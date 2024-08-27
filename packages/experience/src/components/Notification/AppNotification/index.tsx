@@ -2,10 +2,10 @@ import classNames from 'classnames';
 import type { CSSProperties, ForwardedRef, ReactNode } from 'react';
 import { forwardRef } from 'react';
 
-import InfoIcon from '@/assets/icons/info-icon.svg';
+import InfoIcon from '@/assets/icons/info-icon.svg?react';
 import TextLink from '@/components/TextLink';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 /* eslint-disable react/require-default-props */
 type Props = {

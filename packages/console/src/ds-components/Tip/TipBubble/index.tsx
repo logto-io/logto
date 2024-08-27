@@ -5,7 +5,7 @@ import type { ForwardedRef, ReactNode, HTMLProps, RefObject } from 'react';
 
 import type { HorizontalAlignment, Position } from '@/types/positioning';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 export type TipBubblePlacement = 'top' | 'right' | 'bottom' | 'left';
 

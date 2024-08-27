@@ -1,6 +1,6 @@
 {
   "name": "@logto/schemas",
-  "version": "1.18.0",
+  "version": "1.19.0",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
   "type": "module",
@@ -46,16 +46,16 @@
     "@types/inquirer": "^9.0.0",
     "@types/node": "^20.9.5",
     "@types/pluralize": "^0.0.33",
-    "@vitest/coverage-v8": "^1.4.0",
+    "@vitest/coverage-v8": "^2.0.0",
     "camelcase": "^8.0.0",
-    "chalk": "^5.0.0",
+    "chalk": "^5.3.0",
     "eslint": "^8.56.0",
     "lint-staged": "^15.0.0",
     "pluralize": "^8.0.0",
     "prettier": "^3.0.0",
     "roarr": "^7.11.0",
-    "typescript": "^5.3.3",
-    "vitest": "^1.4.0"
+    "typescript": "^5.5.3",
+    "vitest": "^2.0.0"
   },
   "eslintConfig": {
     "extends": "@silverhand",
@@ -81,13 +81,13 @@
     "@logto/connector-kit": "workspace:^4.0.0",
     "@logto/core-kit": "workspace:^2.5.0",
     "@logto/language-kit": "workspace:^1.1.0",
-    "@logto/phrases": "workspace:^1.12.0",
+    "@logto/phrases": "workspace:^1.13.0",
     "@logto/phrases-experience": "workspace:^1.7.0",
     "@logto/shared": "workspace:^3.1.1",
     "@withtyped/server": "^0.13.6",
     "nanoid": "^5.0.1"
   },
   "peerDependencies": {
-    "zod": "^3.22.4"
+    "zod": "^3.23.8"
   }
 }

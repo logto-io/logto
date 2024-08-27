@@ -8,7 +8,7 @@ import DynamicT from '@/ds-components/DynamicT';
 
 import NotSet from '../NotSet';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Action = {
   name: AdminConsoleKey;

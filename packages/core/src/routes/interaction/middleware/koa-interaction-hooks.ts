@@ -1,25 +1,16 @@
-import { type User } from '@logto/schemas';
 import { conditionalString, trySafe } from '@silverhand/essentials';
 import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 
 import {
-  type DataHookContext,
   DataHookContextManager,
   InteractionHookContextManager,
 } from '#src/libraries/hook/context-manager.js';
+import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 
 import { getInteractionStorage } from '../utils/interaction.js';
-
-import type { WithInteractionDetailsContext } from './koa-interaction-details.js';
-
-type AppendDataHookContext = (
-  payload: DataHookContext & {
-    user?: User;
-  }
-) => void;
 
 export type WithInteractionHooksContext<
   ContextT extends IRouterParamContext = IRouterParamContext,

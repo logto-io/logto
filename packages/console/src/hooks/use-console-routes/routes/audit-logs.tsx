@@ -1,7 +1,8 @@
 import { type RouteObject } from 'react-router-dom';
+import { safeLazy } from 'react-safe-lazy';
 
-import AuditLogDetails from '@/pages/AuditLogDetails';
-import AuditLogs from '@/pages/AuditLogs';
+const AuditLogs = safeLazy(async () => import('@/pages/AuditLogs'));
+const AuditLogDetails = safeLazy(async () => import('@/pages/AuditLogDetails'));
 
 export const auditLogs: RouteObject = {
   path: 'audit-logs',

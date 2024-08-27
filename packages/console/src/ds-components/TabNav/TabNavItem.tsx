@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import useMatchTenantPath from '@/hooks/use-tenant-pathname';
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import * as styles from './TabNavItem.module.scss';
+import styles from './TabNavItem.module.scss';
 
 type BaseProps = {
   isActive?: boolean;

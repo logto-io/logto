@@ -1,7 +1,8 @@
 import { type AdminConsoleKey } from '@logto/phrases';
 import type { Application } from '@logto/schemas';
-import { ApplicationType } from '@logto/schemas';
-import { type ReactElement, useMemo } from 'react';
+import { ApplicationType, ReservedPlanId } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
+import { type ReactElement, useContext, useMemo } from 'react';
 import { useController, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +10,8 @@ import Modal from 'react-modal';
 import { useSWRConfig } from 'swr';
 
 import { GtagConversionId, reportConversion } from '@/components/Conversion/utils';
+import { isDevFeaturesEnabled } from '@/consts/env';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
@@ -17,12 +20,12 @@ import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
 import useCurrentUser from '@/hooks/use-current-user';
 import TypeDescription from '@/pages/Applications/components/TypeDescription';
-import * as modalStyles from '@/scss/modal.module.scss';
+import modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { trySubmitSafe } from '@/utils/form';
 
 import Footer from './Footer';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type FormData = {
   type: ApplicationType;
@@ -52,6 +55,9 @@ function CreateForm({
   } = useForm<FormData>({
     defaultValues: { type: defaultCreateType, isThirdParty: isDefaultCreateThirdParty },
   });
+  const {
+    currentSubscription: { planId },
+  } = useContext(SubscriptionDataContext);
   const { user } = useCurrentUser();
   const { mutate: mutateGlobal } = useSWRConfig();
 
@@ -115,6 +121,9 @@ function CreateForm({
       <ModalLayout
         title="applications.create"
         subtitle={subtitleElement}
+        paywall={conditional(
+          isDevFeaturesEnabled && planId === ReservedPlanId.Pro && ReservedPlanId.Pro
+        )}
         size={defaultCreateType ? 'medium' : 'large'}
         footer={
           <Footer

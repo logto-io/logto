@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-saml",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "SAML standard connector implementation.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {
@@ -9,8 +9,8 @@
     "fast-xml-parser": "^4.3.6",
     "got": "^14.0.0",
     "samlify": "2.8.11",
-    "snakecase-keys": "^8.0.0",
-    "zod": "^3.22.4"
+    "snakecase-keys": "^8.0.1",
+    "zod": "^3.23.8"
   },
   "main": "./lib/index.js",
   "module": "./lib/index.js",
@@ -25,9 +25,9 @@
   ],
   "scripts": {
     "precommit": "lint-staged",
-    "build:test": "rm -rf lib/ && tsc -p tsconfig.test.json --sourcemap",
-    "build": "rm -rf lib/ && tsc -p tsconfig.build.json --noEmit && rollup -c",
-    "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
+    "check": "tsc --noEmit",
+    "build": "tsup",
+    "dev": "tsup --watch",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "test": "vitest src",
@@ -54,23 +54,18 @@
     "access": "public"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^26.0.0",
-    "@rollup/plugin-json": "^6.1.0",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-typescript": "^11.1.6",
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/ts-config": "6.0.0",
     "@types/node": "^20.11.20",
     "@types/supertest": "^6.0.2",
-    "@vitest/coverage-v8": "^1.4.0",
+    "@vitest/coverage-v8": "^2.0.0",
     "eslint": "^8.56.0",
     "lint-staged": "^15.0.2",
     "nock": "^13.3.1",
     "prettier": "^3.0.0",
-    "rollup": "^4.12.0",
-    "rollup-plugin-output-size": "^1.3.0",
     "supertest": "^7.0.0",
-    "typescript": "^5.3.3",
-    "vitest": "^1.4.0"
+    "tsup": "^8.1.0",
+    "typescript": "^5.5.3",
+    "vitest": "^2.0.0"
   }
 }

@@ -34,25 +34,56 @@ const sign_in_exp = {
   branding: {
     title: 'ЗОНА БРЕНДИНГА',
     ui_style: 'Стиль',
-    favicon: 'Фавикон',
-    logo_image_url: 'URL изображения логотипа приложения',
-    logo_image_url_placeholder: 'https://your.cdn.domain/logo.png',
-    dark_logo_image_url: 'URL изображения логотипа приложения (темный)',
-    dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
-    logo_image: 'Логотип приложения',
-    dark_logo_image: 'Логотип приложения (темный)',
-    logo_image_error: 'Ошибка логотипа приложения: {{error}}',
-    favicon_error: 'Ошибка фавикона: {{error}}',
+    with_light: '{{value}}',
+    with_dark: '{{value}} (dark)',
+    app_logo_and_favicon: 'Логотип приложения и иконка',
+    company_logo_and_favicon: 'Логотип компании и иконка',
   },
-  custom_css: {
-    title: 'Пользовательский CSS',
-    css_code_editor_title:
-      'Настройте ваш пользовательский интерфейс с помощью пользовательского CSS',
-    css_code_editor_description1: 'Смотрите пример пользовательского CSS.',
+  branding_uploads: {
+    app_logo: {
+      title: 'Логотип приложения',
+      url: 'URL логотипа приложения',
+      url_placeholder: 'https://your.cdn.domain/logo.png',
+      error: 'Логотип приложения: {{error}}',
+    },
+    company_logo: {
+      title: 'Логотип компании',
+      url: 'URL логотипа компании',
+      url_placeholder: 'https://your.cdn.domain/logo.png',
+      error: 'Логотип компании: {{error}}',
+    },
+    organization_logo: {
+      title: 'Загрузить изображение',
+      url: 'URL логотипа организации',
+      url_placeholder: 'https://your.cdn.domain/logo.png',
+      error: 'Логотип организации: {{error}}',
+    },
+    connector_logo: {
+      title: 'Загрузить изображение',
+      url: 'URL логотипа соединителя',
+      url_placeholder: 'https://your.cdn.domain/logo.png',
+      error: 'Логотип соединителя: {{error}}',
+    },
+    favicon: {
+      title: 'Иконка',
+      url: 'URL иконки',
+      url_placeholder: 'https://your.cdn.domain/favicon.ico',
+      error: 'Иконка: {{error}}',
+    },
+  },
+  custom_ui: {
+    title: 'Пользовательский интерфейс',
+    css_code_editor_title: 'Пользовательский CSS',
+    css_code_editor_description1: 'См. пример пользовательского CSS.',
     css_code_editor_description2: '<a>{{link}}</a>',
-    css_code_editor_description_link_content: 'Подробнее',
+    css_code_editor_description_link_content: 'Узнать больше',
     css_code_editor_content_placeholder:
-      'Введите ваш пользовательский CSS, чтобы настроить стили для чего-угодно в соответствии с вашими требованиями. Выражайте свою креативность и выделяйте свой пользовательский интерфейс.',
+      'Введите пользовательский CSS, чтобы настроить стиль любого элемента в соответствии с вашими точными требованиями. Проявите свою креативность и выделите ваш интерфейс.',
+    bring_your_ui_title: 'Создайте свой интерфейс',
+    bring_your_ui_description:
+      'Загрузите сжатый пакет (.zip), чтобы заменить предустановленный интерфейс Logto вашим собственным кодом. <a>Узнать больше</a>',
+    preview_with_bring_your_ui_description:
+      'Ваши пользовательские ресурсы интерфейса успешно загружены и теперь доступны. Встроенное окно предварительного просмотра отключено.\nДля тестирования персонализированного интерфейса входа нажмите кнопку "Прямая трансляция" для открытия в новой вкладке браузера.',
   },
   sign_up_and_sign_in,
   content,

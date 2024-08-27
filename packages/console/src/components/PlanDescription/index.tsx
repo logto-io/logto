@@ -1,4 +1,5 @@
 import { ReservedPlanId } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { type TFuncKey } from 'i18next';
 
 import DynamicT from '@/ds-components/DynamicT';
@@ -11,10 +12,17 @@ const registeredPlanDescriptionPhrasesMap: Record<
   [ReservedPlanId.Pro]: 'pro_plan_description',
 };
 
-type Props = { readonly planId: string };
+type Props = {
+  /** Temporarily mark as optional. */
+  readonly skuId?: string;
+  /** @deprecated */
+  readonly planId: string;
+};
 
-function PlanDescription({ planId }: Props) {
-  const description = registeredPlanDescriptionPhrasesMap[planId];
+function PlanDescription({ skuId, planId }: Props) {
+  const description =
+    conditional(skuId && registeredPlanDescriptionPhrasesMap[skuId]) ??
+    registeredPlanDescriptionPhrasesMap[planId];
 
   if (!description) {
     return null;

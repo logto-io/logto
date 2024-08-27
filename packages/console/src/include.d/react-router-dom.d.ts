@@ -6,7 +6,6 @@
  * Reference: https://github.com/remix-run/react-router/issues/10241
  */
 
-// eslint-disable-next-line import/no-unassigned-import
 import 'react-router-dom';
 
 declare module 'react-router-dom' {

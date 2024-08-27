@@ -18,7 +18,7 @@ import useTerms from '@/hooks/use-terms';
 import ErrorPage from '../ErrorPage';
 
 import Main from './Main';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const SignInFooters = () => {
   const { t } = useTranslation();

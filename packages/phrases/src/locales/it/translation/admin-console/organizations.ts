@@ -7,6 +7,7 @@ const organizations = {
   organization_template: 'Modello organizzazione',
   organization_id: 'ID organizzazione',
   members: 'Membri',
+  machine_to_machine: 'Applicazioni da macchina a macchina',
   create_organization: 'Crea organizzazione',
   setup_organization: 'Configura la tua organizzazione',
   organization_list_placeholder_title: 'Organizzazione',

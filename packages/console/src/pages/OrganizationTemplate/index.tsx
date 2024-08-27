@@ -4,12 +4,12 @@ import classNames from 'classnames';
 import { useCallback, useContext, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
-import OrganizationEmptyDark from '@/assets/images/organization-empty-dark.svg';
-import OrganizationEmpty from '@/assets/images/organization-empty.svg';
+import OrganizationEmptyDark from '@/assets/images/organization-empty-dark.svg?react';
+import OrganizationEmpty from '@/assets/images/organization-empty.svg?react';
 import Drawer from '@/components/Drawer';
 import PageMeta from '@/components/PageMeta';
 import { OrganizationTemplateTabs, organizationTemplateLink } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { subscriptionPage } from '@/consts/pages';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -21,20 +21,28 @@ import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
-import * as pageLayout from '@/scss/page-layout.module.scss';
+import pageLayout from '@/scss/page-layout.module.scss';
 
 import Introduction from '../Organizations/Introduction';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const basePathname = '/organization-template';
 
 function OrganizationTemplate() {
   const { getDocumentationUrl } = useDocumentationUrl();
   const [isGuideDrawerOpen, setIsGuideDrawerOpen] = useState(false);
-  const { currentPlan } = useContext(SubscriptionDataContext);
+  const {
+    currentPlan,
+    currentSubscription: { planId },
+    currentSubscriptionQuota,
+  } = useContext(SubscriptionDataContext);
   const { isDevTenant } = useContext(TenantsContext);
-  const isOrganizationsDisabled = isCloud && !currentPlan.quota.organizationsEnabled;
+  const isOrganizationsDisabled =
+    isCloud &&
+    !(isDevFeaturesEnabled
+      ? currentSubscriptionQuota.organizationsEnabled
+      : currentPlan.quota.organizationsEnabled);
   const { navigate } = useTenantPathname();
 
   const handleUpgradePlan = useCallback(() => {
@@ -52,7 +60,11 @@ function OrganizationTemplate() {
             href: getDocumentationUrl(organizationTemplateLink),
             targetBlank: 'noopener',
           }}
-          paywall={cond((isOrganizationsDisabled || isDevTenant) && ReservedPlanId.Pro)}
+          paywall={
+            isDevFeaturesEnabled
+              ? cond(planId === ReservedPlanId.Pro && ReservedPlanId.Pro)
+              : cond((isOrganizationsDisabled || isDevTenant) && ReservedPlanId.Pro)
+          }
         />
         <Button
           title="application_details.check_guide"

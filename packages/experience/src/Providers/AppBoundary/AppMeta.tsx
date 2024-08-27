@@ -1,3 +1,4 @@
+import { Theme } from '@logto/schemas';
 import { conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
 import i18next from 'i18next';
@@ -7,8 +8,14 @@ import { Helmet } from 'react-helmet';
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 import defaultAppleTouchLogo from '@/assets/apple-touch-icon.png';
 import defaultFavicon from '@/assets/favicon.png';
+import { type SignInExperienceResponse } from '@/types';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
+
+const themeToFavicon = Object.freeze({
+  [Theme.Light]: 'favicon',
+  [Theme.Dark]: 'darkFavicon',
+} as const satisfies Record<Theme, keyof SignInExperienceResponse['branding']>);
 
 /**
  * User React Helmet to manage html and body attributes
@@ -26,16 +33,14 @@ import * as styles from './index.module.scss';
 
 const AppMeta = () => {
   const { experienceSettings, theme, platform, isPreview } = useContext(PageContext);
+  const favicon =
+    experienceSettings?.branding[themeToFavicon[theme]] ?? experienceSettings?.branding.favicon;
 
   return (
     <Helmet>
       <html lang={i18next.language} data-theme={theme} />
-      <link rel="shortcut icon" href={experienceSettings?.branding.favicon ?? defaultFavicon} />
-      <link
-        rel="apple-touch-icon"
-        href={experienceSettings?.branding.favicon ?? defaultAppleTouchLogo}
-        sizes="180x180"
-      />
+      <link rel="shortcut icon" href={favicon ?? defaultFavicon} />
+      <link rel="apple-touch-icon" href={favicon ?? defaultAppleTouchLogo} sizes="180x180" />
       {experienceSettings?.customCss && <style>{experienceSettings.customCss}</style>}
       <body
         className={classNames(

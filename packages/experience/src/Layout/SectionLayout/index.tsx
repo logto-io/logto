@@ -3,7 +3,7 @@ import { type ReactNode } from 'react';
 
 import DynamicT from '@/components/DynamicT';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly title: TFuncKey;

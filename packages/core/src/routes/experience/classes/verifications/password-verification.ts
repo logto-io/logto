@@ -2,6 +2,7 @@ import {
   VerificationType,
   interactionIdentifierGuard,
   type InteractionIdentifier,
+  type User,
 } from '@logto/schemas';
 import { type ToZodObject } from '@logto/schemas/lib/utils/zod.js';
 import { generateStandardId } from '@logto/shared';
@@ -12,39 +13,41 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { findUserByIdentifier } from '../../utils.js';
+import { findUserByIdentifier } from '../utils.js';
 
-import { type VerificationRecord } from './verification-record.js';
+import { type IdentifierVerificationRecord } from './verification-record.js';
 
 export type PasswordVerificationRecordData = {
   id: string;
   type: VerificationType.Password;
   identifier: InteractionIdentifier;
-  /** The unique identifier of the user that has been verified. */
-  userId?: string;
+  verified: boolean;
 };
 
 export const passwordVerificationRecordDataGuard = z.object({
   id: z.string(),
   type: z.literal(VerificationType.Password),
   identifier: interactionIdentifierGuard,
-  userId: z.string().optional(),
+  verified: z.boolean(),
 }) satisfies ToZodObject<PasswordVerificationRecordData>;
 
-export class PasswordVerification implements VerificationRecord<VerificationType.Password> {
+export class PasswordVerification
+  implements IdentifierVerificationRecord<VerificationType.Password>
+{
   /** Factory method to create a new `PasswordVerification` record using an identifier */
   static create(libraries: Libraries, queries: Queries, identifier: InteractionIdentifier) {
     return new PasswordVerification(libraries, queries, {
       id: generateStandardId(),
       type: VerificationType.Password,
       identifier,
+      verified: false,
     });
   }
 
   readonly type = VerificationType.Password;
-  public readonly identifier: InteractionIdentifier;
-  public readonly id: string;
-  private userId?: string;
+  readonly identifier: InteractionIdentifier;
+  readonly id: string;
+  private verified: boolean;
 
   /**
    * The constructor method is intended to be used internally by the interaction class
@@ -57,20 +60,16 @@ export class PasswordVerification implements VerificationRecord<VerificationType
     private readonly queries: Queries,
     data: PasswordVerificationRecordData
   ) {
-    const { id, identifier, userId } = data;
+    const { id, identifier, verified } = data;
 
     this.id = id;
     this.identifier = identifier;
-    this.userId = userId;
+    this.verified = verified;
   }
 
   /** Returns true if a userId is set */
   get isVerified() {
-    return this.userId !== undefined;
-  }
-
-  get verifiedUserId() {
-    return this.userId;
+    return this.verified;
   }
 
   /**
@@ -82,21 +81,45 @@ export class PasswordVerification implements VerificationRecord<VerificationType
    */
   async verify(password: string) {
     const user = await findUserByIdentifier(this.queries.users, this.identifier);
-    const { isSuspended, id } = await this.libraries.users.verifyUserPassword(user, password);
 
+    // Throws an 422 error if the user is not found or the password is incorrect
+    const { isSuspended } = await this.libraries.users.verifyUserPassword(user, password);
     assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
 
-    this.userId = id;
+    this.verified = true;
+
+    return user;
+  }
+
+  async identifyUser(): Promise<User> {
+    assertThat(
+      this.verified,
+      new RequestError({ code: 'session.verification_failed', status: 400 })
+    );
+
+    const user = await findUserByIdentifier(this.queries.users, this.identifier);
+
+    assertThat(
+      user,
+      new RequestError(
+        { code: 'user.user_not_exist', status: 404 },
+        {
+          identifier: this.identifier.value,
+        }
+      )
+    );
+
+    return user;
   }
 
   toJson(): PasswordVerificationRecordData {
-    const { id, type, identifier, userId } = this;
+    const { id, type, identifier, verified } = this;
 
     return {
       id,
       type,
       identifier,
-      userId,
+      verified,
     };
   }
 }

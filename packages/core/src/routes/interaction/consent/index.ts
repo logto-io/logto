@@ -1,11 +1,11 @@
 import { UserScope } from '@logto/core-kit';
 import {
-  consentInfoResponseGuard,
-  publicApplicationGuard,
-  publicUserInfoGuard,
   applicationSignInExperienceGuard,
   type ConsentInfoResponse,
+  consentInfoResponseGuard,
   Organizations,
+  publicApplicationGuard,
+  publicUserInfoGuard,
 } from '@logto/schemas';
 import { conditional, deduplicate } from '@silverhand/essentials';
 import type Router from 'koa-router';
@@ -15,11 +15,11 @@ import { z } from 'zod';
 
 import { consent, getMissingScopes } from '#src/libraries/session.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { interactionPrefix } from '../const.js';
-import type { WithInteractionDetailsContext } from '../middleware/koa-interaction-details.js';
 
 import { filterAndParseMissingResourceScopes } from './utils.js';
 

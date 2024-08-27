@@ -8,7 +8,7 @@ import ImageUploader from '@/ds-components/Uploader/ImageUploader';
 
 import type { FormType } from '../index.js';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const allowedMimeTypes: AllowedUploadMimeType[] = ['image/png', 'image/jpeg', 'image/svg+xml']; // Only allow `svg`, `png`, `jpg` and `jpeg` files.
 
@@ -44,7 +44,9 @@ function LogosUploader({ isDarkModeEnabled }: Props) {
                     : 'enterprise_sso_details.branding_logo_context'
                 )}
                 allowedMimeTypes={allowedMimeTypes}
-                onCompleted={onChange}
+                onUploadComplete={({ url }) => {
+                  onChange(url);
+                }}
                 onUploadErrorChange={setUploadLogoError}
                 onDelete={() => {
                   onChange('');
@@ -65,7 +67,9 @@ function LogosUploader({ isDarkModeEnabled }: Props) {
                   value={value ?? ''}
                   actionDescription={t('enterprise_sso_details.branding_dark_logo_context')}
                   allowedMimeTypes={allowedMimeTypes}
-                  onCompleted={onChange}
+                  onUploadComplete={({ url }) => {
+                    onChange(url);
+                  }}
                   onUploadErrorChange={setUploadDarkLogoError}
                   onDelete={() => {
                     onChange('');

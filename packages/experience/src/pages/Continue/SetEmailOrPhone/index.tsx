@@ -1,8 +1,10 @@
 import type { MissingProfile } from '@logto/schemas';
 import { SignInIdentifier } from '@logto/schemas';
 import type { TFuncKey } from 'i18next';
+import { useContext } from 'react';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import useSendVerificationCode from '@/hooks/use-send-verification-code';
 import type { VerificationCodeIdentifier } from '@/types';
 import { UserFlow } from '@/types';
@@ -59,12 +61,15 @@ const formSettings: Record<
 
 const SetEmailOrPhone = ({ missingProfile, notification }: Props) => {
   const { onSubmit, errorMessage, clearErrorMessage } = useSendVerificationCode(UserFlow.Continue);
+  const { setIdentifierInputValue } = useContext(UserInteractionContext);
 
   const handleSubmit = async (identifier: SignInIdentifier, value: string) => {
     // Only handles email and phone
     if (identifier === SignInIdentifier.Username) {
       return;
     }
+
+    setIdentifierInputValue({ type: identifier, value });
 
     return onSubmit({ identifier, value });
   };

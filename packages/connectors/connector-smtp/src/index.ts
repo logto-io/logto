@@ -1,4 +1,4 @@
-import { assert } from '@silverhand/essentials';
+import { assert, conditional } from '@silverhand/essentials';
 
 import type {
   GetConnectorConfig,
@@ -14,6 +14,7 @@ import {
   replaceSendMessageHandlebars,
 } from '@logto/connector-kit';
 import nodemailer from 'nodemailer';
+import type Mail from 'nodemailer/lib/mailer';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport';
 
 import { defaultMetadata } from './constant.js';
@@ -44,11 +45,17 @@ const sendMessage =
       template.contentType
     );
 
-    const mailOptions = {
+    const mailOptions: Mail.Options = {
       to,
       from: config.fromEmail,
       replyTo: config.replyTo,
       subject: replaceSendMessageHandlebars(template.subject, payload),
+      ...conditional(
+        config.customHeaders &&
+          Object.entries(config.customHeaders).length > 0 && {
+            headers: config.customHeaders,
+          }
+      ),
       ...contentsObject,
     };
 

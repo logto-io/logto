@@ -1,15 +1,19 @@
+// TODO: @darcyYe refactor this file later to remove disable max line comment
+/* eslint-disable max-lines */
 import type { Role } from '@logto/schemas';
 import {
-  demoAppApplicationId,
-  buildDemoAppDataForTenant,
-  InternalRole,
-  ApplicationType,
   Applications,
+  ApplicationType,
+  buildDemoAppDataForTenant,
+  demoAppApplicationId,
+  hasSecrets,
+  InternalRole,
 } from '@logto/schemas';
 import { generateStandardId, generateStandardSecret } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import { boolean, object, string, z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -19,6 +23,8 @@ import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
+import applicationCustomDataRoutes from './application-custom-data.js';
+import { generateInternalSecret } from './application-secret.js';
 import { applicationCreateGuard, applicationPatchGuard } from './types.js';
 
 const includesInternalAdminRole = (roles: Readonly<Array<{ role: Role }>>) =>
@@ -35,32 +41,13 @@ const parseIsThirdPartQueryParam = (isThirdPartyQuery: 'true' | 'false' | undefi
 const applicationTypeGuard = z.nativeEnum(ApplicationType);
 
 export default function applicationRoutes<T extends ManagementApiRouter>(
-  ...[
-    router,
-    {
-      queries,
-      id: tenantId,
-      libraries: { quota, protectedApps },
-    },
-  ]: RouterInitArgs<T>
+  ...[router, tenant]: RouterInitArgs<T>
 ) {
   const {
-    deleteApplicationById,
-    findApplicationById,
-    insertApplication,
-    updateApplicationById,
-    countApplications,
-    findApplications,
-  } = queries.applications;
-
-  const {
-    findApplicationsRolesByApplicationId,
-    insertApplicationsRoles,
-    deleteApplicationRole,
-    findApplicationsRolesByRoleId,
-  } = queries.applicationsRoles;
-
-  const { findRoleByRoleName } = queries.roles;
+    queries,
+    id: tenantId,
+    libraries: { quota, protectedApps },
+  } = tenant;
 
   router.get(
     '/applications',
@@ -107,7 +94,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       const search = parseSearchParamsForSearch(searchParams);
 
       const excludeApplicationsRoles = excludeRoleId
-        ? await findApplicationsRolesByRoleId(excludeRoleId)
+        ? await queries.applicationsRoles.findApplicationsRolesByRoleId(excludeRoleId)
         : [];
 
       const excludeApplicationIds = excludeApplicationsRoles.map(
@@ -115,7 +102,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       );
 
       if (paginationDisabled) {
-        ctx.body = await findApplications({
+        ctx.body = await queries.applications.findApplications({
           search,
           excludeApplicationIds,
           excludeOrganizationId,
@@ -127,14 +114,14 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       }
 
       const [{ count }, applications] = await Promise.all([
-        countApplications({
+        queries.applications.countApplications({
           search,
           excludeApplicationIds,
           excludeOrganizationId,
           isThirdParty,
           types,
         }),
-        findApplications(
+        queries.applications.findApplications(
           {
             search,
             excludeApplicationIds,
@@ -161,27 +148,33 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       response: Applications.guard,
       status: [200, 400, 422, 500],
     }),
+    // eslint-disable-next-line complexity
     async (ctx, next) => {
       const { oidcClientMetadata, protectedAppMetadata, ...rest } = ctx.guard.body;
 
-      // When creating a m2m app, should check both m2m limit and application limit.
-      if (rest.type === ApplicationType.MachineToMachine) {
-        await quota.guardKey('machineToMachineLimit');
-      }
+      const {
+        values: { isDevFeaturesEnabled },
+      } = EnvSet;
 
-      // Guard third party application limit
-      if (rest.isThirdParty) {
-        await quota.guardKey('thirdPartyApplicationsLimit');
-      }
-
-      await quota.guardKey('applicationsLimit');
+      await Promise.all([
+        rest.type === ApplicationType.MachineToMachine &&
+          (isDevFeaturesEnabled
+            ? quota.guardTenantUsageByKey('machineToMachineLimit')
+            : quota.guardKey('machineToMachineLimit')),
+        rest.isThirdParty &&
+          (isDevFeaturesEnabled
+            ? quota.guardTenantUsageByKey('thirdPartyApplicationsLimit')
+            : quota.guardKey('thirdPartyApplicationsLimit')),
+        isDevFeaturesEnabled
+          ? quota.guardTenantUsageByKey('applicationsLimit')
+          : quota.guardKey('applicationsLimit'),
+      ]);
 
       assertThat(
         rest.type !== ApplicationType.Protected || protectedAppMetadata,
         'application.protected_app_metadata_is_required'
       );
 
-      // Third party applications must be traditional type
       if (rest.isThirdParty) {
         assertThat(
           rest.type === ApplicationType.Traditional,
@@ -189,9 +182,9 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         );
       }
 
-      const application = await insertApplication({
+      const application = await queries.applications.insertApplication({
         id: generateStandardId(),
-        secret: generateStandardSecret(),
+        secret: generateInternalSecret(),
         oidcClientMetadata: buildOidcClientMetadata(oidcClientMetadata),
         ...conditional(
           rest.type === ApplicationType.Protected &&
@@ -201,18 +194,25 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         ...rest,
       });
 
+      if (hasSecrets(application.type)) {
+        await queries.applicationSecrets.insert({
+          name: 'Default secret',
+          applicationId: application.id,
+          value: generateStandardSecret(),
+        });
+      }
+
       if (application.type === ApplicationType.Protected) {
         try {
           await protectedApps.syncAppConfigsToRemote(application.id);
         } catch (error: unknown) {
           // Delete the application if failed to sync to remote
-          await deleteApplicationById(application.id);
+          await queries.applications.deleteApplicationById(application.id);
           throw error;
         }
       }
 
       ctx.body = application;
-
       return next();
     }
   );
@@ -236,8 +236,9 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         return next();
       }
 
-      const application = await findApplicationById(id);
-      const applicationsRoles = await findApplicationsRolesByApplicationId(id);
+      const application = await queries.applications.findApplicationById(id);
+      const applicationsRoles =
+        await queries.applicationsRoles.findApplicationsRolesByApplicationId(id);
 
       ctx.body = {
         ...application,
@@ -274,8 +275,8 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       // This role is NOT intended for user assignment.
       if (isAdmin !== undefined) {
         const [applicationsRoles, internalAdminRole] = await Promise.all([
-          findApplicationsRolesByApplicationId(id),
-          findRoleByRoleName(InternalRole.Admin),
+          queries.applicationsRoles.findApplicationsRolesByApplicationId(id),
+          queries.roles.findRoleByRoleName(InternalRole.Admin),
         ]);
         const usedToBeAdmin = includesInternalAdminRole(applicationsRoles);
 
@@ -289,17 +290,17 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         );
 
         if (isAdmin && !usedToBeAdmin) {
-          await insertApplicationsRoles([
+          await queries.applicationsRoles.insertApplicationsRoles([
             { id: generateStandardId(), applicationId: id, roleId: internalAdminRole.id },
           ]);
         } else if (!isAdmin && usedToBeAdmin) {
-          await deleteApplicationRole(id, internalAdminRole.id);
+          await queries.applicationsRoles.deleteApplicationRole(id, internalAdminRole.id);
         }
       }
 
       if (protectedAppMetadata) {
         const { type, protectedAppMetadata: originProtectedAppMetadata } =
-          await findApplicationById(id);
+          await queries.applications.findApplicationById(id);
         assertThat(type === ApplicationType.Protected, 'application.protected_application_only');
         assertThat(
           originProtectedAppMetadata,
@@ -308,7 +309,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
             status: 422,
           })
         );
-        await updateApplicationById(id, {
+        await queries.applications.updateApplicationById(id, {
           protectedAppMetadata: {
             ...originProtectedAppMetadata,
             ...protectedAppMetadata,
@@ -318,7 +319,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
           await protectedApps.syncAppConfigsToRemote(id);
         } catch (error: unknown) {
           // Revert changes on sync failure
-          await updateApplicationById(id, {
+          await queries.applications.updateApplicationById(id, {
             protectedAppMetadata: originProtectedAppMetadata,
           });
           throw error;
@@ -326,8 +327,8 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       }
 
       ctx.body = await (Object.keys(rest).length > 0
-        ? updateApplicationById(id, rest)
-        : findApplicationById(id));
+        ? queries.applications.updateApplicationById(id, rest, 'replace')
+        : queries.applications.findApplicationById(id));
 
       return next();
     }
@@ -342,7 +343,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
-      const { type, protectedAppMetadata } = await findApplicationById(id);
+      const { type, protectedAppMetadata } = await queries.applications.findApplicationById(id);
       if (type === ApplicationType.Protected && protectedAppMetadata) {
         assertThat(
           !protectedAppMetadata.customDomains || protectedAppMetadata.customDomains.length === 0,
@@ -352,10 +353,13 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         await protectedApps.deleteRemoteAppConfigs(protectedAppMetadata.host);
       }
       // Note: will need delete cascade when application is joint with other tables
-      await deleteApplicationById(id);
+      await queries.applications.deleteApplicationById(id);
       ctx.status = 204;
 
       return next();
     }
   );
+
+  applicationCustomDataRoutes(router, tenant);
 }
+/* eslint-enable max-lines */

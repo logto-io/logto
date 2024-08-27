@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
-import ApiResourceDark from '@/assets/icons/api-resource-dark.svg';
-import ApiResource from '@/assets/icons/api-resource.svg';
-import ManagementApiResourceDark from '@/assets/icons/management-api-resource-dark.svg';
-import ManagementApiResource from '@/assets/icons/management-api-resource.svg';
+import ApiResourceDark from '@/assets/icons/api-resource-dark.svg?react';
+import ApiResource from '@/assets/icons/api-resource.svg?react';
+import ManagementApiResourceDark from '@/assets/icons/management-api-resource-dark.svg?react';
+import ManagementApiResource from '@/assets/icons/management-api-resource.svg?react';
 import ChargeNotification from '@/components/ChargeNotification';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
@@ -25,7 +25,7 @@ import useTheme from '@/hooks/use-theme';
 import { buildUrl } from '@/utils/url';
 
 import GuideLibraryModal from './components/GuideLibraryModal';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const pageSize = defaultPageSize;
 const apiResourcesPathname = '/api-resources';

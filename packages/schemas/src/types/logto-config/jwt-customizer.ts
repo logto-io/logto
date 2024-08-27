@@ -10,6 +10,7 @@ import {
   type UserSsoIdentity,
 } from '../../db-entries/index.js';
 import { mfaFactorsGuard, type MfaFactors } from '../../foundations/index.js';
+import { GrantType } from '../oidc-config.js';
 import { scopeResponseGuard, type ScopeResponse } from '../scope.js';
 import { userInfoGuard, type UserInfo } from '../user.js';
 
@@ -67,11 +68,23 @@ export const jwtCustomizerUserContextGuard = userInfoGuard.extend({
     .array(),
 }) satisfies ZodType<JwtCustomizerUserContext>;
 
+export const jwtCustomizerGrantContextGuard = z.object({
+  type: z.literal(GrantType.TokenExchange), // Only support token exchange for now
+  subjectTokenContext: jsonObjectGuard,
+});
+
+export type JwtCustomizerGrantContext = z.infer<typeof jwtCustomizerGrantContextGuard>;
+
 export const accessTokenJwtCustomizerGuard = jwtCustomizerGuard
   .extend({
     // Use partial token guard since users customization may not rely on all fields.
     tokenSample: accessTokenPayloadGuard.partial().optional(),
-    contextSample: z.object({ user: jwtCustomizerUserContextGuard.partial() }).optional(),
+    contextSample: z
+      .object({
+        user: jwtCustomizerUserContextGuard.partial(),
+        grant: jwtCustomizerGrantContextGuard.partial().optional(),
+      })
+      .optional(),
   })
   .strict();
 

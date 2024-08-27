@@ -4,7 +4,7 @@ import Checkbox from '@/ds-components/Checkbox';
 import { type Identifiable } from '@/types/general';
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props<T> = {
   readonly entity: T;

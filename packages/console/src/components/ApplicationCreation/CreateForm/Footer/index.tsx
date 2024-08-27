@@ -2,12 +2,18 @@ import { ApplicationType, ReservedPlanId } from '@logto/schemas';
 import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
+import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
+import { isDevFeaturesEnabled } from '@/consts/env';
+import { machineToMachineAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
+import TextLink from '@/ds-components/TextLink';
 import useApplicationsUsage from '@/hooks/use-applications-usage';
+
+import styles from './index.module.scss';
 
 type Props = {
   readonly selectedType?: ApplicationType;
@@ -17,8 +23,8 @@ type Props = {
 };
 
 function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props) {
-  const { currentPlan } = useContext(SubscriptionDataContext);
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell.paywall' });
+  const { currentPlan, currentSku } = useContext(SubscriptionDataContext);
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell' });
   const {
     hasAppsReachedLimit,
     hasMachineToMachineAppsReachedLimit,
@@ -30,9 +36,34 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
 
     if (
       selectedType === ApplicationType.MachineToMachine &&
+      isDevFeaturesEnabled &&
+      planId === ReservedPlanId.Pro
+    ) {
+      return (
+        <AddOnNoticeFooter
+          isLoading={isLoading}
+          buttonTitle="applications.create"
+          onClick={onClickCreate}
+        >
+          <Trans
+            components={{
+              span: <span className={styles.strong} />,
+              a: <TextLink to="https://blog.logto.io/pricing-add-ons/" />,
+            }}
+          >
+            {t('add_on.footer.machine_to_machine_app', {
+              price: machineToMachineAddOnUnitPrice,
+            })}
+          </Trans>
+        </AddOnNoticeFooter>
+      );
+    }
+
+    if (
+      selectedType === ApplicationType.MachineToMachine &&
       hasMachineToMachineAppsReachedLimit &&
       // For paid plan (pro plan), we don't guard the m2m app creation since it's an add-on feature.
-      planId === ReservedPlanId.Free
+      (isDevFeaturesEnabled ? currentSku.id : planId) === ReservedPlanId.Free
     ) {
       return (
         <QuotaGuardFooter>
@@ -41,7 +72,7 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
               a: <ContactUsPhraseLink />,
             }}
           >
-            {t('machine_to_machine_feature')}
+            {t('paywall.machine_to_machine_feature')}
           </Trans>
         </QuotaGuardFooter>
       );
@@ -56,7 +87,7 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
               a: <ContactUsPhraseLink />,
             }}
           >
-            {t('third_party_apps')}
+            {t('paywall.third_party_apps')}
           </Trans>
         </QuotaGuardFooter>
       );
@@ -68,10 +99,10 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
           <Trans
             components={{
               a: <ContactUsPhraseLink />,
-              planName: <PlanName name={planName} />,
+              planName: <PlanName skuId={currentSku.id} name={planName} />,
             }}
           >
-            {t('applications', { count: quota.applicationsLimit ?? 0 })}
+            {t('paywall.applications', { count: quota.applicationsLimit ?? 0 })}
           </Trans>
         </QuotaGuardFooter>
       );

@@ -1,5 +1,14 @@
 import { type ApplicationSignInExperience } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
+
+import { removeFalsyValues } from '@/utils/object';
+
+export type ApplicationSignInExperienceForm = ApplicationSignInExperience & {
+  /**
+   * Used to determine if the application enables branding for the app-level sign-in experience.
+   * Only effective for non-third-party applications.
+   */
+  isBrandingEnabled: boolean;
+};
 
 /**
  * Format the form data to match the API request body
@@ -7,35 +16,14 @@ import { conditional } from '@silverhand/essentials';
  * - Remove the empty `logoUrl` and `darkLogoUrl` fields in the `branding` object
  **/
 export const formatFormToSubmitData = (
-  data: ApplicationSignInExperience
+  data: ApplicationSignInExperienceForm
 ): Omit<ApplicationSignInExperience, 'applicationId' | 'tenantId'> => {
-  const { branding, applicationId, tenantId, ...rest } = data;
+  const { branding, color, applicationId, tenantId, isBrandingEnabled, ...rest } = data;
 
   return {
     ...rest,
-    branding: {
-      ...conditional(branding.logoUrl && { logoUrl: branding.logoUrl }),
-      ...conditional(branding.darkLogoUrl && { darkLogoUrl: branding.darkLogoUrl }),
-    },
-  };
-};
-
-/**
- * Format the response data to match the form data
- *
- * Fulfill the branding object with empty string if the `logoUrl` or `darkLogoUrl` is not set.
- * Otherwise, the RHF won't update the branding fields properly with the undefined value.
- */
-export const formatResponseDataToForm = (
-  data: ApplicationSignInExperience
-): ApplicationSignInExperience => {
-  const { branding, ...rest } = data;
-
-  return {
-    ...rest,
-    branding: {
-      logoUrl: branding.logoUrl ?? '',
-      darkLogoUrl: branding.darkLogoUrl ?? '',
-    },
+    ...(isBrandingEnabled
+      ? { color, branding: removeFalsyValues(branding) }
+      : { color: {}, branding: {} }),
   };
 };

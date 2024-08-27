@@ -6,7 +6,7 @@ import useMfaFlowState from '@/hooks/use-mfa-factors-state';
 import ErrorPage from '@/pages/ErrorPage';
 import { UserMfaFlow } from '@/types';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const TotpVerification = () => {
   const flowState = useMfaFlowState();

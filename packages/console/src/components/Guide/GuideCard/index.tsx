@@ -1,4 +1,4 @@
-import { ReservedPlanId } from '@logto/schemas';
+import { ReservedPlanId, Theme } from '@logto/schemas';
 import classNames from 'classnames';
 import { Suspense, useCallback, useContext } from 'react';
 
@@ -7,9 +7,10 @@ import FeatureTag, { BetaTag } from '@/components/FeatureTag';
 import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
+import useTheme from '@/hooks/use-theme';
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 export type SelectedGuide = {
   id: Guide['id'];
@@ -29,11 +30,13 @@ function GuideCard({ data, onClick, hasBorder, hasButton }: Props) {
   const {
     id,
     Logo,
+    DarkLogo,
     metadata: { target, name, description, isThirdParty },
   } = data;
 
   const buttonText = target === 'API' ? 'guide.get_started' : 'guide.start_building';
   const { currentPlan } = useContext(SubscriptionDataContext);
+  const theme = useTheme();
 
   const showPaywallTag = isCloud && isThirdParty;
   const showBetaTag = isCloud && isThirdParty;
@@ -58,7 +61,9 @@ function GuideCard({ data, onClick, hasBorder, hasButton }: Props) {
     >
       <div className={styles.header}>
         <Suspense fallback={<div className={styles.logoSkeleton} />}>
-          <Logo className={styles.logo} />
+          <div className={styles.logo}>
+            {theme === Theme.Dark && DarkLogo ? <DarkLogo /> : <Logo />}
+          </div>
         </Suspense>
         <div className={styles.infoWrapper}>
           <div className={styles.flexRow}>

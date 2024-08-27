@@ -56,10 +56,7 @@ function AcceptInvitation() {
       <SwitchAccount
         onClickSwitch={() => {
           saveRedirect();
-          void signIn({
-            redirectUri: redirectUri.href,
-            loginHint: `urn:logto:invitation:${invitationId}`,
-          });
+          void signIn(redirectUri.href);
         }}
       />
     );

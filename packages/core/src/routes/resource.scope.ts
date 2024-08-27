@@ -3,6 +3,7 @@ import { generateStandardId } from '@logto/shared';
 import { tryThat } from '@silverhand/essentials';
 import { object, string } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -89,7 +90,9 @@ export default function resourceScopeRoutes<T extends ManagementApiRouter>(
         body,
       } = ctx.guard;
 
-      await quota.guardKey('scopesPerResourceLimit', resourceId);
+      await (EnvSet.values.isDevFeaturesEnabled
+        ? quota.guardEntityScopesUsage('resources', resourceId)
+        : quota.guardKey('scopesPerResourceLimit', resourceId));
 
       assertThat(!/\s/.test(body.name), 'scope.name_with_space');
 

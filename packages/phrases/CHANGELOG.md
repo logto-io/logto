@@ -1,5 +1,49 @@
 # Change Log
 
+## 1.13.0
+
+### Minor Changes
+
+- b91ec0cd6: add the application `custom_data` field editor to the application details page in console
+
+### Patch Changes
+
+- 3a839f6d6: support organization logo and sign-in experience override
+
+  Now it's able to set light and dark logos for organizations. You can upload the logos in the organization settings page.
+
+  Also, it's possible to override the sign-in experience logo from an organization. Simply add the `organization_id` parameter to the authentication request. In most Logto SDKs, it can be done by using the `extraParams` field in the `signIn` method.
+
+  For example, in the JavaScript SDK:
+
+  ```ts
+  import LogtoClient from "@logto/client";
+
+  const logtoClient = new LogtoClient(/* your configuration */);
+
+  logtoClient.signIn({
+    redirectUri: "https://your-app.com/callback",
+    extraParams: {
+      organization_id: "<organization-id>",
+    },
+  });
+  ```
+
+  The value `<organization-id>` can be found in the organization settings page.
+
+  If you could not find the `extraParams` field in the SDK you are using, please let us know.
+
+- b188bb161: support multiple app secrets with expiration
+
+  Now secure apps (machine-to-machine, traditional web, Protected) can have multiple app secrets with expiration. This allows for secret rotation and provides an even safer experience.
+
+  To manage your application secrets, go to Logto Console -> Applications -> Application Details -> Endpoints & Credentials.
+
+  We've also added a set of Management APIs (`/api/applications/{id}/secrets`) for this purpose.
+
+  > [!Important]
+  > You can still use existing app secrets for client authentication, but it is recommended to delete the old ones and create new secrets with expiration for enhanced security.
+
 ## 1.12.0
 
 ### Minor Changes

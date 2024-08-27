@@ -5,7 +5,7 @@ import ConnectorLogo from '@/components/ConnectorLogo';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import { type ConnectorGroup } from '@/types/connector';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly data: ConnectorGroup<ConnectorFactoryResponse>;

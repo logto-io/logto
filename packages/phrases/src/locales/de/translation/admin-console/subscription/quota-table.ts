@@ -9,7 +9,7 @@ const quota_table = {
     title: 'Anwendungen',
     total: 'Gesamtzahl der Anwendungen',
     m2m: 'Maschine-zu-Maschine',
-    third_party: 'Third-party apps',
+    third_party: 'Drittanbieter-Apps',
   },
   resource: {
     title: 'API-Ressourcen',
@@ -20,7 +20,8 @@ const quota_table = {
     title: 'Benutzeroberfläche und Branding',
     custom_domain: 'Benutzerdefinierte Domain',
     custom_css: 'Benutzerdefiniertes CSS',
-    app_logo_and_favicon: 'App-Logo und Favicon',
+    logo_and_favicon: 'Logo und Favicon',
+    bring_your_ui: 'Bringe deine Benutzeroberfläche',
     dark_mode: 'Dunkler Modus',
     i18n: 'Internationalisierung',
   },
@@ -37,6 +38,7 @@ const quota_table = {
     mfa: 'Multi-Faktor-Authentifizierung',
     sso: 'Unternehmens-SSO',
     adaptive_mfa: 'Adaptive MFA',
+    impersonation: 'Stellvertretung',
   },
   user_management: {
     title: 'Benutzerverwaltung',

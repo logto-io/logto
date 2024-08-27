@@ -1,5 +1,6 @@
 const demo_app = {
   title: '你已成功登录实时预览！',
+  subtitle: '这里是你的用户信息：',
   username: '用户名：',
   user_id: '用户 ID：',
   sign_out: '退出实时预览',

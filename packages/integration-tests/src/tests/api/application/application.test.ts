@@ -3,10 +3,10 @@ import { HTTPError } from 'ky';
 
 import {
   createApplication,
-  getApplication,
-  updateApplication,
   deleteApplication,
+  getApplication,
   getApplications,
+  updateApplication,
 } from '#src/api/index.js';
 import { expectRejects } from '#src/helpers/index.js';
 
@@ -56,7 +56,6 @@ describe('application APIs', () => {
     };
 
     const application = await createApplication(applicationName, ApplicationType.Protected, {
-      // @ts-expect-error the create guard has been modified
       protectedAppMetadata: metadata,
     });
 
@@ -76,12 +75,10 @@ describe('application APIs', () => {
     };
 
     const application = await createApplication(applicationName, ApplicationType.Protected, {
-      // @ts-expect-error the create guard has been modified
       protectedAppMetadata: metadata,
     });
     await expectRejects(
       createApplication('test-create-app', ApplicationType.Protected, {
-        // @ts-expect-error the create guard has been modified
         protectedAppMetadata: metadata,
       }),
       {
@@ -111,6 +108,7 @@ describe('application APIs', () => {
     await updateApplication(application.id, {
       description: newApplicationDescription,
       oidcClientMetadata: {
+        ...application.oidcClientMetadata,
         redirectUris: newRedirectUris,
       },
       customClientMetadata: { rotateRefreshToken: true, refreshTokenTtlInDays: 10 },
@@ -133,7 +131,6 @@ describe('application APIs', () => {
     };
 
     const application = await createApplication('test-update-app', ApplicationType.Protected, {
-      // @ts-expect-error the create guard has been modified
       protectedAppMetadata: metadata,
     });
 

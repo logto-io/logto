@@ -8,18 +8,20 @@ import ReactModal from 'react-modal';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
-import * as modalStyles from '@/scss/modal.module.scss';
+import modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
-import { hasReachedQuotaLimit } from '@/utils/quota';
+import { hasReachedQuotaLimit, hasReachedSubscriptionQuotaLimit } from '@/utils/quota';
 
 type Props = {
   readonly resourceId: string;
+  /** @deprecated get usage from cloud API after migrating to new pricing model */
   readonly totalResourceCount: number;
   readonly onClose: (scope?: Scope) => void;
 };
@@ -27,7 +29,12 @@ type Props = {
 type CreatePermissionFormData = Pick<CreateScope, 'name' | 'description'>;
 
 function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Props) {
-  const { currentPlan } = useContext(SubscriptionDataContext);
+  const {
+    currentPlan,
+    currentSku,
+    currentSubscriptionQuota,
+    currentSubscriptionScopeResourceUsage,
+  } = useContext(SubscriptionDataContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const {
@@ -52,11 +59,17 @@ function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Prop
     })
   );
 
-  const isScopesPerResourceReachLimit = hasReachedQuotaLimit({
-    quotaKey: 'scopesPerResourceLimit',
-    plan: currentPlan,
-    usage: totalResourceCount,
-  });
+  const isScopesPerResourceReachLimit = isDevFeaturesEnabled
+    ? hasReachedSubscriptionQuotaLimit({
+        quotaKey: 'scopesPerResourceLimit',
+        usage: currentSubscriptionScopeResourceUsage[resourceId] ?? 0,
+        quota: currentSubscriptionQuota,
+      })
+    : hasReachedQuotaLimit({
+        quotaKey: 'scopesPerResourceLimit',
+        plan: currentPlan,
+        usage: totalResourceCount,
+      });
 
   return (
     <ReactModal
@@ -81,11 +94,14 @@ function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Prop
               <Trans
                 components={{
                   a: <ContactUsPhraseLink />,
-                  planName: <PlanName name={currentPlan.name} />,
+                  planName: <PlanName skuId={currentSku.id} name={currentPlan.name} />,
                 }}
               >
                 {t('upsell.paywall.scopes_per_resource', {
-                  count: currentPlan.quota.scopesPerResourceLimit ?? 0,
+                  count:
+                    (isDevFeaturesEnabled
+                      ? currentSubscriptionQuota.scopesPerResourceLimit
+                      : currentPlan.quota.scopesPerResourceLimit) ?? 0,
                 })}
               </Trans>
             </QuotaGuardFooter>

@@ -3,11 +3,12 @@ import classNames from 'classnames';
 
 import Button from '@/ds-components/Button';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly isOpen: boolean;
   readonly isSubmitting: boolean;
+  readonly isSubmitDisabled?: boolean;
   readonly onSubmit: () => Promise<void>;
   readonly onDiscard: () => void;
   readonly confirmText?: AdminConsoleKey;
@@ -17,6 +18,7 @@ type Props = {
 function SubmitFormChangesActionBar({
   isOpen,
   isSubmitting,
+  isSubmitDisabled = false,
   confirmText = 'general.save_changes',
   onSubmit,
   onDiscard,
@@ -34,6 +36,7 @@ function SubmitFormChangesActionBar({
           }}
         />
         <Button
+          disabled={isSubmitDisabled}
           isLoading={isSubmitting}
           type="primary"
           size="medium"

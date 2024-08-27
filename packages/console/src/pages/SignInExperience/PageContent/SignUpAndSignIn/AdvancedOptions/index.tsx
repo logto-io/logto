@@ -9,7 +9,7 @@ import TextLink from '@/ds-components/TextLink';
 import type { SignInExperienceForm } from '../../../types';
 import FormSectionTitle from '../../components/FormSectionTitle';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 function AdvancedOptions() {
   const { t } = useTranslation(undefined, {

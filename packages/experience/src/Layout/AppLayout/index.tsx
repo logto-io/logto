@@ -7,7 +7,7 @@ import usePlatform from '@/hooks/use-platform';
 import { layoutClassNames } from '@/utils/consts';
 
 import CustomContent from './CustomContent';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const AppLayout = () => {
   const { isMobile } = usePlatform();

@@ -15,7 +15,7 @@ describe('Smart Input Field Util Methods', () => {
       expect(props.type).toBe('tel');
       expect(props.pattern).toBe('[0-9]*');
       expect(props.inputMode).toBe('numeric');
-      expect(props.placeholder).toBe('input.phone_number');
+      expect(props.label).toBe('input.phone_number');
       expect(props.autoComplete).toBe('tel');
     });
 
@@ -23,21 +23,21 @@ describe('Smart Input Field Util Methods', () => {
       const props = getInputHtmlProps([SignInIdentifier.Email], SignInIdentifier.Email);
       expect(props.type).toBe('email');
       expect(props.inputMode).toBe('email');
-      expect(props.placeholder).toBe('input.email');
+      expect(props.label).toBe('input.email');
       expect(props.autoComplete).toBe('email');
     });
 
     it('Should return correct html props for username', () => {
       const props = getInputHtmlProps([SignInIdentifier.Username], SignInIdentifier.Username);
       expect(props.type).toBe('text');
-      expect(props.placeholder).toBe('input.username');
+      expect(props.label).toBe('input.username');
       expect(props.autoComplete).toBe('username');
     });
 
     it('Should return correct html props for username email or phone', () => {
       const props = getInputHtmlProps(enabledTypes, SignInIdentifier.Username);
       expect(props.type).toBe('text');
-      expect(props.placeholder).toBe('input.username / input.email / input.phone_number');
+      expect(props.label).toBe('input.username / input.email / input.phone_number');
       expect(props.autoComplete).toBe('username email tel');
     });
 
@@ -47,7 +47,7 @@ describe('Smart Input Field Util Methods', () => {
         SignInIdentifier.Email
       );
       expect(props.type).toBe('text');
-      expect(props.placeholder).toBe('input.email / input.phone_number');
+      expect(props.label).toBe('input.email / input.phone_number');
       expect(props.autoComplete).toBe('email tel');
     });
   });

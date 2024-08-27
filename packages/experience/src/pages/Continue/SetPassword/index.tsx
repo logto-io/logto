@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import { addProfile } from '@/apis/interaction';
 import SetPasswordForm from '@/containers/SetPassword';
-import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import { usePromiseConfirmModal } from '@/hooks/use-confirm-modal';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import usePasswordAction, { type SuccessHandler } from '@/hooks/use-password-action';
@@ -18,7 +18,7 @@ const SetPassword = () => {
   }, []);
 
   const navigate = useNavigate();
-  const { show } = useConfirmModal();
+  const { show } = usePromiseConfirmModal();
   const redirectTo = useGlobalRedirectTo();
 
   const preSignInErrorHandler = usePreSignInErrorHandler();
@@ -34,9 +34,9 @@ const SetPassword = () => {
     [navigate, preSignInErrorHandler, show]
   );
   const successHandler: SuccessHandler<typeof addProfile> = useCallback(
-    (result) => {
+    async (result) => {
       if (result?.redirectTo) {
-        redirectTo(result.redirectTo);
+        await redirectTo(result.redirectTo);
       }
     },
     [redirectTo]

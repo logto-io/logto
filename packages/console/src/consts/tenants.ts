@@ -1,8 +1,14 @@
 import { ReservedPlanId, TenantTag, defaultManagementApi } from '@logto/schemas';
 import dayjs from 'dayjs';
 
-import { type TenantResponse } from '@/cloud/types/router';
+import {
+  type NewSubscriptionQuota,
+  type LogtoSkuResponse,
+  type TenantResponse,
+  type NewSubscriptionUsage,
+} from '@/cloud/types/router';
 import { RegionName } from '@/components/Region';
+import { LogtoSkuType } from '@/types/skus';
 import { type SubscriptionPlan } from '@/types/subscriptions';
 
 import { adminEndpoint, isCloud } from './env';
@@ -71,7 +77,91 @@ export const defaultSubscriptionPlan: SubscriptionPlan = {
     thirdPartyApplicationsLimit: null,
     tenantMembersLimit: null,
     customJwtEnabled: true,
+    subjectTokenEnabled: true,
+    bringYourUiEnabled: true,
   },
+};
+
+/**
+ * - For cloud, the initial tenant's subscription plan will be fetched from the cloud API.
+ * - OSS has a fixed subscription plan with `development` id and no cloud API to dynamically fetch the subscription plan.
+ */
+export const defaultLogtoSku: LogtoSkuResponse = {
+  id: ReservedPlanId.Development,
+  name: 'Logto Development plan',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  type: LogtoSkuType.Basic,
+  unitPrice: 0,
+  quota: {
+    // A soft limit for abuse monitoring
+    mauLimit: 100,
+    tokenLimit: null,
+    applicationsLimit: null,
+    machineToMachineLimit: null,
+    resourcesLimit: null,
+    scopesPerResourceLimit: null,
+    socialConnectorsLimit: null,
+    userRolesLimit: null,
+    machineToMachineRolesLimit: null,
+    scopesPerRoleLimit: null,
+    hooksLimit: null,
+    auditLogsRetentionDays: 14,
+    mfaEnabled: true,
+    organizationsEnabled: true,
+    enterpriseSsoLimit: null,
+    thirdPartyApplicationsLimit: null,
+    tenantMembersLimit: 20,
+    customJwtEnabled: true,
+    subjectTokenEnabled: true,
+    bringYourUiEnabled: true,
+  },
+};
+
+/** Quota for Free plan */
+export const defaultSubscriptionQuota: NewSubscriptionQuota = {
+  mauLimit: 50_000,
+  tokenLimit: 500_000,
+  applicationsLimit: 3,
+  machineToMachineLimit: 1,
+  resourcesLimit: 1,
+  scopesPerResourceLimit: 1,
+  socialConnectorsLimit: 3,
+  userRolesLimit: 1,
+  machineToMachineRolesLimit: 1,
+  scopesPerRoleLimit: 1,
+  hooksLimit: 1,
+  auditLogsRetentionDays: 3,
+  mfaEnabled: false,
+  organizationsEnabled: false,
+  enterpriseSsoLimit: 0,
+  thirdPartyApplicationsLimit: 0,
+  tenantMembersLimit: 1,
+  customJwtEnabled: false,
+  subjectTokenEnabled: false,
+  bringYourUiEnabled: false,
+};
+
+export const defaultSubscriptionUsage: NewSubscriptionUsage = {
+  mauLimit: 0,
+  tokenLimit: 0,
+  applicationsLimit: 0,
+  machineToMachineLimit: 0,
+  resourcesLimit: 0,
+  scopesPerResourceLimit: 0,
+  socialConnectorsLimit: 0,
+  userRolesLimit: 0,
+  machineToMachineRolesLimit: 0,
+  scopesPerRoleLimit: 0,
+  hooksLimit: 0,
+  mfaEnabled: false,
+  organizationsEnabled: false,
+  enterpriseSsoLimit: 0,
+  thirdPartyApplicationsLimit: 0,
+  tenantMembersLimit: 0,
+  customJwtEnabled: false,
+  subjectTokenEnabled: false,
+  bringYourUiEnabled: false,
 };
 
 const getAdminTenantEndpoint = () => {

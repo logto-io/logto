@@ -34,9 +34,13 @@ const user_details = {
   field_custom_data: 'カスタムデータ',
   field_custom_data_tip:
     'プリディフィンドされたユーザープロパティにリストされていない、追加のユーザー情報（ユーザーが好みの色や言語など）。',
+  field_profile: 'プロフィール',
+  field_profile_tip:
+    'ユーザーのプロパティに含まれていないオープン ID コネクト標準クレーム。すべての不明なプロパティは削除される点に注意してください。詳細については、<a>プロフィールプロパティリファレンス</a> を参照してください。',
   field_connectors: 'ソーシャル接続',
   field_sso_connectors: 'エンタープライズ接続',
-  custom_data_invalid: 'カスタムデータは有効なJSONオブジェクトである必要があります',
+  custom_data_invalid: 'カスタムデータは有効な JSON オブジェクトである必要があります',
+  profile_invalid: 'プロフィールは有効な JSON オブジェクトである必要があります',
   connectors: {
     connectors: 'コネクタ',
     user_id: 'ユーザーID',
@@ -77,7 +81,8 @@ const user_details = {
     delete_description:
       'この操作により、このユーザーからこの役割が削除されます。役割自体はまだ存在しますが、このユーザーに関連付けられなくなります。',
     deleted: '役割 {{name}} はこのユーザーから正常に削除されました。',
-    assign_subtitle: '名前、説明、または役割IDで検索して適切なユーザー役割を見つけます。',
+    assign_title: '{{name}} に役割を割り当てる',
+    assign_subtitle: '名前、説明、または役割 ID で検索して適切なユーザー役割を見つけます。',
     assign_role_field: '役割を割り当てる',
     role_search_placeholder: '役割名で検索',
     added_text: '{{value, number}} 追加しました',
@@ -87,7 +92,7 @@ const user_details = {
     empty: '利用可能な役割はありません',
   },
   warning_no_sign_in_identifier:
-    'ユーザーは、サインインに少なくとも1つの識別子（ユーザー名、メールアドレス、電話番号、またはソーシャル）を持っている必要があります。続行してよろしいですか？',
+    'ユーザーは、サインインに少なくとも 1 つの識別子（ユーザー名、メールアドレス、電話番号、またはソーシャル）を持っている必要があります。続行してよろしいですか？',
 };
 
 export default Object.freeze(user_details);

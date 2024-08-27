@@ -12,11 +12,11 @@ import {
   useState,
 } from 'react';
 
-import EyeClosed from '@/assets/icons/eye-closed.svg';
-import Eye from '@/assets/icons/eye.svg';
+import EyeClosed from '@/assets/icons/eye-closed.svg?react';
+import Eye from '@/assets/icons/eye.svg?react';
 import IconButton from '@/ds-components/IconButton';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 export type Props = Omit<HTMLProps<HTMLInputElement>, 'size'> & {
   readonly error?: string | boolean | ReactElement;

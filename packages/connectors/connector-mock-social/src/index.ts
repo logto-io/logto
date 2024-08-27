@@ -30,7 +30,7 @@ const getAuthorizationUri: GetAuthorizationUri = async (
     }
   }
 
-  return `http://mock.social.com/?state=${state}&redirect_uri=${redirectUri}`;
+  return `http://mock-social/?state=${state}&redirect_uri=${redirectUri}`;
 };
 
 const getUserInfo: GetUserInfo = async (data, getSession) => {
@@ -39,6 +39,8 @@ const getUserInfo: GetUserInfo = async (data, getSession) => {
     userId: z.optional(z.string()),
     email: z.string().optional(),
     phone: z.string().optional(),
+    name: z.string().optional(),
+    avatar: z.string().optional(),
   });
   const result = dataGuard.safeParse(data);
 

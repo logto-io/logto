@@ -53,6 +53,7 @@ const tenantContext = new MockTenant(
       ),
       updateApplicationById,
     },
+    applicationSecrets: { insert: jest.fn() },
   },
   undefined,
   {
@@ -110,7 +111,6 @@ describe('application route', () => {
     expect(response.body).toEqual({
       ...mockApplication,
       id: mockId,
-      secret: mockId,
       name,
       description,
       type,

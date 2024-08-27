@@ -1,3 +1,4 @@
+import add_on from './add-on.js';
 import featured_plan_content from './featured-plan-content.js';
 import paywall from './paywall.js';
 
@@ -41,6 +42,7 @@ const upsell = {
     'You have surpassed your {{item}} quota limit. Logto will add charges for the usage beyond your quota limit. Charging will commence on the day the new add-on pricing design is released. <a>Learn more</a>',
   paywall,
   featured_plan_content,
+  add_on,
 };
 
 export default Object.freeze(upsell);

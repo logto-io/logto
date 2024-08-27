@@ -18,12 +18,21 @@ const buildSearchParameters = (record: Record<string, Nullable<Optional<string>>
   return conditional(entries.length > 0 && entries);
 };
 
+// A simple camelCase utility to prevent the need to add a dependency.
+const camelCase = (string: string): string =>
+  string.replaceAll(
+    /_([^_])([^_]*)/g,
+    (_, letter: string, rest: string) => letter.toUpperCase() + rest.toLowerCase()
+  );
+
 export const getSignInExperience = async <T extends SignInExperienceResponse>(): Promise<T> => {
   return ky
     .get('/api/.well-known/sign-in-exp', {
-      searchParams: buildSearchParameters({
-        [searchKeys.noCache]: sessionStorage.getItem(searchKeys.noCache),
-      }),
+      searchParams: buildSearchParameters(
+        Object.fromEntries(
+          Object.values(searchKeys).map((key) => [camelCase(key), sessionStorage.getItem(key)])
+        )
+      ),
     })
     .json<T>();
 };
@@ -49,7 +58,6 @@ export const getPhrases = async ({
     })
     .get('/api/.well-known/phrases', {
       searchParams: buildSearchParameters({
-        [searchKeys.noCache]: sessionStorage.getItem(searchKeys.noCache),
         lng: language,
       }),
     });

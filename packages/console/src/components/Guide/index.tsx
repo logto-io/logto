@@ -7,10 +7,11 @@ import { type GuideMetadata } from '@/assets/docs/guides/types';
 import Button from '@/ds-components/Button';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import MdxProvider from '@/mdx-components/MdxProvider';
+import { type ApplicationSecretRow } from '@/pages/ApplicationDetails/ApplicationDetailsContent/EndpointsAndCredentials';
 import NotFound from '@/pages/NotFound';
 
 import StepsSkeleton from './StepsSkeleton';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 export type GuideContextType = {
   metadata: Readonly<GuideMetadata>;
@@ -19,6 +20,7 @@ export type GuideContextType = {
     | ((props: { readonly className?: string }) => JSX.Element);
   isCompact: boolean;
   app?: ApplicationResponse;
+  secrets?: ApplicationSecretRow[];
   endpoint?: string;
   redirectUris?: string[];
   postLogoutRedirectUris?: string[];
@@ -40,6 +42,7 @@ export const GuideContext = createContext<GuideContextType>({
   metadata: {} as GuideMetadata,
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, no-restricted-syntax
   app: {} as ApplicationResponse,
+  secrets: [],
   endpoint: '',
   redirectUris: [],
   postLogoutRedirectUris: [],

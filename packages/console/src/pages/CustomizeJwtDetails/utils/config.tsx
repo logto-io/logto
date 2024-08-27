@@ -1,12 +1,14 @@
-import type {
-  AccessTokenPayload,
-  ClientCredentialsPayload,
-  JwtCustomizerUserContext,
+import {
+  GrantType,
+  type AccessTokenPayload,
+  type ClientCredentialsPayload,
+  type JwtCustomizerUserContext,
+  type JwtCustomizerGrantContext,
 } from '@logto/schemas';
 import { type EditorProps } from '@monaco-editor/react';
 
-import TokenFileIcon from '@/assets/icons/token-file-icon.svg';
-import UserFileIcon from '@/assets/icons/user-file-icon.svg';
+import TokenFileIcon from '@/assets/icons/token-file-icon.svg?react';
+import UserFileIcon from '@/assets/icons/user-file-icon.svg?react';
 
 import type { ModelSettings } from '../MainContent/MonacoCodeEditor/type.js';
 
@@ -27,6 +29,7 @@ declare interface CustomJwtClaims extends Record<string, any> {}
  */
 declare type Context = {
   user: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext};
+  grant?: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerGrantContext};
 }
 
 declare type Payload = {
@@ -199,8 +202,16 @@ const defaultUserContext: Partial<JwtCustomizerUserContext> = {
   organizationRoles: [],
 };
 
+const defaultGrantContext: Partial<JwtCustomizerGrantContext> = {
+  type: GrantType.TokenExchange,
+  subjectTokenContext: {
+    foo: 'bar',
+  },
+};
+
 export const defaultUserTokenContextData = {
   user: defaultUserContext,
+  grant: defaultGrantContext,
 };
 
 export const accessTokenPayloadTestModel: ModelSettings = {
@@ -223,6 +234,6 @@ export const userContextTestModel: ModelSettings = {
   language: 'json',
   icon: <UserFileIcon />,
   name: 'user-token-context.json',
-  title: 'User data',
+  title: 'Context data',
   defaultValue: JSON.stringify(defaultUserTokenContextData, null, 2),
 };

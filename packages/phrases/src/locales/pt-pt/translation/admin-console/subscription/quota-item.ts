@@ -4,7 +4,7 @@ const quota_item = {
     limited: '{{count, number}} inquilino',
     limited_other: '{{count, number}} inquilinos',
     unlimited: 'Inquilinos ilimitados',
-    not_eligible: 'Eliminar tus inquilinos',
+    not_eligible: 'Eliminar os teus inquilinos',
   },
   mau_limit: {
     name: 'Utilizadores ativos mensais',
@@ -158,6 +158,18 @@ const quota_item = {
     limited: 'JWT personalizado',
     unlimited: 'JWT personalizado',
     not_eligible: 'Remove o teu personalizador de reivindicações JWT',
+  },
+  impersonation_enabled: {
+    name: 'Impersonação',
+    limited: 'Impersonação',
+    unlimited: 'Impersonação',
+    not_eligible: 'Não está permitido a personificação',
+  },
+  bring_your_ui_enabled: {
+    name: 'Traga a sua interface gráfica',
+    limited: 'Traga a sua interface gráfica',
+    unlimited: 'Traga a sua interface gráfica',
+    not_eligible: 'Remova os teus ativos de UI personalizados',
   },
 };
 

@@ -5,13 +5,13 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Plus from '@/assets/icons/plus.svg';
-import EnterpriseSsoConnectorEmptyDark from '@/assets/images/sso-connector-empty-dark.svg';
-import EnterpriseSsoConnectorEmpty from '@/assets/images/sso-connector-empty.svg';
+import Plus from '@/assets/icons/plus.svg?react';
+import EnterpriseSsoConnectorEmptyDark from '@/assets/images/sso-connector-empty-dark.svg?react';
+import EnterpriseSsoConnectorEmpty from '@/assets/images/sso-connector-empty.svg?react';
 import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
 import { defaultPageSize } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
@@ -24,7 +24,7 @@ import { buildUrl } from '@/utils/url';
 
 import SsoConnectorLogo from './SsoConnectorLogo';
 import SsoCreationModal from './SsoCreationModal';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const pageSize = defaultPageSize;
 const enterpriseSsoPathname = '/enterprise-sso';
@@ -36,13 +36,21 @@ function EnterpriseSso() {
   const { navigate } = useTenantPathname();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { isDevTenant } = useContext(TenantsContext);
-  const { currentPlan } = useContext(SubscriptionDataContext);
+  const {
+    currentPlan,
+    currentSubscription: { planId },
+    currentSubscriptionQuota,
+  } = useContext(SubscriptionDataContext);
 
   const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
   });
 
-  const isSsoEnabled = !isCloud || currentPlan.quota.ssoEnabled;
+  const isSsoEnabled =
+    !isCloud ||
+    (isDevFeaturesEnabled
+      ? currentSubscriptionQuota.enterpriseSsoLimit !== 0
+      : currentPlan.quota.ssoEnabled);
 
   const url = buildUrl('api/sso-connectors', {
     page: String(page),
@@ -59,7 +67,9 @@ function EnterpriseSso() {
   return (
     <ListPage
       title={{
-        paywall: conditional((!isSsoEnabled || isDevTenant) && ReservedPlanId.Pro),
+        paywall: isDevFeaturesEnabled
+          ? conditional(planId === ReservedPlanId.Pro && ReservedPlanId.Pro)
+          : conditional((!isSsoEnabled || isDevTenant) && ReservedPlanId.Pro),
         title: 'enterprise_sso.title',
         subtitle: 'enterprise_sso.subtitle',
       }}

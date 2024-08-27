@@ -63,7 +63,7 @@ Add the following configuration to your `application.properties` file:
 <Code className="language-properties" title="application.properties">
     {`spring.security.oauth2.client.registration.logto.client-name=logto
 spring.security.oauth2.client.registration.logto.client-id=${props.app.id}
-spring.security.oauth2.client.registration.logto.client-secret=${props.app.secret}
+spring.security.oauth2.client.registration.logto.client-secret=${props.secrets[0]?.value ?? props.app.secret}
 spring.security.oauth2.client.registration.logto.redirect-uri={baseUrl}/login/oauth2/code/{registrationId}
 spring.security.oauth2.client.registration.logto.authorization-grant-type=authorization_code
 spring.security.oauth2.client.registration.logto.scope=openid,profile,email,offline_access

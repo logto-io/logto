@@ -4,16 +4,16 @@ import type { Nullable } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { type WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { type WithInteractionDetailsContext } from '../middleware/koa-interaction-details.js';
 import type { WithInteractionSieContext } from '../middleware/koa-interaction-sie.js';
 import type {
-  SocialIdentifier,
-  VerifiedSignInInteractionResult,
-  VerifiedRegisterInteractionResult,
   Identifier,
+  SocialIdentifier,
+  VerifiedRegisterInteractionResult,
+  VerifiedSignInInteractionResult,
 } from '../types/index.js';
 import { isUserPasswordSet } from '../utils/index.js';
 import { mergeIdentifiers } from '../utils/interaction.js';

@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { sendVerificationCodeApi } from '@/apis/utils';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
-import type { VerificationCodeIdentifier, UserFlow } from '@/types';
+import { type VerificationCodeIdentifier, type UserFlow } from '@/types';
 
 const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) => {
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -47,10 +47,9 @@ const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) =
         navigate(
           {
             pathname: `/${flow}/verification-code`,
-            search: location.search,
+            search: window.location.search,
           },
           {
-            state: { identifier, value },
             replace: replaceCurrentPage,
           }
         );

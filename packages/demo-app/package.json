@@ -1,19 +1,20 @@
 {
   "name": "@logto/demo-app",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Logto demo app.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
   "private": true,
+  "type": "module",
   "files": [
     "dist"
   ],
   "scripts": {
     "precommit": "lint-staged",
-    "start": "parcel src/index.html",
-    "dev": "cross-env PORT=5003 parcel src/index.html --public-url /demo-app --no-cache --hmr-port 6003",
+    "start": "vite",
+    "dev": "vite",
     "check": "tsc --noEmit",
-    "build": "pnpm check && rm -rf dist && parcel build src/index.html --no-autoinstall --no-cache --public-url /demo-app",
+    "build": "vite build",
     "lint": "eslint --ext .ts --ext .tsx src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "stylelint": "stylelint \"src/**/*.scss\""
@@ -21,47 +22,33 @@
   "devDependencies": {
     "@logto/core-kit": "workspace:^2.4.0",
     "@logto/language-kit": "workspace:^1.1.0",
-    "@logto/phrases": "workspace:^1.12.0",
+    "@logto/phrases": "workspace:^1.13.0",
     "@logto/react": "^3.0.12",
-    "@logto/schemas": "workspace:^1.18.0",
-    "@parcel/core": "2.9.3",
-    "@parcel/transformer-sass": "2.9.3",
+    "@logto/schemas": "workspace:^1.19.0",
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/eslint-config-react": "6.0.2",
     "@silverhand/ts-config": "6.0.0",
     "@silverhand/ts-config-react": "6.0.0",
-    "@types/react": "^18.0.31",
-    "@types/react-dom": "^18.0.0",
-    "buffer": "^6.0.0",
-    "cross-env": "^7.0.3",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
     "eslint": "^8.56.0",
     "i18next": "^22.4.15",
     "i18next-browser-languagedetector": "^8.0.0",
-    "jose": "^5.0.0",
+    "jose": "^5.6.3",
     "lint-staged": "^15.0.0",
-    "parcel": "2.9.3",
-    "postcss": "^8.4.31",
     "prettier": "^3.0.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-i18next": "^12.3.1",
     "stylelint": "^15.0.0",
-    "typescript": "^5.3.3",
-    "zod": "^3.22.4"
+    "typescript": "^5.5.3",
+    "vite": "^5.3.4",
+    "vite-plugin-compression": "^0.5.1",
+    "zod": "^3.23.8"
   },
   "engines": {
     "node": "^20.9.0"
-  },
-  "//": "https://github.com/parcel-bundler/parcel/issues/7636",
-  "targets": {
-    "default": {
-      "engines": {
-        "browsers": "defaults"
-      }
-    }
-  },
-  "alias": {
-    "@/*": "./src/$1"
   },
   "eslintConfig": {
     "extends": "@silverhand/react"

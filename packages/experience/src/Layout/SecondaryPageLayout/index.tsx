@@ -8,7 +8,7 @@ import usePlatform from '@/hooks/use-platform';
 
 import { InlineNotification } from '../../components/Notification';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly title: TFuncKey;

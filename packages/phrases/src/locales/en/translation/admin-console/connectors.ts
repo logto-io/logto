@@ -44,16 +44,8 @@ const connectors = {
     name_placeholder: 'Enter name for social sign-in button',
     name_tip:
       'The name of the connector button will be displayed as "Continue with {{name}}." Be mindful of the length of the naming in case it gets too long.',
-    logo: 'Logo URL for social sign-in button',
-    logo_placeholder: 'https://your.cdn.domain/logo.png',
-    logo_tip:
-      'Logo image will show on the connector. Get a publicly accessible image link and insert the link here.',
-    logo_dark: 'Logo URL for social sign-in button (Dark mode)',
-    logo_dark_placeholder: 'https://your.cdn.domain/logo.png',
-    logo_dark_tip:
-      'Set your connector’s logo for dark mode after enabling it in the sign-in experience.',
-    logo_dark_collapse: 'Collapse',
-    logo_dark_show: 'Show logo setting for dark mode',
+    connector_logo: 'Connector logo',
+    connector_logo_tip: 'The logo will be displayed on the connector sign-in button.',
     target: 'Identity provider name',
     target_placeholder: 'Enter connector identity provider name',
     target_tip:

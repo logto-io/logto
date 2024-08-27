@@ -1,18 +1,24 @@
-import { passwordVerificationPayloadGuard } from '@logto/schemas';
+import {
+  passwordVerificationPayloadGuard,
+  SentinelActivityAction,
+  VerificationType,
+} from '@logto/schemas';
+import { Action } from '@logto/schemas/lib/types/log/interaction.js';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
-import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
+import { withSentinel } from '../classes/libraries/sentinel-guard.js';
 import { PasswordVerification } from '../classes/verifications/password-verification.js';
 import { experienceRoutes } from '../const.js';
-import { type WithExperienceInteractionContext } from '../middleware/koa-experience-interaction.js';
+import koaExperienceVerificationsAuditLog from '../middleware/koa-experience-verifications-audit-log.js';
+import { type ExperienceInteractionRouterContext } from '../types.js';
 
-export default function passwordVerificationRoutes<T extends WithLogContext>(
-  router: Router<unknown, WithExperienceInteractionContext<T>>,
-  { libraries, queries }: TenantContext
+export default function passwordVerificationRoutes<T extends ExperienceInteractionRouterContext>(
+  router: Router<unknown, T>,
+  { libraries, queries, sentinel }: TenantContext
 ) {
   router.post(
     `${experienceRoutes.verification}/password`,
@@ -23,13 +29,38 @@ export default function passwordVerificationRoutes<T extends WithLogContext>(
         verificationId: z.string(),
       }),
     }),
+    koaExperienceVerificationsAuditLog({
+      type: VerificationType.Password,
+      action: Action.Submit,
+    }),
     async (ctx, next) => {
+      const { experienceInteraction } = ctx;
       const { identifier, password } = ctx.guard.body;
 
+      ctx.verificationAuditLog.append({
+        payload: {
+          identifier,
+          password,
+        },
+      });
+
       const passwordVerification = PasswordVerification.create(libraries, queries, identifier);
-      await passwordVerification.verify(password);
-      ctx.experienceInteraction.setVerificationRecord(passwordVerification);
-      await ctx.experienceInteraction.save();
+
+      await withSentinel(
+        {
+          sentinel,
+          action: SentinelActivityAction.Password,
+          identifier,
+          payload: {
+            event: experienceInteraction.interactionEvent,
+            verificationId: passwordVerification.id,
+          },
+        },
+        passwordVerification.verify(password)
+      );
+
+      experienceInteraction.setVerificationRecord(passwordVerification);
+      await experienceInteraction.save();
 
       ctx.body = { verificationId: passwordVerification.id };
 

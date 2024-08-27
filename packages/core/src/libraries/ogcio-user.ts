@@ -146,7 +146,7 @@ const getDomainFromEmail = (email: string): string | undefined => {
 const assignCitizenRole = async (
   user: User,
   getRoles: (id: string) => Promise<Role>,
-  insertUsersRoles: (usersRoles: CreateUsersRole[]) => Promise<QueryResult<QueryResultRow>>
+  insertUsersRoles: (usersRoles: CreateUsersRole[]) => Promise<QueryResult<QueryResultRow> | undefined>
 ) => {
   const userRole = await getRoles(OGCIO_ROLES.BB_CITIZEN);
 
@@ -194,7 +194,7 @@ const assignInactivePublicServantRole = async (
   organizationQueries: OrganizationQueries
 ) => {
   const organization = await assignUserToOrganization(user, organizationQueries);
-
+  
   if (!organization) {
     return;
   }
@@ -205,7 +205,7 @@ const assignInactivePublicServantRole = async (
 export const manageDefaultUserRole = async (
   user: User,
   getRoles: (id: string) => Promise<Role>,
-  insertUsersRoles: (usersRoles: CreateUsersRole[]) => Promise<QueryResult<QueryResultRow>>,
+  insertUsersRoles: (usersRoles: CreateUsersRole[]) => Promise<QueryResult<QueryResultRow> | undefined>,
   organizationQueries: OrganizationQueries
 ) => {
   if (user.tenantId === adminTenantId) {

@@ -7,7 +7,7 @@ const config: UserConfig = {
   extends: ['@commitlint/config-conventional'],
   rules: {
     'type-enum': [2, 'always', [...conventional.rules['type-enum'][2], 'api', 'release']],
-    'scope-enum': [2, 'always', ['connector', 'console', 'core', 'demo-app', 'test', 'phrases', 'schemas', 'shared', 'experience', 'deps', 'deps-dev', 'cli', 'toolkit', 'cloud', 'app-insights']],
+    'scope-enum': [2, 'always', ['connector', 'console', 'core', 'demo-app', 'test', 'phrases', 'schemas', 'shared', 'experience', 'deps', 'deps-dev', 'cli', 'toolkit', 'cloud', 'app-insights', 'elements']],
     // Slightly increase the tolerance to allow the appending PR number
     ...(isCi && { 'header-max-length': [2, 'always', 110] }),
     'body-max-line-length': [2, 'always', 110],

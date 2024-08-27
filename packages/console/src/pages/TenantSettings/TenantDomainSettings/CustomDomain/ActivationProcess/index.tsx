@@ -6,7 +6,7 @@ import InlineNotification from '@/ds-components/InlineNotification';
 
 import DnsRecordsTable from './DnsRecordsTable';
 import Step from './Step';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly customDomain: CustomDomain;

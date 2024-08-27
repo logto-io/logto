@@ -1,0 +1,163 @@
+import InlineNotification from '@/ds-components/InlineNotification';
+import UriInputField from '@/mdx-components/UriInputField';
+import Steps from '@/mdx-components/Steps';
+import Step from '@/mdx-components/Step';
+import NpmLikeInstallation from '@/mdx-components/NpmLikeInstallation';
+
+<Steps>
+
+<Step title="Prerequisites">
+
+In this guide, we assume you have set up Express with session in you project. If you haven't, check out the [Express.js website](https://expressjs.com/) to get started.
+
+</Step>
+
+<Step
+  title="Installation"
+  subtitle="Install Passport.js for your project"
+>
+
+Install `passport` and the OIDC strategy plugin, `passport-openidconnect`:
+
+<NpmLikeInstallation packageName="passport passport-openidconnect" />
+
+</Step>
+
+<Step title="Configure redirect URI">
+
+<InlineNotification>
+  In the following steps, we assume your app is running on <code>http://localhost:3000</code>.
+</InlineNotification>
+
+First, let’s enter your redirect URI.
+
+<UriInputField name="redirectUris" defaultValue="http://localhost:3000/api/auth/callback/logto" />
+
+Don't forget to click the **Save** button.
+
+</Step>
+
+<Step title="Initialize Passport.js with OIDC strategy">
+
+<Code title="src/passport.ts" className="language-ts">
+    {`import passport from 'passport';
+import OpenIDConnectStrategy, { type Profile, type VerifyCallback } from 'passport-openidconnect';
+
+const endpoint = '${props.endpoint}';
+const appId = '${props.app.id}';
+const appSecret = '${props.app.secret}';
+
+export default function initPassport() {
+  passport.use(
+    new OpenIDConnectStrategy(
+      {
+        issuer: \`\${endpoint}/oidc\`,
+        authorizationURL: \`\${endpoint}/oidc/auth\`,
+        tokenURL: \`\${endpoint}/oidc/token\`,
+        userInfoURL: \`\${endpoint}/oidc/me\`,
+        clientID: appId,
+        clientSecret: appSecret,
+        callbackURL: '/callback',
+        scope: ['profile', 'offline_access'],
+      },
+      (issuer: string, profile: Profile, callback: VerifyCallback) => {
+        callback(null, profile);
+      }
+    )
+  );
+
+  passport.serializeUser((user, callback) => {
+    callback(null, user);
+  });
+
+  passport.deserializeUser(function (user, callback) {
+    callback(null, user as Express.User);
+  });
+}`}
+</Code>
+
+This code initializes Passport with the **`OpenIDConnectStrategy`**. The serialize and deserialize methods are set for demonstration purposes.
+
+Ensure to initialize and attach Passport middleware in your application:
+
+```tsx
+import initPassport from 'src/passport';
+
+// ... other code
+initPassport();
+// ... other code
+app.use(passport.authenticate('session'));
+// ... other code
+```
+
+</Step>
+
+<Step title="Implement sign-in and sign-out">
+
+We'll now create specific routes for authentication processes:
+
+### Sign in: `/sign-in`
+
+```tsx
+app.get('/sign-in', passport.authenticate('openidconnect'));
+```
+
+This route builds and redirects to an OIDC auth route.
+
+### Handle sign in callback: `/callback`
+
+```tsx
+app.get(
+  '/callback',
+  passport.authenticate('openidconnect', {
+    successReturnToOrRedirect: '/',
+  })
+);
+```
+
+This handles the OIDC sign-in callback, stores tokens, and redirects to the homepage.
+
+### Sign out: `/sign-out`
+
+```tsx
+app.get('/sign-out', (request, response, next) => {
+  request.logout((error) => {
+    if (error) {
+      next(error);
+      return;
+    }
+    response.redirect(`${endpoint}/oidc/session/end?client_id=${appId}`);
+  });
+});
+```
+
+This redirects to Logto's session end URL, then back to the homepage.
+
+### Add to the homepage
+
+```tsx
+app.get('/', (request: Request, response) => {
+  const { user } = request;
+  response.setHeader('content-type', 'text/html');
+
+  if (user) {
+    response.end(
+      `<h1>Hello Logto</h1><p>Signed in as ${JSON.stringify(
+        user
+      )}, <a href="/sign-out">Sign Out</a></p>`
+    );
+  } else {
+    response.end(`<h1>Hello Logto</h1><p><a href="/sign-in">Sign In</a></p>`);
+  }
+});
+```
+
+</Step>
+
+<Step title="Checkpoint: Test Logto and Passport integration">
+
+Now, you can test your application to see if the authentication works as expected.
+
+</Step>
+
+</Steps>

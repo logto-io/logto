@@ -49,4 +49,39 @@ describe('content-type: application/json compatibility', () => {
       { 'content-type': 'application/json1' }
     );
   });
+
+  it('should be ok when `content-type` is json but the body is malformed', async () => {
+    await trySafe(
+      api
+        .post('token', {
+          headers: {
+            'content-type': 'application/json',
+          },
+          body: 'this is not a json',
+        })
+        .json(),
+      async (error) => {
+        if (!(error instanceof HTTPError)) {
+          throw new TypeError('Error is not a HTTPError instance.');
+        }
+
+        // 400 means the request has been processed, we just need to ensure no 500 error
+        expect(error.response.status).toBe(400);
+        expect(await error.response.json()).toHaveProperty(
+          'error_description',
+          'no client authentication mechanism provided'
+        );
+      }
+    );
+  });
+
+  it('should be ok when `content-type` is json for GET requests', async () => {
+    await expect(
+      api.get('.well-known/openid-configuration', {
+        headers: {
+          'content-type': 'application/json',
+        },
+      })
+    ).resolves.toBeDefined();
+  });
 });

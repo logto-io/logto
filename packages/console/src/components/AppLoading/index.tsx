@@ -1,7 +1,7 @@
-import Logo from '@/assets/images/logo.svg';
+import Logo from '@/assets/images/logo.svg?react';
 import { Daisy as Spinner } from '@/ds-components/Spinner';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 function AppLoading() {
   return (

@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Plus from '@/assets/icons/plus.svg';
+import Plus from '@/assets/icons/plus.svg?react';
 import ActionsButton from '@/components/ActionsButton';
-import DateTime from '@/components/DateTime';
+import { LocaleDate } from '@/components/DateTime';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import UserPreview from '@/components/ItemPreview/UserPreview';
 import { RoleOption } from '@/components/OrganizationRolesSelect';
@@ -24,7 +24,7 @@ import EditOrganizationRolesModal from '../EditOrganizationRolesModal';
 import { type OrganizationDetailsOutletContext } from '../types';
 
 import AddMembersToOrganization from './AddMembersToOrganization';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const pageSize = defaultPageSize;
 
@@ -96,7 +96,7 @@ function Members() {
             dataIndex: 'lastSignInAt',
             title: t('users.latest_sign_in'),
             colSpan: 5,
-            render: ({ lastSignInAt }) => <DateTime>{lastSignInAt}</DateTime>,
+            render: ({ lastSignInAt }) => <LocaleDate>{lastSignInAt}</LocaleDate>,
           },
           {
             dataIndex: 'actions',

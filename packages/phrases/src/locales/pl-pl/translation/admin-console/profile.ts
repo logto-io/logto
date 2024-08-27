@@ -51,6 +51,40 @@ const profile = {
     description:
       'Usunięcie twojego konta spowoduje usunięcie wszystkich twoich danych osobistych, danych użytkownika i konfiguracji. Ta operacja nie może być cofnięta.',
     button: 'Usuń konto',
+    p: {
+      has_issue:
+        'Przykro nam, że chcesz usunąć swoje konto. Przed usunięciem konta musisz rozwiązać następujące problemy.',
+      after_resolved:
+        'Po rozwiązaniu problemów, możesz usunąć swoje konto. Prosimy o kontakt, jeśli potrzebujesz pomocy.',
+      check_information:
+        'Przykro nam, że chcesz usunąć swoje konto. Proszę dokładnie sprawdzić poniższe informacje przed kontynuowaniem.',
+      remove_all_data:
+        'Usunięcie konta spowoduje trwałe usunięcie wszystkich danych o Tobie w Logto Cloud. Upewnij się, że masz kopię zapasową ważnych danych przed kontynuowaniem.',
+      confirm_information:
+        'Proszę potwierdzić, że powyższe informacje są zgodne z Twoimi oczekiwaniami. Po usunięciu konta nie będziemy mogli go odzyskać.',
+      has_admin_role:
+        'Ponieważ masz rolę administratora w poniższym najemcy, zostanie on usunięty wraz z Twoim kontem:',
+      has_admin_role_other:
+        'Ponieważ masz rolę administratora w poniższych najemcach, zostaną one usunięte wraz z Twoim kontem:',
+      quit_tenant: 'Zamierzasz opuścić poniższego najemcę:',
+      quit_tenant_other: 'Zamierzasz opuścić poniższych najemców:',
+    },
+    issues: {
+      paid_plan: 'Poniższy najemca ma płatny plan, proszę najpierw anulować subskrypcję:',
+      paid_plan_other: 'Poniżsi najemcy mają płatne plany, proszę najpierw anulować subskrypcję:',
+      subscription_status: 'Poniższy najemca ma problem ze statusem subskrypcji:',
+      subscription_status_other: 'Poniżsi najemcy mają problemy ze statusem subskrypcji:',
+      open_invoice: 'Poniższy najemca ma otwartą fakturę:',
+      open_invoice_other: 'Poniżsi najemcy mają otwarte faktury:',
+    },
+    error_occurred: 'Wystąpił błąd',
+    error_occurred_description: 'Przepraszamy, wystąpił problem podczas usuwania Twojego konta:',
+    request_id: 'ID żądania: {{requestId}}',
+    try_again_later:
+      'Spróbuj ponownie później. Jeśli problem będzie się powtarzał, skontaktuj się z zespołem Logto, podając ID żądania.',
+    final_confirmation: 'Ostateczne potwierdzenie',
+    about_to_start_deletion: 'Zaraz rozpoczniesz proces usuwania i tej operacji nie można cofnąć.',
+    permanently_delete: 'Usuń na stałe',
   },
   set: 'Ustaw',
   change: 'Zmień',

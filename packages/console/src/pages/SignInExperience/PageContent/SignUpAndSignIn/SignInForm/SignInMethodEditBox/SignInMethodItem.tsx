@@ -4,9 +4,9 @@ import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
-import Draggable from '@/assets/icons/draggable.svg';
-import Minus from '@/assets/icons/minus.svg';
-import SwitchArrowIcon from '@/assets/icons/switch-arrow.svg';
+import Draggable from '@/assets/icons/draggable.svg?react';
+import Minus from '@/assets/icons/minus.svg?react';
+import SwitchArrowIcon from '@/assets/icons/switch-arrow.svg?react';
 import Checkbox from '@/ds-components/Checkbox';
 import IconButton from '@/ds-components/IconButton';
 import { Tooltip } from '@/ds-components/Tip';
@@ -15,7 +15,7 @@ import type { SignInMethod } from '@/pages/SignInExperience/types';
 import { signInIdentifierPhrase } from '../../../constants';
 import ConnectorSetupWarning from '../../components/ConnectorSetupWarning';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly signInMethod: SignInMethod;

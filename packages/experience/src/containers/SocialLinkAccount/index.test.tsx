@@ -61,7 +61,7 @@ describe('SocialLinkAccount', () => {
       </SettingsProvider>
     );
 
-    expect(queryByText('description.social_link_email')).not.toBeNull();
+    expect(queryByText('description.skip_social_linking')).not.toBeNull();
     expect(queryByText('action.link_another_email')).not.toBeNull();
   });
 
@@ -81,7 +81,7 @@ describe('SocialLinkAccount', () => {
       </SettingsProvider>
     );
 
-    expect(queryByText('description.social_link_phone')).not.toBeNull();
+    expect(queryByText('description.skip_social_linking')).not.toBeNull();
     expect(queryByText('action.link_another_phone')).not.toBeNull();
   });
 
@@ -101,7 +101,7 @@ describe('SocialLinkAccount', () => {
       </SettingsProvider>
     );
 
-    expect(queryByText('description.social_link_email_or_phone')).not.toBeNull();
+    expect(queryByText('description.skip_social_linking')).not.toBeNull();
     expect(queryByText('action.link_another_email_or_phone')).not.toBeNull();
   });
 

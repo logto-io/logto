@@ -1,5 +1,83 @@
 # Change Log
 
+## 1.19.0
+
+### Minor Changes
+
+- 6477c6dee: add `custom_data` to applications
+
+  Introduce a new property `custom_data` to the `Application` schema. This property is an arbitrary object that can be used to store custom data for an application.
+
+  Added a new API to update the custom data of an application:
+
+  - `PATCH /applications/:applicationId/custom-data`
+
+- d203c8d2f: support experience data server-side rendering
+
+  Logto now injects the sign-in experience settings and phrases into the `index.html` file for better first-screen performance. The experience app will still fetch the settings and phrases from the server if:
+
+  - The server didn't inject the settings and phrases.
+  - The parameters in the URL are different from server-rendered data.
+
+- b188bb161: support multiple app secrets with expiration
+
+  Now secure apps (machine-to-machine, traditional web, Protected) can have multiple app secrets with expiration. This allows for secret rotation and provides an even safer experience.
+
+  To manage your application secrets, go to Logto Console -> Applications -> Application Details -> Endpoints & Credentials.
+
+  We've also added a set of Management APIs (`/api/applications/{id}/secrets`) for this purpose.
+
+  > [!Important]
+  > You can still use existing app secrets for client authentication, but it is recommended to delete the old ones and create new secrets with expiration for enhanced security.
+
+- 62f5e5e0c: support dark favicon
+
+  The favicon for the dark theme now can be set in the sign-in experience branding settings.
+
+- d56bc2f73: add support for new password digest algorithm argon2d and argon2id
+
+  In `POST /users`, the `passwordAlgorithm` field now accepts `Argon2d` and `Argon2id`.
+
+  Users with those algorithms will be migrated to `Argon2i` upon succussful sign in.
+
+- 510f681fa: use tsup for building
+
+  We've updated some of the packages to use `tsup` for building. This will make the build process faster, and should not affect the functionality of the packages.
+
+  Use minor version bump to catch your attention.
+
+### Patch Changes
+
+- 3a839f6d6: support organization logo and sign-in experience override
+
+  Now it's able to set light and dark logos for organizations. You can upload the logos in the organization settings page.
+
+  Also, it's possible to override the sign-in experience logo from an organization. Simply add the `organization_id` parameter to the authentication request. In most Logto SDKs, it can be done by using the `extraParams` field in the `signIn` method.
+
+  For example, in the JavaScript SDK:
+
+  ```ts
+  import LogtoClient from "@logto/client";
+
+  const logtoClient = new LogtoClient(/* your configuration */);
+
+  logtoClient.signIn({
+    redirectUri: "https://your-app.com/callback",
+    extraParams: {
+      organization_id: "<organization-id>",
+    },
+  });
+  ```
+
+  The value `<organization-id>` can be found in the organization settings page.
+
+  If you could not find the `extraParams` field in the SDK you are using, please let us know.
+
+- Updated dependencies [3a839f6d6]
+- Updated dependencies [b91ec0cd6]
+- Updated dependencies [b188bb161]
+  - @logto/phrases@1.13.0
+
 ## 1.18.0
 
 ### Minor Changes

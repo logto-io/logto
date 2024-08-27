@@ -1,5 +1,6 @@
 const demo_app = {
   title: "Hai effettuato l'accesso anteprima live con successo!",
+  subtitle: 'Ecco le informazioni sul tuo utente:',
   username: 'Nome utente: ',
   user_id: 'ID utente: ',
   sign_out: "Esci dall'anteprima live",

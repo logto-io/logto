@@ -7,7 +7,7 @@ import type Queries from '#src/tenants/Queries.js';
 
 import * as clientCredentials from './client-credentials.js';
 import * as refreshToken from './refresh-token.js';
-import * as tokenExchange from './token-exchange.js';
+import * as tokenExchange from './token-exchange/index.js';
 
 export const registerGrants = (oidc: Provider, envSet: EnvSet, queries: Queries) => {
   const {

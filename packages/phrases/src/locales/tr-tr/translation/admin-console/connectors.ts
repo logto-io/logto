@@ -45,15 +45,8 @@ const connectors = {
     name_placeholder: 'Sosyal oturum açma düğmesi için ad girin',
     name_tip:
       'Bağlayıcı düğmesinin adı "{{name}} ile devam et" olarak görüntülenecektir. İsimlendirmenin uzunluğuna dikkat edin, çok uzun olursa bir sorun oluşabilir.',
-    logo: 'Sosyal oturum açma düğmesi için logo URL',
-    logo_placeholder: 'https://your.cdn.domain/logo.png',
-    logo_tip:
-      'Logo resmi bağlantısı düğmede görüntülenecektir. Herkese açık bir bağlantı alın ve bağlantıyı buraya yapıştırın.',
-    logo_dark: 'Sosyal oturum açma düğmesi için logo URL (Karanlık mod)',
-    logo_dark_placeholder: 'https://your.cdn.domain/logo.png',
-    logo_dark_tip: 'Karanlık modu etkinleştikten sonra bağlayıcı logonuzu ayarlayın.',
-    logo_dark_collapse: 'Daralt',
-    logo_dark_show: 'Karanlık mod logu ayarını göster',
+    connector_logo: 'Bağlayıcı logosu',
+    connector_logo_tip: 'Logo, bağlayıcı oturum açma düğmesinde görüntülenecektir.',
     target: 'Kimlik sağlayıcısı adı',
     target_placeholder: 'Bağlayıcı kimlik sağlayıcısı adını girin',
     target_tip:

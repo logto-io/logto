@@ -42,14 +42,19 @@ export const createUsersRolesQueries = (pool: CommonQueryMethods) => {
       ${conditionalSql(limit, (value) => sql`limit ${value}`)}
     `);
 
-  const insertUsersRoles = async (usersRoles: CreateUsersRole[]) =>
-    pool.query(sql`
+  const insertUsersRoles = async (usersRoles: CreateUsersRole[]) => {
+    if (usersRoles.length === 0) {
+      return;
+    }
+
+    return pool.query(sql`
       insert into ${table} (${fields.id}, ${fields.userId}, ${fields.roleId}) values
       ${sql.join(
         usersRoles.map(({ id, userId, roleId }) => sql`(${id}, ${userId}, ${roleId})`),
         sql`, `
       )}
     `);
+  };
 
   const deleteUsersRolesByUserIdAndRoleId = async (userId: string, roleId: string) => {
     const { rowCount } = await pool.query(sql`

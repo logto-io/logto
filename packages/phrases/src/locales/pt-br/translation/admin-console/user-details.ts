@@ -34,9 +34,13 @@ const user_details = {
   field_custom_data: 'Dados personalizados',
   field_custom_data_tip:
     'Informações adicionais do usuário não listadas nas propriedades de usuário predefinidas, como cor e idioma preferidos do usuário.',
+  field_profile: 'Perfil',
+  field_profile_tip:
+    'Declarações OpenID Connect padrão adicionais que não estão incluídas nas propriedades do usuário. Observe que todas as propriedades desconhecidas serão removidas. Por favor, consulte a <a>referência das propriedades de perfil</a> para mais informações.',
   field_connectors: 'Conectores de login sociais',
   field_sso_connectors: 'Conexões empresariais',
   custom_data_invalid: 'Os dados personalizados devem ser um objeto JSON válido',
+  profile_invalid: 'O perfil deve ser um objeto JSON válido',
   connectors: {
     connectors: 'Conectores',
     user_id: 'ID do usuário',
@@ -76,15 +80,18 @@ const user_details = {
   roles: {
     name_column: 'Papel de usuário',
     description_column: 'Descrição',
+    assign_button: 'Atribuir papéis',
     delete_description:
       'Esta ação removerá esta função deste usuário. A função em si ainda existirá, mas não estará mais associada a este usuário.',
     deleted: '{{name}} foi removido com sucesso deste usuário.',
+    assign_title: 'Atribuir papéis a {{name}}',
     assign_subtitle:
       'Encontre papéis de usuário apropriados buscando pelo nome, descrição ou ID do papel.',
     assign_role_field: 'Atribuir funções',
     role_search_placeholder: 'Pesquisar por nome de função',
     added_text: '{{value, number}} adicionado(s)',
     assigned_user_count: '{{value, number}} usuários',
+    confirm_assign: 'Atribuir papéis',
     role_assigned: 'Função(ões) atribuída(s) com sucesso',
     search: 'Pesquisar por nome de função, descrição ou ID',
     empty: 'Nenhuma função disponível',

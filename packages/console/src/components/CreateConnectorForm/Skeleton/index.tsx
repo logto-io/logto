@@ -1,9 +1,9 @@
 import classNames from 'classnames';
 
-import * as radioStyles from '../ConnectorRadioGroup/ConnectorRadio/index.module.scss';
-import * as radioGroupStyles from '../ConnectorRadioGroup/index.module.scss';
+import radioStyles from '../ConnectorRadioGroup/ConnectorRadio/index.module.scss';
+import radioGroupStyles from '../ConnectorRadioGroup/index.module.scss';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly numberOfLoadingConnectors?: number;

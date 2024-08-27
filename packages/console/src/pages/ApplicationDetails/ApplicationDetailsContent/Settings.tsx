@@ -6,17 +6,20 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
 import MultiTextInputField from '@/components/MultiTextInputField';
+import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
 import type { MultiTextInputRule } from '@/ds-components/MultiTextInput/types';
 import {
-  createValidatorForRhf,
   convertRhfErrorMessage,
+  createValidatorForRhf,
 } from '@/ds-components/MultiTextInput/utils';
 import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
+import { isJsonObject } from '@/utils/json';
 
 import ProtectedAppSettings from './ProtectedAppSettings';
+import { type ApplicationForm } from './utils';
 
 type Props = {
   readonly data: Application;
@@ -29,7 +32,7 @@ function Settings({ data }: Props) {
     control,
     register,
     formState: { errors },
-  } = useFormContext<Application>();
+  } = useFormContext<ApplicationForm>();
 
   const { type: applicationType } = data;
 
@@ -161,6 +164,28 @@ function Settings({ data }: Props) {
           )}
         />
       )}
+      <Controller
+        name="customData"
+        control={control}
+        defaultValue="{}"
+        rules={{
+          validate: (value) =>
+            isJsonObject(value ?? '') ? true : t('application_details.custom_data_invalid'),
+        }}
+        render={({ field: { value, onChange } }) => (
+          <FormField
+            title="application_details.field_custom_data"
+            tip={t('application_details.field_custom_data_tip')}
+          >
+            <CodeEditor
+              language="json"
+              value={value}
+              error={errors.customData?.message}
+              onChange={onChange}
+            />
+          </FormField>
+        )}
+      />
     </FormCard>
   );
 }

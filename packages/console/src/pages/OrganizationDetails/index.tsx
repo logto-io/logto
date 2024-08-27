@@ -9,13 +9,11 @@ import { useTranslation } from 'react-i18next';
 import { Outlet, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Delete from '@/assets/icons/delete.svg';
-import File from '@/assets/icons/file.svg';
-import OrganizationIcon from '@/assets/icons/organization-preview.svg';
-import AppError from '@/components/AppError';
+import Delete from '@/assets/icons/delete.svg?react';
+import File from '@/assets/icons/file.svg?react';
+import OrganizationIcon from '@/assets/icons/organization-preview.svg?react';
 import DetailsPage from '@/components/DetailsPage';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
-import Skeleton from '@/components/DetailsPage/Skeleton';
 import Drawer from '@/components/Drawer';
 import PageMeta from '@/components/PageMeta';
 import ThemedIcon from '@/components/ThemedIcon';
@@ -26,7 +24,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import Introduction from '../Organizations/Introduction';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import { OrganizationDetailsTabs, type OrganizationDetailsOutletContext } from './types';
 
 const pathname = '/organizations';
@@ -70,14 +68,19 @@ function OrganizationDetails() {
     (!jitEmailDomains.data && !jitEmailDomains.error) ||
     (!jitRoles.data && !jitRoles.error) ||
     (!jitSsoConnectors.data && !jitSsoConnectors.error);
+
   const error =
     organization.error ?? jitEmailDomains.error ?? jitRoles.error ?? jitSsoConnectors.error;
 
   return (
-    <DetailsPage backLink={pathname} backLinkTitle="organizations.title" className={styles.page}>
+    <DetailsPage
+      backLink={pathname}
+      backLinkTitle="organizations.title"
+      className={styles.page}
+      isLoading={isLoading}
+      error={error}
+    >
       <PageMeta titleKey="organization_details.page_title" />
-      {isLoading && <Skeleton />}
-      {error && <AppError errorCode={error.body?.code} errorMessage={error.body?.message} />}
       {id &&
         organization.data &&
         jitEmailDomains.data &&

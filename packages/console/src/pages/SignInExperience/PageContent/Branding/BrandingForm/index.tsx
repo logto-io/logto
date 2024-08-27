@@ -1,28 +1,23 @@
 import { generateDarkColor } from '@logto/core-kit';
+import { Theme } from '@logto/schemas';
 import { useMemo, useCallback, useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import LogoAndFavicon from '@/components/ImageInputs/LogoAndFavicon';
 import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import ColorPicker from '@/ds-components/ColorPicker';
-import DangerousRaw from '@/ds-components/DangerousRaw';
 import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
-import TextInput from '@/ds-components/TextInput';
-import ImageUploaderField from '@/ds-components/Uploader/ImageUploaderField';
-import useUserAssetsService from '@/hooks/use-user-assets-service';
-import { uriValidator } from '@/utils/validator';
 
 import type { SignInExperienceForm } from '../../../types';
 import FormSectionTitle from '../../components/FormSectionTitle';
 
-import LogoAndFaviconUploader from './LogoAndFaviconUploader';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 function BrandingForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { isReady: isUserAssetsServiceReady } = useUserAssetsService();
   const {
     watch,
     register,
@@ -40,7 +35,7 @@ function BrandingForm() {
   }, [primaryColor]);
 
   const handleResetColor = useCallback(() => {
-    setValue('color.darkPrimaryColor', calculatedDarkPrimaryColor);
+    setValue('color.darkPrimaryColor', calculatedDarkPrimaryColor, { shouldDirty: true });
   }, [calculatedDarkPrimaryColor, setValue]);
 
   useEffect(() => {
@@ -61,48 +56,22 @@ function BrandingForm() {
         <Controller
           name="color.primaryColor"
           control={control}
-          render={({ field: { onChange, value } }) => (
-            <ColorPicker value={value} onChange={onChange} />
+          render={({ field: { name, onChange, value } }) => (
+            <ColorPicker name={name} value={value} onChange={onChange} />
           )}
         />
       </FormField>
-      {isUserAssetsServiceReady ? (
-        <FormField
-          title={
-            <DangerousRaw>
-              {t('sign_in_exp.branding.logo_image')}
-              {' & '}
-              {t('sign_in_exp.branding.favicon')}
-            </DangerousRaw>
-          }
-          headlineSpacing="large"
-        >
-          <LogoAndFaviconUploader />
-        </FormField>
-      ) : (
-        <>
-          <FormField title="sign_in_exp.branding.logo_image_url">
-            <TextInput
-              {...register('branding.logoUrl', {
-                validate: (value) =>
-                  !value || uriValidator(value) || t('errors.invalid_uri_format'),
-              })}
-              error={errors.branding?.logoUrl?.message}
-              placeholder={t('sign_in_exp.branding.logo_image_url_placeholder')}
-            />
-          </FormField>
-          <FormField title="sign_in_exp.branding.favicon">
-            <TextInput
-              {...register('branding.favicon', {
-                validate: (value) =>
-                  !value || uriValidator(value) || t('errors.invalid_uri_format'),
-              })}
-              error={errors.branding?.favicon?.message}
-              placeholder={t('sign_in_exp.branding.favicon')}
-            />
-          </FormField>
-        </>
-      )}
+      <LogoAndFavicon
+        control={control}
+        register={register}
+        theme={Theme.Light}
+        type="company_logo"
+        logo={{ name: 'branding.logoUrl', error: errors.branding?.logoUrl }}
+        favicon={{
+          name: 'branding.favicon',
+          error: errors.branding?.favicon,
+        }}
+      />
       <FormField title="sign_in_exp.color.dark_mode">
         <Switch
           label={t('sign_in_exp.color.dark_mode_description')}
@@ -131,33 +100,17 @@ function BrandingForm() {
               </div>
             )}
           </FormField>
-          {isUserAssetsServiceReady ? (
-            <FormField title="sign_in_exp.branding.dark_logo_image" headlineSpacing="large">
-              <Controller
-                name="branding.darkLogoUrl"
-                control={control}
-                render={({ field: { onChange, value, name } }) => (
-                  <ImageUploaderField
-                    name={name}
-                    value={value ?? ''}
-                    actionDescription={t('sign_in_exp.branding.dark_logo_image')}
-                    onChange={onChange}
-                  />
-                )}
-              />
-            </FormField>
-          ) : (
-            <FormField title="sign_in_exp.branding.dark_logo_image_url">
-              <TextInput
-                {...register('branding.darkLogoUrl', {
-                  validate: (value) =>
-                    !value || uriValidator(value) || t('errors.invalid_uri_format'),
-                })}
-                error={errors.branding?.darkLogoUrl?.message}
-                placeholder={t('sign_in_exp.branding.dark_logo_image_url_placeholder')}
-              />
-            </FormField>
-          )}
+          <LogoAndFavicon
+            control={control}
+            register={register}
+            theme={Theme.Dark}
+            type="company_logo"
+            logo={{ name: 'branding.darkLogoUrl', error: errors.branding?.darkLogoUrl }}
+            favicon={{
+              name: 'branding.darkFavicon',
+              error: errors.branding?.darkFavicon,
+            }}
+          />
         </>
       )}
     </Card>

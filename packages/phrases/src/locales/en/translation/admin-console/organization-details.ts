@@ -38,6 +38,11 @@ const organization_details = {
   custom_data_tip:
     'Custom data is a JSON object that can be used to store additional data associated with the organization.',
   invalid_json_object: 'Invalid JSON object.',
+  branding: {
+    logo: 'Organization logos',
+    logo_tooltip:
+      'You can pass the organization ID to display this logo in the sign-in experience; the dark version of the logo is needed if dark mode is enabled in the omni sign-in experience settings. <a>Learn more</a>',
+  },
   jit: {
     title: 'Just-in-time provisioning',
     description:

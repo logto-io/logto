@@ -4,7 +4,7 @@ import { useCallback, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import FormCard, { FormCardSkeleton } from '@/components/FormCard';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import CardTitle from '@/ds-components/CardTitle';
@@ -13,15 +13,23 @@ import FormField from '@/ds-components/FormField';
 import CreateButton from './CreateButton';
 import CustomizerItem from './CustomizerItem';
 import DeleteConfirmModal from './DeleteConfirmModal';
-import * as styles from './index.module.scss';
+import UpsellNotice from './UpsellNotice';
+import styles from './index.module.scss';
 import useJwtCustomizer from './use-jwt-customizer';
 
 function CustomizeJwt() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const { isDevTenant } = useContext(TenantsContext);
-  const { currentPlan } = useContext(SubscriptionDataContext);
-  const isCustomJwtEnabled = !isCloud || currentPlan.quota.customJwtEnabled;
+  const {
+    currentPlan,
+    currentSubscription: { planId },
+    currentSubscriptionQuota: { customJwtEnabled },
+  } = useContext(SubscriptionDataContext);
+  const isCustomJwtEnabled =
+    !isCloud || (isDevFeaturesEnabled ? customJwtEnabled : currentPlan.quota.customJwtEnabled);
+
+  const showPaywall = planId === ReservedPlanId.Free;
 
   const [deleteModalTokenType, setDeleteModalTokenType] = useState<LogtoJwtTokenKeyType>();
 
@@ -40,6 +48,9 @@ function CustomizeJwt() {
         subtitle="jwt_claims.description"
         className={styles.header}
       />
+      {isDevFeaturesEnabled && (
+        <UpsellNotice isVisible={showPaywall} className={styles.inlineNotice} />
+      )}
       <div className={styles.container}>
         {isLoading && (
           <>
@@ -60,7 +71,10 @@ function CustomizeJwt() {
                     onDelete={onDeleteHandler}
                   />
                 ) : (
-                  <CreateButton tokenType={LogtoJwtTokenKeyType.AccessToken} />
+                  <CreateButton
+                    isDisabled={showPaywall}
+                    tokenType={LogtoJwtTokenKeyType.AccessToken}
+                  />
                 )}
               </FormField>
             </FormCard>
@@ -75,7 +89,10 @@ function CustomizeJwt() {
                     onDelete={onDeleteHandler}
                   />
                 ) : (
-                  <CreateButton tokenType={LogtoJwtTokenKeyType.ClientCredentials} />
+                  <CreateButton
+                    isDisabled={showPaywall}
+                    tokenType={LogtoJwtTokenKeyType.ClientCredentials}
+                  />
                 )}
               </FormField>
             </FormCard>
