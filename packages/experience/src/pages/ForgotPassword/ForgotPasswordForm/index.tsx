@@ -19,7 +19,6 @@ type Props = {
   // eslint-disable-next-line react/boolean-prop-naming
   readonly autoFocus?: boolean;
   readonly defaultValue?: string;
-  readonly defaultType?: VerificationCodeIdentifier;
   readonly enabledTypes: VerificationCodeIdentifier[];
 };
 
@@ -30,13 +29,7 @@ type FormState = {
   };
 };
 
-const ForgotPasswordForm = ({
-  className,
-  autoFocus,
-  defaultType,
-  defaultValue = '',
-  enabledTypes,
-}: Props) => {
+const ForgotPasswordForm = ({ className, autoFocus, defaultValue = '', enabledTypes }: Props) => {
   const { t } = useTranslation();
   const { errorMessage, clearErrorMessage, onSubmit } = useSendVerificationCode(
     UserFlow.ForgotPassword
@@ -52,7 +45,6 @@ const ForgotPasswordForm = ({
     reValidateMode: 'onBlur',
     defaultValues: {
       identifier: {
-        type: defaultType,
         value: defaultValue,
       },
     },
@@ -106,13 +98,12 @@ const ForgotPasswordForm = ({
             return true;
           },
         }}
-        render={({ field }) => (
+        render={({ field, formState: { defaultValues } }) => (
           <SmartInputField
             autoFocus={autoFocus}
             className={styles.inputField}
             {...field}
-            defaultType={defaultType}
-            defaultValue={defaultValue}
+            defaultValue={defaultValues?.identifier?.value}
             isDanger={!!errors.identifier}
             errorMessage={errors.identifier?.message}
             enabledTypes={enabledTypes}

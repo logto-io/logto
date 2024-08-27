@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Navigate } from 'react-router-dom';
 
 import FocusedAuthPageLayout from '@/Layout/FocusedAuthPageLayout';
-import useLoginHint from '@/hooks/use-login-hint';
+import usePrefilledIdentifier from '@/hooks/use-prefilled-identifier';
 import { identifierInputDescriptionMap } from '@/utils/form';
 
 import ForgotPasswordForm from '../ForgotPassword/ForgotPasswordForm';
@@ -33,7 +33,10 @@ import { useResetPasswordMethods } from './use-reset-password-methods';
 const ResetPasswordLanding = () => {
   const { t } = useTranslation();
   const enabledMethods = useResetPasswordMethods();
-  const loginHint = useLoginHint();
+  const { value: prefilledValue } = usePrefilledIdentifier({
+    enabledIdentifiers: enabledMethods,
+    isForgotPassword: true,
+  });
 
   // Fallback to sign-in page
   if (enabledMethods.length === 0) {
@@ -54,7 +57,7 @@ const ResetPasswordLanding = () => {
         text: 'description.back_to_sign_in',
       }}
     >
-      <ForgotPasswordForm autoFocus defaultValue={loginHint} enabledTypes={enabledMethods} />
+      <ForgotPasswordForm autoFocus defaultValue={prefilledValue} enabledTypes={enabledMethods} />
     </FocusedAuthPageLayout>
   );
 };

@@ -32,12 +32,11 @@ describe('ForgotPasswordForm', () => {
   const phone = '13911111111';
   const originalLocation = window.location;
 
-  const renderForm = (defaultType: VerificationCodeIdentifier, defaultValue?: string) =>
+  const renderForm = (defaultValue?: string) =>
     renderWithPageContext(
       <UserInteractionContextProvider>
         <ForgotPasswordForm
           enabledTypes={[SignInIdentifier.Email, SignInIdentifier.Phone]}
-          defaultType={defaultType}
           defaultValue={defaultValue}
         />
       </UserInteractionContextProvider>
@@ -57,7 +56,7 @@ describe('ForgotPasswordForm', () => {
     'identifier: %s, value: %s',
     ({ identifier, value }) => {
       test(`forgot password form render properly with default ${identifier} value ${value}`, async () => {
-        const { container, queryByText } = renderForm(identifier, value);
+        const { container, queryByText } = renderForm(value);
         const identifierInput = container.querySelector(`input[name="identifier"]`);
 
         assert(identifierInput, new Error('identifier input should not be null'));
@@ -73,7 +72,7 @@ describe('ForgotPasswordForm', () => {
       });
 
       test(`send ${identifier} verification code properly`, async () => {
-        const { container, getByText } = renderForm(identifier, value);
+        const { container, getByText } = renderForm(value);
         const identifierInput = container.querySelector(`input[name="identifier"]`);
 
         assert(identifierInput, new Error('identifier input should not be null'));

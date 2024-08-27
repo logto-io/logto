@@ -41,7 +41,7 @@ describe('password policy', () => {
 
     // Open the demo app and navigate to the register page
     await experience.startWith(demoAppUrl, 'register');
-    await experience.toFillInput('id', username, { submit: true });
+    await experience.toFillInput('identifier', username, { submit: true });
 
     // Password tests
     await experience.waitForPathname('register/password');
@@ -69,7 +69,7 @@ describe('password policy', () => {
     await experience.startWith(demoAppUrl, 'register');
 
     // Complete verification code flow
-    await experience.toFillInput('id', email, { submit: true });
+    await experience.toFillInput('identifier', email, { submit: true });
     await experience.toCompleteVerification('register', 'Email');
 
     await experience.waitForPathname('continue/password');

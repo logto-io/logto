@@ -46,23 +46,27 @@ const digitsRegex = /^\d*$/;
 type DetectIdentifierTypeParams = {
   value: string;
   enabledTypeSet: Set<IdentifierInputType>;
-  defaultType?: IdentifierInputType;
   currentType?: IdentifierInputType;
 };
 
 export const detectIdentifierType = ({
   value,
   enabledTypeSet,
-  defaultType,
   currentType,
 }: DetectIdentifierTypeParams) => {
-  // Reset InputType
   if (!value && enabledTypeSet.size > 1) {
+    /**
+     * Multiple types are enabled, so we cannot detect the type without the value.
+     * Return `undefined` since the type is not determined.
+     */
     return;
   }
 
   if (enabledTypeSet.size === 1) {
-    return defaultType;
+    /**
+     * Only one type enabled, so we limit the type to the default type.
+     */
+    return Array.from(enabledTypeSet)[0];
   }
 
   const hasAtSymbol = value.includes('@');

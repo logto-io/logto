@@ -58,7 +58,7 @@ describe('MFA - TOTP', () => {
 
       const experience = new ExpectTotpExperience(await browser.newPage());
       await experience.startWith(demoAppUrl, 'register');
-      await experience.toFillInput('id', context.username, { submit: true });
+      await experience.toFillInput('identifier', context.username, { submit: true });
 
       experience.toBeAt('register/password');
       await experience.toFillNewPasswords(context.userPassword);

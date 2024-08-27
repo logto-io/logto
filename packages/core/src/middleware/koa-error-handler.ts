@@ -1,5 +1,6 @@
 import { appInsights } from '@logto/app-insights/node';
 import type { RequestErrorBody } from '@logto/schemas';
+import { isHttpError } from 'http-errors';
 import type { Middleware } from 'koa';
 import { HttpError } from 'koa';
 
@@ -39,7 +40,7 @@ export default function koaErrorHandler<StateT, ContextT, BodyT>(): Middleware<
       }
 
       // Koa will handle `HttpError` with a built-in manner.
-      if (error instanceof HttpError) {
+      if (error instanceof HttpError || isHttpError(error)) {
         return;
       }
 
