@@ -1,5 +1,6 @@
 import type { ConnectorMetadata } from '@logto/connector-kit';
-import { ConnectorPlatform, ConnectorConfigFormItemType } from '@logto/connector-kit';
+import { ConnectorPlatform } from '@logto/connector-kit';
+import { clientIdFormItem, clientSecretFormItem, scopeFormItem } from '@logto/connector-oauth';
 
 export const authorizationEndpoint = 'https://www.patreon.com/oauth2/authorize';
 export const scope = 'identity identity[email]';
@@ -23,26 +24,10 @@ export const defaultMetadata: ConnectorMetadata = {
   },
   readme: './README.md',
   formItems: [
+    clientIdFormItem,
+    clientSecretFormItem,
     {
-      key: 'clientId',
-      type: ConnectorConfigFormItemType.Text,
-      label: 'Client ID',
-      required: true,
-      placeholder: '<client-id>',
-    },
-    {
-      key: 'clientSecret',
-      type: ConnectorConfigFormItemType.Text,
-      label: 'Client Secret',
-      required: true,
-      placeholder: '<client-secret>',
-    },
-    {
-      key: 'scope',
-      type: ConnectorConfigFormItemType.Text,
-      label: 'Scope',
-      required: false,
-      placeholder: '<scope>',
+      ...scopeFormItem,
       description:
         "The `scope` determines permissions granted by the user's authorization. If you are not sure what to enter, do not worry, just leave it blank.",
     },

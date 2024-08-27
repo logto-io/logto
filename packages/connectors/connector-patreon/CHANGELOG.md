@@ -8,10 +8,6 @@
 
   This release introduces the Logto connector for Patreon, enabling social sign-in using Patreon accounts. It supports OAuth 2.0 authentication flow, fetching user information, and handling errors gracefully.
 
-- Base code adapted from the Hugging Face connector.
-
-  The Patreon connector's initial version is largely based on the Hugging Face connector developed by Silverhand Inc. and the Logto team. Many implementation patterns, error handling strategies, and configuration options were inspired by the Hugging Face connector, leveraging OAuth 2.0 which saved time and complexity. Acknowledgments to @xiaoyijun for pointing it out and to the original creators at Silverhand Inc. for their foundational work.
-
 ### Features
 
 - **OAuth 2.0 Authentication**: Support for OAuth 2.0 authentication flow with Patreon.
