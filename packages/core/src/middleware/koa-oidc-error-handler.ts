@@ -120,13 +120,15 @@ export default function koaOidcErrorHandler<StateT, ContextT>(): Middleware<Stat
         // For some third-party connectors, like Google, `code` is considered as a reserved OIDC key,
         // can't be used as the error code key in the error response body.
         // We add `error_code_key` to the query string to customize the error key in the response body.
-        const errorKeyQuery = z
+        const errorKeyQueryResult = z
           .object({
             error_code_key: z.string().optional(),
           })
-          .parse(ctx.query);
+          .safeParse(ctx.query);
 
-        const errorKey = errorKeyQuery.error_code_key ?? 'code';
+        const errorKey = errorKeyQueryResult.success
+          ? errorKeyQueryResult.data.error_code_key ?? 'code'
+          : 'code';
 
         ctx.body = {
           [errorKey]: code,
