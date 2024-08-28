@@ -7,8 +7,11 @@ import {
 import { act, fireEvent, waitFor } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import { identifyWithVerificationCode, updateProfileWithVerificationCode } from '@/apis/experience';
-import { resendVerificationCodeApi } from '@/apis/utils';
+import {
+  identifyWithVerificationCode,
+  updateProfileWithVerificationCode,
+  sendVerificationCode,
+} from '@/apis/experience';
 import { setupI18nForTesting } from '@/jest.setup';
 import { UserFlow } from '@/types';
 
@@ -29,11 +32,12 @@ jest.mock('react-router-dom', () => ({
 }));
 
 jest.mock('@/apis/utils', () => ({
+  ...jest.requireActual('@/apis/utils'),
   sendVerificationCodeApi: jest.fn(),
-  resendVerificationCodeApi: jest.fn(),
 }));
 
 jest.mock('@/apis/experience', () => ({
+  sendVerificationCode: jest.fn(),
   identifyWithVerificationCode: jest.fn().mockResolvedValue({ redirectTo: '/redirect' }),
   updateProfileWithVerificationCode: jest.fn().mockResolvedValue({ redirectTo: '/redirect' }),
 }));
@@ -123,7 +127,7 @@ describe('<VerificationCode />', () => {
       fireEvent.click(resendButton);
     });
 
-    expect(resendVerificationCodeApi).toBeCalledWith(UserFlow.SignIn, emailIdentifier);
+    expect(sendVerificationCode).toBeCalledWith(InteractionEvent.SignIn, emailIdentifier);
 
     // Reset i18n
     await setupI18nForTesting();
