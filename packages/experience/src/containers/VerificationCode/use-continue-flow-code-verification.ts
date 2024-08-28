@@ -42,7 +42,7 @@ const useContinueFlowCodeVerification = (
   const showIdentifierErrorAlert = useIdentifierErrorAlert();
   const showLinkSocialConfirmModal = useLinkSocialConfirmModal();
 
-  const identifierExistErrorHandler = useCallback(async () => {
+  const identifierExistsErrorHandler = useCallback(async () => {
     const linkSocial = searchParameters.get(SearchParameters.LinkSocial);
     const socialVerificationId = verificationIdsMap[VerificationType.Social];
 
@@ -65,12 +65,12 @@ const useContinueFlowCodeVerification = (
 
   const verifyVerificationCodeErrorHandlers: ErrorHandlers = useMemo(
     () => ({
-      'user.phone_already_in_use': identifierExistErrorHandler,
-      'user.email_already_in_use': identifierExistErrorHandler,
+      'user.phone_already_in_use': identifierExistsErrorHandler,
+      'user.email_already_in_use': identifierExistsErrorHandler,
       ...preSignInErrorHandler,
       ...generalVerificationCodeErrorHandlers,
     }),
-    [preSignInErrorHandler, generalVerificationCodeErrorHandlers, identifierExistErrorHandler]
+    [preSignInErrorHandler, generalVerificationCodeErrorHandlers, identifierExistsErrorHandler]
   );
 
   const onSubmit = useCallback(

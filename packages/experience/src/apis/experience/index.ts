@@ -15,7 +15,7 @@ import {
   identifyUser,
   submitInteraction,
   updateInteractionEvent,
-  _updateProfile,
+  updateProfile,
   identifyAndSubmitInteraction,
 } from './interaction';
 
@@ -55,11 +55,11 @@ export const signInWithPasswordIdentifier = async (payload: PasswordVerification
 export const registerWithUsername = async (username: string) => {
   await initInteraction(InteractionEvent.Register);
 
-  return _updateProfile({ type: SignInIdentifier.Username, value: username });
+  return updateProfile({ type: SignInIdentifier.Username, value: username });
 };
 
 export const continueRegisterWithPassword = async (password: string) => {
-  await _updateProfile({ type: 'password', value: password });
+  await updateProfile({ type: 'password', value: password });
 
   return identifyAndSubmitInteraction();
 };
@@ -108,7 +108,7 @@ export const updateProfileWithVerificationCode = async (
     identifier: { type },
   } = json;
 
-  await _updateProfile({
+  await updateProfile({
     type,
     verificationId,
   });
@@ -125,11 +125,11 @@ type UpdateProfilePayload = {
   value: string;
 };
 
-export const updateProfile = async (
+export const fulfillProfile = async (
   payload: UpdateProfilePayload,
   interactionEvent: ContinueFlowInteractionEvent
 ) => {
-  await _updateProfile(payload);
+  await updateProfile(payload);
 
   if (interactionEvent === InteractionEvent.Register) {
     await identifyUser();

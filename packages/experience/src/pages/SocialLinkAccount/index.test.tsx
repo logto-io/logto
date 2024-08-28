@@ -19,7 +19,7 @@ jest.mock('react-router-dom', () => ({
 
 const verificationIdsMap = { [VerificationType.Social]: 'foo' };
 
-describe('SocialRegister', () => {
+describe('SocialLinkAccount', () => {
   const { result } = renderHook(() => useSessionStorage());
   const { set } = result.current;
 

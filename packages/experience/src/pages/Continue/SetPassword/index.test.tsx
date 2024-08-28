@@ -4,7 +4,7 @@ import { act, waitFor, fireEvent } from '@testing-library/react';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { mockSignInExperienceSettings } from '@/__mocks__/logto';
-import { updateProfile } from '@/apis/experience';
+import { fulfillProfile } from '@/apis/experience';
 
 import SetPassword from '.';
 
@@ -16,7 +16,7 @@ jest.mock('react-router-dom', () => ({
 }));
 
 jest.mock('@/apis/experience', () => ({
-  updateProfile: jest.fn(async () => ({ redirectTo: '/' })),
+  fulfillProfile: jest.fn(async () => ({ redirectTo: '/' })),
 }));
 
 describe('SetPassword', () => {
@@ -116,7 +116,7 @@ describe('SetPassword', () => {
     });
 
     await waitFor(() => {
-      expect(updateProfile).toBeCalledWith(
+      expect(fulfillProfile).toBeCalledWith(
         {
           type: 'password',
           value: '1234!@#$',

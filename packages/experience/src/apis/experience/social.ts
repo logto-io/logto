@@ -1,5 +1,3 @@
-// Social and SSO APIs
-
 import { InteractionEvent, type SocialVerificationCallbackPayload } from '@logto/schemas';
 
 import api from '../api';
@@ -11,7 +9,7 @@ import {
   updateInteractionEvent,
   identifyUser,
   submitInteraction,
-  _updateProfile,
+  updateProfile,
 } from './interaction';
 
 export const getSocialAuthorizationUrl = async (
@@ -91,6 +89,6 @@ export const signInAndLinkWithSocial = async (
 ) => {
   await updateInteractionEvent(InteractionEvent.SignIn);
   await identifyUser({ verificationId });
-  await _updateProfile({ type: 'social', verificationId: socialVerificationid });
+  await updateProfile({ type: 'social', verificationId: socialVerificationid });
   return submitInteraction();
 };

@@ -50,7 +50,7 @@ const SocialLinkAccount = () => {
   }
 
   if (!verificationId) {
-    return <ErrorPage title="error.invalid_session" rawMessage="Verification id not found" />;
+    return <ErrorPage title="error.invalid_session" rawMessage="Verification ID not found" />;
   }
 
   const { relatedUser } = state;

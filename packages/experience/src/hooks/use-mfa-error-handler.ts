@@ -9,12 +9,13 @@ import { type MfaFlowState, mfaErrorDataGuard } from '@/types/guard';
 import { isNativeWebview } from '@/utils/native-sdk';
 
 import type { ErrorHandlers } from './use-error-handler';
-import useBackupCodeBinding from './use-start-backup-code-binding';
+import useStartBackupCodeBinding from './use-start-backup-code-binding';
 import useStartTotpBinding from './use-start-totp-binding';
 import useStartWebAuthnProcessing from './use-start-webauthn-processing';
 import useToast from './use-toast';
 
 export type Options = {
+  /** Whether to replace the current page in the history stack. */
   replace?: boolean;
 };
 
@@ -24,7 +25,7 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
   const { setToast } = useToast();
   const startTotpBinding = useStartTotpBinding({ replace });
   const startWebAuthnProcessing = useStartWebAuthnProcessing({ replace });
-  const startBackupCodeBinding = useBackupCodeBinding({ replace });
+  const startBackupCodeBinding = useStartBackupCodeBinding({ replace });
 
   /**
    * Redirect the user to the corresponding MFA page.

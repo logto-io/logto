@@ -1,7 +1,7 @@
 import { SignInIdentifier } from '@logto/schemas';
 import { useCallback, useMemo, useState } from 'react';
 
-import { updateProfile } from '@/apis/experience';
+import { fulfillProfile } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
@@ -16,7 +16,7 @@ const useSetUsername = (interactionEvent: ContinueFlowInteractionEvent) => {
     setErrorMessage('');
   }, []);
 
-  const asyncAddProfile = useApi(updateProfile);
+  const asyncAddProfile = useApi(fulfillProfile);
   const handleError = useErrorHandler();
   const redirectTo = useGlobalRedirectTo();
 

@@ -11,9 +11,6 @@ import api from '../api';
 import { experienceApiRoutes } from './const';
 import { submitInteraction } from './interaction';
 
-/**
- * Mfa APIs
- */
 const addMfa = async (type: MfaFactor, verificationId: string) =>
   api.post(`${experienceApiRoutes.mfa}`, {
     json: {
