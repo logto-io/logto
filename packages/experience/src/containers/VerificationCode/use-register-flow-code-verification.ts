@@ -52,7 +52,7 @@ const useRegisterFlowCodeVerification = (
 
   const showIdentifierErrorAlert = useIdentifierErrorAlert();
 
-  const identifierExistErrorHandler = useCallback(async () => {
+  const identifierExistsErrorHandler = useCallback(async () => {
     const { type, value } = identifier;
 
     // Should not redirect user to sign-in if is register-only mode
@@ -102,14 +102,14 @@ const useRegisterFlowCodeVerification = (
 
   const errorHandlers = useMemo<ErrorHandlers>(
     () => ({
-      'user.email_already_in_use': identifierExistErrorHandler,
-      'user.phone_already_in_use': identifierExistErrorHandler,
+      'user.email_already_in_use': identifierExistsErrorHandler,
+      'user.phone_already_in_use': identifierExistsErrorHandler,
       ...generalVerificationCodeErrorHandlers,
       ...preRegisterErrorHandler,
       callback: errorCallback,
     }),
     [
-      identifierExistErrorHandler,
+      identifierExistsErrorHandler,
       generalVerificationCodeErrorHandlers,
       preRegisterErrorHandler,
       errorCallback,

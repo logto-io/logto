@@ -59,7 +59,7 @@ const VerificationCode = () => {
   // VerificationId not found
   const verificationId = verificationIdsMap[codeVerificationTypeMap[type]];
   if (!verificationId) {
-    return <ErrorPage title="error.invalid_session" rawMessage="Verification id not found" />;
+    return <ErrorPage title="error.invalid_session" rawMessage="Verification ID not found" />;
   }
 
   return (

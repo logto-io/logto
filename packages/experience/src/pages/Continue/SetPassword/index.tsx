@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
-import { updateProfile } from '@/apis/experience';
+import { fulfillProfile } from '@/apis/experience';
 import SetPasswordForm from '@/containers/SetPassword';
 import useApi from '@/hooks/use-api';
 import { usePromiseConfirmModal } from '@/hooks/use-confirm-modal';
@@ -31,7 +31,7 @@ const SetPassword = ({ interactionEvent }: Props) => {
   const redirectTo = useGlobalRedirectTo();
 
   const checkPassword = usePasswordPolicyChecker({ setErrorMessage });
-  const addPassword = useApi(updateProfile);
+  const addPassword = useApi(fulfillProfile);
   const handleError = useErrorHandler();
 
   const passwordRejectionErrorHandler = usePasswordRejectionErrorHandler({ setErrorMessage });

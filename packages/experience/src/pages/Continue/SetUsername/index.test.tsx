@@ -3,7 +3,7 @@ import { act, waitFor, fireEvent } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import { updateProfile } from '@/apis/experience';
+import { fulfillProfile } from '@/apis/experience';
 
 import SetUsername from '.';
 
@@ -21,7 +21,7 @@ jest.mock('react-router-dom', () => ({
 }));
 
 jest.mock('@/apis/experience', () => ({
-  updateProfile: jest.fn(async () => ({ redirectTo: '/' })),
+  fulfillProfile: jest.fn(async () => ({ redirectTo: '/' })),
 }));
 
 describe('SetUsername', () => {
@@ -53,7 +53,7 @@ describe('SetUsername', () => {
     });
 
     await waitFor(() => {
-      expect(updateProfile).toBeCalledWith(
+      expect(fulfillProfile).toBeCalledWith(
         { type: SignInIdentifier.Username, value: 'username' },
         InteractionEvent.Register
       );

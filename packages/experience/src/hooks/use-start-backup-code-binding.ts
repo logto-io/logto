@@ -11,10 +11,11 @@ import useApi from './use-api';
 import useErrorHandler from './use-error-handler';
 
 type Options = {
+  /** Whether to replace the current page in the history stack. */
   replace?: boolean;
 };
 
-const useBackupCodeBinding = ({ replace }: Options = {}) => {
+const useStartBackupCodeBinding = ({ replace }: Options = {}) => {
   const navigate = useNavigate();
   const generateBackUpCodes = useApi(createBackupCode);
   const { setVerificationId } = useContext(UserInteractionContext);
@@ -43,4 +44,4 @@ const useBackupCodeBinding = ({ replace }: Options = {}) => {
   }, [generateBackUpCodes, handleError, navigate, replace, setVerificationId]);
 };
 
-export default useBackupCodeBinding;
+export default useStartBackupCodeBinding;

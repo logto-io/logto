@@ -25,7 +25,7 @@ export const identifyUser = async (payload: IdentificationApiPayload = {}) =>
 export const submitInteraction = async () =>
   api.post(`${experienceApiRoutes.submit}`).json<SubmitInteractionResponse>();
 
-export const _updateProfile = async (payload: UpdateProfileApiPayload) =>
+export const updateProfile = async (payload: UpdateProfileApiPayload) =>
   api.post(experienceApiRoutes.profile, { json: payload });
 
 export const updateInteractionEvent = async (interactionEvent: InteractionEvent) =>
