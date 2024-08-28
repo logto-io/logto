@@ -1,0 +1,6 @@
+@use '@/scss/underscore' as _;
+
+.description {
+  margin-top: _.unit(6);
+  @include _.text-hint;
+}

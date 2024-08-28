@@ -22,7 +22,7 @@ type Properties = {
 
 export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext, ResponseBodyT>({
   mountedApps,
-  packagePath = 'experience',
+  packagePath = EnvSet.values.isDevFeaturesEnabled ? 'experience' : 'experience-legacy',
   port = 5001,
   prefix = '',
   queries,

@@ -1,0 +1,53 @@
+@use '@/scss/underscore' as _;
+
+.toastContainer {
+  position: fixed;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  @include _.flex-column;
+  pointer-events: none;
+  z-index: 300;
+}
+
+.toast {
+  margin: 0 auto;
+  padding: _.unit(2) _.unit(4);
+  max-width: 295px;
+  font: var(--font-body-1);
+  color: var(--color-static-white);
+  border-radius: var(--radius);
+  background: var(--color-bg-toast);
+  text-align: center;
+  word-break: break-word;
+  pointer-events: auto;
+
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+/* stylelint-disable selector-class-pattern */
+:global {
+  .ReactModal__Content[role='toast'] {
+    opacity: 0%;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .ReactModal__Content--after-open[role='toast'] {
+    opacity: 100%;
+  }
+
+  .ReactModal__Content--before-close[role='toast'] {
+    opacity: 0%;
+  }
+}
+/* stylelint-enable selector-class-pattern */
+
+:global(body.desktop) {
+  .toast {
+    padding: _.unit(3) _.unit(4);
+    box-shadow: var(--color-shadow-2);
+  }
+}

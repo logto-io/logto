@@ -1,0 +1,11 @@
+@use '@/scss/underscore' as _;
+
+.title {
+  font: var(--font-title-3);
+}
+
+.description {
+  font: var(--font-body-2);
+  color: var(--color-type-secondary);
+  margin-top: _.unit(1);
+}

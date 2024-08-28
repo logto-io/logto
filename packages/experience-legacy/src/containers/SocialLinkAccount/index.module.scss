@@ -1,0 +1,33 @@
+@use '@/scss/underscore' as _;
+
+
+.container {
+  @include _.flex-column;
+
+  > * {
+    width: 100%;
+  }
+}
+
+.desc {
+  @include _.text-hint;
+  text-align: left;
+}
+
+.hint {
+  @include _.text-hint;
+  text-align: left;
+  margin-top: _.unit(6);
+}
+
+:global(body.mobile) {
+  .desc {
+    margin-bottom: _.unit(2);
+  }
+}
+
+:global(body.desktop) {
+  .desc {
+    margin-bottom: _.unit(4);
+  }
+}

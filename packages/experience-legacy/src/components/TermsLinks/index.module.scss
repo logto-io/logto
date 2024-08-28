@@ -1,0 +1,24 @@
+@use '@/scss/underscore' as _;
+
+
+.link {
+  display: inline;
+}
+
+.divider {
+  width: 1;
+  margin: 0 _.unit(3);
+  position: relative;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: var(--color-line-divider);
+    transform: translate(-50%, -50%);
+  }
+}

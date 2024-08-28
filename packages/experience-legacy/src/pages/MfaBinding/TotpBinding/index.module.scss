@@ -1,0 +1,12 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  @include _.flex-column;
+  gap: _.unit(6);
+  margin-bottom: _.unit(6);
+  align-items: stretch;
+}
+
+.switchLink {
+  align-self: start;
+}

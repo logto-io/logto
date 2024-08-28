@@ -1,0 +1,13 @@
+@use '@/scss/underscore' as _;
+
+.ssoLinkList {
+  @include _.flex-column;
+}
+
+.ssoLinkButton {
+  margin-bottom: _.unit(4);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}

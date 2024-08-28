@@ -1,0 +1,13 @@
+@use '@/scss/underscore' as _;
+
+.socialLinkList {
+  @include _.flex-column;
+}
+
+.socialLinkButton {
+  margin-bottom: _.unit(4);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}

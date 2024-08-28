@@ -1,0 +1,38 @@
+@use '@/scss/underscore' as _;
+
+.main,
+.otherMethods,
+.divider {
+  margin-bottom: _.unit(4);
+}
+
+.terms {
+  margin-top: _.unit(4);
+  @include _.text-hint;
+  text-align: center;
+  font: var(--font-body-3);
+}
+
+.checkbox {
+  margin-bottom: _.unit(4);
+}
+
+.checkboxForSsoOnly {
+  justify-content: center;
+}
+
+.createAccount,
+.singleSignOn {
+  text-align: center;
+  margin-bottom: _.unit(4);
+}
+
+.placeHolder {
+  flex: 1;
+}
+
+:global(body.desktop) {
+  .placeHolder {
+    flex: 0;
+  }
+}
