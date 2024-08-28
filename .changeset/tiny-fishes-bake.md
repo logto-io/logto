@@ -2,24 +2,22 @@
 "@logto/core": patch
 ---
 
-introduce new `error_code_key` query parameter in the `koaErrorHandler`.
+introduce new `parse_error` query parameter flag. The value of `parse_error` can only be `false`.
 
-By default, Logto uses `code` as the error code key in the error response body.
-For some third-party connectors, like Google, `code` is considered as a reserved OIDC key,
-can't be used as the error code key in the error response body. Any oidc error response body containing `code` will be rejected by Google.
+By default, Logto returns the parsed error code and error description in all the `RequestError` error responses. This is to ensure the error responses are consistent and easy to understand.
 
-To workaround this, we introduce a new `error_code_key` query parameter to customize the error code key in the error response body.
-In the oidc requests, if the `error_code_key` is present in the query string, we will use the value of `error_code_key` as the error code key in the error response body.
+However, when integrating Logto with Google OAuth, the error response body containing `code` will be rejected by Google. `code` is considered as a reserved OIDC key, can't be used as the error code key in the error response body.
+
+To workaround this, we add a new `parse_error` query parameter flag. When parsing the OIDC error body, if the `parse_error` is set to false, only oidc error body will be returned.
 
 example:
 
 ```curl
-curl -X POST "http://localhost:3001/oidc/token?error_code_key=error_code"
+curl -X POST "http://localhost:3001/oidc/token?parse_error=false"
 ```
 
 ```json
 {
-  "error_code": "oidc.invalid_grant",
   "error": "invalid_grant",
   "error_description": "Invalid value for parameter 'code': 'invalid_code'."
 }
