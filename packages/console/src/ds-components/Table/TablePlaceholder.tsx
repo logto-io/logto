@@ -9,7 +9,7 @@ import useTheme from '@/hooks/use-theme';
 import DynamicT from '../DynamicT';
 import TextLink from '../TextLink';
 
-import styles from './TablePlaceholder.module.scss';
+import * as styles from './TablePlaceholder.module.scss';
 
 type Props = {
   readonly image: ReactNode;

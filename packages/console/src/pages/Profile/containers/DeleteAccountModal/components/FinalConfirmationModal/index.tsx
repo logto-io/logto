@@ -10,9 +10,9 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import ModalLayout from '@/ds-components/ModalLayout';
 import useRedirectUri from '@/hooks/use-redirect-uri';
-import modalStyles from '@/scss/modal.module.scss';
+import * as modalStyles from '@/scss/modal.module.scss';
 
-import styles from '../../index.module.scss';
+import * as styles from '../../index.module.scss';
 
 type Props = {
   readonly userId: string;

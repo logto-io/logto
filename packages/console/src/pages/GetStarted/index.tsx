@@ -3,12 +3,12 @@ import classNames from 'classnames';
 import { useCallback, useContext, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import CheckPreviewDark from '@/assets/icons/check-demo-dark.svg?react';
-import CheckPreview from '@/assets/icons/check-demo.svg?react';
-import CreateRoleDark from '@/assets/icons/create-role-dark.svg?react';
-import CreateRole from '@/assets/icons/create-role.svg?react';
-import SocialDark from '@/assets/icons/social-dark.svg?react';
-import Social from '@/assets/icons/social.svg?react';
+import CheckPreviewDark from '@/assets/icons/check-demo-dark.svg';
+import CheckPreview from '@/assets/icons/check-demo.svg';
+import CreateRoleDark from '@/assets/icons/create-role-dark.svg';
+import CreateRole from '@/assets/icons/create-role.svg';
+import SocialDark from '@/assets/icons/social-dark.svg';
+import Social from '@/assets/icons/social.svg';
 import ApplicationCreation from '@/components/ApplicationCreation';
 import { type SelectedGuide } from '@/components/Guide/GuideCard';
 import GuideCardGroup from '@/components/Guide/GuideCardGroup';
@@ -28,7 +28,7 @@ import useWindowResize from '@/hooks/use-window-resize';
 import CreateApiForm from '../ApiResources/components/CreateForm';
 
 import ProtectedAppCreationForm from './ProtectedAppCreationForm';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 const icons = {
   [Theme.Light]: { PreviewIcon: CheckPreview, SocialIcon: Social, RbacIcon: CreateRole },

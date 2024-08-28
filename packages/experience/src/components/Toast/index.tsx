@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly message: string;

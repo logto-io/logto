@@ -19,8 +19,8 @@ const useTotpCodeVerification = (flow: UserMfaFlow, errorCallback?: () => void) 
   );
 
   const onSubmit = useCallback(
-    async (code: string) => {
-      await sendMfaPayload(
+    (code: string) => {
+      void sendMfaPayload(
         { flow, payload: { type: MfaFactor.TOTP, code } },
         invalidCodeErrorHandlers,
         errorCallback

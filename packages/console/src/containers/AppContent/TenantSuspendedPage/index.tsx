@@ -1,13 +1,13 @@
 import { Theme } from '@logto/schemas';
 
-import ErrorDark from '@/assets/images/error-dark.svg?react';
-import Error from '@/assets/images/error.svg?react';
+import ErrorDark from '@/assets/images/error-dark.svg';
+import Error from '@/assets/images/error.svg';
 import { contactEmailLink } from '@/consts';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import useTheme from '@/hooks/use-theme';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 function TenantSuspendedPage() {
   const theme = useTheme();

@@ -5,13 +5,12 @@ import { Trans, useTranslation } from 'react-i18next';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import { contactEmailLink } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button, { LinkButton } from '@/ds-components/Button';
 
 import useTenantMembersUsage from '../../hooks';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly newInvitationCount?: number;
@@ -22,15 +21,12 @@ type Props = {
 function Footer({ newInvitationCount = 0, isLoading, onSubmit }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell.paywall' });
 
-  const { currentPlan, currentSku } = useContext(SubscriptionDataContext);
+  const { currentPlan } = useContext(SubscriptionDataContext);
   const { id: planId, quota } = currentPlan;
 
   const { hasTenantMembersReachedLimit, limit, usage } = useTenantMembersUsage();
 
-  if (
-    (isDevFeaturesEnabled ? currentSku.id : planId) === ReservedPlanId.Free &&
-    hasTenantMembersReachedLimit
-  ) {
+  if (planId === ReservedPlanId.Free && hasTenantMembersReachedLimit) {
     return (
       <QuotaGuardFooter>
         <Trans
@@ -45,7 +41,7 @@ function Footer({ newInvitationCount = 0, isLoading, onSubmit }: Props) {
   }
 
   if (
-    (isDevFeaturesEnabled ? currentSku.id : planId) === ReservedPlanId.Development &&
+    planId === ReservedPlanId.Development &&
     (hasTenantMembersReachedLimit || usage + newInvitationCount > limit)
   ) {
     // Display a custom "Contact us" footer instead of asking for upgrade

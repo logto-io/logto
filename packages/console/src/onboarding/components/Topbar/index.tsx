@@ -1,6 +1,6 @@
-import CloudLogo from '@/assets/images/cloud-logo.svg?react';
+import CloudLogo from '@/assets/images/cloud-logo.svg';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 function Topbar() {
   return (

@@ -1,4 +1,4 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { InteractionIdentifierType } from '@logto/schemas';
 
 import { deleteUser } from '#src/api/admin-user.js';
 import { initExperienceClient } from '#src/helpers/client.js';
@@ -12,7 +12,7 @@ const identifiersTypeToUserProfile = Object.freeze({
 });
 
 devFeatureTest.describe('password verifications', () => {
-  it.each(Object.values(SignInIdentifier))(
+  it.each(Object.values(InteractionIdentifierType))(
     'should verify with password successfully using %p',
     async (identifier) => {
       const { userProfile, user } = await generateNewUser({

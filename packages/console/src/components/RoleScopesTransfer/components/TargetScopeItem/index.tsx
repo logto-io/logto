@@ -1,9 +1,9 @@
 import type { ScopeResponse } from '@logto/schemas';
 
-import Close from '@/assets/icons/close.svg?react';
+import Close from '@/assets/icons/close.svg';
 import IconButton from '@/ds-components/IconButton';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly scope: ScopeResponse;

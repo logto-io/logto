@@ -212,7 +212,7 @@ describe('admin console user management', () => {
     });
 
     const state = 'random_state';
-    const redirectUri = 'http://mock-social/callback/random_string';
+    const redirectUri = 'http://mock.social.com/callback/random_string';
     const code = 'random_code_from_social';
     const socialUserId = 'social_platform_user_id_' + randomString();
     const socialUserEmail = `johndoe_${randomString()}@gmail.com`;
@@ -229,7 +229,7 @@ describe('admin console user management', () => {
     const { id: userId } = await createUserByAdmin();
     const { redirectTo } = await getConnectorAuthorizationUri(connectorId, state, redirectUri);
 
-    expect(redirectTo).toBe(`http://mock-social/?state=${state}&redirect_uri=${redirectUri}`);
+    expect(redirectTo).toBe(`http://mock.social.com/?state=${state}&redirect_uri=${redirectUri}`);
 
     const identities = await postUserIdentity(userId, connectorId, {
       code,

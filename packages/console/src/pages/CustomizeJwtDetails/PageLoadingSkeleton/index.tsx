@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import Card from '@/ds-components/Card';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly tokenType: LogtoJwtTokenKeyType;

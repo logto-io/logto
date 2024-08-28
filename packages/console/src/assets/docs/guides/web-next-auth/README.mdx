@@ -2,8 +2,6 @@ import InlineNotification from '@/ds-components/InlineNotification';
 import UriInputField from '@/mdx-components/UriInputField';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
-import TabItem from '@/mdx-components/TabItem';
-import Tabs from '@/mdx-components/Tabs';
 
 <Steps>
 
@@ -33,42 +31,8 @@ Modify your API route config of Next Auth, if you are using Pages Router, the fi
 
 The following is an example of App Router:
 
-<Tabs>
-
-<TabItem value="v5" label="Next Auth v5">
-  <Code className="language-ts">
-    {`import NextAuth from 'next-auth';
-
-export const { handlers, signIn, signOut, auth } = NextAuth({
-  providers: [
-    {
-      id: 'logto',
-      name: 'Logto',
-      type: 'oidc',
-      issuer: '${props.endpoint}oidc',
-      clientId: '${props.app.id}',
-      clientSecret: '${props.secrets[0]?.value ?? props.app.secret}',
-      authorization: {
-        params: { scope: 'openid offline_access profile email' },
-      },
-      profile(profile) {
-        // You can customize the user profile mapping here
-        return {
-          id: profile.sub,
-          name: profile.name ?? profile.username,
-          email: profile.email,
-          image: profile.picture,
-        };
-      },
-    },
-  ],
-});`}
-</Code>
-</TabItem>
-
-<TabItem value="v4" label="Next Auth v4">
 <Code className="language-ts">
-{`import NextAuth from 'next-auth';
+    {`import NextAuth from 'next-auth';
 
 const handler = NextAuth({
   providers: [
@@ -81,7 +45,7 @@ const handler = NextAuth({
       wellKnown: '${props.endpoint}oidc/.well-known/openid-configuration',
       authorization: { params: { scope: 'openid offline_access profile email' } },
       clientId: '${props.app.id}'',
-      clientSecret: '${props.secrets[0]?.value ?? props.app.secret}',
+      clientSecret: '${props.app.secret}',
       client: {
         id_token_signed_response_alg: 'ES384',
       },
@@ -100,9 +64,6 @@ const handler = NextAuth({
 
 export { handler as GET, handler as POST };`}
 </Code>
-</TabItem>
-
-</Tabs>
 
 </Step>
 

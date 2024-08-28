@@ -15,11 +15,11 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
-import modalStyles from '@/scss/modal.module.scss';
+import * as modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 import { generateRandomPassword } from '@/utils/password';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type FormData = Pick<CreateUser, 'name' | 'username' | 'primaryEmail' | 'primaryPhone'>;
 

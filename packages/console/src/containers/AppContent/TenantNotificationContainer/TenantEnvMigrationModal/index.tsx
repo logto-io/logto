@@ -4,9 +4,9 @@ import Confetti from 'react-confetti';
 import { Trans, useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
-import CongratsDark from '@/assets/images/congrats-dark.svg?react';
-import Congrats from '@/assets/images/congrats.svg?react';
-import Fireworks from '@/assets/images/tenant-modal-fireworks.svg?react';
+import CongratsDark from '@/assets/images/congrats-dark.svg';
+import Congrats from '@/assets/images/congrats.svg';
+import Fireworks from '@/assets/images/tenant-modal-fireworks.svg';
 import { envTagsFeatureLink } from '@/consts';
 import Button, { LinkButton } from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
@@ -14,9 +14,9 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import useConfigs from '@/hooks/use-configs';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTheme from '@/hooks/use-theme';
-import modalStyles from '@/scss/modal.module.scss';
+import * as modalStyles from '@/scss/modal.module.scss';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 /**
  * This modal is used to notify the user that the tenant env has been migrated.

@@ -35,7 +35,7 @@ In your Nuxt config file, add the Logto module and configure it:
     logto: {
       endpoint: '${props.endpoint}',
       appId: '${props.app.id}',
-      appSecret: '${props.secrets[0]?.value ?? props.app.secret}',
+      appSecret: '${props.app.secret}',
       cookieEncryptionKey: '${cookieEncryptionKey}', // Random-generated
     },
   },
@@ -48,7 +48,7 @@ Since these information are sensitive, it's recommended to use environment varia
 <Code title=".env" className="language-bash">
     {`NUXT_LOGTO_ENDPOINT=${props.endpoint}
 NUXT_LOGTO_APP_ID=${props.app.id}
-NUXT_LOGTO_APP_SECRET=${props.secrets[0]?.value ?? props.app.secret}
+NUXT_LOGTO_APP_SECRET=${props.app.secret}
 NUXT_LOGTO_COOKIE_ENCRYPTION_KEY=${cookieEncryptionKey} # Random-generated
 `}
 </Code>

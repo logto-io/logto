@@ -1,14 +1,14 @@
 import { Theme } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
-import Plus from '@/assets/icons/plus.svg?react';
-import OrganizationEmptyDark from '@/assets/images/organization-empty-dark.svg?react';
-import OrganizationEmpty from '@/assets/images/organization-empty.svg?react';
+import Plus from '@/assets/icons/plus.svg';
+import OrganizationEmptyDark from '@/assets/images/organization-empty-dark.svg';
+import OrganizationEmpty from '@/assets/images/organization-empty.svg';
 import Button, { type Props as ButtonProps } from '@/ds-components/Button';
 import useConfigs from '@/hooks/use-configs';
 import useTheme from '@/hooks/use-theme';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   /** Override the default button properties in the placeholder */

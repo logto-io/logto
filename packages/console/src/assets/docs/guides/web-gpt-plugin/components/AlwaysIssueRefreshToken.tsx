@@ -23,7 +23,6 @@ export default function AlwaysIssueRefreshToken() {
       await api.patch(`api/applications/${app.id}`, {
         json: {
           customClientMetadata: {
-            ...app.customClientMetadata,
             alwaysIssueRefreshToken: value,
           },
         },

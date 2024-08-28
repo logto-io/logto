@@ -4,11 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Plus from '@/assets/icons/plus.svg?react';
-import UsersEmptyDark from '@/assets/images/users-empty-dark.svg?react';
-import UsersEmpty from '@/assets/images/users-empty.svg?react';
+import Plus from '@/assets/icons/plus.svg';
+import UsersEmptyDark from '@/assets/images/users-empty-dark.svg';
+import UsersEmpty from '@/assets/images/users-empty.svg';
 import ApplicationName from '@/components/ApplicationName';
-import { LocaleDate } from '@/components/DateTime';
+import DateTime from '@/components/DateTime';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
@@ -104,7 +104,7 @@ function Users() {
             title: t('users.latest_sign_in'),
             dataIndex: 'lastSignInAt',
             colSpan: 5,
-            render: ({ lastSignInAt }) => <LocaleDate>{lastSignInAt}</LocaleDate>,
+            render: ({ lastSignInAt }) => <DateTime>{lastSignInAt}</DateTime>,
           },
         ],
         filter: (

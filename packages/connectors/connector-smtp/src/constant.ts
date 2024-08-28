@@ -198,14 +198,5 @@ export const defaultMetadata: ConnectorMetadata = {
       type: ConnectorConfigFormItemType.Switch,
       required: false,
     },
-    {
-      key: 'customHeaders',
-      label: 'Custom Headers',
-      type: ConnectorConfigFormItemType.Json,
-      required: false,
-      defaultValue: {},
-      description:
-        'Custom headers to be added to original email headers when sending messages. Both keys and values should be string-typed.',
-    },
   ],
 };

@@ -7,7 +7,6 @@ const organizations = {
   organization_template: 'Шаблон организации',
   organization_id: 'Идентификатор организации',
   members: 'Участники',
-  machine_to_machine: 'Приложения машина-машина',
   create_organization: 'Создать организацию',
   setup_organization: 'Настройка вашей организации',
   organization_list_placeholder_title: 'Организация',

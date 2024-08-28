@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import type { HTMLProps, Ref } from 'react';
 import { forwardRef } from 'react';
 
-import styles from './IconButton.module.scss';
+import * as styles from './IconButton.module.scss';
 
 export type Props = Omit<HTMLProps<HTMLButtonElement>, 'type'>;
 

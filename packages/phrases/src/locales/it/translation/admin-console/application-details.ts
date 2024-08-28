@@ -23,7 +23,6 @@ const application_details = {
   description: 'Descrizione',
   description_placeholder: 'Inserisci la descrizione della tua applicazione',
   config_endpoint: 'Endpoint di configurazione OpenID Provider',
-  issuer_endpoint: 'Endpoint dell’emittente',
   authorization_endpoint: 'Endpoint di autorizzazione',
   authorization_endpoint_tip:
     "L'endpoint per effettuare l'autenticazione e l'autorizzazione. Viene utilizzato per la connessione OpenID <a>autenticazione</a>.",
@@ -63,13 +62,6 @@ const application_details = {
   rotate_refresh_token: 'Ruota token di aggiornamento',
   rotate_refresh_token_label:
     'Quando abilitato, Logto emetterà un nuovo token di aggiornamento per le richieste di token quando è passato il 70% del Tempo di vita (TTL) originale o sono soddisfatte determinate condizioni. <a>Ulteriori informazioni</a>',
-  backchannel_logout: 'Logout backchannel',
-  backchannel_logout_description:
-    'Configura l’endpoint di logout backchannel OpenID Connect e se la sessione è richiesta per questa applicazione.',
-  backchannel_logout_uri: 'URI di logout backchannel',
-  backchannel_logout_uri_session_required: 'La sessione è necessaria?',
-  backchannel_logout_uri_session_required_description:
-    'Quando abilitato, l’RP richiede che un’istanza `sid` (ID sessione) sia inclusa nel token di logout per identificare la sessione RP con l’OP quando viene usato il `backchannel_logout_uri`.',
   delete_description:
     "Questa azione non può essere annullata. Eliminerà definitivamente l'applicazione. Inserisci il nome dell'applicazione <span>{{name}}</span> per confermare.",
   enter_your_application_name: 'Inserisci il nome della tua applicazione',
@@ -93,24 +85,15 @@ const application_details = {
     "Assicurati di proteggere il tuo server di origine dall'accesso diretto. Fai riferimento alla guida per ulteriori <a>istruzioni dettagliate</a>.",
   session_duration: 'Durata della sessione (giorni)',
   try_it: 'Provalo',
-  no_organization_placeholder: 'Nessuna organizzazione trovata. <a>Vai alle organizzazioni</a>',
   branding: {
     name: 'Marchio',
     description: "Personalizza il nome e il logo dell'applicazione sullo schermo del consenso.",
-    description_third_party:
-      "Personalizza il nome dell'applicazione e il logo sullo schermo del consenso.",
-    app_logo: 'Logo dell’app',
-    app_level_sie: 'Esperienza di accesso a livello di app',
-    app_level_sie_switch:
-      'Abilita l’esperienza di accesso a livello di app e configura il branding specifico dell’app. Se disabilitato, verrà utilizzata l’esperienza di accesso omni.',
     more_info: 'Maggiori informazioni',
     more_info_description:
       "Offri agli utenti ulteriori dettagli sull'applicazione sullo schermo del consenso.",
     display_name: 'Nome visualizzato',
-    application_logo: 'Logo dell’applicazione',
-    application_logo_dark: 'Logo dell’applicazione (scuro)',
-    brand_color: 'Colore del marchio',
-    brand_color_dark: 'Colore del marchio (scuro)',
+    display_logo: 'Logo visualizzato',
+    display_logo_dark: 'Logo visualizzato (scuro)',
     terms_of_use_url: "URL termini d'uso dell'applicazione",
     privacy_policy_url: "URL politica sulla privacy dell'applicazione",
   },
@@ -149,13 +132,13 @@ const application_details = {
     grant_organization_level_permissions: 'Concedi autorizzazioni dei dati organizzazione',
   },
   roles: {
+    name_column: 'Ruolo da macchina a macchina',
+    description_column: 'Descrizione',
     assign_button: 'Assegna ruoli da macchina a macchina',
     delete_description:
       'Questa azione rimuoverà questo ruolo da questa applicazione tra macchine. Il ruolo stesso esisterà ancora, ma non sarà più associato a questa applicazione tra macchine.',
     deleted: '{{name}} è stato rimosso con successo da questo utente.',
     assign_title: 'Assegna ruoli da macchina a macchina a {{name}}',
-    assign_subtitle:
-      'Le app da macchina a macchina devono avere ruoli di tipo macchina a macchina per accedere alle risorse API correlate.',
     assign_role_field: 'Assegna ruoli da macchina a macchina',
     role_search_placeholder: 'Cerca per nome ruolo',
     added_text: '{{value, number}} aggiunti',

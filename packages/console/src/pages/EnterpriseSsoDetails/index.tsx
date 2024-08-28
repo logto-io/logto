@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Delete from '@/assets/icons/delete.svg?react';
-import File from '@/assets/icons/file.svg?react';
+import Delete from '@/assets/icons/delete.svg';
+import File from '@/assets/icons/file.svg';
 import DetailsPage from '@/components/DetailsPage';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import Skeleton from '@/components/DetailsPage/Skeleton';
@@ -24,7 +24,7 @@ import Connection from './Connection';
 import Experience from './Experience';
 import SsoGuide from './SsoGuide';
 import { enterpriseSsoPathname } from './config';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 import useDeleteConnector from './use-delete-connector';
 
 const getSsoConnectorDetailsPathname = (ssoConnectorId: string, tab: EnterpriseSsoDetailsTabs) =>

@@ -32,7 +32,7 @@ client = LogtoClient(
     LogtoConfig(
         endpoint="${props.endpoint}",
         appId="${props.app.id}",
-        appSecret="${props.secrets[0]?.value ?? props.app.secret}",
+        appSecret="${props.app.secret}",
     )
 )`}
 </Code>

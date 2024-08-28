@@ -1,6 +1,6 @@
 import DynamicT from '@/ds-components/DynamicT';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 function WebAuthnTipContent() {
   return (

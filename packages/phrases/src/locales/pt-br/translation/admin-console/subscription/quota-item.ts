@@ -159,18 +159,6 @@ const quota_item = {
     unlimited: 'JWT personalizado',
     not_eligible: 'Remova seu personalizador de declarações JWT',
   },
-  impersonation_enabled: {
-    name: 'Personificação',
-    limited: 'Personificação',
-    unlimited: 'Personificação',
-    not_eligible: 'Nenhuma personificação permitida',
-  },
-  bring_your_ui_enabled: {
-    name: 'Traga sua IU',
-    limited: 'Traga sua IU',
-    unlimited: 'Traga sua IU',
-    not_eligible: 'Remova seus ativos de IU personalizados',
-  },
 };
 
 export default Object.freeze(quota_item);

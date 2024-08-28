@@ -1,14 +1,14 @@
 import { type OrganizationRole, type RoleType } from '@logto/schemas';
 import classNames from 'classnames';
 
-import RoleIcon from '@/assets/icons/organization-role-feature.svg?react';
+import RoleIcon from '@/assets/icons/organization-role-feature.svg';
 import MultiSelect, { type Option } from '@/ds-components/Select/MultiSelect';
 import useSearchValues from '@/hooks/use-search-values';
 
 import Breakable from '../Breakable';
 import ThemedIcon from '../ThemedIcon';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type RoleOptionProps = {
   readonly title?: string;

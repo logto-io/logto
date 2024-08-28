@@ -11,7 +11,7 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
 import useActionTranslation from '@/hooks/use-action-translation';
 import useApi from '@/hooks/use-api';
-import modalStyles from '@/scss/modal.module.scss';
+import * as modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 
 import { type ScopesTableRowDataType, type UserScopeTableRowDataType } from '../use-scopes-table';

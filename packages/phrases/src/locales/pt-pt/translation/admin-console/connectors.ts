@@ -45,8 +45,16 @@ const connectors = {
     name_placeholder: 'Insira o nome do botão de login social',
     name_tip:
       'O nome do botão do conector será exibido como "Continuar com {{name}}." Esteja atento ao comprimento da nomenclatura caso ela fique muito longa.',
-    connector_logo: 'Logotipo do conector',
-    connector_logo_tip: 'O logotipo será exibido no botão de login do conector.',
+    logo: 'URL do logo para o botão de login social',
+    logo_placeholder: 'https://your.cdn.domain/logo.png',
+    logo_tip:
+      'A imagem do logo será exibida no conector. Obtenha um link de imagem publicamente acessível e insira o link aqui.',
+    logo_dark: 'URL do logo para o botão de login social (modo escuro)',
+    logo_dark_placeholder: 'https://your.cdn.domain/logo.png',
+    logo_dark_tip:
+      'Defina o logo do seu conector para o modo escuro depois de ativá-lo na Experiência de login no Console do administrador.',
+    logo_dark_collapse: 'Fechar',
+    logo_dark_show: 'Exibir configurações de logo para o modo escuro',
     target: 'Nome do provedor de identidade',
     target_placeholder: 'Insira o nome do provedor de identidade do conector',
     target_tip:

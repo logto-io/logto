@@ -52,9 +52,6 @@ Images and other assets (if any) should be placed in the `assets` directory of t
 
 ### Update metadata
 
-> [!Note]
-> This section is outdated and we should test if it's still necessary.
-
 Since Parcel doesn't support dynamic import (see [#112](https://github.com/parcel-bundler/parcel/issues/112) [#125](https://github.com/parcel-bundler/parcel/issues/125)), we need to run `node generate-metadata.js` to update the metadata in `index.ts`, thus we can use it in the guide components with React lazy loading.
 
 This may be fixed by replacing Parcel with something else.

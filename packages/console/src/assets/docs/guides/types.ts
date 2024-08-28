@@ -49,9 +49,6 @@ export type Guide = {
   Logo:
     | LazyExoticComponent<SvgComponent>
     | ((props: { readonly className?: string }) => JSX.Element);
-  DarkLogo?:
-    | LazyExoticComponent<SvgComponent>
-    | ((props: { readonly className?: string }) => JSX.Element);
   Component: LazyExoticComponent<FunctionComponent<MDXProps>>;
   metadata: Readonly<GuideMetadata>;
 };

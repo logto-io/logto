@@ -4,14 +4,14 @@ import type { TFuncKey } from 'i18next';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
+import Divider from '@/components/Divider';
 import DynamicT from '@/components/DynamicT';
-import TextLink from '@/components/TextLink';
 import { useSieMethods } from '@/hooks/use-sie';
 import useSocialRegister from '@/hooks/use-social-register';
 import type { SocialRelatedUserInfo } from '@/types/guard';
 import { maskEmail, maskPhone } from '@/utils/format';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 import useBindSocialRelatedUser from './use-social-link-related-user';
 
 type Props = {
@@ -20,23 +20,37 @@ type Props = {
   readonly relatedUser: SocialRelatedUserInfo;
 };
 
-const getCreateAccountActionText = (signUpMethods: string[]): TFuncKey => {
+const getCreateAccountContent = (
+  signUpMethods: string[]
+): { desc: TFuncKey; buttonText: TFuncKey } => {
   if (
     signUpMethods.includes(SignInIdentifier.Email) &&
     signUpMethods.includes(SignInIdentifier.Phone)
   ) {
-    return 'action.link_another_email_or_phone';
+    return {
+      desc: 'description.social_link_email_or_phone',
+      buttonText: 'action.link_another_email_or_phone',
+    };
   }
 
   if (signUpMethods.includes(SignInIdentifier.Email)) {
-    return 'action.link_another_email';
+    return {
+      desc: 'description.social_link_email',
+      buttonText: 'action.link_another_email',
+    };
   }
 
   if (signUpMethods.includes(SignInIdentifier.Phone)) {
-    return 'action.link_another_phone';
+    return {
+      desc: 'description.social_link_phone',
+      buttonText: 'action.link_another_phone',
+    };
   }
 
-  return 'action.create_account_without_linking';
+  return {
+    desc: 'description.social_create_account',
+    buttonText: 'action.create_account_without_linking',
+  };
 };
 
 const SocialLinkAccount = ({ connectorId, className, relatedUser }: Props) => {
@@ -46,7 +60,7 @@ const SocialLinkAccount = ({ connectorId, className, relatedUser }: Props) => {
   const bindSocialRelatedUser = useBindSocialRelatedUser();
   const registerWithSocial = useSocialRegister(connectorId);
 
-  const actionText = getCreateAccountActionText(signUpMethods);
+  const content = getCreateAccountContent(signUpMethods);
 
   const { type, value } = relatedUser;
 
@@ -65,17 +79,19 @@ const SocialLinkAccount = ({ connectorId, className, relatedUser }: Props) => {
         }}
       />
 
-      <div className={styles.hint}>
-        <div>
-          <DynamicT forKey="description.skip_social_linking" />
-        </div>
-        <TextLink
-          text={actionText}
-          onClick={() => {
-            void registerWithSocial(connectorId);
-          }}
-        />
+      <Divider label="description.or" className={styles.divider} />
+
+      <div className={styles.desc}>
+        <DynamicT forKey={content.desc} />
       </div>
+
+      <Button
+        title={content.buttonText}
+        type="secondary"
+        onClick={() => {
+          void registerWithSocial(connectorId);
+        }}
+      />
     </div>
   );
 };

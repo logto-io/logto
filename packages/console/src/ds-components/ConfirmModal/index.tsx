@@ -5,13 +5,13 @@ import ReactModal from 'react-modal';
 
 import type { ButtonType } from '@/ds-components/Button';
 import Button from '@/ds-components/Button';
-import modalStyles from '@/scss/modal.module.scss';
+import * as modalStyles from '@/scss/modal.module.scss';
 
 import type DangerousRaw from '../DangerousRaw';
 import ModalLayout from '../ModalLayout';
 import type { Props as ModalLayoutProps } from '../ModalLayout';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 export type ConfirmModalProps = {
   readonly children: ReactNode;

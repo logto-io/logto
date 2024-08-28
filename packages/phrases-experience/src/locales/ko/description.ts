@@ -29,8 +29,7 @@ const description = {
   social_link_email: '다른 이메일을 연동할 수 있어요',
   social_link_phone: '다른 휴대전화를 연동할 수 있어요',
   social_link_email_or_phone: '다른 이메일이나 휴대전화를 연동할 수 있어요',
-  social_bind_with_existing: '이미 등록된 관련 계정을 찾았으며, 직접 연결할 수 있습니다.',
-  skip_social_linking: '기존 계정 연결 건너뛰기?',
+  social_bind_with_existing: '관련된 계정을 찾았어요. 직접 연동할 수 있어요.',
   reset_password: '비밀번호를 잊으셨나요',
   reset_password_description:
     '귀하의 계정과 연결된 {{types, list(type: disjunction;)}}를 입력하면 비밀번호 재설정을 위한 인증 코드를 보내드립니다.',

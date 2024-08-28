@@ -7,10 +7,10 @@ import ReactModal from 'react-modal';
 import { Outlet, useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Delete from '@/assets/icons/delete.svg?react';
-import Forbidden from '@/assets/icons/forbidden.svg?react';
-import Reset from '@/assets/icons/reset.svg?react';
-import Shield from '@/assets/icons/shield.svg?react';
+import Delete from '@/assets/icons/delete.svg';
+import Forbidden from '@/assets/icons/forbidden.svg';
+import Reset from '@/assets/icons/reset.svg';
+import Shield from '@/assets/icons/shield.svg';
 import DetailsPage from '@/components/DetailsPage';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import PageMeta from '@/components/PageMeta';
@@ -22,7 +22,7 @@ import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
-import modalStyles from '@/scss/modal.module.scss';
+import * as modalStyles from '@/scss/modal.module.scss';
 import { buildUrl } from '@/utils/url';
 import { getUserTitle, getUserSubtitle } from '@/utils/user';
 
@@ -30,7 +30,7 @@ import UserAccountInformation from '../../components/UserAccountInformation';
 import SuspendedTag from '../Users/components/SuspendedTag';
 
 import ResetPasswordForm from './components/ResetPasswordForm';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 import { type UserDetailsOutletContext } from './types';
 
 function UserDetails() {

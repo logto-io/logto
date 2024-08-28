@@ -8,9 +8,9 @@ import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
 import useSWR, { useSWRConfig } from 'swr';
 
-import Delete from '@/assets/icons/delete.svg?react';
-import File from '@/assets/icons/file.svg?react';
-import Reset from '@/assets/icons/reset.svg?react';
+import Delete from '@/assets/icons/delete.svg';
+import File from '@/assets/icons/file.svg';
+import Reset from '@/assets/icons/reset.svg';
 import ConnectorLogo from '@/components/ConnectorLogo';
 import CreateConnectorForm from '@/components/CreateConnectorForm';
 import DeleteConnectorConfirmModal from '@/components/DeleteConnectorConfirmModal';
@@ -34,7 +34,7 @@ import ConnectorContent from './ConnectorContent';
 import ConnectorTabs from './ConnectorTabs';
 import ConnectorTypeName from './ConnectorTypeName';
 import EmailUsage from './EmailUsage';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 // TODO: refactor path-related operation utils in both Connectors and ConnectorDetails page
 const getConnectorsPathname = (isSocial: boolean) =>

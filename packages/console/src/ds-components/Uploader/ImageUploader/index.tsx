@@ -1,7 +1,7 @@
 import type { AllowedUploadMimeType } from '@logto/schemas';
 import classNames from 'classnames';
 
-import Delete from '@/assets/icons/delete.svg?react';
+import Delete from '@/assets/icons/delete.svg';
 import ImageWithErrorFallback from '@/ds-components/ImageWithErrorFallback';
 import useImageMimeTypes, { maxImageSizeLimit } from '@/hooks/use-image-mime-types';
 
@@ -9,7 +9,7 @@ import IconButton from '../../IconButton';
 import FileUploader from '../FileUploader';
 import type { Props as FileUploaderProps } from '../FileUploader';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 export type Props = Omit<FileUploaderProps, 'maxSize' | 'allowedMimeTypes'> & {
   readonly allowedMimeTypes?: AllowedUploadMimeType[];
@@ -17,7 +17,6 @@ export type Props = Omit<FileUploaderProps, 'maxSize' | 'allowedMimeTypes'> & {
   readonly value: string;
   readonly onDelete: () => void;
   readonly className?: string;
-  readonly uploadedClassName?: string;
 };
 
 function ImageUploader({
@@ -26,12 +25,11 @@ function ImageUploader({
   onDelete,
   allowedMimeTypes: imageMimeTypes,
   className,
-  uploadedClassName,
   ...rest
 }: Props) {
   const { allowedMimeTypes } = useImageMimeTypes(imageMimeTypes);
   return value ? (
-    <div className={classNames(styles.imageUploader, className, uploadedClassName)}>
+    <div className={classNames(styles.imageUploader, className)}>
       <ImageWithErrorFallback
         containerClassName={styles.container}
         src={value}

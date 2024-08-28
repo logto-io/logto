@@ -7,23 +7,23 @@
 }
 
 .logo {
+  @include _.shimmering-animation;
   width: 40px;
   height: 40px;
   border-radius: 8px;
-  @include _.shimmering-animation;
 }
 
 .name {
+  @include _.shimmering-animation;
   width: 50px;
   height: 16px;
   margin-bottom: _.unit(1);
-  @include _.shimmering-animation;
 }
 
 .description {
+  @include _.shimmering-animation;
   height: 14px;
   margin-bottom: _.unit(0.5);
-  @include _.shimmering-animation;
 
   &.shortDescription {
     width: 50%;

@@ -7,7 +7,6 @@ import { conditional } from '@silverhand/essentials';
 import cleanDeep from 'clean-deep';
 import { string, object } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type QuotaLibrary } from '#src/libraries/quota.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -27,9 +26,7 @@ const guardConnectorsQuota = async (
   quota: QuotaLibrary
 ) => {
   if (factory.type === ConnectorType.Social) {
-    await (EnvSet.values.isDevFeaturesEnabled
-      ? quota.guardTenantUsageByKey('socialConnectorsLimit')
-      : quota.guardKey('socialConnectorsLimit'));
+    await quota.guardKey('socialConnectorsLimit');
   }
 };
 

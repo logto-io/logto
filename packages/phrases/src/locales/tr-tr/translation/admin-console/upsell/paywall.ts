@@ -38,9 +38,9 @@ const paywall = {
   roles_other:
     '{{count, number}} <planName/> rol sınırına ulaşıldı. İlave roller ve izinler eklemek için planı yükseltin. Yardım için ihtiyacınız olursa, <a>iletişime geçin</a>.',
   machine_to_machine_roles:
-    '{{count, number}} <planName/> makine-makine rol sınırına ulaşıldı. İlave roller ve izinler eklemek için planı yükseltin. Yardım için ihtiyacınız olursa, <a>iletişime geçin</a>.',
+    '{{count, number}} machine-to-machine role of <planName/> limit reached. Upgrade plan to add additional roles and permissions. Feel free to <a>contact us</a> if you need any assistance.',
   machine_to_machine_roles_other:
-    '{{count, number}} <planName/> makine-makine rol sınırına ulaşıldı. İlave roller ve izinler eklemek için planı yükseltin. Yardım için ihtiyacınız olursa, <a>iletişime geçin</a>.',
+    '{{count, number}} machine-to-machine roles of <planName/> limit reached. Upgrade plan to add additional roles and permissions. Feel free to <a>contact us</a> if you need any assistance.',
   scopes_per_role:
     '{{count, number}} <planName/> rol başına izin sınırına ulaşıldı. İlave roller ve izinler eklemek için planı yükseltin. Yardım için ihtiyacınız olursa, <a>iletişime geçin</a>.',
   scopes_per_role_other:
@@ -65,8 +65,6 @@ const paywall = {
     description:
       'Özel JWT işlevselliği ve prim avantajları için ücretli bir plana yükseltin. Sorularınız varsa, çekinmeden <a>iletişime geçin</a>.',
   },
-  bring_your_ui:
-    'Özel kullanıcı arayüzü işlevselliği ve prim avantajları için ücretli bir plana geçin.',
 };
 
 export default Object.freeze(paywall);

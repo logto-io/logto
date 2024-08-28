@@ -20,8 +20,7 @@ const quota_table = {
     title: 'UI e branding',
     custom_domain: 'Dominio personalizzato',
     custom_css: 'CSS personalizzato',
-    logo_and_favicon: 'Logo e favicon',
-    bring_your_ui: 'Porta la tua interfaccia',
+    app_logo_and_favicon: "Logo e favicon dell'applicazione",
     dark_mode: 'Modalità scura',
     i18n: 'Internazionalizzazione',
   },
@@ -38,7 +37,6 @@ const quota_table = {
     mfa: 'Autenticazione a più fattori',
     sso: 'SSO aziendale',
     adaptive_mfa: 'MFA adattativa',
-    impersonation: 'Impersonificazione',
   },
   user_management: {
     title: 'Gestione utenti',

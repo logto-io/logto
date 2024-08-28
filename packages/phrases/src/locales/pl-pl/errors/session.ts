@@ -18,14 +18,11 @@ const session = {
   verification_failed:
     'Weryfikacja nie powiodła się. Uruchom proces weryfikacji ponownie i spróbuj ponownie.',
   connector_validation_session_not_found: 'Nie znaleziono sesji łącznika dla weryfikacji tokena.',
-  csrf_token_mismatch: 'Nieprawidłowy token CSRF.',
   identifier_not_found:
     'Nie znaleziono identyfikatora użytkownika. Proszę wróć i zaloguj się ponownie.',
   interaction_not_found:
     'Nie znaleziono sesji interakcji. Proszę wróć i rozpocznij sesję ponownie.',
   not_supported_for_forgot_password: 'Ta operacja nie jest obsługiwana dla zapomnienia hasła.',
-  identity_conflict:
-    'Wykryto konflikt tożsamości. Proszę zainicjuj nową sesję, aby kontynuować przy użyciu innej tożsamości.',
   mfa: {
     require_mfa_verification: 'Wymagana jest weryfikacja MFA, aby się zalogować.',
     mfa_sign_in_only: 'MFA jest dostępne tylko dla interakcji logowania.',

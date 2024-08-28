@@ -5,11 +5,11 @@ import { useCallback, useContext, useMemo } from 'react';
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 import TermsAndPrivacyConfirmModalContent from '@/containers/TermsAndPrivacyConfirmModalContent';
 
-import { usePromiseConfirmModal } from './use-confirm-modal';
+import { useConfirmModal } from './use-confirm-modal';
 
 const useTerms = () => {
   const { termsAgreement, setTermsAgreement, experienceSettings } = useContext(PageContext);
-  const { show } = usePromiseConfirmModal();
+  const { show } = useConfirmModal();
 
   const { termsOfUseUrl, privacyPolicyUrl, isTermsDisabled, agreeToTermsPolicy } = useMemo(() => {
     const { termsOfUseUrl, privacyPolicyUrl, agreeToTermsPolicy } = experienceSettings ?? {};

@@ -1,9 +1,5 @@
 @use '@/scss/underscore' as _;
 
-.upsellNotice {
-  margin-bottom: _.unit(4);
-}
-
 .factorField {
   display: flex;
   flex-direction: column;

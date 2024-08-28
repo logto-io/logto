@@ -4,8 +4,6 @@ import classNames from 'classnames';
 import { memo, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-
-// TODO: @charles double check if this is still needed
 /**
  * Workaround for the markdown crash issue in the parcel dev build. It seems parcel does
  * something clever in dev mode and messing up the `hastToReact` module. Manually adding
@@ -19,7 +17,7 @@ import 'property-information';
 import CodeEditor from '@/ds-components/CodeEditor';
 
 import GithubRawImage from './components/GithubRawImage';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;

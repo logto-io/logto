@@ -1,6 +1,6 @@
 import TabWrapper, { type Props as TabWrapperProps } from '@/ds-components/TabWrapper';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = Omit<TabWrapperProps, 'className'>;
 

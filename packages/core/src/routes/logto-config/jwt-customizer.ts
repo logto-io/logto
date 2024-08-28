@@ -8,7 +8,6 @@ import {
   jwtCustomizerConfigsGuard,
   jwtCustomizerTestRequestBodyGuard,
 } from '@logto/schemas';
-import { removeUndefinedKeys } from '@silverhand/essentials';
 import { ResponseError } from '@withtyped/client';
 import { ZodError, z } from 'zod';
 
@@ -16,7 +15,7 @@ import { EnvSet } from '#src/env-set/index.js';
 import RequestError, { formatZodError } from '#src/errors/RequestError/index.js';
 import { JwtCustomizerLibrary } from '#src/libraries/jwt-customizer.js';
 import koaGuard, { parse } from '#src/middleware/koa-guard.js';
-import koaQuotaGuard, { newKoaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
+import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
@@ -61,9 +60,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
       response: accessTokenJwtCustomizerGuard.or(clientCredentialsJwtCustomizerGuard),
       status: [200, 201, 400, 403],
     }),
-    EnvSet.values.isDevFeaturesEnabled
-      ? newKoaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota })
-      : koaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota }),
+    koaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota }),
     async (ctx, next) => {
       const { isCloud, isIntegrationTest } = EnvSet.values;
       if (tenantId === adminTenantId && isCloud && !isIntegrationTest) {
@@ -114,9 +111,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
       response: accessTokenJwtCustomizerGuard.or(clientCredentialsJwtCustomizerGuard),
       status: [200, 400, 404],
     }),
-    EnvSet.values.isDevFeaturesEnabled
-      ? newKoaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota })
-      : koaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota }),
+    koaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota }),
     async (ctx, next) => {
       const { isIntegrationTest } = EnvSet.values;
 
@@ -219,9 +214,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
       response: jsonObjectGuard,
       status: [200, 400, 403, 422],
     }),
-    EnvSet.values.isDevFeaturesEnabled
-      ? newKoaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota })
-      : koaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota }),
+    koaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota }),
     async (ctx, next) => {
       const { body } = ctx.guard;
 
@@ -243,7 +236,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
             search: { isTest: 'true' },
           });
         } else {
-          ctx.body = removeUndefinedKeys(await JwtCustomizerLibrary.runScriptInLocalVm(body));
+          ctx.body = await JwtCustomizerLibrary.runScriptInLocalVm(body);
         }
       } catch (error: unknown) {
         /**

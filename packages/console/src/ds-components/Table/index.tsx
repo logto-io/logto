@@ -12,7 +12,7 @@ import OverlayScrollbar from '../OverlayScrollbar';
 import Skeleton from './Skeleton';
 import TableEmptyWrapper from './TableEmptyWrapper';
 import TableError from './TableError';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 import type { Column, RowGroup } from './types';
 
 export type Props<

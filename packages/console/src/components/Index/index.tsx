@@ -1,8 +1,8 @@
 import classNames from 'classnames';
 
-import Tick from '@/assets/icons/tick.svg?react';
+import Tick from '@/assets/icons/tick.svg';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;

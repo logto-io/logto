@@ -1,5 +1,5 @@
 import { ConnectorType } from '@logto/connector-kit';
-import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
+import { InteractionEvent, InteractionIdentifierType } from '@logto/schemas';
 
 import { mockEmailConnectorId, mockSocialConnectorId } from '#src/__mocks__/connectors-mock.js';
 import { initExperienceClient } from '#src/helpers/client.js';
@@ -134,7 +134,7 @@ devFeatureTest.describe('social verification', () => {
 
       const { verificationId } = await client.sendVerificationCode({
         identifier: {
-          type: SignInIdentifier.Email,
+          type: InteractionIdentifierType.Email,
           value: 'foo',
         },
         interactionEvent: InteractionEvent.SignIn,
@@ -157,7 +157,6 @@ devFeatureTest.describe('social verification', () => {
     it('should throw if the connectorId is different', async () => {
       const client = await initExperienceClient();
       const connectorId = connectorIdMap.get(mockSocialConnectorId)!;
-      const emailConnectorId = connectorIdMap.get(mockEmailConnectorId)!;
 
       const { verificationId } = await client.getSocialAuthorizationUri(connectorId, {
         redirectUri,
@@ -165,7 +164,7 @@ devFeatureTest.describe('social verification', () => {
       });
 
       await expectRejects(
-        client.verifySocialAuthorization(emailConnectorId, {
+        client.verifySocialAuthorization('invalid_connector_id', {
           verificationId,
           connectorData: {
             authorizationCode,

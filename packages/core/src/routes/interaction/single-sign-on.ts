@@ -7,11 +7,11 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { assignInteractionResults } from '#src/libraries/session.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { interactionPrefix, ssoPath } from './const.js';
+import type { WithInteractionDetailsContext } from './middleware/koa-interaction-details.js';
 import koaInteractionHooks from './middleware/koa-interaction-hooks.js';
 import koaInteractionSie from './middleware/koa-interaction-sie.js';
 import { getInteractionStorage, storeInteractionResult } from './utils/interaction.js';

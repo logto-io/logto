@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { validate } from 'superstruct';
 
@@ -12,13 +11,12 @@ import { UserMfaFlow } from '@/types';
 import { webAuthnStateGuard } from '@/types/guard';
 import { isWebAuthnOptions } from '@/utils/webauthn';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 const WebAuthnVerification = () => {
   const { state } = useLocation();
   const [, webAuthnState] = validate(state, webAuthnStateGuard);
   const handleWebAuthn = useWebAuthnOperation();
-  const [isVerifying, setIsVerifying] = useState(false);
 
   if (!webAuthnState) {
     return <ErrorPage title="error.invalid_session" />;
@@ -39,11 +37,8 @@ const WebAuthnVerification = () => {
         <Button
           title="action.verify_via_passkey"
           className={styles.verifyButton}
-          isLoading={isVerifying}
-          onClick={async () => {
-            setIsVerifying(true);
-            await handleWebAuthn(options);
-            setIsVerifying(false);
+          onClick={() => {
+            void handleWebAuthn(options);
           }}
         />
       </SectionLayout>

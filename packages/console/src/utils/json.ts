@@ -1,5 +1,4 @@
-import { jsonGuard, jsonObjectGuard, type Json, type JsonObject } from '@logto/schemas';
-import { trySafe } from '@silverhand/essentials';
+import { jsonGuard, type Json, jsonObjectGuard, type JsonObject } from '@logto/schemas';
 import { t } from 'i18next';
 
 export const safeParseJson = (
@@ -24,9 +23,4 @@ export const safeParseJsonObject = (
   } catch {
     return { success: false, error: t('admin_console.errors.invalid_json_format') };
   }
-};
-
-export const isJsonObject = (value: string) => {
-  const parsed = trySafe<unknown>(() => JSON.parse(value));
-  return Boolean(parsed && typeof parsed === 'object');
 };

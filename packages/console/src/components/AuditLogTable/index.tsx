@@ -19,7 +19,7 @@ import EmptyDataPlaceholder from '../EmptyDataPlaceholder';
 import ApplicationSelector from './components/ApplicationSelector';
 import EventName from './components/EventName';
 import EventSelector from './components/EventSelector';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 const auditLogEventOptions = Object.entries(auditLogEventTitle).map(([value, title]) => ({
   value,

@@ -18,11 +18,11 @@
     background-color: var(--color-layer-1);
 
     .icon {
+      @include _.shimmering-animation;
       width: 60px;
       height: 60px;
       border-radius: 12px;
       margin-right: _.unit(6);
-      @include _.shimmering-animation;
     }
 
     .wrapper {
@@ -30,23 +30,23 @@
       flex-direction: column;
 
       .title {
+        @include _.shimmering-animation;
         width: 113px;
         height: 28px;
-        @include _.shimmering-animation;
       }
 
       .tags {
+        @include _.shimmering-animation;
         width: 453px;
         height: 20px;
         margin-top: _.unit(3);
-        @include _.shimmering-animation;
       }
     }
 
     .button {
+      @include _.shimmering-animation;
       width: 158px;
       height: 44px;
-      @include _.shimmering-animation;
     }
   }
 

@@ -11,7 +11,7 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
-import Close from '@/assets/icons/close.svg?react';
+import Close from '@/assets/icons/close.svg';
 import BasicForm from '@/components/ConnectorForm/BasicForm';
 import ConfigForm from '@/components/ConnectorForm/ConfigForm';
 import ConnectorTester from '@/components/ConnectorTester';
@@ -25,7 +25,7 @@ import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import useConnectorApi from '@/hooks/use-connector-api';
 import { useConnectorFormConfigParser } from '@/hooks/use-connector-form-config-parser';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
-import modalStyles from '@/scss/modal.module.scss';
+import * as modalStyles from '@/scss/modal.module.scss';
 import type { ConnectorFormType } from '@/types/connector';
 import { SyncProfileMode } from '@/types/connector';
 import { convertFactoryResponseToForm } from '@/utils/connector-form';
@@ -33,7 +33,7 @@ import { trySubmitSafe } from '@/utils/form';
 
 import { splitMarkdownByTitle } from '../utils';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 const targetErrorCode = 'connector.multiple_target_with_same_platform';
 

@@ -11,10 +11,6 @@ export default function koaCors<StateT, ContextT, ResponseBodyT>(
     origin: (ctx) => {
       const { origin } = ctx.request.headers;
 
-      if (!EnvSet.values.isProduction) {
-        return origin ?? '';
-      }
-
       if (
         origin &&
         urlSets.some((set) => {

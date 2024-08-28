@@ -42,14 +42,14 @@ const queryDatabaseManifest = async (database) => {
   `);
 
   const { rows: constraints } = await pool.query(/* sql */`
-    select conrelid::regclass as r_table, con.*, pg_get_constraintdef(con.oid) as def
+    select conrelid::regclass AS table, con.*, pg_get_constraintdef(con.oid)
     from pg_catalog.pg_constraint con
     inner join pg_catalog.pg_class rel
     on rel.oid = con.conrelid
     inner join pg_catalog.pg_namespace nsp
     on nsp.oid = connamespace
     where nsp.nspname = 'public'
-    order by conname asc, def asc;
+    order by conname asc;
   `);
 
   const { rows: indexes } = await pool.query(/* sql */`

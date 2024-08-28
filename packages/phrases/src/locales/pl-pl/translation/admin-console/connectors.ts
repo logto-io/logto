@@ -44,8 +44,16 @@ const connectors = {
     name_placeholder: 'Wpisz nazwę przycisku logowania społecznościowego',
     name_tip:
       'Nazwa przycisku łącznika będzie wyświetlana jako "Kontynuuj z {{name}}." Uwzględnij długość nazwy, gdyż może stać się zbyt długa.',
-    connector_logo: 'Logo łącznika',
-    connector_logo_tip: 'Logo będzie wyświetlane na przycisku logowania łącznika.',
+    logo: 'Logo URL łącznika społecznościowego',
+    logo_placeholder: 'https://your.cdn.domain/logo.png',
+    logo_tip:
+      'Obraz logo zostanie wyświetlony na łączniku. Uzyskaj publicznie dostępny link do obrazu i wklej tutaj link.',
+    logo_dark: 'Logo URL łącznika społecznościowego (tryb ciemny)',
+    logo_dark_placeholder: 'https://your.cdn.domain/logo.png',
+    logo_dark_tip:
+      'Ustaw logo łącznika dla trybu ciemnego po jego włączeniu w Doświadczeniu logowania w Konsoli Admina.',
+    logo_dark_collapse: 'Zwiń',
+    logo_dark_show: 'Pokaż ustawienia logo dla trybu ciemnego',
     target: 'Nazwa dostawcy tożsamości',
     target_placeholder: 'Wpisz nazwę dostawcy tożsamości łącznika',
     target_tip:

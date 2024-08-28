@@ -13,12 +13,11 @@ import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useConnectorGroups from '@/hooks/use-connector-groups';
 import useUiLanguages from '@/hooks/use-ui-languages';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly isLivePreviewDisabled?: boolean;
   readonly isLivePreviewEntryInvisible?: boolean;
-  readonly isPreviewIframeDisabled?: boolean;
   readonly signInExperience?: SignInExperience;
   readonly className?: string;
 };
@@ -26,7 +25,6 @@ type Props = {
 function Preview({
   isLivePreviewDisabled = false,
   isLivePreviewEntryInvisible = false,
-  isPreviewIframeDisabled = false,
   signInExperience,
   className,
 }: Props) {
@@ -126,7 +124,6 @@ function Preview({
         mode={mode}
         language={language}
         signInExperience={signInExperience}
-        disabled={isPreviewIframeDisabled}
       />
     </div>
   );

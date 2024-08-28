@@ -9,7 +9,7 @@ import CheckoutSuccessCallback from '@/pages/CheckoutSuccessCallback';
 import Profile from '@/pages/Profile';
 import HandleSocialCallback from '@/pages/Profile/containers/HandleSocialCallback';
 
-import styles from './AppRoutes.module.scss';
+import * as styles from './AppRoutes.module.scss';
 import Main from './pages/Main';
 import SocialDemoCallback from './pages/SocialDemoCallback';
 

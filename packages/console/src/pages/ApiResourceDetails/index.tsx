@@ -8,12 +8,12 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Outlet, useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import ApiResourceDark from '@/assets/icons/api-resource-dark.svg?react';
-import ApiResource from '@/assets/icons/api-resource.svg?react';
-import Delete from '@/assets/icons/delete.svg?react';
-import File from '@/assets/icons/file.svg?react';
-import ManagementApiResourceDark from '@/assets/icons/management-api-resource-dark.svg?react';
-import ManagementApiResource from '@/assets/icons/management-api-resource.svg?react';
+import ApiResourceDark from '@/assets/icons/api-resource-dark.svg';
+import ApiResource from '@/assets/icons/api-resource.svg';
+import Delete from '@/assets/icons/delete.svg';
+import File from '@/assets/icons/file.svg';
+import ManagementApiResourceDark from '@/assets/icons/management-api-resource-dark.svg';
+import ManagementApiResource from '@/assets/icons/management-api-resource.svg';
 import DetailsPage from '@/components/DetailsPage';
 import DetailsPageHeader, { type MenuItem } from '@/components/DetailsPage/DetailsPageHeader';
 import Drawer from '@/components/Drawer';
@@ -30,7 +30,7 @@ import useTheme from '@/hooks/use-theme';
 import GuideDrawer from './components/GuideDrawer';
 import GuideModal from './components/GuideModal';
 import ManagementApiNotice from './components/ManagementApiNotice';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 import { type ApiResourceDetailsOutletContext } from './types';
 
 const icons = {

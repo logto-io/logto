@@ -52,42 +52,6 @@ const profile = {
     description:
       'Apagar a sua conta irá remover todas as suas informações pessoais, dados de usuário e configurações. Esta ação não pode ser desfeita.',
     button: 'Apagar conta',
-    p: {
-      has_issue:
-        'Lamentamos saber que você deseja apagar a sua conta. Antes de poder apagar a sua conta, precisa resolver os seguintes problemas.',
-      after_resolved:
-        'Depois de resolver os problemas, poderá apagar a sua conta. Por favor, não hesite em entrar em contacto connosco se precisar de assistência.',
-      check_information:
-        'Lamentamos saber que você deseja apagar a sua conta. Verifique a seguinte informação cuidadosamente antes de continuar.',
-      remove_all_data:
-        'Apagar a sua conta irá remover permanentemente todos os dados sobre você na Logto Cloud. Por isso, assegure-se de fazer backup de quaisquer dados importantes antes de continuar.',
-      confirm_information:
-        'Por favor confirme que a informação acima é o que esperava. Após apagar a sua conta, não poderemos recuperá-la.',
-      has_admin_role:
-        'Visto que você tem o papel de administrador no seguinte inquilino, ele será apagado junto com a sua conta:',
-      has_admin_role_other:
-        'Visto que você tem o papel de administrador nos seguintes inquilinos, eles serão apagados junto com a sua conta:',
-      quit_tenant: 'Você está prestes a sair do seguinte inquilino:',
-      quit_tenant_other: 'Você está prestes a sair dos seguintes inquilinos:',
-    },
-    issues: {
-      paid_plan: 'O seguinte inquilino tem um plano pago, por favor cancele a subscrição primeiro:',
-      paid_plan_other:
-        'Os seguintes inquilinos têm planos pagos, por favor cancele a subscrição primeiro:',
-      subscription_status: 'O seguinte inquilino tem um problema de estado de subscrição:',
-      subscription_status_other: 'Os seguintes inquilinos têm problemas de estado de subscrição:',
-      open_invoice: 'O seguinte inquilino tem uma fatura em aberto:',
-      open_invoice_other: 'Os seguintes inquilinos têm faturas em aberto:',
-    },
-    error_occurred: 'Ocorreu um erro',
-    error_occurred_description: 'Desculpe, algo correu mal ao apagar a sua conta:',
-    request_id: 'ID do pedido: {{requestId}}',
-    try_again_later:
-      'Por favor, tente novamente mais tarde. Se o problema persistir, contacte a equipa da Logto com o ID do pedido.',
-    final_confirmation: 'Confirmação final',
-    about_to_start_deletion:
-      'Você está prestes a iniciar o processo de exclusão e esta ação não pode ser desfeita.',
-    permanently_delete: 'Apagar permanentemente',
   },
   set: 'Definir',
   change: 'Mudar',

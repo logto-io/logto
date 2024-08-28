@@ -5,14 +5,14 @@ import classNames from 'classnames';
 import { useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import Close from '@/assets/icons/close.svg?react';
+import Close from '@/assets/icons/close.svg';
 import IconButton from '@/ds-components/IconButton';
 import Tag from '@/ds-components/Tag';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import type { InviteeEmailItem } from '../types';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly formName?: string;

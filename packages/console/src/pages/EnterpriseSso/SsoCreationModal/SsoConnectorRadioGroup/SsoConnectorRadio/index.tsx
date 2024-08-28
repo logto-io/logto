@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import ImageWithErrorFallback from '@/ds-components/ImageWithErrorFallback';
 import useTheme from '@/hooks/use-theme';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly data: SsoConnectorProviderDetail;

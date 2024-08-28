@@ -30,11 +30,6 @@ const jwt_claims = {
     title: '사용자 데이터',
     subtitle: '`data.user` 입력 매개변수를 사용하여 중요한 사용자 정보 제공.',
   },
-  grant_data: {
-    title: 'Grant 데이터',
-    subtitle:
-      '`data.grant` 입력 매개변수를 사용하여 중요한 Grant 정보를 제공하고, 이 정보는 오직 토큰 교환에만 사용할 수 있습니다.',
-  },
   token_data: {
     title: '토큰 데이터',
     subtitle: '현재 액세스 토큰 페이로드에 대한 `token` 입력 매개변수 사용.',

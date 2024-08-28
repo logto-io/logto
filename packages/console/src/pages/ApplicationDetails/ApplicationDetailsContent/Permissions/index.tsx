@@ -2,7 +2,7 @@ import { type Application } from '@logto/schemas';
 
 import PermissionsCard from './PermissionsCard';
 import { ScopeLevel } from './PermissionsCard/ApplicationScopesAssignmentModal/type';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly application: Application;

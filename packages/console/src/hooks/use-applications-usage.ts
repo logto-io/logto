@@ -2,18 +2,12 @@ import { type Application, ApplicationType } from '@logto/schemas';
 import { useContext, useMemo } from 'react';
 import useSWR from 'swr';
 
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
-import {
-  hasReachedQuotaLimit,
-  hasReachedSubscriptionQuotaLimit,
-  hasSurpassedQuotaLimit,
-  hasSurpassedSubscriptionQuotaLimit,
-} from '@/utils/quota';
+import { hasReachedQuotaLimit, hasSurpassedQuotaLimit } from '@/utils/quota';
 
 const useApplicationsUsage = () => {
-  const { currentPlan, currentSubscriptionQuota, currentSubscriptionUsage } =
-    useContext(SubscriptionDataContext);
+  const { currentPlan } = useContext(SubscriptionDataContext);
 
   /**
    * Note: we only need to fetch all applications when the user is in cloud environment.
@@ -23,103 +17,53 @@ const useApplicationsUsage = () => {
 
   const m2mAppCount = useMemo(
     () =>
-      isDevFeaturesEnabled
-        ? currentSubscriptionUsage.machineToMachineLimit
-        : allApplications?.filter(({ type }) => type === ApplicationType.MachineToMachine).length ??
-          0,
-    [allApplications, currentSubscriptionUsage.machineToMachineLimit]
+      allApplications?.filter(({ type }) => type === ApplicationType.MachineToMachine).length ?? 0,
+    [allApplications]
   );
 
   const thirdPartyAppCount = useMemo(
-    () =>
-      isDevFeaturesEnabled
-        ? currentSubscriptionUsage.thirdPartyApplicationsLimit
-        : allApplications?.filter(({ isThirdParty }) => isThirdParty).length ?? 0,
-    [allApplications, currentSubscriptionUsage.thirdPartyApplicationsLimit]
+    () => allApplications?.filter(({ isThirdParty }) => isThirdParty).length ?? 0,
+    [allApplications]
   );
 
   const hasMachineToMachineAppsReachedLimit = useMemo(
     () =>
-      isDevFeaturesEnabled
-        ? hasReachedSubscriptionQuotaLimit({
-            quotaKey: 'machineToMachineLimit',
-            usage: currentSubscriptionUsage.machineToMachineLimit,
-            quota: currentSubscriptionQuota,
-          })
-        : hasReachedQuotaLimit({
-            quotaKey: 'machineToMachineLimit',
-            plan: currentPlan,
-            usage: m2mAppCount,
-          }),
-    [
-      currentPlan,
-      m2mAppCount,
-      currentSubscriptionUsage.machineToMachineLimit,
-      currentSubscriptionQuota,
-    ]
+      hasReachedQuotaLimit({
+        quotaKey: 'machineToMachineLimit',
+        plan: currentPlan,
+        usage: m2mAppCount,
+      }),
+    [currentPlan, m2mAppCount]
   );
 
   const hasMachineToMachineAppsSurpassedLimit = useMemo(
     () =>
-      isDevFeaturesEnabled
-        ? hasSurpassedSubscriptionQuotaLimit({
-            quotaKey: 'machineToMachineLimit',
-            usage: currentSubscriptionUsage.machineToMachineLimit,
-            quota: currentSubscriptionQuota,
-          })
-        : hasSurpassedQuotaLimit({
-            quotaKey: 'machineToMachineLimit',
-            plan: currentPlan,
-            usage: m2mAppCount,
-          }),
-    [
-      currentPlan,
-      m2mAppCount,
-      currentSubscriptionUsage.machineToMachineLimit,
-      currentSubscriptionQuota,
-    ]
+      hasSurpassedQuotaLimit({
+        quotaKey: 'machineToMachineLimit',
+        plan: currentPlan,
+        usage: m2mAppCount,
+      }),
+    [currentPlan, m2mAppCount]
   );
 
   const hasThirdPartyAppsReachedLimit = useMemo(
     () =>
-      isDevFeaturesEnabled
-        ? hasReachedSubscriptionQuotaLimit({
-            quotaKey: 'thirdPartyApplicationsLimit',
-            usage: currentSubscriptionUsage.thirdPartyApplicationsLimit,
-            quota: currentSubscriptionQuota,
-          })
-        : hasReachedQuotaLimit({
-            quotaKey: 'thirdPartyApplicationsLimit',
-            plan: currentPlan,
-            usage: thirdPartyAppCount,
-          }),
-    [
-      currentPlan,
-      thirdPartyAppCount,
-      currentSubscriptionUsage.thirdPartyApplicationsLimit,
-      currentSubscriptionQuota,
-    ]
+      hasReachedQuotaLimit({
+        quotaKey: 'thirdPartyApplicationsLimit',
+        plan: currentPlan,
+        usage: thirdPartyAppCount,
+      }),
+    [currentPlan, thirdPartyAppCount]
   );
 
   const hasAppsReachedLimit = useMemo(
     () =>
-      isDevFeaturesEnabled
-        ? hasReachedSubscriptionQuotaLimit({
-            quotaKey: 'applicationsLimit',
-            usage: currentSubscriptionUsage.applicationsLimit,
-            quota: currentSubscriptionQuota,
-          })
-        : hasReachedQuotaLimit({
-            quotaKey: 'applicationsLimit',
-            plan: currentPlan,
-            usage: allApplications?.length ?? 0,
-          }),
-    [
-      allApplications?.length,
-      currentPlan,
-      currentSubscriptionUsage.applicationsLimit,
-      currentSubscriptionQuota,
-    ]
+      hasReachedQuotaLimit({
+        quotaKey: 'applicationsLimit',
+        plan: currentPlan,
+        usage: allApplications?.length ?? 0,
+      }),
+    [allApplications?.length, currentPlan]
   );
 
   return {

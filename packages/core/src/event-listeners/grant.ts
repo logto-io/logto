@@ -1,7 +1,6 @@
 import { GrantType, LogResult, token } from '@logto/schemas';
 import type { errors, KoaContextWithOIDC } from 'oidc-provider';
 
-import { type WithAppSecretContext } from '#src/middleware/koa-app-secret-transpilation.js';
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
 
 import { stringifyError } from '../utils/format.js';
@@ -14,7 +13,7 @@ import { extractInteractionContext } from './utils.js';
  * @see {@link https://github.com/panva/node-oidc-provider/blob/v7.x/lib/shared/error_handler.js OIDC Provider error handler}
  */
 export const grantListener = (
-  ctx: KoaContextWithOIDC & WithLogContext & WithAppSecretContext & { body: GrantBody },
+  ctx: KoaContextWithOIDC & WithLogContext & { body: GrantBody },
   error?: errors.OIDCProviderError
 ) => {
   const { params } = ctx.oidc;

@@ -48,23 +48,11 @@ const connector_details = {
     company_information_description:
       'E-postaların alt kısmında şirket adınızı, adresinizi veya posta kodunuzu görüntüleyin.',
     company_information_placeholder: 'Şirketinizin temel bilgileri',
-    email_logo_field: 'Eposta logosu',
-    email_logo_tip:
-      'Marka logonuzu e-postaların en üstüne yerleştirin. Hem açık mod hem de koyu mod için aynı resmi kullanın.',
+    app_logo_field: 'Uygulama Logosu',
+    app_logo_tip:
+      'E-postaların üstünde marka logosunu görüntüleyin. Aynı görüntüyü açık mod ve karanlık mod için kullanın.',
     urls_not_allowed: 'URLler izin verilmez',
     test_notes: 'Logto testler için "Generic" şablonunu kullanır.',
-  },
-  google_one_tap: {
-    title: 'Google One Tap',
-    description:
-      'Google One Tap , kullanıcıların web sitenize güvenli ve kolay bir şekilde giriş yapmalarını sağlar.',
-    enable_google_one_tap: "Google One Tap'i Etkinleştir",
-    enable_google_one_tap_description:
-      "Giriş deneyiminizde Google One Tap'i etkinleştirin: Kullanıcıların cihazlarında zaten oturum açmışlarsa Google hesaplarıyla hızlıca kayıt olmalarını veya giriş yapmalarını sağlayın.",
-    configure_google_one_tap: "Google One Tap'i Yapılandır",
-    auto_select: 'Mümkünse kimlik bilgilerini otomatik seç',
-    close_on_tap_outside: 'Kullanıcı dışarıya tıklarsa istemi iptal et',
-    itp_support: "<a>ITP tarayıcılarda Yükseltilmiş One Tap UX'i</a> etkinleştir",
   },
 };
 

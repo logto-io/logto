@@ -2,7 +2,7 @@ const action = {
   sign_in: 'Connexion',
   continue: 'Continuer',
   create_account: 'Créer un compte',
-  create_account_without_linking: 'Créer un nouveau à la place',
+  create_account_without_linking: 'Créer un compte sans lier',
   create: 'Créer',
   enter_passcode: 'Entrer le code',
   confirm: 'Confirmer',

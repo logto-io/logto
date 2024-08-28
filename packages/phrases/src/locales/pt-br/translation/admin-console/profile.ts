@@ -51,42 +51,6 @@ const profile = {
     description:
       'Excluir sua conta removerá todas as suas informações pessoais, dados do usuário e configurações. Essa ação não pode ser desfeita.',
     button: 'Excluir conta',
-    p: {
-      has_issue:
-        'Lamentamos saber que você deseja excluir sua conta. Antes de poder excluir sua conta, você precisa resolver os seguintes problemas.',
-      after_resolved:
-        'Assim que resolver os problemas, você poderá excluir sua conta. Não hesite em nos contatar se precisar de alguma assistência.',
-      check_information:
-        'Lamentamos saber que você deseja excluir sua conta. Por favor, verifique as seguintes informações com cuidado antes de prosseguir.',
-      remove_all_data:
-        'Excluir sua conta removerá permanentemente todos os dados sobre você na Logto Cloud. Portanto, certifique-se de fazer backup de quaisquer dados importantes antes de prosseguir.',
-      confirm_information:
-        'Por favor, confirme que as informações acima são o que você esperava. Depois de excluir sua conta, não poderemos recuperá-la.',
-      has_admin_role:
-        'Como você tem o papel de administrador no seguinte tenant, ele será excluído juntamente com sua conta:',
-      has_admin_role_other:
-        'Como você tem o papel de administrador nos seguintes tenants, eles serão excluídos juntamente com sua conta:',
-      quit_tenant: 'Você está prestes a sair do seguinte tenant:',
-      quit_tenant_other: 'Você está prestes a sair dos seguintes tenants:',
-    },
-    issues: {
-      paid_plan: 'O seguinte tenant tem um plano pago, por favor cancele a assinatura primeiro:',
-      paid_plan_other:
-        'Os seguintes tenants têm planos pagos, por favor cancele as assinaturas primeiro:',
-      subscription_status: 'O seguinte tenant tem um problema de status de assinatura:',
-      subscription_status_other: 'Os seguintes tenants têm problemas de status de assinatura:',
-      open_invoice: 'O seguinte tenant tem uma fatura em aberto:',
-      open_invoice_other: 'Os seguintes tenants têm faturas em aberto:',
-    },
-    error_occurred: 'Ocorreu um erro',
-    error_occurred_description: 'Desculpe, algo deu errado ao excluir sua conta:',
-    request_id: 'ID da solicitação: {{requestId}}',
-    try_again_later:
-      'Por favor, tente novamente mais tarde. Se o problema persistir, entre em contato com a equipe Logto com o ID da solicitação.',
-    final_confirmation: 'Confirmação final',
-    about_to_start_deletion:
-      'Você está prestes a iniciar o processo de exclusão e essa ação não pode ser desfeita.',
-    permanently_delete: 'Excluir permanentemente',
   },
   set: 'Configurar',
   change: 'Alterar',

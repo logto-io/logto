@@ -2,7 +2,7 @@ import { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
-import Close from '@/assets/icons/close.svg?react';
+import Close from '@/assets/icons/close.svg';
 import Card from '@/ds-components/Card';
 import CardTitle from '@/ds-components/CardTitle';
 import ConfirmModal from '@/ds-components/ConfirmModal';
@@ -11,7 +11,7 @@ import useUiLanguages from '@/hooks/use-ui-languages';
 
 import LanguageDetails from './LanguageDetails';
 import LanguageNav from './LanguageNav';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 import useLanguageEditorContext, { LanguageEditorContext } from './use-language-editor-context';
 
 type Props = {

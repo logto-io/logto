@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { useContext, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import ArrowRight from '@/assets/icons/arrow-right.svg?react';
+import ArrowRight from '@/assets/icons/arrow-right.svg';
 import PlanDescription from '@/components/PlanDescription';
 import PlanName from '@/components/PlanName';
 import { pricingLink } from '@/consts';
@@ -15,7 +15,7 @@ import TextLink from '@/ds-components/TextLink';
 import { type SubscriptionPlan } from '@/types/subscriptions';
 
 import FeaturedPlanContent from './FeaturedPlanContent';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly plan: SubscriptionPlan;

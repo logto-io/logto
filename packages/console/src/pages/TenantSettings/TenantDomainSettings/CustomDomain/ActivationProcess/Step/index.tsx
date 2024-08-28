@@ -3,14 +3,14 @@ import { DomainStatus } from '@logto/schemas';
 import classNames from 'classnames';
 import { type ReactNode } from 'react';
 
-import Success from '@/assets/icons/success.svg?react';
-import Tip from '@/assets/icons/tip.svg?react';
+import Success from '@/assets/icons/success.svg';
+import Tip from '@/assets/icons/tip.svg';
 import DynamicT from '@/ds-components/DynamicT';
 import IconButton from '@/ds-components/IconButton';
 import { Ring } from '@/ds-components/Spinner';
 import ToggleTip from '@/ds-components/Tip/ToggleTip';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly step: number;

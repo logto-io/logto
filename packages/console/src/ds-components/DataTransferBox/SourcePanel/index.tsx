@@ -2,16 +2,16 @@ import classNames from 'classnames';
 import { useState, type ChangeEvent, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Search from '@/assets/icons/search.svg?react';
+import Search from '@/assets/icons/search.svg';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import TextInput from '@/ds-components/TextInput';
-import transferLayout from '@/scss/transfer.module.scss';
+import * as transferLayout from '@/scss/transfer.module.scss';
 
 import SourceDataItem from '../SourceDataItem';
 import SourceGroupItem from '../SourceGroupItem';
 import { type DataEntry, type DataGroup, type SelectedDataEntry } from '../type';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 const appendUnique = <T extends DataEntry>(list: T[], items: T | T[]) => {
   const newEntries = Array.isArray(items) ? items : [items];

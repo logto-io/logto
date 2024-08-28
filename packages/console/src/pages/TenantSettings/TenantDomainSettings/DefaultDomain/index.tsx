@@ -6,7 +6,7 @@ import DynamicT from '@/ds-components/DynamicT';
 import Spacer from '@/ds-components/Spacer';
 import Tag from '@/ds-components/Tag';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 function DefaultDomain() {
   const { tenantEndpoint } = useContext(AppDataContext);

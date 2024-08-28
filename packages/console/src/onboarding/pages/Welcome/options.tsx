@@ -1,7 +1,7 @@
 import { AdditionalFeatures, Project, Stage } from '@logto/schemas';
 
-import Building from '@/assets/icons/building.svg?react';
-import Pizza from '@/assets/icons/pizza.svg?react';
+import Building from '@/assets/icons/building.svg';
+import Pizza from '@/assets/icons/pizza.svg';
 import type {
   CardSelectorOption,
   MultiCardSelectorOption,

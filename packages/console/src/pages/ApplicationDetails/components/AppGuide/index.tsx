@@ -7,18 +7,15 @@ import Guide, { GuideContext, type GuideContextType } from '@/components/Guide';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import useCustomDomain from '@/hooks/use-custom-domain';
 
-import { type ApplicationSecretRow } from '../../ApplicationDetailsContent/EndpointsAndCredentials';
-
 type Props = {
   readonly className?: string;
   readonly guideId: string;
-  readonly app: ApplicationResponse;
-  readonly secrets: ApplicationSecretRow[];
+  readonly app?: ApplicationResponse;
   readonly isCompact?: boolean;
   readonly onClose: () => void;
 };
 
-function AppGuide({ className, guideId, app, secrets, isCompact, onClose }: Props) {
+function AppGuide({ className, guideId, app, isCompact, onClose }: Props) {
   const { tenantEndpoint } = useContext(AppDataContext);
   const { applyDomain: applyCustomDomain } = useCustomDomain();
   const guide = guides.find(({ id }) => id === guideId);
@@ -26,18 +23,18 @@ function AppGuide({ className, guideId, app, secrets, isCompact, onClose }: Prop
   const memorizedContext = useMemo(
     () =>
       conditional(
-        !!guide && {
-          metadata: guide.metadata,
-          Logo: guide.Logo,
-          app,
-          secrets,
-          endpoint: applyCustomDomain(tenantEndpoint?.href ?? ''),
-          redirectUris: app.oidcClientMetadata.redirectUris,
-          postLogoutRedirectUris: app.oidcClientMetadata.postLogoutRedirectUris,
-          isCompact: Boolean(isCompact),
-        }
+        !!guide &&
+          !!app && {
+            metadata: guide.metadata,
+            Logo: guide.Logo,
+            app,
+            endpoint: applyCustomDomain(tenantEndpoint?.href ?? ''),
+            redirectUris: app.oidcClientMetadata.redirectUris,
+            postLogoutRedirectUris: app.oidcClientMetadata.postLogoutRedirectUris,
+            isCompact: Boolean(isCompact),
+          }
       ) satisfies GuideContextType | undefined,
-    [guide, app, secrets, applyCustomDomain, tenantEndpoint?.href, isCompact]
+    [guide, app, tenantEndpoint?.href, applyCustomDomain, isCompact]
   );
 
   return memorizedContext ? (
@@ -45,7 +42,7 @@ function AppGuide({ className, guideId, app, secrets, isCompact, onClose }: Prop
       <Guide
         className={className}
         guideId={guideId}
-        isEmpty={!guide}
+        isEmpty={!app && !guide}
         isLoading={!app}
         onClose={onClose}
       />

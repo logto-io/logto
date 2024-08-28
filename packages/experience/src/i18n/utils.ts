@@ -1,40 +1,31 @@
 import type { LocalePhrase } from '@logto/phrases-experience';
 import resource from '@logto/phrases-experience';
 import type { LanguageInfo } from '@logto/schemas';
-import { isObject } from '@silverhand/essentials';
 import type { Resource } from 'i18next';
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
-import { getPhrases as getPhrasesApi } from '@/apis/settings';
-
-const getPhrases = async (language?: string) => {
-  // Directly use the server-side phrases if it's already fetched
-  if (isObject(logtoSsr) && (!language || logtoSsr.phrases.lng === language)) {
-    return { phrases: logtoSsr.phrases.data, lng: logtoSsr.phrases.lng };
-  }
-
-  const detectedLanguage = detectLanguage();
-  const response = await getPhrasesApi({
-    localLanguage: Array.isArray(detectedLanguage) ? detectedLanguage.join(' ') : detectedLanguage,
-    language,
-  });
-
-  const remotePhrases = await response.json<LocalePhrase>();
-  const lng = response.headers.get('Content-Language');
-
-  if (!lng) {
-    throw new Error('lng not found');
-  }
-
-  return { phrases: remotePhrases, lng };
-};
+import { getPhrases } from '@/apis/settings';
 
 export const getI18nResource = async (
   language?: string
 ): Promise<{ resources: Resource; lng: string }> => {
+  const detectedLanguage = detectLanguage();
+
   try {
-    const { phrases, lng } = await getPhrases(language);
+    const response = await getPhrases({
+      localLanguage: Array.isArray(detectedLanguage)
+        ? detectedLanguage.join(' ')
+        : detectedLanguage,
+      language,
+    });
+
+    const phrases = await response.json<LocalePhrase>();
+    const lng = response.headers.get('Content-Language');
+
+    if (!lng) {
+      throw new Error('lng not found');
+    }
 
     return {
       resources: { [lng]: phrases },

@@ -15,7 +15,7 @@ import { onKeyDownHandler } from '@/utils/a11y';
 
 import OverlayScrollbar from '../OverlayScrollbar';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 export { default as DropdownItem } from './DropdownItem';
 

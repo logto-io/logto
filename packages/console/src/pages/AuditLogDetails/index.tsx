@@ -16,13 +16,12 @@ import CodeEditor from '@/ds-components/CodeEditor';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import FormField from '@/ds-components/FormField';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
-import Tag from '@/ds-components/Tag';
 import type { RequestError } from '@/hooks/use-api';
 import { isWebhookEventLogKey } from '@/pages/WebhookDetails/utils';
 import { getUserTitle } from '@/utils/user';
 
 import EventIcon from './components/EventIcon';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 const getAuditLogDetailsRelatedResourceLink = (pathname: string) =>
   `${pathname.slice(0, pathname.lastIndexOf('/'))}`;
@@ -85,12 +84,7 @@ function AuditLogDetails() {
           <Card className={styles.header}>
             <EventIcon isSuccess={data.payload.result === 'Success'} />
             <div className={styles.content}>
-              <div className={styles.eventName}>
-                {logEventTitle[data.key]}
-                {data.key === 'ExchangeTokenBy.TokenExchange' && (
-                  <Tag status="alert">Impersonation</Tag>
-                )}
-              </div>
+              <div className={styles.eventName}>{logEventTitle[data.key]}</div>
               <div className={styles.basicInfo}>
                 <div className={styles.infoItem}>
                   <div className={styles.label}>{t('log_details.event_key')}</div>

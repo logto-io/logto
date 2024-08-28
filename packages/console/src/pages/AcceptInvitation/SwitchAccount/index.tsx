@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next';
 
-import Logo from '@/assets/images/logo.svg?react';
+import Logo from '@/assets/images/logo.svg';
 import AppLoading from '@/components/AppLoading';
 import Button from '@/ds-components/Button';
 import useCurrentUser from '@/hooks/use-current-user';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly onClickSwitch: () => void;

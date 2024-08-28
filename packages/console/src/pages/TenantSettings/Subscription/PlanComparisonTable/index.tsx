@@ -14,7 +14,7 @@ import {
 import DynamicT from '@/ds-components/DynamicT';
 
 import TableDataWrapper from './TableDataWrapper';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 const featuredPlanPhraseKey: AdminConsoleKey[] = [
   'subscription.free_plan',
@@ -85,8 +85,7 @@ function PlanComparisonTable() {
     // UI and branding
     const customDomain = t('branding.custom_domain');
     const customCss = t('branding.custom_css');
-    const bringYourUi = t('branding.bring_your_ui');
-    const appLogoAndFavicon = t('branding.logo_and_favicon');
+    const appLogoAndFavicon = t('branding.app_logo_and_favicon');
     const darkMode = t('branding.dark_mode');
     const i18n = t('branding.i18n');
 
@@ -103,7 +102,6 @@ function PlanComparisonTable() {
     const mfaPrice = t('monthly_price', { value: 48 });
     const orgPrice = t('monthly_price', { value: 48 });
     const adaptiveMfa = t('user_authn.adaptive_mfa');
-    const impersonation = t('user_authn.impersonation');
 
     // User management
     const userManagement = t('user_management.user_management');
@@ -188,7 +186,6 @@ function PlanComparisonTable() {
           { name: appLogoAndFavicon, data: ['✓', '✓', '✓'] },
           { name: darkMode, data: ['✓', '✓', '✓'] },
           { name: i18n, data: ['✓', '✓', '✓'] },
-          { name: bringYourUi, data: ['-', '✓', '✓'] },
         ],
       },
       {
@@ -206,7 +203,6 @@ function PlanComparisonTable() {
             name: adaptiveMfa,
             data: ['-', comingSoon, contact],
           },
-          { name: impersonation, data: ['-', '✓', '✓'] },
         ],
       },
       {

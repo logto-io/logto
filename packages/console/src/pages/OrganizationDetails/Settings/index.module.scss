@@ -16,8 +16,10 @@
   }
 }
 
-.ssoJitContent {
-  margin-top: _.unit(2);
+.jitFormField {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(3);
 }
 
 .mfaWarning {

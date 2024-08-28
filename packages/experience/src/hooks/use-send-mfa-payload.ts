@@ -50,7 +50,7 @@ const useSendMfaPayload = () => {
       }
 
       if (result) {
-        await redirectTo(result.redirectTo);
+        redirectTo(result.redirectTo);
       }
     },
     [asyncSendMfaPayload, handleError, preSignInErrorHandler, redirectTo]

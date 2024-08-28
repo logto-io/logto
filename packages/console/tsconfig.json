@@ -3,12 +3,12 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@cloud/*": ["./src/cloud/*"]
     }
   },
   "include": [
     "src",
-    "jest.*.ts",
-    "*.config.ts"
+    "jest.*.ts"
   ]
 }

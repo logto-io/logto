@@ -1,7 +1,6 @@
 import { OrganizationScopes } from '@logto/schemas';
 
-import { EnvSet } from '#src/env-set/index.js';
-import koaQuotaGuard, { newKoaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
+import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 import SchemaRouter from '#src/utils/SchemaRouter.js';
 
 import { errorHandler } from '../organization/utils.js';
@@ -19,11 +18,7 @@ export default function organizationScopeRoutes<T extends ManagementApiRouter>(
   ]: RouterInitArgs<T>
 ) {
   const router = new SchemaRouter(OrganizationScopes, scopes, {
-    middlewares: [
-      EnvSet.values.isDevFeaturesEnabled
-        ? newKoaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] })
-        : koaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] }),
-    ],
+    middlewares: [koaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] })],
     errorHandler,
     searchFields: ['name'],
   });

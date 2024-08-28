@@ -40,7 +40,7 @@ export const handle = handleLogto(
   {
     endpoint: '${props.endpoint}',
     appId: '${props.app.id}',
-    appSecret: '${props.secrets[0]?.value ?? props.app.secret}',
+    appSecret: '${props.app.secret}',
   },
   { encryptionKey: '${cookieEncryptionKey}' } // Random-generated key
 );`}

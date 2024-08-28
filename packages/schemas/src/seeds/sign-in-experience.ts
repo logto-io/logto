@@ -6,7 +6,7 @@ import { MfaPolicy, SignInIdentifier } from '../foundations/index.js';
 
 import { adminTenantId, defaultTenantId } from './tenant.js';
 
-export const defaultPrimaryColor = '#6139F6';
+const defaultPrimaryColor = '#6139F6';
 
 export const createDefaultSignInExperience = (
   forTenantId: string,
@@ -49,7 +49,7 @@ export const createDefaultSignInExperience = (
     signInMode: SignInMode.SignInAndRegister,
     customCss: null,
     customContent: {},
-    customUiAssets: null,
+    customUiAssetId: null,
     passwordPolicy: {},
     mfa: {
       factors: [],

@@ -2,9 +2,9 @@ import { type ConsentInfoResponse } from '@logto/schemas';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
-import UserAvatar from '@/assets/icons/default-user-avatar.svg?react';
+import UserAvatar from '@/assets/icons/default-user-avatar.svg';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly user: ConsentInfoResponse['user'];

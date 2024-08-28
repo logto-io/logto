@@ -2,11 +2,11 @@
   "paths": {
     "/api/applications/{id}/protected-app-metadata/custom-domains": {
       "get": {
-        "summary": "Get application custom domains.",
-        "description": "Get custom domains of the specified application, the application type should be protected app.",
+        "summary": "Get the list of custom domains of the protected application.",
+        "description": "Get the list of custom domains of the protected application. This feature is not available for open source version.",
         "responses": {
           "200": {
-            "description": "An array of the application custom domains."
+            "description": "The domain list of the protected application."
           },
           "400": {
             "description": "Faild to sync the domain info from remote provider."
@@ -14,8 +14,8 @@
         }
       },
       "post": {
-        "summary": "Add a custom domain to the application.",
-        "description": "Add a custom domain to the application. You'll need to setup DNS record later.",
+        "summary": "Add a custom domain to the protected application.",
+        "description": "Add a custom domain to the protected application. You'll need to setup DNS record later. This feature is not available for open source version.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -44,11 +44,11 @@
     },
     "/api/applications/{id}/protected-app-metadata/custom-domains/{domain}": {
       "delete": {
-        "summary": "Remove custom domain.",
-        "description": "Remove custom domain from the specified application.",
+        "summary": "Delete a custom domain.",
+        "description": "Add a custom domain. This feature is not available for open source version.",
         "responses": {
           "204": {
-            "description": "The domain has been removed."
+            "description": "The domain has been deleted."
           },
           "404": {
             "description": "Can not find the domain."

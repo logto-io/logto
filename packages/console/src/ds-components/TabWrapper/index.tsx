@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import type { ReactNode } from 'react';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 export type Props = {
   readonly isActive: boolean;

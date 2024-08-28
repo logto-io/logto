@@ -1,11 +1,10 @@
 import { AgreeToTermsPolicy, type SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
-import { useCallback, useContext, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
-import LockIcon from '@/assets/icons/lock.svg?react';
+import LockIcon from '@/assets/icons/lock.svg';
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import { SmartInputField } from '@/components/InputFields';
@@ -15,7 +14,7 @@ import useSingleSignOnWatch from '@/hooks/use-single-sign-on-watch';
 import useTerms from '@/hooks/use-terms';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 import useOnSubmit from './use-on-submit';
 
 type Props = {
@@ -35,12 +34,10 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
 
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit();
 
-  const { identifierInputValue, setIdentifierInputValue } = useContext(UserInteractionContext);
-
   const {
     watch,
     handleSubmit,
-    formState: { errors, isValid, isSubmitting },
+    formState: { errors, isValid },
     control,
   } = useForm<FormState>({
     reValidateMode: 'onBlur',
@@ -64,8 +61,6 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
           return;
         }
 
-        setIdentifierInputValue({ type, value });
-
         if (showSingleSignOnForm) {
           await navigateToSingleSignOn();
           return;
@@ -83,7 +78,6 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
       handleSubmit,
       navigateToSingleSignOn,
       onSubmit,
-      setIdentifierInputValue,
       showSingleSignOnForm,
       termsValidation,
     ]
@@ -117,8 +111,6 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
             autoFocus={autoFocus}
             className={styles.inputField}
             {...field}
-            defaultValue={identifierInputValue?.value}
-            defaultType={identifierInputValue?.type}
             isDanger={!!errors.id || !!errorMessage}
             errorMessage={errors.id?.message}
             enabledTypes={signUpMethods}
@@ -154,7 +146,6 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
         title={showSingleSignOnForm ? 'action.single_sign_on' : 'action.create_account'}
         icon={showSingleSignOnForm ? <LockIcon /> : undefined}
         htmlType="submit"
-        isLoading={isSubmitting}
       />
 
       <input hidden type="submit" />

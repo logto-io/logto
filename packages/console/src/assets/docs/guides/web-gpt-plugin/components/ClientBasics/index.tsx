@@ -4,7 +4,7 @@ import { GuideContext } from '@/components/Guide';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 export default function ClientBasics() {
   const { app } = useContext(GuideContext);

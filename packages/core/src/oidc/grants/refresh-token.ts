@@ -19,14 +19,19 @@
  * The commit hash of the original file is `cf2069cbb31a6a855876e95157372d25dde2511c`.
  */
 
-import { UserScope } from '@logto/core-kit';
-import { isKeyInObject } from '@silverhand/essentials';
+import { type X509Certificate } from 'node:crypto';
+
+import { UserScope, buildOrganizationUrn } from '@logto/core-kit';
+import { type Optional, isKeyInObject, cond } from '@silverhand/essentials';
 import type Provider from 'oidc-provider';
 import { errors } from 'oidc-provider';
 import difference from 'oidc-provider/lib/helpers/_/difference.js';
+import certificateThumbprint from 'oidc-provider/lib/helpers/certificate_thumbprint.js';
+import epochTime from 'oidc-provider/lib/helpers/epoch_time.js';
 import filterClaims from 'oidc-provider/lib/helpers/filter_claims.js';
 import resolveResource from 'oidc-provider/lib/helpers/resolve_resource.js';
 import revoke from 'oidc-provider/lib/helpers/revoke.js';
+import dpopValidate from 'oidc-provider/lib/helpers/validate_dpop.js';
 import validatePresence from 'oidc-provider/lib/helpers/validate_presence.js';
 import instance from 'oidc-provider/lib/helpers/weak_cache.js';
 
@@ -35,11 +40,11 @@ import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import {
-  handleClientCertificate,
-  handleDPoP,
-  handleOrganizationToken,
-  checkOrganizationAccess,
-} from './utils.js';
+  getSharedResourceServerData,
+  isThirdPartyApplication,
+  reversedResourceAccessTokenTtl,
+  isOrganizationConsentedToApplication,
+} from '../resource.js';
 
 const { InvalidClient, InvalidGrant, InvalidScope, InsufficientScope, AccessDenied } = errors;
 
@@ -70,7 +75,7 @@ export const buildHandler: (
   // eslint-disable-next-line complexity
 ) => Parameters<Provider['registerGrantType']>[1] = (envSet, queries) => async (ctx, next) => {
   const { client, params, requestParamScopes, provider } = ctx.oidc;
-  const { RefreshToken, Account, AccessToken, Grant, IdToken } = provider;
+  const { RefreshToken, Account, AccessToken, Grant, ReplayDetection, IdToken } = provider;
 
   assertThat(params, new InvalidGrant('parameters must be available'));
   assertThat(client, new InvalidClient('client must be available'));
@@ -81,8 +86,14 @@ export const buildHandler: (
   const {
     rotateRefreshToken,
     conformIdTokenClaims,
-    features: { userinfo, resourceIndicators },
+    features: {
+      mTLS: { getCertificate },
+      userinfo,
+      resourceIndicators,
+    },
   } = providerInstance.configuration();
+
+  const dPoP = await dpopValidate(ctx);
 
   // @gao: I believe the presence of the param is validated by required parameters of this grant.
   // Add `String` to make TS happy.
@@ -100,6 +111,35 @@ export const buildHandler: (
   if (refreshToken.isExpired) {
     throw new InvalidGrant('refresh token is expired');
   }
+
+  let cert: Optional<string | X509Certificate>;
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- the original code uses `||`
+  if (client.tlsClientCertificateBoundAccessTokens || refreshToken['x5t#S256']) {
+    cert = getCertificate(ctx);
+    if (!cert) {
+      throw new InvalidGrant('mutual TLS client certificate not provided');
+    }
+  }
+
+  if (!dPoP && client.dpopBoundAccessTokens) {
+    throw new InvalidGrant('DPoP proof JWT not provided');
+  }
+
+  if (refreshToken['x5t#S256'] && refreshToken['x5t#S256'] !== certificateThumbprint(cert!)) {
+    throw new InvalidGrant('failed x5t#S256 verification');
+  }
+
+  /* === RFC 0001 === */
+  // The value type is `unknown`, which will swallow other type inferences. So we have to cast it
+  // to `Boolean` first.
+  const organizationId = cond(Boolean(params.organization_id) && String(params.organization_id));
+  if (
+    organizationId && // Validate if the refresh token has the required scope from RFC 0001.
+    !refreshToken.scopes.has(UserScope.Organizations)
+  ) {
+    throw new InsufficientScope('refresh token missing required scope', UserScope.Organizations);
+  }
+  /* === End RFC 0001 === */
 
   if (!refreshToken.grantId) {
     throw new InvalidGrant('grantId not found');
@@ -137,6 +177,22 @@ export const buildHandler: (
     }
   }
 
+  if (dPoP) {
+    // @ts-expect-error -- code from oidc-provider
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    const unique: unknown = await ReplayDetection.unique(
+      client.clientId,
+      dPoP.jti,
+      epochTime() + 300
+    );
+
+    assertThat(unique, new errors.InvalidGrant('DPoP proof JWT Replay detected'));
+  }
+
+  if (refreshToken.jkt && (!dPoP || refreshToken.jkt !== dPoP.thumbprint)) {
+    throw new InvalidGrant('failed jkt verification');
+  }
+
   ctx.oidc.entity('RefreshToken', refreshToken);
   ctx.oidc.entity('Grant', grant);
 
@@ -159,14 +215,45 @@ export const buildHandler: (
     throw new InvalidGrant('refresh token already used');
   }
 
-  const { organizationId } = await checkOrganizationAccess(ctx, queries, account);
-
   /* === RFC 0001 === */
-  if (
-    organizationId && // Validate if the refresh token has the required scope from RFC 0001.
-    !refreshToken.scopes.has(UserScope.Organizations)
-  ) {
-    throw new InsufficientScope('refresh token missing required scope', UserScope.Organizations);
+  if (organizationId) {
+    // Check membership
+    if (
+      !(await queries.organizations.relations.users.exists({
+        organizationId,
+        userId: account.accountId,
+      }))
+    ) {
+      const error = new AccessDenied('user is not a member of the organization');
+      error.statusCode = 403;
+      throw error;
+    }
+
+    // Check if the organization is granted (third-party application only) by the user
+    if (
+      (await isThirdPartyApplication(queries, client.clientId)) &&
+      !(await isOrganizationConsentedToApplication(
+        queries,
+        client.clientId,
+        account.accountId,
+        organizationId
+      ))
+    ) {
+      const error = new AccessDenied('organization access is not granted to the application');
+      error.statusCode = 403;
+      throw error;
+    }
+
+    // Check if the organization requires MFA and the user has MFA enabled
+    const { isMfaRequired, hasMfaConfigured } = await queries.organizations.getMfaStatus(
+      organizationId,
+      account.accountId
+    );
+    if (isMfaRequired && !hasMfaConfigured) {
+      const error = new AccessDenied('organization requires MFA but user has no MFA configured');
+      error.statusCode = 403;
+      throw error;
+    }
   }
   /* === End RFC 0001 === */
 
@@ -217,8 +304,17 @@ export const buildHandler: (
     scope: undefined!,
   });
 
-  await handleDPoP(ctx, at, refreshToken);
-  await handleClientCertificate(ctx, at, refreshToken);
+  if (client.tlsClientCertificateBoundAccessTokens) {
+    // @ts-expect-error -- code from oidc-provider
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    at.setThumbprint('x5t', cert);
+  }
+
+  if (dPoP) {
+    // @ts-expect-error -- code from oidc-provider
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    at.setThumbprint('jkt', dPoP.thumbprint);
+  }
 
   if (at.gty && !at.gty.endsWith(gty)) {
     at.gty = `${at.gty} ${gty}`;
@@ -232,17 +328,27 @@ export const buildHandler: (
   // the logic is handled in `getResourceServerInfo` and `extraTokenClaims`, see the init file of oidc-provider.
   if (organizationId && !params.resource) {
     /* === RFC 0001 === */
+    const audience = buildOrganizationUrn(organizationId);
     /** All available scopes for the user in the organization. */
     const availableScopes = await queries.organizations.relations.usersRoles
       .getUserScopes(organizationId, account.accountId)
       .then((scopes) => scopes.map(({ name }) => name));
-    await handleOrganizationToken({
-      envSet,
-      availableScopes,
-      accessToken: at,
-      organizationId,
-      scope,
-    });
+
+    /** The intersection of the available scopes and the requested scopes. */
+    const issuedScopes = availableScopes.filter((name) => scope.has(name)).join(' ');
+
+    at.aud = audience;
+    // Note: the original implementation uses `new provider.ResourceServer` to create the resource
+    // server. But it's not available in the typings. The class is actually very simple and holds
+    // no provider-specific context. So we just create the object manually.
+    // See https://github.com/panva/node-oidc-provider/blob/cf2069cbb31a6a855876e95157372d25dde2511c/lib/helpers/resource_server.js
+    at.resourceServer = {
+      ...getSharedResourceServerData(envSet),
+      accessTokenTTL: reversedResourceAccessTokenTtl,
+      audience,
+      scope: availableScopes.join(' '),
+    };
+    at.scope = issuedScopes;
     /* === End RFC 0001 === */
   } else {
     const resource = await resolveResource(

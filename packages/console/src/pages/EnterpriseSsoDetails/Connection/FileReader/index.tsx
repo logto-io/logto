@@ -4,17 +4,17 @@ import { useCallback } from 'react';
 import { useDropzone, type FileRejection, type Accept } from 'react-dropzone';
 import { type FieldError } from 'react-hook-form';
 
-import Delete from '@/assets/icons/delete.svg?react';
-import FileIconDark from '@/assets/icons/file-icon-dark.svg?react';
-import FileIcon from '@/assets/icons/file-icon.svg?react';
-import UploaderIcon from '@/assets/icons/upload.svg?react';
+import Delete from '@/assets/icons/delete.svg';
+import FileIconDark from '@/assets/icons/file-icon-dark.svg';
+import FileIcon from '@/assets/icons/file-icon.svg';
+import UploaderIcon from '@/assets/icons/upload.svg';
 import Button from '@/ds-components/Button';
 import IconButton from '@/ds-components/IconButton';
 import useTheme from '@/hooks/use-theme';
 
 import { calculateFileSize } from '../SamlMetadataForm/utils';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 const fileSizeLimit = 500 * 1024; // 500 KB
 

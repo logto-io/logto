@@ -13,9 +13,9 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import Select, { type Option } from '@/ds-components/Select';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
-import modalStyles from '@/scss/modal.module.scss';
+import * as modalStyles from '@/scss/modal.module.scss';
 
-import styles from '../index.module.scss';
+import * as styles from '../index.module.scss';
 
 type Props = {
   readonly user: TenantMemberResponse;

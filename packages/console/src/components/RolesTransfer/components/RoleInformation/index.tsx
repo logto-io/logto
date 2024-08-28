@@ -1,11 +1,11 @@
 import { RoleType, type ScopeResponse, isManagementApi, type RoleResponse } from '@logto/schemas';
 import useSWR from 'swr';
 
-import ManagementApiAccessFlag from '@/assets/icons/management-api-access.svg?react';
+import ManagementApiAccessFlag from '@/assets/icons/management-api-access.svg';
 import DynamicT from '@/ds-components/DynamicT';
 import { Tooltip } from '@/ds-components/Tip';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly role: RoleResponse;

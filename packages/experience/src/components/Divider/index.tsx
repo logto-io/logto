@@ -3,7 +3,7 @@ import type { TFuncKey } from 'i18next';
 
 import DynamicT from '../DynamicT';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import useSWR from 'swr';
 
-import Close from '@/assets/icons/close.svg?react';
+import Close from '@/assets/icons/close.svg';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
 import IconButton from '@/ds-components/IconButton';
@@ -14,7 +14,7 @@ import Spacer from '@/ds-components/Spacer';
 import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
 import useUserPreferences from '@/hooks/use-user-preferences';
-import modalStyles from '@/scss/modal.module.scss';
+import * as modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 
 import BrandingForm from '../PageContent/Branding/BrandingForm';
@@ -25,7 +25,7 @@ import Preview from '../components/Preview';
 import usePreviewConfigs from '../hooks/use-preview-configs';
 import type { SignInExperienceForm } from '../types';
 
-import styles from './GuideModal.module.scss';
+import * as styles from './GuideModal.module.scss';
 
 type Props = {
   readonly isOpen: boolean;

@@ -1,7 +1,6 @@
 import type { CommonQueryMethods } from '@silverhand/slonik';
 
 import { type WellKnownCache } from '#src/caches/well-known.js';
-import { ApplicationSecretQueries } from '#src/queries/application-secrets.js';
 import createApplicationSignInExperienceQueries from '#src/queries/application-sign-in-experience.js';
 import { createApplicationQueries } from '#src/queries/application.js';
 import { createApplicationsRolesQueries } from '#src/queries/applications-roles.js';
@@ -31,7 +30,6 @@ import { createVerificationStatusQueries } from '#src/queries/verification-statu
 
 export default class Queries {
   applications = createApplicationQueries(this.pool);
-  applicationSecrets = new ApplicationSecretQueries(this.pool);
   applicationSignInExperiences = createApplicationSignInExperienceQueries(this.pool);
   connectors = createConnectorQueries(this.pool, this.wellKnownCache);
   customPhrases = createCustomPhraseQueries(this.pool, this.wellKnownCache);

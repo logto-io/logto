@@ -1,8 +1,6 @@
-import FormFieldSkeleton from '@/ds-components/FormField/Skeleton';
-
 import FormCardLayout from '../FormCardLayout';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly formFieldCount?: number;
@@ -23,7 +21,10 @@ function Skeleton({ formFieldCount = 4 }: Props) {
         </>
       }
     >
-      <FormFieldSkeleton formFieldCount={formFieldCount} />
+      {Array.from({ length: formFieldCount }).map((_, index) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <div key={index} className={styles.field} />
+      ))}
     </FormCardLayout>
   );
 }

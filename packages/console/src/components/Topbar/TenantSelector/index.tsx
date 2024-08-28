@@ -2,8 +2,8 @@ import { OrganizationInvitationStatus } from '@logto/schemas';
 import { useContext, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg?react';
-import PlusSign from '@/assets/icons/plus.svg?react';
+import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg';
+import PlusSign from '@/assets/icons/plus.svg';
 import { type TenantResponse } from '@/cloud/types/router';
 import CreateTenantModal from '@/components/CreateTenantModal';
 import TenantEnvTag from '@/components/TenantEnvTag';
@@ -17,7 +17,7 @@ import { onKeyDownHandler } from '@/utils/a11y';
 
 import TenantDropdownItem from './TenantDropdownItem';
 import TenantInvitationDropdownItem from './TenantInvitationDropdownItem';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 export default function TenantSelector() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

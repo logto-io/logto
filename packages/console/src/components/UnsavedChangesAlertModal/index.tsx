@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useBlocker, useLocation } from 'react-router-dom';
+import { unstable_useBlocker as useBlocker, useLocation } from 'react-router-dom';
 
 import ConfirmModal from '@/ds-components/ConfirmModal';
 

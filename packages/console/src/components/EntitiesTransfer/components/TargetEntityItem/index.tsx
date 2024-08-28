@@ -1,10 +1,10 @@
 import { type ReactNode } from 'react';
 
-import Close from '@/assets/icons/close.svg?react';
+import Close from '@/assets/icons/close.svg';
 import IconButton from '@/ds-components/IconButton';
 import { type Identifiable } from '@/types/general';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props<T> = {
   readonly entity: T;

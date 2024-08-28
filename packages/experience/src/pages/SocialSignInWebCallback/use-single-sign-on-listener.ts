@@ -41,7 +41,7 @@ const useSingleSignOnRegister = () => {
       }
 
       if (result?.redirectTo) {
-        await redirectTo(result.redirectTo);
+        redirectTo(result.redirectTo);
       }
     },
     [agreeToTermsPolicy, handleError, navigate, redirectTo, request, termsValidation]
@@ -104,7 +104,7 @@ const useSingleSignOnListener = (connectorId: string) => {
       }
 
       if (result?.redirectTo) {
-        await redirectTo(result.redirectTo);
+        redirectTo(result.redirectTo);
       }
     },
     [

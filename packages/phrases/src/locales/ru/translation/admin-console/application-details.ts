@@ -23,7 +23,6 @@ const application_details = {
   description: 'Описание',
   description_placeholder: 'Введите описание своего приложения',
   config_endpoint: 'Конечная точка конфигурации OpenID Provider',
-  issuer_endpoint: 'Конечная точка издателя',
   authorization_endpoint: 'Конечная точка авторизации',
   authorization_endpoint_tip:
     'Конечная точка для аутентификации и авторизации. Он используется для аутентификации <a>OpenID Connect</a>.',
@@ -63,13 +62,6 @@ const application_details = {
   rotate_refresh_token: 'Поворот Refresh Token',
   rotate_refresh_token_label:
     'При включении Logto будет выдавать новый Refresh Token для запросов токенов, когда пройдет 70% изначального Time to Live (TTL) или будут выполнены определенные условия. <a>Узнать больше</a>',
-  backchannel_logout: 'Отключение обратного канала',
-  backchannel_logout_description:
-    'Настройте конечную точку отключения обратного канала OpenID Connect и требуется ли сеанс для этого приложения.',
-  backchannel_logout_uri: 'URI для отключения обратного канала',
-  backchannel_logout_uri_session_required: 'Требуется ли сеанс?',
-  backchannel_logout_uri_session_required_description:
-    'При включении RP требует, чтобы претензия `sid` (идентификатор сеанса) была включена в токен выхода, чтобы идентифицировать сеанс RP с OP, когда используется `backchannel_logout_uri`.',
   delete_description:
     'Это действие нельзя отменить. Оно навсегда удалит приложение. Введите название приложения <span> {{name}} </span>, чтобы подтвердить.',
   enter_your_application_name: 'Введите название своего приложения',
@@ -93,24 +85,15 @@ const application_details = {
     'Обеспечьте защиту вашего исходного сервера от прямого доступа. Обратитесь к руководству для получения более <a>подробных инструкций</a>.',
   session_duration: 'Продолжительность сеанса (дни)',
   try_it: 'Попробуйте',
-  no_organization_placeholder: 'Организация не найдена. <a>Перейти к организациям</a>',
   branding: {
     name: 'Брендинг',
     description: 'Настройте отображаемое имя и логотип вашего приложения на экране согласия.',
-    description_third_party:
-      'Настройте отображаемое имя и логотип вашего приложения на экране согласия.',
-    app_logo: 'Логотип приложения',
-    app_level_sie: 'Опыт входа на уровне приложения',
-    app_level_sie_switch:
-      'Включите опыт входа на уровне приложения и настройте брендинг для приложения. Если отключено, будет использоваться омни-опыт входа.',
     more_info: 'Дополнительная информация',
     more_info_description:
       'Предлагайте пользователям больше информации о вашем приложении на экране согласия.',
     display_name: 'Отображаемое имя',
-    application_logo: 'Логотип приложения',
-    application_logo_dark: 'Логотип приложения (темный)',
-    brand_color: 'Цвет бренда',
-    brand_color_dark: 'Цвет бренда (темный)',
+    display_logo: 'Отображаемый логотип',
+    display_logo_dark: 'Отображаемый логотип (темный)',
     terms_of_use_url: 'URL условий использования приложения',
     privacy_policy_url: 'URL политики конфиденциальности приложения',
   },
@@ -148,13 +131,13 @@ const application_details = {
     grant_organization_level_permissions: 'Предоставить разрешения на данные организации',
   },
   roles: {
+    name_column: 'Роль между машинами',
+    description_column: 'Описание',
     assign_button: 'Назначить роли между машинами',
     delete_description:
       'Это действие удалит эту роль из этого приложения. Сама роль останется, но больше не будет связана с этим приложением.',
     deleted: '{{name}} успешно удалено у этого пользователя.',
     assign_title: 'Назначить роли между машинами для {{name}}',
-    assign_subtitle:
-      'Приложения типа «машина к машине» должны иметь соответствующие роли для доступа к связанным ресурсам API.',
     assign_role_field: 'Назначить роли между машинами',
     role_search_placeholder: 'Поиск по названию роли',
     added_text: '{{value, number}} добавлено',

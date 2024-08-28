@@ -9,15 +9,6 @@ import { GlobalRoute } from '@/contexts/TenantsProvider';
 import useApi, { useStaticApi, type RequestError } from './use-api';
 import useSwrFetcher from './use-swr-fetcher';
 
-/**
- * Hook to check if the user assets service (file uploading) is ready.
- *
- * Caveats: When using it in a form, remember to check `isLoading` first and don't render the form
- * until it's settled. Otherwise, the form may be rendered with unexpected behavior, such as
- * registering a unexpected validate function. If you really need to render the form while loading,
- * you can use the `shouldUnregister` option from `react-hook-form` to unregister the field when
- * the component is unmounted.
- */
 const useUserAssetsService = () => {
   const adminApi = useStaticApi({
     prefixUrl: adminTenantEndpoint,
@@ -36,10 +27,6 @@ const useUserAssetsService = () => {
   );
 
   return {
-    /**
-     * Whether the user assets service (file uploading) is ready.
-     * @see {@link useUserAssetsService} for caveats.
-     */
     isReady: data?.status === 'ready',
     isLoading: !error && !data,
   };

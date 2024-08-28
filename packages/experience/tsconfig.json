@@ -10,6 +10,6 @@
   },
   "include": [
     "src",
-    "*.config.ts"
+    "jest.config.ts"
   ]
 }

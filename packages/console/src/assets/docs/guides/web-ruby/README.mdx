@@ -41,7 +41,7 @@ In the file where you want to initialize the Logto client (e.g. a base controlle
   config: LogtoClient::Config.new(
     endpoint: "${props.endpoint}",
     app_id: "${props.app.id}",
-    app_secret: "${props.secrets[0]?.value ?? props.app.secret}"
+    app_secret: "${props.app.secret}"
   ),
   navigate: ->(uri) { a_redirect_method(uri) },
   storage: LogtoClient::SessionStorage.new(the_session_object)
@@ -64,7 +64,7 @@ class SampleController < ApplicationController
       config: LogtoClient::Config.new(
         endpoint: "${props.endpoint}",
         app_id: "${props.app.id}",
-        app_secret: "${props.secrets[0]?.value ?? props.app.secret}"
+        app_secret: "${props.app.secret}"
       ),
       # Allow the client to redirect to other hosts (i.e. your Logto tenant)
       navigate: ->(uri) { redirect_to(uri, allow_other_host: true) },

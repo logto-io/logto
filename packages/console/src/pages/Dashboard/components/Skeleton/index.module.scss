@@ -1,14 +1,14 @@
 @use '@/scss/underscore' as _;
 
 .title {
+  @include _.shimmering-animation;
   height: 24px;
   margin-bottom: _.unit(6);
-  @include _.shimmering-animation;
 }
 
 .number {
-  height: 32px;
   @include _.shimmering-animation;
+  height: 32px;
 }
 
 .blocks {
@@ -30,9 +30,9 @@
 }
 
 .curve {
+  @include _.shimmering-animation;
   margin: _.unit(10) 0 _.unit(6);
   height: 168px;
-  @include _.shimmering-animation;
 }
 
 .activeBlocks {

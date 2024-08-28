@@ -36,9 +36,6 @@ const sign_up_and_sign_in = {
       set_up_more: '立即設置',
       go_to: '其他社交連接器。',
     },
-    automatic_account_linking: '自動帳戶連結',
-    automatic_account_linking_label:
-      '當啟用時，如果用戶以系統中新身份登錄，但存在與之相同標識（如電郵地址）的唯一帳戶，Logto 將自動連結該帳戶與社交身份，而不要求用戶進行帳戶連結。',
   },
   tip: {
     set_a_password: '啟用用戶名註冊，必須設置密碼。',
@@ -56,7 +53,7 @@ const sign_up_and_sign_in = {
     enable_single_sign_on_description: '啟用用戶使用企業身份進行應用程式的單一登錄。',
     single_sign_on_hint: {
       prefix: '前往',
-      link: '“企業 SSO”',
+      link: '“企業SSO”',
       suffix: '部分設置更多企業連接器。',
     },
     enable_user_registration: '啟用用戶註冊',

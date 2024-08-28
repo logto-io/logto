@@ -1,5 +1,4 @@
 import type { LogtoConfig, SignInOptions } from '@logto/node';
-import { InteractionEvent } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 
 import { ExperienceClient } from '#src/client/experience/index.js';
@@ -18,7 +17,6 @@ export const initClient = async (
 };
 
 export const initExperienceClient = async (
-  interactionEvent: InteractionEvent = InteractionEvent.SignIn,
   config?: Partial<LogtoConfig>,
   redirectUri?: string,
   options: Omit<SignInOptions, 'redirectUri'> = {}
@@ -26,7 +24,6 @@ export const initExperienceClient = async (
   const client = new ExperienceClient(config);
   await client.initSession(redirectUri, options);
   assert(client.interactionCookie, new Error('Session not found'));
-  await client.initInteraction({ interactionEvent });
 
   return client;
 };

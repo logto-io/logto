@@ -10,16 +10,6 @@ export const freePlanPermissionsLimit = 1;
 export const freePlanAuditLogsRetentionDays = 3;
 export const proPlanAuditLogsRetentionDays = 14;
 
-// TODO: currently we do not provide a good way to retrieve add-on items unit price in console, we hence manually defined the unit price here, will implement the API soon.
-/* === Add-on unit price (in USD) === */
-export const resourceAddOnUnitPrice = 4;
-export const machineToMachineAddOnUnitPrice = 8;
-export const tenantMembersAddOnUnitPrice = 8;
-export const mfaAddOnUnitPrice = 48;
-export const enterpriseSsoAddOnUnitPrice = 48;
-export const organizationAddOnUnitPrice = 48;
-/* === Add-on unit price (in USD) === */
-
 /**
  * In console, only featured plans are shown in the plan selection component.
  */

@@ -7,7 +7,7 @@ import SignInExperiencePreview from '@/components/SignInExperiencePreview';
 import { PreviewPlatform } from '@/components/SignInExperiencePreview/types';
 
 import PlatformTabs from './PlatformTabs';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly signInExperience?: SignInExperience;

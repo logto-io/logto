@@ -16,7 +16,7 @@ const useLinkSocialConfirmModal = () => {
 
   return useCallback(
     async (method: VerificationCodeIdentifier, target: string, connectorId: string) => {
-      show({
+      const [confirm] = await show({
         confirmText: 'action.bind_and_continue',
         cancelText: 'action.change',
         cancelTextI18nProps: {
@@ -29,13 +29,15 @@ const useLinkSocialConfirmModal = () => {
               ? formatPhoneNumberWithCountryCallingCode(target)
               : target,
         }),
-        onConfirm: async () => {
-          await linkWithSocial(connectorId);
-        },
-        onCancel: () => {
-          navigate(-1);
-        },
       });
+
+      if (!confirm) {
+        navigate(-1);
+
+        return;
+      }
+
+      await linkWithSocial(connectorId);
     },
     [linkWithSocial, navigate, show, t]
   );

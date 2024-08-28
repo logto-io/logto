@@ -10,7 +10,7 @@ import useSwrFetcher from '@/hooks/use-swr-fetcher';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { shouldRetryOnError } from '@/utils/request';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly applicationId: string;

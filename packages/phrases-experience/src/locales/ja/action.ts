@@ -2,7 +2,7 @@ const action = {
   sign_in: 'サインイン',
   continue: '続ける',
   create_account: 'アカウントを作成する',
-  create_account_without_linking: '代わりに新しいアカウントを作成する',
+  create_account_without_linking: 'リンクなしでアカウントを作成する',
   create: '作成する',
   enter_passcode: '認証コードを入力してください',
   confirm: '確認する',

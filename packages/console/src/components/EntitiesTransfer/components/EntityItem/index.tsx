@@ -5,7 +5,7 @@ import UserAvatar from '@/components/UserAvatar';
 import SuspendedTag from '@/pages/Users/components/SuspendedTag';
 import { getUserTitle } from '@/utils/user';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type UserItemProps = {
   readonly entity: User;

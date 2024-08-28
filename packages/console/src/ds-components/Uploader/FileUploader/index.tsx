@@ -6,32 +6,23 @@ import { useCallback, useEffect, useState } from 'react';
 import { type FileRejection, useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
 
-import UploaderIcon from '@/assets/icons/upload.svg?react';
+import UploaderIcon from '@/assets/icons/upload.svg';
 import useApi from '@/hooks/use-api';
-import { convertToFileExtensionArray, formatBytes } from '@/utils/uploader';
+import { convertToFileExtensionArray } from '@/utils/uploader';
 
 import { Ring } from '../../Spinner';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
-export type Props<T extends Record<string, unknown> = UserAssets> = {
-  // eslint-disable-next-line react/boolean-prop-naming
-  readonly disabled?: boolean;
+export type Props = {
   readonly maxSize: number; // In bytes
-  /**
-   * The timeout for the default api instance, in milliseconds.
-   * Will not be applied if a custom API instance is provided.
-   */
-  readonly defaultApiInstanceTimeout?: number;
   readonly allowedMimeTypes: AllowedUploadMimeType[];
   readonly actionDescription?: string;
-  readonly onUploadStart?: (file: File) => void;
-  readonly onUploadComplete?: (response: T) => void;
-  readonly onUploadErrorChange: (errorMessage?: string, files?: File[]) => void;
+  readonly onCompleted: (fileUrl: string) => void;
+  readonly onUploadErrorChange: (errorMessage?: string) => void;
   readonly className?: string;
   /**
    * Specify which API instance to use for the upload request. For example, you can use admin tenant API instead.
-   * The `timeout` prop will not be applied to this instance.
    * Defaults to the return value of `useApi()`.
    */
   readonly apiInstance?: KyInstance;
@@ -41,19 +32,16 @@ export type Props<T extends Record<string, unknown> = UserAssets> = {
   readonly uploadUrl?: string;
 };
 
-function FileUploader<T extends Record<string, unknown> = UserAssets>({
-  disabled,
+function FileUploader({
   maxSize,
-  defaultApiInstanceTimeout,
   allowedMimeTypes,
   actionDescription,
-  onUploadStart,
-  onUploadComplete,
+  onCompleted,
   onUploadErrorChange,
   className,
   apiInstance,
   uploadUrl = 'api/user-assets',
-}: Props<T>) {
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string>();
@@ -66,14 +54,13 @@ function FileUploader<T extends Record<string, unknown> = UserAssets>({
     };
   }, [onUploadErrorChange, uploadError]);
 
-  const api = useApi({ timeout: defaultApiInstanceTimeout });
+  const api = useApi();
 
   const onDrop = useCallback(
     async (acceptedFiles: File[] = [], fileRejection: FileRejection[] = []) => {
       setUploadError(undefined);
 
-      // Do not support uploading multiple files
-      if (acceptedFiles.length + fileRejection.length > 1) {
+      if (fileRejection.length > 1) {
         setUploadError(t('components.uploader.error_file_count'));
 
         return;
@@ -106,9 +93,7 @@ function FileUploader<T extends Record<string, unknown> = UserAssets>({
       const fileSizeLimit = Math.min(maxSize, maxUploadFileSize);
 
       if (acceptedFile.size > fileSizeLimit) {
-        setUploadError(
-          t('components.uploader.error_file_size', { limitWithUnit: formatBytes(fileSizeLimit) })
-        );
+        setUploadError(t('components.uploader.error_file_size', { size: fileSizeLimit / 1024 }));
 
         return;
       }
@@ -118,26 +103,22 @@ function FileUploader<T extends Record<string, unknown> = UserAssets>({
 
       try {
         setIsUploading(true);
-        onUploadStart?.(acceptedFile);
         const uploadApi = apiInstance ?? api;
-        const response = await uploadApi.post(uploadUrl, { body: formData }).json<T>();
+        const { url } = await uploadApi.post(uploadUrl, { body: formData }).json<UserAssets>();
 
-        onUploadComplete?.(response);
-      } catch (error: unknown) {
-        if (error instanceof Error && error.name === 'AbortError') {
-          return;
-        }
+        onCompleted(url);
+      } catch {
         setUploadError(t('components.uploader.error_upload'));
       } finally {
         setIsUploading(false);
       }
     },
-    [api, apiInstance, allowedMimeTypes, maxSize, onUploadComplete, onUploadStart, t, uploadUrl]
+    [api, apiInstance, allowedMimeTypes, maxSize, onCompleted, t, uploadUrl]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    disabled: isUploading || disabled,
+    disabled: isUploading,
     multiple: false,
     accept: Object.fromEntries(allowedMimeTypes.map((mimeType) => [mimeType, []])),
   });
@@ -149,7 +130,6 @@ function FileUploader<T extends Record<string, unknown> = UserAssets>({
         styles.uploader,
         Boolean(uploadError) && styles.uploaderError,
         isDragActive && styles.dragActive,
-        disabled && styles.disabled,
         className
       )}
     >

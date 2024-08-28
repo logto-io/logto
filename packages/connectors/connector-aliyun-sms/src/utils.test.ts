@@ -24,12 +24,13 @@ describe('request', () => {
   it('should call got.post with extended params', async () => {
     const parameters = mockedParameters;
     await request('http://test.endpoint.com', parameters, 'testsecret');
-    const calledData = post.mock.calls[0] as Array<{ form: Record<string, unknown> }>;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const calledData = post.mock.calls[0];
     expect(calledData).not.toBeUndefined();
-    const payload = calledData[0] ? calledData[0].form : undefined;
-    expect(payload?.AccessKeyId).toEqual('testid');
-    expect(payload?.Timestamp).not.toBeNull();
-    expect(payload?.SignatureNonce).not.toBeNull();
-    expect(payload?.Signature).not.toBeNull();
+    const payload = calledData?.[0].form as Record<string, unknown>;
+    expect(payload.AccessKeyId).toEqual('testid');
+    expect(payload.Timestamp).not.toBeNull();
+    expect(payload.SignatureNonce).not.toBeNull();
+    expect(payload.Signature).not.toBeNull();
   });
 });

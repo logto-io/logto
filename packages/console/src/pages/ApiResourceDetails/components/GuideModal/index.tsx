@@ -2,11 +2,11 @@ import { type Resource } from '@logto/schemas';
 import Modal from 'react-modal';
 
 import ModalHeader from '@/components/Guide/ModalHeader';
-import modalStyles from '@/scss/modal.module.scss';
+import * as modalStyles from '@/scss/modal.module.scss';
 
 import ApiGuide from '../ApiGuide';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly guideId: string;

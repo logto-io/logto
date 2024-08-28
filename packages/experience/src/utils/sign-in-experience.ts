@@ -4,14 +4,11 @@
  */
 
 import { SignInIdentifier } from '@logto/schemas';
-import { isObject } from '@silverhand/essentials';
 import i18next from 'i18next';
 
 import { getSignInExperience } from '@/apis/settings';
 import type { SignInExperienceResponse } from '@/types';
 import { filterSocialConnectors } from '@/utils/social-connectors';
-
-import { searchKeys, searchKeysCamelCase } from './search-parameters';
 
 const parseSignInExperienceResponse = (
   response: SignInExperienceResponse
@@ -25,20 +22,8 @@ const parseSignInExperienceResponse = (
 };
 
 export const getSignInExperienceSettings = async (): Promise<SignInExperienceResponse> => {
-  if (isObject(logtoSsr)) {
-    const { data, ...rest } = logtoSsr.signInExperience;
-
-    if (
-      searchKeysCamelCase.every((key) => {
-        const ssrValue = rest[key];
-        const storageValue = sessionStorage.getItem(searchKeys[key]) ?? undefined;
-        return (!ssrValue && !storageValue) || ssrValue === storageValue;
-      })
-    ) {
-      return data;
-    }
-  }
   const response = await getSignInExperience<SignInExperienceResponse>();
+
   return parseSignInExperienceResponse(response);
 };
 

@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 
 import SubmitFormChangesActionBar from '../SubmitFormChangesActionBar';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly autoComplete?: string;

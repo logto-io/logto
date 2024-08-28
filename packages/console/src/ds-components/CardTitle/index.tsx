@@ -12,7 +12,7 @@ import type DangerousRaw from '../DangerousRaw';
 import DynamicT from '../DynamicT';
 import TextLink from '../TextLink';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 export type Props = {
   readonly title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;

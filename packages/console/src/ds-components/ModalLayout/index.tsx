@@ -1,14 +1,14 @@
 import classNames from 'classnames';
 import { type ReactElement, type ReactNode } from 'react';
 
-import Close from '@/assets/icons/close.svg?react';
+import Close from '@/assets/icons/close.svg';
 
 import Card from '../Card';
 import type { Props as CardTitleProps } from '../CardTitle';
 import CardTitle from '../CardTitle';
 import IconButton from '../IconButton';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 export type Props = {
   readonly children: ReactNode;
@@ -17,7 +17,7 @@ export type Props = {
   readonly className?: string;
   readonly size?: 'medium' | 'large' | 'xlarge';
   readonly headerIcon?: ReactElement;
-} & Pick<CardTitleProps, 'learnMoreLink' | 'title' | 'subtitle' | 'isWordWrapEnabled' | 'paywall'>;
+} & Pick<CardTitleProps, 'learnMoreLink' | 'title' | 'subtitle' | 'isWordWrapEnabled'>;
 
 function ModalLayout({
   children,

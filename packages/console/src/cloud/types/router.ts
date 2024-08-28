@@ -11,29 +11,9 @@ export type SubscriptionPlanResponse = GuardedResponse<
   GetRoutes['/api/subscription-plans']
 >[number];
 
-export type LogtoSkuResponse = GetArrayElementType<GuardedResponse<GetRoutes['/api/skus']>>;
-
 export type Subscription = GuardedResponse<GetRoutes['/api/tenants/:tenantId/subscription']>;
 
-/** @deprecated */
 export type SubscriptionUsage = GuardedResponse<GetRoutes['/api/tenants/:tenantId/usage']>;
-
-/* ===== Use `New` in the naming to avoid confusion with legacy types ===== */
-/** The response of `GET /api/tenants/my/subscription/quota` has the same response type. */
-export type NewSubscriptionQuota = GuardedResponse<
-  GetRoutes['/api/tenants/:tenantId/subscription/quota']
->;
-
-/** The response of `GET /api/tenants/my/subscription/usage` has the same response type. */
-export type NewSubscriptionUsage = GuardedResponse<
-  GetRoutes['/api/tenants/:tenantId/subscription/usage']
->;
-
-/** The response of `GET /api/tenants/my/subscription/usage/:entityName/scopes` has the same response type. */
-export type NewSubscriptionScopeUsage = GuardedResponse<
-  GetRoutes['/api/tenants/:tenantId/subscription/usage/:entityName/scopes']
->;
-/* ===== Use `New` in the naming to avoid confusion with legacy types ===== */
 
 export type InvoicesResponse = GuardedResponse<GetRoutes['/api/tenants/:tenantId/invoices']>;
 

@@ -5,7 +5,7 @@ import Tooltip from '@/ds-components/Tip/Tooltip';
 import FlexBox from '../FlexBox';
 import Permission from '../Permission';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;

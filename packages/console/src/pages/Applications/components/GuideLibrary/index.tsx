@@ -5,7 +5,7 @@ import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 
-import SearchIcon from '@/assets/icons/search.svg?react';
+import SearchIcon from '@/assets/icons/search.svg';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import FeatureTag from '@/components/FeatureTag';
 import { type SelectedGuide } from '@/components/Guide/GuideCard';
@@ -22,7 +22,7 @@ import { thirdPartyAppCategory } from '@/types/applications';
 
 import ProtectedAppCard from '../ProtectedAppCard';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;

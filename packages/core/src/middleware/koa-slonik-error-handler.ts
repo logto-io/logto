@@ -5,7 +5,6 @@ import {
   InvalidInputError,
   CheckIntegrityConstraintViolationError,
   UniqueIntegrityConstraintViolationError,
-  ForeignKeyIntegrityConstraintViolationError,
 } from '@silverhand/slonik';
 import type { Middleware } from 'koa';
 
@@ -43,26 +42,12 @@ export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<St
             status: 422,
           });
         }
-
-        if (error.constraint === 'application_secrets_pkey') {
-          throw new RequestError({
-            code: 'application.secret_name_exists',
-            status: 422,
-          });
-        }
       }
 
       if (error instanceof CheckIntegrityConstraintViolationError) {
         throw new RequestError({
           code: 'entity.db_constraint_violated',
           status: 422,
-        });
-      }
-
-      if (error instanceof ForeignKeyIntegrityConstraintViolationError) {
-        throw new RequestError({
-          code: 'entity.relation_foreign_key_not_found',
-          status: 404,
         });
       }
 

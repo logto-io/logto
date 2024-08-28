@@ -2,11 +2,11 @@ import { Theme } from '@logto/schemas';
 import { useContext } from 'react';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
-import LogtoLogtoDark from '@/assets/icons/logto-logo-dark.svg?react';
-import LogtoLogoLight from '@/assets/icons/logto-logo-light.svg?react';
-import LogtoLogoShadow from '@/assets/icons/logto-logo-shadow.svg?react';
+import LogtoLogtoDark from '@/assets/icons/logto-logo-dark.svg';
+import LogtoLogoLight from '@/assets/icons/logto-logo-light.svg';
+import LogtoLogoShadow from '@/assets/icons/logto-logo-shadow.svg';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 const logtoUrl = `https://logto.io/?${new URLSearchParams({
   utm_source: 'sign_in',

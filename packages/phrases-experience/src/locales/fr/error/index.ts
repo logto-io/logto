@@ -13,7 +13,7 @@ const error = {
   invalid_email: "L'email n'est pas valide",
   invalid_phone: "Le numéro de téléphone n'est pas valide",
   passwords_do_not_match: 'Les mots de passe ne correspondent pas',
-  invalid_passcode: 'Le code est invalide.',
+  invalid_passcode: 'Le code est invalide',
   invalid_connector_auth: "L'autorisation n'est pas valide",
   invalid_connector_request: 'Les données du connecteur ne sont pas valides',
   unknown: 'Erreur inconnue. Veuillez réessayer plus tard.',

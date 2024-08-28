@@ -10,11 +10,11 @@ import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import ModalLayout from '@/ds-components/ModalLayout';
 import useSubscribe from '@/hooks/use-subscribe';
-import modalStyles from '@/scss/modal.module.scss';
+import * as modalStyles from '@/scss/modal.module.scss';
 
 import BillInfo from '../BillInfo';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 function PaymentOverdueModal() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

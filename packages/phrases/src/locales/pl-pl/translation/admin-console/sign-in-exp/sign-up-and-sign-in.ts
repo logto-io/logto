@@ -41,9 +41,6 @@ const sign_up_and_sign_in = {
       set_up_more: 'Ustaw',
       go_to: 'inne łączniki społecznościowe teraz.',
     },
-    automatic_account_linking: 'Automatyczne łączenie kont',
-    automatic_account_linking_label:
-      'Gdy jest włączone, jeśli użytkownik zaloguje się za pomocą tożsamości społecznościowej, która jest nowa w systemie, a istnieje jedno istniejące konto z tym samym identyfikatorem (np. adres e-mail), Logto automatycznie połączy konto z tożsamością społecznościową zamiast prosić użytkownika o powiązanie konta.',
   },
   tip: {
     set_a_password: 'Unikatowe hasło dla nazwy użytkownika jest konieczne.',

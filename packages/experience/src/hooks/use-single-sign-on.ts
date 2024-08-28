@@ -6,15 +6,9 @@ import useErrorHandler from '@/hooks/use-error-handler';
 import { getLogtoNativeSdk, isNativeWebview } from '@/utils/native-sdk';
 import { buildSocialLandingUri, generateState, storeState } from '@/utils/social-connectors';
 
-import useGlobalRedirectTo from './use-global-redirect-to';
-
 const useSingleSignOn = () => {
   const handleError = useErrorHandler();
   const asyncInvokeSingleSignOn = useApi(getSingleSignOnUrl);
-  const redirectTo = useGlobalRedirectTo({
-    shouldClearInteractionContextSession: false,
-    isReplace: false,
-  });
 
   /**
    * Native IdP Sign In Flow
@@ -45,7 +39,7 @@ const useSingleSignOn = () => {
       const state = generateState();
       storeState(state, connectorId);
 
-      const [error, redirectUrl] = await asyncInvokeSingleSignOn(
+      const [error, redirectTo] = await asyncInvokeSingleSignOn(
         connectorId,
         state,
         `${window.location.origin}/callback/${connectorId}`
@@ -57,19 +51,19 @@ const useSingleSignOn = () => {
         return;
       }
 
-      if (!redirectUrl) {
+      if (!redirectTo) {
         return;
       }
 
       // Invoke Native Sign In flow
       if (isNativeWebview()) {
-        nativeSignInHandler(redirectUrl, connectorId);
+        nativeSignInHandler(redirectTo, connectorId);
       }
 
       // Invoke Web Sign In flow
-      await redirectTo(redirectUrl);
+      window.location.assign(redirectTo);
     },
-    [asyncInvokeSingleSignOn, handleError, nativeSignInHandler, redirectTo]
+    [asyncInvokeSingleSignOn, handleError, nativeSignInHandler]
   );
 };
 

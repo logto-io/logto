@@ -2,7 +2,7 @@ import type { SignInExperience } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
 import SignUpAndSignInDiffSection from './SignUpAndSignInDiffSection';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly before: SignInExperience;

@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import ActivationProcess from './ActivationProcess';
 import CustomDomainHeader from './CustomDomainHeader';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;

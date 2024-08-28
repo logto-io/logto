@@ -11,15 +11,15 @@ import SocialLanding from '.';
 
 describe(`SocialLanding Page`, () => {
   const replace = jest.fn();
-  const callbackLink = 'logto:logto.android.com';
-  const redirectUri = 'http://www.github.com';
-  const originalLocation = window.location;
 
-  beforeAll(() => {
+  it('Should set session storage and redirect', async () => {
+    const callbackLink = 'logto:logto.android.com';
+    const redirectUri = 'http://www.github.com';
+
     /* eslint-disable @silverhand/fp/no-mutating-methods */
     Object.defineProperty(window, 'location', {
       value: {
-        origin: 'http://localhost',
+        origin,
         href: `/social/landing?`,
         search: queryStringify({
           [SearchParameters.RedirectTo]: redirectUri,
@@ -29,16 +29,7 @@ describe(`SocialLanding Page`, () => {
       },
     });
     /* eslint-enable @silverhand/fp/no-mutating-methods */
-  });
 
-  afterAll(() => {
-    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-    Object.defineProperty(window, 'location', {
-      value: originalLocation,
-    });
-  });
-
-  it('Should set session storage and redirect', async () => {
     renderWithPageContext(
       <SettingsProvider>
         <Routes>

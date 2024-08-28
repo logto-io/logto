@@ -4,11 +4,9 @@
 .signature {
   @include _.flex-row;
   font: var(--font-label-2);
-  font-weight: normal;
   color: var(--color-neutral-variant-70);
   padding: _.unit(1) _.unit(2);
   text-decoration: none;
-  opacity: 75%;
 
   .staticIcon {
     display: block;
@@ -20,8 +18,6 @@
 
   &:hover,
   &:active {
-    opacity: 100%;
-
     .staticIcon {
       display: none;
     }

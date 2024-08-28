@@ -14,8 +14,6 @@ const tenants = {
     tenant_id: 'Kiracı Kimliği',
     tenant_name: 'Kiracı Adı',
     tenant_region: 'Veriler barındırılan bölge',
-    tenant_region_description:
-      'Kiracı kaynaklarınızın (kullanıcılar, uygulamalar vb.) barındırıldığı fiziksel konum. Bu, oluşturulduktan sonra değiştirilemez.',
     tenant_region_tip:
       'Kiracı kaynaklarınız {{region}} bölgesinde barındırılır. <a>Daha fazla bilgi</a>',
     environment_tag_development: 'Geliş',
@@ -48,7 +46,6 @@ const tenants = {
   },
   create_modal: {
     title: 'Kiracı Oluştur',
-    subtitle: 'İzolasyonlu kaynaklara ve kullanıcılara sahip yeni bir kiracı oluşturun.',
     tenant_usage_purpose: 'Bu kiracıyı ne için kullanmak istiyorsunuz?',
     development_description:
       'Yalnızca test amacıyla ve üretimde kullanılmamalıdır. Abonelik gerekli değildir.',
@@ -59,10 +56,6 @@ const tenants = {
     available_plan: 'Mevcut plan:',
     create_button: 'Kiracı oluştur',
     tenant_name_placeholder: 'Benim kiracım',
-    tenant_created: 'Kiracı başarıyla oluşturuldu.',
-    invitation_failed:
-      'Bazı davetler gönderilemedi. Lütfen daha sonra Ayarlar -> Üyeler üzerinden tekrar deneyin.',
-    tenant_type_description: 'Bu, oluşturulduktan sonra değiştirilemez.',
   },
   dev_tenant_migration: {
     title:
@@ -108,10 +101,6 @@ const tenants = {
       'Üzülerek bildirmekten üzüntü duyoyruz, kiracı hesabınız şu anda geçici olarak askıya alınmıştır. Bunun nedeni, MAU sınırlarını aşmak, gecikmiş ödemeler veya diğer izinsiz işlemler gibi yanlış kullanımdır.',
     description_2:
       'Daha fazla açıklama, endişeleriniz veya işlevselliği tamamen geri yüklemek ve kiracılarınızı engellemek isterseniz, lütfen derhal bizimle iletişime geçmekten çekinmeyin.',
-  },
-  production_tenant_notification: {
-    text: 'Ücretsiz test için bir geliştirme kiracısındasınız. Yayına geçmek için bir üretim kiracısı oluşturun.',
-    action: 'Kiracı oluştur',
   },
 };
 

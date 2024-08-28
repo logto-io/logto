@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { Outlet, useLocation, useParams } from 'react-router-dom';
 import useSWR, { useSWRConfig } from 'swr';
 
-import Delete from '@/assets/icons/delete.svg?react';
-import OrgRoleIcon from '@/assets/icons/organization-role-feature.svg?react';
+import Delete from '@/assets/icons/delete.svg';
+import OrgRoleIcon from '@/assets/icons/organization-role-feature.svg';
 import DetailsPage from '@/components/DetailsPage';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import PageMeta from '@/components/PageMeta';
@@ -19,7 +19,7 @@ import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 import { type OrganizationRoleDetailsOutletContext } from './types';
 
 // Console path for organization roles

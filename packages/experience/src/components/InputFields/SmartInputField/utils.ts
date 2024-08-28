@@ -11,7 +11,7 @@ export const getInputHtmlProps = (
   currentType?: IdentifierInputType
 ): Pick<
   HTMLProps<HTMLInputElement>,
-  'type' | 'pattern' | 'inputMode' | 'placeholder' | 'autoComplete' | 'label'
+  'type' | 'pattern' | 'inputMode' | 'placeholder' | 'autoComplete'
 > => {
   if (currentType === SignInIdentifier.Phone && enabledTypes.length === 1) {
     return {
@@ -19,7 +19,7 @@ export const getInputHtmlProps = (
       pattern: '[0-9]*',
       inputMode: 'numeric',
       autoComplete: 'tel',
-      label: i18next.t('input.phone_number'),
+      placeholder: i18next.t('input.phone_number'),
     };
   }
 
@@ -28,7 +28,7 @@ export const getInputHtmlProps = (
       type: 'email',
       inputMode: 'email',
       autoComplete: 'email',
-      label: i18next.t('input.email'),
+      placeholder: i18next.t('input.email'),
     };
   }
 
@@ -37,6 +37,8 @@ export const getInputHtmlProps = (
     autoComplete: enabledTypes
       .map((type) => (type === SignInIdentifier.Phone ? 'tel' : type))
       .join(' '),
-    label: enabledTypes.map((type) => i18next.t(identifierInputPlaceholderMap[type])).join(' / '),
+    placeholder: enabledTypes
+      .map((type) => i18next.t(identifierInputPlaceholderMap[type]))
+      .join(' / '),
   };
 };

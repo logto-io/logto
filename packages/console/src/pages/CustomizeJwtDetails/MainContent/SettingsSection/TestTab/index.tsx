@@ -15,9 +15,9 @@ import {
   userContextTestModel,
 } from '@/pages/CustomizeJwtDetails/utils/config';
 
-import tabContentStyles from '../index.module.scss';
+import * as tabContentStyles from '../index.module.scss';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly isActive: boolean;

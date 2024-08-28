@@ -11,7 +11,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import CreateForm from '../CreateForm';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;

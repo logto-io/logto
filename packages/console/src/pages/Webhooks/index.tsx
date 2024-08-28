@@ -5,11 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Plus from '@/assets/icons/plus.svg?react';
-import WebhookDark from '@/assets/icons/webhook-dark.svg?react';
-import Webhook from '@/assets/icons/webhook.svg?react';
-import WebhooksEmptyDark from '@/assets/images/webhooks-empty-dark.svg?react';
-import WebhooksEmpty from '@/assets/images/webhooks-empty.svg?react';
+import Plus from '@/assets/icons/plus.svg';
+import WebhookDark from '@/assets/icons/webhook-dark.svg';
+import Webhook from '@/assets/icons/webhook.svg';
+import WebhooksEmptyDark from '@/assets/images/webhooks-empty-dark.svg';
+import WebhooksEmpty from '@/assets/images/webhooks-empty.svg';
 import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
 import SuccessRate from '@/components/SuccessRate';
@@ -25,7 +25,7 @@ import useTheme from '@/hooks/use-theme';
 import { buildUrl } from '@/utils/url';
 
 import CreateFormModal from './CreateFormModal';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 const pageSize = defaultPageSize;
 const webhooksPathname = '/webhooks';

@@ -3,21 +3,20 @@ import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import ClearIcon from '@/assets/icons/clear-icon.svg?react';
+import ClearIcon from '@/assets/icons/clear-icon.svg';
 import Button from '@/components/Button';
 import IconButton from '@/components/Button/IconButton';
 import ErrorMessage from '@/components/ErrorMessage';
 import { InputField } from '@/components/InputFields';
 
-import HiddenIdentifierInput from './HiddenIdentifierInput';
 import TogglePassword from './TogglePassword';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;
   // eslint-disable-next-line react/boolean-prop-naming
   readonly autoFocus?: boolean;
-  readonly onSubmit: (password: string) => Promise<void>;
+  readonly onSubmit: (password: string) => void;
   readonly errorMessage?: string;
   readonly clearErrorMessage?: () => void;
 };
@@ -43,7 +42,7 @@ const SetPassword = ({
     watch,
     resetField,
     handleSubmit,
-    formState: { errors, isValid, isSubmitting },
+    formState: { errors, isValid },
   } = useForm<FieldState>({
     reValidateMode: 'onBlur',
     defaultValues: { newPassword: '', confirmPassword: '' },
@@ -59,8 +58,8 @@ const SetPassword = ({
     (event?: React.FormEvent<HTMLFormElement>) => {
       clearErrorMessage?.();
 
-      void handleSubmit(async (data) => {
-        await onSubmit(data.newPassword);
+      void handleSubmit((data, event) => {
+        onSubmit(data.newPassword);
       })(event);
     },
     [clearErrorMessage, handleSubmit, onSubmit]
@@ -68,12 +67,11 @@ const SetPassword = ({
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
-      <HiddenIdentifierInput />
       <InputField
         className={styles.inputField}
         type={showPassword ? 'text' : 'password'}
         autoComplete="new-password"
-        label={t('input.password')}
+        placeholder={t('input.password')}
         autoFocus={autoFocus}
         isDanger={!!errors.newPassword}
         errorMessage={errors.newPassword?.message}
@@ -97,7 +95,7 @@ const SetPassword = ({
         className={styles.inputField}
         type={showPassword ? 'text' : 'password'}
         autoComplete="new-password"
-        label={t('input.confirm_password')}
+        placeholder={t('input.confirm_password')}
         errorMessage={errors.confirmPassword?.message}
         aria-invalid={!!errors.confirmPassword}
         {...register('confirmPassword', {
@@ -119,12 +117,7 @@ const SetPassword = ({
 
       <TogglePassword isChecked={showPassword} onChange={setShowPassword} />
 
-      <Button
-        name="submit"
-        title="action.save_password"
-        htmlType="submit"
-        isLoading={isSubmitting}
-      />
+      <Button name="submit" title="action.save_password" htmlType="submit" />
 
       <input hidden type="submit" />
     </form>

@@ -20,13 +20,10 @@ const session = {
     'La verifica non è stata completata con successo. Riavvia il processo di verifica e riprova.',
   connector_validation_session_not_found:
     'Sessione del connettore per la convalida del token non trovata.',
-  csrf_token_mismatch: 'Token CSRF non corrisponde.',
   identifier_not_found: 'Identificativo utente non trovato. Torna indietro e accedi nuovamente.',
   interaction_not_found:
     'Sessione di interazione non trovata. Torna indietro e avvia la sessione nuovamente.',
   not_supported_for_forgot_password: 'Questa operazione non è supportata per il recupero password.',
-  identity_conflict:
-    "Rilevato conflitto di identità. Si prega di avviare una nuova sessione per procedere con un'altra identità.",
   mfa: {
     require_mfa_verification: 'La verifica MFA è richiesta per accedere.',
     mfa_sign_in_only: "MFA è disponibile solo per l'interazione di accesso.",

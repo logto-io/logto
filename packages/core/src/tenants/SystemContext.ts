@@ -18,8 +18,6 @@ import { devConsole } from '#src/utils/console.js';
 export default class SystemContext {
   static shared = new SystemContext();
   public storageProviderConfig?: StorageProviderData;
-  public experienceBlobsProviderConfig?: StorageProviderData;
-  public experienceZipsProviderConfig?: StorageProviderData;
   public hostnameProviderConfig?: HostnameProviderData;
   public protectedAppConfigProviderConfig?: ProtectedAppConfigProviderData;
   public protectedAppHostnameProviderConfig?: HostnameProviderData;
@@ -30,20 +28,6 @@ export default class SystemContext {
         this.storageProviderConfig = await this.loadConfig(
           pool,
           StorageProviderKey.StorageProvider,
-          storageProviderDataGuard
-        );
-      })(),
-      (async () => {
-        this.experienceBlobsProviderConfig = await this.loadConfig(
-          pool,
-          StorageProviderKey.ExperienceBlobsProvider,
-          storageProviderDataGuard
-        );
-      })(),
-      (async () => {
-        this.experienceZipsProviderConfig = await this.loadConfig(
-          pool,
-          StorageProviderKey.ExperienceZipsProvider,
           storageProviderDataGuard
         );
       })(),

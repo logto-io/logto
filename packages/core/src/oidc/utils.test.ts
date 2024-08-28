@@ -133,19 +133,15 @@ describe('isOriginAllowed', () => {
 describe('buildLoginPromptUrl', () => {
   it('should return the correct url for empty parameters', () => {
     expect(buildLoginPromptUrl({})).toBe('sign-in');
-    expect(buildLoginPromptUrl({}, 'foo')).toBe('sign-in?app_id=foo');
-    expect(buildLoginPromptUrl({}, demoAppApplicationId)).toBe(
-      'sign-in?app_id=' + demoAppApplicationId
-    );
+    expect(buildLoginPromptUrl({}, 'foo')).toBe('sign-in');
+    expect(buildLoginPromptUrl({}, demoAppApplicationId)).toBe('sign-in?no_cache=');
   });
 
   it('should return the correct url for firstScreen', () => {
     expect(buildLoginPromptUrl({ first_screen: FirstScreen.Register })).toBe('register');
-    expect(buildLoginPromptUrl({ first_screen: FirstScreen.Register }, 'foo')).toBe(
-      'register?app_id=foo'
-    );
+    expect(buildLoginPromptUrl({ first_screen: FirstScreen.Register }, 'foo')).toBe('register');
     expect(buildLoginPromptUrl({ first_screen: FirstScreen.SignIn }, demoAppApplicationId)).toBe(
-      'sign-in?app_id=demo-app'
+      'sign-in?no_cache='
     );
     // Legacy interactionMode support
     expect(buildLoginPromptUrl({ interaction_mode: InteractionMode.SignUp })).toBe('register');
@@ -156,10 +152,10 @@ describe('buildLoginPromptUrl', () => {
       'direct/method/target?fallback=sign-in'
     );
     expect(buildLoginPromptUrl({ direct_sign_in: 'method:target' }, 'foo')).toBe(
-      'direct/method/target?app_id=foo&fallback=sign-in'
+      'direct/method/target?fallback=sign-in'
     );
     expect(buildLoginPromptUrl({ direct_sign_in: 'method:target' }, demoAppApplicationId)).toBe(
-      'direct/method/target?app_id=demo-app&fallback=sign-in'
+      'direct/method/target?no_cache=&fallback=sign-in'
     );
     expect(buildLoginPromptUrl({ direct_sign_in: 'method' })).toBe(
       'direct/method?fallback=sign-in'
@@ -176,6 +172,6 @@ describe('buildLoginPromptUrl', () => {
         { first_screen: FirstScreen.Register, direct_sign_in: 'method:target' },
         demoAppApplicationId
       )
-    ).toBe('direct/method/target?app_id=demo-app&fallback=register');
+    ).toBe('direct/method/target?no_cache=&fallback=register');
   });
 });

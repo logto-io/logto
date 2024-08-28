@@ -28,7 +28,7 @@ Import and initialize LogtoClient:
 export const logtoClient = new LogtoClient({
   endpoint: '${props.endpoint}',
   appId: '${props.app.id}',
-  appSecret: '${props.secrets[0]?.value ?? props.app.secret}',
+  appSecret: '${props.app.secret}',
   baseUrl: '${defaultBaseUrl}', // Change to your own base URL
   cookieSecret: '${generateStandardSecret()}', // Auto-generated 32 digit secret
   cookieSecure: process.env.NODE_ENV === 'production',

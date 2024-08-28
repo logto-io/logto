@@ -15,8 +15,6 @@ const tenants = {
     tenant_id: 'ID Najemcy',
     tenant_name: 'Nazwa Najemcy',
     tenant_region: 'Region hostowania danych',
-    tenant_region_description:
-      'Fizyczna lokalizacja, w której hostowane są zasoby twojego najemcy (użytkownicy, aplikacje itp.). Tego nie można zmienić po utworzeniu.',
     tenant_region_tip:
       'Twoje zasoby najemcy są hostowane w {{region}}. <a>Uzyskaj więcej informacji</a>',
     environment_tag_development: 'Dev',
@@ -43,13 +41,12 @@ const tenants = {
     title: 'OPUŚĆ',
     leave_tenant: 'Opuść najemcę',
     leave_tenant_description:
-      'Wszelkie zasoby w najemcy pozostaną, ale nie będziesz mieć dostępu do tego najemcy.',
+      'Any resources in the tenant will remain but you no longer have access to this tenant.',
     last_admin_note:
       'Aby opuścić tego najemcę, upewnij się, że co najmniej jeszcze jeden członek ma rolę Administrator.',
   },
   create_modal: {
     title: 'Utwórz nowego najemcę',
-    subtitle: 'Utwórz nowego najemcę z izolowanymi zasobami i użytkownikami.',
     tenant_usage_purpose: 'Co chcesz zrobić z tym najemcą?',
     development_description:
       'Wyłącznie do testów i nie powinien być używany w produkcji. Nie jest wymagana subskrypcja.',
@@ -60,10 +57,6 @@ const tenants = {
     available_plan: 'Dostępny plan:',
     create_button: 'Utwórz najemcę',
     tenant_name_placeholder: 'Mój najemca',
-    tenant_created: 'Najemca utworzony pomyślnie.',
-    invitation_failed:
-      'Niektóre zaproszenia nie udało się wysłać. Spróbuj ponownie później w Ustawienia -> Członkowie.',
-    tenant_type_description: 'Tego nie można zmienić po utworzeniu.',
   },
   dev_tenant_migration: {
     title:
@@ -79,9 +72,9 @@ const tenants = {
   delete_modal: {
     title: 'Usuń najemcę',
     description_line1:
-      'Czy na pewno chcesz usunąć swojego najemcę "<span>{{name}}</span>" z sufiksem tagu środowiska "<span>{{tag}}</span>"? Tego działania nie można cofnąć i spowoduje ono trwałe usunięcie wszystkich Twoich danych i informacji o najemcy.',
+      'Are you sure you want to delete your tenant "<span>{{name}}</span>" with environment suffix tag "<span>{{tag}}</span>"? This action cannot be undone, and will result in the permanent deletion of all your data and tenant information.',
     description_line2:
-      'Przed usunięciem najemcy, może możemy Ci pomóc. <span><a>Skontaktuj się z nami przez e-mail</a></span>',
+      'Before deleting tenant, maybe we can help you. <span><a>Contact us via Email</a></span>',
     description_line3:
       'Jeśli chcesz kontynuować, wprowadź nazwę najemcy "<span>{{name}}</span>" w celu potwierdzenia.',
     delete_button: 'Usuń na stałe',
@@ -110,10 +103,6 @@ const tenants = {
       'Z głębokim żalem informujemy, że twoje konto najemcy zostało tymczasowo zawieszone z powodu nieprawidłowego korzystania, w tym przekroczenia limitów MAU, opóźnionych płatności lub innych nieautoryzowanych działań.',
     description_2:
       'Jeśli potrzebujesz dalszych wyjaśnień, masz jakiekolwiek obawy lub chcesz przywrócić pełną funkcjonalność i odblokować swoje najemce, nie wahaj się skontaktować z nami natychmiast.',
-  },
-  production_tenant_notification: {
-    text: 'Jesteś w trybie najemcy deweloperskiego do darmowego testowania. Utwórz najemcę produkcyjnego, aby przejść do działania.',
-    action: 'Utwórz najemcę',
   },
 };
 

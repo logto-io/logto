@@ -7,7 +7,7 @@ import useImageMimeTypes from '@/hooks/use-image-mime-types';
 import ImageUploader from '../ImageUploader';
 import type { Props as ImageUploaderProps } from '../ImageUploader';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = Omit<ImageUploaderProps, 'onDelete' | 'onCompleted' | 'onUploadErrorChange'> & {
   readonly onChange: (value: string) => void;
@@ -23,9 +23,7 @@ function ImageUploaderField({ onChange, allowedMimeTypes: mimeTypes, ...rest }: 
     <div>
       <ImageUploader
         allowedMimeTypes={allowedMimeTypes}
-        onUploadComplete={({ url }) => {
-          onChange(url);
-        }}
+        onCompleted={onChange}
         onUploadErrorChange={setUploadError}
         onDelete={() => {
           onChange('');

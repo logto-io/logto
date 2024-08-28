@@ -1,9 +1,8 @@
 import { useLogto } from '@logto/react';
-import { demoAppApplicationId } from '@logto/schemas';
 import { decodeJwt } from 'jose';
 import { useCallback, useState, type FormEventHandler } from 'react';
 
-import styles from './App.module.scss';
+import * as styles from './App.module.scss';
 import { getLocalData, setLocalData } from './utils';
 
 const safeDecodeJwt = (token: string) => {
@@ -50,35 +49,12 @@ const DevPanel = () => {
       <form onSubmit={submitConfig}>
         <div className={styles.title}>Logto config</div>
         <div className={styles.item}>
-          <div className={styles.text}>App ID</div>
-          <input
-            name="appId"
-            defaultValue={config.appId}
-            type="text"
-            placeholder={demoAppApplicationId}
-          />
-        </div>
-        <div className={styles.item}>
-          <div className={styles.text}>Sign-in extra params</div>
-          <input
-            name="signInExtraParams"
-            defaultValue={config.signInExtraParams}
-            type="text"
-            placeholder="foo=bar&baz=qux"
-          />
-        </div>
-        <div className={styles.item}>
           <div className={styles.text}>Prompt</div>
-          <input
-            name="prompt"
-            defaultValue={config.prompt}
-            type="text"
-            placeholder="login consent"
-          />
+          <input name="prompt" defaultValue={config.prompt} type="text" />
         </div>
         <div className={styles.item}>
           <div className={styles.text}>Scope</div>
-          <input name="scope" defaultValue={config.scope} type="text" placeholder="foo bar" />
+          <input name="scope" defaultValue={config.scope} type="text" />
         </div>
         <div className={styles.item}>
           <div className={styles.text}>Resource (space delimited)</div>

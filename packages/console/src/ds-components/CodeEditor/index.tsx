@@ -7,7 +7,7 @@ import { a11yDark as a11yDarkTheme } from 'react-syntax-highlighter/dist/esm/sty
 
 import CopyToClipboard from '../CopyToClipboard';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 import { lineNumberContainerStyle, lineNumberStyle, customStyle } from './utils';
 
 type Props = {

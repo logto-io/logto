@@ -4,7 +4,7 @@ import type { Nullable } from '@silverhand/essentials';
 import type { HTMLProps, Ref } from 'react';
 import { useEffect, useImperativeHandle, useRef, forwardRef } from 'react';
 
-import ClearIcon from '@/assets/icons/clear-icon.svg?react';
+import ClearIcon from '@/assets/icons/clear-icon.svg';
 import IconButton from '@/components/Button/IconButton';
 
 import InputField from '../InputField';
@@ -70,9 +70,8 @@ const SmartInputField = (
       {...rest}
       ref={innerRef}
       isSuffixFocusVisible={Boolean(inputValue)}
-      style={{ paddingLeft }}
+      style={{ zIndex: 1, paddingLeft }} // Give <input /> z-index to override country selector
       value={inputValue}
-      isPrefixVisible={isPrefixVisible}
       prefix={
         <AnimatedPrefix isVisible={isPrefixVisible}>
           <CountryCodeSelector

@@ -180,7 +180,7 @@ describe('organization just-in-time provisioning', () => {
     await deleteUser(userId);
   });
 
-  it('should not automatically provision an existing user', async () => {
+  it('should not automatically provision an existing user when the user is an existing user', async () => {
     const emailDomain = `foo-${randomString()}.com`;
     const email = randomString() + '@' + emailDomain;
     const { client } = await registerWithEmail(email);

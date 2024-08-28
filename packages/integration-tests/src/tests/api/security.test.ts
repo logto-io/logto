@@ -1,5 +1,8 @@
 import { createSubjectToken } from '#src/api/subject-token.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
+import { devFeatureTest } from '#src/utils.js';
+
+const { describe, it } = devFeatureTest;
 
 describe('subject-tokens', () => {
   it('should create a subject token successfully', async () => {

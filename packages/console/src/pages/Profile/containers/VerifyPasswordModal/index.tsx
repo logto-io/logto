@@ -3,9 +3,9 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 
-import ArrowConnection from '@/assets/icons/arrow-connection.svg?react';
-import PasswordHideIcon from '@/assets/icons/password-hide.svg?react';
-import PasswordShowIcon from '@/assets/icons/password-show.svg?react';
+import ArrowConnection from '@/assets/icons/arrow-connection.svg';
+import PasswordHideIcon from '@/assets/icons/password-hide.svg';
+import PasswordShowIcon from '@/assets/icons/password-show.svg';
 import { adminTenantEndpoint, meApi } from '@/consts';
 import Button from '@/ds-components/Button';
 import IconButton from '@/ds-components/IconButton';
@@ -17,7 +17,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import ExperienceLikeModal from '../../components/ExperienceLikeModal';
 import { handleError, parseLocationState } from '../../utils';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type FormFields = {
   password: string;

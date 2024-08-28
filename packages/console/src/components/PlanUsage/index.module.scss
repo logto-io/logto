@@ -18,25 +18,8 @@
   align-items: center;
 }
 
-.newPricingModelUsage {
-  margin-top: _.unit(1);
-  display: flex;
-  flex-wrap: wrap;
-  gap: _.unit(2);
-}
-
-.cardItem {
-  flex: 0 0 calc(33.333% - _.unit(2) * 2);
-  max-width: calc(33.333% - _.unit(2) * 2);
-  max-height: 112px;
-}
-
 .planCycle {
   font: var(--font-body-2);
-}
-
-.planCycleNewPricingModel {
-  color: var(--color-text-secondary);
 }
 
 .usageBar {

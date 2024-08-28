@@ -2,7 +2,6 @@ import { Domains, domainResponseGuard, domainSelectFields } from '@logto/schemas
 import { pick } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
@@ -57,12 +56,7 @@ export default function domainRoutes<T extends ManagementApiRouter>(
 
   router.post(
     '/domains',
-    EnvSet.values.isDevFeaturesEnabled
-      ? // We removed custom domain paywall in new pricing model
-        async (ctx, next) => {
-          return next();
-        }
-      : koaQuotaGuard({ key: 'customDomainEnabled', quota }),
+    koaQuotaGuard({ key: 'customDomainEnabled', quota }),
     koaGuard({
       body: Domains.createGuard.pick({ domain: true }),
       response: domainResponseGuard,

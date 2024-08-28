@@ -2,9 +2,9 @@ import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
 import { useContext, useState } from 'react';
 
-import Plus from '@/assets/icons/plus.svg?react';
-import TenantLandingPageImageDark from '@/assets/images/tenant-landing-page-dark.svg?react';
-import TenantLandingPageImage from '@/assets/images/tenant-landing-page.svg?react';
+import Plus from '@/assets/icons/plus.svg';
+import TenantLandingPageImageDark from '@/assets/images/tenant-landing-page-dark.svg';
+import TenantLandingPageImage from '@/assets/images/tenant-landing-page.svg';
 import { type TenantResponse } from '@/cloud/types/router';
 import CreateTenantModal from '@/components/CreateTenantModal';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -12,7 +12,7 @@ import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import useTheme from '@/hooks/use-theme';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;

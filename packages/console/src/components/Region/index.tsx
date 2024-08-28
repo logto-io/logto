@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 // TODO: This is a copy from `@logto/cloud-models`, make a SSoT for this later
 export enum RegionName {

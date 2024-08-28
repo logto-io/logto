@@ -11,10 +11,10 @@ import DangerousRaw from '@/ds-components/DangerousRaw';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextLink from '@/ds-components/TextLink';
 import useApi from '@/hooks/use-api';
-import modalStyles from '@/scss/modal.module.scss';
+import * as modalStyles from '@/scss/modal.module.scss';
 import { getUserTitle } from '@/utils/user';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = (
   | {

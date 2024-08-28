@@ -32,7 +32,7 @@
 }
 
 .bone {
+  @include _.shimmering-animation;
   height: 26px;
   max-width: 344px;
-  @include _.shimmering-animation;
 }

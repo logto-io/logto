@@ -159,18 +159,6 @@ const quota_item = {
     unlimited: 'Пользовательский JWT',
     not_eligible: 'Удалите свой настраиваемый создатель токенов JWT',
   },
-  impersonation_enabled: {
-    name: 'Выдача за другого пользователя',
-    limited: 'Выдача за другого пользователя',
-    unlimited: 'Выдача за другого пользователя',
-    not_eligible: 'Отказ в выдаче за другого пользователя',
-  },
-  bring_your_ui_enabled: {
-    name: 'Принесите свой UI',
-    limited: 'Принесите свой UI',
-    unlimited: 'Принесите свой UI',
-    not_eligible: 'Удалите свои пользовательские элементы UI',
-  },
 };
 
 export default Object.freeze(quota_item);

@@ -14,7 +14,7 @@ import useUserAssetsService from '@/hooks/use-user-assets-service';
 import { type ConnectorFormType } from '@/types/connector';
 import { uriValidator } from '@/utils/validator';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly extraInfo?: Record<string, unknown>;
@@ -92,8 +92,8 @@ function EmailServiceConnectorForm({ extraInfo }: Props) {
         </div>
       </FormField>
       <FormField
-        title="connector_details.logto_email.email_logo_field"
-        tip={<DynamicT forKey="connector_details.logto_email.email_logo_tip" />}
+        title="connector_details.logto_email.app_logo_field"
+        tip={<DynamicT forKey="connector_details.logto_email.app_logo_tip" />}
         headlineSpacing={isUserAssetsServiceReady ? 'large' : 'default'}
       >
         {isUserAssetsServiceReady ? (

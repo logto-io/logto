@@ -32,9 +32,7 @@ const description = {
   social_link_email: 'You can link another email',
   social_link_phone: 'You can link another phone',
   social_link_email_or_phone: 'You can link another email or phone',
-  social_bind_with_existing:
-    'We found a related account which had been registered, and you can link it directly.',
-  skip_social_linking: 'Skip linking to existing account?',
+  social_bind_with_existing: 'We find a related account, you can link it directly.',
   reset_password: 'Reset password',
   reset_password_description:
     'Enter the {{types, list(type: disjunction;)}} associated with your account, and we’ll send you the verification code to reset your password.',

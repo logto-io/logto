@@ -14,7 +14,6 @@ import { sortBy } from '@/utils/sort';
 import { addSupportQuotaToPlan } from '@/utils/subscription';
 
 /**
- * @deprecated
  * Fetch subscription plans from the cloud API.
  * Note: If you want to retrieve subscription plans under the {@link TenantAccess} component, use `SubscriptionDataContext` instead.
  */

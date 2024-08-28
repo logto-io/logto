@@ -5,8 +5,8 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
-import CreateTenantHeaderIconDark from '@/assets/icons/create-tenant-header-dark.svg?react';
-import CreateTenantHeaderIcon from '@/assets/icons/create-tenant-header.svg?react';
+import CreateTenantHeaderIconDark from '@/assets/icons/create-tenant-header-dark.svg';
+import CreateTenantHeaderIcon from '@/assets/icons/create-tenant-header.svg';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantResponse } from '@/cloud/types/router';
 import Region, { RegionName } from '@/components/Region';
@@ -17,11 +17,11 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import TextInput from '@/ds-components/TextInput';
 import useTheme from '@/hooks/use-theme';
-import modalStyles from '@/scss/modal.module.scss';
+import * as modalStyles from '@/scss/modal.module.scss';
 
 import EnvTagOptionContent from './EnvTagOptionContent';
 import SelectTenantPlanModal from './SelectTenantPlanModal';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 import { type CreateTenantData } from './types';
 
 type Props = {

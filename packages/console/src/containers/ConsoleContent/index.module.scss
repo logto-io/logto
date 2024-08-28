@@ -15,12 +15,12 @@
   height: 100%;
   padding: 0 _.unit(6) 0 _.unit(2);
 
-  > :not(svg) {
+  > * {
     @include _.main-content-width;
   }
 
   // App Insights wrapper on cloud env prevents the CSS assignment to direct children
-  [class='appInsightsWrapper'] > :not(svg) {
+  [class='appInsightsWrapper'] > * {
     @include _.main-content-width;
   }
 }
@@ -30,11 +30,4 @@
   position: absolute;
   bottom: _.unit(3);
   left: _.unit(4);
-}
-
-.daisy {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
 }

@@ -29,12 +29,6 @@ const cloud = {
       others: '以上都不是',
     },
   },
-  create_tenant: {
-    page_title: '创建租户',
-    title: '创建你的第一个租户',
-    description: '租户是一个隔离的环境，你可以在其中管理用户身份、应用程序和所有其他 Logto 资源。',
-    invite_collaborators: '通过电子邮件邀请你的合作者',
-  },
   sie: {
     page_title: '定制登录体验',
     title: '让我们轻松定制你的登录体验',

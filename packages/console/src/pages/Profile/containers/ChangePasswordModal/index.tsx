@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
-import ClearInput from '@/assets/icons/clear-input.svg?react';
+import ClearInput from '@/assets/icons/clear-input.svg';
 import { adminTenantEndpoint, meApi } from '@/consts';
 import Button from '@/ds-components/Button';
 import Checkbox from '@/ds-components/Checkbox';

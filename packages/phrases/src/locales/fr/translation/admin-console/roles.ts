@@ -6,8 +6,6 @@ const roles = {
   create: 'Créer un rôle',
   role_name: 'Nom du rôle',
   role_type: 'Type de rôle',
-  type_user: 'Utilisateur',
-  type_machine_to_machine: 'Machine-à-machine',
   role_description: 'Description',
   role_name_placeholder: 'Entrez le nom de votre rôle',
   role_description_placeholder: 'Entrez la description de votre rôle',
@@ -21,20 +19,16 @@ const roles = {
   application_count: '{{count}} application',
   assign_permissions: 'Assigner des autorisations',
   create_role_title: 'Créer un rôle',
-  create_role_description:
-    'Utilisez les rôles pour organiser les autorisations et les assigner aux utilisateurs.',
   create_role_button: 'Créer un rôle',
   role_created: 'Le rôle {{name}} a été créé avec succès.',
   search: 'Rechercher par nom de rôle, description ou ID',
   placeholder_title: 'Rôles',
   placeholder_description:
     "Les rôles sont un regroupement d'autorisations qui peuvent être assignées aux utilisateurs. Assurez-vous d'ajouter d'abord des autorisations avant de créer des rôles.",
-  assign_roles: 'Assigner des rôles',
   management_api_access_notification:
     "Pour accéder à l'API de gestion de Logto, sélectionnez des rôles avec les autorisations de l'API de gestion <flag/>.",
   with_management_api_access_tip:
     "Ce rôle machine à machine inclut les autorisations de l'API de gestion de Logto",
-  role_creation_hint: 'Vous ne trouvez pas le bon rôle ? <a>Créer un rôle</a>',
 };
 
 export default Object.freeze(roles);

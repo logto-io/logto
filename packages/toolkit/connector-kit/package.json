@@ -40,18 +40,18 @@
     "@withtyped/server": "^0.13.6"
   },
   "optionalDependencies": {
-    "zod": "^3.23.8"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/ts-config": "6.0.0",
     "@types/node": "^20.9.5",
-    "@vitest/coverage-v8": "^2.0.0",
+    "@vitest/coverage-v8": "^1.4.0",
     "eslint": "^8.56.0",
     "lint-staged": "^15.0.0",
     "prettier": "^3.0.0",
-    "typescript": "^5.5.3",
-    "vitest": "^2.0.0"
+    "typescript": "^5.3.3",
+    "vitest": "^1.4.0"
   },
   "engines": {
     "node": "^20.9.0"

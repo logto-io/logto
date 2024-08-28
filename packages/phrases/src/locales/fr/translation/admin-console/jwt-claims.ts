@@ -34,11 +34,6 @@ const jwt_claims = {
     subtitle:
       "Utilisez le paramètre d'entrée `data.user` pour fournir des informations vitales sur l'utilisateur.",
   },
-  grant_data: {
-    title: 'Données de subvention',
-    subtitle:
-      'Utilisez le paramètre d’entrée `data.grant` pour fournir des informations cruciales sur les subventions, uniquement disponibles pour l’échange de jetons.',
-  },
   token_data: {
     title: 'Données du jeton',
     subtitle: "Utilisez le paramètre d'entrée `token` pour le payload du jeton d'accès actuel. ",

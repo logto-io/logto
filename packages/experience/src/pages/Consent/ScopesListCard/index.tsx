@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import ScopeGroup from '../ScopeGroup';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 const isUserScope = (scope: string): scope is UserScope =>
   Object.values<string>(UserScope).includes(scope);

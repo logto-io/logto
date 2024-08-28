@@ -14,7 +14,7 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import { type Option } from '@/ds-components/Select/MultiSelect';
 import useActionTranslation from '@/hooks/use-action-translation';
 import useApi from '@/hooks/use-api';
-import modalStyles from '@/scss/modal.module.scss';
+import * as modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 
 type Props = {

@@ -14,8 +14,6 @@ const tenants = {
     tenant_id: '테넌트 ID',
     tenant_name: '테넌트 이름',
     tenant_region: '데이터 호스팅 영역',
-    tenant_region_description:
-      '테넌트 리소스 (사용자, 앱 등) 가 호스팅되는 물리적 위치입니다. 생성 후에는 변경할 수 없습니다.',
     tenant_region_tip: '당신의 테넌트 자원은 {{region}}에 호스팅됩니다. <a>자세히 알아보기</a>',
     environment_tag_development: '개발',
     environment_tag_production: '프로드',
@@ -46,7 +44,6 @@ const tenants = {
   },
   create_modal: {
     title: '테넌트 만들기',
-    subtitle: '분리된 리소스와 사용자를 가지는 새 테넌트를 만듭니다.',
     tenant_usage_purpose: '이 테넌트를 사용하는 목적은 무엇입니까?',
     development_description:
       '테스트 용으로만 사용하고 프로덕션에서 사용하지 마십시오. 구독이 필요하지 않습니다.',
@@ -55,9 +52,6 @@ const tenants = {
     available_plan: '사용 가능한 요금제:',
     create_button: '테넌트 만들기',
     tenant_name_placeholder: '내 테넌트',
-    tenant_created: '테넌트가 성공적으로 생성되었습니다.',
-    invitation_failed: '초대 전송에 실패했습니다. 나중에 설정 -> 멤버에서 다시 시도하십시오.',
-    tenant_type_description: '생성 후에는 변경할 수 없습니다.',
   },
   dev_tenant_migration: {
     title: '사용자 정의 테넌트로 전환하여 Pro 기능을 무료로 이용할 수 있습니다!',
@@ -102,10 +96,6 @@ const tenants = {
       '매우 유감스럽게도 테넌트 계정이 일시적으로 정지되었으며, MAU 한도 초과, 연체된 결제 또는 다른 무단 조치 등 부적절한 사용으로 인한 것입니다.',
     description_2:
       '자세한 설명이 필요한 경우, 우려 사항이 있거나 기능을 완전히 복원하고 테넌트를 차단 해제하려면 바로 연락 주시기 바랍니다.',
-  },
-  production_tenant_notification: {
-    text: '무료 테스트를 위한 개발 테넌트에 있습니다. 라이브로 전환하려면 프로덕션 테넌트를 만드세요.',
-    action: '테넌트 만들기',
   },
 };
 

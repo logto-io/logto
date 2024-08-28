@@ -12,21 +12,7 @@
         "description": "Get applications associated with the organization.",
         "responses": {
           "200": {
-            "description": "A list of applications.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "properties": {
-                      "secret": {
-                        "$ref": "#/components/schemas/ApplicationLegacySecret"
-                      }
-                    }
-                  }
-                }
-              }
-            }
+            "description": "A list of applications."
           }
         }
       },

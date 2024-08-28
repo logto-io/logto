@@ -31,13 +31,6 @@ const cloud = {
       others: '위에 나열된 것 중에 없어요',
     },
   },
-  create_tenant: {
-    page_title: '테넌트 만들기',
-    title: '첫 번째 테넌트 만들기',
-    description:
-      '테넌트는 사용자 신원, 애플리케이션 및 기타 모든 Logto 리소스를 관리할 수 있는 독립된 환경입니다.',
-    invite_collaborators: '이메일로 협력자를 초대하세요',
-  },
   sie: {
     page_title: '로그인 환경 변경하기',
     title: '먼저 로그인 환경을 간편하게 사용자화해 보세요.',

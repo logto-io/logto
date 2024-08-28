@@ -1,15 +1,14 @@
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
-import CaretExpandedIcon from '@/assets/icons/caret-expanded.svg?react';
+import CaretExpandedIcon from '@/assets/icons/caret-expanded.svg';
 import Card from '@/ds-components/Card';
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 export enum CardType {
   UserData = 'user_data',
-  GrantData = 'grant_data',
   TokenData = 'token_data',
   FetchExternalData = 'fetch_external_data',
   EnvironmentVariables = 'environment_variables',

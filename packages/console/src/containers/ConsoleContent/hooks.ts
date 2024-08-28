@@ -22,7 +22,7 @@ const useTenantScopeListener = () => {
   const { clearAccessToken, clearAllTokens, getOrganizationTokenClaims, signIn } = useLogto();
   const [tokenClaims, setTokenClaims] = useState<string[]>();
   const redirectUri = useRedirectUri();
-  const { scopes, isLoading } = useCurrentTenantScopes();
+  const { scopes = [], isLoading } = useCurrentTenantScopes();
 
   useEffect(() => {
     (async () => {
@@ -33,20 +33,20 @@ const useTenantScopeListener = () => {
   }, [currentTenantId, getOrganizationTokenClaims]);
 
   useEffect(() => {
-    if (isCloud && !isLoading && scopes?.length === 0) {
+    if (isCloud && !isLoading && scopes.length === 0) {
       // User has no access to the current tenant. Navigate to root and it will return to the
       // last visited tenant, or fallback to the page where the user can create a new tenant.
       removeTenant(currentTenantId);
       navigateTenant('');
     }
-  }, [currentTenantId, isLoading, navigateTenant, removeTenant, scopes?.length]);
+  }, [currentTenantId, isLoading, navigateTenant, removeTenant, scopes.length]);
 
   useEffect(() => {
     if (!isCloud || isLoading || tokenClaims === undefined) {
       return;
     }
-    const hasScopesGranted = scopes?.some((scope) => !tokenClaims.includes(scope));
-    const hasScopesRevoked = tokenClaims.some((claim) => !scopes?.includes(claim));
+    const hasScopesGranted = scopes.some((scope) => !tokenClaims.includes(scope));
+    const hasScopesRevoked = tokenClaims.some((claim) => !scopes.includes(claim));
     if (hasScopesGranted) {
       (async () => {
         // User has been newly granted scopes. Need to re-consent to obtain the additional scopes.

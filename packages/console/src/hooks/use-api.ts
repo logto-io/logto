@@ -20,13 +20,12 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import { requestTimeout } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
-import { useConfirmModal } from '@/hooks/use-confirm-modal';
-import useRedirectUri from '@/hooks/use-redirect-uri';
 
-import useSubscribe from './use-subscribe';
+import { useConfirmModal } from './use-confirm-modal';
+import useRedirectUri from './use-redirect-uri';
 
 export class RequestError extends Error {
   constructor(
@@ -41,8 +40,6 @@ export type StaticApiProps = {
   prefixUrl?: URL;
   hideErrorToast?: boolean | LogtoErrorCode[];
   resourceIndicator: string;
-  timeout?: number;
-  signal?: AbortSignal;
 };
 
 const useGlobalRequestErrorHandler = (toastDisabledErrorCodes?: LogtoErrorCode[]) => {
@@ -113,8 +110,6 @@ export const useStaticApi = ({
   prefixUrl,
   hideErrorToast,
   resourceIndicator,
-  timeout = requestTimeout,
-  signal,
 }: StaticApiProps): KyInstance => {
   const { isAuthenticated, getAccessToken, getOrganizationToken } = useLogto();
   const { i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -125,14 +120,12 @@ export const useStaticApi = ({
   const toastDisabledErrorCodes = Array.isArray(hideErrorToast) ? hideErrorToast : undefined;
 
   const { handleError } = useGlobalRequestErrorHandler(toastDisabledErrorCodes);
-  const { syncSubscriptionData } = useSubscribe();
 
   const api = useMemo(
     () =>
       ky.create({
         prefixUrl,
-        timeout,
-        signal,
+        timeout: requestTimeout,
         hooks: {
           beforeError: conditionalArray(
             !disableGlobalErrorHandling &&
@@ -152,26 +145,10 @@ export const useStaticApi = ({
               }
             },
           ],
-          afterResponse: [
-            async (request, _options, response) => {
-              if (
-                isCloud &&
-                isDevFeaturesEnabled &&
-                isAuthenticated &&
-                ['POST', 'PUT', 'DELETE'].includes(request.method) &&
-                response.status >= 200 &&
-                response.status < 300
-              ) {
-                syncSubscriptionData();
-              }
-            },
-          ],
         },
       }),
     [
       prefixUrl,
-      timeout,
-      signal,
       disableGlobalErrorHandling,
       handleError,
       isAuthenticated,
@@ -179,7 +156,6 @@ export const useStaticApi = ({
       getOrganizationToken,
       getAccessToken,
       i18n.language,
-      syncSubscriptionData,
     ]
   );
 

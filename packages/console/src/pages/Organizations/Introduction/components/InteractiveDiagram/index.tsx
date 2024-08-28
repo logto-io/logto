@@ -9,7 +9,7 @@ import User from '../User';
 import JohnVector from '../Vector/John';
 import SarahVector from '../Vector/Sarah';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 function InteractiveDiagram() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.organizations' });

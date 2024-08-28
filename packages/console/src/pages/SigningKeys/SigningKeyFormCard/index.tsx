@@ -9,7 +9,7 @@ import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import Delete from '@/assets/icons/delete.svg?react';
+import Delete from '@/assets/icons/delete.svg';
 import FormCard from '@/components/FormCard';
 import Button from '@/ds-components/Button';
 import DangerConfirmModal from '@/ds-components/DeleteConfirmModal';
@@ -20,7 +20,7 @@ import Table from '@/ds-components/Table';
 import Tag from '@/ds-components/Tag';
 import useApi, { type RequestError } from '@/hooks/use-api';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly keyType: LogtoOidcConfigKeyType;

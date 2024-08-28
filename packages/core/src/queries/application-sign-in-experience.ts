@@ -1,10 +1,4 @@
-import {
-  type Application,
-  ApplicationSignInExperiences,
-  Applications,
-  type ApplicationSignInExperience,
-} from '@logto/schemas';
-import { type Nullable } from '@silverhand/essentials';
+import { ApplicationSignInExperiences, type ApplicationSignInExperience } from '@logto/schemas';
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
@@ -16,22 +10,12 @@ const createApplicationSignInExperienceQueries = (pool: CommonQueryMethods) => {
     returning: true,
   });
 
-  type ApplicationSignInExperienceReturn = ApplicationSignInExperience &
-    Pick<Application, 'type' | 'isThirdParty'>;
+  const safeFindSignInExperienceByApplicationId = async (applicationId: string) => {
+    const { table, fields } = convertToIdentifiers(ApplicationSignInExperiences);
 
-  const safeFindSignInExperienceByApplicationId = async (
-    applicationId: string
-  ): Promise<Nullable<ApplicationSignInExperienceReturn>> => {
-    const applications = convertToIdentifiers(Applications, true);
-    const { table, fields } = convertToIdentifiers(ApplicationSignInExperiences, true);
-
-    return pool.maybeOne<ApplicationSignInExperienceReturn>(sql`
-      select
-        ${sql.join(Object.values(fields), sql`, `)},
-        ${applications.fields.type},
-        ${applications.fields.isThirdParty}
+    return pool.maybeOne<ApplicationSignInExperience>(sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
-      join ${applications.table} on ${fields.applicationId}=${applications.fields.id}
       where ${fields.applicationId}=${applicationId}
     `);
   };

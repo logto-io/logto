@@ -1,14 +1,11 @@
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
-import { useDebouncedLoader } from 'use-debounced-loader';
 
-import RotatingRingIcon from './RotatingRingIcon';
-import socialLinkButtonStyles from './SocialLinkButton.module.scss';
-import styles from './index.module.scss';
+import * as socialLinkButtonStyles from './SocialLinkButton.module.scss';
+import * as styles from './index.module.scss';
 
 export type Props = {
   readonly isDisabled?: boolean;
-  readonly isLoading?: boolean;
   readonly className?: string;
   readonly target: string;
   readonly logo: string;
@@ -16,23 +13,13 @@ export type Props = {
   readonly onClick?: () => void;
 };
 
-const SocialLinkButton = ({
-  isDisabled,
-  isLoading = false,
-  className,
-  target,
-  name,
-  logo,
-  onClick,
-}: Props) => {
+const SocialLinkButton = ({ isDisabled, className, target, name, logo, onClick }: Props) => {
   const {
     t,
     i18n: { language },
   } = useTranslation();
 
   const localName = name[language] ?? name.en;
-
-  const isLoadingActive = useDebouncedLoader(isLoading, 300);
 
   return (
     <button
@@ -42,24 +29,19 @@ const SocialLinkButton = ({
         styles.secondary,
         styles.large,
         socialLinkButtonStyles.socialButton,
-        (isDisabled ?? isLoadingActive) && styles.disabled,
+        isDisabled && styles.disabled,
         className
       )}
       type="button"
       onClick={onClick}
     >
-      {logo && !isLoadingActive && (
+      {logo && (
         <img
           src={logo}
           alt={target}
           className={socialLinkButtonStyles.icon}
           crossOrigin="anonymous"
         />
-      )}
-      {isLoadingActive && (
-        <span className={socialLinkButtonStyles.loadingIcon}>
-          <RotatingRingIcon />
-        </span>
       )}
       <div className={socialLinkButtonStyles.name}>
         <div className={socialLinkButtonStyles.placeHolder} />

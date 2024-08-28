@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 
-import CirclePlus from '@/assets/icons/circle-plus.svg?react';
-import Plus from '@/assets/icons/plus.svg?react';
+import CirclePlus from '@/assets/icons/circle-plus.svg';
+import Plus from '@/assets/icons/plus.svg';
 import ConnectorLogo from '@/components/ConnectorLogo';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import ActionMenu from '@/ds-components/ActionMenu';
@@ -10,7 +10,7 @@ import { DropdownItem } from '@/ds-components/Dropdown';
 import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
 import type { ConnectorGroup } from '@/types/connector';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly options: ConnectorGroup[];

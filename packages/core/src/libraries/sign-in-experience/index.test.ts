@@ -1,7 +1,6 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { builtInLanguages } from '@logto/phrases-experience';
 import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
-import { TtlCache } from '@logto/shared';
 
 import {
   mockGithubConnector,
@@ -12,7 +11,6 @@ import {
   socialTarget02,
   wellConfiguredSsoConnector,
 } from '#src/__mocks__/index.js';
-import { WellKnownCache } from '#src/caches/well-known.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import { mockLogtoConfigsLibrary } from '#src/test-utils/mock-libraries.js';
@@ -68,13 +66,7 @@ const getLogtoConnectors = jest.spyOn(connectorLibrary, 'getLogtoConnectors');
 
 const { createSignInExperienceLibrary } = await import('./index.js');
 const { validateLanguageInfo, removeUnavailableSocialConnectorTargets, getFullSignInExperience } =
-  createSignInExperienceLibrary(
-    queries,
-    connectorLibrary,
-    ssoConnectorLibrary,
-    cloudConnection,
-    new WellKnownCache('foo', new TtlCache())
-  );
+  createSignInExperienceLibrary(queries, connectorLibrary, ssoConnectorLibrary, cloudConnection);
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -157,7 +149,7 @@ describe('getFullSignInExperience()', () => {
       wellConfiguredSsoConnector,
     ]);
 
-    const fullSignInExperience = await getFullSignInExperience({ locale: 'en' });
+    const fullSignInExperience = await getFullSignInExperience('en');
     const connectorFactory = ssoConnectorFactories[wellConfiguredSsoConnector.providerName];
 
     expect(fullSignInExperience).toStrictEqual({
@@ -191,7 +183,7 @@ describe('getFullSignInExperience()', () => {
       wellConfiguredSsoConnector,
     ]);
 
-    const fullSignInExperience = await getFullSignInExperience({ locale: 'en' });
+    const fullSignInExperience = await getFullSignInExperience('en');
     const connectorFactory = ssoConnectorFactories[wellConfiguredSsoConnector.providerName];
 
     expect(fullSignInExperience).toStrictEqual({
@@ -232,7 +224,7 @@ describe('get sso connectors', () => {
       singleSignOnEnabled: false,
     });
 
-    const { ssoConnectors } = await getFullSignInExperience({ locale: 'en' });
+    const { ssoConnectors } = await getFullSignInExperience('en');
 
     expect(ssoConnectorLibrary.getAvailableSsoConnectors).not.toBeCalled();
 
@@ -247,7 +239,7 @@ describe('get sso connectors', () => {
       wellConfiguredSsoConnector,
     ]);
 
-    const { ssoConnectors } = await getFullSignInExperience({ locale: 'jp' });
+    const { ssoConnectors } = await getFullSignInExperience('jp');
 
     const connectorFactory = ssoConnectorFactories[wellConfiguredSsoConnector.providerName];
 
@@ -278,7 +270,7 @@ describe('get sso connectors', () => {
 
     const connectorFactory = ssoConnectorFactories[wellConfiguredSsoConnector.providerName];
 
-    const { ssoConnectors } = await getFullSignInExperience({ locale: 'en' });
+    const { ssoConnectors } = await getFullSignInExperience('en');
 
     expect(ssoConnectors).toEqual([
       {

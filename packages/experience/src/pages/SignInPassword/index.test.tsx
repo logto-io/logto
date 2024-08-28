@@ -1,18 +1,18 @@
 import { SignInIdentifier } from '@logto/schemas';
-import { renderHook } from '@testing-library/react';
 import { useLocation } from 'react-router-dom';
 
-import UserInteractionContextProvider from '@/Providers/UserInteractionContextProvider';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { mockSignInExperienceSettings } from '@/__mocks__/logto';
-import useSessionStorage, { StorageKeys } from '@/hooks/use-session-storages';
 
 import SignInPassword from '.';
 
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useLocation: jest.fn(() => ({})),
+}));
+
 describe('SignInPassword', () => {
-  const { result } = renderHook(() => useSessionStorage());
-  const { set, remove } = result.current;
   const mockUseLocation = useLocation as jest.Mock;
   const email = 'email@logto.io';
   const phone = '18571111111';
@@ -26,9 +26,7 @@ describe('SignInPassword', () => {
           ...settings,
         }}
       >
-        <UserInteractionContextProvider>
-          <SignInPassword />
-        </UserInteractionContextProvider>
+        <SignInPassword />
       </SettingsProvider>
     );
 
@@ -43,7 +41,9 @@ describe('SignInPassword', () => {
   });
 
   test('Show 404 error page with invalid method', () => {
-    set(StorageKeys.IdentifierInputValue, { type: SignInIdentifier.Username, value: username });
+    mockUseLocation.mockImplementation(() => ({
+      state: { identifier: SignInIdentifier.Username, value: username },
+    }));
 
     const { queryByText } = renderPasswordSignInPage({
       signIn: {
@@ -60,8 +60,6 @@ describe('SignInPassword', () => {
 
     expect(queryByText('description.enter_password')).toBeNull();
     expect(queryByText('description.not_found')).not.toBeNull();
-
-    remove(StorageKeys.IdentifierInputValue);
   });
 
   test.each([
@@ -70,7 +68,9 @@ describe('SignInPassword', () => {
   ])(
     'render password page with %variable.identifier',
     ({ identifier, value, verificationCode }) => {
-      set(StorageKeys.IdentifierInputValue, { type: identifier, value });
+      mockUseLocation.mockImplementation(() => ({
+        state: { identifier, value },
+      }));
 
       const { queryByText, container } = renderPasswordSignInPage({
         signIn: {
@@ -93,8 +93,6 @@ describe('SignInPassword', () => {
       } else {
         expect(queryByText('action.sign_in_via_passcode')).toBeNull();
       }
-
-      remove(StorageKeys.IdentifierInputValue);
     }
   );
 });

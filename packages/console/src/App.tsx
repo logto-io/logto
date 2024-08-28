@@ -16,8 +16,6 @@ import './scss/normalized.scss';
 import './scss/overlayscrollbars.scss';
 // eslint-disable-next-line import/no-unassigned-import
 import '@fontsource/roboto-mono';
-// eslint-disable-next-line import/no-unassigned-import
-import 'react-color-palette/css';
 
 import CloudAppRoutes from '@/cloud/AppRoutes';
 import AppLoading from '@/components/AppLoading';

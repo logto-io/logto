@@ -1,8 +1,7 @@
 import { type Organization } from '@logto/schemas';
+import { trySafe } from '@silverhand/essentials';
 
 import { type Option } from '@/ds-components/Select/MultiSelect';
-import { emptyBranding } from '@/types/sign-in-experience';
-import { removeFalsyValues } from '@/utils/object';
 
 export type FormData = Partial<Omit<Organization, 'customData'> & { customData: string }> & {
   jitEmailDomains: string[];
@@ -10,15 +9,16 @@ export type FormData = Partial<Omit<Organization, 'customData'> & { customData: 
   jitSsoConnectorIds: string[];
 };
 
+export const isJsonObject = (value: string) => {
+  const parsed = trySafe<unknown>(() => JSON.parse(value));
+  return Boolean(parsed && typeof parsed === 'object');
+};
+
 export const normalizeData = (
   data: Organization,
   jit: { emailDomains: string[]; roles: Array<Option<string>>; ssoConnectorIds: string[] }
 ): FormData => ({
   ...data,
-  branding: {
-    ...emptyBranding,
-    ...data.branding,
-  },
   jitEmailDomains: jit.emailDomains,
   jitRoles: jit.roles,
   jitSsoConnectorIds: jit.ssoConnectorIds,
@@ -30,11 +30,9 @@ export const assembleData = ({
   jitRoles,
   jitSsoConnectorIds,
   customData,
-  branding,
   ...data
 }: FormData): Partial<Organization> => ({
   ...data,
-  branding: branding && removeFalsyValues(branding),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   customData: JSON.parse(customData ?? '{}'),
 });

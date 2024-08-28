@@ -18,7 +18,7 @@ import { buildUrl } from '@/utils/url';
 import { type WebhookDetailsOutletContext } from '../types';
 import { buildHookEventLogKey, getHookEventKey } from '../utils';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 const hookLogEventOptions = hookEvents.map((event) => ({
   title: event,

@@ -3,7 +3,7 @@ import { useSpring, animated, config } from '@react-spring/web';
 import type { Nullable } from '@silverhand/essentials';
 import { cloneElement, useCallback, useRef, useState } from 'react';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly children: JSX.Element; // Limit to one element

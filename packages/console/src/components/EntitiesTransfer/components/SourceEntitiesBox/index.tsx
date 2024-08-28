@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import Search from '@/assets/icons/search.svg?react';
+import Search from '@/assets/icons/search.svg';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import { defaultPageSize } from '@/consts';
 import DynamicT from '@/ds-components/DynamicT';
@@ -14,13 +14,13 @@ import Pagination from '@/ds-components/Pagination';
 import TextInput from '@/ds-components/TextInput';
 import type { RequestError } from '@/hooks/use-api';
 import useDebounce from '@/hooks/use-debounce';
-import transferLayout from '@/scss/transfer.module.scss';
+import * as transferLayout from '@/scss/transfer.module.scss';
 import { type Identifiable } from '@/types/general';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
 import SourceEntityItem from '../SourceEntityItem';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type SearchProps = {
   pathname: string;

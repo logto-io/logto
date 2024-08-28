@@ -6,12 +6,8 @@ import useMatchTenantPath from '@/hooks/use-tenant-pathname';
 import Item from './components/Item';
 import Section from './components/Section';
 import { useSidebarMenuItems } from './hook';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 import { getPath } from './utils';
-
-export function Skeleton() {
-  return <div className={styles.skeleton} />;
-}
 
 function Sidebar() {
   const { t } = useTranslation(undefined, {

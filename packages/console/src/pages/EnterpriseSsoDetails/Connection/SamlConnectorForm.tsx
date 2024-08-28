@@ -24,7 +24,7 @@ import { invalidConfigErrorCode, invalidMetadataErrorCode } from '../config';
 import SamlAttributeMapping from './SamlAttributeMapping';
 import SamlMetadataForm from './SamlMetadataForm';
 import SamlConnectorSpInfo from './ServiceProviderInfo/SamlConnectorSpInfo';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly isDeleted: boolean;

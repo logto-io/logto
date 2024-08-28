@@ -17,7 +17,7 @@ const jwt_claims = {
   custom_jwt_create_button: '添加自定义声明',
   custom_jwt_item: '自定义声明{{for}}',
   delete_modal_title: '删除自定义声明',
-  delete_modal_content: '你确定要删除自定义声明吗？',
+  delete_modal_content: '您确定要删除自定义声明吗？',
   clear: '清除',
   cleared: '已清除',
   restore: '恢复默认',
@@ -28,10 +28,6 @@ const jwt_claims = {
   user_data: {
     title: '用户数据',
     subtitle: '使用`data.user`输入参数提供重要用户信息。',
-  },
-  grant_data: {
-    title: '授权数据',
-    subtitle: '使用`data.grant`输入参数提供重要的授权信息，仅适用于令牌交换。',
   },
   token_data: {
     title: '令牌数据',

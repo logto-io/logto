@@ -17,9 +17,9 @@
  * from the Console and check if the backchannel logout endpoint is called.
  */
 
-import { createServer, type RequestListener, type Server } from 'node:http';
+import { type Server, type RequestListener, createServer } from 'node:http';
 
-import { adminConsoleApplicationId, type Application } from '@logto/schemas';
+import { adminConsoleApplicationId } from '@logto/schemas';
 
 import { authedAdminTenantApi } from '#src/api/api.js';
 import ExpectConsole from '#src/ui-helpers/expect-console.js';
@@ -91,14 +91,9 @@ describe('backchannel logout', () => {
   });
 
   it('should call the backchannel logout endpoint when a user logs out', async () => {
-    const application = await authedAdminTenantApi
-      .get('applications/' + adminConsoleApplicationId)
-      .json<Application>();
-
     await authedAdminTenantApi.patch('applications/' + adminConsoleApplicationId, {
       json: {
         oidcClientMetadata: {
-          ...application.oidcClientMetadata,
           backchannelLogoutUri,
         },
       },

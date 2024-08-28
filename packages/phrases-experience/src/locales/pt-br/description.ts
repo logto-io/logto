@@ -31,8 +31,7 @@ const description = {
   social_link_phone: 'É possível vincular outro telefone',
   social_link_email_or_phone: 'É possível vincular outro e-mail ou telefone',
   social_bind_with_existing:
-    'Encontramos uma conta relacionada que já foi registrada, e você pode vinculá-la diretamente.',
-  skip_social_linking: 'Pular vinculação à conta existente?',
+    'Encontramos uma conta relacionada registrada e você pode vinculá-la diretamente.',
   reset_password: 'Esqueceu a senha',
   reset_password_description:
     'Digite o {{types, list(type: disjunction;)}} à sua conta e enviaremos a você o código de verificação para redefinir sua senha.',

@@ -45,21 +45,10 @@ const connector_details = {
     company_information_field: '公司信息',
     company_information_description: '在郵件底部顯示您的公司名稱、地址或郵政編碼，以增強真實性。',
     company_information_placeholder: '您公司的基本信息',
-    email_logo_field: '郵件標誌',
-    email_logo_tip: '在電子郵件頂部顯示您的品牌標誌。使用相同的圖像適配亮模式和暗模式。',
+    app_logo_field: '應用程序標誌',
+    app_logo_tip: '在郵件頂部顯示您的品牌標誌。在淺色模式和深色模式下使用相同的圖像。',
     urls_not_allowed: '不允許使用 URL',
     test_notes: 'Logto 使用 "通用" 模板進行測試。',
-  },
-  google_one_tap: {
-    title: 'Google One Tap',
-    description: 'Google One Tap 是一種安全且方便用戶登錄網站的方式。',
-    enable_google_one_tap: '啟用 Google One Tap',
-    enable_google_one_tap_description:
-      '在你的登錄體驗中啟用 Google One Tap：如果用戶的設備上已登錄谷歌帳號，讓用戶快速註冊或登錄。',
-    configure_google_one_tap: '配置 Google One Tap',
-    auto_select: '如果可能，自動選擇憑據',
-    close_on_tap_outside: '如果用戶點擊/點按外部，取消提示',
-    itp_support: '在 ITP 瀏覽器上啟用 <a>升級的 One Tap UX</a>',
   },
 };
 

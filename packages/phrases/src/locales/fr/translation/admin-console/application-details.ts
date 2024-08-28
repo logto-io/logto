@@ -23,7 +23,6 @@ const application_details = {
   description: 'Description',
   description_placeholder: 'Entrez la description de votre application',
   config_endpoint: 'Point de configuration du fournisseur OpenID',
-  issuer_endpoint: 'Point de terminaison de l’émetteur',
   authorization_endpoint: "Point de terminaison d'autorisation",
   authorization_endpoint_tip:
     "Le point de terminaison pour effectuer l'authentification et l'autorisation. Il est utilisé pour <a>l'authentification</a> OpenID Connect.",
@@ -63,13 +62,6 @@ const application_details = {
   rotate_refresh_token: 'Tourner le Refresh Token',
   rotate_refresh_token_label:
     "Lorsqu'elle est activée, Logto émettra un nouveau Refresh Token pour les demandes de jeton lorsque 70% de la durée de vie (TTL) d'origine est écoulée ou que certaines conditions sont remplies. <a>En savoir plus</a>",
-  backchannel_logout: 'Déconnexion en backchannel',
-  backchannel_logout_description:
-    'Configurez le point de terminaison de déconnexion en backchannel OpenID Connect et si une session est requise pour cette application.',
-  backchannel_logout_uri: 'URI de déconnexion en backchannel',
-  backchannel_logout_uri_session_required: 'La session est-elle requise ?',
-  backchannel_logout_uri_session_required_description:
-    "Lorsqu'elle est activée, le RP exige qu'une réclamation `sid` (ID de session) soit incluse dans le jeton de déconnexion pour identifier la session RP avec l'OP lorsque l'`URI de déconnexion en backchannel` est utilisé.",
   delete_description:
     "Cette action ne peut être annulée. Elle supprimera définitivement l'application. Veuillez entrer le nom de l'application <span>{{nom}}</span> pour confirmer.",
   enter_your_application_name: 'Entrez le nom de votre application',
@@ -93,25 +85,16 @@ const application_details = {
     "Assurez-vous de protéger votre serveur d'origine contre un accès direct. Référez-vous au guide pour plus de <a>instructions détaillées</a>.",
   session_duration: 'Durée de la session (jours)',
   try_it: 'Essayez',
-  no_organization_placeholder: 'Aucune organisation trouvée. <a>Aller aux organisations</a>',
   branding: {
     name: 'Marque',
     description:
       "Personnalisez le nom d'affichage et le logo de votre application sur l'écran de consentement.",
-    description_third_party:
-      "Personnalisez le nom d'affichage et le logo de votre application sur l'écran de consentement.",
-    app_logo: 'Logo de l’application',
-    app_level_sie: 'Expérience de connexion au niveau de l’application',
-    app_level_sie_switch:
-      'Activez l’expérience de connexion au niveau de l’application et configurez le branding spécifique à l’application. Si désactivée, l’expérience de connexion omni sera utilisée.',
     more_info: "Plus d'informations",
     more_info_description:
       "Offrez aux utilisateurs plus de détails sur votre application sur l'écran de consentement.",
     display_name: "Nom d'affichage",
-    application_logo: 'Logo de l’application',
-    application_logo_dark: 'Logo de l’application (sombre)',
-    brand_color: 'Couleur de la marque',
-    brand_color_dark: 'Couleur de la marque (sombre)',
+    display_logo: "Logo d'affichage",
+    display_logo_dark: "Logo d'affichage (sombre)",
     terms_of_use_url: "URL des conditions d'utilisation de l'application",
     privacy_policy_url: "URL de la politique de confidentialité de l'application",
   },
@@ -125,8 +108,6 @@ const application_details = {
     field_name: 'Permission',
     field_description: "Affiché à l'écran de consentement",
     delete_text: 'Supprimer la permission',
-    permission_delete_confirm:
-      'Cette action retirera les autorisations accordées à l’application tierce, l’empêchant de demander l’autorisation de l’utilisateur pour des types de données spécifiques. Êtes-vous sûr de vouloir continuer ?',
     permissions_assignment_description:
       "Sélectionnez les permissions demandées par l'application tierce pour l'autorisation de l'utilisateur afin d'accéder à des types de données spécifiques.",
     user_profile: 'Données utilisateur',
@@ -149,13 +130,13 @@ const application_details = {
     grant_organization_level_permissions: "Accorder des permissions des données d'organisation",
   },
   roles: {
+    name_column: 'Rôle de machine à machine',
+    description_column: 'Description',
     assign_button: 'Attribuer des rôles de machine à machine',
     delete_description:
       'Cette action supprimera ce rôle de cette application machine-to-machine. Le rôle lui-même existera toujours, mais il ne sera plus associé à cette application machine-to-machine.',
     deleted: '{{name}} a été supprimé(e) avec succès de cet utilisateur.',
     assign_title: 'Attribuer des rôles de machine à machine à {{name}}',
-    assign_subtitle:
-      'Les applications entre machines doivent avoir des rôles de type machine à machine pour accéder aux ressources API associées.',
     assign_role_field: 'Attribuer des rôles de machine à machine',
     role_search_placeholder: 'Rechercher par nom de rôle',
     added_text: '{{value, number}} ajouté(s)',

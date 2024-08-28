@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
@@ -9,21 +9,13 @@ import useNativeMessageListener from '@/hooks/use-native-message-listener';
 import useSingleSignOn from '@/hooks/use-single-sign-on';
 import { getLogoUrl } from '@/utils/logo';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 const SingleSignOnConnectors = () => {
   const { theme } = useContext(PageContext);
   const { ssoEmail, ssoConnectors } = useContext(UserInteractionContext);
   const navigate = useNavigate();
   const onSubmit = useSingleSignOn();
-
-  const [loadingConnectorId, setLoadingConnectorId] = useState<string>();
-
-  const handleSubmit = async (connectorId: string) => {
-    setLoadingConnectorId(connectorId);
-    await onSubmit(connectorId);
-    setLoadingConnectorId(undefined);
-  };
 
   // Listen to native message
   useNativeMessageListener();
@@ -54,10 +46,7 @@ const SingleSignOnConnectors = () => {
               name={{ en: connectorName }} // I18n support for connectorName not supported yet, always display the plain text
               logo={getLogoUrl({ theme, logoUrl, darkLogoUrl })}
               target={connectorName}
-              isLoading={loadingConnectorId === connector.id}
-              onClick={() => {
-                void handleSubmit(connector.id);
-              }}
+              onClick={async () => onSubmit(id)}
             />
           );
         })}

@@ -30,9 +30,7 @@ const description = {
   social_link_email: 'Możesz połączyć kolejny adres email',
   social_link_phone: 'Możesz połączyć kolejny numer telefonu',
   social_link_email_or_phone: 'Możesz połączyć kolejny adres email lub numer telefonu',
-  social_bind_with_existing:
-    'Znaleźliśmy powiązane konto, które zostało zarejestrowane, i możesz je bezpośrednio połączyć.',
-  skip_social_linking: 'Pominąć połączenie z istniejącym kontem?',
+  social_bind_with_existing: 'Znaleźliśmy powiązane konto, możesz je połączyć bezpośrednio.',
   reset_password: 'Zresetuj hasło',
   reset_password_description:
     'Wpisz {{types, lista(type: złączonych;)}} związanego z twoim kontem, a wyślemy ci kod weryfikacyjny do zresetowania hasła.',

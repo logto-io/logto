@@ -10,7 +10,7 @@ import PageMeta from '@/components/PageMeta';
 import { layoutClassNames } from '@/utils/consts';
 import { getBrandingLogoUrl } from '@/utils/logo';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type ThirdPartyBranding = ConsentInfoResponse['application']['branding'];
 

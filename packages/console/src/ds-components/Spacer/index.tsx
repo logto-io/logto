@@ -1,4 +1,4 @@
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 function Spacer() {
   return <div className={styles.spacer} />;

@@ -159,18 +159,6 @@ const quota_item = {
     unlimited: 'JWT personalizado',
     not_eligible: 'Elimine su personalizador de reclamos JWT',
   },
-  impersonation_enabled: {
-    name: 'Suplantación',
-    limited: 'Suplantación',
-    unlimited: 'Suplantación',
-    not_eligible: 'No se permite la suplantación',
-  },
-  bring_your_ui_enabled: {
-    name: 'Trae tu propia interfaz de usuario',
-    limited: 'Trae tu propia interfaz de usuario',
-    unlimited: 'Trae tu propia interfaz de usuario',
-    not_eligible: 'Elimina tus recursos de interfaz de usuario personalizados',
-  },
 };
 
 export default Object.freeze(quota_item);

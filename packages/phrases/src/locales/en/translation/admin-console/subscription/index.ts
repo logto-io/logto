@@ -1,6 +1,5 @@
 import quota_item from './quota-item.js';
 import quota_table from './quota-table.js';
-import usage from './usage.js';
 
 const subscription = {
   free_plan: 'Free plan',
@@ -65,7 +64,6 @@ const subscription = {
   downgrade_success: 'Successfully downgraded to <name/>',
   subscription_check_timeout: 'Subscription check timed out. Please refresh later.',
   no_subscription: 'No subscription',
-  usage,
 };
 
 export default Object.freeze(subscription);

@@ -1,9 +1,9 @@
 import { type Resource } from '@logto/schemas';
 import useSWR from 'swr';
 
-import ResourceIcon from '@/assets/icons/resource.svg?react';
+import ResourceIcon from '@/assets/icons/resource.svg';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly resourceId: string;

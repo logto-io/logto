@@ -1,10 +1,12 @@
 import { SignInIdentifier } from '@logto/schemas';
-import { useCallback, useContext } from 'react';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
+import { validate } from 'superstruct';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
-import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { useForgotPasswordSettings } from '@/hooks/use-sie';
+import { passwordIdentifierStateGuard } from '@/types/guard';
 import { identifierInputDescriptionMap } from '@/utils/form';
 
 import ErrorPage from '../ErrorPage';
@@ -13,9 +15,9 @@ import ForgotPasswordForm from './ForgotPasswordForm';
 
 const ForgotPassword = () => {
   const { isForgotPasswordEnabled, enabledMethodSet } = useForgotPasswordSettings();
+  const { state } = useLocation();
   const { t } = useTranslation();
   const enabledMethods = [...enabledMethodSet];
-  const { forgotPasswordIdentifierInputValue } = useContext(UserInteractionContext);
 
   const getDefaultIdentifierType = useCallback(
     (identifier?: SignInIdentifier) => {
@@ -40,11 +42,10 @@ const ForgotPassword = () => {
     return <ErrorPage />;
   }
 
-  const defaultType = getDefaultIdentifierType(forgotPasswordIdentifierInputValue?.type);
-  const defaultValue =
-    (forgotPasswordIdentifierInputValue?.type === defaultType &&
-      forgotPasswordIdentifierInputValue.value) ||
-    '';
+  const [_, identifierState] = validate(state, passwordIdentifierStateGuard);
+
+  const defaultType = getDefaultIdentifierType(identifierState?.identifier);
+  const defaultValue = (identifierState?.identifier === defaultType && identifierState.value) || '';
 
   return (
     <SecondaryPageLayout

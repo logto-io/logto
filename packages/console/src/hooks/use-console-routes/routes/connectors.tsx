@@ -1,10 +1,8 @@
 import { Navigate } from 'react-router-dom';
-import { safeLazy } from 'react-safe-lazy';
 
 import { ConnectorsTabs } from '@/consts';
-
-const Connectors = safeLazy(async () => import('@/pages/Connectors'));
-const ConnectorDetails = safeLazy(async () => import('@/pages/ConnectorDetails'));
+import ConnectorDetails from '@/pages/ConnectorDetails';
+import Connectors from '@/pages/Connectors';
 
 export const connectors = {
   path: 'connectors',

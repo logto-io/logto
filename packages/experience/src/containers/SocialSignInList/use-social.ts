@@ -9,7 +9,6 @@ import PageContext from '@/Providers/PageContextProvider/PageContext';
 import { getSocialAuthorizationUrl } from '@/apis/interaction';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
-import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import useTerms from '@/hooks/use-terms';
 import { getLogtoNativeSdk, isNativeWebview } from '@/utils/native-sdk';
 import { generateState, storeState, buildSocialLandingUri } from '@/utils/social-connectors';
@@ -20,10 +19,6 @@ const useSocial = () => {
   const handleError = useErrorHandler();
   const asyncInvokeSocialSignIn = useApi(getSocialAuthorizationUrl);
   const { termsValidation, agreeToTermsPolicy } = useTerms();
-  const redirectTo = useGlobalRedirectTo({
-    shouldClearInteractionContextSession: false,
-    isReplace: false,
-  });
 
   const nativeSignInHandler = useCallback(
     (redirectTo: string, connector: ExperienceSocialConnector) => {
@@ -81,16 +76,9 @@ const useSocial = () => {
       }
 
       // Invoke web social sign-in flow
-      await redirectTo(result.redirectTo);
+      window.location.assign(result.redirectTo);
     },
-    [
-      agreeToTermsPolicy,
-      asyncInvokeSocialSignIn,
-      handleError,
-      nativeSignInHandler,
-      redirectTo,
-      termsValidation,
-    ]
+    [agreeToTermsPolicy, asyncInvokeSocialSignIn, handleError, nativeSignInHandler, termsValidation]
   );
 
   return {

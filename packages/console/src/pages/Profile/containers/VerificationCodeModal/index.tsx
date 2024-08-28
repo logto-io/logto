@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { useTimer } from 'react-timer-hook';
 
-import ArrowConnection from '@/assets/icons/arrow-connection.svg?react';
+import ArrowConnection from '@/assets/icons/arrow-connection.svg';
 import VerificationCodeInput, { defaultLength } from '@/components/VerificationCodeInput';
 import { adminTenantEndpoint, meApi } from '@/consts';
 import TextLink from '@/ds-components/TextLink';
@@ -17,7 +17,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import ExperienceLikeModal from '../../components/ExperienceLikeModal';
 import { handleError, parseLocationState } from '../../utils';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 const resendTimeout = 59;
 

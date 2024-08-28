@@ -2,7 +2,7 @@ import { OrganizationInvitationStatus, getTenantIdFromOrganizationId } from '@lo
 import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import OrganizationIcon from '@/assets/icons/organization-preview.svg?react';
+import OrganizationIcon from '@/assets/icons/organization-preview.svg';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type InvitationListResponse } from '@/cloud/types/router';
 import TenantEnvTag from '@/components/TenantEnvTag';
@@ -13,7 +13,7 @@ import Spacer from '@/ds-components/Spacer';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly invitations: InvitationListResponse;

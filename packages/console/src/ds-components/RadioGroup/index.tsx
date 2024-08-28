@@ -5,7 +5,7 @@ import { Children, cloneElement, forwardRef, isValidElement } from 'react';
 
 import type { Props as RadioProps } from './Radio';
 import Radio from './Radio';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type RadioElement =
   | {

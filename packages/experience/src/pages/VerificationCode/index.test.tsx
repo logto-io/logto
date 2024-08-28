@@ -1,35 +1,24 @@
-import { SignInIdentifier } from '@logto/schemas';
-import { renderHook } from '@testing-library/react';
 import { Routes, Route } from 'react-router-dom';
-import { remove } from 'tiny-cookie';
 
-import UserInteractionContextProvider from '@/Providers/UserInteractionContextProvider';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import useSessionStorage, { StorageKeys } from '@/hooks/use-session-storages';
 
 import VerificationCode from '.';
 
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useLocation: () => ({
+    state: { identifier: 'email', value: 'foo@logto.io' },
+  }),
+}));
+
 describe('VerificationCode Page', () => {
-  const { result } = renderHook(() => useSessionStorage());
-  const { set } = result.current;
-
-  beforeEach(() => {
-    set(StorageKeys.IdentifierInputValue, { type: SignInIdentifier.Email, value: 'foo@logto.io' });
-  });
-
-  afterEach(() => {
-    remove(StorageKeys.IdentifierInputValue);
-  });
-
   it('render properly', () => {
     const { queryByText } = renderWithPageContext(
       <SettingsProvider>
-        <UserInteractionContextProvider>
-          <Routes>
-            <Route path="/:flow/verification-code" element={<VerificationCode />} />
-          </Routes>
-        </UserInteractionContextProvider>
+        <Routes>
+          <Route path="/:flow/verification-code" element={<VerificationCode />} />
+        </Routes>
       </SettingsProvider>,
       { initialEntries: ['/sign-in/verification-code'] }
     );

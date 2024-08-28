@@ -38,15 +38,16 @@
     "@silverhand/essentials": "^2.9.1"
   },
   "peerDependencies": {
-    "zod": "^3.23.8"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/ts-config": "6.0.0",
+    "buffer": "^6.0.0",
     "eslint": "^8.56.0",
     "lint-staged": "^15.0.0",
     "prettier": "^3.0.0",
-    "typescript": "^5.5.3"
+    "typescript": "^5.3.3"
   },
   "engines": {
     "node": "^20.9.0"

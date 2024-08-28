@@ -1,16 +1,14 @@
-import LoadingMask from '../LoadingMask';
-
 import LoadingIcon from './LoadingIcon';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 export { default as LoadingIcon } from './LoadingIcon';
 
 const LoadingLayer = () => (
-  <LoadingMask>
+  <div className={styles.overlay}>
     <div className={styles.container}>
       <LoadingIcon />
     </div>
-  </LoadingMask>
+  </div>
 );
 
 export default LoadingLayer;

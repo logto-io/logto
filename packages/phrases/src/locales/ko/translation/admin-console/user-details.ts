@@ -34,13 +34,9 @@ const user_details = {
   field_custom_data: '사용자 정의 데이터',
   field_custom_data_tip:
     '사용자 정의 색상 및 언어와 같은 미리 정의되지 않은 추가적인 사용자의 정보를 의미해요.',
-  field_profile: '프로필',
-  field_profile_tip:
-    '사용자 속성에 포함되지 않은 추가 OpenID Connect 표준 클레임입니다. 모든 알 수 없는 속성은 제거됩니다. 자세한 내용은 <a>프로필 속성 참조</a>를 참조하세요.',
   field_connectors: '연동된 소셜',
   field_sso_connectors: '기업 연결',
   custom_data_invalid: '사용자 정의 데이터는 반드시 유효한 JSON 객체여야 해요.',
-  profile_invalid: '프로필은 유효한 JSON 객체여야 해요',
   connectors: {
     connectors: '연동',
     user_id: '사용자 ID',
@@ -80,7 +76,6 @@ const user_details = {
     delete_description:
       '이 행동은 사용자에게서 이 역할을 삭제할 거예요. 역할은 그대로 존재하지만, 이 사용자에게 더 이상 할당되지 않아요.',
     deleted: '{{name}}이/가 성공적으로 이 사용자에게서 제거되었어요.',
-    assign_title: '{{name}}에게 역할 할당',
     assign_subtitle: '이름, 설명 또는 역할 ID로 검색하여 적절한 사용자 역할을 찾으세요.',
     assign_role_field: '역할 할당',
     role_search_placeholder: '역할 이름으로 검색',

@@ -7,13 +7,12 @@ import BasicWebhookForm, { type BasicWebhookFormType } from '@/components/BasicW
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import ModalLayout from '@/ds-components/ModalLayout';
 import useApi from '@/hooks/use-api';
 import { trySubmitSafe } from '@/utils/form';
-import { hasReachedQuotaLimit, hasReachedSubscriptionQuotaLimit } from '@/utils/quota';
+import { hasReachedQuotaLimit } from '@/utils/quota';
 
 type Props = {
   readonly totalWebhookCount: number;
@@ -28,21 +27,14 @@ type CreateHookPayload = Pick<CreateHook, 'name'> & {
 };
 
 function CreateForm({ totalWebhookCount, onClose }: Props) {
-  const { currentPlan, currentSku, currentSubscriptionQuota, currentSubscriptionUsage } =
-    useContext(SubscriptionDataContext);
+  const { currentPlan } = useContext(SubscriptionDataContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const shouldBlockCreation = isDevFeaturesEnabled
-    ? hasReachedSubscriptionQuotaLimit({
-        quotaKey: 'hooksLimit',
-        usage: currentSubscriptionUsage.hooksLimit,
-        quota: currentSubscriptionQuota,
-      })
-    : hasReachedQuotaLimit({
-        quotaKey: 'hooksLimit',
-        usage: totalWebhookCount,
-        plan: currentPlan,
-      });
+  const shouldBlockCreation = hasReachedQuotaLimit({
+    quotaKey: 'hooksLimit',
+    usage: totalWebhookCount,
+    plan: currentPlan,
+  });
 
   const formMethods = useForm<BasicWebhookFormType>();
   const {
@@ -78,15 +70,10 @@ function CreateForm({ totalWebhookCount, onClose }: Props) {
             <Trans
               components={{
                 a: <ContactUsPhraseLink />,
-                planName: <PlanName skuId={currentSku.id} name={currentPlan.name} />,
+                planName: <PlanName name={currentPlan.name} />,
               }}
             >
-              {t('upsell.paywall.hooks', {
-                count:
-                  (isDevFeaturesEnabled
-                    ? currentSubscriptionUsage.hooksLimit
-                    : currentPlan.quota.hooksLimit) ?? 0,
-              })}
+              {t('upsell.paywall.hooks', { count: currentPlan.quota.hooksLimit ?? 0 })}
             </Trans>
           </QuotaGuardFooter>
         ) : (

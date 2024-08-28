@@ -14,7 +14,7 @@ import FormField from '@/ds-components/FormField';
 import TextInput from '@/ds-components/TextInput';
 import { uriValidator } from '@/utils/validator';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 const hookEventGroups: Array<CheckboxOptionGroup<HookEvent>> = [
   ...schemaGroupedDataHookEvents.map(([schema, events]) => ({

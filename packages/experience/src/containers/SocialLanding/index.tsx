@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { LoadingIcon } from '@/components/LoadingLayer';
 import useConnectors from '@/hooks/use-connectors';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;

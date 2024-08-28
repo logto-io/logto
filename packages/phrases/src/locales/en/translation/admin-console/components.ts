@@ -5,7 +5,7 @@ const components = {
     image_limit:
       'Upload image under {{size, number}}KB, {{extensions, list(style: narrow; type: conjunction;)}} only.',
     error_upload: 'Something went wrong. File upload failed.',
-    error_file_size: 'File size is too large. Please upload a file under {{limitWithUnit}}.',
+    error_file_size: 'File size is too large. Please upload a file under {{size, number}}KB.',
     error_file_type:
       'File type is not supported. {{extensions, list(style: narrow; type: conjunction;)}} only.',
     error_file_count: 'You can only upload 1 file.',

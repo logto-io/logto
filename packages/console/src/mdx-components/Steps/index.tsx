@@ -11,7 +11,7 @@ import { type Props as StepProps } from '../Step';
 import Step from '../Step';
 
 import FurtherReadings from './FurtherReadings';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly children:

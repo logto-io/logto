@@ -10,7 +10,7 @@ import TenantEnvTag from '@/components/TenantEnvTag';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly data: {

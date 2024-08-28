@@ -2,8 +2,8 @@ import {
   InteractionEvent,
   MfaFactor,
   requestVerificationCodePayloadGuard,
-  webAuthnAuthenticationOptionsGuard,
   webAuthnRegistrationOptionsGuard,
+  webAuthnAuthenticationOptionsGuard,
 } from '@logto/schemas';
 import { getUserDisplayName } from '@logto/shared';
 import type Router from 'koa-router';
@@ -12,7 +12,6 @@ import { authenticator } from 'otplib';
 import qrcode from 'qrcode';
 import { z } from 'zod';
 
-import type { WithInteractionDetailsContext } from '#src//middleware/koa-interaction-details.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -21,6 +20,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { parseUserProfile } from './actions/helpers.js';
 import { interactionPrefix, verificationPath } from './const.js';
+import type { WithInteractionDetailsContext } from './middleware/koa-interaction-details.js';
 import { socialAuthorizationUrlPayloadGuard } from './types/guard.js';
 import {
   getInteractionStorage,

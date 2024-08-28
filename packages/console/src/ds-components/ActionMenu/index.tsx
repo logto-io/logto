@@ -9,7 +9,7 @@ import Button from '../Button';
 import Dropdown from '../Dropdown';
 import IconButton from '../IconButton';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 export { default as ActionMenuItem } from '../Dropdown/DropdownItem';
 

@@ -85,28 +85,4 @@
       }
     }
   }
-
-  &.disabled {
-    background: url('../../assets/images/blur-preview.svg') 0 0 / 100% auto no-repeat;
-  }
-
-  .placeholder {
-    width: 100%;
-    height: calc(_screenSize.$web-height + _.unit(20));
-    padding: _.unit(10);
-    backdrop-filter: blur(25px);
-    display: flex;
-    flex-direction: column;
-    color: var(--color-static-white);
-
-    .title {
-      font: var(--font-label-2);
-    }
-
-    .description {
-      margin-top: _.unit(1.5);
-      font: var(--font-body-2);
-      white-space: pre-wrap;
-    }
-  }
 }

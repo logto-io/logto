@@ -1,14 +1,14 @@
 import { type AdminConsoleKey } from '@logto/phrases';
 import { useCallback, useState } from 'react';
 
-import Box from '@/assets/icons/box.svg?react';
+import Box from '@/assets/icons/box.svg';
 import { githubIssuesLink } from '@/consts';
 import { isCloud } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import DsModalHeader from '@/ds-components/ModalHeader';
 
 import RequestForm from './RequestForm';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly title: AdminConsoleKey;

@@ -3,11 +3,11 @@ import classNames from 'classnames';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import ContactIcon from '@/assets/icons/contact-us.svg?react';
-import CubeIcon from '@/assets/icons/cube.svg?react';
-import DocumentIcon from '@/assets/icons/document-nav-button.svg?react';
-import CloudLogo from '@/assets/images/cloud-logo.svg?react';
-import Logo from '@/assets/images/logo.svg?react';
+import ContactIcon from '@/assets/icons/contact-us.svg';
+import CubeIcon from '@/assets/icons/cube.svg';
+import DocumentIcon from '@/assets/icons/document-nav-button.svg';
+import CloudLogo from '@/assets/images/cloud-logo.svg';
+import Logo from '@/assets/images/logo.svg';
 import { githubReleasesLink } from '@/consts';
 import { isCloud } from '@/consts/env';
 import DynamicT from '@/ds-components/DynamicT';
@@ -20,7 +20,7 @@ import { onKeyDownHandler } from '@/utils/a11y';
 import ContactModal from './ContactModal';
 import TenantSelector from './TenantSelector';
 import UserInfo from './UserInfo';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 import { currentVersion, isGreaterThanCurrentVersion } from './utils';
 
 type Props = {

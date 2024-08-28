@@ -1,13 +1,13 @@
 import { LogtoJwtTokenKeyType } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
-import DeleteIcon from '@/assets/icons/delete.svg?react';
-import EditIcon from '@/assets/icons/edit.svg?react';
+import DeleteIcon from '@/assets/icons/delete.svg';
+import EditIcon from '@/assets/icons/edit.svg';
 import Button from '@/ds-components/Button';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { getPagePath } from '@/pages/CustomizeJwt/utils/path';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly tokenType: LogtoJwtTokenKeyType;

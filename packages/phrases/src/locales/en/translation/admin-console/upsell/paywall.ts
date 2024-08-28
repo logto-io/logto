@@ -10,13 +10,13 @@ const paywall = {
   machine_to_machine_other:
     '{{count, number}} machine-to-machine applications of <planName/> limit reached. Upgrade plan to meet your team’s needs. For any assistance, feel free to <a>contact us</a>.',
   resources:
-    '{{count, number}} API resource of <planName/> limit reached. Upgrade plan to meet your team’s needs. <a>Contact us</a> for any assistance.',
+    '{{count, number}} API resource of <planName/> limit reached. Upgrade plan to meet your team’s needs. <a>Contact us</a> for any assistant.',
   resources_other:
-    '{{count, number}} API resources of <planName/> limit reached. Upgrade plan to meet your team’s needs. <a>Contact us</a> for any assistance.',
+    '{{count, number}} API resources of <planName/> limit reached. Upgrade plan to meet your team’s needs. <a>Contact us</a> for any assistant.',
   scopes_per_resource:
-    '{{count, number}} permission per API resource of <planName/> limit reached. Upgrade now to expand. <a>Contact us</a> for any assistance.',
+    '{{count, number}} permission per API resource of <planName/> limit reached. Upgrade now to expand. <a>Contact us</a> for any assistant.',
   scopes_per_resource_other:
-    '{{count, number}} permissions per API resource of <planName/> limit reached. Upgrade now to expand. <a>Contact us</a> for any assistance.',
+    '{{count, number}} permissions per API resource of <planName/> limit reached. Upgrade now to expand. <a>Contact us</a> for any assistant.',
   custom_domain:
     'Unlock custom domain functionality by upgrading to <strong>Hobby</strong> or <strong>Pro</strong> plan. Don’t hesitate to <a>contact us</a> if you need any assistance.',
   social_connectors:
@@ -65,8 +65,6 @@ const paywall = {
     description:
       "Upgrade to a paid plan for custom JWT functionality and premium benefits. Don't hesitate to <a>contact us</a> if you have any questions.",
   },
-  bring_your_ui:
-    'Upgrade to a paid plan for bring your custom UI functionality and premium benefits.',
 };
 
 export default Object.freeze(paywall);

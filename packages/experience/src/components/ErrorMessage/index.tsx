@@ -3,7 +3,7 @@ import type { TFuncKey } from 'i18next';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type RemovePrefix<T extends string, Prefix extends T> = T extends `${Prefix}${string}` ? never : T;
 

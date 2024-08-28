@@ -6,11 +6,11 @@ import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
 import TextLink from '@/ds-components/TextLink';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 function ApplicationCredentials() {
-  const { app, secrets } = useContext(GuideContext);
-  const { id } = app ?? {};
+  const { app } = useContext(GuideContext);
+  const { id, secret } = app ?? {};
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -37,12 +37,12 @@ function ApplicationCredentials() {
           <CopyToClipboard displayType="block" value={id} variant="border" />
         </FormField>
       )}
-      {secrets?.[0] && (
+      {secret && (
         <FormField title="application_details.application_secret">
           <CopyToClipboard
             hasVisibilityToggle
             displayType="block"
-            value={secrets[0].value}
+            value={secret}
             variant="border"
           />
         </FormField>

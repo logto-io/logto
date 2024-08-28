@@ -5,12 +5,10 @@ import useSWR from 'swr';
 import DetailsPage from '@/components/DetailsPage';
 import PageMeta from '@/components/PageMeta';
 import { openIdProviderConfigPath } from '@/consts/oidc';
-import { Daisy } from '@/ds-components/Spinner';
 import type { RequestError } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import ApplicationDetailsContent from './ApplicationDetailsContent';
-import { type ApplicationSecretRow } from './ApplicationDetailsContent/EndpointsAndCredentials';
 import GuideModal from './GuideModal';
 
 function ApplicationDetails() {
@@ -21,25 +19,21 @@ function ApplicationDetails() {
   const { data, error, mutate } = useSWR<ApplicationResponse, RequestError>(
     id && `api/applications/${id}`
   );
-  const secrets = useSWR<ApplicationSecretRow[], RequestError>(`api/applications/${id}/secrets`);
-  const oidcConfig = useSWR<SnakeCaseOidcConfig, RequestError>(openIdProviderConfigPath);
 
-  const isLoading =
-    (!data && !error) ||
-    (!oidcConfig.data && !oidcConfig.error) ||
-    (!secrets.data && !secrets.error);
-  const requestError = error ?? oidcConfig.error ?? secrets.error;
+  const {
+    data: oidcConfig,
+    error: fetchOidcConfigError,
+    mutate: mutateOidcConfig,
+  } = useSWR<SnakeCaseOidcConfig, RequestError>(openIdProviderConfigPath);
+
+  const isLoading = (!data && !error) || (!oidcConfig && !fetchOidcConfigError);
+  const requestError = error ?? fetchOidcConfigError;
 
   if (isGuideView) {
-    if (!data || !secrets.data) {
-      return <Daisy />;
-    }
-
     return (
       <GuideModal
         guideId={guideId}
         app={data}
-        secrets={secrets.data}
         onClose={() => {
           navigate(`/applications/${id}`);
         }}
@@ -55,16 +49,14 @@ function ApplicationDetails() {
       error={requestError}
       onRetry={() => {
         void mutate();
-        void oidcConfig.mutate();
-        void secrets.mutate();
+        void mutateOidcConfig();
       }}
     >
       <PageMeta titleKey="application_details.page_title" />
-      {data && oidcConfig.data && secrets.data && (
+      {data && oidcConfig && (
         <ApplicationDetailsContent
           data={data}
-          oidcConfig={oidcConfig.data}
-          secrets={secrets.data}
+          oidcConfig={oidcConfig}
           onApplicationUpdated={mutate}
         />
       )}

@@ -145,7 +145,7 @@ First, create a Logto config:
     logtoConfig := &client.LogtoConfig{
         Endpoint:           "${props.endpoint}",
         AppId:              "${props.app.id}",
-        AppSecret:          "${props.secrets[0]?.value ?? props.app.secret}",
+        AppSecret:          "${props.app.secret}",
     }
 
     // ...

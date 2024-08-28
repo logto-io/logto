@@ -13,7 +13,7 @@ import ImageUploaderField from '@/ds-components/Uploader/ImageUploaderField';
 import { useStaticApi } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
-import modalStyles from '@/scss/modal.module.scss';
+import * as modalStyles from '@/scss/modal.module.scss';
 
 import { handleError } from '../../utils';
 

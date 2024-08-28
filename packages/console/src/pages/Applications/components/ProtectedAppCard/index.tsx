@@ -3,8 +3,9 @@ import classNames from 'classnames';
 import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import ProtectedAppDarkIcon from '@/assets/icons/protected-app-dark.svg?react';
-import ProtectedAppIcon from '@/assets/icons/protected-app.svg?react';
+import ProtectedAppDarkIcon from '@/assets/icons/protected-app-dark.svg';
+import ProtectedAppIcon from '@/assets/icons/protected-app.svg';
+import { BetaTag } from '@/components/FeatureTag';
 import Button from '@/ds-components/Button';
 import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
@@ -12,7 +13,7 @@ import useTheme from '@/hooks/use-theme';
 
 import ProtectedAppModal from '../ProtectedAppModal';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;
@@ -47,6 +48,7 @@ function ProtectedAppCard({
               <div className={isInAppCreationPage ? styles.label : styles.title}>
                 {t(isInAppCreationPage ? 'name' : 'title')}
               </div>
+              <BetaTag />
             </div>
             <div className={styles.description}>
               <Trans

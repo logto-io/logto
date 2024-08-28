@@ -23,7 +23,7 @@ const sign_in_exp = {
   color: {
     title: 'COLOR',
     primary_color: 'Brand color',
-    dark_primary_color: 'Brand color (dark)',
+    dark_primary_color: 'Brand color (Dark)',
     dark_mode: 'Enable dark mode',
     dark_mode_description:
       'Your app will have an auto-generated dark mode theme based on your brand color and Logto algorithm. You are free to customize.',
@@ -33,56 +33,24 @@ const sign_in_exp = {
   branding: {
     title: 'BRANDING AREA',
     ui_style: 'Style',
-    with_light: '{{value}}',
-    with_dark: '{{value}} (dark)',
-    app_logo_and_favicon: 'App logo and favicon',
-    company_logo_and_favicon: 'Company logo and favicon',
+    favicon: 'Favicon',
+    logo_image_url: 'App logo image URL',
+    logo_image_url_placeholder: 'https://your.cdn.domain/logo.png',
+    dark_logo_image_url: 'App logo image URL (Dark)',
+    dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
+    logo_image: 'App logo',
+    dark_logo_image: 'App logo (Dark)',
+    logo_image_error: 'App logo: {{error}}',
+    favicon_error: 'Favicon: {{error}}',
   },
-  branding_uploads: {
-    app_logo: {
-      title: 'App logo',
-      url: 'App logo URL',
-      url_placeholder: 'https://your.cdn.domain/logo.png',
-      error: 'App logo: {{error}}',
-    },
-    company_logo: {
-      title: 'Company logo',
-      url: 'Company logo URL',
-      url_placeholder: 'https://your.cdn.domain/logo.png',
-      error: 'Company logo: {{error}}',
-    },
-    organization_logo: {
-      title: 'Upload image',
-      url: 'Organization logo URL',
-      url_placeholder: 'https://your.cdn.domain/logo.png',
-      error: 'Organization logo: {{error}}',
-    },
-    connector_logo: {
-      title: 'Upload image',
-      url: 'Connector logo URL',
-      url_placeholder: 'https://your.cdn.domain/logo.png',
-      error: 'Connector logo: {{error}}',
-    },
-    favicon: {
-      title: 'Favicon',
-      url: 'Favicon URL',
-      url_placeholder: 'https://your.cdn.domain/favicon.ico',
-      error: 'Favicon: {{error}}',
-    },
-  },
-  custom_ui: {
-    title: 'Custom UI',
-    css_code_editor_title: 'Custom CSS',
+  custom_css: {
+    title: 'Custom CSS',
+    css_code_editor_title: 'Personalize your UI with custom CSS',
     css_code_editor_description1: 'See the example of custom CSS.',
     css_code_editor_description2: '<a>{{link}}</a>',
     css_code_editor_description_link_content: 'Learn more',
     css_code_editor_content_placeholder:
       'Enter your custom CSS to tailor the styles of anything to your exact specifications. Express your creativity and make your UI stand out.',
-    bring_your_ui_title: 'Bring your UI',
-    bring_your_ui_description:
-      'Upload a compressed package (.zip) to replace the Logto prebuilt UI with your own code. <a>Learn more</a>',
-    preview_with_bring_your_ui_description:
-      'Your custom UI assets have been successfully uploaded and are now being served. Consequently, the built-in preview window has been disabled.\nTo test your personalized sign-in UI, click the "Live Preview" button to open it in a new browser tab.',
   },
   sign_up_and_sign_in,
   content,

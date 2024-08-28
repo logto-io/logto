@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import type { ForwardedRef, HTMLProps } from 'react';
 import { forwardRef, useRef } from 'react';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = Omit<HTMLProps<HTMLButtonElement>, 'size' | 'type'> & {
   readonly size?: 'small' | 'medium' | 'large';

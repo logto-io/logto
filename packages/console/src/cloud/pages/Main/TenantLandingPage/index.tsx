@@ -1,7 +1,7 @@
 import Topbar from '@/components/Topbar';
 
 import TenantLandingPageContent from './TenantLandingPageContent';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 function TenantLandingPage() {
   return (

@@ -22,7 +22,7 @@ import { ScopeLevel } from './ApplicationScopesAssignmentModal/type';
 import ApplicationScopesManagementModal, {
   type EditableScopeData,
 } from './ApplicationScopesManagementModal';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 import useScopesTable from './use-scopes-table';
 
 type Props = {

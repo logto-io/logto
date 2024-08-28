@@ -3,18 +3,12 @@ import { useContext, useMemo } from 'react';
 import useSWR from 'swr';
 
 import { type ApiResource } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
-import {
-  hasReachedQuotaLimit,
-  hasReachedSubscriptionQuotaLimit,
-  hasSurpassedQuotaLimit,
-  hasSurpassedSubscriptionQuotaLimit,
-} from '@/utils/quota';
+import { hasReachedQuotaLimit, hasSurpassedQuotaLimit } from '@/utils/quota';
 
 const useApiResourcesUsage = () => {
-  const { currentPlan, currentSubscriptionQuota, currentSubscriptionUsage } =
-    useContext(SubscriptionDataContext);
+  const { currentPlan } = useContext(SubscriptionDataContext);
 
   /**
    * Note: we only need to fetch all resources when the user is in cloud environment.
@@ -23,43 +17,28 @@ const useApiResourcesUsage = () => {
   const { data: allResources } = useSWR<ApiResource[]>(isCloud && 'api/resources');
 
   const resourceCount = useMemo(
-    () =>
-      isDevFeaturesEnabled
-        ? currentSubscriptionUsage.resourcesLimit
-        : allResources?.filter(({ indicator }) => !isManagementApi(indicator)).length ?? 0,
-    [allResources, currentSubscriptionUsage.resourcesLimit]
+    () => allResources?.filter(({ indicator }) => !isManagementApi(indicator)).length ?? 0,
+    [allResources]
   );
 
   const hasReachedLimit = useMemo(
     () =>
-      isDevFeaturesEnabled
-        ? hasReachedSubscriptionQuotaLimit({
-            quotaKey: 'resourcesLimit',
-            usage: currentSubscriptionUsage.resourcesLimit,
-            quota: currentSubscriptionQuota,
-          })
-        : hasReachedQuotaLimit({
-            quotaKey: 'resourcesLimit',
-            plan: currentPlan,
-            usage: resourceCount,
-          }),
-    [currentPlan, resourceCount, currentSubscriptionQuota, currentSubscriptionUsage.resourcesLimit]
+      hasReachedQuotaLimit({
+        quotaKey: 'resourcesLimit',
+        plan: currentPlan,
+        usage: resourceCount,
+      }),
+    [currentPlan, resourceCount]
   );
 
   const hasSurpassedLimit = useMemo(
     () =>
-      isDevFeaturesEnabled
-        ? hasSurpassedSubscriptionQuotaLimit({
-            quotaKey: 'resourcesLimit',
-            usage: currentSubscriptionUsage.resourcesLimit,
-            quota: currentSubscriptionQuota,
-          })
-        : hasSurpassedQuotaLimit({
-            quotaKey: 'resourcesLimit',
-            plan: currentPlan,
-            usage: resourceCount,
-          }),
-    [currentPlan, resourceCount, currentSubscriptionQuota, currentSubscriptionUsage.resourcesLimit]
+      hasSurpassedQuotaLimit({
+        quotaKey: 'resourcesLimit',
+        plan: currentPlan,
+        usage: resourceCount,
+      }),
+    [currentPlan, resourceCount]
   );
 
   return {

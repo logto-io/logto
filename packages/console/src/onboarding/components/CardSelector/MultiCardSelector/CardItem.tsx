@@ -7,7 +7,7 @@ import { onKeyDownHandler } from '@/utils/a11y';
 
 import type { MultiCardSelectorOption } from '../types';
 
-import styles from './CardItem.module.scss';
+import * as styles from './CardItem.module.scss';
 
 type Props = {
   readonly option: MultiCardSelectorOption;

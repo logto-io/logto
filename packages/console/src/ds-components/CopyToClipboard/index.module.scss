@@ -28,34 +28,36 @@
     align-items: center;
     justify-content: space-between;
     cursor: text;
-    gap: _.unit(2);
 
     .content {
       flex: 1;
       overflow: hidden;
       text-overflow: ellipsis;
-      display: inline-flex;
-      align-items: center;
-      gap: _.unit(2);
-      margin-right: _.unit(1);
-      flex-wrap: nowrap;
 
       &.wrapContent {
         text-overflow: unset;
         word-break: break-all;
       }
     }
+
+    .copyToolTipAnchor {
+      margin-left: _.unit(2);
+    }
   }
 
   &.default {
     .row {
-      gap: _.unit(2);
+      .copyToolTipAnchor {
+        margin-left: _.unit(3);
+      }
     }
   }
 
   &.small {
     .row {
-      gap: _.unit(0.5);
+      .copyToolTipAnchor {
+        margin-left: _.unit(1);
+      }
 
       .iconButton {
         height: 20px;
@@ -69,9 +71,5 @@
         }
       }
     }
-  }
-
-  .dot {
-    -webkit-text-stroke: 1px var(--color-text);
   }
 }

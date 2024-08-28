@@ -1,15 +1,14 @@
 import { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 
-import Button from '@/components/Button';
 import TextLink from '@/components/TextLink';
 import VerificationCodeInput, { defaultLength } from '@/components/VerificationCode';
 import { UserFlow } from '@/types';
 
 import PasswordSignInLink from './PasswordSignInLink';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 import useResendVerificationCode from './use-resend-verification-code';
 import { getCodeVerificationHookByFlow } from './utils';
 
@@ -22,30 +21,20 @@ type Props = {
 };
 
 const VerificationCode = ({ flow, identifier, className, hasPasswordButton, target }: Props) => {
-  const [codeInput, setCodeInput] = useState<string[]>([]);
-  const [inputErrorMessage, setInputErrorMessage] = useState<string>();
-
+  const [code, setCode] = useState<string[]>([]);
   const { t } = useTranslation();
-
-  const isCodeInputReady = useMemo(
-    () => codeInput.length === defaultLength && codeInput.every(Boolean),
-    [codeInput]
-  );
 
   const useVerificationCode = getCodeVerificationHookByFlow(flow);
 
   const errorCallback = useCallback(() => {
-    setCodeInput([]);
-    setInputErrorMessage(undefined);
+    setCode([]);
   }, []);
 
-  const {
-    errorMessage: submitErrorMessage,
-    clearErrorMessage,
-    onSubmit,
-  } = useVerificationCode(identifier, target, errorCallback);
-
-  const errorMessage = inputErrorMessage ?? submitErrorMessage;
+  const { errorMessage, clearErrorMessage, onSubmit } = useVerificationCode(
+    identifier,
+    target,
+    errorCallback
+  );
 
   const { seconds, isRunning, onResendVerificationCode } = useResendVerificationCode(
     flow,
@@ -53,39 +42,24 @@ const VerificationCode = ({ flow, identifier, className, hasPasswordButton, targ
     target
   );
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleSubmit = useCallback(
-    async (code: string[]) => {
-      setInputErrorMessage(undefined);
-
-      setIsSubmitting(true);
-
-      await onSubmit(
+  useEffect(() => {
+    if (code.length === defaultLength && code.every(Boolean)) {
+      const payload =
         identifier === SignInIdentifier.Email
           ? { email: target, verificationCode: code.join('') }
-          : { phone: target, verificationCode: code.join('') }
-      );
-
-      setIsSubmitting(false);
-    },
-    [identifier, onSubmit, target]
-  );
-
-  useEffect(() => {
-    if (isCodeInputReady) {
-      void handleSubmit(codeInput);
+          : { phone: target, verificationCode: code.join('') };
+      void onSubmit(payload);
     }
-  }, [codeInput, handleSubmit, isCodeInputReady]);
+  }, [code, identifier, onSubmit, target]);
 
   return (
     <form className={classNames(styles.form, className)}>
       <VerificationCodeInput
         name="passcode"
         className={classNames(styles.inputField, errorMessage && styles.withError)}
-        value={codeInput}
+        value={code}
         error={errorMessage}
-        onChange={setCodeInput}
+        onChange={setCode}
       />
       <div className={styles.message}>
         {isRunning ? (
@@ -101,7 +75,7 @@ const VerificationCode = ({ flow, identifier, className, hasPasswordButton, targ
                   onClick={async () => {
                     clearErrorMessage();
                     await onResendVerificationCode();
-                    setCodeInput([]);
+                    setCode([]);
                   }}
                 />
               ),
@@ -112,22 +86,8 @@ const VerificationCode = ({ flow, identifier, className, hasPasswordButton, targ
         )}
       </div>
       {flow === UserFlow.SignIn && hasPasswordButton && (
-        <PasswordSignInLink className={styles.switch} />
+        <PasswordSignInLink method={identifier} target={target} className={styles.switch} />
       )}
-      <Button
-        title="action.continue"
-        type="primary"
-        isLoading={isSubmitting}
-        className={styles.continueButton}
-        onClick={() => {
-          if (!isCodeInputReady) {
-            setInputErrorMessage(t('error.invalid_passcode'));
-            return;
-          }
-
-          void handleSubmit(codeInput);
-        }}
-      />
     </form>
   );
 };

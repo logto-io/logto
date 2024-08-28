@@ -8,7 +8,7 @@ import DynamicT from '@/ds-components/DynamicT';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 function TenantSettings() {
   const { isDevTenant } = useContext(TenantsContext);

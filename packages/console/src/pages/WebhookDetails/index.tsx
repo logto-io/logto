@@ -7,11 +7,11 @@ import { useTranslation } from 'react-i18next';
 import { Outlet, useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Delete from '@/assets/icons/delete.svg?react';
-import Forbidden from '@/assets/icons/forbidden.svg?react';
-import Shield from '@/assets/icons/shield.svg?react';
-import WebhookDark from '@/assets/icons/webhook-dark.svg?react';
-import Webhook from '@/assets/icons/webhook.svg?react';
+import Delete from '@/assets/icons/delete.svg';
+import Forbidden from '@/assets/icons/forbidden.svg';
+import Shield from '@/assets/icons/shield.svg';
+import WebhookDark from '@/assets/icons/webhook-dark.svg';
+import Webhook from '@/assets/icons/webhook.svg';
 import DetailsPage from '@/components/DetailsPage';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import PageMeta from '@/components/PageMeta';
@@ -25,7 +25,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 import { buildUrl } from '@/utils/url';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 import { type WebhookDetailsOutletContext } from './types';
 
 function WebhookDetails() {

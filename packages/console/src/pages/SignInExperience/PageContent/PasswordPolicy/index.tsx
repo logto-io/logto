@@ -18,7 +18,7 @@ import FormFieldDescription from '../components/FormFieldDescription';
 import FormSectionTitle from '../components/FormSectionTitle';
 import SignInExperienceTabWrapper from '../components/SignInExperienceTabWrapper';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type PasswordOptionProps = {
   readonly name: FieldPath<SignInExperienceForm>;

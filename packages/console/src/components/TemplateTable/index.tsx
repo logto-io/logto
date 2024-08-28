@@ -3,14 +3,14 @@ import { useMemo } from 'react';
 import { type FieldPath, type FieldValues } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import CirclePlus from '@/assets/icons/circle-plus.svg?react';
-import Plus from '@/assets/icons/plus.svg?react';
+import CirclePlus from '@/assets/icons/circle-plus.svg';
+import Plus from '@/assets/icons/plus.svg';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import Table from '@/ds-components/Table';
 import { type RowGroup, type Column } from '@/ds-components/Table/types';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props<TFieldValues extends FieldValues, TName extends FieldPath<TFieldValues>> = {
   /**

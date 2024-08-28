@@ -4,7 +4,7 @@ import AuditLogTable from '@/components/AuditLogTable';
 
 import type { UserDetailsOutletContext } from '../types';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 function UserLogs() {
   const {

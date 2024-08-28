@@ -1,16 +1,10 @@
 import { Navigate, type RouteObject } from 'react-router-dom';
-import { safeLazy } from 'react-safe-lazy';
 
 import { ApiResourceDetailsTabs } from '@/consts';
-
-const ApiResources = safeLazy(async () => import('@/pages/ApiResources'));
-const ApiResourceDetails = safeLazy(async () => import('@/pages/ApiResourceDetails'));
-const ApiResourcePermissions = safeLazy(
-  async () => import('@/pages/ApiResourceDetails/ApiResourcePermissions')
-);
-const ApiResourceSettings = safeLazy(
-  async () => import('@/pages/ApiResourceDetails/ApiResourceSettings')
-);
+import ApiResourceDetails from '@/pages/ApiResourceDetails';
+import ApiResourcePermissions from '@/pages/ApiResourceDetails/ApiResourcePermissions';
+import ApiResourceSettings from '@/pages/ApiResourceDetails/ApiResourceSettings';
+import ApiResources from '@/pages/ApiResources';
 
 export const apiResources: RouteObject = {
   path: 'api-resources',

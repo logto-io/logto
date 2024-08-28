@@ -1,12 +1,12 @@
 import { type FieldError } from 'react-hook-form';
 
-import CirclePlus from '@/assets/icons/circle-plus.svg?react';
-import Minus from '@/assets/icons/minus.svg?react';
+import CirclePlus from '@/assets/icons/circle-plus.svg';
+import Minus from '@/assets/icons/minus.svg';
 import Button from '@/ds-components/Button';
 import IconButton from '@/ds-components/IconButton';
 import TextInput, { type Props as TextInputProps } from '@/ds-components/TextInput';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type FieldType = {
   key: string;

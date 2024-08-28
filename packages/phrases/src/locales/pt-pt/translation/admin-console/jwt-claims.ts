@@ -33,11 +33,6 @@ const jwt_claims = {
     subtitle:
       'Utilize o parâmetro de entrada `data.user` para fornecer informações vitais do utilizador.',
   },
-  grant_data: {
-    title: 'Dados da concessão',
-    subtitle:
-      'Utilize o parâmetro de entrada `data.grant` para fornecer informações vitais da concessão, disponíveis apenas para troca de token.',
-  },
   token_data: {
     title: 'Dados do token',
     subtitle: 'Utilize o parâmetro de entrada `token` para a carga util atual do token de acesso.',

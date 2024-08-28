@@ -19,7 +19,6 @@ const userPreferencesGuard = z.object({
   managementApiAcknowledged: z.boolean().optional(),
   roleWithManagementApiAccessNotificationAcknowledged: z.boolean().optional(),
   m2mRoleNotificationAcknowledged: z.boolean().optional(),
-  mfaUpsellNoticeAcknowledged: z.boolean().optional(),
 });
 
 type UserPreferences = z.infer<typeof userPreferencesGuard>;

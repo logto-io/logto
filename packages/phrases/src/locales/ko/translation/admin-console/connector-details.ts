@@ -48,23 +48,11 @@ const connector_details = {
     company_information_description:
       '이메일 하단에 회사 이름, 주소 또는 우편번호를 표시하여 신뢰성을 높입니다.',
     company_information_placeholder: '회사의 기본 정보',
-    email_logo_field: '이메일 로고',
-    email_logo_tip:
-      '이메일 상단에 브랜드 로고를 표시하세요. 라이트 모드와 다크 모드 모두에 동일한 이미지를 사용하세요.',
+    app_logo_field: '앱 로고',
+    app_logo_tip:
+      '이메일 상단에 브랜드 로고를 표시합니다. 라이트 모드와 다크 모드에 모두 동일한 이미지를 사용합니다.',
     urls_not_allowed: 'URL은 허용되지 않습니다.',
     test_notes: 'Logto는 "Generic" 템플릿을 사용하여 테스트합니다.',
-  },
-  google_one_tap: {
-    title: 'Google 원탭',
-    description:
-      'Google 원탭은 사용자들이 당신의 웹사이트에 쉽게 로그인할 수 있는 안전한 방법입니다.',
-    enable_google_one_tap: 'Google 원탭 활성화',
-    enable_google_one_tap_description:
-      '로그인 경험에서 Google 원탭을 활성화하세요: 사용자가 이미 자신의 기기에서 Google 계정에 로그인한 경우 빠르게 가입 또는 로그인할 수 있게 합니다.',
-    configure_google_one_tap: 'Google 원탭 구성',
-    auto_select: '가능한 경우 자격 증명 자동 선택',
-    close_on_tap_outside: '사용자가 외부 클릭/탭 시 프롬프트 취소',
-    itp_support: '<a>ITP 브라우저에서 업그레이드된 원탭 UX</a> 활성화',
   },
 };
 

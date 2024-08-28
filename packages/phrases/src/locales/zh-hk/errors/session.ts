@@ -14,11 +14,9 @@ const session = {
   forgot_password_not_enabled: '忘記密碼功能沒有開啟。',
   verification_failed: '驗證失敗，請重新驗證。',
   connector_validation_session_not_found: '找不到連接器用於驗證 token 的信息。',
-  csrf_token_mismatch: 'CSRF token 不匹配。',
   identifier_not_found: '找不到用戶標識符。請返回並重新登錄。',
   interaction_not_found: '找不到互動會話。請返回並重新開始會話。',
   not_supported_for_forgot_password: '此操作不支援忘記密碼。',
-  identity_conflict: '偵測到身份不匹配。請啟動一個新的會話以使用不同的身份繼續。',
   mfa: {
     require_mfa_verification: '需要 MFA 驗證才能登錄。',
     mfa_sign_in_only: 'MFA 只能用於登錄互動。',

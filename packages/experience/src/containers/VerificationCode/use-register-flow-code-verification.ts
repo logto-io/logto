@@ -50,7 +50,7 @@ const useRegisterFlowCodeVerification = (
       return;
     }
 
-    show({
+    const [confirm] = await show({
       confirmText: 'action.sign_in',
       ModalContent: t('description.create_account_id_exists', {
         type: t(`description.${method === SignInIdentifier.Email ? 'email' : 'phone_number'}`),
@@ -59,23 +59,25 @@ const useRegisterFlowCodeVerification = (
             ? formatPhoneNumberWithCountryCallingCode(target)
             : target,
       }),
-      onConfirm: async () => {
-        const [error, result] = await signInWithIdentifierAsync();
-
-        if (error) {
-          await handleError(error, preSignInErrorHandler);
-
-          return;
-        }
-
-        if (result?.redirectTo) {
-          await redirectTo(result.redirectTo);
-        }
-      },
-      onCancel: () => {
-        navigate(-1);
-      },
     });
+
+    if (!confirm) {
+      navigate(-1);
+
+      return;
+    }
+
+    const [error, result] = await signInWithIdentifierAsync();
+
+    if (error) {
+      await handleError(error, preSignInErrorHandler);
+
+      return;
+    }
+
+    if (result?.redirectTo) {
+      redirectTo(result.redirectTo);
+    }
   }, [
     handleError,
     method,
@@ -118,7 +120,7 @@ const useRegisterFlowCodeVerification = (
       }
 
       if (result?.redirectTo) {
-        await redirectTo(result.redirectTo);
+        redirectTo(result.redirectTo);
       }
     },
     [errorCallback, errorHandlers, handleError, redirectTo, verifyVerificationCode]

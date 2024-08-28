@@ -4,24 +4,16 @@ import type { ConnectorMetadata, SignInExperience, ConnectorResponse } from '@lo
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { format } from 'date-fns';
-import {
-  useContext,
-  useRef,
-  useMemo,
-  useCallback,
-  useEffect,
-  useState,
-  type ReactNode,
-} from 'react';
+import { useContext, useRef, useMemo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import PhoneInfo from '@/assets/images/phone-info.svg?react';
+import PhoneInfo from '@/assets/images/phone-info.svg';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import type { RequestError } from '@/hooks/use-api';
 import useUiLanguages from '@/hooks/use-ui-languages';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 import { PreviewPlatform } from './types';
 
 export { default as ToggleUiThemeButton } from './components/ToggleUiThemeButton';
@@ -36,16 +28,6 @@ type Props = {
    * the `AppDataContext` will be used.
    */
   readonly endpoint?: URL;
-  /**
-   * Whether the preview is disabled. If `true`, the preview will be disabled and a placeholder will
-   * be shown instead. Defaults to `false`.
-   */
-  // eslint-disable-next-line react/boolean-prop-naming
-  readonly disabled?: boolean;
-  /**
-   * The placeholder to show when the preview is disabled.
-   */
-  readonly disabledPlaceholder?: ReactNode;
 };
 
 function SignInExperiencePreview({
@@ -54,8 +36,6 @@ function SignInExperiencePreview({
   language = 'en',
   signInExperience,
   endpoint: endpointInput,
-  disabled = false,
-  disabledPlaceholder,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -117,10 +97,6 @@ function SignInExperiencePreview({
   }, []);
 
   useEffect(() => {
-    if (disabled) {
-      setIframeLoaded(false);
-      return;
-    }
     const iframe = previewRef.current;
 
     iframe?.addEventListener('load', iframeOnLoadEventHandler);
@@ -128,7 +104,7 @@ function SignInExperiencePreview({
     return () => {
       iframe?.removeEventListener('load', iframeOnLoadEventHandler);
     };
-  }, [iframeLoaded, disabled, iframeOnLoadEventHandler]);
+  }, [iframeLoaded, iframeOnLoadEventHandler]);
 
   useEffect(() => {
     if (!iframeLoaded) {
@@ -146,8 +122,7 @@ function SignInExperiencePreview({
     <div
       className={classNames(
         styles.preview,
-        platform === PreviewPlatform.DesktopWeb ? styles.web : styles.mobile,
-        disabled && styles.disabled
+        platform === PreviewPlatform.DesktopWeb ? styles.web : styles.mobile
       )}
       style={conditional(
         platform === PreviewPlatform.DesktopWeb && {
@@ -156,33 +131,24 @@ function SignInExperiencePreview({
         }
       )}
     >
-      {disabled ? (
-        <div className={styles.placeholder}>
-          <div className={styles.title}>{t('sign_in_exp.custom_ui.bring_your_ui_title')}</div>
-          <div className={styles.description}>
-            {t('sign_in_exp.custom_ui.preview_with_bring_your_ui_description')}
-          </div>
+      <div className={styles.deviceWrapper}>
+        <div className={classNames(styles.device, styles[String(mode)])}>
+          {platform !== PreviewPlatform.DesktopWeb && (
+            <div className={styles.topBar}>
+              <div className={styles.time}>{format(Date.now(), 'HH:mm')}</div>
+              <PhoneInfo />
+            </div>
+          )}
+          <iframe
+            ref={previewRef}
+            // Allow all sandbox rules
+            sandbox={undefined}
+            src={new URL('/sign-in?preview=true', endpoint).toString()}
+            tabIndex={-1}
+            title={t('sign_in_exp.preview.title')}
+          />
         </div>
-      ) : (
-        <div className={styles.deviceWrapper}>
-          <div className={classNames(styles.device, styles[String(mode)])}>
-            {platform !== PreviewPlatform.DesktopWeb && (
-              <div className={styles.topBar}>
-                <div className={styles.time}>{format(Date.now(), 'HH:mm')}</div>
-                <PhoneInfo />
-              </div>
-            )}
-            <iframe
-              ref={previewRef}
-              // Allow all sandbox rules
-              sandbox={undefined}
-              src={new URL('/sign-in?preview=true', endpoint).toString()}
-              tabIndex={-1}
-              title={t('sign_in_exp.preview.title')}
-            />
-          </div>
-        </div>
-      )}
+      </div>
     </div>
   );
 }

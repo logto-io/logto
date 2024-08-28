@@ -1,4 +1,4 @@
-import { type SsrData } from '@logto/schemas';
+// Logto Native SDK
 
 type LogtoNativeSdkInfo = {
   platform: 'ios' | 'android';
@@ -10,14 +10,4 @@ type LogtoNativeSdkInfo = {
   };
 };
 
-type LogtoSsr = string | Readonly<SsrData> | undefined;
-
-declare global {
-  const logtoNativeSdk: LogtoNativeSdkInfo | undefined;
-  const logtoSsr: LogtoSsr;
-
-  interface Window {
-    logtoNativeSdk: LogtoNativeSdkInfo | undefined;
-    logtoSsr: LogtoSsr;
-  }
-}
+declare const logtoNativeSdk: LogtoNativeSdkInfo | undefined;

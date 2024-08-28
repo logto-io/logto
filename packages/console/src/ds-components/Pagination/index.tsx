@@ -9,7 +9,7 @@ import DangerousRaw from '../DangerousRaw';
 
 import Next from './Next';
 import Previous from './Previous';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 export type Props = {
   readonly page: number;

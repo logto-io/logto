@@ -5,7 +5,7 @@ import { onKeyDownHandler } from '@/utils/a11y';
 
 import RoleInformation from '../../components/RoleInformation';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly role: RoleResponse;

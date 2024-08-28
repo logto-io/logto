@@ -1,7 +1,7 @@
 import { Prompt } from '@logto/node';
 import { InteractionEvent, demoAppApplicationId } from '@logto/schemas';
 
-import { assignRolesToUser, putRolesToUser, putInteraction } from '#src/api/index.js';
+import { assignRolesToUser, putInteraction } from '#src/api/index.js';
 import { createRole } from '#src/api/role.js';
 import MockClient from '#src/client/index.js';
 import { demoAppRedirectUri } from '#src/constants.js';
@@ -56,8 +56,6 @@ describe('OpenID Connect ID token', () => {
   it('should be issued with correct `username` and `roles` claims', async () => {
     const role = await createRole({});
     await assignRolesToUser(userId, [role.id]);
-    // Should not throw when not adding any new role(s) to a user.
-    await expect(putRolesToUser(userId, [role.id])).resolves.not.toThrow();
     await fetchIdToken(['username', 'roles'], {
       username,
       roles: [role.name],

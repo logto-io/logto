@@ -2,12 +2,12 @@ import { isKeyInObject, type Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { type ReactNode, useRef, useState, useCallback } from 'react';
 
-import Close from '@/assets/icons/close.svg?react';
+import Close from '@/assets/icons/close.svg';
 import IconButton from '@/ds-components/IconButton';
 import Tag from '@/ds-components/Tag';
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type CanBePromise<T> = T | Promise<T>;
 

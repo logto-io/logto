@@ -1,6 +1,7 @@
 # generated files
 /*/tsconfig.*
-/*/*.config.*
+/*/rollup.config.*
+/*/vitest.config.*
 
 # keep templates
 !/templates/**

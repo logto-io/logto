@@ -8,7 +8,7 @@ import { appendPath, conditional } from '@silverhand/essentials';
 import { useCallback, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import MailIcon from '@/assets/icons/mail.svg?react';
+import MailIcon from '@/assets/icons/mail.svg';
 import FormCard from '@/components/FormCard';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import UserInfoCard from '@/components/UserInfoCard';
@@ -24,7 +24,7 @@ import type { Row } from '../CardContent';
 import CardContent from '../CardContent';
 import NotSet from '../NotSet';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly user: UserProfileResponse;

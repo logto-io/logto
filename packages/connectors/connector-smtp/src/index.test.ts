@@ -79,28 +79,6 @@ describe('SMTP connector', () => {
       to: 'baz',
     });
   });
-
-  it('should send mail with customer headers', async () => {
-    const connector = await createConnector({
-      getConfig: vi.fn().mockResolvedValue({
-        ...mockedConfig,
-        customHeaders: { 'X-Test': 'test', 'X-Test-Another': ['test1', 'test2', 'test3'] },
-      }),
-    });
-    await connector.sendMessage({
-      to: 'baz',
-      type: TemplateType.OrganizationInvitation,
-      payload: { code: '345678', link: 'https://example.com' },
-    });
-
-    expect(sendMail).toHaveBeenCalledWith({
-      from: '<notice@test.smtp>',
-      subject: 'Organization invitation',
-      text: 'This is for organization invitation. Your link is https://example.com.',
-      to: 'baz',
-      headers: { 'X-Test': 'test', 'X-Test-Another': ['test1', 'test2', 'test3'] },
-    });
-  });
 });
 
 describe('Test config guard', () => {

@@ -1,110 +1,69 @@
 @use '@/scss/underscore' as _;
 
-.container {
+.inputField {
   position: relative;
+  @include _.flex-row;
+  border: _.border(var(--color-line-border));
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition-property: outline, border;
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.2s;
+  align-items: stretch;
 
-  .inputField {
-    position: relative;
-    @include _.flex-row;
-    overflow: hidden;
-    transition-property: border;
-    transition-timing-function: ease-in-out;
-    transition-duration: 0.2s;
-    background: inherit;
-    align-items: stretch;
+  // fix in safari input field line-height issue
+  height: 44px;
 
-    // fix in safari input field line-height issue
-    height: 44px;
+  input {
+    transition: width 0.3s ease-in;
+    padding: 0 _.unit(4);
+    flex: 1;
+    background: var(--color-bg-body);
+    caret-color: var(--color-brand-default);
+    font: var(--font-body-1);
+    color: var(--color-type-primary);
+
+    &::placeholder {
+      color: var(--color-type-secondary);
+    }
+  }
+
+  .suffix {
+    position: absolute;
+    right: _.unit(2);
+    top: 50%;
+    transform: translateY(-50%);
+    width: _.unit(8);
+    height: _.unit(8);
+    display: none;
+    z-index: 1;
+  }
+
+
+  &:focus-within {
+    border: _.border(var(--color-brand-default));
 
     input {
-      transition: width 0.3s ease-in;
-      padding: 0 _.unit(4);
-      flex: 1;
-      background: inherit;
-      caret-color: var(--color-brand-default);
-      font: var(--font-body-1);
-      color: var(--color-type-primary);
       outline: none;
-      border-radius: var(--radius);
-
-      &::placeholder {
-        color: var(--color-type-secondary);
-        transition: opacity 0.2s ease-out;
-        opacity: 0%;
-      }
-
-      &:-webkit-autofill,
-      &:-webkit-autofill:hover,
-      &:-webkit-autofill:focus {
-        -webkit-text-fill-color: var(--color-type-primary);
-        /*
-         * Create an extremely long (about 11.57 days) transition for background-color
-         * This is a "hack" to prevent the browser from applying its default autofill background color
-         */
-        transition: background-color 999999s ease-in-out 0s;
-        background-color: transparent;
-      }
-
-      &:-webkit-autofill {
-        /*
-         * Define a void transition css rule on the desired <input> element once it is :-webkit-autofilled.
-         * JavaScript will then be able to hook onto the 'animationstart' event.
-         * see https://stackoverflow.com/questions/11708092/detecting-browser-autofill/41530164#41530164
-         */
-        animation-name: onAutoFillStart;
-      }
-    }
-
-    .suffix {
-      position: absolute;
-      right: _.unit(2);
-      top: 50%;
-      transform: translateY(-50%);
-      width: _.unit(8);
-      height: _.unit(8);
-      display: none;
-      z-index: 1;
-    }
-
-    &.isSuffixFocusVisible:focus-within {
-      input {
-        padding-right: _.unit(10);
-      }
-
-      .suffix {
-        display: flex;
-      }
-    }
-  }
-
-  &.active {
-    .inputField {
-      input::placeholder {
-        opacity: 100%;
-      }
-    }
-  }
-
-  &.noLabel {
-    .inputField {
-      input::placeholder {
-        opacity: 100%;
-      }
     }
   }
 
   &.danger {
-    .inputField {
-      /* stylelint-disable-next-line no-descending-specificity */
-      input {
-        caret-color: var(--color-danger-default);
-      }
+    border: _.border(var(--color-danger-default));
+
+    input {
+      caret-color: var(--color-danger-default);
     }
   }
 
-  // override for firefox & safari focus outline since we are using custom notchedOutline
-  &:focus-visible {
-    outline: none;
+  &.isSuffixFocusVisible:focus-within {
+    input {
+      padding-right: _.unit(10);
+    }
+
+    .suffix {
+      display: flex;
+    }
   }
 }
 
@@ -113,29 +72,22 @@
   margin-left: _.unit(0.5);
 }
 
-
 :global(body.desktop) {
-  .container {
-    .inputField {
-      /* stylelint-disable-next-line no-descending-specificity */
-      input {
-        font: var(--font-body-2);
-      }
+  .inputField {
+    outline: 3px solid transparent;
+
+    /* stylelint-disable-next-line no-descending-specificity */
+    input {
+      font: var(--font-body-2);
+      background: var(--color-bg-float);
+    }
+
+    &:focus-within {
+      outline-color: var(--color-overlay-brand-focused);
+    }
+
+    &.danger:focus-within {
+      outline-color: var(--color-overlay-danger-focused);
     }
   }
 }
-
-
-/*
-* Define a void transition css rule on the desired <input> element once it is :-webkit-autofilled.
-* JavaScript will then be able to hook onto the 'animationstart' event.
-* see https://stackoverflow.com/questions/11708092/detecting-browser-autofill/41530164#41530164
-*/
-@keyframes onAutoFillStart {
-  /* stylelint-disable-next-line block-no-empty */
-  from {}
-
-  /* stylelint-disable-next-line block-no-empty */
-  to {}
-}
-

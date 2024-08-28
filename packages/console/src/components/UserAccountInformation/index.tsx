@@ -6,13 +6,13 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
-import Eye from '@/assets/icons/eye.svg?react';
+import Eye from '@/assets/icons/eye.svg';
 import Button from '@/ds-components/Button';
 import IconButton from '@/ds-components/IconButton';
 import ModalLayout from '@/ds-components/ModalLayout';
-import modalStyles from '@/scss/modal.module.scss';
+import * as modalStyles from '@/scss/modal.module.scss';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly user: UserProfileResponse;

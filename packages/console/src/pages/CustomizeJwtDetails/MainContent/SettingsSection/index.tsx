@@ -1,13 +1,13 @@
 import classNames from 'classnames';
 import { useState } from 'react';
 
-import BookIcon from '@/assets/icons/book.svg?react';
-import FlaskIcon from '@/assets/icons/conical-flask.svg?react';
+import BookIcon from '@/assets/icons/book.svg';
+import FlaskIcon from '@/assets/icons/conical-flask.svg';
 import Button from '@/ds-components/Button';
 
 import InstructionTab from './InstructionTab';
 import TestTab from './TestTab';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 enum Tab {
   DataSource = 'data_source_tab',

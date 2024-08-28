@@ -1,12 +1,16 @@
-<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0_9130_88381)">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M19.9999 0L1.38013 6.64063L4.21867 31.2598L19.9999 40L35.7812 31.2598L38.6197 6.64063L19.9999 0Z" fill="#DD0031"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M20 0V4.4401V4.42057V24.681V40L35.7812 31.2598L38.6198 6.64063L20 0Z" fill="#C3002F"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M20 4.4209L8.35938 30.5212H12.6986L15.0391 24.6813H24.9186L27.2591 30.5212H31.5983L20 4.4209ZM23.4017 21.0811H16.6016L20 12.9007L23.4017 21.0811Z" fill="white"/>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 19.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 250 250" style="enable-background:new 0 0 250 250;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#DD0031;}
+	.st1{fill:#C3002F;}
+	.st2{fill:#FFFFFF;}
+</style>
+<g>
+	<polygon class="st0" points="125,30 125,30 125,30 31.9,63.2 46.1,186.3 125,230 125,230 125,230 203.9,186.3 218.1,63.2 	"/>
+	<polygon class="st1" points="125,30 125,52.2 125,52.1 125,153.4 125,153.4 125,230 125,230 203.9,186.3 218.1,63.2 125,30 	"/>
+	<path class="st2" d="M125,52.1L66.8,182.6h0h21.7h0l11.7-29.2h49.4l11.7,29.2h0h21.7h0L125,52.1L125,52.1L125,52.1L125,52.1
+		L125,52.1z M142,135.4H108l17-40.9L142,135.4z"/>
 </g>
-<defs>
-<clipPath id="clip0_9130_88381">
-<rect width="40" height="40" fill="white"/>
-</clipPath>
-</defs>
 </svg>

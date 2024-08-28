@@ -34,13 +34,9 @@ const user_details = {
   field_custom_data: 'Özel veriler',
   field_custom_data_tip:
     'Kullanıcı tarafından tercih edilen renk ve dil gibi önceden tanımlanmış kullanıcı özelliklerinde listelenmeyen ek kullanıcı bilgileri.',
-  field_profile: 'Profil',
-  field_profile_tip:
-    'Kullanıcının özelliklerine dahil olmayan ek OpenID Connect standart talepleri. Tüm bilinmeyen özelliklerin kaldırılacağını unutmayın. Daha fazla bilgi için <a>profil özellik referansına</a> bakın.',
   field_connectors: 'Sosyal bağlayıcılar',
   field_sso_connectors: 'İş bağlantıları',
   custom_data_invalid: 'Özel veriler geçerli bir JSON nesnesi olmalıdır',
-  profile_invalid: 'Profil geçerli bir JSON nesnesi olmalıdır',
   connectors: {
     connectors: 'Bağlayıcılar',
     user_id: 'Kullanıcı IDsi',
@@ -81,11 +77,9 @@ const user_details = {
   roles: {
     name_column: 'Kullanıcı rolü',
     description_column: 'Açıklama',
-    assign_button: 'Rolleri ata',
     delete_description:
       'Bu işlem, bu rolü bu kullanıcıdan kaldıracaktır. Rol kendisi hala var olacaktır, ancak artık bu kullanıcıyla ilişkili olmayacaktır.',
     deleted: '{{name}} bu kullanıcıdan başarıyla kaldırıldı.',
-    assign_title: "{{name}}'e rolleri ata",
     assign_subtitle:
       'İsim, açıklama veya rol kimliği ile arama yaparak uygun kullanıcı rollerini bulun.',
     assign_role_field: 'Rolleri ata',

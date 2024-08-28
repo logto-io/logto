@@ -5,7 +5,7 @@ import { type TenantResponse } from '@/cloud/types/router';
 import Button from '@/ds-components/Button';
 import ModalLayout from '@/ds-components/ModalLayout';
 
-import styles from '../../index.module.scss';
+import * as styles from '../../index.module.scss';
 import TenantsList from '../TenantsList';
 
 type Props = {

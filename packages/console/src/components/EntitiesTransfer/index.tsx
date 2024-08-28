@@ -1,11 +1,11 @@
 import classNames from 'classnames';
 
-import transferLayout from '@/scss/transfer.module.scss';
+import * as transferLayout from '@/scss/transfer.module.scss';
 import { type Identifiable } from '@/types/general';
 
 import SourceEntitiesBox, { type Props as SourceProps } from './components/SourceEntitiesBox';
 import TargetEntitiesBox from './components/TargetEntitiesBox';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props<T extends Identifiable> = SourceProps<T> & {
   readonly errorMessage?: string;

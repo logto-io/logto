@@ -71,8 +71,8 @@
   border: 1px solid var(--color-divider);
 
   .bone {
-    border-radius: 8px;
     @include _.shimmering-animation;
+    border-radius: 8px;
   }
 
   .columnWrapper {

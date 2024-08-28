@@ -1,6 +1,5 @@
 const demo_app = {
   title: 'Canlı önizlemede başarıyla oturum açtınız!',
-  subtitle: 'İşte kullanıcı bilgileriniz:',
   username: 'Kullanıcı Adı: ',
   user_id: 'Kullanıcı Kimliği: ',
   sign_out: 'Canlı Önizlemeyi Kapat',

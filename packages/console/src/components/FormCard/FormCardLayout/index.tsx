@@ -2,7 +2,7 @@ import { type ReactNode } from 'react';
 
 import Card from '@/ds-components/Card';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly introduction: ReactNode;

@@ -66,6 +66,29 @@ The `prompts` field is an array of strings that specifies the type of user inter
 
 Logto will concatenate the prompts with a space as the value of `prompt` in the authorization URL.
 
+### Client ID
+
+You may find the **Application (client) ID** in the **Overview** section of your newly created application in the Azure Portal.
+
+### Client Secret
+
+- In your newly created application, click the **Certificates & Secrets** to get a client secret, and click the **New client secret** from the top.
+- Enter a description and an expiration.
+- This will only show your client secret once. Fill the **value** to the Logto connector configuration and save it to a secure location.
+
+### Cloud Instance
+
+Usually, it is `https://login.microsoftonline.com/`. See [Azure AD authentication endpoints](https://learn.microsoft.com/en-us/azure/active-directory/develop/authentication-national-cloud#azure-ad-authentication-endpoints) for more information.
+
+### Tenant ID
+
+Logto will use this field to construct the authorization endpoints. This value is dependent on the **access type** you selected when creating the application in the Azure Portal.
+
+- If you select **Accounts in this organizational directory only** for access type then you need to enter your **{TenantID}**. You can find the tenant ID in the **Overview** section of your Azure Active Directory.
+- If you select **Accounts in any organizational directory** for access type then you need to enter **organizations**.
+- If you select **Accounts in any organizational directory or personal Microsoft accounts** for access type then you need to enter **common**.
+- If you select **Personal Microsoft accounts only** for access type then you need to enter **consumers**.
+
 ## References
 
 - [Web app that signs in users](https://docs.microsoft.com/en-us/azure/active-directory/develop/scenario-web-app-sign-user-overview)

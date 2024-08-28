@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import ReactModal from 'react-modal';
 
 import { TenantsContext } from '@/contexts/TenantsProvider';
-import modalStyles from '@/scss/modal.module.scss';
+import * as modalStyles from '@/scss/modal.module.scss';
 
 import DeletionConfirmationModal from './components/DeletionConfirmationModal';
 import TenantsIssuesModal from './components/TenantsIssuesModal';

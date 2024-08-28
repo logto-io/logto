@@ -1,0 +1,13 @@
+{
+  "extends": "@silverhand/ts-config/tsconfig.base",
+  "compilerOptions": {
+    "declaration": false,
+    "outDir": "build",
+    "baseUrl": ".",
+    "paths": {
+      "#src/*": [
+        "src/*"
+      ]
+    }
+  }
+}

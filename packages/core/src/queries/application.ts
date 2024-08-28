@@ -14,10 +14,10 @@ import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { getTotalRowCountWithPool } from '#src/database/row-count.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
-import type { Search } from '#src/utils/search.js';
 import { buildConditionsFromSearch } from '#src/utils/search.js';
+import type { Search } from '#src/utils/search.js';
+import { convertToIdentifiers, conditionalSql, conditionalArraySql } from '#src/utils/sql.js';
 import type { OmitAutoSetFields } from '#src/utils/sql.js';
-import { conditionalArraySql, conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
 import ApplicationUserConsentOrganizationsQuery from './application-user-consent-organizations.js';
 import {
@@ -145,9 +145,8 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
 
   const updateApplicationById = async (
     id: string,
-    set: Partial<OmitAutoSetFields<CreateApplication>>,
-    jsonbMode: 'merge' | 'replace' = 'merge'
-  ) => updateApplication({ set, where: { id }, jsonbMode });
+    set: Partial<OmitAutoSetFields<CreateApplication>>
+  ) => updateApplication({ set, where: { id }, jsonbMode: 'merge' });
 
   const countAllApplications = async () =>
     countApplications({

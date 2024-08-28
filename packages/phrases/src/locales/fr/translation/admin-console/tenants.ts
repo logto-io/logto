@@ -15,8 +15,6 @@ const tenants = {
     tenant_id: 'ID du locataire',
     tenant_name: 'Nom du locataire',
     tenant_region: "Région d'hébergement des données",
-    tenant_region_description:
-      'Le lieu physique où vos ressources de locataire (utilisateurs, applications, etc.) sont hébergées. Cela ne peut pas être changé après la création.',
     tenant_region_tip:
       'Vos ressources de locataire sont hébergées dans {{region}}. <a>En savoir plus</a>',
     environment_tag_development: 'Dev',
@@ -49,7 +47,6 @@ const tenants = {
   },
   create_modal: {
     title: 'Créer un locataire',
-    subtitle: "Créer un nouveau locataire qui dispose de ressources et d'utilisateurs isolés.",
     tenant_usage_purpose: 'Dans quel but souhaitez-vous utiliser ce locataire?',
     development_description:
       "Uniquement pour les tests et ne devrait pas être utilisé en production. Aucune souscription n'est requise.",
@@ -60,10 +57,6 @@ const tenants = {
     available_plan: 'Plan disponible :',
     create_button: 'Créer un locataire',
     tenant_name_placeholder: 'Mon locataire',
-    tenant_created: 'Locataire créé avec succès.',
-    invitation_failed:
-      "Certaines invitations n'ont pas pu être envoyées. Veuillez réessayer plus tard dans Paramètres -> Membres.",
-    tenant_type_description: 'Cela ne peut pas être changé après la création.',
   },
   dev_tenant_migration: {
     title:
@@ -110,10 +103,6 @@ const tenants = {
       "Nous regrettons profondément de vous informer que votre compte de locataire a été temporairement suspendu en raison d'une utilisation abusive, y compris le dépassement des limites MAU, des paiements en retard ou d'autres actions non autorisées.",
     description_2:
       "Si vous avez besoin de clarifications supplémentaires, si vous avez des préoccupations ou si vous souhaitez restaurer la fonctionnalité complète et débloquer vos locataires, n'hésitez pas à nous contacter immédiatement.",
-  },
-  production_tenant_notification: {
-    text: 'Vous êtes dans un locataire de développement pour les tests gratuits. Créez un locataire de production pour passer en direct.',
-    action: 'Créer un locataire',
   },
 };
 

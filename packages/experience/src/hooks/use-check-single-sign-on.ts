@@ -83,15 +83,15 @@ const useCheckSingleSignOn = () => {
       return true;
     },
     [
-      clearContext,
-      request,
-      setSsoConnectors,
-      setSsoEmail,
-      navigate,
-      handleError,
-      t,
       availableSsoConnectorsMap,
+      clearContext,
+      handleError,
+      navigate,
+      request,
+      setSsoEmail,
+      setSsoConnectors,
       singleSignOn,
+      t,
     ]
   );
 

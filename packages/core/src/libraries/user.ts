@@ -178,10 +178,7 @@ export const createUserLibrary = (queries: Queries) => {
     );
 
     switch (passwordEncryptionMethod) {
-      // Argon2i, Argon2id, Argon2d shares the same verify function
-      case UsersPasswordEncryptionMethod.Argon2i:
-      case UsersPasswordEncryptionMethod.Argon2id:
-      case UsersPasswordEncryptionMethod.Argon2d: {
+      case UsersPasswordEncryptionMethod.Argon2i: {
         const result = await argon2Verify({ password, hash: passwordEncrypted });
         assertThat(result, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
         break;

@@ -48,8 +48,8 @@ const connector_details = {
     company_information_description:
       'Display your company name, address, or zip code in the bottom of emails to enhance authenticity.',
     company_information_placeholder: "Your company's basic information",
-    email_logo_field: 'Email logo',
-    email_logo_tip:
+    app_logo_field: 'App Logo',
+    app_logo_tip:
       'Display your brand logo in the top of emails. Use the same image for both light mode and dark mode.',
     urls_not_allowed: 'URLs are not allowed',
     test_notes: 'Logto uses the “Generic” template for testing.',

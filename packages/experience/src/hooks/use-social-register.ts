@@ -25,7 +25,7 @@ const useSocialRegister = (connectorId?: string, replace?: boolean) => {
       }
 
       if (result?.redirectTo) {
-        await redirectTo(result.redirectTo);
+        redirectTo(result.redirectTo);
       }
     },
     [asyncRegisterWithSocial, handleError, preSignInErrorHandler, redirectTo]

@@ -14,9 +14,8 @@ const organization_template = {
     create_modal: {
       title: 'Kuruluş rolü oluştur',
       create: 'Rol oluştur',
-      name: 'Rol adı',
-      description: 'Açıklama',
-      type: 'Rol türü',
+      name_field: 'Rol adı',
+      description_field: 'Açıklama',
       created: 'Kuruluş rolü {{name}} başarıyla oluşturuldu.',
     },
   },

@@ -1,11 +1,8 @@
 {
   "extends": "./tsconfig",
   "compilerOptions": {
-    "declaration": false,
     "outDir": "alterations-js",
   },
-  "include": [
-    "alterations"
-  ],
+  "include": ["alterations"],
   "exclude": []
 }

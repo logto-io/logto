@@ -5,7 +5,7 @@ import { useCallback, useContext, useMemo } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import RunIcon from '@/assets/icons/start.svg?react';
+import RunIcon from '@/assets/icons/start.svg';
 import Button from '@/ds-components/Button';
 import { CodeEditorLoadingContext } from '@/pages/CustomizeJwtDetails/CodeEditorLoadingContext';
 import MonacoCodeEditor, {
@@ -20,7 +20,7 @@ import {
 import { buildEnvironmentVariablesTypeDefinition } from '@/pages/CustomizeJwtDetails/utils/type-definitions';
 
 import ErrorContent from './ErrorContent';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 import useTestHandler from './use-test-handler';
 
 function ScriptSection() {

@@ -22,7 +22,6 @@ const application_details = {
   description: '설명',
   description_placeholder: '어플리케이션 설명을 적어주세요.',
   config_endpoint: 'OpenID Provider 구성 엔드포인트',
-  issuer_endpoint: '발급자 엔드포인트',
   authorization_endpoint: '인증 엔드포인트',
   authorization_endpoint_tip:
     '인증 및 권한 부여를 진행할 엔드포인트입니다. OpenID Connect <a>인증</a>에서 사용되었던 값입니다.',
@@ -62,13 +61,6 @@ const application_details = {
   rotate_refresh_token: 'Refresh 토큰 회전',
   rotate_refresh_token_label:
     '활성화하면, 원래 TTL 중 70%가 지난 후 또는 특정 조건이 충족되면 Refresh 토큰 요청에 대해 새로운 Refresh 토큰을 발행합니다. <a>자세히 보기</a>',
-  backchannel_logout: '백채널 로그아웃',
-  backchannel_logout_description:
-    '애플리케이션에 세션이 필요한 경우 OpenID Connect 백채널 로그아웃 엔드포인트를 구성하세요.',
-  backchannel_logout_uri: '백채널 로그아웃 URI',
-  backchannel_logout_uri_session_required: '세션이 필요합니까?',
-  backchannel_logout_uri_session_required_description:
-    '활성화되면, RP는 `sid` (세션 ID) 클레임이 로그아웃 토큰에 포함되어 `backchannel_logout_uri` 사용 시 OP와 RP 세션을 식별하도록 요구합니다.',
   delete_description:
     '이 행동은 취소할 수 없습니다. 애플리케이션을 영구적으로 삭제할 것입니다. 삭제를 진행하려면 <span>{{name}}</span>를 입력하세요.',
   enter_your_application_name: '어플리케이션 이름을 입력하세요.',
@@ -92,22 +84,14 @@ const application_details = {
     '원본 서버를 직접 액세스로부터 보호하세요. 더 많은 <a>자세한 지침</a>을 위해 안내서를 참조하세요.',
   session_duration: '세션 기간 (일)',
   try_it: '해보기',
-  no_organization_placeholder: '조직을 찾을 수 없습니다. <a>조직으로 이동</a>',
   branding: {
     name: '브랜딩',
     description: '동의 화면에서 앱의 표시 이름과 로고를 사용자 정의하세요.',
-    description_third_party: '동의 화면에서 애플리케이션의 표시 이름과 로고를 사용자 정의하세요.',
-    app_logo: '앱 로고',
-    app_level_sie: '앱 수준 로그인 경험',
-    app_level_sie_switch:
-      '앱 수준 로그인 경험을 활성화하고 앱별 브랜딩을 설정하세요. 비활성화되면 전체 로그인 경험이 사용됩니다.',
     more_info: '추가 정보',
     more_info_description: '동의 화면에서 사용자에게 앱에 대한 자세한 정보를 제공하세요.',
     display_name: '표시 이름',
-    application_logo: '애플리케이션 로고',
-    application_logo_dark: '애플리케이션 로고 (다크)',
-    brand_color: '브랜드 색상',
-    brand_color_dark: '브랜드 색상 (다크)',
+    display_logo: '표시 로고',
+    display_logo_dark: '표시 로고 (어두운 버전)',
     terms_of_use_url: '애플리케이션 이용 약관 URL',
     privacy_policy_url: '애플리케이션 개인정보 보호정책 URL',
   },
@@ -143,13 +127,13 @@ const application_details = {
     grant_organization_level_permissions: '조직 데이터의 권한 부여',
   },
   roles: {
+    name_column: '머신 간 역할',
+    description_column: '설명',
     assign_button: '머신 간 역할 할당',
     delete_description:
       '이 작업은 이 장치 간 앱에서이 역할을 제거합니다. 역할 자체는 여전히 존재하지만 이 장치 간 앱과 관련이 없어집니다.',
     deleted: '{{name}} 가 성공적으로 삭제되었습니다.',
     assign_title: '{{name}}에게 머신 간 역할 할당',
-    assign_subtitle:
-      '머신 간 애플리케이션은 관련 API 리소스에 액세스하기 위해 머신 간 유형의 역할을 가져야 합니다.',
     assign_role_field: '머신 간 역할 할당',
     role_search_placeholder: '역할 이름으로 검색',
     added_text: '{{value, number}} 추가됨',

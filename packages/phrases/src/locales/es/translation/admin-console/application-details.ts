@@ -23,7 +23,6 @@ const application_details = {
   description: 'Descripción',
   description_placeholder: 'Ingresa la descripción de tu aplicación',
   config_endpoint: 'Endpoint de configuración del proveedor OpenID',
-  issuer_endpoint: 'Punto de emisión',
   authorization_endpoint: 'Endpoint de Autorización',
   authorization_endpoint_tip:
     'El endpoint para la autenticación y autorización. Se utiliza para OpenID Connect <a>Autenticación</a>.',
@@ -63,13 +62,6 @@ const application_details = {
   rotate_refresh_token: 'Rotar el token de refresco',
   rotate_refresh_token_label:
     'Cuando está habilitado, Logto emitirá un nuevo token de refresco para las solicitudes de token cuando ha pasado el 70 % del tiempo de vida útil (TTL) original o se cumplen ciertas condiciones. <a>Más información</a>',
-  backchannel_logout: 'Cierre de sesión por backchannel',
-  backchannel_logout_description:
-    'Configure el punto de cierre de sesión por backchannel de OpenID Connect y si la sesión es requerida para esta aplicación.',
-  backchannel_logout_uri: 'URI de cierre de sesión por backchannel',
-  backchannel_logout_uri_session_required: '¿Es necesaria la sesión?',
-  backchannel_logout_uri_session_required_description:
-    'Cuando está habilitado, el RP requiere que una reclamación `sid` (ID de sesión) se incluya en el token de cierre de sesión para identificar la sesión del RP con el OP cuando se usa el `backchannel_logout_uri`.',
   delete_description:
     'Esta acción no se puede deshacer. Eliminará permanentemente la aplicación. Ingresa el nombre de la aplicación <span>{{name}}</span> para confirmar.',
   enter_your_application_name: 'Ingresa el nombre de tu aplicación',
@@ -93,25 +85,16 @@ const application_details = {
     'Asegúrate de proteger tu servidor de origen contra el acceso directo. Consulta la guía para obtener más <a>instrucciones detalladas</a>.',
   session_duration: 'Duración de la sesión (días)',
   try_it: 'Probar',
-  no_organization_placeholder: 'No se encontró organización. <a>Ir a organizaciones</a>',
   branding: {
     name: 'Marca',
     description:
       'Personaliza el nombre y el logotipo de tu aplicación en la pantalla de consentimiento.',
-    description_third_party:
-      'Personaliza el nombre y el logotipo de exhibición de tu aplicación en la pantalla de consentimiento.',
-    app_logo: 'Logotipo de la aplicación',
-    app_level_sie: 'Experiencia de inicio de sesión a nivel de aplicación',
-    app_level_sie_switch:
-      'Habilita la experiencia de inicio de sesión a nivel de aplicación y configura el branding específico de la aplicación. Si está deshabilitado, se utilizará la experiencia de inicio de sesión omni.',
     more_info: 'Más información',
     more_info_description:
       'Ofrece a los usuarios más detalles sobre tu aplicación en la pantalla de consentimiento.',
     display_name: 'Nombre a Mostrar',
-    application_logo: 'Logotipo de la aplicación',
-    application_logo_dark: 'Logotipo de la aplicación (oscuro)',
-    brand_color: 'Color de la marca',
-    brand_color_dark: 'Color de la marca (oscuro)',
+    display_logo: 'Logotipo a Mostrar',
+    display_logo_dark: 'Logotipo a Mostrar (oscuro)',
     terms_of_use_url: 'URL de Términos de Uso de la Aplicación',
     privacy_policy_url: 'URL de Política de Privacidad de la Aplicación',
   },
@@ -149,13 +132,13 @@ const application_details = {
     grant_organization_level_permissions: 'Conceder permisos de datos de organización',
   },
   roles: {
+    name_column: 'Rol de máquina a máquina',
+    description_column: 'Descripción',
     assign_button: 'Asignar roles de máquina a máquina',
     delete_description:
       'Esta acción eliminará este rol de esta aplicación de máquina a máquina. El rol seguirá existiendo, pero ya no estará asociado con esta aplicación de máquina a máquina.',
     deleted: 'Se ha eliminado correctamente {{name}} de este usuario.',
     assign_title: 'Asignar roles de máquina a máquina a {{name}}',
-    assign_subtitle:
-      'Las aplicaciones de máquina a máquina deben tener roles de tipo máquina a máquina para acceder a los recursos relacionados con la API.',
     assign_role_field: 'Asignar roles de máquina a máquina',
     role_search_placeholder: 'Buscar por nombre de rol',
     added_text: '{{value, number}} añadido',

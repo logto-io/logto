@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react';
 
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import style from './LanguageItem.module.scss';
+import * as style from './LanguageItem.module.scss';
 
 type Props = {
   readonly languageTag: LanguageTag;

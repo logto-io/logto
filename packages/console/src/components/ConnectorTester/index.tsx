@@ -15,7 +15,7 @@ import useApi from '@/hooks/use-api';
 import { onKeyDownHandler } from '@/utils/a11y';
 import { trySubmitSafe } from '@/utils/form';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly connectorFactoryId: string;

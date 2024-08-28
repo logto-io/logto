@@ -4,17 +4,9 @@ import { type InvoicesResponse, type SubscriptionPlanResponse } from '@/cloud/ty
 
 export enum ReservedPlanName {
   Free = 'Free',
-  /** @deprecated */
   Hobby = 'Hobby',
   Pro = 'Pro',
   Enterprise = 'Enterprise',
-}
-
-// TODO: use `ReservedPlanId` in the future.
-export enum ReservedSkuId {
-  Free = 'free',
-  Pro = 'pro',
-  Enterprise = 'enterprise',
 }
 
 export type SubscriptionPlanQuota = Omit<

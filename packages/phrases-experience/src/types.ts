@@ -1,11 +1,9 @@
 import type en from './locales/en/index.js';
 
-type FlattenKeys<T> = {
-  [K in keyof T]: K extends string
-    ? T[K] extends Record<string, unknown>
-      ? `${K}.${FlattenKeys<T[K]>}`
-      : `${K}`
-    : never;
+type FlattenKeys<T, Prefix extends string = ''> = {
+  [K in keyof T]: T[K] extends Record<string, unknown>
+    ? `${Prefix}${string & K}.${FlattenKeys<T[K]>}`
+    : `${Prefix}${string & K}`;
 }[keyof T];
 
 export type LocalePhrase = typeof en;

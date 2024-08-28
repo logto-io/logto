@@ -8,7 +8,7 @@ import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import DynamicT from '@/ds-components/DynamicT';
 import { type SamlProviderConfig } from '@/pages/EnterpriseSsoDetails/types/saml';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly identityProviderConfig: SamlProviderConfig['identityProvider'];

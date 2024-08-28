@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import OrganizationIcon from '@/assets/icons/organization-preview.svg?react';
+import OrganizationIcon from '@/assets/icons/organization-preview.svg';
 import NotFoundDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import ThemedIcon from '@/components/ThemedIcon';
@@ -15,7 +15,7 @@ import Table from '@/ds-components/Table';
 import { type RequestError } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import AssignedEntities from '@/pages/Roles/components/AssignedEntities';
-import pageLayout from '@/scss/page-layout.module.scss';
+import * as pageLayout from '@/scss/page-layout.module.scss';
 import { buildUrl } from '@/utils/url';
 
 import EmptyDataPlaceholder from './EmptyDataPlaceholder';

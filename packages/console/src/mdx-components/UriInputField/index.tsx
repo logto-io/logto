@@ -26,7 +26,7 @@ import type {
 import { trySubmitSafe } from '@/utils/form';
 import { uriValidator } from '@/utils/validator';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 const nameToKey: Record<Name, AdminConsoleKey> = Object.freeze({
   redirectUris: 'application_details.redirect_uri',
@@ -70,14 +70,13 @@ function UriInputField(props: Props) {
   const title: AdminConsoleKey = nameToKey[name];
 
   const onSubmit = trySubmitSafe(async (value: string[]) => {
-    if (!appId || !data) {
+    if (!appId) {
       return;
     }
     const updatedApp = await api
       .patch(`api/applications/${appId}`, {
         json: {
           [type]: {
-            ...data[type],
             [name]: value.filter(Boolean),
           },
         },

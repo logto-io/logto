@@ -9,7 +9,7 @@ import FormField from '@/ds-components/FormField';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useCurrentUser from '@/hooks/use-current-user';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 function LeaveCard() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

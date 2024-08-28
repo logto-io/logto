@@ -1,16 +1,7 @@
 {
-  "extends": "@silverhand/ts-config/tsconfig.base",
+  "extends": "./tsconfig.base",
   "compilerOptions": {
-    "moduleResolution": "nodenext",
-    "module": "nodenext",
-    "outDir": "lib",
-    "baseUrl": ".",
-    "types": [
-      "node",
-      "vitest/globals"
-    ]
+    "types": ["node", "vitest/globals"]
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src", "types"]
 }

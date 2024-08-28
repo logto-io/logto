@@ -2,15 +2,15 @@ import { ConnectorType } from '@logto/connector-kit';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Bulb from '@/assets/icons/bulb.svg?react';
-import LightBulb from '@/assets/icons/light-bulb.svg?react';
+import Bulb from '@/assets/icons/bulb.svg';
+import LightBulb from '@/assets/icons/light-bulb.svg';
 import Button from '@/ds-components/Button';
 import useConnectorGroups from '@/hooks/use-connector-groups';
 
 import { randomSieFormDataTemplate } from '../sie-config-templates';
 import { type OnboardingSieFormData } from '../types';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly onInspired: (template: OnboardingSieFormData) => void;

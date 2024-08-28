@@ -1,37 +1,25 @@
 import { Prompt, UserScope } from '@logto/react';
 import { z } from 'zod';
 
-type ToZodObject<T> = z.ZodObject<{
-  [K in keyof T]-?: z.ZodType<T[K]>;
-}>;
-
 type LocalLogtoConfig = {
-  signInExtraParams?: string;
   prompt?: string;
   scope?: string;
   resource?: string;
-  appId?: string;
 };
 
-const localLogtoConfigGuard = z
-  .object({
-    signInExtraParams: z.string(),
-    prompt: z.string(),
-    scope: z.string(),
-    resource: z.string(),
-    appId: z.string(),
-  })
-  .partial() satisfies ToZodObject<LocalLogtoConfig>;
+const localLogtoConfigGuard = z.object({
+  prompt: z.string(),
+  scope: z.string(),
+  resource: z.string(),
+}) satisfies z.ZodType<LocalLogtoConfig>;
 
 type LocalUiConfig = {
   showDevPanel?: boolean;
 };
 
-const localUiConfigGuard = z
-  .object({
-    showDevPanel: z.boolean(),
-  })
-  .partial() satisfies ToZodObject<LocalUiConfig>;
+const localUiConfigGuard = z.object({
+  showDevPanel: z.boolean(),
+}) satisfies z.ZodType<LocalUiConfig>;
 
 type Key = 'config' | 'ui';
 

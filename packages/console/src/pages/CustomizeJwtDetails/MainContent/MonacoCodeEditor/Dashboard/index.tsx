@@ -1,10 +1,10 @@
 import classNames from 'classnames';
 import { type ReactNode } from 'react';
 
-import CloseIcon from '@/assets/icons/close.svg?react';
+import CloseIcon from '@/assets/icons/close.svg';
 import IconButton from '@/ds-components/IconButton';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 export type Props = {
   readonly title: string;

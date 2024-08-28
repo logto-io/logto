@@ -11,7 +11,7 @@ const error = {
   invalid_email: 'O e-mail é inválido',
   invalid_phone: 'O número de telefone é inválido',
   passwords_do_not_match: 'Suas senhas não correspondem. Por favor, tente novamente.',
-  invalid_passcode: 'O código de verificação é inválido.',
+  invalid_passcode: 'O código de verificação é inválido',
   invalid_connector_auth: 'A autorização é inválida',
   invalid_connector_request: 'Os dados do conector são inválidos',
   unknown: 'Erro desconhecido. Por favor, tente novamente mais tarde.',

@@ -1,6 +1,6 @@
 import { type TenantResponse } from '@/cloud/types/router';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly description: string;

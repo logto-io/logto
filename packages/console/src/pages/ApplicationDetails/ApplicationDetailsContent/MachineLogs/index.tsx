@@ -1,6 +1,6 @@
 import AuditLogTable from '@/components/AuditLogTable';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = { readonly applicationId: string };
 

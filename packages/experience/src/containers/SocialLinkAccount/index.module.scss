@@ -14,10 +14,8 @@
   text-align: left;
 }
 
-.hint {
-  @include _.text-hint;
-  text-align: left;
-  margin-top: _.unit(6);
+.divider {
+  margin: _.unit(5) 0;
 }
 
 :global(body.mobile) {

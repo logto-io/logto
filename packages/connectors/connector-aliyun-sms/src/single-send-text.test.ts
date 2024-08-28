@@ -20,10 +20,11 @@ describe('sendSms', () => {
       },
       '<access-key-secret>'
     );
-    const calledData = request.mock.calls[0] as Array<{ form: Record<string, unknown> }>;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const calledData = request.mock.calls[0];
     expect(calledData).not.toBeUndefined();
-
-    const payload = calledData[1];
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const payload = calledData?.[1];
     expect(payload).toHaveProperty('Action', 'SendSms');
   });
 });

@@ -6,7 +6,7 @@ import useTerms from '@/hooks/use-terms';
 
 import IdentifierSignInForm from './IdentifierSignInForm';
 import PasswordSignInForm from './PasswordSignInForm';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly signInMethods: SignIn['methods'];

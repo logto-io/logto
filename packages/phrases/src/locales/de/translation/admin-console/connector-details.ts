@@ -48,23 +48,11 @@ const connector_details = {
     company_information_description:
       'Zeigen Sie den Firmennamen, die Adresse oder die Postleitzahl am Ende der E-Mails an, um die Authentizität zu erhöhen.',
     company_information_placeholder: 'Die grundlegenden Informationen Ihres Unternehmens',
-    email_logo_field: 'E-Mail-Logo',
-    email_logo_tip:
-      'Zeigen Sie Ihr Markenlogo oben in den E-Mails an. Verwenden Sie dasselbe Bild für den Lichtmodus und den Dunkelmodus.',
+    app_logo_field: 'App-Logo',
+    app_logo_tip:
+      'Zeigen Sie Ihr Markenlogo oben in E-Mails an. Verwenden Sie dasselbe Bild für den hellen und den dunklen Modus.',
     urls_not_allowed: 'URLs sind nicht erlaubt',
     test_notes: 'Logto verwendet die "Generic"-Vorlage zum Testen.',
-  },
-  google_one_tap: {
-    title: 'Google One Tap',
-    description:
-      'Google One Tap ist eine sichere und einfache Möglichkeit für Benutzer, sich auf Ihrer Website anzumelden.',
-    enable_google_one_tap: 'Google One Tap aktivieren',
-    enable_google_one_tap_description:
-      'Aktivieren Sie Google One Tap in Ihrem Anmeldeerlebnis: Lassen Sie Benutzer sich schnell mit ihrem Google-Konto registrieren oder anmelden, wenn sie bereits auf ihrem Gerät angemeldet sind.',
-    configure_google_one_tap: 'Google One Tap konfigurieren',
-    auto_select: 'Anmeldeinformationen automatisch auswählen, wenn möglich',
-    close_on_tap_outside: 'Aufforderung abbrechen, wenn Benutzer außerhalb klicken/tippen',
-    itp_support: '<a>Erweiterten One Tap UX auf ITP-Browsern</a> aktivieren',
   },
 };
 

@@ -7,7 +7,6 @@ const organizations = {
   organization_template: 'Modelo de organização',
   organization_id: 'ID da organização',
   members: 'Membros',
-  machine_to_machine: 'Aplicativos de máquina para máquina',
   create_organization: 'Criar organização',
   setup_organization: 'Configurar sua organização',
   organization_list_placeholder_title: 'Organização',
@@ -28,7 +27,7 @@ const organizations = {
   empty_placeholder: '🤔 Você ainda não configurou nenhum {{entity}}.',
   organization_and_member: 'Organização e membro',
   organization_and_member_description:
-    'A organização é um grupo de usuários e pode representar as equipes, clientes comerciais e empresas parceiras, sendo que cada usuário é um "Membro". Esses podem ser entidades fundamentais para lidar com seus requisitos de multi-inquilino.',
+    'A organização é um grupo de usuários e pode representar as equipes, clientes comerciais e empresas parceiras, sendo que cada usuário é um "Membro".  Esses podem ser entidades fundamentais para lidar com seus requisitos de multi-inquilino.',
   guide: {
     title: 'Comece com guias',
     subtitle: 'Inicie as configurações da sua organização com nossos guias',

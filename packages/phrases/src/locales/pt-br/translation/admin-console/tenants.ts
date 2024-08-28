@@ -15,8 +15,6 @@ const tenants = {
     tenant_id: 'ID do Locatário',
     tenant_name: 'Nome do Locatário',
     tenant_region: 'Região de hospedagem',
-    tenant_region_description:
-      'A localização física onde seus recursos de locatário (usuários, aplicativos, etc.) estão hospedados. Isso não pode ser alterado após a criação.',
     tenant_region_tip:
       'Seus recursos do locatário estão hospedados na região {{region}}. <a>Veja mais</a>',
     environment_tag_development: 'Desenvolvimento',
@@ -49,7 +47,6 @@ const tenants = {
   },
   create_modal: {
     title: 'Criar inquilino',
-    subtitle: 'Crie um novo locatário que tenha recursos e usuários isolados.',
     tenant_usage_purpose: 'Para que você deseja usar este locatário?',
     development_description:
       'Apenas para testes e não deve ser usado em produção. Nenhuma assinatura é necessária.',
@@ -59,10 +56,6 @@ const tenants = {
     available_plan: 'Plano disponível:',
     create_button: 'Criar inquilino',
     tenant_name_placeholder: 'Meu inquilino',
-    tenant_created: 'Locatário criado com sucesso.',
-    invitation_failed:
-      'Algumas convites falharam ao serem enviadas. Por favor, tente novamente em Configurações -> Membros mais tarde.',
-    tenant_type_description: 'Isso não pode ser alterado após a criação.',
   },
   dev_tenant_migration: {
     title:
@@ -109,10 +102,6 @@ const tenants = {
       'Lamentamos informar que sua conta de locatário foi temporariamente suspensa devido a uso indevido, incluindo exceder os limites de MAU, pagamentos em atraso ou outras ações não autorizadas.',
     description_2:
       'Se precisar de mais esclarecimentos, tiver alguma preocupação ou desejar restaurar a funcionalidade total e desbloquear seus locatários, entre em contato conosco imediatamente.',
-  },
-  production_tenant_notification: {
-    text: 'Você está em um locatário de desenvolvimento para teste gratuito. Crie um locatário de produção para entrar em operação.',
-    action: 'Criar locatário',
   },
 };
 

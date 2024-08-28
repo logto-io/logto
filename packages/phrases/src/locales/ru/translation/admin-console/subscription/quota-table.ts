@@ -20,8 +20,7 @@ const quota_table = {
     title: 'Интерфейс и брендинг',
     custom_domain: 'Пользовательский домен',
     custom_css: 'Пользовательский CSS',
-    logo_and_favicon: 'Логотип и значок',
-    bring_your_ui: 'Используйте свой UI',
+    app_logo_and_favicon: 'Логотип и фавикон приложения',
     dark_mode: 'Темный режим',
     i18n: 'Интернационализация',
   },
@@ -38,7 +37,6 @@ const quota_table = {
     mfa: 'Многофакторная аутентификация',
     sso: 'Единый вход в корпоративные системы',
     adaptive_mfa: 'Адаптивный MFA',
-    impersonation: 'Имперсонация',
   },
   user_management: {
     title: 'Управление пользователями',

@@ -12,15 +12,15 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Copy from '@/assets/icons/copy.svg?react';
-import EyeClosed from '@/assets/icons/eye-closed.svg?react';
-import Eye from '@/assets/icons/eye.svg?react';
+import Copy from '@/assets/icons/copy.svg';
+import EyeClosed from '@/assets/icons/eye-closed.svg';
+import Eye from '@/assets/icons/eye.svg';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import IconButton from '../IconButton';
 import { Tooltip } from '../Tip';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly value: string;
@@ -60,7 +60,7 @@ function CopyToClipboard(
       return value;
     }
 
-    return <span className={styles.dot}>{'•'.repeat(value.length)}</span>;
+    return '•'.repeat(value.length);
   }, [hasVisibilityToggle, showHiddenContent, value]);
 
   useEffect(() => {
@@ -107,7 +107,7 @@ function CopyToClipboard(
         {variant !== 'icon' && (
           <div
             className={classNames(styles.content, isWordWrapAllowed && styles.wrapContent)}
-            style={{ width: `${value.length}ch`, ...valueStyle }}
+            style={valueStyle}
           >
             {displayValue}
           </div>
@@ -124,7 +124,11 @@ function CopyToClipboard(
             </IconButton>
           </Tooltip>
         )}
-        <Tooltip isSuccessful={copyState === 'copied'} content={t(copyState)}>
+        <Tooltip
+          isSuccessful={copyState === 'copied'}
+          anchorClassName={styles.copyToolTipAnchor}
+          content={t(copyState)}
+        >
           <IconButton
             ref={copyIconReference}
             className={styles.iconButton}

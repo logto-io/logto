@@ -6,7 +6,7 @@ import InlineNotification from '@/ds-components/InlineNotification';
 import TextLink from '@/ds-components/TextLink';
 import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type NoConnectorWarningPhrase = {
   [key in ConnectorType]: AdminConsoleKey;

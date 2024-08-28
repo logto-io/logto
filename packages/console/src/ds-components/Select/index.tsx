@@ -3,17 +3,17 @@ import type { ReactEventHandler, ReactNode } from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Close from '@/assets/icons/close.svg?react';
-import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg?react';
-import KeyboardArrowUp from '@/assets/icons/keyboard-arrow-up.svg?react';
-import SearchIcon from '@/assets/icons/search.svg?react';
+import Close from '@/assets/icons/close.svg';
+import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg';
+import KeyboardArrowUp from '@/assets/icons/keyboard-arrow-up.svg';
+import SearchIcon from '@/assets/icons/search.svg';
 import useWindowResize from '@/hooks/use-window-resize';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import Dropdown, { DropdownItem } from '../Dropdown';
 import IconButton from '../IconButton';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 export type Option<T> = {
   value: T;

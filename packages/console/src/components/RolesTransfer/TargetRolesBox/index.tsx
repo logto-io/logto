@@ -1,10 +1,10 @@
 import type { RoleResponse } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
-import transferLayout from '@/scss/transfer.module.scss';
+import * as transferLayout from '@/scss/transfer.module.scss';
 
 import TargetRoleItem from './TargetRoleItem';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly selectedRoles: RoleResponse[];

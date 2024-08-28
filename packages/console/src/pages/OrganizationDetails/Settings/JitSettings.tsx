@@ -1,13 +1,12 @@
 import { RoleType, type SsoConnectorWithProviderConfig } from '@logto/schemas';
-import classNames from 'classnames';
 import { useCallback, useMemo, useState } from 'react';
 import { Controller, type UseFormReturn } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import useSWRInfinite from 'swr/infinite';
 
-import Minus from '@/assets/icons/minus.svg?react';
-import Plus from '@/assets/icons/plus.svg?react';
-import SsoIcon from '@/assets/icons/single-sign-on.svg?react';
+import Minus from '@/assets/icons/minus.svg';
+import Plus from '@/assets/icons/plus.svg';
+import SsoIcon from '@/assets/icons/single-sign-on.svg';
 import FormCard from '@/components/FormCard';
 import MultiOptionInput from '@/components/MultiOptionInput';
 import OrganizationRolesSelect from '@/components/OrganizationRolesSelect';
@@ -23,7 +22,7 @@ import useDocumentationUrl from '@/hooks/use-documentation-url';
 import SsoConnectorLogo from '@/pages/EnterpriseSso/SsoConnectorLogo';
 import { domainRegExp } from '@/pages/EnterpriseSsoDetails/Experience/DomainsInput/consts';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 import { type FormData } from './utils';
 
 type Props = {
@@ -70,6 +69,7 @@ function JitSettings({ form }: Props) {
       description="organization_details.jit.description"
     >
       <FormField
+        className={styles.jitFormField}
         title="organization_details.jit.enterprise_sso"
         description={
           <Trans
@@ -87,7 +87,7 @@ function JitSettings({ form }: Props) {
         descriptionPosition="top"
       >
         {!allSsoConnectors?.length && (
-          <InlineNotification className={styles.ssoJitContent}>
+          <InlineNotification>
             <Trans
               i18nKey="admin_console.organization_details.jit.no_enterprise_connector_set"
               components={{ a: <TextLink to={'/' + enterpriseSso.path} /> }}
@@ -100,7 +100,7 @@ function JitSettings({ form }: Props) {
           render={({ field: { onChange, value } }) => (
             <>
               {value.length > 0 && (
-                <div className={classNames(styles.ssoJitContent, styles.ssoConnectorList)}>
+                <div className={styles.ssoConnectorList}>
                   {value.map((id) => {
                     const connector = allSsoConnectors?.find(
                       ({ id: connectorId }) => id === connectorId
@@ -130,7 +130,6 @@ function JitSettings({ form }: Props) {
               {Boolean(filteredSsoConnectors?.length) && (
                 <ActionMenu
                   buttonProps={{
-                    className: styles.ssoJitContent,
                     type: 'default',
                     size: 'medium',
                     title: 'organization_details.jit.add_enterprise_connector',

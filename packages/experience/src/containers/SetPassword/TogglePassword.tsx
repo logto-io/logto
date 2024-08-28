@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import Checkbox from '@/components/Checkbox';
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly isChecked?: boolean;

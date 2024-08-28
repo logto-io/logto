@@ -2,15 +2,15 @@ import { MfaFactor } from '@logto/schemas';
 import classNames from 'classnames';
 import { type TFuncKey } from 'i18next';
 
-import ArrowNext from '@/assets/icons/arrow-next.svg?react';
-import FactorBackupCode from '@/assets/icons/factor-backup-code.svg?react';
-import FactorTotp from '@/assets/icons/factor-totp.svg?react';
-import FactorWebAuthn from '@/assets/icons/factor-webauthn.svg?react';
+import ArrowNext from '@/assets/icons/arrow-next.svg';
+import FactorBackupCode from '@/assets/icons/factor-backup-code.svg';
+import FactorTotp from '@/assets/icons/factor-totp.svg';
+import FactorWebAuthn from '@/assets/icons/factor-webauthn.svg';
 
 import DynamicT from '../DynamicT';
 
-import mfaFactorButtonStyles from './MfaFactorButton.module.scss';
-import styles from './index.module.scss';
+import * as mfaFactorButtonStyles from './MfaFactorButton.module.scss';
+import * as styles from './index.module.scss';
 
 export type Props = {
   readonly factor: MfaFactor;

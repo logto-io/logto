@@ -41,9 +41,6 @@ const sign_up_and_sign_in = {
       set_up_more: 'Daha fazlasını kur',
       go_to: 'şimdi farklı sosyal bağlantı noktalarına.',
     },
-    automatic_account_linking: 'Otomatik hesap bağlantısı',
-    automatic_account_linking_label:
-      'Açıkken, bir kullanıcı sisteme yeni bir sosyal kimlikle giriş yaparsa ve aynı tanımlayıcıya (örn., e-posta) sahip yalnızca bir mevcut hesap varsa, Logto kullanıcıdan hesap bağlantısı istemek yerine hesabı otomatik olarak sosyal kimlikle bağlar.',
   },
   tip: {
     set_a_password: 'Kullanıcı adınıza benzersiz bir şifre belirlemek şarttır.',

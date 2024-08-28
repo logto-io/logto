@@ -15,7 +15,7 @@ import FileReader, { type Props as FileReaderProps } from '../FileReader';
 
 import ParsedConfigPreview, { CertificatePreview } from './ParsedConfigPreview';
 import SwitchFormatButton, { FormFormat } from './SwitchFormatButton';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type SamlMetadataFormFieldsProps = Pick<SamlMetadataFormProps, 'config'> & {
   readonly identityProviderConfig?: SamlProviderConfig['identityProvider'];

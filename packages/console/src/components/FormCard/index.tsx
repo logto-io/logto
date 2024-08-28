@@ -6,7 +6,7 @@ import TextLink from '@/ds-components/TextLink';
 import type { Props as TextLinkProps } from '@/ds-components/TextLink';
 
 import FormCardLayout from './FormCardLayout';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 export type Props = {
   readonly title: AdminConsoleKey;

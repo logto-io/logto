@@ -4,11 +4,11 @@ import Modal from 'react-modal';
 import { type SelectedGuide } from '@/components/Guide/GuideCard';
 import ModalFooter from '@/components/Guide/ModalFooter';
 import ModalHeader from '@/components/Guide/ModalHeader';
-import modalStyles from '@/scss/modal.module.scss';
+import * as modalStyles from '@/scss/modal.module.scss';
 
 import GuideLibrary from '../GuideLibrary';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly isOpen: boolean;

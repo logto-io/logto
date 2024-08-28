@@ -15,7 +15,7 @@ import useApi from '@/hooks/use-api';
 import { trySubmitSafe } from '@/utils/form';
 
 import Footer from './Footer';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type RadioOption = { key: AdminConsoleKey; value: RoleType };
 

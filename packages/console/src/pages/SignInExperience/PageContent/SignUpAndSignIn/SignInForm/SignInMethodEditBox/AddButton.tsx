@@ -2,15 +2,15 @@ import type { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
-import CirclePlus from '@/assets/icons/circle-plus.svg?react';
-import Plus from '@/assets/icons/plus.svg?react';
+import CirclePlus from '@/assets/icons/circle-plus.svg';
+import Plus from '@/assets/icons/plus.svg';
 import ActionMenu from '@/ds-components/ActionMenu';
 import type { Props as ButtonProps } from '@/ds-components/Button';
 import { DropdownItem } from '@/ds-components/Dropdown';
 
 import { signInIdentifierPhrase } from '../../../constants';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly options: SignInIdentifier[];

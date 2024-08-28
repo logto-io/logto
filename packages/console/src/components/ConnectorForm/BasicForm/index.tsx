@@ -1,10 +1,12 @@
-import { Theme } from '@logto/schemas';
+import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
-import Error from '@/assets/icons/toast-error.svg?react';
-import ImageInputs from '@/components/ImageInputs';
+import CaretDown from '@/assets/icons/caret-down.svg';
+import CaretUp from '@/assets/icons/caret-up.svg';
+import Error from '@/assets/icons/toast-error.svg';
 import UnnamedTrans from '@/components/UnnamedTrans';
+import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import Select from '@/ds-components/Select';
 import TextInput from '@/ds-components/TextInput';
@@ -12,21 +14,23 @@ import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import type { ConnectorFormType } from '@/types/connector';
 import { SyncProfileMode } from '@/types/connector';
+import { uriValidator } from '@/utils/validator';
 
-import styles from './index.module.scss';
-
-const themeToField = Object.freeze({
-  [Theme.Light]: 'logo',
-  [Theme.Dark]: 'logoDark',
-} as const satisfies Record<Theme, string>);
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly isAllowEditTarget?: boolean;
+  readonly isDarkDefaultVisible?: boolean;
   readonly isStandard?: boolean;
   readonly conflictConnectorName?: Record<string, string>;
 };
 
-function BasicForm({ isAllowEditTarget, isStandard, conflictConnectorName }: Props) {
+function BasicForm({
+  isAllowEditTarget,
+  isDarkDefaultVisible,
+  isStandard,
+  conflictConnectorName,
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
   const {
@@ -34,6 +38,17 @@ function BasicForm({ isAllowEditTarget, isStandard, conflictConnectorName }: Pro
     register,
     formState: { errors },
   } = useFormContext<ConnectorFormType>();
+  const [darkVisible, setDarkVisible] = useState(Boolean(isDarkDefaultVisible));
+
+  const toggleDarkVisible = () => {
+    setDarkVisible((previous) => !previous);
+  };
+
+  const toggleVisibleButtonTitle = darkVisible
+    ? 'connectors.guide.logo_dark_collapse'
+    : 'connectors.guide.logo_dark_show';
+
+  const ToggleVisibleCaretIcon = darkVisible ? CaretUp : CaretDown;
 
   const syncProfileOptions = [
     {
@@ -57,18 +72,37 @@ function BasicForm({ isAllowEditTarget, isStandard, conflictConnectorName }: Pro
               {...register('name', { required: true })}
             />
           </FormField>
-          <ImageInputs
-            uploadTitle="connectors.guide.connector_logo"
-            tip={t('connectors.guide.connector_logo_tip')}
-            control={control}
-            register={register}
-            fields={Object.values(Theme).map((theme) => ({
-              name: themeToField[theme],
-              error: errors[themeToField[theme]],
-              type: 'connector_logo',
-              theme,
-            }))}
-          />
+          <FormField title="connectors.guide.logo" tip={t('connectors.guide.logo_tip')}>
+            <TextInput
+              placeholder={t('connectors.guide.logo_placeholder')}
+              error={errors.logo?.message}
+              {...register('logo', {
+                validate: (value) =>
+                  !value || uriValidator(value) || t('errors.invalid_uri_format'),
+              })}
+            />
+          </FormField>
+          {darkVisible && (
+            <FormField title="connectors.guide.logo_dark" tip={t('connectors.guide.logo_dark_tip')}>
+              <TextInput
+                placeholder={t('connectors.guide.logo_dark_placeholder')}
+                error={errors.logoDark?.message}
+                {...register('logoDark', {
+                  validate: (value) =>
+                    !value || uriValidator(value) || t('errors.invalid_uri_format'),
+                })}
+              />
+            </FormField>
+          )}
+          <div className={styles.fieldButton}>
+            <Button
+              size="small"
+              type="text"
+              title={toggleVisibleButtonTitle}
+              trailingIcon={<ToggleVisibleCaretIcon className={styles.trailingIcon} />}
+              onClick={toggleDarkVisible}
+            />
+          </div>
         </>
       )}
       <FormField

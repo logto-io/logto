@@ -34,13 +34,6 @@ const cloud = {
       others: 'Nessuna delle opzioni sopra',
     },
   },
-  create_tenant: {
-    page_title: 'Crea tenant',
-    title: 'Crea il tuo primo tenant',
-    description:
-      'Un tenant è un ambiente isolato in cui puoi gestire identità degli utenti, applicazioni e tutte le altre risorse di Logto.',
-    invite_collaborators: 'Invita i tuoi collaboratori via email',
-  },
   sie: {
     page_title: "Personalizza l'esperienza di accesso",
     title: 'Personalizziamo insieme la tua esperienza di accesso',

@@ -1,13 +1,11 @@
 import { Navigate, type RouteObject } from 'react-router-dom';
-import { safeLazy } from 'react-safe-lazy';
 
 import { WebhookDetailsTabs } from '@/consts';
-
-const WebhookDetails = safeLazy(async () => import('@/pages/WebhookDetails'));
-const AuditLogDetails = safeLazy(async () => import('@/pages/AuditLogDetails'));
-const WebhookSettings = safeLazy(async () => import('@/pages/WebhookDetails/WebhookSettings'));
-const WebhookLogs = safeLazy(async () => import('@/pages/WebhookDetails/WebhookLogs'));
-const Webhooks = safeLazy(async () => import('@/pages/Webhooks'));
+import AuditLogDetails from '@/pages/AuditLogDetails';
+import WebhookDetails from '@/pages/WebhookDetails';
+import WebhookLogs from '@/pages/WebhookDetails/WebhookLogs';
+import WebhookSettings from '@/pages/WebhookDetails/WebhookSettings';
+import Webhooks from '@/pages/Webhooks';
 
 export const webhooks: RouteObject = {
   path: 'webhooks',

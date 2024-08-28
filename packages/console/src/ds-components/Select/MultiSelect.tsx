@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Close from '@/assets/icons/close.svg?react';
+import Close from '@/assets/icons/close.svg';
 import { Ring as Spinner } from '@/ds-components/Spinner';
 import { onKeyDownHandler } from '@/utils/a11y';
 
@@ -12,7 +12,7 @@ import Dropdown, { DropdownItem } from '../Dropdown';
 import IconButton from '../IconButton';
 import Tag from '../Tag';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 export type Option<T> = {
   value: T;

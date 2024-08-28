@@ -48,23 +48,11 @@ const connector_details = {
     company_information_description:
       'Exiba o nome da sua empresa, endereço ou código postal no final dos e-mails para melhorar a autenticidade.',
     company_information_placeholder: 'Informações básicas da sua empresa',
-    email_logo_field: 'Logo do email',
-    email_logo_tip:
-      'Exiba a logo da sua marca no topo dos e-mails. Use a mesma imagem para ambos os modos claro e escuro.',
+    app_logo_field: 'Logotipo do aplicativo',
+    app_logo_tip:
+      'Exiba o logotipo da sua marca no topo dos e-mails. Use a mesma imagem para o modo claro e escuro.',
     urls_not_allowed: 'URLs não permitidas',
     test_notes: 'Logto utiliza o modelo "Genérico" para testes.',
-  },
-  google_one_tap: {
-    title: 'Google One Tap',
-    description:
-      'Google One Tap é uma maneira segura e fácil para os usuários se conectarem ao seu site.',
-    enable_google_one_tap: 'Ativar Google One Tap',
-    enable_google_one_tap_description:
-      'Ative o Google One Tap na sua experiência de login: Permita que os usuários se inscrevam ou conectem rapidamente com a conta Google deles, se eles já estiverem logados em seus dispositivos.',
-    configure_google_one_tap: 'Configurar Google One Tap',
-    auto_select: 'Selecionar credencial automaticamente se possível',
-    close_on_tap_outside: 'Cancelar o prompt se o usuário clicar/tocar fora',
-    itp_support: 'Ativar <a>UX Melhorado do One Tap em navegadores ITP</a>',
   },
 };
 

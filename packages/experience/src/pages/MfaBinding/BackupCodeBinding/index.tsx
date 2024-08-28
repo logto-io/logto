@@ -1,6 +1,5 @@
 import { MfaFactor } from '@logto/schemas';
 import { t } from 'i18next';
-import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { validate } from 'superstruct';
 
@@ -14,12 +13,11 @@ import { UserMfaFlow } from '@/types';
 import { backupCodeBindingStateGuard } from '@/types/guard';
 import { isNativeWebview } from '@/utils/native-sdk';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 const BackupCodeBinding = () => {
   const { copyText, downloadText } = useTextHandler();
   const sendMfaPayload = useSendMfaPayload();
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { state } = useLocation();
   const [, backupCodeBindingState] = validate(state, backupCodeBindingStateGuard);
@@ -66,14 +64,11 @@ const BackupCodeBinding = () => {
         </div>
         <Button
           title="action.continue"
-          isLoading={isSubmitting}
-          onClick={async () => {
-            setIsSubmitting(true);
-            await sendMfaPayload({
+          onClick={() => {
+            void sendMfaPayload({
               flow: UserMfaFlow.MfaBinding,
               payload: { type: MfaFactor.BackupCode },
             });
-            setIsSubmitting(false);
           }}
         />
       </div>

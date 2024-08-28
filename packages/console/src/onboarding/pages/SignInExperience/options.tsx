@@ -1,20 +1,20 @@
 import { SignInIdentifier } from '@logto/schemas';
 
-import Envelop from '@/assets/icons/envelop.svg?react';
-import Keyboard from '@/assets/icons/keyboard.svg?react';
-import Label from '@/assets/icons/label.svg?react';
-import Lock from '@/assets/icons/lock.svg?react';
+import Envelop from '@/assets/icons/envelop.svg';
+import Keyboard from '@/assets/icons/keyboard.svg';
+import Label from '@/assets/icons/label.svg';
+import Lock from '@/assets/icons/lock.svg';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import type {
   MultiCardSelectorOption,
   CardSelectorOption,
 } from '@/onboarding/components/CardSelector';
 
-import Apple from '../../assets/icons/social-apple.svg?react';
-import Facebook from '../../assets/icons/social-facebook.svg?react';
-import Kakao from '../../assets/icons/social-kakao.svg?react';
-import Microsoft from '../../assets/icons/social-microsoft.svg?react';
-import Oidc from '../../assets/icons/social-oidc.svg?react';
+import Apple from '../../assets/icons/social-apple.svg';
+import Facebook from '../../assets/icons/social-facebook.svg';
+import Kakao from '../../assets/icons/social-kakao.svg';
+import Microsoft from '../../assets/icons/social-microsoft.svg';
+import Oidc from '../../assets/icons/social-oidc.svg';
 
 import { Authentication } from './types';
 

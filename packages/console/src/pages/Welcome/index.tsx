@@ -3,13 +3,13 @@ import classNames from 'classnames';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Logo from '@/assets/images/logo.svg?react';
+import Logo from '@/assets/images/logo.svg';
 import Button from '@/ds-components/Button';
 import useRedirectUri from '@/hooks/use-redirect-uri';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 function Welcome() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

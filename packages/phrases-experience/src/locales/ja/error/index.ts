@@ -12,7 +12,7 @@ const error = {
   invalid_email: 'メールアドレスが無効です',
   invalid_phone: '電話番号が無効です',
   passwords_do_not_match: 'パスワードが一致しません。もう一度お試しください。',
-  invalid_passcode: '検証コードが無効です。',
+  invalid_passcode: '検証コードが無効です',
   invalid_connector_auth: '認証が無効です',
   invalid_connector_request: 'コネクターデータが無効です',
   unknown: '不明なエラーが発生しました。後でもう一度お試しください。',

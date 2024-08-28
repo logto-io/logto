@@ -2,11 +2,11 @@ import { type ConsentInfoResponse } from '@logto/schemas';
 import classNames from 'classnames';
 import { type ReactNode } from 'react';
 
-import CheckMark from '@/assets/icons/check-mark.svg?react';
-import OrganizationIcon from '@/assets/icons/organization-icon.svg?react';
+import CheckMark from '@/assets/icons/check-mark.svg';
+import OrganizationIcon from '@/assets/icons/organization-icon.svg';
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 export type Organization = Exclude<ConsentInfoResponse['organizations'], undefined>[number];
 

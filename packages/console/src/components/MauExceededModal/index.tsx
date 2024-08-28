@@ -4,7 +4,6 @@ import ReactModal from 'react-modal';
 
 import PlanUsage from '@/components/PlanUsage';
 import { contactEmailLink } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { subscriptionPage } from '@/consts/pages';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -13,22 +12,16 @@ import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import ModalLayout from '@/ds-components/ModalLayout';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
-import modalStyles from '@/scss/modal.module.scss';
+import * as modalStyles from '@/scss/modal.module.scss';
 
 import PlanName from '../PlanName';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 function MauExceededModal() {
   const { currentTenant } = useContext(TenantsContext);
   const { usage } = currentTenant ?? {};
-  const {
-    currentPlan,
-    currentSubscription,
-    currentSku,
-    currentSubscriptionQuota,
-    currentSubscriptionUsage,
-  } = useContext(SubscriptionDataContext);
+  const { currentPlan, currentSubscription } = useContext(SubscriptionDataContext);
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { navigate } = useTenantPathname();
@@ -47,10 +40,7 @@ function MauExceededModal() {
     name: planName,
   } = currentPlan;
 
-  const isMauExceeded = isDevFeaturesEnabled
-    ? currentSubscriptionQuota.mauLimit !== null &&
-      currentSubscriptionUsage.mauLimit >= currentSubscriptionQuota.mauLimit
-    : mauLimit !== null && usage.activeUsers >= mauLimit;
+  const isMauExceeded = mauLimit !== null && usage.activeUsers >= mauLimit;
 
   if (!isMauExceeded) {
     return null;
@@ -86,7 +76,7 @@ function MauExceededModal() {
         <InlineNotification severity="error">
           <Trans
             components={{
-              planName: <PlanName skuId={currentSku.id} name={planName} />,
+              planName: <PlanName name={planName} />,
             }}
           >
             {t('upsell.mau_exceeded_modal.notification')}

@@ -3,7 +3,6 @@ import Koa from 'koa';
 import Router from 'koa-router';
 
 import { EnvSet } from '#src/env-set/index.js';
-import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import koaCors from '#src/middleware/koa-cors.js';
 import { koaManagementApiHooks } from '#src/middleware/koa-management-api-hooks.js';
@@ -16,7 +15,6 @@ import adminUserRoutes from './admin-user/index.js';
 import applicationOrganizationRoutes from './applications/application-organization.js';
 import applicationProtectedAppMetadataRoutes from './applications/application-protected-app-metadata.js';
 import applicationRoleRoutes from './applications/application-role.js';
-import applicationSecretRoutes from './applications/application-secret.js';
 import applicationSignInExperienceRoutes from './applications/application-sign-in-experience.js';
 import applicationUserConsentOrganizationRoutes from './applications/application-user-consent-organization.js';
 import applicationUserConsentScopeRoutes from './applications/application-user-consent-scope.js';
@@ -40,7 +38,6 @@ import securityRoutes from './security/index.js';
 import signInExperiencesRoutes from './sign-in-experience/index.js';
 import ssoConnectors from './sso-connector/index.js';
 import statusRoutes from './status.js';
-import subjectTokenRoutes from './subject-token.js';
 import swaggerRoutes from './swagger/index.js';
 import systemRoutes from './system.js';
 import type { AnonymousRouter, ManagementApiRouter } from './types.js';
@@ -55,7 +52,6 @@ const createRouters = (tenant: TenantContext) => {
 
   const experienceRouter: AnonymousRouter = new Router();
   if (EnvSet.values.isDevFeaturesEnabled) {
-    experienceRouter.use(koaAuditLog(tenant.queries));
     experienceApiRoutes(experienceRouter, tenant);
   }
 
@@ -69,7 +65,6 @@ const createRouters = (tenant: TenantContext) => {
   applicationRoleRoutes(managementRouter, tenant);
   applicationProtectedAppMetadataRoutes(managementRouter, tenant);
   applicationOrganizationRoutes(managementRouter, tenant);
-  applicationSecretRoutes(managementRouter, tenant);
 
   // Third-party application related routes
   applicationUserConsentScopeRoutes(managementRouter, tenant);
@@ -94,7 +89,7 @@ const createRouters = (tenant: TenantContext) => {
   organizationRoutes(managementRouter, tenant);
   ssoConnectors(managementRouter, tenant);
   systemRoutes(managementRouter, tenant);
-  subjectTokenRoutes(managementRouter, tenant);
+  securityRoutes(managementRouter, tenant);
 
   const anonymousRouter: AnonymousRouter = new Router();
   wellKnownRoutes(anonymousRouter, tenant);

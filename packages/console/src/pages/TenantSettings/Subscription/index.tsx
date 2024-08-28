@@ -4,25 +4,19 @@ import PageMeta from '@/components/PageMeta';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useSubscriptionUsage from '@/hooks/use-subscription-usage';
-import { pickupFeaturedLogtoSkus, pickupFeaturedPlans } from '@/utils/subscription';
+import { pickupFeaturedPlans } from '@/utils/subscription';
 
 import Skeleton from '../components/Skeleton';
 
 import CurrentPlan from './CurrentPlan';
 import PlanComparisonTable from './PlanComparisonTable';
 import SwitchPlanActionBar from './SwitchPlanActionBar';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 function Subscription() {
   const { currentTenantId } = useContext(TenantsContext);
-  const {
-    subscriptionPlans,
-    currentPlan,
-    logtoSkus,
-    currentSku,
-    currentSubscription,
-    onCurrentSubscriptionUpdated,
-  } = useContext(SubscriptionDataContext);
+  const { subscriptionPlans, currentPlan, currentSubscription, onCurrentSubscriptionUpdated } =
+    useContext(SubscriptionDataContext);
 
   const {
     data: subscriptionUsage,
@@ -31,7 +25,6 @@ function Subscription() {
   } = useSubscriptionUsage(currentTenantId);
 
   const reservedPlans = pickupFeaturedPlans(subscriptionPlans);
-  const reservedSkus = pickupFeaturedLogtoSkus(logtoSkus);
 
   if (isLoading) {
     return <Skeleton />;
@@ -53,8 +46,6 @@ function Subscription() {
       <SwitchPlanActionBar
         currentSubscriptionPlanId={currentSubscription.planId}
         subscriptionPlans={reservedPlans}
-        currentSkuId={currentSku.id}
-        logtoSkus={reservedSkus}
         onSubscriptionUpdated={async () => {
           /**
            * The upcoming billing info is calculated based on the current subscription usage,

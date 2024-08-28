@@ -1,25 +1,23 @@
-import { GoogleConnector } from '@logto/connector-kit';
 import {
   VerificationType,
   socialAuthorizationUrlPayloadGuard,
   socialVerificationCallbackPayloadGuard,
 } from '@logto/schemas';
-import { Action } from '@logto/schemas/lib/types/log/interaction.js';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { SocialVerification } from '../classes/verifications/social-verification.js';
 import { experienceRoutes } from '../const.js';
-import koaExperienceVerificationsAuditLog from '../middleware/koa-experience-verifications-audit-log.js';
-import { type ExperienceInteractionRouterContext } from '../types.js';
+import { type WithExperienceInteractionContext } from '../middleware/koa-experience-interaction.js';
 
-export default function socialVerificationRoutes<T extends ExperienceInteractionRouterContext>(
-  router: Router<unknown, T>,
+export default function socialVerificationRoutes<T extends WithLogContext>(
+  router: Router<unknown, WithExperienceInteractionContext<T>>,
   tenantContext: TenantContext
 ) {
   const { libraries, queries } = tenantContext;
@@ -37,20 +35,8 @@ export default function socialVerificationRoutes<T extends ExperienceInteraction
       }),
       status: [200, 400, 404, 500],
     }),
-    koaExperienceVerificationsAuditLog({
-      type: VerificationType.Social,
-      action: Action.Create,
-    }),
     async (ctx, next) => {
       const { connectorId } = ctx.guard.params;
-      const { verificationAuditLog } = ctx;
-
-      verificationAuditLog.append({
-        payload: {
-          connectorId,
-          ...ctx.guard.body,
-        },
-      });
 
       const socialVerification = SocialVerification.create(libraries, queries, connectorId);
 
@@ -85,63 +71,22 @@ export default function socialVerificationRoutes<T extends ExperienceInteraction
       }),
       status: [200, 400, 404],
     }),
-    koaExperienceVerificationsAuditLog({
-      type: VerificationType.Social,
-      action: Action.Submit,
-    }),
     async (ctx, next) => {
-      const { connectorId } = ctx.guard.params;
+      const { connectorId } = ctx.params;
       const { connectorData, verificationId } = ctx.guard.body;
-      const { verificationAuditLog } = ctx;
-      const {
-        socials: { getConnector },
-      } = libraries;
 
-      verificationAuditLog.append({
-        payload: {
-          connectorId,
-          verificationId,
-          connectorData,
-        },
-      });
-
-      const connector = await getConnector(connectorId);
-
-      const socialVerificationRecord = (() => {
-        // Check if is Google one tap verification
-        if (
-          connector.metadata.id === GoogleConnector.factoryId &&
-          connectorData[GoogleConnector.oneTapParams.credential]
-        ) {
-          const socialVerificationRecord = SocialVerification.create(
-            libraries,
-            queries,
-            connectorId
-          );
-          ctx.experienceInteraction.setVerificationRecord(socialVerificationRecord);
-          return socialVerificationRecord;
-        }
-
-        if (verificationId) {
-          return ctx.experienceInteraction.getVerificationRecordByTypeAndId(
-            VerificationType.Social,
-            verificationId
-          );
-        }
-
-        // No verificationId provided and not Google one tap callback
-        throw new RequestError({
-          code: 'session.verification_session_not_found',
-          status: 404,
-        });
-      })();
+      const socialVerificationRecord =
+        ctx.experienceInteraction.getVerificationRecordById(verificationId);
 
       assertThat(
-        socialVerificationRecord.connectorId === connectorId,
+        socialVerificationRecord &&
+          socialVerificationRecord.type === VerificationType.Social &&
+          socialVerificationRecord.connectorId === connectorId,
         new RequestError({ code: 'session.verification_session_not_found', status: 404 })
       );
 
       await socialVerificationRecord.verify(ctx, tenantContext, connectorData);
+
       await ctx.experienceInteraction.save();
 
       ctx.body = {

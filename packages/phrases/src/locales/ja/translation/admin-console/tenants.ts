@@ -14,8 +14,6 @@ const tenants = {
     tenant_id: 'テナントID',
     tenant_name: 'テナント名',
     tenant_region: 'データがホストされている地域',
-    tenant_region_description:
-      'テナントリソース（ユーザー、アプリなど）がホストされている物理的な場所です。作成後に変更することはできません。',
     tenant_region_tip: 'テナントのリソースは{{region}}にホストされています。 <a>詳細</a>',
     environment_tag_development: '開発',
     environment_tag_production: '本番',
@@ -47,7 +45,6 @@ const tenants = {
   },
   create_modal: {
     title: 'テナントを作成する',
-    subtitle: '隔離されたリソースとユーザーを持つ新しいテナントを作成します。',
     tenant_usage_purpose: 'このテナントを使用する目的は何ですか？',
     development_description:
       'テスト用であり、本番で使用すべきではありません。サブスクリプションは必要ありません。',
@@ -57,18 +54,14 @@ const tenants = {
     available_plan: '利用可能なプラン:',
     create_button: 'テナントを作成する',
     tenant_name_placeholder: '私のテナント',
-    tenant_created: 'テナントが正常に作成されました。',
-    invitation_failed:
-      '一部の招待を送信できませんでした。後で設定 -> メンバーで再試行してください。',
-    tenant_type_description: '作成後に変更することはできません。',
   },
   dev_tenant_migration: {
     title: '新しい「開発テナント」を作成して、プロの機能を無料でお試しできます！',
     affect_title: 'これはあなたにどのように影響しますか？',
     hint_1:
-      '古い<strong> 環境タグ </strong>が2つの新しいテナントタイプ<strong> 「開発」</strong>および<strong> 「本番」</strong>に置き換えられます。',
+      '古い<strong>環境タグ</strong>が2つの新しいテナントタイプ<strong>「開発」</strong>および<strong>「本番」</strong>に置き換えられます。',
     hint_2:
-      'シームレスな移行と機能の連続性を保証するため、すべての早期に作成されたテナントは、前のサブスクリプションとともに<strong> 本番 </strong>テナントタイプに昇格されます。',
+      'シームレスな移行と機能の連続性を保証するため、すべての早期に作成されたテナントは、前のサブスクリプションとともに<strong>「本番」</strong>テナントタイプに昇格されます。',
     hint_3: 'ご安心ください、他のすべての設定は変わりません。',
     about_tenant_type: 'テナントタイプについて',
   },
@@ -106,10 +99,6 @@ const tenants = {
       '誠に申し訳ありませんが、ご利用のテナントアカウントが一時的に停止されました。MAU制限を超えた、支払いの遅延、その他の不正な操作などが原因です。',
     description_2:
       '詳細な説明や懸念事項がある場合、または機能を完全に復元しテナントをアンブロックする場合は、直ちにお問い合わせください。',
-  },
-  production_tenant_notification: {
-    text: '無料テスト用の開発テナントにいます。本番テナントを作成して本稼働に移行してください。',
-    action: 'テナントを作成する',
   },
 };
 

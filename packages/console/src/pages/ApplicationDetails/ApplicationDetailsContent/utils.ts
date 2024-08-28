@@ -1,7 +1,5 @@
 import { customClientMetadataDefault, type ApplicationResponse } from '@logto/schemas';
-import { cond, conditional, type DeepPartial } from '@silverhand/essentials';
-
-import { isJsonObject } from '@/utils/json';
+import { type DeepPartial, cond } from '@silverhand/essentials';
 
 type ProtectedAppMetadataType = ApplicationResponse['protectedAppMetadata'];
 
@@ -13,7 +11,6 @@ export type ApplicationForm = {
   isAdmin?: ApplicationResponse['isAdmin'];
   // eslint-disable-next-line @typescript-eslint/ban-types
   protectedAppMetadata?: Omit<Exclude<ProtectedAppMetadataType, null>, 'customDomains'>; // Custom domains are handled separately
-  customData?: string;
 };
 
 const mapToUriFormatArrays = (value?: string[]) =>
@@ -32,7 +29,6 @@ export const applicationFormDataParser = {
       isAdmin,
       /** Specific metadata for protected apps */
       protectedAppMetadata,
-      customData,
     } = data;
 
     return {
@@ -45,7 +41,6 @@ export const applicationFormDataParser = {
             ...customClientMetadataDefault,
             ...customClientMetadata,
           },
-          customData: JSON.stringify(customData, null, 2),
           isAdmin,
         }
       ),
@@ -67,7 +62,6 @@ export const applicationFormDataParser = {
       customClientMetadata,
       isAdmin,
       protectedAppMetadata,
-      customData,
     } = data;
 
     return {
@@ -90,11 +84,6 @@ export const applicationFormDataParser = {
               customClientMetadata?.corsAllowedOrigins
             ),
           },
-          ...conditional(
-            // Invalid JSON string will be guarded by the form field validation
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            customData && isJsonObject(customData) && { customData: JSON.parse(customData) }
-          ),
           isAdmin,
         }
       ),

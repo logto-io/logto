@@ -7,7 +7,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Outlet, useLocation, useParams } from 'react-router-dom';
 import useSWR, { useSWRConfig } from 'swr';
 
-import Delete from '@/assets/icons/delete.svg?react';
+import Delete from '@/assets/icons/delete.svg';
 import DetailsPage from '@/components/DetailsPage';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import RoleIcon from '@/components/RoleIcon';
@@ -22,7 +22,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 import { type RoleDetailsOutletContext } from './types';
 
 function RoleDetails() {

@@ -6,7 +6,7 @@ import { envTagsFeatureLink } from '@/consts';
 import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly tag: TenantTag;

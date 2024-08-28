@@ -1,10 +1,9 @@
 import { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
-import { useCallback, useContext, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import { PasswordInputField } from '@/components/InputFields';
@@ -13,7 +12,7 @@ import ForgotPasswordLink from '@/containers/ForgotPasswordLink';
 import usePasswordSignIn from '@/hooks/use-password-sign-in';
 import { useForgotPasswordSettings } from '@/hooks/use-sie';
 
-import styles from '../index.module.scss';
+import * as styles from '../index.module.scss';
 
 import VerificationCodeLink from './VerificationCodeLink';
 
@@ -40,14 +39,13 @@ const PasswordForm = ({
 }: Props) => {
   const { t } = useTranslation();
   const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn();
-  const { setIdentifierInputValue } = useContext(UserInteractionContext);
   const { isForgotPasswordEnabled } = useForgotPasswordSettings();
 
   const {
     register,
     handleSubmit,
     control,
-    formState: { errors, isValid, isSubmitting },
+    formState: { errors, isValid },
   } = useForm<FormState>({
     reValidateMode: 'onBlur',
     defaultValues: {
@@ -74,15 +72,13 @@ const PasswordForm = ({
           return;
         }
 
-        setIdentifierInputValue({ type, value });
-
         await onSubmit({
           [type]: value,
           password,
         });
       })(event);
     },
-    [clearErrorMessage, handleSubmit, onSubmit, setIdentifierInputValue]
+    [clearErrorMessage, handleSubmit, onSubmit]
   );
 
   return (
@@ -102,7 +98,7 @@ const PasswordForm = ({
         autoFocus={autoFocus}
         className={styles.inputField}
         autoComplete="current-password"
-        label={t('input.password')}
+        placeholder={t('input.password')}
         isDanger={!!errors.password}
         errorMessage={errors.password?.message}
         {...register('password', { required: t('error.password_required') })}
@@ -114,7 +110,7 @@ const PasswordForm = ({
         <ForgotPasswordLink className={styles.link} identifier={identifier} value={value} />
       )}
 
-      <Button title="action.continue" name="submit" htmlType="submit" isLoading={isSubmitting} />
+      <Button title="action.continue" name="submit" htmlType="submit" />
 
       {identifier !== SignInIdentifier.Username && isVerificationCodeEnabled && (
         <VerificationCodeLink className={styles.switch} identifier={identifier} value={value} />

@@ -1,12 +1,10 @@
 import classNames from 'classnames';
 import type { TFuncKey } from 'i18next';
-import { type HTMLProps } from 'react';
-import { useDebouncedLoader } from 'use-debounced-loader';
+import type { HTMLProps } from 'react';
 
 import DynamicT from '../DynamicT';
 
-import RotatingRingIcon from './RotatingRingIcon';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 export type ButtonType = 'primary' | 'secondary';
 
@@ -15,7 +13,6 @@ type BaseProps = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title'> &
   readonly type?: ButtonType;
   readonly size?: 'small' | 'large';
   readonly isDisabled?: boolean;
-  readonly isLoading?: boolean;
   readonly className?: string;
   readonly onClick?: React.MouseEventHandler;
 };
@@ -34,13 +31,10 @@ const Button = ({
   i18nProps,
   className,
   isDisabled = false,
-  isLoading = false,
   icon,
   onClick,
   ...rest
 }: Props) => {
-  const isLoadingActive = useDebouncedLoader(isLoading, 300);
-
   return (
     <button
       disabled={isDisabled}
@@ -48,23 +42,15 @@ const Button = ({
         styles.button,
         styles[type],
         styles[size],
-        isDisabled && styles.disabled,
-        isLoadingActive && styles.loading,
+        isDisabled && styles.isDisabled,
         className
       )}
       type={htmlType}
       onClick={onClick}
       {...rest}
     >
-      <span
-        className={classNames(
-          styles.content,
-          (isLoadingActive || Boolean(icon)) && styles.iconVisible
-        )}
-      >
-        <span className={styles.icon}>{isLoadingActive ? <RotatingRingIcon /> : icon}</span>
-        <DynamicT forKey={title} interpolation={i18nProps} />
-      </span>
+      {icon && <span className={styles.icon}>{icon}</span>}
+      <DynamicT forKey={title} interpolation={i18nProps} />
     </button>
   );
 };

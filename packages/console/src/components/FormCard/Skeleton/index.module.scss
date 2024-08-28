@@ -1,17 +1,27 @@
 @use '@/scss/underscore' as _;
 
 .title {
+  @include _.shimmering-animation;
   height: 16px;
   width: 80px;
-  @include _.shimmering-animation;
 }
 
 .text {
+  @include _.shimmering-animation;
   width: 100%;
   height: 10px;
-  @include _.shimmering-animation;
 }
 
 .text + .text {
   margin-top: _.unit(2);
+}
+
+.field {
+  @include _.shimmering-animation;
+  width: 100%;
+  height: 44px;
+}
+
+.field + .field {
+  margin-top: _.unit(6);
 }

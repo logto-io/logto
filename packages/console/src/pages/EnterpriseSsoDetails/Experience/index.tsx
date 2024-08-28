@@ -32,7 +32,7 @@ import {
 } from './DomainsInput/consts';
 import { domainOptionsParser } from './DomainsInput/utils';
 import LogosUploader from './LogosUploader';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type DataType = Pick<
   SsoConnectorWithProviderConfig,

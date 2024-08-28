@@ -4,37 +4,36 @@ import type {
   Application,
   ApplicationsRole,
   LogtoConfig,
-  OidcConfigKey,
   Passcode,
+  OidcConfigKey,
   Resource,
   Role,
   Scope,
   UsersRole,
 } from '@logto/schemas';
 import {
-  ApplicationType,
-  DomainStatus,
-  internalPrefix,
-  LogtoJwtTokenKey,
-  LogtoOidcConfigKey,
   RoleType,
+  ApplicationType,
+  LogtoOidcConfigKey,
+  DomainStatus,
+  LogtoJwtTokenKey,
 } from '@logto/schemas';
 
 import { protectedAppSignInCallbackUrl } from '#src/constants/index.js';
 import { mockId } from '#src/test-utils/nanoid.js';
 
-export * from './cloud-connection.js';
 export * from './connector.js';
-export * from './domain.js';
-export * from './protected-app.js';
 export * from './sign-in-experience.js';
-export * from './sso.js';
+export * from './cloud-connection.js';
 export * from './user.js';
+export * from './domain.js';
+export * from './sso.js';
+export * from './protected-app.js';
 
 export const mockApplication: Application = {
   tenantId: 'fake_tenant',
   id: 'foo',
-  secret: internalPrefix + mockId,
+  secret: mockId,
   name: 'foo',
   type: ApplicationType.SPA,
   description: null,
@@ -50,7 +49,6 @@ export const mockApplication: Application = {
   protectedAppMetadata: null,
   isThirdParty: false,
   createdAt: 1_645_334_775_356,
-  customData: {},
 };
 
 export const mockProtectedApplication: Omit<Application, 'protectedAppMetadata'> & {
@@ -79,7 +77,6 @@ export const mockProtectedApplication: Omit<Application, 'protectedAppMetadata'>
   },
   isThirdParty: false,
   createdAt: 1_645_334_775_356,
-  customData: {},
 };
 
 export const mockCustomDomain = {

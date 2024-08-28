@@ -23,7 +23,6 @@ const application_details = {
   description: 'Descrição',
   description_placeholder: 'Digite a descrição do seu aplicativo',
   config_endpoint: 'Endpoint de configuração do OpenID Provider',
-  issuer_endpoint: 'Endpoint do emissor',
   authorization_endpoint: 'Endpoint de autorização',
   authorization_endpoint_tip:
     'O endpoint para execução de autenticação e autorização. É usado para <a>autenticação</a> OpenID Connect.',
@@ -63,13 +62,6 @@ const application_details = {
   rotate_refresh_token: 'Rotacionar token de atualização',
   rotate_refresh_token_label:
     'Quando ativado, o Logto emitirá um novo token de atualização para solicitações de token quando 70% do tempo de vida original (TTL) tiver passado ou certas condições forem atendidas. <a>Saiba mais</a>',
-  backchannel_logout: 'Logout por backchannel',
-  backchannel_logout_description:
-    'Configure o endpoint de logout do backchannel OpenID Connect e se a sessão é necessária para esta aplicação.',
-  backchannel_logout_uri: 'URI de logout por backchannel',
-  backchannel_logout_uri_session_required: 'A sessão é necessária?',
-  backchannel_logout_uri_session_required_description:
-    'Quando ativado, o RP exige que uma reivindicação `sid` (ID da sessão) seja incluída no token de logout para identificar a sessão do RP com o OP quando o `backchannel_logout_uri` é usado.',
   delete_description:
     'Esta ação não pode ser desfeita. Isso excluirá permanentemente o aplicativo. Insira o nome do aplicativo <span>{{name}}</span> para confirmar.',
   enter_your_application_name: 'Digite o nome do seu aplicativo',
@@ -93,25 +85,16 @@ const application_details = {
     'Garanta proteger seu servidor de origem contra acesso direto. Consulte o guia para mais <a>instruções detalhadas</a>.',
   session_duration: 'Duração da sessão (dias)',
   try_it: 'Tente',
-  no_organization_placeholder: 'Nenhuma organização encontrada. <a>Vá para organizações</a>',
   branding: {
     name: 'Branding',
     description:
       'Personalize o nome e logotipo da exibição de sua aplicação na tela de consentimento.',
-    description_third_party:
-      'Personalize o nome e logotipo da exibição da sua aplicação na tela de consentimento.',
-    app_logo: 'Logo do aplicativo',
-    app_level_sie: 'Experiência de login ao nível do aplicativo',
-    app_level_sie_switch:
-      'Ative a experiência de login ao nível do aplicativo e configure o branding específico do aplicativo. Se desativado, a experiência de login omnicanal será usada.',
     more_info: 'Mais informações',
     more_info_description:
       'Ofereça aos usuários mais detalhes sobre sua aplicação na tela de consentimento.',
     display_name: 'Nome de exibição',
-    application_logo: 'Logo da aplicação',
-    application_logo_dark: 'Logo da aplicação (escuro)',
-    brand_color: 'Cor da marca',
-    brand_color_dark: 'Cor da marca (escuro)',
+    display_logo: 'Logotipo de exibição',
+    display_logo_dark: 'Logotipo de exibição (escuro)',
     terms_of_use_url: 'URL dos termos de uso da aplicação',
     privacy_policy_url: 'URL da política de privacidade da aplicação',
   },
@@ -149,13 +132,13 @@ const application_details = {
     grant_organization_level_permissions: 'Conceder permissões de dados da organização',
   },
   roles: {
+    name_column: 'Função de máquina para máquina',
+    description_column: 'Descrição',
     assign_button: 'Atribuir funções de máquina para máquina',
     delete_description:
       'Esta ação removerá esta função deste aplicativo máquina-a-máquina. A função ainda existirá, mas não será mais associada a este aplicativo máquina-a-máquina.',
     deleted: '{{name}} foi removido com sucesso deste usuário.',
     assign_title: 'Atribuir funções de máquina para máquina a {{name}}',
-    assign_subtitle:
-      'Aplicativos máquina-a-máquina devem ter tipos de funções máquina-a-máquina para acessar recursos de API relacionados.',
     assign_role_field: 'Atribuir funções de máquina para máquina',
     role_search_placeholder: 'Pesquisar pelo nome da função',
     added_text: '{{value, number}} adicionados',

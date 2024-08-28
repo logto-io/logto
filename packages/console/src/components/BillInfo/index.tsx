@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import Tip from '@/assets/icons/tip.svg?react';
+import Tip from '@/assets/icons/tip.svg';
 import { newPlansBlogLink } from '@/consts';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
@@ -11,7 +11,7 @@ import TextLink from '@/ds-components/TextLink';
 import { ToggleTip } from '@/ds-components/Tip';
 import useSubscribe from '@/hooks/use-subscribe';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly cost: number;

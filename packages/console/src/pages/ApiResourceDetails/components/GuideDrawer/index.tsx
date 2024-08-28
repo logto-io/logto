@@ -2,8 +2,8 @@ import { type Resource } from '@logto/schemas';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import ArrowLeft from '@/assets/icons/arrow-left.svg?react';
-import Close from '@/assets/icons/close.svg?react';
+import ArrowLeft from '@/assets/icons/arrow-left.svg';
+import Close from '@/assets/icons/close.svg';
 import { type SelectedGuide } from '@/components/Guide/GuideCard';
 import GuideCardGroup from '@/components/Guide/GuideCardGroup';
 import { useApiGuideMetadata } from '@/components/Guide/hooks';
@@ -12,7 +12,7 @@ import Spacer from '@/ds-components/Spacer';
 
 import ApiGuide from '../ApiGuide';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly apiResource: Resource;

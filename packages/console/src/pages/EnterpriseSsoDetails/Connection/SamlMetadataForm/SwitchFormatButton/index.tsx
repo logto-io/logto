@@ -2,13 +2,13 @@ import { type AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
-import SwitchArrowIcon from '@/assets/icons/switch-arrow.svg?react';
-import Tick from '@/assets/icons/tick.svg?react';
+import SwitchArrowIcon from '@/assets/icons/switch-arrow.svg';
+import Tick from '@/assets/icons/tick.svg';
 import ActionMenu from '@/ds-components/ActionMenu';
 import { DropdownItem } from '@/ds-components/Dropdown';
 import DynamicT from '@/ds-components/DynamicT';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly value: FormFormat;

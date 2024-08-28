@@ -32,11 +32,6 @@ const jwt_claims = {
     subtitle:
       '`veri.kullanıcı` giriş parametresini kullanarak önemli kullanıcı bilgilerini sağlayın.',
   },
-  grant_data: {
-    title: 'Yetki verisi',
-    subtitle:
-      '`veri.yetki` giriş parametresini kullanarak önemli yetki bilgilerini sağlayın, sadece belge değişimi için kullanılabilir.',
-  },
   token_data: {
     title: 'Belge verisi',
     subtitle: '`belge` giriş parametresini mevcut erişim belgesi yükü için kullanın. ',

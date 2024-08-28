@@ -1,5 +1,5 @@
 import { type MfaFactor } from '../../foundations/index.js';
-import type { InteractionEvent, VerificationType } from '../interactions.js';
+import type { InteractionEvent } from '../interactions.js';
 
 export type Prefix = 'Interaction';
 
@@ -12,7 +12,6 @@ export enum Field {
   Profile = 'Profile',
   BindMfa = 'BindMfa',
   Mfa = 'Mfa',
-  Verification = 'Verification',
 }
 
 /** Method to verify the identifier */
@@ -75,7 +74,7 @@ export enum Action {
  */
 export type LogKey =
   | `${Prefix}.${Action.Create | Action.End}`
-  | `${Prefix}.${InteractionEvent}.${Action.Create | Action.Update | Action.Submit}`
+  | `${Prefix}.${InteractionEvent}.${Action.Update | Action.Submit}`
   | `${Prefix}.${InteractionEvent}.${Field.Profile}.${
       | Action.Update // PATCH profile
       | Action.Create // PUT profile
@@ -94,6 +93,4 @@ export type LogKey =
   | `${Prefix}.${InteractionEvent}.${Field.BindMfa}.${MfaFactor}.${Action.Submit | Action.Create}`
   | `${Prefix}.${InteractionEvent.SignIn}.${Field.Mfa}.${MfaFactor}.${
       | Action.Submit
-      | Action.Create}`
-  | `${Prefix}.${InteractionEvent}.${Field.Verification}.${VerificationType}.${Action}`
-  | `${Prefix}.${InteractionEvent}.${Field.Identifier}.${Action.Submit}`;
+      | Action.Create}`;

@@ -20,8 +20,7 @@ const quota_table = {
     title: '用戶界面與品牌',
     custom_domain: '自訂網域',
     custom_css: '自訂 CSS',
-    logo_and_favicon: 'Logo 和 favicon',
-    bring_your_ui: '帶上你的 UI',
+    app_logo_and_favicon: '應用程式徽標和網站圖示',
     dark_mode: '深色模式',
     i18n: '國際化',
   },
@@ -38,7 +37,6 @@ const quota_table = {
     mfa: '多因素認證',
     sso: '企業 SSO',
     adaptive_mfa: '自適應MFA',
-    impersonation: '冒充',
   },
   user_management: {
     title: '用戶管理',

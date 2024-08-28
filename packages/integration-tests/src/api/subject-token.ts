@@ -4,7 +4,7 @@ import { authedAdminApi } from './api.js';
 
 export const createSubjectToken = async (userId: string, context?: JsonObject) =>
   authedAdminApi
-    .post('subject-tokens', {
+    .post('security/subject-tokens', {
       json: {
         userId,
         context,

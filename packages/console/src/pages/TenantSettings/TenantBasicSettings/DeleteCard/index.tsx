@@ -5,7 +5,7 @@ import FormCard from '@/components/FormCard';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly currentTenantId: string;

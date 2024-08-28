@@ -8,7 +8,7 @@ export const encryptUserPassword = async (
   password: string
 ): Promise<{
   passwordEncrypted: string;
-  passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i;
+  passwordEncryptionMethod: UsersPasswordEncryptionMethod;
 }> => {
   const passwordEncryptionMethod = UsersPasswordEncryptionMethod.Argon2i;
   const passwordEncrypted = await encryptPassword(password, passwordEncryptionMethod);

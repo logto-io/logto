@@ -7,7 +7,7 @@ import { LinkButton } from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import Spacer from '@/ds-components/Spacer';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 /** The inline banner for displaying the sample info. */
 export default function Sample() {

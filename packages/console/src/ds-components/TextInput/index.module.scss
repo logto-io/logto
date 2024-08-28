@@ -76,7 +76,7 @@
       &::-webkit-calendar-picker-indicator {
         background-image: none;
         background-color: var(--color-text-secondary);
-        mask-image: url('../../assets/icons/calendar-outline.svg');
+        mask-image: url('raw:../../assets/icons/calendar-outline.svg');
         mask-size: 20px 20px;
         width: 16px;
         height: 18px;

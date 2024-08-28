@@ -5,9 +5,9 @@ import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
-import Plus from '@/assets/icons/plus.svg?react';
-import PermissionsEmptyDark from '@/assets/images/permissions-empty-dark.svg?react';
-import PermissionsEmpty from '@/assets/images/permissions-empty.svg?react';
+import Plus from '@/assets/icons/plus.svg';
+import PermissionsEmptyDark from '@/assets/images/permissions-empty-dark.svg';
+import PermissionsEmpty from '@/assets/images/permissions-empty.svg';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
 import Button from '@/ds-components/Button';
 import type { Props as PaginationProps } from '@/ds-components/Pagination';
@@ -24,7 +24,7 @@ import ActionsButton from '../ActionsButton';
 import EditScopeModal, { type EditScopeData } from '../EditScopeModal';
 import EmptyDataPlaceholder from '../EmptyDataPlaceholder';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type SearchProps = {
   keyword: string;

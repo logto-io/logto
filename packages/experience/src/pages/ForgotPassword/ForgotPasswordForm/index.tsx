@@ -1,9 +1,8 @@
 import classNames from 'classnames';
-import { useCallback, useContext, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import { SmartInputField } from '@/components/InputFields';
@@ -12,7 +11,7 @@ import type { VerificationCodeIdentifier } from '@/types';
 import { UserFlow } from '@/types';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;
@@ -42,13 +41,10 @@ const ForgotPasswordForm = ({
     UserFlow.ForgotPassword
   );
 
-  const { setForgotPasswordIdentifierInputValue, setIdentifierInputValue } =
-    useContext(UserInteractionContext);
-
   const {
     handleSubmit,
     control,
-    formState: { errors, isValid, isSubmitting },
+    formState: { errors, isValid },
   } = useForm<FormState>({
     reValidateMode: 'onBlur',
     defaultValues: {
@@ -74,13 +70,10 @@ const ForgotPasswordForm = ({
           return;
         }
 
-        // Cache or update the forgot password identifier input value
-        setForgotPasswordIdentifierInputValue({ type, value });
-
         await onSubmit({ identifier: type, value });
       })(event);
     },
-    [clearErrorMessage, handleSubmit, onSubmit, setForgotPasswordIdentifierInputValue]
+    [clearErrorMessage, handleSubmit, onSubmit]
   );
 
   return (
@@ -123,7 +116,7 @@ const ForgotPasswordForm = ({
 
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
-      <Button title="action.continue" htmlType="submit" isLoading={isSubmitting} />
+      <Button title="action.continue" htmlType="submit" />
 
       <input hidden type="submit" />
     </form>

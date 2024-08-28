@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 function NotSet() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

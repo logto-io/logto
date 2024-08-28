@@ -16,28 +16,10 @@
   user-select: none;
   overflow: hidden;
 
-  .content {
-    position: relative;
-    transition: padding-left 0.2s ease;
-
-    .icon {
-      font-size: 0;
-      line-height: normal;
-      position: absolute;
-      pointer-events: none;
-      left: 0;
-      opacity: 0%;
-      transition: opacity 0.2s ease;
-    }
-
-    &.iconVisible {
-      padding-left: _.unit(7);
-
-      .icon {
-        left: 0;
-        opacity: 100%;
-      }
-    }
+  .icon {
+    font-size: 0;
+    line-height: normal;
+    margin-right: _.unit(2);
   }
 }
 
@@ -62,10 +44,6 @@
 
   &:active {
     background: var(--color-brand-pressed);
-  }
-
-  &.loading {
-    background-color: var(--color-brand-loading);
   }
 }
 
@@ -96,7 +74,7 @@
       outline: 3px solid var(--color-overlay-brand-focused);
     }
 
-    &:not(:disabled):not(:active):not(.loading):hover {
+    &:not(:disabled):not(:active):hover {
       background: var(--color-brand-hover);
     }
   }
@@ -106,7 +84,7 @@
       outline: 3px solid var(--color-overlay-neutral-focused);
     }
 
-    &:not(:disabled):not(:active):not(.loading):hover {
+    &:not(:disabled):not(:active):hover {
       background: var(--color-overlay-neutral-hover);
     }
   }

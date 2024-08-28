@@ -8,7 +8,7 @@ import usePlatform from '@/hooks/use-platform';
 import useTextHandler from '@/hooks/use-text-handler';
 import { type TotpBindingState } from '@/types/guard';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 const SecretSection = ({ secret, secretQrCode }: TotpBindingState) => {
   const { t } = useTranslation();

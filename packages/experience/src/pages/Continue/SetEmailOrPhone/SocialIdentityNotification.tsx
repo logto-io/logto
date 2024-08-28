@@ -7,7 +7,7 @@ import type { VerificationCodeIdentifier } from '@/types';
 import { registeredSocialIdentityStateGuard } from '@/types/guard';
 import { maskEmail } from '@/utils/format';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 const SocialIdentityNotification = ({
   missingProfileTypes,

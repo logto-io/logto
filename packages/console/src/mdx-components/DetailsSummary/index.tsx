@@ -4,10 +4,10 @@ import { useState, useCallback } from 'react';
 import type { Height } from 'react-animate-height';
 import AnimateHeight from 'react-animate-height';
 
-import ArrowRight from '@/assets/icons/triangle-right.svg?react';
+import ArrowRight from '@/assets/icons/triangle-right.svg';
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly children?: ReactNode[] | ReactNode;

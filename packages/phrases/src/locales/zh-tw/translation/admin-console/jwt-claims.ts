@@ -17,7 +17,7 @@ const jwt_claims = {
   custom_jwt_create_button: '添加自定義声明',
   custom_jwt_item: '自定義声明 {{for}}',
   delete_modal_title: '刪除自定義声明',
-  delete_modal_content: '你確定要刪除自定義声明嗎？',
+  delete_modal_content: '您確定要刪除自定義声明嗎？',
   clear: '清除',
   cleared: '已清除',
   restore: '恢復默認值',
@@ -29,10 +29,6 @@ const jwt_claims = {
     title: '用戶數據',
     subtitle: '使用 `data.user` 輸入參數提供重要用戶信息。',
   },
-  grant_data: {
-    title: '授權資料',
-    subtitle: '使用 `data.grant` 輸入參數提供重要授權信息，僅適用於令牌交換。',
-  },
   token_data: {
     title: '令牌數據',
     subtitle: '使用 `token` 輸入參數獲取當前訪問令牌有效載荷。',
@@ -40,7 +36,7 @@ const jwt_claims = {
   fetch_external_data: {
     title: '提取外部數據',
     subtitle: '直接將來自外部 APIs 的數據合併到声明中。',
-    description: '使用 `fetch` 函數調用外部 APIs 並將數據包含在你的自定義声明中。示例：',
+    description: '使用 `fetch` 函數調用外部 APIs 並將數據包含在您的自定義声明中。示例：',
   },
   environment_variables: {
     title: '設置環境變量',

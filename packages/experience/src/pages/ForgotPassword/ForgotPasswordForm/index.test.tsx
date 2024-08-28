@@ -2,7 +2,6 @@ import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { act, fireEvent, waitFor } from '@testing-library/react';
 
-import UserInteractionContextProvider from '@/Providers/UserInteractionContextProvider';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import { putInteraction, sendVerificationCode } from '@/apis/interaction';
 import { UserFlow, type VerificationCodeIdentifier } from '@/types';
@@ -30,25 +29,15 @@ describe('ForgotPasswordForm', () => {
   const email = 'foo@logto.io';
   const countryCode = '86';
   const phone = '13911111111';
-  const originalLocation = window.location;
 
   const renderForm = (defaultType: VerificationCodeIdentifier, defaultValue?: string) =>
     renderWithPageContext(
-      <UserInteractionContextProvider>
-        <ForgotPasswordForm
-          enabledTypes={[SignInIdentifier.Email, SignInIdentifier.Phone]}
-          defaultType={defaultType}
-          defaultValue={defaultValue}
-        />
-      </UserInteractionContextProvider>
+      <ForgotPasswordForm
+        enabledTypes={[SignInIdentifier.Email, SignInIdentifier.Phone]}
+        defaultType={defaultType}
+        defaultValue={defaultValue}
+      />
     );
-
-  afterEach(() => {
-    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-    Object.defineProperty(window, 'location', {
-      value: originalLocation,
-    });
-  });
 
   describe.each([
     { identifier: SignInIdentifier.Email, value: email },
@@ -92,7 +81,7 @@ describe('ForgotPasswordForm', () => {
               pathname: `/${UserFlow.ForgotPassword}/verification-code`,
               search: '',
             },
-            { replace: undefined }
+            { state: { identifier, value }, replace: undefined }
           );
         });
       });

@@ -1,10 +1,10 @@
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
-import RedoIcon from '@/assets/icons/redo.svg?react';
+import RedoIcon from '@/assets/icons/redo.svg';
 
 import ActionButton from './index';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;

@@ -1,16 +1,18 @@
 import { useContext } from 'react';
 import { Outlet } from 'react-router-dom';
+import { useDebouncedLoader } from 'use-debounced-loader';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
-import LoadingMask from '@/components/LoadingMask';
+import LoadingLayer from '@/components/LoadingLayer';
 
 const LoadingLayerProvider = () => {
   const { loading } = useContext(PageContext);
+  const debouncedLoading = useDebouncedLoader(loading, 500);
 
   return (
     <>
       <Outlet />
-      {loading && <LoadingMask />}
+      {debouncedLoading && <LoadingLayer />}
     </>
   );
 };

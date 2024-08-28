@@ -22,7 +22,7 @@ const useSkipMfa = () => {
     }
 
     if (result) {
-      await redirectTo(result.redirectTo);
+      redirectTo(result.redirectTo);
     }
   }, [asyncSkipMfa, handleError, preSignInErrorHandler, redirectTo]);
 };

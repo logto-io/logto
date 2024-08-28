@@ -1,7 +1,7 @@
 import { ConnectorType } from '@logto/connector-kit';
 import {
   InteractionEvent,
-  SignInIdentifier,
+  InteractionIdentifierType,
   type VerificationCodeIdentifier,
 } from '@logto/schemas';
 
@@ -25,11 +25,11 @@ devFeatureTest.describe('Verification code verification APIs', () => {
 
   const identifiers: VerificationCodeIdentifier[] = [
     {
-      type: SignInIdentifier.Email,
+      type: InteractionIdentifierType.Email,
       value: 'foo@logto.io',
     },
     {
-      type: SignInIdentifier.Phone,
+      type: InteractionIdentifierType.Phone,
       value: '+1234567890',
     },
   ];

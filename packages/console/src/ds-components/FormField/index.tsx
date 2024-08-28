@@ -3,8 +3,7 @@ import classNames from 'classnames';
 import type { ReactElement, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Tip from '@/assets/icons/tip.svg?react';
-import FeatureTag, { type Props as FeatureTagProps } from '@/components/FeatureTag';
+import Tip from '@/assets/icons/tip.svg';
 
 import type DangerousRaw from '../DangerousRaw';
 import DynamicT from '../DynamicT';
@@ -13,7 +12,7 @@ import Spacer from '../Spacer';
 import { ToggleTip } from '../Tip';
 import type { Props as ToggleTipProps } from '../Tip/ToggleTip';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 export type Props = {
   readonly title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
@@ -26,7 +25,6 @@ export type Props = {
   readonly headlineSpacing?: 'default' | 'large';
   readonly headlineClassName?: string;
   readonly tip?: ToggleTipProps['content'];
-  readonly featureTag?: FeatureTagProps;
 };
 
 function FormField({
@@ -39,7 +37,6 @@ function FormField({
   className,
   headlineSpacing = 'default',
   tip,
-  featureTag,
   headlineClassName,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -66,7 +63,6 @@ function FormField({
             </IconButton>
           </ToggleTip>
         )}
-        {featureTag && <FeatureTag {...featureTag} className={styles.featureTag} />}
         <Spacer />
         {isRequired && <div className={styles.required}>{t('general.required')}</div>}
       </div>

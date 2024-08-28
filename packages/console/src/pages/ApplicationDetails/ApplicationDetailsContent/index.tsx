@@ -9,8 +9,8 @@ import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
-import Delete from '@/assets/icons/delete.svg?react';
-import File from '@/assets/icons/file.svg?react';
+import Delete from '@/assets/icons/delete.svg';
+import File from '@/assets/icons/file.svg';
 import ApplicationIcon from '@/components/ApplicationIcon';
 import DetailsForm from '@/components/DetailsForm';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
@@ -32,24 +32,23 @@ import { trySubmitSafe } from '@/utils/form';
 
 import BackchannelLogout from './BackchannelLogout';
 import Branding from './Branding';
-import EndpointsAndCredentials, { type ApplicationSecretRow } from './EndpointsAndCredentials';
+import EndpointsAndCredentials from './EndpointsAndCredentials';
 import GuideDrawer from './GuideDrawer';
 import MachineLogs from './MachineLogs';
 import MachineToMachineApplicationRoles from './MachineToMachineApplicationRoles';
 import Permissions from './Permissions';
 import RefreshTokenSettings from './RefreshTokenSettings';
 import Settings from './Settings';
-import styles from './index.module.scss';
-import { applicationFormDataParser, type ApplicationForm } from './utils';
+import * as styles from './index.module.scss';
+import { type ApplicationForm, applicationFormDataParser } from './utils';
 
 type Props = {
   readonly data: ApplicationResponse;
-  readonly secrets: ApplicationSecretRow[];
   readonly oidcConfig: SnakeCaseOidcConfig;
   readonly onApplicationUpdated: () => void;
 };
 
-function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpdated }: Props) {
+function ApplicationDetailsContent({ data, oidcConfig, onApplicationUpdated }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { tab } = useParams();
   const { navigate } = useTenantPathname();
@@ -71,12 +70,6 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
   const api = useApi();
-  const hasBranding = [
-    ApplicationType.Native,
-    ApplicationType.SPA,
-    ApplicationType.Traditional,
-    ApplicationType.Protected,
-  ].includes(data.type);
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (formData) => {
@@ -84,14 +77,11 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
         return;
       }
 
-      const json = applicationFormDataParser.toRequestPayload(formData);
-
       const updatedData = await api
         .patch(`api/applications/${data.id}`, {
-          json,
+          json: applicationFormDataParser.toRequestPayload(formData),
         })
         .json<ApplicationResponse>();
-
       reset(applicationFormDataParser.fromResponse(updatedData));
       onApplicationUpdated();
       toast.success(t('general.saved'));
@@ -158,7 +148,7 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
         ]}
       />
       <Drawer isOpen={isReadmeOpen} onClose={onCloseDrawer}>
-        <GuideDrawer app={data} secrets={secrets} onClose={onCloseDrawer} />
+        <GuideDrawer app={data} onClose={onCloseDrawer} />
       </Drawer>
       <DeleteConfirmModal
         isOpen={isDeleteFormOpen}
@@ -195,14 +185,14 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
           </>
         )}
         {data.isThirdParty && (
-          <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Permissions}`}>
-            {t('application_details.permissions.name')}
-          </TabNavItem>
-        )}
-        {hasBranding && (
-          <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Branding}`}>
-            {t('application_details.branding.name')}
-          </TabNavItem>
+          <>
+            <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Permissions}`}>
+              {t('application_details.permissions.name')}
+            </TabNavItem>
+            <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Branding}`}>
+              {t('application_details.branding.name')}
+            </TabNavItem>
+          </>
         )}
       </TabNav>
       <TabWrapper
@@ -219,11 +209,7 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
             <Settings data={data} />
             {/* Protected apps will reference this section in <ProtectedAppSettings /> component */}
             {data.type !== ApplicationType.Protected && (
-              <EndpointsAndCredentials
-                app={data}
-                oidcConfig={oidcConfig}
-                onApplicationUpdated={onApplicationUpdated}
-              />
+              <EndpointsAndCredentials app={data} oidcConfig={oidcConfig} />
             )}
             {![ApplicationType.MachineToMachine, ApplicationType.Protected].includes(data.type) && (
               <RefreshTokenSettings data={data} />
@@ -271,21 +257,21 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
         </>
       )}
       {data.isThirdParty && (
-        <TabWrapper
-          isActive={tab === ApplicationDetailsTabs.Permissions}
-          className={styles.tabContainer}
-        >
-          <Permissions application={data} />
-        </TabWrapper>
-      )}
-      {hasBranding && (
-        <TabWrapper
-          isActive={tab === ApplicationDetailsTabs.Branding}
-          className={styles.tabContainer}
-        >
-          {/* isActive is needed to support conditional render UnsavedChangesAlertModal */}
-          <Branding application={data} isActive={tab === ApplicationDetailsTabs.Branding} />
-        </TabWrapper>
+        <>
+          <TabWrapper
+            isActive={tab === ApplicationDetailsTabs.Permissions}
+            className={styles.tabContainer}
+          >
+            <Permissions application={data} />
+          </TabWrapper>
+          <TabWrapper
+            isActive={tab === ApplicationDetailsTabs.Branding}
+            className={styles.tabContainer}
+          >
+            {/* isActive is needed to support conditional render UnsavedChangesAlertModal */}
+            <Branding application={data} isActive={tab === ApplicationDetailsTabs.Branding} />
+          </TabWrapper>
+        </>
       )}
     </>
   );

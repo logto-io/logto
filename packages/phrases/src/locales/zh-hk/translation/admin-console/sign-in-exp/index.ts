@@ -14,7 +14,7 @@ const sign_in_exp = {
   },
   welcome: {
     title: '自定義登錄體驗',
-    description: '通過首次登錄設置快速入門。本指南將帶領你完成所有必要的設置。',
+    description: '通過首次登錄設置快速入門。本指南將帶領您完成所有必要的設置。',
     get_started: '開始',
     apply_remind: '請注意，登錄體驗將會應用到當前帳戶下的所有應用。',
   },
@@ -24,63 +24,31 @@ const sign_in_exp = {
     dark_primary_color: '品牌顏色 (深色)',
     dark_mode: '開啟深色模式',
     dark_mode_description:
-      '基於品牌顏色和 Logto 的算法，應用將會有一個自動生成的深色模式。當然，你可以自定義和修改。',
+      '基於品牌顏色和 Logto 的算法，應用將會有一個自動生成的深色模式。當然，您可以自定義和修改。',
     dark_mode_reset_tip: '基於品牌顏色，重新生成深色模式顏色。',
     reset: '重新生成',
   },
   branding: {
     title: '品牌定制區',
     ui_style: '樣式',
-    with_light: '{{value}}',
-    with_dark: '{{value}} (深色)',
-    app_logo_and_favicon: '應用程式標誌和圖標',
-    company_logo_and_favicon: '公司標誌和圖標',
+    favicon: '瀏覽器地址欄圖標',
+    logo_image_url: 'Logo 圖片 URL',
+    logo_image_url_placeholder: 'https://your.cdn.domain/logo.png',
+    dark_logo_image_url: 'Logo 圖片 URL (深色)',
+    dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
+    logo_image: 'Logo 圖片',
+    dark_logo_image: 'Logo 圖片(深色)',
+    logo_image_error: '應用 Logo：{{error}}',
+    favicon_error: 'Favicon：{{error}}',
   },
-  branding_uploads: {
-    app_logo: {
-      title: '應用程式標誌',
-      url: '應用程式標誌 URL',
-      url_placeholder: 'https://your.cdn.domain/logo.png',
-      error: '應用程式標誌：{{error}}',
-    },
-    company_logo: {
-      title: '公司標誌',
-      url: '公司標誌 URL',
-      url_placeholder: 'https://your.cdn.domain/logo.png',
-      error: '公司標誌：{{error}}',
-    },
-    organization_logo: {
-      title: '上傳圖片',
-      url: '組織標誌 URL',
-      url_placeholder: 'https://your.cdn.domain/logo.png',
-      error: '組織標誌：{{error}}',
-    },
-    connector_logo: {
-      title: '上傳圖片',
-      url: '連接器標誌 URL',
-      url_placeholder: 'https://your.cdn.domain/logo.png',
-      error: '連接器標誌：{{error}}',
-    },
-    favicon: {
-      title: '圖標',
-      url: '圖標 URL',
-      url_placeholder: 'https://your.cdn.domain/favicon.ico',
-      error: '圖標：{{error}}',
-    },
-  },
-  custom_ui: {
-    title: '自定義 UI',
-    css_code_editor_title: '自定義 CSS',
-    css_code_editor_description1: '查看自定義 CSS 示例。',
+  custom_css: {
+    title: '自定義 CSS',
+    css_code_editor_title: '自定義 CSS 個性化您的用戶界面',
+    css_code_editor_description1: '查看自定義 CSS 的例子。',
     css_code_editor_description2: '<a>{{link}}</a>',
     css_code_editor_description_link_content: '了解更多',
     css_code_editor_content_placeholder:
-      '輸入你的自定義 CSS 來精確調整任何東西的樣式。發揮你的創意，讓你的 UI 脫穎而出。',
-    bring_your_ui_title: '帶上你的 UI',
-    bring_your_ui_description:
-      '上傳壓縮包 (.zip) 以用自己的代碼替換 Logto 預建的 UI。<a>了解更多</a>',
-    preview_with_bring_your_ui_description:
-      '你的自定義 UI 資源已成功上傳，現在正在提供服務。因此，內建預覽窗口已被禁用。\n要測試你的個性化登錄 UI，請點擊“實時預覽”按鈕在新瀏覽器標籤頁中打開。',
+      '輸入 CSS 代碼，修改顏色、字體、組件樣式、佈局，定制您的登錄、註冊、忘記密碼等頁面。充分發揮創造力，讓您的用戶界面脫穎而出。',
   },
   sign_up_and_sign_in,
   content,
@@ -91,12 +59,12 @@ const sign_in_exp = {
     no_connector_email:
       '尚未設置電子郵件連接器。在完成該配置前，用戶將無法通過此登錄方式登錄。<a>{{link}}</a>連接器。',
     no_connector_social:
-      '你還沒有設置任何社交連接器。首先添加連接器以應用社交登錄方法。<a>{{link}}</a>連接器。',
+      '您還沒有設置任何社交連接器。首先添加連接器以應用社交登錄方法。<a>{{link}}</a>連接器。',
     setup_link: '立即設置',
   },
   save_alert: {
     description:
-      '你正在進行登錄註冊設置的變更。當前你的所有用戶會受到新設置的影響。確認保存該設置嗎？',
+      '您正在進行登錄註冊設置的變更。當前您的所有用戶會受到新設置的影響。確認保存該設置嗎？',
     before: '設置前',
     after: '設置後',
     sign_up: '註冊',

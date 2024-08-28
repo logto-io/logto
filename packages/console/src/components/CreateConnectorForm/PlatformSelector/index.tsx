@@ -6,7 +6,7 @@ import { connectorPlatformLabel } from '@/consts/connectors';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import type { ConnectorGroup } from '@/types/connector';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly connectorGroup: ConnectorGroup<ConnectorFactoryResponse & { added: boolean }>;

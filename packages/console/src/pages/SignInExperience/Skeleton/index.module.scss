@@ -18,15 +18,15 @@
       }
 
       .title {
+        @include _.shimmering-animation;
         width: 80px;
         height: 16px;
-        @include _.shimmering-animation;
       }
 
       .field {
+        @include _.shimmering-animation;
         width: 100%;
         height: 44px;
-        @include _.shimmering-animation;
       }
 
       &:not(:first-child) {

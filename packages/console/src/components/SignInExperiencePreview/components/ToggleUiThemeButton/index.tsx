@@ -1,12 +1,12 @@
 import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
 
-import Moon from '@/assets/icons/moon.svg?react';
-import Sun from '@/assets/icons/sun.svg?react';
+import Moon from '@/assets/icons/moon.svg';
+import Sun from '@/assets/icons/sun.svg';
 import Button from '@/ds-components/Button';
 import type { Props as ButtonProps } from '@/ds-components/Button';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly value: Theme;

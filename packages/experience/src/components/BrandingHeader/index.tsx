@@ -2,11 +2,11 @@ import type { Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type { TFuncKey } from 'i18next';
 
-import ConnectIcon from '@/assets/icons/connect-icon.svg?react';
+import ConnectIcon from '@/assets/icons/connect-icon.svg';
 
 import DynamicT from '../DynamicT';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 export type Props = {
   readonly className?: string;

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title></title>
+  <!--Preload well-known settings API-->
+  <script>
+    const { search } = window.location;
+    const noCache = search.includes('no_cache');
+    const isPreview = search.includes('preview');
+    // Preview mode does not query sign-in-exp and phrases
+    const preLoadLinks = isPreview ? [] : ['/api/.well-known/sign-in-exp', '/api/.well-known/phrases'];
+
+    // Append preload well-known settings API links to head
+    preLoadLinks.forEach((linkUrl) => {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.href = `${linkUrl}${noCache ? '?no_cache=true' : ''}`;
+      link.as = 'fetch';
+      link.crossOrigin = 'anonymous';
+      document.head.appendChild(link);
+    });
+  </script>
+</head>
+
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="app"></div>
+  <script type="module" src="index.tsx"></script>
+</body>
+
+</html>

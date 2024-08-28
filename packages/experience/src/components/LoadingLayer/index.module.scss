@@ -1,5 +1,12 @@
 @use '@/scss/underscore' as _;
 
+.overlay {
+  position: fixed;
+  inset: 0;
+  @include _.flex-column;
+  z-index: 300;
+}
+
 .loadingIcon {
   color: var(--color-type-primary);
   animation: rotating 1s steps(12, end) infinite;

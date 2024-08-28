@@ -41,20 +41,6 @@ export const paginationParameters: OpenAPIV3.ParameterObject[] = [
   },
 ];
 
-export const searchParameters: OpenAPIV3.ParameterObject = {
-  name: 'search_params',
-  in: 'query',
-  description: 'Search query parameters.',
-  required: false,
-  schema: {
-    type: 'object',
-    additionalProperties: {
-      type: 'string',
-    },
-  },
-  explode: true,
-};
-
 type BuildParameters = {
   /**
    * Build a parameter array for the given `ZodObject`.

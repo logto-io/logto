@@ -3,7 +3,6 @@ import { generateStandardId } from '@logto/shared';
 import { tryThat } from '@silverhand/essentials';
 import { object, string } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -94,9 +93,7 @@ export default function roleScopeRoutes<T extends ManagementApiRouter>(
         body: { scopeIds },
       } = ctx.guard;
 
-      await (EnvSet.values.isDevFeaturesEnabled
-        ? quota.guardEntityScopesUsage('roles', id)
-        : quota.guardKey('scopesPerRoleLimit', id));
+      await quota.guardKey('scopesPerRoleLimit', id);
 
       await validateRoleScopeAssignment(scopeIds, id);
       await insertRolesScopes(

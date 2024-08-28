@@ -20,24 +20,11 @@ jobs:
 
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v5
+        with:
+          pnpm-version: 9
 
       - name: Build
         run: pnpm ci:build
-
-  main-check:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v5
-
-      - name: Prepack
-        run: pnpm prepack
-
-      - name: Check
-        run: pnpm -r check
 
   main-lint:
     runs-on: ubuntu-latest
@@ -47,6 +34,8 @@ jobs:
 
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v5
+        with:
+          pnpm-version: 9
 
       - name: Prepack
         run: pnpm prepack
@@ -65,6 +54,8 @@ jobs:
 
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v5
+        with:
+          pnpm-version: 9
 
       - name: Build for test
         run: pnpm -r build:test

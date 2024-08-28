@@ -89,7 +89,7 @@ export const defaultMetadata: ConnectorMetadata = {
     },
     {
       key: 'appLogo',
-      label: 'Email logo',
+      label: 'App Logo',
       type: ConnectorConfigFormItemType.Text,
     },
   ],

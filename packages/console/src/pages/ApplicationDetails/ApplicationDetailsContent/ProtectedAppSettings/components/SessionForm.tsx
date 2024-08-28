@@ -11,7 +11,7 @@ import { type RequestError } from '@/hooks/use-api';
 
 import { type ApplicationForm } from '../../utils';
 
-import styles from './SessionForm.module.scss';
+import * as styles from './SessionForm.module.scss';
 
 type Props = {
   readonly data: Application;

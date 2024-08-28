@@ -45,21 +45,10 @@ const connector_details = {
     company_information_field: '公司信息',
     company_information_description: '在电子邮件底部显示您公司的名称、地址或邮编，以增强真实性。',
     company_information_placeholder: '你公司的基本信息',
-    email_logo_field: '电子邮件标志',
-    email_logo_tip: '在电子邮件顶部显示你的品牌标志。对浅色模式和深色模式使用相同的图像。',
+    app_logo_field: '应用程序标志',
+    app_logo_tip: '在电子邮件顶部显示您的品牌标志。在浅色模式和深色模式下使用相同的图像。',
     urls_not_allowed: '不允许使用 URL',
     test_notes: 'Logto 使用 "通用" 模板进行测试。',
-  },
-  google_one_tap: {
-    title: 'Google 一键登录',
-    description: 'Google 一键登录是一种安全且方便的方式，用户可以用它登录你的网站。',
-    enable_google_one_tap: '启用 Google 一键登录',
-    enable_google_one_tap_description:
-      '在你的登录体验中启用 Google 一键登录：如果用户已经在设备上登录，可以让他们快速注册或登录。',
-    configure_google_one_tap: '配置 Google 一键登录',
-    auto_select: '如果可能，自动选择凭据',
-    close_on_tap_outside: '如果用户点击/点击外部则取消提示',
-    itp_support: '启用 <a>在 ITP 浏览器上升级的一键登录 UX</a>',
   },
 };
 

@@ -22,14 +22,13 @@ const initFormData = (formItems: ConnectorConfigFormItem[], config?: Record<stri
 
 export const parseFormConfig = (
   config: Record<string, unknown>,
-  formItems: ConnectorConfigFormItem[],
-  skipFalsyValuesRemoval = false
+  formItems: ConnectorConfigFormItem[]
 ) => {
   return Object.fromEntries(
     Object.entries(config)
       .map(([key, value]) => {
         // Filter out empty input
-        if (!skipFalsyValuesRemoval && value === '') {
+        if (value === '') {
           return null;
         }
 
@@ -69,8 +68,8 @@ export const convertResponseToForm = (connector: ConnectorResponse): ConnectorFo
 
   return {
     name: name?.en,
-    logo: logo ?? '',
-    logoDark: logoDark ?? '',
+    logo,
+    logoDark,
     target: conditional(
       type === ConnectorType.Social && (isStandard ? target : metadata.target ?? target)
     ),

@@ -6,7 +6,7 @@ import classNames from 'classnames';
  * Used to indicate that a new released feature is in beta.
  */
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;

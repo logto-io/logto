@@ -34,13 +34,6 @@ const cloud = {
       others: 'Nic z powyższych',
     },
   },
-  create_tenant: {
-    page_title: 'Utwórz najemcę',
-    title: 'Utwórz swojego pierwszego najemcę',
-    description:
-      'Najemca to odizolowane środowisko, w którym możesz zarządzać tożsamościami użytkowników, aplikacjami i wszystkimi innymi zasobami Logto.',
-    invite_collaborators: 'Zaproś swoich współpracowników za pomocą e-maila',
-  },
   sie: {
     page_title: 'Dostosuj doświadczenie logowania',
     title: 'Najpierw dostosuj swoje doświadczenie logowania',

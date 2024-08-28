@@ -1,6 +1,6 @@
 import { formatNumberWithComma } from '@/utils/number';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly label?: string;

@@ -1,12 +1,9 @@
 @use '@/scss/underscore' as _;
 
 .uploader {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   border: 1px dashed var(--color-border);
   border-radius: 8px;
-  padding: _.unit(5);
+  padding: _.unit(3.25);
 
   > input {
     display: none;
@@ -31,24 +28,12 @@
 
     .actionDescription {
       margin-top: _.unit(1);
-      font: var(--font-body-3);
+      font: var(--font-body-2); // With font height to be 20px.
       user-select: none;
     }
   }
 
-  &.disabled {
-    cursor: not-allowed;
-    border-color: var(--color-disabled);
-    color: var(--color-disabled);
-
-    .placeholder {
-      .icon {
-        color: var(--color-disabled);
-      }
-    }
-  }
-
-  &:not(.disabled):hover {
+  &:hover {
     cursor: pointer;
     border-color: var(--color-primary);
 
@@ -59,7 +44,7 @@
     }
   }
 
-  &:not(.disabled).dragActive {
+  &.dragActive {
     cursor: copy;
     background-color: var(--color-hover-variant);
     border-color: var(--color-primary);
@@ -75,3 +60,4 @@
     border-color: var(--color-error);
   }
 }
+

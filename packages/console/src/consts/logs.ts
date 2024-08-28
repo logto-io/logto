@@ -7,7 +7,6 @@ export const auditLogEventTitle: Record<string, Optional<string>> & {
   'ExchangeTokenBy.AuthorizationCode': 'Exchange token by Code',
   'ExchangeTokenBy.ClientCredentials': 'Exchange token by Client Credentials',
   'ExchangeTokenBy.RefreshToken': 'Exchange token by Refresh Token',
-  'ExchangeTokenBy.TokenExchange': 'Token exchange',
   'Interaction.Create': 'Interaction started',
   'Interaction.End': 'Interaction ended',
   'Interaction.ForgotPassword.Identifier.VerificationCode.Create':

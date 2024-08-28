@@ -6,7 +6,6 @@ import {
   userAssetsServiceStatusGuard,
   allowUploadMimeTypes,
   maxUploadFileSize,
-  uploadFileGuard,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { format } from 'date-fns';
@@ -17,6 +16,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import SystemContext from '#src/tenants/SystemContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
+import { uploadFileGuard } from '#src/utils/storage/consts.js';
 import { buildUploadFile } from '#src/utils/storage/index.js';
 import { getTenantId } from '#src/utils/tenant.js';
 

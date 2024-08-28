@@ -21,9 +21,9 @@
 }
 
 .blockShimmer {
+  @include _.shimmering-animation;
   border-radius: 8px;
   flex: 1;
-  @include _.shimmering-animation;
 }
 
 .card:not(:last-child) {
@@ -32,10 +32,10 @@
 
 
 .textShimmer {
+  @include _.shimmering-animation;
   width: 100%;
   height: _.unit(6);
   border-radius: 8px;
-  @include _.shimmering-animation;
 
   &:not(:last-child) {
     margin-bottom: _.unit(4);
@@ -49,3 +49,4 @@
     height: _.unit(8);
   }
 }
+

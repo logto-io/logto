@@ -21,15 +21,12 @@ const session = {
     "La vérification n'a pas réussi. Veuillez recommencer le processus de vérification.",
   connector_validation_session_not_found:
     'La session de validation de jeton de connecteur est introuvable.',
-  csrf_token_mismatch: 'Jeton CSRF non valide.',
   identifier_not_found:
     'Identifiant utilisateur introuvable. Veuillez retourner en arrière et vous connecter à nouveau.',
   interaction_not_found:
     "Session d'interaction introuvable. Veuillez retourner en arrière et recommencer la session.",
   not_supported_for_forgot_password:
     "Cette opération n'est pas prise en charge pour la réinitialisation du mot de passe.",
-  identity_conflict:
-    "Conflit d'identité détecté. Veuillez initier une nouvelle session pour continuer avec une identité différente.",
   mfa: {
     require_mfa_verification: 'La vérification MFA est requise pour vous connecter.',
     mfa_sign_in_only: "MFA est uniquement disponible pour l'interaction de connexion.",

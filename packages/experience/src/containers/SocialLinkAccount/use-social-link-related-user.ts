@@ -24,7 +24,7 @@ const useBindSocialRelatedUser = () => {
       }
 
       if (result?.redirectTo) {
-        await redirectTo(result.redirectTo);
+        redirectTo(result.redirectTo);
       }
     },
     [asyncBindSocialRelatedUser, handleError, preSignInErrorHandler, redirectTo]

@@ -18,6 +18,7 @@ export const applicationCreateGuard = originalApplicationCreateGuard
   });
 
 export const applicationPatchGuard = originalApplicationPatchGuard
+  .deepPartial()
   .omit({
     protectedAppMetadata: true,
   })

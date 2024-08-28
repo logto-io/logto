@@ -1,6 +1,6 @@
 import { type TestResultData } from '@/pages/CustomizeJwtDetails/MainContent/ScriptSection/use-test-handler';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly testResult: TestResultData;

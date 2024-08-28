@@ -12,11 +12,11 @@
   background-repeat: no-repeat;
 
   &.light {
-    background-image: url('../../assets/images/welcome.svg');
+    background-image: url('raw:../../assets/images/welcome.svg');
   }
 
   &.dark {
-    background-image: url('../../assets/images/welcome-dark.svg');
+    background-image: url('raw:../../assets/images/welcome-dark.svg');
   }
 }
 

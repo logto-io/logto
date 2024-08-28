@@ -3,13 +3,13 @@ import classNames from 'classnames';
 import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import ExpandableIcon from '@/assets/icons/expandable-icon.svg?react';
+import ExpandableIcon from '@/assets/icons/expandable-icon.svg';
 
 import ScopeGroup from '../ScopeGroup';
 
 import OrganizationItem, { type Organization } from './OrganizationItem';
 import OrganizationSelectorModal from './OrganizationSelectorModal';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 export { type Organization } from './OrganizationItem';
 

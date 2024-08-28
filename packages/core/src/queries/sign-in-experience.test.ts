@@ -32,7 +32,6 @@ describe('sign-in-experience query', () => {
     signUp: JSON.stringify(mockSignInExperience.signUp),
     socialSignInConnectorTargets: JSON.stringify(mockSignInExperience.socialSignInConnectorTargets),
     customContent: JSON.stringify(mockSignInExperience.customContent),
-    customUiAssets: JSON.stringify(mockSignInExperience.customUiAssets),
     passwordPolicy: JSON.stringify(mockSignInExperience.passwordPolicy),
     mfa: JSON.stringify(mockSignInExperience.mfa),
     socialSignIn: JSON.stringify(mockSignInExperience.socialSignIn),
@@ -41,7 +40,7 @@ describe('sign-in-experience query', () => {
   it('findDefaultSignInExperience', async () => {
     /* eslint-disable sql/no-unsafe-query */
     const expectSql = `
-      select "tenant_id", "id", "color", "branding", "language_info", "terms_of_use_url", "privacy_policy_url", "agree_to_terms_policy", "sign_in", "sign_up", "social_sign_in", "social_sign_in_connector_targets", "sign_in_mode", "custom_css", "custom_content", "custom_ui_assets", "password_policy", "mfa", "single_sign_on_enabled"
+      select "tenant_id", "id", "color", "branding", "language_info", "terms_of_use_url", "privacy_policy_url", "agree_to_terms_policy", "sign_in", "sign_up", "social_sign_in", "social_sign_in_connector_targets", "sign_in_mode", "custom_css", "custom_content", "custom_ui_asset_id", "password_policy", "mfa", "single_sign_on_enabled"
       from "sign_in_experiences"
       where "id"=$1
     `;

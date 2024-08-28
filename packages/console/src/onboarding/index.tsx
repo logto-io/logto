@@ -9,7 +9,7 @@ import { usePlausiblePageview } from '@/hooks/use-plausible-pageview';
 
 import Topbar from './components/Topbar';
 import useUserOnboardingData from './hooks/use-user-onboarding-data';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 import CreateTenant from './pages/CreateTenant';
 import SignInExperience from './pages/SignInExperience';
 import Welcome from './pages/Welcome';

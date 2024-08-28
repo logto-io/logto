@@ -23,7 +23,6 @@ const application_details = {
   description: 'Opis',
   description_placeholder: 'Wpisz opis swojej aplikacji',
   config_endpoint: 'Konfiguracja punktu końcowego OpenID Provider',
-  issuer_endpoint: 'Punkt końcowy emitenta',
   authorization_endpoint: 'Endpoint autoryzacji',
   authorization_endpoint_tip:
     'Punkt końcowy wykorzystywany do uwierzytelniania i autoryzacji. Jest używany do OpenID Connect <a>uwierzytelniania</a>.',
@@ -63,13 +62,6 @@ const application_details = {
   rotate_refresh_token: 'Obróć token odświeżania',
   rotate_refresh_token_label:
     'Po włączeniu tej opcji Logto wydaje nowy token odświeżania dla żądań tokenów, gdy upłynęło 70% oryginalnego czasu życia (TTL) lub spełnione są określone warunki. <a>Dowiedz się więcej</a>',
-  backchannel_logout: 'Backchannel Logout',
-  backchannel_logout_description:
-    'Skonfiguruj punkt końcowy OpenID Connect backchannel logout i czy sesja jest wymagana dla tej aplikacji.',
-  backchannel_logout_uri: 'URI backchannel logout',
-  backchannel_logout_uri_session_required: 'Czy sesja jest wymagana?',
-  backchannel_logout_uri_session_required_description:
-    'Po włączeniu, RP wymaga, aby roszczenie `sid` (ID sesji) było zawarte w tokenie wylogowania, aby zidentyfikować sesję RP z OP, gdy używany jest `backchannel_logout_uri`.',
   delete_description:
     'Ta operacja nie może zostać cofnięta. Spowoduje trwałe usunięcie aplikacji. Aby potwierdzić, wpisz nazwę aplikacji <span>{{name}}</span>.',
   enter_your_application_name: 'Wpisz nazwę swojej aplikacji',
@@ -93,23 +85,15 @@ const application_details = {
     'Upewnij się, że chronisz swój serwer źródłowy przed bezpośrednim dostępem. Odniesienie do przewodnika dla więcej <a>szczegółowych instrukcji</a>.',
   session_duration: 'Czas trwania sesji (dni)',
   try_it: 'Wypróbuj',
-  no_organization_placeholder: 'Nie znaleziono organizacji. <a>Przejdź do organizacji</a>',
   branding: {
     name: 'Branding',
     description: 'Dostosuj nazwę i logo aplikacji na ekranie zgody.',
-    description_third_party: 'Dostosuj nazwę wyświetlaną aplikacji i logo na ekranie zgody.',
-    app_logo: 'Logo aplikacji',
-    app_level_sie: 'Doświadczenie logowania na poziomie aplikacji',
-    app_level_sie_switch:
-      'Włącz doświadczenie logowania na poziomie aplikacji i ustaw branding specyficzny dla aplikacji. Jeśli jest wyłączony, używane będzie doświadczenie omni sign-in.',
     more_info: 'Więcej informacji',
     more_info_description:
       'Zaoferuj użytkownikom więcej szczegółów na temat Twojej aplikacji na ekranie zgody.',
     display_name: 'Nazwa wyświetlana',
-    application_logo: 'Logo aplikacji',
-    application_logo_dark: 'Logo aplikacji (ciemne)',
-    brand_color: 'Kolor marki',
-    brand_color_dark: 'Kolor marki (ciemny)',
+    display_logo: 'Wyświetl logo',
+    display_logo_dark: 'Wyświetl logo (ciemne)',
     terms_of_use_url: 'Adres URL warunków użytkowania aplikacji',
     privacy_policy_url: 'Adres URL polityki prywatności aplikacji',
   },
@@ -147,13 +131,13 @@ const application_details = {
     grant_organization_level_permissions: 'Udziel uprawnień do danych organizacyjnych',
   },
   roles: {
+    name_column: 'Rola między maszynami',
+    description_column: 'Opis',
     assign_button: 'Przypisz role między maszynami',
     delete_description:
       'Ta czynność usunie tę rolę z tej aplikacji machine-to-machine. Rola ta nadal istnieje, ale nie będzie już powiązana z tą aplikacją machine-to-machine.',
     deleted: '{{name}} został(a) pomyślnie usunięty(ą) z tego użytkownika.',
     assign_title: 'Przypisz role między maszynami do {{name}}',
-    assign_subtitle:
-      'Aplikacje machine-to-machine muszą mieć role typu machine-to-machine, aby uzyskać dostęp do powiązanych zasobów API.',
     assign_role_field: 'Przypisz role między maszynami',
     role_search_placeholder: 'Wyszukaj według nazwy roli',
     added_text: '{{value, number}} dodane',

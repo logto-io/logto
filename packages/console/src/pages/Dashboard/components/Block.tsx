@@ -2,9 +2,9 @@ import type { AdminConsoleKey } from '@logto/phrases';
 import { conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
 
-import ArrowDown from '@/assets/icons/arrow-down.svg?react';
-import ArrowUp from '@/assets/icons/arrow-up.svg?react';
-import Tip from '@/assets/icons/tip.svg?react';
+import ArrowDown from '@/assets/icons/arrow-down.svg';
+import ArrowUp from '@/assets/icons/arrow-up.svg';
+import Tip from '@/assets/icons/tip.svg';
 import Card from '@/ds-components/Card';
 import DynamicT from '@/ds-components/DynamicT';
 import IconButton from '@/ds-components/IconButton';
@@ -12,7 +12,7 @@ import { ToggleTip } from '@/ds-components/Tip';
 import type { Props as ToggleTipProps } from '@/ds-components/Tip/ToggleTip';
 import { formatNumberWithComma } from '@/utils/number';
 
-import styles from './Block.module.scss';
+import * as styles from './Block.module.scss';
 
 type Props = {
   readonly count: number;

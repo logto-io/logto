@@ -13,10 +13,10 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
-import modalStyles from '@/scss/modal.module.scss';
+import * as modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type FormData = Pick<OrganizationRole, 'name' | 'description' | 'type'>;
 

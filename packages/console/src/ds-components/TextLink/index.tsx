@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { LinkButton } from '@/ds-components/Button';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 export type Props = AnchorHTMLAttributes<HTMLAnchorElement> &
   Partial<LinkProps> & {

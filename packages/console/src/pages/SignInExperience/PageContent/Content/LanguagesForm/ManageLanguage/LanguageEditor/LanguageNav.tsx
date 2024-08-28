@@ -6,7 +6,7 @@ import useUiLanguages from '@/hooks/use-ui-languages';
 
 import AddLanguageSelector from './AddLanguageSelector';
 import LanguageItem from './LanguageItem';
-import style from './LanguageNav.module.scss';
+import * as style from './LanguageNav.module.scss';
 import { LanguageEditorContext } from './use-language-editor-context';
 
 function LanguageNav() {

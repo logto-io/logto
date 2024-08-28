@@ -10,7 +10,7 @@ import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
 import useCurrentUser from '@/hooks/use-current-user';
-import modalStyles from '@/scss/modal.module.scss';
+import * as modalStyles from '@/scss/modal.module.scss';
 
 type Props = {
   readonly title: AdminConsoleKey;

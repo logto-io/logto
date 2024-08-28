@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import DynamicT from '@/ds-components/DynamicT';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly tag: TenantTag;

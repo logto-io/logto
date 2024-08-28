@@ -159,18 +159,6 @@ const quota_item = {
     unlimited: 'Özel JWT',
     not_eligible: 'JWT taleplerinizin özelleştiricisini kaldırın',
   },
-  impersonation_enabled: {
-    name: 'Kişileştirme',
-    limited: 'Kişileştirme',
-    unlimited: 'Kişileştirme',
-    not_eligible: 'Kişileştirmeye izin verilmez',
-  },
-  bring_your_ui_enabled: {
-    name: 'Ara yüzünü getir',
-    limited: 'Ara yüzünü getir',
-    unlimited: 'Ara yüzünü getir',
-    not_eligible: 'Özel UI varlıklarınızı kaldırın',
-  },
 };
 
 export default Object.freeze(quota_item);

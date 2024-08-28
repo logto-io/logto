@@ -35,11 +35,6 @@ const jwt_claims = {
     subtitle:
       'Verwenden Sie den `data.user` Eingabeparameter, um wichtige Benutzerinformationen bereitzustellen.',
   },
-  grant_data: {
-    title: 'Zugriffsdaten',
-    subtitle:
-      'Verwenden Sie den `data.grant` Eingabeparameter, um wichtige Informationen zu gewähren, nur für den Token-Austausch verfügbar.',
-  },
   token_data: {
     title: 'Token-Daten',
     subtitle: 'Verwenden Sie den `token` Eingabeparameter für die aktuelle Zugriffstoken-Payload.',

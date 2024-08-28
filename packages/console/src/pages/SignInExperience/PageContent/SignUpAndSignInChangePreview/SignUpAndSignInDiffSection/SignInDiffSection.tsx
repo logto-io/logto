@@ -10,7 +10,7 @@ import { signInIdentifierPhrase } from '../../constants';
 import { convertToSignInMethodsObject } from '../../utils/form';
 
 import DiffSegment from './DiffSegment';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly before: SignInMethod[];

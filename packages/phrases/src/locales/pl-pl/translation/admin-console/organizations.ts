@@ -7,7 +7,6 @@ const organizations = {
   organization_template: 'Szablon organizacji',
   organization_id: 'ID organizacji',
   members: 'Członkowie',
-  machine_to_machine: 'Aplikacje typu machine-to-machine',
   create_organization: 'Utwórz organizację',
   setup_organization: 'Skonfiguruj swoją organizację',
   organization_list_placeholder_title: 'Organizacja',

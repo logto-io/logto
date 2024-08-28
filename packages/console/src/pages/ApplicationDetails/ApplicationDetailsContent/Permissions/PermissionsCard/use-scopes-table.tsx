@@ -7,12 +7,12 @@ import {
 import { useCallback, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Tip from '@/assets/icons/tip.svg?react';
+import Tip from '@/assets/icons/tip.svg';
 import IconButton from '@/ds-components/IconButton';
 import { ToggleTip } from '@/ds-components/Tip';
 import useApi from '@/hooks/use-api';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 export type UserScopeTableRowDataType = {
   type: ApplicationUserConsentScopeType.UserScopes;

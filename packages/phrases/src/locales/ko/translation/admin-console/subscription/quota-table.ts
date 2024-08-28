@@ -20,8 +20,7 @@ const quota_table = {
     title: 'UI 및 브랜딩',
     custom_domain: '사용자 정의 도메인',
     custom_css: '사용자 정의 CSS',
-    logo_and_favicon: '로고 및 파비콘',
-    bring_your_ui: '자신의 UI 가져오기',
+    app_logo_and_favicon: '앱 로고와 파비콘',
     dark_mode: '다크 모드',
     i18n: '국제화',
   },
@@ -38,7 +37,6 @@ const quota_table = {
     mfa: '다중 인증',
     sso: '기업 SSO',
     adaptive_mfa: '적응형 MFA',
-    impersonation: '가장하기',
   },
   user_management: {
     title: '사용자 관리',
@@ -82,23 +80,23 @@ const quota_table = {
   add_on: '부가 기능',
   tier: '레벨{{value, number}}: ',
   paid_token_limit_tip:
-    'Logto 는 할당량 한도를 초과하는 기능에 대해 요금을 부과할 것입니다. 2024년 제 2분기부터 요금이 부과될 때까지 무료로 사용할 수 있습니다. 더 많은 토큰이 필요한 경우 저희에게 문의하십시오. 기본적으로 100만 토큰 당 월 $80 을 청구합니다.',
+    'Logto는 할당량 한도를 초과하는 기능에 대해 요금을 부과할 것입니다. 2024년 제2분기부터 요금이 부과될 때까지 무료로 사용할 수 있습니다. 더 많은 토큰이 필요한 경우 저희에게 문의하십시오. 기본적으로 100만 토큰 당 월 $80을 청구합니다.',
   paid_quota_limit_tip:
-    'Logto 는 할당량 제한을 초과하는 기능에 대해 요금을 부과할 것입니다. 2024년 제 2분기까지는 무료로 사용할 수 있습니다.',
+    'Logto는 할당량 제한을 초과하는 기능에 대해 요금을 부과할 것입니다. 2024년 제2분기까지는 무료로 사용할 수 있습니다.',
   paid_add_on_feature_tip:
-    '이것은 부가 기능입니다. 2024년 제 2분기까지는 무료로 사용할 수 있습니다.',
+    '이것은 부가 기능입니다. 2024년 제2분기까지는 무료로 사용할 수 있습니다.',
   million: '{{value, number}} 백만',
   mau_tip:
-    'MAU (월간 활성 사용자) 는 청구 주기 동안 Logto 와 적어도 하나의 토큰을 교환한 고유 사용자 수를 의미합니다.',
-  tokens_tip: 'Logto 에서 발행한 모든 종류의 토큰, 액세스 토큰, 리프레시 토큰 등을 포함합니다.',
+    'MAU (월간 활성 사용자)는 청구 주기 동안 Logto와 적어도 하나의 토큰을 교환한 고유 사용자 수를 의미합니다.',
+  tokens_tip: 'Logto에서 발행한 모든 종류의 토큰, 액세스 토큰, 리프레시 토큰 등을 포함합니다.',
   mao_tip:
-    'MAO (월간 활성 조직) 는 빌링 주기 내에서 적어도 하나의 MAU (월간 활성 사용자) 를 가진 고유한 조직의 수를 의미합니다.',
-  third_party_tip: '타사 앱의 로그인 및 권한 부여에 대해 OIDC ID 공급자로서 Logto 를 사용합니다.',
+    'MAO (월간 활성 조직)는 빌링 주기 내에서 적어도 하나의 MAU (월간 활성 사용자)를 가진 고유한 조직의 수를 의미합니다.',
+  third_party_tip: '타사 앱의 로그인 및 권한 부여에 대해 OIDC ID 공급자로서 Logto를 사용합니다.',
   included: '{{value, number}} 포함',
   included_mao: '{{value, number}} MAO 포함',
   extra_quota_price: '이후 월당 ${{value, number}} / 각각',
   per_month_each: '월당 ${{value, number}} / 각각',
-  extra_mao_price: '이후 MAO 당 ${{value, number}}',
+  extra_mao_price: '이후 MAO당 ${{value, number}}',
   per_month: '월당 ${{value, number}}',
   per_member: '그런 다음 ${{value, number}} / 회원',
 };

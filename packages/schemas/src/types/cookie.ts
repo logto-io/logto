@@ -1,12 +1,5 @@
 import { z } from 'zod';
 
-import { type ToZodObject } from '../utils/zod.js';
+export const logtoUiCookieGuard = z.object({ appId: z.string() }).partial();
 
-export type LogtoUiCookie = Partial<{
-  appId: string;
-  organizationId: string;
-}>;
-
-export const logtoUiCookieGuard = z
-  .object({ appId: z.string(), organizationId: z.string() })
-  .partial() satisfies ToZodObject<LogtoUiCookie>;
+export type LogtoUiCookie = z.infer<typeof logtoUiCookieGuard>;

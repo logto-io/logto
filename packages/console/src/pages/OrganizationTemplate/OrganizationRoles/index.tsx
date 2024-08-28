@@ -4,10 +4,10 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import OrgRoleIcon from '@/assets/icons/organization-role-feature.svg?react';
-import Plus from '@/assets/icons/plus.svg?react';
-import RolesEmptyDark from '@/assets/images/roles-empty-dark.svg?react';
-import RolesEmpty from '@/assets/images/roles-empty.svg?react';
+import OrgRoleIcon from '@/assets/icons/organization-role-feature.svg';
+import Plus from '@/assets/icons/plus.svg';
+import RolesEmptyDark from '@/assets/images/roles-empty-dark.svg';
+import RolesEmpty from '@/assets/images/roles-empty.svg';
 import Breakable from '@/components/Breakable';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
@@ -27,7 +27,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
 import CreateOrganizationRoleModal from './CreateOrganizationRoleModal';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 function OrganizationRoles() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

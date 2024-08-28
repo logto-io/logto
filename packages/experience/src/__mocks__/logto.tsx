@@ -106,7 +106,7 @@ export const mockSignInExperience: SignInExperience = {
   customCss: null,
   customContent: {},
   agreeToTermsPolicy: AgreeToTermsPolicy.ManualRegistrationOnly,
-  customUiAssets: null,
+  customUiAssetId: null,
   passwordPolicy: {},
   mfa: {
     policy: MfaPolicy.UserControlled,
@@ -140,7 +140,7 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
   customCss: null,
   customContent: {},
   agreeToTermsPolicy: mockSignInExperience.agreeToTermsPolicy,
-  customUiAssets: null,
+  customUiAssetId: null,
   passwordPolicy: {},
   mfa: {
     policy: MfaPolicy.UserControlled,

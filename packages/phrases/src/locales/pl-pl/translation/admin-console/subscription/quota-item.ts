@@ -159,18 +159,6 @@ const quota_item = {
     unlimited: 'Niestandardowy JWT',
     not_eligible: 'Usuń swoje niestandardowe narzędzie tworzące JWT',
   },
-  impersonation_enabled: {
-    name: 'Impersonacja',
-    limited: 'Impersonacja',
-    unlimited: 'Impersonacja',
-    not_eligible: 'Brak pozwolenia na impersonację',
-  },
-  bring_your_ui_enabled: {
-    name: 'Użyj swojego interfejsu użytkownika',
-    limited: 'Użyj swojego interfejsu użytkownika',
-    unlimited: 'Użyj swojego interfejsu użytkownika',
-    not_eligible: 'Usuń swoje niestandardowe zasoby interfejsu użytkownika',
-  },
 };
 
 export default Object.freeze(quota_item);

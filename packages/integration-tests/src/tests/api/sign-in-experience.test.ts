@@ -18,11 +18,11 @@ describe('admin console sign-in experience', () => {
         isDarkModeEnabled: true,
       },
       branding: {
-        logoUrl: 'mock://fake-url/logo.png',
-        darkLogoUrl: 'mock://fake-url/dark-logo.png',
+        logoUrl: 'https://logto.io/new-logo.png',
+        darkLogoUrl: 'https://logto.io/new-dark-logo.png',
       },
-      termsOfUseUrl: 'mock://fake-url/terms',
-      privacyPolicyUrl: 'mock://fake-url/privacy',
+      termsOfUseUrl: 'https://logto.io/terms',
+      privacyPolicyUrl: 'https://logto.io/privacy',
       mfa: {
         policy: MfaPolicy.UserControlled,
         factors: [],

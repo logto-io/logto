@@ -45,8 +45,16 @@ const connectors = {
     name_placeholder: 'Inserisci il nome per il pulsante di accesso tramite social media',
     name_tip:
       'Il nome del pulsante del connettore verrà visualizzato come "Continua con {{name}}." Presta attenzione alla lunghezza del nome in caso risulti troppo lungo.',
-    connector_logo: 'Logo del connettore',
-    connector_logo_tip: 'Il logo verrà visualizzato sul pulsante di accesso del connettore.',
+    logo: 'URL del logo per il pulsante di accesso tramite social media',
+    logo_placeholder: 'https://your.cdn.domain/logo.png',
+    logo_tip:
+      "L'immagine del logo verrà mostrata sul connettore. Otteni un link di immagine pubblicamente accessibile e inserisci qui il link.",
+    logo_dark: 'URL del logo per il pulsante di accesso tramite social media (modalità scura)',
+    logo_dark_placeholder: 'https://your.cdn.domain/logo.png',
+    logo_dark_tip:
+      "Imposta il logo del tuo connettore per la modalità scura dopo averla abilitata nell'esperienza di accesso nel Console dell'Amministratore.",
+    logo_dark_collapse: 'Comprimi',
+    logo_dark_show: 'Mostra le impostazioni del logo per la modalità scura',
     target: 'Nome del provider di identità',
     target_placeholder: 'Inserisci il nome del provider di identità del connettore',
     target_tip:

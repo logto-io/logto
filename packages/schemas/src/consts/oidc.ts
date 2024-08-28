@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
 import { type CustomClientMetadata } from '../foundations/index.js';
-import { type ToZodObject } from '../utils/zod.js';
 
 import { inSeconds } from './date.js';
 
@@ -36,11 +35,6 @@ export enum ExtraParamsKey {
    * - `sso:<connector-id>` (Use the specified SSO connector, e.g. `sso:123456`)
    */
   DirectSignIn = 'direct_sign_in',
-  /**
-   * Override the default sign-in experience configuration with the settings from the specified
-   * organization ID.
-   */
-  OrganizationId = 'organization_id',
 }
 
 /** @deprecated Use {@link FirstScreen} instead. */
@@ -59,13 +53,7 @@ export const extraParamsObjectGuard = z
     [ExtraParamsKey.InteractionMode]: z.nativeEnum(InteractionMode),
     [ExtraParamsKey.FirstScreen]: z.nativeEnum(FirstScreen),
     [ExtraParamsKey.DirectSignIn]: z.string(),
-    [ExtraParamsKey.OrganizationId]: z.string(),
   })
-  .partial() satisfies ToZodObject<ExtraParamsObject>;
+  .partial();
 
-export type ExtraParamsObject = Partial<{
-  [ExtraParamsKey.InteractionMode]: InteractionMode;
-  [ExtraParamsKey.FirstScreen]: FirstScreen;
-  [ExtraParamsKey.DirectSignIn]: string;
-  [ExtraParamsKey.OrganizationId]: string;
-}>;
+export type ExtraParamsObject = z.infer<typeof extraParamsObjectGuard>;

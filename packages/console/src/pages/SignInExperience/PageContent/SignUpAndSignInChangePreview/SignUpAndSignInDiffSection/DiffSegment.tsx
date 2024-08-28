@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   readonly children: ReactNode;

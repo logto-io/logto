@@ -5,12 +5,12 @@ import { Trans, useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 
-import Arrow from '@/assets/icons/arrow-left.svg?react';
+import Arrow from '@/assets/icons/arrow-left.svg';
 import DynamicT from '@/ds-components/DynamicT';
 import TextLink from '@/ds-components/TextLink';
-import modalStyles from '@/scss/modal.module.scss';
+import * as modalStyles from '@/scss/modal.module.scss';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = PropsWithChildren<{
   readonly title: AdminConsoleKey;

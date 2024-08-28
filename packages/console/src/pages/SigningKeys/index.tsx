@@ -6,7 +6,7 @@ import CardTitle from '@/ds-components/CardTitle';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 
 import SigningKeyFormCard from './SigningKeyFormCard';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 function SigningKeys() {
   const { getDocumentationUrl } = useDocumentationUrl();

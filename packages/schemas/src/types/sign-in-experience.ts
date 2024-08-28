@@ -41,7 +41,7 @@ export type FullSignInExperience = SignInExperience & {
   googleOneTap?: GoogleOneTapConfig & { clientId: string; connectorId: string };
 };
 
-export const fullSignInExperienceGuard = SignInExperiences.guard.extend({
+export const guardFullSignInExperience = SignInExperiences.guard.extend({
   socialConnectors: connectorMetadataGuard
     .omit({
       description: true,

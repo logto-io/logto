@@ -1,9 +1,7 @@
 import { SignInIdentifier } from '@logto/schemas';
 import type { TFuncKey } from 'i18next';
-import { useContext } from 'react';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
-import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 
 import IdentifierProfileForm from '../IdentifierProfileForm';
 
@@ -16,14 +14,10 @@ type Props = {
 const SetUsername = (props: Props) => {
   const { onSubmit, errorMessage, clearErrorMessage } = useSetUsername();
 
-  const { setIdentifierInputValue } = useContext(UserInteractionContext);
-
   const handleSubmit = async (identifier: SignInIdentifier, value: string) => {
     if (identifier !== SignInIdentifier.Username) {
       return;
     }
-
-    setIdentifierInputValue({ type: identifier, value });
 
     return onSubmit(value);
   };

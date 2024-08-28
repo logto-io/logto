@@ -36,13 +36,9 @@ const user_details = {
   field_custom_data: 'Benutzerdefinierte Daten',
   field_custom_data_tip:
     'Zusätzliche Benutzerinformationen, die nicht in den vordefinierten Benutzereigenschaften aufgeführt sind, wie z. B. die vom Benutzer bevorzugte Farbe und Sprache.',
-  field_profile: 'Profil',
-  field_profile_tip:
-    'Zusätzliche OpenID Connect-Ansprüche, die nicht in den Benutzereigenschaften enthalten sind. Beachten Sie, dass alle unbekannten Eigenschaften entfernt werden. Weitere Informationen finden Sie in der <a>Profil-Eigenschaftsreferenz</a>.',
   field_connectors: 'Soziale Verbindungen',
   field_sso_connectors: 'Unternehmensverbindungen',
   custom_data_invalid: 'Benutzerdefinierte Daten müssen ein gültiges JSON-Objekt sein.',
-  profile_invalid: 'Profil muss ein gültiges JSON-Objekt sein',
   connectors: {
     connectors: 'Verbindungen',
     user_id: 'Benutzer ID',
@@ -86,7 +82,6 @@ const user_details = {
     delete_description:
       'Diese Aktion entfernt diese Rolle von diesem Benutzer. Die Rolle selbst bleibt erhalten, aber sie wird nicht mehr mit diesem Benutzer verknüpft sein.',
     deleted: '{{name}} wurde erfolgreich von diesem Benutzer entfernt.',
-    assign_title: 'Rollen zuweisen zu {{name}}',
     assign_subtitle:
       'Finden Sie die passenden Benutzerrollen, indem Sie nach Name, Beschreibung oder Rollen-ID suchen.',
     assign_role_field: 'Rollen zuweisen',

@@ -6,7 +6,7 @@ const cloud = {
     page_title: 'ようこそ',
     title: 'Logto Cloud へようこそ！あなたについて少し学びたいです。',
     description:
-      'あなたの情報を知ることで、あなたにユニークな Logto エクスペリエンスを提供します。あなたの情報は安全に保管されます。',
+      'あなたの情報を知ることで、あなたにユニークなLogtoエクスペリエンスを提供します。あなたの情報は安全に保管されます。',
     project_field: 'ログトを使用しています',
     project_options: {
       personal: '個人プロジェクト',
@@ -25,19 +25,12 @@ const cloud = {
     additional_features_options: {
       customize_ui_and_flow:
         '自分の UI を構築および管理し、Logto の事前に構築されたカスタマイズ可能なソリューションだけではなく使用する',
-      compliance: 'SOC2 と GDPR は必須です',
-      export_user_data: 'Logto からユーザーデータをエクスポートする機能が必要です',
+      compliance: 'SOC2とGDPRは必須です',
+      export_user_data: 'Logtoからユーザーデータをエクスポートする機能が必要です',
       budget_control: '予算管理が非常に厳しいです',
-      bring_own_auth: '独自の認証サービスを持っており、Logto の機能が必要な場合',
+      bring_own_auth: '独自の認証サービスを持っており、Logtoの機能が必要な場合',
       others: '上記のどれにも該当しません',
     },
-  },
-  create_tenant: {
-    page_title: 'テナントを作成',
-    title: '最初のテナントを作成',
-    description:
-      'テナントはユーザーアイデンティティ、アプリケーション、およびその他すべての Logto リソースを管理するための独立した環境です。',
-    invite_collaborators: 'メールでコラボレーターを招待',
   },
   sie: {
     page_title: 'サインインエクスペリエンスのカスタマイズ',
@@ -78,7 +71,7 @@ const cloud = {
   socialCallback: {
     title: 'ログインが成功しました',
     description:
-      'ソーシャルアカウントを使用して正常にサインインしました。Logto のすべての機能にシームレスにアクセスできるようにするために、独自のソーシャルコネクタを設定することをお勧めします。',
+      'ソーシャルアカウントを使用して正常にサインインしました。Logtoのすべての機能にシームレスにアクセスできるようにするために、独自のソーシャルコネクタを設定することをお勧めします。',
   },
   tenant: {
     create_tenant: 'テナントを作成する',

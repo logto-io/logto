@@ -31,6 +31,7 @@ export type PasswordIdentifierPayload =
 export type SocialVerifiedIdentifierPayload = SocialEmailPayload | SocialPhonePayload;
 
 /**
+ * @deprecated
  * Legacy type for the interaction API.
  * Use the latest experience API instead.
  * Moved to `@logto/schemas`

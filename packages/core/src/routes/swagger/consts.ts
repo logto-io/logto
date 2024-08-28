@@ -1,4 +1,4 @@
-export const managementApiAuthDescription = `Logto Management API is a comprehensive set of REST APIs that gives you the full control over Logto to suit your product needs and tech stack. To see the full guide on Management API interactions, visit [Interact with Management API](https://docs.logto.io/docs/recipes/interact-with-management-api/).
+export const managementApiDescription = `Logto Management API is a comprehensive set of REST APIs that gives you the full control over Logto to suit your product needs and tech stack. To see the full guide on Management API interactions, visit [Interact with Management API](https://docs.logto.io/docs/recipes/interact-with-management-api/).
 
 ### Get started
 
@@ -21,13 +21,13 @@ For Logto Cloud users, the base URL is your Logto endpoint, i.e. \`https://[tena
 The request should follow the OAuth 2.0 [client credentials](https://datatracker.ietf.org/doc/html/rfc6749#section-4.4) grant type. Here is a non-normative example of how to fetch an access token:
 
 \`\`\`bash
-curl --location \\
-  --request POST 'https://[tenant-id].logto.app/oidc/token' \\
-  --header 'Content-Type: application/x-www-form-urlencoded' \\
-  --data-urlencode 'grant_type=client_credentials' \\
-  --data-urlencode 'client_id=[app-id]' \\
-  --data-urlencode 'client_secret=[app-secret]' \\
-  --data-urlencode 'resource=https://[tenant-id].logto.app/api' \\
+curl --location \
+  --request POST 'https://[tenant-id].logto.app/oidc/token' \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  --data-urlencode 'grant_type=client_credentials' \
+  --data-urlencode 'client_id=[app-id]' \
+  --data-urlencode 'client_secret=[app-secret]' \
+  --data-urlencode 'resource=https://[tenant-id].logto.app/api' \
   --data-urlencode 'scope=all'
 \`\`\`
 
@@ -51,8 +51,8 @@ Once you have the access token, you can use it to authenticate your requests to 
 Here is an example of how to list the first page of users in your Logto tenant:
 
 \`\`\`bash
-curl --location \\
-  --request GET 'https://[tenant-id].logto.app/api/users' \\
+curl --location \
+  --request GET 'https://[tenant-id].logto.app/api/users' \
   --header 'Authorization: Bearer eyJhbG...2g'
 \`\`\`
 

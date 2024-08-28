@@ -40,9 +40,6 @@ const sign_up_and_sign_in = {
       set_up_more: 'Configurar',
       go_to: 'outros conectores sociais agora.',
     },
-    automatic_account_linking: 'Vinculação automática de conta',
-    automatic_account_linking_label:
-      'Quando ativado, se um usuário entrar com uma identidade social que é nova no sistema, e houver exatamente uma conta existente com o mesmo identificador (por exemplo, e-mail), o Logto vinculará automaticamente a conta com a identidade social em vez de solicitar ao usuário a vinculação da conta.',
   },
   tip: {
     set_a_password: 'Um conjunto exclusivo de uma senha para o seu nome de usuário é obrigatório.',

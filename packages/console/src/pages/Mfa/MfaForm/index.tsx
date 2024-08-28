@@ -8,7 +8,7 @@ import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import InlineUpsell from '@/components/InlineUpsell';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
@@ -22,9 +22,8 @@ import { trySubmitSafe } from '@/utils/form';
 import { type MfaConfigForm, type MfaConfig } from '../types';
 
 import FactorLabel from './FactorLabel';
-import UpsellNotice from './UpsellNotice';
 import { policyOptionTitleMap } from './constants';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 import { convertMfaFormToConfig, convertMfaConfigToForm, validateBackupCodeFactor } from './utils';
 
 type Props = {
@@ -33,10 +32,8 @@ type Props = {
 };
 
 function MfaForm({ data, onMfaUpdated }: Props) {
-  const { currentPlan, currentSubscriptionQuota } = useContext(SubscriptionDataContext);
-  const isMfaDisabled =
-    isCloud &&
-    !(isDevFeaturesEnabled ? currentSubscriptionQuota.mfaEnabled : currentPlan.quota.mfaEnabled);
+  const { currentPlan } = useContext(SubscriptionDataContext);
+  const isMfaDisabled = isCloud && !currentPlan.quota.mfaEnabled;
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
@@ -85,7 +82,6 @@ function MfaForm({ data, onMfaUpdated }: Props) {
 
   return (
     <>
-      <UpsellNotice className={styles.upsellNotice} />
       <DetailsForm
         isDirty={isDirty}
         isSubmitting={isSubmitting}

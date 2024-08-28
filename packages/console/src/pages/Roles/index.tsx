@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Plus from '@/assets/icons/plus.svg?react';
-import RolesEmptyDark from '@/assets/images/roles-empty-dark.svg?react';
-import RolesEmpty from '@/assets/images/roles-empty.svg?react';
+import Plus from '@/assets/icons/plus.svg';
+import RolesEmptyDark from '@/assets/images/roles-empty-dark.svg';
+import RolesEmpty from '@/assets/images/roles-empty.svg';
 import Breakable from '@/components/Breakable';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';

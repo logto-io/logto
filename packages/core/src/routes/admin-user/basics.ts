@@ -11,6 +11,9 @@ import { conditional, pick, yes } from '@silverhand/essentials';
 import { boolean, literal, nativeEnum, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+// OGCIO
+import { manageDefaultOrganizations } from '#src/libraries/ogcio-user.js';
+
 import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
 import { encryptUserPassword } from '#src/libraries/user.utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -31,6 +34,8 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       hasUserWithEmail,
       hasUserWithPhone,
     },
+    // OGCIO
+    organizations,
   } = queries;
   const {
     users: {
@@ -220,6 +225,9 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         },
         []
       );
+
+      // OGCIO
+      await manageDefaultOrganizations({ userId: id, organizationQueries: organizations });
 
       ctx.body = pick(user, ...userInfoSelectFields);
       return next();
