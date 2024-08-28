@@ -126,19 +126,28 @@ const App = () => {
                     {/* Consent */}
                     <Route path="consent" element={<Consent />} />
 
-                    {/* Identifier sign-in */}
+                    {/*
+                     * Identifier sign-in (first screen)
+                     * The first screen which only display specific identifier-based sign-in methods to users
+                     */}
                     <Route
                       path={experience.routes.identifierSignIn}
                       element={<IdentifierSignIn />}
                     />
 
-                    {/* Identifier register */}
+                    {/*
+                     * Identifier register (first screen)
+                     * The first screen which only display specific identifier-based registration methods to users
+                     */}
                     <Route
                       path={experience.routes.identifierRegister}
                       element={<IdentifierRegister />}
                     />
 
-                    {/* Reset password */}
+                    {/*
+                     * Reset password (first screen)
+                     * The first screen which allow users to directly access the password reset page
+                     */}
                     <Route
                       path={experience.routes.resetPassword}
                       element={<ResetPasswordLanding />}

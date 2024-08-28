@@ -10,6 +10,15 @@ import { identifierInputDescriptionMap } from '@/utils/form';
 
 import useIdentifierSignUpMethods from './use-identifier-sign-up-methods';
 
+/**
+ * Identifier register page
+ *
+ * This page is used to display specific identifier-based registration methods to users.
+ *
+ * This page can be used as the first screen of the authentication flow,
+ * and can be configured by setting the `first_screen` parameter to `identifier:register`
+ * in the authentication URL.
+ */
 const IdentifierRegister = () => {
   const { t } = useTranslation();
   const signUpMethods = useIdentifierSignUpMethods();

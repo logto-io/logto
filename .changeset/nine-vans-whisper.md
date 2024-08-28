@@ -27,3 +27,4 @@ void signIn({
   */
   identifiers: ['email', 'phone'],
 });
+```
