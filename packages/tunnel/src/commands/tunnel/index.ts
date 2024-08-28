@@ -5,7 +5,7 @@ import { conditional } from '@silverhand/essentials';
 import chalk from 'chalk';
 import type { CommandModule } from 'yargs';
 
-import { consoleLog } from '../utils.js';
+import { consoleLog } from '../../utils.js';
 
 import { type TunnelCommandArgs } from './types.js';
 import {

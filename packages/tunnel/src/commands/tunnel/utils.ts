@@ -10,7 +10,7 @@ import { createProxyMiddleware, responseInterceptor } from 'http-proxy-middlewar
 import { type OnProxyEvent } from 'http-proxy-middleware/dist/types.js';
 import mime from 'mime';
 
-import { consoleLog } from '../utils.js';
+import { consoleLog } from '../../utils.js';
 
 import { type LogtoResponseHandler } from './types.js';
 

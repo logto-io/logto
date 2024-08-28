@@ -3,7 +3,8 @@ import dotenv from 'dotenv';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import tunnel from './commands/index.js';
+import deploy from './commands/deploy/index.js';
+import tunnel from './commands/tunnel/index.js';
 import { packageJson } from './package-json.js';
 import { consoleLog } from './utils.js';
 
@@ -30,6 +31,7 @@ void yargs(hideBin(process.argv))
     }
   }, true)
   .command(tunnel)
+  .command(deploy)
   .showHelpOnFail(false, `Specify ${chalk.green('--help')} for available options`)
   .strict()
   .parserConfiguration({
