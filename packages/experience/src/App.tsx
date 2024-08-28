@@ -7,7 +7,6 @@ import LoadingLayerProvider from './Providers/LoadingLayerProvider';
 import PageContextProvider from './Providers/PageContextProvider';
 import SettingsProvider from './Providers/SettingsProvider';
 import UserInteractionContextProvider from './Providers/UserInteractionContextProvider';
-import { isDevFeaturesEnabled } from './constants/env';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
 import Continue from './pages/Continue';
@@ -119,7 +118,7 @@ const App = () => {
                     {/* Single sign-on */}
                     <Route path={experience.routes.sso}>
                       {/* Single sign-on first screen landing page */}
-                      {isDevFeaturesEnabled && <Route index element={<SingleSignOnLanding />} />}
+                      <Route index element={<SingleSignOnLanding />} />
                       <Route path="email" element={<SingleSignOnEmail />} />
                       <Route path="connectors" element={<SingleSignOnConnectors />} />
                     </Route>
@@ -127,27 +126,32 @@ const App = () => {
                     {/* Consent */}
                     <Route path="consent" element={<Consent />} />
 
-                    {isDevFeaturesEnabled && (
-                      <>
-                        {/* Identifier sign-in */}
-                        <Route
-                          path={experience.routes.identifierSignIn}
-                          element={<IdentifierSignIn />}
-                        />
+                    {/*
+                     * Identifier sign-in (first screen)
+                     * The first screen which only display specific identifier-based sign-in methods to users
+                     */}
+                    <Route
+                      path={experience.routes.identifierSignIn}
+                      element={<IdentifierSignIn />}
+                    />
 
-                        {/* Identifier register */}
-                        <Route
-                          path={experience.routes.identifierRegister}
-                          element={<IdentifierRegister />}
-                        />
+                    {/*
+                     * Identifier register (first screen)
+                     * The first screen which only display specific identifier-based registration methods to users
+                     */}
+                    <Route
+                      path={experience.routes.identifierRegister}
+                      element={<IdentifierRegister />}
+                    />
 
-                        {/* Reset password */}
-                        <Route
-                          path={experience.routes.resetPassword}
-                          element={<ResetPasswordLanding />}
-                        />
-                      </>
-                    )}
+                    {/*
+                     * Reset password (first screen)
+                     * The first screen which allow users to directly access the password reset page
+                     */}
+                    <Route
+                      path={experience.routes.resetPassword}
+                      element={<ResetPasswordLanding />}
+                    />
 
                     <Route path="*" element={<ErrorPage />} />
                   </Route>

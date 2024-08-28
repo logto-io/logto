@@ -11,6 +11,18 @@ import { identifierInputDescriptionMap } from '@/utils/form';
 
 import useIdentifierSignInMethods from './use-identifier-sign-in-methods';
 
+/**
+ * Identifier sign-in page
+ *
+ * This page is used to display specific identifier-based sign-in methods to users.
+ *
+ * This page can be used as the first screen of the authentication flow,
+ * and can be configured by setting the `first_screen` parameter to `identifier:sign_in`
+ * in the authentication URL.
+ *
+ * identifiers used in this page can be configured by setting the `identifier` parameter
+ * in the authentication URL, multiple identifiers can be separated by space.
+ */
 const IdentifierSignIn = () => {
   const { t } = useTranslation();
 
