@@ -2,17 +2,16 @@ import type { VerificationCodeIdentifier } from '@logto/schemas';
 import { VerificationType } from '@logto/schemas';
 import { useCallback, useContext, useMemo } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
-import { validate } from 'superstruct';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { updateProfileWithVerificationCode } from '@/apis/experience';
+import { getInteractionEventFromState } from '@/apis/utils';
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
 import { SearchParameters } from '@/types';
-import { continueFlowStateGuard } from '@/types/guard';
 
 import useGeneralVerificationCodeErrorHandler from './use-general-verification-code-error-handler';
 import useIdentifierErrorAlert, { IdentifierErrorType } from './use-identifier-error-alert';
@@ -27,9 +26,8 @@ const useContinueFlowCodeVerification = (
   const redirectTo = useGlobalRedirectTo();
 
   const { state } = useLocation();
-  const [, continueFlowState] = validate(state, continueFlowStateGuard);
   const { verificationIdsMap } = useContext(UserInteractionContext);
-  const interactionEvent = continueFlowState?.interactionEvent;
+  const interactionEvent = getInteractionEventFromState(state);
 
   const handleError = useErrorHandler();
   const verifyVerificationCode = useApi(updateProfileWithVerificationCode);
