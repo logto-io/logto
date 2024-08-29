@@ -108,7 +108,7 @@
         "name": "File Upload Public Servant",
         "description": "File Upload Public servant",
         "specific_permissions": [
-          "upload:file:*"
+          "upload:file:*", "profile:user:read"
         ]
       },
       {
