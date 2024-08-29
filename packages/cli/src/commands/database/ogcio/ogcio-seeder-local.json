@@ -127,7 +127,11 @@
           "profile:user:read"
         ],
         "type": "MachineToMachine",
-        "related_applications": [{"application_id":"ddl4llp30risjwcjymqw3", "organization_id": "ogcio"}]
+        "related_applications": [
+          {"application_id":"ddl4llp30risjwcjymqw3", "organization_id": "ogcio"}, 
+          {"application_id":"ddl4llp30risjwcjymqw3", "organization_id": "first-testing"},
+          {"application_id":"ddl4llp30risjwcjymqw3", "organization_id": "second-testing"}
+        ]
       },
       {
         "id": "m2m-e2e-tester",
@@ -138,7 +142,8 @@
           "messaging:provider:*",
           "messaging:template:*",
           "messaging:citizen:*",
-          "messaging:event:read"
+          "messaging:event:read",
+          "profile:user:read"
         ],
         "type": "MachineToMachine",
         "related_applications": [
