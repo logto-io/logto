@@ -6,7 +6,7 @@ export const jwksUri = 'https://gitlab.com/oauth/discovery/keys';
 export const authorizationEndpoint = 'https://gitlab.com/oauth/authorize';
 export const userInfoEndpoint = 'https://gitlab.com/oauth/userinfo';
 export const tokenEndpoint = 'https://gitlab.com/oauth/token';
-export const scope = 'openid profile email';
+export const scope = 'openid';
 
 export const defaultMetadata: ConnectorMetadata = {
   id: 'gitlab-universal',
@@ -26,8 +26,9 @@ export const defaultMetadata: ConnectorMetadata = {
     clientSecretFormItem,
     {
       ...scopeFormItem,
+      placeholder: 'openid [profile email]',
       description:
-        "The `scope` determines permissions granted by the user's authorization. If you are not sure what to enter, do not worry, just leave it blank.",
+        "`openid` is required to allow OIDC and it's always added to the scopes if not present, `profile` is required to get user's profile information and `email` is required to get user's email address. These scopes can be used individually or in combination; if no scopes are specified, `openid` will be used by default.",
     },
   ],
 };

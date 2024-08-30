@@ -22,13 +22,13 @@ export type AccessTokenResponse = z.infer<typeof accessTokenResponseGuard>;
 export const userInfoResponseGuard = z.object({
   sub: z.string(),
   sub_legacy: z.string().optional(),
-  name: z.string().optional(),
+  name: z.string(),
   nickname: z.string(),
   preferred_username: z.string(),
-  email: z.string(),
-  email_verified: z.boolean(),
-  profile: z.string().url().optional(),
-  picture: z.string().url().optional(),
+  email: z.string().optional(),
+  email_verified: z.boolean().optional(),
+  profile: z.string().url(),
+  picture: z.string().url(),
   groups: z.array(z.string()).optional(),
 });
 

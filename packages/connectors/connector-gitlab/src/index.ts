@@ -48,10 +48,13 @@ const getAuthorizationUri =
 
     await setSession({ redirectUri });
 
+    const scopes = scope?.split(' ') ?? [defaultScope];
+    const scopesWithOpenid = scopes.includes('openid') ? scopes : [...scopes, 'openid'];
+
     return constructAuthorizationUri(authorizationEndpoint, {
       responseType: 'code',
       clientId,
-      scope: scope ?? defaultScope, // Defaults to 'profile' if not provided
+      scope: scopesWithOpenid.join(' '), // Defaults to 'openid' if not provided
       redirectUri,
       state,
     });

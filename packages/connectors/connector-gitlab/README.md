@@ -26,9 +26,13 @@ Go to the [GitLab website](https://gitlab.com/) and sign in with your GitLab acc
 
 Follow the [creating a GitLab OAuth App](https://docs.gitlab.com/ee/integration/oauth_provider.html) guide, and register a new application.
 
-Name your new OAuth application in **Name** and fill up **Redirect URI** of the app. You can leave the **Description** field blank and customize the **Redirect URIs** as \`${your_logto_origin}/callback/${connector_id}\`. The `connector_id` can be found on the top bar of the Logto Admin Console connector details page.
+Name your new OAuth application in **Name** and fill up **Redirect URI** of the app. Customize the **Redirect URIs** as `${your_logto_origin}/callback/${connector_id}`. The `connector_id` can be found on the top bar of the Logto Admin Console connector details page.
 
-> Note: If you encounter the error message "The redirect_uri MUST match the registered callback URL for this application." when logging in, try aligning the Redirect URI of your GitLab OAuth App and your Logto App's redirect URL (including the protocol) to resolve the issue.
+On scopes, select `openid`. You also may want to enable `profile`, and `email`. `profile` scope is required to get the user's profile information, and `email` scope is required to get the user's email address. Ensure you have allowed these scopes in your GitLab OAuth app if you want to use them.
+
+> Notes: 
+> * If you use custom domains, add both the custom domain and the default Logto domain to the Redirect URIs to ensure the OAuth flow works correctly with both domains. 
+> * If you encounter the error message "The redirect_uri MUST match the registered callback URL for this application." when logging in, try aligning the Redirect URI of your GitLab OAuth App and your Logto App's redirect URL (including the protocol) to resolve the issue.
 
 ## Managing OAuth apps
 
@@ -38,7 +42,7 @@ Go to the [Applications page](https://gitlab.com/-/profile/applications) on GitL
 
 Fill out the `clientId` and `clientSecret` field with the _Application ID_ and _Secret_ you've got from the OAuth app detail pages mentioned in the previous section.
 
-`scope` is a space-delimited list of [scopes](https://docs.gitlab.com/ee/integration/oauth_provider.html#authorized-applications). If not provided, the scope defaults to `read_user`.
+`scope` is a space-delimited list of [scopes](https://docs.gitlab.com/ee/integration/oauth_provider.html#authorized-applications). If not provided, scope defaults to be `openid`. For GitLab connector, the scope you may want to use are `openid`, `profile` and `email`. `profile` scope is required to get the user's profile information, and `email` scope is required to get the user's email address. Ensure you have allowed these scopes in your GitLab OAuth app (configured in [Create an OAuth app in the Hugging Face](#create-and-configure-oauth-app) section).
 
 ### Config types
 
