@@ -36,6 +36,19 @@ const accessTokenResponseHandler = async (
   return result.data;
 };
 
+// eslint-disable-next-line @typescript-eslint/ban-types
+const getValue = (object: Record<string, unknown> | object, path: string) => {
+  return path.split('.').reduce<unknown>((accumulator, part: string) => {
+    // Check if the accumulator is an object and has the property
+    if (accumulator && typeof accumulator === 'object' && part in accumulator) {
+      // eslint-disable-next-line no-restricted-syntax
+      return (accumulator as Record<string, unknown>)[part];
+    }
+
+    return null;
+  }, object);
+};
+
 export const userProfileMapping = (
   // eslint-disable-next-line @typescript-eslint/ban-types
   originUserProfile: object,
@@ -47,9 +60,9 @@ export const userProfileMapping = (
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const mappedUserProfile = Object.fromEntries(
-    Object.entries(originUserProfile)
-      .filter(([key, value]) => keyMap.get(key) && value)
-      .map(([key, value]) => [keyMap.get(key), value])
+    Object.entries(keyMapping)
+      .map(([destination, source]) => [destination, getValue(originUserProfile, source)])
+      .filter(([_, value]) => value)
   );
 
   const result = userProfileGuard.safeParse(mappedUserProfile);
