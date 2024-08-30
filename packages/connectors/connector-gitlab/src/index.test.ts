@@ -45,7 +45,7 @@ describe('GitLab connector', () => {
       `${authorizationEndpoint}?${new URLSearchParams({
         response_type: 'code',
         client_id: '<client-id>',
-        scope: 'profile email',
+        scope: 'profile email openid', // We add openid to the scopes if not present always
         redirect_uri: 'http://localhost:3000/callback',
         state: 'some_state',
       }).toString()}`
