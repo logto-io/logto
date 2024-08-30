@@ -207,7 +207,10 @@ const createRelations = async (params: {
 
 export const cleanScopes = async (transaction: DatabaseTransactionConnection, tenantId: string) => {
   await cleanScopeRelations(transaction, tenantId);
-  const deleteQueryString = deleteQuery([sql`tenant_id = ${tenantId}`], Scopes.table);
+  const deleteQueryString = deleteQuery(
+    [sql`tenant_id = ${tenantId}`, sql`resource_id <> 'management-api'`],
+    Scopes.table
+  );
   return transaction.query(deleteQueryString);
 };
 
@@ -215,7 +218,10 @@ export const cleanScopeRelations = async (
   transaction: DatabaseTransactionConnection,
   tenantId: string
 ) => {
-  const deleteQueryString = deleteQuery([sql`tenant_id = ${tenantId}`], RolesScopes.table);
+  const deleteQueryString = deleteQuery(
+    [sql`tenant_id = ${tenantId}`, sql`scope_id <> 'management-api-all'`],
+    RolesScopes.table
+  );
   return transaction.query(deleteQueryString);
 };
 
