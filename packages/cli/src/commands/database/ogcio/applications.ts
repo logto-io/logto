@@ -6,6 +6,7 @@ import { sql, type DatabaseTransactionConnection } from '@silverhand/slonik';
 
 import { type ApplicationSeeder } from './ogcio-seeder.js';
 import { createOrUpdateItem } from './queries.js';
+import { applyManagementApiRole } from './resources-rbac.js';
 
 type SeedingApplication = {
   id: string;
@@ -90,6 +91,19 @@ export const seedApplications = async (params: {
   }
 
   await Promise.all(queries);
+
+  // Seed the M2M application with the correct role
+  const m2mManagementAPIsApplicationId = params.applications.find(
+    (app) => app.apply_management_api_role
+  )?.id;
+
+  if (m2mManagementAPIsApplicationId) {
+    await applyManagementApiRole(
+      params.transaction,
+      params.tenantId,
+      m2mManagementAPIsApplicationId
+    );
+  }
 
   return appsToCreate;
 };

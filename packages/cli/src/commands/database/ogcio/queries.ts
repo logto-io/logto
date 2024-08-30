@@ -3,6 +3,8 @@
 /* eslint-disable @silverhand/fp/no-mutating-methods */
 /* eslint-disable @silverhand/fp/no-mutation */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+
+import { Roles } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import {
   type DatabaseTransactionConnection,
@@ -200,4 +202,12 @@ export const deleteQuery = (whereClauses: ValueExpression[], table: string) => {
     delete from ${sql.identifier([table])}
     where ${sql.join(whereClauses, sql` AND `)}
   `;
+};
+
+export const findManagementApiRole = async (transaction: DatabaseTransactionConnection) => {
+  const role = await transaction.query<Record<string, string>>(sql`
+    select id from ${sql.identifier([Roles.table])}
+    where name='Logto Management API access' limit 1`);
+
+  return getColumnValueByQueryResult(role, 'id');
 };

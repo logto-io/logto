@@ -14,7 +14,7 @@ import {
   type ResourcePermissionSeeder,
   type ScopePerResourceRoleSeeder,
 } from './ogcio-seeder.js';
-import { createOrUpdateItem, deleteQuery } from './queries.js';
+import { createOrUpdateItem, deleteQuery, findManagementApiRole } from './queries.js';
 import { type SeedingResource } from './resources.js';
 
 type SeedingScope = {
@@ -303,3 +303,19 @@ const assignRoleToM2MApplication = async (
     ],
     toInsert: relation,
   });
+
+export const applyManagementApiRole = async (
+  transaction: DatabaseTransactionConnection,
+  tenantId: string,
+  appId: string
+) => {
+  const roleId = await findManagementApiRole(transaction);
+  if (!roleId) {
+    throw new Error("Cannot find 'Logto Management API access' role");
+  }
+
+  return assignRoleToM2MApplication(transaction, tenantId, {
+    role_id: roleId,
+    application_id: appId,
+  });
+};

@@ -47,6 +47,7 @@ export type ApplicationSeeder = {
   secret: string;
   is_third_party?: boolean;
   always_issue_refresh_token?: boolean;
+  apply_management_api_role?: boolean;
 };
 
 export type ResourceSeeder = {

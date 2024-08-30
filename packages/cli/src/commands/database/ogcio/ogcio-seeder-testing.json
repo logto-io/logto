@@ -91,22 +91,18 @@
         "id": "bb-inactive-ps",
         "name": "Inactive Public Servant",
         "description": "Inactive Public Servant",
-        "specific_permissions": [
-          "bb:public-servant.inactive:*"
-        ]
+        "specific_permissions": ["bb:public-servant.inactive:*"]
       },
       {
         "id": "m2m-ps-profile-reader",
         "name": "M2M Public Servant Profile Reader",
         "description": "Role for M2M Applications that need to read from Profile resources",
-        "specific_permissions": [
-          "profile:user:read"
-        ],
+        "specific_permissions": ["profile:user:read"],
         "type": "MachineToMachine",
         "related_applications": [
-          {"application_id":"tty6llp30risjwcjhbvc9", "organization_id": "ogcio"},
-          {"application_id":"tty6llp30risjwcjhbvc9", "organization_id": "first-testing"},
-          {"application_id":"tty6llp30risjwcjhbvc9", "organization_id": "second-testing"}
+          { "application_id": "tty6llp30risjwcjhbvc9", "organization_id": "ogcio" },
+          { "application_id": "tty6llp30risjwcjhbvc9", "organization_id": "first-testing" },
+          { "application_id": "tty6llp30risjwcjhbvc9", "organization_id": "second-testing" }
         ]
       },
       {
@@ -123,8 +119,8 @@
         ],
         "type": "MachineToMachine",
         "related_applications": [
-          {"application_id":"treftr21fgbvsdjwlol9", "organization_id": "first-testing"},
-          {"application_id":"treftr21fgbvsdjwlol9", "organization_id": "second-testing"}
+          { "application_id": "treftr21fgbvsdjwlol9", "organization_id": "first-testing" },
+          { "application_id": "treftr21fgbvsdjwlol9", "organization_id": "second-testing" }
         ]
       }
     ],
@@ -208,6 +204,17 @@
         "secret": "<SEEDER_M2M_E2E_TESTER_APP_SECRET>",
         "id": "treftr21fgbvsdjwlol9",
         "is_third_party": false
+      },
+      {
+        "name": "M2M Management APIs",
+        "description": "Machine 2 Machine application used to communicate with the Logto Management APIs",
+        "type": "MachineToMachine",
+        "redirect_uri": "",
+        "logout_redirect_uri": "",
+        "secret": "<SEEDER_M2M_MANAGEMENT_API_APP_SECRET>",
+        "id": "46ewhh940rn1e29cmecxs",
+        "is_third_party": false,
+        "apply_management_api_role": true
       }
     ],
     "resources": [
@@ -273,10 +280,7 @@
       },
       {
         "resource_id": "upload-api",
-        "specific_permissions": [
-          "upload:file.self:write",
-          "upload:file.self:read"
-        ]
+        "specific_permissions": ["upload:file.self:write", "upload:file.self:read"]
       }
     ],
     "resource_roles": [
@@ -315,9 +319,7 @@
           },
           {
             "resource_id": "upload-api",
-            "specific_permissions": [
-              "upload:file.self:read"
-            ]
+            "specific_permissions": ["upload:file.self:read"]
           }
         ]
       },
@@ -328,9 +330,7 @@
         "permissions": [
           {
             "resource_id": "profile-api",
-            "specific_permissions": [
-              "profile:user:read"
-            ]
+            "specific_permissions": ["profile:user:read"]
           }
         ],
         "type": "MachineToMachine",
