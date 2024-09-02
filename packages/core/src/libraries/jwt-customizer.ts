@@ -1,4 +1,3 @@
-import { buildErrorResponse, runScriptFunctionInLocalVm } from '@logto/core-kit/custom-jwt';
 import {
   LogtoJwtTokenKeyType,
   jwtCustomizerUserContextGuard,
@@ -22,6 +21,8 @@ import type Queries from '#src/tenants/Queries.js';
 import {
   LocalVmError,
   getJwtCustomizerScripts,
+  runScriptFunctionInLocalVm,
+  buildLocalVmErrorBody,
   type CustomJwtDeployRequestBody,
 } from '#src/utils/custom-jwt/index.js';
 
@@ -53,7 +54,7 @@ export class JwtCustomizerLibrary {
       }
 
       throw new LocalVmError(
-        buildErrorResponse(error),
+        buildLocalVmErrorBody(error),
         error instanceof SyntaxError || error instanceof TypeError ? 422 : 500
       );
     }
