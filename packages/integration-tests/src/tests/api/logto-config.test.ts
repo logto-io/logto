@@ -35,7 +35,7 @@ const defaultAdminConsoleConfig: AdminConsoleData = {
   organizationCreated: false,
 };
 
-describe('admin console sign-in experience', () => {
+describe('logto config', () => {
   it('should get admin console config successfully', async () => {
     const adminConsoleConfig = await getAdminConsoleConfig();
 
