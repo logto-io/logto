@@ -1,6 +1,6 @@
 import nock from 'nock';
 
-import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
+import { ConnectorError, ConnectorErrorCodes, type SocialUserInfo } from '@logto/connector-kit';
 
 import { authorizationEndpoint, tokenEndpoint, userInfoEndpoint } from './constant.js';
 import createConnector from './index.js';
@@ -70,15 +70,11 @@ describe('GitLab connector', () => {
 
     const connector = await createConnector({ getConfig });
     const socialUserInfo = await connector.getUserInfo({ code: 'code' }, getSessionMock);
-
-    expect(socialUserInfo).toStrictEqual({
+    const expectedSocialUserInfo: SocialUserInfo = {
       id: '1234567',
       avatar: 'https://gitlab.com/uploads/-/system/user/avatar/1234567/avatar.png',
       name: 'John Doe',
       email: 'john.doe@example.com',
-      email_verified: true,
-      profile: 'https://gitlab.com/john.doe',
-      preferred_username: 'john.doe',
       rawData: {
         sub: '1234567',
         sub_legacy: 'abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
@@ -91,7 +87,9 @@ describe('GitLab connector', () => {
         picture: 'https://gitlab.com/uploads/-/system/user/avatar/1234567/avatar.png',
         groups: ['group1', 'group2', 'group3'],
       },
-    });
+    };
+
+    expect(socialUserInfo).toStrictEqual(expectedSocialUserInfo);
   });
 
   it('should not return email when email_verified is false on SocialUserInfo', async () => {
@@ -112,15 +110,10 @@ describe('GitLab connector', () => {
 
     const connector = await createConnector({ getConfig });
     const socialUserInfo = await connector.getUserInfo({ code: 'code' }, getSessionMock);
-
-    expect(socialUserInfo).toStrictEqual({
+    const expectedSocialUserInfo: SocialUserInfo = {
       id: '1234567',
       avatar: 'https://gitlab.com/uploads/-/system/user/avatar/1234567/avatar.png',
       name: 'John Doe',
-      email: undefined,
-      email_verified: false,
-      profile: 'https://gitlab.com/john.doe',
-      preferred_username: 'john.doe',
       rawData: {
         sub: '1234567',
         sub_legacy: 'abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
@@ -133,7 +126,9 @@ describe('GitLab connector', () => {
         picture: 'https://gitlab.com/uploads/-/system/user/avatar/1234567/avatar.png',
         groups: ['group1', 'group2', 'group3'],
       },
-    });
+    };
+
+    expect(socialUserInfo).toStrictEqual(expectedSocialUserInfo);
   });
 
   it('throws AuthorizationFailed error if authentication failed', async () => {

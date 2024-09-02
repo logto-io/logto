@@ -1,9 +1,10 @@
-import { assert } from '@silverhand/essentials';
+import { assert, conditional } from '@silverhand/essentials';
 
 import type {
   GetAuthorizationUri,
   GetUserInfo,
   SocialConnector,
+  SocialUserInfo,
   CreateConnector,
   GetConnectorConfig,
 } from '@logto/connector-kit';
@@ -24,7 +25,8 @@ import ky, { HTTPError } from 'ky';
 
 import {
   authorizationEndpoint,
-  scope as defaultScope,
+  mandatoryScope,
+  defaultScopes,
   userInfoEndpoint,
   defaultMetadata,
   defaultTimeout,
@@ -48,13 +50,15 @@ const getAuthorizationUri =
 
     await setSession({ redirectUri });
 
-    const scopes = scope?.split(' ') ?? [defaultScope];
-    const scopesWithOpenid = scopes.includes('openid') ? scopes : [...scopes, 'openid'];
+    const scopes = scope?.split(' ') ?? defaultScopes;
+    const scopesWithRequired = scopes.includes(mandatoryScope)
+      ? scopes
+      : [...scopes, mandatoryScope];
 
     return constructAuthorizationUri(authorizationEndpoint, {
       responseType: 'code',
       clientId,
-      scope: scopesWithOpenid.join(' '), // Defaults to 'openid' if not provided
+      scope: scopesWithRequired.join(' '), // Defaults to mandatoryScope if not provided
       redirectUri,
       state,
     });
@@ -71,7 +75,7 @@ const getAuthorizationUri =
  */
 const getUserInfo =
   (getConfig: GetConnectorConfig): GetUserInfo =>
-  async (data, getSession) => {
+  async (data, getSession): Promise<SocialUserInfo> => {
     const authResponseResult = oauth2AuthResponseGuard.safeParse(data);
 
     if (!authResponseResult.success) {
@@ -132,25 +136,14 @@ const getUserInfo =
         throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, parsedUserInfoResponse.error);
       }
 
-      const {
-        email,
-        email_verified,
-        name,
-        picture: avatar,
-        profile,
-        preferred_username,
-        sub: id,
-      } = parsedUserInfoResponse.data;
+      const { email, email_verified, name, picture: avatar, sub: id } = parsedUserInfoResponse.data;
 
       return {
         id,
-        avatar,
-        email: email_verified ? email : undefined,
+        ...conditional(email_verified && { email }),
         name,
+        avatar,
         rawData,
-        email_verified,
-        profile,
-        preferred_username,
       };
     } catch (error: unknown) {
       if (error instanceof HTTPError) {

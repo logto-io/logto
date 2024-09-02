@@ -6,7 +6,8 @@ export const jwksUri = 'https://gitlab.com/oauth/discovery/keys';
 export const authorizationEndpoint = 'https://gitlab.com/oauth/authorize';
 export const userInfoEndpoint = 'https://gitlab.com/oauth/userinfo';
 export const tokenEndpoint = 'https://gitlab.com/oauth/token';
-export const scope = 'openid';
+export const mandatoryScope = 'openid'; // Always required
+export const defaultScopes = [mandatoryScope];
 
 export const defaultMetadata: ConnectorMetadata = {
   id: 'gitlab-universal',

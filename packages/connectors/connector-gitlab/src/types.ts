@@ -18,17 +18,17 @@ export const accessTokenResponseGuard = z.object({
 
 export type AccessTokenResponse = z.infer<typeof accessTokenResponseGuard>;
 
-// Define a guard for validating the GitLab user info response
+// Define a guard for validating the GitLab user info response. Note: things that are not strictly necessary are marked as optional, even though the response does actually contain them.
 export const userInfoResponseGuard = z.object({
   sub: z.string(),
+  name: z.string().optional(),
+  nickname: z.string().optional(),
   sub_legacy: z.string().optional(),
-  name: z.string(),
-  nickname: z.string(),
-  preferred_username: z.string(),
+  preferred_username: z.string().optional(),
   email: z.string().optional(),
   email_verified: z.boolean().optional(),
-  profile: z.string().url(),
-  picture: z.string().url(),
+  profile: z.string().url().optional(),
+  picture: z.string().url().optional(),
   groups: z.array(z.string()).optional(),
 });
 
