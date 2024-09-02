@@ -8,6 +8,10 @@ const subscription = {
   pro_plan: 'Plan Professionnel',
   pro_plan_description: 'Pour les entreprises qui bénéficient de Logto sans soucis.',
   enterprise: 'Entreprise',
+  /** UNTRANSLATED */
+  admin_plan: 'Admin plan',
+  /** UNTRANSLATED */
+  dev_plan: 'Development plan',
   current_plan: 'Plan Actuel',
   current_plan_description:
     "Voici votre plan actuel. Vous pouvez facilement consulter l'utilisation de votre plan, vérifier votre prochaine facture et apporter des modifications à votre plan si nécessaire.",

@@ -10,6 +10,8 @@ const registeredSkuIdNamePhraseMap: Record<
   quotaKey: undefined,
   [ReservedSkuId.Free]: 'free_plan',
   [ReservedSkuId.Pro]: 'pro_plan',
+  [ReservedSkuId.Development]: 'dev_plan',
+  [ReservedSkuId.Admin]: 'admin_plan',
   [ReservedSkuId.Enterprise]: 'enterprise',
 };
 

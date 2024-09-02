@@ -26,13 +26,13 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
     subscription: { planId },
   } = tenantData;
 
-  const { subscriptionPlans } = useContext(SubscriptionDataContext);
-  const tenantSubscriptionPlan = useMemo(
-    () => subscriptionPlans.find((plan) => plan.id === planId),
-    [subscriptionPlans, planId]
+  const { logtoSkus } = useContext(SubscriptionDataContext);
+  const tenantSubscriptionSku = useMemo(
+    () => logtoSkus.find(({ id }) => id === planId),
+    [logtoSkus, planId]
   );
 
-  if (!tenantSubscriptionPlan) {
+  if (!tenantSubscriptionSku) {
     return null;
   }
 

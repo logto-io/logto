@@ -7,6 +7,10 @@ const subscription = {
   pro_plan: 'Pro plan',
   pro_plan_description: 'Für Unternehmen, die sorgenfrei von Logto profitieren möchten.',
   enterprise: 'Unternehmen',
+  /** UNTRANSLATED */
+  admin_plan: 'Admin plan',
+  /** UNTRANSLATED */
+  dev_plan: 'Development plan',
   current_plan: 'Aktueller Plan',
   current_plan_description:
     'Hier ist dein aktueller Tarif. Du kannst einfach deinen Tarifverbrauch einsehen, deine anstehende Rechnung überprüfen und bei Bedarf Änderungen an deinem Tarif vornehmen.',
