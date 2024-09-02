@@ -94,6 +94,48 @@ describe('GitLab connector', () => {
     });
   });
 
+  it('should not return email when email_verified is false on SocialUserInfo', async () => {
+    nock(userInfoEndpoint)
+      .get('')
+      .reply(200, {
+        sub: '1234567',
+        sub_legacy: 'abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
+        name: 'John Doe',
+        nickname: 'john.doe',
+        preferred_username: 'john.doe',
+        email: 'john.doe@example.com',
+        email_verified: false,
+        profile: 'https://gitlab.com/john.doe',
+        picture: 'https://gitlab.com/uploads/-/system/user/avatar/1234567/avatar.png',
+        groups: ['group1', 'group2', 'group3'],
+      });
+
+    const connector = await createConnector({ getConfig });
+    const socialUserInfo = await connector.getUserInfo({ code: 'code' }, getSessionMock);
+
+    expect(socialUserInfo).toStrictEqual({
+      id: '1234567',
+      avatar: 'https://gitlab.com/uploads/-/system/user/avatar/1234567/avatar.png',
+      name: 'John Doe',
+      email: undefined,
+      email_verified: false,
+      profile: 'https://gitlab.com/john.doe',
+      preferred_username: 'john.doe',
+      rawData: {
+        sub: '1234567',
+        sub_legacy: 'abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
+        name: 'John Doe',
+        nickname: 'john.doe',
+        preferred_username: 'john.doe',
+        email: 'john.doe@example.com',
+        email_verified: false,
+        profile: 'https://gitlab.com/john.doe',
+        picture: 'https://gitlab.com/uploads/-/system/user/avatar/1234567/avatar.png',
+        groups: ['group1', 'group2', 'group3'],
+      },
+    });
+  });
+
   it('throws AuthorizationFailed error if authentication failed', async () => {
     const connector = await createConnector({ getConfig });
     await expect(

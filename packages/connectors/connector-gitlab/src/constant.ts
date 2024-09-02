@@ -26,7 +26,6 @@ export const defaultMetadata: ConnectorMetadata = {
     clientSecretFormItem,
     {
       ...scopeFormItem,
-      placeholder: 'openid [profile email]',
       description:
         "`openid` is required to allow OIDC and it's always added to the scopes if not present, `profile` is required to get user's profile information and `email` is required to get user's email address. These scopes can be used individually or in combination; if no scopes are specified, `openid` will be used by default.",
     },

@@ -145,7 +145,7 @@ const getUserInfo =
       return {
         id,
         avatar,
-        email,
+        email: email_verified ? email : undefined,
         name,
         rawData,
         email_verified,
