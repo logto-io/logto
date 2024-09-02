@@ -3628,8 +3628,8 @@ importers:
         specifier: workspace:^3.1.1
         version: link:../shared
       '@withtyped/server':
-        specifier: ^0.13.6
-        version: 0.13.6(zod@3.23.8)
+        specifier: ^0.14.0
+        version: 0.14.0(zod@3.23.8)
       nanoid:
         specifier: ^5.0.1
         version: 5.0.7
@@ -6548,6 +6548,11 @@ packages:
 
   '@withtyped/server@0.13.6':
     resolution: {integrity: sha512-l+jaZ6Gy/S3oF9q91JuHtWlRqB+bK8ycniAK2atK05/ZfhS/qBPV/JPA18fM+JzSQA+tr3CYXnul5SshmYsRoA==}
+    peerDependencies:
+      zod: ^3.19.1
+
+  '@withtyped/server@0.14.0':
+    resolution: {integrity: sha512-syBE91FzVzQAbuoT+coJwXcyPbyVZgrvKjQgAj4y5y38q7k4Le6SBan0kZE2VEKj2HyYj6i91uI99FdE1SkoYA==}
     peerDependencies:
       zod: ^3.19.1
 
@@ -16658,6 +16663,13 @@ snapshots:
       - zod
 
   '@withtyped/server@0.13.6(zod@3.23.8)':
+    dependencies:
+      '@silverhand/essentials': 2.9.1
+      '@withtyped/shared': 0.2.2
+      nanoid: 4.0.2
+      zod: 3.23.8
+
+  '@withtyped/server@0.14.0(zod@3.23.8)':
     dependencies:
       '@silverhand/essentials': 2.9.1
       '@withtyped/shared': 0.2.2
