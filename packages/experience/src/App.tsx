@@ -1,4 +1,6 @@
 import { MfaFactor, experience } from '@logto/schemas';
+import { Helmet } from 'react-helmet';
+import { useTranslation } from 'react-i18next';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 
 import AppLayout from './Layout/AppLayout';
@@ -45,8 +47,15 @@ import './scss/normalized.scss';
 handleSearchParametersData();
 
 const App = () => {
+  const { i18n } = useTranslation();
+
   return (
     <BrowserRouter>
+      <Helmet
+        htmlAttributes={{
+          lang: i18n.language,
+        }}
+      />
       <PageContextProvider>
         <SettingsProvider>
           <UserInteractionContextProvider>

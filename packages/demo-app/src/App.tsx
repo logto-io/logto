@@ -1,6 +1,7 @@
 import { type IdTokenClaims, LogtoProvider, useLogto, type Prompt } from '@logto/react';
 import { demoAppApplicationId } from '@logto/schemas';
 import { useCallback, useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 
 import '@/scss/normalized.scss';
@@ -20,7 +21,7 @@ const Main = () => {
   const params = new URL(window.location.href).searchParams;
   const { isAuthenticated, isLoading, getIdTokenClaims, signIn, signOut } = useLogto();
   const [user, setUser] = useState<Pick<IdTokenClaims, 'sub' | 'username'>>();
-  const { t } = useTranslation(undefined, { keyPrefix: 'demo_app' });
+  const { t, i18n } = useTranslation(undefined, { keyPrefix: 'demo_app' });
   const isInCallback = Boolean(params.get('code'));
   const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
   const [congratsIcon, setCongratsIcon] = useState<string>(isDarkMode ? congratsDark : congrats);
@@ -121,6 +122,11 @@ const Main = () => {
 
   return (
     <div className={styles.app}>
+      <Helmet
+        htmlAttributes={{
+          lang: i18n.language,
+        }}
+      />
       {showDevPanel && <DevPanel />}
       <div className={[styles.card, styles.congrats].join(' ')}>
         {congratsIcon && <img src={congratsIcon} alt="Congrats" />}
