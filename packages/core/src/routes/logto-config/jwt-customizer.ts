@@ -1,4 +1,5 @@
 import {
+  CustomJwtErrorCode,
   LogtoJwtTokenKey,
   LogtoJwtTokenKeyType,
   accessTokenJwtCustomizerGuard,
@@ -18,6 +19,7 @@ import { JwtCustomizerLibrary } from '#src/libraries/jwt-customizer.js';
 import koaGuard, { parse } from '#src/middleware/koa-guard.js';
 import { koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
+import { parseCustomJwtResponseError } from '#src/utils/custom-jwt/index.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
@@ -249,8 +251,11 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
          * format of `RequestError`, we manually transform it here to keep the error format consistent.
          */
         if (error instanceof ResponseError) {
-          const { message } = z.object({ message: z.string() }).parse(await error.response.json());
-          throw new RequestError({ code: 'jwt_customizer.general', status: 422 }, { message });
+          const { code, message } = await parseCustomJwtResponseError(error);
+
+          const status = code === CustomJwtErrorCode.AccessDenied ? 403 : 422;
+
+          throw new RequestError({ code: 'jwt_customizer.general', status }, { message, code });
         }
 
         if (error instanceof ZodError) {

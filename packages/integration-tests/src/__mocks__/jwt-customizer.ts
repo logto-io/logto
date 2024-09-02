@@ -54,10 +54,22 @@ export const accessTokenJwtCustomizerPayload = {
   },
 };
 
+export const accessDeniedMessage = 'You are not allowed to access this resource';
+
 export const accessTokenSampleScript = `const getCustomJwtClaims = async ({ token, context, environmentVariables }) => {
   return { user_id: context?.user?.id ?? 'unknown', hasPassword: context?.user?.hasPassword };
+};`;
+
+export const accessTokenAccessDeniedSampleScript = `const getCustomJwtClaims = async ({ token, context, environmentVariables, api }) => {
+  api.denyAccess(${accessDeniedMessage});
+  return { test: 'foo'};
 };`;
 
 export const clientCredentialsSampleScript = `const getCustomJwtClaims = async ({ token, context, environmentVariables }) => {
   return { ...environmentVariables };
 }`;
+
+export const clientCredentialsAccessDeniedSampleScript = `const getCustomJwtClaims = async ({ token, context, environmentVariables, api }) => {
+  api.denyAccess(${accessDeniedMessage});
+  return { test: 'foo'};
+};`;
