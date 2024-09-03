@@ -20,7 +20,7 @@ const typeIdentifiers = `export enum JwtCustomizerTypeDefinitionKey {
   AccessTokenPayload = 'AccessTokenPayload',
   ClientCredentialsPayload = 'ClientCredentialsPayload',
   EnvironmentVariables = 'EnvironmentVariables',
-  JwtCustomizerApiContext = 'JwtCustomizerApiContext',
+  CustomJwtApiContext = 'CustomJwtApiContext',
 };`;
 
 const inferTsDefinitionFromZod = (zodSchema: ZodTypeAny, identifier: string): string => {

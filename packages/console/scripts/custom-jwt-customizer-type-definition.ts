@@ -5,12 +5,12 @@
  */
 
 // eslint-disable-next-line unused-imports/no-unused-imports -- For type reference
-import { JwtCustomizerApiContext } from '@logto/schemas';
+import { CustomJwtApiContext } from '@logto/schemas';
 
 /**
- * @returns {JwtCustomizerApiContext}
+ * @returns {CustomJwtApiContext}
  */
-export const jwtCustomizerApiContextTypeDefinition = `type JwtCustomizerApiContext = {
+export const jwtCustomizerApiContextTypeDefinition = `type CustomJwtApiContext = {
   /**
    * Reject the the current token exchange request.
    *

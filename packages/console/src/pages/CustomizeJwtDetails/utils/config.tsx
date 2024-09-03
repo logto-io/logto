@@ -37,7 +37,7 @@ declare type Payload = {
   token: ${JwtCustomizerTypeDefinitionKey.AccessTokenPayload};
   context: Context;
   environmentVariables: ${JwtCustomizerTypeDefinitionKey.EnvironmentVariables};
-  api: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerApiContext};
+  api: ${JwtCustomizerTypeDefinitionKey.CustomJwtApiContext};
 };`;
 
 const clientCredentialsJwtCustomizerDefinition = `
@@ -46,7 +46,7 @@ declare interface CustomJwtClaims extends Record<string, any> {}
 declare type Payload = {
   token: ${JwtCustomizerTypeDefinitionKey.AccessTokenPayload};
   environmentVariables: ${JwtCustomizerTypeDefinitionKey.EnvironmentVariables};
-  api: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerApiContext};
+  api: ${JwtCustomizerTypeDefinitionKey.CustomJwtApiContext};
 };`;
 
 export const defaultAccessTokenJwtCustomizerCode = `/**
@@ -61,7 +61,7 @@ export const defaultAccessTokenJwtCustomizerCode = `/**
 }} [payload.environmentVariables] - The environment variables.
 ${
   isDevFeaturesEnabled
-    ? `* @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerApiContext}} payload.api - The API context.
+    ? `* @param {${JwtCustomizerTypeDefinitionKey.CustomJwtApiContext}} payload.api - The API context.
     * `
     : '*'
 }
@@ -84,7 +84,7 @@ export const defaultClientCredentialsJwtCustomizerCode = `/**
 }} [payload.environmentVariables] - The environment variables.
 ${
   isDevFeaturesEnabled
-    ? `* @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerApiContext}} payload.api - The API context.
+    ? `* @param {${JwtCustomizerTypeDefinitionKey.CustomJwtApiContext}} payload.api - The API context.
 *`
     : '*'
 }
