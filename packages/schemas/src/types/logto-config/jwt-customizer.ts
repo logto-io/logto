@@ -172,7 +172,7 @@ export type CustomJwtApiContext = {
    *
    * @remarks
    * By calling this function, the current token exchange request will be rejected,
-   * and a ODIC `AccessDenied` error will be thrown to the client with the given message.
+   * and a OIDC `AccessDenied` error will be thrown to the client with the given message.
    *
    * @param message The message to be shown to the user.
    * @throws {ResponseError} with `CustomJwtErrorBody`
