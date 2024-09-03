@@ -46,16 +46,8 @@ const connectors = {
     name_placeholder: 'Entrez un nom pour le bouton de connexion sociale',
     name_tip:
       'Le nom du bouton de connexion s\'affichera comme "Continuer avec {{name}}". Tenez compte de la longueur du nom si celui-ci devient trop long.',
-    logo: 'URL du logo pour le bouton de connexion sociale',
-    logo_placeholder: 'https://votre.domaine.cdn/logo.png',
-    logo_tip:
-      "L'image du logo s'affichera sur le connecteur. Obtenez un lien d'image accessible au public et insérez le lien ici.",
-    logo_dark: 'URL du logo pour le bouton de connexion sociale (mode sombre)',
-    logo_dark_placeholder: 'https://votre.domaine.cdn/logo.png',
-    logo_dark_tip:
-      "Définissez le logo de votre connecteur pour le mode sombre après l'avoir activé dans l'expérience de connexion de la console d'administration.",
-    logo_dark_collapse: 'Réduire',
-    logo_dark_show: "Afficher l'option du logo pour le mode sombre",
+    connector_logo: 'Logo du connecteur',
+    connector_logo_tip: 'Le logo sera affiché sur le bouton de connexion du connecteur.',
     target: "Nom du fournisseur d'identité",
     target_placeholder: "Entrez le nom du fournisseur d'identité du connecteur",
     target_tip:

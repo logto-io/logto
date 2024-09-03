@@ -8,10 +8,11 @@ import {
 import { generateStandardId } from '@logto/shared';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
+import koaQuotaGuard, { newKoaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 import { organizationRoleSearchKeys } from '#src/queries/organization/index.js';
 import SchemaRouter from '#src/utils/SchemaRouter.js';
 import { parseSearchOptions } from '#src/utils/search.js';
@@ -44,7 +45,11 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
     unknown,
     ManagementApiRouterContext
   >(OrganizationRoles, roles, {
-    middlewares: [koaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] })],
+    middlewares: [
+      EnvSet.values.isDevFeaturesEnabled
+        ? newKoaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] })
+        : koaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] }),
+    ],
     disabled: { get: true, post: true },
     errorHandler,
     searchFields: ['name'],

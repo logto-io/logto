@@ -7,9 +7,9 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Plus from '@/assets/icons/plus.svg';
-import SocialConnectorEmptyDark from '@/assets/images/social-connector-empty-dark.svg';
-import SocialConnectorEmpty from '@/assets/images/social-connector-empty.svg';
+import Plus from '@/assets/icons/plus.svg?react';
+import SocialConnectorEmptyDark from '@/assets/images/social-connector-empty-dark.svg?react';
+import SocialConnectorEmpty from '@/assets/images/social-connector-empty.svg?react';
 import CreateConnectorForm from '@/components/CreateConnectorForm';
 import ListPage from '@/components/ListPage';
 import { defaultEmailConnectorGroup, defaultSmsConnectorGroup } from '@/consts';
@@ -31,7 +31,7 @@ import ConnectorStatusField from './ConnectorStatusField';
 import ConnectorTypeColumn from './ConnectorTypeColumn';
 import Guide from './Guide';
 import SignInExperienceSetupNotice from './SignInExperienceSetupNotice';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const basePathname = '/connectors';
 const passwordlessPathname = `${basePathname}/${ConnectorsTabs.Passwordless}`;

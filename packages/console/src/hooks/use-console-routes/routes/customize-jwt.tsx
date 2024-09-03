@@ -1,7 +1,8 @@
 import { type RouteObject } from 'react-router-dom';
+import { safeLazy } from 'react-safe-lazy';
 
-import CustomizeJwt from '@/pages/CustomizeJwt';
-import CustomizeJwtDetails from '@/pages/CustomizeJwtDetails';
+const CustomizeJwt = safeLazy(async () => import('@/pages/CustomizeJwt'));
+const CustomizeJwtDetails = safeLazy(async () => import('@/pages/CustomizeJwtDetails'));
 
 export const customizeJwt: RouteObject = {
   path: 'customize-jwt',

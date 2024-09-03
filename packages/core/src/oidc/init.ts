@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 import assert from 'node:assert';
 import { readFileSync } from 'node:fs';
+import querystring from 'node:querystring';
 
 import { userClaims } from '@logto/core-kit';
 import type { I18nKey } from '@logto/phrases';
@@ -15,17 +16,17 @@ import {
   type LogtoUiCookie,
   ExtraParamsKey,
 } from '@logto/schemas';
-import { conditional, trySafe, tryThat } from '@silverhand/essentials';
+import { removeUndefinedKeys, trySafe, tryThat } from '@silverhand/essentials';
 import i18next from 'i18next';
-import { koaBody } from 'koa-body';
 import Provider, { errors } from 'oidc-provider';
+import getRawBody from 'raw-body';
 import snakecaseKeys from 'snakecase-keys';
 
 import { type EnvSet } from '#src/env-set/index.js';
-import RequestError from '#src/errors/RequestError/index.js';
 import { addOidcEventListeners } from '#src/event-listeners/index.js';
 import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
+import koaAppSecretTranspilation from '#src/middleware/koa-app-secret-transpilation.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import koaResourceParam from '#src/middleware/koa-resource-param.js';
@@ -42,6 +43,7 @@ import defaults from './defaults.js';
 import {
   getExtraTokenClaimsForJwtCustomization,
   getExtraTokenClaimsForOrganizationApiResource,
+  getExtraTokenClaimsForTokenExchange,
 } from './extra-token-claims.js';
 import { registerGrants } from './grants/index.js';
 import {
@@ -197,15 +199,19 @@ export default function initOidc(
     },
     interactions: {
       url: (ctx, { params: { client_id: appId }, prompt }) => {
+        const params = trySafe(() => extraParamsObjectGuard.parse(ctx.oidc.params ?? {})) ?? {};
+
+        // Cookies are required to apply the correct server-side rendering
         ctx.cookies.set(
           logtoCookieKey,
-          JSON.stringify({
-            appId: conditional(Boolean(appId) && String(appId)),
-          } satisfies LogtoUiCookie),
+          JSON.stringify(
+            removeUndefinedKeys({
+              appId: typeof appId === 'string' ? appId : undefined,
+              organizationId: params.organization_id,
+            }) satisfies LogtoUiCookie
+          ),
           { sameSite: 'lax', overwrite: true, httpOnly: false }
         );
-
-        const params = trySafe(() => extraParamsObjectGuard.parse(ctx.oidc.params ?? {})) ?? {};
 
         switch (prompt.name) {
           case 'login': {
@@ -224,24 +230,25 @@ export default function initOidc(
     },
     extraParams: Object.values(ExtraParamsKey),
     extraTokenClaims: async (ctx, token) => {
-      const organizationApiResourceClaims = await getExtraTokenClaimsForOrganizationApiResource(
-        ctx,
-        token
-      );
+      const [tokenExchangeClaims, organizationApiResourceClaims, jwtCustomizedClaims] =
+        await Promise.all([
+          getExtraTokenClaimsForTokenExchange(ctx, token),
+          getExtraTokenClaimsForOrganizationApiResource(ctx, token),
+          getExtraTokenClaimsForJwtCustomization(ctx, token, {
+            envSet,
+            queries,
+            libraries,
+            logtoConfigs,
+            cloudConnection,
+          }),
+        ]);
 
-      const jwtCustomizedClaims = await getExtraTokenClaimsForJwtCustomization(ctx, token, {
-        envSet,
-        queries,
-        libraries,
-        logtoConfigs,
-        cloudConnection,
-      });
-
-      if (!organizationApiResourceClaims && !jwtCustomizedClaims) {
+      if (!organizationApiResourceClaims && !jwtCustomizedClaims && !tokenExchangeClaims) {
         return;
       }
 
       return {
+        ...tokenExchangeClaims,
         ...organizationApiResourceClaims,
         ...jwtCustomizedClaims,
       };
@@ -358,27 +365,6 @@ export default function initOidc(
   // Provide audit log context for event listeners
   oidc.use(koaAuditLog(queries));
   /**
-   * Create a middleware function that transpile requests with content type `application/json`
-   * since `oidc-provider` only accepts `application/x-www-form-urlencoded` for most of routes.
-   *
-   * Other parsers are explicitly disabled to keep it neat.
-   */
-  oidc.use(async (ctx, next) => {
-    // `koa-body` will throw `SyntaxError` if the request body is not a valid JSON
-    // By default any untracked server error will throw a `500` internal error. Instead of throwing 500 error
-    // we should throw a `400` RequestError for all the invalid request body input.
-
-    try {
-      await koaBody({ urlencoded: false, text: false })(ctx, next);
-    } catch (error: unknown) {
-      if (error instanceof SyntaxError) {
-        throw new RequestError({ code: 'guard.invalid_input', type: 'body' }, error);
-      }
-
-      throw error;
-    }
-  });
-  /**
    * Check if the request URL contains comma separated `resource` query parameter. If yes, split the values and
    * reconstruct the URL with multiple `resource` query parameters.
    * E.g. `?resource=foo,bar` => `?resource=foo&resource=bar`
@@ -388,19 +374,43 @@ export default function initOidc(
    * `oidc-provider` [strictly checks](https://github.com/panva/node-oidc-provider/blob/6a0bcbcd35ed3e6179e81f0ab97a45f5e4e58f48/lib/shared/selective_body.js#L11)
    * the `content-type` header for further processing.
    *
-   * It will [directly use the `ctx.req.body` for parsing](https://github.com/panva/node-oidc-provider/blob/6a0bcbcd35ed3e6179e81f0ab97a45f5e4e58f48/lib/shared/selective_body.js#L39)
-   * so there's no need to change the raw request body as we uses `koaBody()` above.
+   * It will [directly use the `ctx.req.body` or `ctx.request.body` for parsing](https://github.com/panva/node-oidc-provider/blob/6a0bcbcd35ed3e6179e81f0ab97a45f5e4e58f48/lib/shared/selective_body.js#L39)
+   * so there's no need to change the raw request body if we parse the JSON here.
    *
    * However, this is not recommended for other routes rather since it causes a header-body format mismatch.
    */
   oidc.use(async (ctx, next) => {
-    // WARNING: [Registration actions](https://github.com/panva/node-oidc-provider/blob/6a0bcbcd35ed3e6179e81f0ab97a45f5e4e58f48/lib/actions/registration.js#L4) are using
-    // 'application/json' for body parsing. Update relatively when we enable that feature.
-    if (ctx.headers['content-type'] === 'application/json') {
-      ctx.headers['content-type'] = 'application/x-www-form-urlencoded';
+    const jsonContentType = 'application/json';
+    const formUrlEncodedContentType = 'application/x-www-form-urlencoded';
+
+    // Replicate the behavior of `oidc-provider` for parsing the request body
+    if (ctx.req.readable) {
+      const charset = ctx.headers['content-type']
+        ?.split(';')
+        .map((part) => part.trim().split('='))
+        .find(([key]) => key?.trim() === 'charset')?.[1];
+
+      const body = await getRawBody(ctx.req, {
+        length: ctx.request.length,
+        limit: '56kb',
+        encoding: charset ?? 'utf8',
+      });
+
+      // WARNING: [Registration actions](https://github.com/panva/node-oidc-provider/blob/6a0bcbcd35ed3e6179e81f0ab97a45f5e4e58f48/lib/actions/registration.js#L4) are using
+      // 'application/json' for body parsing. Update relatively when we enable that feature.
+      if (ctx.is(jsonContentType)) {
+        ctx.headers['content-type'] = formUrlEncodedContentType;
+        // eslint-disable-next-line no-restricted-syntax
+        ctx.request.body = trySafe(() => JSON.parse(body) as unknown);
+      } else if (ctx.is(formUrlEncodedContentType)) {
+        ctx.request.body = querystring.parse(body);
+      }
     }
+
     return next();
   });
+
+  oidc.use(koaAppSecretTranspilation(queries));
   oidc.use(koaBodyEtag());
 
   return oidc;

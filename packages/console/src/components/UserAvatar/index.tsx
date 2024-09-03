@@ -4,11 +4,11 @@ import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
-import DefaultAvatar from '@/assets/images/default-avatar.svg';
+import DefaultAvatar from '@/assets/images/default-avatar.svg?react';
 import ImageWithErrorFallback from '@/ds-components/ImageWithErrorFallback';
 import { Tooltip } from '@/ds-components/Tip';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type UserInfo = Pick<User, 'name' | 'username' | 'avatar' | 'primaryEmail' | 'primaryPhone'>;
 

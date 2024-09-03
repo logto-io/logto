@@ -7,7 +7,7 @@ import DynamicT from '@/ds-components/DynamicT';
 import Tag from '@/ds-components/Tag';
 import { ReservedPlanName } from '@/types/subscriptions';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly tag: TenantTag;

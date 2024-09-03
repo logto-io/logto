@@ -14,7 +14,7 @@ import { getUserTitle } from '@/utils/user';
 
 import UserAvatar from '../UserAvatar';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly userId: string;

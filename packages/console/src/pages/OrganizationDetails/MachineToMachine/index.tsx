@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Plus from '@/assets/icons/plus.svg';
+import Plus from '@/assets/icons/plus.svg?react';
 import ActionsButton from '@/components/ActionsButton';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ApplicationPreview from '@/components/ItemPreview/ApplicationPreview';
@@ -23,7 +23,7 @@ import EditOrganizationRolesModal from '../EditOrganizationRolesModal';
 import { type OrganizationDetailsOutletContext } from '../types';
 
 import AddAppsToOrganization from './AddAppsToOrganization';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 const pageSize = defaultPageSize;
 

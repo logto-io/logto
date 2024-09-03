@@ -5,15 +5,15 @@ import type { KeyboardEvent } from 'react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import CirclePlus from '@/assets/icons/circle-plus.svg';
-import Minus from '@/assets/icons/minus.svg';
+import CirclePlus from '@/assets/icons/circle-plus.svg?react';
+import Minus from '@/assets/icons/minus.svg?react';
 
 import Button from '../Button';
 import ConfirmModal from '../ConfirmModal';
 import IconButton from '../IconButton';
 import TextInput from '../TextInput';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import type { MultiTextInputError } from './types';
 
 export type Props = {

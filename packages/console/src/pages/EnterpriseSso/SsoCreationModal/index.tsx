@@ -1,8 +1,10 @@
 import {
+  ReservedPlanId,
   type RequestErrorBody,
   type SsoConnectorProvidersResponse,
   type SsoConnectorWithProviderConfig,
 } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { HTTPError } from 'ky';
 import { useContext, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -10,23 +12,26 @@ import { Trans, useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import useSWR from 'swr';
 
+import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import Skeleton from '@/components/CreateConnectorForm/Skeleton';
 import { getConnectorRadioGroupSize } from '@/components/CreateConnectorForm/utils';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { enterpriseSsoAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
+import TextLink from '@/ds-components/TextLink';
 import useApi, { type RequestError } from '@/hooks/use-api';
-import * as modalStyles from '@/scss/modal.module.scss';
+import modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 
 import SsoConnectorRadioGroup from './SsoConnectorRadioGroup';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import { categorizeSsoConnectorProviders } from './utils';
 
 type Props = {
@@ -42,10 +47,19 @@ const duplicateConnectorNameErrorCode = 'single_sign_on.duplicate_connector_name
 
 function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { currentPlan } = useContext(SubscriptionDataContext);
+  const {
+    currentPlan,
+    currentSubscription: { planId },
+    currentSubscriptionQuota,
+  } = useContext(SubscriptionDataContext);
   const [selectedProviderName, setSelectedProviderName] = useState<string>();
 
-  const isSsoEnabled = !isCloud || currentPlan.quota.ssoEnabled;
+  const isSsoEnabled =
+    !isCloud ||
+    (isDevFeaturesEnabled
+      ? currentSubscriptionQuota.enterpriseSsoLimit === null ||
+        currentSubscriptionQuota.enterpriseSsoLimit > 0
+      : currentPlan.quota.ssoEnabled);
 
   const { data, error } = useSWR<SsoConnectorProvidersResponse, RequestError>(
     'api/sso-connector-providers'
@@ -128,8 +142,31 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
     >
       <ModalLayout
         title="enterprise_sso.create_modal.title"
+        paywall={conditional(
+          isDevFeaturesEnabled && planId === ReservedPlanId.Pro && ReservedPlanId.Pro
+        )}
         footer={
-          isSsoEnabled ? (
+          conditional(
+            isDevFeaturesEnabled && planId === ReservedPlanId.Pro && (
+              <AddOnNoticeFooter
+                buttonTitle="enterprise_sso.create_modal.create_button_text"
+                onClick={onSubmit}
+              >
+                <Trans
+                  components={{
+                    span: <span className={styles.strong} />,
+                    a: <TextLink to="https://blog.logto.io/pricing-add-ons/" />,
+                  }}
+                >
+                  {t('upsell.add_on.footer.enterprise_sso', {
+                    price: enterpriseSsoAddOnUnitPrice,
+                    planName: t('subscription.pro_plan'),
+                  })}
+                </Trans>
+              </AddOnNoticeFooter>
+            )
+          ) ??
+          (isSsoEnabled ? (
             <Button
               title="enterprise_sso.create_modal.create_button_text"
               type="primary"
@@ -152,7 +189,7 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
                 {t('upsell.paywall.sso_connectors')}
               </Trans>
             </QuotaGuardFooter>
-          )
+          ))
         }
         size="xlarge"
         onClose={onClose}

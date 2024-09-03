@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import SwitchIcon from '@/assets/icons/switch-icon.svg';
+import SwitchIcon from '@/assets/icons/switch-icon.svg?react';
 import TextLink from '@/components/TextLink';
 import useSendVerificationCode from '@/hooks/use-send-verification-code';
 import useToast from '@/hooks/use-toast';

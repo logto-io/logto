@@ -48,11 +48,23 @@ const connector_details = {
     company_information_description:
       'Wyświetlaj nazwę firmy, adres lub kod pocztowy na dole wiadomości e-mail, aby zwiększyć autentyczność.',
     company_information_placeholder: 'Podstawowe informacje o Twojej firmie',
-    app_logo_field: 'Logo aplikacji',
-    app_logo_tip:
-      'Wyświetlaj logo marki na górze wiadomości e-mail. Użyj tego samego obrazu zarówno dla trybu jasnego, jak i ciemnego.',
+    email_logo_field: 'Logo e-mail',
+    email_logo_tip:
+      'Wyświetl logo swojej marki na górze wiadomości e-mail. Użyj tego samego obrazu zarówno dla trybu jasnego, jak i ciemnego.',
     urls_not_allowed: 'Nie dozwolone adresy URL',
     test_notes: 'Logto używa szablonu "Ogólny" do testów.',
+  },
+  google_one_tap: {
+    title: 'Google One Tap',
+    description:
+      'Google One Tap to bezpieczny i łatwy sposób, by użytkownicy mogli zalogować się na Twoją stronę.',
+    enable_google_one_tap: 'Włącz Google One Tap',
+    enable_google_one_tap_description:
+      'Włącz Google One Tap w swoim doświadczeniu logowania: Pozwól użytkownikom szybko się zarejestrować lub zalogować za pomocą ich konta Google, jeśli są już zalogowani na swoim urządzeniu.',
+    configure_google_one_tap: 'Skonfiguruj Google One Tap',
+    auto_select: 'Automatyczny wybór poświadczenia, jeśli to możliwe',
+    close_on_tap_outside: 'Anuluj monit, jeśli użytkownik kliknie/tapnie na zewnątrz',
+    itp_support: 'Włącz <a>ulepszony UX One Tap dla przeglądarek ITP</a>',
   },
 };
 

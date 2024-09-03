@@ -12,7 +12,7 @@ import useTheme from '@/hooks/use-theme';
 
 import figureDark from './figure-dark.webp';
 import figureLight from './figure-light.webp';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type FormContext = { rawConfig: { oneTap: GoogleConnectorConfig['oneTap'] } };
 

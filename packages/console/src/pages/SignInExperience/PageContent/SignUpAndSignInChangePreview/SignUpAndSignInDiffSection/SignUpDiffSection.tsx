@@ -10,7 +10,7 @@ import { signUpIdentifierPhrase } from '../../constants';
 import { signUpFormDataParser } from '../../utils/parser';
 
 import DiffSegment from './DiffSegment';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly before: SignUp;

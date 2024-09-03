@@ -9,7 +9,7 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import ModalLayout from '@/ds-components/ModalLayout';
 
-import * as styles from '../../index.module.scss';
+import styles from '../../index.module.scss';
 import FinalConfirmationModal from '../FinalConfirmationModal';
 import TenantsList from '../TenantsList';
 

@@ -1,11 +1,13 @@
 import {
   ApplicationType,
   type Application,
+  type ApplicationSecret,
   type CreateApplication,
+  type CreateApplicationSecret,
   type OidcClientMetadata,
-  type Role,
-  type ProtectedAppMetadata,
   type OrganizationWithRoles,
+  type ProtectedAppMetadata,
+  type Role,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
@@ -14,7 +16,12 @@ import { authedAdminApi, oidcApi } from './api.js';
 export const createApplication = async (
   name: string,
   type: ApplicationType,
-  rest?: Partial<CreateApplication>
+  rest?: Partial<
+    // Synced from packages/core/src/routes/applications/types.ts
+    Omit<CreateApplication, 'protectedAppMetadata'> & {
+      protectedAppMetadata: { origin: string; subDomain: string };
+    }
+  >
 ) =>
   authedAdminApi
     .post('applications', {
@@ -125,4 +132,43 @@ export const getOrganizations = async (applicationId: string, page?: number, pag
       searchParams,
     })
     .json<OrganizationWithRoles[]>();
+};
+
+export const createApplicationSecret = async ({
+  applicationId,
+  ...body
+}: Omit<CreateApplicationSecret, 'value'>) =>
+  authedAdminApi
+    .post(`applications/${applicationId}/secrets`, { json: body })
+    .json<ApplicationSecret>();
+
+export const getApplicationSecrets = async (applicationId: string) =>
+  authedAdminApi.get(`applications/${applicationId}/secrets`).json<ApplicationSecret[]>();
+
+export const deleteApplicationSecret = async (applicationId: string, secretName: string) =>
+  authedAdminApi.delete(`applications/${applicationId}/secrets/${secretName}`);
+
+export const updateApplicationSecret = async (
+  applicationId: string,
+  secretName: string,
+  body: Record<string, unknown>
+) =>
+  authedAdminApi
+    .patch(`applications/${applicationId}/secrets/${secretName}`, {
+      json: body,
+    })
+    .json<ApplicationSecret>();
+
+export const deleteLegacyApplicationSecret = async (applicationId: string) =>
+  authedAdminApi.delete(`applications/${applicationId}/legacy-secret`);
+
+export const patchApplicationCustomData = async (
+  applicationId: string,
+  customData: Record<string, unknown>
+) => {
+  return authedAdminApi
+    .patch(`applications/${applicationId}/custom-data`, {
+      json: customData,
+    })
+    .json<Record<string, unknown>>();
 };

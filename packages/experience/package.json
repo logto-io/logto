@@ -1,6 +1,6 @@
 {
   "name": "@logto/experience",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "license": "MPL-2.0",
   "type": "module",
   "private": true,
@@ -9,10 +9,10 @@
   ],
   "scripts": {
     "precommit": "lint-staged",
-    "start": "parcel src/index.html",
-    "dev": "echo '# OGCIO' && cross-env PORT=7001 parcel src/index.html --no-cache --hmr-port 6001",
+    "start": "vite",
+    "dev": "vite",
     "check": "tsc --noEmit",
-    "build": "pnpm check && rm -rf dist && parcel build src/index.html --no-autoinstall --no-cache --detailed-report",
+    "build": "vite build",
     "lint": "eslint --ext .ts --ext .tsx src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "stylelint": "stylelint \"src/**/*.scss\"",
@@ -24,14 +24,9 @@
     "@logto/connector-kit": "workspace:^4.0.0",
     "@logto/core-kit": "workspace:^2.5.0",
     "@logto/language-kit": "workspace:^1.1.0",
-    "@logto/phrases": "workspace:^1.12.0",
+    "@logto/phrases": "workspace:^1.13.0",
     "@logto/phrases-experience": "workspace:^1.7.0",
-    "@logto/schemas": "workspace:^1.18.0",
-    "@parcel/compressor-brotli": "2.9.3",
-    "@parcel/compressor-gzip": "2.9.3",
-    "@parcel/core": "2.9.3",
-    "@parcel/transformer-sass": "2.9.3",
-    "@parcel/transformer-svg-react": "2.9.3",
+    "@logto/schemas": "workspace:^1.19.0",
     "@react-spring/shared": "^9.6.1",
     "@react-spring/web": "^9.6.1",
     "@silverhand/eslint-config": "6.0.1",
@@ -47,36 +42,36 @@
     "@testing-library/react-hooks": "^8.0.1",
     "@types/color": "^3.0.3",
     "@types/jest": "^29.4.0",
-    "@types/react": "^18.0.31",
-    "@types/react-dom": "^18.0.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
     "@types/react-helmet": "^6.1.6",
     "@types/react-modal": "^3.13.1",
     "@types/react-router-dom": "^5.3.2",
-    "camelcase-keys": "^9.0.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "browserslist": "^4.23.2",
+    "browserslist-to-esbuild": "^2.1.1",
+    "camelcase-keys": "^9.1.3",
     "classnames": "^2.3.1",
     "color": "^4.2.3",
     "core-js": "^3.34.0",
-    "cross-env": "^7.0.3",
     "eslint": "^8.56.0",
     "i18next": "^22.4.15",
     "i18next-browser-languagedetector": "^8.0.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.0.0",
+    "jest-environment-jsdom": "^29.7.0",
     "jest-transform-stub": "^2.0.0",
     "jest-transformer-svg": "^2.0.0",
     "js-base64": "^3.7.5",
     "ky": "^1.2.3",
     "libphonenumber-js": "^1.10.51",
     "lint-staged": "^15.0.0",
-    "parcel": "2.9.3",
-    "parcel-resolver-ignore": "^2.1.3",
     "postcss": "^8.4.31",
     "postcss-modules": "^4.3.0",
     "prettier": "^3.0.0",
-    "react": "^18.0.0",
+    "react": "^18.3.1",
     "react-device-detect": "^2.2.3",
-    "react-dom": "^18.0.0",
+    "react-dom": "^18.3.1",
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.34.0",
     "react-i18next": "^12.3.1",
@@ -86,45 +81,16 @@
     "react-timer-hook": "^3.0.5",
     "react-top-loading-bar": "^2.3.1",
     "stylelint": "^15.0.0",
-    "superstruct": "^1.0.3",
+    "superstruct": "^2.0.0",
     "tiny-cookie": "^2.4.1",
-    "typescript": "^5.3.3",
+    "typescript": "^5.5.3",
     "use-debounced-loader": "^0.1.1",
-    "zod": "^3.22.4"
+    "vite": "^5.3.4",
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-svgr": "^4.2.0"
   },
   "engines": {
     "node": "^20.9.0"
-  },
-  "//": "https://github.com/parcel-bundler/parcel/issues/7636",
-  "targets": {
-    "default": {
-      "engines": {
-        "browsers": [
-          "defaults",
-          ">0.3%",
-          "Chrome >= 52",
-          "Firefox >= 55",
-          "Safari >= 10",
-          "Edge >= 13",
-          "iOS >= 10",
-          "Electron >= 0.36"
-        ]
-      }
-    }
-  },
-  "parcelIgnore": [
-    "^/api/.+"
-  ],
-  "alias": {
-    "@/*": "./src/$1",
-    "superstruct": "./node_modules/superstruct/dist/index.mjs"
-  },
-  "eslintConfig": {
-    "extends": "@silverhand/react",
-    "rules": {
-      "jsx-a11y/no-autofocus": "off",
-      "unicorn/prefer-string-replace-all": "off"
-    }
   },
   "stylelint": {
     "extends": "@silverhand/eslint-config-react/.stylelintrc"

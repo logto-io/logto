@@ -5,7 +5,10 @@ import {
   type SignUp,
   type SignInIdentifier,
 } from '@logto/schemas';
-import { conditional, isSameArray } from '@silverhand/essentials';
+import { isSameArray } from '@silverhand/essentials';
+
+import { emptyBranding } from '@/types/sign-in-experience';
+import { removeFalsyValues } from '@/utils/object';
 
 import {
   type UpdateSignInExperienceData,
@@ -54,10 +57,8 @@ export const sieFormDataParser = {
       createAccountEnabled: signInMode !== SignInMode.SignIn,
       customCss: customCss ?? undefined,
       branding: {
+        ...emptyBranding,
         ...branding,
-        logoUrl: branding.logoUrl ?? '',
-        darkLogoUrl: branding.darkLogoUrl ?? '',
-        favicon: branding.favicon ?? '',
       },
       /** Parse password policy with default values. */
       passwordPolicy: {
@@ -73,19 +74,14 @@ export const sieFormDataParser = {
       createAccountEnabled,
       signUp,
       customCss,
+      customUiAssets,
       /** Remove the custom words related properties since they are not used in the remote model. */
       passwordPolicy: { isCustomWordsEnabled, customWords, ...passwordPolicy },
     } = formData;
 
     return {
       ...formData,
-      branding: {
-        ...branding,
-        // Transform empty string to undefined
-        favicon: conditional(branding.favicon?.length && branding.favicon),
-        logoUrl: conditional(branding.logoUrl?.length && branding.logoUrl),
-        darkLogoUrl: conditional(branding.darkLogoUrl?.length && branding.darkLogoUrl),
-      },
+      branding: removeFalsyValues(branding),
       signUp: signUpFormDataParser.toSignUp(signUp),
       signInMode: createAccountEnabled ? SignInMode.SignInAndRegister : SignInMode.SignIn,
       customCss: customCss?.length ? customCss : null,

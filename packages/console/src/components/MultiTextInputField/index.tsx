@@ -5,7 +5,7 @@ import FormField from '@/ds-components/FormField';
 import type { Props as MultiTextInputProps } from '@/ds-components/MultiTextInput';
 import MultiTextInput from '@/ds-components/MultiTextInput';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = MultiTextInputProps &
   Pick<FormFieldProps, 'isRequired' | 'tip'> & {

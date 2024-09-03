@@ -5,14 +5,14 @@ import { getCountryList } from '@/utils/country-code';
 
 import CountryCodeDropdown from '.';
 
+// Need to mock the scrollIntoView method because jsdom doesn't support it
+// eslint-disable-next-line @silverhand/fp/no-mutation
+Element.prototype.scrollIntoView = jest.fn();
+
 jest.mock('i18next', () => ({
   language: 'en',
   t: (key: string) => key,
 }));
-
-// Need to mock the scrollIntoView method because jsdom doesn't support it
-// eslint-disable-next-line @silverhand/fp/no-mutation
-Element.prototype.scrollIntoView = jest.fn();
 
 describe('CountryCodeDropdown', () => {
   const onChange = jest.fn();

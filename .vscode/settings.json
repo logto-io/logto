@@ -52,7 +52,7 @@
     "topbar",
     "upsell",
     "withtyped",
-    "backchannel"
-  ],
-  "eslint.codeActionsOnSave.rules": null
+    "backchannel",
+    "deepmerge"
+  ]
 }

@@ -8,24 +8,27 @@ import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import RoleScopesTransfer from '@/components/RoleScopesTransfer';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import useApi from '@/hooks/use-api';
-import * as modalStyles from '@/scss/modal.module.scss';
-import { hasSurpassedQuotaLimit } from '@/utils/quota';
+import modalStyles from '@/scss/modal.module.scss';
+import { hasSurpassedQuotaLimit, hasSurpassedSubscriptionQuotaLimit } from '@/utils/quota';
 
 type Props = {
   readonly roleId: string;
   readonly roleType: RoleType;
+  /** @deprecated get usage from cloud API after migrating to new pricing model */
   readonly totalRoleScopeCount: number;
   readonly onClose: (success?: boolean) => void;
 };
 
 function AssignPermissionsModal({ roleId, roleType, totalRoleScopeCount, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { currentPlan } = useContext(SubscriptionDataContext);
+  const { currentPlan, currentSku, currentSubscriptionScopeRoleUsage, currentSubscriptionQuota } =
+    useContext(SubscriptionDataContext);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [scopes, setScopes] = useState<ScopeResponse[]>([]);
 
@@ -49,11 +52,17 @@ function AssignPermissionsModal({ roleId, roleType, totalRoleScopeCount, onClose
     }
   };
 
-  const shouldBlockScopeAssignment = hasSurpassedQuotaLimit({
-    quotaKey: 'scopesPerRoleLimit',
-    plan: currentPlan,
-    usage: totalRoleScopeCount + scopes.length,
-  });
+  const shouldBlockScopeAssignment = isDevFeaturesEnabled
+    ? hasSurpassedSubscriptionQuotaLimit({
+        quotaKey: 'scopesPerRoleLimit',
+        usage: (currentSubscriptionScopeRoleUsage[roleId] ?? 0) + scopes.length,
+        quota: currentSubscriptionQuota,
+      })
+    : hasSurpassedQuotaLimit({
+        quotaKey: 'scopesPerRoleLimit',
+        plan: currentPlan,
+        usage: totalRoleScopeCount + scopes.length,
+      });
 
   return (
     <ReactModal
@@ -79,11 +88,14 @@ function AssignPermissionsModal({ roleId, roleType, totalRoleScopeCount, onClose
               <Trans
                 components={{
                   a: <ContactUsPhraseLink />,
-                  planName: <PlanName name={currentPlan.name} />,
+                  planName: <PlanName skuId={currentSku.id} name={currentPlan.name} />,
                 }}
               >
                 {t('upsell.paywall.scopes_per_role', {
-                  count: currentPlan.quota.scopesPerRoleLimit ?? 0,
+                  count:
+                    (isDevFeaturesEnabled
+                      ? currentSubscriptionQuota.scopesPerRoleLimit
+                      : currentPlan.quota.scopesPerRoleLimit) ?? 0,
                 })}
               </Trans>
             </QuotaGuardFooter>

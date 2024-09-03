@@ -11,11 +11,11 @@
   margin: 0 auto;
 
   .index {
-    @include _.shimmering-animation;
     width: 28px;
     height: 28px;
     border-radius: 50%;
     margin-right: _.unit(4);
+    @include _.shimmering-animation;
   }
 
   .wrapper {
@@ -24,16 +24,16 @@
     flex-direction: column;
 
     .title {
-      @include _.shimmering-animation;
       width: 140px;
       height: 24px;
+      @include _.shimmering-animation;
     }
 
     .subtitle {
-      @include _.shimmering-animation;
       width: 400px;
       height: 20px;
       margin-top: _.unit(1);
+      @include _.shimmering-animation;
     }
   }
 }

@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import useSWR, { SWRConfig } from 'swr';
 
-import Tools from '@/assets/icons/tools.svg';
+import Tools from '@/assets/icons/tools.svg?react';
 import ActionBar from '@/components/ActionBar';
 import { GtagConversionId, reportConversion } from '@/components/Conversion/utils';
 import PageMeta from '@/components/PageMeta';
@@ -26,7 +26,7 @@ import useTenantApi from '@/onboarding/hooks/use-tenant-api';
 import useTenantSwrOptions from '@/onboarding/hooks/use-tenant-swr-options';
 import useTenantUserAssetsService from '@/onboarding/hooks/use-tenant-user-asset-service';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
-import * as pageLayout from '@/onboarding/scss/layout.module.scss';
+import pageLayout from '@/onboarding/scss/layout.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 import { buildUrl } from '@/utils/url';
 import { uriValidator } from '@/utils/validator';
@@ -36,7 +36,7 @@ import Preview from './Preview';
 import Skeleton from './Skeleton';
 import SocialSelector from './SocialSelector';
 import { formDataParser } from './form-data-parser';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import { authenticationOptions, identifierOptions } from './options';
 import { defaultOnboardingSieFormData } from './sie-config-templates';
 import { Authentication, type OnboardingSieFormData } from './types';
@@ -175,7 +175,12 @@ function SignInExperience() {
                     name="logo"
                     control={control}
                     render={({ field: { onChange, value, name } }) => (
-                      <ImageUploaderField name={name} value={value ?? ''} onChange={onChange} />
+                      <ImageUploaderField
+                        apiInstance={api}
+                        name={name}
+                        value={value ?? ''}
+                        onChange={onChange}
+                      />
                     )}
                   />
                 ) : (

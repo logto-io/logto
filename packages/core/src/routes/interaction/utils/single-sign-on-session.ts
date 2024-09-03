@@ -3,9 +3,9 @@ import type Provider from 'oidc-provider';
 import { z } from 'zod';
 
 import {
-  type SingleSignOnConnectorSession,
   singleSignOnConnectorSessionGuard,
   singleSignOnInteractionIdentifierResultGuard,
+  type SingleSignOnConnectorSession,
   type SingleSignOnInteractionIdentifierResult,
 } from '#src/sso/index.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -42,10 +42,33 @@ export const getSingleSignOnSessionResult = async (
   return singleSignOnSessionResult.data.connectorSession;
 };
 
+/**
+ * Assign the single sign on session data to the oidc provider session storage.
+ *
+ * @remark Forked from {@link ./social-verification.ts.}
+ * Use the SingleSignOnConnectorSession type instead of ConnectorSession.
+ * Remove the dependency from social-verification utils.
+ */
+export const assignSingleSignOnSessionResult = async (
+  ctx: Context,
+  provider: Provider,
+  connectorSession: SingleSignOnConnectorSession
+) => {
+  const details = await provider.interactionDetails(ctx.req, ctx.res);
+  await provider.interactionResult(ctx.req, ctx.res, {
+    ...details.result,
+    connectorSession,
+  });
+};
+
+// Remark:
+// The following functions are used in the legacy interaction single sign on routes only.
+// Deprecated in the experience APIs. `SingleSignOnAuthenticationResult` will be stored as a verification record in the latest experience API implementation.
+
 export const assignSingleSignOnAuthenticationResult = async (
   ctx: Context,
   provider: Provider,
-  singleSignOnIdentifier: SingleSignOnInteractionIdentifierResult['singleSignOnIdentifier']
+  singleSignOnIdentifier: SingleSignOnInteractionIdentifierResult
 ) => {
   const details = await provider.interactionDetails(ctx.req, ctx.res);
 
@@ -61,7 +84,7 @@ export const getSingleSignOnAuthenticationResult = async (
   ctx: Context,
   provider: Provider,
   connectorId: string
-): Promise<SingleSignOnInteractionIdentifierResult['singleSignOnIdentifier']> => {
+): Promise<SingleSignOnInteractionIdentifierResult> => {
   const { result } = await provider.interactionDetails(ctx.req, ctx.res);
 
   const singleSignOnInteractionIdentifierResult =

@@ -1,10 +1,11 @@
 import { AgreeToTermsPolicy, type SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import LockIcon from '@/assets/icons/lock.svg';
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
+import LockIcon from '@/assets/icons/lock.svg?react';
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import { SmartInputField, PasswordInputField } from '@/components/InputFields';
@@ -17,7 +18,7 @@ import useSingleSignOnWatch from '@/hooks/use-single-sign-on-watch';
 import useTerms from '@/hooks/use-terms';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;
@@ -37,13 +38,14 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
   const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn();
   const { isForgotPasswordEnabled } = useForgotPasswordSettings();
   const { termsValidation, agreeToTermsPolicy } = useTerms();
+  const { setIdentifierInputValue } = useContext(UserInteractionContext);
 
   const {
     watch,
     register,
     handleSubmit,
     control,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isSubmitting },
   } = useForm<FormState>({
     reValidateMode: 'onBlur',
     defaultValues: {
@@ -64,6 +66,8 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
         if (!type) {
           return;
         }
+
+        setIdentifierInputValue({ type, value });
 
         if (showSingleSignOnForm) {
           await navigateToSingleSignOn();
@@ -87,6 +91,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
       handleSubmit,
       navigateToSingleSignOn,
       onSubmit,
+      setIdentifierInputValue,
       showSingleSignOnForm,
       termsValidation,
     ]
@@ -133,7 +138,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
         <PasswordInputField
           className={styles.inputField}
           autoComplete="current-password"
-          placeholder={t('input.password')}
+          label={t('input.password')}
           isDanger={!!errors.password}
           errorMessage={errors.password?.message}
           {...register('password', { required: t('error.password_required') })}
@@ -169,6 +174,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
         title={showSingleSignOnForm ? 'action.single_sign_on' : 'action.sign_in'}
         icon={showSingleSignOnForm ? <LockIcon /> : undefined}
         htmlType="submit"
+        isLoading={isSubmitting}
       />
 
       <input hidden type="submit" />

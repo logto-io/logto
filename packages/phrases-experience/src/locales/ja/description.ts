@@ -31,7 +31,9 @@ const description = {
   social_link_email: '別のメールアドレスをリンクできます。',
   social_link_phone: '他の電話番号にリンクできます。',
   social_link_email_or_phone: '他のメールアドレスまたは電話番号にリンクできます。',
-  social_bind_with_existing: '関連するアカウントが見つかりました。それを直接リンクできます。',
+  social_bind_with_existing:
+    '関連するアカウントが登録されているのが見つかりましたので、直接リンクできます。',
+  skip_social_linking: '既存のアカウントとのリンクをスキップしますか？',
   reset_password: 'パスワードを再設定する',
   reset_password_description:
     'アカウントに関連する{{types, list(type: disjunction;)}}を入力すると、パスワードの再設定に必要な確認コードが送信されます。',

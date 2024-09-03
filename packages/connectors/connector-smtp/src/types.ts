@@ -125,6 +125,7 @@ export const smtpConfigGuard = z.object({
   servername: z.string().optional(),
   ignoreTLS: z.boolean().optional(),
   requireTLS: z.boolean().optional(),
+  customHeaders: z.record(z.string().or(z.string().array())).optional(),
 });
 
 export type SmtpConfig = z.infer<typeof smtpConfigGuard>;

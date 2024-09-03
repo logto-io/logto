@@ -5,7 +5,7 @@ import { type Guide } from '@/assets/docs/guides/types';
 
 import GuideCard, { type SelectedGuide } from '../GuideCard';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;

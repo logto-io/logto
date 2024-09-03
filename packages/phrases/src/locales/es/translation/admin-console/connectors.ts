@@ -45,16 +45,8 @@ const connectors = {
     name_placeholder: 'Ingrese el nombre para el botón de inicio de sesión social',
     name_tip:
       'El nombre del botón del conector se mostrará como "Continuar con {{name}}". Siempre tenga en cuenta la longitud del nombre en caso de que sea demasiado largo.',
-    logo: 'URL del logotipo para el botón de inicio de sesión social',
-    logo_placeholder: 'https://tudominio.cdn/logo.png',
-    logo_tip:
-      'La imagen del logotipo se mostrará en el conector. Obtenga un enlace de imagen accesible públicamente e insértelo aquí.',
-    logo_dark: 'URL del logotipo para el botón de inicio de sesión social (modo oscuro)',
-    logo_dark_placeholder: 'https://tudominio.cdn/logo.png',
-    logo_dark_tip:
-      'Configure el logotipo de su conector para el modo oscuro después de activarlo en la Experiencia de inicio de sesión del Panel de administrador.',
-    logo_dark_collapse: 'Colapso',
-    logo_dark_show: 'Mostrar configuración de logotipo para modo oscuro',
+    connector_logo: 'Logotipo del conector',
+    connector_logo_tip: 'El logotipo se mostrará en el botón de inicio de sesión del conector.',
     target: 'Nombre del proveedor de identidad',
     target_placeholder: 'Ingrese el nombre del proveedor de identidad del conector',
     target_tip:

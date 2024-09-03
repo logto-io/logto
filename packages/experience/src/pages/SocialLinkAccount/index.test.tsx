@@ -24,8 +24,8 @@ describe('SocialRegister', () => {
       </SettingsProvider>,
       { initialEntries: ['/social/link/github'] }
     );
-    expect(queryByText('description.bind_account_title')).not.toBeNull();
-    expect(queryByText('description.social_create_account')).not.toBeNull();
+    expect(queryByText('description.skip_social_linking')).not.toBeNull();
+    expect(queryByText('action.create_account_without_linking')).not.toBeNull();
   });
 
   it('render link email', () => {
@@ -46,8 +46,8 @@ describe('SocialRegister', () => {
       </SettingsProvider>,
       { initialEntries: ['/social/link/github'] }
     );
-    expect(queryByText('description.link_email')).not.toBeNull();
-    expect(queryByText('description.social_link_email')).not.toBeNull();
+    expect(queryByText('description.skip_social_linking')).not.toBeNull();
+    expect(queryByText('action.link_another_email')).not.toBeNull();
   });
 
   it('render link phone', () => {
@@ -68,8 +68,8 @@ describe('SocialRegister', () => {
       </SettingsProvider>,
       { initialEntries: ['/social/link/github'] }
     );
-    expect(queryByText('description.link_phone')).not.toBeNull();
-    expect(queryByText('description.social_link_phone')).not.toBeNull();
+    expect(queryByText('description.skip_social_linking')).not.toBeNull();
+    expect(queryByText('action.link_another_phone')).not.toBeNull();
   });
 
   it('render link email or phone', () => {
@@ -90,7 +90,7 @@ describe('SocialRegister', () => {
       </SettingsProvider>,
       { initialEntries: ['/social/link/github'] }
     );
-    expect(queryByText('description.link_email_or_phone')).not.toBeNull();
-    expect(queryByText('description.social_link_email_or_phone')).not.toBeNull();
+    expect(queryByText('description.skip_social_linking')).not.toBeNull();
+    expect(queryByText('action.link_another_email_or_phone')).not.toBeNull();
   });
 });

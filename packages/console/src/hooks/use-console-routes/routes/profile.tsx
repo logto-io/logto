@@ -1,9 +1,16 @@
 import { type RouteObject } from 'react-router-dom';
+import { safeLazy } from 'react-safe-lazy';
 
-import ChangePasswordModal from '@/pages/Profile/containers/ChangePasswordModal';
-import LinkEmailModal from '@/pages/Profile/containers/LinkEmailModal';
-import VerificationCodeModal from '@/pages/Profile/containers/VerificationCodeModal';
-import VerifyPasswordModal from '@/pages/Profile/containers/VerifyPasswordModal';
+const ChangePasswordModal = safeLazy(
+  async () => import('@/pages/Profile/containers/ChangePasswordModal')
+);
+const LinkEmailModal = safeLazy(async () => import('@/pages/Profile/containers/LinkEmailModal'));
+const VerificationCodeModal = safeLazy(
+  async () => import('@/pages/Profile/containers/VerificationCodeModal')
+);
+const VerifyPasswordModal = safeLazy(
+  async () => import('@/pages/Profile/containers/VerifyPasswordModal')
+);
 
 export const profile: RouteObject[] = [
   { path: 'verify-password', element: <VerifyPasswordModal /> },

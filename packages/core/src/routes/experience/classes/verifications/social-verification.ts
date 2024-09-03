@@ -6,8 +6,10 @@ import {
   type User,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
+import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import {
   createSocialAuthorizationUrl,
@@ -16,8 +18,12 @@ import {
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
+import assertThat from '#src/utils/assert-that.js';
+import { type LogtoConnector } from '#src/utils/connectors/types.js';
 
-import { type VerificationRecord } from './verification-record.js';
+import type { InteractionProfile } from '../../types.js';
+
+import { type IdentifierVerificationRecord } from './verification-record.js';
 
 /** The JSON data type for the SocialVerification record stored in the interaction storage */
 export type SocialVerificationRecordData = {
@@ -28,7 +34,6 @@ export type SocialVerificationRecordData = {
    * The social identity returned by the connector.
    */
   socialUserInfo?: SocialUserInfo;
-  userId?: string;
 };
 
 export const socialVerificationRecordDataGuard = z.object({
@@ -36,10 +41,9 @@ export const socialVerificationRecordDataGuard = z.object({
   connectorId: z.string(),
   type: z.literal(VerificationType.Social),
   socialUserInfo: socialUserInfoGuard.optional(),
-  userId: z.string().optional(),
 }) satisfies ToZodObject<SocialVerificationRecordData>;
 
-export class SocialVerification implements VerificationRecord<VerificationType.Social> {
+export class SocialVerification implements IdentifierVerificationRecord<VerificationType.Social> {
   /**
    * Factory method to create a new SocialVerification instance
    */
@@ -56,24 +60,18 @@ export class SocialVerification implements VerificationRecord<VerificationType.S
   public readonly connectorId: string;
   public socialUserInfo?: SocialUserInfo;
 
-  /**
-   * The userId of the user that has been verified by the social identity.
-   * @deprecated will be removed in the coming PR
-   */
-  public userId?: string;
+  private connectorDataCache?: LogtoConnector;
 
   constructor(
     private readonly libraries: Libraries,
     private readonly queries: Queries,
     data: SocialVerificationRecordData
   ) {
-    const { id, connectorId, socialUserInfo, userId } =
-      socialVerificationRecordDataGuard.parse(data);
+    const { id, connectorId, socialUserInfo } = socialVerificationRecordDataGuard.parse(data);
 
     this.id = id;
     this.connectorId = connectorId;
     this.socialUserInfo = socialUserInfo;
-    this.userId = userId;
   }
 
   /**
@@ -81,10 +79,6 @@ export class SocialVerification implements VerificationRecord<VerificationType.S
    */
   get isVerified() {
     return Boolean(this.socialUserInfo);
-  }
-
-  get verifiedUserId() {
-    return this.userId;
   }
 
   /**
@@ -118,9 +112,6 @@ export class SocialVerification implements VerificationRecord<VerificationType.S
   /**
    * Verify the social identity and store the social identity in the verification record.
    *
-   * - Store the social identity in the verification record.
-   * - Find the user by the social identity and store the userId in the verification record if the user exists.
-   *
    * @remarks
    * Refer to the {@link verifySocialIdentity} method in the interaction/utils/social-verification.ts file.
    * For compatibility reasons, we keep using the old {@link verifySocialIdentity} method here as a single source of truth.
@@ -136,13 +127,125 @@ export class SocialVerification implements VerificationRecord<VerificationType.S
     );
 
     this.socialUserInfo = socialUserInfo;
-
-    const user = await this.findUserBySocialIdentity();
-    this.userId = user?.id;
   }
 
-  async findUserBySocialIdentity(): Promise<User | undefined> {
-    const { socials } = this.libraries;
+  /**
+   * Identify the user by the social identity.
+   * If the user is not found, find the related user by the social identity and throw an error.
+   */
+  async identifyUser(): Promise<User> {
+    assertThat(
+      this.isVerified,
+      new RequestError({ code: 'session.verification_failed', status: 400 })
+    );
+
+    const user = await this.findUserBySocialIdentity();
+
+    if (!user) {
+      const relatedUser = await this.findRelatedUserBySocialIdentity();
+
+      throw new RequestError(
+        {
+          code: 'user.identity_not_exist',
+          status: 404,
+        },
+        {
+          ...(relatedUser && { relatedUser: relatedUser[0] }),
+        }
+      );
+    }
+
+    return user;
+  }
+
+  async identifyRelatedUser(): Promise<User> {
+    assertThat(
+      this.isVerified,
+      new RequestError({ code: 'session.verification_failed', status: 400 })
+    );
+
+    const relatedUser = await this.findRelatedUserBySocialIdentity();
+
+    assertThat(relatedUser, new RequestError({ code: 'user.identity_not_exist', status: 404 }));
+
+    return relatedUser[1];
+  }
+
+  /**
+   * Returns the social identity as a new user profile.
+   */
+  async toUserProfile(): Promise<Required<Pick<InteractionProfile, 'socialIdentity'>>> {
+    assertThat(
+      this.socialUserInfo,
+      new RequestError({ code: 'session.verification_failed', status: 400 })
+    );
+
+    const {
+      metadata: { target },
+    } = await this.getConnectorData();
+
+    return {
+      socialIdentity: {
+        target,
+        userInfo: this.socialUserInfo,
+      },
+    };
+  }
+
+  /**
+   * Returns the synced profile from the social identity.
+   *
+   * @param isNewUser - Whether the profile is for a new user. Only return the primary email/phone if it is a new user.
+   */
+  async toSyncedProfile(
+    isNewUser = false
+  ): Promise<Pick<InteractionProfile, 'avatar' | 'name' | 'primaryEmail' | 'primaryPhone'>> {
+    assertThat(
+      this.socialUserInfo,
+      new RequestError({ code: 'session.verification_failed', status: 400 })
+    );
+
+    const { name, avatar, email: primaryEmail, phone: primaryPhone } = this.socialUserInfo;
+
+    if (isNewUser) {
+      const {
+        users: { hasUserWithEmail, hasUserWithPhone },
+      } = this.queries;
+
+      return {
+        // Sync the email only if the email is not used by other users
+        ...conditional(primaryEmail && !(await hasUserWithEmail(primaryEmail)) && { primaryEmail }),
+        // Sync the phone only if the phone is not used by other users
+        ...conditional(primaryPhone && !(await hasUserWithPhone(primaryPhone)) && { primaryPhone }),
+        ...conditional(name && { name }),
+        ...conditional(avatar && { avatar }),
+      };
+    }
+
+    const {
+      dbEntry: { syncProfile },
+    } = await this.getConnectorData();
+
+    return syncProfile
+      ? {
+          ...conditional(name && { name }),
+          ...conditional(avatar && { avatar }),
+        }
+      : {};
+  }
+
+  toJson(): SocialVerificationRecordData {
+    const { id, connectorId, type, socialUserInfo } = this;
+
+    return {
+      id,
+      connectorId,
+      type,
+      socialUserInfo,
+    };
+  }
+
+  private async findUserBySocialIdentity(): Promise<User | undefined> {
     const {
       users: { findUserByIdentity },
     } = this.queries;
@@ -153,7 +256,7 @@ export class SocialVerification implements VerificationRecord<VerificationType.S
 
     const {
       metadata: { target },
-    } = await socials.getConnector(this.connectorId);
+    } = await this.getConnectorData();
 
     const user = await findUserByIdentity(target, this.socialUserInfo.id);
 
@@ -163,7 +266,9 @@ export class SocialVerification implements VerificationRecord<VerificationType.S
   /**
    * Find the related user using the social identity's verified email or phone number.
    */
-  async findRelatedUserBySocialIdentity(): ReturnType<typeof socials.findSocialRelatedUser> {
+  private async findRelatedUserBySocialIdentity(): ReturnType<
+    typeof socials.findSocialRelatedUser
+  > {
     const { socials } = this.libraries;
 
     if (!this.socialUserInfo) {
@@ -173,14 +278,11 @@ export class SocialVerification implements VerificationRecord<VerificationType.S
     return socials.findSocialRelatedUser(this.socialUserInfo);
   }
 
-  toJson(): SocialVerificationRecordData {
-    const { id, connectorId, socialUserInfo, type } = this;
+  private async getConnectorData() {
+    const { getConnector } = this.libraries.socials;
 
-    return {
-      id,
-      connectorId,
-      type,
-      socialUserInfo,
-    };
+    this.connectorDataCache ||= await getConnector(this.connectorId);
+
+    return this.connectorDataCache;
   }
 }

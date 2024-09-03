@@ -32,9 +32,14 @@
   }
 
   .logo {
-    width: 48px;
-    height: 48px;
+    padding: _.unit(1.5);
     flex-shrink: 0;
+
+    > svg,
+    > img {
+      width: 36px;
+      height: 36px;
+    }
   }
 
   .tagWrapper {

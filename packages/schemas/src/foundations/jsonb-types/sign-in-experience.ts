@@ -2,6 +2,7 @@ import { hexColorRegEx } from '@logto/core-kit';
 import { languageTagGuard } from '@logto/language-kit';
 import { z } from 'zod';
 
+import { Theme } from '../../types/theme.js';
 import { type ToZodObject } from '../../utils/zod.js';
 
 export const colorGuard = z.object({
@@ -12,11 +13,24 @@ export const colorGuard = z.object({
 
 export type Color = z.infer<typeof colorGuard>;
 
-export const brandingGuard = z.object({
-  logoUrl: z.string().url().optional(),
-  darkLogoUrl: z.string().url().optional(),
-  favicon: z.string().url().optional(),
-});
+export const partialColorGuard = colorGuard.partial();
+
+export type PartialColor = Partial<Color>;
+
+/** Maps a theme to the key of the logo URL in the {@link Branding} object. */
+export const themeToLogoKey = Object.freeze({
+  [Theme.Light]: 'logoUrl',
+  [Theme.Dark]: 'darkLogoUrl',
+} satisfies Record<Theme, keyof Branding>);
+
+export const brandingGuard = z
+  .object({
+    logoUrl: z.string().url(),
+    darkLogoUrl: z.string().url(),
+    favicon: z.string().url(),
+    darkFavicon: z.string().url(),
+  })
+  .partial();
 
 export type Branding = z.infer<typeof brandingGuard>;
 
@@ -95,3 +109,10 @@ export const mfaGuard = z.object({
 });
 
 export type Mfa = z.infer<typeof mfaGuard>;
+
+export const customUiAssetsGuard = z.object({
+  id: z.string(),
+  createdAt: z.number(),
+});
+
+export type CustomUiAssets = z.infer<typeof customUiAssetsGuard>;

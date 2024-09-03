@@ -2,11 +2,11 @@ import { type Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useState, useCallback } from 'react';
 
-import DownArrowIcon from '@/assets/icons/arrow-down.svg';
-import CheckMark from '@/assets/icons/check-mark.svg';
+import DownArrowIcon from '@/assets/icons/arrow-down.svg?react';
+import CheckMark from '@/assets/icons/check-mark.svg?react';
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type ScopeGroupProps = {
   readonly groupName: string;

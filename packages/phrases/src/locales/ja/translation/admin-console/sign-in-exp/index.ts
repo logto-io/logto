@@ -5,7 +5,7 @@ import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 const sign_in_exp = {
   page_title: 'サインインエクスペリエンス',
   title: 'サインインエクスペリエンス',
-  description: 'ブランドに合わせてサインインUIをカスタマイズし、リアルタイムで表示できます。',
+  description: 'ブランドに合わせてサインイン UI をカスタマイズし、リアルタイムで表示できます。',
   tabs: {
     branding: 'ブランディング',
     sign_up_and_sign_in: 'サインアップとサインイン',
@@ -26,38 +26,70 @@ const sign_in_exp = {
     dark_primary_color: 'ブランドカラー（ダーク）',
     dark_mode: 'ダークモードを有効にする',
     dark_mode_description:
-      'あなたのアプリは、ブランドカラーとLogtoアルゴリズムに基づいて自動生成されたダークモードのテーマを持っています。自由にカスタマイズしてください。',
+      'あなたのアプリは、ブランドカラーと Logto アルゴリズムに基づいて自動生成されたダークモードのテーマを持っています。自由にカスタマイズしてください。',
     dark_mode_reset_tip: 'ブランドカラーに基づいてダークモードの色を再計算します。',
     reset: 'リセット',
   },
   branding: {
     title: 'ブランディングエリア',
     ui_style: 'スタイル',
-    favicon: 'ファビコン',
-    logo_image_url: 'アプリのロゴ画像URL',
-    logo_image_url_placeholder: 'https://your.cdn.domain/logo.png',
-    dark_logo_image_url: 'アプリのロゴ画像URL（ダーク）',
-    dark_logo_image_url_placeholder: 'https://your.cdn.domain/logo-dark.png',
-    logo_image: 'アプリのロゴ',
-    dark_logo_image: 'アプリのロゴ（ダーク）',
-    logo_image_error: 'アプリのロゴ：{{error}}',
-    favicon_error: 'ファビコン：{{error}}',
+    with_light: '{{value}}',
+    with_dark: '{{value}} (ダーク)',
+    app_logo_and_favicon: 'アプリロゴとファビコン',
+    company_logo_and_favicon: '企業ロゴとファビコン',
   },
-  custom_css: {
-    title: 'カスタムCSS',
-    css_code_editor_title: 'カスタムCSSでUIをパーソナライズ',
-    css_code_editor_description1: 'カスタムCSSの例を見てください。',
+  branding_uploads: {
+    app_logo: {
+      title: 'アプリロゴ',
+      url: 'アプリロゴ URL',
+      url_placeholder: 'https://your.cdn.domain/logo.png',
+      error: 'アプリロゴ: {{error}}',
+    },
+    company_logo: {
+      title: '企業ロゴ',
+      url: '企業ロゴ URL',
+      url_placeholder: 'https://your.cdn.domain/logo.png',
+      error: '企業ロゴ: {{error}}',
+    },
+    organization_logo: {
+      title: '画像をアップロード',
+      url: '組織ロゴ URL',
+      url_placeholder: 'https://your.cdn.domain/logo.png',
+      error: '組織ロゴ: {{error}}',
+    },
+    connector_logo: {
+      title: '画像をアップロード',
+      url: 'コネクタロゴ URL',
+      url_placeholder: 'https://your.cdn.domain/logo.png',
+      error: 'コネクタロゴ: {{error}}',
+    },
+    favicon: {
+      title: 'ファビコン',
+      url: 'ファビコン URL',
+      url_placeholder: 'https://your.cdn.domain/favicon.ico',
+      error: 'ファビコン: {{error}}',
+    },
+  },
+  custom_ui: {
+    title: 'カスタム UI',
+    css_code_editor_title: 'カスタム CSS',
+    css_code_editor_description1: 'カスタム CSS の例をご覧ください。',
     css_code_editor_description2: '<a>{{link}}</a>',
-    css_code_editor_description_link_content: 'さらに詳しく',
+    css_code_editor_description_link_content: '詳しくはこちら',
     css_code_editor_content_placeholder:
-      'カスタムCSSを入力して、すべてのスタイルをあなたの仕様に合わせて調整します。クリエイティビティを発揮して、UIを際立たせましょう。',
+      'カスタム CSS を入力して、あらゆるスタイルを精確に調整してください。創造性を発揮して、あなたの UI を際立たせましょう。',
+    bring_your_ui_title: 'あなたの UI を持参',
+    bring_your_ui_description:
+      '圧縮パッケージ (.zip) をアップロードして、Logto のビルトイン UI を独自のコードで置き換えます。<a>詳しくはこちら</a>',
+    preview_with_bring_your_ui_description:
+      'カスタム UI のアセットは正常にアップロードされ、現在提供されています。したがって、組み込みのプレビューウィンドウは無効になりました。\nパーソナライズされたサインイン UI をテストするには、「ライブプレビュー」ボタンをクリックして新しいブラウザタブで開きます。',
   },
   sign_up_and_sign_in,
   content,
   password_policy,
   setup_warning: {
     no_connector_sms:
-      'まだSMSコネクタが設定されていません。構成を完了する前に、この方法でのサインインはできません。<a>{{link}}</a>「コネクタ」に移動してください',
+      'まだ SMS コネクタが設定されていません。構成を完了する前に、この方法でのサインインはできません。<a>{{link}}</a>「コネクタ」に移動してください',
     no_connector_email:
       'まだメールコネクタが設定されていません。構成を完了する前に、この方法でのサインインはできません。<a>{{link}}</a>「コネクタ」に移動してください',
     no_connector_social:
@@ -78,8 +110,8 @@ const sign_in_exp = {
     live_preview: 'ライブプレビュー',
     live_preview_tip: '変更を保存してプレビュー',
     native: 'ネイティブ',
-    desktop_web: 'デスクトップWeb',
-    mobile_web: 'モバイルWeb',
+    desktop_web: 'デスクトップ Web',
+    mobile_web: 'モバイル Web',
     desktop: 'デスクトップ',
     mobile: 'モバイル',
   },

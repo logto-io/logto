@@ -2,7 +2,7 @@ const action = {
   sign_in: '登录',
   continue: '继续',
   create_account: '注册',
-  create_account_without_linking: '注册新的账号',
+  create_account_without_linking: '创建新帐户',
   create: '注册',
   enter_passcode: '输入验证码',
   confirm: '确认',
@@ -29,10 +29,8 @@ const action = {
   verify_via_passkey: '通过 Passkey 验证',
   download: '下载',
   single_sign_on: '单点登录',
-  /** UNTRANSLATED */
-  authorize: 'Authorize',
-  /** UNTRANSLATED */
-  use_another_account: 'Use another account',
+  authorize: '授权',
+  use_another_account: '使用另一个账号',
 };
 
 export default Object.freeze(action);

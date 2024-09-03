@@ -3,14 +3,16 @@ import ReactModal from 'react-modal';
 
 import Button from '@/components/Button';
 
-import * as modalStyles from '../../scss/modal.module.scss';
+import modalStyles from '../../scss/modal.module.scss';
 
-import * as styles from './MobileModal.module.scss';
+import styles from './MobileModal.module.scss';
 import type { ModalProps } from './type';
 
 const MobileModal = ({
   className,
   isOpen = false,
+  isConfirmLoading = false,
+  isCancelLoading = false,
   children,
   cancelText = 'action.cancel',
   confirmText = 'action.confirm',
@@ -34,11 +36,17 @@ const MobileModal = ({
           <Button
             title={cancelText}
             i18nProps={cancelTextI18nProps}
+            isLoading={isCancelLoading}
             type="secondary"
             onClick={onClose}
           />
           {onConfirm && (
-            <Button title={confirmText} i18nProps={confirmTextI18nProps} onClick={onConfirm} />
+            <Button
+              title={confirmText}
+              i18nProps={confirmTextI18nProps}
+              isLoading={isConfirmLoading}
+              onClick={onConfirm}
+            />
           )}
         </div>
       </div>

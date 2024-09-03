@@ -25,12 +25,12 @@ import { manageDefaultUserRole } from '#src/libraries/ogcio-user.js';
 import { assignInteractionResults } from '#src/libraries/session.js';
 import { encryptUserPassword } from '#src/libraries/user.utils.js';
 import type { LogEntry, WithLogContext } from '#src/middleware/koa-audit-log.js';
+import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import { getTenantId } from '#src/utils/tenant.js';
 
-import type { WithInteractionDetailsContext } from '../middleware/koa-interaction-details.js';
 import { type WithInteractionHooksContext } from '../middleware/koa-interaction-hooks.js';
 import type {
   VerifiedInteractionResult,

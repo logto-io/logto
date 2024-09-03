@@ -34,9 +34,13 @@ const user_details = {
   field_custom_data: 'Dane niestandardowe',
   field_custom_data_tip:
     'Dodatkowe informacje o użytkowniku niewymienione jako właściwości predefiniowane, takie jak preferowany przez użytkownika kolor i język.',
+  field_profile: 'Profil',
+  field_profile_tip:
+    'Dodatkowe standardowe roszczenia OpenID Connect, które nie są uwzględnione we właściwościach użytkownika. Należy pamiętać, że wszystkie nieznane właściwości zostaną usunięte. Proszę zapoznać się z <a>referencją właściwości profilu</a> aby uzyskać więcej informacji.',
   field_connectors: 'Połączenia społecznościowe',
   field_sso_connectors: 'Połączenia przedsiębiorstwa',
   custom_data_invalid: 'Nieprawidłowe dane niestandardowe JSON',
+  profile_invalid: 'Profil musi być poprawnym obiektem JSON',
   connectors: {
     connectors: 'Połączenia',
     user_id: 'Identyfikator użytkownika',
@@ -75,15 +79,18 @@ const user_details = {
   roles: {
     name_column: 'Rola użytkownika',
     description_column: 'Opis',
+    assign_button: 'Przypisz role',
     delete_description:
       'Ta akcja usunie tę rolę z tego użytkownika. Rola nadal będzie istnieć, ale nie będzie już przypisana do tego użytkownika.',
     deleted: '{{name}} została usunięta z tego użytkownika.',
+    assign_title: 'Przypisz role do {{name}}',
     assign_subtitle:
       'Znajdź odpowiednie role użytkowników, wyszukując według nazwy, opisu lub identyfikatora roli.',
     assign_role_field: 'Przypisz rolę',
     role_search_placeholder: 'Szukaj po nazwie roli',
     added_text: '{{value, number}} dodanych',
     assigned_user_count: '{{value, number}} użytkowników',
+    confirm_assign: 'Przypisz role',
     role_assigned: 'Pomyślnie przypisano rolę(y)',
     search: 'Szukaj po nazwie roli, opisie lub ID',
     empty: 'Brak dostępnej roli',

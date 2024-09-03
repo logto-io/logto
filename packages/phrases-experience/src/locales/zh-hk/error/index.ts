@@ -11,7 +11,7 @@ const error = {
   invalid_email: '無效的電子郵件',
   invalid_phone: '無效的手機號碼',
   passwords_do_not_match: '兩次輸入的密碼不一致，請重試。',
-  invalid_passcode: '無效的驗證碼',
+  invalid_passcode: '無效的驗證碼。',
   invalid_connector_auth: '登錄失敗',
   invalid_connector_request: '無效的登錄請求',
   unknown: '未知錯誤，請稍後重試。',

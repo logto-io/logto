@@ -1,21 +1,23 @@
 import classNames from 'classnames';
 import { useRef, useState } from 'react';
-import { ChromePicker } from 'react-color';
+import { ColorPicker as ColorPalette, useColor } from 'react-color-palette';
 
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import Dropdown from '../Dropdown';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
+  readonly name?: string;
   readonly value?: string;
   readonly onChange: (value: string) => void;
 };
 
-function ColorPicker({ onChange, value = '#000000' }: Props) {
+function ColorPicker({ name, onChange, value = '#000000' }: Props) {
   const anchorRef = useRef<HTMLSpanElement>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [color] = useColor(value);
 
   return (
     <div
@@ -29,6 +31,7 @@ function ColorPicker({ onChange, value = '#000000' }: Props) {
         setIsOpen(true);
       })}
     >
+      <input hidden readOnly name={name} value={value} />
       <span ref={anchorRef} className={styles.brick} style={{ backgroundColor: value }} />
       <span>{value.toUpperCase()}</span>
       <Dropdown
@@ -39,12 +42,14 @@ function ColorPicker({ onChange, value = '#000000' }: Props) {
           setIsOpen(false);
         }}
       >
-        <ChromePicker
-          color={value}
-          onChange={({ hex }) => {
-            onChange(hex);
-          }}
-        />
+        <div className={styles.palette}>
+          <ColorPalette
+            color={color}
+            onChange={({ hex }) => {
+              onChange(hex);
+            }}
+          />
+        </div>
       </Dropdown>
     </div>
   );

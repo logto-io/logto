@@ -45,16 +45,8 @@ const connectors = {
     name_placeholder: 'Geben Sie den Namen für den Social-Sign-In-Button ein',
     name_tip:
       'Der Name des Connector-Buttons wird als "Weiter mit {{name}}" angezeigt. Achten Sie darauf, dass der Name nicht zu lang wird.',
-    logo: 'Logo-URL für Social-Sign-In-Button',
-    logo_placeholder: 'https://your.cdn.domain/logo.png',
-    logo_tip:
-      'Das Logobild wird auf dem Connector angezeigt. Holen Sie sich einen öffentlich zugänglichen Bildlink und fügen Sie den Link hier ein.',
-    logo_dark: 'Logo-URL für Social-Sign-In-Button (Dark mode)',
-    logo_dark_placeholder: 'https://your.cdn.domain/logo.png',
-    logo_dark_tip:
-      'Legen Sie das Logo Ihres Connectors für den Dark-Modus fest, nachdem Sie ihn in der Anmeldeerfahrung der Admin Konsole aktiviert haben.',
-    logo_dark_collapse: 'Zusammenklappen',
-    logo_dark_show: 'Logo-Einstellung für Dark-Modus anzeigen',
+    connector_logo: 'Connector-Logo',
+    connector_logo_tip: 'Das Logo wird auf dem Connector-Anmeldebutton angezeigt.',
     target: 'Identity Provider Name',
     target_placeholder: 'Geben Sie den Namen des Connector Identity Providers ein',
     target_tip:

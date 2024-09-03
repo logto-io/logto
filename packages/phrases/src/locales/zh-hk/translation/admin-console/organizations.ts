@@ -7,6 +7,7 @@ const organizations = {
   organization_template: '組織模板',
   organization_id: '組織 ID',
   members: '成員',
+  machine_to_machine: '機器對機器應用程式',
   create_organization: '建立組織',
   setup_organization: '設定您的組織',
   organization_list_placeholder_title: '組織',
@@ -45,9 +46,9 @@ const organizations = {
         role_description: '組繇角色是可以分配給成員的組繇權限或API權限的分組。',
       },
       section_3: {
-        title: '我可以將API權限分配給組織角色嗎？',
+        title: '我可以將 API 權限分配給組織角色嗎？',
         description:
-          '是的，您可以將API權限分配給組織角色。Logto提供靈活性，有效管理您組織的角色，允許您在這些角色中包括組織權限和API權限。',
+          '是的，您可以將 API 權限分配給組織角色。Logto 提供靈活性，有效管理您組織的角色，允許您在這些角色中包括組織權限和 API 權限。',
       },
       section_4: {
         title: '交互示意圖，看看它們之間的關係',

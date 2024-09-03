@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import {
   accessTokenPayloadGuard,
   clientCredentialsPayloadGuard,
+  jwtCustomizerGrantContextGuard,
   jwtCustomizerUserContextGuard,
 } from '@logto/schemas';
 import prettier from 'prettier';
@@ -13,6 +14,7 @@ const filePath = 'src/consts/jwt-customizer-type-definition.ts';
 
 const typeIdentifiers = `export enum JwtCustomizerTypeDefinitionKey {
   JwtCustomizerUserContext = 'JwtCustomizerUserContext',
+  JwtCustomizerGrantContext = 'JwtCustomizerGrantContext',
   AccessTokenPayload = 'AccessTokenPayload',
   ClientCredentialsPayload = 'ClientCredentialsPayload',
   EnvironmentVariables = 'EnvironmentVariables',
@@ -43,6 +45,11 @@ const createJwtCustomizerTypeDefinitions = async () => {
     'JwtCustomizerUserContext'
   );
 
+  const jwtCustomizerGrantContextTypeDefinition = inferTsDefinitionFromZod(
+    jwtCustomizerGrantContextGuard,
+    'JwtCustomizerGrantContext'
+  );
+
   const accessTokenPayloadTypeDefinition = inferTsDefinitionFromZod(
     accessTokenPayloadGuard,
     'AccessTokenPayload'
@@ -57,6 +64,8 @@ const createJwtCustomizerTypeDefinitions = async () => {
 ${typeIdentifiers}
 
 export const jwtCustomizerUserContextTypeDefinition = \`${jwtCustomizerUserContextTypeDefinition}\`;
+
+export const jwtCustomizerGrantContextTypeDefinition = \`${jwtCustomizerGrantContextTypeDefinition}\`;
 
 export const accessTokenPayloadTypeDefinition = \`${accessTokenPayloadTypeDefinition}\`;
 

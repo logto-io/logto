@@ -5,6 +5,7 @@ import {
   LogResult,
   jwtCustomizer as jwtCustomizerLog,
   type CustomJwtFetcher,
+  GrantType,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
@@ -17,6 +18,8 @@ import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import { LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
+
+import { tokenExchangeActGuard } from './grants/token-exchange/types.js';
 
 /**
  * For organization API resource feature, add extra token claim `organization_id` to the
@@ -44,6 +47,36 @@ export const getExtraTokenClaimsForOrganizationApiResource = async (
   }
 
   return { organization_id: organizationId };
+};
+
+/**
+ * The field `extra` in the access token will be overidden by the return value of `extraTokenClaims` function,
+ * previously in token exchange grant, this field is used to save `act` data temporarily,
+ * here we validate the data and return them again to prevent data loss.
+ */
+export const getExtraTokenClaimsForTokenExchange = async (
+  ctx: KoaContextWithOIDC,
+  token: unknown
+): Promise<UnknownObject | undefined> => {
+  const isAccessToken = token instanceof ctx.oidc.provider.AccessToken;
+
+  // Only handle access tokens
+  if (!isAccessToken) {
+    return;
+  }
+
+  // Only handle token exchange grant type
+  if (token.gty !== GrantType.TokenExchange) {
+    return;
+  }
+
+  const result = tokenExchangeActGuard.safeParse(token.extra);
+
+  if (!result.success) {
+    return;
+  }
+
+  return result.data;
 };
 
 /* eslint-disable complexity */
@@ -109,6 +142,11 @@ export const getExtraTokenClaimsForJwtCustomization = async (
         (await libraries.jwtCustomizers.getUserContext(token.accountId))
     );
 
+    const subjectToken =
+      isTokenClientCredentials || token.gty !== GrantType.TokenExchange
+        ? undefined
+        : await trySafe(async () => queries.subjectTokens.findSubjectToken(token.grantId));
+
     const payload: CustomJwtFetcher = {
       script,
       environmentVariables,
@@ -119,8 +157,18 @@ export const getExtraTokenClaimsForJwtCustomization = async (
             tokenType: LogtoJwtTokenKeyType.AccessToken,
             // TODO (LOG-8555): the newly added `UserProfile` type includes undefined fields and can not be directly assigned to `Json` type. And the `undefined` fields should be removed by zod guard.
             // `context` parameter is only eligible for user's access token for now.
-            // eslint-disable-next-line no-restricted-syntax
-            context: { user: logtoUserInfo as Record<string, Json> },
+            context: {
+              // eslint-disable-next-line no-restricted-syntax
+              user: logtoUserInfo as Record<string, Json>,
+              ...conditional(
+                subjectToken && {
+                  grant: {
+                    type: GrantType.TokenExchange,
+                    subjectTokenContext: subjectToken.context,
+                  },
+                }
+              ),
+            },
           }),
     };
 

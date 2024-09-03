@@ -16,8 +16,8 @@ const quota_item = {
     name: 'Tokens',
     limited: '{{count, number}} token',
     limited_other: '{{count, number}} tokens',
-    unlimited: 'Unlimited tokens',
-    not_eligible: 'Remove your all users to prevent new tokens',
+    unlimited: 'Tokens illimités',
+    not_eligible: 'Supprimez tous vos utilisateurs pour éviter de nouveaux tokens',
   },
   applications_limit: {
     name: 'Applications',
@@ -37,8 +37,8 @@ const quota_item = {
     name: 'Applications tierces',
     limited: '{{count, number}} application tierce',
     limited_other: '{{count, number}} applications tierces',
-    unlimited: 'Unlimited third-party apps',
-    not_eligible: 'Remove your third-party apps',
+    unlimited: 'Applications tierces illimitées',
+    not_eligible: 'Supprimez vos applications tierces',
   },
   resources_limit: {
     name: 'Ressources API',
@@ -97,8 +97,8 @@ const quota_item = {
     name: 'Roles Machine à machine',
     limited: '{{count, number}} rôle machine à machine',
     limited_other: '{{count, number}} rôles machine à machine',
-    unlimited: 'Unlimited machine to machine roles',
-    not_eligible: 'Remove your machine to machine roles',
+    unlimited: 'Rôles machine à machine illimités',
+    not_eligible: 'Supprimez vos rôles machine à machine',
   },
   scopes_per_role_limit: {
     name: 'Permissions de rôle',
@@ -118,7 +118,7 @@ const quota_item = {
     name: 'Organisations',
     limited: 'Organisations',
     unlimited: 'Organisations',
-    not_eligible: 'Remove your organizations',
+    not_eligible: 'Supprimez vos organisations',
   },
   audit_logs_retention_days: {
     name: "Conservation des journaux d'audit",
@@ -150,14 +150,26 @@ const quota_item = {
     name: 'Membres du locataires',
     limited: '{{count, number}} membre du locataire',
     limited_other: '{{count, number}} membres du locataire',
-    unlimited: 'Unlimited tenant members',
-    not_eligible: 'Remove your tenant members',
+    unlimited: 'Membres du locataire illimités',
+    not_eligible: 'Supprimez vos membres du locataire',
   },
   custom_jwt_enabled: {
     name: 'JWT personnalisé',
-    limited: 'Custom JWT',
-    unlimited: 'Custom JWT',
-    not_eligible: 'Remove your JWT claims customizer',
+    limited: 'JWT personnalisé',
+    unlimited: 'JWT personnalisé',
+    not_eligible: 'Supprimez votre personnaliseur de revendications JWT',
+  },
+  impersonation_enabled: {
+    name: 'Usurpation',
+    limited: 'Usurpation',
+    unlimited: 'Usurpation',
+    not_eligible: 'Aucune usurpation autorisée',
+  },
+  bring_your_ui_enabled: {
+    name: 'Apportez votre UI',
+    limited: 'Apportez votre UI',
+    unlimited: 'Apportez votre UI',
+    not_eligible: 'Supprimez vos ressources UI personnalisées',
   },
 };
 

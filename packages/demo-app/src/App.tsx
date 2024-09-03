@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import '@/scss/normalized.scss';
 
-import * as styles from './App.module.scss';
+import styles from './App.module.scss';
 import Callback from './Callback';
 import DevPanel from './DevPanel';
 import congratsDark from './assets/congrats-dark.svg';
@@ -16,6 +16,7 @@ import { getLocalData, setLocalData } from './utils';
 void initI18n();
 
 const Main = () => {
+  const config = getLocalData('config');
   const params = new URL(window.location.href).searchParams;
   const { isAuthenticated, isLoading, getIdTokenClaims, signIn, signOut } = useLogto();
   const [user, setUser] = useState<Pick<IdTokenClaims, 'sub' | 'username'>>();
@@ -53,10 +54,24 @@ const Main = () => {
     if (!isAuthenticated) {
       void signIn({
         redirectUri: window.location.origin + window.location.pathname,
-        extraParams: Object.fromEntries(new URLSearchParams(window.location.search).entries()),
+        extraParams: Object.fromEntries(
+          new URLSearchParams([
+            ...new URLSearchParams(config.signInExtraParams).entries(),
+            ...new URLSearchParams(window.location.search).entries(),
+          ]).entries()
+        ),
       });
     }
-  }, [error, getIdTokenClaims, isAuthenticated, isInCallback, isLoading, signIn, user]);
+  }, [
+    config.signInExtraParams,
+    error,
+    getIdTokenClaims,
+    isAuthenticated,
+    isInCallback,
+    isLoading,
+    signIn,
+    user,
+  ]);
 
   useEffect(() => {
     const onThemeChange = (event: MediaQueryListEvent) => {
@@ -155,13 +170,15 @@ const Main = () => {
 };
 
 const App = () => {
+  const params = new URL(window.location.href).searchParams;
   const config = getLocalData('config');
 
   return (
     <LogtoProvider
       config={{
         endpoint: window.location.origin,
-        appId: demoAppApplicationId,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- We need to fall back for empty string
+        appId: params.get('app_id') || config.appId || demoAppApplicationId,
         // eslint-disable-next-line no-restricted-syntax
         prompt: config.prompt ? (config.prompt.split(' ') as Prompt[]) : [],
         scopes: config.scope ? config.scope.split(' ') : [],

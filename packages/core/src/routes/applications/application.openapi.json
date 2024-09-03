@@ -5,6 +5,15 @@
       "description": "Application represents your registered software program or service that has been authorized to access user information and perform actions on behalf of users within the system. Currently, Logto supports four types of applications:\n\n- Traditional web\n\n- Single-page app\n- Native app\n- Machine-to-machine app.\n\nDepending on the application type, it may have different authentication flows and access to the system. See [🔗 Integrate Logto in your application](https://docs.logto.io/docs/recipes/integrate-logto/) to learn more about how to integrate Logto into your application.\n\nRole-based access control (RBAC) is supported for machine-to-machine applications. See [🔐 Role-based access control (RBAC)](https://docs.logto.io/docs/recipes/rbac/) to get started with role-based access control."
     }
   ],
+  "components": {
+    "schemas": {
+      "ApplicationLegacySecret": {
+        "type": "string",
+        "deprecated": true,
+        "description": "The internal client secret. Note it is only used for internal validation, and the actual secrets should be retrieved from `/api/applications/{id}/secrets` endpoints."
+      }
+    }
+  },
   "paths": {
     "/api/applications": {
       "get": {
@@ -19,7 +28,21 @@
         ],
         "responses": {
           "200": {
-            "description": "A list of applications."
+            "description": "A list of applications.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "secret": {
+                        "$ref": "#/components/schemas/ApplicationLegacySecret"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -49,7 +72,18 @@
         },
         "responses": {
           "200": {
-            "description": "The application was created successfully."
+            "description": "The application was created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "secret": {
+                      "$ref": "#/components/schemas/ApplicationLegacySecret"
+                    }
+                  }
+                }
+              }
+            }
           },
           "422": {
             "description": "Validation error. Please check the request body."
@@ -63,7 +97,18 @@
         "description": "Get application details by ID.",
         "responses": {
           "200": {
-            "description": "Details of the application."
+            "description": "Details of the application.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "secret": {
+                      "$ref": "#/components/schemas/ApplicationLegacySecret"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
             "description": "The application with the specified ID was not found."
@@ -88,7 +133,18 @@
         },
         "responses": {
           "200": {
-            "description": "The application was updated successfully."
+            "description": "The application was updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "secret": {
+                      "$ref": "#/components/schemas/ApplicationLegacySecret"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
             "description": "The application with the specified ID was not found."

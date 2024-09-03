@@ -1,14 +1,11 @@
 import dotenv from 'dotenv';
 import { setDefaultOptions } from 'expect-puppeteer';
-import { TextDecoder, TextEncoder } from 'text-encoder';
 
 const { jest } = import.meta;
 
 dotenv.config();
 
 /* eslint-disable @silverhand/fp/no-mutation */
-global.TextDecoder = TextDecoder;
-global.TextEncoder = TextEncoder;
 global.fail = (message) => {
   throw new Error(message);
 };

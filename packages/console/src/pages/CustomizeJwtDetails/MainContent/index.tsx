@@ -15,7 +15,7 @@ import { formatFormDataToRequestData, formatResponseDataToFormData } from '../ut
 
 import ScriptSection from './ScriptSection';
 import SettingsSection from './SettingsSection';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props<T extends LogtoJwtTokenKeyType> = {
   readonly className?: string;

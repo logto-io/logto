@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- will migrate this file to the latest experience APIs */
 import { ConnectorError, type SocialUserInfo } from '@logto/connector-kit';
 import { validateRedirectUrl } from '@logto/core-kit';
 import {
@@ -12,7 +13,6 @@ import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
-import { type WithInteractionDetailsContext } from '#src/routes/interaction/middleware/koa-interaction-details.js';
 import { ssoConnectorFactories, type SingleSignOnConnectorSession } from '#src/sso/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -22,30 +22,25 @@ import { type WithInteractionHooksContext } from '../middleware/koa-interaction-
 
 import {
   assignSingleSignOnAuthenticationResult,
+  assignSingleSignOnSessionResult,
   getSingleSignOnSessionResult,
 } from './single-sign-on-session.js';
-import { assignConnectorSessionResult } from './social-verification.js';
 
 export const authorizationUrlPayloadGuard = z.object({
   state: z.string().min(1),
   redirectUri: z.string().refine((url) => validateRedirectUrl(url, 'web')),
 });
-
 type AuthorizationUrlPayload = z.infer<typeof authorizationUrlPayloadGuard>;
 
-// Get the authorization url for the SSO provider
 export const getSsoAuthorizationUrl = async (
-  ctx: WithInteractionDetailsContext<WithLogContext>,
+  ctx: WithLogContext,
   { provider, id: tenantId }: TenantContext,
   connectorData: SupportedSsoConnector,
   payload: AuthorizationUrlPayload
 ): Promise<string> => {
   const { id: connectorId, providerName } = connectorData;
 
-  const {
-    createLog,
-    interactionDetails: { jti },
-  } = ctx;
+  const { createLog } = ctx;
 
   const log = createLog(`Interaction.SignIn.Identifier.SingleSignOn.Create`);
   log.append({
@@ -62,10 +57,12 @@ export const getSsoAuthorizationUrl = async (
 
     assertThat(payload, 'session.insufficient_info');
 
+    const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+
     return await connectorInstance.getAuthorizationUrl(
       { jti, ...payload, connectorId },
       async (connectorSession: SingleSignOnConnectorSession) =>
-        assignConnectorSessionResult(ctx, provider, connectorSession)
+        assignSingleSignOnSessionResult(ctx, provider, connectorSession)
     );
   } catch (error: unknown) {
     // Catch ConnectorError and re-throw as 500 RequestError
@@ -78,23 +75,31 @@ export const getSsoAuthorizationUrl = async (
 };
 
 type SsoAuthenticationResult = {
+  /** The issuer of the SSO provider, we need to store this in the user SSO identity to identify the provider. */
   issuer: string;
   userInfo: SocialUserInfo;
 };
 
-// Get the user authentication result from the SSO provider
-export const getSsoAuthentication = async (
-  ctx: WithInteractionHooksContext<WithLogContext>,
+/**
+ * Verify the SSO identity from the SSO provider
+ *
+ * - Load the SSO session from the OIDC provider interaction details
+ * - Verify the SSO identity from the SSO provider
+ *
+ * @returns The SSO authentication result
+ */
+export const verifySsoIdentity = async (
+  ctx: WithLogContext,
   { provider, id: tenantId }: TenantContext,
   connectorData: SupportedSsoConnector,
   data: Record<string, unknown>
 ): Promise<SsoAuthenticationResult> => {
-  const { createLog } = ctx;
   const { id: connectorId, providerName } = connectorData;
+
+  const { createLog } = ctx;
 
   const log = createLog(`Interaction.SignIn.Identifier.SingleSignOn.Submit`);
   log.append({ connectorId, data });
-
   const singleSignOnSession = await getSingleSignOnSessionResult(ctx, provider);
 
   try {
@@ -103,32 +108,47 @@ export const getSsoAuthentication = async (
       connectorData,
       tenantId
     );
-
     const issuer = await connectorInstance.getIssuer();
     const userInfo = await connectorInstance.getUserInfo(singleSignOnSession, data);
 
-    const result = {
+    log.append({ issuer, userInfo });
+
+    return {
       issuer,
       userInfo,
     };
-
-    // Assign the single sign on authentication to the interaction result
-    await assignSingleSignOnAuthenticationResult(ctx, provider, {
-      connectorId,
-      ...result,
-    });
-
-    log.append({ issuer, userInfo });
-
-    return result;
   } catch (error: unknown) {
     // Catch ConnectorError and re-throw as 500 RequestError
     if (error instanceof ConnectorError) {
       throw new RequestError({ code: `connector.${error.code}`, status: 500 }, error.data);
     }
-
     throw error;
   }
+};
+
+// Remark:
+// The following functions are used in the legacy interaction single sign on routes only.
+// The SSO interaction flow will be handled in the latest experience APIs using the SSO verification record.
+
+/** Verify the SSO identity and assign the authentication result to the interaction result */
+export const getSsoAuthentication = async (
+  ctx: WithInteractionHooksContext<WithLogContext>,
+  tenantContext: TenantContext,
+  connectorData: SupportedSsoConnector,
+  data: Record<string, unknown>
+): Promise<SsoAuthenticationResult> => {
+  const { provider } = tenantContext;
+  const { id: connectorId } = connectorData;
+
+  const ssoAuthentication = await verifySsoIdentity(ctx, tenantContext, connectorData, data);
+
+  // Assign the single sign on authentication to the interaction result
+  await assignSingleSignOnAuthenticationResult(ctx, provider, {
+    connectorId,
+    ...ssoAuthentication,
+  });
+
+  return ssoAuthentication;
 };
 
 // Handle the SSO authentication result and return the user id
@@ -372,3 +392,4 @@ export const registerWithSsoAuthentication = async (
 
   return user;
 };
+/* eslint-enable max-lines */

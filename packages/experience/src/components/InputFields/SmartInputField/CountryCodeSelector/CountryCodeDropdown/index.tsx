@@ -6,8 +6,8 @@ import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
-import CheckMark from '@/assets/icons/check-mark.svg';
-import SearchIcon from '@/assets/icons/search-icon.svg';
+import CheckMark from '@/assets/icons/check-mark.svg?react';
+import SearchIcon from '@/assets/icons/search-icon.svg?react';
 import InputField from '@/components/InputFields/InputField';
 import NavBar from '@/components/NavBar';
 import useDebounce from '@/hooks/use-debounce';
@@ -15,7 +15,7 @@ import usePlatform from '@/hooks/use-platform';
 import { onKeyDownHandler } from '@/utils/a11y';
 import type { CountryMetaData } from '@/utils/country-code';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly isOpen: boolean;
@@ -228,6 +228,7 @@ const CountryCodeDropdown = ({
           prefix={<SearchIcon />}
           value={searchValue}
           className={styles.searchInputField}
+          inputFieldClassName={styles.innerInputFiled}
           placeholder={t('input.search_region_code')}
           onChange={onSearchChange}
           onKeyDown={onInputKeyDown}

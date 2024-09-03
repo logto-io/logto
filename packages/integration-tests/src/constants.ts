@@ -30,7 +30,7 @@ export const signUpIdentifiers = {
 
 export const consoleUsername = 'svhd';
 export const consolePassword = 'silverhandasd_1';
-export const mockSocialAuthPageUrl = 'http://mock.social.com';
+export const mockSocialAuthPageUrl = 'http://mock-social';
 
 export const newOidcSsoConnectorPayload = {
   providerName: SsoProviderName.OIDC,

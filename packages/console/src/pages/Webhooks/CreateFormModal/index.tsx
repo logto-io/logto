@@ -1,7 +1,7 @@
 import { type Hook } from '@logto/schemas';
 import Modal from 'react-modal';
 
-import * as modalStyles from '@/scss/modal.module.scss';
+import modalStyles from '@/scss/modal.module.scss';
 
 import CreateForm from './CreateForm';
 

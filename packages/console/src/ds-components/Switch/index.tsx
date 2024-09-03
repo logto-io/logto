@@ -5,7 +5,7 @@ import { forwardRef } from 'react';
 
 import DynamicT from '../DynamicT';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props =
   | (Omit<HTMLProps<HTMLInputElement>, 'label'> & {

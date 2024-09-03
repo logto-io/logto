@@ -21,12 +21,13 @@ import { translationSchemas, zodTypeToSwagger } from '#src/utils/zod.js';
 
 import type { AnonymousRouter } from '../types.js';
 
-import { managementApiDescription } from './consts.js';
+import { managementApiAuthDescription } from './consts.js';
 import {
   buildTag,
   devFeatureTag,
   findSupplementFiles,
   normalizePath,
+  pruneSwaggerDocument,
   removeUnnecessaryOperations,
   shouldThrow,
   validateSupplement,
@@ -36,6 +37,7 @@ import { buildOperationId, customRoutes, throwByDifference } from './utils/opera
 import {
   buildParameters,
   paginationParameters,
+  searchParameters,
   buildPathIdParameters,
   mergeParameters,
   customParameters,
@@ -49,12 +51,25 @@ const anonymousPaths = new Set<string>([
   'status',
 ]);
 
+const advancedSearchPaths = new Set<string>([
+  '/applications',
+  '/applications/:applicationId/roles',
+  '/resources/:resourceId/scopes',
+  '/roles/:id/applications',
+  '/roles/:id/scopes',
+  '/roles',
+  '/roles/:id/users',
+  '/users',
+  '/users/:userId/roles',
+]);
+
 type RouteObject = {
   path: string;
   method: OpenAPIV3.HttpMethods;
   operation: OpenAPIV3.OperationObject;
 };
 
+// eslint-disable-next-line complexity
 const buildOperation = (
   method: OpenAPIV3.HttpMethods,
   stack: IMiddleware[],
@@ -71,6 +86,7 @@ const buildOperation = (
   const queryParameters = [
     ...buildParameters(query, 'query'),
     ...(hasPagination ? paginationParameters : []),
+    ...(advancedSearchPaths.has(path) && method === 'get' ? [searchParameters] : []),
   ];
 
   const requestBody = body && {
@@ -93,7 +109,7 @@ const buildOperation = (
         throw new Error(`Invalid status code ${status}.`);
       }
 
-      if (status === 200) {
+      if (status === 200 || status === 201) {
         return [
           status,
           {
@@ -155,7 +171,7 @@ const identifiableEntityNames = Object.freeze([
 const additionalTags = Object.freeze(
   condArray<string>(
     'Organization applications',
-    EnvSet.values.isDevFeaturesEnabled && 'Security',
+    EnvSet.values.isDevFeaturesEnabled && 'Custom UI assets',
     'Organization users'
   )
 );
@@ -269,14 +285,20 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
         version: 'Cloud',
       },
       paths: Object.fromEntries(pathMap),
-      security: [{ ManagementApi: [] }],
+      security: [{ OAuth2: ['all'] }],
       components: {
         securitySchemes: {
-          ManagementApi: {
-            type: 'http',
-            scheme: 'bearer',
-            bearerFormat: 'JWT',
-            description: managementApiDescription,
+          OAuth2: {
+            type: 'oauth2',
+            description: managementApiAuthDescription,
+            flows: {
+              clientCredentials: {
+                tokenUrl: '/oidc/token',
+                scopes: {
+                  all: 'All scopes',
+                },
+              },
+            },
           },
         },
         schemas: translationSchemas,
@@ -298,6 +320,8 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
         }),
       baseDocument
     );
+
+    pruneSwaggerDocument(data);
 
     if (EnvSet.values.isUnitTest) {
       getConsoleLogFromContext(ctx).warn('Skip validating swagger document in unit test.');

@@ -15,7 +15,7 @@ import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import OrganizationSelector, { type Organization } from './OrganizationSelector';
 import ScopesListCard from './ScopesListCard';
 import UserProfile from './UserProfile';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import { getRedirectUriOrigin } from './util';
 
 const Consent = () => {
@@ -27,10 +27,14 @@ const Consent = () => {
   const [consentData, setConsentData] = useState<ConsentInfoResponse>();
   const [selectedOrganization, setSelectedOrganization] = useState<Organization>();
 
+  const [isConsentLoading, setIsConsentLoading] = useState(false);
+
   const asyncGetConsentInfo = useApi(getConsentInfo);
 
   const consentHandler = useCallback(async () => {
+    setIsConsentLoading(true);
     const [error, result] = await asyncConsent(selectedOrganization?.id);
+    setIsConsentLoading(false);
 
     if (error) {
       await handleError(error);
@@ -39,7 +43,7 @@ const Consent = () => {
     }
 
     if (result?.redirectTo) {
-      redirectTo(result.redirectTo);
+      await redirectTo(result.redirectTo);
     }
   }, [asyncConsent, handleError, redirectTo, selectedOrganization?.id]);
 
@@ -113,7 +117,7 @@ const Consent = () => {
             window.location.replace(consentData.redirectUri);
           }}
         />
-        <Button title="action.authorize" onClick={consentHandler} />
+        <Button title="action.authorize" isLoading={isConsentLoading} onClick={consentHandler} />
       </div>
       {!showTerms && (
         <div className={styles.redirectUri}>

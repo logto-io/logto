@@ -13,7 +13,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 import useSWRImmutable from 'swr/immutable';
 
-import ExternalLinkIcon from '@/assets/icons/external-link.svg';
+import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import DomainStatusTag from '@/components/DomainStatusTag';
 import FormCard from '@/components/FormCard';
 import OpenExternalLink from '@/components/OpenExternalLink';
@@ -35,7 +35,7 @@ import EndpointsAndCredentials from '../EndpointsAndCredentials';
 import { type ApplicationForm } from '../utils';
 
 import SessionForm from './components/SessionForm';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly data: Application;
@@ -287,7 +287,7 @@ function ProtectedAppSettings({ data }: Props) {
           </InlineNotification>
         </FormField>
       </FormCard>
-      <EndpointsAndCredentials app={data} oidcConfig={oidcConfig} />
+      <EndpointsAndCredentials app={data} oidcConfig={oidcConfig} onApplicationUpdated={mutate} />
       <SessionForm data={data} />
     </>
   );

@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import ApplicationIcon from '@/components/ApplicationIcon';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly title: string;

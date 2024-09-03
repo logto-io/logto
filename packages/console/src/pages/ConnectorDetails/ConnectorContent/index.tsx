@@ -21,6 +21,7 @@ import { SyncProfileMode } from '@/types/connector';
 import type { ConnectorFormType } from '@/types/connector';
 import { convertResponseToForm } from '@/utils/connector-form';
 import { trySubmitSafe } from '@/utils/form';
+import { removeFalsyValues } from '@/utils/object';
 
 import EmailServiceConnectorForm from './EmailServiceConnectorForm';
 
@@ -54,7 +55,6 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
     type: connectorType,
     formItems,
     isStandard: isStandardConnector,
-    metadata: { logoDark },
   } = connectorData;
 
   const isSocialConnector = connectorType === ConnectorType.Social;
@@ -68,7 +68,11 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
       const { syncProfile, name, logo, logoDark, target, rawConfig } = data;
       // Apply the raw config first to avoid losing data updated from other forms that are not
       // included in the form items.
-      const config = { ...rawConfig, ...configParser(data, formItems) };
+      // Explicitly SKIP falsy values removal logic (the last argument of `configParser()` method) for social connectors.
+      const config = removeFalsyValues({
+        ...rawConfig,
+        ...configParser(data, formItems, isSocialConnector),
+      });
 
       const payload = isSocialConnector
         ? {
@@ -78,7 +82,7 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
         : { config };
       const standardConnectorPayload = {
         ...payload,
-        metadata: { name: { en: name }, logo, logoDark, target },
+        metadata: { name: { en: name }, target, ...removeFalsyValues({ logo, logoDark }) },
       };
       // Should not update `target` for neither passwordless connectors nor non-standard social connectors.
       const body = isStandard ? standardConnectorPayload : { ...payload, target: undefined };
@@ -124,7 +128,7 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
               targetBlank: 'noopener',
             }}
           >
-            <BasicForm isStandard={isStandardConnector} isDarkDefaultVisible={Boolean(logoDark)} />
+            <BasicForm isStandard={isStandardConnector} />
           </FormCard>
         )}
         {isEmailServiceConnector ? (

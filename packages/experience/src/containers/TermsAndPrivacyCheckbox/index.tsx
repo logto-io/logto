@@ -7,7 +7,7 @@ import TermsLinks from '@/components/TermsLinks';
 import useTerms from '@/hooks/use-terms';
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;

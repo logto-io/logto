@@ -45,10 +45,21 @@ const connector_details = {
     company_information_field: '公司信息',
     company_information_description: '在郵件底部顯示您的公司名稱、地址或郵編，以提高真實性。',
     company_information_placeholder: '您的公司基本信息',
-    app_logo_field: '應用程式標誌',
-    app_logo_tip: '在郵件頂部顯示您的品牌標誌。在淺色模式和深色模式下使用相同的圖像。',
+    email_logo_field: '郵件標誌',
+    email_logo_tip: '在郵件頂部顯示您的品牌標誌。請在淺色模式和深色模式下使用相同的圖片。',
     urls_not_allowed: '不允許使用 URL',
     test_notes: 'Logto 使用「通用」模板進行測試。',
+  },
+  google_one_tap: {
+    title: 'Google 一鍵登入',
+    description: 'Google 一鍵登入 是用戶登錄您網站的一種安全且簡單的方式。',
+    enable_google_one_tap: '啟用 Google 一鍵登入',
+    enable_google_one_tap_description:
+      '在您的登入體驗中啟用 Google 一鍵登入：讓用戶在他們的設備上已經登入 Google 帳戶時快速註冊或登入。',
+    configure_google_one_tap: '配置 Google 一鍵登入',
+    auto_select: '自動選擇憑證（如果可能）',
+    close_on_tap_outside: '在用戶點擊/點擊外面時取消提示',
+    itp_support: '啟用 <a>ITP 瀏覽器上的升級一鍵登入用戶體驗</a>',
   },
 };
 

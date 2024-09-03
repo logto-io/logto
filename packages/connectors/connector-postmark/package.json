@@ -1,0 +1,68 @@
+{
+  "name": "@logto/connector-postmark",
+  "version": "1.0.0",
+  "description": "Postmark connector implementation.",
+  "author": "Sten Sandvik <stenrs@gmail.com>",
+  "dependencies": {
+    "@logto/connector-kit": "workspace:^4.0.0",
+    "@silverhand/essentials": "^2.9.0",
+    "postmark": "^4.0.2",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@silverhand/eslint-config": "6.0.1",
+    "@silverhand/ts-config": "6.0.0",
+    "@types/node": "^20.11.20",
+    "@types/supertest": "^6.0.2",
+    "@vitest/coverage-v8": "^2.0.0",
+    "eslint": "^8.56.0",
+    "lint-staged": "^15.0.2",
+    "nock": "14.0.0-beta.9",
+    "prettier": "^3.0.0",
+    "supertest": "^7.0.0",
+    "tsup": "^8.1.0",
+    "typescript": "^5.5.3",
+    "vitest": "^2.0.0"
+  },
+  "main": "./lib/index.js",
+  "module": "./lib/index.js",
+  "exports": "./lib/index.js",
+  "license": "MPL-2.0",
+  "type": "module",
+  "files": [
+    "lib",
+    "docs",
+    "logo.svg",
+    "logo-dark.svg"
+  ],
+  "scripts": {
+    "precommit": "lint-staged",
+    "check": "tsc --noEmit",
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint --ext .ts src",
+    "lint:report": "pnpm lint --format json --output-file report.json",
+    "test": "vitest src",
+    "test:ci": "pnpm run test --silent --coverage",
+    "prepublishOnly": "pnpm build"
+  },
+  "engines": {
+    "node": "^20.9.0"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand",
+    "settings": {
+      "import/core-modules": [
+        "@silverhand/essentials",
+        "got",
+        "nock",
+        "snakecase-keys",
+        "zod"
+      ]
+    }
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc",
+  "publishConfig": {
+    "access": "public"
+  }
+}

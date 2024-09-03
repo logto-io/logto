@@ -3,10 +3,10 @@ import ReactModal from 'react-modal';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import ModalLayout from '@/ds-components/ModalLayout';
-import * as modalStyles from '@/scss/modal.module.scss';
+import modalStyles from '@/scss/modal.module.scss';
 
 import { useContacts } from './hook';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly isOpen: boolean;

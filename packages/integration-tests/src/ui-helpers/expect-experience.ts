@@ -300,6 +300,18 @@ export default class ExpectExperience extends ExpectPage {
     return (await userIdSpan.evaluate((element) => element.textContent)) ?? '';
   }
 
+  async findFaviconUrls() {
+    const [favicon, appleFavicon] = await Promise.all([
+      this.page.evaluate(() => {
+        return document.querySelector('link[rel="shortcut icon"]')?.getAttribute('href');
+      }),
+      this.page.evaluate(() => {
+        return document.querySelector('link[rel="apple-touch-icon"]')?.getAttribute('href');
+      }),
+    ]);
+    return { favicon, appleFavicon };
+  }
+
   /** Build a full experience URL from a pathname. */
   protected buildExperienceUrl(pathname = '') {
     return appendPath(this.options.endpoint, pathname);

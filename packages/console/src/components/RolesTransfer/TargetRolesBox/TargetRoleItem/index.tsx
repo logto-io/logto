@@ -1,11 +1,11 @@
 import { type RoleResponse } from '@logto/schemas';
 
-import Close from '@/assets/icons/close.svg';
+import Close from '@/assets/icons/close.svg?react';
 import IconButton from '@/ds-components/IconButton';
 
 import RoleInformation from '../../components/RoleInformation';
 
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 
 type Props = {
   readonly role: RoleResponse;

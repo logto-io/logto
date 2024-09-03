@@ -6,6 +6,8 @@ import {
 } from '@logto/schemas';
 import * as s from 'superstruct';
 
+import { type IdentifierInputValue } from '@/components/InputFields/SmartInputField';
+
 import { UserFlow } from '.';
 
 export const userFlowGuard = s.enums([
@@ -14,22 +16,6 @@ export const userFlowGuard = s.enums([
   UserFlow.ForgotPassword,
   UserFlow.Continue,
 ]);
-
-/* Password SignIn Flow */
-export const passwordIdentifierStateGuard = s.object({
-  identifier: s.enums([SignInIdentifier.Email, SignInIdentifier.Phone, SignInIdentifier.Username]),
-  value: s.string(),
-});
-
-/* Verification Code Flow Guard */
-const verificationCodeMethodGuard = s.union([
-  s.literal(SignInIdentifier.Email),
-  s.literal(SignInIdentifier.Phone),
-]);
-export const verificationCodeStateGuard = s.object({
-  identifier: verificationCodeMethodGuard,
-  value: s.string(),
-});
 
 /* Social Flow Guard */
 const registeredSocialIdentity = s.optional(
@@ -118,4 +104,21 @@ export const ssoConnectorMetadataGuard: s.Describe<SsoConnectorMetadata> = s.obj
   logo: s.string(),
   darkLogo: s.optional(s.string()),
   connectorName: s.string(),
+});
+
+/**
+ * Defines the type guard for user identifier input value caching.
+ *
+ * Purpose:
+ * - Used in conjunction with the HiddenIdentifierInput component to assist
+ * password managers in associating the correct identifier with passwords.
+ *
+ * - Cache the identifier so that when the user returns from the verification
+ *  page or the password page, the identifier they entered will not be cleared.
+ */
+export const identifierInputValueGuard: s.Describe<IdentifierInputValue> = s.object({
+  type: s.optional(
+    s.enums([SignInIdentifier.Email, SignInIdentifier.Phone, SignInIdentifier.Username])
+  ),
+  value: s.string(),
 });

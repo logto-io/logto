@@ -1,12 +1,11 @@
 import { SignInIdentifier } from '@logto/schemas';
+import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
-import { validate } from 'superstruct';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { useSieMethods } from '@/hooks/use-sie';
 import ErrorPage from '@/pages/ErrorPage';
-import { passwordIdentifierStateGuard } from '@/types/guard';
 import { formatPhoneNumberWithCountryCallingCode } from '@/utils/country-code';
 import { identifierInputDescriptionMap } from '@/utils/form';
 
@@ -14,18 +13,17 @@ import PasswordForm from './PasswordForm';
 
 const SignInPassword = () => {
   const { t } = useTranslation();
-  const { state } = useLocation();
   const { signInMethods } = useSieMethods();
 
-  const [_, identifierState] = validate(state, passwordIdentifierStateGuard);
+  const { identifierInputValue } = useContext(UserInteractionContext);
 
-  if (!identifierState) {
+  if (!identifierInputValue) {
     return <ErrorPage title="error.invalid_session" />;
   }
 
-  const { identifier, value } = identifierState;
+  const { type, value } = identifierInputValue;
 
-  const methodSetting = signInMethods.find((method) => method.identifier === identifier);
+  const methodSetting = signInMethods.find((method) => method.identifier === type);
 
   // Sign-in method not enabled
   if (!methodSetting?.password) {
@@ -37,9 +35,9 @@ const SignInPassword = () => {
       title="description.enter_password"
       description="description.enter_password_for"
       descriptionProps={{
-        method: t(identifierInputDescriptionMap[identifier]),
+        method: t(identifierInputDescriptionMap[methodSetting.identifier]),
         value:
-          identifier === SignInIdentifier.Phone
+          methodSetting.identifier === SignInIdentifier.Phone
             ? formatPhoneNumberWithCountryCallingCode(value)
             : value,
       }}

@@ -35,6 +35,13 @@ const cloud = {
       others: 'Aucun de ceux mentionnés ci-dessus',
     },
   },
+  create_tenant: {
+    page_title: 'Créer un locataire',
+    title: 'Créez votre premier locataire',
+    description:
+      'Un locataire est un environnement isolé où vous pouvez gérer les identités des utilisateurs, les applications et toutes les autres ressources Logto.',
+    invite_collaborators: 'Invitez vos collaborateurs par e-mail',
+  },
   sie: {
     page_title: "Personnalisez l'expérience de connexion",
     title: "Personnalisons d'abord votre expérience de connexion en toute simplicité",

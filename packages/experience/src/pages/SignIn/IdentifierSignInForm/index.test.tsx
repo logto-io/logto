@@ -66,7 +66,7 @@ describe('IdentifierSignInForm', () => {
   });
 
   test('should show required error message when input is empty', async () => {
-    const { getByText, container } = renderForm(mockSignInMethodSettingsTestCases[0]!);
+    const { getByText } = renderForm(mockSignInMethodSettingsTestCases[0]!);
     const submitButton = getByText('action.sign_in');
 
     act(() => {
@@ -128,10 +128,7 @@ describe('IdentifierSignInForm', () => {
         if (identifier === SignInIdentifier.Username) {
           await waitFor(() => {
             expect(sendVerificationCodeApi).not.toBeCalled();
-            expect(mockedNavigate).toBeCalledWith(
-              { pathname: '/sign-in/password' },
-              { state: { identifier: SignInIdentifier.Username, value } }
-            );
+            expect(mockedNavigate).toBeCalledWith({ pathname: '/sign-in/password' });
           });
 
           return;
@@ -146,18 +143,7 @@ describe('IdentifierSignInForm', () => {
         if (password && (isPasswordPrimary || !verificationCode)) {
           await waitFor(() => {
             expect(sendVerificationCodeApi).not.toBeCalled();
-            expect(mockedNavigate).toBeCalledWith(
-              { pathname: '/sign-in/password' },
-              {
-                state: {
-                  identifier,
-                  value:
-                    identifier === SignInIdentifier.Phone
-                      ? `${getDefaultCountryCallingCode()}${value}`
-                      : value,
-                },
-              }
-            );
+            expect(mockedNavigate).toBeCalledWith({ pathname: '/sign-in/password' });
           });
 
           return;
@@ -203,10 +189,7 @@ describe('IdentifierSignInForm', () => {
 
       await waitFor(() => {
         expect(getSingleSignOnConnectorsMock).not.toBeCalled();
-        expect(mockedNavigate).toBeCalledWith(
-          { pathname: '/sign-in/password' },
-          { state: { identifier: SignInIdentifier.Username, value: username } }
-        );
+        expect(mockedNavigate).toBeCalledWith({ pathname: '/sign-in/password' });
       });
     });
 
@@ -233,10 +216,7 @@ describe('IdentifierSignInForm', () => {
 
       await waitFor(() => {
         expect(getSingleSignOnConnectorsMock).not.toBeCalled();
-        expect(mockedNavigate).toBeCalledWith(
-          { pathname: '/sign-in/password' },
-          { state: { identifier: SignInIdentifier.Email, value: email } }
-        );
+        expect(mockedNavigate).toBeCalledWith({ pathname: '/sign-in/password' });
       });
     });
 
@@ -270,10 +250,7 @@ describe('IdentifierSignInForm', () => {
       });
 
       await waitFor(() => {
-        expect(mockedNavigate).toBeCalledWith(
-          { pathname: '/sign-in/password' },
-          { state: { identifier: SignInIdentifier.Email, value: email } }
-        );
+        expect(mockedNavigate).toBeCalledWith({ pathname: '/sign-in/password' });
       });
     });
 

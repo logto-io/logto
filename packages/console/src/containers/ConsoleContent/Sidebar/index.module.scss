@@ -4,4 +4,11 @@
   width: 248px;
   overflow-y: auto;
   margin-bottom: _.unit(6);
+  flex-shrink: 0;
+}
+
+.skeleton {
+  width: 248px;
+  height: 100%;
+  @include _.shimmering-animation;
 }

@@ -4,6 +4,7 @@ import { generateStandardId } from '@logto/shared';
 import { pickState, trySafe, tryThat } from '@silverhand/essentials';
 import { number, object, string, z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -150,9 +151,18 @@ export default function roleRoutes<T extends ManagementApiRouter>(
       // `rolesLimit` is actually the limit of user roles, keep this name for backward compatibility.
       // We have optional `type` when creating a new role, if `type` is not provided, use `User` as default.
       // `machineToMachineRolesLimit` is the limit of machine to machine roles, and is independent to `rolesLimit`.
-      await quota.guardKey(
-        roleBody.type === RoleType.MachineToMachine ? 'machineToMachineRolesLimit' : 'rolesLimit'
-      );
+      await (EnvSet.values.isDevFeaturesEnabled
+        ? quota.guardTenantUsageByKey(
+            roleBody.type === RoleType.MachineToMachine
+              ? 'machineToMachineRolesLimit'
+              : // In new pricing model, we rename `rolesLimit` to `userRolesLimit`, which is easier to be distinguished from `machineToMachineRolesLimit`.
+                'userRolesLimit'
+          )
+        : quota.guardKey(
+            roleBody.type === RoleType.MachineToMachine
+              ? 'machineToMachineRolesLimit'
+              : 'rolesLimit'
+          ));
 
       assertThat(
         !(await findRoleByRoleName(roleBody.name)),
@@ -174,7 +184,12 @@ export default function roleRoutes<T extends ManagementApiRouter>(
         await insertRolesScopes(
           scopeIds.map((scopeId) => ({ id: generateStandardId(), roleId: role.id, scopeId }))
         );
+      }
 
+      ctx.body = role;
+
+      // Hook context must be triggered after the response is set.
+      if (scopeIds) {
         // Trigger the `Role.Scopes.Updated` event if scopeIds are provided. Should not break the request
         await trySafe(async () => {
           // Align the response type with POST /roles/:id/scopes
@@ -187,8 +202,6 @@ export default function roleRoutes<T extends ManagementApiRouter>(
           });
         });
       }
-
-      ctx.body = role;
 
       return next();
     }
