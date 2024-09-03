@@ -36,8 +36,8 @@
   "dependencies": {
     "@logto/language-kit": "workspace:^1.1.0",
     "@silverhand/essentials": "^2.9.1",
-    "@withtyped/client": "^0.8.7",
-    "@withtyped/server": "^0.13.6"
+    "@withtyped/client": "^0.8.8",
+    "@withtyped/server": "^0.14.0"
   },
   "optionalDependencies": {
     "zod": "^3.23.8"
