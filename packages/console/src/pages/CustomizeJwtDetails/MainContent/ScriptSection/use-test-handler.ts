@@ -41,8 +41,7 @@ const useTestHandler = () => {
           // Get error message from cloud connection client.
           if (errorResponse.code === jwtCustomizerGeneralErrorCode) {
             const result = z
-              .object({ message: z.string() })
-              .catchall(z.unknown())
+              .object({ message: z.string(), code: z.string().optional() })
               .safeParse(errorResponse.data);
 
             if (result.success) {

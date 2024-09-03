@@ -20,53 +20,97 @@ import {
 } from './type-definitions.js';
 
 /**
- * JWT token code editor configuration
+ * Define the user access token JwtCustomizer payload type definitions
+ *
+ * @see {CustomJwtScriptPayload}
  */
 const accessTokenJwtCustomizerDefinition = `
 declare interface CustomJwtClaims extends Record<string, any> {}
 
 /** Logto internal data that can be used to pass additional information
- * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} user - The user info associated with the token.
+ * 
+ * @param {${
+   JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext
+ }} user - The user info associated with the token.
  */
 declare type Context = {
+  /**
+   * The user data associated with the token.
+   */
   user: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext};
+  /**
+   * The grant context associated with the token.
+   */
   grant?: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerGrantContext};
 }
 
 declare type Payload = {
+  /**
+   * Token payload.
+   */
   token: ${JwtCustomizerTypeDefinitionKey.AccessTokenPayload};
+  /**
+   * Logto internal data that can be used to pass additional information.
+   *
+   * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} user
+   * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerGrantContext}} [grant]
+   */
   context: Context;
+  /**
+   * Custom environment variables.
+   */
   environmentVariables: ${JwtCustomizerTypeDefinitionKey.EnvironmentVariables};
-  api: ${JwtCustomizerTypeDefinitionKey.CustomJwtApiContext};
+  ${
+    isDevFeaturesEnabled
+      ? `
+    /**
+   * Logto API context, provides callback methods for access control.
+   *
+   * @param {${JwtCustomizerTypeDefinitionKey.CustomJwtApiContext}} api
+   */
+  api: ${JwtCustomizerTypeDefinitionKey.CustomJwtApiContext};`
+      : ''
+  }
 };`;
 
+/**
+ * Define the client credentials token JwtCustomizer payload type definitions
+ *
+ * @see {CustomJwtScriptPayload}
+ */
 const clientCredentialsJwtCustomizerDefinition = `
 declare interface CustomJwtClaims extends Record<string, any> {}
 
 declare type Payload = {
+  /**
+   * Token payload.
+   */
   token: ${JwtCustomizerTypeDefinitionKey.AccessTokenPayload};
+  /**
+   * Custom environment variables.
+   */
   environmentVariables: ${JwtCustomizerTypeDefinitionKey.EnvironmentVariables};
-  api: ${JwtCustomizerTypeDefinitionKey.CustomJwtApiContext};
+  ${
+    isDevFeaturesEnabled
+      ? `
+    /**
+   * Logto API context, callback methods for access control.
+   *
+   * @param {${JwtCustomizerTypeDefinitionKey.CustomJwtApiContext}} api
+   */
+  api: ${JwtCustomizerTypeDefinitionKey.CustomJwtApiContext};`
+      : ''
+  }
 };`;
 
 export const defaultAccessTokenJwtCustomizerCode = `/**
-* This function is called during the access token generation process to get custom claims for the JWT token.
-* Limit custom claims to under 50KB.
-*
-* @param {Object} payload - The input payload of the function.
-* @param {${JwtCustomizerTypeDefinitionKey.AccessTokenPayload}} payload.token -The JWT token.
-* @param {Context} payload.context - Logto internal data that can be used to pass additional information
-* @param {${
-  JwtCustomizerTypeDefinitionKey.EnvironmentVariables
-}} [payload.environmentVariables] - The environment variables.
-${
-  isDevFeaturesEnabled
-    ? `* @param {${JwtCustomizerTypeDefinitionKey.CustomJwtApiContext}} payload.api - The API context.
-    * `
-    : '*'
-}
-* @returns The custom claims.
-*/
+ * This function is called during the access token generation process to get custom claims for the JWT token.
+ * Limit custom claims to under 50KB.
+ *
+ * @param {Payload} payload - The input argument of the function.
+ * 
+ * @returns The custom claims.
+ */
 const getCustomJwtClaims = async ({ token, context, environmentVariables${
   isDevFeaturesEnabled ? ', api' : ''
 } }) => {
@@ -74,22 +118,13 @@ const getCustomJwtClaims = async ({ token, context, environmentVariables${
 }`;
 
 export const defaultClientCredentialsJwtCustomizerCode = `/**
-* This function is called during the access token generation process to get custom claims for the JWT token.
-* Limit custom claims to under 50KB.
-*
-* @param {Object} payload - The input payload of the function.
-* @param {${JwtCustomizerTypeDefinitionKey.ClientCredentialsPayload}} payload.token -The JWT token.
-* @param {${
-  JwtCustomizerTypeDefinitionKey.EnvironmentVariables
-}} [payload.environmentVariables] - The environment variables.
-${
-  isDevFeaturesEnabled
-    ? `* @param {${JwtCustomizerTypeDefinitionKey.CustomJwtApiContext}} payload.api - The API context.
-*`
-    : '*'
-}
-* @returns The custom claims.
-*/
+ * This function is called during the access token generation process to get custom claims for the JWT token.
+ * Limit custom claims to under 50KB.
+ *
+ * @param {Payload} payload - The input payload of the function.
+ *
+ * @returns The custom claims.
+ */
 const getCustomJwtClaims = async ({ token, environmentVariables${
   isDevFeaturesEnabled ? ', api' : ''
 } }) => {
@@ -179,6 +214,15 @@ export const environmentVariablesCodeExample = `const getCustomJwtClaimsSample =
   return {
     externalData: data,
   };
+};`;
+
+export const denyAccessCodeExample = `/**
+ * @param {Payload} payload - The input payload of the function.
+ */
+getCustomJwtClaims = async ({ api }) => {
+  // Conditionally deny access 
+  api.denyAccess('Access denied');
+  return {};
 };`;
 
 /**

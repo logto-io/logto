@@ -15,11 +15,10 @@ export const jwtCustomizerApiContextTypeDefinition = `type CustomJwtApiContext =
    * Reject the the current token exchange request.
    *
    * @remarks
-   * By calling this function, the current token exchange request will be rejected,
-   * and a ODIC AccessDenied error will be thrown to the client with the given message.
+   * This function will reject the current token exchange request and throw
+   * an OIDC AccessDenied error to the client.
    *
-   * @param message The message to be shown to the user.
-   * @throws {ResponseError} with CustomJwtErrorBody
+   * @param {string} [message] - The custom error message.
    */
   denyAccess: (message?: string) => never;
 };`;
