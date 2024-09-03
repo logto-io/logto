@@ -41,7 +41,7 @@ importers:
         version: 8.8.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.0.2))(typescript@5.0.2)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.0.2))(typescript@5.0.2)
       typescript:
         specifier: ^5.0.0
         version: 5.0.2
@@ -263,7 +263,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -330,7 +330,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -388,7 +388,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -446,7 +446,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -510,7 +510,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -574,7 +574,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -635,7 +635,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -702,7 +702,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -760,7 +760,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -818,7 +818,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -876,7 +876,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -937,7 +937,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -1007,7 +1007,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -1068,7 +1068,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -1126,7 +1126,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -1184,7 +1184,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -1242,7 +1242,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -1269,8 +1269,8 @@ importers:
         version: 3.23.8
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-e14156b
-        version: 0.2.5-e14156b(zod@3.23.8)
+        specifier: 0.2.5-582d792
+        version: 0.2.5-582d792(zod@3.23.8)
       '@silverhand/eslint-config':
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
@@ -1303,7 +1303,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -1361,7 +1361,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -1419,7 +1419,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -1477,7 +1477,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -1535,7 +1535,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -1593,7 +1593,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -1651,7 +1651,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -1709,7 +1709,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -1767,7 +1767,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -1834,7 +1834,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -1904,7 +1904,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -1962,7 +1962,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -2017,7 +2017,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -2081,7 +2081,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -2139,7 +2139,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -2197,7 +2197,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -2261,7 +2261,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -2319,7 +2319,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -2377,7 +2377,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -2435,7 +2435,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -2493,7 +2493,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -2551,7 +2551,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.10.4)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.10.4)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -2568,8 +2568,8 @@ importers:
         specifier: ^29.5.0
         version: 29.5.0
       '@logto/cloud':
-        specifier: 0.2.5-e14156b
-        version: 0.2.5-e14156b(zod@3.23.8)
+        specifier: 0.2.5-582d792
+        version: 0.2.5-582d792(zod@3.23.8)
       '@logto/connector-kit':
         specifier: workspace:^4.0.0
         version: link:../toolkit/connector-kit
@@ -3061,8 +3061,8 @@ importers:
         version: 3.23.8
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-e14156b
-        version: 0.2.5-e14156b(zod@3.23.8)
+        specifier: 0.2.5-582d792
+        version: 0.2.5-582d792(zod@3.23.8)
       '@silverhand/eslint-config':
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
@@ -3134,7 +3134,7 @@ importers:
         version: 8.57.0
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.10.4)(typescript@5.5.3))
+        version: 29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.10.4)(typescript@5.5.3))
       jest-matcher-specific-error:
         specifier: ^1.0.0
         version: 1.0.0
@@ -3164,7 +3164,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.10.4)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.10.4)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -3309,7 +3309,7 @@ importers:
         version: 3.0.0
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.5.3))(typescript@5.5.3)
 
   packages/experience:
     devDependencies:
@@ -3577,7 +3577,7 @@ importers:
         version: 10.0.0
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.10.4)(typescript@5.5.3))
+        version: 29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.10.4)(typescript@5.5.3))
       jest-matcher-specific-error:
         specifier: ^1.0.0
         version: 1.0.0
@@ -3604,7 +3604,7 @@ importers:
         version: 22.6.5(typescript@5.5.3)
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.10.4)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.10.4)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -5355,8 +5355,8 @@ packages:
   '@logto/client@2.7.2':
     resolution: {integrity: sha512-jsmuDl9QpXfR3uLEMPE67tvYoL5XcjJi+4yGqucYPjd4GH6SUHp3N9skk8C/OyygnKDPLY+ttwD0LaIbpGvn+Q==}
 
-  '@logto/cloud@0.2.5-e14156b':
-    resolution: {integrity: sha512-Ea9w6a7EWqbnCFGJ6PAyABK3AJutFuzO/x/8xIHA75rZMhQjKyXeQwbwXA+tq+GMtrSWwajI89S0ggKhHYt+tw==}
+  '@logto/cloud@0.2.5-582d792':
+    resolution: {integrity: sha512-0fIZzqwyjQguTS0a5+XbgVZlGEB/MXIf6pbuBDkHh6JHlMTJ/XH041rWX+e+nMk5N7/Xk2XXS+d2RJUWumnmpw==}
     engines: {node: ^20.9.0}
 
   '@logto/js@4.1.4':
@@ -14687,7 +14687,7 @@ snapshots:
       jest-util: 29.7.0
       slash: 3.0.0
 
-  '@jest/core@29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.10.4)(typescript@5.5.3))':
+  '@jest/core@29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))':
     dependencies:
       '@jest/console': 29.7.0
       '@jest/reporters': 29.7.0
@@ -14701,7 +14701,7 @@ snapshots:
       exit: 0.1.2
       graceful-fs: 4.2.11
       jest-changed-files: 29.7.0
-      jest-config: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.10.4)(typescript@5.5.3))
+      jest-config: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))
       jest-haste-map: 29.7.0
       jest-message-util: 29.7.0
       jest-regex-util: 29.6.3
@@ -14722,7 +14722,7 @@ snapshots:
       - supports-color
       - ts-node
 
-  '@jest/core@29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))':
+  '@jest/core@29.7.0(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.10.4)(typescript@5.5.3))':
     dependencies:
       '@jest/console': 29.7.0
       '@jest/reporters': 29.7.0
@@ -14736,7 +14736,7 @@ snapshots:
       exit: 0.1.2
       graceful-fs: 4.2.11
       jest-changed-files: 29.7.0
-      jest-config: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))
+      jest-config: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.10.4)(typescript@5.5.3))
       jest-haste-map: 29.7.0
       jest-message-util: 29.7.0
       jest-regex-util: 29.6.3
@@ -15024,7 +15024,7 @@ snapshots:
       camelcase-keys: 7.0.2
       jose: 5.6.3
 
-  '@logto/cloud@0.2.5-e14156b(zod@3.23.8)':
+  '@logto/cloud@0.2.5-582d792(zod@3.23.8)':
     dependencies:
       '@silverhand/essentials': 2.9.1
       '@withtyped/server': 0.14.0(zod@3.23.8)
@@ -15468,10 +15468,10 @@ snapshots:
       eslint-config-prettier: 9.1.0(eslint@8.57.0)
       eslint-config-xo: 0.44.0(eslint@8.57.0)
       eslint-config-xo-typescript: 4.0.0(@typescript-eslint/eslint-plugin@7.7.0(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0)(typescript@5.5.3))(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0)(typescript@5.5.3)
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0)
       eslint-plugin-consistent-default-export-name: 0.0.15
       eslint-plugin-eslint-comments: 3.2.0(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
       eslint-plugin-n: 17.2.1(eslint@8.57.0)
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-prettier: 5.1.3(eslint-config-prettier@9.1.0(eslint@8.57.0))(eslint@8.57.0)(prettier@3.0.0)
@@ -17635,13 +17635,13 @@ snapshots:
     dependencies:
       lodash.get: 4.4.2
 
-  create-jest@29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.10.4)(typescript@5.5.3)):
+  create-jest@29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.10.4)(typescript@5.5.3)):
     dependencies:
       '@jest/types': 29.6.3
       chalk: 4.1.2
       exit: 0.1.2
       graceful-fs: 4.2.11
-      jest-config: 29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.10.4)(typescript@5.5.3))
+      jest-config: 29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.10.4)(typescript@5.5.3))
       jest-util: 29.7.0
       prompts: 2.4.2
     transitivePeerDependencies:
@@ -18435,13 +18435,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0):
+  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0):
     dependencies:
       debug: 4.3.5
       enhanced-resolve: 5.16.0
       eslint: 8.57.0
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.3
       is-core-module: 2.13.1
@@ -18452,14 +18452,14 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
+  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 3.2.7(supports-color@5.5.0)
     optionalDependencies:
       '@typescript-eslint/parser': 7.7.0(eslint@8.57.0)(typescript@5.5.3)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -18481,7 +18481,7 @@ snapshots:
       eslint: 8.57.0
       ignore: 5.3.1
 
-  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
+  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):
     dependencies:
       array-includes: 3.1.8
       array.prototype.findlastindex: 1.2.5
@@ -18491,7 +18491,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.13.1
       is-glob: 4.0.3
@@ -19975,16 +19975,16 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
-  jest-cli@29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.10.4)(typescript@5.5.3)):
+  jest-cli@29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.10.4)(typescript@5.5.3)):
     dependencies:
-      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.10.4)(typescript@5.5.3))
+      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.10.4)(typescript@5.5.3))
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
       chalk: 4.1.2
-      create-jest: 29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.10.4)(typescript@5.5.3))
+      create-jest: 29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.10.4)(typescript@5.5.3))
       exit: 0.1.2
       import-local: 3.1.0
-      jest-config: 29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.10.4)(typescript@5.5.3))
+      jest-config: 29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.10.4)(typescript@5.5.3))
       jest-util: 29.7.0
       jest-validate: 29.7.0
       yargs: 17.7.2
@@ -20013,7 +20013,7 @@ snapshots:
       - supports-color
       - ts-node
 
-  jest-config@29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.10.4)(typescript@5.5.3)):
+  jest-config@29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.10.4)(typescript@5.5.3)):
     dependencies:
       '@babel/core': 7.24.4
       '@jest/test-sequencer': 29.7.0
@@ -20039,38 +20039,7 @@ snapshots:
       strip-json-comments: 3.1.1
     optionalDependencies:
       '@types/node': 20.10.4
-      ts-node: 10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.10.4)(typescript@5.5.3)
-    transitivePeerDependencies:
-      - babel-plugin-macros
-      - supports-color
-
-  jest-config@29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.10.4)(typescript@5.5.3)):
-    dependencies:
-      '@babel/core': 7.24.4
-      '@jest/test-sequencer': 29.7.0
-      '@jest/types': 29.6.3
-      babel-jest: 29.7.0(@babel/core@7.24.4)
-      chalk: 4.1.2
-      ci-info: 3.8.0
-      deepmerge: 4.3.1
-      glob: 7.2.3
-      graceful-fs: 4.2.11
-      jest-circus: 29.7.0
-      jest-environment-node: 29.7.0
-      jest-get-type: 29.6.3
-      jest-regex-util: 29.6.3
-      jest-resolve: 29.7.0
-      jest-runner: 29.7.0
-      jest-util: 29.7.0
-      jest-validate: 29.7.0
-      micromatch: 4.0.5
-      parse-json: 5.2.0
-      pretty-format: 29.7.0
-      slash: 3.0.0
-      strip-json-comments: 3.1.1
-    optionalDependencies:
-      '@types/node': 20.12.7
-      ts-node: 10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.10.4)(typescript@5.5.3)
+      ts-node: 10.9.2(@swc/core@1.3.52)(@types/node@20.10.4)(typescript@5.5.3)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
@@ -20102,6 +20071,37 @@ snapshots:
     optionalDependencies:
       '@types/node': 20.12.7
       ts-node: 10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3)
+    transitivePeerDependencies:
+      - babel-plugin-macros
+      - supports-color
+
+  jest-config@29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.10.4)(typescript@5.5.3)):
+    dependencies:
+      '@babel/core': 7.24.4
+      '@jest/test-sequencer': 29.7.0
+      '@jest/types': 29.6.3
+      babel-jest: 29.7.0(@babel/core@7.24.4)
+      chalk: 4.1.2
+      ci-info: 3.8.0
+      deepmerge: 4.3.1
+      glob: 7.2.3
+      graceful-fs: 4.2.11
+      jest-circus: 29.7.0
+      jest-environment-node: 29.7.0
+      jest-get-type: 29.6.3
+      jest-regex-util: 29.6.3
+      jest-resolve: 29.7.0
+      jest-runner: 29.7.0
+      jest-util: 29.7.0
+      jest-validate: 29.7.0
+      micromatch: 4.0.5
+      parse-json: 5.2.0
+      pretty-format: 29.7.0
+      slash: 3.0.0
+      strip-json-comments: 3.1.1
+    optionalDependencies:
+      '@types/node': 20.12.7
+      ts-node: 10.9.2(@swc/core@1.3.52)(@types/node@20.10.4)(typescript@5.5.3)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
@@ -20414,12 +20414,12 @@ snapshots:
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
-  jest@29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.10.4)(typescript@5.5.3)):
+  jest@29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.10.4)(typescript@5.5.3)):
     dependencies:
-      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.10.4)(typescript@5.5.3))
+      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.10.4)(typescript@5.5.3))
       '@jest/types': 29.6.3
       import-local: 3.1.0
-      jest-cli: 29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.10.4)(typescript@5.5.3))
+      jest-cli: 29.7.0(@types/node@20.10.4)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.10.4)(typescript@5.5.3))
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
@@ -22353,31 +22353,31 @@ snapshots:
 
   possible-typed-array-names@1.0.0: {}
 
-  postcss-load-config@4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.10.4)(typescript@5.5.3)):
+  postcss-load-config@4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.10.4)(typescript@5.5.3)):
     dependencies:
       lilconfig: 3.1.2
       yaml: 2.4.5
     optionalDependencies:
       postcss: 8.4.39
-      ts-node: 10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.10.4)(typescript@5.5.3)
+      ts-node: 10.9.2(@swc/core@1.3.52)(@types/node@20.10.4)(typescript@5.5.3)
 
-  postcss-load-config@4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3)):
+  postcss-load-config@4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3)):
     dependencies:
       lilconfig: 3.1.2
       yaml: 2.4.5
     optionalDependencies:
       postcss: 8.4.39
-      ts-node: 10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3)
+      ts-node: 10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3)
 
-  postcss-load-config@4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.0.2)):
+  postcss-load-config@4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.0.2)):
     dependencies:
       lilconfig: 3.1.2
       yaml: 2.4.5
     optionalDependencies:
       postcss: 8.4.39
-      ts-node: 10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.0.2)
+      ts-node: 10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.0.2)
 
-  postcss-load-config@4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3)):
+  postcss-load-config@4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.5.3)):
     dependencies:
       lilconfig: 3.1.2
       yaml: 2.4.5
@@ -23944,7 +23944,28 @@ snapshots:
 
   ts-interface-checker@0.1.13: {}
 
-  ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.10.4)(typescript@5.5.3):
+  ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3):
+    dependencies:
+      '@cspotcode/source-map-support': 0.8.1
+      '@tsconfig/node10': 1.0.11
+      '@tsconfig/node12': 1.0.11
+      '@tsconfig/node14': 1.0.3
+      '@tsconfig/node16': 1.0.4
+      '@types/node': 20.12.7
+      acorn: 8.12.1
+      acorn-walk: 8.3.3
+      arg: 4.1.3
+      create-require: 1.1.1
+      diff: 4.0.2
+      make-error: 1.3.6
+      typescript: 5.5.3
+      v8-compile-cache-lib: 3.0.1
+      yn: 3.1.1
+    optionalDependencies:
+      '@swc/core': 1.3.52(@swc/helpers@0.5.1)
+    optional: true
+
+  ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.10.4)(typescript@5.5.3):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.11
@@ -23965,7 +23986,7 @@ snapshots:
       '@swc/core': 1.3.52(@swc/helpers@0.5.1)
     optional: true
 
-  ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3):
+  ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.11
@@ -23986,7 +24007,7 @@ snapshots:
       '@swc/core': 1.3.52(@swc/helpers@0.5.1)
     optional: true
 
-  ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.0.2):
+  ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.0.2):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.11
@@ -24001,27 +24022,6 @@ snapshots:
       diff: 4.0.2
       make-error: 1.3.6
       typescript: 5.0.2
-      v8-compile-cache-lib: 3.0.1
-      yn: 3.1.1
-    optionalDependencies:
-      '@swc/core': 1.3.52(@swc/helpers@0.5.1)
-    optional: true
-
-  ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3):
-    dependencies:
-      '@cspotcode/source-map-support': 0.8.1
-      '@tsconfig/node10': 1.0.11
-      '@tsconfig/node12': 1.0.11
-      '@tsconfig/node14': 1.0.3
-      '@tsconfig/node16': 1.0.4
-      '@types/node': 20.12.7
-      acorn: 8.12.1
-      acorn-walk: 8.3.3
-      arg: 4.1.3
-      create-require: 1.1.1
-      diff: 4.0.2
-      make-error: 1.3.6
-      typescript: 5.5.3
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     optionalDependencies:
@@ -24048,7 +24048,7 @@ snapshots:
 
   tsscmp@1.0.6: {}
 
-  tsup@8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.10.4)(typescript@5.5.3))(typescript@5.5.3):
+  tsup@8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.10.4)(typescript@5.5.3))(typescript@5.5.3):
     dependencies:
       bundle-require: 4.2.1(esbuild@0.21.5)
       cac: 6.7.14
@@ -24058,7 +24058,7 @@ snapshots:
       execa: 5.1.1
       globby: 11.1.0
       joycon: 3.1.1
-      postcss-load-config: 4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.10.4)(typescript@5.5.3))
+      postcss-load-config: 4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.10.4)(typescript@5.5.3))
       resolve-from: 5.0.0
       rollup: 4.14.3
       source-map: 0.8.0-beta.0
@@ -24072,7 +24072,7 @@ snapshots:
       - supports-color
       - ts-node
 
-  tsup@8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3):
+  tsup@8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))(typescript@5.5.3):
     dependencies:
       bundle-require: 4.2.1(esbuild@0.21.5)
       cac: 6.7.14
@@ -24082,7 +24082,7 @@ snapshots:
       execa: 5.1.1
       globby: 11.1.0
       joycon: 3.1.1
-      postcss-load-config: 4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.11.20)(typescript@5.5.3))
+      postcss-load-config: 4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.11.20)(typescript@5.5.3))
       resolve-from: 5.0.0
       rollup: 4.14.3
       source-map: 0.8.0-beta.0
@@ -24096,7 +24096,7 @@ snapshots:
       - supports-color
       - ts-node
 
-  tsup@8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.0.2))(typescript@5.0.2):
+  tsup@8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.0.2))(typescript@5.0.2):
     dependencies:
       bundle-require: 4.2.1(esbuild@0.21.5)
       cac: 6.7.14
@@ -24106,7 +24106,7 @@ snapshots:
       execa: 5.1.1
       globby: 11.1.0
       joycon: 3.1.1
-      postcss-load-config: 4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.0.2))
+      postcss-load-config: 4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.0.2))
       resolve-from: 5.0.0
       rollup: 4.14.3
       source-map: 0.8.0-beta.0
@@ -24120,7 +24120,7 @@ snapshots:
       - supports-color
       - ts-node
 
-  tsup@8.1.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))(typescript@5.5.3):
+  tsup@8.1.0(@swc/core@1.3.52)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.5.3))(typescript@5.5.3):
     dependencies:
       bundle-require: 4.2.1(esbuild@0.21.5)
       cac: 6.7.14
@@ -24130,7 +24130,7 @@ snapshots:
       execa: 5.1.1
       globby: 11.1.0
       joycon: 3.1.1
-      postcss-load-config: 4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52(@swc/helpers@0.5.1))(@types/node@20.12.7)(typescript@5.5.3))
+      postcss-load-config: 4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.52)(@types/node@20.12.7)(typescript@5.5.3))
       resolve-from: 5.0.0
       rollup: 4.14.3
       source-map: 0.8.0-beta.0
