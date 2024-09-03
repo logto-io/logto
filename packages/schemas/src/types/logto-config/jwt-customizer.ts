@@ -166,7 +166,7 @@ export const customJwtErrorBodyGuard = z.object({
 
 export type CustomJwtErrorBody = z.infer<typeof customJwtErrorBodyGuard>;
 
-export type JwtCustomizerApiContext = {
+export type CustomJwtApiContext = {
   /**
    * Reject the the current token exchange request.
    *
@@ -190,5 +190,5 @@ export type CustomJwtScriptPayload = {
   token: Record<string, unknown>;
   context?: Record<string, unknown>;
   environmentVariables?: Record<string, string>;
-  api: JwtCustomizerApiContext;
+  api: CustomJwtApiContext;
 };

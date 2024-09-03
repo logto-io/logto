@@ -8,7 +8,7 @@ import {
   type JwtCustomizerType,
   type JwtCustomizerUserContext,
   type LogtoJwtTokenKey,
-  type JwtCustomizerApiContext,
+  type CustomJwtApiContext,
   type CustomJwtScriptPayload,
 } from '@logto/schemas';
 import { type ConsoleLog } from '@logto/shared';
@@ -32,7 +32,7 @@ import {
 
 import { type CloudConnectionLibrary } from './cloud-connection.js';
 
-const apiContext: JwtCustomizerApiContext = Object.freeze({
+const apiContext: CustomJwtApiContext = Object.freeze({
   denyAccess: (message = 'Access denied') => {
     const error: CustomJwtErrorBody = {
       code: CustomJwtErrorCode.AccessDenied,
