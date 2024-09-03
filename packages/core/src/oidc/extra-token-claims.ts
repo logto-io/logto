@@ -218,6 +218,11 @@ export const getExtraTokenClaimsForJwtCustomization = async (
       },
     });
 
+    // TODO: @simeng remove this once the feature is ready
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return;
+    }
+
     // If the error is an instance of `ResponseError`, we need to parse the customJwtError body to get the error code.
     if (error instanceof ResponseError) {
       const customJwtError = await trySafe(async () => parseCustomJwtResponseError(error));

@@ -27,7 +27,7 @@ export const getJwtCustomizerScripts = (jwtCustomizers: Partial<JwtCustomizerTyp
  */
 const errorResponseGuard = z.object({
   message: z.string(),
-  error: z.unknown(),
+  error: z.unknown().optional(),
 });
 
 /**
@@ -54,7 +54,6 @@ export const parseCustomJwtResponseError = async (
   }
 
   const errorResponseData = errorResponse.data;
-
   const errorBody = customJwtErrorBodyGuard.safeParse(errorResponseData.error);
 
   // Not a standard CustomJwtError body.
