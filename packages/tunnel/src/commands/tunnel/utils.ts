@@ -10,7 +10,7 @@ import { createProxyMiddleware, responseInterceptor } from 'http-proxy-middlewar
 import { type OnProxyEvent } from 'http-proxy-middleware/dist/types.js';
 import mime from 'mime';
 
-import { consoleLog } from '../utils.js';
+import { consoleLog } from '../../utils.js';
 
 import { type LogtoResponseHandler } from './types.js';
 
@@ -128,15 +128,17 @@ export const checkExperienceInput = (url?: string, staticPath?: string) => {
     consoleLog.fatal('Only one of the experience URI or path can be provided.');
   }
   if (!staticPath && !url) {
-    consoleLog.fatal('Either a sign-in experience URI or local path must be provided.');
+    consoleLog.fatal(`Either a sign-in experience URI or local path must be provided.
+      
+Specify --help for available options`);
   }
   if (url && !isValidUrl(url)) {
     consoleLog.fatal(
-      'A valid sign-in experience URI must be provided. E.g.: http://localhost:4000'
+      'A valid sign-in experience URI must be provided. E.g. `--experience-uri http://localhost:4000` or add `LOGTO_EXPERIENCE_URI` to your environment variables.'
     );
   }
   if (staticPath && !existsSync(path.join(staticPath, index))) {
-    consoleLog.fatal('The provided path does not contain a valid index.html file.');
+    consoleLog.fatal('The provided path must contain a valid index.html file.');
   }
 };
 
