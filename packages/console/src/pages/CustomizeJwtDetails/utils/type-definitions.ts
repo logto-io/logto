@@ -4,6 +4,7 @@ import {
   clientCredentialsPayloadTypeDefinition,
   jwtCustomizerUserContextTypeDefinition,
   jwtCustomizerGrantContextTypeDefinition,
+  jwtCustomizerApiContextTypeDefinition,
 } from '@/consts/jwt-customizer-type-definition';
 
 import { type JwtCustomizerForm } from '../type';
@@ -21,11 +22,15 @@ export const buildAccessTokenJwtCustomizerContextTsDefinition = () => {
 
   declare ${jwtCustomizerGrantContextTypeDefinition}
 
+  declare ${jwtCustomizerApiContextTypeDefinition}
+
   declare ${accessTokenPayloadTypeDefinition}`;
 };
 
 export const buildClientCredentialsJwtCustomizerContextTsDefinition = () =>
-  `declare ${clientCredentialsPayloadTypeDefinition}`;
+  `declare ${clientCredentialsPayloadTypeDefinition}
+
+  declare ${jwtCustomizerApiContextTypeDefinition}`;
 
 export const buildEnvironmentVariablesTypeDefinition = (
   envVariables?: JwtCustomizerForm['environmentVariables']

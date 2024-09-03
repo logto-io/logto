@@ -9,6 +9,7 @@ import { type EditorProps } from '@monaco-editor/react';
 
 import TokenFileIcon from '@/assets/icons/token-file-icon.svg?react';
 import UserFileIcon from '@/assets/icons/user-file-icon.svg?react';
+import { isDevFeaturesEnabled } from '@/consts/env.js';
 
 import type { ModelSettings } from '../MainContent/MonacoCodeEditor/type.js';
 
@@ -36,6 +37,7 @@ declare type Payload = {
   token: ${JwtCustomizerTypeDefinitionKey.AccessTokenPayload};
   context: Context;
   environmentVariables: ${JwtCustomizerTypeDefinitionKey.EnvironmentVariables};
+  api: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerApiContext};
 };`;
 
 const clientCredentialsJwtCustomizerDefinition = `
@@ -44,6 +46,7 @@ declare interface CustomJwtClaims extends Record<string, any> {}
 declare type Payload = {
   token: ${JwtCustomizerTypeDefinitionKey.AccessTokenPayload};
   environmentVariables: ${JwtCustomizerTypeDefinitionKey.EnvironmentVariables};
+  api: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerApiContext};
 };`;
 
 export const defaultAccessTokenJwtCustomizerCode = `/**
@@ -53,11 +56,20 @@ export const defaultAccessTokenJwtCustomizerCode = `/**
 * @param {Object} payload - The input payload of the function.
 * @param {${JwtCustomizerTypeDefinitionKey.AccessTokenPayload}} payload.token -The JWT token.
 * @param {Context} payload.context - Logto internal data that can be used to pass additional information
-* @param {${JwtCustomizerTypeDefinitionKey.EnvironmentVariables}} [payload.environmentVariables] - The environment variables.
-*
+* @param {${
+  JwtCustomizerTypeDefinitionKey.EnvironmentVariables
+}} [payload.environmentVariables] - The environment variables.
+${
+  isDevFeaturesEnabled
+    ? `* @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerApiContext}} payload.api - The API context.
+    * `
+    : '*'
+}
 * @returns The custom claims.
 */
-const getCustomJwtClaims = async ({ token, context, environmentVariables }) => {
+const getCustomJwtClaims = async ({ token, context, environmentVariables${
+  isDevFeaturesEnabled ? ', api' : ''
+} }) => {
   return {};
 }`;
 
@@ -67,11 +79,20 @@ export const defaultClientCredentialsJwtCustomizerCode = `/**
 *
 * @param {Object} payload - The input payload of the function.
 * @param {${JwtCustomizerTypeDefinitionKey.ClientCredentialsPayload}} payload.token -The JWT token.
-* @param {${JwtCustomizerTypeDefinitionKey.EnvironmentVariables}} [payload.environmentVariables] - The environment variables.
-*
+* @param {${
+  JwtCustomizerTypeDefinitionKey.EnvironmentVariables
+}} [payload.environmentVariables] - The environment variables.
+${
+  isDevFeaturesEnabled
+    ? `* @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerApiContext}} payload.api - The API context.
+*`
+    : '*'
+}
 * @returns The custom claims.
 */
-const getCustomJwtClaims = async ({ token, environmentVariables }) => {
+const getCustomJwtClaims = async ({ token, environmentVariables${
+  isDevFeaturesEnabled ? ', api' : ''
+} }) => {
   return {};
 }`;
 
