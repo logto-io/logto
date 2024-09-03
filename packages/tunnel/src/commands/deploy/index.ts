@@ -1,6 +1,3 @@
-import { existsSync } from 'node:fs';
-import path from 'node:path';
-
 import { isValidUrl } from '@logto/core-kit';
 import chalk from 'chalk';
 import ora from 'ora';
@@ -9,7 +6,7 @@ import type { CommandModule } from 'yargs';
 import { consoleLog } from '../../utils.js';
 
 import { type DeployCommandArgs } from './types.js';
-import { deployToLogtoCloud } from './utils.js';
+import { checkExperienceAndZipPathInputs, deployToLogtoCloud } from './utils.js';
 
 const tunnel: CommandModule<unknown, DeployCommandArgs> = {
   command: ['deploy'],
@@ -42,6 +39,11 @@ const tunnel: CommandModule<unknown, DeployCommandArgs> = {
           type: 'boolean',
           default: false,
         },
+        zip: {
+          alias: ['zip-path'],
+          describe: 'The local folder path of your existing zip package.',
+          type: 'string',
+        },
       })
       .epilog(
         `Refer to our documentation for more details:\n${chalk.blue(
@@ -55,6 +57,7 @@ const tunnel: CommandModule<unknown, DeployCommandArgs> = {
       path: experiencePath,
       resource: managementApiResource,
       verbose,
+      zip: zipPath,
     } = options;
     if (!auth) {
       consoleLog.fatal(
@@ -66,14 +69,8 @@ const tunnel: CommandModule<unknown, DeployCommandArgs> = {
         'A valid Logto endpoint URI must be provided. E.g. `--endpoint https://<tenant-id>.logto.app/` or add `LOGTO_ENDPOINT` to your environment variables.'
       );
     }
-    if (!experiencePath) {
-      consoleLog.fatal(
-        'A valid experience path must be provided. E.g. `--experience-path /path/to/experience` or add `LOGTO_EXPERIENCE_PATH` to your environment variables.'
-      );
-    }
-    if (!existsSync(path.join(experiencePath, 'index.html'))) {
-      consoleLog.fatal(`The provided experience path must contain an "index.html" file.`);
-    }
+
+    await checkExperienceAndZipPathInputs(experiencePath, zipPath);
 
     const spinner = ora();
 
@@ -85,7 +82,14 @@ const tunnel: CommandModule<unknown, DeployCommandArgs> = {
       spinner.start('Deploying your custom UI assets to Logto Cloud...');
     }
 
-    await deployToLogtoCloud({ auth, endpoint, experiencePath, managementApiResource, verbose });
+    await deployToLogtoCloud({
+      auth,
+      endpoint,
+      experiencePath,
+      managementApiResource,
+      verbose,
+      zipPath,
+    });
 
     if (!verbose) {
       spinner.succeed('Deploying your custom UI assets to Logto Cloud... Done.');
