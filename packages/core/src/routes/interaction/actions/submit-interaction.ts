@@ -102,6 +102,7 @@ async function handleSubmitRegister(
     organizations,
     // OGCIO
     roles,
+    // OGCIO
     usersRoles,
   } = queries;
 

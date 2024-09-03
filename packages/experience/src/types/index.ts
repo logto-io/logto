@@ -38,7 +38,10 @@ export type PreviewConfig = {
   isNative: boolean;
 };
 
-export type ArrayElement<ArrayType extends readonly unknown[]> =
-  ArrayType extends ReadonlyArray<infer ElementType> ? ElementType : never;
+export type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType extends ReadonlyArray<
+  infer ElementType
+>
+  ? ElementType
+  : never;
 
 export type WebAuthnOptions = WebAuthnRegistrationOptions | WebAuthnAuthenticationOptions;

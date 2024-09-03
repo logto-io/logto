@@ -5,3 +5,4 @@ packages:
   - "!packages/connectors/templates"
   # OGCIO - adding mygovid mock service
   - mygovid-mock-service
+  

@@ -20,7 +20,7 @@ import { OGCIO_ORGANIZATION_ROLES, OGCIO_ORGANIZATIONS, OGCIO_ROLES } from './og
 
 const getDefaultOrganizationsForUser = async (organizationQueries: OrganizationQueries) => {
   const organizationNames: string[] = deduplicate(EnvSet.values.userDefaultOrganizationNames);
-  consoleLog.info('DEFUALT ORG NAMES', organizationNames);
+  consoleLog.info('DEFAULT ORG NAMES', organizationNames);
   if (organizationNames.length === 0) {
     return [];
   }

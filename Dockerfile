@@ -10,6 +10,7 @@ ENV PUPPETEER_SKIP_DOWNLOAD=true
 ENV PORT=3301
 # OGCIO
 ENV ADMIN_PORT=3302
+
 ### Install toolchain ###
 RUN npm add --location=global pnpm@^9.0.0
 # https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md#node-gyp-alpine
@@ -49,9 +50,11 @@ ENV PORT=3301
 ENV ADMIN_PORT=3302
 WORKDIR /etc/logto
 COPY --from=builder /etc/logto .
-RUN apk add --no-cache jq
+# OGCIO
 EXPOSE 3301
 # OGCIO
 EXPOSE 3302
+#OGCIO
+RUN apk add --no-cache jq
 # OGCIO
 CMD [ "sh", "-c", "export ENCODED_PASSWORD=$(jq --slurp --raw-input --raw-output @uri <(printf \"%s\" $POSTGRES_PASSWORD)) && export DB_URL=\"postgres://$POSTGRES_USER:$ENCODED_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB_NAME\" && export REDIS_URL=\"redis://$REDIS_HOST:$REDIS_PORT\" && npm run ogcio:start"]

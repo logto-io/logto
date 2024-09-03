@@ -462,4 +462,3 @@ describe('submit action', () => {
     });
   });
 });
-/* eslint-enable max-lines */

@@ -55,13 +55,6 @@ const applications = {
   placeholder_title: 'Selecciona un tipo de aplicación para continuar',
   placeholder_description:
     'Logto utiliza una entidad de aplicación para OIDC para ayudar con tareas como la identificación de tus aplicaciones, la gestión de inicio de sesión y la creación de registros de auditoría.',
-  m2m_role_assignment: {
-    title: 'Autorizar la aplicación con rol de máquina a máquina para permisos',
-    subtitle:
-      'Las aplicaciones de máquina a máquina requieren un rol de máquina a máquina autorizado.',
-    role_creation_hint:
-      '¿No puede encontrar el rol adecuado de máquina a máquina? <a>Crear un rol de máquina a máquina</a>',
-  },
 };
 
 export default Object.freeze(applications);

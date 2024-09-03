@@ -7,7 +7,6 @@ import {
   type ProtectedAppMetadata,
   type OrganizationWithRoles,
 } from '@logto/schemas';
-import { formUrlEncodedHeaders } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 
 import { authedAdminApi, oidcApi } from './api.js';
