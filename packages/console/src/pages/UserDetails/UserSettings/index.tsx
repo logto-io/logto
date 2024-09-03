@@ -26,10 +26,10 @@ import { uriValidator } from '@/utils/validator';
 import { type UserDetailsForm, type UserDetailsOutletContext } from '../types';
 import { userDetailsParser } from '../utils';
 
+import PersonalAccessTokens from './PersonalAccessTokens';
 import UserMfaVerifications from './UserMfaVerifications';
-import PersonalAccessTokens from './components/PersonalAccessTokens';
-import UserSocialIdentities from './components/UserSocialIdentities';
-import UserSsoIdentities from './components/UserSsoIdentities';
+import UserSocialIdentities from './UserSocialIdentities';
+import UserSsoIdentities from './UserSsoIdentities';
 
 function UserSettings() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
