@@ -8,7 +8,7 @@ import {
   reportSubscriptionUpdates,
   isReportSubscriptionUpdatesUsageKey,
 } from '#src/utils/subscription/index.js';
-import { type SubscriptionQuota } from '#src/utils/subscription/types.js';
+import { type SubscriptionQuota, type SubscriptionUsage } from '#src/utils/subscription/types.js';
 
 import { type CloudConnectionLibrary } from './cloud-connection.js';
 
@@ -24,7 +24,7 @@ const shouldReportSubscriptionUpdates = (planId: string, key: keyof Subscription
   planId === ReservedPlanId.Pro && isReportSubscriptionUpdatesUsageKey(key);
 
 export const createQuotaLibrary = (cloudConnection: CloudConnectionLibrary) => {
-  const guardTenantUsageByKey = async (key: keyof SubscriptionQuota) => {
+  const guardTenantUsageByKey = async (key: keyof SubscriptionUsage) => {
     const { isCloud, isIntegrationTest } = EnvSet.values;
 
     // Cloud only feature, skip in non-cloud environments
@@ -146,7 +146,7 @@ export const createQuotaLibrary = (cloudConnection: CloudConnectionLibrary) => {
     );
   };
 
-  const reportSubscriptionUpdatesUsage = async (key: keyof SubscriptionQuota) => {
+  const reportSubscriptionUpdatesUsage = async (key: keyof SubscriptionUsage) => {
     const { isCloud, isIntegrationTest } = EnvSet.values;
 
     // Cloud only feature, skip in non-cloud environments

@@ -2,12 +2,12 @@ import { type Nullable } from '@silverhand/essentials';
 import type { MiddlewareType } from 'koa';
 
 import { type QuotaLibrary } from '#src/libraries/quota.js';
-import { type SubscriptionQuota } from '#src/utils/subscription/types.js';
+import { type SubscriptionUsage } from '#src/utils/subscription/types.js';
 
 type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'COPY' | 'HEAD' | 'OPTIONS';
 
 type UsageGuardConfig = {
-  key: keyof SubscriptionQuota;
+  key: keyof SubscriptionUsage;
   quota: QuotaLibrary;
   /** Guard usage only for the specified method types. Guard all if not provided. */
   methods?: Method[];

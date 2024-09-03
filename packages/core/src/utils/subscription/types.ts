@@ -38,7 +38,6 @@ export type ReportSubscriptionUpdatesUsageKey = RouteRequestBodyType<
 
 // Have to manually define this variable since we can only get the literal union from the @logto/cloud/routes module.
 export const allReportSubscriptionUpdatesUsageKeys = Object.freeze([
-  'tokenLimit',
   'machineToMachineLimit',
   'resourcesLimit',
   'mfaEnabled',
