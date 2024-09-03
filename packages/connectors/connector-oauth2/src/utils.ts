@@ -1,4 +1,4 @@
-import { assert } from '@silverhand/essentials';
+import { assert, get } from '@silverhand/essentials';
 
 import { ConnectorError, ConnectorErrorCodes, parseJson } from '@logto/connector-kit';
 import { type KyResponse } from 'ky';
@@ -36,32 +36,15 @@ const accessTokenResponseHandler = async (
   return result.data;
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-const getValue = (object: Record<string, unknown> | object, path: string) => {
-  return path.split('.').reduce<unknown>((accumulator, part: string) => {
-    // Check if the accumulator is an object and has the property
-    if (accumulator && typeof accumulator === 'object' && part in accumulator) {
-      // eslint-disable-next-line no-restricted-syntax
-      return (accumulator as Record<string, unknown>)[part];
-    }
-
-    return null;
-  }, object);
-};
-
 export const userProfileMapping = (
   // eslint-disable-next-line @typescript-eslint/ban-types
   originUserProfile: object,
   keyMapping: ProfileMap
 ) => {
-  const keyMap = new Map(
-    Object.entries(keyMapping).map(([destination, source]) => [source, destination])
-  );
-
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const mappedUserProfile = Object.fromEntries(
     Object.entries(keyMapping)
-      .map(([destination, source]) => [destination, getValue(originUserProfile, source)])
+      .map(([destination, source]) => [destination, get(originUserProfile, source)])
       .filter(([_, value]) => value)
   );
 
