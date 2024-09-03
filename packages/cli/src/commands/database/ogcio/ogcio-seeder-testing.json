@@ -335,6 +335,23 @@
         ],
         "type": "MachineToMachine",
         "related_application_ids": ["tty6llp30risjwcjhbvc9"]
+      },
+      {
+        "id": "m2m-e2e-messaging",
+        "name": "M2M E2E Messaging Citizen",
+        "description": "Role used to make M2M applications able to login as messaging citizen to perform E2E testing",
+        "permissions": [
+          {
+            "resource_id": "messaging-api",
+            "specific_permissions": [
+              "messaging:message.self:read",
+              "messaging:citizen.self:read",
+              "messaging:citizen.self:write"
+            ]
+          }
+        ],
+        "type": "MachineToMachine",
+        "related_application_ids": ["treftr21fgbvsdjwlol9"]
       }
     ],
     "connectors": [
