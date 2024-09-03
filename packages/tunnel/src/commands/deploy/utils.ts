@@ -148,7 +148,7 @@ const getAccessToken = async (auth: string, endpoint: URL, managementApiResource
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch access token: ${response.statusText}`);
+    await throwRequestError(response);
   }
 
   return response.json<TokenResponse>();
@@ -160,28 +160,25 @@ const uploadCustomUiAssets = async (accessToken: string, endpoint: URL, zipBuffe
   const timestamp = Math.floor(Date.now() / 1000);
   form.append('file', blob, `custom-ui-${timestamp}.zip`);
 
-  const uploadResponse = await fetch(
-    appendPath(endpoint, '/api/sign-in-exp/default/custom-ui-assets'),
-    {
-      method: 'POST',
-      body: form,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        Accept: 'application/json',
-      },
-    }
-  );
+  const response = await fetch(appendPath(endpoint, '/api/sign-in-exp/default/custom-ui-assets'), {
+    method: 'POST',
+    body: form,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      Accept: 'application/json',
+    },
+  });
 
-  if (!uploadResponse.ok) {
-    throw new Error(`Request error: [${uploadResponse.status}] ${uploadResponse.status}`);
+  if (!response.ok) {
+    await throwRequestError(response);
   }
 
-  return uploadResponse.json<{ customUiAssetId: string }>();
+  return response.json<{ customUiAssetId: string }>();
 };
 
 const saveChangesToSie = async (accessToken: string, endpointUrl: URL, customUiAssetId: string) => {
   const timestamp = Math.floor(Date.now() / 1000);
-  const patchResponse = await fetch(appendPath(endpointUrl, '/api/sign-in-exp'), {
+  const response = await fetch(appendPath(endpointUrl, '/api/sign-in-exp'), {
     method: 'PATCH',
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -193,11 +190,16 @@ const saveChangesToSie = async (accessToken: string, endpointUrl: URL, customUiA
     }),
   });
 
-  if (!patchResponse.ok) {
-    throw new Error(`Request error: [${patchResponse.status}] ${patchResponse.statusText}`);
+  if (!response.ok) {
+    await throwRequestError(response);
   }
 
-  return patchResponse.json();
+  return response.json();
+};
+
+const throwRequestError = async (response: Response) => {
+  const errorDetails = await response.text();
+  throw new Error(`[${response.status}] ${errorDetails}`);
 };
 
 const getTenantIdFromEndpointUri = (endpoint: URL) => {
