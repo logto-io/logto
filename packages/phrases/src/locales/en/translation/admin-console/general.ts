@@ -71,6 +71,8 @@ const general = {
   delete_field: 'Delete {{field}}',
   coming_soon: 'Coming soon',
   or: 'Or',
+  reset: 'Reset',
+  generate: 'Generate',
 };
 
 export default Object.freeze(general);

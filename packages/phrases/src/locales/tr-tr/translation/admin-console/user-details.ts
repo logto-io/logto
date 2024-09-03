@@ -11,10 +11,9 @@ const user_details = {
   delete_description: 'Bu işlem geri alınamaz. Kullanıcıyı kalıcı olarak siler.',
   deleted: 'Kullanıcı başarıyla silindi.',
   reset_password: {
-    reset_password: 'Şifreyi sıfırla',
-    title: 'Şifreyi sıfırlamak istediğinizden emin misiniz?',
+    reset_title: 'Şifreyi sıfırlamak istediğinizden emin misiniz?',
     content: 'Bu işlem geri alınamaz. Bu, kullanıcının oturum açma bilgilerini sıfırlayacaktır.',
-    congratulations: 'Bu kullanıcı sıfırlandı',
+    reset_complete: 'Bu kullanıcı sıfırlandı',
     new_password: 'Yeni şifre:',
   },
   tab_settings: 'Ayarlar',

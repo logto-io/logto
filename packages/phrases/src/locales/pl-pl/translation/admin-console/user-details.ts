@@ -11,10 +11,9 @@ const user_details = {
   delete_description: 'Tej akcji nie można cofnąć. Usunie to użytkownika na stałe.',
   deleted: 'Użytkownik został pomyślnie usunięty',
   reset_password: {
-    reset_password: 'Zresetuj hasło',
-    title: 'Czy na pewno chcesz zresetować hasło?',
+    reset_title: 'Czy na pewno chcesz zresetować hasło?',
     content: 'Tej akcji nie można cofnąć. To zresetuje informacje o logowaniu użytkownika.',
-    congratulations: 'Ten użytkownik został zresetowany',
+    reset_complete: 'Ten użytkownik został zresetowany',
     new_password: 'Nowe hasło:',
   },
   tab_settings: 'Ustawienia',

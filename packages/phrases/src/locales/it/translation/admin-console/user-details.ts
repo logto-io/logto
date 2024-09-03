@@ -12,11 +12,10 @@ const user_details = {
     "Questa azione non può essere annullata. Eliminerai l'utente in modo permanente.",
   deleted: "L'utente è stato eliminato con successo",
   reset_password: {
-    reset_password: 'Resetta la password',
-    title: 'Sei sicuro di voler reimpostare la password?',
+    reset_title: 'Sei sicuro di voler reimpostare la password?',
     content:
       "Questa azione non può essere annullata. Questo reimposterà le informazioni di accesso dell'utente.",
-    congratulations: "L'utente è stato reimpostato",
+    reset_complete: "L'utente è stato reimpostato",
     new_password: 'Nuova password:',
   },
   tab_settings: 'Impostazioni',

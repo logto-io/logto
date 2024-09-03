@@ -11,10 +11,9 @@ const user_details = {
   delete_description: 'Essa ação não pode ser desfeita. Isso excluirá permanentemente o usuário.',
   deleted: 'O usuário foi excluído com sucesso',
   reset_password: {
-    reset_password: 'Redefinir senha',
-    title: 'Tem certeza de que deseja redefinir a senha?',
+    reset_title: 'Tem certeza de que deseja redefinir a senha?',
     content: 'Essa ação não pode ser desfeita. Isso redefinirá as informações de login do usuário.',
-    congratulations: 'Este usuário foi redefinido',
+    reset_complete: 'Este usuário foi redefinido',
     new_password: 'Nova senha:',
   },
   tab_settings: 'Configurações',
