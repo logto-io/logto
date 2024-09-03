@@ -1,6 +1,6 @@
-import { UsersRoles, userInfoSelectFields, userProfileResponseGuard } from '@logto/schemas';
+import { UsersRoles, userProfileResponseGuard } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { pick, tryThat } from '@silverhand/essentials';
+import { tryThat } from '@silverhand/essentials';
 import { object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -8,6 +8,8 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import { type UserConditions } from '#src/queries/user.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
+
+import { transpileUserProfileResponse } from '../utils/user.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
@@ -59,7 +61,7 @@ export default function roleUserRoutes<T extends ManagementApiRouter>(
           ]);
 
           ctx.pagination.totalCount = count;
-          ctx.body = users.map((user) => pick(user, ...userInfoSelectFields));
+          ctx.body = users.map((user) => transpileUserProfileResponse(user));
 
           return next();
         },

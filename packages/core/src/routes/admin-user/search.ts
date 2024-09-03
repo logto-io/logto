@@ -1,10 +1,5 @@
-import {
-  OrganizationUserRelations,
-  UsersRoles,
-  userInfoSelectFields,
-  userProfileResponseGuard,
-} from '@logto/schemas';
-import { type Nullable, pick, tryThat } from '@silverhand/essentials';
+import { OrganizationUserRelations, UsersRoles, userProfileResponseGuard } from '@logto/schemas';
+import { type Nullable, tryThat } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -12,6 +7,7 @@ import koaPagination from '#src/middleware/koa-pagination.js';
 import { type UserConditions } from '#src/queries/user.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
+import { transpileUserProfileResponse } from '../../utils/user.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 const getQueryRelation = (
@@ -82,7 +78,7 @@ export default function adminUserSearchRoutes<T extends ManagementApiRouter>(
           ]);
 
           ctx.pagination.totalCount = count;
-          ctx.body = users.map((user) => pick(user, ...userInfoSelectFields));
+          ctx.body = users.map((user) => transpileUserProfileResponse(user));
 
           return next();
         },

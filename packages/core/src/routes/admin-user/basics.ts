@@ -3,11 +3,10 @@ import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import {
   UsersPasswordEncryptionMethod,
   jsonObjectGuard,
-  userInfoSelectFields,
   userProfileGuard,
   userProfileResponseGuard,
 } from '@logto/schemas';
-import { conditional, pick, yes } from '@silverhand/essentials';
+import { conditional, yes } from '@silverhand/essentials';
 import { boolean, literal, nativeEnum, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -16,6 +15,7 @@ import { encryptUserPassword } from '#src/libraries/user.utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { transpileUserProfileResponse } from '../../utils/user.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
@@ -54,20 +54,16 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const {
         params: { userId },
-        query: { includeSsoIdentities },
+        query: { includeSsoIdentities = 'false' },
       } = ctx.guard;
 
       const user = await findUserById(userId);
 
-      ctx.body = {
-        ...pick(user, ...userInfoSelectFields),
-        ...conditional(
-          includeSsoIdentities &&
-            yes(includeSsoIdentities) && {
-              ssoIdentities: await findUserSsoIdentities(userId),
-            }
+      ctx.body = transpileUserProfileResponse(user, {
+        ssoIdentities: conditional(
+          yes(includeSsoIdentities) && [...(await findUserSsoIdentities(userId))]
         ),
-      };
+      });
 
       return next();
     }
@@ -221,7 +217,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         []
       );
 
-      ctx.body = pick(user, ...userInfoSelectFields);
+      ctx.body = transpileUserProfileResponse(user);
       return next();
     }
   );
@@ -252,7 +248,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       await checkIdentifierCollision(body, userId);
 
       const updatedUser = await updateUserById(userId, body, 'replace');
-      ctx.body = pick(updatedUser, ...userInfoSelectFields);
+      ctx.body = transpileUserProfileResponse(updatedUser);
 
       return next();
     }
@@ -281,7 +277,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         passwordEncryptionMethod,
       });
 
-      ctx.body = pick(user, ...userInfoSelectFields);
+      ctx.body = transpileUserProfileResponse(user);
 
       return next();
     }
@@ -352,7 +348,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         await signOutUser(user.id);
       }
 
-      ctx.body = pick(user, ...userInfoSelectFields);
+      ctx.body = transpileUserProfileResponse(user);
 
       return next();
     }

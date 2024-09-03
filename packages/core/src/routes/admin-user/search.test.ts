@@ -1,7 +1,7 @@
 import type { CreateUser, Role, User } from '@logto/schemas';
-import { userInfoSelectFields, RoleType } from '@logto/schemas';
+import { RoleType } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
-import { pick, removeUndefinedKeys } from '@silverhand/essentials';
+import { removeUndefinedKeys } from '@silverhand/essentials';
 
 import { mockUser, mockUserList, mockUserListResponse } from '#src/__mocks__/index.js';
 import { type InsertUserResult } from '#src/libraries/user.js';
@@ -9,6 +9,8 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import { MockTenant, type Partial2 } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
+
+import { transpileUserProfileResponse } from '../../utils/user.js';
 
 const { jest } = import.meta;
 
@@ -86,7 +88,7 @@ describe('adminUserRoutes', () => {
     const response = await userRequest.get('/users').send({ search });
     expect(response.status).toEqual(200);
     expect(response.body).toEqual(
-      filterUsersWithSearch(mockUserList, search).map((user) => pick(user, ...userInfoSelectFields))
+      filterUsersWithSearch(mockUserList, search).map((user) => transpileUserProfileResponse(user))
     );
     expect(response.header).toHaveProperty(
       'total-number',
