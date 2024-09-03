@@ -6,10 +6,12 @@ import {
   jwtCustomizer as jwtCustomizerLog,
   type CustomJwtFetcher,
   GrantType,
+  CustomJwtErrorCode,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
-import { type KoaContextWithOIDC, type UnknownObject } from 'oidc-provider';
+import { ResponseError } from '@withtyped/client';
+import { errors, type KoaContextWithOIDC, type UnknownObject } from 'oidc-provider';
 import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -19,6 +21,8 @@ import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import { LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
+
+import { parseCustomJwtResponseError } from '../utils/custom-jwt/index.js';
 
 import { tokenExchangeActGuard } from './grants/token-exchange/types.js';
 
@@ -196,11 +200,14 @@ export const getExtraTokenClaimsForJwtCustomization = async (
           : jwtCustomizerLog.Type.AccessToken
       }`
     );
+
     entry.append({
       result: LogResult.Error,
       error: { message: String(error) },
     });
+
     const { payload } = entry;
+
     await queries.logs.insertLog({
       id: generateStandardId(),
       key: payload.key,
@@ -210,6 +217,20 @@ export const getExtraTokenClaimsForJwtCustomization = async (
         token,
       },
     });
+
+    // TODO: @simeng remove this once the feature is ready
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return;
+    }
+
+    // If the error is an instance of `ResponseError`, we need to parse the customJwtError body to get the error code.
+    if (error instanceof ResponseError) {
+      const customJwtError = await trySafe(async () => parseCustomJwtResponseError(error));
+
+      if (customJwtError?.code === CustomJwtErrorCode.AccessDenied) {
+        throw new errors.AccessDenied(customJwtError.message);
+      }
+    }
   }
 };
 /* eslint-enable complexity */

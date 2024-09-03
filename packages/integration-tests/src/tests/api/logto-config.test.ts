@@ -11,6 +11,8 @@ import {
   clientCredentialsJwtCustomizerPayload,
   accessTokenSampleScript,
   clientCredentialsSampleScript,
+  accessTokenAccessDeniedSampleScript,
+  clientCredentialsAccessDeniedSampleScript,
 } from '#src/__mocks__/jwt-customizer.js';
 import {
   deleteOidcKey,
@@ -26,13 +28,14 @@ import {
   testJwtCustomizer,
 } from '#src/api/index.js';
 import { expectRejects } from '#src/helpers/index.js';
+import { devFeatureTest } from '#src/utils.js';
 
 const defaultAdminConsoleConfig: AdminConsoleData = {
   signInExperienceCustomized: false,
   organizationCreated: false,
 };
 
-describe('admin console sign-in experience', () => {
+describe('logto config', () => {
   it('should get admin console config successfully', async () => {
     const adminConsoleConfig = await getAdminConsoleConfig();
 
@@ -268,4 +271,41 @@ describe('admin console sign-in experience', () => {
     });
     expect(testResult).toMatchObject(clientCredentialsJwtCustomizerPayload.environmentVariables);
   });
+
+  devFeatureTest.it(
+    'should throw access denied error when calling the denyAccess api in the script',
+    async () => {
+      await expectRejects(
+        testJwtCustomizer({
+          tokenType: LogtoJwtTokenKeyType.AccessToken,
+          token: accessTokenJwtCustomizerPayload.tokenSample,
+          context: accessTokenJwtCustomizerPayload.contextSample,
+          script: accessTokenAccessDeniedSampleScript,
+          environmentVariables: accessTokenJwtCustomizerPayload.environmentVariables,
+        }),
+        {
+          code: 'jwt_customizer.general',
+          status: 403,
+        }
+      );
+    }
+  );
+
+  devFeatureTest.it(
+    'should throw access denied error when calling the denyAccess api in the script',
+    async () => {
+      await expectRejects(
+        testJwtCustomizer({
+          tokenType: LogtoJwtTokenKeyType.ClientCredentials,
+          token: clientCredentialsJwtCustomizerPayload.tokenSample,
+          script: clientCredentialsAccessDeniedSampleScript,
+          environmentVariables: clientCredentialsJwtCustomizerPayload.environmentVariables,
+        }),
+        {
+          code: 'jwt_customizer.general',
+          status: 403,
+        }
+      );
+    }
+  );
 });
