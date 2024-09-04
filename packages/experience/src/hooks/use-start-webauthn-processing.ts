@@ -10,11 +10,7 @@ import { type WebAuthnState, type MfaFlowState } from '@/types/guard';
 import useApi from './use-api';
 import useErrorHandler from './use-error-handler';
 
-type Options = {
-  replace?: boolean;
-};
-
-const useStartWebAuthnProcessing = ({ replace }: Options = {}) => {
+const useStartWebAuthnProcessing = () => {
   const navigate = useNavigate();
   const asyncCreateRegistrationOptions = useApi(createWebAuthnRegistration);
   const asyncGenerateAuthnOptions = useApi(createWebAuthnAuthentication);
@@ -22,7 +18,7 @@ const useStartWebAuthnProcessing = ({ replace }: Options = {}) => {
   const { setVerificationId } = useContext(UserInteractionContext);
 
   return useCallback(
-    async (flow: UserMfaFlow, flowState: MfaFlowState) => {
+    async (flow: UserMfaFlow, flowState: MfaFlowState, replace?: boolean) => {
       const [error, result] =
         flow === UserMfaFlow.MfaBinding
           ? await asyncCreateRegistrationOptions()
@@ -50,7 +46,6 @@ const useStartWebAuthnProcessing = ({ replace }: Options = {}) => {
       asyncGenerateAuthnOptions,
       handleError,
       navigate,
-      replace,
       setVerificationId,
     ]
   );

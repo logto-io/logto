@@ -94,14 +94,11 @@ const useSocialSignInListener = (connectorId: string) => {
     ]
   );
 
-  const globalErrorHandler = useMemo<ErrorHandlers>(
-    () => ({
-      // Redirect to sign-in page if error is not handled by the error handlers
-      global: async (error) => {
-        setToast(error.message);
-        navigate('/' + experience.routes.signIn);
-      },
-    }),
+  const globalErrorHandler = useCallback(
+    async (error: RequestErrorBody) => {
+      setToast(error.message);
+      navigate('/' + experience.routes.signIn);
+    },
     [navigate, setToast]
   );
 
@@ -130,7 +127,7 @@ const useSocialSignInListener = (connectorId: string) => {
         await accountNotExistErrorHandler(error);
       },
       ...preSignInErrorHandler,
-      ...globalErrorHandler,
+      global: globalErrorHandler,
     }),
     [
       preSignInErrorHandler,
@@ -162,7 +159,7 @@ const useSocialSignInListener = (connectorId: string) => {
 
       if (error || !result) {
         setLoading(false);
-        await handleError(error, globalErrorHandler);
+        await handleError(error, { global: globalErrorHandler });
         return;
       }
 
