@@ -1,4 +1,4 @@
-import { type User } from '@logto/schemas';
+import { type UserProfileResponse } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 
 import { type CreateUserPayload, createUser, deleteUser } from '#src/api/index.js';
@@ -51,13 +51,13 @@ export const generateNewUser = async <T extends NewUserProfileOptions>(options: 
 };
 
 export class UserApiTest {
-  #users: User[] = [];
+  #users: UserProfileResponse[] = [];
 
-  get users(): User[] {
+  get users(): UserProfileResponse[] {
     return this.#users;
   }
 
-  async create(data: CreateUserPayload): Promise<User> {
+  async create(data: CreateUserPayload): Promise<UserProfileResponse> {
     const user = await createUser(data);
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods
     this.users.push(user);

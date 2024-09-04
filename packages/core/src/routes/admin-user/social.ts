@@ -3,16 +3,16 @@ import {
   ConnectorType,
   identityGuard,
   identitiesGuard,
-  userInfoSelectFields,
   userProfileResponseGuard,
 } from '@logto/schemas';
-import { has, pick } from '@silverhand/essentials';
+import { has } from '@silverhand/essentials';
 import { object, record, string, unknown } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { transpileUserProfileResponse } from '../../utils/user.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 export default function adminUserSocialRoutes<T extends ManagementApiRouter>(
@@ -149,7 +149,7 @@ export default function adminUserSocialRoutes<T extends ManagementApiRouter>(
       }
 
       const updatedUser = await deleteUserIdentity(userId, target);
-      ctx.body = pick(updatedUser, ...userInfoSelectFields);
+      ctx.body = transpileUserProfileResponse(updatedUser);
 
       return next();
     }

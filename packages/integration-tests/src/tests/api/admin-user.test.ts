@@ -201,7 +201,11 @@ describe('admin console user management', () => {
   it('should update user password successfully', async () => {
     const { updatedAt, ...rest } = await createUserByAdmin();
     const userEntity = await updateUserPassword(rest.id, 'new_password');
-    expect(userEntity).toMatchObject(rest);
+    expect(userEntity).toMatchObject({
+      ...rest,
+      // Since the password is updated, the hasPassword field will be true.
+      hasPassword: true,
+    });
     expect(userEntity.updatedAt).toBeGreaterThan(updatedAt);
   });
 
