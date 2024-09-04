@@ -31,7 +31,7 @@ export const checkExperienceAndZipPathInputs = async (
 ) => {
   if (zipPath && experiencePath) {
     consoleLog.fatal(
-      'You can only specify either `--zip` or `--experience-path`. Please check your input and environment variables.'
+      'You can only specify either `--zip-path` or `--experience-path`. Please check your input and environment variables.'
     );
   }
   if (!zipPath && !experiencePath) {
