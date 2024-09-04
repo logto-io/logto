@@ -1,3 +1,7 @@
+import { existsSync } from 'node:fs';
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
+
 import { appendPath } from '@silverhand/essentials';
 import AdmZip from 'adm-zip';
 import chalk from 'chalk';
@@ -15,9 +19,45 @@ type TokenResponse = {
 type DeployArgs = {
   auth: string;
   endpoint: string;
-  experiencePath: string;
+  experiencePath?: string;
+  zipPath?: string;
   managementApiResource?: string;
   verbose: boolean;
+};
+
+export const checkExperienceAndZipPathInputs = async (
+  experiencePath?: string,
+  zipPath?: string
+) => {
+  if (zipPath && experiencePath) {
+    consoleLog.fatal(
+      'You can only specify either `--zip-path` or `--experience-path`. Please check your input and environment variables.'
+    );
+  }
+  if (!zipPath && !experiencePath) {
+    consoleLog.fatal(
+      'A valid path to your experience asset folder or zip package must be provided. You can specify either `--zip-path` or `--experience-path` options or corresponding environment variables.'
+    );
+  }
+  if (zipPath) {
+    if (!existsSync(zipPath)) {
+      consoleLog.fatal(`The specified zip file does not exist: ${zipPath}`);
+    }
+
+    const zipFile = new AdmZip(zipPath);
+    const zipEntries = zipFile.getEntries();
+    const hasIndexHtmlInRoot = zipEntries.some(({ entryName }) => {
+      const parts = entryName.split('/');
+      return parts.length <= 2 && parts.at(-1) === 'index.html';
+    });
+
+    if (!hasIndexHtmlInRoot) {
+      consoleLog.fatal('The provided zip must contain an "index.html" file in the root directory.');
+    }
+  }
+  if (experiencePath && !existsSync(path.join(experiencePath, 'index.html'))) {
+    consoleLog.fatal(`The provided experience path must contain an "index.html" file.`);
+  }
 };
 
 export const deployToLogtoCloud = async ({
@@ -26,14 +66,15 @@ export const deployToLogtoCloud = async ({
   experiencePath,
   managementApiResource,
   verbose,
+  zipPath,
 }: DeployArgs) => {
   const spinner = ora();
   if (verbose) {
-    spinner.start('[1/4] Zipping files...');
+    spinner.start(`[1/4] ${zipPath ? 'Reading zip' : 'Zipping'} files...`);
   }
-  const zipBuffer = await zipFiles(experiencePath);
+  const zipBuffer = await getZipBuffer(experiencePath, zipPath);
   if (verbose) {
-    spinner.succeed('[1/4] Zipping files... Done.');
+    spinner.succeed(`[1/4] ${zipPath ? 'Reading zip' : 'Zipping'} files... Done.`);
   }
 
   try {
@@ -72,9 +113,20 @@ export const deployToLogtoCloud = async ({
   }
 };
 
-const zipFiles = async (path: string): Promise<Uint8Array> => {
+const getZipBuffer = async (experiencePath?: string, zipPath?: string): Promise<Uint8Array> => {
+  if (!experiencePath && !zipPath) {
+    consoleLog.fatal('Must specify either `--experience-path` or `--zip-path`.');
+  }
+  if (zipPath) {
+    return readFile(zipPath);
+  }
+  if (!experiencePath) {
+    consoleLog.fatal('Invalid experience path input.');
+  }
   const zip = new AdmZip();
-  await zip.addLocalFolderPromise(path, {});
+  await zip.addLocalFolderPromise(experiencePath, {
+    filter: (filename) => !isHiddenEntry(filename),
+  });
   return zip.toBuffer();
 };
 
@@ -96,7 +148,7 @@ const getAccessToken = async (auth: string, endpoint: URL, managementApiResource
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch access token: ${response.statusText}`);
+    await throwRequestError(response);
   }
 
   return response.json<TokenResponse>();
@@ -108,28 +160,25 @@ const uploadCustomUiAssets = async (accessToken: string, endpoint: URL, zipBuffe
   const timestamp = Math.floor(Date.now() / 1000);
   form.append('file', blob, `custom-ui-${timestamp}.zip`);
 
-  const uploadResponse = await fetch(
-    appendPath(endpoint, '/api/sign-in-exp/default/custom-ui-assets'),
-    {
-      method: 'POST',
-      body: form,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        Accept: 'application/json',
-      },
-    }
-  );
+  const response = await fetch(appendPath(endpoint, '/api/sign-in-exp/default/custom-ui-assets'), {
+    method: 'POST',
+    body: form,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      Accept: 'application/json',
+    },
+  });
 
-  if (!uploadResponse.ok) {
-    throw new Error(`Request error: [${uploadResponse.status}] ${uploadResponse.status}`);
+  if (!response.ok) {
+    await throwRequestError(response);
   }
 
-  return uploadResponse.json<{ customUiAssetId: string }>();
+  return response.json<{ customUiAssetId: string }>();
 };
 
 const saveChangesToSie = async (accessToken: string, endpointUrl: URL, customUiAssetId: string) => {
   const timestamp = Math.floor(Date.now() / 1000);
-  const patchResponse = await fetch(appendPath(endpointUrl, '/api/sign-in-exp'), {
+  const response = await fetch(appendPath(endpointUrl, '/api/sign-in-exp'), {
     method: 'PATCH',
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -141,11 +190,16 @@ const saveChangesToSie = async (accessToken: string, endpointUrl: URL, customUiA
     }),
   });
 
-  if (!patchResponse.ok) {
-    throw new Error(`Request error: [${patchResponse.status}] ${patchResponse.statusText}`);
+  if (!response.ok) {
+    await throwRequestError(response);
   }
 
-  return patchResponse.json();
+  return response.json();
+};
+
+const throwRequestError = async (response: Response) => {
+  const errorDetails = await response.text();
+  throw new Error(`[${response.status}] ${errorDetails}`);
 };
 
 const getTenantIdFromEndpointUri = (endpoint: URL) => {
@@ -158,4 +212,8 @@ const getManagementApiResourceFromEndpointUri = (endpoint: URL) => {
 
   // This resource domain is fixed to `logto.app` for all environments (prod, staging, and dev)
   return `https://${tenantId}.logto.app/api`;
+};
+
+const isHiddenEntry = (entryName: string) => {
+  return entryName.split('/').some((part) => part.startsWith('.'));
 };
