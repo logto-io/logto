@@ -28,12 +28,12 @@ const jwt_claims = {
   jwt_claims_description: '기본 클레임은 JWT에 자동으로 추가되며 재정의할 수 없습니다.',
   user_data: {
     title: '사용자 데이터',
-    subtitle: '`data.user` 입력 매개변수를 사용하여 중요한 사용자 정보 제공.',
+    subtitle: '`context.user` 입력 매개변수를 사용하여 중요한 사용자 정보 제공.',
   },
   grant_data: {
     title: 'Grant 데이터',
     subtitle:
-      '`data.grant` 입력 매개변수를 사용하여 중요한 Grant 정보를 제공하고, 이 정보는 오직 토큰 교환에만 사용할 수 있습니다.',
+      '`context.grant` 입력 매개변수를 사용하여 중요한 Grant 정보를 제공하고, 이 정보는 오직 토큰 교환에만 사용할 수 있습니다.',
   },
   token_data: {
     title: '토큰 데이터',

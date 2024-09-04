@@ -10,6 +10,8 @@ import prettier from 'prettier';
 import { type ZodTypeAny } from 'zod';
 import { printNode, zodToTs } from 'zod-to-ts';
 
+import { jwtCustomizerApiContextTypeDefinition } from './custom-jwt-customizer-type-definition.js';
+
 const filePath = 'src/consts/jwt-customizer-type-definition.ts';
 
 const typeIdentifiers = `export enum JwtCustomizerTypeDefinitionKey {
@@ -18,6 +20,7 @@ const typeIdentifiers = `export enum JwtCustomizerTypeDefinitionKey {
   AccessTokenPayload = 'AccessTokenPayload',
   ClientCredentialsPayload = 'ClientCredentialsPayload',
   EnvironmentVariables = 'EnvironmentVariables',
+  CustomJwtApiContext = 'CustomJwtApiContext',
 };`;
 
 const inferTsDefinitionFromZod = (zodSchema: ZodTypeAny, identifier: string): string => {
@@ -70,6 +73,8 @@ export const jwtCustomizerGrantContextTypeDefinition = \`${jwtCustomizerGrantCon
 export const accessTokenPayloadTypeDefinition = \`${accessTokenPayloadTypeDefinition}\`;
 
 export const clientCredentialsPayloadTypeDefinition = \`${clientCredentialsPayloadTypeDefinition}\`;
+
+export const jwtCustomizerApiContextTypeDefinition = \`${jwtCustomizerApiContextTypeDefinition}\`;
 `;
 
   const formattedFileContent = await prettier.format(fileContent, {

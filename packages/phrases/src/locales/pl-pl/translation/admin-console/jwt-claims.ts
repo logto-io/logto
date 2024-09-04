@@ -31,12 +31,12 @@ const jwt_claims = {
   user_data: {
     title: 'Dane użytkownika',
     subtitle:
-      'Użyj parametru wejściowego `data.user`, aby dostarczyć istotne informacje o użytkowniku.',
+      'Użyj parametru wejściowego `context.user`, aby dostarczyć istotne informacje o użytkowniku.',
   },
   grant_data: {
     title: 'Dane przyznania',
     subtitle:
-      'Użyj parametru wejściowego `data.grant`, aby dostarczyć istotne informacje dotyczące przyznania, dostępne tylko przy wymianie tokenu.',
+      'Użyj parametru wejściowego `context.grant`, aby dostarczyć istotne informacje dotyczące przyznania, dostępne tylko przy wymianie tokenu.',
   },
   token_data: {
     title: 'Dane tokenu',

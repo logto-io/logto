@@ -27,11 +27,11 @@ const jwt_claims = {
   jwt_claims_description: '默認声明自動包含在 JWT 中，無法覆蓋。',
   user_data: {
     title: '用戶數據',
-    subtitle: '使用 `data.user` 輸入參數提供重要用戶信息。',
+    subtitle: '使用 `context.user` 輸入參數提供重要用戶信息。',
   },
   grant_data: {
     title: '授權資料',
-    subtitle: '使用 `data.grant` 輸入參數提供重要授權信息，僅適用於令牌交換。',
+    subtitle: '使用 `context.grant` 輸入參數提供重要授權信息，僅適用於令牌交換。',
   },
   token_data: {
     title: '令牌數據',

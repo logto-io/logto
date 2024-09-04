@@ -27,17 +27,21 @@ const jwt_claims = {
   test_tab: 'Test context',
   jwt_claims_description: 'Default claims are auto-included in the JWT and cannot be overridden.',
   user_data: {
-    title: 'User data',
-    subtitle: 'Use `data.user` input parameter to provide vital user info.',
+    title: 'User context',
+    subtitle: 'Use `context.user` input parameter to provide vital user info.',
   },
   grant_data: {
-    title: 'Grant data',
+    title: 'Grant context',
     subtitle:
-      'Use `data.grant` input parameter to provide vital grant info, only available for token exchange.',
+      'Use `context.grant` input parameter to provide vital grant info, only available for token exchange.',
   },
   token_data: {
-    title: 'Token data',
+    title: 'Token payload',
     subtitle: 'Use `token` input parameter for current access token payload. ',
+  },
+  api_context: {
+    title: 'API context',
+    subtitle: 'Use `api.denyAccess` method to reject the current token exchange request.',
   },
   fetch_external_data: {
     title: 'Fetch external data',

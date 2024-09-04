@@ -5,8 +5,10 @@ import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { type JwtCustomizerForm } from '@/pages/CustomizeJwtDetails/type';
 import {
+  denyAccessCodeExample,
   environmentVariablesCodeExample,
   fetchExternalDataCodeExample,
   sampleCodeEditorOptions,
@@ -136,6 +138,24 @@ function InstructionTab({ isActive }: Props) {
           options={sampleCodeEditorOptions}
         />
       </GuideCard>
+      {isDevFeaturesEnabled && (
+        <GuideCard
+          name={CardType.ApiContext}
+          isExpanded={expendCard === CardType.ApiContext}
+          setExpanded={(expand) => {
+            setExpendCard(expand ? CardType.ApiContext : undefined);
+          }}
+        >
+          <Editor
+            language="typescript"
+            className={styles.sampleCode}
+            value={denyAccessCodeExample}
+            height="320px"
+            theme="logto-dark"
+            options={sampleCodeEditorOptions}
+          />
+        </GuideCard>
+      )}
       <div className={tabContentStyles.description}>{t('jwt_claims.jwt_claims_description')}</div>
     </div>
   );

@@ -33,12 +33,12 @@ const jwt_claims = {
   user_data: {
     title: 'Benutzerdaten',
     subtitle:
-      'Verwenden Sie den `data.user` Eingabeparameter, um wichtige Benutzerinformationen bereitzustellen.',
+      'Verwenden Sie den `context.user` Eingabeparameter, um wichtige Benutzerinformationen bereitzustellen.',
   },
   grant_data: {
     title: 'Zugriffsdaten',
     subtitle:
-      'Verwenden Sie den `data.grant` Eingabeparameter, um wichtige Informationen zu gewähren, nur für den Token-Austausch verfügbar.',
+      'Verwenden Sie den `context.grant` Eingabeparameter, um wichtige Informationen zu gewähren, nur für den Token-Austausch verfügbar.',
   },
   token_data: {
     title: 'Token-Daten',

@@ -1,4 +1,5 @@
 import { type JsonObject, type RequestErrorBody } from '@logto/schemas';
+import { trySafe } from '@silverhand/essentials';
 import { HTTPError } from 'ky';
 import { useCallback, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -35,14 +36,17 @@ const useTestHandler = () => {
       .catch(async (error: unknown) => {
         if (error instanceof HTTPError) {
           const { response } = error;
-          const metadata = await response.clone().json<RequestErrorBody>();
+          const errorResponse = await response.clone().json<RequestErrorBody>();
 
           // Get error message from cloud connection client.
-          if (metadata.code === jwtCustomizerGeneralErrorCode) {
-            const result = z.object({ message: z.string() }).safeParse(metadata.data);
+          if (errorResponse.code === jwtCustomizerGeneralErrorCode) {
+            const result = z
+              .object({ message: z.string(), code: z.string().optional() })
+              .safeParse(errorResponse.data);
+
             if (result.success) {
               setTestResult({
-                error: result.data.message,
+                error: JSON.stringify(result.data, null, 2),
               });
               return;
             }
@@ -54,8 +58,8 @@ const useTestHandler = () => {
            * 1. `RequestError`
            * 2. `koaGuard`
            */
-          if (metadata.code === apiInvalidInputErrorCode) {
-            const result = z.string().safeParse(metadata.details);
+          if (errorResponse.code === apiInvalidInputErrorCode) {
+            const result = z.string().safeParse(errorResponse.details);
             if (result.success) {
               setTestResult({
                 error: result.data,
@@ -63,6 +67,15 @@ const useTestHandler = () => {
               return;
             }
           }
+
+          setTestResult({
+            error: trySafe(
+              () => JSON.stringify(errorResponse, null, 2),
+              () => errorResponse.message
+            ),
+          });
+
+          return;
         }
 
         setTestResult({

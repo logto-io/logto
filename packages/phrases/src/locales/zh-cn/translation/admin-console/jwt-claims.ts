@@ -27,11 +27,11 @@ const jwt_claims = {
   jwt_claims_description: '默认声明会自动包含在JWT中，不能被覆盖。',
   user_data: {
     title: '用户数据',
-    subtitle: '使用`data.user`输入参数提供重要用户信息。',
+    subtitle: '使用`context.user`输入参数提供重要用户信息。',
   },
   grant_data: {
     title: '授权数据',
-    subtitle: '使用`data.grant`输入参数提供重要的授权信息，仅适用于令牌交换。',
+    subtitle: '使用`context.grant`输入参数提供重要的授权信息，仅适用于令牌交换。',
   },
   token_data: {
     title: '令牌数据',
