@@ -15,7 +15,7 @@ import useStartWebAuthnProcessing from './use-start-webauthn-processing';
 import useToast from './use-toast';
 
 export type Options = {
-  /** Whether to replace the current page in the history stack. */
+  /** Whether to replace the current page in the history stack on navigation. */
   replace?: boolean;
 };
 
@@ -23,9 +23,9 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { setToast } = useToast();
-  const startTotpBinding = useStartTotpBinding({ replace });
-  const startWebAuthnProcessing = useStartWebAuthnProcessing({ replace });
-  const startBackupCodeBinding = useStartBackupCodeBinding({ replace });
+  const startTotpBinding = useStartTotpBinding();
+  const startWebAuthnProcessing = useStartWebAuthnProcessing();
+  const startBackupCodeBinding = useStartBackupCodeBinding();
 
   /**
    * Redirect the user to the corresponding MFA page.
@@ -74,14 +74,14 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
         /**
          * Start TOTP binding process if only TOTP is available.
          */
-        return startTotpBinding(state);
+        return startTotpBinding(state, replace);
       }
 
       if (factor === MfaFactor.WebAuthn) {
         /**
          * Start WebAuthn processing if only TOTP is available.
          */
-        return startWebAuthnProcessing(flow, state);
+        return startWebAuthnProcessing(flow, state, replace);
       }
 
       /**
@@ -120,9 +120,9 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
     () => ({
       'user.missing_mfa': handleMfaError(UserMfaFlow.MfaBinding),
       'session.mfa.require_mfa_verification': handleMfaError(UserMfaFlow.MfaVerification),
-      'session.mfa.backup_code_required': startBackupCodeBinding,
+      'session.mfa.backup_code_required': async () => startBackupCodeBinding(replace),
     }),
-    [handleMfaError, startBackupCodeBinding]
+    [handleMfaError, replace, startBackupCodeBinding]
   );
 
   return mfaVerificationErrorHandler;

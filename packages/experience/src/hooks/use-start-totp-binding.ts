@@ -9,11 +9,7 @@ import useErrorHandler from '@/hooks/use-error-handler';
 import { UserMfaFlow } from '@/types';
 import { type MfaFlowState, type TotpBindingState } from '@/types/guard';
 
-type Options = {
-  replace?: boolean;
-};
-
-const useStartTotpBinding = ({ replace }: Options = {}) => {
+const useStartTotpBinding = () => {
   const navigate = useNavigate();
   const asyncCreateTotpSecret = useApi(createTotpSecret);
   const { setVerificationId } = useContext(UserInteractionContext);
@@ -21,7 +17,7 @@ const useStartTotpBinding = ({ replace }: Options = {}) => {
   const handleError = useErrorHandler();
 
   return useCallback(
-    async (flowState: MfaFlowState) => {
+    async (flowState: MfaFlowState, replace?: boolean) => {
       const [error, result] = await asyncCreateTotpSecret();
 
       if (error) {
@@ -42,7 +38,7 @@ const useStartTotpBinding = ({ replace }: Options = {}) => {
         navigate({ pathname: `/${UserMfaFlow.MfaBinding}/${MfaFactor.TOTP}` }, { replace, state });
       }
     },
-    [asyncCreateTotpSecret, handleError, navigate, replace, setVerificationId]
+    [asyncCreateTotpSecret, handleError, navigate, setVerificationId]
   );
 };
 

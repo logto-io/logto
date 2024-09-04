@@ -10,38 +10,36 @@ import { type BackupCodeBindingState } from '@/types/guard';
 import useApi from './use-api';
 import useErrorHandler from './use-error-handler';
 
-type Options = {
-  /** Whether to replace the current page in the history stack. */
-  replace?: boolean;
-};
-
-const useStartBackupCodeBinding = ({ replace }: Options = {}) => {
+const useStartBackupCodeBinding = () => {
   const navigate = useNavigate();
   const generateBackUpCodes = useApi(createBackupCode);
   const { setVerificationId } = useContext(UserInteractionContext);
 
   const handleError = useErrorHandler();
 
-  return useCallback(async () => {
-    const [error, result] = await generateBackUpCodes();
+  return useCallback(
+    async (replace?: boolean) => {
+      const [error, result] = await generateBackUpCodes();
 
-    if (error) {
-      await handleError(error);
-      return;
-    }
+      if (error) {
+        await handleError(error);
+        return;
+      }
 
-    if (!result) {
-      return;
-    }
+      if (!result) {
+        return;
+      }
 
-    const { verificationId, codes } = result;
-    setVerificationId(VerificationType.BackupCode, verificationId);
+      const { verificationId, codes } = result;
+      setVerificationId(VerificationType.BackupCode, verificationId);
 
-    navigate(
-      { pathname: `/${UserMfaFlow.MfaBinding}/${MfaFactor.BackupCode}` },
-      { replace, state: { codes } satisfies BackupCodeBindingState }
-    );
-  }, [generateBackUpCodes, handleError, navigate, replace, setVerificationId]);
+      navigate(
+        { pathname: `/${UserMfaFlow.MfaBinding}/${MfaFactor.BackupCode}` },
+        { replace, state: { codes } satisfies BackupCodeBindingState }
+      );
+    },
+    [generateBackUpCodes, handleError, navigate, setVerificationId]
+  );
 };
 
 export default useStartBackupCodeBinding;
