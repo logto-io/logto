@@ -138,7 +138,8 @@
           "messaging:citizen:*",
           "messaging:event:read",
           "profile:user:read",
-          "upload:file:*"
+          "upload:file:*",
+          "scheduler:jobs:write"
         ],
         "type": "MachineToMachine",
         "related_applications": [
