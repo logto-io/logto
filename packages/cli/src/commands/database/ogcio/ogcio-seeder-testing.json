@@ -115,7 +115,8 @@
           "messaging:template:*",
           "messaging:citizen:*",
           "messaging:event:read",
-          "profile:user:read"
+          "profile:user:read",
+          "upload:file:*"
         ],
         "type": "MachineToMachine",
         "related_applications": [
