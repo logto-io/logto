@@ -1,0 +1,66 @@
+@use '@/scss/underscore' as _;
+
+/* Main Layout */
+.viewBox {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+}
+
+.container {
+  min-height: 100%;
+  @include _.flex_column(center, center);
+}
+
+.main {
+  @include _.flex_column;
+}
+
+:global(body.mobile) {
+  .container {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .main {
+    flex: 1;
+    align-self: stretch;
+    padding: _.unit(4) _.unit(5);
+    position: relative;
+    background: var(--color-bg-body);
+  }
+
+  .signature {
+    margin: _.unit(10) 0 _.unit(2);
+  }
+}
+
+:global(body.desktop) {
+  .container {
+    padding: _.unit(5);
+  }
+
+  .main {
+    width: 540px;
+    min-height: 540px;
+    position: relative;
+    padding: _.unit(6);
+    border-radius: 16px;
+    background: var(--color-bg-float);
+    box-shadow: var(--color-shadow-2);
+  }
+
+  .signature {
+    position: absolute;
+    bottom: 0;
+    transform: translateY(calc(100% + _.unit(7)));
+    // Have to use padding instead of margin. Overflow margin spacing will be ignored by the browser.
+    padding-bottom: _.unit(7);
+  }
+
+  @media only screen and (max-width: 580px) {
+    .main {
+      align-self: stretch;
+      width: auto;
+    }
+  }
+}

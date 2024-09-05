@@ -1,0 +1,36 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  @include _.flex-column(center);
+  align-items: stretch;
+  gap: _.unit(4);
+  padding-bottom: _.unit(6);
+}
+
+.backupCodes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: _.unit(4);
+  font: var(--font-label-2);
+  text-align: center;
+  border-radius: var(--radius);
+  background-color: var(--color-bg-light);
+  color: var(--color-type-primary);
+  row-gap: _.unit(2);
+}
+
+.actions {
+  @include _.flex-row;
+  gap: _.unit(4);
+}
+
+.hint {
+  font: var(--font-body-2);
+  color: var(--color-type-secondary);
+}
+
+:global(body.mobile) {
+  .backupCodes {
+    font: var(--font-label-1);
+  }
+}

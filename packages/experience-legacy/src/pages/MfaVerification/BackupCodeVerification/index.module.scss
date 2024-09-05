@@ -1,0 +1,9 @@
+@use '@/scss/underscore' as _;
+
+.backupCodeInput {
+  margin: _.unit(4) 0;
+}
+
+.switchFactorLink {
+  margin-top: _.unit(6);
+}

@@ -1,0 +1,6 @@
+@use '@/scss/underscore' as _;
+
+.factorList {
+  @include _.flex-column;
+  gap: _.unit(3);
+}

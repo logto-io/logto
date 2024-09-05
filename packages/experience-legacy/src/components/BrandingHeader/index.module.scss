@@ -1,0 +1,56 @@
+@use '@/scss/underscore' as _;
+
+$logo-height: 40px;
+
+.container {
+  width: 100%;
+  @include _.flex-column;
+}
+
+.logoWrapper {
+  @include _.flex-row;
+}
+
+.connectIcon {
+  color: var(--color-neutral-variant-80);
+  margin: 0 _.unit(3);
+}
+
+.logo {
+  height: $logo-height;
+  width: auto;
+  @include _.image-align-center;
+}
+
+.headline {
+  flex-shrink: 0;
+  text-align: center;
+  color: var(--color-type-primary);
+  @include _.multi-line-ellipsis(2);
+}
+
+:global(body.mobile) {
+  .container {
+    height: 15vh;
+    min-height: 92px;
+    max-height: 148px;
+  }
+
+  .logoWrapper:not(:last-child) {
+    margin-bottom: _.unit(2);
+  }
+
+  .headline {
+    font: var(--font-title-1);
+  }
+}
+
+:global(body.desktop) {
+  .logoWrapper:not(:last-child) {
+    margin-bottom: _.unit(3);
+  }
+
+  .headline {
+    font: var(--font-title-2);
+  }
+}

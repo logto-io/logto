@@ -1,0 +1,25 @@
+@use '@/scss/underscore' as _;
+
+.wrapper {
+  @include _.full-page;
+  @include _.flex-column(normal, normal);
+  @include _.full-width;
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+}
+
+:global(body.desktop) {
+  .wrapper {
+    padding: _.unit(6) 0;
+  }
+
+  .placeholderTop {
+    flex: 3;
+  }
+
+  .placeholderBottom {
+    flex: 5;
+  }
+}

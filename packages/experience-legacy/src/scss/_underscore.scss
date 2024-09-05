@@ -1,0 +1,60 @@
+@function unit($factor: 1) {
+  @return #{$factor * 4}px;
+}
+
+@mixin flex-column($align-items: center, $justify-content: center) {
+  display: flex;
+  flex-direction: column;
+  align-items: $align-items;
+  justify-content: $justify-content;
+}
+
+@mixin flex-row {
+  display: flex;
+  align-items: center;
+}
+
+@mixin image-align-center {
+  object-fit: contain;
+  object-position: center;
+}
+
+@mixin text-hint {
+  font: var(--font-body-2);
+  color: var(--color-type-secondary);
+}
+
+@mixin title {
+  font: var(--font-headline-1);
+  color: var(--color-type-primary);
+}
+
+@mixin title-desktop {
+  font: var(--font-headline-2);
+  color: var(--color-type-primary);
+}
+
+@mixin full-page {
+  flex: 1;
+  align-self: stretch;
+}
+
+@mixin full-width {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+@function border($color: transparent, $width: 1) {
+  @return #{$width}px solid #{$color};
+}
+
+@mixin multi-line-ellipsis($line) {
+  // https://css-tricks.com/almanac/properties/l/line-clamp/
+  /* stylelint-disable-next-line value-no-vendor-prefix */
+  display: -webkit-box;
+  -webkit-line-clamp: $line;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
