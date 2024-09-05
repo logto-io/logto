@@ -440,5 +440,16 @@
         "enabled": true
       }
     ]
-  }
+  },
+  "users": [
+      {
+        "id": "e2e-user-1",
+        "username": "e2e_test_user_1",
+        "primary_email": "e2e_test_1@user.com",
+        "primary_phone": "+21312666999",
+        "name": "E2E First User",
+        "application_id": "1lvmteh2ao3xrswyq7j3e",
+        "resource_role_ids": ["bb-citizen"]
+      }
+    ]
 }

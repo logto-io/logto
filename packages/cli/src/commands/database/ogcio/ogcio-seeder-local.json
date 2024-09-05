@@ -472,6 +472,17 @@
         "signing_key": "webhooks_local_signing_key",
         "enabled": true
       }
+    ],
+    "users": [
+      {
+        "id": "e2e-user-1",
+        "username": "e2e_test_user_1",
+        "primary_email": "e2e_test_1@user.com",
+        "primary_phone": "+21312666999",
+        "name": "E2E First User",
+        "application_id": "4695d8onfb9f3bv18phtq",
+        "resource_role_ids": ["bb-citizen"]
+      }
     ]
   }
 }

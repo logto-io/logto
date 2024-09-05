@@ -12,6 +12,7 @@ import { createOrganizations } from './organizations.js';
 import { seedResourceRbacData } from './resources-rbac.js';
 import { seedResources } from './resources.js';
 import { seedSignInExperiences } from './sign-in-experiences.js';
+import { seedUsers } from './users.js';
 import { seedWebhooks } from './webhooks.js';
 
 const createDataForTenant = async (
@@ -77,6 +78,14 @@ const createDataForTenant = async (
       transaction,
       tenantId,
       hooks: tenantData.webhooks,
+    });
+  }
+
+  if (tenantData.users?.length) {
+    const users = await seedUsers({
+      transaction,
+      tenantId,
+      usersToSeed: tenantData.users,
     });
   }
 };

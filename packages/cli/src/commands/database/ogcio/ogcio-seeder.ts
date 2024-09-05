@@ -16,6 +16,7 @@ export type OgcioSeeder = {
   sign_in_experiences?: SignInExperienceSeeder[];
   resource_permissions?: ResourcePermissionSeeder[];
   resource_roles?: ResourceRoleSeeder[];
+  users?: UserSeeder[];
 };
 
 export type OrganizationSeeder = {
@@ -135,6 +136,16 @@ export type WebhookSeeder = {
   };
   signing_key: string;
   enabled: true;
+};
+
+export type UserSeeder = {
+  id: string;
+  username: string;
+  primary_email: string;
+  primary_phone?: string;
+  name: string;
+  application_id: string;
+  resource_role_ids: string[];
 };
 
 let inputSeeder: OgcioTenantSeeder | undefined;
