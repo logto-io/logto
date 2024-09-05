@@ -102,6 +102,11 @@
         justify-content: space-between;
         align-items: center;
       }
+
+      &.rtl {
+        left: unset;
+        right: _.unit(2);
+      }
     }
 
     img {

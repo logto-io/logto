@@ -29,13 +29,13 @@
     color: var(--color-success-pressed);
     width: 20px;
     height: 20px;
-    margin-right: _.unit(2);
+    margin-inline-end: _.unit(2);
   }
 
   .scopeGroupName {
     font: var(--font-body-2);
     flex: 1;
-    margin-right: _.unit(2);
+    margin-inline-end: _.unit(2);
   }
 
   .toggleButton {

@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import { type ComponentProps } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import CaretDown from '@/assets/icons/caret-down.svg?react';
 import CaretUp from '@/assets/icons/caret-up.svg?react';
@@ -47,6 +48,7 @@ type Props = Omit<ComponentProps<typeof TextInput>, 'type' | 'suffix'> & {
 
 /** A numeric text input with up and down buttons for incrementing and decrementing the value. */
 function NumericInput({ onValueUp, onValueDown, ...props }: Props) {
+  const { i18n } = useTranslation();
   const isDisabled = Boolean(props.disabled) || Boolean(props.readOnly);
 
   return (
@@ -55,7 +57,7 @@ function NumericInput({ onValueUp, onValueDown, ...props }: Props) {
       alwaysShowSuffix
       type="number"
       suffix={
-        <div className={styles.container}>
+        <div className={classNames(styles.container, styles[i18n.dir()])}>
           <Button
             className={styles.up}
             isDisabled={

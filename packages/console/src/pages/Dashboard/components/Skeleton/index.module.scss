@@ -21,7 +21,7 @@
   flex: 1;
 
   &:not(:last-child) {
-    margin-right: _.unit(4);
+    margin-inline-end: _.unit(4);
   }
 }
 

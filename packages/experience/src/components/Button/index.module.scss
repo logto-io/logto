@@ -31,7 +31,7 @@
     }
 
     &.iconVisible {
-      padding-left: _.unit(7);
+      padding-inline-start: _.unit(7);
 
       .icon {
         left: 0;

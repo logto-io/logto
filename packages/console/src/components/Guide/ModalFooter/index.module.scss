@@ -15,12 +15,12 @@
     justify-content: space-between;
     max-width: dim.$guide-main-content-max-width;
     margin: 0 auto;
+    gap: _.unit(3);
   }
 
   .text {
     font: var(--font-body-2);
     color: var(--color-text);
-    margin-right: _.unit(3);
     @include _.multi-line-ellipsis(2);
   }
 }

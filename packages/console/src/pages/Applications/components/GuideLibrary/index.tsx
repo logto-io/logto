@@ -30,7 +30,7 @@ type Props = {
 };
 
 function GuideLibrary({ className, hasCardBorder, hasCardButton, onSelectGuide }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { pathname } = useLocation();
   const [keyword, setKeyword] = useState<string>('');
   const [filterCategories, setFilterCategories] = useState<AppGuideCategory[]>([]);
@@ -68,7 +68,13 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, onSelectGuide }
 
   return (
     <OverlayScrollbar className={classNames(styles.container, className)}>
-      <div className={classNames(styles.wrapper, isApplicationCreateModal && styles.hasFilters)}>
+      <div
+        className={classNames(
+          styles.wrapper,
+          isApplicationCreateModal && styles.hasFilters,
+          styles[i18n.dir()]
+        )}
+      >
         <div className={styles.groups}>
           {isApplicationCreateModal && (
             <div className={styles.filterAnchor}>

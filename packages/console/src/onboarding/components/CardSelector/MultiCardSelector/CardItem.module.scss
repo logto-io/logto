@@ -14,7 +14,7 @@
 
   .icon {
     color: var(--color-text-secondary);
-    margin-right: _.unit(4);
+    margin-inline-end: _.unit(4);
     vertical-align: middle;
 
     > svg {
@@ -29,7 +29,7 @@
     }
 
     .trailingTag {
-      margin-left: _.unit(1);
+      margin-inline-start: _.unit(1);
     }
   }
 

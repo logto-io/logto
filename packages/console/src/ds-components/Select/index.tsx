@@ -76,7 +76,8 @@ function Select<T extends string>({
     }
     const element = anchorRef.current;
     const cs = getComputedStyle(element);
-    const paddingX = Number.parseFloat(cs.paddingLeft) + Number.parseFloat(cs.paddingRight);
+    const paddingX =
+      Number.parseFloat(cs.paddingInlineStart) + Number.parseFloat(cs.paddingInlineEnd);
     const paddingY = Number.parseFloat(cs.paddingTop) + Number.parseFloat(cs.paddingBottom);
     const borderX = Number.parseFloat(cs.borderLeftWidth) + Number.parseFloat(cs.borderRightWidth);
     const borderY = Number.parseFloat(cs.borderTopWidth) + Number.parseFloat(cs.borderBottomWidth);
@@ -92,7 +93,7 @@ function Select<T extends string>({
       left: `${
         element.getBoundingClientRect().left +
         Number.parseFloat(cs.borderLeftWidth) +
-        Number.parseFloat(cs.paddingLeft)
+        Number.parseFloat(cs.paddingInlineStart)
       }px`,
       backgroundColor: cs.backgroundColor,
     };

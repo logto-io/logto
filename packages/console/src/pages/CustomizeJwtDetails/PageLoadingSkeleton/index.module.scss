@@ -10,7 +10,7 @@
     margin-bottom: _.unit(6);
 
     &:first-child {
-      margin-right: _.unit(3);
+      margin-inline-end: _.unit(3);
       flex: 9;
     }
 

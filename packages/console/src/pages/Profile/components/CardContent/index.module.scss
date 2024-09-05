@@ -12,7 +12,7 @@
     display: inline-flex;
 
     + .actionButton {
-      margin-left: _.unit(4);
+      margin-inline-start: _.unit(4);
     }
   }
 
@@ -24,7 +24,7 @@
   .icon {
     width: 32px;
     height: 32px;
-    margin-right: _.unit(4);
+    margin-inline-end: _.unit(4);
   }
 
   table {
@@ -46,7 +46,7 @@
       }
 
       &:last-child {
-        text-align: right;
+        text-align: end;
         width: 25%;
 
         .wrapper {

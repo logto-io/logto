@@ -5,17 +5,17 @@ export const lineNumberContainerStyle = (): CSSProperties => {
     display: 'flex',
     flexDirection: 'column',
     textAlign: 'right',
-    paddingLeft: '0px',
-    paddingRight: '0px',
+    paddingInlineStart: '0px',
+    paddingInlineEnd: '0px',
   };
 };
 
 export const lineNumberStyle = (numberOfLines: number): CSSProperties => {
   return {
     minWidth: `calc(${numberOfLines}ch + 20px)`,
-    marginLeft: '0px',
-    paddingRight: '20px',
-    paddingLeft: '0px',
+    marginInlineStart: '0px',
+    paddingInlineEnd: '20px',
+    paddingInlineStart: '0px',
     display: 'inline-flex',
     justifyContent: 'flex-end',
     counterIncrement: 'line',

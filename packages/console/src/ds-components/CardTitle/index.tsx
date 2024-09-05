@@ -58,7 +58,7 @@ function CardTitle({
           {learnMoreLink?.href && (
             <>
               {/* Use a space to keep the link and the text separate.
-               * Avoid using `margin-left` since it will cause an unexpected gap when the "learn more" text is at the start of a new line
+               * Avoid using `margin-inline-start` since it will cause an unexpected gap when the "learn more" text is at the start of a new line
                */}{' '}
               <TextLink href={learnMoreLink.href} targetBlank={learnMoreLink.targetBlank}>
                 {t('general.learn_more')}

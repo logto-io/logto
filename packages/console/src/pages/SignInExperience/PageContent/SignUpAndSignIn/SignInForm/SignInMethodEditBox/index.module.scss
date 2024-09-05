@@ -8,6 +8,7 @@
   display: flex;
   align-items: center;
   margin: _.unit(2) 0;
+  gap: _.unit(2);
 }
 
 .signInMethod {
@@ -15,7 +16,6 @@
   align-items: center;
   height: 44px;
   width: 100%;
-  margin-right: _.unit(2);
   padding: _.unit(3) _.unit(2);
   background-color: var(--color-layer-2);
   border-radius: 8px;
@@ -31,6 +31,7 @@
     display: flex;
     font: var(--font-label-2);
     align-items: center;
+    gap: _.unit(1);
   }
 
   .authentication {
@@ -53,7 +54,6 @@
 
   .draggableIcon {
     color: var(--color-text-secondary);
-    margin-right: _.unit(1);
   }
 }
 

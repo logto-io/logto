@@ -6,6 +6,7 @@ import { type To } from 'react-router-dom';
 import Back from '@/assets/icons/back.svg?react';
 import type DangerousRaw from '@/ds-components/DangerousRaw';
 import DynamicT from '@/ds-components/DynamicT';
+import FlipOnRtl from '@/ds-components/FlipOnRtl';
 import TextLink from '@/ds-components/TextLink';
 import type { RequestError } from '@/hooks/use-api';
 
@@ -35,7 +36,15 @@ function DetailsPage({
 }: Props) {
   return (
     <div className={classNames(styles.container, className)}>
-      <TextLink to={backLink} icon={<Back />} className={styles.backLink}>
+      <TextLink
+        to={backLink}
+        icon={
+          <FlipOnRtl>
+            <Back />
+          </FlipOnRtl>
+        }
+        className={styles.backLink}
+      >
         {typeof backLinkTitle === 'string' ? <DynamicT forKey={backLinkTitle} /> : backLinkTitle}
       </TextLink>
       {isLoading ? (

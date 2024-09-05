@@ -105,12 +105,13 @@ function DetailsPageHeader({
   additionalCustomElement,
   actionMenuItems,
 }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [showIcon, setShowIcon] = useState(true);
   const [isCompact, setIsCompact] = useState(false);
   const [showAdditionalCustomElement, setShowAdditionalCustomElement] = useState(true);
   const identifierRef = useRef<HTMLDivElement>(null);
   const operationRef = useRef<HTMLDivElement>(null);
+  const isRtl = i18n.dir() === 'rtl';
 
   useWindowResize(() => {
     if (!identifierRef.current || !operationRef.current) {
@@ -119,37 +120,45 @@ function DetailsPageHeader({
 
     // Dynamically handle the visibility of the icon and action button styles. Sources:
     // https://www.figma.com/file/hqAWH3Di8gkiV5TXAt6juO/%F0%9F%8C%B9-%5BAC%5D-Layout-UI-Optimization?type=design&node-id=896-75673
-    const { right: identifierRightEdge, width: identifierWidth } =
-      identifierRef.current.getBoundingClientRect();
-    const operationLeftEdge = operationRef.current.getBoundingClientRect().left;
+    const {
+      left: identifierLeftEdge,
+      right: identifierRightEdge,
+      width: identifierWidth,
+    } = identifierRef.current.getBoundingClientRect();
+
+    const { left: operationLeftEdge, right: operationRightEdge } =
+      operationRef.current.getBoundingClientRect();
+
+    const identifierEdge = isRtl ? identifierLeftEdge : identifierRightEdge;
+    const operationEdge = isRtl ? operationRightEdge : operationLeftEdge;
 
     // When the operation buttons are in regular form, and the gap between the operation area and the identifier copy box is
     // only 24px. This means the window is shrinking and reaching the 1st breakpoint. Set operation buttons to compact form.
-    if (!isCompact && operationLeftEdge - identifierRightEdge <= 24) {
+    if (!isCompact && Math.abs(operationEdge - identifierEdge) <= 24) {
       setIsCompact(true);
     }
 
     // When the operation buttons are compact, and the gap between the operation area and the identifier copy box is only 24px.
     // This means the window keeps shrinking and reaching the 2nd breakpoint. Hide the main icon on the very left.
-    if (isCompact && showIcon && operationLeftEdge - identifierRightEdge <= 24) {
+    if (isCompact && showIcon && Math.abs(operationEdge - identifierEdge) <= 24) {
       setShowIcon(false);
     }
 
     // When the identifier copy box is 50px, and the gap between the operation area and the identifier copy box is only 24px.
     // This is when the page header is extremely narrow and barely has space to hold the identifier. Hide the additional custom element.
-    if (identifierWidth <= 50 && operationLeftEdge - identifierRightEdge <= 24) {
+    if (identifierWidth <= 50 && Math.abs(operationEdge - identifierEdge) <= 24) {
       setShowAdditionalCustomElement(false);
     }
 
     // When the gap between the operation buttons and the identifier copy box is greater than 80px, show the additional custom element.
-    if (!showAdditionalCustomElement && operationLeftEdge - identifierRightEdge > 80) {
+    if (!showAdditionalCustomElement && Math.abs(operationEdge - identifierEdge) > 80) {
       setShowAdditionalCustomElement(true);
     }
 
     // When the operation buttons are compact, icon is hidden, and the operation area is 120px away from the identifier copy box.
     // This means the window is enlarging and there is enough room to hold the icon. Show the icon.
     // 120px is a bit greater than the space required to hold the icon (60px + 24px padding), in order to avoid jittering.
-    if (isCompact && !showIcon && operationLeftEdge - identifierRightEdge > 120) {
+    if (isCompact && !showIcon && Math.abs(operationEdge - identifierEdge) > 120) {
       setShowIcon(true);
     }
 
@@ -160,7 +169,7 @@ function DetailsPageHeader({
     if (
       isCompact &&
       showIcon &&
-      operationLeftEdge - identifierRightEdge > (additionalCustomElement ? 240 : 180)
+      Math.abs(operationEdge - identifierEdge) > (additionalCustomElement ? 240 : 180)
     ) {
       setIsCompact(false);
     }

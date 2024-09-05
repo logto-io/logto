@@ -2,6 +2,7 @@ import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import type { KeyboardEventHandler, ReactElement, ReactNode } from 'react';
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import type DangerousRaw from '../DangerousRaw';
 import DynamicT from '../DynamicT';
@@ -52,6 +53,7 @@ function Radio({
   trailingIcon,
   hasCheckIconForCard = true,
 }: Props) {
+  const { i18n } = useTranslation();
   const handleKeyPress: KeyboardEventHandler<HTMLDivElement> = useCallback(
     (event) => {
       if (isDisabled) {
@@ -73,7 +75,8 @@ function Radio({
         styles[type],
         isChecked && styles.checked,
         isDisabled && styles.disabled,
-        className
+        className,
+        styles[i18n.dir()]
       )}
       // eslint-disable-next-line jsx-a11y/role-has-required-aria-props
       role="radio"

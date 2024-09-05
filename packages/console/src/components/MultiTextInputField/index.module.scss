@@ -1,5 +1,5 @@
 @use '@/scss/underscore' as _;
 
 .headlineWithMultiInputs {
-  padding-right: _.unit(9);
+  padding-inline-end: _.unit(9);
 }

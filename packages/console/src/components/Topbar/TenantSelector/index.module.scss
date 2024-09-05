@@ -11,8 +11,8 @@ $dropdown-item-height: 40px;
   display: flex;
   align-items: center;
   padding: _.unit(1);
-  padding-left: _.unit(2);
-  margin-left: _.unit(4);
+  padding-inline-start: _.unit(2);
+  margin-inline-start: _.unit(4);
   max-width: 500px;
   border-radius: _.unit(2);
   transition: background-color 0.2s ease-in-out;
@@ -61,6 +61,13 @@ $dropdown-item-height: 40px;
   &:hover::before {
     pointer-events: none;
     cursor: default;
+  }
+
+  &.rtl {
+    &::before {
+      left: unset;
+      right: _.unit(-3);
+    }
   }
 }
 

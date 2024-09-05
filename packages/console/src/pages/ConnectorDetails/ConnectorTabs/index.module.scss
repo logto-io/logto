@@ -16,14 +16,14 @@
     border: 1px solid var(--color-surface-5);
 
     &:not(:last-child) {
-      margin-right: _.unit(4);
+      margin-inline-end: _.unit(4);
     }
 
     .icon {
       width: 16px;
       height: 16px;
       object-fit: cover;
-      margin-right: _.unit(1);
+      margin-inline-end: _.unit(1);
       color: var(--color-text-link);
     }
 

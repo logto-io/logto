@@ -34,6 +34,11 @@
     }
   }
 
+  &.rtl .slider::before {
+    left: unset;
+    right: 2px;
+  }
+
   input:checked + .slider {
     background-color: var(--color-success-70);
   }
@@ -49,6 +54,10 @@
   input:disabled + .slider::before {
     background-color: var(--color-specific-toggle-thumb-disabled);
     box-shadow: unset;
+  }
+
+  &.rtl input:checked + .slider::before {
+    transform: translateX(-16px);
   }
 }
 

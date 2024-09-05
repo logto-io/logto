@@ -11,12 +11,12 @@
 
 .desc {
   @include _.text-hint;
-  text-align: left;
+  text-align: start;
 }
 
 .hint {
   @include _.text-hint;
-  text-align: left;
+  text-align: start;
   margin-top: _.unit(6);
 }
 

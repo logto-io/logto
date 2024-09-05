@@ -24,10 +24,7 @@
 .previewTitle {
   display: flex;
   align-items: center;
-
-  > *:first-child {
-    margin-right: _.unit(2);
-  }
+  gap: _.unit(2);
 }
 
 .platforms {
@@ -37,6 +34,7 @@
   .platform {
     display: flex;
     align-items: center;
+    gap: _.unit(1);
 
     &:not(:last-child)::after {
       content: '';
@@ -44,10 +42,6 @@
       height: 12px;
       border-right: 1px solid var(--color-border);
       margin: 0 _.unit(1);
-    }
-
-    svg {
-      margin-right: _.unit(1);
     }
   }
 }

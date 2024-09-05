@@ -30,6 +30,7 @@
   height: 36px;
   background-color: var(--color-layer-1);
   font: var(--font-body-2);
+  gap: _.unit(2);
 
   &.withIcon {
     display: flex;
@@ -38,7 +39,6 @@
     .icon {
       width: 20px;
       height: 20px;
-      margin-right: _.unit(2);
     }
   }
 

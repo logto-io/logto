@@ -19,7 +19,7 @@ function Skeleton() {
       <div className={classNames(pageContentStyles.tabs, styles.tabBar)} />
       <div className={classNames(pageContentStyles.content, styles.content)}>
         <div className={pageContentStyles.contentTop}>
-          <div className={pageContentStyles.form}>
+          <div>
             <div className={styles.card}>
               <div className={styles.title} />
               <div className={styles.field} />

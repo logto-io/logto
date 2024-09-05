@@ -58,12 +58,12 @@
     display: flex;
     align-items: flex-start; // align name and the feature tag to the top
     justify-content: space-between;
+    gap: _.unit(1);
   }
 
   .name {
     font: var(--font-label-2);
     color: var(--color-text);
-    margin-right: _.unit(1);
   }
 
   .description {

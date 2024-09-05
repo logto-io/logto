@@ -1,11 +1,13 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import { type ReactNode, useCallback, useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import ArrowRight from '@/assets/icons/arrow-right.svg?react';
 import Tick from '@/assets/icons/tick.svg?react';
 import { DropdownItem } from '@/ds-components/Dropdown';
 import DynamicT from '@/ds-components/DynamicT';
+import FlipOnRtl from '@/ds-components/FlipOnRtl';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import type { Option } from '@/ds-components/Select';
 import Spacer from '@/ds-components/Spacer';
@@ -42,6 +44,7 @@ function SubMenu<T extends string>({
   const mouseEnterTimeoutRef = useRef(0);
   const mouseLeaveTimeoutRef = useRef(0);
   const [menuHeight, setMenuHeight] = useState<number>();
+  const { i18n } = useTranslation();
 
   const calculateDropdownHeight = useCallback(() => {
     if (anchorRef.current) {
@@ -90,9 +93,11 @@ function SubMenu<T extends string>({
         <DynamicT forKey={title} />
       </span>
       <Spacer />
-      <ArrowRight className={styles.icon} />
+      <FlipOnRtl>
+        <ArrowRight className={styles.icon} />
+      </FlipOnRtl>
       <OverlayScrollbar
-        className={classNames(styles.menu, showMenu && styles.visible)}
+        className={classNames(styles.menu, showMenu && styles.visible, styles[i18n.dir()])}
         style={{ maxHeight: menuHeight }}
       >
         {options.map(({ value, title }) => {
@@ -104,7 +109,8 @@ function SubMenu<T extends string>({
               className={classNames(
                 styles.menuOption,
                 selected && styles.selected,
-                menuItemClassName
+                menuItemClassName,
+                styles[i18n.dir()]
               )}
               onClick={() => {
                 onItemClick(value);

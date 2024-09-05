@@ -103,9 +103,7 @@ function BasicForm({ isAllowEditTarget, isStandard, conflictConnectorName }: Pro
         </div>
         {conflictConnectorName && (
           <div className={styles.error}>
-            <div className={styles.icon}>
-              <Error />
-            </div>
+            <Error />
             <div className={styles.content}>
               <Trans
                 components={{

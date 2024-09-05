@@ -5,7 +5,7 @@
   align-items: center;
 
   >:not(:first-child) {
-    margin-left: _.unit(2);
+    margin-inline-start: _.unit(2);
   }
 
   .searchIcon {

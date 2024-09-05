@@ -37,7 +37,7 @@ export class LogtoListRow extends LitElement {
     }
 
     slot[name='actions'] {
-      text-align: right;
+      text-align: end;
     }
 
     span.not-set {

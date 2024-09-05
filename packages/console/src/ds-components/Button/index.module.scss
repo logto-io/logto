@@ -205,7 +205,7 @@
 
   &.text {
     background: none;
-    border-color: none;
+    border-color: transparent;
     font: var(--font-label-2);
     color: var(--color-text-link);
     padding: _.unit(0.5) _.unit(1);

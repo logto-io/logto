@@ -3,7 +3,7 @@
 .quotaListItem {
   font: var(--font-body-2);
   // Add a margin to the left for the list item marker
-  margin-left: _.unit(4);
+  margin-inline-start: _.unit(4);
 
   .content {
     display: flex;
@@ -27,6 +27,6 @@
   &.withIcon {
     list-style-type: none;
     // Unset a margin to the left for the list item marker
-    margin-left: unset;
+    margin-inline-start: unset;
   }
 }

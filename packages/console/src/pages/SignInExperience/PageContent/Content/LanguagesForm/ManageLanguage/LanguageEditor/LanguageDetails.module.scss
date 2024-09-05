@@ -44,7 +44,7 @@
       }
 
       .clearButton {
-        margin-left: _.unit(1);
+        margin-inline-start: _.unit(1);
       }
 
       .clearIcon {
@@ -113,7 +113,7 @@
       display: flex;
       flex-direction: row-reverse;
       align-items: center;
-      padding-right: _.unit(5);
+      padding-inline-end: _.unit(5);
     }
   }
 }

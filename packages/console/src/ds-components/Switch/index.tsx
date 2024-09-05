@@ -2,6 +2,7 @@ import { type AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import type { HTMLProps, ReactElement, ReactNode, Ref } from 'react';
 import { forwardRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import DynamicT from '../DynamicT';
 
@@ -20,6 +21,7 @@ type Props =
 
 function Switch(props: Props, ref?: Ref<HTMLInputElement>) {
   const { label, hasError, ...rest } = props;
+  const { i18n } = useTranslation();
 
   return (
     <div className={classNames(styles.wrapper, hasError && styles.error)}>
@@ -33,7 +35,7 @@ function Switch(props: Props, ref?: Ref<HTMLInputElement>) {
         </div>
       )}
       {label && <div className={styles.label}>{label}</div>}
-      <label className={styles.switch}>
+      <label className={classNames(styles.switch, styles[i18n.dir()])}>
         <input type="checkbox" {...rest} ref={ref} />
         <span className={styles.slider} />
       </label>

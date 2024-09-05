@@ -13,13 +13,13 @@
   // Todo @xiaoyijun Remove this `count` style together with the dev feature flag
   .count {
     flex-shrink: 0;
-    margin-left: _.unit(2);
+    margin-inline-start: _.unit(2);
     color: var(--color-text-secondary);
   }
 
   .flag {
     flex-shrink: 0;
-    margin-left: _.unit(2);
+    margin-inline-start: _.unit(2);
     color: var(--color-text-secondary);
     display: flex;
     align-items: center;

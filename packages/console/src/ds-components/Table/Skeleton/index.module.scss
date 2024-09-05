@@ -14,7 +14,7 @@
     .avatar {
       width: 40px;
       height: 40px;
-      margin-right: _.unit(4);
+      margin-inline-end: _.unit(4);
       border-radius: 12px;
       flex-shrink: 0;
       @include _.shimmering-animation;

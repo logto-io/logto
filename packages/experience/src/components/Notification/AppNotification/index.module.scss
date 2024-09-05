@@ -14,13 +14,13 @@
   .icon {
     width: 20px;
     height: 20px;
-    margin-right: _.unit(3);
+    margin-inline-end: _.unit(3);
     color: var(--color-neutral-variant-60);
   }
 
   .message {
     flex: 1;
-    margin-right: _.unit(4);
+    margin-inline-end: _.unit(4);
   }
 
   .link {

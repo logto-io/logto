@@ -9,6 +9,7 @@
   padding: _.unit(1) _.unit(2);
   text-decoration: none;
   opacity: 75%;
+  direction: ltr;
 
   .staticIcon {
     display: block;
@@ -32,7 +33,7 @@
   }
 
   .text {
-    margin-right: _.unit(1);
+    margin-inline-end: _.unit(1);
   }
 }
 

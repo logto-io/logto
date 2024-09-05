@@ -10,6 +10,7 @@ import {
   useEffect,
   useCallback,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import ErrorMessage from '@/components/ErrorMessage';
 
@@ -47,6 +48,7 @@ const InputField = (
   }: Props,
   reference: Ref<Nullable<HTMLInputElement>>
 ) => {
+  const { i18n } = useTranslation();
   const innerRef = useRef<HTMLInputElement>(null);
 
   useImperativeHandle(reference, () => innerRef.current);
@@ -94,7 +96,8 @@ const InputField = (
           className={classNames(
             styles.inputField,
             isSuffixFocusVisible && styles.isSuffixFocusVisible,
-            inputFieldClassName
+            inputFieldClassName,
+            styles[i18n.dir()]
           )}
         >
           {prefix}

@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
 
 import styles from './index.module.scss';
 
@@ -26,6 +27,8 @@ type Props = {
  *
  */
 const NotchedBorder = ({ label, isActive, isDanger, isFocused }: Props) => {
+  const { i18n } = useTranslation();
+
   return (
     <div
       className={classNames(
@@ -33,7 +36,8 @@ const NotchedBorder = ({ label, isActive, isDanger, isFocused }: Props) => {
         isDanger && styles.danger,
         isActive && styles.active,
         isFocused && styles.focused,
-        !label && styles.noLabel
+        !label && styles.noLabel,
+        styles[i18n.dir()]
       )}
     >
       <fieldset className={styles.border}>

@@ -65,7 +65,7 @@
 
         // TODO (LOG-8602): Remove the default left margin of CopyToClipboard copyToolTipAnchor component.
         div[class*='copyToolTipAnchor'] {
-          margin-left: 0;
+          margin-inline-start: 0;
         }
       }
     }
@@ -74,6 +74,7 @@
   .editorContainer {
     position: relative;
     flex-grow: 1;
+    direction: ltr;
 
     &.dashboardOpen {
       flex-grow: 0;
