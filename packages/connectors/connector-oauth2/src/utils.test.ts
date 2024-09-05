@@ -80,7 +80,7 @@ describe('userProfileMapping', () => {
     });
   });
 
-  it('should throw an exception for non-existent nested attributes', () => {
+  it('should safely return undefined for non-existent nested attributes', () => {
     const keyMapping: ProfileMap = {
       id: 'id',
       email: 'contact.email',
@@ -98,8 +98,11 @@ describe('userProfileMapping', () => {
       },
     };
 
-    expect(() => {
-      userProfileMapping(originUserProfile, keyMapping);
-    }).toThrowError();
+    const profile: UserProfile = userProfileMapping(originUserProfile, keyMapping);
+    expect(profile).toMatchObject({
+      id: '123456',
+      email: 'octcat@github.com',
+      name: 'Oct Cat',
+    });
   });
 });
