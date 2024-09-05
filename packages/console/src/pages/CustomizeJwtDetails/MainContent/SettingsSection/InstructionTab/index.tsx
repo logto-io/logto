@@ -150,7 +150,7 @@ function InstructionTab({ isActive }: Props) {
             language="typescript"
             className={styles.sampleCode}
             value={denyAccessCodeExample}
-            height="320px"
+            height="240px"
             theme="logto-dark"
             options={sampleCodeEditorOptions}
           />

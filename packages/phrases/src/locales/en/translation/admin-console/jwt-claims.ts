@@ -40,8 +40,8 @@ const jwt_claims = {
     subtitle: 'Use `token` input parameter for current access token payload. ',
   },
   api_context: {
-    title: 'API context',
-    subtitle: 'Use `api.denyAccess` method to reject the current token exchange request.',
+    title: 'API context: access control',
+    subtitle: 'Use `api.denyAccess` method to reject the token exchange request.',
   },
   fetch_external_data: {
     title: 'Fetch external data',
