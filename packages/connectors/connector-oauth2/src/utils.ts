@@ -1,4 +1,4 @@
-import { assert } from '@silverhand/essentials';
+import { assert, getSafe } from '@silverhand/essentials';
 
 import { ConnectorError, ConnectorErrorCodes, parseJson } from '@logto/connector-kit';
 import { type KyResponse } from 'ky';
@@ -41,15 +41,11 @@ export const userProfileMapping = (
   originUserProfile: object,
   keyMapping: ProfileMap
 ) => {
-  const keyMap = new Map(
-    Object.entries(keyMapping).map(([destination, source]) => [source, destination])
-  );
-
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const mappedUserProfile = Object.fromEntries(
-    Object.entries(originUserProfile)
-      .filter(([key, value]) => keyMap.get(key) && value)
-      .map(([key, value]) => [keyMap.get(key), value])
+    Object.entries(keyMapping)
+      .map(([destination, source]) => [destination, getSafe(originUserProfile, source)])
+      .filter(([_, value]) => value)
   );
 
   const result = userProfileGuard.safeParse(mappedUserProfile);
