@@ -116,7 +116,7 @@
         ]
       },
       {
-        "id": "m2m-ps-scheduler-writer",
+        "id": "m2m-ps-sched-writer",
         "name": "M2M Public Servant Scheduler Writer",
         "description": "Role for M2M Applications that need to schedule tasks using Scheduler resources",
         "specific_permissions": ["scheduler:jobs:write"],
