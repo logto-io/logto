@@ -8,9 +8,9 @@ import {
   updatePersonalAccessToken,
 } from '#src/api/admin-user.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
-import { devFeatureTest, randomString } from '#src/utils.js';
+import { randomString } from '#src/utils.js';
 
-devFeatureTest.describe('personal access tokens', () => {
+describe('personal access tokens', () => {
   it('should throw error when creating PAT with existing name', async () => {
     const user = await createUserByAdmin();
     const name = randomString();

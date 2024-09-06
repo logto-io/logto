@@ -12,7 +12,7 @@ import {
   type CustomJwtScriptPayload,
 } from '@logto/schemas';
 import { type ConsoleLog } from '@logto/shared';
-import { assert, conditional, deduplicate, pick, pickState } from '@silverhand/essentials';
+import { assert, deduplicate, pick, pickState } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
 import { ZodError, z } from 'zod';
 
@@ -53,17 +53,11 @@ export class JwtCustomizerLibrary {
   // Convert errors to WithTyped client response error to share the error handling logic.
   static async runScriptInLocalVm(data: CustomJwtFetcher) {
     try {
-      // @ts-expect-error -- remove this when the dev feature is ready
       const payload: CustomJwtScriptPayload = {
         ...(data.tokenType === LogtoJwtTokenKeyType.AccessToken
           ? pick(data, 'token', 'context', 'environmentVariables')
           : pick(data, 'token', 'environmentVariables')),
-        ...conditional(
-          // TODO: @simeng remove this when the dev feature is ready
-          EnvSet.values.isDevFeaturesEnabled && {
-            api: apiContext,
-          }
-        ),
+        api: apiContext,
       };
 
       const result = await runScriptFunctionInLocalVm(data.script, 'getCustomJwtClaims', payload);
