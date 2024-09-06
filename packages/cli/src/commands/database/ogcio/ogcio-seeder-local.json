@@ -482,7 +482,8 @@
         "primary_phone": "+21312666999",
         "name": "E2E First User",
         "application_id": "4695d8onfb9f3bv18phtq",
-        "resource_role_ids": ["bb-citizen"]
+        "resource_role_ids": ["bb-citizen"],
+        "ppsn": "E2E_TEST_USER_1"
       }
     ]
   }

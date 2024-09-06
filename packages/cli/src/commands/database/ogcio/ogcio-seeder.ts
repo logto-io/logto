@@ -135,7 +135,7 @@ export type WebhookSeeder = {
     url: string;
   };
   signing_key: string;
-  enabled: true;
+  enabled: boolean;
 };
 
 export type UserSeeder = {
@@ -146,6 +146,7 @@ export type UserSeeder = {
   name: string;
   application_id: string;
   resource_role_ids: string[];
+  ppsn: string;
 };
 
 let inputSeeder: OgcioTenantSeeder | undefined;

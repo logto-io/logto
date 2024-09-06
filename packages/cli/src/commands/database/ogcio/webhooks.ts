@@ -7,14 +7,14 @@ import { sql, type DatabaseTransactionConnection } from '@silverhand/slonik';
 import { type WebhookSeeder } from './ogcio-seeder.js';
 import { createOrUpdateItemWithoutId } from './queries.js';
 
-type SeedingWebhook = {
+export type SeedingWebhook = {
   tenant_id: string;
   id: string;
   name: string;
   events: string;
   config: string;
   signing_key: string;
-  enabled: true;
+  enabled: boolean;
 };
 
 const createWebhook = async (

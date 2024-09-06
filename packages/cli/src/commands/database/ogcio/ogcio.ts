@@ -1,4 +1,6 @@
 /* eslint-disable eslint-comments/disable-enable-pair */
+/* eslint-disable @silverhand/fp/no-let */
+/* eslint-disable @silverhand/fp/no-mutation */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @silverhand/fp/no-mutating-methods */
 
@@ -13,7 +15,9 @@ import { seedResourceRbacData } from './resources-rbac.js';
 import { seedResources } from './resources.js';
 import { seedSignInExperiences } from './sign-in-experiences.js';
 import { seedUsers } from './users.js';
-import { seedWebhooks } from './webhooks.js';
+import { type SeedingWebhook, seedWebhooks } from './webhooks.js';
+
+const WEBHOOK_ID_FOR_USERS = 'login-webhook';
 
 const createDataForTenant = async (
   transaction: DatabaseTransactionConnection,
@@ -72,9 +76,9 @@ const createDataForTenant = async (
       experiences: tenantData.sign_in_experiences,
     });
   }
-
+  let webhooks: SeedingWebhook[] = [];
   if (tenantData.webhooks?.length) {
-    const webhooks = await seedWebhooks({
+    webhooks = await seedWebhooks({
       transaction,
       tenantId,
       hooks: tenantData.webhooks,
@@ -82,10 +86,12 @@ const createDataForTenant = async (
   }
 
   if (tenantData.users?.length) {
+    const webhookToUse = webhooks.find((web) => web.id === WEBHOOK_ID_FOR_USERS && web.enabled);
     const users = await seedUsers({
       transaction,
       tenantId,
       usersToSeed: tenantData.users,
+      webhook: webhookToUse,
     });
   }
 };
@@ -98,8 +104,6 @@ const transactionMethod = async (transaction: DatabaseTransactionConnection) => 
   }
 
   await Promise.all(items);
-
-  // Const resourcesRbac = await seedResourceRbacData(transaction, defaultTenantId, resources);
 };
 
 export const seedOgcio = async (connection: CommonQueryMethods) => {
