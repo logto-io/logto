@@ -9,6 +9,7 @@ import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import CardTitle from '@/ds-components/CardTitle';
 import FormField from '@/ds-components/FormField';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 
 import CreateButton from './CreateButton';
 import CustomizerItem from './CustomizerItem';
@@ -25,6 +26,8 @@ function CustomizeJwt() {
     currentSubscription: { planId },
     currentSubscriptionQuota: { customJwtEnabled },
   } = useContext(SubscriptionDataContext);
+
+  const { getDocumentationUrl } = useDocumentationUrl();
   const isCustomJwtEnabled = !isCloud || customJwtEnabled;
 
   const showPaywall = planId === ReservedPlanId.Free;
@@ -44,6 +47,10 @@ function CustomizeJwt() {
         paywall={cond((!isCustomJwtEnabled || isDevTenant) && ReservedPlanId.Pro)}
         title="jwt_claims.title"
         subtitle="jwt_claims.description"
+        learnMoreLink={{
+          href: getDocumentationUrl('/docs/recipes/custom-jwt'),
+          targetBlank: 'noopener',
+        }}
         className={styles.header}
       />
       <UpsellNotice isVisible={showPaywall} className={styles.inlineNotice} />
