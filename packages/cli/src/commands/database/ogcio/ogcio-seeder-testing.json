@@ -106,6 +106,18 @@
         ]
       },
       {
+        "id": "m2m-ps-scheduler-writer",
+        "name": "M2M Public Servant Scheduler Writer",
+        "description": "Role for M2M Applications that need to schedule tasks using Scheduler resources",
+        "specific_permissions": ["scheduler:jobs:write"],
+        "type": "MachineToMachine",
+        "related_applications": [
+          { "application_id": "f7p2k8w5jv4c1rm6xn3q9", "organization_id": "ogcio" },
+          { "application_id": "f7p2k8w5jv4c1rm6xn3q9", "organization_id": "first-testing" },
+          { "application_id": "f7p2k8w5jv4c1rm6xn3q9", "organization_id": "second-testing" }
+        ]
+      },
+      {
         "id": "m2m-e2e-tester",
         "name": "M2M E2E Tester Role",
         "description": "Role for M2M Applications that need to perform E2E testing",
@@ -194,6 +206,16 @@
         "logout_redirect_uri": "",
         "secret": "<SEEDER_M2M_PROFILE_APP_SECRET>",
         "id": "tty6llp30risjwcjhbvc9",
+        "is_third_party": false
+      },
+      {
+        "name": "M2M Scheduler Writer",
+        "description": "Machine 2 Machine application used to communicate between services and Scheduler resource",
+        "type": "MachineToMachine",
+        "redirect_uri": "",
+        "logout_redirect_uri": "",
+        "secret": "<SEEDER_M2M_SCHEDULER_APP_SECRET>",
+        "id": "f7p2k8w5jv4c1rm6xn3q9",
         "is_third_party": false
       },
       {
