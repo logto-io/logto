@@ -439,9 +439,8 @@
         "signing_key": "<SEEDER_WEBHOOK_SIGNING_KEY>",
         "enabled": true
       }
-    ]
-  },
-  "users": [
+    ],
+    "users": [
       {
         "id": "e2e-user-1",
         "username": "e2e_test_user_1",
@@ -453,4 +452,5 @@
         "ppsn": "E2E_TEST_USER_1"
       }
     ]
+  }
 }
