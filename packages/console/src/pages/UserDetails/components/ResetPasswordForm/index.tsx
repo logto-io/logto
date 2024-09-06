@@ -8,10 +8,11 @@ import { generateRandomPassword } from '@/utils/password';
 
 type Props = {
   readonly userId: string;
+  readonly hasPassword: boolean;
   readonly onClose?: (password?: string) => void;
 };
 
-function ResetPasswordForm({ onClose, userId }: Props) {
+function ResetPasswordForm({ onClose, userId, hasPassword }: Props) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console',
   });
@@ -29,7 +30,7 @@ function ResetPasswordForm({ onClose, userId }: Props) {
   return (
     <ConfirmModal
       isOpen
-      title="user_details.reset_password.title"
+      title={`user_details.reset_password.${hasPassword ? 'reset_title' : 'generate_title'}`}
       isLoading={isLoading}
       onCancel={() => {
         onClose?.();

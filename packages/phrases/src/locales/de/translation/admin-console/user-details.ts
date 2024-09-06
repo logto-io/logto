@@ -12,11 +12,10 @@ const user_details = {
     'Diese Aktion kann nicht rückgängig gemacht werden. Der Benutzer wird permanent gelöscht.',
   deleted: 'Der Benutzer wurde erfolgreich gelöscht',
   reset_password: {
-    reset_password: 'Passwort zurücksetzen',
-    title: 'Willst du das Passwort wirklich zurücksetzen?',
+    reset_title: 'Willst du das Passwort wirklich zurücksetzen?',
     content:
       'Diese Aktion kann nicht rückgängig gemacht werden. Das Anmeldeinformationen werden zurückgesetzt.',
-    congratulations: 'Der Benutzer wurde erfolgreich zurückgesetzt',
+    reset_complete: 'Der Benutzer wurde erfolgreich zurückgesetzt',
     new_password: 'Neues Passwort:',
   },
   tab_settings: 'Einstellungen',

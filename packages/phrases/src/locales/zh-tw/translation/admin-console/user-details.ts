@@ -11,10 +11,9 @@ const user_details = {
   delete_description: '本操作將永久刪除該用戶，且無法撤銷。',
   deleted: '用戶已成功刪除。',
   reset_password: {
-    reset_password: '重置密碼',
-    title: '確定要重置密碼？',
+    reset_title: '確定要重置密碼？',
     content: '本操作不可撤銷，將會重置用戶的登入資訊。',
-    congratulations: '該用戶已被重置',
+    reset_complete: '該用戶已被重置',
     new_password: '新密碼：',
   },
   tab_settings: '設定',

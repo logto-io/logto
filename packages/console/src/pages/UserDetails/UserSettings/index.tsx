@@ -28,6 +28,7 @@ import { userDetailsParser } from '../utils';
 
 import PersonalAccessTokens from './PersonalAccessTokens';
 import UserMfaVerifications from './UserMfaVerifications';
+import UserPassword from './UserPassword';
 import UserSocialIdentities from './UserSocialIdentities';
 import UserSsoIdentities from './UserSsoIdentities';
 
@@ -148,6 +149,14 @@ function UserSettings() {
               })}
               error={errors.username?.message}
               placeholder={t('users.placeholder_username')}
+            />
+          </FormField>
+          <FormField title="user_details.field_password">
+            <UserPassword
+              user={user}
+              onResetPassword={() => {
+                onUserUpdated({ ...user, hasPassword: true });
+              }}
             />
           </FormField>
           <FormField title="user_details.field_connectors">

@@ -3,13 +3,11 @@ import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import ReactModal from 'react-modal';
 import { Outlet, useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Delete from '@/assets/icons/delete.svg?react';
 import Forbidden from '@/assets/icons/forbidden.svg?react';
-import Reset from '@/assets/icons/reset.svg?react';
 import Shield from '@/assets/icons/shield.svg?react';
 import DetailsPage from '@/components/DetailsPage';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
@@ -22,14 +20,11 @@ import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
-import modalStyles from '@/scss/modal.module.scss';
 import { buildUrl } from '@/utils/url';
 import { getUserTitle, getUserSubtitle } from '@/utils/user';
 
-import UserAccountInformation from '../../components/UserAccountInformation';
 import SuspendedTag from '../Users/components/SuspendedTag';
 
-import ResetPasswordForm from './components/ResetPasswordForm';
 import styles from './index.module.scss';
 import { type UserDetailsOutletContext } from './types';
 
@@ -41,10 +36,8 @@ function UserDetails() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isResetPasswordFormOpen, setIsResetPasswordFormOpen] = useState(false);
   const [isToggleSuspendFormOpen, setIsToggleSuspendFormOpen] = useState(false);
   const [isUpdatingSuspendState, setIsUpdatingSuspendState] = useState(false);
-  const [resetResult, setResetResult] = useState<string>();
 
   // Get user info with user's SSO identities in a single API call.
   const { data, error, mutate } = useSWR<UserProfileResponse, RequestError>(
@@ -59,7 +52,6 @@ function UserDetails() {
 
   useEffect(() => {
     setIsDeleteFormOpen(false);
-    setIsResetPasswordFormOpen(false);
     setIsToggleSuspendFormOpen(false);
   }, [pathname]);
 
@@ -120,13 +112,6 @@ function UserDetails() {
             identifier={{ name: 'User ID', value: data.id }}
             actionMenuItems={[
               {
-                title: 'user_details.reset_password.reset_password',
-                icon: <Reset />,
-                onClick: () => {
-                  setIsResetPasswordFormOpen(true);
-                },
-              },
-              {
                 title: isSuspendedUser
                   ? 'user_details.reactivate_user'
                   : 'user_details.suspend_user',
@@ -145,26 +130,6 @@ function UserDetails() {
               },
             ]}
           />
-          <ReactModal
-            shouldCloseOnEsc
-            isOpen={isResetPasswordFormOpen}
-            className={modalStyles.content}
-            overlayClassName={modalStyles.overlay}
-            onRequestClose={() => {
-              setIsResetPasswordFormOpen(false);
-            }}
-          >
-            <ResetPasswordForm
-              userId={data.id}
-              onClose={(password) => {
-                setIsResetPasswordFormOpen(false);
-
-                if (password) {
-                  setResetResult(password);
-                }
-              }}
-            />
-          </ReactModal>
           <DeleteConfirmModal
             isOpen={isDeleteFormOpen}
             isLoading={isDeleting}
@@ -217,17 +182,6 @@ function UserDetails() {
               } satisfies UserDetailsOutletContext
             }
           />
-          {resetResult && (
-            <UserAccountInformation
-              title="user_details.reset_password.congratulations"
-              user={data}
-              password={resetResult}
-              passwordLabel={t('user_details.reset_password.new_password')}
-              onClose={() => {
-                setResetResult(undefined);
-              }}
-            />
-          )}
         </>
       )}
     </DetailsPage>

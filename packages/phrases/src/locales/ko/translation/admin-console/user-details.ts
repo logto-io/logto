@@ -11,10 +11,9 @@ const user_details = {
   delete_description: '이 사용자를 영원히 삭제할까요? 이 행동은 취소될 수 없어요.',
   deleted: '해당 사용자가 성공적으로 삭제되었어요.',
   reset_password: {
-    reset_password: '비밀번호 초기화',
-    title: '정말로 비밀번호를 초기화 할까요?',
+    reset_title: '정말로 비밀번호를 초기화 할까요?',
     content: '정말로 비밀번호를 초기화 할까요? 이 행동은 취소될 수 없어요.',
-    congratulations: '해당 사용자의 비밀번호가 성공적으로 초기화 되었어요.',
+    reset_complete: '해당 사용자의 비밀번호가 성공적으로 초기화 되었어요.',
     new_password: '새로운 비밀번호:',
   },
   tab_settings: '설정',

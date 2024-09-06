@@ -11,10 +11,9 @@ const user_details = {
   delete_description: 'この操作は取り消せません。ユーザーが永久に削除されます。',
   deleted: 'ユーザーは正常に削除されました',
   reset_password: {
-    reset_password: 'パスワードをリセット',
-    title: '本当にパスワードをリセットしますか？',
+    reset_title: '本当にパスワードをリセットしますか？',
     content: 'この操作は取り消せません。ユーザーのログイン情報がリセットされます。',
-    congratulations: 'このユーザーはリセットされました',
+    reset_complete: 'このユーザーはリセットされました',
     new_password: '新しいパスワード：',
   },
   tab_settings: '設定',

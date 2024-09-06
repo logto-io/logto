@@ -12,11 +12,10 @@ const user_details = {
     'Esta ação não pode ser desfeita. Isso irá eliminar o utilizador permanentemente.',
   deleted: 'O utilizador foi eliminado com sucesso',
   reset_password: {
-    reset_password: 'Redefinir palavra-passe',
-    title: 'Tem a certeza de que deseja redefinir a palavra-passe?',
+    reset_title: 'Tem a certeza de que deseja redefinir a palavra-passe?',
     content:
       'Esta ação não pode ser desfeita. Isso irá redefinir as informações de login do utilizador.',
-    congratulations: 'Este utilizador foi redefinido',
+    reset_complete: 'Este utilizador foi redefinido',
     new_password: 'Nova palavra-passe:',
   },
   tab_settings: 'Definições',
