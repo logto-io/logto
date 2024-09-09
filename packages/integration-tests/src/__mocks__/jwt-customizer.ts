@@ -59,8 +59,7 @@ export const accessTokenSampleScript = `const getCustomJwtClaims = async ({ toke
 };`;
 
 export const accessTokenAccessDeniedSampleScript = `const getCustomJwtClaims = async ({ token, context, environmentVariables, api }) => {
-  api.denyAccess('You are not allowed to access this resource');
-  return { test: 'foo'};
+  return api.denyAccess('You are not allowed to access this resource');
 };`;
 
 export const clientCredentialsSampleScript = `const getCustomJwtClaims = async ({ token, context, environmentVariables }) => {
@@ -68,6 +67,5 @@ export const clientCredentialsSampleScript = `const getCustomJwtClaims = async (
 }`;
 
 export const clientCredentialsAccessDeniedSampleScript = `const getCustomJwtClaims = async ({ token, context, environmentVariables, api }) => {
-  api.denyAccess('You are not allowed to access this resource');
-  return { test: 'foo'};
+  return api.denyAccess('You are not allowed to access this resource');
 };`;

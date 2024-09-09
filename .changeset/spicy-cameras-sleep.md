@@ -11,6 +11,6 @@ Use `api.denyAccess()` to reject the token exchange request. Use this method to 
 ```javascript
 const getCustomJwtClaims: async ({ api }) => {
   // Reject the token request, with a custom error message
-  api.denyAccess('Access denied');
+  return api.denyAccess('Access denied');
 }
 ```

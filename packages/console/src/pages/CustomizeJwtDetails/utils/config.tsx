@@ -204,8 +204,7 @@ export const denyAccessCodeExample = `/**
  */
 getCustomJwtClaims = async ({ api }) => {
   // Conditionally deny access 
-  api.denyAccess('Access denied');
-  return {};
+  return api.denyAccess('Access denied');
 };`;
 
 /**
