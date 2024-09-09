@@ -7,6 +7,7 @@ import {
   TenantScope,
 } from '@logto/schemas';
 import { conditionalArray } from '@silverhand/essentials';
+import i18next from 'i18next';
 import { useContext, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
@@ -114,7 +115,16 @@ function Providers() {
       }}
     >
       <AppThemeProvider>
-        <Helmet titleTemplate={`%s - ${mainTitle}`} defaultTitle={mainTitle} />
+        <Helmet
+          titleTemplate={`%s - ${mainTitle}`}
+          defaultTitle={mainTitle}
+          htmlAttributes={{
+            // We intentionally use the imported i18next instance instead of the hook, since the
+            // hook will cause a re-render following some bugs here. This still works for the
+            // initial render, so we're good for now. Consider refactoring this in the future.
+            lang: i18next.language,
+          }}
+        />
         <Toast />
         <AppConfirmModalProvider>
           <ErrorBoundary>
