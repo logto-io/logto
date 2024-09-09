@@ -41,7 +41,7 @@ const jwt_claims = {
   },
   api_context: {
     title: 'API context: access control',
-    subtitle: 'Use `api.denyAccess` method to reject the token exchange request.',
+    subtitle: 'Use `api.denyAccess` method to reject the token request.',
   },
   fetch_external_data: {
     title: 'Fetch external data',

@@ -168,10 +168,10 @@ export type CustomJwtErrorBody = z.infer<typeof customJwtErrorBodyGuard>;
 
 export type CustomJwtApiContext = {
   /**
-   * Reject the the current token exchange request.
+   * Reject the the current token request.
    *
    * @remarks
-   * By calling this function, the current token exchange request will be rejected,
+   * By calling this function, the current token request will be rejected,
    * and a OIDC `AccessDenied` error will be thrown to the client with the given message.
    *
    * @param message The message to be shown to the user.

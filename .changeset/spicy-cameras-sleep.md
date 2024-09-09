@@ -9,8 +9,8 @@ Introduce a new `api` parameter to the custom token claims script. This paramete
 Use `api.denyAccess()` to reject the token exchange request. Use this method to implement your own access control logics.
 
 ```javascript
-const getCustomJwtClaims: async ({api}) => {
-  // Reject the token exchange request
+const getCustomJwtClaims: async ({ api }) => {
+  // Reject the token request, with a custom error message
   api.denyAccess('Access denied');
 }
 ```
