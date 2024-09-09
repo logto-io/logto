@@ -104,7 +104,7 @@ declare type Payload = {
 };`;
 
 export const defaultAccessTokenJwtCustomizerCode = `/**
- * This function is called during the access token generation process to get custom claims for the JWT token.
+ * This function is called during the access token generation process to get custom claims for the access token.
  * Limit custom claims to under 50KB.
  *
  * @param {Payload} payload - The input argument of the function.
@@ -118,7 +118,7 @@ const getCustomJwtClaims = async ({ token, context, environmentVariables${
 }`;
 
 export const defaultClientCredentialsJwtCustomizerCode = `/**
- * This function is called during the access token generation process to get custom claims for the JWT token.
+ * This function is called during the access token generation process to get custom claims for the access token.
  * Limit custom claims to under 50KB.
  *
  * @param {Payload} payload - The input payload of the function.
