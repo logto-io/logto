@@ -1,0 +1,9 @@
+@use '@/scss/underscore' as _;
+
+.totpCodeInput {
+  margin-top: _.unit(4);
+}
+
+.continueButton {
+  margin-top: _.unit(6);
+}

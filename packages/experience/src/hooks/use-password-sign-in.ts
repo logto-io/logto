@@ -1,7 +1,7 @@
+import { SignInIdentifier, type PasswordVerificationPayload } from '@logto/schemas';
 import { useCallback, useMemo, useState } from 'react';
 
-import type { PasswordSignInPayload } from '@/apis/interaction';
-import { signInWithPasswordIdentifier } from '@/apis/interaction';
+import { signInWithPasswordIdentifier } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import useCheckSingleSignOn from '@/hooks/use-check-single-sign-on';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
@@ -34,10 +34,12 @@ const usePasswordSignIn = () => {
   );
 
   const onSubmit = useCallback(
-    async (payload: PasswordSignInPayload) => {
+    async (payload: PasswordVerificationPayload) => {
+      const { identifier } = payload;
+
       // Check if the email is registered with any SSO connectors. If the email is registered with any SSO connectors, we should not proceed to the next step
-      if (payload.email) {
-        const result = await checkSingleSignOn(payload.email);
+      if (identifier.type === SignInIdentifier.Email) {
+        const result = await checkSingleSignOn(identifier.value);
 
         if (result) {
           return;

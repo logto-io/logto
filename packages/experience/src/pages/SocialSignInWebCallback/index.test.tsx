@@ -1,12 +1,14 @@
-import { waitFor } from '@testing-library/react';
+import { VerificationType } from '@logto/schemas';
+import { renderHook, waitFor } from '@testing-library/react';
 import { Navigate, Route, Routes, useSearchParams } from 'react-router-dom';
 
+import UserInteractionContextProvider from '@/Providers/UserInteractionContextProvider';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import { mockSsoConnectors, mockSignInExperienceSettings } from '@/__mocks__/logto';
+import { mockSignInExperienceSettings, mockSsoConnectors } from '@/__mocks__/logto';
 import { socialConnectors } from '@/__mocks__/social-connectors';
-import { signInWithSocial } from '@/apis/interaction';
-import { singleSignOnAuthorization } from '@/apis/single-sign-on';
+import { verifySocialVerification, signInWithSso } from '@/apis/experience';
+import useSessionStorage, { StorageKeys } from '@/hooks/use-session-storages';
 import { type SignInExperienceResponse } from '@/types';
 import { generateState, storeState } from '@/utils/social-connectors';
 
@@ -17,12 +19,10 @@ jest.mock('i18next', () => ({
   language: 'en',
 }));
 
-jest.mock('@/apis/interaction', () => ({
-  signInWithSocial: jest.fn().mockResolvedValue({ redirectTo: `/sign-in` }),
-}));
-
-jest.mock('@/apis/single-sign-on', () => ({
-  singleSignOnAuthorization: jest.fn().mockResolvedValue({ redirectTo: `/sign-in` }),
+jest.mock('@/apis/experience', () => ({
+  verifySocialVerification: jest.fn().mockResolvedValue({ verificationId: 'foo' }),
+  identifyAndSubmitInteraction: jest.fn().mockResolvedValue({ redirectTo: `/sign-in` }),
+  signInWithSso: jest.fn().mockResolvedValue({ redirectTo: `/sign-in` }),
 }));
 
 jest.mock('react-router-dom', () => ({
@@ -34,7 +34,19 @@ jest.mock('react-router-dom', () => ({
 const mockUseSearchParameters = useSearchParams as jest.Mock;
 const mockNavigate = Navigate as jest.Mock;
 
+const verificationIdsMap = {
+  [VerificationType.Social]: 'foo',
+  [VerificationType.EnterpriseSso]: 'bar',
+};
+
 describe('SocialCallbackPage with code', () => {
+  const { result } = renderHook(() => useSessionStorage());
+  const { set } = result.current;
+
+  beforeAll(() => {
+    set(StorageKeys.verificationIds, verificationIdsMap);
+  });
+
   describe('fallback', () => {
     it('should redirect to /sign-in if connectorId is not found', async () => {
       mockUseSearchParameters.mockReturnValue([new URLSearchParams('code=foo'), jest.fn()]);
@@ -49,7 +61,7 @@ describe('SocialCallbackPage with code', () => {
       );
 
       await waitFor(() => {
-        expect(signInWithSocial).not.toBeCalled();
+        expect(verifySocialVerification).not.toBeCalled();
         expect(mockNavigate.mock.calls[0][0].to).toBe('/sign-in');
       });
     });
@@ -68,20 +80,22 @@ describe('SocialCallbackPage with code', () => {
 
       renderWithPageContext(
         <SettingsProvider>
-          <Routes>
-            <Route path="/callback/social/:connectorId" element={<SocialCallback />} />
-          </Routes>
+          <UserInteractionContextProvider>
+            <Routes>
+              <Route path="/callback/social/:connectorId" element={<SocialCallback />} />
+            </Routes>
+          </UserInteractionContextProvider>
         </SettingsProvider>,
         { initialEntries: [`/callback/social/${connectorId}`] }
       );
 
       await waitFor(() => {
-        expect(signInWithSocial).toBeCalled();
+        expect(verifySocialVerification).toBeCalled();
       });
     });
 
     it('callback with invalid state should not call signInWithSocial', async () => {
-      (signInWithSocial as jest.Mock).mockClear();
+      (verifySocialVerification as jest.Mock).mockClear();
 
       mockUseSearchParameters.mockReturnValue([
         new URLSearchParams(`state=bar&code=foo`),
@@ -90,15 +104,17 @@ describe('SocialCallbackPage with code', () => {
 
       renderWithPageContext(
         <SettingsProvider>
-          <Routes>
-            <Route path="/callback/social/:connectorId" element={<SocialCallback />} />
-          </Routes>
+          <UserInteractionContextProvider>
+            <Routes>
+              <Route path="/callback/social/:connectorId" element={<SocialCallback />} />
+            </Routes>
+          </UserInteractionContextProvider>
         </SettingsProvider>,
         { initialEntries: [`/callback/social/${connectorId}`] }
       );
 
       await waitFor(() => {
-        expect(signInWithSocial).not.toBeCalled();
+        expect(verifySocialVerification).not.toBeCalled();
       });
     });
   });
@@ -121,20 +137,22 @@ describe('SocialCallbackPage with code', () => {
 
       renderWithPageContext(
         <SettingsProvider settings={sieSettings}>
-          <Routes>
-            <Route path="/callback/social/:connectorId" element={<SocialCallback />} />
-          </Routes>
+          <UserInteractionContextProvider>
+            <Routes>
+              <Route path="/callback/social/:connectorId" element={<SocialCallback />} />
+            </Routes>
+          </UserInteractionContextProvider>
         </SettingsProvider>,
         { initialEntries: [`/callback/social/${connectorId}`] }
       );
 
       await waitFor(() => {
-        expect(singleSignOnAuthorization).toBeCalled();
+        expect(signInWithSso).toBeCalled();
       });
     });
 
-    it('callback with invalid state should not call singleSignOnAuthorization', async () => {
-      (singleSignOnAuthorization as jest.Mock).mockClear();
+    it('callback with invalid state should not call signInWithSso', async () => {
+      (signInWithSso as jest.Mock).mockClear();
 
       mockUseSearchParameters.mockReturnValue([
         new URLSearchParams(`state=bar&code=foo`),
@@ -143,15 +161,17 @@ describe('SocialCallbackPage with code', () => {
 
       renderWithPageContext(
         <SettingsProvider settings={sieSettings}>
-          <Routes>
-            <Route path="/callback/social/:connectorId" element={<SocialCallback />} />
-          </Routes>
+          <UserInteractionContextProvider>
+            <Routes>
+              <Route path="/callback/social/:connectorId" element={<SocialCallback />} />
+            </Routes>
+          </UserInteractionContextProvider>
         </SettingsProvider>,
         { initialEntries: [`/callback/social/${connectorId}`] }
       );
 
       await waitFor(() => {
-        expect(singleSignOnAuthorization).not.toBeCalled();
+        expect(signInWithSso).not.toBeCalled();
       });
     });
   });

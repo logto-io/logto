@@ -1,0 +1,29 @@
+/* Typography Foundation */
+
+$font-family:
+  -apple-system,
+  system-ui,
+  'BlinkMacSystemFont',
+  'Segoe UI',
+  'Roboto',
+  'Arial',
+  sans-serif;
+
+@mixin fonts {
+  --font-headline-1: 600 28px/32px #{$font-family};
+  --font-headline-2: 600 24px/32px #{$font-family};
+
+  --font-title-1: 600 20px/28px #{$font-family};
+  --font-title-2: 600 18px/26px #{$font-family};
+  --font-title-3: 600 16px/24px #{$font-family};
+
+  --font-label-1: 500 16px/24px #{$font-family};
+  --font-label-2: 500 14px/20px #{$font-family};
+  --font-label-3: 500 12px/16px #{$font-family};
+
+  --font-body-1: 400 16px/24px #{$font-family};
+  --font-body-2: 400 14px/20px #{$font-family};
+  --font-body-3: 400 12px/16px #{$font-family};
+
+  --font-subhead-cap: 700 12px/16px #{$font-family};
+}

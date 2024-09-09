@@ -1,0 +1,67 @@
+@use '@/scss/underscore' as _;
+
+.dropdownOverlay {
+  background: transparent;
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+}
+
+.dropdownModal {
+  border: _.border(var(--color-line-divider));
+  box-shadow: var(--color-shadow-2);
+  border-radius: _.unit(2);
+  background: var(--color-bg-float);
+  position: absolute;
+  z-index: 50;
+
+  .container {
+    padding: _.unit(2);
+  }
+}
+
+:global(body.mobile) {
+  .dropdownOverlay {
+    background: var(--color-bg-mask);
+  }
+
+  // Use bottom drawer for mobile
+  .dropdownModal {
+    border: none;
+    border-top: _.border(var(--color-line-divider));
+    box-shadow: none;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    bottom: 0;
+    width: 100%;
+    min-height: 200px;
+    padding-bottom: env(safe-area-inset-bottom);
+
+    .container {
+      padding: _.unit(3) _.unit(1);
+    }
+  }
+
+  .organizationItem {
+    padding: _.unit(3);
+  }
+}
+
+:global {
+  body.mobile {
+    .ReactModal__Content[class*='dropdownModal'] {
+      transform: translateY(100%);
+      transition: transform 0.2s ease-in-out;
+    }
+
+    /* stylelint-disable-next-line selector-class-pattern */
+    .ReactModal__Content--after-open[class*='dropdownModal'] {
+      transform: translateY(0);
+    }
+
+    /* stylelint-disable-next-line selector-class-pattern */
+    .ReactModal__Content--before-close[class*='dropdownModal'] {
+      transform: translateY(100%);
+    }
+  }
+}

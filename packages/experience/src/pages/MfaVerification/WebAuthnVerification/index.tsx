@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { VerificationType } from '@logto/schemas';
+import { useContext, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { validate } from 'superstruct';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import SectionLayout from '@/Layout/SectionLayout';
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import Button from '@/components/Button';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
 import useWebAuthnOperation from '@/hooks/use-webauthn-operation';
@@ -17,10 +19,13 @@ import styles from './index.module.scss';
 const WebAuthnVerification = () => {
   const { state } = useLocation();
   const [, webAuthnState] = validate(state, webAuthnStateGuard);
+  const { verificationIdsMap } = useContext(UserInteractionContext);
+  const verificationId = verificationIdsMap[VerificationType.WebAuthn];
+
   const handleWebAuthn = useWebAuthnOperation();
   const [isVerifying, setIsVerifying] = useState(false);
 
-  if (!webAuthnState) {
+  if (!webAuthnState || !verificationId) {
     return <ErrorPage title="error.invalid_session" />;
   }
 
@@ -42,7 +47,7 @@ const WebAuthnVerification = () => {
           isLoading={isVerifying}
           onClick={async () => {
             setIsVerifying(true);
-            await handleWebAuthn(options);
+            await handleWebAuthn(options, verificationId);
             setIsVerifying(false);
           }}
         />

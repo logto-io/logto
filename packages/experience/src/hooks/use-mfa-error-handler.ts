@@ -5,20 +5,17 @@ import { useNavigate } from 'react-router-dom';
 import { validate } from 'superstruct';
 
 import { UserMfaFlow } from '@/types';
-import {
-  type MfaFlowState,
-  mfaErrorDataGuard,
-  backupCodeErrorDataGuard,
-  type BackupCodeBindingState,
-} from '@/types/guard';
+import { type MfaFlowState, mfaErrorDataGuard } from '@/types/guard';
 import { isNativeWebview } from '@/utils/native-sdk';
 
 import type { ErrorHandlers } from './use-error-handler';
+import useStartBackupCodeBinding from './use-start-backup-code-binding';
 import useStartTotpBinding from './use-start-totp-binding';
 import useStartWebAuthnProcessing from './use-start-webauthn-processing';
 import useToast from './use-toast';
 
 export type Options = {
+  /** Whether to replace the current page in the history stack on navigation. */
   replace?: boolean;
 };
 
@@ -26,8 +23,9 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { setToast } = useToast();
-  const startTotpBinding = useStartTotpBinding({ replace });
-  const startWebAuthnProcessing = useStartWebAuthnProcessing({ replace });
+  const startTotpBinding = useStartTotpBinding();
+  const startWebAuthnProcessing = useStartWebAuthnProcessing();
+  const startBackupCodeBinding = useStartBackupCodeBinding();
 
   /**
    * Redirect the user to the corresponding MFA page.
@@ -76,14 +74,14 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
         /**
          * Start TOTP binding process if only TOTP is available.
          */
-        return startTotpBinding(state);
+        return startTotpBinding(state, replace);
       }
 
       if (factor === MfaFactor.WebAuthn) {
         /**
          * Start WebAuthn processing if only TOTP is available.
          */
-        return startWebAuthnProcessing(flow, state);
+        return startWebAuthnProcessing(flow, state, replace);
       }
 
       /**
@@ -118,30 +116,13 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
     [handleMfaRedirect, setToast]
   );
 
-  const handleBackupCodeError = useCallback(
-    (error: RequestErrorBody) => {
-      const [_, data] = validate(error.data, backupCodeErrorDataGuard);
-
-      if (!data) {
-        setToast(error.message);
-        return;
-      }
-
-      navigate(
-        { pathname: `/${UserMfaFlow.MfaBinding}/${MfaFactor.BackupCode}` },
-        { replace, state: data satisfies BackupCodeBindingState }
-      );
-    },
-    [navigate, replace, setToast]
-  );
-
   const mfaVerificationErrorHandler = useMemo<ErrorHandlers>(
     () => ({
       'user.missing_mfa': handleMfaError(UserMfaFlow.MfaBinding),
       'session.mfa.require_mfa_verification': handleMfaError(UserMfaFlow.MfaVerification),
-      'session.mfa.backup_code_required': handleBackupCodeError,
+      'session.mfa.backup_code_required': async () => startBackupCodeBinding(replace),
     }),
-    [handleBackupCodeError, handleMfaError]
+    [handleMfaError, replace, startBackupCodeBinding]
   );
 
   return mfaVerificationErrorHandler;

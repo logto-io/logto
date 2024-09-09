@@ -1,22 +1,27 @@
 import { useCallback } from 'react';
 
-import { linkWithSocial } from '@/apis/interaction';
+import { signInAndLinkWithSocial } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 
 import useErrorHandler from './use-error-handler';
 import useGlobalRedirectTo from './use-global-redirect-to';
+import usePreSignInErrorHandler from './use-pre-sign-in-error-handler';
 
 const useLinkSocial = () => {
   const handleError = useErrorHandler();
-  const asyncLinkWithSocial = useApi(linkWithSocial);
+  const asyncLinkWithSocial = useApi(signInAndLinkWithSocial);
   const redirectTo = useGlobalRedirectTo();
+  const preSignInErrorHandler = usePreSignInErrorHandler({ replace: true });
 
   return useCallback(
-    async (connectorId: string) => {
-      const [error, result] = await asyncLinkWithSocial(connectorId);
+    async (identifierVerificationId: string, socialVerificationId: string) => {
+      const [error, result] = await asyncLinkWithSocial(
+        identifierVerificationId,
+        socialVerificationId
+      );
 
       if (error) {
-        await handleError(error);
+        await handleError(error, preSignInErrorHandler);
 
         return;
       }
@@ -25,7 +30,7 @@ const useLinkSocial = () => {
         await redirectTo(result.redirectTo);
       }
     },
-    [asyncLinkWithSocial, handleError, redirectTo]
+    [asyncLinkWithSocial, handleError, preSignInErrorHandler, redirectTo]
   );
 };
 

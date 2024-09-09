@@ -1,0 +1,28 @@
+@use '@/scss/underscore' as _;
+
+.loadingIcon {
+  color: var(--color-type-primary);
+  animation: rotating 1s steps(12, end) infinite;
+}
+
+.container {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius);
+  background-color: var(--color-bg-toast);
+  @include _.flex-column;
+
+  .loadingIcon {
+    color: var(--color-static-dark-type-primary);
+  }
+}
+
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

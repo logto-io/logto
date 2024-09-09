@@ -1,9 +1,10 @@
+import { InteractionEvent } from '@logto/schemas';
 import { act, waitFor, fireEvent } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { mockSignInExperienceSettings } from '@/__mocks__/logto';
-import { addProfile } from '@/apis/interaction';
+import { fulfillProfile } from '@/apis/experience';
 
 import SetPassword from '.';
 
@@ -14,15 +15,15 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedNavigate,
 }));
 
-jest.mock('@/apis/interaction', () => ({
-  addProfile: jest.fn(async () => ({ redirectTo: '/' })),
+jest.mock('@/apis/experience', () => ({
+  fulfillProfile: jest.fn(async () => ({ redirectTo: '/' })),
 }));
 
 describe('SetPassword', () => {
   it('render set-password page properly without confirm password field', () => {
     const { queryByText, container } = renderWithPageContext(
       <SettingsProvider>
-        <SetPassword />
+        <SetPassword interactionEvent={InteractionEvent.Register} />
       </SettingsProvider>
     );
     expect(container.querySelector('input[name="newPassword"]')).not.toBeNull();
@@ -41,7 +42,7 @@ describe('SetPassword', () => {
           },
         }}
       >
-        <SetPassword />
+        <SetPassword interactionEvent={InteractionEvent.Register} />
       </SettingsProvider>
     );
     expect(container.querySelector('input[name="newPassword"]')).not.toBeNull();
@@ -60,7 +61,7 @@ describe('SetPassword', () => {
           },
         }}
       >
-        <SetPassword />
+        <SetPassword interactionEvent={InteractionEvent.Register} />
       </SettingsProvider>
     );
     const submitButton = getByText('action.save_password');
@@ -95,7 +96,7 @@ describe('SetPassword', () => {
           },
         }}
       >
-        <SetPassword />
+        <SetPassword interactionEvent={InteractionEvent.Register} />
       </SettingsProvider>
     );
     const submitButton = getByText('action.save_password');
@@ -115,7 +116,13 @@ describe('SetPassword', () => {
     });
 
     await waitFor(() => {
-      expect(addProfile).toBeCalledWith({ password: '1234!@#$' });
+      expect(fulfillProfile).toBeCalledWith(
+        {
+          type: 'password',
+          value: '1234!@#$',
+        },
+        InteractionEvent.Register
+      );
     });
   });
 });

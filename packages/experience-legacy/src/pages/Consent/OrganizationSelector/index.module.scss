@@ -1,0 +1,43 @@
+@use '@/scss/underscore' as _;
+
+.title {
+  font: var(--font-label-2);
+  margin-bottom: _.unit(2);
+}
+
+.scopeListWrapper {
+  border: _.border(var(--color-line-divider));
+  border-bottom: unset;
+  border-radius: 8px 8px 0 0;
+  padding: _.unit(2) 0;
+}
+
+.cardWrapper {
+  border: _.border(var(--color-line-divider));
+  border-radius: 8px;
+  padding: _.unit(2);
+  position: relative;
+
+  &[data-active='true'] {
+    border-color: var(--color-brand-default);
+    outline: 3px solid var(--color-overlay-brand-focused);
+  }
+
+  &.withoutTopRadius {
+    border-radius: 0 0 8px 8px;
+  }
+}
+
+.expandButton {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  color: var(--color-type-disable);
+}
+
+.selectedOrganization {
+  &:hover {
+    background: none;
+  }
+}
+

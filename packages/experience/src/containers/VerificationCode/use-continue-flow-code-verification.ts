@@ -1,15 +1,16 @@
-import type { EmailVerificationCodePayload, PhoneVerificationCodePayload } from '@logto/schemas';
-import { SignInIdentifier } from '@logto/schemas';
-import { useCallback, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import type { VerificationCodeIdentifier } from '@logto/schemas';
+import { VerificationType } from '@logto/schemas';
+import { useCallback, useContext, useMemo } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
-import { addProfileWithVerificationCodeIdentifier } from '@/apis/interaction';
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
+import { updateProfileWithVerificationCode } from '@/apis/experience';
+import { getInteractionEventFromState } from '@/apis/utils';
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
-import type { VerificationCodeIdentifier } from '@/types';
 import { SearchParameters } from '@/types';
 
 import useGeneralVerificationCodeErrorHandler from './use-general-verification-code-error-handler';
@@ -17,58 +18,69 @@ import useIdentifierErrorAlert, { IdentifierErrorType } from './use-identifier-e
 import useLinkSocialConfirmModal from './use-link-social-confirm-modal';
 
 const useContinueFlowCodeVerification = (
-  _method: VerificationCodeIdentifier,
-  target: string,
+  identifier: VerificationCodeIdentifier,
+  verificationId: string,
   errorCallback?: () => void
 ) => {
   const [searchParameters] = useSearchParams();
   const redirectTo = useGlobalRedirectTo();
 
+  const { state } = useLocation();
+  const { verificationIdsMap } = useContext(UserInteractionContext);
+  const interactionEvent = getInteractionEventFromState(state);
+
   const handleError = useErrorHandler();
-  const verifyVerificationCode = useApi(addProfileWithVerificationCodeIdentifier);
+  const verifyVerificationCode = useApi(updateProfileWithVerificationCode);
 
   const { generalVerificationCodeErrorHandlers, errorMessage, clearErrorMessage } =
     useGeneralVerificationCodeErrorHandler();
-  const preSignInErrorHandler = usePreSignInErrorHandler({ replace: true });
+
+  const preSignInErrorHandler = usePreSignInErrorHandler({ replace: true, interactionEvent });
 
   const showIdentifierErrorAlert = useIdentifierErrorAlert();
   const showLinkSocialConfirmModal = useLinkSocialConfirmModal();
-  const identifierExistErrorHandler = useCallback(
-    async (method: VerificationCodeIdentifier, target: string) => {
-      const linkSocial = searchParameters.get(SearchParameters.LinkSocial);
 
-      // Show bind with social confirm modal
-      if (linkSocial) {
-        await showLinkSocialConfirmModal(method, target, linkSocial);
+  const identifierExistsErrorHandler = useCallback(async () => {
+    const linkSocial = searchParameters.get(SearchParameters.LinkSocial);
+    const socialVerificationId = verificationIdsMap[VerificationType.Social];
 
-        return;
-      }
+    // Show bind with social confirm modal
+    if (linkSocial && socialVerificationId) {
+      await showLinkSocialConfirmModal(identifier, verificationId, socialVerificationId);
 
-      await showIdentifierErrorAlert(IdentifierErrorType.IdentifierAlreadyExists, method, target);
-    },
-    [searchParameters, showIdentifierErrorAlert, showLinkSocialConfirmModal]
-  );
+      return;
+    }
+    const { type, value } = identifier;
+    await showIdentifierErrorAlert(IdentifierErrorType.IdentifierAlreadyExists, type, value);
+  }, [
+    identifier,
+    searchParameters,
+    showIdentifierErrorAlert,
+    showLinkSocialConfirmModal,
+    verificationId,
+    verificationIdsMap,
+  ]);
 
   const verifyVerificationCodeErrorHandlers: ErrorHandlers = useMemo(
     () => ({
-      'user.phone_already_in_use': async () =>
-        identifierExistErrorHandler(SignInIdentifier.Phone, target),
-      'user.email_already_in_use': async () =>
-        identifierExistErrorHandler(SignInIdentifier.Email, target),
+      'user.phone_already_in_use': identifierExistsErrorHandler,
+      'user.email_already_in_use': identifierExistsErrorHandler,
       ...preSignInErrorHandler,
       ...generalVerificationCodeErrorHandlers,
     }),
-    [
-      preSignInErrorHandler,
-      generalVerificationCodeErrorHandlers,
-      identifierExistErrorHandler,
-      target,
-    ]
+    [preSignInErrorHandler, generalVerificationCodeErrorHandlers, identifierExistsErrorHandler]
   );
 
   const onSubmit = useCallback(
-    async (payload: EmailVerificationCodePayload | PhoneVerificationCodePayload) => {
-      const [error, result] = await verifyVerificationCode(payload);
+    async (code: string) => {
+      const [error, result] = await verifyVerificationCode(
+        {
+          code,
+          identifier,
+          verificationId,
+        },
+        interactionEvent
+      );
 
       if (error) {
         await handleError(error, verifyVerificationCodeErrorHandlers);
@@ -84,7 +96,10 @@ const useContinueFlowCodeVerification = (
     [
       errorCallback,
       handleError,
+      identifier,
+      interactionEvent,
       redirectTo,
+      verificationId,
       verifyVerificationCode,
       verifyVerificationCodeErrorHandlers,
     ]
