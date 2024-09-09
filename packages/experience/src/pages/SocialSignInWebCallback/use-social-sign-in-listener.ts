@@ -1,12 +1,6 @@
 import { GoogleConnector } from '@logto/connector-kit';
 import type { RequestErrorBody } from '@logto/schemas';
-import {
-  AgreeToTermsPolicy,
-  InteractionEvent,
-  SignInMode,
-  VerificationType,
-  experience,
-} from '@logto/schemas';
+import { InteractionEvent, SignInMode, VerificationType, experience } from '@logto/schemas';
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -25,7 +19,6 @@ import useErrorHandler from '@/hooks/use-error-handler';
 import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
 import useSocialRegister from '@/hooks/use-social-register';
-import useTerms from '@/hooks/use-terms';
 import useToast from '@/hooks/use-toast';
 import { socialAccountNotExistErrorDataGuard } from '@/types/guard';
 import { parseQueryParameters } from '@/utils';
@@ -36,7 +29,6 @@ const useSocialSignInListener = (connectorId: string) => {
   const { setToast } = useToast();
   const { signInMode, socialSignInSettings } = useSieMethods();
   const { t } = useTranslation();
-  const { termsValidation, agreeToTermsPolicy } = useTerms();
   const [isConsumed, setIsConsumed] = useState(false);
   const [searchParameters, setSearchParameters] = useSearchParams();
   const { verificationIdsMap, setVerificationId } = useContext(UserInteractionContext);
@@ -80,6 +72,13 @@ const useSocialSignInListener = (connectorId: string) => {
         return;
       }
 
+      // Should not let user register new social account under sign-in only mode
+      if (signInMode === SignInMode.SignIn) {
+        setToast(error.message);
+        navigate('/' + experience.routes.signIn);
+        return;
+      }
+
       // Register with social
       await registerWithSocial(verificationId);
     },
@@ -89,6 +88,7 @@ const useSocialSignInListener = (connectorId: string) => {
       navigate,
       registerWithSocial,
       setToast,
+      signInMode,
       socialSignInSettings.automaticAccountLinking,
       t,
     ]
@@ -106,39 +106,11 @@ const useSocialSignInListener = (connectorId: string) => {
 
   const signInWithSocialErrorHandlers: ErrorHandlers = useMemo(
     () => ({
-      'user.identity_not_exist': async (error) => {
-        // Should not let user register new social account under sign-in only mode
-        if (signInMode === SignInMode.SignIn) {
-          setToast(error.message);
-          navigate('/' + experience.routes.signIn);
-          return;
-        }
-
-        /**
-         * Agree to terms and conditions first before proceeding
-         * If the agreement policy is `Manual`, the user must agree to the terms to reach this step.
-         * Therefore, skip the check for `Manual` policy.
-         */
-        if (agreeToTermsPolicy !== AgreeToTermsPolicy.Manual && !(await termsValidation())) {
-          navigate('/' + experience.routes.signIn);
-          return;
-        }
-
-        await accountNotExistErrorHandler(error);
-      },
+      'user.identity_not_exist': accountNotExistErrorHandler,
       ...preSignInErrorHandler,
       global: globalErrorHandler,
     }),
-    [
-      preSignInErrorHandler,
-      globalErrorHandler,
-      signInMode,
-      agreeToTermsPolicy,
-      termsValidation,
-      accountNotExistErrorHandler,
-      setToast,
-      navigate,
-    ]
+    [preSignInErrorHandler, globalErrorHandler, accountNotExistErrorHandler]
   );
 
   const verifySocialCallbackData = useCallback(

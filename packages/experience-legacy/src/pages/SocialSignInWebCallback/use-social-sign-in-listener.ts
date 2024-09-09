@@ -1,6 +1,6 @@
 import { GoogleConnector } from '@logto/connector-kit';
 import type { RequestErrorBody } from '@logto/schemas';
-import { AgreeToTermsPolicy, InteractionEvent, SignInMode, experience } from '@logto/schemas';
+import { InteractionEvent, SignInMode, experience } from '@logto/schemas';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -14,7 +14,6 @@ import useErrorHandler from '@/hooks/use-error-handler';
 import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
 import useSocialRegister from '@/hooks/use-social-register';
-import useTerms from '@/hooks/use-terms';
 import useToast from '@/hooks/use-toast';
 import { socialAccountNotExistErrorDataGuard } from '@/types/guard';
 import { parseQueryParameters } from '@/utils';
@@ -25,7 +24,6 @@ const useSocialSignInListener = (connectorId: string) => {
   const { setToast } = useToast();
   const { signInMode, socialSignInSettings } = useSieMethods();
   const { t } = useTranslation();
-  const { termsValidation, agreeToTermsPolicy } = useTerms();
   const [isConsumed, setIsConsumed] = useState(false);
   const [searchParameters, setSearchParameters] = useSearchParams();
 
@@ -42,19 +40,29 @@ const useSocialSignInListener = (connectorId: string) => {
       const { relatedUser } = data ?? {};
 
       if (relatedUser) {
+        // If automatic account linking is enabled, bind the related user directly
         if (socialSignInSettings.automaticAccountLinking) {
           const { type, value } = relatedUser;
+
           await bindSocialRelatedUser({
             connectorId,
             ...(type === 'email' ? { email: value } : { phone: value }),
           });
         } else {
+          // Redirect to the social link page
           navigate(`/social/link/${connectorId}`, {
             replace: true,
             state: { relatedUser },
           });
         }
 
+        return;
+      }
+
+      // Should not let user register new social account under sign-in only mode
+      if (signInMode === SignInMode.SignIn) {
+        setToast(error.message);
+        navigate('/' + experience.routes.signIn);
         return;
       }
 
@@ -66,6 +74,8 @@ const useSocialSignInListener = (connectorId: string) => {
       connectorId,
       navigate,
       registerWithSocial,
+      setToast,
+      signInMode,
       socialSignInSettings.automaticAccountLinking,
     ]
   );
@@ -74,26 +84,7 @@ const useSocialSignInListener = (connectorId: string) => {
 
   const signInWithSocialErrorHandlers: ErrorHandlers = useMemo(
     () => ({
-      'user.identity_not_exist': async (error) => {
-        // Should not let user register new social account under sign-in only mode
-        if (signInMode === SignInMode.SignIn) {
-          setToast(error.message);
-          navigate('/' + experience.routes.signIn);
-          return;
-        }
-
-        /**
-         * Agree to terms and conditions first before proceeding
-         * If the agreement policy is `Manual`, the user must agree to the terms to reach this step.
-         * Therefore, skip the check for `Manual` policy.
-         */
-        if (agreeToTermsPolicy !== AgreeToTermsPolicy.Manual && !(await termsValidation())) {
-          navigate('/' + experience.routes.signIn);
-          return;
-        }
-
-        await accountNotExistErrorHandler(error);
-      },
+      'user.identity_not_exist': accountNotExistErrorHandler,
       ...preSignInErrorHandler,
       // Redirect to sign-in page if error is not handled by the error handlers
       global: async (error) => {
@@ -101,15 +92,7 @@ const useSocialSignInListener = (connectorId: string) => {
         navigate('/' + experience.routes.signIn);
       },
     }),
-    [
-      preSignInErrorHandler,
-      signInMode,
-      agreeToTermsPolicy,
-      termsValidation,
-      accountNotExistErrorHandler,
-      setToast,
-      navigate,
-    ]
+    [preSignInErrorHandler, accountNotExistErrorHandler, setToast, navigate]
   );
 
   const signInWithSocialHandler = useCallback(
