@@ -32,6 +32,7 @@ import interactionRoutes from './interaction/index.js';
 import logRoutes from './log.js';
 import logtoConfigRoutes from './logto-config/index.js';
 import organizationRoutes from './organization/index.js';
+import profileRoutes from './profile/index.js';
 import resourceRoutes from './resource.js';
 import resourceScopeRoutes from './resource.scope.js';
 import roleRoutes from './role.js';
@@ -42,7 +43,7 @@ import statusRoutes from './status.js';
 import subjectTokenRoutes from './subject-token.js';
 import swaggerRoutes from './swagger/index.js';
 import systemRoutes from './system.js';
-import type { AnonymousRouter, ManagementApiRouter } from './types.js';
+import type { AnonymousRouter, ManagementApiRouter, ProfileRouter } from './types.js';
 import userAssetsRoutes from './user-assets.js';
 import verificationCodeRoutes from './verification-code.js';
 import wellKnownRoutes from './well-known/index.js';
@@ -104,6 +105,11 @@ const createRouters = (tenant: TenantContext) => {
 
   statusRoutes(anonymousRouter, tenant);
   authnRoutes(anonymousRouter, tenant);
+
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    const profileRouter: ProfileRouter = new Router();
+    profileRoutes(profileRouter, tenant);
+  }
 
   // The swagger.json should contain all API routers.
   swaggerRoutes(anonymousRouter, [

@@ -17,5 +17,7 @@ export type ManagementApiRouterContext = WithAuthContext &
 
 export type ManagementApiRouter = Router<unknown, ManagementApiRouterContext>;
 
+export type ProfileRouter = Router<unknown, WithAuthContext & WithLogContext & WithI18nContext>;
+
 type RouterInit<T> = (router: T, tenant: TenantContext) => void;
 export type RouterInitArgs<T> = Parameters<RouterInit<T>>;
