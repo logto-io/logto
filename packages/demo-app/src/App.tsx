@@ -1,5 +1,6 @@
 import { type IdTokenClaims, LogtoProvider, useLogto, type Prompt } from '@logto/react';
 import { demoAppApplicationId } from '@logto/schemas';
+import i18next from 'i18next';
 import { useCallback, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
@@ -21,7 +22,7 @@ const Main = () => {
   const params = new URL(window.location.href).searchParams;
   const { isAuthenticated, isLoading, getIdTokenClaims, signIn, signOut } = useLogto();
   const [user, setUser] = useState<Pick<IdTokenClaims, 'sub' | 'username'>>();
-  const { t, i18n } = useTranslation(undefined, { keyPrefix: 'demo_app' });
+  const { t } = useTranslation(undefined, { keyPrefix: 'demo_app' });
   const isInCallback = Boolean(params.get('code'));
   const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
   const [congratsIcon, setCongratsIcon] = useState<string>(isDarkMode ? congratsDark : congrats);
@@ -124,7 +125,10 @@ const Main = () => {
     <div className={styles.app}>
       <Helmet
         htmlAttributes={{
-          lang: i18n.language,
+          // We intentionally use the imported i18next instance instead of the hook, since the hook
+          // will cause a re-render following some bugs here. This still works for the initial
+          // render, so we're good for now. Consider refactoring this in the future.
+          lang: i18next.language,
         }}
       />
       {showDevPanel && <DevPanel />}

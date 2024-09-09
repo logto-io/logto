@@ -1,6 +1,6 @@
 import { MfaFactor, experience } from '@logto/schemas';
+import i18next from 'i18next';
 import { Helmet } from 'react-helmet';
-import { useTranslation } from 'react-i18next';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 
 import AppLayout from './Layout/AppLayout';
@@ -41,19 +41,19 @@ import Springboard from './pages/Springboard';
 import VerificationCode from './pages/VerificationCode';
 import { UserMfaFlow } from './types';
 import { handleSearchParametersData } from './utils/search-parameters';
-
 import './scss/normalized.scss';
 
 handleSearchParametersData();
 
 const App = () => {
-  const { i18n } = useTranslation();
-
   return (
     <BrowserRouter>
       <Helmet
         htmlAttributes={{
-          lang: i18n.language,
+          // We intentionally use the imported i18next instance instead of the hook, since the hook
+          // will cause a re-render following some bugs here. This still works for the initial
+          // render, so we're good for now. Consider refactoring this in the future.
+          lang: i18next.language,
         }}
       />
       <PageContextProvider>

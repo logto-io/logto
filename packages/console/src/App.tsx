@@ -7,9 +7,9 @@ import {
   TenantScope,
 } from '@logto/schemas';
 import { conditionalArray } from '@silverhand/essentials';
+import i18next from 'i18next';
 import { useContext, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
-import { useTranslation } from 'react-i18next';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import 'overlayscrollbars/overlayscrollbars.css';
@@ -73,7 +73,6 @@ export default App;
  */
 function Providers() {
   const { currentTenantId } = useContext(TenantsContext);
-  const { i18n } = useTranslation();
 
   // For Cloud, we use Management API proxy for accessing tenant data.
   // For OSS, we directly call the tenant API with the default tenant API resource.
@@ -120,7 +119,10 @@ function Providers() {
           titleTemplate={`%s - ${mainTitle}`}
           defaultTitle={mainTitle}
           htmlAttributes={{
-            lang: i18n.language,
+            // We intentionally use the imported i18next instance instead of the hook, since the
+            // hook will cause a re-render following some bugs here. This still works for the
+            // initial render, so we're good for now. Consider refactoring this in the future.
+            lang: i18next.language,
           }}
         />
         <Toast />
