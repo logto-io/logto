@@ -9,7 +9,6 @@ import { type EditorProps } from '@monaco-editor/react';
 
 import TokenFileIcon from '@/assets/icons/token-file-icon.svg?react';
 import UserFileIcon from '@/assets/icons/user-file-icon.svg?react';
-import { isDevFeaturesEnabled } from '@/consts/env.js';
 
 import type { ModelSettings } from '../MainContent/MonacoCodeEditor/type.js';
 
@@ -29,9 +28,7 @@ declare interface CustomJwtClaims extends Record<string, any> {}
 
 /** Logto internal data that can be used to pass additional information
  * 
- * @param {${
-   JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext
- }} user - The user info associated with the token.
+ * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} user - The user info associated with the token.
  */
 declare type Context = {
   /**
@@ -60,17 +57,12 @@ declare type Payload = {
    * Custom environment variables.
    */
   environmentVariables: ${JwtCustomizerTypeDefinitionKey.EnvironmentVariables};
-  ${
-    isDevFeaturesEnabled
-      ? `
-    /**
+  /**
    * Logto API context, provides callback methods for access control.
    *
    * @param {${JwtCustomizerTypeDefinitionKey.CustomJwtApiContext}} api
    */
-  api: ${JwtCustomizerTypeDefinitionKey.CustomJwtApiContext};`
-      : ''
-  }
+  api: ${JwtCustomizerTypeDefinitionKey.CustomJwtApiContext};
 };`;
 
 /**
@@ -90,17 +82,12 @@ declare type Payload = {
    * Custom environment variables.
    */
   environmentVariables: ${JwtCustomizerTypeDefinitionKey.EnvironmentVariables};
-  ${
-    isDevFeaturesEnabled
-      ? `
-    /**
+  /**
    * Logto API context, callback methods for access control.
    *
    * @param {${JwtCustomizerTypeDefinitionKey.CustomJwtApiContext}} api
    */
-  api: ${JwtCustomizerTypeDefinitionKey.CustomJwtApiContext};`
-      : ''
-  }
+  api: ${JwtCustomizerTypeDefinitionKey.CustomJwtApiContext};
 };`;
 
 export const defaultAccessTokenJwtCustomizerCode = `/**
@@ -111,9 +98,7 @@ export const defaultAccessTokenJwtCustomizerCode = `/**
  * 
  * @returns The custom claims.
  */
-const getCustomJwtClaims = async ({ token, context, environmentVariables${
-  isDevFeaturesEnabled ? ', api' : ''
-} }) => {
+const getCustomJwtClaims = async ({ token, context, environmentVariables, api }) => {
   return {};
 }`;
 
@@ -125,9 +110,7 @@ export const defaultClientCredentialsJwtCustomizerCode = `/**
  *
  * @returns The custom claims.
  */
-const getCustomJwtClaims = async ({ token, environmentVariables${
-  isDevFeaturesEnabled ? ', api' : ''
-} }) => {
+const getCustomJwtClaims = async ({ token, environmentVariables, api }) => {
   return {};
 }`;
 
@@ -221,8 +204,7 @@ export const denyAccessCodeExample = `/**
  */
 getCustomJwtClaims = async ({ api }) => {
   // Conditionally deny access 
-  api.denyAccess('Access denied');
-  return {};
+  return api.denyAccess('Access denied');
 };`;
 
 /**

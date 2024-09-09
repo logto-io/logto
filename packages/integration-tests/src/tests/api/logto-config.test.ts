@@ -28,7 +28,6 @@ import {
   testJwtCustomizer,
 } from '#src/api/index.js';
 import { expectRejects } from '#src/helpers/index.js';
-import { devFeatureTest } from '#src/utils.js';
 
 const defaultAdminConsoleConfig: AdminConsoleData = {
   signInExperienceCustomized: false,
@@ -272,40 +271,34 @@ describe('logto config', () => {
     expect(testResult).toMatchObject(clientCredentialsJwtCustomizerPayload.environmentVariables);
   });
 
-  devFeatureTest.it(
-    'should throw access denied error when calling the denyAccess api in the script',
-    async () => {
-      await expectRejects(
-        testJwtCustomizer({
-          tokenType: LogtoJwtTokenKeyType.AccessToken,
-          token: accessTokenJwtCustomizerPayload.tokenSample,
-          context: accessTokenJwtCustomizerPayload.contextSample,
-          script: accessTokenAccessDeniedSampleScript,
-          environmentVariables: accessTokenJwtCustomizerPayload.environmentVariables,
-        }),
-        {
-          code: 'jwt_customizer.general',
-          status: 403,
-        }
-      );
-    }
-  );
+  it('should throw access denied error when calling the denyAccess api in the script', async () => {
+    await expectRejects(
+      testJwtCustomizer({
+        tokenType: LogtoJwtTokenKeyType.AccessToken,
+        token: accessTokenJwtCustomizerPayload.tokenSample,
+        context: accessTokenJwtCustomizerPayload.contextSample,
+        script: accessTokenAccessDeniedSampleScript,
+        environmentVariables: accessTokenJwtCustomizerPayload.environmentVariables,
+      }),
+      {
+        code: 'jwt_customizer.general',
+        status: 403,
+      }
+    );
+  });
 
-  devFeatureTest.it(
-    'should throw access denied error when calling the denyAccess api in the script',
-    async () => {
-      await expectRejects(
-        testJwtCustomizer({
-          tokenType: LogtoJwtTokenKeyType.ClientCredentials,
-          token: clientCredentialsJwtCustomizerPayload.tokenSample,
-          script: clientCredentialsAccessDeniedSampleScript,
-          environmentVariables: clientCredentialsJwtCustomizerPayload.environmentVariables,
-        }),
-        {
-          code: 'jwt_customizer.general',
-          status: 403,
-        }
-      );
-    }
-  );
+  it('should throw access denied error when calling the denyAccess api in the script', async () => {
+    await expectRejects(
+      testJwtCustomizer({
+        tokenType: LogtoJwtTokenKeyType.ClientCredentials,
+        token: clientCredentialsJwtCustomizerPayload.tokenSample,
+        script: clientCredentialsAccessDeniedSampleScript,
+        environmentVariables: clientCredentialsJwtCustomizerPayload.environmentVariables,
+      }),
+      {
+        code: 'jwt_customizer.general',
+        status: 403,
+      }
+    );
+  });
 });
