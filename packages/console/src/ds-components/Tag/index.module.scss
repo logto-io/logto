@@ -4,13 +4,13 @@
   display: inline-flex;
   align-items: center;
   font: var(--font-body-2);
+  gap: _.unit(2);
   @include _.text-ellipsis;
 
   .icon {
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    margin-right: _.unit(2);
     background: var(--color-on-success-container);
   }
 

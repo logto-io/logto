@@ -5,8 +5,9 @@ import { Trans, useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 
-import Arrow from '@/assets/icons/arrow-left.svg?react';
+import ArrowLeft from '@/assets/icons/arrow-left.svg?react';
 import DynamicT from '@/ds-components/DynamicT';
+import FlipOnRtl from '@/ds-components/FlipOnRtl';
 import TextLink from '@/ds-components/TextLink';
 import modalStyles from '@/scss/modal.module.scss';
 
@@ -37,7 +38,11 @@ function ExperienceLikeModal({
         <div className={styles.wrapper}>
           <TextLink
             className={styles.backButton}
-            icon={<Arrow />}
+            icon={
+              <FlipOnRtl>
+                <ArrowLeft />
+              </FlipOnRtl>
+            }
             onClick={() => {
               if (onGoBack) {
                 onGoBack();

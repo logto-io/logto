@@ -17,7 +17,7 @@
     cursor: pointer;
 
     .arrow {
-      margin-right: _.unit(2);
+      margin-inline-end: _.unit(2);
       transform: rotate(0deg);
       transition: transform 0.3s;
     }

@@ -24,7 +24,7 @@
 .name {
   flex: 1;
   overflow: hidden;
-  margin-left: _.unit(-6);
+  margin-inline-start: _.unit(-6);
   @include _.flex-row;
   height: 100%;
 

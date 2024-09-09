@@ -12,6 +12,7 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button, { type Props as ButtonProps } from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import DynamicT from '@/ds-components/DynamicT';
+import FlipOnRtl from '@/ds-components/FlipOnRtl';
 import TextLink from '@/ds-components/TextLink';
 
 import FeaturedSkuContent from './FeaturedSkuContent';
@@ -67,7 +68,11 @@ function SkuCardItem({ sku, onSelect, buttonProps }: Props) {
               isTrailingIcon
               href={pricingLink}
               targetBlank="noopener"
-              icon={<ArrowRight className={styles.linkIcon} />}
+              icon={
+                <FlipOnRtl>
+                  <ArrowRight className={styles.linkIcon} />
+                </FlipOnRtl>
+              }
               className={styles.link}
             >
               <DynamicT forKey="upsell.create_tenant.view_all_features" />

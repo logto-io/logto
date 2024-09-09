@@ -21,7 +21,7 @@
 .titleWrapper {
   width: 296px;
   padding-bottom: _.unit(6);
-  margin-right: _.unit(14);
+  margin-inline-end: _.unit(14);
   flex-shrink: 0;
 
   > :not(:first-child) {
@@ -73,7 +73,7 @@
       }
 
       &:last-child {
-        text-align: right;
+        text-align: end;
         width: 25%;
 
         .item {
@@ -95,7 +95,7 @@
 
   .titleWrapper {
     width: 100%;
-    margin-right: unset;
+    margin-inline-end: unset;
   }
 
   .card {

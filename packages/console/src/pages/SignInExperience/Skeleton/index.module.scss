@@ -63,7 +63,7 @@
         .button {
           width: 104px;
           height: 30px;
-          margin-left: _.unit(2.5);
+          margin-inline-start: _.unit(2.5);
           @include _.shimmering-animation;
         }
       }

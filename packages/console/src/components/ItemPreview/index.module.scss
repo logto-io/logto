@@ -10,11 +10,11 @@
   }
 
   > div:not(:first-child) {
-    margin-left: _.unit(3);
+    margin-inline-start: _.unit(3);
   }
 
   .content {
-    padding-right: _.unit(4);
+    padding-inline-end: _.unit(4);
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -22,7 +22,7 @@
     margin-top: _.unit(-1);
 
     > div:not(:last-child) {
-      margin-right: _.unit(2);
+      margin-inline-end: _.unit(2);
     }
 
     .meta {
@@ -56,7 +56,7 @@
         align-items: baseline;
 
         .title {
-          margin-right: _.unit(1);
+          margin-inline-end: _.unit(1);
         }
       }
     }

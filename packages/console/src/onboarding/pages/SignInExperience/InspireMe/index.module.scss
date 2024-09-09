@@ -10,7 +10,7 @@
   justify-content: space-between;
 
   .inspireContent {
-    margin-right: _.unit(6);
+    margin-inline-end: _.unit(6);
     display: flex;
     flex-direction: column;
 
@@ -27,7 +27,7 @@
   .button {
     border-color: var(--color-neutral-variant-80);
     // Note: this is a special case for the inspire me button since the bulb icon does not follow the standard icon size
-    padding-right: _.unit(7);
+    padding-inline-end: _.unit(7);
 
     &:not(:disabled) {
       &:not(:active),

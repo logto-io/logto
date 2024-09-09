@@ -11,7 +11,7 @@
     align-items: center;
 
     .createButton {
-      margin-left: _.unit(2);
+      margin-inline-start: _.unit(2);
     }
   }
 
@@ -25,6 +25,6 @@
   }
 
   .actionColumn {
-    text-align: right;
+    text-align: end;
   }
 }

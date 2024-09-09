@@ -1,6 +1,7 @@
+import classNames from 'classnames';
 import { format } from 'date-fns';
 import type { ChangeEventHandler } from 'react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Area,
@@ -47,7 +48,22 @@ function Dashboard() {
   const { data: activeData, error: activeError } = useSWR<ActiveUsersResponse, RequestError>(
     `api/dashboard/users/active?date=${date}`
   );
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const isRtl = i18n.dir() === 'rtl';
+
+  const areaChartData = useMemo(() => {
+    const chartData = activeData?.dauCurve.map((item) => ({
+      ...item,
+      // Remove "year" for a compact label.
+      date: item.date.replace(/\d{4}-/, ''),
+    }));
+
+    if (isRtl) {
+      // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+      return chartData?.slice().reverse();
+    }
+    return chartData;
+  }, [activeData?.dauCurve, isRtl]);
 
   // Pick an error as the page's error
   const error = totalError ?? newError ?? activeError;
@@ -87,7 +103,7 @@ function Dashboard() {
               delta={newData.last7Days.delta}
             />
           </div>
-          <Card className={styles.activeCard}>
+          <Card className={classNames(styles.activeCard, styles[i18n.dir()])}>
             <Block
               title="dashboard.daily_active_users"
               tip={t('dashboard.daily_active_users_tip')}
@@ -98,17 +114,9 @@ function Dashboard() {
             <div className={styles.datePicker}>
               <TextInput type="date" value={date} onChange={handleDateChange} />
             </div>
-            <div className={styles.curve}>
+            <div className={classNames(styles.curve, styles[i18n.dir()])}>
               <ResponsiveContainer>
-                <AreaChart
-                  data={activeData.dauCurve.map((item) => ({
-                    ...item,
-                    // Remove "year" for a compact label.
-                    date: item.date.replace(/\d{4}-/, ''),
-                  }))}
-                  width={1100}
-                  height={168}
-                >
+                <AreaChart data={areaChartData} width={1100} height={168}>
                   <CartesianGrid vertical={false} stroke="var(--color-divider)" />
                   <Area
                     type="monotone"
@@ -116,10 +124,12 @@ function Dashboard() {
                     stroke="var(--color-primary)"
                     strokeWidth={2}
                     fill="var(--color-hover-variant)"
+                    animationDuration={isRtl ? 0 : 1500}
                   />
                   <XAxis dataKey="date" tickLine={false} tick={tickStyle} />
                   <YAxis
                     width={35}
+                    orientation={isRtl ? 'right' : 'left'}
                     axisLine={false}
                     tickLine={false}
                     tick={tickStyle}

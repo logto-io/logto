@@ -14,7 +14,7 @@
   position: sticky;
   top: _.unit(6);
   flex-shrink: 0;
-  margin-right: _.unit(7.5);
+  margin-inline-end: _.unit(7.5);
   width: 220px;
 
   > :not(:last-child) {
@@ -61,7 +61,7 @@
 @media screen and (max-width: dim.$guide-content-max-width) {
   .content {
     margin: 0;
-    padding-right: dim.$guide-content-padding;
+    padding-inline-end: dim.$guide-content-padding;
     max-width: calc(dim.$guide-main-content-max-width + dim.$guide-sidebar-width + dim.$guide-panel-gap + 2 * dim.$guide-content-padding);
   }
 }

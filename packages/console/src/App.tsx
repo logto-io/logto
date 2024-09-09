@@ -123,6 +123,7 @@ function Providers() {
             // hook will cause a re-render following some bugs here. This still works for the
             // initial render, so we're good for now. Consider refactoring this in the future.
             lang: i18next.language,
+            dir: i18next.dir(),
           }}
         />
         <Toast />

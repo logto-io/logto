@@ -15,6 +15,10 @@
   height: 100%;
   padding: 0 _.unit(6) 0 _.unit(2);
 
+  &.rtl {
+    padding: 0 _.unit(2) 0 _.unit(6);
+  }
+
   > :not(svg) {
     @include _.main-content-width;
   }
@@ -30,6 +34,11 @@
   position: absolute;
   bottom: _.unit(3);
   left: _.unit(4);
+
+  &.rtl {
+    left: unset;
+    right: _.unit(4);
+  }
 }
 
 .daisy {

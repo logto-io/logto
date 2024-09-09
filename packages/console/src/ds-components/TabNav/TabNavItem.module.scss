@@ -4,10 +4,6 @@
   display: flex;
   align-items: center;
 
-  &:not(:last-child) {
-    margin-right: _.unit(6);
-  }
-
   .link {
     font: var(--font-label-2);
     padding: _.unit(0.5) _.unit(1.5);
@@ -48,7 +44,7 @@
   }
 
   .errors {
-    margin-left: _.unit(0.5);
+    margin-inline-start: _.unit(0.5);
     font: var(--font-label-3);
     color: var(--color-white);
     padding: _.unit(0.5) _.unit(1.5);

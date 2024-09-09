@@ -36,7 +36,7 @@
     justify-content: flex-end;
 
     > :not(:first-child) {
-      margin-left: _.unit(4);
+      margin-inline-start: _.unit(4);
     }
   }
 

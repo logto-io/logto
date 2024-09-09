@@ -5,34 +5,32 @@
   align-items: center;
   margin: _.unit(2) 0;
 
-
   .info {
     display: flex;
     align-items: center;
     height: 44px;
     width: 100%;
-    margin-right: _.unit(2);
+    margin-inline-end: _.unit(2);
     padding: _.unit(3) _.unit(2);
     background-color: var(--color-layer-2);
     border-radius: 8px;
     cursor: move;
     color: var(--color-text);
+    gap: _.unit(3);
 
     .draggableIcon {
       color: var(--color-text-secondary);
-      margin-right: _.unit(3);
     }
 
     .name {
       font: var(--font-label-2);
-      margin-left: _.unit(3);
     }
 
     .icon {
       width: 16px;
       height: 16px;
       object-fit: cover;
-      margin-left: _.unit(1);
+      margin-inline-start: _.unit(1);
       color: var(--color-text-secondary);
     }
   }

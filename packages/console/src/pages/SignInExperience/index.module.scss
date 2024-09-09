@@ -26,6 +26,7 @@
       display: flex;
       flex: 1;
       margin-bottom: _.unit(6);
+      gap: _.unit(3);
 
       &.withSubmitActionBar {
         margin-bottom: _.unit(3);
@@ -34,10 +35,6 @@
       > * {
         flex: 1;
         min-width: 510px;
-      }
-
-      .form {
-        margin-right: _.unit(3);
       }
 
       .preview {

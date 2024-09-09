@@ -15,7 +15,7 @@
     padding: 0 _.unit(21) 0 _.unit(2);
 
     button {
-      margin-left: _.unit(4);
+      margin-inline-start: _.unit(4);
     }
 
     .separator {
@@ -63,7 +63,7 @@
 
     .preview {
       flex: 1;
-      margin-left: _.unit(8);
+      margin-inline-start: _.unit(8);
       position: sticky;
       top: _.unit(4);
     }

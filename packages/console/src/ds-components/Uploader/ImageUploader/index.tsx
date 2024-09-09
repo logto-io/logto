@@ -1,5 +1,6 @@
 import type { AllowedUploadMimeType } from '@logto/schemas';
 import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
 
 import Delete from '@/assets/icons/delete.svg?react';
 import ImageWithErrorFallback from '@/ds-components/ImageWithErrorFallback';
@@ -29,9 +30,13 @@ function ImageUploader({
   uploadedClassName,
   ...rest
 }: Props) {
+  const { i18n } = useTranslation();
   const { allowedMimeTypes } = useImageMimeTypes(imageMimeTypes);
+
   return value ? (
-    <div className={classNames(styles.imageUploader, className, uploadedClassName)}>
+    <div
+      className={classNames(styles.imageUploader, className, uploadedClassName, styles[i18n.dir()])}
+    >
       <ImageWithErrorFallback
         containerClassName={styles.container}
         src={value}

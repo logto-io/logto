@@ -29,6 +29,12 @@
     }
   }
 
+  &.rtl {
+    .delete {
+      left: _.unit(2);
+      right: unset;
+    }
+  }
 
   &:hover {
     .delete {

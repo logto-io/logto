@@ -31,14 +31,14 @@
 
       .groupLabel {
         font: var(--font-title-2);
-        text-align: left;
+        text-align: start;
         background-color: var(--color-layer-light);
         border-radius: 6px;
       }
 
       .quotaKeyColumn {
         padding: _.unit(4) _.unit(6);
-        text-align: left;
+        text-align: start;
       }
     }
   }

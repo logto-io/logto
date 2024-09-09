@@ -46,7 +46,8 @@ function UserInfoTipContent({ user }: { readonly user: Partial<UserInfo> }) {
 }
 
 function UserAvatar({ className, size = 'medium', user, hasTooltip = false }: Props) {
-  const avatarClassName = classNames(styles.avatar, styles[size]);
+  const { i18n } = useTranslation();
+  const avatarClassName = classNames(styles.avatar, styles[size], styles[i18n.dir()]);
   const wrapperClassName = classNames(styles.wrapper, styles[size], className);
   const defaultColorPalette = [
     '#E74C3C',

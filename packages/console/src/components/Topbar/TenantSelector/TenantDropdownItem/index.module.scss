@@ -20,7 +20,7 @@
   .info {
     display: flex;
     flex-direction: column;
-    margin-right: _.unit(4);
+    margin-inline-end: _.unit(4);
 
     .meta {
       display: flex;

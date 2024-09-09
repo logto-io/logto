@@ -78,6 +78,6 @@ form {
 
   &.leftAligned {
     align-self: flex-start;
-    margin-left: _.unit(15);
+    margin-inline-start: _.unit(15);
   }
 }

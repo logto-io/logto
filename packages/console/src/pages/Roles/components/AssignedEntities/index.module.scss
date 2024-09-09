@@ -3,6 +3,7 @@
 .entities {
   display: flex;
   align-items: center;
+  gap: _.unit(2);
 
   .avatars {
     display: flex;
@@ -15,7 +16,7 @@
       box-sizing: content-box;
 
       &:not(:last-child) {
-        margin-left: _.unit(-2);
+        margin-inline-start: _.unit(-2);
       }
     }
 
@@ -27,12 +28,11 @@
   }
 
   .count {
-    margin-left: 9px;
     color: var(--color-text);
     font: var(--font-body-2);
   }
 }
 
 .empty {
-  padding-left: _.unit(0.5);
+  padding-inline-start: _.unit(0.5);
 }

@@ -22,11 +22,11 @@
 .title {
   display: flex;
   align-items: center;
-  margin-left: _.unit(1);
+  margin-inline-start: _.unit(1);
 
   .optionText {
     font: var(--font-body-2);
-    margin-left: _.unit(3);
+    margin-inline-start: _.unit(3);
   }
 
   &.selected {

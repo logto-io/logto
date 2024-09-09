@@ -8,6 +8,6 @@
 
 .requests {
   font: var(--font-body-2);
-  text-align: right;
-  margin-right: _.unit(4);
+  text-align: end;
+  margin-inline-end: _.unit(4);
 }

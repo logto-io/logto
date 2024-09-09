@@ -27,7 +27,7 @@
   margin-bottom: _.unit(2);
 
   input {
-    padding-left: _.unit(2);
+    padding-inline-start: _.unit(2);
   }
 
   svg {
@@ -48,12 +48,12 @@
     cursor: pointer;
 
     > svg {
-      margin-right: _.unit(1);
+      margin-inline-end: _.unit(1);
     }
 
     &.active {
       color: var(--color-type-link);
-      padding-left: calc(_.unit(7) - _.unit(6));
+      padding-inline-start: calc(_.unit(7) - _.unit(6));
     }
 
     &.selected {
@@ -114,7 +114,7 @@
     }
 
     .innerInputFiled {
-      padding-left: _.unit(4);
+      padding-inline-start: _.unit(4);
     }
   }
 }

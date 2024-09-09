@@ -1,4 +1,5 @@
 import { OrganizationInvitationStatus } from '@logto/schemas';
+import classNames from 'classnames';
 import { useContext, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -20,7 +21,7 @@ import TenantInvitationDropdownItem from './TenantInvitationDropdownItem';
 import styles from './index.module.scss';
 
 export default function TenantSelector() {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     tenants,
     prependTenant,
@@ -44,7 +45,7 @@ export default function TenantSelector() {
       <div
         ref={anchorRef}
         tabIndex={0}
-        className={styles.currentTenantCard}
+        className={classNames(styles.currentTenantCard, styles[i18n.dir()])}
         role="button"
         onKeyDown={onKeyDownHandler(() => {
           setShowDropdown(true);

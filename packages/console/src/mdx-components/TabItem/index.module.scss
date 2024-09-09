@@ -9,10 +9,10 @@
     display: flex;
     margin: _.unit(1) 0;
     padding: 0;
+    gap: _.unit(6);
 
     li {
       list-style: none;
-      margin-right: _.unit(6);
       padding-bottom: _.unit(1);
       font: var(--font-label-2);
       color: var(--color-text-secondary);

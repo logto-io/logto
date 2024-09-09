@@ -15,6 +15,7 @@ import UserInfoCard from '@/components/UserInfoCard';
 import { isCloud } from '@/consts/env';
 import Divider from '@/ds-components/Divider';
 import Dropdown, { DropdownItem } from '@/ds-components/Dropdown';
+import FlipOnRtl from '@/ds-components/FlipOnRtl';
 import Spacer from '@/ds-components/Spacer';
 import { Ring as Spinner } from '@/ds-components/Spinner';
 import useCurrentUser from '@/hooks/use-current-user';
@@ -90,7 +91,9 @@ function UserInfo() {
           {t('menu.profile')}
           <Spacer />
           <div className={styles.icon}>
-            <ExternalLinkIcon />
+            <FlipOnRtl>
+              <ExternalLinkIcon />
+            </FlipOnRtl>
           </div>
         </DropdownItem>
         <Divider />
@@ -132,7 +135,11 @@ function UserInfo() {
         <Divider />
         <DropdownItem
           className={classNames(styles.dropdownItem, isLoading && styles.loading)}
-          icon={<SignOut className={styles.icon} />}
+          icon={
+            <FlipOnRtl>
+              <SignOut className={styles.icon} />
+            </FlipOnRtl>
+          }
           onClick={(event) => {
             event.stopPropagation();
 

@@ -1,4 +1,6 @@
+import classNames from 'classnames';
 import { Suspense } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useOutletContext, useRoutes } from 'react-router-dom';
 import { safeLazy } from 'react-safe-lazy';
 
@@ -21,6 +23,8 @@ function ConsoleContent() {
   const { scrollableContent } = useOutletContext<AppContentOutletContext>();
   const routeObjects = useConsoleRoutes();
   const routes = useRoutes(routeObjects);
+  const { i18n } = useTranslation();
+  const direction = i18n.dir();
 
   usePlausiblePageview(routeObjects, ':tenantId');
   // Use this hook here to make sure console listens to user tenant scope changes.
@@ -32,12 +36,17 @@ function ConsoleContent() {
         <Sidebar />
       </Suspense>
       <OverlayScrollbar className={styles.overlayScrollbarWrapper}>
-        <div ref={scrollableContent} className={styles.main}>
+        <div ref={scrollableContent} className={classNames(styles.main, styles[direction])}>
           <Suspense fallback={<DelayedSuspenseFallback />}>{routes}</Suspense>
         </div>
       </OverlayScrollbar>
       {isDevFeaturesEnabled && (
-        <Tag type="state" status="success" variant="plain" className={styles.devStatus}>
+        <Tag
+          type="state"
+          status="success"
+          variant="plain"
+          className={classNames(styles.devStatus, styles[direction])}
+        >
           Dev features enabled
         </Tag>
       )}

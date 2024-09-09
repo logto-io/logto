@@ -36,7 +36,7 @@
     .expander {
       display: inline-flex;
       align-items: center;
-      margin-left: _.unit(2);
+      margin-inline-start: _.unit(2);
       margin-top: _.unit(2);
       color: var(--color-primary);
       cursor: pointer;

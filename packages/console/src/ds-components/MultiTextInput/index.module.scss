@@ -6,7 +6,7 @@
   }
 
   .firstFieldWithMultiInputs {
-    padding-right: _.unit(9);
+    padding-inline-end: _.unit(9);
   }
 
   .deletableInput {
@@ -18,7 +18,7 @@
     }
 
     > :not(:first-child) {
-      margin-left: _.unit(2);
+      margin-inline-start: _.unit(2);
     }
   }
 

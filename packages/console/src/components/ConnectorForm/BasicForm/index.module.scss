@@ -15,10 +15,7 @@
   border-radius: 8px;
   display: flex;
   align-items: center;
-
-  .icon {
-    margin-right: _.unit(3);
-  }
+  gap: _.unit(3);
 
   .content {
     span {
@@ -26,7 +23,7 @@
     }
 
     > ul {
-      padding-left: _.unit(3);
+      padding-inline-start: _.unit(3);
     }
   }
 }

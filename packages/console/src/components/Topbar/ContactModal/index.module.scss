@@ -9,7 +9,7 @@
     padding: _.unit(3) _.unit(4);
 
     .icon {
-      margin-right: _.unit(6);
+      margin-inline-end: _.unit(6);
     }
 
     &:not(:last-child) {

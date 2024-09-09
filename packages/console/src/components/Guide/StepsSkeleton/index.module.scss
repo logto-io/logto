@@ -9,12 +9,12 @@
   background-color: var(--color-layer-1);
   max-width: dim.$guide-main-content-max-width;
   margin: 0 auto;
+  gap: _.unit(4);
 
   .index {
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    margin-right: _.unit(4);
     @include _.shimmering-animation;
   }
 

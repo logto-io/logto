@@ -13,11 +13,11 @@
 
     &.withLabel {
       &:first-child {
-        margin-right: _.unit(4);
+        margin-inline-end: _.unit(4);
       }
 
       &:last-child {
-        margin-left: _.unit(4);
+        margin-inline-start: _.unit(4);
       }
     }
   }

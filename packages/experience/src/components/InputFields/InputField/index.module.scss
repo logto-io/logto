@@ -57,7 +57,7 @@
 
     .suffix {
       position: absolute;
-      right: _.unit(2);
+      inset-inline-end: _.unit(2);
       top: 50%;
       transform: translateY(-50%);
       width: _.unit(8);
@@ -68,7 +68,7 @@
 
     &.isSuffixFocusVisible:focus-within {
       input {
-        padding-right: _.unit(10);
+        padding-inline-end: _.unit(10);
       }
 
       .suffix {
@@ -110,7 +110,7 @@
 
 .errorMessage {
   margin-top: _.unit(1);
-  margin-left: _.unit(0.5);
+  margin-inline-start: _.unit(0.5);
 }
 
 
