@@ -25,9 +25,9 @@
     "organization_permissions": {
       "specific_permissions": [
         "analytics:global:*",
-        "analytics:website:admin",
-        "analytics:website:write",
-        "analytics:website:view",
+        "analytics:measurable:admin",
+        "analytics:measurable:write",
+        "analytics:measurable:view",
         "payments:provider:*",
         "payments:payment_request:*",
         "payments:payment_request.public:read",
@@ -89,13 +89,13 @@
         "id": "anl-admin",
         "name": "Analytics Admin",
         "description": "Analytics Admin",
-        "specific_permissions": ["analytics:website:admin"]
+        "specific_permissions": ["analytics:measurable:admin"]
       },
       {
         "id": "anl-public-servant",
         "name": "Analytics Public Servant",
         "description": "Analytics Public servant",
-        "specific_permissions": ["analytics:website:view"]
+        "specific_permissions": ["analytics:measurable:view"]
       },
       {
         "id": "anl-super-user",
