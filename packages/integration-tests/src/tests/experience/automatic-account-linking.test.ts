@@ -1,5 +1,5 @@
 import { ConnectorType } from '@logto/connector-kit';
-import { AgreeToTermsPolicy, SignInIdentifier } from '@logto/schemas';
+import { AgreeToTermsPolicy, SignInIdentifier, SignInMode } from '@logto/schemas';
 
 import { createUser, deleteUser } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
@@ -55,7 +55,38 @@ describe('automatic account linking', () => {
     await deleteUser(user.id);
   });
 
-  it('should automatically link account with terms of use and privacy policy', async () => {
+  it('should automatically link account even if the registration is disabled', async () => {
+    await updateSignInExperience({
+      termsOfUseUrl: null,
+      privacyPolicyUrl: null,
+      socialSignIn: { automaticAccountLinking: true },
+      signInMode: SignInMode.SignIn,
+    });
+
+    const socialUserId = 'foo_' + randomString();
+    const user = await createUser({ primaryEmail: generateEmail() });
+    const experience = new ExpectExperience(await browser.newPage());
+
+    await experience.navigateTo(demoAppUrl.href);
+    await experience.toProcessSocialSignIn({
+      socialUserId,
+      socialEmail: user.primaryEmail!,
+    });
+
+    experience.toMatchUrl(demoAppUrl);
+    await experience.toMatchElement('div', { text: `User ID: ${user.id}` });
+    await experience.toClick('div[role=button]', /sign out/i);
+    await experience.page.close();
+
+    await deleteUser(user.id);
+
+    // Reset the sign-in experience
+    await updateSignInExperience({
+      signInMode: SignInMode.SignInAndRegister,
+    });
+  });
+
+  it('should automatically link account without verify terms of use', async () => {
     await updateSignInExperience({
       termsOfUseUrl: 'https://example.com/terms',
       privacyPolicyUrl: 'https://example.com/privacy',
@@ -71,10 +102,6 @@ describe('automatic account linking', () => {
       socialUserId,
       socialEmail: user.primaryEmail!,
     });
-
-    // Should have popped up the terms of use and privacy policy dialog
-    await experience.toMatchElement('div', { text: /terms of use/i });
-    await experience.toClick('button', /agree/i);
 
     experience.toMatchUrl(demoAppUrl);
     await experience.toMatchElement('div', { text: `User ID: ${user.id}` });

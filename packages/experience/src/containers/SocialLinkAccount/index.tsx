@@ -1,4 +1,4 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier, SignInMode } from '@logto/schemas';
 import classNames from 'classnames';
 import type { TFuncKey } from 'i18next';
 import { useTranslation } from 'react-i18next';
@@ -42,7 +42,7 @@ const getCreateAccountActionText = (signUpMethods: string[]): TFuncKey => {
 
 const SocialLinkAccount = ({ connectorId, verificationId, className, relatedUser }: Props) => {
   const { t } = useTranslation();
-  const { signUpMethods } = useSieMethods();
+  const { signUpMethods, signInMode } = useSieMethods();
 
   const bindSocialRelatedUser = useBindSocialRelatedUser();
   const registerWithSocial = useSocialRegister(connectorId);
@@ -63,17 +63,19 @@ const SocialLinkAccount = ({ connectorId, verificationId, className, relatedUser
         }}
       />
 
-      <div className={styles.hint}>
-        <div>
-          <DynamicT forKey="description.skip_social_linking" />
+      {signInMode !== SignInMode.SignIn && (
+        <div className={styles.hint}>
+          <div>
+            <DynamicT forKey="description.skip_social_linking" />
+          </div>
+          <TextLink
+            text={actionText}
+            onClick={() => {
+              void registerWithSocial(verificationId);
+            }}
+          />
         </div>
-        <TextLink
-          text={actionText}
-          onClick={() => {
-            void registerWithSocial(verificationId);
-          }}
-        />
-      </div>
+      )}
     </div>
   );
 };
