@@ -1,3 +1,5 @@
+import { type IncomingHttpHeaders } from 'node:http';
+
 import { adminTenantId } from '@logto/schemas';
 import { TtlCache } from '@logto/shared';
 import { appendPath, isKeyInObject } from '@silverhand/essentials';
@@ -5,6 +7,9 @@ import { type JWK } from 'jose';
 import ky from 'ky';
 
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
+
+import RequestError from '../../errors/RequestError/index.js';
+import assertThat from '../../utils/assert-that.js';
 
 const jwksCache = new TtlCache<string, JWK[]>(60 * 60 * 1000); // 1 hour
 
@@ -57,4 +62,22 @@ export const getAdminTenantTokenValidationSet = async (): Promise<{
     keys: jwks.keys,
     issuer: [issuer.href],
   };
+};
+
+const bearerTokenIdentifier = 'Bearer';
+
+export const extractBearerTokenFromHeaders = ({ authorization }: IncomingHttpHeaders) => {
+  assertThat(
+    authorization,
+    new RequestError({ code: 'auth.authorization_header_missing', status: 401 })
+  );
+  assertThat(
+    authorization.startsWith(bearerTokenIdentifier),
+    new RequestError(
+      { code: 'auth.authorization_token_type_not_supported', status: 401 },
+      { supportedTypes: [bearerTokenIdentifier] }
+    )
+  );
+
+  return authorization.slice(bearerTokenIdentifier.length + 1);
 };
