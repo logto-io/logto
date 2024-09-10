@@ -8,6 +8,7 @@ import {
   resourceMe,
 } from '#src/helpers/admin-tenant.js';
 import { expectRejects } from '#src/helpers/index.js';
+import { generatePassword } from '#src/utils.js';
 
 describe('me', () => {
   it('should only be available in admin tenant', async () => {
@@ -56,6 +57,46 @@ describe('me', () => {
       .json<Record<string, unknown>>();
 
     expect({ ...data, foo: 'bar' }).toStrictEqual({ ...newData });
+
+    await deleteUser(id);
+  });
+
+  it('should be able to verify and reset password', async () => {
+    const { id, client, password } = await createUserWithAllRolesAndSignInToClient();
+    const headers = { authorization: `Bearer ${await client.getAccessToken(resourceMe)}` };
+
+    await expectRejects(
+      ky.post(logtoConsoleUrl + '/me/password/verify', {
+        headers,
+        json: { password: 'wrong-password' },
+      }),
+      {
+        code: 'session.invalid_credentials',
+        status: 422,
+      }
+    );
+
+    await expect(
+      ky.post(logtoConsoleUrl + '/me/password/verify', {
+        headers,
+        json: { password },
+      })
+    ).resolves.toHaveProperty('status', 204);
+
+    // Should reject weak password
+    await expect(
+      ky.post(logtoConsoleUrl + '/me/password', {
+        headers,
+        json: { password: '1' },
+      })
+    ).rejects.toMatchInlineSnapshot('[HTTPError: Request failed with status code 400 Bad Request]');
+
+    await expect(
+      ky.post(logtoConsoleUrl + '/me/password', {
+        headers,
+        json: { password: generatePassword() },
+      })
+    ).resolves.toHaveProperty('status', 204);
 
     await deleteUser(id);
   });

@@ -100,5 +100,5 @@ export const createUserWithAllRolesAndSignInToClient = async () => {
     scopes: [PredefinedScope.All],
   });
 
-  return { id, client };
+  return { id, client, username, password };
 };
