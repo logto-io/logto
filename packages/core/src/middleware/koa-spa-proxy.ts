@@ -58,8 +58,9 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
     }
 
     const { customUiAssets } = await queries.signInExperiences.findDefaultSignInExperience();
+
     // If user has uploaded custom UI assets, serve them instead of native experience UI
-    if (customUiAssets && packagePath === 'experience') {
+    if (customUiAssets && (packagePath === 'experience' || packagePath === 'experience-legacy')) {
       const serve = serveCustomUiAssets(customUiAssets.id);
       return serve(ctx, next);
     }
