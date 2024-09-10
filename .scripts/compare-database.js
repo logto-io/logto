@@ -1,8 +1,12 @@
 import pg from 'pg';
 import assert from 'node:assert';
 
-const omit = (object, ...keys) => Object.fromEntries(Object.entries(object).filter(([key]) => !keys.includes(key)));
-const omitArray = (arrayOfObjects, ...keys) => arrayOfObjects.map((value) => omit(value, ...keys));
+const omit = (object, ...keys) =>
+  Object.fromEntries(
+    Object.entries(object).filter(([key]) => !keys.includes(key))
+  );
+const omitArray = (arrayOfObjects, ...keys) =>
+  arrayOfObjects.map((value) => omit(value, ...keys));
 
 const schemas = ['cloud', 'public'];
 const schemasArray = `(${schemas.map((schema) => `'${schema}'`).join(', ')})`;
@@ -17,23 +21,27 @@ const tryCompare = (a, b) => {
 };
 
 const queryDatabaseManifest = async (database) => {
-  const pool = new pg.Pool({ database, user: 'postgres', password: 'postgres' });
+  const pool = new pg.Pool({
+    database,
+    user: 'postgres',
+    password: 'postgres',
+  });
 
-  const { rows: tables } = await pool.query(/* sql */`
+  const { rows: tables } = await pool.query(/* sql */ `
     select *
     from information_schema.tables
     where table_schema in ${schemasArray}
     order by table_schema, table_name asc;
   `);
 
-  const { rows: columns } = await pool.query(/* sql */`
+  const { rows: columns } = await pool.query(/* sql */ `
     select *
     from information_schema.columns 
     where table_schema in ${schemasArray}
     order by table_schema, table_name, column_name asc;
   `);
 
-  const { rows: enums } = await pool.query(/* sql */`
+  const { rows: enums } = await pool.query(/* sql */ `
     select pg_type.typname, pg_enum.enumlabel
     from pg_type 
     join pg_enum 
@@ -41,7 +49,7 @@ const queryDatabaseManifest = async (database) => {
     order by pg_type.typname, pg_enum.enumlabel asc;
   `);
 
-  const { rows: constraints } = await pool.query(/* sql */`
+  const { rows: constraints } = await pool.query(/* sql */ `
     select conrelid::regclass as r_table, con.*, pg_get_constraintdef(con.oid) as def
     from pg_catalog.pg_constraint con
     inner join pg_catalog.pg_class rel
@@ -52,14 +60,14 @@ const queryDatabaseManifest = async (database) => {
     order by conname asc, def asc;
   `);
 
-  const { rows: indexes } = await pool.query(/* sql */`
+  const { rows: indexes } = await pool.query(/* sql */ `
     select *
     from pg_indexes
     where schemaname in ${schemasArray}
     order by schemaname, indexname asc;
   `);
 
-  const { rows: funcs } = await pool.query(/* sql */`
+  const { rows: funcs } = await pool.query(/* sql */ `
     select n.nspname as schema_name,
       p.proname as specific_name,
       case p.prokind 
@@ -83,15 +91,19 @@ const queryDatabaseManifest = async (database) => {
     order by schema_name, specific_name;
   `);
 
-  const { rows: triggers } = await pool.query(/* sql */`select * from information_schema.triggers;`);
-  const { rows: policies } = await pool.query(/* sql */`select * from pg_policies order by tablename, policyname;`);
-  const { rows: columnGrants } = await pool.query(/* sql */`
+  const { rows: triggers } = await pool.query(
+    /* sql */ `select * from information_schema.triggers;`
+  );
+  const { rows: policies } = await pool.query(
+    /* sql */ `select * from pg_policies order by tablename, policyname;`
+  );
+  const { rows: columnGrants } = await pool.query(/* sql */ `
     select * from information_schema.role_column_grants
     where table_schema in ${schemasArray}
       and grantee != 'postgres'
     order by table_schema, grantee, table_name, column_name, privilege_type;
   `);
-  const { rows: tableGrants } = await pool.query(/* sql */`
+  const { rows: tableGrants } = await pool.query(/* sql */ `
     select * from information_schema.role_table_grants
     where table_schema in ${schemasArray}
       and grantee != 'postgres'
@@ -130,10 +142,19 @@ const queryDatabaseManifest = async (database) => {
   const normalizePolicyname = ({ policyname, ...rest }) => {
     const prefix = 'allow_';
     const suffix = '_access';
-    if (policyname && policyname.startsWith(prefix) && policyname.endsWith(suffix)) {
+    if (
+      policyname &&
+      policyname.startsWith(prefix) &&
+      policyname.endsWith(suffix)
+    ) {
       // This is a naming convention in Logto cloud, it is formatted as `allow_{role_name}_access`, we need to normalize the role name part for the convenience of comparing DB updates.
       // Ref: https://github.com/logto-io/cloud/pull/738
-      return { policyname: `${prefix}${normalizeRoleName(policyname.slice(prefix.length, -suffix.length))}${suffix}`, ...rest };
+      return {
+        policyname: `${prefix}${normalizeRoleName(
+          policyname.slice(prefix.length, -suffix.length)
+        )}${suffix}`,
+        ...rest,
+      };
     }
 
     return { policyname, ...rest };
@@ -142,12 +163,18 @@ const queryDatabaseManifest = async (database) => {
   // Omit generated ids and values
   return {
     tables: omitArray(tables, 'table_catalog'),
-    columns: omitArray(columns, 'table_catalog', 'udt_catalog', 'ordinal_position', 'dtd_identifier'),
+    columns: omitArray(
+      columns,
+      'table_catalog',
+      'udt_catalog',
+      'ordinal_position',
+      'dtd_identifier'
+    ),
     enums,
     constraints: omitArray(
       constraints,
       'oid',
-      /** 
+      /**
        * See https://www.postgresql.org/docs/current/catalog-pg-constraint.html, better to use `pg_get_constraintdef()`
        * to extract the definition of check constraint, so this can be omitted since conbin changes with the status of the computing resources.
        */
@@ -164,18 +191,20 @@ const queryDatabaseManifest = async (database) => {
       'conppeqop',
       'conffeqop',
       'confdelsetcols',
-      'conexclop',
+      'conexclop'
     ),
     indexes,
     funcs,
     triggers: omitArray(triggers, 'trigger_catalog', 'event_object_catalog'),
     policies: policies.map(normalizeRoles).map(normalizePolicyname),
-    columnGrants: omitArray(columnGrants, 'table_catalog').map(normalizeGrantee),
+    columnGrants: omitArray(columnGrants, 'table_catalog').map(
+      normalizeGrantee
+    ),
     tableGrants: omitArray(tableGrants, 'table_catalog').map(normalizeGrantee),
   };
 };
 
-const [,, database1, database2] = process.argv;
+const [, , database1, database2] = process.argv;
 
 console.log('Compare database manifest between', database1, 'and', database2);
 
@@ -191,6 +220,23 @@ const autoCompare = (a, b) => {
     return (typeof a).localeCompare(typeof b);
   }
 
+  if (typeof a === 'object' && a !== null && b !== null) {
+    const aKeys = Object.keys(a).sort();
+    const bKeys = Object.keys(b).sort();
+
+    for (let i = 0; i < Math.min(aKeys.length, bKeys.length); i++) {
+      if (aKeys[i] !== bKeys[i]) {
+        return aKeys[i].localeCompare(bKeys[i]);
+      }
+      const comparison = autoCompare(a[aKeys[i]], b[bKeys[i]]);
+      if (comparison !== 0) {
+        return comparison;
+      }
+    }
+
+    return aKeys.length - bKeys.length;
+  }
+
   return String(a).localeCompare(String(b));
 };
 
@@ -200,15 +246,24 @@ const buildSortByKeys = (keys) => (a, b) => {
 };
 
 const queryDatabaseData = async (database) => {
-  const pool = new pg.Pool({ database, user: 'postgres', password: 'postgres' });
-  const result = await Promise.all(manifests[0].tables
-    .map(async ({ table_schema, table_name }) => {
-      const { rows } = await pool.query(/* sql */`select * from ${table_schema}.${table_name};`);
+  const pool = new pg.Pool({
+    database,
+    user: 'postgres',
+    password: 'postgres',
+  });
+  const result = await Promise.all(
+    manifests[0].tables.map(async ({ table_schema, table_name }) => {
+      const { rows } = await pool.query(
+        /* sql */ `select * from ${table_schema}.${table_name};`
+      );
 
       // check config rows except the value column
       if (['logto_configs', '_logto_configs', 'systems'].includes(table_name)) {
         const data = omitArray(rows, 'value');
-        return [table_name, data.sort(buildSortByKeys(Object.keys(data[0] ?? {})))];
+        return [
+          table_name,
+          data.sort(buildSortByKeys(Object.keys(data[0] ?? {}))),
+        ];
       }
 
       const data = omitArray(
@@ -234,4 +289,7 @@ const queryDatabaseData = async (database) => {
 
 console.log('Compare database data between', database1, 'and', database2);
 
-tryCompare(await queryDatabaseData(database1), await queryDatabaseData(database2));
+tryCompare(
+  await queryDatabaseData(database1),
+  await queryDatabaseData(database2)
+);
