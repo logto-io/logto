@@ -17,11 +17,15 @@ export type QuotaLibrary = ReturnType<typeof createQuotaLibrary>;
 /**
  * @remarks
  * Should report usage changes to the Cloud only when the following conditions are met:
- * 1. The tenant is on the Pro plan.
+ * 1. The tenant is either on Pro plan or Enterprise plan.
  * 2. The usage key is add-on related usage key.
  */
-const shouldReportSubscriptionUpdates = (planId: string, key: keyof SubscriptionQuota) =>
-  planId === ReservedPlanId.Pro && isReportSubscriptionUpdatesUsageKey(key);
+const shouldReportSubscriptionUpdates = (
+  planId: string,
+  isEnterprisePlan: boolean,
+  key: keyof SubscriptionQuota
+) =>
+  (planId === ReservedPlanId.Pro || isEnterprisePlan) && isReportSubscriptionUpdatesUsageKey(key);
 
 export const createQuotaLibrary = (cloudConnection: CloudConnectionLibrary) => {
   const guardTenantUsageByKey = async (key: keyof SubscriptionUsage) => {
@@ -41,10 +45,11 @@ export const createQuotaLibrary = (cloudConnection: CloudConnectionLibrary) => {
       planId,
       quota: fullQuota,
       usage: fullUsage,
+      isEnterprisePlan,
     } = await getTenantSubscriptionData(cloudConnection);
 
-    // Do not block Pro plan from adding add-on resources.
-    if (shouldReportSubscriptionUpdates(planId, key)) {
+    // Do not block Pro/Enterprise plan from adding add-on resources.
+    if (shouldReportSubscriptionUpdates(planId, isEnterprisePlan, key)) {
       return;
     }
 
@@ -159,9 +164,11 @@ export const createQuotaLibrary = (cloudConnection: CloudConnectionLibrary) => {
       return;
     }
 
-    const { planId, isAddOnAvailable } = await getTenantSubscriptionData(cloudConnection);
+    const { planId, isAddOnAvailable, isEnterprisePlan } = await getTenantSubscriptionData(
+      cloudConnection
+    );
 
-    if (shouldReportSubscriptionUpdates(planId, key) && isAddOnAvailable) {
+    if (shouldReportSubscriptionUpdates(planId, isEnterprisePlan, key) && isAddOnAvailable) {
       await reportSubscriptionUpdates(cloudConnection, key);
     }
   };

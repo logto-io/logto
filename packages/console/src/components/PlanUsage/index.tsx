@@ -22,12 +22,15 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
   const {
     currentSubscriptionQuota,
     currentSubscriptionUsage,
-    currentSubscription: currentSubscriptionFromNewPricingModel,
+    currentSubscription: {
+      currentPeriodStart,
+      currentPeriodEnd,
+      planId,
+      isAddOnAvailable,
+      isEnterprisePlan,
+    },
   } = useContext(SubscriptionDataContext);
   const { currentTenant } = useContext(TenantsContext);
-
-  const { currentPeriodStart, currentPeriodEnd, planId, isAddOnAvailable } =
-    currentSubscriptionFromNewPricingModel;
 
   const periodicUsage = useMemo(
     () =>
@@ -71,6 +74,8 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
       ...cond(
         (key === 'tokenLimit' || key === 'mauLimit') && { quota: currentSubscriptionQuota[key] }
       ),
+      // Hide usage tip for Enterprise plan.
+      isUsageTipHidden: isEnterprisePlan,
     }));
 
   return (
@@ -83,7 +88,7 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
               periodStart: currentPeriodStart,
               periodEnd: currentPeriodEnd,
             }),
-            renewDate: dayjs(currentPeriodEnd).add(1, 'day').format('MMM D, YYYY'),
+            renewDate: dayjs(currentPeriodEnd).format('MMM D, YYYY'),
           }}
         />
       </div>

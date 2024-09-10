@@ -20,6 +20,7 @@ import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useUserPreferences from '@/hooks/use-user-preferences';
 import modalStyles from '@/scss/modal.module.scss';
 import { hasReachedSubscriptionQuotaLimit } from '@/utils/quota';
+import { isPaidPlan } from '@/utils/subscription';
 
 import InviteEmailsInput from '../InviteEmailsInput';
 import useEmailInputUtils from '../InviteEmailsInput/hooks';
@@ -42,7 +43,7 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
   const { parseEmailOptions } = useEmailInputUtils();
   const { show } = useConfirmModal();
   const {
-    currentSubscription: { planId, isAddOnAvailable },
+    currentSubscription: { planId, isAddOnAvailable, isEnterprisePlan },
     currentSubscriptionQuota,
     currentSubscriptionUsage: { tenantMembersLimit },
     mutateSubscriptionQuotaAndUsages,
@@ -138,7 +139,8 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
           conditional(
             isAddOnAvailable &&
               hasTenantMembersReachedLimit &&
-              planId === ReservedPlanId.Pro &&
+              // Just in case the enterprise plan has reached the resource limit, we still need to show charge notice.
+              isPaidPlan(planId, isEnterprisePlan) &&
               !tenantMembersUpsellNoticeAcknowledged && (
                 <AddOnNoticeFooter
                   isLoading={isLoading}

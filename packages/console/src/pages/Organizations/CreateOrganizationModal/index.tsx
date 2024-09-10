@@ -21,6 +21,7 @@ import useApi from '@/hooks/use-api';
 import useUserPreferences from '@/hooks/use-user-preferences';
 import modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
+import { isPaidPlan } from '@/utils/subscription';
 
 import styles from './index.module.scss';
 
@@ -33,7 +34,7 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
-    currentSubscription: { planId, isAddOnAvailable },
+    currentSubscription: { planId, isAddOnAvailable, isEnterprisePlan },
     currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
   const {
@@ -85,7 +86,8 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
         footer={
           cond(
             isAddOnAvailable &&
-              planId === ReservedPlanId.Pro &&
+              // Just in case the enterprise plan has reached the resource limit, we still need to show charge notice.
+              isPaidPlan(planId, isEnterprisePlan) &&
               !organizationUpsellNoticeAcknowledged && (
                 <AddOnNoticeFooter
                   isLoading={isSubmitting}
@@ -103,7 +105,9 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
                   >
                     {t('upsell.add_on.footer.organization', {
                       price: organizationAddOnUnitPrice,
-                      planName: t('subscription.pro_plan'),
+                      planName: t(
+                        isEnterprisePlan ? 'subscription.enterprise' : 'subscription.pro_plan'
+                      ),
                     })}
                   </Trans>
                 </AddOnNoticeFooter>

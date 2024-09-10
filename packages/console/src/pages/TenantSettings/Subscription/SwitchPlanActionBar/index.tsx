@@ -8,6 +8,7 @@ import { type LogtoSkuResponse } from '@/cloud/types/router';
 import SkuName from '@/components/SkuName';
 import { contactEmailLink } from '@/consts';
 import { subscriptionPage } from '@/consts/pages';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import Spacer from '@/ds-components/Spacer';
@@ -29,6 +30,9 @@ type Props = {
 function SwitchPlanActionBar({ onSubscriptionUpdated, currentSkuId, logtoSkus }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.subscription' });
   const { currentTenantId } = useContext(TenantsContext);
+  const {
+    currentSubscription: { isEnterprisePlan },
+  } = useContext(SubscriptionDataContext);
   const { subscribe, cancelSubscription } = useSubscribe();
   const { show } = useConfirmModal();
   const [currentLoadingSkuId, setCurrentLoadingSkuId] = useState<string>();
@@ -140,7 +144,11 @@ function SwitchPlanActionBar({ onSubscriptionUpdated, currentSkuId, logtoSkus }:
       })}
       <div>
         <a href={contactEmailLink} className={styles.buttonLink} rel="noopener">
-          <Button title="general.contact_us_action" type="primary" />
+          <Button
+            title={isEnterprisePlan ? 'subscription.current' : 'general.contact_us_action'}
+            type="primary"
+            disabled={isEnterprisePlan}
+          />
         </a>
       </div>
     </div>

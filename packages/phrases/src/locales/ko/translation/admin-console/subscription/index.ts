@@ -8,6 +8,9 @@ const subscription = {
   pro_plan_description: 'Logto와 함께 걱정 없이 비즈니스 혜택을 받으세요.',
   enterprise: '기업용',
   /** UNTRANSLATED */
+  enterprise_description:
+    'For large-scale organizations requiring advanced features, full customization, and dedicated support to power mission-critical applications. Tailored to your needs for ultimate security, compliance, and performance.',
+  /** UNTRANSLATED */
   admin_plan: 'Admin plan',
   /** UNTRANSLATED */
   dev_plan: 'Development plan',

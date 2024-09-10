@@ -22,6 +22,7 @@ export type Props = {
   readonly titleKey: AdminConsoleKey;
   readonly tooltipKey?: AdminConsoleKey;
   readonly unitPrice: number;
+  readonly isUsageTipHidden: boolean;
   readonly className?: string;
 };
 
@@ -32,6 +33,7 @@ function PlanUsageCard({
   usageKey,
   titleKey,
   tooltipKey,
+  isUsageTipHidden,
   className,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -75,7 +77,9 @@ function PlanUsageCard({
         >
           <Trans
             components={{
-              span: <span className={styles.usageTip} />,
+              span: (
+                <span className={classNames(styles.usageTip, isUsageTipHidden && styles.hidden)} />
+              ),
             }}
           >
             {t(usageKey, {

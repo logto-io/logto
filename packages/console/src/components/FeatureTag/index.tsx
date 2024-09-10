@@ -80,8 +80,13 @@ type CombinedAddOnAndFeatureTagProps = {
 export function CombinedAddOnAndFeatureTag(props: CombinedAddOnAndFeatureTagProps) {
   const { hasAddOnTag, className, paywall } = props;
   const {
-    currentSubscription: { planId, isAddOnAvailable },
+    currentSubscription: { planId, isAddOnAvailable, isEnterprisePlan },
   } = useContext(SubscriptionDataContext);
+
+  // We believe that the enterprise plan has already allocated sufficient resource quotas in the deal negotiation, so there is no need for upselling, nor will it trigger the add-on tag prompt.
+  if (isEnterprisePlan) {
+    return null;
+  }
 
   // Show the "Add-on" tag for Pro plan when dev features enabled.
   if (hasAddOnTag && isAddOnAvailable && isCloud && planId === ReservedPlanId.Pro) {

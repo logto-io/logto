@@ -1,3 +1,4 @@
+import { ReservedPlanId } from '@logto/schemas';
 import { cond } from '@silverhand/essentials';
 import { useContext, useMemo } from 'react';
 
@@ -21,7 +22,10 @@ type Props = {
 };
 
 function CurrentPlan({ periodicUsage: rawPeriodicUsage }: Props) {
-  const { currentSku, currentSubscription } = useContext(SubscriptionDataContext);
+  const {
+    currentSku: { id, unitPrice },
+    currentSubscription: { upcomingInvoice, isEnterprisePlan, isAddOnAvailable, planId },
+  } = useContext(SubscriptionDataContext);
   const { currentTenant } = useContext(TenantsContext);
 
   const periodicUsage = useMemo(
@@ -36,13 +40,15 @@ function CurrentPlan({ periodicUsage: rawPeriodicUsage }: Props) {
     [currentTenant, rawPeriodicUsage]
   );
 
+  const currentSkuId = isEnterprisePlan ? ReservedPlanId.Enterprise : id;
+
   /**
    * After the new pricing model goes live, `upcomingInvoice` will always exist. `upcomingInvoice` is updated more frequently than `currentSubscription.upcomingInvoice`.
    * However, for compatibility reasons, the price of the SKU's corresponding `unitPrice` will be used as a fallback when it does not exist. If `unitPrice` also does not exist, it means that the tenant does not have any applicable paid subscription, and the bill will be 0.
    */
   const upcomingCost = useMemo(
-    () => currentSubscription.upcomingInvoice?.subtotal ?? currentSku.unitPrice ?? 0,
-    [currentSku.unitPrice, currentSubscription.upcomingInvoice]
+    () => upcomingInvoice?.subtotal ?? unitPrice ?? 0,
+    [unitPrice, upcomingInvoice]
   );
 
   if (!periodicUsage) {
@@ -53,10 +59,10 @@ function CurrentPlan({ periodicUsage: rawPeriodicUsage }: Props) {
     <FormCard title="subscription.current_plan" description="subscription.current_plan_description">
       <div className={styles.planInfo}>
         <div className={styles.name}>
-          <SkuName skuId={currentSku.id} />
+          <SkuName skuId={currentSkuId} />
         </div>
         <div className={styles.description}>
-          <PlanDescription skuId={currentSku.id} planId={currentSubscription.planId} />
+          <PlanDescription skuId={currentSkuId} planId={planId} />
         </div>
       </div>
       <FormField title="subscription.plan_usage">
@@ -65,7 +71,7 @@ function CurrentPlan({ periodicUsage: rawPeriodicUsage }: Props) {
       <FormField title="subscription.next_bill">
         <BillInfo cost={upcomingCost} isManagePaymentVisible={Boolean(upcomingCost)} />
       </FormField>
-      {currentSubscription.isAddOnAvailable && (
+      {isAddOnAvailable && !isEnterprisePlan && (
         <AddOnUsageChangesNotification className={styles.notification} />
       )}
       <MauLimitExceedNotification
