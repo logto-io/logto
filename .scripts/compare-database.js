@@ -1,5 +1,5 @@
-import pg from "pg";
-import assert from "node:assert";
+import pg from 'pg';
+import assert from 'node:assert';
 
 const omit = (object, ...keys) =>
   Object.fromEntries(
@@ -8,8 +8,8 @@ const omit = (object, ...keys) =>
 const omitArray = (arrayOfObjects, ...keys) =>
   arrayOfObjects.map((value) => omit(value, ...keys));
 
-const schemas = ["cloud", "public"];
-const schemasArray = `(${schemas.map((schema) => `'${schema}'`).join(", ")})`;
+const schemas = ['cloud', 'public'];
+const schemasArray = `(${schemas.map((schema) => `'${schema}'`).join(', ')})`;
 
 const tryCompare = (a, b) => {
   try {
@@ -23,8 +23,8 @@ const tryCompare = (a, b) => {
 const queryDatabaseManifest = async (database) => {
   const pool = new pg.Pool({
     database,
-    user: "postgres",
-    password: "postgres",
+    user: 'postgres',
+    password: 'postgres',
   });
 
   const { rows: tables } = await pool.query(/* sql */ `
@@ -112,13 +112,13 @@ const queryDatabaseManifest = async (database) => {
 
   // This function removes the last segment of grantee since Logto will use 'logto_tenant_fresh/alteration' for the role name.
   const normalizeRoleName = (roleName) => {
-    if (roleName.startsWith("logto_tenant_")) {
-      return "logto_tenant";
+    if (roleName.startsWith('logto_tenant_')) {
+      return 'logto_tenant';
     }
 
     // Removes the last segment of region grantee since Logto will use 'logto_region_xxx' for the role name for different regions.
-    if (roleName.startsWith("logto_region_")) {
-      return "logto_region";
+    if (roleName.startsWith('logto_region_')) {
+      return 'logto_region';
     }
 
     return roleName;
@@ -133,15 +133,15 @@ const queryDatabaseManifest = async (database) => {
   const normalizeRoles = ({ roles: raw, ...rest }) => {
     const roles = raw
       .slice(1, -1)
-      .split(",")
+      .split(',')
       .map((name) => normalizeRoleName(name));
 
     return { roles, ...rest };
   };
 
   const normalizePolicyname = ({ policyname, ...rest }) => {
-    const prefix = "allow_";
-    const suffix = "_access";
+    const prefix = 'allow_';
+    const suffix = '_access';
     if (
       policyname &&
       policyname.startsWith(prefix) &&
@@ -162,51 +162,51 @@ const queryDatabaseManifest = async (database) => {
 
   // Omit generated ids and values
   return {
-    tables: omitArray(tables, "table_catalog"),
+    tables: omitArray(tables, 'table_catalog'),
     columns: omitArray(
       columns,
-      "table_catalog",
-      "udt_catalog",
-      "ordinal_position",
-      "dtd_identifier"
+      'table_catalog',
+      'udt_catalog',
+      'ordinal_position',
+      'dtd_identifier'
     ),
     enums,
     constraints: omitArray(
       constraints,
-      "oid",
+      'oid',
       /**
        * See https://www.postgresql.org/docs/current/catalog-pg-constraint.html, better to use `pg_get_constraintdef()`
        * to extract the definition of check constraint, so this can be omitted since conbin changes with the status of the computing resources.
        */
-      "conbin",
-      "connamespace",
-      "conrelid",
-      "contypid",
-      "conindid",
-      "conparentid",
-      "confrelid",
-      "conkey",
-      "confkey",
-      "conpfeqop",
-      "conppeqop",
-      "conffeqop",
-      "confdelsetcols",
-      "conexclop"
+      'conbin',
+      'connamespace',
+      'conrelid',
+      'contypid',
+      'conindid',
+      'conparentid',
+      'confrelid',
+      'conkey',
+      'confkey',
+      'conpfeqop',
+      'conppeqop',
+      'conffeqop',
+      'confdelsetcols',
+      'conexclop'
     ),
     indexes,
     funcs,
-    triggers: omitArray(triggers, "trigger_catalog", "event_object_catalog"),
+    triggers: omitArray(triggers, 'trigger_catalog', 'event_object_catalog'),
     policies: policies.map(normalizeRoles).map(normalizePolicyname),
-    columnGrants: omitArray(columnGrants, "table_catalog").map(
+    columnGrants: omitArray(columnGrants, 'table_catalog').map(
       normalizeGrantee
     ),
-    tableGrants: omitArray(tableGrants, "table_catalog").map(normalizeGrantee),
+    tableGrants: omitArray(tableGrants, 'table_catalog').map(normalizeGrantee),
   };
 };
 
 const [, , database1, database2] = process.argv;
 
-console.log("Compare database manifest between", database1, "and", database2);
+console.log('Compare database manifest between', database1, 'and', database2);
 
 const manifests = [
   await queryDatabaseManifest(database1),
@@ -220,7 +220,7 @@ const autoCompare = (a, b) => {
     return (typeof a).localeCompare(typeof b);
   }
 
-  if (typeof a === "object" && a !== null && b !== null) {
+  if (typeof a === 'object' && a !== null && b !== null) {
     const aKeys = Object.keys(a).sort();
     const bKeys = Object.keys(b).sort();
 
@@ -248,8 +248,8 @@ const buildSortByKeys = (keys) => (a, b) => {
 const queryDatabaseData = async (database) => {
   const pool = new pg.Pool({
     database,
-    user: "postgres",
-    password: "postgres",
+    user: 'postgres',
+    password: 'postgres',
   });
   const result = await Promise.all(
     manifests[0].tables.map(async ({ table_schema, table_name }) => {
@@ -258,8 +258,8 @@ const queryDatabaseData = async (database) => {
       );
 
       // check config rows except the value column
-      if (["logto_configs", "_logto_configs", "systems"].includes(table_name)) {
-        const data = omitArray(rows, "value");
+      if (['logto_configs', '_logto_configs', 'systems'].includes(table_name)) {
+        const data = omitArray(rows, 'value');
         return [
           table_name,
           data.sort(buildSortByKeys(Object.keys(data[0] ?? {}))),
@@ -268,16 +268,16 @@ const queryDatabaseData = async (database) => {
 
       const data = omitArray(
         rows,
-        "id",
-        "resource_id",
-        "role_id",
-        "application_id",
-        "scope_id",
-        "created_at",
-        "updated_at",
-        "secret",
-        "db_user",
-        "db_user_password"
+        'id',
+        'resource_id',
+        'role_id',
+        'application_id',
+        'scope_id',
+        'created_at',
+        'updated_at',
+        'secret',
+        'db_user',
+        'db_user_password'
       );
 
       return [table_name, data.sort(buildSortByKeys(Object.keys(data[0] ?? {})))];
@@ -287,7 +287,7 @@ const queryDatabaseData = async (database) => {
   return Object.fromEntries(result);
 };
 
-console.log("Compare database data between", database1, "and", database2);
+console.log('Compare database data between', database1, 'and', database2);
 
 tryCompare(
   await queryDatabaseData(database1),
