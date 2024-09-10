@@ -55,19 +55,6 @@ export const verificationCodeIdentifierGuard = z.object({
   value: z.string(),
 }) satisfies ToZodObject<VerificationCodeIdentifier>;
 
-/** Logto supported interaction verification types. */
-export enum VerificationType {
-  Password = 'Password',
-  EmailVerificationCode = 'EmailVerificationCode',
-  PhoneVerificationCode = 'PhoneVerificationCode',
-  Social = 'Social',
-  EnterpriseSso = 'EnterpriseSso',
-  TOTP = 'Totp',
-  WebAuthn = 'WebAuthn',
-  BackupCode = 'BackupCode',
-  NewPasswordIdentity = 'NewPasswordIdentity',
-}
-
 // REMARK: API payload guard
 
 /** Payload type for `POST /api/experience/verification/{social|sso}/:connectorId/authorization-uri`. */
