@@ -37,6 +37,11 @@
           margin: 0 auto;
         }
 
+        svg {
+          width: 20px;
+          height: 20px;
+        }
+
         &.active {
           border-color: var(--color-text-link);
           color: var(--color-text-link);

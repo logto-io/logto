@@ -2,13 +2,14 @@ import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import ReactPaginate from 'react-paginate';
 
+import ArrowLeft from '@/assets/icons/arrow-left.svg?react';
+import ArrowRight from '@/assets/icons/arrow-right.svg?react';
 import useCacheValue from '@/hooks/use-cache-value';
 
 import Button from '../Button';
 import DangerousRaw from '../DangerousRaw';
+import FlipOnRtl from '../FlipOnRtl';
 
-import Next from './Next';
-import Previous from './Previous';
 import styles from './index.module.scss';
 
 export type Props = {
@@ -61,7 +62,11 @@ function Pagination({ page, totalCount, pageSize, className, mode = 'normal', on
           <Button
             className={styles.button}
             size="small"
-            icon={<Previous />}
+            icon={
+              <FlipOnRtl>
+                <ArrowLeft />
+              </FlipOnRtl>
+            }
             disabled={page === 1}
           />
         }
@@ -69,7 +74,11 @@ function Pagination({ page, totalCount, pageSize, className, mode = 'normal', on
           <Button
             className={styles.button}
             size="small"
-            icon={<Next />}
+            icon={
+              <FlipOnRtl>
+                <ArrowRight />
+              </FlipOnRtl>
+            }
             disabled={page === pageCount}
           />
         }

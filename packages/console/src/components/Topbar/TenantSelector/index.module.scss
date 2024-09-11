@@ -55,19 +55,12 @@ $dropdown-item-height: 40px;
     background-color: var(--color-neutral-80);
     flex-shrink: 0;
     position: absolute;
-    left: _.unit(-3);
+    inset-inline-start: _.unit(-3);
   }
 
   &:hover::before {
     pointer-events: none;
     cursor: default;
-  }
-
-  &.rtl {
-    &::before {
-      left: unset;
-      right: _.unit(-3);
-    }
   }
 }
 

@@ -1,7 +1,6 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import { type ReactNode, useCallback, useState, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import ArrowRight from '@/assets/icons/arrow-right.svg?react';
 import Tick from '@/assets/icons/tick.svg?react';
@@ -44,7 +43,6 @@ function SubMenu<T extends string>({
   const mouseEnterTimeoutRef = useRef(0);
   const mouseLeaveTimeoutRef = useRef(0);
   const [menuHeight, setMenuHeight] = useState<number>();
-  const { i18n } = useTranslation();
 
   const calculateDropdownHeight = useCallback(() => {
     if (anchorRef.current) {
@@ -97,7 +95,7 @@ function SubMenu<T extends string>({
         <ArrowRight className={styles.icon} />
       </FlipOnRtl>
       <OverlayScrollbar
-        className={classNames(styles.menu, showMenu && styles.visible, styles[i18n.dir()])}
+        className={classNames(styles.menu, showMenu && styles.visible)}
         style={{ maxHeight: menuHeight }}
       >
         {options.map(({ value, title }) => {
@@ -109,8 +107,7 @@ function SubMenu<T extends string>({
               className={classNames(
                 styles.menuOption,
                 selected && styles.selected,
-                menuItemClassName,
-                styles[i18n.dir()]
+                menuItemClassName
               )}
               onClick={() => {
                 onItemClick(value);

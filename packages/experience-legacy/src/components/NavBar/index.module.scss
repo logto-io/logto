@@ -36,7 +36,7 @@
   font: var(--font-label-1);
   cursor: pointer;
   color: var(--color-type-link);
-  padding-right: _.unit(1);
+  padding-inline-end: _.unit(1);
 }
 
 :global(body.mobile) {
