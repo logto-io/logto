@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import type { MiddlewareType } from 'koa';
+import type { Context, MiddlewareType } from 'koa';
 import proxy from 'koa-proxies';
 import type { IRouterParamContext } from 'koa-router';
 
@@ -11,6 +11,7 @@ import type Queries from '#src/tenants/Queries.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 
 import serveCustomUiAssets from './koa-serve-custom-ui-assets.js';
+import { getExperiencePackageWithABTest } from './utils/experience-proxy-a-b-test.js';
 
 type Properties = {
   readonly mountedApps: string[];
@@ -20,11 +21,12 @@ type Properties = {
   readonly prefix?: string;
 };
 
-const getDistributionPath = (packagePath: string) => {
+const getDistributionPath = async <ContextT extends Context>(
+  packagePath: string,
+  ctx: ContextT
+) => {
   if (packagePath === 'experience') {
-    // Use the new experience package if dev features are enabled
-    const moduleName = EnvSet.values.isDevFeaturesEnabled ? 'experience' : 'experience-legacy';
-
+    const moduleName = await getExperiencePackageWithABTest(ctx);
     return path.join('node_modules/@logto', moduleName, 'dist');
   }
 
@@ -40,25 +42,21 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
 }: Properties): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   type Middleware = MiddlewareType<StateT, ContextT, ResponseBodyT>;
 
-  const distributionPath = getDistributionPath(packagePath);
+  const devProxy: Middleware = proxy('*', {
+    target: `http://localhost:${port}`,
+    changeOrigin: true,
+    logs: (ctx, target) => {
+      // Ignoring static file requests in development since vite will load a crazy amount of files
+      if (path.basename(ctx.request.path).includes('.')) {
+        return;
+      }
 
-  const spaProxy: Middleware = EnvSet.values.isProduction
-    ? serveStatic(distributionPath)
-    : proxy('*', {
-        target: `http://localhost:${port}`,
-        changeOrigin: true,
-        logs: (ctx, target) => {
-          // Ignoring static file requests in development since vite will load a crazy amount of files
-          if (path.basename(ctx.request.path).includes('.')) {
-            return;
-          }
-
-          getConsoleLogFromContext(ctx).plain(`\tproxy --> ${target}`);
-        },
-        rewrite: (requestPath) => {
-          return '/' + path.join(prefix, requestPath);
-        },
-      });
+      getConsoleLogFromContext(ctx).plain(`\tproxy --> ${target}`);
+    },
+    rewrite: (requestPath) => {
+      return '/' + path.join(prefix, requestPath);
+    },
+  });
 
   return async (ctx, next) => {
     const requestPath = ctx.request.path;
@@ -77,8 +75,10 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
     }
 
     if (!EnvSet.values.isProduction) {
-      return spaProxy(ctx, next);
+      return devProxy(ctx, next);
     }
+
+    const distributionPath = await getDistributionPath(packagePath, ctx);
 
     const spaDistributionFiles = await fs.readdir(distributionPath);
 
@@ -86,6 +86,6 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
       ctx.request.path = '/';
     }
 
-    return spaProxy(ctx, next);
+    return serveStatic(distributionPath)(ctx, next);
   };
 }

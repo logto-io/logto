@@ -211,24 +211,50 @@ export const cloudflareGuard: Readonly<{
   [CloudflareKey.CustomJwtWorkerConfig]: customJwtWorkerConfigGuard,
 });
 
+// A/B Test settings
+export enum ABTestConfigKey {
+  ExperiencePackageABTest = 'experiencePackageABTest',
+}
+
+export const abTestConfigDataGuard = z.object({
+  percentage: z.number().min(0).max(1),
+});
+
+export type AbTestConfig = z.infer<typeof abTestConfigDataGuard>;
+
+export type ABTestConfigType = {
+  [ABTestConfigKey.ExperiencePackageABTest]: AbTestConfig;
+};
+
+export const abTestConfigGuard: Readonly<{
+  [key in ABTestConfigKey]: ZodType<ABTestConfigType[key]>;
+}> = Object.freeze({
+  [ABTestConfigKey.ExperiencePackageABTest]: abTestConfigDataGuard,
+});
+
 // Summary
 export type SystemKey =
   | AlterationStateKey
   | StorageProviderKey
   | DemoSocialKey
   | CloudflareKey
-  | EmailServiceProviderKey;
+  | EmailServiceProviderKey
+  | ABTestConfigKey;
+
 export type SystemType =
   | AlterationStateType
   | StorageProviderType
   | DemoSocialType
   | CloudflareType
-  | EmailServiceProviderType;
+  | EmailServiceProviderType
+  | ABTestConfigType;
+
 export type SystemGuard = typeof alterationStateGuard &
   typeof storageProviderGuard &
   typeof demoSocialGuard &
   typeof cloudflareGuard &
-  typeof emailServiceProviderGuard;
+  typeof emailServiceProviderGuard &
+  typeof abTestConfigGuard;
 
 export const systemKeys: readonly SystemKey[] = Object.freeze([
   ...Object.values(AlterationStateKey),
@@ -236,6 +262,7 @@ export const systemKeys: readonly SystemKey[] = Object.freeze([
   ...Object.values(DemoSocialKey),
   ...Object.values(CloudflareKey),
   ...Object.values(EmailServiceProviderKey),
+  ...Object.values(ABTestConfigKey),
 ]);
 
 export const systemGuards: SystemGuard = Object.freeze({
@@ -244,4 +271,5 @@ export const systemGuards: SystemGuard = Object.freeze({
   ...demoSocialGuard,
   ...cloudflareGuard,
   ...emailServiceProviderGuard,
+  ...abTestConfigGuard,
 });
