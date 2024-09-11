@@ -37,7 +37,7 @@ export const auditLogEventTitle: Record<string, Optional<string>> & {
     'Submit and verify sign-in identifier with verification code',
   'Interaction.SignIn.Profile.Create': 'Put new sign-in interaction profile',
   'Interaction.SignIn.Profile.Delete': 'Delete sign-in interaction profile',
-  'Interaction.SignIn.Profile.Update': 'Patch Update sign-in interaction profile',
+  'Interaction.SignIn.Profile.Update': 'Patch update sign-in interaction profile',
   'Interaction.SignIn.Submit': 'Submit sign-in interaction',
   'Interaction.SignIn.Update': 'Update sign-in interaction',
   'Interaction.SignIn.Identifier.SingleSignOn.Create':
