@@ -1,4 +1,4 @@
-import { TenantTag } from '@logto/schemas';
+import { TenantTag, ReservedPlanId } from '@logto/schemas';
 import classNames from 'classnames';
 import { useContext, useMemo } from 'react';
 
@@ -23,7 +23,7 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
   const {
     name,
     tag,
-    subscription: { planId },
+    subscription: { planId, isEnterprisePlan },
   } = tenantData;
 
   const { logtoSkus } = useContext(SubscriptionDataContext);
@@ -31,6 +31,7 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
     () => logtoSkus.find(({ id }) => id === planId),
     [logtoSkus, planId]
   );
+  const skuId = isEnterprisePlan ? ReservedPlanId.Enterprise : planId;
 
   if (!tenantSubscriptionSku) {
     return null;
@@ -48,7 +49,7 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
           {tag === TenantTag.Development ? (
             <DynamicT forKey="subscription.no_subscription" />
           ) : (
-            <SkuName skuId={planId} />
+            <SkuName skuId={skuId} />
           )}
         </div>
       </div>

@@ -13,6 +13,7 @@ import Button from '@/ds-components/Button';
 import TextLink from '@/ds-components/TextLink';
 import useApiResourcesUsage from '@/hooks/use-api-resources-usage';
 import useUserPreferences from '@/hooks/use-user-preferences';
+import { isPaidPlan } from '@/utils/subscription';
 
 import styles from './index.module.scss';
 
@@ -24,7 +25,7 @@ type Props = {
 function Footer({ isCreationLoading, onClickCreate }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
-    currentSubscription: { planId, isAddOnAvailable },
+    currentSubscription: { planId, isAddOnAvailable, isEnterprisePlan },
     currentSubscriptionUsage: { resourcesLimit },
     currentSku,
   } = useContext(SubscriptionDataContext);
@@ -60,7 +61,8 @@ function Footer({ isCreationLoading, onClickCreate }: Props) {
   if (
     isAddOnAvailable &&
     hasReachedLimit &&
-    planId === ReservedPlanId.Pro &&
+    // Just in case the enterprise plan has reached the resource limit, we still need to show charge notice.
+    isPaidPlan(planId, isEnterprisePlan) &&
     !apiResourceUpsellNoticeAcknowledged
   ) {
     return (

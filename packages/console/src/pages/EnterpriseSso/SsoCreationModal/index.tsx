@@ -31,6 +31,7 @@ import useApi, { type RequestError } from '@/hooks/use-api';
 import useUserPreferences from '@/hooks/use-user-preferences';
 import modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
+import { isPaidPlan } from '@/utils/subscription';
 
 import SsoConnectorRadioGroup from './SsoConnectorRadioGroup';
 import styles from './index.module.scss';
@@ -50,7 +51,7 @@ const duplicateConnectorNameErrorCode = 'single_sign_on.duplicate_connector_name
 function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
-    currentSubscription: { planId, isAddOnAvailable },
+    currentSubscription: { planId, isAddOnAvailable, isEnterprisePlan },
     currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
   const {
@@ -160,7 +161,8 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
         footer={
           conditional(
             isAddOnAvailable &&
-              planId === ReservedPlanId.Pro &&
+              // Just in case the enterprise plan has reached the resource limit, we still need to show charge notice.
+              isPaidPlan(planId, isEnterprisePlan) &&
               !enterpriseSsoUpsellNoticeAcknowledged && (
                 <AddOnNoticeFooter
                   buttonTitle="enterprise_sso.create_modal.create_button_text"
@@ -178,7 +180,9 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
                   >
                     {t('upsell.add_on.footer.enterprise_sso', {
                       price: enterpriseSsoAddOnUnitPrice,
-                      planName: t('subscription.pro_plan'),
+                      planName: t(
+                        isEnterprisePlan ? 'subscription.enterprise' : 'subscription.pro_plan'
+                      ),
                     })}
                   </Trans>
                 </AddOnNoticeFooter>

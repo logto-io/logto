@@ -31,6 +31,7 @@ export const defaultTenantResponse: TenantResponse = {
     planId: defaultSubscriptionPlanId,
     currentPeriodStart: dayjs().toDate(),
     currentPeriodEnd: dayjs().add(1, 'month').toDate(),
+    isEnterprisePlan: false,
   },
   usage: {
     activeUsers: 0,

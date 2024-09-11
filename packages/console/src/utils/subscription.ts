@@ -1,3 +1,4 @@
+import { ReservedPlanId } from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
 import { ResponseError } from '@withtyped/client';
 import dayjs from 'dayjs';
@@ -94,3 +95,6 @@ export const parseExceededSkuQuotaLimitError = async (
 
 export const pickupFeaturedLogtoSkus = (logtoSkus: LogtoSkuResponse[]): LogtoSkuResponse[] =>
   logtoSkus.filter(({ id }) => featuredPlanIds.includes(id));
+
+export const isPaidPlan = (planId: string, isEnterprisePlan: boolean) =>
+  planId === ReservedPlanId.Pro || isEnterprisePlan;

@@ -18,6 +18,7 @@ export enum ReservedPlanId {
    */
   Hobby = 'hobby',
   Pro = 'pro',
+  Enterprise = 'enterprise',
   /**
    * @deprecated
    * Should not use this plan ID, we only use this tag as a record for the legacy `pro` plan since we will rename the `hobby` plan to be `pro`.

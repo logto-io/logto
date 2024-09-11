@@ -13,6 +13,7 @@ import Button from '@/ds-components/Button';
 import TextLink from '@/ds-components/TextLink';
 import useApplicationsUsage from '@/hooks/use-applications-usage';
 import useUserPreferences from '@/hooks/use-user-preferences';
+import { isPaidPlan } from '@/utils/subscription';
 
 import styles from './index.module.scss';
 
@@ -26,7 +27,7 @@ type Props = {
 function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props) {
   const {
     currentSku,
-    currentSubscription: { planId, isAddOnAvailable },
+    currentSubscription: { planId, isAddOnAvailable, isEnterprisePlan },
     currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell' });
@@ -45,7 +46,8 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
       selectedType === ApplicationType.MachineToMachine &&
       isAddOnAvailable &&
       hasMachineToMachineAppsReachedLimit &&
-      planId === ReservedPlanId.Pro &&
+      // Just in case the enterprise plan has reached the resource limit, we still need to show charge notice.
+      isPaidPlan(planId, isEnterprisePlan) &&
       !m2mUpsellNoticeAcknowledged
     ) {
       return (
