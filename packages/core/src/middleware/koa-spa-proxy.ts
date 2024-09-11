@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
+import { trySafe } from '@silverhand/essentials';
 import type { Context, MiddlewareType } from 'koa';
 import proxy from 'koa-proxies';
 import type { IRouterParamContext } from 'koa-router';
@@ -26,7 +27,11 @@ const getDistributionPath = async <ContextT extends Context>(
   ctx: ContextT
 ) => {
   if (packagePath === 'experience') {
-    const moduleName = await getExperiencePackageWithFeatureFlagDetection(ctx);
+    // Safely get the experience package name with feature flag detection, default fallback to legacy
+    const moduleName =
+      (await trySafe(async () => getExperiencePackageWithFeatureFlagDetection(ctx))) ??
+      'experience-legacy';
+
     return path.join('node_modules/@logto', moduleName, 'dist');
   }
 

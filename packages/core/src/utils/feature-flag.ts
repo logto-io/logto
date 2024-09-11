@@ -17,7 +17,7 @@ type Properties = {
  * We use the entityId to determine if feature flag should be enabled for the request.
  */
 export const isFeatureFlagEnabled = ({ entityId, rollOutPercentage }: Properties) => {
-  const hash = crypto.createHash('sha1');
+  const hash = crypto.createHash('sha256');
   const hashedSessionId = hash.update(entityId).digest('hex');
 
   // Convert hash to a number between 0 and 999
