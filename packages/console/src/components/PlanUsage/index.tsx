@@ -4,7 +4,10 @@ import classNames from 'classnames';
 import dayjs from 'dayjs';
 import { useContext, useMemo } from 'react';
 
-import { type NewSubscriptionPeriodicUsage } from '@/cloud/types/router';
+import {
+  type NewSubscriptionPeriodicUsage,
+  type NewSubscriptionCountBasedUsage,
+} from '@/cloud/types/router';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
@@ -12,10 +15,39 @@ import { formatPeriod } from '@/utils/subscription';
 
 import PlanUsageCard, { type Props as PlanUsageCardProps } from './PlanUsageCard';
 import styles from './index.module.scss';
-import { usageKeys, usageKeyPriceMap, usageKeyMap, titleKeyMap, tooltipKeyMap } from './utils';
+import {
+  type UsageKey,
+  usageKeys,
+  usageKeyPriceMap,
+  usageKeyMap,
+  titleKeyMap,
+  tooltipKeyMap,
+} from './utils';
 
 type Props = {
   readonly periodicUsage?: NewSubscriptionPeriodicUsage;
+};
+
+const getUsageByKey = (
+  key: keyof UsageKey,
+  {
+    periodicUsage,
+    countBasedUsage,
+  }: {
+    periodicUsage: NewSubscriptionPeriodicUsage;
+    countBasedUsage: NewSubscriptionCountBasedUsage;
+  }
+) => {
+  if (key === 'mauLimit' || key === 'tokenLimit') {
+    return periodicUsage[key];
+  }
+
+  // Show enabled status for organization feature.
+  if (key === 'organizationsLimit') {
+    return countBasedUsage[key] > 0;
+  }
+
+  return countBasedUsage[key];
 };
 
 function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
@@ -59,13 +91,7 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
         isAddOnAvailable || (onlyShowPeriodicUsage && (key === 'mauLimit' || key === 'tokenLimit'))
     )
     .map((key) => ({
-      usage:
-        key === 'mauLimit' || key === 'tokenLimit'
-          ? periodicUsage[key]
-          : // Show enabled status for organization feature.
-          key === 'organizationsLimit'
-          ? currentSubscriptionUsage[key] > 0
-          : currentSubscriptionUsage[key],
+      usage: getUsageByKey(key, { periodicUsage, countBasedUsage: currentSubscriptionUsage }),
       usageKey: `subscription.usage.${usageKeyMap[key]}`,
       titleKey: `subscription.usage.${titleKeyMap[key]}`,
       unitPrice: usageKeyPriceMap[key],

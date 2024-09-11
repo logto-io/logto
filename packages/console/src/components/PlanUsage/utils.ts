@@ -12,7 +12,7 @@ import {
   hooksAddOnUnitPrice,
 } from '@/consts/subscriptions';
 
-type UsageKey = Pick<
+export type UsageKey = Pick<
   NewSubscriptionQuota,
   | 'mauLimit'
   | 'organizationsLimit'
