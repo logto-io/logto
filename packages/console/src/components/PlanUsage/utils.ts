@@ -15,7 +15,7 @@ import {
 type UsageKey = Pick<
   NewSubscriptionQuota,
   | 'mauLimit'
-  | 'organizationsEnabled'
+  | 'organizationsLimit'
   | 'mfaEnabled'
   | 'enterpriseSsoLimit'
   | 'resourcesLimit'
@@ -28,7 +28,7 @@ type UsageKey = Pick<
 // We decide not to show `hooksLimit` usage in console for now.
 export const usageKeys: Array<keyof UsageKey> = [
   'mauLimit',
-  'organizationsEnabled',
+  'organizationsLimit',
   'mfaEnabled',
   'enterpriseSsoLimit',
   'resourcesLimit',
@@ -39,7 +39,7 @@ export const usageKeys: Array<keyof UsageKey> = [
 
 export const usageKeyPriceMap: Record<keyof UsageKey, number> = {
   mauLimit: 0,
-  organizationsEnabled: organizationAddOnUnitPrice,
+  organizationsLimit: organizationAddOnUnitPrice,
   mfaEnabled: mfaAddOnUnitPrice,
   enterpriseSsoLimit: enterpriseSsoAddOnUnitPrice,
   resourcesLimit: resourceAddOnUnitPrice,
@@ -54,7 +54,7 @@ export const usageKeyMap: Record<
   TFuncKey<'translation', 'admin_console.subscription.usage'>
 > = {
   mauLimit: 'mau.description',
-  organizationsEnabled: 'organizations.description',
+  organizationsLimit: 'organizations.description',
   mfaEnabled: 'mfa.description',
   enterpriseSsoLimit: 'enterprise_sso.description',
   resourcesLimit: 'api_resources.description',
@@ -69,7 +69,7 @@ export const titleKeyMap: Record<
   TFuncKey<'translation', 'admin_console.subscription.usage'>
 > = {
   mauLimit: 'mau.title',
-  organizationsEnabled: 'organizations.title',
+  organizationsLimit: 'organizations.title',
   mfaEnabled: 'mfa.title',
   enterpriseSsoLimit: 'enterprise_sso.title',
   resourcesLimit: 'api_resources.title',
@@ -84,7 +84,7 @@ export const tooltipKeyMap: Record<
   TFuncKey<'translation', 'admin_console.subscription.usage'>
 > = {
   mauLimit: 'mau.tooltip',
-  organizationsEnabled: 'organizations.tooltip',
+  organizationsLimit: 'organizations.tooltip',
   mfaEnabled: 'mfa.tooltip',
   enterpriseSsoLimit: 'enterprise_sso.tooltip',
   resourcesLimit: 'api_resources.tooltip',

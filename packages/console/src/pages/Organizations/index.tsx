@@ -15,6 +15,7 @@ import CardTitle from '@/ds-components/CardTitle';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import pageLayout from '@/scss/page-layout.module.scss';
+import { isFeatureEnabled } from '@/utils/subscription';
 
 import CreateOrganizationModal from './CreateOrganizationModal';
 import OrganizationsTable from './OrganizationsTable';
@@ -35,7 +36,9 @@ function Organizations() {
   const [isCreating, setIsCreating] = useState(false);
 
   const isOrganizationsDisabled =
-    isCloud && !currentSubscriptionQuota.organizationsEnabled && planId !== ReservedPlanId.Pro;
+    isCloud &&
+    !isFeatureEnabled(currentSubscriptionQuota.organizationsLimit) &&
+    planId !== ReservedPlanId.Pro;
 
   const upgradePlan = useCallback(() => {
     navigate(subscriptionPage);

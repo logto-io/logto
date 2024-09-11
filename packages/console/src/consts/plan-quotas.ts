@@ -27,7 +27,7 @@ export const skuQuotaItemOrder: Array<keyof LogtoSkuQuota> = [
   'userRolesLimit',
   'machineToMachineRolesLimit',
   'scopesPerRoleLimit',
-  'organizationsEnabled',
+  'organizationsLimit',
   'auditLogsRetentionDays',
   'hooksLimit',
   'customJwtEnabled',

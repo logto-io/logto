@@ -62,6 +62,9 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
       usage:
         key === 'mauLimit' || key === 'tokenLimit'
           ? periodicUsage[key]
+          : // Show enabled status for organization feature.
+          key === 'organizationsLimit'
+          ? currentSubscriptionUsage[key] > 0
           : currentSubscriptionUsage[key],
       usageKey: `subscription.usage.${usageKeyMap[key]}`,
       titleKey: `subscription.usage.${titleKeyMap[key]}`,

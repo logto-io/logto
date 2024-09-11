@@ -21,27 +21,32 @@ export type Subscription = RouteResponseType<GetRoutes['/api/tenants/:tenantId/s
  */
 export type SubscriptionQuota = Omit<
   RouteResponseType<GetRoutes['/api/tenants/:tenantId/subscription/quota']>,
-  'auditLogsRetentionDays'
+  // Since we are deprecation the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
+  'auditLogsRetentionDays' | 'organizationsEnabled'
 >;
 
 /**
  * The type of the response of the `GET /api/tenants/:tenantId/subscription/usage` endpoint.
  * It is the same as the response type of `GET /api/tenants/my/subscription/usage` endpoint.
  */
-export type SubscriptionUsage = RouteResponseType<
-  GetRoutes['/api/tenants/:tenantId/subscription/usage']
+export type SubscriptionUsage = Omit<
+  RouteResponseType<GetRoutes['/api/tenants/:tenantId/subscription/usage']>,
+  // Since we are deprecation the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
+  'organizationsEnabled'
 >;
 
-export type ReportSubscriptionUpdatesUsageKey = RouteRequestBodyType<
-  PostRoutes['/api/tenants/my/subscription/item-updates']
->['usageKey'];
+export type ReportSubscriptionUpdatesUsageKey = Exclude<
+  RouteRequestBodyType<PostRoutes['/api/tenants/my/subscription/item-updates']>['usageKey'],
+  // Since we are deprecation the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
+  'organizationsEnabled'
+>;
 
 // Have to manually define this variable since we can only get the literal union from the @logto/cloud/routes module.
 export const allReportSubscriptionUpdatesUsageKeys = Object.freeze([
   'machineToMachineLimit',
   'resourcesLimit',
   'mfaEnabled',
-  'organizationsEnabled',
+  'organizationsLimit',
   'tenantMembersLimit',
   'enterpriseSsoLimit',
   'hooksLimit',

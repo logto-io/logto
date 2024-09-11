@@ -22,6 +22,7 @@ import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import pageLayout from '@/scss/page-layout.module.scss';
+import { isFeatureEnabled } from '@/utils/subscription';
 
 import Introduction from '../Organizations/Introduction';
 
@@ -38,7 +39,9 @@ function OrganizationTemplate() {
   } = useContext(SubscriptionDataContext);
   const { isDevTenant } = useContext(TenantsContext);
   const isOrganizationsDisabled =
-    isCloud && !currentSubscriptionQuota.organizationsEnabled && planId !== ReservedPlanId.Pro;
+    isCloud &&
+    !isFeatureEnabled(currentSubscriptionQuota.organizationsLimit) &&
+    planId !== ReservedPlanId.Pro;
   const { navigate } = useTenantPathname();
 
   const handleUpgradePlan = useCallback(() => {
