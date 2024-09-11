@@ -43,7 +43,8 @@
   overflow: scroll;
 
   li {
-    padding: _.unit(1) _.unit(2) _.unit(1) _.unit(7);
+    padding-block: _.unit(1);
+    padding-inline: _.unit(7) _.unit(2);
     @include _.flex-row;
     cursor: pointer;
 

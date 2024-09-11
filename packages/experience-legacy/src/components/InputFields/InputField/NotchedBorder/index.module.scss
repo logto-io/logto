@@ -48,7 +48,7 @@
 
   .label {
     position: absolute;
-    left: _.unit(3.5);
+    inset-inline-start: _.unit(3.5);
     font: var(--font-body-1);
     color: var(--color-type-secondary);
     pointer-events: none;

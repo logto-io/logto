@@ -47,7 +47,8 @@
   }
 
   .scopeItem {
-    padding: _.unit(0.5) 0 _.unit(0.5) _.unit(1);
+    padding-block: _.unit(0.5);
+    padding-inline: _.unit(1) 0;
     margin-bottom: _.unit(1.5);
   }
 }

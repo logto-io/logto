@@ -81,12 +81,14 @@
 
 .mostPopularTag {
   position: absolute;
-  border-radius: 4px 4px 0;
+  border-radius: 4px;
+  border-end-end-radius: unset;
   font: var(--font-label-3);
-  padding: _.unit(1.5) _.unit(2) _.unit(1.5) _.unit(2.5);
+  padding-block: _.unit(1.5);
+  padding-inline: _.unit(2.5) _.unit(2);
   color: var(--color-white);
   background-color: var(--color-specific-tag-upsell);
-  right: -5px;
+  inset-inline-end: -5px;
   top: _.unit(6);
   width: 64px;
   text-align: center;
@@ -95,9 +97,9 @@
     display: block;
     content: '';
     position: absolute;
-    right: 0;
+    inset-inline-end: 0;
     bottom: -3px;
-    border-left: 4px solid var(--color-primary-60);
+    border-inline-start: 4px solid var(--color-primary-60);
     border-bottom: 3px solid transparent;
   }
 }

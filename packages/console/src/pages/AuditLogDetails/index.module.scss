@@ -27,7 +27,8 @@
 
       > * {
         width: 270px;
-        margin: 0 _.unit(4) _.unit(4) 0;
+        margin-block: 0 _.unit(4);
+        margin-inline: 0 _.unit(4);
       }
     }
 

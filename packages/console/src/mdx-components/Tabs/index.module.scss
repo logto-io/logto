@@ -14,9 +14,9 @@
     li {
       position: relative;
       list-style: none;
-      margin-block-end: unset;
       padding-inline-start: unset;
-      margin: 0 _.unit(6) _.unit(1) 0;
+      margin-block: 0 unset;
+      margin-inline: 0 _.unit(6);
       padding: _.unit(0.5) _.unit(1.5);
       font: var(--font-label-2);
       color: var(--color-text-secondary);

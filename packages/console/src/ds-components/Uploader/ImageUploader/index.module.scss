@@ -12,7 +12,7 @@
   .delete {
     display: none;
     position: absolute;
-    right: _.unit(2);
+    inset-inline-end: _.unit(2);
     bottom: _.unit(2);
   }
 
@@ -26,13 +26,6 @@
       max-height: 100%;
       object-fit: contain;
       cursor: not-allowed;
-    }
-  }
-
-  &.rtl {
-    .delete {
-      left: _.unit(2);
-      right: unset;
     }
   }
 

@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import type { ReactNode } from 'react';
 import { Fragment } from 'react';
 import type { FieldPath, FieldValues } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 
 import type { Props as PaginationProps } from '@/ds-components/Pagination';
 import Pagination from '@/ds-components/Pagination';
@@ -99,7 +98,6 @@ function Table<
   onRetry,
   footer,
 }: Props<TFieldValues, TName>) {
-  const { i18n } = useTranslation();
   const totalColspan = columns.reduce((result, { colSpan }) => {
     return result + (colSpan ?? 1);
   }, 0);
@@ -110,7 +108,7 @@ function Table<
   const isLoaded = !isLoading && hasData;
 
   return (
-    <div className={classNames(styles.container, className, styles[i18n.dir()])}>
+    <div className={classNames(styles.container, className)}>
       <div className={classNames(styles.tableContainer, hasBorder && styles.hasBorder)}>
         {filter && (
           <div className={styles.filterContainer}>

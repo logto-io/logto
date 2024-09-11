@@ -34,16 +34,9 @@
 
   .datePicker {
     position: absolute;
-    right: _.unit(6);
+    inset-inline-end: _.unit(6);
     top: _.unit(6);
     width: 160px;
-  }
-
-  &.rtl {
-    .datePicker {
-      right: unset;
-      left: _.unit(6);
-    }
   }
 }
 

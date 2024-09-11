@@ -50,6 +50,10 @@ form {
   display: flex;
   width: 100%;
 
+  &.rtl {
+    flex-direction: row-reverse;
+  }
+
   .subdomain {
     flex: 1;
 

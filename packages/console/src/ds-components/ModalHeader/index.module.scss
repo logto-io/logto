@@ -12,7 +12,8 @@
   .separator {
     @include _.vertical-bar;
     height: 20px;
-    margin: 0 _.unit(5) 0 _.unit(4);
+    margin-block: 0;
+    margin-inline: _.unit(4) _.unit(5);
   }
 
   .closeIcon {

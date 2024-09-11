@@ -3,7 +3,8 @@
 .targetScopeItem {
   display: flex;
   align-items: center;
-  padding: _.unit(1.5) _.unit(3) _.unit(1.5) _.unit(4);
+  padding-block: _.unit(1.5);
+  padding-inline: _.unit(4) _.unit(3);
 
   .title {
     flex: 1 1 0;

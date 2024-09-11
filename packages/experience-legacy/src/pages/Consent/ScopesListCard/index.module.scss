@@ -58,13 +58,14 @@
   }
 
   .scopeItem {
-    padding: _.unit(0.5) 0 _.unit(0.5) _.unit(1);
+    padding-block: _.unit(0.5);
+    padding-inline: _.unit(1) 0;
     margin-bottom: _.unit(1.5);
   }
 }
 
 .terms {
-  padding: _.unit(4)  _.unit(4) _.unit(2) _.unit(4);
+  padding: _.unit(4)  _.unit(4) _.unit(2);
   border-top: _.border(var(--color-line-divider));
   margin-top: _.unit(2);
   font: var(--font-body-3);

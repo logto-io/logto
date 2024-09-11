@@ -3,7 +3,8 @@
 .sourceScopeItem {
   display: flex;
   align-items: center;
-  padding: _.unit(1.5)  _.unit(4) _.unit(1.5) _.unit(11.5);
+  padding-block: _.unit(1.5);
+  padding-inline: _.unit(11.5) _.unit(4);
 
   .name {
     font: var(--font-body-2);

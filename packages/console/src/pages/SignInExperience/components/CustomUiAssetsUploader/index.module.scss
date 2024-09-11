@@ -3,7 +3,8 @@
 .placeholder {
   display: flex;
   align-items: center;
-  padding: _.unit(5) _.unit(5) _.unit(5) _.unit(4);
+  padding-block: _.unit(5);
+  padding-inline: _.unit(4) _.unit(5);
   border: 1px solid var(--color-border);
   border-radius: 12px;
   gap: _.unit(4);

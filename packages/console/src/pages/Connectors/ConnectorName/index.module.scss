@@ -40,7 +40,7 @@
       content: '';
       width: 0;
       height: 12px;
-      border-right: 1px solid var(--color-border);
+      border-inline-end: 1px solid var(--color-border);
       margin: 0 _.unit(1);
     }
   }

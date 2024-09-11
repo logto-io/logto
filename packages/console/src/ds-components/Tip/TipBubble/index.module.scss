@@ -47,7 +47,7 @@
   &.right {
     .arrow {
       top: 50%;
-      left: 0%;
+      inset-inline-start: 0%;
     }
   }
 
@@ -60,7 +60,7 @@
   &.left {
     .arrow {
       top: 50%;
-      left: 100%;
+      inset-inline-start: 100%;
     }
   }
 }

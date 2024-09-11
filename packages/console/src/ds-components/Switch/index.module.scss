@@ -25,18 +25,13 @@
       content: '';
       height: 20px;
       width: 20px;
-      left: 2px;
+      inset-inline-start: 2px;
       bottom: 2px;
       background-color: #fff;
       transition: 0.4s;
       border-radius: 50%;
       box-shadow: 0 3px 7px rgba(0, 0, 0, 12%);
     }
-  }
-
-  &.rtl .slider::before {
-    left: unset;
-    right: 2px;
   }
 
   input:checked + .slider {

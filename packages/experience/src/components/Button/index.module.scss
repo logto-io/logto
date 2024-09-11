@@ -25,7 +25,7 @@
       line-height: normal;
       position: absolute;
       pointer-events: none;
-      left: 0;
+      inset-inline-start: 0;
       opacity: 0%;
       transition: opacity 0.2s ease;
     }
@@ -34,7 +34,7 @@
       padding-inline-start: _.unit(7);
 
       .icon {
-        left: 0;
+        inset-inline-start: 0;
         opacity: 100%;
       }
     }

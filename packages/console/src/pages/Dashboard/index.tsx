@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import { format } from 'date-fns';
 import type { ChangeEventHandler } from 'react';
 import { useMemo, useState } from 'react';
@@ -103,7 +102,7 @@ function Dashboard() {
               delta={newData.last7Days.delta}
             />
           </div>
-          <Card className={classNames(styles.activeCard, styles[i18n.dir()])}>
+          <Card className={styles.activeCard}>
             <Block
               title="dashboard.daily_active_users"
               tip={t('dashboard.daily_active_users_tip')}
@@ -114,7 +113,7 @@ function Dashboard() {
             <div className={styles.datePicker}>
               <TextInput type="date" value={date} onChange={handleDateChange} />
             </div>
-            <div className={classNames(styles.curve, styles[i18n.dir()])}>
+            <div className={styles.curve}>
               <ResponsiveContainer>
                 <AreaChart data={areaChartData} width={1100} height={168}>
                   <CartesianGrid vertical={false} stroke="var(--color-divider)" />

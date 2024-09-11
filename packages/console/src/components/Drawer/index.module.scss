@@ -1,15 +1,18 @@
 @use '@/scss/underscore' as _;
 
+$offset: 100%;
+
 .content {
   position: absolute;
   top: 0;
-  right: 0;
+  inset-inline-end: 0;
   bottom: 0;
   width: 50%;
   max-width: 960px;
   min-width: 860px;
   outline: none;
   background: var(--color-base);
+  transition: transform 0.3s ease-in-out;
 
   .wrapper {
     display: flex;
@@ -45,15 +48,26 @@
 :global {
   .ReactModal__Content[role='drawer'] {
     transform: translateX(100%);
-    transition: transform 0.3s ease-in-out;
+  }
+
+  .ReactModal__Content[role='drawer'][data-dir='rtl'] {
+    transform: translateX(-100%);
   }
 
   .ReactModal__Content--after-open[role='drawer'] {
     transform: translateX(0);
   }
 
+  .ReactModal__Content--after-open[role='drawer'][data-dir='rtl'] {
+    transform: translateX(0);
+  }
+
   .ReactModal__Content--before-close[role='drawer'] {
     transform: translateX(100%);
+  }
+
+  .ReactModal__Content--before-close[role='drawer'][data-dir='rtl'] {
+    transform: translateX(-100%);
   }
 }
 
