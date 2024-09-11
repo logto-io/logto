@@ -212,24 +212,24 @@ export const cloudflareGuard: Readonly<{
 });
 
 // A/B Test settings
-export enum ABTestConfigKey {
-  ExperiencePackageABTest = 'experiencePackageABTest',
+export enum FeatureFlagConfigKey {
+  NewExperienceFeatureFlag = 'newExperienceFeatureFlag',
 }
 
-export const abTestConfigDataGuard = z.object({
+export const featureFlagConfigGuard = z.object({
   percentage: z.number().min(0).max(1),
 });
 
-export type AbTestConfig = z.infer<typeof abTestConfigDataGuard>;
+export type FeatureFlagConfig = z.infer<typeof featureFlagConfigGuard>;
 
-export type ABTestConfigType = {
-  [ABTestConfigKey.ExperiencePackageABTest]: AbTestConfig;
+export type FeatureFlagConfigType = {
+  [FeatureFlagConfigKey.NewExperienceFeatureFlag]: FeatureFlagConfig;
 };
 
-export const abTestConfigGuard: Readonly<{
-  [key in ABTestConfigKey]: ZodType<ABTestConfigType[key]>;
+export const featureFlagConfigsGuard: Readonly<{
+  [key in FeatureFlagConfigKey]: ZodType<FeatureFlagConfigType[key]>;
 }> = Object.freeze({
-  [ABTestConfigKey.ExperiencePackageABTest]: abTestConfigDataGuard,
+  [FeatureFlagConfigKey.NewExperienceFeatureFlag]: featureFlagConfigGuard,
 });
 
 // Summary
@@ -239,7 +239,7 @@ export type SystemKey =
   | DemoSocialKey
   | CloudflareKey
   | EmailServiceProviderKey
-  | ABTestConfigKey;
+  | FeatureFlagConfigKey;
 
 export type SystemType =
   | AlterationStateType
@@ -247,14 +247,14 @@ export type SystemType =
   | DemoSocialType
   | CloudflareType
   | EmailServiceProviderType
-  | ABTestConfigType;
+  | FeatureFlagConfigType;
 
 export type SystemGuard = typeof alterationStateGuard &
   typeof storageProviderGuard &
   typeof demoSocialGuard &
   typeof cloudflareGuard &
   typeof emailServiceProviderGuard &
-  typeof abTestConfigGuard;
+  typeof featureFlagConfigsGuard;
 
 export const systemKeys: readonly SystemKey[] = Object.freeze([
   ...Object.values(AlterationStateKey),
@@ -262,7 +262,7 @@ export const systemKeys: readonly SystemKey[] = Object.freeze([
   ...Object.values(DemoSocialKey),
   ...Object.values(CloudflareKey),
   ...Object.values(EmailServiceProviderKey),
-  ...Object.values(ABTestConfigKey),
+  ...Object.values(FeatureFlagConfigKey),
 ]);
 
 export const systemGuards: SystemGuard = Object.freeze({
@@ -271,5 +271,5 @@ export const systemGuards: SystemGuard = Object.freeze({
   ...demoSocialGuard,
   ...cloudflareGuard,
   ...emailServiceProviderGuard,
-  ...abTestConfigGuard,
+  ...featureFlagConfigsGuard,
 });

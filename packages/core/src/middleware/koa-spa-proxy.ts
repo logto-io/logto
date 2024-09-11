@@ -11,7 +11,7 @@ import type Queries from '#src/tenants/Queries.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 
 import serveCustomUiAssets from './koa-serve-custom-ui-assets.js';
-import { getExperiencePackageWithABTest } from './utils/experience-proxy-a-b-test.js';
+import { getExperiencePackageWithFeatureFlagDetection } from './utils/experience-proxy.js';
 
 type Properties = {
   readonly mountedApps: string[];
@@ -26,7 +26,7 @@ const getDistributionPath = async <ContextT extends Context>(
   ctx: ContextT
 ) => {
   if (packagePath === 'experience') {
-    const moduleName = await getExperiencePackageWithABTest(ctx);
+    const moduleName = await getExperiencePackageWithFeatureFlagDetection(ctx);
     return path.join('node_modules/@logto', moduleName, 'dist');
   }
 

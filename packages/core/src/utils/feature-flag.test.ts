@@ -1,13 +1,13 @@
-import { isRequestInTestGroup } from './a-b-test.js';
+import { isFeatureFlagEnabled } from './feature-flag.js';
 import { randomString } from './test-utils.js';
 
-describe('A/B Test', () => {
+describe('feature flag detection', () => {
   it('should return same result for same session ID', () => {
     const entityId = randomString();
-    const result = isRequestInTestGroup({ entityId, rollOutPercentage: 0.5 });
+    const result = isFeatureFlagEnabled({ entityId, rollOutPercentage: 0.5 });
 
     for (const _ of Array.from({ length: 20 })) {
-      expect(isRequestInTestGroup({ entityId, rollOutPercentage: 0.5 })).toBe(result);
+      expect(isFeatureFlagEnabled({ entityId, rollOutPercentage: 0.5 })).toBe(result);
     }
   });
 
@@ -19,7 +19,7 @@ describe('A/B Test', () => {
       for (const _ of Array.from({ length: 200 })) {
         const entityId = randomString();
         // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-        results.push(isRequestInTestGroup({ entityId, rollOutPercentage }));
+        results.push(isFeatureFlagEnabled({ entityId, rollOutPercentage }));
       }
 
       const count = results.filter(Boolean).length;

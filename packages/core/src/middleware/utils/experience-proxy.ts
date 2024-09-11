@@ -1,29 +1,31 @@
 /**
- * This file provides the utility functions for the experience app A/B testing only.
- * Should clean up this file once the A/B testing is removed.
+ * This file provides the utility functions for the experience package proxy with feature flag detection.
+ * Should clean up this file once feature flag is fully rolled out.
  */
 
-import { abTestConfigDataGuard, ABTestConfigKey } from '@logto/schemas';
+import { featureFlagConfigGuard, FeatureFlagConfigKey } from '@logto/schemas';
 import { TtlCache } from '@logto/shared';
 import type { Context } from 'koa';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { createSystemsQuery } from '#src/queries/system.js';
-import { isRequestInTestGroup } from '#src/utils/a-b-test.js';
+import { isFeatureFlagEnabled } from '#src/utils/feature-flag.js';
 
 const interactionCookieName = '_interaction';
 
-const aBTestPercentageCache = new TtlCache<string, number>(60 * 60 * 1000); // 1 hour
+const featureFlagSettingsCache = new TtlCache<string, number>(60 * 60 * 1000); // 1 hour
 
 /**
- * Get the A/B test percentage from the system settings.
+ * Get the feature flag rollout percentage from the system settings.
  *
  * - return the cached percentage if it exists.
  * - read the percentage from the system settings if no cache exists.
  * - return 0% if the system settings are not found.
  */
-const getABTestPercentage = async () => {
-  const cachedPercentage = aBTestPercentageCache.get(ABTestConfigKey.ExperiencePackageABTest);
+const getFeatureFlagSettings = async () => {
+  const cachedPercentage = featureFlagSettingsCache.get(
+    FeatureFlagConfigKey.NewExperienceFeatureFlag
+  );
 
   if (cachedPercentage !== undefined) {
     return cachedPercentage;
@@ -31,18 +33,18 @@ const getABTestPercentage = async () => {
 
   const sharedAdminPool = await EnvSet.sharedPool;
   const { findSystemByKey } = createSystemsQuery(sharedAdminPool);
-  const abTestConfig = await findSystemByKey(ABTestConfigKey.ExperiencePackageABTest);
+  const flagConfig = await findSystemByKey(FeatureFlagConfigKey.NewExperienceFeatureFlag);
 
-  const result = abTestConfigDataGuard.safeParse(abTestConfig?.value);
+  const result = featureFlagConfigGuard.safeParse(flagConfig?.value);
 
   if (result.success) {
     const { percentage } = result.data;
-    aBTestPercentageCache.set(ABTestConfigKey.ExperiencePackageABTest, percentage);
+    featureFlagSettingsCache.set(FeatureFlagConfigKey.NewExperienceFeatureFlag, percentage);
     return percentage;
   }
 
   // Default to 0% if the system settings are not found
-  aBTestPercentageCache.set(ABTestConfigKey.ExperiencePackageABTest, 0);
+  featureFlagSettingsCache.set(FeatureFlagConfigKey.NewExperienceFeatureFlag, 0);
   return 0;
 };
 
@@ -52,9 +54,11 @@ const getABTestPercentage = async () => {
  * - Always return the new experience package if dev features are enabled.
  * - Always return the legacy experience package for OSS. Until the new experience is fully rolled out.
  * - Roll out the new experience package based on the session ID for cloud.
- * - The A/B test percentage is read from DB system settings.
+ * - The feature flag enabled percentage is read from DB system settings.
  */
-export const getExperiencePackageWithABTest = async <ContextT extends Context>(ctx: ContextT) => {
+export const getExperiencePackageWithFeatureFlagDetection = async <ContextT extends Context>(
+  ctx: ContextT
+) => {
   if (EnvSet.values.isDevFeaturesEnabled) {
     return 'experience';
   }
@@ -71,9 +75,9 @@ export const getExperiencePackageWithABTest = async <ContextT extends Context>(c
     return 'experience-legacy';
   }
 
-  const rollOutPercentage = await getABTestPercentage();
+  const rollOutPercentage = await getFeatureFlagSettings();
 
-  const isEligibleForNewExperience = isRequestInTestGroup({
+  const isEligibleForNewExperience = isFeatureFlagEnabled({
     entityId: interactionSessionId,
     rollOutPercentage,
   });

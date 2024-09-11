@@ -19,17 +19,17 @@ mockEsm('#src/queries/system.js', () => ({
   })),
 }));
 
-mockEsm('#src/utils/a-b-test.js', () => ({
-  isRequestInTestGroup: mockIsRequestInTestGroup,
+mockEsm('#src/utils/feature-flag.js', () => ({
+  isFeatureFlagEnabled: mockIsRequestInTestGroup,
 }));
 
 await mockEsmWithActual('@logto/shared', () => ({
   TtlCache: jest.fn().mockImplementation(() => mockTtlCache),
 }));
 
-const { getExperiencePackageWithABTest } = await import('./experience-proxy-a-b-test.js');
+const { getExperiencePackageWithFeatureFlagDetection } = await import('./experience-proxy.js');
 
-describe('experience proxy A/B test', () => {
+describe('experience proxy with feature flag detection test', () => {
   const envBackup = process.env;
   const _interaction = '12345678';
 
@@ -56,7 +56,7 @@ describe('experience proxy A/B test', () => {
       isDevFeaturesEnabled: true,
     });
 
-    const result = await getExperiencePackageWithABTest(mockContext);
+    const result = await getExperiencePackageWithFeatureFlagDetection(mockContext);
 
     expect(result).toBe('experience');
     expect(mockFindSystemByKey).not.toBeCalled();
@@ -72,7 +72,7 @@ describe('experience proxy A/B test', () => {
       isCloud: false,
     });
 
-    const result = await getExperiencePackageWithABTest(mockContext);
+    const result = await getExperiencePackageWithFeatureFlagDetection(mockContext);
 
     expect(result).toBe('experience-legacy');
     expect(mockFindSystemByKey).not.toBeCalled();
@@ -95,7 +95,7 @@ describe('experience proxy A/B test', () => {
       },
     });
 
-    const result = await getExperiencePackageWithABTest(mockContextWithEmptyCookie);
+    const result = await getExperiencePackageWithFeatureFlagDetection(mockContextWithEmptyCookie);
     expect(result).toBe('experience-legacy');
     expect(mockFindSystemByKey).not.toBeCalled();
     expect(mockIsRequestInTestGroup).not.toBeCalled();
@@ -113,7 +113,7 @@ describe('experience proxy A/B test', () => {
     mockFindSystemByKey.mockResolvedValueOnce(null);
     mockIsRequestInTestGroup.mockReturnValueOnce(false);
 
-    const result = await getExperiencePackageWithABTest(mockContext);
+    const result = await getExperiencePackageWithFeatureFlagDetection(mockContext);
     expect(result).toBe('experience-legacy');
     expect(mockFindSystemByKey).toBeCalled();
     expect(mockIsRequestInTestGroup).toBeCalledWith({
@@ -136,7 +136,7 @@ describe('experience proxy A/B test', () => {
       mockFindSystemByKey.mockResolvedValueOnce({ value: percentage });
       mockIsRequestInTestGroup.mockReturnValueOnce(false);
 
-      const result = await getExperiencePackageWithABTest(mockContext);
+      const result = await getExperiencePackageWithFeatureFlagDetection(mockContext);
       expect(result).toBe('experience-legacy');
       expect(mockFindSystemByKey).toBeCalled();
       expect(mockIsRequestInTestGroup).toBeCalledWith({
@@ -148,7 +148,7 @@ describe('experience proxy A/B test', () => {
     }
   );
 
-  it('should get the A/B test group based on the settings in the systems db', async () => {
+  it('should get the package path based on the feature flag settings in the systems db', async () => {
     const stub = Sinon.stub(EnvSet, 'values').value({
       ...EnvSet.values,
       isDevFeaturesEnabled: false,
@@ -158,7 +158,7 @@ describe('experience proxy A/B test', () => {
     mockFindSystemByKey.mockResolvedValueOnce({ value: { percentage: 0.5 } });
     mockIsRequestInTestGroup.mockReturnValueOnce(true);
 
-    const result = await getExperiencePackageWithABTest(mockContext);
+    const result = await getExperiencePackageWithFeatureFlagDetection(mockContext);
     expect(result).toBe('experience');
     expect(mockFindSystemByKey).toBeCalled();
     expect(mockIsRequestInTestGroup).toBeCalledWith({
@@ -169,7 +169,7 @@ describe('experience proxy A/B test', () => {
     stub.restore();
   });
 
-  it('should get the A/B test group based on the cached settings', async () => {
+  it('should get the package path based on the cached feature flag settings', async () => {
     const stub = Sinon.stub(EnvSet, 'values').value({
       ...EnvSet.values,
       isDevFeaturesEnabled: false,
@@ -178,8 +178,8 @@ describe('experience proxy A/B test', () => {
 
     mockFindSystemByKey.mockResolvedValueOnce({ value: { percentage: 0.5 } });
 
-    await getExperiencePackageWithABTest(mockContext);
-    await getExperiencePackageWithABTest(mockContext);
+    await getExperiencePackageWithFeatureFlagDetection(mockContext);
+    await getExperiencePackageWithFeatureFlagDetection(mockContext);
 
     expect(mockFindSystemByKey).toBeCalledTimes(1);
     expect(mockIsRequestInTestGroup).toBeCalledTimes(2);
