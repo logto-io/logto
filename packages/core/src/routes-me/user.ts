@@ -1,6 +1,6 @@
 import { emailRegEx, PasswordPolicyChecker, usernameRegEx } from '@logto/core-kit';
 import { userInfoSelectFields, jsonObjectGuard } from '@logto/schemas';
-import { conditional, pick } from '@silverhand/essentials';
+import { condArray, conditional, pick } from '@silverhand/essentials';
 import { literal, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -141,7 +141,7 @@ export default function userRoutes<T extends AuthedMeRouter>(
 
       const [signInExperience] = await Promise.all([
         findDefaultSignInExperience(),
-        checkVerificationStatus(userId, null),
+        ...condArray(user.passwordEncrypted && [checkVerificationStatus(userId, null)]),
       ]);
       const passwordPolicyChecker = new PasswordPolicyChecker(signInExperience.passwordPolicy);
       const issues = await checkPasswordPolicyForUser(passwordPolicyChecker, password, user);
