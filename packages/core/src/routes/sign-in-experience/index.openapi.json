@@ -135,6 +135,7 @@
     },
     "/api/sign-in-exp/default/check-password": {
       "post": {
+        "operationId": "CheckPasswordWithDefaultSignInExperience",
         "summary": "Check if a password meets the password policy",
         "description": "Check if a password meets the password policy in the sign-in experience settings.",
         "requestBody": {

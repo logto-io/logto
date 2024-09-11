@@ -130,7 +130,7 @@ export default function userRoutes<T extends AuthedMeRouter>(
 
   router.post(
     '/password',
-    koaGuard({ body: object({ password: string().min(1) }), status: [204, 400] }),
+    koaGuard({ body: object({ password: string().min(1) }), status: [204, 400, 401] }),
     async (ctx, next) => {
       const { id: userId } = ctx.auth;
       const { password } = ctx.guard.body;
@@ -147,9 +147,7 @@ export default function userRoutes<T extends AuthedMeRouter>(
       const issues = await checkPasswordPolicyForUser(passwordPolicyChecker, password, user);
 
       if (issues.length > 0) {
-        ctx.status = 400;
-        ctx.body = { issues };
-        return next();
+        throw new RequestError('password.rejected', { issues });
       }
 
       const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);
