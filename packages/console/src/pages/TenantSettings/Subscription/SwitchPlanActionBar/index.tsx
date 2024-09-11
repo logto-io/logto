@@ -122,7 +122,14 @@ function SwitchPlanActionBar({ onSubscriptionUpdated, currentSkuId, logtoSkus }:
         const isCurrentSku = currentSkuId === skuId;
         const isDowngrade = isDowngradePlan(currentSkuId, skuId);
 
-        return (
+        // Let user contact us for Pro plan when they are currently on Enterprise plan.
+        return isEnterprisePlan && skuId === ReservedPlanId.Pro ? (
+          <div>
+            <a href={contactEmailLink} className={styles.buttonLink} rel="noopener">
+              <Button title="general.contact_us_action" />
+            </a>
+          </div>
+        ) : (
           <div key={skuId}>
             <Button
               title={
