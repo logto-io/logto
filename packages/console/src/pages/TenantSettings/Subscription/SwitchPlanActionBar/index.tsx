@@ -122,8 +122,8 @@ function SwitchPlanActionBar({ onSubscriptionUpdated, currentSkuId, logtoSkus }:
         const isCurrentSku = currentSkuId === skuId;
         const isDowngrade = isDowngradePlan(currentSkuId, skuId);
 
-        // Let user contact us for Pro plan when they are currently on Enterprise plan.
-        return isEnterprisePlan && skuId === ReservedPlanId.Pro ? (
+        // Let user contact us when they are currently on Enterprise plan. Do not allow users to self-serve downgrade.
+        return isEnterprisePlan ? (
           <div>
             <a href={contactEmailLink} className={styles.buttonLink} rel="noopener">
               <Button title="general.contact_us_action" />

@@ -1,4 +1,4 @@
-import { MfaFactor, MfaPolicy, ReservedPlanId, type SignInExperience } from '@logto/schemas';
+import { MfaFactor, MfaPolicy, type SignInExperience } from '@logto/schemas';
 import { useContext, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -18,6 +18,7 @@ import Switch from '@/ds-components/Switch';
 import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { trySubmitSafe } from '@/utils/form';
+import { isPaidPlan } from '@/utils/subscription';
 
 import { type MfaConfigForm, type MfaConfig } from '../types';
 
@@ -34,12 +35,12 @@ type Props = {
 
 function MfaForm({ data, onMfaUpdated }: Props) {
   const {
-    currentSubscription: { planId },
+    currentSubscription: { planId, isEnterprisePlan },
     currentSubscriptionQuota,
     mutateSubscriptionQuotaAndUsages,
   } = useContext(SubscriptionDataContext);
   const isMfaDisabled =
-    isCloud && !currentSubscriptionQuota.mfaEnabled && planId !== ReservedPlanId.Pro;
+    isCloud && !currentSubscriptionQuota.mfaEnabled && !isPaidPlan(planId, isEnterprisePlan);
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
