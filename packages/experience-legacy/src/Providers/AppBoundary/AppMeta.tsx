@@ -38,7 +38,7 @@ const AppMeta = () => {
 
   return (
     <Helmet>
-      <html lang={i18next.language} data-theme={theme} />
+      <html lang={i18next.language} dir={i18next.dir()} data-theme={theme} />
       <link rel="shortcut icon" href={favicon ?? defaultFavicon} />
       <link rel="apple-touch-icon" href={favicon ?? defaultAppleTouchLogo} sizes="180x180" />
       {experienceSettings?.customCss && <style>{experienceSettings.customCss}</style>}
