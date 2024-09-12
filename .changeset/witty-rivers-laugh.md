@@ -2,12 +2,12 @@
 "@logto/core": minor
 ---
 
-add enterprise SSO only email identifier guard on the registraction and profile fulfillment flow.
+enterprise SSO-only email identifier guard to the registration and profile fulfillment flow.
 
 Bug fix:
 
-Add the missing SSO only email identifier guard on the user registration and profile fulfillment flow.
+Implement the missing SSO-only email identifier guard in the user registration and profile fulfillment flow.
 
-- Create new user with verification record that contains SSO only email identifier should return 422 `RequestError` with error code `session.sso_enabled`.
+- Creating a new user with a verification record containing an SSO-only email identifier should return a 422 `RequestError` with the error code `session.sso_required`.
 
-- Update user profile with SSO only email identifier should return 422 `RequestError` with error code `session.sso_enabled`.
+- Updating a user profile with an SSO-only email identifier should return a 422 `RequestError` with the error code `session.sso_required`.
