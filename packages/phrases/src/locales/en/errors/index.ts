@@ -23,6 +23,7 @@ import subscription from './subscription.js';
 import swagger from './swagger.js';
 import user from './user.js';
 import verification_code from './verification-code.js';
+import verification_record from './verification-record.js';
 
 const errors = {
   request,
@@ -50,6 +51,7 @@ const errors = {
   application,
   organization,
   single_sign_on,
+  verification_record,
 };
 
 export default Object.freeze(errors);

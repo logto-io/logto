@@ -7,7 +7,7 @@ import { adminTenantApi } from '#src/api/api.js';
 const { default: OpenApiSchemaValidator } = Validator;
 
 describe('.well-known openapi.json endpoints', () => {
-  it.each(['management', 'experience'])('should return %s.openapi.json', async (type) => {
+  it.each(['management', 'experience', 'user'])('should return %s.openapi.json', async (type) => {
     const response = await adminTenantApi.get(`.well-known/${type}.openapi.json`);
 
     expect(response).toHaveProperty('status', 200);

@@ -43,8 +43,9 @@ import statusRoutes from './status.js';
 import subjectTokenRoutes from './subject-token.js';
 import swaggerRoutes from './swagger/index.js';
 import systemRoutes from './system.js';
-import type { AnonymousRouter, ManagementApiRouter, ProfileRouter } from './types.js';
+import type { AnonymousRouter, ManagementApiRouter, UserRouter } from './types.js';
 import userAssetsRoutes from './user-assets.js';
+import verificationRoutes from './verification/index.js';
 import verificationCodeRoutes from './verification-code.js';
 import wellKnownRoutes from './well-known/index.js';
 import wellKnownOpenApiRoutes from './well-known/well-known.openapi.js';
@@ -97,30 +98,31 @@ const createRouters = (tenant: TenantContext) => {
 
   const anonymousRouter: AnonymousRouter = new Router();
 
-  wellKnownRoutes(anonymousRouter, tenant);
-  wellKnownOpenApiRoutes(anonymousRouter, {
-    experienceRouters: [experienceRouter, interactionRouter],
-    managementRouters: [managementRouter, anonymousRouter],
-  });
+  const userRouter: UserRouter = new Router();
+  profileRoutes(userRouter, tenant);
+  verificationRoutes(userRouter, tenant);
 
+  wellKnownRoutes(anonymousRouter, tenant);
   statusRoutes(anonymousRouter, tenant);
   authnRoutes(anonymousRouter, tenant);
 
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    const profileRouter: ProfileRouter = new Router();
-    profileRoutes(profileRouter, tenant);
-  }
+  wellKnownOpenApiRoutes(anonymousRouter, {
+    experienceRouters: [experienceRouter, interactionRouter],
+    managementRouters: [managementRouter, anonymousRouter],
+    userRouters: [userRouter],
+  });
 
   // The swagger.json should contain all API routers.
   swaggerRoutes(anonymousRouter, [
     managementRouter,
     anonymousRouter,
     experienceRouter,
+    userRouter,
     // TODO: interactionRouter should be removed from swagger.json
     interactionRouter,
   ]);
 
-  return [experienceRouter, interactionRouter, managementRouter, anonymousRouter];
+  return [experienceRouter, interactionRouter, managementRouter, anonymousRouter, userRouter];
 };
 
 export default function initApis(tenant: TenantContext): Koa {

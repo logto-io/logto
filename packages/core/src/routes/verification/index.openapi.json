@@ -1,0 +1,41 @@
+{
+  "tags": [
+    {
+      "name": "Verifications",
+      "description": "Endpoints for creating and validating verification records, which can be used in Profile routes."
+    },
+    {
+      "name": "Dev feature"
+    }
+  ],
+  "paths": {
+    "/api/verifications/password": {
+      "post": {
+        "operationId": "CreateVerificationByPassword",
+        "summary": "Create a record by password",
+        "description": "Create a verification record by verifying the password.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "password": {
+                    "description": "The password of the user."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The verification record was created successfully."
+          },
+          "422": {
+            "description": "The password is invalid."
+          }
+        }
+      }
+    }
+  }
+}

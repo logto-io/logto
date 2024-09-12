@@ -57,3 +57,8 @@ curl --location \\
 \`\`\`
 
 Replace \`[tenant-id]\` with your Logto tenant ID and \`eyJhbG...2g\` with the access token you fetched earlier.`;
+
+export const userApiAuthDescription = `Logto User API is a set of REST APIs that gives the end user the ability to manage their own profile and perform verifications.
+
+To use this API, you need to have an openid access token with empty audience and required scopes.
+`;

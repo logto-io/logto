@@ -2,6 +2,7 @@ import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import { z } from 'zod';
 
 import {
+  AdditionalIdentifier,
   MfaFactor,
   SignInIdentifier,
   jsonObjectGuard,
@@ -27,6 +28,16 @@ export enum InteractionEvent {
   Register = 'Register',
   ForgotPassword = 'ForgotPassword',
 }
+
+export type VerificationIdentifier = {
+  type: SignInIdentifier | AdditionalIdentifier;
+  value: string;
+};
+
+export const verificationIdentifierGuard = z.object({
+  type: z.union([z.nativeEnum(SignInIdentifier), z.nativeEnum(AdditionalIdentifier)]),
+  value: z.string(),
+}) satisfies ToZodObject<VerificationIdentifier>;
 
 // ====== Experience API payload guards and type definitions start ======
 

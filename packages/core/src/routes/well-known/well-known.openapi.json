@@ -68,6 +68,17 @@
           }
         }
       }
+    },
+    "/api/.well-known/user.openapi.json": {
+      "get": {
+        "summary": "Get User API swagger JSON",
+        "description": "The endpoint for the User API JSON document. The JSON conforms to the [OpenAPI v3.0.1](https://spec.openapis.org/oas/v3.0.1) (a.k.a. Swagger) specification.",
+        "responses": {
+          "200": {
+            "description": "The JSON document."
+          }
+        }
+      }
     }
   }
 }

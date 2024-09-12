@@ -1,8 +1,8 @@
 import {
+  type VerificationIdentifier,
   VerificationType,
-  interactionIdentifierGuard,
-  type InteractionIdentifier,
   type User,
+  verificationIdentifierGuard,
 } from '@logto/schemas';
 import { type ToZodObject } from '@logto/schemas/lib/utils/zod.js';
 import { generateStandardId } from '@logto/shared';
@@ -20,14 +20,14 @@ import { type IdentifierVerificationRecord } from './verification-record.js';
 export type PasswordVerificationRecordData = {
   id: string;
   type: VerificationType.Password;
-  identifier: InteractionIdentifier;
+  identifier: VerificationIdentifier;
   verified: boolean;
 };
 
 export const passwordVerificationRecordDataGuard = z.object({
   id: z.string(),
   type: z.literal(VerificationType.Password),
-  identifier: interactionIdentifierGuard,
+  identifier: verificationIdentifierGuard,
   verified: z.boolean(),
 }) satisfies ToZodObject<PasswordVerificationRecordData>;
 
@@ -35,7 +35,7 @@ export class PasswordVerification
   implements IdentifierVerificationRecord<VerificationType.Password>
 {
   /** Factory method to create a new `PasswordVerification` record using an identifier */
-  static create(libraries: Libraries, queries: Queries, identifier: InteractionIdentifier) {
+  static create(libraries: Libraries, queries: Queries, identifier: VerificationIdentifier) {
     return new PasswordVerification(libraries, queries, {
       id: generateStandardId(),
       type: VerificationType.Password,
@@ -45,7 +45,7 @@ export class PasswordVerification
   }
 
   readonly type = VerificationType.Password;
-  readonly identifier: InteractionIdentifier;
+  readonly identifier: VerificationIdentifier;
   readonly id: string;
   private verified: boolean;
 

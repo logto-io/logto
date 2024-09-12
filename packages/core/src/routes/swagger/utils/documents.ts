@@ -13,7 +13,7 @@ import assertThat from '#src/utils/assert-that.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 import { translationSchemas } from '#src/utils/zod.js';
 
-import { managementApiAuthDescription } from '../consts.js';
+import { managementApiAuthDescription, userApiAuthDescription } from '../consts.js';
 
 import {
   type FindSupplementFilesOptions,
@@ -147,6 +147,60 @@ export const buildExperienceApiBaseDocument = (
         ...buildPathIdParameters(entityName),
       }),
       customParameters()
+    ),
+  },
+  tags: [...tags].map((tag) => ({ name: tag })),
+});
+
+const userApiIdentifiableEntityNames = Object.freeze(['profile', 'verification']);
+
+export const buildUserApiBaseDocument = (
+  pathMap: Map<string, OpenAPIV3.PathItemObject>,
+  tags: Set<string>,
+  origin: string
+): OpenAPIV3.Document => ({
+  openapi: '3.0.1',
+  servers: [
+    {
+      url: EnvSet.values.isCloud ? 'https://[tenant_id].logto.app/' : origin,
+      description: 'Logto endpoint address.',
+    },
+  ],
+  info: {
+    title: 'Logto user API references',
+    description:
+      'API references for Logto user interaction.' +
+      condString(
+        EnvSet.values.isCloud &&
+          '\n\nNote: The documentation is for Logto Cloud. If you are using Logto OSS, please refer to the response of `/api/swagger.json` endpoint on your Logto instance.'
+      ),
+    version: 'Cloud',
+  },
+  paths: Object.fromEntries(pathMap),
+  security: [{ cookieAuth: ['all'] }],
+  components: {
+    schemas: translationSchemas,
+    securitySchemes: {
+      OAuth2: {
+        type: 'oauth2',
+        description: userApiAuthDescription,
+        flows: {
+          clientCredentials: {
+            tokenUrl: '/oidc/token',
+            scopes: {
+              openid: 'OpenID scope',
+              profile: 'Profile scope',
+            },
+          },
+        },
+      },
+    },
+    parameters: userApiIdentifiableEntityNames.reduce(
+      (previous, entityName) => ({
+        ...previous,
+        ...buildPathIdParameters(entityName),
+      }),
+      {}
     ),
   },
   tags: [...tags].map((tag) => ({ name: tag })),

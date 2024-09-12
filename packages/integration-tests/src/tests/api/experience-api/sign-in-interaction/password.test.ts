@@ -23,6 +23,7 @@ const identifiersTypeToUserProfile = Object.freeze({
   username: 'username',
   email: 'primaryEmail',
   phone: 'primaryPhone',
+  userId: '',
 });
 
 describe('sign-in with password verification happy path', () => {
@@ -31,7 +32,7 @@ describe('sign-in with password verification happy path', () => {
     await Promise.all([setEmailConnector(), setSmsConnector()]);
   });
 
-  it.each(Object.values(SignInIdentifier))(
+  it.each([SignInIdentifier.Username, SignInIdentifier.Email, SignInIdentifier.Phone])(
     'should sign-in with password using %p',
     async (identifier) => {
       const { userProfile, user } = await generateNewUser({
