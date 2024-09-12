@@ -192,6 +192,8 @@ export const validateSupplement = (
  * @throws {TypeError} if the document is invalid.
  */
 export const validateSwaggerDocument = (document: OpenAPIV3.Document) => {
+  const operationIdSet = new Set<string>();
+
   for (const [path, operations] of Object.entries(document.paths)) {
     if (path.startsWith('/api/interaction')) {
       devConsole.warn(`Path \`${path}\` is not documented. Do something!`);
@@ -236,6 +238,11 @@ export const validateSwaggerDocument = (document: OpenAPIV3.Document) => {
         operation.operationId,
         `Path \`${path}\` and operation \`${method}\` must have an operationId.`
       );
+      assert(
+        !operationIdSet.has(operation.operationId),
+        `Operation ID \`${operation.operationId}\` is duplicated.`
+      );
+      operationIdSet.add(operation.operationId);
     }
 
     for (const tag of document.tags ?? []) {

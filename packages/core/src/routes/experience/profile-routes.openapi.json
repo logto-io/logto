@@ -2,8 +2,8 @@
   "paths": {
     "/api/experience/profile": {
       "post": {
-        "operationId": "UpdateUserProfile",
-        "summary": "Update user profile data",
+        "operationId": "AddUserProfile",
+        "summary": "Add user profile",
         "description": "Adds user profile data to the current experience interaction. <br/>- For `Register`: The profile data provided before the identification request will be used to create a new user account. <br/>- For `SignIn` and `Register`: The profile data provided after the user is identified will be used to update the user's profile when the interaction is submitted. <br/>- `ForgotPassword`: Not supported.",
         "requestBody": {
           "content": {

@@ -47,7 +47,7 @@
     },
     "/api/experience/verification/verification-code/verify": {
       "post": {
-        "operationId": "VerifyVerificationCode",
+        "operationId": "VerifyVerificationCodeVerification",
         "summary": "Verify verification code",
         "description": "Verify the provided verification code against the user's identifier. If successful, the verification record will be marked as verified.",
         "requestBody": {
