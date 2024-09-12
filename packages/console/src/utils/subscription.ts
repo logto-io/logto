@@ -1,5 +1,5 @@
 import { ReservedPlanId } from '@logto/schemas';
-import { conditional, trySafe } from '@silverhand/essentials';
+import { conditional, trySafe, type Nullable } from '@silverhand/essentials';
 import { ResponseError } from '@withtyped/client';
 import dayjs from 'dayjs';
 
@@ -98,3 +98,7 @@ export const pickupFeaturedLogtoSkus = (logtoSkus: LogtoSkuResponse[]): LogtoSku
 
 export const isPaidPlan = (planId: string, isEnterprisePlan: boolean) =>
   planId === ReservedPlanId.Pro || isEnterprisePlan;
+
+export const isFeatureEnabled = (quota: Nullable<number>): boolean => {
+  return quota === null || quota > 0;
+};

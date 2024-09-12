@@ -21,7 +21,7 @@ import useApi from '@/hooks/use-api';
 import useUserPreferences from '@/hooks/use-user-preferences';
 import modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
-import { isPaidPlan } from '@/utils/subscription';
+import { isPaidPlan, isFeatureEnabled } from '@/utils/subscription';
 
 import styles from './index.module.scss';
 
@@ -42,7 +42,9 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
     update,
   } = useUserPreferences();
   const isOrganizationsDisabled =
-    isCloud && !currentSubscriptionQuota.organizationsEnabled && planId !== ReservedPlanId.Pro;
+    isCloud &&
+    !isFeatureEnabled(currentSubscriptionQuota.organizationsLimit) &&
+    planId !== ReservedPlanId.Pro;
 
   const {
     reset,

@@ -46,9 +46,9 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
     ManagementApiRouterContext
   >(OrganizationRoles, roles, {
     middlewares: condArray(
-      koaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] }),
+      koaQuotaGuard({ key: 'organizationsLimit', quota, methods: ['POST', 'PUT'] }),
       koaReportSubscriptionUpdates({
-        key: 'organizationsEnabled',
+        key: 'organizationsLimit',
         quota,
         methods: ['POST', 'PUT', 'DELETE'],
       })
