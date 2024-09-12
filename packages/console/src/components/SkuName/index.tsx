@@ -1,6 +1,9 @@
+import { ReservedPlanId } from '@logto/schemas';
 import { type TFuncKey } from 'i18next';
+import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { ReservedSkuId } from '@/types/subscriptions';
 
 const registeredSkuIdNamePhraseMap: Record<
@@ -19,8 +22,13 @@ type Props = {
   readonly skuId: string;
 };
 
-function SkuName({ skuId }: Props) {
+function SkuName({ skuId: rawSkuId }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.subscription' });
+  const {
+    currentSubscription: { isEnterprisePlan },
+  } = useContext(SubscriptionDataContext);
+  const skuId = isEnterprisePlan ? ReservedPlanId.Enterprise : rawSkuId;
+
   const skuNamePhrase = registeredSkuIdNamePhraseMap[skuId];
 
   /**

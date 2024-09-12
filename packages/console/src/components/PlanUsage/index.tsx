@@ -42,11 +42,6 @@ const getUsageByKey = (
     return periodicUsage[key];
   }
 
-  // Show enabled status for organization feature.
-  if (key === 'organizationsLimit') {
-    return countBasedUsage[key] > 0;
-  }
-
   return countBasedUsage[key];
 };
 
@@ -101,7 +96,11 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
         }
       ),
       ...cond(
-        (key === 'tokenLimit' || key === 'mauLimit') && { quota: currentSubscriptionQuota[key] }
+        (key === 'tokenLimit' || key === 'mauLimit' || key === 'organizationsLimit') &&
+          // Do not show `xxx / 0` in displaying usage.
+          currentSubscriptionQuota[key] !== 0 && {
+            quota: currentSubscriptionQuota[key],
+          }
       ),
       // Hide usage tip for Enterprise plan.
       isUsageTipHidden: isEnterprisePlan,
