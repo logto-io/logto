@@ -46,7 +46,10 @@ function ProtectedAppForm({
   onCreateSuccess,
 }: Props) {
   const { data } = useSWRImmutable<ProtectedAppsDomainConfig>(isCloud && 'api/systems/application');
-  const { currentSku, currentSubscriptionQuota } = useContext(SubscriptionDataContext);
+  const {
+    currentSubscriptionQuota,
+    currentSubscription: { planId, isEnterprisePlan },
+  } = useContext(SubscriptionDataContext);
   const { hasAppsReachedLimit } = useApplicationsUsage();
   const defaultDomain = data?.protectedApps.defaultDomain ?? '';
   const { navigate } = useTenantPathname();
@@ -202,7 +205,7 @@ function ProtectedAppForm({
           <Trans
             components={{
               a: <ContactUsPhraseLink />,
-              planName: <SkuName skuId={currentSku.id} />,
+              planName: <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />,
             }}
           >
             {t('upsell.paywall.applications', {

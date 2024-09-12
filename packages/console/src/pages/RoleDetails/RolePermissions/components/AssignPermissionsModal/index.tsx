@@ -24,8 +24,11 @@ type Props = {
 
 function AssignPermissionsModal({ roleId, roleType, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { currentSku, currentSubscriptionRoleScopeUsage, currentSubscriptionQuota } =
-    useContext(SubscriptionDataContext);
+  const {
+    currentSubscription: { planId, isEnterprisePlan },
+    currentSubscriptionRoleScopeUsage,
+    currentSubscriptionQuota,
+  } = useContext(SubscriptionDataContext);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [scopes, setScopes] = useState<ScopeResponse[]>([]);
 
@@ -79,7 +82,7 @@ function AssignPermissionsModal({ roleId, roleType, onClose }: Props) {
               <Trans
                 components={{
                   a: <ContactUsPhraseLink />,
-                  planName: <SkuName skuId={currentSku.id} />,
+                  planName: <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />,
                 }}
               >
                 {t('upsell.paywall.scopes_per_role', {

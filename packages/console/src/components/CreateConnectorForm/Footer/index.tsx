@@ -16,8 +16,11 @@ type Props = {
 
 function Footer({ isCreatingSocialConnector, isCreateButtonDisabled, onClickCreateButton }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell.paywall' });
-  const { currentSku, currentSubscriptionUsage, currentSubscriptionQuota } =
-    useContext(SubscriptionDataContext);
+  const {
+    currentSubscription: { planId, isEnterprisePlan },
+    currentSubscriptionUsage,
+    currentSubscriptionQuota,
+  } = useContext(SubscriptionDataContext);
 
   const isSocialConnectorsReachLimit = hasReachedSubscriptionQuotaLimit({
     quotaKey: 'socialConnectorsLimit',
@@ -31,7 +34,7 @@ function Footer({ isCreatingSocialConnector, isCreateButtonDisabled, onClickCrea
         <Trans
           components={{
             a: <ContactUsPhraseLink />,
-            planName: <SkuName skuId={currentSku.id} />,
+            planName: <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />,
           }}
         >
           {t('social_connectors', {

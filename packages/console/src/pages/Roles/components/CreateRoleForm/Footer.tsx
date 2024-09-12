@@ -20,8 +20,11 @@ type Props = {
 
 function Footer({ roleType, isCreating, onClickCreate }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { currentSku, currentSubscriptionQuota, currentSubscriptionUsage } =
-    useContext(SubscriptionDataContext);
+  const {
+    currentSubscription: { planId, isEnterprisePlan },
+    currentSubscriptionQuota,
+    currentSubscriptionUsage,
+  } = useContext(SubscriptionDataContext);
 
   const hasRoleReachedLimit = hasReachedSubscriptionQuotaLimit({
     quotaKey: roleType === RoleType.User ? 'userRolesLimit' : 'machineToMachineRolesLimit',
@@ -44,7 +47,7 @@ function Footer({ roleType, isCreating, onClickCreate }: Props) {
         <Trans
           components={{
             a: <ContactUsPhraseLink />,
-            planName: <SkuName skuId={currentSku.id} />,
+            planName: <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />,
           }}
         >
           {/* User roles limit paywall */}
