@@ -50,8 +50,8 @@ const SmartInputField = (
   });
 
   const isPrefixVisible = identifierType === SignInIdentifier.Phone;
-  const { paddingLeft } = useSpring({
-    paddingLeft: isPrefixVisible ? 4 : 16,
+  const { paddingInlineStart } = useSpring({
+    paddingInlineStart: isPrefixVisible ? 4 : 16,
     config: { ...config.default, clamp: true },
   });
 
@@ -68,7 +68,7 @@ const SmartInputField = (
       {...rest}
       ref={innerRef}
       isSuffixFocusVisible={Boolean(inputValue)}
-      style={{ paddingLeft }}
+      style={{ paddingInlineStart }}
       value={inputValue}
       isPrefixVisible={isPrefixVisible}
       prefix={

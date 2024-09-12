@@ -22,7 +22,7 @@
 
 .backButton {
   position: absolute;
-  left: 16px;
+  inset-inline-start: 16px;
   top: 24px;
   color: var(--color-text);
   display: flex;

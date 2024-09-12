@@ -1,6 +1,7 @@
 import { Theme } from '@logto/schemas';
 import { conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
+import i18next from 'i18next';
 import { useContext } from 'react';
 import { Helmet } from 'react-helmet';
 
@@ -37,6 +38,7 @@ const AppMeta = () => {
 
   return (
     <Helmet>
+      <html lang={i18next.language} dir={i18next.dir()} data-theme={theme} />
       <link rel="shortcut icon" href={favicon ?? defaultFavicon} />
       <link rel="apple-touch-icon" href={favicon ?? defaultAppleTouchLogo} sizes="180x180" />
       {experienceSettings?.customCss && <style>{experienceSettings.customCss}</style>}

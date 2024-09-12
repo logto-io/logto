@@ -68,7 +68,7 @@
       display: block;
       margin-inline-end: unset;
       position: absolute;
-      right: 0;
+      inset-inline-end: 0;
       top: 0;
 
       svg {
@@ -104,11 +104,6 @@
       color: var(--color-text);
     }
   }
-
-  &.rtl .content .indicator {
-    right: unset;
-    left: 0;
-  }
 }
 
 .compact {
@@ -118,34 +113,21 @@
   font: var(--font-label-2);
 
   &:first-child {
-    border-radius: 12px 0 0 12px;
+    border-start-start-radius: 12px;
+    border-end-start-radius: 12px;
   }
 
   &:last-child {
-    border-radius: 0 12px 12px 0;
+    border-start-end-radius: 12px;
+    border-end-end-radius: 12px;
   }
 
   &:not(:first-child) {
-    border-left: none;
+    border-inline-start: none;
   }
 
   &:not(:last-child) {
     margin-bottom: unset;
-  }
-
-  &.rtl {
-    &:first-child {
-      border-radius: 0 12px 12px 0;
-    }
-
-    &:last-child {
-      border-radius: 12px 0 0 12px;
-    }
-
-    &:not(:first-child) {
-      border-left: 1px solid var(--color-border);
-      border-right: none;
-    }
   }
 
   .content {
@@ -170,34 +152,21 @@
   height: 36px;
 
   &:first-child {
-    border-radius: 6px 0 0 6px;
+    border-start-start-radius: 6px;
+    border-end-start-radius: 6px;
   }
 
   &:last-child {
-    border-radius: 0 6px 6px 0;
+    border-start-end-radius: 6px;
+    border-end-end-radius: 6px;
   }
 
   &:not(:first-child) {
-    border-left: none;
+    border-inline-start: none;
   }
 
   &:not(:last-child) {
     margin-bottom: unset;
-  }
-
-  &.rtl {
-    &:first-child {
-      border-radius: 0 6px 6px 0;
-    }
-
-    &:last-child {
-      border-radius: 6px 0 0 6px;
-    }
-
-    &:not(:first-child) {
-      border-left: 1px solid var(--color-border);
-      border-right: none;
-    }
   }
 
   .content {
@@ -250,20 +219,9 @@
     content: '';
     width: 1px;
     top: -1px;
-    left: -1px;
+    inset-inline-start: -1px;
     bottom: -1px;
     background-color: var(--color-primary);
-  }
-
-  &.rtl {
-    &:not(:first-child) {
-      border-left: 1px solid var(--color-primary);
-
-      &::before {
-        left: unset;
-        right: -1px;
-      }
-    }
   }
 }
 
@@ -277,20 +235,9 @@
     content: '';
     width: 1px;
     top: -1px;
-    left: -1px;
+    inset-inline-start: -1px;
     bottom: -1px;
     background-color: var(--color-text-link);
-  }
-
-  &.rtl {
-    &:not(:first-child) {
-      border-color: var(--color-text-link);
-
-      &::before {
-        left: unset;
-        right: -1px;
-      }
-    }
   }
 }
 
@@ -379,7 +326,7 @@
       content: '';
       width: 1px;
       top: -1px;
-      left: -1px;
+      inset-inline-start: -1px;
       bottom: -1px;
       background-color: var(--color-primary);
     }

@@ -2,7 +2,6 @@ import { useLogto } from '@logto/react';
 import { demoAppApplicationId } from '@logto/schemas';
 import { decodeJwt } from 'jose';
 import { useCallback, useState, type FormEventHandler } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import styles from './App.module.scss';
 import { getLocalData, setLocalData } from './utils';
@@ -16,7 +15,6 @@ const safeDecodeJwt = (token: string) => {
 };
 
 const DevPanel = () => {
-  const { i18n } = useTranslation();
   const config = getLocalData('config');
   const [showSaved, setShowSaved] = useState(false);
   const { getAccessToken, getIdTokenClaims, fetchUserInfo } = useLogto();
@@ -48,7 +46,7 @@ const DevPanel = () => {
   );
 
   return (
-    <div className={[styles.card, styles.devPanel, styles[i18n.dir()]].join(' ')}>
+    <div className={[styles.card, styles.devPanel].join(' ')}>
       <form onSubmit={submitConfig}>
         <div className={styles.title}>Logto config</div>
         <div className={styles.item}>

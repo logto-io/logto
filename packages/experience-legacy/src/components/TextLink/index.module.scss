@@ -7,7 +7,7 @@
   justify-content: center;
 
   > svg {
-    margin-right: _.unit(2);
+    margin-inline-end: _.unit(2);
   }
 
   &.primary {

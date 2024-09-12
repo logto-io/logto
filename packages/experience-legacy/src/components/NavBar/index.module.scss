@@ -20,7 +20,7 @@
 
 .navButton {
   position: absolute;
-  left: 0;
+  inset-inline-start: 0;
   top: 50%;
   transform: translateY(-50%);
   font: var(--font-label-2);
@@ -30,13 +30,13 @@
 
 .skipButton {
   position: absolute;
-  right: 0;
+  inset-inline-end: 0;
   top: 50%;
   transform: translateY(-50%);
   font: var(--font-label-1);
   cursor: pointer;
   color: var(--color-type-link);
-  padding-right: _.unit(1);
+  padding-inline-end: _.unit(1);
 }
 
 :global(body.mobile) {

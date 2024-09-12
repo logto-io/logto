@@ -18,23 +18,23 @@
 
   .content {
     position: relative;
-    transition: padding-left 0.2s ease;
+    transition: padding-inline-start 0.2s ease;
 
     .icon {
       font-size: 0;
       line-height: normal;
       position: absolute;
       pointer-events: none;
-      left: 0;
+      inset-inline-start: 0;
       opacity: 0%;
       transition: opacity 0.2s ease;
     }
 
     &.iconVisible {
-      padding-left: _.unit(7);
+      padding-inline-start: _.unit(7);
 
       .icon {
-        left: 0;
+        inset-inline-start: 0;
         opacity: 100%;
       }
     }

@@ -1,6 +1,4 @@
 import { MfaFactor, experience } from '@logto/schemas';
-import i18next from 'i18next';
-import { Helmet } from 'react-helmet';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 
 import AppLayout from './Layout/AppLayout';
@@ -48,15 +46,6 @@ handleSearchParametersData();
 const App = () => {
   return (
     <BrowserRouter>
-      <Helmet
-        htmlAttributes={{
-          // We intentionally use the imported i18next instance instead of the hook, since the hook
-          // will cause a re-render following some bugs here. This still works for the initial
-          // render, so we're good for now. Consider refactoring this in the future.
-          lang: i18next.language,
-          dir: i18next.dir(),
-        }}
-      />
       <PageContextProvider>
         <SettingsProvider>
           <UserInteractionContextProvider>

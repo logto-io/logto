@@ -18,13 +18,13 @@
     color: var(--color-success-pressed);
     width: 20px;
     height: 20px;
-    margin-right: _.unit(2);
+    margin-inline-end: _.unit(2);
   }
 
   .scopeGroupName {
     font: var(--font-body-2);
     flex: 1;
-    margin-right: _.unit(2);
+    margin-inline-end: _.unit(2);
   }
 
   .toggleButton {
@@ -47,7 +47,8 @@
   }
 
   .scopeItem {
-    padding: _.unit(0.5) 0 _.unit(0.5) _.unit(1);
+    padding-block: _.unit(0.5);
+    padding-inline: _.unit(1) 0;
     margin-bottom: _.unit(1.5);
   }
 }

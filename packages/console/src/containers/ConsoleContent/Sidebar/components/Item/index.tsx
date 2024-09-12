@@ -18,7 +18,7 @@ type Props = {
 };
 
 function Item({ icon, titleKey, modal, externalLink, isActive = false }: Props) {
-  const { t, i18n } = useTranslation(undefined, {
+  const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console.tabs',
   });
   const [isOpen, setIsOpen] = useState(false);
@@ -37,7 +37,7 @@ function Item({ icon, titleKey, modal, externalLink, isActive = false }: Props) 
     return (
       <>
         <button
-          className={classNames(styles.row, styles[i18n.dir()])}
+          className={styles.row}
           onClick={() => {
             setIsOpen(true);
           }}
@@ -60,10 +60,7 @@ function Item({ icon, titleKey, modal, externalLink, isActive = false }: Props) 
   }
 
   return (
-    <Link
-      to={getPath(titleKey)}
-      className={classNames(styles.row, isActive && styles.active, styles[i18n.dir()])}
-    >
+    <Link to={getPath(titleKey)} className={classNames(styles.row, isActive && styles.active)}>
       {content}
     </Link>
   );

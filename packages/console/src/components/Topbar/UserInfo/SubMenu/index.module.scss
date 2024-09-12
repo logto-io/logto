@@ -28,7 +28,7 @@
 .menu {
   position: absolute;
   top: -4px;
-  right: calc(100% + 5px);
+  inset-inline-end: calc(100% + 5px);
   visibility: hidden;
   background: var(--color-float);
   border: 1px solid var(--color-divider);
@@ -38,17 +38,13 @@
   &.visible {
     visibility: visible;
   }
-
-  &.rtl {
-    right: unset;
-    left: calc(100% + 5px);
-  }
 }
 
 .menuOption {
   position: relative;
   min-width: 200px;
-  padding: _.unit(2.5) _.unit(5.5) _.unit(2.5) _.unit(8);
+  padding-block: _.unit(2.5);
+  padding-inline: _.unit(8) _.unit(5.5);
   margin: _.unit(1);
 
   &.selected {
@@ -57,16 +53,7 @@
 
   .tick {
     position: absolute;
-    left: 8px;
+    inset-inline-start: 8px;
     top: 10px;
-  }
-
-  &.rtl {
-    padding: _.unit(2.5) _.unit(8) _.unit(2.5) _.unit(5.5);
-
-    .tick {
-      left: unset;
-      right: 8px;
-    }
   }
 }

@@ -14,7 +14,7 @@
   }
 
   .formErrors {
-    margin-left: _.unit(0.5);
+    margin-inline-start: _.unit(0.5);
     margin-top: _.unit(-3);
   }
 }
@@ -26,7 +26,7 @@
   cursor: pointer;
 
   .checkbox {
-    margin-right: _.unit(2);
+    margin-inline-end: _.unit(2);
     fill: var(--color-type-secondary);
     cursor: pointer;
   }

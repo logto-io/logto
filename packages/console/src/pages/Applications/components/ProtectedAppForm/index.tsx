@@ -50,7 +50,7 @@ function ProtectedAppForm({
   const { hasAppsReachedLimit } = useApplicationsUsage();
   const defaultDomain = data?.protectedApps.defaultDomain ?? '';
   const { navigate } = useTenantPathname();
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     register,
     handleSubmit,
@@ -172,7 +172,7 @@ function ProtectedAppForm({
               t('protected_app.form.domain_field_tooltip', { domain: defaultDomain })
           )}
         >
-          <div className={styles.domainFieldWrapper}>
+          <div className={classNames(styles.domainFieldWrapper, styles[i18n.dir()])}>
             <TextInput
               className={styles.subdomain}
               inputContainerClassName={styles.input}

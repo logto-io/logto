@@ -9,7 +9,8 @@
   max-width: 400px;
   align-items: center;
   flex-direction: row;
-  padding: _.unit(5) _.unit(5) _.unit(5) _.unit(4);
+  padding-block: _.unit(5);
+  padding-inline: _.unit(4) _.unit(5);
   background: var(--color-layer-1);
   color: var(--color-text);
   border: 1px solid var(--color-border);

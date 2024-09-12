@@ -5,7 +5,7 @@
   padding: _.unit(3) _.unit(2);
   flex-shrink: 0;
   background-color: var(--color-layer-light);
-  border-right: 1px solid var(--color-divider);
+  border-inline-end: 1px solid var(--color-divider);
   display: flex;
   flex-direction: column;
 
