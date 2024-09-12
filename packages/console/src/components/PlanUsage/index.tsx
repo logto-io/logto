@@ -97,6 +97,7 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
       ),
       ...cond(
         (key === 'tokenLimit' || key === 'mauLimit' || key === 'organizationsLimit') &&
+          // Do not show `xxx / 0` in displaying usage.
           currentSubscriptionQuota[key] !== 0 && {
             quota: currentSubscriptionQuota[key],
           }
