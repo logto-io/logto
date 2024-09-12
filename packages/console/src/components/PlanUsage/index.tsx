@@ -96,9 +96,10 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
         }
       ),
       ...cond(
-        (key === 'tokenLimit' || key === 'mauLimit' || key === 'organizationsLimit') && {
-          quota: currentSubscriptionQuota[key],
-        }
+        (key === 'tokenLimit' || key === 'mauLimit' || key === 'organizationsLimit') &&
+          currentSubscriptionQuota[key] !== 0 && {
+            quota: currentSubscriptionQuota[key],
+          }
       ),
       // Hide usage tip for Enterprise plan.
       isUsageTipHidden: isEnterprisePlan,
