@@ -1,6 +1,7 @@
 import type { LogtoConfig, SignInOptions } from '@logto/node';
 import { InteractionEvent } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
+import { type KyInstance } from 'ky';
 
 import { ExperienceClient } from '#src/client/experience/index.js';
 import MockClient from '#src/client/index.js';
@@ -21,9 +22,10 @@ export const initExperienceClient = async (
   interactionEvent: InteractionEvent = InteractionEvent.SignIn,
   config?: Partial<LogtoConfig>,
   redirectUri?: string,
-  options: Omit<SignInOptions, 'redirectUri'> = {}
+  options: Omit<SignInOptions, 'redirectUri'> = {},
+  api?: KyInstance
 ) => {
-  const client = new ExperienceClient(config);
+  const client = new ExperienceClient(config, api);
   await client.initSession(redirectUri, options);
   assert(client.interactionCookie, new Error('Session not found'));
   await client.initInteraction({ interactionEvent });
