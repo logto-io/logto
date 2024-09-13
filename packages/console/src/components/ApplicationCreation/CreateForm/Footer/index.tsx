@@ -113,7 +113,7 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
           <Trans
             components={{
               a: <ContactUsPhraseLink />,
-              planName: <SkuName skuId={currentSku.id} />,
+              planName: <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />,
             }}
           >
             {t('paywall.applications', { count: currentSubscriptionQuota.applicationsLimit ?? 0 })}

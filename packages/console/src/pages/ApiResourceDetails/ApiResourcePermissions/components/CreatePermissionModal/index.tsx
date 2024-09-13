@@ -28,8 +28,11 @@ type Props = {
 type CreatePermissionFormData = Pick<CreateScope, 'name' | 'description'>;
 
 function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Props) {
-  const { currentSku, currentSubscriptionQuota, currentSubscriptionResourceScopeUsage } =
-    useContext(SubscriptionDataContext);
+  const {
+    currentSubscriptionQuota,
+    currentSubscriptionResourceScopeUsage,
+    currentSubscription: { planId, isEnterprisePlan },
+  } = useContext(SubscriptionDataContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const {
@@ -83,7 +86,7 @@ function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Prop
               <Trans
                 components={{
                   a: <ContactUsPhraseLink />,
-                  planName: <SkuName skuId={currentSku.id} />,
+                  planName: <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />,
                 }}
               >
                 {t('upsell.paywall.scopes_per_resource', {

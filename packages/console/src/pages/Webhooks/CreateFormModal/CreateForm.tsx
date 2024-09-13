@@ -26,8 +26,11 @@ type CreateHookPayload = Pick<CreateHook, 'name'> & {
 };
 
 function CreateForm({ onClose }: Props) {
-  const { currentSku, currentSubscriptionQuota, currentSubscriptionUsage } =
-    useContext(SubscriptionDataContext);
+  const {
+    currentSubscription: { planId, isEnterprisePlan },
+    currentSubscriptionQuota,
+    currentSubscriptionUsage,
+  } = useContext(SubscriptionDataContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const shouldBlockCreation = hasReachedSubscriptionQuotaLimit({
@@ -70,7 +73,7 @@ function CreateForm({ onClose }: Props) {
             <Trans
               components={{
                 a: <ContactUsPhraseLink />,
-                planName: <SkuName skuId={currentSku.id} />,
+                planName: <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />,
               }}
             >
               {t('upsell.paywall.hooks', {

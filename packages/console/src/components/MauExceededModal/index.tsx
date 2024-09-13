@@ -20,7 +20,9 @@ import SkuName from '../SkuName';
 import styles from './index.module.scss';
 
 function MauExceededModal() {
-  const { currentSku } = useContext(SubscriptionDataContext);
+  const {
+    currentSubscription: { planId, isEnterprisePlan },
+  } = useContext(SubscriptionDataContext);
   const { currentTenant } = useContext(TenantsContext);
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -75,7 +77,7 @@ function MauExceededModal() {
         <InlineNotification severity="error">
           <Trans
             components={{
-              planName: <SkuName skuId={currentSku.id} />,
+              planName: <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />,
             }}
           >
             {t('upsell.mau_exceeded_modal.notification')}

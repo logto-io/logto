@@ -59,7 +59,7 @@ function CurrentPlan({ periodicUsage: rawPeriodicUsage }: Props) {
     <FormCard title="subscription.current_plan" description="subscription.current_plan_description">
       <div className={styles.planInfo}>
         <div className={styles.name}>
-          <SkuName skuId={currentSkuId} />
+          <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />
         </div>
         <div className={styles.description}>
           <PlanDescription skuId={currentSkuId} planId={planId} />
