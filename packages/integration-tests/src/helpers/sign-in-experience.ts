@@ -171,3 +171,14 @@ export const setUsernamePasswordOnly = async () => {
     passwordPolicy: {},
   });
 };
+
+export const setLanguage = async (
+  language: SignInExperience['languageInfo']['fallbackLanguage'],
+  autoDetect = false
+) =>
+  updateSignInExperience({
+    languageInfo: {
+      fallbackLanguage: language,
+      autoDetect,
+    },
+  });

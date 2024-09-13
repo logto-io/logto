@@ -1,5 +1,5 @@
 import { demoAppUrl } from '#src/constants.js';
-import { setUsernamePasswordOnly } from '#src/helpers/sign-in-experience.js';
+import { setLanguage, setUsernamePasswordOnly } from '#src/helpers/sign-in-experience.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
 
 const credentials = {
@@ -17,6 +17,28 @@ const credentials = {
 describe('smoke testing on the demo app', () => {
   beforeAll(async () => {
     await setUsernamePasswordOnly();
+  });
+
+  it('should have html attribute "lang=en" and "dir=ltr" by default', async () => {
+    const experience = new ExpectExperience(await browser.newPage());
+    await experience.startWith(demoAppUrl);
+
+    await experience.toMatchElement('html[lang=en][dir=ltr]');
+
+    void experience.page.close();
+  });
+
+  it('should have html attribute "lang=ar" and "dir=rtl" for Arabic language', async () => {
+    await setLanguage('ar');
+
+    const experience = new ExpectExperience(await browser.newPage());
+    await experience.startWith(demoAppUrl);
+
+    await experience.toMatchElement('html[lang=ar][dir=rtl]');
+
+    // Clean up
+    await setLanguage('en', true);
+    void experience.page.close();
   });
 
   it('should be able to create a new account with a credential preset', async () => {
