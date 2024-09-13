@@ -1,5 +1,172 @@
 # Change Log
 
+## 1.20.0
+
+### Minor Changes
+
+- e0326c96c: Add personal access token (PAT)
+
+  Personal access tokens (PATs) provide a secure way for users to grant access tokens without using their credentials and interactive sign-in.
+
+  You can create a PAT by going to the user's detail page in Console or using the Management API `POST /users/:userId/personal-access-tokens`.
+
+  To use a PAT, call the token exchange endpoint `POST /oidc/token` with the following parameters:
+
+  1. `grant_type`: REQUIRED. The value of this parameter must be `urn:ietf:params:oauth:grant-type:token-exchange` indicates that a token exchange is being performed.
+  2. `resource`: OPTIONAL. The resource indicator, the same as other token requests.
+  3. `scope`: OPTIONAL. The requested scopes, the same as other token requests.
+  4. `subject_token`: REQUIRED. The user's PAT.
+  5. `subject_token_type`: REQUIRED. The type of the security token provided in the `subject_token` parameter. The value of this parameter must be `urn:logto:token-type:personal_access_token`.
+  6. `client_id`: REQUIRED. The client identifier of the client application that is making the request, the returned access token will contain this client_id claim.
+
+  And the response will be a JSON object with the following properties:
+
+  1. `access_token`: REQUIRED. The access token of the user, which is the same as other token requests like `authorization_code` or `refresh_token`.
+  2. `issued_token_type`: REQUIRED. The type of the issued token. The value of this parameter must be `urn:ietf:params:oauth:token-type:access_token`.
+  3. `token_type`: REQUIRED. The type of the token. The value of this parameter must be `Bearer`.
+  4. `expires_in`: REQUIRED. The lifetime in seconds of the access token.
+  5. `scope`: OPTIONAL. The scopes of the access token.
+
+- 3d3a22030: add support for additional first screen options
+
+  This feature introduces new first screen options, allowing developers to customize the initial screen presented to users. In addition to the existing `sign_in` and `register` options, the following first screen choices are now supported:
+
+  - `identifier:sign_in`: Only display specific identifier-based sign-in methods to users.
+  - `identifier:register`: Only display specific identifier-based registration methods to users.
+  - `reset_password`: Allow users to directly access the password reset page.
+  - `single_sign_on`: Allow users to directly access the single sign-on (SSO) page.
+
+  Example:
+
+  ```javascript
+  // Example usage (React project using React SDK)
+  void signIn({
+    redirectUri,
+    firstScreen: "identifier:sign_in",
+    /**
+     * Optional. Specifies which sign-in methods to display on the identifier sign-in page.
+     * If not specified, the default sign-in experience configuration will be used.
+     * This option is effective when the `firstScreen` value is `identifier:sign_in`, `identifier:register`, or `reset_password`.
+     */
+    identifiers: ["email", "phone"],
+  });
+  ```
+
+- 25187ef63: add support for `login_hint` parameter in sign-in method
+
+  This feature allows you to provide a suggested identifier (email, phone, or username) for the user, improving the sign-in experience especially in scenarios where the user's identifier is known or can be inferred.
+
+  Example:
+
+  ```javascript
+  // Example usage (React project using React SDK)
+  void signIn({
+    redirectUri,
+    loginHint: "user@example.com",
+    firstScreen: "signIn", // or 'register'
+  });
+  ```
+
+- b837efead: add access deny method to the custom token claims script
+
+  Introduce a new `api` parameter to the custom token claims script. This parameter is used to provide more access control context over the token exchange process.
+  Use `api.denyAccess()` to reject the token exchange request. Use this method to implement your own access control logics.
+
+  ```javascript
+  const getCustomJwtClaims: async ({ api }) => {
+    // Reject the token request, with a custom error message
+    return api.denyAccess('Access denied');
+  }
+  ```
+
+- cc346b4e0: add password policy checking api
+
+  Add `POST /api/sign-in-exp/default/check-password` API to check if the password meets the password policy configured in the default sign-in experience. A user ID is required for this API if rejects user info is enabled in the password policy.
+
+  Here's a non-normative example of the request and response:
+
+  ```http
+  POST /api/sign-in-exp/default/check-password
+  Content-Type: application/json
+
+  {
+    "password": "123",
+    "userId": "some-user-id"
+  }
+  ```
+
+  ```http
+  400 Bad Request
+  Content-Type: application/json
+
+  {
+    "result": false,
+    "issues": [
+      { "code": "password_rejected.too_short" },
+      { "code": "password_rejected.character_types" },
+      { "code": "password_rejected.restricted.sequence" }
+    ]
+  }
+  ```
+
+### Patch Changes
+
+- a748fc85b: fix: add `hasPassword` field to user API response
+- fae8725a4: improve RTL language support
+- 6951e3157: introduce new `parse_error` query parameter flag. The value of `parse_error` can only be `false`.
+
+  By default, Logto returns the parsed error code and error description in all the `RequestError` error responses. This is to ensure the error responses are consistent and easy to understand.
+
+  However, when integrating Logto with Google OAuth, the error response body containing `code` will be rejected by Google. `code` is considered as a reserved OIDC key, can't be used as the error code key in the error response body.
+
+  To workaround this, we add a new `parse_error` query parameter flag. When parsing the OIDC error body, if the `parse_error` is set to false, only oidc error body will be returned.
+
+  example:
+
+  ```curl
+  curl -X POST "http://localhost:3001/oidc/token?parse_error=false"
+  ```
+
+  ```json
+  {
+    "error": "invalid_grant",
+    "error_description": "Invalid value for parameter 'code': 'invalid_code'."
+  }
+  ```
+
+- 5aab7c01b: prevent user registration and profile fulfillment with SSO-only email domains
+
+  Emails associated with SSO-enabled domains should only be used through the SSO authentication process.
+
+  Bug fix:
+
+  - Creating a new user with a verification record that contains an SSO-only email domain should return a 422 `RequestError` with the error code `session.sso_required`.
+  - Updating a user profile with an SSO-only email domain should return a 422 `RequestError` with the error code `session.sso_required`.
+
+- Updated dependencies [f150a67d5]
+- Updated dependencies [ee1947ac4]
+- Updated dependencies [baa8577c4]
+- Updated dependencies [ff6b304ba]
+- Updated dependencies [e0326c96c]
+- Updated dependencies [3d3a22030]
+- Updated dependencies [25187ef63]
+- Updated dependencies [479d5895a]
+- Updated dependencies [262661677]
+- Updated dependencies [3b9714b99]
+- Updated dependencies [ab90f43db]
+- Updated dependencies [fae8725a4]
+- Updated dependencies [0183d0c33]
+- Updated dependencies [b837efead]
+- Updated dependencies [53060c203]
+  - @logto/console@1.18.0
+  - @logto/phrases@1.14.0
+  - @logto/experience@1.9.0
+  - @logto/schemas@1.20.0
+  - @logto/experience-legacy@1.9.0
+  - @logto/demo-app@1.4.1
+  - @logto/cli@1.20.0
+  - @logto/phrases-experience@1.8.0
+
 ## 1.19.0
 
 ### Minor Changes

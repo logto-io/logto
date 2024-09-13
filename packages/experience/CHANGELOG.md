@@ -1,5 +1,93 @@
 # Change Log
 
+## 1.9.0
+
+### Minor Changes
+
+- baa8577c4: migrate experience app using Experience API.
+
+  Migrate experience app API requests from legacy [Interaction API](https://openapi.logto.io/group/endpoint-interaction) to the new [Experience API](https://openapi.logto.io/group/endpoint-experience), except the following endpoints:
+
+  - `GET /api/interaction/consent`
+  - `POST /api/interaction/consent`
+
+  Those endpoints are used in the third-party application's consent page only. Remain unchanged.
+
+- 3d3a22030: add support for additional first screen options
+
+  This feature introduces new first screen options, allowing developers to customize the initial screen presented to users. In addition to the existing `sign_in` and `register` options, the following first screen choices are now supported:
+
+  - `identifier:sign_in`: Only display specific identifier-based sign-in methods to users.
+  - `identifier:register`: Only display specific identifier-based registration methods to users.
+  - `reset_password`: Allow users to directly access the password reset page.
+  - `single_sign_on`: Allow users to directly access the single sign-on (SSO) page.
+
+  Example:
+
+  ```javascript
+  // Example usage (React project using React SDK)
+  void signIn({
+    redirectUri,
+    firstScreen: "identifier:sign_in",
+    /**
+     * Optional. Specifies which sign-in methods to display on the identifier sign-in page.
+     * If not specified, the default sign-in experience configuration will be used.
+     * This option is effective when the `firstScreen` value is `identifier:sign_in`, `identifier:register`, or `reset_password`.
+     */
+    identifiers: ["email", "phone"],
+  });
+  ```
+
+- 25187ef63: add support for `login_hint` parameter in sign-in method
+
+  This feature allows you to provide a suggested identifier (email, phone, or username) for the user, improving the sign-in experience especially in scenarios where the user's identifier is known or can be inferred.
+
+  Example:
+
+  ```javascript
+  // Example usage (React project using React SDK)
+  void signIn({
+    redirectUri,
+    loginHint: "user@example.com",
+    firstScreen: "signIn", // or 'register'
+  });
+  ```
+
+- 262661677: allow link new social identity to an existing user account when registration is disabled.
+
+  ### Previous behavior
+
+  Sign-in with a social identity that does not have an existing user account will throw an `identity_not_exist` error. When the registration is disabled, the error message will be shown, the user will not be able to create a new account or link the social identity to an existing account via verified email or phone number.
+
+  ### Expected behavior
+
+  When the registration is disabled, if a related user account is found, the user should be able to link the social identity to an existing account via a verified email or phone number.
+
+  ### Updates
+
+  When the registration is disabled:
+
+  - Show `identity_not_exist` error message if no related user account is found.
+  - Automatically link the social identity to the existing account if a related user account is found and social automatic account linking is enabled.
+  - Redirect the user to the social link account page if a related user account is found and social automatic account linking is disabled.
+  - Hide the register button on the social link account page if the registration is disabled.
+
+  When the registration is enabled:
+
+  - Automatically register a new account with the social identity if no related user account is found.
+  - Automatically link the social identity to the existing account if a related user account is found and social automatic account linking is enabled.
+  - Redirect the user to the social link account page if a related user account is found and social automatic account linking is disabled.
+  - Show the register new account button on the social link account page.
+
+### Patch Changes
+
+- 3b9714b99: set `lang` attribute for `<html>`
+- ab90f43db: fix(experience): prevent errors from applying unsupported cached identifier types
+
+  Previously, cached identifier input values were applied to all pages without type checking, potentially causing errors. Now, the type is verified before application to ensure compatibility with each page's supported types.
+
+- fae8725a4: improve RTL language support
+
 ## 1.8.0
 
 ### Minor Changes

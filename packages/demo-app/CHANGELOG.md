@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.4.1
+
+### Patch Changes
+
+- 3b9714b99: set `lang` attribute for `<html>`
+- fae8725a4: improve RTL language support
+
 ## 1.4.0
 
 ### Minor Changes

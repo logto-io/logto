@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.8.0
+
+### Minor Changes
+
+- 53060c203: add ar-SA language (credit to @zaaakher)
+
 ## 1.7.0
 
 ### Minor Changes
