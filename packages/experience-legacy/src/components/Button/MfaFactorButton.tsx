@@ -8,6 +8,7 @@ import FactorTotp from '@/assets/icons/factor-totp.svg?react';
 import FactorWebAuthn from '@/assets/icons/factor-webauthn.svg?react';
 
 import DynamicT from '../DynamicT';
+import FlipOnRtl from '../FlipOnRtl';
 
 import mfaFactorButtonStyles from './MfaFactorButton.module.scss';
 import styles from './index.module.scss';
@@ -65,7 +66,9 @@ const MfaFactorButton = ({ factor, isBinding, onClick }: Props) => {
           <DynamicT forKey={(isBinding ? linkFactorDescription : factorDescription)[factor]} />
         </div>
       </div>
-      <ArrowNext className={mfaFactorButtonStyles.icon} />
+      <FlipOnRtl>
+        <ArrowNext className={mfaFactorButtonStyles.icon} />
+      </FlipOnRtl>
     </button>
   );
 };

@@ -7,6 +7,8 @@ import ArrowPrev from '@/assets/icons/arrow-prev.svg?react';
 import NavClose from '@/assets/icons/nav-close.svg?react';
 import { onKeyDownHandler } from '@/utils/a11y';
 
+import FlipOnRtl from '../FlipOnRtl';
+
 import styles from './index.module.scss';
 
 type Props = {
@@ -48,7 +50,13 @@ const NavBar = ({ title, type = 'back', isHidden, onClose, onSkip }: Props) => {
         onKeyDown={onKeyDownHandler(clickHandler)}
         onClick={clickHandler}
       >
-        {isClosable ? <NavClose /> : <ArrowPrev />}
+        {isClosable ? (
+          <NavClose />
+        ) : (
+          <FlipOnRtl>
+            <ArrowPrev />
+          </FlipOnRtl>
+        )}
         {!isClosable && <span>{t('action.nav_back')}</span>}
       </div>
       {title && <div className={styles.title}>{title}</div>}
