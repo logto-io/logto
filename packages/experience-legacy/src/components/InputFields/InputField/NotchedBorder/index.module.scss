@@ -7,7 +7,7 @@
 
   .border,
   .outline {
-    text-align: left;
+    text-align: start;
     position: absolute;
     inset: -10px 0 -0.5px;
     border: _.border(var(--color-line-border));

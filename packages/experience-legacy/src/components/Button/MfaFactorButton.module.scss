@@ -19,7 +19,7 @@
   flex: 1;
   @include _.flex-column;
   align-items: flex-start;
-  text-align: left;
+  text-align: start;
 
   .name {
     font: var(--font-label-1);
