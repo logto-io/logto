@@ -4,6 +4,7 @@ import type {
   ConnectorResponse,
   CreateConnector,
 } from '@logto/schemas';
+import { type KyInstance } from 'ky';
 
 import { authedAdminApi } from './api.js';
 
@@ -15,29 +16,32 @@ import { authedAdminApi } from './api.js';
  * that contain metadata (considered connectors' FIXED properties) and code implementation (which determines how connectors work).
  */
 
-export const listConnectors = async () =>
-  authedAdminApi.get('connectors').json<ConnectorResponse[]>();
+export const listConnectors = async (api: KyInstance = authedAdminApi) =>
+  api.get('connectors').json<ConnectorResponse[]>();
 
-export const getConnector = async (id: string) =>
-  authedAdminApi.get(`connectors/${id}`).json<ConnectorResponse>();
+export const getConnector = async (id: string, api: KyInstance = authedAdminApi) =>
+  api.get(`connectors/${id}`).json<ConnectorResponse>();
 
-export const listConnectorFactories = async () =>
-  authedAdminApi.get('connector-factories').json<ConnectorFactoryResponse[]>();
+export const listConnectorFactories = async (api: KyInstance = authedAdminApi) =>
+  api.get('connector-factories').json<ConnectorFactoryResponse[]>();
 
-export const getConnectorFactory = async (connectorFactoryId: string) =>
-  authedAdminApi.get(`connector-factories/${connectorFactoryId}`).json<ConnectorFactoryResponse>();
+export const getConnectorFactory = async (
+  connectorFactoryId: string,
+  api: KyInstance = authedAdminApi
+) => api.get(`connector-factories/${connectorFactoryId}`).json<ConnectorFactoryResponse>();
 
 export const postConnector = async (
-  payload: Pick<CreateConnector, 'connectorId' | 'config' | 'metadata' | 'syncProfile'>
+  payload: Pick<CreateConnector, 'connectorId' | 'config' | 'metadata' | 'syncProfile'>,
+  api: KyInstance = authedAdminApi
 ) =>
-  authedAdminApi
+  api
     .post('connectors', {
       json: payload,
     })
     .json<Connector>();
 
-export const deleteConnectorById = async (id: string) =>
-  authedAdminApi.delete(`connectors/${id}`).json();
+export const deleteConnectorById = async (id: string, api: KyInstance = authedAdminApi) =>
+  api.delete(`connectors/${id}`).json();
 
 export const updateConnectorConfig = async (
   id: string,
@@ -75,9 +79,10 @@ const sendTestMessage = async (
 export const getConnectorAuthorizationUri = async (
   connectorId: string,
   state: string,
-  redirectUri: string
+  redirectUri: string,
+  api: KyInstance = authedAdminApi
 ) =>
-  authedAdminApi
+  api
     .post(`connectors/${connectorId}/authorization-uri`, {
       json: { state, redirectUri },
     })

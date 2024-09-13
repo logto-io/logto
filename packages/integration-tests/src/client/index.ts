@@ -20,14 +20,14 @@ export default class MockClient {
   protected readonly config: LogtoConfig;
   protected readonly storage: MemoryStorage;
   protected readonly logto: LogtoClient;
+  protected readonly api: KyInstance;
 
   private navigateUrl?: string;
-  private readonly api: KyInstance;
 
-  constructor(config?: Partial<LogtoConfig>) {
+  constructor(config?: Partial<LogtoConfig>, api?: KyInstance) {
     this.storage = new MemoryStorage();
     this.config = { ...defaultConfig, ...config };
-    this.api = ky.extend({ prefixUrl: this.config.endpoint + '/api' });
+    this.api = api ?? ky.extend({ prefixUrl: this.config.endpoint + '/api' });
 
     this.logto = new LogtoClient(this.config, {
       navigate: (url: string) => {
