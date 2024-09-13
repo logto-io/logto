@@ -170,7 +170,7 @@ export class SignInExperienceValidator {
    *
    * @throws {RequestError} with status 422 if the email identifier is SSO enabled
    **/
-  private async guardSsoOnlyEmailIdentifier(verificationRecord: VerificationRecord) {
+  public async guardSsoOnlyEmailIdentifier(verificationRecord: VerificationRecord) {
     const emailIdentifier = getEmailIdentifierFromVerificationRecord(verificationRecord);
 
     if (!emailIdentifier) {

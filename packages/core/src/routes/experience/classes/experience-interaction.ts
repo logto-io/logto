@@ -253,6 +253,7 @@ export default class ExperienceInteraction {
    * @throws {RequestError} with 400 if the verification record can not be used for creating a new user or not verified
    * @throws {RequestError} with 422 if the profile data is not unique across users
    * @throws {RequestError} with 422 if any of required profile fields are missing
+   * @throws {RequestError} with 422 if the email domain is SSO only
    */
   public async createUser(verificationId?: string, log?: LogEntry) {
     assertThat(
@@ -274,6 +275,7 @@ export default class ExperienceInteraction {
         verification: verificationRecord.toJson(),
       });
 
+      await this.signInExperienceValidator.guardSsoOnlyEmailIdentifier(verificationRecord);
       const identifierProfile = await getNewUserProfileFromVerificationRecord(verificationRecord);
 
       await this.profile.setProfileWithValidation(identifierProfile);

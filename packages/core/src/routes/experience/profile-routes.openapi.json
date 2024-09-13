@@ -38,7 +38,7 @@
             "description": "`SignIn` interaction only: MFA is enabled for the user but has not been verified. The user must verify the MFA before updating the profile data."
           },
           "422": {
-            "description": "The user profile can not been processed, check error message for more details. <br/>- The profile data is invalid or conflicts with existing user data. <br/>- The profile data is already in use by another user account."
+            "description": "The user profile can not been processed, check error message for more details. <br/>- The profile data is invalid or conflicts with existing user data. <br/>- The profile data is already in use by another user account. <br/>- The email address is enterprise SSO enabled, can only be linked through the SSO connector."
           }
         }
       }
