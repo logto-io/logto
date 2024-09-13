@@ -1,13 +1,12 @@
 ---
-"@logto/core": minor
+"@logto/core": patch
 ---
 
-enterprise SSO-only email identifier guard to the registration and profile fulfillment flow.
+prevent user registration and profile fulfillment with SSO-only email domains
+
+Email associated with SSO-enabled domains should only be used through the SSO authentication process.
 
 Bug fix:
 
-Implement the missing SSO-only email identifier guard in the user registration and profile fulfillment flow.
-
-- Creating a new user with a verification record containing an SSO-only email identifier should return a 422 `RequestError` with the error code `session.sso_required`.
-
-- Updating a user profile with an SSO-only email identifier should return a 422 `RequestError` with the error code `session.sso_required`.
+- Creating a new user with a verification record that contains an SSO-only email domain should return a 422 `RequestError` with the error code `session.sso_required`.
+- Updating a user profile with an SSO-only email domain should return a 422 `RequestError` with the error code `session.sso_required`.

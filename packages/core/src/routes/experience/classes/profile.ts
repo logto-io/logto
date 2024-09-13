@@ -37,7 +37,7 @@ export class Profile {
    *
    * @throws {RequestError} 422 if the profile data already exists in the current user account.
    * @throws {RequestError} 422 if the unique identifier data already exists in another user account.
-   * @throws {RequestError} 422 if the email identifier is SSO only.
+   * @throws {RequestError} 422 if the email domain is SSO only.
    */
   async setProfileByVerificationRecord(
     type: VerificationType.EmailVerificationCode | VerificationType.PhoneVerificationCode,
