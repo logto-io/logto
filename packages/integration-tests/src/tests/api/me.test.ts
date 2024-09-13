@@ -113,7 +113,7 @@ describe('me', () => {
     await deleteUser(id);
   });
 
-  describe('Social sign-up user who has no password', () => {
+  describe('social sign-up user who has no password', () => {
     const context = new (class Context {
       socialConnectorId?: string;
       userId?: string;
