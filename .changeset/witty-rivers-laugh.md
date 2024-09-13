@@ -4,7 +4,7 @@
 
 prevent user registration and profile fulfillment with SSO-only email domains
 
-Email associated with SSO-enabled domains should only be used through the SSO authentication process.
+Emails associated with SSO-enabled domains should only be used through the SSO authentication process.
 
 Bug fix:
 
