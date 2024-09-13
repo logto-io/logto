@@ -49,7 +49,7 @@
     "dotenv": "^16.4.5",
     "got": "^14.0.0",
     "hpagent": "^1.2.0",
-    "inquirer": "^9.0.0",
+    "inquirer": "^10.0.0",
     "ora": "^8.0.1",
     "p-queue": "^8.0.0",
     "typescript": "^5.5.3",
