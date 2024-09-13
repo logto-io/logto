@@ -1,5 +1,66 @@
 # Change Log
 
+## 1.9.0
+
+### Minor Changes
+
+- 3d3a22030: add support for additional first screen options
+
+  This feature introduces new first screen options, allowing developers to customize the initial screen presented to users. In addition to the existing `sign_in` and `register` options, the following first screen choices are now supported:
+
+  - `identifier:sign_in`: Only display specific identifier-based sign-in methods to users.
+  - `identifier:register`: Only display specific identifier-based registration methods to users.
+  - `reset_password`: Allow users to directly access the password reset page.
+  - `single_sign_on`: Allow users to directly access the single sign-on (SSO) page.
+
+  Example:
+
+  ```javascript
+  // Example usage (React project using React SDK)
+  void signIn({
+    redirectUri,
+    firstScreen: "identifier:sign_in",
+    /**
+     * Optional. Specifies which sign-in methods to display on the identifier sign-in page.
+     * If not specified, the default sign-in experience configuration will be used.
+     * This option is effective when the `firstScreen` value is `identifier:sign_in`, `identifier:register`, or `reset_password`.
+     */
+    identifiers: ["email", "phone"],
+  });
+  ```
+
+### Patch Changes
+
+- cc346b4e0: add password policy checking api
+
+  Add `POST /api/sign-in-exp/default/check-password` API to check if the password meets the password policy configured in the default sign-in experience. A user ID is required for this API if rejects user info is enabled in the password policy.
+
+  Here's a non-normative example of the request and response:
+
+  ```http
+  POST /api/sign-in-exp/default/check-password
+  Content-Type: application/json
+
+  {
+    "password": "123",
+    "userId": "some-user-id"
+  }
+  ```
+
+  ```http
+  400 Bad Request
+  Content-Type: application/json
+
+  {
+    "result": false,
+    "issues": [
+      { "code": "password_rejected.too_short" },
+      { "code": "password_rejected.character_types" },
+      { "code": "password_rejected.restricted.sequence" }
+    ]
+  }
+  ```
+
 ## 1.8.0
 
 ### Minor Changes

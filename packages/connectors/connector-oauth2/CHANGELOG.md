@@ -1,5 +1,11 @@
 # @logto/connector-oauth
 
+## 1.5.0
+
+### Minor Changes
+
+- 27d2c91d2: adding support for nested attributes
+
 ## 1.4.0
 
 ### Minor Changes

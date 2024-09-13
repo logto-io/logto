@@ -1,5 +1,11 @@
 # @logto/connector-wecom
 
+## 0.3.1
+
+### Patch Changes
+
+- 763dd60cd: fix wecom connector platform, should be `Universal` instead of `null`
+
 ## 0.3.0
 
 ### Minor Changes
