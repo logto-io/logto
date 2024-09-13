@@ -9,7 +9,7 @@ import type { Context } from 'koa';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { createSystemsQuery } from '#src/queries/system.js';
-import { isFeatureFlagEnabled } from '#src/utils/feature-flag.js';
+import { isFeatureEnabledForEntity } from '#src/utils/feature-flag.js';
 
 const interactionCookieName = '_interaction';
 
@@ -77,7 +77,7 @@ export const getExperiencePackageWithFeatureFlagDetection = async <ContextT exte
 
   const rollOutPercentage = await getFeatureFlagSettings();
 
-  const isEligibleForNewExperience = isFeatureFlagEnabled({
+  const isEligibleForNewExperience = isFeatureEnabledForEntity({
     entityId: interactionSessionId,
     rollOutPercentage,
   });

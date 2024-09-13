@@ -1,13 +1,13 @@
-import { isFeatureFlagEnabled } from './feature-flag.js';
+import { isFeatureEnabledForEntity } from './feature-flag.js';
 import { randomString } from './test-utils.js';
 
 describe('feature flag detection', () => {
   it('should return same result for same session ID', () => {
     const entityId = randomString();
-    const result = isFeatureFlagEnabled({ entityId, rollOutPercentage: 0.5 });
+    const result = isFeatureEnabledForEntity({ entityId, rollOutPercentage: 0.5 });
 
     for (const _ of Array.from({ length: 20 })) {
-      expect(isFeatureFlagEnabled({ entityId, rollOutPercentage: 0.5 })).toBe(result);
+      expect(isFeatureEnabledForEntity({ entityId, rollOutPercentage: 0.5 })).toBe(result);
     }
   });
 
@@ -19,7 +19,7 @@ describe('feature flag detection', () => {
       for (const _ of Array.from({ length: 200 })) {
         const entityId = randomString();
         // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-        results.push(isFeatureFlagEnabled({ entityId, rollOutPercentage }));
+        results.push(isFeatureEnabledForEntity({ entityId, rollOutPercentage }));
       }
 
       const count = results.filter(Boolean).length;

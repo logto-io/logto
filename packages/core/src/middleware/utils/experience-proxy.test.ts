@@ -20,7 +20,7 @@ mockEsm('#src/queries/system.js', () => ({
 }));
 
 mockEsm('#src/utils/feature-flag.js', () => ({
-  isFeatureFlagEnabled: mockIsRequestInTestGroup,
+  isFeatureEnabledForEntity: mockIsRequestInTestGroup,
 }));
 
 await mockEsmWithActual('@logto/shared', () => ({

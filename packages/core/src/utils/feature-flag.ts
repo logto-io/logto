@@ -13,10 +13,13 @@ type Properties = {
 };
 
 /**
- * Check if a request is included in an A/B test.
- * We use the entityId to determine if feature flag should be enabled for the request.
+ * Check if the feature is enabled for the given entity.
+ *
+ * The function uses a simple hashing algorithm to determine
+ * if the feature is enabled for the given entityId based on a
+ * given rollOutPercentage.
  */
-export const isFeatureFlagEnabled = ({ entityId, rollOutPercentage }: Properties) => {
+export const isFeatureEnabledForEntity = ({ entityId, rollOutPercentage }: Properties) => {
   const hash = crypto.createHash('sha256');
   const hashedSessionId = hash.update(entityId).digest('hex');
 
