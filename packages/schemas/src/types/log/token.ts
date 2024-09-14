@@ -21,6 +21,7 @@ export enum ExchangeByType {
   RefreshToken = 'RefreshToken',
   ClientCredentials = 'ClientCredentials',
   TokenExchange = 'TokenExchange',
+  Implicit = 'Implicit',
 }
 
 export type LogKey = `${Type.ExchangeTokenBy}.${ExchangeByType}` | `${Type.RevokeToken}`;

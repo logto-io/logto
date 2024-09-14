@@ -1,4 +1,5 @@
 import {
+  oidcClientMetadataGuard,
   applicationCreateGuard as originalApplicationCreateGuard,
   applicationPatchGuard as originalApplicationPatchGuard,
 } from '@logto/schemas';
@@ -7,6 +8,7 @@ import { z } from 'zod';
 export const applicationCreateGuard = originalApplicationCreateGuard
   .omit({
     protectedAppMetadata: true,
+    oidcClientMetadata: true,
   })
   .extend({
     protectedAppMetadata: z
@@ -15,11 +17,19 @@ export const applicationCreateGuard = originalApplicationCreateGuard
         origin: z.string(),
       })
       .optional(),
+    // Prevent setting grantTypes and responseTypes in the create guard
+    oidcClientMetadata: oidcClientMetadataGuard
+      .omit({
+        grantTypes: true,
+        responseTypes: true,
+      })
+      .optional(),
   });
 
 export const applicationPatchGuard = originalApplicationPatchGuard
   .omit({
     protectedAppMetadata: true,
+    oidcClientMetadata: true,
   })
   .extend({
     protectedAppMetadata: z
@@ -34,6 +44,13 @@ export const applicationPatchGuard = originalApplicationPatchGuard
             })
           )
           .optional(),
+      })
+      .optional(),
+    // Prevent setting grantTypes and responseTypes in the create guard
+    oidcClientMetadata: oidcClientMetadataGuard
+      .omit({
+        grantTypes: true,
+        responseTypes: true,
       })
       .optional(),
   });

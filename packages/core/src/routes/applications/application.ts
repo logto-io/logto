@@ -260,7 +260,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         body,
       } = ctx.guard;
 
-      const { isAdmin, protectedAppMetadata, ...rest } = body;
+      const { isAdmin, protectedAppMetadata, oidcClientMetadata, ...rest } = body;
 
       // @deprecated
       // User can enable the admin access of Machine-to-Machine apps by switching on a toggle on Admin Console.
@@ -317,6 +317,12 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
           });
           throw error;
         }
+      }
+
+      // Prevent hidden fields (grantTypes, responseTypes) from being replaced
+      // Merge oidcClientMetadata if it's provided
+      if (oidcClientMetadata) {
+        await queries.applications.updateApplicationById(id, { oidcClientMetadata }, 'merge');
       }
 
       ctx.body = await (Object.keys(rest).length > 0
