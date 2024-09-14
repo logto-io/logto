@@ -1,6 +1,7 @@
 import { validateRedirectUrl } from '@logto/core-kit';
 import { z } from 'zod';
 
+import { GrantType, ResponseType } from '../../types/oidc-config.js';
 import { type ToZodObject } from '../../utils/zod.js';
 
 export const oidcModelInstancePayloadGuard = z
@@ -21,7 +22,7 @@ export type OidcClientMetadata = {
   /**
    * The redirect URIs that the client is allowed to use.
    *
-   * @see {@link https://openid.net/specs/openid-connect-registration-1_0.html#ClientMetadata | OpenID Connect Dynamic Client Registration 1.0}
+   * @see {@link https://openid.net/specs/openid-connect-registration-1_0.html#ClientMetadata | OpenID Connect Registration 1.0}
    */
   redirectUris: string[];
   /**
@@ -43,6 +44,18 @@ export type OidcClientMetadata = {
    */
   backchannelLogoutSessionRequired?: boolean;
   logoUri?: string;
+  /**
+   * The allowed grant types for the client.
+   *
+   * @see {@link https://openid.net/specs/openid-connect-core-1_0.html#ClientMetadata | OpenID Connect Registration 1.0}
+   */
+  grantTypes?: GrantType[];
+  /**
+   * The allowed response types for the client.
+   *
+   * @see {@link https://openid.net/specs/openid-connect-core-1_0.html#ClientMetadata | OpenID Connect Registration 1.0}
+   */
+  responseTypes?: ResponseType[];
 };
 
 export const oidcClientMetadataGuard = z.object({
@@ -55,6 +68,8 @@ export const oidcClientMetadataGuard = z.object({
   backchannelLogoutUri: z.string().url().optional(),
   backchannelLogoutSessionRequired: z.boolean().optional(),
   logoUri: z.string().optional(),
+  grantTypes: z.nativeEnum(GrantType).array().optional(),
+  responseTypes: z.nativeEnum(ResponseType).array().optional(),
 }) satisfies ToZodObject<OidcClientMetadata>;
 
 export enum CustomClientMetadataKey {

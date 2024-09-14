@@ -13,4 +13,14 @@ export enum GrantType {
   RefreshToken = 'refresh_token',
   ClientCredentials = 'client_credentials',
   TokenExchange = 'urn:ietf:params:oauth:grant-type:token-exchange',
+  Implicit = 'implicit',
+}
+
+export enum ResponseType {
+  /** Authorization code flow */
+  Code = 'code',
+  /** Implicit flow */
+  IdToken = 'id_token',
+  /** Hybrid flow */
+  HybridIdToken = 'code id_token',
 }
