@@ -1,3 +1,4 @@
+import { ResponseError } from '@withtyped/client';
 import { HTTPError, TimeoutError } from 'ky';
 import { type FieldValues, type SubmitHandler } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -16,7 +17,10 @@ export const trySubmitSafe =
     try {
       await handler(formData, event);
     } catch (error) {
-      if (error instanceof HTTPError && error.response.status !== 401) {
+      if (
+        (error instanceof HTTPError || error instanceof ResponseError) &&
+        error.response.status !== 401
+      ) {
         // Returned directly, since the error has been handled by the `use-api` hook.
         return;
       }
