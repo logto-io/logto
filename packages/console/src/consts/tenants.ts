@@ -9,7 +9,6 @@ import {
 } from '@/cloud/types/router';
 import { RegionName } from '@/components/Region';
 import { LogtoSkuType } from '@/types/skus';
-import { type SubscriptionPlan } from '@/types/subscriptions';
 
 import { adminEndpoint, isCloud } from './env';
 
@@ -46,44 +45,6 @@ export const defaultTenantResponse: TenantResponse = {
   planId: defaultSubscriptionPlanId, // Reserved for compatibility with cloud
   regionName: RegionName.EU, // Reserved for compatibility with cloud
   createdAt: new Date(),
-};
-
-/**
- * - For cloud, the initial tenant's subscription plan will be fetched from the cloud API.
- * - OSS has a fixed subscription plan with `development` id and no cloud API to dynamically fetch the subscription plan.
- */
-export const defaultSubscriptionPlan: SubscriptionPlan = {
-  id: defaultSubscriptionPlanId,
-  name: 'Development',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-  stripeProducts: [],
-  quota: {
-    mauLimit: null,
-    tokenLimit: null,
-    applicationsLimit: null,
-    machineToMachineLimit: null,
-    resourcesLimit: null,
-    scopesPerResourceLimit: null,
-    customDomainEnabled: true,
-    mfaEnabled: true,
-    omniSignInEnabled: true,
-    socialConnectorsLimit: null,
-    standardConnectorsLimit: null,
-    rolesLimit: null,
-    machineToMachineRolesLimit: null,
-    scopesPerRoleLimit: null,
-    auditLogsRetentionDays: null,
-    hooksLimit: null,
-    organizationsEnabled: true,
-    ssoEnabled: true,
-    ticketSupportResponseTime: 48,
-    thirdPartyApplicationsLimit: null,
-    tenantMembersLimit: null,
-    customJwtEnabled: true,
-    subjectTokenEnabled: true,
-    bringYourUiEnabled: true,
-  },
 };
 
 /**

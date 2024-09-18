@@ -4,25 +4,10 @@ import { ResponseError } from '@withtyped/client';
 import dayjs from 'dayjs';
 
 import { tryReadResponseErrorBody } from '@/cloud/hooks/use-cloud-api';
-import { type LogtoSkuResponse, type SubscriptionPlanResponse } from '@/cloud/types/router';
+import { type LogtoSkuResponse } from '@/cloud/types/router';
 import { ticketSupportResponseTimeMap } from '@/consts/plan-quotas';
 import { featuredPlanIdOrder, featuredPlanIds } from '@/consts/subscriptions';
 import { type LogtoSkuQuota } from '@/types/skus';
-
-export const addSupportQuotaToPlan = (subscriptionPlanResponse: SubscriptionPlanResponse) => {
-  const { id, quota } = subscriptionPlanResponse;
-
-  return {
-    ...subscriptionPlanResponse,
-    quota: {
-      ...quota,
-      /**
-       * Manually add this support quota item to the plan since it will be compared in the downgrade plan notification modal.
-       */
-      ticketSupportResponseTime: ticketSupportResponseTimeMap[id] ?? 0, // Fallback to not supported
-    },
-  };
-};
 
 export const addSupportQuota = (logtoSkuResponse: LogtoSkuResponse) => {
   const { id, quota } = logtoSkuResponse;

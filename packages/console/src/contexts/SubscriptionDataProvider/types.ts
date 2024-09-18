@@ -6,13 +6,8 @@ import {
   type NewSubscriptionResourceScopeUsage,
   type NewSubscriptionRoleScopeUsage,
 } from '@/cloud/types/router';
-import { type SubscriptionPlan } from '@/types/subscriptions';
 
 export type Context = {
-  /** @deprecated */
-  subscriptionPlans: SubscriptionPlan[];
-  /** @deprecated */
-  currentPlan: SubscriptionPlan;
   currentSubscription: Subscription;
   onCurrentSubscriptionUpdated: (subscription?: Subscription) => void;
 };
@@ -27,7 +22,6 @@ type NewSubscriptionSupplementContext = {
   mutateSubscriptionQuotaAndUsages: () => void;
 };
 
-export type NewSubscriptionContext = Omit<Context, 'subscriptionPlans' | 'currentPlan'> &
-  NewSubscriptionSupplementContext;
+export type NewSubscriptionContext = Context & NewSubscriptionSupplementContext;
 
 export type FullContext = Context & NewSubscriptionSupplementContext;

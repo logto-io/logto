@@ -15,7 +15,6 @@ import { checkoutStateQueryKey } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useLogtoSkus from '@/hooks/use-logto-skus';
-import useSubscriptionPlans from '@/hooks/use-subscription-plans';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { clearLocalCheckoutSession, getLocalCheckoutSession } from '@/utils/checkout';
 
@@ -33,8 +32,6 @@ function CheckoutSuccessCallback() {
   const checkoutState = new URLSearchParams(search).get(checkoutStateQueryKey);
   const { state, sessionId, callbackPage, isDowngrade } = getLocalCheckoutSession() ?? {};
 
-  const { data: subscriptionPlans, error: fetchPlansError } = useSubscriptionPlans();
-  const isLoadingPlans = !subscriptionPlans && !fetchPlansError;
   const { data: logtoSkus, error: fetchLogtoSkusError } = useLogtoSkus();
   const isLoadingLogtoSkus = !logtoSkus && !fetchLogtoSkusError;
 
@@ -132,12 +129,11 @@ function CheckoutSuccessCallback() {
     navigate,
     navigateTenant,
     onCurrentSubscriptionUpdated,
-    subscriptionPlans,
     t,
     tenantSubscription,
   ]);
 
-  if (!isValidSession && !isLoadingPlans) {
+  if (!isValidSession) {
     return <Navigate replace to={consoleHomePage} />;
   }
 
