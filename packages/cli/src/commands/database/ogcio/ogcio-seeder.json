@@ -303,6 +303,7 @@
         "resource_id": "messaging-api",
         "specific_permissions": [
           "messaging:message.self:read",
+          "messaging:message.self:write",
           "messaging:citizen.self:read",
           "messaging:citizen.self:write"
         ]
@@ -355,6 +356,7 @@
             "resource_id": "messaging-api",
             "specific_permissions": [
               "messaging:message.self:read",
+              "messaging:message.self:write",
               "messaging:citizen.self:read",
               "messaging:citizen.self:write"
             ]
