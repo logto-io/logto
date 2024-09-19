@@ -128,3 +128,13 @@ stages:
         awsRegion: ${{ variables.awsRegion }}
         serviceName: mygovid-mock-service
         containerTag: mygovid-mock-service
+  - stage: Deploy_MyGovId_Mock
+    displayName: Deploy to ECS - MyGovId Mock
+    dependsOn: Push_MyGovId_Mock
+    jobs:
+    - template: pipeline-templates/deploy_ecs.yml
+      parameters:
+        awsServiceConnection: ${{ variables.awsServiceConnection }}
+        awsRegion: ${{ variables.awsRegion }}
+        serviceName: mygov-mock
+    
