@@ -1,6 +1,7 @@
 import { SignInIdentifier, SignInMode } from '@logto/schemas';
 import classNames from 'classnames';
 import type { TFuncKey } from 'i18next';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
@@ -45,6 +46,8 @@ const SocialLinkAccount = ({ connectorId, verificationId, className, relatedUser
   const { signUpMethods, signInMode } = useSieMethods();
 
   const bindSocialRelatedUser = useBindSocialRelatedUser();
+  const [isBindingUser, setIsBindingUser] = useState(false);
+
   const registerWithSocial = useSocialRegister(connectorId);
 
   const actionText = getCreateAccountActionText(signUpMethods);
@@ -58,8 +61,11 @@ const SocialLinkAccount = ({ connectorId, verificationId, className, relatedUser
       <Button
         title="action.bind"
         i18nProps={{ address: type === 'email' ? maskEmail(value) : maskPhone(value) }}
-        onClick={() => {
-          void bindSocialRelatedUser(verificationId);
+        isLoading={isBindingUser}
+        onClick={async () => {
+          setIsBindingUser(true);
+          await bindSocialRelatedUser(verificationId);
+          setIsBindingUser(false);
         }}
       />
 
