@@ -1,6 +1,10 @@
 @use '@/scss/underscore' as _;
 
-.regionText {
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: _.unit(2);
   font: var(--font-label-2);
 
   .comingSoon {
