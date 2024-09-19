@@ -88,7 +88,6 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
     }
 
     const [distributionPath, moduleName] = await getDistributionPath(packagePath, ctx);
-
     const spaDistributionFiles = await fs.readdir(distributionPath);
 
     if (!spaDistributionFiles.some((file) => requestPath.startsWith('/' + file))) {
