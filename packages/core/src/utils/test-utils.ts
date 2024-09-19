@@ -96,6 +96,7 @@ export const createContextWithRouteParameters = (
 
   return {
     ...ctx,
+    set: ctx.set,
     path: ctx.path,
     URL: ctx.URL,
     params: {},
