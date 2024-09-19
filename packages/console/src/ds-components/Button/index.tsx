@@ -95,14 +95,7 @@ function Button(
     >
       {showSpinner && <Spinner className={styles.spinner} />}
       {icon && <span className={styles.icon}>{icon}</span>}
-      {title &&
-        (typeof title === 'string' ? (
-          <span>
-            <DynamicT forKey={title} />
-          </span>
-        ) : (
-          title
-        ))}
+      {title && <span>{typeof title === 'string' ? <DynamicT forKey={title} /> : title}</span>}
       {trailingIcon && <span className={styles.trailingIcon}>{trailingIcon}</span>}
     </button>
   );
