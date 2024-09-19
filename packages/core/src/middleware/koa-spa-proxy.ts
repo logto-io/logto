@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import { trySafe } from '@silverhand/essentials';
+import { type Nullable, trySafe } from '@silverhand/essentials';
 import type { Context, MiddlewareType } from 'koa';
 import proxy from 'koa-proxies';
 import type { IRouterParamContext } from 'koa-router';
@@ -32,6 +32,9 @@ const getDistributionPath = async <ContextT extends Context>(
       (await trySafe(async () => getExperiencePackageWithFeatureFlagDetection(ctx))) ??
       'experience-legacy';
 
+    // Add a header to indicate which experience package is being served
+    ctx.set('Logto-Experience-Package', moduleName);
+
     return path.join('node_modules/@logto', moduleName, 'dist');
   }
 
@@ -47,21 +50,24 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
 }: Properties): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   type Middleware = MiddlewareType<StateT, ContextT, ResponseBodyT>;
 
-  const devProxy: Middleware = proxy('*', {
-    target: `http://localhost:${port}`,
-    changeOrigin: true,
-    logs: (ctx, target) => {
-      // Ignoring static file requests in development since vite will load a crazy amount of files
-      if (path.basename(ctx.request.path).includes('.')) {
-        return;
-      }
+  // Avoid defining a devProxy if we are in production
+  const devProxy: Nullable<Middleware> = EnvSet.values.isProduction
+    ? null
+    : proxy('*', {
+        target: `http://localhost:${port}`,
+        changeOrigin: true,
+        logs: (ctx, target) => {
+          // Ignoring static file requests in development since vite will load a crazy amount of files
+          if (path.basename(ctx.request.path).includes('.')) {
+            return;
+          }
 
-      getConsoleLogFromContext(ctx).plain(`\tproxy --> ${target}`);
-    },
-    rewrite: (requestPath) => {
-      return '/' + path.join(prefix, requestPath);
-    },
-  });
+          getConsoleLogFromContext(ctx).plain(`\tproxy --> ${target}`);
+        },
+        rewrite: (requestPath) => {
+          return '/' + path.join(prefix, requestPath);
+        },
+      });
 
   return async (ctx, next) => {
     const requestPath = ctx.request.path;
@@ -79,7 +85,8 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
       return serve(ctx, next);
     }
 
-    if (!EnvSet.values.isProduction) {
+    // Use the devProxy under development mode
+    if (devProxy) {
       return devProxy(ctx, next);
     }
 
