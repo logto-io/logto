@@ -5,6 +5,7 @@ parameters:
   - name: awsRegion
   - name: awsServiceConnection
   - name: containerTag
+  - name: repositoryName
   
 jobs:
   - job: Push
