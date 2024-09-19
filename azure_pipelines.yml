@@ -85,6 +85,7 @@ stages:
         awsRegion: ${{ variables.awsRegion }}
         serviceName: logto
         containerTag: $(Build.SourceBranchName)
+        repositoryName: life-events-logto
   - stage: Deploy_Logto
     displayName: Deploy to ECS - logto
     dependsOn: Push_Logto
@@ -128,6 +129,7 @@ stages:
         awsRegion: ${{ variables.awsRegion }}
         serviceName: mygovid-mock-service
         containerTag: mygovid-mock-service
+        repositoryName: life-events-mygov-mock
   - stage: Deploy_MyGovId_Mock
     displayName: Deploy to ECS - MyGovId Mock
     dependsOn: Push_MyGovId_Mock
