@@ -25,20 +25,17 @@ type Properties = {
 const getDistributionPath = async <ContextT extends Context>(
   packagePath: string,
   ctx: ContextT
-) => {
+): Promise<[string, string]> => {
   if (packagePath === 'experience') {
     // Safely get the experience package name with feature flag detection, default fallback to legacy
     const moduleName =
       (await trySafe(async () => getExperiencePackageWithFeatureFlagDetection(ctx))) ??
       'experience-legacy';
 
-    // Add a header to indicate which experience package is being served
-    ctx.set('Logto-Experience-Package', moduleName);
-
-    return path.join('node_modules/@logto', moduleName, 'dist');
+    return [path.join('node_modules/@logto', moduleName, 'dist'), moduleName];
   }
 
-  return path.join('node_modules/@logto', packagePath, 'dist');
+  return [path.join('node_modules/@logto', packagePath, 'dist'), packagePath];
 };
 
 export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext, ResponseBodyT>({
@@ -90,13 +87,16 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
       return devProxy(ctx, next);
     }
 
-    const distributionPath = await getDistributionPath(packagePath, ctx);
+    const [distributionPath, moduleName] = await getDistributionPath(packagePath, ctx);
 
     const spaDistributionFiles = await fs.readdir(distributionPath);
 
     if (!spaDistributionFiles.some((file) => requestPath.startsWith('/' + file))) {
       ctx.request.path = '/';
     }
+
+    // Add a header to indicate which static package is being served
+    ctx.set('Logto-Static-Package', moduleName);
 
     return serveStatic(distributionPath)(ctx, next);
   };
