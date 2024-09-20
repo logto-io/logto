@@ -49,7 +49,7 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
         </div>
         <div className={styles.metadata}>
           <div className={styles.region}>
-            <RegionFlag />
+            <RegionFlag width={12} />
             <span>{regionName}</span>
           </div>
           <span>{t(`tenants.full_env_tag.${tag}`)}</span>
