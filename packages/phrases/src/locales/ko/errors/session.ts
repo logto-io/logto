@@ -21,8 +21,12 @@ const session = {
   csrf_token_mismatch: 'CSRF 토큰이 일치하지 않아요.',
   identifier_not_found: '사용자 식별자를 찾을 수 없어요. 처음부터 다시 로그인을 시도해 주세요.',
   interaction_not_found: '인터랙션 세션을 찾을 수 없어요. 처음부터 다시 세션을 시작해 주세요.',
+  invalid_interaction_type:
+    '현재 상호 작용에는 이 작업이 지원되지 않습니다. 새 세션을 시작해 주세요.',
   not_supported_for_forgot_password: '이 작업은 비밀번호 찾기를 지원하지 않아요.',
   identity_conflict: 'ID 불일치가 감지되었어요. 다른 ID로 진행하기 위해 새 세션을 시작해 주세요.',
+  identifier_not_verified:
+    '제공된 식별자 {{identifier}}가 확인되지 않았습니다. 이 식별자에 대한 검증 기록을 생성하고 검증 과정을 완료해 주세요.',
   mfa: {
     require_mfa_verification: 'MFA 인증이 필요해요.',
     mfa_sign_in_only: 'MFA는 로그인 인터랙션에서만 사용할 수 있어요.',
@@ -35,6 +39,7 @@ const session = {
     backup_code_required: '백업 코드가 필요해요.',
     invalid_backup_code: '유효하지 않은 백업 코드예요.',
     mfa_policy_not_user_controlled: 'MFA 정책은 사용자가 제어할 수 없어요.',
+    mfa_factor_not_enabled: 'MFA 요소가 활성화되지 않았습니다.',
   },
   sso_enabled: '이 이메일로는 SSO가 활성화되어 있어요. SSO로 로그인해 주세요.',
 };

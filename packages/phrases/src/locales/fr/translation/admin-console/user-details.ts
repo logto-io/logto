@@ -13,10 +13,13 @@ const user_details = {
   deleted: "L'utilisateur a été supprimé avec succès",
   reset_password: {
     reset_title: 'Êtes-vous sûr de vouloir réinitialiser le mot de passe ?',
+    generate_title: 'Êtes-vous sûr de vouloir générer un mot de passe ?',
     content:
       "Cette action ne peut être annulée. Cette action réinitialisera les informations de connexion de l'utilisateur.",
     reset_complete: 'Cet utilisateur a été réinitialisé',
+    generate_complete: 'Le mot de passe a été généré',
     new_password: 'Nouveau mot de passe :',
+    password: 'Mot de passe :',
   },
   tab_settings: 'Paramètres',
   tab_roles: 'Rôles utilisateur',
@@ -29,6 +32,7 @@ const user_details = {
   field_email: 'Adresse e-mail',
   field_phone: 'Numéro de téléphone',
   field_username: "Nom d'utilisateur",
+  field_password: 'Mot de passe',
   field_name: 'Nom',
   field_avatar: "URL de l'image avatar",
   field_avatar_placeholder: 'https://votre.domaine.cdn/avatar.png',
@@ -42,6 +46,8 @@ const user_details = {
   field_sso_connectors: "Connexions d'entreprise",
   custom_data_invalid: 'Les données personnalisées doivent être un objet JSON valide.',
   profile_invalid: 'Le profil doit être un objet JSON valide.',
+  password_already_set: 'Mot de passe déjà défini',
+  no_password_set: 'Pas de mot de passe défini',
   connectors: {
     connectors: 'Connecteurs',
     user_id: 'ID utilisateur',
@@ -100,6 +106,37 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     "L'utilisateur doit avoir au moins l'un des identifiants de connexion (nom d'utilisateur, e-mail, numéro de téléphone ou compte social) pour se connecter. Êtes-vous sûr(e) de vouloir continuer?",
+  personal_access_tokens: {
+    title: "Jeton d'accès personnel",
+    title_other: "Jetons d'accès personnel",
+    title_short: 'jeton',
+    empty: "L'utilisateur ne possède aucun jeton d'accès personnel.",
+    create: 'Créer un nouveau jeton',
+    tip: "Les jetons d'accès personnel (PAT) offrent un moyen sécurisé pour les utilisateurs d'accorder des jetons d'accès sans utiliser leurs identifiants et connexion interactive. Ceci est utile pour les CI/CD, scripts ou applications qui doivent accéder aux ressources de manière programmatique. <a>En savoir plus</a>",
+    value: 'Valeur',
+    created_at: 'Créé le',
+    expires_at: 'Expire le',
+    never: 'Jamais',
+    create_new_token: 'Créer un nouveau jeton',
+    delete_confirmation:
+      'Cette action ne peut être annulée. Êtes-vous sûr de vouloir supprimer ce jeton ?',
+    expired: 'Expiré',
+    expired_tooltip: 'Ce jeton a expiré le {{date}}.',
+    create_modal: {
+      title: "Créer un jeton d'accès personnel",
+      expiration: 'Expiration',
+      expiration_description: 'Le jeton expirera le {{date}}.',
+      expiration_description_never:
+        "Le jeton n'expirera jamais. Nous recommandons de définir une date d'expiration pour une sécurité renforcée.",
+      days: '{{count}} jour',
+      days_other: '{{count}} jours',
+      created: 'Le jeton {{name}} a été créé avec succès.',
+    },
+    edit_modal: {
+      title: "Éditer le jeton d'accès personnel",
+      edited: 'Le jeton {{name}} a été modifié avec succès.',
+    },
+  },
 };
 
 export default Object.freeze(user_details);

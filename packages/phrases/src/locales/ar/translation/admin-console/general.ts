@@ -46,10 +46,8 @@ const general = {
   continue: 'متابعة',
   page_info: '{{min, number}}-{{max, number}} من {{total, number}}',
   learn_more: 'معرفة المزيد',
-  /** UNTRANSLATED */
-  tab_error_one: '{{count, number}} error',
-  /** UNTRANSLATED */
-  tab_error_other: '{{count, number}} errors',
+  tab_error_one: '{{count, number}} خطأ',
+  tab_error_other: '{{count, number}} أخطاء',
   skip_for_now: 'تخطي للآن',
   remove: 'إزالة',
   visit: 'زيارة',
@@ -72,6 +70,8 @@ const general = {
   delete_field: 'حذف {{field}}',
   coming_soon: 'قريبًا',
   or: 'أو',
+  reset: 'إعادة تعيين',
+  generate: 'إنشاء',
 };
 
 export default Object.freeze(general);

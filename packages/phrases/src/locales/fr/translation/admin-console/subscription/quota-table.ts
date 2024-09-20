@@ -37,7 +37,6 @@ const quota_table = {
     built_in_email_connector: 'Connecteur email intégré',
     mfa: 'Authentification multi-facteurs',
     sso: 'SSO entreprise',
-
     impersonation: "Usurpation d'identité",
   },
   user_management: {
@@ -59,12 +58,21 @@ const quota_table = {
     just_in_time_provisioning: 'Fourniture juste-à-temps',
   },
   support: {
-    /** UNTRANSLATED */
-    title: 'Support',
+    title: 'Assistance',
     community: 'Communauté',
     customer_ticket: 'Ticket de support',
     premium: 'Premium',
     email_ticket_support: 'Support par ticket électronique',
+    discord_private_channel: 'Canal privé Discord',
+    premium_support: 'Support premium',
+    developer_onboarding: 'Intégration des développeurs',
+    solution_engineer_support: 'Support ingénieur solutions',
+    sla: 'SLA',
+    dedicated_computing_resources: 'Ressources informatiques dédiées',
+  },
+  compliance: {
+    title: 'Conformité',
+    soc2_compliant: 'Conforme SOC2',
     soc2_report: 'Rapport SOC2',
     hipaa_or_baa_report: 'Rapport HIPAA/BAA',
   },
@@ -82,7 +90,6 @@ const quota_table = {
   days_other: '{{count, number}} jours',
   add_on: 'Module complémentaire',
   tier: 'Niveau{{value, number}} :',
-
   million: '{{value, number}} million',
   mau_tip:
     "MAU (utilisateurs actifs mensuels) signifie le nombre d'utilisateurs uniques qui ont échangé au moins un jeton avec Logto au cours d'un cycle de facturation.",

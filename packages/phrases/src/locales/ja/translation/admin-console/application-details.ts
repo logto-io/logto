@@ -34,6 +34,7 @@ const application_details = {
   application_id_tip:
     '通常 Logto によって生成される一意のアプリケーション識別子です。OpenID Connect では「<a>client_id</a>」とも呼ばれます。',
   application_secret: 'アプリのシークレット',
+  application_secret_other: 'アプリのシークレット',
   redirect_uri: 'リダイレクト URI',
   redirect_uris: 'リダイレクト URI',
   redirect_uri_placeholder: 'https://your.website.com/app',
@@ -94,6 +95,10 @@ const application_details = {
   session_duration: 'セッション期間（日単位）',
   try_it: 'お試しください',
   no_organization_placeholder: 'No organization found. <a>Go to organizations</a>',
+  field_custom_data: 'カスタムデータ',
+  field_custom_data_tip:
+    '追加のカスタムアプリケーション情報で、事前定義されたアプリケーションプロパティにリストされていないもの。たとえば、ビジネス固有の設定と構成。',
+  custom_data_invalid: 'カスタムデータは有効な JSON オブジェクトである必要があります',
   branding: {
     name: 'ブランディング',
     description: 'Consent 画面上でアプリケーションの表示名とロゴをカスタマイズします。',
@@ -162,6 +167,33 @@ const application_details = {
     role_assigned: '役割の割り当てに成功しました。',
     search: '役割名、説明、または ID で検索',
     empty: '利用可能な役割はありません',
+  },
+  secrets: {
+    value: '値',
+    empty: 'アプリケーションにはシークレットがありません。',
+    created_at: '作成日',
+    expires_at: '有効期限',
+    never: 'なし',
+    create_new_secret: '新しいシークレットを作成',
+    delete_confirmation:
+      'この操作は元に戻せません。本当にこのシークレットを削除してもよろしいですか？',
+    legacy_secret: 'レガシーシークレット',
+    expired: '期限切れ',
+    expired_tooltip: 'このシークレットは {{date}} に期限切れになりました。',
+    create_modal: {
+      title: 'アプリケーションシークレットを作成',
+      expiration: '有効期限',
+      expiration_description: 'シークレットは{{date}}に期限切れになります。',
+      expiration_description_never:
+        'シークレットは期限切れになりません。セキュリティを強化するため、有効期限を設定することをお勧めします。',
+      days: '{{count}} 日',
+      days_other: '{{count}} 日間',
+      created: 'シークレット {{name}} が正常に作成されました。',
+    },
+    edit_modal: {
+      title: 'アプリケーションシークレットを編集',
+      edited: 'シークレット {{name}} が正常に編集されました。',
+    },
   },
 };
 

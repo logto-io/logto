@@ -35,6 +35,7 @@ const application_details = {
   application_id_tip:
     'Die eindeutige Anwendungs-ID, die normalerweise von Logto generiert wird. Steht auch für "<a>client_id</a>" in OpenID Connect.',
   application_secret: 'App-Geheimnis',
+  application_secret_other: 'App-Geheimnisse',
   redirect_uri: 'Umleitungs-URI',
   redirect_uris: 'Umleitungs-URIs',
   redirect_uri_placeholder: 'https://deine.website.de/app',
@@ -95,6 +96,10 @@ const application_details = {
   session_duration: 'Sitzungsdauer (Tage)',
   try_it: 'Probieren Sie es aus',
   no_organization_placeholder: 'Keine Organisation gefunden. <a>Zu den Organisationen</a>',
+  field_custom_data: 'Benutzerdefinierte Daten',
+  field_custom_data_tip:
+    'Zusätzliche benutzerdefinierte Anwendungsinformationen, die nicht in den vordefinierten Anwendungseigenschaften aufgeführt sind, wie z. B. geschäftsspezifische Einstellungen und Konfigurationen.',
+  custom_data_invalid: 'Benutzerdefinierte Daten müssen ein gültiges JSON-Objekt sein',
   branding: {
     name: 'Branding',
     description:
@@ -168,6 +173,33 @@ const application_details = {
     role_assigned: 'Rolle(n) erfolgreich zugewiesen',
     search: 'Nach Rollennamen, Beschreibung oder ID suchen',
     empty: 'Keine Rollen verfügbar',
+  },
+  secrets: {
+    value: 'Wert',
+    empty: 'Die Anwendung hat keine Geheimnisse.',
+    created_at: 'Erstellt am',
+    expires_at: 'Läuft ab am',
+    never: 'Niemals',
+    create_new_secret: 'Neues Geheimnis erstellen',
+    delete_confirmation:
+      'Diese Aktion kann nicht rückgängig gemacht werden. Sind Sie sicher, dass Sie dieses Geheimnis löschen möchten?',
+    legacy_secret: 'Altes Geheimnis',
+    expired: 'Abgelaufen',
+    expired_tooltip: 'Dieses Geheimnis lief am {{date}} ab.',
+    create_modal: {
+      title: 'Anwendungsgeheimnis erstellen',
+      expiration: 'Ablauf',
+      expiration_description: 'Das Geheimnis läuft am {{date}} ab.',
+      expiration_description_never:
+        'Das Geheimnis läuft niemals ab. Wir empfehlen, ein Ablaufdatum festzulegen, um die Sicherheit zu verbessern.',
+      days: '{{count}} Tag',
+      days_other: '{{count}} Tage',
+      created: 'Das Geheimnis {{name}} wurde erfolgreich erstellt.',
+    },
+    edit_modal: {
+      title: 'Anwendungsgeheimnis bearbeiten',
+      edited: 'Das Geheimnis {{name}} wurde erfolgreich bearbeitet.',
+    },
   },
 };
 

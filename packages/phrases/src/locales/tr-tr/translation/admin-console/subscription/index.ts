@@ -1,31 +1,27 @@
 import quota_item from './quota-item.js';
 import quota_table from './quota-table.js';
+import usage from './usage.js';
 
 const subscription = {
-  free_plan: 'Ücretsiz Plan',
+  free_plan: 'Ücretsiz plan',
   free_plan_description:
     'Yan projeler ve başlangıç Logto denemeleri için. Kredi kartı gerektirmez.',
   pro_plan: 'Pro plan',
   pro_plan_description: "Endişesiz bir şekilde Logto'dan faydalanan işletmeler için.",
-  enterprise: 'Kurumsal',
-  /** UNTRANSLATED */
+  enterprise: 'Kurumsal plan',
   enterprise_description:
-    'For large-scale organizations requiring advanced features, full customization, and dedicated support to power mission-critical applications. Tailored to your needs for ultimate security, compliance, and performance.',
-  /** UNTRANSLATED */
-  admin_plan: 'Admin plan',
-  /** UNTRANSLATED */
-  dev_plan: 'Development plan',
+    'Gelişmiş özellikler, tam özelleştirme ve kritik uygulamaları desteklemek için özel destek gerektiren büyük ölçekli organizasyonlar için. Nihai güvenlik, uyumluluk ve performans için ihtiyaçlarınıza göre uyarlanmıştır.',
+  admin_plan: 'Yönetici planı',
+  dev_plan: 'Geliştirme planı',
   current_plan: 'Mevcut Plan',
   current_plan_description:
     'İşte mevcut planınız. Plan kullanımınızı kolayca görebilir, önümüzdeki faturanızı kontrol edebilir ve ihtiyaç duydukça planınızda değişiklikler yapabilirsiniz.',
   plan_usage: 'Plan kullanımı',
   plan_cycle: 'Plan döngüsü: {{period}}. Kullanım {{renewDate}} tarihinde yenilenir.',
-  /** UNTRANSLATED */
-  next_bill: 'Your upcoming bill',
+  next_bill: 'Yaklaşan faturanız',
   next_bill_hint: 'Hesaplama hakkında daha fazla bilgi için lütfen bu <a>makaleye</a> başvurun.',
-  /** UNTRANSLATED */
   next_bill_tip:
-    'The prices displayed here are tax-exclusive and may be subject to a slight delay in updates. The tax amount will be calculated based on the information you provide and your local regulatory requirements, and will be shown in your invoices.',
+    'Burada gösterilen fiyatlar vergiler hariçtir ve güncellemelerde hafif bir gecikmeye tabi olabilir. Vergi tutarı, verdiğiniz bilgilere ve yerel düzenleyici gereksinimlerinize göre hesaplanacak ve faturalarınızda gösterilecektir.',
   manage_payment: 'Ödemeleri düzenle',
   overfill_quota_warning:
     'Kota sınırınıza ulaştınız. Herhangi bir sorunu önlemek için planı yükseltin.',
@@ -72,11 +68,12 @@ const subscription = {
       'Yükseltme konusunda yardıma mı ihtiyacınız var? <a>Bizimle iletişime geçin</a>.',
     a_maximum_of: '<item/> için maksimum',
   },
-  upgrade_success: 'Successfully upgraded to <name/>',
-  downgrade_success: 'Successfully downgraded to <name/>',
+  upgrade_success: "Başarıyla <name/>'e yükseltildi",
+  downgrade_success: "Başarıyla <name/>'e düşürüldü",
   subscription_check_timeout:
     'Abonelik kontrolü zaman aşımına uğradı. Lütfen daha sonra yenileyin.',
   no_subscription: 'Abonelik bulunamadı',
+  usage,
 };
 
 export default Object.freeze(subscription);

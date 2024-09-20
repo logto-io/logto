@@ -17,6 +17,8 @@ const application = {
   invalid_subdomain: 'Geçersiz alt alan adı.',
   custom_domain_not_found: 'Özel domain bulunamadı.',
   should_delete_custom_domains_first: 'Özel domainleri önce silmelisiniz.',
+  no_legacy_secret_found: 'Uygulamanın eski bir gizli anahtarı yok.',
+  secret_name_exists: 'Gizli isim zaten mevcut.',
 };
 
 export default Object.freeze(application);

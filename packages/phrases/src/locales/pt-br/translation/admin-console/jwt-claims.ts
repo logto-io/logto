@@ -41,6 +41,10 @@ const jwt_claims = {
     title: 'Dados do token',
     subtitle: 'Use o parâmetro de entrada `token` para a carga útil do token de acesso atual. ',
   },
+  api_context: {
+    title: 'Contexto da API: controle de acesso',
+    subtitle: 'Use o método `api.denyAccess` para rejeitar a solicitação de token.',
+  },
   fetch_external_data: {
     title: 'Buscar dados externos',
     subtitle: 'Incorpore dados de suas APIs externas diretamente nas reivindicações.',

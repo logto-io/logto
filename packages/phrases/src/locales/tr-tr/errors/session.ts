@@ -23,9 +23,13 @@ const session = {
   identifier_not_found: 'Kullanıcı kimliği bulunamadı. Lütfen geri gidin ve yeniden giriş yapın.',
   interaction_not_found:
     'Etkileşim oturumu bulunamadı. Lütfen geri gidin ve oturumu yeniden başlatın.',
+  invalid_interaction_type:
+    'Bu işlem mevcut etkileşim için desteklenmiyor. Lütfen yeni bir oturum başlatın.',
   not_supported_for_forgot_password: 'Parolamı unuttum için bu işlem desteklenmiyor.',
   identity_conflict:
     'Kimlik uyuşmazlığı tespit edildi. Farklı bir kimlikle devam etmek için yeni bir oturum başlatın.',
+  identifier_not_verified:
+    'Sağlanan {{identifier}} kimliği doğrulanmadı. Lütfen bu kimlik için bir doğrulama kaydı oluşturun ve doğrulama sürecini tamamlayın.',
   mfa: {
     require_mfa_verification: 'Oturum açmak için Mfa doğrulaması gereklidir.',
     mfa_sign_in_only: 'Mfa yalnızca oturum açma etkileşimi için kullanılabilir.',
@@ -38,6 +42,7 @@ const session = {
     backup_code_required: 'Yedek kod gereklidir.',
     invalid_backup_code: 'Geçersiz yedek kod.',
     mfa_policy_not_user_controlled: 'MFA politikası kullanıcı tarafından kontrol edilmez.',
+    mfa_factor_not_enabled: 'MFA faktörü etkin değil.',
   },
   sso_enabled: 'Bu e-posta için tek oturum açma etkin. Lütfen SSO ile oturum açın.',
 };

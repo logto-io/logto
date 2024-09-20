@@ -13,10 +13,13 @@ const user_details = {
   deleted: 'O utilizador foi eliminado com sucesso',
   reset_password: {
     reset_title: 'Tem a certeza de que deseja redefinir a palavra-passe?',
+    generate_title: 'Tem a certeza de que deseja gerar uma palavra-passe?',
     content:
       'Esta ação não pode ser desfeita. Isso irá redefinir as informações de login do utilizador.',
     reset_complete: 'Este utilizador foi redefinido',
+    generate_complete: 'A palavra-passe foi gerada',
     new_password: 'Nova palavra-passe:',
+    password: 'Palavra-passe:',
   },
   tab_settings: 'Definições',
   tab_roles: 'Funções de usuário',
@@ -29,6 +32,7 @@ const user_details = {
   field_email: 'Endereço de email',
   field_phone: 'Número de telefone',
   field_username: 'Nome de utilizador',
+  field_password: 'Palavra-passe',
   field_name: 'Nome',
   field_avatar: 'URL da imagem do avatar',
   field_avatar_placeholder: 'https://your.cdn.domain/avatar.png',
@@ -42,6 +46,8 @@ const user_details = {
   field_sso_connectors: 'Conexões empresariais',
   custom_data_invalid: 'Os dados personalizados devem ser um objeto JSON válido',
   profile_invalid: 'O perfil deve ser um objeto JSON válido',
+  password_already_set: 'Palavra-passe já definida',
+  no_password_set: 'Nenhuma palavra-passe definida',
   connectors: {
     connectors: 'Conectores',
     user_id: 'ID do utilizador',
@@ -99,6 +105,37 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     'O utilizador precisa de ter pelo menos um dos identificadores de início de sessão (nome de utilizador, e-mail, número de telefone ou redes sociais) para iniciar sessão. Tem a certeza de que quer continuar?',
+  personal_access_tokens: {
+    title: 'Token de acesso pessoal',
+    title_other: 'Tokens de acesso pessoal',
+    title_short: 'token',
+    empty: 'O utilizador não possui nenhum token de acesso pessoal.',
+    create: 'Criar novo token',
+    tip: 'Tokens de acesso pessoal (PATs) fornecem uma maneira segura para os utilizadores concederem tokens de acesso sem usar as suas credenciais e login interativo. Isso é útil para CI/CD, scripts ou aplicações que precisam acessar recursos programaticamente. <a>Saiba mais</a>',
+    value: 'Valor',
+    created_at: 'Criado em',
+    expires_at: 'Expira em',
+    never: 'Nunca',
+    create_new_token: 'Criar novo token',
+    delete_confirmation:
+      'Esta ação não pode ser desfeita. Tem a certeza de que deseja eliminar este token?',
+    expired: 'Expirado',
+    expired_tooltip: 'Este token expirou em {{date}}.',
+    create_modal: {
+      title: 'Criar token de acesso pessoal',
+      expiration: 'Expiração',
+      expiration_description: 'O token expirará em {{date}}.',
+      expiration_description_never:
+        'O token nunca expirará. Recomendamos definir uma data de expiração para maior segurança.',
+      days: '{{count}} dia',
+      days_other: '{{count}} dias',
+      created: 'O token {{name}} foi criado com sucesso.',
+    },
+    edit_modal: {
+      title: 'Editar token de acesso pessoal',
+      edited: 'O token {{name}} foi editado com sucesso.',
+    },
+  },
 };
 
 export default Object.freeze(user_details);

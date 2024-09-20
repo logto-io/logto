@@ -4,6 +4,7 @@ const guard = {
   can_not_get_tenant_id: 'Невозможно получить идентификатор арендатора из запроса.',
   file_size_exceeded: 'Превышен размер файла.',
   mime_type_not_allowed: 'MIME-тип не разрешен.',
+  not_allowed_for_admin_tenant: 'Не разрешено для арендатора-админа.',
 };
 
 export default Object.freeze(guard);

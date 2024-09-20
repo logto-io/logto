@@ -34,6 +34,7 @@ const application_details = {
   application_id_tip:
     'O identificador exclusivo da aplicação normalmente gerado pelo Logto. Também conhecido como “<a>client_id</a>” no OpenID Connect.',
   application_secret: 'Segredo da aplicação',
+  application_secret_other: 'Segredos do aplicativo',
   redirect_uri: 'URI de redirecionamento',
   redirect_uris: 'URIs de redirecionamento',
   redirect_uri_placeholder: 'https://seusite.com.br/app',
@@ -94,6 +95,10 @@ const application_details = {
   session_duration: 'Duração da sessão (dias)',
   try_it: 'Tente',
   no_organization_placeholder: 'Nenhuma organização encontrada. <a>Vá para organizações</a>',
+  field_custom_data: 'Dados personalizados',
+  field_custom_data_tip:
+    'Informações adicionais personalizadas da aplicação não listadas nas propriedades pré-definidas da aplicação, como configurações e configurações específicas dos negócios.',
+  custom_data_invalid: 'Os dados personalizados devem ser um objeto JSON válido',
   branding: {
     name: 'Branding',
     description:
@@ -164,6 +169,33 @@ const application_details = {
     role_assigned: 'Função(s) atribuída(s) com sucesso',
     search: 'Pesquisar pelo nome, descrição ou ID da função',
     empty: 'Nenhuma função disponível',
+  },
+  secrets: {
+    value: 'Valor',
+    empty: 'O aplicativo não possui nenhum segredo.',
+    created_at: 'Criado em',
+    expires_at: 'Expira em',
+    never: 'Nunca',
+    create_new_secret: 'Criar novo segredo',
+    delete_confirmation:
+      'Esta ação não pode ser desfeita. Tem certeza de que deseja excluir este segredo?',
+    legacy_secret: 'Segredo legado',
+    expired: 'Expirado',
+    expired_tooltip: 'Este segredo expirou em {{date}}.',
+    create_modal: {
+      title: 'Criar segredo da aplicação',
+      expiration: 'Expiração',
+      expiration_description: 'O segredo expirará em {{date}}.',
+      expiration_description_never:
+        'O segredo nunca expirará. Recomendamos definir uma data de expiração para maior segurança.',
+      days: '{{count}} dia',
+      days_other: '{{count}} dias',
+      created: 'O segredo {{name}} foi criado com sucesso.',
+    },
+    edit_modal: {
+      title: 'Editar segredo da aplicação',
+      edited: 'O segredo {{name}} foi editado com sucesso.',
+    },
   },
 };
 

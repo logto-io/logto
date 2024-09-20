@@ -1,23 +1,17 @@
 const add_on = {
-  /** UNTRANSLATED */
   mfa_inline_notification:
-    'MFA is a ${{price, number}} per mo add-on for the {{planName}}. First month prorated based on your billing cycle. <a>Learn more</a>',
+    'MFA стоит ${{price, number}} в месяц в дополнение к {{planName}}. Первый месяц рассчитывается пропорционально в зависимости от вашего расчетного цикла. <a>Узнайте больше</a>',
   footer: {
-    /** UNTRANSLATED */
     api_resource:
-      'Additional resources cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
-    /** UNTRANSLATED */
+      'Дополнительные ресурсы стоят <span>${{price, number}} в месяц / каждый</span>. Первый месяц рассчитывается пропорционально в зависимости от вашего расчетного цикла. <a>Узнайте больше</a>',
     machine_to_machine_app:
-      'Additional machine-to-machine apps cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
-    /** UNTRANSLATED */
+      'Дополнительные приложения между машинами стоят <span>${{price, number}} в месяц / каждое</span>. Первый месяц рассчитывается пропорционально в зависимости от вашего расчетного цикла. <a>Узнайте больше</a>',
     enterprise_sso:
-      'Enterprise SSO cost <span>${{price, number}} per mo / ea</span> add-on for {{planName}}. First month prorated based on your billing cycle. <a>Learn more</a>',
-    /** UNTRANSLATED */
+      'Enterprise SSO стоит <span>${{price, number}} в месяц / каждое</span> в дополнение к {{planName}}. Первый месяц рассчитывается пропорционально в зависимости от вашего расчетного цикла. <a>Узнайте больше</a>',
     tenant_members:
-      'Additional members cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
-    /** UNTRANSLATED */
+      'Дополнительные участники стоят <span>${{price, number}} в месяц / каждый</span>. Первый месяц рассчитывается пропорционально в зависимости от вашего расчетного цикла. <a>Узнайте больше</a>',
     organization:
-      'Organization is a <span>${{price, number}} per mo</span> add-on for {{planName}} with unlimited organizations. First month prorated based on your billing cycle. <a>Learn more</a>',
+      'Организация стоит <span>${{price, number}} в месяц</span> в дополнение к {{planName}} с неограниченным количеством организаций. Первый месяц рассчитывается пропорционально в зависимости от вашего расчетного цикла. <a>Узнайте больше</a>',
   },
 };
 

@@ -36,6 +36,7 @@ const user = {
   password_algorithm_required: 'Wymagany jest algorytm hasła.',
   password_and_digest:
     'Nie możesz ustawić zarówno hasła w postaci tekstu jawnego, jak i skrótu hasła.',
+  personal_access_token_name_exists: 'Nazwa osobistego tokenu dostępu już istnieje.',
 };
 
 export default Object.freeze(user);

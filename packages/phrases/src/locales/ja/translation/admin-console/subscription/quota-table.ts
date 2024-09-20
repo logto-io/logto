@@ -37,7 +37,6 @@ const quota_table = {
     built_in_email_connector: '組み込みE-mailコネクタ',
     mfa: '多要素認証',
     sso: 'エンタープライズ SSO',
-
     impersonation: 'なりすまし',
   },
   user_management: {
@@ -59,14 +58,23 @@ const quota_table = {
     just_in_time_provisioning: 'ジャストインタイムプロビジョニング',
   },
   support: {
-    /** UNTRANSLATED */
-    title: 'Support',
+    title: 'サポート',
     community: 'コミュニティ',
     customer_ticket: 'カスタマーチケット',
     premium: 'プレミアム',
     email_ticket_support: 'Emailチケットサポート',
-    soc2_report: 'SOC2レポート',
-    hipaa_or_baa_report: 'HIPAA/BAAレポート',
+    discord_private_channel: 'Discord プライベートチャンネル',
+    premium_support: 'プレミアムサポート',
+    developer_onboarding: 'デベロッパーオンボーディング',
+    solution_engineer_support: 'ソリューションエンジニアサポート',
+    sla: 'SLA',
+    dedicated_computing_resources: '専用コンピューティングリソース',
+  },
+  compliance: {
+    title: 'コンプライアンス',
+    soc2_compliant: 'SOC2 準拠',
+    soc2_report: 'SOC2 レポート',
+    hipaa_or_baa_report: 'HIPAA/BAA レポート',
   },
   developers_and_platform: {
     title: 'デベロッパーとプラットフォーム',
@@ -82,7 +90,6 @@ const quota_table = {
   days_other: '{{count, number}} 日',
   add_on: 'アドオン',
   tier: 'レベル{{value, number}}: ',
-
   million: '{{value, number}} 万',
   mau_tip:
     'MAU（月間アクティブユーザー）は、請求サイクルで Logto と少なくとも 1 つのトークンを交換したユニークユーザーの数を指します。',

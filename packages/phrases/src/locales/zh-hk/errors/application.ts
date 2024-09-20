@@ -15,6 +15,8 @@ const application = {
   invalid_subdomain: '無效的子域名。',
   custom_domain_not_found: '自訂域名未找到。',
   should_delete_custom_domains_first: '應該先刪除自訂域名。',
+  no_legacy_secret_found: '此應用程式沒有傳統密鑰。',
+  secret_name_exists: '密鑰名稱已存在。',
 };
 
 export default Object.freeze(application);

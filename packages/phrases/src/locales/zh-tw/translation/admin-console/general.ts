@@ -46,8 +46,7 @@ const general = {
   continue: '繼續',
   page_info: '{{min, number}}-{{max, number}} 共 {{total, number}} 條',
   learn_more: '了解更多',
-  /** UNTRANSLATED */
-  tab_error_one: '{{count, number}} error',
+  tab_error_one: '{{count, number}} 錯誤',
   tab_error_other: '{{count, number}} 個錯誤',
   skip_for_now: '先跳過',
   remove: '移除',
@@ -71,6 +70,8 @@ const general = {
   delete_field: '刪除{{field}}',
   coming_soon: '即將上線',
   or: '或',
+  reset: '重置',
+  generate: '生成',
 };
 
 export default Object.freeze(general);

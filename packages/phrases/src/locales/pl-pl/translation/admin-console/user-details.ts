@@ -12,9 +12,12 @@ const user_details = {
   deleted: 'Użytkownik został pomyślnie usunięty',
   reset_password: {
     reset_title: 'Czy na pewno chcesz zresetować hasło?',
+    generate_title: 'Czy na pewno chcesz wygenerować hasło?',
     content: 'Tej akcji nie można cofnąć. To zresetuje informacje o logowaniu użytkownika.',
     reset_complete: 'Ten użytkownik został zresetowany',
+    generate_complete: 'Hasło zostało wygenerowane',
     new_password: 'Nowe hasło:',
+    password: 'Hasło:',
   },
   tab_settings: 'Ustawienia',
   tab_roles: 'Role użytkowników',
@@ -27,6 +30,7 @@ const user_details = {
   field_email: 'Adres e-mail',
   field_phone: 'Numer telefonu',
   field_username: 'Nazwa użytkownika',
+  field_password: 'Hasło',
   field_name: 'Imię i nazwisko',
   field_avatar: 'Adres URL obrazka awatara',
   field_avatar_placeholder: 'https://twoja.domena/cdn/avatar.png',
@@ -40,6 +44,8 @@ const user_details = {
   field_sso_connectors: 'Połączenia przedsiębiorstwa',
   custom_data_invalid: 'Nieprawidłowe dane niestandardowe JSON',
   profile_invalid: 'Profil musi być poprawnym obiektem JSON',
+  password_already_set: 'Hasło już ustawione',
+  no_password_set: 'Brak ustawionego hasła',
   connectors: {
     connectors: 'Połączenia',
     user_id: 'Identyfikator użytkownika',
@@ -96,6 +102,36 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     'Aby się zalogować, użytkownik musi mieć co najmniej jeden identyfikator logowania (nazwa użytkownika, e-mail, numer telefonu lub konto społecznościowe). Czy na pewno chcesz kontynuować?',
+  personal_access_tokens: {
+    title: 'Token dostępu osobistego',
+    title_other: 'Tokeny dostępu osobistego',
+    title_short: 'token',
+    empty: 'Użytkownik nie ma żadnych tokenów dostępu osobistego.',
+    create: 'Utwórz nowy token',
+    tip: 'Tokeny dostępu osobistego (PAT) zapewniają użytkownikom bezpieczny sposób przyznawania tokenów dostępu bez użycia poświadczeń i interaktywnego logowania. Jest to przydatne dla CI/CD, skryptów lub aplikacji, które muszą programowo uzyskiwać dostęp do zasobów. <a>Dowiedz się więcej</a>',
+    value: 'Wartość',
+    created_at: 'Utworzono w dniu',
+    expires_at: 'Wygasa w dniu',
+    never: 'Nigdy',
+    create_new_token: 'Utwórz nowy token',
+    delete_confirmation: 'Tej akcji nie można cofnąć. Czy na pewno chcesz usunąć ten token?',
+    expired: 'Wygasły',
+    expired_tooltip: 'Ten token wygasł w dniu {{date}}.',
+    create_modal: {
+      title: 'Utwórz token dostępu osobistego',
+      expiration: 'Wygaśnięcie',
+      expiration_description: 'Token wygaśnie w dniu {{date}}.',
+      expiration_description_never:
+        'Token nigdy nie wygaśnie. Zalecamy ustawienie daty wygaśnięcia w celu zwiększenia bezpieczeństwa.',
+      days: '{{count}} dzień',
+      days_other: '{{count}} dni',
+      created: 'Token {{name}} został pomyślnie utworzony.',
+    },
+    edit_modal: {
+      title: 'Edytuj token dostępu osobistego',
+      edited: 'Token {{name}} został pomyślnie edytowany.',
+    },
+  },
 };
 
 export default Object.freeze(user_details);

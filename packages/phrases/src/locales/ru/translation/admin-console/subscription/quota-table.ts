@@ -37,7 +37,6 @@ const quota_table = {
     built_in_email_connector: 'Встроенное подключение электронной почты',
     mfa: 'Многофакторная аутентификация',
     sso: 'Единый вход в корпоративные системы',
-
     impersonation: 'Имперсонация',
   },
   user_management: {
@@ -59,12 +58,21 @@ const quota_table = {
     just_in_time_provisioning: 'Пакетная настройка по запросу',
   },
   support: {
-    /** UNTRANSLATED */
-    title: 'Support',
+    title: 'Поддержка',
     community: 'Сообщество',
     customer_ticket: 'Техническая поддержка',
     premium: 'Премиум',
     email_ticket_support: 'Поддержка по электронной почте',
+    discord_private_channel: 'Приватный канал Discord',
+    premium_support: 'Премиум-поддержка',
+    developer_onboarding: 'Адаптация разработчика',
+    solution_engineer_support: 'Инженерные решения',
+    sla: 'SLA',
+    dedicated_computing_resources: 'Выделенные вычислительные ресурсы',
+  },
+  compliance: {
+    title: 'Соответствие',
+    soc2_compliant: 'Соответствие SOC2',
     soc2_report: 'Отчет SOC2',
     hipaa_or_baa_report: 'Отчет HIPAA/BAA',
   },
@@ -82,7 +90,6 @@ const quota_table = {
   days_other: '{{count, number}} дней',
   add_on: 'Дополнительно',
   tier: 'Уровень {{value, number}}: ',
-
   million: '{{value, number}} миллионов',
   mau_tip:
     'MAU (месячно активные пользователи) означает количество уникальных пользователей, которые обменивались как минимум одним токеном с Logto в биллинговом цикле.',

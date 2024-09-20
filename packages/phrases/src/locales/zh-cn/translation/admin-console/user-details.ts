@@ -12,9 +12,12 @@ const user_details = {
   deleted: '用户已成功删除。',
   reset_password: {
     reset_title: '确定要重置密码？',
+    generate_title: '你确定要生成密码吗？',
     content: '本操作不可撤销，将会重置用户的登录信息。',
     reset_complete: '该用户已被重置',
+    generate_complete: '密码已生成',
     new_password: '新密码：',
+    password: '密码：',
   },
   tab_settings: '设置',
   tab_roles: '用户角色',
@@ -27,6 +30,7 @@ const user_details = {
   field_email: '邮箱地址',
   field_phone: '手机号码',
   field_username: '用户名',
+  field_password: '密码',
   field_name: '姓名',
   field_avatar: '头像图片链接',
   field_avatar_placeholder: 'https://your.cdn.domain/avatar.png',
@@ -39,6 +43,8 @@ const user_details = {
   field_sso_connectors: '企业连接',
   custom_data_invalid: '自定义数据必须是有效的 JSON 对象',
   profile_invalid: '个人资料必须是有效的 JSON 对象',
+  password_already_set: '密码已设置',
+  no_password_set: '未设置密码',
   connectors: {
     connectors: '连接器',
     user_id: '用户 ID',
@@ -89,6 +95,35 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     '用户需要至少拥有一个登录标识（用户名、邮箱、手机号或社交账户）才能登录。确定要继续吗？',
+  personal_access_tokens: {
+    title: '个人访问令牌',
+    title_other: '个人访问令牌',
+    title_short: '令牌',
+    empty: '该用户没有任何个人访问令牌。',
+    create: '创建新令牌',
+    tip: '个人访问令牌（PATs）为用户提供了一种安全的方式来授予访问令牌，而无需使用其凭据和交互式登录。这对于需要以编程方式访问资源的 CI/CD、脚本或应用程序非常有用。<a>了解更多</a>',
+    value: '值',
+    created_at: '创建于',
+    expires_at: '到期于',
+    never: '从不',
+    create_new_token: '创建新令牌',
+    delete_confirmation: '此操作无法撤销。你确定要删除此令牌吗？',
+    expired: '已过期',
+    expired_tooltip: '此令牌已于 {{date}} 过期。',
+    create_modal: {
+      title: '创建个人访问令牌',
+      expiration: '到期时间',
+      expiration_description: '令牌将于 {{date}} 到期。',
+      expiration_description_never: '令牌将永远不会过期。我们建议设置一个到期日期以增强安全性。',
+      days: '{{count}} 天',
+      days_other: '{{count}} 天',
+      created: '令牌 {{name}} 已成功创建。',
+    },
+    edit_modal: {
+      title: '编辑个人访问令牌',
+      edited: '令牌 {{name}} 已成功编辑。',
+    },
+  },
 };
 
 export default Object.freeze(user_details);

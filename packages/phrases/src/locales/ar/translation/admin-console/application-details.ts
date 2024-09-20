@@ -168,8 +168,7 @@ const application_details = {
   },
   secrets: {
     value: 'Value',
-    /** UNTRANSLATED */
-    empty: 'The application does not have any secrets.',
+    empty: 'التطبيق لا يحتوي على أي أسرار.',
     created_at: 'Created at',
     expires_at: 'Expires at',
     never: 'Never',

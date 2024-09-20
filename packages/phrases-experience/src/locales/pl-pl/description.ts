@@ -65,15 +65,9 @@ const description = {
   password_requirement: {
     length_one: 'wymaga co najmniej {{count}} znaku',
     length_other: 'wymaga co najmniej {{count}} znaków',
-    length_few: 'wymaga co najmniej {{count}} znaki',
-    length_many: 'wymaga co najmniej {{count}} znaków',
     character_types_one:
       'powinno zawierać co najmniej {{count}} rodzaj liter wielkich, małych liter, cyfr i symboli',
     character_types_other:
-      'powinno zawierać co najmniej {{count}} rodzaje liter wielkich, małych liter, cyfr i symboli',
-    character_types_few:
-      'powinno zawierać co najmniej {{count}} rodzaje liter wielkich, małych liter, cyfr i symboli',
-    character_types_many:
       'powinno zawierać co najmniej {{count}} rodzaje liter wielkich, małych liter, cyfr i symboli',
   },
   use: 'Użyj',

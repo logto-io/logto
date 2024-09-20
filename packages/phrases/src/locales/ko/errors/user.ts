@@ -34,6 +34,7 @@ const user = {
   backup_code_already_in_use: 'Backup code is already in use.',
   password_algorithm_required: '비밀번호 알고리즘이 필요합니다.',
   password_and_digest: 'You cannot set both plain text password and password digest.',
+  personal_access_token_name_exists: '개인 액세스 토큰 이름이 이미 존재합니다.',
 };
 
 export default Object.freeze(user);

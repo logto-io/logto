@@ -35,6 +35,7 @@ const user = {
   backup_code_already_in_use: 'バックアップコードはすでに使用されています。',
   password_algorithm_required: 'Password algorithm is required.',
   password_and_digest: 'You cannot set both plain text password and password digest.',
+  personal_access_token_name_exists: '個人用アクセス トークン名は既に存在します。',
 };
 
 export default Object.freeze(user);

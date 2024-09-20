@@ -12,9 +12,12 @@ const user_details = {
   deleted: 'Kullanıcı başarıyla silindi.',
   reset_password: {
     reset_title: 'Şifreyi sıfırlamak istediğinizden emin misiniz?',
+    generate_title: 'Şifre oluşturmak istediğinizden emin misiniz?',
     content: 'Bu işlem geri alınamaz. Bu, kullanıcının oturum açma bilgilerini sıfırlayacaktır.',
     reset_complete: 'Bu kullanıcı sıfırlandı',
+    generate_complete: 'Şifre oluşturuldu',
     new_password: 'Yeni şifre:',
+    password: 'Şifre:',
   },
   tab_settings: 'Ayarlar',
   tab_roles: 'Kullanıcı rolleri',
@@ -27,6 +30,7 @@ const user_details = {
   field_email: 'Eposta adresi',
   field_phone: 'Telefon numarası',
   field_username: 'Kullanıcı Adı',
+  field_password: 'Şifre',
   field_name: 'İsim',
   field_avatar: 'Avatar resmi URLi',
   field_avatar_placeholder: 'https://your.cdn.domain/avatar.png',
@@ -40,6 +44,8 @@ const user_details = {
   field_sso_connectors: 'İş bağlantıları',
   custom_data_invalid: 'Özel veriler geçerli bir JSON nesnesi olmalıdır',
   profile_invalid: 'Profil geçerli bir JSON nesnesi olmalıdır',
+  password_already_set: 'Şifre zaten ayarlandı',
+  no_password_set: 'Şifre ayarlanmadı',
   connectors: {
     connectors: 'Bağlayıcılar',
     user_id: 'Kullanıcı IDsi',
@@ -98,6 +104,36 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     'Kullanıcının giriş yapmak için en az bir oturum açma kimliği (kullanıcı adı, e-posta, telefon numarası, veya sosyal) olması gerekiyor. Devam etmek istediğinizden emin misiniz?',
+  personal_access_tokens: {
+    title: 'Kişisel erişim belirteci',
+    title_other: 'Kişisel erişim belirteçleri',
+    title_short: 'belirteç',
+    empty: 'Kullanıcının herhangi bir kişisel erişim belirteci yok.',
+    create: 'Yeni belirteç oluştur',
+    tip: 'Kişisel erişim belirteçleri (PATs), kullanıcıların kimlik bilgilerini veya interaktif oturum açmayı kullanmadan erişim belirteçleri vermesini sağlamak için güvenli bir yol sunar. Bu, kaynaklara programatik erişim gerektiren CI/CD, betikler veya uygulamalar için kullanışlıdır. <a>Daha fazla bilgi edinin</a>',
+    value: 'Değer',
+    created_at: 'Oluşturulma tarihi',
+    expires_at: 'Son kullanma tarihi',
+    never: 'Hiçbir zaman',
+    create_new_token: 'Yeni belirteç oluştur',
+    delete_confirmation: 'Bu işlem geri alınamaz. Bu belirteci silmek istediğinizden emin misiniz?',
+    expired: 'Süresi dolmuş',
+    expired_tooltip: 'Bu belirtecin süresi {{date}} tarihinde dolmuştur.',
+    create_modal: {
+      title: 'Kişisel erişim belirteci oluştur',
+      expiration: 'Son kullanma tarihi',
+      expiration_description: 'Belirtecin süresi {{date}} tarihinde dolacak.',
+      expiration_description_never:
+        'Belirtecin süresi dolmayacak. Güvenliği artırmak için bir son kullanma tarihi belirlemenizi öneririz.',
+      days: '{{count}} gün',
+      days_other: '{{count}} gün',
+      created: 'Belirteç {{name}} başarıyla oluşturuldu.',
+    },
+    edit_modal: {
+      title: 'Kişisel erişim belirtecini düzenle',
+      edited: 'Belirteç {{name}} başarıyla düzenlendi.',
+    },
+  },
 };
 
 export default Object.freeze(user_details);

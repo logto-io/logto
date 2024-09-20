@@ -1,32 +1,28 @@
 import quota_item from './quota-item.js';
 import quota_table from './quota-table.js';
+import usage from './usage.js';
 
 const subscription = {
   free_plan: '免費方案',
   free_plan_description: '適用於旁邊項目和開始使用 Logto 的試用。無需信用卡。',
   pro_plan: '專業方案',
   pro_plan_description: '企業無憂享受 Logto 服務。',
-  enterprise: '企業版',
-  /** UNTRANSLATED */
+  enterprise: '企業方案',
   enterprise_description:
-    'For large-scale organizations requiring advanced features, full customization, and dedicated support to power mission-critical applications. Tailored to your needs for ultimate security, compliance, and performance.',
-  /** UNTRANSLATED */
-  admin_plan: 'Admin plan',
-  /** UNTRANSLATED */
-  dev_plan: 'Development plan',
+    '適用於需要高級功能、完全定制和專屬支持的大型企業，以支持關鍵任務的應用。根據你的需求量身定制，確保絕對的安全性、合規性和性能。',
+  admin_plan: '管理員方案',
+  dev_plan: '開發方案',
   current_plan: '當前方案',
   current_plan_description:
     '這是您目前的方案。您可以輕鬆查看您的方案使用情況，檢查即將到來的帳單，並根據需要進行變更。',
   plan_usage: '計劃使用情況',
   plan_cycle: '計劃週期：{{period}}。使用情況訂閱日期為{{renewDate}}。',
-  /** UNTRANSLATED */
-  next_bill: 'Your upcoming bill',
+  next_bill: '您的即將到來的帳單',
   next_bill_hint: '要了解更多計算方法，請參閱本<a>文章</a>。',
-  /** UNTRANSLATED */
   next_bill_tip:
-    'The prices displayed here are tax-exclusive and may be subject to a slight delay in updates. The tax amount will be calculated based on the information you provide and your local regulatory requirements, and will be shown in your invoices.',
+    '此處顯示的價格不含稅，更新可能會有輕微延遲。稅額將根據你提供的信息和當地法規計算，並顯示在您的發票中。',
   manage_payment: '管理付款',
-  overfill_quota_warning: '您已達到配額限制。為防止出現問題，請升級計畫。',
+  overfill_quota_warning: '你已達到配額限制。為防止出現問題，請升級計畫。',
   upgrade_pro: '升級專業',
   update_payment: '更新付款信息',
   payment_error:
@@ -49,20 +45,20 @@ const subscription = {
   },
   quota_item,
   downgrade_modal: {
-    title: '您確定要降級嗎？',
+    title: '你確定要降級嗎？',
     description:
-      '如果您選擇切換到 <targetName/>，請注意您將不再使用之前在 <currentName/> 中的配額和功能。',
+      '如果你選擇切換到 <targetName/>，請注意你將不再使用之前在 <currentName/> 中的配額和功能。',
     before: '在此之前：<name/>',
     after: '在此之後：<name/>',
     downgrade: '降級',
   },
   not_eligible_modal: {
-    downgrade_title: '您不符合降級條件',
+    downgrade_title: '你不符合降級條件',
     downgrade_description: '降級到<name/>前，請確保符合以下條件。',
     downgrade_help_tip: '需要降級幫助？<a>聯絡我們</a>。',
     upgrade_title: '致尊敬的早期採用者的友善提醒',
     upgrade_description:
-      '您目前的使用量超過了 <name /> 允許的範圍。Logto 現已正式發布，包括針對每個計劃量身定制的功能。在考慮升級到 <name /> 之前，請確保您符合以下升級條件。',
+      '你目前的使用量超過了 <name /> 允許的範圍。Logto 現已正式發布，包括針對每個計劃量身定制的功能。在考慮升級到 <name /> 之前，請確保你符合以下升級條件。',
     upgrade_pro_tip: ' 或者考慮升級到專業版計劃。',
     upgrade_help_tip: '需要升級幫助？<a>聯絡我們</a>。',
     a_maximum_of: '最多<item/>',
@@ -71,6 +67,7 @@ const subscription = {
   downgrade_success: '已成功降級到 <name/>',
   subscription_check_timeout: '訂閱檢查已逾時，請稍後重新刷新。',
   no_subscription: '無訂閱',
+  usage,
 };
 
 export default Object.freeze(subscription);

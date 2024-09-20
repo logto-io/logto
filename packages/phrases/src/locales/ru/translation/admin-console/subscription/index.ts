@@ -1,30 +1,26 @@
 import quota_item from './quota-item.js';
 import quota_table from './quota-table.js';
+import usage from './usage.js';
 
 const subscription = {
   free_plan: 'Бесплатный план',
   free_plan_description: 'Для побочных проектов и начальных испытаний Logto. Без кредитной карты.',
   pro_plan: 'Про план',
   pro_plan_description: 'Позволяет бизнесу использовать Logto без забот.',
-  enterprise: 'Enterprise',
-  /** UNTRANSLATED */
+  enterprise: 'Корпоративный план',
   enterprise_description:
-    'For large-scale organizations requiring advanced features, full customization, and dedicated support to power mission-critical applications. Tailored to your needs for ultimate security, compliance, and performance.',
-  /** UNTRANSLATED */
-  admin_plan: 'Admin plan',
-  /** UNTRANSLATED */
-  dev_plan: 'Development plan',
+    'Для крупных организаций, которым необходимы расширенные возможности, полная настройка и поддержка для работы с критически важными приложениями. Адаптирован для обеспечения максимальной безопасности, соответствия требованиям и производительности.',
+  admin_plan: 'План администратора',
+  dev_plan: 'План для разработки',
   current_plan: 'Текущий план',
   current_plan_description:
     'Вот ваш текущий тарифный план. Вы можете легко просмотреть использование вашего тарифа, проверить предстоящий счет и вносить изменения в тариф по мере необходимости.',
   plan_usage: 'Использование плана',
   plan_cycle: 'Цикл плана: {{period}}. Использование обновляется {{renewDate}}.',
-  /** UNTRANSLATED */
-  next_bill: 'Your upcoming bill',
+  next_bill: 'Ваш предстоящий счет',
   next_bill_hint: 'Чтобы узнать больше о расчете, ознакомьтесь с этой <a>статьей</a>.',
-  /** UNTRANSLATED */
   next_bill_tip:
-    'The prices displayed here are tax-exclusive and may be subject to a slight delay in updates. The tax amount will be calculated based on the information you provide and your local regulatory requirements, and will be shown in your invoices.',
+    'Цены, указанные здесь, не включают налоги и могут обновляться с небольшой задержкой. Сумма налога будет рассчитана на основе предоставленной вами информации и требований местного законодательства, и будет отображена в ваших счетах.',
   manage_payment: 'Управление платежами',
   overfill_quota_warning:
     'Вы достигли лимита вашего квоты. Чтобы избежать возможных проблем, повысьте план.',
@@ -73,6 +69,7 @@ const subscription = {
   downgrade_success: 'Успешно понижен до <name/>',
   subscription_check_timeout: 'Время проверки подписки истекло. Пожалуйста, обновите позже.',
   no_subscription: 'Нет подписки',
+  usage,
 };
 
 export default Object.freeze(subscription);

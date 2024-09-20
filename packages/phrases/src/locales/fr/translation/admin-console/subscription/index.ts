@@ -1,5 +1,6 @@
 import quota_item from './quota-item.js';
 import quota_table from './quota-table.js';
+import usage from './usage.js';
 
 const subscription = {
   free_plan: 'Plan Gratuit',
@@ -7,25 +8,20 @@ const subscription = {
     'Pour les projets secondaires et les premiers essais de Logto. Aucune carte de crédit.',
   pro_plan: 'Plan Professionnel',
   pro_plan_description: 'Pour les entreprises qui bénéficient de Logto sans soucis.',
-  enterprise: 'Entreprise',
-  /** UNTRANSLATED */
+  enterprise: 'Plan Entreprise',
   enterprise_description:
-    'For large-scale organizations requiring advanced features, full customization, and dedicated support to power mission-critical applications. Tailored to your needs for ultimate security, compliance, and performance.',
-  /** UNTRANSLATED */
-  admin_plan: 'Admin plan',
-  /** UNTRANSLATED */
-  dev_plan: 'Development plan',
+    'Pour les grandes organisations nécessitant des fonctionnalités avancées, une personnalisation complète et un support dédié afin de soutenir les applications critiques. Adapté à vos besoins pour une sécurité, une conformité et une performance optimales.',
+  admin_plan: 'Plan Admin',
+  dev_plan: 'Plan Développement',
   current_plan: 'Plan Actuel',
   current_plan_description:
     "Voici votre plan actuel. Vous pouvez facilement consulter l'utilisation de votre plan, vérifier votre prochaine facture et apporter des modifications à votre plan si nécessaire.",
   plan_usage: 'Utilisation du plan',
   plan_cycle: "Cycle du plan: {{period}}. L'utilisation est renouvelée le {{renewDate}}.",
-  /** UNTRANSLATED */
-  next_bill: 'Your upcoming bill',
+  next_bill: 'Votre prochaine facture',
   next_bill_hint: 'Pour en savoir plus sur le calcul, veuillez vous référer à cet <a>article</a>.',
-  /** UNTRANSLATED */
   next_bill_tip:
-    'The prices displayed here are tax-exclusive and may be subject to a slight delay in updates. The tax amount will be calculated based on the information you provide and your local regulatory requirements, and will be shown in your invoices.',
+    'Les prix affichés ici sont hors taxes et peuvent être soumis à un léger délai de mise à jour. Le montant des taxes sera calculé en fonction des informations que vous fournissez et des exigences réglementaires locales, et sera indiqué sur vos factures.',
   manage_payment: 'Gérer le Paiement',
   overfill_quota_warning:
     'Vous avez atteint votre limite de quota. Pour éviter tout problème, passez à un plan supérieur.',
@@ -75,6 +71,7 @@ const subscription = {
   subscription_check_timeout:
     "La vérification d'abonnement a expiré. Veuillez actualiser ultérieurement.",
   no_subscription: 'Aucun abonnement',
+  usage,
 };
 
 export default Object.freeze(subscription);

@@ -37,6 +37,7 @@ const user = {
   password_algorithm_required: 'Se requiere algoritmo de contraseña.',
   password_and_digest:
     'No puedes establecer una contraseña en texto plano y en formato resumido al mismo tiempo.',
+  personal_access_token_name_exists: 'El nombre del token de acceso personal ya existe.',
 };
 
 export default Object.freeze(user);

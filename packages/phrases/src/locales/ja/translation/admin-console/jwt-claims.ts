@@ -39,6 +39,10 @@ const jwt_claims = {
     title: 'トークンデータ',
     subtitle: '現在のアクセストークンペイロードに対して`token`入力パラメータを使用します。',
   },
+  api_context: {
+    title: 'API コンテキスト：アクセス制御',
+    subtitle: '`api.denyAccess` メソッドを使用してトークンリクエストを拒否します。',
+  },
   fetch_external_data: {
     title: '外部データを取得',
     subtitle: '外部APIからデータを直接クレームに組み込みます。',

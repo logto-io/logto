@@ -46,8 +46,7 @@ const general = {
   continue: '계속하기',
   page_info: '{{min, number}}-{{max, number}} / {{total, number}}',
   learn_more: '더 알아보기',
-  /** UNTRANSLATED */
-  tab_error_one: '{{count, number}} error',
+  tab_error_one: '{{count, number}} 오류',
   tab_error_other: '{{count, number}} 오류',
   skip_for_now: '지금은 건너뛰기',
   remove: '삭제',
@@ -71,6 +70,8 @@ const general = {
   delete_field: '{{field}} 삭제',
   coming_soon: '곧 출시 예정',
   or: '또는',
+  reset: '재설정',
+  generate: '생성',
 };
 
 export default Object.freeze(general);

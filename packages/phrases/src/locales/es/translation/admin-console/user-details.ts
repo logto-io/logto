@@ -13,10 +13,13 @@ const user_details = {
   deleted: 'Usuario eliminado con éxito',
   reset_password: {
     reset_title: '¿Está seguro de que desea restablecer la contraseña?',
+    generate_title: '¿Estás seguro de que deseas generar una contraseña?',
     content:
       'Esta acción no se puede deshacer. Esto restablecerá la información de inicio de sesión del usuario.',
     reset_complete: 'Se ha restablecido la información de inicio de sesión del usuario',
+    generate_complete: 'La contraseña ha sido generada',
     new_password: 'Nueva contraseña:',
+    password: 'Contraseña:',
   },
   tab_settings: 'Configuración',
   tab_roles: 'Roles de usuario',
@@ -29,6 +32,7 @@ const user_details = {
   field_email: 'Dirección de correo electrónico',
   field_phone: 'Número de teléfono',
   field_username: 'Nombre de usuario',
+  field_password: 'Contraseña',
   field_name: 'Nombre',
   field_avatar: 'URL de imagen de avatar',
   field_avatar_placeholder: 'https://tu.dominio.cdn/avatar.png',
@@ -41,7 +45,9 @@ const user_details = {
   field_connectors: 'Conexiones sociales',
   field_sso_connectors: 'Conexiones empresariales',
   custom_data_invalid: 'Los datos personalizados deben ser un objeto JSON válido',
-  profile_invalid: 'Profile must be a valid JSON object',
+  profile_invalid: 'El perfil debe ser un objeto JSON válido',
+  password_already_set: 'Contraseña ya configurada',
+  no_password_set: 'No se ha configurado la contraseña',
   connectors: {
     connectors: 'Conectores',
     user_id: 'ID de usuario',
@@ -99,6 +105,37 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     'El usuario necesita tener al menos uno de los identificadores de inicio de sesión (nombre de usuario, correo electrónico, número de teléfono o red social) para iniciar sesión. ¿Estás seguro/a de que quieres continuar?',
+  personal_access_tokens: {
+    title: 'Token de acceso personal',
+    title_other: 'Tokens de acceso personal',
+    title_short: 'token',
+    empty: 'El usuario no tiene ningún token de acceso personal.',
+    create: 'Crear nuevo token',
+    tip: 'Los tokens de acceso personal (PATs) proporcionan una forma segura para que los usuarios otorguen tokens de acceso sin usar sus credenciales y el inicio de sesión interactivo. Esto es útil para CI/CD, scripts o aplicaciones que necesitan acceder a recursos de forma programática. <a>Aprende más</a>',
+    value: 'Valor',
+    created_at: 'Creado el',
+    expires_at: 'Expira el',
+    never: 'Nunca',
+    create_new_token: 'Crear nuevo token',
+    delete_confirmation:
+      'Esta acción no se puede deshacer. ¿Está seguro de que desea eliminar este token?',
+    expired: 'Expirado',
+    expired_tooltip: 'Este token expiró el {{date}}.',
+    create_modal: {
+      title: 'Crear token de acceso personal',
+      expiration: 'Expiración',
+      expiration_description: 'El token expirará el {{date}}.',
+      expiration_description_never:
+        'El token nunca expirará. Recomendamos establecer una fecha de expiración para una mayor seguridad.',
+      days: '{{count}} día',
+      days_other: '{{count}} días',
+      created: 'El token {{name}} ha sido creado con éxito.',
+    },
+    edit_modal: {
+      title: 'Editar token de acceso personal',
+      edited: 'El token {{name}} ha sido editado con éxito.',
+    },
+  },
 };
 
 export default Object.freeze(user_details);

@@ -1,3 +1,4 @@
+import add_on from './add-on.js';
 import featured_plan_content from './featured-plan-content.js';
 import paywall from './paywall.js';
 
@@ -41,6 +42,7 @@ const upsell = {
     'Has superado tu límite de cuota de {{item}}. Logto agregará cargos por el uso más allá de tu límite de cuota. La facturación comenzará el día en que se lance el nuevo diseño de precios del complemento. <a>Más información</a>',
   paywall,
   featured_plan_content,
+  add_on,
 };
 
 export default Object.freeze(upsell);

@@ -15,7 +15,9 @@ const user_details = {
     generate_title: '確定要生成密碼？',
     content: '本操作不可撤銷，將會重置用戶的登錄信息。',
     reset_complete: '該用戶已被重置',
+    generate_complete: '密碼已生成',
     new_password: '新密碼：',
+    password: '密碼：',
   },
   tab_settings: '設置',
   tab_roles: '用戶角色',
@@ -28,6 +30,7 @@ const user_details = {
   field_email: '電子郵箱',
   field_phone: '手機號碼',
   field_username: '用戶名',
+  field_password: '密碼',
   field_name: '姓名',
   field_avatar: '頭像圖片鏈接',
   field_avatar_placeholder: 'https://your.cdn.domain/avatar.png',
@@ -40,6 +43,8 @@ const user_details = {
   field_sso_connectors: '企業連接',
   custom_data_invalid: '自定義數據必須是有效的 JSON 對象',
   profile_invalid: '個人資料必須是有效的 JSON 對象',
+  password_already_set: '密碼已設定',
+  no_password_set: '未設定密碼',
   connectors: {
     connectors: '連接器',
     user_id: '用戶 ID',
@@ -90,6 +95,35 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     '用戶需要至少擁有一個登錄標識（用戶名、電子郵件、電話號碼或社交帳號）才能登錄。確定要繼續嗎？',
+  personal_access_tokens: {
+    title: '個人訪問令牌',
+    title_other: '個人訪問令牌',
+    title_short: '令牌',
+    empty: '該使用者沒有任何個人訪問令牌。',
+    create: '創建新令牌',
+    tip: '個人訪問令牌（PATs）提供了一種安全方式，允許用戶在不使用憑據和互動登錄的情況下授予訪問權限。這對於 CI/CD、腳本或需要以程式方式訪問資源的應用程序很有用。<a>了解更多</a>',
+    value: '值',
+    created_at: '創建於',
+    expires_at: '過期於',
+    never: '永不過期',
+    create_new_token: '創建新令牌',
+    delete_confirmation: '此操作無法撤銷。你確定要刪除此令牌嗎？',
+    expired: '已過期',
+    expired_tooltip: '此令牌已於 {{date}} 過期。',
+    create_modal: {
+      title: '創建個人訪問令牌',
+      expiration: '過期時間',
+      expiration_description: '令牌將於 {{date}} 過期。',
+      expiration_description_never: '令牌將永不過期。我們建議設置過期日期以增強安全性。',
+      days: '{{count}} 天',
+      days_other: '{{count}} 天',
+      created: '令牌 {{name}} 已成功創建。',
+    },
+    edit_modal: {
+      title: '編輯個人訪問令牌',
+      edited: '令牌 {{name}} 已成功編輯。',
+    },
+  },
 };
 
 export default Object.freeze(user_details);

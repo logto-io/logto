@@ -4,6 +4,7 @@ const guard = {
   can_not_get_tenant_id: '요청에서 테넌트 ID를 가져올 수 없습니다.',
   file_size_exceeded: '파일 크기가 초과되었습니다.',
   mime_type_not_allowed: 'MIME 타입이 허용되지 않습니다.',
+  not_allowed_for_admin_tenant: '관리자 테넌트에 허용되지 않습니다.',
 };
 
 export default Object.freeze(guard);

@@ -53,9 +53,8 @@ const usage = {
     tooltip: 'ميزة إضافية بسعر قدره ${{price, number}} لكل خطاف. الخطافات الأولى 10 مشمولة.',
   },
   pricing: {
-    /** UNTRANSLATED */
     add_on_changes_in_current_cycle_notice:
-      'If you make any changes during the current billing cycle, your next bill may be slightly higher for the first month after the change. It will be ${{price, number}} base price plus add-on costs for unbilled usage from the current cycle and the full charge for the next cycle. <a>Learn more</a>',
+      'إذا قمت بإجراء أي تغييرات خلال دورة الفوترة الحالية، فقد تكون فاتورتك التالية أعلى قليلًا للشهر الأول بعد التغيير. سيكون السعر الأساسي ${{price, number}} بالإضافة إلى تكاليف الميزات الإضافية للاستخدام غير المقدر من الدورة الحالية والرسوم الكاملة للدورة التالية. <a>تعرف أكثر</a>',
   },
 };
 

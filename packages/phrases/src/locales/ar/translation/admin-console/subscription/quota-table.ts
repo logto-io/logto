@@ -63,28 +63,18 @@ const quota_table = {
     customer_ticket: 'دعم التذاكر',
     premium: 'متميز',
     email_ticket_support: 'دعم التذاكر عبر البريد الإلكتروني',
-    /** UNTRANSLATED */
-    discord_private_channel: 'Discord private channel',
-    /** UNTRANSLATED */
-    premium_support: 'Premium support',
-    /** UNTRANSLATED */
-    developer_onboarding: 'Developer onboarding',
-    /** UNTRANSLATED */
-    solution_engineer_support: 'Solution engineer',
-    /** UNTRANSLATED */
-    sla: 'SLA',
-    /** UNTRANSLATED */
-    dedicated_computing_resources: 'Dedicated computing resources',
+    discord_private_channel: 'قناة خاصة على Discord',
+    premium_support: 'دعم متميز',
+    developer_onboarding: 'إعداد المطور',
+    solution_engineer_support: 'مهندس الحلول',
+    sla: 'اتفاقية مستوى الخدمة',
+    dedicated_computing_resources: 'موارد الحوسبة المخصصة',
   },
   compliance: {
-    /** UNTRANSLATED */
-    title: 'Compliance',
-    /** UNTRANSLATED */
-    soc2_compliant: 'SOC2 compliant',
-    /** UNTRANSLATED */
-    soc2_report: 'SOC2 report',
-    /** UNTRANSLATED */
-    hipaa_or_baa_report: 'HIPAA/BAA report',
+    title: 'التوافق',
+    soc2_compliant: 'متوافق مع SOC2',
+    soc2_report: 'تقرير SOC2',
+    hipaa_or_baa_report: 'تقرير HIPAA/BAA',
   },
   developers_and_platform: {
     title: 'المطورين والمنصة',

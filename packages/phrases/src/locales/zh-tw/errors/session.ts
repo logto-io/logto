@@ -8,7 +8,7 @@ const session = {
   connector_session_not_found: '無法找到連接器登錄信息，請嘗試重新登錄。',
   verification_session_not_found: '驗證失敗，請重新驗證。',
   verification_expired: '當前頁面已超時。為確保你的帳號安全，請重新驗證。',
-  verification_blocked_too_many_attempts: '在短時間內嘗試次數過多。請於{{relativeTime}}後再試。',
+  verification_blocked_too_many_attempts: '在短時間內嘗試次數過多。請於 {{relativeTime}} 後再試。',
   unauthorized: '請先登錄',
   unsupported_prompt_name: '不支援的 prompt 名稱',
   forgot_password_not_enabled: '忘記密碼功能沒有開啟。',
@@ -17,8 +17,11 @@ const session = {
   csrf_token_mismatch: 'CSRF token 不匹配。',
   identifier_not_found: '找不到使用者識別碼。請返回並重新登錄。',
   interaction_not_found: '找不到交互會話。請返回並重新開始會話。',
+  invalid_interaction_type: '此操作不支援當前的交互。請啟動一個新的會話。',
   not_supported_for_forgot_password: '該操作不支援忘記密碼。',
   identity_conflict: '檢測到身分不匹配。請啟動一個新的會話以進行不同的身分驗證。',
+  identifier_not_verified:
+    '提供的識別碼 {{identifier}} 尚未驗證。請為此識別碼創建一個驗證記錄並完成驗證過程。',
   mfa: {
     require_mfa_verification: '需要 MFA 驗證才能登錄。',
     mfa_sign_in_only: 'MFA 只能用於登錄交互。',
@@ -31,6 +34,7 @@ const session = {
     backup_code_required: '需要備份碼。',
     invalid_backup_code: '無效的備份碼。',
     mfa_policy_not_user_controlled: 'MFA 策略不受用戶控制。',
+    mfa_factor_not_enabled: 'MFA 因素未啟用。',
   },
   sso_enabled: '該郵箱已開啟單點登錄，請使用 SSO 登錄。',
 };

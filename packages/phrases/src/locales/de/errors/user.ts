@@ -40,6 +40,7 @@ const user = {
   password_algorithm_required: 'Password-Algorithmus ist erforderlich.',
   password_and_digest:
     'Sie können nicht sowohl das Passwort im Klartext als auch den Passwort-Hash festlegen.',
+  personal_access_token_name_exists: 'Name des persönlichen Zugriffstokens existiert bereits.',
 };
 
 export default Object.freeze(user);
