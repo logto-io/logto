@@ -39,6 +39,10 @@ const jwt_claims = {
     title: '토큰 데이터',
     subtitle: '현재 액세스 토큰 페이로드에 대한 `token` 입력 매개변수 사용.',
   },
+  api_context: {
+    title: 'API 컨텍스트: 접근 제어',
+    subtitle: '`api.denyAccess` 메소드를 사용하여 토큰 요청을 거절하세요.',
+  },
   fetch_external_data: {
     title: '외부 데이터 가져오기',
     subtitle: '외부 API에서 데이터 직접 클레임에 통합.',

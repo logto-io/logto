@@ -24,10 +24,14 @@ const session = {
     'Benutzerkennung nicht gefunden. Bitte gehen Sie zurück und melden Sie sich erneut an.',
   interaction_not_found:
     'Interaktionssitzung nicht gefunden. Bitte gehen Sie zurück und starten Sie die Sitzung erneut.',
+  invalid_interaction_type:
+    'Diese Operation wird für die aktuelle Interaktion nicht unterstützt. Bitte starte eine neue Sitzung.',
   not_supported_for_forgot_password:
     'Diese Operation wird für das vergessene Passwort nicht unterstützt.',
   identity_conflict:
     'Identitätskonflikt festgestellt. Bitte starten Sie eine neue Sitzung, um mit einer anderen Identität fortzufahren.',
+  identifier_not_verified:
+    'Die bereitgestellte Kennung {{identifier}} wurde nicht verifiziert. Bitte erstelle einen Verifizierungsdatensatz für diese Kennung und schließe den Verifizierungsprozess ab.',
   mfa: {
     require_mfa_verification: 'MFA-Verifizierung ist erforderlich, um sich anzumelden.',
     mfa_sign_in_only: 'MFA ist nur für die Anmeldeinteraktion verfügbar.',
@@ -41,6 +45,7 @@ const session = {
     backup_code_required: 'Backup-Code ist erforderlich.',
     invalid_backup_code: 'Ungültiger Backup-Code.',
     mfa_policy_not_user_controlled: 'MFA-Richtlinie wird nicht vom Benutzer gesteuert.',
+    mfa_factor_not_enabled: 'MFA-Faktor ist nicht aktiviert.',
   },
   sso_enabled:
     'Einmaliges Anmelden ist für diese gegebene E-Mail aktiviert. Bitte melden Sie sich mit SSO an.',

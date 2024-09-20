@@ -37,7 +37,6 @@ const quota_table = {
     built_in_email_connector: '內置電子郵件連接器',
     mfa: '多因素認證',
     sso: '企業 SSO',
-
     impersonation: '冒充',
   },
   user_management: {
@@ -59,14 +58,23 @@ const quota_table = {
     just_in_time_provisioning: '即時規定',
   },
   support: {
-    /** UNTRANSLATED */
-    title: 'Support',
+    title: '支援',
     community: '社群',
     customer_ticket: '客戶支援票據',
     premium: '高級版',
     email_ticket_support: '電子郵件票務支援',
-    soc2_report: 'SOC2報告',
-    hipaa_or_baa_report: 'HIPAA/BAA報告',
+    discord_private_channel: 'Discord 私人頻道',
+    premium_support: '高級支援',
+    developer_onboarding: '開發者入門',
+    solution_engineer_support: '解決方案工程支援',
+    sla: '服務水平協議',
+    dedicated_computing_resources: '專用計算資源',
+  },
+  compliance: {
+    title: '合規性',
+    soc2_compliant: 'SOC2 合規',
+    soc2_report: 'SOC2 報告',
+    hipaa_or_baa_report: 'HIPAA/BAA 報告',
   },
   developers_and_platform: {
     title: '開發者和平台',
@@ -82,12 +90,11 @@ const quota_table = {
   days_other: '{{count, number}} 天',
   add_on: '附加功能',
   tier: '層級{{value, number}}：',
-
   million: '{{value, number}} 百萬',
-  mau_tip: 'MAU（每月活躍用戶）是指在計費週期內與Logto交換過至少一個令牌的獨立用戶數量。',
+  mau_tip: 'MAU（每月活躍用戶）是指在計費週期內與 Logto 交換過至少一個令牌的獨立用戶數量。',
   tokens_tip: 'Logto 發行的所有類型令牌，包括訪問令牌、刷新令牌等。',
-  mao_tip: 'MAO（月度活躍組織）指的是在計費週期內至少有一個MAU（月度活躍用戶）的獨特組織數量。',
-  third_party_tip: '使用Logto作為您的OIDC身份提供者，用於第三方應用程式的登錄和權限授予。',
+  mao_tip: 'MAO（月度活躍組織）指的是在計費週期內至少有一個 MAU（月度活躍用戶）的獨特組織數量。',
+  third_party_tip: '使用 Logto 作為你的 OIDC 身份提供者，用於第三方應用程式的登錄和權限授予。',
   included: '已包含 {{value, number}}',
   included_mao: '已包含 {{value, number}} MAO',
   extra_quota_price: '然後每月 ${{value, number}} / 每個之後',

@@ -43,6 +43,10 @@ const jwt_claims = {
     title: 'Données du jeton',
     subtitle: "Utilisez le paramètre d'entrée `token` pour le payload du jeton d'accès actuel. ",
   },
+  api_context: {
+    title: "Contexte API : contrôle d'accès",
+    subtitle: 'Utilisez la méthode `api.denyAccess` pour rejeter la demande de jeton.',
+  },
   fetch_external_data: {
     title: 'Récupérer des données externes',
     subtitle:

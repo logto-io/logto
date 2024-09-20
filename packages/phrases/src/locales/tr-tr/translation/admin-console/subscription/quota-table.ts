@@ -37,7 +37,6 @@ const quota_table = {
     built_in_email_connector: 'Dahili e-posta bağlayıcısı',
     mfa: 'Çoklu faktörlü kimlik doğrulama',
     sso: 'Kurumsal SSO',
-
     impersonation: 'Taklit etme',
   },
   user_management: {
@@ -59,12 +58,21 @@ const quota_table = {
     just_in_time_provisioning: 'İstisnai olana kadar temin',
   },
   support: {
-    /** UNTRANSLATED */
-    title: 'Support',
+    title: 'Destek',
     community: 'Topluluk',
     customer_ticket: 'Müşteri destek bileti',
     premium: 'Premium',
     email_ticket_support: 'E-posta bileti desteği',
+    discord_private_channel: 'Discord özel kanalı',
+    premium_support: 'Premium destek',
+    developer_onboarding: 'Geliştirici adaptasyonu',
+    solution_engineer_support: 'Çözüm mühendisliği desteği',
+    sla: 'SLA',
+    dedicated_computing_resources: 'Özel hesaplama kaynakları',
+  },
+  compliance: {
+    title: 'Uyumluluk',
+    soc2_compliant: 'SOC2 uyumlu',
     soc2_report: 'SOC2 raporu',
     hipaa_or_baa_report: 'HIPAA/BAA raporu',
   },
@@ -82,7 +90,6 @@ const quota_table = {
   days_other: '{{count, number}} gün',
   add_on: 'Ek Hizmet',
   tier: 'Seviye{{value, number}}: ',
-
   million: '{{value, number}} milyon',
   mau_tip:
     'MAU (aylık aktif kullanıcı) Logto ile en az bir jeton değiştirmiş olan benzersiz kullanıcı sayısını ifade eder.',

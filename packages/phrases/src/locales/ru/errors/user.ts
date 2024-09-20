@@ -35,6 +35,7 @@ const user = {
   backup_code_already_in_use: 'Backup code is already in use.',
   password_algorithm_required: 'Требуется алгоритм пароля.',
   password_and_digest: 'Вы не можете установить как обычный пароль, так и дайджест пароля.',
+  personal_access_token_name_exists: 'Имя личного токена доступа уже существует.',
 };
 
 export default Object.freeze(user);

@@ -36,6 +36,7 @@ const user = {
   password_algorithm_required: 'Algorithme de mot de passe est requis.',
   password_and_digest:
     'Vous ne pouvez pas définir à la fois un mot de passe en texte brut et un digest de mot de passe.',
+  personal_access_token_name_exists: "Le nom du jeton d'accès personnel existe déjà.",
 };
 
 export default Object.freeze(user);

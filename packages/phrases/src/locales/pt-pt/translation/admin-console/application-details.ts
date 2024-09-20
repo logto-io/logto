@@ -34,6 +34,7 @@ const application_details = {
   application_id_tip:
     'O identificador exclusivo da aplicação normalmente gerado pelo Logto. Também representa “<a>client_id</a>” no OpenID Connect.',
   application_secret: 'Segredo da aplicação',
+  application_secret_other: 'Segredos da aplicação',
   redirect_uri: 'URI de redirecionamento',
   redirect_uris: 'URIs de redirecionamento',
   redirect_uri_placeholder: 'https://seusite.com/app',
@@ -94,6 +95,10 @@ const application_details = {
   session_duration: 'Duração da sessão (dias)',
   try_it: 'Experimente',
   no_organization_placeholder: 'Nenhuma organização encontrada. <a>Ir para organizações</a>',
+  field_custom_data: 'Dados personalizados',
+  field_custom_data_tip:
+    'Informações personalizadas adicionais da aplicação não listadas nas propriedades predefinidas da aplicação, como configurações e configurações específicas de negócios.',
+  custom_data_invalid: 'Os dados personalizados devem ser um objeto JSON válido',
   branding: {
     name: 'Marca',
     description: 'Personalize o nome e o logótipo da sua aplicação no ecrã de consentimento.',
@@ -163,6 +168,33 @@ const application_details = {
     role_assigned: 'Função(s) atribuída(s) com sucesso',
     search: 'Pesquisar por nome, descrição ou ID da função',
     empty: 'Nenhuma função disponível',
+  },
+  secrets: {
+    value: 'Valor',
+    empty: 'A aplicação não tem segredos.',
+    created_at: 'Criado em',
+    expires_at: 'Expira em',
+    never: 'Nunca',
+    create_new_secret: 'Criar novo segredo',
+    delete_confirmation:
+      'Esta ação não pode ser desfeita. Tem a certeza de que deseja eliminar este segredo?',
+    legacy_secret: 'Segredo legado',
+    expired: 'Expirado',
+    expired_tooltip: 'Este segredo expirou em {{date}}.',
+    create_modal: {
+      title: 'Criar segredo da aplicação',
+      expiration: 'Expiração',
+      expiration_description: 'O segredo expirará em {{date}}.',
+      expiration_description_never:
+        'O segredo nunca expirará. Recomendamos definir uma data de expiração para melhorar a segurança.',
+      days: '{{count}} dia',
+      days_other: '{{count}} dias',
+      created: 'O segredo {{name}} foi criado com sucesso.',
+    },
+    edit_modal: {
+      title: 'Editar segredo da aplicação',
+      edited: 'O segredo {{name}} foi editado com sucesso.',
+    },
   },
 };
 

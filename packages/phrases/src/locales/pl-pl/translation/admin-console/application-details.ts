@@ -34,6 +34,7 @@ const application_details = {
   application_id_tip:
     'Unikalny identyfikator aplikacji, który zazwyczaj jest generowany przez Logto. Oznacza również „<a>client_id</a>” w OpenID Connect.',
   application_secret: 'Tajny kod aplikacji',
+  application_secret_other: 'Sekrety aplikacji',
   redirect_uri: 'Adres URL przekierowania',
   redirect_uris: 'Adresy URL przekierowania',
   redirect_uri_placeholder: 'https://twoja.strona.com/aplikacja',
@@ -94,6 +95,10 @@ const application_details = {
   session_duration: 'Czas trwania sesji (dni)',
   try_it: 'Wypróbuj',
   no_organization_placeholder: 'Nie znaleziono organizacji. <a>Przejdź do organizacji</a>',
+  field_custom_data: 'Dane niestandardowe',
+  field_custom_data_tip:
+    'Dodatkowe niestandardowe informacje o aplikacji, które nie są wymienione w predefiniowanych właściwościach aplikacji, takie jak ustawienia i konfiguracje specyficzne dla biznesu.',
+  custom_data_invalid: 'Dane niestandardowe muszą być poprawnym obiektem JSON',
   branding: {
     name: 'Branding',
     description: 'Dostosuj nazwę i logo aplikacji na ekranie zgody.',
@@ -162,6 +167,33 @@ const application_details = {
     role_assigned: 'Pomyślnie przypisano rolę(y)',
     search: 'Wyszukaj według nazwy roli, opisu lub ID',
     empty: 'Brak dostępnych ról',
+  },
+  secrets: {
+    value: 'Wartość',
+    empty: 'Aplikacja nie ma żadnych sekretów.',
+    created_at: 'Utworzono',
+    expires_at: 'Wygasa o',
+    never: 'Nigdy',
+    create_new_secret: 'Utwórz nowy sekret',
+    delete_confirmation:
+      'Ta czynność nie może zostać cofnięta. Czy na pewno chcesz usunąć ten sekret?',
+    legacy_secret: 'Sekret dziedziczenia',
+    expired: 'Wygasły',
+    expired_tooltip: 'Ten sekret wygasł w dniu {{date}}.',
+    create_modal: {
+      title: 'Utwórz sekret aplikacji',
+      expiration: 'Ważność',
+      expiration_description: 'Sekret wygaśnie w dniu {{date}}.',
+      expiration_description_never:
+        'Sekret nigdy nie wygaśnie. Zalecamy ustawienie daty wygaśnięcia dla zwiększenia bezpieczeństwa.',
+      days: '{{count}} dzień',
+      days_other: '{{count}} dni',
+      created: 'Sekret {{name}} został pomyślnie utworzony.',
+    },
+    edit_modal: {
+      title: 'Edytuj sekret aplikacji',
+      edited: 'Sekret {{name}} został pomyślnie zaktualizowany.',
+    },
   },
 };
 

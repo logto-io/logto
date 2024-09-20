@@ -1,23 +1,17 @@
 const add_on = {
-  /** UNTRANSLATED */
   mfa_inline_notification:
-    'MFA is a ${{price, number}} per mo add-on for the {{planName}}. First month prorated based on your billing cycle. <a>Learn more</a>',
+    'MFA es un complemento de ${{price, number}} por mes para el {{planName}}. Primer mes prorrateado según tu ciclo de facturación. <a>Aprende más</a>',
   footer: {
-    /** UNTRANSLATED */
     api_resource:
-      'Additional resources cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
-    /** UNTRANSLATED */
+      'Los recursos adicionales cuestan <span>${{price, number}} por mes / cada uno</span>. Primer mes prorrateado según tu ciclo de facturación. <a>Aprende más</a>',
     machine_to_machine_app:
-      'Additional machine-to-machine apps cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
-    /** UNTRANSLATED */
+      'Las aplicaciones de máquina a máquina adicionales cuestan <span>${{price, number}} por mes / cada una</span>. Primer mes prorrateado según tu ciclo de facturación. <a>Aprende más</a>',
     enterprise_sso:
-      'Enterprise SSO cost <span>${{price, number}} per mo / ea</span> add-on for {{planName}}. First month prorated based on your billing cycle. <a>Learn more</a>',
-    /** UNTRANSLATED */
+      'SSO empresarial es un complemento de <span>${{price, number}} por mes / cada uno</span> para {{planName}}. Primer mes prorrateado según tu ciclo de facturación. <a>Aprende más</a>',
     tenant_members:
-      'Additional members cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
-    /** UNTRANSLATED */
+      'Miembros adicionales cuestan <span>${{price, number}} por mes / cada uno</span>. Primer mes prorrateado según tu ciclo de facturación. <a>Aprende más</a>',
     organization:
-      'Organization is a <span>${{price, number}} per mo</span> add-on for {{planName}} with unlimited organizations. First month prorated based on your billing cycle. <a>Learn more</a>',
+      'La organización es un complemento de <span>${{price, number}} por mes</span> para {{planName}} con organizaciones ilimitadas. Primer mes prorrateado según tu ciclo de facturación. <a>Aprende más</a>',
   },
 };
 

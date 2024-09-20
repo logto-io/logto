@@ -37,7 +37,6 @@ const quota_table = {
     built_in_email_connector: '내장 이메일 커넥터',
     mfa: '다중 인증',
     sso: '기업 SSO',
-
     impersonation: '가장하기',
   },
   user_management: {
@@ -59,12 +58,21 @@ const quota_table = {
     just_in_time_provisioning: '적시 프로비저닝',
   },
   support: {
-    /** UNTRANSLATED */
-    title: 'Support',
+    title: '지원',
     community: '커뮤니티',
     customer_ticket: '지원 티켓',
     premium: '프리미엄',
     email_ticket_support: '이메일 티켓 지원',
+    discord_private_channel: 'Discord 전용 채널',
+    premium_support: '프리미엄 지원',
+    developer_onboarding: '개발자 온보딩',
+    solution_engineer_support: '솔루션 엔지니어 지원',
+    sla: '서비스 수준 계약',
+    dedicated_computing_resources: '전용 컴퓨팅 리소스',
+  },
+  compliance: {
+    title: '준수',
+    soc2_compliant: 'SOC2 준수',
     soc2_report: 'SOC2 보고서',
     hipaa_or_baa_report: 'HIPAA/BAA 보고서',
   },
@@ -82,7 +90,6 @@ const quota_table = {
   days_other: '{{count, number}} 일',
   add_on: '부가 기능',
   tier: '레벨{{value, number}}: ',
-
   million: '{{value, number}} 백만',
   mau_tip:
     'MAU (월간 활성 사용자) 는 청구 주기 동안 Logto 와 적어도 하나의 토큰을 교환한 고유 사용자 수를 의미합니다.',

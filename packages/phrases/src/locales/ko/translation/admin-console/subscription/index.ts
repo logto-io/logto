@@ -1,30 +1,26 @@
 import quota_item from './quota-item.js';
 import quota_table from './quota-table.js';
+import usage from './usage.js';
 
 const subscription = {
   free_plan: '무료 요금제',
   free_plan_description: '사이드 프로젝트 및 초기 Logto 시험용. 신용 카드 없음.',
   pro_plan: '프로 요금제',
   pro_plan_description: 'Logto와 함께 걱정 없이 비즈니스 혜택을 받으세요.',
-  enterprise: '기업용',
-  /** UNTRANSLATED */
+  enterprise: '엔터프라이즈 플랜',
   enterprise_description:
-    'For large-scale organizations requiring advanced features, full customization, and dedicated support to power mission-critical applications. Tailored to your needs for ultimate security, compliance, and performance.',
-  /** UNTRANSLATED */
-  admin_plan: 'Admin plan',
-  /** UNTRANSLATED */
-  dev_plan: 'Development plan',
+    '대규모 조직을 위한 고급 기능, 전체 맞춤화 및 전용 지원이 필요한 미션 크리티컬 애플리케이션을 구동합니다. 궁극적인 보안, 규정 준수 및 성능을 위해 당신의 요구에 맞춥니다.',
+  admin_plan: '관리자 플랜',
+  dev_plan: '개발 플랜',
   current_plan: '현재 요금제',
   current_plan_description:
     '현재 사용중인 요금제 정보입니다. 요금제 사용 내역을 쉽게 확인하고, 다가오는 청구서를 확인하며 필요에 따라 요금제를 변경할 수 있습니다.',
   plan_usage: '요금제 사용량',
   plan_cycle: 'Plan cycle: {{period}}. 사용량은 {{renewDate}}에 갱신됩니다.',
-  /** UNTRANSLATED */
-  next_bill: 'Your upcoming bill',
+  next_bill: '다가오는 청구서',
   next_bill_hint: '계산에 대해 자세히 알아보려면 이 <a>게시물</a>을 참조하세요.',
-  /** UNTRANSLATED */
   next_bill_tip:
-    'The prices displayed here are tax-exclusive and may be subject to a slight delay in updates. The tax amount will be calculated based on the information you provide and your local regulatory requirements, and will be shown in your invoices.',
+    '여기에 표시된 가격은 세금 제외이며 업데이트에 약간의 지연이 있을 수 있습니다. 세금 금액은 제공한 정보와 지역 규제 요건에 따라 계산되며 청구서에 표시됩니다.',
   manage_payment: '결제 관리',
   overfill_quota_warning:
     '할당량 한도에 도달했습니다. 문제를 방지하기 위해 요금제를 업그레이드하세요.',
@@ -72,6 +68,7 @@ const subscription = {
   downgrade_success: '성공적으로 <name/>으로 다운그레이드되었습니다.',
   subscription_check_timeout: '구독 확인이 타임아웃되었습니다. 나중에 다시 확인해주세요.',
   no_subscription: '구독 없음',
+  usage,
 };
 
 export default Object.freeze(subscription);

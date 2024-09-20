@@ -19,6 +19,8 @@ const application = {
   invalid_subdomain: 'Ungültige Subdomain.',
   custom_domain_not_found: 'Benutzerdefinierte Domain nicht gefunden.',
   should_delete_custom_domains_first: 'Benutzerdefinierte Domains sollten zuerst gelöscht werden.',
+  no_legacy_secret_found: 'Die Anwendung hat kein altes Geheimnis.',
+  secret_name_exists: 'Geheimnisname existiert bereits.',
 };
 
 export default Object.freeze(application);

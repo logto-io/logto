@@ -37,7 +37,6 @@ const quota_table = {
     built_in_email_connector: '内置电子邮件连接器',
     mfa: '多因素认证',
     sso: '企业 SSO',
-
     impersonation: '模拟',
   },
   user_management: {
@@ -59,12 +58,21 @@ const quota_table = {
     just_in_time_provisioning: '即时配置',
   },
   support: {
-    /** UNTRANSLATED */
-    title: 'Support',
+    title: '支持',
     community: '社区',
     customer_ticket: '客户支持票据',
     premium: '高级版',
     email_ticket_support: '邮件支持票据',
+    discord_private_channel: 'Discord 私人频道',
+    premium_support: '高级支持',
+    developer_onboarding: '开发者入门',
+    solution_engineer_support: '解决方案工程师',
+    sla: 'SLA',
+    dedicated_computing_resources: '专用计算资源',
+  },
+  compliance: {
+    title: '合规性',
+    soc2_compliant: 'SOC2 合规',
     soc2_report: 'SOC2 报告',
     hipaa_or_baa_report: 'HIPAA/BAA 报告',
   },
@@ -82,7 +90,6 @@ const quota_table = {
   days_other: '{{count, number}} 天',
   add_on: '附加功能',
   tier: '层级{{value, number}}：',
-
   million: '{{value, number}} 百万',
   mau_tip: 'MAU（月活跃用户）是指在计费周期内与 Logto 交换过至少一个令牌的独立用户数量。',
   tokens_tip: 'Logto 发行的所有类型令牌，包括访问令牌、刷新令牌等。',

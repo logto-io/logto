@@ -37,7 +37,6 @@ const quota_table = {
     built_in_email_connector: 'Conector de e-mail integrado',
     mfa: 'Autenticação multifator',
     sso: 'SSO Empresarial',
-
     impersonation: 'Impersonação',
   },
   user_management: {
@@ -59,12 +58,21 @@ const quota_table = {
     just_in_time_provisioning: 'Provisionamento just-in-time',
   },
   support: {
-    /** UNTRANSLATED */
-    title: 'Support',
+    title: 'Suporte',
     community: 'Comunidade',
     customer_ticket: 'Ticket de suporte',
     premium: 'Premium',
     email_ticket_support: 'Suporte por e-mail',
+    discord_private_channel: 'Canal privado no Discord',
+    premium_support: 'Suporte premium',
+    developer_onboarding: 'Integração de desenvolvedores',
+    solution_engineer_support: 'Engenheiro de soluções',
+    sla: 'SLA',
+    dedicated_computing_resources: 'Recursos de computação dedicados',
+  },
+  compliance: {
+    title: 'Conformidade',
+    soc2_compliant: 'Conformidade SOC2',
     soc2_report: 'Relatório SOC2',
     hipaa_or_baa_report: 'Relatório HIPAA/BAA',
   },
@@ -82,7 +90,6 @@ const quota_table = {
   days_other: '${ { count, number } } dias',
   add_on: 'Adicional',
   tier: 'Nível${ { value, number } }:',
-
   million: '{{value, number}} milhão',
   mau_tip:
     'MAU (usuários ativos mensais) significa o número de usuários únicos que trocaram pelo menos um token com o Logto em um ciclo de faturamento.',

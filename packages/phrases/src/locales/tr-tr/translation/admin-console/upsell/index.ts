@@ -1,3 +1,4 @@
+import add_on from './add-on.js';
 import featured_plan_content from './featured-plan-content.js';
 import paywall from './paywall.js';
 
@@ -41,6 +42,7 @@ const upsell = {
     '{{item}} kota sınırını aştınız. Logto, kota sınırınızın ötesindeki kullanım için ücret ekleyecektir. Yeni ek paket fiyatlandırma tasarımı gününüzde başlayacaktır. <a>Daha fazla bilgi</a>',
   paywall,
   featured_plan_content,
+  add_on,
 };
 
 export default Object.freeze(upsell);

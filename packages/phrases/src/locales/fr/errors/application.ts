@@ -22,6 +22,8 @@ const application = {
   invalid_subdomain: 'Sous-domaine invalide.',
   custom_domain_not_found: 'Domaine personnalisé non trouvé.',
   should_delete_custom_domains_first: "Devrait d'abord supprimer les domaines personnalisés.",
+  no_legacy_secret_found: "L'application n'a pas de secret hérité.",
+  secret_name_exists: 'Le nom du secret existe déjà.',
 };
 
 export default Object.freeze(application);

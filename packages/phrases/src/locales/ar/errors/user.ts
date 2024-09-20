@@ -34,8 +34,7 @@ const user = {
   backup_code_already_in_use: 'تم استخدام رمز النسخ الاحتياطي بالفعل.',
   password_algorithm_required: 'مطلوب خوارزمية كلمة المرور.',
   password_and_digest: 'لا يمكنك تعيين كلمة مرور عادية ومعلومات تجزئة كلمة المرور معًا.',
-  /** UNTRANSLATED */
-  personal_access_token_name_exists: 'Personal access token name already exists.',
+  personal_access_token_name_exists: 'اسم رمز الوصول الشخصي موجود بالفعل.',
 };
 
 export default Object.freeze(user);

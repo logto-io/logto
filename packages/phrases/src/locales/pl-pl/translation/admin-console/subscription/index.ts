@@ -1,31 +1,27 @@
 import quota_item from './quota-item.js';
 import quota_table from './quota-table.js';
+import usage from './usage.js';
 
 const subscription = {
-  free_plan: 'Darmowy plan',
+  free_plan: 'Plan Darmowy',
   free_plan_description:
     'Dla projektów pobocznych i początkowych prób Logto. Brak wymaganej karty kredytowej.',
   pro_plan: 'Plan Pro',
   pro_plan_description: 'Dla firm, ciesz się bezstresową obsługą Logto.',
-  enterprise: 'Przedsiębiorstwo',
-  /** UNTRANSLATED */
+  enterprise: 'Plan Przedsiębiorstwo',
   enterprise_description:
-    'For large-scale organizations requiring advanced features, full customization, and dedicated support to power mission-critical applications. Tailored to your needs for ultimate security, compliance, and performance.',
-  /** UNTRANSLATED */
-  admin_plan: 'Admin plan',
-  /** UNTRANSLATED */
-  dev_plan: 'Development plan',
+    'Dla dużych organizacji wymagających zaawansowanych funkcji, pełnej personalizacji i dedykowanego wsparcia dla kluczowych aplikacji. Dopasowane do twoich potrzeb dla najwyższego bezpieczeństwa, zgodności i wydajności.',
+  admin_plan: 'Plan administracyjny',
+  dev_plan: 'Plan deweloperski',
   current_plan: 'Obecny plan',
   current_plan_description:
     'Oto Twój obecny plan. Łatwo możesz sprawdzić wykorzystanie swojego planu, sprawdzić nadchodzący rachunek i dokonać zmian w planie, jeśli jest to konieczne.',
   plan_usage: 'Wykorzystanie planu',
   plan_cycle: 'Cykl planu: {{period}}. Użycie odnawiane w dniu {{renewDate}}.',
-  /** UNTRANSLATED */
-  next_bill: 'Your upcoming bill',
+  next_bill: 'Twój nadchodzący rachunek',
   next_bill_hint: 'Aby dowiedzieć się więcej o obliczeniach, zapoznaj się z tym <a>artykułem</a>.',
-  /** UNTRANSLATED */
   next_bill_tip:
-    'The prices displayed here are tax-exclusive and may be subject to a slight delay in updates. The tax amount will be calculated based on the information you provide and your local regulatory requirements, and will be shown in your invoices.',
+    'Ceny przedstawione tutaj są bez podatku i mogą podlegać niewielkiemu opóźnieniu w aktualizacjach. Kwota podatku zostanie obliczona na podstawie informacji, które podasz oraz lokalnych wymogów prawnych, i będzie wyświetlona na twoich fakturach.',
   manage_payment: 'Zarządzanie płatnościami',
   overfill_quota_warning:
     'Osiągnąłeś limit swojej puli. Aby uniknąć problemów, zaktualizuj swój plan.',
@@ -74,6 +70,7 @@ const subscription = {
   downgrade_success: 'Pomyślnie zdegradowano do <name/>',
   subscription_check_timeout: 'Czas sprawdzenia subskrypcji wygasł. Proszę odświeżyć później.',
   no_subscription: 'Brak subskrypcji',
+  usage,
 };
 
 export default Object.freeze(subscription);

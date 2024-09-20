@@ -22,10 +22,14 @@ const session = {
   identifier_not_found: 'ユーザー ID が見つかりません。戻って再度サインインしてください。',
   interaction_not_found:
     'インタラクションセッションが見つかりません。戻ってセッションを開始してください。',
+  invalid_interaction_type:
+    'この操作は現在のインタラクションではサポートされていません。新しいセッションを開始してください。',
   not_supported_for_forgot_password:
     'この操作は パスワードを忘れた 場合にはサポートされていません。',
   identity_conflict:
     'ID の不一致が検出されました。別の ID を使用して新しいセッションを開始してください。',
+  identifier_not_verified:
+    '指定された識別子 {{identifier}} は検証されていません。この識別子の検証記録を作成し、検証プロセスを完了してください。',
   mfa: {
     require_mfa_verification: 'サインインするには MFA 検証が必要です。',
     mfa_sign_in_only: 'MFA はサインイン操作のみに使用できます。',
@@ -38,6 +42,7 @@ const session = {
     backup_code_required: 'バックアップコードが必要です。',
     invalid_backup_code: '無効なバックアップコード。',
     mfa_policy_not_user_controlled: 'MFA ポリシーはユーザーによって管理されていません。',
+    mfa_factor_not_enabled: 'MFA は有効になっていません。',
   },
   sso_enabled:
     'このメールアドレスではシングルサインオンが有効になっています。SSO でサインインしてください。',

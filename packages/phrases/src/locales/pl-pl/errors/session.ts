@@ -23,9 +23,13 @@ const session = {
     'Nie znaleziono identyfikatora użytkownika. Proszę wróć i zaloguj się ponownie.',
   interaction_not_found:
     'Nie znaleziono sesji interakcji. Proszę wróć i rozpocznij sesję ponownie.',
+  invalid_interaction_type:
+    'Ta operacja nie jest obsługiwana dla bieżącej interakcji. Proszę zainicjuj nową sesję.',
   not_supported_for_forgot_password: 'Ta operacja nie jest obsługiwana dla zapomnienia hasła.',
   identity_conflict:
     'Wykryto konflikt tożsamości. Proszę zainicjuj nową sesję, aby kontynuować przy użyciu innej tożsamości.',
+  identifier_not_verified:
+    'Podany identyfikator {{identifier}} nie został zweryfikowany. Proszę utwórz zapis weryfikacyjny dla tego identyfikatora i ukończ proces weryfikacji.',
   mfa: {
     require_mfa_verification: 'Wymagana jest weryfikacja MFA, aby się zalogować.',
     mfa_sign_in_only: 'MFA jest dostępne tylko dla interakcji logowania.',
@@ -39,6 +43,7 @@ const session = {
     backup_code_required: 'Kod zapasowy jest wymagany.',
     invalid_backup_code: 'Nieprawidłowy kod zapasowy.',
     mfa_policy_not_user_controlled: 'Polityka MFA nie jest kontrolowana przez użytkownika.',
+    mfa_factor_not_enabled: 'Czynnik MFA nie jest włączony.',
   },
   sso_enabled: 'Single sign on jest włączony dla tego adresu e-mail. Zaloguj się za pomocą SSO.',
 };

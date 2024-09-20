@@ -37,6 +37,10 @@ const jwt_claims = {
     title: '令牌数据',
     subtitle: '使用`token`输入参数查看当前访问令牌负载。',
   },
+  api_context: {
+    title: 'API 上下文：访问控制',
+    subtitle: '使用 `api.denyAccess` 方法拒绝令牌请求。',
+  },
   fetch_external_data: {
     title: '获取外部数据',
     subtitle: '直接将外部API中的数据纳入声明。',

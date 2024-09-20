@@ -17,8 +17,11 @@ const session = {
   csrf_token_mismatch: 'CSRF token 不匹配。',
   identifier_not_found: '找不到用戶標識符。請返回並重新登錄。',
   interaction_not_found: '找不到互動會話。請返回並重新開始會話。',
+  invalid_interaction_type: '此操作不支援當前的互動。請啟動一個新的會話。',
   not_supported_for_forgot_password: '此操作不支援忘記密碼。',
   identity_conflict: '偵測到身份不匹配。請啟動一個新的會話以使用不同的身份繼續。',
+  identifier_not_verified:
+    '提供的標識符 {{identifier}} 尚未驗證。請為此標識符創建驗證記錄並完成驗證過程。',
   mfa: {
     require_mfa_verification: '需要 MFA 驗證才能登錄。',
     mfa_sign_in_only: 'MFA 只能用於登錄互動。',
@@ -31,6 +34,7 @@ const session = {
     backup_code_required: '備用碼是必需的。',
     invalid_backup_code: '無效的備用碼。',
     mfa_policy_not_user_controlled: 'MFA 政策不受使用者控制。',
+    mfa_factor_not_enabled: 'MFA 因素未啟用。',
   },
   sso_enabled: '該郵箱已開啟單點登錄，請使用 SSO 登錄。',
 };

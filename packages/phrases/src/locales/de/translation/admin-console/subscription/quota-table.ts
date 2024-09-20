@@ -37,7 +37,6 @@ const quota_table = {
     built_in_email_connector: 'Integrierter E-Mail-Connector',
     mfa: 'Multi-Faktor-Authentifizierung',
     sso: 'Unternehmens-SSO',
-
     impersonation: 'Stellvertretung',
   },
   user_management: {
@@ -59,12 +58,21 @@ const quota_table = {
     just_in_time_provisioning: 'Bedarfsgesteuerte Bereitstellung',
   },
   support: {
-    /** UNTRANSLATED */
-    title: 'Support',
+    title: 'Unterstützung',
     community: 'Gemeinschaft',
     customer_ticket: 'Support-Ticket',
     premium: 'Premium',
     email_ticket_support: 'E-Mail-Ticket-Support',
+    discord_private_channel: 'Discord-Privatkanal',
+    premium_support: 'Premium-Unterstützung',
+    developer_onboarding: 'Entwickler-Einarbeitung',
+    solution_engineer_support: 'Solution-Engineer',
+    sla: 'SLA',
+    dedicated_computing_resources: 'Dedizierte Computerressourcen',
+  },
+  compliance: {
+    title: 'Compliance',
+    soc2_compliant: 'SOC2-konform',
     soc2_report: 'SOC2-Bericht',
     hipaa_or_baa_report: 'HIPAA/BAA-Bericht',
   },
@@ -82,7 +90,6 @@ const quota_table = {
   days_other: '{{count, number}} Tage',
   add_on: 'Zusatzleistung',
   tier: 'Stufe{{value, number}}: ',
-
   million: '{{value, number}} Millionen',
   mau_tip:
     'MAU (monatlich aktive Benutzer) bezeichnet die Anzahl der eindeutigen Benutzer, die in einem Abrechnungszyklus mindestens einen Token mit Logto ausgetauscht haben.',

@@ -3,12 +3,13 @@ import { isBuiltInLanguageTag as isPhrasesBuiltInLanguageTag } from '@logto/phra
 import PQueue from 'p-queue';
 import type { CommandModule } from 'yargs';
 
-import { syncTranslation } from './openai.js';
+import { model, syncTranslation } from './openai.js';
 import {
   inquireInstancePath,
   lintLocaleFiles,
   type TranslationOptions,
   baseLanguage,
+  consoleLog,
 } from './utils.js';
 
 const sync: CommandModule<
@@ -29,6 +30,7 @@ const sync: CommandModule<
     const queue = new PQueue({ concurrency: 10 });
     const instancePath = await inquireInstancePath(inputPath, skipCoreCheck);
     const packages = packageName ? [packageName] : ['phrases', 'phrases-experience'];
+    consoleLog.info(`Translating files using model ${model}`);
 
     for (const languageTag of Object.keys(languages)) {
       if (languageTag === baseLanguage) {

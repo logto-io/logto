@@ -34,6 +34,7 @@ const application_details = {
   application_id_tip:
     'L\'identificatore univoco dell\'applicazione generato normalmente da Logto. Sta anche per "<a>client_id</a>" in OpenID Connect.',
   application_secret: 'Secret App',
+  application_secret_other: "Segreti dell'app",
   redirect_uri: 'URI di reindirizzamento',
   redirect_uris: 'URI di reindirizzamento',
   redirect_uri_placeholder: 'https://il-tuo-sito-web.com/la-tua-app',
@@ -94,6 +95,10 @@ const application_details = {
   session_duration: 'Durata della sessione (giorni)',
   try_it: 'Provalo',
   no_organization_placeholder: 'Nessuna organizzazione trovata. <a>Vai alle organizzazioni</a>',
+  field_custom_data: 'Dati personalizzati',
+  field_custom_data_tip:
+    "Ulteriori informazioni personalizzate sull'applicazione non elencate nelle proprietà predefinite dell'applicazione, come impostazioni e configurazioni specifiche del business.",
+  custom_data_invalid: 'I dati personalizzati devono essere un oggetto JSON valido',
   branding: {
     name: 'Marchio',
     description: "Personalizza il nome e il logo dell'applicazione sullo schermo del consenso.",
@@ -164,6 +169,33 @@ const application_details = {
     role_assigned: 'Ruolo(i) assegnato con successo',
     search: 'Cerca per nome ruolo, descrizione o ID',
     empty: 'Nessun ruolo disponibile',
+  },
+  secrets: {
+    value: 'Valore',
+    empty: "L'applicazione non ha segreti.",
+    created_at: 'Creato il',
+    expires_at: 'Scade il',
+    never: 'Mai',
+    create_new_secret: 'Crea nuovo segreto',
+    delete_confirmation:
+      'Questa azione non può essere annullata. Sei sicuro di voler eliminare questo segreto?',
+    legacy_secret: 'Segreto legacy',
+    expired: 'Scaduto',
+    expired_tooltip: 'Questo segreto è scaduto il {{date}}.',
+    create_modal: {
+      title: "Crea segreto dell'applicazione",
+      expiration: 'Scadenza',
+      expiration_description: 'Il segreto scadrà il {{date}}.',
+      expiration_description_never:
+        'Il segreto non scadrà mai. Si consiglia di impostare una data di scadenza per una maggiore sicurezza.',
+      days: '{{count}} giorno',
+      days_other: '{{count}} giorni',
+      created: 'Il segreto {{name}} è stato creato con successo.',
+    },
+    edit_modal: {
+      title: "Modifica segreto dell'applicazione",
+      edited: 'Il segreto {{name}} è stato modificato con successo.',
+    },
   },
 };
 

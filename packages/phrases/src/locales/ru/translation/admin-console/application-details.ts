@@ -34,6 +34,7 @@ const application_details = {
   application_id_tip:
     'Уникальный идентификатор приложения, обычно генерируемый Logto. Он также означает «<a>client_id</a>» в OpenID Connect.',
   application_secret: 'Секрет приложения',
+  application_secret_other: 'Секреты приложения',
   redirect_uri: 'URI перенаправления',
   redirect_uris: 'URI перенаправления',
   redirect_uri_placeholder: 'https://ваш.вебсайт.com/приложение',
@@ -94,6 +95,10 @@ const application_details = {
   session_duration: 'Продолжительность сеанса (дни)',
   try_it: 'Попробуйте',
   no_organization_placeholder: 'Организация не найдена. <a>Перейти к организациям</a>',
+  field_custom_data: 'Пользовательские данные',
+  field_custom_data_tip:
+    'Дополнительная информация о приложении, не указанная в предопределенных свойствах приложения, такая как настройки и конфигурации, специфичные для бизнеса.',
+  custom_data_invalid: 'Пользовательские данные должны быть допустимым объектом JSON',
   branding: {
     name: 'Брендинг',
     description: 'Настройте отображаемое имя и логотип вашего приложения на экране согласия.',
@@ -163,6 +168,33 @@ const application_details = {
     role_assigned: 'Роль(и) успешно назначены',
     search: 'Поиск по названию роли, описанию или ID',
     empty: 'Нет доступных ролей',
+  },
+  secrets: {
+    value: 'Значение',
+    empty: 'Приложение не имеет секретов.',
+    created_at: 'Создано в',
+    expires_at: 'Истекает в',
+    never: 'Никогда',
+    create_new_secret: 'Создать новый секрет',
+    delete_confirmation:
+      'Это действие нельзя отменить. Вы уверены, что хотите удалить этот секрет?',
+    legacy_secret: 'Устаревший секрет',
+    expired: 'Истек',
+    expired_tooltip: 'Секрет истек {{date}}.',
+    create_modal: {
+      title: 'Создать секрет приложения',
+      expiration: 'Срок действия',
+      expiration_description: 'Секрет истечет {{date}}.',
+      expiration_description_never:
+        'Секрет никогда не истечет. Мы рекомендуем установить дату истечения для повышения безопасности.',
+      days: '{{count}} день',
+      days_other: '{{count}} дней',
+      created: 'Секрет {{name}} успешно создан.',
+    },
+    edit_modal: {
+      title: 'Изменить секрет приложения',
+      edited: 'Секрет {{name}} успешно изменен.',
+    },
   },
 };
 

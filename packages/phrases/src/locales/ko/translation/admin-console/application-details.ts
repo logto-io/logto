@@ -33,6 +33,7 @@ const application_details = {
   application_id_tip:
     '일반적으로 로그토에서 생성되는 고유한 애플리케이션 식별자입니다. OpenID Connect에서 "<a>client_id</a>"의 약어입니다.',
   application_secret: '앱 시크릿',
+  application_secret_other: '앱 시크릿',
   redirect_uri: '리디렉트 URI',
   redirect_uris: '리디렉트 URIs',
   redirect_uri_placeholder: 'https://your.website.com/app',
@@ -75,9 +76,9 @@ const application_details = {
   application_deleted: '{{name}} 애플리케이션이 성공적으로 삭제되었습니다.',
   redirect_uri_required: '최소 하나의 리디렉트 URI를 반드시 입력해야 합니다.',
   app_domain_description_1:
-    'Feel free to use your domain with {{domain}} powered by Logto, which is permanently valid.',
+    'Logto 에 의해 구동되는 {{domain}} 와 함께 도메인을 자유롭게 사용하세요. 이것은 영구적으로 유효합니다.',
   app_domain_description_2:
-    'Feel free to utilize your domain <domain>{{domain}}</domain> which is permanently valid.',
+    '도메인 <domain>{{domain}}</domain> 을 자유롭게 활용하세요. 이것은 영구적으로 유효합니다.',
   custom_rules: '사용자 인증규칙',
   custom_rules_placeholder: '^/(admin|privacy)/.+$',
   custom_rules_description:
@@ -93,6 +94,10 @@ const application_details = {
   session_duration: '세션 기간 (일)',
   try_it: '해보기',
   no_organization_placeholder: '조직을 찾을 수 없습니다. <a>조직으로 이동</a>',
+  field_custom_data: '사용자 지정 데이터',
+  field_custom_data_tip:
+    '사전 정의된 애플리케이션 속성에 나열되지 않은 추가 사용자 지정 애플리케이션 정보, 비즈니스 관련 설정 및 구성과 같은 항목들.',
+  custom_data_invalid: '사용자 지정 데이터는 유효한 JSON 객체여야 합니다',
   branding: {
     name: '브랜딩',
     description: '동의 화면에서 앱의 표시 이름과 로고를 사용자 정의하세요.',
@@ -158,6 +163,32 @@ const application_details = {
     role_assigned: '역할이 성공적으로 할당되었습니다.',
     search: '역할 이름, 설명 또는 ID로 검색',
     empty: '사용 가능한 역할이 없습니다.',
+  },
+  secrets: {
+    value: '값',
+    empty: '애플리케이션에 비밀이 없습니다.',
+    created_at: '생성 시간',
+    expires_at: '만료 시간',
+    never: '만료되지 않음',
+    create_new_secret: '새 시크릿 생성',
+    delete_confirmation: '이 작업은 되돌릴 수 없습니다. 이 시크릿을 삭제하시겠습니까?',
+    legacy_secret: '레거시 시크릿',
+    expired: '만료됨',
+    expired_tooltip: '이 시크릿은 {{date}} 에 만료되었습니다.',
+    create_modal: {
+      title: '애플리케이션 시크릿 생성',
+      expiration: '만료',
+      expiration_description: '이 시크릿은 {{date}}에 만료됩니다.',
+      expiration_description_never:
+        '이 시크릿은 만료되지 않을 것입니다. 보안을 강화하기 위해 만료 날짜를 설정하는 것을 권장합니다.',
+      days: '{{count}} 일',
+      days_other: '{{count}} 일',
+      created: '시크릿 {{name}} 이(가) 성공적으로 생성되었습니다.',
+    },
+    edit_modal: {
+      title: '애플리케이션 시크릿 편집',
+      edited: '시크릿 {{name}} 이(가) 성공적으로 편집되었습니다.',
+    },
   },
 };
 

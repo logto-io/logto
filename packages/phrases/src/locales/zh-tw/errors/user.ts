@@ -33,6 +33,7 @@ const user = {
   backup_code_already_in_use: '備份代碼已經在使用中。',
   password_algorithm_required: 'Password algorithm is required.',
   password_and_digest: 'You cannot set both plain text password and password digest.',
+  personal_access_token_name_exists: '個人訪問令牌名稱已存在。',
 };
 
 export default Object.freeze(user);

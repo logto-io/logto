@@ -34,6 +34,7 @@ const application_details = {
   application_id_tip:
     "L'identifiant d'application unique généralement généré par Logto. Il signifie également <a>client_id</a> dans OpenID Connect.",
   application_secret: "Secret de l'application",
+  application_secret_other: 'Secrets de l’appli',
   redirect_uri: 'URI de redirection',
   redirect_uris: 'URIs de redirection',
   redirect_uri_placeholder: 'https://votre.site.com/app',
@@ -94,6 +95,10 @@ const application_details = {
   session_duration: 'Durée de la session (jours)',
   try_it: 'Essayez',
   no_organization_placeholder: 'Aucune organisation trouvée. <a>Aller aux organisations</a>',
+  field_custom_data: 'Données personnalisées',
+  field_custom_data_tip:
+    'Informations supplémentaires personnalisées de l’application non listées dans les propriétés prédéfinies de l’application, telles que les paramètres et configurations spécifiques à l’entreprise.',
+  custom_data_invalid: 'Les données personnalisées doivent être un objet JSON valide.',
   branding: {
     name: 'Marque',
     description:
@@ -164,6 +169,33 @@ const application_details = {
     role_assigned: 'Rôle(s) attribué(e)s avec succès',
     search: 'Rechercher par nom de rôle, description ou ID',
     empty: 'Aucun rôle disponible',
+  },
+  secrets: {
+    value: 'Valeur',
+    empty: "L'application n'a aucun secret.",
+    created_at: 'Créé à',
+    expires_at: 'Expire à',
+    never: 'Jamais',
+    create_new_secret: 'Créer un nouveau secret',
+    delete_confirmation:
+      'Cette action ne peut pas être annulée. Êtes-vous sûr de vouloir supprimer ce secret ?',
+    legacy_secret: 'Secret hérité',
+    expired: 'Expiré',
+    expired_tooltip: 'Ce secret a expiré le {{date}}.',
+    create_modal: {
+      title: "Créer un secret d'application",
+      expiration: 'Expiration',
+      expiration_description: 'Le secret expirera le {{date}}.',
+      expiration_description_never:
+        "Le secret n'expirera jamais. Nous recommandons de définir une date d'expiration pour une sécurité renforcée.",
+      days: '{{count}} jour',
+      days_other: '{{count}} jours',
+      created: 'Le secret {{name}} a été créé avec succès.',
+    },
+    edit_modal: {
+      title: "Modifier le secret de l'application",
+      edited: 'Le secret {{name}} a été modifié avec succès.',
+    },
   },
 };
 

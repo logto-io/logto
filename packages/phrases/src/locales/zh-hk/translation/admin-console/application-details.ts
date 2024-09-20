@@ -31,6 +31,7 @@ const application_details = {
   application_id_tip:
     '應用程式的唯一標識，通常由 Logto 生成。等同於 OpenID Connect 中的 <a>client_id</a>。',
   application_secret: '應用程式密鑰',
+  application_secret_other: '應用程式密鑰',
   redirect_uri: '重定向 URI',
   redirect_uris: '重定向 URI',
   redirect_uri_placeholder: 'https://your.website.com/app',
@@ -87,6 +88,10 @@ const application_details = {
   session_duration: '會話持續時間（天）',
   try_it: '試試看',
   no_organization_placeholder: '沒有找到組織。<a>前往組織</a>',
+  field_custom_data: '自定義資料',
+  field_custom_data_tip:
+    '額外的自定義應用程式資訊，不在預定義的應用程式屬性中列出，例如業務特定的設定和配置。',
+  custom_data_invalid: '自定義資料必須是一個有效的 JSON 對象',
   branding: {
     name: '品牌推廣',
     description: '在同意屏幕上自訂您應用程式的顯示名稱和標誌。',
@@ -149,6 +154,31 @@ const application_details = {
     role_assigned: '成功指派角色',
     search: '按角色名稱、描述或 ID 搜索',
     empty: '無可用角色',
+  },
+  secrets: {
+    value: '值',
+    empty: '應用程式目前沒有任何密鑰。',
+    created_at: '創建於',
+    expires_at: '到期於',
+    never: '永不',
+    create_new_secret: '創建新密鑰',
+    delete_confirmation: '此操作無法撤銷。你確定要刪除此密鑰嗎？',
+    legacy_secret: '舊版密鑰',
+    expired: '已過期',
+    expired_tooltip: '此密鑰已於 {{date}} 過期。',
+    create_modal: {
+      title: '創建應用程式密鑰',
+      expiration: '到期時間',
+      expiration_description: '密鑰將於 {{date}} 到期。',
+      expiration_description_never: '此密鑰將永不過期。我們建議設置到期日期以增強安全性。',
+      days: '{{count}} 天',
+      days_other: '{{count}} 天',
+      created: '密鑰 {{name}} 已成功創建。',
+    },
+    edit_modal: {
+      title: '編輯應用程式密鑰',
+      edited: '密鑰 {{name}} 已成功編輯。',
+    },
   },
 };
 

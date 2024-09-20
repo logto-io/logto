@@ -46,9 +46,8 @@ const general = {
   continue: '続ける',
   page_info: '{{total}}件中{{min}}件〜{{max}}件を表示',
   learn_more: '詳しく見る',
-  /** UNTRANSLATED */
-  tab_error_one: '{{count, number}} error',
-  tab_error_other: '{{count}}件のエラーがあります',
+  tab_error_one: '{{count, number}} 件のエラー',
+  tab_error_other: '{{count}} 件のエラーがあります',
   skip_for_now: '今回はスキップする',
   remove: '削除する',
   visit: '訪問する',
@@ -71,6 +70,8 @@ const general = {
   delete_field: '{{field}}を削除',
   coming_soon: '近日公開予定',
   or: 'または',
+  reset: 'リセット',
+  generate: '生成する',
 };
 
 export default Object.freeze(general);

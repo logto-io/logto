@@ -12,10 +12,13 @@ const user_details = {
   deleted: 'تم حذف المستخدم بنجاح',
   reset_password: {
     reset_title: 'هل أنت متأكد أنك تريد إعادة تعيين كلمة المرور؟',
+    generate_title: 'هل أنت متأكد أنك تريد توليد كلمة مرور؟',
     content:
       'لا يمكن التراجع عن هذا الإجراء. سيتم إعادة تعيين معلومات تسجيل الدخول الخاصة بالمستخدم.',
     reset_complete: 'تم إعادة تعيين هذا المستخدم',
+    generate_complete: 'تم توليد كلمة المرور',
     new_password: 'كلمة المرور الجديدة:',
+    password: 'كلمة المرور:',
   },
   tab_settings: 'الإعدادات',
   tab_roles: 'الأدوار',
@@ -28,6 +31,7 @@ const user_details = {
   field_email: 'عنوان البريد الإلكتروني',
   field_phone: 'رقم الهاتف',
   field_username: 'اسم المستخدم',
+  field_password: 'كلمة المرور',
   field_name: 'الاسم',
   field_avatar: 'عنوان صورة الصورة الرمزية',
   field_avatar_placeholder: 'https://your.cdn.domain/avatar.png',
@@ -41,6 +45,8 @@ const user_details = {
   field_sso_connectors: 'روابط المؤسسات',
   custom_data_invalid: 'يجب أن تكون البيانات المخصصة كائن JSON صالح',
   profile_invalid: 'يجب أن يكون الملف الشخصي كائن JSON صالح',
+  password_already_set: 'تم تعيين كلمة المرور بالفعل',
+  no_password_set: 'لم يتم تعيين كلمة مرور',
   connectors: {
     connectors: 'الروابط',
     user_id: 'معرف المستخدم',
@@ -96,57 +102,33 @@ const user_details = {
   warning_no_sign_in_identifier:
     'يحتاج المستخدم إلى وجود واحد على الأقل من معرفات تسجيل الدخول (اسم المستخدم أو البريد الإلكتروني أو رقم الهاتف أو الوسائط الاجتماعية) لتسجيل الدخول. هل أنت متأكد أنك تريد المتابعة؟',
   personal_access_tokens: {
-    /** UNTRANSLATED */
-    title: 'Personal access token',
-    /** UNTRANSLATED */
-    title_other: 'Personal access tokens',
-    /** UNTRANSLATED */
-    title_short: 'token',
-    /** UNTRANSLATED */
-    empty: 'The user does not have any personal access tokens.',
-    /** UNTRANSLATED */
-    create: 'Create new token',
-    /** UNTRANSLATED */
-    tip: 'Personal access tokens (PATs) provide a secure way for users to grant access tokens without using their credentials and interactive sign-in. This is useful for CI/CD, scripts, or applications that need to access resources programmatically. <a>Learn more</a>',
-    /** UNTRANSLATED */
-    value: 'Value',
-    /** UNTRANSLATED */
-    created_at: 'Created at',
-    /** UNTRANSLATED */
-    expires_at: 'Expires at',
-    /** UNTRANSLATED */
-    never: 'Never',
-    /** UNTRANSLATED */
-    create_new_token: 'Create new token',
-    /** UNTRANSLATED */
-    delete_confirmation:
-      'This action cannot be undone. Are you sure you want to delete this token?',
-    /** UNTRANSLATED */
-    expired: 'Expired',
-    /** UNTRANSLATED */
-    expired_tooltip: 'This token was expired on {{date}}.',
+    title: 'رمز الوصول الشخصي',
+    title_other: 'رموز الوصول الشخصية',
+    title_short: 'رمز',
+    empty: 'المستخدم لا يمتلك أي رموز وصول شخصية.',
+    create: 'إنشاء رمز جديد',
+    tip: 'توفر رموز الوصول الشخصية (PATs) طريقة آمنة للمستخدمين لمنح رموز الوصول دون استخدام بيانات اعتمادهم وتسجيل الدخول التفاعلي. هذا مفيد لـ CI/CD، النصوص، أو التطبيقات التي تحتاج إلى الوصول إلى الموارد برمجيًا. <a> تعرف على المزيد </a>',
+    value: 'القيمة',
+    created_at: 'تم إنشاؤه في',
+    expires_at: 'ينتهي في',
+    never: 'أبدًا',
+    create_new_token: 'إنشاء رمز جديد',
+    delete_confirmation: 'لا يمكن التراجع عن هذا الإجراء. هل أنت متأكد أنك تريد حذف هذا الرمز؟',
+    expired: 'منتهي الصلاحية',
+    expired_tooltip: 'انتهت صلاحية هذا الرمز في {{date}}.',
     create_modal: {
-      /** UNTRANSLATED */
-      title: 'Create personal access token',
-      /** UNTRANSLATED */
-      expiration: 'Expiration',
-      /** UNTRANSLATED */
-      expiration_description: 'The token will expire at {{date}}.',
-      /** UNTRANSLATED */
+      title: 'إنشاء رمز الوصول الشخصي',
+      expiration: 'انتهاء الصلاحية',
+      expiration_description: 'سينتهي الرمز في {{date}}.',
       expiration_description_never:
-        'The token will never expire. We recommend setting an expiration date for enhanced security.',
-      /** UNTRANSLATED */
-      days: '{{count}} day',
-      /** UNTRANSLATED */
-      days_other: '{{count}} days',
-      /** UNTRANSLATED */
-      created: 'The token {{name}} has been successfully created.',
+        'لن تنتهي صلاحية الرمز أبدًا. نوصي بتحديد تاريخ انتهاء لتعزيز الأمان.',
+      days: '{{count}} يوم',
+      days_other: '{{count}} أيام',
+      created: 'تم إنشاء الرمز {{name}} بنجاح.',
     },
     edit_modal: {
-      /** UNTRANSLATED */
-      title: 'Edit personal access token',
-      /** UNTRANSLATED */
-      edited: 'The token {{name}} has been successfully edited.',
+      title: 'تحرير رمز الوصول الشخصي',
+      edited: 'تم تحرير الرمز {{name}} بنجاح.',
     },
   },
 };

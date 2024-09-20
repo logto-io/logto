@@ -41,6 +41,10 @@ const jwt_claims = {
     title: 'Belge verisi',
     subtitle: '`belge` giriş parametresini mevcut erişim belgesi yükü için kullanın. ',
   },
+  api_context: {
+    title: 'API bağlamı: erişim kontrolü',
+    subtitle: '`api.denyAccess` yöntemini kullanarak belge isteğini reddedin.',
+  },
   fetch_external_data: {
     title: 'Harici veri al',
     subtitle: "Harici API'larınızdan verileri doğrudan iddialara dahil edin.",

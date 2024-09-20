@@ -1,30 +1,26 @@
 import quota_item from './quota-item.js';
 import quota_table from './quota-table.js';
+import usage from './usage.js';
 
 const subscription = {
-  free_plan: 'Kostenloser Plan',
+  free_plan: 'Kostenloser plan',
   free_plan_description: 'Für Nebenprojekte und erste Logto-Tests. Keine Kreditkarte erforderlich.',
   pro_plan: 'Pro plan',
   pro_plan_description: 'Für Unternehmen, die sorgenfrei von Logto profitieren möchten.',
-  enterprise: 'Unternehmen',
-  /** UNTRANSLATED */
+  enterprise: 'Enterprise-Plan',
   enterprise_description:
-    'For large-scale organizations requiring advanced features, full customization, and dedicated support to power mission-critical applications. Tailored to your needs for ultimate security, compliance, and performance.',
-  /** UNTRANSLATED */
-  admin_plan: 'Admin plan',
-  /** UNTRANSLATED */
-  dev_plan: 'Development plan',
+    'Für große Organisationen, die erweiterte Funktionen, volle Anpassung und dedizierten Support benötigen, um geschäftskritische Anwendungen zu betreiben. Auf Ihre Bedürfnisse zugeschnitten für ultimative Sicherheit, Compliance und Leistung.',
+  admin_plan: 'Admin-Plan',
+  dev_plan: 'Entwicklungsplan',
   current_plan: 'Aktueller Plan',
   current_plan_description:
     'Hier ist dein aktueller Tarif. Du kannst einfach deinen Tarifverbrauch einsehen, deine anstehende Rechnung überprüfen und bei Bedarf Änderungen an deinem Tarif vornehmen.',
   plan_usage: 'Plan-Nutzung',
   plan_cycle: 'Plan-Zyklus: {{period}}. Die Nutzung wird am {{renewDate}} erneuert.',
-  /** UNTRANSLATED */
-  next_bill: 'Your upcoming bill',
+  next_bill: 'Ihre bevorstehende Rechnung',
   next_bill_hint: 'Weitere Informationen zur Berechnung finden Sie in diesem <a>Artikel</a>.',
-  /** UNTRANSLATED */
   next_bill_tip:
-    'The prices displayed here are tax-exclusive and may be subject to a slight delay in updates. The tax amount will be calculated based on the information you provide and your local regulatory requirements, and will be shown in your invoices.',
+    'Die hier angezeigten Preise sind ohne Steuern und können geringfügigen Verzögerungen bei der Aktualisierung unterliegen. Der Steuerbetrag wird basierend auf den von Ihnen bereitgestellten Informationen und den lokalen regulatorischen Anforderungen berechnet und in Ihren Rechnungen angezeigt.',
   manage_payment: 'Zahlung verwalten',
   overfill_quota_warning:
     'Sie haben Ihr Quotenlimit erreicht. Um Probleme zu vermeiden, upgraden Sie den Plan.',
@@ -73,6 +69,7 @@ const subscription = {
   downgrade_success: 'Erfolgreich auf <name/> herabgestuft',
   subscription_check_timeout: 'Abo-Überprüfung ist abgelaufen. Bitte später aktualisieren.',
   no_subscription: 'Kein Abonnement',
+  usage,
 };
 
 export default Object.freeze(subscription);

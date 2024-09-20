@@ -13,10 +13,13 @@ const user_details = {
   deleted: 'Der Benutzer wurde erfolgreich gelöscht',
   reset_password: {
     reset_title: 'Willst du das Passwort wirklich zurücksetzen?',
+    generate_title: 'Möchten Sie wirklich ein Passwort generieren?',
     content:
       'Diese Aktion kann nicht rückgängig gemacht werden. Das Anmeldeinformationen werden zurückgesetzt.',
     reset_complete: 'Der Benutzer wurde erfolgreich zurückgesetzt',
+    generate_complete: 'Das Passwort wurde generiert',
     new_password: 'Neues Passwort:',
+    password: 'Passwort:',
   },
   tab_settings: 'Einstellungen',
   tab_roles: 'Benutzerrollen',
@@ -29,6 +32,7 @@ const user_details = {
   field_email: 'E-Mail-Adresse',
   field_phone: 'Telefonnummer',
   field_username: 'Benutzername',
+  field_password: 'Passwort',
   field_name: 'Name',
   field_avatar: 'Profilbild URL',
   field_avatar_placeholder: 'https://dein.cdn.domain/profilbild.png',
@@ -42,6 +46,8 @@ const user_details = {
   field_sso_connectors: 'Unternehmensverbindungen',
   custom_data_invalid: 'Benutzerdefinierte Daten müssen ein gültiges JSON-Objekt sein.',
   profile_invalid: 'Profil muss ein gültiges JSON-Objekt sein',
+  password_already_set: 'Passwort bereits gesetzt',
+  no_password_set: 'Kein Passwort gesetzt',
   connectors: {
     connectors: 'Verbindungen',
     user_id: 'Benutzer ID',
@@ -100,6 +106,37 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     'Der Benutzer muss mindestens einen der Anmelde-Identifikatoren (Benutzername, E-Mail, Telefonnummer oder soziales Konto) haben, um sich anzumelden. Sind Sie sicher, dass Sie fortfahren möchten?',
+  personal_access_tokens: {
+    title: 'Persönliches Zugriffstoken',
+    title_other: 'Persönliche Zugriffstokens',
+    title_short: 'Token',
+    empty: 'Der Benutzer hat keine persönlichen Zugriffstokens.',
+    create: 'Neues Token erstellen',
+    tip: 'Persönliche Zugriffstokens (PATs) bieten eine sichere Möglichkeit, Nutzern Zugriffstokens zu gewähren, ohne ihre Anmeldedaten und interaktive Anmeldung zu nutzen. Dies ist nützlich für CI/CD, Skripte oder Anwendungen, die programmatisch auf Ressourcen zugreifen müssen. <a>Erfahre mehr</a>',
+    value: 'Wert',
+    created_at: 'Erstellt am',
+    expires_at: 'Läuft ab am',
+    never: 'Niemals',
+    create_new_token: 'Neues Token erstellen',
+    delete_confirmation:
+      'Diese Aktion kann nicht rückgängig gemacht werden. Sind Sie sicher, dass Sie dieses Token löschen möchten?',
+    expired: 'Abgelaufen',
+    expired_tooltip: 'Dieses Token ist am {{date}} abgelaufen.',
+    create_modal: {
+      title: 'Persönliches Zugriffstoken erstellen',
+      expiration: 'Ablauf',
+      expiration_description: 'Das Token läuft am {{date}} ab.',
+      expiration_description_never:
+        'Das Token läuft nie ab. Wir empfehlen, ein Ablaufdatum für verbesserte Sicherheit festzulegen.',
+      days: '{{count}} Tag',
+      days_other: '{{count}} Tage',
+      created: 'Das Token {{name}} wurde erfolgreich erstellt.',
+    },
+    edit_modal: {
+      title: 'Persönliches Zugriffstoken bearbeiten',
+      edited: 'Das Token {{name}} wurde erfolgreich bearbeitet.',
+    },
+  },
 };
 
 export default Object.freeze(user_details);

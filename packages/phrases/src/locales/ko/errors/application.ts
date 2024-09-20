@@ -18,6 +18,8 @@ const application = {
   invalid_subdomain: '잘못된 하위 도메인입니다.',
   custom_domain_not_found: '사용자 정의 도메인을 찾을 수 없습니다.',
   should_delete_custom_domains_first: '먼저 사용자 정의 도메인을 삭제해야 합니다.',
+  no_legacy_secret_found: '응용 프로그램에 레거시 비밀이 없습니다.',
+  secret_name_exists: '비밀 이름이 이미 존재합니다.',
 };
 
 export default Object.freeze(application);

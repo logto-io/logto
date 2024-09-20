@@ -19,6 +19,8 @@ const application = {
   invalid_subdomain: 'Недопустимый поддомен.',
   custom_domain_not_found: 'Пользовательский домен не найден.',
   should_delete_custom_domains_first: 'Сначала следует удалить пользоватские домены.',
+  no_legacy_secret_found: 'Приложение не имеет устаревшего секрета.',
+  secret_name_exists: 'Имя секрета уже существует.',
 };
 
 export default Object.freeze(application);

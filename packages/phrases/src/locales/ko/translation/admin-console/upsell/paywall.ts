@@ -17,6 +17,22 @@ const paywall = {
     '<planName/>의 {{count, number}}개 API 리소스 당 권한 한도에 도달했습니다. 확장을 위해 지금 업그레이드하세요. 도움이 필요하면 <a>문의하기</a>로 연락 주세요.',
   scopes_per_resource_other:
     '<planName/>의 {{count, number}}개 API 리소스 당 권한 한도에 도달했습니다. 확장을 위해 지금 업그레이드하세요. 도움이 필요하면 <a>문의하기</a>로 연락 주세요.',
+  custom_domain:
+    '사용자 정의 도메인 기능을 잠금 해제하려면 <strong>Hobby</strong> 또는 <strong>Pro</strong> 플랜으로 업그레이드하세요. 도움이 필요하면 <a>문의하세요</a>.',
+  social_connectors:
+    '<planName/>의 {{count, number}}개 소셜 커넥터 제한에 도달했습니다. 팀의 요구를 충족하기 위해 플랜을 업그레이드하여 추가 소셜 커넥터 및 OIDC, OAuth 2.0, SAML 프로토콜을 사용하여 고유한 커넥터를 생성할 수 있는 기능을 제공합니다. 도움이 필요하면 <a>문의하세요</a>.',
+  social_connectors_other:
+    '<planName/>의 {{count, number}}개 소셜 커넥터 제한에 도달했습니다. 팀의 요구를 충족하기 위해 플랜을 업그레이드하여 추가 소셜 커넥터 및 OIDC, OAuth 2.0, SAML 프로토콜을 사용하여 고유한 커넥터를 생성할 수 있는 기능을 제공합니다. 도움이 필요하면 <a>문의하세요</a>.',
+  standard_connectors_feature:
+    'OIDC, OAuth 2.0, SAML 프로토콜을 사용하여 고유한 커넥터를 생성하고 무제한 소셜 커넥터와 모든 프리미엄 기능을 즐기려면 <strong>Hobby</strong> 또는 <strong>Pro</strong> 플랜으로 업그레이드하세요. 도움이 필요하면 <a>문의하세요</a>.',
+  standard_connectors:
+    '<planName/>의 {{count, number}}개 소셜 커넥터 제한에 도달했습니다. 팀의 요구를 충족하기 위해 플랜을 업그레이드하여 추가 소셜 커넥터 및 OIDC, OAuth 2.0, SAML 프로토콜을 사용하여 고유한 커넥터를 생성할 수 있는 기능을 제공합니다. 도움이 필요하면 <a>문의하세요</a>.',
+  standard_connectors_other:
+    '<planName/>의 {{count, number}}개 소셜 커넥터 제한에 도달했습니다. 팀의 요구를 충족하기 위해 플랜을 업그레이드하여 추가 소셜 커넥터 및 OIDC, OAuth 2.0, SAML 프로토콜을 사용하여 고유한 커넥터를 생성할 수 있는 기능을 제공합니다. 도움이 필요하면 <a>문의하세요</a>.',
+  standard_connectors_pro:
+    '<planName/>의 {{count, number}}개 표준 커넥터 제한에 도달했습니다. 팀의 요구를 충족하기 위해 추가 소셜 커넥터 및 OIDC, OAuth 2.0, SAML 프로토콜을 사용하여 고유한 커넥터를 생성할 수 있는 기능과 함께 엔터프라이즈 플랜으로 업그레이드하세요. 도움이 필요하면 <a>문의하세요</a>.',
+  standard_connectors_pro_other:
+    '<planName/>의 {{count, number}}개 표준 커넥터 제한에 도달했습니다. 팀의 요구를 충족하기 위해 추가 소셜 커넥터 및 OIDC, OAuth 2.0, SAML 프로토콜을 사용하여 고유한 커넥터를 생성할 수 있는 기능과 함께 엔터프라이즈 플랜으로 업그레이드하세요. 도움이 필요하면 <a>문의하세요</a>.',
   roles:
     '<planName/>의 {{count, number}}개 역할 한도에 도달했습니다. 플랜을 업그레이드하여 추가 역할과 권한을 추가하세요. 도움이 필요하면 <a>문의하기</a>로 연락 주세요.',
   roles_other:

@@ -4,6 +4,7 @@ const guard = {
   can_not_get_tenant_id: 'Die tenant_id konnte nicht aus der Anfrage abgerufen werden.',
   file_size_exceeded: 'Dateigröße überschritten.',
   mime_type_not_allowed: 'Der MIME-Typ ist nicht erlaubt.',
+  not_allowed_for_admin_tenant: 'Nicht erlaubt für Administrator-Mieter.',
 };
 
 export default Object.freeze(guard);

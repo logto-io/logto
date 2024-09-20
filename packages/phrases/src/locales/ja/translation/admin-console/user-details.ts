@@ -12,9 +12,12 @@ const user_details = {
   deleted: 'ユーザーは正常に削除されました',
   reset_password: {
     reset_title: '本当にパスワードをリセットしますか？',
+    generate_title: '本当にパスワードを生成しますか？',
     content: 'この操作は取り消せません。ユーザーのログイン情報がリセットされます。',
     reset_complete: 'このユーザーはリセットされました',
+    generate_complete: 'パスワードが生成されました',
     new_password: '新しいパスワード：',
+    password: 'パスワード：',
   },
   tab_settings: '設定',
   tab_roles: 'ユーザー役割',
@@ -27,6 +30,7 @@ const user_details = {
   field_email: 'メールアドレス',
   field_phone: '電話番号',
   field_username: 'ユーザー名',
+  field_password: 'パスワード',
   field_name: '名前',
   field_avatar: 'アバター画像のURL',
   field_avatar_placeholder: 'https://your.cdn.domain/avatar.png',
@@ -40,6 +44,8 @@ const user_details = {
   field_sso_connectors: 'エンタープライズ接続',
   custom_data_invalid: 'カスタムデータは有効な JSON オブジェクトである必要があります',
   profile_invalid: 'プロフィールは有効な JSON オブジェクトである必要があります',
+  password_already_set: 'すでにパスワードが設定されています',
+  no_password_set: 'パスワードが設定されていません',
   connectors: {
     connectors: 'コネクタ',
     user_id: 'ユーザーID',
@@ -94,6 +100,36 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     'ユーザーは、サインインに少なくとも 1 つの識別子（ユーザー名、メールアドレス、電話番号、またはソーシャル）を持っている必要があります。続行してよろしいですか？',
+  personal_access_tokens: {
+    title: '個人用アクセス トークン',
+    title_other: '個人用アクセス トークン',
+    title_short: 'トークン',
+    empty: 'ユーザーは個人用アクセス トークンを持っていません。',
+    create: '新しいトークンを作成',
+    tip: '個人用アクセス トークン (PAT) を使用すると、ユーザーは資格情報やインタラクティブサインインを使用せずにアクセス トークンを発行できます。これは、プログラムでリソースにアクセスする必要がある CI/CD、スクリプト、またはアプリケーションに役立ちます。<a>詳細を学ぶ</a>',
+    value: '値',
+    created_at: '作成日',
+    expires_at: '有効期限',
+    never: '期限切れなし',
+    create_new_token: '新しいトークンを作成',
+    delete_confirmation: 'この操作は取り消せません。本当にこのトークンを削除しますか？',
+    expired: '期限切れ',
+    expired_tooltip: 'このトークンは {{date}} に期限切れでした。',
+    create_modal: {
+      title: '個人用アクセス トークンを作成',
+      expiration: '有効期限',
+      expiration_description: 'トークンは {{date}} に期限切れになります。',
+      expiration_description_never:
+        'トークンは期限切れになりません。セキュリティを強化するために有効期限を設定することをお勧めします。',
+      days: '{{count}} 日',
+      days_other: '{{count}} 日',
+      created: 'トークン {{name}} が正常に作成されました。',
+    },
+    edit_modal: {
+      title: '個人用アクセス トークンを編集',
+      edited: 'トークン {{name}} が正常に編集されました。',
+    },
+  },
 };
 
 export default Object.freeze(user_details);

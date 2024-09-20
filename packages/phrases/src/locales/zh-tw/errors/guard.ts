@@ -4,6 +4,7 @@ const guard = {
   can_not_get_tenant_id: '無法從請求中獲取租戶 ID。',
   file_size_exceeded: '文件大小超過限制。',
   mime_type_not_allowed: '不允許使用此 MIME 類型。',
+  not_allowed_for_admin_tenant: '不允許管理用戶使用。',
 };
 
 export default Object.freeze(guard);

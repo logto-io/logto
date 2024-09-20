@@ -1,23 +1,17 @@
 const add_on = {
-  /** UNTRANSLATED */
   mfa_inline_notification:
-    'MFA is a ${{price, number}} per mo add-on for the {{planName}}. First month prorated based on your billing cycle. <a>Learn more</a>',
+    'MFA 是 {{planName}} 的一个每月 ${{price, number}} 的附加功能。第一个月根据你的计费周期按比例收费。<a>了解更多</a>',
   footer: {
-    /** UNTRANSLATED */
     api_resource:
-      'Additional resources cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
-    /** UNTRANSLATED */
+      '额外资源的费用是 <span>每月 / 每个 ${{price, number}}</span>。第一个月根据你的计费周期按比例收费。<a>了解更多</a>',
     machine_to_machine_app:
-      'Additional machine-to-machine apps cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
-    /** UNTRANSLATED */
+      '额外的机器对机器应用程序的费用是 <span>每月 / 每个 ${{price, number}}</span>。第一个月根据你的计费周期按比例收费。<a>了解更多</a>',
     enterprise_sso:
-      'Enterprise SSO cost <span>${{price, number}} per mo / ea</span> add-on for {{planName}}. First month prorated based on your billing cycle. <a>Learn more</a>',
-    /** UNTRANSLATED */
+      '企业 SSO 是 {{planName}} 的一个每月 / 每个 <span>${{price, number}}</span> 的附加功能。第一个月根据你的计费周期按比例收费。<a>了解更多</a>',
     tenant_members:
-      'Additional members cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
-    /** UNTRANSLATED */
+      '额外成员的费用是 <span>每月 / 每个 ${{price, number}}</span>。第一个月根据你的计费周期按比例收费。<a>了解更多</a>',
     organization:
-      'Organization is a <span>${{price, number}} per mo</span> add-on for {{planName}} with unlimited organizations. First month prorated based on your billing cycle. <a>Learn more</a>',
+      '组织是 {{planName}} 的一个每月 <span>${{price, number}}</span> 的附加功能，可提供无限制的组织。第一个月根据你的计费周期按比例收费。<a>了解更多</a>',
   },
 };
 

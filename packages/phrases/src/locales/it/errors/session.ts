@@ -24,9 +24,13 @@ const session = {
   identifier_not_found: 'Identificativo utente non trovato. Torna indietro e accedi nuovamente.',
   interaction_not_found:
     'Sessione di interazione non trovata. Torna indietro e avvia la sessione nuovamente.',
+  invalid_interaction_type:
+    "Questa operazione non è supportata per l'interazione corrente. Si prega di avviare una nuova sessione.",
   not_supported_for_forgot_password: 'Questa operazione non è supportata per il recupero password.',
   identity_conflict:
     "Rilevato conflitto di identità. Si prega di avviare una nuova sessione per procedere con un'altra identità.",
+  identifier_not_verified:
+    "L'identificativo fornito {{identifier}} non è stato verificato. Si prega di creare un record di verifica per questo identificativo e completare il processo di verifica.",
   mfa: {
     require_mfa_verification: 'La verifica MFA è richiesta per accedere.',
     mfa_sign_in_only: "MFA è disponibile solo per l'interazione di accesso.",
@@ -40,6 +44,7 @@ const session = {
     backup_code_required: 'Il codice di backup è richiesto.',
     invalid_backup_code: 'Codice di backup non valido.',
     mfa_policy_not_user_controlled: "La politica MFA non è controllata dall'utente.",
+    mfa_factor_not_enabled: 'Il fattore MFA non è abilitato.',
   },
   sso_enabled: "L'accesso singolo è abilitato per questa email. Accedi con SSO.",
 };

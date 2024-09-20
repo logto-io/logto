@@ -17,8 +17,11 @@ const session = {
   csrf_token_mismatch: 'CSRF token 不匹配。',
   identifier_not_found: '找不到用户标识符。请返回并重新登录。',
   interaction_not_found: '找不到交互会话。请返回并重新开始会话。',
+  invalid_interaction_type: '此操作不支持当前交互。请启动一个新会话。',
   not_supported_for_forgot_password: '此操作不支持忘记密码。',
   identity_conflict: '检测到身份不匹配。请启动一个新会话以使用不同的身份进行操作。',
+  identifier_not_verified:
+    '提供的标识符 {{identifier}} 尚未经过验证。请为此标识符创建验证记录并完成验证过程。',
   mfa: {
     require_mfa_verification: '需要多因素身份验证 (MFA) 才能登录。',
     mfa_sign_in_only: '多因素身份验证 (MFA) 仅适用于登录交互。',
@@ -31,6 +34,7 @@ const session = {
     backup_code_required: '需要备用代码。',
     invalid_backup_code: '无效的备用代码。',
     mfa_policy_not_user_controlled: 'MFA 策略不受用户控制。',
+    mfa_factor_not_enabled: 'MFA 因素未启用。',
   },
   sso_enabled: '该邮箱已开启单点登录，请使用 SSO 登录。',
 };

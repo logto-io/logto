@@ -17,6 +17,8 @@ const application = {
   invalid_subdomain: 'Nieprawidłowa subdomena.',
   custom_domain_not_found: 'Nie znaleziono niestandardowej domeny.',
   should_delete_custom_domains_first: 'Należy najpierw usunąć niestandardowe domeny.',
+  no_legacy_secret_found: 'Aplikacja nie ma starszego sekretu.',
+  secret_name_exists: 'Nazwa sekretu już istnieje.',
 };
 
 export default Object.freeze(application);

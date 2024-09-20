@@ -1,23 +1,17 @@
 const add_on = {
-  /** UNTRANSLATED */
   mfa_inline_notification:
-    'MFA is a ${{price, number}} per mo add-on for the {{planName}}. First month prorated based on your billing cycle. <a>Learn more</a>',
+    "L'authentification multifacteur (MFA) est un complément à ${{price, number}} par mois pour le {{planName}}. Le premier mois est calculé au prorata en fonction de votre cycle de facturation. <a>En savoir plus</a>",
   footer: {
-    /** UNTRANSLATED */
     api_resource:
-      'Additional resources cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
-    /** UNTRANSLATED */
+      'Les ressources supplémentaires coûtent <span>${{price, number}} par mois / chacune</span>. Le premier mois est calculé au prorata en fonction de votre cycle de facturation. <a>En savoir plus</a>',
     machine_to_machine_app:
-      'Additional machine-to-machine apps cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
-    /** UNTRANSLATED */
+      'Les applications machine-à-machine supplémentaires coûtent <span>${{price, number}} par mois / chacune</span>. Le premier mois est calculé au prorata en fonction de votre cycle de facturation. <a>En savoir plus</a>',
     enterprise_sso:
-      'Enterprise SSO cost <span>${{price, number}} per mo / ea</span> add-on for {{planName}}. First month prorated based on your billing cycle. <a>Learn more</a>',
-    /** UNTRANSLATED */
+      "Le SSO d'entreprise coûte <span>${{price, number}} par mois / chacune</span> en option pour {{planName}}. Le premier mois est calculé au prorata en fonction de votre cycle de facturation. <a>En savoir plus</a>",
     tenant_members:
-      'Additional members cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
-    /** UNTRANSLATED */
+      'Les membres supplémentaires coûtent <span>${{price, number}} par mois / chacun</span>. Le premier mois est calculé au prorata en fonction de votre cycle de facturation. <a>En savoir plus</a>',
     organization:
-      'Organization is a <span>${{price, number}} per mo</span> add-on for {{planName}} with unlimited organizations. First month prorated based on your billing cycle. <a>Learn more</a>',
+      "L'organisation est un complément à <span>${{price, number}} par mois</span> pour {{planName}} avec les organisations illimitées. Le premier mois est calculé au prorata en fonction de votre cycle de facturation. <a>En savoir plus</a>",
   },
 };
 

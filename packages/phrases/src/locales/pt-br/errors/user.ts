@@ -35,6 +35,7 @@ const user = {
   backup_code_already_in_use: 'O código de backup já está em uso.',
   password_algorithm_required: 'Algoritmo de senha é necessário.',
   password_and_digest: 'Você não pode definir tanto senha de texto simples quanto digest de senha.',
+  personal_access_token_name_exists: 'O nome do token de acesso pessoal já existe.',
 };
 
 export default Object.freeze(user);

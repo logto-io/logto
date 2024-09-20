@@ -47,8 +47,7 @@ const general = {
   continue: 'Devam et',
   page_info: '{{min, number}}-{{max, number}} / {{total, number}}',
   learn_more: 'Daha fazla bilgi edinin',
-  /** UNTRANSLATED */
-  tab_error_one: '{{count, number}} error',
+  tab_error_one: '{{count, number}} hata',
   tab_error_other: '{{count, number}} hata',
   skip_for_now: 'Şimdilik atla',
   remove: 'Kaldır',
@@ -72,6 +71,8 @@ const general = {
   delete_field: '{{field}} Sil',
   coming_soon: 'Yakında',
   or: 'Veya',
+  reset: 'Sıfırla',
+  generate: 'Oluştur',
 };
 
 export default Object.freeze(general);

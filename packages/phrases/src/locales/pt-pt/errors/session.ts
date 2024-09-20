@@ -26,9 +26,13 @@ const session = {
     'Identificador do usuário não encontrado. Por favor, volte e faça login novamente.',
   interaction_not_found:
     'Sessão de interação não encontrada. Por favor, volte e inicie a sessão novamente.',
+  invalid_interaction_type:
+    'Esta operação não é suportada para a interação atual. Por favor, inicie uma nova sessão.',
   not_supported_for_forgot_password: 'Esta operação não é suportada para recuperação de senha.',
   identity_conflict:
     'Conflito de identidade detetado. Por favor, inicie uma nova sessão para continuar com uma identidade diferente.',
+  identifier_not_verified:
+    'O identificador fornecido {{identifier}} não foi verificado. Por favor, crie um registo de verificação para este identificador e complete o processo de verificação.',
   mfa: {
     require_mfa_verification: 'Verificação MFA é necessária para efetuar login.',
     mfa_sign_in_only: 'MFA está disponível apenas para interação de login.',
@@ -42,6 +46,7 @@ const session = {
     backup_code_required: 'O código de backup é necessário.',
     invalid_backup_code: 'Código de backup inválido.',
     mfa_policy_not_user_controlled: 'A política MFA não é controlada pelo usuário.',
+    mfa_factor_not_enabled: 'O fator MFA não está ativado.',
   },
   sso_enabled:
     'O login único está habilitado para este e-mail fornecido. Faça login com SSO, por favor.',

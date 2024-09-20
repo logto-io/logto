@@ -1,5 +1,6 @@
 import quota_item from './quota-item.js';
 import quota_table from './quota-table.js';
+import usage from './usage.js';
 
 const subscription = {
   free_plan: 'Piano gratuito',
@@ -7,25 +8,20 @@ const subscription = {
     'Per progetti secondari e prove iniziali di Logto. Nessuna carta di credito.',
   pro_plan: 'Piano Pro',
   pro_plan_description: 'Per aziende che beneficiano di Logto senza preoccupazioni.',
-  enterprise: 'Azienda',
-  /** UNTRANSLATED */
+  enterprise: 'Piano Azienda',
   enterprise_description:
-    'For large-scale organizations requiring advanced features, full customization, and dedicated support to power mission-critical applications. Tailored to your needs for ultimate security, compliance, and performance.',
-  /** UNTRANSLATED */
-  admin_plan: 'Admin plan',
-  /** UNTRANSLATED */
-  dev_plan: 'Development plan',
+    'Per organizzazioni su larga scala che richiedono funzionalità avanzate, personalizzazione completa e supporto dedicato per applicazioni mission-critical. Su misura per le tue esigenze per la massima sicurezza, conformità e prestazioni.',
+  admin_plan: 'Piano amministratore',
+  dev_plan: 'Piano di sviluppo',
   current_plan: 'Piano attuale',
   current_plan_description:
     "Ecco il tuo piano attuale. Puoi facilmente visualizzare l'utilizzo del tuo piano, controllare la tua prossima fattura e apportare modifiche al piano, se necessario.",
   plan_usage: 'Utilizzo del piano',
   plan_cycle: "Ciclo del piano: {{period}}. L'utilizzo si rinnova il {{renewDate}}.",
-  /** UNTRANSLATED */
-  next_bill: 'Your upcoming bill',
+  next_bill: 'La tua prossima fattura',
   next_bill_hint: 'Per saperne di più sul calcolo, consulta questo <a>articolo</a>.',
-  /** UNTRANSLATED */
   next_bill_tip:
-    'The prices displayed here are tax-exclusive and may be subject to a slight delay in updates. The tax amount will be calculated based on the information you provide and your local regulatory requirements, and will be shown in your invoices.',
+    "I prezzi visualizzati qui sono al netto delle tasse e possono essere soggetti a un leggero ritardo negli aggiornamenti. L'importo fiscale sarà calcolato in base alle informazioni fornite e ai requisiti normativi locali, e sarà mostrato nelle tue fatture.",
   manage_payment: 'Gestisci pagamento',
   overfill_quota_warning:
     "Hai raggiunto il limite del tuo contingente. Per evitare eventuali problemi, esegui l'upgrade del piano.",
@@ -75,6 +71,7 @@ const subscription = {
   subscription_check_timeout:
     "Il controllo dell'abbonamento è scaduto. Si prega di riprovare più tardi.",
   no_subscription: 'Nessuna sottoscrizione',
+  usage,
 };
 
 export default Object.freeze(subscription);

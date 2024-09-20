@@ -37,7 +37,6 @@ const quota_table = {
     built_in_email_connector: 'Conector de correo electrónico incorporado',
     mfa: 'Autenticación multifactor',
     sso: 'SSO empresarial',
-
     impersonation: 'Suplantación de identidad',
   },
   user_management: {
@@ -59,14 +58,23 @@ const quota_table = {
     just_in_time_provisioning: 'Provisión justo a tiempo',
   },
   support: {
-    /** UNTRANSLATED */
-    title: 'Support',
+    title: 'Soporte',
     community: 'Comunidad',
     customer_ticket: 'Ticket de soporte',
     premium: 'Premium',
     email_ticket_support: 'Soporte por ticket de correo electrónico',
-    soc2_report: 'Informe SOC2 (Próximamente)',
-    hipaa_or_baa_report: 'Informe HIPAA/BAA (Próximamente)',
+    discord_private_channel: 'Canal privado de Discord',
+    premium_support: 'Soporte premium',
+    developer_onboarding: 'Incorporación de desarrolladores',
+    solution_engineer_support: 'Soporte de ingeniero de soluciones',
+    sla: 'SLA',
+    dedicated_computing_resources: 'Recursos informáticos dedicados',
+  },
+  compliance: {
+    title: 'Cumplimiento',
+    soc2_compliant: 'Cumple con SOC2',
+    soc2_report: 'Informe SOC2',
+    hipaa_or_baa_report: 'Informe HIPAA/BAA',
   },
   developers_and_platform: {
     title: 'Desarrolladores y plataforma',
@@ -82,7 +90,6 @@ const quota_table = {
   days_other: '{{count, number}} días',
   add_on: 'Complemento',
   tier: 'Nivel{{value, number}}: ',
-
   million: '{{value, number}} millones',
   mau_tip:
     'MAU (usuarios activos mensuales) significa el número de usuarios únicos que han intercambiado al menos un token con Logto en un ciclo de facturación.',

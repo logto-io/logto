@@ -12,9 +12,12 @@ const user_details = {
   deleted: 'O usuário foi excluído com sucesso',
   reset_password: {
     reset_title: 'Tem certeza de que deseja redefinir a senha?',
+    generate_title: 'Tem certeza de que deseja gerar uma senha?',
     content: 'Essa ação não pode ser desfeita. Isso redefinirá as informações de login do usuário.',
     reset_complete: 'Este usuário foi redefinido',
+    generate_complete: 'A senha foi gerada',
     new_password: 'Nova senha:',
+    password: 'Senha:',
   },
   tab_settings: 'Configurações',
   tab_roles: 'Papéis de usuário',
@@ -27,6 +30,7 @@ const user_details = {
   field_email: 'Endereço de e-mail',
   field_phone: 'Número de telefone',
   field_username: 'Nome de usuário',
+  field_password: 'Senha',
   field_name: 'Nome',
   field_avatar: 'URL da imagem do avatar',
   field_avatar_placeholder: 'https://your.cdn.domain/avatar.png',
@@ -40,6 +44,8 @@ const user_details = {
   field_sso_connectors: 'Conexões empresariais',
   custom_data_invalid: 'Os dados personalizados devem ser um objeto JSON válido',
   profile_invalid: 'O perfil deve ser um objeto JSON válido',
+  password_already_set: 'Senha já definida',
+  no_password_set: 'Nenhuma senha definida',
   connectors: {
     connectors: 'Conectores',
     user_id: 'ID do usuário',
@@ -97,6 +103,37 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     'O usuário precisa ter pelo menos um dos identificadores de login (nome de usuário, e-mail, número de telefone ou social) para fazer login. Tem certeza de que deseja continuar?',
+  personal_access_tokens: {
+    title: 'Token de acesso pessoal',
+    title_other: 'Tokens de acesso pessoal',
+    title_short: 'token',
+    empty: 'O usuário não tem nenhum token de acesso pessoal.',
+    create: 'Criar novo token',
+    tip: 'Tokens de acesso pessoal (PATs) fornecem uma maneira segura para usuários gerarem tokens de acesso sem usar suas credenciais e login interativo. Isso é útil para CI/CD, scripts ou aplicativos que precisam acessar recursos programaticamente. <a>Saiba mais</a>',
+    value: 'Valor',
+    created_at: 'Criado em',
+    expires_at: 'Expira em',
+    never: 'Nunca',
+    create_new_token: 'Criar novo token',
+    delete_confirmation:
+      'Esta ação não pode ser desfeita. Tem certeza de que deseja excluir este token?',
+    expired: 'Expirado',
+    expired_tooltip: 'Este token expirou em {{date}}.',
+    create_modal: {
+      title: 'Criar token de acesso pessoal',
+      expiration: 'Expiração',
+      expiration_description: 'O token expirará em {{date}}.',
+      expiration_description_never:
+        'O token nunca expirará. Recomendamos definir uma data de expiração para maior segurança.',
+      days: '{{count}} dia',
+      days_other: '{{count}} dias',
+      created: 'O token {{name}} foi criado com sucesso.',
+    },
+    edit_modal: {
+      title: 'Editar token de acesso pessoal',
+      edited: 'O token {{name}} foi editado com sucesso.',
+    },
+  },
 };
 
 export default Object.freeze(user_details);

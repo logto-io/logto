@@ -25,10 +25,14 @@ const session = {
     'Identificador de usuario no encontrado. Vuelva atrás e inicie sesión nuevamente.',
   interaction_not_found:
     'No se encuentra la sesión de interacción. Vuelva atrás y vuelva a iniciar la sesión.',
+  invalid_interaction_type:
+    'Esta operación no es compatible con la interacción actual. Inicie una nueva sesión, por favor.',
   not_supported_for_forgot_password:
     'Esta operación no es compatible para restablecer la contraseña.',
   identity_conflict:
     'Se detectó un conflicto de identidad. Por favor, inicie una nueva sesión para continuar con una identidad diferente.',
+  identifier_not_verified:
+    'El identificador proporcionado {{identifier}} no ha sido verificado. Crea un registro de verificación para este identificador y completa el proceso de verificación, por favor.',
   mfa: {
     require_mfa_verification: 'Se requiere verificación de MFA para iniciar sesión.',
     mfa_sign_in_only: 'MFA solo está disponible para la interacción de inicio de sesión.',
@@ -42,6 +46,7 @@ const session = {
     backup_code_required: 'Se requiere el código de respaldo.',
     invalid_backup_code: 'Código de respaldo no válido.',
     mfa_policy_not_user_controlled: 'La política de MFA no está controlada por el usuario.',
+    mfa_factor_not_enabled: 'El factor de MFA no está habilitado.',
   },
   sso_enabled:
     'El inicio de sesión único está habilitado para este correo electrónico dado. Inicie sesión con SSO, por favor.',

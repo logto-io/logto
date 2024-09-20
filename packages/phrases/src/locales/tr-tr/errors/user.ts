@@ -34,6 +34,7 @@ const user = {
   backup_code_already_in_use: 'Yedek kod zaten kullanımda.',
   password_algorithm_required: 'Şifre algoritması gereklidir.',
   password_and_digest: 'Düz metin şifresini ve şifre özetini aynı anda belirleyemezsiniz.',
+  personal_access_token_name_exists: 'Kişisel erişim belirteci adı zaten mevcut.',
 };
 
 export default Object.freeze(user);

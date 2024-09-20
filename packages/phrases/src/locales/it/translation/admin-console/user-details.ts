@@ -13,10 +13,13 @@ const user_details = {
   deleted: "L'utente è stato eliminato con successo",
   reset_password: {
     reset_title: 'Sei sicuro di voler reimpostare la password?',
+    generate_title: 'Sei sicuro di voler generare una password?',
     content:
       "Questa azione non può essere annullata. Questo reimposterà le informazioni di accesso dell'utente.",
     reset_complete: "L'utente è stato reimpostato",
+    generate_complete: 'La password è stata generata',
     new_password: 'Nuova password:',
+    password: 'Password:',
   },
   tab_settings: 'Impostazioni',
   tab_roles: 'Ruoli utente',
@@ -29,6 +32,7 @@ const user_details = {
   field_email: 'Indirizzo email',
   field_phone: 'Numero di telefono',
   field_username: 'Nome utente',
+  field_password: 'Password',
   field_name: 'Nome',
   field_avatar: "URL dell'immagine dell'avatar",
   field_avatar_placeholder: 'https://il-tuo-dominio.cdn/avatar.png',
@@ -42,6 +46,8 @@ const user_details = {
   field_sso_connectors: 'Connessioni enterprise',
   custom_data_invalid: 'I dati personalizzati devono essere un oggetto JSON valido',
   profile_invalid: 'Il profilo deve essere un oggetto JSON valido',
+  password_already_set: 'Password già impostata',
+  no_password_set: 'Nessuna password impostata',
   connectors: {
     connectors: 'Connettori',
     user_id: 'ID utente',
@@ -99,6 +105,37 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     "L'utente deve avere almeno uno degli identificatori di accesso (nome utente, email, numero di telefono, o social) per accedere. Sei sicuro di voler continuare?",
+  personal_access_tokens: {
+    title: 'Token di accesso personale',
+    title_other: 'Token di accesso personali',
+    title_short: 'token',
+    empty: "L'utente non ha token di accesso personali.",
+    create: 'Crea nuovo token',
+    tip: 'I token di accesso personali (PAT) forniscono un modo sicuro per consentire agli utenti di concedere token di accesso senza utilizzare le loro credenziali e il login interattivo. Questo è utile per CI/CD, script o applicazioni che necessitano di accedere alle risorse in modo programmatico. <a>Per saperne di più</a>',
+    value: 'Valore',
+    created_at: 'Creato il',
+    expires_at: 'Scade il',
+    never: 'Mai',
+    create_new_token: 'Crea nuovo token',
+    delete_confirmation:
+      'Questa azione non può essere annullata. Sei sicuro di voler eliminare questo token?',
+    expired: 'Scaduto',
+    expired_tooltip: 'Questo token è scaduto il {{date}}.',
+    create_modal: {
+      title: 'Crea token di accesso personale',
+      expiration: 'Scadenza',
+      expiration_description: 'Il token scadrà il {{date}}.',
+      expiration_description_never:
+        'Il token non scadrà mai. Si consiglia di impostare una data di scadenza per una maggiore sicurezza.',
+      days: '{{count}} giorno',
+      days_other: '{{count}} giorni',
+      created: 'Il token {{name}} è stato creato con successo.',
+    },
+    edit_modal: {
+      title: 'Modifica token di accesso personale',
+      edited: 'Il token {{name}} è stato modificato con successo.',
+    },
+  },
 };
 
 export default Object.freeze(user_details);

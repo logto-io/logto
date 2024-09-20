@@ -1,5 +1,6 @@
 import quota_item from './quota-item.js';
 import quota_table from './quota-table.js';
+import usage from './usage.js';
 
 const subscription = {
   free_plan: 'Plan Gratuito',
@@ -7,25 +8,20 @@ const subscription = {
     'Para proyectos secundarios y pruebas iniciales de Logto. No se requiere tarjeta de crédito.',
   pro_plan: 'Plan Pro',
   pro_plan_description: 'Benefíciese sin preocupaciones con Logto para empresas.',
-  enterprise: 'Empresa',
-  /** UNTRANSLATED */
+  enterprise: 'Plan Empresa',
   enterprise_description:
-    'For large-scale organizations requiring advanced features, full customization, and dedicated support to power mission-critical applications. Tailored to your needs for ultimate security, compliance, and performance.',
-  /** UNTRANSLATED */
-  admin_plan: 'Admin plan',
-  /** UNTRANSLATED */
-  dev_plan: 'Development plan',
+    'Para organizaciones a gran escala que requieren funciones avanzadas, personalización completa y soporte dedicado para impulsar aplicaciones críticas. Adaptado a tus necesidades para máxima seguridad, cumplimiento y rendimiento.',
+  admin_plan: 'Plan de administrador',
+  dev_plan: 'Plan de desarrollo',
   current_plan: 'Plan Actual',
   current_plan_description:
     'Aquí está tu plan actual. Puedes ver fácilmente el uso de tu plan, revisar tu próxima factura y hacer cambios en tu plan según sea necesario.',
   plan_usage: 'Uso del plan',
   plan_cycle: 'Ciclo del plan: {{period}}. La renovación del uso se realiza en {{renewDate}}.',
-  /** UNTRANSLATED */
-  next_bill: 'Your upcoming bill',
+  next_bill: 'Tu próxima factura',
   next_bill_hint: 'Para obtener más información sobre el cálculo, consulte este <a>artículo</a>.',
-  /** UNTRANSLATED */
   next_bill_tip:
-    'The prices displayed here are tax-exclusive and may be subject to a slight delay in updates. The tax amount will be calculated based on the information you provide and your local regulatory requirements, and will be shown in your invoices.',
+    'Los precios mostrados aquí son sin impuestos y pueden estar sujetos a un ligero retraso en las actualizaciones. El monto del impuesto se calculará en función de la información que proporciones y los requisitos regulatorios locales y se mostrará en tus facturas.',
   manage_payment: 'Gestionar el pago',
   overfill_quota_warning:
     'Ha alcanzado el límite de su cuota. Para evitar problemas, actualice el plan.',
@@ -75,6 +71,7 @@ const subscription = {
   subscription_check_timeout:
     'La comprobación de suscripción expiró. Por favor, actualiza más tarde.',
   no_subscription: 'Sin suscripción',
+  usage,
 };
 
 export default Object.freeze(subscription);

@@ -4,6 +4,7 @@ const guard = {
   can_not_get_tenant_id: 'No se puede obtener el ID del inquilino de la solicitud.',
   file_size_exceeded: 'Se excedió el tamaño del archivo.',
   mime_type_not_allowed: 'El tipo MIME no está permitido.',
+  not_allowed_for_admin_tenant: 'No está permitido para el inquilino administrador.',
 };
 
 export default Object.freeze(guard);

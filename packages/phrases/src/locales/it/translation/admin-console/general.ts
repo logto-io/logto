@@ -47,8 +47,7 @@ const general = {
   continue: 'Continua',
   page_info: '{{min, number}}-{{max, number}} di {{total, number}}',
   learn_more: 'Scopri di più',
-  /** UNTRANSLATED */
-  tab_error_one: '{{count, number}} error',
+  tab_error_one: '{{count, number}} errore',
   tab_error_other: '{{count, number}} errori',
   skip_for_now: 'Salta per ora',
   remove: 'Rimuovi',
@@ -72,6 +71,8 @@ const general = {
   delete_field: 'Elimina {{field}}',
   coming_soon: 'Prossimamente',
   or: 'O',
+  reset: 'Ripristina',
+  generate: 'Genera',
 };
 
 export default Object.freeze(general);

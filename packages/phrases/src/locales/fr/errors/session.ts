@@ -26,10 +26,14 @@ const session = {
     'Identifiant utilisateur introuvable. Veuillez retourner en arrière et vous connecter à nouveau.',
   interaction_not_found:
     "Session d'interaction introuvable. Veuillez retourner en arrière et recommencer la session.",
+  invalid_interaction_type:
+    "Cette opération n'est pas prise en charge pour l'interaction actuelle. Veuillez initier une nouvelle session.",
   not_supported_for_forgot_password:
     "Cette opération n'est pas prise en charge pour la réinitialisation du mot de passe.",
   identity_conflict:
     "Conflit d'identité détecté. Veuillez initier une nouvelle session pour continuer avec une identité différente.",
+  identifier_not_verified:
+    "L'identifiant fourni {{identifier}} n'a pas été vérifié. Veuillez créer un enregistrement de vérification pour cet identifiant et compléter le processus de vérification.",
   mfa: {
     require_mfa_verification: 'La vérification MFA est requise pour vous connecter.',
     mfa_sign_in_only: "MFA est uniquement disponible pour l'interaction de connexion.",
@@ -43,6 +47,7 @@ const session = {
     backup_code_required: 'Le code de sauvegarde est requis.',
     invalid_backup_code: 'Code de sauvegarde non valide.',
     mfa_policy_not_user_controlled: "La politique MFA n'est pas contrôlée par l'utilisateur.",
+    mfa_factor_not_enabled: "Le facteur MFA n'est pas activé.",
   },
   sso_enabled:
     'La connexion unique est activée pour cet e-mail donné. Veuillez vous connecter avec SSO.',

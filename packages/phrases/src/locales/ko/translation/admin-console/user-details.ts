@@ -12,9 +12,12 @@ const user_details = {
   deleted: '해당 사용자가 성공적으로 삭제되었어요.',
   reset_password: {
     reset_title: '정말로 비밀번호를 초기화 할까요?',
+    generate_title: '비밀번호를 생성하시겠습니까?',
     content: '정말로 비밀번호를 초기화 할까요? 이 행동은 취소될 수 없어요.',
     reset_complete: '해당 사용자의 비밀번호가 성공적으로 초기화 되었어요.',
+    generate_complete: '비밀번호가 생성되었습니다',
     new_password: '새로운 비밀번호:',
+    password: '비밀번호:',
   },
   tab_settings: '설정',
   tab_roles: '사용자 역할',
@@ -27,6 +30,7 @@ const user_details = {
   field_email: '이메일 주소',
   field_phone: '휴대전화 번호',
   field_username: '사용자 이름',
+  field_password: '비밀번호',
   field_name: '이름',
   field_avatar: '아바타 이미지 URL',
   field_avatar_placeholder: 'https://your.cdn.domain/avatar.png',
@@ -40,6 +44,8 @@ const user_details = {
   field_sso_connectors: '기업 연결',
   custom_data_invalid: '사용자 정의 데이터는 반드시 유효한 JSON 객체여야 해요.',
   profile_invalid: '프로필은 유효한 JSON 객체여야 해요',
+  password_already_set: '비밀번호가 이미 설정되었습니다',
+  no_password_set: '비밀번호가 설정되지 않았습니다',
   connectors: {
     connectors: '연동',
     user_id: '사용자 ID',
@@ -93,6 +99,36 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     '사용자는 로그인 식별자(사용자 이름, 이메일, 전화 번호 또는 소셜) 중 적어도 하나를 갖고 로그인해야 합니다. 계속 하시겠습니까?',
+  personal_access_tokens: {
+    title: '개인 액세스 토큰',
+    title_other: '개인 액세스 토큰들',
+    title_short: '토큰',
+    empty: '사용자에게 개인 액세스 토큰이 없습니다.',
+    create: '새로운 토큰 생성',
+    tip: '개인 액세스 토큰(PAT)은 사용자가 자격 증명과 상호작용 로그인을 사용하지 않고 액세스 토큰을 부여할 수 있는 안전한 방법을 제공합니다. 이는 CI/CD, 스크립트 또는 프로그램으로 리소스에 접근해야 하는 애플리케이션에 유용합니다. <a>자세히 알아보기</a>',
+    value: '값',
+    created_at: '생성 시각',
+    expires_at: '만료 시각',
+    never: '만료되지 않음',
+    create_new_token: '새로운 토큰 생성',
+    delete_confirmation: '이 작업은 되돌릴 수 없습니다. 이 토큰을 정말 삭제하시겠습니까?',
+    expired: '만료됨',
+    expired_tooltip: '이 토큰은 {{date}}에 만료되었습니다.',
+    create_modal: {
+      title: '개인 액세스 토큰 생성',
+      expiration: '만료',
+      expiration_description: '토큰은 {{date}}에 만료됩니다.',
+      expiration_description_never:
+        '토큰은 절대 만료되지 않습니다. 보안을 강화하기 위해 만료 날짜를 설정할 것을 권장합니다.',
+      days: '{{count}} 일',
+      days_other: '{{count}} 일',
+      created: '토큰 {{name}}이/가 성공적으로 생성되었습니다.',
+    },
+    edit_modal: {
+      title: '개인 액세스 토큰 편집',
+      edited: '토큰 {{name}}이/가 성공적으로 편집되었습니다.',
+    },
+  },
 };
 
 export default Object.freeze(user_details);

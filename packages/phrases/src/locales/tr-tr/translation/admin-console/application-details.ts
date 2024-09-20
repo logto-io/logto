@@ -33,6 +33,7 @@ const application_details = {
   application_id_tip:
     'Genellikle Logto tarafından oluşturulan benzersiz bir uygulama tanımlayıcısıdır. Ayrıca OpenID Connect "client_id" anlamına gelir.',
   application_secret: 'Uygulama Sırrı',
+  application_secret_other: 'Uygulama sırları',
   redirect_uri: 'Yönlendirme URIı',
   redirect_uris: 'Yönlendirme URIları',
   redirect_uri_placeholder: 'https://siteniz.com/uygulama',
@@ -93,6 +94,10 @@ const application_details = {
   session_duration: 'Oturum süresi (gün cinsinden)',
   try_it: 'Deneyin',
   no_organization_placeholder: 'Organizasyon bulunamadı. <a>Organizasyonlara git</a>',
+  field_custom_data: 'Özel veri',
+  field_custom_data_tip:
+    'Önceden tanımlanmış uygulama özelliklerinde listelenmeyen ek özel uygulama bilgileri, iş ile ilgili ayarlar ve yapılandırmalar gibi.',
+  custom_data_invalid: 'Özel veri geçerli bir JSON nesnesi olmalıdır',
   branding: {
     name: 'Markalama',
     description: 'Uygulamanızın adını ve logosunu açıklama ekranında özelleştirin.',
@@ -161,6 +166,32 @@ const application_details = {
     role_assigned: 'Başarıyla rol(ler) atandı',
     search: "Rol adı, açıklaması veya ID'si ile arama yapın",
     empty: 'Mevcut rol yok',
+  },
+  secrets: {
+    value: 'Değer',
+    empty: 'Uygulamanın herhangi bir sırrı yok.',
+    created_at: 'Oluşturulma tarihi',
+    expires_at: 'Son kullanma tarihi',
+    never: 'Asla',
+    create_new_secret: 'Yeni sır oluştur',
+    delete_confirmation: 'Bu işlem geri alınamaz. Bu sırrı silmek istediğinizden emin misiniz?',
+    legacy_secret: 'Eski sır',
+    expired: 'Süresi doldu',
+    expired_tooltip: 'Bu sır {{date}} tarihinde süresi dolmuştu.',
+    create_modal: {
+      title: 'Uygulama sırrı oluştur',
+      expiration: 'Son kullanma tarihi',
+      expiration_description: 'Sır {{date}} tarihinde süresi dolacak.',
+      expiration_description_never:
+        'Sırın süresi asla dolmaz. Gelişmiş güvenlik için bir son kullanma tarihi ayarlamanızı öneririz.',
+      days: '{{count}} gün',
+      days_other: '{{count}} gün',
+      created: 'Sır {{name}} başarıyla oluşturuldu.',
+    },
+    edit_modal: {
+      title: 'Uygulama sırrını düzenle',
+      edited: 'Sır {{name}} başarıyla düzenlendi.',
+    },
   },
 };
 

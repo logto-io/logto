@@ -5,6 +5,7 @@ const guard = {
     "Impossible de récupérer l'identifiant du locataire à partir de la demande.",
   file_size_exceeded: 'Taille du fichier dépassée.',
   mime_type_not_allowed: "Le type MIME n'est pas autorisé.",
+  not_allowed_for_admin_tenant: 'Non autorisé pour le locataire administrateur.',
 };
 
 export default Object.freeze(guard);

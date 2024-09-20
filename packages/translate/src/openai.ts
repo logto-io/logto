@@ -18,6 +18,9 @@ import {
   type TranslationOptions,
 } from './utils.js';
 
+// The full list of OPENAI model can be found at https://platform.openai.com/docs/models.
+export const model = process.env.OPENAI_MODEL_NAME ?? 'gpt-4o-2024-08-06';
+
 export const createOpenaiApi = () => {
   const proxy = getProxy();
 
@@ -58,8 +61,7 @@ export const translate = async ({
     api
       .post('chat/completions', {
         json: {
-          // The full list of OPENAI model can be found at https://platform.openai.com/docs/models.
-          model: process.env.OPENAI_MODEL_NAME ?? 'gpt-3.5-turbo-0125',
+          model,
           messages: getTranslationPromptMessages({
             sourceFileContent,
             targetLanguage,

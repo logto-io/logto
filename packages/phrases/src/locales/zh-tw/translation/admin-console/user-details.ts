@@ -12,9 +12,12 @@ const user_details = {
   deleted: '用戶已成功刪除。',
   reset_password: {
     reset_title: '確定要重置密碼？',
+    generate_title: '你確定要生成密碼嗎？',
     content: '本操作不可撤銷，將會重置用戶的登入資訊。',
     reset_complete: '該用戶已被重置',
+    generate_complete: '密碼已生成',
     new_password: '新密碼：',
+    password: '密碼：',
   },
   tab_settings: '設定',
   tab_roles: '使用者角色',
@@ -27,6 +30,7 @@ const user_details = {
   field_email: '電子郵箱',
   field_phone: '手機號碼',
   field_username: '用戶名',
+  field_password: '密碼',
   field_name: '姓名',
   field_avatar: '頭像圖片連結',
   field_avatar_placeholder: 'https://your.cdn.domain/avatar.png',
@@ -39,6 +43,8 @@ const user_details = {
   field_sso_connectors: '企業連接',
   custom_data_invalid: '自定義數據必須是有效的 JSON 對象',
   profile_invalid: '個人資料必須是有效的 JSON 對象',
+  password_already_set: '密碼已設置',
+  no_password_set: '未設置密碼',
   connectors: {
     connectors: '連接器',
     user_id: '用戶ID',
@@ -89,6 +95,35 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     '使用者需要至少擁有一個登入標識（使用者名稱、電子郵件、電話號碼或社交帳號）才能登入。確定要繼續嗎？',
+  personal_access_tokens: {
+    title: '個人訪問令牌',
+    title_other: '個人訪問令牌',
+    title_short: '令牌',
+    empty: '該用戶沒有任何個人訪問令牌。',
+    create: '創建新令牌',
+    tip: '個人訪問令牌（PATs）為用戶提供了一種不使用其憑證和交互式登錄情況下授予訪問令牌的安全方式。這對於 CI/CD、腳本或需要以程式化方式訪問資源的應用程式非常有用。<a>了解更多</a>',
+    value: '值',
+    created_at: '創建於',
+    expires_at: '過期於',
+    never: '永不',
+    create_new_token: '創建新令牌',
+    delete_confirmation: '此操作無法撤銷。你確定要刪除此令牌嗎？',
+    expired: '已過期',
+    expired_tooltip: '此令牌已於 {{date}} 過期。',
+    create_modal: {
+      title: '創建個人訪問令牌',
+      expiration: '過期時間',
+      expiration_description: '令牌將於 {{date}} 過期。',
+      expiration_description_never: '令牌將永不過期。我們建議設置過期日期以增強安全性。',
+      days: '{{count}} 天',
+      days_other: '{{count}} 天',
+      created: '令牌 {{name}} 已成功創建。',
+    },
+    edit_modal: {
+      title: '編輯個人訪問令牌',
+      edited: '令牌 {{name}} 已成功編輯。',
+    },
+  },
 };
 
 export default Object.freeze(user_details);

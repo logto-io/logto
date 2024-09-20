@@ -7,7 +7,7 @@ const subscription = {
   free_plan_description: 'For side projects and initial Logto trials. No credit card.',
   pro_plan: 'Pro plan',
   pro_plan_description: 'For businesses benefit worry-free with Logto.',
-  enterprise: 'Enterprise',
+  enterprise: 'Enterprise plan',
   enterprise_description:
     'For large-scale organizations requiring advanced features, full customization, and dedicated support to power mission-critical applications. Tailored to your needs for ultimate security, compliance, and performance.',
   admin_plan: 'Admin plan',
