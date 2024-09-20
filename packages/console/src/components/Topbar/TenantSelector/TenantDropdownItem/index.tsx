@@ -1,14 +1,14 @@
 import { TenantTag } from '@logto/schemas';
 import classNames from 'classnames';
 import { useContext, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Tick from '@/assets/icons/tick.svg?react';
 import { type TenantResponse } from '@/cloud/types/router';
+import { regionFlagMap } from '@/components/Region';
 import SkuName from '@/components/SkuName';
-import TenantEnvTag from '@/components/TenantEnvTag';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { DropdownItem } from '@/ds-components/Dropdown';
-import DynamicT from '@/ds-components/DynamicT';
 
 import TenantStatusTag from './TenantStatusTag';
 import styles from './index.module.scss';
@@ -23,8 +23,10 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
   const {
     name,
     tag,
+    regionName,
     subscription: { planId, isEnterprisePlan },
   } = tenantData;
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const { logtoSkus } = useContext(SubscriptionDataContext);
   const tenantSubscriptionSku = useMemo(
@@ -36,18 +38,22 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
     return null;
   }
 
+  const RegionFlag = regionFlagMap[regionName];
+
   return (
     <DropdownItem className={styles.item} onClick={onClick}>
       <div className={styles.info}>
         <div className={styles.meta}>
           <div className={styles.name}>{name}</div>
-          <TenantEnvTag tag={tag} />
           <TenantStatusTag tenantData={tenantData} className={styles.statusTag} />
         </div>
-        <div className={styles.planName}>
-          {tag === TenantTag.Development ? (
-            <DynamicT forKey="subscription.no_subscription" />
-          ) : (
+        <div className={styles.metadata}>
+          <div className={styles.region}>
+            <RegionFlag />
+            <span>{regionName}</span>
+          </div>
+          <span>{t(`tenants.full_env_tag.${tag}`)}</span>
+          {tag !== TenantTag.Development && (
             <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />
           )}
         </div>
