@@ -211,24 +211,50 @@ export const cloudflareGuard: Readonly<{
   [CloudflareKey.CustomJwtWorkerConfig]: customJwtWorkerConfigGuard,
 });
 
+// A/B Test settings
+export enum FeatureFlagConfigKey {
+  NewExperienceFeatureFlag = 'newExperienceFeatureFlag',
+}
+
+export const featureFlagConfigGuard = z.object({
+  percentage: z.number().min(0).max(1),
+});
+
+export type FeatureFlagConfig = z.infer<typeof featureFlagConfigGuard>;
+
+export type FeatureFlagConfigType = {
+  [FeatureFlagConfigKey.NewExperienceFeatureFlag]: FeatureFlagConfig;
+};
+
+export const featureFlagConfigsGuard: Readonly<{
+  [key in FeatureFlagConfigKey]: ZodType<FeatureFlagConfigType[key]>;
+}> = Object.freeze({
+  [FeatureFlagConfigKey.NewExperienceFeatureFlag]: featureFlagConfigGuard,
+});
+
 // Summary
 export type SystemKey =
   | AlterationStateKey
   | StorageProviderKey
   | DemoSocialKey
   | CloudflareKey
-  | EmailServiceProviderKey;
+  | EmailServiceProviderKey
+  | FeatureFlagConfigKey;
+
 export type SystemType =
   | AlterationStateType
   | StorageProviderType
   | DemoSocialType
   | CloudflareType
-  | EmailServiceProviderType;
+  | EmailServiceProviderType
+  | FeatureFlagConfigType;
+
 export type SystemGuard = typeof alterationStateGuard &
   typeof storageProviderGuard &
   typeof demoSocialGuard &
   typeof cloudflareGuard &
-  typeof emailServiceProviderGuard;
+  typeof emailServiceProviderGuard &
+  typeof featureFlagConfigsGuard;
 
 export const systemKeys: readonly SystemKey[] = Object.freeze([
   ...Object.values(AlterationStateKey),
@@ -236,6 +262,7 @@ export const systemKeys: readonly SystemKey[] = Object.freeze([
   ...Object.values(DemoSocialKey),
   ...Object.values(CloudflareKey),
   ...Object.values(EmailServiceProviderKey),
+  ...Object.values(FeatureFlagConfigKey),
 ]);
 
 export const systemGuards: SystemGuard = Object.freeze({
@@ -244,4 +271,5 @@ export const systemGuards: SystemGuard = Object.freeze({
   ...demoSocialGuard,
   ...cloudflareGuard,
   ...emailServiceProviderGuard,
+  ...featureFlagConfigsGuard,
 });

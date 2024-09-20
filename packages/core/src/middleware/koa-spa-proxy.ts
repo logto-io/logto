@@ -1,7 +1,8 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import type { MiddlewareType } from 'koa';
+import { type Nullable, trySafe } from '@silverhand/essentials';
+import type { Context, MiddlewareType } from 'koa';
 import proxy from 'koa-proxies';
 import type { IRouterParamContext } from 'koa-router';
 
@@ -11,6 +12,7 @@ import type Queries from '#src/tenants/Queries.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 
 import serveCustomUiAssets from './koa-serve-custom-ui-assets.js';
+import { getExperiencePackageWithFeatureFlagDetection } from './utils/experience-proxy.js';
 
 type Properties = {
   readonly mountedApps: string[];
@@ -20,15 +22,20 @@ type Properties = {
   readonly prefix?: string;
 };
 
-const getDistributionPath = (packagePath: string) => {
+const getDistributionPath = async <ContextT extends Context>(
+  packagePath: string,
+  ctx: ContextT
+): Promise<[string, string]> => {
   if (packagePath === 'experience') {
-    // Use the new experience package if dev features are enabled
-    const moduleName = EnvSet.values.isDevFeaturesEnabled ? 'experience' : 'experience-legacy';
+    // Safely get the experience package name with feature flag detection, default fallback to legacy
+    const moduleName =
+      (await trySafe(async () => getExperiencePackageWithFeatureFlagDetection(ctx))) ??
+      'experience-legacy';
 
-    return path.join('node_modules/@logto', moduleName, 'dist');
+    return [path.join('node_modules/@logto', moduleName, 'dist'), moduleName];
   }
 
-  return path.join('node_modules/@logto', packagePath, 'dist');
+  return [path.join('node_modules/@logto', packagePath, 'dist'), packagePath];
 };
 
 export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext, ResponseBodyT>({
@@ -40,10 +47,9 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
 }: Properties): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   type Middleware = MiddlewareType<StateT, ContextT, ResponseBodyT>;
 
-  const distributionPath = getDistributionPath(packagePath);
-
-  const spaProxy: Middleware = EnvSet.values.isProduction
-    ? serveStatic(distributionPath)
+  // Avoid defining a devProxy if we are in production
+  const devProxy: Nullable<Middleware> = EnvSet.values.isProduction
+    ? null
     : proxy('*', {
         target: `http://localhost:${port}`,
         changeOrigin: true,
@@ -76,16 +82,21 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
       return serve(ctx, next);
     }
 
-    if (!EnvSet.values.isProduction) {
-      return spaProxy(ctx, next);
+    // Use the devProxy under development mode
+    if (devProxy) {
+      return devProxy(ctx, next);
     }
 
+    const [distributionPath, moduleName] = await getDistributionPath(packagePath, ctx);
     const spaDistributionFiles = await fs.readdir(distributionPath);
 
     if (!spaDistributionFiles.some((file) => requestPath.startsWith('/' + file))) {
       ctx.request.path = '/';
     }
 
-    return spaProxy(ctx, next);
+    // Add a header to indicate which static package is being served
+    ctx.set('Logto-Static-Package', moduleName);
+
+    return serveStatic(distributionPath)(ctx, next);
   };
 }

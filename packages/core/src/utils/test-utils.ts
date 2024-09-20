@@ -1,3 +1,5 @@
+import crypto from 'node:crypto';
+
 import type { QueryResult, QueryResultRow } from '@silverhand/slonik';
 import { createMockPool, createMockQueryResult } from '@silverhand/slonik';
 import type {
@@ -94,6 +96,7 @@ export const createContextWithRouteParameters = (
 
   return {
     ...ctx,
+    set: ctx.set,
     path: ctx.path,
     URL: ctx.URL,
     params: {},
@@ -160,3 +163,5 @@ export function createRequester<StateT, ContextT extends IRouterParamContext, Re
 
   return request(app.callback());
 }
+
+export const randomString = (length = 10) => crypto.randomBytes(length).toString('hex');
