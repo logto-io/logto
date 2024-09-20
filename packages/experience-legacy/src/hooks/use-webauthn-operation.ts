@@ -67,7 +67,7 @@ const useWebAuthnOperation = () => {
         /**
          * Assert type manually to get the correct type
          */
-        void sendMfaPayload(
+        await sendMfaPayload(
           isAuthenticationResponseJSON(response)
             ? {
                 flow: UserMfaFlow.MfaVerification,
