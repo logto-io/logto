@@ -83,7 +83,9 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
     .filter(
       (key) =>
         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-        isAddOnAvailable || (onlyShowPeriodicUsage && (key === 'mauLimit' || key === 'tokenLimit'))
+        isAddOnAvailable ||
+        isEnterprisePlan ||
+        (onlyShowPeriodicUsage && (key === 'mauLimit' || key === 'tokenLimit'))
     )
     .map((key) => ({
       usage: getUsageByKey(key, { periodicUsage, countBasedUsage: currentSubscriptionUsage }),
