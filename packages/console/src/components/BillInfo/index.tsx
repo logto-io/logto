@@ -3,6 +3,7 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import Tip from '@/assets/icons/tip.svg?react';
 import { addOnPricingExplanationLink } from '@/consts';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
@@ -22,6 +23,9 @@ function BillInfo({ cost, isManagePaymentVisible }: Props) {
   const { currentTenantId } = useContext(TenantsContext);
   const { visitManagePaymentPage } = useSubscribe();
   const [isLoading, setIsLoading] = useState(false);
+  const {
+    currentSubscription: { isEnterprisePlan },
+  } = useContext(SubscriptionDataContext);
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -38,21 +42,23 @@ function BillInfo({ cost, isManagePaymentVisible }: Props) {
             </ToggleTip>
           )}
         </div>
-        <div className={styles.description}>
-          <Trans
-            components={{
-              a: (
-                <TextLink
-                  className={styles.articleLink}
-                  href={addOnPricingExplanationLink}
-                  targetBlank="noopener"
-                />
-              ),
-            }}
-          >
-            {t('subscription.next_bill_hint')}
-          </Trans>
-        </div>
+        {!isEnterprisePlan && (
+          <div className={styles.description}>
+            <Trans
+              components={{
+                a: (
+                  <TextLink
+                    className={styles.articleLink}
+                    href={addOnPricingExplanationLink}
+                    targetBlank="noopener"
+                  />
+                ),
+              }}
+            >
+              {t('subscription.next_bill_hint')}
+            </Trans>
+          </div>
+        )}
       </div>
       {isManagePaymentVisible && (
         <Button
