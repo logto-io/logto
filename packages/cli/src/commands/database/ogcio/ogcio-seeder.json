@@ -141,6 +141,16 @@
         "related_applications": [
           { "application_id": "03emabp0dwznxw414mxme", "organization_id": "ogcio" }
         ]
+      },
+      {
+        "id": "m2m-ps-uploader",
+        "name": "M2M Public Servant Uploader",
+        "description": "Role for M2M Applications that need to interact with the Upload API",
+        "specific_permissions": ["upload:file:*"],
+        "type": "MachineToMachine",
+        "related_applications": [
+          { "application_id": "der1wqp78uhshgbjyupl0", "organization_id": "ogcio" }
+        ]
       }
     ],
     "applications": [
@@ -254,6 +264,16 @@
         "logout_redirect_uri": "",
         "secret": "<SEEDER_M2M_ANALYTICS_API_APP_SECRET>",
         "id": "03emabp0dwznxw414mxme",
+        "is_third_party": false
+      },
+      {
+        "name": "M2M Uploader",
+        "description": "Machine 2 Machine application used to communicate between services and Upload API",
+        "type": "MachineToMachine",
+        "redirect_uri": "",
+        "logout_redirect_uri": "",
+        "secret": "<SEEDER_M2M_UPLOADER_APP_SECRET>",
+        "id": "der1wqp78uhshgbjyupl0",
         "is_third_party": false
       }
     ],
