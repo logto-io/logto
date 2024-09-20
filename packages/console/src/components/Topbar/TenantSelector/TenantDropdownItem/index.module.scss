@@ -40,12 +40,37 @@
       }
     }
 
-    .planName {
+    .metadata {
       margin-top: _.unit(0.5);
       font: var(--font-body-3);
       color: var(--color-text-secondary);
       // Keep the height of the item consistent when the plan name is loading
       min-height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: start;
+      flex-wrap: nowrap;
+      gap: _.unit(3);
+
+      .region {
+        display: flex;
+        gap: _.unit(1);
+        align-items: center;
+      }
+
+      > * {
+        position: relative;
+      }
+
+      > *:not(:last-child)::after {
+        content: '';
+        height: 10px;
+        border-right: 1px solid var(--color-divider);
+        position: absolute;
+        inset-inline-end: _.unit(-1.5);
+        top: 50%;
+        transform: translateY(-50%);
+      }
     }
   }
 

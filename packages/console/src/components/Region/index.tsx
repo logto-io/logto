@@ -14,13 +14,13 @@ export enum RegionName {
   AU = 'AU',
 }
 
-const regionDisplayNameMap = Object.freeze({
+export const regionDisplayNameMap = Object.freeze({
   [RegionName.EU]: 'Europe',
   [RegionName.US]: 'West US',
   [RegionName.AU]: 'Australia',
 } satisfies Record<RegionName, string>);
 
-const regionFlagMap = Object.freeze({
+export const regionFlagMap = Object.freeze({
   [RegionName.EU]: euFlag,
   [RegionName.US]: usFlag,
   [RegionName.AU]: auFlag,
