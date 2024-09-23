@@ -9,8 +9,8 @@ const subscription = {
   pro_plan: 'プロプラン',
   pro_plan_description: 'ビジネスが安心してLogtoを利用できるプランです。',
   enterprise: 'エンタープライズプラン',
-  enterprise_description:
-    '高度な機能、完全なカスタマイズ、および専用サポートを必要とする大規模組織のためのものです。究極のセキュリティ、コンプライアンス、およびパフォーマンスのために、あなたのニーズに合わせて調整されています。',
+  /** UNTRANSLATED */
+  enterprise_description: 'For large teams and businesses with enterprise-grade requirements.',
   admin_plan: '管理者プラン',
   dev_plan: '開発プラン',
   current_plan: '現在のプラン',

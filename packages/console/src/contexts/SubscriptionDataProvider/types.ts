@@ -21,6 +21,7 @@ type NewSubscriptionSupplementContext = {
   logtoSkus: LogtoSkuResponse[];
   currentSku: LogtoSkuResponse;
   currentSubscriptionQuota: NewSubscriptionQuota;
+  currentSubscriptionBasicQuota: NewSubscriptionQuota;
   currentSubscriptionUsage: NewSubscriptionCountBasedUsage;
   currentSubscriptionResourceScopeUsage: NewSubscriptionResourceScopeUsage;
   currentSubscriptionRoleScopeUsage: NewSubscriptionRoleScopeUsage;

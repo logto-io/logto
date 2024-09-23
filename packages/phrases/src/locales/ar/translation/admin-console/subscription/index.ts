@@ -8,8 +8,8 @@ const subscription = {
   pro_plan: 'خطة Pro',
   pro_plan_description: 'للاستفادة من الأعمال بدون قلق مع Logto.',
   enterprise: 'خطة المؤسسة',
-  enterprise_description:
-    'للمؤسسات الكبيرة التي تتطلب ميزات متقدمة وتخصيص كامل ودعم مخصص لتشغيل التطبيقات الحيوية. مصمم خصيصًا لتلبية احتياجاتك من الأمان والامتثال والأداء النهائي.',
+  /** UNTRANSLATED */
+  enterprise_description: 'For large teams and businesses with enterprise-grade requirements.',
   admin_plan: 'خطة المسؤول',
   dev_plan: 'خطة التطوير',
   current_plan: 'الخطة الحالية',

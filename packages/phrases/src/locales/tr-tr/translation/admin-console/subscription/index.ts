@@ -9,8 +9,8 @@ const subscription = {
   pro_plan: 'Pro plan',
   pro_plan_description: "Endişesiz bir şekilde Logto'dan faydalanan işletmeler için.",
   enterprise: 'Kurumsal plan',
-  enterprise_description:
-    'Gelişmiş özellikler, tam özelleştirme ve kritik uygulamaları desteklemek için özel destek gerektiren büyük ölçekli organizasyonlar için. Nihai güvenlik, uyumluluk ve performans için ihtiyaçlarınıza göre uyarlanmıştır.',
+  /** UNTRANSLATED */
+  enterprise_description: 'For large teams and businesses with enterprise-grade requirements.',
   admin_plan: 'Yönetici planı',
   dev_plan: 'Geliştirme planı',
   current_plan: 'Mevcut Plan',

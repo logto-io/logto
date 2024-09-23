@@ -1,6 +1,8 @@
 const usage = {
-  status_active: 'تشغيل',
-  status_inactive: 'إيقاف',
+  /** UNTRANSLATED */
+  status_active: 'In use',
+  /** UNTRANSLATED */
+  status_inactive: 'Not in use',
   mau: {
     title: 'MAU',
     description: '{{usage}}',

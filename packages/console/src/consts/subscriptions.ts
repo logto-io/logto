@@ -23,6 +23,8 @@ export const tokenAddOnUnitPrice = 80;
 export const hooksAddOnUnitPrice = 2;
 /* === Add-on unit price (in USD) === */
 
+export const tokenCountUnit = 1_000_000;
+
 /**
  * In console, only featured plans are shown in the plan selection component.
  */

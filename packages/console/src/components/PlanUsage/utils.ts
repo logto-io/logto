@@ -94,6 +94,36 @@ export const tooltipKeyMap: Record<
   hooksLimit: 'hooks.tooltip',
 };
 
+export const enterpriseTooltipKeyMap: Record<
+  keyof UsageKey,
+  TFuncKey<'translation', 'admin_console.subscription.usage'>
+> = {
+  mauLimit: 'mau.tooltip_for_enterprise',
+  organizationsLimit: 'organizations.tooltip_for_enterprise',
+  mfaEnabled: 'mfa.tooltip_for_enterprise',
+  enterpriseSsoLimit: 'enterprise_sso.tooltip_for_enterprise',
+  resourcesLimit: 'api_resources.tooltip_for_enterprise',
+  machineToMachineLimit: 'machine_to_machine.tooltip_for_enterprise',
+  tenantMembersLimit: 'tenant_members.tooltip_for_enterprise',
+  tokenLimit: 'tokens.tooltip_for_enterprise',
+  hooksLimit: 'hooks.tooltip_for_enterprise',
+};
+
+export const enterpriseUsageKeyMap: Record<
+  keyof UsageKey,
+  TFuncKey<'translation', 'admin_console.subscription.usage'>
+> = {
+  mauLimit: 'mau.description_for_enterprise',
+  organizationsLimit: 'organizations.description_for_enterprise',
+  mfaEnabled: 'mfa.description_for_enterprise',
+  enterpriseSsoLimit: 'enterprise_sso.description_for_enterprise',
+  resourcesLimit: 'api_resources.description_for_enterprise',
+  machineToMachineLimit: 'machine_to_machine.description_for_enterprise',
+  tenantMembersLimit: 'tenant_members.description_for_enterprise',
+  tokenLimit: 'tokens.description_for_enterprise',
+  hooksLimit: 'hooks.description_for_enterprise',
+};
+
 export const formatNumber = (number: number): string => {
   return number.toString().replaceAll(/\B(?=(\d{3})+(?!\d))/g, ',');
 };

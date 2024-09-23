@@ -9,8 +9,8 @@ const subscription = {
   pro_plan: 'Plano Pro',
   pro_plan_description: 'Para empresas se beneficiarem tranquilo com o Logto.',
   enterprise: 'Plano Empresa',
-  enterprise_description:
-    'Para organizações de grande escala que exigem recursos avançados, personalização completa e suporte dedicado para aplicações críticas. Adaptado às suas necessidades para máxima segurança, conformidade e desempenho.',
+  /** UNTRANSLATED */
+  enterprise_description: 'For large teams and businesses with enterprise-grade requirements.',
   admin_plan: 'Plano de administrador',
   dev_plan: 'Plano de desenvolvimento',
   current_plan: 'Plano Atual',

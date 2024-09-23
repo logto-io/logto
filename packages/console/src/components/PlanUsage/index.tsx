@@ -11,7 +11,7 @@ import {
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
-import { formatPeriod } from '@/utils/subscription';
+import { formatPeriod, isPaidPlan } from '@/utils/subscription';
 
 import PlanUsageCard, { type Props as PlanUsageCardProps } from './PlanUsageCard';
 import styles from './index.module.scss';
@@ -22,6 +22,8 @@ import {
   usageKeyMap,
   titleKeyMap,
   tooltipKeyMap,
+  enterpriseTooltipKeyMap,
+  enterpriseUsageKeyMap,
 } from './utils';
 
 type Props = {
@@ -42,12 +44,17 @@ const getUsageByKey = (
     return periodicUsage[key];
   }
 
+  if (key === 'organizationsLimit') {
+    return countBasedUsage[key] > 0;
+  }
+
   return countBasedUsage[key];
 };
 
 function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
   const {
     currentSubscriptionQuota,
+    currentSubscriptionBasicQuota,
     currentSubscriptionUsage,
     currentSubscription: {
       currentPeriodStart,
@@ -99,15 +106,24 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
           tooltipKey: `subscription.usage.${tooltipKeyMap[key]}`,
         }
       ),
+      ...conditional(
+        isEnterprisePlan && {
+          usageKey: `subscription.usage.${enterpriseUsageKeyMap[key]}`,
+          tooltipKey: `subscription.usage.${enterpriseTooltipKeyMap[key]}`,
+        }
+      ),
       ...cond(
-        (key === 'tokenLimit' || key === 'mauLimit' || key === 'organizationsLimit') &&
+        (key === 'tokenLimit' || key === 'mauLimit' || isPaidPlan(planId, isEnterprisePlan)) &&
           // Do not show `xxx / 0` in displaying usage.
           currentSubscriptionQuota[key] !== 0 && {
             quota: currentSubscriptionQuota[key],
           }
       ),
-      // Hide usage tip for Enterprise plan.
-      isUsageTipHidden: isEnterprisePlan,
+      ...cond(
+        isPaidPlan(planId, isEnterprisePlan) && {
+          basicQuota: currentSubscriptionBasicQuota[key],
+        }
+      ),
     }));
 
   return (

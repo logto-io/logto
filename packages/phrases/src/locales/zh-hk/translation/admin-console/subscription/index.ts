@@ -8,8 +8,8 @@ const subscription = {
   pro_plan: '專業計劃',
   pro_plan_description: '供企業放心使用 Logto。',
   enterprise: '企業計劃',
-  enterprise_description:
-    '適用於大型組織，需要高級功能、完整自定義和專屬支持，以推動使命關鍵型應用。根據你的需求量身定制，以達到終極安全、合規和性能。',
+  /** UNTRANSLATED */
+  enterprise_description: 'For large teams and businesses with enterprise-grade requirements.',
   admin_plan: '管理員計劃',
   dev_plan: '開發計劃',
   current_plan: '當前計劃',
