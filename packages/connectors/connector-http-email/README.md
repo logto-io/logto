@@ -24,4 +24,4 @@ The HTTP email connector will send the following payload to the endpoint when it
 }
 ```
 
-You can find the type definition of `SendMessageData` in [connector-kit](../../toolkit/connector-kit/src/types/passwordless.ts).
+You can find the type definition of `SendMessageData` in [connector-kit](https://github.com/logto-io/logto/tree/master/packages/toolkit/connector-kit/src/types/passwordless.ts).
