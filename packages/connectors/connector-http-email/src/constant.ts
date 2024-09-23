@@ -2,8 +2,8 @@ import type { ConnectorMetadata } from '@logto/connector-kit';
 import { ConnectorConfigFormItemType } from '@logto/connector-kit';
 
 export const defaultMetadata: ConnectorMetadata = {
-  id: 'http-email-service',
-  target: 'http-mail',
+  id: 'http-email',
+  target: 'http-email',
   platform: null,
   name: {
     en: 'HTTP Email',
