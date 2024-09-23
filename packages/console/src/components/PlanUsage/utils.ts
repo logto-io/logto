@@ -49,21 +49,6 @@ export const usageKeyPriceMap: Record<keyof UsageKey, number> = {
   hooksLimit: hooksAddOnUnitPrice,
 };
 
-export const usageKeyMap: Record<
-  keyof UsageKey,
-  TFuncKey<'translation', 'admin_console.subscription.usage'>
-> = {
-  mauLimit: 'mau.description',
-  organizationsLimit: 'organizations.description',
-  mfaEnabled: 'mfa.description',
-  enterpriseSsoLimit: 'enterprise_sso.description',
-  resourcesLimit: 'api_resources.description',
-  machineToMachineLimit: 'machine_to_machine.description',
-  tenantMembersLimit: 'tenant_members.description',
-  tokenLimit: 'tokens.description',
-  hooksLimit: 'hooks.description',
-};
-
 export const titleKeyMap: Record<
   keyof UsageKey,
   TFuncKey<'translation', 'admin_console.subscription.usage'>
@@ -107,21 +92,6 @@ export const enterpriseTooltipKeyMap: Record<
   tenantMembersLimit: 'tenant_members.tooltip_for_enterprise',
   tokenLimit: 'tokens.tooltip_for_enterprise',
   hooksLimit: 'hooks.tooltip_for_enterprise',
-};
-
-export const enterpriseUsageKeyMap: Record<
-  keyof UsageKey,
-  TFuncKey<'translation', 'admin_console.subscription.usage'>
-> = {
-  mauLimit: 'mau.description_for_enterprise',
-  organizationsLimit: 'organizations.description_for_enterprise',
-  mfaEnabled: 'mfa.description_for_enterprise',
-  enterpriseSsoLimit: 'enterprise_sso.description_for_enterprise',
-  resourcesLimit: 'api_resources.description_for_enterprise',
-  machineToMachineLimit: 'machine_to_machine.description_for_enterprise',
-  tenantMembersLimit: 'tenant_members.description_for_enterprise',
-  tokenLimit: 'tokens.description_for_enterprise',
-  hooksLimit: 'hooks.description_for_enterprise',
 };
 
 export const formatNumber = (number: number): string => {

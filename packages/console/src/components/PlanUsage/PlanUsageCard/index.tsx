@@ -6,7 +6,6 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import Tip from '@/assets/icons/tip.svg?react';
 import { addOnPricingExplanationLink } from '@/consts/external-links';
-import { tokenCountUnit } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import IconButton from '@/ds-components/IconButton';
@@ -19,13 +18,39 @@ import { formatNumber } from '../utils';
 
 import styles from './index.module.scss';
 
-const formatQuotaNumber = (rawNumber: number): string => {
-  const number = rawNumber >= 0.1 * tokenCountUnit ? rawNumber / tokenCountUnit : rawNumber;
+const formatQuotaNumber = (number: number): string => {
+  if (number >= 1e6) {
+    return (number / 1e6).toFixed(1) + 'M';
+  }
+
+  if (number >= 1e3) {
+    return (number / 1e3).toFixed(1) + 'K';
+  }
 
   if (Number.isInteger(number)) {
     return number.toString();
   }
+
   return number.toFixed(2);
+};
+
+const formatNumberTypedUsageDescription = ({
+  usage,
+  quota,
+  unlimitedString,
+}: {
+  usage: number;
+  quota?: Props['quota'];
+  unlimitedString: string;
+}) => {
+  const usagePercent = conditional(typeof quota === 'number' && usage / quota);
+  return quota === undefined || typeof quota === 'boolean'
+    ? formatNumber(usage)
+    : typeof quota === 'number'
+    ? `${formatNumber(usage)} / ${formatQuotaNumber(quota)}${
+        usagePercent === undefined ? '' : ` (${(usagePercent * 100).toFixed(0)}%)`
+      }`
+    : `${formatNumber(usage)} / ${unlimitedString}`;
 };
 
 export type Props = {
@@ -39,8 +64,6 @@ export type Props = {
   readonly className?: string;
 };
 
-// TODO: refactor this component to reduce complexity
-// eslint-disable-next-line complexity
 function PlanUsageCard({
   usage,
   quota,
@@ -79,7 +102,9 @@ function PlanUsageCard({
                 {t(tooltipKey, {
                   price: unitPrice,
                   ...conditional(
-                    (quota === null || typeof quota === 'number') && { quota: basicQuota }
+                    typeof basicQuota === 'number' && {
+                      basicQuota: formatQuotaNumber(basicQuota),
+                    }
                   ),
                 })}
               </Trans>
@@ -104,36 +129,45 @@ function PlanUsageCard({
                 <span
                   className={classNames(
                     styles.usageTip,
-                    (!isPaidTenant || basicQuota === undefined || basicQuota === 0) && styles.hidden
+                    // Hide usage tip for free plan users.
+                    (!isPaidTenant || basicQuota === undefined) && styles.hidden
                   )}
                 />
               ),
             }}
           >
             {t(
-              basicQuota === null ? 'subscription.usage.unlimited_quota_description' : usageKey,
+              (() => {
+                switch (true) {
+                  case basicQuota === null || basicQuota === true: {
+                    return 'subscription.usage.usage_description_with_unlimited_quota';
+                  }
+                  case basicQuota === false || basicQuota === 0: {
+                    return 'subscription.usage.usage_description_without_quota';
+                  }
+                  case typeof basicQuota === 'number': {
+                    return 'subscription.usage.usage_description_with_limited_quota';
+                  }
+                  default: {
+                    return usageKey;
+                  }
+                }
+              })(),
               isPaidTenant
                 ? {
                     usage: formatNumber(usage),
                     ...conditional(
                       typeof basicQuota === 'number' && {
-                        quota: formatQuotaNumber(basicQuota),
+                        basicQuota: formatQuotaNumber(basicQuota),
                       }
                     ),
                   }
                 : {
-                    usage:
-                      quota === undefined
-                        ? formatNumber(usage)
-                        : typeof quota === 'number'
-                        ? `${formatNumber(usage)} / ${formatNumber(quota)}${
-                            usagePercent === undefined
-                              ? ''
-                              : ` (${(usagePercent * 100).toFixed(0)}%)`
-                          }`
-                        : `${formatNumber(usage)} / ${String(
-                            t('subscription.quota_table.unlimited')
-                          )}`,
+                    usage: formatNumberTypedUsageDescription({
+                      usage,
+                      quota,
+                      unlimitedString: String(t('subscription.quota_table.unlimited')),
+                    }),
                   }
             )}
           </Trans>
@@ -147,16 +181,29 @@ function PlanUsageCard({
           </Tag>
           {quota !== undefined && (
             <div className={styles.usageTip}>
-              {(quota === null || quota === true) && (
-                <DynamicT forKey="subscription.usage.unlimited_status_quota_description" />
-              )}
-              {typeof quota === 'number' && (
-                <>
-                  {t('subscription.usage.status_quota_description', {
-                    quota: formatQuotaNumber(quota),
-                  })}
-                </>
-              )}
+              {/* Consider the type of quota is number, null or boolean, the following switch statement covers all cases. */}
+              {(() => {
+                switch (true) {
+                  case quota === null || quota === true: {
+                    return (
+                      <DynamicT forKey="subscription.usage.unlimited_status_quota_description" />
+                    );
+                  }
+                  case quota === false || quota === 0: {
+                    return (
+                      <DynamicT forKey="subscription.usage.disabled_status_quota_description" />
+                    );
+                  }
+                  case typeof quota === 'number': {
+                    return t('subscription.usage.limited_status_quota_description', {
+                      quota: formatQuotaNumber(quota),
+                    });
+                  }
+                  default: {
+                    return null;
+                  }
+                }
+              })()}
             </div>
           )}
         </div>

@@ -29,6 +29,7 @@ export const SubscriptionDataContext = createContext<FullContext>({
   logtoSkus: [],
   currentSku: defaultLogtoSku,
   currentSubscriptionQuota: defaultSubscriptionQuota,
+  currentSubscriptionBasicQuota: defaultSubscriptionQuota,
   currentSubscriptionUsage: defaultSubscriptionUsage,
   currentSubscriptionResourceScopeUsage: {},
   currentSubscriptionRoleScopeUsage: {},

@@ -19,11 +19,9 @@ import {
   type UsageKey,
   usageKeys,
   usageKeyPriceMap,
-  usageKeyMap,
   titleKeyMap,
   tooltipKeyMap,
   enterpriseTooltipKeyMap,
-  enterpriseUsageKeyMap,
 } from './utils';
 
 type Props = {
@@ -44,6 +42,7 @@ const getUsageByKey = (
     return periodicUsage[key];
   }
 
+  // Show organization usage status in in-use/not-in-use state.
   if (key === 'organizationsLimit') {
     return countBasedUsage[key] > 0;
   }
@@ -82,6 +81,7 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
     return null;
   }
 
+  const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
   const onlyShowPeriodicUsage =
     planId === ReservedPlanId.Free || (!isAddOnAvailable && planId === ReservedPlanId.Pro);
 
@@ -98,29 +98,19 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
     )
     .map((key) => ({
       usage: getUsageByKey(key, { periodicUsage, countBasedUsage: currentSubscriptionUsage }),
-      usageKey: `subscription.usage.${usageKeyMap[key]}`,
+      usageKey: 'subscription.usage.usage_description_with_limited_quota',
       titleKey: `subscription.usage.${titleKeyMap[key]}`,
       unitPrice: usageKeyPriceMap[key],
-      ...conditional(
-        planId === ReservedPlanId.Pro && {
-          tooltipKey: `subscription.usage.${tooltipKeyMap[key]}`,
-        }
-      ),
-      ...conditional(
-        isEnterprisePlan && {
-          usageKey: `subscription.usage.${enterpriseUsageKeyMap[key]}`,
-          tooltipKey: `subscription.usage.${enterpriseTooltipKeyMap[key]}`,
+      ...cond(
+        (key === 'tokenLimit' || key === 'mauLimit' || isPaidTenant) && {
+          quota: currentSubscriptionQuota[key],
         }
       ),
       ...cond(
-        (key === 'tokenLimit' || key === 'mauLimit' || isPaidPlan(planId, isEnterprisePlan)) &&
-          // Do not show `xxx / 0` in displaying usage.
-          currentSubscriptionQuota[key] !== 0 && {
-            quota: currentSubscriptionQuota[key],
-          }
-      ),
-      ...cond(
-        isPaidPlan(planId, isEnterprisePlan) && {
+        isPaidTenant && {
+          tooltipKey: `subscription.usage.${
+            isEnterprisePlan ? enterpriseTooltipKeyMap[key] : tooltipKeyMap[key]
+          }`,
           basicQuota: currentSubscriptionBasicQuota[key],
         }
       ),
