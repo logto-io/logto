@@ -25,12 +25,14 @@ SystemContext.shared.experienceBlobsProviderConfig = experienceBlobsProviderConf
 
 const mockedIsFileExisted = jest.fn(async (filename: string) => true);
 const mockedDownloadFile = jest.fn();
+const mockedGetFileProperties = jest.fn(async () => ({ contentLength: 100 }));
 
 await mockEsmWithActual('#src/utils/storage/azure-storage.js', () => ({
   buildAzureStorage: jest.fn(() => ({
     uploadFile: jest.fn(async () => 'https://fake.url'),
     downloadFile: mockedDownloadFile,
     isFileExisted: mockedIsFileExisted,
+    getFileProperties: mockedGetFileProperties,
   })),
 }));
 
@@ -81,11 +83,47 @@ describe('koaServeCustomUiAssets middleware', () => {
   });
 
   it('should return 404 if the file does not exist', async () => {
-    mockedIsFileExisted.mockResolvedValue(false);
+    mockedIsFileExisted.mockResolvedValueOnce(false);
     const ctx = createMockContext({ url: '/fake.txt' });
 
     await expect(koaServeCustomUiAssets('custom-ui-asset-id')(ctx, next)).rejects.toMatchError(
       new RequestError({ code: 'entity.not_found', status: 404 })
+    );
+  });
+
+  it('should be able to handle range request', async () => {
+    const mockBodyStream = Readable.from('video data');
+    mockedDownloadFile.mockImplementationOnce(
+      async (objectKey: string, offset?: number, count?: number) => {
+        if (objectKey.endsWith('/video.mp4')) {
+          return {
+            contentType: 'video/mp4',
+            readableStreamBody: mockBodyStream,
+            contentLength: count ?? 0,
+          };
+        }
+        throw new Error('File not found');
+      }
+    );
+
+    const ctx = createMockContext({ url: '/video.mp4', headers: { range: 'bytes=0-10' } });
+
+    await koaServeCustomUiAssets('custom-ui-asset-id')(ctx, next);
+
+    expect(mockedDownloadFile).toHaveBeenCalledWith('default/custom-ui-asset-id/video.mp4', 0, 11);
+    expect(ctx.type).toEqual('video/mp4');
+    expect(ctx.body).toEqual(mockBodyStream);
+    expect(ctx.status).toEqual(206);
+    expect(ctx.response.headers['accept-ranges']).toEqual('bytes');
+    expect(ctx.response.headers['content-range']).toEqual('bytes 0-10/100');
+    expect(ctx.response.headers['content-length']).toEqual('11');
+  });
+
+  it('should throw if range is not satisfiable', async () => {
+    const ctx = createMockContext({ url: '/video.mp4', headers: { range: 'invalid-range' } });
+
+    await expect(koaServeCustomUiAssets('custom-ui-asset-id')(ctx, next)).rejects.toMatchError(
+      new RequestError({ code: 'request.range_not_satisfiable', status: 416 })
     );
   });
 });
