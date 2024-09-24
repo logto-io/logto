@@ -8,10 +8,11 @@ const identifiersTypeToUserProfile = Object.freeze({
   username: 'username',
   email: 'primaryEmail',
   phone: 'primaryPhone',
+  userId: '',
 });
 
 describe('password verifications', () => {
-  it.each(Object.values(SignInIdentifier))(
+  it.each([SignInIdentifier.Username, SignInIdentifier.Email, SignInIdentifier.Phone])(
     'should verify with password successfully using %p',
     async (identifier) => {
       const { userProfile, user } = await generateNewUser({

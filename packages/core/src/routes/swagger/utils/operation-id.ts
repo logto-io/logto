@@ -24,10 +24,7 @@ const methodToVerb = Object.freeze({
 
 type RouteDictionary = Record<`${OpenAPIV3.HttpMethods} ${string}`, string>;
 
-const devFeatureCustomRoutes: RouteDictionary = Object.freeze({
-  // Subject tokens
-  'post /subject-tokens': 'CreateSubjectToken',
-});
+const devFeatureCustomRoutes: RouteDictionary = Object.freeze({});
 
 export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   // Authn
@@ -127,6 +124,8 @@ const exceptionPrefixes = Object.freeze([
   '/interaction',
   '/experience',
   '/sign-in-exp/default/check-password',
+  '/profile',
+  '/verifications',
 ]);
 
 const isPathParameter = (segment?: string) =>

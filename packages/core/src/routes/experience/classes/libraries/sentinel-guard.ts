@@ -2,7 +2,7 @@ import {
   SentinelActionResult,
   SentinelActivityTargetType,
   SentinelDecision,
-  type InteractionIdentifier,
+  type VerificationIdentifier,
   type Sentinel,
   type SentinelActivityAction,
 } from '@logto/schemas';
@@ -33,7 +33,7 @@ export async function withSentinel<T>(
   }: {
     sentinel: Sentinel;
     action: SentinelActivityAction;
-    identifier: InteractionIdentifier;
+    identifier: VerificationIdentifier;
     payload: Record<string, unknown>;
   },
   verificationPromise: Promise<T>

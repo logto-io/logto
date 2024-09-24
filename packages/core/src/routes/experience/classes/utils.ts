@@ -1,9 +1,11 @@
 import {
   SignInIdentifier,
+  type VerificationIdentifier,
   VerificationType,
   type InteractionIdentifier,
   type User,
   type VerificationCodeSignInIdentifier,
+  AdditionalIdentifier,
 } from '@logto/schemas';
 
 import type Queries from '#src/tenants/Queries.js';
@@ -12,7 +14,7 @@ import type { InteractionProfile } from '../types.js';
 
 export const findUserByIdentifier = async (
   userQuery: Queries['users'],
-  { type, value }: InteractionIdentifier
+  { type, value }: VerificationIdentifier
 ) => {
   switch (type) {
     case SignInIdentifier.Username: {
@@ -23,6 +25,9 @@ export const findUserByIdentifier = async (
     }
     case SignInIdentifier.Phone: {
       return userQuery.findUserByPhone(value);
+    }
+    case AdditionalIdentifier.UserId: {
+      return userQuery.findUserById(value);
     }
   }
 };

@@ -3,6 +3,7 @@ import {
   buildManagementApiBaseDocument,
   getSupplementDocuments,
   assembleSwaggerDocument,
+  buildUserApiBaseDocument,
 } from '#src/routes/swagger/utils/documents.js';
 import {
   buildRouterObjects,
@@ -14,11 +15,12 @@ import { type AnonymousRouter } from '#src/routes/types.js';
 type OpenApiRouters<R> = {
   managementRouters: R[];
   experienceRouters: R[];
+  userRouters: R[];
 };
 
 export default function openapiRoutes<T extends AnonymousRouter, R extends UnknownRouter>(
   router: T,
-  { managementRouters, experienceRouters }: OpenApiRouters<R>
+  { managementRouters, experienceRouters, userRouters }: OpenApiRouters<R>
 ) {
   router.get('/.well-known/management.openapi.json', async (ctx, next) => {
     const managementApiRoutes = buildRouterObjects(managementRouters, {
@@ -29,7 +31,7 @@ export default function openapiRoutes<T extends AnonymousRouter, R extends Unkno
 
     // Find supplemental documents
     const supplementDocuments = await getSupplementDocuments('routes', {
-      excludeDirectories: ['experience', 'interaction'],
+      excludeDirectories: ['experience', 'interaction', 'profile', 'verification'],
     });
     const baseDocument = buildManagementApiBaseDocument(pathMap, tags, ctx.request.origin);
 
@@ -52,6 +54,26 @@ export default function openapiRoutes<T extends AnonymousRouter, R extends Unkno
       includeDirectories: ['experience', 'interaction'],
     });
     const baseDocument = buildExperienceApiBaseDocument(pathMap, tags, ctx.request.origin);
+
+    const data = assembleSwaggerDocument(supplementDocuments, baseDocument, ctx);
+
+    ctx.body = {
+      ...data,
+      tags: data.tags?.slice().sort((tagA, tagB) => tagA.name.localeCompare(tagB.name)),
+    };
+
+    return next();
+  });
+
+  router.get('/.well-known/user.openapi.json', async (ctx, next) => {
+    const userApiRoutes = buildRouterObjects(userRouters);
+    const { pathMap, tags } = groupRoutesByPath(userApiRoutes);
+
+    // Find supplemental documents
+    const supplementDocuments = await getSupplementDocuments('routes', {
+      includeDirectories: ['profile', 'verification'],
+    });
+    const baseDocument = buildUserApiBaseDocument(pathMap, tags, ctx.request.origin);
 
     const data = assembleSwaggerDocument(supplementDocuments, baseDocument, ctx);
 
