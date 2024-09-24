@@ -22,11 +22,17 @@ const initFormData = (formItems: ConnectorConfigFormItem[], config?: Record<stri
 
 export const parseFormConfig = (
   config: Record<string, unknown>,
-  formItems: ConnectorConfigFormItem[]
+  formItems: ConnectorConfigFormItem[],
+  skipFalsyValuesRemoval = false
 ) => {
   return Object.fromEntries(
     Object.entries(config)
       .map(([key, value]) => {
+        // Filter out empty input
+        if (!skipFalsyValuesRemoval && value === '') {
+          return null;
+        }
+
         const formItem = formItems.find((item) => item.key === key);
 
         if (!formItem) {
