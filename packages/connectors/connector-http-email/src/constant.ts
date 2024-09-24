@@ -28,6 +28,8 @@ export const defaultMetadata: ConnectorMetadata = {
       type: ConnectorConfigFormItemType.Text,
       required: false,
       placeholder: '<Bearer your-token>',
+      tooltip:
+        'The authorization header to be sent with the request, you can verify the value in your server.',
     },
   ],
 };
