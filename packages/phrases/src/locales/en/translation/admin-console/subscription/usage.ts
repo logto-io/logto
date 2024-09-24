@@ -21,6 +21,8 @@ const usage = {
     description_for_enterprise: '(Included)',
     tooltip_for_enterprise:
       'Inclusion depends on your plan. If the organization feature isn’t in your initial contract, it will be added to your bill when you activate it. The add-on costs ${{price, number}}/month, regardless of the number of organizations or their activity.',
+    tooltip_for_enterprise_with_numbered_basic_quota:
+      'Your plan includes the first {{basicQuota}} organizations for free. If you need more, you can add them with the organization add-on at a flat rate of ${{price, number}} per month, regardless of the number of organizations or their activity level.',
   },
   mfa: {
     title: 'MFA',
