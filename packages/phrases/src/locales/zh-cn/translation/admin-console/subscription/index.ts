@@ -8,8 +8,8 @@ const subscription = {
   pro_plan: '专业计划',
   pro_plan_description: '适用于企业付费无忧。',
   enterprise: '企业计划',
-  enterprise_description:
-    '适用于需要高级功能、完全定制和专门支持以推动关键任务应用的大型组织。根据您的需求量身定制，以实现终极的安全性、合规性和性能。',
+  /** UNTRANSLATED */
+  enterprise_description: 'For large teams and businesses with enterprise-grade requirements.',
   admin_plan: '管理员计划',
   dev_plan: '开发计划',
   current_plan: '当前计划',

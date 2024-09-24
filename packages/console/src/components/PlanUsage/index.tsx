@@ -7,11 +7,12 @@ import { useContext, useMemo } from 'react';
 import {
   type NewSubscriptionPeriodicUsage,
   type NewSubscriptionCountBasedUsage,
+  type NewSubscriptionQuota,
 } from '@/cloud/types/router';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
-import { formatPeriod } from '@/utils/subscription';
+import { formatPeriod, isPaidPlan } from '@/utils/subscription';
 
 import PlanUsageCard, { type Props as PlanUsageCardProps } from './PlanUsageCard';
 import styles from './index.module.scss';
@@ -19,9 +20,9 @@ import {
   type UsageKey,
   usageKeys,
   usageKeyPriceMap,
-  usageKeyMap,
   titleKeyMap,
   tooltipKeyMap,
+  enterpriseTooltipKeyMap,
 } from './utils';
 
 type Props = {
@@ -33,13 +34,25 @@ const getUsageByKey = (
   {
     periodicUsage,
     countBasedUsage,
+    basicQuota,
   }: {
     periodicUsage: NewSubscriptionPeriodicUsage;
     countBasedUsage: NewSubscriptionCountBasedUsage;
+    basicQuota: NewSubscriptionQuota;
   }
 ) => {
   if (key === 'mauLimit' || key === 'tokenLimit') {
     return periodicUsage[key];
+  }
+
+  // Show organization usage status in in-use/not-in-use state.
+  if (key === 'organizationsLimit') {
+    // If the basic quota is a non-zero number, show the usage in `usage(number-typed) (First {{basicQuota}} included)` format.
+    if (typeof basicQuota[key] === 'number' && basicQuota[key] !== 0) {
+      return countBasedUsage[key];
+    }
+
+    return countBasedUsage[key] > 0;
   }
 
   return countBasedUsage[key];
@@ -48,6 +61,7 @@ const getUsageByKey = (
 function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
   const {
     currentSubscriptionQuota,
+    currentSubscriptionBasicQuota,
     currentSubscriptionUsage,
     currentSubscription: {
       currentPeriodStart,
@@ -75,6 +89,7 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
     return null;
   }
 
+  const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
   const onlyShowPeriodicUsage =
     planId === ReservedPlanId.Free || (!isAddOnAvailable && planId === ReservedPlanId.Pro);
 
@@ -90,24 +105,35 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
         (onlyShowPeriodicUsage && (key === 'mauLimit' || key === 'tokenLimit'))
     )
     .map((key) => ({
-      usage: getUsageByKey(key, { periodicUsage, countBasedUsage: currentSubscriptionUsage }),
-      usageKey: `subscription.usage.${usageKeyMap[key]}`,
+      usage: getUsageByKey(key, {
+        periodicUsage,
+        countBasedUsage: currentSubscriptionUsage,
+        basicQuota: currentSubscriptionBasicQuota,
+      }),
+      usageKey: 'subscription.usage.usage_description_with_limited_quota',
       titleKey: `subscription.usage.${titleKeyMap[key]}`,
       unitPrice: usageKeyPriceMap[key],
-      ...conditional(
-        planId === ReservedPlanId.Pro && {
-          tooltipKey: `subscription.usage.${tooltipKeyMap[key]}`,
+      ...cond(
+        (key === 'tokenLimit' || key === 'mauLimit' || isPaidTenant) && {
+          quota: currentSubscriptionQuota[key],
         }
       ),
       ...cond(
-        (key === 'tokenLimit' || key === 'mauLimit' || key === 'organizationsLimit') &&
-          // Do not show `xxx / 0` in displaying usage.
-          currentSubscriptionQuota[key] !== 0 && {
-            quota: currentSubscriptionQuota[key],
+        isPaidTenant && {
+          tooltipKey: `subscription.usage.${
+            isEnterprisePlan ? enterpriseTooltipKeyMap[key] : tooltipKeyMap[key]
+          }`,
+          basicQuota: currentSubscriptionBasicQuota[key],
+        }
+      ),
+      // Hide the quota notice for Pro plans if the basic quota is 0.
+      // Per current pricing model design, it should apply to `enterpriseSsoLimit`.
+      ...cond(
+        planId === ReservedPlanId.Pro &&
+          currentSubscriptionBasicQuota[key] === 0 && {
+            isQuotaNoticeHidden: true,
           }
       ),
-      // Hide usage tip for Enterprise plan.
-      isUsageTipHidden: isEnterprisePlan,
     }));
 
   return (

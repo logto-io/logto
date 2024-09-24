@@ -37,6 +37,11 @@
   }
 }
 
+.tagContainer {
+  display: flex;
+  gap: _.unit(1);
+}
+
 .tag {
   padding-top: 1px;
   padding-bottom: 1px;

@@ -8,8 +8,8 @@ const subscription = {
   pro_plan: '專業方案',
   pro_plan_description: '企業無憂享受 Logto 服務。',
   enterprise: '企業方案',
-  enterprise_description:
-    '適用於需要高級功能、完全定制和專屬支持的大型企業，以支持關鍵任務的應用。根據你的需求量身定制，確保絕對的安全性、合規性和性能。',
+  /** UNTRANSLATED */
+  enterprise_description: 'For large teams and businesses with enterprise-grade requirements.',
   admin_plan: '管理員方案',
   dev_plan: '開發方案',
   current_plan: '當前方案',
