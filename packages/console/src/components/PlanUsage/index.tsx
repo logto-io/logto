@@ -104,54 +104,54 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
         isEnterprisePlan ||
         (onlyShowPeriodicUsage && (key === 'mauLimit' || key === 'tokenLimit'))
     )
-    .map((key) => {
-      const parsedUsage = getUsageByKey(key, {
+    .map((key) => ({
+      usage: getUsageByKey(key, {
         periodicUsage,
         countBasedUsage: currentSubscriptionUsage,
         basicQuota: currentSubscriptionBasicQuota,
-      });
-      return {
-        usage: parsedUsage,
-        usageKey: 'subscription.usage.usage_description_with_limited_quota',
-        titleKey: `subscription.usage.${titleKeyMap[key]}`,
-        unitPrice: usageKeyPriceMap[key],
-        ...cond(
-          (key === 'tokenLimit' || key === 'mauLimit' || isPaidTenant) && {
-            quota: currentSubscriptionQuota[key],
-          }
-        ),
-        ...cond(
-          isPaidTenant && {
-            basicQuota: currentSubscriptionBasicQuota[key],
-            // Do not show tooltip if the basic quota is null (unlimited) and the usage is number-typed.
-            ...cond(
-              !(currentSubscriptionBasicQuota[key] === null && typeof parsedUsage === 'number') && {
-                tooltipKey: `subscription.usage.${
-                  isEnterprisePlan ? enterpriseTooltipKeyMap[key] : tooltipKeyMap[key]
-                }`,
-              }
-            ),
-            // Show tooltip for number-typed basic quota for 'organizationsLimit'.
-            ...cond(
-              key === 'organizationsLimit' &&
-                typeof currentSubscriptionBasicQuota[key] === 'number' &&
-                currentSubscriptionBasicQuota[key] > 0 && {
-                  tooltipKey:
-                    'subscription.usage.organizations.tooltip_for_enterprise_with_numbered_basic_quota',
-                }
-            ),
-          }
-        ),
-        // Hide the quota notice for Pro plans if the basic quota is 0.
-        // Per current pricing model design, it should apply to `enterpriseSsoLimit`.
-        ...cond(
-          planId === ReservedPlanId.Pro &&
-            currentSubscriptionBasicQuota[key] === 0 && {
-              isQuotaNoticeHidden: true,
+      }),
+      usageKey: 'subscription.usage.usage_description_with_limited_quota',
+      titleKey: `subscription.usage.${titleKeyMap[key]}`,
+      unitPrice: usageKeyPriceMap[key],
+      ...cond(
+        (key === 'tokenLimit' || key === 'mauLimit' || isPaidTenant) && {
+          quota: currentSubscriptionQuota[key],
+        }
+      ),
+      ...cond(
+        isPaidTenant && {
+          basicQuota: currentSubscriptionBasicQuota[key],
+          // Do not show tooltip if the basic quota is null (unlimited) for m2m/API resource add-on.
+          ...cond(
+            !(
+              currentSubscriptionBasicQuota[key] === null &&
+              (key === 'machineToMachineLimit' || key === 'resourcesLimit')
+            ) && {
+              tooltipKey: `subscription.usage.${
+                isEnterprisePlan ? enterpriseTooltipKeyMap[key] : tooltipKeyMap[key]
+              }`,
             }
-        ),
-      };
-    });
+          ),
+          // Show tooltip for number-typed basic quota for 'organizationsLimit'.
+          ...cond(
+            key === 'organizationsLimit' &&
+              typeof currentSubscriptionBasicQuota[key] === 'number' &&
+              currentSubscriptionBasicQuota[key] > 0 && {
+                tooltipKey:
+                  'subscription.usage.organizations.tooltip_for_enterprise_with_numbered_basic_quota',
+              }
+          ),
+        }
+      ),
+      // Hide the quota notice for Pro plans if the basic quota is 0.
+      // Per current pricing model design, it should apply to `enterpriseSsoLimit`.
+      ...cond(
+        planId === ReservedPlanId.Pro &&
+          currentSubscriptionBasicQuota[key] === 0 && {
+            isQuotaNoticeHidden: true,
+          }
+      ),
+    }));
 
   return (
     <div>
