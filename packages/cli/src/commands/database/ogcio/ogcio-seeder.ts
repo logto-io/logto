@@ -147,6 +147,7 @@ export type UserSeeder = {
   application_id: string;
   resource_role_ids: string[];
   ppsn: string;
+  related_organizations: Array<{ roles: string[]; organization_id: string }>;
 };
 
 let inputSeeder: OgcioTenantSeeder | undefined;

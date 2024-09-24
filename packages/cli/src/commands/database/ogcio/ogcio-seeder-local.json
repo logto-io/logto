@@ -570,7 +570,11 @@
         "name": "E2E First User",
         "application_id": "4695d8onfb9f3bv18phtq",
         "resource_role_ids": ["bb-citizen"],
-        "ppsn": "E2E_TEST_USER_1"
+        "ppsn": "E2E_TEST_USER_1",
+        "related_organizations": [
+          { "roles": ["upload-public-servant"], "organization_id": "first-testing" },
+          { "roles": ["upload-public-servant"], "organization_id": "second-testing" }
+        ]
       }
     ]
   }
