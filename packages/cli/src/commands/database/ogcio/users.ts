@@ -3,7 +3,12 @@
 
 import { createHmac } from 'node:crypto';
 
-import { OrganizationRoleUserRelations, Users, UsersRoles } from '@logto/schemas';
+import {
+  OrganizationRoleUserRelations,
+  OrganizationUserRelations,
+  Users,
+  UsersRoles,
+} from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { sql, type DatabaseTransactionConnection } from '@silverhand/slonik';
 import { got, type RequestError } from 'got';
@@ -79,44 +84,55 @@ const createUser = async (params: {
     );
   }
 
-  const assignOrganizationRoleQueries = [];
+  const assignUserToOrganization = [];
+  const userRoleOrgToInsert = [];
   for (const rolesPerOrg of params.userToSeed.related_organizations) {
-    for (const currentRole of rolesPerOrg.roles) {
-      assignOrganizationRoleQueries.push(async () => {
-        await createOrUpdateItem({
-          transaction: params.transaction,
-          tenantId: params.tenantId,
-          toLogFieldName: 'organization_id',
-          whereClauses: [
-            sql`user_id = ${params.userToSeed.id}`,
-            sql`organization_id = ${rolesPerOrg.organization_id}`,
-          ],
-          toInsert: {
-            user_id: params.userToSeed.id,
-            organization_id: rolesPerOrg.organization_id,
-          },
-          tableName: UsersRoles.table,
-        });
-        return createOrUpdateItemWithoutId({
-          transaction: params.transaction,
-          tenantId: params.tenantId,
-          toLogFieldName: 'organization_role_id',
-          columnToGet: 'organization_role_id',
-          whereClauses: [
-            sql`user_id = ${params.userToSeed.id}`,
-            sql`organization_id = ${rolesPerOrg.organization_id}`,
-            sql`organization_role_id = ${currentRole}`,
-          ],
-          toInsert: {
-            user_id: params.userToSeed.id,
-            organization_id: rolesPerOrg.organization_id,
-            organization_role_id: currentRole,
-            tenant_id: params.tenantId,
-          },
-          tableName: OrganizationRoleUserRelations.table,
-        });
-      });
-    }
+    assignUserToOrganization.push(
+      createOrUpdateItemWithoutId({
+        transaction: params.transaction,
+        tenantId: params.tenantId,
+        toLogFieldName: 'organization_id',
+        columnToGet: 'organization_id',
+        whereClauses: [
+          sql`user_id = ${params.userToSeed.id}`,
+          sql`organization_id = ${rolesPerOrg.organization_id}`,
+        ],
+        toInsert: {
+          user_id: params.userToSeed.id,
+          organization_id: rolesPerOrg.organization_id,
+        },
+        tableName: OrganizationUserRelations.table,
+      })
+    );
+    userRoleOrgToInsert.push(
+      ...rolesPerOrg.roles.map((roleId) => ({
+        organization_role_id: roleId,
+        user_id: params.userToSeed.id,
+        organization_id: rolesPerOrg.organization_id,
+      }))
+    );
+  }
+
+  await Promise.all(assignUserToOrganization);
+
+  const assignOrganizationRoleQueries = [];
+
+  for (const currentMapping of userRoleOrgToInsert) {
+    assignOrganizationRoleQueries.push(
+      createOrUpdateItemWithoutId({
+        transaction: params.transaction,
+        tenantId: params.tenantId,
+        toLogFieldName: 'organization_role_id',
+        columnToGet: 'organization_role_id',
+        whereClauses: [
+          sql`user_id = ${currentMapping.user_id}`,
+          sql`organization_id = ${currentMapping.organization_id}`,
+          sql`organization_role_id = ${currentMapping.organization_role_id}`,
+        ],
+        toInsert: currentMapping,
+        tableName: OrganizationRoleUserRelations.table,
+      })
+    );
   }
 
   await Promise.all(assignOrganizationRoleQueries);
