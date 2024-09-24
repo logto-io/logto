@@ -7,6 +7,7 @@ import { useContext, useMemo } from 'react';
 import {
   type NewSubscriptionPeriodicUsage,
   type NewSubscriptionCountBasedUsage,
+  type NewSubscriptionQuota,
 } from '@/cloud/types/router';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -33,9 +34,11 @@ const getUsageByKey = (
   {
     periodicUsage,
     countBasedUsage,
+    basicQuota,
   }: {
     periodicUsage: NewSubscriptionPeriodicUsage;
     countBasedUsage: NewSubscriptionCountBasedUsage;
+    basicQuota: NewSubscriptionQuota;
   }
 ) => {
   if (key === 'mauLimit' || key === 'tokenLimit') {
@@ -44,6 +47,11 @@ const getUsageByKey = (
 
   // Show organization usage status in in-use/not-in-use state.
   if (key === 'organizationsLimit') {
+    // If the basic quota is a non-zero number, show the usage in `usage(number-typed) (First {{basicQuota}} included)` format.
+    if (typeof basicQuota[key] === 'number' && basicQuota[key] !== 0) {
+      return countBasedUsage[key];
+    }
+
     return countBasedUsage[key] > 0;
   }
 
@@ -97,7 +105,11 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
         (onlyShowPeriodicUsage && (key === 'mauLimit' || key === 'tokenLimit'))
     )
     .map((key) => ({
-      usage: getUsageByKey(key, { periodicUsage, countBasedUsage: currentSubscriptionUsage }),
+      usage: getUsageByKey(key, {
+        periodicUsage,
+        countBasedUsage: currentSubscriptionUsage,
+        basicQuota: currentSubscriptionBasicQuota,
+      }),
       usageKey: 'subscription.usage.usage_description_with_limited_quota',
       titleKey: `subscription.usage.${titleKeyMap[key]}`,
       unitPrice: usageKeyPriceMap[key],
@@ -113,6 +125,14 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
           }`,
           basicQuota: currentSubscriptionBasicQuota[key],
         }
+      ),
+      // Hide the quota notice for Pro plans if the basic quota is 0.
+      // Per current pricing model design, it should apply to `enterpriseSsoLimit`.
+      ...cond(
+        planId === ReservedPlanId.Pro &&
+          currentSubscriptionBasicQuota[key] === 0 && {
+            isQuotaNoticeHidden: true,
+          }
       ),
     }));
 

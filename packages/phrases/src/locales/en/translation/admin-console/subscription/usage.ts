@@ -4,7 +4,7 @@ const usage = {
   limited_status_quota_description: '(First {{quota}} included)',
   unlimited_status_quota_description: '(Included)',
   disabled_status_quota_description: '(Not included)',
-  usage_description_with_unlimited_quota: '{{usage}}<span> (Unlimited included)</span>',
+  usage_description_with_unlimited_quota: '{{usage}}<span> (Unlimited)</span>',
   usage_description_with_limited_quota: '{{usage}}<span> (First {{basicQuota}} included)</span>',
   usage_description_without_quota: '{{usage}}<span> (Not included)</span>',
   mau: {

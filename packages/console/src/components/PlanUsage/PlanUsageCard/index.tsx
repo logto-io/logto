@@ -43,14 +43,21 @@ const formatNumberTypedUsageDescription = ({
   quota?: Props['quota'];
   unlimitedString: string;
 }) => {
-  const usagePercent = conditional(typeof quota === 'number' && usage / quota);
-  return quota === undefined || typeof quota === 'boolean'
-    ? formatNumber(usage)
-    : typeof quota === 'number'
-    ? `${formatNumber(usage)} / ${formatQuotaNumber(quota)}${
-        usagePercent === undefined ? '' : ` (${(usagePercent * 100).toFixed(0)}%)`
-      }`
-    : `${formatNumber(usage)} / ${unlimitedString}`;
+  // Only show usage if quota is undefined or boolean (although quota should not be boolean if quota is number-typed).
+  if (quota === undefined || typeof quota === 'boolean') {
+    return formatNumber(usage);
+  }
+
+  // Show `usage / quota (usage percent)` if quota is number-typed, but hide the percentage display if usage percent is 0.
+  if (typeof quota === 'number') {
+    const usagePercent = usage / quota;
+    return `${formatNumber(usage)} / ${formatQuotaNumber(quota)}${
+      usagePercent > 0 ? ` (${(usagePercent * 100).toFixed(0)}%)` : ''
+    }`;
+  }
+
+  // Show `usage / unlimited` if quota is null.
+  return `${formatNumber(usage)} / ${unlimitedString}`;
 };
 
 export type Props = {
@@ -62,6 +69,7 @@ export type Props = {
   readonly tooltipKey?: AdminConsoleKey;
   readonly unitPrice: number;
   readonly className?: string;
+  readonly isQuotaNoticeHidden?: boolean;
 };
 
 function PlanUsageCard({
@@ -73,6 +81,7 @@ function PlanUsageCard({
   titleKey,
   tooltipKey,
   className,
+  isQuotaNoticeHidden,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
@@ -130,28 +139,29 @@ function PlanUsageCard({
                   className={classNames(
                     styles.usageTip,
                     // Hide usage tip for free plan users.
-                    (!isPaidTenant || basicQuota === undefined) && styles.hidden
+                    (!isPaidTenant || basicQuota === undefined || isQuotaNoticeHidden) &&
+                      styles.hidden
                   )}
                 />
               ),
             }}
           >
+            {/* Can not use `DynamicT` here since we need to inherit the style of span. */}
             {t(
               (() => {
-                switch (true) {
-                  case basicQuota === null || basicQuota === true: {
-                    return 'subscription.usage.usage_description_with_unlimited_quota';
-                  }
-                  case basicQuota === false || basicQuota === 0: {
-                    return 'subscription.usage.usage_description_without_quota';
-                  }
-                  case typeof basicQuota === 'number': {
-                    return 'subscription.usage.usage_description_with_limited_quota';
-                  }
-                  default: {
-                    return usageKey;
-                  }
+                if (basicQuota === null || basicQuota === true) {
+                  return 'subscription.usage.usage_description_with_unlimited_quota';
                 }
+
+                if (basicQuota === false || basicQuota === 0) {
+                  return 'subscription.usage.usage_description_without_quota';
+                }
+
+                if (typeof basicQuota === 'number') {
+                  return 'subscription.usage.usage_description_with_limited_quota';
+                }
+
+                return usageKey;
               })(),
               isPaidTenant
                 ? {
@@ -179,30 +189,33 @@ function PlanUsageCard({
               forKey={`subscription.usage.${usage ? 'status_active' : 'status_inactive'}`}
             />
           </Tag>
-          {quota !== undefined && (
+          {/* Only show the quota notice for enterprise plan. */}
+          {quota !== undefined && isEnterprisePlan && (
             <div className={styles.usageTip}>
-              {/* Consider the type of quota is number, null or boolean, the following switch statement covers all cases. */}
+              {/* Consider the type of quota is number, null or boolean, the following statement covers all cases. */}
               {(() => {
-                switch (true) {
-                  case quota === null || quota === true: {
-                    return (
-                      <DynamicT forKey="subscription.usage.unlimited_status_quota_description" />
-                    );
-                  }
-                  case quota === false || quota === 0: {
-                    return (
-                      <DynamicT forKey="subscription.usage.disabled_status_quota_description" />
-                    );
-                  }
-                  case typeof quota === 'number': {
-                    return t('subscription.usage.limited_status_quota_description', {
-                      quota: formatQuotaNumber(quota),
-                    });
-                  }
-                  default: {
-                    return null;
-                  }
+                if (quota === null || quota === true) {
+                  return (
+                    <DynamicT forKey="subscription.usage.unlimited_status_quota_description" />
+                  );
                 }
+
+                if (quota === false || quota === 0) {
+                  return <DynamicT forKey="subscription.usage.disabled_status_quota_description" />;
+                }
+
+                if (typeof quota === 'number') {
+                  return (
+                    <DynamicT
+                      forKey="subscription.usage.limited_status_quota_description"
+                      interpolation={{
+                        quota: formatQuotaNumber(quota),
+                      }}
+                    />
+                  );
+                }
+
+                return null;
               })()}
             </div>
           )}
