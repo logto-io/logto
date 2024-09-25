@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.5.1
+
+### Patch Changes
+
+- 3c993d59c: add range request handling to url utilities
+
 ## 2.5.0
 
 ### Minor Changes
