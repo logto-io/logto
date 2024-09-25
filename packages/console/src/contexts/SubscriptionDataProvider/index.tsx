@@ -2,7 +2,6 @@ import { noop } from '@silverhand/essentials';
 import { createContext, type ReactNode } from 'react';
 
 import {
-  defaultSubscriptionPlan,
   defaultLogtoSku,
   defaultTenantResponse,
   defaultSubscriptionQuota,
@@ -21,8 +20,6 @@ const defaultSubscription = defaultTenantResponse.subscription;
  * CAUTION: You should only use this data context under the {@link TenantAccess} component
  */
 export const SubscriptionDataContext = createContext<FullContext>({
-  subscriptionPlans: [],
-  currentPlan: defaultSubscriptionPlan,
   currentSubscription: defaultSubscription,
   onCurrentSubscriptionUpdated: noop,
   /* ==== For new pricing model ==== */
