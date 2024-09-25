@@ -89,9 +89,9 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
   // @ts-expect-error: helmet typings has lots of {A?: T, B?: never} | {A?: never, B?: T} options definitions. Optional settings type can not inferred correctly.
   const experienceSecurityHeaderSettings: HelmetOptions = {
     ...basicSecurityHeaderSettings,
-    // WARNING: high risk Need to allow self hosted terms of use page loaded in an iframe
+    // WARNING (high risk): Need to allow self-hosted terms of use page loaded in an iframe
     frameguard: false,
-    // Alow loaded by console preview iframe
+    // Allow being loaded by console preview iframe
     crossOriginResourcePolicy: {
       policy: 'cross-origin',
     },
@@ -100,7 +100,6 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
       directives: {
         'upgrade-insecure-requests': null,
         imgSrc: ["'self'", 'data:', 'https:'],
-        // Non-production environment allow "unsafe-eval" and "unsafe-inline" for debugging purpose
         scriptSrc: [
           "'self'",
           "'unsafe-inline'",
@@ -108,12 +107,13 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
           // Some of our users may use the Cloudflare Web Analytics service. We need to allow it to
           // load its scripts.
           'https://static.cloudflareinsights.com/',
+          // Allow "unsafe-eval" for debugging purpose in non-production environment
           ...conditionalArray(!isProduction && "'unsafe-eval'"),
         ],
         connectSrc: ["'self'", gsiOrigin, tenantEndpointOrigin, ...developmentOrigins],
-        // WARNING: high risk Need to allow self hosted terms of use page loaded in an iframe
+        // WARNING (high risk): Need to allow self-hosted terms of use page loaded in an iframe
         frameSrc: ["'self'", 'https:', gsiOrigin],
-        // Alow loaded by console preview iframe
+        // Allow being loaded by console preview iframe
         frameAncestors: ["'self'", ...adminOrigins],
         defaultSrc: ["'self'", gsiOrigin],
       },
@@ -130,14 +130,13 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
       directives: {
         'upgrade-insecure-requests': null,
         imgSrc: ["'self'", 'data:', 'https:'],
-        // Non-production environment allow "unsafe-eval" and "unsafe-inline" for debugging purpose
+        // Allow "unsafe-eval" and "unsafe-inline" for debugging purpose in non-production environment
         scriptSrc: [
           "'self'",
           ...conditionalArray(!isProduction && ["'unsafe-eval'", "'unsafe-inline'"]),
           ...cdnSources,
         ],
         connectSrc: ["'self'", logtoOrigin, ...adminOrigins, ...coreOrigins, ...developmentOrigins],
-        // Allow Main Flow origin loaded in preview iframe
         frameSrc: ["'self'", ...adminOrigins, ...coreOrigins],
       },
     },
@@ -164,7 +163,7 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
       return next();
     }
 
-    // Main flow UI
+    // Experience
     await helmetPromise(experienceSecurityHeaderSettings, req, res);
 
     return next();
