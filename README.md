@@ -21,15 +21,15 @@
 Logto[^info] is an open-source Identity and Access Management (IAM) platform designed to streamline Customer Identity and Access Management (CIAM) and Workforce Identity Management. With Single Sign-On (SSO), OIDC-based authentication, and Multi-Tenant SaaS capabilities, Logto offers a scalable, secure, and developer-friendly way to manage authentication for modern web and mobile application
 
 ## Getting started
-- [Join now](https://discord.gg/vRvwuwgpVX) the 💬 [Logto Discord Server](https://discord.gg/vRvwuwgpVX) and connect with developers! Get real-time support, share ideas, and stay updated on all things identity management.
+- [Join now](https://discord.gg/vRvwuwgpVX) the 💬 [Logto Discord server](https://discord.gg/vRvwuwgpVX) and connect with developers! Get real-time support, share ideas, and stay updated on all things identity management.
 - Deploy today by [registering now](https://auth.logto.io/register) for a free, full featured development tenant 
 - Follow the [quick start](https://logto.io/quick-starts/?utm_source=github&utm_medium=repo_logto) guide to begin managing authentication efficiently.
 - Check out our [📖 integrations](https://docs.logto.io/integrations?utm_source=github&utm_medium=repo_logto) to start integrating Logto with your application today.
-- A step-by-step getting started is available on 📖 [Logto Docs](https://docs.logto.io/docs/get-started/welcome/?utm_source=github&utm_medium=repo_logto).
-- Visit 🎨 [Logto Webstie](https://logto.io/?utm_source=github&utm_medium=repo_logto) for a brief introduction if you are new to Logto.
+- A step-by-step getting started is available on 📖 [Logto docs](https://docs.logto.io/docs/get-started/welcome/?utm_source=github&utm_medium=repo_logto).
+- Visit 🎨 [Logto webstie](https://logto.io/?utm_source=github&utm_medium=repo_logto) for a brief introduction if you are new to Logto.
 
 > [!IMPORTANT]
-> [Subscribe Now](https://logto.io/subscribe/?utm_source=github&utm_medium=repo_logto) to stay updated with the latest information about the Logto and receive feature updates in real-time.
+> [Subscribe now](https://logto.io/subscribe/?utm_source=github&utm_medium=repo_logto) to stay updated with the latest information about the Logto and receive feature updates in real-time.
 
 ## Key features
 
@@ -47,14 +47,14 @@ Logto[^info] is an open-source Identity and Access Management (IAM) platform des
 
 ### 💻 Enterprise-ready solutions
 
-- Implements [Role-Based Access Control (RBAC)](https://docs.logto.io/docs/recipes/rbac/) for scalable authorization.
+- Implements [role-based access control (RBAC)](https://docs.logto.io/docs/recipes/rbac/) for scalable authorization.
 - Enables user management with [audit logs](https://docs.logto.io/docs/recipes/inspect-audit-logs/) to track identity-related activities and maintain security.
 - Enables [single sign-on (SSO)](https://docs.logto.io/docs/recipes/single-sign-on/) and [multi-factor authentication (MFA)](https://docs.logto.io/docs/recipes/multi-factor-auth/) without minimal coding.
 - Leverage [Logto organizations](https://docs.logto.io/docs/recipes/organizations/understand-how-it-works/) to build [multi-tenancy](https://blog.logto.io/tenancy-models/) apps with ease.
 
 ## Customer Identity Access Management (CIAM) introductory courses
 For a more approachable introduction, check out Logto’s ***Customer Identity Access Management (CIAM) introductory courses***:
-- [CIAM 101](https://docs.logto.io/ciam-101-intro-authn-sso/): Authentication, Identity, Single sign-on (SSO)
+- [CIAM 101](https://blog.logto.io/ciam-101-intro-authn-sso/): Authentication, Identity, Single sign-on (SSO)
 - [CIAM 102](https://blog.logto.io/ciam-102-authz-and-rbac/): Authorization & Role-based Access Control
 
 ## Deep dives 
