@@ -40,6 +40,7 @@ RUN rm -rf .scripts pnpm-*.yaml packages/cloud
 FROM node:20-alpine as app
 WORKDIR /etc/logto
 COPY --from=builder /etc/logto .
+RUN mkdir -p /etc/logto/packages/cli/alteration-scripts && chmod g+w /etc/logto/packages/cli/alteration-scripts
 EXPOSE 3001
 ENTRYPOINT ["npm", "run"]
 CMD ["start"]
