@@ -46,6 +46,34 @@ describe('profile', () => {
 
       await deleteUser(user.id);
     });
+
+    it('should be able to update username', async () => {
+      const { user, username, password } = await createUserWithPassword();
+      const api = await signInAndGetUserApi(username, password);
+      const newUsername = generateUsername();
+
+      const response = await updateUser(api, { username: newUsername });
+      expect(response).toMatchObject({ username: newUsername });
+
+      // Sign in with new username
+      await initClientAndSignIn(newUsername, password);
+
+      await deleteUser(user.id);
+    });
+
+    it('should fail if username is already in use', async () => {
+      const { user, username, password } = await createUserWithPassword();
+      const { user: user2, username: username2 } = await createUserWithPassword();
+      const api = await signInAndGetUserApi(username, password);
+
+      await expectRejects(updateUser(api, { username: username2 }), {
+        code: 'user.username_already_in_use',
+        status: 422,
+      });
+
+      await deleteUser(user.id);
+      await deleteUser(user2.id);
+    });
   });
 
   describe('POST /profile/password', () => {
