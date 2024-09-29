@@ -31,7 +31,9 @@ create table users (
   constraint users__primary_email
     unique (tenant_id, primary_email),
   constraint users__primary_phone
-    unique (tenant_id, primary_phone)
+    unique (tenant_id, primary_phone),
+  constraint users__tenant_id__id
+    unique (tenant_id, id)
 );
 
 create index users__id
