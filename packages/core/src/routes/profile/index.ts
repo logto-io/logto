@@ -1,4 +1,4 @@
-import { UserScope } from '@logto/core-kit';
+import { usernameRegEx, UserScope } from '@logto/core-kit';
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
@@ -18,6 +18,10 @@ export default function profileRoutes<T extends UserRouter>(
     users: { updateUserById },
   } = queries;
 
+  const {
+    users: { checkIdentifierCollision },
+  } = libraries;
+
   router.use(koaOidcAuth(provider));
 
   if (!EnvSet.values.isDevFeaturesEnabled) {
@@ -30,22 +34,27 @@ export default function profileRoutes<T extends UserRouter>(
       body: z.object({
         name: z.string().nullable().optional(),
         avatar: z.string().url().nullable().optional(),
+        username: z.string().regex(usernameRegEx).optional(),
       }),
       response: z.object({
         name: z.string().nullable().optional(),
         avatar: z.string().nullable().optional(),
+        username: z.string().optional(),
       }),
-      status: [200, 400],
+      status: [200, 400, 422],
     }),
     async (ctx, next) => {
       const { id: userId, scopes } = ctx.auth;
-      const {
-        body: { name, avatar },
-      } = ctx.guard;
+      const { body } = ctx.guard;
+      const { name, avatar, username } = body;
 
       assertThat(scopes.has(UserScope.Profile), 'auth.unauthorized');
 
-      const updatedUser = await updateUserById(userId, { name, avatar });
+      if (username !== undefined) {
+        await checkIdentifierCollision({ username }, userId);
+      }
+
+      const updatedUser = await updateUserById(userId, { name, avatar, username });
 
       // TODO(LOG-10005): trigger user updated webhook
 
@@ -53,6 +62,7 @@ export default function profileRoutes<T extends UserRouter>(
       ctx.body = {
         ...conditional(name !== undefined && { name: updatedUser.name }),
         ...conditional(avatar !== undefined && { avatar: updatedUser.avatar }),
+        ...conditional(username !== undefined && { username: updatedUser.username }),
       };
 
       return next();

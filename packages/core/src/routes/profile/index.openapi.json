@@ -24,6 +24,9 @@
                   },
                   "avatar": {
                     "description": "The new avatar for the user, must be a URL."
+                  },
+                  "username": {
+                    "description": "The new username for the user, must be a valid username and unique."
                   }
                 }
               }
@@ -36,6 +39,9 @@
           },
           "400": {
             "description": "The request body is invalid."
+          },
+          "422": {
+            "description": "The username is already in use."
           }
         }
       }

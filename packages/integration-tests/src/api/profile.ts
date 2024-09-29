@@ -11,6 +11,7 @@ export const updateUser = async (api: KyInstance, body: Record<string, string>) 
   api.patch('api/profile', { json: body }).json<{
     name?: string;
     avatar?: string;
+    username?: string;
   }>();
 
 export const getUserInfo = async (api: KyInstance) => api.get('oidc/me').json<UserInfoResponse>();
