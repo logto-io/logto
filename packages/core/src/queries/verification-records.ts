@@ -18,24 +18,16 @@ export class VerificationRecordQueries {
     returning: true,
   });
 
-  public upsertRecord = buildInsertIntoWithPool(this.pool)(VerificationRecords, {
-    onConflict: {
-      fields: [fields.id],
-      setExcludedFields: [fields.expiresAt],
-    },
-  });
-
   public readonly update = buildUpdateWhereWithPool(this.pool)(VerificationRecords, true);
 
   public readonly find = buildFindEntityByIdWithPool(this.pool)(VerificationRecords);
 
   constructor(public readonly pool: CommonQueryMethods) {}
 
-  public findUserActiveVerificationRecordById = async (userId: string, id: string) => {
+  public findActiveVerificationRecordById = async (id: string) => {
     return this.pool.maybeOne<VerificationRecord>(sql`
       select * from ${table}
-      where ${fields.userId} = ${userId}
-      and ${fields.id} = ${id}
+      where ${fields.id} = ${id}
       and ${fields.expiresAt} > now()
     `);
   };

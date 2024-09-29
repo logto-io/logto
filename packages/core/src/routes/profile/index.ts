@@ -1,4 +1,5 @@
-import { usernameRegEx, UserScope } from '@logto/core-kit';
+import { emailRegEx, usernameRegEx, UserScope } from '@logto/core-kit';
+import { VerificationType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
@@ -6,7 +7,10 @@ import koaGuard from '#src/middleware/koa-guard.js';
 
 import { EnvSet } from '../../env-set/index.js';
 import { encryptUserPassword } from '../../libraries/user.utils.js';
-import { buildUserVerificationRecordById } from '../../libraries/verification.js';
+import {
+  buildVerificationRecordByIdAndType,
+  verifyUserSensitivePermission,
+} from '../../libraries/verification.js';
 import assertThat from '../../utils/assert-that.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
@@ -70,7 +74,7 @@ export default function profileRoutes<T extends UserRouter>(
     '/profile/password',
     koaGuard({
       body: z.object({ password: z.string().min(1), verificationRecordId: z.string() }),
-      status: [204, 400],
+      status: [204, 400, 403],
     }),
     async (ctx, next) => {
       const { id: userId } = ctx.auth;
@@ -78,19 +82,63 @@ export default function profileRoutes<T extends UserRouter>(
 
       // TODO(LOG-9947): apply password policy
 
-      const verificationRecord = await buildUserVerificationRecordById(
+      await verifyUserSensitivePermission({
         userId,
-        verificationRecordId,
+        id: verificationRecordId,
         queries,
-        libraries
-      );
-      assertThat(verificationRecord.isVerified, 'verification_record.not_found');
+        libraries,
+      });
 
       const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);
       const updatedUser = await updateUserById(userId, {
         passwordEncrypted,
         passwordEncryptionMethod,
       });
+
+      ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/profile/primary-email',
+    koaGuard({
+      body: z.object({
+        email: z.string().regex(emailRegEx),
+        verificationRecordId: z.string(),
+        newIdentifierVerificationRecordId: z.string(),
+      }),
+      status: [204, 400, 403],
+    }),
+    async (ctx, next) => {
+      const { id: userId, scopes } = ctx.auth;
+      const { email, verificationRecordId, newIdentifierVerificationRecordId } = ctx.guard.body;
+
+      assertThat(scopes.has(UserScope.Email), 'auth.unauthorized');
+
+      await verifyUserSensitivePermission({
+        userId,
+        id: verificationRecordId,
+        queries,
+        libraries,
+      });
+
+      // Check new identifier
+      const newVerificationRecord = await buildVerificationRecordByIdAndType({
+        type: VerificationType.EmailVerificationCode,
+        id: newIdentifierVerificationRecordId,
+        queries,
+        libraries,
+      });
+      assertThat(newVerificationRecord.isVerified, 'verification_record.not_found');
+      assertThat(newVerificationRecord.identifier.value === email, 'verification_record.not_found');
+
+      await checkIdentifierCollision({ primaryEmail: email }, userId);
+
+      const updatedUser = await updateUserById(userId, { primaryEmail: email });
 
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
 
