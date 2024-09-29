@@ -9,6 +9,37 @@
     }
   ],
   "paths": {
+    "/api/profile": {
+      "patch": {
+        "operationId": "UpdateProfile",
+        "summary": "Update profile",
+        "description": "Update profile for the user, only the fields that are passed in will be updated.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "The new name for the user."
+                  },
+                  "avatar": {
+                    "description": "The new avatar for the user, must be a URL."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The profile was updated successfully."
+          },
+          "400": {
+            "description": "The request body is invalid."
+          }
+        }
+      }
+    },
     "/api/profile/password": {
       "post": {
         "operationId": "UpdatePassword",

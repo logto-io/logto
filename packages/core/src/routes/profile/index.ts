@@ -1,3 +1,5 @@
+import { UserScope } from '@logto/core-kit';
+import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -21,6 +23,41 @@ export default function profileRoutes<T extends UserRouter>(
   if (!EnvSet.values.isDevFeaturesEnabled) {
     return;
   }
+
+  router.patch(
+    '/profile',
+    koaGuard({
+      body: z.object({
+        name: z.string().nullable().optional(),
+        avatar: z.string().url().nullable().optional(),
+      }),
+      response: z.object({
+        name: z.string().nullable().optional(),
+        avatar: z.string().nullable().optional(),
+      }),
+      status: [200, 400],
+    }),
+    async (ctx, next) => {
+      const { id: userId, scopes } = ctx.auth;
+      const {
+        body: { name, avatar },
+      } = ctx.guard;
+
+      assertThat(scopes.has(UserScope.Profile), 'auth.unauthorized');
+
+      const updatedUser = await updateUserById(userId, { name, avatar });
+
+      // TODO(LOG-10005): trigger user updated webhook
+
+      // Only return the fields that were actually updated
+      ctx.body = {
+        ...conditional(name !== undefined && { name: updatedUser.name }),
+        ...conditional(avatar !== undefined && { avatar: updatedUser.avatar }),
+      };
+
+      return next();
+    }
+  );
 
   router.post(
     '/profile/password',
