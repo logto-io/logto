@@ -44,6 +44,13 @@ export default function koaErrorHandler<StateT, ContextT, BodyT>(): Middleware<
         return;
       }
 
+      // Expose JSON body parsing errors
+      if (error instanceof SyntaxError) {
+        ctx.status = 400;
+        ctx.body = { message: error.message };
+        return;
+      }
+
       // Should log 500 errors in prod anyway
       if (EnvSet.values.isProduction) {
         consoleLog.error(error);
