@@ -56,7 +56,11 @@ function RefreshTokenSettings({ data: { type } }: Props) {
                 ),
               }}
             >
-              {t('application_details.rotate_refresh_token_label')}
+              {t(
+                [ApplicationType.Native, ApplicationType.SPA].includes(type)
+                  ? 'application_details.rotate_refresh_token_label_for_public_clients'
+                  : 'application_details.rotate_refresh_token_label'
+              )}
             </Trans>
           }
           {...register('customClientMetadata.rotateRefreshToken')}

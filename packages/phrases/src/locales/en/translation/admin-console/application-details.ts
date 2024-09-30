@@ -63,6 +63,8 @@ const application_details = {
   rotate_refresh_token: 'Rotate refresh token',
   rotate_refresh_token_label:
     'When enabled, Logto will issue a new refresh token for token requests when 70% of the original time to live (TTL) has passed or certain conditions are met. <a>Learn more</a>',
+  rotate_refresh_token_label_for_public_clients:
+    'When enabled, Logto will issue a new refresh token for each token request. <a>Learn more</a>',
   backchannel_logout: 'Backchannel Logout',
   backchannel_logout_description:
     'Configure the OpenID Connect backchannel logout endpoint and if session is required for this application.',
