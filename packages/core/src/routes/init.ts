@@ -11,6 +11,7 @@ import koaTenantGuard from '#src/middleware/koa-tenant-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
 import koaAuth from '../middleware/koa-auth/index.js';
+import koaOidcAuth from '../middleware/koa-auth/koa-oidc-auth.js';
 
 import adminUserRoutes from './admin-user/index.js';
 import applicationOrganizationRoutes from './applications/application-organization.js';
@@ -99,6 +100,9 @@ const createRouters = (tenant: TenantContext) => {
   const anonymousRouter: AnonymousRouter = new Router();
 
   const userRouter: UserRouter = new Router();
+  userRouter.use(koaOidcAuth(tenant.provider));
+  // TODO(LOG-10147): Rename to koaApiHooks, this middleware is used for both management API and user API
+  userRouter.use(koaManagementApiHooks(tenant.libraries.hooks));
   profileRoutes(userRouter, tenant);
   verificationRoutes(userRouter, tenant);
 

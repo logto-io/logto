@@ -5,7 +5,6 @@ import koaGuard from '#src/middleware/koa-guard.js';
 
 import { EnvSet } from '../../env-set/index.js';
 import { saveVerificationRecord } from '../../libraries/verification.js';
-import koaOidcAuth from '../../middleware/koa-auth/koa-oidc-auth.js';
 import { withSentinel } from '../experience/classes/libraries/sentinel-guard.js';
 import { PasswordVerification } from '../experience/classes/verifications/password-verification.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
@@ -13,8 +12,6 @@ import type { UserRouter, RouterInitArgs } from '../types.js';
 export default function verificationRoutes<T extends UserRouter>(
   ...[router, { provider, queries, libraries, sentinel }]: RouterInitArgs<T>
 ) {
-  router.use(koaOidcAuth(provider));
-
   if (!EnvSet.values.isDevFeaturesEnabled) {
     return;
   }

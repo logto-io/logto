@@ -10,8 +10,8 @@ const api = ky.extend({
 
 export default api;
 
-export const baseAdminTenantApi = ky.extend({
-  prefixUrl: new URL(logtoConsoleUrl),
+export const baseApi = ky.extend({
+  prefixUrl: new URL(logtoUrl),
 });
 
 // TODO: @gao rename

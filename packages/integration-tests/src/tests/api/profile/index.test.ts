@@ -1,25 +1,52 @@
+import { hookEvents } from '@logto/schemas';
+
 import { getUserInfo, updatePassword, updateUser } from '#src/api/profile.js';
 import { createVerificationRecordByPassword } from '#src/api/verification-record.js';
-import {
-  createUserWithPassword,
-  deleteUser,
-  initClientAndSignIn,
-} from '#src/helpers/admin-tenant.js';
+import { WebHookApiTest } from '#src/helpers/hook.js';
 import { expectRejects } from '#src/helpers/index.js';
-import { signInAndGetUserApi } from '#src/helpers/profile.js';
+import {
+  createDefaultTenantUserWithPassword,
+  deleteDefaultTenantUser,
+  initClientAndSignInForDefaultTenant,
+  signInAndGetUserApi,
+} from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { devFeatureTest, generatePassword, generateUsername } from '#src/utils.js';
+
+import WebhookMockServer from '../hook/WebhookMockServer.js';
+import { assertHookLogResult } from '../hook/utils.js';
 
 const { describe, it } = devFeatureTest;
 
 describe('profile', () => {
+  const webHookMockServer = new WebhookMockServer(9999);
+  const webHookApi = new WebHookApiTest();
+  const hookName = 'profileApiHookEventListener';
+
   beforeAll(async () => {
+    await webHookMockServer.listen();
     await enableAllPasswordSignInMethods();
+  });
+
+  afterAll(async () => {
+    await webHookMockServer.close();
+  });
+
+  beforeEach(async () => {
+    await webHookApi.create({
+      name: hookName,
+      events: [...hookEvents],
+      config: { url: webHookMockServer.endpoint },
+    });
+  });
+
+  afterEach(async () => {
+    await webHookApi.cleanUp();
   });
 
   describe('PATCH /profile', () => {
     it('should be able to update name', async () => {
-      const { user, username, password } = await createUserWithPassword();
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);
       const newName = generateUsername();
 
@@ -29,11 +56,22 @@ describe('profile', () => {
       const userInfo = await getUserInfo(api);
       expect(userInfo).toHaveProperty('name', newName);
 
-      await deleteUser(user.id);
+      // Check if the hook is triggered
+      const hook = webHookApi.hooks.get(hookName)!;
+      await assertHookLogResult(hook, 'User.Data.Updated', {
+        hookPayload: {
+          event: 'User.Data.Updated',
+          data: expect.objectContaining({
+            name: newName,
+          }),
+        },
+      });
+
+      await deleteDefaultTenantUser(user.id);
     });
 
     it('should be able to update picture', async () => {
-      const { user, username, password } = await createUserWithPassword();
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);
       const newAvatar = 'https://example.com/avatar.png';
 
@@ -44,11 +82,11 @@ describe('profile', () => {
       // In OIDC, the avatar is mapped to the `picture` field
       expect(userInfo).toHaveProperty('picture', newAvatar);
 
-      await deleteUser(user.id);
+      await deleteDefaultTenantUser(user.id);
     });
 
     it('should be able to update username', async () => {
-      const { user, username, password } = await createUserWithPassword();
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);
       const newUsername = generateUsername();
 
@@ -56,14 +94,14 @@ describe('profile', () => {
       expect(response).toMatchObject({ username: newUsername });
 
       // Sign in with new username
-      await initClientAndSignIn(newUsername, password);
+      await initClientAndSignInForDefaultTenant(newUsername, password);
 
-      await deleteUser(user.id);
+      await deleteDefaultTenantUser(user.id);
     });
 
     it('should fail if username is already in use', async () => {
-      const { user, username, password } = await createUserWithPassword();
-      const { user: user2, username: username2 } = await createUserWithPassword();
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const { user: user2, username: username2 } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);
 
       await expectRejects(updateUser(api, { username: username2 }), {
@@ -71,14 +109,14 @@ describe('profile', () => {
         status: 422,
       });
 
-      await deleteUser(user.id);
-      await deleteUser(user2.id);
+      await deleteDefaultTenantUser(user.id);
+      await deleteDefaultTenantUser(user2.id);
     });
   });
 
   describe('POST /profile/password', () => {
     it('should fail if verification record is invalid', async () => {
-      const { user, username, password } = await createUserWithPassword();
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);
       const newPassword = generatePassword();
 
@@ -87,21 +125,29 @@ describe('profile', () => {
         status: 400,
       });
 
-      await deleteUser(user.id);
+      await deleteDefaultTenantUser(user.id);
     });
 
     it('should be able to update password', async () => {
-      const { user, username, password } = await createUserWithPassword();
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);
       const verificationRecordId = await createVerificationRecordByPassword(api, password);
       const newPassword = generatePassword();
 
       await updatePassword(api, verificationRecordId, newPassword);
 
-      // Sign in with new password
-      await initClientAndSignIn(username, newPassword);
+      // Check if the hook is triggered
+      const hook = webHookApi.hooks.get(hookName)!;
+      await assertHookLogResult(hook, 'User.Data.Updated', {
+        hookPayload: {
+          event: 'User.Data.Updated',
+        },
+      });
 
-      await deleteUser(user.id);
+      // Sign in with new password
+      await initClientAndSignInForDefaultTenant(username, newPassword);
+
+      await deleteDefaultTenantUser(user.id);
     });
   });
 });
