@@ -37,6 +37,9 @@
                   },
                   "username": {
                     "description": "The new username for the user, must be a valid username and unique."
+                  },
+                  "profile": {
+                    "description": "The new profile for the user, it can be partial."
                   }
                 }
               }

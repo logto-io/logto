@@ -7,12 +7,8 @@ export const updatePassword = async (
   password: string
 ) => api.post('api/profile/password', { json: { password, verificationRecordId } });
 
-export const updateUser = async (api: KyInstance, body: Record<string, string>) =>
-  api.patch('api/profile', { json: body }).json<{
-    name?: string;
-    avatar?: string;
-    username?: string;
-  }>();
+export const updateUser = async (api: KyInstance, body: Record<string, unknown>) =>
+  api.patch('api/profile', { json: body }).json<Partial<UserProfileResponse>>();
 
 export const getUserInfo = async (api: KyInstance) =>
   api.get('api/profile').json<Partial<UserProfileResponse>>();

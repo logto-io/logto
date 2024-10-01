@@ -1,5 +1,6 @@
 import { usernameRegEx, UserScope } from '@logto/core-kit';
-import { userProfileResponseGuard } from '@logto/schemas';
+import { userProfileGuard, userProfileResponseGuard } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -47,6 +48,7 @@ export default function profileRoutes<T extends UserRouter>(
         name: z.string().nullable().optional(),
         avatar: z.string().url().nullable().optional(),
         username: z.string().regex(usernameRegEx).optional(),
+        profile: userProfileGuard.optional(),
       }),
       response: userProfileResponseGuard.partial(),
       status: [200, 400, 422],
@@ -54,7 +56,8 @@ export default function profileRoutes<T extends UserRouter>(
     async (ctx, next) => {
       const { id: userId, scopes } = ctx.auth;
       const { body } = ctx.guard;
-      const { name, avatar, username } = body;
+      const { name, avatar, username, profile } = body;
+      const { address, ...restProfile } = profile ?? {};
 
       assertThat(scopes.has(UserScope.Profile), 'auth.unauthorized');
 
@@ -62,7 +65,20 @@ export default function profileRoutes<T extends UserRouter>(
         await checkIdentifierCollision({ username }, userId);
       }
 
-      const updatedUser = await updateUserById(userId, { name, avatar, username });
+      const updatedUser = await updateUserById(userId, {
+        name,
+        avatar,
+        username,
+        ...conditional(
+          profile && {
+            profile: {
+              ...restProfile,
+              // Remove address from profile if user does not have the address scope
+              ...conditional(scopes.has(UserScope.Address) && { address }),
+            },
+          }
+        ),
+      });
 
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
 

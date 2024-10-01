@@ -1,3 +1,4 @@
+import { UserScope } from '@logto/core-kit';
 import { hookEvents } from '@logto/schemas';
 
 import { getUserInfo, updatePassword, updateUser } from '#src/api/profile.js';
@@ -121,6 +122,46 @@ describe('profile', () => {
 
       await deleteDefaultTenantUser(user.id);
       await deleteDefaultTenantUser(user2.id);
+    });
+
+    it('should be able to update profile', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password);
+      const newProfile = {
+        profile: 'HI',
+        address: {
+          country: 'USA',
+        },
+      };
+
+      const response = await updateUser(api, { profile: newProfile });
+      // Should not be able to update address
+      expect(response).toMatchObject({
+        profile: {
+          profile: 'HI',
+        },
+      });
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should be able to update profile address', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Address, UserScope.Profile],
+      });
+      const newProfile = {
+        address: {
+          country: 'USA',
+        },
+      };
+
+      const response = await updateUser(api, { profile: newProfile });
+      expect(response).toMatchObject({
+        profile: newProfile,
+      });
+
+      await deleteDefaultTenantUser(user.id);
     });
   });
 
