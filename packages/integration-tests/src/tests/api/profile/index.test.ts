@@ -1,7 +1,7 @@
 import { UserScope } from '@logto/core-kit';
 import { hookEvents } from '@logto/schemas';
 
-import { getUserInfo, updatePassword, updateUser } from '#src/api/profile.js';
+import { getUserInfo, updateOtherProfile, updatePassword, updateUser } from '#src/api/profile.js';
 import { createVerificationRecordByPassword } from '#src/api/verification-record.js';
 import { WebHookApiTest } from '#src/helpers/hook.js';
 import { expectRejects } from '#src/helpers/index.js';
@@ -174,6 +174,53 @@ describe('profile', () => {
 
       await deleteDefaultTenantUser(user.id);
       await deleteDefaultTenantUser(user2.id);
+    });
+  });
+
+  describe('PATCH /profile/profile', () => {
+    it('should be able to update other profile', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password);
+      const newProfile = {
+        profile: 'HI',
+        middleName: 'middleName',
+      };
+
+      const response = await updateOtherProfile(api, newProfile);
+      expect(response).toMatchObject(newProfile);
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should be able to update profile address', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Address, UserScope.Profile],
+      });
+      const newProfile = {
+        address: {
+          country: 'USA',
+        },
+      };
+
+      const response = await updateOtherProfile(api, newProfile);
+      expect(response).toMatchObject(newProfile);
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should fail if user does not have the address scope', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile],
+      });
+
+      await expectRejects(updateOtherProfile(api, { address: { country: 'USA' } }), {
+        code: 'auth.unauthorized',
+        status: 400,
+      });
+
+      await deleteDefaultTenantUser(user.id);
     });
   });
 

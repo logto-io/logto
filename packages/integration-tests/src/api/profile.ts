@@ -17,12 +17,11 @@ export const updatePrimaryEmail = async (
     json: { email, verificationRecordId, newIdentifierVerificationRecordId },
   });
 
-export const updateUser = async (api: KyInstance, body: Record<string, string>) =>
-  api.patch('api/profile', { json: body }).json<{
-    name?: string;
-    avatar?: string;
-    username?: string;
-  }>();
+export const updateUser = async (api: KyInstance, body: Record<string, unknown>) =>
+  api.patch('api/profile', { json: body }).json<Partial<UserProfileResponse>>();
+
+export const updateOtherProfile = async (api: KyInstance, body: Record<string, unknown>) =>
+  api.patch('api/profile/profile', { json: body }).json<Partial<UserProfileResponse['profile']>>();
 
 export const getUserInfo = async (api: KyInstance) =>
   api.get('api/profile').json<Partial<UserProfileResponse>>();

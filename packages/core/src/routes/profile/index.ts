@@ -1,5 +1,5 @@
 import { emailRegEx, usernameRegEx, UserScope } from '@logto/core-kit';
-import { VerificationType, userProfileResponseGuard } from '@logto/schemas';
+import { VerificationType, userProfileResponseGuard, userProfileGuard } from '@logto/schemas';
 import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -67,7 +67,11 @@ export default function profileRoutes<T extends UserRouter>(
         await checkIdentifierCollision({ username }, userId);
       }
 
-      const updatedUser = await updateUserById(userId, { name, avatar, username });
+      const updatedUser = await updateUserById(userId, {
+        name,
+        avatar,
+        username,
+      });
 
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
 
@@ -77,11 +81,41 @@ export default function profileRoutes<T extends UserRouter>(
     }
   );
 
+  router.patch(
+    '/profile/profile',
+    koaGuard({
+      body: userProfileGuard,
+      response: userProfileGuard,
+      status: [200, 400],
+    }),
+    async (ctx, next) => {
+      const { id: userId, scopes } = ctx.auth;
+      const { body } = ctx.guard;
+
+      assertThat(scopes.has(UserScope.Profile), 'auth.unauthorized');
+
+      if (body.address !== undefined) {
+        assertThat(scopes.has(UserScope.Address), 'auth.unauthorized');
+      }
+
+      const updatedUser = await updateUserById(userId, {
+        profile: body,
+      });
+
+      ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
+
+      const profile = await getScopedProfile(queries, libraries, scopes, userId);
+      ctx.body = profile.profile;
+
+      return next();
+    }
+  );
+
   router.post(
     '/profile/password',
     koaGuard({
       body: z.object({ password: z.string().min(1), verificationRecordId: z.string() }),
-      status: [204, 400, 403],
+      status: [204, 401, 422],
     }),
     async (ctx, next) => {
       const { id: userId } = ctx.auth;
