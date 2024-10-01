@@ -128,6 +128,19 @@ describe('profile', () => {
       await deleteDefaultTenantUser(user.id);
     });
 
+    it('should fail if password does not meet the password policy', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password);
+      const newPassword = '123456';
+
+      await expectRejects(updatePassword(api, 'invalid-varification-record-id', newPassword), {
+        code: 'password.rejected',
+        status: 422,
+      });
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
     it('should be able to update password', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);
