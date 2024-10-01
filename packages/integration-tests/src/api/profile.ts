@@ -1,4 +1,4 @@
-import { type UserInfoResponse } from '@logto/js';
+import { type UserProfileResponse } from '@logto/schemas';
 import { type KyInstance } from 'ky';
 
 export const updatePassword = async (
@@ -24,4 +24,5 @@ export const updateUser = async (api: KyInstance, body: Record<string, string>) 
     username?: string;
   }>();
 
-export const getUserInfo = async (api: KyInstance) => api.get('oidc/me').json<UserInfoResponse>();
+export const getUserInfo = async (api: KyInstance) =>
+  api.get('api/profile').json<Partial<UserProfileResponse>>();
