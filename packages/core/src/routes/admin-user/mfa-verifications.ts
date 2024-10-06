@@ -9,7 +9,10 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import { transpileUserMfaVerifications } from '#src/utils/user.js';
 
-import { generateBackupCodes } from '../interaction/utils/backup-code-validation.js';
+import {
+  generateBackupCodes,
+  validateBackupCodes,
+} from '../interaction/utils/backup-code-validation.js';
 import { generateTotpSecret } from '../interaction/utils/totp-validation.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
@@ -47,9 +50,16 @@ export default function adminUserMfaVerificationsRoutes<T extends ManagementApiR
     '/users/:userId/mfa-verifications',
     koaGuard({
       params: object({ userId: string() }),
-      body: z.object({
-        type: z.literal(MfaFactor.TOTP).or(z.literal(MfaFactor.BackupCode)),
-      }),
+      body: z.discriminatedUnion('type', [
+        z.object({
+          type: z.literal(MfaFactor.TOTP),
+          secret: z.string().optional(),
+        }),
+        z.object({
+          type: z.literal(MfaFactor.BackupCode),
+          codes: z.string().array().optional(),
+        }),
+      ]),
       response: z.discriminatedUnion('type', [
         z.object({
           type: z.literal(MfaFactor.TOTP),
@@ -79,7 +89,23 @@ export default function adminUserMfaVerificationsRoutes<T extends ManagementApiR
           })
         );
 
-        const secret = generateTotpSecret();
+        if (ctx.guard.body.secret) {
+          const base32Regex =
+            /^(?:[2-7A-Z]{8})*(?:[2-7A-Z]{2}={6}|[2-7A-Z]{4}={4}|[2-7A-Z]{5}={3}|[2-7A-Z]{7}=)?$/;
+          base32Regex.test(ctx.guard.body.secret);
+
+          assertThat(
+            ctx.guard.body.secret.length >= 16 &&
+              ctx.guard.body.secret.length <= 32 &&
+              base32Regex.test(ctx.guard.body.secret),
+            new RequestError({
+              code: 'user.totp_secret_invalid',
+              status: 422,
+            })
+          );
+        }
+
+        const secret = ctx.guard.body.secret ?? generateTotpSecret();
         const service = ctx.URL.hostname;
         const user = getUserDisplayName({ username, primaryEmail, primaryPhone, name });
         const keyUri = authenticator.keyuri(user ?? 'Unnamed User', service, secret);
@@ -111,7 +137,16 @@ export default function adminUserMfaVerificationsRoutes<T extends ManagementApiR
           status: 422,
         })
       );
-      const codes = generateBackupCodes();
+      if (ctx.guard.body.codes) {
+        assertThat(
+          validateBackupCodes(ctx.guard.body.codes),
+          new RequestError({
+            code: 'user.wrong_backup_code_format',
+            status: 422,
+          })
+        );
+      }
+      const codes = ctx.guard.body.codes ?? generateBackupCodes();
       await addUserMfaVerification(id, { type: MfaFactor.BackupCode, codes });
       ctx.body = { codes, type: MfaFactor.BackupCode };
       return next();
