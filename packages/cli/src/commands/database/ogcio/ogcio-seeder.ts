@@ -17,6 +17,7 @@ export type OgcioSeeder = {
   resource_permissions?: ResourcePermissionSeeder[];
   resource_roles?: ResourceRoleSeeder[];
   users?: UserSeeder[];
+  raw_queries?: RawQuerySeeder[];
 };
 
 export type OrganizationSeeder = {
@@ -148,6 +149,11 @@ export type UserSeeder = {
   resource_role_ids: string[];
   ppsn: string;
   related_organizations: Array<{ roles: string[]; organization_id: string }>;
+};
+
+export type RawQuerySeeder = {
+  name: string;
+  query: string;
 };
 
 let inputSeeder: OgcioTenantSeeder | undefined;

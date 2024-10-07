@@ -502,6 +502,12 @@
           { "roles": ["upload-public-servant"], "organization_id": "second-testing" }
         ]
       }
+    ],
+    "raw_queries": [
+      {
+        "name": "Re-insert all",
+        "query": "begin; insert into public.scopes (tenant_id, id, resource_id, \"name\", description) values('default','management-api-all','management-api','all','Default scope for Management API, allows all permissions.') on conflict do nothing; insert into public.roles_scopes  (tenant_id, id, role_id, scope_id) values('default','70pjp17i4m4y01gm1jv3e','admin-role','management-api-all') on conflict do nothing; commit;"
+      }
     ]
   }
 }

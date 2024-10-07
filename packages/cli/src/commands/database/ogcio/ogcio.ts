@@ -11,6 +11,7 @@ import { seedConnectors } from './connectors.js';
 import { getTenantSeederData, type OgcioSeeder } from './ogcio-seeder.js';
 import { seedOrganizationRbacData } from './organizations-rbac.js';
 import { createOrganizations } from './organizations.js';
+import { executeRawQueries } from './raw-queries.js';
 import { seedResourceRbacData } from './resources-rbac.js';
 import { seedResources } from './resources.js';
 import { seedSignInExperiences } from './sign-in-experiences.js';
@@ -93,6 +94,10 @@ const createDataForTenant = async (
       usersToSeed: tenantData.users,
       webhook: webhookToUse,
     });
+  }
+
+  if (tenantData.raw_queries?.length) {
+    await executeRawQueries({ transaction, rawQueries: tenantData.raw_queries });
   }
 };
 

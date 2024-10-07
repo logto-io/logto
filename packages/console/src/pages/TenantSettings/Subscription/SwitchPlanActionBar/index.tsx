@@ -136,8 +136,8 @@ function SwitchPlanActionBar({ onSubscriptionUpdated, currentSkuId, logtoSkus }:
                 isCurrentSku
                   ? 'subscription.current'
                   : isDowngrade
-                    ? 'subscription.downgrade'
-                    : 'subscription.upgrade'
+                  ? 'subscription.downgrade'
+                  : 'subscription.upgrade'
               }
               type={isDowngrade ? 'default' : 'primary'}
               disabled={isCurrentSku}
