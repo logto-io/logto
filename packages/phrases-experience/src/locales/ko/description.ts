@@ -93,6 +93,13 @@ const description = {
   /** UNTRANSLATED */
   redirect_to: 'You will be redirected to {{name}}.',
   auto_agreement: '계속 진행하면 <link></link>에 동의하는 것입니다.',
+  identifier_sign_in_description:
+    '로그인하려면 {{types, list(type: disjunction;)}}을(를) 입력하세요.',
+  all_sign_in_options: '모든 로그인 옵션',
+  identifier_register_description:
+    '새 계정을 만들려면 {{types, list(type: disjunction;)}}을(를) 입력하세요.',
+  all_account_creation_options: '모든 계정 생성 옵션',
+  back_to_sign_in: '로그인으로 돌아가기',
 };
 
 export default Object.freeze(description);

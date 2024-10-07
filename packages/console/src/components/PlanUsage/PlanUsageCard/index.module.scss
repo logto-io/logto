@@ -1,0 +1,43 @@
+@use '@/scss/underscore' as _;
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: left;
+  border-radius: 12px;
+  border: 1px solid var(--color-divider);
+  background: var(--color-layer-1);
+  padding: _.unit(5.5) _.unit(6);
+  gap: _.unit(6);
+}
+
+.title {
+  font: var(--font-title-3);
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+}
+
+.description {
+  font: var(--font-title-3);
+  color: var(--color-text);
+
+  &.quotaExceeded {
+    color: var(--color-danger-default);
+  }
+}
+
+.usageTip {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+
+  &.hidden {
+    display: none;
+  }
+}
+
+.tag {
+  padding-top: 1px;
+  padding-bottom: 1px;
+}

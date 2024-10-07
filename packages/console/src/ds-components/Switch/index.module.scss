@@ -25,7 +25,7 @@
       content: '';
       height: 20px;
       width: 20px;
-      left: 2px;
+      inset-inline-start: 2px;
       bottom: 2px;
       background-color: #fff;
       transition: 0.4s;
@@ -49,6 +49,10 @@
   input:disabled + .slider::before {
     background-color: var(--color-specific-toggle-thumb-disabled);
     box-shadow: unset;
+  }
+
+  &.rtl input:checked + .slider::before {
+    transform: translateX(-16px);
   }
 }
 

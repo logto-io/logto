@@ -17,6 +17,7 @@ export const logContextPayloadGuard = z
     userId: z.string().optional(),
     applicationId: z.string().optional(),
     sessionId: z.string().optional(),
+    params: z.record(z.string(), z.unknown()).optional(),
   })
   .catchall(z.unknown());
 

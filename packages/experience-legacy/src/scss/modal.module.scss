@@ -1,0 +1,10 @@
+.overlay {
+  position: fixed;
+  background: var(--color-bg-mask);
+  inset: 0;
+}
+
+/* stylelint-disable-next-line selector-class-pattern */
+:global(.ReactModal__Body--open) {
+  overflow: hidden;
+}

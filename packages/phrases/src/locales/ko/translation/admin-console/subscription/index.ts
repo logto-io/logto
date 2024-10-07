@@ -7,15 +7,24 @@ const subscription = {
   pro_plan: '프로 요금제',
   pro_plan_description: 'Logto와 함께 걱정 없이 비즈니스 혜택을 받으세요.',
   enterprise: '기업용',
+  /** UNTRANSLATED */
+  enterprise_description:
+    'For large-scale organizations requiring advanced features, full customization, and dedicated support to power mission-critical applications. Tailored to your needs for ultimate security, compliance, and performance.',
+  /** UNTRANSLATED */
+  admin_plan: 'Admin plan',
+  /** UNTRANSLATED */
+  dev_plan: 'Development plan',
   current_plan: '현재 요금제',
   current_plan_description:
     '현재 사용중인 요금제 정보입니다. 요금제 사용 내역을 쉽게 확인하고, 다가오는 청구서를 확인하며 필요에 따라 요금제를 변경할 수 있습니다.',
   plan_usage: '요금제 사용량',
   plan_cycle: 'Plan cycle: {{period}}. 사용량은 {{renewDate}}에 갱신됩니다.',
-  next_bill: '다음 청구서',
+  /** UNTRANSLATED */
+  next_bill: 'Your upcoming bill',
   next_bill_hint: '계산에 대해 자세히 알아보려면 이 <a>게시물</a>을 참조하세요.',
+  /** UNTRANSLATED */
   next_bill_tip:
-    '여기에 표시된 가격은 세금이 포함되어 있지 않습니다. 세금은 제공하는 정보와 지역 규정 요건을 기반으로 계산되어 청구서에 표시됩니다.',
+    'The prices displayed here are tax-exclusive and may be subject to a slight delay in updates. The tax amount will be calculated based on the information you provide and your local regulatory requirements, and will be shown in your invoices.',
   manage_payment: '결제 관리',
   overfill_quota_warning:
     '할당량 한도에 도달했습니다. 문제를 방지하기 위해 요금제를 업그레이드하세요.',

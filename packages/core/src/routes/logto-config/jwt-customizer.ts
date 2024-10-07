@@ -1,4 +1,5 @@
 import {
+  CustomJwtErrorCode,
   LogtoJwtTokenKey,
   LogtoJwtTokenKeyType,
   accessTokenJwtCustomizerGuard,
@@ -16,8 +17,9 @@ import { EnvSet } from '#src/env-set/index.js';
 import RequestError, { formatZodError } from '#src/errors/RequestError/index.js';
 import { JwtCustomizerLibrary } from '#src/libraries/jwt-customizer.js';
 import koaGuard, { parse } from '#src/middleware/koa-guard.js';
-import koaQuotaGuard, { newKoaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
+import { koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
+import { parseCustomJwtResponseError } from '#src/utils/custom-jwt/index.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
@@ -61,9 +63,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
       response: accessTokenJwtCustomizerGuard.or(clientCredentialsJwtCustomizerGuard),
       status: [200, 201, 400, 403],
     }),
-    EnvSet.values.isDevFeaturesEnabled
-      ? newKoaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota })
-      : koaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota }),
+    koaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota }),
     async (ctx, next) => {
       const { isCloud, isIntegrationTest } = EnvSet.values;
       if (tenantId === adminTenantId && isCloud && !isIntegrationTest) {
@@ -114,9 +114,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
       response: accessTokenJwtCustomizerGuard.or(clientCredentialsJwtCustomizerGuard),
       status: [200, 400, 404],
     }),
-    EnvSet.values.isDevFeaturesEnabled
-      ? newKoaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota })
-      : koaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota }),
+    koaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota }),
     async (ctx, next) => {
       const { isIntegrationTest } = EnvSet.values;
 
@@ -219,9 +217,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
       response: jsonObjectGuard,
       status: [200, 400, 403, 422],
     }),
-    EnvSet.values.isDevFeaturesEnabled
-      ? newKoaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota })
-      : koaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota }),
+    koaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota }),
     async (ctx, next) => {
       const { body } = ctx.guard;
 
@@ -255,8 +251,11 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
          * format of `RequestError`, we manually transform it here to keep the error format consistent.
          */
         if (error instanceof ResponseError) {
-          const { message } = z.object({ message: z.string() }).parse(await error.response.json());
-          throw new RequestError({ code: 'jwt_customizer.general', status: 422 }, { message });
+          const { code, message } = await parseCustomJwtResponseError(error);
+
+          const status = code === CustomJwtErrorCode.AccessDenied ? 403 : 422;
+
+          throw new RequestError({ code: 'jwt_customizer.general', status }, { message, code });
         }
 
         if (error instanceof ZodError) {

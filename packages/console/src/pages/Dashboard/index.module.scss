@@ -17,7 +17,7 @@
 
   .subtitle {
     margin-top: _.unit(1);
-    padding-right: _.unit(6);
+    padding-inline-end: _.unit(6);
     font: var(--font-body-2);
     color: var(--color-text-secondary);
   }
@@ -34,7 +34,7 @@
 
   .datePicker {
     position: absolute;
-    right: _.unit(6);
+    inset-inline-end: _.unit(6);
     top: _.unit(6);
     width: 160px;
   }
@@ -44,4 +44,5 @@
   margin: _.unit(10) 0 _.unit(6);
   width: 100%;
   height: 168px;
+  direction: ltr;
 }

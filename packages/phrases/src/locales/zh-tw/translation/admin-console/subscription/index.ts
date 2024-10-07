@@ -7,15 +7,24 @@ const subscription = {
   pro_plan: '專業方案',
   pro_plan_description: '企業無憂享受 Logto 服務。',
   enterprise: '企業版',
+  /** UNTRANSLATED */
+  enterprise_description:
+    'For large-scale organizations requiring advanced features, full customization, and dedicated support to power mission-critical applications. Tailored to your needs for ultimate security, compliance, and performance.',
+  /** UNTRANSLATED */
+  admin_plan: 'Admin plan',
+  /** UNTRANSLATED */
+  dev_plan: 'Development plan',
   current_plan: '當前方案',
   current_plan_description:
     '這是您目前的方案。您可以輕鬆查看您的方案使用情況，檢查即將到來的帳單，並根據需要進行變更。',
   plan_usage: '計劃使用情況',
   plan_cycle: '計劃週期：{{period}}。使用情況訂閱日期為{{renewDate}}。',
-  next_bill: '您的下一個帳單',
+  /** UNTRANSLATED */
+  next_bill: 'Your upcoming bill',
   next_bill_hint: '要了解更多計算方法，請參閱本<a>文章</a>。',
+  /** UNTRANSLATED */
   next_bill_tip:
-    '這裡顯示的價格不包括稅款。稅款將根據您提供的信息和當地法規要求進行計算，並顯示在您的發票中。',
+    'The prices displayed here are tax-exclusive and may be subject to a slight delay in updates. The tax amount will be calculated based on the information you provide and your local regulatory requirements, and will be shown in your invoices.',
   manage_payment: '管理付款',
   overfill_quota_warning: '您已達到配額限制。為防止出現問題，請升級計畫。',
   upgrade_pro: '升級專業',

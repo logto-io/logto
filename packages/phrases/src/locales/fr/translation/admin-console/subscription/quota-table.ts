@@ -37,7 +37,7 @@ const quota_table = {
     built_in_email_connector: 'Connecteur email intégré',
     mfa: 'Authentification multi-facteurs',
     sso: 'SSO entreprise',
-    adaptive_mfa: 'MFA adaptative',
+
     impersonation: "Usurpation d'identité",
   },
   user_management: {
@@ -59,7 +59,8 @@ const quota_table = {
     just_in_time_provisioning: 'Fourniture juste-à-temps',
   },
   support: {
-    title: 'Conformité et support',
+    /** UNTRANSLATED */
+    title: 'Support',
     community: 'Communauté',
     customer_ticket: 'Ticket de support',
     premium: 'Premium',
@@ -81,12 +82,7 @@ const quota_table = {
   days_other: '{{count, number}} jours',
   add_on: 'Module complémentaire',
   tier: 'Niveau{{value, number}} :',
-  paid_token_limit_tip:
-    "Logto facturera des frais pour les fonctionnalités qui dépassent votre limite de quota. Vous pouvez l'utiliser gratuitement jusqu'à ce que nous commencions à facturer vers le deuxième trimestre 2024. Si vous avez besoin de plus de jetons, veuillez nous contacter. Par défaut, nous facturons 80 $ par mois pour chaque million de jetons.",
-  paid_quota_limit_tip:
-    "Logto ajoutera des frais pour les fonctionnalités qui dépassent votre limite de quota. Vous pouvez l'utiliser gratuitement jusqu'à ce que nous commencions à facturer vers le deuxième trimestre 2024.",
-  paid_add_on_feature_tip:
-    "Il s'agit d'une fonctionnalité supplémentaire. Vous pouvez l'utiliser gratuitement jusqu'à ce que nous commencions à facturer vers le deuxième trimestre 2024.",
+
   million: '{{value, number}} million',
   mau_tip:
     "MAU (utilisateurs actifs mensuels) signifie le nombre d'utilisateurs uniques qui ont échangé au moins un jeton avec Logto au cours d'un cycle de facturation.",

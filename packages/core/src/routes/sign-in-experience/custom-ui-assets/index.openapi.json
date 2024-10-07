@@ -4,8 +4,7 @@
       "name": "Custom UI assets",
       "description": "Endpoints for uploading custom UI assets for the sign-in experience. Users can upload a zip file containing custom HTML, CSS, and JavaScript files to replace and fully customize the sign-in experience."
     },
-    { "name": "Cloud only" },
-    { "name": "Dev feature" }
+    { "name": "Cloud only" }
   ],
   "paths": {
     "/api/sign-in-exp/default/custom-ui-assets": {

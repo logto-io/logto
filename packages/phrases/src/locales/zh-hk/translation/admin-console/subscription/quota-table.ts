@@ -37,7 +37,7 @@ const quota_table = {
     built_in_email_connector: '內置電子郵件連接器',
     mfa: '多因素認證',
     sso: '企業 SSO',
-    adaptive_mfa: '自適應MFA',
+
     impersonation: '冒充',
   },
   user_management: {
@@ -59,7 +59,8 @@ const quota_table = {
     just_in_time_provisioning: '即時規定',
   },
   support: {
-    title: '合規和支援',
+    /** UNTRANSLATED */
+    title: 'Support',
     community: '社群',
     customer_ticket: '客戶支援票據',
     premium: '高級版',
@@ -81,12 +82,7 @@ const quota_table = {
   days_other: '{{count, number}} 天',
   add_on: '附加功能',
   tier: '層級{{value, number}}：',
-  paid_token_limit_tip:
-    'Logto將為超出您配額限制的功能收費。您可以在2024年第二季度左右開始收費之前免費使用它。如果您需要更多的令牌，請與我們聯繫。默認情況下，我們每月為每百萬令牌收費80美元。',
-  paid_quota_limit_tip:
-    'Logto將為超出配額限制的功能添加費用。在我們從2024年第二季度開始收費之前，您可以免費使用它。',
-  paid_add_on_feature_tip:
-    '這是一個附加功能。在我們從2024年第二季度開始收費之前，您可以免費使用它。',
+
   million: '{{value, number}} 百萬',
   mau_tip: 'MAU（每月活躍用戶）是指在計費週期內與Logto交換過至少一個令牌的獨立用戶數量。',
   tokens_tip: 'Logto 發行的所有類型令牌，包括訪問令牌、刷新令牌等。',

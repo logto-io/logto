@@ -27,8 +27,6 @@ type RouteDictionary = Record<`${OpenAPIV3.HttpMethods} ${string}`, string>;
 const devFeatureCustomRoutes: RouteDictionary = Object.freeze({
   // Subject tokens
   'post /subject-tokens': 'CreateSubjectToken',
-  // Custom UI assets
-  'post /sign-in-exp/default/custom-ui-assets': 'UploadCustomUiAssets',
 });
 
 export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
@@ -83,6 +81,8 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   // Well-known
   'get /.well-known/phrases': 'GetSignInExperiencePhrases',
   'get /.well-known/sign-in-exp': 'GetSignInExperienceConfig',
+  // Custom UI assets
+  'post /sign-in-exp/default/custom-ui-assets': 'UploadCustomUiAssets',
   ...(EnvSet.values.isDevFeaturesEnabled ? devFeatureCustomRoutes : {}),
 } satisfies RouteDictionary); // Key assertion doesn't work without `satisfies`
 
@@ -123,6 +123,11 @@ export const throwByDifference = (builtCustomRoutes: Set<string>) => {
 
 /** Path segments that are treated as namespace prefixes. */
 const namespacePrefixes = Object.freeze(['jit', '.well-known']);
+const exceptionPrefixes = Object.freeze([
+  '/interaction',
+  '/experience',
+  '/sign-in-exp/default/check-password',
+]);
 
 const isPathParameter = (segment?: string) =>
   Boolean(segment && (segment.startsWith(':') || segment.startsWith('{')));
@@ -154,6 +159,7 @@ const throwIfNeeded = (method: OpenAPIV3.HttpMethods, path: string) => {
  * @see {@link methodToVerb} for the mapping of HTTP methods to verbs.
  * @see {@link namespacePrefixes} for the list of namespace prefixes.
  */
+
 export const buildOperationId = (method: OpenAPIV3.HttpMethods, path: string) => {
   const customOperationId = customRoutes[`${method} ${path}`];
 
@@ -162,7 +168,8 @@ export const buildOperationId = (method: OpenAPIV3.HttpMethods, path: string) =>
   }
 
   // Skip interactions APIs as they are going to replaced by the new APIs soon.
-  if (path.startsWith('/interaction')) {
+  // Skip experience APIs, as all the experience APIs' `operationId` will be customized in the custom openapi.json documents.
+  if (exceptionPrefixes.some((prefix) => path.startsWith(prefix))) {
     return;
   }
 

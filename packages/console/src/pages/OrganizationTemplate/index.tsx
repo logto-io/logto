@@ -9,7 +9,7 @@ import OrganizationEmpty from '@/assets/images/organization-empty.svg?react';
 import Drawer from '@/components/Drawer';
 import PageMeta from '@/components/PageMeta';
 import { OrganizationTemplateTabs, organizationTemplateLink } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { subscriptionPage } from '@/consts/pages';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -22,6 +22,7 @@ import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import pageLayout from '@/scss/page-layout.module.scss';
+import { isFeatureEnabled } from '@/utils/subscription';
 
 import Introduction from '../Organizations/Introduction';
 
@@ -33,16 +34,14 @@ function OrganizationTemplate() {
   const { getDocumentationUrl } = useDocumentationUrl();
   const [isGuideDrawerOpen, setIsGuideDrawerOpen] = useState(false);
   const {
-    currentPlan,
     currentSubscription: { planId },
     currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
   const { isDevTenant } = useContext(TenantsContext);
   const isOrganizationsDisabled =
     isCloud &&
-    !(isDevFeaturesEnabled
-      ? currentSubscriptionQuota.organizationsEnabled
-      : currentPlan.quota.organizationsEnabled);
+    !isFeatureEnabled(currentSubscriptionQuota.organizationsLimit) &&
+    planId !== ReservedPlanId.Pro;
   const { navigate } = useTenantPathname();
 
   const handleUpgradePlan = useCallback(() => {
@@ -60,11 +59,7 @@ function OrganizationTemplate() {
             href: getDocumentationUrl(organizationTemplateLink),
             targetBlank: 'noopener',
           }}
-          paywall={
-            isDevFeaturesEnabled
-              ? cond(planId === ReservedPlanId.Pro && ReservedPlanId.Pro)
-              : cond((isOrganizationsDisabled || isDevTenant) && ReservedPlanId.Pro)
-          }
+          paywall={cond((isOrganizationsDisabled || isDevTenant) && ReservedPlanId.Pro)}
         />
         <Button
           title="application_details.check_guide"

@@ -1,11 +1,10 @@
 import { type OrganizationWithFeatured, Organizations, featuredUserGuard } from '@logto/schemas';
-import { yes } from '@silverhand/essentials';
+import { condArray, yes } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import koaQuotaGuard, { newKoaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
+import { koaQuotaGuard, koaReportSubscriptionUpdates } from '#src/middleware/koa-quota-guard.js';
 import SchemaRouter from '#src/utils/SchemaRouter.js';
 import { parseSearchOptions } from '#src/utils/search.js';
 
@@ -31,11 +30,14 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
   ] = args;
 
   const router = new SchemaRouter(Organizations, organizations, {
-    middlewares: [
-      EnvSet.values.isDevFeaturesEnabled
-        ? newKoaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] })
-        : koaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] }),
-    ],
+    middlewares: condArray(
+      koaQuotaGuard({ key: 'organizationsLimit', quota, methods: ['POST', 'PUT'] }),
+      koaReportSubscriptionUpdates({
+        key: 'organizationsLimit',
+        quota,
+        methods: ['POST', 'PUT', 'DELETE'],
+      })
+    ),
     errorHandler,
     searchFields: ['name'],
     disabled: { get: true },

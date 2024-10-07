@@ -8,6 +8,7 @@ import {
   isDevFeaturesEnabled,
   logtoConsoleUrl as logtoConsoleUrlString,
 } from '#src/constants.js';
+import { switchToLanguage } from '#src/ui-helpers/switch-language.js';
 import { appendPathname, cls, dcls, expectNavigation, waitFor } from '#src/utils.js';
 
 /**
@@ -67,7 +68,7 @@ describe('smoke testing for console admin account creation and sign-in', () => {
 
     expect(page.url()).toBe(new URL('register', logtoConsoleUrl).href);
 
-    await expect(page).toFill('input[name=id]', consoleUsername);
+    await expect(page).toFill('input[name=identifier]', consoleUsername);
     await expectNavigation(expect(page).toClick('button[name=submit]'));
 
     expect(page.url()).toBe(appendPathname('/register/password', logtoConsoleUrl).href);
@@ -80,6 +81,18 @@ describe('smoke testing for console admin account creation and sign-in', () => {
     await expectNavigation(expect(page).toClick('button[name=submit]'));
 
     expect(page.url()).toBe(new URL('console/get-started', logtoConsoleUrl).href);
+  });
+
+  it('should have html attributes "lang=en" and "dir=ltr" by default', async () => {
+    await expect(page).toMatchElement('html[lang=en][dir=ltr]');
+  });
+
+  it('should change to to "lang=ar" and "dir=rtl" when switching to Arabic language', async () => {
+    await switchToLanguage(page, 'العربية');
+    await expect(page).toMatchElement('html[lang=ar][dir=rtl]');
+
+    // Switch back to English
+    await switchToLanguage(page, 'English');
   });
 
   it('can sign out of admin console', async () => {

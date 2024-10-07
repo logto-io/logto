@@ -1,0 +1,37 @@
+@use '@/scss/colors' as colors;
+@use '@/scss/underscore' as _;
+
+body {
+  &.light {
+    @include colors.light;
+  }
+
+  &.dark {
+    @include colors.dark;
+  }
+}
+
+/* Preview Settings */
+.preview {
+  pointer-events: none;
+  user-select: none;
+
+  .viewBox::-webkit-scrollbar {
+    display: none;
+  }
+
+  main {
+    pointer-events: none;
+    user-select: none;
+  }
+}
+
+:global(body.mobile) {
+  --max-width: 360px;
+  background: var(--color-bg-body);
+}
+
+:global(body.desktop) {
+  --max-width: 400px;
+  background: var(--color-bg-float-base);
+}

@@ -3,7 +3,7 @@ import { useCallback, useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
-import { isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
@@ -21,11 +21,9 @@ function CreateButton({ isDisabled, tokenType }: Props) {
   const { show } = useConfirmModal();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const { currentPlan, currentSubscriptionQuota } = useContext(SubscriptionDataContext);
+  const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
 
-  const isCustomJwtEnabled = isDevFeaturesEnabled
-    ? currentSubscriptionQuota.customJwtEnabled
-    : currentPlan.quota.customJwtEnabled;
+  const isCustomJwtEnabled = !isCloud || currentSubscriptionQuota.customJwtEnabled;
 
   const onCreateButtonClick = useCallback(async () => {
     if (isCustomJwtEnabled) {
@@ -59,7 +57,7 @@ function CreateButton({ isDisabled, tokenType }: Props) {
     <Button
       type="primary"
       title="jwt_claims.custom_jwt_create_button"
-      disabled={isDevFeaturesEnabled && isDisabled}
+      disabled={isDisabled}
       onClick={onCreateButtonClick}
     />
   );

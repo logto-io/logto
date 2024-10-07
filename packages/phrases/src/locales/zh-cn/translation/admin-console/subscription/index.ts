@@ -7,15 +7,24 @@ const subscription = {
   pro_plan: '专业计划',
   pro_plan_description: '适用于企业付费无忧。',
   enterprise: '企业',
+  /** UNTRANSLATED */
+  enterprise_description:
+    'For large-scale organizations requiring advanced features, full customization, and dedicated support to power mission-critical applications. Tailored to your needs for ultimate security, compliance, and performance.',
+  /** UNTRANSLATED */
+  admin_plan: 'Admin plan',
+  /** UNTRANSLATED */
+  dev_plan: 'Development plan',
   current_plan: '当前计划',
   current_plan_description:
     '以下是您当前的计划。您可以轻松查看计划使用情况，检查即将到来的账单，并根据需要对计划进行更改。',
   plan_usage: '计划使用情况',
   plan_cycle: '计划周期：{{period}}，使用情况将于{{renewDate}}续订。',
-  next_bill: '您的下一个账单',
+  /** UNTRANSLATED */
+  next_bill: 'Your upcoming bill',
   next_bill_hint: '要了解有关计算的更多信息，请参阅此<a>文章</a>。',
+  /** UNTRANSLATED */
   next_bill_tip:
-    '此处显示的价格不包含税款。税款将根据您提供的信息和当地法规要求进行计算，并将显示在您的发票中。',
+    'The prices displayed here are tax-exclusive and may be subject to a slight delay in updates. The tax amount will be calculated based on the information you provide and your local regulatory requirements, and will be shown in your invoices.',
   manage_payment: '管理付款',
   overfill_quota_warning: '您已达到配额限制。为防止任何问题，请升级计划。',
   upgrade_pro: '升级专业计划',

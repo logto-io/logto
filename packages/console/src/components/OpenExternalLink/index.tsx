@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
+import FlipOnRtl from '@/ds-components/FlipOnRtl';
 import IconButton from '@/ds-components/IconButton';
 import { Tooltip } from '@/ds-components/Tip';
 
@@ -18,7 +19,9 @@ function OpenExternalLink({ link }: Props) {
           window.open(link, '_blank');
         }}
       >
-        <ExternalLinkIcon />
+        <FlipOnRtl>
+          <ExternalLinkIcon />
+        </FlipOnRtl>
       </IconButton>
     </Tooltip>
   );

@@ -4,7 +4,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: _.unit(2) _.unit(3) _.unit(2) _.unit(4);
+  padding-block: _.unit(2);
+  padding-inline: _.unit(4) _.unit(3);
   user-select: none;
 
   &:hover {
@@ -12,6 +13,6 @@
   }
 
   .closeIcon {
-    margin-left: _.unit(1);
+    margin-inline-start: _.unit(1);
   }
 }

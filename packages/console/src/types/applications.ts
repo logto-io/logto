@@ -18,11 +18,11 @@ export const applicationTypeI18nKey = Object.freeze({
  * plus the "featured" category.
  */
 export const allAppGuideCategories = Object.freeze([
-  'Protected',
   'featured',
   'Traditional',
   'SPA',
   'Native',
+  'Protected',
   'MachineToMachine',
   thirdPartyAppCategory,
 ] as const);

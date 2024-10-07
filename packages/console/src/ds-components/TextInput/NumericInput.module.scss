@@ -3,7 +3,7 @@
 .container {
   position: absolute;
   // The design is 2px off from the edge of the input, while the input has 1px border.
-  right: 1px;
+  inset-inline-end: 1px;
   top: 1px;
   bottom: 1px;
 

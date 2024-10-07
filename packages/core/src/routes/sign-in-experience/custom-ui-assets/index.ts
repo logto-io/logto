@@ -5,10 +5,9 @@ import { generateStandardId } from '@logto/shared';
 import pRetry, { AbortError } from 'p-retry';
 import { object, z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import koaQuotaGuard, { newKoaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
+import { koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 import SystemContext from '#src/tenants/SystemContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
@@ -28,18 +27,9 @@ export default function customUiAssetsRoutes<T extends ManagementApiRouter>(
     },
   ]: RouterInitArgs<T>
 ) {
-  // TODO: Remove
-  if (!EnvSet.values.isDevFeaturesEnabled) {
-    return;
-  }
-
   router.post(
     '/sign-in-exp/default/custom-ui-assets',
-    // Manually add this to avoid the case that the dev feature guard is removed but the quota guard is not being updated accordingly.
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    EnvSet.values.isDevFeaturesEnabled
-      ? newKoaQuotaGuard({ key: 'bringYourUiEnabled', quota })
-      : koaQuotaGuard({ key: 'bringYourUiEnabled', quota }),
+    koaQuotaGuard({ key: 'bringYourUiEnabled', quota }),
     koaGuard({
       files: object({
         file: uploadFileGuard.array().min(1).max(1),

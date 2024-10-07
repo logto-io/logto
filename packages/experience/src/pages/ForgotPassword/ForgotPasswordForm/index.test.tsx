@@ -1,10 +1,10 @@
-import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { act, fireEvent, waitFor } from '@testing-library/react';
 
 import UserInteractionContextProvider from '@/Providers/UserInteractionContextProvider';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import { putInteraction, sendVerificationCode } from '@/apis/interaction';
+import { sendVerificationCodeApi } from '@/apis/utils';
 import { UserFlow, type VerificationCodeIdentifier } from '@/types';
 
 import ForgotPasswordForm from '.';
@@ -21,9 +21,8 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedNavigate,
 }));
 
-jest.mock('@/apis/interaction', () => ({
-  sendVerificationCode: jest.fn(() => ({ success: true })),
-  putInteraction: jest.fn(() => ({ success: true })),
+jest.mock('@/apis/utils', () => ({
+  sendVerificationCodeApi: jest.fn().mockResolvedValue({ verificationId: '123' }),
 }));
 
 describe('ForgotPasswordForm', () => {
@@ -32,12 +31,11 @@ describe('ForgotPasswordForm', () => {
   const phone = '13911111111';
   const originalLocation = window.location;
 
-  const renderForm = (defaultType: VerificationCodeIdentifier, defaultValue?: string) =>
+  const renderForm = (defaultValue?: string) =>
     renderWithPageContext(
       <UserInteractionContextProvider>
         <ForgotPasswordForm
           enabledTypes={[SignInIdentifier.Email, SignInIdentifier.Phone]}
-          defaultType={defaultType}
           defaultValue={defaultValue}
         />
       </UserInteractionContextProvider>
@@ -48,6 +46,8 @@ describe('ForgotPasswordForm', () => {
     Object.defineProperty(window, 'location', {
       value: originalLocation,
     });
+
+    jest.clearAllMocks();
   });
 
   describe.each([
@@ -57,7 +57,7 @@ describe('ForgotPasswordForm', () => {
     'identifier: %s, value: %s',
     ({ identifier, value }) => {
       test(`forgot password form render properly with default ${identifier} value ${value}`, async () => {
-        const { container, queryByText } = renderForm(identifier, value);
+        const { container, queryByText } = renderForm(value);
         const identifierInput = container.querySelector(`input[name="identifier"]`);
 
         assert(identifierInput, new Error('identifier input should not be null'));
@@ -73,7 +73,7 @@ describe('ForgotPasswordForm', () => {
       });
 
       test(`send ${identifier} verification code properly`, async () => {
-        const { container, getByText } = renderForm(identifier, value);
+        const { container, getByText } = renderForm(value);
         const identifierInput = container.querySelector(`input[name="identifier"]`);
 
         assert(identifierInput, new Error('identifier input should not be null'));
@@ -85,8 +85,14 @@ describe('ForgotPasswordForm', () => {
         });
 
         await waitFor(() => {
-          expect(putInteraction).toBeCalledWith(InteractionEvent.ForgotPassword);
-          expect(sendVerificationCode).toBeCalledWith({ email });
+          expect(sendVerificationCodeApi).toBeCalledWith(
+            UserFlow.ForgotPassword,
+            {
+              type: identifier,
+              value,
+            },
+            undefined
+          );
           expect(mockedNavigate).toBeCalledWith(
             {
               pathname: `/${UserFlow.ForgotPassword}/verification-code`,

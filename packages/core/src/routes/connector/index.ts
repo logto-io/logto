@@ -7,7 +7,6 @@ import { conditional } from '@silverhand/essentials';
 import cleanDeep from 'clean-deep';
 import { string, object } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type QuotaLibrary } from '#src/libraries/quota.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -27,9 +26,7 @@ const guardConnectorsQuota = async (
   quota: QuotaLibrary
 ) => {
   if (factory.type === ConnectorType.Social) {
-    await (EnvSet.values.isDevFeaturesEnabled
-      ? quota.guardTenantUsageByKey('socialConnectorsLimit')
-      : quota.guardKey('socialConnectorsLimit'));
+    await quota.guardTenantUsageByKey('socialConnectorsLimit');
   }
 };
 
@@ -71,7 +68,7 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
         */
         .merge(Connectors.createGuard.pick({ id: true }).partial()),
       response: connectorResponseGuard,
-      status: [200, 400, 422],
+      status: [200, 400, 403, 422],
     }),
     async (ctx, next) => {
       const {

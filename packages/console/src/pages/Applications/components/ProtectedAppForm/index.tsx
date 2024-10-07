@@ -11,9 +11,9 @@ import { Trans, useTranslation } from 'react-i18next';
 import useSWRImmutable from 'swr/immutable';
 
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
-import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { isDevFeaturesEnabled, isCloud } from '@/consts/env';
+import SkuName from '@/components/SkuName';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button, { type Props as ButtonProps } from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
@@ -36,8 +36,6 @@ type Props = {
   readonly onCreateSuccess?: (createdApp: Application) => void;
 };
 
-// TODO: refactor this component to reduce complexity
-// eslint-disable-next-line complexity
 function ProtectedAppForm({
   className,
   buttonAlignment = 'right',
@@ -49,14 +47,13 @@ function ProtectedAppForm({
 }: Props) {
   const { data } = useSWRImmutable<ProtectedAppsDomainConfig>(isCloud && 'api/systems/application');
   const {
-    currentPlan: { name: planName, quota },
-    currentSku,
     currentSubscriptionQuota,
+    currentSubscription: { planId, isEnterprisePlan },
   } = useContext(SubscriptionDataContext);
   const { hasAppsReachedLimit } = useApplicationsUsage();
   const defaultDomain = data?.protectedApps.defaultDomain ?? '';
   const { navigate } = useTenantPathname();
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     register,
     handleSubmit,
@@ -178,7 +175,7 @@ function ProtectedAppForm({
               t('protected_app.form.domain_field_tooltip', { domain: defaultDomain })
           )}
         >
-          <div className={styles.domainFieldWrapper}>
+          <div className={classNames(styles.domainFieldWrapper, styles[i18n.dir()])}>
             <TextInput
               className={styles.subdomain}
               inputContainerClassName={styles.input}
@@ -208,14 +205,11 @@ function ProtectedAppForm({
           <Trans
             components={{
               a: <ContactUsPhraseLink />,
-              planName: <PlanName skuId={currentSku.id} name={planName} />,
+              planName: <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />,
             }}
           >
             {t('upsell.paywall.applications', {
-              count:
-                (isDevFeaturesEnabled
-                  ? currentSubscriptionQuota.applicationsLimit
-                  : quota.applicationsLimit) ?? 0,
+              count: currentSubscriptionQuota.applicationsLimit ?? 0,
             })}
           </Trans>
         </QuotaGuardFooter>

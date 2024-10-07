@@ -50,6 +50,10 @@ form {
   display: flex;
   width: 100%;
 
+  &.rtl {
+    flex-direction: row-reverse;
+  }
+
   .subdomain {
     flex: 1;
 
@@ -78,6 +82,6 @@ form {
 
   &.leftAligned {
     align-self: flex-start;
-    margin-left: _.unit(15);
+    margin-inline-start: _.unit(15);
   }
 }

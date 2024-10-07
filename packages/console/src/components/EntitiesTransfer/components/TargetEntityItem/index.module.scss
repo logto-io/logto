@@ -3,7 +3,8 @@
 .item {
   display: flex;
   align-items: center;
-  padding: _.unit(2) _.unit(3) _.unit(2) _.unit(4);
+  padding-block: _.unit(2);
+  padding-inline: _.unit(4) _.unit(3);
   user-select: none;
 
   .meta {
@@ -22,7 +23,7 @@
       flex: 1 1 0;
       font: var(--font-body-2);
       @include _.text-ellipsis;
-      margin-left: _.unit(2);
+      margin-inline-start: _.unit(2);
       max-width: fit-content;
     }
 

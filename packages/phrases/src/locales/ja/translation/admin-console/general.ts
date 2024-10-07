@@ -46,7 +46,9 @@ const general = {
   continue: '続ける',
   page_info: '{{total}}件中{{min}}件〜{{max}}件を表示',
   learn_more: '詳しく見る',
-  tab_errors: '{{count}}件のエラーがあります',
+  /** UNTRANSLATED */
+  tab_error_one: '{{count, number}} error',
+  tab_error_other: '{{count}}件のエラーがあります',
   skip_for_now: '今回はスキップする',
   remove: '削除する',
   visit: '訪問する',

@@ -26,9 +26,11 @@ import { uriValidator } from '@/utils/validator';
 import { type UserDetailsForm, type UserDetailsOutletContext } from '../types';
 import { userDetailsParser } from '../utils';
 
+import PersonalAccessTokens from './PersonalAccessTokens';
 import UserMfaVerifications from './UserMfaVerifications';
-import UserSocialIdentities from './components/UserSocialIdentities';
-import UserSsoIdentities from './components/UserSsoIdentities';
+import UserPassword from './UserPassword';
+import UserSocialIdentities from './UserSocialIdentities';
+import UserSsoIdentities from './UserSsoIdentities';
 
 function UserSettings() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -149,6 +151,14 @@ function UserSettings() {
               placeholder={t('users.placeholder_username')}
             />
           </FormField>
+          <FormField title="user_details.field_password">
+            <UserPassword
+              user={user}
+              onResetPassword={() => {
+                onUserUpdated({ ...user, hasPassword: true });
+              }}
+            />
+          </FormField>
           <FormField title="user_details.field_connectors">
             <UserSocialIdentities
               userId={user.id}
@@ -164,6 +174,7 @@ function UserSettings() {
           <FormField title="user_details.mfa.field_name">
             <UserMfaVerifications userId={user.id} />
           </FormField>
+          <PersonalAccessTokens userId={user.id} />
         </FormCard>
         <FormCard title="user_details.user_profile">
           <FormField title="user_details.field_name">

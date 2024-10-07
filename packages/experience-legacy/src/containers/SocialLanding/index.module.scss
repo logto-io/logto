@@ -1,0 +1,22 @@
+@use '@/scss/underscore' as _;
+
+
+.container {
+  @include _.flex-column;
+  @include _.full-width;
+}
+
+.connector {
+  margin-bottom: _.unit(4);
+
+  > img {
+    width: 96px;
+    height: 96px;
+    @include _.image-align-center;
+  }
+}
+
+.message {
+  text-align: center;
+  @include _.text-hint;
+}

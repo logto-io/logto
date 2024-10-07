@@ -8,9 +8,9 @@
 
 .factorIcon {
   color: var(--color-text-secondary);
-  margin-right: _.unit(3);
+  margin-inline-end: _.unit(3);
 }
 
 .factorTip {
-  margin-left: _.unit(1);
+  margin-inline-start: _.unit(1);
 }

@@ -1,0 +1,45 @@
+@use '@/scss/underscore' as _;
+
+
+.signature {
+  @include _.flex-row;
+  font: var(--font-label-2);
+  font-weight: normal;
+  color: var(--color-neutral-variant-70);
+  padding: _.unit(1) _.unit(2);
+  text-decoration: none;
+  opacity: 75%;
+
+  .staticIcon {
+    display: block;
+  }
+
+  .highlightIcon {
+    display: none;
+  }
+
+  &:hover,
+  &:active {
+    opacity: 100%;
+
+    .staticIcon {
+      display: none;
+    }
+
+    .highlightIcon {
+      display: block;
+    }
+  }
+
+  .text {
+    margin-inline-end: _.unit(1);
+  }
+}
+
+
+:global(body.mobile) {
+  .signature {
+    color: var(--color-neutral-variant-80);
+    font: var(--font-label-3);
+  }
+}

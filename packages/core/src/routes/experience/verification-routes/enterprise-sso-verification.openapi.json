@@ -1,0 +1,100 @@
+{
+  "paths": {
+    "/api/experience/verification/sso/{connectorId}/authorization-uri": {
+      "post": {
+        "operationId": "CreateEnterpriseSsoVerification",
+        "summary": "Create enterprise SSO verification",
+        "description": "Create a new EnterpriseSSO verification record and return the provider's authorization URI for the given connector.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "redirectUri": {
+                    "description": "The URI to redirect the user after the SSO authorization is completed."
+                  },
+                  "state": {
+                    "description": "The state parameter to pass to the SSO connector."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The SSO authorization URI has been successfully generated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "authorizationUri": {
+                      "description": "The SSO authorization URI."
+                    },
+                    "verificationId": {
+                      "description": "The unique verification ID of the newly created EnterpriseSSO verification record. The `verificationId` is required when verifying the SSO authorization response."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The SSO connector is not found."
+          },
+          "500": {
+            "description": "Connector error. Failed to generate the SSO authorization URI."
+          }
+        }
+      }
+    },
+    "/api/experience/verification/sso/{connectorId}/verify": {
+      "post": {
+        "operationId": "VerifyEnterpriseSsoVerification",
+        "summary": "Verify enterprise SSO verification",
+        "description": "Verify the SSO authorization response data and get the user's identity from the SSO provider.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "verificationId": {
+                    "description": "The ID of the EnterpriseSSO verification record."
+                  },
+                  "connectorData": {
+                    "description": "Arbitrary data returned by the SSO provider to complete the verification process."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The SSO authorization response has been successfully verified.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "verificationId": {
+                      "description": "The current verified EnterpriseSSO verification record ID. This ID is required when identifying the user in the current interaction."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The SSO authorization response is invalid or cannot be verified."
+          },
+          "404": {
+            "description": "The verification record or the SSO connector is not found."
+          },
+          "500": {
+            "description": "Connector error. Failed to verify the SSO authorization response or fetch the user info from the SSO provider."
+          }
+        }
+      }
+    }
+  }
+}

@@ -19,10 +19,7 @@
     border-radius: 12px 12px 0 0;
     transform: translateY(100%);
     transition: transform 0.3s ease-out;
-
-    > button + button {
-      margin-left: _.unit(3);
-    }
+    gap: _.unit(3);
   }
 
   &.active {

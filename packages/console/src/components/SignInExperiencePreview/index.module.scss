@@ -22,7 +22,7 @@
           width: _screenSize.$web-iframe-width;
           height: _screenSize.$web-iframe-height;
           transform: scaleX(_screenSize.$web-scale-x) scaleY(_screenSize.$web-scale-y);
-          margin-left: _screenSize.$web-to-wrapper-offset-x;
+          margin-inline-start: _screenSize.$web-to-wrapper-offset-x;
           margin-top: _screenSize.$web-to-wrapper-offset-y;
         }
       }
@@ -79,7 +79,7 @@
           width: _screenSize.$mobile-iframe-width;
           height: _screenSize.$mobile-iframe-height;
           transform: scaleX(_screenSize.$mobile-scale-x) scaleY(_screenSize.$mobile-scale-y);
-          margin-left: _screenSize.$mobile-to-wrapper-offset-x;
+          margin-inline-start: _screenSize.$mobile-to-wrapper-offset-x;
           margin-top: _screenSize.$mobile-to-wrapper-offset-y;
         }
       }

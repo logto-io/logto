@@ -8,7 +8,8 @@ import ReactModal from 'react-modal';
 import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
+import { addOnPricingExplanationLink } from '@/consts/external-links';
 import { organizationAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
@@ -17,8 +18,10 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
 import useApi from '@/hooks/use-api';
+import useUserPreferences from '@/hooks/use-user-preferences';
 import modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
+import { isPaidPlan, isFeatureEnabled } from '@/utils/subscription';
 
 import styles from './index.module.scss';
 
@@ -31,15 +34,17 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
-    currentPlan,
-    currentSubscription: { planId },
+    currentSubscription: { planId, isAddOnAvailable, isEnterprisePlan },
     currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
+  const {
+    data: { organizationUpsellNoticeAcknowledged },
+    update,
+  } = useUserPreferences();
   const isOrganizationsDisabled =
     isCloud &&
-    !(isDevFeaturesEnabled
-      ? currentSubscriptionQuota.organizationsEnabled
-      : currentPlan.quota.organizationsEnabled);
+    !isFeatureEnabled(currentSubscriptionQuota.organizationsLimit) &&
+    planId !== ReservedPlanId.Pro;
 
   const {
     reset,
@@ -77,29 +82,38 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
       <ModalLayout
         title="organizations.create_organization"
         paywall={conditional(
-          isDevFeaturesEnabled && planId === ReservedPlanId.Pro && ReservedPlanId.Pro
+          isAddOnAvailable && planId !== ReservedPlanId.Pro && ReservedPlanId.Pro
         )}
+        hasAddOnTag={isAddOnAvailable}
         footer={
           cond(
-            isDevFeaturesEnabled && planId === ReservedPlanId.Pro && (
-              <AddOnNoticeFooter
-                isLoading={isSubmitting}
-                buttonTitle="general.create"
-                onClick={submit}
-              >
-                <Trans
-                  components={{
-                    span: <span className={styles.strong} />,
-                    a: <TextLink to="https://blog.logto.io/pricing-add-ons/" />,
+            isAddOnAvailable &&
+              // Just in case the enterprise plan has reached the resource limit, we still need to show charge notice.
+              isPaidPlan(planId, isEnterprisePlan) &&
+              !organizationUpsellNoticeAcknowledged && (
+                <AddOnNoticeFooter
+                  isLoading={isSubmitting}
+                  buttonTitle="general.create"
+                  onClick={async () => {
+                    void update({ organizationUpsellNoticeAcknowledged: true });
+                    await submit();
                   }}
                 >
-                  {t('upsell.add_on.footer.organization', {
-                    price: organizationAddOnUnitPrice,
-                    planName: t('subscription.pro_plan'),
-                  })}
-                </Trans>
-              </AddOnNoticeFooter>
-            )
+                  <Trans
+                    components={{
+                      span: <span className={styles.strong} />,
+                      a: <TextLink to={addOnPricingExplanationLink} />,
+                    }}
+                  >
+                    {t('upsell.add_on.footer.organization', {
+                      price: organizationAddOnUnitPrice,
+                      planName: t(
+                        isEnterprisePlan ? 'subscription.enterprise' : 'subscription.pro_plan'
+                      ),
+                    })}
+                  </Trans>
+                </AddOnNoticeFooter>
+              )
           ) ??
           (isOrganizationsDisabled ? (
             <QuotaGuardFooter>

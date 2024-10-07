@@ -8,17 +8,14 @@ import ApiResourceDark from '@/assets/icons/api-resource-dark.svg?react';
 import ApiResource from '@/assets/icons/api-resource.svg?react';
 import ManagementApiResourceDark from '@/assets/icons/management-api-resource-dark.svg?react';
 import ManagementApiResource from '@/assets/icons/management-api-resource.svg?react';
-import ChargeNotification from '@/components/ChargeNotification';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
 import { defaultPageSize } from '@/consts';
-import { isCloud } from '@/consts/env';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import Tag from '@/ds-components/Tag';
 import type { RequestError } from '@/hooks/use-api';
-import useApiResourcesUsage from '@/hooks/use-api-resources-usage';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
@@ -41,7 +38,6 @@ const icons = {
 function ApiResources() {
   const { search } = useLocation();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { hasSurpassedLimit } = useApiResourcesUsage();
   const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
   });
@@ -78,16 +74,6 @@ function ApiResources() {
             });
           },
         }}
-        subHeader={
-          isCloud && (
-            <ChargeNotification
-              hasSurpassedLimit={hasSurpassedLimit}
-              quotaItemPhraseKey="api_resource"
-              checkedFlagKey="apiResource"
-              className={styles.chargeNotification}
-            />
-          )
-        }
         table={{
           rowGroups: [{ key: 'apiResources', data: apiResources }],
           rowIndexKey: 'id',

@@ -37,7 +37,7 @@ const quota_table = {
     built_in_email_connector: 'Built-in email connector',
     mfa: 'Multi-factor authentication',
     sso: 'Enterprise SSO',
-    adaptive_mfa: 'Adaptive MFA',
+
     impersonation: 'Impersonation',
   },
   user_management: {
@@ -59,11 +59,21 @@ const quota_table = {
     just_in_time_provisioning: 'Just-in-time provisioning',
   },
   support: {
-    title: 'Compliance and support',
+    title: 'Support',
     community: 'Community',
     customer_ticket: 'Ticket support',
     premium: 'Premium',
     email_ticket_support: 'Email ticket support',
+    discord_private_channel: 'Discord private channel',
+    premium_support: 'Premium support',
+    developer_onboarding: 'Developer onboarding',
+    solution_engineer_support: 'Solution engineer',
+    sla: 'SLA',
+    dedicated_computing_resources: 'Dedicated computing resources',
+  },
+  compliance: {
+    title: 'Compliance',
+    soc2_compliant: 'SOC2 compliant',
     soc2_report: 'SOC2 report',
     hipaa_or_baa_report: 'HIPAA/BAA report',
   },
@@ -81,12 +91,7 @@ const quota_table = {
   days_other: '{{count, number}} days',
   add_on: 'Add-on',
   tier: 'Tier{{value, number}}: ',
-  paid_token_limit_tip:
-    "Logto will add charges for features that go beyond your quota limit. You can use it at no cost until we're beginning charging around Q2 2024. If you require more tokens, please get in touch with us. By default, we bill $80 per month for every million tokens.",
-  paid_quota_limit_tip:
-    "Logto will add charges for features that go beyond your quota limit. You can use it at no cost until we're beginning charging around Q2 2024.",
-  paid_add_on_feature_tip:
-    "This is an add-on feature. You can use it at no cost until we're beginning charging around Q2 2024.",
+
   million: '{{value, number}} million',
   mau_tip:
     'MAU (monthly active user) means the number of unique users who have exchanged at least one token with Logto in a billing cycle.',

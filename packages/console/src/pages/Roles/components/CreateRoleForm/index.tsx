@@ -77,12 +77,7 @@ function CreateRoleForm({ onClose }: Props) {
       }}
       size="large"
       footer={
-        <Footer
-          roleType={watch('type')}
-          selectedScopesCount={watch('scopes', []).length}
-          isCreating={isSubmitting}
-          onClickCreate={onSubmit}
-        />
+        <Footer roleType={watch('type')} isCreating={isSubmitting} onClickCreate={onSubmit} />
       }
       onClose={onClose}
     >

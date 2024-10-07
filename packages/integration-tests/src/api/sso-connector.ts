@@ -41,6 +41,11 @@ export const patchSsoConnectorById = async (id: string, data: Partial<SsoConnect
     })
     .json<SsoConnectorWithProviderConfig>();
 
+export const clearSsoConnectors = async () => {
+  const connectors = await getSsoConnectors();
+  await Promise.all(connectors.map(async (connector) => deleteSsoConnectorById(connector.id)));
+};
+
 export class SsoConnectorApi {
   readonly connectorInstances = new Map<string, SsoConnector>();
 

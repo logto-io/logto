@@ -4,13 +4,13 @@
   display: flex;
   align-items: center;
   padding: _.unit(2);
-  margin-left: _.unit(4);
+  margin-inline-start: _.unit(4);
   border-radius: 8px;
 
   .image {
     width: 36px;
     height: 36px;
-    margin-right: _.unit(2);
+    margin-inline-end: _.unit(2);
     border-radius: 6px;
     @include _.shimmering-animation;
   }

@@ -108,9 +108,9 @@ function CodeEditor({
             value={value}
             style={
               isShowingPlaceholder
-                ? { marginLeft: '8px', width: 'calc(100% - 8px)' }
+                ? { marginInlineStart: '8px', width: 'calc(100% - 8px)' }
                 : {
-                    marginLeft: `calc(${maxLineNumberDigits}ch + 20px)`,
+                    marginInlineStart: `calc(${maxLineNumberDigits}ch + 20px)`,
                     width: `calc(100% - ${maxLineNumberDigits}ch - 20px)`,
                   }
             }

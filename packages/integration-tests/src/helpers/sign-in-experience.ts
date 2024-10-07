@@ -5,13 +5,32 @@ import { updateSignInExperience } from '#src/api/index.js';
 
 import { clearConnectorsByTypes } from './connector.js';
 
+export const defaultSignInSignUpConfigs = {
+  signInMode: SignInMode.SignInAndRegister,
+  signUp: {
+    identifiers: [SignInIdentifier.Username],
+    password: true,
+    verify: false,
+  },
+  signIn: {
+    methods: [
+      {
+        identifier: SignInIdentifier.Username,
+        isPasswordPrimary: true,
+        password: true,
+        verificationCode: false,
+      },
+    ],
+  },
+};
+
 export const defaultSignUpMethod = {
   identifiers: [],
   password: false,
   verify: false,
 };
 
-const defaultPasswordSignInMethods = [
+export const defaultPasswordSignInMethods = [
   {
     identifier: SignInIdentifier.Username,
     password: true,
@@ -152,3 +171,14 @@ export const setUsernamePasswordOnly = async () => {
     passwordPolicy: {},
   });
 };
+
+export const setLanguage = async (
+  language: SignInExperience['languageInfo']['fallbackLanguage'],
+  autoDetect = false
+) =>
+  updateSignInExperience({
+    languageInfo: {
+      fallbackLanguage: language,
+      autoDetect,
+    },
+  });

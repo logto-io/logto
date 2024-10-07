@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { skipMfa } from '@/apis/interaction';
+import { skipMfa } from '@/apis/experience';
 
 import useApi from './use-api';
 import useErrorHandler from './use-error-handler';

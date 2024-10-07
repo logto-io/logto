@@ -54,6 +54,10 @@ const usage = {
     tooltip:
       'Add-on feature priced at ${{price, number}} per hook. The first 10 hooks are included.',
   },
+  pricing: {
+    add_on_changes_in_current_cycle_notice:
+      'If you make any changes during the current billing cycle, your next bill may be slightly higher for the first month after the change. It will be ${{price, number}} base price plus add-on costs for unbilled usage from the current cycle and the full charge for the next cycle. <a>Learn more</a>',
+  },
 };
 
 export default Object.freeze(usage);

@@ -4,7 +4,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
 import InlineUpsell from '@/components/InlineUpsell';
-import { isDevFeaturesEnabled, isCloud } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Card from '@/ds-components/Card';
 import CodeEditor from '@/ds-components/CodeEditor';
@@ -22,8 +22,8 @@ function CustomUiForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
   const { control } = useFormContext<SignInExperienceForm>();
-  const { currentPlan } = useContext(SubscriptionDataContext);
-  const isBringYourUiEnabled = currentPlan.quota.bringYourUiEnabled;
+  const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
+  const isBringYourUiEnabled = currentSubscriptionQuota.bringYourUiEnabled;
 
   return (
     <Card>
@@ -67,8 +67,9 @@ function CustomUiForm() {
           )}
         />
       </FormField>
-      {isDevFeaturesEnabled && isCloud && (
+      {isCloud && (
         <FormField
+          isBeta
           title="sign_in_exp.custom_ui.bring_your_ui_title"
           description={
             <Trans

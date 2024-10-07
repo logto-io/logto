@@ -1,0 +1,155 @@
+{
+  "paths": {
+    "/api/experience/verification/web-authn/registration": {
+      "post": {
+        "operationId": "CreateWebAuthnRegistrationVerification",
+        "summary": "Create WebAuthn registration verification",
+        "description": "Create a new WebAuthn registration verification record. The verification record can be used to bind a new WebAuthn credential to the user's profile.",
+        "responses": {
+          "200": {
+            "description": "WebAuthn registration successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "registrationOptions": {
+                      "description": "The WebAuthn registration options that the user needs to create a new WebAuthn credential."
+                    },
+                    "verificationId": {
+                      "description": "The unique verification ID for the WebAuthn registration record. This ID is required to verify the WebAuthn registration challenge."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity not found. <br/> - `session.identifier_not_found:` The current interaction is not identified yet. All MFA verification records must be associated with a identified user."
+          }
+        }
+      }
+    },
+    "/api/experience/verification/web-authn/registration/verify": {
+      "post": {
+        "operationId": "VerifyWebAuthnRegistrationVerification",
+        "summary": "Verify WebAuthn registration verification",
+        "description": "Verify the WebAuthn registration response against the user's WebAuthn registration challenge. If the response is valid, the WebAuthn registration record will be marked as verified.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "payload": {
+                    "description": "The WebAuthn attestation response from the user's WebAuthn credential."
+                  },
+                  "verificationId": {
+                    "description": "The verification ID of the WebAuthn registration record."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The WebAuthn registration has been successfully verified.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "verificationId": {
+                      "description": "The unique verification ID of the WebAuthn registration record. This `verificationId` is required to bind the WebAuthn credential to the user account via the `Profile` API."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. <br/>  - `session.mfa.pending_info_not_found:` The WebAuthn registration challenge is missing from the current verification record. <br/>- `session.mfa.webauthn_verification_failed:` The WebAuthn attestation response is invalid or cannot be verified."
+          },
+          "404": {
+            "description": "Verification record not found."
+          }
+        }
+      }
+    },
+    "/api/experience/verification/web-authn/authentication": {
+      "post": {
+        "operationId": "CreateWebAuthnAuthenticationVerification",
+        "summary": "Create WebAuthn authentication verification",
+        "description": "Create a new WebAuthn authentication verification record based on the user's existing WebAuthn credential. This verification record can be used to verify the user's WebAuthn credential.",
+        "responses": {
+          "200": {
+            "description": "WebAuthn authentication successfully initiated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "authenticationOptions": {
+                      "description": "Options for the user to authenticate with their WebAuthn credential."
+                    },
+                    "verificationId": {
+                      "description": "The unique ID for the WebAuthn authentication record, required to verify the WebAuthn authentication challenge."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The user does not have a verified WebAuthn credential."
+          },
+          "404": {
+            "description": "The current interaction is not yet identified. All MFA verification records must be associated with an identified user."
+          }
+        }
+      }
+    },
+    "/api/experience/verification/web-authn/authentication/verify": {
+      "post": {
+        "operationId": "VerifyWebAuthnAuthenticationVerification",
+        "summary": "Verify WebAuthn authentication verification",
+        "description": "Verifies the WebAuthn authentication response against the user's authentication challenge. Upon successful verification, the verification record will be marked as verified.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "payload": {
+                    "description": "The WebAuthn assertion response from the user's WebAuthn credential."
+                  },
+                  "verificationId": {
+                    "description": "The verification ID of the WebAuthn authentication verification record."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The WebAuthn authentication has been successfully verified.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "verificationId": {
+                      "description": "The unique verification ID of the WebAuthn authentication verification record."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. <br/> - `session.mfa.pending_info_not_found:` The WebAuthn authentication challenge is missing in the current verification record. <br/>- `session.mfa.webauthn_verification_failed:` The WebAuthn assertion response is invalid or cannot be verified."
+          },
+          "404": {
+            "description": "Verification record not found."
+          }
+        }
+      }
+    }
+  }
+}

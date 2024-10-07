@@ -1,0 +1,46 @@
+@use '@/scss/underscore' as _;
+
+
+.scopesCard,
+.organizationSelector {
+  margin-top: _.unit(6);
+}
+
+.terms {
+  margin-top: _.unit(5);
+  font: var(--font-body-3);
+  color: var(--color-type-secondary);
+}
+
+.redirectUri {
+  margin-top: _.unit(5);
+  text-align: center;
+  font: var(--font-label-3);
+  color: var(--color-type-secondary);
+}
+
+.footerButton {
+  margin-top: _.unit(7);
+  @include _.flex_row;
+  gap: _.unit(2);
+}
+
+.footerLink {
+  align-items: center;
+  margin-top: _.unit(6);
+  @include _.flex_row;
+  justify-content: center;
+  gap: _.unit(1);
+}
+
+:global(body.mobile) {
+  .scopesCard {
+    margin-top: _.unit(4);
+  }
+}
+
+:global(body.desktop) {
+  .scopesCard {
+    margin-top: _.unit(6);
+  }
+}

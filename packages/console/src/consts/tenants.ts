@@ -5,7 +5,7 @@ import {
   type NewSubscriptionQuota,
   type LogtoSkuResponse,
   type TenantResponse,
-  type NewSubscriptionUsage,
+  type NewSubscriptionCountBasedUsage,
 } from '@/cloud/types/router';
 import { RegionName } from '@/components/Region';
 import { LogtoSkuType } from '@/types/skus';
@@ -31,11 +31,15 @@ export const defaultTenantResponse: TenantResponse = {
     planId: defaultSubscriptionPlanId,
     currentPeriodStart: dayjs().toDate(),
     currentPeriodEnd: dayjs().add(1, 'month').toDate(),
+    isEnterprisePlan: false,
   },
   usage: {
     activeUsers: 0,
-    cost: 0,
     tokenUsage: 0,
+  },
+  quota: {
+    mauLimit: null,
+    tokenLimit: null,
   },
   openInvoices: [],
   isSuspended: false,
@@ -108,7 +112,7 @@ export const defaultLogtoSku: LogtoSkuResponse = {
     hooksLimit: null,
     auditLogsRetentionDays: 14,
     mfaEnabled: true,
-    organizationsEnabled: true,
+    organizationsLimit: null,
     enterpriseSsoLimit: null,
     thirdPartyApplicationsLimit: null,
     tenantMembersLimit: 20,
@@ -133,7 +137,7 @@ export const defaultSubscriptionQuota: NewSubscriptionQuota = {
   hooksLimit: 1,
   auditLogsRetentionDays: 3,
   mfaEnabled: false,
-  organizationsEnabled: false,
+  organizationsLimit: 0,
   enterpriseSsoLimit: 0,
   thirdPartyApplicationsLimit: 0,
   tenantMembersLimit: 1,
@@ -142,9 +146,7 @@ export const defaultSubscriptionQuota: NewSubscriptionQuota = {
   bringYourUiEnabled: false,
 };
 
-export const defaultSubscriptionUsage: NewSubscriptionUsage = {
-  mauLimit: 0,
-  tokenLimit: 0,
+export const defaultSubscriptionUsage: NewSubscriptionCountBasedUsage = {
   applicationsLimit: 0,
   machineToMachineLimit: 0,
   resourcesLimit: 0,
@@ -155,7 +157,7 @@ export const defaultSubscriptionUsage: NewSubscriptionUsage = {
   scopesPerRoleLimit: 0,
   hooksLimit: 0,
   mfaEnabled: false,
-  organizationsEnabled: false,
+  organizationsLimit: 0,
   enterpriseSsoLimit: 0,
   thirdPartyApplicationsLimit: 0,
   tenantMembersLimit: 0,

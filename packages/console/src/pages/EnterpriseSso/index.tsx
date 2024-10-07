@@ -11,7 +11,7 @@ import EnterpriseSsoConnectorEmpty from '@/assets/images/sso-connector-empty.svg
 import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
 import { defaultPageSize } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
@@ -37,8 +37,7 @@ function EnterpriseSso() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { isDevTenant } = useContext(TenantsContext);
   const {
-    currentPlan,
-    currentSubscription: { planId },
+    currentSubscription: { planId, isAddOnAvailable },
     currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
 
@@ -47,10 +46,7 @@ function EnterpriseSso() {
   });
 
   const isSsoEnabled =
-    !isCloud ||
-    (isDevFeaturesEnabled
-      ? currentSubscriptionQuota.enterpriseSsoLimit !== 0
-      : currentPlan.quota.ssoEnabled);
+    !isCloud || currentSubscriptionQuota.enterpriseSsoLimit !== 0 || planId === ReservedPlanId.Pro;
 
   const url = buildUrl('api/sso-connectors', {
     page: String(page),
@@ -67,11 +63,10 @@ function EnterpriseSso() {
   return (
     <ListPage
       title={{
-        paywall: isDevFeaturesEnabled
-          ? conditional(planId === ReservedPlanId.Pro && ReservedPlanId.Pro)
-          : conditional((!isSsoEnabled || isDevTenant) && ReservedPlanId.Pro),
+        paywall: conditional((!isSsoEnabled || isDevTenant) && ReservedPlanId.Pro),
         title: 'enterprise_sso.title',
         subtitle: 'enterprise_sso.subtitle',
+        hasAddOnTag: isAddOnAvailable,
       }}
       pageMeta={{ titleKey: 'enterprise_sso.page_title' }}
       createButton={conditional(

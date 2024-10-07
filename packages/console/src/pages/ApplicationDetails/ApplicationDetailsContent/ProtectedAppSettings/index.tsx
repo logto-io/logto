@@ -21,6 +21,7 @@ import { isCloud } from '@/consts/env';
 import { openIdProviderConfigPath } from '@/consts/oidc';
 import Button from '@/ds-components/Button';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
+import FlipOnRtl from '@/ds-components/FlipOnRtl';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Spacer from '@/ds-components/Spacer';
@@ -110,7 +111,11 @@ function ProtectedAppSettings({ data }: Props) {
             className={styles.button}
             size="small"
             title="application_details.try_it"
-            trailingIcon={<ExternalLinkIcon />}
+            trailingIcon={
+              <FlipOnRtl>
+                <ExternalLinkIcon />
+              </FlipOnRtl>
+            }
             onClick={() => {
               window.open(externalLink, '_blank');
             }}

@@ -12,7 +12,7 @@
   .delete {
     display: none;
     position: absolute;
-    right: _.unit(2);
+    inset-inline-end: _.unit(2);
     bottom: _.unit(2);
   }
 
@@ -28,7 +28,6 @@
       cursor: not-allowed;
     }
   }
-
 
   &:hover {
     .delete {

@@ -15,17 +15,17 @@
 .title {
   display: flex;
   align-items: center;
+  gap: _.unit(3);
 
   .name {
     font: var(--font-body-2);
-    margin-left: _.unit(3);
   }
 
   .icon {
     width: 16px;
     height: 16px;
     object-fit: cover;
-    margin-left: _.unit(1);
+    margin-inline-start: _.unit(1);
     color: var(--color-text-secondary);
   }
 }

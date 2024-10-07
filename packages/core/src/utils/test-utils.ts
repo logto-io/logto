@@ -146,7 +146,7 @@ export function createRequester<StateT, ContextT extends IRouterParamContext, Re
     const authRouter: ManagementApiRouter = new Router();
 
     authRouter.use(async (ctx, next) => {
-      ctx.auth = { type: 'user', id: 'foo' };
+      ctx.auth = { type: 'user', id: 'foo', scopes: new Set() };
 
       return next();
     });

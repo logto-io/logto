@@ -2,17 +2,26 @@ import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
-import { addProfile } from '@/apis/interaction';
+import { fulfillProfile } from '@/apis/experience';
 import SetPasswordForm from '@/containers/SetPassword';
+import useApi from '@/hooks/use-api';
 import { usePromiseConfirmModal } from '@/hooks/use-confirm-modal';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
+import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
-import usePasswordAction, { type SuccessHandler } from '@/hooks/use-password-action';
+import usePasswordPolicyChecker from '@/hooks/use-password-policy-checker';
+import usePasswordRejectionErrorHandler from '@/hooks/use-password-rejection-handler';
 import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
 import { usePasswordPolicy } from '@/hooks/use-sie';
+import { type ContinueFlowInteractionEvent } from '@/types';
 
-const SetPassword = () => {
+type Props = {
+  readonly interactionEvent: ContinueFlowInteractionEvent;
+};
+
+const SetPassword = ({ interactionEvent }: Props) => {
   const [errorMessage, setErrorMessage] = useState<string>();
+
   const clearErrorMessage = useCallback(() => {
     setErrorMessage(undefined);
   }, []);
@@ -21,7 +30,12 @@ const SetPassword = () => {
   const { show } = usePromiseConfirmModal();
   const redirectTo = useGlobalRedirectTo();
 
-  const preSignInErrorHandler = usePreSignInErrorHandler();
+  const checkPassword = usePasswordPolicyChecker({ setErrorMessage });
+  const addPassword = useApi(fulfillProfile);
+  const handleError = useErrorHandler();
+
+  const passwordRejectionErrorHandler = usePasswordRejectionErrorHandler({ setErrorMessage });
+  const preSignInErrorHandler = usePreSignInErrorHandler({ interactionEvent, replace: true });
 
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
@@ -30,24 +44,35 @@ const SetPassword = () => {
         navigate(-1);
       },
       ...preSignInErrorHandler,
+      ...passwordRejectionErrorHandler,
     }),
-    [navigate, preSignInErrorHandler, show]
+    [navigate, passwordRejectionErrorHandler, preSignInErrorHandler, show]
   );
-  const successHandler: SuccessHandler<typeof addProfile> = useCallback(
-    async (result) => {
+
+  const onSubmitHandler = useCallback(
+    async (password: string) => {
+      const success = await checkPassword(password);
+
+      if (!success) {
+        return;
+      }
+
+      const [error, result] = await addPassword(
+        { type: 'password', value: password },
+        interactionEvent
+      );
+
+      if (error) {
+        await handleError(error, errorHandlers);
+        return;
+      }
+
       if (result?.redirectTo) {
         await redirectTo(result.redirectTo);
       }
     },
-    [redirectTo]
+    [addPassword, checkPassword, errorHandlers, interactionEvent, handleError, redirectTo]
   );
-
-  const [action] = usePasswordAction({
-    api: async (password) => addProfile({ password }),
-    setErrorMessage,
-    errorHandlers,
-    successHandler,
-  });
 
   const {
     policy: {
@@ -68,7 +93,7 @@ const SetPassword = () => {
         errorMessage={errorMessage}
         maxLength={max}
         clearErrorMessage={clearErrorMessage}
-        onSubmit={action}
+        onSubmit={onSubmitHandler}
       />
     </SecondaryPageLayout>
   );

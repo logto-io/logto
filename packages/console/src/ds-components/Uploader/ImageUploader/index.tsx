@@ -30,6 +30,7 @@ function ImageUploader({
   ...rest
 }: Props) {
   const { allowedMimeTypes } = useImageMimeTypes(imageMimeTypes);
+
   return value ? (
     <div className={classNames(styles.imageUploader, className, uploadedClassName)}>
       <ImageWithErrorFallback

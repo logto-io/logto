@@ -37,7 +37,7 @@ const quota_table = {
     built_in_email_connector: '내장 이메일 커넥터',
     mfa: '다중 인증',
     sso: '기업 SSO',
-    adaptive_mfa: '적응형 MFA',
+
     impersonation: '가장하기',
   },
   user_management: {
@@ -59,7 +59,8 @@ const quota_table = {
     just_in_time_provisioning: '적시 프로비저닝',
   },
   support: {
-    title: '컴플라이언스 및 지원',
+    /** UNTRANSLATED */
+    title: 'Support',
     community: '커뮤니티',
     customer_ticket: '지원 티켓',
     premium: '프리미엄',
@@ -81,12 +82,7 @@ const quota_table = {
   days_other: '{{count, number}} 일',
   add_on: '부가 기능',
   tier: '레벨{{value, number}}: ',
-  paid_token_limit_tip:
-    'Logto 는 할당량 한도를 초과하는 기능에 대해 요금을 부과할 것입니다. 2024년 제 2분기부터 요금이 부과될 때까지 무료로 사용할 수 있습니다. 더 많은 토큰이 필요한 경우 저희에게 문의하십시오. 기본적으로 100만 토큰 당 월 $80 을 청구합니다.',
-  paid_quota_limit_tip:
-    'Logto 는 할당량 제한을 초과하는 기능에 대해 요금을 부과할 것입니다. 2024년 제 2분기까지는 무료로 사용할 수 있습니다.',
-  paid_add_on_feature_tip:
-    '이것은 부가 기능입니다. 2024년 제 2분기까지는 무료로 사용할 수 있습니다.',
+
   million: '{{value, number}} 백만',
   mau_tip:
     'MAU (월간 활성 사용자) 는 청구 주기 동안 Logto 와 적어도 하나의 토큰을 교환한 고유 사용자 수를 의미합니다.',

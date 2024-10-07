@@ -191,6 +191,17 @@ function CreateForm({ onClose, onCreate }: Props) {
               error={errors.username?.message ?? Boolean(missingIdentifierError)}
             />
           </FormField>
+          <FormField title="user_details.field_name">
+            <TextInput
+              {...register('name', {
+                onChange: () => {
+                  revalidateForm();
+                },
+              })}
+              placeholder={t('users.placeholder_name')}
+              error={errors.name?.message ?? Boolean(missingIdentifierError)}
+            />
+          </FormField>
         </form>
         {missingIdentifierError && <div className={styles.error}>{missingIdentifierError}</div>}
       </ModalLayout>

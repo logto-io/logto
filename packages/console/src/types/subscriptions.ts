@@ -14,20 +14,18 @@ export enum ReservedPlanName {
 export enum ReservedSkuId {
   Free = 'free',
   Pro = 'pro',
+  Development = 'dev',
+  Admin = 'admin',
   Enterprise = 'enterprise',
 }
 
-export type SubscriptionPlanQuota = Omit<
+type SubscriptionPlanQuota = Omit<
   SubscriptionPlanResponse['quota'],
   'builtInEmailConnectorEnabled'
 > & {
   // Add ticket support quota item to the plan since it will be compared in the downgrade plan notification modal.
   ticketSupportResponseTime: number;
 };
-
-export type SubscriptionPlanQuotaEntries = Array<
-  [keyof SubscriptionPlanQuota, SubscriptionPlanQuota[keyof SubscriptionPlanQuota]]
->;
 
 export type SubscriptionPlan = Omit<SubscriptionPlanResponse, 'quota'> & {
   quota: SubscriptionPlanQuota;

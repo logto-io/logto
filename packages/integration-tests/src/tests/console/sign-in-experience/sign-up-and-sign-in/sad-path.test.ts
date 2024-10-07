@@ -73,7 +73,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
 
         await expectErrorsOnNavTab(page, {
           tab: 'Sign-up and sign-in',
-          error: '1 errors',
+          error: '1 error',
         });
       });
 
@@ -129,7 +129,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
 
         await expectErrorsOnNavTab(page, {
           tab: 'Sign-up and sign-in',
-          error: '1 errors',
+          error: '1 error',
         });
       });
 
@@ -220,7 +220,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
         await expectSignInMethodError(page, 'Phone number');
         await expectErrorsOnNavTab(page, {
           tab: 'Sign-up and sign-in',
-          error: '1 errors',
+          error: '1 error',
         });
 
         // Disable password option for sign-in method
@@ -234,7 +234,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
         await expectSignInMethodError(page, 'Phone number');
         await expectErrorsOnNavTab(page, {
           tab: 'Sign-up and sign-in',
-          error: '1 errors',
+          error: '1 error',
         });
       });
     });
@@ -285,7 +285,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
         await expectSignInMethodError(page, 'Email address');
         await expectErrorsOnNavTab(page, {
           tab: 'Sign-up and sign-in',
-          error: '1 errors',
+          error: '1 error',
         });
 
         // Disable password option for sign-in method
@@ -299,7 +299,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
         await expectSignInMethodError(page, 'Email address');
         await expectErrorsOnNavTab(page, {
           tab: 'Sign-up and sign-in',
-          error: '1 errors',
+          error: '1 error',
         });
       });
     });

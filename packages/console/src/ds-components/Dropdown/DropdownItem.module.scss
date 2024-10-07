@@ -8,6 +8,7 @@
   display: flex;
   align-items: center;
   overflow: hidden;
+  gap: _.unit(4);
 
   &:hover {
     background: var(--color-hover);
@@ -20,6 +21,5 @@
   .icon {
     display: flex;
     align-items: center;
-    margin-right: _.unit(4);
   }
 }

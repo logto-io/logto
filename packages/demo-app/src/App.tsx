@@ -1,6 +1,8 @@
 import { type IdTokenClaims, LogtoProvider, useLogto, type Prompt } from '@logto/react';
 import { demoAppApplicationId } from '@logto/schemas';
+import i18next from 'i18next';
 import { useCallback, useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 
 import '@/scss/normalized.scss';
@@ -121,6 +123,15 @@ const Main = () => {
 
   return (
     <div className={styles.app}>
+      <Helmet
+        htmlAttributes={{
+          // We intentionally use the imported i18next instance instead of the hook, since the hook
+          // will cause a re-render following some bugs here. This still works for the initial
+          // render, so we're good for now. Consider refactoring this in the future.
+          lang: i18next.language,
+          dir: i18next.dir(),
+        }}
+      />
       {showDevPanel && <DevPanel />}
       <div className={[styles.card, styles.congrats].join(' ')}>
         {congratsIcon && <img src={congratsIcon} alt="Congrats" />}

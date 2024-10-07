@@ -1,0 +1,90 @@
+{
+  "paths": {
+    "/api/users/{userId}/personal-access-tokens": {
+      "get": {
+        "summary": "Get personal access tokens",
+        "description": "Get all personal access tokens for the user.",
+        "responses": {
+          "200": {
+            "description": "A list of personal access tokens."
+          }
+        }
+      },
+      "post": {
+        "summary": "Add personal access token",
+        "description": "Add a new personal access token for the user.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "The personal access token name. Must be unique within the user."
+                  },
+                  "expiresAt": {
+                    "description": "The epoch time in milliseconds when the token will expire. If not provided, the token will never expire."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The personal access token was added successfully."
+          },
+          "422": {
+            "description": "The personal access token name is already in use."
+          }
+        }
+      }
+    },
+    "/api/users/{userId}/personal-access-tokens/{name}": {
+      "delete": {
+        "summary": "Delete personal access token",
+        "description": "Delete a token for the user by name.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "The name of the token."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The token was deleted successfully."
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update personal access token",
+        "description": "Update a token for the user by name.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "The name of the token."
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "The token name to update. Must be unique within the user."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The token was updated successfully."
+          }
+        }
+      }
+    }
+  }
+}

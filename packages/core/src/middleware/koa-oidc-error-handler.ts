@@ -82,6 +82,7 @@ const isSessionNotFound = (description?: string) =>
  * @see {@link errorUris} for the list of error URIs.
  */
 export default function koaOidcErrorHandler<StateT, ContextT>(): Middleware<StateT, ContextT> {
+  // eslint-disable-next-line complexity
   return async (ctx, next) => {
     try {
       await next();
@@ -96,9 +97,22 @@ export default function koaOidcErrorHandler<StateT, ContextT>(): Middleware<Stat
       ctx.body = errorOut(error);
     }
 
+    // Parse the `parse_error` from the query string.
+    // If the `parse_error` is set to false, only returns the original oidc error body.
+    // For some third-party connectors, like Google, `code` is considered as a reserved OIDC key,
+    // we can't return the error body containing `code` in the error response.
+    const queryParametersResult = z
+      .object({
+        parse_error: z.literal('false').optional(),
+      })
+      .safeParse(ctx.query);
+
+    const returnRawError =
+      queryParametersResult.success && queryParametersResult.data.parse_error === 'false';
+
     // This is the only way we can check if the error is handled by the oidc-provider, because
     // oidc-provider doesn't call `renderError` when the request prefers JSON response.
-    if (ctx.status >= 400 && isObject(ctx.body)) {
+    if (ctx.status >= 400 && isObject(ctx.body) && !returnRawError) {
       const parsed = z
         .object({
           error: z.string(),
@@ -112,11 +126,14 @@ export default function koaOidcErrorHandler<StateT, ContextT>(): Middleware<Stat
         const code = isSessionNotFound(data.error_description)
           ? 'session.not_found'
           : `oidc.${data.error}`;
+
         const uri = errorUris[data.error];
 
         ctx.body = {
           code,
-          message: i18next.t(['errors:' + code, 'errors:oidc.provider_error_fallback'], { code }),
+          message: i18next.t(['errors:' + code, 'errors:oidc.provider_error_fallback'], {
+            code,
+          }),
           error_uri: uri,
           ...ctx.body,
         };

@@ -116,23 +116,23 @@ function Providers() {
       <AppThemeProvider>
         <Helmet titleTemplate={`%s - ${mainTitle}`} defaultTitle={mainTitle} />
         <Toast />
-        <ErrorBoundary>
-          <LogtoErrorBoundary>
-            {/**
-             * If it's not Cloud (OSS), render the tenant app container directly since only default tenant is available;
-             * if it's Cloud, render the tenant app container only when a tenant ID is available (in a tenant context).
-             */}
-            {!isCloud || currentTenantId ? (
-              <AppDataProvider>
-                <AppConfirmModalProvider>
+        <AppConfirmModalProvider>
+          <ErrorBoundary>
+            <LogtoErrorBoundary>
+              {/**
+               * If it's not Cloud (OSS), render the tenant app container directly since only default tenant is available;
+               * if it's Cloud, render the tenant app container only when a tenant ID is available (in a tenant context).
+               */}
+              {!isCloud || currentTenantId ? (
+                <AppDataProvider>
                   <AppRoutes />
-                </AppConfirmModalProvider>
-              </AppDataProvider>
-            ) : (
-              <CloudAppRoutes />
-            )}
-          </LogtoErrorBoundary>
-        </ErrorBoundary>
+                </AppDataProvider>
+              ) : (
+                <CloudAppRoutes />
+              )}
+            </LogtoErrorBoundary>
+          </ErrorBoundary>
+        </AppConfirmModalProvider>
       </AppThemeProvider>
     </LogtoProvider>
   );

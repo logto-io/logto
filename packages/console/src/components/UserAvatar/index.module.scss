@@ -45,7 +45,11 @@
   width: 48px;
   height: 48px;
   object-fit: cover;
-  transform-origin: 0 0;
+  transform-origin: top left;
+
+  &.rtl {
+    transform-origin: top right;
+  }
 
   &.micro {
     transform: scale(0.416);
@@ -90,6 +94,6 @@
   .value {
     // Fixed font color should used in Tooltip component as the color does not change when theme changes.
     color: #f7f8f8;
-    margin-left: _.unit(1);
+    margin-inline-start: _.unit(1);
   }
 }

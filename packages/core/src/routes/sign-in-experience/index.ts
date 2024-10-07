@@ -1,12 +1,15 @@
 import { DemoConnector } from '@logto/connector-kit';
+import { PasswordPolicyChecker } from '@logto/core-kit';
 import { ConnectorType, SignInExperiences } from '@logto/schemas';
+import { tryThat } from '@silverhand/essentials';
 import { literal, object, string, z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import { validateSignUp, validateSignIn } from '#src/libraries/sign-in-experience/index.js';
 import { validateMfa } from '#src/libraries/sign-in-experience/mfa.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
+import RequestError from '../../errors/RequestError/index.js';
+import { checkPasswordPolicyForUser } from '../../utils/password.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 import customUiAssetsRoutes from './custom-ui-assets/index.js';
@@ -17,9 +20,10 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
   const [router, { queries, libraries, connectors }] = args;
   const { findDefaultSignInExperience, updateDefaultSignInExperience } = queries.signInExperiences;
   const { deleteConnectorById } = queries.connectors;
+  const { findUserById } = queries.users;
   const {
     signInExperiences: { validateLanguageInfo },
-    quota: { guardKey, guardTenantUsageByKey },
+    quota: { guardTenantUsageByKey, reportSubscriptionUpdatesUsage },
   } = libraries;
   const { getLogtoConnectors } = connectors;
 
@@ -56,7 +60,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
       response: SignInExperiences.guard,
       status: [200, 400, 404, 422],
     }),
-    // eslint-disable-next-line complexity
+
     async (ctx, next) => {
       const {
         query: { removeUnusedDemoSocialConnector },
@@ -91,9 +95,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
 
       if (mfa) {
         if (mfa.factors.length > 0) {
-          await (EnvSet.values.isDevFeaturesEnabled
-            ? guardTenantUsageByKey('mfaEnabled')
-            : guardKey('mfaEnabled'));
+          await guardTenantUsageByKey('mfaEnabled');
         }
         validateMfa(mfa);
       }
@@ -122,6 +124,54 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           : rest
       );
 
+      await reportSubscriptionUpdatesUsage('mfaEnabled');
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/sign-in-exp/default/check-password',
+    koaGuard({
+      body: z.object({ password: z.string(), userId: z.string().optional() }),
+      response: z.object({ result: z.literal(true) }).or(
+        z.object({
+          result: z.literal(false),
+          issues: z.array(
+            z.object({ code: z.string(), interpolation: z.record(z.unknown()).optional() })
+          ),
+        })
+      ),
+      status: [200, 400],
+    }),
+    async (ctx, next) => {
+      const { password, userId } = ctx.guard.body;
+      const [signInExperience, user] = await Promise.all([
+        findDefaultSignInExperience(),
+        userId && findUserById(userId),
+      ]);
+      const passwordPolicyChecker = new PasswordPolicyChecker(signInExperience.passwordPolicy);
+
+      const issues = await tryThat(
+        async () =>
+          user
+            ? checkPasswordPolicyForUser(passwordPolicyChecker, password, user)
+            : passwordPolicyChecker.check(password),
+        (error) => {
+          if (error instanceof TypeError) {
+            throw new RequestError('request.invalid_input', { message: error.message });
+          }
+          throw error;
+        }
+      );
+
+      if (issues.length > 0) {
+        ctx.status = 400;
+        ctx.body = { result: false, issues };
+        return next();
+      }
+
+      ctx.body = { result: true };
       return next();
     }
   );

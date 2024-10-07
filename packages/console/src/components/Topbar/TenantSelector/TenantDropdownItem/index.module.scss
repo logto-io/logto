@@ -3,7 +3,8 @@
 .item {
   display: flex;
   align-items: center;
-  padding: _.unit(2.5) _.unit(3) _.unit(2.5) _.unit(4);
+  padding-block: _.unit(2.5);
+  padding-inline: _.unit(4) _.unit(3);
   margin: _.unit(1);
   border-radius: 6px;
   transition: background-color 0.2s ease-in-out;
@@ -20,7 +21,7 @@
   .info {
     display: flex;
     flex-direction: column;
-    margin-right: _.unit(4);
+    margin-inline-end: _.unit(4);
 
     .meta {
       display: flex;

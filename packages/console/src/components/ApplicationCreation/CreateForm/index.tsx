@@ -10,7 +10,6 @@ import Modal from 'react-modal';
 import { useSWRConfig } from 'swr';
 
 import { GtagConversionId, reportConversion } from '@/components/Conversion/utils';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
@@ -18,6 +17,7 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
+import useApplicationsUsage from '@/hooks/use-applications-usage';
 import useCurrentUser from '@/hooks/use-current-user';
 import TypeDescription from '@/pages/Applications/components/TypeDescription';
 import modalStyles from '@/scss/modal.module.scss';
@@ -49,6 +49,7 @@ function CreateForm({
 }: Props) {
   const {
     handleSubmit,
+    watch,
     control,
     register,
     formState: { errors, isSubmitting },
@@ -56,7 +57,7 @@ function CreateForm({
     defaultValues: { type: defaultCreateType, isThirdParty: isDefaultCreateThirdParty },
   });
   const {
-    currentSubscription: { planId },
+    currentSubscription: { isAddOnAvailable, planId },
   } = useContext(SubscriptionDataContext);
   const { user } = useCurrentUser();
   const { mutate: mutateGlobal } = useSWRConfig();
@@ -71,6 +72,8 @@ function CreateForm({
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useApi();
+
+  const { hasMachineToMachineAppsReachedLimit } = useApplicationsUsage();
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (data) => {
@@ -122,8 +125,16 @@ function CreateForm({
         title="applications.create"
         subtitle={subtitleElement}
         paywall={conditional(
-          isDevFeaturesEnabled && planId === ReservedPlanId.Pro && ReservedPlanId.Pro
+          isAddOnAvailable &&
+            watch('type') === ApplicationType.MachineToMachine &&
+            planId !== ReservedPlanId.Pro &&
+            ReservedPlanId.Pro
         )}
+        hasAddOnTag={
+          isAddOnAvailable &&
+          watch('type') === ApplicationType.MachineToMachine &&
+          hasMachineToMachineAppsReachedLimit
+        }
         size={defaultCreateType ? 'medium' : 'large'}
         footer={
           <Footer

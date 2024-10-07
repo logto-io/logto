@@ -16,7 +16,7 @@
     background-color: var(--color-layer-1);
     border-radius: 8px;
     padding: _.unit(12);
-    margin-right: _.unit(6);
+    margin-inline-end: _.unit(6);
 
     .authnSelector {
       grid-template-columns: repeat(2, 1fr);

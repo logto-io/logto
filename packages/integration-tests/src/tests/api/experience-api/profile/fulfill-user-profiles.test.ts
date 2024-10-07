@@ -22,9 +22,9 @@ import {
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest, generateEmail } from '#src/utils.js';
+import { generateEmail } from '#src/utils.js';
 
-devFeatureTest.describe('Fulfill User Profiles', () => {
+describe('Fulfill User Profiles', () => {
   const userApi = new UserApiTest();
 
   beforeAll(async () => {

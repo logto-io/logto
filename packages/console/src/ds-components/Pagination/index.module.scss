@@ -21,7 +21,7 @@
       list-style: none;
 
       &:not(:first-child) {
-        margin-left: _.unit(2);
+        margin-inline-start: _.unit(2);
       }
 
       .button {
@@ -35,6 +35,11 @@
 
         > span {
           margin: 0 auto;
+        }
+
+        svg {
+          width: 20px;
+          height: 20px;
         }
 
         &.active {

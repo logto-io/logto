@@ -81,7 +81,7 @@
       max-width: 800px;
       width: 25vw;
       position: fixed;
-      left: _.unit(2);
+      inset-inline-start: _.unit(2);
       top: _.unit(2);
       padding: _.unit(4);
       gap: _.unit(3);

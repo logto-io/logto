@@ -37,7 +37,7 @@ const quota_table = {
     built_in_email_connector: '組み込みE-mailコネクタ',
     mfa: '多要素認証',
     sso: 'エンタープライズ SSO',
-    adaptive_mfa: '適応型MFA',
+
     impersonation: 'なりすまし',
   },
   user_management: {
@@ -59,7 +59,8 @@ const quota_table = {
     just_in_time_provisioning: 'ジャストインタイムプロビジョニング',
   },
   support: {
-    title: 'コンプライアンスとサポート',
+    /** UNTRANSLATED */
+    title: 'Support',
     community: 'コミュニティ',
     customer_ticket: 'カスタマーチケット',
     premium: 'プレミアム',
@@ -81,12 +82,7 @@ const quota_table = {
   days_other: '{{count, number}} 日',
   add_on: 'アドオン',
   tier: 'レベル{{value, number}}: ',
-  paid_token_limit_tip:
-    'Logtoは、クォータ制限を超える機能に対して料金を追加します。2024年第2四半期ごろから課金を開始するまで無料でご利用いただけます。トークンがさらに必要な場合は、お問い合わせください。デフォルトでは、100万トークンごとに月額 80 ドルを請求します。',
-  paid_quota_limit_tip:
-    'Logtoはクォータ制限を超える機能に対して料金を追加します。2024年第2四半期ごろまでは無料でご利用いただけます。',
-  paid_add_on_feature_tip:
-    'これはアドオン機能です。2024年第2四半期ごろまでは無料でご利用いただけます。',
+
   million: '{{value, number}} 万',
   mau_tip:
     'MAU（月間アクティブユーザー）は、請求サイクルで Logto と少なくとも 1 つのトークンを交換したユニークユーザーの数を指します。',

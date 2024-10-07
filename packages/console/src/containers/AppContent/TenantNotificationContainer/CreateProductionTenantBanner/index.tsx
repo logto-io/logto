@@ -22,25 +22,27 @@ function CreateProductionTenantBanner() {
   }
 
   return createPortal(
-    <div className={styles.banner}>
-      <CreateTenantModal
-        isOpen={isCreateModalOpen}
-        onClose={async (tenant?: TenantResponse) => {
-          setIsCreateModalOpen(false);
-          if (tenant) {
-            prependTenant(tenant);
-            navigateTenant(tenant.id);
-          }
-        }}
-      />
-      <span>{t('text')}</span>
-      <TextLink
-        onClick={() => {
-          setIsCreateModalOpen(true);
-        }}
-      >
-        {t('action')}
-      </TextLink>
+    <div className={styles.container}>
+      <div className={styles.banner}>
+        <CreateTenantModal
+          isOpen={isCreateModalOpen}
+          onClose={async (tenant?: TenantResponse) => {
+            setIsCreateModalOpen(false);
+            if (tenant) {
+              prependTenant(tenant);
+              navigateTenant(tenant.id);
+            }
+          }}
+        />
+        <span>{t('text')}</span>
+        <TextLink
+          onClick={() => {
+            setIsCreateModalOpen(true);
+          }}
+        >
+          {t('action')}
+        </TextLink>
+      </div>
     </div>,
     document.body
   );

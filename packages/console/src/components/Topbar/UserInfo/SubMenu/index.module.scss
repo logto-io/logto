@@ -8,6 +8,7 @@
   font: var(--font-body-2);
   border-radius: _.unit(2);
   cursor: pointer;
+  gap: _.unit(4);
 
   &:hover {
     background: var(--color-hover);
@@ -22,13 +23,12 @@
 
 .title {
   font: var(--font-body-2);
-  margin-left: _.unit(4);
 }
 
 .menu {
   position: absolute;
   top: -4px;
-  right: calc(100% + 5px);
+  inset-inline-end: calc(100% + 5px);
   visibility: hidden;
   background: var(--color-float);
   border: 1px solid var(--color-divider);
@@ -43,7 +43,8 @@
 .menuOption {
   position: relative;
   min-width: 200px;
-  padding: _.unit(2.5) _.unit(5.5) _.unit(2.5) _.unit(8);
+  padding-block: _.unit(2.5);
+  padding-inline: _.unit(8) _.unit(5.5);
   margin: _.unit(1);
 
   &.selected {
@@ -52,7 +53,7 @@
 
   .tick {
     position: absolute;
-    left: 8px;
+    inset-inline-start: 8px;
     top: 10px;
   }
 }

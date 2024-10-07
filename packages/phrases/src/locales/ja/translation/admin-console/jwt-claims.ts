@@ -28,12 +28,12 @@ const jwt_claims = {
   jwt_claims_description: 'デフォルトクレームはJWTに自動的に含まれ、オーバーライドできません。',
   user_data: {
     title: 'ユーザーデータ',
-    subtitle: '`data.user`入力パラメータを使用して重要なユーザー情報を提供します。',
+    subtitle: '`context.user`入力パラメータを使用して重要なユーザー情報を提供します。',
   },
   grant_data: {
     title: 'グラントデータ',
     subtitle:
-      '`data.grant`入力パラメータを使用して重要なグラント情報を提供します。これはトークン交換のためにのみ使用できます。',
+      '`context.grant`入力パラメータを使用して重要なグラント情報を提供します。これはトークン交換のためにのみ使用できます。',
   },
   token_data: {
     title: 'トークンデータ',

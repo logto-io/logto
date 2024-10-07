@@ -1,0 +1,100 @@
+{
+  "paths": {
+    "/api/experience/verification/social/{connectorId}/authorization-uri": {
+      "post": {
+        "operationId": "CreateSocialVerification",
+        "summary": "Create social verification",
+        "description": "Create a new SocialVerification record and return the provider's authorization URI for the given connector.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "redirectUri": {
+                    "description": "The URI to redirect the user after the social authorization is completed."
+                  },
+                  "state": {
+                    "description": "The state parameter to pass to the social connector."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The social authorization URI has been successfully generated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "authorizationUri": {
+                      "description": "The social authorization URI."
+                    },
+                    "verificationId": {
+                      "description": "The unique verification ID of the newly created SocialVerification record. The `verificationId` is required when verifying the social authorization response."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The social connector is not found."
+          },
+          "500": {
+            "description": "Connector error. Failed to generate the social authorization URI."
+          }
+        }
+      }
+    },
+    "/api/experience/verification/social/{connectorId}/verify": {
+      "post": {
+        "operationId": "VerifySocialVerification",
+        "summary": "Verify social verification",
+        "description": "Verify the social authorization response data and get the user's identity data from the social provider.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "verificationId": {
+                    "description": "The ID of the Social verification record."
+                  },
+                  "connectorData": {
+                    "description": "Arbitrary data returned by the social provider to complete the verification process."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The social authorization response has been successfully verified.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "verificationId": {
+                      "description": "The unique verification ID of the SocialVerification record. This ID is required when identifying the user in the current interaction."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The social authorization response is invalid or cannot be verified."
+          },
+          "404": {
+            "description": "The social connector is not found."
+          },
+          "500": {
+            "description": "Connector error. Failed to verify the social authorization response or fetch the user info from the social provider."
+          }
+        }
+      }
+    }
+  }
+}

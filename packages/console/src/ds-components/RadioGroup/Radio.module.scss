@@ -13,12 +13,12 @@
   .content {
     display: flex;
     align-items: center;
+    gap: _.unit(2);
 
     .indicator {
       border-radius: 50%;
       border: 2px solid var(--color-neutral-60);
       display: inline-block;
-      margin-right: _.unit(2);
 
       &::before {
         content: '';
@@ -33,7 +33,7 @@
 
     .icon,
     .trailingIcon {
-      margin-right: _.unit(2);
+      margin-inline-end: _.unit(2);
       color: var(--color-text-secondary);
 
       > svg {
@@ -42,8 +42,8 @@
     }
 
     .trailingIcon {
-      margin-right: unset;
-      margin-left: _.unit(2);
+      margin-inline-end: unset;
+      margin-inline-start: _.unit(2);
     }
   }
 }
@@ -66,9 +66,9 @@
       border-radius: unset;
       border: unset;
       display: block;
-      margin-right: unset;
+      margin-inline-end: unset;
       position: absolute;
-      right: 0;
+      inset-inline-end: 0;
       top: 0;
 
       svg {
@@ -82,7 +82,7 @@
 
     .icon,
     .trailingIcon {
-      margin-right: _.unit(2);
+      margin-inline-end: _.unit(2);
       vertical-align: middle;
       color: var(--color-text-secondary);
 
@@ -92,8 +92,8 @@
     }
 
     .trailingIcon {
-      margin-right: unset;
-      margin-left: _.unit(2);
+      margin-inline-end: unset;
+      margin-inline-start: _.unit(2);
     }
 
     .disabledLabel {
@@ -113,15 +113,17 @@
   font: var(--font-label-2);
 
   &:first-child {
-    border-radius: 12px 0 0 12px;
+    border-start-start-radius: 12px;
+    border-end-start-radius: 12px;
   }
 
   &:last-child {
-    border-radius: 0 12px 12px 0;
+    border-start-end-radius: 12px;
+    border-end-end-radius: 12px;
   }
 
   &:not(:first-child) {
-    border-left: none;
+    border-inline-start: none;
   }
 
   &:not(:last-child) {
@@ -133,11 +135,11 @@
     height: 100%;
 
     .icon {
-      margin-right: _.unit(4);
+      margin-inline-end: _.unit(4);
     }
 
     .trailingIcon {
-      margin-left: _.unit(4);
+      margin-inline-start: _.unit(4);
     }
   }
 }
@@ -150,15 +152,17 @@
   height: 36px;
 
   &:first-child {
-    border-radius: 6px 0 0 6px;
+    border-start-start-radius: 6px;
+    border-end-start-radius: 6px;
   }
 
   &:last-child {
-    border-radius: 0 6px 6px 0;
+    border-start-end-radius: 6px;
+    border-end-end-radius: 6px;
   }
 
   &:not(:first-child) {
-    border-left: none;
+    border-inline-start: none;
   }
 
   &:not(:last-child) {
@@ -215,7 +219,7 @@
     content: '';
     width: 1px;
     top: -1px;
-    left: -1px;
+    inset-inline-start: -1px;
     bottom: -1px;
     background-color: var(--color-primary);
   }
@@ -231,7 +235,7 @@
     content: '';
     width: 1px;
     top: -1px;
-    left: -1px;
+    inset-inline-start: -1px;
     bottom: -1px;
     background-color: var(--color-text-link);
   }
@@ -322,7 +326,7 @@
       content: '';
       width: 1px;
       top: -1px;
-      left: -1px;
+      inset-inline-start: -1px;
       bottom: -1px;
       background-color: var(--color-primary);
     }

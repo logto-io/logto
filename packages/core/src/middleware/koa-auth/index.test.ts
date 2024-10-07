@@ -12,9 +12,9 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 import type { WithAuthContext } from './index.js';
 
 const { jest } = import.meta;
-const { mockEsm } = createMockUtils(jest);
+const { mockEsmWithActual, mockEsm } = createMockUtils(jest);
 
-mockEsm('./utils.js', () => ({
+await mockEsmWithActual('./utils.js', () => ({
   getAdminTenantTokenValidationSet: jest.fn().mockResolvedValue({ keys: [], issuer: [] }),
 }));
 
@@ -39,6 +39,7 @@ describe('koaAuth middleware', () => {
     auth: {
       type: 'user',
       id: '',
+      scopes: new Set(),
     },
   };
 
@@ -62,6 +63,7 @@ describe('koaAuth middleware', () => {
     ctx.auth = {
       type: 'user',
       id: '',
+      scopes: new Set(),
     };
     ctx.request = baseCtx.request;
     jest.resetModules();
@@ -74,7 +76,7 @@ describe('koaAuth middleware', () => {
     });
 
     await koaAuth(mockEnvSet, audience)(ctx, next);
-    expect(ctx.auth).toEqual({ type: 'user', id: 'foo' });
+    expect(ctx.auth).toEqual({ type: 'user', id: 'foo', scopes: new Set(['all']) });
 
     stub.restore();
   });
@@ -89,7 +91,7 @@ describe('koaAuth middleware', () => {
     };
 
     await koaAuth(mockEnvSet, audience)(mockCtx, next);
-    expect(mockCtx.auth).toEqual({ type: 'user', id: 'foo' });
+    expect(mockCtx.auth).toEqual({ type: 'user', id: 'foo', scopes: new Set(['all']) });
   });
 
   it('should read DEVELOPMENT_USER_ID from env variable first if is in production and integration test', async () => {
@@ -101,7 +103,7 @@ describe('koaAuth middleware', () => {
     });
 
     await koaAuth(mockEnvSet, audience)(ctx, next);
-    expect(ctx.auth).toEqual({ type: 'user', id: 'foo' });
+    expect(ctx.auth).toEqual({ type: 'user', id: 'foo', scopes: new Set(['all']) });
 
     stub.restore();
   });
@@ -122,7 +124,7 @@ describe('koaAuth middleware', () => {
     };
 
     await koaAuth(mockEnvSet, audience)(mockCtx, next);
-    expect(mockCtx.auth).toEqual({ type: 'user', id: 'foo' });
+    expect(mockCtx.auth).toEqual({ type: 'user', id: 'foo', scopes: new Set(['all']) });
 
     stub.restore();
   });
@@ -135,7 +137,7 @@ describe('koaAuth middleware', () => {
       },
     };
     await koaAuth(mockEnvSet, audience)(ctx, next);
-    expect(ctx.auth).toEqual({ type: 'user', id: 'fooUser' });
+    expect(ctx.auth).toEqual({ type: 'user', id: 'fooUser', scopes: new Set(['all']) });
   });
 
   it('expect to throw if authorization header is missing', async () => {
@@ -183,7 +185,7 @@ describe('koaAuth middleware', () => {
     };
 
     await koaAuth(mockEnvSet, audience)(ctx, next);
-    expect(ctx.auth).toEqual({ type: 'app', id: 'bar' });
+    expect(ctx.auth).toEqual({ type: 'app', id: 'bar', scopes: new Set(['all']) });
   });
 
   it('expect to throw if jwt scope is missing', async () => {

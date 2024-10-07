@@ -32,6 +32,7 @@ import interactionRoutes from './interaction/index.js';
 import logRoutes from './log.js';
 import logtoConfigRoutes from './logto-config/index.js';
 import organizationRoutes from './organization/index.js';
+import profileRoutes from './profile/index.js';
 import resourceRoutes from './resource.js';
 import resourceScopeRoutes from './resource.scope.js';
 import roleRoutes from './role.js';
@@ -42,10 +43,11 @@ import statusRoutes from './status.js';
 import subjectTokenRoutes from './subject-token.js';
 import swaggerRoutes from './swagger/index.js';
 import systemRoutes from './system.js';
-import type { AnonymousRouter, ManagementApiRouter } from './types.js';
+import type { AnonymousRouter, ManagementApiRouter, ProfileRouter } from './types.js';
 import userAssetsRoutes from './user-assets.js';
 import verificationCodeRoutes from './verification-code.js';
-import wellKnownRoutes from './well-known.js';
+import wellKnownRoutes from './well-known/index.js';
+import wellKnownOpenApiRoutes from './well-known/well-known.openapi.js';
 
 const createRouters = (tenant: TenantContext) => {
   const interactionRouter: AnonymousRouter = new Router();
@@ -53,10 +55,8 @@ const createRouters = (tenant: TenantContext) => {
   interactionRoutes(interactionRouter, tenant);
 
   const experienceRouter: AnonymousRouter = new Router();
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    experienceRouter.use(koaAuditLog(tenant.queries));
-    experienceApiRoutes(experienceRouter, tenant);
-  }
+  experienceRouter.use(koaAuditLog(tenant.queries));
+  experienceApiRoutes(experienceRouter, tenant);
 
   const managementRouter: ManagementApiRouter = new Router();
   managementRouter.use(koaAuth(tenant.envSet, getManagementApiResourceIndicator(tenant.id)));
@@ -96,11 +96,29 @@ const createRouters = (tenant: TenantContext) => {
   subjectTokenRoutes(managementRouter, tenant);
 
   const anonymousRouter: AnonymousRouter = new Router();
+
   wellKnownRoutes(anonymousRouter, tenant);
+  wellKnownOpenApiRoutes(anonymousRouter, {
+    experienceRouters: [experienceRouter, interactionRouter],
+    managementRouters: [managementRouter, anonymousRouter],
+  });
+
   statusRoutes(anonymousRouter, tenant);
   authnRoutes(anonymousRouter, tenant);
+
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    const profileRouter: ProfileRouter = new Router();
+    profileRoutes(profileRouter, tenant);
+  }
+
   // The swagger.json should contain all API routers.
-  swaggerRoutes(anonymousRouter, [interactionRouter, managementRouter, anonymousRouter]);
+  swaggerRoutes(anonymousRouter, [
+    managementRouter,
+    anonymousRouter,
+    experienceRouter,
+    // TODO: interactionRouter should be removed from swagger.json
+    interactionRouter,
+  ]);
 
   return [experienceRouter, interactionRouter, managementRouter, anonymousRouter];
 };

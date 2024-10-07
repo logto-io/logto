@@ -20,6 +20,7 @@
     .selects {
       display: flex;
       align-items: center;
+      gap: _.unit(2);
 
       .language {
         width: 112px;
@@ -27,7 +28,7 @@
 
       > * {
         &:not(:last-child) {
-          margin-right: _.unit(2);
+          margin-inline-end: _.unit(2);
         }
       }
     }

@@ -5,6 +5,7 @@ create table verification_statuses (
   user_id varchar(21) not null
     references users (id) on update cascade on delete cascade,
   created_at timestamptz not null default(now()),
+  verified_identifier varchar(255),
   primary key (id)
 );
 

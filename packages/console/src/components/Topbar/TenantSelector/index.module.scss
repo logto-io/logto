@@ -11,8 +11,8 @@ $dropdown-item-height: 40px;
   display: flex;
   align-items: center;
   padding: _.unit(1);
-  padding-left: _.unit(2);
-  margin-left: _.unit(4);
+  padding-inline-start: _.unit(2);
+  margin-inline-start: _.unit(4);
   max-width: 500px;
   border-radius: _.unit(2);
   transition: background-color 0.2s ease-in-out;
@@ -55,7 +55,7 @@ $dropdown-item-height: 40px;
     background-color: var(--color-neutral-80);
     flex-shrink: 0;
     position: absolute;
-    left: _.unit(-3);
+    inset-inline-start: _.unit(-3);
   }
 
   &:hover::before {
@@ -79,7 +79,8 @@ $dropdown-item-height: 40px;
   all: unset;
   display: flex;
   align-items: center;
-  padding: _.unit(2.5) _.unit(3) _.unit(2.5) _.unit(4);
+  padding-block: _.unit(2.5);
+  padding-inline: _.unit(4) _.unit(3);
   margin: _.unit(1);
   border-radius: 6px;
   transition: background-color 0.2s ease-in-out;

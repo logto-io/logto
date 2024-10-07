@@ -235,7 +235,7 @@ export default class ExperienceInteraction {
     // Sync social/enterprise SSO identity profile data.
     // Note: The profile data is not saved to the user profile until the user submits the interaction.
     // Also no need to validate the synced profile data availability as it is already validated during the identification process.
-    if (syncedProfile) {
+    if (syncedProfile && Object.keys(syncedProfile).length > 0) {
       const log = this.ctx.createLog(`Interaction.${this.interactionEvent}.Profile.Update`);
       log.append({ syncedProfile });
       this.profile.unsafeSet(syncedProfile);
@@ -253,6 +253,7 @@ export default class ExperienceInteraction {
    * @throws {RequestError} with 400 if the verification record can not be used for creating a new user or not verified
    * @throws {RequestError} with 422 if the profile data is not unique across users
    * @throws {RequestError} with 422 if any of required profile fields are missing
+   * @throws {RequestError} with 422 if the email domain is SSO only
    */
   public async createUser(verificationId?: string, log?: LogEntry) {
     assertThat(
@@ -274,6 +275,7 @@ export default class ExperienceInteraction {
         verification: verificationRecord.toJson(),
       });
 
+      await this.signInExperienceValidator.guardSsoOnlyEmailIdentifier(verificationRecord);
       const identifierProfile = await getNewUserProfileFromVerificationRecord(verificationRecord);
 
       await this.profile.setProfileWithValidation(identifierProfile);
@@ -362,13 +364,12 @@ export default class ExperienceInteraction {
     );
 
     // Prepend the interaction data to all log entries
-    this.ctx.prependAllLogEntries({ interaction: interactionData });
+    this.ctx.prependAllLogEntries({ interaction: interactionData, userId: this.userId });
   }
 
   /**
    * Submit the current interaction result to the OIDC provider and clear the interaction data
    *
-   * @throws {RequestError} with 404 if the interaction event is not set
    * @throws {RequestError} with 404 if the user is not identified
    * @throws {RequestError} with 403 if the mfa verification is required but not verified
    * @throws {RequestError} with 422 if the profile data is conflicting with the current user account
@@ -379,12 +380,6 @@ export default class ExperienceInteraction {
     const {
       queries: { users: userQueries },
     } = this.tenant;
-
-    // Initiated
-    assertThat(
-      this.interactionEvent,
-      new RequestError({ code: 'session.interaction_not_found', status: 404 })
-    );
 
     // Identified
     const user = await this.getIdentifiedUser();

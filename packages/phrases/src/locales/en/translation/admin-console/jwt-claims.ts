@@ -1,7 +1,7 @@
 const jwt_claims = {
   title: 'Custom JWT',
   description:
-    'Set up custom JWT claims to include in the access token. These claims can be used to pass additional information to your application.',
+    'Set up custom claims in the access token. These claims can be used to pass additional information to your application.',
   user_jwt: {
     card_title: 'For user',
     card_field: 'User access token',
@@ -25,19 +25,23 @@ const jwt_claims = {
   restored: 'Restored',
   data_source_tab: 'Data source',
   test_tab: 'Test context',
-  jwt_claims_description: 'Default claims are auto-included in the JWT and cannot be overridden.',
+  jwt_claims_description: 'Default claims are auto-included in the  and cannot be overridden.',
   user_data: {
-    title: 'User data',
-    subtitle: 'Use `data.user` input parameter to provide vital user info.',
+    title: 'User context',
+    subtitle: 'Use `context.user` input parameter to provide vital user info.',
   },
   grant_data: {
-    title: 'Grant data',
+    title: 'Grant context',
     subtitle:
-      'Use `data.grant` input parameter to provide vital grant info, only available for token exchange.',
+      'Use `context.grant` input parameter to provide vital grant info, only available for token exchange.',
   },
   token_data: {
-    title: 'Token data',
+    title: 'Token payload',
     subtitle: 'Use `token` input parameter for current access token payload. ',
+  },
+  api_context: {
+    title: 'API context: access control',
+    subtitle: 'Use `api.denyAccess` method to reject the token request.',
   },
   fetch_external_data: {
     title: 'Fetch external data',
@@ -49,10 +53,10 @@ const jwt_claims = {
     title: 'Set environment variables',
     subtitle: 'Use environment variables to store sensitive information.',
     input_field_title: 'Add environment variables',
-    sample_code: 'Accessing environment variables in your custom JWT claims handler. Example: ',
+    sample_code: 'Accessing environment variables in your custom token claims handler. Example: ',
   },
   jwt_claims_hint:
-    'Limit custom claims to under 50KB. Default JWT claims are automatically included in the token and can not be overridden.',
+    'Limit custom claims to under 50KB. Default token claims are automatically included in the token and can not be overridden.',
   tester: {
     subtitle: 'Adjust mock token and user data for testing.',
     run_button: 'Run test',

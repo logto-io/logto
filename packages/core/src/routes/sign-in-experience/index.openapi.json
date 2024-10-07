@@ -132,6 +132,37 @@
           }
         }
       }
+    },
+    "/api/sign-in-exp/default/check-password": {
+      "post": {
+        "operationId": "CheckPasswordWithDefaultSignInExperience",
+        "summary": "Check if a password meets the password policy",
+        "description": "Check if a password meets the password policy in the sign-in experience settings.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "password": {
+                    "description": "The password to check."
+                  },
+                  "userId": {
+                    "description": "The user ID to check the password for. It is required if rejects user info is enabled in the password policy."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The password meets the password policy."
+          },
+          "400": {
+            "description": "The password does not meet the password policy or no user ID provided."
+          }
+        }
+      }
     }
   }
 }

@@ -1,11 +1,21 @@
 import { type TFuncKey } from 'i18next';
 
 import { type NewSubscriptionQuota } from '@/cloud/types/router';
+import {
+  resourceAddOnUnitPrice,
+  machineToMachineAddOnUnitPrice,
+  tenantMembersAddOnUnitPrice,
+  mfaAddOnUnitPrice,
+  enterpriseSsoAddOnUnitPrice,
+  organizationAddOnUnitPrice,
+  tokenAddOnUnitPrice,
+  hooksAddOnUnitPrice,
+} from '@/consts/subscriptions';
 
-type UsageKey = Pick<
+export type UsageKey = Pick<
   NewSubscriptionQuota,
   | 'mauLimit'
-  | 'organizationsEnabled'
+  | 'organizationsLimit'
   | 'mfaEnabled'
   | 'enterpriseSsoLimit'
   | 'resourcesLimit'
@@ -15,24 +25,36 @@ type UsageKey = Pick<
   | 'hooksLimit'
 >;
 
+// We decide not to show `hooksLimit` usage in console for now.
 export const usageKeys: Array<keyof UsageKey> = [
   'mauLimit',
-  'organizationsEnabled',
+  'organizationsLimit',
   'mfaEnabled',
   'enterpriseSsoLimit',
   'resourcesLimit',
   'machineToMachineLimit',
   'tenantMembersLimit',
   'tokenLimit',
-  'hooksLimit',
 ];
+
+export const usageKeyPriceMap: Record<keyof UsageKey, number> = {
+  mauLimit: 0,
+  organizationsLimit: organizationAddOnUnitPrice,
+  mfaEnabled: mfaAddOnUnitPrice,
+  enterpriseSsoLimit: enterpriseSsoAddOnUnitPrice,
+  resourcesLimit: resourceAddOnUnitPrice,
+  machineToMachineLimit: machineToMachineAddOnUnitPrice,
+  tenantMembersLimit: tenantMembersAddOnUnitPrice,
+  tokenLimit: tokenAddOnUnitPrice,
+  hooksLimit: hooksAddOnUnitPrice,
+};
 
 export const usageKeyMap: Record<
   keyof UsageKey,
   TFuncKey<'translation', 'admin_console.subscription.usage'>
 > = {
   mauLimit: 'mau.description',
-  organizationsEnabled: 'organizations.description',
+  organizationsLimit: 'organizations.description',
   mfaEnabled: 'mfa.description',
   enterpriseSsoLimit: 'enterprise_sso.description',
   resourcesLimit: 'api_resources.description',
@@ -47,7 +69,7 @@ export const titleKeyMap: Record<
   TFuncKey<'translation', 'admin_console.subscription.usage'>
 > = {
   mauLimit: 'mau.title',
-  organizationsEnabled: 'organizations.title',
+  organizationsLimit: 'organizations.title',
   mfaEnabled: 'mfa.title',
   enterpriseSsoLimit: 'enterprise_sso.title',
   resourcesLimit: 'api_resources.title',
@@ -62,7 +84,7 @@ export const tooltipKeyMap: Record<
   TFuncKey<'translation', 'admin_console.subscription.usage'>
 > = {
   mauLimit: 'mau.tooltip',
-  organizationsEnabled: 'organizations.tooltip',
+  organizationsLimit: 'organizations.tooltip',
   mfaEnabled: 'mfa.tooltip',
   enterpriseSsoLimit: 'enterprise_sso.tooltip',
   resourcesLimit: 'api_resources.tooltip',

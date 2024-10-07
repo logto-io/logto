@@ -21,6 +21,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { type AnonymousRouter, type RouterInitArgs } from '../types.js';
 
+import experienceAnonymousRoutes from './anonymous-routes/index.js';
 import ExperienceInteraction from './classes/experience-interaction.js';
 import { experienceRoutes } from './const.js';
 import { koaExperienceInteractionHooks } from './middleware/koa-experience-interaction-hooks.js';
@@ -58,7 +59,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       body: z.object({
         interactionEvent: z.nativeEnum(InteractionEvent),
       }),
-      status: [204, 403],
+      status: [204],
     }),
     async (ctx, next) => {
       const { interactionEvent } = ctx.guard.body;
@@ -170,6 +171,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
 
       log.append({
         interaction: ctx.experienceInteraction.toJson(),
+        userId: ctx.experienceInteraction.identifiedUserId,
       });
 
       ctx.status = 200;
@@ -187,4 +189,5 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
   newPasswordIdentityVerificationRoutes(experienceRouter, tenant);
 
   profileRoutes(experienceRouter, tenant);
+  experienceAnonymousRoutes(experienceRouter, tenant);
 }

@@ -97,6 +97,12 @@ const description = {
   /** UNTRANSLATED */
   redirect_to: 'You will be redirected to {{name}}.',
   auto_agreement: 'Ao continuar, você concorda com os <link></link>.',
+  identifier_sign_in_description: 'Digite seu {{types, list(type: disjunction;)}} para entrar.',
+  all_sign_in_options: 'Todas as opções de login',
+  identifier_register_description:
+    'Digite seu {{types, list(type: disjunction;)}} para criar uma nova conta.',
+  all_account_creation_options: 'Todas as opções de criação de conta',
+  back_to_sign_in: 'Voltar para o login',
 };
 
 export default Object.freeze(description);

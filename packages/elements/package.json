@@ -1,6 +1,6 @@
 {
   "name": "@logto/elements",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Logto user interface elements.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/logto#readme",
@@ -56,7 +56,7 @@
   },
   "devDependencies": {
     "@lit/localize-tools": "^0.7.2",
-    "@logto/schemas": "workspace:^1.18.0",
+    "@logto/schemas": "workspace:^1.20.0",
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/ts-config": "6.0.0",
     "@types/node": "^20.9.5",

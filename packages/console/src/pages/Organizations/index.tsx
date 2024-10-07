@@ -5,7 +5,7 @@ import { useCallback, useContext, useState } from 'react';
 import Plus from '@/assets/icons/plus.svg?react';
 import PageMeta from '@/components/PageMeta';
 import { organizationsFeatureLink } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { subscriptionPage } from '@/consts/pages';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -15,6 +15,7 @@ import CardTitle from '@/ds-components/CardTitle';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import pageLayout from '@/scss/page-layout.module.scss';
+import { isFeatureEnabled } from '@/utils/subscription';
 
 import CreateOrganizationModal from './CreateOrganizationModal';
 import OrganizationsTable from './OrganizationsTable';
@@ -26,8 +27,7 @@ const organizationsPathname = '/organizations';
 function Organizations() {
   const { getDocumentationUrl } = useDocumentationUrl();
   const {
-    currentPlan,
-    currentSubscription: { planId },
+    currentSubscription: { planId, isAddOnAvailable },
     currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
   const { isDevTenant } = useContext(TenantsContext);
@@ -37,9 +37,8 @@ function Organizations() {
 
   const isOrganizationsDisabled =
     isCloud &&
-    !(isDevFeaturesEnabled
-      ? currentSubscriptionQuota.organizationsEnabled
-      : currentPlan.quota.organizationsEnabled);
+    !isFeatureEnabled(currentSubscriptionQuota.organizationsLimit) &&
+    planId !== ReservedPlanId.Pro;
 
   const upgradePlan = useCallback(() => {
     navigate(subscriptionPage);
@@ -64,11 +63,8 @@ function Organizations() {
       <PageMeta titleKey="organizations.page_title" />
       <div className={pageLayout.headline}>
         <CardTitle
-          paywall={
-            isDevFeaturesEnabled
-              ? cond(planId === ReservedPlanId.Pro && ReservedPlanId.Pro)
-              : cond((isOrganizationsDisabled || isDevTenant) && ReservedPlanId.Pro)
-          }
+          paywall={cond((isOrganizationsDisabled || isDevTenant) && ReservedPlanId.Pro)}
+          hasAddOnTag={isAddOnAvailable}
           title="organizations.title"
           subtitle="organizations.subtitle"
           learnMoreLink={{

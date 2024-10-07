@@ -5,12 +5,12 @@
   align-items: center;
   user-select: none;
   cursor: default;
+  gap: _.unit(3);
 }
 
 .nameWrapper {
   display: flex;
   flex-direction: column;
-  margin-left: _.unit(3);
 
   .name {
     font: var(--font-label-2);

@@ -1,5 +1,5 @@
-import { type MfaFactor } from '../../foundations/index.js';
-import type { InteractionEvent, VerificationType } from '../interactions.js';
+import { type VerificationType, type MfaFactor } from '../../foundations/index.js';
+import type { InteractionEvent } from '../interactions.js';
 
 export type Prefix = 'Interaction';
 

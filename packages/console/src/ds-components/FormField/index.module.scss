@@ -20,14 +20,14 @@
     color: var(--color-text);
 
     .multiple {
-      margin-left: _.unit(1);
+      margin-inline-start: _.unit(1);
       font: var(--font-body-2);
       color: var(--color-text-secondary);
     }
   }
 
   .toggleTipButton {
-    margin-left: _.unit(0.5);
+    margin-inline-start: _.unit(0.5);
   }
 
   .required {
@@ -35,8 +35,11 @@
     color: var(--color-text-secondary);
   }
 
-  .featureTag {
-    margin-left: _.unit(2);
+  .tagsWrapper {
+    display: flex;
+    align-items: center;
+    margin-inline-start: _.unit(2);
+    gap: _.unit(1);
   }
 }
 

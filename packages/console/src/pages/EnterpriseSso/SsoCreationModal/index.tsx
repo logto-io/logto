@@ -17,7 +17,8 @@ import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import Skeleton from '@/components/CreateConnectorForm/Skeleton';
 import { getConnectorRadioGroupSize } from '@/components/CreateConnectorForm/utils';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
+import { addOnPricingExplanationLink } from '@/consts/external-links';
 import { enterpriseSsoAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
@@ -27,8 +28,10 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
 import useApi, { type RequestError } from '@/hooks/use-api';
+import useUserPreferences from '@/hooks/use-user-preferences';
 import modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
+import { isPaidPlan } from '@/utils/subscription';
 
 import SsoConnectorRadioGroup from './SsoConnectorRadioGroup';
 import styles from './index.module.scss';
@@ -48,18 +51,20 @@ const duplicateConnectorNameErrorCode = 'single_sign_on.duplicate_connector_name
 function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
-    currentPlan,
-    currentSubscription: { planId },
+    currentSubscription: { planId, isAddOnAvailable, isEnterprisePlan },
     currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
+  const {
+    data: { enterpriseSsoUpsellNoticeAcknowledged },
+    update,
+  } = useUserPreferences();
   const [selectedProviderName, setSelectedProviderName] = useState<string>();
 
   const isSsoEnabled =
     !isCloud ||
-    (isDevFeaturesEnabled
-      ? currentSubscriptionQuota.enterpriseSsoLimit === null ||
-        currentSubscriptionQuota.enterpriseSsoLimit > 0
-      : currentPlan.quota.ssoEnabled);
+    currentSubscriptionQuota.enterpriseSsoLimit === null ||
+    currentSubscriptionQuota.enterpriseSsoLimit > 0 ||
+    planId === ReservedPlanId.Pro;
 
   const { data, error } = useSWR<SsoConnectorProvidersResponse, RequestError>(
     'api/sso-connector-providers'
@@ -126,6 +131,13 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
     })
   );
 
+  // The button is available only when:
+  // 1. `connectorName` field is not empty.
+  // 2. At least one connector is selected.
+  // 3. Error is resolved. Since `connectorName` is the only field of this form, it means `connectorName` field error is resolved.
+  const isCreateButtonDisabled =
+    !(watch('connectorName') && isAnyConnectorSelected) || Boolean(errors.connectorName);
+
   if (!isOpen) {
     return null;
   }
@@ -143,40 +155,44 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
       <ModalLayout
         title="enterprise_sso.create_modal.title"
         paywall={conditional(
-          isDevFeaturesEnabled && planId === ReservedPlanId.Pro && ReservedPlanId.Pro
+          isAddOnAvailable && planId !== ReservedPlanId.Pro && ReservedPlanId.Pro
         )}
+        hasAddOnTag={isAddOnAvailable}
         footer={
           conditional(
-            isDevFeaturesEnabled && planId === ReservedPlanId.Pro && (
-              <AddOnNoticeFooter
-                buttonTitle="enterprise_sso.create_modal.create_button_text"
-                onClick={onSubmit}
-              >
-                <Trans
-                  components={{
-                    span: <span className={styles.strong} />,
-                    a: <TextLink to="https://blog.logto.io/pricing-add-ons/" />,
+            isAddOnAvailable &&
+              // Just in case the enterprise plan has reached the resource limit, we still need to show charge notice.
+              isPaidPlan(planId, isEnterprisePlan) &&
+              !enterpriseSsoUpsellNoticeAcknowledged && (
+                <AddOnNoticeFooter
+                  buttonTitle="enterprise_sso.create_modal.create_button_text"
+                  isCreateButtonDisabled={isCreateButtonDisabled}
+                  onClick={async () => {
+                    void update({ enterpriseSsoUpsellNoticeAcknowledged: true });
+                    await onSubmit();
                   }}
                 >
-                  {t('upsell.add_on.footer.enterprise_sso', {
-                    price: enterpriseSsoAddOnUnitPrice,
-                    planName: t('subscription.pro_plan'),
-                  })}
-                </Trans>
-              </AddOnNoticeFooter>
-            )
+                  <Trans
+                    components={{
+                      span: <span className={styles.strong} />,
+                      a: <TextLink to={addOnPricingExplanationLink} />,
+                    }}
+                  >
+                    {t('upsell.add_on.footer.enterprise_sso', {
+                      price: enterpriseSsoAddOnUnitPrice,
+                      planName: t(
+                        isEnterprisePlan ? 'subscription.enterprise' : 'subscription.pro_plan'
+                      ),
+                    })}
+                  </Trans>
+                </AddOnNoticeFooter>
+              )
           ) ??
           (isSsoEnabled ? (
             <Button
               title="enterprise_sso.create_modal.create_button_text"
               type="primary"
-              disabled={
-                // The button is available only when:
-                // 1. `connectorName` field is not empty.
-                // 2. At least one connector is selected.
-                // 3. Error is resolved. Since `connectorName` is the only field of this form, it means `connectorName` field error is resolved.
-                !(watch('connectorName') && isAnyConnectorSelected) || Boolean(errors.connectorName)
-              }
+              disabled={isCreateButtonDisabled}
               onClick={onSubmit}
             />
           ) : (

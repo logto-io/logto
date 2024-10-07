@@ -24,16 +24,11 @@ export default function AppContent() {
   const { isLoading: isLoadingPreference } = useUserPreferences();
   const { currentTenant } = useContext(TenantsContext);
   const isTenantSuspended = isCloud && currentTenant?.isSuspended;
+  // TODO: @darcyYe remove this
   const { isLoading: isLoadingSubscriptionData, ...subscriptionDta } = useSubscriptionData();
-  const {
-    isLoading: isLoadingNewSubscriptionData,
-    logtoSkus,
-    currentSku,
-    currentSubscriptionQuota,
-    currentSubscriptionUsage,
-    currentSubscriptionScopeResourceUsage,
-    currentSubscriptionScopeRoleUsage,
-  } = useNewSubscriptionData();
+
+  const { isLoading: isLoadingNewSubscriptionData, ...newSubscriptionData } =
+    useNewSubscriptionData();
 
   const scrollableContent = useRef<HTMLDivElement>(null);
   const { scrollTop } = useScroll(scrollableContent.current);
@@ -49,12 +44,7 @@ export default function AppContent() {
     <SubscriptionDataProvider
       subscriptionData={{
         ...subscriptionDta,
-        logtoSkus,
-        currentSku,
-        currentSubscriptionQuota,
-        currentSubscriptionUsage,
-        currentSubscriptionScopeResourceUsage,
-        currentSubscriptionScopeRoleUsage,
+        ...newSubscriptionData,
       }}
     >
       <div className={styles.app}>

@@ -11,6 +11,8 @@ import {
   clientCredentialsJwtCustomizerPayload,
   accessTokenSampleScript,
   clientCredentialsSampleScript,
+  accessTokenAccessDeniedSampleScript,
+  clientCredentialsAccessDeniedSampleScript,
 } from '#src/__mocks__/jwt-customizer.js';
 import {
   deleteOidcKey,
@@ -32,7 +34,7 @@ const defaultAdminConsoleConfig: AdminConsoleData = {
   organizationCreated: false,
 };
 
-describe('admin console sign-in experience', () => {
+describe('logto config', () => {
   it('should get admin console config successfully', async () => {
     const adminConsoleConfig = await getAdminConsoleConfig();
 
@@ -267,5 +269,36 @@ describe('admin console sign-in experience', () => {
       environmentVariables: clientCredentialsJwtCustomizerPayload.environmentVariables,
     });
     expect(testResult).toMatchObject(clientCredentialsJwtCustomizerPayload.environmentVariables);
+  });
+
+  it('should throw access denied error when calling the denyAccess api in the script', async () => {
+    await expectRejects(
+      testJwtCustomizer({
+        tokenType: LogtoJwtTokenKeyType.AccessToken,
+        token: accessTokenJwtCustomizerPayload.tokenSample,
+        context: accessTokenJwtCustomizerPayload.contextSample,
+        script: accessTokenAccessDeniedSampleScript,
+        environmentVariables: accessTokenJwtCustomizerPayload.environmentVariables,
+      }),
+      {
+        code: 'jwt_customizer.general',
+        status: 403,
+      }
+    );
+  });
+
+  it('should throw access denied error when calling the denyAccess api in the script', async () => {
+    await expectRejects(
+      testJwtCustomizer({
+        tokenType: LogtoJwtTokenKeyType.ClientCredentials,
+        token: clientCredentialsJwtCustomizerPayload.tokenSample,
+        script: clientCredentialsAccessDeniedSampleScript,
+        environmentVariables: clientCredentialsJwtCustomizerPayload.environmentVariables,
+      }),
+      {
+        code: 'jwt_customizer.general',
+        status: 403,
+      }
+    );
   });
 });

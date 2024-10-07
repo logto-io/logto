@@ -7,6 +7,7 @@ import Close from '@/assets/icons/close.svg?react';
 import { type SelectedGuide } from '@/components/Guide/GuideCard';
 import GuideCardGroup from '@/components/Guide/GuideCardGroup';
 import { useApiGuideMetadata } from '@/components/Guide/hooks';
+import FlipOnRtl from '@/ds-components/FlipOnRtl';
 import IconButton from '@/ds-components/IconButton';
 import Spacer from '@/ds-components/Spacer';
 
@@ -35,10 +36,12 @@ function GuideDrawer({ apiResource, onClose }: Props) {
                 setSelectedGuide(undefined);
               }}
             >
-              <ArrowLeft />
+              <FlipOnRtl>
+                <ArrowLeft />
+              </FlipOnRtl>
             </IconButton>
             <div className={styles.separator} />
-            <span>{t('checkout_tutorial', { name: selectedGuide.name })}</span>
+            <span>{t('checkout_tutorial', { name: selectedGuide.metadata.name })}</span>
           </>
         )}
         {!selectedGuide && t('api.select_a_tutorial')}

@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import { type JwtCustomizerForm } from '@/pages/CustomizeJwtDetails/type';
 import {
+  denyAccessCodeExample,
   environmentVariablesCodeExample,
   fetchExternalDataCodeExample,
   sampleCodeEditorOptions,
@@ -132,6 +133,22 @@ function InstructionTab({ isActive }: Props) {
           value={environmentVariablesCodeExample}
           path="file:///env-variables-sample.js"
           height="400px"
+          theme="logto-dark"
+          options={sampleCodeEditorOptions}
+        />
+      </GuideCard>
+      <GuideCard
+        name={CardType.ApiContext}
+        isExpanded={expendCard === CardType.ApiContext}
+        setExpanded={(expand) => {
+          setExpendCard(expand ? CardType.ApiContext : undefined);
+        }}
+      >
+        <Editor
+          language="typescript"
+          className={styles.sampleCode}
+          value={denyAccessCodeExample}
+          height="240px"
           theme="logto-dark"
           options={sampleCodeEditorOptions}
         />

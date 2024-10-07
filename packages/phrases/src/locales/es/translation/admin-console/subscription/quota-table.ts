@@ -37,7 +37,7 @@ const quota_table = {
     built_in_email_connector: 'Conector de correo electrónico incorporado',
     mfa: 'Autenticación multifactor',
     sso: 'SSO empresarial',
-    adaptive_mfa: 'MFA adaptativo',
+
     impersonation: 'Suplantación de identidad',
   },
   user_management: {
@@ -59,7 +59,8 @@ const quota_table = {
     just_in_time_provisioning: 'Provisión justo a tiempo',
   },
   support: {
-    title: 'Cumplimiento y soporte',
+    /** UNTRANSLATED */
+    title: 'Support',
     community: 'Comunidad',
     customer_ticket: 'Ticket de soporte',
     premium: 'Premium',
@@ -81,12 +82,7 @@ const quota_table = {
   days_other: '{{count, number}} días',
   add_on: 'Complemento',
   tier: 'Nivel{{value, number}}: ',
-  paid_token_limit_tip:
-    'Logto agregará cargos por funciones que superen su límite de cuota. Puede usarlo sin costo hasta que comencemos a cobrar alrededor del segundo trimestre de 2024. Si necesita más tokens, por favor contáctenos. Por defecto, cobramos $80 por mes por cada millón de tokens.',
-  paid_quota_limit_tip:
-    'Logto agregará cargos por funciones que excedan su límite de cuota. Puede usarlo sin costo hasta que comencemos a cobrar aproximadamente en el segundo trimestre de 2024.',
-  paid_add_on_feature_tip:
-    'Esta es una característica adicional. Puede usarla sin costo hasta que comencemos a cobrar aproximadamente en el segundo trimestre de 2024.',
+
   million: '{{value, number}} millones',
   mau_tip:
     'MAU (usuarios activos mensuales) significa el número de usuarios únicos que han intercambiado al menos un token con Logto en un ciclo de facturación.',

@@ -46,7 +46,9 @@ const general = {
   continue: '继续',
   page_info: '{{min, number}}-{{max, number}} 共 {{total, number}} 条',
   learn_more: '了解更多',
-  tab_errors: '{{count, number}} 个错误',
+  /** UNTRANSLATED */
+  tab_error_one: '{{count, number}} error',
+  tab_error_other: '{{count, number}} 个错误',
   skip_for_now: '先跳过',
   remove: '移除',
   visit: '访问',

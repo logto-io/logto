@@ -1,0 +1,37 @@
+{
+  "paths": {
+    "/api/experience/sso-connectors": {
+      "get": {
+        "operationId": "GetEnabledSsoConnectors",
+        "summary": "Get enabled SSO connectors by the given email's domain",
+        "description": "Extract the email domain from the provided email address. Returns all the enabled SSO connectors that match the email domain.",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "The email address to find the enabled SSO connectors."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The enabled SSO connectors have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "connectorIds": {
+                      "description": "The list of enabled SSO connectorIds. Returns an empty array if no enabled SSO connectors are found."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The email address is invalid, can not extract a valid domain from it."
+          }
+        }
+      }
+    }
+  }
+}

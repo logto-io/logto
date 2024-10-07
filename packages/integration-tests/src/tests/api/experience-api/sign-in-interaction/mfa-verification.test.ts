@@ -11,9 +11,8 @@ import {
   enableMandatoryMfaWithTotpAndBackupCode,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
 
-devFeatureTest.describe('mfa sign-in verification', () => {
+describe('mfa sign-in verification', () => {
   const userApi = new UserApiTest();
 
   beforeAll(async () => {

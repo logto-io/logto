@@ -17,7 +17,10 @@ export type Props = {
   readonly className?: string;
   readonly size?: 'medium' | 'large' | 'xlarge';
   readonly headerIcon?: ReactElement;
-} & Pick<CardTitleProps, 'learnMoreLink' | 'title' | 'subtitle' | 'isWordWrapEnabled' | 'paywall'>;
+} & Pick<
+  CardTitleProps,
+  'learnMoreLink' | 'title' | 'subtitle' | 'isWordWrapEnabled' | 'paywall' | 'hasAddOnTag'
+>;
 
 function ModalLayout({
   children,

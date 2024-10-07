@@ -66,7 +66,7 @@ describe('MFA - TOTP', () => {
 
       const experience = new ExpectTotpExperience(await browser.newPage());
       await experience.startWith(demoAppUrl, 'register');
-      await experience.toFillInput('id', context.userEmail, { submit: true });
+      await experience.toFillInput('identifier', context.userEmail, { submit: true });
       await experience.toCompleteVerification('register', 'Email');
       context.setUpTotpSecret(await experience.toBindTotp());
       await experience.verifyThenEnd();
@@ -146,7 +146,7 @@ describe('MFA - TOTP', () => {
 
       const experience = new ExpectTotpExperience(await browser.newPage());
       await experience.startWith(demoAppUrl, 'register');
-      await experience.toFillInput('id', context.userPhone, { submit: true });
+      await experience.toFillInput('identifier', context.userPhone, { submit: true });
       await experience.toCompleteVerification('register', 'Sms');
 
       context.setUpTotpSecret(await experience.toBindTotp());

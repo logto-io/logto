@@ -37,6 +37,7 @@ export class Profile {
    *
    * @throws {RequestError} 422 if the profile data already exists in the current user account.
    * @throws {RequestError} 422 if the unique identifier data already exists in another user account.
+   * @throws {RequestError} 422 if the email domain is SSO only.
    */
   async setProfileByVerificationRecord(
     type: VerificationType.EmailVerificationCode | VerificationType.PhoneVerificationCode,
@@ -51,6 +52,10 @@ export class Profile {
     log?.append({
       verification: verificationRecord.toJson(),
     });
+
+    if (verificationRecord.type === VerificationType.EmailVerificationCode) {
+      await this.signInExperienceValidator.guardSsoOnlyEmailIdentifier(verificationRecord);
+    }
 
     const profile = verificationRecord.toUserProfile();
 

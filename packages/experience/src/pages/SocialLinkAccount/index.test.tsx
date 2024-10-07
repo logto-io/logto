@@ -1,9 +1,12 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier, VerificationType } from '@logto/schemas';
+import { renderHook } from '@testing-library/react';
 import { Route, Routes } from 'react-router-dom';
 
+import UserInteractionContextProvider from '@/Providers/UserInteractionContextProvider';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { mockSignInExperienceSettings } from '@/__mocks__/logto';
+import useSessionStorage, { StorageKeys } from '@/hooks/use-session-storages';
 
 import SocialRegister from '.';
 
@@ -14,13 +17,24 @@ jest.mock('react-router-dom', () => ({
   })),
 }));
 
-describe('SocialRegister', () => {
+const verificationIdsMap = { [VerificationType.Social]: 'foo' };
+
+describe('SocialLinkAccount', () => {
+  const { result } = renderHook(() => useSessionStorage());
+  const { set } = result.current;
+
+  beforeAll(() => {
+    set(StorageKeys.verificationIds, verificationIdsMap);
+  });
+
   it('render', () => {
     const { queryByText } = renderWithPageContext(
       <SettingsProvider>
-        <Routes>
-          <Route path="/social/link/:connectorId" element={<SocialRegister />} />
-        </Routes>
+        <UserInteractionContextProvider>
+          <Routes>
+            <Route path="/social/link/:connectorId" element={<SocialRegister />} />
+          </Routes>
+        </UserInteractionContextProvider>
       </SettingsProvider>,
       { initialEntries: ['/social/link/github'] }
     );
@@ -40,9 +54,11 @@ describe('SocialRegister', () => {
           },
         }}
       >
-        <Routes>
-          <Route path="/social/link/:connectorId" element={<SocialRegister />} />
-        </Routes>
+        <UserInteractionContextProvider>
+          <Routes>
+            <Route path="/social/link/:connectorId" element={<SocialRegister />} />
+          </Routes>
+        </UserInteractionContextProvider>
       </SettingsProvider>,
       { initialEntries: ['/social/link/github'] }
     );
@@ -62,9 +78,11 @@ describe('SocialRegister', () => {
           },
         }}
       >
-        <Routes>
-          <Route path="/social/link/:connectorId" element={<SocialRegister />} />
-        </Routes>
+        <UserInteractionContextProvider>
+          <Routes>
+            <Route path="/social/link/:connectorId" element={<SocialRegister />} />
+          </Routes>
+        </UserInteractionContextProvider>
       </SettingsProvider>,
       { initialEntries: ['/social/link/github'] }
     );
@@ -84,9 +102,11 @@ describe('SocialRegister', () => {
           },
         }}
       >
-        <Routes>
-          <Route path="/social/link/:connectorId" element={<SocialRegister />} />
-        </Routes>
+        <UserInteractionContextProvider>
+          <Routes>
+            <Route path="/social/link/:connectorId" element={<SocialRegister />} />
+          </Routes>
+        </UserInteractionContextProvider>
       </SettingsProvider>,
       { initialEntries: ['/social/link/github'] }
     );

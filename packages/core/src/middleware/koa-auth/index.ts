@@ -1,5 +1,3 @@
-import type { IncomingHttpHeaders } from 'node:http';
-
 import { adminTenantId, defaultManagementApi, PredefinedScope } from '@logto/schemas';
 import type { Optional } from '@silverhand/essentials';
 import type { JWK } from 'jose';
@@ -14,41 +12,10 @@ import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 import { devConsole } from '#src/utils/console.js';
 
-import { getAdminTenantTokenValidationSet } from './utils.js';
+import { type WithAuthContext, type TokenInfo } from './types.js';
+import { extractBearerTokenFromHeaders, getAdminTenantTokenValidationSet } from './utils.js';
 
-export type Auth = {
-  type: 'user' | 'app';
-  id: string;
-};
-
-export type WithAuthContext<ContextT extends IRouterParamContext = IRouterParamContext> =
-  ContextT & {
-    auth: Auth;
-  };
-
-const bearerTokenIdentifier = 'Bearer';
-
-export const extractBearerTokenFromHeaders = ({ authorization }: IncomingHttpHeaders) => {
-  assertThat(
-    authorization,
-    new RequestError({ code: 'auth.authorization_header_missing', status: 401 })
-  );
-  assertThat(
-    authorization.startsWith(bearerTokenIdentifier),
-    new RequestError(
-      { code: 'auth.authorization_token_type_not_supported', status: 401 },
-      { supportedTypes: [bearerTokenIdentifier] }
-    )
-  );
-
-  return authorization.slice(bearerTokenIdentifier.length + 1);
-};
-
-type TokenInfo = {
-  sub: string;
-  clientId: unknown;
-  scopes: string[];
-};
+export * from './types.js';
 
 export const verifyBearerTokenFromRequest = async (
   envSet: EnvSet,
@@ -146,6 +113,7 @@ export default function koaAuth<StateT, ContextT extends IRouterParamContext, Re
     ctx.auth = {
       type: sub === clientId ? 'app' : 'user',
       id: sub,
+      scopes: new Set(scopes),
     };
 
     return next();

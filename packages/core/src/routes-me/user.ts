@@ -1,6 +1,6 @@
-import { emailRegEx, usernameRegEx } from '@logto/core-kit';
+import { emailRegEx, PasswordPolicyChecker, usernameRegEx } from '@logto/core-kit';
 import { userInfoSelectFields, jsonObjectGuard } from '@logto/schemas';
-import { conditional, pick } from '@silverhand/essentials';
+import { condArray, conditional, pick } from '@silverhand/essentials';
 import { literal, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -9,6 +9,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type { RouterInitArgs } from '../routes/types.js';
+import { checkPasswordPolicyForUser } from '../utils/password.js';
 
 import type { AuthedMeRouter } from './types.js';
 
@@ -18,6 +19,7 @@ export default function userRoutes<T extends AuthedMeRouter>(
   const {
     queries: {
       users: { findUserById, updateUserById },
+      signInExperiences: { findDefaultSignInExperience },
     },
     libraries: {
       users: { checkIdentifierCollision, verifyUserPassword },
@@ -44,8 +46,8 @@ export default function userRoutes<T extends AuthedMeRouter>(
     '/',
     koaGuard({
       body: object({
-        username: string().regex(usernameRegEx),
-        primaryEmail: string().regex(emailRegEx),
+        username: string().regex(usernameRegEx), // OSS only
+        primaryEmail: string().regex(emailRegEx), // Cloud only
         name: string().or(literal('')).nullable(),
         avatar: string().url().or(literal('')).nullable(),
       }).partial(),
@@ -56,6 +58,12 @@ export default function userRoutes<T extends AuthedMeRouter>(
 
       const user = await findUserById(userId);
       assertThat(!user.isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
+
+      const { primaryEmail } = body;
+      if (primaryEmail) {
+        // Check if user has verified email within 10 minutes.
+        await checkVerificationStatus(userId, primaryEmail);
+      }
 
       await checkIdentifierCollision(body, userId);
 
@@ -112,8 +120,7 @@ export default function userRoutes<T extends AuthedMeRouter>(
       assertThat(!user.isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
 
       await verifyUserPassword(user, password);
-
-      await createVerificationStatus(userId);
+      await createVerificationStatus(userId, null);
 
       ctx.status = 204;
 
@@ -123,17 +130,24 @@ export default function userRoutes<T extends AuthedMeRouter>(
 
   router.post(
     '/password',
-    koaGuard({ body: object({ password: string().min(1) }) }),
+    koaGuard({ body: object({ password: string().min(1) }), status: [204, 400, 401] }),
     async (ctx, next) => {
       const { id: userId } = ctx.auth;
       const { password } = ctx.guard.body;
 
-      const { isSuspended, passwordEncrypted: oldPasswordEncrypted } = await findUserById(userId);
+      const user = await findUserById(userId);
 
-      assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
+      assertThat(!user.isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
 
-      if (oldPasswordEncrypted) {
-        await checkVerificationStatus(userId);
+      const [signInExperience] = await Promise.all([
+        findDefaultSignInExperience(),
+        ...condArray(user.passwordEncrypted && [checkVerificationStatus(userId, null)]),
+      ]);
+      const passwordPolicyChecker = new PasswordPolicyChecker(signInExperience.passwordPolicy);
+      const issues = await checkPasswordPolicyForUser(passwordPolicyChecker, password, user);
+
+      if (issues.length > 0) {
+        throw new RequestError('password.rejected', { issues });
       }
 
       const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);

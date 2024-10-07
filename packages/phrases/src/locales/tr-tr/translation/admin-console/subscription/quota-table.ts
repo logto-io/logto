@@ -37,7 +37,7 @@ const quota_table = {
     built_in_email_connector: 'Dahili e-posta bağlayıcısı',
     mfa: 'Çoklu faktörlü kimlik doğrulama',
     sso: 'Kurumsal SSO',
-    adaptive_mfa: 'Uyarlamalı MFA',
+
     impersonation: 'Taklit etme',
   },
   user_management: {
@@ -59,7 +59,8 @@ const quota_table = {
     just_in_time_provisioning: 'İstisnai olana kadar temin',
   },
   support: {
-    title: 'Uyumluluk ve destek',
+    /** UNTRANSLATED */
+    title: 'Support',
     community: 'Topluluk',
     customer_ticket: 'Müşteri destek bileti',
     premium: 'Premium',
@@ -81,12 +82,7 @@ const quota_table = {
   days_other: '{{count, number}} gün',
   add_on: 'Ek Hizmet',
   tier: 'Seviye{{value, number}}: ',
-  paid_token_limit_tip:
-    'Logto, kota sınırlarını aşan özellikler için ücretlendirme ekleyecektir. 2024 ikinci çeyreğinde başlamak üzere ücretlendirmeye kadar ücretsiz kullanabilirsiniz. Daha fazla tokena ihtiyacınız varsa lütfen bizimle iletişime geçin. Varsayılan olarak her milyon token için aylık $80 fatura kesmekteyiz.',
-  paid_quota_limit_tip:
-    "Logto, kota limitinizi aşan özellikler için ücretlendirme ekleyecektir. Şarjımıza başlamadan önce, yaklaşık olarak 2024 Q2'ye kadar ücretsiz olarak kullanabilirsiniz.",
-  paid_add_on_feature_tip:
-    "Bu bir ek özelliktir. Şarjımıza başlamadan önce, yaklaşık olarak 2024 Q2'ye kadar ücretsiz olarak kullanabilirsiniz.",
+
   million: '{{value, number}} milyon',
   mau_tip:
     'MAU (aylık aktif kullanıcı) Logto ile en az bir jeton değiştirmiş olan benzersiz kullanıcı sayısını ifade eder.',

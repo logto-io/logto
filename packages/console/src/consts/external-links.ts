@@ -8,7 +8,6 @@ export const contactEmailLink = `mailto:${contactEmail}`;
 export const reservationLink = 'https://cal.com/logto/30min';
 export const trustAndSecurityLink = 'https://logto.io/trust-and-security';
 export const pricingLink = 'https://logto.io/pricing';
-export const newPlansBlogLink = 'https://blog.logto.io/logto-pricing-v2';
 
 /** Docs link */
 export const envTagsFeatureLink = '/docs/references/tenants/#tenant-type';
@@ -36,3 +35,6 @@ export const organizationJit = Object.freeze({
     '/docs/recipes/organizations/just-in-time-provisioning/#enterprise-sso-provisioning',
   emailDomain: '/docs/recipes/organizations/just-in-time-provisioning/#email-domain-provisioning',
 });
+
+export const addOnPricingExplanationLink =
+  'https://blog.logto.io/pricing-add-on-a-simple-explanation/';

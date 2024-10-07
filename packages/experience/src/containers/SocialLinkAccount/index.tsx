@@ -1,4 +1,4 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier, SignInMode } from '@logto/schemas';
 import classNames from 'classnames';
 import type { TFuncKey } from 'i18next';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +17,7 @@ import useBindSocialRelatedUser from './use-social-link-related-user';
 type Props = {
   readonly className?: string;
   readonly connectorId: string;
+  readonly verificationId: string;
   readonly relatedUser: SocialRelatedUserInfo;
 };
 
@@ -39,9 +40,9 @@ const getCreateAccountActionText = (signUpMethods: string[]): TFuncKey => {
   return 'action.create_account_without_linking';
 };
 
-const SocialLinkAccount = ({ connectorId, className, relatedUser }: Props) => {
+const SocialLinkAccount = ({ connectorId, verificationId, className, relatedUser }: Props) => {
   const { t } = useTranslation();
-  const { signUpMethods } = useSieMethods();
+  const { signUpMethods, signInMode } = useSieMethods();
 
   const bindSocialRelatedUser = useBindSocialRelatedUser();
   const registerWithSocial = useSocialRegister(connectorId);
@@ -58,24 +59,23 @@ const SocialLinkAccount = ({ connectorId, className, relatedUser }: Props) => {
         title="action.bind"
         i18nProps={{ address: type === 'email' ? maskEmail(value) : maskPhone(value) }}
         onClick={() => {
-          void bindSocialRelatedUser({
-            connectorId,
-            ...(type === 'email' ? { email: value } : { phone: value }),
-          });
+          void bindSocialRelatedUser(verificationId);
         }}
       />
 
-      <div className={styles.hint}>
-        <div>
-          <DynamicT forKey="description.skip_social_linking" />
+      {signInMode !== SignInMode.SignIn && (
+        <div className={styles.hint}>
+          <div>
+            <DynamicT forKey="description.skip_social_linking" />
+          </div>
+          <TextLink
+            text={actionText}
+            onClick={() => {
+              void registerWithSocial(verificationId);
+            }}
+          />
         </div>
-        <TextLink
-          text={actionText}
-          onClick={() => {
-            void registerWithSocial(connectorId);
-          }}
-        />
-      </div>
+      )}
     </div>
   );
 };

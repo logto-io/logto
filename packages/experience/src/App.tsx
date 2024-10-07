@@ -13,6 +13,8 @@ import Continue from './pages/Continue';
 import DirectSignIn from './pages/DirectSignIn';
 import ErrorPage from './pages/ErrorPage';
 import ForgotPassword from './pages/ForgotPassword';
+import IdentifierRegister from './pages/IdentifierRegister';
+import IdentifierSignIn from './pages/IdentifierSignIn';
 import MfaBinding from './pages/MfaBinding';
 import BackupCodeBinding from './pages/MfaBinding/BackupCodeBinding';
 import TotpBinding from './pages/MfaBinding/TotpBinding';
@@ -24,10 +26,12 @@ import WebAuthnVerification from './pages/MfaVerification/WebAuthnVerification';
 import Register from './pages/Register';
 import RegisterPassword from './pages/RegisterPassword';
 import ResetPassword from './pages/ResetPassword';
+import ResetPasswordLanding from './pages/ResetPasswordLanding';
 import SignIn from './pages/SignIn';
 import SignInPassword from './pages/SignInPassword';
 import SingleSignOnConnectors from './pages/SingleSignOnConnectors';
 import SingleSignOnEmail from './pages/SingleSignOnEmail';
+import SingleSignOnLanding from './pages/SingleSignOnLanding';
 import SocialLanding from './pages/SocialLanding';
 import SocialLinkAccount from './pages/SocialLinkAccount';
 import SocialSignInWebCallback from './pages/SocialSignInWebCallback';
@@ -35,7 +39,6 @@ import Springboard from './pages/Springboard';
 import VerificationCode from './pages/VerificationCode';
 import { UserMfaFlow } from './types';
 import { handleSearchParametersData } from './utils/search-parameters';
-
 import './scss/normalized.scss';
 
 handleSearchParametersData();
@@ -112,13 +115,42 @@ const App = () => {
                     </Route>
 
                     {/* Single sign-on */}
-                    <Route path={experience.routes.sso} element={<LoadingLayerProvider />}>
+                    <Route path={experience.routes.sso}>
+                      {/* Single sign-on first screen landing page */}
+                      <Route index element={<SingleSignOnLanding />} />
                       <Route path="email" element={<SingleSignOnEmail />} />
                       <Route path="connectors" element={<SingleSignOnConnectors />} />
                     </Route>
 
                     {/* Consent */}
                     <Route path="consent" element={<Consent />} />
+
+                    {/*
+                     * Identifier sign-in (first screen)
+                     * The first screen which only display specific identifier-based sign-in methods to users
+                     */}
+                    <Route
+                      path={experience.routes.identifierSignIn}
+                      element={<IdentifierSignIn />}
+                    />
+
+                    {/*
+                     * Identifier register (first screen)
+                     * The first screen which only display specific identifier-based registration methods to users
+                     */}
+                    <Route
+                      path={experience.routes.identifierRegister}
+                      element={<IdentifierRegister />}
+                    />
+
+                    {/*
+                     * Reset password (first screen)
+                     * The first screen which allow users to directly access the password reset page
+                     */}
+                    <Route
+                      path={experience.routes.resetPassword}
+                      element={<ResetPasswordLanding />}
+                    />
 
                     <Route path="*" element={<ErrorPage />} />
                   </Route>

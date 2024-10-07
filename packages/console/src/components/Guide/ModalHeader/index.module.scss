@@ -1,11 +1,11 @@
 @use '@/scss/underscore' as _;
 
 .requestSdkButton {
-  margin-right: _.unit(15);
+  margin-inline-end: _.unit(15);
 }
 
 @media screen and (max-width: 918px) {
   .requestSdkButton {
-    margin-right: 0;
+    margin-inline-end: 0;
   }
 }

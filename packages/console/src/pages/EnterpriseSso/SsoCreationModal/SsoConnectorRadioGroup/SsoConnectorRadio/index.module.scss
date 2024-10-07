@@ -3,15 +3,14 @@
 .ssoConnector {
   font: var(--font-body-2);
   display: flex;
+  gap: _.unit(3);
 
   .content {
     flex: 1;
-    margin-left: _.unit(3);
 
     .name {
       font: var(--font-label-2);
       @include _.multi-line-ellipsis(1);
-      padding-right: _.unit(3);
     }
 
     .description {

@@ -15,7 +15,8 @@
 
   .saveButton {
     flex-shrink: 0;
-    margin: _.unit(6) 0 0 _.unit(2);
+    margin-block: _.unit(6) 0;
+    margin-inline: _.unit(2) 0;
   }
 }
 

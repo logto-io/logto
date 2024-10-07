@@ -1,0 +1,100 @@
+{
+  "paths": {
+    "/api/experience/verification/verification-code": {
+      "post": {
+        "operationId": "CreateAndSendVerificationCode",
+        "summary": "Create and send verification code",
+        "description": "Create a new `CodeVerification` record and sends the code to the specified identifier. The code verification can be used to verify the given identifier.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "identifier": {
+                    "description": "The identifier (email address or phone number) to send the verification code to."
+                  },
+                  "interactionEvent": {
+                    "description": "The interaction event for which the verification code will be used. Supported values are `SignIn`, `Register`, and `ForgotPassword`. This determines the template for the verification code."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The verification code has been successfully sent.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "verificationId": {
+                      "description": "The unique ID of the verification record. Required to verify the code."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "An invalid identifier was provided."
+          },
+          "501": {
+            "description": "The connector for sending the verification code is not configured."
+          }
+        }
+      }
+    },
+    "/api/experience/verification/verification-code/verify": {
+      "post": {
+        "operationId": "VerifyVerificationCodeVerification",
+        "summary": "Verify verification code",
+        "description": "Verify the provided verification code against the user's identifier. If successful, the verification record will be marked as verified.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "code": {
+                    "description": "The verification code to be verified."
+                  },
+                  "identifier": {
+                    "description": "The identifier (email address or phone number) to verify the code against. Must match the identifier used to send the verification code."
+                  },
+                  "verificationId": {
+                    "description": "The verification ID of the CodeVerification record."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The verification code was successfully verified.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "verificationId": {
+                      "description": "he unique ID of the verification record. Required for user identification via the `Identification` API or to bind the identifier to the user's account via the `Profile` API."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The verification code is invalid or the maximum number of attempts has been exceeded. Check the error message for details."
+          },
+          "404": {
+            "description": "Verification record not found."
+          },
+          "501": {
+            "description": "The connector for sending the verification code is not configured."
+          }
+        }
+      }
+    }
+  }
+}

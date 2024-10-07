@@ -1,6 +1,7 @@
 import type { User } from '@logto/schemas';
-import { MfaFactor, userInfoSelectFields, UsersPasswordEncryptionMethod } from '@logto/schemas';
-import { pick } from '@silverhand/essentials';
+import { MfaFactor, UsersPasswordEncryptionMethod } from '@logto/schemas';
+
+import { transpileUserProfileResponse } from '../utils/user.js';
 
 export const mockUser: User = {
   tenantId: 'fake_tenant',
@@ -56,7 +57,7 @@ export const mockUserWithMfaVerifications: User = {
   mfaVerifications: [mockUserTotpMfaVerification],
 };
 
-export const mockUserResponse = pick(mockUser, ...userInfoSelectFields);
+export const mockUserResponse = transpileUserProfileResponse(mockUser);
 
 export const mockPasswordEncrypted = 'a1b2c3';
 export const mockUserWithPassword: User = {
@@ -191,4 +192,4 @@ export const mockUserList: User[] = [
   },
 ];
 
-export const mockUserListResponse = mockUserList.map((user) => pick(user, ...userInfoSelectFields));
+export const mockUserListResponse = mockUserList.map((user) => transpileUserProfileResponse(user));

@@ -66,9 +66,15 @@ const description = {
   password_requirement: {
     length_one: 'требуется минимум {{count}} символ',
     length_other: 'требуется минимум {{count}} символов',
+    length_few: 'требуется минимум {{count}} символа',
+    length_many: 'требуется минимум {{count}} символов',
     character_types_one:
       'должен содержать по крайней мере {{count}} тип прописных букв, строчных букв, цифр и символов',
     character_types_other:
+      'должен содержать по крайней мере {{count}} типа прописных букв, строчных букв, цифр и символов',
+    character_types_few:
+      'должен содержать по крайней мере {{count}} типа прописных букв, строчных букв, цифр и символов',
+    character_types_many:
       'должен содержать по крайней мере {{count}} типа прописных букв, строчных букв, цифр и символов',
   },
   use: 'Использовать',
@@ -101,6 +107,12 @@ const description = {
   /** UNTRANSLATED */
   redirect_to: 'You will be redirected to {{name}}.',
   auto_agreement: 'Продолжая, вы соглашаетесь с <link></link>.',
+  identifier_sign_in_description: 'Введите свои {{types, list(type: disjunction;)}} для входа.',
+  all_sign_in_options: 'Все варианты входа',
+  identifier_register_description:
+    'Введите свои {{types, list(type: disjunction;)}} чтобы создать новую учётную запись.',
+  all_account_creation_options: 'Все варианты создания учётной записи',
+  back_to_sign_in: 'Вернуться ко входу',
 };
 
 export default Object.freeze(description);

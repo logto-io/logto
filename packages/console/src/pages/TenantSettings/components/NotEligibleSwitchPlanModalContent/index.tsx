@@ -5,122 +5,22 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import { type LogtoSkuResponse } from '@/cloud/types/router';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
-import PlanName from '@/components/PlanName';
-import { planQuotaItemOrder, skuQuotaItemOrder } from '@/consts/plan-quotas';
+import SkuName from '@/components/SkuName';
+import { skuQuotaItemOrder } from '@/consts/plan-quotas';
 import {
-  quotaItemLimitedPhrasesMap,
-  quotaItemNotEligiblePhrasesMap,
   skuQuotaItemLimitedPhrasesMap,
   skuQuotaItemNotEligiblePhrasesMap,
 } from '@/consts/quota-item-phrases';
 import DynamicT from '@/ds-components/DynamicT';
 import { type LogtoSkuQuota, type LogtoSkuQuotaEntries } from '@/types/skus';
-import {
-  type SubscriptionPlanQuotaEntries,
-  type SubscriptionPlan,
-  type SubscriptionPlanQuota,
-} from '@/types/subscriptions';
 import { sortBy } from '@/utils/sort';
 
 import styles from './index.module.scss';
-
-const excludedQuotaKeys = new Set<keyof SubscriptionPlanQuota>([
-  'auditLogsRetentionDays',
-  'ticketSupportResponseTime',
-]);
 
 const excludedSkuQuotaKeys = new Set<keyof LogtoSkuQuota>([
   'auditLogsRetentionDays',
   'ticketSupportResponseTime',
 ]);
-
-type Props = {
-  readonly targetPlan: SubscriptionPlan;
-  readonly exceededQuotaKeys: Array<keyof SubscriptionPlanQuota>;
-  readonly isDowngrade?: boolean;
-};
-
-/** @deprecated */
-function NotEligibleSwitchPlanModalContent({
-  targetPlan,
-  exceededQuotaKeys,
-  isDowngrade = false,
-}: Props) {
-  const { t } = useTranslation(undefined, {
-    keyPrefix: 'admin_console.subscription.not_eligible_modal',
-  });
-
-  const { id, name, quota } = targetPlan;
-
-  const orderedEntries = useMemo(() => {
-    // eslint-disable-next-line no-restricted-syntax
-    const entries = Object.entries(quota) as SubscriptionPlanQuotaEntries;
-    return entries
-      .filter(([quotaKey]) => exceededQuotaKeys.includes(quotaKey))
-      .slice()
-      .sort(([preQuotaKey], [nextQuotaKey]) =>
-        sortBy(planQuotaItemOrder)(preQuotaKey, nextQuotaKey)
-      );
-  }, [quota, exceededQuotaKeys]);
-
-  return (
-    <div className={styles.container}>
-      <div className={styles.description}>
-        <Trans
-          components={{
-            name: <PlanName name={name} />,
-          }}
-        >
-          {t(isDowngrade ? 'downgrade_description' : 'upgrade_description')}
-        </Trans>
-        {!isDowngrade && id === ReservedPlanId.Pro && t('upgrade_pro_tip')}
-      </div>
-      <ul className={styles.list}>
-        {orderedEntries.map(([quotaKey, quotaValue]) => {
-          if (
-            excludedQuotaKeys.has(quotaKey) ||
-            quotaValue === null || // Unlimited items
-            quotaValue === true // Eligible items
-          ) {
-            return null;
-          }
-
-          return (
-            <li key={quotaKey}>
-              {quotaValue ? (
-                <Trans
-                  components={{
-                    item: (
-                      <DynamicT
-                        forKey={`subscription.quota_item.${quotaItemLimitedPhrasesMap[quotaKey]}`}
-                        interpolation={conditional(
-                          typeof quotaValue === 'number' && { count: quotaValue }
-                        )}
-                      />
-                    ),
-                  }}
-                >
-                  {t('a_maximum_of')}
-                </Trans>
-              ) : (
-                <DynamicT
-                  forKey={`subscription.quota_item.${quotaItemNotEligiblePhrasesMap[quotaKey]}`}
-                />
-              )}
-            </li>
-          );
-        })}
-      </ul>
-      <Trans
-        components={{
-          a: <ContactUsPhraseLink />,
-        }}
-      >
-        {t(isDowngrade ? 'downgrade_help_tip' : 'upgrade_help_tip')}
-      </Trans>
-    </div>
-  );
-}
 
 type SkuProps = {
   readonly targetSku: LogtoSkuResponse;
@@ -141,7 +41,7 @@ export function NotEligibleSwitchSkuModalContent({
     keyPrefix: 'admin_console.subscription.not_eligible_modal',
   });
 
-  const { id, name, quota } = targetSku;
+  const { id, quota } = targetSku;
 
   const orderedEntries = useMemo(() => {
     // eslint-disable-next-line no-restricted-syntax
@@ -159,7 +59,7 @@ export function NotEligibleSwitchSkuModalContent({
       <div className={styles.description}>
         <Trans
           components={{
-            name: <PlanName skuId={id} name={name ?? id} />,
+            name: <SkuName skuId={id} />,
           }}
         >
           {t(isDowngrade ? 'downgrade_description' : 'upgrade_description')}
@@ -212,5 +112,3 @@ export function NotEligibleSwitchSkuModalContent({
     </div>
   );
 }
-
-export default NotEligibleSwitchPlanModalContent;

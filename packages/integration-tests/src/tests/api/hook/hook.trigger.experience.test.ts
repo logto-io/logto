@@ -26,7 +26,7 @@ import {
   enableAllVerificationCodeSignInMethods,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest, generateEmail, generatePassword, randomString } from '#src/utils.js';
+import { generateEmail, generatePassword, randomString } from '#src/utils.js';
 
 import WebhookMockServer from './WebhookMockServer.js';
 import { assertHookLogResult } from './utils.js';
@@ -64,7 +64,7 @@ afterEach(async () => {
   await Promise.all([organizationApi.cleanUp(), ssoConnectorApi.cleanUp()]);
 });
 
-devFeatureTest.describe('trigger invalid hook', () => {
+describe('trigger invalid hook', () => {
   beforeAll(async () => {
     await webHookApi.create({
       name: 'invalidHookEventListener',
@@ -94,7 +94,7 @@ devFeatureTest.describe('trigger invalid hook', () => {
   });
 });
 
-devFeatureTest.describe('experience api hook trigger', () => {
+describe('experience api hook trigger', () => {
   // Use new hooks for each test to ensure test isolation
   beforeEach(async () => {
     await Promise.all([
@@ -275,7 +275,7 @@ devFeatureTest.describe('experience api hook trigger', () => {
   });
 });
 
-devFeatureTest.describe('organization jit provisioning hook trigger', () => {
+describe('organization jit provisioning hook trigger', () => {
   const hookName = 'organizationJitProvisioningHookEventListener';
 
   beforeAll(async () => {

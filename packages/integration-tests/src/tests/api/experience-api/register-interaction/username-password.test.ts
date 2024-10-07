@@ -9,9 +9,9 @@ import {
 } from '#src/helpers/experience/index.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest, generateUsername } from '#src/utils.js';
+import { generateUsername } from '#src/utils.js';
 
-devFeatureTest.describe('register new user with username and password', () => {
+describe('register new user with username and password', () => {
   const userApi = new UserApiTest();
 
   beforeAll(async () => {

@@ -12,7 +12,7 @@ import {
 import { conditional } from '@silverhand/essentials';
 import { type AllClientMetadata, type ClientAuthMethod, errors } from 'oidc-provider';
 
-import type { EnvSet } from '#src/env-set/index.js';
+import { type EnvSet } from '#src/env-set/index.js';
 
 export const getConstantClientMetadata = (
   envSet: EnvSet,
@@ -86,13 +86,29 @@ export const getUtcStartOfTheDay = (date: Date) => {
   );
 };
 
+const firstScreenRouteMapping: Record<FirstScreen, keyof typeof experience.routes> = {
+  [FirstScreen.SignIn]: 'signIn',
+  [FirstScreen.Register]: 'register',
+  [FirstScreen.ResetPassword]: 'resetPassword',
+  [FirstScreen.IdentifierSignIn]: 'identifierSignIn',
+  [FirstScreen.IdentifierRegister]: 'identifierRegister',
+  [FirstScreen.SingleSignOn]: 'sso',
+  [FirstScreen.SignInDeprecated]: 'signIn',
+};
+
+// Note: this eslint comment can be removed once the dev feature flag is removed
+
 export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown): string => {
   const firstScreenKey =
     params[ExtraParamsKey.FirstScreen] ??
     params[ExtraParamsKey.InteractionMode] ??
     FirstScreen.SignIn;
+
   const firstScreen =
-    firstScreenKey === 'signUp' ? experience.routes.register : experience.routes[firstScreenKey];
+    firstScreenKey === 'signUp'
+      ? experience.routes.register
+      : experience.routes[firstScreenRouteMapping[firstScreenKey]];
+
   const directSignIn = params[ExtraParamsKey.DirectSignIn];
   const searchParams = new URLSearchParams();
   const getSearchParamString = () => (searchParams.size > 0 ? `?${searchParams.toString()}` : '');
@@ -103,6 +119,14 @@ export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown):
 
   if (params[ExtraParamsKey.OrganizationId]) {
     searchParams.append(ExtraParamsKey.OrganizationId, params[ExtraParamsKey.OrganizationId]);
+  }
+
+  if (params[ExtraParamsKey.LoginHint]) {
+    searchParams.append(ExtraParamsKey.LoginHint, params[ExtraParamsKey.LoginHint]);
+  }
+
+  if (params[ExtraParamsKey.Identifier]) {
+    searchParams.append(ExtraParamsKey.Identifier, params[ExtraParamsKey.Identifier]);
   }
 
   if (directSignIn) {

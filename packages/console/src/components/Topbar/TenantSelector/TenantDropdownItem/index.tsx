@@ -1,13 +1,11 @@
 import { TenantTag } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useContext, useMemo } from 'react';
 
 import Tick from '@/assets/icons/tick.svg?react';
 import { type TenantResponse } from '@/cloud/types/router';
-import PlanName from '@/components/PlanName';
+import SkuName from '@/components/SkuName';
 import TenantEnvTag from '@/components/TenantEnvTag';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { DropdownItem } from '@/ds-components/Dropdown';
 import DynamicT from '@/ds-components/DynamicT';
@@ -25,21 +23,16 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
   const {
     name,
     tag,
-    subscription: { planId },
+    subscription: { planId, isEnterprisePlan },
   } = tenantData;
 
-  const {
-    currentPlan,
-    subscriptionPlans,
-    currentSubscriptionUsage: usage,
-    currentSubscriptionQuota: quota,
-  } = useContext(SubscriptionDataContext);
-  const tenantSubscriptionPlan = useMemo(
-    () => subscriptionPlans.find((plan) => plan.id === planId),
-    [subscriptionPlans, planId]
+  const { logtoSkus } = useContext(SubscriptionDataContext);
+  const tenantSubscriptionSku = useMemo(
+    () => logtoSkus.find(({ id }) => id === planId),
+    [logtoSkus, planId]
   );
 
-  if (!tenantSubscriptionPlan) {
+  if (!tenantSubscriptionSku) {
     return null;
   }
 
@@ -49,18 +42,13 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
         <div className={styles.meta}>
           <div className={styles.name}>{name}</div>
           <TenantEnvTag tag={tag} />
-          <TenantStatusTag
-            tenantData={tenantData}
-            tenantStatus={{ usage, quota }}
-            tenantSubscriptionPlan={tenantSubscriptionPlan}
-            className={styles.statusTag}
-          />
+          <TenantStatusTag tenantData={tenantData} className={styles.statusTag} />
         </div>
         <div className={styles.planName}>
           {tag === TenantTag.Development ? (
             <DynamicT forKey="subscription.no_subscription" />
           ) : (
-            <PlanName skuId={conditional(isDevFeaturesEnabled && planId)} name={currentPlan.name} />
+            <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />
           )}
         </div>
       </div>

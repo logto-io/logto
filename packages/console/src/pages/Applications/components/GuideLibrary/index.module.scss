@@ -24,6 +24,13 @@
   transform: translateX(-100%);
 }
 
+.wrapper.rtl {
+  .filterAnchor {
+    inset: 0 0 0 auto;
+    transform: translateX(100%);
+  }
+}
+
 .filters {
   position: sticky;
   top: dim.$guide-content-padding;
@@ -31,7 +38,7 @@
   flex-direction: column;
   width: dim.$guide-sidebar-width;
   gap: _.unit(4);
-  margin-right: dim.$guide-panel-gap;
+  margin-inline-end: dim.$guide-panel-gap;
 
   label {
     font: var(--font-label-2);
@@ -54,7 +61,7 @@
 
   .proTag {
     position: absolute;
-    right: -2px;
+    inset-inline-end: -2px;
     bottom: 0;
     @include _.z-index(front);
   }
@@ -99,8 +106,8 @@
 
 @media screen and (max-width: dim.$guide-content-max-width) {
   .wrapper.hasFilters {
-    margin-left: 0;
-    padding-right: dim.$guide-content-padding;
+    margin-inline-start: 0;
+    padding-inline-end: dim.$guide-content-padding;
     max-width: calc(dim.$guide-main-content-max-width + dim.$guide-sidebar-width + dim.$guide-panel-gap + 2 * dim.$guide-content-padding);
   }
 }

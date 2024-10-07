@@ -7,7 +7,7 @@
 
   .border,
   .outline {
-    text-align: left;
+    text-align: start;
     position: absolute;
     inset: -10px 0 -0.5px;
     border: _.border(var(--color-line-border));
@@ -22,7 +22,7 @@
       display: inline-block;
       visibility: hidden;
       // To keep the label in the middle of the empty space
-      margin-left: 1px;
+      margin-inline-start: 1px;
       padding: 0;
       // fix to the label font height to keep space for the input container
       height: 20px;
@@ -48,7 +48,7 @@
 
   .label {
     position: absolute;
-    left: _.unit(3.5);
+    inset-inline-start: _.unit(3.5);
     font: var(--font-body-1);
     color: var(--color-type-secondary);
     pointer-events: none;
@@ -87,7 +87,6 @@
     }
   }
 }
-
 
 .container.danger {
   .border {

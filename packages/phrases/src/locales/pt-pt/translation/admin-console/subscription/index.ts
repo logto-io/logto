@@ -8,15 +8,24 @@ const subscription = {
   pro_plan: 'Plano Pro',
   pro_plan_description: 'Para empresas que desejam se beneficiar sem preocupações com o Logto.',
   enterprise: 'Empresa',
+  /** UNTRANSLATED */
+  enterprise_description:
+    'For large-scale organizations requiring advanced features, full customization, and dedicated support to power mission-critical applications. Tailored to your needs for ultimate security, compliance, and performance.',
+  /** UNTRANSLATED */
+  admin_plan: 'Admin plan',
+  /** UNTRANSLATED */
+  dev_plan: 'Development plan',
   current_plan: 'Plano Atual',
   current_plan_description:
     'Aqui está o seu plano atual. Pode facilmente verificar a utilização do seu plano, verificar a sua próxima fatura e efetuar alterações no seu plano, conforme necessário.',
   plan_usage: 'Uso do plano',
   plan_cycle: 'Ciclo do plano: {{period}}. O uso é renovado em {{renewDate}}.',
-  next_bill: 'Sua próxima fatura',
+  /** UNTRANSLATED */
+  next_bill: 'Your upcoming bill',
   next_bill_hint: 'Para saber mais sobre o cálculo, consulte este <a>artigo</a>.',
+  /** UNTRANSLATED */
   next_bill_tip:
-    'Os preços exibidos aqui não incluem impostos. O valor do imposto será calculado com base nas informações que você fornecer e nos requisitos regulatórios locais, e será mostrado nas suas faturas.',
+    'The prices displayed here are tax-exclusive and may be subject to a slight delay in updates. The tax amount will be calculated based on the information you provide and your local regulatory requirements, and will be shown in your invoices.',
   manage_payment: 'Gerenciar pagamento',
   overfill_quota_warning:
     'Você atingiu o limite da sua cota. Para evitar problemas, faça upgrade do plano.',

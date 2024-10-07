@@ -145,3 +145,50 @@ export const customJwtFetcherGuard = z.discriminatedUnion('tokenType', [
 ]);
 
 export type CustomJwtFetcher = z.infer<typeof customJwtFetcherGuard>;
+
+export enum CustomJwtErrorCode {
+  /**
+   * The `AccessDenied` error explicitly thrown
+   * by calling the `api.denyAccess` function in the custom JWT script.
+   */
+  AccessDenied = 'AccessDenied',
+  /** General JWT customizer error,
+   * this is the fallback custom jwt error code
+   * for any internal error thrown by the JWT customizer (localVM, azure function, or CF worker).
+   */
+  General = 'General',
+}
+
+export const customJwtErrorBodyGuard = z.object({
+  code: z.nativeEnum(CustomJwtErrorCode),
+  message: z.string(),
+});
+
+export type CustomJwtErrorBody = z.infer<typeof customJwtErrorBodyGuard>;
+
+export type CustomJwtApiContext = {
+  /**
+   * Reject the the current token request.
+   *
+   * @remarks
+   * By calling this function, the current token request will be rejected,
+   * and a OIDC `AccessDenied` error will be thrown to the client with the given message.
+   *
+   * @param message The message to be shown to the user.
+   * @throws {ResponseError} with `CustomJwtErrorBody`
+   */
+  denyAccess: (message?: string) => never;
+};
+
+/**
+ * The payload type for the custom JWT script.
+ *
+ * @remarks
+ * We use this type to guard the input payload for the custom JWT script.
+ */
+export type CustomJwtScriptPayload = {
+  token: Record<string, unknown>;
+  context?: Record<string, unknown>;
+  environmentVariables?: Record<string, string>;
+  api: CustomJwtApiContext;
+};

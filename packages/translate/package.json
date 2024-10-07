@@ -1,0 +1,80 @@
+{
+  "name": "@logto/translate",
+  "version": "0.1.0",
+  "description": "A CLI tool that helps translate phrases and experience-phrases to i18n resources.",
+  "author": "Silverhand Inc. <contact@silverhand.io>",
+  "homepage": "https://github.com/logto-io/logto#readme",
+  "license": "MPL-2.0",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "lib/index.js",
+  "bin": {
+    "logto-translate": "bin/index.js"
+  },
+  "files": [
+    "bin",
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/logto-io/logto.git"
+  },
+  "scripts": {
+    "precommit": "lint-staged",
+    "prepare:package-json": "node -p \"'export const packageJson = ' + JSON.stringify(require('./package.json'), undefined, 2) + ';'\" > src/package-json.ts",
+    "build": "rm -rf lib && pnpm prepare:package-json && tsc -p tsconfig.build.json",
+    "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
+    "start": "node .",
+    "start:dev": "pnpm build && node .",
+    "lint": "eslint --ext .ts src",
+    "lint:report": "pnpm lint --format json --output-file report.json",
+    "prepack": "pnpm build"
+  },
+  "engines": {
+    "node": "^20.9.0"
+  },
+  "bugs": {
+    "url": "https://github.com/logto-io/logto/issues"
+  },
+  "dependencies": {
+    "@logto/core-kit": "workspace:^2.5.0",
+    "@logto/language-kit": "workspace:^1.1.0",
+    "@logto/phrases": "workspace:^1.14.0",
+    "@logto/phrases-experience": "workspace:^1.8.0",
+    "@logto/shared": "workspace:^3.1.1",
+    "@silverhand/essentials": "^2.9.1",
+    "chalk": "^5.3.0",
+    "dotenv": "^16.4.5",
+    "got": "^14.0.0",
+    "hpagent": "^1.2.0",
+    "inquirer": "^9.0.0",
+    "ora": "^8.0.1",
+    "p-queue": "^8.0.0",
+    "typescript": "^5.5.3",
+    "yargs": "^17.6.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@silverhand/eslint-config": "6.0.1",
+    "@silverhand/ts-config": "6.0.0",
+    "@types/inquirer": "^9.0.0",
+    "@types/node": "^20.9.5",
+    "@types/yargs": "^17.0.13",
+    "@vitest/coverage-v8": "^2.0.0",
+    "eslint": "^8.56.0",
+    "lint-staged": "^15.0.0",
+    "prettier": "^3.0.0"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand",
+    "rules": {
+      "no-console": "error"
+    },
+    "ignorePatterns": [
+      "src/package-json.ts"
+    ]
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc"
+}

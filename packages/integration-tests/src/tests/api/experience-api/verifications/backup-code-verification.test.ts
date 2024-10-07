@@ -6,9 +6,8 @@ import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.
 import { expectRejects } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { UserApiTest, generateNewUserProfile } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
 
-devFeatureTest.describe('backup code verification APIs', () => {
+describe('backup code verification APIs', () => {
   const { username, password } = generateNewUserProfile({ username: true, password: true });
   const userApi = new UserApiTest();
 
@@ -21,12 +20,12 @@ devFeatureTest.describe('backup code verification APIs', () => {
     await userApi.cleanUp();
   });
 
-  it('should throw 400 if the user is not identified', async () => {
+  it('should throw 404 if the user is not identified', async () => {
     const client = await initExperienceClient();
 
     await expectRejects(client.verifyBackupCode({ code: '1234' }), {
       code: 'session.identifier_not_found',
-      status: 400,
+      status: 404,
     });
   });
 

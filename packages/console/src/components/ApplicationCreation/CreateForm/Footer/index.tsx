@@ -4,14 +4,16 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
-import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { isDevFeaturesEnabled } from '@/consts/env';
+import SkuName from '@/components/SkuName';
+import { addOnPricingExplanationLink } from '@/consts/external-links';
 import { machineToMachineAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import TextLink from '@/ds-components/TextLink';
 import useApplicationsUsage from '@/hooks/use-applications-usage';
+import useUserPreferences from '@/hooks/use-user-preferences';
+import { isPaidPlan } from '@/utils/subscription';
 
 import styles from './index.module.scss';
 
@@ -23,32 +25,44 @@ type Props = {
 };
 
 function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props) {
-  const { currentPlan, currentSku } = useContext(SubscriptionDataContext);
+  const {
+    currentSku,
+    currentSubscription: { planId, isAddOnAvailable, isEnterprisePlan },
+    currentSubscriptionQuota,
+  } = useContext(SubscriptionDataContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell' });
   const {
     hasAppsReachedLimit,
     hasMachineToMachineAppsReachedLimit,
     hasThirdPartyAppsReachedLimit,
   } = useApplicationsUsage();
+  const {
+    data: { m2mUpsellNoticeAcknowledged },
+    update,
+  } = useUserPreferences();
 
   if (selectedType) {
-    const { id: planId, name: planName, quota } = currentPlan;
-
     if (
       selectedType === ApplicationType.MachineToMachine &&
-      isDevFeaturesEnabled &&
-      planId === ReservedPlanId.Pro
+      isAddOnAvailable &&
+      hasMachineToMachineAppsReachedLimit &&
+      // Just in case the enterprise plan has reached the resource limit, we still need to show charge notice.
+      isPaidPlan(planId, isEnterprisePlan) &&
+      !m2mUpsellNoticeAcknowledged
     ) {
       return (
         <AddOnNoticeFooter
           isLoading={isLoading}
           buttonTitle="applications.create"
-          onClick={onClickCreate}
+          onClick={() => {
+            void update({ m2mUpsellNoticeAcknowledged: true });
+            onClickCreate();
+          }}
         >
           <Trans
             components={{
               span: <span className={styles.strong} />,
-              a: <TextLink to="https://blog.logto.io/pricing-add-ons/" />,
+              a: <TextLink to={addOnPricingExplanationLink} />,
             }}
           >
             {t('add_on.footer.machine_to_machine_app', {
@@ -63,7 +77,7 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
       selectedType === ApplicationType.MachineToMachine &&
       hasMachineToMachineAppsReachedLimit &&
       // For paid plan (pro plan), we don't guard the m2m app creation since it's an add-on feature.
-      (isDevFeaturesEnabled ? currentSku.id : planId) === ReservedPlanId.Free
+      currentSku.id === ReservedPlanId.Free
     ) {
       return (
         <QuotaGuardFooter>
@@ -99,10 +113,10 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
           <Trans
             components={{
               a: <ContactUsPhraseLink />,
-              planName: <PlanName skuId={currentSku.id} name={planName} />,
+              planName: <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />,
             }}
           >
-            {t('paywall.applications', { count: quota.applicationsLimit ?? 0 })}
+            {t('paywall.applications', { count: currentSubscriptionQuota.applicationsLimit ?? 0 })}
           </Trans>
         </QuotaGuardFooter>
       );

@@ -19,7 +19,7 @@
   flex: 1;
 
   &:not(:last-child) {
-    margin-right: _.unit(4);
+    margin-inline-end: _.unit(4);
   }
 
   &.bordered {
@@ -35,7 +35,7 @@
     align-items: center;
 
     .toggleTipButton {
-      margin-left: _.unit(0.5);
+      margin-inline-start: _.unit(0.5);
     }
   }
 
@@ -61,7 +61,7 @@
       align-items: center;
 
       .number {
-        margin-right: _.unit(2);
+        margin-inline-end: _.unit(2);
         flex: 0;
       }
     }

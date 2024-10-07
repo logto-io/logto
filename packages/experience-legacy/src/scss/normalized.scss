@@ -1,0 +1,44 @@
+@use '@/scss/colors' as colors;
+@use '@/scss/fonts' as fonts;
+
+body {
+  @include colors.static;
+  @include fonts.fonts;
+
+  --radius: 8px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: auto;
+  margin: 0;
+  padding: 0;
+  word-break: break-word;
+  color: var(--color-type-primary);
+  font: var(--font-body-2);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  text-underline-offset: 2px;
+}
+
+input {
+  border: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+:focus-visible {
+  outline: solid 1px var(--color-brand-default);
+}

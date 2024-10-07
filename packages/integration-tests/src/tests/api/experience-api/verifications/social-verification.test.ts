@@ -13,9 +13,8 @@ import {
   successFullyVerifySocialAuthorization,
 } from '#src/helpers/experience/social-verification.js';
 import { expectRejects } from '#src/helpers/index.js';
-import { devFeatureTest } from '#src/utils.js';
 
-devFeatureTest.describe('social verification', () => {
+describe('social verification', () => {
   const state = 'fake_state';
   const redirectUri = 'http://localhost:3000/redirect';
   const authorizationCode = 'fake_code';

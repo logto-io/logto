@@ -1,3 +1,4 @@
+import { ReservedPlanId } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import dayjs from 'dayjs';
 import { useCallback, useContext, useMemo } from 'react';
@@ -6,7 +7,7 @@ import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import PageMeta from '@/components/PageMeta';
-import PlanName from '@/components/PlanName';
+import SkuName from '@/components/SkuName';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import Table from '@/ds-components/Table';
@@ -50,11 +51,23 @@ function BillingHistory() {
           {
             title: <DynamicT forKey="subscription.billing_history.invoice_column" />,
             dataIndex: 'planName',
-            render: ({ planName, periodStart, periodEnd }) => {
+            render: ({ skuId: rawSkuId, periodStart, periodEnd }) => {
+              /**
+               * @remarks
+               * The `skuId` should be either ReservedPlanId.Dev, ReservedPlanId.Pro, ReservedPlanId.Admin, ReservedPlanId.Free, or a random string.
+               * Except for the random string, which corresponds to the custom enterprise plan, other `skuId` values correspond to specific Reserved Plans.
+               */
+              const skuId =
+                rawSkuId &&
+                // eslint-disable-next-line no-restricted-syntax
+                (Object.values(ReservedPlanId).includes(rawSkuId as ReservedPlanId)
+                  ? rawSkuId
+                  : ReservedPlanId.Enterprise);
+
               return (
                 <ItemPreview
                   title={formatPeriod({ periodStart, periodEnd, displayYear: true })}
-                  subtitle={conditional(planName && <PlanName name={planName} />)}
+                  subtitle={conditional(skuId && <SkuName skuId={skuId} />)}
                 />
               );
             },

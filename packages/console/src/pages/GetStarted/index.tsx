@@ -1,4 +1,4 @@
-import { Theme, type Application, type Resource } from '@logto/schemas';
+import { ApplicationType, Theme, type Application, type Resource } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useContext, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -26,8 +26,8 @@ import useTheme from '@/hooks/use-theme';
 import useWindowResize from '@/hooks/use-window-resize';
 
 import CreateApiForm from '../ApiResources/components/CreateForm';
+import ProtectedAppModal from '../Applications/components/ProtectedAppModal';
 
-import ProtectedAppCreationForm from './ProtectedAppCreationForm';
 import styles from './index.module.scss';
 
 const icons = {
@@ -111,12 +111,6 @@ function GetStarted() {
         <div className={styles.title}>
           {t(`get_started.develop.title${isCloud ? '_cloud' : ''}`)}
         </div>
-        {isCloud && (
-          <>
-            <ProtectedAppCreationForm />
-            <div className={styles.subtitle}>{t('get_started.develop.subtitle_cloud')}</div>
-          </>
-        )}
         <GuideCardGroup
           ref={containerRef}
           hasCardBorder
@@ -124,11 +118,21 @@ function GetStarted() {
           guides={featuredAppGuides}
           onClickGuide={onClickAppGuide}
         />
-        {selectedGuide?.target !== 'API' && showCreateAppForm && (
-          <ApplicationCreation
-            defaultCreateType={selectedGuide?.target}
-            defaultCreateFrameworkName={selectedGuide?.name}
-            onCompleted={onAppCreationCompleted}
+        {selectedGuide?.metadata.target !== 'API' &&
+          selectedGuide?.metadata.target !== ApplicationType.Protected &&
+          showCreateAppForm && (
+            <ApplicationCreation
+              defaultCreateType={selectedGuide?.metadata.target}
+              defaultCreateFrameworkName={selectedGuide?.metadata.name}
+              onCompleted={onAppCreationCompleted}
+            />
+          )}
+        {selectedGuide?.metadata.target === ApplicationType.Protected && showCreateAppForm && (
+          <ProtectedAppModal
+            onClose={() => {
+              setShowCreateAppForm(false);
+              setSelectedGuide(undefined);
+            }}
           />
         )}
         <TextLink to="/applications/create">{t('get_started.view_all')}</TextLink>

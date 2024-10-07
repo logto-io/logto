@@ -37,7 +37,7 @@
       display: inline-flex;
       align-items: center;
       gap: _.unit(2);
-      margin-right: _.unit(1);
+      margin-inline-end: _.unit(1);
       flex-wrap: nowrap;
 
       &.wrapContent {

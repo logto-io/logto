@@ -10,10 +10,11 @@
     "prepack": "pnpm -r prepack",
     "dev": "pnpm -r prepack && pnpm start:dev",
     "dev:cloud": "IS_CLOUD=1 CONSOLE_PUBLIC_URL=/ pnpm dev",
-    "start:dev": "pnpm -r --parallel --filter=!@logto/integration-tests --filter \"!./packages/connectors/connector-*\" dev",
+    "start:dev": "pnpm -r --parallel --filter=!@logto/integration-tests --filter=!@logto/experience-legacy --filter \"!./packages/connectors/connector-*\" dev",
     "start": "cd packages/core && NODE_ENV=production node .",
     "ogcio:start": "cd packages/core && node .",
     "cli": "logto",
+    "translate": "logto-translate",
     "changeset": "changeset",
     "alteration": "logto db alt",
     "connectors": "pnpm -r --filter \"./packages/connectors/connector-*\"",
@@ -53,6 +54,7 @@
     }
   },
   "dependencies": {
-    "@logto/cli": "workspace:^1.1.0"
+    "@logto/cli": "workspace:^",
+    "@logto/translate": "workspace:^"
   }
 }

@@ -11,11 +11,13 @@ const user_details = {
   delete_description: 'This action cannot be undone. It will permanently delete the user.',
   deleted: 'The user has been successfully deleted',
   reset_password: {
-    reset_password: 'Reset password',
-    title: 'Are you sure you want to reset the password?',
-    content: "This action cannot be undone. This will reset the user's log in information.",
-    congratulations: 'This user has been reset',
+    reset_title: 'Are you sure you want to reset the password?',
+    generate_title: 'Are you sure you want to generate a password?',
+    content: "This action cannot be undone. This will update the user's sign-in information.",
+    reset_complete: 'The password has been reset',
+    generate_complete: 'The password has been generated',
     new_password: 'New password:',
+    password: 'Password:',
   },
   tab_settings: 'Settings',
   tab_roles: 'Roles',
@@ -28,6 +30,7 @@ const user_details = {
   field_email: 'Email address',
   field_phone: 'Phone number',
   field_username: 'Username',
+  field_password: 'Password',
   field_name: 'Name',
   field_avatar: 'Avatar image URL',
   field_avatar_placeholder: 'https://your.cdn.domain/avatar.png',
@@ -41,6 +44,8 @@ const user_details = {
   field_sso_connectors: 'Enterprise connections',
   custom_data_invalid: 'Custom data must be a valid JSON object',
   profile_invalid: 'Profile must be a valid JSON object',
+  password_already_set: 'Password already set',
+  no_password_set: 'No password set',
   connectors: {
     connectors: 'Connectors',
     user_id: 'User ID',
@@ -97,6 +102,37 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     'User needs to have at least one of the sign-in identifiers (username, email, phone number or social) to sign in. Are you sure you want to continue?',
+  personal_access_tokens: {
+    title: 'Personal access token',
+    title_other: 'Personal access tokens',
+    title_short: 'token',
+    empty: 'The user does not have any personal access tokens.',
+    create: 'Create new token',
+    tip: 'Personal access tokens (PATs) provide a secure way for users to grant access tokens without using their credentials and interactive sign-in. This is useful for CI/CD, scripts, or applications that need to access resources programmatically. <a>Learn more</a>',
+    value: 'Value',
+    created_at: 'Created at',
+    expires_at: 'Expires at',
+    never: 'Never',
+    create_new_token: 'Create new token',
+    delete_confirmation:
+      'This action cannot be undone. Are you sure you want to delete this token?',
+    expired: 'Expired',
+    expired_tooltip: 'This token was expired on {{date}}.',
+    create_modal: {
+      title: 'Create personal access token',
+      expiration: 'Expiration',
+      expiration_description: 'The token will expire at {{date}}.',
+      expiration_description_never:
+        'The token will never expire. We recommend setting an expiration date for enhanced security.',
+      days: '{{count}} day',
+      days_other: '{{count}} days',
+      created: 'The token {{name}} has been successfully created.',
+    },
+    edit_modal: {
+      title: 'Edit personal access token',
+      edited: 'The token {{name}} has been successfully edited.',
+    },
+  },
 };
 
 export default Object.freeze(user_details);

@@ -97,6 +97,12 @@ const description = {
   /** UNTRANSLATED */
   redirect_to: 'You will be redirected to {{name}}.',
   auto_agreement: 'Devam ederek <link></link> kabul etmiş oluyorsunuz.',
+  identifier_sign_in_description: 'Oturum açmak için {{types, list(type: disjunction;)}} girin.',
+  all_sign_in_options: 'Tüm oturum açma seçenekleri',
+  identifier_register_description:
+    'Yeni bir hesap oluşturmak için {{types, list(type: disjunction;)}} girin.',
+  all_account_creation_options: 'Tüm hesap oluşturma seçenekleri',
+  back_to_sign_in: 'Girişe dön',
 };
 
 export default Object.freeze(description);

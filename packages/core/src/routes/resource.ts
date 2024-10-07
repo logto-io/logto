@@ -3,11 +3,10 @@ import { generateStandardId } from '@logto/shared';
 import { yes } from '@silverhand/essentials';
 import { boolean, object, string } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import koaQuotaGuard, { newKoaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
+import { koaQuotaGuard, koaReportSubscriptionUpdates } from '#src/middleware/koa-quota-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import { attachScopesToResources } from '#src/utils/resource.js';
 
@@ -77,15 +76,18 @@ export default function resourceRoutes<T extends ManagementApiRouter>(
 
   router.post(
     '/resources',
-    EnvSet.values.isDevFeaturesEnabled
-      ? newKoaQuotaGuard({ key: 'resourcesLimit', quota })
-      : koaQuotaGuard({ key: 'resourcesLimit', quota }),
+    koaQuotaGuard({ key: 'resourcesLimit', quota }),
     koaGuard({
       // Intentionally omit `isDefault` since it'll affect other rows.
       // Use the dedicated API `PATCH /resources/:id/is-default` to update.
       body: Resources.createGuard.omit({ id: true, isDefault: true }),
       response: Resources.guard.extend({ scopes: Scopes.guard.array().optional() }),
       status: [201, 422],
+    }),
+    koaReportSubscriptionUpdates({
+      key: 'resourcesLimit',
+      quota,
+      methods: ['POST'],
     }),
     async (ctx, next) => {
       const { body } = ctx.guard;
@@ -184,6 +186,11 @@ export default function resourceRoutes<T extends ManagementApiRouter>(
   router.delete(
     '/resources/:id',
     koaGuard({ params: object({ id: string().min(1) }), status: [204, 400, 404] }),
+    koaReportSubscriptionUpdates({
+      key: 'resourcesLimit',
+      quota,
+      methods: ['DELETE'],
+    }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
 

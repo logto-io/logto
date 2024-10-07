@@ -1,7 +1,7 @@
 const add_on = {
   /** UNTRANSLATED */
   mfa_inline_notification:
-    'MFA is a ${{price, number}} per mo add-on for the {{planName}} plan. First month prorated based on your billing cycle. <a>Learn more</a>',
+    'MFA is a ${{price, number}} per mo add-on for the {{planName}}. First month prorated based on your billing cycle. <a>Learn more</a>',
   footer: {
     /** UNTRANSLATED */
     api_resource:
@@ -17,7 +17,7 @@ const add_on = {
       'Additional members cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
     /** UNTRANSLATED */
     organization:
-      'Organization is a <span>${{price, number}} per mo / ea</span> add-on for {{planName}}. First month prorated based on your billing cycle. <a>Learn more</a>',
+      'Organization is a <span>${{price, number}} per mo</span> add-on for {{planName}} with unlimited organizations. First month prorated based on your billing cycle. <a>Learn more</a>',
   },
 };
 

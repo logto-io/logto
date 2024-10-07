@@ -40,9 +40,6 @@ export const defaultConfig: UserConfig = {
       },
     ],
   },
-  optimizeDeps: {
-    include: ['@logto/phrases', '@logto/phrases-experience', '@logto/schemas'],
-  },
   build: {
     sourcemap: true,
     rollupOptions: {

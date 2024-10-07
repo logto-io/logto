@@ -46,7 +46,9 @@ const general = {
   continue: '계속하기',
   page_info: '{{min, number}}-{{max, number}} / {{total, number}}',
   learn_more: '더 알아보기',
-  tab_errors: '{{count, number}} 오류',
+  /** UNTRANSLATED */
+  tab_error_one: '{{count, number}} error',
+  tab_error_other: '{{count, number}} 오류',
   skip_for_now: '지금은 건너뛰기',
   remove: '삭제',
   visit: '방문하기',

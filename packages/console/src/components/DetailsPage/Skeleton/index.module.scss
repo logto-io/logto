@@ -16,12 +16,12 @@
     padding: _.unit(6);
     border-radius: 16px;
     background-color: var(--color-layer-1);
+    gap: _.unit(6);
 
     .icon {
       width: 60px;
       height: 60px;
       border-radius: 12px;
-      margin-right: _.unit(6);
       @include _.shimmering-animation;
     }
 

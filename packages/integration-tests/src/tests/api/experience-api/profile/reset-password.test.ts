@@ -12,7 +12,7 @@ import {
 import { expectRejects } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest, generatePassword } from '#src/utils.js';
+import { generatePassword } from '#src/utils.js';
 
 const identifyForgotPasswordInteraction = async (client: ExperienceClient, email: string) => {
   const { verificationId, code } = await successfullySendVerificationCode(client, {
@@ -27,7 +27,7 @@ const identifyForgotPasswordInteraction = async (client: ExperienceClient, email
   await client.identifyUser({ verificationId });
 };
 
-devFeatureTest.describe('Reset Password', () => {
+describe('Reset Password', () => {
   const userApi = new UserApiTest();
 
   beforeAll(async () => {

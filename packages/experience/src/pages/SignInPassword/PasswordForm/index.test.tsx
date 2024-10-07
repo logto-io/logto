@@ -4,17 +4,17 @@ import { fireEvent, waitFor, act } from '@testing-library/react';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import {
   signInWithPasswordIdentifier,
-  putInteraction,
+  initInteraction,
   sendVerificationCode,
-} from '@/apis/interaction';
+} from '@/apis/experience';
 import { UserFlow } from '@/types';
 
 import PasswordForm from '.';
 
-jest.mock('@/apis/interaction', () => ({
+jest.mock('@/apis/experience', () => ({
   signInWithPasswordIdentifier: jest.fn(() => ({ redirectTo: '/' })),
   sendVerificationCode: jest.fn(() => ({ success: true })),
-  putInteraction: jest.fn(() => ({ success: true })),
+  initInteraction: jest.fn(() => ({ success: true })),
 }));
 
 const mockedNavigate = jest.fn();
@@ -71,7 +71,13 @@ describe('PasswordSignInForm', () => {
       });
 
       await waitFor(() => {
-        expect(signInWithPasswordIdentifier).toBeCalledWith({ [identifier]: value, password });
+        expect(signInWithPasswordIdentifier).toBeCalledWith({
+          identifier: {
+            type: identifier,
+            value,
+          },
+          password,
+        });
       });
 
       if (isVerificationCodeEnabled) {
@@ -84,8 +90,11 @@ describe('PasswordSignInForm', () => {
         });
 
         await waitFor(() => {
-          expect(putInteraction).toBeCalledWith(InteractionEvent.SignIn);
-          expect(sendVerificationCode).toBeCalledWith({ [identifier]: value });
+          expect(initInteraction).toBeCalledWith(InteractionEvent.SignIn);
+          expect(sendVerificationCode).toBeCalledWith(InteractionEvent.SignIn, {
+            type: identifier,
+            value,
+          });
         });
 
         expect(mockedNavigate).toBeCalledWith(

@@ -13,7 +13,8 @@
 .main {
   width: 100%;
   height: 100%;
-  padding: 0 _.unit(6) 0 _.unit(2);
+  padding-block: 0;
+  padding-inline: _.unit(2) _.unit(6);
 
   > :not(svg) {
     @include _.main-content-width;
@@ -29,7 +30,7 @@
   color: var(--color-text-secondary);
   position: absolute;
   bottom: _.unit(3);
-  left: _.unit(4);
+  inset-inline-start: _.unit(4);
 }
 
 .daisy {

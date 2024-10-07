@@ -6,6 +6,7 @@ import ArrowRight from '@/assets/icons/arrow-right.svg?react';
 import Tick from '@/assets/icons/tick.svg?react';
 import { DropdownItem } from '@/ds-components/Dropdown';
 import DynamicT from '@/ds-components/DynamicT';
+import FlipOnRtl from '@/ds-components/FlipOnRtl';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import type { Option } from '@/ds-components/Select';
 import Spacer from '@/ds-components/Spacer';
@@ -90,7 +91,9 @@ function SubMenu<T extends string>({
         <DynamicT forKey={title} />
       </span>
       <Spacer />
-      <ArrowRight className={styles.icon} />
+      <FlipOnRtl>
+        <ArrowRight className={styles.icon} />
+      </FlipOnRtl>
       <OverlayScrollbar
         className={classNames(styles.menu, showMenu && styles.visible)}
         style={{ maxHeight: menuHeight }}

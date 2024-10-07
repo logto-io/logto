@@ -29,12 +29,13 @@ const jwt_claims = {
     'As reivindicações padrão são automaticamente incluídas no JWT e não podem ser substituídas.',
   user_data: {
     title: 'Dados do usuário',
-    subtitle: 'Use o parâmetro de entrada `data.user` para fornecer informações vitais do usuário.',
+    subtitle:
+      'Use o parâmetro de entrada `context.user` para fornecer informações vitais do usuário.',
   },
   grant_data: {
     title: 'Dados da concessão',
     subtitle:
-      'Use o parâmetro de entrada `data.grant` para fornecer informações vitais da concessão, disponível apenas para troca de token.',
+      'Use o parâmetro de entrada `context.grant` para fornecer informações vitais da concessão, disponível apenas para troca de token.',
   },
   token_data: {
     title: 'Dados do token',

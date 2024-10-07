@@ -14,11 +14,10 @@ import { conditional, deduplicate, yes } from '@silverhand/essentials';
 import { subDays } from 'date-fns';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import koaQuotaGuard, { newKoaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
+import { koaReportSubscriptionUpdates, koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 import { type AllowedKeyPrefix } from '#src/queries/log.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -158,9 +157,7 @@ export default function hookRoutes<T extends ManagementApiRouter>(
 
   router.post(
     '/hooks',
-    EnvSet.values.isDevFeaturesEnabled
-      ? newKoaQuotaGuard({ key: 'hooksLimit', quota })
-      : koaQuotaGuard({ key: 'hooksLimit', quota }),
+    koaQuotaGuard({ key: 'hooksLimit', quota }),
     koaGuard({
       body: Hooks.createGuard.omit({ id: true, signingKey: true }).extend({
         event: hookEventGuard.optional(),
@@ -168,6 +165,11 @@ export default function hookRoutes<T extends ManagementApiRouter>(
       }),
       response: Hooks.guard,
       status: [201, 400],
+    }),
+    koaReportSubscriptionUpdates({
+      key: 'hooksLimit',
+      quota,
+      methods: ['POST'],
     }),
     async (ctx, next) => {
       const { event, events, enabled, ...rest } = ctx.guard.body;
@@ -257,6 +259,11 @@ export default function hookRoutes<T extends ManagementApiRouter>(
   router.delete(
     '/hooks/:id',
     koaGuard({ params: z.object({ id: z.string() }), status: [204, 404] }),
+    koaReportSubscriptionUpdates({
+      key: 'hooksLimit',
+      quota,
+      methods: ['DELETE'],
+    }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
       await deleteHookById(id);

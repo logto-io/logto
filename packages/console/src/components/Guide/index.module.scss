@@ -88,8 +88,7 @@
     max-width: dim.$guide-main-content-max-width;
 
     > button {
-      margin-right: 0;
-      margin-left: auto;
+      margin-inline: auto 0;
     }
   }
 }

@@ -19,7 +19,15 @@ const userPreferencesGuard = z.object({
   managementApiAcknowledged: z.boolean().optional(),
   roleWithManagementApiAccessNotificationAcknowledged: z.boolean().optional(),
   m2mRoleNotificationAcknowledged: z.boolean().optional(),
+  /* === Add on feature related fields === */
   mfaUpsellNoticeAcknowledged: z.boolean().optional(),
+  m2mUpsellNoticeAcknowledged: z.boolean().optional(),
+  apiResourceUpsellNoticeAcknowledged: z.boolean().optional(),
+  organizationUpsellNoticeAcknowledged: z.boolean().optional(),
+  tenantMembersUpsellNoticeAcknowledged: z.boolean().optional(),
+  enterpriseSsoUpsellNoticeAcknowledged: z.boolean().optional(),
+  addOnChangesInCurrentCycleNoticeAcknowledged: z.boolean().optional(),
+  /* === Add on feature related fields === */
 });
 
 type UserPreferences = z.infer<typeof userPreferencesGuard>;

@@ -12,11 +12,10 @@ const user_details = {
   delete_description: 'Esta acción no se puede deshacer. Eliminará permanentemente al usuario.',
   deleted: 'Usuario eliminado con éxito',
   reset_password: {
-    reset_password: 'Restablecer contraseña',
-    title: '¿Está seguro de que desea restablecer la contraseña?',
+    reset_title: '¿Está seguro de que desea restablecer la contraseña?',
     content:
       'Esta acción no se puede deshacer. Esto restablecerá la información de inicio de sesión del usuario.',
-    congratulations: 'Se ha restablecido la información de inicio de sesión del usuario',
+    reset_complete: 'Se ha restablecido la información de inicio de sesión del usuario',
     new_password: 'Nueva contraseña:',
   },
   tab_settings: 'Configuración',

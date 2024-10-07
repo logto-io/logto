@@ -10,32 +10,22 @@ import {
 
 import MockClient from '#src/client/index.js';
 
-import api from '../../api/api.js';
-
 import { experienceRoutes } from './const.js';
 
 type RedirectResponse = {
   redirectTo: string;
 };
 
-export const identifyUser = async (cookie: string, payload: IdentificationApiPayload) =>
-  api
-    .post(experienceRoutes.identification, {
-      headers: { cookie },
-      json: payload,
-    })
-    .json();
-
 export class ExperienceClient extends MockClient {
   public async identifyUser(payload: IdentificationApiPayload = {}) {
-    return api.post(experienceRoutes.identification, {
+    return this.api.post(experienceRoutes.identification, {
       headers: { cookie: this.interactionCookie },
       json: payload,
     });
   }
 
   public async updateInteractionEvent(payload: { interactionEvent: InteractionEvent }) {
-    return api
+    return this.api
       .put(`${experienceRoutes.prefix}/interaction-event`, {
         headers: { cookie: this.interactionCookie },
         json: payload,
@@ -44,7 +34,7 @@ export class ExperienceClient extends MockClient {
   }
 
   public async initInteraction(payload: CreateExperienceApiPayload) {
-    return api
+    return this.api
       .put(experienceRoutes.prefix, {
         headers: { cookie: this.interactionCookie },
         json: payload,
@@ -53,13 +43,13 @@ export class ExperienceClient extends MockClient {
   }
 
   public override async submitInteraction(): Promise<RedirectResponse> {
-    return api
+    return this.api
       .post(`${experienceRoutes.prefix}/submit`, { headers: { cookie: this.interactionCookie } })
       .json<RedirectResponse>();
   }
 
   public async verifyPassword(payload: PasswordVerificationPayload) {
-    return api
+    return this.api
       .post(`${experienceRoutes.verification}/password`, {
         headers: { cookie: this.interactionCookie },
         json: payload,
@@ -71,7 +61,7 @@ export class ExperienceClient extends MockClient {
     identifier: VerificationCodeIdentifier;
     interactionEvent: InteractionEvent;
   }) {
-    return api
+    return this.api
       .post(`${experienceRoutes.verification}/verification-code`, {
         headers: { cookie: this.interactionCookie },
         json: payload,
@@ -84,7 +74,7 @@ export class ExperienceClient extends MockClient {
     verificationId: string;
     code: string;
   }) {
-    return api
+    return this.api
       .post(`${experienceRoutes.verification}/verification-code/verify`, {
         headers: { cookie: this.interactionCookie },
         json: payload,
@@ -99,7 +89,7 @@ export class ExperienceClient extends MockClient {
       state: string;
     }
   ) {
-    return api
+    return this.api
       .post(`${experienceRoutes.verification}/social/${connectorId}/authorization-uri`, {
         headers: { cookie: this.interactionCookie },
         json: payload,
@@ -114,7 +104,7 @@ export class ExperienceClient extends MockClient {
       connectorData: Record<string, unknown>;
     }
   ) {
-    return api
+    return this.api
       .post(`${experienceRoutes.verification}/social/${connectorId}/verify`, {
         headers: { cookie: this.interactionCookie },
         json: payload,
@@ -129,7 +119,7 @@ export class ExperienceClient extends MockClient {
       state: string;
     }
   ) {
-    return api
+    return this.api
       .post(`${experienceRoutes.verification}/sso/${connectorId}/authorization-uri`, {
         headers: { cookie: this.interactionCookie },
         json: payload,
@@ -144,7 +134,7 @@ export class ExperienceClient extends MockClient {
       connectorData: Record<string, unknown>;
     }
   ) {
-    return api
+    return this.api
       .post(`${experienceRoutes.verification}/sso/${connectorId}/verify`, {
         headers: { cookie: this.interactionCookie },
         json: payload,
@@ -153,8 +143,8 @@ export class ExperienceClient extends MockClient {
   }
 
   public async getAvailableSsoConnectors(email: string) {
-    return api
-      .get(`${experienceRoutes.verification}/sso/connectors`, {
+    return this.api
+      .get(`${experienceRoutes.prefix}/sso-connectors`, {
         headers: { cookie: this.interactionCookie },
         searchParams: { email },
       })
@@ -162,7 +152,7 @@ export class ExperienceClient extends MockClient {
   }
 
   public async createTotpSecret() {
-    return api
+    return this.api
       .post(`${experienceRoutes.verification}/totp/secret`, {
         headers: { cookie: this.interactionCookie },
       })
@@ -170,7 +160,7 @@ export class ExperienceClient extends MockClient {
   }
 
   public async verifyTotp(payload: { verificationId?: string; code: string }) {
-    return api
+    return this.api
       .post(`${experienceRoutes.verification}/totp/verify`, {
         headers: { cookie: this.interactionCookie },
         json: payload,
@@ -179,7 +169,7 @@ export class ExperienceClient extends MockClient {
   }
 
   public async generateMfaBackupCodes() {
-    return api
+    return this.api
       .post(`${experienceRoutes.verification}/backup-code/generate`, {
         headers: { cookie: this.interactionCookie },
       })
@@ -187,7 +177,7 @@ export class ExperienceClient extends MockClient {
   }
 
   public async verifyBackupCode(payload: { code: string }) {
-    return api
+    return this.api
       .post(`${experienceRoutes.verification}/backup-code/verify`, {
         headers: { cookie: this.interactionCookie },
         json: payload,
@@ -198,7 +188,7 @@ export class ExperienceClient extends MockClient {
   public async createNewPasswordIdentityVerification(
     payload: Pick<PasswordVerificationPayload, 'identifier'> & { password?: string }
   ) {
-    return api
+    return this.api
       .post(`${experienceRoutes.verification}/new-password-identity`, {
         headers: { cookie: this.interactionCookie },
         json: payload,
@@ -207,27 +197,27 @@ export class ExperienceClient extends MockClient {
   }
 
   public async resetPassword(payload: { password: string }) {
-    return api.put(`${experienceRoutes.profile}/password`, {
+    return this.api.put(`${experienceRoutes.profile}/password`, {
       headers: { cookie: this.interactionCookie },
       json: payload,
     });
   }
 
   public async updateProfile(payload: UpdateProfileApiPayload) {
-    return api.post(`${experienceRoutes.profile}`, {
+    return this.api.post(`${experienceRoutes.profile}`, {
       headers: { cookie: this.interactionCookie },
       json: payload,
     });
   }
 
   public async skipMfaBinding() {
-    return api.post(`${experienceRoutes.mfa}/mfa-skipped`, {
+    return this.api.post(`${experienceRoutes.mfa}/mfa-skipped`, {
       headers: { cookie: this.interactionCookie },
     });
   }
 
   public async bindMfa(type: MfaFactor, verificationId: string) {
-    return api.post(`${experienceRoutes.mfa}`, {
+    return this.api.post(`${experienceRoutes.mfa}`, {
       headers: { cookie: this.interactionCookie },
       json: { type, verificationId },
     });

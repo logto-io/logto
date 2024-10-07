@@ -4,11 +4,12 @@ import { useCallback, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import FormCard, { FormCardSkeleton } from '@/components/FormCard';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import CardTitle from '@/ds-components/CardTitle';
 import FormField from '@/ds-components/FormField';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 
 import CreateButton from './CreateButton';
 import CustomizerItem from './CustomizerItem';
@@ -22,12 +23,12 @@ function CustomizeJwt() {
 
   const { isDevTenant } = useContext(TenantsContext);
   const {
-    currentPlan,
     currentSubscription: { planId },
     currentSubscriptionQuota: { customJwtEnabled },
   } = useContext(SubscriptionDataContext);
-  const isCustomJwtEnabled =
-    !isCloud || (isDevFeaturesEnabled ? customJwtEnabled : currentPlan.quota.customJwtEnabled);
+
+  const { getDocumentationUrl } = useDocumentationUrl();
+  const isCustomJwtEnabled = !isCloud || customJwtEnabled;
 
   const showPaywall = planId === ReservedPlanId.Free;
 
@@ -46,11 +47,13 @@ function CustomizeJwt() {
         paywall={cond((!isCustomJwtEnabled || isDevTenant) && ReservedPlanId.Pro)}
         title="jwt_claims.title"
         subtitle="jwt_claims.description"
+        learnMoreLink={{
+          href: getDocumentationUrl('/docs/recipes/custom-jwt'),
+          targetBlank: 'noopener',
+        }}
         className={styles.header}
       />
-      {isDevFeaturesEnabled && (
-        <UpsellNotice isVisible={showPaywall} className={styles.inlineNotice} />
-      )}
+      <UpsellNotice isVisible={showPaywall} className={styles.inlineNotice} />
       <div className={styles.container}>
         {isLoading && (
           <>

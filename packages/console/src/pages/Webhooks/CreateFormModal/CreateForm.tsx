@@ -5,18 +5,16 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import BasicWebhookForm, { type BasicWebhookFormType } from '@/components/BasicWebhookForm';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
-import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { isDevFeaturesEnabled } from '@/consts/env';
+import SkuName from '@/components/SkuName';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import ModalLayout from '@/ds-components/ModalLayout';
 import useApi from '@/hooks/use-api';
 import { trySubmitSafe } from '@/utils/form';
-import { hasReachedQuotaLimit, hasReachedSubscriptionQuotaLimit } from '@/utils/quota';
+import { hasReachedSubscriptionQuotaLimit } from '@/utils/quota';
 
 type Props = {
-  readonly totalWebhookCount: number;
   readonly onClose: (createdHook?: Hook) => void;
 };
 
@@ -27,22 +25,19 @@ type CreateHookPayload = Pick<CreateHook, 'name'> & {
   };
 };
 
-function CreateForm({ totalWebhookCount, onClose }: Props) {
-  const { currentPlan, currentSku, currentSubscriptionQuota, currentSubscriptionUsage } =
-    useContext(SubscriptionDataContext);
+function CreateForm({ onClose }: Props) {
+  const {
+    currentSubscription: { planId, isEnterprisePlan },
+    currentSubscriptionQuota,
+    currentSubscriptionUsage,
+  } = useContext(SubscriptionDataContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const shouldBlockCreation = isDevFeaturesEnabled
-    ? hasReachedSubscriptionQuotaLimit({
-        quotaKey: 'hooksLimit',
-        usage: currentSubscriptionUsage.hooksLimit,
-        quota: currentSubscriptionQuota,
-      })
-    : hasReachedQuotaLimit({
-        quotaKey: 'hooksLimit',
-        usage: totalWebhookCount,
-        plan: currentPlan,
-      });
+  const shouldBlockCreation = hasReachedSubscriptionQuotaLimit({
+    quotaKey: 'hooksLimit',
+    usage: currentSubscriptionUsage.hooksLimit,
+    quota: currentSubscriptionQuota,
+  });
 
   const formMethods = useForm<BasicWebhookFormType>();
   const {
@@ -78,14 +73,11 @@ function CreateForm({ totalWebhookCount, onClose }: Props) {
             <Trans
               components={{
                 a: <ContactUsPhraseLink />,
-                planName: <PlanName skuId={currentSku.id} name={currentPlan.name} />,
+                planName: <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />,
               }}
             >
               {t('upsell.paywall.hooks', {
-                count:
-                  (isDevFeaturesEnabled
-                    ? currentSubscriptionUsage.hooksLimit
-                    : currentPlan.quota.hooksLimit) ?? 0,
+                count: currentSubscriptionUsage.hooksLimit,
               })}
             </Trans>
           </QuotaGuardFooter>

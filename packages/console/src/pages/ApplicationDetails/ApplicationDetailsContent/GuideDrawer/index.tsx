@@ -39,11 +39,8 @@ function GuideDrawer({ app, secrets, onClose }: Props) {
     if (hasSingleGuide) {
       const guide = structuredMetadata[app.type][0];
       if (guide) {
-        const {
-          id,
-          metadata: { target, name, isThirdParty },
-        } = guide;
-        setSelectedGuide({ id, target, name, isThirdParty });
+        const { id, metadata } = guide;
+        setSelectedGuide({ id, metadata });
       }
     }
   }, [hasSingleGuide, app.type, structuredMetadata]);
@@ -66,7 +63,7 @@ function GuideDrawer({ app, secrets, onClose }: Props) {
                 <div className={styles.separator} />
               </>
             )}
-            <span>{t('checkout_tutorial', { name: selectedGuide.name })}</span>
+            <span>{t('checkout_tutorial', { name: selectedGuide.metadata.name })}</span>
           </>
         )}
         {!selectedGuide && t('app.select_a_framework')}

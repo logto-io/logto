@@ -12,16 +12,18 @@
     align-items: center;
     background-color: var(--color-layer-1);
     height: 64px;
-    padding: 0 _.unit(21) 0 _.unit(2);
+    padding-block: 0;
+    padding-inline: _.unit(2) _.unit(21);
 
     button {
-      margin-left: _.unit(4);
+      margin-inline-start: _.unit(4);
     }
 
     .separator {
       @include _.vertical-bar;
       height: 20px;
-      margin: 0 _.unit(5) 0 _.unit(4);
+      margin-block: 0;
+      margin-inline: _.unit(4) _.unit(5);
     }
 
     .closeIcon {
@@ -63,7 +65,7 @@
 
     .preview {
       flex: 1;
-      margin-left: _.unit(8);
+      margin-inline-start: _.unit(8);
       position: sticky;
       top: _.unit(4);
     }

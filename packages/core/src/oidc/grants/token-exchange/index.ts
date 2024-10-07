@@ -6,7 +6,6 @@
 
 import { buildOrganizationUrn } from '@logto/core-kit';
 import { GrantType } from '@logto/schemas';
-import { trySafe } from '@silverhand/essentials';
 import type Provider from 'oidc-provider';
 import { errors } from 'oidc-provider';
 import resolveResource from 'oidc-provider/lib/helpers/resolve_resource.js';
@@ -24,10 +23,11 @@ import {
 } from '../../resource.js';
 import { handleClientCertificate, handleDPoP, checkOrganizationAccess } from '../utils.js';
 
+import { validateSubjectToken } from './account.js';
 import { handleActorToken } from './actor-token.js';
-import { TokenExchangeTokenType, type TokenExchangeAct } from './types.js';
+import { type TokenExchangeAct } from './types.js';
 
-const { InvalidClient, InvalidGrant, AccessDenied } = errors;
+const { InvalidClient, InvalidGrant } = errors;
 
 /**
  * The valid parameters for the `urn:ietf:params:oauth:grant-type:token-exchange` grant type. Note the `resource` parameter is
@@ -58,10 +58,7 @@ export const buildHandler: (
   queries: Queries
 ) => Parameters<Provider['registerGrantType']>['1'] = (envSet, queries) => async (ctx, next) => {
   const { client, params, requestParamScopes, provider } = ctx.oidc;
-  const { Account, AccessToken } = provider;
-  const {
-    subjectTokens: { findSubjectToken, updateSubjectTokenById },
-  } = queries;
+  const { Account, AccessToken, Grant } = provider;
 
   assertThat(params, new InvalidGrant('parameters must be available'));
   assertThat(client, new InvalidClient('client must be available'));
@@ -69,10 +66,6 @@ export const buildHandler: (
   assertThat(
     !(await isThirdPartyApplication(queries, client.clientId)),
     new InvalidClient('third-party applications are not allowed for this grant type')
-  );
-  assertThat(
-    params.subject_token_type === TokenExchangeTokenType.AccessToken,
-    new InvalidGrant('unsupported subject token type')
   );
 
   validatePresence(ctx, ...requiredParameters);
@@ -83,18 +76,24 @@ export const buildHandler: (
     scopes: oidcScopes,
   } = providerInstance.configuration();
 
-  const subjectToken = await trySafe(async () => findSubjectToken(String(params.subject_token)));
-  assertThat(subjectToken, new InvalidGrant('subject token not found'));
-  assertThat(subjectToken.expiresAt > Date.now(), new InvalidGrant('subject token is expired'));
-  assertThat(!subjectToken.consumedAt, new InvalidGrant('subject token is already consumed'));
+  const { userId, subjectTokenId } = await validateSubjectToken(
+    queries,
+    String(params.subject_token),
+    String(params.subject_token_type)
+  );
 
-  const account = await Account.findAccount(ctx, subjectToken.userId);
+  const account = await Account.findAccount(ctx, userId);
 
   if (!account) {
-    throw new InvalidGrant('refresh token invalid (referenced account not found)');
+    throw new InvalidGrant('subject token invalid (referenced account not found)');
   }
 
   ctx.oidc.entity('Account', account);
+
+  const grant = new Grant({
+    accountId: account.accountId,
+    clientId: client.clientId,
+  });
 
   const { organizationId } = await checkOrganizationAccess(ctx, queries, account);
 
@@ -103,9 +102,12 @@ export const buildHandler: (
     clientId: client.clientId,
     gty: GrantType.TokenExchange,
     client,
-    grantId: subjectToken.id, // There is no actual grant, so we use the subject token ID
+    grantId: await grant.save(),
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     scope: undefined!,
+    extra: {
+      ...(subjectTokenId ? { subjectTokenId } : {}),
+    },
   });
 
   await handleDPoP(ctx, accessToken);
@@ -148,6 +150,7 @@ export const buildHandler: (
       scope: availableScopes.join(' '),
     };
     accessToken.scope = issuedScopes;
+    grant.addResourceScope(audience, accessToken.scope);
     /* === End RFC 0001 === */
   } else if (resource) {
     const resourceServerInfo = await resourceIndicators.getResourceServerInfo(
@@ -164,6 +167,7 @@ export const buildHandler: (
       // @ts-expect-error -- code from oidc-provider
       .filter(Set.prototype.has.bind(accessToken.resourceServer.scopes))
       .join(' ');
+    grant.addResourceScope(resource, accessToken.scope);
   } else {
     accessToken.claims = ctx.oidc.claims;
     // Filter scopes from `oidcScopes`,
@@ -174,6 +178,7 @@ export const buildHandler: (
       // wrap it with `new Set` to make it work
       .filter((name) => new Set(oidcScopes).has(name))
       .join(' ');
+    grant.addOIDCScope(accessToken.scope);
   }
 
   // Handle the actor token
@@ -184,16 +189,22 @@ export const buildHandler: (
     // @see https://github.com/panva/node-oidc-provider/blob/main/lib/models/formats/jwt.js#L118
     // We save the `act` data in the `extra` field temporarily,
     // so that we can get this context it in the `extraTokenClaims` function and add it to the JWT.
-    accessToken.extra = { act: { sub: actorId } } satisfies TokenExchangeAct;
+    accessToken.extra = {
+      ...accessToken.extra,
+      ...({ act: { sub: actorId } } satisfies TokenExchangeAct),
+    };
   }
 
+  await grant.save();
+  ctx.oidc.entity('Grant', grant);
   ctx.oidc.entity('AccessToken', accessToken);
   const accessTokenString = await accessToken.save();
 
-  // Consume the subject token
-  await updateSubjectTokenById(subjectToken.id, {
-    consumedAt: Date.now(),
-  });
+  if (subjectTokenId) {
+    await queries.subjectTokens.updateSubjectTokenById(subjectTokenId, {
+      consumedAt: Date.now(),
+    });
+  }
 
   ctx.body = {
     access_token: accessTokenString,

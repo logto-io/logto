@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 _.unit(2) 0 _.unit(3);
+  padding: 0 _.unit(2);
   background: var(--color-layer-1);
   border: 1px solid var(--color-border);
   border-radius: 8px;
@@ -46,7 +46,7 @@
     .delete {
       width: 20px;
       height: 20px;
-      margin-right: _.unit(-0.5);
+      margin-inline-end: _.unit(-0.5);
     }
 
     input {
@@ -63,6 +63,7 @@
   }
 
   .title {
+    padding: 0 _.unit(1);
     @include _.text-ellipsis;
   }
 
@@ -88,7 +89,6 @@
 
   .icon {
     display: flex;
-    margin-left: _.unit(1);
     color: var(--color-text-secondary);
   }
 
@@ -147,7 +147,7 @@
   align-items: center;
 
   .search {
-    margin-right: _.unit(2);
+    margin-inline-end: _.unit(2);
     color: var(--color-text-secondary);
     width: 20px;
     height: 20px;

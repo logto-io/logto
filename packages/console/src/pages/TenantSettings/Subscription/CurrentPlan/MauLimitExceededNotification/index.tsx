@@ -1,8 +1,9 @@
 import { ReservedPlanId } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { useContext, useMemo, useState } from 'react';
 
 import { toastResponseError } from '@/cloud/hooks/use-cloud-api';
-import { isDevFeaturesEnabled } from '@/consts/env';
+import { type NewSubscriptionPeriodicUsage } from '@/cloud/types/router';
 import { subscriptionPage } from '@/consts/pages';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -10,29 +11,21 @@ import DynamicT from '@/ds-components/DynamicT';
 import InlineNotification from '@/ds-components/InlineNotification';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useSubscribe from '@/hooks/use-subscribe';
-import NotEligibleSwitchPlanModalContent, {
-  NotEligibleSwitchSkuModalContent,
-} from '@/pages/TenantSettings/components/NotEligibleSwitchPlanModalContent';
-import { type SubscriptionPlan } from '@/types/subscriptions';
-import {
-  parseExceededQuotaLimitError,
-  parseExceededSkuQuotaLimitError,
-} from '@/utils/subscription';
+import { NotEligibleSwitchSkuModalContent } from '@/pages/TenantSettings/components/NotEligibleSwitchPlanModalContent';
+import { parseExceededSkuQuotaLimitError } from '@/utils/subscription';
 
 type Props = {
-  /** @deprecated No need to pass in this argument in new pricing model */
-  readonly activeUsers: number;
-  /** @deprecated No need to pass in this argument in new pricing model */
-  readonly currentPlan: SubscriptionPlan;
   readonly className?: string;
+  readonly periodicUsage?: NewSubscriptionPeriodicUsage;
 };
 
-function MauLimitExceededNotification({ activeUsers, currentPlan, className }: Props) {
+function MauLimitExceededNotification({ periodicUsage: rawPeriodicUsage, className }: Props) {
   const { currentTenantId } = useContext(TenantsContext);
   const { subscribe } = useSubscribe();
   const { show } = useConfirmModal();
-  const { subscriptionPlans, logtoSkus, currentSubscriptionQuota, currentSubscriptionUsage } =
+  const { subscriptionPlans, logtoSkus, currentSubscriptionQuota } =
     useContext(SubscriptionDataContext);
+  const { currentTenant } = useContext(TenantsContext);
 
   const [isLoading, setIsLoading] = useState(false);
   const proPlan = useMemo(
@@ -41,18 +34,27 @@ function MauLimitExceededNotification({ activeUsers, currentPlan, className }: P
   );
   const proSku = useMemo(() => logtoSkus.find(({ id }) => id === ReservedPlanId.Pro), [logtoSkus]);
 
-  const {
-    quota: { mauLimit: oldPricingModelMauLimit },
-  } = currentPlan;
+  const periodicUsage = useMemo(
+    () =>
+      rawPeriodicUsage ??
+      conditional(
+        currentTenant && {
+          mauLimit: currentTenant.usage.activeUsers,
+          tokenLimit: currentTenant.usage.tokenUsage,
+        }
+      ),
+    [currentTenant, rawPeriodicUsage]
+  );
 
-  // Should be safe to access `mauLimit` here since we have excluded the case where `isDevFeaturesEnabled` is `true` but `currentSubscriptionQuota` is `null` in the above condition.
-  const mauLimit = isDevFeaturesEnabled
-    ? currentSubscriptionQuota.mauLimit
-    : oldPricingModelMauLimit;
+  if (!periodicUsage) {
+    return null;
+  }
+
+  const { mauLimit } = currentSubscriptionQuota;
 
   if (
     mauLimit === null || // Unlimited
-    (isDevFeaturesEnabled ? currentSubscriptionUsage.mauLimit : activeUsers) < mauLimit ||
+    periodicUsage.mauLimit < mauLimit ||
     !proPlan ||
     !proSku
   ) {
@@ -78,34 +80,14 @@ function MauLimitExceededNotification({ activeUsers, currentPlan, className }: P
         } catch (error: unknown) {
           setIsLoading(false);
 
-          if (isDevFeaturesEnabled) {
-            const [result, exceededSkuQuotaKeys] = await parseExceededSkuQuotaLimitError(error);
-
-            if (result) {
-              await show({
-                ModalContent: () => (
-                  <NotEligibleSwitchSkuModalContent
-                    targetSku={proSku}
-                    exceededSkuQuotaKeys={exceededSkuQuotaKeys}
-                  />
-                ),
-                title: 'subscription.not_eligible_modal.upgrade_title',
-                confirmButtonText: 'general.got_it',
-                confirmButtonType: 'primary',
-                isCancelButtonVisible: false,
-              });
-              return;
-            }
-          }
-
-          const [result, exceededQuotaKeys] = await parseExceededQuotaLimitError(error);
+          const [result, exceededSkuQuotaKeys] = await parseExceededSkuQuotaLimitError(error);
 
           if (result) {
             await show({
               ModalContent: () => (
-                <NotEligibleSwitchPlanModalContent
-                  targetPlan={proPlan}
-                  exceededQuotaKeys={exceededQuotaKeys}
+                <NotEligibleSwitchSkuModalContent
+                  targetSku={proSku}
+                  exceededSkuQuotaKeys={exceededSkuQuotaKeys}
                 />
               ),
               title: 'subscription.not_eligible_modal.upgrade_title',

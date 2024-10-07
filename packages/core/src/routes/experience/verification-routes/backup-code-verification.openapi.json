@@ -1,0 +1,75 @@
+{
+  "paths": {
+    "/api/experience/verification/backup-code/generate": {
+      "post": {
+        "operationId": "GenerateBackupCodes",
+        "summary": "Generate backup codes",
+        "description": "Create a new BackupCode verification record with new backup codes generated. This verification record will be used to bind the backup codes to the user's profile.",
+        "responses": {
+          "200": {
+            "description": "Backup codes have been successfully generated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "codes": {
+                      "description": "The generated backup codes."
+                    },
+                    "verificationId": {
+                      "description": "The unique verification ID of the newly created BackupCode verification record. This ID is required when adding the backup codes to the user profile via the Profile API."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The current interaction is not identified yet. All MFA verification records must be associated with a identified user."
+          }
+        }
+      }
+    },
+    "/api/experience/verification/backup-code/verify": {
+      "post": {
+        "operationId": "VerifyBackupCode",
+        "summary": "Verify backup code",
+        "description": "Create a new BackupCode verification record and verify the provided backup code against the user's backup codes. The verification record will be marked as verified if the code is correct.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "code": {
+                    "description": "The backup code to verify."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The backup code has been successfully verified.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "verificationId": {
+                      "description": "The unique verification ID of the BackupCode verification record."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity not found. <br/> - `session.identifier_not_found:` The current interaction is not identified yet. All MFA verification records must be associated with a identified user."
+          },
+          "400": {
+            "description": "The provided backup code is invalid."
+          }
+        }
+      }
+    }
+  }
+}

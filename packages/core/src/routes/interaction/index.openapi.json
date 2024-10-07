@@ -2,7 +2,7 @@
   "tags": [
     {
       "name": "Interaction",
-      "description": "Interaction endpoints are used to manage and process interactions for end-users, such as sign-in experience. Currently, all interaction endpoints are used internally as part of the authentication flow, and they are not useful to developers directly."
+      "description": "Interaction endpoints are used to manage and process interactions for end-users, such as sign-in experience. Interaction endpoints are legacy endpoints that are used internally, will be replaced with Experience endpoints instead."
     }
   ]
 }

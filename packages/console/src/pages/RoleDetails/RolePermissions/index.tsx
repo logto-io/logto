@@ -95,7 +95,6 @@ function RolePermissions() {
         <AssignPermissionsModal
           roleId={roleId}
           roleType={roleType}
-          totalRoleScopeCount={totalCount}
           onClose={(success) => {
             if (success) {
               void mutate();

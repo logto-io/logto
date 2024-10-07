@@ -11,17 +11,18 @@
 
     .title {
       font: var(--font-label-2);
-      margin-left: _.unit(5);
+      margin-inline-start: _.unit(5);
     }
 
     .tip {
-      margin-left: _.unit(0.5);
+      margin-inline-start: _.unit(0.5);
     }
   }
 
   .contentContainer {
     position: relative;
-    padding: _.unit(2) 0 _.unit(6) _.unit(10);
+    padding-block: _.unit(2) _.unit(6);
+    padding-inline: _.unit(10) 0;
   }
 
   &:not(:last-child) {

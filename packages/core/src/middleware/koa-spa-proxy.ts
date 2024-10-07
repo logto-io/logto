@@ -20,17 +20,27 @@ type Properties = {
   readonly prefix?: string;
 };
 
+const getDistributionPath = (packagePath: string) => {
+  if (packagePath === 'experience') {
+    // Use the new experience package if dev features are enabled
+    const moduleName = EnvSet.values.isDevFeaturesEnabled ? 'experience' : 'experience-legacy';
+
+    return path.join('node_modules/@logto', moduleName, 'dist');
+  }
+
+  return path.join('node_modules/@logto', packagePath, 'dist');
+};
+
 export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext, ResponseBodyT>({
   mountedApps,
   packagePath = 'experience',
-  // OGCIO - formsie port clash
-  port = 7001,
+  port = 5001,
   prefix = '',
   queries,
 }: Properties): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   type Middleware = MiddlewareType<StateT, ContextT, ResponseBodyT>;
 
-  const distributionPath = path.join('node_modules/@logto', packagePath, 'dist');
+  const distributionPath = getDistributionPath(packagePath);
 
   const spaProxy: Middleware = EnvSet.values.isProduction
     ? serveStatic(distributionPath)
@@ -59,6 +69,7 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
     }
 
     const { customUiAssets } = await queries.signInExperiences.findDefaultSignInExperience();
+
     // If user has uploaded custom UI assets, serve them instead of native experience UI
     if (customUiAssets && packagePath === 'experience') {
       const serve = serveCustomUiAssets(customUiAssets.id);

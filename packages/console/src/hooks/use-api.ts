@@ -20,13 +20,12 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import { requestTimeout } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useRedirectUri from '@/hooks/use-redirect-uri';
-
-import useSubscribe from './use-subscribe';
 
 export class RequestError extends Error {
   constructor(
@@ -118,6 +117,7 @@ export const useStaticApi = ({
 }: StaticApiProps): KyInstance => {
   const { isAuthenticated, getAccessToken, getOrganizationToken } = useLogto();
   const { i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { mutateSubscriptionQuotaAndUsages } = useContext(SubscriptionDataContext);
 
   // Disable global error handling if `hideErrorToast` is true.
   const disableGlobalErrorHandling = hideErrorToast === true;
@@ -125,7 +125,6 @@ export const useStaticApi = ({
   const toastDisabledErrorCodes = Array.isArray(hideErrorToast) ? hideErrorToast : undefined;
 
   const { handleError } = useGlobalRequestErrorHandler(toastDisabledErrorCodes);
-  const { syncSubscriptionData } = useSubscribe();
 
   const api = useMemo(
     () =>
@@ -156,13 +155,12 @@ export const useStaticApi = ({
             async (request, _options, response) => {
               if (
                 isCloud &&
-                isDevFeaturesEnabled &&
                 isAuthenticated &&
                 ['POST', 'PUT', 'DELETE'].includes(request.method) &&
                 response.status >= 200 &&
                 response.status < 300
               ) {
-                syncSubscriptionData();
+                mutateSubscriptionQuotaAndUsages();
               }
             },
           ],
@@ -179,7 +177,7 @@ export const useStaticApi = ({
       getOrganizationToken,
       getAccessToken,
       i18n.language,
-      syncSubscriptionData,
+      mutateSubscriptionQuotaAndUsages,
     ]
   );
 

@@ -1,0 +1,123 @@
+{
+  "tags": [
+    {
+      "name": "Experience",
+      "description": "The Experience endpoints allow end-users to interact with Logto for identity verification and profile completion."
+    }
+  ],
+  "paths": {
+    "/api/experience": {
+      "put": {
+        "operationId": "InitInteraction",
+        "summary": "Init new interaction",
+        "description": "Init a new experience interaction with the given interaction type. Any existing interaction data will be cleared.",
+        "responses": {
+          "204": {
+            "description": "A new experience interaction has been successfully initiated."
+          }
+        }
+      }
+    },
+    "/api/experience/interaction-event": {
+      "put": {
+        "operationId": "UpdateInteractionEvent",
+        "summary": "Update interaction event",
+        "description": "Update the current experience interaction event to the given event type. This API is used to switch the interaction event between `SignIn` and `Register`, while keeping all the verification records data.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "interactionEvent": {
+                    "description": "The type of the interaction event. Only `SignIn` and `Register` are supported."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The interaction event has been successfully updated."
+          },
+          "400": {
+            "description": "The interaction event is invalid or cannot be updated.  Only `SignIn` and `Register` are interchangeable. If the current interaction event is `ForgotPassword`, it cannot be updated."
+          },
+          "403": {
+            "description": "The given interaction event is not enabled in the sign-in experience settings."
+          }
+        }
+      }
+    },
+    "/api/experience/identification": {
+      "post": {
+        "operationId": "IdentifyUser",
+        "summary": "Identify user for the current interaction",
+        "description": "This API identifies the user based on the verificationId within the current experience interaction: <br/>- `SignIn` and `ForgotPassword` interactions: Verifies the user's identity using the provided `verificationId`. <br/>- `Register` interaction: Creates a new user account using the profile data from the current interaction. If a verificationId is provided, the profile data will first be updated with the verification record before creating the account. If not, the account is created directly from the stored profile data.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "verificationId": {
+                    "description": "The ID of the verification record used to identify the user. <br/>- `SignIn` and `ForgotPassword` interactions: Required to verify the user's identity. <br/>- `Register` interaction: Optional. If provided, it updates the profile data with the verification record before account creation. If omitted, the account is created using existing profile data in the current interaction."
+                  },
+                  "linkSocialIdentity": {
+                    "description": "Applies to the SignIn interaction only, and is used when a SocialVerification type verificationId is provided. <br/>- If `true`, the user is identified using the verified email or phone number from the social identity provider, and the social identity is linked to the user's account. <br/>- If `false` or not provided, the API identifies the user solely through the social identity. <br/> This parameters is used for linking a non-existing social identity to a related user account that can be identified through the verified email or phone number."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "`Register` interaction: The user account has been successfully created and identified."
+          },
+          "204": {
+            "description": "`SignIn` and `ForgotPassword` interactions: The user has been successfully identified."
+          },
+          "400": {
+            "description": "The provided verificationId is invalid, not verified, or cannot be used to identify the user. <br/>- `session.verification_failed:` The verification is not verified or can not be used to identify the user. <br/>- `guard.invalid_target:` The `verificationId` is missing, but required for the `SignIn` and `ForgotPassword` interactions."
+          },
+          "401": {
+            "description": "The user is suspended or banned from the service. (SignIn and ForgotPassword only)"
+          },
+          "403": {
+            "description": "The `SignIn` or `Register` interaction is disabled in the experience settings."
+          },
+          "404": {
+            "description": "Entity not found. <br/>- `session.verification_session_not_found:` The verification record is not found.  <br/>- `user.user_not_exist:` The user account is not found (SignIn and ForgotPassword only).  "
+          },
+          "409": {
+            "description": "The interaction has already been identified with a different user account."
+          },
+          "422": {
+            "description": "The user account cannot be created due to validation errors, check error message for more details (Register only). <br/>- `user.<identifier>_already_in_use:` The given identifier is already in use by another user account. <br/>- `user.missing_profile:` Sign-in experience required user identifier or profile data is missing. (Register only)"
+          }
+        }
+      }
+    },
+    "/api/experience/submit": {
+      "post": {
+        "operationId": "SubmitInteraction",
+        "summary": "Submit interaction",
+        "description": "Submit the current interaction. <br/>- Submit the verified user identity to the OIDC provider for further authentication (SignIn and Register). <br/>- Update the user's profile data if any (SignIn and Register). <br/>- Reset the password and clear all the interaction records (ForgotPassword).",
+        "responses": {
+          "200": {
+            "description": "The interaction has been successfully submitted."
+          },
+          "403": {
+            "description": "Multi-Factor Authentication (MFA) is enabled for the user but has not been verified."
+          },
+          "404": {
+            "description": "The user has not been identified. "
+          },
+          "422": {
+            "description": "The user profile can not been processed, check error message for more details. <br/>- The profile data is invalid or conflicts with existing user data. <br/>- Required profile data is missing. <br/>- The profile data is already in use by another user account."
+          }
+        }
+      }
+    }
+  }
+}

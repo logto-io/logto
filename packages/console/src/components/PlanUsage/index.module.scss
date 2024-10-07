@@ -7,7 +7,7 @@
   padding: _.unit(5) _.unit(6);
 
   > div:not(:first-child) {
-    margin-top: _.unit(2);
+    margin-top: _.unit(4);
   }
 }
 
@@ -26,9 +26,14 @@
 }
 
 .cardItem {
-  flex: 0 0 calc(33.333% - _.unit(2) * 2);
-  max-width: calc(33.333% - _.unit(2) * 2);
+  flex: 0 0 calc((100% - _.unit(2) * 2) / 3);
+  max-width: calc((100% - _.unit(2) * 2) / 3);
   max-height: 112px;
+
+  &.periodicUsage {
+    flex: 0 0 calc((100% - _.unit(2)) / 2);
+    max-width: calc((100% - _.unit(2)) / 2);
+  }
 }
 
 .planCycle {

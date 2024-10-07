@@ -1,13 +1,17 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { InteractionEvent, type VerificationCodeIdentifier } from '@logto/schemas';
 import { t } from 'i18next';
-import { useCallback } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useTimer } from 'react-timer-hook';
 
-import { sendVerificationCodeApi } from '@/apis/utils';
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
+import { sendVerificationCode } from '@/apis/experience';
+import { getInteractionEventFromState, userFlowToInteractionEventMap } from '@/apis/utils';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useToast from '@/hooks/use-toast';
-import type { UserFlow } from '@/types';
+import { UserFlow } from '@/types';
+import { codeVerificationTypeMap } from '@/utils/sign-in-experience';
 
 export const timeRange = 59;
 
@@ -18,12 +22,19 @@ const getTimeout = () => {
   return now;
 };
 
-const useResendVerificationCode = (
-  type: UserFlow,
-  method: SignInIdentifier.Email | SignInIdentifier.Phone,
-  target: string
-) => {
+const useResendVerificationCode = (flow: UserFlow, identifier: VerificationCodeIdentifier) => {
   const { setToast } = useToast();
+  const { state } = useLocation();
+
+  const interactionEvent = useMemo<InteractionEvent>(() => {
+    if (flow === UserFlow.Continue) {
+      const interactionEvent = getInteractionEventFromState(state);
+      console.log('interactionEvent', interactionEvent);
+      return interactionEvent ?? InteractionEvent.SignIn;
+    }
+
+    return userFlowToInteractionEventMap[flow];
+  }, [flow, state]);
 
   const { seconds, isRunning, restart } = useTimer({
     autoStart: true,
@@ -31,11 +42,11 @@ const useResendVerificationCode = (
   });
 
   const handleError = useErrorHandler();
-  const sendVerificationCode = useApi(sendVerificationCodeApi);
+  const resendVerificationCode = useApi(sendVerificationCode);
+  const { setVerificationId } = useContext(UserInteractionContext);
 
   const onResendVerificationCode = useCallback(async () => {
-    const payload = method === SignInIdentifier.Email ? { email: target } : { phone: target };
-    const [error, result] = await sendVerificationCode(type, payload);
+    const [error, result] = await resendVerificationCode(interactionEvent, identifier);
 
     if (error) {
       await handleError(error);
@@ -44,10 +55,20 @@ const useResendVerificationCode = (
     }
 
     if (result) {
+      // Renew the verification ID in the context
+      setVerificationId(codeVerificationTypeMap[identifier.type], result.verificationId);
       setToast(t('description.passcode_sent'));
       restart(getTimeout(), true);
     }
-  }, [handleError, method, restart, sendVerificationCode, setToast, target, type]);
+  }, [
+    resendVerificationCode,
+    interactionEvent,
+    identifier,
+    handleError,
+    setVerificationId,
+    setToast,
+    restart,
+  ]);
 
   return {
     seconds,

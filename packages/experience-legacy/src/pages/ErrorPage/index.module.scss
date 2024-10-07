@@ -1,0 +1,42 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  flex: 1;
+  @include _.flex-column;
+  @include _.full-width;
+}
+
+.title {
+  margin-top: _.unit(8);
+  text-align: center;
+}
+
+.message {
+  @include _.text-hint;
+  text-align: center;
+}
+
+
+:global(body.mobile) {
+  .title {
+    @include _.title;
+    margin-bottom: _.unit(4);
+  }
+
+  .backButton {
+    @include _.full-width;
+    margin-bottom: _.unit(4);
+  }
+}
+
+:global(body.desktop) {
+  .title {
+    @include _.title-desktop;
+    margin-bottom: _.unit(2);
+  }
+
+  .backButton {
+    @include _.full-width;
+    margin-bottom: _.unit(12);
+  }
+}

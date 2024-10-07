@@ -3,7 +3,8 @@
 .row {
   display: flex;
   align-items: center;
-  margin: _.unit(1) _.unit(6) _.unit(1) _.unit(4);
+  margin-block: _.unit(1);
+  margin-inline: _.unit(4) _.unit(6);
   padding: _.unit(2);
   color: var(--color-neutral-variant-30);
   border-radius: _.unit(2);
@@ -13,6 +14,7 @@
   background: none;
   border: none;
   width: calc(100% - _.unit(10));
+  gap: _.unit(4);
 
   .icon {
     height: _.unit(5);
@@ -36,10 +38,6 @@
     .icon svg {
       color: var(--color-primary-50);
     }
-  }
-
-  > div + div {
-    margin-left: _.unit(4);
   }
 
   .title {

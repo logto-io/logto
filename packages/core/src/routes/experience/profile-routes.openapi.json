@@ -1,0 +1,142 @@
+{
+  "paths": {
+    "/api/experience/profile": {
+      "post": {
+        "operationId": "AddUserProfile",
+        "summary": "Add user profile",
+        "description": "Adds user profile data to the current experience interaction. <br/>- For `Register`: The profile data provided before the identification request will be used to create a new user account. <br/>- For `SignIn` and `Register`: The profile data provided after the user is identified will be used to update the user's profile when the interaction is submitted. <br/>- `ForgotPassword`: Not supported.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "type": {
+                    "description": "The type of profile data to add. `email`, `phone`, `username`, `password`, etc."
+                  },
+                  "value": {
+                    "description": "The plain text value of the profile data. Only supported for profile data types that does not require verification, such as `username` and `password`."
+                  },
+                  "verificationId": {
+                    "description": "The ID of the verification record used to verify the profile data. Required for profile data types that require verification, such as `email`, `phone` and `social`."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The profile data has been successfully added to the current experience interaction."
+          },
+          "400": {
+            "description": "Invalid request. <br/> - `session.not_supported_for_forgot_password:` This API can not be used in the `ForgotPassword` interaction. <br/>- `session.verification_failed:` The verification record is not verified. "
+          },
+          "404": {
+            "description": "Entity not found. <br/> - `session.identifier_not_found:` (`SignIn` interaction only) The current interaction is not identified yet. All profile data must be associated with a identified user. <br/>- `session.verification_session_not_found:` The verification record is not found."
+          },
+          "403": {
+            "description": "`SignIn` interaction only: MFA is enabled for the user but has not been verified. The user must verify the MFA before updating the profile data."
+          },
+          "422": {
+            "description": "The user profile can not been processed, check error message for more details. <br/>- The profile data is invalid or conflicts with existing user data. <br/>- The profile data is already in use by another user account. <br/>- The email address is enterprise SSO enabled, can only be linked through the SSO connector."
+          }
+        }
+      }
+    },
+    "/api/experience/profile/password": {
+      "put": {
+        "operationId": "ResetUserPassword",
+        "summary": "Reset user password",
+        "description": "Reset the user's password. (`ForgotPassword` interaction only)",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "password": {
+                    "description": "The new password to update. The password must meet the password policy requirements and can not be the same as the current password."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The password has been successfully updated."
+          },
+          "400": {
+            "description": "The current interaction event is not `ForgotPassword`. The password can only be updated through the `ForgotPassword` interaction."
+          },
+          "404": {
+            "description": "The user has not been identified yet. The user must be identified before updating the password."
+          },
+          "422": {
+            "description": "The password can not be updated due to validation errors, check error message for more details. <br/>- `user.password_policy_violation:` The password does not meet the password policy requirements. <br/>- `user.same_password:` The new password is the same as the current password."
+          }
+        }
+      }
+    },
+    "/api/experience/profile/mfa/mfa-skipped": {
+      "post": {
+        "operationId": "SkipMfaBindingFlow",
+        "summary": "Skip MFA binding flow",
+        "description": "Skip MFA verification binding flow. If the MFA is enabled in the sign-in experience settings and marked as `UserControlled`, the user can skip the MFA verification binding flow by calling this API.",
+        "responses": {
+          "204": {
+            "description": "The MFA verification has been successfully skipped."
+          },
+          "400": {
+            "description": "Not supported for the current interaction event. The MFA profile API can only be used in the `SignIn` or `Register` interaction."
+          },
+          "403": {
+            "description": "Some MFA factors has already been enabled for the user. The user must verify the MFA before updating the MFA settings."
+          },
+          "404": {
+            "description": "The user has not been identified yet. The `mfa-skipped` configuration must be associated with a identified user."
+          },
+          "422": {
+            "description": "The MFA verification binding is `Mandatory`, user can not skip the MFA verification binding flow."
+          }
+        }
+      }
+    },
+    "/api/experience/profile/mfa": {
+      "post": {
+        "operationId": "BindMfaVerification",
+        "summary": "Bind MFA verification by verificationId",
+        "description": "Bind new MFA verification to the user profile using the verificationId.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "type": {
+                    "description": "The type of MFA."
+                  },
+                  "verificationId": {
+                    "description": "The ID of the MFA verification record."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The MFA verification has been successfully added to the user profile."
+          },
+          "400": {
+            "description": "Invalid request. <br/>- `session.verification_failed:` The MFA verification record is invalid or not verified. <br/>- `session.mfa.mfa_factor_not_enabled:` The MFA factor is not enabled in the sign-in experience settings. <br/>- `session.mfa.pending_info_not_found:` The MFA verification record does not have the required information to bind the MFA verification."
+          },
+          "404": {
+            "description": "Entity not found. <br/> - `session.identifier_not_found:` The user has not been identified yet. The MFA verification can only be added to a identified user. <br/>- `session.verification_session_not_found:` The MFA verification record is not found."
+          },
+          "422": {
+            "description": "The MFA verification can not been processed, check error message for more details. <br/>- `user.totp_already_in_use`: A TOTP MFA secret is already in use in the current user profile. <br/>- `session.mfa.backup_code_can_not_be_alone`: The backup code can not be the only MFA factor in the user profile."
+          }
+        }
+      }
+    }
+  }
+}

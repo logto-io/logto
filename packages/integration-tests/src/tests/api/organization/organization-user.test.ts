@@ -47,7 +47,11 @@ describe('organization user APIs', () => {
     it('should be able to get organization users with search', async () => {
       const organizationId = organizationApi.organizations[0]!.id;
       const username = generateTestName();
-      const createdUser = await userApi.create({ username });
+      /**
+       * Exclude `hasPassword` field since the user type returned by the organization user API is not `userProfileResponse`.
+       * So the `hasPassword` field will not be included in the user object.
+       */
+      const { hasPassword, ...createdUser } = await userApi.create({ username });
 
       await organizationApi.addUsers(organizationId, [createdUser.id]);
       const [users] = await organizationApi.getUsers(organizationId, {
@@ -59,7 +63,11 @@ describe('organization user APIs', () => {
 
     it('should be able to get organization users with their roles', async () => {
       const organizationId = organizationApi.organizations[0]!.id;
-      const user = userApi.users[0]!;
+      /**
+       * Exclude `hasPassword` field since the user type returned by the organization user API is not `userProfileResponse`.
+       * So the `hasPassword` field will not be included in the user object.
+       */
+      const { hasPassword, ...user } = userApi.users[0]!;
 
       const roles = await Promise.all([
         organizationApi.roleApi.create({ name: generateTestName() }),

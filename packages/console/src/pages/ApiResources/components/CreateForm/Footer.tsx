@@ -4,14 +4,16 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
-import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { isDevFeaturesEnabled } from '@/consts/env';
+import SkuName from '@/components/SkuName';
+import { addOnPricingExplanationLink } from '@/consts/external-links';
 import { resourceAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import TextLink from '@/ds-components/TextLink';
 import useApiResourcesUsage from '@/hooks/use-api-resources-usage';
+import useUserPreferences from '@/hooks/use-user-preferences';
+import { isPaidPlan } from '@/utils/subscription';
 
 import styles from './index.module.scss';
 
@@ -23,47 +25,59 @@ type Props = {
 function Footer({ isCreationLoading, onClickCreate }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
-    currentPlan,
-    currentSubscription: { planId },
+    currentSubscription: { planId, isAddOnAvailable, isEnterprisePlan },
     currentSubscriptionUsage: { resourcesLimit },
     currentSku,
   } = useContext(SubscriptionDataContext);
   const { hasReachedLimit } = useApiResourcesUsage();
+  const {
+    data: { apiResourceUpsellNoticeAcknowledged },
+    update,
+  } = useUserPreferences();
 
   if (
     hasReachedLimit &&
     /**
      * We don't guard API resources quota limit for paid plan, since it's an add-on feature
      */
-    (isDevFeaturesEnabled ? currentSku.id : currentPlan.id) === ReservedPlanId.Free
+    currentSku.id === ReservedPlanId.Free
   ) {
     return (
       <QuotaGuardFooter>
         <Trans
           components={{
             a: <ContactUsPhraseLink />,
-            planName: <PlanName skuId={currentSku.id} name={currentPlan.name} />,
+            planName: <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />,
           }}
         >
           {t('upsell.paywall.resources', {
-            count: (isDevFeaturesEnabled ? resourcesLimit : currentPlan.quota.resourcesLimit) ?? 0,
+            count: resourcesLimit,
           })}
         </Trans>
       </QuotaGuardFooter>
     );
   }
 
-  if (isDevFeaturesEnabled && planId === ReservedPlanId.Pro) {
+  if (
+    isAddOnAvailable &&
+    hasReachedLimit &&
+    // Just in case the enterprise plan has reached the resource limit, we still need to show charge notice.
+    isPaidPlan(planId, isEnterprisePlan) &&
+    !apiResourceUpsellNoticeAcknowledged
+  ) {
     return (
       <AddOnNoticeFooter
         isLoading={isCreationLoading}
         buttonTitle="api_resources.create"
-        onClick={onClickCreate}
+        onClick={() => {
+          void update({ apiResourceUpsellNoticeAcknowledged: true });
+          onClickCreate();
+        }}
       >
         <Trans
           components={{
             span: <span className={styles.strong} />,
-            a: <TextLink to="https://blog.logto.io/pricing-add-ons/" />,
+            a: <TextLink to={addOnPricingExplanationLink} />,
           }}
         >
           {t('upsell.add_on.footer.api_resource', {

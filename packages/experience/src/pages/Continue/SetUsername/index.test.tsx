@@ -1,8 +1,9 @@
+import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
 import { act, waitFor, fireEvent } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import { addProfile } from '@/apis/interaction';
+import { fulfillProfile } from '@/apis/experience';
 
 import SetUsername from '.';
 
@@ -19,15 +20,15 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedNavigate,
 }));
 
-jest.mock('@/apis/interaction', () => ({
-  addProfile: jest.fn(async () => ({ redirectTo: '/' })),
+jest.mock('@/apis/experience', () => ({
+  fulfillProfile: jest.fn(async () => ({ redirectTo: '/' })),
 }));
 
 describe('SetUsername', () => {
   it('render SetUsername page properly', () => {
     const { queryByText, container } = renderWithPageContext(
       <SettingsProvider>
-        <SetUsername />
+        <SetUsername interactionEvent={InteractionEvent.Register} />
       </SettingsProvider>
     );
     expect(container.querySelector('input[name="identifier"]')).not.toBeNull();
@@ -37,7 +38,7 @@ describe('SetUsername', () => {
   it('should submit properly', async () => {
     const { getByText, container } = renderWithPageContext(
       <SettingsProvider>
-        <SetUsername />
+        <SetUsername interactionEvent={InteractionEvent.Register} />
       </SettingsProvider>
     );
     const submitButton = getByText('action.continue');
@@ -52,7 +53,10 @@ describe('SetUsername', () => {
     });
 
     await waitFor(() => {
-      expect(addProfile).toBeCalledWith({ username: 'username' });
+      expect(fulfillProfile).toBeCalledWith(
+        { type: SignInIdentifier.Username, value: 'username' },
+        InteractionEvent.Register
+      );
     });
   });
 });

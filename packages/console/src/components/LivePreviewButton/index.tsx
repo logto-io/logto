@@ -7,6 +7,7 @@ import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import type { Props as ButtonProps, ButtonType } from '@/ds-components/Button';
 import Button from '@/ds-components/Button';
+import FlipOnRtl from '@/ds-components/FlipOnRtl';
 import { Tooltip } from '@/ds-components/Tip';
 
 import styles from './index.module.scss';
@@ -29,12 +30,14 @@ function LivePreviewButton({ size, type, isDisabled }: Props) {
         disabled={isDisabled}
         title="sign_in_exp.preview.live_preview"
         trailingIcon={
-          <ExternalLinkIcon
-            className={conditional(
-              type !== 'violet' &&
-                classNames(styles.defaultIcon, isDisabled && styles.disabledDefaultIcon)
-            )}
-          />
+          <FlipOnRtl>
+            <ExternalLinkIcon
+              className={conditional(
+                type !== 'violet' &&
+                  classNames(styles.defaultIcon, isDisabled && styles.disabledDefaultIcon)
+              )}
+            />
+          </FlipOnRtl>
         }
         onClick={() => {
           window.open(new URL('/demo-app', tenantEndpoint), '_blank');

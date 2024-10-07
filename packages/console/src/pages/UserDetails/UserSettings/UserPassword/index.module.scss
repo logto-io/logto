@@ -1,0 +1,34 @@
+@use '@/scss/underscore' as _;
+
+.password {
+  display: flex;
+  align-items: center;
+  user-select: none;
+  border: 1px solid var(--color-divider);
+  border-radius: 12px;
+  padding: _.unit(3) _.unit(6);
+  justify-content: space-between;
+  font: var(--font-body-2);
+
+  .label {
+    flex: 5;
+    display: flex;
+    align-items: center;
+
+    .icon {
+      margin-inline-end: _.unit(3);
+      color: var(--color-text-secondary);
+    }
+  }
+
+  .text {
+    flex: 8;
+    color: var(--color-text-secondary);
+  }
+
+  .actionButton {
+    flex: 3;
+    display: flex;
+    justify-content: center;
+  }
+}

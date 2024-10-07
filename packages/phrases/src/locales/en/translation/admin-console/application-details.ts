@@ -169,6 +169,7 @@ const application_details = {
   },
   secrets: {
     value: 'Value',
+    empty: 'The application does not have any secrets.',
     created_at: 'Created at',
     expires_at: 'Expires at',
     never: 'Never',

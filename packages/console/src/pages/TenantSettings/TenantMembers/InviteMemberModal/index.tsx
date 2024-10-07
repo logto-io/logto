@@ -8,7 +8,7 @@ import ReactModal from 'react-modal';
 
 import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
 import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
-import { isDevFeaturesEnabled } from '@/consts/env';
+import { addOnPricingExplanationLink } from '@/consts/external-links';
 import { tenantMembersAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -17,7 +17,10 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import Select, { type Option } from '@/ds-components/Select';
 import TextLink from '@/ds-components/TextLink';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import useUserPreferences from '@/hooks/use-user-preferences';
 import modalStyles from '@/scss/modal.module.scss';
+import { hasReachedSubscriptionQuotaLimit } from '@/utils/quota';
+import { isPaidPlan } from '@/utils/subscription';
 
 import InviteEmailsInput from '../InviteEmailsInput';
 import useEmailInputUtils from '../InviteEmailsInput/hooks';
@@ -40,8 +43,15 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
   const { parseEmailOptions } = useEmailInputUtils();
   const { show } = useConfirmModal();
   const {
-    currentSubscription: { planId },
+    currentSubscription: { planId, isAddOnAvailable, isEnterprisePlan },
+    currentSubscriptionQuota,
+    currentSubscriptionUsage: { tenantMembersLimit },
+    mutateSubscriptionQuotaAndUsages,
   } = useContext(SubscriptionDataContext);
+  const {
+    data: { tenantMembersUpsellNoticeAcknowledged },
+    update,
+  } = useUserPreferences();
 
   const formMethods = useForm<InviteMemberForm>({
     defaultValues: {
@@ -72,6 +82,12 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
     [t]
   );
 
+  const hasTenantMembersReachedLimit = hasReachedSubscriptionQuotaLimit({
+    quotaKey: 'tenantMembersLimit',
+    usage: tenantMembersLimit,
+    quota: currentSubscriptionQuota,
+  });
+
   const onSubmit = handleSubmit(async ({ emails, role }) => {
     if (role === TenantRole.Admin) {
       const [result] = await show({
@@ -89,19 +105,18 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
     }
 
     setIsLoading(true);
-    try {
-      await Promise.all(
-        emails.map(async (email) =>
-          cloudApi.post('/api/tenants/:tenantId/invitations', {
-            params: { tenantId: currentTenantId },
-            body: { invitee: email.value, roleName: role },
-          })
-        )
-      );
-      toast.success(t('tenant_members.messages.invitation_sent'));
-      onClose(true);
-    } finally {
-      setIsLoading(false);
+    if (emails.length > 0) {
+      try {
+        await cloudApi.post('/api/tenants/:tenantId/invitations', {
+          params: { tenantId: currentTenantId },
+          body: { invitee: emails.map(({ value }) => value), roleName: role },
+        });
+        mutateSubscriptionQuotaAndUsages();
+        toast.success(t('tenant_members.messages.invitation_sent'));
+        onClose(true);
+      } finally {
+        setIsLoading(false);
+      }
     }
   });
 
@@ -117,30 +132,36 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
       <ModalLayout
         size="large"
         title="tenant_members.invite_modal.title"
-        paywall={conditional(
-          isDevFeaturesEnabled && planId === ReservedPlanId.Pro && ReservedPlanId.Pro
-        )}
+        paywall={conditional(planId !== ReservedPlanId.Pro && ReservedPlanId.Pro)}
+        hasAddOnTag={isAddOnAvailable && hasTenantMembersReachedLimit}
         subtitle="tenant_members.invite_modal.subtitle"
         footer={
           conditional(
-            isDevFeaturesEnabled && planId === ReservedPlanId.Pro && (
-              <AddOnNoticeFooter
-                isLoading={isLoading}
-                buttonTitle="tenant_members.invite_members"
-                onClick={onSubmit}
-              >
-                <Trans
-                  components={{
-                    span: <span className={styles.strong} />,
-                    a: <TextLink to="https://blog.logto.io/pricing-add-ons/" />,
+            isAddOnAvailable &&
+              hasTenantMembersReachedLimit &&
+              // Just in case the enterprise plan has reached the resource limit, we still need to show charge notice.
+              isPaidPlan(planId, isEnterprisePlan) &&
+              !tenantMembersUpsellNoticeAcknowledged && (
+                <AddOnNoticeFooter
+                  isLoading={isLoading}
+                  buttonTitle="tenant_members.invite_members"
+                  onClick={async () => {
+                    void update({ tenantMembersUpsellNoticeAcknowledged: true });
+                    await onSubmit();
                   }}
                 >
-                  {t('upsell.add_on.footer.tenant_members', {
-                    price: tenantMembersAddOnUnitPrice,
-                  })}
-                </Trans>
-              </AddOnNoticeFooter>
-            )
+                  <Trans
+                    components={{
+                      span: <span className={styles.strong} />,
+                      a: <TextLink to={addOnPricingExplanationLink} />,
+                    }}
+                  >
+                    {t('upsell.add_on.footer.tenant_members', {
+                      price: tenantMembersAddOnUnitPrice,
+                    })}
+                  </Trans>
+                </AddOnNoticeFooter>
+              )
           ) ?? (
             <Footer
               newInvitationCount={watch('emails').length}

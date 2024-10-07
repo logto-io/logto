@@ -17,6 +17,7 @@ import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
 import type { InvitationResponse, TenantInvitationResponse } from '@/cloud/types/router';
 import Breakable from '@/components/Breakable';
 import { RoleOption } from '@/components/OrganizationRolesSelect';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
 import Button from '@/ds-components/Button';
@@ -56,7 +57,7 @@ function Invitations() {
   const {
     access: { canInviteMember, canRemoveMember },
   } = useCurrentTenantScopes();
-
+  const { mutateSubscriptionQuotaAndUsages } = useContext(SubscriptionDataContext);
   const { data, error, isLoading, mutate } = useSWR<TenantInvitationResponse[], RequestError>(
     `api/tenants/${currentTenantId}/invitations`,
     async () =>
@@ -80,6 +81,7 @@ function Invitations() {
       params: { tenantId: currentTenantId, invitationId },
       body: { status: OrganizationInvitationStatus.Revoked },
     });
+    mutateSubscriptionQuotaAndUsages();
     void mutate();
     toast.success(t('messages.invitation_revoked'));
   };
@@ -97,6 +99,7 @@ function Invitations() {
     await cloudApi.delete(`/api/tenants/:tenantId/invitations/:invitationId`, {
       params: { tenantId: currentTenantId, invitationId },
     });
+    mutateSubscriptionQuotaAndUsages();
     void mutate();
     toast.success(t('messages.invitation_deleted'));
   };

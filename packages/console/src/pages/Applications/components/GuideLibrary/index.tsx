@@ -1,4 +1,4 @@
-import { ApplicationType, ReservedPlanId } from '@logto/schemas';
+import { ReservedPlanId } from '@logto/schemas';
 import { cond } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useCallback, useContext, useMemo, useState } from 'react';
@@ -20,8 +20,6 @@ import TextLink from '@/ds-components/TextLink';
 import { allAppGuideCategories, type AppGuideCategory } from '@/types/applications';
 import { thirdPartyAppCategory } from '@/types/applications';
 
-import ProtectedAppCard from '../ProtectedAppCard';
-
 import styles from './index.module.scss';
 
 type Props = {
@@ -32,13 +30,13 @@ type Props = {
 };
 
 function GuideLibrary({ className, hasCardBorder, hasCardButton, onSelectGuide }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { pathname } = useLocation();
   const [keyword, setKeyword] = useState<string>('');
   const [filterCategories, setFilterCategories] = useState<AppGuideCategory[]>([]);
   const { getFilteredAppGuideMetadata, getStructuredAppGuideMetadata } = useAppGuideMetadata();
   const isApplicationCreateModal = pathname.includes('/applications/create');
-  const { currentPlan } = useContext(SubscriptionDataContext);
+  const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
 
   const structuredMetadata = useMemo(
     () => getStructuredAppGuideMetadata({ categories: filterCategories }),
@@ -70,7 +68,13 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, onSelectGuide }
 
   return (
     <OverlayScrollbar className={classNames(styles.container, className)}>
-      <div className={classNames(styles.wrapper, isApplicationCreateModal && styles.hasFilters)}>
+      <div
+        className={classNames(
+          styles.wrapper,
+          isApplicationCreateModal && styles.hasFilters,
+          styles[i18n.dir()]
+        )}
+      >
         <div className={styles.groups}>
           {isApplicationCreateModal && (
             <div className={styles.filterAnchor}>
@@ -98,7 +102,9 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, onSelectGuide }
                             category === 'ThirdParty' && {
                               tag: (
                                 <FeatureTag
-                                  isVisible={currentPlan.quota.thirdPartyApplicationsLimit === 0}
+                                  isVisible={
+                                    currentSubscriptionQuota.thirdPartyApplicationsLimit === 0
+                                  }
                                   plan={ReservedPlanId.Pro}
                                 />
                               ),
@@ -129,34 +135,21 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, onSelectGuide }
             ) : (
               <EmptyDataPlaceholder className={styles.emptyPlaceholder} size="large" />
             ))}
-          {!keyword && (
-            <>
-              {isCloud &&
-                (filterCategories.length === 0 ||
-                  filterCategories.includes(ApplicationType.Protected)) && (
-                  <ProtectedAppCard
-                    isInAppCreationPage
-                    hasCreateButton
-                    hasBorder={hasCardBorder}
-                    className={styles.protectedAppCard}
+          {!keyword &&
+            (filterCategories.length > 0 ? filterCategories : fullApplicationCategories).map(
+              (category) =>
+                structuredMetadata[category].length > 0 && (
+                  <GuideCardGroup
+                    key={category}
+                    className={styles.guideGroup}
+                    hasCardBorder={hasCardBorder}
+                    hasCardButton={hasCardButton}
+                    categoryName={t(`guide.categories.${category}`)}
+                    guides={structuredMetadata[category]}
+                    onClickGuide={onClickGuide}
                   />
-                )}
-              {(filterCategories.length > 0 ? filterCategories : fullApplicationCategories).map(
-                (category) =>
-                  structuredMetadata[category].length > 0 && (
-                    <GuideCardGroup
-                      key={category}
-                      className={styles.guideGroup}
-                      hasCardBorder={hasCardBorder}
-                      hasCardButton={hasCardButton}
-                      categoryName={t(`guide.categories.${category}`)}
-                      guides={structuredMetadata[category]}
-                      onClickGuide={onClickGuide}
-                    />
-                  )
-              )}
-            </>
-          )}
+                )
+            )}
           {!isApplicationCreateModal && (
             <TextLink className={styles.viewAll} to="/applications/create">
               {t('get_started.view_all')}

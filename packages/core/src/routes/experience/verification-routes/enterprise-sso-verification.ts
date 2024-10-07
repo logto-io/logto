@@ -128,36 +128,4 @@ export default function enterpriseSsoVerificationRoutes<
       return next();
     }
   );
-
-  router.get(
-    `${experienceRoutes.verification}/sso/connectors`,
-    koaGuard({
-      query: z.object({
-        email: z.string().email(),
-      }),
-      status: [200, 400],
-      response: z.object({
-        connectorIds: z.string().array(),
-      }),
-    }),
-    async (ctx, next) => {
-      const { email } = ctx.guard.query;
-      const {
-        experienceInteraction: { signInExperienceValidator },
-      } = ctx;
-
-      assertThat(
-        email.split('@')[1],
-        new RequestError({ code: 'guard.invalid_input', status: 400, email })
-      );
-
-      const connectors = await signInExperienceValidator.getEnabledSsoConnectorsByEmail(email);
-
-      ctx.body = {
-        connectorIds: connectors.map(({ id }) => id),
-      };
-
-      return next();
-    }
-  );
 }

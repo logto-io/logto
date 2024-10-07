@@ -65,9 +65,15 @@ const description = {
   password_requirement: {
     length_one: 'wymaga co najmniej {{count}} znaku',
     length_other: 'wymaga co najmniej {{count}} znaków',
+    length_few: 'wymaga co najmniej {{count}} znaki',
+    length_many: 'wymaga co najmniej {{count}} znaków',
     character_types_one:
       'powinno zawierać co najmniej {{count}} rodzaj liter wielkich, małych liter, cyfr i symboli',
     character_types_other:
+      'powinno zawierać co najmniej {{count}} rodzaje liter wielkich, małych liter, cyfr i symboli',
+    character_types_few:
+      'powinno zawierać co najmniej {{count}} rodzaje liter wielkich, małych liter, cyfr i symboli',
+    character_types_many:
       'powinno zawierać co najmniej {{count}} rodzaje liter wielkich, małych liter, cyfr i symboli',
   },
   use: 'Użyj',
@@ -100,6 +106,13 @@ const description = {
   /** UNTRANSLATED */
   redirect_to: 'You will be redirected to {{name}}.',
   auto_agreement: 'Kontynuując, zgadzasz się na <link></link>.',
+  identifier_sign_in_description:
+    'Wprowadź swoje {{types, list(type: disjunction;)}} aby się zalogować.',
+  all_sign_in_options: 'Wszystkie opcje logowania',
+  identifier_register_description:
+    'Wprowadź swoje {{types, list(type: disjunction;)}} aby utworzyć nowe konto.',
+  all_account_creation_options: 'Wszystkie opcje tworzenia konta',
+  back_to_sign_in: 'Wróć do logowania',
 };
 
 export default Object.freeze(description);

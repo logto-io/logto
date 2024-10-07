@@ -38,21 +38,43 @@ You are expected to find `authorizationEndpoint`, `tokenEndpoint` and `userInfoE
 
 *userInfoEndpoint*: This endpoint is used by the client application to obtain additional information about the user, such as their fullname, email address or profile picture. The user info endpoint is typically accessed after the client application has obtained an access token from the token endpoint.
 
-Logto also provide a `profileMap` field that users can customize the mapping from the social vendors' profiles which are usually not standard. The keys are Logto's standard user profile field names and corresponding values should be social profiles' field names. In current stage, Logto only concern 'id', 'name', 'avatar', 'email' and 'phone' from social profile, only 'id' is required and others are optional fields.
+Logto also provides a `profileMap` field that users can customize the mapping from the social vendors' profiles which are usually not standard. The keys are Logto's standard user profile field names and corresponding values should be social profiles' field names. In the current stage, Logto only concerns 'id', 'name', 'avatar', 'email', and 'phone' from social profiles, only 'id' is required and others are optional fields.
 
-`responseType` and `grantType` can ONLY be FIXED values with authorization code grant type, so we make them optional and default values will be automatically filled.
+### Nested Attributes
 
-For example, you can find [Google user profile response](https://developers.google.com/identity/openid-connect/openid-connect#an-id-tokens-payload) and hence its `profileMap` should be like:
+The `profileMap` also supports nested attributes. You can map nested properties from the social vendor's profile to Logto's standard user profile fields.
 
+For example, if the social vendor's profile has nested attributes like the following:
 ```json
 {
-  "id": "sub",
-  "avatar": "picture"
+  "id": "123456",
+  "contact": {
+    "email": "octcat@github.com",
+    "phone": "123-456-7890"
+  },
+  "details": {
+    "name": "Oct Cat",
+    "avatar": {
+      "url": "avatar.png"
+    },
+    "groups": ["group1", "group2", "group3"]
+  }
 }
 ```
+You can configure the `profileMap` like this:
+```json
+{
+  "id": "id",
+  "name": "details.name",
+  "avatar": "details.avatar.url",
+  "email": "contact.email",
+  "phone": "contact.phone"
+}
+```
+In this example, `details.name`, `details.avatar.url`, `contact.email`, and `contact.phone` are nested attributes in the social vendor's profile.
 
 > ℹ️ **Note**
-> 
+>
 > We provided an OPTIONAL `customConfig` key to put your customize parameters.
 > Each social identity provider could have their own variant on OAuth standard protocol. If your desired social identity provider strictly stick to OAuth standard protocol, the you do not need to care about `customConfig`.
 

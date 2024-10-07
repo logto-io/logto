@@ -1,7 +1,9 @@
 import { MissingProfile } from '@logto/schemas';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
+import { validate } from 'superstruct';
 
 import ErrorPage from '@/pages/ErrorPage';
+import { continueFlowStateGuard } from '@/types/guard';
 
 import SetEmailOrPhone from './SetEmailOrPhone';
 import SetPassword from './SetPassword';
@@ -13,13 +15,22 @@ type Parameters = {
 
 const Continue = () => {
   const { method = '' } = useParams<Parameters>();
+  const { state } = useLocation();
+
+  const [, continueFlowState] = validate(state, continueFlowStateGuard);
+
+  if (!continueFlowState) {
+    return <ErrorPage title="error.invalid_session" rawMessage="flow state not found" />;
+  }
+
+  const { interactionEvent } = continueFlowState;
 
   if (method === MissingProfile.password) {
-    return <SetPassword />;
+    return <SetPassword interactionEvent={interactionEvent} />;
   }
 
   if (method === MissingProfile.username) {
-    return <SetUsername />;
+    return <SetUsername interactionEvent={interactionEvent} />;
   }
 
   if (
@@ -27,7 +38,7 @@ const Continue = () => {
     method === MissingProfile.phone ||
     method === MissingProfile.emailOrPhone
   ) {
-    return <SetEmailOrPhone missingProfile={method} />;
+    return <SetEmailOrPhone missingProfile={method} interactionEvent={interactionEvent} />;
   }
 
   return <ErrorPage />;

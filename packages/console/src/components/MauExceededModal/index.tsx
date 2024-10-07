@@ -1,10 +1,10 @@
+import { cond } from '@silverhand/essentials';
 import { useContext, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
 import PlanUsage from '@/components/PlanUsage';
 import { contactEmailLink } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { subscriptionPage } from '@/consts/pages';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -15,20 +15,15 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import modalStyles from '@/scss/modal.module.scss';
 
-import PlanName from '../PlanName';
+import SkuName from '../SkuName';
 
 import styles from './index.module.scss';
 
 function MauExceededModal() {
-  const { currentTenant } = useContext(TenantsContext);
-  const { usage } = currentTenant ?? {};
   const {
-    currentPlan,
-    currentSubscription,
-    currentSku,
-    currentSubscriptionQuota,
-    currentSubscriptionUsage,
+    currentSubscription: { planId, isEnterprisePlan },
   } = useContext(SubscriptionDataContext);
+  const { currentTenant } = useContext(TenantsContext);
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { navigate } = useTenantPathname();
@@ -38,19 +33,15 @@ function MauExceededModal() {
     setHasClosed(true);
   };
 
-  if (!usage || hasClosed) {
+  if (hasClosed) {
     return null;
   }
 
-  const {
-    quota: { mauLimit },
-    name: planName,
-  } = currentPlan;
-
-  const isMauExceeded = isDevFeaturesEnabled
-    ? currentSubscriptionQuota.mauLimit !== null &&
-      currentSubscriptionUsage.mauLimit >= currentSubscriptionQuota.mauLimit
-    : mauLimit !== null && usage.activeUsers >= mauLimit;
+  const isMauExceeded =
+    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain, prettier/prettier
+    cond(currentTenant && currentTenant.quota.mauLimit !== null &&
+        currentTenant.usage.activeUsers >= currentTenant.quota.mauLimit
+    );
 
   if (!isMauExceeded) {
     return null;
@@ -86,18 +77,14 @@ function MauExceededModal() {
         <InlineNotification severity="error">
           <Trans
             components={{
-              planName: <PlanName skuId={currentSku.id} name={planName} />,
+              planName: <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />,
             }}
           >
             {t('upsell.mau_exceeded_modal.notification')}
           </Trans>
         </InlineNotification>
         <FormField title="subscription.plan_usage">
-          <PlanUsage
-            subscriptionUsage={usage}
-            currentSubscription={currentSubscription}
-            currentPlan={currentPlan}
-          />
+          <PlanUsage />
         </FormField>
       </ModalLayout>
     </ReactModal>

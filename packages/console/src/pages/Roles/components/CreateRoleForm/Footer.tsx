@@ -1,69 +1,45 @@
-import { type RoleResponse, RoleType } from '@logto/schemas';
+import { RoleType } from '@logto/schemas';
 import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import useSWR from 'swr';
 
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
-import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import SkuName from '@/components/SkuName';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import {
-  hasReachedQuotaLimit,
   hasReachedSubscriptionQuotaLimit,
-  hasSurpassedQuotaLimit,
   hasSurpassedSubscriptionQuotaLimit,
 } from '@/utils/quota';
-import { buildUrl } from '@/utils/url';
 
 type Props = {
   readonly roleType: RoleType;
-  readonly selectedScopesCount: number;
   readonly isCreating: boolean;
   readonly onClickCreate: () => void;
 };
 
-function Footer({ roleType, selectedScopesCount, isCreating, onClickCreate }: Props) {
+function Footer({ roleType, isCreating, onClickCreate }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { currentPlan, currentSku, currentSubscriptionQuota, currentSubscriptionUsage } =
-    useContext(SubscriptionDataContext);
+  const {
+    currentSubscription: { planId, isEnterprisePlan },
+    currentSubscriptionQuota,
+    currentSubscriptionUsage,
+  } = useContext(SubscriptionDataContext);
 
-  const { data: [, roleCount] = [] } = useSWR<[RoleResponse[], number]>(
-    isCloud &&
-      buildUrl('api/roles', {
-        page: String(1),
-        page_size: String(1),
-        type: roleType,
-      })
-  );
+  const hasRoleReachedLimit = hasReachedSubscriptionQuotaLimit({
+    quotaKey: roleType === RoleType.User ? 'userRolesLimit' : 'machineToMachineRolesLimit',
+    usage:
+      roleType === RoleType.User
+        ? currentSubscriptionUsage.userRolesLimit
+        : currentSubscriptionUsage.machineToMachineRolesLimit,
+    quota: currentSubscriptionQuota,
+  });
 
-  const hasRoleReachedLimit = isDevFeaturesEnabled
-    ? hasReachedSubscriptionQuotaLimit({
-        quotaKey: roleType === RoleType.User ? 'userRolesLimit' : 'machineToMachineRolesLimit',
-        usage:
-          roleType === RoleType.User
-            ? currentSubscriptionUsage.userRolesLimit
-            : currentSubscriptionUsage.machineToMachineRolesLimit,
-        quota: currentSubscriptionQuota,
-      })
-    : hasReachedQuotaLimit({
-        quotaKey: roleType === RoleType.User ? 'rolesLimit' : 'machineToMachineRolesLimit',
-        plan: currentPlan,
-        usage: roleCount ?? 0,
-      });
-
-  const hasScopesPerRoleSurpassedLimit = isDevFeaturesEnabled
-    ? hasSurpassedSubscriptionQuotaLimit({
-        quotaKey: 'scopesPerRoleLimit',
-        usage: currentSubscriptionUsage.scopesPerRoleLimit,
-        quota: currentSubscriptionQuota,
-      })
-    : hasSurpassedQuotaLimit({
-        quotaKey: 'scopesPerRoleLimit',
-        plan: currentPlan,
-        usage: selectedScopesCount,
-      });
+  const hasScopesPerRoleSurpassedLimit = hasSurpassedSubscriptionQuotaLimit({
+    quotaKey: 'scopesPerRoleLimit',
+    usage: currentSubscriptionUsage.scopesPerRoleLimit,
+    quota: currentSubscriptionQuota,
+  });
 
   if (hasRoleReachedLimit || hasScopesPerRoleSurpassedLimit) {
     return (
@@ -71,23 +47,23 @@ function Footer({ roleType, selectedScopesCount, isCreating, onClickCreate }: Pr
         <Trans
           components={{
             a: <ContactUsPhraseLink />,
-            planName: <PlanName skuId={currentSku.id} name={currentPlan.name} />,
+            planName: <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />,
           }}
         >
           {/* User roles limit paywall */}
           {hasRoleReachedLimit &&
             roleType === RoleType.User &&
-            t('upsell.paywall.roles', { count: currentPlan.quota.rolesLimit ?? 0 })}
+            t('upsell.paywall.roles', { count: currentSubscriptionQuota.userRolesLimit ?? 0 })}
           {hasRoleReachedLimit &&
             roleType === RoleType.MachineToMachine &&
             t('upsell.paywall.machine_to_machine_roles', {
-              count: currentPlan.quota.machineToMachineRolesLimit ?? 0,
+              count: currentSubscriptionQuota.machineToMachineRolesLimit ?? 0,
             })}
           {/* Role scopes limit paywall */}
           {!hasRoleReachedLimit &&
             hasScopesPerRoleSurpassedLimit &&
             t('upsell.paywall.scopes_per_role', {
-              count: currentPlan.quota.scopesPerRoleLimit ?? 0,
+              count: currentSubscriptionQuota.scopesPerRoleLimit ?? 0,
             })}
         </Trans>
       </QuotaGuardFooter>

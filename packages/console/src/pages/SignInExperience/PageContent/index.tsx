@@ -135,7 +135,7 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
       <div className={styles.content}>
         <div className={classNames(styles.contentTop, isDirty && styles.withSubmitActionBar)}>
           <FormProvider {...methods}>
-            <form className={styles.form}>
+            <form>
               <Branding isActive={tab === SignInExperienceTab.Branding} />
               <SignUpAndSignIn isActive={tab === SignInExperienceTab.SignUpAndSignIn} />
               <Content isActive={tab === SignInExperienceTab.Content} />

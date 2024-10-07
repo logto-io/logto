@@ -51,7 +51,7 @@ function TabNavItem<Paths extends string>({
         )}
       </div>
       {errorCount > 0 && (
-        <div className={styles.errors}>{t('general.tab_errors', { count: errorCount })}</div>
+        <div className={styles.errors}>{t('general.tab_error', { count: errorCount })}</div>
       )}
     </div>
   );
