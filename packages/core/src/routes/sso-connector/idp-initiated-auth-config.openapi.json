@@ -1,0 +1,57 @@
+{
+  "tags": [
+    {
+      "name": "Dev feature"
+    }
+  ],
+  "paths": {
+    "/api/sso-connectors/{id}/idp-initiated-auth-config": {
+      "get": {
+        "summary": "Get IdP initiated auth config",
+        "description": "Get the IdP initiated authentication config of the given SAML SSO connector.",
+        "responses": {
+          "200": {
+            "description": "The IdP initiated authentication config."
+          },
+          "404": {
+            "description": "SSO connector or the IdP initiated auth config not found."
+          }
+        }
+      },
+      "put": {
+        "summary": "Set IdP initiated auth config",
+        "description": "Set IdP initiated authentication config for a given SAML SSO connector. Any existing IdP initiated auth config will be overwritten.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "defaultApplicationId": {
+                    "description": "The unique identifier for the application that users will sign in to using IdP initiated authentication. The application type must be `Traditional` and cannot be a third-party application."
+                  },
+                  "redirectUri": {
+                    "description": "The sign-in redirect URI for the application. This URI must be registered in the application's OIDC client metadata. If not provided, Logto will use the first registered redirect URI of the application."
+                  },
+                  "authParameters": {
+                    "description": "The additional parameters to be sent to the application's OIDC authorization endpoint, e.g. `resources` and `scopes`."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated IdP initiated auth config."
+          },
+          "404": {
+            "description": "SSO connector or application not found."
+          },
+          "400": {
+            "description": "The request body is invalid. The SSO connector is not a SAML connector or the application is not a Traditional web application."
+          }
+        }
+      }
+    }
+  }
+}
