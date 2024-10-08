@@ -44,6 +44,7 @@ const ssoConnectorLibrary = {
   getSsoConnectors: jest.fn(),
   getSsoConnectorById: jest.fn(),
   getAvailableSsoConnectors: jest.fn(),
+  createSsoConnectorIdpInitiatedAuthConfig: jest.fn(),
 };
 
 const { MockQueries } = await import('#src/test-utils/tenant.js');

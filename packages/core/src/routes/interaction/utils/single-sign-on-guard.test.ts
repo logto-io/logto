@@ -13,6 +13,7 @@ const mockSsoConnectorLibrary: SsoConnectorLibrary = {
   getAvailableSsoConnectors: getAvailableSsoConnectorsMock,
   getSsoConnectors: jest.fn(),
   getSsoConnectorById: jest.fn(),
+  createSsoConnectorIdpInitiatedAuthConfig: jest.fn(),
 };
 
 describe('verifyEmailIdentifier tests', () => {

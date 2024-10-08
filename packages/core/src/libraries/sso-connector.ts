@@ -1,4 +1,8 @@
-import { type SupportedSsoConnector } from '@logto/schemas';
+import {
+  ApplicationType,
+  type CreateSsoConnectorIdpInitiatedAuthConfig,
+  type SupportedSsoConnector,
+} from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -6,10 +10,13 @@ import { ssoConnectorFactories } from '#src/sso/index.js';
 import { isSupportedSsoConnector } from '#src/sso/utils.js';
 import type Queries from '#src/tenants/Queries.js';
 
+import assertThat from '../utils/assert-that.js';
+import { type OmitAutoSetFields } from '../utils/sql.js';
+
 export type SsoConnectorLibrary = ReturnType<typeof createSsoConnectorLibrary>;
 
 export const createSsoConnectorLibrary = (queries: Queries) => {
-  const { ssoConnectors } = queries;
+  const { ssoConnectors, applications } = queries;
 
   const getSsoConnectors = async (
     limit?: number,
@@ -52,9 +59,32 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
     return connector;
   };
 
+  /**
+   * Creates a new IdP-initiated authentication configuration for a SSO connector.
+   *
+   * @throws {RequestError} Throws a 404 error if the application is not found
+   * @throws {RequestError} Throws a 400 error if the application is not a first-party traditional web application
+   */
+  const createSsoConnectorIdpInitiatedAuthConfig = async (
+    data: OmitAutoSetFields<CreateSsoConnectorIdpInitiatedAuthConfig>
+  ) => {
+    const { defaultApplicationId } = data;
+
+    // Throws an 404 error if the application is not found
+    const application = await applications.findApplicationById(defaultApplicationId);
+
+    assertThat(
+      application.type === ApplicationType.Traditional && !application.isThirdParty,
+      new RequestError('connector.invalid_application_type')
+    );
+
+    return ssoConnectors.insertIdpInitiatedAuthConfig(data);
+  };
+
   return {
     getSsoConnectors,
     getAvailableSsoConnectors,
     getSsoConnectorById,
+    createSsoConnectorIdpInitiatedAuthConfig,
   };
 };

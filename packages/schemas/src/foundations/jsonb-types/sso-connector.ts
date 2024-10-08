@@ -15,7 +15,7 @@ export const idpInitiatedAuthParamsGuard = z
     resources: z.array(z.string()).optional(),
     scopes: z.array(z.string()).optional(),
   })
-  .catchall(z.string());
+  .catchall(z.unknown());
 
 export type IdpInitiatedAuthParams = z.infer<typeof idpInitiatedAuthParamsGuard>;
 
