@@ -1,6 +1,8 @@
 import {
   type CreateSsoConnector,
   type SsoConnector,
+  type SsoConnectorIdpInitiatedAuthConfig,
+  SsoConnectorIdpInitiatedAuthConfigs,
   type SsoConnectorKeys,
   SsoConnectors,
 } from '@logto/schemas';
@@ -9,11 +11,42 @@ import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 import SchemaQueries from '#src/utils/SchemaQueries.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
 
+import { buildInsertIntoWithPool } from '../database/insert-into.js';
+import { buildUpdateWhereWithPool } from '../database/update-where.js';
+
+const {
+  table: SsoConnectorIdpInitiatedAuthConfigsTable,
+  fields: SsoConnectorIdpInitiatedAuthConfigsFields,
+} = convertToIdentifiers(SsoConnectorIdpInitiatedAuthConfigs);
+
 export default class SsoConnectorQueries extends SchemaQueries<
   SsoConnectorKeys,
   CreateSsoConnector,
   SsoConnector
 > {
+  public readonly insertIdpInitiatedAuthConfig = buildInsertIntoWithPool(this.pool)(
+    SsoConnectorIdpInitiatedAuthConfigs,
+    {
+      returning: true,
+      onConflict: {
+        fields: [
+          SsoConnectorIdpInitiatedAuthConfigsFields.connectorId,
+          SsoConnectorIdpInitiatedAuthConfigsFields.tenantId,
+        ],
+        setExcludedFields: [
+          SsoConnectorIdpInitiatedAuthConfigsFields.defaultApplicationId,
+          SsoConnectorIdpInitiatedAuthConfigsFields.redirectUri,
+          SsoConnectorIdpInitiatedAuthConfigsFields.authParameters,
+        ],
+      },
+    }
+  );
+
+  public readonly updateIdpInitiatedAuthConfig = buildUpdateWhereWithPool(this.pool)(
+    SsoConnectorIdpInitiatedAuthConfigs,
+    true
+  );
+
   constructor(pool: CommonQueryMethods) {
     super(pool, SsoConnectors);
   }
@@ -24,6 +57,13 @@ export default class SsoConnectorQueries extends SchemaQueries<
     return this.pool.maybeOne<SsoConnector>(sql`
       SELECT * FROM ${table}
       where ${fields.connectorName}=${connectorName}
+    `);
+  }
+
+  async getIdpInitiatedAuthConfigByConnectorId(connectorId: string) {
+    return this.pool.maybeOne<SsoConnectorIdpInitiatedAuthConfig>(sql`
+      SELECT * FROM ${SsoConnectorIdpInitiatedAuthConfigsTable}
+      WHERE ${SsoConnectorIdpInitiatedAuthConfigsFields.connectorId}=${connectorId}
     `);
   }
 }
