@@ -12,7 +12,6 @@ import Button from '@/ds-components/Button';
 import ModalLayout from '@/ds-components/ModalLayout';
 import useApi from '@/hooks/use-api';
 import { trySubmitSafe } from '@/utils/form';
-import { hasReachedSubscriptionQuotaLimit } from '@/utils/quota';
 
 type Props = {
   readonly onClose: (createdHook?: Hook) => void;
@@ -28,16 +27,12 @@ type CreateHookPayload = Pick<CreateHook, 'name'> & {
 function CreateForm({ onClose }: Props) {
   const {
     currentSubscription: { planId, isEnterprisePlan },
-    currentSubscriptionQuota,
     currentSubscriptionUsage,
+    hasReachedSubscriptionQuotaLimit,
   } = useContext(SubscriptionDataContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const shouldBlockCreation = hasReachedSubscriptionQuotaLimit({
-    quotaKey: 'hooksLimit',
-    usage: currentSubscriptionUsage.hooksLimit,
-    quota: currentSubscriptionQuota,
-  });
+  const shouldBlockCreation = hasReachedSubscriptionQuotaLimit('hooksLimit');
 
   const formMethods = useForm<BasicWebhookFormType>();
   const {

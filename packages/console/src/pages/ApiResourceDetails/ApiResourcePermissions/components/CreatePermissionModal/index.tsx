@@ -16,7 +16,6 @@ import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
 import modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
-import { hasReachedSubscriptionQuotaLimit } from '@/utils/quota';
 
 type Props = {
   readonly resourceId: string;
@@ -32,6 +31,7 @@ function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Prop
     currentSubscriptionQuota,
     currentSubscriptionResourceScopeUsage,
     currentSubscription: { planId, isEnterprisePlan },
+    hasReachedSubscriptionQuotaLimit,
   } = useContext(SubscriptionDataContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -57,11 +57,10 @@ function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Prop
     })
   );
 
-  const isScopesPerResourceReachLimit = hasReachedSubscriptionQuotaLimit({
-    quotaKey: 'scopesPerResourceLimit',
-    usage: currentSubscriptionResourceScopeUsage[resourceId] ?? 0,
-    quota: currentSubscriptionQuota,
-  });
+  const isScopesPerResourceReachLimit = hasReachedSubscriptionQuotaLimit(
+    'scopesPerResourceLimit',
+    currentSubscriptionResourceScopeUsage[resourceId] ?? 0
+  );
 
   return (
     <ReactModal
