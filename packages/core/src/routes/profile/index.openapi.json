@@ -50,7 +50,7 @@
       "post": {
         "operationId": "UpdatePassword",
         "summary": "Update password",
-        "description": "Update password for the user, a verification record is required.",
+        "description": "Update password for the user, a verification record is required for checking sensitive permissions.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -60,7 +60,7 @@
                     "description": "The new password for the user."
                   },
                   "verificationRecordId": {
-                    "description": "The verification record ID."
+                    "description": "The verification record ID for checking sensitive permissions."
                   }
                 }
               }
@@ -71,8 +71,45 @@
           "204": {
             "description": "The password was updated successfully."
           },
+          "403": {
+            "description": "Permission denied, the verification record is invalid."
+          }
+        }
+      }
+    },
+    "/api/profile/primary-email": {
+      "post": {
+        "operationId": "UpdatePrimaryEmail",
+        "summary": "Update primary email",
+        "description": "Update primary email for the user, a verification record is required for checking sensitive permissions, and a new identifier verification record is required for the new email ownership verification.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "email": {
+                    "description": "The new email for the user."
+                  },
+                  "verificationRecordId": {
+                    "description": "The verification record ID for checking sensitive permissions."
+                  },
+                  "newIdentifierVerificationRecordId": {
+                    "description": "The identifier verification record ID for the new email ownership verification."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The primary email was updated successfully."
+          },
           "400": {
-            "description": "The verification record is invalid."
+            "description": "The new verification record is invalid."
+          },
+          "403": {
+            "description": "Permission denied, the verification record is invalid."
           }
         }
       }

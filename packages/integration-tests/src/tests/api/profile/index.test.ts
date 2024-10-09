@@ -121,8 +121,8 @@ describe('profile', () => {
       const newPassword = generatePassword();
 
       await expectRejects(updatePassword(api, 'invalid-varification-record-id', newPassword), {
-        code: 'verification_record.not_found',
-        status: 400,
+        code: 'verification_record.permission_denied',
+        status: 401,
       });
 
       await deleteDefaultTenantUser(user.id);

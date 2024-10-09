@@ -9,12 +9,18 @@ import api, { baseApi, authedAdminApi } from '../api/api.js';
 
 import { initClient } from './client.js';
 
-export const createDefaultTenantUserWithPassword = async () => {
+export const createDefaultTenantUserWithPassword = async ({
+  primaryEmail,
+  primaryPhone,
+}: {
+  primaryEmail?: string;
+  primaryPhone?: string;
+} = {}) => {
   const username = generateUsername();
   const password = generatePassword();
   const user = await authedAdminApi
     .post('users', {
-      json: { username, password },
+      json: { username, password, primaryEmail, primaryPhone },
     })
     .json<User>();
 
