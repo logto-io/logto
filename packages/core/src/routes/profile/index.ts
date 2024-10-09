@@ -12,13 +12,15 @@ import {
   verifyUserSensitivePermission,
 } from '../../libraries/verification.js';
 import assertThat from '../../utils/assert-that.js';
+import { PasswordValidator } from '../experience/classes/libraries/password-validator.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
 export default function profileRoutes<T extends UserRouter>(
   ...[router, { queries, libraries }]: RouterInitArgs<T>
 ) {
   const {
-    users: { updateUserById },
+    users: { updateUserById, findUserById },
+    signInExperiences: { findDefaultSignInExperience },
   } = queries;
 
   const {
@@ -80,7 +82,10 @@ export default function profileRoutes<T extends UserRouter>(
       const { id: userId } = ctx.auth;
       const { password, verificationRecordId } = ctx.guard.body;
 
-      // TODO(LOG-9947): apply password policy
+      const user = await findUserById(userId);
+      const signInExperience = await findDefaultSignInExperience();
+      const passwordPolicyChecker = new PasswordValidator(signInExperience.passwordPolicy, user);
+      await passwordPolicyChecker.validatePassword(password, user);
 
       await verifyUserSensitivePermission({
         userId,
