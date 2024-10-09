@@ -134,4 +134,8 @@ export class SsoConnectorApi {
       .delete(`sso-connectors/${connectorId}/idp-initiated-auth-config`)
       .json<void>();
   }
+
+  get firstConnectorId() {
+    return Array.from(this.connectorInstances.keys())[0];
+  }
 }
