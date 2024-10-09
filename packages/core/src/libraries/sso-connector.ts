@@ -81,10 +81,37 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
     return ssoConnectors.insertIdpInitiatedAuthConfig(data);
   };
 
+  const updateSsoConnectorIdpInitiatedAuthConfig = async (
+    connectorId: string,
+    set: Pick<
+      Partial<CreateSsoConnectorIdpInitiatedAuthConfig>,
+      'defaultApplicationId' | 'redirectUri' | 'authParameters'
+    >
+  ) => {
+    const { defaultApplicationId } = set;
+
+    if (defaultApplicationId) {
+      // Throws an 404 error if the application is not found
+      const application = await applications.findApplicationById(defaultApplicationId);
+
+      assertThat(
+        application.type === ApplicationType.Traditional && !application.isThirdParty,
+        new RequestError('connector.invalid_application_type')
+      );
+    }
+
+    return ssoConnectors.updateIdpInitiatedAuthConfig({
+      set,
+      where: { connectorId },
+      jsonbMode: 'replace',
+    });
+  };
+
   return {
     getSsoConnectors,
     getAvailableSsoConnectors,
     getSsoConnectorById,
     createSsoConnectorIdpInitiatedAuthConfig,
+    updateSsoConnectorIdpInitiatedAuthConfig,
   };
 };
