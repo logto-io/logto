@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.20.1
+
+### Patch Changes
+
+- Updated dependencies [3c993d59c]
+  - @logto/core-kit@2.5.1
+  - @logto/schemas@1.20.1
+
 ## 1.20.0
 
 ### Minor Changes
