@@ -14,6 +14,3 @@ create table idp_initiated_saml_sso_sessions (
   expires_at timestamptz not null,
   primary key (tenant_id, id)
 );
-
-create index idp_initiated_saml_sso_sessions__nameID
-  on idp_initiated_saml_sso_sessions (connector_id, (assertion_content->>'nameID'));
