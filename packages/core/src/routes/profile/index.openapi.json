@@ -10,6 +10,16 @@
   ],
   "paths": {
     "/api/profile": {
+      "get": {
+        "operationId": "GetProfile",
+        "summary": "Get profile",
+        "description": "Get profile for the user.",
+        "responses": {
+          "200": {
+            "description": "The profile was retrieved successfully."
+          }
+        }
+      },
       "patch": {
         "operationId": "UpdateProfile",
         "summary": "Update profile",

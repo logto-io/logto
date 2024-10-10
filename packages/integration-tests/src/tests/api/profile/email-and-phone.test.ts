@@ -104,7 +104,7 @@ describe('profile (email and phone)', () => {
       await updatePrimaryEmail(api, newEmail, verificationRecordId, newVerificationRecordId);
 
       const userInfo = await getUserInfo(api);
-      expect(userInfo).toHaveProperty('email', newEmail);
+      expect(userInfo).toHaveProperty('primaryEmail', newEmail);
 
       await deleteDefaultTenantUser(user.id);
     });
@@ -130,7 +130,7 @@ describe('profile (email and phone)', () => {
       await updatePrimaryEmail(api, newEmail, verificationRecordId, newVerificationRecordId);
 
       const userInfo = await getUserInfo(api);
-      expect(userInfo).toHaveProperty('email', newEmail);
+      expect(userInfo).toHaveProperty('primaryEmail', newEmail);
 
       await deleteDefaultTenantUser(user.id);
     });

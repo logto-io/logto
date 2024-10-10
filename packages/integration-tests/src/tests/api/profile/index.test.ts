@@ -1,3 +1,4 @@
+import { UserScope } from '@logto/core-kit';
 import { hookEvents } from '@logto/schemas';
 
 import { getUserInfo, updatePassword, updateUser } from '#src/api/profile.js';
@@ -44,6 +45,69 @@ describe('profile', () => {
     await webHookApi.cleanUp();
   });
 
+  describe('GET /profile', () => {
+    it('should be able to get profile with default scopes', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password);
+      const response = await getUserInfo(api);
+      expect(response).toMatchObject({ username });
+      expect(response).not.toHaveProperty('customData');
+      expect(response).not.toHaveProperty('identities');
+      expect(response).not.toHaveProperty('primaryEmail');
+      expect(response).not.toHaveProperty('primaryPhone');
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should return profile data based on scopes (email)', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Email],
+      });
+
+      const response = await getUserInfo(api);
+      expect(response).toHaveProperty('primaryEmail');
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should return profile data based on scopes (phone)', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Phone],
+      });
+
+      const response = await getUserInfo(api);
+      expect(response).toHaveProperty('primaryPhone');
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should return profile data based on scopes (identities)', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Identities],
+      });
+
+      const response = await getUserInfo(api);
+      expect(response).toHaveProperty('identities');
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should return profile data based on scopes (custom data)', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.CustomData],
+      });
+
+      const response = await getUserInfo(api);
+      expect(response).toHaveProperty('customData');
+
+      await deleteDefaultTenantUser(user.id);
+    });
+  });
+
   describe('PATCH /profile', () => {
     it('should be able to update name', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
@@ -79,8 +143,7 @@ describe('profile', () => {
       expect(response).toMatchObject({ avatar: newAvatar });
 
       const userInfo = await getUserInfo(api);
-      // In OIDC, the avatar is mapped to the `picture` field
-      expect(userInfo).toHaveProperty('picture', newAvatar);
+      expect(userInfo).toHaveProperty('avatar', newAvatar);
 
       await deleteDefaultTenantUser(user.id);
     });
