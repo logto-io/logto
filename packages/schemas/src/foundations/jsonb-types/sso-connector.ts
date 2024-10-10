@@ -10,4 +10,13 @@ export const ssoBrandingGuard = z.object({
   darkLogo: z.string().optional(),
 });
 
+export const idpInitiatedAuthParamsGuard = z
+  .object({
+    resources: z.array(z.string()).optional(),
+    scopes: z.array(z.string()).optional(),
+  })
+  .catchall(z.string());
+
+export type IdpInitiatedAuthParams = z.infer<typeof idpInitiatedAuthParamsGuard>;
+
 export type SsoBranding = z.infer<typeof ssoBrandingGuard>;
