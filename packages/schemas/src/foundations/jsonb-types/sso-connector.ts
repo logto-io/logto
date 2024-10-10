@@ -10,6 +10,8 @@ export const ssoBrandingGuard = z.object({
   darkLogo: z.string().optional(),
 });
 
+export type SsoBranding = z.infer<typeof ssoBrandingGuard>;
+
 export const idpInitiatedAuthParamsGuard = z
   .object({
     resources: z.array(z.string()).optional(),
@@ -19,4 +21,17 @@ export const idpInitiatedAuthParamsGuard = z
 
 export type IdpInitiatedAuthParams = z.infer<typeof idpInitiatedAuthParamsGuard>;
 
-export type SsoBranding = z.infer<typeof ssoBrandingGuard>;
+export const ssoSamlAssertionContentGuard = z
+  .object({
+    nameID: z.string().optional(),
+    attributes: z.record(z.string().or(z.array(z.string()))).optional(),
+    conditions: z
+      .object({
+        notBefore: z.string(),
+        notOnOrAfter: z.string(),
+      })
+      .optional(),
+  })
+  .catchall(z.unknown());
+
+export type SsoSamlAssertionContent = z.infer<typeof ssoSamlAssertionContentGuard>;
