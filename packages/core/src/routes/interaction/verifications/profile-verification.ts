@@ -1,5 +1,5 @@
 import type { Profile, User } from '@logto/schemas';
-import { InteractionEvent } from '@logto/schemas';
+import { InteractionEvent, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { argon2Verify } from 'hash-wasm';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -192,10 +192,15 @@ export default async function verifyProfile(
 
   const passwordProfile = passwordProfileResult.data;
 
-  const { passwordEncrypted: oldPasswordEncrypted } = await findUserById(accountId);
+  const { passwordEncrypted: oldPasswordEncrypted, passwordEncryptionMethod } = await findUserById(
+    accountId
+  );
 
+  // Only compare password if the encryption method (algorithm) is Argon2i
+  // if the user is migrated, this check will be skipped
   assertThat(
     !oldPasswordEncrypted ||
+      passwordEncryptionMethod !== UsersPasswordEncryptionMethod.Argon2i ||
       !(await argon2Verify({ password: passwordProfile.password, hash: oldPasswordEncrypted })),
     new RequestError({ code: 'user.same_password', status: 422 })
   );
