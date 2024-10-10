@@ -29,7 +29,7 @@
     "@logto/core-kit": "workspace:^",
     "@logto/js": "^4.1.4",
     "@logto/node": "^2.5.4",
-    "@logto/schemas": "workspace:^1.20.0",
+    "@logto/schemas": "workspace:^1.20.1",
     "@logto/shared": "workspace:^3.1.1",
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/essentials": "^2.9.1",
