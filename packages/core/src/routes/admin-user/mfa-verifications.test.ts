@@ -103,6 +103,29 @@ describe('adminUserRoutes', () => {
         });
         expect(response.status).toEqual(422);
       });
+
+      it('should fail for malformed secret', async () => {
+        findUserById.mockResolvedValueOnce(mockUser);
+        const response = await userRequest.post(`/users/${mockUser.id}/mfa-verifications`).send({
+          type: MfaFactor.TOTP,
+          secret: 'invalid_secret',
+        });
+        expect(response.status).toEqual(422);
+      });
+
+      it('should return supplied secret', async () => {
+        findUserById.mockResolvedValueOnce(mockUser);
+        const response = await userRequest.post(`/users/${mockUser.id}/mfa-verifications`).send({
+          type: MfaFactor.TOTP,
+          secret: 'JBSWY3DPEHPK3PXP',
+        });
+        expect(response.body).toMatchObject({
+          type: MfaFactor.TOTP,
+          secret: 'JBSWY3DPEHPK3PXP',
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          secretQrCode: expect.stringContaining('data:image'),
+        });
+      });
     });
   });
 
@@ -141,6 +164,78 @@ describe('adminUserRoutes', () => {
         type: MfaFactor.BackupCode,
       });
       expect(response.status).toEqual(422);
+    });
+
+    it('should fail for wrong length', async () => {
+      findUserById.mockResolvedValueOnce({
+        ...mockUser,
+        mfaVerifications: [],
+      });
+      const response = await userRequest.post(`/users/${mockUser.id}/mfa-verifications`).send({
+        type: MfaFactor.BackupCode,
+        codes: ['wrong-code'],
+      });
+      expect(response.status).toEqual(422);
+    });
+
+    it('should fail for wrong characters', async () => {
+      findUserById.mockResolvedValueOnce({
+        ...mockUser,
+        mfaVerifications: [],
+      });
+      const response = await userRequest.post(`/users/${mockUser.id}/mfa-verifications`).send({
+        type: MfaFactor.BackupCode,
+        codes: [
+          'd94c2f29ae',
+          '74fa801bb7',
+          '2cbcc9323c',
+          '87299f89aa',
+          '0d95df8598',
+          '78eedbf35d',
+          '0fa4c1xd19',
+          '7384b69eb5',
+          '7bf2481db7',
+          'f00febc9ae',
+        ],
+      });
+      expect(response.status).toEqual(422);
+    });
+
+    it('should return the supplied codes', async () => {
+      findUserById.mockResolvedValueOnce({
+        ...mockUser,
+        mfaVerifications: [],
+      });
+      const response = await userRequest.post(`/users/${mockUser.id}/mfa-verifications`).send({
+        type: MfaFactor.BackupCode,
+        codes: [
+          'd94c2f29ae',
+          '74fa801bb7',
+          '2cbcc9323c',
+          '87299f89aa',
+          '0d95df8598',
+          '78eedbf35d',
+          '0fa4c1fd19',
+          '7384b69eb5',
+          '7bf2481db7',
+          'f00febc9ae',
+        ],
+      });
+      expect(response.body).toMatchObject({
+        type: MfaFactor.BackupCode,
+        codes: [
+          'd94c2f29ae',
+          '74fa801bb7',
+          '2cbcc9323c',
+          '87299f89aa',
+          '0d95df8598',
+          '78eedbf35d',
+          '0fa4c1fd19',
+          '7384b69eb5',
+          '7bf2481db7',
+          'f00febc9ae',
+        ],
+      });
     });
   });
 
