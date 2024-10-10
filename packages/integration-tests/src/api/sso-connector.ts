@@ -68,13 +68,13 @@ export class SsoConnectorApi {
     return connector;
   }
 
-  async createMockSamlConnector(domains: string[], connectorName?: string) {
+  async createMockSamlConnector(domains: string[], connectorName?: string, metadata?: string) {
     const connector = await this.create({
       providerName: SsoProviderName.SAML,
       connectorName: connectorName ?? `test-saml-${randomString()}`,
       domains,
       config: {
-        metadata: metadataXml,
+        metadata: metadata ?? metadataXml,
       },
       syncProfile: true,
     });
@@ -87,6 +87,10 @@ export class SsoConnectorApi {
 
     this.connectorInstances.set(connector.id, connector);
     return connector;
+  }
+
+  async getSsoConnectorById(id: string) {
+    return getSsoConnectorById(id);
   }
 
   async delete(id: string) {

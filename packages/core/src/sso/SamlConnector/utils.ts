@@ -1,11 +1,12 @@
 import { X509Certificate } from 'node:crypto';
 
 import * as validator from '@authenio/samlify-node-xmllint';
+import { ssoSamlAssertionContentGuard, type SsoSamlAssertionContent } from '@logto/schemas';
 import { type Optional, appendPath, tryThat } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
 import { HTTPError, got } from 'got';
 import * as saml from 'samlify';
-import { z } from 'zod';
+import { z, ZodError } from 'zod';
 
 import { ssoPath } from '#src/routes/interaction/const.js';
 
@@ -172,7 +173,7 @@ export const handleSamlAssertion = async (
   request: ESamlHttpRequest,
   identityProvider: saml.IdentityProviderInstance,
   metadata: { entityId: string; x509Certificate: string }
-): Promise<Record<string, unknown>> => {
+): Promise<SsoSamlAssertionContent> => {
   const { entityId: entityID, x509Certificate } = metadata;
 
   // eslint-disable-next-line new-cap
@@ -191,18 +192,11 @@ export const handleSamlAssertion = async (
       request
     );
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return {
-      ...(Boolean(assertionResult.extract.nameID) && {
-        // Usually identity provider DOES NOT allow the configuration of `nameID` claim name.
-        nameID: assertionResult.extract.nameID,
-      }),
-      ...assertionResult.extract.attributes,
-    };
+    return ssoSamlAssertionContentGuard.parse(assertionResult.extract);
   } catch (error: unknown) {
     throw new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
       message: 'Invalid SAML assertion',
-      error,
+      error: error instanceof ZodError ? error.flatten() : error,
     });
   }
 };
