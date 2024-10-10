@@ -1,7 +1,7 @@
-import { type Optional } from '@silverhand/essentials';
+import { type SsoSamlAssertionContent } from '@logto/schemas';
+import { conditional, type Optional } from '@silverhand/essentials';
 import { XMLValidator } from 'fast-xml-parser';
 import * as saml from 'samlify';
-import { z } from 'zod';
 
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 
@@ -45,7 +45,7 @@ import {
  * @property _identityProvider The SAML identity provider instance cache
  *
  * @method getSamlIdpMetadata Parse and return SAML config from the SAML connector config. Throws error if config is invalid.
- * @method parseSamlAssertion Parse and store the SAML assertion from IdP.
+ * @method getUserInfoFromSamlAssertion Parse and store the SAML assertion from IdP.
  * @method getSingleSignOnUrl Get the SAML SSO URL.
  * @method getIdpMetadataXml Get the raw SAML metadata (in XML-format) from the raw SAML SSO connector config.
  * @method getIdpMetadataJson Get manually configured IdP SAML metadata from the raw SAML SSO connector config.
@@ -98,13 +98,12 @@ class SamlConnector {
   }
 
   /**
-   * Parse and return the SAML assertion from IdP (with attribute mapping applied).
+   * Parse the SAML assertion content received from IdP.
    *
-   * @param assertion The SAML assertion from IdP.
-   *
-   * @returns The parsed SAML assertion from IdP (with attribute mapping applied).
+   * @param body The raw SAML assertion request body received from IdP.
+   * @throws {SsoConnectorError} If the SAML assertion is invalid or cannot be parsed.
    */
-  async parseSamlAssertion(body: Record<string, unknown>): Promise<ExtendedSocialUserInfo> {
+  async parseSamlAssertionContent(body: Record<string, unknown>) {
     const identityProvider = await this.getIdentityProvider();
     const { x509Certificate } = await this.getSamlIdpMetadata();
 
@@ -114,18 +113,23 @@ class SamlConnector {
       entityId: this.serviceProviderMetadata.entityId,
     });
 
-    const userProfileGuard = z.record(z.string().or(z.array(z.string())));
-    const rawProfileParseResult = userProfileGuard.safeParse(samlAssertionContent);
+    return samlAssertionContent;
+  }
 
-    if (!rawProfileParseResult.success) {
-      throw new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
-        message: 'Invalid SAML assertion',
-        response: samlAssertionContent,
-        error: rawProfileParseResult.error.flatten(),
-      });
-    }
-
-    const rawUserProfile = rawProfileParseResult.data;
+  /**
+   * Extract the user info from the SAML assertion received from IdP. (with attribute mapping applied).
+   *
+   * @param body The raw SAML assertion request body received from IdP.
+   *
+   * @returns {ExtendedSocialUserInfo} The parsed social user info (with attribute mapping applied).
+   */
+  getUserInfoFromSamlAssertion(
+    samlAssertionContent: SsoSamlAssertionContent
+  ): ExtendedSocialUserInfo {
+    const rawUserProfile = {
+      ...conditional(samlAssertionContent.nameID && { nameID: samlAssertionContent.nameID }),
+      ...samlAssertionContent.attributes,
+    };
 
     const profileMap = attributeMappingPostProcessor(this.idpConfig.attributeMapping);
 
