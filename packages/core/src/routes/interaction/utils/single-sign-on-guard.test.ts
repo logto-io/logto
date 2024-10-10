@@ -15,6 +15,7 @@ const mockSsoConnectorLibrary: jest.Mocked<SsoConnectorLibrary> = {
   getSsoConnectorById: jest.fn(),
   createSsoConnectorIdpInitiatedAuthConfig: jest.fn(),
   updateSsoConnectorIdpInitiatedAuthConfig: jest.fn(),
+  createIdpInitiatedSamlSsoSession: jest.fn(),
 };
 
 describe('verifyEmailIdentifier tests', () => {

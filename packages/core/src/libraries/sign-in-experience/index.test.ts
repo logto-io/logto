@@ -47,6 +47,7 @@ const ssoConnectorLibrary: jest.Mocked<SsoConnectorLibrary> = {
   getAvailableSsoConnectors: jest.fn(),
   createSsoConnectorIdpInitiatedAuthConfig: jest.fn(),
   updateSsoConnectorIdpInitiatedAuthConfig: jest.fn(),
+  createIdpInitiatedSamlSsoSession: jest.fn(),
 };
 
 const { MockQueries } = await import('#src/test-utils/tenant.js');

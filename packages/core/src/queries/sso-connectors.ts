@@ -5,12 +5,14 @@ import {
   SsoConnectorIdpInitiatedAuthConfigs,
   type SsoConnectorKeys,
   SsoConnectors,
+  IdpInitiatedSamlSsoSessions,
 } from '@logto/schemas';
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
 import SchemaQueries from '#src/utils/SchemaQueries.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
 
+import { buildDeleteByIdWithPool } from '../database/delete-by-id.js';
 import { buildInsertIntoWithPool } from '../database/insert-into.js';
 import { buildUpdateWhereWithPool } from '../database/update-where.js';
 import { DeletionError } from '../errors/SlonikError/index.js';
@@ -46,6 +48,18 @@ export default class SsoConnectorQueries extends SchemaQueries<
   public readonly updateIdpInitiatedAuthConfig = buildUpdateWhereWithPool(this.pool)(
     SsoConnectorIdpInitiatedAuthConfigs,
     true
+  );
+
+  public readonly insertIdpInitiatedSamlSsoSession = buildInsertIntoWithPool(this.pool)(
+    IdpInitiatedSamlSsoSessions,
+    {
+      returning: true,
+    }
+  );
+
+  public readonly deleteIdpInitiatedSamlSsoSessionById = buildDeleteByIdWithPool(
+    this.pool,
+    IdpInitiatedSamlSsoSessions.table
   );
 
   constructor(pool: CommonQueryMethods) {

@@ -16,6 +16,8 @@ import {
   assignSamlAssertionResultViaJti,
 } from '#src/utils/saml-assertion-handler.js';
 
+import { EnvSet } from '../env-set/index.js';
+
 import { ssoPath } from './interaction/const.js';
 import type { AnonymousRouter, RouterInitArgs } from './types.js';
 
@@ -24,7 +26,7 @@ import type { AnonymousRouter, RouterInitArgs } from './types.js';
  * This router will have a route `/authn` to authenticate tokens with a general manner.
  */
 export default function authnRoutes<T extends AnonymousRouter>(
-  ...[router, { envSet, provider, libraries, id: tenantId }]: RouterInitArgs<T>
+  ...[router, { envSet, provider, libraries, id: tenantId, queries }]: RouterInitArgs<T>
 ) {
   const {
     users: { findUserRoles },
@@ -174,9 +176,11 @@ export default function authnRoutes<T extends AnonymousRouter>(
   router.post(
     `/authn/${ssoPath}/saml/:connectorId`,
     koaGuard({
-      body: z.object({ RelayState: z.string(), SAMLResponse: z.string() }).catchall(z.unknown()),
+      body: z
+        .object({ RelayState: z.string().optional(), SAMLResponse: z.string() })
+        .catchall(z.unknown()),
       params: z.object({ connectorId: z.string().min(1) }),
-      status: [302, 404],
+      status: [302, 400, 404],
     }),
     async (ctx, next) => {
       const {
@@ -188,20 +192,6 @@ export default function authnRoutes<T extends AnonymousRouter>(
       const connectorData = await ssoConnectorsLibrary.getSsoConnectorById(connectorId);
       const { providerName } = connectorData;
 
-      // Get relay state from the request body. We need to use it to find the connector session.
-      // All the rest of the request body will be validated and parsed by the connector.
-      const { RelayState: jti } = body;
-
-      // Retrieve the single sign on session data using the jti
-      const singleSignOnSession = await getSingleSignOnSessionResultByJti(jti, provider);
-
-      const { redirectUri, state, connectorId: sessionConnectorId } = singleSignOnSession;
-
-      assertThat(
-        connectorId === sessionConnectorId,
-        'session.connector_validation_session_not_found'
-      );
-
       // Will throw ConnectorError if the config is invalid
       const connectorInstance = new ssoConnectorFactories[providerName].constructor(
         connectorData,
@@ -210,8 +200,63 @@ export default function authnRoutes<T extends AnonymousRouter>(
 
       assertThat(connectorInstance instanceof SamlConnector, 'connector.unexpected_type');
 
-      const userInfo = await connectorInstance.parseSamlAssertion(body);
+      // Get relay state from the request body. We need to use it to find the connector session.
+      // All the rest of the request body will be validated and parsed by the connector.
+      const { RelayState: jti } = body;
 
+      // IdP initiated SSO will not have the jti in the RelayState.
+      // Trigger the IdP initiated SSO flow if enabled for the current connector.
+      if (!jti && EnvSet.values.isDevFeaturesEnabled) {
+        const idpInitiatedAuthConfig =
+          await queries.ssoConnectors.getIdpInitiatedAuthConfigByConnectorId(connectorId);
+
+        // No IdP initiated auth config found
+        assertThat(
+          idpInitiatedAuthConfig,
+          new RequestError({
+            code: 'session.connector_validation_session_not_found',
+            status: 404,
+          })
+        );
+
+        const assertionContent = await connectorInstance.parseSamlAssertionContent(body);
+
+        await ssoConnectorsLibrary.createIdpInitiatedSamlSsoSession(
+          connectorId,
+          assertionContent,
+          ctx
+        );
+
+        // TODO: redirect to SSO direct sign-in flow
+
+        return next();
+      }
+
+      // TODO: remove this assertion after the IdP initiated SSO flow is implemented
+      assertThat(
+        jti,
+        new RequestError({
+          code: 'session.connector_validation_session_not_found',
+          status: 404,
+        })
+      );
+
+      // Retrieve the single sign on session data using the jti
+      const singleSignOnSession = await getSingleSignOnSessionResultByJti(jti, provider);
+      const { redirectUri, state, connectorId: sessionConnectorId } = singleSignOnSession;
+
+      assertThat(
+        connectorId === sessionConnectorId,
+        new RequestError({
+          code: 'session.connector_validation_session_not_found',
+          status: 404,
+        })
+      );
+
+      const assertionContent = await connectorInstance.parseSamlAssertionContent(body);
+      const userInfo = connectorInstance.getUserInfoFromSamlAssertion(assertionContent);
+
+      // Store the extracted user info to the connector session storage for later use.
       await assignSamlAssertionResultViaJti(jti, provider, {
         ...singleSignOnSession,
         userInfo,
