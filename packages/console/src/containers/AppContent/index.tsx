@@ -2,12 +2,17 @@ import { conditional, joinPath } from '@silverhand/essentials';
 import { useContext, useRef } from 'react';
 import { Navigate, Outlet, useParams } from 'react-router-dom';
 
+import { type NewSubscriptionCountBasedUsage } from '@/cloud/types/router';
 import AppLoading from '@/components/AppLoading';
 import Topbar from '@/components/Topbar';
 import { isCloud } from '@/consts/env';
 import SubscriptionDataProvider from '@/contexts/SubscriptionDataProvider';
 import useNewSubscriptionData from '@/contexts/SubscriptionDataProvider/use-new-subscription-data';
 import useSubscriptionData from '@/contexts/SubscriptionDataProvider/use-subscription-data';
+import {
+  hasSurpassedSubscriptionQuotaLimit,
+  hasReachedSubscriptionQuotaLimit,
+} from '@/contexts/SubscriptionDataProvider/utils';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useScroll from '@/hooks/use-scroll';
 import useUserPreferences from '@/hooks/use-user-preferences';
@@ -42,9 +47,29 @@ export default function AppContent() {
 
   return (
     <SubscriptionDataProvider
-      subscriptionData={{
+      subscriptionDataAndUtils={{
         ...subscriptionDta,
         ...newSubscriptionData,
+        hasSurpassedSubscriptionQuotaLimit: <T extends keyof NewSubscriptionCountBasedUsage>(
+          quotaKey: T,
+          usage?: NewSubscriptionCountBasedUsage[T]
+        ) =>
+          hasSurpassedSubscriptionQuotaLimit({
+            quotaKey,
+            usage,
+            subscriptionUsage: newSubscriptionData.currentSubscriptionUsage,
+            subscriptionQuota: newSubscriptionData.currentSubscriptionQuota,
+          }),
+        hasReachedSubscriptionQuotaLimit: <T extends keyof NewSubscriptionCountBasedUsage>(
+          quotaKey: T,
+          usage?: NewSubscriptionCountBasedUsage[T]
+        ) =>
+          hasReachedSubscriptionQuotaLimit({
+            quotaKey,
+            usage,
+            subscriptionUsage: newSubscriptionData.currentSubscriptionUsage,
+            subscriptionQuota: newSubscriptionData.currentSubscriptionQuota,
+          }),
       }}
     >
       <div className={styles.app}>

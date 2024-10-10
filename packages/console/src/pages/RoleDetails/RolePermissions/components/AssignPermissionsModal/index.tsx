@@ -14,7 +14,6 @@ import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import useApi from '@/hooks/use-api';
 import modalStyles from '@/scss/modal.module.scss';
-import { hasSurpassedSubscriptionQuotaLimit } from '@/utils/quota';
 
 type Props = {
   readonly roleId: string;
@@ -28,6 +27,7 @@ function AssignPermissionsModal({ roleId, roleType, onClose }: Props) {
     currentSubscription: { planId, isEnterprisePlan },
     currentSubscriptionRoleScopeUsage,
     currentSubscriptionQuota,
+    hasSurpassedSubscriptionQuotaLimit,
   } = useContext(SubscriptionDataContext);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [scopes, setScopes] = useState<ScopeResponse[]>([]);
@@ -52,11 +52,10 @@ function AssignPermissionsModal({ roleId, roleType, onClose }: Props) {
     }
   };
 
-  const shouldBlockScopeAssignment = hasSurpassedSubscriptionQuotaLimit({
-    quotaKey: 'scopesPerRoleLimit',
-    usage: (currentSubscriptionRoleScopeUsage[roleId] ?? 0) + scopes.length,
-    quota: currentSubscriptionQuota,
-  });
+  const shouldBlockScopeAssignment = hasSurpassedSubscriptionQuotaLimit(
+    'scopesPerRoleLimit',
+    (currentSubscriptionRoleScopeUsage[roleId] ?? 0) + scopes.length
+  );
 
   return (
     <ReactModal

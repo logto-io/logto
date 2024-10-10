@@ -1,34 +1,14 @@
-import { useContext, useMemo } from 'react';
+import { useContext } from 'react';
 
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
-import {
-  hasReachedSubscriptionQuotaLimit,
-  hasSurpassedSubscriptionQuotaLimit,
-} from '@/utils/quota';
 
 const useApiResourcesUsage = () => {
-  const { currentSubscriptionQuota, currentSubscriptionUsage } =
+  const { hasReachedSubscriptionQuotaLimit, hasSurpassedSubscriptionQuotaLimit } =
     useContext(SubscriptionDataContext);
 
-  const hasReachedLimit = useMemo(
-    () =>
-      hasReachedSubscriptionQuotaLimit({
-        quotaKey: 'resourcesLimit',
-        usage: currentSubscriptionUsage.resourcesLimit,
-        quota: currentSubscriptionQuota,
-      }),
-    [currentSubscriptionQuota, currentSubscriptionUsage.resourcesLimit]
-  );
+  const hasReachedLimit = hasReachedSubscriptionQuotaLimit('resourcesLimit');
 
-  const hasSurpassedLimit = useMemo(
-    () =>
-      hasSurpassedSubscriptionQuotaLimit({
-        quotaKey: 'resourcesLimit',
-        usage: currentSubscriptionUsage.resourcesLimit,
-        quota: currentSubscriptionQuota,
-      }),
-    [currentSubscriptionQuota, currentSubscriptionUsage.resourcesLimit]
-  );
+  const hasSurpassedLimit = hasSurpassedSubscriptionQuotaLimit('resourcesLimit');
 
   return {
     hasReachedLimit,

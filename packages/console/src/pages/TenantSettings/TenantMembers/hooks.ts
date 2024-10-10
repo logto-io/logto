@@ -1,38 +1,22 @@
 import { useContext, useMemo } from 'react';
 
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
-import {
-  hasReachedSubscriptionQuotaLimit,
-  hasSurpassedSubscriptionQuotaLimit,
-} from '@/utils/quota';
 
 const useTenantMembersUsage = () => {
-  const { currentSubscriptionUsage, currentSubscriptionQuota } =
-    useContext(SubscriptionDataContext);
+  const {
+    currentSubscriptionUsage,
+    currentSubscriptionQuota,
+    hasReachedSubscriptionQuotaLimit,
+    hasSurpassedSubscriptionQuotaLimit,
+  } = useContext(SubscriptionDataContext);
 
   const usage = useMemo(() => {
     return currentSubscriptionUsage.tenantMembersLimit;
   }, [currentSubscriptionUsage.tenantMembersLimit]);
 
-  const hasTenantMembersReachedLimit = useMemo(
-    () =>
-      hasReachedSubscriptionQuotaLimit({
-        quotaKey: 'tenantMembersLimit',
-        quota: currentSubscriptionQuota,
-        usage: currentSubscriptionUsage.tenantMembersLimit,
-      }),
-    [currentSubscriptionQuota, currentSubscriptionUsage.tenantMembersLimit]
-  );
+  const hasTenantMembersReachedLimit = hasReachedSubscriptionQuotaLimit('tenantMembersLimit');
 
-  const hasTenantMembersSurpassedLimit = useMemo(
-    () =>
-      hasSurpassedSubscriptionQuotaLimit({
-        quotaKey: 'tenantMembersLimit',
-        quota: currentSubscriptionQuota,
-        usage: currentSubscriptionUsage.tenantMembersLimit,
-      }),
-    [currentSubscriptionQuota, currentSubscriptionUsage.tenantMembersLimit]
-  );
+  const hasTenantMembersSurpassedLimit = hasSurpassedSubscriptionQuotaLimit('tenantMembersLimit');
 
   return {
     hasTenantMembersReachedLimit,

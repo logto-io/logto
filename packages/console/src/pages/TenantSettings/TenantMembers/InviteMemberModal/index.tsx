@@ -19,7 +19,6 @@ import TextLink from '@/ds-components/TextLink';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useUserPreferences from '@/hooks/use-user-preferences';
 import modalStyles from '@/scss/modal.module.scss';
-import { hasReachedSubscriptionQuotaLimit } from '@/utils/quota';
 import { isPaidPlan } from '@/utils/subscription';
 
 import InviteEmailsInput from '../InviteEmailsInput';
@@ -44,9 +43,8 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
   const { show } = useConfirmModal();
   const {
     currentSubscription: { planId, isAddOnAvailable, isEnterprisePlan },
-    currentSubscriptionQuota,
-    currentSubscriptionUsage: { tenantMembersLimit },
     mutateSubscriptionQuotaAndUsages,
+    hasReachedSubscriptionQuotaLimit,
   } = useContext(SubscriptionDataContext);
   const {
     data: { tenantMembersUpsellNoticeAcknowledged },
@@ -82,11 +80,7 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
     [t]
   );
 
-  const hasTenantMembersReachedLimit = hasReachedSubscriptionQuotaLimit({
-    quotaKey: 'tenantMembersLimit',
-    usage: tenantMembersLimit,
-    quota: currentSubscriptionQuota,
-  });
+  const hasTenantMembersReachedLimit = hasReachedSubscriptionQuotaLimit('tenantMembersLimit');
 
   const onSubmit = handleSubmit(async ({ emails, role }) => {
     if (role === TenantRole.Admin) {

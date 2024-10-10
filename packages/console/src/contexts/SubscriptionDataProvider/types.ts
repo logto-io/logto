@@ -12,6 +12,13 @@ export type Context = {
   onCurrentSubscriptionUpdated: (subscription?: Subscription) => void;
 };
 
+export type SubscriptionUsageOptions<T extends keyof NewSubscriptionCountBasedUsage> = {
+  quotaKey: T;
+  subscriptionUsage: NewSubscriptionCountBasedUsage;
+  subscriptionQuota: NewSubscriptionQuota;
+  usage?: NewSubscriptionCountBasedUsage[T];
+};
+
 type NewSubscriptionSupplementContext = {
   logtoSkus: LogtoSkuResponse[];
   currentSku: LogtoSkuResponse;
@@ -23,6 +30,19 @@ type NewSubscriptionSupplementContext = {
   mutateSubscriptionQuotaAndUsages: () => void;
 };
 
+type NewSubscriptionResourceStatus = {
+  hasSurpassedSubscriptionQuotaLimit: <T extends keyof NewSubscriptionCountBasedUsage>(
+    quotaKey: T,
+    usage?: NewSubscriptionCountBasedUsage[T]
+  ) => boolean;
+  hasReachedSubscriptionQuotaLimit: <T extends keyof NewSubscriptionCountBasedUsage>(
+    quotaKey: T,
+    usage?: NewSubscriptionCountBasedUsage[T]
+  ) => boolean;
+};
+
 export type NewSubscriptionContext = Context & NewSubscriptionSupplementContext;
 
-export type FullContext = Context & NewSubscriptionSupplementContext;
+export type FullContext = Context &
+  NewSubscriptionSupplementContext &
+  NewSubscriptionResourceStatus;
