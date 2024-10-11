@@ -1,4 +1,4 @@
-import { type DirectSignInOptions, Prompt, QueryKey, withReservedScopes } from '@logto/js';
+import { type DirectSignInOptions, Prompt, QueryKey, ReservedScope, UserScope } from '@logto/js';
 import {
   ApplicationType,
   type SsoSamlAssertionContent,
@@ -7,7 +7,7 @@ import {
   type SsoConnectorIdpInitiatedAuthConfig,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { assert, trySafe } from '@silverhand/essentials';
+import { assert, deduplicate, trySafe } from '@silverhand/essentials';
 
 import { defaultIdPInitiatedSamlSsoSessionTtl } from '#src/constants/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -141,6 +141,9 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
    *
    * @remarks
    * For IdP-initiated SAML SSO flow use only. Generate the sign-in URL for the user to sign in.
+   * Default scopes: openid, profile
+   * Default prompt: login
+   * Default response type: code
    *
    * @param issuer The oidc issuer endpoint of the current tenant.
    * @param authConfig The IdP-initiated SAML SSO authentication configuration.
@@ -183,7 +186,11 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
       ...extraParams,
     });
 
-    queryParameters.append(QueryKey.Scope, withReservedScopes(scope?.split(' ') ?? []));
+    queryParameters.append(
+      QueryKey.Scope,
+      // For security reasons, DO NOT include the offline_access scope for IdP-initiated SAML SSO by default
+      deduplicate([ReservedScope.OpenId, UserScope.Profile, ...(scope?.split(' ') ?? [])]).join(' ')
+    );
 
     return new URL(`${issuer}/auth?${queryParameters.toString()}`);
   };
