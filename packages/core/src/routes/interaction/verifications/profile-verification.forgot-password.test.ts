@@ -1,4 +1,4 @@
-import { InteractionEvent } from '@logto/schemas';
+import { InteractionEvent, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -9,7 +9,11 @@ import type { Identifier } from '../types/index.js';
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
 
-const findUserById = jest.fn().mockResolvedValue({ id: 'foo', passwordEncrypted: 'passwordHash' });
+const findUserById = jest.fn().mockResolvedValue({
+  id: 'foo',
+  passwordEncrypted: 'passwordHash',
+  passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+});
 
 const tenantContext = new MockTenant(undefined, { users: { findUserById } });
 
