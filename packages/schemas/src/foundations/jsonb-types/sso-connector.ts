@@ -14,10 +14,9 @@ export type SsoBranding = z.infer<typeof ssoBrandingGuard>;
 
 export const idpInitiatedAuthParamsGuard = z
   .object({
-    resources: z.array(z.string()).optional(),
-    scopes: z.array(z.string()).optional(),
+    scope: z.string().optional(),
   })
-  .catchall(z.unknown());
+  .catchall(z.string());
 
 export type IdpInitiatedAuthParams = z.infer<typeof idpInitiatedAuthParamsGuard>;
 

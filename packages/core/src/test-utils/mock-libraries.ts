@@ -3,6 +3,8 @@ import Client from '@withtyped/client';
 
 import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 
+import { type SsoConnectorLibrary } from '../libraries/sso-connector.js';
+
 const { jest } = import.meta;
 
 export const mockLogtoConfigsLibrary: jest.Mocked<LogtoConfigLibrary> = {
@@ -15,3 +17,13 @@ export const mockLogtoConfigsLibrary: jest.Mocked<LogtoConfigLibrary> = {
 };
 
 export const mockCloudClient = new Client<typeof router>({ baseUrl: 'http://localhost:3001' });
+
+export const mockSsoConnectorLibrary: jest.Mocked<SsoConnectorLibrary> = {
+  getAvailableSsoConnectors: jest.fn(),
+  getSsoConnectors: jest.fn(),
+  getSsoConnectorById: jest.fn(),
+  createSsoConnectorIdpInitiatedAuthConfig: jest.fn(),
+  updateSsoConnectorIdpInitiatedAuthConfig: jest.fn(),
+  createIdpInitiatedSamlSsoSession: jest.fn(),
+  getIdpInitiatedSamlSsoSignInUrl: jest.fn(),
+};

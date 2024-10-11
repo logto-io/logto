@@ -2,6 +2,7 @@ import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import { wellConfiguredSsoConnector } from '#src/__mocks__/sso.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type SsoConnectorLibrary } from '#src/libraries/sso-connector.js';
+import { mockSsoConnectorLibrary } from '#src/test-utils/mock-libraries.js';
 
 import { verifySsoOnlyEmailIdentifier } from './single-sign-on-guard.js';
 
@@ -9,13 +10,9 @@ const { jest } = import.meta;
 
 const getAvailableSsoConnectorsMock = jest.fn();
 
-const mockSsoConnectorLibrary: jest.Mocked<SsoConnectorLibrary> = {
+const ssoConnectorLibrary: jest.Mocked<SsoConnectorLibrary> = {
+  ...mockSsoConnectorLibrary,
   getAvailableSsoConnectors: getAvailableSsoConnectorsMock,
-  getSsoConnectors: jest.fn(),
-  getSsoConnectorById: jest.fn(),
-  createSsoConnectorIdpInitiatedAuthConfig: jest.fn(),
-  updateSsoConnectorIdpInitiatedAuthConfig: jest.fn(),
-  createIdpInitiatedSamlSsoSession: jest.fn(),
 };
 
 describe('verifyEmailIdentifier tests', () => {
@@ -26,7 +23,7 @@ describe('verifyEmailIdentifier tests', () => {
   it('should return if the identifier is not an email', async () => {
     await expect(
       verifySsoOnlyEmailIdentifier(
-        mockSsoConnectorLibrary,
+        ssoConnectorLibrary,
         {
           username: 'foo',
           password: 'bar',
@@ -39,7 +36,7 @@ describe('verifyEmailIdentifier tests', () => {
   it('should return if the ssoConnector is not enabled', async () => {
     await expect(
       verifySsoOnlyEmailIdentifier(
-        mockSsoConnectorLibrary,
+        ssoConnectorLibrary,
         {
           email: 'foo@bar.com',
           password: 'bar',
@@ -64,7 +61,7 @@ describe('verifyEmailIdentifier tests', () => {
 
     await expect(
       verifySsoOnlyEmailIdentifier(
-        mockSsoConnectorLibrary,
+        ssoConnectorLibrary,
         {
           email: 'foo@bar.com',
           password: 'bar',
@@ -84,7 +81,7 @@ describe('verifyEmailIdentifier tests', () => {
 
     await expect(
       verifySsoOnlyEmailIdentifier(
-        mockSsoConnectorLibrary,
+        ssoConnectorLibrary,
         {
           email: 'foo@example.com',
           verificationCode: 'bar',
