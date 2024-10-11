@@ -12,18 +12,20 @@ type RouteRequestBodyType<T extends { search?: unknown; body?: ZodType; response
 
 export type Subscription = RouteResponseType<GetRoutes['/api/tenants/my/subscription']>;
 
+type CompleteSubscriptionUsage = RouteResponseType<GetRoutes['/api/tenants/my/subscription-usage']>;
+
 /**
  * @remarks
  * The `auditLogsRetentionDays` will be handled by cron job in Azure Functions, outdated audit logs will be removed automatically.
  */
 export type SubscriptionQuota = Omit<
-  RouteResponseType<GetRoutes['/api/tenants/my/subscription/quota']>,
+  CompleteSubscriptionUsage['quota'],
   // Since we are deprecation the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
   'auditLogsRetentionDays' | 'organizationsEnabled'
 >;
 
 export type SubscriptionUsage = Omit<
-  RouteResponseType<GetRoutes['/api/tenants/my/subscription/usage']>,
+  CompleteSubscriptionUsage['usage'],
   // Since we are deprecation the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
   'organizationsEnabled'
 >;
