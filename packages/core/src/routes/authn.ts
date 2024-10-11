@@ -16,6 +16,7 @@ import {
   assignSamlAssertionResultViaJti,
 } from '#src/utils/saml-assertion-handler.js';
 
+import { idpInitiatedSamlSsoSessionCookieName } from '../constants/index.js';
 import { EnvSet } from '../env-set/index.js';
 
 import { ssoPath } from './interaction/const.js';
@@ -221,11 +222,18 @@ export default function authnRoutes<T extends AnonymousRouter>(
 
         const assertionContent = await connectorInstance.parseSamlAssertionContent(body);
 
-        await ssoConnectorsLibrary.createIdpInitiatedSamlSsoSession(
+        const { id, expiresAt } = await ssoConnectorsLibrary.createIdpInitiatedSamlSsoSession(
           connectorId,
-          assertionContent,
-          ctx
+          assertionContent
         );
+
+        // Set the session ID to cookie for later use.
+        ctx.cookies.set(idpInitiatedSamlSsoSessionCookieName, id, {
+          httpOnly: true,
+          sameSite: 'strict',
+          expires: new Date(expiresAt),
+          overwrite: true,
+        });
 
         // TODO: redirect to SSO direct sign-in flow
 

@@ -27,8 +27,8 @@ export const ssoSamlAssertionContentGuard = z
     attributes: z.record(z.string().or(z.array(z.string()))).optional(),
     conditions: z
       .object({
-        notBefore: z.string(),
-        notOnOrAfter: z.string(),
+        notBefore: z.string().optional(),
+        notOnOrAfter: z.string().optional(),
       })
       .optional(),
   })

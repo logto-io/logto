@@ -126,7 +126,7 @@ class SamlConnector {
   getUserInfoFromSamlAssertion(
     samlAssertionContent: SsoSamlAssertionContent
   ): ExtendedSocialUserInfo {
-    const rawUserProfile = {
+    const rawUserProfile: Record<string, unknown> = {
       ...conditional(samlAssertionContent.nameID && { nameID: samlAssertionContent.nameID }),
       ...samlAssertionContent.attributes,
     };

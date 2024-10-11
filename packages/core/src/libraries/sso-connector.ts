@@ -6,12 +6,8 @@ import {
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { assert } from '@silverhand/essentials';
-import { type Context } from 'koa';
 
-import {
-  defaultIdPInitiatedSamlSsoSessionTtl,
-  idpInitiatedSamlSsoSessionCookieName,
-} from '#src/constants/index.js';
+import { defaultIdPInitiatedSamlSsoSessionTtl } from '#src/constants/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import { isSupportedSsoConnector } from '#src/sso/utils.js';
@@ -114,17 +110,15 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
   };
 
   /**
-   * Records the verified SAML assertion content to the database and sets the session ID to the cookie.
-   *
+   * Records the verified SAML assertion content to the database.
    * @remarks
    * For IdP-initiated SAML SSO flow use only.
-   * Save the SAML assertion content to the database and set the session ID to the cookie.
+   * Save the SAML assertion content to the database
    * The session ID will be used to retrieve the SAML assertion content when the user is redirected to Logto SSO authentication flow.
    */
   const createIdpInitiatedSamlSsoSession = async (
     connectorId: string,
-    assertionContent: SsoSamlAssertionContent,
-    ctx: Context
+    assertionContent: SsoSamlAssertionContent
   ) => {
     // If the assertion has a notOnOrAfter condition, we will use it as the expiration date,
     // otherwise use the creation date + 10 minutes
@@ -132,19 +126,11 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
       ? new Date(assertionContent.conditions.notOnOrAfter)
       : new Date(Date.now() + defaultIdPInitiatedSamlSsoSessionTtl);
 
-    const { id } = await ssoConnectors.insertIdpInitiatedSamlSsoSession({
+    return ssoConnectors.insertIdpInitiatedSamlSsoSession({
       id: generateStandardId(),
       connectorId,
       assertionContent,
       expiresAt: expiresAt.valueOf(),
-    });
-
-    // Set the session ID to cookie
-    ctx.cookies.set(idpInitiatedSamlSsoSessionCookieName, id, {
-      httpOnly: true,
-      sameSite: 'strict',
-      expires: expiresAt,
-      overwrite: true,
     });
   };
 
