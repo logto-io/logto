@@ -1,5 +1,3 @@
-import { pick } from '@silverhand/essentials';
-
 import { type NewSubscriptionCountBasedUsage } from '@/cloud/types/router';
 import { isCloud } from '@/consts/env';
 
@@ -15,6 +13,11 @@ const isSubscriptionUsageWithInLimit = <T extends keyof NewSubscriptionCountBase
     return true;
   }
 
+  /**
+   * Sometimes we need to manually retrieve usage to overwrite the usage in subscriptionUsage.
+   * For example, for the usage of `scopesPerResourceLimit`, `subscriptionUsage.scopesPerResourceLimit` records the largest value among all resource scopes.
+   * However, when operating on resources in practice, we need to know the specific usage of scopes for the current resource. In this case, we need to manually calculate the value of scopes for the current resource before calling the function.
+   */
   const usageValue = usage ?? subscriptionUsage[quotaKey];
   const quotaValue = subscriptionQuota[quotaKey];
 
@@ -32,21 +35,9 @@ const isSubscriptionUsageWithInLimit = <T extends keyof NewSubscriptionCountBase
 
 export const hasSurpassedSubscriptionQuotaLimit = <T extends keyof NewSubscriptionCountBasedUsage>(
   options: SubscriptionUsageOptions<T>
-) => {
-  console.log(
-    'hasSurpassedSubscriptionQuotaLimit',
-    pick(options, 'quotaKey', 'usage', 'subscriptionUsage', 'subscriptionQuota')
-  );
-  return !isSubscriptionUsageWithInLimit(options);
-};
+) => !isSubscriptionUsageWithInLimit(options);
 
 export const hasReachedSubscriptionQuotaLimit = <T extends keyof NewSubscriptionCountBasedUsage>(
   options: SubscriptionUsageOptions<T>
-) => {
-  console.log(
-    'hasReachedSubscriptionQuotaLimit',
-    pick(options, 'quotaKey', 'usage', 'subscriptionUsage', 'subscriptionQuota')
-  );
-  return !isSubscriptionUsageWithInLimit(options, false);
-};
+) => !isSubscriptionUsageWithInLimit(options, false);
 /* === For new pricing model === */
