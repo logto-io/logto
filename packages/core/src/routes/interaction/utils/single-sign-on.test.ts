@@ -1,7 +1,14 @@
+/* eslint-disable max-lines */
 import { createMockUtils } from '@logto/shared/esm';
 import type Provider from 'oidc-provider';
+import Sinon from 'sinon';
 
-import { mockSsoConnector, wellConfiguredSsoConnector } from '#src/__mocks__/sso.js';
+import {
+  mockSsoConnector,
+  wellConfiguredSsoConnector,
+  mockSamlSsoConnector,
+} from '#src/__mocks__/sso.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import { type WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
@@ -13,6 +20,8 @@ import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
+import { idpInitiatedSamlSsoSessionCookieName } from '../../../constants/index.js';
+import { SamlSsoConnector } from '../../../sso/SamlSsoConnector/index.js';
 import { type WithInteractionHooksContext } from '../middleware/koa-interaction-hooks.js';
 
 const { jest } = import.meta;
@@ -30,7 +39,16 @@ const insertUserMock = jest.fn().mockResolvedValue([{ id: 'foo' }, { organizatio
 const generateUserIdMock = jest.fn().mockResolvedValue('foo');
 const getAvailableSsoConnectorsMock = jest.fn();
 
+const findIdpInitiatedSamlSsoSessionMock = jest.fn();
+const deleteIdpInitiatedSamlSsoSessionMock = jest.fn();
+
 class MockOidcSsoConnector extends OidcSsoConnector {
+  override getAuthorizationUrl = getAuthorizationUrlMock;
+  override getIssuer = getIssuerMock;
+  override getUserInfo = getUserInfoMock;
+}
+
+class MockSamlSsoConnector extends SamlSsoConnector {
   override getAuthorizationUrl = getAuthorizationUrlMock;
   override getIssuer = getIssuerMock;
   override getUserInfo = getUserInfoMock;
@@ -41,9 +59,11 @@ mockEsm('./interaction.js', () => ({
 }));
 
 const {
+  assignSingleSignOnSessionResult: assignSingleSignOnSessionResultMock,
   getSingleSignOnSessionResult: getSingleSignOnSessionResultMock,
   assignSingleSignOnAuthenticationResult: assignSingleSignOnAuthenticationResultMock,
 } = await mockEsmWithActual('./single-sign-on-session.js', () => ({
+  assignSingleSignOnSessionResult: jest.fn(),
   getSingleSignOnSessionResult: jest.fn(),
   assignSingleSignOnAuthenticationResult: jest.fn(),
 }));
@@ -51,6 +71,11 @@ const {
 jest
   .spyOn(ssoConnectorFactories.OIDC, 'constructor')
   .mockImplementation((data: SingleSignOnConnectorData) => new MockOidcSsoConnector(data));
+jest
+  .spyOn(ssoConnectorFactories.SAML, 'constructor')
+  .mockImplementation(
+    (data: SingleSignOnConnectorData) => new MockSamlSsoConnector(data, 'tenantId')
+  );
 
 const {
   getSsoAuthorizationUrl,
@@ -82,6 +107,10 @@ describe('Single sign on util methods tests', () => {
       users: {
         updateUserById: updateUserMock,
         findUserByEmail: findUserByEmailMock,
+      },
+      ssoConnectors: {
+        findIdpInitiatedSamlSsoSessionById: findIdpInitiatedSamlSsoSessionMock,
+        deleteIdpInitiatedSamlSsoSessionById: deleteIdpInitiatedSamlSsoSessionMock,
       },
     },
     undefined,
@@ -327,4 +356,171 @@ describe('Single sign on util methods tests', () => {
       });
     });
   });
+
+  describe('getSsoAuthorizationUrl tests with idp initiated sso session', () => {
+    const stub = Sinon.stub(EnvSet, 'values').value({
+      ...EnvSet.values,
+      isDevFeaturesEnabled: true,
+    });
+
+    const payload = {
+      state: 'state',
+      redirectUri: 'https://example.com',
+    };
+
+    const samlSsoSessionId = 'samlSsoSessionId';
+    const samlAuthorizationUrl = 'https://saml-connector/callback';
+
+    const mockContextWithIdpInitiatedSsoSession = {
+      ...mockContext,
+      ...createContextWithRouteParameters({
+        cookies: {
+          [idpInitiatedSamlSsoSessionCookieName]: samlSsoSessionId,
+        },
+      }),
+    };
+
+    afterAll(() => {
+      stub.restore();
+    });
+
+    beforeEach(() => {
+      getAuthorizationUrlMock.mockResolvedValueOnce(samlAuthorizationUrl);
+    });
+
+    it('should not check idp initiated sso session if the connector is not SAML', async () => {
+      await expect(
+        getSsoAuthorizationUrl(
+          mockContextWithIdpInitiatedSsoSession,
+          tenant,
+          wellConfiguredSsoConnector,
+          payload
+        )
+      ).resolves.toBe(samlAuthorizationUrl);
+
+      expect(findIdpInitiatedSamlSsoSessionMock).not.toHaveBeenCalled();
+    });
+
+    it('should not check idp initiated sso session if the session cookie is not found', async () => {
+      await expect(
+        getSsoAuthorizationUrl(mockContext, tenant, mockSamlSsoConnector, payload)
+      ).resolves.toBe(samlAuthorizationUrl);
+
+      expect(findIdpInitiatedSamlSsoSessionMock).not.toHaveBeenCalled();
+      expect(deleteIdpInitiatedSamlSsoSessionMock).not.toHaveBeenCalled();
+    });
+
+    it('should redirect to the connector authorization uri  if the idp initiated sso session is not found', async () => {
+      findIdpInitiatedSamlSsoSessionMock.mockResolvedValueOnce(null);
+
+      await expect(
+        getSsoAuthorizationUrl(
+          mockContextWithIdpInitiatedSsoSession,
+          tenant,
+          mockSamlSsoConnector,
+          payload
+        )
+      ).resolves.toBe(samlAuthorizationUrl);
+
+      expect(findIdpInitiatedSamlSsoSessionMock).toBeCalledWith(samlSsoSessionId);
+    });
+
+    it('should redirect to the connector authorization uri  if the idp initiated sso session connectorId mismatch', async () => {
+      findIdpInitiatedSamlSsoSessionMock.mockResolvedValueOnce({
+        id: samlSsoSessionId,
+        connectorId: 'foo',
+      });
+
+      await expect(
+        getSsoAuthorizationUrl(
+          mockContextWithIdpInitiatedSsoSession,
+          tenant,
+          mockSamlSsoConnector,
+          payload
+        )
+      ).resolves.toBe(samlAuthorizationUrl);
+
+      expect(findIdpInitiatedSamlSsoSessionMock).toBeCalledWith(samlSsoSessionId);
+      expect(deleteIdpInitiatedSamlSsoSessionMock).not.toHaveBeenCalled();
+    });
+
+    it('should redirect to the connector authorization uri  if the idp initiated sso session is expired', async () => {
+      findIdpInitiatedSamlSsoSessionMock.mockResolvedValueOnce({
+        id: samlSsoSessionId,
+        connectorId: mockSamlSsoConnector.id,
+        expiresAt: Date.now() - 1000 * 60 * 11,
+      });
+
+      await expect(
+        getSsoAuthorizationUrl(
+          mockContextWithIdpInitiatedSsoSession,
+          tenant,
+          mockSamlSsoConnector,
+          payload
+        )
+      ).resolves.toBe(samlAuthorizationUrl);
+
+      expect(findIdpInitiatedSamlSsoSessionMock).toBeCalledWith(samlSsoSessionId);
+
+      // Should delete the idp initiated sso session
+      expect(mockContextWithIdpInitiatedSsoSession.cookies.set).toBeCalledWith(
+        idpInitiatedSamlSsoSessionCookieName,
+        '',
+        {
+          httpOnly: true,
+          expires: new Date(0),
+        }
+      );
+      expect(deleteIdpInitiatedSamlSsoSessionMock).toBeCalledWith(samlSsoSessionId);
+    });
+
+    it('should assign the user info and redirect to the SSO callback uri if the idp initiated sso session is valid', async () => {
+      findIdpInitiatedSamlSsoSessionMock.mockResolvedValueOnce({
+        id: samlSsoSessionId,
+        connectorId: mockSamlSsoConnector.id,
+        expiresAt: Date.now() + 1000 * 60 * 10,
+        assertionContent: {
+          nameID: mockSsoUserInfo.id,
+          attributes: {
+            email: mockSsoUserInfo.email,
+            name: mockSsoUserInfo.name,
+            avatar: mockSsoUserInfo.avatar,
+          },
+        },
+      });
+
+      await expect(
+        getSsoAuthorizationUrl(
+          mockContextWithIdpInitiatedSsoSession,
+          tenant,
+          mockSamlSsoConnector,
+          payload
+        )
+      ).resolves.toBe(`${payload.redirectUri}/?state=${payload.state}`);
+
+      expect(findIdpInitiatedSamlSsoSessionMock).toBeCalledWith(samlSsoSessionId);
+
+      expect(assignSingleSignOnSessionResultMock).toBeCalledWith(
+        mockContextWithIdpInitiatedSsoSession,
+        mockProvider,
+        {
+          connectorId: mockSamlSsoConnector.id,
+          ...payload,
+          userInfo: mockSsoUserInfo,
+        }
+      );
+
+      // Should delete the idp initiated sso session
+      expect(mockContextWithIdpInitiatedSsoSession.cookies.set).toBeCalledWith(
+        idpInitiatedSamlSsoSessionCookieName,
+        '',
+        {
+          httpOnly: true,
+          expires: new Date(0),
+        }
+      );
+      expect(deleteIdpInitiatedSamlSsoSessionMock).toBeCalledWith(samlSsoSessionId);
+    });
+  });
 });
+/* eslint-enable max-lines */

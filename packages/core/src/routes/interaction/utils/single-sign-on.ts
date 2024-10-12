@@ -11,16 +11,16 @@ import { generateStandardId } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { idpInitiatedSamlSsoSessionCookieName } from '#src/constants/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
+import SamlConnector from '#src/sso/SamlConnector/index.js';
 import { ssoConnectorFactories, type SingleSignOnConnectorSession } from '#src/sso/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { idpInitiatedSamlSsoSessionCookieName } from '../../../constants/index.js';
-import { EnvSet } from '../../../env-set/index.js';
-import SamlConnector from '../../../sso/SamlConnector/index.js';
 import { type WithInteractionHooksContext } from '../middleware/koa-interaction-hooks.js';
 
 import {
