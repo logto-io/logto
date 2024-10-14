@@ -119,20 +119,6 @@ export class SsoConnectorApi {
       .json<SsoConnectorIdpInitiatedAuthConfig>();
   }
 
-  async updateSsoConnectorIdpInitiatedAuthConfig(
-    connectorId: string,
-    data: Pick<
-      Partial<CreateSsoConnectorIdpInitiatedAuthConfig>,
-      'defaultApplicationId' | 'redirectUri' | 'authParameters'
-    >
-  ) {
-    return authedAdminApi
-      .patch(`sso-connectors/${connectorId}/idp-initiated-auth-config`, {
-        json: data,
-      })
-      .json<SsoConnectorIdpInitiatedAuthConfig>();
-  }
-
   async deleteSsoConnectorIdpInitiatedAuthConfig(connectorId: string) {
     return authedAdminApi
       .delete(`sso-connectors/${connectorId}/idp-initiated-auth-config`)

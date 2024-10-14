@@ -23,7 +23,6 @@ export const mockSsoConnectorLibrary: jest.Mocked<SsoConnectorLibrary> = {
   getSsoConnectors: jest.fn(),
   getSsoConnectorById: jest.fn(),
   createSsoConnectorIdpInitiatedAuthConfig: jest.fn(),
-  updateSsoConnectorIdpInitiatedAuthConfig: jest.fn(),
   createIdpInitiatedSamlSsoSession: jest.fn(),
   getIdpInitiatedSamlSsoSignInUrl: jest.fn(),
 };

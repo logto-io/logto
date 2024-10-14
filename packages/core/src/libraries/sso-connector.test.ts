@@ -155,23 +155,6 @@ describe('SsoConnectorLibrary', () => {
     expect(insertIdpInitiatedAuthConfig).not.toHaveBeenCalled();
   });
 
-  it('should guard the application type if the defaultApplicationId is provided', async () => {
-    findApplicationById.mockResolvedValueOnce({
-      type: ApplicationType.MachineToMachine,
-      isThirdParty: false,
-    });
-
-    await expect(
-      ssoConnectorLibrary.updateSsoConnectorIdpInitiatedAuthConfig('connectorId', {
-        defaultApplicationId: 'appId',
-      })
-    ).rejects.toMatchError(
-      new RequestError('connector.saml_idp_initiated_auth_invalid_application_type')
-    );
-
-    expect(updateIdpInitiatedAuthConfig).not.toHaveBeenCalled();
-  });
-
   describe('getIdpInitiatedSamlSsoSignInUrl()', () => {
     const { getIdpInitiatedSamlSsoSignInUrl } = ssoConnectorLibrary;
 

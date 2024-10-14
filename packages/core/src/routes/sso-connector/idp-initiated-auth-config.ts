@@ -21,11 +21,7 @@ export default function ssoConnectorIdpInitiatedAuthConfigRoutes<T extends Manag
     {
       queries,
       libraries: {
-        ssoConnectors: {
-          getSsoConnectorById,
-          createSsoConnectorIdpInitiatedAuthConfig,
-          updateSsoConnectorIdpInitiatedAuthConfig,
-        },
+        ssoConnectors: { getSsoConnectorById, createSsoConnectorIdpInitiatedAuthConfig },
       },
     },
   ] = args;
@@ -94,33 +90,6 @@ export default function ssoConnectorIdpInitiatedAuthConfigRoutes<T extends Manag
       );
 
       ctx.body = configs;
-      ctx.status = 200;
-
-      return next();
-    }
-  );
-
-  router.patch(
-    pathPrefix,
-    koaGuard({
-      body: SsoConnectorIdpInitiatedAuthConfigs.updateGuard.pick({
-        defaultApplicationId: true,
-        redirectUri: true,
-        authParameters: true,
-      }),
-      params: z.object({ id: z.string().min(1) }),
-      response: SsoConnectorIdpInitiatedAuthConfigs.guard,
-      status: [200, 400, 404],
-    }),
-    async (ctx, next) => {
-      const {
-        body,
-        params: { id },
-      } = ctx.guard;
-
-      const config = await updateSsoConnectorIdpInitiatedAuthConfig(id, body);
-
-      ctx.body = config;
       ctx.status = 200;
 
       return next();
