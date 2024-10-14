@@ -15,8 +15,8 @@ import { buildInsertIntoWithPool } from '../database/insert-into.js';
 import { buildUpdateWhereWithPool } from '../database/update-where.js';
 
 const {
-  table: SsoConnectorIdpInitiatedAuthConfigsTable,
-  fields: SsoConnectorIdpInitiatedAuthConfigsFields,
+  table: ssoConnectorIdpInitiatedAuthConfigsTable,
+  fields: ssoConnectorIdpInitiatedAuthConfigsFields,
 } = convertToIdentifiers(SsoConnectorIdpInitiatedAuthConfigs);
 
 export default class SsoConnectorQueries extends SchemaQueries<
@@ -30,13 +30,13 @@ export default class SsoConnectorQueries extends SchemaQueries<
       returning: true,
       onConflict: {
         fields: [
-          SsoConnectorIdpInitiatedAuthConfigsFields.connectorId,
-          SsoConnectorIdpInitiatedAuthConfigsFields.tenantId,
+          ssoConnectorIdpInitiatedAuthConfigsFields.connectorId,
+          ssoConnectorIdpInitiatedAuthConfigsFields.tenantId,
         ],
         setExcludedFields: [
-          SsoConnectorIdpInitiatedAuthConfigsFields.defaultApplicationId,
-          SsoConnectorIdpInitiatedAuthConfigsFields.redirectUri,
-          SsoConnectorIdpInitiatedAuthConfigsFields.authParameters,
+          ssoConnectorIdpInitiatedAuthConfigsFields.defaultApplicationId,
+          ssoConnectorIdpInitiatedAuthConfigsFields.redirectUri,
+          ssoConnectorIdpInitiatedAuthConfigsFields.authParameters,
         ],
       },
     }
@@ -62,8 +62,8 @@ export default class SsoConnectorQueries extends SchemaQueries<
 
   async getIdpInitiatedAuthConfigByConnectorId(connectorId: string) {
     return this.pool.maybeOne<SsoConnectorIdpInitiatedAuthConfig>(sql`
-      SELECT * FROM ${SsoConnectorIdpInitiatedAuthConfigsTable}
-      WHERE ${SsoConnectorIdpInitiatedAuthConfigsFields.connectorId}=${connectorId}
+      SELECT * FROM ${ssoConnectorIdpInitiatedAuthConfigsTable}
+      WHERE ${ssoConnectorIdpInitiatedAuthConfigsFields.connectorId}=${connectorId}
     `);
   }
 }

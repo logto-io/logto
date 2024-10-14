@@ -96,7 +96,7 @@ devFeatureTest.describe('SAML IdP initiated authentication config', () => {
           redirectUri: 'https://example.com',
         }),
         {
-          code: 'connector.invalid_application_type',
+          code: 'connector.saml_idp_initiated_auth_invalid_application_type',
           status: 400,
         }
       );

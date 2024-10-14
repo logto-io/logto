@@ -36,7 +36,7 @@ const connector = {
   cannot_overwrite_metadata_for_non_standard_connector:
     "This connector's 'metadata' cannot be overwritten.",
   saml_only_idp_initiated_auth: 'Only the SAML connector can set up IdP initiated authentication.',
-  invalid_application_type:
+  saml_idp_initiated_auth_invalid_application_type:
     'SAML IdP initiated authentication can only be used with a first-party traditional web application.',
 };
 
