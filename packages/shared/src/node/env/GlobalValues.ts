@@ -104,6 +104,8 @@ export default class GlobalValues {
   /** Maximum number of clients to keep in a single database pool (i.e. per `Tenant` class). */
   public readonly databasePoolSize = Number(getEnv('DATABASE_POOL_SIZE', '20'));
 
+  public readonly databaseConnectionTimeout = Number(getEnv('DATABASE_CONNECTION_TIMEOUT', '5000'));
+
   /** Case insensitive username */
   public readonly isCaseSensitiveUsername = yes(getEnv('CASE_SENSITIVE_USERNAME', 'true'));
 
