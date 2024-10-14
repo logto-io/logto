@@ -6,7 +6,7 @@
   "dependencies": {
     "@logto/connector-kit": "workspace:^4.0.0",
     "@silverhand/essentials": "^2.9.1",
-    "fast-xml-parser": "^4.3.6",
+    "fast-xml-parser": "^4.4.1",
     "got": "^14.0.0",
     "samlify": "2.8.11",
     "snakecase-keys": "^8.0.1",
