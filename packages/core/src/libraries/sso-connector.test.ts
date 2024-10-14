@@ -114,45 +114,98 @@ describe('SsoConnectorLibrary', () => {
     expect(connector).toEqual(mockSsoConnector);
   });
 
-  it.each([
-    ApplicationType.MachineToMachine,
-    ApplicationType.Native,
-    ApplicationType.Protected,
-    ApplicationType.SPA,
-  ])(
-    'createSsoConnectorIdpInitiatedAuthConfig() should throw 400 if the application type is $s',
-    async (type) => {
-      findApplicationById.mockResolvedValueOnce({ type, isThirdParty: false });
+  describe('createSsoConnectorIdpInitiatedAuthConfig()', () => {
+    it.each([
+      ApplicationType.MachineToMachine,
+      ApplicationType.Native,
+      ApplicationType.Protected,
+      ApplicationType.SPA,
+    ])(
+      'createSsoConnectorIdpInitiatedAuthConfig() should throw 400 if the application type is $s, and autoSendAuthorizationRequest is enabled',
+      async (type) => {
+        findApplicationById.mockResolvedValueOnce({ type, isThirdParty: false });
+
+        await expect(
+          ssoConnectorLibrary.createSsoConnectorIdpInitiatedAuthConfig({
+            connectorId: 'connectorId',
+            defaultApplicationId: 'appId',
+            autoSendAuthorizationRequest: true,
+          })
+        ).rejects.toMatchError(
+          new RequestError('single_sign_on.idp_initiated_authentication_invalid_application_type', {
+            type: ApplicationType.Traditional,
+          })
+        );
+
+        expect(insertIdpInitiatedAuthConfig).not.toHaveBeenCalled();
+      }
+    );
+
+    it.each([ApplicationType.MachineToMachine, ApplicationType.Native, ApplicationType.Protected])(
+      'createSsoConnectorIdpInitiatedAuthConfig() should throw if 400 the application type is $s, and autoSendAuthorizationRequest is disabled',
+      async (type) => {
+        findApplicationById.mockResolvedValueOnce({ type, isThirdParty: false });
+
+        await expect(
+          ssoConnectorLibrary.createSsoConnectorIdpInitiatedAuthConfig({
+            connectorId: 'connectorId',
+            defaultApplicationId: 'appId',
+            autoSendAuthorizationRequest: false,
+            clientIdpInitiatedAuthCallbackUri: 'https://callback.com',
+          })
+        ).rejects.toMatchError(
+          new RequestError('single_sign_on.idp_initiated_authentication_invalid_application_type', {
+            type: `${ApplicationType.Traditional}, ${ApplicationType.SPA}`,
+          })
+        );
+
+        expect(insertIdpInitiatedAuthConfig).not.toHaveBeenCalled();
+      }
+    );
+
+    it('createSsoConnectorIdpInitiatedAuthConfig() should throw 400 if the application is third-party app', async () => {
+      findApplicationById.mockResolvedValueOnce({
+        type: ApplicationType.Traditional,
+        isThirdParty: true,
+      });
 
       await expect(
         ssoConnectorLibrary.createSsoConnectorIdpInitiatedAuthConfig({
           connectorId: 'connectorId',
           defaultApplicationId: 'appId',
+          autoSendAuthorizationRequest: true,
         })
       ).rejects.toMatchError(
-        new RequestError('connector.saml_idp_initiated_auth_invalid_application_type')
+        new RequestError('single_sign_on.idp_initiated_authentication_invalid_application_type', {
+          type: ApplicationType.Traditional,
+        })
       );
 
       expect(insertIdpInitiatedAuthConfig).not.toHaveBeenCalled();
-    }
-  );
-
-  it('createSsoConnectorIdpInitiatedAuthConfig() should throw 400 if the application is third-party app', async () => {
-    findApplicationById.mockResolvedValueOnce({
-      type: ApplicationType.Traditional,
-      isThirdParty: true,
     });
 
-    await expect(
-      ssoConnectorLibrary.createSsoConnectorIdpInitiatedAuthConfig({
-        connectorId: 'connectorId',
-        defaultApplicationId: 'appId',
-      })
-    ).rejects.toMatchError(
-      new RequestError('connector.saml_idp_initiated_auth_invalid_application_type')
-    );
+    it('should throw 400 error if the redirectUri is not registered', async () => {
+      findApplicationById.mockResolvedValueOnce({
+        type: ApplicationType.Traditional,
+        isThirdParty: false,
+        oidcClientMetadata: {
+          redirectUris: ['https://fallback.com'],
+        },
+      });
 
-    expect(insertIdpInitiatedAuthConfig).not.toHaveBeenCalled();
+      await expect(
+        ssoConnectorLibrary.createSsoConnectorIdpInitiatedAuthConfig({
+          connectorId: 'connectorId',
+          defaultApplicationId: 'appId',
+          autoSendAuthorizationRequest: true,
+          redirectUri: 'https://invalid.com',
+        })
+      ).rejects.toMatchError(
+        new RequestError('single_sign_on.idp_initiated_authentication_redirect_uri_not_registered')
+      );
+
+      expect(insertIdpInitiatedAuthConfig).not.toHaveBeenCalled();
+    });
   });
 
   describe('getIdpInitiatedSamlSsoSignInUrl()', () => {

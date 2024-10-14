@@ -13,6 +13,8 @@ import { tableToPathname } from '#src/utils/SchemaRouter.js';
 import assertThat from '../../utils/assert-that.js';
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
+import { ssoConnectorIdpInitiatedAuthConfigCreateGuard } from './type.js';
+
 export default function ssoConnectorIdpInitiatedAuthConfigRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>
 ) {
@@ -31,11 +33,7 @@ export default function ssoConnectorIdpInitiatedAuthConfigRoutes<T extends Manag
   router.put(
     pathPrefix,
     koaGuard({
-      body: SsoConnectorIdpInitiatedAuthConfigs.createGuard.pick({
-        defaultApplicationId: true,
-        redirectUri: true,
-        authParameters: true,
-      }),
+      body: ssoConnectorIdpInitiatedAuthConfigCreateGuard,
       params: z.object({ id: z.string().min(1) }),
       response: SsoConnectorIdpInitiatedAuthConfigs.guard,
       status: [200, 400, 404],
@@ -52,7 +50,7 @@ export default function ssoConnectorIdpInitiatedAuthConfigRoutes<T extends Manag
 
       assertThat(
         providerType === SsoProviderType.SAML,
-        new RequestError('connector.saml_only_idp_initiated_auth')
+        new RequestError('single_sign_on.idp_initiated_authentication_not_supported')
       );
 
       const config = await createSsoConnectorIdpInitiatedAuthConfig({
