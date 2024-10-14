@@ -100,7 +100,7 @@
         "id": "upload-public-servant",
         "name": "File Upload Public Servant",
         "description": "File Upload Public servant",
-        "specific_permissions": ["upload:file:*", "profile:user:read"]
+        "specific_permissions": ["upload:file:*"]
       },
       {
         "id": "bb-inactive-ps",
