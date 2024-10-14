@@ -13,6 +13,7 @@ import { convertToIdentifiers } from '#src/utils/sql.js';
 
 import { buildInsertIntoWithPool } from '../database/insert-into.js';
 import { buildUpdateWhereWithPool } from '../database/update-where.js';
+import { DeletionError } from '../errors/SlonikError/index.js';
 
 const {
   table: ssoConnectorIdpInitiatedAuthConfigsTable,
@@ -65,5 +66,16 @@ export default class SsoConnectorQueries extends SchemaQueries<
       SELECT * FROM ${ssoConnectorIdpInitiatedAuthConfigsTable}
       WHERE ${ssoConnectorIdpInitiatedAuthConfigsFields.connectorId}=${connectorId}
     `);
+  }
+
+  async deleteIdpInitiatedAuthConfigByConnectorId(connectorId: string) {
+    const { rowCount } = await this.pool.query(sql`
+      DELETE FROM ${ssoConnectorIdpInitiatedAuthConfigsTable}
+      WHERE ${ssoConnectorIdpInitiatedAuthConfigsFields.connectorId}=${connectorId}
+    `);
+
+    if (rowCount < 1) {
+      throw new DeletionError(SsoConnectorIdpInitiatedAuthConfigs.table);
+    }
   }
 }

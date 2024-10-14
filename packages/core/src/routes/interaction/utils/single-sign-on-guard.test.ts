@@ -9,11 +9,12 @@ const { jest } = import.meta;
 
 const getAvailableSsoConnectorsMock = jest.fn();
 
-const mockSsoConnectorLibrary: SsoConnectorLibrary = {
+const mockSsoConnectorLibrary: jest.Mocked<SsoConnectorLibrary> = {
   getAvailableSsoConnectors: getAvailableSsoConnectorsMock,
   getSsoConnectors: jest.fn(),
   getSsoConnectorById: jest.fn(),
   createSsoConnectorIdpInitiatedAuthConfig: jest.fn(),
+  updateSsoConnectorIdpInitiatedAuthConfig: jest.fn(),
 };
 
 describe('verifyEmailIdentifier tests', () => {

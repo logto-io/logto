@@ -19,6 +19,7 @@ import { mockLogtoConfigsLibrary } from '#src/test-utils/mock-libraries.js';
 
 import { createCloudConnectionLibrary } from '../cloud-connection.js';
 import { createConnectorLibrary } from '../connector.js';
+import { type SsoConnectorLibrary } from '../sso-connector.js';
 
 const { jest } = import.meta;
 
@@ -40,11 +41,12 @@ const signInExperiences = {
 };
 const { findDefaultSignInExperience, updateDefaultSignInExperience } = signInExperiences;
 
-const ssoConnectorLibrary = {
+const ssoConnectorLibrary: jest.Mocked<SsoConnectorLibrary> = {
   getSsoConnectors: jest.fn(),
   getSsoConnectorById: jest.fn(),
   getAvailableSsoConnectors: jest.fn(),
   createSsoConnectorIdpInitiatedAuthConfig: jest.fn(),
+  updateSsoConnectorIdpInitiatedAuthConfig: jest.fn(),
 };
 
 const { MockQueries } = await import('#src/test-utils/tenant.js');

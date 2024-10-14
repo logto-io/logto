@@ -39,117 +39,201 @@ devFeatureTest.describe('SAML IdP initiated authentication config', () => {
     await ssoConnectorsApi.cleanUp();
   });
 
-  it('should throw 404 if the connector is not found', async () => {
-    const defaultApplicationId = applications.get('traditional')!.id;
+  describe('Set IdP-initiated authentication configuration', () => {
+    it('should throw 404 if the connector is not found', async () => {
+      const defaultApplicationId = applications.get('traditional')!.id;
 
-    await expectRejects(
-      ssoConnectorsApi.setSsoConnectorIdpInitiatedAuthConfig({
-        connectorId: 'not-found',
-        defaultApplicationId,
-        redirectUri: 'https://example.com',
-      }),
-      {
-        code: 'entity.not_exists_with_id',
-        status: 404,
-      }
-    );
-  });
-
-  it('should throw 400 if the connector is not SAML', async () => {
-    const defaultApplicationId = applications.get('traditional')!.id;
-
-    await expectRejects(
-      ssoConnectorsApi.setSsoConnectorIdpInitiatedAuthConfig({
-        connectorId: ssoConnectors.get('oidc')!.id,
-        defaultApplicationId,
-        redirectUri: 'https://example.com',
-      }),
-      {
-        code: 'connector.saml_only_idp_initiated_auth',
-        status: 400,
-      }
-    );
-  });
-
-  it('should throw 404 if the application is not found', async () => {
-    await expectRejects(
-      ssoConnectorsApi.setSsoConnectorIdpInitiatedAuthConfig({
-        connectorId: ssoConnectors.get('saml')!.id,
-        defaultApplicationId: 'not-found',
-        redirectUri: 'https://example.com',
-      }),
-      {
-        code: 'entity.not_exists_with_id',
-        status: 404,
-      }
-    );
-  });
-
-  it.each(['spa', 'thirdParty'])(
-    'should throw 400 if the application is not a first-party traditional web application',
-    async (applicationKey) => {
-      const defaultApplicationId = applications.get(applicationKey)!.id;
       await expectRejects(
         ssoConnectorsApi.setSsoConnectorIdpInitiatedAuthConfig({
-          connectorId: ssoConnectors.get('saml')!.id,
+          connectorId: 'not-found',
           defaultApplicationId,
           redirectUri: 'https://example.com',
         }),
         {
-          code: 'connector.saml_idp_initiated_auth_invalid_application_type',
+          code: 'entity.not_exists_with_id',
+          status: 404,
+        }
+      );
+    });
+
+    it('should throw 400 if the connector is not SAML', async () => {
+      const defaultApplicationId = applications.get('traditional')!.id;
+
+      await expectRejects(
+        ssoConnectorsApi.setSsoConnectorIdpInitiatedAuthConfig({
+          connectorId: ssoConnectors.get('oidc')!.id,
+          defaultApplicationId,
+          redirectUri: 'https://example.com',
+        }),
+        {
+          code: 'connector.saml_only_idp_initiated_auth',
           status: 400,
         }
       );
-    }
-  );
-
-  it('should create a new IdP-initiated authentication configuration for a SAML SSO connector', async () => {
-    const defaultApplicationId = applications.get('traditional')!.id;
-    const redirectUri = 'https://example.com';
-    const authParameters = {
-      resources: ['resource1', 'resource2'],
-      scopes: ['profile', 'email'],
-    };
-    const connectorId = ssoConnectors.get('saml')!.id;
-
-    const config = await ssoConnectorsApi.setSsoConnectorIdpInitiatedAuthConfig({
-      connectorId,
-      defaultApplicationId,
-      redirectUri,
-      authParameters,
     });
 
-    expect(config).toMatchObject({
-      defaultApplicationId,
-      redirectUri,
-      authParameters,
+    it('should throw 404 if the application is not found', async () => {
+      await expectRejects(
+        ssoConnectorsApi.setSsoConnectorIdpInitiatedAuthConfig({
+          connectorId: ssoConnectors.get('saml')!.id,
+          defaultApplicationId: 'not-found',
+          redirectUri: 'https://example.com',
+        }),
+        {
+          code: 'entity.not_exists_with_id',
+          status: 404,
+        }
+      );
     });
 
-    const fetchedConfig = await ssoConnectorsApi.getSsoConnectorIdpInitiatedAuthConfig(connectorId);
+    it.each(['spa', 'thirdParty'])(
+      'should throw 400 if the application is not a first-party traditional web application',
+      async (applicationKey) => {
+        const defaultApplicationId = applications.get(applicationKey)!.id;
+        await expectRejects(
+          ssoConnectorsApi.setSsoConnectorIdpInitiatedAuthConfig({
+            connectorId: ssoConnectors.get('saml')!.id,
+            defaultApplicationId,
+            redirectUri: 'https://example.com',
+          }),
+          {
+            code: 'connector.saml_idp_initiated_auth_invalid_application_type',
+            status: 400,
+          }
+        );
+      }
+    );
 
-    expect(fetchedConfig).toMatchObject(config);
+    it('should create a new IdP-initiated authentication configuration for a SAML SSO connector', async () => {
+      const defaultApplicationId = applications.get('traditional')!.id;
+      const redirectUri = 'https://example.com';
+      const authParameters = {
+        resources: ['resource1', 'resource2'],
+        scopes: ['profile', 'email'],
+      };
+      const connectorId = ssoConnectors.get('saml')!.id;
+
+      const config = await ssoConnectorsApi.setSsoConnectorIdpInitiatedAuthConfig({
+        connectorId,
+        defaultApplicationId,
+        redirectUri,
+        authParameters,
+      });
+
+      expect(config).toMatchObject({
+        defaultApplicationId,
+        redirectUri,
+        authParameters,
+      });
+
+      const fetchedConfig = await ssoConnectorsApi.getSsoConnectorIdpInitiatedAuthConfig(
+        connectorId
+      );
+
+      expect(fetchedConfig).toMatchObject(config);
+    });
+
+    it('should cascade delete the IdP-initiated authentication configuration when the application is deleted', async () => {
+      const application = await createApplication(
+        `web-app-${randomString()}`,
+        ApplicationType.Traditional
+      );
+      const connectorId = ssoConnectors.get('saml')!.id;
+
+      const config = await ssoConnectorsApi.setSsoConnectorIdpInitiatedAuthConfig({
+        connectorId,
+        defaultApplicationId: application.id,
+        redirectUri: 'https://example.com',
+      });
+
+      expect(config).not.toBeNull();
+
+      await deleteApplication(application.id);
+
+      await expectRejects(ssoConnectorsApi.getSsoConnectorIdpInitiatedAuthConfig(connectorId), {
+        code: 'entity.not_found',
+        status: 404,
+      });
+    });
   });
 
-  it('should cascade delete the IdP-initiated authentication configuration when the application is deleted', async () => {
-    const application = await createApplication(
-      `web-app-${randomString()}`,
-      ApplicationType.Traditional
-    );
-    const connectorId = ssoConnectors.get('saml')!.id;
-
-    const config = await ssoConnectorsApi.setSsoConnectorIdpInitiatedAuthConfig({
-      connectorId,
-      defaultApplicationId: application.id,
-      redirectUri: 'https://example.com',
+  describe('Update IdP-initiated authentication configuration', () => {
+    it('should throw 404 if the application is not found', async () => {
+      await expectRejects(
+        ssoConnectorsApi.updateSsoConnectorIdpInitiatedAuthConfig(ssoConnectors.get('saml')!.id, {
+          defaultApplicationId: 'not-found',
+          redirectUri: 'https://example.com',
+        }),
+        {
+          code: 'entity.not_exists_with_id',
+          status: 404,
+        }
+      );
     });
 
-    expect(config).not.toBeNull();
+    it.each(['spa', 'thirdParty'])(
+      'should throw 400 if the application is not a first-party traditional web application',
+      async (applicationKey) => {
+        await expectRejects(
+          ssoConnectorsApi.updateSsoConnectorIdpInitiatedAuthConfig(ssoConnectors.get('saml')!.id, {
+            defaultApplicationId: applications.get(applicationKey)!.id,
+            redirectUri: 'https://example.com',
+          }),
+          {
+            code: 'connector.saml_idp_initiated_auth_invalid_application_type',
+            status: 400,
+          }
+        );
+      }
+    );
 
-    await deleteApplication(application.id);
+    it('should update the IdP-initiated authentication configuration for a SAML SSO connector', async () => {
+      const connectorId = ssoConnectors.get('saml')!.id;
+      const defaultApplicationId = applications.get('traditional')!.id;
 
-    await expectRejects(ssoConnectorsApi.getSsoConnectorIdpInitiatedAuthConfig(connectorId), {
-      code: 'entity.not_found',
-      status: 404,
+      const config = await ssoConnectorsApi.setSsoConnectorIdpInitiatedAuthConfig({
+        connectorId,
+        defaultApplicationId,
+        redirectUri: 'https://example.com',
+      });
+
+      const updatedConfig = await ssoConnectorsApi.updateSsoConnectorIdpInitiatedAuthConfig(
+        connectorId,
+        {
+          redirectUri: 'https://updated.com',
+          authParameters: {
+            resources: ['resource1', 'resource2'],
+            scopes: ['profile', 'email'],
+          },
+        }
+      );
+
+      expect(updatedConfig).toMatchObject({
+        connectorId,
+        defaultApplicationId,
+        redirectUri: 'https://updated.com',
+        authParameters: {
+          resources: ['resource1', 'resource2'],
+          scopes: ['profile', 'email'],
+        },
+      });
+    });
+
+    it('should throw 404 if the IdP-initiated authentication configuration is not found', async () => {
+      const connectorId = ssoConnectors.get('saml')!.id;
+
+      await ssoConnectorsApi.deleteSsoConnectorIdpInitiatedAuthConfig(connectorId);
+
+      await expectRejects(
+        ssoConnectorsApi.updateSsoConnectorIdpInitiatedAuthConfig(connectorId, {
+          defaultApplicationId: applications.get('traditional')!.id,
+          redirectUri: 'https://example.com',
+        }),
+        {
+          code: 'entity.not_exists',
+          status: 404,
+        }
+      );
     });
   });
 });
