@@ -108,8 +108,7 @@ devFeatureTest.describe('SAML IdP initiated authentication config', () => {
       const defaultApplicationId = applications.get('traditional')!.id;
       const redirectUri = 'https://example.com';
       const authParameters = {
-        resources: ['resource1', 'resource2'],
-        scopes: ['profile', 'email'],
+        scope: 'profile email',
       };
       const connectorId = ssoConnectors.get('saml')!.id;
 
@@ -202,8 +201,8 @@ devFeatureTest.describe('SAML IdP initiated authentication config', () => {
         {
           redirectUri: 'https://updated.com',
           authParameters: {
-            resources: ['resource1', 'resource2'],
-            scopes: ['profile', 'email'],
+            resource: 'test_api.com',
+            scopes: 'profile email',
           },
         }
       );
@@ -213,8 +212,8 @@ devFeatureTest.describe('SAML IdP initiated authentication config', () => {
         defaultApplicationId,
         redirectUri: 'https://updated.com',
         authParameters: {
-          resources: ['resource1', 'resource2'],
-          scopes: ['profile', 'email'],
+          resource: 'test_api.com',
+          scopes: 'profile email',
         },
       });
     });

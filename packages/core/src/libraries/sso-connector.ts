@@ -1,11 +1,13 @@
+import { type DirectSignInOptions, Prompt, QueryKey, withReservedScopes } from '@logto/js';
 import {
   ApplicationType,
   type SsoSamlAssertionContent,
   type CreateSsoConnectorIdpInitiatedAuthConfig,
   type SupportedSsoConnector,
+  type SsoConnectorIdpInitiatedAuthConfig,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { assert } from '@silverhand/essentials';
+import { assert, trySafe } from '@silverhand/essentials';
 
 import { defaultIdPInitiatedSamlSsoSessionTtl } from '#src/constants/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -134,6 +136,58 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
     });
   };
 
+  /**
+   * Build the IdP initiated SAML SSO authentication sign-in URL.
+   *
+   * @remarks
+   * For IdP-initiated SAML SSO flow use only. Generate the sign-in URL for the user to sign in.
+   *
+   * @param issuer The oidc issuer endpoint of the current tenant.
+   * @param authConfig The IdP-initiated SAML SSO authentication configuration.
+   *
+   * @throw {RequestError} Throws a 400 error if the redirect URI is not provided and the default application does not have a registered redirect URI.
+   */
+  const getIdpInitiatedSamlSsoSignInUrl = async (
+    issuer: string,
+    authConfig: SsoConnectorIdpInitiatedAuthConfig
+  ) => {
+    const {
+      connectorId,
+      defaultApplicationId,
+      authParameters: { scope, ...extraParams },
+    } = authConfig;
+
+    // Get the first registered redirect URI of the default application if not provided
+    const redirectUri =
+      authConfig.redirectUri ??
+      (await trySafe(async () => {
+        const { oidcClientMetadata } = await applications.findApplicationById(defaultApplicationId);
+        return oidcClientMetadata.redirectUris[0];
+      }));
+
+    if (!redirectUri) {
+      throw new RequestError('oidc.invalid_redirect_uri');
+    }
+
+    const directSignInOptions: DirectSignInOptions = {
+      method: 'sso',
+      target: connectorId,
+    };
+
+    const queryParameters = new URLSearchParams({
+      [QueryKey.ClientId]: defaultApplicationId,
+      [QueryKey.RedirectUri]: redirectUri,
+      [QueryKey.ResponseType]: 'code',
+      [QueryKey.Prompt]: Prompt.Login,
+      [QueryKey.DirectSignIn]: `${directSignInOptions.method}:${directSignInOptions.target}`,
+      ...extraParams,
+    });
+
+    queryParameters.append(QueryKey.Scope, withReservedScopes(scope?.split(' ') ?? []));
+
+    return new URL(`${issuer}/auth?${queryParameters.toString()}`);
+  };
+
   return {
     getSsoConnectors,
     getAvailableSsoConnectors,
@@ -141,5 +195,6 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
     createSsoConnectorIdpInitiatedAuthConfig,
     updateSsoConnectorIdpInitiatedAuthConfig,
     createIdpInitiatedSamlSsoSession,
+    getIdpInitiatedSamlSsoSignInUrl,
   };
 };

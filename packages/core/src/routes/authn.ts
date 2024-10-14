@@ -236,8 +236,14 @@ export default function authnRoutes<T extends AnonymousRouter>(
         });
 
         // TODO: redirect to SSO direct sign-in flow
+        const signInUrl = await ssoConnectorsLibrary.getIdpInitiatedSamlSsoSignInUrl(
+          envSet.oidc.issuer,
+          idpInitiatedAuthConfig
+        );
 
-        return next();
+        ctx.redirect(signInUrl.toString());
+
+        return;
       }
 
       // TODO: remove this assertion after the IdP initiated SSO flow is implemented

@@ -15,11 +15,13 @@ import {
 import { WellKnownCache } from '#src/caches/well-known.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
-import { mockLogtoConfigsLibrary } from '#src/test-utils/mock-libraries.js';
+import {
+  mockLogtoConfigsLibrary,
+  mockSsoConnectorLibrary,
+} from '#src/test-utils/mock-libraries.js';
 
 import { createCloudConnectionLibrary } from '../cloud-connection.js';
 import { createConnectorLibrary } from '../connector.js';
-import { type SsoConnectorLibrary } from '../sso-connector.js';
 
 const { jest } = import.meta;
 
@@ -40,15 +42,6 @@ const signInExperiences = {
   ),
 };
 const { findDefaultSignInExperience, updateDefaultSignInExperience } = signInExperiences;
-
-const ssoConnectorLibrary: jest.Mocked<SsoConnectorLibrary> = {
-  getSsoConnectors: jest.fn(),
-  getSsoConnectorById: jest.fn(),
-  getAvailableSsoConnectors: jest.fn(),
-  createSsoConnectorIdpInitiatedAuthConfig: jest.fn(),
-  updateSsoConnectorIdpInitiatedAuthConfig: jest.fn(),
-  createIdpInitiatedSamlSsoSession: jest.fn(),
-};
 
 const { MockQueries } = await import('#src/test-utils/tenant.js');
 
@@ -75,7 +68,7 @@ const { validateLanguageInfo, removeUnavailableSocialConnectorTargets, getFullSi
   createSignInExperienceLibrary(
     queries,
     connectorLibrary,
-    ssoConnectorLibrary,
+    mockSsoConnectorLibrary,
     cloudConnection,
     new WellKnownCache('foo', new TtlCache())
   );
@@ -157,7 +150,7 @@ describe('getFullSignInExperience()', () => {
   it('should return full sign-in experience', async () => {
     findDefaultSignInExperience.mockResolvedValueOnce(mockSignInExperience);
     getLogtoConnectors.mockResolvedValueOnce(mockSocialConnectors);
-    ssoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValueOnce([
+    mockSsoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValueOnce([
       wellConfiguredSsoConnector,
     ]);
 
@@ -191,7 +184,7 @@ describe('getFullSignInExperience()', () => {
       socialSignInConnectorTargets: ['github', 'facebook', 'google'],
     });
     getLogtoConnectors.mockResolvedValueOnce([mockGoogleConnector, mockGithubConnector]);
-    ssoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValueOnce([
+    mockSsoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValueOnce([
       wellConfiguredSsoConnector,
     ]);
 
@@ -238,7 +231,7 @@ describe('get sso connectors', () => {
 
     const { ssoConnectors } = await getFullSignInExperience({ locale: 'en' });
 
-    expect(ssoConnectorLibrary.getAvailableSsoConnectors).not.toBeCalled();
+    expect(mockSsoConnectorLibrary.getAvailableSsoConnectors).not.toBeCalled();
 
     expect(ssoConnectors).toEqual([]);
   });
@@ -247,7 +240,7 @@ describe('get sso connectors', () => {
     getLogtoConnectors.mockResolvedValueOnce(mockSocialConnectors);
     findDefaultSignInExperience.mockResolvedValueOnce(mockSignInExperience);
 
-    ssoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValueOnce([
+    mockSsoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValueOnce([
       wellConfiguredSsoConnector,
     ]);
 
@@ -271,7 +264,7 @@ describe('get sso connectors', () => {
 
     const displayName = 'Logto Connector';
 
-    ssoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValueOnce([
+    mockSsoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValueOnce([
       {
         ...wellConfiguredSsoConnector,
         branding: {
