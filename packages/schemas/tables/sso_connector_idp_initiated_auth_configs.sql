@@ -12,9 +12,13 @@ create table sso_connector_idp_initiated_auth_configs (
   redirect_uri text,
   /** Additional OIDC auth parameters. */
   auth_parameters jsonb /* @use IdpInitiatedAuthParams */ not null default '{}'::jsonb,
+  /** Whether to auto-trigger the auth flow on an IdP-initiated auth request. */
+  auto_send_authorization_request boolean not null default false,
+  /** The client side callback URI for handling IdP-initiated auth request. */
+  client_idp_initiated_auth_callback_uri text,
   created_at timestamptz not null default(now()),
   primary key (tenant_id, connector_id),
-  /** Insure the application type is Traditional. */
+  /** Insure the application type is Traditional or SPA. */
   constraint application_type
-    check (check_application_type(default_application_id, 'Traditional'))
+    check (check_application_type(default_application_id, 'Traditional', 'SPA'))
 );
