@@ -96,7 +96,7 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
 
       assertThat(
         application.type === ApplicationType.Traditional && !application.isThirdParty,
-        new RequestError('connector.invalid_application_type')
+        new RequestError('connector.saml_idp_initiated_auth_invalid_application_type')
       );
     }
 

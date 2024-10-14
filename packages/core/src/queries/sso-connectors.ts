@@ -70,8 +70,8 @@ export default class SsoConnectorQueries extends SchemaQueries<
 
   async deleteIdpInitiatedAuthConfigByConnectorId(connectorId: string) {
     const { rowCount } = await this.pool.query(sql`
-      DELETE FROM ${SsoConnectorIdpInitiatedAuthConfigsTable}
-      WHERE ${SsoConnectorIdpInitiatedAuthConfigsFields.connectorId}=${connectorId}
+      DELETE FROM ${ssoConnectorIdpInitiatedAuthConfigsTable}
+      WHERE ${ssoConnectorIdpInitiatedAuthConfigsFields.connectorId}=${connectorId}
     `);
 
     if (rowCount < 1) {
