@@ -129,7 +129,9 @@ describe('SsoConnectorLibrary', () => {
           connectorId: 'connectorId',
           defaultApplicationId: 'appId',
         })
-      ).rejects.toMatchError(new RequestError('connector.invalid_application_type'));
+      ).rejects.toMatchError(
+        new RequestError('connector.saml_idp_initiated_auth_invalid_application_type')
+      );
 
       expect(insertIdpInitiatedAuthConfig).not.toHaveBeenCalled();
     }
@@ -146,7 +148,9 @@ describe('SsoConnectorLibrary', () => {
         connectorId: 'connectorId',
         defaultApplicationId: 'appId',
       })
-    ).rejects.toMatchError(new RequestError('connector.invalid_application_type'));
+    ).rejects.toMatchError(
+      new RequestError('connector.saml_idp_initiated_auth_invalid_application_type')
+    );
 
     expect(insertIdpInitiatedAuthConfig).not.toHaveBeenCalled();
   });
@@ -161,7 +165,9 @@ describe('SsoConnectorLibrary', () => {
       ssoConnectorLibrary.updateSsoConnectorIdpInitiatedAuthConfig('connectorId', {
         defaultApplicationId: 'appId',
       })
-    ).rejects.toMatchError(new RequestError('connector.invalid_application_type'));
+    ).rejects.toMatchError(
+      new RequestError('connector.saml_idp_initiated_auth_invalid_application_type')
+    );
 
     expect(updateIdpInitiatedAuthConfig).not.toHaveBeenCalled();
   });
