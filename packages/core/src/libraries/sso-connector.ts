@@ -1,17 +1,19 @@
 import {
   ApplicationType,
+  type SsoSamlAssertionContent,
   type CreateSsoConnectorIdpInitiatedAuthConfig,
   type SupportedSsoConnector,
 } from '@logto/schemas';
+import { generateStandardId } from '@logto/shared';
 import { assert } from '@silverhand/essentials';
 
+import { defaultIdPInitiatedSamlSsoSessionTtl } from '#src/constants/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import { isSupportedSsoConnector } from '#src/sso/utils.js';
 import type Queries from '#src/tenants/Queries.js';
-
-import assertThat from '../utils/assert-that.js';
-import { type OmitAutoSetFields } from '../utils/sql.js';
+import assertThat from '#src/utils/assert-that.js';
+import { type OmitAutoSetFields } from '#src/utils/sql.js';
 
 export type SsoConnectorLibrary = ReturnType<typeof createSsoConnectorLibrary>;
 
@@ -107,11 +109,37 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
     });
   };
 
+  /**
+   * Records the verified SAML assertion content to the database.
+   * @remarks
+   * For IdP-initiated SAML SSO flow use only.
+   * Save the SAML assertion content to the database
+   * The session ID will be used to retrieve the SAML assertion content when the user is redirected to Logto SSO authentication flow.
+   */
+  const createIdpInitiatedSamlSsoSession = async (
+    connectorId: string,
+    assertionContent: SsoSamlAssertionContent
+  ) => {
+    // If the assertion has a notOnOrAfter condition, we will use it as the expiration date,
+    // otherwise use the creation date + 10 minutes
+    const expiresAt = assertionContent.conditions?.notOnOrAfter
+      ? new Date(assertionContent.conditions.notOnOrAfter)
+      : new Date(Date.now() + defaultIdPInitiatedSamlSsoSessionTtl);
+
+    return ssoConnectors.insertIdpInitiatedSamlSsoSession({
+      id: generateStandardId(),
+      connectorId,
+      assertionContent,
+      expiresAt: expiresAt.valueOf(),
+    });
+  };
+
   return {
     getSsoConnectors,
     getAvailableSsoConnectors,
     getSsoConnectorById,
     createSsoConnectorIdpInitiatedAuthConfig,
     updateSsoConnectorIdpInitiatedAuthConfig,
+    createIdpInitiatedSamlSsoSession,
   };
 };
