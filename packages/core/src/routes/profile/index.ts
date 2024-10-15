@@ -1,4 +1,4 @@
-import { emailRegEx, usernameRegEx, UserScope } from '@logto/core-kit';
+import { emailRegEx, phoneRegEx, usernameRegEx, UserScope } from '@logto/core-kit';
 import { VerificationType, userProfileResponseGuard, userProfileGuard } from '@logto/schemas';
 import { z } from 'zod';
 
@@ -155,7 +155,7 @@ export default function profileRoutes<T extends UserRouter>(
         verificationRecordId: z.string(),
         newIdentifierVerificationRecordId: z.string(),
       }),
-      status: [204, 400, 403],
+      status: [204, 400, 401],
     }),
     async (ctx, next) => {
       const { id: userId, scopes } = ctx.auth;
@@ -183,6 +183,51 @@ export default function profileRoutes<T extends UserRouter>(
       await checkIdentifierCollision({ primaryEmail: email }, userId);
 
       const updatedUser = await updateUserById(userId, { primaryEmail: email });
+
+      ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/profile/primary-phone',
+    koaGuard({
+      body: z.object({
+        phone: z.string().regex(phoneRegEx),
+        verificationRecordId: z.string(),
+        newIdentifierVerificationRecordId: z.string(),
+      }),
+      status: [204, 400, 401],
+    }),
+    async (ctx, next) => {
+      const { id: userId, scopes } = ctx.auth;
+      const { phone, verificationRecordId, newIdentifierVerificationRecordId } = ctx.guard.body;
+
+      assertThat(scopes.has(UserScope.Phone), 'auth.unauthorized');
+
+      await verifyUserSensitivePermission({
+        userId,
+        id: verificationRecordId,
+        queries,
+        libraries,
+      });
+
+      // Check new identifier
+      const newVerificationRecord = await buildVerificationRecordByIdAndType({
+        type: VerificationType.PhoneVerificationCode,
+        id: newIdentifierVerificationRecordId,
+        queries,
+        libraries,
+      });
+      assertThat(newVerificationRecord.isVerified, 'verification_record.not_found');
+      assertThat(newVerificationRecord.identifier.value === phone, 'verification_record.not_found');
+
+      await checkIdentifierCollision({ primaryPhone: phone }, userId);
+
+      const updatedUser = await updateUserById(userId, { primaryPhone: phone });
 
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
 
