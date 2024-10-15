@@ -56,6 +56,64 @@
         }
       }
     },
+    "/api/profile/profile": {
+      "patch": {
+        "operationId": "UpdateOtherProfile",
+        "summary": "Update other profile",
+        "description": "Update other profile for the user, only the fields that are passed in will be updated, to update the address, the user must have the address scope.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "familyName": {
+                    "description": "The new family name for the user."
+                  },
+                  "givenName": {
+                    "description": "The new given name for the user."
+                  },
+                  "middleName": {
+                    "description": "The new middle name for the user."
+                  },
+                  "nickname": {
+                    "description": "The new nickname for the user."
+                  },
+                  "preferredUsername": {
+                    "description": "The new preferred username for the user."
+                  },
+                  "profile": {
+                    "description": "The new profile for the user."
+                  },
+                  "website": {
+                    "description": "The new website for the user."
+                  },
+                  "gender": {
+                    "description": "The new gender for the user."
+                  },
+                  "birthdate": {
+                    "description": "The new birthdate for the user."
+                  },
+                  "zoneinfo": {
+                    "description": "The new zoneinfo for the user."
+                  },
+                  "locale": {
+                    "description": "The new locale for the user."
+                  },
+                  "address": {
+                    "description": "The new address for the user."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The profile was updated successfully."
+          }
+        }
+      }
+    },
     "/api/profile/password": {
       "post": {
         "operationId": "UpdatePassword",
