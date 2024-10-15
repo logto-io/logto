@@ -27,3 +27,17 @@ export const wellConfiguredSsoConnector = {
   syncProfile: true,
   createdAt: Date.now(),
 } satisfies SsoConnector;
+
+export const mockSamlSsoConnector = {
+  id: 'mock-saml-sso-connector',
+  tenantId: 'mock-tenant',
+  providerName: SsoProviderName.SAML,
+  connectorName: 'mock-connector-name',
+  config: {
+    metadata: 'mock-metadata',
+  },
+  domains: ['foo.com'],
+  branding: {},
+  syncProfile: true,
+  createdAt: Date.now(),
+} satisfies SsoConnector;

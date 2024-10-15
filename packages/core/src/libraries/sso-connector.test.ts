@@ -1,4 +1,4 @@
-import { Prompt, QueryKey, withReservedScopes } from '@logto/js';
+import { Prompt, QueryKey, ReservedScope, UserScope } from '@logto/js';
 import { ApplicationType, type SsoConnectorIdpInitiatedAuthConfig } from '@logto/schemas';
 
 import { mockSsoConnector, wellConfiguredSsoConnector } from '#src/__mocks__/sso.js';
@@ -204,7 +204,7 @@ describe('SsoConnectorLibrary', () => {
       for (const [key, value] of Object.entries(defaultQueryParameters)) {
         expect(parameters.get(key)).toBe(value);
       }
-      expect(parameters.get(QueryKey.Scope)).toBe(withReservedScopes());
+      expect(parameters.get(QueryKey.Scope)).toBe(`${ReservedScope.OpenId} ${UserScope.Profile}`);
     });
 
     it('should use the provided redirectUri', async () => {
@@ -233,7 +233,7 @@ describe('SsoConnectorLibrary', () => {
     });
 
     it('should append extra scopes to the query parameters', async () => {
-      const scopes = ['scope1', 'scope2'];
+      const scopes = ['organization', 'email', 'profile'];
 
       const url = await getIdpInitiatedSamlSsoSignInUrl(issuer, {
         ...authConfig,
@@ -243,7 +243,9 @@ describe('SsoConnectorLibrary', () => {
       });
 
       const parameters = new URLSearchParams(url.search);
-      expect(parameters.get(QueryKey.Scope)).toBe(withReservedScopes(scopes));
+      expect(parameters.get(QueryKey.Scope)).toBe(
+        `${ReservedScope.OpenId} ${UserScope.Profile} organization email`
+      );
     });
 
     it('should be able to append extra query parameters', async () => {

@@ -6,6 +6,7 @@ import {
   type SsoConnectorKeys,
   SsoConnectors,
   IdpInitiatedSamlSsoSessions,
+  type IdpInitiatedSamlSsoSession,
 } from '@logto/schemas';
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
@@ -91,5 +92,13 @@ export default class SsoConnectorQueries extends SchemaQueries<
     if (rowCount < 1) {
       throw new DeletionError(SsoConnectorIdpInitiatedAuthConfigs.table);
     }
+  }
+
+  async findIdpInitiatedSamlSsoSessionById(id: string) {
+    const { table, fields } = convertToIdentifiers(IdpInitiatedSamlSsoSessions);
+    return this.pool.maybeOne<IdpInitiatedSamlSsoSession>(sql`
+      SELECT * FROM ${table}
+      WHERE ${fields.id}=${id}
+    `);
   }
 }
