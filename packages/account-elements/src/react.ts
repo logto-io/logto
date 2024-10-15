@@ -2,6 +2,8 @@ import { createComponent } from '@lit/react';
 
 import { LogtoAccountProvider } from './index.js';
 
+export type { AccessTokenFetcher } from './api/index.js';
+
 export const createReactComponents = (react: Parameters<typeof createComponent>[0]['react']) => {
   return {
     LogtoAccountProvider: createComponent({
