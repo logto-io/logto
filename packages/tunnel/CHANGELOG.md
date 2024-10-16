@@ -1,5 +1,16 @@
 # @logto/tunnel
 
+## @logto/tunnel@0.2.1
+
+### Patch Changes
+
+- 349a6a405: support range request for mp4 video source hosting
+
+  Safari browser uses range request to fetch video data, but it was not supported by the `@logto/tunnel` CLI tool. This prevents our users who want to build custom sign-in pages with video background. In order to fix this, we need to partially read the video file stream based on the `range` request header, and set proper response headers and status code (206).
+
+- Updated dependencies [3c993d59c]
+  - @logto/core-kit@2.5.1
+
 ## @logto/tunnel@0.2.0
 
 ### Minor Changes
