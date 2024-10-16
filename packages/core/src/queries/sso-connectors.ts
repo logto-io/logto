@@ -41,6 +41,8 @@ export default class SsoConnectorQueries extends SchemaQueries<
           ssoConnectorIdpInitiatedAuthConfigsFields.defaultApplicationId,
           ssoConnectorIdpInitiatedAuthConfigsFields.redirectUri,
           ssoConnectorIdpInitiatedAuthConfigsFields.authParameters,
+          ssoConnectorIdpInitiatedAuthConfigsFields.clientIdpInitiatedAuthCallbackUri,
+          ssoConnectorIdpInitiatedAuthConfigsFields.autoSendAuthorizationRequest,
         ],
       },
     }

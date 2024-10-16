@@ -67,48 +67,58 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
    * Creates a new IdP-initiated authentication configuration for a SSO connector.
    *
    * @throws {RequestError} Throws a 404 error if the application is not found
-   * @throws {RequestError} Throws a 400 error if the application is not a first-party traditional web application
+   * @throws {RequestError} Throws a 400 error if the application type is not supported
+   * @throws {RequestError} Throws a 400 error if the redirect URI is not registered
    */
   const createSsoConnectorIdpInitiatedAuthConfig = async (
     data: OmitAutoSetFields<CreateSsoConnectorIdpInitiatedAuthConfig>
   ) => {
-    const { defaultApplicationId } = data;
+    const {
+      defaultApplicationId,
+      redirectUri,
+      autoSendAuthorizationRequest,
+      clientIdpInitiatedAuthCallbackUri,
+    } = data;
 
     // Throws an 404 error if the application is not found
     const application = await applications.findApplicationById(defaultApplicationId);
 
-    assertThat(
-      application.type === ApplicationType.Traditional && !application.isThirdParty,
-      new RequestError('connector.saml_idp_initiated_auth_invalid_application_type')
-    );
-
-    return ssoConnectors.insertIdpInitiatedAuthConfig(data);
-  };
-
-  const updateSsoConnectorIdpInitiatedAuthConfig = async (
-    connectorId: string,
-    set: Pick<
-      Partial<CreateSsoConnectorIdpInitiatedAuthConfig>,
-      'defaultApplicationId' | 'redirectUri' | 'authParameters'
-    >
-  ) => {
-    const { defaultApplicationId } = set;
-
-    if (defaultApplicationId) {
-      // Throws an 404 error if the application is not found
-      const application = await applications.findApplicationById(defaultApplicationId);
-
+    // Authorization request initiated by Logto server
+    if (autoSendAuthorizationRequest) {
+      // Only first-party traditional web applications are allowed
       assertThat(
         application.type === ApplicationType.Traditional && !application.isThirdParty,
-        new RequestError('connector.saml_idp_initiated_auth_invalid_application_type')
+        new RequestError('single_sign_on.idp_initiated_authentication_invalid_application_type', {
+          type: ApplicationType.Traditional,
+        })
+      );
+
+      // If the redirect URI is provided, it must be one of the registered redirect URIs of the application
+      assertThat(
+        !redirectUri || application.oidcClientMetadata.redirectUris.includes(redirectUri),
+        new RequestError('single_sign_on.idp_initiated_authentication_redirect_uri_not_registered')
+      );
+    } else {
+      // Authorization request initiated by the client
+      assertThat(
+        (application.type === ApplicationType.Traditional && !application.isThirdParty) ||
+          application.type === ApplicationType.SPA,
+        new RequestError('single_sign_on.idp_initiated_authentication_invalid_application_type', {
+          type: `${ApplicationType.Traditional}, ${ApplicationType.SPA}`,
+        })
+      );
+
+      // Fallback validation for the clientIdpInitiatedAuthCallbackUri
+      assertThat(
+        clientIdpInitiatedAuthCallbackUri,
+        new RequestError({
+          code: 'guard.invalid_input',
+          message: 'clientIdpInitiatedAuthCallbackUri is required',
+        })
       );
     }
 
-    return ssoConnectors.updateIdpInitiatedAuthConfig({
-      set,
-      where: { connectorId },
-      jsonbMode: 'replace',
-    });
+    return ssoConnectors.insertIdpInitiatedAuthConfig(data);
   };
 
   /**
@@ -200,7 +210,6 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
     getAvailableSsoConnectors,
     getSsoConnectorById,
     createSsoConnectorIdpInitiatedAuthConfig,
-    updateSsoConnectorIdpInitiatedAuthConfig,
     createIdpInitiatedSamlSsoSession,
     getIdpInitiatedSamlSsoSignInUrl,
   };

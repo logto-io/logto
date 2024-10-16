@@ -13,6 +13,8 @@ import { tableToPathname } from '#src/utils/SchemaRouter.js';
 import assertThat from '../../utils/assert-that.js';
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
+import { ssoConnectorIdpInitiatedAuthConfigCreateGuard } from './type.js';
+
 export default function ssoConnectorIdpInitiatedAuthConfigRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>
 ) {
@@ -21,11 +23,7 @@ export default function ssoConnectorIdpInitiatedAuthConfigRoutes<T extends Manag
     {
       queries,
       libraries: {
-        ssoConnectors: {
-          getSsoConnectorById,
-          createSsoConnectorIdpInitiatedAuthConfig,
-          updateSsoConnectorIdpInitiatedAuthConfig,
-        },
+        ssoConnectors: { getSsoConnectorById, createSsoConnectorIdpInitiatedAuthConfig },
       },
     },
   ] = args;
@@ -35,11 +33,7 @@ export default function ssoConnectorIdpInitiatedAuthConfigRoutes<T extends Manag
   router.put(
     pathPrefix,
     koaGuard({
-      body: SsoConnectorIdpInitiatedAuthConfigs.createGuard.pick({
-        defaultApplicationId: true,
-        redirectUri: true,
-        authParameters: true,
-      }),
+      body: ssoConnectorIdpInitiatedAuthConfigCreateGuard,
       params: z.object({ id: z.string().min(1) }),
       response: SsoConnectorIdpInitiatedAuthConfigs.guard,
       status: [200, 400, 404],
@@ -56,7 +50,7 @@ export default function ssoConnectorIdpInitiatedAuthConfigRoutes<T extends Manag
 
       assertThat(
         providerType === SsoProviderType.SAML,
-        new RequestError('connector.saml_only_idp_initiated_auth')
+        new RequestError('single_sign_on.idp_initiated_authentication_not_supported')
       );
 
       const config = await createSsoConnectorIdpInitiatedAuthConfig({
@@ -94,33 +88,6 @@ export default function ssoConnectorIdpInitiatedAuthConfigRoutes<T extends Manag
       );
 
       ctx.body = configs;
-      ctx.status = 200;
-
-      return next();
-    }
-  );
-
-  router.patch(
-    pathPrefix,
-    koaGuard({
-      body: SsoConnectorIdpInitiatedAuthConfigs.updateGuard.pick({
-        defaultApplicationId: true,
-        redirectUri: true,
-        authParameters: true,
-      }),
-      params: z.object({ id: z.string().min(1) }),
-      response: SsoConnectorIdpInitiatedAuthConfigs.guard,
-      status: [200, 400, 404],
-    }),
-    async (ctx, next) => {
-      const {
-        body,
-        params: { id },
-      } = ctx.guard;
-
-      const config = await updateSsoConnectorIdpInitiatedAuthConfig(id, body);
-
-      ctx.body = config;
       ctx.status = 200;
 
       return next();

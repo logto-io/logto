@@ -27,13 +27,19 @@
               "schema": {
                 "properties": {
                   "defaultApplicationId": {
-                    "description": "The unique identifier for the application that users will sign in to using IdP initiated authentication. The application type must be `Traditional` and cannot be a third-party application."
+                    "description": "The unique identifier for the application that users will sign in to using IdP initiated authentication. The application type must be `Traditional` or `SPA`. `autoSendAuthorizationRequest` is not supported for `SPA` applications."
+                  },
+                  "autoSendAuthorizationRequest": {
+                    "description": "Whether to automatically send an authorization request to the application's OIDC authorization endpoint when a IdP initiated authentication request is received. If not provided, Logto will use the default value `false`. "
+                  },
+                  "clientIdpInitiatedAuthCallbackUri": {
+                    "description": "The callback URI for the IdP initiated authentication request. Only available when `autoSendAuthorizationRequest` is `false`. Logto will redirect the user to this URI after the IdP initiated authentication request is received. You should manually trigger the authorization request to the application's OIDC authorization endpoint at the client side."
                   },
                   "redirectUri": {
-                    "description": "The sign-in redirect URI for the application. This URI must be registered in the application's OIDC client metadata. If not provided, Logto will use the first registered redirect URI of the application."
+                    "description": "The sign-in callback redirect URI for the application. This URI must be registered in the application's OIDC client metadata. If not provided, Logto will use the first registered redirect URI of the application. Only available when `autoSendAuthorizationRequest` is `true`."
                   },
                   "authParameters": {
-                    "description": "The additional parameters to be sent to the application's OIDC authorization endpoint, e.g. `resources` and `scopes`."
+                    "description": "The additional parameters to be sent to the application's OIDC authorization endpoint, e.g. `resources` and `scopes`. Only available when `autoSendAuthorizationRequest` is `true`."
                   }
                 }
               }
@@ -49,40 +55,6 @@
           },
           "400": {
             "description": "The request body is invalid. The SSO connector is not a SAML connector or the application is not a Traditional web application."
-          }
-        }
-      },
-      "patch": {
-        "summary": "Update IdP initiated auth config",
-        "description": "Partially update the IdP initiated authentication config of the given SAML SSO connector.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "defaultApplicationId": {
-                    "description": "The unique identifier for the application that users will sign in to using IdP initiated authentication. The application type must be `Traditional` and cannot be a third-party application."
-                  },
-                  "redirectUri": {
-                    "description": "The sign-in redirect URI for the application. This URI must be registered in the application's OIDC client metadata. If not provided, Logto will use the first registered redirect URI of the application."
-                  },
-                  "authParameters": {
-                    "description": "The additional parameters to be sent to the application's OIDC authorization endpoint, e.g. `resources` and `scopes`."
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "The updated IdP initiated auth config."
-          },
-          "404": {
-            "description": "IdP initiated auth config not found for the given SSO connector or the provided application ID is not found."
-          },
-          "400": {
-            "description": "The request body is invalid. The application is not a first-party Traditional web application."
           }
         }
       },

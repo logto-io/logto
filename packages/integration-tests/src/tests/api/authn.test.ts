@@ -86,15 +86,23 @@ describe('SAML SSO ACS endpoint', () => {
 
     it('should try to process the SAML assertion if no relayState is provided and IdP initiated SSO is enabled', async () => {
       const connectorId = ssoConnectorApi.firstConnectorId!;
+      const redirectUri = 'https://example.com/callback';
       const application = await createApplication(
         `web-app-${randomString()}`,
-        ApplicationType.Traditional
+        ApplicationType.Traditional,
+        {
+          oidcClientMetadata: {
+            redirectUris: [redirectUri],
+            postLogoutRedirectUris: [],
+          },
+        }
       );
 
       await ssoConnectorApi.setSsoConnectorIdpInitiatedAuthConfig({
         connectorId,
         defaultApplicationId: application.id,
-        redirectUri: 'https://example.com',
+        autoSendAuthorizationRequest: true,
+        redirectUri,
       });
 
       await expectRejects(
