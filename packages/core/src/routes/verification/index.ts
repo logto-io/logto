@@ -1,6 +1,6 @@
+import { TemplateType } from '@logto/connector-kit';
 import {
   AdditionalIdentifier,
-  InteractionEvent,
   SentinelActivityAction,
   SignInIdentifier,
   verificationCodeIdentifierGuard,
@@ -84,13 +84,15 @@ export default function verificationRoutes<T extends UserRouter>(
       const { identifier } = ctx.guard.body;
 
       const user = await queries.users.findUserById(userId);
+      const isNewIdentifier =
+        (identifier.type === SignInIdentifier.Email && identifier.value === user.primaryEmail) ||
+        (identifier.type === SignInIdentifier.Phone && identifier.value === user.primaryPhone);
 
       const codeVerification = createNewCodeVerificationRecord(
         libraries,
         queries,
         identifier,
-        // TODO(LOG-10148): Add new event
-        InteractionEvent.SignIn
+        isNewIdentifier ? TemplateType.BindNewIdentifier : TemplateType.UserPermissionValidation
       );
 
       await codeVerification.sendVerificationCode();
@@ -98,11 +100,7 @@ export default function verificationRoutes<T extends UserRouter>(
       const { expiresAt } = await insertVerificationRecord(
         codeVerification,
         queries,
-        // If the identifier is the primary email or phone, the verification record is associated with the user.
-        (identifier.type === SignInIdentifier.Email && identifier.value === user.primaryEmail) ||
-          (identifier.type === SignInIdentifier.Phone && identifier.value === user.primaryPhone)
-          ? userId
-          : undefined
+        isNewIdentifier ? userId : undefined
       );
 
       ctx.body = {
