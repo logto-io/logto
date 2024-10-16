@@ -180,6 +180,8 @@ describe('SsoConnectorLibrary', () => {
     const authConfig: SsoConnectorIdpInitiatedAuthConfig = {
       tenantId: 'tenantId',
       defaultApplicationId: 'appId',
+      autoSendAuthorizationRequest: true,
+      clientIdpInitiatedAuthCallbackUri: null,
       connectorId: 'connectorId',
       redirectUri: 'https://app.com',
       authParameters: {},
