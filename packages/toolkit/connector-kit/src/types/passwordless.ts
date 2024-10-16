@@ -10,6 +10,8 @@ export enum VerificationCodeType {
   Register = 'Register',
   ForgotPassword = 'ForgotPassword',
   Generic = 'Generic',
+  UserPermissionValidation = 'UserPermissionValidation',
+  BindNewIdentifier = 'BindNewIdentifier',
   /** @deprecated Use `Generic` type template for sending test sms/email use case */
   Test = 'Test',
 }
@@ -28,6 +30,10 @@ export enum TemplateType {
   OrganizationInvitation = 'OrganizationInvitation',
   /** The template for generic usage. */
   Generic = 'Generic',
+  /** The template for validating user permission for sensitive operations. */
+  UserPermissionValidation = 'UserPermissionValidation',
+  /** The template for binding a new identifier to an existing account. */
+  BindNewIdentifier = 'BindNewIdentifier',
 }
 
 export const templateTypeGuard = z.nativeEnum(TemplateType);

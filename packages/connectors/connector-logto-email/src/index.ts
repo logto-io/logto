@@ -40,6 +40,8 @@ const sendMessage =
         body: {
           data: {
             to,
+            // TODO @wangsijie: fix this circular dependency, the connector-kit type change should be released first
+            // @ts-expect-error circular dependency
             type,
             payload: {
               ...payload,
