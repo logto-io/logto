@@ -63,13 +63,7 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
     currentSubscriptionQuota,
     currentSubscriptionBasicQuota,
     currentSubscriptionUsage,
-    currentSubscription: {
-      currentPeriodStart,
-      currentPeriodEnd,
-      planId,
-      isAddOnAvailable,
-      isEnterprisePlan,
-    },
+    currentSubscription: { currentPeriodStart, currentPeriodEnd, planId, isEnterprisePlan },
   } = useContext(SubscriptionDataContext);
   const { currentTenant } = useContext(TenantsContext);
 
@@ -90,19 +84,13 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
   }
 
   const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
-  const onlyShowPeriodicUsage =
-    planId === ReservedPlanId.Free || (!isAddOnAvailable && planId === ReservedPlanId.Pro);
+  const onlyShowPeriodicUsage = planId === ReservedPlanId.Free;
 
   const usages: PlanUsageCardProps[] = usageKeys
     // Show all usages for Pro plan and only show MAU and token usage for Free plan
     .filter(
       (key) =>
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-        isAddOnAvailable ||
-        // TODO: design a flow for enterprise tenants onboarding.
-        // Show all usages for Enterprise plan since some of the enterprise tenants does not have Stripe subscription, as a result, the `isAddOnAvailable` will be undefined in this case, even if we will deprecate `isAddOnAvailable` soon, the plan usage will not be automatically fixed for these enterprise tenants.
-        isEnterprisePlan ||
-        (onlyShowPeriodicUsage && (key === 'mauLimit' || key === 'tokenLimit'))
+        isPaidTenant || (onlyShowPeriodicUsage && (key === 'mauLimit' || key === 'tokenLimit'))
     )
     .map((key) => ({
       usage: getUsageByKey(key, {
