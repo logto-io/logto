@@ -1,6 +1,6 @@
 import type { ConnectorSession } from '@logto/connector-kit';
 import { ConnectorError, ConnectorErrorCodes, ConnectorType } from '@logto/connector-kit';
-import { jsonObjectGuard } from '@logto/schemas';
+import { jsonObjectGuard, SsoAuthenticationQueryKey } from '@logto/schemas';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -211,7 +211,7 @@ export default function authnRoutes<T extends AnonymousRouter>(
         const idpInitiatedAuthConfig =
           await queries.ssoConnectors.getIdpInitiatedAuthConfigByConnectorId(connectorId);
 
-        // No IdP initiated auth config found
+        // IdP initiated SSO flow is not enabled for the current connector.
         assertThat(
           idpInitiatedAuthConfig,
           new RequestError({
@@ -235,7 +235,28 @@ export default function authnRoutes<T extends AnonymousRouter>(
           overwrite: true,
         });
 
-        // TODO: redirect to SSO direct sign-in flow
+        const { autoSendAuthorizationRequest, clientIdpInitiatedAuthCallbackUri } =
+          idpInitiatedAuthConfig;
+
+        // Redirect to the client side callback URI if the autoSendAuthorizationRequest is disabled.
+        // Client side will generate and verify the state to prevent CSRF attack.
+        if (!autoSendAuthorizationRequest) {
+          assertThat(
+            clientIdpInitiatedAuthCallbackUri,
+            new RequestError(
+              'single_sign_on.idp_initiated_authentication_client_callback_uri_not_found'
+            )
+          );
+
+          const url = new URL(clientIdpInitiatedAuthCallbackUri);
+          url.searchParams.append(SsoAuthenticationQueryKey.SsoConnectorId, connectorId);
+
+          ctx.redirect(url.toString());
+
+          return;
+        }
+
+        // Generate the OIDC authorization request URL for the IdP initiated SSO flow.
         const signInUrl = await ssoConnectorsLibrary.getIdpInitiatedSamlSsoSignInUrl(
           envSet.oidc.issuer,
           idpInitiatedAuthConfig
