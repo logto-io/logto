@@ -4,13 +4,14 @@ import { type KyInstance } from 'ky';
 import { readConnectorMessage } from '#src/helpers/index.js';
 
 export const createVerificationRecordByPassword = async (api: KyInstance, password: string) => {
-  const { verificationRecordId } = await api
+  const { verificationRecordId, expiresAt } = await api
     .post('api/verifications/password', {
       json: {
         password,
       },
     })
-    .json<{ verificationRecordId: string }>();
+    .json<{ verificationRecordId: string; expiresAt: string }>();
+  expect(expiresAt).toBeTruthy();
 
   return verificationRecordId;
 };
@@ -19,7 +20,7 @@ const createVerificationCode = async (
   api: KyInstance,
   identifier: { type: SignInIdentifier; value: string }
 ) => {
-  const { verificationRecordId } = await api
+  const { verificationRecordId, expiresAt } = await api
     .post('api/verifications/verification-code', {
       json: {
         identifier: {
@@ -28,7 +29,8 @@ const createVerificationCode = async (
         },
       },
     })
-    .json<{ verificationRecordId: string }>();
+    .json<{ verificationRecordId: string; expiresAt: string }>();
+  expect(expiresAt).toBeTruthy();
 
   return verificationRecordId;
 };
