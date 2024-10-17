@@ -171,6 +171,12 @@ const quota_item = {
     unlimited: 'Bring your UI',
     not_eligible: 'Remove your custom UI assets',
   },
+  idp_initiated_sso_enabled: {
+    name: 'IDP-initiated SSO',
+    limited: 'IDP-initiated SSO',
+    unlimited: 'IDP-initiated SSO',
+    not_eligible: 'IDP-initiated SSO not allowed',
+  },
 };
 
 export default Object.freeze(quota_item);
