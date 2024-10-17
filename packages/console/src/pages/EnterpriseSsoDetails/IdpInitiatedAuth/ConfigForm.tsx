@@ -111,9 +111,9 @@ function ConfigForm({
 
       if (!isIdpInitiatedSsoEnabled || !config) {
         await api.delete(buildIdpInitiatedAuthConfigEndpoint(ssoConnector.id));
-        await mutateIdpInitiatedConfig(undefined);
+        await mutateIdpInitiatedConfig();
         toast.success(t('general.saved'));
-        reset(parseResponseToFormData(undefined));
+        reset(parseResponseToFormData());
         return;
       }
 
@@ -129,10 +129,7 @@ function ConfigForm({
       await mutateIdpInitiatedConfig(updated);
       toast.success(t('general.saved'));
       reset(parseResponseToFormData(updated));
-    }),
-    (errors) => {
-      console.log(errors);
-    }
+    })
   );
 
   return (

@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import type { ReactElement, ReactEventHandler, ReactNode } from 'react';
+import type { ReactEventHandler, ReactNode } from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -26,7 +26,7 @@ type Props<T> = {
   readonly options: Array<Option<T>>;
   readonly onChange?: (value?: T) => void;
   readonly isReadOnly?: boolean;
-  readonly error?: string | boolean | ReactElement;
+  readonly error?: ReactNode;
   readonly placeholder?: ReactNode;
   readonly isClearable?: boolean;
   readonly size?: 'small' | 'medium' | 'large';
