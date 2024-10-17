@@ -32,7 +32,7 @@ export default function verificationRoutes<T extends UserRouter>(
     '/verifications/password',
     koaGuard({
       body: z.object({ password: z.string().min(1) }),
-      response: z.object({ verificationRecordId: z.string() }),
+      response: z.object({ verificationRecordId: z.string(), expiresAt: z.string() }),
       status: [201, 422],
     }),
     async (ctx, next) => {
@@ -58,9 +58,12 @@ export default function verificationRoutes<T extends UserRouter>(
         passwordVerification.verify(password)
       );
 
-      await insertVerificationRecord(passwordVerification, queries, userId);
+      const { expiresAt } = await insertVerificationRecord(passwordVerification, queries, userId);
 
-      ctx.body = { verificationRecordId: passwordVerification.id };
+      ctx.body = {
+        verificationRecordId: passwordVerification.id,
+        expiresAt: new Date(expiresAt).toISOString(),
+      };
       ctx.status = 201;
 
       return next();
@@ -73,7 +76,7 @@ export default function verificationRoutes<T extends UserRouter>(
       body: z.object({
         identifier: verificationCodeIdentifierGuard,
       }),
-      response: z.object({ verificationRecordId: z.string() }),
+      response: z.object({ verificationRecordId: z.string(), expiresAt: z.string() }),
       status: [201, 501],
     }),
     async (ctx, next) => {
@@ -92,7 +95,7 @@ export default function verificationRoutes<T extends UserRouter>(
 
       await codeVerification.sendVerificationCode();
 
-      await insertVerificationRecord(
+      const { expiresAt } = await insertVerificationRecord(
         codeVerification,
         queries,
         // If the identifier is the primary email or phone, the verification record is associated with the user.
@@ -102,7 +105,10 @@ export default function verificationRoutes<T extends UserRouter>(
           : undefined
       );
 
-      ctx.body = { verificationRecordId: codeVerification.id };
+      ctx.body = {
+        verificationRecordId: codeVerification.id,
+        expiresAt: new Date(expiresAt).toISOString(),
+      };
       ctx.status = 201;
 
       return next();

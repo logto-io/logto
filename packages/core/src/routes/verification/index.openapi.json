@@ -29,7 +29,21 @@
         },
         "responses": {
           "201": {
-            "description": "The verification record was created successfully."
+            "description": "The verification record was created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "verificationRecordId": {
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "422": {
             "description": "The password is invalid."
@@ -57,7 +71,21 @@
         },
         "responses": {
           "201": {
-            "description": "The verification code has been successfully sent."
+            "description": "The verification code has been successfully sent.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "verificationRecordId": {
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "501": {
             "description": "The connector for sending the verification code is not configured."
