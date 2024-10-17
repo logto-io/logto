@@ -42,7 +42,7 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
   const { parseEmailOptions } = useEmailInputUtils();
   const { show } = useConfirmModal();
   const {
-    currentSubscription: { planId, isAddOnAvailable, isEnterprisePlan },
+    currentSubscription: { planId, isEnterprisePlan },
     mutateSubscriptionQuotaAndUsages,
     hasReachedSubscriptionQuotaLimit,
   } = useContext(SubscriptionDataContext);
@@ -50,6 +50,7 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
     data: { tenantMembersUpsellNoticeAcknowledged },
     update,
   } = useUserPreferences();
+  const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
 
   const formMethods = useForm<InviteMemberForm>({
     defaultValues: {
@@ -127,14 +128,13 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
         size="large"
         title="tenant_members.invite_modal.title"
         paywall={conditional(planId !== ReservedPlanId.Pro && ReservedPlanId.Pro)}
-        hasAddOnTag={isAddOnAvailable && hasTenantMembersReachedLimit}
+        hasAddOnTag={isPaidTenant && hasTenantMembersReachedLimit}
         subtitle="tenant_members.invite_modal.subtitle"
         footer={
           conditional(
-            isAddOnAvailable &&
-              hasTenantMembersReachedLimit &&
+            hasTenantMembersReachedLimit &&
               // Just in case the enterprise plan has reached the resource limit, we still need to show charge notice.
-              isPaidPlan(planId, isEnterprisePlan) &&
+              isPaidTenant &&
               !tenantMembersUpsellNoticeAcknowledged && (
                 <AddOnNoticeFooter
                   isLoading={isLoading}
