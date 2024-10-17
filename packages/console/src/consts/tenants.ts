@@ -58,6 +58,8 @@ export const defaultLogtoSku: LogtoSkuResponse = {
   updatedAt: new Date(),
   type: LogtoSkuType.Basic,
   unitPrice: 0,
+  productId: null,
+  defaultPriceId: null,
   quota: {
     // A soft limit for abuse monitoring
     mauLimit: 100,
@@ -80,6 +82,7 @@ export const defaultLogtoSku: LogtoSkuResponse = {
     customJwtEnabled: true,
     subjectTokenEnabled: true,
     bringYourUiEnabled: true,
+    idpInitiatedSsoEnabled: false,
   },
 };
 
@@ -105,6 +108,7 @@ export const defaultSubscriptionQuota: NewSubscriptionQuota = {
   customJwtEnabled: false,
   subjectTokenEnabled: false,
   bringYourUiEnabled: false,
+  idpInitiatedSsoEnabled: false,
 };
 
 export const defaultSubscriptionUsage: NewSubscriptionCountBasedUsage = {
@@ -125,6 +129,7 @@ export const defaultSubscriptionUsage: NewSubscriptionCountBasedUsage = {
   customJwtEnabled: false,
   subjectTokenEnabled: false,
   bringYourUiEnabled: false,
+  idpInitiatedSsoEnabled: false,
 };
 
 const getAdminTenantEndpoint = () => {
