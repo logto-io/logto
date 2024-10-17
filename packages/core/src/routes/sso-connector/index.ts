@@ -303,7 +303,7 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
     }
   );
 
-  if (EnvSet.values.isDevFeaturesEnabled) {
+  if (EnvSet.values.isDevFeaturesEnabled && EnvSet.values.isCloud) {
     ssoConnectorIdpInitiatedAuthConfigRoutes(...args);
   }
 }
