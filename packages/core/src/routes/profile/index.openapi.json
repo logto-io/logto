@@ -181,6 +181,43 @@
           }
         }
       }
+    },
+    "/api/profile/primary-phone": {
+      "post": {
+        "operationId": "UpdatePrimaryPhone",
+        "summary": "Update primary phone",
+        "description": "Update primary phone for the user, a verification record is required for checking sensitive permissions, and a new identifier verification record is required for the new phone ownership verification.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "phone": {
+                    "description": "The new phone for the user."
+                  },
+                  "verificationRecordId": {
+                    "description": "The verification record ID for checking sensitive permissions."
+                  },
+                  "newIdentifierVerificationRecordId": {
+                    "description": "The identifier verification record ID for the new phone ownership verification."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The primary phone was updated successfully."
+          },
+          "400": {
+            "description": "The new verification record is invalid."
+          },
+          "403": {
+            "description": "Permission denied, the verification record is invalid."
+          }
+        }
+      }
     }
   }
 }

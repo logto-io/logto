@@ -125,7 +125,10 @@ export default function verificationRoutes<T extends UserRouter>(
       const { identifier, code, verificationId } = ctx.guard.body;
 
       const codeVerification = await buildVerificationRecordByIdAndType({
-        type: VerificationType.EmailVerificationCode,
+        type:
+          identifier.type === SignInIdentifier.Email
+            ? VerificationType.EmailVerificationCode
+            : VerificationType.PhoneVerificationCode,
         id: verificationId,
         queries,
         libraries,
