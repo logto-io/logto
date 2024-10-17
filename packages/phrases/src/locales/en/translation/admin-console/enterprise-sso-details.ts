@@ -5,6 +5,7 @@ const enterprise_sso_details = {
   readme_drawer_subtitle: 'Set up enterprise SSO connectors to enable end users SSO',
   tab_experience: 'SSO Experience',
   tab_connection: 'Connection',
+  tab_idp_initiated_auth: 'IdP-initiated SSO',
   general_settings_title: 'General',
   custom_branding_title: 'Display',
   custom_branding_description:
@@ -72,6 +73,40 @@ const enterprise_sso_details = {
     userinfo_endpoint: 'User information endpoint',
     jwks_uri: 'JSON web key set endpoint',
     issuer: 'Issuer',
+  },
+  idp_initiated_auth_config: {
+    card_title: 'IdP-initiated SSO',
+    card_description:
+      'User typically start the authentication process from your app using the SP-initiated SSO flow. DO NOT enable this feature unless absolutely necessary.',
+    enable_idp_initiated_sso: 'Enable IdP-initiated SSO',
+    enable_idp_initiated_sso_description:
+      "Allow enterprise users to start the authentication process directly from the identity provider's portal. Please understand the potential security risks before enabling this feature.",
+    default_application: 'Default application',
+    default_application_tooltip:
+      'Target application the user will be redirected to after authentication.',
+    empty_applications_error:
+      'No applications found. Please add one in the <a>Applications</a> section.',
+    authentication_type: 'Authentication type',
+    auto_authentication_disabled_title: 'Redirect to client for SP-initiated SSO (Recommended)',
+    auto_authentication_disabled_description:
+      'Redirect users to the client-side application to initiate a secure SP-initiated OIDC authentication.  This will prevent the CSRF attack and increase the security of the authentication process.',
+    auto_authentication_enabled_title: 'Directly sign in using the IdP-initiated SSO',
+    auto_authentication_enabled_description:
+      'Sign in directly using IdP-initiated SSO authentication. After successful sign-in, users will be redirected to the specified Redirect URI with the authorization code. (Without state and PKCE validation)',
+    auto_authentication_disabled_app:
+      'For traditional web applications and single-page applications (SPA)',
+    auto_authentication_enabled_app: 'For traditional web applications only',
+    idp_initiated_auth_callback_uri: 'Client callback URI',
+    idp_initiated_auth_callback_uri_tooltip:
+      'The client callback URI to initiate a SP-initiated SSO authentication flow. An ssoConnectorId will be appended to the URI as a query parameter. (e.g., https://your.domain/sso/callback?connectorId={{ssoConnectorId}})',
+    redirect_uri: 'Post sign-in redirect URI',
+    redirect_uri_tooltip:
+      'The redirect URI to redirect users after successful sign-in. Logto will use this URI as the OIDC redirect URI in the authorization request. Use a dedicated URI for the IdP-initiated SSO authentication flow for better security.',
+    empty_redirect_uris_error:
+      'No redirect URI has been registered for the application. Please add one first.',
+    auth_params: 'Additional authentication parameters',
+    auth_params_tooltip:
+      'Additional parameters to be passed in the authorization request. By default only (openid profile) scopes will be requested, you can specify additional scopes or a exclusive state value here. (e.g., { "scope": "organizations email", "state": "secret_state" }).',
   },
 };
 

@@ -1,0 +1,37 @@
+@use '@/scss/underscore' as _;
+
+.radioGroup {
+  display: flex;
+  gap: _.unit(3);
+
+  > * {
+    flex: 1;
+  }
+}
+
+.radioCardTitle {
+  font: var(--font-label-2);
+  margin-bottom: _.unit(2);
+}
+
+.radioCardFooter {
+  margin-top: _.unit(4);
+  font: var(--font-body-3);
+  color: var(--color-text-secondary);
+}
+
+.inlineLink {
+  text-decoration: none;
+  color: var(--color-text-link);
+  cursor: pointer;
+
+  &:active {
+    color: var(--color-primary-pressed);
+  }
+}
+
+div[class$='disabled'] {
+  .radioCardFooter {
+    color: var(--color-disabled);
+  }
+}
