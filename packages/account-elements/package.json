@@ -1,5 +1,5 @@
 {
-  "name": "@logto/elements",
+  "name": "@logto/account-elements",
   "version": "0.0.1",
   "description": "Logto account elements.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
@@ -33,8 +33,8 @@
     "dev": "tsup --watch --no-splitting",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
-    "test": "echo \"No tests yet.\"",
-    "test:ci": "pnpm run test --silent --coverage"
+    "test": "web-test-runner",
+    "test:ci": "pnpm run test --coverage"
   },
   "engines": {
     "node": "^20.9.0"
@@ -51,20 +51,27 @@
   },
   "devDependencies": {
     "@logto/schemas": "workspace:^1.20.0",
+    "@open-wc/testing": "^4.0.0",
+    "@playwright/test": "^1.48.1",
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/ts-config": "6.0.0",
+    "@types/mocha": "^10.0.9",
     "@types/node": "^20.9.5",
     "@web/dev-server": "^0.4.6",
     "@web/dev-server-esbuild": "^1.0.2",
+    "@web/test-runner": "^0.19.0",
+    "@web/test-runner-playwright": "^0.11.0",
     "eslint": "^8.56.0",
     "lint-staged": "^15.0.0",
+    "msw": "^2.4.11",
     "prettier": "^3.0.0",
     "tsup": "^8.1.0"
   },
   "eslintConfig": {
     "extends": "@silverhand",
     "ignorePatterns": [
-      "src/generated/"
+      "src/generated/",
+      "mockServiceWorker.js"
     ],
     "rules": {
       "no-console": "error",
@@ -79,5 +86,10 @@
       ]
     }
   },
-  "prettier": "@silverhand/eslint-config/.prettierrc"
+  "prettier": "@silverhand/eslint-config/.prettierrc",
+  "msw": {
+    "workerDirectory": [
+      ""
+    ]
+  }
 }

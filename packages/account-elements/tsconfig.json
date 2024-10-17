@@ -5,8 +5,5 @@
     "useDefineForClassFields": false,
     "noEmit": true
   },
-  "include": [
-    "src",
-    "*.config.ts"
-  ]
+  "include": ["src", "*.config.ts", "mockServiceWorker.js"]
 }

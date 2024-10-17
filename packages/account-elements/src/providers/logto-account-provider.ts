@@ -1,6 +1,6 @@
 import { createContext, provide } from '@lit/context';
 import type { UserProfileResponse } from '@logto/schemas';
-import { html, LitElement, type PropertyValues } from 'lit';
+import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 import { LogtoAccountApi, type AccessTokenFetcher } from '../api/index.js';
@@ -35,30 +35,48 @@ export class LogtoAccountProvider extends LitElement {
 
   /**
    * The access token fetcher function.
-   * This is a required property that specifies the function to fetch the access token.
+   * This property can be set in two ways:
+   * 1. Directly as a prop in supported frameworks.
+   * 2. Via the `init` method in vanilla JS scenarios.
+   *
    * It is used to obtain the access token for Account-related API interactions.
    * This method is called every time the account elements make a request to the backend API.
    *
-   * This method should handle access token expiration. When the access token expires,
-   * it should request a new access token.
+   * This method should handle access token expiration and request a new token when needed.
    *
-   * Note: If you are using the getAccessToken method provided by the Logto SDK,
-   * the SDK already ensures that a valid access token is obtained.
-   *
-   * Important: When using this component in HTML, it's not possible to set non-string values directly.
-   * In such cases, this `LogtoAccountProvider` will not be able to provide the account context to its child components
-   * until this property is set via JavaScript after the component is mounted.
+   * Note: If you are using the `getAccessToken` method provided by the Logto SDK,
+   * it already ensures that a valid access token is obtained.
    */
   @property({ attribute: false })
-  accessTokenFetcher?: AccessTokenFetcher;
+  private accessTokenFetcher?: AccessTokenFetcher;
 
   @provide({ context: logtoAccountContext })
   private accountContext?: LogtoAccountContextType;
 
-  connectedCallback(): void {
+  /**
+   * Initializes the LogtoAccountProvider with an access token fetcher.
+   * This method should be used in scenarios where direct prop passing is not supported.
+   *
+   * @param accessTokenFetcher A function to fetch the access token.
+   */
+  @property({ attribute: false })
+  public init = (accessTokenFetcher: AccessTokenFetcher) => {
+    this.accessTokenFetcher ||= accessTokenFetcher;
+
+    void this.initProvider();
+  };
+
+  connectedCallback() {
     super.connectedCallback();
     if (!this.logtoEndpoint) {
       throw new Error('logto-endpoint is required');
+    }
+    /**
+     * This path initializes the provider
+     * when accessTokenFetcher is directly set on the element.
+     */
+    if (this.accessTokenFetcher) {
+      void this.initProvider();
     }
   }
 
@@ -66,16 +84,16 @@ export class LogtoAccountProvider extends LitElement {
     return html`<slot></slot>`;
   }
 
-  protected updated(changedProperties: PropertyValues<this>): void {
-    void this.handlePropertiesChange(changedProperties);
-  }
-
-  private async handlePropertiesChange(changedProperties: PropertyValues<this>) {
-    if (changedProperties.has('accessTokenFetcher') && this.accessTokenFetcher) {
-      const api = new LogtoAccountApi(this.logtoEndpoint, this.accessTokenFetcher);
-      const userProfile = await api.fetchUserProfile();
-      this.accountContext = { api, userProfile };
+  private async initProvider() {
+    if (!this.logtoEndpoint || !this.accessTokenFetcher) {
+      throw new Error('`logto-endpoint` and `accessTokenFetcher` are both required');
     }
+
+    const api = new LogtoAccountApi(this.logtoEndpoint, this.accessTokenFetcher);
+    this.accountContext = {
+      api: new LogtoAccountApi(this.logtoEndpoint, this.accessTokenFetcher),
+      userProfile: await api.fetchUserProfile(),
+    };
   }
 }
 
