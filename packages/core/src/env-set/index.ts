@@ -37,7 +37,8 @@ export class EnvSet {
   static sharedPool = createPoolByEnv(
     this.dbUrl,
     EnvSet.values.isUnitTest,
-    this.values.databasePoolSize
+    this.values.databasePoolSize,
+    EnvSet.values.databaseConnectionTimeout
   );
 
   #pool: Optional<DatabasePool>;
@@ -68,7 +69,8 @@ export class EnvSet {
     const pool = await createPoolByEnv(
       this.databaseUrl,
       EnvSet.values.isUnitTest,
-      EnvSet.values.databasePoolSize
+      EnvSet.values.databasePoolSize,
+      EnvSet.values.databaseConnectionTimeout
     );
 
     this.#pool = pool;

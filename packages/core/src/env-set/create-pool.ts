@@ -10,7 +10,8 @@ import {
 const createPoolByEnv = async (
   databaseDsn: string,
   mockDatabaseConnection: boolean,
-  poolSize?: number
+  poolSize?: number,
+  connectionTimeout?: number
 ) => {
   // Database connection is disabled in unit test environment
   if (mockDatabaseConnection) {
@@ -22,6 +23,7 @@ const createPoolByEnv = async (
   return createPool(databaseDsn, {
     interceptors: createInterceptorsPreset(),
     maximumPoolSize: poolSize,
+    connectionTimeout,
   });
 };
 
