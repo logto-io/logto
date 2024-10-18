@@ -20,6 +20,7 @@ import Tag from '@/ds-components/Tag';
 import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
+import { isPaidPlan } from '@/utils/subscription';
 import { buildUrl } from '@/utils/url';
 
 import SsoConnectorLogo from './SsoConnectorLogo';
@@ -37,7 +38,7 @@ function EnterpriseSso() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { isDevTenant } = useContext(TenantsContext);
   const {
-    currentSubscription: { planId, isAddOnAvailable },
+    currentSubscription: { planId, isEnterprisePlan },
     currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
 
@@ -66,7 +67,7 @@ function EnterpriseSso() {
         paywall: conditional((!isSsoEnabled || isDevTenant) && ReservedPlanId.Pro),
         title: 'enterprise_sso.title',
         subtitle: 'enterprise_sso.subtitle',
-        hasAddOnTag: isAddOnAvailable,
+        hasAddOnTag: isPaidPlan(planId, isEnterprisePlan),
       }}
       pageMeta={{ titleKey: 'enterprise_sso.page_title' }}
       createButton={conditional(

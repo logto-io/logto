@@ -164,11 +164,9 @@ export const createQuotaLibrary = (cloudConnection: CloudConnectionLibrary) => {
       return;
     }
 
-    const { planId, isAddOnAvailable, isEnterprisePlan } = await getTenantSubscriptionData(
-      cloudConnection
-    );
+    const { planId, isEnterprisePlan } = await getTenantSubscriptionData(cloudConnection);
 
-    if (shouldReportSubscriptionUpdates(planId, isEnterprisePlan, key) && isAddOnAvailable) {
+    if (shouldReportSubscriptionUpdates(planId, isEnterprisePlan, key)) {
       await reportSubscriptionUpdates(cloudConnection, key);
     }
   };

@@ -15,7 +15,7 @@ import CardTitle from '@/ds-components/CardTitle';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import pageLayout from '@/scss/page-layout.module.scss';
-import { isFeatureEnabled } from '@/utils/subscription';
+import { isFeatureEnabled, isPaidPlan } from '@/utils/subscription';
 
 import CreateOrganizationModal from './CreateOrganizationModal';
 import OrganizationsTable from './OrganizationsTable';
@@ -27,7 +27,7 @@ const organizationsPathname = '/organizations';
 function Organizations() {
   const { getDocumentationUrl } = useDocumentationUrl();
   const {
-    currentSubscription: { planId, isAddOnAvailable },
+    currentSubscription: { planId, isEnterprisePlan },
     currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
   const { isDevTenant } = useContext(TenantsContext);
@@ -64,7 +64,7 @@ function Organizations() {
       <div className={pageLayout.headline}>
         <CardTitle
           paywall={cond((isOrganizationsDisabled || isDevTenant) && ReservedPlanId.Pro)}
-          hasAddOnTag={isAddOnAvailable}
+          hasAddOnTag={isPaidPlan(planId, isEnterprisePlan)}
           title="organizations.title"
           subtitle="organizations.subtitle"
           learnMoreLink={{

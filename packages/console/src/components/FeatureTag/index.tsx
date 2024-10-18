@@ -80,7 +80,7 @@ type CombinedAddOnAndFeatureTagProps = {
 export function CombinedAddOnAndFeatureTag(props: CombinedAddOnAndFeatureTagProps) {
   const { hasAddOnTag, className, paywall } = props;
   const {
-    currentSubscription: { planId, isAddOnAvailable, isEnterprisePlan },
+    currentSubscription: { planId, isEnterprisePlan },
   } = useContext(SubscriptionDataContext);
 
   // We believe that the enterprise plan has already allocated sufficient resource quotas in the deal negotiation, so there is no need for upselling, nor will it trigger the add-on tag prompt.
@@ -88,8 +88,8 @@ export function CombinedAddOnAndFeatureTag(props: CombinedAddOnAndFeatureTagProp
     return null;
   }
 
-  // Show the "Add-on" tag for Pro plan when dev features enabled.
-  if (hasAddOnTag && isAddOnAvailable && isCloud && planId === ReservedPlanId.Pro) {
+  // Show the "Add-on" tag for Pro plan.
+  if (hasAddOnTag && isCloud && planId === ReservedPlanId.Pro) {
     return (
       <div className={classNames(styles.tag, styles.beta, styles.addOn, className)}>Add-on</div>
     );
