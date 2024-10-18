@@ -28,6 +28,7 @@ export const skuQuotaItemPhrasesMap: Record<
   customJwtEnabled: 'custom_jwt_enabled.name',
   subjectTokenEnabled: 'impersonation_enabled.name',
   bringYourUiEnabled: 'bring_your_ui_enabled.name',
+  idpInitiatedSsoEnabled: 'idp_initiated_sso_enabled.name',
 };
 
 export const skuQuotaItemUnlimitedPhrasesMap: Record<
@@ -55,6 +56,7 @@ export const skuQuotaItemUnlimitedPhrasesMap: Record<
   customJwtEnabled: 'custom_jwt_enabled.unlimited',
   subjectTokenEnabled: 'impersonation_enabled.unlimited',
   bringYourUiEnabled: 'bring_your_ui_enabled.unlimited',
+  idpInitiatedSsoEnabled: 'idp_initiated_sso_enabled.unlimited',
 };
 
 export const skuQuotaItemLimitedPhrasesMap: Record<
@@ -82,6 +84,7 @@ export const skuQuotaItemLimitedPhrasesMap: Record<
   customJwtEnabled: 'custom_jwt_enabled.limited',
   subjectTokenEnabled: 'impersonation_enabled.limited',
   bringYourUiEnabled: 'bring_your_ui_enabled.limited',
+  idpInitiatedSsoEnabled: 'idp_initiated_sso_enabled.limited',
 };
 
 export const skuQuotaItemNotEligiblePhrasesMap: Record<
@@ -109,5 +112,6 @@ export const skuQuotaItemNotEligiblePhrasesMap: Record<
   customJwtEnabled: 'custom_jwt_enabled.not_eligible',
   subjectTokenEnabled: 'impersonation_enabled.not_eligible',
   bringYourUiEnabled: 'bring_your_ui_enabled.not_eligible',
+  idpInitiatedSsoEnabled: 'idp_initiated_sso_enabled.not_eligible',
 };
 /* === for new pricing model === */

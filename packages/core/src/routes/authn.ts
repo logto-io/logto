@@ -205,8 +205,7 @@ export default function authnRoutes<T extends AnonymousRouter>(
       // All the rest of the request body will be validated and parsed by the connector.
       const { RelayState: jti } = body;
 
-      // IdP initiated SSO will not have the jti in the RelayState.
-      // Trigger the IdP initiated SSO flow if enabled for the current connector.
+      // IdP initiated SSO does not provide the RelayState, we need to check if the IdP initiated SSO flow is enabled.
       if (!jti && EnvSet.values.isDevFeaturesEnabled) {
         const idpInitiatedAuthConfig =
           await queries.ssoConnectors.getIdpInitiatedAuthConfigByConnectorId(connectorId);

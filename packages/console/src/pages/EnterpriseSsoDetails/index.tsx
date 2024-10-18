@@ -67,12 +67,11 @@ function EnterpriseSsoDetails() {
 
   const isDarkModeEnabled = signInExperience?.color.isDarkModeEnabled ?? false;
 
-  const isIdpInitiatedAuthEnabled = useMemo(
+  const isIdpInitiatedAuthConfigEnabled = useMemo(
     () =>
       isCloud &&
       ssoConnector?.providerType === SsoProviderType.SAML &&
-      // TODO: @simeng: Replace this with new IdP-initiated auth quota guard
-      Boolean(currentSubscriptionQuota.enterpriseSsoLimit),
+      currentSubscriptionQuota.idpInitiatedSsoEnabled,
     [ssoConnector, currentSubscriptionQuota]
   );
 
@@ -153,7 +152,7 @@ function EnterpriseSsoDetails() {
             >
               <DynamicT forKey="enterprise_sso_details.tab_experience" />
             </TabNavItem>
-            {isIdpInitiatedAuthEnabled && (
+            {isIdpInitiatedAuthConfigEnabled && (
               <TabNavItem
                 href={getSsoConnectorDetailsPathname(
                   ssoConnectorId,
@@ -183,7 +182,7 @@ function EnterpriseSsoDetails() {
               }}
             />
           )}
-          {isIdpInitiatedAuthEnabled && tab === EnterpriseSsoDetailsTabs.IdpInitiatedAuth && (
+          {isIdpInitiatedAuthConfigEnabled && tab === EnterpriseSsoDetailsTabs.IdpInitiatedAuth && (
             <IdpInitiatedAuth ssoConnector={ssoConnector} />
           )}
           <ConfirmModal
