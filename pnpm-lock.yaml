@@ -147,10 +147,10 @@ importers:
         specifier: workspace:^2.5.0
         version: link:../toolkit/core-kit
       '@logto/schemas':
-        specifier: workspace:1.20.0
+        specifier: workspace:1.20.1
         version: link:../schemas
       '@logto/shared':
-        specifier: workspace:^3.1.1
+        specifier: workspace:^3.1.2
         version: link:../shared
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -3039,7 +3039,7 @@ importers:
         specifier: workspace:^2.0.0
         version: link:../app-insights
       '@logto/cli':
-        specifier: workspace:^1.20.0
+        specifier: workspace:^1.20.1
         version: link:../cli
       '@logto/connector-kit':
         specifier: workspace:^4.0.0
@@ -3066,16 +3066,16 @@ importers:
         specifier: workspace:^1.1.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.14.0
+        specifier: workspace:^1.14.1
         version: link:../phrases
       '@logto/phrases-experience':
         specifier: workspace:^1.8.0
         version: link:../phrases-experience
       '@logto/schemas':
-        specifier: workspace:^1.20.0
+        specifier: workspace:^1.20.1
         version: link:../schemas
       '@logto/shared':
-        specifier: workspace:^3.1.1
+        specifier: workspace:^3.1.2
         version: link:../shared
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -3340,7 +3340,7 @@ importers:
   packages/create:
     dependencies:
       '@logto/cli':
-        specifier: workspace:^1.20.0
+        specifier: workspace:^1.20.1
         version: link:../cli
 
   packages/demo-app:
@@ -4070,13 +4070,13 @@ importers:
         specifier: workspace:^1.1.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.14.0
+        specifier: workspace:^1.14.1
         version: link:../phrases
       '@logto/phrases-experience':
         specifier: workspace:^1.8.0
         version: link:../phrases-experience
       '@logto/shared':
-        specifier: workspace:^3.1.1
+        specifier: workspace:^3.1.2
         version: link:../shared
       '@withtyped/server':
         specifier: ^0.14.0
@@ -18867,7 +18867,7 @@ snapshots:
       debug: 4.3.5
       enhanced-resolve: 5.16.0
       eslint: 8.57.0
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
       eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.3
@@ -18879,7 +18879,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0):
+  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):
     dependencies:
       debug: 3.2.7(supports-color@5.5.0)
     optionalDependencies:
@@ -18918,7 +18918,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.13.1
       is-glob: 4.0.3

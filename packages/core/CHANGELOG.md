@@ -1,5 +1,24 @@
 # Change Log
 
+## 1.20.1
+
+### Patch Changes
+
+- bc2a0ac03: add environment variable to override default database connection timeout
+
+  By default, out database connection timeout is set to 5 seconds, which might not be enough for some network conditions. This change allows users to override the default value by setting the `DATABASE_CONNECTION_TIMEOUT` environment variable.
+
+- 3c993d59c: fix an issue that prevent mp4 video from playing in custom sign-in pages on Safari browser
+
+  Safari browser uses range request to fetch video data, but it was not supported by the `koa-serve-custom-ui-assets` middleware in core. This prevents our users who want to build custom sign-in pages with video background. In order to fix this, we need to partially read the video file stream based on the `range` request header, and set proper response headers and status code (206).
+
+- Updated dependencies [bc2a0ac03]
+- Updated dependencies [3c993d59c]
+  - @logto/shared@3.1.2
+  - @logto/phrases@1.14.1
+  - @logto/schemas@1.20.1
+  - @logto/cli@1.20.1
+
 ## 1.20.0
 
 ### Minor Changes
