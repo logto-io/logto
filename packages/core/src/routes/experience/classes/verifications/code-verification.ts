@@ -1,6 +1,6 @@
 import { TemplateType, type ToZodObject } from '@logto/connector-kit';
 import {
-  InteractionEvent,
+  type InteractionEvent,
   SignInIdentifier,
   VerificationType,
   type User,
@@ -27,12 +27,9 @@ const eventToTemplateTypeMap: Record<InteractionEvent, TemplateType> = {
 };
 
 /**
- * To make the typescript type checking work. A valid TemplateType is required.
- * This is a work around to map the latest interaction event type to old TemplateType.
- *
- * @remark This is a temporary solution until the connector-kit is updated to use the latest interaction event types.
+ * Utility method to convert interaction event to template type.
  **/
-const getTemplateTypeByEvent = (event: InteractionEvent): TemplateType =>
+export const getTemplateTypeByEvent = (event: InteractionEvent): TemplateType =>
   eventToTemplateTypeMap[event];
 
 /** This util method convert the interaction identifier to passcode library payload format */
@@ -64,7 +61,7 @@ export type CodeVerificationRecordData<T extends CodeVerificationType = CodeVeri
   id: string;
   type: T;
   identifier: VerificationCodeIdentifierOf<T>;
-  interactionEvent: InteractionEvent;
+  templateType: TemplateType;
   verified: boolean;
 };
 
@@ -83,13 +80,9 @@ abstract class CodeVerification<T extends CodeVerificationType>
   public readonly identifier: VerificationCodeIdentifierOf<T>;
 
   /**
-   * The interaction event that triggered the verification.
-   * This will be used to determine the template type for the verification code.
-   *
-   * @remark
-   * `InteractionEvent.ForgotPassword` triggered verification results can not used as a verification record for other events.
+   * The template type for sending the verification code, the connector will use this to get the correct template.
    */
-  public readonly interactionEvent: InteractionEvent;
+  public readonly templateType: TemplateType;
   public abstract readonly type: T;
   protected verified: boolean;
 
@@ -98,11 +91,11 @@ abstract class CodeVerification<T extends CodeVerificationType>
     private readonly queries: Queries,
     data: CodeVerificationRecordData<T>
   ) {
-    const { id, identifier, verified, interactionEvent } = data;
+    const { id, identifier, verified, templateType } = data;
 
     this.id = id;
     this.identifier = identifier;
-    this.interactionEvent = interactionEvent;
+    this.templateType = templateType;
     this.verified = verified;
   }
 
@@ -123,7 +116,7 @@ abstract class CodeVerification<T extends CodeVerificationType>
 
     const verificationCode = await createPasscode(
       this.id,
-      getTemplateTypeByEvent(this.interactionEvent),
+      this.templateType,
       getPasscodeIdentifierPayload(this.identifier)
     );
 
@@ -148,7 +141,7 @@ abstract class CodeVerification<T extends CodeVerificationType>
 
     await verifyPasscode(
       this.id,
-      getTemplateTypeByEvent(this.interactionEvent),
+      this.templateType,
       code,
       getPasscodeIdentifierPayload(identifier)
     );
@@ -178,13 +171,13 @@ abstract class CodeVerification<T extends CodeVerificationType>
   }
 
   toJson(): CodeVerificationRecordData<T> {
-    const { id, type, identifier, interactionEvent, verified } = this;
+    const { id, type, identifier, templateType, verified } = this;
 
     return {
       id,
       type,
       identifier,
-      interactionEvent,
+      templateType,
       verified,
     };
   }
@@ -194,7 +187,7 @@ abstract class CodeVerification<T extends CodeVerificationType>
 
 const basicCodeVerificationRecordDataGuard = z.object({
   id: z.string(),
-  interactionEvent: z.nativeEnum(InteractionEvent),
+  templateType: z.nativeEnum(TemplateType),
   verified: z.boolean(),
 });
 
@@ -273,7 +266,7 @@ export const createNewCodeVerificationRecord = (
   identifier:
     | VerificationCodeIdentifier<SignInIdentifier.Email>
     | VerificationCodeIdentifier<SignInIdentifier.Phone>,
-  interactionEvent: InteractionEvent
+  templateType: TemplateType
 ) => {
   const { type } = identifier;
 
@@ -283,7 +276,7 @@ export const createNewCodeVerificationRecord = (
         id: generateStandardId(),
         type: VerificationType.EmailVerificationCode,
         identifier,
-        interactionEvent,
+        templateType,
         verified: false,
       });
     }
@@ -292,7 +285,7 @@ export const createNewCodeVerificationRecord = (
         id: generateStandardId(),
         type: VerificationType.PhoneVerificationCode,
         identifier,
-        interactionEvent,
+        templateType,
         verified: false,
       });
     }
