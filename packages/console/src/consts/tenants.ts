@@ -81,8 +81,6 @@ export const defaultLogtoSku: LogtoSkuResponse = {
     subjectTokenEnabled: true,
     bringYourUiEnabled: true,
   },
-  defaultPriceId: 'default-price-id',
-  productId: 'product-id',
 };
 
 /** Quota for Free plan */
