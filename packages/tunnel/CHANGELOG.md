@@ -1,5 +1,12 @@
 # @logto/tunnel
 
+## 0.2.2
+
+### Patch Changes
+
+- Updated dependencies [bc2a0ac03]
+  - @logto/shared@3.1.2
+
 ## @logto/tunnel@0.2.1
 
 ### Patch Changes
@@ -94,4 +101,3 @@
   If all set up correctly, when you click the "sign-in" button in your application, you should be navigated to your custom sign-in page instead of Logto's built-in UI, along with valid session (cookies) that allows you to further interact with Logto experience API.
 
   Refer to [Logto tunnel documentation](https://docs.logto.dev/docs/references/tunnel-cli/) for more details.
-  
