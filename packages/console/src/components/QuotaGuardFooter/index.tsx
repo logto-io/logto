@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react';
 
 import { contactEmailLink } from '@/consts';
-import Button from '@/ds-components/Button';
+import Button, { LinkButton } from '@/ds-components/Button';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import styles from './index.module.scss';
@@ -20,9 +20,13 @@ function QuotaGuardFooter({ children, isLoading, onClickUpgrade, isContactUsPref
     <div className={styles.container}>
       <div className={styles.description}>{children}</div>
       {isContactUsPreferred ? (
-        <a href={contactEmailLink} className={styles.button} rel="noopener">
-          <Button size="large" type="primary" title="general.contact_us_action" />
-        </a>
+        <LinkButton
+          title="general.contact_us_action"
+          size="large"
+          type="primary"
+          href={contactEmailLink}
+          targetBlank="noopener"
+        />
       ) : (
         <Button
           size="large"
