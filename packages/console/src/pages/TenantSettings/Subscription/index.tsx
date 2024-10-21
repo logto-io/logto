@@ -19,7 +19,7 @@ function Subscription() {
   const cloudApi = useCloudApi();
   const { logtoSkus, currentSku, onCurrentSubscriptionUpdated } =
     useContext(SubscriptionDataContext);
-  const { currentTenantId } = useContext(TenantsContext);
+  const { currentTenantId, updateTenant } = useContext(TenantsContext);
 
   const reservedSkus = pickupFeaturedLogtoSkus(logtoSkus);
 
@@ -34,8 +34,17 @@ function Subscription() {
   useEffect(() => {
     if (isCloud) {
       onCurrentSubscriptionUpdated();
+
+      if (periodicUsage) {
+        updateTenant(currentTenantId, {
+          usage: {
+            activeUsers: periodicUsage.mauLimit,
+            tokenUsage: periodicUsage.tokenLimit,
+          },
+        });
+      }
     }
-  }, [onCurrentSubscriptionUpdated]);
+  }, [currentTenantId, onCurrentSubscriptionUpdated, periodicUsage, updateTenant]);
 
   if (isLoading) {
     return <Skeleton />;
