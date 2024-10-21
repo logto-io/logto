@@ -34,17 +34,19 @@ function Subscription() {
   useEffect(() => {
     if (isCloud) {
       onCurrentSubscriptionUpdated();
-
-      if (periodicUsage) {
-        updateTenant(currentTenantId, {
-          usage: {
-            activeUsers: periodicUsage.mauLimit,
-            tokenUsage: periodicUsage.tokenLimit,
-          },
-        });
-      }
     }
-  }, [currentTenantId, onCurrentSubscriptionUpdated, periodicUsage, updateTenant]);
+  }, [onCurrentSubscriptionUpdated]);
+
+  useEffect(() => {
+    if (isCloud && periodicUsage) {
+      updateTenant(currentTenantId, {
+        usage: {
+          activeUsers: periodicUsage.mauLimit,
+          tokenUsage: periodicUsage.tokenLimit,
+        },
+      });
+    }
+  }, [currentTenantId, periodicUsage, updateTenant]);
 
   if (isLoading) {
     return <Skeleton />;
