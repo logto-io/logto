@@ -56,7 +56,7 @@ const useNewSubscriptionData: () => NewSubscriptionContext & { isLoading: boolea
         quota: pick(subscriptionUsageData.quota, 'mauLimit', 'tokenLimit'),
       });
     }
-  }, [tenantId, subscriptionUsageData, updateTenant]);
+  }, [tenantId, subscriptionUsageData?.quota, updateTenant]);
 
   return useMemo(
     () => ({
