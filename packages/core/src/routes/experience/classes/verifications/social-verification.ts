@@ -1,4 +1,13 @@
-import { socialUserInfoGuard, type SocialUserInfo, type ToZodObject } from '@logto/connector-kit';
+import {
+  type ConnectorSession,
+  connectorSessionGuard,
+  socialUserInfoGuard,
+  type SocialUserInfo,
+  type ToZodObject,
+  ConnectorType,
+  type SocialConnector,
+  GoogleConnector,
+} from '@logto/connector-kit';
 import {
   VerificationType,
   type JsonObject,
@@ -11,10 +20,6 @@ import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
-import {
-  createSocialAuthorizationUrl,
-  verifySocialIdentity,
-} from '#src/routes/interaction/utils/social-verification.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -34,6 +39,10 @@ export type SocialVerificationRecordData = {
    * The social identity returned by the connector.
    */
   socialUserInfo?: SocialUserInfo;
+  /**
+   * The connector session result
+   */
+  connectorSession?: ConnectorSession;
 };
 
 export const socialVerificationRecordDataGuard = z.object({
@@ -41,6 +50,7 @@ export const socialVerificationRecordDataGuard = z.object({
   connectorId: z.string(),
   type: z.literal(VerificationType.Social),
   socialUserInfo: socialUserInfoGuard.optional(),
+  connectorSession: connectorSessionGuard.optional(),
 }) satisfies ToZodObject<SocialVerificationRecordData>;
 
 export class SocialVerification implements IdentifierVerificationRecord<VerificationType.Social> {
@@ -59,7 +69,7 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
   public readonly type = VerificationType.Social;
   public readonly connectorId: string;
   public socialUserInfo?: SocialUserInfo;
-
+  public connectorSession?: ConnectorSession;
   private connectorDataCache?: LogtoConnector;
 
   constructor(
@@ -67,11 +77,13 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     private readonly queries: Queries,
     data: SocialVerificationRecordData
   ) {
-    const { id, connectorId, socialUserInfo } = socialVerificationRecordDataGuard.parse(data);
+    const { id, connectorId, socialUserInfo, connectorSession } =
+      socialVerificationRecordDataGuard.parse(data);
 
     this.id = id;
     this.connectorId = connectorId;
     this.socialUserInfo = socialUserInfo;
+    this.connectorSession = connectorSession;
   }
 
   /**
@@ -102,11 +114,27 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     tenantContext: TenantContext,
     { state, redirectUri }: SocialAuthorizationUrlPayload
   ) {
-    return createSocialAuthorizationUrl(ctx, tenantContext, {
-      connectorId: this.connectorId,
-      state,
-      redirectUri,
-    });
+    assertThat(state && redirectUri, 'session.insufficient_info');
+
+    const connector = await this.getConnectorData();
+
+    const {
+      headers: { 'user-agent': userAgent },
+    } = ctx.request;
+
+    return connector.getAuthorizationUri(
+      {
+        state,
+        redirectUri,
+        connectorId: this.connectorId,
+        connectorFactoryId: connector.metadata.id,
+        jti: await this.getJti(ctx, tenantContext),
+        headers: { userAgent },
+      },
+      async (connectorSession) => {
+        this.connectorSession = connectorSession;
+      }
+    );
   }
 
   /**
@@ -120,10 +148,23 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
    * TODO: check the log event
    */
   async verify(ctx: WithLogContext, tenantContext: TenantContext, connectorData: JsonObject) {
-    const socialUserInfo = await verifySocialIdentity(
-      { connectorId: this.connectorId, connectorData },
-      ctx,
-      tenantContext
+    const connector = await this.getConnectorData();
+
+    // Verify the CSRF token if it's a Google connector and has credential (a Google One Tap
+    // verification)
+    if (
+      connector.metadata.id === GoogleConnector.factoryId &&
+      connectorData[GoogleConnector.oneTapParams.credential]
+    ) {
+      const csrfToken = connectorData[GoogleConnector.oneTapParams.csrfToken];
+      const value = ctx.cookies.get(GoogleConnector.oneTapParams.csrfToken);
+      assertThat(value === csrfToken, 'session.csrf_token_mismatch');
+    }
+
+    const socialUserInfo = await this.libraries.socials.getUserInfo(
+      this.connectorId,
+      connectorData,
+      async () => this.connectorSession ?? {}
     );
 
     this.socialUserInfo = socialUserInfo;
@@ -235,13 +276,14 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
   }
 
   toJson(): SocialVerificationRecordData {
-    const { id, connectorId, type, socialUserInfo } = this;
+    const { id, connectorId, type, socialUserInfo, connectorSession } = this;
 
     return {
       id,
       connectorId,
       type,
       socialUserInfo,
+      connectorSession,
     };
   }
 
@@ -278,11 +320,27 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     return socials.findSocialRelatedUser(this.socialUserInfo);
   }
 
-  private async getConnectorData() {
+  private async getConnectorData(): Promise<LogtoConnector<SocialConnector>> {
     const { getConnector } = this.libraries.socials;
 
     this.connectorDataCache ||= await getConnector(this.connectorId);
 
+    assertThat(this.connectorDataCache.type === ConnectorType.Social, 'connector.unexpected_type');
+
     return this.connectorDataCache;
+  }
+
+  /**
+   * Get the `jti` from the interaction details.
+   * If the interaction details is not found, return an empty string.
+   */
+  private async getJti(ctx: WithLogContext, tenantContext: TenantContext) {
+    try {
+      const { jti } = await tenantContext.provider.interactionDetails(ctx.req, ctx.res);
+
+      return jti;
+    } catch {
+      return '';
+    }
   }
 }
