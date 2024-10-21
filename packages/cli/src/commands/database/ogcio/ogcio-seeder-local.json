@@ -47,7 +47,8 @@
         "life-events:digital-wallet-flow:*",
         "bb:public-servant.inactive:*",
         "scheduler:jobs:write",
-        "upload:file:*"
+        "upload:file:*",
+        "o11y:metrics:*"
       ]
     },
     "organization_roles": [
@@ -187,6 +188,18 @@
           { "application_id": "upl1wqp66oisjwcjyder9", "organization_id": "first-testing" },
           { "application_id": "upl1wqp66oisjwcjyder9", "organization_id": "second-testing" }
         ]
+      },
+      {
+        "id": "m2m-otel-collector",
+        "name": "M2M Open Telemetry Collector",
+        "description": "Role for M2M Applications that need to push metrics to Open Telemetry Collector",
+        "specific_permissions": [
+          "o11y:metrics:*"
+        ],
+        "type": "MachineToMachine",
+        "related_applications": [
+          { "application_id": "628ud3kj186xzpid7zo5n", "organization_id": "ogcio" }
+        ]
       }
     ],
     "applications": [
@@ -321,6 +334,16 @@
         "secret": "uploader_local_secret",
         "id": "upl1wqp66oisjwcjyder9",
         "is_third_party": false
+      },
+      {
+        "name": "M2M Open Telemetry Collector",
+        "description": "Machine 2 Machine application used to communicate with the Otel Collector",
+        "type": "MachineToMachine",
+        "redirect_uri": "",
+        "logout_redirect_uri": "",
+        "secret": "m2m_otel_collector_local_secret",
+        "id": "628ud3kj186xzpid7zo5n",
+        "is_third_party": false
       }
     ],
     "resources": [
@@ -353,6 +376,11 @@
         "id": "analytics-api",
         "name": "Analytics Building Block API",
         "indicator": "http://localhost:8075/"
+      },
+      {
+        "id": "otel-collector-http",
+        "name": "Observability Open Telemetry Collector HTTP",
+        "indicator": "http://localhost:4318/"
       }
     ],
     "resource_permissions": [
@@ -400,6 +428,12 @@
           "analytics:website:read",
           "analytics:website:write",
           "analytics:website:tracking"
+        ]
+      },
+      {
+        "resource_id": "otel-collector-http",
+        "specific_permissions": [
+          "o11y:metrics:*"
         ]
       }
     ],
