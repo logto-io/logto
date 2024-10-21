@@ -11,6 +11,7 @@
 
 .radioCardTitle {
   font: var(--font-label-2);
+  padding-inline-end: _.unit(5);
   margin-bottom: _.unit(2);
 }
 
@@ -30,8 +31,6 @@
   }
 }
 
-div[class$='disabled'] {
-  .radioCardFooter {
-    color: var(--color-disabled);
-  }
+div[class*='radio'][class*='disabled'] {
+  color: var(--color-text);
 }

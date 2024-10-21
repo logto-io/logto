@@ -88,7 +88,7 @@ const enterprise_sso_details = {
       'No applications found. Please add one in the <a>Applications</a> section.',
     empty_applications_placeholder: 'No applications',
     authentication_type: 'Authentication type',
-    auto_authentication_disabled_title: 'Redirect to client for SP-initiated SSO (Recommended)',
+    auto_authentication_disabled_title: 'Redirect to SP-initiated SSO (Recommended)',
     auto_authentication_disabled_description:
       'Redirect users to the client-side application to initiate a secure SP-initiated OIDC authentication.  This will prevent the CSRF attack and increase the security of the authentication process.',
     auto_authentication_enabled_title: 'Directly sign in using the IdP-initiated SSO',
