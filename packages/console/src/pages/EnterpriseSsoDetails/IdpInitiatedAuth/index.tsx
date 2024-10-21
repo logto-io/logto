@@ -26,7 +26,8 @@ function IdpInitiatedAuth({ ssoConnector }: Props) {
 
   const isLoading = useMemo(
     () =>
-      !applications && !applicationError && !idpInitiatedAuthConfig && !idpInitiatedAuthConfigError,
+      (!applications && !applicationError) ||
+      (!idpInitiatedAuthConfig && !idpInitiatedAuthConfigError),
     [applicationError, applications, idpInitiatedAuthConfig, idpInitiatedAuthConfigError]
   );
 

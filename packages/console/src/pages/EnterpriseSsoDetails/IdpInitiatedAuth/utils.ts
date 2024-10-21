@@ -1,9 +1,11 @@
 import {
+  type Application,
   ApplicationType,
   SsoConnectorIdpInitiatedAuthConfigs,
   type CreateSsoConnectorIdpInitiatedAuthConfig,
   type SsoConnectorIdpInitiatedAuthConfig,
 } from '@logto/schemas';
+import { conditional, type DeepPartial } from '@silverhand/essentials';
 import { t } from 'i18next';
 import { toast } from 'react-hot-toast';
 
@@ -20,11 +22,12 @@ export const buildIdpInitiatedAuthConfigEndpoint = (connectorId: string) =>
 
 type IdpInitiatedAuthConfigData = Pick<
   SsoConnectorIdpInitiatedAuthConfig,
-  | 'defaultApplicationId'
-  | 'autoSendAuthorizationRequest'
-  | 'redirectUri'
-  | 'clientIdpInitiatedAuthCallbackUri'
-> & { authParameters: string };
+  'defaultApplicationId' | 'autoSendAuthorizationRequest'
+> & {
+  authParameters: string;
+  redirectUri: string | undefined;
+  clientIdpInitiatedAuthCallbackUri: string | undefined;
+};
 
 const authParametersGuard = SsoConnectorIdpInitiatedAuthConfigs.createGuard.shape.authParameters;
 
@@ -34,11 +37,17 @@ export type IdpInitiatedAuthConfigFormData = {
 };
 
 export const parseResponseToFormData = (
-  response?: SsoConnectorIdpInitiatedAuthConfig
-): IdpInitiatedAuthConfigFormData => {
+  response: SsoConnectorIdpInitiatedAuthConfig | undefined,
+  applications: Application[] = []
+): DeepPartial<IdpInitiatedAuthConfigFormData> => {
   if (!response) {
     return {
       isIdpInitiatedSsoEnabled: false,
+      config: {
+        // Set default values
+        defaultApplicationId: applications[0]?.id,
+        autoSendAuthorizationRequest: false,
+      },
     };
   }
 
@@ -55,8 +64,8 @@ export const parseResponseToFormData = (
     config: {
       defaultApplicationId,
       autoSendAuthorizationRequest,
-      redirectUri,
-      clientIdpInitiatedAuthCallbackUri,
+      redirectUri: conditional(redirectUri),
+      clientIdpInitiatedAuthCallbackUri: conditional(clientIdpInitiatedAuthCallbackUri),
       authParameters: JSON.stringify(authParameters, null, 2),
     },
   };

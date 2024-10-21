@@ -58,7 +58,7 @@ function ConfigForm({
     handleSubmit,
     watch,
   } = useForm<IdpInitiatedAuthConfigFormData>({
-    defaultValues: parseResponseToFormData(idpInitiatedAuthConfig),
+    defaultValues: parseResponseToFormData(idpInitiatedAuthConfig, applications),
   });
 
   const isIdpInitiatedSsoEnabled = watch('isIdpInitiatedSsoEnabled');
@@ -98,8 +98,9 @@ function ConfigForm({
   useEffect(() => {
     if (defaultApplication?.type === ApplicationType.SPA) {
       setValue('config.autoSendAuthorizationRequest', false);
+      setValue('config.redirectUri', undefined);
     }
-  }, [defaultApplication?.type, setValue]);
+  }, [defaultApplication, setValue]);
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (data) => {
@@ -113,7 +114,7 @@ function ConfigForm({
         await api.delete(buildIdpInitiatedAuthConfigEndpoint(ssoConnector.id));
         await mutateIdpInitiatedConfig();
         toast.success(t('general.saved'));
-        reset(parseResponseToFormData());
+        reset(parseResponseToFormData(undefined, applications));
         return;
       }
 
@@ -172,6 +173,9 @@ function ConfigForm({
                 }}
                 render={({ field: { value, onChange } }) => (
                   <Select
+                    placeholder={t(
+                      'enterprise_sso_details.idp_initiated_auth_config.empty_applications_placeholder'
+                    )}
                     options={applications.map((application) => ({
                       value: application.id,
                       title: `${application.name} (${application.type}, ID: ${application.id})`,
@@ -278,6 +282,9 @@ function ConfigForm({
                           value: uri,
                           title: uri,
                         }))}
+                        placeholder={t(
+                          'enterprise_sso_details.idp_initiated_auth_config.redirect_uri_placeholder'
+                        )}
                         value={value}
                         error={emptyRedirectUrisError ?? errors.config?.redirectUri?.message}
                         onChange={onChange}
