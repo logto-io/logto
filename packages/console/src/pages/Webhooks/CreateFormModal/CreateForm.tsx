@@ -64,7 +64,7 @@ function CreateForm({ onClose }: Props) {
       subtitle="webhooks.create_form.subtitle"
       footer={
         shouldBlockCreation ? (
-          <QuotaGuardFooter>
+          <QuotaGuardFooter isContactUsPreferred={isEnterprisePlan}>
             <Trans
               components={{
                 a: <ContactUsPhraseLink />,
