@@ -26,7 +26,7 @@ function CheckoutSuccessCallback() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.subscription' });
   const { navigate } = useTenantPathname();
   const cloudApi = useCloudApi({ hideErrorToast: true });
-  const { currentTenantId, navigateTenant } = useContext(TenantsContext);
+  const { currentTenantId, navigateTenant, updateTenant } = useContext(TenantsContext);
   const { onCurrentSubscriptionUpdated } = useContext(SubscriptionDataContext);
   const { search } = useLocation();
   const checkoutState = new URLSearchParams(search).get(checkoutStateQueryKey);
@@ -101,6 +101,10 @@ function CheckoutSuccessCallback() {
       }
 
       onCurrentSubscriptionUpdated(tenantSubscription);
+      updateTenant(checkoutTenantId, {
+        subscription: tenantSubscription,
+        ...conditional(tenantSubscription?.planId && { planId: tenantSubscription.planId }),
+      });
 
       // No need to check `isDowngrade` here, since a downgrade must occur in a tenant with a Pro
       // plan, and the purchase conversion has already been reported using the same tenant ID. We
@@ -131,6 +135,7 @@ function CheckoutSuccessCallback() {
     onCurrentSubscriptionUpdated,
     t,
     tenantSubscription,
+    updateTenant,
   ]);
 
   if (!isValidSession) {
