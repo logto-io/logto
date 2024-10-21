@@ -20,8 +20,8 @@ function QuotaGuardFooter({ children, isLoading, onClickUpgrade, isContactUsPref
     <div className={styles.container}>
       <div className={styles.description}>{children}</div>
       {isContactUsPreferred ? (
-        <a href={contactEmailLink} className={styles.linkButton} rel="noopener">
-          <Button title="general.contact_us_action" />
+        <a href={contactEmailLink} className={styles.button} rel="noopener">
+          <Button size="large" type="primary" title="general.contact_us_action" />
         </a>
       ) : (
         <Button
