@@ -218,6 +218,34 @@
           }
         }
       }
+    },
+    "/api/profile/identities": {
+      "post": {
+        "operationId": "AddUserIdentities",
+        "summary": "Add a user identity",
+        "description": "Add an identity (social identity) to the user, a verification record is required for checking sensitive permissions, and a verification record for the social identity is required.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "verificationRecordId": {
+                    "description": "The verification record ID for checking sensitive permissions."
+                  },
+                  "newIdentifierVerificationRecordId": {
+                    "description": "The identifier verification record ID for the new social identity ownership verification."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The identity was added successfully."
+          }
+        }
+      }
     }
   }
 }

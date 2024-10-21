@@ -236,4 +236,63 @@ export default function profileRoutes<T extends UserRouter>(
       return next();
     }
   );
+
+  router.post(
+    '/profile/identities',
+    koaGuard({
+      body: z.object({
+        verificationRecordId: z.string(),
+        newIdentifierVerificationRecordId: z.string(),
+      }),
+      status: [204, 400, 401],
+    }),
+    async (ctx, next) => {
+      const { id: userId, scopes } = ctx.auth;
+      const { verificationRecordId, newIdentifierVerificationRecordId } = ctx.guard.body;
+
+      assertThat(scopes.has(UserScope.Identities), 'auth.unauthorized');
+
+      await verifyUserSensitivePermission({
+        userId,
+        id: verificationRecordId,
+        queries,
+        libraries,
+      });
+
+      // Check new identifier
+      const newVerificationRecord = await buildVerificationRecordByIdAndType({
+        type: VerificationType.Social,
+        id: newIdentifierVerificationRecordId,
+        queries,
+        libraries,
+      });
+      assertThat(newVerificationRecord.isVerified, 'verification_record.not_found');
+
+      const {
+        socialIdentity: { target, userInfo },
+      } = await newVerificationRecord.toUserProfile();
+
+      await checkIdentifierCollision({ identity: { target, id: userInfo.id } }, userId);
+
+      const user = await findUserById(userId);
+
+      assertThat(!user.identities[target], 'user.identity_already_in_use');
+
+      const updatedUser = await updateUserById(userId, {
+        identities: {
+          ...user.identities,
+          [target]: {
+            userId: userInfo.id,
+            details: userInfo,
+          },
+        },
+      });
+
+      ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
 }
