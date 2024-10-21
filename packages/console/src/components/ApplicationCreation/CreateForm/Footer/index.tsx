@@ -27,7 +27,7 @@ type Props = {
 function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props) {
   const {
     currentSku,
-    currentSubscription: { planId, isAddOnAvailable, isEnterprisePlan },
+    currentSubscription: { planId, isEnterprisePlan },
     currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell' });
@@ -44,7 +44,6 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
   if (selectedType) {
     if (
       selectedType === ApplicationType.MachineToMachine &&
-      isAddOnAvailable &&
       hasMachineToMachineAppsReachedLimit &&
       // Just in case the enterprise plan has reached the resource limit, we still need to show charge notice.
       isPaidPlan(planId, isEnterprisePlan) &&

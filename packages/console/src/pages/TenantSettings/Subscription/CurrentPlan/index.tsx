@@ -11,6 +11,7 @@ import SkuName from '@/components/SkuName';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import FormField from '@/ds-components/FormField';
+import { isPaidPlan } from '@/utils/subscription';
 
 import AddOnUsageChangesNotification from './AddOnUsageChangesNotification';
 import MauLimitExceedNotification from './MauLimitExceededNotification';
@@ -24,7 +25,7 @@ type Props = {
 function CurrentPlan({ periodicUsage: rawPeriodicUsage }: Props) {
   const {
     currentSku: { id, unitPrice },
-    currentSubscription: { upcomingInvoice, isEnterprisePlan, isAddOnAvailable, planId },
+    currentSubscription: { upcomingInvoice, isEnterprisePlan, planId },
   } = useContext(SubscriptionDataContext);
   const { currentTenant } = useContext(TenantsContext);
 
@@ -71,7 +72,7 @@ function CurrentPlan({ periodicUsage: rawPeriodicUsage }: Props) {
       <FormField title="subscription.next_bill">
         <BillInfo cost={upcomingCost} isManagePaymentVisible={Boolean(upcomingCost)} />
       </FormField>
-      {isAddOnAvailable && !isEnterprisePlan && (
+      {isPaidPlan(planId, isEnterprisePlan) && !isEnterprisePlan && (
         <AddOnUsageChangesNotification className={styles.notification} />
       )}
       <MauLimitExceedNotification

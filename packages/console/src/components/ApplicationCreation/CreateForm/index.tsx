@@ -23,6 +23,7 @@ import TypeDescription from '@/pages/Applications/components/TypeDescription';
 import modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { trySubmitSafe } from '@/utils/form';
+import { isPaidPlan } from '@/utils/subscription';
 
 import Footer from './Footer';
 import styles from './index.module.scss';
@@ -57,10 +58,11 @@ function CreateForm({
     defaultValues: { type: defaultCreateType, isThirdParty: isDefaultCreateThirdParty },
   });
   const {
-    currentSubscription: { isAddOnAvailable, planId },
+    currentSubscription: { planId, isEnterprisePlan },
   } = useContext(SubscriptionDataContext);
   const { user } = useCurrentUser();
   const { mutate: mutateGlobal } = useSWRConfig();
+  const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
 
   const {
     field: { onChange, value, name, ref },
@@ -125,13 +127,13 @@ function CreateForm({
         title="applications.create"
         subtitle={subtitleElement}
         paywall={conditional(
-          isAddOnAvailable &&
+          isPaidTenant &&
             watch('type') === ApplicationType.MachineToMachine &&
             planId !== ReservedPlanId.Pro &&
             ReservedPlanId.Pro
         )}
         hasAddOnTag={
-          isAddOnAvailable &&
+          isPaidTenant &&
           watch('type') === ApplicationType.MachineToMachine &&
           hasMachineToMachineAppsReachedLimit
         }

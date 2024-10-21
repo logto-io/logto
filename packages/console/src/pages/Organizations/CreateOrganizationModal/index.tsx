@@ -34,7 +34,7 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
-    currentSubscription: { planId, isAddOnAvailable, isEnterprisePlan },
+    currentSubscription: { planId, isEnterprisePlan },
     currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
   const {
@@ -45,6 +45,7 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
     isCloud &&
     !isFeatureEnabled(currentSubscriptionQuota.organizationsLimit) &&
     planId !== ReservedPlanId.Pro;
+  const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
 
   const {
     reset,
@@ -81,39 +82,35 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
     >
       <ModalLayout
         title="organizations.create_organization"
-        paywall={conditional(
-          isAddOnAvailable && planId !== ReservedPlanId.Pro && ReservedPlanId.Pro
-        )}
-        hasAddOnTag={isAddOnAvailable}
+        paywall={conditional(isPaidTenant && planId !== ReservedPlanId.Pro && ReservedPlanId.Pro)}
+        hasAddOnTag={isPaidTenant}
         footer={
           cond(
-            isAddOnAvailable &&
-              // Just in case the enterprise plan has reached the resource limit, we still need to show charge notice.
-              isPaidPlan(planId, isEnterprisePlan) &&
-              !organizationUpsellNoticeAcknowledged && (
-                <AddOnNoticeFooter
-                  isLoading={isSubmitting}
-                  buttonTitle="general.create"
-                  onClick={async () => {
-                    void update({ organizationUpsellNoticeAcknowledged: true });
-                    await submit();
+            // Just in case the enterprise plan has reached the resource limit, we still need to show charge notice.
+            isPaidTenant && !organizationUpsellNoticeAcknowledged && (
+              <AddOnNoticeFooter
+                isLoading={isSubmitting}
+                buttonTitle="general.create"
+                onClick={async () => {
+                  void update({ organizationUpsellNoticeAcknowledged: true });
+                  await submit();
+                }}
+              >
+                <Trans
+                  components={{
+                    span: <span className={styles.strong} />,
+                    a: <TextLink to={addOnPricingExplanationLink} />,
                   }}
                 >
-                  <Trans
-                    components={{
-                      span: <span className={styles.strong} />,
-                      a: <TextLink to={addOnPricingExplanationLink} />,
-                    }}
-                  >
-                    {t('upsell.add_on.footer.organization', {
-                      price: organizationAddOnUnitPrice,
-                      planName: t(
-                        isEnterprisePlan ? 'subscription.enterprise' : 'subscription.pro_plan'
-                      ),
-                    })}
-                  </Trans>
-                </AddOnNoticeFooter>
-              )
+                  {t('upsell.add_on.footer.organization', {
+                    price: organizationAddOnUnitPrice,
+                    planName: t(
+                      isEnterprisePlan ? 'subscription.enterprise' : 'subscription.pro_plan'
+                    ),
+                  })}
+                </Trans>
+              </AddOnNoticeFooter>
+            )
           ) ??
           (isOrganizationsDisabled ? (
             <QuotaGuardFooter>

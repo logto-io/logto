@@ -16,6 +16,7 @@ import useApi from '@/hooks/use-api';
 import useApiResourcesUsage from '@/hooks/use-api-resources-usage';
 import modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
+import { isPaidPlan } from '@/utils/subscription';
 
 import Footer from './Footer';
 
@@ -31,7 +32,7 @@ type Props = {
 function CreateForm({ onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
-    currentSubscription: { planId, isAddOnAvailable },
+    currentSubscription: { planId, isEnterprisePlan },
   } = useContext(SubscriptionDataContext);
 
   const {
@@ -69,7 +70,7 @@ function CreateForm({ onClose }: Props) {
         title="api_resources.create"
         subtitle="api_resources.subtitle"
         paywall={conditional(planId !== ReservedPlanId.Pro && ReservedPlanId.Pro)}
-        hasAddOnTag={isAddOnAvailable && hasReachedLimit}
+        hasAddOnTag={isPaidPlan(planId, isEnterprisePlan) && hasReachedLimit}
         footer={<Footer isCreationLoading={isSubmitting} onClickCreate={onSubmit} />}
         onClose={onClose}
       >
