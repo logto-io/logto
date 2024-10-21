@@ -70,3 +70,31 @@ export const createAndVerifyVerificationCode = async (
 
   return verificationRecordId;
 };
+
+export const createSocialVerificationRecord = async (
+  api: KyInstance,
+  connectorId: string,
+  state: string,
+  redirectUri: string
+) => {
+  const { verificationRecordId, authorizationUri, expiresAt } = await api
+    .post('api/verifications/social', {
+      json: { connectorId, state, redirectUri },
+    })
+    .json<{ verificationRecordId: string; authorizationUri: string; expiresAt: string }>();
+
+  expect(expiresAt).toBeTruthy();
+  expect(authorizationUri).toBeTruthy();
+
+  return { verificationRecordId, authorizationUri };
+};
+
+export const verifySocialAuthorization = async (
+  api: KyInstance,
+  verificationRecordId: string,
+  connectorData: Record<string, unknown>
+) => {
+  await api.post('api/verifications/social/verify', {
+    json: { verificationRecordId, connectorData },
+  });
+};

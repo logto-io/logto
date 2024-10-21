@@ -1,4 +1,10 @@
-import { socialUserInfoGuard, type SocialUserInfo, type ToZodObject } from '@logto/connector-kit';
+import {
+  type ConnectorSession,
+  connectorSessionGuard,
+  socialUserInfoGuard,
+  type SocialUserInfo,
+  type ToZodObject,
+} from '@logto/connector-kit';
 import {
   VerificationType,
   type JsonObject,
@@ -34,6 +40,10 @@ export type SocialVerificationRecordData = {
    * The social identity returned by the connector.
    */
   socialUserInfo?: SocialUserInfo;
+  /**
+   * The connector session result
+   */
+  connectorSession?: ConnectorSession;
 };
 
 export const socialVerificationRecordDataGuard = z.object({
@@ -41,6 +51,7 @@ export const socialVerificationRecordDataGuard = z.object({
   connectorId: z.string(),
   type: z.literal(VerificationType.Social),
   socialUserInfo: socialUserInfoGuard.optional(),
+  connectorSession: connectorSessionGuard.optional(),
 }) satisfies ToZodObject<SocialVerificationRecordData>;
 
 export class SocialVerification implements IdentifierVerificationRecord<VerificationType.Social> {
@@ -59,7 +70,7 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
   public readonly type = VerificationType.Social;
   public readonly connectorId: string;
   public socialUserInfo?: SocialUserInfo;
-
+  public connectorSession?: ConnectorSession;
   private connectorDataCache?: LogtoConnector;
 
   constructor(
@@ -67,11 +78,13 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     private readonly queries: Queries,
     data: SocialVerificationRecordData
   ) {
-    const { id, connectorId, socialUserInfo } = socialVerificationRecordDataGuard.parse(data);
+    const { id, connectorId, socialUserInfo, connectorSession } =
+      socialVerificationRecordDataGuard.parse(data);
 
     this.id = id;
     this.connectorId = connectorId;
     this.socialUserInfo = socialUserInfo;
+    this.connectorSession = connectorSession;
   }
 
   /**
@@ -102,11 +115,21 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     tenantContext: TenantContext,
     { state, redirectUri }: SocialAuthorizationUrlPayload
   ) {
-    return createSocialAuthorizationUrl(ctx, tenantContext, {
-      connectorId: this.connectorId,
-      state,
-      redirectUri,
-    });
+    return createSocialAuthorizationUrl(
+      ctx,
+      tenantContext,
+      {
+        connectorId: this.connectorId,
+        state,
+        redirectUri,
+      },
+      {
+        setSession: async (connectorSession) => {
+          this.connectorSession = connectorSession;
+        },
+        jti: this.id,
+      }
+    );
   }
 
   /**
@@ -119,11 +142,17 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
    *
    * TODO: check the log event
    */
-  async verify(ctx: WithLogContext, tenantContext: TenantContext, connectorData: JsonObject) {
+  async verify(
+    ctx: WithLogContext,
+    tenantContext: TenantContext,
+    connectorData: JsonObject,
+    skipInteractionLogging = false
+  ) {
     const socialUserInfo = await verifySocialIdentity(
       { connectorId: this.connectorId, connectorData },
       ctx,
-      tenantContext
+      tenantContext,
+      { getSession: async () => this.connectorSession ?? {}, skipInteractionLogging }
     );
 
     this.socialUserInfo = socialUserInfo;
@@ -235,13 +264,14 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
   }
 
   toJson(): SocialVerificationRecordData {
-    const { id, connectorId, type, socialUserInfo } = this;
+    const { id, connectorId, type, socialUserInfo, connectorSession } = this;
 
     return {
       id,
       connectorId,
       type,
       socialUserInfo,
+      connectorSession,
     };
   }
 
