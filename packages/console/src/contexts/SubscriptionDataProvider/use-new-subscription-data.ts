@@ -1,5 +1,5 @@
-import { cond, condString, pick } from '@silverhand/essentials';
-import { useContext, useEffect, useMemo } from 'react';
+import { cond, condString } from '@silverhand/essentials';
+import { useContext, useMemo } from 'react';
 import useSWR from 'swr';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
@@ -50,13 +50,7 @@ const useNewSubscriptionData: () => NewSubscriptionContext & { isLoading: boolea
     [currentTenant?.planId, logtoSkus]
   );
 
-  useEffect(() => {
-    if (subscriptionUsageData?.quota) {
-      updateTenant(tenantId, {
-        quota: pick(subscriptionUsageData.quota, 'mauLimit', 'tokenLimit'),
-      });
-    }
-  }, [tenantId, subscriptionUsageData?.quota, updateTenant]);
+  // TODO: @darcyYe can use `updateTenant()` to manually update the quota of the current tenant. Previously we removed such logic to unblock the release since it breaks the Cloud console integration tests.
 
   return useMemo(
     () => ({
