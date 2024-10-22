@@ -15,11 +15,7 @@ import type { SocialAuthorizationUrlPayload } from '../types/index.js';
 export const createSocialAuthorizationUrl = async (
   ctx: WithLogContext,
   { provider, connectors }: TenantContext,
-  payload: SocialAuthorizationUrlPayload,
-  {
-    setSession,
-    jti,
-  }: { setSession?: (connectorSession: ConnectorSession) => Promise<void>; jti?: string } = {}
+  payload: SocialAuthorizationUrlPayload
 ) => {
   const { getLogtoConnectorById } = connectors;
 
@@ -34,7 +30,7 @@ export const createSocialAuthorizationUrl = async (
     headers: { 'user-agent': userAgent },
   } = ctx.request;
 
-  const { jti: finalJti } = jti ? { jti } : await provider.interactionDetails(ctx.req, ctx.res);
+  const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
 
   return connector.getAuthorizationUri(
     {
@@ -47,34 +43,25 @@ export const createSocialAuthorizationUrl = async (
        */
       connectorId,
       connectorFactoryId: connector.metadata.id,
-      jti: finalJti,
+      jti,
       headers: { userAgent },
     },
-    // TODO(LOG-10266): remove this and migrate all connector session result to verification record
-    setSession ??
-      (async (connectorStorage: ConnectorSession) =>
-        assignConnectorSessionResult(ctx, provider, connectorStorage))
+    async (connectorStorage: ConnectorSession) =>
+      assignConnectorSessionResult(ctx, provider, connectorStorage)
   );
 };
 
 export const verifySocialIdentity = async (
   { connectorId, connectorData }: SocialConnectorPayload,
   ctx: WithLogContext,
-  { provider, libraries }: TenantContext,
-  {
-    getSession,
-    skipInteractionLogging,
-  }: { getSession?: () => Promise<ConnectorSession>; skipInteractionLogging?: boolean } = {}
+  { provider, libraries }: TenantContext
 ): Promise<SocialUserInfo> => {
   const {
     socials: { getUserInfo, getConnector },
   } = libraries;
 
-  // TODO(LOG-10268): move logging to experience api layer
-  const log = skipInteractionLogging
-    ? undefined
-    : ctx.createLog('Interaction.SignIn.Identifier.Social.Submit');
-  log?.append({ connectorId, connectorData });
+  const log = ctx.createLog('Interaction.SignIn.Identifier.Social.Submit');
+  log.append({ connectorId, connectorData });
 
   const connector = await getConnector(connectorId);
 
@@ -89,13 +76,11 @@ export const verifySocialIdentity = async (
     assertThat(value === csrfToken, 'session.csrf_token_mismatch');
   }
 
-  const userInfo = await getUserInfo(
-    connectorId,
-    connectorData,
-    getSession ?? (async () => getConnectorSessionResult(ctx, provider))
+  const userInfo = await getUserInfo(connectorId, connectorData, async () =>
+    getConnectorSessionResult(ctx, provider)
   );
 
-  log?.append(userInfo);
+  log.append(userInfo);
 
   return userInfo;
 };
