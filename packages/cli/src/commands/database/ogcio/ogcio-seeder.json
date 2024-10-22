@@ -38,12 +38,7 @@
         "bb:public-servant.inactive:*",
         "scheduler:jobs:write",
         "upload:file:*",
-        "o11y:metrics:*",
-        "integrator:journey.public:read",
-        "integrator:journey:*",
-        "integrator:step:*",
-        "integrator:run:*",
-        "integrator:run:read"
+        "o11y:metrics:*"
       ]
     },
     "organization_roles": [
@@ -109,12 +104,6 @@
         "specific_permissions": ["upload:file:*"]
       },
       {
-        "id": "int-public-servant",
-        "name": "Integrator Public Servant",
-        "description": "Integrator Public servant",
-        "specific_permissions": ["integrator:journey:*", "integrator:step:*", "integrator:run:read"]
-      },
-      {
         "id": "bb-inactive-ps",
         "name": "Inactive Public Servant",
         "description": "Inactive Public Servant",
@@ -152,16 +141,6 @@
         "type": "MachineToMachine",
         "related_applications": [
           { "application_id": "03emabp0dwznxw414mxme", "organization_id": "ogcio" }
-        ]
-      },
-      {
-        "id": "m2m-citiz-integrator",
-        "name": "M2M Citizen Integrator Reader",
-        "description": "Role for M2M Applications that need to read from Integrator resources",
-        "specific_permissions": ["integrator:journey.public:read"],
-        "type": "MachineToMachine",
-        "related_applications": [
-          { "application_id": "ca0c4izoo6dli4vko06g3", "organization_id": "ogcio" }
         ]
       },
       {
@@ -289,25 +268,6 @@
         "apply_management_api_role": true
       },
       {
-        "name": "Integrator Building Block",
-        "description": "Integrator App for Building Block",
-        "type": "Traditional",
-        "redirect_uri": "<SEEDER_INTEGRATOR_APP_REDIRECT_URI>",
-        "logout_redirect_uri": "<SEEDER_INTEGRATOR_APP_LOGOUT_REDIRECT_URI>",
-        "secret": "<SEEDER_INTEGRATOR_APP_SECRET>",
-        "id": "1qpp7cfssbb4mcrvmfe0c",
-        "is_third_party": false
-      },
-      {
-        "name": "M2M Integrator Reader",
-        "description": "Machine 2 Machine application used to communicate between services and Integrator resources",
-        "type": "MachineToMachine",
-        "redirect_uri": "",
-        "logout_redirect_uri": "",
-        "secret": "<SEEDER_M2M_INTEGRATOR_APP_SECRET>",
-        "id": "ca0c4izoo6dli4vko06g3"
-      },
-      {
         "name": "M2M Analytics API",
         "description": "Machine 2 Machine application used to communicate with the Analytics APIs",
         "type": "MachineToMachine",
@@ -365,11 +325,6 @@
         "indicator": "<SEEDER_UPLOAD_API_INDICATOR>"
       },
       {
-        "id": "integrator-api",
-        "name": "Integrator Building Block API",
-        "indicator": "<SEEDER_INTEGRATOR_API_INDICATOR>"
-      },
-      {
         "id": "analytics-api",
         "name": "Analytics Building Block API",
         "indicator": "<SEEDER_ANALYTICS_API_INDICATOR>"
@@ -418,14 +373,6 @@
       {
         "resource_id": "upload-api",
         "specific_permissions": ["upload:file.self:write", "upload:file.self:read"]
-      },
-      {
-        "resource_id": "integrator-api",
-        "specific_permissions": [
-          "integrator:journey.public:read",
-          "integrator:run.self:read",
-          "integrator:run.self:write"
-        ]
       },
       {
         "resource_id": "analytics-api",
@@ -478,14 +425,6 @@
           {
             "resource_id": "upload-api",
             "specific_permissions": ["upload:file.self:read"]
-          },
-          {
-            "resource_id": "integrator-api",
-            "specific_permissions": [
-              "integrator:journey.public:read",
-              "integrator:run.self:read",
-              "integrator:run.self:write"
-            ]
           }
         ]
       },
@@ -501,19 +440,6 @@
         ],
         "type": "MachineToMachine",
         "related_application_ids": ["tty6llp30risjwcjhbvc9"]
-      },
-      {
-        "id": "m2m-citiz-integrator",
-        "name": "M2M Citizen Integrator Reader role",
-        "description": "Role used to make M2M applications able to read from integrator resources",
-        "permissions": [
-          {
-            "resource_id": "integrator-api",
-            "specific_permissions": ["integrator:journey.public:read"]
-          }
-        ],
-        "type": "MachineToMachine",
-        "related_application_ids": ["ca0c4izoo6dli4vko06g3"]
       }
     ],
     "connectors": [
