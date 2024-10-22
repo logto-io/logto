@@ -30,7 +30,6 @@
     "@logto/cloud": "0.2.5-5e334eb",
     "@logto/connector-kit": "workspace:^4.0.0",
     "@logto/core-kit": "workspace:^2.5.0",
-    "@logto/elements": "workspace:^0.0.1",
     "@logto/language-kit": "workspace:^1.1.0",
     "@logto/phrases": "workspace:^1.14.0",
     "@logto/phrases-experience": "workspace:^1.8.0",

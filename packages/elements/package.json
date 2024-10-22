@@ -10,13 +10,13 @@
   "main": "dist/index.js",
   "module": "dist/index.js",
   "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+    "./account": {
+      "import": "./dist/account/index.js",
+      "types": "./dist/account/index.d.ts"
     },
-    "./react": {
-      "import": "./dist/react.js",
-      "types": "./dist/react.d.ts"
+    "./account/react": {
+      "import": "./dist/account/react.js",
+      "types": "./dist/account/react.d.ts"
     }
   },
   "files": [
@@ -28,17 +28,14 @@
   },
   "scripts": {
     "precommit": "lint-staged",
-    "build:only": "lit-localize build && tsup",
-    "build": "pnpm check && pnpm build:only",
+    "prepack": "pnpm build",
+    "build": "tsup",
     "start": "web-dev-server",
-    "dev": "lit-localize build && tsup --watch --no-splitting",
+    "dev": "tsup --watch --no-splitting",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "test": "echo \"No tests yet.\"",
-    "test:ci": "pnpm run test --silent --coverage",
-    "prepack": "pnpm build:only",
-    "localize": "lit-localize",
-    "check": "if command -v git &> /dev/null; then lit-localize extract && git add . -N && git diff --exit-code; fi"
+    "test:ci": "pnpm run test --silent --coverage"
   },
   "engines": {
     "node": "^20.9.0"

@@ -1,3 +1,0 @@
-# Logto account elements
-
-TBD
