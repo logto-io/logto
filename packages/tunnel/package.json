@@ -48,7 +48,7 @@
     "chalk": "^5.3.0",
     "dotenv": "^16.4.5",
     "find-up": "^7.0.0",
-    "http-proxy-middleware": "^3.0.0",
+    "http-proxy-middleware": "^3.0.3",
     "mime": "^4.0.4",
     "ora": "^8.0.1",
     "yargs": "^17.6.0",
