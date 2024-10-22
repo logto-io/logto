@@ -1,5 +1,5 @@
-import { cond, condString } from '@silverhand/essentials';
-import { useContext, useMemo } from 'react';
+import { cond, pick } from '@silverhand/essentials';
+import { useContext, useEffect, useMemo } from 'react';
 import useSWR from 'swr';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
@@ -21,25 +21,24 @@ import { type NewSubscriptionContext } from './types';
 const useNewSubscriptionData: () => NewSubscriptionContext & { isLoading: boolean } = () => {
   const cloudApi = useCloudApi();
 
-  const { currentTenant, updateTenant } = useContext(TenantsContext);
+  const { currentTenant, currentTenantId, updateTenant } = useContext(TenantsContext);
   const { isLoading: isLogtoSkusLoading, data: fetchedLogtoSkus } = useLogtoSkus();
-  const tenantId = condString(currentTenant?.id);
 
   const {
     data: currentSubscription,
     isLoading: isSubscriptionLoading,
     mutate: mutateSubscription,
-  } = useSubscription(tenantId);
+  } = useSubscription(currentTenantId);
 
   const {
     data: subscriptionUsageData,
     isLoading: isSubscriptionUsageDataLoading,
     mutate: mutateSubscriptionQuotaAndUsages,
   } = useSWR<NewSubscriptionUsageResponse, Error>(
-    isCloud && tenantId && `/api/tenants/${tenantId}/subscription-usage`,
+    isCloud && currentTenantId && `/api/tenants/${currentTenantId}/subscription-usage`,
     async () =>
       cloudApi.get('/api/tenants/:tenantId/subscription-usage', {
-        params: { tenantId },
+        params: { tenantId: currentTenantId },
       })
   );
 
@@ -50,7 +49,16 @@ const useNewSubscriptionData: () => NewSubscriptionContext & { isLoading: boolea
     [currentTenant?.planId, logtoSkus]
   );
 
-  // TODO: @darcyYe can use `updateTenant()` to manually update the quota of the current tenant. Previously we removed such logic to unblock the release since it breaks the Cloud console integration tests.
+  useEffect(() => {
+    if (subscriptionUsageData?.quota) {
+      updateTenant(currentTenantId, {
+        quota: pick(subscriptionUsageData.quota, 'mauLimit', 'tokenLimit'),
+      });
+    }
+    // Since `updateTenant` updates `tenants` in TenantsContext and triggers re-renders (`updateTenant` is re-rendered as well),
+    // we can not add `updateTenant` to the dependency list, otherwise it will cause a infinite loop.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTenantId, subscriptionUsageData?.quota]);
 
   return useMemo(
     () => ({
