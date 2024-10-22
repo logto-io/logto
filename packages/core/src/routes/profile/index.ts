@@ -5,6 +5,7 @@ import { z } from 'zod';
 import koaGuard from '#src/middleware/koa-guard.js';
 
 import { EnvSet } from '../../env-set/index.js';
+import RequestError from '../../errors/RequestError/index.js';
 import { encryptUserPassword } from '../../libraries/user.utils.js';
 import {
   buildVerificationRecordByIdAndType,
@@ -20,7 +21,7 @@ export default function profileRoutes<T extends UserRouter>(
   ...[router, { queries, libraries }]: RouterInitArgs<T>
 ) {
   const {
-    users: { updateUserById, findUserById },
+    users: { updateUserById, findUserById, deleteUserIdentity },
     signInExperiences: { findDefaultSignInExperience },
   } = queries;
 
@@ -287,6 +288,49 @@ export default function profileRoutes<T extends UserRouter>(
           },
         },
       });
+
+      ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  router.delete(
+    '/profile/identities/:target',
+    koaGuard({
+      params: z.object({ target: z.string() }),
+      query: z.object({
+        // TODO: Move all sensitive permission checks to the header
+        verificationRecordId: z.string(),
+      }),
+      status: [204, 400, 401, 404],
+    }),
+    async (ctx, next) => {
+      const { id: userId, scopes } = ctx.auth;
+      const { verificationRecordId } = ctx.guard.query;
+      const { target } = ctx.guard.params;
+      assertThat(scopes.has(UserScope.Identities), 'auth.unauthorized');
+
+      await verifyUserSensitivePermission({
+        userId,
+        id: verificationRecordId,
+        queries,
+        libraries,
+      });
+
+      const user = await findUserById(userId);
+
+      assertThat(
+        user.identities[target],
+        new RequestError({
+          code: 'user.identity_not_exist',
+          status: 404,
+        })
+      );
+
+      const updatedUser = await deleteUserIdentity(userId, target);
 
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
 
