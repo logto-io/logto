@@ -6,7 +6,7 @@
   "dependencies": {
     "@logto/connector-kit": "workspace:^4.0.0",
     "@silverhand/essentials": "^2.9.0",
-    "postmark": "^4.0.2",
+    "postmark": "^4.0.5",
     "zod": "^3.22.4"
   },
   "devDependencies": {
