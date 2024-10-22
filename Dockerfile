@@ -54,6 +54,12 @@ EXPOSE 3301
 # OGCIO
 EXPOSE 3302
 #OGCIO
-RUN apk add --no-cache jq
+RUN apk add --no-cache jq && \
+  chown -R node:root /etc/logto && \
+  chmod -R 775 /etc/logto
+
+#OGCIO
+USER 1000
+
 # OGCIO
 CMD [ "sh", "-c", "export ENCODED_PASSWORD=$(jq --slurp --raw-input --raw-output @uri <(printf \"%s\" $POSTGRES_PASSWORD)) && export DB_URL=\"postgres://$POSTGRES_USER:$ENCODED_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB_NAME\" && export REDIS_URL=\"redis://$REDIS_HOST:$REDIS_PORT\" && npm run ogcio:start"]
