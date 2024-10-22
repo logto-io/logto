@@ -9,14 +9,23 @@
   }
 }
 
+.applicationDetails {
+  margin-inline-start: _.unit(2);
+  color: var(--color-text-secondary);
+}
+
 .radioCardTitle {
   font: var(--font-label-2);
+  padding-inline-end: _.unit(5);
   margin-bottom: _.unit(2);
+}
+
+.radioCardBody {
+  color: var(--color-text-secondary);
 }
 
 .radioCardFooter {
   margin-top: _.unit(4);
-  font: var(--font-body-3);
   color: var(--color-text-secondary);
 }
 
@@ -30,8 +39,6 @@
   }
 }
 
-div[class$='disabled'] {
-  .radioCardFooter {
-    color: var(--color-disabled);
-  }
+div[class*='radio'][class*='disabled'] {
+  color: inherit;
 }
