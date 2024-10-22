@@ -6,7 +6,7 @@ import {
   mockSocialConnectorId,
   mockSocialConnectorTarget,
 } from '#src/__mocks__/connectors-mock.js';
-import { getUserInfo, updateIdentities } from '#src/api/profile.js';
+import { deleteIdentity, getUserInfo, updateIdentities } from '#src/api/profile.js';
 import {
   createSocialVerificationRecord,
   createVerificationRecordByPassword,
@@ -164,6 +164,85 @@ describe('profile (social)', () => {
 
         await deleteDefaultTenantUser(user.id);
       });
+    });
+  });
+
+  describe('DELETE /profile/identities/:target', () => {
+    it('should fail if scope is missing', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password);
+
+      await expectRejects(
+        deleteIdentity(api, mockSocialConnectorTarget, 'invalid-verification-record-id'),
+        {
+          code: 'auth.unauthorized',
+          status: 400,
+        }
+      );
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should fail if verification record is invalid', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+
+      await expectRejects(
+        deleteIdentity(api, mockSocialConnectorTarget, 'invalid-verification-record-id'),
+        {
+          code: 'verification_record.permission_denied',
+          status: 401,
+        }
+      );
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should fail if identity does not exist', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
+
+      await expectRejects(deleteIdentity(api, mockSocialConnectorTarget, verificationRecordId), {
+        code: 'user.identity_not_exist',
+        status: 404,
+      });
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should be able to delete social identity', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
+
+      // Link social identity to the user
+      const { verificationRecordId: newVerificationRecordId } =
+        await createSocialVerificationRecord(
+          api,
+          connectorIdMap.get(mockSocialConnectorId)!,
+          state,
+          redirectUri
+        );
+      await verifySocialAuthorization(api, newVerificationRecordId, {
+        code: authorizationCode,
+      });
+      await updateIdentities(api, verificationRecordId, newVerificationRecordId);
+      const userInfo = await getUserInfo(api);
+      expect(userInfo.identities).toHaveProperty(mockSocialConnectorTarget);
+
+      await deleteIdentity(api, mockSocialConnectorTarget, verificationRecordId);
+
+      const updatedUserInfo = await getUserInfo(api);
+      expect(updatedUserInfo.identities).not.toHaveProperty(mockSocialConnectorTarget);
+
+      await deleteDefaultTenantUser(user.id);
     });
   });
 });
