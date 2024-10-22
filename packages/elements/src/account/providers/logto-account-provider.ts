@@ -2,7 +2,7 @@ import { html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
 const tagName = 'logto-account-provider';
-@customElement('logto-account-provider')
+@customElement(tagName)
 export class LogtoAccountProvider extends LitElement {
   static tagName = tagName;
 
