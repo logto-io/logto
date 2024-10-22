@@ -10,6 +10,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import { tableToPathname } from '#src/utils/SchemaRouter.js';
 
+import { koaQuotaGuard } from '../../middleware/koa-quota-guard.js';
 import assertThat from '../../utils/assert-that.js';
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
@@ -24,6 +25,7 @@ export default function ssoConnectorIdpInitiatedAuthConfigRoutes<T extends Manag
       queries,
       libraries: {
         ssoConnectors: { getSsoConnectorById, createSsoConnectorIdpInitiatedAuthConfig },
+        quota,
       },
     },
   ] = args;
@@ -32,6 +34,7 @@ export default function ssoConnectorIdpInitiatedAuthConfigRoutes<T extends Manag
 
   router.put(
     pathPrefix,
+    koaQuotaGuard({ key: 'idpInitiatedSsoEnabled', quota }),
     koaGuard({
       body: ssoConnectorIdpInitiatedAuthConfigCreateGuard,
       params: z.object({ id: z.string().min(1) }),
