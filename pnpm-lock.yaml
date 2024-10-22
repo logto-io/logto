@@ -940,7 +940,7 @@ importers:
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
-        version: 2.9.1
+        version: 2.9.2
       got:
         specifier: ^14.0.0
         version: 14.0.0
@@ -1431,8 +1431,8 @@ importers:
         version: 3.23.8
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-1661979
-        version: 0.2.5-1661979(zod@3.23.8)
+        specifier: 0.2.5-5e334eb
+        version: 0.2.5-5e334eb(zod@3.23.8)
       '@silverhand/eslint-config':
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
@@ -2730,8 +2730,8 @@ importers:
         specifier: ^29.5.0
         version: 29.5.0
       '@logto/cloud':
-        specifier: 0.2.5-6654b82
-        version: 0.2.5-6654b82(zod@3.23.8)
+        specifier: 0.2.5-5e334eb
+        version: 0.2.5-5e334eb(zod@3.23.8)
       '@logto/connector-kit':
         specifier: workspace:^4.0.0
         version: link:../toolkit/connector-kit
@@ -3229,8 +3229,8 @@ importers:
         version: 3.23.8
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-1661979
-        version: 0.2.5-1661979(zod@3.23.8)
+        specifier: 0.2.5-5e334eb
+        version: 0.2.5-5e334eb(zod@3.23.8)
       '@silverhand/eslint-config':
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
@@ -5749,12 +5749,8 @@ packages:
   '@logto/client@2.7.2':
     resolution: {integrity: sha512-jsmuDl9QpXfR3uLEMPE67tvYoL5XcjJi+4yGqucYPjd4GH6SUHp3N9skk8C/OyygnKDPLY+ttwD0LaIbpGvn+Q==}
 
-  '@logto/cloud@0.2.5-1661979':
-    resolution: {integrity: sha512-CiH6VxaR281cZLWQyI54XUiwSXEnW9rxci6ptz73rS4OWYfIweOWzP3Z30OVLiOslznBfTLuBML8eVelxpG1iQ==}
-    engines: {node: ^20.9.0}
-
-  '@logto/cloud@0.2.5-6654b82':
-    resolution: {integrity: sha512-BRPKyEb8r5z8kSYgsVr5StCfxXwhgJLiKfwdVK7DQdN8cY6gpUGS0EoQoB7bLamUNLieGJOhpoKMmk8QszuSaw==}
+  '@logto/cloud@0.2.5-5e334eb':
+    resolution: {integrity: sha512-HqcxjQV5F87Q5dM8sQY+F06YrjZofFl2Hb3VJh6c6Q5fHIPZ6WWJDAVVbGZU8GK7LO2f8gpLWWD+p7DIyLzDoA==}
     engines: {node: ^20.9.0}
 
   '@logto/js@4.1.4':
@@ -7095,8 +7091,8 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
-  acorn@8.12.1:
-    resolution: {integrity: sha512-tcpGyI9zbizT9JbV6oYE477V6mTlXvvi0T0G3SNIYE2apm/G5huBa1+K89VGeovbg+jycCrfhl3ADxErOuO6Jg==}
+  acorn@8.13.0:
+    resolution: {integrity: sha512-8zSiw54Oxrdym50NlZ9sUusyO1Z1ZchgRLWRaK6c86XJFClyCgFKetdowBg5bKxyp/u+CDBJG4Mpp0m3HLZl9w==}
     engines: {node: '>=0.4.0'}
     hasBin: true
 
@@ -11444,8 +11440,8 @@ packages:
   picocolors@1.0.1:
     resolution: {integrity: sha512-anP1Z8qwhkbmu7MFP5iTt+wQKXgwzf7zTyGlcdzabySa9vd0Xt392U0rVmz9poOaBj0uHJKyyo9/upk0HrEQew==}
 
-  picocolors@1.1.0:
-    resolution: {integrity: sha512-TQ92mBOW0l3LeMeyLV6mzy/kWr8lkd/hp3mTg7wYK7zJhuBStmGMBG0BdeDZS/dZx1IukaX6Bk11zcln25o1Aw==}
+  picocolors@1.1.1:
+    resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
 
   picomatch@2.3.1:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
@@ -12882,6 +12878,9 @@ packages:
   tslib@2.7.0:
     resolution: {integrity: sha512-gLXCKdN1/j47AiHiOkJN69hJmcbGTHI0ImLmbYLHykhgeN0jVGola9yVjFgzCUklsZQMW55o+dW7IXv3RCXDzA==}
 
+  tslib@2.8.0:
+    resolution: {integrity: sha512-jWVzBLplnCmoaTr13V9dYbiQ99wvZRd0vNWaDRg+aVYRcjDF3nDksxFDE/+fkXnKhpnUUkmx5pK/v8mCtLVqZA==}
+
   tsscmp@1.0.6:
     resolution: {integrity: sha512-LxhtAkPDTkVCMQjt2h6eBVY28KCjikZqZfMcC15YBeNjkgUpdCfBu5HoiOTDu86v6smE8yOjyEktJ8hlbANHQA==}
     engines: {node: '>=0.6.x'}
@@ -14192,7 +14191,7 @@ snapshots:
   '@babel/code-frame@7.25.7':
     dependencies:
       '@babel/highlight': 7.25.7
-      picocolors: 1.1.0
+      picocolors: 1.1.1
 
   '@babel/compat-data@7.24.4': {}
 
@@ -14404,7 +14403,7 @@ snapshots:
       '@babel/helper-validator-identifier': 7.25.7
       chalk: 2.4.2
       js-tokens: 4.0.0
-      picocolors: 1.1.0
+      picocolors: 1.1.1
 
   '@babel/parser@7.24.4':
     dependencies:
@@ -15428,22 +15427,23 @@ snapshots:
 
   '@logto/affiliate@0.1.0':
     dependencies:
-      '@silverhand/essentials': 2.9.1
+      '@silverhand/essentials': 2.9.2
       tiny-cookie: 2.4.1
 
   '@logto/browser@2.2.15':
     dependencies:
       '@logto/client': 2.7.2
-      '@silverhand/essentials': 2.9.1
+      '@silverhand/essentials': 2.9.2
       js-base64: 3.7.5
 
   '@logto/client@2.7.2':
     dependencies:
       '@logto/js': 4.1.4
-      '@silverhand/essentials': 2.9.1
+      '@silverhand/essentials': 2.9.2
       camelcase-keys: 7.0.2
       jose: 5.6.3
 
+<<<<<<< HEAD
   '@logto/cloud@0.2.5-1661979(zod@3.23.8)':
     dependencies:
       '@silverhand/essentials': 2.9.1
@@ -15452,6 +15452,9 @@ snapshots:
       - zod
 
   '@logto/cloud@0.2.5-6654b82(zod@3.23.8)':
+=======
+  '@logto/cloud@0.2.5-5e334eb(zod@3.23.8)':
+>>>>>>> 14e65924f (chore(core): guard idp-initiated sso console and api (#6690))
     dependencies:
       '@silverhand/essentials': 2.9.1
       '@withtyped/server': 0.14.0(zod@3.23.8)
@@ -15460,19 +15463,19 @@ snapshots:
 
   '@logto/js@4.1.4':
     dependencies:
-      '@silverhand/essentials': 2.9.1
+      '@silverhand/essentials': 2.9.2
       camelcase-keys: 7.0.2
 
   '@logto/node@2.5.4':
     dependencies:
       '@logto/client': 2.7.2
-      '@silverhand/essentials': 2.9.1
+      '@silverhand/essentials': 2.9.2
       js-base64: 3.7.5
 
   '@logto/react@3.0.13(react@18.3.1)':
     dependencies:
       '@logto/browser': 2.2.15
-      '@silverhand/essentials': 2.9.1
+      '@silverhand/essentials': 2.9.2
       react: 18.3.1
 
   '@manypkg/find-root@1.1.0':
@@ -16441,7 +16444,7 @@ snapshots:
 
   '@swc/helpers@0.5.1':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.0
     optional: true
 
   '@swc/jest@0.2.26(@swc/core@1.3.52(@swc/helpers@0.5.1))':
@@ -17244,14 +17247,14 @@ snapshots:
 
   acorn-walk@8.3.4:
     dependencies:
-      acorn: 8.12.1
+      acorn: 8.13.0
     optional: true
 
   acorn@8.10.0: {}
 
   acorn@8.11.3: {}
 
-  acorn@8.12.1:
+  acorn@8.13.0:
     optional: true
 
   adm-zip@0.5.14: {}
@@ -22750,7 +22753,7 @@ snapshots:
 
   picocolors@1.0.1: {}
 
-  picocolors@1.1.0: {}
+  picocolors@1.1.1: {}
 
   picomatch@2.3.1: {}
 
@@ -24221,7 +24224,7 @@ snapshots:
   synckit@0.8.8:
     dependencies:
       '@pkgr/core': 0.1.1
-      tslib: 2.7.0
+      tslib: 2.8.0
 
   table-layout@3.0.2:
     dependencies:
@@ -24384,7 +24387,11 @@ snapshots:
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
       '@types/node': 20.10.4
+<<<<<<< HEAD
       acorn: 8.12.1
+=======
+      acorn: 8.13.0
+>>>>>>> 14e65924f (chore(core): guard idp-initiated sso console and api (#6690))
       acorn-walk: 8.3.4
       arg: 4.1.3
       create-require: 1.1.1
@@ -24405,7 +24412,11 @@ snapshots:
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
       '@types/node': 20.11.20
+<<<<<<< HEAD
       acorn: 8.12.1
+=======
+      acorn: 8.13.0
+>>>>>>> 14e65924f (chore(core): guard idp-initiated sso console and api (#6690))
       acorn-walk: 8.3.4
       arg: 4.1.3
       create-require: 1.1.1
@@ -24426,7 +24437,11 @@ snapshots:
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
       '@types/node': 20.12.7
+<<<<<<< HEAD
       acorn: 8.12.1
+=======
+      acorn: 8.13.0
+>>>>>>> 14e65924f (chore(core): guard idp-initiated sso console and api (#6690))
       acorn-walk: 8.3.4
       arg: 4.1.3
       create-require: 1.1.1
@@ -24447,7 +24462,11 @@ snapshots:
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
       '@types/node': 20.12.7
+<<<<<<< HEAD
       acorn: 8.12.1
+=======
+      acorn: 8.13.0
+>>>>>>> 14e65924f (chore(core): guard idp-initiated sso console and api (#6690))
       acorn-walk: 8.3.4
       arg: 4.1.3
       create-require: 1.1.1
@@ -24476,6 +24495,8 @@ snapshots:
   tslib@2.6.2: {}
 
   tslib@2.7.0: {}
+
+  tslib@2.8.0: {}
 
   tsscmp@1.0.6: {}
 
