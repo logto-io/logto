@@ -86,6 +86,7 @@ const enterprise_sso_details = {
       'Target application the user will be redirected to after authentication.',
     empty_applications_error:
       'No applications found. Please add one in the <a>Applications</a> section.',
+    empty_applications_placeholder: 'No applications',
     authentication_type: 'Authentication type',
     auto_authentication_disabled_title: 'Redirect to client for SP-initiated SSO (Recommended)',
     auto_authentication_disabled_description:
@@ -104,6 +105,7 @@ const enterprise_sso_details = {
       'The redirect URI to redirect users after successful sign-in. Logto will use this URI as the OIDC redirect URI in the authorization request. Use a dedicated URI for the IdP-initiated SSO authentication flow for better security.',
     empty_redirect_uris_error:
       'No redirect URI has been registered for the application. Please add one first.',
+    redirect_uri_placeholder: 'Select a post sign-in redirect URI',
     auth_params: 'Additional authentication parameters',
     auth_params_tooltip:
       'Additional parameters to be passed in the authorization request. By default only (openid profile) scopes will be requested, you can specify additional scopes or a exclusive state value here. (e.g., { "scope": "organizations email", "state": "secret_state" }).',
