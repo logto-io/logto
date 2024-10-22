@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import {
   type Application,
   type SsoConnectorWithProviderConfig,
@@ -178,7 +179,14 @@ function ConfigForm({
                     )}
                     options={applications.map((application) => ({
                       value: application.id,
-                      title: `${application.name} (${application.type}, ID: ${application.id})`,
+                      title: (
+                        <span>
+                          {application.name}
+                          <span className={styles.applicationDetails}>
+                            ({t(`guide.categories.${application.type}`)}, ID: {application.id})
+                          </span>
+                        </span>
+                      ),
                     }))}
                     value={value}
                     error={emptyApplicationsError ?? errors.config?.defaultApplicationId?.message}
@@ -215,7 +223,7 @@ function ConfigForm({
                             }_title`
                           )}
                         </div>
-                        <div>
+                        <div className={styles.radioCardBody}>
                           {t(
                             `enterprise_sso_details.idp_initiated_auth_config.auto_authentication_${
                               value ? 'enabled' : 'disabled'
@@ -315,3 +323,4 @@ function ConfigForm({
 }
 
 export default ConfigForm;
+/* eslint-enable max-lines */
