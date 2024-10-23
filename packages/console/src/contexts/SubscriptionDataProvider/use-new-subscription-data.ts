@@ -1,4 +1,4 @@
-import { cond, condString, pick } from '@silverhand/essentials';
+import { cond, pick } from '@silverhand/essentials';
 import { useContext, useEffect, useMemo } from 'react';
 import useSWR from 'swr';
 
@@ -21,25 +21,24 @@ import { type NewSubscriptionContext } from './types';
 const useNewSubscriptionData: () => NewSubscriptionContext & { isLoading: boolean } = () => {
   const cloudApi = useCloudApi();
 
-  const { currentTenant, updateTenant } = useContext(TenantsContext);
+  const { currentTenant, currentTenantId, updateTenant } = useContext(TenantsContext);
   const { isLoading: isLogtoSkusLoading, data: fetchedLogtoSkus } = useLogtoSkus();
-  const tenantId = condString(currentTenant?.id);
 
   const {
     data: currentSubscription,
     isLoading: isSubscriptionLoading,
     mutate: mutateSubscription,
-  } = useSubscription(tenantId);
+  } = useSubscription(currentTenantId);
 
   const {
     data: subscriptionUsageData,
     isLoading: isSubscriptionUsageDataLoading,
     mutate: mutateSubscriptionQuotaAndUsages,
   } = useSWR<NewSubscriptionUsageResponse, Error>(
-    isCloud && tenantId && `/api/tenants/${tenantId}/subscription-usage`,
+    isCloud && currentTenantId && `/api/tenants/${currentTenantId}/subscription-usage`,
     async () =>
       cloudApi.get('/api/tenants/:tenantId/subscription-usage', {
-        params: { tenantId },
+        params: { tenantId: currentTenantId },
       })
   );
 
@@ -52,11 +51,11 @@ const useNewSubscriptionData: () => NewSubscriptionContext & { isLoading: boolea
 
   useEffect(() => {
     if (subscriptionUsageData?.quota) {
-      updateTenant(tenantId, {
+      updateTenant(currentTenantId, {
         quota: pick(subscriptionUsageData.quota, 'mauLimit', 'tokenLimit'),
       });
     }
-  }, [tenantId, subscriptionUsageData?.quota, updateTenant]);
+  }, [currentTenantId, subscriptionUsageData?.quota, updateTenant]);
 
   return useMemo(
     () => ({

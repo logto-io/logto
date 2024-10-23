@@ -118,31 +118,49 @@ function TenantsProvider({ children }: Props) {
     [currentTenantId, tenants]
   );
 
+  const resetTenants = useCallback((tenants: TenantResponse[]) => {
+    setTenants(tenants);
+    setIsInitComplete(true);
+  }, []);
+
+  const prependTenant = useCallback((tenant: TenantResponse) => {
+    setTenants((tenants) => [tenant, ...tenants]);
+  }, []);
+
+  const removeTenant = useCallback((tenantId: string) => {
+    setTenants((tenants) => tenants.filter((tenant) => tenant.id !== tenantId));
+  }, []);
+
+  const updateTenant = useCallback((tenantId: string, data: Partial<TenantResponse>) => {
+    setTenants((tenants) =>
+      tenants.map((tenant) => (tenant.id === tenantId ? { ...tenant, ...data } : tenant))
+    );
+  }, []);
+
   const memorizedContext = useMemo(
     () => ({
       tenants,
-      resetTenants: (tenants: TenantResponse[]) => {
-        setTenants(tenants);
-        setIsInitComplete(true);
-      },
-      prependTenant: (tenant: TenantResponse) => {
-        setTenants((tenants) => [tenant, ...tenants]);
-      },
-      removeTenant: (tenantId: string) => {
-        setTenants((tenants) => tenants.filter((tenant) => tenant.id !== tenantId));
-      },
-      updateTenant: (tenantId: string, data: Partial<TenantResponse>) => {
-        setTenants((tenants) =>
-          tenants.map((tenant) => (tenant.id === tenantId ? { ...tenant, ...data } : tenant))
-        );
-      },
+      resetTenants,
+      prependTenant,
+      removeTenant,
+      updateTenant,
       isInitComplete,
       currentTenantId,
       isDevTenant: currentTenant?.tag === TenantTag.Development,
       currentTenant,
       navigateTenant,
     }),
-    [currentTenant, currentTenantId, isInitComplete, navigateTenant, tenants]
+    [
+      currentTenant,
+      currentTenantId,
+      isInitComplete,
+      navigateTenant,
+      tenants,
+      resetTenants,
+      prependTenant,
+      removeTenant,
+      updateTenant,
+    ]
   );
 
   return <TenantsContext.Provider value={memorizedContext}>{children}</TenantsContext.Provider>;
