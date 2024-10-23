@@ -3395,6 +3395,9 @@ importers:
       ky:
         specifier: ^1.2.3
         version: 1.2.3
+      libphonenumber-js:
+        specifier: ^1.11.12
+        version: 1.11.12
       lit:
         specifier: ^3.1.4
         version: 3.1.4
@@ -10479,6 +10482,9 @@ packages:
 
   libphonenumber-js@1.10.51:
     resolution: {integrity: sha512-vY2I+rQwrDQzoPds0JeTEpeWzbUJgqoV0O4v31PauHBb/e+1KCXKylHcDnBMgJZ9fH9mErsEbROJY3Z3JtqEmg==}
+
+  libphonenumber-js@1.11.12:
+    resolution: {integrity: sha512-QkJn9/D7zZ1ucvT++TQSvZuSA2xAWeUytU+DiEQwbPKLyrDpvbul2AFs1CGbRAPpSCCk47aRAb5DX5mmcayp4g==}
 
   lighthouse-logger@1.4.2:
     resolution: {integrity: sha512-gPWxznF6TKmUHrOQjlVo2UbaL2EJ71mb2CCeRs/2qBpi4L/g4LUVc9+3lKQ6DTUZwJswfM7ainGrLO1+fOqa2g==}
@@ -21885,6 +21891,8 @@ snapshots:
       type-check: 0.4.0
 
   libphonenumber-js@1.10.51: {}
+
+  libphonenumber-js@1.11.12: {}
 
   lighthouse-logger@1.4.2:
     dependencies:
