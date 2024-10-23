@@ -2,6 +2,7 @@ import { createComponent } from '@lit/react';
 
 import { LogtoUsername } from './elements/logto-username.js';
 import {
+  LogtoAccountCenter,
   LogtoAccountProvider,
   LogtoSocialIdentity,
   LogtoUserEmail,
@@ -41,6 +42,11 @@ export const createReactComponents = (react: Parameters<typeof createComponent>[
     LogtoSocialIdentity: createComponent({
       tagName: LogtoSocialIdentity.tagName,
       elementClass: LogtoSocialIdentity,
+      react,
+    }),
+    LogtoAccountCenter: createComponent({
+      tagName: LogtoAccountCenter.tagName,
+      elementClass: LogtoAccountCenter,
       react,
     }),
   };
