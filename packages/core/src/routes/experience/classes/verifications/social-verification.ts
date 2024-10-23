@@ -20,6 +20,10 @@ import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
+import {
+  createSocialAuthorizationUrl,
+  verifySocialIdentity,
+} from '#src/routes/interaction/utils/social-verification.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -52,6 +56,8 @@ export const socialVerificationRecordDataGuard = z.object({
   socialUserInfo: socialUserInfoGuard.optional(),
   connectorSession: connectorSessionGuard.optional(),
 }) satisfies ToZodObject<SocialVerificationRecordData>;
+
+type SocialAuthorizationSessionStorageType = 'interactionSession' | 'verificationRecord';
 
 export class SocialVerification implements IdentifierVerificationRecord<VerificationType.Social> {
   /**
@@ -94,78 +100,80 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
   }
 
   /**
-   * Create the authorization URL for the social connector.
-   * Store the connector session result in the provider's interaction storage.
+   * Create the authorization URL for the social connector and generate a connector authorization session.
+   *
+   * @param {SocialAuthorizationSessionStorageType} useInternalSession  - Whether to store the connector session result in the current verification record directly. Set to `true` for the profile API.
    *
    * @remarks
-   * Refers to the {@link createSocialAuthorizationUrl} method in the interaction/utils/social-verification.ts file.
-   * Currently, all the intermediate connector session results are stored in the provider's interactionDetails separately,
-   * apart from the new verification record.
+   * For the experience API:
+   * This method directly calls the {@link createSocialAuthorizationUrl} method in the interaction/utils/social-verification.ts file.
+   * All the intermediate connector session results are stored in the provider's interactionDetails separately, apart from the new verification record.
    * For compatibility reasons, we keep using the old {@link createSocialAuthorizationUrl} method here as a single source of truth.
    * Especially for the SAML connectors,
    * SAML ACS endpoint will find the connector session result by the jti and assign it to the interaction storage.
    * We will need to update the SAML ACS endpoint before move the logic to this new SocialVerification class.
    *
-   * TODO: Consider store the connector session result in the verification record directly.
+   * For the profile API:
+   * This method calls the internal {@link createSocialAuthorizationSession} method to create a social authorization session.
+   * The connector session result is stored in the current verification record directly.
+   * The social verification flow does not rely on the OIDC interaction context.
+   *
+   * TODO: Remove the old {@link createSocialAuthorizationUrl} once the old SAML connectors are updated.
+   * Align using the new {@link createSocialAuthorizationSession} method for both experience and profile APIs.
    * SAML ACS endpoint will find the verification record by the jti and assign the connector session result to the verification record.
    */
   async createAuthorizationUrl(
     ctx: WithLogContext,
     tenantContext: TenantContext,
-    { state, redirectUri }: SocialAuthorizationUrlPayload
+    { state, redirectUri }: SocialAuthorizationUrlPayload,
+    useInternalSession: SocialAuthorizationSessionStorageType = 'interactionSession'
   ) {
-    assertThat(state && redirectUri, 'session.insufficient_info');
+    // For the profile API, connector session result is stored in the current verification record directly.
+    if (useInternalSession === 'verificationRecord') {
+      return this.createSocialAuthorizationSession(ctx, { state, redirectUri });
+    }
 
-    const connector = await this.getConnectorData();
-
-    const {
-      headers: { 'user-agent': userAgent },
-    } = ctx.request;
-
-    return connector.getAuthorizationUri(
-      {
-        state,
-        redirectUri,
-        connectorId: this.connectorId,
-        connectorFactoryId: connector.metadata.id,
-        jti: await this.getJti(ctx, tenantContext),
-        headers: { userAgent },
-      },
-      async (connectorSession) => {
-        this.connectorSession = connectorSession;
-      }
-    );
+    // For the experience API, connector session result is stored in the provider's interactionDetails.
+    return createSocialAuthorizationUrl(ctx, tenantContext, {
+      connectorId: this.connectorId,
+      state,
+      redirectUri,
+    });
   }
 
   /**
    * Verify the social identity and store the social identity in the verification record.
    *
+   * @param {SocialAuthorizationSessionStorageType} useInternalSession  - Whether to find the connector session result from the current verification record directly. Set to `true` for the profile API.
+   *
    * @remarks
-   * Refer to the {@link verifySocialIdentity} method in the interaction/utils/social-verification.ts file.
+   * For the experience API:
+   * This method directly calls the {@link verifySocialIdentity} method in the interaction/utils/social-verification.ts file.
+   * Fetch the connector session result from the provider's interactionDetails and verify the social identity.
    * For compatibility reasons, we keep using the old {@link verifySocialIdentity} method here as a single source of truth.
    * See the above {@link createAuthorizationUrl} method for more details.
    *
-   * TODO: check the log event
+   * For the profile API:
+   * This method calls the internal {@link verifySocialIdentityInternally} method to verify the social identity.
+   * The connector session result is fetched from the current verification record directly.
+   *
    */
-  async verify(ctx: WithLogContext, tenantContext: TenantContext, connectorData: JsonObject) {
-    const connector = await this.getConnectorData();
-
-    // Verify the CSRF token if it's a Google connector and has credential (a Google One Tap
-    // verification)
-    if (
-      connector.metadata.id === GoogleConnector.factoryId &&
-      connectorData[GoogleConnector.oneTapParams.credential]
-    ) {
-      const csrfToken = connectorData[GoogleConnector.oneTapParams.csrfToken];
-      const value = ctx.cookies.get(GoogleConnector.oneTapParams.csrfToken);
-      assertThat(value === csrfToken, 'session.csrf_token_mismatch');
-    }
-
-    const socialUserInfo = await this.libraries.socials.getUserInfo(
-      this.connectorId,
-      connectorData,
-      async () => this.connectorSession ?? {}
-    );
+  async verify(
+    ctx: WithLogContext,
+    tenantContext: TenantContext,
+    connectorData: JsonObject,
+    useInternalSession: SocialAuthorizationSessionStorageType = 'interactionSession'
+  ) {
+    const socialUserInfo =
+      useInternalSession === 'verificationRecord'
+        ? // For the profile API, find the connector session result from the current verification record directly.
+          await this.verifySocialIdentityInternally(connectorData, ctx)
+        : // For the experience API, fetch the connector session result from the provider's interactionDetails.
+          await verifySocialIdentity(
+            { connectorId: this.connectorId, connectorData },
+            ctx,
+            tenantContext
+          );
 
     this.socialUserInfo = socialUserInfo;
   }
@@ -328,6 +336,78 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     assertThat(this.connectorDataCache.type === ConnectorType.Social, 'connector.unexpected_type');
 
     return this.connectorDataCache;
+  }
+
+  /**
+   * Internal method to create a social authorization session.
+   *
+   * @remarks
+   * This method is a alternative to the {@link createSocialAuthorizationUrl} method in the interaction/utils/social-verification.ts file.
+   * Generate the social authorization URL and store the connector session result in the current verification record directly.
+   * This social connector session result will be used to verify the social response later.
+   * This method can be used for both experience and profile APIs, w/o OIDC interaction context.
+   *
+   */
+  private async createSocialAuthorizationSession(
+    ctx: WithLogContext,
+    { state, redirectUri }: SocialAuthorizationUrlPayload
+  ) {
+    assertThat(state && redirectUri, 'session.insufficient_info');
+
+    const connector = await this.getConnectorData();
+
+    const {
+      headers: { 'user-agent': userAgent },
+    } = ctx.request;
+
+    return connector.getAuthorizationUri(
+      {
+        state,
+        redirectUri,
+        connectorId: this.connectorId,
+        connectorFactoryId: connector.metadata.id,
+        // Instead of getting the jti from the interaction details, use the current verification record's id as the jti.
+        jti: this.id,
+        headers: { userAgent },
+      },
+      async (connectorSession) => {
+        // Store the connector session result in the current verification record directly.
+        this.connectorSession = connectorSession;
+      }
+    );
+  }
+
+  /**
+   * Internal method to verify the social identity.
+   *
+   * @remarks
+   * This method is a alternative to the {@link verifySocialIdentity} method in the interaction/utils/social-verification.ts file.
+   * Verify the social identity using the connector data received from the client and the connector session stored in the current verification record.
+   * This method can be used for both experience and profile APIs, w/o OIDC interaction context.
+   */
+  private async verifySocialIdentityInternally(connectorData: JsonObject, ctx: WithLogContext) {
+    const connector = await this.getConnectorData();
+
+    // Verify the CSRF token if it's a Google connector and has credential (a Google One Tap verification)
+    if (
+      connector.metadata.id === GoogleConnector.factoryId &&
+      connectorData[GoogleConnector.oneTapParams.credential]
+    ) {
+      const csrfToken = connectorData[GoogleConnector.oneTapParams.csrfToken];
+      const value = ctx.cookies.get(GoogleConnector.oneTapParams.csrfToken);
+      assertThat(value === csrfToken, 'session.csrf_token_mismatch');
+    }
+
+    // Verify the social authorization session exists
+    assertThat(this.connectorSession, 'session.connector_validation_session_not_found');
+
+    const socialUserInfo = await this.libraries.socials.getUserInfo(
+      this.connectorId,
+      connectorData,
+      async () => this.connectorSession ?? {}
+    );
+
+    return socialUserInfo;
   }
 
   /**
