@@ -409,18 +409,4 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
 
     return socialUserInfo;
   }
-
-  /**
-   * Get the `jti` from the interaction details.
-   * If the interaction details is not found, return an empty string.
-   */
-  private async getJti(ctx: WithLogContext, tenantContext: TenantContext) {
-    try {
-      const { jti } = await tenantContext.provider.interactionDetails(ctx.req, ctx.res);
-
-      return jti;
-    } catch {
-      return '';
-    }
-  }
 }
