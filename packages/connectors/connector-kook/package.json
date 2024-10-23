@@ -44,9 +44,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@silverhand/essentials": "^2.9.1",
     "@logto/connector-kit": "workspace:^4.0.0",
     "@logto/connector-oauth": "workspace:^1.5.0",
+    "@silverhand/essentials": "^2.9.1",
     "ky": "^1.2.3",
     "zod": "^3.23.8"
   },
@@ -61,8 +61,8 @@
     "nock": "14.0.0-beta.7",
     "prettier": "^3.0.0",
     "supertest": "^7.0.0",
-    "tsup": "^8.1.0",
+    "tsup": "^8.3.0",
     "typescript": "^5.5.3",
-    "vitest": "^2.0.0"
+    "vitest": "^2.1.3"
   }
 }
