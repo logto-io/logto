@@ -44,7 +44,8 @@
     "overrides": {
       "formidable@<3.2.4": "^3.2.4",
       "d3-color@2.0.0": "^3.1.0",
-      "braces@<3.0.3": "^3.0.3"
+      "braces@<3.0.3": "^3.0.3",
+      "@75lb/deep-merge@<1.1.2": "^1.1.2"
     },
     "peerDependencyRules": {
       "allowedVersions": {
