@@ -55,10 +55,7 @@ const useNewSubscriptionData: () => NewSubscriptionContext & { isLoading: boolea
         quota: pick(subscriptionUsageData.quota, 'mauLimit', 'tokenLimit'),
       });
     }
-    // Since `updateTenant` updates `tenants` in TenantsContext and triggers re-renders (`updateTenant` is re-rendered as well),
-    // we can not add `updateTenant` to the dependency list, otherwise it will cause a infinite loop.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentTenantId, subscriptionUsageData?.quota]);
+  }, [currentTenantId, subscriptionUsageData?.quota, updateTenant]);
 
   return useMemo(
     () => ({
