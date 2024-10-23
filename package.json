@@ -42,7 +42,8 @@
   },
   "pnpm": {
     "overrides": {
-      "formidable@<3.2.4": "^3.2.4"
+      "formidable@<3.2.4": "^3.2.4",
+      "d3-color@2.0.0": "^3.1.0"
     },
     "peerDependencyRules": {
       "allowedVersions": {
