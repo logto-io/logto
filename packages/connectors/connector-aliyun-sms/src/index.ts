@@ -20,7 +20,7 @@ import { sendSms } from './single-send-text.js';
 import type { Template } from './types.js';
 import { aliyunSmsConfigGuard, sendSmsResponseGuard } from './types.js';
 
-const isChinaNumber = (to: string) => /^(\+86|0086|86)?\d{11}$/.test(to);
+const isChinaNumber = (to: string) => /^(\+86|0086|86)\d{11}$/.test(to);
 
 const getTemplateCode = ({ templateCode }: Template, to: string) => {
   if (typeof templateCode === 'string') {
