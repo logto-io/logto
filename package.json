@@ -42,7 +42,8 @@
   },
   "pnpm": {
     "overrides": {
-      "formidable@<3.2.4": "^3.2.4"
+      "formidable@<3.2.4": "^3.2.4",
+      "braces@<3.0.3": "^3.0.3"
     },
     "peerDependencyRules": {
       "allowedVersions": {
