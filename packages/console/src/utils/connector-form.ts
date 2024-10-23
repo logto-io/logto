@@ -13,7 +13,10 @@ import { safeParseJson } from '@/utils/json';
  */
 const initFormData = (formItems: ConnectorConfigFormItem[], config?: Record<string, unknown>) => {
   const data: Array<[string, unknown]> = formItems.map((item) => {
-    const configValue = config?.[item.key];
+    const configValue =
+      config?.[item.key] ??
+      conditional(item.type === ConnectorConfigFormItemType.Json && {}) ??
+      conditional(item.type === ConnectorConfigFormItemType.MultiSelect && []);
     const { defaultValue } = item;
     const value = config ? configValue : defaultValue;
 
