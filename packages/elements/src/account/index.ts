@@ -11,3 +11,4 @@ export * from './elements/logto-user-email.js';
 export * from './elements/logto-user-password.js';
 export * from './elements/logto-user-phone.js';
 export * from './elements/logto-social-identity.js';
+export * from './elements/logto-account-center.js';
