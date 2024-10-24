@@ -21,9 +21,15 @@ function BillingHistory() {
   const { currentTenantId, updateTenant } = useContext(TenantsContext);
   const { data: invoices, error } = useInvoices(currentTenantId);
   const isLoadingInvoices = !invoices && !error;
+
   const displayInvoices = useMemo(
     // Don't show draft invoices
     () => invoices?.filter(({ status }) => status !== 'draft'),
+    [invoices]
+  );
+
+  const openInvoices = useMemo(
+    () => invoices?.filter(({ status }) => status === 'open'),
     [invoices]
   );
 
@@ -42,12 +48,12 @@ function BillingHistory() {
   );
 
   useEffect(() => {
-    if (invoices) {
+    if (openInvoices) {
       updateTenant(currentTenantId, {
-        openInvoices: invoices,
+        openInvoices,
       });
     }
-  }, [currentTenantId, invoices, updateTenant]);
+  }, [currentTenantId, openInvoices, updateTenant]);
 
   return (
     <div>
