@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.18.1
+
+### Patch Changes
+
+- 5bb937505: Connector config default values should only show up when creating new connectors
+
 ## 1.18.0
 
 ### Minor Changes

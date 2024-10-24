@@ -1,5 +1,11 @@
 # @logto/connector-google
 
+## 1.6.0
+
+### Minor Changes
+
+- 5bb937505: update the default `prompts` to be `select_account`
+
 ## 1.5.0
 
 ### Minor Changes
