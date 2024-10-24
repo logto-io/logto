@@ -91,7 +91,7 @@
         "id": "upload-public-servant",
         "name": "File Upload Public Servant",
         "description": "File Upload Public servant",
-        "specific_permissions": ["upload:file:*"]
+        "specific_permissions": ["upload:file:*", "profile:user:read"]
       },
       {
         "id": "int-public-servant",
