@@ -1,9 +1,9 @@
 import { useContext, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 import DevIcon from '@/assets/icons/dev-icon.svg?react';
-import usePlatform from '@/hooks/use-platform';
 
 /**
  * Styles that may effect the visibility of a DOM element.
@@ -50,7 +50,6 @@ const DevelopmentTenantNotification = () => {
   const iconRef = useRef<HTMLSpanElement>(null);
   const { experienceSettings, isPreview } = useContext(PageContext);
   const { isDevelopmentTenant } = experienceSettings ?? {};
-  const { isMobile } = usePlatform();
 
   const styles: Record<string, string> = Object.freeze({
     display: 'flex',
@@ -58,19 +57,22 @@ const DevelopmentTenantNotification = () => {
     'justify-content': 'center',
     'align-self': 'stretch',
     gap: '8px',
-    margin: isMobile ? '-16px -20px 16px' : '-24px -24px 0',
-    padding: '12px 16px',
-    'border-radius': isMobile ? 'unset' : '8px 8px 0 0',
-    background: 'var(--color-container-alert)',
+    padding: '6px 16px',
+    'border-radius': 'unset',
+    background: 'var(--color-container-on-alert)',
     font: 'var(--font-label-2)',
-    color: 'var(--color-type-primary)',
+    color: 'var(--color-static-white)',
+    position: 'fixed',
+    left: '0',
+    right: '0',
+    'z-index': '9999',
   });
 
   const iconStyles: Record<string, string> = Object.freeze({
     // Use 'display: inline-flex' and 'align-items: center' to vertically center the icon
     display: 'inline-flex',
     'align-items': 'center',
-    color: 'var(--color-container-on-alert)',
+    color: 'var(--color-container-alert)',
   });
 
   useEffect(() => {
@@ -86,13 +88,14 @@ const DevelopmentTenantNotification = () => {
     return null;
   }
 
-  return (
+  return createPortal(
     <div ref={ref}>
       <span ref={iconRef}>
         <DevIcon />
       </span>
       {t('development_tenant.notification')}
-    </div>
+    </div>,
+    document.body
   );
 };
 
