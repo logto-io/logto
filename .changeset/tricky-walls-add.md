@@ -2,4 +2,4 @@
 "@logto/console": patch
 ---
 
-connector config default values should only show up on when creating new connectors
+Connector config default values should only show up when creating new connectors
