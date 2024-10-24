@@ -184,7 +184,8 @@ export default function verificationRoutes<T extends UserRouter>(
       const authorizationUri = await socialVerification.createAuthorizationUrl(
         ctx,
         tenantContext,
-        rest
+        rest,
+        'verificationRecord'
       );
 
       const { expiresAt } = await insertVerificationRecord(socialVerification, queries);
@@ -225,7 +226,7 @@ export default function verificationRoutes<T extends UserRouter>(
         libraries,
       });
 
-      await socialVerification.verify(ctx, tenantContext, connectorData);
+      await socialVerification.verify(ctx, tenantContext, connectorData, 'verificationRecord');
 
       await updateVerificationRecord(socialVerification, queries);
 
