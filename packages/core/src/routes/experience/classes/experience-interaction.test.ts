@@ -1,3 +1,4 @@
+import { TemplateType } from '@logto/connector-kit';
 import {
   adminConsoleApplicationId,
   adminTenantId,
@@ -88,7 +89,7 @@ describe('ExperienceInteraction class', () => {
       type: SignInIdentifier.Email,
       value: mockEmail,
     },
-    interactionEvent: InteractionEvent.Register,
+    templateType: TemplateType.Register,
     verified: true,
   });
 
