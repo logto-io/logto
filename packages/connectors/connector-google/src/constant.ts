@@ -69,6 +69,7 @@ export const defaultMetadata: ConnectorMetadata = {
         .map((prompt) => ({
           value: prompt,
         })),
+      defaultValue: [OidcPrompt.SelectAccount],
     },
   ],
 };
