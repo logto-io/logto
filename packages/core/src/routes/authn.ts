@@ -18,6 +18,7 @@ import {
 
 import { idpInitiatedSamlSsoSessionCookieName } from '../constants/index.js';
 import { EnvSet } from '../env-set/index.js';
+import koaAuditLog from '../middleware/koa-audit-log.js';
 
 import { ssoPath } from './interaction/const.js';
 import type { AnonymousRouter, RouterInitArgs } from './types.js';
@@ -183,6 +184,7 @@ export default function authnRoutes<T extends AnonymousRouter>(
       params: z.object({ connectorId: z.string().min(1) }),
       status: [302, 400, 404],
     }),
+    koaAuditLog(queries),
     async (ctx, next) => {
       const {
         params: { connectorId },
@@ -236,6 +238,13 @@ export default function authnRoutes<T extends AnonymousRouter>(
 
         const { autoSendAuthorizationRequest, clientIdpInitiatedAuthCallbackUri } =
           idpInitiatedAuthConfig;
+
+        const log = ctx.createLog('Interaction.SignIn.Verification.IdpInitiatedSso.Create');
+        log.append({
+          connectorId,
+          ssoSessionId: id,
+          assertionContent,
+        });
 
         // Redirect to the client side callback URI if the autoSendAuthorizationRequest is disabled.
         // Client side will generate and verify the state to prevent CSRF attack.
