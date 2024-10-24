@@ -29,6 +29,7 @@ export const createUserLibrary = (queries: Queries) => {
       hasUserWithEmail,
       hasUserWithId,
       hasUserWithPhone,
+      hasUserWithIdentity,
       findUsersByIds,
       updateUserById,
       findUserById,
@@ -91,10 +92,11 @@ export const createUserLibrary = (queries: Queries) => {
       username?: Nullable<string>;
       primaryEmail?: Nullable<string>;
       primaryPhone?: Nullable<string>;
+      identity?: Nullable<{ target: string; id: string }>;
     },
     excludeUserId?: string
   ) => {
-    const { primaryEmail, primaryPhone, username } = identifiers;
+    const { primaryEmail, primaryPhone, username, identity } = identifiers;
 
     if (primaryEmail && (await hasUserWithEmail(primaryEmail, excludeUserId))) {
       throw new RequestError({ code: 'user.email_already_in_use', status: 422 });
@@ -106,6 +108,10 @@ export const createUserLibrary = (queries: Queries) => {
 
     if (username && (await hasUser(username, excludeUserId))) {
       throw new RequestError({ code: 'user.username_already_in_use', status: 422 });
+    }
+
+    if (identity && (await hasUserWithIdentity(identity.target, identity.id, excludeUserId))) {
+      throw new RequestError({ code: 'user.identity_already_in_use', status: 422 });
     }
   };
 

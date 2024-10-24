@@ -129,6 +129,88 @@
           }
         }
       }
+    },
+    "/api/verifications/social": {
+      "post": {
+        "operationId": "CreateVerificationBySocial",
+        "summary": "Create a social verification record",
+        "description": "Create a social verification record and return the authorization URI.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "connectorId": {
+                    "description": "The Logto connector ID."
+                  },
+                  "redirectUri": {
+                    "description": "The URI to navigate back to after the user is authenticated by the connected social identity provider and has granted access to the connector."
+                  },
+                  "state": {
+                    "description": "A random string generated on the client side to prevent CSRF (Cross-Site Request Forgery) attacks."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully created the social verification record and returned the authorization URI.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "verificationRecordId": {
+                      "description": "The ID of the verification record."
+                    },
+                    "authorizationUri": {
+                      "description": "The authorization URI to navigate to for authentication and authorization in the connected social identity provider."
+                    },
+                    "expiresAt": {
+                      "description": "The expiration date and time of the verification record."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The connector specified by connectorId is not found."
+          },
+          "422": {
+            "description": "The connector specified by connectorId is not a valid social connector."
+          }
+        }
+      }
+    },
+    "/api/verifications/social/verify": {
+      "post": {
+        "operationId": "VerifyVerificationBySocial",
+        "summary": "Verify a social verification record",
+        "description": "Verify a social verification record by callback connector data, and save the user information to the record.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "connectorData": {
+                    "description": "A json object constructed from the url query params returned by the social platform. Typically it contains `code`, `state` and `redirectUri` fields."
+                  },
+                  "verificationId": {
+                    "description": "The verification ID of the SocialVerification record."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The social verification record has been successfully verified and the user information has been saved."
+          }
+        }
+      }
     }
   }
 }
