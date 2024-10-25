@@ -6,6 +6,7 @@ import {
   type Log,
   type interaction,
   type LogKeyUnknown,
+  type jwtCustomizer,
 } from '@logto/schemas';
 import { conditional, conditionalArray } from '@silverhand/essentials';
 import { sql } from '@silverhand/slonik';
@@ -18,7 +19,12 @@ import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(Logs);
 
-export type AllowedKeyPrefix = hook.Type | token.Type | interaction.Prefix | typeof LogKeyUnknown;
+export type AllowedKeyPrefix =
+  | hook.Type
+  | token.Type
+  | interaction.Prefix
+  | jwtCustomizer.Prefix
+  | typeof LogKeyUnknown;
 
 type LogCondition = {
   logKey?: string;

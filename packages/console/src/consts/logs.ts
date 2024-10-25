@@ -106,6 +106,8 @@ export const auditLogEventTitle: Record<string, Optional<string>> & {
     'Verify forgot-password SMS verification code',
   'Interaction.SignIn.Verification.IdpInitiatedSso.Create':
     'Create IdP-initiated SAML SSO authentication session',
+  'JwtCustomizer.AccessToken': 'Get custom user access token claims',
+  'JwtCustomizer.ClientCredential': 'Get custom M2M access token claims',
 });
 
 export const logEventTitle: Record<string, Optional<string>> & {
