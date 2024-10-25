@@ -102,7 +102,7 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
   /**
    * Create the authorization URL for the social connector and generate a connector authorization session.
    *
-   * @param {SocialAuthorizationSessionStorageType} useInternalSession  - Whether to store the connector session result in the current verification record directly. Set to `true` for the profile API.
+   * @param {SocialAuthorizationSessionStorageType} connectorSessionType  - Whether to store the connector session result in the current verification record directly. Set to `true` for the profile API.
    *
    * @remarks
    * For the experience API:
@@ -126,10 +126,10 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     ctx: WithLogContext,
     tenantContext: TenantContext,
     { state, redirectUri }: SocialAuthorizationUrlPayload,
-    useInternalSession: SocialAuthorizationSessionStorageType = 'interactionSession'
+    connectorSessionType: SocialAuthorizationSessionStorageType = 'interactionSession'
   ) {
     // For the profile API, connector session result is stored in the current verification record directly.
-    if (useInternalSession === 'verificationRecord') {
+    if (connectorSessionType === 'verificationRecord') {
       return this.createSocialAuthorizationSession(ctx, { state, redirectUri });
     }
 
@@ -144,7 +144,7 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
   /**
    * Verify the social identity and store the social identity in the verification record.
    *
-   * @param {SocialAuthorizationSessionStorageType} useInternalSession  - Whether to find the connector session result from the current verification record directly. Set to `true` for the profile API.
+   * @param {SocialAuthorizationSessionStorageType} connectorSessionType  - Whether to find the connector session result from the current verification record directly. Set to `true` for the profile API.
    *
    * @remarks
    * For the experience API:
@@ -162,10 +162,10 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     ctx: WithLogContext,
     tenantContext: TenantContext,
     connectorData: JsonObject,
-    useInternalSession: SocialAuthorizationSessionStorageType = 'interactionSession'
+    connectorSessionType: SocialAuthorizationSessionStorageType = 'interactionSession'
   ) {
     const socialUserInfo =
-      useInternalSession === 'verificationRecord'
+      connectorSessionType === 'verificationRecord'
         ? // For the profile API, find the connector session result from the current verification record directly.
           await this.verifySocialIdentityInternally(connectorData, ctx)
         : // For the experience API, fetch the connector session result from the provider's interactionDetails.

@@ -45,7 +45,7 @@ describe('profile (social)', () => {
   });
 
   afterAll(async () => {
-    await clearConnectorsByTypes([ConnectorType.Social]);
+    await clearConnectorsByTypes([ConnectorType.Social, ConnectorType.Email]);
   });
 
   describe('POST /profile/identities', () => {
