@@ -98,10 +98,10 @@ importers:
         specifier: workspace:^2.5.0
         version: link:../toolkit/core-kit
       '@logto/schemas':
-        specifier: workspace:1.20.0
+        specifier: workspace:1.21.0
         version: link:../schemas
       '@logto/shared':
-        specifier: workspace:^3.1.1
+        specifier: workspace:^3.1.2
         version: link:../shared
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -2693,7 +2693,7 @@ importers:
         specifier: workspace:^1.1.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.14.0
+        specifier: workspace:^1.14.1
         version: link:../phrases
       '@logto/phrases-experience':
         specifier: workspace:^1.8.0
@@ -2702,10 +2702,10 @@ importers:
         specifier: ^3.0.12
         version: 3.0.13(react@18.3.1)
       '@logto/schemas':
-        specifier: workspace:^1.20.0
+        specifier: workspace:^1.21.0
         version: link:../schemas
       '@logto/shared':
-        specifier: workspace:^3.1.1
+        specifier: workspace:^3.1.2
         version: link:../shared
       '@mdx-js/react':
         specifier: ^3.0.1
@@ -2987,7 +2987,7 @@ importers:
         specifier: workspace:^2.0.0
         version: link:../app-insights
       '@logto/cli':
-        specifier: workspace:^1.20.0
+        specifier: workspace:^1.21.0
         version: link:../cli
       '@logto/connector-kit':
         specifier: workspace:^4.0.0
@@ -3014,16 +3014,16 @@ importers:
         specifier: workspace:^1.1.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.14.0
+        specifier: workspace:^1.14.1
         version: link:../phrases
       '@logto/phrases-experience':
         specifier: workspace:^1.8.0
         version: link:../phrases-experience
       '@logto/schemas':
-        specifier: workspace:^1.20.0
+        specifier: workspace:^1.21.0
         version: link:../schemas
       '@logto/shared':
-        specifier: workspace:^3.1.1
+        specifier: workspace:^3.1.2
         version: link:../shared
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -3288,7 +3288,7 @@ importers:
   packages/create:
     dependencies:
       '@logto/cli':
-        specifier: workspace:^1.20.0
+        specifier: workspace:^1.21.0
         version: link:../cli
 
   packages/demo-app:
@@ -4036,13 +4036,13 @@ importers:
         specifier: workspace:^1.1.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.14.0
+        specifier: workspace:^1.14.1
         version: link:../phrases
       '@logto/phrases-experience':
         specifier: workspace:^1.8.0
         version: link:../phrases-experience
       '@logto/shared':
-        specifier: workspace:^3.1.1
+        specifier: workspace:^3.1.2
         version: link:../shared
       '@withtyped/server':
         specifier: ^0.14.0

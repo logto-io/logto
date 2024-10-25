@@ -1,5 +1,14 @@
 # Change Log
 
+## 1.21.0
+
+### Patch Changes
+
+- Updated dependencies [bc2a0ac03]
+- Updated dependencies [3c993d59c]
+  - @logto/shared@3.1.2
+  - @logto/phrases@1.14.1
+
 ## 1.20.0
 
 ### Minor Changes
