@@ -1,0 +1,27 @@
+:root {
+  /* Colors */
+  --logto-color-background: #ffffff;
+  --logto-color-typeface-primary: #191C1D;
+  --logto-color-typeface-secondary: #747778;
+  --logto-color-container-on-success: #68BE6C;
+
+  /* Shapes */
+  --logto-shape-corner-lg: 12px;
+  --logto-shape-corner-md: 8px;
+  
+  /* Spacing */
+  --logto-spacing-xl: 20px;
+  --logto-spacing-lg: 16px;
+  --logto-spacing-md: 12px;
+  --logto-spacing-sm: 8px;
+  --logto-spacing-xs: 4px;
+
+  /* Fonts */
+  --logto-font-label-lg: 500 16px/24px 'SF Pro Text', sans-serif;
+  --logto-font-label-md: 500 14px/20px 'SF Pro Text', sans-serif;
+  --logto-font-label-sm: 500 12px/16px 'SF Pro Text', sans-serif;
+
+  --logto-font-body-lg: 400 16px/24px 'SF Pro Text', sans-serif;
+  --logto-font-body-md: 400 14px/20px 'SF Pro Text', sans-serif;
+  --logto-font-body-sm: 400 12px/16px 'SF Pro Text', sans-serif;
+}
