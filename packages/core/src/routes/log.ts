@@ -1,4 +1,4 @@
-import { Logs, interaction, token, LogKeyUnknown } from '@logto/schemas';
+import { Logs, interaction, token, LogKeyUnknown, jwtCustomizer } from '@logto/schemas';
 import { object, string } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -34,6 +34,7 @@ export default function logRoutes<T extends ManagementApiRouter>(
         token.Type.ExchangeTokenBy,
         token.Type.RevokeToken,
         interaction.prefix,
+        jwtCustomizer.prefix,
         LogKeyUnknown,
       ];
 
