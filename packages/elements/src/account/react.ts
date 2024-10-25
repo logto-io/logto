@@ -1,7 +1,7 @@
 import { createComponent } from '@lit/react';
 
 import { LogtoUsername } from './elements/logto-username.js';
-import { LogtoAccountProvider, LogtoUserEmail } from './index.js';
+import { LogtoAccountProvider, LogtoUserEmail, LogtoUserPassword } from './index.js';
 
 export * from './api/index.js';
 
@@ -20,6 +20,11 @@ export const createReactComponents = (react: Parameters<typeof createComponent>[
     LogtoUserEmail: createComponent({
       tagName: LogtoUserEmail.tagName,
       elementClass: LogtoUserEmail,
+      react,
+    }),
+    LogtoUserPassword: createComponent({
+      tagName: LogtoUserPassword.tagName,
+      elementClass: LogtoUserPassword,
       react,
     }),
   };
