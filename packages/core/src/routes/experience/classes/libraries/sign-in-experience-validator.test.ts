@@ -1,3 +1,4 @@
+import { TemplateType } from '@logto/connector-kit';
 import {
   InteractionEvent,
   type SignInExperience,
@@ -68,7 +69,7 @@ const verificationCodeVerificationRecords = Object.freeze({
       type: SignInIdentifier.Email,
       value: `foo@${emailDomain}`,
     },
-    InteractionEvent.SignIn
+    TemplateType.SignIn
   ),
   [SignInIdentifier.Phone]: createNewCodeVerificationRecord(
     mockTenant.libraries,
@@ -77,7 +78,7 @@ const verificationCodeVerificationRecords = Object.freeze({
       type: SignInIdentifier.Phone,
       value: 'value',
     },
-    InteractionEvent.SignIn
+    TemplateType.SignIn
   ),
 });
 

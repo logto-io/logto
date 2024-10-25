@@ -118,6 +118,14 @@ export const mockSmsConnectorConfig = {
       usageType: 'Test',
       content: 'This is for testing purposes only. Your passcode is {{code}}.',
     },
+    {
+      usageType: 'UserPermissionValidation',
+      content: 'This is for user permission validation purposes only. Your passcode is {{code}}.',
+    },
+    {
+      usageType: 'BindNewIdentifier',
+      content: 'This is for binding new identifier purposes only. Your passcode is {{code}}.',
+    },
   ],
 };
 
@@ -162,6 +170,18 @@ export const mockEmailConnectorConfig = {
       type: 'text/plain',
       subject: 'Logto Organization Invitation Template',
       content: 'This is for organization invitation purposes only. Your link is {{link}}.',
+    },
+    {
+      usageType: 'UserPermissionValidation',
+      type: 'text/plain',
+      subject: 'Logto User Permission Validation Template',
+      content: 'This is for user permission validation purposes only. Your passcode is {{code}}.',
+    },
+    {
+      usageType: 'BindNewIdentifier',
+      type: 'text/plain',
+      subject: 'Logto Bind New Identifier Template',
+      content: 'This is for binding new identifier purposes only. Your passcode is {{code}}.',
     },
   ],
 };
