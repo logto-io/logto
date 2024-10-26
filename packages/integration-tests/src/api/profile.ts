@@ -27,6 +27,15 @@ export const updatePrimaryPhone = async (
     json: { phone, verificationRecordId, newIdentifierVerificationRecordId },
   });
 
+export const updateIdentities = async (
+  api: KyInstance,
+  verificationRecordId: string,
+  newIdentifierVerificationRecordId: string
+) =>
+  api.post('api/profile/identities', {
+    json: { verificationRecordId, newIdentifierVerificationRecordId },
+  });
+
 export const updateUser = async (api: KyInstance, body: Record<string, unknown>) =>
   api.patch('api/profile', { json: body }).json<Partial<UserProfileResponse>>();
 
