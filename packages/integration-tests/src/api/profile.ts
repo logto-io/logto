@@ -36,6 +36,15 @@ export const updateIdentities = async (
     json: { verificationRecordId, newIdentifierVerificationRecordId },
   });
 
+export const deleteIdentity = async (
+  api: KyInstance,
+  target: string,
+  verificationRecordId: string
+) =>
+  api.delete(`api/profile/identities/${target}`, {
+    searchParams: { verificationRecordId },
+  });
+
 export const updateUser = async (api: KyInstance, body: Record<string, unknown>) =>
   api.patch('api/profile', { json: body }).json<Partial<UserProfileResponse>>();
 

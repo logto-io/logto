@@ -246,6 +246,31 @@
           }
         }
       }
+    },
+    "/api/profile/identities/{target}": {
+      "delete": {
+        "operationId": "DeleteIdentity",
+        "summary": "Delete a user identity",
+        "description": "Delete an identity (social identity) from the user, a verification record is required for checking sensitive permissions.",
+        "parameters": [
+          {
+            "name": "verificationRecordId",
+            "in": "query",
+            "description": "The verification record ID for checking sensitive permissions."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The identity was deleted successfully."
+          },
+          "400": {
+            "description": "The verification record is invalid."
+          },
+          "404": {
+            "description": "The identity does not exist."
+          }
+        }
+      }
     }
   }
 }
