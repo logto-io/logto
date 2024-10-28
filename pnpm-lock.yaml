@@ -6,6 +6,7 @@ settings:
 
 overrides:
   formidable@<3.2.4: ^3.2.4
+  d3-color@2.0.0: ^3.1.0
 
 importers:
 
@@ -8254,9 +8255,6 @@ packages:
   d3-chord@3.0.1:
     resolution: {integrity: sha512-VE5S6TNa+j8msksl7HwjxMHDM2yNK3XCkusIlpX5kwauBfXuyLAtNg9jCp/iHH61tgI4sb6R/EIMWCqEIdjT/g==}
     engines: {node: '>=12'}
-
-  d3-color@2.0.0:
-    resolution: {integrity: sha512-SPXi0TSKPD4g9tw0NMZFnR95XVgUZiBH+uUTqQuDu1OsE2zomHU7ho0FISciaPvosimixwHFl3WHLGabv6dDgQ==}
 
   d3-color@3.1.0:
     resolution: {integrity: sha512-zg/chbXyeBtMQ1LbD/WSoW2DpC3I0mpmPdW+ynRTj/x2DAWYrIY7qeZIHidozwV24m4iavr15lNwIwLxRmOxhA==}
@@ -19099,8 +19097,6 @@ snapshots:
     dependencies:
       d3-path: 3.1.0
 
-  d3-color@2.0.0: {}
-
   d3-color@3.1.0: {}
 
   d3-contour@4.0.2:
@@ -19148,7 +19144,7 @@ snapshots:
 
   d3-interpolate@3.0.1:
     dependencies:
-      d3-color: 2.0.0
+      d3-color: 3.1.0
 
   d3-path@1.0.9: {}
 
