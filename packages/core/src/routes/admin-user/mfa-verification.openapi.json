@@ -25,11 +25,10 @@
                       },
                       "secret": {
                         "type": "string",
-                        "description": "The secret for the MFA verification."
+                        "description": "The secret for the MFA verification, if not provided, a new secret will be generated."
                       }
                     },
-                    "required": ["type", "secret"],
-                    "additionalProperties": false
+                    "required": ["type"]
                   },
                   {
                     "type": "object",
@@ -43,11 +42,10 @@
                         "items": {
                           "type": "string"
                         },
-                        "description": "The backup codes for the MFA verification."
+                        "description": "The backup codes for the MFA verification, if not provided, a new group of backup codes will be generated."
                       }
                     },
-                    "required": ["type", "codes"],
-                    "additionalProperties": false
+                    "required": ["type"]
                   }
                 ]
               }
