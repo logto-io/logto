@@ -59,6 +59,19 @@ const usersLibraries = {
   ),
 } satisfies Partial<Libraries['users']>;
 
+const codes = [
+  'd94c2f29ae',
+  '74fa801bb7',
+  '2cbcc9323c',
+  '87299f89aa',
+  '0d95df8598',
+  '78eedbf35d',
+  '0fa4c1fd19',
+  '7384b69eb5',
+  '7bf2481db7',
+  'f00febc9ae',
+];
+
 const adminUserRoutes = await pickDefault(import('./mfa-verifications.js'));
 
 describe('adminUserRoutes', () => {
@@ -169,7 +182,7 @@ describe('adminUserRoutes', () => {
     it('should fail for wrong length', async () => {
       findUserById.mockResolvedValueOnce({
         ...mockUser,
-        mfaVerifications: [],
+        mfaVerifications: [mockUserTotpMfaVerification],
       });
       const response = await userRequest.post(`/users/${mockUser.id}/mfa-verifications`).send({
         type: MfaFactor.BackupCode,
@@ -181,22 +194,11 @@ describe('adminUserRoutes', () => {
     it('should fail for wrong characters', async () => {
       findUserById.mockResolvedValueOnce({
         ...mockUser,
-        mfaVerifications: [],
+        mfaVerifications: [mockUserTotpMfaVerification],
       });
       const response = await userRequest.post(`/users/${mockUser.id}/mfa-verifications`).send({
         type: MfaFactor.BackupCode,
-        codes: [
-          'd94c2f29ae',
-          '74fa801bb7',
-          '2cbcc9323c',
-          '87299f89aa',
-          '0d95df8598',
-          '78eedbf35d',
-          '0fa4c1xd19',
-          '7384b69eb5',
-          '7bf2481db7',
-          'f00febc9ae',
-        ],
+        codes: [...codes, '0fa4c1xd19'],
       });
       expect(response.status).toEqual(422);
     });
@@ -204,37 +206,15 @@ describe('adminUserRoutes', () => {
     it('should return the supplied codes', async () => {
       findUserById.mockResolvedValueOnce({
         ...mockUser,
-        mfaVerifications: [],
+        mfaVerifications: [mockUserTotpMfaVerification],
       });
       const response = await userRequest.post(`/users/${mockUser.id}/mfa-verifications`).send({
         type: MfaFactor.BackupCode,
-        codes: [
-          'd94c2f29ae',
-          '74fa801bb7',
-          '2cbcc9323c',
-          '87299f89aa',
-          '0d95df8598',
-          '78eedbf35d',
-          '0fa4c1fd19',
-          '7384b69eb5',
-          '7bf2481db7',
-          'f00febc9ae',
-        ],
+        codes,
       });
       expect(response.body).toMatchObject({
         type: MfaFactor.BackupCode,
-        codes: [
-          'd94c2f29ae',
-          '74fa801bb7',
-          '2cbcc9323c',
-          '87299f89aa',
-          '0d95df8598',
-          '78eedbf35d',
-          '0fa4c1fd19',
-          '7384b69eb5',
-          '7bf2481db7',
-          'f00febc9ae',
-        ],
+        codes,
       });
     });
   });
