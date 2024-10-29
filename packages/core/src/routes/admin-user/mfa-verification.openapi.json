@@ -15,11 +15,39 @@
           "content": {
             "application/json": {
               "schema": {
-                "properties": {
-                  "type": {
-                    "description": "The type of MFA verification to create."
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "description": "The type of MFA verification to create."
+                      },
+                      "secret": {
+                        "type": "string",
+                        "description": "The secret for the MFA verification, if not provided, a new secret will be generated."
+                      }
+                    },
+                    "required": ["type"]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "description": "The type of MFA verification to create."
+                      },
+                      "codes": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "The backup codes for the MFA verification, if not provided, a new group of backup codes will be generated."
+                      }
+                    },
+                    "required": ["type"]
                   }
-                }
+                ]
               }
             }
           }

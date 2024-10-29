@@ -35,6 +35,8 @@ const user = {
   password_algorithm_required: 'Password algorithm is required.',
   password_and_digest: 'You cannot set both plain text password and password digest.',
   personal_access_token_name_exists: 'Personal access token name already exists.',
+  totp_secret_invalid: 'Invalid TOTP secret supplied.',
+  wrong_backup_code_format: 'Backup code format is invalid.',
 };
 
 export default Object.freeze(user);
