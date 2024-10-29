@@ -13,7 +13,7 @@ import {
   generateBackupCodes,
   validateBackupCodes,
 } from '../interaction/utils/backup-code-validation.js';
-import { generateTotpSecret } from '../interaction/utils/totp-validation.js';
+import { generateTotpSecret, validateTotpSecret } from '../interaction/utils/totp-validation.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 export default function adminUserMfaVerificationsRoutes<T extends ManagementApiRouter>(
@@ -90,14 +90,8 @@ export default function adminUserMfaVerificationsRoutes<T extends ManagementApiR
         );
 
         if (ctx.guard.body.secret) {
-          const base32Regex =
-            /^(?:[2-7A-Z]{8})*(?:[2-7A-Z]{2}={6}|[2-7A-Z]{4}={4}|[2-7A-Z]{5}={3}|[2-7A-Z]{7}=)?$/;
-          base32Regex.test(ctx.guard.body.secret);
-
           assertThat(
-            ctx.guard.body.secret.length >= 16 &&
-              ctx.guard.body.secret.length <= 32 &&
-              base32Regex.test(ctx.guard.body.secret),
+            validateTotpSecret(ctx.guard.body.secret),
             new RequestError({
               code: 'user.totp_secret_invalid',
               status: 422,

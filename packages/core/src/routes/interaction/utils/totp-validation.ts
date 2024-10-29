@@ -12,6 +12,13 @@ authenticator.options = { window: 1 };
 
 export const generateTotpSecret = () => authenticator.generateSecret();
 
+export const validateTotpSecret = (secret: string) => {
+  const base32Regex =
+    /^(?:[2-7A-Z]{8})*(?:[2-7A-Z]{2}={6}|[2-7A-Z]{4}={4}|[2-7A-Z]{5}={3}|[2-7A-Z]{7}=)?$/;
+
+  return secret.length >= 16 && secret.length <= 32 && base32Regex.test(secret);
+};
+
 export const validateTotpToken = (secret: string, token: string) => {
   return authenticator.check(token, secret);
 };
