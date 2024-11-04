@@ -1,4 +1,4 @@
-import { socialUserInfoGuard, type SocialUserInfo, type ToZodObject } from '@logto/connector-kit';
+import { type ToZodObject } from '@logto/connector-kit';
 import {
   VerificationType,
   type JsonObject,
@@ -17,10 +17,12 @@ import {
   getSsoAuthorizationUrl,
   verifySsoIdentity,
 } from '#src/routes/interaction/utils/single-sign-on.js';
+import { extendedSocialUserInfoGuard, type ExtendedSocialUserInfo } from '#src/sso/types/saml.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
+import { safeParseUnknownJson } from '#src/utils/json.js';
 
 import type { InteractionProfile } from '../../types.js';
 
@@ -34,7 +36,7 @@ export type EnterpriseSsoVerificationRecordData = {
   /**
    * The enterprise SSO identity returned by the connector.
    */
-  enterpriseSsoUserInfo?: SocialUserInfo;
+  enterpriseSsoUserInfo?: ExtendedSocialUserInfo;
   issuer?: string;
 };
 
@@ -42,7 +44,7 @@ export const enterPriseSsoVerificationRecordDataGuard = z.object({
   id: z.string(),
   connectorId: z.string(),
   type: z.literal(VerificationType.EnterpriseSso),
-  enterpriseSsoUserInfo: socialUserInfoGuard.optional(),
+  enterpriseSsoUserInfo: extendedSocialUserInfoGuard.optional(),
   issuer: z.string().optional(),
 }) satisfies ToZodObject<EnterpriseSsoVerificationRecordData>;
 
@@ -60,7 +62,7 @@ export class EnterpriseSsoVerification
   public readonly id: string;
   public readonly type = VerificationType.EnterpriseSso;
   public readonly connectorId: string;
-  public enterpriseSsoUserInfo?: SocialUserInfo;
+  public enterpriseSsoUserInfo?: ExtendedSocialUserInfo;
   public issuer?: string;
 
   private connectorDataCache?: SupportedSsoConnector;
@@ -144,8 +146,6 @@ export class EnterpriseSsoVerification
       new RequestError({ code: 'session.verification_failed', status: 400 })
     );
 
-    // TODO: sync userInfo and link sso identity
-
     const userSsoIdentityResult = await this.findUserSsoIdentityByEnterpriseSsoUserInfo();
 
     if (userSsoIdentityResult) {
@@ -184,7 +184,7 @@ export class EnterpriseSsoVerification
         issuer: this.issuer,
         ssoConnectorId: this.connectorId,
         identityId: this.enterpriseSsoUserInfo.id,
-        detail: this.enterpriseSsoUserInfo,
+        detail: safeParseUnknownJson(this.enterpriseSsoUserInfo),
       },
     };
   }
