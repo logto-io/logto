@@ -28,6 +28,8 @@ export type InteractionProfile = {
     UserSsoIdentity,
     'identityId' | 'ssoConnectorId' | 'issuer' | 'detail'
   >;
+  // Syncing the existing enterprise SSO identity detail
+  syncedEnterpriseSsoIdentity?: Pick<UserSsoIdentity, 'identityId' | 'issuer' | 'detail'>;
 } & Pick<
   CreateUser,
   | 'avatar'
@@ -60,6 +62,13 @@ export const interactionProfileGuard = Users.createGuard
       .pick({
         identityId: true,
         ssoConnectorId: true,
+        issuer: true,
+        detail: true,
+      })
+      .optional(),
+    syncedEnterpriseSsoIdentity: UserSsoIdentities.guard
+      .pick({
+        identityId: true,
         issuer: true,
         detail: true,
       })

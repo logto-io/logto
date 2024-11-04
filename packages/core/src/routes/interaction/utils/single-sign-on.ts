@@ -1,5 +1,5 @@
 /* eslint-disable max-lines -- will migrate this file to the latest experience APIs */
-import { ConnectorError, type SocialUserInfo } from '@logto/connector-kit';
+import { ConnectorError } from '@logto/connector-kit';
 import { validateRedirectUrl } from '@logto/core-kit';
 import {
   InteractionEvent,
@@ -17,9 +17,11 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import SamlConnector from '#src/sso/SamlConnector/index.js';
 import { ssoConnectorFactories, type SingleSignOnConnectorSession } from '#src/sso/index.js';
+import { type ExtendedSocialUserInfo } from '#src/sso/types/saml.js';
 import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
+import { safeParseUnknownJson } from '#src/utils/json.js';
 
 import { type WithInteractionHooksContext } from '../middleware/koa-interaction-hooks.js';
 
@@ -128,7 +130,7 @@ export const getSsoAuthorizationUrl = async (
 type SsoAuthenticationResult = {
   /** The issuer of the SSO provider, we need to store this in the user SSO identity to identify the provider. */
   issuer: string;
-  userInfo: SocialUserInfo;
+  userInfo: ExtendedSocialUserInfo;
 };
 
 /**
@@ -268,7 +270,7 @@ const signInWithSsoAuthentication = async (
 
   // Update the user's SSO identity details
   await userSsoIdentitiesQueries.updateById(id, {
-    detail: userInfo,
+    detail: safeParseUnknownJson(userInfo),
   });
 
   const { name, avatar, id: identityId } = userInfo;
@@ -331,7 +333,7 @@ const signInAndLinkWithSsoAuthentication = async (
     userId,
     identityId,
     issuer,
-    detail: userInfo,
+    detail: safeParseUnknownJson(userInfo),
   });
 
   // Sync the user name and avatar to the existing user if the connector has syncProfile enabled (sign-in)
@@ -413,7 +415,7 @@ export const registerWithSsoAuthentication = async (
     ssoConnectorId: connectorId,
     identityId: userInfo.id,
     issuer,
-    detail: userInfo,
+    detail: safeParseUnknownJson(userInfo),
   });
 
   // JIT provision for new users signing up with SSO

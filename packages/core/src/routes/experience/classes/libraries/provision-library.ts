@@ -58,7 +58,7 @@ export class ProvisionLibrary {
       queries: { userSsoIdentities: userSsoIdentitiesQueries },
     } = this.tenantContext;
 
-    const { socialIdentity, enterpriseSsoIdentity, ...rest } = profile;
+    const { socialIdentity, enterpriseSsoIdentity, syncedEnterpriseSsoIdentity, ...rest } = profile;
 
     const { isCreatingFirstAdminUser, initialUserRoles, customData } =
       await this.getUserProvisionContext(profile);
