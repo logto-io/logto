@@ -161,7 +161,7 @@ function CreateForm({
               >
                 {Object.values(ApplicationType)
                   // Other application types (e.g. "Protected") should not show up in the creation modal
-                  .filter((value) =>
+                  .filter((value): value is Exclude<ApplicationType, ApplicationType.SAML> =>
                     [
                       ApplicationType.Native,
                       ApplicationType.SPA,

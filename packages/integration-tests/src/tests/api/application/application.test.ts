@@ -26,7 +26,7 @@ describe('application APIs', () => {
     expect(fetchedApplication.id).toBe(application.id);
   });
 
-  it('should throw error when creating a third party application with invalid type', async () => {
+  it('should throw error when creating an OIDC third party application with invalid type', async () => {
     await expectRejects(
       createApplication('test-create-app', ApplicationType.Native, {
         isThirdParty: true,
@@ -35,7 +35,16 @@ describe('application APIs', () => {
     );
   });
 
-  it('should create third party application successfully', async () => {
+  it('should throw error when creating a non-third party SAML application', async () => {
+    await expectRejects(createApplication('test-create-saml-app', ApplicationType.SAML), {
+      code: 'application.use_saml_app_api',
+      status: 400,
+    });
+  });
+
+  // TODO: add tests for blocking updating SAML application with `PATCH /applications/:id` API, we can not do it before we implement the `POST /saml-applications` API
+
+  it('should create OIDC third party application successfully', async () => {
     const applicationName = 'test-third-party-app';
 
     const application = await createApplication(applicationName, ApplicationType.Traditional, {

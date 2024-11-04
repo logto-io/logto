@@ -1,5 +1,4 @@
-import type { ApplicationType } from '@logto/schemas';
-import { Theme } from '@logto/schemas';
+import { ApplicationType, Theme } from '@logto/schemas';
 
 import {
   darkModeApplicationIconMap,
@@ -16,7 +15,8 @@ type Props = {
 };
 
 const getIcon = (type: ApplicationType, isLightMode: boolean, isThirdParty?: boolean) => {
-  if (isThirdParty) {
+  // We have ensured that SAML applications are always third party in DB schema, we use `??` here to make TypeScript happy.
+  if (isThirdParty ?? type === ApplicationType.SAML) {
     return isLightMode ? thirdPartyApplicationIcon : thirdPartyApplicationIconDark;
   }
 

@@ -12,7 +12,8 @@ import TraditionalWebAppDark from '@/assets/icons/traditional-web-app-dark.svg?r
 import TraditionalWebApp from '@/assets/icons/traditional-web-app.svg?react';
 
 type ApplicationIconMap = {
-  [key in ApplicationType]: SvgComponent;
+  // TODO: Add SAML icon when we support SAML application in console
+  [key in Exclude<ApplicationType, ApplicationType.SAML>]: SvgComponent;
 };
 
 export const lightModeApplicationIconMap: ApplicationIconMap = Object.freeze({

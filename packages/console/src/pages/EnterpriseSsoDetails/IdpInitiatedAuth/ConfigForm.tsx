@@ -177,17 +177,28 @@ function ConfigForm({
                     placeholder={t(
                       'enterprise_sso_details.idp_initiated_auth_config.empty_applications_placeholder'
                     )}
-                    options={applications.map((application) => ({
-                      value: application.id,
-                      title: (
-                        <span>
-                          {application.name}
-                          <span className={styles.applicationDetails}>
-                            ({t(`guide.categories.${application.type}`)}, ID: {application.id})
+                    options={applications
+                      .filter(
+                        // See definition of `applicationsSearchUrl`, there is only non-third party SPA/Traditional applications here, and SAML applications are always third party secured by DB schema, we need to manually exclude other application types here to make TypeScript happy.
+                        (
+                          application
+                        ): application is Exclude<Application, 'type'> & {
+                          type: Extract<ApplicationType, 'SPA' | 'Traditional'>;
+                        } =>
+                          application.type === ApplicationType.SPA ||
+                          application.type === ApplicationType.Traditional
+                      )
+                      .map((application) => ({
+                        value: application.id,
+                        title: (
+                          <span>
+                            {application.name}
+                            <span className={styles.applicationDetails}>
+                              ({t(`guide.categories.${application.type}`)}, ID: {application.id})
+                            </span>
                           </span>
-                        </span>
-                      ),
-                    }))}
+                        ),
+                      }))}
                     value={value}
                     error={emptyApplicationsError ?? errors.config?.defaultApplicationId?.message}
                     onChange={onChange}

@@ -10,6 +10,7 @@ const application = {
   protected_app_metadata_is_required: 'Protected app metadata is required.',
   protected_app_not_configured:
     'Protected app provider is not configured. This feature is not available for open source version.',
+  use_saml_app_api: 'Use `[METHOD] /saml-applications(/.*)?` API to operate SAML app.',
   cloudflare_unknown_error: 'Got unknown error when requesting Cloudflare API',
   protected_application_only: 'The feature is only available for protected applications.',
   protected_application_misconfigured: 'Protected application is misconfigured.',

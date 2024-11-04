@@ -1,3 +1,4 @@
+import { ApplicationType } from '@logto/schemas';
 import { useCallback, useMemo } from 'react';
 
 import { guides } from '@/assets/docs/guides';
@@ -98,7 +99,8 @@ export const useAppGuideMetadata = (): {
           return accumulated;
         }
 
-        if (isThirdParty) {
+        // We have ensured that SAML applications are always third party in DB schema, we use `||` here to make TypeScript happy.
+        if (target === ApplicationType.SAML || isThirdParty) {
           return {
             ...accumulated,
             [thirdPartyAppCategory]: [...accumulated[thirdPartyAppCategory], guide],

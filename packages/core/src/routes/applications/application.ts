@@ -1,5 +1,5 @@
 // TODO: @darcyYe refactor this file later to remove disable max line comment
-
+/* eslint-disable max-lines */
 import type { Role } from '@logto/schemas';
 import {
   Applications,
@@ -147,9 +147,13 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       response: Applications.guard,
       status: [200, 400, 422, 500],
     }),
-
+    // eslint-disable-next-line complexity
     async (ctx, next) => {
       const { oidcClientMetadata, protectedAppMetadata, ...rest } = ctx.guard.body;
+
+      if (rest.type === ApplicationType.SAML) {
+        throw new RequestError('application.use_saml_app_api');
+      }
 
       await Promise.all([
         rest.type === ApplicationType.MachineToMachine &&
@@ -262,6 +266,11 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
 
       const { isAdmin, protectedAppMetadata, ...rest } = body;
 
+      const pendingUpdateApplication = await queries.applications.findApplicationById(id);
+      if (pendingUpdateApplication.type === ApplicationType.SAML) {
+        throw new RequestError('application.use_saml_app_api');
+      }
+
       // @deprecated
       // User can enable the admin access of Machine-to-Machine apps by switching on a toggle on Admin Console.
       // Since those apps sit in the user tenant, we provide an internal role to apply the necessary scopes.
@@ -292,8 +301,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       }
 
       if (protectedAppMetadata) {
-        const { type, protectedAppMetadata: originProtectedAppMetadata } =
-          await queries.applications.findApplicationById(id);
+        const { type, protectedAppMetadata: originProtectedAppMetadata } = pendingUpdateApplication;
         assertThat(type === ApplicationType.Protected, 'application.protected_application_only');
         assertThat(
           originProtectedAppMetadata,
@@ -319,9 +327,10 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         }
       }
 
-      ctx.body = await (Object.keys(rest).length > 0
-        ? queries.applications.updateApplicationById(id, rest, 'replace')
-        : queries.applications.findApplicationById(id));
+      ctx.body =
+        Object.keys(rest).length > 0
+          ? await queries.applications.updateApplicationById(id, rest, 'replace')
+          : pendingUpdateApplication;
 
       return next();
     }
@@ -359,3 +368,4 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
 
   applicationCustomDataRoutes(router, tenant);
 }
+/* eslint-enable max-lines */

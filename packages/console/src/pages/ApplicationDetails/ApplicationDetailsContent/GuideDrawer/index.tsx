@@ -1,4 +1,4 @@
-import { type ApplicationResponse } from '@logto/schemas';
+import { ApplicationType, type ApplicationResponse } from '@logto/schemas';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -26,24 +26,30 @@ function GuideDrawer({ app, secrets, onClose }: Props) {
   const { getStructuredAppGuideMetadata } = useAppGuideMetadata();
   const [selectedGuide, setSelectedGuide] = useState<SelectedGuide>();
 
+  const appType = useMemo(
+    // SAML application is actually a Traditional application, the same as OIDC applications.
+    () => (app.type === ApplicationType.SAML ? ApplicationType.Traditional : app.type),
+    [app.type]
+  );
+
   const structuredMetadata = useMemo(
-    () => getStructuredAppGuideMetadata({ categories: [app.type] }),
-    [getStructuredAppGuideMetadata, app.type]
+    () => getStructuredAppGuideMetadata({ categories: [appType] }),
+    [getStructuredAppGuideMetadata, appType]
   );
 
   const hasSingleGuide = useMemo(() => {
-    return structuredMetadata[app.type].length === 1;
-  }, [app.type, structuredMetadata]);
+    return structuredMetadata[appType].length === 1;
+  }, [appType, structuredMetadata]);
 
   useEffect(() => {
     if (hasSingleGuide) {
-      const guide = structuredMetadata[app.type][0];
+      const guide = structuredMetadata[appType][0];
       if (guide) {
         const { id, metadata } = guide;
         setSelectedGuide({ id, metadata });
       }
     }
-  }, [hasSingleGuide, app.type, structuredMetadata]);
+  }, [hasSingleGuide, appType, structuredMetadata]);
 
   return (
     <div className={styles.drawerContainer}>
@@ -75,8 +81,8 @@ function GuideDrawer({ app, secrets, onClose }: Props) {
       {!selectedGuide && (
         <GuideCardGroup
           className={styles.cardGroup}
-          categoryName={t(`categories.${app.type}`)}
-          guides={structuredMetadata[app.type]}
+          categoryName={t(`categories.${appType}`)}
+          guides={structuredMetadata[appType]}
           onClickGuide={(guide) => {
             setSelectedGuide(guide);
           }}
