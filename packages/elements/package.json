@@ -53,7 +53,7 @@
     "lit": "^3.1.4"
   },
   "devDependencies": {
-    "@lit/localize-tools": "^0.7.2",
+    "@lit/localize-tools": "^0.8.0",
     "@logto/schemas": "workspace:^1.20.0",
     "@open-wc/testing": "^4.0.0",
     "@playwright/test": "^1.48.1",
