@@ -358,6 +358,11 @@
         "id": "otel-collector-http",
         "name": "Observability Open Telemetry Collector HTTP",
         "indicator": "<SEEDER_OTEL_COLLECTOR_HTTP_INDICATOR>"
+      },
+      {
+        "id": "otel-collector-grpc",
+        "name": "Observability Open Telemetry Collector GRPC",
+        "indicator": "<SEEDER_OTEL_COLLECTOR_GRPC_INDICATOR>"
       }
     ],
     "resource_permissions": [
@@ -401,6 +406,10 @@
       },
       {
         "resource_id": "otel-collector-http",
+        "specific_permissions": ["o11y:metrics:*"]
+      },
+      {
+        "resource_id": "otel-collector-grpc",
         "specific_permissions": ["o11y:metrics:*"]
       },
       {
