@@ -137,8 +137,7 @@ export class EnterpriseSsoVerification
   }
 
   /**
-   * Identify the user by the enterprise SSO identity.
-   * If the user is not found, find the related user by the enterprise SSO identity and return the related user.
+   * Identify the user by the enterprise SSO identity and sync the user SSO identity.
    */
   async identifyUser(): Promise<User> {
     assertThat(
@@ -171,7 +170,7 @@ export class EnterpriseSsoVerification
   }
 
   /**
-   * Returns the use SSO identity as a new user profile.
+   * Returns the user SSO identity as a new user profile.
    */
   toUserProfile(): Required<Pick<InteractionProfile, 'enterpriseSsoIdentity'>> {
     assertThat(
