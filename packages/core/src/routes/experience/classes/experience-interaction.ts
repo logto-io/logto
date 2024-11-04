@@ -376,9 +376,10 @@ export default class ExperienceInteraction {
    * @throws {RequestError} with 422 if the profile data is not unique across users
    * @throws {RequestError} with 422 if the required profile fields are missing
    **/
+  // eslint-disable-next-line complexity
   public async submit() {
     const {
-      queries: { users: userQueries },
+      queries: { users: userQueries, userSsoIdentities: userSsoIdentityQueries },
     } = this.tenant;
 
     // Identified
@@ -425,7 +426,8 @@ export default class ExperienceInteraction {
       await this.mfa.assertUserMandatoryMfaFulfilled();
     }
 
-    const { socialIdentity, enterpriseSsoIdentity, ...rest } = this.profile.data;
+    const { socialIdentity, enterpriseSsoIdentity, syncedEnterpriseSsoIdentity, ...rest } =
+      this.profile.data;
     const { mfaSkipped, mfaVerifications } = this.mfa.toUserMfaVerifications();
 
     // Update user profile
@@ -456,6 +458,16 @@ export default class ExperienceInteraction {
       ),
       lastSignInAt: Date.now(),
     });
+
+    // Sync SSO identity
+    if (syncedEnterpriseSsoIdentity) {
+      const { identityId, issuer, detail } = syncedEnterpriseSsoIdentity;
+      await userSsoIdentityQueries.updateUserSsoIdentityDetailByIdentityId(
+        issuer,
+        identityId,
+        detail
+      );
+    }
 
     if (enterpriseSsoIdentity) {
       await this.provisionLibrary.addSsoIdentityToUser(user.id, enterpriseSsoIdentity);
