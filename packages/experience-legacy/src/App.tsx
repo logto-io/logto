@@ -7,6 +7,7 @@ import LoadingLayerProvider from './Providers/LoadingLayerProvider';
 import PageContextProvider from './Providers/PageContextProvider';
 import SettingsProvider from './Providers/SettingsProvider';
 import UserInteractionContextProvider from './Providers/UserInteractionContextProvider';
+import DevelopmentTenantNotification from './containers/DevelopmentTenantNotification';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
 import Continue from './pages/Continue';
@@ -50,6 +51,7 @@ const App = () => {
       <PageContextProvider>
         <SettingsProvider>
           <UserInteractionContextProvider>
+            <DevelopmentTenantNotification />
             <AppBoundary>
               <Routes>
                 <Route element={<LoadingLayerProvider />}>
