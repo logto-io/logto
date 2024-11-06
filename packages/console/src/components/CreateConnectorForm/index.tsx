@@ -55,7 +55,7 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
         // Hide the entrance of adding HTTP Email connector
         .filter(({ id }) => id !== 'http-email')
         // Hide the entrance of adding Vonage SMS connector
-        .filter(({ id }) => id !== 'vonage')
+        .filter(({ id }) => id !== 'vonage-sms')
     );
 
     return allGroups
