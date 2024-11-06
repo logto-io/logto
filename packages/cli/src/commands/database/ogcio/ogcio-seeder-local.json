@@ -213,6 +213,20 @@
         ]
       },
       {
+        "id": "m2m-messaging",
+        "name": "M2M Messaging",
+        "description": "Role for M2M Applications that need to interact with the Messaging API",
+        "specific_permissions": [
+          "messaging:message:*",
+          "messaging:template:*",
+          "messaging:citizen:*"
+        ],
+        "type": "MachineToMachine",
+        "related_applications": [
+          { "application_id": "ouhygzydwvrv67j4hpm9p", "organization_id": "ogcio" }
+        ]
+      },
+      {
         "id": "m2m-otel-collector",
         "name": "M2M Open Telemetry Collector",
         "description": "Role for M2M Applications that need to push metrics to Open Telemetry Collector",
@@ -373,6 +387,16 @@
         "logout_redirect_uri": "",
         "secret": "uploader_local_secret",
         "id": "upl1wqp66oisjwcjyder9",
+        "is_third_party": false
+      },
+      {
+        "name": "M2M Messaging",
+        "description": "Machine 2 Machine application used to communicate between services and Messaging API",
+        "type": "MachineToMachine",
+        "redirect_uri": "",
+        "logout_redirect_uri": "",
+        "secret": "messaging_local_secret",
+        "id": "ouhygzydwvrv67j4hpm9p",
         "is_third_party": false
       },
       {
