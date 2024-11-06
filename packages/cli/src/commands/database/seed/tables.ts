@@ -25,8 +25,10 @@ import {
   Users,
   OrganizationRoleUserRelations,
   TenantRole,
+  AccountCenters,
 } from '@logto/schemas';
 import { getTenantRole } from '@logto/schemas';
+import { createDefaultAccountCenter } from '@logto/schemas/lib/seeds/account-center.js';
 import { Tenants } from '@logto/schemas/models';
 import { generateStandardId } from '@logto/shared';
 import type { DatabaseTransactionConnection } from '@silverhand/slonik';
@@ -201,6 +203,8 @@ export const seedTables = async (
     ),
     connection.query(insertInto(createAdminTenantSignInExperience(), SignInExperiences.table)),
     connection.query(insertInto(createDefaultAdminConsoleApplication(), Applications.table)),
+    connection.query(insertInto(createDefaultAccountCenter(defaultTenantId), AccountCenters.table)),
+    connection.query(insertInto(createDefaultAccountCenter(adminTenantId), AccountCenters.table)),
   ]);
 
   // The below seed data is for the Logto Cloud only. We put it here for the sack of simplicity.

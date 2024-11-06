@@ -51,7 +51,12 @@ const managementApiIdentifiableEntityNames = Object.freeze([
 
 /** Additional tags that cannot be inferred from the path. */
 const additionalTags = Object.freeze(
-  condArray<string>('Organization applications', 'Custom UI assets', 'Organization users')
+  condArray<string>(
+    'Organization applications',
+    'Custom UI assets',
+    'Organization users',
+    EnvSet.values.isDevFeaturesEnabled && 'Account center'
+  )
 );
 
 export const buildManagementApiBaseDocument = (

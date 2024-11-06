@@ -13,6 +13,7 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 import koaAuth from '../middleware/koa-auth/index.js';
 import koaOidcAuth from '../middleware/koa-auth/koa-oidc-auth.js';
 
+import accountCentersRoutes from './account-center/index.js';
 import adminUserRoutes from './admin-user/index.js';
 import applicationOrganizationRoutes from './applications/application-organization.js';
 import applicationProtectedAppMetadataRoutes from './applications/application-protected-app-metadata.js';
@@ -96,6 +97,9 @@ const createRouters = (tenant: TenantContext) => {
   ssoConnectors(managementRouter, tenant);
   systemRoutes(managementRouter, tenant);
   subjectTokenRoutes(managementRouter, tenant);
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    accountCentersRoutes(managementRouter, tenant);
+  }
 
   const anonymousRouter: AnonymousRouter = new Router();
 
