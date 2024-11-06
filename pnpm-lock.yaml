@@ -2501,6 +2501,61 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@20.11.20)(happy-dom@14.12.3)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
 
+  packages/connectors/connector-vonage-sms:
+    dependencies:
+      '@logto/connector-kit':
+        specifier: workspace:^4.0.0
+        version: link:../../toolkit/connector-kit
+      '@silverhand/essentials':
+        specifier: ^2.9.1
+        version: 2.9.2
+      '@vonage/auth':
+        specifier: ^1.12.0
+        version: 1.12.0
+      '@vonage/server-sdk':
+        specifier: ^3.19.0
+        version: 3.19.0
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
+    devDependencies:
+      '@silverhand/eslint-config':
+        specifier: 6.0.1
+        version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
+      '@silverhand/ts-config':
+        specifier: 6.0.0
+        version: 6.0.0(typescript@5.5.3)
+      '@types/node':
+        specifier: ^20.11.20
+        version: 20.12.7
+      '@types/supertest':
+        specifier: ^6.0.2
+        version: 6.0.2
+      '@vitest/coverage-v8':
+        specifier: ^2.0.0
+        version: 2.0.0(vitest@2.0.0(@types/node@20.12.7)(happy-dom@14.12.3)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+      eslint:
+        specifier: ^8.56.0
+        version: 8.57.0
+      lint-staged:
+        specifier: ^15.0.2
+        version: 15.0.2
+      prettier:
+        specifier: ^3.0.0
+        version: 3.0.0
+      supertest:
+        specifier: ^7.0.0
+        version: 7.0.0
+      tsup:
+        specifier: ^8.3.0
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.4.39)(typescript@5.5.3)(yaml@2.4.5)
+      typescript:
+        specifier: ^5.5.3
+        version: 5.5.3
+      vitest:
+        specifier: ^2.0.0
+        version: 2.0.0(@types/node@20.12.7)(happy-dom@14.12.3)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+
   packages/connectors/connector-wechat-native:
     dependencies:
       '@logto/connector-kit':
@@ -4677,7 +4732,7 @@ packages:
   '@azure/core-http@3.0.4':
     resolution: {integrity: sha512-Fok9VVhMdxAFOtqiiAtg74fL0UJkt0z3D+ouUUxcRLzZNBioPRAMJFVxiWoJljYpXsRi4GDQHzQHDc9AiYaIUQ==}
     engines: {node: '>=14.0.0'}
-    deprecated: This package is no longer supported. Please migrate to use @azure/core-rest-pipeline
+    deprecated: deprecating as we migrated to core v2
 
   '@azure/core-lro@2.5.1':
     resolution: {integrity: sha512-JHQy/bA3NOz2WuzOi5zEk6n/TJdAropupxUT521JIJvW7EXV2YN2SFYZrf/2RHeD28QAClGdynYadZsbmP+nyQ==}
@@ -6889,6 +6944,9 @@ packages:
   '@types/debounce@1.2.4':
     resolution: {integrity: sha512-jBqiORIzKDOToaF63Fm//haOCHuwQuLa2202RK4MozpA6lh93eCBc+/8+wZn5OzjJt3ySdc+74SXWXB55Ewtyw==}
 
+  '@types/debug@4.1.12':
+    resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
+
   '@types/debug@4.1.7':
     resolution: {integrity: sha512-9AonUzyTjXXhEOa0DnqpzZi6VHlqKMswga9EXjpXnnqxwLtdvPPtlO8evrI5D9S6asFRCQ6v+wpiUKbw+vKqyg==}
 
@@ -6988,6 +7046,15 @@ packages:
   '@types/koa__cors@5.0.0':
     resolution: {integrity: sha512-LCk/n25Obq5qlernGOK/2LUwa/2YJb2lxHUkkvYFDOpLXlVI6tKcdfCHRBQnOY4LwH6el5WOLs6PD/a8Uzau6g==}
 
+  '@types/lodash.omit@4.5.8':
+    resolution: {integrity: sha512-CeIDttD58jS7R7M4rI8ZNBbV6JGG+BkKQFnWjduFJwTxqo8NdT/xjbjmQc39MVB2TKJ0rvQxddNaIna+W/pQvw==}
+
+  '@types/lodash.omit@4.5.9':
+    resolution: {integrity: sha512-zuAVFLUPJMOzsw6yawshsYGgq2hWUHtsZgeXHZmSFhaQQFC6EQ021uDKHkSjOpNhSvtNSU9165/o3o/Q51GpTw==}
+
+  '@types/lodash@4.17.13':
+    resolution: {integrity: sha512-lfx+dftrEZcdBPczf9d0Qv0x+j/rfNCMuC6OcfXmO8gkfeNAY88PgKUbvG56whcN23gc27yenwF6oJZXGFpYxg==}
+
   '@types/mdast@3.0.15':
     resolution: {integrity: sha512-LnwD+mUEfxWMa1QpDraczIn6k0Ee3SMicuYSSzS6ZYl2gKS09EClnJYGd8Du6rfc5r/GZEk5o1mRb8TaTj03sQ==}
 
@@ -7014,6 +7081,9 @@ packages:
 
   '@types/ms@0.7.31':
     resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
+
+  '@types/node-fetch@2.6.11':
+    resolution: {integrity: sha512-24xFj9R5+rfQJLRyM56qh+wnVSYhyXC2tkoBndtY0U+vubqNsYXGjufB2nn8Q6gt0LrARwL6UBtMCSVCwl4B1g==}
 
   '@types/node-fetch@2.6.2':
     resolution: {integrity: sha512-DHqhlq5jeESLy19TYhLakJ07kNumXWjcDdxXsLUMJZ6ue8VZJj4kLPQVE/2mdHh3xZziNF1xppu5lwmS53HR+A==}
@@ -7260,6 +7330,63 @@ packages:
 
   '@vitest/utils@2.0.0':
     resolution: {integrity: sha512-t0jbx8VugWEP6A29NbyfQKVU68Vo6oUw0iX3a8BwO3nrZuivfHcFO4Y5UsqXlplX+83P9UaqEvC2YQhspC0JSA==}
+
+  '@vonage/accounts@1.16.0':
+    resolution: {integrity: sha512-qSgHZ3mUcrpMaIRwbIJsVqGyqyfvwsB9kuU52+ki+KcUmTVNr1tblfpUMgjrFHNxXeumq2ZUj6IuFRlN6/Rf5Q==}
+
+  '@vonage/applications@1.16.0':
+    resolution: {integrity: sha512-CWZMYdKK2QlzTlChQ3F33PdVfTI0GL6F63zbX/6k0w/pmLf+o2zJzsj1vKShqibo5ulOhtFgW09EICGuYvlQdw==}
+
+  '@vonage/auth@1.12.0':
+    resolution: {integrity: sha512-tV7RvEhLn/w506PjA9NKFq/Kglxs98vpQ7qsyNXB8xUqblJaiajVhBASFKaYai+MdsBjjacbPRc+9hDKNHezEw==}
+
+  '@vonage/conversations@1.7.0':
+    resolution: {integrity: sha512-zeKRYq3wD5EDeeEv+PplumU7Brp2WOD7owlro5SVkektKlw0+rk2KgGUVIBdsVVf5L7ebEZDDq45IuZxdI2AyA==}
+
+  '@vonage/jwt@1.11.0':
+    resolution: {integrity: sha512-P9KM6QYBBkW8ruC+HeOxFGVQh123KCqgVuGyWjp+VjD64WikYAfT73N5isP4rQob0umpMDjGKNOIAYsVAaRdnA==}
+
+  '@vonage/messages@1.18.0':
+    resolution: {integrity: sha512-RXD/MhkL2Ohs2Q7MO9Buta4MgxTy5ecv4YvGyp8x3uJgpA9add++6r8TDgPygBl4TR7WmS4YESdP/2JSnLHQ+Q==}
+
+  '@vonage/number-insights@1.16.0':
+    resolution: {integrity: sha512-YhHKZmEEzdvi8AiDSbl99pYXKEgc8MePzedcFGwQsAthkMVCd7SPExsTuIXr58TrJ+aakAf9SWxovmMRCvSFjg==}
+
+  '@vonage/numbers@1.16.0':
+    resolution: {integrity: sha512-0FOaeRDKkzJdUcyIcryK3Hw9SomgCa/LZJXRbMyjoiO3th4EtSJEg+7u9tKpL7Vq/APdaWwyjKQuVpWAsvAWPQ==}
+
+  '@vonage/pricing@1.16.0':
+    resolution: {integrity: sha512-3OTB2/DDUdKMvK0Ik1k0Njopbm50t79fu/zvbjs8MfRF7V2RGtaWPtQnUzWERPJ0MkW/wgtECJTP3yDz+N01NQ==}
+
+  '@vonage/redact@1.15.0':
+    resolution: {integrity: sha512-t4SK+5RJse0GCz9c8YJ8B1Uoxkwy0S7LOeaWk4JkKxBcRTSBrDHx5gs4Mycw8fvupDqZmJiw8EuaQMoezjfJdg==}
+
+  '@vonage/server-client@1.16.0':
+    resolution: {integrity: sha512-fEzBeBI68B/IcYMnwR0YJ3QfEGWq75fUQPuVLc10+sRpn8K2eJj10Yl24OwtYbLXikg8IzMx0DfIUG05E+BPlg==}
+
+  '@vonage/server-sdk@3.19.0':
+    resolution: {integrity: sha512-Oeag+gT2pi04kgZUkbbdYEKQFgGD/xkQ7wUp9mf3iWaznnd5jpz82Lup4VJ2Q8cNZbAOuInrQb8WwSlDXO9vMQ==}
+
+  '@vonage/sms@1.17.0':
+    resolution: {integrity: sha512-Z07ijLEDCcGPsdjtxB/TZs1Ssyfr2ZScnUgpi2TF8GlpbCsjCyIt4Ib/fzqnKs5boCxeZxdIyLV8i7PeH0I/dA==}
+
+  '@vonage/users@1.10.0':
+    resolution: {integrity: sha512-/yzwjqqxtNoEundGmBHGlf1JeWSoFW6yQEno1oME3nEQwUwChxO0559+MmQ+hRuxaYCIDFCv+oZ2zlJTX0+W+Q==}
+
+  '@vonage/verify2@1.15.0':
+    resolution: {integrity: sha512-EuVpE10YYoDGWkoctK3z53u3kZ9t1M0m8Kis5Mn79/vsfxULcDfmdGrVfZDwT6qIAMsnIdLD+G3QXbpRCgzDDw==}
+
+  '@vonage/verify@1.16.0':
+    resolution: {integrity: sha512-UTt4Yr4bNgzep/XPKyi3WX14mej5NLEqYnLBw4xPDHCWWVf+kn+6QpE7QVJ+kriw/4TwbKAu7hj415i4psJRLg==}
+
+  '@vonage/vetch@1.8.0':
+    resolution: {integrity: sha512-CuYnW5VrywLhWSdnAb+06b0fan2oDa0pexMi7kQHtRte/TIO0t0TSZvV5/74xDNtSqkhNFGgAlc8pgwn84sR4Q==}
+
+  '@vonage/video@1.20.0':
+    resolution: {integrity: sha512-N75h2dgL54ob0AYQt8K35PDxoft4Xzkke8p7N2h7Er3R1Q+MnowECPEiIMFzRghm59JCrwXmYlBoCQCUv9yYJA==}
+
+  '@vonage/voice@1.16.0':
+    resolution: {integrity: sha512-sWLGccwcG63HCDAqyGioc9FgfK9Sq8/4Pa/iOksa0lfFkhqVhWdzLzQZAlNM8uvA+HD9LuzxbKwAvgdwBncbPw==}
 
   '@web/browser-logs@0.4.0':
     resolution: {integrity: sha512-/EBiDAUCJ2DzZhaFxTPRIznEPeafdLbXShIL6aTu7x73x7ZoxSDv7DGuTsh2rWNMUa4+AKli4UORrpyv6QBOiA==}
@@ -10800,6 +10927,9 @@ packages:
   lodash.isnumber@3.0.3:
     resolution: {integrity: sha512-QYqzpfwO3/CWf3XP+Z+tkQsfaLL/EnUlXWVkIk5FUPc4sBdTehEqZONuyRt2P67PXAk+NXmTBcc97zw9t1FQrw==}
 
+  lodash.isobject@3.0.2:
+    resolution: {integrity: sha512-3/Qptq2vr7WeJbB4KHUSKlq8Pl7ASXi3UG6CMbBm8WRtXi8+GHm7mKaU3urfpSEzWe2wCIChs6/sdocUsTKJiA==}
+
   lodash.isplainobject@4.0.6:
     resolution: {integrity: sha512-oSXzaWypCMHkPC3NvBEaPHf0KsA5mvPrOPgQWDsbg8n7orZ290M0BmC/jgRZ4vcJ6DTAhjrsSYgdsW/F+MFOBA==}
 
@@ -10814,6 +10944,9 @@ packages:
 
   lodash.mergewith@4.6.2:
     resolution: {integrity: sha512-GK3g5RPZWTRSeLSpgP8Xhra+pnjBC56q9FZYe1d5RN3TJ35dbkGy3YqBSMbyCrlbi+CM9Z3Jk5yTL7RCsqboyQ==}
+
+  lodash.omit@4.5.0:
+    resolution: {integrity: sha512-XeqSp49hNGmlkj2EJlfrQFIzQ6lXdNro9sddtQzcJY8QaoC2GO0DT7xaIokHeyM+mIT0mPMlPvkYzg2xCuHdZg==}
 
   lodash.once@4.1.1:
     resolution: {integrity: sha512-Sb487aTOCr9drQVL8pIxOzVhafOjZN9UU54hiN8PU3uAiSV7lx1yYNpbNmex2PK6dSJoNTSJUUswT651yww3Mg==}
@@ -13361,6 +13494,9 @@ packages:
       '@swc/wasm':
         optional: true
 
+  ts-xor@1.3.0:
+    resolution: {integrity: sha512-RLXVjliCzc1gfKQFLRpfeD0rrWmjnSTgj7+RFhoq3KRkUYa8LE/TIidYOzM5h+IdFBDSjjSgk9Lto9sdMfDFEA==}
+
   tsconfig-paths@3.15.0:
     resolution: {integrity: sha512-2Ac2RgzDe/cn48GvOe3M+o82pEFewD3UPbyoUHHdKasHwJKjds4fLXWf/Ux5kATBKN20oaFGu+jbElp1pos0mg==}
 
@@ -15717,7 +15853,7 @@ snapshots:
   '@jest/console@29.5.0':
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 20.10.4
+      '@types/node': 20.12.7
       chalk: 4.1.2
       jest-message-util: 29.7.0
       jest-util: 29.7.0
@@ -16621,10 +16757,10 @@ snapshots:
       eslint-config-prettier: 9.1.0(eslint@8.57.0)
       eslint-config-xo: 0.44.0(eslint@8.57.0)
       eslint-config-xo-typescript: 4.0.0(@typescript-eslint/eslint-plugin@7.7.0(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0)(typescript@5.5.3))(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0)(typescript@5.5.3)
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0)
       eslint-plugin-consistent-default-export-name: 0.0.15
       eslint-plugin-eslint-comments: 3.2.0(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
       eslint-plugin-n: 17.2.1(eslint@8.57.0)
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-prettier: 5.1.3(eslint-config-prettier@9.1.0(eslint@8.57.0))(eslint@8.57.0)(prettier@3.0.0)
@@ -17268,7 +17404,7 @@ snapshots:
   '@types/body-parser@1.19.2':
     dependencies:
       '@types/connect': 3.4.35
-      '@types/node': 20.10.4
+      '@types/node': 20.12.7
 
   '@types/caseless@0.12.5': {}
 
@@ -17328,6 +17464,10 @@ snapshots:
 
   '@types/debounce@1.2.4': {}
 
+  '@types/debug@4.1.12':
+    dependencies:
+      '@types/ms': 0.7.31
+
   '@types/debug@4.1.7':
     dependencies:
       '@types/ms': 0.7.31
@@ -17346,7 +17486,7 @@ snapshots:
 
   '@types/express-serve-static-core@4.17.26':
     dependencies:
-      '@types/node': 20.10.4
+      '@types/node': 20.12.7
       '@types/qs': 6.9.7
       '@types/range-parser': 1.2.4
 
@@ -17363,7 +17503,7 @@ snapshots:
 
   '@types/graceful-fs@4.1.5':
     dependencies:
-      '@types/node': 20.10.4
+      '@types/node': 20.12.7
 
   '@types/hast@2.3.4':
     dependencies:
@@ -17457,6 +17597,16 @@ snapshots:
     dependencies:
       '@types/koa': 2.15.0
 
+  '@types/lodash.omit@4.5.8':
+    dependencies:
+      '@types/lodash': 4.17.13
+
+  '@types/lodash.omit@4.5.9':
+    dependencies:
+      '@types/lodash': 4.17.13
+
+  '@types/lodash@4.17.13': {}
+
   '@types/mdast@3.0.15':
     dependencies:
       '@types/unist': 2.0.11
@@ -17480,6 +17630,11 @@ snapshots:
   '@types/mocha@10.0.9': {}
 
   '@types/ms@0.7.31': {}
+
+  '@types/node-fetch@2.6.11':
+    dependencies:
+      '@types/node': 20.12.7
+      form-data: 4.0.1
 
   '@types/node-fetch@2.6.2':
     dependencies:
@@ -17598,7 +17753,7 @@ snapshots:
   '@types/serve-static@1.13.10':
     dependencies:
       '@types/mime': 1.3.2
-      '@types/node': 20.10.4
+      '@types/node': 20.12.7
 
   '@types/shimmer@1.0.2': {}
 
@@ -17667,7 +17822,7 @@ snapshots:
 
   '@types/yauzl@2.10.3':
     dependencies:
-      '@types/node': 20.10.4
+      '@types/node': 20.12.7
     optional: true
 
   '@typescript-eslint/eslint-plugin@7.7.0(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0)(typescript@5.5.3)':
@@ -17853,6 +18008,187 @@ snapshots:
       estree-walker: 3.0.3
       loupe: 3.1.1
       pretty-format: 29.7.0
+
+  '@vonage/accounts@1.16.0':
+    dependencies:
+      '@vonage/server-client': 1.16.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
+  '@vonage/applications@1.16.0':
+    dependencies:
+      '@vonage/server-client': 1.16.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
+  '@vonage/auth@1.12.0':
+    dependencies:
+      '@vonage/jwt': 1.11.0
+      debug: 4.3.7(supports-color@5.5.0)
+    transitivePeerDependencies:
+      - supports-color
+
+  '@vonage/conversations@1.7.0':
+    dependencies:
+      '@vonage/messages': 1.18.0
+      '@vonage/server-client': 1.16.0
+      '@vonage/users': 1.10.0
+      '@vonage/voice': 1.16.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
+  '@vonage/jwt@1.11.0':
+    dependencies:
+      debug: 4.3.7(supports-color@5.5.0)
+      jsonwebtoken: 9.0.2
+      uuid: 9.0.1
+    transitivePeerDependencies:
+      - supports-color
+
+  '@vonage/messages@1.18.0':
+    dependencies:
+      '@vonage/server-client': 1.16.0
+      '@vonage/vetch': 1.8.0
+      debug: 4.3.7(supports-color@5.5.0)
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
+  '@vonage/number-insights@1.16.0':
+    dependencies:
+      '@vonage/auth': 1.12.0
+      '@vonage/server-client': 1.16.0
+      '@vonage/vetch': 1.8.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
+  '@vonage/numbers@1.16.0':
+    dependencies:
+      '@types/lodash.omit': 4.5.8
+      '@vonage/auth': 1.12.0
+      '@vonage/server-client': 1.16.0
+      '@vonage/vetch': 1.8.0
+      lodash.omit: 4.5.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
+  '@vonage/pricing@1.16.0':
+    dependencies:
+      '@vonage/auth': 1.12.0
+      '@vonage/server-client': 1.16.0
+      '@vonage/vetch': 1.8.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
+  '@vonage/redact@1.15.0':
+    dependencies:
+      '@vonage/server-client': 1.16.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
+  '@vonage/server-client@1.16.0':
+    dependencies:
+      '@vonage/auth': 1.12.0
+      '@vonage/vetch': 1.8.0
+      debug: 4.3.7(supports-color@5.5.0)
+      lodash.camelcase: 4.3.0
+      lodash.isobject: 3.0.2
+      lodash.kebabcase: 4.1.1
+      lodash.snakecase: 4.1.1
+      node-fetch: 2.7.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
+  '@vonage/server-sdk@3.19.0':
+    dependencies:
+      '@vonage/accounts': 1.16.0
+      '@vonage/applications': 1.16.0
+      '@vonage/auth': 1.12.0
+      '@vonage/conversations': 1.7.0
+      '@vonage/messages': 1.18.0
+      '@vonage/number-insights': 1.16.0
+      '@vonage/numbers': 1.16.0
+      '@vonage/pricing': 1.16.0
+      '@vonage/redact': 1.15.0
+      '@vonage/server-client': 1.16.0
+      '@vonage/sms': 1.17.0
+      '@vonage/users': 1.10.0
+      '@vonage/verify': 1.16.0
+      '@vonage/verify2': 1.15.0
+      '@vonage/video': 1.20.0
+      '@vonage/voice': 1.16.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
+  '@vonage/sms@1.17.0':
+    dependencies:
+      '@vonage/auth': 1.12.0
+      '@vonage/server-client': 1.16.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
+  '@vonage/users@1.10.0':
+    dependencies:
+      '@vonage/server-client': 1.16.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
+  '@vonage/verify2@1.15.0':
+    dependencies:
+      '@vonage/server-client': 1.16.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
+  '@vonage/verify@1.16.0':
+    dependencies:
+      '@types/lodash.omit': 4.5.9
+      '@vonage/auth': 1.12.0
+      '@vonage/server-client': 1.16.0
+      '@vonage/vetch': 1.8.0
+      lodash.omit: 4.5.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
+  '@vonage/vetch@1.8.0':
+    dependencies:
+      '@types/node-fetch': 2.6.11
+      node-fetch: 2.7.0
+    transitivePeerDependencies:
+      - encoding
+
+  '@vonage/video@1.20.0':
+    dependencies:
+      '@vonage/auth': 1.12.0
+      '@vonage/jwt': 1.11.0
+      '@vonage/server-client': 1.16.0
+      '@vonage/vetch': 1.8.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
+  '@vonage/voice@1.16.0':
+    dependencies:
+      '@types/debug': 4.1.12
+      '@vonage/server-client': 1.16.0
+      '@vonage/vetch': 1.8.0
+      debug: 4.3.7(supports-color@5.5.0)
+      ts-xor: 1.3.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
 
   '@web/browser-logs@0.4.0':
     dependencies:
@@ -19818,13 +20154,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0):
+  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0):
     dependencies:
       debug: 4.3.5
       enhanced-resolve: 5.16.0
       eslint: 8.57.0
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.3
       is-core-module: 2.13.1
@@ -19835,14 +20171,14 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
+  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 7.7.0(eslint@8.57.0)(typescript@5.5.3)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -19864,7 +20200,7 @@ snapshots:
       eslint: 8.57.0
       ignore: 5.3.1
 
-  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
+  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):
     dependencies:
       array-includes: 3.1.8
       array.prototype.findlastindex: 1.2.5
@@ -19874,7 +20210,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.13.1
       is-glob: 4.0.3
@@ -21572,7 +21908,7 @@ snapshots:
       '@jest/environment': 29.7.0
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 20.10.4
+      '@types/node': 20.12.7
       jest-mock: 29.7.0
       jest-util: 29.7.0
 
@@ -21779,7 +22115,7 @@ snapshots:
   jest-util@29.5.0:
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 20.10.4
+      '@types/node': 20.12.7
       chalk: 4.1.2
       ci-info: 3.8.0
       graceful-fs: 4.2.11
@@ -21816,7 +22152,7 @@ snapshots:
 
   jest-worker@29.5.0:
     dependencies:
-      '@types/node': 20.10.4
+      '@types/node': 20.12.7
       jest-util: 29.7.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
@@ -22341,6 +22677,8 @@ snapshots:
 
   lodash.isnumber@3.0.3: {}
 
+  lodash.isobject@3.0.2: {}
+
   lodash.isplainobject@4.0.6: {}
 
   lodash.isstring@4.0.1: {}
@@ -22350,6 +22688,8 @@ snapshots:
   lodash.merge@4.6.2: {}
 
   lodash.mergewith@4.6.2: {}
+
+  lodash.omit@4.5.0: {}
 
   lodash.once@4.1.1: {}
 
@@ -25520,6 +25860,8 @@ snapshots:
     optionalDependencies:
       '@swc/core': 1.3.52(@swc/helpers@0.5.1)
     optional: true
+
+  ts-xor@1.3.0: {}
 
   tsconfig-paths@3.15.0:
     dependencies:
