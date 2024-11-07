@@ -29,25 +29,29 @@ variables:
   - ${{ else }}:
     - template: pipeline-variables/dev.yml
 
+resources:
+  repositories:
+    - repository: pipeline-templates
+      type: github
+      name: ogcio/building-blocks-pipelines
+      ref: refs/tags/v0.5
+      endpoint: ogcio
+    - repository: logto-k8s-apps
+      type: github
+      name: ogcio/logto-k8s-apps
+      ref: main
+      endpoint: ogcio
+    - repository: mygovid-mock-k8s-apps
+      type: github
+      name: ogcio/mygovid-mock-k8s-apps
+      ref: main
+      endpoint: ogcio
+
 stages:
   - stage: securityScan
     displayName: Security Scans
     jobs:
-      - job: gitLeaksScan
-        #continueOnError: True
-        pool:
-          vmImage: "ubuntu-22.04"
-        displayName: GitLeaks Scan
-        steps:
-          - task: DockerInstaller@0
-            displayName: Docker Installer
-            inputs:
-              dockerVersion: 17.09.0-ce
-              releaseType: stable
-          - script: |
-              docker pull zricethezav/gitleaks:v8.10.3
-              docker run --rm -i -v "$(pwd):/src" zricethezav/gitleaks:v8.10.3 detect --source="/src" -c "src/.gitleaks.toml"  --no-git -v
-            displayName: GitLeaks Scan
+      - template: security/gitleaks.yml@pipeline-templates
   - stage: Build_Logto
     displayName: Build Logto
     dependsOn: 
@@ -79,31 +83,29 @@ stages:
     dependsOn: EnvApproval
     condition: and(${{ variables.pushArtefacts }}, succeeded())
     jobs:
-    - template: pipeline-templates/push_image.yml
+    - template: build/push_image_ecr.yml@pipeline-templates
       parameters:
         awsServiceConnection: ${{ variables.awsServiceConnection }}
         awsRegion: ${{ variables.awsRegion }}
         serviceName: logto
-        containerTag: $(Build.SourceBranchName)
-        repositoryName: life-events-logto
-  - stage: Deploy_Logto
-    displayName: Deploy to ECS - logto
-    dependsOn: Push_Logto
+        repositoryName: bb-logto
+        pushTag: $(Build.BuildId)
+  - stage: Deploy_Openshift_Logto
+    displayName: GitOps deploy Logto
+    dependsOn:
+      - EnvApproval
+      - Push_Logto
+    condition: succeeded()
     jobs:
-    - template: pipeline-templates/deploy_ecs.yml
+    - template: deploy/gitops.yml@pipeline-templates
       parameters:
-        awsServiceConnection: ${{ variables.awsServiceConnection }}
-        awsRegion: ${{ variables.awsRegion }}
         serviceName: logto
-  - stage: Deploy_Logto_Admin
-    displayName: Deploy to ECS - logto Admin
-    dependsOn: Push_Logto
-    jobs:
-    - template: pipeline-templates/deploy_ecs.yml
-      parameters:
-        awsServiceConnection: ${{ variables.awsServiceConnection }}
-        awsRegion: ${{ variables.awsRegion }}
-        serviceName: logto-admin
+        newName: ${{ variables.ecrEndpoint }}/bb-logto
+        newTag: $(Build.BuildId)
+        ${{ if containsValue(parameters.validEnvironments ,variables['Build.SourceBranchName']) }}:
+          environment: ${{ variables['Build.SourceBranchName'] }}
+        ${{ else }}:
+          environment: dev
   - stage: Build_MyGovId_Mock
     displayName: Build MyGovId Mock
     dependsOn: 
@@ -119,24 +121,27 @@ stages:
   - stage: Push_MyGovId_Mock
     displayName: Push MyGovId Mock to ECR
     dependsOn: 
-      - Build_MyGovId_Mock
       - EnvApproval
+      - Build_MyGovId_Mock
     condition: and(eq(variables['Build.SourceBranchName'], 'dev'), succeeded())
     jobs:
-    - template: pipeline-templates/push_image.yml
+    - template: build/push_image_ecr.yml@pipeline-templates
       parameters:
         awsServiceConnection: ${{ variables.awsServiceConnection }}
         awsRegion: ${{ variables.awsRegion }}
-        serviceName: mygovid-mock-service
-        containerTag: mygovid-mock-service
-        repositoryName: life-events-mygov-mock
-  - stage: Deploy_MyGovId_Mock
-    displayName: Deploy to ECS - MyGovId Mock
-    dependsOn: Push_MyGovId_Mock
+        serviceName: mygovid-mock
+        repositoryName: bb-mygovid-mock
+        pushTag: $(Build.BuildId)
+  - stage: Deploy_Openshift_MyGovId_Mock
+    displayName: GitOps deploy MyGovId Mock
+    dependsOn:
+      - Push_MyGovId_Mock
+    condition: succeeded()
     jobs:
-    - template: pipeline-templates/deploy_ecs.yml
+    - template: deploy/gitops.yml@pipeline-templates
       parameters:
-        awsServiceConnection: ${{ variables.awsServiceConnection }}
-        awsRegion: ${{ variables.awsRegion }}
-        serviceName: mygov-mock
+        serviceName: mygovid-mock
+        newName: ${{ variables.ecrEndpoint }}/bb-mygovid-mock
+        newTag: $(Build.BuildId)
+        environment: dev
     
