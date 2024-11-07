@@ -129,7 +129,7 @@ stages:
       parameters:
         awsServiceConnection: ${{ variables.awsServiceConnection }}
         awsRegion: ${{ variables.awsRegion }}
-        serviceName: mygovid-mock
+        serviceName: mygovid-mock-service
         repositoryName: bb-mygovid-mock
         pushTag: $(Build.BuildId)
   - stage: Deploy_Openshift_MyGovId_Mock
