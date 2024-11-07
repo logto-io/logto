@@ -1,6 +1,7 @@
 import { UserScope } from '@logto/core-kit';
 import { SignInIdentifier } from '@logto/schemas';
 
+import { enableAllAccountCenterFields } from '#src/api/account-center.js';
 import { authedAdminApi } from '#src/api/api.js';
 import { getUserInfo, updatePrimaryEmail, updatePrimaryPhone } from '#src/api/profile.js';
 import {
@@ -24,6 +25,7 @@ describe('profile (email and phone)', () => {
     await enableAllPasswordSignInMethods();
     await setEmailConnector(authedAdminApi);
     await setSmsConnector(authedAdminApi);
+    await enableAllAccountCenterFields(authedAdminApi);
   });
 
   describe('POST /profile/primary-email', () => {

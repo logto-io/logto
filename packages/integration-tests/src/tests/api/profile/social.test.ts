@@ -6,6 +6,7 @@ import {
   mockSocialConnectorId,
   mockSocialConnectorTarget,
 } from '#src/__mocks__/connectors-mock.js';
+import { enableAllAccountCenterFields } from '#src/api/account-center.js';
 import { deleteIdentity, getUserInfo, updateIdentities } from '#src/api/profile.js';
 import {
   createSocialVerificationRecord,
@@ -36,6 +37,7 @@ describe('profile (social)', () => {
 
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
+    await enableAllAccountCenterFields();
 
     await clearConnectorsByTypes([ConnectorType.Social]);
     const { id: socialConnectorId } = await setSocialConnector();

@@ -1,5 +1,11 @@
+/* eslint-disable max-lines */
 import { emailRegEx, phoneRegEx, usernameRegEx, UserScope } from '@logto/core-kit';
-import { VerificationType, userProfileResponseGuard, userProfileGuard } from '@logto/schemas';
+import {
+  VerificationType,
+  userProfileResponseGuard,
+  userProfileGuard,
+  AccountCenterControlValue,
+} from '@logto/schemas';
 import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -15,7 +21,8 @@ import assertThat from '../../utils/assert-that.js';
 import { PasswordValidator } from '../experience/classes/libraries/password-validator.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
-import { getScopedProfile } from './utils/get-scoped-profile.js';
+import koaAccountCenter from './middlewares/koa-account-center.js';
+import { getAccountCenterFilteredProfile, getScopedProfile } from './utils/get-scoped-profile.js';
 
 export default function profileRoutes<T extends UserRouter>(
   ...[router, { queries, libraries }]: RouterInitArgs<T>
@@ -29,6 +36,8 @@ export default function profileRoutes<T extends UserRouter>(
     users: { checkIdentifierCollision },
   } = libraries;
 
+  router.use(koaAccountCenter(queries));
+
   if (!EnvSet.values.isDevFeaturesEnabled) {
     return;
   }
@@ -41,7 +50,8 @@ export default function profileRoutes<T extends UserRouter>(
     }),
     async (ctx, next) => {
       const { id: userId, scopes } = ctx.auth;
-      ctx.body = await getScopedProfile(queries, libraries, scopes, userId);
+      const profile = await getScopedProfile(queries, libraries, scopes, userId);
+      ctx.body = getAccountCenterFilteredProfile(profile, ctx.accountCenter);
       return next();
     }
   );
@@ -61,7 +71,20 @@ export default function profileRoutes<T extends UserRouter>(
       const { id: userId, scopes } = ctx.auth;
       const { body } = ctx.guard;
       const { name, avatar, username } = body;
+      const { fields } = ctx.accountCenter;
 
+      assertThat(
+        name === undefined || fields.name === AccountCenterControlValue.Edit,
+        'account_center.filed_not_editable'
+      );
+      assertThat(
+        avatar === undefined || fields.avatar === AccountCenterControlValue.Edit,
+        'account_center.filed_not_editable'
+      );
+      assertThat(
+        username === undefined || fields.username === AccountCenterControlValue.Edit,
+        'account_center.filed_not_editable'
+      );
       assertThat(scopes.has(UserScope.Profile), 'auth.unauthorized');
 
       if (username !== undefined) {
@@ -76,7 +99,8 @@ export default function profileRoutes<T extends UserRouter>(
 
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
 
-      ctx.body = await getScopedProfile(queries, libraries, scopes, userId);
+      const profile = await getScopedProfile(queries, libraries, scopes, userId);
+      ctx.body = getAccountCenterFilteredProfile(profile, ctx.accountCenter);
 
       return next();
     }
@@ -92,7 +116,12 @@ export default function profileRoutes<T extends UserRouter>(
     async (ctx, next) => {
       const { id: userId, scopes } = ctx.auth;
       const { body } = ctx.guard;
+      const { fields } = ctx.accountCenter;
 
+      assertThat(
+        fields.profile === AccountCenterControlValue.Edit,
+        'account_center.filed_not_editable'
+      );
       assertThat(scopes.has(UserScope.Profile), 'auth.unauthorized');
 
       if (body.address !== undefined) {
@@ -116,11 +145,16 @@ export default function profileRoutes<T extends UserRouter>(
     '/profile/password',
     koaGuard({
       body: z.object({ password: z.string().min(1), verificationRecordId: z.string() }),
-      status: [204, 401, 422],
+      status: [204, 400, 401, 422],
     }),
     async (ctx, next) => {
       const { id: userId } = ctx.auth;
       const { password, verificationRecordId } = ctx.guard.body;
+      const { fields } = ctx.accountCenter;
+      assertThat(
+        fields.password === AccountCenterControlValue.Edit,
+        'account_center.filed_not_editable'
+      );
 
       const user = await findUserById(userId);
       const signInExperience = await findDefaultSignInExperience();
@@ -161,6 +195,11 @@ export default function profileRoutes<T extends UserRouter>(
     async (ctx, next) => {
       const { id: userId, scopes } = ctx.auth;
       const { email, verificationRecordId, newIdentifierVerificationRecordId } = ctx.guard.body;
+      const { fields } = ctx.accountCenter;
+      assertThat(
+        fields.email === AccountCenterControlValue.Edit,
+        'account_center.filed_not_editable'
+      );
 
       assertThat(scopes.has(UserScope.Email), 'auth.unauthorized');
 
@@ -206,6 +245,11 @@ export default function profileRoutes<T extends UserRouter>(
     async (ctx, next) => {
       const { id: userId, scopes } = ctx.auth;
       const { phone, verificationRecordId, newIdentifierVerificationRecordId } = ctx.guard.body;
+      const { fields } = ctx.accountCenter;
+      assertThat(
+        fields.phone === AccountCenterControlValue.Edit,
+        'account_center.filed_not_editable'
+      );
 
       assertThat(scopes.has(UserScope.Phone), 'auth.unauthorized');
 
@@ -250,6 +294,11 @@ export default function profileRoutes<T extends UserRouter>(
     async (ctx, next) => {
       const { id: userId, scopes } = ctx.auth;
       const { verificationRecordId, newIdentifierVerificationRecordId } = ctx.guard.body;
+      const { fields } = ctx.accountCenter;
+      assertThat(
+        fields.social === AccountCenterControlValue.Edit,
+        'account_center.filed_not_editable'
+      );
 
       assertThat(scopes.has(UserScope.Identities), 'auth.unauthorized');
 
@@ -311,6 +360,12 @@ export default function profileRoutes<T extends UserRouter>(
       const { id: userId, scopes } = ctx.auth;
       const { verificationRecordId } = ctx.guard.query;
       const { target } = ctx.guard.params;
+      const { fields } = ctx.accountCenter;
+      assertThat(
+        fields.social === AccountCenterControlValue.Edit,
+        'account_center.filed_not_editable'
+      );
+
       assertThat(scopes.has(UserScope.Identities), 'auth.unauthorized');
 
       await verifyUserSensitivePermission({
@@ -340,3 +395,4 @@ export default function profileRoutes<T extends UserRouter>(
     }
   );
 }
+/* eslint-enable max-lines */

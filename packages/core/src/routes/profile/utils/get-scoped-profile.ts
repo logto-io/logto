@@ -1,5 +1,9 @@
 import { UserScope } from '@logto/core-kit';
-import { type UserProfileResponse } from '@logto/schemas';
+import {
+  type AccountCenter,
+  AccountCenterControlValue,
+  type UserProfileResponse,
+} from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
 import type Libraries from '../../../tenants/Libraries.js';
@@ -65,5 +69,42 @@ export const getScopedProfile = async (
         hasPassword,
       }
     ),
+  };
+};
+
+const isFieldReadable = (field?: AccountCenterControlValue): boolean => {
+  return field === AccountCenterControlValue.ReadOnly || field === AccountCenterControlValue.Edit;
+};
+
+export const getAccountCenterFilteredProfile = (
+  user: Partial<UserProfileResponse>,
+  accountCenter: AccountCenter
+): Partial<UserProfileResponse> => {
+  const {
+    username,
+    primaryEmail,
+    primaryPhone,
+    name,
+    avatar,
+    customData,
+    identities,
+    profile,
+    hasPassword,
+    ...rest
+  } = user;
+
+  const { fields } = accountCenter;
+
+  return {
+    ...rest,
+    ...conditional(isFieldReadable(fields.name) && { name }),
+    ...conditional(isFieldReadable(fields.avatar) && { avatar }),
+    ...conditional(isFieldReadable(fields.username) && { username }),
+    ...conditional(isFieldReadable(fields.email) && { primaryEmail }),
+    ...conditional(isFieldReadable(fields.phone) && { primaryPhone }),
+    ...conditional(isFieldReadable(fields.profile) && { profile }),
+    ...conditional(isFieldReadable(fields.customData) && { customData }),
+    ...conditional(isFieldReadable(fields.social) && { identities }),
+    ...conditional(isFieldReadable(fields.password) && { hasPassword }),
   };
 };

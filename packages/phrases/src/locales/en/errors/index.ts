@@ -1,3 +1,4 @@
+import account_center from './account-center.js';
 import application from './application.js';
 import auth from './auth.js';
 import connector from './connector.js';
@@ -52,6 +53,7 @@ const errors = {
   organization,
   single_sign_on,
   verification_record,
+  account_center,
 };
 
 export default Object.freeze(errors);

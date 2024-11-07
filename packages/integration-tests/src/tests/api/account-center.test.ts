@@ -1,11 +1,19 @@
 import { AccountCenterControlValue } from '@logto/schemas';
 
-import { getAccountCenter, updateAccountCenter } from '#src/api/account-center.js';
+import {
+  disableAccountCenter,
+  getAccountCenter,
+  updateAccountCenter,
+} from '#src/api/account-center.js';
 import { devFeatureTest } from '#src/utils.js';
 
 const { describe, it } = devFeatureTest;
 
 describe('account center', () => {
+  beforeAll(async () => {
+    await disableAccountCenter();
+  });
+
   it('should get account center successfully', async () => {
     const accountCenter = await getAccountCenter();
 

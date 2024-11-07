@@ -15,7 +15,7 @@ import { type AnonymousRouter } from '#src/routes/types.js';
 type OpenApiRouters<R> = {
   managementRouters: R[];
   experienceRouters: R[];
-  userRouters: R[];
+  userRouters: UnknownRouter[];
 };
 
 export default function openapiRoutes<T extends AnonymousRouter, R extends UnknownRouter>(
