@@ -49,6 +49,7 @@ export const mockApplication: Application = {
   },
   protectedAppMetadata: null,
   isThirdParty: false,
+  unknownSessionFallbackUri: null,
   createdAt: 1_645_334_775_356,
   customData: {},
 };
@@ -77,6 +78,7 @@ export const mockProtectedApplication: Omit<Application, 'protectedAppMetadata'>
     sessionDuration: 1_209_600,
     pageRules: [],
   },
+  unknownSessionFallbackUri: null,
   isThirdParty: false,
   createdAt: 1_645_334_775_356,
   customData: {},
