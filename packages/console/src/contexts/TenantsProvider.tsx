@@ -34,6 +34,13 @@ const reservedRoutes: Readonly<string[]> = Object.freeze([
   ...Object.values(GlobalRoute),
 ]);
 
+/**
+ * The reserved tenant ID wildcard for the default tenant. Useful when specifying a console URL in
+ * the documentation or other places where the tenant ID is not known. Will be replaced with the
+ * actual default tenant ID in the runtime.
+ */
+export const reservedTenantIdWildcard = 'default';
+
 /** @see {@link TenantsProvider} for why `useSWR()` is not applicable for this context. */
 type Tenants = {
   tenants: readonly TenantResponse[];

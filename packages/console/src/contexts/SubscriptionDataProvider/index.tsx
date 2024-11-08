@@ -7,9 +7,6 @@ import {
   defaultSubscriptionQuota,
   defaultSubscriptionUsage,
 } from '@/consts';
-// Used in the docs
-// eslint-disable-next-line unused-imports/no-unused-imports
-import TenantAccess from '@/containers/TenantAccess';
 
 import { type FullContext } from './types';
 
