@@ -1,6 +1,8 @@
+/* eslint-disable max-lines */
 // TODO: @darcyYe refactor this file later to remove disable max line comment
 
-import type { Role } from '@logto/schemas';
+import { isValidUrl } from '@logto/core-kit';
+import type { CreateApplication, Role } from '@logto/schemas';
 import {
   Applications,
   ApplicationType,
@@ -10,9 +12,10 @@ import {
   InternalRole,
 } from '@logto/schemas';
 import { generateStandardId, generateStandardSecret } from '@logto/shared';
-import { conditional } from '@silverhand/essentials';
+import { conditional, type Nullable } from '@silverhand/essentials';
 import { boolean, object, string, z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -24,7 +27,7 @@ import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 import applicationCustomDataRoutes from './application-custom-data.js';
 import { generateInternalSecret } from './application-secret.js';
-import { applicationCreateGuard, applicationPatchGuard } from './types.js';
+import { applicationCreateGuard, applicationPatchGuard, applicationTypeGuard } from './types.js';
 
 const includesInternalAdminRole = (roles: Readonly<Array<{ role: Role }>>) =>
   roles.some(({ role: { name } }) => name === InternalRole.Admin);
@@ -36,8 +39,25 @@ const parseIsThirdPartQueryParam = (isThirdPartyQuery: 'true' | 'false' | undefi
 
   return isThirdPartyQuery === 'true';
 };
+const validateApplicationUnknownSessionFallbackUri = ({
+  type,
+  unknownSessionFallbackUri,
+  isThirdParty,
+}: Partial<CreateApplication>) => {
+  if (!unknownSessionFallbackUri || !EnvSet.values.isDevFeaturesEnabled) {
+    return;
+  }
 
-const applicationTypeGuard = z.nativeEnum(ApplicationType);
+  assertThat(
+    isValidUrl(unknownSessionFallbackUri),
+    'application.invalid_unknown_session_fallback_uri'
+  );
+
+  assertThat(
+    type !== ApplicationType.MachineToMachine && !isThirdParty,
+    'application.unknown_session_fallback_uri_not_supported'
+  );
+};
 
 export default function applicationRoutes<T extends ManagementApiRouter>(
   ...[router, tenant]: RouterInitArgs<T>
@@ -170,6 +190,8 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         );
       }
 
+      validateApplicationUnknownSessionFallbackUri(rest);
+
       const application = await queries.applications.insertApplication({
         id: generateStandardId(),
         secret: generateInternalSecret(),
@@ -252,7 +274,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         })
       ),
       response: Applications.guard,
-      status: [200, 404, 422, 500],
+      status: [200, 400, 404, 422, 500],
     }),
     async (ctx, next) => {
       const {
@@ -319,6 +341,22 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         }
       }
 
+      // @ts-expect-error -- fix me once devFeature guard is removed
+      // eslint-disable-next-line no-restricted-syntax
+      const unknownSessionFallbackUri = rest.unknownSessionFallbackUri as Nullable<
+        string | undefined
+      >;
+
+      if (unknownSessionFallbackUri) {
+        const { type, isThirdParty } = await queries.applications.findApplicationById(id);
+        // Validate the unknownSessionFallbackUri
+        validateApplicationUnknownSessionFallbackUri({
+          type,
+          isThirdParty,
+          unknownSessionFallbackUri,
+        });
+      }
+
       ctx.body = await (Object.keys(rest).length > 0
         ? queries.applications.updateApplicationById(id, rest, 'replace')
         : queries.applications.findApplicationById(id));
@@ -359,3 +397,4 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
 
   applicationCustomDataRoutes(router, tenant);
 }
+/* eslint-enable max-lines */

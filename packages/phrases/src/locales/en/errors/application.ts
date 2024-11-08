@@ -20,6 +20,10 @@ const application = {
   should_delete_custom_domains_first: 'Should delete custom domains first.',
   no_legacy_secret_found: 'The application does not have a legacy secret.',
   secret_name_exists: 'Secret name already exists.',
+  invalid_unknown_session_fallback_uri:
+    'The session fallback URI is invalid. It must be in a valid URI format.',
+  unknown_session_fallback_uri_not_supported:
+    'Unknown session fallback URI is not supported for this application type.',
 };
 
 export default Object.freeze(application);

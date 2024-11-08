@@ -7,6 +7,7 @@ import { type Page } from 'puppeteer';
 
 import { isDevFeaturesEnabled } from './constants.js';
 
+export const generateUuid = () => crypto.randomUUID();
 export const generateName = () => crypto.randomUUID();
 export const generateUserId = () => crypto.randomUUID();
 export const generateUsername = () => `usr_${crypto.randomUUID().replaceAll('-', '_')}`;
