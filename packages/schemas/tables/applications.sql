@@ -15,6 +15,7 @@ create table applications (
   custom_client_metadata jsonb /* @use CustomClientMetadata */ not null default '{}'::jsonb,
   protected_app_metadata jsonb /* @use ProtectedAppMetadata */,
   custom_data jsonb /* @use JsonObject */ not null default '{}'::jsonb,
+  unknown_session_fallback_uri text,
   is_third_party boolean not null default false,
   created_at timestamptz not null default(now()),
   primary key (id)
