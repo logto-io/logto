@@ -19,15 +19,6 @@ import { handleError, parseLocationState } from '../../utils';
 
 import styles from './index.module.scss';
 
-const resendTimeout = 59;
-
-const getTimeout = () => {
-  const now = new Date();
-  now.setSeconds(now.getSeconds() + resendTimeout);
-
-  return now;
-};
-
 function VerificationCodeModal() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { navigate } = useTenantPathname();
@@ -38,15 +29,10 @@ function VerificationCodeModal() {
   const [error, setError] = useState<string>();
   const api = useStaticApi({
     prefixUrl: adminTenantEndpoint,
-    resourceIndicator: meApi.indicator,
     hideErrorToast: true,
   });
-  const { email, action } = parseLocationState(state);
-
-  const { seconds, isRunning, restart } = useTimer({
-    autoStart: true,
-    expiryTimestamp: getTimeout(),
-  });
+  const { email, action, verificationRecordId, newVerificationRecordId } =
+    parseLocationState(state);
 
   const onClose = useCallback(() => {
     navigate('/profile');
@@ -61,10 +47,22 @@ function VerificationCodeModal() {
     }
 
     try {
-      await api.post(`me/verification-codes/verify`, { json: { verificationCode, email } });
+      await api.post(`api/verifications/verification-code/verify`, {
+        json: {
+          verificationId: newVerificationRecordId,
+          identifier: { type: 'email', value: email },
+          code: verificationCode,
+        },
+      });
 
       if (action === 'changeEmail') {
-        await api.patch('me', { json: { primaryEmail: email } });
+        await api.post('api/profile/primary-email', {
+          json: {
+            email,
+            verificationRecordId,
+            newIdentifierVerificationRecordId: newVerificationRecordId,
+          },
+        });
         toast.success(t('profile.email_changed'));
 
         onClose();
@@ -125,23 +123,6 @@ function VerificationCodeModal() {
           setError(undefined);
         }}
       />
-      {isRunning ? (
-        <div className={styles.message}>
-          {t('profile.code.resend_countdown', { countdown: seconds })}
-        </div>
-      ) : (
-        <TextLink
-          className={styles.link}
-          onClick={async () => {
-            setCode([]);
-            setError(undefined);
-            await api.post(`me/verification-codes`, { json: { email } });
-            restart(getTimeout(), true);
-          }}
-        >
-          {t('profile.code.resend')}
-        </TextLink>
-      )}
       {action === 'changePassword' && (
         <TextLink
           className={styles.link}

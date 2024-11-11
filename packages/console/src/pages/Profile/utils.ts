@@ -7,7 +7,7 @@ import { type LocationState, locationStateGuard } from '@/types/profile';
 export const parseLocationState = (state: unknown): Partial<LocationState> => {
   const parsed = locationStateGuard.safeParse(state);
 
-  return parsed.success ? parsed.data : { email: undefined, action: undefined };
+  return parsed.success ? parsed.data : { email: undefined, action: undefined, verificationRecordId: undefined };
 };
 
 export const popupWindow = (url: string, windowName: string, width: number, height: number) => {

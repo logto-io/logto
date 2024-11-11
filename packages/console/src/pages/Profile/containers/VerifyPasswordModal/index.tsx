@@ -39,11 +39,10 @@ function VerifyPasswordModal() {
   });
   const api = useStaticApi({
     prefixUrl: adminTenantEndpoint,
-    resourceIndicator: meApi.indicator,
     hideErrorToast: true,
   });
   const [showPassword, setShowPassword] = useState(false);
-  const { email } = parseLocationState(state);
+  const { email, action, connectorId } = parseLocationState(state);
 
   const onClose = () => {
     navigate('/profile');
@@ -53,9 +52,19 @@ function VerifyPasswordModal() {
     clearErrors();
     void handleSubmit(async ({ password }) => {
       try {
-        await api.post(`me/password/verify`, { json: { password } });
+        const { verificationRecordId } = await api
+          .post(`api/verifications/password`, { json: { password } })
+          .json<{ verificationRecordId: string }>();
         reset();
-        navigate('../change-password', { state });
+        if (action === 'changeEmail') {
+          navigate('../link-email', {
+            state: { email, action, verificationRecordId },
+          });
+        } else if (action === 'linkSocial') {
+          navigate('/profile', { state: { action, verificationRecordId, connectorId } });
+        } else {
+          navigate('../change-password', { state: { email, action, verificationRecordId } });
+        }
       } catch (error: unknown) {
         void handleError(error, async (code, message) => {
           if (code === 'session.invalid_credentials') {

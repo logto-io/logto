@@ -13,16 +13,17 @@ function HandleSocialCallback() {
   const { show: showModal } = useConfirmModal();
   const api = useStaticApi({
     prefixUrl: adminTenantEndpoint,
-    resourceIndicator: meApi.indicator,
     hideErrorToast: true,
   });
 
   useEffect(() => {
     (async () => {
-      const connectorId = sessionStorage.getItem(storageKeys.linkingSocialConnector);
+      const [connectorId, verificationRecordId, newIdentifierVerificationRecordId] = String(
+        sessionStorage.getItem(storageKeys.linkingSocialConnector)
+      ).split(':');
       sessionStorage.removeItem(storageKeys.linkingSocialConnector);
 
-      if (connectorId) {
+      if (connectorId && verificationRecordId && newIdentifierVerificationRecordId) {
         const queries = new URLSearchParams(search);
         queries.set(
           'redirectUri',
@@ -31,7 +32,12 @@ function HandleSocialCallback() {
         const connectorData = Object.fromEntries(queries);
 
         try {
-          await api.post('me/social/link-identity', { json: { connectorId, connectorData } });
+          await api.post('api/verifications/social/verify', {
+            json: { verificationRecordId: newIdentifierVerificationRecordId, connectorData },
+          });
+          await api.post('api/profile/identities', {
+            json: { verificationRecordId, newIdentifierVerificationRecordId },
+          });
 
           window.close();
         } catch (error: unknown) {

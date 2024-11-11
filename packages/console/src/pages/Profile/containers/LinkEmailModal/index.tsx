@@ -30,7 +30,8 @@ function LinkEmailModal() {
   } = useForm<EmailForm>({
     reValidateMode: 'onBlur',
   });
-  const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
+  const api = useStaticApi({ prefixUrl: adminTenantEndpoint });
+  const { email: currentEmail, verificationRecordId } = parseLocationState(state);
 
   const onClose = () => {
     navigate('/profile');
@@ -40,14 +41,18 @@ function LinkEmailModal() {
     clearErrors();
     void handleSubmit(
       trySubmitSafe(async ({ email }) => {
-        await api.post(`me/verification-codes`, { json: { email } });
+        const { verificationRecordId: newVerificationRecordId } = await api
+          .post(`api/verifications/verification-code`, {
+            json: { identifier: { type: 'email', value: email } },
+          })
+          .json<{ verificationRecordId: string }>();
         reset();
-        navigate('../verification-code', { state: { email, action: 'changeEmail' } });
+        navigate('../verification-code', {
+          state: { email, action: 'changeEmail', verificationRecordId, newVerificationRecordId },
+        });
       })
     )();
   };
-
-  const { email: currentEmail } = parseLocationState(state);
 
   return (
     <ExperienceLikeModal

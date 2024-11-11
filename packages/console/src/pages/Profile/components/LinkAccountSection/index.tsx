@@ -5,7 +5,7 @@ import type { ConnectorResponse, UserProfileResponse } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared/universal';
 import type { Optional } from '@silverhand/essentials';
 import { appendPath, conditional } from '@silverhand/essentials';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import MailIcon from '@/assets/icons/mail.svg?react';
@@ -19,15 +19,16 @@ import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 
-import { popupWindow } from '../../utils';
+import { parseLocationState, popupWindow } from '../../utils';
 import type { Row } from '../CardContent';
 import CardContent from '../CardContent';
 import NotSet from '../NotSet';
 
 import styles from './index.module.scss';
+import { useLocation } from 'react-router-dom';
 
 type Props = {
-  readonly user: UserProfileResponse;
+  readonly user: Partial<UserProfileResponse>;
   readonly connectors?: ConnectorResponse[];
   readonly onUpdate: () => void;
 };
@@ -37,23 +38,63 @@ function LinkAccountSection({ user, connectors, onUpdate }: Props) {
   const { navigate } = useTenantPathname();
   const theme = useTheme();
   const { show: showConfirm } = useConfirmModal();
-  const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
+  const api = useStaticApi({ prefixUrl: adminTenantEndpoint });
+  const { state } = useLocation();
+  const { verificationRecordId, connectorId } = parseLocationState(state);
 
   const getSocialAuthorizationUri = useCallback(
-    async (connectorId: string) => {
+    async (connectorId: string, verificationRecordId: string) => {
       const adminTenantEndpointUrl = new URL(adminTenantEndpoint);
       const state = generateStandardId(8);
       const redirectUri = new URL(`/callback/${connectorId}`, adminTenantEndpointUrl).href;
-      const { redirectTo } = await api
-        .post('me/social/authorization-uri', { json: { connectorId, state, redirectUri } })
-        .json<{ redirectTo: string }>();
+      const { authorizationUri, verificationRecordId: newIdentifierVerificationRecordId } =
+        await api
+          .post('api/verifications/social', { json: { connectorId, state, redirectUri } })
+          .json<{ authorizationUri: string; verificationRecordId: string }>();
 
-      sessionStorage.setItem(storageKeys.linkingSocialConnector, connectorId);
+      sessionStorage.setItem(
+        storageKeys.linkingSocialConnector,
+        `${connectorId}:${verificationRecordId}:${newIdentifierVerificationRecordId}`
+      );
 
-      return redirectTo;
+      return { authorizationUri };
     },
     [api]
   );
+
+  useEffect(() => {
+    if (!verificationRecordId || !connectorId) {
+      return;
+    }
+
+    const handleSocial = async () => {
+      const { authorizationUri } = await getSocialAuthorizationUri(connectorId, verificationRecordId);
+      // Profile page has been moved to the root path instead of being nested inside a tenant context.
+      // Therefore, we don't need to use `getUrl` to prepend the tenant segment in the callback URL.
+      // Also, link social is Cloud only, so no need to conditionally prepend the `ossConsolePath`, either.
+      const callback = new URL('/console/handle-social', window.location.href).href;
+
+      const queries = new URLSearchParams({
+        redirectTo: authorizationUri,
+        connectorId,
+        callback,
+      });
+
+      const newWindow = popupWindow(
+        appendPath(adminTenantEndpoint, `/springboard?${queries.toString()}`).href,
+        'Link social account with Logto',
+        600,
+        640
+      );
+
+      newWindow?.focus();
+
+      // Clear the location state
+      navigate(window.location.pathname, { replace: true, state: {} });
+    };
+
+    void handleSocial();
+  }, [verificationRecordId]);
 
   const tableInfo = useMemo((): Array<Row<Optional<SocialUserInfo>>> => {
     if (!connectors) {
@@ -62,7 +103,7 @@ function LinkAccountSection({ user, connectors, onUpdate }: Props) {
 
     return connectors.map(({ id, name, logo, logoDark, target }) => {
       const logoSrc = theme === Theme.Dark && logoDark ? logoDark : logo;
-      const relatedUserDetails = user.identities[target]?.details;
+      const relatedUserDetails = user.identities?.[target]?.details;
 
       const socialUserInfo = socialUserInfoGuard.safeParse(relatedUserDetails);
       const hasLinked = socialUserInfo.success;
@@ -95,26 +136,10 @@ function LinkAccountSection({ user, connectors, onUpdate }: Props) {
           : {
               name: 'profile.link',
               handler: async () => {
-                const authUri = await getSocialAuthorizationUri(id);
-                // Profile page has been moved to the root path instead of being nested inside a tenant context.
-                // Therefore, we don't need to use `getUrl` to prepend the tenant segment in the callback URL.
-                // Also, link social is Cloud only, so no need to conditionally prepend the `ossConsolePath`, either.
-                const callback = new URL('/handle-social', window.location.href).href;
-
-                const queries = new URLSearchParams({
-                  redirectTo: authUri,
-                  connectorId: id,
-                  callback,
+                navigate('verify-password', {
+                  state: { action: 'linkSocial', connectorId: id },
                 });
-
-                const newWindow = popupWindow(
-                  appendPath(adminTenantEndpoint, `/springboard?${queries.toString()}`).href,
-                  'Link social account with Logto',
-                  600,
-                  640
-                );
-
-                newWindow?.focus();
+                return;
               },
             },
       };
@@ -151,7 +176,7 @@ function LinkAccountSection({ user, connectors, onUpdate }: Props) {
             action: {
               name: user.primaryEmail ? 'profile.change' : 'profile.link',
               handler: () => {
-                navigate('link-email', {
+                navigate('verify-password', {
                   state: { email: user.primaryEmail, action: 'changeEmail' },
                 });
               },

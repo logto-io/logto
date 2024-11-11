@@ -33,11 +33,7 @@ type FormFields = {
 function BasicUserInfoUpdateModal({ field, value: initialValue, isOpen, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { show: showModal } = useConfirmModal();
-  const api = useStaticApi({
-    prefixUrl: adminTenantEndpoint,
-    resourceIndicator: meApi.indicator,
-    hideErrorToast: true,
-  });
+  const api = useStaticApi({ prefixUrl: adminTenantEndpoint, hideErrorToast: true });
   const {
     register,
     clearErrors,
@@ -85,7 +81,7 @@ function BasicUserInfoUpdateModal({ field, value: initialValue, isOpen, onClose 
     clearErrors();
     void handleSubmit(async (data) => {
       try {
-        await api.patch('me', { json: { [field]: data[field] } });
+        await api.patch('api/profile', { json: { [field]: data[field] } });
         toast.success(t('profile.updated', { target: t(`profile.settings.${field}`) }));
         onClose();
       } catch (error: unknown) {

@@ -1,8 +1,9 @@
-import type { ConnectorResponse } from '@logto/schemas';
+import type { ConnectorResponse, UserProfileResponse } from '@logto/schemas';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRoutes } from 'react-router-dom';
 import useSWRImmutable from 'swr/immutable';
+import useSWR from 'swr';
 
 import FormCard from '@/components/FormCard';
 import PageMeta from '@/components/PageMeta';
@@ -13,10 +14,8 @@ import AppBoundary from '@/containers/AppBoundary';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
-import type { RequestError } from '@/hooks/use-api';
-import { useStaticApi } from '@/hooks/use-api';
+import { useStaticApi, type RequestError } from '@/hooks/use-api';
 import { profile } from '@/hooks/use-console-routes/routes/profile';
-import useCurrentUser from '@/hooks/use-current-user';
 import { usePlausiblePageview } from '@/hooks/use-plausible-pageview';
 import useSwrFetcher from '@/hooks/use-swr-fetcher';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
@@ -44,9 +43,12 @@ function Profile() {
     RequestError
   >('me/social/connectors', fetcher);
   const isLoadingConnectors = !connectors && !fetchConnectorsError;
-  const { user, reload, isLoading: isLoadingUser } = useCurrentUser();
   const { isLoading: isUserAssetServiceLoading } = useUserAssetsService();
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
+
+  const profileApi = useStaticApi({ prefixUrl: adminTenantEndpoint });
+  const profileFetcher = useSwrFetcher<Partial<UserProfileResponse>>(profileApi);
+  const { data: user, mutate, isLoading: isLoadingUser } = useSWR('api/profile', profileFetcher);
 
   // Avoid unnecessary re-renders in child components
   const show = useCallback(() => {
@@ -73,10 +75,8 @@ function Profile() {
             {showLoadingSkeleton && <Skeleton />}
             {user && !showLoadingSkeleton && (
               <div className={styles.content}>
-                <BasicUserInfoSection user={user} onUpdate={reload} />
-                {isCloud && (
-                  <LinkAccountSection user={user} connectors={connectors} onUpdate={reload} />
-                )}
+                <BasicUserInfoSection user={user} onUpdate={mutate} />
+                <LinkAccountSection user={user} connectors={connectors} onUpdate={mutate} />
                 <FormCard title="profile.password.title">
                   <CardContent
                     title="profile.password.password_setting"

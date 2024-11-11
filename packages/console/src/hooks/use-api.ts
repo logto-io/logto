@@ -39,7 +39,7 @@ export class RequestError extends Error {
 export type StaticApiProps = {
   prefixUrl?: URL;
   hideErrorToast?: boolean | LogtoErrorCode[];
-  resourceIndicator: string;
+  resourceIndicator?: string;
   timeout?: number;
   signal?: AbortSignal;
 };
@@ -143,7 +143,7 @@ export const useStaticApi = ({
           beforeRequest: [
             async (request) => {
               if (isAuthenticated) {
-                const accessToken = await (resourceIndicator.startsWith(organizationUrnPrefix)
+                const accessToken = await (resourceIndicator?.startsWith(organizationUrnPrefix)
                   ? getOrganizationToken(getOrganizationIdFromUrn(resourceIndicator))
                   : getAccessToken(resourceIndicator));
                 request.headers.set('Authorization', `Bearer ${accessToken ?? ''}`);

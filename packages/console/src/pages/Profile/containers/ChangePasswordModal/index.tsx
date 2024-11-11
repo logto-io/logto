@@ -15,7 +15,8 @@ import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import ExperienceLikeModal from '../../components/ExperienceLikeModal';
-import { handleError } from '../../utils';
+import { handleError, parseLocationState } from '../../utils';
+import { useLocation } from 'react-router-dom';
 
 type FormFields = {
   newPassword: string;
@@ -33,6 +34,8 @@ function ChangePasswordModal() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { navigate } = useTenantPathname();
   const { show: showModal } = useConfirmModal();
+  const { state } = useLocation();
+  const { verificationRecordId } = parseLocationState(state);
   const {
     watch,
     reset,
@@ -48,7 +51,6 @@ function ChangePasswordModal() {
   const [showPassword, setShowPassword] = useState(false);
   const api = useStaticApi({
     prefixUrl: adminTenantEndpoint,
-    resourceIndicator: meApi.indicator,
     hideErrorToast: true,
   });
 
@@ -61,7 +63,9 @@ function ChangePasswordModal() {
     clearErrors();
     void handleSubmit(async ({ newPassword }) => {
       try {
-        await api.post(`me/password`, { json: { password: newPassword } });
+        await api.post(`api/profile/password`, {
+          json: { password: newPassword, verificationRecordId: verificationRecordId ?? null },
+        });
         toast.success(t('profile.password_changed'));
         onClose();
       } catch (error: unknown) {

@@ -18,6 +18,7 @@ import CheckoutSuccessCallback from '@/pages/CheckoutSuccessCallback';
 import { dropLeadingSlash } from '@/utils/url';
 
 import { __Internal__ImportError } from './internal';
+import HandleSocialCallback from '@/pages/Profile/containers/HandleSocialCallback';
 
 const Welcome = safeLazy(async () => import('@/pages/Welcome'));
 const Profile = safeLazy(async () => import('@/pages/Profile'));
@@ -52,6 +53,7 @@ export function ConsoleRoutes() {
           )}
           <Route element={<ProtectedRoutes />}>
             <Route path={dropLeadingSlash(GlobalRoute.Profile) + '/*'} element={<Profile />} />
+            <Route path={dropLeadingSlash(GlobalRoute.HandleSocial)} element={<HandleSocialCallback />} />
             <Route element={<TenantAccess />}>
               {isCloud && (
                 <Route

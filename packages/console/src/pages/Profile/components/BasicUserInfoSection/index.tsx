@@ -12,7 +12,7 @@ import type { Row } from '../CardContent';
 import CardContent from '../CardContent';
 
 type Props = {
-  readonly user: UserProfileResponse;
+  readonly user: Partial<UserProfileResponse>;
   readonly onUpdate?: () => void;
 };
 
