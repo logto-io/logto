@@ -114,6 +114,8 @@ export const mockSignInExperience: SignInExperience = {
   },
   singleSignOnEnabled: true,
   socialSignIn: {},
+  supportEmail: null,
+  supportWebsiteUrl: null,
 };
 
 export const mockSignInExperienceSettings: SignInExperienceResponse = {
@@ -149,6 +151,8 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
   isDevelopmentTenant: false,
   singleSignOnEnabled: true,
   socialSignIn: {},
+  supportEmail: null,
+  supportWebsiteUrl: null,
 };
 
 const usernameSettings = {
