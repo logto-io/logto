@@ -75,7 +75,7 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
   public readonly type = VerificationType.Social;
   public readonly connectorId: string;
   public socialUserInfo?: SocialUserInfo;
-  public connectorSession?: ConnectorSession;
+  public connectorSession: ConnectorSession;
   private connectorDataCache?: LogtoConnector;
 
   constructor(
@@ -89,7 +89,7 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     this.id = id;
     this.connectorId = connectorId;
     this.socialUserInfo = socialUserInfo;
-    this.connectorSession = connectorSession;
+    this.connectorSession = connectorSession ?? {};
   }
 
   /**
@@ -404,7 +404,7 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     const socialUserInfo = await this.libraries.socials.getUserInfo(
       this.connectorId,
       connectorData,
-      async () => this.connectorSession ?? {}
+      async () => this.connectorSession
     );
 
     return socialUserInfo;
