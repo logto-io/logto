@@ -11,6 +11,7 @@ export type ApplicationForm = {
   oidcClientMetadata?: ApplicationResponse['oidcClientMetadata'];
   customClientMetadata?: ApplicationResponse['customClientMetadata'];
   isAdmin?: ApplicationResponse['isAdmin'];
+  unknownSessionFallbackUri?: ApplicationResponse['unknownSessionFallbackUri'];
   // eslint-disable-next-line @typescript-eslint/ban-types
   protectedAppMetadata?: Omit<Exclude<ProtectedAppMetadataType, null>, 'customDomains'>; // Custom domains are handled separately
   customData?: string;
@@ -33,6 +34,7 @@ export const applicationFormDataParser = {
       /** Specific metadata for protected apps */
       protectedAppMetadata,
       customData,
+      unknownSessionFallbackUri,
     } = data;
 
     return {
@@ -46,6 +48,7 @@ export const applicationFormDataParser = {
             ...customClientMetadata,
           },
           customData: JSON.stringify(customData, null, 2),
+          unknownSessionFallbackUri,
           isAdmin,
         }
       ),
@@ -68,6 +71,7 @@ export const applicationFormDataParser = {
       isAdmin,
       protectedAppMetadata,
       customData,
+      unknownSessionFallbackUri,
     } = data;
 
     return {
@@ -90,6 +94,7 @@ export const applicationFormDataParser = {
               customClientMetadata?.corsAllowedOrigins
             ),
           },
+          unknownSessionFallbackUri,
           ...conditional(
             // Invalid JSON string will be guarded by the form field validation
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

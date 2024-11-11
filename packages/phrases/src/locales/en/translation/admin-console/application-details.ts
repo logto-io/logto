@@ -100,6 +100,9 @@ const application_details = {
   field_custom_data_tip:
     'Additional custom application info not listed in the pre-defined application properties, such as business-specific settings and configurations.',
   custom_data_invalid: 'Custom data must be a valid JSON object',
+  field_unknown_session_fallback_uri: 'Unknown session sign-in fallback URI',
+  field_unknown_session_fallback_uri_tip:
+    'The fallback URI when the user accesses the sign-in page without a valid session. User will be redirected to this URI to initiate a new authentication flow.',
   branding: {
     name: 'Branding',
     description: 'Customize your app logo and branding color for the app-level experience.',
