@@ -96,6 +96,10 @@ const firstScreenRouteMapping: Record<FirstScreen, keyof typeof experience.route
   [FirstScreen.SignInDeprecated]: 'signIn',
 };
 
+export enum LoginQueryParamsKey {
+  AppId = 'app_id',
+}
+
 // Note: this eslint comment can be removed once the dev feature flag is removed
 
 export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown): string => {
@@ -114,7 +118,7 @@ export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown):
   const getSearchParamString = () => (searchParams.size > 0 ? `?${searchParams.toString()}` : '');
 
   if (appId) {
-    searchParams.append('app_id', String(appId));
+    searchParams.append(LoginQueryParamsKey.AppId, String(appId));
   }
 
   if (params[ExtraParamsKey.OrganizationId]) {

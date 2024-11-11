@@ -6,6 +6,8 @@ import { EnvSet, UserApps } from '#src/env-set/index.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
+import { LoginQueryParamsKey } from '../oidc/utils.js';
+
 const { jest } = import.meta;
 
 const { mockEsmWithActual } = createMockUtils(jest);
@@ -25,7 +27,11 @@ describe('koaSpaSessionGuard', () => {
   const provider = new Provider('https://logto.test');
   const interactionDetails = jest.spyOn(provider, 'interactionDetails');
   const getRowsByKeys = jest.fn().mockResolvedValue({ rows: [] });
-  const queries = new MockQueries({ logtoConfigs: { getRowsByKeys } });
+  const findApplicationById = jest.fn();
+  const queries = new MockQueries({
+    logtoConfigs: { getRowsByKeys },
+    applications: { findApplicationById },
+  });
 
   beforeEach(() => {
     process.env = { ...envBackup };
@@ -114,5 +120,22 @@ describe('koaSpaSessionGuard', () => {
     await koaSpaSessionGuard(provider, queries)(ctx, next);
     expect(ctx.redirect).toBeCalledWith('https://test.com/unknown-session');
     stub.restore();
+  });
+
+  it('should redirect to configured application fallback URL if session not found', async () => {
+    const unknownSessionFallbackUri = 'https://foo.bar';
+    findApplicationById.mockResolvedValueOnce({
+      unknownSessionFallbackUri,
+    });
+
+    const appId = '123';
+    interactionDetails.mockRejectedValue(new Error('session not found'));
+    const ctx = createContextWithRouteParameters({
+      url: `${guardedPath[0]!}?${LoginQueryParamsKey.AppId}=${appId}`,
+    });
+
+    await koaSpaSessionGuard(provider, queries)(ctx, next);
+    expect(findApplicationById).toBeCalledWith(appId);
+    expect(ctx.redirect).toBeCalledWith(unknownSessionFallbackUri);
   });
 });
