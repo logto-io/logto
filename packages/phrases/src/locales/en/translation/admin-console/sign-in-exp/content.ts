@@ -24,6 +24,13 @@ const content = {
     default_language_description_fixed:
       'When auto-detect is off, the default language is the only language your software will show. Turn on auto-detect for language extension.',
   },
+  support: {
+    title: 'SUPPORT',
+    support_email: 'Support email',
+    support_email_placeholder: 'support@email.com',
+    support_website: 'Support website',
+    support_website_placeholder: 'https://your.website/support',
+  },
   manage_language: {
     title: 'Manage language',
     subtitle:
