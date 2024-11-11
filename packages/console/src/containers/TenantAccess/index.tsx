@@ -71,8 +71,9 @@ export default function TenantAccess() {
       isAuthenticated &&
       currentTenantId &&
       // The current tenant is unavailable to the user, maybe a deleted tenant or a tenant that
-      // the user has no access to. Try with prepended default tenant ID, or if it's not available,
-      // redirect to the home page.
+      // the user has no access to.
+      // If the current tenant ID equals the reserved wildcard "to", replace it with the last
+      // visited tenant ID and keeping the rest of the URL path, otherwise redirect to home page.
       !currentTenant
     ) {
       if (isCloud && defaultTenantId && currentTenantId === reservedTenantIdWildcard) {
