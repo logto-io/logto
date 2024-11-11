@@ -7,6 +7,8 @@ import type { WithI18nContext } from '#src/middleware/koa-i18next.js';
 import { type WithHookContext } from '#src/middleware/koa-management-api-hooks.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
+import { type WithAccountCenterContext } from './profile/middlewares/koa-account-center.js';
+
 export type AnonymousRouter = Router<unknown, WithLogContext & WithI18nContext>;
 
 export type ManagementApiRouterContext = WithAuthContext &
@@ -17,7 +19,10 @@ export type ManagementApiRouterContext = WithAuthContext &
 
 export type ManagementApiRouter = Router<unknown, ManagementApiRouterContext>;
 
-export type UserRouter = Router<unknown, ManagementApiRouterContext & WithHookContext>;
+export type UserRouter = Router<
+  unknown,
+  ManagementApiRouterContext & WithAccountCenterContext & WithHookContext
+>;
 
 type RouterInit<T> = (router: T, tenant: TenantContext) => void;
 export type RouterInitArgs<T> = Parameters<RouterInit<T>>;

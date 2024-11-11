@@ -1,6 +1,7 @@
 import { UserScope } from '@logto/core-kit';
 import { hookEvents } from '@logto/schemas';
 
+import { enableAllAccountCenterFields } from '#src/api/account-center.js';
 import { getUserInfo, updateOtherProfile, updatePassword, updateUser } from '#src/api/profile.js';
 import { createVerificationRecordByPassword } from '#src/api/verification-record.js';
 import { WebHookApiTest } from '#src/helpers/hook.js';
@@ -27,6 +28,7 @@ describe('profile', () => {
   beforeAll(async () => {
     await webHookMockServer.listen();
     await enableAllPasswordSignInMethods();
+    await enableAllAccountCenterFields();
   });
 
   afterAll(async () => {
