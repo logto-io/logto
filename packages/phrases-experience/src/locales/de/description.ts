@@ -109,6 +109,8 @@ const description = {
     'Geben Sie Ihre {{types, list(type: disjunction;)}} ein, um ein neues Konto zu erstellen.',
   all_account_creation_options: 'Alle Kontoerstellungsoptionen',
   back_to_sign_in: 'Zurück zur Anmeldung',
+  support_email: 'Support-E-Mail: <link></link>',
+  support_website: 'Support-Website: <link></link>',
 };
 
 export default Object.freeze(description);

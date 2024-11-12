@@ -95,6 +95,10 @@ const description = {
   all_account_creation_options: 'All account creation options',
   /** UNTRANSLATED */
   back_to_sign_in: 'Back to sign in',
+  /** UNTRANSLATED */
+  support_email: 'Support email: <link></link>',
+  /** UNTRANSLATED */
+  support_website: 'Support website: <link></link>',
 };
 
 export default Object.freeze(description);

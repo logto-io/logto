@@ -34,7 +34,7 @@ const description = {
     'Vous pouvez lier une autre adresse e-mail ou un autre numéro de téléphone',
   social_bind_with_existing:
     'Nous avons trouvé un compte associé qui a été enregistré, et vous pouvez le lier directement.',
-  skip_social_linking: 'Ignorer le lien avec le compte existant ?',
+  skip_social_linking: 'Ignorer le lien avec le compte existant ?',
   reset_password: 'Mot de passe oublié',
   reset_password_description:
     'Entrez le {{types, list(type: disjunction;)}} associé à votre compte et nous vous enverrons le code de vérification pour réinitialiser votre mot de passe.',
@@ -109,6 +109,8 @@ const description = {
     'Entrez votre {{types, list(type: disjunction;)}} pour créer un nouveau compte.',
   all_account_creation_options: 'Toutes les options de création de compte',
   back_to_sign_in: 'Retour à la connexion',
+  support_email: 'Email de support: <link></link>',
+  support_website: 'Site web de support: <link></link>',
 };
 
 export default Object.freeze(description);

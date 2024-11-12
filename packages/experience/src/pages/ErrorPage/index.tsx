@@ -10,6 +10,7 @@ import DynamicT from '@/components/DynamicT';
 import NavBar from '@/components/NavBar';
 import PageMeta from '@/components/PageMeta';
 
+import SupportInfo from './SupportInfo';
 import styles from './index.module.scss';
 
 type Props = {
@@ -34,6 +35,7 @@ const ErrorPage = ({ title = 'description.not_found', message, rawMessage }: Pro
         {errorMessage && (
           <div className={styles.message}>{rawMessage ?? <DynamicT forKey={message} />}</div>
         )}
+        <SupportInfo />
       </div>
     </StaticPageLayout>
   );

@@ -103,6 +103,8 @@ const description = {
     'Yeni bir hesap oluşturmak için {{types, list(type: disjunction;)}} girin.',
   all_account_creation_options: 'Tüm hesap oluşturma seçenekleri',
   back_to_sign_in: 'Girişe dön',
+  support_email: 'Destek e-postası: <link></link>',
+  support_website: 'Destek web sitesi: <link></link>',
 };
 
 export default Object.freeze(description);

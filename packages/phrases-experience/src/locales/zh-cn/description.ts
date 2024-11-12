@@ -82,6 +82,8 @@ const description = {
   identifier_register_description: '输入您的{{types, list(type: disjunction;)}}以创建新账户。',
   all_account_creation_options: '所有账户创建选项',
   back_to_sign_in: '返回登录',
+  support_email: '支持邮箱：<link></link>',
+  support_website: '支持网站：<link></link>',
 };
 
 export default Object.freeze(description);

@@ -94,6 +94,8 @@ const description = {
   identifier_register_description: '輸入您的{{types, list(type: disjunction;)}}以建立新帳戶。',
   all_account_creation_options: '所有帳戶創建選項',
   back_to_sign_in: '返回登入',
+  support_email: '支援郵箱: <link></link>',
+  support_website: '支援網站: <link></link>',
 };
 
 export default Object.freeze(description);

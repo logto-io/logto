@@ -16,6 +16,10 @@
   text-align: center;
 }
 
+.support {
+  margin-top: _.unit(4);
+}
+
 
 :global(body.mobile) {
   .title {
