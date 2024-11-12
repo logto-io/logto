@@ -48,6 +48,16 @@ describe('profile', () => {
   });
 
   describe('GET /profile', () => {
+    it('should allow all origins', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password);
+      const response = await api.get('api/profile');
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Access-Control-Allow-Origin')).toBe('*');
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
     it('should be able to get profile with default scopes', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);
