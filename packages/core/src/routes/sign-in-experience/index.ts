@@ -49,11 +49,19 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
     koaGuard({
       query: z.object({ removeUnusedDemoSocialConnector: z.string().optional() }),
       body: SignInExperiences.createGuard
-        .omit({ id: true, termsOfUseUrl: true, privacyPolicyUrl: true })
+        .omit({
+          id: true,
+          termsOfUseUrl: true,
+          privacyPolicyUrl: true,
+          supportEmail: true,
+          supportWebsiteUrl: true,
+        })
         .merge(
           object({
             termsOfUseUrl: string().url().optional().nullable().or(literal('')),
             privacyPolicyUrl: string().url().optional().nullable().or(literal('')),
+            supportEmail: string().email().optional().nullable().or(literal('')),
+            supportWebsiteUrl: string().url().optional().nullable().or(literal('')),
           })
         )
         .partial(),

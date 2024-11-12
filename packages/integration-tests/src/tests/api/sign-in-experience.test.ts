@@ -36,6 +36,8 @@ describe('admin console sign-in experience', () => {
         factors: [],
       },
       singleSignOnEnabled: true,
+      supportEmail: 'contact@logto.io',
+      supportWebsiteUrl: 'https://logto.io',
     };
 
     const updatedSignInExperience = await updateSignInExperience(newSignInExperience);
