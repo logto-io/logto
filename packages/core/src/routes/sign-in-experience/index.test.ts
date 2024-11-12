@@ -232,4 +232,28 @@ describe('PATCH /sign-in-exp', () => {
       },
     });
   });
+
+  it('should guard unknown session redirect URL field format', async () => {
+    const exception = await signInExperienceRequester
+      .patch('/sign-in-exp')
+      .send({ unknownSessionRedirectUrl: 'invalid' });
+
+    expect(exception).toMatchObject({
+      status: 400,
+    });
+
+    const unknownSessionRedirectUrl = 'https://logto.io';
+
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      unknownSessionRedirectUrl,
+    });
+
+    expect(response).toMatchObject({
+      status: 200,
+      body: {
+        ...mockSignInExperience,
+        unknownSessionRedirectUrl,
+      },
+    });
+  });
 });

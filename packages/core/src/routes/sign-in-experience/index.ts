@@ -55,6 +55,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           privacyPolicyUrl: true,
           supportEmail: true,
           supportWebsiteUrl: true,
+          unknownSessionRedirectUrl: true,
         })
         .merge(
           object({
@@ -62,6 +63,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
             privacyPolicyUrl: string().url().optional().nullable().or(literal('')),
             supportEmail: string().email().optional().nullable().or(literal('')),
             supportWebsiteUrl: string().url().optional().nullable().or(literal('')),
+            unknownSessionRedirectUrl: string().url().optional().nullable().or(literal('')),
           })
         )
         .partial(),
