@@ -35,11 +35,16 @@ const reservedRoutes: Readonly<string[]> = Object.freeze([
 ]);
 
 /**
- * The reserved tenant ID wildcard for the default tenant. Useful when specifying a console URL in
- * the documentation or other places where the tenant ID is not known. Will be replaced with the
- * actual default tenant ID in the runtime.
+ * The reserved tenant ID wildcard for the last-visited tenant. Useful when specifying a console URL in
+ * the documentation or other places where the actual user tenant ID is unknown. The wildcard value "to"
+ * will be replaced by the detected last-visited tenant ID in the runtime.
+ *
+ * @example
+ * ```md
+ * [Console > Applications](https://cloud.logto.io/to/applications)
+ * ```
  */
-export const reservedTenantIdWildcard = 'default';
+export const reservedTenantIdWildcard = 'to';
 
 /** @see {@link TenantsProvider} for why `useSWR()` is not applicable for this context. */
 type Tenants = {
