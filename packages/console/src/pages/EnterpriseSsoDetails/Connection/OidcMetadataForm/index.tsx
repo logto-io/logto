@@ -2,9 +2,11 @@ import { SsoProviderName } from '@logto/schemas';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
+import Switch from '@/ds-components/Switch';
 import TextInput from '@/ds-components/TextInput';
 import { uriValidator } from '@/utils/validator';
 
@@ -83,6 +85,17 @@ function OidcMetadataForm({ providerConfig, config, providerName }: Props) {
       <FormField title="enterprise_sso.metadata.oidc.scope_field_name">
         <TextInput {...register('scope')} error={Boolean(errors.scope)} />
       </FormField>
+      {isDevFeaturesEnabled && providerName === SsoProviderName.AZURE_AD_OIDC && (
+        <FormField
+          title="enterprise_sso_details.trust_unverified_email"
+          tip={t('enterprise_sso_details.trust_unverified_email_tip')}
+        >
+          <Switch
+            label={t('enterprise_sso_details.trust_unverified_email_label')}
+            {...register('trustUnverifiedEmail')}
+          />
+        </FormField>
+      )}
     </>
   );
 }
