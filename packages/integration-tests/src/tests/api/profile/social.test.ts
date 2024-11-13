@@ -54,9 +54,10 @@ describe('profile (social)', () => {
     it('should fail if scope is missing', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
 
       await expectRejects(
-        updateIdentities(api, 'invalid-verification-record-id', 'new-verification-record-id'),
+        updateIdentities(api, verificationRecordId, 'new-verification-record-id'),
         {
           code: 'auth.unauthorized',
           status: 400,
@@ -107,7 +108,6 @@ describe('profile (social)', () => {
         const api = await signInAndGetUserApi(username, password, {
           scopes: [UserScope.Profile, UserScope.Identities],
         });
-
         await expectRejects(
           createSocialVerificationRecord(api, 'invalid-connector-id', state, redirectUri),
           {
@@ -173,14 +173,12 @@ describe('profile (social)', () => {
     it('should fail if scope is missing', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
 
-      await expectRejects(
-        deleteIdentity(api, mockSocialConnectorTarget, 'invalid-verification-record-id'),
-        {
-          code: 'auth.unauthorized',
-          status: 400,
-        }
-      );
+      await expectRejects(deleteIdentity(api, mockSocialConnectorTarget, verificationRecordId), {
+        code: 'auth.unauthorized',
+        status: 400,
+      });
 
       await deleteDefaultTenantUser(user.id);
     });

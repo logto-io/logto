@@ -33,14 +33,10 @@ describe('profile (email and phone)', () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);
       const newEmail = generateEmail();
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
 
       await expectRejects(
-        updatePrimaryEmail(
-          api,
-          newEmail,
-          'invalid-verification-record-id',
-          'new-verification-record-id'
-        ),
+        updatePrimaryEmail(api, newEmail, verificationRecordId, 'new-verification-record-id'),
         {
           code: 'auth.unauthorized',
           status: 400,
@@ -144,14 +140,10 @@ describe('profile (email and phone)', () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);
       const newPhone = generatePhone();
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
 
       await expectRejects(
-        updatePrimaryPhone(
-          api,
-          newPhone,
-          'invalid-verification-record-id',
-          'new-verification-record-id'
-        ),
+        updatePrimaryPhone(api, newPhone, verificationRecordId, 'new-verification-record-id'),
         {
           code: 'auth.unauthorized',
           status: 400,

@@ -4,6 +4,8 @@ type Auth = {
   type: 'user' | 'app';
   id: string;
   scopes: Set<string>;
+  /** If the request is verified by a verification record, this will be set to `true`. */
+  identityVerified?: boolean;
 };
 
 export type WithAuthContext<ContextT extends IRouterParamContext = IRouterParamContext> =

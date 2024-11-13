@@ -118,7 +118,7 @@
       "post": {
         "operationId": "UpdatePassword",
         "summary": "Update password",
-        "description": "Update password for the user, a verification record is required for checking sensitive permissions.",
+        "description": "Update password for the user, a logto-verification-id in header is required for checking sensitive permissions.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -126,9 +126,6 @@
                 "properties": {
                   "password": {
                     "description": "The new password for the user."
-                  },
-                  "verificationRecordId": {
-                    "description": "The verification record ID for checking sensitive permissions."
                   }
                 }
               }
@@ -149,7 +146,7 @@
       "post": {
         "operationId": "UpdatePrimaryEmail",
         "summary": "Update primary email",
-        "description": "Update primary email for the user, a verification record is required for checking sensitive permissions, and a new identifier verification record is required for the new email ownership verification.",
+        "description": "Update primary email for the user, a logto-verification-id in header is required for checking sensitive permissions, and a new identifier verification record is required for the new email ownership verification.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -157,9 +154,6 @@
                 "properties": {
                   "email": {
                     "description": "The new email for the user."
-                  },
-                  "verificationRecordId": {
-                    "description": "The verification record ID for checking sensitive permissions."
                   },
                   "newIdentifierVerificationRecordId": {
                     "description": "The identifier verification record ID for the new email ownership verification."
@@ -186,7 +180,7 @@
       "post": {
         "operationId": "UpdatePrimaryPhone",
         "summary": "Update primary phone",
-        "description": "Update primary phone for the user, a verification record is required for checking sensitive permissions, and a new identifier verification record is required for the new phone ownership verification.",
+        "description": "Update primary phone for the user, a logto-verification-id in header is required for checking sensitive permissions, and a new identifier verification record is required for the new phone ownership verification.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -194,9 +188,6 @@
                 "properties": {
                   "phone": {
                     "description": "The new phone for the user."
-                  },
-                  "verificationRecordId": {
-                    "description": "The verification record ID for checking sensitive permissions."
                   },
                   "newIdentifierVerificationRecordId": {
                     "description": "The identifier verification record ID for the new phone ownership verification."
@@ -223,15 +214,12 @@
       "post": {
         "operationId": "AddUserIdentities",
         "summary": "Add a user identity",
-        "description": "Add an identity (social identity) to the user, a verification record is required for checking sensitive permissions, and a verification record for the social identity is required.",
+        "description": "Add an identity (social identity) to the user, a logto-verification-id in header is required for checking sensitive permissions, and a verification record for the social identity is required.",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "properties": {
-                  "verificationRecordId": {
-                    "description": "The verification record ID for checking sensitive permissions."
-                  },
                   "newIdentifierVerificationRecordId": {
                     "description": "The identifier verification record ID for the new social identity ownership verification."
                   }
@@ -251,14 +239,7 @@
       "delete": {
         "operationId": "DeleteIdentity",
         "summary": "Delete a user identity",
-        "description": "Delete an identity (social identity) from the user, a verification record is required for checking sensitive permissions.",
-        "parameters": [
-          {
-            "name": "verificationRecordId",
-            "in": "query",
-            "description": "The verification record ID for checking sensitive permissions."
-          }
-        ],
+        "description": "Delete an identity (social identity) from the user, a logto-verification-id in header is required for checking sensitive permissions.",
         "responses": {
           "204": {
             "description": "The identity was deleted successfully."

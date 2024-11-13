@@ -244,8 +244,9 @@ describe('profile', () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);
       const newPassword = '123456';
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
 
-      await expectRejects(updatePassword(api, 'invalid-varification-record-id', newPassword), {
+      await expectRejects(updatePassword(api, verificationRecordId, newPassword), {
         code: 'password.rejected',
         status: 422,
       });

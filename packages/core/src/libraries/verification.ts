@@ -1,4 +1,3 @@
-import RequestError from '../errors/RequestError/index.js';
 import { expirationTime } from '../queries/verification-records.js';
 import {
   buildVerificationRecord,
@@ -41,34 +40,6 @@ const getVerificationRecordById = async ({
   assertThat(result.success, 'verification_record.not_found');
 
   return buildVerificationRecord(libraries, queries, result.data);
-};
-
-/**
- * Verifies the user sensitive permission by checking if the verification record is valid
- * and associated with the user.
- */
-export const verifyUserSensitivePermission = async ({
-  userId,
-  id,
-  queries,
-  libraries,
-}: {
-  userId: string;
-  id: string;
-  queries: Queries;
-  libraries: Libraries;
-}): Promise<void> => {
-  try {
-    const record = await getVerificationRecordById({ id, queries, libraries, userId });
-
-    assertThat(record.isVerified, 'verification_record.not_found');
-  } catch (error) {
-    if (error instanceof RequestError) {
-      throw new RequestError({ code: 'verification_record.permission_denied', status: 401 });
-    }
-
-    throw error;
-  }
 };
 
 /**

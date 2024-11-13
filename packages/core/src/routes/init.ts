@@ -104,7 +104,7 @@ const createRouters = (tenant: TenantContext) => {
   const anonymousRouter: AnonymousRouter = new Router();
 
   const userRouter: UserRouter = new Router();
-  userRouter.use(koaOidcAuth(tenant.provider));
+  userRouter.use(koaOidcAuth(tenant));
   // TODO(LOG-10147): Rename to koaApiHooks, this middleware is used for both management API and user API
   userRouter.use(koaManagementApiHooks(tenant.libraries.hooks));
   profileRoutes(userRouter, tenant);

@@ -13,10 +13,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import { EnvSet } from '../../env-set/index.js';
 import RequestError from '../../errors/RequestError/index.js';
 import { encryptUserPassword } from '../../libraries/user.utils.js';
-import {
-  buildVerificationRecordByIdAndType,
-  verifyUserSensitivePermission,
-} from '../../libraries/verification.js';
+import { buildVerificationRecordByIdAndType } from '../../libraries/verification.js';
 import assertThat from '../../utils/assert-that.js';
 import { PasswordValidator } from '../experience/classes/libraries/password-validator.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
@@ -144,12 +141,16 @@ export default function profileRoutes<T extends UserRouter>(
   router.post(
     '/profile/password',
     koaGuard({
-      body: z.object({ password: z.string().min(1), verificationRecordId: z.string() }),
+      body: z.object({ password: z.string().min(1) }),
       status: [204, 400, 401, 422],
     }),
     async (ctx, next) => {
-      const { id: userId } = ctx.auth;
-      const { password, verificationRecordId } = ctx.guard.body;
+      const { id: userId, identityVerified } = ctx.auth;
+      assertThat(
+        identityVerified,
+        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
+      );
+      const { password } = ctx.guard.body;
       const { fields } = ctx.accountCenter;
       assertThat(
         fields.password === AccountCenterControlValue.Edit,
@@ -160,13 +161,6 @@ export default function profileRoutes<T extends UserRouter>(
       const signInExperience = await findDefaultSignInExperience();
       const passwordPolicyChecker = new PasswordValidator(signInExperience.passwordPolicy, user);
       await passwordPolicyChecker.validatePassword(password, user);
-
-      await verifyUserSensitivePermission({
-        userId,
-        id: verificationRecordId,
-        queries,
-        libraries,
-      });
 
       const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);
       const updatedUser = await updateUserById(userId, {
@@ -187,14 +181,17 @@ export default function profileRoutes<T extends UserRouter>(
     koaGuard({
       body: z.object({
         email: z.string().regex(emailRegEx),
-        verificationRecordId: z.string(),
         newIdentifierVerificationRecordId: z.string(),
       }),
       status: [204, 400, 401],
     }),
     async (ctx, next) => {
-      const { id: userId, scopes } = ctx.auth;
-      const { email, verificationRecordId, newIdentifierVerificationRecordId } = ctx.guard.body;
+      const { id: userId, scopes, identityVerified } = ctx.auth;
+      assertThat(
+        identityVerified,
+        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
+      );
+      const { email, newIdentifierVerificationRecordId } = ctx.guard.body;
       const { fields } = ctx.accountCenter;
       assertThat(
         fields.email === AccountCenterControlValue.Edit,
@@ -202,13 +199,6 @@ export default function profileRoutes<T extends UserRouter>(
       );
 
       assertThat(scopes.has(UserScope.Email), 'auth.unauthorized');
-
-      await verifyUserSensitivePermission({
-        userId,
-        id: verificationRecordId,
-        queries,
-        libraries,
-      });
 
       // Check new identifier
       const newVerificationRecord = await buildVerificationRecordByIdAndType({
@@ -237,14 +227,17 @@ export default function profileRoutes<T extends UserRouter>(
     koaGuard({
       body: z.object({
         phone: z.string().regex(phoneRegEx),
-        verificationRecordId: z.string(),
         newIdentifierVerificationRecordId: z.string(),
       }),
       status: [204, 400, 401],
     }),
     async (ctx, next) => {
-      const { id: userId, scopes } = ctx.auth;
-      const { phone, verificationRecordId, newIdentifierVerificationRecordId } = ctx.guard.body;
+      const { id: userId, scopes, identityVerified } = ctx.auth;
+      assertThat(
+        identityVerified,
+        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
+      );
+      const { phone, newIdentifierVerificationRecordId } = ctx.guard.body;
       const { fields } = ctx.accountCenter;
       assertThat(
         fields.phone === AccountCenterControlValue.Edit,
@@ -252,13 +245,6 @@ export default function profileRoutes<T extends UserRouter>(
       );
 
       assertThat(scopes.has(UserScope.Phone), 'auth.unauthorized');
-
-      await verifyUserSensitivePermission({
-        userId,
-        id: verificationRecordId,
-        queries,
-        libraries,
-      });
 
       // Check new identifier
       const newVerificationRecord = await buildVerificationRecordByIdAndType({
@@ -286,14 +272,17 @@ export default function profileRoutes<T extends UserRouter>(
     '/profile/identities',
     koaGuard({
       body: z.object({
-        verificationRecordId: z.string(),
         newIdentifierVerificationRecordId: z.string(),
       }),
       status: [204, 400, 401],
     }),
     async (ctx, next) => {
-      const { id: userId, scopes } = ctx.auth;
-      const { verificationRecordId, newIdentifierVerificationRecordId } = ctx.guard.body;
+      const { id: userId, scopes, identityVerified } = ctx.auth;
+      assertThat(
+        identityVerified,
+        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
+      );
+      const { newIdentifierVerificationRecordId } = ctx.guard.body;
       const { fields } = ctx.accountCenter;
       assertThat(
         fields.social === AccountCenterControlValue.Edit,
@@ -301,13 +290,6 @@ export default function profileRoutes<T extends UserRouter>(
       );
 
       assertThat(scopes.has(UserScope.Identities), 'auth.unauthorized');
-
-      await verifyUserSensitivePermission({
-        userId,
-        id: verificationRecordId,
-        queries,
-        libraries,
-      });
 
       // Check new identifier
       const newVerificationRecord = await buildVerificationRecordByIdAndType({
@@ -350,15 +332,14 @@ export default function profileRoutes<T extends UserRouter>(
     '/profile/identities/:target',
     koaGuard({
       params: z.object({ target: z.string() }),
-      query: z.object({
-        // TODO: Move all sensitive permission checks to the header
-        verificationRecordId: z.string(),
-      }),
       status: [204, 400, 401, 404],
     }),
     async (ctx, next) => {
-      const { id: userId, scopes } = ctx.auth;
-      const { verificationRecordId } = ctx.guard.query;
+      const { id: userId, scopes, identityVerified } = ctx.auth;
+      assertThat(
+        identityVerified,
+        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
+      );
       const { target } = ctx.guard.params;
       const { fields } = ctx.accountCenter;
       assertThat(
@@ -367,13 +348,6 @@ export default function profileRoutes<T extends UserRouter>(
       );
 
       assertThat(scopes.has(UserScope.Identities), 'auth.unauthorized');
-
-      await verifyUserSensitivePermission({
-        userId,
-        id: verificationRecordId,
-        queries,
-        libraries,
-      });
 
       const user = await findUserById(userId);
 
