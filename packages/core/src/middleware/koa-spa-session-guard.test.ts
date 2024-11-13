@@ -25,7 +25,11 @@ describe('koaSpaSessionGuard', () => {
   const provider = new Provider('https://logto.test');
   const interactionDetails = jest.spyOn(provider, 'interactionDetails');
   const getRowsByKeys = jest.fn().mockResolvedValue({ rows: [] });
-  const queries = new MockQueries({ logtoConfigs: { getRowsByKeys } });
+  const findDefaultSignInExperience = jest.fn().mockResolvedValue({});
+  const queries = new MockQueries({
+    logtoConfigs: { getRowsByKeys },
+    signInExperiences: { findDefaultSignInExperience },
+  });
 
   beforeEach(() => {
     process.env = { ...envBackup };
@@ -90,6 +94,28 @@ describe('koaSpaSessionGuard', () => {
       expect(ctx.redirect).toBeCalledWith('https://logto.test/unknown-session');
     });
   }
+
+  it('should redirect to configured unknown session redirect URL in SIE if session not found for a selected path', async () => {
+    const stub = Sinon.stub(EnvSet, 'values').value({
+      ...EnvSet.values,
+      isDevFeaturesEnabled: true,
+    });
+
+    const unknownSessionRedirectUrl = 'https://foo.bar/redirect';
+
+    interactionDetails.mockRejectedValue(new Error('session not found'));
+    findDefaultSignInExperience.mockResolvedValueOnce({
+      unknownSessionRedirectUrl,
+    });
+
+    const ctx = createContextWithRouteParameters({
+      url: `${guardedPath[0]!}/foo`,
+    });
+    await koaSpaSessionGuard(provider, queries)(ctx, next);
+    expect(ctx.redirect).toBeCalledWith(unknownSessionRedirectUrl);
+
+    stub.restore();
+  });
 
   it('should redirect to configured URL if session not found for a selected path', async () => {
     interactionDetails.mockRejectedValue(new Error('session not found'));
