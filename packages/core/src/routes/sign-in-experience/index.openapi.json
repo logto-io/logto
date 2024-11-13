@@ -51,6 +51,15 @@
                     },
                     "mfa": {
                       "description": "MFA settings"
+                    },
+                    "supportEmail": {
+                      "description": "The support email address to display on the error pages."
+                    },
+                    "supportWebsiteUrl": {
+                      "description": "The support website URL to display on the error pages."
+                    },
+                    "unknownSessionRedirectUrl": {
+                      "description": "The fallback URL to redirect users when the sign-in session does not exist or unknown. Client should initiates a new authentication flow after the redirection."
                     }
                   }
                 }
@@ -111,6 +120,15 @@
                   },
                   "mfa": {
                     "description": "MFA settings"
+                  },
+                  "supportEmail": {
+                    "description": "The support email address to display on the error pages."
+                  },
+                  "supportWebsiteUrl": {
+                    "description": "The support website URL to display on the error pages."
+                  },
+                  "unknownSessionRedirectUrl": {
+                    "description": "The fallback URL to redirect users when the sign-in session does not exist or unknown. Client should initiate a new authentication flow after the redirection."
                   }
                 }
               }

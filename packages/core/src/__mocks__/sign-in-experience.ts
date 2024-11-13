@@ -102,4 +102,5 @@ export const mockSignInExperience: SignInExperience = {
   socialSignIn: {},
   supportEmail: null,
   supportWebsiteUrl: null,
+  unknownSessionRedirectUrl: null,
 };
