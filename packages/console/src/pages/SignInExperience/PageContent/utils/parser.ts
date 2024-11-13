@@ -74,7 +74,6 @@ export const sieFormDataParser = {
       createAccountEnabled,
       signUp,
       customCss,
-      customUiAssets,
       /** Remove the custom words related properties since they are not used in the remote model. */
       passwordPolicy: { isCustomWordsEnabled, customWords, ...passwordPolicy },
     } = formData;
