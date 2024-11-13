@@ -34,7 +34,7 @@ describe('profile, account center fields disabled', () => {
       enabled: true,
       fields: {
         name: AccountCenterControlValue.ReadOnly,
-        // Unexisted filed should not be readable
+        // Unexisted field should not be readable
       },
     });
   });
