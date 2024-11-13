@@ -109,6 +109,11 @@ const enterprise_sso_details = {
     auth_params_tooltip:
       'Additional parameters to be passed in the authorization request. By default only (openid profile) scopes will be requested, you can specify additional scopes or a exclusive state value here. (e.g., { "scope": "organizations email", "state": "secret_state" }).',
   },
+  trust_unverified_email: 'Trust unverified email',
+  trust_unverified_email_label:
+    'Always trust the unverified email addresses returned from the identity provider',
+  trust_unverified_email_tip:
+    'The Entra ID (OIDC) connector does not return the `email_verified` claim, meaning that email addresses from Azure are not guaranteed to be verified. By default, Logto will not sync unverified email addresses to the user profile. Enable this option only if you trust all the email addresses from the Entra ID directory.',
 };
 
 export default Object.freeze(enterprise_sso_details);
