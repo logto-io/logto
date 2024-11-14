@@ -174,6 +174,16 @@
             "description": "Permission denied, the verification record is invalid."
           }
         }
+      },
+      "delete": {
+        "operationId": "DeletePrimaryEmail",
+        "summary": "Delete primary email",
+        "description": "Delete primary email for the user, a verification-record-id in header is required for checking sensitive permissions.",
+        "responses": {
+          "204": {
+            "description": "The primary email was deleted successfully."
+          }
+        }
       }
     },
     "/api/profile/primary-phone": {
@@ -206,6 +216,16 @@
           },
           "403": {
             "description": "Permission denied, the verification record is invalid."
+          }
+        }
+      },
+      "delete": {
+        "operationId": "DeletePrimaryPhone",
+        "summary": "Delete primary phone",
+        "description": "Delete primary phone for the user, a verification-record-id in header is required for checking sensitive permissions.",
+        "responses": {
+          "204": {
+            "description": "The primary phone was deleted successfully."
           }
         }
       }

@@ -24,6 +24,11 @@ export const updatePrimaryEmail = async (
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
 
+export const deletePrimaryEmail = async (api: KyInstance, verificationRecordId: string) =>
+  api.delete('api/profile/primary-email', {
+    headers: { [verificationRecordIdHeader]: verificationRecordId },
+  });
+
 export const updatePrimaryPhone = async (
   api: KyInstance,
   phone: string,
@@ -32,6 +37,11 @@ export const updatePrimaryPhone = async (
 ) =>
   api.post('api/profile/primary-phone', {
     json: { phone, newIdentifierVerificationRecordId },
+    headers: { [verificationRecordIdHeader]: verificationRecordId },
+  });
+
+export const deletePrimaryPhone = async (api: KyInstance, verificationRecordId: string) =>
+  api.delete('api/profile/primary-phone', {
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
 
