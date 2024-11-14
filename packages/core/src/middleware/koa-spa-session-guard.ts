@@ -37,17 +37,14 @@ export default function koaSpaSessionGuard<
       try {
         await provider.interactionDetails(ctx.req, ctx.res);
       } catch {
-        // TODO: remove this check after the feature is stable
-        if (EnvSet.values.isDevFeaturesEnabled) {
-          // For unknown session, check if there is a redirect URL set in the SignInExperience
-          const { unknownSessionRedirectUrl } =
-            await queries.signInExperiences.findDefaultSignInExperience();
+        // For unknown session, check if there is a redirect URL set in the SignInExperience
+        const { unknownSessionRedirectUrl } =
+          await queries.signInExperiences.findDefaultSignInExperience();
 
-          if (unknownSessionRedirectUrl) {
-            ctx.redirect(unknownSessionRedirectUrl);
+        if (unknownSessionRedirectUrl) {
+          ctx.redirect(unknownSessionRedirectUrl);
 
-            return;
-          }
+          return;
         }
 
         // If not, check if there is a redirect URL set in the tenant level LogtoConfigs

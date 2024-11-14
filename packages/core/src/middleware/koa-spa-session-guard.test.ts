@@ -96,11 +96,6 @@ describe('koaSpaSessionGuard', () => {
   }
 
   it('should redirect to configured unknown session redirect URL in SIE if session not found for a selected path', async () => {
-    const stub = Sinon.stub(EnvSet, 'values').value({
-      ...EnvSet.values,
-      isDevFeaturesEnabled: true,
-    });
-
     const unknownSessionRedirectUrl = 'https://foo.bar/redirect';
 
     interactionDetails.mockRejectedValue(new Error('session not found'));
@@ -113,8 +108,6 @@ describe('koaSpaSessionGuard', () => {
     });
     await koaSpaSessionGuard(provider, queries)(ctx, next);
     expect(ctx.redirect).toBeCalledWith(unknownSessionRedirectUrl);
-
-    stub.restore();
   });
 
   it('should redirect to configured URL if session not found for a selected path', async () => {
