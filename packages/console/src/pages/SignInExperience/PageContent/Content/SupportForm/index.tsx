@@ -8,6 +8,7 @@ import TextInput from '@/ds-components/TextInput';
 import { type SignInExperienceForm } from '@/pages/SignInExperience/types';
 import { uriValidator } from '@/utils/validator';
 
+import FormFieldDescription from '../../components/FormFieldDescription';
 import FormSectionTitle from '../../components/FormSectionTitle';
 
 function SupportForm() {
@@ -21,6 +22,7 @@ function SupportForm() {
   return (
     <Card>
       <FormSectionTitle title="content.support.title" />
+      <FormFieldDescription>{t('sign_in_exp.content.support.subtitle')}</FormFieldDescription>
       <FormField title="sign_in_exp.content.support.support_email">
         <TextInput
           {...register('supportEmail', {
