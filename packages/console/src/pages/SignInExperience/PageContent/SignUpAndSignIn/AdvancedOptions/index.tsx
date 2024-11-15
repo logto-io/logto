@@ -1,7 +1,6 @@
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import Card from '@/ds-components/Card';
 import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
@@ -49,22 +48,18 @@ function AdvancedOptions() {
           )}
         />
       </FormField>
-      {isDevFeaturesEnabled && (
-        <FormField
-          title="sign_in_exp.sign_up_and_sign_in.advanced_options.unknown_session_redirect_url"
-          tip={t(
-            'sign_in_exp.sign_up_and_sign_in.advanced_options.unknown_session_redirect_url_tip'
-          )}
-        >
-          <TextInput
-            {...register('unknownSessionRedirectUrl', {
-              validate: (value) => !value || uriValidator(value) || t('errors.invalid_uri_format'),
-            })}
-            error={errors.unknownSessionRedirectUrl?.message}
-            placeholder="https://"
-          />
-        </FormField>
-      )}
+      <FormField
+        title="sign_in_exp.sign_up_and_sign_in.advanced_options.unknown_session_redirect_url"
+        tip={t('sign_in_exp.sign_up_and_sign_in.advanced_options.unknown_session_redirect_url_tip')}
+      >
+        <TextInput
+          {...register('unknownSessionRedirectUrl', {
+            validate: (value) => !value || uriValidator(value) || t('errors.invalid_uri_format'),
+          })}
+          error={errors.unknownSessionRedirectUrl?.message}
+          placeholder="https://"
+        />
+      </FormField>
     </Card>
   );
 }
