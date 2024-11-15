@@ -5,11 +5,20 @@ import type { MiddlewareType } from 'koa';
 import { EnvSet } from '#src/env-set/index.js';
 
 export default function koaCors<StateT, ContextT, ResponseBodyT>(
-  ...urlSets: UrlSet[]
+  urlSets: UrlSet[],
+  allowedPrefixes: string[] = []
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   return cors({
     origin: (ctx) => {
-      const { origin } = ctx.request.headers;
+      const {
+        headers: { origin },
+        path,
+      } = ctx.request;
+
+      // Allow any origin if the path starts with an allowed prefix
+      if (allowedPrefixes.some((prefix) => path.startsWith(prefix))) {
+        return origin ?? '*';
+      }
 
       if (!EnvSet.values.isProduction) {
         return origin ?? '';
