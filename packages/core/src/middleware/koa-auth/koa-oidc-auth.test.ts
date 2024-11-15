@@ -7,11 +7,15 @@ import Sinon from 'sinon';
 import RequestError from '#src/errors/RequestError/index.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
+import { MockTenant } from '../../test-utils/tenant.js';
+
 import type { WithAuthContext } from './index.js';
 
 const { jest } = import.meta;
 
 const provider = new Provider('https://logto.test');
+const tenantContext = new MockTenant(provider);
+
 const mockAccessToken = {
   accountId: 'fooUser',
   clientId: 'fooClient',
@@ -70,12 +74,19 @@ describe('koaOidcAuth middleware', () => {
       },
     };
     Sinon.stub(provider.AccessToken, 'find').resolves(mockAccessToken);
-    await koaOidcAuth(provider)(ctx, next);
-    expect(ctx.auth).toEqual({ type: 'user', id: 'fooUser', scopes: new Set(['openid']) });
+    await koaOidcAuth(tenantContext)(ctx, next);
+    expect(ctx.auth).toEqual({
+      type: 'user',
+      id: 'fooUser',
+      scopes: new Set(['openid']),
+      identityVerified: false,
+    });
   });
 
   it('expect to throw if authorization header is missing', async () => {
-    await expect(koaOidcAuth(provider)(ctx, next)).rejects.toMatchError(authHeaderMissingError);
+    await expect(koaOidcAuth(tenantContext)(ctx, next)).rejects.toMatchError(
+      authHeaderMissingError
+    );
   });
 
   it('expect to throw if authorization header token type not recognized ', async () => {
@@ -86,7 +97,9 @@ describe('koaOidcAuth middleware', () => {
       },
     };
 
-    await expect(koaOidcAuth(provider)(ctx, next)).rejects.toMatchError(tokenNotSupportedError);
+    await expect(koaOidcAuth(tenantContext)(ctx, next)).rejects.toMatchError(
+      tokenNotSupportedError
+    );
   });
 
   it('expect to throw if access token is not found', async () => {
@@ -98,7 +111,7 @@ describe('koaOidcAuth middleware', () => {
     };
     Sinon.stub(provider.AccessToken, 'find').resolves();
 
-    await expect(koaOidcAuth(provider)(ctx, next)).rejects.toMatchError(unauthorizedError);
+    await expect(koaOidcAuth(tenantContext)(ctx, next)).rejects.toMatchError(unauthorizedError);
   });
 
   it('expect to throw if sub is missing', async () => {
@@ -113,7 +126,7 @@ describe('koaOidcAuth middleware', () => {
       accountId: undefined,
     });
 
-    await expect(koaOidcAuth(provider)(ctx, next)).rejects.toMatchError(unauthorizedError);
+    await expect(koaOidcAuth(tenantContext)(ctx, next)).rejects.toMatchError(unauthorizedError);
   });
 
   it('expect to throw if access token does not have openid scope', async () => {
@@ -128,6 +141,6 @@ describe('koaOidcAuth middleware', () => {
       scopes: new Set(['foo']),
     });
 
-    await expect(koaOidcAuth(provider)(ctx, next)).rejects.toMatchError(forbiddenError);
+    await expect(koaOidcAuth(tenantContext)(ctx, next)).rejects.toMatchError(forbiddenError);
   });
 });
