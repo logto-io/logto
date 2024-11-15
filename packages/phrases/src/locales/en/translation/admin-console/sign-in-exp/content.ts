@@ -26,6 +26,7 @@ const content = {
   },
   support: {
     title: 'SUPPORT',
+    subtitle: 'Display your support channels on error pages for quick user assistance.',
     support_email: 'Support email',
     support_email_placeholder: 'support@email.com',
     support_website: 'Support website',
