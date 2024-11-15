@@ -1,8 +1,9 @@
 import { UserScope } from '@logto/core-kit';
-import { hookEvents } from '@logto/schemas';
+import { hookEvents, SignInIdentifier } from '@logto/schemas';
 
 import { enableAllAccountCenterFields } from '#src/api/account-center.js';
 import { getUserInfo, updateOtherProfile, updatePassword, updateUser } from '#src/api/profile.js';
+import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { createVerificationRecordByPassword } from '#src/api/verification-record.js';
 import { WebHookApiTest } from '#src/helpers/hook.js';
 import { expectRejects } from '#src/helpers/index.js';
@@ -170,6 +171,27 @@ describe('profile', () => {
 
       // Sign in with new username
       await initClientAndSignInForDefaultTenant(newUsername, password);
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should be able to update username to null', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password);
+
+      await updateSignInExperience({
+        signUp: {
+          identifiers: [SignInIdentifier.Email],
+          password: true,
+          verify: true,
+        },
+      });
+      const response = await updateUser(api, { username: null });
+      expect(response).toMatchObject({ username: null });
+      await enableAllPasswordSignInMethods();
+
+      const userInfo = await getUserInfo(api);
+      expect(userInfo).toHaveProperty('username', null);
 
       await deleteDefaultTenantUser(user.id);
     });

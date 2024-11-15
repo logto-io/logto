@@ -1,9 +1,9 @@
-import { emailRegEx, phoneRegEx, usernameRegEx, UserScope } from '@logto/core-kit';
+import { usernameRegEx, UserScope } from '@logto/core-kit';
 import {
-  VerificationType,
   userProfileResponseGuard,
   userProfileGuard,
   AccountCenterControlValue,
+  SignInIdentifier,
 } from '@logto/schemas';
 import { z } from 'zod';
 
@@ -12,11 +12,11 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import { EnvSet } from '../../env-set/index.js';
 import RequestError from '../../errors/RequestError/index.js';
 import { encryptUserPassword } from '../../libraries/user.utils.js';
-import { buildVerificationRecordByIdAndType } from '../../libraries/verification.js';
 import assertThat from '../../utils/assert-that.js';
 import { PasswordValidator } from '../experience/classes/libraries/password-validator.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
+import emailAndPhoneRoutes from './email-and-phone.js';
 import identitiesRoutes from './identities.js';
 import koaAccountCenter from './middlewares/koa-account-center.js';
 import { getAccountCenterFilteredProfile, getScopedProfile } from './utils/get-scoped-profile.js';
@@ -24,7 +24,7 @@ import { getAccountCenterFilteredProfile, getScopedProfile } from './utils/get-s
 export default function profileRoutes<T extends UserRouter>(...args: RouterInitArgs<T>) {
   const [router, { queries, libraries }] = args;
   const {
-    users: { updateUserById, findUserById, deleteUserIdentity },
+    users: { updateUserById, findUserById },
     signInExperiences: { findDefaultSignInExperience },
   } = queries;
 
@@ -58,7 +58,7 @@ export default function profileRoutes<T extends UserRouter>(...args: RouterInitA
       body: z.object({
         name: z.string().nullable().optional(),
         avatar: z.string().url().nullable().optional(),
-        username: z.string().regex(usernameRegEx).optional(),
+        username: z.string().regex(usernameRegEx).nullable().optional(),
       }),
       response: userProfileResponseGuard.partial(),
       status: [200, 400, 422],
@@ -84,7 +84,15 @@ export default function profileRoutes<T extends UserRouter>(...args: RouterInitA
       assertThat(scopes.has(UserScope.Profile), 'auth.unauthorized');
 
       if (username !== undefined) {
-        await checkIdentifierCollision({ username }, userId);
+        if (username === null) {
+          const { signUp } = await findDefaultSignInExperience();
+          assertThat(
+            !signUp.identifiers.includes(SignInIdentifier.Username),
+            'user.username_required'
+          );
+        } else {
+          await checkIdentifierCollision({ username }, userId);
+        }
       }
 
       const updatedUser = await updateUserById(userId, {
@@ -175,97 +183,6 @@ export default function profileRoutes<T extends UserRouter>(...args: RouterInitA
     }
   );
 
-  router.post(
-    '/profile/primary-email',
-    koaGuard({
-      body: z.object({
-        email: z.string().regex(emailRegEx),
-        newIdentifierVerificationRecordId: z.string(),
-      }),
-      status: [204, 400, 401],
-    }),
-    async (ctx, next) => {
-      const { id: userId, scopes, identityVerified } = ctx.auth;
-      assertThat(
-        identityVerified,
-        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
-      );
-      const { email, newIdentifierVerificationRecordId } = ctx.guard.body;
-      const { fields } = ctx.accountCenter;
-      assertThat(
-        fields.email === AccountCenterControlValue.Edit,
-        'account_center.filed_not_editable'
-      );
-
-      assertThat(scopes.has(UserScope.Email), 'auth.unauthorized');
-
-      // Check new identifier
-      const newVerificationRecord = await buildVerificationRecordByIdAndType({
-        type: VerificationType.EmailVerificationCode,
-        id: newIdentifierVerificationRecordId,
-        queries,
-        libraries,
-      });
-      assertThat(newVerificationRecord.isVerified, 'verification_record.not_found');
-      assertThat(newVerificationRecord.identifier.value === email, 'verification_record.not_found');
-
-      await checkIdentifierCollision({ primaryEmail: email }, userId);
-
-      const updatedUser = await updateUserById(userId, { primaryEmail: email });
-
-      ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
-
-      ctx.status = 204;
-
-      return next();
-    }
-  );
-
-  router.post(
-    '/profile/primary-phone',
-    koaGuard({
-      body: z.object({
-        phone: z.string().regex(phoneRegEx),
-        newIdentifierVerificationRecordId: z.string(),
-      }),
-      status: [204, 400, 401],
-    }),
-    async (ctx, next) => {
-      const { id: userId, scopes, identityVerified } = ctx.auth;
-      assertThat(
-        identityVerified,
-        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
-      );
-      const { phone, newIdentifierVerificationRecordId } = ctx.guard.body;
-      const { fields } = ctx.accountCenter;
-      assertThat(
-        fields.phone === AccountCenterControlValue.Edit,
-        'account_center.filed_not_editable'
-      );
-
-      assertThat(scopes.has(UserScope.Phone), 'auth.unauthorized');
-
-      // Check new identifier
-      const newVerificationRecord = await buildVerificationRecordByIdAndType({
-        type: VerificationType.PhoneVerificationCode,
-        id: newIdentifierVerificationRecordId,
-        queries,
-        libraries,
-      });
-      assertThat(newVerificationRecord.isVerified, 'verification_record.not_found');
-      assertThat(newVerificationRecord.identifier.value === phone, 'verification_record.not_found');
-
-      await checkIdentifierCollision({ primaryPhone: phone }, userId);
-
-      const updatedUser = await updateUserById(userId, { primaryPhone: phone });
-
-      ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
-
-      ctx.status = 204;
-
-      return next();
-    }
-  );
-
+  emailAndPhoneRoutes(...args);
   identitiesRoutes(...args);
 }
