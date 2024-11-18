@@ -21,10 +21,10 @@ import { assertHookLogResult } from '../hook/utils.js';
 
 const { describe, it } = devFeatureTest;
 
-describe('profile', () => {
+describe('account', () => {
   const webHookMockServer = new WebhookMockServer(9999);
   const webHookApi = new WebHookApiTest();
-  const hookName = 'profileApiHookEventListener';
+  const hookName = 'accountApiHookEventListener';
 
   beforeAll(async () => {
     await webHookMockServer.listen();
@@ -48,11 +48,11 @@ describe('profile', () => {
     await webHookApi.cleanUp();
   });
 
-  describe('GET /profile', () => {
+  describe('GET /account', () => {
     it('should allow all origins', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);
-      const response = await api.get('api/profile');
+      const response = await api.get('api/account');
       expect(response.status).toBe(200);
       expect(response.headers.get('Access-Control-Allow-Origin')).toBe('*');
 
@@ -121,7 +121,7 @@ describe('profile', () => {
     });
   });
 
-  describe('PATCH /profile', () => {
+  describe('PATCH /account', () => {
     it('should be able to update name', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);
@@ -211,7 +211,7 @@ describe('profile', () => {
     });
   });
 
-  describe('PATCH /profile/profile', () => {
+  describe('PATCH /account/profile', () => {
     it('should be able to update other profile', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);
@@ -258,7 +258,7 @@ describe('profile', () => {
     });
   });
 
-  describe('POST /profile/password', () => {
+  describe('POST /account/password', () => {
     it('should fail if verification record is invalid', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);

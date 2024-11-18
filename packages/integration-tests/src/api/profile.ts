@@ -8,7 +8,7 @@ export const updatePassword = async (
   verificationRecordId: string,
   password: string
 ) =>
-  api.post('api/profile/password', {
+  api.post('api/account/password', {
     json: { password },
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
@@ -19,13 +19,13 @@ export const updatePrimaryEmail = async (
   verificationRecordId: string,
   newIdentifierVerificationRecordId: string
 ) =>
-  api.post('api/profile/primary-email', {
+  api.post('api/account/primary-email', {
     json: { email, newIdentifierVerificationRecordId },
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
 
 export const deletePrimaryEmail = async (api: KyInstance, verificationRecordId: string) =>
-  api.delete('api/profile/primary-email', {
+  api.delete('api/account/primary-email', {
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
 
@@ -35,13 +35,13 @@ export const updatePrimaryPhone = async (
   verificationRecordId: string,
   newIdentifierVerificationRecordId: string
 ) =>
-  api.post('api/profile/primary-phone', {
+  api.post('api/account/primary-phone', {
     json: { phone, newIdentifierVerificationRecordId },
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
 
 export const deletePrimaryPhone = async (api: KyInstance, verificationRecordId: string) =>
-  api.delete('api/profile/primary-phone', {
+  api.delete('api/account/primary-phone', {
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
 
@@ -50,7 +50,7 @@ export const updateIdentities = async (
   verificationRecordId: string,
   newIdentifierVerificationRecordId: string
 ) =>
-  api.post('api/profile/identities', {
+  api.post('api/account/identities', {
     json: { newIdentifierVerificationRecordId },
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
@@ -60,15 +60,15 @@ export const deleteIdentity = async (
   target: string,
   verificationRecordId: string
 ) =>
-  api.delete(`api/profile/identities/${target}`, {
+  api.delete(`api/account/identities/${target}`, {
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
 
 export const updateUser = async (api: KyInstance, body: Record<string, unknown>) =>
-  api.patch('api/profile', { json: body }).json<Partial<UserProfileResponse>>();
+  api.patch('api/account', { json: body }).json<Partial<UserProfileResponse>>();
 
 export const updateOtherProfile = async (api: KyInstance, body: Record<string, unknown>) =>
-  api.patch('api/profile/profile', { json: body }).json<Partial<UserProfileResponse['profile']>>();
+  api.patch('api/account/profile', { json: body }).json<Partial<UserProfileResponse['profile']>>();
 
 export const getUserInfo = async (api: KyInstance) =>
-  api.get('api/profile').json<Partial<UserProfileResponse>>();
+  api.get('api/account').json<Partial<UserProfileResponse>>();

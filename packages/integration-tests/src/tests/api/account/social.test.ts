@@ -29,7 +29,7 @@ import { devFeatureTest } from '#src/utils.js';
 
 const { describe, it } = devFeatureTest;
 
-describe('profile (social)', () => {
+describe('account (social)', () => {
   const state = 'fake_state';
   const redirectUri = 'http://localhost:3000/redirect';
   const authorizationCode = 'fake_code';
@@ -50,7 +50,7 @@ describe('profile (social)', () => {
     await clearConnectorsByTypes([ConnectorType.Social, ConnectorType.Email]);
   });
 
-  describe('POST /profile/identities', () => {
+  describe('POST /account/identities', () => {
     it('should fail if scope is missing', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);
@@ -169,7 +169,7 @@ describe('profile (social)', () => {
     });
   });
 
-  describe('DELETE /profile/identities/:target', () => {
+  describe('DELETE /account/identities/:target', () => {
     it('should fail if scope is missing', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);

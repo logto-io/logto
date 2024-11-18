@@ -16,12 +16,13 @@ import assertThat from '../../utils/assert-that.js';
 import { PasswordValidator } from '../experience/classes/libraries/password-validator.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
+import { accountApiPrefix } from './constants.js';
 import emailAndPhoneRoutes from './email-and-phone.js';
 import identitiesRoutes from './identities.js';
 import koaAccountCenter from './middlewares/koa-account-center.js';
 import { getAccountCenterFilteredProfile, getScopedProfile } from './utils/get-scoped-profile.js';
 
-export default function profileRoutes<T extends UserRouter>(...args: RouterInitArgs<T>) {
+export default function accountRoutes<T extends UserRouter>(...args: RouterInitArgs<T>) {
   const [router, { queries, libraries }] = args;
   const {
     users: { updateUserById, findUserById },
@@ -39,7 +40,7 @@ export default function profileRoutes<T extends UserRouter>(...args: RouterInitA
   }
 
   router.get(
-    '/profile',
+    `${accountApiPrefix}`,
     koaGuard({
       response: userProfileResponseGuard.partial(),
       status: [200],
@@ -53,7 +54,7 @@ export default function profileRoutes<T extends UserRouter>(...args: RouterInitA
   );
 
   router.patch(
-    '/profile',
+    `${accountApiPrefix}`,
     koaGuard({
       body: z.object({
         name: z.string().nullable().optional(),
@@ -111,7 +112,7 @@ export default function profileRoutes<T extends UserRouter>(...args: RouterInitA
   );
 
   router.patch(
-    '/profile/profile',
+    `${accountApiPrefix}/profile`,
     koaGuard({
       body: userProfileGuard,
       response: userProfileGuard,
@@ -146,7 +147,7 @@ export default function profileRoutes<T extends UserRouter>(...args: RouterInitA
   );
 
   router.post(
-    '/profile/password',
+    `${accountApiPrefix}/password`,
     koaGuard({
       body: z.object({ password: z.string().min(1) }),
       status: [204, 400, 401, 422],

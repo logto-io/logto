@@ -7,7 +7,7 @@ import type { WithI18nContext } from '#src/middleware/koa-i18next.js';
 import { type WithHookContext } from '#src/middleware/koa-management-api-hooks.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
-import { type WithAccountCenterContext } from './profile/middlewares/koa-account-center.js';
+import { type WithAccountCenterContext } from './account/middlewares/koa-account-center.js';
 
 export type AnonymousRouter = Router<unknown, WithLogContext & WithI18nContext>;
 

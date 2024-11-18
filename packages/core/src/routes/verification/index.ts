@@ -24,6 +24,8 @@ import { PasswordVerification } from '../experience/classes/verifications/passwo
 import { SocialVerification } from '../experience/classes/verifications/social-verification.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
+export const verificationApiPrefix = '/verifications';
+
 export default function verificationRoutes<T extends UserRouter>(
   ...[router, tenantContext]: RouterInitArgs<T>
 ) {
@@ -34,7 +36,7 @@ export default function verificationRoutes<T extends UserRouter>(
   }
 
   router.post(
-    '/verifications/password',
+    `${verificationApiPrefix}/password`,
     koaGuard({
       body: z.object({ password: z.string().min(1) }),
       response: z.object({ verificationRecordId: z.string(), expiresAt: z.string() }),
@@ -76,7 +78,7 @@ export default function verificationRoutes<T extends UserRouter>(
   );
 
   router.post(
-    '/verifications/verification-code',
+    `${verificationApiPrefix}/verification-code`,
     koaGuard({
       body: z.object({
         identifier: verificationCodeIdentifierGuard,
@@ -119,7 +121,7 @@ export default function verificationRoutes<T extends UserRouter>(
   );
 
   router.post(
-    '/verifications/verification-code/verify',
+    `${verificationApiPrefix}/verification-code/verify`,
     koaGuard({
       body: z.object({
         identifier: verificationCodeIdentifierGuard,
@@ -164,7 +166,7 @@ export default function verificationRoutes<T extends UserRouter>(
   );
 
   router.post(
-    '/verifications/social',
+    `${verificationApiPrefix}/social`,
     koaGuard({
       body: socialAuthorizationUrlPayloadGuard.extend({
         connectorId: z.string(),
@@ -202,7 +204,7 @@ export default function verificationRoutes<T extends UserRouter>(
   );
 
   router.post(
-    '/verifications/social/verify',
+    `${verificationApiPrefix}/social/verify`,
     koaGuard({
       body: socialVerificationCallbackPayloadGuard
         .pick({
