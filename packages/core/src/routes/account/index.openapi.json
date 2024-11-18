@@ -3,9 +3,6 @@
     {
       "name": "Account",
       "description": "Account routes provide functionality for managing user profile for the end user to interact directly with access tokens."
-    },
-    {
-      "name": "Dev feature"
     }
   ],
   "paths": {

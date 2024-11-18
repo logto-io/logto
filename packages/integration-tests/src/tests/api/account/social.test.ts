@@ -25,9 +25,6 @@ import {
   signInAndGetUserApi,
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest } from '#src/utils.js';
-
-const { describe, it } = devFeatureTest;
 
 describe('account (social)', () => {
   const state = 'fake_state';

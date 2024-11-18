@@ -21,9 +21,7 @@ import {
   signInAndGetUserApi,
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest, generateEmail, generatePhone } from '#src/utils.js';
-
-const { describe, it } = devFeatureTest;
+import { generateEmail, generatePhone } from '#src/utils.js';
 
 const expectedError = {
   code: 'account_center.filed_not_editable',

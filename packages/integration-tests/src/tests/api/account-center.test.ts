@@ -5,9 +5,6 @@ import {
   getAccountCenter,
   updateAccountCenter,
 } from '#src/api/account-center.js';
-import { devFeatureTest } from '#src/utils.js';
-
-const { describe, it } = devFeatureTest;
 
 describe('account center', () => {
   beforeAll(async () => {
