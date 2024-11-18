@@ -4,19 +4,7 @@ import { type InvoicesResponse } from '@/cloud/types/router';
 
 export enum ReservedPlanName {
   Free = 'Free',
-  /** @deprecated */
-  Hobby = 'Hobby',
   Pro = 'Pro',
-  Enterprise = 'Enterprise',
-}
-
-// TODO: use `ReservedPlanId` in the future.
-export enum ReservedSkuId {
-  Free = 'free',
-  Pro = 'pro',
-  Development = 'dev',
-  Admin = 'admin',
-  Enterprise = 'enterprise',
 }
 
 export const localCheckoutSessionGuard = z.object({

@@ -21,7 +21,7 @@ import styles from './index.module.scss';
 
 function MauExceededModal() {
   const {
-    currentSubscription: { planId, isEnterprisePlan },
+    currentSubscription: { planId },
   } = useContext(SubscriptionDataContext);
   const { currentTenant } = useContext(TenantsContext);
 
@@ -37,11 +37,12 @@ function MauExceededModal() {
     return null;
   }
 
-  const isMauExceeded =
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain, prettier/prettier
-    cond(currentTenant && currentTenant.quota.mauLimit !== null &&
-        currentTenant.usage.activeUsers >= currentTenant.quota.mauLimit
-    );
+  const isMauExceeded = cond(
+    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
+    currentTenant &&
+      currentTenant.quota.mauLimit !== null &&
+      currentTenant.usage.activeUsers >= currentTenant.quota.mauLimit
+  );
 
   if (!isMauExceeded) {
     return null;
@@ -77,7 +78,7 @@ function MauExceededModal() {
         <InlineNotification severity="error">
           <Trans
             components={{
-              planName: <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />,
+              planName: <SkuName skuId={planId} />,
             }}
           >
             {t('upsell.mau_exceeded_modal.notification')}

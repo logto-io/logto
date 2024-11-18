@@ -124,7 +124,7 @@ function SwitchPlanActionBar({ onSubscriptionUpdated, currentSkuId, logtoSkus }:
 
         // Let user contact us when they are currently on Enterprise plan. Do not allow users to self-serve downgrade.
         return isEnterprisePlan ? (
-          <div>
+          <div key={skuId}>
             <a href={contactEmailLink} className={styles.buttonLink} rel="noopener">
               <Button title="general.contact_us_action" />
             </a>

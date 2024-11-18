@@ -39,7 +39,7 @@ function Footer({ roleType, scopes, isCreating, onClickCreate }: Props) {
         <Trans
           components={{
             a: <ContactUsPhraseLink />,
-            planName: <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />,
+            planName: <SkuName skuId={planId} />,
           }}
         >
           {/* User roles limit paywall */}

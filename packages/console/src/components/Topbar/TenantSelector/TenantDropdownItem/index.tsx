@@ -41,9 +41,7 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
             <span>{regionName}</span>
           </div>
           <span>{t(`tenants.full_env_tag.${tag}`)}</span>
-          {tag !== TenantTag.Development && (
-            <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />
-          )}
+          {tag !== TenantTag.Development && <SkuName skuId={planId} />}
         </div>
       </div>
       <Tick className={classNames(styles.checkIcon, isSelected && styles.visible)} />

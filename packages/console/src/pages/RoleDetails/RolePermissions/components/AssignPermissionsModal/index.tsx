@@ -81,7 +81,7 @@ function AssignPermissionsModal({ roleId, roleType, onClose }: Props) {
               <Trans
                 components={{
                   a: <ContactUsPhraseLink />,
-                  planName: <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />,
+                  planName: <SkuName skuId={planId} />,
                 }}
               >
                 {t('upsell.paywall.scopes_per_role', {

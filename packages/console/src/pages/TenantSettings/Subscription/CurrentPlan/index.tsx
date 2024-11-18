@@ -1,4 +1,3 @@
-import { ReservedPlanId } from '@logto/schemas';
 import { cond } from '@silverhand/essentials';
 import { useContext, useMemo } from 'react';
 
@@ -24,7 +23,7 @@ type Props = {
 
 function CurrentPlan({ periodicUsage: rawPeriodicUsage }: Props) {
   const {
-    currentSku: { id, unitPrice },
+    currentSku: { unitPrice },
     currentSubscription: { upcomingInvoice, isEnterprisePlan, planId },
   } = useContext(SubscriptionDataContext);
   const { currentTenant } = useContext(TenantsContext);
@@ -40,8 +39,6 @@ function CurrentPlan({ periodicUsage: rawPeriodicUsage }: Props) {
       ),
     [currentTenant, rawPeriodicUsage]
   );
-
-  const currentSkuId = isEnterprisePlan ? ReservedPlanId.Enterprise : id;
 
   /**
    * After the new pricing model goes live, `upcomingInvoice` will always exist. `upcomingInvoice` is updated more frequently than `currentSubscription.upcomingInvoice`.
@@ -60,10 +57,10 @@ function CurrentPlan({ periodicUsage: rawPeriodicUsage }: Props) {
     <FormCard title="subscription.current_plan" description="subscription.current_plan_description">
       <div className={styles.planInfo}>
         <div className={styles.name}>
-          <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />
+          <SkuName skuId={planId} />
         </div>
         <div className={styles.description}>
-          <PlanDescription skuId={currentSkuId} planId={planId} />
+          <PlanDescription skuId={planId} isEnterprisePlan={isEnterprisePlan} />
         </div>
       </div>
       <FormField title="subscription.plan_usage">
