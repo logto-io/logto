@@ -13,6 +13,8 @@ import koaAuth from '../middleware/koa-auth/index.js';
 import koaOidcAuth from '../middleware/koa-auth/koa-oidc-auth.js';
 import koaCors from '../middleware/koa-cors.js';
 
+import { accountApiPrefix } from './account/constants.js';
+import accountRoutes from './account/index.js';
 import accountCentersRoutes from './account-center/index.js';
 import adminUserRoutes from './admin-user/index.js';
 import applicationOrganizationRoutes from './applications/application-organization.js';
@@ -34,7 +36,6 @@ import interactionRoutes from './interaction/index.js';
 import logRoutes from './log.js';
 import logtoConfigRoutes from './logto-config/index.js';
 import organizationRoutes from './organization/index.js';
-import profileRoutes from './profile/index.js';
 import resourceRoutes from './resource.js';
 import resourceScopeRoutes from './resource.scope.js';
 import roleRoutes from './role.js';
@@ -47,7 +48,7 @@ import swaggerRoutes from './swagger/index.js';
 import systemRoutes from './system.js';
 import type { AnonymousRouter, ManagementApiRouter, UserRouter } from './types.js';
 import userAssetsRoutes from './user-assets.js';
-import verificationRoutes from './verification/index.js';
+import verificationRoutes, { verificationApiPrefix } from './verification/index.js';
 import verificationCodeRoutes from './verification-code.js';
 import wellKnownRoutes from './well-known/index.js';
 import wellKnownOpenApiRoutes from './well-known/well-known.openapi.js';
@@ -107,7 +108,7 @@ const createRouters = (tenant: TenantContext) => {
   userRouter.use(koaOidcAuth(tenant));
   // TODO(LOG-10147): Rename to koaApiHooks, this middleware is used for both management API and user API
   userRouter.use(koaManagementApiHooks(tenant.libraries.hooks));
-  profileRoutes(userRouter, tenant);
+  accountRoutes(userRouter, tenant);
   verificationRoutes(userRouter, tenant);
 
   wellKnownRoutes(anonymousRouter, tenant);
@@ -136,7 +137,7 @@ const createRouters = (tenant: TenantContext) => {
 export default function initApis(tenant: TenantContext): Koa {
   const apisApp = new Koa();
   const { adminUrlSet, cloudUrlSet } = EnvSet.values;
-  apisApp.use(koaCors([adminUrlSet, cloudUrlSet], ['/profile', '/verifications']));
+  apisApp.use(koaCors([adminUrlSet, cloudUrlSet], [accountApiPrefix, verificationApiPrefix]));
   apisApp.use(koaBodyEtag());
 
   for (const router of createRouters(tenant)) {

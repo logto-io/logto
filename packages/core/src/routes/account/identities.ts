@@ -9,6 +9,8 @@ import { buildVerificationRecordByIdAndType } from '../../libraries/verification
 import assertThat from '../../utils/assert-that.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
+import { accountApiPrefix } from './constants.js';
+
 export default function identitiesRoutes<T extends UserRouter>(
   ...[router, { queries, libraries }]: RouterInitArgs<T>
 ) {
@@ -21,7 +23,7 @@ export default function identitiesRoutes<T extends UserRouter>(
   } = libraries;
 
   router.post(
-    '/profile/identities',
+    `${accountApiPrefix}/identities`,
     koaGuard({
       body: z.object({
         newIdentifierVerificationRecordId: z.string(),
@@ -81,7 +83,7 @@ export default function identitiesRoutes<T extends UserRouter>(
   );
 
   router.delete(
-    '/profile/identities/:target',
+    `${accountApiPrefix}/identities/:target`,
     koaGuard({
       params: z.object({ target: z.string() }),
       status: [204, 400, 401, 404],

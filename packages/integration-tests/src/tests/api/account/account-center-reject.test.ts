@@ -30,7 +30,7 @@ const expectedError = {
   status: 400,
 };
 
-describe('profile, account center fields disabled', () => {
+describe('account center fields disabled', () => {
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
     await updateAccountCenter({
@@ -42,7 +42,7 @@ describe('profile, account center fields disabled', () => {
     });
   });
 
-  it('should return only name in GET /profile', async () => {
+  it('should return only name in GET /account', async () => {
     const { user, username, password } = await createDefaultTenantUserWithPassword();
     const api = await signInAndGetUserApi(username, password, {
       scopes: [UserScope.Email],

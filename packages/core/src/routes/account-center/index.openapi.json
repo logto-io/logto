@@ -11,6 +11,7 @@
   "paths": {
     "/api/account-center": {
       "get": {
+        "operationId": "GetAccountCenterSettings",
         "summary": "Get account center settings",
         "description": "Get the account center settings.",
         "responses": {
@@ -20,6 +21,7 @@
         }
       },
       "patch": {
+        "operationId": "UpdateAccountCenterSettings",
         "summary": "Update account center settings",
         "description": "Update the account center settings with the provided settings.",
         "requestBody": {

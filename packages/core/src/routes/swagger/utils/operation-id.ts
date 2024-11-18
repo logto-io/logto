@@ -124,7 +124,7 @@ const exceptionPrefixes = Object.freeze([
   '/interaction',
   '/experience',
   '/sign-in-exp/default/check-password',
-  '/profile',
+  '/account',
   '/verifications',
 ]);
 

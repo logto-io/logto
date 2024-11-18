@@ -9,6 +9,8 @@ import { buildVerificationRecordByIdAndType } from '../../libraries/verification
 import assertThat from '../../utils/assert-that.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
+import { accountApiPrefix } from './constants.js';
+
 export default function emailAndPhoneRoutes<T extends UserRouter>(...args: RouterInitArgs<T>) {
   const [router, { queries, libraries }] = args;
   const {
@@ -21,7 +23,7 @@ export default function emailAndPhoneRoutes<T extends UserRouter>(...args: Route
   } = libraries;
 
   router.post(
-    '/profile/primary-email',
+    `${accountApiPrefix}/primary-email`,
     koaGuard({
       body: z.object({
         email: z.string().regex(emailRegEx),
@@ -67,7 +69,7 @@ export default function emailAndPhoneRoutes<T extends UserRouter>(...args: Route
   );
 
   router.delete(
-    '/profile/primary-email',
+    `${accountApiPrefix}/primary-email`,
     koaGuard({
       status: [204, 400, 401],
     }),
@@ -106,7 +108,7 @@ export default function emailAndPhoneRoutes<T extends UserRouter>(...args: Route
   );
 
   router.post(
-    '/profile/primary-phone',
+    `${accountApiPrefix}/primary-phone`,
     koaGuard({
       body: z.object({
         phone: z.string().regex(phoneRegEx),
@@ -152,7 +154,7 @@ export default function emailAndPhoneRoutes<T extends UserRouter>(...args: Route
   );
 
   router.delete(
-    '/profile/primary-phone',
+    `${accountApiPrefix}/primary-phone`,
     koaGuard({
       status: [204, 400, 401],
     }),
