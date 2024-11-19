@@ -1,0 +1,95 @@
+{
+  "tags": [
+    {
+      "name": "SAML applications",
+      "description": "SAML applications enable Single Sign-On (SSO) integration between Logto (acting as Identity Provider/IdP) and third-party Service Providers (SP) using the SAML 2.0 protocol. These endpoints allow you to manage SAML application configurations."
+    },
+    {
+      "name": "Dev feature"
+    }
+  ],
+  "paths": {
+    "/api/saml-applications": {
+      "post": {
+        "summary": "Create SAML application",
+        "description": "Create a new SAML application with the given configuration. This will create both the application entity and its SAML-specific configurations.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the SAML application."
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "The description of the SAML application."
+                  },
+                  "customData": {
+                    "type": "object",
+                    "description": "Custom data for the application."
+                  },
+                  "config": {
+                    "type": "object",
+                    "properties": {
+                      "attributeMapping": {
+                        "type": "object",
+                        "description": "Mapping of SAML attributes to Logto user properties."
+                      },
+                      "entityId": {
+                        "type": "string",
+                        "description": "Service provider's entityId."
+                      },
+                      "acsUrl": {
+                        "type": "object",
+                        "description": "Service provider assertion consumer service URL configuration."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The SAML application was created successfully."
+          },
+          "400": {
+            "description": "Invalid request body or SAML configuration."
+          }
+        }
+      }
+    },
+    "/api/saml-applications/{id}": {
+      "delete": {
+        "summary": "Delete SAML application",
+        "description": "Delete a SAML application by ID. This will remove both the application entity and its SAML-specific configurations.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the SAML application to delete."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The SAML application was deleted successfully."
+          },
+          "400": {
+            "description": "Invalid application ID, the application is not a SAML application."
+          },
+          "404": {
+            "description": "The SAML application was not found."
+          }
+        }
+      }
+    }
+  }
+}

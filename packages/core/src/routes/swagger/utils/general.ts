@@ -35,6 +35,7 @@ const tagMap = new Map([
   ['sso-connectors', 'SSO connectors'],
   ['sso-connector-providers', 'SSO connector providers'],
   ['.well-known', 'Well-known'],
+  ['saml-applications', 'SAML applications'],
 ]);
 
 /**
@@ -67,23 +68,41 @@ export const findSupplementFiles = async (
   option?: FindSupplementFilesOptions
 ) => {
   const result: string[] = [];
+  const files = await fs.readdir(directory);
 
-  for (const file of await fs.readdir(directory)) {
-    const stats = await fs.stat(path.join(directory, file));
-
-    if (
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-      option?.excludeDirectories?.includes(file) ||
-      (option?.includeDirectories && !option.includeDirectories.includes(file))
-    ) {
-      continue;
-    }
+  for (const file of files) {
+    const fullPath = path.join(directory, file);
+    const stats = await fs.stat(fullPath);
 
     if (stats.isDirectory()) {
-      result.push(...(await findSupplementFiles(path.join(directory, file))));
+      // Skip if the current directory is excluded
+      if (option?.excludeDirectories?.includes(file)) {
+        continue;
+      }
+
+      // Recursively search subdirectories
+      const subFiles = await findSupplementFiles(fullPath, option);
+      result.push(...subFiles);
     } else if (file.endsWith('.openapi.json')) {
-      result.push(path.join(directory, file));
+      result.push(fullPath);
     }
+  }
+
+  // If `includeDirectories` is specified, only keep files that contain the specified subdirectories
+  if (option?.includeDirectories?.length && option.includeDirectories.length > 0) {
+    return result.filter((filePath) =>
+      // The fallback to empty array will never happen here, as we've already checked the length of option.`includeDirectories` before entering this branch
+      (option.includeDirectories ?? []).some((directory) => filePath.includes(`/${directory}/`))
+    );
+  }
+
+  // If `excludeDirectories` is specified, exclude files that contain the specified subdirectories
+  if (option?.excludeDirectories?.length && option.excludeDirectories.length > 0) {
+    return result.filter(
+      (filePath) =>
+        // The fallback to empty array will never happen here, as we've already checked the length of option.`excludeDirectories` before entering this branch
+        !(option.excludeDirectories ?? []).some((directory) => filePath.includes(`/${directory}/`))
+    );
   }
 
   return result;

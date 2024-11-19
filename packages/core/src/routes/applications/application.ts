@@ -152,7 +152,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       const { oidcClientMetadata, protectedAppMetadata, ...rest } = ctx.guard.body;
 
       if (rest.type === ApplicationType.SAML) {
-        throw new RequestError('application.use_saml_app_api');
+        throw new RequestError('application.saml.use_saml_app_api');
       }
 
       await Promise.all([
@@ -268,7 +268,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
 
       const pendingUpdateApplication = await queries.applications.findApplicationById(id);
       if (pendingUpdateApplication.type === ApplicationType.SAML) {
-        throw new RequestError('application.use_saml_app_api');
+        throw new RequestError('application.saml.use_saml_app_api');
       }
 
       // @deprecated
@@ -348,7 +348,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       const { type, protectedAppMetadata } = await queries.applications.findApplicationById(id);
 
       if (type === ApplicationType.SAML) {
-        throw new RequestError('application.use_saml_app_api');
+        throw new RequestError('application.saml.use_saml_app_api');
       }
 
       if (type === ApplicationType.Protected && protectedAppMetadata) {

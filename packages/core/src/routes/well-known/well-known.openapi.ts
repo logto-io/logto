@@ -30,7 +30,7 @@ export default function openapiRoutes<T extends AnonymousRouter, R extends Unkno
     const { pathMap, tags } = groupRoutesByPath(managementApiRoutes);
 
     // Find supplemental documents
-    const supplementDocuments = await getSupplementDocuments('routes', {
+    const supplementDocuments = await getSupplementDocuments('build', {
       excludeDirectories: ['experience', 'interaction', 'account', 'verification'],
     });
     const baseDocument = buildManagementApiBaseDocument(pathMap, tags, ctx.request.origin);

@@ -47,11 +47,17 @@ const managementApiIdentifiableEntityNames = Object.freeze([
   'organization-role',
   'organization-scope',
   'organization-invitation',
+  'saml-application',
 ]);
 
 /** Additional tags that cannot be inferred from the path. */
 const additionalTags = Object.freeze(
-  condArray<string>('Organization applications', 'Custom UI assets', 'Organization users')
+  condArray<string>(
+    'Organization applications',
+    'Custom UI assets',
+    'Organization users',
+    EnvSet.values.isDevFeaturesEnabled && 'SAML applications'
+  )
 );
 
 export const buildManagementApiBaseDocument = (
@@ -207,7 +213,7 @@ export const buildUserApiBaseDocument = (
 });
 
 export const getSupplementDocuments = async (
-  directory = 'routes',
+  directory = 'build',
   option?: FindSupplementFilesOptions
 ) => {
   // Find supplemental documents
