@@ -98,9 +98,7 @@ const createRouters = (tenant: TenantContext) => {
   ssoConnectors(managementRouter, tenant);
   systemRoutes(managementRouter, tenant);
   subjectTokenRoutes(managementRouter, tenant);
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    accountCentersRoutes(managementRouter, tenant);
-  }
+  accountCentersRoutes(managementRouter, tenant);
 
   const anonymousRouter: AnonymousRouter = new Router();
 

@@ -14,12 +14,10 @@ import {
   signInAndGetUserApi,
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest, generatePassword, generateUsername } from '#src/utils.js';
+import { generatePassword, generateUsername } from '#src/utils.js';
 
 import WebhookMockServer from '../hook/WebhookMockServer.js';
 import { assertHookLogResult } from '../hook/utils.js';
-
-const { describe, it } = devFeatureTest;
 
 describe('account', () => {
   const webHookMockServer = new WebhookMockServer(9999);

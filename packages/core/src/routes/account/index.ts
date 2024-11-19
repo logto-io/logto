@@ -9,7 +9,6 @@ import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 
-import { EnvSet } from '../../env-set/index.js';
 import RequestError from '../../errors/RequestError/index.js';
 import { encryptUserPassword } from '../../libraries/user.utils.js';
 import assertThat from '../../utils/assert-that.js';
@@ -34,10 +33,6 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
   } = libraries;
 
   router.use(koaAccountCenter(queries));
-
-  if (!EnvSet.values.isDevFeaturesEnabled) {
-    return;
-  }
 
   router.get(
     `${accountApiPrefix}`,

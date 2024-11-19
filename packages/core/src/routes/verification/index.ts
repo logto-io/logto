@@ -12,7 +12,6 @@ import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 
-import { EnvSet } from '../../env-set/index.js';
 import {
   buildVerificationRecordByIdAndType,
   insertVerificationRecord,
@@ -30,10 +29,6 @@ export default function verificationRoutes<T extends UserRouter>(
   ...[router, tenantContext]: RouterInitArgs<T>
 ) {
   const { queries, libraries, sentinel } = tenantContext;
-
-  if (!EnvSet.values.isDevFeaturesEnabled) {
-    return;
-  }
 
   router.post(
     `${verificationApiPrefix}/password`,
