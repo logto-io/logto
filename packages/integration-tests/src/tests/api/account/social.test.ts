@@ -7,7 +7,7 @@ import {
   mockSocialConnectorTarget,
 } from '#src/__mocks__/connectors-mock.js';
 import { enableAllAccountCenterFields } from '#src/api/account-center.js';
-import { deleteIdentity, getUserInfo, updateIdentities } from '#src/api/profile.js';
+import { deleteIdentity, getUserInfo, updateIdentities } from '#src/api/my-account.js';
 import {
   createSocialVerificationRecord,
   createVerificationRecordByPassword,
@@ -26,7 +26,7 @@ import {
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 
-describe('account (social)', () => {
+describe('my-account (social)', () => {
   const state = 'fake_state';
   const redirectUri = 'http://localhost:3000/redirect';
   const authorizationCode = 'fake_code';
@@ -47,7 +47,7 @@ describe('account (social)', () => {
     await clearConnectorsByTypes([ConnectorType.Social, ConnectorType.Email]);
   });
 
-  describe('POST /account/identities', () => {
+  describe('POST /my-account/identities', () => {
     it('should fail if scope is missing', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);
@@ -166,7 +166,7 @@ describe('account (social)', () => {
     });
   });
 
-  describe('DELETE /account/identities/:target', () => {
+  describe('DELETE /my-account/identities/:target', () => {
     it('should fail if scope is missing', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);

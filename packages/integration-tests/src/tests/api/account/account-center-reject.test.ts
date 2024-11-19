@@ -12,7 +12,7 @@ import {
   updatePrimaryEmail,
   updatePrimaryPhone,
   updateUser,
-} from '#src/api/profile.js';
+} from '#src/api/my-account.js';
 import { createVerificationRecordByPassword } from '#src/api/verification-record.js';
 import { expectRejects } from '#src/helpers/index.js';
 import {
@@ -40,7 +40,7 @@ describe('account center fields disabled', () => {
     });
   });
 
-  it('should return only name in GET /account', async () => {
+  it('should return only name in GET /my-account', async () => {
     const { user, username, password } = await createDefaultTenantUserWithPassword();
     const api = await signInAndGetUserApi(username, password, {
       scopes: [UserScope.Email],
