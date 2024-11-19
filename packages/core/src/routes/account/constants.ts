@@ -1,1 +1,1 @@
-export const accountApiPrefix = '/account';
+export const accountApiPrefix = '/my-account';

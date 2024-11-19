@@ -1,12 +1,12 @@
 {
   "tags": [
     {
-      "name": "Account",
+      "name": "My account",
       "description": "Account routes provide functionality for managing user profile for the end user to interact directly with access tokens."
     }
   ],
   "paths": {
-    "/api/account": {
+    "/api/my-account": {
       "get": {
         "operationId": "GetProfile",
         "summary": "Get profile",
@@ -53,7 +53,7 @@
         }
       }
     },
-    "/api/account/profile": {
+    "/api/my-account/profile": {
       "patch": {
         "operationId": "UpdateOtherProfile",
         "summary": "Update other profile",
@@ -111,7 +111,7 @@
         }
       }
     },
-    "/api/account/password": {
+    "/api/my-account/password": {
       "post": {
         "operationId": "UpdatePassword",
         "summary": "Update password",
@@ -139,7 +139,7 @@
         }
       }
     },
-    "/api/account/primary-email": {
+    "/api/my-account/primary-email": {
       "post": {
         "operationId": "UpdatePrimaryEmail",
         "summary": "Update primary email",
@@ -183,7 +183,7 @@
         }
       }
     },
-    "/api/account/primary-phone": {
+    "/api/my-account/primary-phone": {
       "post": {
         "operationId": "UpdatePrimaryPhone",
         "summary": "Update primary phone",
@@ -227,7 +227,7 @@
         }
       }
     },
-    "/api/account/identities": {
+    "/api/my-account/identities": {
       "post": {
         "operationId": "AddUserIdentities",
         "summary": "Add a user identity",
@@ -252,7 +252,7 @@
         }
       }
     },
-    "/api/account/identities/{target}": {
+    "/api/my-account/identities/{target}": {
       "delete": {
         "operationId": "DeleteIdentity",
         "summary": "Delete a user identity",

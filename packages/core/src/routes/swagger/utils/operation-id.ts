@@ -4,6 +4,9 @@ import pluralize from 'pluralize';
 
 import { EnvSet } from '#src/env-set/index.js';
 
+import { accountApiPrefix } from '../../account/constants.js';
+import { verificationApiPrefix } from '../../verification/index.js';
+
 import { shouldThrow } from './general.js';
 
 const chunk = <T>(array: T[], chunkSize: number): T[][] =>
@@ -124,8 +127,8 @@ const exceptionPrefixes = Object.freeze([
   '/interaction',
   '/experience',
   '/sign-in-exp/default/check-password',
-  '/account',
-  '/verifications',
+  accountApiPrefix,
+  verificationApiPrefix,
 ]);
 
 const isPathParameter = (segment?: string) =>

@@ -2,7 +2,12 @@ import { UserScope } from '@logto/core-kit';
 import { hookEvents, SignInIdentifier } from '@logto/schemas';
 
 import { enableAllAccountCenterFields } from '#src/api/account-center.js';
-import { getUserInfo, updateOtherProfile, updatePassword, updateUser } from '#src/api/profile.js';
+import {
+  getUserInfo,
+  updateOtherProfile,
+  updatePassword,
+  updateUser,
+} from '#src/api/my-account.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { createVerificationRecordByPassword } from '#src/api/verification-record.js';
 import { WebHookApiTest } from '#src/helpers/hook.js';
@@ -46,11 +51,11 @@ describe('account', () => {
     await webHookApi.cleanUp();
   });
 
-  describe('GET /account', () => {
+  describe('GET /my-account', () => {
     it('should allow all origins', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);
-      const response = await api.get('api/account');
+      const response = await api.get('api/my-account');
       expect(response.status).toBe(200);
       expect(response.headers.get('Access-Control-Allow-Origin')).toBe('*');
 
@@ -119,7 +124,7 @@ describe('account', () => {
     });
   });
 
-  describe('PATCH /account', () => {
+  describe('PATCH /my-account', () => {
     it('should be able to update name', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);
@@ -209,7 +214,7 @@ describe('account', () => {
     });
   });
 
-  describe('PATCH /account/profile', () => {
+  describe('PATCH /my-account/profile', () => {
     it('should be able to update other profile', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);
@@ -256,7 +261,7 @@ describe('account', () => {
     });
   });
 
-  describe('POST /account/password', () => {
+  describe('POST /my-account/password', () => {
     it('should fail if verification record is invalid', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);
