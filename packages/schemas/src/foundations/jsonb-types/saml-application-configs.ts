@@ -13,16 +13,16 @@ export enum BindingType {
 }
 
 export type SamlSpMetadata = {
-  entityID: string;
-  acsURL: {
+  entityId: string;
+  acsUrl: {
     binding: BindingType;
     url: string;
   };
 };
 
 export const samlSpMetadataGuard = z.object({
-  entityID: z.string(),
-  acsURL: z.object({
+  entityId: z.string(),
+  acsUrl: z.object({
     binding: z.nativeEnum(BindingType),
     url: z.string(),
   }),
