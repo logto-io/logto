@@ -13,7 +13,8 @@ const alteration: AlterationScript = {
         tenant_id varchar(21) not null
           references tenants (id) on update cascade on delete cascade,
         attribute_mapping jsonb /* @use SamlAttributeMapping */ not null default '{}'::jsonb,
-        sp_metadata jsonb /* @use SamlSpMetadata */ not null,
+        entity_id varchar(128),
+        acs_url jsonb /* @use SamlAcsUrl */,
         primary key (tenant_id, application_id),
         constraint application_type
           check (check_application_type(application_id, 'SAML'))
