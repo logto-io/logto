@@ -4,6 +4,13 @@ import type { AlterationScript } from '../lib/types/alteration.js';
 
 const alteration: AlterationScript = {
   up: async (pool) => {
+    // Delete the default account center if it exists
+    const { rowCount } = await pool.query(sql`
+      delete from account_centers where id = 'default';
+    `);
+
+    console.log(`Deleted ${rowCount} default account center`);
+
     // Process in chunks of 1000 tenants
     const batchSize = 1000;
     // eslint-disable-next-line @silverhand/fp/no-let
@@ -26,7 +33,7 @@ const alteration: AlterationScript = {
       // eslint-disable-next-line no-await-in-loop
       await pool.query(sql`
         insert into account_centers (tenant_id, id)
-        values ${sql.join(values, sql`, `)};
+        values ${sql.join(values, sql`, `)}
       `);
 
       // eslint-disable-next-line @silverhand/fp/no-mutation
