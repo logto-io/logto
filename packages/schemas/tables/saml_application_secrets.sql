@@ -6,8 +6,8 @@ create table saml_application_secrets (
     references tenants (id) on update cascade on delete cascade,
   application_id varchar(21) not null
     references applications (id) on update cascade on delete cascade,
-  private_key varchar not null,
-  certificate varchar not null,
+  private_key text not null,
+  certificate text not null,
   created_at timestamptz not null default now(),
   expires_at timestamptz not null,
   active boolean not null,
