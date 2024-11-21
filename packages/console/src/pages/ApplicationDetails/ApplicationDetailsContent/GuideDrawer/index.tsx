@@ -27,7 +27,7 @@ function GuideDrawer({ app, secrets, onClose }: Props) {
   const [selectedGuide, setSelectedGuide] = useState<SelectedGuide>();
 
   const appType = useMemo(
-    // SAML application is actually a Traditional application, the same as OIDC applications.
+    // TODO: @darcy Revisit this section during the implementation of the SAML app guide, note that SAML is currently treated as a Traditional app to prevent TypeScript errors (this is actually feasible since the API for creating SAML apps has not yet been enabled). However, SAML apps cannot modify OIDC config, so the final guide may differ.
     () => (app.type === ApplicationType.SAML ? ApplicationType.Traditional : app.type),
     [app.type]
   );

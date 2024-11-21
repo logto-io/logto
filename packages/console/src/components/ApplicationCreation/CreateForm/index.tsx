@@ -28,6 +28,14 @@ import { isPaidPlan } from '@/utils/subscription';
 import Footer from './Footer';
 import styles from './index.module.scss';
 
+type AvailableApplicationTypeForCreation = Extract<
+  ApplicationType,
+  | ApplicationType.Native
+  | ApplicationType.SPA
+  | ApplicationType.Traditional
+  | ApplicationType.MachineToMachine
+>;
+
 type FormData = {
   type: ApplicationType;
   name: string;
@@ -160,22 +168,13 @@ function CreateForm({
                 onChange={onChange}
               >
                 {Object.values(ApplicationType)
-                  .filter(
-                    (
-                      value
-                    ): value is Extract<
-                      ApplicationType,
-                      | ApplicationType.Native
-                      | ApplicationType.SPA
-                      | ApplicationType.Traditional
-                      | ApplicationType.MachineToMachine
-                    > =>
-                      [
-                        ApplicationType.Native,
-                        ApplicationType.SPA,
-                        ApplicationType.Traditional,
-                        ApplicationType.MachineToMachine,
-                      ].includes(value)
+                  .filter((value): value is AvailableApplicationTypeForCreation =>
+                    [
+                      ApplicationType.Native,
+                      ApplicationType.SPA,
+                      ApplicationType.Traditional,
+                      ApplicationType.MachineToMachine,
+                    ].includes(value)
                   )
                   .map((type) => (
                     <Radio

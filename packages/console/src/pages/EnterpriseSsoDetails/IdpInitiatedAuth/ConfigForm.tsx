@@ -42,13 +42,28 @@ type FormProps = {
 
 function ConfigForm({
   ssoConnector,
-  applications,
+  applications: allApplications,
   idpInitiatedAuthConfig,
   mutateIdpInitiatedConfig,
 }: FormProps) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getTo } = useTenantPathname();
   const api = useApi();
+
+  /**
+   * See definition of `applicationsSearchUrl`, there is only non-third party SPA/Traditional applications here, and SAML applications are always third party secured by DB schema, we need to manually exclude other application types here to make TypeScript happy.
+   */
+  const applications = useMemo(
+    () =>
+      allApplications.filter(
+        (
+          application
+        ): application is Omit<Application, 'type'> & {
+          type: Exclude<ApplicationType, ApplicationType.SAML>;
+        } => application.type !== ApplicationType.SAML
+      ),
+    [allApplications]
+  );
 
   const {
     control,
@@ -177,29 +192,17 @@ function ConfigForm({
                     placeholder={t(
                       'enterprise_sso_details.idp_initiated_auth_config.empty_applications_placeholder'
                     )}
-                    options={applications
-                      .filter(
-                        (
-                          application
-                        ): application is Omit<Application, 'type'> & {
-                          type: Exclude<ApplicationType, ApplicationType.SAML>;
-                        } =>
-                          /**
-                           * See definition of `applicationsSearchUrl`, there is only non-third party SPA/Traditional applications here, and SAML applications are always third party secured by DB schema, we need to manually exclude other application types here to make TypeScript happy.
-                           */
-                          application.type !== ApplicationType.SAML
-                      )
-                      .map((application) => ({
-                        value: application.id,
-                        title: (
-                          <span>
-                            {application.name}
-                            <span className={styles.applicationDetails}>
-                              ({t(`guide.categories.${application.type}`)}, ID: {application.id})
-                            </span>
+                    options={applications.map((application) => ({
+                      value: application.id,
+                      title: (
+                        <span>
+                          {application.name}
+                          <span className={styles.applicationDetails}>
+                            ({t(`guide.categories.${application.type}`)}, ID: {application.id})
                           </span>
-                        ),
-                      }))}
+                        </span>
+                      ),
+                    }))}
                     value={value}
                     error={emptyApplicationsError ?? errors.config?.defaultApplicationId?.message}
                     onChange={onChange}
