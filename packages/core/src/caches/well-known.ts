@@ -104,13 +104,16 @@ export class WellKnownCache {
   /**
    * Set value to the inner cache store for the given type and key.
    * The given value will be stringify without format validation before storing into the cache.
+   *
+   * @param expire The expire time in seconds. If not given, use the default expire time  30 * 60 seconds.
    */
   async set<Type extends WellKnownCacheType>(
     type: Type,
     key: string,
-    value: Readonly<WellKnownMap[Type]>
+    value: Readonly<WellKnownMap[Type]>,
+    expire?: number
   ) {
-    return this.cacheStore.set(this.cacheKey(type, key), JSON.stringify(value));
+    return this.cacheStore.set(this.cacheKey(type, key), JSON.stringify(value), expire);
   }
 
   /** Delete value from the inner cache store for the given type and key. */
@@ -156,10 +159,17 @@ export class WellKnownCache {
    *
    * @param run The function to memoize.
    * @param config The object to determine how cache key will be built. See {@link CacheKeyConfig} for details.
+   * @param getExpiresIn A function to determine how long the cache will be expired. The function will be called
+   * with the resolved value from the original function. The return value should be the expire time in seconds.
    */
-  memoize<Type extends WellKnownCacheType, Args extends unknown[]>(
-    run: (...args: Args) => Promise<Readonly<WellKnownMap[Type]>>,
-    [type, cacheKey]: CacheKeyConfig<Args, Type>
+  memoize<
+    Type extends WellKnownCacheType,
+    Args extends unknown[],
+    Value extends Readonly<WellKnownMap[Type]>,
+  >(
+    run: (...args: Args) => Promise<Value>,
+    [type, cacheKey]: CacheKeyConfig<Args, Type>,
+    getExpiresIn?: (value: Value) => number
   ) {
     const promiseCache = new Map<unknown, Promise<Readonly<WellKnownMap[Type]>>>();
     // Intended. We're going to use `this` cache inside another closure.
@@ -188,7 +198,8 @@ export class WellKnownCache {
           }
 
           const value = await run.apply(this, args);
-          await trySafe(kvCache.set(type, promiseKey, value));
+
+          await trySafe(kvCache.set(type, promiseKey, value, getExpiresIn?.(value)));
 
           return value;
         } finally {
