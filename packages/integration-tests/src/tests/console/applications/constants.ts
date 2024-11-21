@@ -64,8 +64,10 @@ export type ApplicationMetadata = {
   description: string;
 };
 
-export const applicationTypesMetadata = Object.entries(ApplicationType).map(([key, value]) => ({
-  type: value,
-  name: `${key} app`,
-  description: `This is a ${key} app`,
-})) satisfies ApplicationMetadata[];
+export const applicationTypesMetadata = Object.entries(ApplicationType)
+  .filter(([_, value]) => value !== ApplicationType.SAML)
+  .map(([key, value]) => ({
+    type: value,
+    name: `${key} app`,
+    description: `This is a ${key} app`,
+  })) satisfies ApplicationMetadata[];

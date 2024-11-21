@@ -6,4 +6,6 @@ export const hasSecrets = (type: ApplicationType) =>
     ApplicationType.MachineToMachine,
     ApplicationType.Protected,
     ApplicationType.Traditional,
+    // SAML applications are used as traditional web applications.
+    ApplicationType.SAML,
   ].includes(type);

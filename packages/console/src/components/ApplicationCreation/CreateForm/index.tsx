@@ -28,6 +28,14 @@ import { isPaidPlan } from '@/utils/subscription';
 import Footer from './Footer';
 import styles from './index.module.scss';
 
+type AvailableApplicationTypeForCreation = Extract<
+  ApplicationType,
+  | ApplicationType.Native
+  | ApplicationType.SPA
+  | ApplicationType.Traditional
+  | ApplicationType.MachineToMachine
+>;
+
 type FormData = {
   type: ApplicationType;
   name: string;
@@ -160,8 +168,7 @@ function CreateForm({
                 onChange={onChange}
               >
                 {Object.values(ApplicationType)
-                  // Other application types (e.g. "Protected") should not show up in the creation modal
-                  .filter((value) =>
+                  .filter((value): value is AvailableApplicationTypeForCreation =>
                     [
                       ApplicationType.Native,
                       ApplicationType.SPA,
