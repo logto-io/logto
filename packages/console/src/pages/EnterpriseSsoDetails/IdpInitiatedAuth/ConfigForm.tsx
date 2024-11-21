@@ -179,14 +179,15 @@ function ConfigForm({
                     )}
                     options={applications
                       .filter(
-                        // See definition of `applicationsSearchUrl`, there is only non-third party SPA/Traditional applications here, and SAML applications are always third party secured by DB schema, we need to manually exclude other application types here to make TypeScript happy.
                         (
                           application
-                        ): application is Exclude<Application, 'type'> & {
-                          type: Extract<ApplicationType, 'SPA' | 'Traditional'>;
+                        ): application is Omit<Application, 'type'> & {
+                          type: Exclude<ApplicationType, ApplicationType.SAML>;
                         } =>
-                          application.type === ApplicationType.SPA ||
-                          application.type === ApplicationType.Traditional
+                          /**
+                           * See definition of `applicationsSearchUrl`, there is only non-third party SPA/Traditional applications here, and SAML applications are always third party secured by DB schema, we need to manually exclude other application types here to make TypeScript happy.
+                           */
+                          application.type !== ApplicationType.SAML
                       )
                       .map((application) => ({
                         value: application.id,

@@ -35,7 +35,7 @@ describe('application APIs', () => {
     );
   });
 
-  it('should throw error when creating a non-third party SAML application', async () => {
+  it('should throw error when creating a SAML application', async () => {
     await expectRejects(createApplication('test-create-saml-app', ApplicationType.SAML), {
       code: 'application.use_saml_app_api',
       status: 400,

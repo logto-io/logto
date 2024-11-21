@@ -346,6 +346,11 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const { id } = ctx.guard.params;
       const { type, protectedAppMetadata } = await queries.applications.findApplicationById(id);
+
+      if (type === ApplicationType.SAML) {
+        throw new RequestError('application.use_saml_app_api');
+      }
+
       if (type === ApplicationType.Protected && protectedAppMetadata) {
         assertThat(
           !protectedAppMetadata.customDomains || protectedAppMetadata.customDomains.length === 0,

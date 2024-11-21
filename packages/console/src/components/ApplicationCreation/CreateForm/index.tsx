@@ -160,14 +160,22 @@ function CreateForm({
                 onChange={onChange}
               >
                 {Object.values(ApplicationType)
-                  // Other application types (e.g. "Protected") should not show up in the creation modal
-                  .filter((value): value is Exclude<ApplicationType, ApplicationType.SAML> =>
-                    [
-                      ApplicationType.Native,
-                      ApplicationType.SPA,
-                      ApplicationType.Traditional,
-                      ApplicationType.MachineToMachine,
-                    ].includes(value)
+                  .filter(
+                    (
+                      value
+                    ): value is Extract<
+                      ApplicationType,
+                      | ApplicationType.Native
+                      | ApplicationType.SPA
+                      | ApplicationType.Traditional
+                      | ApplicationType.MachineToMachine
+                    > =>
+                      [
+                        ApplicationType.Native,
+                        ApplicationType.SPA,
+                        ApplicationType.Traditional,
+                        ApplicationType.MachineToMachine,
+                      ].includes(value)
                   )
                   .map((type) => (
                     <Radio

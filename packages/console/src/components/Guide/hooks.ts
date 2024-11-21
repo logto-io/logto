@@ -100,6 +100,7 @@ export const useAppGuideMetadata = (): {
         }
 
         // We have ensured that SAML applications are always third party in DB schema, we use `||` here to make TypeScript happy.
+        // TODO: @darcy fix this when SAML third-party app guide is ready
         if (target === ApplicationType.SAML || isThirdParty) {
           return {
             ...accumulated,

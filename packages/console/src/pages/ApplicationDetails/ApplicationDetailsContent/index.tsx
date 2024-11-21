@@ -124,6 +124,7 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
         title={data.name}
         primaryTag={
           // We have ensured that SAML applications are always third party in DB schema, we use `||` here to make TypeScript happy.
+          // TODO: @darcy fix this when we add SAML apps details page
           data.isThirdParty || data.type === ApplicationType.SAML
             ? t(`${applicationTypeI18nKey.thirdParty}.title`)
             : t(`${applicationTypeI18nKey[data.type]}.title`)
