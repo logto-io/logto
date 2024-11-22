@@ -1,7 +1,12 @@
 import { ApplicationType, BindingType } from '@logto/schemas';
 
 import { createApplication, deleteApplication } from '#src/api/application.js';
-import { createSamlApplication, deleteSamlApplication } from '#src/api/saml-application.js';
+import {
+  createSamlApplication,
+  deleteSamlApplication,
+  updateSamlApplication,
+  getSamlApplication,
+} from '#src/api/saml-application.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { devFeatureTest } from '#src/utils.js';
 
@@ -54,12 +59,45 @@ describe('SAML application', () => {
     await deleteSamlApplication(createdSamlApplication.id);
   });
 
-  it('can not delete non-SAML applications with `DEL /saml-applications/:id` API', async () => {
+  it('should be able to update SAML application and get the updated one', async () => {
+    const createdSamlApplication = await createSamlApplication({
+      name: 'test',
+      description: 'test',
+    });
+
+    const newConfig = {
+      acsUrl: {
+        binding: BindingType.POST,
+        url: 'https://example.logto.io/sso/saml',
+      },
+    };
+    const updatedSamlApplication = await updateSamlApplication(createdSamlApplication.id, {
+      name: 'updated',
+      config: newConfig,
+    });
+    const upToDateSamlApplication = await getSamlApplication(createdSamlApplication.id);
+
+    expect(updatedSamlApplication).toEqual(upToDateSamlApplication);
+    expect(updatedSamlApplication.name).toEqual('updated');
+    expect(updatedSamlApplication.acsUrl).toEqual(newConfig.acsUrl);
+
+    await deleteSamlApplication(updatedSamlApplication.id);
+  });
+
+  it('can not delete/update/get non-SAML applications with `DEL /saml-applications/:id` API', async () => {
     const application = await createApplication('test-non-saml-app', ApplicationType.Traditional, {
       isThirdParty: true,
     });
 
     await expectRejects(deleteSamlApplication(application.id), {
+      code: 'application.saml.saml_application_only',
+      status: 400,
+    });
+    await expectRejects(updateSamlApplication(application.id, { name: 'updated' }), {
+      code: 'application.saml.saml_application_only',
+      status: 400,
+    });
+    await expectRejects(getSamlApplication(application.id), {
       code: 'application.saml.saml_application_only',
       status: 400,
     });

@@ -16,7 +16,7 @@ export const createSamlApplicationConfigQueries = (pool: CommonQueryMethods) => 
   const updateSamlApplicationConfig = buildUpdateWhereWithPool(pool)(SamlApplicationConfigs, true);
 
   const findSamlApplicationConfigByApplicationId = async (applicationId: string) =>
-    pool.maybeOne<SamlApplicationConfig>(sql`
+    pool.one<SamlApplicationConfig>(sql`
       select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
       where ${fields.applicationId}=${applicationId}
