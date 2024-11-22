@@ -7,9 +7,9 @@ export const samlAttributeMappingGuard = z.record(
   z.string()
 ) satisfies z.ZodType<SamlAttributeMapping>;
 
-// Only support SP HTTP-POST binding for now.
 export enum BindingType {
   POST = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
+  REDIRECT = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
 }
 
 export type SamlAcsUrl = {
@@ -18,6 +18,6 @@ export type SamlAcsUrl = {
 };
 
 export const samlAcsUrlGuard = z.object({
-  binding: z.nativeEnum(BindingType).optional().default(BindingType.POST),
+  binding: z.nativeEnum(BindingType),
   url: z.string(),
 }) satisfies ToZodObject<SamlAcsUrl>;
