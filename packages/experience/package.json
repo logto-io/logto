@@ -40,7 +40,7 @@
     "@swc/jest": "^0.2.26",
     "@testing-library/react": "^16.0.0",
     "@testing-library/react-hooks": "^8.0.1",
-    "@types/color": "^3.0.3",
+    "@types/color": "^4.0.0",
     "@types/jest": "^29.4.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
