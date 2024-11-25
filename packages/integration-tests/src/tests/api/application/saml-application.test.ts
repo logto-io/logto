@@ -10,6 +10,8 @@ import {
   createSamlApplicationSecret,
   updateSamlApplicationSecret,
   getSamlApplicationSecrets,
+  getSamlApplicationMetadata,
+  getSamlApplicationCertificate,
 } from '#src/api/saml-application.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { devFeatureTest } from '#src/utils.js';
@@ -33,7 +35,7 @@ describe('SAML application', () => {
         description: 'test',
         config: {
           acsUrl: {
-            binding: BindingType.REDIRECT,
+            binding: BindingType.Redirect,
             url: 'https://example.com',
           },
         },
@@ -49,7 +51,7 @@ describe('SAML application', () => {
     const config = {
       entityId: 'https://example.logto.io',
       acsUrl: {
-        binding: BindingType.POST,
+        binding: BindingType.Post,
         url: 'https://example.logto.io/sso/saml',
       },
     };
@@ -71,7 +73,7 @@ describe('SAML application', () => {
 
     const newConfig = {
       acsUrl: {
-        binding: BindingType.POST,
+        binding: BindingType.Post,
         url: 'https://example.logto.io/sso/saml',
       },
     };
@@ -156,6 +158,11 @@ describe('SAML application', () => {
     expect(updatedSecret.active).toBe(true);
     // @ts-expect-error - Make sure the `privateKey` is not exposed in the response.
     expect(updatedSecret.privateKey).toBeUndefined();
+
+    const { certificate } = await getSamlApplicationCertificate(id);
+    expect(typeof certificate).toBe('string');
+
+    await expect(getSamlApplicationMetadata(id)).resolves.not.toThrow();
 
     await expectRejects(deleteSamlApplicationSecret(id, createdSecret.id), {
       code: 'application.saml.can_not_delete_active_secret',

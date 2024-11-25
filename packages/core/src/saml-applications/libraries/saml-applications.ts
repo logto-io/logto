@@ -3,20 +3,30 @@ import {
   type SamlApplicationResponse,
   type PatchSamlApplication,
   type SamlApplicationSecret,
+  BindingType,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { removeUndefinedKeys } from '@silverhand/essentials';
+import * as saml from 'samlify';
 
+import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { ensembleSamlApplication, generateKeyPairAndCertificate } from './utils.js';
+import {
+  ensembleSamlApplication,
+  generateKeyPairAndCertificate,
+  buildSingleSignOnUrl,
+} from './utils.js';
 
 export const createSamlApplicationsLibrary = (queries: Queries) => {
   const {
     applications: { findApplicationById, updateApplicationById },
-    samlApplicationSecrets: { insertSamlApplicationSecret },
+    samlApplicationSecrets: {
+      insertSamlApplicationSecret,
+      findActiveSamlApplicationSecretByApplicationId,
+    },
     samlApplicationConfigs: {
       findSamlApplicationConfigByApplicationId,
       updateSamlApplicationConfig,
@@ -91,9 +101,35 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
     });
   };
 
+  const getSamlApplicationMetadataByApplicationId = async (id: string): Promise<string> => {
+    const [{ tenantId, entityId }, { certificate }] = await Promise.all([
+      findSamlApplicationConfigByApplicationId(id),
+      findActiveSamlApplicationSecretByApplicationId(id),
+    ]);
+
+    assertThat(entityId, 'application.saml.entity_id_required');
+
+    const tenantEndpoint = getTenantEndpoint(tenantId, EnvSet.values);
+
+    // eslint-disable-next-line new-cap
+    const idp = saml.IdentityProvider({
+      entityID: entityId,
+      signingCert: certificate,
+      singleSignOnService: [
+        {
+          Location: buildSingleSignOnUrl(tenantEndpoint, id),
+          Binding: BindingType.Redirect,
+        },
+      ],
+    });
+
+    return idp.getMetadata();
+  };
+
   return {
     createSamlApplicationSecret,
     findSamlApplicationById,
     updateSamlApplicationById,
+    getSamlApplicationMetadataByApplicationId,
   };
 };

@@ -1,5 +1,6 @@
 import {
   ApplicationType,
+  certificateFingerprintsGuard,
   samlApplicationCreateGuard,
   samlApplicationPatchGuard,
   samlApplicationResponseGuard,
@@ -17,7 +18,11 @@ import { generateInternalSecret } from '#src/routes/applications/application-sec
 import type { ManagementApiRouter, RouterInitArgs } from '#src/routes/types.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { ensembleSamlApplication, validateAcsUrl } from '../libraries/utils.js';
+import {
+  calculateCertificateFingerprints,
+  ensembleSamlApplication,
+  validateAcsUrl,
+} from '../libraries/utils.js';
 
 export default function samlApplicationRoutes<T extends ManagementApiRouter>(
   ...[router, { queries, libraries }]: RouterInitArgs<T>
@@ -30,6 +35,7 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       findSamlApplicationSecretsByApplicationId,
       findSamlApplicationSecretByApplicationIdAndId,
       updateSamlApplicationSecretStatusByApplicationIdAndSecretId,
+      findActiveSamlApplicationSecretByApplicationId,
     },
   } = queries;
   const {
@@ -248,6 +254,30 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
 
       ctx.status = 200;
       ctx.body = updatedSamlApplicationSecret;
+
+      return next();
+    }
+  );
+
+  router.get(
+    '/saml-applications/:id/certificate',
+    koaGuard({
+      params: z.object({ id: z.string() }),
+      status: [200, 400, 404],
+      response: z.object({
+        certificate: z.string(),
+        fingerprints: certificateFingerprintsGuard,
+      }),
+    }),
+    async (ctx, next) => {
+      const { id } = ctx.guard.params;
+
+      const { certificate } = await findActiveSamlApplicationSecretByApplicationId(id);
+
+      const fingerprints = calculateCertificateFingerprints(certificate);
+
+      ctx.status = 200;
+      ctx.body = { certificate, fingerprints };
 
       return next();
     }

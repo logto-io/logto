@@ -6,12 +6,24 @@ import {
   type SamlApplicationConfig,
   type SamlAcsUrl,
   BindingType,
+  type CertificateFingerprints,
 } from '@logto/schemas';
+import { appendPath } from '@silverhand/essentials';
 import { addDays } from 'date-fns';
 import forge from 'node-forge';
+import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
+
+// Add PEM certificate validation
+const pemCertificateGuard = z
+  .string()
+  .trim()
+  .regex(/^-{5}BEGIN CERTIFICATE-{5}[\n\r]+[\S\s]*?[\n\r]+-{5}END CERTIFICATE-{5}$/);
+
+// Add base64 validation schema
+const base64Guard = z.string().regex(/^[\d+/A-Za-z]*={0,2}$/);
 
 export const generateKeyPairAndCertificate = async (lifeSpanInDays = 365) => {
   const keypair = forge.pki.rsa.generateKeyPair({ bits: 4096 });
@@ -67,6 +79,52 @@ const createCertificate = (keypair: forge.pki.KeyPair, lifeSpanInDays: number) =
   };
 };
 
+export const calculateCertificateFingerprints = (
+  pemCertificate: string
+): CertificateFingerprints => {
+  try {
+    // Validate PEM certificate format
+    pemCertificateGuard.parse(pemCertificate);
+
+    // Remove PEM headers, newlines and spaces
+    const cleanedPem = pemCertificate
+      .replace('-----BEGIN CERTIFICATE-----', '')
+      .replace('-----END CERTIFICATE-----', '')
+      .replaceAll(/\s/g, '');
+
+    // Validate base64 format using zod
+    base64Guard.parse(cleanedPem);
+
+    // Convert base64 to binary
+    const certDer = Buffer.from(cleanedPem, 'base64');
+
+    // Calculate SHA-1 fingerprint
+    const sha1Unformatted = crypto.createHash('sha1').update(certDer).digest('hex').toUpperCase();
+    const sha1Formatted = sha1Unformatted.match(/.{2}/g)?.join(':') ?? '';
+
+    // Calculate SHA-256 fingerprint
+    const sha256Unformatted = crypto
+      .createHash('sha256')
+      .update(certDer)
+      .digest('hex')
+      .toUpperCase();
+    const sha256Formatted = sha256Unformatted.match(/.{2}/g)?.join(':') ?? '';
+
+    return {
+      sha1: {
+        formatted: sha1Formatted,
+        unformatted: sha1Unformatted,
+      },
+      sha256: {
+        formatted: sha256Formatted,
+        unformatted: sha256Unformatted,
+      },
+    };
+  } catch {
+    throw new RequestError('application.saml.invalid_certificate_pem_format');
+  }
+};
+
 /**
  * According to the design, a SAML app will be associated with multiple records from various tables.
  * Therefore, when complete SAML app data is required, it is necessary to retrieve multiple related records and assemble them into a comprehensive SAML app dataset. This dataset includes:
@@ -92,10 +150,13 @@ export const ensembleSamlApplication = ({
 export const validateAcsUrl = (acsUrl: SamlAcsUrl) => {
   const { binding } = acsUrl;
   assertThat(
-    binding === BindingType.POST,
+    binding === BindingType.Post,
     new RequestError({
       code: 'application.saml.acs_url_binding_not_supported',
       status: 422,
     })
   );
 };
+
+export const buildSingleSignOnUrl = (baseUrl: URL, samlApplicationId: string) =>
+  appendPath(baseUrl, `api/saml/${samlApplicationId}/authn`).toString();
