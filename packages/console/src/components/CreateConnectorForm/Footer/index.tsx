@@ -29,7 +29,7 @@ function Footer({ isCreatingSocialConnector, isCreateButtonDisabled, onClickCrea
         <Trans
           components={{
             a: <ContactUsPhraseLink />,
-            planName: <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />,
+            planName: <SkuName skuId={planId} />,
           }}
         >
           {t('social_connectors', {

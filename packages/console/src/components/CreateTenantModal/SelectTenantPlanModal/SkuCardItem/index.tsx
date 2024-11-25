@@ -52,7 +52,7 @@ function SkuCardItem({ sku, onSelect, buttonProps }: Props) {
           </div>
         </div>
         <div className={styles.description}>
-          <PlanDescription skuId={skuId} planId={skuId} />
+          <PlanDescription skuId={skuId} />
         </div>
       </div>
       <div className={styles.content}>

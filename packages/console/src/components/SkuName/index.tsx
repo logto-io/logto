@@ -2,37 +2,32 @@ import { ReservedPlanId } from '@logto/schemas';
 import { type TFuncKey } from 'i18next';
 import { useTranslation } from 'react-i18next';
 
-import { ReservedSkuId } from '@/types/subscriptions';
-
-const registeredSkuIdNamePhraseMap: Record<
+const registeredPlanNamePhraseMap: Record<
   string,
-  TFuncKey<'translation', 'admin_console.subscription'> | undefined
+  TFuncKey<'translation', 'admin_console.subscription'>
 > = {
-  quotaKey: undefined,
-  [ReservedSkuId.Free]: 'free_plan',
-  [ReservedSkuId.Pro]: 'pro_plan',
-  [ReservedSkuId.Development]: 'dev_plan',
-  [ReservedSkuId.Admin]: 'admin_plan',
-  [ReservedSkuId.Enterprise]: 'enterprise',
+  [ReservedPlanId.Free]: 'free_plan',
+  [ReservedPlanId.Pro]: 'pro_plan',
+  [ReservedPlanId.Development]: 'dev_plan',
+  [ReservedPlanId.Admin]: 'admin_plan',
+} satisfies Record<ReservedPlanId, TFuncKey<'translation', 'admin_console.subscription'>>;
+
+const getRegisteredSkuNamePhrase = (
+  skuId: string
+): TFuncKey<'translation', 'admin_console.subscription'> => {
+  const reservedSkuNamePhrase = registeredPlanNamePhraseMap[skuId];
+
+  return reservedSkuNamePhrase ?? 'enterprise';
 };
 
 type Props = {
   readonly skuId: string;
-  readonly isEnterprisePlan?: boolean;
 };
 
-function SkuName({ skuId: rawSkuId, isEnterprisePlan = false }: Props) {
+function SkuName({ skuId }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.subscription' });
-  const skuId = isEnterprisePlan ? ReservedPlanId.Enterprise : rawSkuId;
-
-  const skuNamePhrase = registeredSkuIdNamePhraseMap[skuId];
-
-  /**
-   * Note: fallback to the plan name if the phrase is not registered.
-   */
-  const skuName = skuNamePhrase ? String(t(skuNamePhrase)) : skuId;
-
-  return <span>{skuName}</span>;
+  const skuNamePhrase = getRegisteredSkuNamePhrase(skuId);
+  return <span>{String(t(skuNamePhrase))}</span>;
 }
 
 export default SkuName;
