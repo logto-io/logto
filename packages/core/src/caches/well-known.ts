@@ -89,15 +89,16 @@ export class WellKnownCache {
 
   /**
    * Get value from the inner cache store for the given type and key.
-   * Note: Format errors will be silently caught and result an `undefined` return.
+   * Note: Redis connection and format errors will be silently caught and result an `undefined` return.
    */
   async get<Type extends WellKnownCacheType>(
     type: Type,
     key: string
   ): Promise<Optional<WellKnownMap[Type]>> {
-    const data = await this.cacheStore.get(this.cacheKey(type, key));
-
-    return trySafe(() => getValueGuard(type).parse(JSON.parse(data ?? '')));
+    return trySafe(async () => {
+      const data = await this.cacheStore.get(this.cacheKey(type, key));
+      return getValueGuard(type).parse(JSON.parse(data ?? ''));
+    });
   }
 
   /**

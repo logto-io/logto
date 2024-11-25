@@ -90,6 +90,9 @@ export class RedisCache extends RedisCacheBase {
       this.client = createClient({
         url: conditional(!yes(redisUrl) && redisUrl),
         socket: this.getSocketOptions(trySafe(() => new URL(redisUrl))),
+        // Azure redis has a 10 minutes idle timeout
+        // @see https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-best-practices-connection#idle-timeout
+        pingInterval: 8 * 60 * 1000, // 8 minutes
       });
 
       this.client.on('error', (error) => {
