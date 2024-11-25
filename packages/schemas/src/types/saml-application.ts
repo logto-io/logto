@@ -37,6 +37,14 @@ export const samlApplicationPatchGuard = applicationPatchGuard
 
 export type PatchSamlApplication = z.infer<typeof samlApplicationPatchGuard>;
 
+export const samlApplicationSecretResponseGuard = SamlApplicationSecrets.guard.omit({
+  tenantId: true,
+  applicationId: true,
+  privateKey: true,
+});
+
+export type SamlApplicationSecretResponse = z.infer<typeof samlApplicationSecretResponseGuard>;
+
 export const samlApplicationResponseGuard = Applications.guard.merge(
   // Partial to allow the optional fields to be omitted in the response.
   // When starting to create a SAML application, SAML configuration is optional, which can lead to the absence of SAML configuration.

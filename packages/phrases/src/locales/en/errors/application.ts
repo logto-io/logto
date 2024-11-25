@@ -25,6 +25,7 @@ const application = {
     saml_application_only: 'The API is only available for SAML applications.',
     acs_url_binding_not_supported:
       'Only HTTP-POST binding is supported for receiving SAML assertions.',
+    can_not_delete_active_secret: 'Can not delete the active secret.',
   },
 };
 

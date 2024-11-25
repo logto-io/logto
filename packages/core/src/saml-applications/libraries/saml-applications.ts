@@ -2,6 +2,7 @@ import {
   ApplicationType,
   type SamlApplicationResponse,
   type PatchSamlApplication,
+  type SamlApplicationSecret,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { removeUndefinedKeys } from '@silverhand/essentials';
@@ -26,7 +27,7 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
     applicationId: string,
     // Set certificate life span to 1 year by default.
     lifeSpanInDays = 365
-  ) => {
+  ): Promise<SamlApplicationSecret> => {
     const { privateKey, certificate, notAfter } = await generateKeyPairAndCertificate(
       lifeSpanInDays
     );
