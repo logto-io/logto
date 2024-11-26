@@ -16,7 +16,15 @@ export const getTenantSubscription = async (
   const client = await cloudConnection.getClient();
   const subscription = await client.get('/api/tenants/my/subscription');
 
-  return subscription;
+  // All the dates will be converted to the ISO 8601 format after json serialization.
+  // Convert the dates to ISO 8601 format to match the exact type of the response.
+  const { currentPeriodStart, currentPeriodEnd, ...rest } = subscription;
+
+  return {
+    ...rest,
+    currentPeriodStart: new Date(currentPeriodStart).toISOString(),
+    currentPeriodEnd: new Date(currentPeriodEnd).toISOString(),
+  };
 };
 
 export const getTenantSubscriptionData = async (
