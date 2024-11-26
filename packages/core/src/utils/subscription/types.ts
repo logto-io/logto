@@ -10,7 +10,17 @@ type RouteResponseType<T extends { search?: unknown; body?: unknown; response?: 
 type RouteRequestBodyType<T extends { search?: unknown; body?: ZodType; response?: unknown }> =
   z.infer<NonNullable<T['body']>>;
 
-export type Subscription = RouteResponseType<GetRoutes['/api/tenants/my/subscription']>;
+/**
+ * The subscription data is fetched from the Cloud API.
+ * All the dates are in ISO 8601 format, we need to manually fix the type to string here.
+ */
+export type Subscription = Omit<
+  RouteResponseType<GetRoutes['/api/tenants/my/subscription']>,
+  'currentPeriodStart' | 'currentPeriodEnd'
+> & {
+  currentPeriodStart: string;
+  currentPeriodEnd: string;
+};
 
 type CompleteSubscriptionUsage = RouteResponseType<GetRoutes['/api/tenants/my/subscription-usage']>;
 
