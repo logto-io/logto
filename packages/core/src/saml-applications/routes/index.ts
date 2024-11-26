@@ -1,6 +1,5 @@
 import {
   ApplicationType,
-  BindingType,
   samlApplicationCreateGuard,
   samlApplicationResponseGuard,
 } from '@logto/schemas';
@@ -8,12 +7,11 @@ import { generateStandardId } from '@logto/shared';
 import { removeUndefinedKeys } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { buildOidcClientMetadata } from '#src/oidc/utils.js';
 import { generateInternalSecret } from '#src/routes/applications/application-secret.js';
 import type { ManagementApiRouter, RouterInitArgs } from '#src/routes/types.js';
-import { ensembleSamlApplication } from '#src/saml-applications/routes/utils.js';
+import { ensembleSamlApplication, validateAcsUrl } from '#src/saml-applications/routes/utils.js';
 import assertThat from '#src/utils/assert-that.js';
 
 export default function samlApplicationRoutes<T extends ManagementApiRouter>(
@@ -24,7 +22,7 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
     samlApplicationConfigs: { insertSamlApplicationConfig },
   } = queries;
   const {
-    samlApplicationSecrets: { createNewSamlApplicationSecretForApplication },
+    samlApplicationSecrets: { createSamlApplicationSecret },
   } = libraries;
 
   router.post(
@@ -37,12 +35,8 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const { name, description, customData, config } = ctx.guard.body;
 
-      // Only HTTP-POST binding is supported for receiving SAML assertions at the moment.
-      if (config?.acsUrl?.binding && config.acsUrl.binding !== BindingType.POST) {
-        throw new RequestError({
-          code: 'application.saml.acs_url_binding_not_supported',
-          status: 422,
-        });
+      if (config?.acsUrl) {
+        validateAcsUrl(config.acsUrl);
       }
 
       const application = await insertApplication(
@@ -58,16 +52,21 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
         })
       );
 
-      const [samlConfig, samlSecret] = await Promise.all([
-        insertSamlApplicationConfig({
-          applicationId: application.id,
-          ...config,
-        }),
-        createNewSamlApplicationSecretForApplication(application.id),
-      ]);
+      try {
+        const [samlConfig, _] = await Promise.all([
+          insertSamlApplicationConfig({
+            applicationId: application.id,
+            ...config,
+          }),
+          createSamlApplicationSecret(application.id),
+        ]);
 
-      ctx.status = 201;
-      ctx.body = ensembleSamlApplication({ application, samlConfig, samlSecret });
+        ctx.status = 201;
+        ctx.body = ensembleSamlApplication({ application, samlConfig });
+      } catch (error) {
+        await deleteApplicationById(application.id);
+        throw error;
+      }
 
       return next();
     }
@@ -82,11 +81,8 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const { id } = ctx.guard.params;
 
-      const { type, isThirdParty } = await findApplicationById(id);
-      assertThat(
-        type === ApplicationType.SAML && isThirdParty,
-        'application.saml.saml_application_only'
-      );
+      const { type } = await findApplicationById(id);
+      assertThat(type === ApplicationType.SAML, 'application.saml.saml_application_only');
 
       await deleteApplicationById(id);
 

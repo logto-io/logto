@@ -9,7 +9,7 @@ export const createSamlApplicationSecretsLibrary = (queries: Queries) => {
     samlApplicationSecrets: { insertSamlApplicationSecret },
   } = queries;
 
-  const createNewSamlApplicationSecretForApplication = async (
+  const createSamlApplicationSecret = async (
     applicationId: string,
     // Set certificate life span to 1 year by default.
     lifeSpanInDays = 365
@@ -29,6 +29,6 @@ export const createSamlApplicationSecretsLibrary = (queries: Queries) => {
   };
 
   return {
-    createNewSamlApplicationSecretForApplication,
+    createSamlApplicationSecret,
   };
 };

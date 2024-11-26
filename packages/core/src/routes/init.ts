@@ -100,7 +100,11 @@ const createRouters = (tenant: TenantContext) => {
   systemRoutes(managementRouter, tenant);
   subjectTokenRoutes(managementRouter, tenant);
   accountCentersRoutes(managementRouter, tenant);
-  if (EnvSet.values.isDevFeaturesEnabled) {
+  // TODO: @darcy per our design, we will move related routes to Cloud repo and the routes will be loaded from remote.
+  if (
+    (EnvSet.values.isDevFeaturesEnabled && EnvSet.values.isCloud) ||
+    EnvSet.values.isIntegrationTest
+  ) {
     samlApplicationRoutes(managementRouter, tenant);
   }
 

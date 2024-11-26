@@ -14,18 +14,6 @@ describe('SAML application', () => {
       description: 'test',
     });
 
-    // Check secrets array exists and not empty
-    expect(Array.isArray(createdSamlApplication.secrets)).toBe(true);
-    expect(createdSamlApplication.secrets.length).toBeGreaterThan(0);
-
-    // Check first secret has non-empty privateKey and certificate
-    // Since we checked the array is not empty in previous check, we can safely access the first element.
-    const firstSecret = createdSamlApplication.secrets[0]!;
-    expect(typeof firstSecret.privateKey).toBe('string');
-    expect(firstSecret.privateKey).not.toBe('');
-    expect(typeof firstSecret.certificate).toBe('string');
-    expect(firstSecret.certificate).not.toBe('');
-
     await deleteSamlApplication(createdSamlApplication.id);
   });
 
