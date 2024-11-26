@@ -1,4 +1,4 @@
-import { type ToZodObject } from '@logto/schemas/lib/utils/zod.js';
+import { type ToZodObject } from '@logto/connector-kit';
 import { z } from 'zod';
 
 import { extendedSocialUserInfoGuard, type ExtendedSocialUserInfo } from './saml.js';
