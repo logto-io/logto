@@ -138,6 +138,9 @@ export const buildRouterObjects = <T extends UnknownRouter>(routers: T[], option
             .map((method) => method.toLowerCase())
             // There is no need to show the HEAD method.
             .filter((method): method is OpenAPIV3.HttpMethods => method !== 'head')
+            // TODO: Remove this and bring back `/saml-applications` routes before release.
+            // Exclude `/saml-applications` routes for now.
+            .filter(() => !routerPath.startsWith('/saml-applications'))
             .map((httpMethod) => {
               const path = normalizePath(routerPath);
               const operation = buildOperation(httpMethod, stack, routerPath, isAuthGuarded);

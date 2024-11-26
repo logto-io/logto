@@ -12,7 +12,7 @@
   },
   "scripts": {
     "precommit": "lint-staged",
-    "copy:apidocs": "rsync -a -m --include '*/' --include '*.openapi.json' --exclude '*' src/routes/ build/routes/ && rsync -a -m --include '*/' --include '*.openapi.json' --exclude '*' src/saml-applications/ build/saml-applications/",
+    "copy:apidocs": "rsync -a -m --include '*/' --include '*.openapi.json' --exclude '*' src/routes/ build/routes/",
     "check": "tsc --noEmit",
     "build": "tsup",
     "build:test": "rm -rf build/ && tsc -p tsconfig.test.json --sourcemap && pnpm run copy:apidocs",
