@@ -37,7 +37,7 @@ describe('application APIs', () => {
 
   it('should throw error when creating a SAML application', async () => {
     await expectRejects(createApplication('test-create-saml-app', ApplicationType.SAML), {
-      code: 'application.use_saml_app_api',
+      code: 'application.saml.use_saml_app_api',
       status: 400,
     });
   });
@@ -54,6 +54,7 @@ describe('application APIs', () => {
     expect(application.name).toBe(applicationName);
     expect(application.type).toBe(ApplicationType.Traditional);
     expect(application.isThirdParty).toBe(true);
+
     await deleteApplication(application.id);
   });
 
