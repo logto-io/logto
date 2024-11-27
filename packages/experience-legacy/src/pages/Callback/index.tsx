@@ -17,15 +17,15 @@ type Parameters = {
 const Callback = () => {
   const { connectorId } = useParams<Parameters>();
 
-  const { social_callbackHandler } = useSocialCallbackHandler();
+  const { socialCallbackHandler } = useSocialCallbackHandler();
 
   // SocialSignIn Callback Handler
   useEffect(() => {
     if (!connectorId) {
       return;
     }
-    social_callbackHandler(connectorId);
-  }, [social_callbackHandler, connectorId]);
+    socialCallbackHandler(connectorId);
+  }, [socialCallbackHandler, connectorId]);
 
   if (!connectorId) {
     return null;

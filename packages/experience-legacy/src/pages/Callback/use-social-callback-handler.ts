@@ -9,7 +9,7 @@ import {
 const useSocialCallbackHandler = () => {
   const navigate = useNavigate();
 
-  const social_callbackHandler = useCallback(
+  const socialCallbackHandler = useCallback(
     (connectorId: string) => {
       // Get search parameter to evaluate
       const searchParams = new URLSearchParams(window.location.search);
@@ -44,7 +44,7 @@ const useSocialCallbackHandler = () => {
     [navigate]
   );
 
-  return { social_callbackHandler };
+  return { socialCallbackHandler };
 };
 
 export default useSocialCallbackHandler;
