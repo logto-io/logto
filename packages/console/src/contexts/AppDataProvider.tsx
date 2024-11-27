@@ -22,7 +22,7 @@ type AppData = {
 
 export const AppDataContext = createContext<AppData>({});
 
-export const useTenantEndpoint = (tenantId: string) => {
+const useTenantEndpoint = (tenantId: string) => {
   return useSWRImmutable(`api/.well-known/endpoints/${tenantId}`, async (pathname) => {
     const { user } = await ky.get(new URL(pathname, adminTenantEndpoint)).json<{ user: string }>();
     return new URL(user);
