@@ -1,7 +1,6 @@
 import { emailRegEx } from '@logto/core-kit';
 import { useLogto } from '@logto/react';
 import { TenantRole, Theme } from '@logto/schemas';
-import { joinPath } from '@silverhand/essentials';
 import { useCallback, useContext } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -14,6 +13,7 @@ import ActionBar from '@/components/ActionBar';
 import { type CreateTenantData } from '@/components/CreateTenantModal/types';
 import PageMeta from '@/components/PageMeta';
 import Region, { RegionName } from '@/components/Region';
+import { availableRegions } from '@/consts';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
@@ -21,10 +21,9 @@ import FormField from '@/ds-components/FormField';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import TextInput from '@/ds-components/TextInput';
-import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
+import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 import pageLayout from '@/onboarding/scss/layout.module.scss';
-import { OnboardingPage, OnboardingRoute } from '@/onboarding/types';
 import InviteEmailsInput from '@/pages/TenantSettings/TenantMembers/InviteEmailsInput';
 import { type InviteeEmailItem } from '@/pages/TenantSettings/TenantMembers/types';
 import { trySubmitSafe } from '@/utils/form';
@@ -33,7 +32,7 @@ type CreateTenantForm = Omit<CreateTenantData, 'tag'> & { collaboratorEmails: In
 
 function CreateTenant() {
   const methods = useForm<CreateTenantForm>({
-    defaultValues: { regionName: RegionName.EU, collaboratorEmails: [] },
+    defaultValues: { name: 'My project', regionName: RegionName.EU, collaboratorEmails: [] },
   });
   const {
     control,
@@ -41,10 +40,10 @@ function CreateTenant() {
     formState: { errors, isSubmitting },
     register,
   } = methods;
-  const { navigate } = useTenantPathname();
   const { prependTenant } = useContext(TenantsContext);
   const theme = useTheme();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { update } = useUserOnboardingData();
   const parseEmailOptions = useCallback(
     (values: InviteeEmailItem[]) => {
       const validEmails = values.filter(({ value }) => emailRegEx.test(value));
@@ -93,7 +92,7 @@ function CreateTenant() {
           toast.error(t('tenants.create_modal.invitation_failed', { duration: 5 }));
         }
       }
-      navigate(joinPath(OnboardingRoute.Onboarding, newTenant.id, OnboardingPage.SignInExperience));
+      await update({ isOnboardingDone: true });
     })
   );
 
@@ -126,8 +125,7 @@ function CreateTenant() {
                 rules={{ required: true }}
                 render={({ field: { onChange, value, name } }) => (
                   <RadioGroup type="small" name={name} value={value} onChange={onChange}>
-                    {/* Manually maintaining the list of regions to avoid unexpected changes. We may consider using an API in the future. */}
-                    {[RegionName.EU, RegionName.US].map((region) => (
+                    {availableRegions.map((region) => (
                       <Radio
                         key={region}
                         title={
@@ -167,7 +165,7 @@ function CreateTenant() {
           </FormProvider>
         </div>
       </OverlayScrollbar>
-      <ActionBar step={2} totalSteps={3}>
+      <ActionBar>
         <Button
           title="general.create"
           type="primary"

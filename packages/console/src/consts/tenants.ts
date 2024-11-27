@@ -146,3 +146,10 @@ const getAdminTenantEndpoint = () => {
 export const adminTenantEndpoint = getAdminTenantEndpoint();
 
 export const mainTitle = isCloud ? 'Logto Cloud' : 'Logto Console';
+
+// Manually maintaining the list of regions to avoid unexpected changes. We may consider using an API in the future.
+export const availableRegions = Object.freeze([
+  RegionName.EU,
+  RegionName.US,
+  RegionName.AU,
+] as const);

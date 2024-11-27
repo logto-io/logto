@@ -3,7 +3,5 @@ export enum OnboardingRoute {
 }
 
 export enum OnboardingPage {
-  Welcome = 'welcome',
   CreateTenant = 'create-tenant',
-  SignInExperience = 'sign-in-experience',
 }
