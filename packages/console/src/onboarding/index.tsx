@@ -1,6 +1,6 @@
 import { Theme } from '@logto/schemas';
 import { useContext, useEffect } from 'react';
-import { Navigate, type RouteObject, useMatch, useRoutes } from 'react-router-dom';
+import { Navigate, type RouteObject, useRoutes } from 'react-router-dom';
 
 import AppLoading from '@/components/AppLoading';
 import AppBoundary from '@/containers/AppBoundary';
@@ -11,35 +11,21 @@ import Topbar from './components/Topbar';
 import useUserOnboardingData from './hooks/use-user-onboarding-data';
 import styles from './index.module.scss';
 import CreateTenant from './pages/CreateTenant';
-import SignInExperience from './pages/SignInExperience';
-import Welcome from './pages/Welcome';
 import { OnboardingPage } from './types';
-import { getOnboardingPage } from './utils';
-
-const welcomePathname = getOnboardingPage(OnboardingPage.Welcome);
 
 const routeObjects: RouteObject[] = [
   {
     index: true,
-    element: <Navigate replace to={OnboardingPage.Welcome} />,
-  },
-  {
-    path: OnboardingPage.Welcome,
-    element: <Welcome />,
+    element: <Navigate replace to={OnboardingPage.CreateTenant} />,
   },
   {
     path: OnboardingPage.CreateTenant,
     element: <CreateTenant />,
   },
-  {
-    path: `:tenantId/${OnboardingPage.SignInExperience}`,
-    element: <SignInExperience />,
-  },
 ];
 
 export function OnboardingApp() {
   const { setThemeOverride } = useContext(AppThemeContext);
-  const matched = useMatch(welcomePathname);
   const routes = useRoutes(routeObjects);
 
   usePlausiblePageview(routeObjects, 'onboarding');
@@ -54,7 +40,7 @@ export function OnboardingApp() {
 
   const {
     isLoading,
-    data: { questionnaire, isOnboardingDone },
+    data: { isOnboardingDone },
   } = useUserOnboardingData();
 
   if (isLoading) {
@@ -63,11 +49,6 @@ export function OnboardingApp() {
 
   if (isOnboardingDone) {
     return <Navigate replace to="/" />;
-  }
-
-  // Redirect to the welcome page if the user has not started the onboarding process.
-  if (!questionnaire && !matched) {
-    return <Navigate replace to={welcomePathname} />;
   }
 
   return (

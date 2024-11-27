@@ -4,17 +4,23 @@ import ProgressBar from '../ProgressBar';
 
 import styles from './index.module.scss';
 
-type Props = {
-  readonly step: number;
-  readonly totalSteps: number;
-  readonly children: ReactNode;
-};
+type Props =
+  | {
+      readonly step: number;
+      readonly totalSteps: number;
+      readonly children: ReactNode;
+    }
+  | {
+      readonly children: ReactNode;
+    };
 
-function ActionBar({ step, totalSteps, children }: Props) {
+function ActionBar(props: Props) {
   return (
     <div className={styles.container}>
-      <ProgressBar currentStep={step} totalSteps={totalSteps} />
-      <div className={styles.actions}>{children}</div>
+      {'step' in props && 'totalSteps' in props && (
+        <ProgressBar currentStep={props.step} totalSteps={props.totalSteps} />
+      )}
+      <div className={styles.actions}>{props.children}</div>
     </div>
   );
 }
