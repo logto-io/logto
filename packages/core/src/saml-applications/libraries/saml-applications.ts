@@ -61,6 +61,7 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
     );
 
     const [updatedApplication, upToDateSamlConfig] = await Promise.all([
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       name || description || customData
         ? updateApplicationById(
             id,
