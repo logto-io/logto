@@ -26,8 +26,8 @@ function SocialDemoCallback() {
     <div className={styles.container}>
       <Card className={styles.card}>
         {theme === Theme.Light ? <Congrats /> : <CongratsDark />}
-        <div className={styles.title}>{t('cloud.socialCallback.title')}</div>
-        <div className={styles.message}>{t('cloud.socialCallback.description')}</div>
+        <div className={styles.title}>{t('cloud.social_callback.title')}</div>
+        <div className={styles.message}>{t('cloud.social_callback.description')}</div>
       </Card>
     </div>
   );
