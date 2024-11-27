@@ -57,7 +57,7 @@ const queryDatabaseManifest = async (database) => {
     inner join pg_catalog.pg_namespace nsp
     on nsp.oid = connamespace
     where nsp.nspname = 'public'
-    order by conname asc, def asc;
+    order by conname asc, def asc, conrelid::regclass asc;
   `);
 
   const { rows: indexes } = await pool.query(/* sql */ `
