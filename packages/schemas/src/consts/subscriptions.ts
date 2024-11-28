@@ -8,7 +8,7 @@ export enum ReservedPlanId {
   Free = 'free',
   /**
    * @deprecated
-   * Grandfathered pro plan ID deprecated from 2024-11.
+   * Grandfathered Pro plan ID deprecated from 2024-11.
    * Use {@link Pro202411} instead.
    */
   Pro = 'pro',
@@ -19,9 +19,7 @@ export enum ReservedPlanId {
    */
   Admin = 'admin',
   /**
-   * New pro plan ID applied from 2024-11.
-   * This plan ID will used for new pro plan users.
-   * Deprecated {@link Pro} plan ID only for grandfathered users.
+   * The latest Pro plan ID applied from 2024-11.
    */
   Pro202411 = 'pro-202411',
 }
