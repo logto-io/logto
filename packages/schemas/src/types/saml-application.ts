@@ -2,6 +2,7 @@ import { type z } from 'zod';
 
 import { Applications } from '../db-entries/application.js';
 import { SamlApplicationConfigs } from '../db-entries/saml-application-config.js';
+import { SamlApplicationSecrets } from '../db-entries/saml-application-secret.js';
 
 import { applicationCreateGuard, applicationPatchGuard } from './application.js';
 
@@ -37,6 +38,7 @@ export const samlApplicationPatchGuard = applicationPatchGuard
 
 export type PatchSamlApplication = z.infer<typeof samlApplicationPatchGuard>;
 
+// Make sure the `privateKey` is not exposed in the response.
 export const samlApplicationSecretResponseGuard = SamlApplicationSecrets.guard.omit({
   tenantId: true,
   applicationId: true,

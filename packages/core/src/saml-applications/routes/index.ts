@@ -27,6 +27,7 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
     samlApplicationConfigs: { insertSamlApplicationConfig },
     samlApplicationSecrets: {
       deleteSamlApplicationSecretById,
+      findSamlApplicationSecretsByApplicationId,
       findSamlApplicationSecretByApplicationIdAndId,
       updateSamlApplicationSecretStatusByApplicationIdAndSecretId,
     },
@@ -168,7 +169,24 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       } = ctx.guard;
 
       ctx.status = 201;
-      ctx.body = await createNewSamlApplicationSecretForApplication(id, lifeSpanInDays);
+      ctx.body = await createSamlApplicationSecret(id, lifeSpanInDays);
+
+      return next();
+    }
+  );
+
+  router.get(
+    '/saml-applications/:id/secrets',
+    koaGuard({
+      params: z.object({ id: z.string() }),
+      response: samlApplicationSecretResponseGuard.array(),
+      status: [200, 400, 404],
+    }),
+    async (ctx, next) => {
+      const { id } = ctx.guard.params;
+
+      ctx.status = 200;
+      ctx.body = await findSamlApplicationSecretsByApplicationId(id);
 
       return next();
     }

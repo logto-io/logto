@@ -33,6 +33,9 @@ export const createSamlApplicationSecret = async (id: string, lifeSpanInDays: nu
     .post(`saml-applications/${id}/secrets`, { json: { lifeSpanInDays } })
     .json<SamlApplicationSecretResponse>();
 
+export const getSamlApplicationSecrets = async (id: string) =>
+  authedAdminApi.get(`saml-applications/${id}/secrets`).json<SamlApplicationSecretResponse[]>();
+
 export const deleteSamlApplicationSecret = async (id: string, secretId: string) =>
   authedAdminApi.delete(`saml-applications/${id}/secrets/${secretId}`);
 
