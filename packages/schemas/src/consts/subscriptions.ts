@@ -6,6 +6,11 @@
  */
 export enum ReservedPlanId {
   Free = 'free',
+  /**
+   * @deprecated
+   * Grandfathered pro plan ID deprecated from 2024-11.
+   * Use {@link Pro202411} instead.
+   */
   Pro = 'pro',
   Development = 'dev',
   /**
@@ -13,4 +18,10 @@ export enum ReservedPlanId {
    * In our new pricing model, we plan to add a special plan for Admin tenant, previously, admin tenant is using the `pro` plan, which is not suitable.
    */
   Admin = 'admin',
+  /**
+   * New pro plan ID applied from 2024-11.
+   * This plan ID will used for new pro plan users.
+   * Deprecated {@link Pro} plan ID only for grandfathered users.
+   */
+  Pro202411 = 'pro-202411',
 }
