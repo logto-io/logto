@@ -101,8 +101,10 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
     });
   };
 
-  const getSamlApplicationMetadataByApplicationId = async (id: string): Promise<string> => {
-    const [{ tenantId, entityId }, { certificate }] = await Promise.all([
+  const getSamlApplicationMetadataByApplicationId = async (
+    id: string
+  ): Promise<{ metadata: string; secretId: string }> => {
+    const [{ tenantId, entityId }, { id: secretId, certificate }] = await Promise.all([
       findSamlApplicationConfigByApplicationId(id),
       findActiveSamlApplicationSecretByApplicationId(id),
     ]);
@@ -123,7 +125,10 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
       ],
     });
 
-    return idp.getMetadata();
+    return {
+      metadata: idp.getMetadata(),
+      secretId,
+    };
   };
 
   return {
