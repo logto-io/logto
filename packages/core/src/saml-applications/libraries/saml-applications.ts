@@ -6,6 +6,7 @@ import {
 import { generateStandardId } from '@logto/shared';
 import { removeUndefinedKeys } from '@silverhand/essentials';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -42,7 +43,13 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
 
   const findSamlApplicationById = async (id: string): Promise<SamlApplicationResponse> => {
     const application = await findApplicationById(id);
-    assertThat(application.type === ApplicationType.SAML, 'application.saml.saml_application_only');
+    assertThat(
+      application.type === ApplicationType.SAML,
+      new RequestError({
+        code: 'application.saml.saml_application_only',
+        status: 422,
+      })
+    );
 
     const samlConfig = await findSamlApplicationConfigByApplicationId(application.id);
 
@@ -53,24 +60,20 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
     id: string,
     patchApplicationObject: PatchSamlApplication
   ): Promise<SamlApplicationResponse> => {
-    const { name, description, customData, config } = patchApplicationObject;
+    const { config, ...applicationData } = patchApplicationObject;
     const originalApplication = await findApplicationById(id);
+
     assertThat(
       originalApplication.type === ApplicationType.SAML,
-      'application.saml.saml_application_only'
+      new RequestError({
+        code: 'application.saml.saml_application_only',
+        status: 422,
+      })
     );
 
     const [updatedApplication, upToDateSamlConfig] = await Promise.all([
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-      name || description || customData
-        ? updateApplicationById(
-            id,
-            removeUndefinedKeys({
-              name,
-              description,
-              customData,
-            })
-          )
+      Object.keys(applicationData).length > 0
+        ? updateApplicationById(id, removeUndefinedKeys(applicationData))
         : originalApplication,
       config
         ? updateSamlApplicationConfig({

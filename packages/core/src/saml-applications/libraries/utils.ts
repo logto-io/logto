@@ -90,8 +90,9 @@ export const ensembleSamlApplication = ({
  * Only HTTP-POST binding is supported for receiving SAML assertions at the moment.
  */
 export const validateAcsUrl = (acsUrl: SamlAcsUrl) => {
+  const { binding } = acsUrl;
   assertThat(
-    acsUrl.binding === BindingType.POST,
+    binding === BindingType.POST,
     new RequestError({
       code: 'application.saml.acs_url_binding_not_supported',
       status: 422,

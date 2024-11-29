@@ -91,15 +91,15 @@ describe('SAML application', () => {
 
     await expectRejects(deleteSamlApplication(application.id), {
       code: 'application.saml.saml_application_only',
-      status: 400,
+      status: 422,
     });
     await expectRejects(updateSamlApplication(application.id, { name: 'updated' }), {
       code: 'application.saml.saml_application_only',
-      status: 400,
+      status: 422,
     });
     await expectRejects(getSamlApplication(application.id), {
       code: 'application.saml.saml_application_only',
-      status: 400,
+      status: 422,
     });
     await deleteApplication(application.id);
   });
