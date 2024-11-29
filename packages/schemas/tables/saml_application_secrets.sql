@@ -12,7 +12,7 @@ create table saml_application_secrets (
   expires_at timestamptz not null,
   active boolean not null,
   primary key (tenant_id, application_id, id),
-  constraint application_type
+  constraint saml_application_secrets__application_type
     check (check_application_type(application_id, 'SAML'))
 );
 

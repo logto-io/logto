@@ -10,6 +10,6 @@ create table saml_application_configs (
   entity_id varchar(128),
   acs_url jsonb /* @use SamlAcsUrl */,
   primary key (tenant_id, application_id),
-  constraint application_type
+  constraint saml_application_configs__application_type
     check (check_application_type(application_id, 'SAML'))
 );
