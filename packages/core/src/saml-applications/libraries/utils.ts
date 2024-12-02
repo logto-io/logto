@@ -98,10 +98,6 @@ export const calculateCertificateFingerprints = (
     // Convert base64 to binary
     const certDer = Buffer.from(cleanedPem, 'base64');
 
-    // Calculate SHA-1 fingerprint
-    const sha1Unformatted = crypto.createHash('sha1').update(certDer).digest('hex').toUpperCase();
-    const sha1Formatted = sha1Unformatted.match(/.{2}/g)?.join(':') ?? '';
-
     // Calculate SHA-256 fingerprint
     const sha256Unformatted = crypto
       .createHash('sha256')
@@ -111,10 +107,6 @@ export const calculateCertificateFingerprints = (
     const sha256Formatted = sha256Unformatted.match(/.{2}/g)?.join(':') ?? '';
 
     return {
-      sha1: {
-        formatted: sha1Formatted,
-        unformatted: sha1Unformatted,
-      },
       sha256: {
         formatted: sha256Formatted,
         unformatted: sha256Unformatted,

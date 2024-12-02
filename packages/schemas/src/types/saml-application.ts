@@ -67,11 +67,9 @@ const fingerprintFormatGuard = z.object({
 }) satisfies ToZodObject<FingerprintFormat>;
 
 export type CertificateFingerprints = {
-  sha1: FingerprintFormat;
   sha256: FingerprintFormat;
 };
 
 export const certificateFingerprintsGuard = z.object({
-  sha1: fingerprintFormatGuard,
   sha256: fingerprintFormatGuard,
 }) satisfies ToZodObject<CertificateFingerprints>;

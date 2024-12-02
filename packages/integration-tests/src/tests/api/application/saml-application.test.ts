@@ -145,6 +145,16 @@ describe('SAML application', () => {
     // @ts-expect-error - Make sure the `privateKey` is not exposed in the response.
     expect(createdSecret.privateKey).toBeUndefined();
 
+    // Since we create a secret (not activated) when creating a SAML app, we are expecting to receive 404 when getting certificate/metadata
+    await expectRejects(getSamlApplicationCertificate(id), {
+      status: 404,
+      code: 'application.saml.no_active_secret',
+    });
+    await expectRejects(getSamlApplicationMetadata(id), {
+      status: 404,
+      code: 'application.saml.no_active_secret',
+    });
+
     const samlApplicationSecrets = await getSamlApplicationSecrets(id);
     expect(samlApplicationSecrets.length).toBe(2);
     expect(
@@ -162,6 +172,15 @@ describe('SAML application', () => {
     const { certificate } = await getSamlApplicationCertificate(id);
     expect(typeof certificate).toBe('string');
 
+    await expectRejects(getSamlApplicationCertificate(id), {
+      status: 400,
+      code: 'application.saml.entity_id_required',
+    });
+    await updateSamlApplication(id, {
+      config: {
+        entityId: 'https://example.logto.io',
+      },
+    });
     await expect(getSamlApplicationMetadata(id)).resolves.not.toThrow();
 
     await expectRejects(deleteSamlApplicationSecret(id, createdSecret.id), {

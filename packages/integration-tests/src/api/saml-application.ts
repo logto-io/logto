@@ -49,4 +49,10 @@ export const getSamlApplicationCertificate = async (id: string) =>
 
 // Anonymous endpoints
 export const getSamlApplicationMetadata = async (id: string) =>
-  api.get(`saml-applications/${id}/metadata`).text();
+  api
+    .get(`saml-applications/${id}/metadata`, {
+      headers: {
+        Accept: 'text/xml',
+      },
+    })
+    .text();

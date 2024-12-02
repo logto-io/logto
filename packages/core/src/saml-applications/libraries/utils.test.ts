@@ -75,13 +75,10 @@ describe('calculateCertificateFingerprints', () => {
     const fingerprints = calculateCertificateFingerprints(validCertificate);
 
     // Verify fingerprint format
-    expect(fingerprints.sha1.formatted).toMatch(/^([\dA-F]{2}:){19}[\dA-F]{2}$/);
-    expect(fingerprints.sha1.unformatted).toMatch(/^[\dA-F]{40}$/);
     expect(fingerprints.sha256.formatted).toMatch(/^([\dA-F]{2}:){31}[\dA-F]{2}$/);
     expect(fingerprints.sha256.unformatted).toMatch(/^[\dA-F]{64}$/);
 
     // Verify formatted and unformatted consistency
-    expect(fingerprints.sha1.unformatted).toBe(fingerprints.sha1.formatted.replaceAll(':', ''));
     expect(fingerprints.sha256.unformatted).toBe(fingerprints.sha256.formatted.replaceAll(':', ''));
   });
 

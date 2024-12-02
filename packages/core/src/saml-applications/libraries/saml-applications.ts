@@ -35,8 +35,8 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
 
   const createSamlApplicationSecret = async (
     applicationId: string,
-    // Set certificate life span to 1 year by default.
-    lifeSpanInDays = 365
+    // Set certificate life span to 3 years by default.
+    lifeSpanInDays = 365 * 3
   ): Promise<SamlApplicationSecret> => {
     const { privateKey, certificate, notAfter } = await generateKeyPairAndCertificate(
       lifeSpanInDays
