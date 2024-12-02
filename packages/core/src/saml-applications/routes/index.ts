@@ -3,6 +3,8 @@ import {
   samlApplicationCreateGuard,
   samlApplicationPatchGuard,
   samlApplicationResponseGuard,
+  samlApplicationSecretResponseGuard,
+  SamlApplicationSecrets,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { removeUndefinedKeys } from '@silverhand/essentials';
@@ -23,6 +25,12 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
   const {
     applications: { insertApplication, findApplicationById, deleteApplicationById },
     samlApplicationConfigs: { insertSamlApplicationConfig },
+    samlApplicationSecrets: {
+      deleteSamlApplicationSecretById,
+      findSamlApplicationSecretsByApplicationId,
+      findSamlApplicationSecretByApplicationIdAndId,
+      updateSamlApplicationSecretStatusByApplicationIdAndSecretId,
+    },
   } = queries;
   const {
     samlApplications: {
@@ -141,6 +149,105 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       await deleteApplicationById(id);
 
       ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/saml-applications/:id/secrets',
+    koaGuard({
+      params: z.object({ id: z.string() }),
+      body: z.object({ lifeSpanInDays: z.number().optional() }),
+      response: samlApplicationSecretResponseGuard,
+      status: [201, 400, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        body: { lifeSpanInDays },
+        params: { id },
+      } = ctx.guard;
+
+      ctx.status = 201;
+      ctx.body = await createSamlApplicationSecret(id, lifeSpanInDays);
+
+      return next();
+    }
+  );
+
+  router.get(
+    '/saml-applications/:id/secrets',
+    koaGuard({
+      params: z.object({ id: z.string() }),
+      response: samlApplicationSecretResponseGuard.array(),
+      status: [200, 400, 404],
+    }),
+    async (ctx, next) => {
+      const { id } = ctx.guard.params;
+
+      ctx.status = 200;
+      ctx.body = await findSamlApplicationSecretsByApplicationId(id);
+
+      return next();
+    }
+  );
+
+  router.delete(
+    '/saml-applications/:id/secrets/:secretId',
+    koaGuard({
+      params: z.object({ id: z.string(), secretId: z.string() }),
+      status: [204, 400, 404],
+    }),
+    async (ctx, next) => {
+      const { id, secretId } = ctx.guard.params;
+
+      // Although we can directly find the SAML app secret by `secretId` here, to prevent deleting a secret that does not belong to the current application, we will first verify through the application ID and secret ID.
+      const samlApplicationSecret = await findSamlApplicationSecretByApplicationIdAndId(
+        id,
+        secretId
+      );
+
+      assertThat(!samlApplicationSecret.active, 'application.saml.can_not_delete_active_secret');
+
+      await deleteSamlApplicationSecretById(secretId);
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  router.patch(
+    '/saml-applications/:id/secrets/:secretId',
+    koaGuard({
+      params: z.object({ id: z.string(), secretId: z.string() }),
+      body: SamlApplicationSecrets.createGuard.pick({
+        active: true,
+      }),
+      response: samlApplicationSecretResponseGuard,
+      status: [200, 400, 404],
+    }),
+    async (ctx, next) => {
+      const { id, secretId } = ctx.guard.params;
+      const { active } = ctx.guard.body;
+
+      const originalSamlApplicationSecret = await findSamlApplicationSecretByApplicationIdAndId(
+        id,
+        secretId
+      );
+
+      if (originalSamlApplicationSecret.active === active) {
+        ctx.status = 200;
+        ctx.body = originalSamlApplicationSecret;
+
+        return next();
+      }
+
+      const updatedSamlApplicationSecret =
+        await updateSamlApplicationSecretStatusByApplicationIdAndSecretId(id, secretId, active);
+
+      ctx.status = 200;
+      ctx.body = updatedSamlApplicationSecret;
 
       return next();
     }

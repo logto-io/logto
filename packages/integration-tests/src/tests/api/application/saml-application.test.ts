@@ -6,6 +6,10 @@ import {
   deleteSamlApplication,
   updateSamlApplication,
   getSamlApplication,
+  deleteSamlApplicationSecret,
+  createSamlApplicationSecret,
+  updateSamlApplicationSecret,
+  getSamlApplicationSecrets,
 } from '#src/api/saml-application.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { devFeatureTest } from '#src/utils.js';
@@ -102,5 +106,64 @@ describe('SAML application', () => {
       status: 422,
     });
     await deleteApplication(application.id);
+  });
+
+  it('should be able to create and delete SAML application secrets', async () => {
+    const { id } = await createSamlApplication({
+      name: 'test',
+      description: 'test',
+    });
+
+    const createdSecret = await createSamlApplicationSecret(id, 30);
+
+    // @ts-expect-error - Make sure the `privateKey` is not exposed in the response.
+    expect(createdSecret.privateKey).toBeUndefined();
+
+    const samlApplicationSecrets = await getSamlApplicationSecrets(id);
+    expect(samlApplicationSecrets.length).toBe(2);
+    expect(
+      samlApplicationSecrets.find((secret) => secret.id === createdSecret.id)
+    ).not.toBeUndefined();
+    // @ts-expect-error - Make sure the `privateKey` is not exposed in the response.
+    expect(samlApplicationSecrets.every((secret) => secret.privateKey === undefined)).toBe(true);
+
+    await deleteSamlApplicationSecret(id, createdSecret.id);
+
+    await deleteSamlApplication(id);
+  });
+
+  it('should be able to update SAML application secret status and can not delete active secret', async () => {
+    const { id } = await createSamlApplication({
+      name: 'test',
+      description: 'test',
+    });
+
+    const createdSecret = await createSamlApplicationSecret(id, 30);
+
+    // @ts-expect-error - Make sure the `privateKey` is not exposed in the response.
+    expect(createdSecret.privateKey).toBeUndefined();
+
+    const samlApplicationSecrets = await getSamlApplicationSecrets(id);
+    expect(samlApplicationSecrets.length).toBe(2);
+    expect(
+      samlApplicationSecrets.find((secret) => secret.id === createdSecret.id)
+    ).not.toBeUndefined();
+
+    // @ts-expect-error - Make sure the `privateKey` is not exposed in the response.
+    expect(samlApplicationSecrets.every((secret) => secret.privateKey === undefined)).toBe(true);
+
+    const updatedSecret = await updateSamlApplicationSecret(id, createdSecret.id, true);
+    expect(updatedSecret.active).toBe(true);
+    // @ts-expect-error - Make sure the `privateKey` is not exposed in the response.
+    expect(updatedSecret.privateKey).toBeUndefined();
+
+    await expectRejects(deleteSamlApplicationSecret(id, createdSecret.id), {
+      code: 'application.saml.can_not_delete_active_secret',
+      status: 400,
+    });
+
+    await updateSamlApplicationSecret(id, createdSecret.id, false);
+    await deleteSamlApplicationSecret(id, createdSecret.id);
+    await deleteSamlApplication(id);
   });
 });
