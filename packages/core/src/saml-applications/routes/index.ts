@@ -1,18 +1,21 @@
 import {
   ApplicationType,
   samlApplicationCreateGuard,
+  samlApplicationPatchGuard,
   samlApplicationResponseGuard,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { removeUndefinedKeys } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { buildOidcClientMetadata } from '#src/oidc/utils.js';
 import { generateInternalSecret } from '#src/routes/applications/application-secret.js';
 import type { ManagementApiRouter, RouterInitArgs } from '#src/routes/types.js';
-import { ensembleSamlApplication, validateAcsUrl } from '#src/saml-applications/routes/utils.js';
 import assertThat from '#src/utils/assert-that.js';
+
+import { ensembleSamlApplication, validateAcsUrl } from '../libraries/utils.js';
 
 export default function samlApplicationRoutes<T extends ManagementApiRouter>(
   ...[router, { queries, libraries }]: RouterInitArgs<T>
@@ -22,7 +25,11 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
     samlApplicationConfigs: { insertSamlApplicationConfig },
   } = queries;
   const {
-    samlApplicationSecrets: { createSamlApplicationSecret },
+    samlApplications: {
+      createSamlApplicationSecret,
+      findSamlApplicationById,
+      updateSamlApplicationById,
+    },
   } = libraries;
 
   router.post(
@@ -30,7 +37,7 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
     koaGuard({
       body: samlApplicationCreateGuard,
       response: samlApplicationResponseGuard,
-      status: [201, 400],
+      status: [201, 400, 422],
     }),
     async (ctx, next) => {
       const { name, description, customData, config } = ctx.guard.body;
@@ -72,17 +79,64 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
     }
   );
 
+  router.get(
+    '/saml-applications/:id',
+    koaGuard({
+      params: z.object({
+        id: z.string(),
+      }),
+      response: samlApplicationResponseGuard,
+      status: [200, 404, 422],
+    }),
+    async (ctx, next) => {
+      const { id } = ctx.guard.params;
+
+      const samlApplication = await findSamlApplicationById(id);
+
+      ctx.status = 200;
+      ctx.body = samlApplication;
+
+      return next();
+    }
+  );
+
+  router.patch(
+    '/saml-applications/:id',
+    koaGuard({
+      params: z.object({ id: z.string() }),
+      body: samlApplicationPatchGuard,
+      response: samlApplicationResponseGuard,
+      status: [200, 404, 422],
+    }),
+    async (ctx, next) => {
+      const { id } = ctx.guard.params;
+
+      const updatedSamlApplication = await updateSamlApplicationById(id, ctx.guard.body);
+
+      ctx.status = 200;
+      ctx.body = updatedSamlApplication;
+
+      return next();
+    }
+  );
+
   router.delete(
     '/saml-applications/:id',
     koaGuard({
       params: z.object({ id: z.string() }),
-      status: [204, 400, 404],
+      status: [204, 422, 404],
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
 
       const { type } = await findApplicationById(id);
-      assertThat(type === ApplicationType.SAML, 'application.saml.saml_application_only');
+      assertThat(
+        type === ApplicationType.SAML,
+        new RequestError({
+          code: 'application.saml.saml_application_only',
+          status: 422,
+        })
+      );
 
       await deleteApplicationById(id);
 

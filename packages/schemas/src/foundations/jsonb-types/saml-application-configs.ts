@@ -19,5 +19,5 @@ export type SamlAcsUrl = {
 
 export const samlAcsUrlGuard = z.object({
   binding: z.nativeEnum(BindingType),
-  url: z.string(),
+  url: z.string().url(),
 }) satisfies ToZodObject<SamlAcsUrl>;
