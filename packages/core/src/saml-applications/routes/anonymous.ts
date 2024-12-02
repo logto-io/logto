@@ -7,7 +7,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
   ...[router, { libraries }]: RouterInitArgs<T>
 ) {
   const {
-    samlApplications: { getSamlApplicationMetadataByApplicationId },
+    samlApplications: { getSamlIdPMetadataByApplicationId },
   } = libraries;
 
   router.get(
@@ -20,7 +20,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
     async (ctx, next) => {
       const { id } = ctx.guard.params;
 
-      const metadata = await getSamlApplicationMetadataByApplicationId(id);
+      const { metadata } = await getSamlIdPMetadataByApplicationId(id);
 
       ctx.status = 200;
       ctx.body = metadata;

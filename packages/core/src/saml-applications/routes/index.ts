@@ -44,7 +44,7 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       createSamlApplicationSecret,
       findSamlApplicationById,
       updateSamlApplicationById,
-      getSamlApplicationMetadataByApplicationId,
+      getSamlIdPMetadataByApplicationId,
     },
   } = libraries;
 
@@ -286,7 +286,7 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
   );
 
   router.get(
-    '/saml-applications/:id/certificate/download',
+    '/saml-applications/:id/certificate.pem',
     koaGuard({
       params: z.object({ id: z.string() }),
       status: [200, 400, 404],
@@ -295,24 +295,19 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const { id } = ctx.guard.params;
 
-      const { id: secretId, certificate } = await findActiveSamlApplicationSecretByApplicationId(
-        id
-      );
+      const { certificate } = await findActiveSamlApplicationSecretByApplicationId(id);
 
       ctx.status = 200;
       ctx.body = certificate;
       ctx.type = 'application/x-pem-file';
-      ctx.set(
-        'Content-Disposition',
-        createContentDisposition(`saml-certificate-app-${id}-secret-${secretId}.pem`)
-      );
+      ctx.set('Content-Disposition', createContentDisposition(`certificate.pem`));
 
       return next();
     }
   );
 
   router.get(
-    '/saml-applications/:id/metadata/download',
+    '/saml-applications/:id/metadata.xml',
     koaGuard({
       params: z.object({ id: z.string() }),
       status: [200, 400, 404],
@@ -321,15 +316,12 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const { id } = ctx.guard.params;
 
-      const { metadata, secretId } = await getSamlApplicationMetadataByApplicationId(id);
+      const { metadata } = await getSamlIdPMetadataByApplicationId(id);
 
       ctx.status = 200;
       ctx.body = metadata;
       ctx.type = 'text/xml;charset=utf-8';
-      ctx.set(
-        'Content-Disposition',
-        createContentDisposition(`saml-metadata-app-${id}-secret-${secretId}.xml`)
-      );
+      ctx.set('Content-Disposition', createContentDisposition(`metadata.xml`));
 
       return next();
     }

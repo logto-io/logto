@@ -47,7 +47,7 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
       applicationId,
       privateKey,
       certificate,
-      expiresAt: Math.floor(notAfter.getTime() / 1000),
+      expiresAt: notAfter.getTime(),
       active: false,
     });
   };
@@ -101,10 +101,8 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
     });
   };
 
-  const getSamlApplicationMetadataByApplicationId = async (
-    id: string
-  ): Promise<{ metadata: string; secretId: string }> => {
-    const [{ tenantId, entityId }, { id: secretId, certificate }] = await Promise.all([
+  const getSamlIdPMetadataByApplicationId = async (id: string): Promise<{ metadata: string }> => {
+    const [{ tenantId, entityId }, { certificate }] = await Promise.all([
       findSamlApplicationConfigByApplicationId(id),
       findActiveSamlApplicationSecretByApplicationId(id),
     ]);
@@ -127,7 +125,6 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
 
     return {
       metadata: idp.getMetadata(),
-      secretId,
     };
   };
 
@@ -135,6 +132,6 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
     createSamlApplicationSecret,
     findSamlApplicationById,
     updateSamlApplicationById,
-    getSamlApplicationMetadataByApplicationId,
+    getSamlIdPMetadataByApplicationId,
   };
 };
