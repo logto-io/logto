@@ -1,6 +1,6 @@
 import { ApplicationType, BindingType } from '@logto/schemas';
 
-import { createApplication, deleteApplication } from '#src/api/application.js';
+import { createApplication, deleteApplication, updateApplication } from '#src/api/application.js';
 import {
   createSamlApplication,
   deleteSamlApplication,
@@ -123,6 +123,14 @@ describe('SAML application secrets/certificate/metadata', () => {
     // @ts-expect-error - Make sure the `privateKey` is not exposed
     expect(createdSecret.privateKey).toBeUndefined();
 
+    await expectRejects(updateApplication(id, { name: 'updated' }), {
+      code: 'application.saml.use_saml_app_api',
+      status: 400,
+    });
+    await expectRejects(deleteApplication(id), {
+      code: 'application.saml.use_saml_app_api',
+      status: 400,
+    });
     await deleteSamlApplication(id);
   });
 

@@ -256,7 +256,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         })
       ),
       response: Applications.guard,
-      status: [200, 404, 422, 500],
+      status: [200, 400, 404, 422, 500],
     }),
     async (ctx, next) => {
       const {
@@ -341,7 +341,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
     koaGuard({
       params: object({ id: string().min(1) }),
       response: z.undefined(),
-      status: [204, 404, 422],
+      status: [204, 400, 404, 422],
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
