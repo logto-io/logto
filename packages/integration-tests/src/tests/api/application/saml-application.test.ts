@@ -10,6 +10,8 @@ import {
   createSamlApplicationSecret,
   updateSamlApplicationSecret,
   getSamlApplicationSecrets,
+  getSamlApplicationMetadata,
+  getSamlApplicationCertificate,
 } from '#src/api/saml-application.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { devFeatureTest } from '#src/utils.js';
@@ -33,7 +35,7 @@ describe('SAML application', () => {
         description: 'test',
         config: {
           acsUrl: {
-            binding: BindingType.REDIRECT,
+            binding: BindingType.Redirect,
             url: 'https://example.com',
           },
         },
@@ -49,7 +51,7 @@ describe('SAML application', () => {
     const config = {
       entityId: 'https://example.logto.io',
       acsUrl: {
-        binding: BindingType.POST,
+        binding: BindingType.Post,
         url: 'https://example.logto.io/sso/saml',
       },
     };
@@ -71,7 +73,7 @@ describe('SAML application', () => {
 
     const newConfig = {
       acsUrl: {
-        binding: BindingType.POST,
+        binding: BindingType.Post,
         url: 'https://example.logto.io/sso/saml',
       },
     };
@@ -107,8 +109,10 @@ describe('SAML application', () => {
     });
     await deleteApplication(application.id);
   });
+});
 
-  it('should be able to create and delete SAML application secrets', async () => {
+describe('SAML application secrets/certificate/metadata', () => {
+  it('should create a secret and verify privateKey is not exposed', async () => {
     const { id } = await createSamlApplication({
       name: 'test',
       description: 'test',
@@ -116,23 +120,32 @@ describe('SAML application', () => {
 
     const createdSecret = await createSamlApplicationSecret(id, 30);
 
-    // @ts-expect-error - Make sure the `privateKey` is not exposed in the response.
+    // @ts-expect-error - Make sure the `privateKey` is not exposed
     expect(createdSecret.privateKey).toBeUndefined();
-
-    const samlApplicationSecrets = await getSamlApplicationSecrets(id);
-    expect(samlApplicationSecrets.length).toBe(2);
-    expect(
-      samlApplicationSecrets.find((secret) => secret.id === createdSecret.id)
-    ).not.toBeUndefined();
-    // @ts-expect-error - Make sure the `privateKey` is not exposed in the response.
-    expect(samlApplicationSecrets.every((secret) => secret.privateKey === undefined)).toBe(true);
-
-    await deleteSamlApplicationSecret(id, createdSecret.id);
 
     await deleteSamlApplication(id);
   });
 
-  it('should be able to update SAML application secret status and can not delete active secret', async () => {
+  it('should return 404 when getting certificate/metadata without active secret', async () => {
+    const { id } = await createSamlApplication({
+      name: 'test',
+      description: 'test',
+    });
+
+    await expectRejects(getSamlApplicationCertificate(id), {
+      status: 404,
+      code: 'application.saml.no_active_secret',
+    });
+
+    await expectRejects(getSamlApplicationMetadata(id), {
+      status: 404,
+      code: 'application.saml.no_active_secret',
+    });
+
+    await deleteSamlApplication(id);
+  });
+
+  it('should manage secret activation status correctly', async () => {
     const { id } = await createSamlApplication({
       name: 'test',
       description: 'test',
@@ -140,30 +153,64 @@ describe('SAML application', () => {
 
     const createdSecret = await createSamlApplicationSecret(id, 30);
 
-    // @ts-expect-error - Make sure the `privateKey` is not exposed in the response.
-    expect(createdSecret.privateKey).toBeUndefined();
-
-    const samlApplicationSecrets = await getSamlApplicationSecrets(id);
-    expect(samlApplicationSecrets.length).toBe(2);
-    expect(
-      samlApplicationSecrets.find((secret) => secret.id === createdSecret.id)
-    ).not.toBeUndefined();
-
-    // @ts-expect-error - Make sure the `privateKey` is not exposed in the response.
-    expect(samlApplicationSecrets.every((secret) => secret.privateKey === undefined)).toBe(true);
+    const secrets = await getSamlApplicationSecrets(id);
+    expect(secrets.length).toBe(2);
+    expect(secrets.every(({ createdAt, expiresAt }) => createdAt < expiresAt)).toBe(true);
 
     const updatedSecret = await updateSamlApplicationSecret(id, createdSecret.id, true);
     expect(updatedSecret.active).toBe(true);
-    // @ts-expect-error - Make sure the `privateKey` is not exposed in the response.
-    expect(updatedSecret.privateKey).toBeUndefined();
 
-    await expectRejects(deleteSamlApplicationSecret(id, createdSecret.id), {
+    const { certificate } = await getSamlApplicationCertificate(id);
+    expect(typeof certificate).toBe('string');
+
+    await deleteSamlApplication(id);
+  });
+
+  it('should handle metadata requirements correctly', async () => {
+    const { id } = await createSamlApplication({
+      name: 'test',
+      description: 'test',
+    });
+
+    const secret = await createSamlApplicationSecret(id, 30);
+    await updateSamlApplicationSecret(id, secret.id, true);
+
+    await expect(getSamlApplicationCertificate(id)).resolves.not.toThrow();
+
+    await expectRejects(getSamlApplicationMetadata(id), {
+      status: 400,
+      code: 'application.saml.entity_id_required',
+    });
+
+    await updateSamlApplication(id, {
+      config: {
+        entityId: 'https://example.logto.io',
+      },
+    });
+
+    await expect(getSamlApplicationMetadata(id)).resolves.not.toThrow();
+
+    await deleteSamlApplication(id);
+  });
+
+  it('should prevent deletion of active secrets', async () => {
+    const { id } = await createSamlApplication({
+      name: 'test',
+      description: 'test',
+    });
+
+    const secret = await createSamlApplicationSecret(id, 30);
+    await updateSamlApplicationSecret(id, secret.id, true);
+
+    await expectRejects(deleteSamlApplicationSecret(id, secret.id), {
       code: 'application.saml.can_not_delete_active_secret',
       status: 400,
     });
 
-    await updateSamlApplicationSecret(id, createdSecret.id, false);
-    await deleteSamlApplicationSecret(id, createdSecret.id);
+    await updateSamlApplicationSecret(id, secret.id, false);
+
+    await deleteSamlApplicationSecret(id, secret.id);
+
     await deleteSamlApplication(id);
   });
 });

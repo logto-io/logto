@@ -1,7 +1,9 @@
 import { addDays } from 'date-fns';
 import forge from 'node-forge';
 
-import { generateKeyPairAndCertificate } from './utils.js';
+import RequestError from '#src/errors/RequestError/index.js';
+
+import { generateKeyPairAndCertificate, calculateCertificateFingerprints } from './utils.js';
 
 describe('generateKeyPairAndCertificate', () => {
   it('should generate valid key pair and certificate', async () => {
@@ -55,5 +57,71 @@ describe('generateKeyPairAndCertificate', () => {
 
     // RSA key should be 4096 bits
     expect(forge.pki.privateKeyToPem(privateKey).length).toBeGreaterThan(3000); // A 4096-bit RSA private key in PEM format is typically longer than 3000 characters
+  });
+});
+
+describe('calculateCertificateFingerprints', () => {
+  // eslint-disable-next-line @silverhand/fp/no-let
+  let validCertificate: string;
+
+  beforeAll(async () => {
+    // Generate a valid certificate for testing
+    const { certificate } = await generateKeyPairAndCertificate();
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    validCertificate = certificate;
+  });
+
+  it('should calculate correct fingerprints for valid certificate', () => {
+    const fingerprints = calculateCertificateFingerprints(validCertificate);
+
+    // Verify fingerprint format
+    expect(fingerprints.sha256.formatted).toMatch(/^([\dA-F]{2}:){31}[\dA-F]{2}$/);
+    expect(fingerprints.sha256.unformatted).toMatch(/^[\dA-F]{64}$/);
+
+    // Verify formatted and unformatted consistency
+    expect(fingerprints.sha256.unformatted).toBe(fingerprints.sha256.formatted.replaceAll(':', ''));
+  });
+
+  it('should throw error for invalid PEM format', () => {
+    const invalidCertificates = [
+      'not a certificate',
+      '-----BEGIN CERTIFICATE-----\n-----END CERTIFICATE-----\n',
+      // Missing begin/end markers
+      'MIIFWjCCA0KgAwIBAgIUMDAwMDAwMDAwMDAwMDAwMDAwMDAwDQYJKoZIhvcNAQEL',
+    ];
+
+    for (const cert of invalidCertificates) {
+      expect(() => calculateCertificateFingerprints(cert)).toThrow(
+        new RequestError('application.saml.invalid_certificate_pem_format')
+      );
+    }
+  });
+
+  it('should throw error for invalid base64 content', () => {
+    const invalidBase64Certificate =
+      '-----BEGIN CERTIFICATE-----\n' +
+      'This is not base64!@#$%^&*()\n' +
+      '-----END CERTIFICATE-----\n';
+
+    expect(() => calculateCertificateFingerprints(invalidBase64Certificate)).toThrow(
+      new RequestError('application.saml.invalid_certificate_pem_format')
+    );
+  });
+
+  it('should handle certificates with different line endings', () => {
+    // Replace \n with \r\n in valid certificate
+    const crlfCertificate = validCertificate.replaceAll('\n', '\r\n');
+
+    const originalFingerprints = calculateCertificateFingerprints(validCertificate);
+    const crlfFingerprints = calculateCertificateFingerprints(crlfCertificate);
+
+    expect(crlfFingerprints).toEqual(originalFingerprints);
+  });
+
+  it('should calculate consistent fingerprints for the same certificate', () => {
+    const firstResult = calculateCertificateFingerprints(validCertificate);
+    const secondResult = calculateCertificateFingerprints(validCertificate);
+
+    expect(firstResult).toEqual(secondResult);
   });
 });

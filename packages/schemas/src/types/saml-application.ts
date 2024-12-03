@@ -1,4 +1,5 @@
-import { type z } from 'zod';
+import { type ToZodObject } from '@logto/connector-kit';
+import { z } from 'zod';
 
 import { Applications } from '../db-entries/application.js';
 import { SamlApplicationConfigs } from '../db-entries/saml-application-config.js';
@@ -54,3 +55,21 @@ export const samlApplicationResponseGuard = Applications.guard.merge(
 );
 
 export type SamlApplicationResponse = z.infer<typeof samlApplicationResponseGuard>;
+
+type FingerprintFormat = {
+  formatted: string;
+  unformatted: string;
+};
+
+const fingerprintFormatGuard = z.object({
+  formatted: z.string(),
+  unformatted: z.string(),
+}) satisfies ToZodObject<FingerprintFormat>;
+
+export type CertificateFingerprints = {
+  sha256: FingerprintFormat;
+};
+
+export const certificateFingerprintsGuard = z.object({
+  sha256: fingerprintFormatGuard,
+}) satisfies ToZodObject<CertificateFingerprints>;

@@ -8,8 +8,8 @@ export const samlAttributeMappingGuard = z.record(
 ) satisfies z.ZodType<SamlAttributeMapping>;
 
 export enum BindingType {
-  POST = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
-  REDIRECT = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
+  Post = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
+  Redirect = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
 }
 
 export type SamlAcsUrl = {

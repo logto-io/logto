@@ -7,6 +7,7 @@ import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import { koaManagementApiHooks } from '#src/middleware/koa-management-api-hooks.js';
 import koaTenantGuard from '#src/middleware/koa-tenant-guard.js';
+import samlApplicationAnonymousRoutes from '#src/saml-applications/routes/anonymous.js';
 import samlApplicationRoutes from '#src/saml-applications/routes/index.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
@@ -120,6 +121,13 @@ const createRouters = (tenant: TenantContext) => {
   wellKnownRoutes(anonymousRouter, tenant);
   statusRoutes(anonymousRouter, tenant);
   authnRoutes(anonymousRouter, tenant);
+  // TODO: @darcy per our design, we will move related routes to Cloud repo and the routes will be loaded from remote.
+  if (
+    (EnvSet.values.isDevFeaturesEnabled && EnvSet.values.isCloud) ||
+    EnvSet.values.isIntegrationTest
+  ) {
+    samlApplicationAnonymousRoutes(anonymousRouter, tenant);
+  }
 
   wellKnownOpenApiRoutes(anonymousRouter, {
     experienceRouters: [experienceRouter, interactionRouter],

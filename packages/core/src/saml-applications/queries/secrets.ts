@@ -3,6 +3,7 @@ import type { CommonQueryMethods } from '@silverhand/slonik';
 import { sql } from '@silverhand/slonik';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
 
@@ -19,6 +20,22 @@ export const createSamlApplicationSecretsQueries = (pool: CommonQueryMethods) =>
       from ${table}
       where ${fields.applicationId}=${applicationId}
     `);
+
+  const findActiveSamlApplicationSecretByApplicationId = async (
+    applicationId: string
+  ): Promise<SamlApplicationSecret> => {
+    const activeSecret = await pool.maybeOne<SamlApplicationSecret>(sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where ${fields.applicationId}=${applicationId} and ${fields.active}=true
+    `);
+
+    if (!activeSecret) {
+      throw new RequestError({ code: 'application.saml.no_active_secret', status: 404 });
+    }
+
+    return activeSecret;
+  };
 
   const findSamlApplicationSecretByApplicationIdAndId = async (applicationId: string, id: string) =>
     pool.one<SamlApplicationSecret>(sql`
@@ -68,6 +85,7 @@ export const createSamlApplicationSecretsQueries = (pool: CommonQueryMethods) =>
   return {
     insertSamlApplicationSecret,
     findSamlApplicationSecretsByApplicationId,
+    findActiveSamlApplicationSecretByApplicationId,
     findSamlApplicationSecretByApplicationIdAndId,
     deleteSamlApplicationSecretById,
     updateSamlApplicationSecretStatusByApplicationIdAndSecretId,

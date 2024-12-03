@@ -3,20 +3,30 @@ import {
   type SamlApplicationResponse,
   type PatchSamlApplication,
   type SamlApplicationSecret,
+  BindingType,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { removeUndefinedKeys } from '@silverhand/essentials';
+import * as saml from 'samlify';
 
+import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { ensembleSamlApplication, generateKeyPairAndCertificate } from './utils.js';
+import {
+  ensembleSamlApplication,
+  generateKeyPairAndCertificate,
+  buildSingleSignOnUrl,
+} from './utils.js';
 
 export const createSamlApplicationsLibrary = (queries: Queries) => {
   const {
     applications: { findApplicationById, updateApplicationById },
-    samlApplicationSecrets: { insertSamlApplicationSecret },
+    samlApplicationSecrets: {
+      insertSamlApplicationSecret,
+      findActiveSamlApplicationSecretByApplicationId,
+    },
     samlApplicationConfigs: {
       findSamlApplicationConfigByApplicationId,
       updateSamlApplicationConfig,
@@ -25,8 +35,8 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
 
   const createSamlApplicationSecret = async (
     applicationId: string,
-    // Set certificate life span to 1 year by default.
-    lifeSpanInDays = 365
+    // Set certificate life span to 3 years by default.
+    lifeSpanInDays = 365 * 3
   ): Promise<SamlApplicationSecret> => {
     const { privateKey, certificate, notAfter } = await generateKeyPairAndCertificate(
       lifeSpanInDays
@@ -37,7 +47,7 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
       applicationId,
       privateKey,
       certificate,
-      expiresAt: Math.floor(notAfter.getTime() / 1000),
+      expiresAt: notAfter.getTime(),
       active: false,
     });
   };
@@ -91,9 +101,37 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
     });
   };
 
+  const getSamlIdPMetadataByApplicationId = async (id: string): Promise<{ metadata: string }> => {
+    const [{ tenantId, entityId }, { certificate }] = await Promise.all([
+      findSamlApplicationConfigByApplicationId(id),
+      findActiveSamlApplicationSecretByApplicationId(id),
+    ]);
+
+    assertThat(entityId, 'application.saml.entity_id_required');
+
+    const tenantEndpoint = getTenantEndpoint(tenantId, EnvSet.values);
+
+    // eslint-disable-next-line new-cap
+    const idp = saml.IdentityProvider({
+      entityID: entityId,
+      signingCert: certificate,
+      singleSignOnService: [
+        {
+          Location: buildSingleSignOnUrl(tenantEndpoint, id),
+          Binding: BindingType.Redirect,
+        },
+      ],
+    });
+
+    return {
+      metadata: idp.getMetadata(),
+    };
+  };
+
   return {
     createSamlApplicationSecret,
     findSamlApplicationById,
     updateSamlApplicationById,
+    getSamlIdPMetadataByApplicationId,
   };
 };
