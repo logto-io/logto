@@ -23,6 +23,8 @@ import {
   validateAcsUrl,
 } from '../libraries/utils.js';
 
+import { samlAppCustomDataGuard } from './utils.js';
+
 export default function samlApplicationRoutes<T extends ManagementApiRouter>(
   ...[router, { queries, libraries }]: RouterInitArgs<T>
 ) {
@@ -53,6 +55,15 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
     }),
     async (ctx, next) => {
       const { name, description, customData, ...config } = ctx.guard.body;
+
+      const result = samlAppCustomDataGuard.safeParse(customData);
+
+      if (!result.success) {
+        throw new RequestError({
+          code: 'application.invalid_custom_data',
+          details: result.error.flatten(),
+        });
+      }
 
       if (config.acsUrl) {
         validateAcsUrl(config.acsUrl);
@@ -122,6 +133,17 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
+
+      if (ctx.guard.body.customData) {
+        const result = samlAppCustomDataGuard.safeParse(ctx.guard.body.customData);
+
+        if (!result.success) {
+          throw new RequestError({
+            code: 'application.invalid_custom_data',
+            details: result.error.flatten(),
+          });
+        }
+      }
 
       const updatedSamlApplication = await updateSamlApplicationById(id, ctx.guard.body);
 
