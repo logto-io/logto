@@ -1,6 +1,6 @@
 import { InteractionEvent, MfaFactor, adminTenantId } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
-import type Provider from 'oidc-provider';
+import type { Provider } from 'oidc-provider';
 
 import { mockWebAuthnBind } from '#src/__mocks__/mfa-verification.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';

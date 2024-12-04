@@ -20,7 +20,7 @@
  */
 
 import { cond } from '@silverhand/essentials';
-import type Provider from 'oidc-provider';
+import type { Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 import instance from 'oidc-provider/lib/helpers/weak_cache.js';
 import checkResource from 'oidc-provider/lib/shared/check_resource.js';

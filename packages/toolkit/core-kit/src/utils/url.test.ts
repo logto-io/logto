@@ -19,6 +19,8 @@ describe('url utilities', () => {
     expect(validateRedirectUrl('com.company://demo:1234', 'mobile')).toBeTruthy();
     expect(validateRedirectUrl('io.logto.SwiftUI-Demo://callback', 'mobile')).toBeTruthy();
     expect(validateRedirectUrl('io.logto.SwiftUI+Demo://callback', 'mobile')).toBeTruthy();
+    expect(validateRedirectUrl('logto:/my-app/callback', 'mobile')).toBeTruthy();
+    expect(validateRedirectUrl('http1://localhost:3001', 'mobile')).toBeTruthy();
   });
 
   it('should detect invalid redirect URIs', () => {

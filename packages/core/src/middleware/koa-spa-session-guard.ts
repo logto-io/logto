@@ -2,7 +2,7 @@ import { logtoConfigGuards, LogtoTenantConfigKey } from '@logto/schemas';
 import { appendPath, trySafe } from '@silverhand/essentials';
 import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
-import type Provider from 'oidc-provider';
+import type { Provider } from 'oidc-provider';
 
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';

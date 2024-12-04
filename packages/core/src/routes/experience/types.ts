@@ -7,7 +7,7 @@ import {
   UserSsoIdentities,
   type UserSsoIdentity,
 } from '@logto/schemas';
-import type Provider from 'oidc-provider';
+import type { Provider } from 'oidc-provider';
 import { z } from 'zod';
 
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';

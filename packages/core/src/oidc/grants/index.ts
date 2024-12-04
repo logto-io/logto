@@ -1,5 +1,5 @@
 import { GrantType } from '@logto/schemas';
-import type Provider from 'oidc-provider';
+import type { Provider } from 'oidc-provider';
 import instance from 'oidc-provider/lib/helpers/weak_cache.js';
 
 import { type EnvSet } from '#src/env-set/index.js';

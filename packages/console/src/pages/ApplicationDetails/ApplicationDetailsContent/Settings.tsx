@@ -8,6 +8,7 @@ import FormCard from '@/components/FormCard';
 import MultiTextInputField from '@/components/MultiTextInputField';
 import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
+import InlineNotification from '@/ds-components/InlineNotification';
 import type { MultiTextInputRule } from '@/ds-components/MultiTextInput/types';
 import {
   convertRhfErrorMessage,
@@ -19,7 +20,32 @@ import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { isJsonObject } from '@/utils/json';
 
 import ProtectedAppSettings from './ProtectedAppSettings';
+import styles from './index.module.scss';
 import { type ApplicationForm } from './utils';
+
+const hasMixedUriProtocols = (applicationType: ApplicationType, uris: string[]): boolean => {
+  switch (applicationType) {
+    case ApplicationType.Native: {
+      return uris.some((uri) => validateRedirectUrl(uri, 'web'));
+    }
+    case ApplicationType.Traditional:
+    case ApplicationType.SPA: {
+      return uris.some((uri) => validateRedirectUrl(uri, 'mobile'));
+    }
+    default: {
+      return false;
+    }
+  }
+};
+
+function MixedUriWarning() {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  return (
+    <InlineNotification severity="alert" className={styles.mixedUriWarning}>
+      {t('application_details.mixed_redirect_uri_warning')}
+    </InlineNotification>
+  );
+}
 
 type Props = {
   readonly data: Application;
@@ -31,19 +57,27 @@ function Settings({ data }: Props) {
   const {
     control,
     register,
+    watch,
     formState: { errors },
   } = useFormContext<ApplicationForm>();
 
   const { type: applicationType } = data;
 
-  const isNativeApp = applicationType === ApplicationType.Native;
   const isProtectedApp = applicationType === ApplicationType.Protected;
   const uriPatternRules: MultiTextInputRule = {
     pattern: {
-      verify: (value) => !value || validateRedirectUrl(value, isNativeApp ? 'mobile' : 'web'),
+      verify: (value) =>
+        !value || validateRedirectUrl(value, 'web') || validateRedirectUrl(value, 'mobile'),
       message: t('errors.invalid_uri_format'),
     },
   };
+  const redirectUris = watch('oidcClientMetadata.redirectUris');
+  const postLogoutRedirectUris = watch('oidcClientMetadata.postLogoutRedirectUris');
+  const showRedirectUriMixedWarning = hasMixedUriProtocols(applicationType, redirectUris);
+  const showPostLogoutUriMixedWarning = hasMixedUriProtocols(
+    applicationType,
+    postLogoutRedirectUris
+  );
 
   if (isProtectedApp) {
     return <ProtectedAppSettings data={data} />;
@@ -113,6 +147,7 @@ function Settings({ data }: Props) {
           )}
         />
       )}
+      {showRedirectUriMixedWarning && <MixedUriWarning />}
       {applicationType !== ApplicationType.MachineToMachine && (
         <Controller
           name="oidcClientMetadata.postLogoutRedirectUris"
@@ -133,6 +168,7 @@ function Settings({ data }: Props) {
           )}
         />
       )}
+      {showPostLogoutUriMixedWarning && <MixedUriWarning />}
       {applicationType !== ApplicationType.MachineToMachine && (
         <Controller
           name="customClientMetadata.corsAllowedOrigins"

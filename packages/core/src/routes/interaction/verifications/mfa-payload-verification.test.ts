@@ -1,6 +1,6 @@
 import { InteractionEvent, MfaFactor } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
-import type Provider from 'oidc-provider';
+import type { Provider } from 'oidc-provider';
 
 import {
   mockUserBackupCodeMfaVerification,

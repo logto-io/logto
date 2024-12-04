@@ -1,4 +1,5 @@
-import Provider, { type KoaContextWithOIDC } from 'oidc-provider';
+import { type KoaContextWithOIDC } from 'oidc-provider';
+import { Provider } from 'oidc-provider';
 import Sinon from 'sinon';
 
 import createMockContext from './jest-koa-mocks/create-mock-context.js';

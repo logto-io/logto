@@ -1,5 +1,4 @@
-import type Provider from 'oidc-provider';
-import type { TTLFunction, KoaContextWithOIDC } from 'oidc-provider';
+import type { Provider, TTLFunction, KoaContextWithOIDC } from 'oidc-provider';
 
 /**
  * Keep the default pre-checks from oidc-provider.
