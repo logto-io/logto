@@ -6,7 +6,7 @@ import {
   type MfaVerification,
 } from '@logto/schemas';
 import { type Context } from 'koa';
-import type Provider from 'oidc-provider';
+import type { Provider } from 'oidc-provider';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';

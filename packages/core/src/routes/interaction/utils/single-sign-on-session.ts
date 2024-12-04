@@ -1,5 +1,5 @@
 import { type Context } from 'koa';
-import type Provider from 'oidc-provider';
+import type { Provider } from 'oidc-provider';
 import { z } from 'zod';
 
 import {

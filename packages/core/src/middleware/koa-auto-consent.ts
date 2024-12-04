@@ -1,7 +1,7 @@
 import { demoAppApplicationId } from '@logto/schemas';
 import { type MiddlewareType } from 'koa';
 import { type IRouterParamContext } from 'koa-router';
-import type Provider from 'oidc-provider';
+import type { Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 
 import { consent, getMissingScopes } from '#src/libraries/session.js';

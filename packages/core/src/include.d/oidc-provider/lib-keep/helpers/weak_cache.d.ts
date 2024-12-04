@@ -1,5 +1,5 @@
 declare module 'oidc-provider/lib/helpers/weak_cache.js' {
-  import type Provider, { type Configuration } from 'oidc-provider';
+  import type { Provider, Configuration } from 'oidc-provider';
 
   /** Deeply make all properties of a record required. */
   type DeepRequired<T> = T extends Record<string | number | symbol, unknown>

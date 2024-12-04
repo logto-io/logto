@@ -21,7 +21,7 @@
 
 import { UserScope } from '@logto/core-kit';
 import { isKeyInObject } from '@silverhand/essentials';
-import type Provider from 'oidc-provider';
+import type { Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 import difference from 'oidc-provider/lib/helpers/_/difference.js';
 import filterClaims from 'oidc-provider/lib/helpers/filter_claims.js';

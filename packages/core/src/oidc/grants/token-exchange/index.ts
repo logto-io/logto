@@ -6,7 +6,7 @@
 
 import { buildOrganizationUrn } from '@logto/core-kit';
 import { GrantType } from '@logto/schemas';
-import type Provider from 'oidc-provider';
+import type { Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 import resolveResource from 'oidc-provider/lib/helpers/resolve_resource.js';
 import validatePresence from 'oidc-provider/lib/helpers/validate_presence.js';

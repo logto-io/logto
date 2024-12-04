@@ -1,5 +1,5 @@
 import { createMockUtils } from '@logto/shared/esm';
-import Provider from 'oidc-provider';
+import { Provider } from 'oidc-provider';
 import Sinon from 'sinon';
 
 import { EnvSet, UserApps } from '#src/env-set/index.js';

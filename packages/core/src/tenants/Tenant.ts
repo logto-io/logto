@@ -5,7 +5,7 @@ import Koa from 'koa';
 import compose from 'koa-compose';
 import koaCompress from 'koa-compress';
 import mount from 'koa-mount';
-import type Provider from 'oidc-provider';
+import type { Provider } from 'oidc-provider';
 
 import { type CacheStore } from '#src/caches/types.js';
 import { WellKnownCache } from '#src/caches/well-known.js';

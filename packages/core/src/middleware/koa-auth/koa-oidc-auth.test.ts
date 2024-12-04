@@ -1,7 +1,7 @@
 import { pickDefault } from '@logto/shared/esm';
 import type { Context } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
-import Provider from 'oidc-provider';
+import { Provider } from 'oidc-provider';
 import Sinon from 'sinon';
 
 import RequestError from '#src/errors/RequestError/index.js';
