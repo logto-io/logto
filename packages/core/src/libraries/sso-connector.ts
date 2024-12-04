@@ -85,11 +85,14 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
 
     // Authorization request initiated by Logto server
     if (autoSendAuthorizationRequest) {
-      // Only first-party traditional web applications are allowed
+      // Only first-party traditional web applications or SAML applications are allowed
       assertThat(
-        application.type === ApplicationType.Traditional && !application.isThirdParty,
-        new RequestError('single_sign_on.idp_initiated_authentication_invalid_application_type', {
-          type: ApplicationType.Traditional,
+        (application.type === ApplicationType.Traditional && !application.isThirdParty) ||
+          application.type === ApplicationType.SAML,
+        new RequestError({
+          code: 'single_sign_on.idp_initiated_authentication_invalid_application_type',
+          type: `${ApplicationType.Traditional}, ${ApplicationType.SAML}`,
+          status: 400,
         })
       );
 
@@ -100,11 +103,16 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
       );
     } else {
       // Authorization request initiated by the client
+
+      // Only first-party traditional web applications, SPAs, or SAML applications are allowed
       assertThat(
         (application.type === ApplicationType.Traditional && !application.isThirdParty) ||
-          application.type === ApplicationType.SPA,
-        new RequestError('single_sign_on.idp_initiated_authentication_invalid_application_type', {
-          type: `${ApplicationType.Traditional}, ${ApplicationType.SPA}`,
+          application.type === ApplicationType.SPA ||
+          application.type === ApplicationType.SAML,
+        new RequestError({
+          code: 'single_sign_on.idp_initiated_authentication_invalid_application_type',
+          type: `${ApplicationType.Traditional}, ${ApplicationType.SPA}, ${ApplicationType.SAML}`,
+          status: 400,
         })
       );
 

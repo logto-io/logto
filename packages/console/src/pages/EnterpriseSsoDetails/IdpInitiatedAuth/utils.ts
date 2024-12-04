@@ -12,7 +12,8 @@ import { toast } from 'react-hot-toast';
 const applicationsSearchParams = new URLSearchParams([
   ['types', ApplicationType.Traditional],
   ['types', ApplicationType.SPA],
-  ['isThirdParty', 'false'],
+  ['types', ApplicationType.SAML],
+  // TODO: for now we allow all third-party applications here, including SAML and OIDC
 ]);
 
 export const applicationsSearchUrl = `api/applications?${applicationsSearchParams.toString()}`;

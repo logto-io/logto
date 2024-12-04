@@ -42,28 +42,13 @@ type FormProps = {
 
 function ConfigForm({
   ssoConnector,
-  applications: allApplications,
+  applications,
   idpInitiatedAuthConfig,
   mutateIdpInitiatedConfig,
 }: FormProps) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getTo } = useTenantPathname();
   const api = useApi();
-
-  /**
-   * See definition of `applicationsSearchUrl`, there is only non-third party SPA/Traditional applications here, and SAML applications are always third party secured by DB schema, we need to manually exclude other application types here to make TypeScript happy.
-   */
-  const applications = useMemo(
-    () =>
-      allApplications.filter(
-        (
-          application
-        ): application is Omit<Application, 'type'> & {
-          type: Exclude<ApplicationType, ApplicationType.SAML>;
-        } => application.type !== ApplicationType.SAML
-      ),
-    [allApplications]
-  );
 
   const {
     control,
