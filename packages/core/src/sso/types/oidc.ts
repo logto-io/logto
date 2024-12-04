@@ -77,3 +77,5 @@ export const idTokenProfileStandardClaimsGuard = z.object({
   profile: z.string().nullish(),
   nonce: z.string().nullish(),
 });
+
+export type idTokenProfileStandardClaims = z.infer<typeof idTokenProfileStandardClaimsGuard>;
