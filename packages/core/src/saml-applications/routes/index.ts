@@ -1,6 +1,5 @@
 import {
   ApplicationType,
-  certificateFingerprintsGuard,
   samlApplicationCreateGuard,
   samlApplicationPatchGuard,
   samlApplicationResponseGuard,
@@ -177,7 +176,11 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       } = ctx.guard;
 
       ctx.status = 201;
-      ctx.body = await createSamlApplicationSecret({ applicationId: id, lifeSpanInDays });
+      const secret = await createSamlApplicationSecret({ applicationId: id, lifeSpanInDays });
+      ctx.body = {
+        ...secret,
+        fingerprints: calculateCertificateFingerprints(secret.certificate),
+      };
 
       return next();
     }
@@ -194,7 +197,11 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       const { id } = ctx.guard.params;
 
       ctx.status = 200;
-      ctx.body = await findSamlApplicationSecretsByApplicationId(id);
+      const secrets = await findSamlApplicationSecretsByApplicationId(id);
+      ctx.body = secrets.map((secret) => ({
+        ...secret,
+        fingerprints: calculateCertificateFingerprints(secret.certificate),
+      }));
 
       return next();
     }
@@ -255,7 +262,10 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
         await updateSamlApplicationSecretStatusByApplicationIdAndSecretId(id, secretId, active);
 
       ctx.status = 200;
-      ctx.body = updatedSamlApplicationSecret;
+      ctx.body = {
+        ...updatedSamlApplicationSecret,
+        fingerprints: calculateCertificateFingerprints(updatedSamlApplicationSecret.certificate),
+      };
 
       return next();
     }
@@ -266,9 +276,9 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
     koaGuard({
       params: z.object({ id: z.string() }),
       status: [200, 400, 404],
-      response: z.object({
-        certificate: z.string(),
-        fingerprints: certificateFingerprintsGuard,
+      response: samlApplicationSecretResponseGuard.pick({
+        certificate: true,
+        fingerprints: true,
       }),
     }),
     async (ctx, next) => {

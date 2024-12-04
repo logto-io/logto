@@ -35,15 +35,6 @@ export const samlApplicationPatchGuard = applicationPatchGuard
 
 export type PatchSamlApplication = z.infer<typeof samlApplicationPatchGuard>;
 
-// Make sure the `privateKey` is not exposed in the response.
-export const samlApplicationSecretResponseGuard = SamlApplicationSecrets.guard.omit({
-  tenantId: true,
-  applicationId: true,
-  privateKey: true,
-});
-
-export type SamlApplicationSecretResponse = z.infer<typeof samlApplicationSecretResponseGuard>;
-
 export const samlApplicationResponseGuard = Applications.guard
   .omit({
     secret: true,
@@ -76,3 +67,16 @@ export type CertificateFingerprints = {
 export const certificateFingerprintsGuard = z.object({
   sha256: fingerprintFormatGuard,
 }) satisfies ToZodObject<CertificateFingerprints>;
+
+// Make sure the `privateKey` is not exposed in the response.
+export const samlApplicationSecretResponseGuard = SamlApplicationSecrets.guard
+  .omit({
+    tenantId: true,
+    applicationId: true,
+    privateKey: true,
+  })
+  .extend({
+    fingerprints: certificateFingerprintsGuard,
+  });
+
+export type SamlApplicationSecretResponse = z.infer<typeof samlApplicationSecretResponseGuard>;
