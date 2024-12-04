@@ -1,4 +1,8 @@
-import { type Application, type SsoConnectorWithProviderConfig } from '@logto/schemas';
+import {
+  ApplicationType,
+  type Application,
+  type SsoConnectorWithProviderConfig,
+} from '@logto/schemas';
 import { useMemo } from 'react';
 import useSWR from 'swr';
 
@@ -31,6 +35,15 @@ function IdpInitiatedAuth({ ssoConnector }: Props) {
     [applicationError, applications, idpInitiatedAuthConfig, idpInitiatedAuthConfigError]
   );
 
+  // Filter out non-SAML third-party applications
+  const filteredApplications = useMemo(
+    () =>
+      applications?.filter(
+        ({ type, isThirdParty }) => !isThirdParty || type === ApplicationType.SAML
+      ),
+    [applications]
+  );
+
   if (isLoading) {
     return (
       <FormCard
@@ -45,7 +58,7 @@ function IdpInitiatedAuth({ ssoConnector }: Props) {
   return (
     <ConfigForm
       ssoConnector={ssoConnector}
-      applications={applications ?? []}
+      applications={filteredApplications ?? []}
       idpInitiatedAuthConfig={idpInitiatedAuthConfig}
       mutateIdpInitiatedConfig={mutate}
     />

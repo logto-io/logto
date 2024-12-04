@@ -20,5 +20,5 @@ create table sso_connector_idp_initiated_auth_configs (
   primary key (tenant_id, connector_id),
   /** Insure the application type is Traditional or SPA. */
   constraint application_type
-    check (check_application_type(default_application_id, 'Traditional', 'SPA'))
+    check (check_application_type(default_application_id, 'Traditional', 'SPA', 'SAML'))
 );
