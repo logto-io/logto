@@ -1,5 +1,5 @@
 import { parseJson } from '@logto/connector-kit';
-import { BindingType } from '@logto/schemas';
+import { tryThat } from '@silverhand/essentials';
 import camelcaseKeys from 'camelcase-keys';
 import { got } from 'got';
 import saml from 'samlify';
@@ -9,16 +9,15 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { AnonymousRouter, RouterInitArgs } from '#src/routes/types.js';
 import { fetchOidcConfig, getUserInfo } from '#src/sso/OidcConnector/utils.js';
+import { SsoConnectorError } from '#src/sso/types/error.js';
 import { oidcTokenResponseGuard } from '#src/sso/types/oidc.js';
-
-import assertThat from '../../utils/assert-that.js';
+import assertThat from '#src/utils/assert-that.js';
 
 import { createSamlTemplateCallback, samlLogInResponseTemplate } from './utils.js';
 
 const samlApplicationSignInCallbackQueryParametersGuard = z.union([
   z.object({
     code: z.string(),
-    iss: z.string(),
   }),
   z.object({
     error: z.string(),
@@ -27,7 +26,7 @@ const samlApplicationSignInCallbackQueryParametersGuard = z.union([
 ]);
 
 export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter>(
-  ...[router, { libraries, queries }]: RouterInitArgs<T>
+  ...[router, { libraries, queries, envSet }]: RouterInitArgs<T>
 ) {
   const {
     samlApplications: { getSamlIdPMetadataByApplicationId },
@@ -57,11 +56,14 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
     '/saml-applications/:id/callback',
     koaGuard({
       params: z.object({ id: z.string() }),
-      status: [200],
+      query: samlApplicationSignInCallbackQueryParametersGuard,
+      status: [200, 400],
     }),
     async (ctx, next) => {
-      const { id } = ctx.guard.params;
-      const queryParameters = ctx.request.query;
+      const {
+        params: { id },
+        query,
+      } = ctx.guard;
 
       // Find the SAML application secret by application ID
       const { applications, samlApplicationSecrets, samlApplicationConfigs } = queries;
@@ -70,27 +72,33 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         oidcClientMetadata: { redirectUris },
       } = await applications.findApplicationById(id);
 
-      // Sign-in callback handler
-      const query = samlApplicationSignInCallbackQueryParametersGuard.safeParse(queryParameters);
-
-      if (!query.success) {
-        throw new RequestError('guard.invalid_input');
-      }
-
-      if ('error' in query.data) {
+      if ('error' in query) {
         throw new RequestError({
           code: 'oidc.invalid_request',
-          status: 400,
-          message: query.data.error_description,
+          message: query.error_description,
         });
       }
 
       // TODO: need to validate state for SP initiated SAML flow
-      const { code, iss } = query.data;
+      const { code } = query;
 
-      const { tokenEndpoint, userinfoEndpoint } = await fetchOidcConfig(iss);
+      const { tokenEndpoint, userinfoEndpoint } = await tryThat(
+        async () => fetchOidcConfig(envSet.oidc.issuer),
+        (error) => {
+          if (error instanceof SsoConnectorError) {
+            throw new RequestError({
+              code: 'oidc.invalid_request',
+              message: error.message,
+            });
+          }
+
+          // Should rarely happen, fetch OIDC configuration should only throw SSO connector error .
+          throw error;
+        }
+      );
 
       const headers = {
+        // Not sure whether we should use internal secret here instead of getting non-expired secret from table `application_secrets`, but it should be fine since this is an internal use case.
         Authorization: `Basic ${Buffer.from(`${id}:${secret}`, 'utf8').toString('base64')}`,
         'Content-Type': 'application/x-www-form-urlencoded',
       };
@@ -99,7 +107,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         grant_type: 'authorization_code',
         code,
         client_id: id,
-        redirect_uri: redirectUris[0] ?? '',
+        ...(redirectUris[0] ? { redirect_uri: redirectUris[0] } : {}),
       });
 
       // TODO: error handling
@@ -114,7 +122,6 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       if (!result.success) {
         throw new RequestError({
           code: 'oidc.invalid_token',
-          status: 400,
           message: 'Invalid token response',
         });
       }
@@ -131,7 +138,8 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       const { entityId, acsUrl } =
         await samlApplicationConfigs.findSamlApplicationConfigByApplicationId(id);
 
-      assertThat(entityId && acsUrl, 'application.saml.entity_id_required');
+      assertThat(entityId, 'application.saml.entity_id_required');
+      assertThat(acsUrl, 'application.saml.acs_url_required');
 
       // eslint-disable-next-line new-cap
       const idp = saml.IdentityProvider({
@@ -157,14 +165,12 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         },
       });
 
-      const binding = acsUrl.binding ?? BindingType.Post;
-
       // eslint-disable-next-line new-cap
       const sp = saml.ServiceProvider({
         entityID: entityId,
         assertionConsumerService: [
           {
-            Binding: binding,
+            Binding: acsUrl.binding,
             Location: acsUrl.url,
           },
         ],
@@ -194,7 +200,6 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
           </body>
         </html>
       `;
-
       return next();
     }
   );

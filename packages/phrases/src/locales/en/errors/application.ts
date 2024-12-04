@@ -28,6 +28,7 @@ const application = {
     can_not_delete_active_secret: 'Can not delete the active secret.',
     no_active_secret: 'No active secret found.',
     entity_id_required: 'Entity ID is required to generate metadata.',
+    acs_url_required: 'Assertion consumer service URL is required to generate metadata.',
     invalid_certificate_pem_format: 'Invalid PEM certificate format',
   },
 };
