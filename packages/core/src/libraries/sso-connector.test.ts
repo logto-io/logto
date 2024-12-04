@@ -13,7 +13,6 @@ const findAllSsoConnectors = jest.fn();
 const getConnectorById = jest.fn();
 const findApplicationById = jest.fn();
 const insertIdpInitiatedAuthConfig = jest.fn();
-const updateIdpInitiatedAuthConfig = jest.fn();
 
 const queries = new MockQueries({
   ssoConnectors: {
@@ -132,8 +131,10 @@ describe('SsoConnectorLibrary', () => {
             autoSendAuthorizationRequest: true,
           })
         ).rejects.toMatchError(
-          new RequestError('single_sign_on.idp_initiated_authentication_invalid_application_type', {
-            type: ApplicationType.Traditional,
+          new RequestError({
+            code: 'single_sign_on.idp_initiated_authentication_invalid_application_type',
+            type: `${ApplicationType.Traditional}, ${ApplicationType.SAML}`,
+            statue: 400,
           })
         );
 
@@ -154,8 +155,10 @@ describe('SsoConnectorLibrary', () => {
             clientIdpInitiatedAuthCallbackUri: 'https://callback.com',
           })
         ).rejects.toMatchError(
-          new RequestError('single_sign_on.idp_initiated_authentication_invalid_application_type', {
-            type: `${ApplicationType.Traditional}, ${ApplicationType.SPA}`,
+          new RequestError({
+            code: 'single_sign_on.idp_initiated_authentication_invalid_application_type',
+            type: `${ApplicationType.Traditional}, ${ApplicationType.SPA}, ${ApplicationType.SAML}`,
+            status: 400,
           })
         );
 
@@ -176,8 +179,10 @@ describe('SsoConnectorLibrary', () => {
           autoSendAuthorizationRequest: true,
         })
       ).rejects.toMatchError(
-        new RequestError('single_sign_on.idp_initiated_authentication_invalid_application_type', {
-          type: ApplicationType.Traditional,
+        new RequestError({
+          code: 'single_sign_on.idp_initiated_authentication_invalid_application_type',
+          type: `${ApplicationType.Traditional}, ${ApplicationType.SAML}`,
+          status: 400,
         })
       );
 

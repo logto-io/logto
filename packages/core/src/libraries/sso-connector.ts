@@ -91,7 +91,7 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
           application.type === ApplicationType.SAML,
         new RequestError({
           code: 'single_sign_on.idp_initiated_authentication_invalid_application_type',
-          type: ApplicationType.Traditional,
+          type: `${ApplicationType.Traditional}, ${ApplicationType.SAML}`,
           status: 400,
         })
       );
