@@ -12,6 +12,7 @@ import {
   handleOidcCallbackAndGetUserInfo,
   setupSamlProviders,
   buildSamlAppCallbackUrl,
+  samlAppCustomDataGuard,
 } from './utils.js';
 
 const samlApplicationSignInCallbackQueryParametersGuard = z.union([
@@ -78,6 +79,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       const {
         secret,
         oidcClientMetadata: { redirectUris },
+        customData,
       } = await applications.findApplicationById(id);
 
       const tenantEndpoint = getTenantEndpoint(tenantId, EnvSet.values);
@@ -85,6 +87,18 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         redirectUris[0] === buildSamlAppCallbackUrl(tenantEndpoint, id),
         'oidc.invalid_redirect_uri'
       );
+
+      // For demo purpose
+      const result = samlAppCustomDataGuard.safeParse(customData);
+
+      if (!result.success) {
+        throw new RequestError(
+          {
+            code: 'application.invalid_custom_data',
+          },
+          { details: result.error.flatten() }
+        );
+      }
 
       // TODO: should be able to handle `state` and code verifier etc.
       const { code } = query;
@@ -110,8 +124,21 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       assertThat(acsUrl, 'application.saml.acs_url_required');
 
       // Setup SAML providers and create response
-      const { idp, sp } = setupSamlProviders(metadata, privateKey, entityId, acsUrl);
-      const { context, entityEndpoint } = await createSamlResponse(idp, sp, userInfo);
+      const { idp, sp } = setupSamlProviders(
+        metadata,
+        privateKey,
+        entityId,
+        acsUrl,
+        result.data.encryptAssertion,
+        result.data.encryptionAlgorithm,
+        result.data.spCertificate
+      );
+      const { context, entityEndpoint } = await createSamlResponse(
+        idp,
+        sp,
+        userInfo,
+        result.data.encryptThenSign
+      );
 
       // Return auto-submit form
       ctx.body = generateAutoSubmitForm(entityEndpoint, context);

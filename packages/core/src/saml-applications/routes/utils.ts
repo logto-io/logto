@@ -1,6 +1,6 @@
 import { parseJson } from '@logto/connector-kit';
 import { generateStandardId } from '@logto/shared';
-import { tryThat, appendPath } from '@silverhand/essentials';
+import { cond, tryThat, appendPath } from '@silverhand/essentials';
 import camelcaseKeys from 'camelcase-keys';
 import saml from 'samlify';
 import { ZodError, z } from 'zod';
@@ -106,6 +106,8 @@ export const createSamlTemplateCallback =
       NameID,
       // TODO: should get the request ID from the input parameters, pending https://github.com/logto-io/logto/pull/6881.
       InResponseTo: 'null',
+      // Hardcode AuthnContextClassRef to 'urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified' for ADFS for now.
+      AuthnContextClassRef: 'urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified',
       /**
        * User attributes for SAML response
        *
@@ -162,7 +164,8 @@ export const exchangeAuthorizationCode = async (
 export const createSamlResponse = async (
   idp: saml.IdentityProviderInstance,
   sp: saml.ServiceProviderInstance,
-  userInfo: IdTokenProfileStandardClaims
+  userInfo: IdTokenProfileStandardClaims,
+  encryptThenSign?: boolean
 ): Promise<{ context: string; entityEndpoint: string }> => {
   // TODO: fix binding method
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -172,7 +175,8 @@ export const createSamlResponse = async (
     null,
     'post',
     userInfo,
-    createSamlTemplateCallback(idp, sp, userInfo)
+    createSamlTemplateCallback(idp, sp, userInfo),
+    encryptThenSign
   );
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -256,13 +260,17 @@ export const setupSamlProviders = (
   metadata: string,
   privateKey: string,
   entityId: string,
-  acsUrl: { binding: string; url: string }
+  acsUrl: { binding: string; url: string },
+  encryptAssertion?: boolean,
+  encryptionAlgorithm?: string,
+  spCertificate?: string
 ) => {
   // eslint-disable-next-line new-cap
   const idp = saml.IdentityProvider({
     metadata,
     privateKey,
-    isAssertionEncrypted: false,
+    isAssertionEncrypted: encryptAssertion ?? false,
+    ...cond(encryptionAlgorithm && { encryptionAlgorithm }),
     loginResponseTemplate: {
       context: samlLogInResponseTemplate,
       attributes: [
@@ -270,20 +278,30 @@ export const setupSamlProviders = (
           name: 'email',
           valueTag: 'email',
           nameFormat: samlAttributeNameFormatBasic,
+          // Have to define this to make Typescript happy although we do not use it in the template.
           valueXsiType: samlValueXmlnsXsi.string,
         },
         {
           name: 'name',
           valueTag: 'name',
           nameFormat: samlAttributeNameFormatBasic,
+          // Have to define this to make Typescript happy although we do not use it in the template.
           valueXsiType: samlValueXmlnsXsi.string,
         },
       ],
+      additionalTemplates: {
+        attributeStatementTemplate: {
+          context: `<AttributeStatement>{Attributes}</AttributeStatement>`,
+        },
+        attributeTemplate: {
+          context: `<Attribute Name="{Name}" NameFormat="{NameFormat}"><AttributeValue>{Value}</AttributeValue></Attribute>`,
+        },
+      },
     },
-    nameIDFormat: [
-      saml.Constants.namespace.format.emailAddress,
-      saml.Constants.namespace.format.persistent,
-    ],
+    tagPrefix: {
+      encryptAssertion: '',
+    },
+    nameIDFormat: [saml.Constants.namespace.format.emailAddress],
   });
 
   // eslint-disable-next-line new-cap
@@ -295,6 +313,7 @@ export const setupSamlProviders = (
         Location: acsUrl.url,
       },
     ],
+    ...cond(spCertificate && { encryptCert: spCertificate }),
   });
 
   return { idp, sp };
@@ -302,3 +321,24 @@ export const setupSamlProviders = (
 
 export const buildSamlAppCallbackUrl = (baseUrl: URL, samlApplicationId: string) =>
   appendPath(baseUrl, `api/saml-applications/${samlApplicationId}/callback`).toString();
+
+export const samlAppCustomDataGuard = z.object({
+  spCertificate: z.string().optional(),
+  encryptThenSign: z.boolean().optional(),
+  encryptAssertion: z.boolean().optional(),
+  encryptionAlgorithm: z
+    .enum([
+      'http://www.w3.org/2001/04/xmlenc#aes128-cbc', // AES_128
+      'http://www.w3.org/2001/04/xmlenc#aes256-cbc', // AES_256
+      'http://www.w3.org/2001/04/xmlenc#tripledes-cbc', // TRI_DEC
+      'http://www.w3.org/2009/xmlenc11#aes128-gcm', // AES_128_GCM
+    ])
+    .optional(),
+  // Canonicalization and transformation Algorithms
+  transformationAlgorithm: z
+    .enum([
+      'http://www.w3.org/2000/09/xmldsig#enveloped-signature',
+      'http://www.w3.org/2001/10/xml-exc-c14n#',
+    ])
+    .optional(),
+});
