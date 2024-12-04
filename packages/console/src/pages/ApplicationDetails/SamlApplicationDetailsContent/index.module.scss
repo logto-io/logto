@@ -1,0 +1,24 @@
+@use '@/scss/underscore' as _;
+
+.deleteConfirm {
+  > :not(:first-child) {
+    margin-top: _.unit(6);
+  }
+
+  .description {
+    font: var(--font-body-2);
+  }
+
+  .highlight {
+    color: var(--color-primary-50);
+  }
+}
+
+.tabContainer {
+  flex-direction: column;
+  flex-grow: 1;
+
+  &[data-active='true'] {
+    display: flex;
+  }
+}

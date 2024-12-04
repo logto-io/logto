@@ -198,6 +198,22 @@ const application_details = {
       edited: 'The secret {{name}} has been successfully edited.',
     },
   },
+  saml_idp_config: {
+    title: 'SAML IdP metadata',
+    description:
+      'Use the following metadata and certificate to configure the SAML IdP in your application.',
+    metadata_url_label: 'IdP metadata URL',
+    single_sign_on_service_url_label: 'Single sign-on service URL',
+    idp_entity_id_label: 'IdP entity ID',
+  },
+  saml_idp_certificates: {
+    title: 'SAML signing certificate',
+    expires_at: 'Expires at',
+    finger_print: 'Fingerprint',
+    status: 'Status',
+    active: 'Active',
+    inactive: 'Inactive',
+  },
 };
 
 export default Object.freeze(application_details);
