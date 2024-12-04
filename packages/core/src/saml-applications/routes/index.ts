@@ -56,9 +56,9 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       status: [201, 400, 422],
     }),
     async (ctx, next) => {
-      const { name, description, customData, config } = ctx.guard.body;
+      const { name, description, customData, ...config } = ctx.guard.body;
 
-      if (config?.acsUrl) {
+      if (config.acsUrl) {
         validateAcsUrl(config.acsUrl);
       }
 
@@ -81,7 +81,7 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
             applicationId: application.id,
             ...config,
           }),
-          createSamlApplicationSecret(application.id),
+          createSamlApplicationSecret({ applicationId: application.id, active: true }),
         ]);
 
         ctx.status = 201;
@@ -177,7 +177,7 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       } = ctx.guard;
 
       ctx.status = 201;
-      ctx.body = await createSamlApplicationSecret(id, lifeSpanInDays);
+      ctx.body = await createSamlApplicationSecret({ applicationId: id, lifeSpanInDays });
 
       return next();
     }
@@ -310,7 +310,7 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
     '/saml-applications/:id/metadata.xml',
     koaGuard({
       params: z.object({ id: z.string() }),
-      status: [200, 400, 404],
+      status: [200, 404],
       response: z.string(),
     }),
     async (ctx, next) => {

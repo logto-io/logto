@@ -19,10 +19,8 @@ export const samlApplicationCreateGuard = applicationCreateGuard
     description: true,
     customData: true,
   })
-  .extend({
-    // The reason for encapsulating attributeMapping and spMetadata into an object within the config field is that you cannot provide only one of `attributeMapping` or `spMetadata`. Due to the structure of the `saml_application_configs` table, both must be not null.
-    config: samlAppConfigGuard.partial().optional(),
-  });
+  // The reason for encapsulating attributeMapping and spMetadata into an object within the config field is that you cannot provide only one of `attributeMapping` or `spMetadata`. Due to the structure of the `saml_application_configs` table, both must be not null.
+  .merge(samlAppConfigGuard.partial());
 
 export type CreateSamlApplication = z.infer<typeof samlApplicationCreateGuard>;
 
@@ -32,10 +30,8 @@ export const samlApplicationPatchGuard = applicationPatchGuard
     description: true,
     customData: true,
   })
-  .extend({
-    // The reason for encapsulating attributeMapping and spMetadata into an object within the config field is that you cannot provide only one of `attributeMapping` or `spMetadata`. Due to the structure of the `saml_application_configs` table, both must be not null.
-    config: samlAppConfigGuard.partial().optional(),
-  });
+  // The reason for encapsulating attributeMapping and spMetadata into an object within the config field is that you cannot provide only one of `attributeMapping` or `spMetadata`. Due to the structure of the `saml_application_configs` table, both must be not null.
+  .merge(samlAppConfigGuard.partial());
 
 export type PatchSamlApplication = z.infer<typeof samlApplicationPatchGuard>;
 
@@ -48,11 +44,18 @@ export const samlApplicationSecretResponseGuard = SamlApplicationSecrets.guard.o
 
 export type SamlApplicationSecretResponse = z.infer<typeof samlApplicationSecretResponseGuard>;
 
-export const samlApplicationResponseGuard = Applications.guard.merge(
-  // Partial to allow the optional fields to be omitted in the response.
-  // When starting to create a SAML application, SAML configuration is optional, which can lead to the absence of SAML configuration.
-  samlAppConfigGuard
-);
+export const samlApplicationResponseGuard = Applications.guard
+  .omit({
+    secret: true,
+    oidcClientMetadata: true,
+    customClientMetadata: true,
+    protectedAppMetadata: true,
+  })
+  .merge(
+    // Partial to allow the optional fields to be omitted in the response.
+    // When starting to create a SAML application, SAML configuration is optional, which can lead to the absence of SAML configuration.
+    samlAppConfigGuard
+  );
 
 export type SamlApplicationResponse = z.infer<typeof samlApplicationResponseGuard>;
 

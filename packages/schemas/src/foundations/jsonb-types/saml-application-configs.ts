@@ -13,7 +13,7 @@ export enum BindingType {
 }
 
 export type SamlAcsUrl = {
-  binding?: BindingType;
+  binding: BindingType;
   url: string;
 };
 

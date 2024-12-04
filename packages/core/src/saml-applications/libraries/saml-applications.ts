@@ -18,6 +18,7 @@ import {
   ensembleSamlApplication,
   generateKeyPairAndCertificate,
   buildSingleSignOnUrl,
+  buildSamlIdentityProviderEntityId,
 } from './utils.js';
 
 export const createSamlApplicationsLibrary = (queries: Queries) => {
@@ -33,11 +34,15 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
     },
   } = queries;
 
-  const createSamlApplicationSecret = async (
-    applicationId: string,
-    // Set certificate life span to 3 years by default.
-    lifeSpanInDays = 365 * 3
-  ): Promise<SamlApplicationSecret> => {
+  const createSamlApplicationSecret = async ({
+    applicationId,
+    lifeSpanInDays = 365 * 3,
+    active = false,
+  }: {
+    applicationId: string;
+    lifeSpanInDays?: number;
+    active?: boolean;
+  }): Promise<SamlApplicationSecret> => {
     const { privateKey, certificate, notAfter } = await generateKeyPairAndCertificate(
       lifeSpanInDays
     );
@@ -48,7 +53,7 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
       privateKey,
       certificate,
       expiresAt: notAfter.getTime(),
-      active: false,
+      active,
     });
   };
 
@@ -71,8 +76,9 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
     id: string,
     patchApplicationObject: PatchSamlApplication
   ): Promise<SamlApplicationResponse> => {
-    const { config, ...applicationData } = patchApplicationObject;
+    const { name, description, customData, ...config } = patchApplicationObject;
     const originalApplication = await findApplicationById(id);
+    const applicationData = { name, description, customData };
 
     assertThat(
       originalApplication.type === ApplicationType.SAML,
@@ -86,7 +92,7 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
       Object.keys(applicationData).length > 0
         ? updateApplicationById(id, removeUndefinedKeys(applicationData))
         : originalApplication,
-      config
+      Object.keys(config).length > 0
         ? updateSamlApplicationConfig({
             set: config,
             where: { applicationId: id },
@@ -102,18 +108,16 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
   };
 
   const getSamlIdPMetadataByApplicationId = async (id: string): Promise<{ metadata: string }> => {
-    const [{ tenantId, entityId }, { certificate }] = await Promise.all([
+    const [{ tenantId }, { certificate }] = await Promise.all([
       findSamlApplicationConfigByApplicationId(id),
       findActiveSamlApplicationSecretByApplicationId(id),
     ]);
-
-    assertThat(entityId, 'application.saml.entity_id_required');
 
     const tenantEndpoint = getTenantEndpoint(tenantId, EnvSet.values);
 
     // eslint-disable-next-line new-cap
     const idp = saml.IdentityProvider({
-      entityID: entityId,
+      entityID: buildSamlIdentityProviderEntityId(tenantEndpoint, id),
       signingCert: certificate,
       singleSignOnService: [
         {
