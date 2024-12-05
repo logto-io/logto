@@ -152,3 +152,6 @@ export const validateAcsUrl = (acsUrl: SamlAcsUrl) => {
 
 export const buildSingleSignOnUrl = (baseUrl: URL, samlApplicationId: string) =>
   appendPath(baseUrl, `api/saml/${samlApplicationId}/authn`).toString();
+
+export const buildSamlIdentityProviderEntityId = (baseUrl: URL, samlApplicationId: string) =>
+  appendPath(baseUrl, `saml/${samlApplicationId}`).toString();

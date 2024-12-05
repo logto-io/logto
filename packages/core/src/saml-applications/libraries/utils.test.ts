@@ -74,7 +74,7 @@ describe('calculateCertificateFingerprints', () => {
   it('should calculate correct fingerprints for valid certificate', () => {
     const fingerprints = calculateCertificateFingerprints(validCertificate);
 
-    // Verify fingerprint format
+    // Verify fingerprints format
     expect(fingerprints.sha256.formatted).toMatch(/^([\dA-F]{2}:){31}[\dA-F]{2}$/);
     expect(fingerprints.sha256.unformatted).toMatch(/^[\dA-F]{64}$/);
 

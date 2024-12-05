@@ -14,7 +14,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
     '/saml-applications/:id/metadata',
     koaGuard({
       params: z.object({ id: z.string() }),
-      status: [200, 400, 404],
+      status: [200, 404],
       response: z.string(),
     }),
     async (ctx, next) => {

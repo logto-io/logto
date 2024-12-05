@@ -1,18 +1,58 @@
-import { SamlApplicationSecrets, type SamlApplicationSecret } from '@logto/schemas';
+import {
+  type CreateSamlApplicationSecret,
+  SamlApplicationSecrets,
+  type SamlApplicationSecret,
+} from '@logto/schemas';
 import type { CommonQueryMethods } from '@silverhand/slonik';
 import { sql } from '@silverhand/slonik';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
-import { convertToIdentifiers } from '#src/utils/sql.js';
+import { convertToIdentifiers, type OmitAutoSetFields } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(SamlApplicationSecrets);
 
 export const createSamlApplicationSecretsQueries = (pool: CommonQueryMethods) => {
-  const insertSamlApplicationSecret = buildInsertIntoWithPool(pool)(SamlApplicationSecrets, {
-    returning: true,
-  });
+  /**
+   * @remarks
+   * When creating a SAML app secret, it is set to inactive by default. Since only one secret can be active for a SAML app at a time, creating a new active secret will deactivate all current secrets.
+   * If you need to create an active secret, it is best to use a transaction to ensure that all steps are successful.
+   */
+  const insertInactiveSamlApplicationSecret = async (
+    data: Omit<OmitAutoSetFields<CreateSamlApplicationSecret>, 'active'>
+  ) => {
+    return buildInsertIntoWithPool(pool)(SamlApplicationSecrets, {
+      returning: true,
+    })({ ...data, active: false });
+  };
+
+  const insertActiveSamlApplicationSecret = async (
+    data: Omit<OmitAutoSetFields<CreateSamlApplicationSecret>, 'active'>
+  ) => {
+    return pool.transaction(async (transaction) => {
+      const newSecret = await buildInsertIntoWithPool(transaction)(SamlApplicationSecrets, {
+        returning: true,
+      })({ ...data, active: false });
+
+      // If activating this secret, first deactivate all other secrets of the same application
+      await transaction.query(sql`
+        update ${table}
+        set ${fields.active} = false
+        where ${fields.applicationId} = ${newSecret.applicationId}
+      `);
+
+      // Update the status of the specified secret
+      const updatedSecret = await transaction.one<SamlApplicationSecret>(sql`
+        update ${table}
+        set ${fields.active} = true
+        where ${fields.id} = ${newSecret.id}
+        returning ${sql.join(Object.values(fields), sql`, `)}
+      `);
+
+      return updatedSecret;
+    });
+  };
 
   const findSamlApplicationSecretsByApplicationId = async (applicationId: string) =>
     pool.any<SamlApplicationSecret>(sql`
@@ -83,7 +123,8 @@ export const createSamlApplicationSecretsQueries = (pool: CommonQueryMethods) =>
   };
 
   return {
-    insertSamlApplicationSecret,
+    insertInactiveSamlApplicationSecret,
+    insertActiveSamlApplicationSecret,
     findSamlApplicationSecretsByApplicationId,
     findActiveSamlApplicationSecretByApplicationId,
     findSamlApplicationSecretByApplicationIdAndId,

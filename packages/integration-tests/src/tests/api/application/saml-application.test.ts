@@ -33,11 +33,9 @@ describe('SAML application', () => {
       createSamlApplication({
         name: 'test',
         description: 'test',
-        config: {
-          acsUrl: {
-            binding: BindingType.Redirect,
-            url: 'https://example.com',
-          },
+        acsUrl: {
+          binding: BindingType.Redirect,
+          url: 'https://example.com',
         },
       }),
       {
@@ -58,7 +56,7 @@ describe('SAML application', () => {
     const createdSamlApplication = await createSamlApplication({
       name: 'test',
       description: 'test',
-      config,
+      ...config,
     });
     expect(createdSamlApplication.entityId).toEqual(config.entityId);
     expect(createdSamlApplication.acsUrl).toEqual(config.acsUrl);
@@ -69,18 +67,27 @@ describe('SAML application', () => {
     const createdSamlApplication = await createSamlApplication({
       name: 'test',
       description: 'test',
+      entityId: 'http://example.logto.io/foo',
     });
+    expect(createdSamlApplication.entityId).toEqual('http://example.logto.io/foo');
+    expect(createdSamlApplication.acsUrl).toEqual(null);
+    expect(createdSamlApplication.attributeMapping).toEqual({});
 
     const newConfig = {
       acsUrl: {
         binding: BindingType.Post,
         url: 'https://example.logto.io/sso/saml',
       },
+      entityId: null,
     };
     const updatedSamlApplication = await updateSamlApplication(createdSamlApplication.id, {
       name: 'updated',
-      config: newConfig,
+      ...newConfig,
     });
+    expect(updatedSamlApplication.acsUrl).toEqual(newConfig.acsUrl);
+    expect(updatedSamlApplication.entityId).toEqual(newConfig.entityId);
+    expect(updatedSamlApplication.attributeMapping).toEqual({});
+
     const upToDateSamlApplication = await getSamlApplication(createdSamlApplication.id);
 
     expect(updatedSamlApplication).toEqual(upToDateSamlApplication);
@@ -134,21 +141,14 @@ describe('SAML application secrets/certificate/metadata', () => {
     await deleteSamlApplication(id);
   });
 
-  it('should return 404 when getting certificate/metadata without active secret', async () => {
+  it('should be able to get certificate/metadata after creating a SAML app', async () => {
     const { id } = await createSamlApplication({
       name: 'test',
       description: 'test',
     });
 
-    await expectRejects(getSamlApplicationCertificate(id), {
-      status: 404,
-      code: 'application.saml.no_active_secret',
-    });
-
-    await expectRejects(getSamlApplicationMetadata(id), {
-      status: 404,
-      code: 'application.saml.no_active_secret',
-    });
+    await expect(getSamlApplicationCertificate(id)).resolves.not.toThrow();
+    await expect(getSamlApplicationMetadata(id)).resolves.not.toThrow();
 
     await deleteSamlApplication(id);
   });
@@ -161,42 +161,16 @@ describe('SAML application secrets/certificate/metadata', () => {
 
     const createdSecret = await createSamlApplicationSecret(id, 30);
 
-    const secrets = await getSamlApplicationSecrets(id);
-    expect(secrets.length).toBe(2);
-    expect(secrets.every(({ createdAt, expiresAt }) => createdAt < expiresAt)).toBe(true);
-
     const updatedSecret = await updateSamlApplicationSecret(id, createdSecret.id, true);
     expect(updatedSecret.active).toBe(true);
 
+    const secrets = await getSamlApplicationSecrets(id);
+    expect(secrets.length).toBe(2);
+    expect(secrets.every(({ createdAt, expiresAt }) => createdAt < expiresAt)).toBe(true);
+    expect(secrets.filter(({ active }) => active).length).toBe(1);
+
     const { certificate } = await getSamlApplicationCertificate(id);
     expect(typeof certificate).toBe('string');
-
-    await deleteSamlApplication(id);
-  });
-
-  it('should handle metadata requirements correctly', async () => {
-    const { id } = await createSamlApplication({
-      name: 'test',
-      description: 'test',
-    });
-
-    const secret = await createSamlApplicationSecret(id, 30);
-    await updateSamlApplicationSecret(id, secret.id, true);
-
-    await expect(getSamlApplicationCertificate(id)).resolves.not.toThrow();
-
-    await expectRejects(getSamlApplicationMetadata(id), {
-      status: 400,
-      code: 'application.saml.entity_id_required',
-    });
-
-    await updateSamlApplication(id, {
-      config: {
-        entityId: 'https://example.logto.io',
-      },
-    });
-
-    await expect(getSamlApplicationMetadata(id)).resolves.not.toThrow();
 
     await deleteSamlApplication(id);
   });

@@ -1,6 +1,5 @@
 import {
   ApplicationType,
-  certificateFingerprintsGuard,
   samlApplicationCreateGuard,
   samlApplicationPatchGuard,
   samlApplicationResponseGuard,
@@ -56,9 +55,9 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       status: [201, 400, 422],
     }),
     async (ctx, next) => {
-      const { name, description, customData, config } = ctx.guard.body;
+      const { name, description, customData, ...config } = ctx.guard.body;
 
-      if (config?.acsUrl) {
+      if (config.acsUrl) {
         validateAcsUrl(config.acsUrl);
       }
 
@@ -81,7 +80,7 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
             applicationId: application.id,
             ...config,
           }),
-          createSamlApplicationSecret(application.id),
+          createSamlApplicationSecret({ applicationId: application.id, isActive: true }),
         ]);
 
         ctx.status = 201;
@@ -176,8 +175,12 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
         params: { id },
       } = ctx.guard;
 
+      const secret = await createSamlApplicationSecret({ applicationId: id, lifeSpanInDays });
       ctx.status = 201;
-      ctx.body = await createSamlApplicationSecret(id, lifeSpanInDays);
+      ctx.body = {
+        ...secret,
+        fingerprints: calculateCertificateFingerprints(secret.certificate),
+      };
 
       return next();
     }
@@ -194,7 +197,11 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       const { id } = ctx.guard.params;
 
       ctx.status = 200;
-      ctx.body = await findSamlApplicationSecretsByApplicationId(id);
+      const secrets = await findSamlApplicationSecretsByApplicationId(id);
+      ctx.body = secrets.map((secret) => ({
+        ...secret,
+        fingerprints: calculateCertificateFingerprints(secret.certificate),
+      }));
 
       return next();
     }
@@ -255,7 +262,10 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
         await updateSamlApplicationSecretStatusByApplicationIdAndSecretId(id, secretId, active);
 
       ctx.status = 200;
-      ctx.body = updatedSamlApplicationSecret;
+      ctx.body = {
+        ...updatedSamlApplicationSecret,
+        fingerprints: calculateCertificateFingerprints(updatedSamlApplicationSecret.certificate),
+      };
 
       return next();
     }
@@ -266,9 +276,9 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
     koaGuard({
       params: z.object({ id: z.string() }),
       status: [200, 400, 404],
-      response: z.object({
-        certificate: z.string(),
-        fingerprints: certificateFingerprintsGuard,
+      response: samlApplicationSecretResponseGuard.pick({
+        certificate: true,
+        fingerprints: true,
       }),
     }),
     async (ctx, next) => {
@@ -310,7 +320,7 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
     '/saml-applications/:id/metadata.xml',
     koaGuard({
       params: z.object({ id: z.string() }),
-      status: [200, 400, 404],
+      status: [200, 404],
       response: z.string(),
     }),
     async (ctx, next) => {

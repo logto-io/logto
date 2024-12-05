@@ -18,13 +18,15 @@ import {
   ensembleSamlApplication,
   generateKeyPairAndCertificate,
   buildSingleSignOnUrl,
+  buildSamlIdentityProviderEntityId,
 } from './utils.js';
 
 export const createSamlApplicationsLibrary = (queries: Queries) => {
   const {
     applications: { findApplicationById, updateApplicationById },
     samlApplicationSecrets: {
-      insertSamlApplicationSecret,
+      insertInactiveSamlApplicationSecret,
+      insertActiveSamlApplicationSecret,
       findActiveSamlApplicationSecretByApplicationId,
     },
     samlApplicationConfigs: {
@@ -33,23 +35,34 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
     },
   } = queries;
 
-  const createSamlApplicationSecret = async (
-    applicationId: string,
-    // Set certificate life span to 3 years by default.
-    lifeSpanInDays = 365 * 3
-  ): Promise<SamlApplicationSecret> => {
+  /**
+   * @remarks
+   * When creating a SAML app secret, it is set to inactive by default. Since a SAML app can only have one active secret at a time, creating a new active secret will deactivate all current secrets.
+   */
+  const createSamlApplicationSecret = async ({
+    applicationId,
+    lifeSpanInDays = 365 * 3,
+    isActive = false,
+  }: {
+    applicationId: string;
+    lifeSpanInDays?: number;
+    isActive?: boolean;
+  }): Promise<SamlApplicationSecret> => {
     const { privateKey, certificate, notAfter } = await generateKeyPairAndCertificate(
       lifeSpanInDays
     );
 
-    return insertSamlApplicationSecret({
+    const createObject = {
       id: generateStandardId(),
       applicationId,
       privateKey,
       certificate,
       expiresAt: notAfter.getTime(),
-      active: false,
-    });
+    };
+
+    return isActive
+      ? insertActiveSamlApplicationSecret(createObject)
+      : insertInactiveSamlApplicationSecret(createObject);
   };
 
   const findSamlApplicationById = async (id: string): Promise<SamlApplicationResponse> => {
@@ -71,8 +84,9 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
     id: string,
     patchApplicationObject: PatchSamlApplication
   ): Promise<SamlApplicationResponse> => {
-    const { config, ...applicationData } = patchApplicationObject;
+    const { name, description, customData, ...config } = patchApplicationObject;
     const originalApplication = await findApplicationById(id);
+    const applicationData = { name, description, customData };
 
     assertThat(
       originalApplication.type === ApplicationType.SAML,
@@ -86,11 +100,11 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
       Object.keys(applicationData).length > 0
         ? updateApplicationById(id, removeUndefinedKeys(applicationData))
         : originalApplication,
-      config
+      Object.keys(config).length > 0
         ? updateSamlApplicationConfig({
             set: config,
             where: { applicationId: id },
-            jsonbMode: 'replace',
+            jsonbMode: 'merge',
           })
         : findSamlApplicationConfigByApplicationId(id),
     ]);
@@ -102,18 +116,16 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
   };
 
   const getSamlIdPMetadataByApplicationId = async (id: string): Promise<{ metadata: string }> => {
-    const [{ tenantId, entityId }, { certificate }] = await Promise.all([
+    const [{ tenantId }, { certificate }] = await Promise.all([
       findSamlApplicationConfigByApplicationId(id),
       findActiveSamlApplicationSecretByApplicationId(id),
     ]);
-
-    assertThat(entityId, 'application.saml.entity_id_required');
 
     const tenantEndpoint = getTenantEndpoint(tenantId, EnvSet.values);
 
     // eslint-disable-next-line new-cap
     const idp = saml.IdentityProvider({
-      entityID: entityId,
+      entityID: buildSamlIdentityProviderEntityId(tenantEndpoint, id),
       signingCert: certificate,
       singleSignOnService: [
         {
