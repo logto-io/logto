@@ -3,7 +3,7 @@ import {
   type PatchSamlApplication,
   type SamlApplicationResponse,
 } from '@logto/schemas';
-import { type Nullable, removeUndefinedKeys } from '@silverhand/essentials';
+import { removeUndefinedKeys } from '@silverhand/essentials';
 
 import { type SamlApplicationFormData } from './Settings';
 
@@ -17,26 +17,8 @@ export const parseSamlApplicationResponseToFormData = (
     description,
     name,
     entityId,
-    acsUrl: acsUrl?.url,
+    acsUrl: acsUrl?.url ?? null,
   };
-};
-
-const buildSamlConfig = ({
-  entityId,
-  acsUrl,
-}: {
-  entityId: Nullable<string | undefined>;
-  acsUrl: Nullable<string | undefined>;
-}): PatchSamlApplication['config'] => {
-  if (!entityId && !acsUrl) {
-    return;
-  }
-
-  return removeUndefinedKeys({
-    entityId: entityId ?? undefined,
-    // Currently, we only support HTTP-POST binding
-    acsUrl: acsUrl ? { url: acsUrl, binding: BindingType.Post } : undefined,
-  });
 };
 
 export const parseFormDataToSamlApplicationRequest = (
@@ -47,17 +29,22 @@ export const parseFormDataToSamlApplicationRequest = (
 } => {
   const { id, description, name, entityId, acsUrl } = data;
 
-  const config = buildSamlConfig({ entityId, acsUrl });
+  // If acsUrl value is empty string, it should be removed. Convert it to null.
+  const acsUrlData = acsUrl ? { url: acsUrl, binding: BindingType.Post } : null;
 
   return {
     id,
     payload: removeUndefinedKeys({
       description,
       name,
-      config,
+      entityId,
+      acsUrl: acsUrlData,
     }),
   };
 };
+
+export const buildSamlSigningCertificateFilename = (appId: string, id: string) =>
+  `${appId}-saml-certificate-${id}`;
 
 export const samlApplicationManagementApiPrefix = '/api/saml-applications';
 export const samlApplicationEndpointPrefix = '/saml';

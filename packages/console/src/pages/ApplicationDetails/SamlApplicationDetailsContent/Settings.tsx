@@ -1,5 +1,5 @@
 import { type SamlApplicationSecretResponse, type SamlApplicationResponse } from '@logto/schemas';
-import { appendPath } from '@silverhand/essentials';
+import { appendPath, type Nullable } from '@silverhand/essentials';
 import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -33,7 +33,9 @@ export type SamlApplicationFormData = Pick<
   SamlApplicationResponse,
   'id' | 'description' | 'name' | 'entityId'
 > & {
-  acsUrl?: string;
+  // Currently we only support HTTP-POST binding
+  // Keep the acsUrl as a string in the form data instead of the object
+  acsUrl: Nullable<string>;
 };
 
 type Props = {

@@ -3,19 +3,13 @@ import { compareDesc } from 'date-fns';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import ActionsButton from '@/components/ActionsButton';
 import { LocaleDateTime } from '@/components/DateTime';
 import { type Column } from '@/ds-components/Table/types';
 import Tag from '@/ds-components/Tag';
 import { Tooltip } from '@/ds-components/Tip';
-import useApi from '@/hooks/use-api';
 
+import CertificateActionMenu from './CertificateActionMenu';
 import styles from './index.module.scss';
-
-type ApplicationSecretRow = Pick<
-  SamlApplicationSecretResponse,
-  'id' | 'certificate' | 'expiresAt' | 'active'
->;
 
 const isExpired = (expiresAt: Date | number) => compareDesc(expiresAt, new Date()) === 1;
 
@@ -38,8 +32,8 @@ type UseSecretTableColumns = {
 
 export const useSecretTableColumns = ({ appId }: UseSecretTableColumns) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const api = useApi();
-  const tableColumns: Array<Column<ApplicationSecretRow>> = useMemo(
+
+  const tableColumns: Array<Column<SamlApplicationSecretResponse>> = useMemo(
     () => [
       {
         title: t('application_details.saml_idp_certificates.expires_at'),
@@ -59,7 +53,9 @@ export const useSecretTableColumns = ({ appId }: UseSecretTableColumns) => {
         title: t('application_details.saml_idp_certificates.finger_print'),
         dataIndex: 'fingerPrint',
         colSpan: 5,
-        render: () => <span>@darcy fix me</span>,
+        render: ({ fingerprints }) => (
+          <span className={styles.fingerPrint}>{fingerprints.sha256.unformatted}</span>
+        ),
       },
       {
         title: t('application_details.saml_idp_certificates.status'),
@@ -78,17 +74,11 @@ export const useSecretTableColumns = ({ appId }: UseSecretTableColumns) => {
         title: '',
         dataIndex: 'actions',
         render: (secret) => {
-          const { expiresAt } = secret;
-          return (
-            <ActionsButton
-              fieldName="application_details.application_secret"
-              deleteConfirmation="application_details.secrets.delete_confirmation"
-            />
-          );
+          return <CertificateActionMenu secret={secret} appId={appId} />;
         },
       },
     ],
-    [t]
+    [appId, t]
   );
 
   return tableColumns;

@@ -22,3 +22,11 @@
     display: flex;
   }
 }
+
+.expired {
+  color: var(--color-placeholder);
+}
+
+.fingerPrint {
+  word-break: break-all;
+}
