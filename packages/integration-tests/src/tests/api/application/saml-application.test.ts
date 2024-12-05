@@ -11,7 +11,6 @@ import {
   updateSamlApplicationSecret,
   getSamlApplicationSecrets,
   getSamlApplicationMetadata,
-  getSamlApplicationCertificate,
 } from '#src/api/saml-application.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { devFeatureTest } from '#src/utils.js';
@@ -141,13 +140,12 @@ describe('SAML application secrets/certificate/metadata', () => {
     await deleteSamlApplication(id);
   });
 
-  it('should be able to get certificate/metadata after creating a SAML app', async () => {
+  it('should be able to get metadata after creating a SAML app', async () => {
     const { id } = await createSamlApplication({
       name: 'test',
       description: 'test',
     });
 
-    await expect(getSamlApplicationCertificate(id)).resolves.not.toThrow();
     await expect(getSamlApplicationMetadata(id)).resolves.not.toThrow();
 
     await deleteSamlApplication(id);
@@ -163,14 +161,12 @@ describe('SAML application secrets/certificate/metadata', () => {
 
     const updatedSecret = await updateSamlApplicationSecret(id, createdSecret.id, true);
     expect(updatedSecret.active).toBe(true);
+    expect(typeof updatedSecret.certificate).toBe('string');
 
     const secrets = await getSamlApplicationSecrets(id);
     expect(secrets.length).toBe(2);
     expect(secrets.every(({ createdAt, expiresAt }) => createdAt < expiresAt)).toBe(true);
     expect(secrets.filter(({ active }) => active).length).toBe(1);
-
-    const { certificate } = await getSamlApplicationCertificate(id);
-    expect(typeof certificate).toBe('string');
 
     await deleteSamlApplication(id);
   });
