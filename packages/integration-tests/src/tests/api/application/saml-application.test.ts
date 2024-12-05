@@ -11,7 +11,7 @@ import {
   updateSamlApplicationSecret,
   getSamlApplicationSecrets,
   getSamlApplicationMetadata,
-  getSamlApplicationCertificate,
+  getSamlApplicationCertificateByAppIdAndSecretId,
 } from '#src/api/saml-application.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { devFeatureTest } from '#src/utils.js';
@@ -140,11 +140,6 @@ describe('SAML application secrets/certificate/metadata', () => {
       description: 'test',
     });
 
-    await expectRejects(getSamlApplicationCertificate(id), {
-      status: 404,
-      code: 'application.saml.no_active_secret',
-    });
-
     await expectRejects(getSamlApplicationMetadata(id), {
       status: 404,
       code: 'application.saml.no_active_secret',
@@ -168,8 +163,12 @@ describe('SAML application secrets/certificate/metadata', () => {
     const updatedSecret = await updateSamlApplicationSecret(id, createdSecret.id, true);
     expect(updatedSecret.active).toBe(true);
 
-    const { certificate } = await getSamlApplicationCertificate(id);
-    expect(typeof certificate).toBe('string');
+    for (const secret of secrets) {
+      // eslint-disable-next-line no-await-in-loop
+      await expect(
+        getSamlApplicationCertificateByAppIdAndSecretId(id, secret.id)
+      ).resolves.not.toThrow();
+    }
 
     await deleteSamlApplication(id);
   });
@@ -182,8 +181,6 @@ describe('SAML application secrets/certificate/metadata', () => {
 
     const secret = await createSamlApplicationSecret(id, 30);
     await updateSamlApplicationSecret(id, secret.id, true);
-
-    await expect(getSamlApplicationCertificate(id)).resolves.not.toThrow();
 
     await expectRejects(getSamlApplicationMetadata(id), {
       status: 400,

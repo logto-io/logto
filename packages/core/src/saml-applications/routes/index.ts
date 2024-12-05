@@ -1,6 +1,5 @@
 import {
   ApplicationType,
-  certificateFingerprintsGuard,
   samlApplicationCreateGuard,
   samlApplicationPatchGuard,
   samlApplicationResponseGuard,
@@ -19,11 +18,7 @@ import type { ManagementApiRouter, RouterInitArgs } from '#src/routes/types.js';
 import assertThat from '#src/utils/assert-that.js';
 import { createContentDisposition } from '#src/utils/content-disposition.js';
 
-import {
-  calculateCertificateFingerprints,
-  ensembleSamlApplication,
-  validateAcsUrl,
-} from '../libraries/utils.js';
+import { ensembleSamlApplication, validateAcsUrl } from '../libraries/utils.js';
 
 export default function samlApplicationRoutes<T extends ManagementApiRouter>(
   ...[router, { queries, libraries }]: RouterInitArgs<T>
@@ -36,7 +31,6 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       findSamlApplicationSecretsByApplicationId,
       findSamlApplicationSecretByApplicationIdAndId,
       updateSamlApplicationSecretStatusByApplicationIdAndSecretId,
-      findActiveSamlApplicationSecretByApplicationId,
     },
   } = queries;
   const {
@@ -262,45 +256,21 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
   );
 
   router.get(
-    '/saml-applications/:id/certificate',
+    '/saml-applications/:id/secrets/:secretId/certificate.crt',
     koaGuard({
-      params: z.object({ id: z.string() }),
-      status: [200, 400, 404],
-      response: z.object({
-        certificate: z.string(),
-        fingerprints: certificateFingerprintsGuard,
-      }),
-    }),
-    async (ctx, next) => {
-      const { id } = ctx.guard.params;
-
-      const { certificate } = await findActiveSamlApplicationSecretByApplicationId(id);
-
-      const fingerprints = calculateCertificateFingerprints(certificate);
-
-      ctx.status = 200;
-      ctx.body = { certificate, fingerprints };
-
-      return next();
-    }
-  );
-
-  router.get(
-    '/saml-applications/:id/certificate.pem',
-    koaGuard({
-      params: z.object({ id: z.string() }),
+      params: z.object({ id: z.string(), secretId: z.string() }),
       status: [200, 400, 404],
       response: z.string(),
     }),
     async (ctx, next) => {
-      const { id } = ctx.guard.params;
+      const { id, secretId } = ctx.guard.params;
 
-      const { certificate } = await findActiveSamlApplicationSecretByApplicationId(id);
+      const { certificate } = await findSamlApplicationSecretByApplicationIdAndId(id, secretId);
 
       ctx.status = 200;
       ctx.body = certificate;
-      ctx.type = 'application/x-pem-file';
-      ctx.set('Content-Disposition', createContentDisposition(`certificate.pem`));
+      ctx.type = 'application/x-x509-ca-cert';
+      ctx.set('Content-Disposition', createContentDisposition(`certificate.crt`));
 
       return next();
     }

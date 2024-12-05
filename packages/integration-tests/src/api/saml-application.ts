@@ -44,8 +44,10 @@ export const updateSamlApplicationSecret = async (id: string, secretId: string, 
     .patch(`saml-applications/${id}/secrets/${secretId}`, { json: { active } })
     .json<SamlApplicationSecretResponse>();
 
-export const getSamlApplicationCertificate = async (id: string) =>
-  authedAdminApi.get(`saml-applications/${id}/certificate`).json<{ certificate: string }>();
+export const getSamlApplicationCertificateByAppIdAndSecretId = async (
+  id: string,
+  secretId: string
+) => authedAdminApi.get(`saml-applications/${id}/secrets/${secretId}/certificate.crt`);
 
 // Anonymous endpoints
 export const getSamlApplicationMetadata = async (id: string) =>
