@@ -16,7 +16,6 @@ import { buildOidcClientMetadata } from '#src/oidc/utils.js';
 import { generateInternalSecret } from '#src/routes/applications/application-secret.js';
 import type { ManagementApiRouter, RouterInitArgs } from '#src/routes/types.js';
 import assertThat from '#src/utils/assert-that.js';
-import { createContentDisposition } from '#src/utils/content-disposition.js';
 
 import {
   calculateCertificateFingerprints,
@@ -35,7 +34,6 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       findSamlApplicationSecretsByApplicationId,
       findSamlApplicationSecretByApplicationIdAndId,
       updateSamlApplicationSecretStatusByApplicationIdAndSecretId,
-      findActiveSamlApplicationSecretByApplicationId,
     },
   } = queries;
   const {
@@ -43,7 +41,6 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       createSamlApplicationSecret,
       findSamlApplicationById,
       updateSamlApplicationById,
-      getSamlIdPMetadataByApplicationId,
     },
   } = libraries;
 
@@ -266,72 +263,6 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
         ...updatedSamlApplicationSecret,
         fingerprints: calculateCertificateFingerprints(updatedSamlApplicationSecret.certificate),
       };
-
-      return next();
-    }
-  );
-
-  router.get(
-    '/saml-applications/:id/certificate',
-    koaGuard({
-      params: z.object({ id: z.string() }),
-      status: [200, 400, 404],
-      response: samlApplicationSecretResponseGuard.pick({
-        certificate: true,
-        fingerprints: true,
-      }),
-    }),
-    async (ctx, next) => {
-      const { id } = ctx.guard.params;
-
-      const { certificate } = await findActiveSamlApplicationSecretByApplicationId(id);
-
-      const fingerprints = calculateCertificateFingerprints(certificate);
-
-      ctx.status = 200;
-      ctx.body = { certificate, fingerprints };
-
-      return next();
-    }
-  );
-
-  router.get(
-    '/saml-applications/:id/certificate.pem',
-    koaGuard({
-      params: z.object({ id: z.string() }),
-      status: [200, 400, 404],
-      response: z.string(),
-    }),
-    async (ctx, next) => {
-      const { id } = ctx.guard.params;
-
-      const { certificate } = await findActiveSamlApplicationSecretByApplicationId(id);
-
-      ctx.status = 200;
-      ctx.body = certificate;
-      ctx.type = 'application/x-pem-file';
-      ctx.set('Content-Disposition', createContentDisposition(`certificate.pem`));
-
-      return next();
-    }
-  );
-
-  router.get(
-    '/saml-applications/:id/metadata.xml',
-    koaGuard({
-      params: z.object({ id: z.string() }),
-      status: [200, 404],
-      response: z.string(),
-    }),
-    async (ctx, next) => {
-      const { id } = ctx.guard.params;
-
-      const { metadata } = await getSamlIdPMetadataByApplicationId(id);
-
-      ctx.status = 200;
-      ctx.body = metadata;
-      ctx.type = 'text/xml;charset=utf-8';
-      ctx.set('Content-Disposition', createContentDisposition(`metadata.xml`));
 
       return next();
     }
