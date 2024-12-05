@@ -1,8 +1,5 @@
-import { parseJson } from '@logto/connector-kit';
 import { tryThat } from '@silverhand/essentials';
-import camelcaseKeys from 'camelcase-keys';
-import { got } from 'got';
-import saml from 'samlify';
+import * as saml from 'samlify';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -10,10 +7,11 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import type { AnonymousRouter, RouterInitArgs } from '#src/routes/types.js';
 import { fetchOidcConfig, getUserInfo } from '#src/sso/OidcConnector/utils.js';
 import { SsoConnectorError } from '#src/sso/types/error.js';
-import { oidcTokenResponseGuard } from '#src/sso/types/oidc.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { createSamlTemplateCallback, samlLogInResponseTemplate } from './utils.js';
+import { samlLogInResponseTemplate } from '../libraries/consts.js';
+
+import { exchangeAuthorizationCode, generateAutoSubmitForm, createSamlResponse } from './utils.js';
 
 const samlApplicationSignInCallbackQueryParametersGuard = z.union([
   z.object({
@@ -97,41 +95,20 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         }
       );
 
-      const headers = {
-        // Not sure whether we should use internal secret here instead of getting non-expired secret from table `application_secrets`, but it should be fine since this is an internal use case.
-        Authorization: `Basic ${Buffer.from(`${id}:${secret}`, 'utf8').toString('base64')}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      };
-
-      const tokenRequestParameters = new URLSearchParams({
-        grant_type: 'authorization_code',
+      // Exchange authorization code for tokens
+      const { accessToken } = await exchangeAuthorizationCode(tokenEndpoint, {
         code,
-        client_id: id,
-        ...(redirectUris[0] ? { redirect_uri: redirectUris[0] } : {}),
+        clientId: id,
+        clientSecret: secret,
+        redirectUri: redirectUris[0],
       });
-
-      // TODO: error handling
-      // Exchange the authorization code for an access token
-      const httpResponse = await got.post(tokenEndpoint, {
-        body: tokenRequestParameters.toString(),
-        headers,
-      });
-
-      const result = oidcTokenResponseGuard.safeParse(parseJson(httpResponse.body));
-
-      if (!result.success) {
-        throw new RequestError({
-          code: 'oidc.invalid_token',
-          message: 'Invalid token response',
-        });
-      }
-
-      const { accessToken } = camelcaseKeys(result.data);
 
       assertThat(accessToken, new RequestError('oidc.access_denied'));
 
+      // Get user info using access token
       const userInfo = await getUserInfo(accessToken, userinfoEndpoint);
 
+      // Get SAML configuration and create SAML response
       const { metadata } = await getSamlIdPMetadataByApplicationId(id);
       const { privateKey } =
         await samlApplicationSecrets.findActiveSamlApplicationSecretByApplicationId(id);
@@ -176,30 +153,10 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         ],
       });
 
-      // TODO: fix binding method
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const { context, entityEndpoint } = await idp.createLoginResponse(
-        sp,
-        // @ts-expect-error --fix request object later
-        null,
-        'post',
-        userInfo,
-        createSamlTemplateCallback(idp, sp, userInfo)
-      );
+      const { context, entityEndpoint } = await createSamlResponse(idp, sp, userInfo);
 
-      ctx.body = `
-        <html>
-          <body>
-            <form id="redirectForm" action="${entityEndpoint}" method="POST">
-              <input type="hidden" name="SAMLResponse" value="${context}" />
-              <input type="submit" value="Submit" /> 
-            </form>
-            <script>
-              document.getElementById('redirectForm').submit();
-            </script>
-          </body>
-        </html>
-      `;
+      // Return auto-submit form
+      ctx.body = generateAutoSubmitForm(entityEndpoint, context);
       return next();
     }
   );
