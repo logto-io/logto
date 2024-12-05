@@ -1,32 +1,13 @@
+import { parseJson } from '@logto/connector-kit';
 import { generateStandardId } from '@logto/shared';
-import saml from 'samlify';
+import camelcaseKeys from 'camelcase-keys';
+import { got } from 'got';
+import * as saml from 'samlify';
 
-import { type idTokenProfileStandardClaims } from '#src/sso/types/oidc.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import { oidcTokenResponseGuard, type idTokenProfileStandardClaims } from '#src/sso/types/oidc.js';
 
-export const samlLogInResponseTemplate = `
-<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="{ID}" Version="2.0" IssueInstant="{IssueInstant}" Destination="{Destination}" InResponseTo="{InResponseTo}">
-  <saml:Issuer>{Issuer}</saml:Issuer>
-  <samlp:Status>
-    <samlp:StatusCode Value="{StatusCode}"/>
-  </samlp:Status>
-  <saml:Assertion ID="{AssertionID}" Version="2.0" IssueInstant="{IssueInstant}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">
-    <saml:Issuer>{Issuer}</saml:Issuer>
-    <saml:Subject>
-      <saml:NameID Format="{NameIDFormat}">{NameID}</saml:NameID>
-      <saml:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
-        <saml:SubjectConfirmationData NotOnOrAfter="{SubjectConfirmationDataNotOnOrAfter}" Recipient="{SubjectRecipient}" InResponseTo="{InResponseTo}"/>
-      </saml:SubjectConfirmation>
-    </saml:Subject>
-    <saml:Conditions NotBefore="{ConditionsNotBefore}" NotOnOrAfter="{ConditionsNotOnOrAfter}">
-      <saml:AudienceRestriction>
-        <saml:Audience>{Audience}</saml:Audience>
-      </saml:AudienceRestriction>
-    </saml:Conditions>
-    {AttributeStatement}
-  </saml:Assertion>
-</samlp:Response>`;
-
-export const createSamlTemplateCallback =
+const createSamlTemplateCallback =
   (
     idp: saml.IdentityProviderInstance,
     sp: saml.ServiceProviderInstance,
@@ -72,3 +53,82 @@ export const createSamlTemplateCallback =
       context,
     };
   };
+
+export const exchangeAuthorizationCode = async (
+  tokenEndpoint: string,
+  {
+    code,
+    clientId,
+    clientSecret,
+    redirectUri,
+  }: {
+    code: string;
+    clientId: string;
+    clientSecret: string;
+    redirectUri?: string;
+  }
+) => {
+  const headers = {
+    Authorization: `Basic ${Buffer.from(`${clientId}:${clientSecret}`, 'utf8').toString('base64')}`,
+    'Content-Type': 'application/x-www-form-urlencoded',
+  };
+
+  const tokenRequestParameters = new URLSearchParams({
+    grant_type: 'authorization_code',
+    code,
+    client_id: clientId,
+    ...(redirectUri ? { redirect_uri: redirectUri } : {}),
+  });
+
+  const httpResponse = await got.post(tokenEndpoint, {
+    body: tokenRequestParameters.toString(),
+    headers,
+  });
+
+  const result = oidcTokenResponseGuard.safeParse(parseJson(httpResponse.body));
+
+  if (!result.success) {
+    throw new RequestError({
+      code: 'oidc.invalid_token',
+      message: 'Invalid token response',
+    });
+  }
+
+  return camelcaseKeys(result.data);
+};
+
+export const createSamlResponse = async (
+  idp: saml.IdentityProviderInstance,
+  sp: saml.ServiceProviderInstance,
+  userInfo: idTokenProfileStandardClaims
+): Promise<{ context: string; entityEndpoint: string }> => {
+  // TODO: fix binding method
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const { context, entityEndpoint } = await idp.createLoginResponse(
+    sp,
+    // @ts-expect-error --fix request object later
+    null,
+    'post',
+    userInfo,
+    createSamlTemplateCallback(idp, sp, userInfo)
+  );
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  return { context, entityEndpoint };
+};
+
+export const generateAutoSubmitForm = (actionUrl: string, samlResponse: string) => {
+  return `
+    <html>
+      <body>
+        <form id="redirectForm" action="${actionUrl}" method="POST">
+          <input type="hidden" name="SAMLResponse" value="${samlResponse}" />
+          <input type="submit" value="Submit" /> 
+        </form>
+        <script>
+          document.getElementById('redirectForm').submit();
+        </script>
+      </body>
+    </html>
+  `;
+};
