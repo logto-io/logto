@@ -31,11 +31,9 @@ export const createSamlApplicationSecretsQueries = (pool: CommonQueryMethods) =>
     data: Omit<OmitAutoSetFields<CreateSamlApplicationSecret>, 'active'>
   ) => {
     return pool.transaction(async (transaction) => {
-      const newSecret = await transaction.one<SamlApplicationSecret>(sql`
-        insert into ${table} (${sql.join(Object.values(fields), sql`, `)})
-        values (${sql.join(Object.values(data), sql`, `)})
-        returning ${sql.join(Object.values(fields), sql`, `)};
-      `);
+      const newSecret = await buildInsertIntoWithPool(transaction)(SamlApplicationSecrets, {
+        returning: true,
+      })({ ...data, active: false });
 
       // If activating this secret, first deactivate all other secrets of the same application
       await transaction.query(sql`

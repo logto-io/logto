@@ -60,13 +60,13 @@ const fingerprintFormatGuard = z.object({
   unformatted: z.string(),
 }) satisfies ToZodObject<FingerprintFormat>;
 
-export type CertificateFingerprint = {
+export type CertificateFingerprints = {
   sha256: FingerprintFormat;
 };
 
-export const certificateFingerprintGuard = z.object({
+export const certificateFingerprintsGuard = z.object({
   sha256: fingerprintFormatGuard,
-}) satisfies ToZodObject<CertificateFingerprint>;
+}) satisfies ToZodObject<CertificateFingerprints>;
 
 // Make sure the `privateKey` is not exposed in the response.
 export const samlApplicationSecretResponseGuard = SamlApplicationSecrets.guard
@@ -76,7 +76,7 @@ export const samlApplicationSecretResponseGuard = SamlApplicationSecrets.guard
     privateKey: true,
   })
   .extend({
-    fingerprint: certificateFingerprintGuard,
+    fingerprints: certificateFingerprintsGuard,
   });
 
 export type SamlApplicationSecretResponse = z.infer<typeof samlApplicationSecretResponseGuard>;

@@ -19,7 +19,7 @@ import assertThat from '#src/utils/assert-that.js';
 import { createContentDisposition } from '#src/utils/content-disposition.js';
 
 import {
-  calculateCertificateFingerprint,
+  calculateCertificateFingerprints,
   ensembleSamlApplication,
   validateAcsUrl,
 } from '../libraries/utils.js';
@@ -80,7 +80,7 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
             applicationId: application.id,
             ...config,
           }),
-          createSamlApplicationSecret({ applicationId: application.id, active: true }),
+          createSamlApplicationSecret({ applicationId: application.id, isActive: true }),
         ]);
 
         ctx.status = 201;
@@ -179,7 +179,7 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       ctx.status = 201;
       ctx.body = {
         ...secret,
-        fingerprint: calculateCertificateFingerprint(secret.certificate),
+        fingerprints: calculateCertificateFingerprints(secret.certificate),
       };
 
       return next();
@@ -200,7 +200,7 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       const secrets = await findSamlApplicationSecretsByApplicationId(id);
       ctx.body = secrets.map((secret) => ({
         ...secret,
-        fingerprint: calculateCertificateFingerprint(secret.certificate),
+        fingerprints: calculateCertificateFingerprints(secret.certificate),
       }));
 
       return next();
@@ -264,7 +264,7 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       ctx.status = 200;
       ctx.body = {
         ...updatedSamlApplicationSecret,
-        fingerprint: calculateCertificateFingerprint(updatedSamlApplicationSecret.certificate),
+        fingerprints: calculateCertificateFingerprints(updatedSamlApplicationSecret.certificate),
       };
 
       return next();
@@ -278,7 +278,7 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       status: [200, 400, 404],
       response: samlApplicationSecretResponseGuard.pick({
         certificate: true,
-        fingerprint: true,
+        fingerprints: true,
       }),
     }),
     async (ctx, next) => {
@@ -286,10 +286,10 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
 
       const { certificate } = await findActiveSamlApplicationSecretByApplicationId(id);
 
-      const fingerprint = calculateCertificateFingerprint(certificate);
+      const fingerprints = calculateCertificateFingerprints(certificate);
 
       ctx.status = 200;
-      ctx.body = { certificate, fingerprint };
+      ctx.body = { certificate, fingerprints };
 
       return next();
     }

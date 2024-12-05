@@ -3,7 +3,7 @@ import forge from 'node-forge';
 
 import RequestError from '#src/errors/RequestError/index.js';
 
-import { generateKeyPairAndCertificate, calculateCertificateFingerprint } from './utils.js';
+import { generateKeyPairAndCertificate, calculateCertificateFingerprints } from './utils.js';
 
 describe('generateKeyPairAndCertificate', () => {
   it('should generate valid key pair and certificate', async () => {
@@ -60,7 +60,7 @@ describe('generateKeyPairAndCertificate', () => {
   });
 });
 
-describe('calculateCertificateFingerprint', () => {
+describe('calculateCertificateFingerprints', () => {
   // eslint-disable-next-line @silverhand/fp/no-let
   let validCertificate: string;
 
@@ -71,15 +71,15 @@ describe('calculateCertificateFingerprint', () => {
     validCertificate = certificate;
   });
 
-  it('should calculate correct fingerprint for valid certificate', () => {
-    const fingerprint = calculateCertificateFingerprint(validCertificate);
+  it('should calculate correct fingerprints for valid certificate', () => {
+    const fingerprints = calculateCertificateFingerprints(validCertificate);
 
-    // Verify fingerprint format
-    expect(fingerprint.sha256.formatted).toMatch(/^([\dA-F]{2}:){31}[\dA-F]{2}$/);
-    expect(fingerprint.sha256.unformatted).toMatch(/^[\dA-F]{64}$/);
+    // Verify fingerprints format
+    expect(fingerprints.sha256.formatted).toMatch(/^([\dA-F]{2}:){31}[\dA-F]{2}$/);
+    expect(fingerprints.sha256.unformatted).toMatch(/^[\dA-F]{64}$/);
 
     // Verify formatted and unformatted consistency
-    expect(fingerprint.sha256.unformatted).toBe(fingerprint.sha256.formatted.replaceAll(':', ''));
+    expect(fingerprints.sha256.unformatted).toBe(fingerprints.sha256.formatted.replaceAll(':', ''));
   });
 
   it('should throw error for invalid PEM format', () => {
@@ -91,7 +91,7 @@ describe('calculateCertificateFingerprint', () => {
     ];
 
     for (const cert of invalidCertificates) {
-      expect(() => calculateCertificateFingerprint(cert)).toThrow(
+      expect(() => calculateCertificateFingerprints(cert)).toThrow(
         new RequestError('application.saml.invalid_certificate_pem_format')
       );
     }
@@ -103,7 +103,7 @@ describe('calculateCertificateFingerprint', () => {
       'This is not base64!@#$%^&*()\n' +
       '-----END CERTIFICATE-----\n';
 
-    expect(() => calculateCertificateFingerprint(invalidBase64Certificate)).toThrow(
+    expect(() => calculateCertificateFingerprints(invalidBase64Certificate)).toThrow(
       new RequestError('application.saml.invalid_certificate_pem_format')
     );
   });
@@ -112,15 +112,15 @@ describe('calculateCertificateFingerprint', () => {
     // Replace \n with \r\n in valid certificate
     const crlfCertificate = validCertificate.replaceAll('\n', '\r\n');
 
-    const originalFingerprints = calculateCertificateFingerprint(validCertificate);
-    const crlfFingerprints = calculateCertificateFingerprint(crlfCertificate);
+    const originalFingerprints = calculateCertificateFingerprints(validCertificate);
+    const crlfFingerprints = calculateCertificateFingerprints(crlfCertificate);
 
     expect(crlfFingerprints).toEqual(originalFingerprints);
   });
 
-  it('should calculate consistent fingerprint for the same certificate', () => {
-    const firstResult = calculateCertificateFingerprint(validCertificate);
-    const secondResult = calculateCertificateFingerprint(validCertificate);
+  it('should calculate consistent fingerprints for the same certificate', () => {
+    const firstResult = calculateCertificateFingerprints(validCertificate);
+    const secondResult = calculateCertificateFingerprints(validCertificate);
 
     expect(firstResult).toEqual(secondResult);
   });
