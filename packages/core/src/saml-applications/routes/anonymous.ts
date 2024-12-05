@@ -1,5 +1,5 @@
 import { tryThat } from '@silverhand/essentials';
-import * as saml from 'samlify';
+import saml from 'samlify';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
