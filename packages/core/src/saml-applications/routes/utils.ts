@@ -2,7 +2,7 @@ import { parseJson } from '@logto/connector-kit';
 import { generateStandardId } from '@logto/shared';
 import camelcaseKeys from 'camelcase-keys';
 import { got } from 'got';
-import * as saml from 'samlify';
+import saml from 'samlify';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { oidcTokenResponseGuard, type idTokenProfileStandardClaims } from '#src/sso/types/oidc.js';
@@ -117,7 +117,7 @@ export const createSamlResponse = async (
   return { context, entityEndpoint };
 };
 
-export const generateAutoSubmitForm = (actionUrl: string, samlResponse: string) => {
+export const generateAutoSubmitForm = (actionUrl: string, samlResponse: string): string => {
   return `
     <html>
       <body>

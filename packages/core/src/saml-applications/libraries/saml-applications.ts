@@ -7,7 +7,7 @@ import {
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { removeUndefinedKeys } from '@silverhand/essentials';
-import * as saml from 'samlify';
+import saml from 'samlify';
 
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
