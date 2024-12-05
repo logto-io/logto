@@ -67,18 +67,27 @@ describe('SAML application', () => {
     const createdSamlApplication = await createSamlApplication({
       name: 'test',
       description: 'test',
+      entityId: 'http://example.logto.io/foo',
     });
+    expect(createdSamlApplication.entityId).toEqual('http://example.logto.io/foo');
+    expect(createdSamlApplication.acsUrl).toEqual(null);
+    expect(createdSamlApplication.attributeMapping).toEqual({});
 
     const newConfig = {
       acsUrl: {
         binding: BindingType.Post,
         url: 'https://example.logto.io/sso/saml',
       },
+      entityId: null,
     };
     const updatedSamlApplication = await updateSamlApplication(createdSamlApplication.id, {
       name: 'updated',
       ...newConfig,
     });
+    expect(updatedSamlApplication.acsUrl).toEqual(newConfig.acsUrl);
+    expect(updatedSamlApplication.entityId).toEqual(newConfig.entityId);
+    expect(updatedSamlApplication.attributeMapping).toEqual({});
+
     const upToDateSamlApplication = await getSamlApplication(createdSamlApplication.id);
 
     expect(updatedSamlApplication).toEqual(upToDateSamlApplication);

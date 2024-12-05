@@ -25,7 +25,8 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
   const {
     applications: { findApplicationById, updateApplicationById },
     samlApplicationSecrets: {
-      insertSamlApplicationSecret,
+      insertInactiveSamlApplicationSecret,
+      insertActiveSamlApplicationSecret,
       findActiveSamlApplicationSecretByApplicationId,
     },
     samlApplicationConfigs: {
@@ -34,27 +35,34 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
     },
   } = queries;
 
+  /**
+   * @remarks
+   * When creating a SAML app secret, it is set to inactive by default. Since a SAML app can only have one active secret at a time, creating a new active secret will deactivate all current secrets.
+   */
   const createSamlApplicationSecret = async ({
     applicationId,
     lifeSpanInDays = 365 * 3,
-    active = false,
+    isActive = false,
   }: {
     applicationId: string;
     lifeSpanInDays?: number;
-    active?: boolean;
+    isActive?: boolean;
   }): Promise<SamlApplicationSecret> => {
     const { privateKey, certificate, notAfter } = await generateKeyPairAndCertificate(
       lifeSpanInDays
     );
 
-    return insertSamlApplicationSecret({
+    const createObject = {
       id: generateStandardId(),
       applicationId,
       privateKey,
       certificate,
       expiresAt: notAfter.getTime(),
-      active,
-    });
+    };
+
+    return isActive
+      ? insertActiveSamlApplicationSecret(createObject)
+      : insertInactiveSamlApplicationSecret(createObject);
   };
 
   const findSamlApplicationById = async (id: string): Promise<SamlApplicationResponse> => {
@@ -96,7 +104,7 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
         ? updateSamlApplicationConfig({
             set: config,
             where: { applicationId: id },
-            jsonbMode: 'replace',
+            jsonbMode: 'merge',
           })
         : findSamlApplicationConfigByApplicationId(id),
     ]);

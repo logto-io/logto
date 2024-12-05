@@ -175,8 +175,8 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
         params: { id },
       } = ctx.guard;
 
-      ctx.status = 201;
       const secret = await createSamlApplicationSecret({ applicationId: id, lifeSpanInDays });
+      ctx.status = 201;
       ctx.body = {
         ...secret,
         fingerprints: calculateCertificateFingerprints(secret.certificate),
