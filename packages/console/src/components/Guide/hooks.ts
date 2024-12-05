@@ -3,7 +3,7 @@ import { useCallback, useMemo } from 'react';
 
 import { guides } from '@/assets/docs/guides';
 import { type Guide } from '@/assets/docs/guides/types';
-import { isCloud as isCloudEnv } from '@/consts/env';
+import { isCloud as isCloudEnv, isDevFeaturesEnabled } from '@/consts/env';
 import {
   thirdPartyAppCategory,
   type AppGuideCategory,
@@ -37,7 +37,8 @@ export const useAppGuideMetadata = (): {
   const appGuides = useMemo(
     () =>
       guides.filter(
-        ({ metadata: { target, isCloud } }) => target !== 'API' && (isCloudEnv || !isCloud)
+        ({ metadata: { target, isCloud, isDevFeature } }) =>
+          target !== 'API' && (isCloudEnv || !isCloud) && (isDevFeaturesEnabled || !isDevFeature)
       ),
     []
   );

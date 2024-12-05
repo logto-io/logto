@@ -1,5 +1,6 @@
 /* eslint-disable max-lines */
 // This is a generated file, don't update manually.
+
 import { safeLazy } from 'react-safe-lazy';
 
 import apiExpress from './api-express/index';
@@ -12,6 +13,7 @@ import nativeExpo from './native-expo/index';
 import nativeFlutter from './native-flutter/index';
 import nativeIosSwift from './native-ios-swift/index';
 import protectedApp from './protected-app/index';
+import samlIdp from './saml-idp/index';
 import spaAngular from './spa-angular/index';
 import spaChromeExtension from './spa-chrome-extension/index';
 import spaReact from './spa-react/index';
@@ -320,6 +322,14 @@ export const guides: Readonly<Guide[]> = Object.freeze([
     DarkLogo: undefined,
     Component: safeLazy(async () => import('./api-spring-boot/README.mdx')),
     metadata: apiSpringBoot,
+  },
+  {
+    order: Number.POSITIVE_INFINITY,
+    id: 'saml-idp',
+    Logo: safeLazy(async () => import('./saml-idp/logo.svg?react')),
+    DarkLogo: undefined,
+    Component: safeLazy(async () => import('./saml-idp/README.mdx')),
+    metadata: samlIdp,
   },
   {
     order: Number.POSITIVE_INFINITY,
