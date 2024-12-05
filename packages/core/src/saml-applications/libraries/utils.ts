@@ -6,7 +6,7 @@ import {
   type SamlApplicationConfig,
   type SamlAcsUrl,
   BindingType,
-  type CertificateFingerprints,
+  type CertificateFingerprint,
 } from '@logto/schemas';
 import { appendPath } from '@silverhand/essentials';
 import { addDays } from 'date-fns';
@@ -79,9 +79,7 @@ const createCertificate = (keypair: forge.pki.KeyPair, lifeSpanInDays: number) =
   };
 };
 
-export const calculateCertificateFingerprints = (
-  pemCertificate: string
-): CertificateFingerprints => {
+export const calculateCertificateFingerprint = (pemCertificate: string): CertificateFingerprint => {
   try {
     // Validate PEM certificate format
     pemCertificateGuard.parse(pemCertificate);

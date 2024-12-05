@@ -19,7 +19,7 @@ import assertThat from '#src/utils/assert-that.js';
 import { createContentDisposition } from '#src/utils/content-disposition.js';
 
 import {
-  calculateCertificateFingerprints,
+  calculateCertificateFingerprint,
   ensembleSamlApplication,
   validateAcsUrl,
 } from '../libraries/utils.js';
@@ -179,7 +179,7 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       ctx.status = 201;
       ctx.body = {
         ...secret,
-        fingerprints: calculateCertificateFingerprints(secret.certificate),
+        fingerprint: calculateCertificateFingerprint(secret.certificate),
       };
 
       return next();
@@ -200,7 +200,7 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       const secrets = await findSamlApplicationSecretsByApplicationId(id);
       ctx.body = secrets.map((secret) => ({
         ...secret,
-        fingerprints: calculateCertificateFingerprints(secret.certificate),
+        fingerprint: calculateCertificateFingerprint(secret.certificate),
       }));
 
       return next();
@@ -264,7 +264,7 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       ctx.status = 200;
       ctx.body = {
         ...updatedSamlApplicationSecret,
-        fingerprints: calculateCertificateFingerprints(updatedSamlApplicationSecret.certificate),
+        fingerprint: calculateCertificateFingerprint(updatedSamlApplicationSecret.certificate),
       };
 
       return next();
@@ -278,7 +278,7 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       status: [200, 400, 404],
       response: samlApplicationSecretResponseGuard.pick({
         certificate: true,
-        fingerprints: true,
+        fingerprint: true,
       }),
     }),
     async (ctx, next) => {
@@ -286,10 +286,10 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
 
       const { certificate } = await findActiveSamlApplicationSecretByApplicationId(id);
 
-      const fingerprints = calculateCertificateFingerprints(certificate);
+      const fingerprint = calculateCertificateFingerprint(certificate);
 
       ctx.status = 200;
-      ctx.body = { certificate, fingerprints };
+      ctx.body = { certificate, fingerprint };
 
       return next();
     }
