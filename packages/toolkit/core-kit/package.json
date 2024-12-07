@@ -61,7 +61,7 @@
     "@types/color": "^3.0.3",
     "@types/node": "^20.9.5",
     "@types/react": "^18.3.3",
-    "@vitest/coverage-v8": "^2.0.0",
+    "@vitest/coverage-v8": "^2.1.8",
     "eslint": "^8.56.0",
     "lint-staged": "^15.0.0",
     "postcss": "^8.4.31",
