@@ -1,5 +1,29 @@
 # Change Log
 
+## 1.22.1
+
+### Patch Changes
+
+- 239b81e31: loose redirect uri restrictions
+
+  Logto has been following the industry best practices for OAuth2.0 and OIDC from the start. However, in the real world, there are things we cannot control, like third-party services or operation systems like Windows.
+
+  This update relaxes restrictions on redirect URIs to allow the following:
+
+  1. A mix of native and HTTP(S) redirect URIs. For example, a native app can now use a redirect URI like `https://example.com`.
+  2. Native schemes without a period (`.`). For example, `myapp://callback` is now allowed.
+
+  When such URIs are configured, Logto Console will display a prominent warning. This change is backward-compatible and will not affect existing applications.
+
+  We hope this change will make it easier for you to integrate Logto with your applications.
+
+- Updated dependencies [239b81e31]
+  - @logto/core-kit@2.5.2
+  - @logto/console@1.19.1
+  - @logto/phrases@1.15.1
+  - @logto/schemas@1.22.1
+  - @logto/cli@1.22.1
+
 ## 1.22.0
 
 ### Minor Changes
