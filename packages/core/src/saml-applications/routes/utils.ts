@@ -1,17 +1,28 @@
 import { parseJson } from '@logto/connector-kit';
 import { generateStandardId } from '@logto/shared';
+import { tryThat } from '@silverhand/essentials';
 import camelcaseKeys from 'camelcase-keys';
 import { got } from 'got';
 import saml from 'samlify';
+import { ZodError, z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { oidcTokenResponseGuard, type idTokenProfileStandardClaims } from '#src/sso/types/oidc.js';
+import { fetchOidcConfigRaw, getRawUserInfoResponse } from '#src/sso/OidcConnector/utils.js';
+import { idTokenProfileStandardClaimsGuard } from '#src/sso/types/oidc.js';
+import { oidcTokenResponseGuard, type IdTokenProfileStandardClaims } from '#src/sso/types/oidc.js';
+import assertThat from '#src/utils/assert-that.js';
+
+import {
+  samlLogInResponseTemplate,
+  samlAttributeNameFormatBasic,
+  samlValueXmlnsXsi,
+} from '../libraries/consts.js';
 
 const createSamlTemplateCallback =
   (
     idp: saml.IdentityProviderInstance,
     sp: saml.ServiceProviderInstance,
-    user: idTokenProfileStandardClaims
+    user: IdTokenProfileStandardClaims
   ) =>
   (template: string) => {
     const assertionConsumerServiceUrl = sp.entityMeta.getAssertionConsumerService(
@@ -63,7 +74,7 @@ const createSamlTemplateCallback =
     };
   };
 
-export const exchangeAuthorizationCode = async (
+const exchangeAuthorizationCode = async (
   tokenEndpoint: string,
   {
     code,
@@ -109,7 +120,7 @@ export const exchangeAuthorizationCode = async (
 export const createSamlResponse = async (
   idp: saml.IdentityProviderInstance,
   sp: saml.ServiceProviderInstance,
-  userInfo: idTokenProfileStandardClaims
+  userInfo: IdTokenProfileStandardClaims
 ): Promise<{ context: string; entityEndpoint: string }> => {
   // TODO: fix binding method
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -140,4 +151,104 @@ export const generateAutoSubmitForm = (actionUrl: string, samlResponse: string):
       </body>
     </html>
   `;
+};
+
+const getUserInfo = async (
+  accessToken: string,
+  userinfoEndpoint: string
+): Promise<IdTokenProfileStandardClaims & Record<string, unknown>> => {
+  const body = await getRawUserInfoResponse(accessToken, userinfoEndpoint);
+  const result = idTokenProfileStandardClaimsGuard.catchall(z.unknown()).safeParse(body);
+
+  if (!result.success) {
+    throw new RequestError({
+      code: 'oidc.invalid_request',
+      message: 'Invalid user info response',
+      details: result.error.flatten(),
+    });
+  }
+
+  return result.data;
+};
+
+// Helper functions for SAML callback
+export const handleOidcCallbackAndGetUserInfo = async (
+  code: string,
+  applicationId: string,
+  secret: string,
+  redirectUri: string,
+  issuer: string
+) => {
+  // Get OIDC configuration
+  const { tokenEndpoint, userinfoEndpoint } = await tryThat(
+    async () => fetchOidcConfigRaw(issuer),
+    (error) => {
+      if (error instanceof ZodError) {
+        throw new RequestError({
+          code: 'oidc.invalid_request',
+          message: error.message,
+          error: error.flatten(),
+        });
+      }
+
+      throw error;
+    }
+  );
+
+  // Exchange authorization code for tokens
+  const { accessToken } = await exchangeAuthorizationCode(tokenEndpoint, {
+    code,
+    clientId: applicationId,
+    clientSecret: secret,
+    redirectUri,
+  });
+
+  assertThat(accessToken, new RequestError('oidc.access_denied'));
+
+  // Get user info using access token
+  return getUserInfo(accessToken, userinfoEndpoint);
+};
+
+export const setupSamlProviders = (
+  metadata: string,
+  privateKey: string,
+  entityId: string,
+  acsUrl: { binding: string; url: string }
+) => {
+  // eslint-disable-next-line new-cap
+  const idp = saml.IdentityProvider({
+    metadata,
+    privateKey,
+    isAssertionEncrypted: false,
+    loginResponseTemplate: {
+      context: samlLogInResponseTemplate,
+      attributes: [
+        {
+          name: 'email',
+          valueTag: 'email',
+          nameFormat: samlAttributeNameFormatBasic,
+          valueXsiType: samlValueXmlnsXsi.string,
+        },
+        {
+          name: 'name',
+          valueTag: 'name',
+          nameFormat: samlAttributeNameFormatBasic,
+          valueXsiType: samlValueXmlnsXsi.string,
+        },
+      ],
+    },
+  });
+
+  // eslint-disable-next-line new-cap
+  const sp = saml.ServiceProvider({
+    entityID: entityId,
+    assertionConsumerService: [
+      {
+        Binding: acsUrl.binding,
+        Location: acsUrl.url,
+      },
+    ],
+  });
+
+  return { idp, sp };
 };

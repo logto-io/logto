@@ -1,17 +1,16 @@
-import { tryThat } from '@silverhand/essentials';
-import saml from 'samlify';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { AnonymousRouter, RouterInitArgs } from '#src/routes/types.js';
-import { fetchOidcConfig, getUserInfo } from '#src/sso/OidcConnector/utils.js';
-import { SsoConnectorError } from '#src/sso/types/error.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { samlLogInResponseTemplate, samlAttributeNameFormatBasic,samlValueXmlnsXsi } from '../libraries/consts.js';
-
-import { exchangeAuthorizationCode, generateAutoSubmitForm, createSamlResponse } from './utils.js';
+import {
+  generateAutoSubmitForm,
+  createSamlResponse,
+  handleOidcCallbackAndGetUserInfo,
+  setupSamlProviders,
+} from './utils.js';
 
 const samlApplicationSignInCallbackQueryParametersGuard = z.union([
   z.object({
@@ -29,6 +28,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
   const {
     samlApplications: { getSamlIdPMetadataByApplicationId },
   } = libraries;
+  const { applications, samlApplicationSecrets, samlApplicationConfigs } = queries;
 
   router.get(
     '/saml-applications/:id/metadata',
@@ -63,13 +63,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         query,
       } = ctx.guard;
 
-      // Find the SAML application secret by application ID
-      const { applications, samlApplicationSecrets, samlApplicationConfigs } = queries;
-      const {
-        secret,
-        oidcClientMetadata: { redirectUris },
-      } = await applications.findApplicationById(id);
-
+      // Handle error in query parameters
       if ('error' in query) {
         throw new RequestError({
           code: 'oidc.invalid_request',
@@ -77,38 +71,27 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         });
       }
 
-      // TODO: need to validate state for SP initiated SAML flow
+      // Get application configuration
+      const {
+        secret,
+        oidcClientMetadata: { redirectUris },
+      } = await applications.findApplicationById(id);
+
+      assertThat(redirectUris[0], 'oidc.redirect_uri_not_set');
+
+      // TODO: should be able to handle `state` and code verifier etc.
       const { code } = query;
 
-      const { tokenEndpoint, userinfoEndpoint } = await tryThat(
-        async () => fetchOidcConfig(envSet.oidc.issuer),
-        (error) => {
-          if (error instanceof SsoConnectorError) {
-            throw new RequestError({
-              code: 'oidc.invalid_request',
-              message: error.message,
-            });
-          }
-
-          // Should rarely happen, fetch OIDC configuration should only throw SSO connector error .
-          throw error;
-        }
+      // Handle OIDC callback and get user info
+      const userInfo = await handleOidcCallbackAndGetUserInfo(
+        code,
+        id,
+        secret,
+        redirectUris[0],
+        envSet.oidc.issuer
       );
 
-      // Exchange authorization code for tokens
-      const { accessToken } = await exchangeAuthorizationCode(tokenEndpoint, {
-        code,
-        clientId: id,
-        clientSecret: secret,
-        redirectUri: redirectUris[0],
-      });
-
-      assertThat(accessToken, new RequestError('oidc.access_denied'));
-
-      // Get user info using access token
-      const userInfo = await getUserInfo(accessToken, userinfoEndpoint);
-
-      // Get SAML configuration and create SAML response
+      // Get SAML configuration
       const { metadata } = await getSamlIdPMetadataByApplicationId(id);
       const { privateKey } =
         await samlApplicationSecrets.findActiveSamlApplicationSecretByApplicationId(id);
@@ -118,41 +101,8 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       assertThat(entityId, 'application.saml.entity_id_required');
       assertThat(acsUrl, 'application.saml.acs_url_required');
 
-      // eslint-disable-next-line new-cap
-      const idp = saml.IdentityProvider({
-        metadata,
-        privateKey,
-        isAssertionEncrypted: false,
-        loginResponseTemplate: {
-          context: samlLogInResponseTemplate,
-          attributes: [
-            {
-              name: 'email',
-              valueTag: 'email',
-              nameFormat: samlAttributeNameFormatBasic,
-              valueXsiType: samlValueXmlnsXsi['string'],
-            },
-            {
-              name: 'name',
-              valueTag: 'name',
-              nameFormat: samlAttributeNameFormatBasic,
-              valueXsiType: samlValueXmlnsXsi['string'],
-            },
-          ],
-        },
-      });
-
-      // eslint-disable-next-line new-cap
-      const sp = saml.ServiceProvider({
-        entityID: entityId,
-        assertionConsumerService: [
-          {
-            Binding: acsUrl.binding,
-            Location: acsUrl.url,
-          },
-        ],
-      });
-
+      // Setup SAML providers and create response
+      const { idp, sp } = setupSamlProviders(metadata, privateKey, entityId, acsUrl);
       const { context, entityEndpoint } = await createSamlResponse(idp, sp, userInfo);
 
       // Return auto-submit form

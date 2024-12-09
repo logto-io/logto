@@ -8,6 +8,7 @@ const oidc = {
   invalid_grant: 'Grant request is invalid.',
   invalid_redirect_uri:
     "`redirect_uri` did not match any of the client's registered `redirect_uris`.",
+  redirect_uri_not_set: '`redirect_uri` is not set.',
   access_denied: 'Access denied.',
   invalid_target: 'Invalid resource indicator.',
   unsupported_grant_type: 'Unsupported `grant_type` requested.',
