@@ -9,7 +9,7 @@ import { fetchOidcConfig, getUserInfo } from '#src/sso/OidcConnector/utils.js';
 import { SsoConnectorError } from '#src/sso/types/error.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { samlLogInResponseTemplate } from '../libraries/consts.js';
+import { samlLogInResponseTemplate, samlAttributeNameFormatBasic,samlValueXmlnsXsi } from '../libraries/consts.js';
 
 import { exchangeAuthorizationCode, generateAutoSubmitForm, createSamlResponse } from './utils.js';
 
@@ -129,14 +129,14 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
             {
               name: 'email',
               valueTag: 'email',
-              nameFormat: 'urn:oasis:names:tc:SAML:2.0:attrname-format:basic',
-              valueXsiType: 'xs:string',
+              nameFormat: samlAttributeNameFormatBasic,
+              valueXsiType: samlValueXmlnsXsi['string'],
             },
             {
               name: 'name',
               valueTag: 'name',
-              nameFormat: 'urn:oasis:names:tc:SAML:2.0:attrname-format:basic',
-              valueXsiType: 'xs:string',
+              nameFormat: samlAttributeNameFormatBasic,
+              valueXsiType: samlValueXmlnsXsi['string'],
             },
           ],
         },
