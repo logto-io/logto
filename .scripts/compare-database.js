@@ -277,7 +277,8 @@ const queryDatabaseData = async (database) => {
         'updated_at',
         'secret',
         'db_user',
-        'db_user_password'
+        'db_user_password',
+        'add_on_sku_id'
       );
 
       return [table_name, data.sort(buildSortByKeys(Object.keys(data[0] ?? {})))];
