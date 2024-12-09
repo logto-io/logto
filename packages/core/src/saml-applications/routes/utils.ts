@@ -35,13 +35,22 @@ const createSamlTemplateCallback =
       Issuer: idp.entityMeta.getEntityID(),
       IssueInstant: now.toISOString(),
       AssertionConsumerServiceURL: assertionConsumerServiceUrl,
-      StatusCode: 'urn:oasis:names:tc:SAML:2.0:status:Success',
+      StatusCode: saml.Constants.StatusCode.Success,
       ConditionsNotBefore: now.toISOString(),
       ConditionsNotOnOrAfter: expireAt.toISOString(),
       SubjectConfirmationDataNotOnOrAfter: expireAt.toISOString(),
       NameIDFormat: selectedNameIDFormat,
       NameID: user.sub,
       InResponseTo: 'null',
+      /**
+       * User attributes for SAML response
+       *
+       * @todo Support custom attribute mapping
+       * @see {@link https://github.com/tngan/samlify/blob/master/src/libsaml.ts#L275-L300|samlify implementation}
+       *
+       * @remarks
+       * By examining the code provided in the link above, we can define all the attributes supported by the attribute mapping here. Only the attributes defined in the `loginResponseTemplate.attributes` added when creating the IdP instance will appear in the SAML response.
+       */
       attrEmail: user.email,
       attrName: user.name,
     };

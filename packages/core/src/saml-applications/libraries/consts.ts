@@ -20,3 +20,17 @@ export const samlLogInResponseTemplate = `
     {AttributeStatement}
   </saml:Assertion>
 </samlp:Response>`;
+
+export const samlAttributeNameFormatBasic = 'urn:oasis:names:tc:SAML:2.0:attrname-format:basic';
+
+const samlValueXmlnsXsiString = 'xs:string';
+const samlValueXmlnsXsiInteger = 'xsd:integer';
+const samlValueXmlnsXsiBoolean = 'xsd:boolean';
+const samlValueXmlnsXsiDatetime = 'xsd:dateTime';
+
+export const samlValueXmlnsXsi = {
+  string: samlValueXmlnsXsiString,
+  integer: samlValueXmlnsXsiInteger,
+  boolean: samlValueXmlnsXsiBoolean,
+  datetime: samlValueXmlnsXsiDatetime,
+};
