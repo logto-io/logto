@@ -5,10 +5,28 @@ import { useContext } from 'react';
 import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
+import { isProPlan } from '@/utils/subscription';
 
 import styles from './index.module.scss';
 
 export { default as BetaTag } from './BetaTag';
+
+/**
+ * The display tag mapping for each ReservedPlanId.
+ */
+const planIdTagMap: Record<ReservedPlanId, string> = {
+  [ReservedPlanId.Free]: 'free',
+  [ReservedPlanId.Pro]: 'pro',
+  [ReservedPlanId.Pro202411]: 'pro',
+  [ReservedPlanId.Development]: 'dev',
+  [ReservedPlanId.Admin]: 'admin',
+};
+
+/**
+ * The minimum plan required to use the feature.
+ * Currently we only have pro plan paywall.
+ */
+export type PaywallPlanId = Extract<ReservedPlanId, ReservedPlanId.Pro | ReservedPlanId.Pro202411>;
 
 export type Props = {
   /**
@@ -17,8 +35,12 @@ export type Props = {
    * tenants.
    */
   readonly isVisible: boolean;
-  /** The minimum plan required to use the feature. */
-  readonly plan: Exclude<ReservedPlanId, ReservedPlanId.Free | ReservedPlanId.Development>;
+  /**
+   * The minimum plan required to use the feature.
+   * Currently we only have pro plan paywall.
+   * Set the default value to the latest pro plan id we are using.
+   */
+  readonly plan: PaywallPlanId;
   readonly className?: string;
 };
 
@@ -61,7 +83,7 @@ function FeatureTag(props: Props) {
     return null;
   }
 
-  return <div className={classNames(styles.tag, className)}>{plan}</div>;
+  return <div className={classNames(styles.tag, className)}>{planIdTagMap[plan]}</div>;
 }
 
 export default FeatureTag;
@@ -89,7 +111,7 @@ export function CombinedAddOnAndFeatureTag(props: CombinedAddOnAndFeatureTagProp
   }
 
   // Show the "Add-on" tag for Pro plan.
-  if (hasAddOnTag && isCloud && planId === ReservedPlanId.Pro) {
+  if (hasAddOnTag && isCloud && isProPlan(planId)) {
     return (
       <div className={classNames(styles.tag, styles.beta, styles.addOn, className)}>Add-on</div>
     );

@@ -1,4 +1,4 @@
-import { type SsoConnectorWithProviderConfig, ReservedPlanId } from '@logto/schemas';
+import { type SsoConnectorWithProviderConfig } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +12,7 @@ import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
 import { defaultPageSize } from '@/consts';
 import { isCloud } from '@/consts/env';
+import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
@@ -46,8 +47,7 @@ function EnterpriseSso() {
     page: 1,
   });
 
-  const isSsoEnabled =
-    !isCloud || currentSubscriptionQuota.enterpriseSsoLimit !== 0 || planId === ReservedPlanId.Pro;
+  const isSsoEnabled = !isCloud || currentSubscriptionQuota.enterpriseSsoLimit !== 0;
 
   const url = buildUrl('api/sso-connectors', {
     page: String(page),
@@ -64,7 +64,7 @@ function EnterpriseSso() {
   return (
     <ListPage
       title={{
-        paywall: conditional((!isSsoEnabled || isDevTenant) && ReservedPlanId.Pro),
+        paywall: conditional((!isSsoEnabled || isDevTenant) && latestProPlanId),
         title: 'enterprise_sso.title',
         subtitle: 'enterprise_sso.subtitle',
         hasAddOnTag: isPaidPlan(planId, isEnterprisePlan),

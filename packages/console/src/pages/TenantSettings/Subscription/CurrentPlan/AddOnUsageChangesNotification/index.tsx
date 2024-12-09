@@ -1,4 +1,3 @@
-import { ReservedPlanId } from '@logto/schemas';
 import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -8,6 +7,7 @@ import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import InlineNotification from '@/ds-components/InlineNotification';
 import TextLink from '@/ds-components/TextLink';
 import useUserPreferences from '@/hooks/use-user-preferences';
+import { isPaidPlan } from '@/utils/subscription';
 
 type Props = {
   readonly className?: string;
@@ -16,14 +16,16 @@ type Props = {
 function AddOnUsageChangesNotification({ className }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
-    currentSubscription: { planId },
+    currentSubscription: { planId, isEnterprisePlan },
   } = useContext(SubscriptionDataContext);
   const {
     data: { addOnChangesInCurrentCycleNoticeAcknowledged },
     update,
   } = useUserPreferences();
 
-  if (planId !== ReservedPlanId.Pro || addOnChangesInCurrentCycleNoticeAcknowledged) {
+  const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
+
+  if (!isPaidTenant || addOnChangesInCurrentCycleNoticeAcknowledged) {
     return null;
   }
 

@@ -1,6 +1,6 @@
 import { type AdminConsoleKey } from '@logto/phrases';
 import type { Application } from '@logto/schemas';
-import { ApplicationType, ReservedPlanId } from '@logto/schemas';
+import { ApplicationType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { type ReactElement, useContext, useMemo } from 'react';
 import { useController, useForm } from 'react-hook-form';
@@ -11,6 +11,7 @@ import { useSWRConfig } from 'swr';
 
 import { GtagConversionId, reportConversion } from '@/components/Conversion/utils';
 import { isDevFeaturesEnabled } from '@/consts/env';
+import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
@@ -142,10 +143,7 @@ function CreateForm({
         title="applications.create"
         subtitle={subtitleElement}
         paywall={conditional(
-          isPaidTenant &&
-            watch('type') === ApplicationType.MachineToMachine &&
-            planId !== ReservedPlanId.Pro &&
-            ReservedPlanId.Pro
+          !isPaidTenant && watch('type') === ApplicationType.MachineToMachine && latestProPlanId
         )}
         hasAddOnTag={
           isPaidTenant &&
