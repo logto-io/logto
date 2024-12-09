@@ -168,26 +168,25 @@ export const fetchOfficialConnectorList = async (includingCloudConnectors = fals
 
   const packages: PackageMeta[] = [];
 
+  const excludeList = ['mock', 'kit', ...conditionalArray(!includingCloudConnectors && 'logto')];
+
+  // The API called by `fetchList` performs a 'fuzzy' search based on the `text` parameter, which will yield many irrelevant results. We need to filter out these irrelevant results (using `name.startsWith(officialConnectorPrefix)` for filtering).
   // Disable lint rules for business need
   // eslint-disable-next-line @silverhand/fp/no-let, @silverhand/fp/no-mutation
   for (let page = 0; ; ++page) {
     // eslint-disable-next-line no-await-in-loop
-    const { objects } = await fetchList(page * 20, 20);
+    const { objects: rawObjects } = await fetchList(page * 20, 20);
 
-    const excludeList = ['mock', 'kit', ...conditionalArray(!includingCloudConnectors && 'logto')];
+    const objects = rawObjects.filter(
+      ({ package: { name, scope } }) =>
+        name.startsWith(officialConnectorPrefix) &&
+        excludeList.every(
+          (excluded) => !name.slice(officialConnectorPrefix.length).startsWith(excluded)
+        )
+    );
 
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-    packages.push(
-      ...objects
-        .filter(
-          ({ package: { name, scope } }) =>
-            scope === 'logto' &&
-            excludeList.every(
-              (excluded) => !name.slice(officialConnectorPrefix.length).startsWith(excluded)
-            )
-        )
-        .map(({ package: data }) => data)
-    );
+    packages.push(...objects.map(({ package: data }) => data));
 
     if (objects.length < 20) {
       break;
