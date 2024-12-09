@@ -1,5 +1,7 @@
 import { ReservedPlanId } from '@logto/schemas';
 
+import { isDevFeaturesEnabled } from './env';
+
 /**
  * Shared quota limits between the featured plan content in the `CreateTenantModal` and the `PlanComparisonTable`.
  */
@@ -34,3 +36,6 @@ export const featuredPlanIds: string[] = [ReservedPlanId.Free, ReservedPlanId.Pr
 export const featuredPlanIdOrder: string[] = [ReservedPlanId.Free, ReservedPlanId.Pro];
 
 export const checkoutStateQueryKey = 'checkout-state';
+
+/** The latest pro plan id we are using. TODO: Remove this when we have the new Pro202411 plan released. */
+export const latestProPlanId = isDevFeaturesEnabled ? ReservedPlanId.Pro202411 : ReservedPlanId.Pro;

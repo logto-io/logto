@@ -8,6 +8,7 @@ import { type LogtoSkuQuota } from '@/types/skus';
 export const ticketSupportResponseTimeMap: Record<string, number> = {
   [ReservedPlanId.Free]: 0,
   [ReservedPlanId.Pro]: 48,
+  [ReservedPlanId.Pro202411]: 48,
 };
 
 /**
