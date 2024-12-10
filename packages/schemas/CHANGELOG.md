@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.22.1
+
+### Patch Changes
+
+- Updated dependencies [239b81e31]
+  - @logto/core-kit@2.5.2
+  - @logto/phrases@1.15.1
+
 ## 1.22.0
 
 ### Minor Changes
