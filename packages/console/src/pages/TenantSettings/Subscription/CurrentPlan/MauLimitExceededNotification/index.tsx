@@ -1,10 +1,10 @@
-import { ReservedPlanId } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useContext, useMemo, useState } from 'react';
 
 import { toastResponseError } from '@/cloud/hooks/use-cloud-api';
 import { type NewSubscriptionPeriodicUsage } from '@/cloud/types/router';
 import { subscriptionPage } from '@/consts/pages';
+import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
@@ -27,7 +27,7 @@ function MauLimitExceededNotification({ periodicUsage: rawPeriodicUsage, classNa
   const { currentTenant } = useContext(TenantsContext);
 
   const [isLoading, setIsLoading] = useState(false);
-  const proSku = useMemo(() => logtoSkus.find(({ id }) => id === ReservedPlanId.Pro), [logtoSkus]);
+  const proSku = useMemo(() => logtoSkus.find(({ id }) => id === latestProPlanId), [logtoSkus]);
 
   const periodicUsage = useMemo(
     () =>
