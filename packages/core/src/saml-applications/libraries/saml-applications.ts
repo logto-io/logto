@@ -132,6 +132,10 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
           Location: buildSingleSignOnUrl(tenantEndpoint, id),
           Binding: BindingType.Redirect,
         },
+        {
+          Location: buildSingleSignOnUrl(tenantEndpoint, id),
+          Binding: BindingType.Post,
+        },
       ],
     });
 

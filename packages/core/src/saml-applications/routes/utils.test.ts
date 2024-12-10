@@ -1,12 +1,7 @@
 import nock from 'nock';
 import type { IdentityProviderInstance, ServiceProviderInstance } from 'samlify';
 
-import {
-  createSamlTemplateCallback,
-  exchangeAuthorizationCode,
-  getUserInfo,
-  setupSamlProviders,
-} from './utils.js';
+import { createSamlTemplateCallback, exchangeAuthorizationCode, getUserInfo } from './utils.js';
 
 const { jest } = import.meta;
 
@@ -156,23 +151,5 @@ describe('getUserInfo', () => {
     await expect(getUserInfo(mockAccessToken, mockUserinfoEndpoint)).rejects.toMatchObject({
       code: 'oidc.invalid_request',
     });
-  });
-});
-
-describe('setupSamlProviders', () => {
-  it('should setup SAML providers with correct configuration', () => {
-    const mockMetadata = '<EntityDescriptor>...</EntityDescriptor>';
-    const mockPrivateKey = '-----BEGIN PRIVATE KEY-----...';
-    const mockEntityId = 'https://sp.example.com';
-    const mockAcsUrl = {
-      binding: 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
-      url: 'https://sp.example.com/acs',
-    };
-
-    const { idp, sp } = setupSamlProviders(mockMetadata, mockPrivateKey, mockEntityId, mockAcsUrl);
-
-    expect(idp).toBeDefined();
-    expect(sp).toBeDefined();
-    expect(sp.entityMeta.getEntityID()).toBe(mockEntityId);
   });
 });

@@ -29,6 +29,7 @@ import { createUserQueries } from '#src/queries/user.js';
 import { createUsersRolesQueries } from '#src/queries/users-roles.js';
 import { createVerificationStatusQueries } from '#src/queries/verification-status.js';
 import { createSamlApplicationConfigQueries } from '#src/saml-applications/queries/configs.js';
+import { createSamlApplicationQueries } from '#src/saml-applications/queries/index.js';
 import { createSamlApplicationSecretsQueries } from '#src/saml-applications/queries/secrets.js';
 import { createSamlApplicationSessionQueries } from '#src/saml-applications/queries/sessions.js';
 
@@ -66,6 +67,7 @@ export default class Queries {
   samlApplicationSecrets = createSamlApplicationSecretsQueries(this.pool);
   samlApplicationConfigs = createSamlApplicationConfigQueries(this.pool);
   samlApplicationSessions = createSamlApplicationSessionQueries(this.pool);
+  samlApplications = createSamlApplicationQueries(this.pool);
   personalAccessTokens = new PersonalAccessTokensQueries(this.pool);
   verificationRecords = new VerificationRecordQueries(this.pool);
   accountCenters = new AccountCenterQueries(this.pool);

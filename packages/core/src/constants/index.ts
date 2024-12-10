@@ -8,3 +8,4 @@ export const subjectTokenPrefix = 'sub_';
 export const defaultIdPInitiatedSamlSsoSessionTtl = 10 * 60 * 1000; // 10 minutes
 
 export const idpInitiatedSamlSsoSessionCookieName = '_logto_idp_saml_sso_session_id';
+export const spInitiatedSamlSsoSessionCookieName = '_logto_sp_saml_sso_session_id';
