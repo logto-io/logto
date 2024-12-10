@@ -1,5 +1,5 @@
 import { type Optional } from '@silverhand/essentials';
-import { useContext, useMemo } from 'react';
+import { useMemo } from 'react';
 import useSWRImmutable from 'swr/immutable';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
@@ -9,7 +9,6 @@ import { featuredPlanIdOrder } from '@/consts/subscriptions';
 // Used in the docs
 // eslint-disable-next-line unused-imports/no-unused-imports
 import TenantAccess from '@/containers/TenantAccess';
-import { TenantsContext } from '@/contexts/TenantsProvider';
 import { LogtoSkuType } from '@/types/skus';
 import { sortBy } from '@/utils/sort';
 import { addSupportQuota } from '@/utils/subscription';
@@ -20,13 +19,11 @@ import { addSupportQuota } from '@/utils/subscription';
  */
 const useLogtoSkus = () => {
   const cloudApi = useCloudApi();
-  const { currentTenantId } = useContext(TenantsContext);
 
   const useSwrResponse = useSWRImmutable<LogtoSkuResponse[], Error>(
-    isCloud && currentTenantId && `/api/tenants/${currentTenantId}/available-skus`,
+    isCloud && '/api/skus',
     async () =>
-      cloudApi.get('/api/tenants/:tenantId/available-skus', {
-        params: { tenantId: currentTenantId },
+      cloudApi.get('/api/skus', {
         search: { type: LogtoSkuType.Basic },
       })
   );
