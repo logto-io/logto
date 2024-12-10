@@ -1,10 +1,10 @@
-import { ReservedPlanId } from '@logto/schemas';
 import { useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
 import InlineUpsell from '@/components/InlineUpsell';
 import { isCloud } from '@/consts/env';
+import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Card from '@/ds-components/Card';
 import CodeEditor from '@/ds-components/CodeEditor';
@@ -88,7 +88,7 @@ function CustomUiForm() {
           descriptionPosition="top"
           featureTag={{
             isVisible: !isBringYourUiEnabled,
-            plan: ReservedPlanId.Pro,
+            plan: latestProPlanId,
           }}
         >
           <Controller

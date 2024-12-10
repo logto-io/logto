@@ -1,10 +1,9 @@
 import type { AdminConsoleKey } from '@logto/phrases';
-import { type ReservedPlanId } from '@logto/schemas';
 import classNames from 'classnames';
 import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { CombinedAddOnAndFeatureTag } from '@/components/FeatureTag';
+import { CombinedAddOnAndFeatureTag, type PaywallPlanId } from '@/components/FeatureTag';
 import type { Props as TextLinkProps } from '@/ds-components/TextLink';
 
 import type DangerousRaw from '../DangerousRaw';
@@ -22,10 +21,9 @@ export type Props = {
   readonly className?: string;
   /**
    * If a paywall tag should be shown next to the title. The value is the plan type.
-   *
    * If not provided, no paywall tag will be shown.
    */
-  readonly paywall?: Exclude<ReservedPlanId, ReservedPlanId.Free | ReservedPlanId.Development>;
+  readonly paywall?: PaywallPlanId;
   readonly hasAddOnTag?: boolean;
 };
 

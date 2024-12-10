@@ -14,6 +14,7 @@ import DangerousRaw from '@/ds-components/DangerousRaw';
 import DynamicT from '@/ds-components/DynamicT';
 import FlipOnRtl from '@/ds-components/FlipOnRtl';
 import TextLink from '@/ds-components/TextLink';
+import { isProPlan } from '@/utils/subscription';
 
 import FeaturedSkuContent from './FeaturedSkuContent';
 import styles from './index.module.scss';
@@ -92,9 +93,7 @@ function SkuCardItem({ sku, onSelect, buttonProps }: Props) {
           disabled={(isFreeSku && isFreeTenantExceeded) || buttonProps?.disabled}
         />
       </div>
-      {skuId === ReservedPlanId.Pro && (
-        <div className={styles.mostPopularTag}>{t('most_popular')}</div>
-      )}
+      {isProPlan(skuId) && <div className={styles.mostPopularTag}>{t('most_popular')}</div>}
     </div>
   );
 }
