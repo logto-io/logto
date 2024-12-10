@@ -174,7 +174,9 @@ export const getUserInfo = async (accessToken: string, userinfoEndpoint: string)
   try {
     const body = await getRawUserInfoResponse(accessToken, userinfoEndpoint);
 
-    const result = idTokenProfileStandardClaimsGuard.catchall(z.unknown()).safeParse(body);
+    const result = idTokenProfileStandardClaimsGuard
+      .catchall(z.unknown())
+      .safeParse(parseJson(body));
 
     if (!result.success) {
       throw new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {

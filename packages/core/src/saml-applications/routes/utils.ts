@@ -18,7 +18,7 @@ import {
   samlValueXmlnsXsi,
 } from '../libraries/consts.js';
 
-const createSamlTemplateCallback =
+export const createSamlTemplateCallback =
   (
     idp: saml.IdentityProviderInstance,
     sp: saml.ServiceProviderInstance,
@@ -74,7 +74,7 @@ const createSamlTemplateCallback =
     };
   };
 
-const exchangeAuthorizationCode = async (
+export const exchangeAuthorizationCode = async (
   tokenEndpoint: string,
   {
     code,
@@ -153,12 +153,12 @@ export const generateAutoSubmitForm = (actionUrl: string, samlResponse: string):
   `;
 };
 
-const getUserInfo = async (
+export const getUserInfo = async (
   accessToken: string,
   userinfoEndpoint: string
 ): Promise<IdTokenProfileStandardClaims & Record<string, unknown>> => {
   const body = await getRawUserInfoResponse(accessToken, userinfoEndpoint);
-  const result = idTokenProfileStandardClaimsGuard.catchall(z.unknown()).safeParse(body);
+  const result = idTokenProfileStandardClaimsGuard.catchall(z.unknown()).safeParse(parseJson(body));
 
   if (!result.success) {
     throw new RequestError({
