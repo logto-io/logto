@@ -35,6 +35,20 @@ describe('Well-known cache basics', () => {
     expect(await cache.get('sie', WellKnownCache.defaultKey)).toBe(undefined);
   });
 
+  it('should be able to set the value with expire time', async () => {
+    jest.useFakeTimers();
+    const cache = new WellKnownCache(tenantId, cacheStore);
+
+    await cache.set('sie', WellKnownCache.defaultKey, mockSignInExperience, 100);
+    expect(await cache.get('sie', WellKnownCache.defaultKey)).toStrictEqual(mockSignInExperience);
+
+    jest.advanceTimersByTime(101);
+
+    expect(await cache.get('sie', WellKnownCache.defaultKey)).toBe(undefined);
+
+    jest.useRealTimers();
+  });
+
   it('should NOT be able to set the value with wrong structure', async () => {
     const cache = new WellKnownCache(tenantId, cacheStore);
 
@@ -113,6 +127,46 @@ describe('Well-known cache function wrappers', () => {
       { foo: '1', bar: 1 },
       { foo: '2', bar: 2 },
     ]);
+  });
+
+  it('can memoize function with expire time', async () => {
+    jest.useFakeTimers();
+
+    const run = jest.fn(
+      async (foo: string, bar: number) =>
+        new Promise<Record<string, unknown>>((resolve) => {
+          setTimeout(() => {
+            resolve({ foo, bar });
+          }, 0);
+          jest.runOnlyPendingTimers(); // Ensure this runs in fake timers
+        })
+    );
+
+    const cache = new WellKnownCache(tenantId, cacheStore);
+
+    const memoized = cache.memoize(
+      run,
+      ['custom-phrases', (foo, bar) => `${foo}+${bar}`],
+      () => 100
+    );
+
+    const [result1, result2] = await Promise.all([memoized('1', 1), memoized('2', 2)]);
+    expect(result1).toStrictEqual({ foo: '1', bar: 1 });
+    expect(result2).toStrictEqual({ foo: '2', bar: 2 });
+
+    expect(
+      await Promise.all([cache.get('custom-phrases', '1+1'), cache.get('custom-phrases', '2+2')])
+    ).toStrictEqual([
+      { foo: '1', bar: 1 },
+      { foo: '2', bar: 2 },
+    ]);
+
+    jest.advanceTimersByTime(101);
+
+    expect(await cache.get('custom-phrases', '1+1')).toBe(undefined);
+    expect(await cache.get('custom-phrases', '2+2')).toBe(undefined);
+
+    jest.useRealTimers();
   });
 
   it('can create mutate function wrapper with default cache key builder', async () => {

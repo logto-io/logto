@@ -1385,8 +1385,8 @@ importers:
         version: 3.23.8
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-5e334eb
-        version: 0.2.5-5e334eb(zod@3.23.8)
+        specifier: 0.2.5-b98b019
+        version: 0.2.5-b98b019(zod@3.23.8)
       '@silverhand/eslint-config':
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
@@ -2739,8 +2739,8 @@ importers:
         specifier: ^29.5.0
         version: 29.5.0
       '@logto/cloud':
-        specifier: 0.2.5-5e334eb
-        version: 0.2.5-5e334eb(zod@3.23.8)
+        specifier: 0.2.5-b98b019
+        version: 0.2.5-b98b019(zod@3.23.8)
       '@logto/connector-kit':
         specifier: workspace:^4.1.0
         version: link:../toolkit/connector-kit
@@ -3235,8 +3235,8 @@ importers:
         version: 3.23.8
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-5e334eb
-        version: 0.2.5-5e334eb(zod@3.23.8)
+        specifier: 0.2.5-b98b019
+        version: 0.2.5-b98b019(zod@3.23.8)
       '@silverhand/eslint-config':
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
@@ -4800,8 +4800,8 @@ packages:
     resolution: {integrity: sha512-0xZJFNE5XMpENsgfHYTw8FbX4kv53mFLn2i3XPoq69LyhYSCBJtitaHx9QnsVTrsogI4Z3+HtEfZ2/GFPOtf5g==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/code-frame@7.25.9':
-    resolution: {integrity: sha512-z88xeGxnzehn2sqZ8UdGQEvYErF1odv2CftxInpSYJt6uHuPe9YjahKZITGs3l5LeI9d2ROG+obuDAoSlqbNfQ==}
+  '@babel/code-frame@7.26.2':
+    resolution: {integrity: sha512-RJlIHRueQgwWitWgF8OdFYGZX328Ax5BCemNGlqHfplnRT9ESi8JkFlvaVYbS+UubVY6dpv87Fs2u5M29iNFVQ==}
     engines: {node: '>=6.9.0'}
 
   '@babel/compat-data@7.24.4':
@@ -4968,10 +4968,6 @@ packages:
     resolution: {integrity: sha512-iYyACpW3iW8Fw+ZybQK+drQre+ns/tKpXbNESfrhNnPLIklLbXr7MYJ6gPEd0iETGLOK+SxMjVvKb/ffmk+FEw==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/highlight@7.25.9':
-    resolution: {integrity: sha512-llL88JShoCsth8fF8R4SJnIn+WLvR6ccFxu1H3FlMhDontdcmZWf2HgIZ7AIqV3Xcck1idlohrN4EUBQz6klbw==}
-    engines: {node: '>=6.9.0'}
-
   '@babel/parser@7.24.4':
     resolution: {integrity: sha512-zTvEBcghmeBma9QIGunWevvBAp4/Qu9Bdq+2k0Ot4fVMD6v3dsC9WOcRSKk7tRRyBM/53yKMJko9xOatGQAwSg==}
     engines: {node: '>=6.0.0'}
@@ -5084,8 +5080,8 @@ packages:
     resolution: {integrity: sha512-dkxf7+hn8mFBwKjs9bvBlArzLVxVbS8usaPUDd5p2a9JCL9tB8OaOVN1isD4+Xyk4ns89/xeOmbQvgdK7IIVdA==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/runtime@7.25.9':
-    resolution: {integrity: sha512-4zpTHZ9Cm6L9L+uIqghQX8ZXg8HKFcjYO3qHoO8zTmRm6HQUJ8SSJ+KRvbMBZn0EGVlT4DRYeQ/6hjlyXBh+Kg==}
+  '@babel/runtime@7.26.0':
+    resolution: {integrity: sha512-FDSOghenHTiToteC/QRlv2q3DhPZ/oOXTBoirfWNx1Cx3TMVcGWQtMMmQcSvb/JjpNeGzx8Pq/b4fKEJuWm1sw==}
     engines: {node: '>=6.9.0'}
 
   '@babel/template@7.18.10':
@@ -5943,8 +5939,8 @@ packages:
   '@logto/client@2.7.2':
     resolution: {integrity: sha512-jsmuDl9QpXfR3uLEMPE67tvYoL5XcjJi+4yGqucYPjd4GH6SUHp3N9skk8C/OyygnKDPLY+ttwD0LaIbpGvn+Q==}
 
-  '@logto/cloud@0.2.5-5e334eb':
-    resolution: {integrity: sha512-HqcxjQV5F87Q5dM8sQY+F06YrjZofFl2Hb3VJh6c6Q5fHIPZ6WWJDAVVbGZU8GK7LO2f8gpLWWD+p7DIyLzDoA==}
+  '@logto/cloud@0.2.5-b98b019':
+    resolution: {integrity: sha512-ASLgd6GKi9Hn2OY9gZBmzZ1y4w7qd1NIuEy4A2b6F5/Pz+wBJlI+5nqR3W6rl6NUOm4UU2CPdd4ccyOov81p2A==}
     engines: {node: ^20.9.0}
 
   '@logto/js@4.1.4':
@@ -7551,8 +7547,8 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
-  acorn@8.13.0:
-    resolution: {integrity: sha512-8zSiw54Oxrdym50NlZ9sUusyO1Z1ZchgRLWRaK6c86XJFClyCgFKetdowBg5bKxyp/u+CDBJG4Mpp0m3HLZl9w==}
+  acorn@8.14.0:
+    resolution: {integrity: sha512-cl669nCJTZBsL97OF4kUQm5g5hC2uihk0NxY3WENAC0TYdILVkAyHymAntgxGkl7K+t0cXIrH5siy5S4XkFycA==}
     engines: {node: '>=0.4.0'}
     hasBin: true
 
@@ -13573,6 +13569,9 @@ packages:
   tslib@2.8.0:
     resolution: {integrity: sha512-jWVzBLplnCmoaTr13V9dYbiQ99wvZRd0vNWaDRg+aVYRcjDF3nDksxFDE/+fkXnKhpnUUkmx5pK/v8mCtLVqZA==}
 
+  tslib@2.8.1:
+    resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
+
   tsscmp@1.0.6:
     resolution: {integrity: sha512-LxhtAkPDTkVCMQjt2h6eBVY28KCjikZqZfMcC15YBeNjkgUpdCfBu5HoiOTDu86v6smE8yOjyEktJ8hlbANHQA==}
     engines: {node: '>=0.6.x'}
@@ -14892,9 +14891,10 @@ snapshots:
       '@babel/highlight': 7.25.7
       picocolors: 1.1.1
 
-  '@babel/code-frame@7.25.9':
+  '@babel/code-frame@7.26.2':
     dependencies:
-      '@babel/highlight': 7.25.9
+      '@babel/helper-validator-identifier': 7.25.9
+      js-tokens: 4.0.0
       picocolors: 1.1.1
 
   '@babel/compat-data@7.24.4': {}
@@ -15113,13 +15113,6 @@ snapshots:
       js-tokens: 4.0.0
       picocolors: 1.1.1
 
-  '@babel/highlight@7.25.9':
-    dependencies:
-      '@babel/helper-validator-identifier': 7.25.9
-      chalk: 2.4.2
-      js-tokens: 4.0.0
-      picocolors: 1.1.1
-
   '@babel/parser@7.24.4':
     dependencies:
       '@babel/types': 7.24.0
@@ -15224,7 +15217,7 @@ snapshots:
     dependencies:
       regenerator-runtime: 0.14.1
 
-  '@babel/runtime@7.25.9':
+  '@babel/runtime@7.26.0':
     dependencies:
       regenerator-runtime: 0.14.1
 
@@ -16235,7 +16228,7 @@ snapshots:
       camelcase-keys: 7.0.2
       jose: 5.9.6
 
-  '@logto/cloud@0.2.5-5e334eb(zod@3.23.8)':
+  '@logto/cloud@0.2.5-b98b019(zod@3.23.8)':
     dependencies:
       '@silverhand/essentials': 2.9.2
       '@withtyped/server': 0.14.0(zod@3.23.8)
@@ -17327,7 +17320,7 @@ snapshots:
 
   '@swc/helpers@0.5.1':
     dependencies:
-      tslib: 2.8.0
+      tslib: 2.8.1
     optional: true
 
   '@swc/jest@0.2.26(@swc/core@1.3.52(@swc/helpers@0.5.1))':
@@ -17342,8 +17335,8 @@ snapshots:
 
   '@testing-library/dom@10.0.0':
     dependencies:
-      '@babel/code-frame': 7.25.9
-      '@babel/runtime': 7.25.9
+      '@babel/code-frame': 7.26.2
+      '@babel/runtime': 7.26.0
       '@types/aria-query': 5.0.4
       aria-query: 5.3.0
       chalk: 4.1.2
@@ -18516,14 +18509,14 @@ snapshots:
 
   acorn-walk@8.3.4:
     dependencies:
-      acorn: 8.13.0
+      acorn: 8.14.0
     optional: true
 
   acorn@8.10.0: {}
 
   acorn@8.11.3: {}
 
-  acorn@8.13.0:
+  acorn@8.14.0:
     optional: true
 
   adm-zip@0.5.14: {}
@@ -25885,7 +25878,7 @@ snapshots:
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
       '@types/node': 20.10.4
-      acorn: 8.13.0
+      acorn: 8.14.0
       acorn-walk: 8.3.4
       arg: 4.1.3
       create-require: 1.1.1
@@ -25906,7 +25899,7 @@ snapshots:
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
       '@types/node': 20.12.7
-      acorn: 8.13.0
+      acorn: 8.14.0
       acorn-walk: 8.3.4
       arg: 4.1.3
       create-require: 1.1.1
@@ -25939,6 +25932,9 @@ snapshots:
   tslib@2.7.0: {}
 
   tslib@2.8.0: {}
+
+  tslib@2.8.1:
+    optional: true
 
   tsscmp@1.0.6: {}
 
