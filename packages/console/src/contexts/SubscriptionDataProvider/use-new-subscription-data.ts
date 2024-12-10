@@ -1,9 +1,9 @@
-import { cond, pick } from '@silverhand/essentials';
+import { pick } from '@silverhand/essentials';
 import { useContext, useEffect, useMemo } from 'react';
 import useSWR from 'swr';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
-import { type NewSubscriptionUsageResponse } from '@/cloud/types/router';
+import { type LogtoSkuResponse, type NewSubscriptionUsageResponse } from '@/cloud/types/router';
 import {
   defaultLogtoSku,
   defaultTenantResponse,
@@ -12,7 +12,8 @@ import {
 } from '@/consts';
 import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
-import useLogtoSkus from '@/hooks/use-logto-skus';
+import { LogtoSkuType } from '@/types/skus';
+import { formatLogtoSkusResponses } from '@/utils/subscription';
 
 import useSubscription from '../../hooks/use-subscription';
 
@@ -22,7 +23,6 @@ const useNewSubscriptionData: () => NewSubscriptionContext & { isLoading: boolea
   const cloudApi = useCloudApi();
 
   const { currentTenant, currentTenantId, updateTenant } = useContext(TenantsContext);
-  const { isLoading: isLogtoSkusLoading, data: fetchedLogtoSkus } = useLogtoSkus();
 
   const {
     data: currentSubscription,
@@ -42,7 +42,21 @@ const useNewSubscriptionData: () => NewSubscriptionContext & { isLoading: boolea
       })
   );
 
-  const logtoSkus = useMemo(() => cond(isCloud && fetchedLogtoSkus) ?? [], [fetchedLogtoSkus]);
+  // Fetch tenant specific available SKUs
+  // Unlike the `useLogtoSkus` hook, apart from public available SKUs, this hook also fetches tenant specific private SKUs
+  // For enterprise tenants who have their own private SKUs, and all grandfathered plan tenants,
+  // this is the only place to retrieve their current SKU data.
+  const { isLoading: isLogtoSkusLoading, data: fetchedLogtoSkus } = useSWR<
+    LogtoSkuResponse[],
+    Error
+  >(isCloud && currentTenantId && `/api/tenants/${currentTenantId}/available-skus`, async () =>
+    cloudApi.get('/api/tenants/:tenantId/available-skus', {
+      params: { tenantId: currentTenantId },
+      search: { type: LogtoSkuType.Basic },
+    })
+  );
+
+  const logtoSkus = useMemo(() => formatLogtoSkusResponses(fetchedLogtoSkus), [fetchedLogtoSkus]);
 
   const currentSku = useMemo(
     () => logtoSkus.find((logtoSku) => logtoSku.id === currentTenant?.planId) ?? defaultLogtoSku,

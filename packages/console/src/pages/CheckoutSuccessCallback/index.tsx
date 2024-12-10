@@ -14,7 +14,6 @@ import SkuName from '@/components/SkuName';
 import { checkoutStateQueryKey } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
-import useLogtoSkus from '@/hooks/use-logto-skus';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { clearLocalCheckoutSession, getLocalCheckoutSession } from '@/utils/checkout';
 
@@ -31,9 +30,6 @@ function CheckoutSuccessCallback() {
   const { search } = useLocation();
   const checkoutState = new URLSearchParams(search).get(checkoutStateQueryKey);
   const { state, sessionId, callbackPage, isDowngrade } = getLocalCheckoutSession() ?? {};
-
-  const { data: logtoSkus, error: fetchLogtoSkusError } = useLogtoSkus();
-  const isLoadingLogtoSkus = !logtoSkus && !fetchLogtoSkusError;
 
   // Note: if we can't get the subscription results in 10 seconds, we will redirect to the console home page
   useTimer({
@@ -63,7 +59,6 @@ function CheckoutSuccessCallback() {
   );
 
   const checkoutTenantId = stripeCheckoutSession?.tenantId;
-  const checkoutPlanId = stripeCheckoutSession?.planId;
   const checkoutSkuId = stripeCheckoutSession?.skuId;
 
   const { data: tenantSubscription } = useSWR(
@@ -80,19 +75,18 @@ function CheckoutSuccessCallback() {
   const isCheckoutSuccessful =
     checkoutTenantId &&
     stripeCheckoutSession.status === 'complete' &&
-    !isLoadingLogtoSkus &&
     checkoutSkuId === tenantSubscription?.planId;
 
   useEffect(() => {
     if (isCheckoutSuccessful) {
       clearLocalCheckoutSession();
 
-      const checkoutSku = logtoSkus?.find((sku) => sku.id === checkoutPlanId);
-      if (checkoutSku) {
+      // Make the typescript happy checkoutSkuId should not be empty here
+      if (checkoutSkuId) {
         toast.success(
           <Trans
             components={{
-              name: <SkuName skuId={checkoutSku.id} />,
+              name: <SkuName skuId={checkoutSkuId} />,
             }}
           >
             {t(isDowngrade ? 'downgrade_success' : 'upgrade_success')}
@@ -124,12 +118,11 @@ function CheckoutSuccessCallback() {
     }
   }, [
     callbackPage,
-    checkoutPlanId,
+    checkoutSkuId,
     checkoutTenantId,
     currentTenantId,
     isCheckoutSuccessful,
     isDowngrade,
-    logtoSkus,
     navigate,
     navigateTenant,
     onCurrentSubscriptionUpdated,

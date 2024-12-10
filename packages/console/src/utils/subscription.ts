@@ -9,7 +9,7 @@ import { ticketSupportResponseTimeMap } from '@/consts/plan-quotas';
 import { featuredPlanIdOrder, featuredPlanIds } from '@/consts/subscriptions';
 import { type LogtoSkuQuota } from '@/types/skus';
 
-export const addSupportQuota = (logtoSkuResponse: LogtoSkuResponse) => {
+const addSupportQuota = (logtoSkuResponse: LogtoSkuResponse) => {
   const { id, quota } = logtoSkuResponse;
 
   return {
@@ -22,6 +22,26 @@ export const addSupportQuota = (logtoSkuResponse: LogtoSkuResponse) => {
       ticketSupportResponseTime: ticketSupportResponseTimeMap[id] ?? 0, // Fallback to not supported
     },
   };
+};
+
+/**
+ * Format Logto SKUs responses.
+ *
+ * - add support quota to the SKUs.
+ * - Sort the SKUs by the order of `featuredPlanIdOrder`.
+ */
+export const formatLogtoSkusResponses = (logtoSkus: LogtoSkuResponse[] | undefined) => {
+  if (!logtoSkus) {
+    return [];
+  }
+
+  return logtoSkus
+    .map((logtoSku) => addSupportQuota(logtoSku))
+    .slice()
+    .sort(
+      ({ id: previousId }, { id: nextId }) =>
+        featuredPlanIdOrder.indexOf(previousId) - featuredPlanIdOrder.indexOf(nextId)
+    );
 };
 
 const getSubscriptionPlanOrderById = (id: string) => {
