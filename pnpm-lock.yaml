@@ -5,17 +5,18 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  formidable@<3.2.4: ^3.2.4
-  d3-color@2.0.0: ^3.1.0
+  '@75lb/deep-merge@<1.1.2': ^1.1.2
   braces@<3.0.3: ^3.0.3
   cross-spawn@<6.0.6: ^6.0.6
   cross-spawn@>=7.0.0 <7.0.5: ^7.0.5
-  '@75lb/deep-merge@<1.1.2': ^1.1.2
+  d3-color@2.0.0: ^3.1.0
+  formidable@<3.2.4: ^3.2.4
   micromatch@<4.0.8: ^4.0.8
   nanoid@>=4.0.0 <5.0.9: ^5.0.9
   path-to-regexp@>=0.2.0 <1.9.0: ^1.9.0
   path-to-regexp@>=4.0.0 <6.3.0: ^6.3.0
   rollup@>=4.0.0 <4.22.4: ^4.22.4
+  ws@>=8.0.0 <8.17.1: ^8.18.0
 
 importers:
 
@@ -14164,18 +14165,6 @@ packages:
       utf-8-validate:
         optional: true
 
-  ws@8.16.0:
-    resolution: {integrity: sha512-HS0c//TP7Ina87TfiPUz1rQzMhHrl/SG2guqRcTOIUYD2q8uhUdNHZYJUaQ8aTGPzCh+c6oawMKW35nFl1dxyQ==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-
   ws@8.18.0:
     resolution: {integrity: sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==}
     engines: {node: '>=10.0.0'}
@@ -22518,7 +22507,7 @@ snapshots:
       whatwg-encoding: 2.0.0
       whatwg-mimetype: 3.0.0
       whatwg-url: 11.0.0
-      ws: 8.16.0
+      ws: 8.18.0
       xml-name-validator: 4.0.0
     transitivePeerDependencies:
       - bufferutil
@@ -26848,8 +26837,6 @@ snapshots:
       signal-exit: 4.1.0
 
   ws@7.5.10: {}
-
-  ws@8.16.0: {}
 
   ws@8.18.0: {}
 
