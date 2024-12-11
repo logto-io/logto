@@ -4,12 +4,13 @@ import { useCallback, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import FormCard, { FormCardSkeleton } from '@/components/FormCard';
-import { isCloud } from '@/consts/env';
+import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import CardTitle from '@/ds-components/CardTitle';
 import FormField from '@/ds-components/FormField';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
+import { isPaidPlan } from '@/utils/subscription';
 
 import CreateButton from './CreateButton';
 import CustomizerItem from './CustomizerItem';
@@ -23,12 +24,11 @@ function CustomizeJwt() {
 
   const { isDevTenant } = useContext(TenantsContext);
   const {
-    currentSubscription: { planId },
+    currentSubscription: { planId, isEnterprisePlan },
     currentSubscriptionQuota: { customJwtEnabled },
   } = useContext(SubscriptionDataContext);
 
   const { getDocumentationUrl } = useDocumentationUrl();
-  const isCustomJwtEnabled = !isCloud || customJwtEnabled;
 
   const showPaywall = planId === ReservedPlanId.Free;
 
@@ -38,13 +38,15 @@ function CustomizeJwt() {
     setDeleteModalTokenType(tokenType);
   }, []);
 
+  const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
+
   const { isLoading, accessTokenJwtCustomizer, clientCredentialsJwtCustomizer } =
     useJwtCustomizer();
 
   return (
     <main className={styles.mainContent}>
       <CardTitle
-        paywall={cond((!isCustomJwtEnabled || isDevTenant) && ReservedPlanId.Pro)}
+        paywall={cond(!isPaidTenant && latestProPlanId)}
         title="jwt_claims.title"
         subtitle="jwt_claims.description"
         learnMoreLink={{

@@ -12,7 +12,7 @@ import {
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
-import { formatPeriod, isPaidPlan } from '@/utils/subscription';
+import { formatPeriod, isPaidPlan, isProPlan } from '@/utils/subscription';
 
 import PlanUsageCard, { type Props as PlanUsageCardProps } from './PlanUsageCard';
 import styles from './index.module.scss';
@@ -134,7 +134,7 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
       // Hide the quota notice for Pro plans if the basic quota is 0.
       // Per current pricing model design, it should apply to `enterpriseSsoLimit`.
       ...cond(
-        planId === ReservedPlanId.Pro &&
+        isProPlan(planId) &&
           currentSubscriptionBasicQuota[key] === 0 && {
             isQuotaNoticeHidden: true,
           }

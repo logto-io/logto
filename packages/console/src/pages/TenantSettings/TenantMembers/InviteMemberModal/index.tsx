@@ -1,4 +1,4 @@
-import { ReservedPlanId, TenantRole } from '@logto/schemas';
+import { TenantRole } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -9,7 +9,7 @@ import ReactModal from 'react-modal';
 import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
 import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
 import { addOnPricingExplanationLink } from '@/consts/external-links';
-import { tenantMembersAddOnUnitPrice } from '@/consts/subscriptions';
+import { latestProPlanId, tenantMembersAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import FormField from '@/ds-components/FormField';
@@ -127,7 +127,7 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
       <ModalLayout
         size="large"
         title="tenant_members.invite_modal.title"
-        paywall={conditional(planId !== ReservedPlanId.Pro && ReservedPlanId.Pro)}
+        paywall={conditional(!isPaidTenant && latestProPlanId)}
         hasAddOnTag={isPaidTenant && hasTenantMembersReachedLimit}
         subtitle="tenant_members.invite_modal.subtitle"
         footer={

@@ -102,8 +102,17 @@ export const pickupFeaturedLogtoSkus = (logtoSkus: LogtoSkuResponse[]): LogtoSku
   logtoSkus.filter(({ id }) => featuredPlanIds.includes(id));
 
 export const isPaidPlan = (planId: string, isEnterprisePlan: boolean) =>
-  planId === ReservedPlanId.Pro || isEnterprisePlan;
+  isProPlan(planId) || isEnterprisePlan;
 
 export const isFeatureEnabled = (quota: Nullable<number>): boolean => {
   return quota === null || quota > 0;
 };
+
+/**
+ * We may have more than one pro planId in the future.
+ * E.g grandfathered {@link ReservedPlanId.Pro} and new {@link ReservedPlanId.Pro202411}.
+ * User this function to check if the planId can be considered as a pro plan.
+ */
+export const isProPlan = (planId: string) =>
+  // eslint-disable-next-line no-restricted-syntax
+  [ReservedPlanId.Pro, ReservedPlanId.Pro202411].includes(planId as ReservedPlanId);

@@ -1,4 +1,3 @@
-import { ReservedPlanId } from '@logto/schemas';
 import { cond } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useCallback, useContext, useMemo, useState } from 'react';
@@ -12,6 +11,7 @@ import { type SelectedGuide } from '@/components/Guide/GuideCard';
 import GuideCardGroup from '@/components/Guide/GuideCardGroup';
 import { useAppGuideMetadata } from '@/components/Guide/hooks';
 import { isCloud } from '@/consts/env';
+import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { CheckboxGroup } from '@/ds-components/Checkbox';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
@@ -105,7 +105,7 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, onSelectGuide }
                                   isVisible={
                                     currentSubscriptionQuota.thirdPartyApplicationsLimit === 0
                                   }
-                                  plan={ReservedPlanId.Pro}
+                                  plan={latestProPlanId}
                                 />
                               ),
                             }
