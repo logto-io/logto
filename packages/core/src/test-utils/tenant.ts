@@ -2,6 +2,7 @@ import { type Sentinel } from '@logto/schemas';
 import { TtlCache } from '@logto/shared';
 import { createMockPool, createMockQueryResult } from '@silverhand/slonik';
 
+import { redisCache } from '#src/caches/index.js';
 import { WellKnownCache } from '#src/caches/well-known.js';
 import type { CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 import { createCloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
@@ -11,6 +12,8 @@ import { createLogtoConfigLibrary, type LogtoConfigLibrary } from '#src/librarie
 import Libraries from '#src/tenants/Libraries.js';
 import Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
+
+import { SubscriptionLibrary } from '../libraries/subscription.js';
 
 import { mockEnvSet } from './env-set.js';
 import type { GrantMock } from './oidc-provider.js';
@@ -67,6 +70,7 @@ export class MockTenant implements TenantContext {
   public connectors: ConnectorLibrary;
   public libraries: Libraries;
   public sentinel: Sentinel;
+  public readonly subscription: SubscriptionLibrary;
 
   // eslint-disable-next-line max-params
   constructor(
@@ -93,6 +97,12 @@ export class MockTenant implements TenantContext {
     );
     this.setPartial('libraries', librariesOverride);
     this.sentinel = new MockSentinel();
+    this.subscription = new SubscriptionLibrary(
+      this.id,
+      this.queries,
+      this.cloudConnection,
+      redisCache
+    );
   }
 
   public async invalidateCache() {

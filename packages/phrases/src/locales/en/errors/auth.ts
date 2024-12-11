@@ -6,6 +6,7 @@ const auth = {
   expected_role_not_found: 'Expected role not found. Please check your user roles and permissions.',
   jwt_sub_missing: 'Missing `sub` in JWT.',
   require_re_authentication: 'Re-authentication is required to perform a protected action.',
+  exceed_token_limit: 'Token limit exceeded. Please contact your administrator.',
 };
 
 export default Object.freeze(auth);
