@@ -3,7 +3,7 @@ import { assert } from '@silverhand/essentials';
 import camelcaseKeys, { type CamelCaseKeys } from 'camelcase-keys';
 import { got, HTTPError } from 'got';
 import { createRemoteJWKSet, jwtVerify, type JWTVerifyOptions } from 'jose';
-import { z } from 'zod';
+import { z, ZodError } from 'zod';
 
 import {
   SsoConnectorConfigErrorCodes,
@@ -20,28 +20,26 @@ import {
   type OidcTokenResponse,
 } from '../types/oidc.js';
 
+export const fetchOidcConfigRaw = async (issuer: string) => {
+  const { body } = await got.get(`${issuer}/.well-known/openid-configuration`, {
+    responseType: 'json',
+  });
+
+  return camelcaseKeys(oidcConfigResponseGuard.parse(body));
+};
+
 export const fetchOidcConfig = async (
   issuer: string
 ): Promise<CamelCaseKeys<OidcConfigResponse>> => {
   try {
-    const { body } = await got.get(`${issuer}/.well-known/openid-configuration`, {
-      responseType: 'json',
-    });
-
-    const result = oidcConfigResponseGuard.safeParse(body);
-
-    if (!result.success) {
+    return await fetchOidcConfigRaw(issuer);
+  } catch (error: unknown) {
+    if (error instanceof ZodError) {
       throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidConfig, {
         config: { issuer },
         message: SsoConnectorConfigErrorCodes.InvalidConfigResponse,
-        error: result.error.flatten(),
+        error: error.flatten(),
       });
-    }
-
-    return camelcaseKeys(result.data);
-  } catch (error: unknown) {
-    if (error instanceof SsoConnectorError) {
-      throw error;
     }
 
     throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidConfig, {
@@ -159,26 +157,31 @@ export const getIdTokenClaims = async (
   }
 };
 
+export const getRawUserInfoResponse = async (accessToken: string, userinfoEndpoint: string) => {
+  const httpResponse = await got.get(userinfoEndpoint, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  return httpResponse.body;
+};
+
 /**
  * Get the user info from the userinfo endpoint incase id token does not contain sufficient user claims.
  */
 export const getUserInfo = async (accessToken: string, userinfoEndpoint: string) => {
   try {
-    const httpResponse = await got.get(userinfoEndpoint, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      responseType: 'json',
-    });
+    const body = await getRawUserInfoResponse(accessToken, userinfoEndpoint);
 
     const result = idTokenProfileStandardClaimsGuard
       .catchall(z.unknown())
-      .safeParse(httpResponse.body);
+      .safeParse(parseJson(body));
 
     if (!result.success) {
       throw new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
         message: 'Invalid user info response',
-        response: httpResponse.body,
+        response: body,
         error: result.error.flatten(),
       });
     }
