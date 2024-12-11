@@ -2,6 +2,8 @@ import { type ElementHandle, type Page } from 'puppeteer';
 
 import { expectNavigation } from '#src/utils.js';
 
+import { type PuppeteerInstance } from './index.js';
+
 /** Error thrown by {@link ExpectPage}. */
 export class ExpectPageError extends Error {
   constructor(
@@ -83,7 +85,7 @@ export default class ExpectPage {
   /**
    * Alias for {@link jest.Matchers['toFill']}.
    */
-  async toFill(...args: Parameters<jest.Matchers<unknown>['toFill']>) {
+  async toFill(...args: Parameters<jest.Matchers<unknown, PuppeteerInstance>['toFill']>) {
     return expect(this.page).toFill(...args);
   }
 
@@ -142,7 +144,9 @@ export default class ExpectPage {
    * @alias `expect(this.page).toMatchElement()`
    * @see {@link jest.Matchers.toMatchElement}
    */
-  async toMatchElement(...args: Parameters<jest.Matchers<unknown>['toMatchElement']>) {
+  async toMatchElement(
+    ...args: Parameters<jest.Matchers<unknown, PuppeteerInstance>['toMatchElement']>
+  ) {
     return expect(this.page).toMatchElement(...args);
   }
 

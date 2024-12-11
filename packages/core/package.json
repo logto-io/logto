@@ -79,7 +79,7 @@
     "koa-send": "^5.0.1",
     "ky": "^1.2.3",
     "lru-cache": "^11.0.0",
-    "nanoid": "^5.0.1",
+    "nanoid": "^5.0.9",
     "node-forge": "^1.3.1",
     "oidc-provider": "github:logto-io/node-oidc-provider#de2d8fd68e91b76d71fb910d44142f9eccd844bc",
     "openapi-types": "^12.1.3",

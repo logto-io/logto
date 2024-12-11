@@ -85,7 +85,7 @@
     "@logto/phrases-experience": "workspace:^1.9.0",
     "@logto/shared": "workspace:^3.1.2",
     "@withtyped/server": "^0.14.0",
-    "nanoid": "^5.0.1"
+    "nanoid": "^5.0.9"
   },
   "peerDependencies": {
     "zod": "^3.23.8"
