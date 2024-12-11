@@ -1,6 +1,6 @@
 import { ConnectorType } from '@logto/connector-kit';
 import { SignInMode, SignInIdentifier, type PartialPasswordPolicy } from '@logto/schemas';
-import { type ElementHandle, type Browser, type Page } from 'puppeteer';
+import { type ElementHandle, type Browser, type Page, type Frame } from 'puppeteer';
 
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import {
@@ -12,6 +12,8 @@ import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connecto
 import { dcls, expectNavigation, waitFor } from '#src/utils.js';
 
 import { selectDropdownMenuItem } from './select-dropdown-menu-item.js';
+
+export type PuppeteerInstance = Page | Frame | ElementHandle;
 
 export const goToAdminConsole = async () => {
   const logtoConsoleUrl = new URL(logtoConsoleUrlString);

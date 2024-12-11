@@ -9,7 +9,7 @@
     "@silverhand/essentials": "^2.9.1",
     "jose": "^5.6.3",
     "ky": "^1.2.3",
-    "nanoid": "^5.0.1",
+    "nanoid": "^5.0.9",
     "snakecase-keys": "^8.0.1",
     "zod": "^3.23.8"
   },
