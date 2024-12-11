@@ -81,8 +81,6 @@ describe('user management', () => {
       ),
     ]);
 
-    console.log('################### email, phone, username', email, phone, username);
-
     expect(email).toBe('jdoe@gmail.com');
     expect(phone).toBe('+1 810 555 5555');
     expect(username).toBe('johndoe');
