@@ -65,7 +65,7 @@ function PlanComparisonTable() {
     const includedTokens = t('quota.included_tokens');
     const includedTokensTip = t('tokens_tip');
     const proPlanIncludedTokens = isDevFeaturesEnabled ? '100,000' : t('million', { value: 1 });
-    const freePlanIncludedTokens = isDevFeaturesEnabled ? '100,000' : '50,000';
+    const freePlanIncludedTokens = isDevFeaturesEnabled ? '100,000' : '500,000';
     const proPlanTokenPrice = isDevFeaturesEnabled
       ? t('extra_token_price', { value: 0.08, amount: 100 })
       : t('extra_token_price', { value: 80, amount: 1_000_000 });
