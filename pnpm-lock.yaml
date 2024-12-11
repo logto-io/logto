@@ -3557,8 +3557,8 @@ importers:
         specifier: 6.0.0
         version: 6.0.0(typescript@5.5.3)
       '@simplewebauthn/browser':
-        specifier: ^10.0.0
-        version: 10.0.0
+        specifier: ^13.0.0
+        version: 13.0.0
       '@simplewebauthn/types':
         specifier: ^10.0.0
         version: 10.0.0
@@ -3764,8 +3764,8 @@ importers:
         specifier: 6.0.0
         version: 6.0.0(typescript@5.5.3)
       '@simplewebauthn/browser':
-        specifier: ^10.0.0
-        version: 10.0.0
+        specifier: ^13.0.0
+        version: 13.0.0
       '@simplewebauthn/types':
         specifier: ^10.0.0
         version: 10.0.0
@@ -6427,8 +6427,8 @@ packages:
     peerDependencies:
       typescript: ^5.3.3
 
-  '@simplewebauthn/browser@10.0.0':
-    resolution: {integrity: sha512-hG0JMZD+LiLUbpQcAjS4d+t4gbprE/dLYop/CkE01ugU/9sKXflxV5s0DRjdz3uNMFecatRfb4ZLG3XvF8m5zg==}
+  '@simplewebauthn/browser@13.0.0':
+    resolution: {integrity: sha512-7d/+gxoFoDQxq2EkLl/PuTIQ/rnSrA3bmr8L2Ij7bRyicJoCJX/NDGUNExyctB9nSDrEkkcrJMDkwpCYOGU3Lg==}
 
   '@simplewebauthn/server@10.0.0':
     resolution: {integrity: sha512-w5eIoiF7ltg1sgggjY5Tx654j+DBuyEx2B3869jjmPp0xl2Z4BUP4kJ3yJ6DnZIv+ZYYntT3E6nZXNjPOQbrtw==}
@@ -16832,9 +16832,7 @@ snapshots:
     dependencies:
       typescript: 5.5.3
 
-  '@simplewebauthn/browser@10.0.0':
-    dependencies:
-      '@simplewebauthn/types': 10.0.0
+  '@simplewebauthn/browser@13.0.0': {}
 
   '@simplewebauthn/server@10.0.0':
     dependencies:
