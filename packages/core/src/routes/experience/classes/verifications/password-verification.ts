@@ -1,10 +1,10 @@
+import { type ToZodObject } from '@logto/connector-kit';
 import {
   type VerificationIdentifier,
   VerificationType,
   type User,
   verificationIdentifierGuard,
 } from '@logto/schemas';
-import { type ToZodObject } from '@logto/schemas/lib/utils/zod.js';
 import { generateStandardId } from '@logto/shared';
 import { z } from 'zod';
 
