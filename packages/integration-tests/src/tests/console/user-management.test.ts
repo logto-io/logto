@@ -39,11 +39,14 @@ describe('user management', () => {
   });
 
   it('can create a new user', async () => {
+    const email = 'jdoe@gmail.com';
+    const phone = '+1 810 555 5555';
+    const username = 'johndoe';
     await expect(page).toClick('div[class$=main] div[class$=headline] > button');
     await expect(page).toFillForm('form', {
-      primaryEmail: 'jdoe@gmail.com',
-      primaryPhone: '+18105555555',
-      username: 'johndoe',
+      primaryEmail: email,
+      primaryPhone: phone,
+      username,
     });
     await expect(page).toClick('button[type=submit]');
     await page.waitForSelector('div[class$=infoLine');
@@ -52,7 +55,7 @@ describe('user management', () => {
     // Go to user details page
     await expectToClickModalAction(page, 'Check user detail');
     await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=name]', {
-      text: 'jdoe@gmail.com',
+      text: email,
     });
     const userId = await page.$eval(
       'div[class$=main] div[class$=metadata] div[class$=row] div[class$=content]',
@@ -61,19 +64,10 @@ describe('user management', () => {
     if (userId) {
       expect(page.url()).toBe(new URL(`console/users/${userId}/settings`, logtoConsoleUrl).href);
     }
-    const email = await page.$eval('form input[name=primaryEmail]', (element) =>
-      element instanceof HTMLInputElement ? element.value : null
-    );
-    const phone = await page.$eval('form input[name=primaryPhone]', (element) =>
-      element instanceof HTMLInputElement ? element.value : null
-    );
-    const username = await page.$eval('form input[name=username]', (element) =>
-      element instanceof HTMLInputElement ? element.value : null
-    );
 
-    expect(email).toBe('jdoe@gmail.com');
-    expect(phone).toBe('+1 810 555 5555');
-    expect(username).toBe('johndoe');
+    await expect(page).toMatchElement('form input[name=primaryEmail]', { text: email });
+    await expect(page).toMatchElement('form input[name=primaryPhone]', { text: phone });
+    await expect(page).toMatchElement('form input[name=username]', { text: username });
   });
 
   it('fails to create user if no identifier is provided', async () => {
