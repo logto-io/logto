@@ -3,6 +3,7 @@ import { type TFuncKey } from 'i18next';
 import { Fragment, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import {
   freePlanAuditLogsRetentionDays,
   freePlanM2mLimit,
@@ -63,7 +64,11 @@ function PlanComparisonTable() {
     const mauLimitTip = t('mau_tip');
     const includedTokens = t('quota.included_tokens');
     const includedTokensTip = t('tokens_tip');
-    const proPlanIncludedTokens = t('million', { value: 1 });
+    const proPlanIncludedTokens = isDevFeaturesEnabled ? '100,000' : t('million', { value: 1 });
+    const freePlanIncludedTokens = isDevFeaturesEnabled ? '100,000' : '500,000';
+    const proPlanTokenPrice = isDevFeaturesEnabled
+      ? t('extra_token_price', { value: 0.08, amount: 100 })
+      : t('extra_token_price', { value: 80, amount: 1_000_000 });
 
     // Applications
     const totalApplications = t('application.total');
@@ -152,7 +157,11 @@ function PlanComparisonTable() {
           },
           {
             name: `${includedTokens}|${includedTokensTip}`,
-            data: ['500,000', `${proPlanIncludedTokens}`, contact],
+            data: [
+              `${freePlanIncludedTokens}`,
+              `${proPlanIncludedTokens}||${proPlanTokenPrice}`,
+              contact,
+            ],
           },
         ],
       },

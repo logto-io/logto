@@ -102,6 +102,7 @@ const quota_table = {
   included: 'incluido{{value, number}}',
   included_mao: '{{value, number}} MAO incluido',
   extra_quota_price: 'Luego ${{value, number}} por mes / cada uno después',
+  extra_token_price: 'Luego ${{value, number}} por mes / {{amount, number}} después',
   per_month_each: '${{value, number}} por mes / cada uno',
   extra_mao_price: 'Luego ${{value, number}} por MAO',
   per_month: '${{value, number}} por mes',

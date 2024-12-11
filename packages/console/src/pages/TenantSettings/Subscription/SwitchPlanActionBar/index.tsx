@@ -15,22 +15,75 @@ import Spacer from '@/ds-components/Spacer';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useSubscribe from '@/hooks/use-subscribe';
 import { NotEligibleSwitchSkuModalContent } from '@/pages/TenantSettings/components/NotEligibleSwitchPlanModalContent';
-import { isDowngradePlan, parseExceededSkuQuotaLimitError } from '@/utils/subscription';
+import {
+  isDowngradePlan,
+  isEquivalentPlan,
+  parseExceededSkuQuotaLimitError,
+} from '@/utils/subscription';
 
 import DowngradeConfirmModalContent from '../DowngradeConfirmModalContent';
 
 import styles from './index.module.scss';
+
+type SkuButtonProps = {
+  readonly targetSkuId: string;
+  readonly currentSkuId: string;
+  readonly isCurrentEnterprisePlan: boolean;
+  readonly loadingSkuId?: string;
+  readonly onClick: (targetSkuId: string, isDowngrade: boolean) => Promise<void>;
+};
+function SkuButton({
+  targetSkuId,
+  currentSkuId,
+  isCurrentEnterprisePlan,
+  loadingSkuId,
+  onClick,
+}: SkuButtonProps) {
+  const isCurrentSku = currentSkuId === targetSkuId;
+  const isDowngrade = isDowngradePlan(currentSkuId, targetSkuId);
+  const isEquivalent = isEquivalentPlan(currentSkuId, targetSkuId);
+
+  if (isCurrentEnterprisePlan || isEquivalent) {
+    return (
+      <div>
+        <a href={contactEmailLink} className={styles.buttonLink} rel="noopener">
+          <Button title="general.contact_us_action" />
+        </a>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <Button
+        title={
+          isCurrentSku
+            ? 'subscription.current'
+            : isDowngrade
+            ? 'subscription.downgrade'
+            : 'subscription.upgrade'
+        }
+        type={isDowngrade ? 'default' : 'primary'}
+        disabled={isCurrentSku}
+        isLoading={!isCurrentSku && loadingSkuId === targetSkuId}
+        onClick={() => {
+          void onClick(targetSkuId, isDowngrade);
+        }}
+      />
+    </div>
+  );
+}
 
 type Props = {
   readonly currentSkuId: string;
   readonly logtoSkus: LogtoSkuResponse[];
   readonly onSubscriptionUpdated: () => Promise<void>;
 };
-
 function SwitchPlanActionBar({ onSubscriptionUpdated, currentSkuId, logtoSkus }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.subscription' });
   const { currentTenantId } = useContext(TenantsContext);
   const {
+    currentSku,
     currentSubscription: { isEnterprisePlan },
   } = useContext(SubscriptionDataContext);
   const { subscribe, cancelSubscription } = useSubscribe();
@@ -42,10 +95,9 @@ function SwitchPlanActionBar({ onSubscriptionUpdated, currentSkuId, logtoSkus }:
       return;
     }
 
-    const currentSku = logtoSkus.find(({ id }) => id === currentSkuId);
     const targetSku = logtoSkus.find(({ id }) => id === targetSkuId);
 
-    if (!currentSku || !targetSku) {
+    if (!targetSku) {
       return;
     }
 
@@ -118,37 +170,20 @@ function SwitchPlanActionBar({ onSubscriptionUpdated, currentSkuId, logtoSkus }:
   return (
     <div className={styles.container}>
       <Spacer />
+      {/** Public reserved plan buttons */}
       {logtoSkus.map(({ id: skuId }) => {
-        const isCurrentSku = currentSkuId === skuId;
-        const isDowngrade = isDowngradePlan(currentSkuId, skuId);
-
-        // Let user contact us when they are currently on Enterprise plan. Do not allow users to self-serve downgrade.
-        return isEnterprisePlan ? (
-          <div key={skuId}>
-            <a href={contactEmailLink} className={styles.buttonLink} rel="noopener">
-              <Button title="general.contact_us_action" />
-            </a>
-          </div>
-        ) : (
-          <div key={skuId}>
-            <Button
-              title={
-                isCurrentSku
-                  ? 'subscription.current'
-                  : isDowngrade
-                  ? 'subscription.downgrade'
-                  : 'subscription.upgrade'
-              }
-              type={isDowngrade ? 'default' : 'primary'}
-              disabled={isCurrentSku}
-              isLoading={!isCurrentSku && currentLoadingSkuId === skuId}
-              onClick={() => {
-                void handleSubscribe(skuId, isDowngrade);
-              }}
-            />
-          </div>
+        return (
+          <SkuButton
+            key={skuId}
+            targetSkuId={skuId}
+            currentSkuId={currentSkuId}
+            isCurrentEnterprisePlan={isEnterprisePlan}
+            loadingSkuId={currentLoadingSkuId}
+            onClick={handleSubscribe}
+          />
         );
       })}
+      {/** Enterprise plan button */}
       <div>
         <a href={contactEmailLink} className={styles.buttonLink} rel="noopener">
           <Button

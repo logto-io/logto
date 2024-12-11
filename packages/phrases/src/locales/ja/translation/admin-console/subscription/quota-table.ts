@@ -102,6 +102,7 @@ const quota_table = {
   included: '{{value, number}} 込み',
   included_mao: '{{value, number}} MAO込み',
   extra_quota_price: 'その後、各${{value, number}} / 月ごと',
+  extra_token_price: 'その後、${{value, number}} / 月ごと {{amount, number}} ごと',
   per_month_each: '各${{value, number}} / 月ごと',
   extra_mao_price: 'その後、MAOごとに${{value, number}}',
   per_month: '${{value, number}} / 月ごと',
