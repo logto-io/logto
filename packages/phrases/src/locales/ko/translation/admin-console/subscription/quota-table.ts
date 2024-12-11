@@ -100,6 +100,7 @@ const quota_table = {
   included: '{{value, number}} 포함',
   included_mao: '{{value, number}} MAO 포함',
   extra_quota_price: '이후 월당 ${{value, number}} / 각각',
+  extra_token_price: '이후 월당 ${{value, number}} / 각각 {{amount, number}} 당',
   per_month_each: '월당 ${{value, number}} / 각각',
   extra_mao_price: '이후 MAO 당 ${{value, number}}',
   per_month: '월당 ${{value, number}}',

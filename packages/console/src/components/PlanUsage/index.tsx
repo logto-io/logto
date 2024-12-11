@@ -1,8 +1,8 @@
 import { ReservedPlanId } from '@logto/schemas';
-import { cond, conditional } from '@silverhand/essentials';
+import { cond } from '@silverhand/essentials';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
-import { useContext, useMemo } from 'react';
+import { useContext } from 'react';
 
 import {
   type NewSubscriptionPeriodicUsage,
@@ -10,7 +10,6 @@ import {
   type NewSubscriptionQuota,
 } from '@/cloud/types/router';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
-import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import { formatPeriod, isPaidPlan, isProPlan } from '@/utils/subscription';
 
@@ -26,7 +25,7 @@ import {
 } from './utils';
 
 type Props = {
-  readonly periodicUsage?: NewSubscriptionPeriodicUsage;
+  readonly periodicUsage: NewSubscriptionPeriodicUsage | undefined;
 };
 
 const getUsageByKey = (
@@ -58,26 +57,13 @@ const getUsageByKey = (
   return countBasedUsage[key];
 };
 
-function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
+function PlanUsage({ periodicUsage }: Props) {
   const {
     currentSubscriptionQuota,
     currentSubscriptionBasicQuota,
     currentSubscriptionUsage,
     currentSubscription: { currentPeriodStart, currentPeriodEnd, planId, isEnterprisePlan },
   } = useContext(SubscriptionDataContext);
-  const { currentTenant } = useContext(TenantsContext);
-
-  const periodicUsage = useMemo(
-    () =>
-      rawPeriodicUsage ??
-      conditional(
-        currentTenant && {
-          mauLimit: currentTenant.usage.activeUsers,
-          tokenLimit: currentTenant.usage.tokenUsage,
-        }
-      ),
-    [currentTenant, rawPeriodicUsage]
-  );
 
   if (!periodicUsage) {
     return null;
@@ -102,6 +88,7 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
       titleKey: `subscription.usage.${titleKeyMap[key]}`,
       unitPrice: usageKeyPriceMap[key],
       ...cond(
+        // We only show the usage card for MAU and token for Free plan
         (key === 'tokenLimit' || key === 'mauLimit' || isPaidTenant) && {
           quota: currentSubscriptionQuota[key],
         }

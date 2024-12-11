@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import { tryReadResponseErrorBody } from '@/cloud/hooks/use-cloud-api';
 import { type LogtoSkuResponse } from '@/cloud/types/router';
 import { ticketSupportResponseTimeMap } from '@/consts/plan-quotas';
-import { featuredPlanIdOrder, featuredPlanIds } from '@/consts/subscriptions';
+import { featuredPlanIds, planIdOrder } from '@/consts/subscriptions';
 import { type LogtoSkuQuota } from '@/types/skus';
 
 const addSupportQuota = (logtoSkuResponse: LogtoSkuResponse) => {
@@ -35,24 +35,27 @@ export const formatLogtoSkusResponses = (logtoSkus: LogtoSkuResponse[] | undefin
     return [];
   }
 
-  return logtoSkus
-    .map((logtoSku) => addSupportQuota(logtoSku))
-    .slice()
-    .sort(
-      ({ id: previousId }, { id: nextId }) =>
-        featuredPlanIdOrder.indexOf(previousId) - featuredPlanIdOrder.indexOf(nextId)
-    );
+  return logtoSkus.map((logtoSku) => addSupportQuota(logtoSku));
 };
 
 const getSubscriptionPlanOrderById = (id: string) => {
-  const index = featuredPlanIdOrder.indexOf(id);
+  const index = planIdOrder[id];
 
   // Note: if the plan id is not in the featuredPlanIdOrder, it will be treated as the highest priority
-  return index === -1 ? Number.POSITIVE_INFINITY : index;
+  // E.g. enterprise plan.
+  return index ?? Number.POSITIVE_INFINITY;
 };
 
 export const isDowngradePlan = (fromPlanId: string, toPlanId: string) =>
   getSubscriptionPlanOrderById(fromPlanId) > getSubscriptionPlanOrderById(toPlanId);
+
+/**
+ * Check if the two plan ids are equivalent,
+ * one is grandfathered and the other is public visible featured plan.
+ */
+export const isEquivalentPlan = (fromPlanId: string, toPlanId: string) =>
+  fromPlanId !== toPlanId &&
+  getSubscriptionPlanOrderById(fromPlanId) === getSubscriptionPlanOrderById(toPlanId);
 
 type FormatPeriodOptions = {
   periodStart: Date;
@@ -98,8 +101,18 @@ export const parseExceededSkuQuotaLimitError = async (
   return [true, Object.keys(exceededQuota) as Array<keyof LogtoSkuQuota>];
 };
 
+/**
+ * Filter the featured plans (public visible) from the Logto SKUs API response.
+ * and sorted by the order of {@link planIdOrder}.
+ */
 export const pickupFeaturedLogtoSkus = (logtoSkus: LogtoSkuResponse[]): LogtoSkuResponse[] =>
-  logtoSkus.filter(({ id }) => featuredPlanIds.includes(id));
+  logtoSkus
+    .filter(({ id }) => featuredPlanIds.includes(id))
+    .slice()
+    .sort(
+      ({ id: previousId }, { id: nextId }) =>
+        getSubscriptionPlanOrderById(previousId) - getSubscriptionPlanOrderById(nextId)
+    );
 
 export const isPaidPlan = (planId: string, isEnterprisePlan: boolean) =>
   isProPlan(planId) || isEnterprisePlan;
