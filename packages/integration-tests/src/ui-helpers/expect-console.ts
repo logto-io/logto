@@ -1,12 +1,15 @@
 import path from 'node:path';
 
 import { appendPath, condString } from '@silverhand/essentials';
+import { type ElementHandle, type Frame, type Page } from 'puppeteer';
 
 import { consolePassword, consoleUsername, logtoConsoleUrl } from '#src/constants.js';
 import { cls, dcls, waitFor } from '#src/utils.js';
 
 import ExpectPage, { ExpectPageError } from './expect-page.js';
 import { expectConfirmModalAndAct, expectToSaveChanges } from './index.js';
+
+type PuppeteerInstance = Page | Frame | ElementHandle;
 
 type ExpectConsoleOptions = {
   /** The URL of the console endpoint. */
@@ -67,7 +70,9 @@ export default class ExpectConsole extends ExpectPage {
    *
    * @see {@link jest.Matchers.toMatchElement}
    */
-  async toMatchElement(...args: Parameters<jest.Matchers<unknown>['toMatchElement']>) {
+  async toMatchElement(
+    ...args: Parameters<jest.Matchers<unknown, PuppeteerInstance>['toMatchElement']>
+  ) {
     return expect(this.page).toMatchElement(...args);
   }
 
