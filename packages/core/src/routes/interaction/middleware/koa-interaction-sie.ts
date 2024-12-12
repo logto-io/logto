@@ -1,7 +1,7 @@
 import crypto from 'node:crypto';
 
 import { PasswordPolicyChecker } from '@logto/core-kit';
-import type { SignInExperience } from '@logto/schemas';
+import { MfaPolicy, type SignInExperience } from '@logto/schemas';
 import type { MiddlewareType } from 'koa';
 import { type IRouterParamContext } from 'koa-router';
 
@@ -24,7 +24,17 @@ export default function koaInteractionSie<StateT, ContextT extends IRouterParamC
   return async (ctx, next) => {
     const signInExperience = await findDefaultSignInExperience();
 
-    ctx.signInExperience = signInExperience;
+    ctx.signInExperience = {
+      ...signInExperience,
+      mfa: {
+        ...signInExperience.mfa,
+        policy:
+          // Fallback deprecated UserControlled policy to PromptAtSignInAndSignUp
+          signInExperience.mfa.policy === MfaPolicy.UserControlled
+            ? MfaPolicy.PromptAtSignInAndSignUp
+            : signInExperience.mfa.policy,
+      },
+    };
     ctx.passwordPolicyChecker = new PasswordPolicyChecker(
       signInExperience.passwordPolicy,
       crypto.subtle

@@ -54,7 +54,7 @@ const baseCtx = {
     ...mockSignInExperience,
     mfa: {
       factors: [MfaFactor.TOTP],
-      policy: MfaPolicy.UserControlled,
+      policy: MfaPolicy.PromptAtSignInAndSignUp,
     },
   },
   passwordPolicyChecker: new PasswordPolicyChecker(

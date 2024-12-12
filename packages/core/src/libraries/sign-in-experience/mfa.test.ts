@@ -10,7 +10,7 @@ describe('validate mfa', () => {
       expect(() => {
         validateMfa({
           factors: [],
-          policy: MfaPolicy.UserControlled,
+          policy: MfaPolicy.PromptAtSignInAndSignUp,
         });
       }).not.toThrow();
     });
@@ -19,7 +19,7 @@ describe('validate mfa', () => {
       expect(() => {
         validateMfa({
           factors: [MfaFactor.TOTP],
-          policy: MfaPolicy.UserControlled,
+          policy: MfaPolicy.PromptAtSignInAndSignUp,
         });
       }).not.toThrow();
     });
@@ -28,7 +28,7 @@ describe('validate mfa', () => {
       expect(() => {
         validateMfa({
           factors: [MfaFactor.TOTP, MfaFactor.BackupCode],
-          policy: MfaPolicy.UserControlled,
+          policy: MfaPolicy.PromptAtSignInAndSignUp,
         });
       }).not.toThrow();
     });
@@ -38,7 +38,7 @@ describe('validate mfa', () => {
     expect(() => {
       validateMfa({
         factors: [MfaFactor.BackupCode],
-        policy: MfaPolicy.UserControlled,
+        policy: MfaPolicy.PromptAtSignInAndSignUp,
       });
     }).toMatchError(new RequestError('sign_in_experiences.backup_code_cannot_be_enabled_alone'));
   });
@@ -47,7 +47,7 @@ describe('validate mfa', () => {
     expect(() => {
       validateMfa({
         factors: [MfaFactor.TOTP, MfaFactor.TOTP],
-        policy: MfaPolicy.UserControlled,
+        policy: MfaPolicy.PromptAtSignInAndSignUp,
       });
     }).toMatchError(new RequestError('sign_in_experiences.duplicated_mfa_factors'));
   });

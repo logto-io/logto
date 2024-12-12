@@ -109,7 +109,7 @@ export const mockSignInExperience: SignInExperience = {
   customUiAssets: null,
   passwordPolicy: {},
   mfa: {
-    policy: MfaPolicy.UserControlled,
+    policy: MfaPolicy.PromptAtSignInAndSignUp,
     factors: [],
   },
   singleSignOnEnabled: true,
@@ -146,7 +146,7 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
   customUiAssets: null,
   passwordPolicy: {},
   mfa: {
-    policy: MfaPolicy.UserControlled,
+    policy: MfaPolicy.PromptAtSignInAndSignUp,
     factors: [],
   },
   isDevelopmentTenant: false,

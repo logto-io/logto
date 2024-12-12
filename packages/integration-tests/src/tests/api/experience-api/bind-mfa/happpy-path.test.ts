@@ -16,7 +16,9 @@ import {
   enableAllPasswordSignInMethods,
   enableMandatoryMfaWithTotp,
   enableMandatoryMfaWithTotpAndBackupCode,
+  enableUserControlledMfaWithNoPrompt,
   enableUserControlledMfaWithTotp,
+  enableUserControlledMfaWithTotpOnlyAtSignIn,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
 
@@ -122,7 +124,7 @@ describe('Bind MFA APIs happy path', () => {
     });
   });
 
-  describe('user controlled TOTP', () => {
+  describe('TOTP with policy PromptAtSignInAndSignUp', () => {
     beforeAll(async () => {
       await enableUserControlledMfaWithTotp();
     });
@@ -177,6 +179,86 @@ describe('Bind MFA APIs happy path', () => {
 
       await client.skipMfaBinding();
 
+      const { redirectTo } = await client.submitInteraction();
+      await processSession(client, redirectTo);
+      await logoutClient(client);
+    });
+  });
+
+  describe('TOTP with policy PromptOnlyAtSignIn', () => {
+    beforeAll(async () => {
+      await enableUserControlledMfaWithTotpOnlyAtSignIn();
+    });
+
+    it('should able to register without MFA', async () => {
+      const { username, password } = generateNewUserProfile({ username: true, password: true });
+      const client = await initExperienceClient(InteractionEvent.Register);
+
+      const { verificationId } = await client.createNewPasswordIdentityVerification({
+        identifier: {
+          type: SignInIdentifier.Username,
+          value: username,
+        },
+        password,
+      });
+
+      await client.identifyUser({ verificationId });
+      const { redirectTo } = await client.submitInteraction();
+      const userId = await processSession(client, redirectTo);
+      await logoutClient(client);
+      await deleteUser(userId);
+    });
+
+    it('should able to skip MFA binding on sign-in', async () => {
+      const { username, password } = generateNewUserProfile({ username: true, password: true });
+      await userApi.create({ username, password });
+
+      const client = await initExperienceClient();
+      await identifyUserWithUsernamePassword(client, username, password);
+
+      await expectRejects(client.submitInteraction(), {
+        code: 'user.missing_mfa',
+        status: 422,
+      });
+
+      await client.skipMfaBinding();
+
+      const { redirectTo } = await client.submitInteraction();
+      await processSession(client, redirectTo);
+      await logoutClient(client);
+    });
+  });
+
+  describe('TOTP with policy NoPrompt', () => {
+    beforeAll(async () => {
+      await enableUserControlledMfaWithNoPrompt();
+    });
+
+    it('should able to register without MFA', async () => {
+      const { username, password } = generateNewUserProfile({ username: true, password: true });
+      const client = await initExperienceClient(InteractionEvent.Register);
+
+      const { verificationId } = await client.createNewPasswordIdentityVerification({
+        identifier: {
+          type: SignInIdentifier.Username,
+          value: username,
+        },
+        password,
+      });
+
+      await client.identifyUser({ verificationId });
+      const { redirectTo } = await client.submitInteraction();
+      const userId = await processSession(client, redirectTo);
+      await logoutClient(client);
+      await deleteUser(userId);
+    });
+
+    it('should able to sign-in without MFA', async () => {
+      const { username, password } = generateNewUserProfile({ username: true, password: true });
+      await userApi.create({ username, password });
+
+      const client = await initExperienceClient();
+      await identifyUserWithUsernamePassword(client, username, password);
       const { redirectTo } = await client.submitInteraction();
       await processSession(client, redirectTo);
       await logoutClient(client);
