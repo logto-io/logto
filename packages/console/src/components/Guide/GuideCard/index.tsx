@@ -1,9 +1,10 @@
-import { ReservedPlanId, Theme } from '@logto/schemas';
+import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
 import { Suspense, useCallback } from 'react';
 
 import { type Guide, type GuideMetadata } from '@/assets/docs/guides/types';
 import FeatureTag, { BetaTag } from '@/components/FeatureTag';
+import { latestProPlanId } from '@/consts/subscriptions';
 import Button from '@/ds-components/Button';
 import useTheme from '@/hooks/use-theme';
 import { onKeyDownHandler } from '@/utils/a11y';
@@ -61,7 +62,7 @@ function GuideCard({ data, onClick, hasBorder, hasButton, hasPaywall, isBeta }: 
             <div className={styles.name}>{name}</div>
             {hasTags && (
               <div className={styles.tagWrapper}>
-                {hasPaywall && <FeatureTag isVisible plan={ReservedPlanId.Pro} />}
+                {hasPaywall && <FeatureTag isVisible plan={latestProPlanId} />}
                 {isBeta && <BetaTag />}
               </div>
             )}

@@ -1,4 +1,4 @@
-import { type Organization, type CreateOrganization, ReservedPlanId } from '@logto/schemas';
+import { type Organization, type CreateOrganization } from '@logto/schemas';
 import { cond, conditional } from '@silverhand/essentials';
 import { useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -10,7 +10,7 @@ import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import { isCloud } from '@/consts/env';
 import { addOnPricingExplanationLink } from '@/consts/external-links';
-import { organizationAddOnUnitPrice } from '@/consts/subscriptions';
+import { latestProPlanId, organizationAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
@@ -41,11 +41,11 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
     data: { organizationUpsellNoticeAcknowledged },
     update,
   } = useUserPreferences();
-  const isOrganizationsDisabled =
-    isCloud &&
-    !isFeatureEnabled(currentSubscriptionQuota.organizationsLimit) &&
-    planId !== ReservedPlanId.Pro;
   const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
+  const isOrganizationsDisabled =
+    // Check if the organizations feature is disabled except for paid tenants.
+    // Paid tenants can create organizations with organization feature add-on applied to their subscription.
+    isCloud && !isFeatureEnabled(currentSubscriptionQuota.organizationsLimit) && !isPaidTenant;
 
   const {
     reset,
@@ -82,7 +82,7 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
     >
       <ModalLayout
         title="organizations.create_organization"
-        paywall={conditional(isPaidTenant && planId !== ReservedPlanId.Pro && ReservedPlanId.Pro)}
+        paywall={conditional(!isPaidTenant && latestProPlanId)}
         hasAddOnTag={isPaidTenant}
         footer={
           cond(

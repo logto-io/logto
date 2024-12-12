@@ -1,5 +1,4 @@
 import {
-  ReservedPlanId,
   type RequestErrorBody,
   type SsoConnectorProvidersResponse,
   type SsoConnectorWithProviderConfig,
@@ -19,7 +18,7 @@ import { getConnectorRadioGroupSize } from '@/components/CreateConnectorForm/uti
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import { isCloud } from '@/consts/env';
 import { addOnPricingExplanationLink } from '@/consts/external-links';
-import { enterpriseSsoAddOnUnitPrice } from '@/consts/subscriptions';
+import { enterpriseSsoAddOnUnitPrice, latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
@@ -63,8 +62,8 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
   const isSsoEnabled =
     !isCloud ||
     currentSubscriptionQuota.enterpriseSsoLimit === null ||
-    currentSubscriptionQuota.enterpriseSsoLimit > 0 ||
-    planId === ReservedPlanId.Pro;
+    currentSubscriptionQuota.enterpriseSsoLimit > 0;
+
   const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
 
   const { data, error } = useSWR<SsoConnectorProvidersResponse, RequestError>(
@@ -155,7 +154,7 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
     >
       <ModalLayout
         title="enterprise_sso.create_modal.title"
-        paywall={conditional(isPaidTenant && planId !== ReservedPlanId.Pro && ReservedPlanId.Pro)}
+        paywall={conditional(!isPaidTenant && latestProPlanId)}
         hasAddOnTag={isPaidTenant}
         footer={
           conditional(
@@ -185,7 +184,8 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
               </AddOnNoticeFooter>
             )
           ) ??
-          (isSsoEnabled ? (
+          // Paid tenant can create SSO connectors
+          (isSsoEnabled || isPaidTenant ? (
             <Button
               title="enterprise_sso.create_modal.create_button_text"
               type="primary"
