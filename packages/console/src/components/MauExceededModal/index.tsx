@@ -1,5 +1,5 @@
-import { cond } from '@silverhand/essentials';
-import { useContext, useState } from 'react';
+import { conditional } from '@silverhand/essentials';
+import { useContext, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
@@ -33,18 +33,25 @@ function MauExceededModal() {
     setHasClosed(true);
   };
 
-  if (hasClosed) {
-    return null;
-  }
+  const periodicUsage = useMemo(
+    () =>
+      conditional(
+        currentTenant && {
+          mauLimit: currentTenant.usage.activeUsers,
+          tokenLimit: currentTenant.usage.tokenUsage,
+        }
+      ),
+    [currentTenant]
+  );
 
-  const isMauExceeded = cond(
+  const isMauExceeded = conditional(
     // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
     currentTenant &&
       currentTenant.quota.mauLimit !== null &&
       currentTenant.usage.activeUsers >= currentTenant.quota.mauLimit
   );
 
-  if (!isMauExceeded) {
+  if (hasClosed || !isMauExceeded) {
     return null;
   }
 
@@ -85,7 +92,7 @@ function MauExceededModal() {
           </Trans>
         </InlineNotification>
         <FormField title="subscription.plan_usage">
-          <PlanUsage />
+          <PlanUsage periodicUsage={periodicUsage} />
         </FormField>
       </ModalLayout>
     </ReactModal>

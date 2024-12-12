@@ -98,6 +98,7 @@ const quota_table = {
   included: '已包含 {{value, number}}',
   included_mao: '已包含 {{value, number}} MAO',
   extra_quota_price: '然後每月 ${{value, number}} / 每個之後',
+  extra_token_price: '然後每月 ${{value, number}} / 每 {{amount, number}} 之後',
   per_month_each: '每月 ${{value, number}} / 每個',
   extra_mao_price: '然後每 MAO ${{value, number}}',
   per_month: '每月 ${{value, number}}',

@@ -102,6 +102,7 @@ const quota_table = {
   included: 'включено {{value, number}}',
   included_mao: '{{value, number}} MAO включено',
   extra_quota_price: 'Затем $ {{value, number}} в месяц / за каждый после',
+  extra_token_price: 'Затем $ {{value, number}} в месяц / {{amount, number}} за каждый после',
   per_month_each: '$ {{value, number}} в месяц / за каждый',
   extra_mao_price: 'Затем $ {{value, number}} за MAO',
   per_month: '$ {{value, number}} в месяц',
