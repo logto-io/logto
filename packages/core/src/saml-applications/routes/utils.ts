@@ -18,6 +18,46 @@ import {
   samlValueXmlnsXsi,
 } from '../libraries/consts.js';
 
+// We only support email and persistent format at the moment.
+const getSamlNameId = (user: IdTokenProfileStandardClaims, idpNameIDFormat?: string | string[]) => {
+  // If IdP has specified nameIDFormat, use it
+  if (idpNameIDFormat) {
+    // Get the first name ID format
+    const format = Array.isArray(idpNameIDFormat) ? idpNameIDFormat[0] : idpNameIDFormat;
+    // If email format is specified, try to use email first
+    if (
+      format === saml.Constants.namespace.format.emailAddress &&
+      user.email &&
+      user.email_verified
+    ) {
+      return {
+        NameIDFormat: format,
+        NameID: user.email,
+      };
+    }
+    // For other formats or when email is not available, use sub
+    if (format === saml.Constants.namespace.format.persistent) {
+      return {
+        NameIDFormat: format,
+        NameID: user.sub,
+      };
+    }
+  }
+  // No nameIDFormat specified, use default logic
+  // Use email if available
+  if (user.email && user.email_verified) {
+    return {
+      NameIDFormat: saml.Constants.namespace.format.emailAddress,
+      NameID: user.email,
+    };
+  }
+  // Fallback to persistent format with user.sub
+  return {
+    NameIDFormat: saml.Constants.namespace.format.persistent,
+    NameID: user.sub,
+  };
+};
+
 export const createSamlTemplateCallback =
   (
     idp: saml.IdentityProviderInstance,
@@ -30,7 +70,7 @@ export const createSamlTemplateCallback =
     );
 
     const { nameIDFormat } = idp.entitySetting;
-    const selectedNameIDFormat = Array.isArray(nameIDFormat) ? nameIDFormat[0] : nameIDFormat;
+    const { NameIDFormat, NameID } = getSamlNameId(user, nameIDFormat);
 
     const id = `ID_${generateStandardId()}`;
     const now = new Date();
@@ -50,8 +90,8 @@ export const createSamlTemplateCallback =
       ConditionsNotBefore: now.toISOString(),
       ConditionsNotOnOrAfter: expireAt.toISOString(),
       SubjectConfirmationDataNotOnOrAfter: expireAt.toISOString(),
-      NameIDFormat: selectedNameIDFormat,
-      NameID: user.sub,
+      NameIDFormat,
+      NameID,
       InResponseTo: 'null',
       /**
        * User attributes for SAML response
@@ -62,6 +102,7 @@ export const createSamlTemplateCallback =
        * @remarks
        * By examining the code provided in the link above, we can define all the attributes supported by the attribute mapping here. Only the attributes defined in the `loginResponseTemplate.attributes` added when creating the IdP instance will appear in the SAML response.
        */
+      attrSub: user.sub,
       attrEmail: user.email,
       attrName: user.name,
     };
@@ -237,6 +278,10 @@ export const setupSamlProviders = (
         },
       ],
     },
+    nameIDFormat: [
+      saml.Constants.namespace.format.emailAddress,
+      saml.Constants.namespace.format.persistent,
+    ],
   });
 
   // eslint-disable-next-line new-cap
