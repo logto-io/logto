@@ -12,7 +12,6 @@ import { isCloud } from '@/consts/env';
 import { subscriptionPage } from '@/consts/pages';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
-import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import CardTitle from '@/ds-components/CardTitle';
@@ -37,10 +36,11 @@ function OrganizationTemplate() {
     currentSubscription: { planId, isEnterprisePlan },
     currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
-  const { isDevTenant } = useContext(TenantsContext);
   const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
 
   const isOrganizationsDisabled =
+    // Check if the organizations feature is disabled except for paid tenants.
+    // Paid tenants can create organizations with organization feature add-on applied to their subscription.
     isCloud && !isFeatureEnabled(currentSubscriptionQuota.organizationsLimit) && !isPaidTenant;
 
   const { navigate } = useTenantPathname();
