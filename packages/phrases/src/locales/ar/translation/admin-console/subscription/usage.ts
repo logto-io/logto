@@ -47,7 +47,8 @@ const usage = {
   tokens: {
     title: 'الرموز',
     description: '{{usage}}',
-    tooltip: 'ميزة إضافية بسعر قدره ${{price, number}} لكل مليون رمز. الرموز الأولى مليون مشمولة.',
+    tooltip:
+      'ميزة إضافية بسعر ${{price, number}} لكل {{tokenLimit}} توكن. أول {{basicQuota}} توكن مشمولة.',
   },
   hooks: {
     title: 'الخطافات',

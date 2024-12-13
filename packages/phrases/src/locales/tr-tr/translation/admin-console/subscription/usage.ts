@@ -48,7 +48,7 @@ const usage = {
     title: 'Tokenler',
     description: '{{usage}}',
     tooltip:
-      'Milyon token başına {{price, number}} $ ücretle ek özellik. İlk 1 milyon token dahildir.',
+      '{{tokenLimit}} token başına {{price, number}} $ ücretle ek özellik. İlk 1 {{basicQuota}} token dahildir.',
   },
   hooks: {
     title: 'Hooklar',

@@ -42,7 +42,8 @@ const usage = {
   tokens: {
     title: '令牌',
     description: '{{usage}}',
-    tooltip: '附加功能，每百萬次令牌 ${{price, number}}。首百萬次令牌已包含在內。',
+    tooltip:
+      '附加功能，每 {{tokenLimit}} 次令牌 ${{price, number}}。首 {{basicQuota}} 次令牌已包含在內。',
   },
   hooks: {
     title: '鉤子',

@@ -49,7 +49,7 @@ const usage = {
     title: 'Jetons',
     description: '{{usage}}',
     tooltip:
-      'Fonctionnalité en supplément au prix de ${{price, number}} par million de jetons. Le premier million de jetons est inclus.',
+      'Fonctionnalité en supplément au prix de ${{price, number}} par {{tokenLimit}} de jetons. Le premier {{basicQuota}} de jetons est inclus.',
   },
   hooks: {
     title: 'Hooks',
