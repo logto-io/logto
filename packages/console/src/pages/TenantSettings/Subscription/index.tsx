@@ -5,7 +5,7 @@ import useSWR from 'swr';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantUsageAddOnSkus, type NewSubscriptionPeriodicUsage } from '@/cloud/types/router';
 import PageMeta from '@/components/PageMeta';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { pickupFeaturedLogtoSkus } from '@/utils/subscription';
@@ -37,7 +37,7 @@ function Subscription() {
   const { data: usageAddOnSkus, error: usageAddOnSkusError } = useSWR<
     TenantUsageAddOnSkus,
     ResponseError
-  >(isCloud && isDevFeaturesEnabled && `/api/tenants/${currentTenantId}/add-on-skus`, async () =>
+  >(isCloud && `/api/tenants/${currentTenantId}/add-on-skus`, async () =>
     cloudApi.get(`/api/tenants/:tenantId/subscription/add-on-skus`, {
       params: { tenantId: currentTenantId },
     })
