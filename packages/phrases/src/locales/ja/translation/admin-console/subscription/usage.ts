@@ -48,7 +48,7 @@ const usage = {
     title: 'トークン',
     description: '{{usage}}',
     tooltip:
-      '追加機能として、100 万トークンにつき {{price, number}} ドルの料金です。最初の 100 万トークンは含まれています。',
+      '追加機能として、{{tokenLimit}} トークンにつき {{price, number}} ドルの料金です。最初の {{basicQuota}} トークンは含まれています。',
   },
   hooks: {
     title: 'フック',

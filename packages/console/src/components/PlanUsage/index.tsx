@@ -8,6 +8,7 @@ import {
   type NewSubscriptionPeriodicUsage,
   type NewSubscriptionCountBasedUsage,
   type NewSubscriptionQuota,
+  type TenantUsageAddOnSkus,
 } from '@/cloud/types/router';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
@@ -26,6 +27,7 @@ import {
 
 type Props = {
   readonly periodicUsage: NewSubscriptionPeriodicUsage | undefined;
+  readonly usageAddOnSkus?: TenantUsageAddOnSkus;
 };
 
 const getUsageByKey = (
@@ -57,7 +59,7 @@ const getUsageByKey = (
   return countBasedUsage[key];
 };
 
-function PlanUsage({ periodicUsage }: Props) {
+function PlanUsage({ periodicUsage, usageAddOnSkus }: Props) {
   const {
     currentSubscriptionQuota,
     currentSubscriptionBasicQuota,
@@ -87,6 +89,8 @@ function PlanUsage({ periodicUsage }: Props) {
       usageKey: 'subscription.usage.usage_description_with_limited_quota',
       titleKey: `subscription.usage.${titleKeyMap[key]}`,
       unitPrice: usageKeyPriceMap[key],
+      // Only support tokenLimit for now
+      usageAddOnSku: cond(key === 'tokenLimit' && usageAddOnSkus?.[key]),
       ...cond(
         // We only show the usage card for MAU and token for Free plan
         (key === 'tokenLimit' || key === 'mauLimit' || isPaidTenant) && {

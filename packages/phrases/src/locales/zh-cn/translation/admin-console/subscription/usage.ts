@@ -42,7 +42,8 @@ const usage = {
   tokens: {
     title: '令牌',
     description: '{{usage}}',
-    tooltip: '附加功能，每百万个令牌价格为 ${{price, number}} 。首百万个令牌包含在内。',
+    tooltip:
+      '附加功能，每 {{tokenLimit}} 个令牌价格为 ${{price, number}} 。首 {{basicQuota}} 个令牌包含在内。',
   },
   hooks: {
     title: '钩子',

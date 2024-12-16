@@ -53,7 +53,8 @@ const usage = {
   hooks: {
     title: '훅',
     description: '{{usage}} <span>(처음 10개는 무료)</span>',
-    tooltip: '훅 하나당 ${{price, number}} 의 추가 기능입니다. 처음 10개의 훅이 포함되어 있습니다.',
+    tooltip:
+      '추가 기능은 ${{price, number}}에 {{tokenLimit}} 토큰당 가격이 책정됩니다. 처음 {{basicQuota}} 토큰이 포함되어 있습니다.',
   },
   pricing: {
     add_on_changes_in_current_cycle_notice:

@@ -48,7 +48,7 @@ const usage = {
     title: 'Tokens',
     description: '{{usage}}',
     tooltip:
-      'Función adicional con un precio de ${{price, number}} por millón de tokens. El primer millón de tokens está incluido.',
+      'Función adicional con un precio de ${{price, number}} por {{tokenLimit}} de tokens. El primer {{basicQuota}} de tokens está incluido.',
   },
   hooks: {
     title: 'Ganchos',

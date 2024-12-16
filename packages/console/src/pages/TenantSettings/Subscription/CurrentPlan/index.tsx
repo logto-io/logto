@@ -1,6 +1,6 @@
 import { useContext, useMemo } from 'react';
 
-import { type NewSubscriptionPeriodicUsage } from '@/cloud/types/router';
+import { type TenantUsageAddOnSkus, type NewSubscriptionPeriodicUsage } from '@/cloud/types/router';
 import BillInfo from '@/components/BillInfo';
 import FormCard from '@/components/FormCard';
 import PlanDescription from '@/components/PlanDescription';
@@ -17,9 +17,10 @@ import styles from './index.module.scss';
 
 type Props = {
   readonly periodicUsage?: NewSubscriptionPeriodicUsage;
+  readonly usageAddOnSkus?: TenantUsageAddOnSkus;
 };
 
-function CurrentPlan({ periodicUsage }: Props) {
+function CurrentPlan({ periodicUsage, usageAddOnSkus }: Props) {
   const {
     currentSku: { unitPrice },
     currentSubscription: { upcomingInvoice, isEnterprisePlan, planId },
@@ -49,7 +50,7 @@ function CurrentPlan({ periodicUsage }: Props) {
         </div>
       </div>
       <FormField title="subscription.plan_usage">
-        <PlanUsage periodicUsage={periodicUsage} />
+        <PlanUsage periodicUsage={periodicUsage} usageAddOnSkus={usageAddOnSkus} />
       </FormField>
       <FormField title="subscription.next_bill">
         <BillInfo cost={upcomingCost} isManagePaymentVisible={Boolean(upcomingCost)} />
