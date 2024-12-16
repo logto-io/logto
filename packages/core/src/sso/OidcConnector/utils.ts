@@ -20,6 +20,12 @@ import {
   type OidcTokenResponse,
 } from '../types/oidc.js';
 
+/**
+ * Fetch the full-list of OIDC config from the issuer. Throws error if config is invalid.
+ *
+ * @param issuer The issuer URL
+ * @returns The full-list of OIDC config
+ */
 export const fetchOidcConfigRaw = async (issuer: string) => {
   const { body } = await got.get(`${issuer}/.well-known/openid-configuration`, {
     responseType: 'json',
@@ -50,6 +56,46 @@ export const fetchOidcConfig = async (
   }
 };
 
+export const handleTokenExchange = async (
+  tokenEndpoint: string,
+  {
+    code,
+    clientId,
+    clientSecret,
+    redirectUri,
+  }: {
+    code: string;
+    clientId: string;
+    clientSecret: string;
+    redirectUri?: string;
+  }
+) => {
+  const tokenRequestParameters = new URLSearchParams({
+    grant_type: 'authorization_code',
+    code,
+    client_id: clientId,
+    ...(redirectUri ? { redirect_uri: redirectUri } : {}),
+  });
+
+  const headers = {
+    Authorization: `Basic ${Buffer.from(`${clientId}:${clientSecret}`, 'utf8').toString('base64')}`,
+    'Content-Type': 'application/x-www-form-urlencoded',
+  };
+
+  const httpResponse = await got.post(tokenEndpoint, {
+    body: tokenRequestParameters.toString(),
+    headers,
+  });
+
+  const result = oidcTokenResponseGuard.safeParse(parseJson(httpResponse.body));
+
+  if (!result.success) {
+    return { success: false as const, error: result.error, response: httpResponse };
+  }
+
+  return { success: true as const, data: result.data };
+};
+
 export const fetchToken = async (
   { tokenEndpoint, clientId, clientSecret }: BaseOidcConfig,
   data: unknown,
@@ -68,28 +114,22 @@ export const fetchToken = async (
   const { code } = result.data;
 
   try {
-    const httpResponse = await got.post({
-      url: tokenEndpoint,
-      form: {
-        grant_type: 'authorization_code',
-        code,
-        redirect_uri: redirectUri,
-        client_id: clientId,
-        client_secret: clientSecret,
-      },
+    const exchangeResult = await handleTokenExchange(tokenEndpoint, {
+      code,
+      clientId,
+      clientSecret,
+      redirectUri,
     });
 
-    const result = oidcTokenResponseGuard.safeParse(parseJson(httpResponse.body));
-
-    if (!result.success) {
+    if (!exchangeResult.success) {
       throw new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
         message: 'Invalid token response',
-        response: httpResponse.body,
-        error: result.error.flatten(),
+        response: exchangeResult.response.body,
+        error: exchangeResult.error.flatten(),
       });
     }
 
-    return camelcaseKeys(result.data);
+    return camelcaseKeys(exchangeResult.data);
   } catch (error: unknown) {
     if (error instanceof SsoConnectorError) {
       throw error;

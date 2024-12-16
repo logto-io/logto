@@ -1,15 +1,18 @@
 import { parseJson } from '@logto/connector-kit';
 import { generateStandardId } from '@logto/shared';
-import { tryThat } from '@silverhand/essentials';
+import { tryThat, appendPath } from '@silverhand/essentials';
 import camelcaseKeys from 'camelcase-keys';
-import { got } from 'got';
 import saml from 'samlify';
 import { ZodError, z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { fetchOidcConfigRaw, getRawUserInfoResponse } from '#src/sso/OidcConnector/utils.js';
+import {
+  fetchOidcConfigRaw,
+  getRawUserInfoResponse,
+  handleTokenExchange,
+} from '#src/sso/OidcConnector/utils.js';
 import { idTokenProfileStandardClaimsGuard } from '#src/sso/types/oidc.js';
-import { oidcTokenResponseGuard, type IdTokenProfileStandardClaims } from '#src/sso/types/oidc.js';
+import { type IdTokenProfileStandardClaims } from '#src/sso/types/oidc.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import {
@@ -18,9 +21,18 @@ import {
   samlValueXmlnsXsi,
 } from '../libraries/consts.js';
 
-// We only support email and persistent format at the moment.
-const getSamlNameId = (user: IdTokenProfileStandardClaims, idpNameIDFormat?: string | string[]) => {
-  // If IdP has specified nameIDFormat, use it
+/**
+ * Determines the SAML NameID format and value based on the user's claims and IdP's NameID format.
+ * Supports email and persistent formats.
+ *
+ * @param user - The user's standard claims
+ * @param idpNameIDFormat - The NameID format(s) specified by the IdP (optional)
+ * @returns An object containing the NameIDFormat and NameID
+ */
+const buildSamlAssertionNameId = (
+  user: IdTokenProfileStandardClaims,
+  idpNameIDFormat?: string | string[]
+): { NameIDFormat: string; NameID: string } => {
   if (idpNameIDFormat) {
     // Get the first name ID format
     const format = Array.isArray(idpNameIDFormat) ? idpNameIDFormat[0] : idpNameIDFormat;
@@ -70,7 +82,7 @@ export const createSamlTemplateCallback =
     );
 
     const { nameIDFormat } = idp.entitySetting;
-    const { NameIDFormat, NameID } = getSamlNameId(user, nameIDFormat);
+    const { NameIDFormat, NameID } = buildSamlAssertionNameId(user, nameIDFormat);
 
     const id = `ID_${generateStandardId()}`;
     const now = new Date();
@@ -92,6 +104,7 @@ export const createSamlTemplateCallback =
       SubjectConfirmationDataNotOnOrAfter: expireAt.toISOString(),
       NameIDFormat,
       NameID,
+      // TODO: should get the request ID from the input parameters, pending https://github.com/logto-io/logto/pull/6881.
       InResponseTo: 'null',
       /**
        * User attributes for SAML response
@@ -129,24 +142,12 @@ export const exchangeAuthorizationCode = async (
     redirectUri?: string;
   }
 ) => {
-  const headers = {
-    Authorization: `Basic ${Buffer.from(`${clientId}:${clientSecret}`, 'utf8').toString('base64')}`,
-    'Content-Type': 'application/x-www-form-urlencoded',
-  };
-
-  const tokenRequestParameters = new URLSearchParams({
-    grant_type: 'authorization_code',
+  const result = await handleTokenExchange(tokenEndpoint, {
     code,
-    client_id: clientId,
-    ...(redirectUri ? { redirect_uri: redirectUri } : {}),
+    clientId,
+    clientSecret,
+    redirectUri,
   });
-
-  const httpResponse = await got.post(tokenEndpoint, {
-    body: tokenRequestParameters.toString(),
-    headers,
-  });
-
-  const result = oidcTokenResponseGuard.safeParse(parseJson(httpResponse.body));
 
   if (!result.success) {
     throw new RequestError({
@@ -184,10 +185,11 @@ export const generateAutoSubmitForm = (actionUrl: string, samlResponse: string):
       <body>
         <form id="redirectForm" action="${actionUrl}" method="POST">
           <input type="hidden" name="SAMLResponse" value="${samlResponse}" />
-          <input type="submit" value="Submit" /> 
         </form>
         <script>
-          document.getElementById('redirectForm').submit();
+          window.onload = function() {
+            document.getElementById('redirectForm').submit();
+          };
         </script>
       </body>
     </html>
@@ -297,3 +299,6 @@ export const setupSamlProviders = (
 
   return { idp, sp };
 };
+
+export const buildSamlAppCallbackUrl = (baseUrl: URL, samlApplicationId: string) =>
+  appendPath(baseUrl, `api/saml-applications/${samlApplicationId}/callback`).toString();

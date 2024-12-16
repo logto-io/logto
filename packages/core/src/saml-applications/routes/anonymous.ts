@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { AnonymousRouter, RouterInitArgs } from '#src/routes/types.js';
@@ -10,6 +11,7 @@ import {
   createSamlResponse,
   handleOidcCallbackAndGetUserInfo,
   setupSamlProviders,
+  buildSamlAppCallbackUrl,
 } from './utils.js';
 
 const samlApplicationSignInCallbackQueryParametersGuard = z.union([
@@ -23,7 +25,7 @@ const samlApplicationSignInCallbackQueryParametersGuard = z.union([
 ]);
 
 export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter>(
-  ...[router, { libraries, queries, envSet }]: RouterInitArgs<T>
+  ...[router, { id: tenantId, libraries, queries, envSet }]: RouterInitArgs<T>
 ) {
   const {
     samlApplications: { getSamlIdPMetadataByApplicationId },
@@ -54,6 +56,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
     '/saml-applications/:id/callback',
     koaGuard({
       params: z.object({ id: z.string() }),
+      // TODO: should be able to handle `state` and `redirectUri`
       query: samlApplicationSignInCallbackQueryParametersGuard,
       status: [200, 400],
     }),
@@ -77,7 +80,11 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         oidcClientMetadata: { redirectUris },
       } = await applications.findApplicationById(id);
 
-      assertThat(redirectUris[0], 'oidc.redirect_uri_not_set');
+      const tenantEndpoint = getTenantEndpoint(tenantId, EnvSet.values);
+      assertThat(
+        redirectUris[0] === buildSamlAppCallbackUrl(tenantEndpoint, id),
+        'oidc.invalid_redirect_uri'
+      );
 
       // TODO: should be able to handle `state` and code verifier etc.
       const { code } = query;
