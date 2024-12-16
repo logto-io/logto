@@ -27,8 +27,12 @@ const application = {
       'Only HTTP-POST binding is supported for receiving SAML assertions.',
     can_not_delete_active_secret: 'Can not delete the active secret.',
     no_active_secret: 'No active secret found.',
-    entity_id_required: 'Entity ID is required to generate metadata.',
+    entity_id_required: 'Entity ID is required.',
     invalid_certificate_pem_format: 'Invalid PEM certificate format',
+    acs_url_required: 'Assertion Consumer Service URL is required.',
+    invalid_saml_request: 'Invalid SAML authentication request.',
+    auth_request_issuer_not_match:
+      'The issuer of the SAML authentication request mismatch with service provider entity ID.',
   },
 };
 

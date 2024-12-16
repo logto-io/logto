@@ -115,7 +115,9 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
     });
   };
 
-  const getSamlIdPMetadataByApplicationId = async (id: string): Promise<{ metadata: string }> => {
+  const getSamlIdPMetadataByApplicationId = async (
+    id: string
+  ): Promise<{ metadata: string; certificate: string }> => {
     const [{ tenantId }, { certificate }] = await Promise.all([
       findSamlApplicationConfigByApplicationId(id),
       findActiveSamlApplicationSecretByApplicationId(id),
@@ -132,11 +134,16 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
           Location: buildSingleSignOnUrl(tenantEndpoint, id),
           Binding: BindingType.Redirect,
         },
+        {
+          Location: buildSingleSignOnUrl(tenantEndpoint, id),
+          Binding: BindingType.Post,
+        },
       ],
     });
 
     return {
       metadata: idp.getMetadata(),
+      certificate,
     };
   };
 

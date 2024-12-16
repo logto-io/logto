@@ -134,8 +134,12 @@ export const buildRouterObjects = <T extends UnknownRouter>(routers: T[], option
         // Filter out universal routes (mostly like a proxy route to withtyped)
         .filter(({ path }) => !path.includes('.*'))
         // TODO: Remove this and bring back `/saml-applications` routes before release.
-        // Exclude `/saml-applications` routes for now.
-        .filter(({ path }) => !path.startsWith('/saml-applications'))
+        // Exclude `/saml-applications` routes and `/saml/:id/authn` for now.
+        .filter(
+          ({ path }) =>
+            !path.startsWith('/saml-applications') &&
+            !(path.startsWith('/saml') && path.endsWith('/authn'))
+        )
         .flatMap<RouteObject>(({ path: routerPath, stack, methods }) =>
           methods
             .map((method) => method.toLowerCase())
