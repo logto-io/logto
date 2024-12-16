@@ -1,7 +1,5 @@
 import { ReservedPlanId } from '@logto/schemas';
 
-import { isDevFeaturesEnabled } from './env';
-
 /**
  * Shared quota limits between the featured plan content in the `CreateTenantModal` and the `PlanComparisonTable`.
  */
@@ -25,14 +23,14 @@ export const tokenAddOnUnitPrice = 80;
 export const hooksAddOnUnitPrice = 2;
 /* === Add-on unit price (in USD) === */
 
-// TODO: Remove this dev feature flag when we have the new Pro202411 plan released.
 /**
  * In console, only featured plans are shown in the plan selection component.
  * we will this to filter out the public visible featured plans.
  */
-export const featuredPlanIds: readonly string[] = isDevFeaturesEnabled
-  ? Object.freeze([ReservedPlanId.Free, ReservedPlanId.Pro202411])
-  : Object.freeze([ReservedPlanId.Free, ReservedPlanId.Pro]);
+export const featuredPlanIds: readonly string[] = Object.freeze([
+  ReservedPlanId.Free,
+  ReservedPlanId.Pro202411,
+]);
 
 /**
  * The order of plans in the plan selection content component.
@@ -47,5 +45,5 @@ export const planIdOrder: Record<string, number> = Object.freeze({
 
 export const checkoutStateQueryKey = 'checkout-state';
 
-/** The latest pro plan id we are using. TODO: Remove this when we have the new Pro202411 plan released. */
-export const latestProPlanId = isDevFeaturesEnabled ? ReservedPlanId.Pro202411 : ReservedPlanId.Pro;
+/** The latest pro plan id we are using. */
+export const latestProPlanId = ReservedPlanId.Pro202411;
