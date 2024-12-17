@@ -22,7 +22,7 @@ function getValueGuard(type: SubscriptionCacheType): ZodType<SubscriptionCacheMa
 /**
  * A local region cache for tenant subscription data.
  * We use this cache to reduce the number of requests to the Cloud
- *  and improve the performance of subscription-related operations.
+ * and improve the performance of subscription-related operations.
  *
  * TODO: Will use the cache for tenant subscription data.
  */
