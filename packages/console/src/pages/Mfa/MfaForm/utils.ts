@@ -1,17 +1,24 @@
-import { MfaFactor } from '@logto/schemas';
+import { MfaFactor, MfaPolicy } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
-import { type MfaConfig, type MfaConfigForm } from '../types';
+import { type SignInPrompt, type MfaConfig, type MfaConfigForm } from '../types';
+
+const isSignInPrompt = (policy: MfaPolicy): policy is SignInPrompt =>
+  [MfaPolicy.NoPrompt, MfaPolicy.PromptAtSignInAndSignUp, MfaPolicy.PromptOnlyAtSignIn].includes(
+    policy
+  );
 
 export const convertMfaConfigToForm = ({ policy, factors }: MfaConfig): MfaConfigForm => ({
-  policy,
+  isMandatory: policy === MfaPolicy.Mandatory,
+  setUpPrompt: isSignInPrompt(policy) ? policy : MfaPolicy.PromptAtSignInAndSignUp,
   totpEnabled: factors.includes(MfaFactor.TOTP),
   webAuthnEnabled: factors.includes(MfaFactor.WebAuthn),
   backupCodeEnabled: factors.includes(MfaFactor.BackupCode),
 });
 
 export const convertMfaFormToConfig = (mfaConfigForm: MfaConfigForm): MfaConfig => {
-  const { policy, totpEnabled, webAuthnEnabled, backupCodeEnabled } = mfaConfigForm;
+  const { isMandatory, setUpPrompt, totpEnabled, webAuthnEnabled, backupCodeEnabled } =
+    mfaConfigForm;
 
   const factors = [
     conditional(totpEnabled && MfaFactor.TOTP),
@@ -21,7 +28,7 @@ export const convertMfaFormToConfig = (mfaConfigForm: MfaConfigForm): MfaConfig 
   ].filter((factor): factor is MfaFactor => Boolean(factor));
 
   return {
-    policy,
+    policy: isMandatory ? MfaPolicy.Mandatory : setUpPrompt,
     factors,
   };
 };

@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import {
   InteractionEvent,
   MfaFactor,
@@ -147,13 +148,19 @@ export const validateMandatoryBindMfa = async (
   const { event, bindMfas } = interaction;
   const availableFactors = factors.filter((factor) => factor !== MfaFactor.BackupCode);
 
-  // No available MFA, skip check
-  if (availableFactors.length === 0) {
+  // No available MFA, or no prompt policy, skip check
+  if (availableFactors.length === 0 || policy === MfaPolicy.NoPrompt) {
     return interaction;
   }
 
+  // If the policy is not mandatory and the user has skipped MFA, skip check
   const { mfaSkipped } = interaction;
-  if (policy === MfaPolicy.UserControlled && mfaSkipped) {
+  if (policy !== MfaPolicy.Mandatory && mfaSkipped) {
+    return interaction;
+  }
+
+  // If the policy is prompt only at sign-in, and the event is register, skip check
+  if (interaction.event === InteractionEvent.Register && policy === MfaPolicy.PromptOnlyAtSignIn) {
     return interaction;
   }
 
@@ -268,3 +275,4 @@ export const validateBindMfaBackupCode = async (
     { codes }
   );
 };
+/* eslint-enable complexity */

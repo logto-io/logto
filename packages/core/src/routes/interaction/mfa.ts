@@ -171,7 +171,7 @@ export default function mfaRoutes<T extends IRouterParamContext>(
       } = ctx;
 
       assertThat(
-        policy === MfaPolicy.UserControlled,
+        policy !== MfaPolicy.Mandatory,
         new RequestError({
           code: 'session.mfa.mfa_policy_not_user_controlled',
           status: 422,
