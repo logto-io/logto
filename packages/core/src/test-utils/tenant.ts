@@ -2,7 +2,6 @@ import { type Sentinel } from '@logto/schemas';
 import { TtlCache } from '@logto/shared';
 import { createMockPool, createMockQueryResult } from '@silverhand/slonik';
 
-import { redisCache } from '#src/caches/index.js';
 import { WellKnownCache } from '#src/caches/well-known.js';
 import type { CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 import { createCloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
@@ -101,7 +100,7 @@ export class MockTenant implements TenantContext {
       this.id,
       this.queries,
       this.cloudConnection,
-      redisCache
+      new TtlCache<string, string>(60_000)
     );
   }
 
