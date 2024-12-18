@@ -312,6 +312,35 @@ describe('Bind MFA APIs happy path', () => {
       await deleteUser(userId);
     });
 
+    it('should reject if user has not binded MFA even if it is skipped', async () => {
+      const { username, password } = generateNewUserProfile({ username: true, password: true });
+      await userApi.create({ username, password });
+
+      // Set to skipable policy first to update the user's mfa skipped state
+      await enableUserControlledMfaWithTotp();
+      const client = await initExperienceClient();
+      await identifyUserWithUsernamePassword(client, username, password);
+      await expectRejects(client.submitInteraction(), {
+        code: 'user.missing_mfa',
+        status: 422,
+      });
+      await client.skipMfaBinding();
+      const { redirectTo } = await client.submitInteraction();
+      const userId = await processSession(client, redirectTo);
+      await logoutClient(client);
+
+      // Set to mandatory policy to check the user's mfa skipped state
+      await enableMandatoryMfaWithTotpAndBackupCode();
+      const client2 = await initExperienceClient();
+      await identifyUserWithUsernamePassword(client2, username, password);
+      await expectRejects(client2.submitInteraction(), {
+        code: 'user.missing_mfa',
+        status: 422,
+      });
+
+      await deleteUser(userId);
+    });
+
     it('should bind backup codes on sign-in', async () => {
       const { username, password } = generateNewUserProfile({ username: true, password: true });
       const user = await userApi.create({ username, password });
