@@ -157,6 +157,43 @@ describe('sign in and fulfill mfa (mandatory TOTP)', () => {
     await deleteUser(user.id);
   });
 
+  it('should fail with missing_mfa error even if mfa is skipped', async () => {
+    // Set to skipable policy first to update the user's mfa skipped state
+    await enableUserControlledMfaWithTotp();
+    const { userProfile, user } = await generateNewUser({ username: true, password: true });
+    const client = await initClient();
+    await client.successSend(putInteraction, {
+      event: InteractionEvent.SignIn,
+      identifier: {
+        username: userProfile.username,
+        password: userProfile.password,
+      },
+    });
+    await expectRejects(client.submitInteraction(), {
+      code: 'user.missing_mfa',
+      status: 422,
+    });
+    await client.successSend(skipMfaBinding);
+    await client.submitInteraction();
+
+    // Set to mandatory policy to check the user's mfa skipped state
+    await enableMandatoryMfaWithTotp();
+    const client2 = await initClient();
+    await client2.successSend(putInteraction, {
+      event: InteractionEvent.SignIn,
+      identifier: {
+        username: userProfile.username,
+        password: userProfile.password,
+      },
+    });
+    await expectRejects(client2.submitInteraction(), {
+      code: 'user.missing_mfa',
+      status: 422,
+    });
+
+    await deleteUser(user.id);
+  });
+
   it('should sign in and fulfill totp', async () => {
     const { id } = await registerWithMfa();
     await deleteUser(id);

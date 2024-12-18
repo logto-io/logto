@@ -285,7 +285,7 @@ export class Mfa {
     }
 
     // If the policy is not mandatory and the user has skipped MFA, then there is nothing to check
-    if ((policy !== MfaPolicy.Mandatory && this.#mfaSkipped) ?? isMfaSkipped(logtoConfig)) {
+    if (policy !== MfaPolicy.Mandatory && (this.#mfaSkipped ?? isMfaSkipped(logtoConfig))) {
       return;
     }
 

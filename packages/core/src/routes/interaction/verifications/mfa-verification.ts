@@ -153,7 +153,7 @@ export const validateMandatoryBindMfa = async (
     return interaction;
   }
 
-  // If the policy is not mandatory and the user has skipped MFA, skip check
+  // If the policy is not mandatory and the user has skipped MFA (in the current interaction), skip check
   const { mfaSkipped } = interaction;
   if (policy !== MfaPolicy.Mandatory && mfaSkipped) {
     return interaction;
@@ -177,7 +177,8 @@ export const validateMandatoryBindMfa = async (
     const { accountId } = interaction;
     const { mfaVerifications, logtoConfig } = await tenant.queries.users.findUserById(accountId);
 
-    if (isMfaSkipped(logtoConfig)) {
+    // If the policy is not mandatory and the user has skipped MFA (not in the current interaction), skip check
+    if (policy !== MfaPolicy.Mandatory && isMfaSkipped(logtoConfig)) {
       return interaction;
     }
 
