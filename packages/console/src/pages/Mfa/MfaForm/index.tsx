@@ -1,5 +1,5 @@
 import { MfaFactor, MfaPolicy, type SignInExperience } from '@logto/schemas';
-import { useContext, useMemo } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -67,6 +67,13 @@ function MfaForm({ data, onMfaUpdated }: Props) {
     const { factors } = convertMfaFormToConfig(formValues);
     return factors.length === 0;
   }, [formValues, isMfaDisabled]);
+
+  useEffect(() => {
+    // Reset the `isMandatory` to false when the policy settings are disabled
+    if (isPolicySettingsDisabled) {
+      reset({ ...formValues, isMandatory: false });
+    }
+  }, [isPolicySettingsDisabled, reset, formValues]);
 
   const mfaPolicyOptions = useMemo(
     () => [
