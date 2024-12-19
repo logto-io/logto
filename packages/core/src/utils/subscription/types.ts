@@ -113,7 +113,6 @@ export const subscriptionCacheGuard = z.object({
   currentPeriodStart: z.string(),
   currentPeriodEnd: z.string(),
   isEnterprisePlan: z.boolean(),
-  isAddOnAvailable: z.boolean(),
   status: subscriptionStatusGuard,
   upcomingInvoice: upcomingInvoiceGuard.nullable().optional(),
   quota: logtoSkuQuotaGuard,
