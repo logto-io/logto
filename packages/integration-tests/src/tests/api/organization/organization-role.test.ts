@@ -1,11 +1,16 @@
+/* eslint-disable max-lines */
+// TODO: @darcy reorg to break this file into smaller files
 import assert from 'node:assert';
 
 import { generateStandardId } from '@logto/shared';
 import { isKeyInObject, pick } from '@silverhand/essentials';
 import { HTTPError } from 'ky';
 
+import { createResource } from '#src/api/index.js';
+import { createScope } from '#src/api/scope.js';
 import { OrganizationRoleApiTest, OrganizationScopeApiTest } from '#src/helpers/organization.js';
 import { ScopeApiTest } from '#src/helpers/resource.js';
+import { generateScopeName } from '#src/utils.js';
 
 const randomId = () => generateStandardId(4);
 
@@ -178,6 +183,85 @@ describe('organization role APIs', () => {
     it('should fail when try to delete an organization role that does not exist', async () => {
       const response = await roleApi.delete('0').catch((error: unknown) => error);
       expect(response instanceof HTTPError && response.response.status).toBe(404);
+    });
+
+    it('should fail when creating a role with invalid organization scope IDs', async () => {
+      const invalidScopeId = generateStandardId();
+      const response = await roleApi
+        .create({
+          name: 'test' + randomId(),
+          organizationScopeIds: [invalidScopeId],
+        })
+        .catch((error: unknown) => error);
+
+      assert(response instanceof HTTPError);
+      const body: unknown = await response.response.json();
+      expect(response.response.status).toBe(422);
+      expect(body).toMatchObject(
+        expect.objectContaining({
+          code: 'organization.roles.invalid_scope_ids',
+        })
+      );
+
+      const roles = await roleApi.getList();
+      expect(roles).toHaveLength(0);
+    });
+
+    it('should fail when creating a role with invalid resource scope IDs', async () => {
+      const invalidScopeId = generateStandardId();
+      const response = await roleApi
+        .create({
+          name: 'test' + randomId(),
+          resourceScopeIds: [invalidScopeId],
+        })
+        .catch((error: unknown) => error);
+
+      assert(response instanceof HTTPError);
+      const body: unknown = await response.response.json();
+      expect(response.response.status).toBe(422);
+      expect(body).toMatchObject(
+        expect.objectContaining({
+          code: 'organization.roles.invalid_resource_scope_ids',
+        })
+      );
+
+      const roles = await roleApi.getList();
+      expect(roles).toHaveLength(0);
+    });
+
+    it('should successfully create a role with scope IDs are provided', async () => {
+      const resource = await createResource();
+      const scopeName = generateScopeName();
+      const createdScope = await createScope(resource.id, scopeName);
+
+      const [scope1, scope2] = await Promise.all([
+        scopeApi.create({ name: 'test' + randomId() }),
+        scopeApi.create({ name: 'test' + randomId() }),
+      ]);
+      const createdRole = await roleApi.create({
+        name: 'test' + randomId(),
+        organizationScopeIds: [scope1.id, scope2.id],
+        resourceScopeIds: [createdScope.id],
+      });
+
+      expect(createdRole).toHaveProperty('id');
+      expect(createdRole).toHaveProperty('name');
+
+      const scopes = await roleApi.getScopes(createdRole.id);
+      expect(scopes).toContainEqual(
+        expect.objectContaining({
+          name: scope1.name,
+        })
+      );
+      expect(scopes).toContainEqual(
+        expect.objectContaining({
+          name: scope2.name,
+        })
+      );
+
+      const { resourceScopes } = await roleApi.get(createdRole.id);
+      expect(resourceScopes.length).toBe(1);
+      expect(resourceScopes[0]).toHaveProperty('name', scopeName);
     });
   });
 
@@ -397,3 +481,4 @@ describe('organization role APIs', () => {
     });
   });
 });
+/* eslint-enable max-lines */
