@@ -23,3 +23,13 @@ export enum ReservedPlanId {
    */
   Pro202411 = 'pro-202411',
 }
+
+/**
+ * Tenant subscription related Redis cache keys.
+ *
+ * We use Redis to cache the tenant subscription data to reduce the number of requests to the Cloud.
+ * Both @logto/core and @logto/cloud will need to access the cache, so we define the cache keys here as the SSOT.
+ */
+export enum SubscriptionRedisCacheKey {
+  Subscription = 'subscription',
+}
