@@ -16,13 +16,27 @@ import { type CloudConnectionLibrary } from './cloud-connection.js';
  * @param currentPeriodEnd The end date of the current subscription period.
  */
 const getSubscriptionCacheExpiration = (currentPeriodEnd: string) => {
-  const defaultExpiration = 60 * 60 * 24; // 1 day
   const expiration = Math.floor((new Date(currentPeriodEnd).getTime() - Date.now()) / 1000);
-
-  return expiration > 0 ? expiration : defaultExpiration;
+  return Math.max(expiration, 0);
 };
 
 const tokenUsageCacheTtl = 60 * 60 * 1000; // 1 hour
+/**
+ *
+ * @param to The end date of the token usage period.
+ *
+ * @returns The TTL for the token usage cache in milliseconds.
+ *
+ * @remarks
+ * - A maximum TTL of 1 hour is set for the token usage cache.
+ * - If the token usage period ends is more than an hour from now, the TTL will be 1 hour.
+ * - If the token usage period ends is less than an hour from now, the TTL will be the difference between the end date and now.
+ * - This is to ensure that the cache is invalidated immediately after the token usage period ends.
+ */
+const getTokenUsageCacheTtl = (to: Date) => {
+  const expiration = Math.floor(to.getTime() - Date.now());
+  return Math.min(expiration, tokenUsageCacheTtl);
+};
 
 export class SubscriptionLibrary {
   /**
@@ -85,7 +99,7 @@ export class SubscriptionLibrary {
       to,
     });
 
-    this.tokenUsageCache.set(cacheKey, tokenUsage);
+    this.tokenUsageCache.set(cacheKey, tokenUsage, getTokenUsageCacheTtl(to));
     return tokenUsage;
   }
 
