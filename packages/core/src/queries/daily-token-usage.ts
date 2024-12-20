@@ -41,7 +41,21 @@ export const createDailyTokenUsageQueries = (pool: CommonQueryMethods) => {
       returning ${sql.join(Object.values(fields), sql`, `)}
     `);
 
+  const countTokenUsage = async ({ from, to }: { from: Date; to: Date }) => {
+    return pool.one<{ tokenUsage: number }>(sql`
+      select sum(${fields.usage}) as token_usage
+      from ${table}
+      where ${fields.date} >= to_timestamp(${getUtcStartOfTheDay(
+        from
+      ).getTime()}::double precision / 1000)
+        and ${fields.date} < to_timestamp(${getUtcStartOfTheDay(
+          to
+        ).getTime()}::double precision / 1000)
+    `);
+  };
+
   return {
     recordTokenUsage,
+    countTokenUsage,
   };
 };

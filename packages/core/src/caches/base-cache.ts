@@ -147,7 +147,9 @@ export abstract class BaseCache<CacheMapT extends Record<string, unknown>> {
           const cachedValue = await trySafe(kvCache.get(type, promiseKey));
 
           if (cachedValue) {
-            cacheConsole.info(`${kvCache.name} cache hit for', type, promiseKey`);
+            cacheConsole.info(
+              `${kvCache.name} cache hit for, ${kvCache.tenantId}, ${type}, ${promiseKey}`
+            );
             return cachedValue;
           }
 
