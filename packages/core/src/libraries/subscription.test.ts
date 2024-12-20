@@ -8,6 +8,14 @@ const { mockEsmWithActual } = createMockUtils(jest);
 const mockGetTenantSubscription = jest.fn();
 const mockCountTokenUsage = jest.fn();
 
+const now = new Date();
+// Set the current period end to 1 day from now
+const currentPeriodEnd = new Date(now.getTime() + 1000 * 60 * 60 * 24);
+const mockSubscription = {
+  ...mockSubscriptionData,
+  currentPeriodEnd: currentPeriodEnd.toISOString(),
+};
+
 await mockEsmWithActual('#src/utils/subscription/index.js', () => ({
   getTenantSubscription: mockGetTenantSubscription,
 }));
@@ -18,16 +26,15 @@ describe('get subscription data', () => {
   const { subscription } = new MockTenant(undefined);
 
   it('should get subscription data', async () => {
-    mockGetTenantSubscription.mockResolvedValueOnce(mockSubscriptionData);
-
+    mockGetTenantSubscription.mockResolvedValueOnce(mockSubscription);
     const subscriptionData = await subscription.getSubscriptionData();
-    expect(subscriptionData).toEqual(mockSubscriptionData);
+    expect(subscriptionData).toEqual(mockSubscription);
   });
 
   it('should get subscription data from cache', async () => {
     mockGetTenantSubscription.mockClear();
     const subscriptionDataFromCache = await subscription.getSubscriptionData();
-    expect(subscriptionDataFromCache).toEqual(mockSubscriptionData);
+    expect(subscriptionDataFromCache).toEqual(mockSubscription);
     expect(mockGetTenantSubscription).not.toHaveBeenCalled();
   });
 });
@@ -44,18 +51,9 @@ describe('get subscription data with cache expiration', () => {
   });
 
   it('should get new subscription data if cache is expired', async () => {
-    const now = new Date();
-    // Set the current period end to 1 day from now
-    const currentPeriodEnd = new Date(now.getTime() + 1000 * 60 * 60 * 24);
-
-    const subscriptionDataExpiresInOneDay = {
-      ...mockSubscriptionData,
-      currentPeriodEnd: new Date(currentPeriodEnd).toISOString(),
-    };
-
-    mockGetTenantSubscription.mockResolvedValueOnce(subscriptionDataExpiresInOneDay);
+    mockGetTenantSubscription.mockResolvedValueOnce(mockSubscription);
     const subscriptionData = await subscription.getSubscriptionData();
-    expect(subscriptionData).toEqual(subscriptionDataExpiresInOneDay);
+    expect(subscriptionData).toEqual(mockSubscription);
 
     // Move the time to 1 hour later
     // In Unit test we use ttlCache instead of redis cache
@@ -65,7 +63,7 @@ describe('get subscription data with cache expiration', () => {
 
     // Should hit the cache
     const subscriptionDataFromCache = await subscription.getSubscriptionData();
-    expect(subscriptionDataFromCache).toEqual(subscriptionDataExpiresInOneDay);
+    expect(subscriptionDataFromCache).toEqual(mockSubscription);
 
     // Move the time to 1 day later
     jest.advanceTimersByTime(60 * 60 * 24);
