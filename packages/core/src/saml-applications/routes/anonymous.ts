@@ -98,6 +98,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         envSet.oidc.issuer
       );
 
+      // TODO: we will refactor the following code later, to reduce the DB query connections.
       // Get SAML configuration
       const { metadata } = await getSamlIdPMetadataByApplicationId(id);
       const { privateKey } =
