@@ -159,7 +159,10 @@ function PlanUsageCard({
         <div
           className={classNames(
             styles.description,
-            typeof usagePercent === 'number' && usagePercent >= 1 && styles.quotaExceeded
+            typeof usagePercent === 'number' &&
+              usagePercent >= 1 &&
+              !isPaidTenant &&
+              styles.quotaExceeded
           )}
         >
           <Trans
