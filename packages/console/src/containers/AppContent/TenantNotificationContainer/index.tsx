@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import MauExceededModal from '@/components/MauExceededModal';
+import MauTokenExceededModal from '@/components/MauTokenExceededModal';
 import PaymentOverdueModal from '@/components/PaymentOverdueModal';
 import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -18,10 +18,10 @@ function TenantNotificationContainer() {
 
   return (
     <>
-      {/* Note: we won't check the MAU limit and payment for dev tenants */}
+      {/* Note: we won't check the MAU limit, token limit and payment for dev tenants */}
       {!isDevTenant && (
         <>
-          <MauExceededModal />
+          <MauTokenExceededModal />
           <PaymentOverdueModal />
         </>
       )}
