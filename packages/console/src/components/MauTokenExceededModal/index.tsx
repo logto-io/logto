@@ -14,19 +14,25 @@ import InlineNotification from '@/ds-components/InlineNotification';
 import ModalLayout from '@/ds-components/ModalLayout';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import modalStyles from '@/scss/modal.module.scss';
+import { isPaidPlan } from '@/utils/subscription';
 
 import SkuName from '../SkuName';
 
 import styles from './index.module.scss';
 
-function MauExceededModal() {
+function MauTokenExceededModal() {
   const {
-    currentSubscription: { planId },
+    currentSubscription: { planId, isEnterprisePlan },
   } = useContext(SubscriptionDataContext);
   const { currentTenant } = useContext(TenantsContext);
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { navigate } = useTenantPathname();
+
+  const isPaidSubscriptionPlan = useMemo(
+    () => isPaidPlan(planId, isEnterprisePlan),
+    [planId, isEnterprisePlan]
+  );
 
   const [hasClosed, setHasClosed] = useState(false);
   const handleCloseModal = () => {
@@ -51,7 +57,15 @@ function MauExceededModal() {
       currentTenant.usage.activeUsers >= currentTenant.quota.mauLimit
   );
 
-  if (hasClosed || !isMauExceeded) {
+  const isTokenExceeded = conditional(
+    currentTenant &&
+      // Token usage add-on will be automatically applied for paid plans
+      !isPaidSubscriptionPlan &&
+      currentTenant.quota.tokenLimit !== null &&
+      currentTenant.usage.tokenUsage >= currentTenant.quota.tokenLimit
+  );
+
+  if (hasClosed || (!isMauExceeded && !isTokenExceeded)) {
     return null;
   }
 
@@ -64,7 +78,7 @@ function MauExceededModal() {
       onRequestClose={handleCloseModal}
     >
       <ModalLayout
-        title="upsell.mau_exceeded_modal.title"
+        title={`upsell.${isTokenExceeded ? 'token' : 'mau'}_exceeded_modal.title`}
         footer={
           <>
             <a href={contactEmailLink} className={styles.linkButton} rel="noopener">
@@ -82,15 +96,28 @@ function MauExceededModal() {
         }
         onClose={handleCloseModal}
       >
-        <InlineNotification severity="error">
-          <Trans
-            components={{
-              planName: <SkuName skuId={planId} />,
-            }}
-          >
-            {t('upsell.mau_exceeded_modal.notification')}
-          </Trans>
-        </InlineNotification>
+        {isMauExceeded && (
+          <InlineNotification severity="error">
+            <Trans
+              components={{
+                planName: <SkuName skuId={planId} />,
+              }}
+            >
+              {t('upsell.mau_exceeded_modal.notification')}
+            </Trans>
+          </InlineNotification>
+        )}
+        {isTokenExceeded && (
+          <InlineNotification severity="error">
+            <Trans
+              components={{
+                planName: <SkuName skuId={planId} />,
+              }}
+            >
+              {t('upsell.token_exceeded_modal.notification')}
+            </Trans>
+          </InlineNotification>
+        )}
         <FormField title="subscription.plan_usage">
           <PlanUsage periodicUsage={periodicUsage} />
         </FormField>
@@ -99,4 +126,4 @@ function MauExceededModal() {
   );
 }
 
-export default MauExceededModal;
+export default MauTokenExceededModal;
