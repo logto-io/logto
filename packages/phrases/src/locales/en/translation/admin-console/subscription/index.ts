@@ -69,6 +69,12 @@ const subscription = {
   subscription_check_timeout: 'Subscription check timed out. Please refresh later.',
   no_subscription: 'No subscription',
   usage,
+  token_usage_notification: {
+    exceeded:
+      'You have exceeded your <planName/> token usage limit. Users will not be able to access the Logto service properly. Please upgrade your plan to premium promptly to avoid any inconvenience.',
+    close_to_limit:
+      'You almost reached your <planName/> token usage limit. Logto will stop granting tokens when the limit is reached. Please upgrade your plan to premium to avoid any inconvenience.',
+  },
 };
 
 export default Object.freeze(subscription);
