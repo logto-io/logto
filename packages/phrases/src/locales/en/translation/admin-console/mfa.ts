@@ -36,7 +36,7 @@ const mfa = {
   prompt_at_sign_in_and_sign_up:
     'Ask users to set up MFA during registration (skippable, one-time prompt)',
   prompt_only_at_sign_in:
-    'Ask users to set up MFA on their sign-in after registration (skippable, one-time prompt)',
+    'Ask users to set up MFA on their next sign-in attempt after registration (skippable, one-time prompt)',
 };
 
 export default Object.freeze(mfa);
