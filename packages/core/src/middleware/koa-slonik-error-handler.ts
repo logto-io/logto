@@ -57,6 +57,27 @@ export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<St
             status: 422,
           });
         }
+
+        if (error.constraint === 'users__username') {
+          throw new RequestError({
+            code: 'user.username_already_in_use',
+            status: 422,
+          });
+        }
+
+        if (error.constraint === 'users__primary_email') {
+          throw new RequestError({
+            code: 'user.email_already_in_use',
+            status: 422,
+          });
+        }
+
+        if (error.constraint === 'users__primary_phone') {
+          throw new RequestError({
+            code: 'user.phone_already_in_use',
+            status: 422,
+          });
+        }
       }
 
       if (error instanceof CheckIntegrityConstraintViolationError) {
