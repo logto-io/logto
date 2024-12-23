@@ -50,6 +50,7 @@ function MfaForm({ data, onMfaUpdated }: Props) {
     handleSubmit,
     control,
     watch,
+    setValue,
   } = useForm<MfaConfigForm>({ defaultValues: convertMfaConfigToForm(data), mode: 'onChange' });
   const api = useApi();
 
@@ -69,11 +70,12 @@ function MfaForm({ data, onMfaUpdated }: Props) {
   }, [formValues, isMfaDisabled]);
 
   useEffect(() => {
-    // Reset the `isMandatory` to false when the policy settings are disabled
-    if (isPolicySettingsDisabled) {
-      reset({ ...formValues, isMandatory: false });
+    // Reset the `isMandatory` to false when there is no MFA factor
+    const { factors } = convertMfaFormToConfig(formValues);
+    if (factors.length === 0 && formValues.isMandatory) {
+      setValue('isMandatory', false);
     }
-  }, [isPolicySettingsDisabled, reset, formValues]);
+  }, [formValues, setValue]);
 
   const mfaPolicyOptions = useMemo(
     () => [
