@@ -94,7 +94,8 @@ const tenants = {
     create_tenant_button: 'Create tenant',
   },
   status: {
-    mau_exceeded: 'MAU Exceeded',
+    mau_exceeded: 'MAU exceeded',
+    token_exceeded: 'Token exceeded',
     suspended: 'Suspended',
     overdue: 'Overdue',
   },
