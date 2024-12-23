@@ -13,6 +13,7 @@ import { isPaidPlan } from '@/utils/subscription';
 import AddOnUsageChangesNotification from './AddOnUsageChangesNotification';
 import MauLimitExceedNotification from './MauLimitExceededNotification';
 import PaymentOverdueNotification from './PaymentOverdueNotification';
+import TokenLimitExceededNotification from './TokenLimitExceededNotification';
 import styles from './index.module.scss';
 
 type Props = {
@@ -58,6 +59,10 @@ function CurrentPlan({ periodicUsage, usageAddOnSkus }: Props) {
       {isPaidPlan(planId, isEnterprisePlan) && !isEnterprisePlan && (
         <AddOnUsageChangesNotification className={styles.notification} />
       )}
+      <TokenLimitExceededNotification
+        periodicUsage={periodicUsage}
+        className={styles.notification}
+      />
       <MauLimitExceedNotification periodicUsage={periodicUsage} className={styles.notification} />
       <PaymentOverdueNotification className={styles.notification} />
     </FormCard>
