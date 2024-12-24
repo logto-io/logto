@@ -71,9 +71,10 @@ const subscription = {
   usage,
   token_usage_notification: {
     exceeded:
-      'You have exceeded your <planName/> token usage limit. Users will not be able to access the Logto service properly. Please upgrade your plan to premium promptly to avoid any inconvenience.',
+      'You have exceeded 100% of your quota limit. Users will no longer be able to log in properly. Please upgrade immediately to avoid any inconvenience.',
     close_to_limit:
-      'You almost reached your <planName/> token usage limit. Logto will stop granting tokens when the limit is reached. Please upgrade your plan to premium to avoid any inconvenience.',
+      'You almost reached your token usage limit. Logto will stop granting token if your usage exceeds 100%. Please upgrade your plan to avoid any inconvenience. Logto will stop granting tokens if your usage exceeds 100%.',
+    dev_plan_exceeded: "This tenant has reached the token limit per Logto's entity limit policy.",
   },
 };
 
