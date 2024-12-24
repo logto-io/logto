@@ -1,6 +1,7 @@
 import { type TenantResponse } from '@/cloud/types/router';
 import DynamicT from '@/ds-components/DynamicT';
 import Tag from '@/ds-components/Tag';
+import { isPaidPlan } from '@/utils/subscription';
 
 type Props = {
   readonly tenantData: TenantResponse;
@@ -8,13 +9,20 @@ type Props = {
 };
 
 function TenantStatusTag({ tenantData, className }: Props) {
-  const { usage, quota, openInvoices, isSuspended } = tenantData;
+  const {
+    usage,
+    quota,
+    openInvoices,
+    isSuspended,
+    subscription: { planId, isEnterprisePlan },
+  } = tenantData;
 
   /**
    * Tenant status priority:
    * 1. suspend
    * 2. overdue
    * 3. mau exceeded
+   * 4. token exceeded
    */
 
   if (isSuspended) {
@@ -33,16 +41,27 @@ function TenantStatusTag({ tenantData, className }: Props) {
     );
   }
 
-  const { activeUsers } = usage;
+  const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
 
-  const { mauLimit } = quota;
+  const { activeUsers, tokenUsage } = usage;
+
+  const { mauLimit, tokenLimit } = quota;
 
   const isMauExceeded = mauLimit !== null && activeUsers >= mauLimit;
+  const isTokenExceeded = tokenLimit !== null && !isPaidTenant && tokenUsage >= tokenLimit;
 
   if (isMauExceeded) {
     return (
       <Tag className={className}>
         <DynamicT forKey="tenants.status.mau_exceeded" />
+      </Tag>
+    );
+  }
+
+  if (isTokenExceeded) {
+    return (
+      <Tag className={className}>
+        <DynamicT forKey="tenants.status.token_exceeded" />
       </Tag>
     );
   }
