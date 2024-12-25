@@ -77,9 +77,7 @@ const sendMessage =
       if (unsupportedCountriesMsg) {
         throw new ConnectorError(ConnectorErrorCodes.General, unsupportedCountriesMsg);
       } else {
-        console.warn(
-          `connector-yunpian-sms: try to send a unsupported countries phone number: ${formattedPhone}`
-        );
+        console.warn(`connector-yunpian-sms: unsupported phone number: ${formattedPhone}`);
         return;
       }
     }
@@ -105,15 +103,15 @@ const sendMessage =
         typeof error.response.body === 'string'
       ) {
         const errorBody = yunpianErrorResponseGuard.parse(JSON.parse(error.response.body));
-        console.warn('connector-yunpian-sms send error', errorBody);
+        console.warn('connector-yunpian-sms: send error', errorBody);
 
         if (errorBody.msg) {
           throw new ConnectorError(ConnectorErrorCodes.General, errorBody.msg);
         }
       }
 
-      console.warn('connector-yunpian-sms send unknown error', error);
-      throw new ConnectorError(ConnectorErrorCodes.General, 'SMS Send Failed: Unknown Error');
+      console.warn('connector-yunpian-sms: send unknown error', error);
+      throw new ConnectorError(ConnectorErrorCodes.General, `Unknown error: ${String(error)}`);
     }
   };
 
