@@ -6,13 +6,11 @@ import {
   validateConfig,
   ConnectorType,
   jsonGuard,
-} from '@logto/connector-kit';
-import type {
-  GetAuthorizationUri,
-  GetUserInfo,
-  SocialConnector,
-  CreateConnector,
-  GetConnectorConfig,
+  type GetAuthorizationUri,
+  type GetUserInfo,
+  type SocialConnector,
+  type CreateConnector,
+  type GetConnectorConfig,
 } from '@logto/connector-kit';
 import ky, { HTTPError } from 'ky';
 
@@ -31,6 +29,8 @@ import {
   userInfoResponseGuard,
   authorizationCallbackErrorGuard,
   authResponseGuard,
+  getAccessTokenErrorGuard,
+  getUserInfoErrorGuard,
 } from './types.js';
 
 const authorizationCallbackHandler = async (parameterObject: unknown) => {
@@ -100,7 +100,16 @@ export const getAccessToken = async (
   const result = accessTokenResponseGuard.safeParse(jsonResponse);
 
   if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
+    const parsedError = getAccessTokenErrorGuard.safeParse(jsonResponse);
+    if (!parsedError.success) {
+      console.warn(`connector-xiaomi: getAccessToken unknown error: ${String(parsedError.error)}`);
+      throw new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid);
+    }
+    const { error, error_description } = parsedError.data;
+    console.warn(
+      `connector-xiaomi: getAccessToken error: ${error}, error_description: ${error_description}`
+    );
+    throw new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid);
   }
 
   const { access_token: accessToken } = result.data;
@@ -119,7 +128,7 @@ const getUserInfo =
     const { accessToken } = await getAccessToken(config, { code }, redirectUri);
 
     try {
-      const userInfo = await ky
+      const response = await ky
         .get(userInfoEndpoint, {
           searchParams: {
             clientId: config.clientId,
@@ -129,10 +138,10 @@ const getUserInfo =
         })
         .json();
 
-      const userInfoResult = userInfoResponseGuard.safeParse(userInfo);
+      const userInfoResult = userInfoResponseGuard.safeParse(response);
 
       if (!userInfoResult.success) {
-        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, userInfoResult.error);
+        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse);
       }
 
       const {
@@ -143,17 +152,31 @@ const getUserInfo =
         id: unionId,
         avatar: conditional(miliaoIcon),
         name: conditional(miliaoNick),
-        rawData: jsonGuard.parse(userInfo),
+        rawData: jsonGuard.parse(response),
       };
     } catch (error: unknown) {
       if (error instanceof HTTPError) {
-        const { status } = error.response;
+        const errorBody: unknown = await error.response.json();
+        const parsedError = getUserInfoErrorGuard.safeParse(errorBody);
 
-        if (status === 401) {
+        if (!parsedError.success) {
+          console.warn(`connector-xiaomi: getUserInfo unknown error: ${String(parsedError.error)}`);
+          throw new ConnectorError(ConnectorErrorCodes.General);
+        }
+
+        const { code, description } = parsedError.data;
+        console.warn(
+          `connector-xiaomi: getUserInfo error: ${code}, error_description: ${description}`
+        );
+
+        if (error.response.status === 403) {
           throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
         }
 
-        throw new ConnectorError(ConnectorErrorCodes.General);
+        throw new ConnectorError(ConnectorErrorCodes.General, {
+          code,
+          description,
+        });
       }
 
       throw error;

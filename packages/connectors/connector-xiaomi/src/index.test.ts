@@ -37,7 +37,6 @@ describe('getAccessToken', () => {
     nock.cleanAll();
     vi.clearAllMocks();
   });
-
   it('should get an accessToken by exchanging with code', async () => {
     nock(accessTokenEndpoint)
       .post('')
@@ -45,9 +44,10 @@ describe('getAccessToken', () => {
     const { accessToken } = await getAccessToken(mockedConfig, { code: 'code' }, '');
     expect(accessToken).toEqual('access_token');
   });
-
   it('throws SocialAuthCodeInvalid error if accessToken not found in response', async () => {
-    nock(accessTokenEndpoint).post('').reply(200, '&&&START&&&{"access_token":"","scope":"1"}');
+    nock(accessTokenEndpoint)
+      .post('')
+      .reply(200, '&&&START&&&{"error":96010,"error_description":"invalid redirect uri"}');
     await expect(getAccessToken(mockedConfig, { code: 'code' }, '')).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
     );
@@ -69,7 +69,13 @@ describe('getUserInfo', () => {
   it('should get valid SocialUserInfo', async () => {
     nock(userInfoEndpoint).get('').query(true).reply(200, mockedUserInfoResponse);
     const connector = await createConnector({ getConfig });
-    const socialUserInfo = await connector.getUserInfo({ code: 'code' }, vi.fn());
+    const socialUserInfo = await connector.getUserInfo(
+      {
+        code: 'valid_code',
+        redirectUri: 'http://localhost:3000/callback',
+      },
+      vi.fn()
+    );
     expect(socialUserInfo).toStrictEqual({
       id: 'union_id',
       avatar: 'https://avatar.example.com/user.jpg',
@@ -78,11 +84,62 @@ describe('getUserInfo', () => {
     });
   });
 
-  it('throws SocialAccessTokenInvalid error if remote response code is 401', async () => {
-    nock(userInfoEndpoint).get('').query(true).reply(401);
+  it('throws SocialAccessTokenInvalid error if remote response code is 403', async () => {
+    // Mock the token endpoint to return a valid token first
+    nock(accessTokenEndpoint)
+      .post('')
+      .reply(
+        200,
+        `&&&START&&&${JSON.stringify({
+          access_token: 'invalid_token',
+          refresh_token: 'refresh_token',
+          openid: 'openid',
+        })}`
+      );
+
+    // Mock the userinfo endpoint to return 403
+    nock(userInfoEndpoint).get('').query(true).reply(403, {
+      // eslint-disable-next-line unicorn/numeric-separators-style
+      code: 96008,
+      description: 'token invalid or expired',
+      result: 'error',
+    });
+
     const connector = await createConnector({ getConfig });
-    await expect(connector.getUserInfo({ code: 'code' }, vi.fn())).rejects.toStrictEqual(
-      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
+    await expect(
+      connector.getUserInfo(
+        {
+          code: 'some_code',
+          redirectUri: 'http://localhost:3000/callback',
+        },
+        vi.fn()
+      )
+    ).rejects.toThrow(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
+  });
+
+  it('throws General error if remote response code is 401', async () => {
+    const errorResponse = {
+      // eslint-disable-next-line unicorn/numeric-separators-style
+      code: 96012,
+      description: 'server rejected auth request',
+      result: 'error',
+    };
+    nock(userInfoEndpoint).get('').query(true).reply(401, JSON.stringify(errorResponse));
+
+    const connector = await createConnector({ getConfig });
+    await expect(
+      connector.getUserInfo(
+        {
+          code: 'some_code',
+          redirectUri: 'http://localhost:3000/callback',
+        },
+        vi.fn()
+      )
+    ).rejects.toThrow(
+      new ConnectorError(ConnectorErrorCodes.General, {
+        code: errorResponse.code,
+        description: errorResponse.description,
+      })
     );
   });
 });

@@ -17,7 +17,7 @@ export const mockedAccessTokenResponse = {
 export const mockedUserInfoResponse = {
   result: 'ok',
   code: 0,
-  description: '成功',
+  description: 'no error',
   data: {
     miliaoNick: 'Test User',
     unionId: 'union_id',
