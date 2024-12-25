@@ -26,7 +26,6 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "lint": "eslint --ext .ts src",
-    "lint:fix": "eslint --ext .ts src --fix",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "test": "vitest src",
     "test:ci": "pnpm run test --silent --coverage",
