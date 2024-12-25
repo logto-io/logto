@@ -85,18 +85,6 @@ describe('getUserInfo', () => {
   });
 
   it('throws SocialAccessTokenInvalid error if remote response code is 403', async () => {
-    // Mock the token endpoint to return a valid token first
-    nock(accessTokenEndpoint)
-      .post('')
-      .reply(
-        200,
-        `&&&START&&&${JSON.stringify({
-          access_token: 'invalid_token',
-          refresh_token: 'refresh_token',
-          openid: 'openid',
-        })}`
-      );
-
     // Mock the userinfo endpoint to return 403
     nock(userInfoEndpoint).get('').query(true).reply(403, {
       // eslint-disable-next-line unicorn/numeric-separators-style

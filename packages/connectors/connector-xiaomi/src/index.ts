@@ -29,7 +29,6 @@ import {
   userInfoResponseGuard,
   authorizationCallbackErrorGuard,
   authResponseGuard,
-  getAccessTokenErrorGuard,
   getUserInfoErrorGuard,
 } from './types.js';
 
@@ -100,15 +99,6 @@ export const getAccessToken = async (
   const result = accessTokenResponseGuard.safeParse(jsonResponse);
 
   if (!result.success) {
-    const parsedError = getAccessTokenErrorGuard.safeParse(jsonResponse);
-    if (!parsedError.success) {
-      console.warn(`connector-xiaomi: getAccessToken unknown error: ${String(parsedError.error)}`);
-      throw new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid);
-    }
-    const { error, error_description } = parsedError.data;
-    console.warn(
-      `connector-xiaomi: getAccessToken error: ${error}, error_description: ${error_description}`
-    );
     throw new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid);
   }
 
@@ -160,15 +150,10 @@ const getUserInfo =
         const parsedError = getUserInfoErrorGuard.safeParse(errorBody);
 
         if (!parsedError.success) {
-          console.warn(`connector-xiaomi: getUserInfo unknown error: ${String(parsedError.error)}`);
-          throw new ConnectorError(ConnectorErrorCodes.General);
+          throw new ConnectorError(ConnectorErrorCodes.General, parsedError.error);
         }
 
         const { code, description } = parsedError.data;
-        console.warn(
-          `connector-xiaomi: getUserInfo error: ${code}, error_description: ${description}`
-        );
-
         if (error.response.status === 403) {
           throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
         }
