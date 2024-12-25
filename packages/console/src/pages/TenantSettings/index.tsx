@@ -8,6 +8,7 @@ import DynamicT from '@/ds-components/DynamicT';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
+import DevTenantNotification from './DevTenantNotification';
 import styles from './index.module.scss';
 
 function TenantSettings() {
@@ -23,6 +24,7 @@ function TenantSettings() {
         subtitle="tenants.description"
         className={styles.cardTitle}
       />
+      {isDevTenant && <DevTenantNotification className={styles.notification} />}
       <TabNav className={styles.tabs}>
         <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Settings}`}>
           <DynamicT forKey="tenants.tabs.settings" />
