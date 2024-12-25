@@ -5,8 +5,8 @@ export const authorizationEndpoint = 'https://account.xiaomi.com/oauth2/authoriz
 export const accessTokenEndpoint = 'https://account.xiaomi.com/oauth2/token';
 export const userInfoEndpoint = 'https://open.account.xiaomi.com/user/profile';
 
-// 默认请求用户基本信息的scope
-export const scope = '1';
+// Default scope is read user profile
+export const defaultScope = '1';
 
 export const defaultMetadata: ConnectorMetadata = {
   id: 'xiaomi-universal',

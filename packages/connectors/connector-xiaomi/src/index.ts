@@ -20,7 +20,7 @@ import {
   authorizationEndpoint,
   accessTokenEndpoint,
   userInfoEndpoint,
-  scope as defaultScope,
+  defaultScope,
   defaultMetadata,
   defaultTimeout,
 } from './constant.js';
