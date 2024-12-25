@@ -1,4 +1,4 @@
-import { addDays } from 'date-fns';
+import { addDays, addYears } from 'date-fns';
 import forge from 'node-forge';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -7,7 +7,7 @@ import { generateKeyPairAndCertificate, calculateCertificateFingerprints } from 
 
 describe('generateKeyPairAndCertificate', () => {
   it('should generate valid key pair and certificate', async () => {
-    const result = await generateKeyPairAndCertificate();
+    const result = await generateKeyPairAndCertificate(1);
 
     // Verify private key format
     expect(result.privateKey).toContain('-----BEGIN RSA PRIVATE KEY-----');
@@ -32,18 +32,18 @@ describe('generateKeyPairAndCertificate', () => {
   });
 
   it('should generate certificate with custom lifespan', async () => {
-    const customDays = 30;
-    const result = await generateKeyPairAndCertificate(customDays);
+    const customYears = 30;
+    const result = await generateKeyPairAndCertificate(customYears);
 
-    const expectedNotAfter = addDays(new Date(), customDays);
+    const expectedNotAfter = addYears(new Date(), customYears);
     expect(result.notAfter.getDate()).toBe(expectedNotAfter.getDate());
     expect(result.notAfter.getMonth()).toBe(expectedNotAfter.getMonth());
     expect(result.notAfter.getFullYear()).toBe(expectedNotAfter.getFullYear());
   });
 
   it('should generate unique serial numbers for different certificates', async () => {
-    const result1 = await generateKeyPairAndCertificate();
-    const result2 = await generateKeyPairAndCertificate();
+    const result1 = await generateKeyPairAndCertificate(1);
+    const result2 = await generateKeyPairAndCertificate(1);
 
     const cert1 = forge.pki.certificateFromPem(result1.certificate);
     const cert2 = forge.pki.certificateFromPem(result2.certificate);
@@ -52,7 +52,7 @@ describe('generateKeyPairAndCertificate', () => {
   });
 
   it('should generate RSA key pair with 4096 bits', async () => {
-    const result = await generateKeyPairAndCertificate();
+    const result = await generateKeyPairAndCertificate(1);
     const privateKey = forge.pki.privateKeyFromPem(result.privateKey);
 
     // RSA key should be 4096 bits
@@ -66,7 +66,7 @@ describe('calculateCertificateFingerprints', () => {
 
   beforeAll(async () => {
     // Generate a valid certificate for testing
-    const { certificate } = await generateKeyPairAndCertificate();
+    const { certificate } = await generateKeyPairAndCertificate(1);
     // eslint-disable-next-line @silverhand/fp/no-mutation
     validCertificate = certificate;
   });

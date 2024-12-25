@@ -9,7 +9,7 @@ import {
   type CertificateFingerprints,
 } from '@logto/schemas';
 import { appendPath } from '@silverhand/essentials';
-import { addDays } from 'date-fns';
+import { addYears } from 'date-fns';
 import forge from 'node-forge';
 import { z } from 'zod';
 
@@ -25,15 +25,15 @@ const pemCertificateGuard = z
 // Add base64 validation schema
 const base64Guard = z.string().regex(/^[\d+/A-Za-z]*={0,2}$/);
 
-export const generateKeyPairAndCertificate = async (lifeSpanInDays = 365) => {
+export const generateKeyPairAndCertificate = async (lifeSpanInYears: number) => {
   const keypair = forge.pki.rsa.generateKeyPair({ bits: 4096 });
-  return createCertificate(keypair, lifeSpanInDays);
+  return createCertificate(keypair, lifeSpanInYears);
 };
 
-const createCertificate = (keypair: forge.pki.KeyPair, lifeSpanInDays: number) => {
+const createCertificate = (keypair: forge.pki.KeyPair, lifeSpanInYears: number) => {
   const cert = forge.pki.createCertificate();
   const notBefore = new Date();
-  const notAfter = addDays(notBefore, lifeSpanInDays);
+  const notAfter = addYears(notBefore, lifeSpanInYears);
 
   // Can not initialize the certificate with the keypair directly, so we need to set the public key manually.
   /* eslint-disable @silverhand/fp/no-mutation */

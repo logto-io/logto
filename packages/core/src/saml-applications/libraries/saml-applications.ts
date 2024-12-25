@@ -41,15 +41,15 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
    */
   const createSamlApplicationSecret = async ({
     applicationId,
-    lifeSpanInDays = 365 * 3,
+    lifeSpanInYears,
     isActive = false,
   }: {
     applicationId: string;
-    lifeSpanInDays?: number;
+    lifeSpanInYears: number;
     isActive?: boolean;
   }): Promise<SamlApplicationSecret> => {
     const { privateKey, certificate, notAfter } = await generateKeyPairAndCertificate(
-      lifeSpanInDays
+      lifeSpanInYears
     );
 
     const createObject = {

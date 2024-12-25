@@ -77,7 +77,13 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
             applicationId: application.id,
             ...config,
           }),
-          createSamlApplicationSecret({ applicationId: application.id, isActive: true }),
+          // Create a default SAML app secret
+          createSamlApplicationSecret({
+            applicationId: application.id,
+            isActive: true,
+            // The default lifetime is 3 years
+            lifeSpanInYears: 3,
+          }),
         ]);
 
         ctx.status = 201;
@@ -162,17 +168,18 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
     '/saml-applications/:id/secrets',
     koaGuard({
       params: z.object({ id: z.string() }),
-      body: z.object({ lifeSpanInDays: z.number().optional() }),
+      // The life span of the SAML app secret is in years (at least 1 year), and for security concern, secrets which never expire are not recommended.
+      body: z.object({ lifeSpanInYears: z.number().int().gte(1) }),
       response: samlApplicationSecretResponseGuard,
       status: [201, 400, 404],
     }),
     async (ctx, next) => {
       const {
-        body: { lifeSpanInDays },
+        body: { lifeSpanInYears },
         params: { id },
       } = ctx.guard;
 
-      const secret = await createSamlApplicationSecret({ applicationId: id, lifeSpanInDays });
+      const secret = await createSamlApplicationSecret({ applicationId: id, lifeSpanInYears });
       ctx.status = 201;
       ctx.body = {
         ...secret,
