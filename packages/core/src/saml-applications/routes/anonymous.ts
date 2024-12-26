@@ -215,7 +215,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
           applicationId: id,
           oidcState: state,
           samlRequestId: extractResult.data.request.id,
-          authRequestInfo: extractResult.data,
+          rawAuthRequest: SAMLRequest,
           // Expire the session in 60 minutes.
           expiresAt: expiresAt.getTime(),
           ...cond(RelayState && { relayState: RelayState }),
@@ -312,7 +312,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
           applicationId: id,
           oidcState: state,
           samlRequestId: extractResult.data.request.id,
-          authRequestInfo: extractResult.data,
+          rawAuthRequest: SAMLRequest,
           // Expire the session in 60 minutes.
           expiresAt: expiresAt.getTime(),
           ...cond(RelayState && { relayState: RelayState }),
