@@ -418,9 +418,7 @@ export default function initOidc(
   oidc.use(koaAppSecretTranspilation(queries));
   oidc.use(koaBodyEtag());
 
-  // TODO: Remove the devFeature guard when the implementation is stable
-  // Only enabled in the cloud environment
-  if (EnvSet.values.isDevFeaturesEnabled && EnvSet.values.isCloud) {
+  if (EnvSet.values.isCloud) {
     oidc.use(koaTokenUsageGuard(subscription));
   }
 
