@@ -51,13 +51,8 @@ export const useSecretTableColumns = ({
             {isExpired(expiresAt) ? (
               <Expired expiresAt={new Date(expiresAt)} />
             ) : (
-              <LocaleDateTime
-                format={{
-                  month: 'short',
-                }}
-              >
-                {expiresAt}
-              </LocaleDateTime>
+              // E.g. Apr 29, 1453, 12:00:00 AM
+              <LocaleDateTime format="PPpp">{expiresAt}</LocaleDateTime>
             )}
           </span>
         ),
@@ -101,7 +96,7 @@ export const useSecretTableColumns = ({
         },
       },
     ],
-    [appId, t]
+    [appId, onActivate, onDeactivate, onDelete, t]
   );
 
   return tableColumns;

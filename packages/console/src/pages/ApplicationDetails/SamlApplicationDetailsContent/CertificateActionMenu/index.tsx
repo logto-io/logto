@@ -8,7 +8,6 @@ import Deactivate from '@/assets/icons/moon.svg?react';
 import More from '@/assets/icons/more.svg?react';
 import Activate from '@/assets/icons/sun.svg?react';
 import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
-import useApi from '@/hooks/use-api';
 import { downloadText } from '@/utils/downloader';
 
 import { buildSamlSigningCertificateFilename } from '../utils';
@@ -31,7 +30,6 @@ function CertificateActionMenu({
   onDeactivate,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const api = useApi();
 
   const onDownload = useCallback(() => {
     downloadText(
@@ -43,17 +41,6 @@ function CertificateActionMenu({
 
   return (
     <ActionMenu icon={<More className={styles.icon} />} title={t('general.more_options')}>
-      {!active && (
-        <ActionMenuItem
-          type="danger"
-          icon={<Delete />}
-          onClick={() => {
-            onDelete(id);
-          }}
-        >
-          {t('general.delete')}
-        </ActionMenuItem>
-      )}
       {active ? (
         <ActionMenuItem
           iconClassName={styles.icon}
@@ -65,15 +52,27 @@ function CertificateActionMenu({
           {t('general.deactivate')}
         </ActionMenuItem>
       ) : (
-        <ActionMenuItem
-          iconClassName={styles.icon}
-          icon={<Activate />}
-          onClick={() => {
-            onActivate(id);
-          }}
-        >
-          {t('general.activate')}
-        </ActionMenuItem>
+        <>
+          {/* Can only delete inactive certificates */}
+          <ActionMenuItem
+            type="danger"
+            icon={<Delete />}
+            onClick={() => {
+              onDelete(id);
+            }}
+          >
+            {t('general.delete')}
+          </ActionMenuItem>
+          <ActionMenuItem
+            iconClassName={styles.icon}
+            icon={<Activate />}
+            onClick={() => {
+              onActivate(id);
+            }}
+          >
+            {t('general.activate')}
+          </ActionMenuItem>
+        </>
       )}
       <ActionMenuItem iconClassName={styles.icon} icon={<Download />} onClick={onDownload}>
         {t('general.download')}

@@ -1,5 +1,5 @@
 import { type SamlApplicationSecret } from '@logto/schemas';
-import { addYears, format } from 'date-fns';
+import { addMilliseconds, addYears, format } from 'date-fns';
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -25,6 +25,9 @@ type Props = {
 
 const years = Object.freeze([1, 3, 5, 10]);
 
+// Update expiration date every minute
+const intervalExpirationRefresh = 60 * 1000; // In milliseconds.
+
 function CreateSecretModal({ appId, isOpen, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
@@ -43,15 +46,19 @@ function CreateSecretModal({ appId, isOpen, onClose }: Props) {
   );
   const api = useApi();
   const expirationYears = watch('lifeSpanInYears');
-  const [expirationDate, setExpirationDate] = useState<Date>(addYears(new Date(), 1));
+  const [expirationDate, setExpirationDate] = useState<Date>(
+    addYears(new Date(), Number(expirationYears))
+  );
 
-  // Update expiration date every second since our options are relative to the current time (in years).
+  // Update expiration date every minute since our options are relative to the current time (in years).
+  // Since we will show expire time on create secret modal in the format of `Apr 29, 1953, 12:00 AM`.
   useEffect(() => {
-    const setDate = () => {
-      setExpirationDate(addYears(new Date(), Number(expirationYears)));
+    const incrementExpirationDate = (incrementMilliseconds: number = intervalExpirationRefresh) => {
+      setExpirationDate(addMilliseconds(expirationDate, incrementMilliseconds));
     };
-    const interval = setInterval(setDate, 1000);
-    setDate();
+
+    const interval = setInterval(incrementExpirationDate, intervalExpirationRefresh);
+    incrementExpirationDate();
 
     return () => {
       clearInterval(interval);
@@ -95,7 +102,7 @@ function CreateSecretModal({ appId, isOpen, onClose }: Props) {
               description={
                 <DangerousRaw>
                   {t('application_details.secrets.create_modal.expiration_description', {
-                    date: format(expirationDate, 'Pp'),
+                    date: format(expirationDate, 'PPp'),
                   })}
                 </DangerousRaw>
               }

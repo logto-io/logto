@@ -1,6 +1,6 @@
 import { type SamlApplicationSecretResponse, type SamlApplicationResponse } from '@logto/schemas';
 import { appendPath, type Nullable } from '@silverhand/essentials';
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -69,6 +69,8 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
     mode: 'onBlur',
   });
 
+  const secretsData = useMemo(() => secrets.data ?? [], [secrets.data]);
+
   const api = useApi();
 
   const onSubmit = handleSubmit(
@@ -94,22 +96,23 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
     async (id: string) => {
       await api.delete(`api/saml-applications/${data.id}/secrets/${id}`);
       toast.success(t('application_details.secrets.deleted'));
-      void secrets.mutate((secrets.data ?? []).filter(({ id: secretId }) => secretId !== id));
+      void secrets.mutate(secretsData.filter(({ id: secretId }) => secretId !== id));
     },
-    [api, data.id, secrets, t]
+    [api, data.id, secrets, secretsData, t]
   );
 
   const onActivate = useCallback(
     async (id: string) => {
       await api.patch(`api/saml-applications/${data.id}/secrets/${id}`, { json: { active: true } });
       toast.success(t('application_details.secrets.activated'));
+      // Activate a secret will deactivate all other secrets.
       void secrets.mutate(
-        (secrets.data ?? []).map((secret) =>
-          secret.id === id ? { ...secret, active: true } : secret
+        secretsData.map((secret) =>
+          secret.id === id ? { ...secret, active: true } : { ...secret, active: false }
         )
       );
     },
-    [api, data.id, secrets, t]
+    [api, data.id, secrets, secretsData, t]
   );
 
   const onDeactivate = useCallback(
@@ -119,12 +122,10 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
       });
       toast.success(t('application_details.secrets.deactivated'));
       void secrets.mutate(
-        (secrets.data ?? []).map((secret) =>
-          secret.id === id ? { ...secret, active: false } : secret
-        )
+        secretsData.map((secret) => (secret.id === id ? { ...secret, active: false } : secret))
       );
     },
-    [api, data.id, secrets, t]
+    [api, data.id, secrets, secretsData, t]
   );
 
   const secretTableColumns = useSecretTableColumns({
@@ -234,7 +235,7 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
             </>
           )}
           <FormField title="application_details.saml_idp_certificates.title">
-            {secrets.data?.length === 0 ? (
+            {secretsData.length === 0 && !secrets.error ? (
               <>
                 <div className={styles.empty}>{t('application_details.secrets.empty')}</div>
                 <Button
@@ -253,7 +254,7 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
                   rowIndexKey="id"
                   isLoading={!secrets.data && !secrets.error}
                   errorMessage={secrets.error?.body?.message ?? secrets.error?.message}
-                  rowGroups={[{ key: 'application_secrets', data: secrets.data }]}
+                  rowGroups={[{ key: 'application_secrets', data: secretsData }]}
                   columns={secretTableColumns}
                 />
                 <Button
