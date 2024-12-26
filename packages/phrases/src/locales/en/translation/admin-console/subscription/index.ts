@@ -23,7 +23,7 @@ const subscription = {
   manage_payment: 'Manage payment',
   overfill_quota_warning:
     'You have reached your quota limit. To prevent any issues, upgrade the plan.',
-  upgrade_pro: 'Upgrade pro',
+  upgrade_pro: 'Upgrade to Pro',
   update_payment: 'Update payment',
   payment_error:
     'Payment issue detected. Unable to process ${{price, number}} for previous cycle. Update payment to avoid Logto service suspension.',
@@ -73,7 +73,7 @@ const subscription = {
     exceeded:
       'You have exceeded 100% of your quota limit. Users will no longer be able to log in properly. Please upgrade immediately to avoid any inconvenience.',
     close_to_limit:
-      'You almost reached your token usage limit. Logto will stop granting token if your usage exceeds 100%. Please upgrade your plan to avoid any inconvenience.',
+      'You almost reached your token usage limit. Logto will stop granting token if your usage exceeds 100%. Please upgrade Free plan to avoid any inconvenience.',
     dev_plan_exceeded: "This tenant has reached the token limit per Logto's entity limit policy.",
   },
 };
