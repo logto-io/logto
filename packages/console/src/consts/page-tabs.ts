@@ -5,6 +5,7 @@ export enum ApplicationDetailsTabs {
   Branding = 'branding',
   Permissions = 'permissions',
   Organizations = 'organizations',
+  AttributeMapping = 'attribute-mapping',
 }
 
 export enum ApiResourceDetailsTabs {

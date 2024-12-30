@@ -50,3 +50,15 @@ export const samlApplicationManagementApiPrefix = '/api/saml-applications';
 export const samlApplicationEndpointPrefix = '/saml';
 export const samlApplicationMetadataEndpointSuffix = 'metadata';
 export const samlApplicationSingleSignOnEndpointSuffix = 'authn';
+
+export const camelCaseToSentenceCase = (input: string): string => {
+  const words = input.split('_');
+
+  // If the first word is empty, return an empty string.
+  if (!words[0]) {
+    return '';
+  }
+
+  const capitalizedFirstWord = words[0].charAt(0).toUpperCase() + words[0].slice(1);
+  return [capitalizedFirstWord, ...words.slice(1)].join(' ');
+};

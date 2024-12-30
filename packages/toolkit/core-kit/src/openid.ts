@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 /** Scopes that reserved by Logto, which will be added to the auth request automatically. */
 export enum ReservedScope {
   OpenId = 'openid',
@@ -14,37 +16,52 @@ export enum ReservedResource {
   Organization = 'urn:logto:resource:organizations',
 }
 
-export type UserClaim =
+/**
+ * A comprehensive list of all available user claims that can be used in SAML applications.
+ * These claims can be mapped to SAML attributes in the application configuration.
+ *
+ * Note: This array must include ALL possible values from UserClaim type.
+ * TypeScript will throw a compile-time error if any value is missing.
+ */
+export const completeUserClaims = [
   // OIDC standard claims
-  | 'name'
-  | 'given_name'
-  | 'family_name'
-  | 'middle_name'
-  | 'nickname'
-  | 'preferred_username'
-  | 'profile'
-  | 'picture'
-  | 'website'
-  | 'email'
-  | 'email_verified'
-  | 'gender'
-  | 'birthdate'
-  | 'zoneinfo'
-  | 'locale'
-  | 'phone_number'
-  | 'phone_number_verified'
-  | 'address'
-  | 'updated_at'
+  'name',
+  'given_name',
+  'family_name',
+  'middle_name',
+  'nickname',
+  'preferred_username',
+  'profile',
+  'picture',
+  'website',
+  'email',
+  'email_verified',
+  'gender',
+  'birthdate',
+  'zoneinfo',
+  'locale',
+  'phone_number',
+  'phone_number_verified',
+  'address',
+  'updated_at',
   // Custom claims
-  | 'username'
-  | 'roles'
-  | 'organizations'
-  | 'organization_data'
-  | 'organization_roles'
-  | 'custom_data'
-  | 'identities'
-  | 'sso_identities'
-  | 'created_at';
+  'username',
+  'roles',
+  'organizations',
+  'organization_data',
+  'organization_roles',
+  'custom_data',
+  'identities',
+  'sso_identities',
+  'created_at',
+] as const;
+
+/**
+ * Zod guard for UserClaim type, using completeUserClaims as the single source of truth
+ */
+export const userClaimGuard = z.enum(completeUserClaims);
+
+export type UserClaim = z.infer<typeof userClaimGuard>;
 
 /**
  * Scopes for ID Token and Userinfo Endpoint.
