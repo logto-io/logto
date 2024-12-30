@@ -25,6 +25,7 @@ import { applicationTypeI18nKey } from '@/types/applications';
 import Branding from '../components/Branding';
 import Permissions from '../components/Permissions';
 
+import AttributeMapping from './AttributeMapping';
 import Settings from './Settings';
 import styles from './index.module.scss';
 
@@ -131,10 +132,12 @@ function SamlApplicationDetailsContent({ data }: Props) {
         <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Settings}`}>
           {t('application_details.settings')}
         </TabNavItem>
+        <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.AttributeMapping}`}>
+          {t('application_details.saml_app_attribute_mapping.name')}
+        </TabNavItem>
         <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Permissions}`}>
           {t('application_details.permissions.name')}
         </TabNavItem>
-        {/** TODO: Attribute mapping tab */}
         <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Branding}`}>
           {t('application_details.branding.name')}
         </TabNavItem>
@@ -149,6 +152,14 @@ function SamlApplicationDetailsContent({ data }: Props) {
             mutateApplication={mutateSamlApplication}
             isDeleted={isDeleted}
           />
+        )}
+      </TabWrapper>
+      <TabWrapper
+        isActive={tab === ApplicationDetailsTabs.AttributeMapping}
+        className={styles.tabContainer}
+      >
+        {samlApplicationData && (
+          <AttributeMapping data={samlApplicationData} mutateApplication={mutateSamlApplication} />
         )}
       </TabWrapper>
       <TabWrapper

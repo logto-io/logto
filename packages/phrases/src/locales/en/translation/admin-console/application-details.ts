@@ -219,6 +219,14 @@ const application_details = {
     active: 'Active',
     inactive: 'Inactive',
   },
+  saml_app_attribute_mapping: {
+    name: 'Attribute mappings',
+    title: 'Base attribute mappings',
+    description: 'Add attribute mappings to sync user profile from Logto to your application.',
+    col_logto_claims: 'Value of Logto',
+    col_sp_claims: 'Value name of your application',
+    add_button: 'Add another',
+  },
 };
 
 export default Object.freeze(application_details);
