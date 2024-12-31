@@ -1,5 +1,20 @@
 # Change Log
 
+## 1.23.0
+
+### Patch Changes
+
+- 217858950: fix fetch official connector list CLI command error
+
+  Due to changes in the npm registry API (`https://registry.npmjs.org/-/v1/search`) that our CLI add official connector depends on, the new API behavior returns irrelevant search results.
+
+  We need to manually filter out these irrelevant results to avoid potential infinite loops, where each loop triggers an API call, eventually hitting a rate limit and resulting in a status code 429.
+
+- Updated dependencies [f1b1d9e95]
+- Updated dependencies [239b81e31]
+  - @logto/schemas@1.23.0
+  - @logto/core-kit@2.5.2
+
 ## 1.22.0
 
 ### Patch Changes
