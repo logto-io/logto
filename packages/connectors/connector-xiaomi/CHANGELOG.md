@@ -1,6 +1,6 @@
 # @logto/connector-xiaomi
 
-## 1.1.0
+## 1.0.0
 
 ### Minor Changes
 
