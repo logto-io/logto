@@ -1,7 +1,12 @@
+/* eslint-disable max-lines */
+// TODO: refactor this file to reduce LOC
 import { parseJson } from '@logto/connector-kit';
+import { Prompt, QueryKey, ReservedScope, UserScope } from '@logto/js';
+import { type SamlAcsUrl } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { tryThat, appendPath } from '@silverhand/essentials';
-import camelcaseKeys from 'camelcase-keys';
+import { tryThat, appendPath, deduplicate } from '@silverhand/essentials';
+import camelcaseKeys, { type CamelCaseKeys } from 'camelcase-keys';
+import { XMLValidator } from 'fast-xml-parser';
 import saml from 'samlify';
 import { ZodError, z } from 'zod';
 
@@ -11,8 +16,11 @@ import {
   getRawUserInfoResponse,
   handleTokenExchange,
 } from '#src/sso/OidcConnector/utils.js';
-import { idTokenProfileStandardClaimsGuard } from '#src/sso/types/oidc.js';
-import { type IdTokenProfileStandardClaims } from '#src/sso/types/oidc.js';
+import {
+  idTokenProfileStandardClaimsGuard,
+  type OidcConfigResponse,
+  type IdTokenProfileStandardClaims,
+} from '#src/sso/types/oidc.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import {
@@ -20,6 +28,7 @@ import {
   samlAttributeNameFormatBasic,
   samlValueXmlnsXsi,
 } from '../libraries/consts.js';
+import { type SamlApplicationDetails } from '../queries/index.js';
 
 /**
  * Determines the SAML NameID format and value based on the user's claims and IdP's NameID format.
@@ -223,20 +232,7 @@ export const handleOidcCallbackAndGetUserInfo = async (
   issuer: string
 ) => {
   // Get OIDC configuration
-  const { tokenEndpoint, userinfoEndpoint } = await tryThat(
-    async () => fetchOidcConfigRaw(issuer),
-    (error) => {
-      if (error instanceof ZodError) {
-        throw new RequestError({
-          code: 'oidc.invalid_request',
-          message: error.message,
-          error: error.flatten(),
-        });
-      }
-
-      throw error;
-    }
-  );
+  const { tokenEndpoint, userinfoEndpoint } = await getOidcConfig(issuer);
 
   // Exchange authorization code for tokens
   const { accessToken } = await exchangeAuthorizationCode(tokenEndpoint, {
@@ -252,12 +248,102 @@ export const handleOidcCallbackAndGetUserInfo = async (
   return getUserInfo(accessToken, userinfoEndpoint);
 };
 
-export const setupSamlProviders = (
-  metadata: string,
-  privateKey: string,
-  entityId: string,
-  acsUrl: { binding: string; url: string }
-) => {
+const getOidcConfig = async (issuer: string): Promise<CamelCaseKeys<OidcConfigResponse>> => {
+  const oidcConfig = await tryThat(
+    async () => fetchOidcConfigRaw(issuer),
+    (error) => {
+      if (error instanceof ZodError) {
+        throw new RequestError({
+          code: 'oidc.invalid_request',
+          message: error.message,
+          error: error.flatten(),
+        });
+      }
+
+      throw error;
+    }
+  );
+
+  return oidcConfig;
+};
+
+export const getSignInUrl = async ({
+  issuer,
+  applicationId,
+  redirectUri,
+  scope,
+  state,
+}: {
+  issuer: string;
+  applicationId: string;
+  redirectUri: string;
+  scope?: string;
+  state?: string;
+}) => {
+  const { authorizationEndpoint } = await getOidcConfig(issuer);
+
+  const queryParameters = new URLSearchParams({
+    [QueryKey.ClientId]: applicationId,
+    [QueryKey.RedirectUri]: redirectUri,
+    [QueryKey.ResponseType]: 'code',
+    [QueryKey.Prompt]: Prompt.Login,
+  });
+
+  // TODO: get value of `scope` parameters according to setup in attribute mapping.
+  queryParameters.append(
+    QueryKey.Scope,
+    // For security reasons, DO NOT include the offline_access scope by default.
+    deduplicate([
+      ReservedScope.OpenId,
+      UserScope.Profile,
+      UserScope.Roles,
+      UserScope.Organizations,
+      UserScope.OrganizationRoles,
+      UserScope.CustomData,
+      UserScope.Identities,
+      ...(scope?.split(' ') ?? []),
+    ]).join(' ')
+  );
+
+  if (state) {
+    queryParameters.append(QueryKey.State, state);
+  }
+
+  return new URL(`${authorizationEndpoint}?${queryParameters.toString()}`);
+};
+
+export const validateSamlApplicationDetails = (details: SamlApplicationDetails) => {
+  const {
+    entityId,
+    acsUrl,
+    oidcClientMetadata: { redirectUris },
+    privateKey,
+    certificate,
+  } = details;
+
+  assertThat(acsUrl, 'application.saml.acs_url_required');
+  assertThat(entityId, 'application.saml.entity_id_required');
+  assertThat(redirectUris[0], 'oidc.invalid_redirect_uri');
+
+  assertThat(privateKey, 'application.saml.private_key_required');
+  assertThat(certificate, 'application.saml.certificate_required');
+
+  return {
+    entityId,
+    acsUrl,
+    redirectUri: redirectUris[0],
+    privateKey,
+    certificate,
+  };
+};
+
+export const getSamlIdpAndSp = ({
+  idp: { metadata, privateKey, certificate },
+  sp: { entityId, acsUrl },
+}: {
+  idp: { metadata: string; privateKey: string; certificate: string };
+  sp: { entityId: string; acsUrl: SamlAcsUrl };
+}): { idp: saml.IdentityProviderInstance; sp: saml.ServiceProviderInstance } => {
   // eslint-disable-next-line new-cap
   const idp = saml.IdentityProvider({
     metadata,
@@ -295,6 +381,24 @@ export const setupSamlProviders = (
         Location: acsUrl.url,
       },
     ],
+    signingCert: certificate,
+    authnRequestsSigned: idp.entityMeta.isWantAuthnRequestsSigned(),
+    allowCreate: false,
+  });
+
+  // Used to check whether xml content is valid in format.
+  saml.setSchemaValidator({
+    validate: async (xmlContent: string) => {
+      try {
+        XMLValidator.validate(xmlContent, {
+          allowBooleanAttributes: true,
+        });
+
+        return true;
+      } catch {
+        return false;
+      }
+    },
   });
 
   return { idp, sp };
@@ -302,3 +406,4 @@ export const setupSamlProviders = (
 
 export const buildSamlAppCallbackUrl = (baseUrl: URL, samlApplicationId: string) =>
   appendPath(baseUrl, `api/saml-applications/${samlApplicationId}/callback`).toString();
+/* eslint-enable max-lines */
