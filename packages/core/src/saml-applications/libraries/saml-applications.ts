@@ -6,7 +6,7 @@ import {
   BindingType,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { removeUndefinedKeys } from '@silverhand/essentials';
+import { removeUndefinedKeys, pick } from '@silverhand/essentials';
 import saml from 'samlify';
 
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
@@ -86,7 +86,9 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
   ): Promise<SamlApplicationResponse> => {
     const { name, description, customData, ...config } = patchApplicationObject;
     const originalApplication = await findApplicationById(id);
-    const applicationData = { name, description, customData };
+    const applicationData = removeUndefinedKeys(
+      pick(patchApplicationObject, 'name', 'description', 'customData')
+    );
 
     assertThat(
       originalApplication.type === ApplicationType.SAML,
@@ -98,7 +100,7 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
 
     const [updatedApplication, upToDateSamlConfig] = await Promise.all([
       Object.keys(applicationData).length > 0
-        ? updateApplicationById(id, removeUndefinedKeys(applicationData))
+        ? updateApplicationById(id, applicationData)
         : originalApplication,
       Object.keys(config).length > 0
         ? updateSamlApplicationConfig({
