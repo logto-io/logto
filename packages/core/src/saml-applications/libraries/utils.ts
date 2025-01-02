@@ -128,7 +128,10 @@ export const ensembleSamlApplication = ({
   samlConfig,
 }: {
   application: Application;
-  samlConfig: Pick<SamlApplicationConfig, 'attributeMapping' | 'entityId' | 'acsUrl'>;
+  samlConfig: Pick<
+    SamlApplicationConfig,
+    'attributeMapping' | 'entityId' | 'acsUrl' | 'encryption' | 'nameIdFormat'
+  >;
 }): SamlApplicationResponse => {
   return {
     ...application,

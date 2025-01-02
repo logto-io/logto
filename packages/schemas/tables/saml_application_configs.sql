@@ -9,6 +9,8 @@ create table saml_application_configs (
   attribute_mapping jsonb /* @use SamlAttributeMapping */ not null default '{}'::jsonb,
   entity_id varchar(128),
   acs_url jsonb /* @use SamlAcsUrl */,
+  encryption jsonb /* @use SamlEncryption */,
+  name_id_format varchar(128) /* @use NameIdFormat */ not null,
   primary key (tenant_id, application_id),
   constraint saml_application_configs__application_type
     check (check_application_type(application_id, 'SAML'))

@@ -1,4 +1,4 @@
-import { ApplicationType, BindingType } from '@logto/schemas';
+import { ApplicationType, BindingType, NameIdFormat } from '@logto/schemas';
 
 import { createApplication, deleteApplication, updateApplication } from '#src/api/application.js';
 import {
@@ -23,6 +23,8 @@ describe('SAML application', () => {
       name: 'test',
       description: 'test',
     });
+
+    expect(createdSamlApplication.nameIdFormat).toBe(NameIdFormat.Persistent);
 
     await deleteSamlApplication(createdSamlApplication.id);
   });
@@ -51,14 +53,25 @@ describe('SAML application', () => {
         binding: BindingType.Post,
         url: 'https://example.logto.io/sso/saml',
       },
+      nameIdFormat: NameIdFormat.EmailAddress,
+      encryption: {
+        encryptAssertion: true,
+        certificate:
+          '-----BEGIN CERTIFICATE-----\nMIIDDTCCAfWgAwIBAgI...\n-----END CERTIFICATE-----\n',
+        encryptThenSign: false,
+      },
     };
     const createdSamlApplication = await createSamlApplication({
       name: 'test',
       description: 'test',
       ...config,
     });
+
     expect(createdSamlApplication.entityId).toEqual(config.entityId);
     expect(createdSamlApplication.acsUrl).toEqual(config.acsUrl);
+    expect(createdSamlApplication.nameIdFormat).toEqual(config.nameIdFormat);
+    expect(createdSamlApplication.encryption).toEqual(config.encryption);
+
     await deleteSamlApplication(createdSamlApplication.id);
   });
 
@@ -71,6 +84,8 @@ describe('SAML application', () => {
     expect(createdSamlApplication.entityId).toEqual('http://example.logto.io/foo');
     expect(createdSamlApplication.acsUrl).toEqual(null);
     expect(createdSamlApplication.attributeMapping).toEqual({});
+    expect(createdSamlApplication.nameIdFormat).toEqual(NameIdFormat.Persistent);
+    expect(createdSamlApplication.encryption).toBe(null);
 
     const newConfig = {
       acsUrl: {
@@ -78,6 +93,10 @@ describe('SAML application', () => {
         url: 'https://example.logto.io/sso/saml',
       },
       entityId: null,
+      nameIdFormat: NameIdFormat.EmailAddress,
+      encryption: {
+        encryptAssertion: false,
+      },
     };
     const updatedSamlApplication = await updateSamlApplication(createdSamlApplication.id, {
       name: 'updated',
@@ -86,6 +105,8 @@ describe('SAML application', () => {
     expect(updatedSamlApplication.acsUrl).toEqual(newConfig.acsUrl);
     expect(updatedSamlApplication.entityId).toEqual(newConfig.entityId);
     expect(updatedSamlApplication.attributeMapping).toEqual({});
+    expect(updatedSamlApplication.nameIdFormat).toEqual(newConfig.nameIdFormat);
+    expect(updatedSamlApplication.encryption).toEqual(newConfig.encryption);
 
     const upToDateSamlApplication = await getSamlApplication(createdSamlApplication.id);
 
