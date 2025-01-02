@@ -66,7 +66,6 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
           description,
           customData,
           oidcClientMetadata: buildOidcClientMetadata(),
-          isThirdParty: true,
           type: ApplicationType.SAML,
         })
       );
