@@ -1,15 +1,18 @@
 import { type SamlApplicationSecretResponse, type SamlApplicationResponse } from '@logto/schemas';
 import { appendPath, type Nullable } from '@silverhand/essentials';
-import { useContext } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import useSWR, { type KeyedMutator } from 'swr';
 
+import CirclePlus from '@/assets/icons/circle-plus.svg?react';
+import Plus from '@/assets/icons/plus.svg?react';
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { AppDataContext } from '@/contexts/AppDataProvider';
+import Button from '@/ds-components/Button';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
 import Table from '@/ds-components/Table';
@@ -19,6 +22,8 @@ import useCustomDomain from '@/hooks/use-custom-domain';
 import { trySubmitSafe } from '@/utils/form';
 import { uriValidator } from '@/utils/validator';
 
+import CreateSecretModal from './CreateSecretModal';
+import styles from './index.module.scss';
 import { useSecretTableColumns } from './use-secret-table-columns';
 import {
   parseFormDataToSamlApplicationRequest,
@@ -48,6 +53,7 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { tenantEndpoint } = useContext(AppDataContext);
   const { applyDomain: applyCustomDomain } = useCustomDomain();
+  const [showCreateSecretModal, setShowCreateSecretModal] = useState(false);
 
   const secrets = useSWR<SamlApplicationSecretResponse[], RequestError>(
     `api/saml-applications/${data.id}/secrets`
@@ -62,6 +68,8 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
     defaultValues: parseSamlApplicationResponseToFormData(data),
     mode: 'onBlur',
   });
+
+  const secretsData = useMemo(() => secrets.data ?? [], [secrets.data]);
 
   const api = useApi();
 
@@ -84,7 +92,48 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
     })
   );
 
-  const secretTableColumns = useSecretTableColumns({ appId: data.id });
+  const onDelete = useCallback(
+    async (id: string) => {
+      await api.delete(`api/saml-applications/${data.id}/secrets/${id}`);
+      toast.success(t('application_details.secrets.deleted'));
+      void secrets.mutate(secretsData.filter(({ id: secretId }) => secretId !== id));
+    },
+    [api, data.id, secrets, secretsData, t]
+  );
+
+  const onActivate = useCallback(
+    async (id: string) => {
+      await api.patch(`api/saml-applications/${data.id}/secrets/${id}`, { json: { active: true } });
+      toast.success(t('application_details.secrets.activated'));
+      // Activate a secret will deactivate all other secrets.
+      void secrets.mutate(
+        secretsData.map((secret) =>
+          secret.id === id ? { ...secret, active: true } : { ...secret, active: false }
+        )
+      );
+    },
+    [api, data.id, secrets, secretsData, t]
+  );
+
+  const onDeactivate = useCallback(
+    async (id: string) => {
+      await api.patch(`api/saml-applications/${data.id}/secrets/${id}`, {
+        json: { active: false },
+      });
+      toast.success(t('application_details.secrets.deactivated'));
+      void secrets.mutate(
+        secretsData.map((secret) => (secret.id === id ? { ...secret, active: false } : secret))
+      );
+    },
+    [api, data.id, secrets, secretsData, t]
+  );
+
+  const secretTableColumns = useSecretTableColumns({
+    appId: data.id,
+    onDelete,
+    onActivate,
+    onDeactivate,
+  });
 
   return (
     <>
@@ -186,14 +235,49 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
             </>
           )}
           <FormField title="application_details.saml_idp_certificates.title">
-            <Table
-              hasBorder
-              isRowHoverEffectDisabled
-              rowIndexKey="id"
-              isLoading={!secrets.data && !secrets.error}
-              errorMessage={secrets.error?.body?.message ?? secrets.error?.message}
-              rowGroups={[{ key: 'application_secrets', data: secrets.data ?? [] }]}
-              columns={secretTableColumns}
+            {secretsData.length === 0 && !secrets.error ? (
+              <>
+                <div className={styles.empty}>{t('application_details.secrets.empty')}</div>
+                <Button
+                  icon={<Plus />}
+                  title="application_details.secrets.create_new_secret"
+                  onClick={() => {
+                    setShowCreateSecretModal(true);
+                  }}
+                />
+              </>
+            ) : (
+              <>
+                <Table
+                  hasBorder
+                  isRowHoverEffectDisabled
+                  rowIndexKey="id"
+                  isLoading={!secrets.data && !secrets.error}
+                  errorMessage={secrets.error?.body?.message ?? secrets.error?.message}
+                  rowGroups={[{ key: 'application_secrets', data: secretsData }]}
+                  columns={secretTableColumns}
+                />
+                <Button
+                  size="small"
+                  type="text"
+                  className={styles.add}
+                  icon={<CirclePlus />}
+                  title="application_details.secrets.create_new_secret"
+                  onClick={() => {
+                    setShowCreateSecretModal(true);
+                  }}
+                />
+              </>
+            )}
+            <CreateSecretModal
+              appId={data.id}
+              isOpen={showCreateSecretModal}
+              onClose={(created) => {
+                if (created) {
+                  void secrets.mutate();
+                }
+                setShowCreateSecretModal(false);
+              }}
             />
           </FormField>
         </FormCard>

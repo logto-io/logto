@@ -180,6 +180,9 @@ const application_details = {
     create_new_secret: 'Create new secret',
     delete_confirmation:
       'This action cannot be undone. Are you sure you want to delete this secret?',
+    deleted: 'The secret has been successfully deleted.',
+    activated: 'The secret has been successfully activated.',
+    deactivated: 'The secret has been successfully deactivated.',
     legacy_secret: 'Legacy secret',
     expired: 'Expired',
     expired_tooltip: 'This secret was expired on {{date}}.',
@@ -191,6 +194,8 @@ const application_details = {
         'The secret will never expire. We recommend setting an expiration date for enhanced security.',
       days: '{{count}} day',
       days_other: '{{count}} days',
+      years: '{{count}} year',
+      years_other: '{{count}} years',
       created: 'The secret {{name}} has been successfully created.',
     },
     edit_modal: {
