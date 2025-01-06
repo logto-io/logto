@@ -5,21 +5,13 @@ import { addMinutes } from 'date-fns';
 import { z } from 'zod';
 
 import { spInitiatedSamlSsoSessionCookieName } from '#src/constants/index.js';
-import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { AnonymousRouter, RouterInitArgs } from '#src/routes/types.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import {
-  generateAutoSubmitForm,
-  createSamlResponse,
-  handleOidcCallbackAndGetUserInfo,
-  getSamlIdpAndSp,
-  getSignInUrl,
-  buildSamlAppCallbackUrl,
-  validateSamlApplicationDetails,
-} from './utils.js';
+import { SamlApplication } from '../SamlApplication/index.js';
+import { generateAutoSubmitForm } from '../SamlApplication/utils.js';
 
 const samlApplicationSignInCallbackQueryParametersGuard = z.union([
   z.object({
@@ -38,9 +30,6 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
     samlApplications: { getSamlIdPMetadataByApplicationId },
   } = libraries;
   const {
-    applications,
-    samlApplicationSecrets,
-    samlApplicationConfigs,
     samlApplications: { getSamlApplicationDetailsById },
     samlApplicationSessions: { insertSession },
   } = queries;
@@ -87,15 +76,11 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         });
       }
 
-      // Get application configuration
-      const {
-        secret,
-        oidcClientMetadata: { redirectUris },
-      } = await applications.findApplicationById(id);
+      const details = await getSamlApplicationDetailsById(id);
+      const samlApplication = new SamlApplication(details, id, envSet.oidc.issuer, tenantId);
 
-      const tenantEndpoint = getTenantEndpoint(tenantId, EnvSet.values);
       assertThat(
-        redirectUris[0] === buildSamlAppCallbackUrl(tenantEndpoint, id),
+        samlApplication.details.redirectUri === samlApplication.samlAppCallbackUrl,
         'oidc.invalid_redirect_uri'
       );
 
@@ -103,31 +88,11 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       const { code } = query;
 
       // Handle OIDC callback and get user info
-      const userInfo = await handleOidcCallbackAndGetUserInfo(
+      const userInfo = await samlApplication.handleOidcCallbackAndGetUserInfo({
         code,
-        id,
-        secret,
-        redirectUris[0],
-        envSet.oidc.issuer
-      );
-
-      // TODO: we will refactor the following code later, to reduce the DB query connections.
-      // Get SAML configuration
-      const { metadata } = await getSamlIdPMetadataByApplicationId(id);
-      const { privateKey, certificate } =
-        await samlApplicationSecrets.findActiveSamlApplicationSecretByApplicationId(id);
-      const { entityId, acsUrl } =
-        await samlApplicationConfigs.findSamlApplicationConfigByApplicationId(id);
-
-      assertThat(entityId, 'application.saml.entity_id_required');
-      assertThat(acsUrl, 'application.saml.acs_url_required');
-
-      // Setup SAML providers and create response
-      const { idp, sp } = getSamlIdpAndSp({
-        idp: { metadata, privateKey, certificate },
-        sp: { entityId, acsUrl },
       });
-      const { context, entityEndpoint } = await createSamlResponse(idp, sp, userInfo);
+
+      const { context, entityEndpoint } = await samlApplication.createSamlResponse(userInfo);
 
       // Return auto-submit form
       ctx.body = generateAutoSubmitForm(entityEndpoint, context);
@@ -156,18 +121,8 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         query: { Signature, RelayState, ...rest },
       } = ctx.guard;
 
-      const [{ metadata }, details] = await Promise.all([
-        getSamlIdPMetadataByApplicationId(id),
-        getSamlApplicationDetailsById(id),
-      ]);
-
-      const { entityId, acsUrl, redirectUri, certificate, privateKey } =
-        validateSamlApplicationDetails(details);
-
-      const { idp, sp } = getSamlIdpAndSp({
-        idp: { metadata, certificate, privateKey },
-        sp: { entityId, acsUrl },
-      });
+      const details = await getSamlApplicationDetailsById(id);
+      const samlApplication = new SamlApplication(details, id, envSet.oidc.issuer, tenantId);
 
       const octetString = Object.keys(ctx.request.query)
         // eslint-disable-next-line no-restricted-syntax
@@ -177,7 +132,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
 
       // Parse login request
       try {
-        const loginRequestResult = await idp.parseLoginRequest(sp, 'redirect', {
+        const loginRequestResult = await samlApplication.parseLoginRequest('redirect', {
           query: removeUndefinedKeys({
             SAMLRequest,
             Signature,
@@ -196,15 +151,12 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         }
 
         assertThat(
-          extractResult.data.issuer === entityId,
+          extractResult.data.issuer === samlApplication.details.entityId,
           'application.saml.auth_request_issuer_not_match'
         );
 
         const state = generateStandardId(32);
-        const signInUrl = await getSignInUrl({
-          issuer: envSet.oidc.issuer,
-          applicationId: id,
-          redirectUri,
+        const signInUrl = await samlApplication.getSignInUrl({
           state,
         });
 
@@ -262,22 +214,12 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         body: { SAMLRequest, RelayState },
       } = ctx.guard;
 
-      const [{ metadata }, details] = await Promise.all([
-        getSamlIdPMetadataByApplicationId(id),
-        getSamlApplicationDetailsById(id),
-      ]);
-
-      const { acsUrl, entityId, redirectUri, privateKey, certificate } =
-        validateSamlApplicationDetails(details);
-
-      const { idp, sp } = getSamlIdpAndSp({
-        idp: { metadata, privateKey, certificate },
-        sp: { entityId, acsUrl },
-      });
+      const details = await getSamlApplicationDetailsById(id);
+      const samlApplication = new SamlApplication(details, id, envSet.oidc.issuer, tenantId);
 
       // Parse login request
       try {
-        const loginRequestResult = await idp.parseLoginRequest(sp, 'post', {
+        const loginRequestResult = await samlApplication.parseLoginRequest('post', {
           body: {
             SAMLRequest,
           },
@@ -293,15 +235,12 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         }
 
         assertThat(
-          extractResult.data.issuer === entityId,
+          extractResult.data.issuer === samlApplication.details.entityId,
           'application.saml.auth_request_issuer_not_match'
         );
 
         const state = generateStandardShortId();
-        const signInUrl = await getSignInUrl({
-          issuer: envSet.oidc.issuer,
-          applicationId: id,
-          redirectUri,
+        const signInUrl = await samlApplication.getSignInUrl({
           state,
         });
 
