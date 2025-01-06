@@ -19,7 +19,7 @@ export const buildUploadFile = (config: StorageProviderData): UploadFile | Uploa
     return storage.uploadFile;
   }
 
-  const { endpoint, bucket, accessKeyId, accessSecretKey, region } = config;
+  const { endpoint, bucket, accessKeyId, forcePathStyle, accessSecretKey, region } = config;
 
   const storage = buildS3Storage({
     endpoint,
@@ -27,6 +27,7 @@ export const buildUploadFile = (config: StorageProviderData): UploadFile | Uploa
     accessKeyId,
     secretAccessKey: accessSecretKey,
     region,
+    forcePathStyle,
   });
 
   return storage.uploadFile;
