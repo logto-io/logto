@@ -41,155 +41,177 @@ type ValidSamlApplicationDetails = {
   certificate: string;
 };
 
+// Used to check whether xml content is valid in format.
+saml.setSchemaValidator({
+  validate: async (xmlContent: string) => {
+    try {
+      XMLValidator.validate(xmlContent, {
+        allowBooleanAttributes: true,
+      });
+
+      return true;
+    } catch {
+      return false;
+    }
+  },
+});
+
+const validateSamlApplicationDetails = (
+  details: SamlApplicationDetails
+): ValidSamlApplicationDetails => {
+  const {
+    entityId,
+    acsUrl,
+    oidcClientMetadata: { redirectUris },
+    privateKey,
+    certificate,
+    secret,
+  } = details;
+
+  assertThat(acsUrl, 'application.saml.acs_url_required');
+  assertThat(entityId, 'application.saml.entity_id_required');
+  assertThat(redirectUris[0], 'oidc.invalid_redirect_uri');
+
+  assertThat(privateKey, 'application.saml.private_key_required');
+  assertThat(certificate, 'application.saml.certificate_required');
+
+  return {
+    secret,
+    entityId,
+    acsUrl,
+    redirectUri: redirectUris[0],
+    privateKey,
+    certificate,
+  };
+};
+
+const buildLoginResponseTemplate = () => {
+  return {
+    context: samlLogInResponseTemplate,
+    attributes: [
+      {
+        name: 'email',
+        valueTag: 'email',
+        nameFormat: samlAttributeNameFormatBasic,
+        valueXsiType: samlValueXmlnsXsi.string,
+      },
+      {
+        name: 'name',
+        valueTag: 'name',
+        nameFormat: samlAttributeNameFormatBasic,
+        valueXsiType: samlValueXmlnsXsi.string,
+      },
+    ],
+  };
+};
+
+const buildSamlIdentityProvider = ({
+  entityId,
+  certificate,
+  singleSignOnUrl,
+  privateKey,
+}: {
+  entityId: string;
+  certificate: string;
+  singleSignOnUrl: string;
+  privateKey: string;
+}): saml.IdentityProviderInstance => {
+  // eslint-disable-next-line new-cap
+  return saml.IdentityProvider({
+    entityID: entityId,
+    signingCert: certificate,
+    singleSignOnService: [
+      {
+        Location: singleSignOnUrl,
+        Binding: BindingType.Redirect,
+      },
+      {
+        Location: singleSignOnUrl,
+        Binding: BindingType.Post,
+      },
+    ],
+    privateKey,
+    isAssertionEncrypted: false,
+    loginResponseTemplate: buildLoginResponseTemplate(),
+    nameIDFormat: [
+      saml.Constants.namespace.format.emailAddress,
+      saml.Constants.namespace.format.persistent,
+    ],
+  });
+};
+
+const buildSamlServiceProvider = ({
+  entityId,
+  acsUrl,
+  certificate,
+  isWantAuthnRequestsSigned,
+}: {
+  entityId: string;
+  acsUrl: SamlAcsUrl;
+  certificate: string;
+  isWantAuthnRequestsSigned: boolean;
+}): saml.ServiceProviderInstance => {
+  // eslint-disable-next-line new-cap
+  return saml.ServiceProvider({
+    entityID: entityId,
+    assertionConsumerService: [
+      {
+        Binding: acsUrl.binding,
+        Location: acsUrl.url,
+      },
+    ],
+    signingCert: certificate,
+    authnRequestsSigned: isWantAuthnRequestsSigned,
+    allowCreate: false,
+  });
+};
+
 export class SamlApplication {
-  public static validateSamlApplicationDetails = (
-    details: SamlApplicationDetails
-  ): ValidSamlApplicationDetails => {
-    const {
-      entityId,
-      acsUrl,
-      oidcClientMetadata: { redirectUris },
-      privateKey,
-      certificate,
-      secret,
-    } = details;
-
-    assertThat(acsUrl, 'application.saml.acs_url_required');
-    assertThat(entityId, 'application.saml.entity_id_required');
-    assertThat(redirectUris[0], 'oidc.invalid_redirect_uri');
-
-    assertThat(privateKey, 'application.saml.private_key_required');
-    assertThat(certificate, 'application.saml.certificate_required');
-
-    return {
-      secret,
-      entityId,
-      acsUrl,
-      redirectUri: redirectUris[0],
-      privateKey,
-      certificate,
-    };
-  };
-
-  protected static getSamlIdpAndSp = ({
-    idp: { entityId: idpEntityId, privateKey, certificate, singleSignOnUrl },
-    sp: { entityId: spEntityId, acsUrl },
-  }: {
-    idp: { entityId: string; privateKey: string; certificate: string; singleSignOnUrl: string };
-    sp: { entityId: string; acsUrl: SamlAcsUrl };
-  }): { idp: saml.IdentityProviderInstance; sp: saml.ServiceProviderInstance } => {
-    // eslint-disable-next-line new-cap
-    const idp = saml.IdentityProvider({
-      entityID: idpEntityId,
-      signingCert: certificate,
-      singleSignOnService: [
-        {
-          Location: singleSignOnUrl,
-          Binding: BindingType.Redirect,
-        },
-        {
-          Location: singleSignOnUrl,
-          Binding: BindingType.Post,
-        },
-      ],
-      privateKey,
-      isAssertionEncrypted: false,
-      loginResponseTemplate: {
-        context: samlLogInResponseTemplate,
-        attributes: [
-          {
-            name: 'email',
-            valueTag: 'email',
-            nameFormat: samlAttributeNameFormatBasic,
-            valueXsiType: samlValueXmlnsXsi.string,
-          },
-          {
-            name: 'name',
-            valueTag: 'name',
-            nameFormat: samlAttributeNameFormatBasic,
-            valueXsiType: samlValueXmlnsXsi.string,
-          },
-        ],
-      },
-      nameIDFormat: [
-        saml.Constants.namespace.format.emailAddress,
-        saml.Constants.namespace.format.persistent,
-      ],
-    });
-
-    // eslint-disable-next-line new-cap
-    const sp = saml.ServiceProvider({
-      entityID: spEntityId,
-      assertionConsumerService: [
-        {
-          Binding: acsUrl.binding,
-          Location: acsUrl.url,
-        },
-      ],
-      signingCert: certificate,
-      authnRequestsSigned: idp.entityMeta.isWantAuthnRequestsSigned(),
-      allowCreate: false,
-    });
-
-    // Used to check whether xml content is valid in format.
-    saml.setSchemaValidator({
-      validate: async (xmlContent: string) => {
-        try {
-          XMLValidator.validate(xmlContent, {
-            allowBooleanAttributes: true,
-          });
-
-          return true;
-        } catch {
-          return false;
-        }
-      },
-    });
-
-    return { idp, sp };
-  };
-
   public details: ValidSamlApplicationDetails;
-
-  protected idp: saml.IdentityProviderInstance;
-  protected sp: saml.ServiceProviderInstance;
 
   protected tenantEndpoint: URL;
   protected oidcConfig?: CamelCaseKeys<OidcConfigResponse>;
 
+  private _idp?: saml.IdentityProviderInstance;
+  private _sp?: saml.ServiceProviderInstance;
+
   constructor(
     details: SamlApplicationDetails,
-    tenantId: string,
     protected samlApplicationId: string,
-    protected issuer: string
+    protected issuer: string,
+    tenantId: string
   ) {
-    this.details = SamlApplication.validateSamlApplicationDetails(details);
-
+    this.details = validateSamlApplicationDetails(details);
     this.tenantEndpoint = getTenantEndpoint(tenantId, EnvSet.values);
-    this.samlApplicationId = samlApplicationId;
-
-    const { idp, sp } = SamlApplication.getSamlIdpAndSp({
-      idp: {
-        entityId: buildSamlIdentityProviderEntityId(this.tenantEndpoint, this.samlApplicationId),
-        privateKey: this.details.privateKey,
-        certificate: this.details.certificate,
-        singleSignOnUrl: buildSingleSignOnUrl(this.tenantEndpoint, this.samlApplicationId),
-      },
-      sp: {
-        entityId: this.details.entityId,
-        acsUrl: this.details.acsUrl,
-      },
-    });
-    this.idp = idp;
-    this.sp = sp;
   }
 
-  public getIdPMetadata() {
+  public get idp(): saml.IdentityProviderInstance {
+    this._idp ||= buildSamlIdentityProvider(this.buildIdpConfig());
+    return this._idp;
+  }
+
+  public get sp(): saml.ServiceProviderInstance {
+    this._sp ||= buildSamlServiceProvider({
+      ...this.buildSpConfig(),
+      certificate: this.details.certificate,
+      isWantAuthnRequestsSigned: this.idp.entityMeta.isWantAuthnRequestsSigned(),
+    });
+    return this._sp;
+  }
+
+  public get idPMetadata() {
     return this.idp.getMetadata();
   }
 
-  public getIdPCertificate() {
+  public get idPCertificate() {
     return this.details.certificate;
+  }
+
+  public get samlAppCallbackUrl() {
+    return appendPath(
+      this.tenantEndpoint,
+      `api/saml-applications/${this.samlApplicationId}/callback`
+    ).toString();
   }
 
   public async parseLoginRequest(
@@ -216,12 +238,6 @@ export class SamlApplication {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     return { context, entityEndpoint };
   };
-
-  public buildSamlAppCallbackUrl = () =>
-    appendPath(
-      this.tenantEndpoint,
-      `api/saml-applications/${this.samlApplicationId}/callback`
-    ).toString();
 
   // Helper functions for SAML callback
   public handleOidcCallbackAndGetUserInfo = async ({ code }: { code: string }) => {
@@ -387,6 +403,22 @@ export class SamlApplication {
         context,
       };
     };
+
+  private buildIdpConfig() {
+    return {
+      entityId: buildSamlIdentityProviderEntityId(this.tenantEndpoint, this.samlApplicationId),
+      privateKey: this.details.privateKey,
+      certificate: this.details.certificate,
+      singleSignOnUrl: buildSingleSignOnUrl(this.tenantEndpoint, this.samlApplicationId),
+    };
+  }
+
+  private buildSpConfig() {
+    return {
+      entityId: this.details.entityId,
+      acsUrl: this.details.acsUrl,
+    };
+  }
 }
 
 /**

@@ -76,10 +76,10 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       }
 
       const details = await getSamlApplicationDetailsById(id);
-      const samlApplication = new SamlApplication(details, tenantId, id, envSet.oidc.issuer);
+      const samlApplication = new SamlApplication(details, id, envSet.oidc.issuer, tenantId);
 
       assertThat(
-        samlApplication.details.redirectUri === samlApplication.buildSamlAppCallbackUrl(),
+        samlApplication.details.redirectUri === samlApplication.samlAppCallbackUrl,
         'oidc.invalid_redirect_uri'
       );
 
@@ -121,7 +121,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       } = ctx.guard;
 
       const details = await getSamlApplicationDetailsById(id);
-      const samlApplication = new SamlApplication(details, tenantId, id, envSet.oidc.issuer);
+      const samlApplication = new SamlApplication(details, id, envSet.oidc.issuer, tenantId);
 
       const octetString = Object.keys(ctx.request.query)
         // eslint-disable-next-line no-restricted-syntax
@@ -214,7 +214,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       } = ctx.guard;
 
       const details = await getSamlApplicationDetailsById(id);
-      const samlApplication = new SamlApplication(details, tenantId, id, envSet.oidc.issuer);
+      const samlApplication = new SamlApplication(details, id, envSet.oidc.issuer, tenantId);
 
       // Parse login request
       try {
