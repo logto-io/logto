@@ -28,8 +28,13 @@ const application = {
     can_not_delete_active_secret: 'Can not delete the active secret.',
     no_active_secret: 'No active secret found.',
     entity_id_required: 'Entity ID is required to generate metadata.',
-    acs_url_required: 'Assertion consumer service URL is required to generate metadata.',
     invalid_certificate_pem_format: 'Invalid PEM certificate format',
+    acs_url_required: 'Assertion Consumer Service URL is required.',
+    private_key_required: 'Private key is required.',
+    certificate_required: 'Certificate is required.',
+    invalid_saml_request: 'Invalid SAML authentication request.',
+    auth_request_issuer_not_match:
+      'The issuer of the SAML authentication request mismatch with service provider entity ID.',
   },
 };
 
