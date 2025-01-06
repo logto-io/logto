@@ -10,7 +10,8 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import type { AnonymousRouter, RouterInitArgs } from '#src/routes/types.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { generateAutoSubmitForm, SamlApplication } from './utils.js';
+import { SamlApplication } from '../SamlApplication/index.js';
+import { generateAutoSubmitForm } from '../SamlApplication/utils.js';
 
 const samlApplicationSignInCallbackQueryParametersGuard = z.union([
   z.object({

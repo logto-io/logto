@@ -1,6 +1,6 @@
 import nock from 'nock';
 
-import { SamlApplication, generateAutoSubmitForm, buildSamlAssertionNameId } from './utils.js';
+import { SamlApplication } from './index.js';
 
 const { jest } = import.meta;
 
@@ -37,7 +37,7 @@ describe('SamlApplication', () => {
   const mockSamlApplicationId = 'saml-app-id';
   const mockIssuer = 'https://issuer.example.com';
 
-  const mockEndpoint = 'http://auth.example.com';
+  const mockEndpoint = 'https://auth.example.com';
   const mockAuthEndpoint = `${mockEndpoint}/auth`;
   const mockTokenEndpoint = `${mockEndpoint}/token`;
   const mockUserinfoEndpoint = `${mockEndpoint}/userinfo`;
@@ -49,7 +49,7 @@ describe('SamlApplication', () => {
   beforeEach(() => {
     // @ts-expect-error
     // eslint-disable-next-line @silverhand/fp/no-mutation
-    samlApp = new TestSamlApplication(mockDetails, mockTenantId, mockSamlApplicationId, mockIssuer);
+    samlApp = new TestSamlApplication(mockDetails, mockSamlApplicationId, mockIssuer, mockTenantId);
 
     nock(mockIssuer).get('/.well-known/openid-configuration').reply(200, {
       token_endpoint: mockTokenEndpoint,
@@ -165,98 +165,6 @@ describe('SamlApplication', () => {
       nock(mockEndpoint).get('/userinfo').reply(400, { error: 'invalid_token' });
 
       await expect(samlApp.exposedGetUserInfo({ accessToken: mockAccessToken })).rejects.toThrow();
-    });
-  });
-
-  describe('buildSamlAssertionNameId', () => {
-    it('should use email when email_verified is true', () => {
-      const user = {
-        sub: 'user123',
-        email: 'user@example.com',
-        email_verified: true,
-      };
-
-      const result = buildSamlAssertionNameId(user);
-
-      expect(result).toEqual({
-        NameIDFormat: 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',
-        NameID: user.email,
-      });
-    });
-
-    it('should use sub when email is not verified', () => {
-      const user = {
-        sub: 'user123',
-        email: 'user@example.com',
-        email_verified: false,
-      };
-
-      const result = buildSamlAssertionNameId(user);
-
-      expect(result).toEqual({
-        NameIDFormat: 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',
-        NameID: user.sub,
-      });
-    });
-
-    it('should use sub when email is not available', () => {
-      const user = {
-        sub: 'user123',
-      };
-
-      const result = buildSamlAssertionNameId(user);
-
-      expect(result).toEqual({
-        NameIDFormat: 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',
-        NameID: user.sub,
-      });
-    });
-
-    it('should use specified format when provided', () => {
-      const user = {
-        sub: 'user123',
-        email: 'user@example.com',
-        email_verified: false,
-      };
-      const format = 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent';
-
-      const result = buildSamlAssertionNameId(user, format);
-
-      expect(result).toEqual({
-        NameIDFormat: format,
-        NameID: user.sub,
-      });
-    });
-  });
-
-  describe('generateAutoSubmitForm', () => {
-    it('should generate valid HTML form with auto-submit script', () => {
-      const actionUrl = 'https://example.com/acs';
-      const samlResponse = 'base64EncodedSamlResponse';
-
-      const result = generateAutoSubmitForm(actionUrl, samlResponse);
-
-      expect(result).toContain('<html>');
-      expect(result).toContain('<body>');
-      expect(result).toContain('</html>');
-
-      expect(result).toContain(`<form id="redirectForm" action="${actionUrl}" method="POST">`);
-      expect(result).toContain(
-        `<input type="hidden" name="SAMLResponse" value="${samlResponse}" />`
-      );
-
-      expect(result).toContain('window.onload = function()');
-      expect(result).toContain("document.getElementById('redirectForm').submit()");
-    });
-
-    it('should properly escape special characters in URLs and values', () => {
-      const actionUrl = 'https://example.com/acs?param=value&other=123';
-      const samlResponse = 'response+with/special=characters&';
-
-      const result = generateAutoSubmitForm(actionUrl, samlResponse);
-
-      expect(result).toContain('action="https://example.com/acs?param=value&other=123"');
-      expect(result).toContain('value="response+with/special=characters&"');
     });
   });
 });
