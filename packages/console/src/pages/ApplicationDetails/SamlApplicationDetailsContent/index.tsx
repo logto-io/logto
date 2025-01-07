@@ -23,7 +23,6 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { applicationTypeI18nKey } from '@/types/applications';
 
 import Branding from '../components/Branding';
-import Permissions from '../components/Permissions';
 
 import AttributeMapping from './AttributeMapping';
 import Settings from './Settings';
@@ -98,7 +97,7 @@ function SamlApplicationDetailsContent({ data }: Props) {
       <DetailsPageHeader
         icon={<ApplicationIcon type={data.type} isThirdParty={data.isThirdParty} />}
         title={data.name}
-        primaryTag={t(`${applicationTypeI18nKey.thirdParty}.title`)}
+        primaryTag={t(`${applicationTypeI18nKey[ApplicationType.SAML]}.title`)}
         identifier={{ name: 'App ID', value: data.id }}
         actionMenuItems={[
           {
@@ -135,9 +134,6 @@ function SamlApplicationDetailsContent({ data }: Props) {
         <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.AttributeMapping}`}>
           {t('application_details.saml_app_attribute_mapping.name')}
         </TabNavItem>
-        <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Permissions}`}>
-          {t('application_details.permissions.name')}
-        </TabNavItem>
         <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Branding}`}>
           {t('application_details.branding.name')}
         </TabNavItem>
@@ -161,12 +157,6 @@ function SamlApplicationDetailsContent({ data }: Props) {
         {samlApplicationData && (
           <AttributeMapping data={samlApplicationData} mutateApplication={mutateSamlApplication} />
         )}
-      </TabWrapper>
-      <TabWrapper
-        isActive={tab === ApplicationDetailsTabs.Permissions}
-        className={styles.tabContainer}
-      >
-        <Permissions application={data} />
       </TabWrapper>
       <TabWrapper
         isActive={tab === ApplicationDetailsTabs.Branding}

@@ -72,7 +72,8 @@ function CreateSecretModal({ appId, isOpen, onClose }: Props) {
           json: { lifeSpanInYears: Number(lifeSpanInYears) },
         })
         .json<SamlApplicationSecret>();
-      toast.success(t('application_details.secrets.create_modal.created'));
+      // We do not have `name` for SAML application secret, use empty string instead to avoid showing the placeholder.
+      toast.success(t('application_details.secrets.create_modal.created', { name: '' }));
       onCloseHandler(createdData);
     })
   );
