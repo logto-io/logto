@@ -40,3 +40,8 @@
 button.add {
   margin-top: _.unit(2);
 }
+
+.nameIdFormatDescription {
+  margin-inline-start: _.unit(2);
+  color: var(--color-text-secondary);
+}
