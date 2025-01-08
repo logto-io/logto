@@ -322,7 +322,6 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
                 <Select
                   options={Object.values(NameIdFormat).map((format) => ({
                     value: format,
-                    // eslint-disable-next-line no-restricted-syntax
                     title: (
                       <span>
                         {t(nameIdFormatToOptionMap[format])}
@@ -330,7 +329,7 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
                           ({t(nameIdFormatToOptionDescriptionMap[format])})
                         </span>
                       </span>
-                    ) as React.ReactNode,
+                    ),
                   }))}
                   value={value}
                   onChange={onChange}
@@ -363,7 +362,6 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
                   error={errors.certificate?.message}
                   {...register('certificate', {
                     validate: (value) => {
-                      console.log('certificate value', value, !value);
                       if (!value) {
                         return t(
                           'application_details.saml_encryption_config.certificate_missing_error'

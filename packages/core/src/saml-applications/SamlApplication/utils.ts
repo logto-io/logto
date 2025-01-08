@@ -1,7 +1,9 @@
-// TODO: refactor this file to reduce LOC
-import saml from 'samlify';
+import { NameIdFormat } from '@logto/schemas';
+import { generateStandardId } from '@logto/shared';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import { type IdTokenProfileStandardClaims } from '#src/sso/types/oidc.js';
+import assertThat from '#src/utils/assert-that.js';
 
 /**
  * Determines the SAML NameID format and value based on the user's claims and IdP's NameID format.
@@ -13,43 +15,41 @@ import { type IdTokenProfileStandardClaims } from '#src/sso/types/oidc.js';
  */
 export const buildSamlAssertionNameId = (
   user: IdTokenProfileStandardClaims,
-  idpNameIDFormat?: string | string[]
+  idpNameIDFormat: string[]
 ): { NameIDFormat: string; NameID: string } => {
-  if (idpNameIDFormat) {
-    // Get the first name ID format
-    const format = Array.isArray(idpNameIDFormat) ? idpNameIDFormat[0] : idpNameIDFormat;
-    // If email format is specified, try to use email first
-    if (
-      format === saml.Constants.namespace.format.emailAddress &&
-      user.email &&
-      user.email_verified
-    ) {
-      return {
-        NameIDFormat: format,
-        NameID: user.email,
-      };
-    }
-    // For other formats or when email is not available, use sub
-    if (format === saml.Constants.namespace.format.persistent) {
-      return {
-        NameIDFormat: format,
-        NameID: user.sub,
-      };
-    }
-  }
-  // No nameIDFormat specified, use default logic
-  // Use email if available
-  if (user.email && user.email_verified) {
+  // Get the first name ID format
+  const format = Array.isArray(idpNameIDFormat) ? idpNameIDFormat[0] : idpNameIDFormat;
+
+  // If email format is specified, try to use email first
+  if (format === NameIdFormat.EmailAddress) {
+    assertThat(user.email, 'application.saml.missing_email_address');
+    assertThat(user.email_verified, 'application.saml.email_address_unverified');
     return {
-      NameIDFormat: saml.Constants.namespace.format.emailAddress,
+      NameIDFormat: format,
       NameID: user.email,
     };
   }
-  // Fallback to persistent format with user.sub
-  return {
-    NameIDFormat: saml.Constants.namespace.format.persistent,
-    NameID: user.sub,
-  };
+
+  // For persistent and unspecified formats, we use Logto user ID.
+  if (format === NameIdFormat.Persistent || format === NameIdFormat.Unspecified) {
+    return {
+      NameIDFormat: format,
+      NameID: user.sub,
+    };
+  }
+
+  // For transient format, we generate a random ID.
+  if (format === NameIdFormat.Transient) {
+    return {
+      NameIDFormat: format,
+      NameID: generateStandardId(),
+    };
+  }
+
+  throw new RequestError({
+    code: 'application.saml.unsupported_name_id_format',
+    details: { idpNameIDFormat, user },
+  });
 };
 
 export const generateAutoSubmitForm = (actionUrl: string, samlResponse: string): string => {

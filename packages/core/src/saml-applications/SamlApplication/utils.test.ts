@@ -1,3 +1,5 @@
+import { NameIdFormat } from '@logto/schemas';
+
 import { generateAutoSubmitForm, buildSamlAssertionNameId } from './utils.js';
 
 describe('buildSamlAssertionNameId', () => {
@@ -8,7 +10,7 @@ describe('buildSamlAssertionNameId', () => {
       email_verified: true,
     };
 
-    const result = buildSamlAssertionNameId(user);
+    const result = buildSamlAssertionNameId(user, [NameIdFormat.EmailAddress]);
 
     expect(result).toEqual({
       NameIDFormat: 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',
@@ -23,7 +25,7 @@ describe('buildSamlAssertionNameId', () => {
       email_verified: false,
     };
 
-    const result = buildSamlAssertionNameId(user);
+    const result = buildSamlAssertionNameId(user, [NameIdFormat.Persistent]);
 
     expect(result).toEqual({
       NameIDFormat: 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',
@@ -36,7 +38,7 @@ describe('buildSamlAssertionNameId', () => {
       sub: 'user123',
     };
 
-    const result = buildSamlAssertionNameId(user);
+    const result = buildSamlAssertionNameId(user, [NameIdFormat.Persistent]);
 
     expect(result).toEqual({
       NameIDFormat: 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',
@@ -52,7 +54,7 @@ describe('buildSamlAssertionNameId', () => {
     };
     const format = 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent';
 
-    const result = buildSamlAssertionNameId(user, format);
+    const result = buildSamlAssertionNameId(user, [format]);
 
     expect(result).toEqual({
       NameIDFormat: format,
