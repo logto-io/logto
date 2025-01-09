@@ -1,12 +1,14 @@
 /* eslint-disable max-lines */
 // TODO: refactor this file to reduce LOC
 import { parseJson } from '@logto/connector-kit';
-import { Prompt, QueryKey, ReservedScope, UserScope } from '@logto/js';
+import { userClaims, type UserClaim, UserScope } from '@logto/core-kit';
+import { Prompt, QueryKey, ReservedScope } from '@logto/js';
 import {
   type SamlAcsUrl,
   BindingType,
-  type NameIdFormat,
+  NameIdFormat,
   type SamlEncryption,
+  type SamlAttributeMapping,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { tryThat, appendPath, deduplicate, type Nullable, cond } from '@silverhand/essentials';
@@ -46,6 +48,7 @@ type ValidSamlApplicationDetails = {
   redirectUri: string;
   privateKey: string;
   certificate: string;
+  attributeMapping: SamlAttributeMapping;
   nameIdFormat: NameIdFormat;
   encryption: Nullable<SamlEncryption>;
 };
@@ -92,6 +95,7 @@ const validateSamlApplicationDetails = (
     secret,
     nameIdFormat,
     encryption,
+    attributeMapping,
   } = details;
 
   assertThat(acsUrl, 'application.saml.acs_url_required');
@@ -110,6 +114,7 @@ const validateSamlApplicationDetails = (
     certificate,
     nameIdFormat,
     encryption,
+    attributeMapping,
   };
 };
 
@@ -277,7 +282,7 @@ export class SamlApplication {
     return this.getUserInfo({ accessToken });
   };
 
-  public getSignInUrl = async ({ scope, state }: { scope?: string; state?: string }) => {
+  public getSignInUrl = async ({ state }: { state?: string }) => {
     const { authorizationEndpoint } = await this.fetchOidcConfig();
 
     const queryParameters = new URLSearchParams({
@@ -287,20 +292,10 @@ export class SamlApplication {
       [QueryKey.Prompt]: Prompt.Login,
     });
 
-    // TODO: get value of `scope` parameters according to setup in attribute mapping.
     queryParameters.append(
       QueryKey.Scope,
       // For security reasons, DO NOT include the offline_access scope by default.
-      deduplicate([
-        ReservedScope.OpenId,
-        UserScope.Profile,
-        UserScope.Roles,
-        UserScope.Organizations,
-        UserScope.OrganizationRoles,
-        UserScope.CustomData,
-        UserScope.Identities,
-        ...(scope?.split(' ') ?? []),
-      ]).join(' ')
+      deduplicate([ReservedScope.OpenId, ...this.getScopesFromAttributeMapping()]).join(' ')
     );
 
     if (state) {
@@ -374,6 +369,41 @@ export class SamlApplication {
     }
 
     return result.data;
+  };
+
+  // Get required scopes based on attribute mapping configuration
+  protected getScopesFromAttributeMapping = (): UserScope[] => {
+    const requiredScopes = new Set<UserScope>();
+    if (this.details.nameIdFormat === NameIdFormat.EmailAddress) {
+      requiredScopes.add(UserScope.Email);
+    }
+
+    // If no attribute mapping, return empty array
+    if (Object.keys(this.details.attributeMapping).length === 0) {
+      return Array.from(requiredScopes);
+    }
+
+    // Iterate through all claims in attribute mapping
+    // eslint-disable-next-line no-restricted-syntax
+    for (const claim of Object.keys(this.details.attributeMapping) as Array<
+      keyof SamlAttributeMapping
+    >) {
+      // Ignore `id` claim since this will always be included.
+      if (claim === 'id') {
+        continue;
+      }
+
+      // Find which scope includes this claim
+      // eslint-disable-next-line no-restricted-syntax
+      for (const [scope, claims] of Object.entries(userClaims) as Array<[UserScope, UserClaim[]]>) {
+        if (claims.includes(claim)) {
+          requiredScopes.add(scope);
+          break;
+        }
+      }
+    }
+
+    return Array.from(requiredScopes);
   };
 
   protected createSamlTemplateCallback =

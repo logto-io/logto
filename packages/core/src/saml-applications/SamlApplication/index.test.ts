@@ -1,3 +1,4 @@
+import { UserScope } from '@logto/core-kit';
 import { NameIdFormat } from '@logto/schemas';
 import nock from 'nock';
 
@@ -11,6 +12,7 @@ class TestSamlApplication extends SamlApplication {
   public exposedExchangeAuthorizationCode = this.exchangeAuthorizationCode;
   public exposedGetUserInfo = this.getUserInfo;
   public exposedFetchOidcConfig = this.fetchOidcConfig;
+  public exposedGetScopesFromAttributeMapping = this.getScopesFromAttributeMapping;
 }
 
 describe('SamlApplication', () => {
@@ -167,6 +169,106 @@ describe('SamlApplication', () => {
       nock(mockEndpoint).get('/userinfo').reply(400, { error: 'invalid_token' });
 
       await expect(samlApp.exposedGetUserInfo({ accessToken: mockAccessToken })).rejects.toThrow();
+    });
+  });
+
+  describe('getScopesFromAttributeMapping', () => {
+    it('should include email scope when nameIdFormat is EmailAddress', () => {
+      const app = new TestSamlApplication(
+        // @ts-expect-error
+        {
+          ...mockDetails,
+          nameIdFormat: NameIdFormat.EmailAddress,
+          attributeMapping: {},
+        },
+        mockSamlApplicationId,
+        mockIssuer,
+        mockTenantId
+      );
+
+      const scopes = app.exposedGetScopesFromAttributeMapping();
+      expect(scopes).toContain(UserScope.Email);
+    });
+
+    it('should return only nameIdFormat related scope when attributeMapping is empty', () => {
+      const app = new TestSamlApplication(
+        // @ts-expect-error
+        {
+          ...mockDetails,
+          nameIdFormat: NameIdFormat.EmailAddress,
+          attributeMapping: {},
+        },
+        mockSamlApplicationId,
+        mockIssuer,
+        mockTenantId
+      );
+
+      const scopes = app.exposedGetScopesFromAttributeMapping();
+      expect(scopes).toHaveLength(1);
+      expect(scopes).toEqual([UserScope.Email]);
+    });
+
+    it('should return correct scopes based on attributeMapping', () => {
+      const app = new TestSamlApplication(
+        // @ts-expect-error
+        {
+          ...mockDetails,
+          attributeMapping: {
+            name: 'name',
+            email: 'email',
+            custom_data: 'customData',
+          },
+        },
+        mockSamlApplicationId,
+        mockIssuer,
+        mockTenantId
+      );
+
+      const scopes = app.exposedGetScopesFromAttributeMapping();
+      expect(scopes).toContain(UserScope.Profile); // For 'name'
+      expect(scopes).toContain(UserScope.Email); // For 'email'
+      expect(scopes).toContain(UserScope.CustomData); // For 'custom_data'
+    });
+
+    it('should ignore id claim in attributeMapping', () => {
+      const app = new TestSamlApplication(
+        // @ts-expect-error
+        {
+          ...mockDetails,
+          attributeMapping: {
+            id: 'userId',
+            name: 'name',
+          },
+        },
+        mockSamlApplicationId,
+        mockIssuer,
+        mockTenantId
+      );
+
+      const scopes = app.exposedGetScopesFromAttributeMapping();
+      expect(scopes).toHaveLength(1);
+      expect(scopes).toContain(UserScope.Profile); // Only for 'name'
+    });
+
+    it('should deduplicate scopes when multiple claims map to the same scope', () => {
+      const app = new TestSamlApplication(
+        // @ts-expect-error
+        {
+          ...mockDetails,
+          attributeMapping: {
+            name: 'name',
+            given_name: 'givenName',
+            family_name: 'familyName',
+          },
+        },
+        mockSamlApplicationId,
+        mockIssuer,
+        mockTenantId
+      );
+
+      const scopes = app.exposedGetScopesFromAttributeMapping();
+      expect(scopes).toHaveLength(1);
+      expect(scopes).toContain(UserScope.Profile); // All claims map to 'profile' scope
     });
   });
 });
