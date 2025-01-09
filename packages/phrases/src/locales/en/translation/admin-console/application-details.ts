@@ -219,6 +219,33 @@ const application_details = {
     active: 'Active',
     inactive: 'Inactive',
   },
+  saml_idp_name_id_format: {
+    title: 'Name ID format',
+    description: 'Select the name ID format of the SAML IdP.',
+    persistent: 'Persistent',
+    persistent_description: 'Use Logto user ID as Name ID',
+    transient: 'Transient',
+    transient_description: 'Use one-time user ID as Name ID',
+    unspecified: 'Unspecified',
+    unspecified_description: 'Use Logto user ID as Name ID',
+    email_address: 'Email address',
+    email_address_description: 'Use email address as Name ID',
+  },
+  saml_encryption_config: {
+    encrypt_assertion: 'Encrypt SAML assertion',
+    encrypt_assertion_description: 'By enabling this option, the SAML assertion will be encrypted.',
+    encrypt_then_sign: 'Encrypt then sign',
+    encrypt_then_sign_description:
+      'By enabling this option, the SAML assertion will be encrypted and then signed; otherwise, the SAML assertion will be signed and then encrypted.',
+    certificate: 'Certificate',
+    certificate_tooltip:
+      'Copy and paste the x509 certificate you get from your service provider to encrypt the SAML assertion.',
+    certificate_placeholder:
+      '-----BEGIN CERTIFICATE-----\nMIICYDCCAcmgAwIBA...\n-----END CERTIFICATE-----\n',
+    certificate_missing_error: 'Certificate is required.',
+    certificate_invalid_format_error:
+      'Invalid certificate format detected. Please check the certificate format and try again.',
+  },
   saml_app_attribute_mapping: {
     name: 'Attribute mappings',
     title: 'Base attribute mappings',

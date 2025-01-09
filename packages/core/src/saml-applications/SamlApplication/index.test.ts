@@ -1,3 +1,4 @@
+import { NameIdFormat } from '@logto/schemas';
 import nock from 'nock';
 
 import { SamlApplication } from './index.js';
@@ -25,6 +26,7 @@ describe('SamlApplication', () => {
     privateKey: 'mock-private-key',
     certificate: 'mock-certificate',
     secret: 'mock-secret',
+    nameIdFormat: NameIdFormat.Persistent,
   };
 
   const mockUser = {

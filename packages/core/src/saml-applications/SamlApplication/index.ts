@@ -2,9 +2,14 @@
 // TODO: refactor this file to reduce LOC
 import { parseJson } from '@logto/connector-kit';
 import { Prompt, QueryKey, ReservedScope, UserScope } from '@logto/js';
-import { type SamlAcsUrl, BindingType } from '@logto/schemas';
+import {
+  type SamlAcsUrl,
+  BindingType,
+  type NameIdFormat,
+  type SamlEncryption,
+} from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { tryThat, appendPath, deduplicate } from '@silverhand/essentials';
+import { tryThat, appendPath, deduplicate, type Nullable, cond } from '@silverhand/essentials';
 import camelcaseKeys, { type CamelCaseKeys } from 'camelcase-keys';
 import { XMLValidator } from 'fast-xml-parser';
 import saml from 'samlify';
@@ -41,6 +46,23 @@ type ValidSamlApplicationDetails = {
   redirectUri: string;
   privateKey: string;
   certificate: string;
+  nameIdFormat: NameIdFormat;
+  encryption: Nullable<SamlEncryption>;
+};
+
+type SamlIdentityProviderConfig = {
+  entityId: string;
+  certificate: string;
+  singleSignOnUrl: string;
+  privateKey: string;
+  nameIdFormat: NameIdFormat;
+  encryptSamlAssertion: boolean;
+};
+
+type SamlServiceProviderConfig = {
+  entityId: string;
+  acsUrl: SamlAcsUrl;
+  certificate?: string;
 };
 
 // Used to check whether xml content is valid in format.
@@ -68,6 +90,8 @@ const validateSamlApplicationDetails = (
     privateKey,
     certificate,
     secret,
+    nameIdFormat,
+    encryption,
   } = details;
 
   assertThat(acsUrl, 'application.saml.acs_url_required');
@@ -84,6 +108,8 @@ const validateSamlApplicationDetails = (
     redirectUri: redirectUris[0],
     privateKey,
     certificate,
+    nameIdFormat,
+    encryption,
   };
 };
 
@@ -112,12 +138,9 @@ const buildSamlIdentityProvider = ({
   certificate,
   singleSignOnUrl,
   privateKey,
-}: {
-  entityId: string;
-  certificate: string;
-  singleSignOnUrl: string;
-  privateKey: string;
-}): saml.IdentityProviderInstance => {
+  nameIdFormat,
+  encryptSamlAssertion,
+}: SamlIdentityProviderConfig): saml.IdentityProviderInstance => {
   // eslint-disable-next-line new-cap
   return saml.IdentityProvider({
     entityID: entityId,
@@ -133,12 +156,9 @@ const buildSamlIdentityProvider = ({
       },
     ],
     privateKey,
-    isAssertionEncrypted: false,
+    isAssertionEncrypted: encryptSamlAssertion,
     loginResponseTemplate: buildLoginResponseTemplate(),
-    nameIDFormat: [
-      saml.Constants.namespace.format.emailAddress,
-      saml.Constants.namespace.format.persistent,
-    ],
+    nameIDFormat: [nameIdFormat],
   });
 };
 
@@ -193,10 +213,12 @@ export class SamlApplication {
   }
 
   public get sp(): saml.ServiceProviderInstance {
+    const { certificate: encryptCert, ...rest } = this.buildSpConfig();
     this._sp ||= buildSamlServiceProvider({
-      ...this.buildSpConfig(),
+      ...rest,
       certificate: this.details.certificate,
       isWantAuthnRequestsSigned: this.idp.entityMeta.isWantAuthnRequestsSigned(),
+      ...cond(encryptCert && { encryptCert }),
     });
     return this._sp;
   }
@@ -234,7 +256,8 @@ export class SamlApplication {
       null,
       'post',
       userInfo,
-      this.createSamlTemplateCallback(userInfo)
+      this.createSamlTemplateCallback(userInfo),
+      this.details.encryption?.encryptThenSign
     );
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -360,6 +383,7 @@ export class SamlApplication {
       );
 
       const { nameIDFormat } = this.idp.entitySetting;
+      assertThat(nameIDFormat, 'application.saml.name_id_format_required');
       const { NameIDFormat, NameID } = buildSamlAssertionNameId(user, nameIDFormat);
 
       const id = `ID_${generateStandardId()}`;
@@ -406,19 +430,22 @@ export class SamlApplication {
       };
     };
 
-  private buildIdpConfig() {
+  private buildIdpConfig(): SamlIdentityProviderConfig {
     return {
       entityId: buildSamlIdentityProviderEntityId(this.tenantEndpoint, this.samlApplicationId),
       privateKey: this.details.privateKey,
       certificate: this.details.certificate,
       singleSignOnUrl: buildSingleSignOnUrl(this.tenantEndpoint, this.samlApplicationId),
+      nameIdFormat: this.details.nameIdFormat,
+      encryptSamlAssertion: this.details.encryption?.encryptAssertion ?? false,
     };
   }
 
-  private buildSpConfig() {
+  private buildSpConfig(): SamlServiceProviderConfig {
     return {
       entityId: this.details.entityId,
       acsUrl: this.details.acsUrl,
+      certificate: this.details.encryption?.certificate,
     };
   }
 }

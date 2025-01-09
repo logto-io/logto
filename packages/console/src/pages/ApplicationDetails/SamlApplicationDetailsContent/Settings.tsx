@@ -1,7 +1,13 @@
-import { type SamlApplicationSecretResponse, type SamlApplicationResponse } from '@logto/schemas';
+/* eslint-disable max-lines */
+import { type AdminConsoleKey } from '@logto/phrases';
+import {
+  type SamlApplicationSecretResponse,
+  type SamlApplicationResponse,
+  NameIdFormat,
+} from '@logto/schemas';
 import { appendPath, type Nullable } from '@silverhand/essentials';
 import { useCallback, useContext, useMemo, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import useSWR, { type KeyedMutator } from 'swr';
@@ -15,8 +21,11 @@ import { AppDataContext } from '@/contexts/AppDataProvider';
 import Button from '@/ds-components/Button';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
+import Select from '@/ds-components/Select';
+import Switch from '@/ds-components/Switch';
 import Table from '@/ds-components/Table';
 import TextInput from '@/ds-components/TextInput';
+import Textarea from '@/ds-components/Textarea';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import useCustomDomain from '@/hooks/use-custom-domain';
 import { trySubmitSafe } from '@/utils/form';
@@ -32,15 +41,19 @@ import {
   samlApplicationManagementApiPrefix,
   samlApplicationMetadataEndpointSuffix,
   samlApplicationSingleSignOnEndpointSuffix,
+  validateCertificate,
 } from './utils';
 
 export type SamlApplicationFormData = Pick<
   SamlApplicationResponse,
-  'id' | 'description' | 'name' | 'entityId'
+  'id' | 'description' | 'name' | 'entityId' | 'nameIdFormat'
 > & {
   // Currently we only support HTTP-POST binding
   // Keep the acsUrl as a string in the form data instead of the object
   acsUrl: Nullable<string>;
+  encryptSamlAssertion: boolean;
+  encryptThenSignSamlAssertion: boolean;
+  certificate?: string;
 };
 
 type Props = {
@@ -48,6 +61,25 @@ type Props = {
   readonly mutateApplication: KeyedMutator<SamlApplicationResponse>;
   readonly isDeleted: boolean;
 };
+
+type NameIdFormatToTranslationKey = {
+  [key in NameIdFormat]: AdminConsoleKey;
+};
+
+const nameIdFormatToOptionMap = Object.freeze({
+  [NameIdFormat.EmailAddress]: 'application_details.saml_idp_name_id_format.email_address',
+  [NameIdFormat.Transient]: 'application_details.saml_idp_name_id_format.transient',
+  [NameIdFormat.Persistent]: 'application_details.saml_idp_name_id_format.persistent',
+  [NameIdFormat.Unspecified]: 'application_details.saml_idp_name_id_format.unspecified',
+}) satisfies NameIdFormatToTranslationKey;
+
+const nameIdFormatToOptionDescriptionMap = Object.freeze({
+  [NameIdFormat.EmailAddress]:
+    'application_details.saml_idp_name_id_format.email_address_description',
+  [NameIdFormat.Transient]: 'application_details.saml_idp_name_id_format.transient_description',
+  [NameIdFormat.Persistent]: 'application_details.saml_idp_name_id_format.persistent_description',
+  [NameIdFormat.Unspecified]: 'application_details.saml_idp_name_id_format.unspecified_description',
+}) satisfies NameIdFormatToTranslationKey;
 
 function Settings({ data, mutateApplication, isDeleted }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -60,6 +92,8 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
   );
 
   const {
+    watch,
+    control,
     register,
     handleSubmit,
     reset,
@@ -280,6 +314,75 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
               }}
             />
           </FormField>
+          <FormField title="application_details.saml_idp_name_id_format.title">
+            <Controller
+              name="nameIdFormat"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Select
+                  options={Object.values(NameIdFormat).map((format) => ({
+                    value: format,
+                    title: (
+                      <span>
+                        {t(nameIdFormatToOptionMap[format])}
+                        <span className={styles.nameIdFormatDescription}>
+                          ({t(nameIdFormatToOptionDescriptionMap[format])})
+                        </span>
+                      </span>
+                    ),
+                  }))}
+                  value={value}
+                  onChange={onChange}
+                />
+              )}
+            />
+          </FormField>
+          <FormField title="application_details.saml_encryption_config.encrypt_assertion">
+            <Switch
+              label={t('application_details.saml_encryption_config.encrypt_assertion_description')}
+              {...register('encryptSamlAssertion')}
+            />
+          </FormField>
+          {watch('encryptSamlAssertion') && (
+            <>
+              <FormField title="application_details.saml_encryption_config.encrypt_then_sign">
+                <Switch
+                  label={t(
+                    'application_details.saml_encryption_config.encrypt_then_sign_description'
+                  )}
+                  {...register('encryptThenSignSamlAssertion')}
+                />
+              </FormField>
+              <FormField
+                title="application_details.saml_encryption_config.certificate"
+                tip={t('application_details.saml_encryption_config.certificate_tooltip')}
+              >
+                <Textarea
+                  rows={5}
+                  error={errors.certificate?.message}
+                  {...register('certificate', {
+                    validate: (value) => {
+                      if (!value) {
+                        return t(
+                          'application_details.saml_encryption_config.certificate_missing_error'
+                        );
+                      }
+
+                      return (
+                        validateCertificate(value) ||
+                        t(
+                          'application_details.saml_encryption_config.certificate_invalid_format_error'
+                        )
+                      );
+                    },
+                  })}
+                  placeholder={t(
+                    'application_details.saml_encryption_config.certificate_placeholder'
+                  )}
+                />
+              </FormField>
+            </>
+          )}
         </FormCard>
       </DetailsForm>
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} onConfirm={reset} />
@@ -288,3 +391,4 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
 }
 
 export default Settings;
+/* eslint-enable max-lines */
