@@ -1,5 +1,6 @@
 import { NameIdFormat } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
+import { appendPath } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type IdTokenProfileStandardClaims } from '#src/sso/types/oidc.js';
@@ -68,3 +69,6 @@ export const generateAutoSubmitForm = (actionUrl: string, samlResponse: string):
     </html>
   `;
 };
+
+export const getSamlAppCallbackUrl = (baseUrl: URL, samlAppId: string) =>
+  appendPath(baseUrl, `api/saml-applications/${samlAppId}/callback`);
