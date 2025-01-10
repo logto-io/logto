@@ -1,7 +1,12 @@
 import { ApplicationType, BindingType, NameIdFormat } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
-import { createApplication, deleteApplication, updateApplication } from '#src/api/application.js';
+import {
+  createApplication,
+  deleteApplication,
+  getApplications,
+  updateApplication,
+} from '#src/api/application.js';
 import {
   createSamlApplication,
   deleteSamlApplication,
@@ -26,6 +31,20 @@ describe('SAML application', () => {
     });
 
     expect(createdSamlApplication.nameIdFormat).toBe(NameIdFormat.Persistent);
+
+    // Check if the SAML application's OIDC metadata redirect URI is properly set.
+    // We need to do this since we do not return OIDC related info when using SAML app APIs.
+    const samlApplications = await getApplications([ApplicationType.SAML]);
+    const pickedSamlApplication = samlApplications.find(
+      ({ id }) => id === createdSamlApplication.id
+    );
+    expect(pickedSamlApplication).toBeDefined();
+    expect(pickedSamlApplication!.oidcClientMetadata.redirectUris.length).toBe(1);
+    expect(
+      pickedSamlApplication!.oidcClientMetadata.redirectUris[0]!.endsWith(
+        `api/saml-applications/${createdSamlApplication.id}/callback`
+      )
+    ).toBe(true);
 
     await deleteSamlApplication(createdSamlApplication.id);
   });

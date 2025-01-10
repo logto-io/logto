@@ -1,4 +1,4 @@
-import { UserScope } from '@logto/core-kit';
+import { UserScope, ReservedScope } from '@logto/core-kit';
 import { NameIdFormat } from '@logto/schemas';
 import nock from 'nock';
 
@@ -173,7 +173,7 @@ describe('SamlApplication', () => {
   });
 
   describe('getScopesFromAttributeMapping', () => {
-    it('should include email scope when nameIdFormat is EmailAddress', () => {
+    it('should include default scopes and email scope when nameIdFormat is EmailAddress', () => {
       const app = new TestSamlApplication(
         // @ts-expect-error
         {
@@ -188,14 +188,16 @@ describe('SamlApplication', () => {
 
       const scopes = app.exposedGetScopesFromAttributeMapping();
       expect(scopes).toContain(UserScope.Email);
+      expect(scopes).toContain(ReservedScope.OpenId);
+      expect(scopes).toContain(UserScope.Profile);
+      expect(scopes).toHaveLength(3);
     });
 
-    it('should return only nameIdFormat related scope when attributeMapping is empty', () => {
+    it('should include default scopes when attributeMapping is empty', () => {
       const app = new TestSamlApplication(
         // @ts-expect-error
         {
           ...mockDetails,
-          nameIdFormat: NameIdFormat.EmailAddress,
           attributeMapping: {},
         },
         mockSamlApplicationId,
@@ -204,8 +206,9 @@ describe('SamlApplication', () => {
       );
 
       const scopes = app.exposedGetScopesFromAttributeMapping();
-      expect(scopes).toHaveLength(1);
-      expect(scopes).toEqual([UserScope.Email]);
+      expect(scopes).toHaveLength(2);
+      expect(scopes).toContain(ReservedScope.OpenId);
+      expect(scopes).toContain(UserScope.Profile);
     });
 
     it('should return correct scopes based on attributeMapping', () => {
@@ -214,9 +217,8 @@ describe('SamlApplication', () => {
         {
           ...mockDetails,
           attributeMapping: {
-            name: 'name',
             email: 'email',
-            custom_data: 'customData',
+            name: 'name',
           },
         },
         mockSamlApplicationId,
@@ -225,9 +227,10 @@ describe('SamlApplication', () => {
       );
 
       const scopes = app.exposedGetScopesFromAttributeMapping();
-      expect(scopes).toContain(UserScope.Profile); // For 'name'
-      expect(scopes).toContain(UserScope.Email); // For 'email'
-      expect(scopes).toContain(UserScope.CustomData); // For 'custom_data'
+      expect(scopes).toContain(ReservedScope.OpenId);
+      expect(scopes).toContain(UserScope.Profile);
+      expect(scopes).toContain(UserScope.Email);
+      expect(scopes).toHaveLength(3);
     });
 
     it('should ignore id claim in attributeMapping', () => {
@@ -236,7 +239,7 @@ describe('SamlApplication', () => {
         {
           ...mockDetails,
           attributeMapping: {
-            id: 'userId',
+            id: 'id',
             name: 'name',
           },
         },
@@ -246,8 +249,9 @@ describe('SamlApplication', () => {
       );
 
       const scopes = app.exposedGetScopesFromAttributeMapping();
-      expect(scopes).toHaveLength(1);
-      expect(scopes).toContain(UserScope.Profile); // Only for 'name'
+      expect(scopes).toContain(ReservedScope.OpenId);
+      expect(scopes).toContain(UserScope.Profile);
+      expect(scopes).toHaveLength(2);
     });
 
     it('should deduplicate scopes when multiple claims map to the same scope', () => {
@@ -257,8 +261,13 @@ describe('SamlApplication', () => {
           ...mockDetails,
           attributeMapping: {
             name: 'name',
-            given_name: 'givenName',
-            family_name: 'familyName',
+            nickname: 'nickname',
+            preferred_username: 'preferred_username',
+            custom_data: 'custom_data',
+            organization_data: 'organization_data',
+            sso_identities: 'sso_identities',
+            phone_number: 'phone_number',
+            roles: 'roles',
           },
         },
         mockSamlApplicationId,
@@ -267,8 +276,14 @@ describe('SamlApplication', () => {
       );
 
       const scopes = app.exposedGetScopesFromAttributeMapping();
-      expect(scopes).toHaveLength(1);
-      expect(scopes).toContain(UserScope.Profile); // All claims map to 'profile' scope
+      expect(scopes).toContain(ReservedScope.OpenId);
+      expect(scopes).toContain(UserScope.Profile);
+      expect(scopes).toContain(UserScope.Organizations);
+      expect(scopes).toContain(UserScope.Identities);
+      expect(scopes).toContain(UserScope.CustomData);
+      expect(scopes).toContain(UserScope.Phone);
+      expect(scopes).toContain(UserScope.Roles);
+      expect(scopes).toHaveLength(7);
     });
   });
 });

@@ -10,6 +10,7 @@ import { generateStandardId } from '@logto/shared';
 import { removeUndefinedKeys } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { buildOidcClientMetadata } from '#src/oidc/utils.js';
@@ -17,6 +18,8 @@ import { generateInternalSecret } from '#src/routes/applications/application-sec
 import type { ManagementApiRouter, RouterInitArgs } from '#src/routes/types.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { getTenantEndpoint } from '../../env-set/utils.js';
+import { getSamlAppCallbackUrl } from '../SamlApplication/utils.js';
 import {
   calculateCertificateFingerprints,
   ensembleSamlApplication,
@@ -24,7 +27,7 @@ import {
 } from '../libraries/utils.js';
 
 export default function samlApplicationRoutes<T extends ManagementApiRouter>(
-  ...[router, { queries, libraries }]: RouterInitArgs<T>
+  ...[router, { id: tenantId, queries, libraries }]: RouterInitArgs<T>
 ) {
   const {
     applications: { insertApplication, findApplicationById, deleteApplicationById },
@@ -58,14 +61,24 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
         validateAcsUrl(config.acsUrl);
       }
 
+      const id = generateStandardId();
+      // Set the default redirect URI for SAML apps when creating a new SAML app.
+      const redirectUri = getSamlAppCallbackUrl(
+        getTenantEndpoint(tenantId, EnvSet.values),
+        id
+      ).toString();
+
       const application = await insertApplication(
         removeUndefinedKeys({
-          id: generateStandardId(),
+          id,
           secret: generateInternalSecret(),
           name,
           description,
           customData,
-          oidcClientMetadata: buildOidcClientMetadata(),
+          oidcClientMetadata: {
+            ...buildOidcClientMetadata(),
+            redirectUris: [redirectUri],
+          },
           type: ApplicationType.SAML,
         })
       );

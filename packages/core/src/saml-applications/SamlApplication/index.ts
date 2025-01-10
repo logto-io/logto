@@ -1,8 +1,8 @@
 /* eslint-disable max-lines */
 // TODO: refactor this file to reduce LOC
 import { parseJson } from '@logto/connector-kit';
-import { userClaims, type UserClaim, UserScope } from '@logto/core-kit';
-import { Prompt, QueryKey, ReservedScope } from '@logto/js';
+import { userClaims, type UserClaim, UserScope, ReservedScope } from '@logto/core-kit';
+import { Prompt, QueryKey } from '@logto/js';
 import {
   type SamlAcsUrl,
   BindingType,
@@ -11,7 +11,7 @@ import {
   type SamlAttributeMapping,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { tryThat, appendPath, deduplicate, type Nullable, cond } from '@silverhand/essentials';
+import { tryThat, type Nullable, cond } from '@silverhand/essentials';
 import camelcaseKeys, { type CamelCaseKeys } from 'camelcase-keys';
 import { XMLValidator } from 'fast-xml-parser';
 import saml from 'samlify';
@@ -39,7 +39,7 @@ import {
 import { buildSingleSignOnUrl, buildSamlIdentityProviderEntityId } from '../libraries/utils.js';
 import { type SamlApplicationDetails } from '../queries/index.js';
 
-import { buildSamlAssertionNameId } from './utils.js';
+import { buildSamlAssertionNameId, getSamlAppCallbackUrl } from './utils.js';
 
 type ValidSamlApplicationDetails = {
   secret: string;
@@ -237,10 +237,7 @@ export class SamlApplication {
   }
 
   public get samlAppCallbackUrl() {
-    return appendPath(
-      this.tenantEndpoint,
-      `api/saml-applications/${this.samlApplicationId}/callback`
-    ).toString();
+    return getSamlAppCallbackUrl(this.tenantEndpoint, this.samlApplicationId).toString();
   }
 
   public async parseLoginRequest(
@@ -295,7 +292,7 @@ export class SamlApplication {
     queryParameters.append(
       QueryKey.Scope,
       // For security reasons, DO NOT include the offline_access scope by default.
-      deduplicate([ReservedScope.OpenId, ...this.getScopesFromAttributeMapping()]).join(' ')
+      this.getScopesFromAttributeMapping().join(' ')
     );
 
     if (state) {
@@ -372,8 +369,13 @@ export class SamlApplication {
   };
 
   // Get required scopes based on attribute mapping configuration
-  protected getScopesFromAttributeMapping = (): UserScope[] => {
-    const requiredScopes = new Set<UserScope>();
+  protected getScopesFromAttributeMapping = (): Array<UserScope | ReservedScope> => {
+    const requiredScopes = new Set<UserScope | ReservedScope>();
+
+    // Add default scopes.
+    requiredScopes.add(ReservedScope.OpenId);
+    requiredScopes.add(UserScope.Profile);
+
     if (this.details.nameIdFormat === NameIdFormat.EmailAddress) {
       requiredScopes.add(UserScope.Email);
     }
