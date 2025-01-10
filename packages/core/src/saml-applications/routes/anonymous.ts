@@ -6,6 +6,7 @@ import { z } from 'zod';
 
 import { spInitiatedSamlSsoSessionCookieName } from '#src/constants/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { AnonymousRouter, RouterInitArgs } from '#src/routes/types.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -62,11 +63,19 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       query: samlApplicationSignInCallbackQueryParametersGuard,
       status: [200, 400],
     }),
+    koaAuditLog(queries),
     async (ctx, next) => {
       const {
         params: { id },
         query,
       } = ctx.guard;
+
+      const log = ctx.createLog('SamlApplication.Callback');
+
+      log.append({
+        query,
+        samlApplicationId: id,
+      });
 
       // Handle error in query parameters
       if ('error' in query) {
@@ -94,6 +103,11 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
 
       const { context, entityEndpoint } = await samlApplication.createSamlResponse(userInfo);
 
+      log.append({
+        context,
+        entityEndpoint,
+      });
+
       // Return auto-submit form
       ctx.body = generateAutoSubmitForm(entityEndpoint, context);
       return next();
@@ -115,11 +129,18 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         .catchall(z.string()),
       status: [200, 302, 400, 404],
     }),
+    koaAuditLog(queries),
     async (ctx, next) => {
       const {
         params: { id },
         query: { Signature, RelayState, ...rest },
       } = ctx.guard;
+
+      const log = ctx.createLog('SamlApplication.AuthnRequest');
+      log.append({
+        query: ctx.guard.query,
+        samlApplicationId: id,
+      });
 
       const details = await getSamlApplicationDetailsById(id);
       const samlApplication = new SamlApplication(details, id, envSet.oidc.issuer, tenantId);
@@ -142,6 +163,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         });
 
         const extractResult = authRequestInfoGuard.safeParse(loginRequestResult.extract);
+        log.append({ extractResult });
 
         if (!extractResult.success) {
           throw new RequestError({
@@ -149,6 +171,8 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
             error: extractResult.error.flatten(),
           });
         }
+
+        log.append({ extractResultData: extractResult.data });
 
         assertThat(
           extractResult.data.issuer === samlApplication.details.entityId,
@@ -182,6 +206,12 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
           overwrite: true,
         });
 
+        log.append({
+          cookie: {
+            spInitiatedSamlSsoSessionCookieName: insertSamlAppSession,
+          },
+        });
+
         ctx.redirect(signInUrl.toString());
       } catch (error: unknown) {
         if (error instanceof RequestError) {
@@ -208,11 +238,18 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       }),
       status: [200, 302, 400, 404],
     }),
+    koaAuditLog(queries),
     async (ctx, next) => {
       const {
         params: { id },
         body: { SAMLRequest, RelayState },
       } = ctx.guard;
+
+      const log = ctx.createLog('SamlApplication.AuthnRequest');
+      log.append({
+        body: ctx.guard.body,
+        samlApplicationId: id,
+      });
 
       const details = await getSamlApplicationDetailsById(id);
       const samlApplication = new SamlApplication(details, id, envSet.oidc.issuer, tenantId);
@@ -226,6 +263,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         });
 
         const extractResult = authRequestInfoGuard.safeParse(loginRequestResult.extract);
+        log.append({ extractResult });
 
         if (!extractResult.success) {
           throw new RequestError({
@@ -233,6 +271,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
             error: extractResult.error.flatten(),
           });
         }
+        log.append({ extractResultData: extractResult.data });
 
         assertThat(
           extractResult.data.issuer === samlApplication.details.entityId,
@@ -262,6 +301,12 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
           sameSite: 'strict',
           expires: expiresAt,
           overwrite: true,
+        });
+
+        log.append({
+          cookie: {
+            spInitiatedSamlSsoSessionCookieName: insertSamlAppSession,
+          },
         });
 
         ctx.redirect(signInUrl.toString());
