@@ -66,9 +66,10 @@ describe('SamlApplication', () => {
 
   describe('createSamlTemplateCallback', () => {
     it('should create SAML template callback with correct values', () => {
-      const result = samlApp.exposedCreateSamlTemplateCallback(mockUser)(
-        'ID:NameID:attrEmail:attrName'
-      );
+      const result = samlApp.exposedCreateSamlTemplateCallback({
+        userInfo: mockUser,
+        samlRequestId: null,
+      })('ID:NameID:attrEmail:attrName');
       const generatedId = result.id.replace('ID_', '');
 
       expect(result.id).toBe('ID_' + generatedId);

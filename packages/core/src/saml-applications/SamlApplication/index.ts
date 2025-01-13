@@ -247,9 +247,15 @@ export class SamlApplication {
     return this.idp.parseLoginRequest(this.sp, binding, loginRequest);
   }
 
-  public createSamlResponse = async (
-    userInfo: IdTokenProfileStandardClaims
-  ): Promise<{ context: string; entityEndpoint: string }> => {
+  public createSamlResponse = async ({
+    userInfo,
+    relayState,
+    samlRequestId,
+  }: {
+    userInfo: IdTokenProfileStandardClaims;
+    relayState: Nullable<string>;
+    samlRequestId: Nullable<string>;
+  }): Promise<{ context: string; entityEndpoint: string }> => {
     // TODO: fix binding method
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { context, entityEndpoint } = await this.idp.createLoginResponse(
@@ -258,8 +264,9 @@ export class SamlApplication {
       null,
       'post',
       userInfo,
-      this.createSamlTemplateCallback(userInfo),
-      this.details.encryption?.encryptThenSign
+      this.createSamlTemplateCallback({ userInfo, samlRequestId }),
+      this.details.encryption?.encryptThenSign,
+      relayState ?? undefined
     );
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -409,14 +416,21 @@ export class SamlApplication {
   };
 
   protected createSamlTemplateCallback =
-    (user: IdTokenProfileStandardClaims) => (template: string) => {
+    ({
+      userInfo,
+      samlRequestId,
+    }: {
+      userInfo: IdTokenProfileStandardClaims;
+      samlRequestId: Nullable<string>;
+    }) =>
+    (template: string) => {
       const assertionConsumerServiceUrl = this.sp.entityMeta.getAssertionConsumerService(
         saml.Constants.wording.binding.post
       );
 
       const { nameIDFormat } = this.idp.entitySetting;
       assertThat(nameIDFormat, 'application.saml.name_id_format_required');
-      const { NameIDFormat, NameID } = buildSamlAssertionNameId(user, nameIDFormat);
+      const { NameIDFormat, NameID } = buildSamlAssertionNameId(userInfo, nameIDFormat);
 
       const id = `ID_${generateStandardId()}`;
       const now = new Date();
@@ -439,7 +453,7 @@ export class SamlApplication {
         NameIDFormat,
         NameID,
         // TODO: should get the request ID from the input parameters, pending https://github.com/logto-io/logto/pull/6881.
-        InResponseTo: 'null',
+        InResponseTo: samlRequestId ?? 'null',
         /**
          * User attributes for SAML response
          *
@@ -449,9 +463,9 @@ export class SamlApplication {
          * @remarks
          * By examining the code provided in the link above, we can define all the attributes supported by the attribute mapping here. Only the attributes defined in the `loginResponseTemplate.attributes` added when creating the IdP instance will appear in the SAML response.
          */
-        attrSub: user.sub,
-        attrEmail: user.email,
-        attrName: user.name,
+        attrSub: userInfo.sub,
+        attrEmail: userInfo.email,
+        attrName: userInfo.name,
       };
 
       const context = saml.SamlLib.replaceTagsByValue(template, tagValues);

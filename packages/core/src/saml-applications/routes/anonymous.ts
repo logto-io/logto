@@ -1,6 +1,8 @@
+/* eslint-disable max-lines */
+// TODO: refactor this file to reduce LOC
 import { authRequestInfoGuard } from '@logto/schemas';
 import { generateStandardId, generateStandardShortId } from '@logto/shared';
-import { cond, removeUndefinedKeys } from '@silverhand/essentials';
+import { cond, type Nullable, removeUndefinedKeys, trySafe } from '@silverhand/essentials';
 import { addMinutes } from 'date-fns';
 import { z } from 'zod';
 
@@ -10,6 +12,7 @@ import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { AnonymousRouter, RouterInitArgs } from '#src/routes/types.js';
 import assertThat from '#src/utils/assert-that.js';
+import { getConsoleLogFromContext } from '#src/utils/console.js';
 
 import { SamlApplication } from '../SamlApplication/index.js';
 import { generateAutoSubmitForm } from '../SamlApplication/utils.js';
@@ -17,6 +20,8 @@ import { generateAutoSubmitForm } from '../SamlApplication/utils.js';
 const samlApplicationSignInCallbackQueryParametersGuard = z.union([
   z.object({
     code: z.string(),
+    state: z.string().optional(),
+    redirectUri: z.string().optional(),
   }),
   z.object({
     error: z.string(),
@@ -32,7 +37,12 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
   } = libraries;
   const {
     samlApplications: { getSamlApplicationDetailsById },
-    samlApplicationSessions: { insertSession },
+    samlApplicationSessions: {
+      insertSession,
+      findSessionById,
+      removeSessionOidcStateById,
+      deleteExpiredSessions,
+    },
   } = queries;
 
   router.get(
@@ -59,12 +69,12 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
     '/saml-applications/:id/callback',
     koaGuard({
       params: z.object({ id: z.string() }),
-      // TODO: should be able to handle `state` and `redirectUri`
       query: samlApplicationSignInCallbackQueryParametersGuard,
       status: [200, 400],
     }),
     koaAuditLog(queries),
     async (ctx, next) => {
+      const consoleLog = getConsoleLogFromContext(ctx);
       const {
         params: { id },
         query,
@@ -93,15 +103,44 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         'oidc.invalid_redirect_uri'
       );
 
-      // TODO: should be able to handle `state` and code verifier etc.
-      const { code } = query;
+      const { code, state, redirectUri } = query;
+
+      if (redirectUri) {
+        assertThat(redirectUri === samlApplication.samlAppCallbackUrl, 'oidc.invalid_redirect_uri');
+      }
+
+      // eslint-disable-next-line @silverhand/fp/no-let
+      let relayState: Nullable<string> = null;
+      // eslint-disable-next-line @silverhand/fp/no-let
+      let samlRequestId: Nullable<string> = null;
+
+      if (state) {
+        const sessionId = ctx.cookies.get(spInitiatedSamlSsoSessionCookieName);
+        assertThat(
+          sessionId,
+          'application.saml.sp_initiated_saml_sso_session_not_found_in_cookies'
+        );
+        const session = await findSessionById(sessionId);
+        assertThat(session, 'application.saml.sp_initiated_saml_sso_session_not_found');
+
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        relayState = session.relayState;
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        samlRequestId = session.samlRequestId;
+
+        assertThat(session.oidcState === state, 'application.saml.state_mismatch');
+      }
 
       // Handle OIDC callback and get user info
       const userInfo = await samlApplication.handleOidcCallbackAndGetUserInfo({
         code,
       });
 
-      const { context, entityEndpoint } = await samlApplication.createSamlResponse(userInfo);
+      const { context, entityEndpoint } = await samlApplication.createSamlResponse({
+        userInfo,
+        relayState,
+        samlRequestId,
+      });
 
       log.append({
         context,
@@ -110,6 +149,38 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
 
       // Return auto-submit form
       ctx.body = generateAutoSubmitForm(entityEndpoint, context);
+
+      // Reset cookies and state only after the whole process is done.
+      if (state) {
+        const sessionId = ctx.cookies.get(spInitiatedSamlSsoSessionCookieName);
+        if (sessionId) {
+          // Mark OIDC `state` as verified.
+          await trySafe(
+            async () => removeSessionOidcStateById(sessionId),
+            (error) => {
+              consoleLog.warn(
+                'error encountered while resetting OIDC `state`',
+                JSON.stringify(error)
+              );
+            }
+          );
+          // Clear the session cookie
+          ctx.cookies.set(spInitiatedSamlSsoSessionCookieName, '', {
+            httpOnly: true,
+            expires: new Date(0),
+          });
+        }
+        await trySafe(
+          async () => deleteExpiredSessions(),
+          (error) => {
+            consoleLog.warn(
+              'error encountered while deleting expired sessions',
+              JSON.stringify(error)
+            );
+          }
+        );
+      }
+
       return next();
     }
   );
@@ -324,3 +395,4 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
     }
   );
 }
+/* eslint-enable max-lines */
