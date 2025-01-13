@@ -33,9 +33,6 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
   ...[router, { id: tenantId, libraries, queries, envSet }]: RouterInitArgs<T>
 ) {
   const {
-    samlApplications: { getSamlIdPMetadataByApplicationId },
-  } = libraries;
-  const {
     samlApplications: { getSamlApplicationDetailsById },
     samlApplicationSessions: {
       insertSession,
@@ -55,10 +52,11 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
     async (ctx, next) => {
       const { id } = ctx.guard.params;
 
-      const { metadata } = await getSamlIdPMetadataByApplicationId(id);
+      const details = await getSamlApplicationDetailsById(id);
+      const samlApplication = new SamlApplication(details, id, envSet.oidc.issuer, tenantId);
 
       ctx.status = 200;
-      ctx.body = metadata;
+      ctx.body = samlApplication.idPMetadata;
       ctx.type = 'text/xml;charset=utf-8';
 
       return next();
