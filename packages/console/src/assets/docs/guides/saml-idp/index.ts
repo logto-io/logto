@@ -6,7 +6,7 @@ const metadata = Object.freeze({
   name: 'SAML',
   description: 'Use Logto as a SAML identity provider (IdP) for your application.',
   target: ApplicationType.SAML,
-  isThirdParty: true,
+  isThirdParty: false,
   skipGuideAfterCreation: true,
   isCloud: true,
   isDevFeature: true,

@@ -25,6 +25,7 @@ export const allAppGuideCategories = Object.freeze([
   'Native',
   'Protected',
   'MachineToMachine',
+  'SAML',
   thirdPartyAppCategory,
 ] as const);
 
