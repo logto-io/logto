@@ -46,7 +46,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
     '/saml-applications/:id/metadata',
     koaGuard({
       params: z.object({ id: z.string() }),
-      status: [200, 404],
+      status: [200, 400, 404],
       response: z.string(),
     }),
     async (ctx, next) => {
@@ -97,7 +97,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       const samlApplication = new SamlApplication(details, id, envSet.oidc.issuer, tenantId);
 
       assertThat(
-        samlApplication.details.redirectUri === samlApplication.samlAppCallbackUrl,
+        samlApplication.config.redirectUri === samlApplication.samlAppCallbackUrl,
         'oidc.invalid_redirect_uri'
       );
 
@@ -244,7 +244,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         log.append({ extractResultData: extractResult.data });
 
         assertThat(
-          extractResult.data.issuer === samlApplication.details.entityId,
+          extractResult.data.issuer === samlApplication.config.entityId,
           'application.saml.auth_request_issuer_not_match'
         );
 
@@ -343,7 +343,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         log.append({ extractResultData: extractResult.data });
 
         assertThat(
-          extractResult.data.issuer === samlApplication.details.entityId,
+          extractResult.data.issuer === samlApplication.config.entityId,
           'application.saml.auth_request_issuer_not_match'
         );
 
