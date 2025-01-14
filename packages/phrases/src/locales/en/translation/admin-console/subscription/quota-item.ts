@@ -177,6 +177,13 @@ const quota_item = {
     unlimited: 'IDP-initiated SSO',
     not_eligible: 'IDP-initiated SSO not allowed',
   },
+  saml_applications_limit: {
+    name: 'SAML applications',
+    limited: '{{count, number}} SAML application',
+    limited_other: '{{count, number}} SAML applications',
+    unlimited: 'Unlimited SAML applications',
+    not_eligible: 'Remove your SAML applications',
+  },
 };
 
 export default Object.freeze(quota_item);
