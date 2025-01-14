@@ -7,7 +7,6 @@ import {
   type SamlAcsUrl,
   BindingType,
   NameIdFormat,
-  type SamlEncryption,
   type SamlAttributeMapping,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
@@ -41,18 +40,6 @@ import { type SamlApplicationDetails } from '../queries/index.js';
 
 import { buildSamlAssertionNameId, getSamlAppCallbackUrl } from './utils.js';
 
-type ValidSamlApplicationDetails = {
-  secret: string;
-  entityId: string;
-  acsUrl: SamlAcsUrl;
-  redirectUri: string;
-  privateKey: string;
-  certificate: string;
-  attributeMapping: SamlAttributeMapping;
-  nameIdFormat: NameIdFormat;
-  encryption: Nullable<SamlEncryption>;
-};
-
 type SamlIdentityProviderConfig = {
   entityId: string;
   certificate: string;
@@ -82,41 +69,6 @@ saml.setSchemaValidator({
     }
   },
 });
-
-const validateSamlApplicationDetails = (
-  details: SamlApplicationDetails
-): ValidSamlApplicationDetails => {
-  const {
-    entityId,
-    acsUrl,
-    oidcClientMetadata: { redirectUris },
-    privateKey,
-    certificate,
-    secret,
-    nameIdFormat,
-    encryption,
-    attributeMapping,
-  } = details;
-
-  assertThat(acsUrl, 'application.saml.acs_url_required');
-  assertThat(entityId, 'application.saml.entity_id_required');
-  assertThat(redirectUris[0], 'oidc.invalid_redirect_uri');
-
-  assertThat(privateKey, 'application.saml.private_key_required');
-  assertThat(certificate, 'application.saml.certificate_required');
-
-  return {
-    secret,
-    entityId,
-    acsUrl,
-    redirectUri: redirectUris[0],
-    privateKey,
-    certificate,
-    nameIdFormat,
-    encryption,
-    attributeMapping,
-  };
-};
 
 const buildLoginResponseTemplate = () => {
   return {
@@ -193,8 +145,53 @@ const buildSamlServiceProvider = ({
   });
 };
 
+class SamlApplicationConfig {
+  constructor(private readonly _details: SamlApplicationDetails) {}
+
+  public get secret() {
+    return this._details.secret;
+  }
+
+  public get entityId() {
+    assertThat(this._details.entityId, 'application.saml.entity_id_required');
+    return this._details.entityId;
+  }
+
+  public get acsUrl() {
+    assertThat(this._details.acsUrl, 'application.saml.acs_url_required');
+    return this._details.acsUrl;
+  }
+
+  public get redirectUri() {
+    assertThat(this._details.oidcClientMetadata.redirectUris[0], 'oidc.invalid_redirect_uri');
+    return this._details.oidcClientMetadata.redirectUris[0];
+  }
+
+  public get privateKey() {
+    assertThat(this._details.privateKey, 'application.saml.private_key_required');
+    return this._details.privateKey;
+  }
+
+  public get certificate() {
+    assertThat(this._details.certificate, 'application.saml.certificate_required');
+    return this._details.certificate;
+  }
+
+  public get nameIdFormat() {
+    return this._details.nameIdFormat;
+  }
+
+  public get encryption() {
+    return this._details.encryption;
+  }
+
+  public get attributeMapping() {
+    return this._details.attributeMapping;
+  }
+}
+
 export class SamlApplication {
-  public details: ValidSamlApplicationDetails;
+  public config: SamlApplicationConfig;
 
   protected tenantEndpoint: URL;
   protected oidcConfig?: CamelCaseKeys<OidcConfigResponse>;
@@ -208,7 +205,7 @@ export class SamlApplication {
     protected issuer: string,
     tenantId: string
   ) {
-    this.details = validateSamlApplicationDetails(details);
+    this.config = new SamlApplicationConfig(details);
     this.tenantEndpoint = getTenantEndpoint(tenantId, EnvSet.values);
   }
 
@@ -221,7 +218,7 @@ export class SamlApplication {
     const { certificate: encryptCert, ...rest } = this.buildSpConfig();
     this._sp ||= buildSamlServiceProvider({
       ...rest,
-      certificate: this.details.certificate,
+      certificate: this.config.certificate,
       isWantAuthnRequestsSigned: this.idp.entityMeta.isWantAuthnRequestsSigned(),
       ...cond(encryptCert && { encryptCert }),
     });
@@ -233,7 +230,7 @@ export class SamlApplication {
   }
 
   public get idPCertificate() {
-    return this.details.certificate;
+    return this.config.certificate;
   }
 
   public get samlAppCallbackUrl() {
@@ -265,7 +262,7 @@ export class SamlApplication {
       'post',
       userInfo,
       this.createSamlTemplateCallback({ userInfo, samlRequestId }),
-      this.details.encryption?.encryptThenSign,
+      this.config.encryption?.encryptThenSign,
       relayState ?? undefined
     );
 
@@ -291,7 +288,7 @@ export class SamlApplication {
 
     const queryParameters = new URLSearchParams({
       [QueryKey.ClientId]: this.samlApplicationId,
-      [QueryKey.RedirectUri]: this.details.redirectUri,
+      [QueryKey.RedirectUri]: this.config.redirectUri,
       [QueryKey.ResponseType]: 'code',
       [QueryKey.Prompt]: Prompt.Login,
     });
@@ -333,8 +330,8 @@ export class SamlApplication {
     const result = await handleTokenExchange(tokenEndpoint, {
       code,
       clientId: this.samlApplicationId,
-      clientSecret: this.details.secret,
-      redirectUri: this.details.redirectUri,
+      clientSecret: this.config.secret,
+      redirectUri: this.config.redirectUri,
     });
 
     if (!result.success) {
@@ -383,18 +380,18 @@ export class SamlApplication {
     requiredScopes.add(ReservedScope.OpenId);
     requiredScopes.add(UserScope.Profile);
 
-    if (this.details.nameIdFormat === NameIdFormat.EmailAddress) {
+    if (this.config.nameIdFormat === NameIdFormat.EmailAddress) {
       requiredScopes.add(UserScope.Email);
     }
 
     // If no attribute mapping, return empty array
-    if (Object.keys(this.details.attributeMapping).length === 0) {
+    if (Object.keys(this.config.attributeMapping).length === 0) {
       return Array.from(requiredScopes);
     }
 
     // Iterate through all claims in attribute mapping
     // eslint-disable-next-line no-restricted-syntax
-    for (const claim of Object.keys(this.details.attributeMapping) as Array<
+    for (const claim of Object.keys(this.config.attributeMapping) as Array<
       keyof SamlAttributeMapping
     >) {
       // Ignore `id` claim since this will always be included.
@@ -479,19 +476,19 @@ export class SamlApplication {
   private buildIdpConfig(): SamlIdentityProviderConfig {
     return {
       entityId: buildSamlIdentityProviderEntityId(this.tenantEndpoint, this.samlApplicationId),
-      privateKey: this.details.privateKey,
-      certificate: this.details.certificate,
+      privateKey: this.config.privateKey,
+      certificate: this.config.certificate,
       singleSignOnUrl: buildSingleSignOnUrl(this.tenantEndpoint, this.samlApplicationId),
-      nameIdFormat: this.details.nameIdFormat,
-      encryptSamlAssertion: this.details.encryption?.encryptAssertion ?? false,
+      nameIdFormat: this.config.nameIdFormat,
+      encryptSamlAssertion: this.config.encryption?.encryptAssertion ?? false,
     };
   }
 
   private buildSpConfig(): SamlServiceProviderConfig {
     return {
-      entityId: this.details.entityId,
-      acsUrl: this.details.acsUrl,
-      certificate: this.details.encryption?.certificate,
+      entityId: this.config.entityId,
+      acsUrl: this.config.acsUrl,
+      certificate: this.config.encryption?.certificate,
     };
   }
 }

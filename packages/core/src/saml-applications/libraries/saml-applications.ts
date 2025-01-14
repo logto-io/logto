@@ -3,23 +3,15 @@ import {
   type SamlApplicationResponse,
   type PatchSamlApplication,
   type SamlApplicationSecret,
-  BindingType,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { removeUndefinedKeys, pick } from '@silverhand/essentials';
-import saml from 'samlify';
 
-import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import {
-  ensembleSamlApplication,
-  generateKeyPairAndCertificate,
-  buildSingleSignOnUrl,
-  buildSamlIdentityProviderEntityId,
-} from './utils.js';
+import { ensembleSamlApplication, generateKeyPairAndCertificate } from './utils.js';
 
 export const createSamlApplicationsLibrary = (queries: Queries) => {
   const {
@@ -27,7 +19,6 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
     samlApplicationSecrets: {
       insertInactiveSamlApplicationSecret,
       insertActiveSamlApplicationSecret,
-      findActiveSamlApplicationSecretByApplicationId,
     },
     samlApplicationConfigs: {
       findSamlApplicationConfigByApplicationId,
@@ -117,39 +108,9 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
     });
   };
 
-  const getSamlIdPMetadataByApplicationId = async (id: string): Promise<{ metadata: string }> => {
-    const [{ tenantId }, { certificate }] = await Promise.all([
-      findSamlApplicationConfigByApplicationId(id),
-      findActiveSamlApplicationSecretByApplicationId(id),
-    ]);
-
-    const tenantEndpoint = getTenantEndpoint(tenantId, EnvSet.values);
-
-    // eslint-disable-next-line new-cap
-    const idp = saml.IdentityProvider({
-      entityID: buildSamlIdentityProviderEntityId(tenantEndpoint, id),
-      signingCert: certificate,
-      singleSignOnService: [
-        {
-          Location: buildSingleSignOnUrl(tenantEndpoint, id),
-          Binding: BindingType.Redirect,
-        },
-        {
-          Location: buildSingleSignOnUrl(tenantEndpoint, id),
-          Binding: BindingType.Post,
-        },
-      ],
-    });
-
-    return {
-      metadata: idp.getMetadata(),
-    };
-  };
-
   return {
     createSamlApplicationSecret,
     findSamlApplicationById,
     updateSamlApplicationById,
-    getSamlIdPMetadataByApplicationId,
   };
 };
