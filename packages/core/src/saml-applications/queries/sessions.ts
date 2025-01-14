@@ -40,17 +40,6 @@ export const createSamlApplicationSessionQueries = (pool: CommonQueryMethods) =>
     }
   };
 
-  const deleteSessionById = async (id: string) => {
-    const { rowCount } = await pool.query(sql`
-      delete from ${table}
-      where ${fields.id} = ${id}
-    `);
-
-    if (rowCount < 1) {
-      throw new DeletionError(SamlApplicationSessions.table);
-    }
-  };
-
   const findSessionById = async (id: string) =>
     pool.maybeOne<SamlApplicationSession>(sql`
       select ${sql.join(Object.values(fields), sql`, `)}
@@ -58,20 +47,11 @@ export const createSamlApplicationSessionQueries = (pool: CommonQueryMethods) =>
       where ${fields.id}=${id}
     `);
 
-  const findSessionsByApplicationId = async (applicationId: string) =>
-    pool.any<SamlApplicationSession>(sql`
-      select ${sql.join(Object.values(fields), sql`, `)}
-      from ${table}
-      where ${fields.applicationId}=${applicationId}
-    `);
-
   return {
     insertSession,
     updateSession,
     removeSessionOidcStateById,
     deleteExpiredSessions,
-    deleteSessionById,
     findSessionById,
-    findSessionsByApplicationId,
   };
 };

@@ -39,6 +39,11 @@ const application = {
     invalid_saml_request: 'Invalid SAML authentication request.',
     auth_request_issuer_not_match:
       'The issuer of the SAML authentication request mismatch with service provider entity ID.',
+    sp_initiated_saml_sso_session_not_found_in_cookies:
+      'Service provider initiated SAML SSO session ID not found in cookies.',
+    sp_initiated_saml_sso_session_not_found:
+      'Service provider initiated SAML SSO session not found.',
+    state_mismatch: '`state` mismatch.',
   },
 };
 
