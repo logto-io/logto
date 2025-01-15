@@ -13,6 +13,7 @@ import { z } from 'zod';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import { koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 import { buildOidcClientMetadata } from '#src/oidc/utils.js';
 import { generateInternalSecret } from '#src/routes/applications/application-secret.js';
 import type { ManagementApiRouter, RouterInitArgs } from '#src/routes/types.js';
@@ -45,10 +46,12 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       findSamlApplicationById,
       updateSamlApplicationById,
     },
+    quota,
   } = libraries;
 
   router.post(
     '/saml-applications',
+    koaQuotaGuard({ key: 'samlApplicationsLimit', quota }),
     koaGuard({
       body: samlApplicationCreateGuard,
       response: samlApplicationResponseGuard,
@@ -178,6 +181,7 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
 
   router.post(
     '/saml-applications/:id/secrets',
+    koaQuotaGuard({ key: 'samlApplicationsLimit', quota }),
     koaGuard({
       params: z.object({ id: z.string() }),
       // The life span of the SAML app secret is in years (at least 1 year), and for security concern, secrets which never expire are not recommended.

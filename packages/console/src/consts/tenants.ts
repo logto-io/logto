@@ -109,6 +109,7 @@ export const defaultSubscriptionQuota: NewSubscriptionQuota = {
   subjectTokenEnabled: false,
   bringYourUiEnabled: false,
   idpInitiatedSsoEnabled: false,
+  samlApplicationsLimit: 0,
 };
 
 export const defaultSubscriptionUsage: NewSubscriptionCountBasedUsage = {
@@ -130,6 +131,7 @@ export const defaultSubscriptionUsage: NewSubscriptionCountBasedUsage = {
   subjectTokenEnabled: false,
   bringYourUiEnabled: false,
   idpInitiatedSsoEnabled: false,
+  samlApplicationsLimit: 0,
 };
 
 const getAdminTenantEndpoint = () => {

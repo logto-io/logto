@@ -99,6 +99,7 @@ const logtoSkuQuotaGuard = z.object({
   organizationsEnabled: z.boolean(),
   organizationsLimit: z.number().nullable(),
   idpInitiatedSsoEnabled: z.boolean(),
+  samlApplicationsLimit: z.number().nullable(),
 }) satisfies ToZodObject<SubscriptionQuota>;
 
 /**
