@@ -7,6 +7,8 @@ const errors = {
   invalid_uri_format: "Format d'URI non valide",
   invalid_origin_format: "Format d'origine URI non valide",
   invalid_json_format: 'Format JSON non valide',
+  /** UNTRANSLATED */
+  invalid_parameters_format: 'Invalid parameters format',
   invalid_regex: 'Expression régulière non valide',
   invalid_error_message_format: "Le format du message d'erreur n'est pas valide.",
   required_field_missing: 'Veuillez saisir {{field}}',

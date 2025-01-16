@@ -72,6 +72,11 @@ const sign_up_and_sign_in = {
     enable_user_registration: 'Habilitar registro de usuario',
     enable_user_registration_description:
       'Habilitar o deshabilitar el registro de usuarios. Una vez deshabilitado, los usuarios aún se pueden agregar en la consola de administración, pero los usuarios ya no pueden establecer cuentas a través de la interfaz de inicio de sesión.',
+    /** UNTRANSLATED */
+    unknown_session_redirect_url: 'Unknown session redirect URL',
+    /** UNTRANSLATED */
+    unknown_session_redirect_url_tip:
+      'Sometimes, Logto may not recognize a user’s session on the sign-in page, like when a session expires or the user bookmarks or shares the sign-in link. By default, an “unknown session” 404 error appears. To enhance user experience, set a fallback URL to redirect users back to your app and restart authentication.',
   },
 };
 

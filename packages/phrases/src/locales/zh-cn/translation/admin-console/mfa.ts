@@ -22,6 +22,21 @@ const mfa = {
   user_controlled_tip: '用户可以在首次登录或注册时跳过MFA设置，或在账户设置中启用/禁用MFA。',
   mandatory: '用户始终需要在登录时使用MFA',
   mandatory_tip: '用户必须在首次登录或注册时设置MFA，并在所有未来的登录中使用它。',
+  /** UNTRANSLATED */
+  require_mfa: 'Require MFA',
+  /** UNTRANSLATED */
+  require_mfa_label:
+    'Enable this to make 2-step verification mandatory for accessing your applications. If disabled, users can decide whether to enable MFA for themselves.',
+  /** UNTRANSLATED */
+  set_up_prompt: 'MFA set-up prompt',
+  /** UNTRANSLATED */
+  no_prompt: 'Do not ask users to set up MFA',
+  /** UNTRANSLATED */
+  prompt_at_sign_in_and_sign_up:
+    'Ask users to set up MFA during registration (skippable, one-time prompt)',
+  /** UNTRANSLATED */
+  prompt_only_at_sign_in:
+    'Ask users to set up MFA on their next sign-in attempt after registration (skippable, one-time prompt)',
 };
 
 export default Object.freeze(mfa);

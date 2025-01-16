@@ -6,6 +6,8 @@ const oidc = {
   insufficient_scope: 'Отсутствует область токена `{{scope}}`.',
   invalid_request: 'Недопустимый запрос.',
   invalid_grant: 'Недопустимый запрос на предоставление прав.',
+  /** UNTRANSLATED */
+  invalid_issuer: 'Invalid issuer.',
   invalid_redirect_uri:
     'redirect_uri не соответствует ни одному зарегистрированному redirect_uris клиента.',
   access_denied: 'Доступ запрещен.',

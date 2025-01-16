@@ -25,6 +25,13 @@ const upsell = {
       'لقد تجاوزت MAU الحالي الحد الأقصى لـ <planName/>. يرجى ترقية خطتك إلى النسخة المميزة بسرعة لتجنب تعليق خدمة Logto.',
     update_plan: 'تحديث الخطة',
   },
+  token_exceeded_modal: {
+    /** UNTRANSLATED */
+    title: 'Token usage exceeded the limit. Upgrade your plan.',
+    /** UNTRANSLATED */
+    notification:
+      'You have exceeded your <planName/> token usage limit. Users will not be able to access the Logto service properly. Please upgrade your plan to premium promptly to avoid any inconvenience.',
+  },
   payment_overdue_modal: {
     title: 'تأخر في دفع الفاتورة',
     notification:

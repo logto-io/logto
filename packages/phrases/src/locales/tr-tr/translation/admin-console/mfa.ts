@@ -31,6 +31,21 @@ const mfa = {
   mandatory: 'Kullanıcılar her zaman girişte MFA kullanmak zorundadır',
   mandatory_tip:
     'Kullanıcılar, ilk kez giriş veya kayıt sırasında MFA kurmalı ve tüm gelecekteki girişlerde kullanmalıdır.',
+  /** UNTRANSLATED */
+  require_mfa: 'Require MFA',
+  /** UNTRANSLATED */
+  require_mfa_label:
+    'Enable this to make 2-step verification mandatory for accessing your applications. If disabled, users can decide whether to enable MFA for themselves.',
+  /** UNTRANSLATED */
+  set_up_prompt: 'MFA set-up prompt',
+  /** UNTRANSLATED */
+  no_prompt: 'Do not ask users to set up MFA',
+  /** UNTRANSLATED */
+  prompt_at_sign_in_and_sign_up:
+    'Ask users to set up MFA during registration (skippable, one-time prompt)',
+  /** UNTRANSLATED */
+  prompt_only_at_sign_in:
+    'Ask users to set up MFA on their next sign-in attempt after registration (skippable, one-time prompt)',
 };
 
 export default Object.freeze(mfa);

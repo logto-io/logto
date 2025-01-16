@@ -27,6 +27,21 @@ const mfa = {
   mandatory: '사용자는 항상 로그인 시 MFA 사용이 필요합니다',
   mandatory_tip:
     '사용자는 처음 로그인 또는 가입 시에 MFA를 설정하고 모든 향후 로그인에서 그것을 사용해야 합니다.',
+  /** UNTRANSLATED */
+  require_mfa: 'Require MFA',
+  /** UNTRANSLATED */
+  require_mfa_label:
+    'Enable this to make 2-step verification mandatory for accessing your applications. If disabled, users can decide whether to enable MFA for themselves.',
+  /** UNTRANSLATED */
+  set_up_prompt: 'MFA set-up prompt',
+  /** UNTRANSLATED */
+  no_prompt: 'Do not ask users to set up MFA',
+  /** UNTRANSLATED */
+  prompt_at_sign_in_and_sign_up:
+    'Ask users to set up MFA during registration (skippable, one-time prompt)',
+  /** UNTRANSLATED */
+  prompt_only_at_sign_in:
+    'Ask users to set up MFA on their next sign-in attempt after registration (skippable, one-time prompt)',
 };
 
 export default Object.freeze(mfa);

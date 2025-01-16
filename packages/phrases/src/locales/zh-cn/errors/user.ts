@@ -34,6 +34,19 @@ const user = {
   password_algorithm_required: '密码算法是必需的。',
   password_and_digest: 'You cannot set both plain text password and password digest.',
   personal_access_token_name_exists: '个人访问令牌名称已存在。',
+  /** UNTRANSLATED */
+  totp_secret_invalid: 'Invalid TOTP secret supplied.',
+  /** UNTRANSLATED */
+  wrong_backup_code_format: 'Backup code format is invalid.',
+  /** UNTRANSLATED */
+  username_required: 'Username is a required identifier, you can not set it to null.',
+  /** UNTRANSLATED */
+  email_or_phone_required:
+    'Email address or phone number is a required identifier, at least one is required.',
+  /** UNTRANSLATED */
+  email_required: 'Email address is a required identifier, you can not set it to null.',
+  /** UNTRANSLATED */
+  phone_required: 'Phone number is a required identifier, you can not set it to null.',
 };
 
 export default Object.freeze(user);

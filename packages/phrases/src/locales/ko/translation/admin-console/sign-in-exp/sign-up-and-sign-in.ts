@@ -66,6 +66,11 @@ const sign_up_and_sign_in = {
     enable_user_registration: '사용자 등록 활성화',
     enable_user_registration_description:
       '사용자 등록을 활성화하거나 비활성화합니다. 비활성화된 경우 사용자는 관리 콘솔에서는 추가할 수 있지만 사용자는 더 이상 로그인 UI를 통해 계정을 설정할 수 없습니다.',
+    /** UNTRANSLATED */
+    unknown_session_redirect_url: 'Unknown session redirect URL',
+    /** UNTRANSLATED */
+    unknown_session_redirect_url_tip:
+      'Sometimes, Logto may not recognize a user’s session on the sign-in page, like when a session expires or the user bookmarks or shares the sign-in link. By default, an “unknown session” 404 error appears. To enhance user experience, set a fallback URL to redirect users back to your app and restart authentication.',
   },
 };
 

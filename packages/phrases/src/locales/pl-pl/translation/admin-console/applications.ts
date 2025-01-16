@@ -46,6 +46,14 @@ const applications = {
       subtitle: 'Aplikacja chroniona przez Logto',
       description: 'N/A',
     },
+    saml: {
+      /** UNTRANSLATED */
+      title: 'SAML App',
+      /** UNTRANSLATED */
+      subtitle: 'An app that is used as an SAML IdP connector',
+      /** UNTRANSLATED */
+      description: 'E.g., SAML',
+    },
     third_party: {
       title: 'Aplikacja stron trzecich',
       subtitle: 'Aplikacja używana jako łącznik do dostawcy tożsamości stron trzecich',

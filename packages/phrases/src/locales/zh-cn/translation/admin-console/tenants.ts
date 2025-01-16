@@ -88,6 +88,8 @@ const tenants = {
   },
   status: {
     mau_exceeded: '超出 MAU 限制',
+    /** UNTRANSLATED */
+    token_exceeded: 'Token exceeded',
     suspended: '已暂停',
     overdue: '逾期',
   },

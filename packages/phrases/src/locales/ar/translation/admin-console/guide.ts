@@ -9,6 +9,8 @@ const guide = {
     MachineToMachine: 'ماكينة إلى ماكينة',
     Protected: 'تكامل غير محمي',
     ThirdParty: 'تطبيق طرف ثالث',
+    /** UNTRANSLATED */
+    SAML: 'SAML',
   },
   filter: {
     title: 'تصفية الإطار',

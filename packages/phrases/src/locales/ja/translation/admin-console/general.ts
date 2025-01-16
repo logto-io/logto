@@ -13,6 +13,8 @@ const general = {
   save_changes: '変更を保存する',
   saved: '保存しました',
   discard: '破棄する',
+  /** UNTRANSLATED */
+  download: 'Download',
   loading: '読み込み中...',
   redirecting: 'リダイレクト中...',
   add: '追加',
@@ -28,6 +30,10 @@ const general = {
   edit: '編集',
   delete: '削除',
   deleted: '削除済',
+  /** UNTRANSLATED */
+  activate: 'Activate',
+  /** UNTRANSLATED */
+  deactivate: 'Deactivate',
   more_options: 'その他のオプション',
   close: '閉じる',
   copy: 'コピーする',
