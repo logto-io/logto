@@ -10,7 +10,7 @@ import FeatureTag from '@/components/FeatureTag';
 import { type SelectedGuide } from '@/components/Guide/GuideCard';
 import GuideCardGroup from '@/components/Guide/GuideCardGroup';
 import { useAppGuideMetadata } from '@/components/Guide/hooks';
-import { isCloud } from '@/consts/env';
+import { isDevFeaturesEnabled, isCloud } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { CheckboxGroup } from '@/ds-components/Checkbox';
@@ -93,6 +93,19 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, onSelectGuide }
                   <CheckboxGroup
                     className={styles.checkboxGroup}
                     options={allAppGuideCategories
+                      /**
+                       * Show SAML guides when it is:
+                       * 1. Cloud env
+                       * 2. `isDevFeatureEnabled` is true
+                       * 3. `quota.samlApplicationsLimit` is not 0.
+                       */
+                      .filter(
+                        (category) =>
+                          category !== 'SAML' ||
+                          (isCloud &&
+                            isDevFeaturesEnabled &&
+                            currentSubscriptionQuota.samlApplicationsLimit !== 0)
+                      )
                       .filter((category) => isCloud || category !== 'Protected')
                       .map((category) => ({
                         title: `guide.categories.${category}`,

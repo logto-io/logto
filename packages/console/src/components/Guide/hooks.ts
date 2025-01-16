@@ -1,8 +1,10 @@
-import { useCallback, useMemo } from 'react';
+import { ApplicationType } from '@logto/schemas';
+import { useCallback, useMemo, useContext } from 'react';
 
 import { guides } from '@/assets/docs/guides';
 import { type Guide } from '@/assets/docs/guides/types';
 import { isCloud as isCloudEnv, isDevFeaturesEnabled } from '@/consts/env';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import {
   thirdPartyAppCategory,
   type AppGuideCategory,
@@ -34,12 +36,28 @@ export const useAppGuideMetadata = (): {
     filters?: FilterOptions
   ) => Record<AppGuideCategory, readonly Guide[]>;
 } => {
+  const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
+
   const appGuides = useMemo(
     () =>
-      guides.filter(
-        ({ metadata: { target, isCloud, isDevFeature } }) =>
-          target !== 'API' && (isCloudEnv || !isCloud) && (isDevFeaturesEnabled || !isDevFeature)
-      ),
+      guides
+        .filter(
+          ({ metadata: { target, isCloud, isDevFeature } }) =>
+            target !== 'API' && (isCloudEnv || !isCloud) && (isDevFeaturesEnabled || !isDevFeature)
+          /**
+           * Show SAML guides when it is:
+           * 1. Cloud env
+           * 2. `isDevFeatureEnabled` is true
+           * 3. `quota.samlApplicationsLimit` is not 0.
+           */
+        )
+        .filter(
+          ({ metadata: { target } }) =>
+            target !== ApplicationType.SAML ||
+            (isCloudEnv &&
+              isDevFeaturesEnabled &&
+              currentSubscriptionQuota.samlApplicationsLimit !== 0)
+        ),
     []
   );
 
