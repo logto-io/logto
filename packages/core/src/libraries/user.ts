@@ -12,6 +12,7 @@ import { type JitOrganization } from '#src/queries/organization/email-domains.js
 import { createUsersRolesQueries } from '#src/queries/users-roles.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
+import { legacyVerify } from '#src/utils/password.js';
 import type { OmitAutoSetFields } from '#src/utils/sql.js';
 
 import { convertBindMfaToMfaVerification, encryptUserPassword } from './user.utils.js';
@@ -219,6 +220,11 @@ export const createUserLibrary = (queries: Queries) => {
       case UsersPasswordEncryptionMethod.Bcrypt: {
         const result = await bcryptVerify({ password, hash: passwordEncrypted });
         assertThat(result, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
+        break;
+      }
+      case UsersPasswordEncryptionMethod.Legacy: {
+        const isValid = await legacyVerify(passwordEncrypted, password);
+        assertThat(isValid, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
         break;
       }
     }
