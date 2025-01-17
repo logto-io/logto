@@ -15,6 +15,7 @@ import { encryptUserPassword } from '#src/libraries/user.utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { parseLegacyPassword } from '../../utils/password.js';
 import { transpileUserProfileResponse } from '../../utils/user.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
@@ -193,6 +194,10 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         !primaryPhone || !(await hasUserWithPhone(primaryPhone)),
         new RequestError({ code: 'user.phone_already_in_use', status: 422 })
       );
+
+      if (passwordAlgorithm === UsersPasswordEncryptionMethod.Legacy) {
+        parseLegacyPassword(passwordDigest);
+      }
 
       const id = await generateUserId();
 
