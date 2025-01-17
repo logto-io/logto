@@ -25,6 +25,13 @@ const upsell = {
       'Mevcut MAU, <planName/> sınırını aştı. Logto hizmetinin askıya alınmasını önlemek için premium plana hemen yükseltin.',
     update_plan: 'Planı Güncelle',
   },
+  token_exceeded_modal: {
+    /** UNTRANSLATED */
+    title: 'Token usage exceeded the limit. Upgrade your plan.',
+    /** UNTRANSLATED */
+    notification:
+      'You have exceeded your <planName/> token usage limit. Users will not be able to access the Logto service properly. Please upgrade your plan to premium promptly to avoid any inconvenience.',
+  },
   payment_overdue_modal: {
     title: 'Fatura ödemesi gecikti',
     notification:

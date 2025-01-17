@@ -41,6 +41,9 @@ const application_details = {
   redirect_uri_placeholder_native: 'io.logto://retorno',
   redirect_uri_tip:
     'O URI para o redirecionamento após o login do usuário (seja bem-sucedido ou não). Consulte <a>AuthRequest</a> OpenID Connect para mais informações.',
+  /** UNTRANSLATED */
+  mixed_redirect_uri_warning:
+    'Your application type is not compatible with at least one of the redirect URIs. It does not follow best practices and we strongly recommend keeping the redirect URIs consistent.',
   post_sign_out_redirect_uri: 'URI de redirecionamento após saída',
   post_sign_out_redirect_uris: 'URIs de redirecionamento após saída',
   post_sign_out_redirect_uri_placeholder: 'https://seusite.com.br/home',
@@ -64,6 +67,9 @@ const application_details = {
   rotate_refresh_token: 'Rotacionar token de atualização',
   rotate_refresh_token_label:
     'Quando ativado, o Logto emitirá um novo token de atualização para solicitações de token quando 70% do tempo de vida original (TTL) tiver passado ou certas condições forem atendidas. <a>Saiba mais</a>',
+  /** UNTRANSLATED */
+  rotate_refresh_token_label_for_public_clients:
+    'When enabled, Logto will issue a new refresh token for each token request. <a>Learn more</a>',
   backchannel_logout: 'Logout por backchannel',
   backchannel_logout_description:
     'Configure o endpoint de logout do backchannel OpenID Connect e se a sessão é necessária para esta aplicação.',
@@ -179,6 +185,12 @@ const application_details = {
     create_new_secret: 'Criar novo segredo',
     delete_confirmation:
       'Esta ação não pode ser desfeita. Tem certeza de que deseja excluir este segredo?',
+    /** UNTRANSLATED */
+    deleted: 'The secret has been successfully deleted.',
+    /** UNTRANSLATED */
+    activated: 'The secret has been successfully activated.',
+    /** UNTRANSLATED */
+    deactivated: 'The secret has been successfully deactivated.',
     legacy_secret: 'Segredo legado',
     expired: 'Expirado',
     expired_tooltip: 'Este segredo expirou em {{date}}.',
@@ -190,12 +202,103 @@ const application_details = {
         'O segredo nunca expirará. Recomendamos definir uma data de expiração para maior segurança.',
       days: '{{count}} dia',
       days_other: '{{count}} dias',
+      /** UNTRANSLATED */
+      years: '{{count}} year',
+      /** UNTRANSLATED */
+      years_other: '{{count}} years',
       created: 'O segredo {{name}} foi criado com sucesso.',
     },
     edit_modal: {
       title: 'Editar segredo da aplicação',
       edited: 'O segredo {{name}} foi editado com sucesso.',
     },
+  },
+  saml_idp_config: {
+    /** UNTRANSLATED */
+    title: 'SAML IdP metadata',
+    /** UNTRANSLATED */
+    description:
+      'Use the following metadata and certificate to configure the SAML IdP in your application.',
+    /** UNTRANSLATED */
+    metadata_url_label: 'IdP metadata URL',
+    /** UNTRANSLATED */
+    single_sign_on_service_url_label: 'Single sign-on service URL',
+    /** UNTRANSLATED */
+    idp_entity_id_label: 'IdP entity ID',
+  },
+  saml_idp_certificates: {
+    /** UNTRANSLATED */
+    title: 'SAML signing certificate',
+    /** UNTRANSLATED */
+    expires_at: 'Expires at',
+    /** UNTRANSLATED */
+    finger_print: 'Fingerprint',
+    /** UNTRANSLATED */
+    status: 'Status',
+    /** UNTRANSLATED */
+    active: 'Active',
+    /** UNTRANSLATED */
+    inactive: 'Inactive',
+  },
+  saml_idp_name_id_format: {
+    /** UNTRANSLATED */
+    title: 'Name ID format',
+    /** UNTRANSLATED */
+    description: 'Select the name ID format of the SAML IdP.',
+    /** UNTRANSLATED */
+    persistent: 'Persistent',
+    /** UNTRANSLATED */
+    persistent_description: 'Use Logto user ID as Name ID',
+    /** UNTRANSLATED */
+    transient: 'Transient',
+    /** UNTRANSLATED */
+    transient_description: 'Use one-time user ID as Name ID',
+    /** UNTRANSLATED */
+    unspecified: 'Unspecified',
+    /** UNTRANSLATED */
+    unspecified_description: 'Use Logto user ID as Name ID',
+    /** UNTRANSLATED */
+    email_address: 'Email address',
+    /** UNTRANSLATED */
+    email_address_description: 'Use email address as Name ID',
+  },
+  saml_encryption_config: {
+    /** UNTRANSLATED */
+    encrypt_assertion: 'Encrypt SAML assertion',
+    /** UNTRANSLATED */
+    encrypt_assertion_description: 'By enabling this option, the SAML assertion will be encrypted.',
+    /** UNTRANSLATED */
+    encrypt_then_sign: 'Encrypt then sign',
+    /** UNTRANSLATED */
+    encrypt_then_sign_description:
+      'By enabling this option, the SAML assertion will be encrypted and then signed; otherwise, the SAML assertion will be signed and then encrypted.',
+    /** UNTRANSLATED */
+    certificate: 'Certificate',
+    /** UNTRANSLATED */
+    certificate_tooltip:
+      'Copy and paste the x509 certificate you get from your service provider to encrypt the SAML assertion.',
+    /** UNTRANSLATED */
+    certificate_placeholder:
+      '-----BEGIN CERTIFICATE-----\nMIICYDCCAcmgAwIBA...\n-----END CERTIFICATE-----\n',
+    /** UNTRANSLATED */
+    certificate_missing_error: 'Certificate is required.',
+    /** UNTRANSLATED */
+    certificate_invalid_format_error:
+      'Invalid certificate format detected. Please check the certificate format and try again.',
+  },
+  saml_app_attribute_mapping: {
+    /** UNTRANSLATED */
+    name: 'Attribute mappings',
+    /** UNTRANSLATED */
+    title: 'Base attribute mappings',
+    /** UNTRANSLATED */
+    description: 'Add attribute mappings to sync user profile from Logto to your application.',
+    /** UNTRANSLATED */
+    col_logto_claims: 'Value of Logto',
+    /** UNTRANSLATED */
+    col_sp_claims: 'Value name of your application',
+    /** UNTRANSLATED */
+    add_button: 'Add another',
   },
 };
 

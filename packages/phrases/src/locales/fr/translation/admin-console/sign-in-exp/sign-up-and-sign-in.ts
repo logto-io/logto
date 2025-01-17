@@ -72,6 +72,11 @@ const sign_up_and_sign_in = {
     enable_user_registration: "Activer l'inscription des utilisateurs",
     enable_user_registration_description:
       "Activer ou interdire l'inscription des utilisateurs. Une fois désactivée, les utilisateurs peuvent toujours être ajoutés à la console d'administration mais ne peuvent plus créer de compte via l'interface de connexion.",
+    /** UNTRANSLATED */
+    unknown_session_redirect_url: 'Unknown session redirect URL',
+    /** UNTRANSLATED */
+    unknown_session_redirect_url_tip:
+      'Sometimes, Logto may not recognize a user’s session on the sign-in page, like when a session expires or the user bookmarks or shares the sign-in link. By default, an “unknown session” 404 error appears. To enhance user experience, set a fallback URL to redirect users back to your app and restart authentication.',
   },
 };
 

@@ -13,6 +13,8 @@ const general = {
   save_changes: 'Değişiklikleri Kaydet',
   saved: 'Kaydedildi',
   discard: 'At',
+  /** UNTRANSLATED */
+  download: 'Download',
   loading: 'Yükleniyor...',
   redirecting: 'Yönlendiriliyor...',
   add: 'Ekle',
@@ -28,6 +30,10 @@ const general = {
   edit: 'Düzenle',
   delete: 'Sil',
   deleted: 'Silindi',
+  /** UNTRANSLATED */
+  activate: 'Activate',
+  /** UNTRANSLATED */
+  deactivate: 'Deactivate',
   more_options: 'DAHA FAZLA SEÇENEK',
   close: 'Kapat',
   copy: 'Kopyala',

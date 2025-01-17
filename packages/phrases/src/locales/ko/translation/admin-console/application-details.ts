@@ -40,6 +40,9 @@ const application_details = {
   redirect_uri_placeholder_native: 'io.logto://callback',
   redirect_uri_tip:
     '사용자 로그인 후 리디렉트될 URI 경로입니다. 더 자세한 정보는 OpenID Connect <a>인증 요청</a>을 참조하세요.',
+  /** UNTRANSLATED */
+  mixed_redirect_uri_warning:
+    'Your application type is not compatible with at least one of the redirect URIs. It does not follow best practices and we strongly recommend keeping the redirect URIs consistent.',
   post_sign_out_redirect_uri: '로그아웃 후 리디렉트 URI',
   post_sign_out_redirect_uris: '로그아웃 후 리디렉트 URIs',
   post_sign_out_redirect_uri_placeholder: 'https://your.website.com/home',
@@ -63,6 +66,9 @@ const application_details = {
   rotate_refresh_token: 'Refresh 토큰 회전',
   rotate_refresh_token_label:
     '활성화하면, 원래 TTL 중 70%가 지난 후 또는 특정 조건이 충족되면 Refresh 토큰 요청에 대해 새로운 Refresh 토큰을 발행합니다. <a>자세히 보기</a>',
+  /** UNTRANSLATED */
+  rotate_refresh_token_label_for_public_clients:
+    'When enabled, Logto will issue a new refresh token for each token request. <a>Learn more</a>',
   backchannel_logout: '백채널 로그아웃',
   backchannel_logout_description:
     '애플리케이션에 세션이 필요한 경우 OpenID Connect 백채널 로그아웃 엔드포인트를 구성하세요.',
@@ -172,6 +178,12 @@ const application_details = {
     never: '만료되지 않음',
     create_new_secret: '새 시크릿 생성',
     delete_confirmation: '이 작업은 되돌릴 수 없습니다. 이 시크릿을 삭제하시겠습니까?',
+    /** UNTRANSLATED */
+    deleted: 'The secret has been successfully deleted.',
+    /** UNTRANSLATED */
+    activated: 'The secret has been successfully activated.',
+    /** UNTRANSLATED */
+    deactivated: 'The secret has been successfully deactivated.',
     legacy_secret: '레거시 시크릿',
     expired: '만료됨',
     expired_tooltip: '이 시크릿은 {{date}} 에 만료되었습니다.',
@@ -183,12 +195,103 @@ const application_details = {
         '이 시크릿은 만료되지 않을 것입니다. 보안을 강화하기 위해 만료 날짜를 설정하는 것을 권장합니다.',
       days: '{{count}} 일',
       days_other: '{{count}} 일',
+      /** UNTRANSLATED */
+      years: '{{count}} year',
+      /** UNTRANSLATED */
+      years_other: '{{count}} years',
       created: '시크릿 {{name}} 이(가) 성공적으로 생성되었습니다.',
     },
     edit_modal: {
       title: '애플리케이션 시크릿 편집',
       edited: '시크릿 {{name}} 이(가) 성공적으로 편집되었습니다.',
     },
+  },
+  saml_idp_config: {
+    /** UNTRANSLATED */
+    title: 'SAML IdP metadata',
+    /** UNTRANSLATED */
+    description:
+      'Use the following metadata and certificate to configure the SAML IdP in your application.',
+    /** UNTRANSLATED */
+    metadata_url_label: 'IdP metadata URL',
+    /** UNTRANSLATED */
+    single_sign_on_service_url_label: 'Single sign-on service URL',
+    /** UNTRANSLATED */
+    idp_entity_id_label: 'IdP entity ID',
+  },
+  saml_idp_certificates: {
+    /** UNTRANSLATED */
+    title: 'SAML signing certificate',
+    /** UNTRANSLATED */
+    expires_at: 'Expires at',
+    /** UNTRANSLATED */
+    finger_print: 'Fingerprint',
+    /** UNTRANSLATED */
+    status: 'Status',
+    /** UNTRANSLATED */
+    active: 'Active',
+    /** UNTRANSLATED */
+    inactive: 'Inactive',
+  },
+  saml_idp_name_id_format: {
+    /** UNTRANSLATED */
+    title: 'Name ID format',
+    /** UNTRANSLATED */
+    description: 'Select the name ID format of the SAML IdP.',
+    /** UNTRANSLATED */
+    persistent: 'Persistent',
+    /** UNTRANSLATED */
+    persistent_description: 'Use Logto user ID as Name ID',
+    /** UNTRANSLATED */
+    transient: 'Transient',
+    /** UNTRANSLATED */
+    transient_description: 'Use one-time user ID as Name ID',
+    /** UNTRANSLATED */
+    unspecified: 'Unspecified',
+    /** UNTRANSLATED */
+    unspecified_description: 'Use Logto user ID as Name ID',
+    /** UNTRANSLATED */
+    email_address: 'Email address',
+    /** UNTRANSLATED */
+    email_address_description: 'Use email address as Name ID',
+  },
+  saml_encryption_config: {
+    /** UNTRANSLATED */
+    encrypt_assertion: 'Encrypt SAML assertion',
+    /** UNTRANSLATED */
+    encrypt_assertion_description: 'By enabling this option, the SAML assertion will be encrypted.',
+    /** UNTRANSLATED */
+    encrypt_then_sign: 'Encrypt then sign',
+    /** UNTRANSLATED */
+    encrypt_then_sign_description:
+      'By enabling this option, the SAML assertion will be encrypted and then signed; otherwise, the SAML assertion will be signed and then encrypted.',
+    /** UNTRANSLATED */
+    certificate: 'Certificate',
+    /** UNTRANSLATED */
+    certificate_tooltip:
+      'Copy and paste the x509 certificate you get from your service provider to encrypt the SAML assertion.',
+    /** UNTRANSLATED */
+    certificate_placeholder:
+      '-----BEGIN CERTIFICATE-----\nMIICYDCCAcmgAwIBA...\n-----END CERTIFICATE-----\n',
+    /** UNTRANSLATED */
+    certificate_missing_error: 'Certificate is required.',
+    /** UNTRANSLATED */
+    certificate_invalid_format_error:
+      'Invalid certificate format detected. Please check the certificate format and try again.',
+  },
+  saml_app_attribute_mapping: {
+    /** UNTRANSLATED */
+    name: 'Attribute mappings',
+    /** UNTRANSLATED */
+    title: 'Base attribute mappings',
+    /** UNTRANSLATED */
+    description: 'Add attribute mappings to sync user profile from Logto to your application.',
+    /** UNTRANSLATED */
+    col_logto_claims: 'Value of Logto',
+    /** UNTRANSLATED */
+    col_sp_claims: 'Value name of your application',
+    /** UNTRANSLATED */
+    add_button: 'Add another',
   },
 };
 

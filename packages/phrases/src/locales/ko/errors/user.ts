@@ -35,6 +35,19 @@ const user = {
   password_algorithm_required: '비밀번호 알고리즘이 필요합니다.',
   password_and_digest: 'You cannot set both plain text password and password digest.',
   personal_access_token_name_exists: '개인 액세스 토큰 이름이 이미 존재합니다.',
+  /** UNTRANSLATED */
+  totp_secret_invalid: 'Invalid TOTP secret supplied.',
+  /** UNTRANSLATED */
+  wrong_backup_code_format: 'Backup code format is invalid.',
+  /** UNTRANSLATED */
+  username_required: 'Username is a required identifier, you can not set it to null.',
+  /** UNTRANSLATED */
+  email_or_phone_required:
+    'Email address or phone number is a required identifier, at least one is required.',
+  /** UNTRANSLATED */
+  email_required: 'Email address is a required identifier, you can not set it to null.',
+  /** UNTRANSLATED */
+  phone_required: 'Phone number is a required identifier, you can not set it to null.',
 };
 
 export default Object.freeze(user);

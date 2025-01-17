@@ -69,6 +69,11 @@ const sign_up_and_sign_in = {
     enable_user_registration: 'Включить регистрацию пользователей',
     enable_user_registration_description:
       'Включить или отключить регистрацию пользователей. После отключения пользователи все равно могут быть добавлены через консоль администратора, но больше создавать учетные записи через пользовательский интерфейс регистрации не могут.',
+    /** UNTRANSLATED */
+    unknown_session_redirect_url: 'Unknown session redirect URL',
+    /** UNTRANSLATED */
+    unknown_session_redirect_url_tip:
+      'Sometimes, Logto may not recognize a user’s session on the sign-in page, like when a session expires or the user bookmarks or shares the sign-in link. By default, an “unknown session” 404 error appears. To enhance user experience, set a fallback URL to redirect users back to your app and restart authentication.',
   },
 };
 

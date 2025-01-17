@@ -13,6 +13,8 @@ const general = {
   save_changes: '保存更改',
   saved: '保存成功',
   discard: '放弃',
+  /** UNTRANSLATED */
+  download: 'Download',
   loading: '读取中...',
   redirecting: '页面跳转中...',
   add: '添加',
@@ -28,6 +30,10 @@ const general = {
   edit: '编辑',
   delete: '删除',
   deleted: '已删除',
+  /** UNTRANSLATED */
+  activate: 'Activate',
+  /** UNTRANSLATED */
+  deactivate: 'Deactivate',
   more_options: '更多选项',
   close: '关闭',
   copy: '复制',

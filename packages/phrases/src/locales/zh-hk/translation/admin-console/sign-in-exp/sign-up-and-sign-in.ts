@@ -62,6 +62,11 @@ const sign_up_and_sign_in = {
     enable_user_registration: '啟用用戶註冊',
     enable_user_registration_description:
       '啟用或禁止用戶註冊。禁用後，管理控制臺仍然可以添加用戶，但用戶無法通過登錄界面建立帳戶。',
+    /** UNTRANSLATED */
+    unknown_session_redirect_url: 'Unknown session redirect URL',
+    /** UNTRANSLATED */
+    unknown_session_redirect_url_tip:
+      'Sometimes, Logto may not recognize a user’s session on the sign-in page, like when a session expires or the user bookmarks or shares the sign-in link. By default, an “unknown session” 404 error appears. To enhance user experience, set a fallback URL to redirect users back to your app and restart authentication.',
   },
 };
 

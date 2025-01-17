@@ -9,6 +9,8 @@ const guide = {
     MachineToMachine: 'Machine-à-machine',
     Protected: 'Intégration non-SDK',
     ThirdParty: 'Application tierce',
+    /** UNTRANSLATED */
+    SAML: 'SAML',
   },
   filter: {
     title: 'Filtrer le framework',

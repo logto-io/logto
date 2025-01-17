@@ -37,6 +37,19 @@ const user = {
   password_and_digest:
     'Vous ne pouvez pas définir à la fois un mot de passe en texte brut et un digest de mot de passe.',
   personal_access_token_name_exists: "Le nom du jeton d'accès personnel existe déjà.",
+  /** UNTRANSLATED */
+  totp_secret_invalid: 'Invalid TOTP secret supplied.',
+  /** UNTRANSLATED */
+  wrong_backup_code_format: 'Backup code format is invalid.',
+  /** UNTRANSLATED */
+  username_required: 'Username is a required identifier, you can not set it to null.',
+  /** UNTRANSLATED */
+  email_or_phone_required:
+    'Email address or phone number is a required identifier, at least one is required.',
+  /** UNTRANSLATED */
+  email_required: 'Email address is a required identifier, you can not set it to null.',
+  /** UNTRANSLATED */
+  phone_required: 'Phone number is a required identifier, you can not set it to null.',
 };
 
 export default Object.freeze(user);

@@ -100,6 +100,8 @@ const tenants = {
   },
   status: {
     mau_exceeded: 'Limite MAU Excedido',
+    /** UNTRANSLATED */
+    token_exceeded: 'Token exceeded',
     suspended: 'Suspenso',
     overdue: 'Atrasado',
   },

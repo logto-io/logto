@@ -25,6 +25,13 @@ const upsell = {
       'Ihr aktueller MAU hat das Limit von <planName/> überschritten. Bitte upgraden Sie umgehend auf den Premium-Plan, um die Aussetzung des Logto-Dienstes zu vermeiden.',
     update_plan: 'Plan aktualisieren',
   },
+  token_exceeded_modal: {
+    /** UNTRANSLATED */
+    title: 'Token usage exceeded the limit. Upgrade your plan.',
+    /** UNTRANSLATED */
+    notification:
+      'You have exceeded your <planName/> token usage limit. Users will not be able to access the Logto service properly. Please upgrade your plan to premium promptly to avoid any inconvenience.',
+  },
   payment_overdue_modal: {
     title: 'Zahlungsrückstand für Rechnung',
     notification:

@@ -36,6 +36,19 @@ const user = {
   password_algorithm_required: "L'algoritmo della password è richiesto.",
   password_and_digest: 'Non puoi impostare sia la password in chiaro che il digest della password.',
   personal_access_token_name_exists: 'Il nome del token di accesso personale esiste già.',
+  /** UNTRANSLATED */
+  totp_secret_invalid: 'Invalid TOTP secret supplied.',
+  /** UNTRANSLATED */
+  wrong_backup_code_format: 'Backup code format is invalid.',
+  /** UNTRANSLATED */
+  username_required: 'Username is a required identifier, you can not set it to null.',
+  /** UNTRANSLATED */
+  email_or_phone_required:
+    'Email address or phone number is a required identifier, at least one is required.',
+  /** UNTRANSLATED */
+  email_required: 'Email address is a required identifier, you can not set it to null.',
+  /** UNTRANSLATED */
+  phone_required: 'Phone number is a required identifier, you can not set it to null.',
 };
 
 export default Object.freeze(user);

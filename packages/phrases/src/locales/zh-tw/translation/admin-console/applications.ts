@@ -43,6 +43,14 @@ const applications = {
       subtitle: '受 Logto 保護的應用',
       description: 'N/A',
     },
+    saml: {
+      /** UNTRANSLATED */
+      title: 'SAML App',
+      /** UNTRANSLATED */
+      subtitle: 'An app that is used as an SAML IdP connector',
+      /** UNTRANSLATED */
+      description: 'E.g., SAML',
+    },
     third_party: {
       title: '第三方應用程式',
       subtitle: '作為第三方 IdP 連接器使用的應用程式',

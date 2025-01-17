@@ -94,6 +94,8 @@ const tenants = {
   },
   status: {
     mau_exceeded: 'تجاوز MAU',
+    /** UNTRANSLATED */
+    token_exceeded: 'Token exceeded',
     suspended: 'معلق',
     overdue: 'متأخر عن الدفع',
   },

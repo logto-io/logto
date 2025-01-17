@@ -6,6 +6,8 @@ const oidc = {
   insufficient_scope: "Token mancante dell'ambito `{{scope}}`.",
   invalid_request: 'La richiesta non è valida.',
   invalid_grant: 'La richiesta di concessione non è valida.',
+  /** UNTRANSLATED */
+  invalid_issuer: 'Invalid issuer.',
   invalid_redirect_uri:
     '`redirect_uri` non corrisponde a nessuno dei `redirect_uris` registrati dal client.',
   access_denied: 'Accesso negato.',

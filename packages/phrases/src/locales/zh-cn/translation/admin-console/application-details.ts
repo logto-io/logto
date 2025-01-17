@@ -38,6 +38,9 @@ const application_details = {
   redirect_uri_placeholder_native: 'io.logto://callback',
   redirect_uri_tip:
     '在用户登录完成（不论成功与否）后重定向的目标 URI。参见 OpenID Connect <a>AuthRequest</a> 以了解更多。',
+  /** UNTRANSLATED */
+  mixed_redirect_uri_warning:
+    'Your application type is not compatible with at least one of the redirect URIs. It does not follow best practices and we strongly recommend keeping the redirect URIs consistent.',
   post_sign_out_redirect_uri: '退出登录后重定向 URI',
   post_sign_out_redirect_uris: '退出登录后重定向 URIs',
   post_sign_out_redirect_uri_placeholder: 'https://your.website.com/home',
@@ -61,6 +64,9 @@ const application_details = {
   rotate_refresh_token: '轮换刷新令牌',
   rotate_refresh_token_label:
     '启用后，当原先的刷新令牌的时效已经过去 70%，或者满足一定条件时，Logto 将会为访问令牌请求发放新的刷新令牌。<a>了解更多</a>',
+  /** UNTRANSLATED */
+  rotate_refresh_token_label_for_public_clients:
+    'When enabled, Logto will issue a new refresh token for each token request. <a>Learn more</a>',
   backchannel_logout: '后端通道注销',
   backchannel_logout_description: '配置 OpenID Connect 后端通道注销端点，以及该应用是否需要会话。',
   backchannel_logout_uri: '后端通道注销 URI',
@@ -162,6 +168,12 @@ const application_details = {
     never: '从不',
     create_new_secret: '创建新密钥',
     delete_confirmation: '此操作无法撤销。你确定要删除此密钥吗？',
+    /** UNTRANSLATED */
+    deleted: 'The secret has been successfully deleted.',
+    /** UNTRANSLATED */
+    activated: 'The secret has been successfully activated.',
+    /** UNTRANSLATED */
+    deactivated: 'The secret has been successfully deactivated.',
     legacy_secret: '旧密钥',
     expired: '已过期',
     expired_tooltip: '此密钥已于 {{date}} 过期。',
@@ -172,12 +184,103 @@ const application_details = {
       expiration_description_never: '该密钥永不过期。我们建议设置一个到期日期以增强安全性。',
       days: '{{count}} 天',
       days_other: '{{count}} 天',
+      /** UNTRANSLATED */
+      years: '{{count}} year',
+      /** UNTRANSLATED */
+      years_other: '{{count}} years',
       created: '密钥 {{name}} 已成功创建。',
     },
     edit_modal: {
       title: '编辑应用密钥',
       edited: '密钥 {{name}} 已成功编辑。',
     },
+  },
+  saml_idp_config: {
+    /** UNTRANSLATED */
+    title: 'SAML IdP metadata',
+    /** UNTRANSLATED */
+    description:
+      'Use the following metadata and certificate to configure the SAML IdP in your application.',
+    /** UNTRANSLATED */
+    metadata_url_label: 'IdP metadata URL',
+    /** UNTRANSLATED */
+    single_sign_on_service_url_label: 'Single sign-on service URL',
+    /** UNTRANSLATED */
+    idp_entity_id_label: 'IdP entity ID',
+  },
+  saml_idp_certificates: {
+    /** UNTRANSLATED */
+    title: 'SAML signing certificate',
+    /** UNTRANSLATED */
+    expires_at: 'Expires at',
+    /** UNTRANSLATED */
+    finger_print: 'Fingerprint',
+    /** UNTRANSLATED */
+    status: 'Status',
+    /** UNTRANSLATED */
+    active: 'Active',
+    /** UNTRANSLATED */
+    inactive: 'Inactive',
+  },
+  saml_idp_name_id_format: {
+    /** UNTRANSLATED */
+    title: 'Name ID format',
+    /** UNTRANSLATED */
+    description: 'Select the name ID format of the SAML IdP.',
+    /** UNTRANSLATED */
+    persistent: 'Persistent',
+    /** UNTRANSLATED */
+    persistent_description: 'Use Logto user ID as Name ID',
+    /** UNTRANSLATED */
+    transient: 'Transient',
+    /** UNTRANSLATED */
+    transient_description: 'Use one-time user ID as Name ID',
+    /** UNTRANSLATED */
+    unspecified: 'Unspecified',
+    /** UNTRANSLATED */
+    unspecified_description: 'Use Logto user ID as Name ID',
+    /** UNTRANSLATED */
+    email_address: 'Email address',
+    /** UNTRANSLATED */
+    email_address_description: 'Use email address as Name ID',
+  },
+  saml_encryption_config: {
+    /** UNTRANSLATED */
+    encrypt_assertion: 'Encrypt SAML assertion',
+    /** UNTRANSLATED */
+    encrypt_assertion_description: 'By enabling this option, the SAML assertion will be encrypted.',
+    /** UNTRANSLATED */
+    encrypt_then_sign: 'Encrypt then sign',
+    /** UNTRANSLATED */
+    encrypt_then_sign_description:
+      'By enabling this option, the SAML assertion will be encrypted and then signed; otherwise, the SAML assertion will be signed and then encrypted.',
+    /** UNTRANSLATED */
+    certificate: 'Certificate',
+    /** UNTRANSLATED */
+    certificate_tooltip:
+      'Copy and paste the x509 certificate you get from your service provider to encrypt the SAML assertion.',
+    /** UNTRANSLATED */
+    certificate_placeholder:
+      '-----BEGIN CERTIFICATE-----\nMIICYDCCAcmgAwIBA...\n-----END CERTIFICATE-----\n',
+    /** UNTRANSLATED */
+    certificate_missing_error: 'Certificate is required.',
+    /** UNTRANSLATED */
+    certificate_invalid_format_error:
+      'Invalid certificate format detected. Please check the certificate format and try again.',
+  },
+  saml_app_attribute_mapping: {
+    /** UNTRANSLATED */
+    name: 'Attribute mappings',
+    /** UNTRANSLATED */
+    title: 'Base attribute mappings',
+    /** UNTRANSLATED */
+    description: 'Add attribute mappings to sync user profile from Logto to your application.',
+    /** UNTRANSLATED */
+    col_logto_claims: 'Value of Logto',
+    /** UNTRANSLATED */
+    col_sp_claims: 'Value name of your application',
+    /** UNTRANSLATED */
+    add_button: 'Add another',
   },
 };
 

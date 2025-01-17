@@ -70,6 +70,16 @@ const subscription = {
   subscription_check_timeout: 'Время проверки подписки истекло. Пожалуйста, обновите позже.',
   no_subscription: 'Нет подписки',
   usage,
+  token_usage_notification: {
+    /** UNTRANSLATED */
+    exceeded:
+      'You have exceeded 100% of your quota limit. Users will no longer be able to log in properly. Please upgrade immediately to avoid any inconvenience.',
+    /** UNTRANSLATED */
+    close_to_limit:
+      'You almost reached your token usage limit. Logto will stop granting token if your usage exceeds 100%. Please upgrade Free plan to avoid any inconvenience.',
+    /** UNTRANSLATED */
+    dev_plan_exceeded: "This tenant has reached the token limit per Logto's entity limit policy.",
+  },
 };
 
 export default Object.freeze(subscription);

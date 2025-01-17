@@ -97,6 +97,8 @@ const tenants = {
   },
   status: {
     mau_exceeded: 'MAUの制限を超えました',
+    /** UNTRANSLATED */
+    token_exceeded: 'Token exceeded',
     suspended: '一時停止中',
     overdue: '期限切れ',
   },

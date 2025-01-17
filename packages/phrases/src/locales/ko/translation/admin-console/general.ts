@@ -13,6 +13,8 @@ const general = {
   save_changes: '변경 내용 저장',
   saved: '저장됨',
   discard: '취소',
+  /** UNTRANSLATED */
+  download: 'Download',
   loading: '로딩 중...',
   redirecting: '리다이렉트 중...',
   add: '추가',
@@ -28,6 +30,10 @@ const general = {
   edit: '편집',
   delete: '삭제',
   deleted: '삭제됨',
+  /** UNTRANSLATED */
+  activate: 'Activate',
+  /** UNTRANSLATED */
+  deactivate: 'Deactivate',
   more_options: '더 많은 설정',
   close: '닫기',
   copy: '복사',

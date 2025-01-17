@@ -7,6 +7,8 @@ const auth = {
     '期待される役割が見つかりませんでした。ユーザーの役割と権限を確認してください。',
   jwt_sub_missing: 'JWT内に`sub`がありません。',
   require_re_authentication: '保護されたアクションを実行するには再認証が必要です。',
+  /** UNTRANSLATED */
+  exceed_token_limit: 'Token limit exceeded. Please contact your administrator.',
 };
 
 export default Object.freeze(auth);
