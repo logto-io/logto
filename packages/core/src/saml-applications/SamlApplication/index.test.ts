@@ -13,6 +13,8 @@ class TestSamlApplication extends SamlApplication {
   public exposedGetUserInfo = this.getUserInfo;
   public exposedFetchOidcConfig = this.fetchOidcConfig;
   public exposedGetScopesFromAttributeMapping = this.getScopesFromAttributeMapping;
+  public exposedBuildLoginResponseTemplate = this.buildLoginResponseTemplate;
+  public exposedBuildSamlAttributesTagValues = this.buildSamlAttributesTagValues;
 }
 
 describe('SamlApplication', () => {
@@ -29,12 +31,15 @@ describe('SamlApplication', () => {
     certificate: 'mock-certificate',
     secret: 'mock-secret',
     nameIdFormat: NameIdFormat.Persistent,
+    attributeMapping: {},
   };
 
   const mockUser = {
     sub: 'user123',
     email: 'user@example.com',
     name: 'Test User',
+    phone: '+1234567890',
+    phone_verified: true,
   };
 
   const mockTenantId = 'tenant-id';
@@ -285,6 +290,110 @@ describe('SamlApplication', () => {
       expect(scopes).toContain(UserScope.Phone);
       expect(scopes).toContain(UserScope.Roles);
       expect(scopes).toHaveLength(7);
+    });
+  });
+
+  describe('buildLoginResponseTemplate', () => {
+    it('should generate correct SAML response template with attribute mapping', () => {
+      const mockDetailsWithMapping = {
+        ...mockDetails,
+        attributeMapping: {
+          sub: 'userId',
+          email: 'emailAddress',
+          name: 'displayName',
+        },
+      };
+
+      const samlApp = new TestSamlApplication(
+        // @ts-expect-error
+        mockDetailsWithMapping,
+        mockSamlApplicationId,
+        mockIssuer,
+        mockTenantId
+      );
+
+      const template = samlApp.exposedBuildLoginResponseTemplate();
+
+      expect(template.attributes).toEqual([
+        {
+          name: 'userId',
+          valueTag: 'attrUserId',
+          nameFormat: 'urn:oasis:names:tc:SAML:2.0:attrname-format:basic',
+          valueXsiType: 'xs:string',
+        },
+        {
+          name: 'emailAddress',
+          valueTag: 'attrEmailAddress',
+          nameFormat: 'urn:oasis:names:tc:SAML:2.0:attrname-format:basic',
+          valueXsiType: 'xs:string',
+        },
+        {
+          name: 'displayName',
+          valueTag: 'attrDisplayName',
+          nameFormat: 'urn:oasis:names:tc:SAML:2.0:attrname-format:basic',
+          valueXsiType: 'xs:string',
+        },
+      ]);
+    });
+  });
+
+  describe('buildSamlAttributesTagValues', () => {
+    it('should generate correct SAML attribute tag values from user info', () => {
+      const mockDetailsWithMapping = {
+        ...mockDetails,
+        attributeMapping: {
+          sub: 'userId',
+          email: 'emailAddress',
+          name: 'displayName',
+          phone: 'phoneNumber',
+        },
+      };
+
+      const samlApp = new TestSamlApplication(
+        // @ts-expect-error
+        mockDetailsWithMapping,
+        mockSamlApplicationId,
+        mockIssuer,
+        mockTenantId
+      );
+
+      const tagValues = samlApp.exposedBuildSamlAttributesTagValues(mockUser);
+
+      expect(tagValues).toEqual({
+        attrUserId: 'user123',
+        attrEmailAddress: 'user@example.com',
+        attrDisplayName: 'Test User',
+        attrPhoneNumber: '+1234567890',
+      });
+    });
+
+    it('should skip undefined or null values from user info', () => {
+      const mockDetailsWithMapping = {
+        ...mockDetails,
+        attributeMapping: {
+          sub: 'userId',
+          email: 'emailAddress',
+          name: 'displayName',
+          picture: 'avatar', // This field doesn't exist in mockUser
+        },
+      };
+
+      const samlApp = new TestSamlApplication(
+        // @ts-expect-error
+        mockDetailsWithMapping,
+        mockSamlApplicationId,
+        mockIssuer,
+        mockTenantId
+      );
+
+      const tagValues = samlApp.exposedBuildSamlAttributesTagValues(mockUser);
+
+      expect(tagValues).toEqual({
+        attrUserId: 'user123',
+        attrEmailAddress: 'user@example.com',
+        attrDisplayName: 'Test User',
+      });
+      expect(tagValues).not.toHaveProperty('attrAvatar');
     });
   });
 });

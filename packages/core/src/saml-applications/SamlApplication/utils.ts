@@ -1,6 +1,7 @@
 import { NameIdFormat } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { appendPath } from '@silverhand/essentials';
+import camelCase from 'camelcase';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type IdTokenProfileStandardClaims } from '#src/sso/types/oidc.js';
@@ -72,3 +73,14 @@ export const generateAutoSubmitForm = (actionUrl: string, samlResponse: string):
 
 export const getSamlAppCallbackUrl = (baseUrl: URL, samlAppId: string) =>
   appendPath(baseUrl, `api/saml-applications/${samlAppId}/callback`);
+
+/**
+ * @desc Tag normalization, copied from https://github.com/tngan/samlify/blob/master/src/libsaml.ts#L230-L240 to get SAML attribute tag name.
+ * @param {string} prefix     prefix of the tag
+ * @param {content} content   normalize it to capitalized camel case
+ * @return {string}
+ */
+export const generateSamlAttributeTag = (content: string, prefix = 'attr'): string => {
+  const camelContent = camelCase(content, { locale: 'en-us' });
+  return prefix + camelContent.charAt(0).toUpperCase() + camelContent.slice(1);
+};
