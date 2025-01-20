@@ -46,7 +46,7 @@
             "description": "The organization role was created successfully."
           },
           "422": {
-            "description": "The organization role name is already in use."
+            "description": "The organization role name is already in use, or at least one of the IDs (organizationScopeIds or resourceScopeIds) provided is invalid. For example, the organization scope ID or resource scope ID does not exist."
           }
         }
       }

@@ -6,9 +6,10 @@ import {
   type OrganizationRoleKeys,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { condArray } from '@silverhand/essentials';
+import { condArray, tryThat } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -93,6 +94,28 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
         resourceScopeIds: z.array(z.string()).default([]),
       });
 
+  /** Helper function to handle scope insertion with error handling */
+  const insertScopesWithErrorHandling = async (
+    roleId: string,
+    insertFunction: () => Promise<unknown>,
+    errorCode:
+      | 'organization.roles.invalid_scope_ids'
+      | 'organization.roles.invalid_resource_scope_ids'
+  ) => {
+    await tryThat(
+      async () => insertFunction(),
+      (error) => {
+        void roles.deleteById(roleId);
+
+        throw new RequestError({
+          code: errorCode,
+          status: 422,
+          details: error instanceof Error ? error.message : String(error),
+        });
+      }
+    );
+  };
+
   router.post(
     '/',
     koaGuard({
@@ -104,23 +127,29 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
       const { organizationScopeIds, resourceScopeIds, ...data } = ctx.guard.body;
       const role = await roles.insert({ id: generateStandardId(), ...data });
 
-      if (organizationScopeIds.length > 0) {
-        await rolesScopes.insert(
-          ...organizationScopeIds.map((id) => ({
-            organizationRoleId: role.id,
-            organizationScopeId: id,
-          }))
-        );
-      }
+      await insertScopesWithErrorHandling(
+        role.id,
+        async () =>
+          rolesScopes.insert(
+            ...organizationScopeIds.map((id) => ({
+              organizationRoleId: role.id,
+              organizationScopeId: id,
+            }))
+          ),
+        'organization.roles.invalid_scope_ids'
+      );
 
-      if (resourceScopeIds.length > 0) {
-        await rolesResourceScopes.insert(
-          ...resourceScopeIds.map((id) => ({
-            organizationRoleId: role.id,
-            scopeId: id,
-          }))
-        );
-      }
+      await insertScopesWithErrorHandling(
+        role.id,
+        async () =>
+          rolesResourceScopes.insert(
+            ...resourceScopeIds.map((id) => ({
+              organizationRoleId: role.id,
+              scopeId: id,
+            }))
+          ),
+        'organization.roles.invalid_resource_scope_ids'
+      );
 
       ctx.body = role;
       ctx.status = 201;
