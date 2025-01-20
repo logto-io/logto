@@ -10,7 +10,7 @@ import {
   type SamlAttributeMapping,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { tryThat, type Nullable, cond } from '@silverhand/essentials';
+import { cond, tryThat, type Nullable } from '@silverhand/essentials';
 import camelcaseKeys, { type CamelCaseKeys } from 'camelcase-keys';
 import { XMLValidator } from 'fast-xml-parser';
 import saml from 'samlify';
@@ -38,7 +38,11 @@ import {
 import { buildSingleSignOnUrl, buildSamlIdentityProviderEntityId } from '../libraries/utils.js';
 import { type SamlApplicationDetails } from '../queries/index.js';
 
-import { buildSamlAssertionNameId, getSamlAppCallbackUrl } from './utils.js';
+import {
+  buildSamlAssertionNameId,
+  getSamlAppCallbackUrl,
+  generateSamlAttributeTag,
+} from './utils.js';
 
 type SamlIdentityProviderConfig = {
   entityId: string;
@@ -69,81 +73,6 @@ saml.setSchemaValidator({
     }
   },
 });
-
-const buildLoginResponseTemplate = () => {
-  return {
-    context: samlLogInResponseTemplate,
-    attributes: [
-      {
-        name: 'email',
-        valueTag: 'email',
-        nameFormat: samlAttributeNameFormatBasic,
-        valueXsiType: samlValueXmlnsXsi.string,
-      },
-      {
-        name: 'name',
-        valueTag: 'name',
-        nameFormat: samlAttributeNameFormatBasic,
-        valueXsiType: samlValueXmlnsXsi.string,
-      },
-    ],
-  };
-};
-
-const buildSamlIdentityProvider = ({
-  entityId,
-  certificate,
-  singleSignOnUrl,
-  privateKey,
-  nameIdFormat,
-  encryptSamlAssertion,
-}: SamlIdentityProviderConfig): saml.IdentityProviderInstance => {
-  // eslint-disable-next-line new-cap
-  return saml.IdentityProvider({
-    entityID: entityId,
-    signingCert: certificate,
-    singleSignOnService: [
-      {
-        Location: singleSignOnUrl,
-        Binding: BindingType.Redirect,
-      },
-      {
-        Location: singleSignOnUrl,
-        Binding: BindingType.Post,
-      },
-    ],
-    privateKey,
-    isAssertionEncrypted: encryptSamlAssertion,
-    loginResponseTemplate: buildLoginResponseTemplate(),
-    nameIDFormat: [nameIdFormat],
-  });
-};
-
-const buildSamlServiceProvider = ({
-  entityId,
-  acsUrl,
-  certificate,
-  isWantAuthnRequestsSigned,
-}: {
-  entityId: string;
-  acsUrl: SamlAcsUrl;
-  certificate: string;
-  isWantAuthnRequestsSigned: boolean;
-}): saml.ServiceProviderInstance => {
-  // eslint-disable-next-line new-cap
-  return saml.ServiceProvider({
-    entityID: entityId,
-    assertionConsumerService: [
-      {
-        Binding: acsUrl.binding,
-        Location: acsUrl.url,
-      },
-    ],
-    signingCert: certificate,
-    authnRequestsSigned: isWantAuthnRequestsSigned,
-    allowCreate: false,
-  });
-};
 
 class SamlApplicationConfig {
   constructor(private readonly _details: SamlApplicationDetails) {}
@@ -210,18 +139,12 @@ export class SamlApplication {
   }
 
   public get idp(): saml.IdentityProviderInstance {
-    this._idp ||= buildSamlIdentityProvider(this.buildIdpConfig());
+    this._idp ||= this.buildSamlIdentityProvider();
     return this._idp;
   }
 
   public get sp(): saml.ServiceProviderInstance {
-    const { certificate: encryptCert, ...rest } = this.buildSpConfig();
-    this._sp ||= buildSamlServiceProvider({
-      ...rest,
-      certificate: this.config.certificate,
-      isWantAuthnRequestsSigned: this.idp.entityMeta.isWantAuthnRequestsSigned(),
-      ...cond(encryptCert && { encryptCert }),
-    });
+    this._sp ||= this.buildSamlServiceProvider();
     return this._sp;
   }
 
@@ -304,6 +227,54 @@ export class SamlApplication {
     }
 
     return new URL(`${authorizationEndpoint}?${queryParameters.toString()}`);
+  };
+
+  protected buildSamlIdentityProvider = (): saml.IdentityProviderInstance => {
+    const {
+      entityId,
+      certificate,
+      singleSignOnUrl,
+      privateKey,
+      nameIdFormat,
+      encryptSamlAssertion,
+    } = this.buildIdpConfig();
+    // eslint-disable-next-line new-cap
+    return saml.IdentityProvider({
+      entityID: entityId,
+      signingCert: certificate,
+      singleSignOnService: [
+        {
+          Location: singleSignOnUrl,
+          Binding: BindingType.Redirect,
+        },
+        {
+          Location: singleSignOnUrl,
+          Binding: BindingType.Post,
+        },
+      ],
+      privateKey,
+      isAssertionEncrypted: encryptSamlAssertion,
+      loginResponseTemplate: this.buildLoginResponseTemplate(),
+      nameIDFormat: [nameIdFormat],
+    });
+  };
+
+  protected buildSamlServiceProvider = (): saml.ServiceProviderInstance => {
+    const { certificate: encryptCert, entityId, acsUrl } = this.buildSpConfig();
+    // eslint-disable-next-line new-cap
+    return saml.ServiceProvider({
+      entityID: entityId,
+      assertionConsumerService: [
+        {
+          Binding: acsUrl.binding,
+          Location: acsUrl.url,
+        },
+      ],
+      signingCert: this.config.certificate,
+      authnRequestsSigned: this.idp.entityMeta.isWantAuthnRequestsSigned(),
+      allowCreate: false,
+      ...cond(encryptCert && { encryptCert }),
+    });
   };
 
   protected getOidcConfig = async (): Promise<CamelCaseKeys<OidcConfigResponse>> => {
@@ -460,9 +431,11 @@ export class SamlApplication {
          * @remarks
          * By examining the code provided in the link above, we can define all the attributes supported by the attribute mapping here. Only the attributes defined in the `loginResponseTemplate.attributes` added when creating the IdP instance will appear in the SAML response.
          */
+        // Keep the `attrSub`, `attrEmail` and `attrName` attributes since attribute mapping can be empty.
         attrSub: userInfo.sub,
         attrEmail: userInfo.email,
         attrName: userInfo.name,
+        ...this.buildSamlAttributesTagValues(userInfo),
       };
 
       const context = saml.SamlLib.replaceTagsByValue(template, tagValues);
@@ -472,6 +445,32 @@ export class SamlApplication {
         context,
       };
     };
+
+  protected readonly buildLoginResponseTemplate = () => {
+    return {
+      context: samlLogInResponseTemplate,
+      attributes: Object.values(this.config.attributeMapping).map((value) => ({
+        name: value,
+        valueTag: generateSamlAttributeTag(value),
+        nameFormat: samlAttributeNameFormatBasic,
+        valueXsiType: samlValueXmlnsXsi.string,
+      })),
+    };
+  };
+
+  protected readonly buildSamlAttributesTagValues = (
+    userInfo: IdTokenProfileStandardClaims
+  ): Record<string, string> => {
+    return Object.fromEntries(
+      Object.entries(this.config.attributeMapping)
+        .map(([key, value]) => {
+          // eslint-disable-next-line no-restricted-syntax
+          return [value, userInfo[key as keyof IdTokenProfileStandardClaims]] as [string, unknown];
+        })
+        .filter(([_, value]) => Boolean(value))
+        .map(([key, value]) => [generateSamlAttributeTag(key), String(value)])
+    );
+  };
 
   private buildIdpConfig(): SamlIdentityProviderConfig {
     return {
