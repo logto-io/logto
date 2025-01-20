@@ -18,11 +18,7 @@ const SocialLanding = ({ className, connectorId, isLoading = false }: Props) => 
   return (
     <div className={classNames(styles.container, className)}>
       <div className={styles.connector}>
-        {result ? (
-          <img src={getConnectorLogo(result)} alt="logo" crossOrigin="anonymous" />
-        ) : (
-          connectorId
-        )}
+        {result ? <img src={getConnectorLogo(result)} alt="logo" /> : connectorId}
       </div>
       {isLoading && <LoadingIcon />}
     </div>
