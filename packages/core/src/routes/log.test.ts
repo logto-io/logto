@@ -1,4 +1,4 @@
-import { LogResult, token, interaction, LogKeyUnknown, jwtCustomizer } from '@logto/schemas';
+import { LogResult, token, interaction, LogKeyUnknown, jwtCustomizer, saml } from '@logto/schemas';
 import type { Log } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
@@ -50,6 +50,7 @@ describe('logRoutes', () => {
           token.Type.RevokeToken,
           interaction.prefix,
           jwtCustomizer.prefix,
+          saml.prefix,
           LogKeyUnknown,
         ],
       });
@@ -61,6 +62,7 @@ describe('logRoutes', () => {
           token.Type.RevokeToken,
           interaction.prefix,
           jwtCustomizer.prefix,
+          saml.prefix,
           LogKeyUnknown,
         ],
       });

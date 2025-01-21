@@ -82,7 +82,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
 
       log.append({
         query,
-        samlApplicationId: id,
+        applicationId: id,
       });
 
       // Handle error in query parameters
@@ -208,7 +208,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       const log = ctx.createLog('SamlApplication.AuthnRequest');
       log.append({
         query: ctx.guard.query,
-        samlApplicationId: id,
+        applicationId: id,
       });
 
       const details = await getSamlApplicationDetailsById(id);
@@ -317,7 +317,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       const log = ctx.createLog('SamlApplication.AuthnRequest');
       log.append({
         body: ctx.guard.body,
-        samlApplicationId: id,
+        applicationId: id,
       });
 
       const details = await getSamlApplicationDetailsById(id);
