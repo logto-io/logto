@@ -59,21 +59,6 @@ type SamlServiceProviderConfig = {
   certificate?: string;
 };
 
-// Used to check whether xml content is valid in format.
-saml.setSchemaValidator({
-  validate: async (xmlContent: string) => {
-    try {
-      XMLValidator.validate(xmlContent, {
-        allowBooleanAttributes: true,
-      });
-
-      return true;
-    } catch {
-      return false;
-    }
-  },
-});
-
 class SamlApplicationConfig {
   constructor(private readonly _details: SamlApplicationDetails) {}
 
@@ -140,11 +125,13 @@ export class SamlApplication {
 
   public get idp(): saml.IdentityProviderInstance {
     this._idp ||= this.buildSamlIdentityProvider();
+    this.setSchemaValidator();
     return this._idp;
   }
 
   public get sp(): saml.ServiceProviderInstance {
     this._sp ||= this.buildSamlServiceProvider();
+    this.setSchemaValidator();
     return this._sp;
   }
 
@@ -471,6 +458,23 @@ export class SamlApplication {
         .map(([key, value]) => [generateSamlAttributeTag(key), String(value)])
     );
   };
+
+  // Used to check whether xml content is valid in format.
+  private setSchemaValidator() {
+    saml.setSchemaValidator({
+      validate: async (xmlContent: string) => {
+        try {
+          XMLValidator.validate(xmlContent, {
+            allowBooleanAttributes: true,
+          });
+
+          return true;
+        } catch {
+          return false;
+        }
+      },
+    });
+  }
 
   private buildIdpConfig(): SamlIdentityProviderConfig {
     return {
