@@ -49,12 +49,7 @@ const SocialLinkButton = ({
       onClick={onClick}
     >
       {logo && !isLoadingActive && (
-        <img
-          src={logo}
-          alt={target}
-          className={socialLinkButtonStyles.icon}
-          crossOrigin="anonymous"
-        />
+        <img src={logo} alt={target} className={socialLinkButtonStyles.icon} />
       )}
       {isLoadingActive && (
         <span className={socialLinkButtonStyles.loadingIcon}>
