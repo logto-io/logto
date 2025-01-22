@@ -25,7 +25,8 @@ const enterprise_sso = {
     description: '在{{name}}身份提供者中通过SAML 2.0创建一个新的应用集成。然后将以下值粘贴到其中。',
     saml: {
       acs_url_field_name: '断言消费者服务URL（回复URL）',
-      audience_uri_field_name: '受众URI（SP实体ID）',
+      /** UNTRANSLATED */
+      audience_uri_field_name: 'Audience URI (SP Entity ID)',
     },
     oidc: {
       redirect_uri_field_name: '重定向URI（回调URL）',

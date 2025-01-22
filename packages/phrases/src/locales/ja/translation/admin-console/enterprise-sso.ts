@@ -27,7 +27,8 @@ const enterprise_sso = {
       'IdPにてSAML 2.0の新しいアプリケーション連携を作成します。次に以下の値を貼り付けます。',
     saml: {
       acs_url_field_name: 'アサーションコンシューマサービスURL（応答URL）',
-      audience_uri_field_name: 'オーディエンスURI（SPエンティティID）',
+      /** UNTRANSLATED */
+      audience_uri_field_name: 'Audience URI (SP Entity ID)',
     },
     oidc: {
       redirect_uri_field_name: 'リダイレクトURI（コールバックURL）',

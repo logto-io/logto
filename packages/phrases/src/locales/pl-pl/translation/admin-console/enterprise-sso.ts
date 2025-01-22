@@ -27,7 +27,8 @@ const enterprise_sso = {
       'Utwórz nową integrację aplikacji za pomocą SAML 2.0 w dostawcy tożsamości {{name}}. Następnie wklej poniższą wartość.',
     saml: {
       acs_url_field_name: 'Adres URL usługi konsumenta twierdzeń (Adres URL odpowiedzi)',
-      audience_uri_field_name: 'URI odbiorcy (ID podmiotu SP)',
+      /** UNTRANSLATED */
+      audience_uri_field_name: 'Audience URI (SP Entity ID)',
     },
     oidc: {
       redirect_uri_field_name: 'Adres URL przekierowania (Adres URL wywołania zwrotnego)',

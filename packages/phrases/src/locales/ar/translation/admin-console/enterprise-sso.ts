@@ -26,7 +26,8 @@ const enterprise_sso = {
       'قم بإنشاء تكامل تطبيق جديد باستخدام SAML 2.0 في موفر الهوية {{name}} الخاص بك. ثم قم بلصق القيمة التالية فيه.',
     saml: {
       acs_url_field_name: 'عنوان URL لخدمة المستهلك للتأكيد (رد URL)',
-      audience_uri_field_name: 'معرف الجمهور (معرف SP)',
+      /** UNTRANSLATED */
+      audience_uri_field_name: 'Audience URI (SP Entity ID)',
     },
     oidc: {
       redirect_uri_field_name: 'عنوان URL لإعادة التوجيه (عنوان URL للرد)',

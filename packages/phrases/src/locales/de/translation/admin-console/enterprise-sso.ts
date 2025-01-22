@@ -27,7 +27,8 @@ const enterprise_sso = {
       'Erstellen Sie eine neue Anwendungsintegration per SAML 2.0 in Ihrem {{name}}-Identitätsanbieter. Fügen Sie dann den folgenden Wert hinzu.',
     saml: {
       acs_url_field_name: 'Zieldienst-URL für Assertionsverbrauch (Antwort-URL)',
-      audience_uri_field_name: 'Ziel-URI (SP Entity ID)',
+      /** UNTRANSLATED */
+      audience_uri_field_name: 'Audience URI (SP Entity ID)',
     },
     oidc: {
       redirect_uri_field_name: 'Weiterleitungs-URI (Callback-URL)',

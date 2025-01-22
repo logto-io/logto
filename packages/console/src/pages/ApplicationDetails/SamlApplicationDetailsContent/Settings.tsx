@@ -208,18 +208,22 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
                   !value || uriValidator(value) || t('errors.invalid_uri_format'),
               })}
               error={Boolean(errors.acsUrl)}
-              placeholder={t('enterprise_sso.basic_info.saml.acs_url_field_name')}
+              placeholder={t('enterprise_sso.basic_info.saml.acs_url_field_placeholder')}
             />
           </FormField>
-          <FormField isRequired title="enterprise_sso.basic_info.saml.audience_uri_field_name">
+          <FormField
+            isRequired
+            title="enterprise_sso.basic_info.saml.entity_id_field_name"
+            tip={t('enterprise_sso.basic_info.saml.entity_id_field_tooltip')}
+          >
             <TextInput
               {...register('entityId', {
                 required: t('errors.required_field_missing', {
-                  field: t('enterprise_sso.basic_info.saml.audience_uri_field_name'),
+                  field: t('enterprise_sso.basic_info.saml.entity_id_field_name'),
                 }),
               })}
               error={Boolean(errors.entityId)}
-              placeholder={t('enterprise_sso.basic_info.saml.audience_uri_field_name')}
+              placeholder={t('enterprise_sso.basic_info.saml.entity_id_field_placeholder')}
             />
           </FormField>
         </FormCard>

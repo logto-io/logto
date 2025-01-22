@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 
 import Delete from '@/assets/icons/delete.svg?react';
 import Download from '@/assets/icons/download.svg?react';
-import Deactivate from '@/assets/icons/moon.svg?react';
+import Deactivate from '@/assets/icons/forbidden.svg?react';
 import More from '@/assets/icons/more.svg?react';
-import Activate from '@/assets/icons/sun.svg?react';
+import Activate from '@/assets/icons/shield.svg?react';
 import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
 import { downloadText } from '@/utils/downloader';
 
@@ -41,42 +41,38 @@ function CertificateActionMenu({
 
   return (
     <ActionMenu icon={<More className={styles.icon} />} title={t('general.more_options')}>
-      {active ? (
-        <ActionMenuItem
-          iconClassName={styles.icon}
-          icon={<Deactivate />}
-          onClick={() => {
+      <ActionMenuItem
+        iconClassName={styles.icon}
+        icon={active ? <Deactivate /> : <Activate />}
+        onClick={() => {
+          if (active) {
             onDeactivate(id);
-          }}
-        >
-          {t('general.deactivate')}
-        </ActionMenuItem>
-      ) : (
-        <>
-          {/* Can only delete inactive certificates */}
-          <ActionMenuItem
-            type="danger"
-            icon={<Delete />}
-            onClick={() => {
-              onDelete(id);
-            }}
-          >
-            {t('general.delete')}
-          </ActionMenuItem>
-          <ActionMenuItem
-            iconClassName={styles.icon}
-            icon={<Activate />}
-            onClick={() => {
-              onActivate(id);
-            }}
-          >
-            {t('general.activate')}
-          </ActionMenuItem>
-        </>
-      )}
-      <ActionMenuItem iconClassName={styles.icon} icon={<Download />} onClick={onDownload}>
+          } else {
+            onActivate(id);
+          }
+        }}
+      >
+        {t(`general.${active ? 'deactivate' : 'activate'}`)}
+      </ActionMenuItem>
+      <ActionMenuItem
+        iconClassName={styles.icon}
+        icon={<Download className={styles.icon} />}
+        onClick={onDownload}
+      >
         {t('general.download')}
       </ActionMenuItem>
+      {!active && (
+        // Can only delete inactive certificates.
+        <ActionMenuItem
+          type="danger"
+          icon={<Delete />}
+          onClick={() => {
+            onDelete(id);
+          }}
+        >
+          {t('general.delete')}
+        </ActionMenuItem>
+      )}
     </ActionMenu>
   );
 }
