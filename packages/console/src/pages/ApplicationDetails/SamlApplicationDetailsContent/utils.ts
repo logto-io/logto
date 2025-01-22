@@ -21,7 +21,7 @@ export const parseSamlApplicationResponseToFormData = (
     nameIdFormat,
     encryptSamlAssertion: encryption?.encryptAssertion ?? false,
     encryptThenSignSamlAssertion: encryption?.encryptThenSign ?? false,
-    certificate: encryption?.certificate,
+    certificate: encryption?.certificate ?? '',
   };
 };
 
@@ -55,14 +55,19 @@ export const parseFormDataToSamlApplicationRequest = (
       acsUrl: acsUrlData,
       nameIdFormat,
       ...cond(
-        encryptSamlAssertion &&
-          certificate && {
-            certificate: {
-              encryptAssertion: encryptSamlAssertion,
-              certificate,
-              encryptThenSign: encryptThenSignSamlAssertion,
-            },
-          }
+        encryptSamlAssertion
+          ? cond(
+              certificate && {
+                encryption: {
+                  encryptAssertion: encryptSamlAssertion,
+                  certificate,
+                  encryptThenSign: encryptThenSignSamlAssertion,
+                },
+              }
+            )
+          : {
+              encryption: null,
+            }
       ),
     }),
   };
