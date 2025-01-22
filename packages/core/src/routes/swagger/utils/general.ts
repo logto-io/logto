@@ -35,6 +35,7 @@ const tagMap = new Map([
   ['sso-connectors', 'SSO connectors'],
   ['sso-connector-providers', 'SSO connector providers'],
   ['.well-known', 'Well-known'],
+  ['saml-applications', 'SAML applications'],
 ]);
 
 /**
@@ -138,7 +139,9 @@ const validateSupplementPaths = (
         if (
           isKeyInObject(operation, 'tags') &&
           Array.isArray(operation.tags) &&
-          !operation.tags.every((tag) => typeof tag === 'string' && reservedTags.has(tag))
+          !operation.tags.every(
+            (tag) => typeof tag === 'string' && [cloudOnlyTag, devFeatureTag].includes(tag)
+          )
         ) {
           throw new TypeError(
             `Cannot use \`tags\` in supplement document on path \`${path}\` and operation \`${method}\` except for tag \`${cloudOnlyTag}\` and \`${devFeatureTag}\`. Define tags in the document root instead.`
