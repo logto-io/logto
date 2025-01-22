@@ -11,11 +11,10 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { AnonymousRouter, RouterInitArgs } from '#src/routes/types.js';
+import { SamlApplication } from '#src/saml-application/SamlApplication/index.js';
+import { generateAutoSubmitForm } from '#src/saml-application/SamlApplication/utils.js';
 import assertThat from '#src/utils/assert-that.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
-
-import { SamlApplication } from '../SamlApplication/index.js';
-import { generateAutoSubmitForm } from '../SamlApplication/utils.js';
 
 const samlApplicationSignInCallbackQueryParametersGuard = z.union([
   z.object({

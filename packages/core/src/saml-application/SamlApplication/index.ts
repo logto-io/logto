@@ -19,6 +19,11 @@ import { ZodError, z } from 'zod';
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import {
+  buildSingleSignOnUrl,
+  buildSamlIdentityProviderEntityId,
+} from '#src/libraries/saml-application/utils.js';
+import { type SamlApplicationDetails } from '#src/queries/saml-application/index.js';
+import {
   fetchOidcConfigRaw,
   getRawUserInfoResponse,
   handleTokenExchange,
@@ -34,10 +39,7 @@ import {
   samlLogInResponseTemplate,
   samlAttributeNameFormatBasic,
   samlValueXmlnsXsi,
-} from '../libraries/consts.js';
-import { buildSingleSignOnUrl, buildSamlIdentityProviderEntityId } from '../libraries/utils.js';
-import { type SamlApplicationDetails } from '../queries/index.js';
-
+} from './consts.js';
 import {
   buildSamlAssertionNameId,
   getSamlAppCallbackUrl,

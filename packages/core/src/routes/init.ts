@@ -7,8 +7,6 @@ import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import { koaManagementApiHooks } from '#src/middleware/koa-management-api-hooks.js';
 import koaTenantGuard from '#src/middleware/koa-tenant-guard.js';
-import samlApplicationAnonymousRoutes from '#src/saml-applications/routes/anonymous.js';
-import samlApplicationRoutes from '#src/saml-applications/routes/index.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
 import koaAuth from '../middleware/koa-auth/index.js';
@@ -42,6 +40,8 @@ import resourceRoutes from './resource.js';
 import resourceScopeRoutes from './resource.scope.js';
 import roleRoutes from './role.js';
 import roleScopeRoutes from './role.scope.js';
+import samlApplicationAnonymousRoutes from './saml-application/anonymous.js';
+import samlApplicationRoutes from './saml-application/index.js';
 import signInExperiencesRoutes from './sign-in-experience/index.js';
 import ssoConnectors from './sso-connector/index.js';
 import statusRoutes from './status.js';

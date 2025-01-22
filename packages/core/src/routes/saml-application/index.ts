@@ -10,22 +10,20 @@ import { generateStandardId } from '@logto/shared';
 import { removeUndefinedKeys } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
+import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import {
+  calculateCertificateFingerprints,
+  ensembleSamlApplication,
+  validateAcsUrl,
+} from '#src/libraries/saml-application/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 import { buildOidcClientMetadata } from '#src/oidc/utils.js';
 import { generateInternalSecret } from '#src/routes/applications/application-secret.js';
 import type { ManagementApiRouter, RouterInitArgs } from '#src/routes/types.js';
+import { getSamlAppCallbackUrl } from '#src/saml-application/SamlApplication/utils.js';
 import assertThat from '#src/utils/assert-that.js';
-
-import { getTenantEndpoint } from '../../env-set/utils.js';
-import { getSamlAppCallbackUrl } from '../SamlApplication/utils.js';
-import {
-  calculateCertificateFingerprints,
-  ensembleSamlApplication,
-  validateAcsUrl,
-} from '../libraries/utils.js';
 
 export default function samlApplicationRoutes<T extends ManagementApiRouter>(
   ...[router, { id: tenantId, queries, libraries }]: RouterInitArgs<T>

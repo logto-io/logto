@@ -11,13 +11,13 @@ import { createPhraseLibrary } from '#src/libraries/phrase.js';
 import { createProtectedAppLibrary } from '#src/libraries/protected-app.js';
 import { createQuotaLibrary } from '#src/libraries/quota.js';
 import { createRoleScopeLibrary } from '#src/libraries/role-scope.js';
+import { createSamlApplicationsLibrary } from '#src/libraries/saml-application/saml-applications.js';
 import { createScopeLibrary } from '#src/libraries/scope.js';
 import { createSignInExperienceLibrary } from '#src/libraries/sign-in-experience/index.js';
 import { createSocialLibrary } from '#src/libraries/social.js';
 import { createSsoConnectorLibrary } from '#src/libraries/sso-connector.js';
 import { createUserLibrary } from '#src/libraries/user.js';
 import { createVerificationStatusLibrary } from '#src/libraries/verification-status.js';
-import { createSamlApplicationsLibrary } from '#src/saml-applications/libraries/saml-applications.js';
 
 import type Queries from './Queries.js';
 
