@@ -67,7 +67,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
     koaGuard({
       params: z.object({ id: z.string() }),
       query: samlApplicationSignInCallbackQueryParametersGuard,
-      status: [200, 400],
+      status: [200, 400, 404],
     }),
     koaAuditLog(queries),
     async (ctx, next) => {
