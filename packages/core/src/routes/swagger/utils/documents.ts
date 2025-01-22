@@ -18,6 +18,7 @@ import { managementApiAuthDescription, userApiAuthDescription } from '../consts.
 import {
   type FindSupplementFilesOptions,
   devFeatureTag,
+  cloudOnlyTag,
   findSupplementFiles,
   pruneSwaggerDocument,
   removeUnnecessaryOperations,
@@ -56,7 +57,7 @@ const additionalTags = Object.freeze(
     'Organization applications',
     'Custom UI assets',
     'Organization users',
-    EnvSet.values.isDevFeaturesEnabled && 'SAML applications'
+    EnvSet.values.isCloud && 'SAML applications'
   )
 );
 
@@ -234,12 +235,25 @@ export const getSupplementDocuments = async (
     )
   );
 
-  // Filter out supplement documents that are for dev features when dev features are disabled.
-  const supplementDocuments = allSupplementDocuments.filter(
-    (supplement) =>
-      EnvSet.values.isDevFeaturesEnabled ||
-      !supplement.tags?.find((tag) => tag?.name === devFeatureTag)
-  );
+  const supplementDocuments = allSupplementDocuments.filter((supplement) => {
+    // Include documents without special tags
+    if (
+      !supplement.tags?.some((tag) => tag?.name === devFeatureTag || tag?.name === cloudOnlyTag)
+    ) {
+      return true;
+    }
+
+    // Include dev feature documents when dev features are enabled and cloud features when in cloud mode
+    if (
+      EnvSet.values.isDevFeaturesEnabled &&
+      supplement.tags.some((tag) => tag?.name === devFeatureTag) &&
+      (!supplement.tags.some((tag) => tag?.name === cloudOnlyTag) || EnvSet.values.isCloud)
+    ) {
+      return true;
+    }
+
+    return false;
+  });
 
   return supplementDocuments;
 };

@@ -1,18 +1,15 @@
 {
   "tags": [
     {
-      "name": "SAML Applications",
+      "name": "SAML applications",
       "description": "SAML (Security Assertion Markup Language) applications represent applications that use SAML protocol for single sign-on (SSO). These endpoints allow you to manage SAML applications, including their configurations and signing certificates."
-    },
-    {
-      "name": "Dev feature"
     },
     {
       "name": "Cloud only"
     }
   ],
   "paths": {
-    "/saml-applications/{id}/metadata": {
+    "/api/saml-applications/{id}/metadata": {
       "get": {
         "summary": "Get SAML application metadata",
         "description": "Get the SAML metadata XML for the application.",
@@ -47,7 +44,7 @@
         }
       }
     },
-    "/saml-applications/{id}/callback": {
+    "/api/saml-applications/{id}/callback": {
       "get": {
         "summary": "SAML application callback",
         "description": "Handle the OIDC callback for SAML application and generate SAML response.",
@@ -93,11 +90,14 @@
           },
           "400": {
             "description": "Invalid request or OIDC error."
+          },
+          "404": {
+            "description": "The SAML application was not found."
           }
         }
       }
     },
-    "/saml/{id}/authn": {
+    "/api/saml/{id}/authn": {
       "get": {
         "summary": "Handle SAML authentication request (Redirect binding)",
         "description": "Process SAML authentication request using HTTP Redirect binding.",
