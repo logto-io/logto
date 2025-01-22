@@ -51,14 +51,14 @@ export const samlEncryptionGuard = z
 export type SamlEncryption = z.input<typeof samlEncryptionGuard>;
 
 export enum NameIdFormat {
-  /** The Identity Provider can determine the format. */
-  Unspecified = 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified',
-  /** Returns the email address of the user. */
-  EmailAddress = 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',
   /** Uses unique and persistent identifiers for the user. */
   Persistent = 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',
+  /** Returns the email address of the user. */
+  EmailAddress = 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',
   /** Uses unique and transient identifiers for the user, which can be different for each session. */
   Transient = 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient',
+  /** The Identity Provider can determine the format. */
+  Unspecified = 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified',
 }
 
 export const nameIdFormatGuard = z.nativeEnum(NameIdFormat);
