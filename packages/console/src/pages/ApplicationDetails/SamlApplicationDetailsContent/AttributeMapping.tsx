@@ -1,6 +1,6 @@
 import { type UserClaim, completeUserClaims } from '@logto/core-kit';
 import { type SamlApplicationResponse, samlAttributeMappingKeys } from '@logto/schemas';
-import { useMemo } from 'react';
+import { conditionalArray } from '@silverhand/essentials';
 import { useForm, Controller } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -102,12 +102,9 @@ function AttributeMapping({ data, mutateApplication }: Props) {
     })
   );
 
-  const existingKeys = useMemo(() => formValues.map(([key]) => key).filter(Boolean), [formValues]);
-
-  const availableKeys = useMemo(
-    () => completeUserClaims.filter((claim) => !existingKeys.includes(claim)),
-    [existingKeys]
-  );
+  // Not using `useMemo` to avoid the reappearance of the available keys when the form values change.
+  const existingKeys = new Set(formValues.map(([key]) => key).filter(Boolean));
+  const availableKeys = completeUserClaims.filter((claim) => !existingKeys.has(claim));
 
   return (
     <DetailsForm
@@ -153,14 +150,14 @@ function AttributeMapping({ data, mutateApplication }: Props) {
                           <Select
                             isSearchEnabled
                             value={value}
-                            options={[
-                              ...availableKeys.map((claim) => ({
+                            options={conditionalArray(
+                              availableKeys.map((claim) => ({
                                 title: camelCaseToSentenceCase(claim),
                                 value: claim,
                               })),
-                              // If this is not specified, the component will fail to render the current value. The current value has been excluded in `availableKeys`.
-                              { value, title: camelCaseToSentenceCase(value) },
-                            ]}
+                              // If this is not specified, the component will fail to render the current value. The current value has been excluded in `availableKeys`. But we should not show if the current value is empty.
+                              value.trim() && [{ title: camelCaseToSentenceCase(value), value }]
+                            )}
                             onChange={(value) => {
                               onChange(value);
                             }}

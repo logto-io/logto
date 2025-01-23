@@ -142,6 +142,12 @@ describe('SAML application', () => {
         },
       },
     },
+    {
+      name: 'Update with empty attribute mapping',
+      config: {
+        attributeMapping: {},
+      },
+    },
   ])('should update SAML application - %#', async ({ name, config }) => {
     const formattedName = name ? `updated-${name}` : undefined;
     const initConfig = {
