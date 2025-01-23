@@ -26,7 +26,8 @@ const enterprise_sso = {
       'SAML 2.0을 사용하여 {{name}} 신원 공급자에서 새로운 응용 프로그램 통합을 만듭니다. 그런 다음 다음 값을 붙여 넣습니다.',
     saml: {
       acs_url_field_name: '단언 소비자 서비스 URL (응답 URL)',
-      audience_uri_field_name: '대상 URI (SP 엔터티 ID)',
+      /** UNTRANSLATED */
+      audience_uri_field_name: 'Audience URI (SP Entity ID)',
     },
     oidc: {
       redirect_uri_field_name: '리디렉션 URI (콜백 URL)',

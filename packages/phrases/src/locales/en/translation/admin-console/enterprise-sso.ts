@@ -28,6 +28,11 @@ const enterprise_sso = {
     saml: {
       acs_url_field_name: 'Assertion consumer service URL (Reply URL)',
       audience_uri_field_name: 'Audience URI (SP Entity ID)',
+      entity_id_field_name: 'Service Provider (SP) Entity ID',
+      entity_id_field_tooltip:
+        'The SP Entity ID can be in any string format, typically using a URI form or a URL form as an identifier, but this is not mandatory.',
+      acs_url_field_placeholder: 'https://your-domain.com/api/saml/callback',
+      entity_id_field_placeholder: 'urn:your-domain.com:sp:saml:{serviceProviderId}',
     },
     oidc: {
       redirect_uri_field_name: 'Redirect URI (Callback URL)',

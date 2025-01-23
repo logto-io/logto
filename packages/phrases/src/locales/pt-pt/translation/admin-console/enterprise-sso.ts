@@ -27,7 +27,8 @@ const enterprise_sso = {
       'Crie uma nova integração de aplicativo usando SAML 2.0 no seu provedor de identidade {{name}}. Em seguida, cole o seguinte valor nele.',
     saml: {
       acs_url_field_name: 'URL do serviço de consumo de afirmação (URL de resposta)',
-      audience_uri_field_name: 'URI do público (ID da entidade do SP)',
+      /** UNTRANSLATED */
+      audience_uri_field_name: 'Audience URI (SP Entity ID)',
     },
     oidc: {
       redirect_uri_field_name: 'URI de redirecionamento (URL de retorno)',
