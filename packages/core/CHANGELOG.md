@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.23.1
+
+### Patch Changes
+
+- 39cef8ea4: support custom endpoint and addressing style for S3
+- Updated dependencies [d2468683c]
+  - @logto/experience@1.11.1
+  - @logto/schemas@1.23.1
+  - @logto/cli@1.23.1
+
 ## 1.23.0
 
 ### Minor Changes

@@ -111,7 +111,7 @@ importers:
         specifier: workspace:^2.5.2
         version: link:../toolkit/core-kit
       '@logto/schemas':
-        specifier: workspace:1.23.0
+        specifier: workspace:1.23.1
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^3.1.2
@@ -3162,7 +3162,7 @@ importers:
         specifier: workspace:^2.0.0
         version: link:../app-insights
       '@logto/cli':
-        specifier: workspace:^1.23.0
+        specifier: workspace:^1.23.1
         version: link:../cli
       '@logto/connector-kit':
         specifier: workspace:^4.1.0
@@ -3195,7 +3195,7 @@ importers:
         specifier: workspace:^1.9.0
         version: link:../phrases-experience
       '@logto/schemas':
-        specifier: workspace:^1.23.0
+        specifier: workspace:^1.23.1
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^3.1.2
@@ -3469,7 +3469,7 @@ importers:
   packages/create:
     dependencies:
       '@logto/cli':
-        specifier: workspace:^1.23.0
+        specifier: workspace:^1.23.1
         version: link:../cli
 
   packages/demo-app:
@@ -3653,7 +3653,7 @@ importers:
         specifier: workspace:^1.9.0
         version: link:../phrases-experience
       '@logto/schemas':
-        specifier: workspace:^1.23.0
+        specifier: workspace:^1.23.1
         version: link:../schemas
       '@react-spring/shared':
         specifier: ^9.6.1
