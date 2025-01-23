@@ -76,11 +76,11 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
     patchApplicationObject: PatchSamlApplication
   ): Promise<SamlApplicationResponse> => {
     const { name, description, customData, ...config } = patchApplicationObject;
-    const originalApplication = await findApplicationById(id);
     const applicationData = removeUndefinedKeys(
       pick(patchApplicationObject, 'name', 'description', 'customData')
     );
 
+    const originalApplication = await findApplicationById(id);
     assertThat(
       originalApplication.type === ApplicationType.SAML,
       new RequestError({
@@ -89,17 +89,20 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
       })
     );
 
+    // Can not put this in a single Promise.all with `findApplicationById()` we want to API to throw SAML app only error before throwing other errors.
+    const originalAppConfig = await findSamlApplicationConfigByApplicationId(id);
+
     const [updatedApplication, upToDateSamlConfig] = await Promise.all([
       Object.keys(applicationData).length > 0
         ? updateApplicationById(id, applicationData)
         : originalApplication,
       Object.keys(config).length > 0
         ? updateSamlApplicationConfig({
-            set: config,
+            set: { ...originalAppConfig, ...config },
             where: { applicationId: id },
-            jsonbMode: 'merge',
+            jsonbMode: 'replace',
           })
-        : findSamlApplicationConfigByApplicationId(id),
+        : originalAppConfig,
     ]);
 
     return ensembleSamlApplication({
