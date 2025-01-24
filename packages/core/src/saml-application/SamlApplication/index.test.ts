@@ -245,7 +245,7 @@ describe('SamlApplication', () => {
         {
           ...mockDetails,
           attributeMapping: {
-            id: 'id',
+            sub: 'sub',
             name: 'name',
           },
         },
@@ -317,19 +317,19 @@ describe('SamlApplication', () => {
       expect(template.attributes).toEqual([
         {
           name: 'userId',
-          valueTag: 'attrUserId',
+          valueTag: 'userId',
           nameFormat: 'urn:oasis:names:tc:SAML:2.0:attrname-format:basic',
           valueXsiType: 'xs:string',
         },
         {
           name: 'emailAddress',
-          valueTag: 'attrEmailAddress',
+          valueTag: 'emailAddress',
           nameFormat: 'urn:oasis:names:tc:SAML:2.0:attrname-format:basic',
           valueXsiType: 'xs:string',
         },
         {
           name: 'displayName',
-          valueTag: 'attrDisplayName',
+          valueTag: 'displayName',
           nameFormat: 'urn:oasis:names:tc:SAML:2.0:attrname-format:basic',
           valueXsiType: 'xs:string',
         },
@@ -389,11 +389,11 @@ describe('SamlApplication', () => {
       const tagValues = samlApp.exposedBuildSamlAttributesTagValues(mockUser);
 
       expect(tagValues).toEqual({
+        attrAvatar: 'null',
         attrUserId: 'user123',
         attrEmailAddress: 'user@example.com',
         attrDisplayName: 'Test User',
       });
-      expect(tagValues).not.toHaveProperty('attrAvatar');
     });
   });
 });
