@@ -10,7 +10,7 @@ import {
   InternalRole,
 } from '@logto/schemas';
 import { generateStandardId, generateStandardSecret } from '@logto/shared';
-import { conditional } from '@silverhand/essentials';
+import { cond, conditional } from '@silverhand/essentials';
 import { boolean, object, string, z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -134,7 +134,12 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
 
       // Return totalCount to pagination middleware
       ctx.pagination.totalCount = count;
-      ctx.body = applications;
+      ctx.body = applications.map((application) =>
+        application.type === ApplicationType.SAML
+          ? // Hide `oidcClientMetadata` for SAML application
+            { ...application, oidcClientMetadata: buildOidcClientMetadata() }
+          : application
+      );
 
       return next();
     }
@@ -239,6 +244,12 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
 
       ctx.body = {
         ...application,
+        ...cond(
+          // Hide `oidcClientMetadata` for SAML application
+          application.type === ApplicationType.SAML && {
+            oidcClientMetadata: buildOidcClientMetadata(),
+          }
+        ),
         isAdmin: includesInternalAdminRole(applicationsRoles),
       };
 
