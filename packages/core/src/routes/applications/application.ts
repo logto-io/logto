@@ -13,6 +13,7 @@ import { generateStandardId, generateStandardSecret } from '@logto/shared';
 import { cond, conditional } from '@silverhand/essentials';
 import { boolean, object, string, z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -134,12 +135,14 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
 
       // Return totalCount to pagination middleware
       ctx.pagination.totalCount = count;
-      ctx.body = applications.map((application) =>
-        application.type === ApplicationType.SAML
-          ? // Hide `oidcClientMetadata` for SAML application
-            { ...application, oidcClientMetadata: buildOidcClientMetadata() }
-          : application
-      );
+      ctx.body = applications.map((application) => ({
+        ...application,
+        // Hide `oidcClientMetadata` for SAML application
+        ...cond(
+          application.type === ApplicationType.SAML &&
+            EnvSet.values.isDevFeaturesEnabled && { oidcClientMetadata: buildOidcClientMetadata() }
+        ),
+      }));
 
       return next();
     }
@@ -246,9 +249,10 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         ...application,
         ...cond(
           // Hide `oidcClientMetadata` for SAML application
-          application.type === ApplicationType.SAML && {
-            oidcClientMetadata: buildOidcClientMetadata(),
-          }
+          application.type === ApplicationType.SAML &&
+            EnvSet.values.isDevFeaturesEnabled && {
+              oidcClientMetadata: buildOidcClientMetadata(),
+            }
         ),
         isAdmin: includesInternalAdminRole(applicationsRoles),
       };
