@@ -45,6 +45,7 @@ describe('SAML application', () => {
     // Check if the SAML application's OIDC metadata redirect URI is properly set.
     // We need to do this since we do not return OIDC related info when using SAML app APIs.
     const samlApplications = await getApplications([ApplicationType.SAML]);
+    expect(samlApplications.every(({ type }) => type === ApplicationType.SAML));
     const pickedSamlApplication = samlApplications.find(
       ({ id }) => id === createdSamlApplication.id
     );
@@ -55,6 +56,9 @@ describe('SAML application', () => {
         `api/saml-applications/${createdSamlApplication.id}/callback`
       )
     ).toBe(true);
+
+    console.log('pickedSamlApplication', pickedSamlApplication);
+    console.log('samlApplications', samlApplications);
 
     expect(
       samlApplications.every(
