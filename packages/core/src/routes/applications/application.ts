@@ -1,8 +1,7 @@
 // TODO: @darcyYe refactor this file later to remove disable max line comment
 /* eslint-disable max-lines */
-import type { Role } from '@logto/schemas';
+import type { Role, Application } from '@logto/schemas';
 import {
-  type Application,
   Applications,
   ApplicationType,
   buildDemoAppDataForTenant,

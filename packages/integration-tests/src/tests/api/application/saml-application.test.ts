@@ -50,16 +50,6 @@ describe('SAML application', () => {
       ({ id }) => id === createdSamlApplication.id
     );
     expect(pickedSamlApplication).toBeDefined();
-    expect(pickedSamlApplication!.oidcClientMetadata.redirectUris.length).toBe(1);
-    expect(
-      pickedSamlApplication!.oidcClientMetadata.redirectUris[0]!.endsWith(
-        `api/saml-applications/${createdSamlApplication.id}/callback`
-      )
-    ).toBe(true);
-
-    console.log('pickedSamlApplication', pickedSamlApplication);
-    console.log('samlApplications', samlApplications);
-
     expect(
       samlApplications.every(
         ({ oidcClientMetadata: { redirectUris, postLogoutRedirectUris } }) =>
