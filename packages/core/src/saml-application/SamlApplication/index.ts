@@ -354,8 +354,8 @@ export class SamlApplication {
     for (const claim of Object.keys(this.config.attributeMapping) as Array<
       keyof SamlAttributeMapping
     >) {
-      // Ignore `id` claim since this will always be included.
-      if (claim === 'id') {
+      // Ignore `sub` claim since this will always be included.
+      if (claim === 'sub') {
         continue;
       }
 
@@ -409,7 +409,6 @@ export class SamlApplication {
         SubjectConfirmationDataNotOnOrAfter: expireAt.toISOString(),
         NameIDFormat,
         NameID,
-        // TODO: should get the request ID from the input parameters, pending https://github.com/logto-io/logto/pull/6881.
         InResponseTo: samlRequestId ?? 'null',
         /**
          * User attributes for SAML response
@@ -440,7 +439,7 @@ export class SamlApplication {
       context: samlLogInResponseTemplate,
       attributes: Object.values(this.config.attributeMapping).map((value) => ({
         name: value,
-        valueTag: generateSamlAttributeTag(value),
+        valueTag: value,
         nameFormat: samlAttributeNameFormatBasic,
         valueXsiType: samlValueXmlnsXsi.string,
       })),
@@ -454,10 +453,15 @@ export class SamlApplication {
       Object.entries(this.config.attributeMapping)
         .map(([key, value]) => {
           // eslint-disable-next-line no-restricted-syntax
-          return [value, userInfo[key as keyof IdTokenProfileStandardClaims]] as [string, unknown];
+          return [value, userInfo[key as keyof IdTokenProfileStandardClaims] ?? null] as [
+            string,
+            unknown,
+          ];
         })
-        .filter(([_, value]) => Boolean(value))
-        .map(([key, value]) => [generateSamlAttributeTag(key), String(value)])
+        .map(([key, value]) => [
+          generateSamlAttributeTag(key),
+          typeof value === 'object' ? JSON.stringify(value) : String(value),
+        ])
     );
   };
 

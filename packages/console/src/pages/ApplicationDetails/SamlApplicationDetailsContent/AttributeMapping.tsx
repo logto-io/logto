@@ -10,7 +10,6 @@ import CirclePlus from '@/assets/icons/circle-plus.svg?react';
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import Button from '@/ds-components/Button';
-import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import DynamicT from '@/ds-components/DynamicT';
 import IconButton from '@/ds-components/IconButton';
 import Select from '@/ds-components/Select';
@@ -22,7 +21,7 @@ import { trySubmitSafe } from '@/utils/form';
 import styles from './AttributeMapping.module.scss';
 import { camelCaseToSentenceCase } from './utils';
 
-const defaultFormValue: Array<[UserClaim | 'id' | '', string]> = [['id', '']];
+const defaultFormValue: Array<[UserClaim | 'sub' | '', string]> = [['sub', '']];
 
 type Props = {
   readonly data: SamlApplicationResponse;
@@ -31,10 +30,10 @@ type Props = {
 
 /**
  * Type for the attribute mapping form data.
- * Array of tuples containing key (UserClaim or 'id' or empty string) and value pairs
+ * Array of tuples containing key (UserClaim or 'sub' or empty string) and value pairs
  */
 type FormData = {
-  attributeMapping: Array<[key: UserClaim | 'id' | '', value: string]>;
+  attributeMapping: Array<[key: UserClaim | 'sub' | '', value: string]>;
 };
 
 const keyPrefix = 'attributeMapping';
@@ -46,7 +45,7 @@ const getOrderedAttributeMapping = (
     samlAttributeMappingKeys
       .filter((key) => key in attributeMapping)
       // eslint-disable-next-line no-restricted-syntax
-      .map((key) => [key, attributeMapping[key]] as [UserClaim | 'id', string])
+      .map((key) => [key, attributeMapping[key]] as [UserClaim | 'sub', string])
   );
 };
 
@@ -140,51 +139,45 @@ function AttributeMapping({ data, mutateApplication }: Props) {
                 // eslint-disable-next-line react/no-array-index-key
                 <tr key={index} className={styles.row}>
                   <td>
-                    {key === 'id' ? (
-                      <CopyToClipboard displayType="block" variant="border" value={key} />
-                    ) : (
-                      <Controller
-                        control={control}
-                        name={`${keyPrefix}.${index}.0` as const}
-                        render={({ field: { onChange, value } }) => (
-                          <Select
-                            isSearchEnabled
-                            value={value}
-                            options={conditionalArray(
-                              availableKeys.map((claim) => ({
-                                title: camelCaseToSentenceCase(claim),
-                                value: claim,
-                              })),
-                              // If this is not specified, the component will fail to render the current value. The current value has been excluded in `availableKeys`. But we should not show if the current value is empty.
-                              value.trim() && [{ title: camelCaseToSentenceCase(value), value }]
-                            )}
-                            onChange={(value) => {
-                              onChange(value);
-                            }}
-                          />
-                        )}
-                      />
-                    )}
+                    <Controller
+                      control={control}
+                      name={`${keyPrefix}.${index}.0` as const}
+                      render={({ field: { onChange, value } }) => (
+                        <Select
+                          isSearchEnabled
+                          value={value}
+                          options={conditionalArray(
+                            availableKeys.map((claim) => ({
+                              title: camelCaseToSentenceCase(claim),
+                              value: claim,
+                            })),
+                            // If this is not specified, the component will fail to render the current value. The current value has been excluded in `availableKeys`. But we should not show if the current value is empty.
+                            value.trim() && [{ title: camelCaseToSentenceCase(value), value }]
+                          )}
+                          onChange={(value) => {
+                            onChange(value);
+                          }}
+                        />
+                      )}
+                    />
                   </td>
                   <td>
                     <TextInput {...register(`${keyPrefix}.${index}.1`)} />
                   </td>
                   <td>
-                    {key !== 'id' && (
-                      <IconButton
-                        onClick={() => {
-                          const currentValues = [
-                            ...formValues.slice(0, index),
-                            ...formValues.slice(index + 1),
-                          ];
-                          setValue('attributeMapping', currentValues, {
-                            shouldDirty: true,
-                          });
-                        }}
-                      >
-                        <CircleMinus />
-                      </IconButton>
-                    )}
+                    <IconButton
+                      onClick={() => {
+                        const currentValues = [
+                          ...formValues.slice(0, index),
+                          ...formValues.slice(index + 1),
+                        ];
+                        setValue('attributeMapping', currentValues, {
+                          shouldDirty: true,
+                        });
+                      }}
+                    >
+                      <CircleMinus />
+                    </IconButton>
                   </td>
                 </tr>
               );

@@ -128,7 +128,7 @@ describe('SAML application', () => {
         acsUrl: null,
         entityId: null,
         attributeMapping: {
-          id: 'sub',
+          sub: 'sub',
           preferred_username: 'username',
           email: 'email_address',
         },
@@ -138,7 +138,7 @@ describe('SAML application', () => {
       name: 'Update with minimal attribute mapping',
       config: {
         attributeMapping: {
-          id: 'sub',
+          sub: 'sub',
         },
       },
     },
