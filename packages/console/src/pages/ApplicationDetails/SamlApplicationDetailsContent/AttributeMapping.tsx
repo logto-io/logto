@@ -1,4 +1,4 @@
-import { type UserClaim, completeUserClaims } from '@logto/core-kit';
+import { type UserClaim, userClaimsList } from '@logto/core-kit';
 import { type SamlApplicationResponse, samlAttributeMappingKeys } from '@logto/schemas';
 import { conditionalArray } from '@silverhand/essentials';
 import { useForm, Controller } from 'react-hook-form';
@@ -103,7 +103,7 @@ function AttributeMapping({ data, mutateApplication }: Props) {
 
   // Not using `useMemo` to avoid the reappearance of the available keys when the form values change.
   const existingKeys = new Set(formValues.map(([key]) => key).filter(Boolean));
-  const availableKeys = completeUserClaims.filter((claim) => !existingKeys.has(claim));
+  const availableKeys = userClaimsList.filter((claim) => !existingKeys.has(claim));
 
   return (
     <DetailsForm

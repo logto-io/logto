@@ -1,13 +1,12 @@
 import { type ToZodObject } from '@logto/connector-kit';
-import { completeUserClaims, type UserClaim } from '@logto/core-kit';
+import { userClaimsList, type UserClaim } from '@logto/core-kit';
 import { z } from 'zod';
 
 export type SamlAttributeMapping = Partial<Record<UserClaim | 'sub', string>>;
 
-export const samlAttributeMappingKeys = Object.freeze([
-  'sub',
-  ...completeUserClaims,
-] satisfies Array<keyof SamlAttributeMapping>);
+export const samlAttributeMappingKeys = Object.freeze(['sub', ...userClaimsList] satisfies Array<
+  keyof SamlAttributeMapping
+>);
 
 export const samlAttributeMappingGuard = z
   .object(
