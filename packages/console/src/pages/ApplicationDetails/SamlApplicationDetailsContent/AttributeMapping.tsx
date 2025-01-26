@@ -116,8 +116,7 @@ function AttributeMapping({ data, mutateApplication }: Props) {
         title="application_details.saml_app_attribute_mapping.title"
         description="application_details.saml_app_attribute_mapping.description"
         learnMoreLink={{
-          // TODO: update this link once docs is ready
-          href: getDocumentationUrl('/connectors/enterprise-connectors'),
+          href: getDocumentationUrl('/integrate-logto/saml-app/attribute-mapping'),
           targetBlank: 'noopener',
         }}
       >
