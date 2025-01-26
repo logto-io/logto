@@ -179,7 +179,6 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
 
   router.post(
     '/saml-applications/:id/secrets',
-    koaQuotaGuard({ key: 'samlApplicationsLimit', quota }),
     koaGuard({
       params: z.object({ id: z.string() }),
       // The life span of the SAML app secret is in years (at least 1 year), and for security concern, secrets which never expire are not recommended.

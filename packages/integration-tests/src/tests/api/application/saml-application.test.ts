@@ -5,6 +5,7 @@ import {
   createApplication,
   deleteApplication,
   getApplications,
+  getApplication,
   updateApplication,
 } from '#src/api/application.js';
 import {
@@ -30,19 +31,29 @@ describe('SAML application', () => {
       description: 'test',
     });
 
+    await expect(getApplication(createdSamlApplication.id)).resolves.toMatchObject(
+      expect.objectContaining({
+        oidcClientMetadata: {
+          redirectUris: [],
+          postLogoutRedirectUris: [],
+        },
+      })
+    );
+
     expect(createdSamlApplication.nameIdFormat).toBe(NameIdFormat.Persistent);
 
     // Check if the SAML application's OIDC metadata redirect URI is properly set.
     // We need to do this since we do not return OIDC related info when using SAML app APIs.
     const samlApplications = await getApplications([ApplicationType.SAML]);
+    expect(samlApplications.every(({ type }) => type === ApplicationType.SAML));
     const pickedSamlApplication = samlApplications.find(
       ({ id }) => id === createdSamlApplication.id
     );
     expect(pickedSamlApplication).toBeDefined();
-    expect(pickedSamlApplication!.oidcClientMetadata.redirectUris.length).toBe(1);
     expect(
-      pickedSamlApplication!.oidcClientMetadata.redirectUris[0]!.endsWith(
-        `api/saml-applications/${createdSamlApplication.id}/callback`
+      samlApplications.every(
+        ({ oidcClientMetadata: { redirectUris, postLogoutRedirectUris } }) =>
+          redirectUris.length === 0 && postLogoutRedirectUris.length === 0
       )
     ).toBe(true);
 

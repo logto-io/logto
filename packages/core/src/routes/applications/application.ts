@@ -1,6 +1,6 @@
 // TODO: @darcyYe refactor this file later to remove disable max line comment
 /* eslint-disable max-lines */
-import type { Role } from '@logto/schemas';
+import type { Role, Application } from '@logto/schemas';
 import {
   Applications,
   ApplicationType,
@@ -13,6 +13,7 @@ import { generateStandardId, generateStandardSecret } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import { boolean, object, string, z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -35,6 +36,22 @@ const parseIsThirdPartQueryParam = (isThirdPartyQuery: 'true' | 'false' | undefi
   }
 
   return isThirdPartyQuery === 'true';
+};
+
+const hideOidcClientMetadataForSamlApp = (application: Application) => {
+  return {
+    ...application,
+    ...conditional(
+      application.type === ApplicationType.SAML &&
+        EnvSet.values.isDevFeaturesEnabled && {
+          oidcClientMetadata: buildOidcClientMetadata(),
+        }
+    ),
+  };
+};
+
+const hideOidcClientMetadataForSamlApps = (applications: readonly Application[]) => {
+  return applications.map((application) => hideOidcClientMetadataForSamlApp(application));
 };
 
 const applicationTypeGuard = z.nativeEnum(ApplicationType);
@@ -101,13 +118,14 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       );
 
       if (paginationDisabled) {
-        ctx.body = await queries.applications.findApplications({
+        const rawApplications = await queries.applications.findApplications({
           search,
           excludeApplicationIds,
           excludeOrganizationId,
           types,
           isThirdParty,
         });
+        ctx.body = hideOidcClientMetadataForSamlApps(rawApplications);
 
         return next();
       }
@@ -134,7 +152,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
 
       // Return totalCount to pagination middleware
       ctx.pagination.totalCount = count;
-      ctx.body = applications;
+      ctx.body = hideOidcClientMetadataForSamlApps(applications);
 
       return next();
     }
@@ -238,7 +256,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         await queries.applicationsRoles.findApplicationsRolesByApplicationId(id);
 
       ctx.body = {
-        ...application,
+        ...hideOidcClientMetadataForSamlApp(application),
         isAdmin: includesInternalAdminRole(applicationsRoles),
       };
 
