@@ -13,7 +13,6 @@ import { generateStandardId, generateStandardSecret } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import { boolean, object, string, z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -42,10 +41,9 @@ const hideOidcClientMetadataForSamlApp = (application: Application) => {
   return {
     ...application,
     ...conditional(
-      application.type === ApplicationType.SAML &&
-        EnvSet.values.isDevFeaturesEnabled && {
-          oidcClientMetadata: buildOidcClientMetadata(),
-        }
+      application.type === ApplicationType.SAML && {
+        oidcClientMetadata: buildOidcClientMetadata(),
+      }
     ),
   };
 };

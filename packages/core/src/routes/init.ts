@@ -101,11 +101,7 @@ const createRouters = (tenant: TenantContext) => {
   systemRoutes(managementRouter, tenant);
   subjectTokenRoutes(managementRouter, tenant);
   accountCentersRoutes(managementRouter, tenant);
-  // TODO: @darcy per our design, we will move related routes to Cloud repo and the routes will be loaded from remote.
-  if (
-    (EnvSet.values.isDevFeaturesEnabled && EnvSet.values.isCloud) ||
-    EnvSet.values.isIntegrationTest
-  ) {
+  if (EnvSet.values.isCloud || EnvSet.values.isIntegrationTest) {
     samlApplicationRoutes(managementRouter, tenant);
   }
 
@@ -121,11 +117,7 @@ const createRouters = (tenant: TenantContext) => {
   wellKnownRoutes(anonymousRouter, tenant);
   statusRoutes(anonymousRouter, tenant);
   authnRoutes(anonymousRouter, tenant);
-  // TODO: @darcy per our design, we will move related routes to Cloud repo and the routes will be loaded from remote.
-  if (
-    (EnvSet.values.isDevFeaturesEnabled && EnvSet.values.isCloud) ||
-    EnvSet.values.isIntegrationTest
-  ) {
+  if (EnvSet.values.isCloud || EnvSet.values.isIntegrationTest) {
     samlApplicationAnonymousRoutes(anonymousRouter, tenant);
   }
 
