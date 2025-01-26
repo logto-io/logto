@@ -24,9 +24,7 @@ function isLegacyHashAlgorithm(algorithm: string): boolean {
   }
 }
 
-function isLegacyPassword(
-  value: string
-): [boolean, parsed: [string, string[], string] | undefined] {
+function isLegacyPassword(value: string): [string, string[], string] | undefined {
   try {
     const parsed: unknown = JSON.parse(value);
     if (
@@ -42,11 +40,11 @@ function isLegacyPassword(
       const args = parsed[1];
       const encryptedPassword = parsed[2];
 
-      return [true, [algorithm, args, encryptedPassword]] as const;
+      return [algorithm, args, encryptedPassword] as const;
     }
-    return [false, undefined] as const;
+    return undefined;
   } catch {
-    return [false, undefined] as const;
+    return undefined;
   }
 }
 
@@ -58,12 +56,9 @@ function isLegacyPassword(
 export const parseLegacyPassword = (passwordDigest: string | undefined): LegacyPassword => {
   assertThat(passwordDigest, new RequestError({ code: 'password.unsupported_encryption_method' }));
 
-  const [success, parsed] = isLegacyPassword(passwordDigest);
+  const parsed = isLegacyPassword(passwordDigest);
 
-  assertThat(
-    success && parsed,
-    new RequestError({ code: 'password.invalid_legacy_password_format' })
-  );
+  assertThat(parsed, new RequestError({ code: 'password.invalid_legacy_password_format' }));
 
   const [algorithm, args, encryptedPassword] = parsed;
 
