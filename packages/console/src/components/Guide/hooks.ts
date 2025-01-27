@@ -47,16 +47,13 @@ export const useAppGuideMetadata = (): {
           /**
            * Show SAML guides when it is:
            * 1. Cloud env
-           * 2. `isDevFeatureEnabled` is true
-           * 3. `quota.samlApplicationsLimit` is not 0.
+           * 2. `quota.samlApplicationsLimit` is not 0.
            */
         )
         .filter(
           ({ metadata: { target } }) =>
             target !== ApplicationType.SAML ||
-            (isCloudEnv &&
-              isDevFeaturesEnabled &&
-              currentSubscriptionQuota.samlApplicationsLimit !== 0)
+            (isCloudEnv && currentSubscriptionQuota.samlApplicationsLimit !== 0)
         ),
     []
   );
