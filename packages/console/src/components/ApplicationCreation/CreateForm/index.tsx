@@ -10,7 +10,6 @@ import Modal from 'react-modal';
 import { useSWRConfig } from 'swr';
 
 import { GtagConversionId, reportConversion } from '@/components/Conversion/utils';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
@@ -94,10 +93,7 @@ function CreateForm({
       }
 
       const appCreationEndpoint =
-        // TODO: @darcy remove this after the SAML is implemented
-        isDevFeaturesEnabled && data.type === ApplicationType.SAML
-          ? 'api/saml-applications'
-          : 'api/applications';
+        data.type === ApplicationType.SAML ? 'api/saml-applications' : 'api/applications';
 
       const createdApp = await api.post(appCreationEndpoint, { json: data }).json<Application>();
 
