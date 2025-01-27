@@ -35,8 +35,11 @@ const tagMap = new Map([
   ['sso-connectors', 'SSO connectors'],
   ['sso-connector-providers', 'SSO connector providers'],
   ['.well-known', 'Well-known'],
-  ['saml-applications', 'SAML applications'],
 ]);
+if (EnvSet.values.isCloud || EnvSet.values.isIntegrationTest) {
+  tagMap.set('saml-applications', 'SAML applications');
+  tagMap.set('saml', 'SAML applications auth flow');
+}
 
 /**
  * Build a tag name from the given absolute path. The function will get the root component name
