@@ -68,9 +68,7 @@ function GuideCard({ data, onClick, hasBorder, hasButton, hasPaywall, isBeta }: 
               <div className={styles.tagWrapper}>
                 {hasPaywall &&
                   (target === ApplicationType.SAML ? (
-                    isEnterprisePlan ? null : (
-                      <FeatureTag isVisible isEnterprise />
-                    )
+                    <FeatureTag isEnterprise isVisible={!isEnterprisePlan} />
                   ) : (
                     <FeatureTag isVisible plan={latestProPlanId} />
                   ))}

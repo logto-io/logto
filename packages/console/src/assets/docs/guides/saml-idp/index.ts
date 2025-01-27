@@ -9,7 +9,6 @@ const metadata = Object.freeze({
   isThirdParty: false,
   skipGuideAfterCreation: true,
   isCloud: true,
-  isDevFeature: true,
 } satisfies GuideMetadata);
 
 export default metadata;
