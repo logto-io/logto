@@ -237,23 +237,30 @@ export const getSupplementDocuments = async (
   );
 
   const supplementDocuments = allSupplementDocuments.filter((supplement) => {
-    // Include documents without special tags
-    if (
-      !supplement.tags?.some((tag) => tag?.name === devFeatureTag || tag?.name === cloudOnlyTag)
-    ) {
+    if (EnvSet.values.isIntegrationTest) {
       return true;
     }
 
-    // Include dev feature documents when dev features are enabled and cloud features when in cloud mode
-    if (
-      EnvSet.values.isDevFeaturesEnabled &&
-      supplement.tags.some((tag) => tag?.name === devFeatureTag) &&
-      (!supplement.tags.some((tag) => tag?.name === cloudOnlyTag) || EnvSet.values.isCloud)
-    ) {
+    const hasDevFeatureTag = supplement.tags?.some((tag) => tag?.name === devFeatureTag) ?? false;
+    const hasCloudOnlyTag = supplement.tags?.some((tag) => tag?.name === cloudOnlyTag) ?? false;
+
+    // 1. Return true if there is no special tag
+    if (!hasDevFeatureTag && !hasCloudOnlyTag) {
       return true;
     }
 
-    return false;
+    // 2. devFeatureTag only
+    if (hasDevFeatureTag && !hasCloudOnlyTag) {
+      return EnvSet.values.isDevFeaturesEnabled;
+    }
+
+    // 3. cloudOnlyTag only
+    if (!hasDevFeatureTag && hasCloudOnlyTag) {
+      return EnvSet.values.isCloud;
+    }
+
+    // 4. devFeatureTag and cloudOnlyTag
+    return EnvSet.values.isDevFeaturesEnabled && EnvSet.values.isCloud;
   });
 
   return supplementDocuments;
