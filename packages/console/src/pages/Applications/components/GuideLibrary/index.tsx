@@ -10,7 +10,7 @@ import FeatureTag from '@/components/FeatureTag';
 import { type SelectedGuide } from '@/components/Guide/GuideCard';
 import GuideCardGroup from '@/components/Guide/GuideCardGroup';
 import { useAppGuideMetadata } from '@/components/Guide/hooks';
-import { isDevFeaturesEnabled, isCloud } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { CheckboxGroup } from '@/ds-components/Checkbox';
@@ -36,7 +36,10 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, onSelectGuide }
   const [filterCategories, setFilterCategories] = useState<AppGuideCategory[]>([]);
   const { getFilteredAppGuideMetadata, getStructuredAppGuideMetadata } = useAppGuideMetadata();
   const isApplicationCreateModal = pathname.includes('/applications/create');
-  const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
+  const {
+    currentSubscriptionQuota,
+    currentSubscription: { isEnterprisePlan },
+  } = useContext(SubscriptionDataContext);
 
   const structuredMetadata = useMemo(
     () => getStructuredAppGuideMetadata({ categories: filterCategories }),
@@ -96,16 +99,8 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, onSelectGuide }
                       /**
                        * Show SAML guides when it is:
                        * 1. Cloud env
-                       * 2. `isDevFeatureEnabled` is true
-                       * 3. `quota.samlApplicationsLimit` is not 0.
                        */
-                      .filter(
-                        (category) =>
-                          category !== 'SAML' ||
-                          (isCloud &&
-                            isDevFeaturesEnabled &&
-                            currentSubscriptionQuota.samlApplicationsLimit !== 0)
-                      )
+                      .filter((category) => category !== 'SAML' || isCloud)
                       .filter((category) => isCloud || category !== 'Protected')
                       .map((category) => ({
                         title: `guide.categories.${category}`,
@@ -121,6 +116,12 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, onSelectGuide }
                                   plan={latestProPlanId}
                                 />
                               ),
+                            }
+                        ),
+                        ...cond(
+                          isCloud &&
+                            category === 'SAML' && {
+                              tag: <FeatureTag isEnterprise isVisible={!isEnterprisePlan} />,
                             }
                         ),
                       }))}

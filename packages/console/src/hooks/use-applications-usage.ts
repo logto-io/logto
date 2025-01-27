@@ -18,11 +18,17 @@ const useApplicationsUsage = () => {
 
   const hasAppsReachedLimit = hasReachedSubscriptionQuotaLimit('applicationsLimit');
 
+  const hasSamlAppsReachedLimit = hasReachedSubscriptionQuotaLimit('samlApplicationsLimit');
+
+  const hasSamlAppsSurpassedLimit = hasSurpassedSubscriptionQuotaLimit('samlApplicationsLimit');
+
   return {
     hasMachineToMachineAppsReachedLimit,
     hasMachineToMachineAppsSurpassedLimit,
     hasAppsReachedLimit,
     hasThirdPartyAppsReachedLimit,
+    hasSamlAppsReachedLimit,
+    hasSamlAppsSurpassedLimit,
   };
 };
 
