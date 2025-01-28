@@ -18,12 +18,18 @@ export enum ReservedResource {
 
 /**
  * A comprehensive list of all available user claims that can be used in SAML applications.
- * These claims can be mapped to SAML attributes in the application configuration.
+ * This array serves two purposes:
+ * 1. Acts as a single source of truth for all possible `UserClaim` values
+ * 2. Provides a runtime accessible list of all available claims
  *
- * Note: This array must include ALL possible values from UserClaim type.
- * TypeScript will throw a compile-time error if any value is missing.
+ * Previously, `UserClaim` type was defined directly as a union type. Now, we define this array first
+ * and derive the `UserClaim` type from it using Zod. This approach maintains type safety while also
+ * making the complete list of claims available at runtime.
+ *
+ * Note: This array must include ALL possible values from `UserClaim` type.
+ * TypeScript will throw error if any value is missing.
  */
-export const completeUserClaims = [
+export const userClaimsList = [
   // OIDC standard claims
   'name',
   'given_name',
@@ -57,9 +63,9 @@ export const completeUserClaims = [
 ] as const;
 
 /**
- * Zod guard for UserClaim type, using completeUserClaims as the single source of truth
+ * Zod guard for `UserClaim` type, using `userClaimsList` as the single source of truth
  */
-export const userClaimGuard = z.enum(completeUserClaims);
+export const userClaimGuard = z.enum(userClaimsList);
 
 export type UserClaim = z.infer<typeof userClaimGuard>;
 
