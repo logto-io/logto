@@ -1,5 +1,17 @@
 # Change Log
 
+## 2.5.3
+
+### Patch Changes
+
+- 62eb8ed8d: refactor user claims type and introduce `userClaimsList`
+
+  - Introduce a new exported variable `userClaimsList` containing all possible user claims.
+  - Utilize `userClaimsList` to derive the `UserClaim` type, ensuring consistency and maintainability.
+
+- Updated dependencies [a8080e891]
+  - @logto/shared@3.1.3
+
 ## 2.5.2
 
 ### Patch Changes
