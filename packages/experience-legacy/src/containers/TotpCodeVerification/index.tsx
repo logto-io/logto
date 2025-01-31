@@ -40,12 +40,16 @@ const TotpCodeVerification = ({ flow }: Props) => {
 
   const handleSubmit = useCallback(
     async (code: string[]) => {
+      if (isSubmitting) {
+        return;
+      }
+
       setInputErrorMessage(undefined);
       setIsSubmitting(true);
       await onSubmit(code.join(''));
       setIsSubmitting(false);
     },
-    [onSubmit]
+    [onSubmit, isSubmitting]
   );
 
   return (
