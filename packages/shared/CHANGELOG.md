@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.1.3
+
+### Patch Changes
+
+- a8080e891: bump dependencies
+
 ## 3.1.2
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-http-email",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Email connector to send email via HTTP call.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {
