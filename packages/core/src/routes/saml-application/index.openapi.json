@@ -310,6 +310,94 @@
           }
         }
       }
+    },
+    "/api/saml-applications/{id}/metadata": {
+      "get": {
+        "summary": "Get SAML application metadata",
+        "description": "Get the SAML metadata XML for the application.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the SAML application."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The SAML metadata XML.",
+            "content": {
+              "text/xml": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request."
+          },
+          "404": {
+            "description": "The SAML application was not found."
+          }
+        }
+      }
+    },
+    "/api/saml-applications/{id}/callback": {
+      "get": {
+        "summary": "SAML application callback",
+        "description": "Handle the OIDC callback for SAML application and generate SAML response.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the SAML application."
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The authorization code from OIDC callback."
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The state parameter from OIDC callback."
+          },
+          {
+            "name": "redirectUri",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The redirect URI for the callback."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns an HTML form that automatically submits the SAML response."
+          },
+          "400": {
+            "description": "Invalid request or OIDC error."
+          },
+          "404": {
+            "description": "The SAML application was not found."
+          }
+        }
+      }
     }
   }
 }
