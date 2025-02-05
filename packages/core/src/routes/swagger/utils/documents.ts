@@ -57,8 +57,8 @@ const additionalTags = Object.freeze(
     'Organization applications',
     'Custom UI assets',
     'Organization users',
-    (EnvSet.values.isCloud || EnvSet.values.isIntegrationTest) && 'SAML applications',
-    (EnvSet.values.isCloud || EnvSet.values.isIntegrationTest) && 'SAML applications auth flow'
+    'SAML applications',
+    'SAML applications auth flow'
   )
 );
 

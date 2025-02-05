@@ -3,9 +3,6 @@
     {
       "name": "SAML applications",
       "description": "SAML (Security Assertion Markup Language) applications represent applications that use SAML protocol for single sign-on (SSO). These endpoints allow you to manage SAML applications, including their configurations and signing certificates."
-    },
-    {
-      "name": "Cloud only"
     }
   ],
   "paths": {

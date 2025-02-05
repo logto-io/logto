@@ -3,9 +3,6 @@
     {
       "name": "SAML applications auth flow",
       "description": "Endpoints for SAML (Security Assertion Markup Language) applications auth flow."
-    },
-    {
-      "name": "Cloud only"
     }
   ],
   "paths": {
