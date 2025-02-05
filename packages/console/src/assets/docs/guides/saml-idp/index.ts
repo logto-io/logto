@@ -8,7 +8,6 @@ const metadata = Object.freeze({
   target: ApplicationType.SAML,
   isThirdParty: false,
   skipGuideAfterCreation: true,
-  isCloud: true,
 } satisfies GuideMetadata);
 
 export default metadata;

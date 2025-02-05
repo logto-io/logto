@@ -96,11 +96,6 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, onSelectGuide }
                   <CheckboxGroup
                     className={styles.checkboxGroup}
                     options={allAppGuideCategories
-                      /**
-                       * Show SAML guides when it is:
-                       * 1. Cloud env
-                       */
-                      .filter((category) => category !== 'SAML' || isCloud)
                       .filter((category) => isCloud || category !== 'Protected')
                       .map((category) => ({
                         title: `guide.categories.${category}`,

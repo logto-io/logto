@@ -101,9 +101,7 @@ const createRouters = (tenant: TenantContext) => {
   systemRoutes(managementRouter, tenant);
   subjectTokenRoutes(managementRouter, tenant);
   accountCentersRoutes(managementRouter, tenant);
-  if (EnvSet.values.isCloud || EnvSet.values.isIntegrationTest) {
-    samlApplicationRoutes(managementRouter, tenant);
-  }
+  samlApplicationRoutes(managementRouter, tenant);
 
   const anonymousRouter: AnonymousRouter = new Router();
 
@@ -117,9 +115,7 @@ const createRouters = (tenant: TenantContext) => {
   wellKnownRoutes(anonymousRouter, tenant);
   statusRoutes(anonymousRouter, tenant);
   authnRoutes(anonymousRouter, tenant);
-  if (EnvSet.values.isCloud || EnvSet.values.isIntegrationTest) {
-    samlApplicationAnonymousRoutes(anonymousRouter, tenant);
-  }
+  samlApplicationAnonymousRoutes(anonymousRouter, tenant);
 
   wellKnownOpenApiRoutes(anonymousRouter, {
     experienceRouters: [experienceRouter, interactionRouter],

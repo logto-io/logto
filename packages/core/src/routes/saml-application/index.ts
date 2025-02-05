@@ -24,12 +24,18 @@ import { generateInternalSecret } from '#src/routes/applications/application-sec
 import type { ManagementApiRouter, RouterInitArgs } from '#src/routes/types.js';
 import { getSamlAppCallbackUrl } from '#src/saml-application/SamlApplication/utils.js';
 import assertThat from '#src/utils/assert-that.js';
+import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 export default function samlApplicationRoutes<T extends ManagementApiRouter>(
   ...[router, { id: tenantId, queries, libraries }]: RouterInitArgs<T>
 ) {
   const {
-    applications: { insertApplication, findApplicationById, deleteApplicationById },
+    applications: {
+      countApplications,
+      insertApplication,
+      findApplicationById,
+      deleteApplicationById,
+    },
     samlApplicationConfigs: { insertSamlApplicationConfig },
     samlApplicationSecrets: {
       deleteSamlApplicationSecretById,
@@ -49,7 +55,29 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
 
   router.post(
     '/saml-applications',
-    koaQuotaGuard({ key: 'samlApplicationsLimit', quota }),
+    EnvSet.values.isCloud
+      ? koaQuotaGuard({ key: 'samlApplicationsLimit', quota })
+      : // OSS can create at most 3 SAML apps.
+        async (ctx, next) => {
+          const { searchParams } = ctx.URL;
+          // This will only parse the `search` query param, other params will be ignored. Please use query guard to validate them.
+          const search = parseSearchParamsForSearch(searchParams);
+          const { count: samlAppCount } = await countApplications({
+            search,
+            types: [ApplicationType.SAML],
+          });
+
+          assertThat(
+            samlAppCount < 3,
+            new RequestError({
+              code: 'application.saml.reach_oss_limit',
+              status: 403,
+              limit: 3,
+            })
+          );
+
+          return next();
+        },
     koaGuard({
       body: samlApplicationCreateGuard,
       response: samlApplicationResponseGuard,

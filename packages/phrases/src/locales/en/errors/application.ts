@@ -23,6 +23,7 @@ const application = {
   saml: {
     use_saml_app_api: 'Use `[METHOD] /saml-applications(/.*)?` API to operate SAML app.',
     saml_application_only: 'The API is only available for SAML applications.',
+    reach_oss_limit: 'You CAN NOT create more SAML apps since the limit of {{limit}} is hit.',
     acs_url_binding_not_supported:
       'Only HTTP-POST binding is supported for receiving SAML assertions.',
     can_not_delete_active_secret: 'Can not delete the active secret.',
