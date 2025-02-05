@@ -9,7 +9,8 @@ const quota_table = {
     title: 'التطبيقات',
     total: 'إجمالي التطبيقات',
     m2m: 'تطبيقات من الجهاز إلى الجهاز',
-    third_party: 'تطبيقات الطرف الثالث',
+    /** UNTRANSLATED */
+    third_party: 'OIDC/OAuth 3rd party apps',
   },
   resource: {
     title: 'موارد واجهة برمجة التطبيقات',
