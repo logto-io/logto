@@ -48,6 +48,7 @@ const managementApiIdentifiableEntityNames = Object.freeze([
   'organization-scope',
   'organization-invitation',
   'saml-application',
+  'secret',
 ]);
 
 /** Additional tags that cannot be inferred from the path. */

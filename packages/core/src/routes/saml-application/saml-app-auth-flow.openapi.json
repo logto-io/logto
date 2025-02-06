@@ -5,6 +5,37 @@
       "description": "Endpoints for SAML (Security Assertion Markup Language) applications auth flow."
     }
   ],
+  "components": {
+    "parameters": {
+      "samlId-root": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "The ID of the SAML application.",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "schemas": {
+      "SamlRequest": {
+        "type": "string",
+        "description": "Base64-encoded SAML request message."
+      },
+      "SamlSignature": {
+        "type": "string",
+        "description": "Base64-encoded signature of the request."
+      },
+      "SamlSignatureAlgorithm": {
+        "type": "string",
+        "description": "The signature algorithm used to sign the request."
+      },
+      "RelayState": {
+        "type": "string",
+        "description": "Optional state parameter to be returned in the response."
+      }
+    }
+  },
   "paths": {
     "/api/saml/{id}/authn": {
       "get": {
@@ -12,46 +43,36 @@
         "description": "Process SAML authentication request using HTTP Redirect binding.",
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "The ID of the SAML application."
-          },
-          {
             "name": "SAMLRequest",
             "in": "query",
-            "required": true,
+            "description": "The SAML request message.",
             "schema": {
               "type": "string"
-            },
-            "description": "The SAML request message."
+            }
           },
           {
             "name": "Signature",
             "in": "query",
+            "description": "The signature of the request.",
             "schema": {
               "type": "string"
-            },
-            "description": "The signature of the request."
+            }
           },
           {
             "name": "SigAlg",
             "in": "query",
+            "description": "The signature algorithm.",
             "schema": {
               "type": "string"
-            },
-            "description": "The signature algorithm."
+            }
           },
           {
             "name": "RelayState",
             "in": "query",
+            "description": "The relay state parameter.",
             "schema": {
               "type": "string"
-            },
-            "description": "The relay state parameter."
+            }
           }
         ],
         "responses": {
@@ -69,34 +90,24 @@
       "post": {
         "summary": "Handle SAML authentication request (POST binding)",
         "description": "Process SAML authentication request using HTTP POST binding.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "The ID of the SAML application."
-          }
-        ],
+        "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/x-www-form-urlencoded": {
               "schema": {
                 "type": "object",
+                "required": ["SAMLRequest"],
                 "properties": {
                   "SAMLRequest": {
                     "type": "string",
-                    "description": "The SAML request message."
+                    "description": "Base64-encoded SAML request message."
                   },
                   "RelayState": {
                     "type": "string",
-                    "description": "The relay state parameter."
+                    "description": "Optional state parameter to be returned in the response."
                   }
-                },
-                "required": ["SAMLRequest"]
+                }
               }
             }
           }
