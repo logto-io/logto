@@ -1,94 +1,75 @@
 const usage = {
-  /** UNTRANSLATED */
-  status_active: 'In use',
-  /** UNTRANSLATED */
-  status_inactive: 'Not in use',
-  /** UNTRANSLATED */
-  limited_status_quota_description: '(First {{quota}} included)',
-  /** UNTRANSLATED */
-  unlimited_status_quota_description: '(Included)',
-  /** UNTRANSLATED */
-  disabled_status_quota_description: '(Not included)',
-  /** UNTRANSLATED */
-  usage_description_with_unlimited_quota: '{{usage}}<span> (Unlimited)</span>',
-  /** UNTRANSLATED */
-  usage_description_with_limited_quota: '{{usage}}<span> (First {{basicQuota}} included)</span>',
-  /** UNTRANSLATED */
-  usage_description_without_quota: '{{usage}}<span> (Not included)</span>',
+  status_active: 'قيد الاستخدام',
+  status_inactive: 'غير مستخدم',
+  limited_status_quota_description: '(تم تضمين أول {{quota}})',
+  unlimited_status_quota_description: '(مدرج)',
+  disabled_status_quota_description: '(غير مدرج)',
+  usage_description_with_unlimited_quota: '{{usage}}<span> (غير محدود)</span>',
+  usage_description_with_limited_quota: '{{usage}}<span> (تم تضمين أول {{basicQuota}})</span>',
+  usage_description_without_quota: '{{usage}}<span> (غير مدرج)</span>',
   mau: {
     title: 'MAU',
     tooltip:
       'MAU هو مستخدم فريد قام بتبادل رمز واحد على الأقل مع Logto خلال دورة فوترة. غير محدود لخطة Pro. <a>تعرف أكثر</a>',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'A MAU is a unique user who has exchanged at least one token with Logto within a billing cycle. Unlimited for the Enterprise Plan.',
+      'MAU هو مستخدم فريد قام بتبادل رمز واحد على الأقل مع Logto خلال دورة فوترة. غير محدود لخطة الشركات.',
   },
   organizations: {
     title: 'المؤسسات',
     tooltip:
       'ميزة إضافية بسعر ثابت قدره ${{price, number}} شهريًا. لا يتأثر السعر بعدد المؤسسات أو مستوى نشاطها.',
-    /** UNTRANSLATED */
-    description_for_enterprise: '(Included)',
-    /** UNTRANSLATED */
+    description_for_enterprise: '(مدرج)',
     tooltip_for_enterprise:
-      'Inclusion depends on your plan. If the organization feature isn’t in your initial contract, it will be added to your bill when you activate it. The add-on costs ${{price, number}}/month, regardless of the number of organizations or their activity.',
-    /** UNTRANSLATED */
+      'يعتمد الإدراج على خطتك. إذا لم تكن ميزة المؤسسة في عقدك الأولي ، فسيتم إضافتها إلى فاتورتك عند تفعيلها. الإضافة تكلف ${{price, number}}/الشهر ، بغض النظر عن عدد المؤسسات أو نشاطها.',
     tooltip_for_enterprise_with_numbered_basic_quota:
-      'Your plan includes the first {{basicQuota}} organizations for free. If you need more, you can add them with the organization add-on at a flat rate of ${{price, number}} per month, regardless of the number of organizations or their activity level.',
+      'تشمل خطتك أول {{basicQuota}} مؤسسات مجانًا. إذا كنت بحاجة إلى المزيد ، يمكنك إضافتها مع الإضافة للمؤسسات بمعدل ثابت قدره ${{price, number}} شهريًا ، بغض النظر عن عدد المؤسسات أو مستوى نشاطها.',
   },
   mfa: {
     title: 'MFA',
     tooltip:
       'ميزة إضافية بسعر ثابت قدره ${{price, number}} شهريًا. لا يتأثر السعر بعدد عوامل المصادقة المستخدمة.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'Inclusion depends on your plan. If the MFA feature isn’t in your initial contract, it will be added to your bill when you activate it. The add-on costs ${{price, number}}/month, regardless of the number of authentication factors used.',
+      'يعتمد الإدراج على خطتك. إذا لم تكن ميزة MFA في عقدك الأولي ، فسيتم إضافتها إلى فاتورتك عند تفعيلها. الإضافة تكلف ${{price, number}}/الشهر ، بغض النظر عن عدد عوامل المصادقة المستخدمة.',
   },
   enterprise_sso: {
     title: 'SSO للشركات',
     tooltip: 'ميزة إضافية بسعر قدره ${{price, number}} للاتصال بواجهة SSO شهريًا.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'Add-on feature with a price of ${{price, number}} per SSO connection per month. The first {{basicQuota}} SSO are included and free to use in your contract-based plan.',
+      'ميزة إضافية بسعر ${{price, number}} لكل اتصال SSO شهريًا. تُشمل وتكون مجانية لاستخدام أول {{basicQuota}} في خطتك القائمة على العقد.',
   },
   api_resources: {
     title: 'موارد واجهة برمجة التطبيقات',
     tooltip:
       'ميزة إضافية بسعر قدره ${{price, number}} لكل مورد في واجهة برمجة التطبيقات شهريًا. الموارد الأولى 3 مجانية.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} API resources are included and free to use in your contract-based plan. If you need more, ${{price, number}} per API resource per month.',
+      'تشمل خطتك القائمة على العقد أول {{basicQuota}} من موارد واجهة برمجة التطبيقات وتكون مجانية للاستخدام. إذا كنت بحاجة إلى المزيد ، {{price, number}} لكل مورد واجهة برمجة التطبيقات شهريًا.',
   },
   machine_to_machine: {
     title: 'من الجهاز إلى الجهاز',
     tooltip:
       'ميزة إضافية بسعر قدره ${{price, number}} لكل تطبيق من الجهاز إلى الجهاز شهريًا. التطبيق الأول من الجهاز إلى الجهاز مجاني.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} machine-to-machine app is free to use in your contract-based plan. If you need more, ${{price, number}} per app per month.',
+      'أول {{basicQuota}} تطبيق من الجهاز إلى الجهاز مجاني للاستخدام في خطتك القائمة على العقد. إذا كنت بحاجة إلى المزيد ، {{price, number}} لكل تطبيق شهريًا.',
   },
   tenant_members: {
     title: 'أعضاء المستأجر',
     tooltip:
       'ميزة إضافية بسعر قدره ${{price, number}} لكل عضو في المستأجر شهريًا. الأعضاء الأولى 3 في المستأجر مجانية.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} tenant members are included and free to use in your contract-based plan. If you need more, ${{price, number}} per tenant member per month.',
+      'تشمل خطتك القائمة على العقد أول {{basicQuota}} من أعضاء المستأجر وتكون مجانية للاستخدام. إذا كنت بحاجة إلى المزيد ، {{price, number}} لكل عضو مستأجر شهريًا.',
   },
   tokens: {
     title: 'الرموز',
     tooltip:
       'ميزة إضافية بسعر ${{price, number}} لكل {{tokenLimit}} توكن. أول {{basicQuota}} توكن مشمولة.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} tokens is included and free to use in your contract-based plan. If you need more, ${{price, number}} per {{tokenLimit}} tokens per month.',
+      'تشمل خطتك القائمة على العقد أول {{basicQuota}} من الرموز وتكون مجانية للاستخدام. إذا كنت بحاجة إلى المزيد ، {{price, number}} لكل {{tokenLimit}} رمز شهريًا.',
   },
   hooks: {
     title: 'الخطافات',
     tooltip: 'ميزة إضافية بسعر قدره ${{price, number}} لكل خطاف. الخطافات الأولى 10 مشمولة.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} hooks are included and free to use in your contract-based plan. If you need more, ${{price, number}} per hook per month.',
+      'تشمل خطتك القائمة على العقد أول {{basicQuota}} من الخطافات وتكون مجانية للاستخدام. إذا كنت بحاجة إلى المزيد ، {{price, number}} لكل خطاف شهريًا.',
   },
   pricing: {
     add_on_changes_in_current_cycle_notice:

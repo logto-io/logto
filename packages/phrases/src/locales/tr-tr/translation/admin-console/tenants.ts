@@ -99,8 +99,7 @@ const tenants = {
   },
   status: {
     mau_exceeded: 'MAU Sınırı Aşıldı',
-    /** UNTRANSLATED */
-    token_exceeded: 'Token exceeded',
+    token_exceeded: 'Jeton sınırı aşıldı',
     suspended: 'Askıya Alındı',
     overdue: 'Geçmişte',
   },

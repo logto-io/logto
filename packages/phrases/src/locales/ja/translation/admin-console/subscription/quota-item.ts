@@ -172,26 +172,17 @@ const quota_item = {
     not_eligible: 'カスタム UI を削除してください',
   },
   idp_initiated_sso_enabled: {
-    /** UNTRANSLATED */
-    name: 'IDP-initiated SSO',
-    /** UNTRANSLATED */
-    limited: 'IDP-initiated SSO',
-    /** UNTRANSLATED */
-    unlimited: 'IDP-initiated SSO',
-    /** UNTRANSLATED */
-    not_eligible: 'IDP-initiated SSO not allowed',
+    name: 'IDPによって開始された SSO',
+    limited: 'IDPによって開始された SSO',
+    unlimited: 'IDPによって開始された SSO',
+    not_eligible: 'IDPによって開始された SSO は許可されていません',
   },
   saml_applications_limit: {
-    /** UNTRANSLATED */
-    name: 'SAML applications',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} SAML application',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} SAML applications',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited SAML applications',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your SAML applications',
+    name: 'SAML アプリケーション',
+    limited: '{{count, number}} SAML アプリケーション',
+    limited_other: '{{count, number}} SAML アプリケーション',
+    unlimited: '無制限のSAMLアプリケーション',
+    not_eligible: 'SAMLアプリケーションを削除してください',
   },
 };
 

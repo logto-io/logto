@@ -5,8 +5,7 @@ const enterprise_sso_details = {
   readme_drawer_subtitle: 'エンドユーザーのSSOを有効にするために企業SSOコネクタを設定します',
   tab_experience: 'SSO体験',
   tab_connection: '接続',
-  /** UNTRANSLATED */
-  tab_idp_initiated_auth: 'IdP-initiated SSO',
+  tab_idp_initiated_auth: 'IdP によって開始された SSO',
   general_settings_title: '一般設定',
   custom_branding_title: '表示',
   custom_branding_description:
@@ -74,75 +73,49 @@ const enterprise_sso_details = {
     authorization_endpoint: '認可エンドポイント',
     token_endpoint: 'トークンエンドポイント',
     userinfo_endpoint: 'ユーザー情報エンドポイント',
-    jwks_uri: 'JSON Webキーセットエンドポイント',
+    jwks_uri: 'JSON Web キー セットエンドポイント',
     issuer: '発行者',
   },
   idp_initiated_auth_config: {
-    /** UNTRANSLATED */
-    card_title: 'IdP-initiated SSO',
-    /** UNTRANSLATED */
+    card_title: 'IdP によって開始された SSO',
     card_description:
-      'User typically start the authentication process from your app using the SP-initiated SSO flow. DO NOT enable this feature unless absolutely necessary.',
-    /** UNTRANSLATED */
-    enable_idp_initiated_sso: 'Enable IdP-initiated SSO',
-    /** UNTRANSLATED */
+      '通常、ユーザーは SP によって開始される SSO フローを使用してアプリから認証プロセスを開始します。この機能は絶対に必要な場合にのみ有効にして下さい。',
+    enable_idp_initiated_sso: 'IdP によって開始された SSO を有効にする',
     enable_idp_initiated_sso_description:
-      "Allow enterprise users to start the authentication process directly from the identity provider's portal. Please understand the potential security risks before enabling this feature.",
-    /** UNTRANSLATED */
-    default_application: 'Default application',
-    /** UNTRANSLATED */
-    default_application_tooltip:
-      'Target application the user will be redirected to after authentication.',
-    /** UNTRANSLATED */
+      '企業ユーザーがアイデンティティプロバイダーのポータルから直接認証プロセスを開始できるようにします。この機能を有効にする前に潜在的なセキュリティリスクを確認してください。',
+    default_application: 'デフォルトアプリケーション',
+    default_application_tooltip: 'ユーザーが認証後にリダイレクトされる目標アプリケーション。',
     empty_applications_error:
-      'No applications found. Please add one in the <a>Applications</a> section.',
-    /** UNTRANSLATED */
-    empty_applications_placeholder: 'No applications',
-    /** UNTRANSLATED */
-    authentication_type: 'Authentication type',
-    /** UNTRANSLATED */
-    auto_authentication_disabled_title: 'Redirect to client for SP-initiated SSO',
-    /** UNTRANSLATED */
+      'アプリケーションが見つかりませんでした。「<a>アプリケーション</a>」セクションに追加してください。',
+    empty_applications_placeholder: 'アプリケーションなし',
+    authentication_type: '認証の種類',
+    auto_authentication_disabled_title:
+      'SP イニシエーテッド SSO のためにクライアントにリダイレクト',
     auto_authentication_disabled_description:
-      'Recommended. Redirect users to the client-side application to initiate a secure SP-initiated OIDC authentication.  This will prevent the CSRF attacks.',
-    /** UNTRANSLATED */
-    auto_authentication_enabled_title: 'Directly sign in using the IdP-initiated SSO',
-    /** UNTRANSLATED */
+      '推奨: セキュアな SP イニシエーテッド OIDC 認証を開始するためにクライアント側アプリケーションにユーザーをリダイレクトします。これにより CSRF 攻撃を防止できます。',
+    auto_authentication_enabled_title: 'IdP によって開始された SSO を使用して直接サインイン',
     auto_authentication_enabled_description:
-      'After successful sign-in, users will be redirected to the specified Redirect URI with the authorization code (Without state and PKCE validation).',
-    /** UNTRANSLATED */
-    auto_authentication_disabled_app: 'For traditional web app, single-page app (SPA)',
-    /** UNTRANSLATED */
-    auto_authentication_enabled_app: 'For traditional web app',
-    /** UNTRANSLATED */
-    idp_initiated_auth_callback_uri: 'Client callback URI',
-    /** UNTRANSLATED */
+      'サインインが成功すると、ユーザーは特定されたリダイレクト URI に認可コードでリダイレクトされます（状態と PKCE 検証なし）。',
+    auto_authentication_disabled_app: '従来のウェブアプリ、シングルページアプリ（SPA）向け',
+    auto_authentication_enabled_app: '従来のウェブアプリ向け',
+    idp_initiated_auth_callback_uri: 'クライアント コールバック URI',
     idp_initiated_auth_callback_uri_tooltip:
-      'The client callback URI to initiate a SP-initiated SSO authentication flow. An ssoConnectorId will be appended to the URI as a query parameter. (e.g., https://your.domain/sso/callback?connectorId={{ssoConnectorId}})',
-    /** UNTRANSLATED */
-    redirect_uri: 'Post sign-in redirect URI',
-    /** UNTRANSLATED */
+      'SP イニシエーテッド SSO 認証フローを開始するためのクライアント コールバック URI。ssoConnectorId がクエリ パラメータとして URI に追加されます。（例: https://your.domain/sso/callback?connectorId={{ssoConnectorId}}）',
+    redirect_uri: 'サインイン後のリダイレクト URI',
     redirect_uri_tooltip:
-      'The redirect URI to redirect users after successful sign-in. Logto will use this URI as the OIDC redirect URI in the authorization request. Use a dedicated URI for the IdP-initiated SSO authentication flow for better security.',
-    /** UNTRANSLATED */
+      'サインインが成功した後にユーザーをリダイレクトする URI。この URI を OIDC 認証リクエストで使用されるリダイレクト URI として使用します。より良いセキュリティのため、IdP によって開始された SSO 認証フローに専用の URI を使用してください。',
     empty_redirect_uris_error:
-      'No redirect URI has been registered for the application. Please add one first.',
-    /** UNTRANSLATED */
-    redirect_uri_placeholder: 'Select a post sign-in redirect URI',
-    /** UNTRANSLATED */
-    auth_params: 'Additional authentication parameters',
-    /** UNTRANSLATED */
+      'アプリケーションのために登録されたリダイレクト URI がありません。最初に追加してください。',
+    redirect_uri_placeholder: 'サインイン後のリダイレクト URI を選択してください',
+    auth_params: '追加の認証パラメータ',
     auth_params_tooltip:
-      'Additional parameters to be passed in the authorization request. By default only (openid profile) scopes will be requested, you can specify additional scopes or a exclusive state value here. (e.g., { "scope": "organizations email", "state": "secret_state" }).',
+      '認可リクエストで渡される追加のパラメータ。デフォルトでは (openid profile) スコープのみリクエストされますが、ここで追加のスコープまたは排他的な状態値を指定できます。（例: { "scope": "organizations email", "state": "secret_state" }）。',
   },
-  /** UNTRANSLATED */
-  trust_unverified_email: 'Trust unverified email',
-  /** UNTRANSLATED */
+  trust_unverified_email: '未検証のメールを信頼する',
   trust_unverified_email_label:
-    'Always trust the unverified email addresses returned from the identity provider',
-  /** UNTRANSLATED */
+    'アイデンティティプロバイダーから返された未確認のメールアドレスを常に信頼する',
   trust_unverified_email_tip:
-    'The Entra ID (OIDC) connector does not return the `email_verified` claim, meaning that email addresses from Azure are not guaranteed to be verified. By default, Logto will not sync unverified email addresses to the user profile. Enable this option only if you trust all the email addresses from the Entra ID directory.',
+    'Entra ID (OIDC) コネクタは `email_verified` クレームを返さないため、Azure からのメールアドレスは確認済みであることは保証されません。デフォルトでは、Logto は未検証のメールアドレスをユーザープロファイルに同期しません。Entra ID ディレクトリからのすべてのメールアドレスを信頼する場合にのみ、このオプションを有効にしてください。',
 };
 
 export default Object.freeze(enterprise_sso_details);

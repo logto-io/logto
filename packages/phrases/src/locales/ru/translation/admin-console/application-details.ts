@@ -41,9 +41,8 @@ const application_details = {
   redirect_uri_placeholder_native: 'io.logto://callback',
   redirect_uri_tip:
     'URI перенаправляется после входа пользователя (успешного или нет). См. OpenID Connect <a>AuthRequest</a> для получения дополнительной информации.',
-  /** UNTRANSLATED */
   mixed_redirect_uri_warning:
-    'Your application type is not compatible with at least one of the redirect URIs. It does not follow best practices and we strongly recommend keeping the redirect URIs consistent.',
+    'Тип вашего приложения несовместим как минимум с одним из URI перенаправления. Это не соответствует лучшим практикам, и мы настоятельно рекомендуем держать URI перенаправления согласованными.',
   post_sign_out_redirect_uri: 'URI перенаправления после выхода из системы',
   post_sign_out_redirect_uris: 'URI перенаправления после выхода из системы',
   post_sign_out_redirect_uri_placeholder: 'https://ваш.вебсайт.com/домашняя страница',
@@ -67,9 +66,8 @@ const application_details = {
   rotate_refresh_token: 'Поворот Refresh Token',
   rotate_refresh_token_label:
     'При включении Logto будет выдавать новый Refresh Token для запросов токенов, когда пройдет 70% изначального Time to Live (TTL) или будут выполнены определенные условия. <a>Узнать больше</a>',
-  /** UNTRANSLATED */
   rotate_refresh_token_label_for_public_clients:
-    'When enabled, Logto will issue a new refresh token for each token request. <a>Learn more</a>',
+    'При включении Logto будет выдавать новый Refresh Token для каждого запроса токена. <a>Узнать больше</a>',
   backchannel_logout: 'Отключение обратного канала',
   backchannel_logout_description:
     'Настройте конечную точку отключения обратного канала OpenID Connect и требуется ли сеанс для этого приложения.',
@@ -184,12 +182,9 @@ const application_details = {
     create_new_secret: 'Создать новый секрет',
     delete_confirmation:
       'Это действие нельзя отменить. Вы уверены, что хотите удалить этот секрет?',
-    /** UNTRANSLATED */
-    deleted: 'The secret has been successfully deleted.',
-    /** UNTRANSLATED */
-    activated: 'The secret has been successfully activated.',
-    /** UNTRANSLATED */
-    deactivated: 'The secret has been successfully deactivated.',
+    deleted: 'Секрет был успешно удален.',
+    activated: 'Секрет был успешно активирован.',
+    deactivated: 'Секрет был успешно деактивирован.',
     legacy_secret: 'Устаревший секрет',
     expired: 'Истек',
     expired_tooltip: 'Секрет истек {{date}}.',
@@ -201,10 +196,8 @@ const application_details = {
         'Секрет никогда не истечет. Мы рекомендуем установить дату истечения для повышения безопасности.',
       days: '{{count}} день',
       days_other: '{{count}} дней',
-      /** UNTRANSLATED */
-      years: '{{count}} year',
-      /** UNTRANSLATED */
-      years_other: '{{count}} years',
+      years: '{{count}} год',
+      years_other: '{{count}} лет',
       created: 'Секрет {{name}} успешно создан.',
     },
     edit_modal: {
@@ -213,91 +206,56 @@ const application_details = {
     },
   },
   saml_idp_config: {
-    /** UNTRANSLATED */
-    title: 'SAML IdP metadata',
-    /** UNTRANSLATED */
+    title: 'Метаданные SAML IdP',
     description:
-      'Use the following metadata and certificate to configure the SAML IdP in your application.',
-    /** UNTRANSLATED */
-    metadata_url_label: 'IdP metadata URL',
-    /** UNTRANSLATED */
-    single_sign_on_service_url_label: 'Single sign-on service URL',
-    /** UNTRANSLATED */
-    idp_entity_id_label: 'IdP entity ID',
+      'Используйте следующие метаданные и сертификат, чтобы настроить SAML IdP в вашем приложении.',
+    metadata_url_label: 'URL метаданных IdP',
+    single_sign_on_service_url_label: 'URL сервиса единого входа',
+    idp_entity_id_label: 'ID сущности IdP',
   },
   saml_idp_certificates: {
-    /** UNTRANSLATED */
-    title: 'SAML signing certificate',
-    /** UNTRANSLATED */
-    expires_at: 'Expires at',
-    /** UNTRANSLATED */
-    finger_print: 'Fingerprint',
-    /** UNTRANSLATED */
-    status: 'Status',
-    /** UNTRANSLATED */
-    active: 'Active',
-    /** UNTRANSLATED */
-    inactive: 'Inactive',
+    title: 'Сертификат подписи SAML',
+    expires_at: 'Истекает в',
+    finger_print: 'Отпечаток',
+    status: 'Статус',
+    active: 'Активный',
+    inactive: 'Неактивный',
   },
   saml_idp_name_id_format: {
-    /** UNTRANSLATED */
-    title: 'Name ID format',
-    /** UNTRANSLATED */
-    description: 'Select the name ID format of the SAML IdP.',
-    /** UNTRANSLATED */
-    persistent: 'Persistent',
-    /** UNTRANSLATED */
-    persistent_description: 'Use Logto user ID as Name ID',
-    /** UNTRANSLATED */
-    transient: 'Transient',
-    /** UNTRANSLATED */
-    transient_description: 'Use one-time user ID as Name ID',
-    /** UNTRANSLATED */
-    unspecified: 'Unspecified',
-    /** UNTRANSLATED */
-    unspecified_description: 'Use Logto user ID as Name ID',
-    /** UNTRANSLATED */
-    email_address: 'Email address',
-    /** UNTRANSLATED */
-    email_address_description: 'Use email address as Name ID',
+    title: 'Формат идентификатора имени',
+    description: 'Выберите формат идентификатора имени SAML IdP.',
+    persistent: 'Постоянный',
+    persistent_description: 'Использовать ID пользователя Logto как идентификатор имени',
+    transient: 'Временный',
+    transient_description: 'Использовать одноразовый ID пользователя как идентификатор имени',
+    unspecified: 'Неопределенный',
+    unspecified_description: 'Использовать ID пользователя Logto как идентификатор имени',
+    email_address: 'Адрес электронной почты',
+    email_address_description: 'Использовать адрес электронной почты как идентификатор имени',
   },
   saml_encryption_config: {
-    /** UNTRANSLATED */
-    encrypt_assertion: 'Encrypt SAML assertion',
-    /** UNTRANSLATED */
-    encrypt_assertion_description: 'By enabling this option, the SAML assertion will be encrypted.',
-    /** UNTRANSLATED */
-    encrypt_then_sign: 'Encrypt then sign',
-    /** UNTRANSLATED */
+    encrypt_assertion: 'Зашифровать утверждение SAML',
+    encrypt_assertion_description: 'Включив эту опцию, утверждение SAML будет зашифровано.',
+    encrypt_then_sign: 'Зашифровать, затем подписать',
     encrypt_then_sign_description:
-      'By enabling this option, the SAML assertion will be encrypted and then signed; otherwise, the SAML assertion will be signed and then encrypted.',
-    /** UNTRANSLATED */
-    certificate: 'Certificate',
-    /** UNTRANSLATED */
+      'Включив эту опцию, утверждение SAML будет зашифровано, а затем подписано; иначе утверждение SAML будет подписано, а затем зашифровано.',
+    certificate: 'Сертификат',
     certificate_tooltip:
-      'Copy and paste the x509 certificate you get from your service provider to encrypt the SAML assertion.',
-    /** UNTRANSLATED */
+      'Скопируйте и вставьте сертификат x509, который вы получили от вашего поставщика услуг, чтобы зашифровать утверждение SAML.',
     certificate_placeholder:
       '-----BEGIN CERTIFICATE-----\nMIICYDCCAcmgAwIBA...\n-----END CERTIFICATE-----\n',
-    /** UNTRANSLATED */
-    certificate_missing_error: 'Certificate is required.',
-    /** UNTRANSLATED */
+    certificate_missing_error: 'Требуется сертификат.',
     certificate_invalid_format_error:
-      'Invalid certificate format detected. Please check the certificate format and try again.',
+      'Обнаружен недопустимый формат сертификата. Пожалуйста, проверьте формат сертификата и попробуйте снова.',
   },
   saml_app_attribute_mapping: {
-    /** UNTRANSLATED */
-    name: 'Attribute mappings',
-    /** UNTRANSLATED */
-    title: 'Base attribute mappings',
-    /** UNTRANSLATED */
-    description: 'Add attribute mappings to sync user profile from Logto to your application.',
-    /** UNTRANSLATED */
-    col_logto_claims: 'Value of Logto',
-    /** UNTRANSLATED */
-    col_sp_claims: 'Value name of your application',
-    /** UNTRANSLATED */
-    add_button: 'Add another',
+    name: 'Отображение атрибутов',
+    title: 'Базовое отображение атрибутов',
+    description:
+      'Добавьте отображения атрибутов, чтобы синхронизировать профиль пользователя из Logto в ваше приложение.',
+    col_logto_claims: 'Значение Logto',
+    col_sp_claims: 'Название значения вашего приложения',
+    add_button: 'Добавить еще',
   },
 };
 

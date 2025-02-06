@@ -27,16 +27,11 @@ const enterprise_sso = {
       'Создайте новую интеграцию приложения с помощью SAML 2.0 в вашем провайдере идентичности {{name}}. Затем вставьте следующее значение в него.',
     saml: {
       acs_url_field_name: 'URL потребителя утверждений (URL ответа)',
-      /** UNTRANSLATED */
-      audience_uri_field_name: 'Audience URI (SP Entity ID)',
-      /** UNTRANSLATED */
-      entity_id_field_name: 'Service Provider (SP) Entity ID',
-      /** UNTRANSLATED */
+      audience_uri_field_name: 'URI аудитории (идентификатор сущности SP)',
+      entity_id_field_name: 'Идентификатор сущности поставщика услуг (SP)',
       entity_id_field_tooltip:
-        'The SP Entity ID can be in any string format, typically using a URI form or a URL form as an identifier, but this is not mandatory.',
-      /** UNTRANSLATED */
+        'Идентификатор сущности SP может иметь любую строку, обычно используемая форма URI или URL как идентификатор, но это не обязательно.',
       acs_url_field_placeholder: 'https://your-domain.com/api/saml/callback',
-      /** UNTRANSLATED */
       entity_id_field_placeholder: 'urn:your-domain.com:sp:saml:{serviceProviderId}',
     },
     oidc: {

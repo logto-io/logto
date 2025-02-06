@@ -38,9 +38,8 @@ const application_details = {
   redirect_uri_placeholder_native: 'io.logto://callback',
   redirect_uri_tip:
     '在用戶登錄完成（不論成功與否）後，重新導向的目標 URI。參見 OpenID Connect <a>AuthRequest</a> 以了解更多。',
-  /** UNTRANSLATED */
   mixed_redirect_uri_warning:
-    'Your application type is not compatible with at least one of the redirect URIs. It does not follow best practices and we strongly recommend keeping the redirect URIs consistent.',
+    '你的應用程式類型不相容於至少一個重定向 URI。這不符合最佳實踐，我們強烈建議保持重定向 URI 一致。',
   post_sign_out_redirect_uri: '登出後重定向的 URI',
   post_sign_out_redirect_uris: '登出後重定向的 URIs',
   post_sign_out_redirect_uri_placeholder: 'https://your.website.com/home',
@@ -64,9 +63,8 @@ const application_details = {
   rotate_refresh_token: '旋轉 Refresh Token',
   rotate_refresh_token_label:
     '啟用此配置將使 Logto 當 Refresh Token 的原始有效期剩下 70% 時或當滿足某些條件時，授予新的 Refresh Token 以獲取新的 Access Token。<a>了解更多</a>',
-  /** UNTRANSLATED */
   rotate_refresh_token_label_for_public_clients:
-    'When enabled, Logto will issue a new refresh token for each token request. <a>Learn more</a>',
+    '啟用後，Logto 將為每個令牌請求發放新的刷新令牌。<a>了解更多</a>',
   backchannel_logout: '後台登出',
   backchannel_logout_description: '配置 OpenID Connect 後台登出端點以及此應用程式是否需要會話。',
   backchannel_logout_uri: '後台登出 URI',
@@ -134,7 +132,7 @@ const application_details = {
     organization_permissions_assignment_form_title: '添加組織權限',
     api_resource_permissions_assignment_form_title: '添加 API 資源權限',
     user_data_permission_description_tips:
-      '您可以通過「登入體驗 > 內容 > 管理語言」修改個人用戶資料權限的描述。',
+      '你可以通過「登入體驗 > 內容 > 管理語言」修改個人用戶資料權限的描述。',
     permission_description_tips:
       '當 Logto 作為第三方應用程式中的身份提供者（IdP）用於身份驗證時，用戶被要求授權，此描述將顯示在同意畫面上。',
     user_title: '用戶',
@@ -168,12 +166,9 @@ const application_details = {
     never: '從不',
     create_new_secret: '創建新秘鑰',
     delete_confirmation: '此操作無法撤銷。你確定要刪除此秘鑰嗎？',
-    /** UNTRANSLATED */
-    deleted: 'The secret has been successfully deleted.',
-    /** UNTRANSLATED */
-    activated: 'The secret has been successfully activated.',
-    /** UNTRANSLATED */
-    deactivated: 'The secret has been successfully deactivated.',
+    deleted: '秘鑰已成功刪除。',
+    activated: '秘鑰已成功啟用。',
+    deactivated: '秘鑰已成功停用。',
     legacy_secret: '舊版秘鑰',
     expired: '已過期',
     expired_tooltip: '此秘鑰已於 {{date}} 過期。',
@@ -184,10 +179,8 @@ const application_details = {
       expiration_description_never: '秘鑰不會過期。我們建議設置到期日期以增強安全性。',
       days: '{{count}} 天',
       days_other: '{{count}} 天',
-      /** UNTRANSLATED */
-      years: '{{count}} year',
-      /** UNTRANSLATED */
-      years_other: '{{count}} years',
+      years: '{{count}} 年',
+      years_other: '{{count}} 年',
       created: '秘鑰 {{name}} 創建成功。',
     },
     edit_modal: {
@@ -196,91 +189,52 @@ const application_details = {
     },
   },
   saml_idp_config: {
-    /** UNTRANSLATED */
-    title: 'SAML IdP metadata',
-    /** UNTRANSLATED */
-    description:
-      'Use the following metadata and certificate to configure the SAML IdP in your application.',
-    /** UNTRANSLATED */
-    metadata_url_label: 'IdP metadata URL',
-    /** UNTRANSLATED */
-    single_sign_on_service_url_label: 'Single sign-on service URL',
-    /** UNTRANSLATED */
-    idp_entity_id_label: 'IdP entity ID',
+    title: 'SAML IdP 元資料',
+    description: '使用以下元資料和證書在你的應用程式中配置 SAML IdP。',
+    metadata_url_label: 'IdP 元資料 URL',
+    single_sign_on_service_url_label: '單一登入服務 URL',
+    idp_entity_id_label: 'IdP 實體 ID',
   },
   saml_idp_certificates: {
-    /** UNTRANSLATED */
-    title: 'SAML signing certificate',
-    /** UNTRANSLATED */
-    expires_at: 'Expires at',
-    /** UNTRANSLATED */
-    finger_print: 'Fingerprint',
-    /** UNTRANSLATED */
-    status: 'Status',
-    /** UNTRANSLATED */
-    active: 'Active',
-    /** UNTRANSLATED */
-    inactive: 'Inactive',
+    title: 'SAML 簽名證書',
+    expires_at: '到期於',
+    finger_print: '指紋',
+    status: '狀態',
+    active: '啟用',
+    inactive: '停用',
   },
   saml_idp_name_id_format: {
-    /** UNTRANSLATED */
-    title: 'Name ID format',
-    /** UNTRANSLATED */
-    description: 'Select the name ID format of the SAML IdP.',
-    /** UNTRANSLATED */
-    persistent: 'Persistent',
-    /** UNTRANSLATED */
-    persistent_description: 'Use Logto user ID as Name ID',
-    /** UNTRANSLATED */
-    transient: 'Transient',
-    /** UNTRANSLATED */
-    transient_description: 'Use one-time user ID as Name ID',
-    /** UNTRANSLATED */
-    unspecified: 'Unspecified',
-    /** UNTRANSLATED */
-    unspecified_description: 'Use Logto user ID as Name ID',
-    /** UNTRANSLATED */
-    email_address: 'Email address',
-    /** UNTRANSLATED */
-    email_address_description: 'Use email address as Name ID',
+    title: 'Name ID 格式',
+    description: '選擇 SAML IdP 的 Name ID 格式。',
+    persistent: '持久',
+    persistent_description: '使用 Logto 使用者 ID 作為 Name ID',
+    transient: '暫時',
+    transient_description: '使用一次性使用者 ID 作為 Name ID',
+    unspecified: '未指定',
+    unspecified_description: '使用 Logto 使用者 ID 作為 Name ID',
+    email_address: '電子郵件地址',
+    email_address_description: '使用電子郵件地址作為 Name ID',
   },
   saml_encryption_config: {
-    /** UNTRANSLATED */
-    encrypt_assertion: 'Encrypt SAML assertion',
-    /** UNTRANSLATED */
-    encrypt_assertion_description: 'By enabling this option, the SAML assertion will be encrypted.',
-    /** UNTRANSLATED */
-    encrypt_then_sign: 'Encrypt then sign',
-    /** UNTRANSLATED */
+    encrypt_assertion: '加密 SAML 斷言',
+    encrypt_assertion_description: '啟用此選項，SAML 斷言將被加密。',
+    encrypt_then_sign: '加密然後簽名',
     encrypt_then_sign_description:
-      'By enabling this option, the SAML assertion will be encrypted and then signed; otherwise, the SAML assertion will be signed and then encrypted.',
-    /** UNTRANSLATED */
-    certificate: 'Certificate',
-    /** UNTRANSLATED */
-    certificate_tooltip:
-      'Copy and paste the x509 certificate you get from your service provider to encrypt the SAML assertion.',
-    /** UNTRANSLATED */
+      '啟用此選項，SAML 斷言將被加密後再簽名；否則，SAML 斷言將先簽名後加密。',
+    certificate: '證書',
+    certificate_tooltip: '複製並貼上從服務提供者獲得的 x509 證書，以加密 SAML 斷言。',
     certificate_placeholder:
       '-----BEGIN CERTIFICATE-----\nMIICYDCCAcmgAwIBA...\n-----END CERTIFICATE-----\n',
-    /** UNTRANSLATED */
-    certificate_missing_error: 'Certificate is required.',
-    /** UNTRANSLATED */
-    certificate_invalid_format_error:
-      'Invalid certificate format detected. Please check the certificate format and try again.',
+    certificate_missing_error: '需要證書。',
+    certificate_invalid_format_error: '檢測到無效的證書格式。請檢查證書格式後重試。',
   },
   saml_app_attribute_mapping: {
-    /** UNTRANSLATED */
-    name: 'Attribute mappings',
-    /** UNTRANSLATED */
-    title: 'Base attribute mappings',
-    /** UNTRANSLATED */
-    description: 'Add attribute mappings to sync user profile from Logto to your application.',
-    /** UNTRANSLATED */
-    col_logto_claims: 'Value of Logto',
-    /** UNTRANSLATED */
-    col_sp_claims: 'Value name of your application',
-    /** UNTRANSLATED */
-    add_button: 'Add another',
+    name: '屬性映射',
+    title: '基礎屬性映射',
+    description: '添加屬性映射以將使用者配置文件從 Logto 同步到你的應用程式。',
+    col_logto_claims: 'Logto 的值',
+    col_sp_claims: '你應用程式的值名稱',
+    add_button: '添加其他',
   },
 };
 

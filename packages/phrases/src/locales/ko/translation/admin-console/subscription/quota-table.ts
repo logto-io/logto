@@ -9,9 +9,7 @@ const quota_table = {
     title: '애플리케이션',
     total: '총 애플리케이션 수',
     m2m: '머신 투 머신',
-    /** UNTRANSLATED */
     third_party: 'OIDC/OAuth 3rd party apps',
-    /** UNTRANSLATED */
     saml_app: 'SAML apps',
   },
   resource: {

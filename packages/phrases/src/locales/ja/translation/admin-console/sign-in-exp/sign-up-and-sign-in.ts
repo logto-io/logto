@@ -67,11 +67,9 @@ const sign_up_and_sign_in = {
     enable_user_registration: 'ユーザー登録を有効にする',
     enable_user_registration_description:
       'ユーザー登録を有効または無効にできます。無効にすると、ユーザーは管理コンソールで追加できますが、サインイン画面でアカウントを作成することはできません。',
-    /** UNTRANSLATED */
-    unknown_session_redirect_url: 'Unknown session redirect URL',
-    /** UNTRANSLATED */
+    unknown_session_redirect_url: '不明なセッションのリダイレクト URL',
     unknown_session_redirect_url_tip:
-      'Sometimes, Logto may not recognize a user’s session on the sign-in page, like when a session expires or the user bookmarks or shares the sign-in link. By default, an “unknown session” 404 error appears. To enhance user experience, set a fallback URL to redirect users back to your app and restart authentication.',
+      'Logto がサインインページでユーザーのセッションを認識できないことがあります。例えば、セッションが期限切れになった場合や、ユーザーがサインインリンクをブックマークまたは共有した場合です。デフォルトでは、「不明なセッション」404 エラーが表示されます。ユーザーエクスペリエンスを向上させるために、ユーザーをアプリに戻して認証を再開するためのフォールバック URL を設定します。',
   },
 };
 

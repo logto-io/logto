@@ -45,11 +45,9 @@ const paywall = {
     'تم الوصول إلى الحد الأقصى لعدد الأذونات ({{count, number}}) لكل دور في الخطة <planName/>. قم بترقية الخطة لإضافة أدوار وأذونات إضافية. لأي مساعدة، لا تتردد في <a>الاتصال بنا</a>.',
   scopes_per_role_other:
     'تم الوصول إلى الحد الأقصى لعدد الأذونات ({{count, number}}) لكل دور في الخطة <planName/>. قم بترقية الخطة لإضافة أدوار وأذونات إضافية. لأي مساعدة، لا تتردد في <a>الاتصال بنا</a>.',
-  /** UNTRANSLATED */
   saml_applications_oss:
-    'The additional SAML app is available with the Logto Enterprise plan. Contact us if you need assistance.',
-  /** UNTRANSLATED */
-  logto_pricing_button_text: 'Logto Cloud Pricing',
+    'التطبيق الإضافي لـ SAML متاح مع خطة Logto المؤسسية. اتصل بنا إذا كنت بحاجة إلى مساعدة.',
+  logto_pricing_button_text: 'تسعير Logto Cloud',
   hooks:
     'تم الوصول إلى الحد الأقصى لعدد الويب هوك ({{count, number}}) في الخطة <planName/>. قم بترقية الخطة لإنشاء المزيد من الويب هوك. لأي مساعدة، لا تتردد في <a>الاتصال بنا</a>.',
   hooks_other:

@@ -27,16 +27,11 @@ const enterprise_sso = {
       'IdPにてSAML 2.0の新しいアプリケーション連携を作成します。次に以下の値を貼り付けます。',
     saml: {
       acs_url_field_name: 'アサーションコンシューマサービスURL（応答URL）',
-      /** UNTRANSLATED */
-      audience_uri_field_name: 'Audience URI (SP Entity ID)',
-      /** UNTRANSLATED */
-      entity_id_field_name: 'Service Provider (SP) Entity ID',
-      /** UNTRANSLATED */
+      audience_uri_field_name: 'オーディエンス URI (SP エンティティ ID)',
+      entity_id_field_name: 'サービスプロバイダー (SP) エンティティ ID',
       entity_id_field_tooltip:
-        'The SP Entity ID can be in any string format, typically using a URI form or a URL form as an identifier, but this is not mandatory.',
-      /** UNTRANSLATED */
+        'SP エンティティ ID は任意の文字列形式で指定可能で、通常は識別子として URI 形式または URL 形式を使用しますが、これに限定されません。',
       acs_url_field_placeholder: 'https://your-domain.com/api/saml/callback',
-      /** UNTRANSLATED */
       entity_id_field_placeholder: 'urn:your-domain.com:sp:saml:{serviceProviderId}',
     },
     oidc: {

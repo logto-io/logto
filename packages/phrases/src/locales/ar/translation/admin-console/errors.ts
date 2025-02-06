@@ -7,8 +7,7 @@ const errors = {
   invalid_uri_format: 'تنسيق عنوان URI غير صالح',
   invalid_origin_format: 'تنسيق أصل URI غير صالح',
   invalid_json_format: 'تنسيق JSON غير صالح',
-  /** UNTRANSLATED */
-  invalid_parameters_format: 'Invalid parameters format',
+  invalid_parameters_format: 'تنسيق المعلمات غير صالح',
   invalid_regex: 'تعبير عادي غير صالح',
   invalid_error_message_format: 'تنسيق رسالة الخطأ غير صالح.',
   required_field_missing: 'يرجى إدخال {{field}}',

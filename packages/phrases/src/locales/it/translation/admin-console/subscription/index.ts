@@ -9,8 +9,7 @@ const subscription = {
   pro_plan: 'Piano Pro',
   pro_plan_description: 'Per aziende che beneficiano di Logto senza preoccupazioni.',
   enterprise: 'Piano Azienda',
-  /** UNTRANSLATED */
-  enterprise_description: 'For large teams and businesses with enterprise-grade requirements.',
+  enterprise_description: 'Per grandi team e aziende con requisiti di livello aziendale.',
   admin_plan: 'Piano amministratore',
   dev_plan: 'Piano di sviluppo',
   current_plan: 'Piano attuale',
@@ -73,14 +72,12 @@ const subscription = {
   no_subscription: 'Nessuna sottoscrizione',
   usage,
   token_usage_notification: {
-    /** UNTRANSLATED */
     exceeded:
-      'You have exceeded 100% of your quota limit. Users will no longer be able to log in properly. Please upgrade immediately to avoid any inconvenience.',
-    /** UNTRANSLATED */
+      'Hai superato il 100% del limite del tuo contingente. Gli utenti non potranno più accedere correttamente. Si prega di aggiornare immediatamente per evitare inconvenienti.',
     close_to_limit:
-      'You almost reached your token usage limit. Logto will stop granting token if your usage exceeds 100%. Please upgrade Free plan to avoid any inconvenience.',
-    /** UNTRANSLATED */
-    dev_plan_exceeded: "This tenant has reached the token limit per Logto's entity limit policy.",
+      'Stai quasi raggiungendo il limite di utilizzo del tuo token. Logto smetterà di concedere token se il tuo utilizzo supera il 100%. Si prega di aggiornare il piano gratuito per evitare inconvenienti.',
+    dev_plan_exceeded:
+      'Questo tenant ha raggiunto il limite di token per la politica del limite di entità di Logto.',
   },
 };
 

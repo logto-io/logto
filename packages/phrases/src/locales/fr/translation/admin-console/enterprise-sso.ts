@@ -27,16 +27,11 @@ const enterprise_sso = {
       "Créez une nouvelle intégration d'application par SAML 2.0 dans votre fournisseur d'identité {{name}}. Ensuite, collez la valeur suivante.",
     saml: {
       acs_url_field_name: "URL de service de consommation d'assertions (URL de réponse)",
-      /** UNTRANSLATED */
-      audience_uri_field_name: 'Audience URI (SP Entity ID)',
-      /** UNTRANSLATED */
-      entity_id_field_name: 'Service Provider (SP) Entity ID',
-      /** UNTRANSLATED */
+      audience_uri_field_name: "URI de l'audience (ID d'entité du fournisseur de services)",
+      entity_id_field_name: "ID d'entité du fournisseur de services (SP)",
       entity_id_field_tooltip:
-        'The SP Entity ID can be in any string format, typically using a URI form or a URL form as an identifier, but this is not mandatory.',
-      /** UNTRANSLATED */
+        "L'ID d'entité SP peut être dans n'importe quel format de chaîne, généralement en utilisant une forme URI ou une forme URL comme identifiant, mais ce n'est pas obligatoire.",
       acs_url_field_placeholder: 'https://your-domain.com/api/saml/callback',
-      /** UNTRANSLATED */
       entity_id_field_placeholder: 'urn:your-domain.com:sp:saml:{serviceProviderId}',
     },
     oidc: {

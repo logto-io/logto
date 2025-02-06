@@ -6,8 +6,7 @@ const enterprise_sso_details = {
     "Configura i connettori SSO aziendali per abilitare l'SSO degli utenti finali",
   tab_experience: 'Esperienza SSO',
   tab_connection: 'Connessione',
-  /** UNTRANSLATED */
-  tab_idp_initiated_auth: 'IdP-initiated SSO',
+  tab_idp_initiated_auth: "SSO avviato dall'IdP",
   general_settings_title: 'Generale',
   custom_branding_title: 'Display',
   custom_branding_description:
@@ -78,71 +77,46 @@ const enterprise_sso_details = {
     issuer: 'Emittente',
   },
   idp_initiated_auth_config: {
-    /** UNTRANSLATED */
-    card_title: 'IdP-initiated SSO',
-    /** UNTRANSLATED */
+    card_title: "SSO avviato dall'IdP",
     card_description:
-      'User typically start the authentication process from your app using the SP-initiated SSO flow. DO NOT enable this feature unless absolutely necessary.',
-    /** UNTRANSLATED */
-    enable_idp_initiated_sso: 'Enable IdP-initiated SSO',
-    /** UNTRANSLATED */
+      'Gli utenti di solito iniziano il processo di autenticazione dalla tua app utilizzando il flusso SSO avviato dal SP. NON abilitare questa funzione a meno che non sia assolutamente necessario.',
+    enable_idp_initiated_sso: "Abilita l'SSO avviato dall'IdP",
     enable_idp_initiated_sso_description:
-      "Allow enterprise users to start the authentication process directly from the identity provider's portal. Please understand the potential security risks before enabling this feature.",
-    /** UNTRANSLATED */
-    default_application: 'Default application',
-    /** UNTRANSLATED */
+      'Consenti agli utenti aziendali di avviare il processo di autenticazione direttamente dal portale del fornitore di identità. Si prega di comprendere i potenziali rischi per la sicurezza prima di abilitare questa funzione.',
+    default_application: 'Applicazione predefinita',
     default_application_tooltip:
-      'Target application the user will be redirected to after authentication.',
-    /** UNTRANSLATED */
+      "Applicazione di destinazione alla quale l'utente sarà reindirizzato dopo l'autenticazione.",
     empty_applications_error:
-      'No applications found. Please add one in the <a>Applications</a> section.',
-    /** UNTRANSLATED */
-    empty_applications_placeholder: 'No applications',
-    /** UNTRANSLATED */
-    authentication_type: 'Authentication type',
-    /** UNTRANSLATED */
-    auto_authentication_disabled_title: 'Redirect to client for SP-initiated SSO',
-    /** UNTRANSLATED */
+      'Nessuna applicazione trovata. Si prega di aggiungerne una nella sezione <a>Applicazioni</a>.',
+    empty_applications_placeholder: 'Nessuna applicazione',
+    authentication_type: 'Tipo di autenticazione',
+    auto_authentication_disabled_title: "Reindirizza al client per l'SSO avviato dal SP",
     auto_authentication_disabled_description:
-      'Recommended. Redirect users to the client-side application to initiate a secure SP-initiated OIDC authentication.  This will prevent the CSRF attacks.',
-    /** UNTRANSLATED */
-    auto_authentication_enabled_title: 'Directly sign in using the IdP-initiated SSO',
-    /** UNTRANSLATED */
+      "Raccomandato. Reindirizza gli utenti all'applicazione client-side per avviare un'autenticazione OIDC avviata dal SP sicura. Questo preverrà gli attacchi CSRF.",
+    auto_authentication_enabled_title: "Accedi direttamente utilizzando l'SSO avviato dall'IdP",
     auto_authentication_enabled_description:
-      'After successful sign-in, users will be redirected to the specified Redirect URI with the authorization code (Without state and PKCE validation).',
-    /** UNTRANSLATED */
-    auto_authentication_disabled_app: 'For traditional web app, single-page app (SPA)',
-    /** UNTRANSLATED */
-    auto_authentication_enabled_app: 'For traditional web app',
-    /** UNTRANSLATED */
-    idp_initiated_auth_callback_uri: 'Client callback URI',
-    /** UNTRANSLATED */
+      "Dopo l'accesso riuscito, gli utenti saranno reindirizzati all'URI di reindirizzamento specificato con il codice di autorizzazione (Senza convalida dello stato e del PKCE).",
+    auto_authentication_disabled_app:
+      'Per app web tradizionale, applicazione a pagina singola (SPA)',
+    auto_authentication_enabled_app: 'Per app web tradizionale',
+    idp_initiated_auth_callback_uri: 'URI di callback del client',
     idp_initiated_auth_callback_uri_tooltip:
-      'The client callback URI to initiate a SP-initiated SSO authentication flow. An ssoConnectorId will be appended to the URI as a query parameter. (e.g., https://your.domain/sso/callback?connectorId={{ssoConnectorId}})',
-    /** UNTRANSLATED */
-    redirect_uri: 'Post sign-in redirect URI',
-    /** UNTRANSLATED */
+      "L'URI di callback del client per avviare un flusso di autenticazione SSO avviato dal SP. Un ssoConnectorId verrà aggiunto come parametro query all'URI. (es., https://tuo.domino/sso/callback?connectorId={{ssoConnectorId}})",
+    redirect_uri: 'URI di reindirizzamento post-accesso',
     redirect_uri_tooltip:
-      'The redirect URI to redirect users after successful sign-in. Logto will use this URI as the OIDC redirect URI in the authorization request. Use a dedicated URI for the IdP-initiated SSO authentication flow for better security.',
-    /** UNTRANSLATED */
+      "L'URI di reindirizzamento per reindirizzare gli utenti dopo l'accesso riuscito. Logto utilizzerà questo URI come URI di reindirizzamento OIDC nella richiesta di autorizzazione. Utilizza un URI dedicato per il flusso di autenticazione SSO avviato dall'IdP per una maggiore sicurezza.",
     empty_redirect_uris_error:
-      'No redirect URI has been registered for the application. Please add one first.',
-    /** UNTRANSLATED */
-    redirect_uri_placeholder: 'Select a post sign-in redirect URI',
-    /** UNTRANSLATED */
-    auth_params: 'Additional authentication parameters',
-    /** UNTRANSLATED */
+      "Nessun URI di reindirizzamento è stato registrato per l'applicazione. Si prega di aggiungerne uno per primo.",
+    redirect_uri_placeholder: 'Seleziona un URI di reindirizzamento post-accesso',
+    auth_params: 'Parametri di autenticazione aggiuntivi',
     auth_params_tooltip:
-      'Additional parameters to be passed in the authorization request. By default only (openid profile) scopes will be requested, you can specify additional scopes or a exclusive state value here. (e.g., { "scope": "organizations email", "state": "secret_state" }).',
+      'Parametri aggiuntivi da passare nella richiesta di autorizzazione. Per impostazione predefinita verranno richiesti solo gli ambiti (openid profile), puoi specificare ambiti aggiuntivi o un valore di stato esclusivo qui. (es., { "scope": "organizations email", "state": "secret_state" }).',
   },
-  /** UNTRANSLATED */
-  trust_unverified_email: 'Trust unverified email',
-  /** UNTRANSLATED */
+  trust_unverified_email: "Considera attendibile l'email non verificata",
   trust_unverified_email_label:
-    'Always trust the unverified email addresses returned from the identity provider',
-  /** UNTRANSLATED */
+    'Considera sempre attendibili gli indirizzi email non verificati restituiti dal fornitore di identità',
   trust_unverified_email_tip:
-    'The Entra ID (OIDC) connector does not return the `email_verified` claim, meaning that email addresses from Azure are not guaranteed to be verified. By default, Logto will not sync unverified email addresses to the user profile. Enable this option only if you trust all the email addresses from the Entra ID directory.',
+    'Il connettore Entra ID (OIDC) non restituisce il claim `email_verified`, il che significa che gli indirizzi email di Azure non sono garantiti come verificati. Per impostazione predefinita, Logto non sincronizzerà gli indirizzi email non verificati nel profilo utente. Abilita questa opzione solo se consideri attendibili tutti gli indirizzi email dal directory Entra ID.',
 };
 
 export default Object.freeze(enterprise_sso_details);

@@ -35,19 +35,13 @@ const user = {
   password_algorithm_required: '비밀번호 알고리즘이 필요합니다.',
   password_and_digest: 'You cannot set both plain text password and password digest.',
   personal_access_token_name_exists: '개인 액세스 토큰 이름이 이미 존재합니다.',
-  /** UNTRANSLATED */
-  totp_secret_invalid: 'Invalid TOTP secret supplied.',
-  /** UNTRANSLATED */
-  wrong_backup_code_format: 'Backup code format is invalid.',
-  /** UNTRANSLATED */
-  username_required: 'Username is a required identifier, you can not set it to null.',
-  /** UNTRANSLATED */
+  totp_secret_invalid: '제공된 TOTP 비밀이 잘못되었습니다.',
+  wrong_backup_code_format: '백업 코드 형식이 잘못되었습니다.',
+  username_required: '사용자 이름은 필수 식별자이며, null 로 설정할 수 없습니다.',
   email_or_phone_required:
-    'Email address or phone number is a required identifier, at least one is required.',
-  /** UNTRANSLATED */
-  email_required: 'Email address is a required identifier, you can not set it to null.',
-  /** UNTRANSLATED */
-  phone_required: 'Phone number is a required identifier, you can not set it to null.',
+    '이메일 주소 또는 휴대전화번호는 필수 식별자이며, 적어도 하나는 필요합니다.',
+  email_required: '이메일 주소는 필수 식별자이며, null 로 설정할 수 없습니다.',
+  phone_required: '휴대전화번호는 필수 식별자이며, null 로 설정할 수 없습니다.',
 };
 
 export default Object.freeze(user);

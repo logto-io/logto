@@ -30,25 +30,22 @@ const user = {
   missing_profile: 'Вы должны предоставить дополнительную информацию перед входом в систему.',
   role_exists: 'Идентификатор роли {{roleId}} уже добавлен в этого пользователя',
   invalid_role_type: 'Недопустимый тип роли, роль машины к машине нельзя назначить пользователю.',
-  missing_mfa: 'You need to bind additional MFA before signing-in.',
-  totp_already_in_use: 'TOTP is already in use.',
-  backup_code_already_in_use: 'Backup code is already in use.',
+  missing_mfa: 'Вы должны привязать дополнительную MFA перед входом в систему.',
+  totp_already_in_use: 'TOTP уже используется.',
+  backup_code_already_in_use: 'Резервный код уже используется.',
   password_algorithm_required: 'Требуется алгоритм пароля.',
   password_and_digest: 'Вы не можете установить как обычный пароль, так и дайджест пароля.',
   personal_access_token_name_exists: 'Имя личного токена доступа уже существует.',
-  /** UNTRANSLATED */
-  totp_secret_invalid: 'Invalid TOTP secret supplied.',
-  /** UNTRANSLATED */
-  wrong_backup_code_format: 'Backup code format is invalid.',
-  /** UNTRANSLATED */
-  username_required: 'Username is a required identifier, you can not set it to null.',
-  /** UNTRANSLATED */
+  totp_secret_invalid: 'Указан недопустимый секрет TOTP.',
+  wrong_backup_code_format: 'Неверный формат резервного кода.',
+  username_required:
+    'Имя пользователя является обязательным идентификатором, нельзя установить его в null.',
   email_or_phone_required:
-    'Email address or phone number is a required identifier, at least one is required.',
-  /** UNTRANSLATED */
-  email_required: 'Email address is a required identifier, you can not set it to null.',
-  /** UNTRANSLATED */
-  phone_required: 'Phone number is a required identifier, you can not set it to null.',
+    'Адрес электронной почты или номер телефона являются обязательными идентификаторами, требуется как минимум один.',
+  email_required:
+    'Адрес электронной почты является обязательным идентификатором, нельзя установить его в null.',
+  phone_required:
+    'Номер телефона является обязательным идентификатором, нельзя установить его в null.',
 };
 
 export default Object.freeze(user);

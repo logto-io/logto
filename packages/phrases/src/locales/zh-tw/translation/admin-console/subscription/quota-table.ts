@@ -9,10 +9,8 @@ const quota_table = {
     title: '應用程式',
     total: '總應用程式數',
     m2m: '機器對機器',
-    /** UNTRANSLATED */
-    third_party: 'OIDC/OAuth 3rd party apps',
-    /** UNTRANSLATED */
-    saml_app: 'SAML apps',
+    third_party: 'OIDC/OAuth 第三方應用程式',
+    saml_app: 'SAML 應用程式',
   },
   resource: {
     title: 'API 資源',

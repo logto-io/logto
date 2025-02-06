@@ -1,8 +1,6 @@
 const account_center = {
-  /** UNTRANSLATED */
-  not_enabled: 'Account center is not enabled.',
-  /** UNTRANSLATED */
-  filed_not_editable: 'Field is not editable.',
+  not_enabled: '账户中心未启用。',
+  filed_not_editable: '字段不可编辑。',
 };
 
 export default Object.freeze(account_center);

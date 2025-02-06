@@ -9,10 +9,8 @@ const quota_table = {
     title: 'Uygulamalar',
     total: 'Toplam uygulama sayısı',
     m2m: 'Makine-makine uygulamaları',
-    /** UNTRANSLATED */
-    third_party: 'OIDC/OAuth 3rd party apps',
-    /** UNTRANSLATED */
-    saml_app: 'SAML apps',
+    third_party: 'OIDC/OAuth üçüncü parti uygulamalar',
+    saml_app: 'SAML uygulamaları',
   },
   resource: {
     title: 'API Kaynakları',

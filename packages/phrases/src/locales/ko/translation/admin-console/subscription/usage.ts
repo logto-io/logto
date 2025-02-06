@@ -1,95 +1,76 @@
 const usage = {
-  /** UNTRANSLATED */
-  status_active: 'In use',
-  /** UNTRANSLATED */
-  status_inactive: 'Not in use',
-  /** UNTRANSLATED */
-  limited_status_quota_description: '(First {{quota}} included)',
-  /** UNTRANSLATED */
-  unlimited_status_quota_description: '(Included)',
-  /** UNTRANSLATED */
-  disabled_status_quota_description: '(Not included)',
-  /** UNTRANSLATED */
-  usage_description_with_unlimited_quota: '{{usage}}<span> (Unlimited)</span>',
-  /** UNTRANSLATED */
-  usage_description_with_limited_quota: '{{usage}}<span> (First {{basicQuota}} included)</span>',
-  /** UNTRANSLATED */
-  usage_description_without_quota: '{{usage}}<span> (Not included)</span>',
+  status_active: '사용 중',
+  status_inactive: '사용 안 함',
+  limited_status_quota_description: '(처음 {{quota}} 포함)',
+  unlimited_status_quota_description: '(포함됨)',
+  disabled_status_quota_description: '(포함되지 않음)',
+  usage_description_with_unlimited_quota: '{{usage}}<span> (무제한)</span>',
+  usage_description_with_limited_quota: '{{usage}}<span> (처음 {{basicQuota}} 포함)</span>',
+  usage_description_without_quota: '{{usage}}<span> (포함되지 않음)</span>',
   mau: {
     title: 'MAU',
     tooltip:
       'MAU 는 청구 주기 동안 Logto 와 적어도 한 번 토큰을 교환한 고유 사용자입니다. Pro 플랜에는 무제한입니다. <a>자세히 알아보기</a>',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'A MAU is a unique user who has exchanged at least one token with Logto within a billing cycle. Unlimited for the Enterprise Plan.',
+      'MAU 는 청구 주기 동안 Logto 와 적어도 한 번 토큰을 교환한 고유 사용자입니다. 기업 플랜에서는 무제한입니다.',
   },
   organizations: {
     title: '조직',
     tooltip:
       '매달 ${{price, number}} 의 정액 요금으로 추가 기능입니다. 조직의 수나 활동 수준에 상관없이 가격은 영향을 받지 않습니다.',
-    /** UNTRANSLATED */
-    description_for_enterprise: '(Included)',
-    /** UNTRANSLATED */
+    description_for_enterprise: '(포함됨)',
     tooltip_for_enterprise:
-      'Inclusion depends on your plan. If the organization feature isn’t in your initial contract, it will be added to your bill when you activate it. The add-on costs ${{price, number}}/month, regardless of the number of organizations or their activity.',
-    /** UNTRANSLATED */
+      '포함 여부는 플랜에 따라 다릅니다. 조직 기능이 초기 계약에 포함되어 있지 않다면, 활성화 시 청구서에 추가됩니다. 추가 기능은 조직 수나 활동에 관계없이 ${{price, number}}/월 입니다.',
     tooltip_for_enterprise_with_numbered_basic_quota:
-      'Your plan includes the first {{basicQuota}} organizations for free. If you need more, you can add them with the organization add-on at a flat rate of ${{price, number}} per month, regardless of the number of organizations or their activity level.',
+      '플랜은 처음 {{basicQuota}} 개의 조직을 무료로 포함합니다. 더 필요하다면, 조직 추가 기능을 통해 월 ${{price, number}} 에 추가할 수 있으며, 조직 수와 활동 수준에 관계없이 정액 요금이 부과됩니다.',
   },
   mfa: {
     title: 'MFA',
     tooltip:
       '매달 ${{price, number}} 의 정액 요금으로 추가 기능입니다. 사용된 인증 요인의 수에 상관없이 가격은 영향을 받지 않습니다.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'Inclusion depends on your plan. If the MFA feature isn’t in your initial contract, it will be added to your bill when you activate it. The add-on costs ${{price, number}}/month, regardless of the number of authentication factors used.',
+      '포함 여부는 플랜에 따라 다릅니다. MFA 기능이 초기 계약에 포함되어 있지 않다면, 활성화 시 청구서에 추가됩니다. 추가 기능은 사용된 인증 요인의 수에 관계없이 ${{price, number}}/월 입니다.',
   },
   enterprise_sso: {
     title: '기업 SSO',
     tooltip: '매달 SSO 연결당 ${{price, number}} 의 추가 기능입니다.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'Add-on feature with a price of ${{price, number}} per SSO connection per month. The first {{basicQuota}} SSO are included and free to use in your contract-based plan.',
+      '매달 SSO 연결당 ${{price, number}} 의 추가 기능입니다. 플랜에는 처음 {{basicQuota}} 개의 SSO 가 포함되며 무료로 사용할 수 있습니다.',
   },
   api_resources: {
     title: 'API 리소스',
     tooltip:
       '매달 자원당 ${{price, number}} 의 추가 기능입니다. 처음 3개의 API 리소스는 무료입니다.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} API resources are included and free to use in your contract-based plan. If you need more, ${{price, number}} per API resource per month.',
+      '플랜에는 처음 {{basicQuota}} 개의 API 리소스가 포함되어 무료로 사용할 수 있습니다. 더 필요하다면, 매달 API 리소스당 ${{price, number}} 입니다.',
   },
   machine_to_machine: {
     title: '기계 대 기계',
     tooltip:
       '매달 앱당 ${{price, number}} 의 추가 기능입니다. 첫 번째 기계 대 기계 앱은 무료입니다.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} machine-to-machine app is free to use in your contract-based plan. If you need more, ${{price, number}} per app per month.',
+      '플랜에는 처음 {{basicQuota}} 개의 기계 대 기계 앱이 무료로 포함되어 있습니다. 더 필요하다면, 매달 앱당 ${{price, number}} 입니다.',
   },
   tenant_members: {
     title: '테넌트 멤버',
     tooltip:
       '매달 멤버당 ${{price, number}} 의 추가 기능입니다. 처음 3명의 테넌트 멤버는 무료입니다.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} tenant members are included and free to use in your contract-based plan. If you need more, ${{price, number}} per tenant member per month.',
+      '플랜에는 처음 {{basicQuota}} 명의 테넌트 멤버가 포함되어 무료로 사용할 수 있습니다. 더 필요하다면, 매달 멤버당 ${{price, number}} 입니다.',
   },
   tokens: {
     title: '토큰',
     tooltip:
       '백만 개의 토큰당 ${{price, number}} 의 추가 기능입니다. 처음 100만 개의 토큰은 포함되어 있습니다.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} tokens is included and free to use in your contract-based plan. If you need more, ${{price, number}} per {{tokenLimit}} tokens per month.',
+      '플랜에는 처음 {{basicQuota}} 개의 토큰이 포함되어 무료로 사용할 수 있습니다. 더 필요하다면, 매달 {{tokenLimit}} 개의 토큰당 ${{price, number}} 입니다.',
   },
   hooks: {
     title: '훅',
     tooltip:
       '추가 기능은 ${{price, number}}에 {{tokenLimit}} 토큰당 가격이 책정됩니다. 처음 {{basicQuota}} 토큰이 포함되어 있습니다.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} hooks are included and free to use in your contract-based plan. If you need more, ${{price, number}} per hook per month.',
+      '플랜에는 처음 {{basicQuota}} 개의 훅이 포함되어 무료로 사용할 수 있습니다. 더 필요하다면, 매달 훅당 ${{price, number}} 입니다.',
   },
   pricing: {
     add_on_changes_in_current_cycle_notice:

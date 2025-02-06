@@ -12,9 +12,8 @@ const cloud = {
     title: '你已成功登录',
     description:
       '你已成功使用社交账户登录。为确保与 Logto 的无缝集成并获得所有功能的访问权限，我们建议你继续配置自己的社交连接器。',
-    /** UNTRANSLATED */
     notice:
-      "Please avoid using the demo connector for production purposes. Once you've completed testing, kindly delete the demo connector and set up your own connector with your credentials.",
+      '请避免将演示连接器用于生产目的。一旦你完成测试，请删除演示连接器，并使用你的凭证设置你自己的连接器。',
   },
   tenant: {
     create_tenant: '创建租户',

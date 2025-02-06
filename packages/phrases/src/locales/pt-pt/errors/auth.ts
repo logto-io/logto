@@ -6,8 +6,7 @@ const auth = {
   expected_role_not_found: 'Role esperado não encontrado. Verifique os seus cargos e permissões.',
   jwt_sub_missing: 'Campo `sub` está ausente no JWT.',
   require_re_authentication: 'É necessária uma nova autenticação para executar uma ação protegida.',
-  /** UNTRANSLATED */
-  exceed_token_limit: 'Token limit exceeded. Please contact your administrator.',
+  exceed_token_limit: 'Limite de token excedido. Por favor, contacte o seu administrador.',
 };
 
 export default Object.freeze(auth);

@@ -1,94 +1,75 @@
 const usage = {
-  /** UNTRANSLATED */
-  status_active: 'In use',
-  /** UNTRANSLATED */
-  status_inactive: 'Not in use',
-  /** UNTRANSLATED */
-  limited_status_quota_description: '(First {{quota}} included)',
-  /** UNTRANSLATED */
-  unlimited_status_quota_description: '(Included)',
-  /** UNTRANSLATED */
-  disabled_status_quota_description: '(Not included)',
-  /** UNTRANSLATED */
-  usage_description_with_unlimited_quota: '{{usage}}<span> (Unlimited)</span>',
-  /** UNTRANSLATED */
-  usage_description_with_limited_quota: '{{usage}}<span> (First {{basicQuota}} included)</span>',
-  /** UNTRANSLATED */
-  usage_description_without_quota: '{{usage}}<span> (Not included)</span>',
+  status_active: 'В использовании',
+  status_inactive: 'Не используется',
+  limited_status_quota_description: '(Первые {{quota}} включены)',
+  unlimited_status_quota_description: '(Включено)',
+  disabled_status_quota_description: '(Не включено)',
+  usage_description_with_unlimited_quota: '{{usage}}<span> (Неограниченно)</span>',
+  usage_description_with_limited_quota: '{{usage}}<span> (Первые {{basicQuota}} включены)</span>',
+  usage_description_without_quota: '{{usage}}<span> (Не включено)</span>',
   mau: {
     title: 'MAU',
     tooltip:
       'MAU — это уникальный пользователь, который обменял хотя бы один токен с Logto в течение расчетного цикла. Безлимитно для Pro плана. <a>Узнать больше</a>',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'A MAU is a unique user who has exchanged at least one token with Logto within a billing cycle. Unlimited for the Enterprise Plan.',
+      'MAU — это уникальный пользователь, который обменял хотя бы один токен с Logto в течение расчетного цикла. Неограниченно для План компании.',
   },
   organizations: {
     title: 'Организации',
     tooltip:
       'Дополнительная функция с фиксированной ставкой ${{price, number}} в месяц. Цена не зависит от количества организаций или уровня их активности.',
-    /** UNTRANSLATED */
-    description_for_enterprise: '(Included)',
-    /** UNTRANSLATED */
+    description_for_enterprise: '(Включено)',
     tooltip_for_enterprise:
-      'Inclusion depends on your plan. If the organization feature isn’t in your initial contract, it will be added to your bill when you activate it. The add-on costs ${{price, number}}/month, regardless of the number of organizations or their activity.',
-    /** UNTRANSLATED */
+      'Включение зависит от вашего плана. Если функция организации не включена в ваш начальный контракт, она будет добавлена ​​к вашему счету, когда вы её активируете. Дополнение стоит ${{price, number}}/месяц, независимо от количества организаций и их активности.',
     tooltip_for_enterprise_with_numbered_basic_quota:
-      'Your plan includes the first {{basicQuota}} organizations for free. If you need more, you can add them with the organization add-on at a flat rate of ${{price, number}} per month, regardless of the number of organizations or their activity level.',
+      'Ваш план включает первые {{basicQuota}} организации бесплатно. Если вам нужно больше, вы можете добавить их с функцией организации за фиксированную цену ${{price, number}} в месяц, независимо от количества организаций и их уровня активности.',
   },
   mfa: {
     title: 'MFA',
     tooltip:
       'Дополнительная функция с фиксированной ставкой ${{price, number}} в месяц. Цена не зависит от количества используемых факторов аутентификации.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'Inclusion depends on your plan. If the MFA feature isn’t in your initial contract, it will be added to your bill when you activate it. The add-on costs ${{price, number}}/month, regardless of the number of authentication factors used.',
+      'Включение зависит от вашего плана. Если функция MFA не включена в ваш начальный контракт, она будет добавлена ​​к вашему счету, когда вы её активируете. Дополнение стоит ${{price, number}}/месяц, независимо от количества используемых факторов аутентификации.',
   },
   enterprise_sso: {
     title: 'Корпоративное SSO',
     tooltip: 'Дополнительная функция с ценой ${{price, number}} за SSO соединение в месяц.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'Add-on feature with a price of ${{price, number}} per SSO connection per month. The first {{basicQuota}} SSO are included and free to use in your contract-based plan.',
+      'Дополнительная функция с ценой ${{price, number}} за SSO соединение в месяц. Первые {{basicQuota}} SSO включены и бесплатны в вашем плановом контракте.',
   },
   api_resources: {
     title: 'API ресурсы',
     tooltip:
       'Дополнительная функция с ценой ${{price, number}} за ресурс в месяц. Первые 3 API ресурса предоставляются бесплатно.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} API resources are included and free to use in your contract-based plan. If you need more, ${{price, number}} per API resource per month.',
+      'Первые {{basicQuota}} API ресурса включены и бесплатны в вашем плановом контракте. Если вам нужно больше, то ${{price, number}} за API ресурс в месяц.',
   },
   machine_to_machine: {
     title: 'Machine-to-machine',
     tooltip:
       'Дополнительная функция с ценой ${{price, number}} за приложение в месяц. Первое machine-to-machine приложение предоставляется бесплатно.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} machine-to-machine app is free to use in your contract-based plan. If you need more, ${{price, number}} per app per month.',
+      'Первое {{basicQuota}} machine-to-machine приложение бесплатно в вашем плановом контракте. Если вам нужно больше, то ${{price, number}} за приложение в месяц.',
   },
   tenant_members: {
     title: 'Члены арендатора',
     tooltip:
       'Дополнительная функция с ценой ${{price, number}} за участника в месяц. Первые 3 члена арендатора предоставляются бесплатно.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} tenant members are included and free to use in your contract-based plan. If you need more, ${{price, number}} per tenant member per month.',
+      'Первые {{basicQuota}} члена арендатора включены и бесплатны в вашем плановом контракте. Если вам нужно больше, то ${{price, number}} за члена арендатора в месяц.',
   },
   tokens: {
     title: 'Токены',
     tooltip:
       'Дополнительная функция с ценой ${{price, number}} за {{tokenLimit}} токенов. Первые 1 {{basicQuota}} токенов включены.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} tokens is included and free to use in your contract-based plan. If you need more, ${{price, number}} per {{tokenLimit}} tokens per month.',
+      'Первые {{basicQuota}} токенов включены и бесплатны в вашем плановом контракте. Если вам нужно больше, то ${{price, number}} за {{tokenLimit}} токенов в месяц.',
   },
   hooks: {
     title: 'Хуки',
     tooltip: 'Дополнительная функция с ценой ${{price, number}} за хук. Первые 10 хуков включены.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} hooks are included and free to use in your contract-based plan. If you need more, ${{price, number}} per hook per month.',
+      'Первые {{basicQuota}} хуков включены и бесплатны в вашем плановом контракте. Если вам нужно больше, то ${{price, number}} за хук в месяц.',
   },
   pricing: {
     add_on_changes_in_current_cycle_notice:

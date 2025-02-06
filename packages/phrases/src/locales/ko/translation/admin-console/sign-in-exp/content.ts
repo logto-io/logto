@@ -25,17 +25,11 @@ const content = {
       'When auto-detect is off, the default language is the only language your software will show. Turn on auto-detect for language extension.',
   },
   support: {
-    /** UNTRANSLATED */
-    title: 'SUPPORT',
-    /** UNTRANSLATED */
-    subtitle: 'Display your support channels on error pages for quick user assistance.',
-    /** UNTRANSLATED */
-    support_email: 'Support email',
-    /** UNTRANSLATED */
+    title: '지원',
+    subtitle: '오류 페이지에 지원 채널을 표시하여 사용자에게 빠른 도움을 제공합니다.',
+    support_email: '지원 이메일',
     support_email_placeholder: 'support@email.com',
-    /** UNTRANSLATED */
-    support_website: 'Support website',
-    /** UNTRANSLATED */
+    support_website: '지원 웹사이트',
     support_website_placeholder: 'https://your.website/support',
   },
   manage_language: {

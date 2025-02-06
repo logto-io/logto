@@ -9,10 +9,8 @@ const quota_table = {
     title: 'Applicazioni',
     total: 'Totale applicazioni',
     m2m: 'Machine-to-machine',
-    /** UNTRANSLATED */
-    third_party: 'OIDC/OAuth 3rd party apps',
-    /** UNTRANSLATED */
-    saml_app: 'SAML apps',
+    third_party: 'App di terze parti OIDC/OAuth',
+    saml_app: 'App SAML',
   },
   resource: {
     title: 'Risorse API',

@@ -13,9 +13,8 @@ const cloud = {
     title: 'ログインが成功しました',
     description:
       'ソーシャルアカウントを使用して正常にサインインしました。Logto のすべての機能にシームレスにアクセスできるようにするために、独自のソーシャルコネクタを設定することをお勧めします。',
-    /** UNTRANSLATED */
     notice:
-      "Please avoid using the demo connector for production purposes. Once you've completed testing, kindly delete the demo connector and set up your own connector with your credentials.",
+      'デモコネクタを運用目的で使用しないでください。テストが完了したら、デモコネクタを削除し、独自の資格情報でコネクタを設定してください。',
   },
   tenant: {
     create_tenant: 'テナントを作成する',

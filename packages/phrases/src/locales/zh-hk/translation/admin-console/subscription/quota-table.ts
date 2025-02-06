@@ -9,10 +9,8 @@ const quota_table = {
     title: '應用程式',
     total: '應用程式總數',
     m2m: '機器到機器',
-    /** UNTRANSLATED */
-    third_party: 'OIDC/OAuth 3rd party apps',
-    /** UNTRANSLATED */
-    saml_app: 'SAML apps',
+    third_party: 'OIDC/OAuth 第三方應用程式',
+    saml_app: 'SAML 應用程式',
   },
   resource: {
     title: 'API 資源',
@@ -83,7 +81,7 @@ const quota_table = {
     title: '開發者和平台',
     hooks: 'Webhooks',
     audit_logs_retention: '審計日誌保留',
-    jwt_claims: 'JWT聲明',
+    jwt_claims: 'JWT 聲明',
     tenant_members: '租戶成員',
   },
   unlimited: '無限制',

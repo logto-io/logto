@@ -8,8 +8,7 @@ const subscription = {
   pro_plan: 'خطة Pro',
   pro_plan_description: 'للاستفادة من الأعمال بدون قلق مع Logto.',
   enterprise: 'خطة المؤسسة',
-  /** UNTRANSLATED */
-  enterprise_description: 'For large teams and businesses with enterprise-grade requirements.',
+  enterprise_description: 'للشركات الكبرى والفرق التي لديها متطلبات على مستوى المؤسسة.',
   admin_plan: 'خطة المسؤول',
   dev_plan: 'خطة التطوير',
   current_plan: 'الخطة الحالية',
@@ -69,14 +68,11 @@ const subscription = {
   no_subscription: 'لا يوجد اشتراك',
   usage,
   token_usage_notification: {
-    /** UNTRANSLATED */
     exceeded:
-      'You have exceeded 100% of your quota limit. Users will no longer be able to log in properly. Please upgrade immediately to avoid any inconvenience.',
-    /** UNTRANSLATED */
+      'لقد تجاوزت 100% من حد الحصة الخاص بك. لن يتمكن المستخدمون بعد الآن من تسجيل الدخول بشكل صحيح. يرجى الترقية فورًا لتجنب أي إزعاج.',
     close_to_limit:
-      'You almost reached your token usage limit. Logto will stop granting token if your usage exceeds 100%. Please upgrade Free plan to avoid any inconvenience.',
-    /** UNTRANSLATED */
-    dev_plan_exceeded: "This tenant has reached the token limit per Logto's entity limit policy.",
+      'أنت على وشك الوصول إلى حد استخدام الرموز المميزة الخاص بك. سيتوقف Logto عن منح الرموز إذا تجاوز استخدامك 100%. يرجى ترقية الخطة المجانية لتجنب أي إزعاج.',
+    dev_plan_exceeded: 'لقد وصل هذا المستأجر إلى حد الرموز لكل سياسة حد الكيان في Logto.',
   },
 };
 

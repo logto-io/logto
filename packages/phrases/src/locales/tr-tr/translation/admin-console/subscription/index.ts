@@ -9,8 +9,7 @@ const subscription = {
   pro_plan: 'Pro plan',
   pro_plan_description: "Endişesiz bir şekilde Logto'dan faydalanan işletmeler için.",
   enterprise: 'Kurumsal plan',
-  /** UNTRANSLATED */
-  enterprise_description: 'For large teams and businesses with enterprise-grade requirements.',
+  enterprise_description: 'Büyük ekipler ve kurumsal gereksinimleri olan işletmeler için.',
   admin_plan: 'Yönetici planı',
   dev_plan: 'Geliştirme planı',
   current_plan: 'Mevcut Plan',
@@ -75,14 +74,11 @@ const subscription = {
   no_subscription: 'Abonelik bulunamadı',
   usage,
   token_usage_notification: {
-    /** UNTRANSLATED */
     exceeded:
-      'You have exceeded 100% of your quota limit. Users will no longer be able to log in properly. Please upgrade immediately to avoid any inconvenience.',
-    /** UNTRANSLATED */
+      "Kota sınırınızın %100'ünü aştınız. Kullanıcılar artık düzgün bir şekilde giriş yapamayacak. Herhangi bir sorunu önlemek için lütfen hemen yükseltin.",
     close_to_limit:
-      'You almost reached your token usage limit. Logto will stop granting token if your usage exceeds 100%. Please upgrade Free plan to avoid any inconvenience.',
-    /** UNTRANSLATED */
-    dev_plan_exceeded: "This tenant has reached the token limit per Logto's entity limit policy.",
+      "Token kullanım sınırınıza yaklaştınız. Kullanımınız %100'ü aşarsa Logto token vermeyi durduracak. Herhangi bir sorun yaşamamak için Ücretsiz planı yükseltin.",
+    dev_plan_exceeded: "Bu tenant, Logto'nun varlık limit politikası gereği token limitine ulaştı.",
   },
 };
 

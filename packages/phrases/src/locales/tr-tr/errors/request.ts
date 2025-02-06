@@ -1,8 +1,7 @@
 const request = {
   invalid_input: 'Girdi geçersiz. {{details}}',
   general: 'İstek hatası oluştu.',
-  /** UNTRANSLATED */
-  range_not_satisfiable: 'Range not satisfiable.',
+  range_not_satisfiable: 'Aralık karşılanamıyor.',
 };
 
 export default Object.freeze(request);

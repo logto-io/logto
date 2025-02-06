@@ -1,10 +1,7 @@
 const verification_record = {
-  /** UNTRANSLATED */
-  not_found: 'Verification record not found.',
-  /** UNTRANSLATED */
-  permission_denied: 'Permission denied, please re-authenticate.',
-  /** UNTRANSLATED */
-  not_supported_for_google_one_tap: 'This API does not support Google One Tap.',
+  not_found: 'Nie znaleziono rekordu weryfikacyjnego.',
+  permission_denied: 'Odmowa dostępu, proszę ponownie się uwierzytelnić.',
+  not_supported_for_google_one_tap: 'Ta API nie obsługuje Google One Tap.',
 };
 
 export default Object.freeze(verification_record);

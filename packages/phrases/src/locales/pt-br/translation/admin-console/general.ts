@@ -13,8 +13,7 @@ const general = {
   save_changes: 'Salvar alterações',
   saved: 'Salvo',
   discard: 'Descartar',
-  /** UNTRANSLATED */
-  download: 'Download',
+  download: 'Baixar',
   loading: 'Carregando...',
   redirecting: 'Redirecionando...',
   add: 'Adicionar',
@@ -30,10 +29,8 @@ const general = {
   edit: 'Editar',
   delete: 'Excluir',
   deleted: 'Excluído',
-  /** UNTRANSLATED */
-  activate: 'Activate',
-  /** UNTRANSLATED */
-  deactivate: 'Deactivate',
+  activate: 'Ativar',
+  deactivate: 'Desativar',
   more_options: 'MAIS OPÇÕES',
   close: 'Fechar',
   copy: 'Copiar',

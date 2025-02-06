@@ -26,16 +26,11 @@ const enterprise_sso = {
       'قم بإنشاء تكامل تطبيق جديد باستخدام SAML 2.0 في موفر الهوية {{name}} الخاص بك. ثم قم بلصق القيمة التالية فيه.',
     saml: {
       acs_url_field_name: 'عنوان URL لخدمة المستهلك للتأكيد (رد URL)',
-      /** UNTRANSLATED */
-      audience_uri_field_name: 'Audience URI (SP Entity ID)',
-      /** UNTRANSLATED */
-      entity_id_field_name: 'Service Provider (SP) Entity ID',
-      /** UNTRANSLATED */
+      audience_uri_field_name: 'معرف URI للجمهور (معرف الكيان لمزود الخدمة)',
+      entity_id_field_name: 'معرف كيان مزود الخدمة',
       entity_id_field_tooltip:
-        'The SP Entity ID can be in any string format, typically using a URI form or a URL form as an identifier, but this is not mandatory.',
-      /** UNTRANSLATED */
+        'يمكن أن يكون معرف كيان مزود الخدمة في أي تنسيق نصي، عادةً باستخدام صيغة URI أو URL كمُعرِّف، ولكن هذا ليس إلزاميًا.',
       acs_url_field_placeholder: 'https://your-domain.com/api/saml/callback',
-      /** UNTRANSLATED */
       entity_id_field_placeholder: 'urn:your-domain.com:sp:saml:{serviceProviderId}',
     },
     oidc: {

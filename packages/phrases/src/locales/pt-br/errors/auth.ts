@@ -7,8 +7,8 @@ const auth = {
     'Regra esperada não encontrada. Verifique suas regras e permissões de usuário.',
   jwt_sub_missing: '`sub` ausente no JWT.',
   require_re_authentication: 'A reautenticação é necessária para executar uma ação protegida.',
-  /** UNTRANSLATED */
-  exceed_token_limit: 'Token limit exceeded. Please contact your administrator.',
+  exceed_token_limit:
+    'Limite de tokens excedido. Por favor, entre em contato com seu administrador.',
 };
 
 export default Object.freeze(auth);

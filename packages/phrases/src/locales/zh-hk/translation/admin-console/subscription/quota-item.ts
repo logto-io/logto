@@ -172,26 +172,17 @@ const quota_item = {
     not_eligible: '移除您的自定義介面資產',
   },
   idp_initiated_sso_enabled: {
-    /** UNTRANSLATED */
-    name: 'IDP-initiated SSO',
-    /** UNTRANSLATED */
-    limited: 'IDP-initiated SSO',
-    /** UNTRANSLATED */
-    unlimited: 'IDP-initiated SSO',
-    /** UNTRANSLATED */
-    not_eligible: 'IDP-initiated SSO not allowed',
+    name: 'IDP 启動的 SSO',
+    limited: 'IDP 启動的 SSO',
+    unlimited: 'IDP 启动的 SSO',
+    not_eligible: '不允許 IDP 启动的 SSO',
   },
   saml_applications_limit: {
-    /** UNTRANSLATED */
-    name: 'SAML applications',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} SAML application',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} SAML applications',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited SAML applications',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your SAML applications',
+    name: 'SAML 應用程式',
+    limited: '{{count, number}} 個 SAML 應用程式',
+    limited_other: '{{count, number}} 個 SAML 應用程式',
+    unlimited: '無限 SAML 應用程式',
+    not_eligible: '刪除您的 SAML 應用程式',
   },
 };
 

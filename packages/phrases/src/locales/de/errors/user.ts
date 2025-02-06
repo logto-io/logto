@@ -41,19 +41,13 @@ const user = {
   password_and_digest:
     'Sie können nicht sowohl das Passwort im Klartext als auch den Passwort-Hash festlegen.',
   personal_access_token_name_exists: 'Name des persönlichen Zugriffstokens existiert bereits.',
-  /** UNTRANSLATED */
-  totp_secret_invalid: 'Invalid TOTP secret supplied.',
-  /** UNTRANSLATED */
-  wrong_backup_code_format: 'Backup code format is invalid.',
-  /** UNTRANSLATED */
-  username_required: 'Username is a required identifier, you can not set it to null.',
-  /** UNTRANSLATED */
+  totp_secret_invalid: 'Ungültiges TOTP-Geheimnis bereitgestellt.',
+  wrong_backup_code_format: 'Backup-Code-Format ist ungültig.',
+  username_required: 'Benutzername ist ein erforderlicher Bezeichner, er kann nicht null sein.',
   email_or_phone_required:
-    'Email address or phone number is a required identifier, at least one is required.',
-  /** UNTRANSLATED */
-  email_required: 'Email address is a required identifier, you can not set it to null.',
-  /** UNTRANSLATED */
-  phone_required: 'Phone number is a required identifier, you can not set it to null.',
+    'E-Mail-Adresse oder Telefonnummer ist ein erforderlicher Bezeichner, mindestens eine ist erforderlich.',
+  email_required: 'E-Mail-Adresse ist ein erforderlicher Bezeichner, sie kann nicht null sein.',
+  phone_required: 'Telefonnummer ist ein erforderlicher Bezeichner, sie kann nicht null sein.',
 };
 
 export default Object.freeze(user);
