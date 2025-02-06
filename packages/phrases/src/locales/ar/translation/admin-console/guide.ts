@@ -10,7 +10,7 @@ const guide = {
     Protected: 'تكامل غير محمي',
     ThirdParty: 'تطبيق طرف ثالث',
     /** UNTRANSLATED */
-    SAML: 'SAML',
+    SAML: 'SAML app',
   },
   filter: {
     title: 'تصفية الإطار',

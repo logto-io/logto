@@ -10,7 +10,7 @@ const guide = {
     Protected: '非 SDK 集成',
     ThirdParty: '第三方应用',
     /** UNTRANSLATED */
-    SAML: 'SAML',
+    SAML: 'SAML app',
   },
   filter: {
     title: '筛选框架',

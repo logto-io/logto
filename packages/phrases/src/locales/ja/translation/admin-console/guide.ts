@@ -10,7 +10,7 @@ const guide = {
     Protected: '非SDK統合',
     ThirdParty: 'サードパーティーアプリ',
     /** UNTRANSLATED */
-    SAML: 'SAML',
+    SAML: 'SAML app',
   },
   filter: {
     title: 'フレームワークを絞り込む',

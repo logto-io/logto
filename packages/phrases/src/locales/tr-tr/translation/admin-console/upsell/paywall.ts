@@ -45,6 +45,11 @@ const paywall = {
     '{{count, number}} <planName/> rol başına izin sınırına ulaşıldı. İlave roller ve izinler eklemek için planı yükseltin. Yardım için ihtiyacınız olursa, <a>iletişime geçin</a>.',
   scopes_per_role_other:
     '{{count, number}} <planName/> rol başına izin sınırına ulaşıldı. İlave roller ve izinler eklemek için planı yükseltin. Yardım için ihtiyacınız olursa, <a>iletişime geçin</a>.',
+  /** UNTRANSLATED */
+  saml_applications_oss:
+    'The additional SAML app is available with the Logto Enterprise plan. Contact us if you need assistance.',
+  /** UNTRANSLATED */
+  logto_pricing_button_text: 'Logto Cloud Pricing',
   hooks:
     '{{count, number}} <planName/> webhook sınırına ulaşıldı. Daha fazla webhook oluşturmak için planı yükseltin. Yardım için ihtiyacınız olursa, <a>iletişime geçin</a>.',
   hooks_other:

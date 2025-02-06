@@ -11,6 +11,8 @@ const quota_table = {
     m2m: 'Aplikacja typu maszyna-maszyna',
     /** UNTRANSLATED */
     third_party: 'OIDC/OAuth 3rd party apps',
+    /** UNTRANSLATED */
+    saml_app: 'SAML apps',
   },
   resource: {
     title: 'Zasoby API',

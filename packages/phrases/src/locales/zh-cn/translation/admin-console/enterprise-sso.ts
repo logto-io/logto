@@ -27,6 +27,15 @@ const enterprise_sso = {
       acs_url_field_name: '断言消费者服务URL（回复URL）',
       /** UNTRANSLATED */
       audience_uri_field_name: 'Audience URI (SP Entity ID)',
+      /** UNTRANSLATED */
+      entity_id_field_name: 'Service Provider (SP) Entity ID',
+      /** UNTRANSLATED */
+      entity_id_field_tooltip:
+        'The SP Entity ID can be in any string format, typically using a URI form or a URL form as an identifier, but this is not mandatory.',
+      /** UNTRANSLATED */
+      acs_url_field_placeholder: 'https://your-domain.com/api/saml/callback',
+      /** UNTRANSLATED */
+      entity_id_field_placeholder: 'urn:your-domain.com:sp:saml:{serviceProviderId}',
     },
     oidc: {
       redirect_uri_field_name: '重定向URI（回调URL）',

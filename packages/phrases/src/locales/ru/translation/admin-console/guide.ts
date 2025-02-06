@@ -10,7 +10,7 @@ const guide = {
     Protected: 'Интеграция без SDK',
     ThirdParty: 'Third-party app',
     /** UNTRANSLATED */
-    SAML: 'SAML',
+    SAML: 'SAML app',
   },
   filter: {
     title: 'Фильтры фреймворков',

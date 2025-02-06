@@ -29,6 +29,8 @@ const application = {
     /** UNTRANSLATED */
     saml_application_only: 'The API is only available for SAML applications.',
     /** UNTRANSLATED */
+    reach_oss_limit: 'You CAN NOT create more SAML apps since the limit of {{limit}} is hit.',
+    /** UNTRANSLATED */
     acs_url_binding_not_supported:
       'Only HTTP-POST binding is supported for receiving SAML assertions.',
     /** UNTRANSLATED */

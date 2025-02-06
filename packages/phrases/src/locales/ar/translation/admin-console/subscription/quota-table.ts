@@ -11,6 +11,8 @@ const quota_table = {
     m2m: 'تطبيقات من الجهاز إلى الجهاز',
     /** UNTRANSLATED */
     third_party: 'OIDC/OAuth 3rd party apps',
+    /** UNTRANSLATED */
+    saml_app: 'SAML apps',
   },
   resource: {
     title: 'موارد واجهة برمجة التطبيقات',

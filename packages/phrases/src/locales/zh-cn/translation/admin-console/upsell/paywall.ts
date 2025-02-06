@@ -45,6 +45,11 @@ const paywall = {
     '已达到 <planName/> 的{{count, number}}个角色每个权限限制。升级计划以添加额外的角色和权限。如需任何帮助，请 <a>联系我们</a>。',
   scopes_per_role_other:
     '已达到 <planName/> 的{{count, number}}个角色每个权限限制。升级计划以添加额外的角色和权限。如需任何帮助，请 <a>联系我们</a>。',
+  /** UNTRANSLATED */
+  saml_applications_oss:
+    'The additional SAML app is available with the Logto Enterprise plan. Contact us if you need assistance.',
+  /** UNTRANSLATED */
+  logto_pricing_button_text: 'Logto Cloud Pricing',
   hooks:
     '已达到 <planName/> 的{{count, number}}个 Webhook 限制。升级计划以创建更多 Webhook。如需任何帮助，请 <a>联系我们</a>。',
   hooks_other:

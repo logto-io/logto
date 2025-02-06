@@ -10,7 +10,7 @@ const guide = {
     Protected: 'SDK Entegrasyonu Olmayan',
     ThirdParty: 'Üçüncü taraf uygulama',
     /** UNTRANSLATED */
-    SAML: 'SAML',
+    SAML: 'SAML app',
   },
   filter: {
     title: "Framework'ü filtrele",

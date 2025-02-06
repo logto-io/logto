@@ -10,7 +10,7 @@ const guide = {
     Protected: 'SDK 통합이 없는 보호',
     ThirdParty: '타사 앱',
     /** UNTRANSLATED */
-    SAML: 'SAML',
+    SAML: 'SAML app',
   },
   filter: {
     title: '프레임워크 필터',

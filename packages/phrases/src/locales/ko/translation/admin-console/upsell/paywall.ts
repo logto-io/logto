@@ -45,6 +45,11 @@ const paywall = {
     '<planName/>의 {{count, number}}개 역할 당 권한 한도에 도달했습니다. 플랜을 업그레이드하여 추가 역할과 권한을 추가하세요. 도움이 필요하면 <a>문의하기</a>로 연락 주세요.',
   scopes_per_role_other:
     '<planName/>의 {{count, number}}개 역할 당 권한 한도에 도달했습니다. 플랜을 업그레이드하여 추가 역할과 권한을 추가하세요. 도움이 필요하면 <a>문의하기</a>로 연락 주세요.',
+  /** UNTRANSLATED */
+  saml_applications_oss:
+    'The additional SAML app is available with the Logto Enterprise plan. Contact us if you need assistance.',
+  /** UNTRANSLATED */
+  logto_pricing_button_text: 'Logto Cloud Pricing',
   hooks:
     '<planName/>의 {{count, number}}개 웹훅 한도에 도달했습니다. 더 많은 웹훅을 생성하려면 플랜을 업그레이드하세요. 도움이 필요하면 <a>문의하기</a>로 연락 주세요.',
   hooks_other:

@@ -45,6 +45,11 @@ const paywall = {
     'Достигнут лимит {{count, number}} разрешений на роль в плане <planName/>. Повысьте план, чтобы добавить дополнительные роли и разрешения. Если вам нужна помощь, не стесняйтесь <a>связаться с нами</a>.',
   scopes_per_role_other:
     'Достигнут лимит {{count, number}} разрешений на роль в плане <planName/>. Повысьте план, чтобы добавить дополнительные роли и разрешения. Если вам нужна помощь, не стесняйтесь <a>связаться с нами</a>.',
+  /** UNTRANSLATED */
+  saml_applications_oss:
+    'The additional SAML app is available with the Logto Enterprise plan. Contact us if you need assistance.',
+  /** UNTRANSLATED */
+  logto_pricing_button_text: 'Logto Cloud Pricing',
   hooks:
     'Достигнут лимит {{count, number}} вебхуков в плане <planName/>. Повысьте план, чтобы создать больше вебхуков. Если вам нужна помощь, не стесняйтесь <a>связаться с нами</a>.',
   hooks_other:

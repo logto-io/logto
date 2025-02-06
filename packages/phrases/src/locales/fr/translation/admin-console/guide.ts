@@ -10,7 +10,7 @@ const guide = {
     Protected: 'Intégration non-SDK',
     ThirdParty: 'Application tierce',
     /** UNTRANSLATED */
-    SAML: 'SAML',
+    SAML: 'SAML app',
   },
   filter: {
     title: 'Filtrer le framework',

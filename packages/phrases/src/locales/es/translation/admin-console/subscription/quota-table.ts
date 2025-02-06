@@ -11,6 +11,8 @@ const quota_table = {
     m2m: 'Aplicación machine-to-machine',
     /** UNTRANSLATED */
     third_party: 'OIDC/OAuth 3rd party apps',
+    /** UNTRANSLATED */
+    saml_app: 'SAML apps',
   },
   resource: {
     title: 'Recursos de API',
