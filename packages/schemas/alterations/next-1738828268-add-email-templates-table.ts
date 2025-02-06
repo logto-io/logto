@@ -32,7 +32,7 @@ const alteration: AlterationScript = {
   down: async (pool) => {
     await dropTableRls(pool, 'email_templates');
     await pool.query(sql`
-      drop table is exists email_templates;  
+      drop table if exists email_templates;
     `);
   },
 };
