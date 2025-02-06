@@ -42,13 +42,17 @@ const TotpCodeVerification = <T extends UserMfaFlow>(props: Props<T>) => {
 
   const handleSubmit = useCallback(
     async (code: string[]) => {
+      if (isSubmitting) {
+        return;
+      }
+
       setInputErrorMessage(undefined);
       setIsSubmitting(true);
 
       await onSubmit(code.join(''), props);
       setIsSubmitting(false);
     },
-    [onSubmit, props]
+    [onSubmit, isSubmitting, props]
   );
 
   return (
