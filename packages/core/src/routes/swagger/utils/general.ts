@@ -16,7 +16,7 @@ import { isKoaAuthMiddleware } from '../../../middleware/koa-auth/index.js';
 const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
 
 /** The tag name used in the supplement document to indicate that the operation is cloud only. */
-export const cloudOnlyTag = 'Cloud only';
+const cloudOnlyTag = 'Cloud only';
 /** The tag name is used in the supplement document to indicate that the corresponding API operation is a dev feature. */
 export const devFeatureTag = 'Dev feature';
 

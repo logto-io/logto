@@ -18,7 +18,6 @@ import { managementApiAuthDescription, userApiAuthDescription } from '../consts.
 import {
   type FindSupplementFilesOptions,
   devFeatureTag,
-  cloudOnlyTag,
   findSupplementFiles,
   pruneSwaggerDocument,
   removeUnnecessaryOperations,
@@ -236,32 +235,12 @@ export const getSupplementDocuments = async (
     )
   );
 
-  const supplementDocuments = allSupplementDocuments.filter((supplement) => {
-    if (EnvSet.values.isIntegrationTest) {
-      return true;
-    }
-
-    const hasDevFeatureTag = supplement.tags?.some((tag) => tag?.name === devFeatureTag) ?? false;
-    const hasCloudOnlyTag = supplement.tags?.some((tag) => tag?.name === cloudOnlyTag) ?? false;
-
-    // 1. Return true if there is no special tag
-    if (!hasDevFeatureTag && !hasCloudOnlyTag) {
-      return true;
-    }
-
-    // 2. devFeatureTag only
-    if (hasDevFeatureTag && !hasCloudOnlyTag) {
-      return EnvSet.values.isDevFeaturesEnabled;
-    }
-
-    // 3. cloudOnlyTag only
-    if (!hasDevFeatureTag && hasCloudOnlyTag) {
-      return EnvSet.values.isCloud;
-    }
-
-    // 4. devFeatureTag and cloudOnlyTag
-    return EnvSet.values.isDevFeaturesEnabled && EnvSet.values.isCloud;
-  });
+  // Filter out supplement documents that are for dev features when dev features are disabled.
+  const supplementDocuments = allSupplementDocuments.filter(
+    (supplement) =>
+      EnvSet.values.isDevFeaturesEnabled ||
+      !supplement.tags?.find((tag) => tag?.name === devFeatureTag)
+  );
 
   return supplementDocuments;
 };
