@@ -128,6 +128,51 @@ describe('Kook connector', () => {
       });
     });
 
+    it('should get valid SocialUserInfo when user have not banner', async () => {
+      nock(userInfoEndpoint)
+        .get('')
+        .reply(200, {
+          code: 0,
+          message: '操作成功',
+          data: {
+            id: '364862',
+            username: 'test',
+            identify_num: '1670',
+            online: false,
+            os: 'Websocket',
+            status: 0,
+            avatar: 'https://xxx.com/assets/bot.png/icon',
+            banner: '',
+            bot: false,
+            mobile_verified: true,
+            mobile_prefix: '86',
+            mobile: '110****2333',
+            invited_count: 0,
+          },
+        });
+      const connector = await createConnector({ getConfig });
+      const socialUserInfo = await connector.getUserInfo(
+        {
+          code: 'code',
+          redirectUri: 'dummyRedirectUri',
+        },
+        vi.fn()
+      );
+      expect(socialUserInfo).toStrictEqual({
+        id: '364862',
+        name: 'test',
+        avatar: 'https://xxx.com/assets/bot.png/icon',
+        rawData: {
+          id: '364862',
+          username: 'test',
+          identify_num: '1670',
+          avatar: 'https://xxx.com/assets/bot.png/icon',
+          banner: '',
+          mobile_verified: true,
+        },
+      });
+    });
+
     it('throws SocialAccessTokenInvalid error if remote response code is 401', async () => {
       nock(userInfoEndpoint).get('').reply(401);
       const connector = await createConnector({ getConfig });
