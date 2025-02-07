@@ -13,9 +13,8 @@ const cloud = {
     title: 'Você entrou com sucesso',
     description:
       'Você entrou com sucesso usando sua conta social. Para garantir a integração perfeita e o acesso a todos os recursos do Logto, recomendamos que você prossiga para configurar seu próprio conector social.',
-    /** UNTRANSLATED */
     notice:
-      "Please avoid using the demo connector for production purposes. Once you've completed testing, kindly delete the demo connector and set up your own connector with your credentials.",
+      'Por favor, evite usar o conector de demonstração para fins de produção. Depois de concluir os testes, gentilmente exclua o conector de demonstração e configure seu próprio conector com suas credenciais.',
   },
   tenant: {
     create_tenant: 'Criar inquilino',

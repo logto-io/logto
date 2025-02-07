@@ -1,95 +1,76 @@
 const usage = {
-  /** UNTRANSLATED */
-  status_active: 'In use',
-  /** UNTRANSLATED */
-  status_inactive: 'Not in use',
-  /** UNTRANSLATED */
-  limited_status_quota_description: '(First {{quota}} included)',
-  /** UNTRANSLATED */
-  unlimited_status_quota_description: '(Included)',
-  /** UNTRANSLATED */
-  disabled_status_quota_description: '(Not included)',
-  /** UNTRANSLATED */
-  usage_description_with_unlimited_quota: '{{usage}}<span> (Unlimited)</span>',
-  /** UNTRANSLATED */
-  usage_description_with_limited_quota: '{{usage}}<span> (First {{basicQuota}} included)</span>',
-  /** UNTRANSLATED */
-  usage_description_without_quota: '{{usage}}<span> (Not included)</span>',
+  status_active: 'Em uso',
+  status_inactive: 'Não está em uso',
+  limited_status_quota_description: '(Primeiro {{quota}} incluído)',
+  unlimited_status_quota_description: '(Incluído)',
+  disabled_status_quota_description: '(Não incluído)',
+  usage_description_with_unlimited_quota: '{{usage}}<span> (Ilimitado)</span>',
+  usage_description_with_limited_quota: '{{usage}}<span> (Primeiro {{basicQuota}} incluído)</span>',
+  usage_description_without_quota: '{{usage}}<span> (Não incluído)</span>',
   mau: {
     title: 'MAU',
     tooltip:
       'Um MAU é um usuário único que trocou pelo menos um token com o Logto dentro de um ciclo de faturamento. Ilimitado para o Plano Pro. <a>Saiba mais</a>',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'A MAU is a unique user who has exchanged at least one token with Logto within a billing cycle. Unlimited for the Enterprise Plan.',
+      'Um MAU é um usuário único que trocou pelo menos um token com o Logto dentro de um ciclo de faturamento. Ilimitado para o Plano Enterprise.',
   },
   organizations: {
     title: 'Organizações',
     tooltip:
       'Recurso adicional com uma taxa fixa de ${{price, number}} por mês. O preço não é afetado pelo número de organizações ou seu nível de atividade.',
-    /** UNTRANSLATED */
-    description_for_enterprise: '(Included)',
-    /** UNTRANSLATED */
+    description_for_enterprise: '(Incluído)',
     tooltip_for_enterprise:
-      'Inclusion depends on your plan. If the organization feature isn’t in your initial contract, it will be added to your bill when you activate it. The add-on costs ${{price, number}}/month, regardless of the number of organizations or their activity.',
-    /** UNTRANSLATED */
+      'A inclusão depende do seu plano. Se o recurso de organização não estiver no seu contrato inicial, ele será adicionado à sua fatura quando você ativá-lo. O complemento custa ${{price, number}}/mês, independentemente do número de organizações ou da sua atividade.',
     tooltip_for_enterprise_with_numbered_basic_quota:
-      'Your plan includes the first {{basicQuota}} organizations for free. If you need more, you can add them with the organization add-on at a flat rate of ${{price, number}} per month, regardless of the number of organizations or their activity level.',
+      'Seu plano inclui as primeiras {{basicQuota}} organizações gratuitamente. Se você precisar de mais, pode adicioná-las com o complemento de organização a uma taxa fixa de ${{price, number}} por mês, independentemente do número de organizações ou do nível de atividade delas.',
   },
   mfa: {
     title: 'MFA',
     tooltip:
       'Recurso adicional com uma taxa fixa de ${{price, number}} por mês. O preço não é afetado pelo número de fatores de autenticação utilizados.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'Inclusion depends on your plan. If the MFA feature isn’t in your initial contract, it will be added to your bill when you activate it. The add-on costs ${{price, number}}/month, regardless of the number of authentication factors used.',
+      'A inclusão depende do seu plano. Se o recurso MFA não estiver no seu contrato inicial, ele será adicionado à sua fatura quando você ativá-lo. O complemento custa ${{price, number}}/mês, independentemente do número de fatores de autenticação utilizados.',
   },
   enterprise_sso: {
     title: 'SSO Empresarial',
     tooltip: 'Recurso adicional com um preço de ${{price, number}} por conexão SSO por mês.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'Add-on feature with a price of ${{price, number}} per SSO connection per month. The first {{basicQuota}} SSO are included and free to use in your contract-based plan.',
+      'Recurso adicional com um preço de ${{price, number}} por conexão SSO por mês. Os primeiros {{basicQuota}} SSO estão incluídos e são gratuitos para usar no seu plano baseado em contrato.',
   },
   api_resources: {
     title: 'Recursos de API',
     tooltip:
       'Recurso adicional com preço de ${{price, number}} por recurso por mês. Os primeiros 3 recursos de API são gratuitos.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} API resources are included and free to use in your contract-based plan. If you need more, ${{price, number}} per API resource per month.',
+      'Os primeiros {{basicQuota}} recursos de API estão incluídos e são gratuitos para usar no seu plano baseado em contrato. Se você precisar de mais, ${{price, number}} por recurso de API por mês.',
   },
   machine_to_machine: {
     title: 'Máquina para máquina',
     tooltip:
       'Recurso adicional com preço de ${{price, number}} por aplicativo por mês. O primeiro aplicativo máquina para máquina é gratuito.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} machine-to-machine app is free to use in your contract-based plan. If you need more, ${{price, number}} per app per month.',
+      'O primeiro {{basicQuota}} aplicativo máquina para máquina é gratuito para usar no seu plano baseado em contrato. Se você precisar de mais, ${{price, number}} por aplicativo por mês.',
   },
   tenant_members: {
     title: 'Membros do locatário',
     tooltip:
       'Recurso adicional com preço de ${{price, number}} por membro por mês. Os primeiros 3 membros do locatário são gratuitos.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} tenant members are included and free to use in your contract-based plan. If you need more, ${{price, number}} per tenant member per month.',
+      'Os primeiros {{basicQuota}} membros do locatário estão incluídos e são gratuitos para usar no seu plano baseado em contrato. Se você precisar de mais, ${{price, number}} por membro do locatário por mês.',
   },
   tokens: {
     title: 'Tokens',
     tooltip:
       'Recurso adicional com preço de ${{price, number}} por {{tokenLimit}} de tokens. O primeiro {{basicQuota}} de tokens está incluído.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} tokens is included and free to use in your contract-based plan. If you need more, ${{price, number}} per {{tokenLimit}} tokens per month.',
+      'O primeiro {{basicQuota}} de tokens está incluído e é gratuito para usar no seu plano baseado em contrato. Se você precisar de mais, ${{price, number}} por {{tokenLimit}} de tokens por mês.',
   },
   hooks: {
     title: 'Hooks',
     tooltip:
       'Recurso adicional com preço de ${{price, number}} por hook. Os primeiros 10 hooks estão incluídos.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} hooks are included and free to use in your contract-based plan. If you need more, ${{price, number}} per hook per month.',
+      'Os primeiros {{basicQuota}} hooks estão incluídos e são gratuitos para usar no seu plano baseado em contrato. Se você precisar de mais, ${{price, number}} por hook por mês.',
   },
   pricing: {
     add_on_changes_in_current_cycle_notice:

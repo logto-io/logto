@@ -6,8 +6,7 @@ const oidc = {
   insufficient_scope: 'Token em falta com âmbito `{{scope}}`.',
   invalid_request: 'Pedido inválido.',
   invalid_grant: 'Pedido Grant inválido.',
-  /** UNTRANSLATED */
-  invalid_issuer: 'Invalid issuer.',
+  invalid_issuer: 'Emissor inválido.',
   invalid_redirect_uri: '`redirect_uri` não correspondeu a nenhum dos `redirect_uris` registados.',
   access_denied: 'Acesso negado.',
   invalid_target: 'Indicador de recurso inválido.',

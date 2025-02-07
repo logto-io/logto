@@ -13,9 +13,8 @@ const cloud = {
     title: 'Başarıyla giriş yaptınız',
     description:
       "Sosyal hesabınızı kullanarak başarılı bir şekilde giriş yaptınız. Logto'nun tüm özelliklerine sorunsuz entegrasyon ve erişim sağlamak için kendi sosyal konektörünüzü yapılandırmaya devam etmenizi öneririz.",
-    /** UNTRANSLATED */
     notice:
-      "Please avoid using the demo connector for production purposes. Once you've completed testing, kindly delete the demo connector and set up your own connector with your credentials.",
+      'Demo konektörünü üretim amaçlı kullanmaktan kaçının. Testlerinizi tamamladıktan sonra, lütfen demo konektörünü silin ve kimlik bilgilerinizle kendi konektörünüzü kurun.',
   },
   tenant: {
     create_tenant: 'Kiracı Oluştur',

@@ -5,8 +5,7 @@ const enterprise_sso_details = {
   readme_drawer_subtitle: '设置企业SSO连接器以启用最终用户SSO',
   tab_experience: 'SSO体验',
   tab_connection: '连接',
-  /** UNTRANSLATED */
-  tab_idp_initiated_auth: 'IdP-initiated SSO',
+  tab_idp_initiated_auth: 'IdP 发起的 SSO',
   general_settings_title: '常规',
   custom_branding_title: '显示',
   custom_branding_description:
@@ -38,7 +37,7 @@ const enterprise_sso_details = {
   enterprise_sso_deleted: '企业SSO连接器已成功删除',
   delete_confirm_modal_title: '删除企业SSO连接器',
   delete_confirm_modal_content:
-    '您确定要删除此企业连接器吗？来自身份提供者的用户将不能使用单点登录。',
+    '你确定要删除此企业连接器吗？来自身份提供者的用户将不能使用单点登录。',
   upload_idp_metadata_title_saml: '上传元数据',
   upload_idp_metadata_description_saml: '配置从身份提供者复制的元数据。',
   upload_idp_metadata_title_oidc: '上传凭证',
@@ -53,10 +52,10 @@ const enterprise_sso_details = {
   upload_oidc_idp_info_text: '填写来自身份提供者的信息进行连接。',
   service_provider_property_title: '在IdP中配置',
   service_provider_property_description:
-    '在您的身份提供者中使用{{protocol}}设置应用程序集成。输入Logto提供的详细信息。',
+    '在你的身份提供者中使用{{protocol}}设置应用程序集成。输入 Logto 提供的详细信息。',
   attribute_mapping_title: '属性映射',
   attribute_mapping_description:
-    '通过在身份提供者或Logto端配置用户属性映射，从身份提供者同步用户配置文件。',
+    '通过在身份提供者或 Logto 端配置用户属性映射，从身份提供者同步用户配置文件。',
   saml_preview: {
     sign_on_url: '登录URL',
     entity_id: '发行者',
@@ -67,75 +66,45 @@ const enterprise_sso_details = {
     authorization_endpoint: '授权端点',
     token_endpoint: '令牌端点',
     userinfo_endpoint: '用户信息端点',
-    jwks_uri: 'JSON Web Key集端点',
+    jwks_uri: 'JSON Web Key 集端点',
     issuer: '发行者',
   },
   idp_initiated_auth_config: {
-    /** UNTRANSLATED */
-    card_title: 'IdP-initiated SSO',
-    /** UNTRANSLATED */
+    card_title: 'IdP 发起的 SSO',
     card_description:
-      'User typically start the authentication process from your app using the SP-initiated SSO flow. DO NOT enable this feature unless absolutely necessary.',
-    /** UNTRANSLATED */
-    enable_idp_initiated_sso: 'Enable IdP-initiated SSO',
-    /** UNTRANSLATED */
+      '用户通常会通过 SP 发起的 SSO 流程从你的应用开始认证流程。除非绝对必要，否则不要启用此功能。',
+    enable_idp_initiated_sso: '启用 IdP 发起的 SSO',
     enable_idp_initiated_sso_description:
-      "Allow enterprise users to start the authentication process directly from the identity provider's portal. Please understand the potential security risks before enabling this feature.",
-    /** UNTRANSLATED */
-    default_application: 'Default application',
-    /** UNTRANSLATED */
-    default_application_tooltip:
-      'Target application the user will be redirected to after authentication.',
-    /** UNTRANSLATED */
-    empty_applications_error:
-      'No applications found. Please add one in the <a>Applications</a> section.',
-    /** UNTRANSLATED */
-    empty_applications_placeholder: 'No applications',
-    /** UNTRANSLATED */
-    authentication_type: 'Authentication type',
-    /** UNTRANSLATED */
-    auto_authentication_disabled_title: 'Redirect to client for SP-initiated SSO',
-    /** UNTRANSLATED */
+      '允许企业用户直接从身份提供者的门户开始认证流程。请在启用此功能前了解潜在的安全风险。',
+    default_application: '默认应用程序',
+    default_application_tooltip: '用户进行认证后将被重定向到的目标应用程序。',
+    empty_applications_error: '未找到应用程序。请在<a>应用程序</a>部分添加一个。',
+    empty_applications_placeholder: '没有应用程序',
+    authentication_type: '认证类型',
+    auto_authentication_disabled_title: '为 SP 发起的 SSO 重定向到客户端',
     auto_authentication_disabled_description:
-      'Recommended. Redirect users to the client-side application to initiate a secure SP-initiated OIDC authentication.  This will prevent the CSRF attacks.',
-    /** UNTRANSLATED */
-    auto_authentication_enabled_title: 'Directly sign in using the IdP-initiated SSO',
-    /** UNTRANSLATED */
+      '推荐。将用户重定向到客户端应用程序以启动安全的 SP 发起的 OIDC 认证。这样可以防止 CSRF 攻击。',
+    auto_authentication_enabled_title: '通过 IdP 发起的 SSO 直接登录',
     auto_authentication_enabled_description:
-      'After successful sign-in, users will be redirected to the specified Redirect URI with the authorization code (Without state and PKCE validation).',
-    /** UNTRANSLATED */
-    auto_authentication_disabled_app: 'For traditional web app, single-page app (SPA)',
-    /** UNTRANSLATED */
-    auto_authentication_enabled_app: 'For traditional web app',
-    /** UNTRANSLATED */
-    idp_initiated_auth_callback_uri: 'Client callback URI',
-    /** UNTRANSLATED */
+      '成功登录后，用户将被重定向到指定的重定向 URI，并携带授权码（无状态和 PKCE 验证）。',
+    auto_authentication_disabled_app: '适用于传统 Web 应用、单页应用（SPA）',
+    auto_authentication_enabled_app: '适用于传统 Web 应用',
+    idp_initiated_auth_callback_uri: '客户端回调 URI',
     idp_initiated_auth_callback_uri_tooltip:
-      'The client callback URI to initiate a SP-initiated SSO authentication flow. An ssoConnectorId will be appended to the URI as a query parameter. (e.g., https://your.domain/sso/callback?connectorId={{ssoConnectorId}})',
-    /** UNTRANSLATED */
-    redirect_uri: 'Post sign-in redirect URI',
-    /** UNTRANSLATED */
+      '客户端回调 URI 用于启动 SP 发起的 SSO 认证流程。一个 ssoConnectorId 将作为查询参数附加到 URI。（例如，https://your.domain/sso/callback?connectorId={{ssoConnectorId}}）',
+    redirect_uri: '登录后重定向 URI',
     redirect_uri_tooltip:
-      'The redirect URI to redirect users after successful sign-in. Logto will use this URI as the OIDC redirect URI in the authorization request. Use a dedicated URI for the IdP-initiated SSO authentication flow for better security.',
-    /** UNTRANSLATED */
-    empty_redirect_uris_error:
-      'No redirect URI has been registered for the application. Please add one first.',
-    /** UNTRANSLATED */
-    redirect_uri_placeholder: 'Select a post sign-in redirect URI',
-    /** UNTRANSLATED */
-    auth_params: 'Additional authentication parameters',
-    /** UNTRANSLATED */
+      '用户成功登录后将被重定向的 URI。Logto 将在授权请求中使用此 URI 作为 OIDC 重定向 URI。为 IdP 发起的 SSO 认证流程使用专用 URI 以获得更好的安全性。',
+    empty_redirect_uris_error: '应用程序没有注册重定向 URI。请先添加一个。',
+    redirect_uri_placeholder: '选择一个登录后重定向 URI',
+    auth_params: '附加认证参数',
     auth_params_tooltip:
-      'Additional parameters to be passed in the authorization request. By default only (openid profile) scopes will be requested, you can specify additional scopes or a exclusive state value here. (e.g., { "scope": "organizations email", "state": "secret_state" }).',
+      '在授权请求中传递的附加参数。默认情况下将仅请求（openid profile）作用域，你可以在此指定附加作用域或一个独占的状态值。（例如，{ "scope": "organizations email", "state": "secret_state" }）',
   },
-  /** UNTRANSLATED */
-  trust_unverified_email: 'Trust unverified email',
-  /** UNTRANSLATED */
-  trust_unverified_email_label:
-    'Always trust the unverified email addresses returned from the identity provider',
-  /** UNTRANSLATED */
+  trust_unverified_email: '信任未验证的电子邮件',
+  trust_unverified_email_label: '始终信任身份提供者返回的未验证电子邮件地址',
   trust_unverified_email_tip:
-    'The Entra ID (OIDC) connector does not return the `email_verified` claim, meaning that email addresses from Azure are not guaranteed to be verified. By default, Logto will not sync unverified email addresses to the user profile. Enable this option only if you trust all the email addresses from the Entra ID directory.',
+    'Entra ID（OIDC）连接器不返回 `email_verified` 声明，这意味着来自 Azure 的电子邮件地址不一定经过验证。默认情况下，Logto 将不会将未验证的电子邮件地址同步到用户配置文件。只有在你信任来自 Entra ID 目录的所有电子邮件地址时才启用此选项。',
 };
 
 export default Object.freeze(enterprise_sso_details);

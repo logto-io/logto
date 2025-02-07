@@ -6,8 +6,7 @@ const enterprise_sso_details = {
     "Son kullanıcı SSO'yu etkinleştirmek için kurumsal SSO bağlayıcılarını kurun",
   tab_experience: 'SSO Deneyimi',
   tab_connection: 'Bağlantı',
-  /** UNTRANSLATED */
-  tab_idp_initiated_auth: 'IdP-initiated SSO',
+  tab_idp_initiated_auth: 'IdP başlatmalı SSO',
   general_settings_title: 'Genel',
   custom_branding_title: 'Ekran',
   custom_branding_description:
@@ -78,71 +77,46 @@ const enterprise_sso_details = {
     issuer: 'Deyici',
   },
   idp_initiated_auth_config: {
-    /** UNTRANSLATED */
-    card_title: 'IdP-initiated SSO',
-    /** UNTRANSLATED */
+    card_title: 'IdP başlatmalı SSO',
     card_description:
-      'User typically start the authentication process from your app using the SP-initiated SSO flow. DO NOT enable this feature unless absolutely necessary.',
-    /** UNTRANSLATED */
-    enable_idp_initiated_sso: 'Enable IdP-initiated SSO',
-    /** UNTRANSLATED */
+      'Kullanıcılar genellikle SP başlatmalı SSO akışı kullanarak uygulamanızdan kimlik doğrulama sürecine başlar. Bu özelliği yalnızca kesinlikle gerekli olduğunda etkinleştirin.',
+    enable_idp_initiated_sso: "IdP başlatmalı SSO'yu etkinleştir",
     enable_idp_initiated_sso_description:
-      "Allow enterprise users to start the authentication process directly from the identity provider's portal. Please understand the potential security risks before enabling this feature.",
-    /** UNTRANSLATED */
-    default_application: 'Default application',
-    /** UNTRANSLATED */
+      'Kurumsal kullanıcıların kimlik sağlayıcı portalından kimlik doğrulama sürecine doğrudan başlamalarına izin verin. Bu özelliği etkinleştirmeden önce olası güvenlik risklerini anlayın.',
+    default_application: 'Varsayılan uygulama',
     default_application_tooltip:
-      'Target application the user will be redirected to after authentication.',
-    /** UNTRANSLATED */
+      'Kullanıcının kimlik doğrulama sonrası yönlendirileceği hedef uygulama.',
     empty_applications_error:
-      'No applications found. Please add one in the <a>Applications</a> section.',
-    /** UNTRANSLATED */
-    empty_applications_placeholder: 'No applications',
-    /** UNTRANSLATED */
-    authentication_type: 'Authentication type',
-    /** UNTRANSLATED */
-    auto_authentication_disabled_title: 'Redirect to client for SP-initiated SSO',
-    /** UNTRANSLATED */
+      '<a>Uygulamalar</a> bölümünde hiçbir uygulama bulunamadı. Lütfen bir tane ekleyin.',
+    empty_applications_placeholder: 'Uygulama yok',
+    authentication_type: 'Kimlik doğrulama türü',
+    auto_authentication_disabled_title: 'SP başlatmalı SSO için istemciye yönlendir',
     auto_authentication_disabled_description:
-      'Recommended. Redirect users to the client-side application to initiate a secure SP-initiated OIDC authentication.  This will prevent the CSRF attacks.',
-    /** UNTRANSLATED */
-    auto_authentication_enabled_title: 'Directly sign in using the IdP-initiated SSO',
-    /** UNTRANSLATED */
+      'Önerilir. CSRF saldırılarını önlemek için kullanıcıları SP başlatmalı OIDC kimlik doğrulamasını başlatmak üzere istemci tarafı uygulamaya yönlendirin.',
+    auto_authentication_enabled_title: 'IdP başlatmalı SSO kullanarak doğrudan oturum açın',
     auto_authentication_enabled_description:
-      'After successful sign-in, users will be redirected to the specified Redirect URI with the authorization code (Without state and PKCE validation).',
-    /** UNTRANSLATED */
-    auto_authentication_disabled_app: 'For traditional web app, single-page app (SPA)',
-    /** UNTRANSLATED */
-    auto_authentication_enabled_app: 'For traditional web app',
-    /** UNTRANSLATED */
-    idp_initiated_auth_callback_uri: 'Client callback URI',
-    /** UNTRANSLATED */
+      "Başarılı bir oturum açmanın ardından, kullanıcılar belirtilen Yönlendirme URI'sine yetkilendirme kodu ile yönlendirilecektir (Durum ve PKCE doğrulaması olmadan).",
+    auto_authentication_disabled_app:
+      'Geleneksel web uygulamaları, tek sayfa uygulamaları (SPA) için',
+    auto_authentication_enabled_app: 'Geleneksel web uygulamaları için',
+    idp_initiated_auth_callback_uri: "İstemci geri çağırma URI'si",
     idp_initiated_auth_callback_uri_tooltip:
-      'The client callback URI to initiate a SP-initiated SSO authentication flow. An ssoConnectorId will be appended to the URI as a query parameter. (e.g., https://your.domain/sso/callback?connectorId={{ssoConnectorId}})',
-    /** UNTRANSLATED */
-    redirect_uri: 'Post sign-in redirect URI',
-    /** UNTRANSLATED */
+      "SP başlatmalı SSO kimlik doğrulama akışını başlatmak için istemci geri çağırma URI'si. Bir ssoConnectorId sorgu parametresi olarak URI'ye eklenecektir. (Örneğin, https://your.domain/sso/callback?connectorId={{ssoConnectorId}})",
+    redirect_uri: "Oturum sonrası yönlendirme URI'si",
     redirect_uri_tooltip:
-      'The redirect URI to redirect users after successful sign-in. Logto will use this URI as the OIDC redirect URI in the authorization request. Use a dedicated URI for the IdP-initiated SSO authentication flow for better security.',
-    /** UNTRANSLATED */
+      "Başarılı oturum açmadan sonra kullanıcıları yönlendirmek için kullanılacak yönlendirme URI'si. Logto, bu URI'yi yetkilendirme isteğinde OIDC yönlendirme URI'si olarak kullanacaktır. Daha iyi güvenlik için IdP başlatmalı SSO kimlik doğrulama akışı için özel bir URI kullanın.",
     empty_redirect_uris_error:
-      'No redirect URI has been registered for the application. Please add one first.',
-    /** UNTRANSLATED */
-    redirect_uri_placeholder: 'Select a post sign-in redirect URI',
-    /** UNTRANSLATED */
-    auth_params: 'Additional authentication parameters',
-    /** UNTRANSLATED */
+      "Uygulama için kayıtlı hiçbir yönlendirme URI'si bulunamadı. Lütfen önce bir tane ekleyin.",
+    redirect_uri_placeholder: "Oturum sonrası yönlendirme URI'sini seçin",
+    auth_params: 'Ek kimlik doğrulama parametreleri',
     auth_params_tooltip:
-      'Additional parameters to be passed in the authorization request. By default only (openid profile) scopes will be requested, you can specify additional scopes or a exclusive state value here. (e.g., { "scope": "organizations email", "state": "secret_state" }).',
+      'Yetkilendirme isteğine eklenmesi gereken ek parametreler. Varsayılan olarak yalnızca (openid profile) kapsamları istenecek olup, burada ek kapsamlar veya özel bir durum değeri belirtebilirsiniz. (Örneğin, { "scope": "organizations email", "state": "secret_state" }).',
   },
-  /** UNTRANSLATED */
-  trust_unverified_email: 'Trust unverified email',
-  /** UNTRANSLATED */
+  trust_unverified_email: 'Doğrulanmamış e-postaya güven',
   trust_unverified_email_label:
-    'Always trust the unverified email addresses returned from the identity provider',
-  /** UNTRANSLATED */
+    'Kimlik sağlayıcıdan dönen doğrulanmamış e-posta adreslerine her zaman güven',
   trust_unverified_email_tip:
-    'The Entra ID (OIDC) connector does not return the `email_verified` claim, meaning that email addresses from Azure are not guaranteed to be verified. By default, Logto will not sync unverified email addresses to the user profile. Enable this option only if you trust all the email addresses from the Entra ID directory.',
+    "Entra ID (OIDC) bağlayıcısı `email_verified` bilgisini döndürmez, bu da Azure'dan alınan e-posta adreslerinin doğrulandığının garanti edilmediği anlamına gelir. Varsayılan olarak, Logto doğrulanmamış e-posta adreslerini kullanıcı profiline senkronize etmeyecektir. Bu seçeneği yalnızca Entra ID dizininden gelen tüm e-posta adreslerine güveniyorsanız etkinleştirin.",
 };
 
 export default Object.freeze(enterprise_sso_details);

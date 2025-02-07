@@ -172,26 +172,17 @@ const quota_item = {
     not_eligible: 'Удалите свои пользовательские элементы UI',
   },
   idp_initiated_sso_enabled: {
-    /** UNTRANSLATED */
-    name: 'IDP-initiated SSO',
-    /** UNTRANSLATED */
-    limited: 'IDP-initiated SSO',
-    /** UNTRANSLATED */
-    unlimited: 'IDP-initiated SSO',
-    /** UNTRANSLATED */
-    not_eligible: 'IDP-initiated SSO not allowed',
+    name: 'Инициированное IDP SSO',
+    limited: 'Инициированное IDP SSO',
+    unlimited: 'Инициированное IDP SSO',
+    not_eligible: 'Инициированное IDP SSO не разрешено',
   },
   saml_applications_limit: {
-    /** UNTRANSLATED */
-    name: 'SAML applications',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} SAML application',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} SAML applications',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited SAML applications',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your SAML applications',
+    name: 'SAML приложения',
+    limited: '{{count, number}} SAML приложение',
+    limited_other: '{{count, number}} SAML приложений',
+    unlimited: 'Неограниченное количество SAML приложений',
+    not_eligible: 'Удалите свои SAML приложения',
   },
 };
 

@@ -3,18 +3,14 @@ const single_sign_on = {
   duplicated_domains: 'Il existe des domaines en double.',
   invalid_domain_format: 'Format de domaine invalide.',
   duplicate_connector_name: 'Le nom du connecteur existe déjà. Veuillez choisir un nom différent.',
-  /** UNTRANSLATED */
   idp_initiated_authentication_not_supported:
-    'IdP-initiated authentication is exclusively supported for SAML connectors.',
-  /** UNTRANSLATED */
+    "L'authentification initiée par l'IdP est exclusivement prise en charge pour les connecteurs SAML.",
   idp_initiated_authentication_invalid_application_type:
-    'Invalid application type. Only {{type}} applications are allowed.',
-  /** UNTRANSLATED */
+    "Type d'application invalide. Seules les applications {{type}} sont autorisées.",
   idp_initiated_authentication_redirect_uri_not_registered:
-    'The redirect_uri is not registered. Please check the application settings.',
-  /** UNTRANSLATED */
+    "L'URI de redirection n'est pas enregistrée. Veuillez vérifier les paramètres de l'application.",
   idp_initiated_authentication_client_callback_uri_not_found:
-    'The client IdP-initiated authentication callback URI is not found. Please check the connector settings.',
+    "L'URI de rappel d'authentification initiée par le client IdP n'est pas trouvée. Veuillez vérifier les paramètres du connecteur.",
 };
 
 export default Object.freeze(single_sign_on);

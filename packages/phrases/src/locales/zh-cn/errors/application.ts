@@ -18,48 +18,27 @@ const application = {
   no_legacy_secret_found: '该应用程序没有旧版密钥。',
   secret_name_exists: '密钥名称已存在。',
   saml: {
-    /** UNTRANSLATED */
-    use_saml_app_api: 'Use `[METHOD] /saml-applications(/.*)?` API to operate SAML app.',
-    /** UNTRANSLATED */
-    saml_application_only: 'The API is only available for SAML applications.',
-    /** UNTRANSLATED */
-    acs_url_binding_not_supported:
-      'Only HTTP-POST binding is supported for receiving SAML assertions.',
-    /** UNTRANSLATED */
-    can_not_delete_active_secret: 'Can not delete the active secret.',
-    /** UNTRANSLATED */
-    no_active_secret: 'No active secret found.',
-    /** UNTRANSLATED */
-    entity_id_required: 'Entity ID is required to generate metadata.',
-    /** UNTRANSLATED */
-    name_id_format_required: 'Name ID format is required.',
-    /** UNTRANSLATED */
-    unsupported_name_id_format: 'Unsupported name ID format.',
-    /** UNTRANSLATED */
-    missing_email_address: 'User does not have an email address.',
-    /** UNTRANSLATED */
-    email_address_unverified: 'User email address is not verified.',
-    /** UNTRANSLATED */
-    invalid_certificate_pem_format: 'Invalid PEM certificate format',
-    /** UNTRANSLATED */
-    acs_url_required: 'Assertion Consumer Service URL is required.',
-    /** UNTRANSLATED */
-    private_key_required: 'Private key is required.',
-    /** UNTRANSLATED */
-    certificate_required: 'Certificate is required.',
-    /** UNTRANSLATED */
-    invalid_saml_request: 'Invalid SAML authentication request.',
-    /** UNTRANSLATED */
-    auth_request_issuer_not_match:
-      'The issuer of the SAML authentication request mismatch with service provider entity ID.',
-    /** UNTRANSLATED */
+    use_saml_app_api: '使用 `[METHOD] /saml-applications(/.*)?` API 操作 SAML 应用。',
+    saml_application_only: '该 API 仅适用于 SAML 应用。',
+    reach_oss_limit: '你不能创建更多 SAML 应用，因为已达到 {{limit}} 的限制。',
+    acs_url_binding_not_supported: '仅支持用于接收 SAML 断言的 HTTP-POST 绑定。',
+    can_not_delete_active_secret: '不能删除活动密钥。',
+    no_active_secret: '未找到活动密钥。',
+    entity_id_required: '生成元数据需要实体 ID。',
+    name_id_format_required: '需要名称 ID 格式。',
+    unsupported_name_id_format: '不支持的名称 ID 格式。',
+    missing_email_address: '用户没有电子邮件地址。',
+    email_address_unverified: '用户电子邮件地址未验证。',
+    invalid_certificate_pem_format: '无效的 PEM 证书格式',
+    acs_url_required: '需要断言消费服务 URL。',
+    private_key_required: '需要私钥。',
+    certificate_required: '需要证书。',
+    invalid_saml_request: '无效的 SAML 认证请求。',
+    auth_request_issuer_not_match: 'SAML 认证请求的发行者与服务提供者实体 ID 不匹配。',
     sp_initiated_saml_sso_session_not_found_in_cookies:
-      'Service provider initiated SAML SSO session ID not found in cookies.',
-    /** UNTRANSLATED */
-    sp_initiated_saml_sso_session_not_found:
-      'Service provider initiated SAML SSO session not found.',
-    /** UNTRANSLATED */
-    state_mismatch: '`state` mismatch.',
+      '在 cookies 中未找到服务提供者发起的 SAML 单点登录会话 ID。',
+    sp_initiated_saml_sso_session_not_found: '未找到服务提供者发起的 SAML 单点登录会话。',
+    state_mismatch: '`state` 不匹配。',
   },
 };
 

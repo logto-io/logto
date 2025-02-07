@@ -6,8 +6,7 @@ const oidc = {
   insufficient_scope: 'Manque de champ `{{scope}}` dans le jeton.',
   invalid_request: 'La requête est invalide.',
   invalid_grant: 'La requête de consentement est invalide.',
-  /** UNTRANSLATED */
-  invalid_issuer: 'Invalid issuer.',
+  invalid_issuer: 'Émetteur invalide.',
   invalid_redirect_uri:
     '`redirect_uri` ne correspond à aucun des `redirect_uris` enregistrés par le client.',
   access_denied: 'Accès refusé.',

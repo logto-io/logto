@@ -172,26 +172,17 @@ const quota_item = {
     not_eligible: '맞춤 UI 자산을 제거하십시오',
   },
   idp_initiated_sso_enabled: {
-    /** UNTRANSLATED */
-    name: 'IDP-initiated SSO',
-    /** UNTRANSLATED */
-    limited: 'IDP-initiated SSO',
-    /** UNTRANSLATED */
-    unlimited: 'IDP-initiated SSO',
-    /** UNTRANSLATED */
-    not_eligible: 'IDP-initiated SSO not allowed',
+    name: 'IDP 시작 SSO',
+    limited: 'IDP 시작 SSO',
+    unlimited: 'IDP 시작 SSO',
+    not_eligible: 'IDP 시작 SSO 허용되지 않음',
   },
   saml_applications_limit: {
-    /** UNTRANSLATED */
-    name: 'SAML applications',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} SAML application',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} SAML applications',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited SAML applications',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your SAML applications',
+    name: 'SAML 애플리케이션',
+    limited: '{{count, number}} SAML 애플리케이션',
+    limited_other: '{{count, number}} SAML 애플리케이션',
+    unlimited: '무제한 SAML 애플리케이션',
+    not_eligible: 'SAML 애플리케이션을 제거하십시오',
   },
 };
 

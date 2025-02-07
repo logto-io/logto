@@ -74,6 +74,7 @@ function PlanComparisonTable() {
     const proPlanM2mAppPrice = t('extra_quota_price', { value: 8 });
     const thirdPartyApps = t('application.third_party');
     const thirdPartyAppsTip = t('third_party_tip');
+    const samlApps = t('application.saml_app');
 
     // API resources
     const resourceCount = t('resource.resource_count');
@@ -171,6 +172,7 @@ function PlanComparisonTable() {
             data: [`${freePlanM2mLimit}`, `${proPlanM2mAppLimit}||${proPlanM2mAppPrice}`, contact],
           },
           { name: `${thirdPartyApps}|${thirdPartyAppsTip}`, data: ['-', unlimited, contact] },
+          { name: samlApps, data: ['-', '-', '✓'] },
         ],
       },
       {

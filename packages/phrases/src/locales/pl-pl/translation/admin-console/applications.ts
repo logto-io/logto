@@ -47,12 +47,9 @@ const applications = {
       description: 'N/A',
     },
     saml: {
-      /** UNTRANSLATED */
-      title: 'SAML App',
-      /** UNTRANSLATED */
-      subtitle: 'An app that is used as an SAML IdP connector',
-      /** UNTRANSLATED */
-      description: 'E.g., SAML',
+      title: 'Aplikacja SAML',
+      subtitle: 'Aplikacja, która jest używana jako łącznik IdP SAML',
+      description: 'Np. SAML',
     },
     third_party: {
       title: 'Aplikacja stron trzecich',

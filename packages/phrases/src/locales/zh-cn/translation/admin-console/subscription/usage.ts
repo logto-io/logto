@@ -1,89 +1,70 @@
 const usage = {
-  /** UNTRANSLATED */
-  status_active: 'In use',
-  /** UNTRANSLATED */
-  status_inactive: 'Not in use',
-  /** UNTRANSLATED */
-  limited_status_quota_description: '(First {{quota}} included)',
-  /** UNTRANSLATED */
-  unlimited_status_quota_description: '(Included)',
-  /** UNTRANSLATED */
-  disabled_status_quota_description: '(Not included)',
-  /** UNTRANSLATED */
-  usage_description_with_unlimited_quota: '{{usage}}<span> (Unlimited)</span>',
-  /** UNTRANSLATED */
-  usage_description_with_limited_quota: '{{usage}}<span> (First {{basicQuota}} included)</span>',
-  /** UNTRANSLATED */
-  usage_description_without_quota: '{{usage}}<span> (Not included)</span>',
+  status_active: '使用中',
+  status_inactive: '未使用',
+  limited_status_quota_description: '（前 {{quota}} 个已包含）',
+  unlimited_status_quota_description: '（已包含）',
+  disabled_status_quota_description: '（未包含）',
+  usage_description_with_unlimited_quota: '{{usage}}<span>（无限制）</span>',
+  usage_description_with_limited_quota: '{{usage}}<span>（前 {{basicQuota}} 个已包含）</span>',
+  usage_description_without_quota: '{{usage}}<span>（未包含）</span>',
   mau: {
     title: 'MAU',
     tooltip:
       'MAU 是指在一个计费周期内与 Logto 交换过至少一个令牌的唯一用户。Pro 计划无限制。<a>了解更多</a>',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'A MAU is a unique user who has exchanged at least one token with Logto within a billing cycle. Unlimited for the Enterprise Plan.',
+      'MAU 是指在一个计费周期内与 Logto 交换过至少一个令牌的唯一用户。企业计划无限制。',
   },
   organizations: {
     title: '组织',
     tooltip: '附加功能，每月固定费用为 ${{price, number}} 。组织的数量或其活动水平不影响价格。',
-    /** UNTRANSLATED */
-    description_for_enterprise: '(Included)',
-    /** UNTRANSLATED */
+    description_for_enterprise: '（已包含）',
     tooltip_for_enterprise:
-      'Inclusion depends on your plan. If the organization feature isn’t in your initial contract, it will be added to your bill when you activate it. The add-on costs ${{price, number}}/month, regardless of the number of organizations or their activity.',
-    /** UNTRANSLATED */
+      '根据你的计划而定。如果组织功能不在你的初始合同中，当你激活它时，将会添加到你的账单中。附加费用为 ${{price, number}}/月，无论组织的数量或其活动如何。',
     tooltip_for_enterprise_with_numbered_basic_quota:
-      'Your plan includes the first {{basicQuota}} organizations for free. If you need more, you can add them with the organization add-on at a flat rate of ${{price, number}} per month, regardless of the number of organizations or their activity level.',
+      '你的计划包括前 {{basicQuota}} 个组织免费。如果需要更多，可以按月以每月 ${{price, number}} 的固定价格添加组织，不管组织的数量或活动水平如何。',
   },
   mfa: {
     title: 'MFA',
     tooltip: '附加功能，每月固定费用为 ${{price, number}} 。认证因素的数量不影响价格。',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'Inclusion depends on your plan. If the MFA feature isn’t in your initial contract, it will be added to your bill when you activate it. The add-on costs ${{price, number}}/month, regardless of the number of authentication factors used.',
+      '根据你的计划而定。如果 MFA 功能不在你的初始合同中，当你激活它时，将会添加到你的账单中。附加费用为 ${{price, number}}/月，不受使用的认证因素数量影响。',
   },
   enterprise_sso: {
     title: '企业 SSO',
     tooltip: '附加功能，每个 SSO 连接每月价格为 ${{price, number}} 。',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'Add-on feature with a price of ${{price, number}} per SSO connection per month. The first {{basicQuota}} SSO are included and free to use in your contract-based plan.',
+      '附加功能，每个 SSO 连接每月价格为 ${{price, number}}。合同计划包括前 {{basicQuota}} 个 SSO，免费使用。',
   },
   api_resources: {
     title: 'API 资源',
     tooltip: '附加功能，每个资源每月价格为 ${{price, number}} 。前三个 API 资源免费。',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} API resources are included and free to use in your contract-based plan. If you need more, ${{price, number}} per API resource per month.',
+      '合同计划包括前 {{basicQuota}} 个 API 资源，免费使用。如果需要更多，每个 API 资源每月 ${{price, number}}。',
   },
   machine_to_machine: {
     title: '机器对机器',
     tooltip: '附加功能，每个应用每月价格为 ${{price, number}} 。第一个机器对机器应用免费。',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} machine-to-machine app is free to use in your contract-based plan. If you need more, ${{price, number}} per app per month.',
+      '合同计划包括第一个 {{basicQuota}} 个机器对机器应用，免费使用。如果需要更多，每个应用每月 ${{price, number}}。',
   },
   tenant_members: {
     title: '租户成员',
     tooltip: '附加功能，每个成员每月价格为 ${{price, number}} 。前三个租户成员免费。',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} tenant members are included and free to use in your contract-based plan. If you need more, ${{price, number}} per tenant member per month.',
+      '合同计划包括前 {{basicQuota}} 个租户成员，免费使用。如果需要更多，每个租户成员每月 ${{price, number}}。',
   },
   tokens: {
     title: '令牌',
     tooltip:
       '附加功能，每 {{tokenLimit}} 个令牌价格为 ${{price, number}} 。首 {{basicQuota}} 个令牌包含在内。',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} tokens is included and free to use in your contract-based plan. If you need more, ${{price, number}} per {{tokenLimit}} tokens per month.',
+      '合同计划包括首 {{basicQuota}} 个令牌，免费使用。如果需要更多，每 {{tokenLimit}} 个令牌每月 ${{price, number}}。',
   },
   hooks: {
     title: '钩子',
     tooltip: '附加功能，每个钩子价格为 ${{price, number}} 。前十个钩子包含在内。',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} hooks are included and free to use in your contract-based plan. If you need more, ${{price, number}} per hook per month.',
+      '合同计划包括前 {{basicQuota}} 个钩子，免费使用。如果需要更多，每个钩子每月 ${{price, number}}。',
   },
   pricing: {
     add_on_changes_in_current_cycle_notice:

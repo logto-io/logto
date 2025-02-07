@@ -172,26 +172,17 @@ const quota_item = {
     not_eligible: 'Özel UI varlıklarınızı kaldırın',
   },
   idp_initiated_sso_enabled: {
-    /** UNTRANSLATED */
-    name: 'IDP-initiated SSO',
-    /** UNTRANSLATED */
-    limited: 'IDP-initiated SSO',
-    /** UNTRANSLATED */
-    unlimited: 'IDP-initiated SSO',
-    /** UNTRANSLATED */
-    not_eligible: 'IDP-initiated SSO not allowed',
+    name: 'IDP başlatılan SSO',
+    limited: 'IDP başlatılan SSO',
+    unlimited: 'IDP başlatılan SSO',
+    not_eligible: "IDP başlatılan SSO'ya izin verilmez",
   },
   saml_applications_limit: {
-    /** UNTRANSLATED */
-    name: 'SAML applications',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} SAML application',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} SAML applications',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited SAML applications',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your SAML applications',
+    name: 'SAML uygulamaları',
+    limited: '{{count, number}} SAML uygulaması',
+    limited_other: '{{count, number}} SAML uygulamaları',
+    unlimited: 'Sınırsız SAML uygulamaları',
+    not_eligible: 'SAML uygulamalarınızı kaldırın',
   },
 };
 

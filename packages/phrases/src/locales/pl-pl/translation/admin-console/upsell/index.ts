@@ -26,11 +26,9 @@ const upsell = {
     update_plan: 'Zaktualizuj plan',
   },
   token_exceeded_modal: {
-    /** UNTRANSLATED */
-    title: 'Token usage exceeded the limit. Upgrade your plan.',
-    /** UNTRANSLATED */
+    title: 'Użycie tokena przekroczyło limit. Ulepsz swój plan.',
     notification:
-      'You have exceeded your <planName/> token usage limit. Users will not be able to access the Logto service properly. Please upgrade your plan to premium promptly to avoid any inconvenience.',
+      'Przekroczyłeś limit użycia tokena <planName/>. Użytkownicy nie będą mogli prawidłowo korzystać z usługi Logto. Proszę niezwłocznie uaktualnić swój plan do wersji premium, aby uniknąć niedogodności.',
   },
   payment_overdue_modal: {
     title: 'Opłata za fakturę zaległa',

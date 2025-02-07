@@ -5,7 +5,6 @@ const enterprise_sso_details = {
   readme_drawer_subtitle: '엔드 유저 SSO를 활성화하려면 기업 SSO 커넥터를 설정하세요',
   tab_experience: 'SSO 경험',
   tab_connection: '연결',
-  /** UNTRANSLATED */
   tab_idp_initiated_auth: 'IdP-initiated SSO',
   general_settings_title: '일반',
   custom_branding_title: '표시',
@@ -73,71 +72,44 @@ const enterprise_sso_details = {
     issuer: '발급자',
   },
   idp_initiated_auth_config: {
-    /** UNTRANSLATED */
     card_title: 'IdP-initiated SSO',
-    /** UNTRANSLATED */
     card_description:
-      'User typically start the authentication process from your app using the SP-initiated SSO flow. DO NOT enable this feature unless absolutely necessary.',
-    /** UNTRANSLATED */
-    enable_idp_initiated_sso: 'Enable IdP-initiated SSO',
-    /** UNTRANSLATED */
+      '사용자는 일반적으로 SP-initiated SSO 흐름을 사용하여 앱에서 인증 프로세스를 시작합니다. 이 기능을 반드시 필요하지 않으면 활성화하지 마십시오.',
+    enable_idp_initiated_sso: 'IdP-initiated SSO 활성화',
     enable_idp_initiated_sso_description:
-      "Allow enterprise users to start the authentication process directly from the identity provider's portal. Please understand the potential security risks before enabling this feature.",
-    /** UNTRANSLATED */
-    default_application: 'Default application',
-    /** UNTRANSLATED */
-    default_application_tooltip:
-      'Target application the user will be redirected to after authentication.',
-    /** UNTRANSLATED */
+      '기업 사용자가 신원 공급자 포털에서 직접 인증 프로세스를 시작할 수 있도록 허용합니다. 이 기능을 활성화하기 전에 잠재적인 보안 위험을 이해하세요.',
+    default_application: '기본 애플리케이션',
+    default_application_tooltip: '사용자가 인증 후에 리디렉션될 대상 애플리케이션입니다.',
     empty_applications_error:
-      'No applications found. Please add one in the <a>Applications</a> section.',
-    /** UNTRANSLATED */
-    empty_applications_placeholder: 'No applications',
-    /** UNTRANSLATED */
-    authentication_type: 'Authentication type',
-    /** UNTRANSLATED */
-    auto_authentication_disabled_title: 'Redirect to client for SP-initiated SSO',
-    /** UNTRANSLATED */
+      '<a>애플리케이션</a> 섹션에 애플리케이션이 추가되지 않았습니다. 하나 추가하세요.',
+    empty_applications_placeholder: '애플리케이션 없음',
+    authentication_type: '인증 유형',
+    auto_authentication_disabled_title: 'SP-initiated SSO를 위해 클라이언트로 리디렉션',
     auto_authentication_disabled_description:
-      'Recommended. Redirect users to the client-side application to initiate a secure SP-initiated OIDC authentication.  This will prevent the CSRF attacks.',
-    /** UNTRANSLATED */
-    auto_authentication_enabled_title: 'Directly sign in using the IdP-initiated SSO',
-    /** UNTRANSLATED */
+      '추천. CSRF 공격을 방지하기 위해 보안이 강화된 SP-initiated OIDC 인증을 시작하기 위해 클라이언트 측 애플리케이션으로 사용자 리디렉션.',
+    auto_authentication_enabled_title: 'IdP-initiated SSO를 사용하여 직접 로그인',
     auto_authentication_enabled_description:
-      'After successful sign-in, users will be redirected to the specified Redirect URI with the authorization code (Without state and PKCE validation).',
-    /** UNTRANSLATED */
-    auto_authentication_disabled_app: 'For traditional web app, single-page app (SPA)',
-    /** UNTRANSLATED */
-    auto_authentication_enabled_app: 'For traditional web app',
-    /** UNTRANSLATED */
-    idp_initiated_auth_callback_uri: 'Client callback URI',
-    /** UNTRANSLATED */
+      '성공적인 로그인 후, 사용자는 지정된 리디렉션 URI로 리디렉션되어 인증 코드(상태 및 PKCE 검증 없이)를 수신합니다.',
+    auto_authentication_disabled_app: '전통적 웹 앱, 단일 페이지 앱(SPA) 용',
+    auto_authentication_enabled_app: '전통적 웹 앱 용',
+    idp_initiated_auth_callback_uri: '클라이언트 콜백 URI',
     idp_initiated_auth_callback_uri_tooltip:
-      'The client callback URI to initiate a SP-initiated SSO authentication flow. An ssoConnectorId will be appended to the URI as a query parameter. (e.g., https://your.domain/sso/callback?connectorId={{ssoConnectorId}})',
-    /** UNTRANSLATED */
-    redirect_uri: 'Post sign-in redirect URI',
-    /** UNTRANSLATED */
+      'SP-initiated SSO 인증 흐름을 시작하기 위한 클라이언트 콜백 URI입니다. ssoConnectorId는 쿼리 매개 변수로 URI에 추가됩니다. (예: https://your.domain/sso/callback?connectorId={{ssoConnectorId}})',
+    redirect_uri: '로그인 후 리디렉션 URI',
     redirect_uri_tooltip:
-      'The redirect URI to redirect users after successful sign-in. Logto will use this URI as the OIDC redirect URI in the authorization request. Use a dedicated URI for the IdP-initiated SSO authentication flow for better security.',
-    /** UNTRANSLATED */
+      '성공적인 로그인 후 사용자 리디렉션에 사용할 리디렉션 URI입니다. Logto는 이 URI를 권한 요청에서 OIDC 리디렉션 URI로 사용합니다. 보안을 강화하기 위해 IdP-initiated SSO 인증 흐름을 위한 전용 URI를 사용하는 것이 좋습니다.',
     empty_redirect_uris_error:
-      'No redirect URI has been registered for the application. Please add one first.',
-    /** UNTRANSLATED */
-    redirect_uri_placeholder: 'Select a post sign-in redirect URI',
-    /** UNTRANSLATED */
-    auth_params: 'Additional authentication parameters',
-    /** UNTRANSLATED */
+      '애플리케이션에 대해 등록된 리디렉션 URI가 없습니다. 하나 추가하세요.',
+    redirect_uri_placeholder: '로그인 후 리디렉션 URI 선택',
+    auth_params: '추가 인증 매개 변수',
     auth_params_tooltip:
-      'Additional parameters to be passed in the authorization request. By default only (openid profile) scopes will be requested, you can specify additional scopes or a exclusive state value here. (e.g., { "scope": "organizations email", "state": "secret_state" }).',
+      '권한 요청에 전달할 추가 매개 변수입니다. 기본적으로 (openid profile) 범위만 요청되며, 여기에서 추가 범위 또는 독점 상태 값을 지정할 수 있습니다. (예: { "scope": "organizations email", "state": "secret_state" }).',
   },
-  /** UNTRANSLATED */
-  trust_unverified_email: 'Trust unverified email',
-  /** UNTRANSLATED */
+  trust_unverified_email: '검증되지 않은 이메일 신뢰',
   trust_unverified_email_label:
-    'Always trust the unverified email addresses returned from the identity provider',
-  /** UNTRANSLATED */
+    '신원 공급자로부터 반환된 검증되지 않은 이메일 주소를 항상 신뢰합니다',
   trust_unverified_email_tip:
-    'The Entra ID (OIDC) connector does not return the `email_verified` claim, meaning that email addresses from Azure are not guaranteed to be verified. By default, Logto will not sync unverified email addresses to the user profile. Enable this option only if you trust all the email addresses from the Entra ID directory.',
+    'Entra ID (OIDC) 커넥터는 `email_verified` 클레임을 반환하지 않으며, 이는 Azure의 이메일 주소가 검증되지 않았음을 의미합니다. 기본적으로 Logto는 검증되지 않은 이메일 주소를 사용자 프로필과 동기화하지 않습니다. Entra ID 디렉토리의 모든 이메일 주소를 신뢰하는 경우에만 이 옵션을 활성화하세요.',
 };
 
 export default Object.freeze(enterprise_sso_details);

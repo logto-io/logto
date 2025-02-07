@@ -9,8 +9,7 @@ const guide = {
     MachineToMachine: 'Machine-to-machine',
     Protected: '非 SDK 集成',
     ThirdParty: '第三方应用',
-    /** UNTRANSLATED */
-    SAML: 'SAML',
+    SAML: 'SAML 应用',
   },
   filter: {
     title: '筛选框架',

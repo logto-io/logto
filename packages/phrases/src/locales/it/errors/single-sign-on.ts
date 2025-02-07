@@ -4,18 +4,14 @@ const single_sign_on = {
   invalid_domain_format: 'Formato del dominio non valido.',
   duplicate_connector_name:
     'Il nome del connettore esiste già. Si prega di scegliere un nome diverso.',
-  /** UNTRANSLATED */
   idp_initiated_authentication_not_supported:
-    'IdP-initiated authentication is exclusively supported for SAML connectors.',
-  /** UNTRANSLATED */
+    "L'autenticazione avviata da IdP è supportata esclusivamente per i connettori SAML.",
   idp_initiated_authentication_invalid_application_type:
-    'Invalid application type. Only {{type}} applications are allowed.',
-  /** UNTRANSLATED */
+    'Tipo di applicazione non valido. Sono consentite solo applicazioni {{type}}.',
   idp_initiated_authentication_redirect_uri_not_registered:
-    'The redirect_uri is not registered. Please check the application settings.',
-  /** UNTRANSLATED */
+    "Il redirect_uri non è registrato. Si prega di controllare le impostazioni dell'applicazione.",
   idp_initiated_authentication_client_callback_uri_not_found:
-    'The client IdP-initiated authentication callback URI is not found. Please check the connector settings.',
+    "L'URI di callback dell'autenticazione iniziata dal client IdP non è stato trovato. Controlla le impostazioni del connettore.",
 };
 
 export default Object.freeze(single_sign_on);

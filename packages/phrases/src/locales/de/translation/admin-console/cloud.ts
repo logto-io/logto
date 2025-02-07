@@ -13,9 +13,8 @@ const cloud = {
     title: 'Sie haben sich erfolgreich angemeldet',
     description:
       'Sie haben sich erfolgreich mit Ihrem Social-Account angemeldet. Um eine nahtlose Integration und den Zugriff auf alle Funktionen von Logto zu gewährleisten, empfehlen wir Ihnen, Ihren eigenen Social-Connector zu konfigurieren.',
-    /** UNTRANSLATED */
     notice:
-      "Please avoid using the demo connector for production purposes. Once you've completed testing, kindly delete the demo connector and set up your own connector with your credentials.",
+      'Bitte vermeiden Sie die Verwendung des Demo-Connectors für Produktionszwecke. Sobald Sie die Tests abgeschlossen haben, löschen Sie bitte den Demo-Connector und richten Sie Ihren eigenen Connector mit Ihren Anmeldedaten ein.',
   },
   tenant: {
     create_tenant: 'Tenant erstellen',

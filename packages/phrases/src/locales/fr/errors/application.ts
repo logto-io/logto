@@ -25,48 +25,32 @@ const application = {
   no_legacy_secret_found: "L'application n'a pas de secret hérité.",
   secret_name_exists: 'Le nom du secret existe déjà.',
   saml: {
-    /** UNTRANSLATED */
-    use_saml_app_api: 'Use `[METHOD] /saml-applications(/.*)?` API to operate SAML app.',
-    /** UNTRANSLATED */
-    saml_application_only: 'The API is only available for SAML applications.',
-    /** UNTRANSLATED */
+    use_saml_app_api:
+      "Utilisez l'API `[METHOD] /saml-applications(/.*)?` pour gérer l'application SAML.",
+    saml_application_only: "L'API est uniquement disponible pour les applications SAML.",
+    reach_oss_limit:
+      "Vous NE POUVEZ PAS créer plus d'applications SAML car la limite de {{limit}} est atteinte.",
     acs_url_binding_not_supported:
-      'Only HTTP-POST binding is supported for receiving SAML assertions.',
-    /** UNTRANSLATED */
-    can_not_delete_active_secret: 'Can not delete the active secret.',
-    /** UNTRANSLATED */
-    no_active_secret: 'No active secret found.',
-    /** UNTRANSLATED */
-    entity_id_required: 'Entity ID is required to generate metadata.',
-    /** UNTRANSLATED */
-    name_id_format_required: 'Name ID format is required.',
-    /** UNTRANSLATED */
-    unsupported_name_id_format: 'Unsupported name ID format.',
-    /** UNTRANSLATED */
-    missing_email_address: 'User does not have an email address.',
-    /** UNTRANSLATED */
-    email_address_unverified: 'User email address is not verified.',
-    /** UNTRANSLATED */
-    invalid_certificate_pem_format: 'Invalid PEM certificate format',
-    /** UNTRANSLATED */
-    acs_url_required: 'Assertion Consumer Service URL is required.',
-    /** UNTRANSLATED */
-    private_key_required: 'Private key is required.',
-    /** UNTRANSLATED */
-    certificate_required: 'Certificate is required.',
-    /** UNTRANSLATED */
-    invalid_saml_request: 'Invalid SAML authentication request.',
-    /** UNTRANSLATED */
+      'Seul le binding HTTP-POST est pris en charge pour recevoir des assertions SAML.',
+    can_not_delete_active_secret: 'Impossible de supprimer le secret actif.',
+    no_active_secret: 'Aucun secret actif trouvé.',
+    entity_id_required: "L'identifiant de l'entité est requis pour générer les métadonnées.",
+    name_id_format_required: 'Le format Name ID est requis.',
+    unsupported_name_id_format: 'Format Name ID non pris en charge.',
+    missing_email_address: "L'utilisateur n'a pas d'adresse e-mail.",
+    email_address_unverified: "L'adresse e-mail de l'utilisateur n'est pas vérifiée.",
+    invalid_certificate_pem_format: 'Format PEM de certificat invalide',
+    acs_url_required: "L'URL du service consommateur d'assertions est requise.",
+    private_key_required: 'La clé privée est requise.',
+    certificate_required: 'Le certificat est requis.',
+    invalid_saml_request: "Requête d'authentification SAML invalide.",
     auth_request_issuer_not_match:
-      'The issuer of the SAML authentication request mismatch with service provider entity ID.',
-    /** UNTRANSLATED */
+      "L'émetteur de la requête d'authentification SAML ne correspond pas à l'ID d'entité du fournisseur de service.",
     sp_initiated_saml_sso_session_not_found_in_cookies:
-      'Service provider initiated SAML SSO session ID not found in cookies.',
-    /** UNTRANSLATED */
+      "L'ID de session SSO SAML initiée par le fournisseur de services n'est pas trouvé dans les cookies.",
     sp_initiated_saml_sso_session_not_found:
-      'Service provider initiated SAML SSO session not found.',
-    /** UNTRANSLATED */
-    state_mismatch: '`state` mismatch.',
+      'La session SSO SAML initiée par le fournisseur de services est introuvable.',
+    state_mismatch: 'Mismatch `state`.',
   },
 };
 

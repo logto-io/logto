@@ -1,4 +1,3 @@
-import { ApplicationType } from '@logto/schemas';
 import { useCallback, useMemo } from 'react';
 
 import { guides } from '@/assets/docs/guides';
@@ -37,16 +36,10 @@ export const useAppGuideMetadata = (): {
 } => {
   const appGuides = useMemo(
     () =>
-      guides
-        .filter(
-          ({ metadata: { target, isCloud, isDevFeature } }) =>
-            target !== 'API' && (isCloudEnv || !isCloud) && (isDevFeaturesEnabled || !isDevFeature)
-          /**
-           * Show SAML guides when it is:
-           * 1. Cloud env
-           */
-        )
-        .filter(({ metadata: { target } }) => target !== ApplicationType.SAML || isCloudEnv),
+      guides.filter(
+        ({ metadata: { target, isCloud, isDevFeature } }) =>
+          target !== 'API' && (isCloudEnv || !isCloud) && (isDevFeaturesEnabled || !isDevFeature)
+      ),
     []
   );
 

@@ -172,26 +172,17 @@ const quota_item = {
     not_eligible: 'قم بإزالة أصول واجهة المستخدم المخصصة الخاصة بك',
   },
   idp_initiated_sso_enabled: {
-    /** UNTRANSLATED */
-    name: 'IDP-initiated SSO',
-    /** UNTRANSLATED */
-    limited: 'IDP-initiated SSO',
-    /** UNTRANSLATED */
-    unlimited: 'IDP-initiated SSO',
-    /** UNTRANSLATED */
-    not_eligible: 'IDP-initiated SSO not allowed',
+    name: 'تسجيل الدخول الأحادي الذي بدأه موفر الهوية',
+    limited: 'تسجيل الدخول الأحادي الذي بدأه موفر الهوية',
+    unlimited: 'تسجيل الدخول الأحادي الذي بدأه موفر الهوية',
+    not_eligible: 'تسجيل الدخول الأحادي الذي بدأه موفر الهوية غير مسموح',
   },
   saml_applications_limit: {
-    /** UNTRANSLATED */
-    name: 'SAML applications',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} SAML application',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} SAML applications',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited SAML applications',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your SAML applications',
+    name: 'تطبيقات SAML',
+    limited: '{{count, number}} تطبيق SAML',
+    limited_other: '{{count, number}} تطبيقات SAML',
+    unlimited: 'عدد غير محدود من تطبيقات SAML',
+    not_eligible: 'قم بإزالة تطبيقات SAML الخاصة بك',
   },
 };
 

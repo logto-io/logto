@@ -1,94 +1,75 @@
 const usage = {
-  /** UNTRANSLATED */
-  status_active: 'In use',
-  /** UNTRANSLATED */
-  status_inactive: 'Not in use',
-  /** UNTRANSLATED */
-  limited_status_quota_description: '(First {{quota}} included)',
-  /** UNTRANSLATED */
-  unlimited_status_quota_description: '(Included)',
-  /** UNTRANSLATED */
-  disabled_status_quota_description: '(Not included)',
-  /** UNTRANSLATED */
-  usage_description_with_unlimited_quota: '{{usage}}<span> (Unlimited)</span>',
-  /** UNTRANSLATED */
-  usage_description_with_limited_quota: '{{usage}}<span> (First {{basicQuota}} included)</span>',
-  /** UNTRANSLATED */
-  usage_description_without_quota: '{{usage}}<span> (Not included)</span>',
+  status_active: 'Kullanımda',
+  status_inactive: 'Kullanımda değil',
+  limited_status_quota_description: '(İlk {{quota}} dahil)',
+  unlimited_status_quota_description: '(Dahil)',
+  disabled_status_quota_description: '(Dahil değil)',
+  usage_description_with_unlimited_quota: '{{usage}}<span> (Sınırsız)</span>',
+  usage_description_with_limited_quota: '{{usage}}<span> (İlk {{basicQuota}} dahil)</span>',
+  usage_description_without_quota: '{{usage}}<span> (Dahil değil)</span>',
   mau: {
     title: 'MAU',
     tooltip:
       'Bir MAU, bir faturalandırma döngüsü içinde Logto ile en az bir token değiştirmiş benzersiz bir kullanıcıdır. Pro Plan için sınırsızdır. <a>Daha fazla bilgi edin</a>',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'A MAU is a unique user who has exchanged at least one token with Logto within a billing cycle. Unlimited for the Enterprise Plan.',
+      'Bir MAU, Logto ile bir faturalandırma döngüsü içinde en az bir token değiştirmiş benzersiz bir kullanıcıdır. Kurumsal Plan için sınırsızdır.',
   },
   organizations: {
     title: 'Organizasyonlar',
     tooltip:
       'Aylık {{price, number}} $ sabit ücretle ek özellik. Fiyat, organizasyon sayısı veya aktiviteleriyle değişmez.',
-    /** UNTRANSLATED */
-    description_for_enterprise: '(Included)',
-    /** UNTRANSLATED */
+    description_for_enterprise: '(Dahil)',
     tooltip_for_enterprise:
-      'Inclusion depends on your plan. If the organization feature isn’t in your initial contract, it will be added to your bill when you activate it. The add-on costs ${{price, number}}/month, regardless of the number of organizations or their activity.',
-    /** UNTRANSLATED */
+      "Dahil olma durumu planınıza bağlıdır. Organizasyon özelliği başlangıç sözleşmenizde yoksa, bu özelliği etkinleştirdiğinizde faturanıza eklenir. Eklenti, organizasyon sayısı veya aktiviteleri ne olursa olsun aylık ${{price, number}}'a mal olur.",
     tooltip_for_enterprise_with_numbered_basic_quota:
-      'Your plan includes the first {{basicQuota}} organizations for free. If you need more, you can add them with the organization add-on at a flat rate of ${{price, number}} per month, regardless of the number of organizations or their activity level.',
+      "Planınız, ilk {{basicQuota}} organizasyonu ücretsiz olarak içerir. Daha fazlasına ihtiyacınız varsa, organizasyon eklentisi ile organizasyon sayısı veya aktivite seviyesinden bağımsız olarak aylık ${{price, number}}'a ekleyebilirsiniz.",
   },
   mfa: {
     title: 'MFA',
     tooltip:
       'Aylık {{price, number}} $ sabit ücretle ek özellik. Fiyat, kullanılan kimlik doğrulama faktörlerinin sayısından etkilenmez.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'Inclusion depends on your plan. If the MFA feature isn’t in your initial contract, it will be added to your bill when you activate it. The add-on costs ${{price, number}}/month, regardless of the number of authentication factors used.',
+      "Dahil olma durumu planınıza bağlıdır. MFA özelliği başlangıç sözleşmenizde yoksa, bu özelliği etkinleştirdiğinizde faturanıza eklenir. Eklenti, kullanılan kimlik doğrulama faktörlerinin sayısından bağımsız olarak aylık ${{price, number}} 'a mal olur.",
   },
   enterprise_sso: {
     title: 'Kurumsal SSO',
     tooltip: 'Her bir SSO bağlantısı için aylık {{price, number}} $ ücretle ek özellik.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'Add-on feature with a price of ${{price, number}} per SSO connection per month. The first {{basicQuota}} SSO are included and free to use in your contract-based plan.',
+      'Ek bir özellik olarak, sözleşmeye dayalı planınızdaki ilk {{basicQuota}} SSO dahil edilmiştir. Daha fazla ihtiyacınız varsa, her SSO bağlantısı için aylık ${{price, number}} ücretle.',
   },
   api_resources: {
     title: 'API kaynakları',
     tooltip:
       'Her bir kaynak için aylık {{price, number}} $ ücretle ek özellik. İlk 3 API kaynağı ücretsizdir.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} API resources are included and free to use in your contract-based plan. If you need more, ${{price, number}} per API resource per month.',
+      'Sözleşmeye dayalı planınız, ilk {{basicQuota}} API kaynağını içerir ve ücretsiz kullanım sağlar. Daha fazla ihtiyacınız varsa, her API kaynağı için aylık ${{price, number}}.',
   },
   machine_to_machine: {
     title: 'Makineden makineye',
     tooltip:
       'Uygulama başına aylık {{price, number}} $ ücretle ek özellik. İlk makineden makineye uygulama ücretsizdir.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} machine-to-machine app is free to use in your contract-based plan. If you need more, ${{price, number}} per app per month.',
+      'Sözleşmeye dayalı planınız, ilk {{basicQuota}} makineden makineye uygulamasını ücretsiz kullanım sağlar. Daha fazla ihtiyacınız varsa, her uygulama için aylık ${{price, number}}.',
   },
   tenant_members: {
     title: 'Kiracı üyeler',
     tooltip:
       'Üye başına aylık {{price, number}} $ ücretle ek özellik. İlk 3 kiracı üye ücretsizdir.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} tenant members are included and free to use in your contract-based plan. If you need more, ${{price, number}} per tenant member per month.',
+      'Sözleşmeye dayalı planınız, ilk {{basicQuota}} kiracı üyeyi içerir ve ücretsiz kullanım sağlar. Daha fazla ihtiyacınız varsa, her kiracı üye için aylık ${{price, number}}.',
   },
   tokens: {
     title: 'Tokenler',
     tooltip:
       '{{tokenLimit}} token başına {{price, number}} $ ücretle ek özellik. İlk 1 {{basicQuota}} token dahildir.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} tokens is included and free to use in your contract-based plan. If you need more, ${{price, number}} per {{tokenLimit}} tokens per month.',
+      'Sözleşmeye dayalı planınız, ilk {{basicQuota}} tokenleri içerir ve ücretsiz kullanım sağlar. Daha fazla ihtiyacınız varsa, her {{tokenLimit}} token için aylık ${{price, number}}.',
   },
   hooks: {
     title: 'Hooklar',
     tooltip: 'Her bir hook için {{price, number}} $ ücretle ek özellik. İlk 10 hook dahildir.',
-    /** UNTRANSLATED */
     tooltip_for_enterprise:
-      'The first {{basicQuota}} hooks are included and free to use in your contract-based plan. If you need more, ${{price, number}} per hook per month.',
+      "Sözleşmeye dayalı planınız, ilk {{basicQuota}} hook'u içerir ve ücretsiz kullanım sağlar. Daha fazla ihtiyacınız varsa, her hook için aylık ${{price, number}}.",
   },
   pricing: {
     add_on_changes_in_current_cycle_notice:

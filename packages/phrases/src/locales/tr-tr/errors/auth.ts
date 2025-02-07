@@ -7,8 +7,7 @@ const auth = {
   jwt_sub_missing: 'JWTde `sub` eksik.',
   require_re_authentication:
     'Korumalı bir işlem gerçekleştirmek için yeniden doğrulama gereklidir.',
-  /** UNTRANSLATED */
-  exceed_token_limit: 'Token limit exceeded. Please contact your administrator.',
+  exceed_token_limit: 'Token limiti aşıldı. Lütfen yöneticinizle iletişime geçin.',
 };
 
 export default Object.freeze(auth);

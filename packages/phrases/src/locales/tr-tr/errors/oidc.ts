@@ -6,8 +6,7 @@ const oidc = {
   insufficient_scope: "Token'ın `{{scope}}` kapsamı eksik.",
   invalid_request: 'Geçersiz istek.',
   invalid_grant: 'Geçersiz hibe.',
-  /** UNTRANSLATED */
-  invalid_issuer: 'Invalid issuer.',
+  invalid_issuer: 'Geçersiz issuer.',
   invalid_redirect_uri:
     "Sağlanan `redirect_uri`, istemcilerin kayıtlı `redirect_uris`'lerinden hiçbiriyle eşleşmiyor",
   access_denied: 'Erişim reddedildi.',

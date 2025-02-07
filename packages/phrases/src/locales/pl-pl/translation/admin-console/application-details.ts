@@ -41,9 +41,8 @@ const application_details = {
   redirect_uri_placeholder_native: 'io.logto://callback',
   redirect_uri_tip:
     'Adres URL, na który użytkownik jest przekierowywany po zalogowaniu (zarówno pozytywnym, jak i negatywnym). Zobacz OpenID Connect <a>AuthRequest</a> po więcej informacji.',
-  /** UNTRANSLATED */
   mixed_redirect_uri_warning:
-    'Your application type is not compatible with at least one of the redirect URIs. It does not follow best practices and we strongly recommend keeping the redirect URIs consistent.',
+    'Typ Twojej aplikacji jest niekompatybilny z co najmniej jednym z adresów URL przekierowania. To nie jest zgodne z najlepszymi praktykami i zdecydowanie zalecamy zachowanie spójności adresów URL przekierowania.',
   post_sign_out_redirect_uri: 'Adres URL przekierowania po wylogowaniu',
   post_sign_out_redirect_uris: 'Adresy URL przekierowania po wylogowaniu',
   post_sign_out_redirect_uri_placeholder: 'https://twoja.strona.com/strona-startowa',
@@ -67,9 +66,8 @@ const application_details = {
   rotate_refresh_token: 'Obróć token odświeżania',
   rotate_refresh_token_label:
     'Po włączeniu tej opcji Logto wydaje nowy token odświeżania dla żądań tokenów, gdy upłynęło 70% oryginalnego czasu życia (TTL) lub spełnione są określone warunki. <a>Dowiedz się więcej</a>',
-  /** UNTRANSLATED */
   rotate_refresh_token_label_for_public_clients:
-    'When enabled, Logto will issue a new refresh token for each token request. <a>Learn more</a>',
+    'Po włączeniu, Logto wyda nowy token odświeżania dla każdego żądania tokena. <a>Dowiedz się więcej</a>',
   backchannel_logout: 'Backchannel Logout',
   backchannel_logout_description:
     'Skonfiguruj punkt końcowy OpenID Connect backchannel logout i czy sesja jest wymagana dla tej aplikacji.',
@@ -183,12 +181,9 @@ const application_details = {
     create_new_secret: 'Utwórz nowy sekret',
     delete_confirmation:
       'Ta czynność nie może zostać cofnięta. Czy na pewno chcesz usunąć ten sekret?',
-    /** UNTRANSLATED */
-    deleted: 'The secret has been successfully deleted.',
-    /** UNTRANSLATED */
-    activated: 'The secret has been successfully activated.',
-    /** UNTRANSLATED */
-    deactivated: 'The secret has been successfully deactivated.',
+    deleted: 'Sekret został pomyślnie usunięty.',
+    activated: 'Sekret został pomyślnie aktywowany.',
+    deactivated: 'Sekret został pomyślnie dezaktywowany.',
     legacy_secret: 'Sekret dziedziczenia',
     expired: 'Wygasły',
     expired_tooltip: 'Ten sekret wygasł w dniu {{date}}.',
@@ -200,10 +195,8 @@ const application_details = {
         'Sekret nigdy nie wygaśnie. Zalecamy ustawienie daty wygaśnięcia dla zwiększenia bezpieczeństwa.',
       days: '{{count}} dzień',
       days_other: '{{count}} dni',
-      /** UNTRANSLATED */
-      years: '{{count}} year',
-      /** UNTRANSLATED */
-      years_other: '{{count}} years',
+      years: '{{count}} rok',
+      years_other: '{{count}} lata',
       created: 'Sekret {{name}} został pomyślnie utworzony.',
     },
     edit_modal: {
@@ -212,91 +205,56 @@ const application_details = {
     },
   },
   saml_idp_config: {
-    /** UNTRANSLATED */
-    title: 'SAML IdP metadata',
-    /** UNTRANSLATED */
+    title: 'Metadane SAML IdP',
     description:
-      'Use the following metadata and certificate to configure the SAML IdP in your application.',
-    /** UNTRANSLATED */
-    metadata_url_label: 'IdP metadata URL',
-    /** UNTRANSLATED */
-    single_sign_on_service_url_label: 'Single sign-on service URL',
-    /** UNTRANSLATED */
-    idp_entity_id_label: 'IdP entity ID',
+      'Użyj poniższych metadanych i certyfikatu do skonfigurowania SAML IdP w swojej aplikacji.',
+    metadata_url_label: 'URL metadanych IdP',
+    single_sign_on_service_url_label: 'URL usługi jednokrotnego logowania',
+    idp_entity_id_label: 'Identyfikator jednostki IdP',
   },
   saml_idp_certificates: {
-    /** UNTRANSLATED */
-    title: 'SAML signing certificate',
-    /** UNTRANSLATED */
-    expires_at: 'Expires at',
-    /** UNTRANSLATED */
-    finger_print: 'Fingerprint',
-    /** UNTRANSLATED */
+    title: 'Certyfikat podpisywania SAML',
+    expires_at: 'Wygasa o',
+    finger_print: 'Odcisk palca',
     status: 'Status',
-    /** UNTRANSLATED */
-    active: 'Active',
-    /** UNTRANSLATED */
-    inactive: 'Inactive',
+    active: 'Aktywny',
+    inactive: 'Nieaktywny',
   },
   saml_idp_name_id_format: {
-    /** UNTRANSLATED */
-    title: 'Name ID format',
-    /** UNTRANSLATED */
-    description: 'Select the name ID format of the SAML IdP.',
-    /** UNTRANSLATED */
-    persistent: 'Persistent',
-    /** UNTRANSLATED */
-    persistent_description: 'Use Logto user ID as Name ID',
-    /** UNTRANSLATED */
-    transient: 'Transient',
-    /** UNTRANSLATED */
-    transient_description: 'Use one-time user ID as Name ID',
-    /** UNTRANSLATED */
-    unspecified: 'Unspecified',
-    /** UNTRANSLATED */
-    unspecified_description: 'Use Logto user ID as Name ID',
-    /** UNTRANSLATED */
-    email_address: 'Email address',
-    /** UNTRANSLATED */
-    email_address_description: 'Use email address as Name ID',
+    title: 'Format identyfikatora nazwiska',
+    description: 'Wybierz format identyfikatora nazwiska SAML IdP.',
+    persistent: 'Stały',
+    persistent_description: 'Użyj ID użytkownika Logto jako identyfikatora nazwy',
+    transient: 'Tymczasowy',
+    transient_description: 'Użyj jednorazowego ID użytkownika jako identyfikatora nazwy',
+    unspecified: 'Nieokreślony',
+    unspecified_description: 'Użyj ID użytkownika Logto jako identyfikatora nazwy',
+    email_address: 'Adres e-mail',
+    email_address_description: 'Użyj adresu e-mail jako identyfikatora nazwy',
   },
   saml_encryption_config: {
-    /** UNTRANSLATED */
-    encrypt_assertion: 'Encrypt SAML assertion',
-    /** UNTRANSLATED */
-    encrypt_assertion_description: 'By enabling this option, the SAML assertion will be encrypted.',
-    /** UNTRANSLATED */
-    encrypt_then_sign: 'Encrypt then sign',
-    /** UNTRANSLATED */
+    encrypt_assertion: 'Szyfruj oświadczenie SAML',
+    encrypt_assertion_description: 'Włączając tę opcję, oświadczenie SAML zostanie zaszyfrowane.',
+    encrypt_then_sign: 'Szyfruj, a następnie podpisz',
     encrypt_then_sign_description:
-      'By enabling this option, the SAML assertion will be encrypted and then signed; otherwise, the SAML assertion will be signed and then encrypted.',
-    /** UNTRANSLATED */
-    certificate: 'Certificate',
-    /** UNTRANSLATED */
+      'Włączając tę opcję, oświadczenie SAML zostanie zaszyfrowane, a następnie podpisane; w przeciwnym razie oświadczenie SAML zostanie podpisane, a następnie zaszyfrowane.',
+    certificate: 'Certyfikat',
     certificate_tooltip:
-      'Copy and paste the x509 certificate you get from your service provider to encrypt the SAML assertion.',
-    /** UNTRANSLATED */
+      'Skopiuj i wklej certyfikat x509, który otrzymasz od swojego dostawcy usług, aby zaszyfrować oświadczenie SAML.',
     certificate_placeholder:
       '-----BEGIN CERTIFICATE-----\nMIICYDCCAcmgAwIBA...\n-----END CERTIFICATE-----\n',
-    /** UNTRANSLATED */
-    certificate_missing_error: 'Certificate is required.',
-    /** UNTRANSLATED */
+    certificate_missing_error: 'Certyfikat jest wymagany.',
     certificate_invalid_format_error:
-      'Invalid certificate format detected. Please check the certificate format and try again.',
+      'Wykryto nieprawidłowy format certyfikatu. Proszę sprawdzić format certyfikatu i spróbować ponownie.',
   },
   saml_app_attribute_mapping: {
-    /** UNTRANSLATED */
-    name: 'Attribute mappings',
-    /** UNTRANSLATED */
-    title: 'Base attribute mappings',
-    /** UNTRANSLATED */
-    description: 'Add attribute mappings to sync user profile from Logto to your application.',
-    /** UNTRANSLATED */
-    col_logto_claims: 'Value of Logto',
-    /** UNTRANSLATED */
-    col_sp_claims: 'Value name of your application',
-    /** UNTRANSLATED */
-    add_button: 'Add another',
+    name: 'Mapowania atrybutów',
+    title: 'Podstawowe mapowania atrybutów',
+    description:
+      'Dodaj mapowania atrybutów, aby synchronizować profil użytkownika z Logto do swojej aplikacji.',
+    col_logto_claims: 'Wartość Logto',
+    col_sp_claims: 'Nazwa wartości w Twojej aplikacji',
+    add_button: 'Dodaj kolejne',
   },
 };
 

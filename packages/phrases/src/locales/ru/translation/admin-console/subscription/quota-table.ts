@@ -9,7 +9,8 @@ const quota_table = {
     title: 'Приложения',
     total: 'Всего приложений',
     m2m: 'Приложения "машина-машина"',
-    third_party: 'Приложения третьих сторон',
+    third_party: 'OIDC/OAuth приложения третьих сторон',
+    saml_app: 'SAML приложения',
   },
   resource: {
     title: 'Ресурсы API',

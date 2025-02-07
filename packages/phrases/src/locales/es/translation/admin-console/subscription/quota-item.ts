@@ -172,26 +172,17 @@ const quota_item = {
     not_eligible: 'Elimina tus recursos de interfaz de usuario personalizados',
   },
   idp_initiated_sso_enabled: {
-    /** UNTRANSLATED */
-    name: 'IDP-initiated SSO',
-    /** UNTRANSLATED */
-    limited: 'IDP-initiated SSO',
-    /** UNTRANSLATED */
-    unlimited: 'IDP-initiated SSO',
-    /** UNTRANSLATED */
-    not_eligible: 'IDP-initiated SSO not allowed',
+    name: 'SSO iniciado por IDP',
+    limited: 'SSO iniciado por IDP',
+    unlimited: 'SSO iniciado por IDP',
+    not_eligible: 'SSO iniciado por IDP no permitido',
   },
   saml_applications_limit: {
-    /** UNTRANSLATED */
-    name: 'SAML applications',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} SAML application',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} SAML applications',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited SAML applications',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your SAML applications',
+    name: 'Aplicaciones SAML',
+    limited: '{{count, number}} aplicación SAML',
+    limited_other: '{{count, number}} aplicaciones SAML',
+    unlimited: 'Aplicaciones SAML ilimitadas',
+    not_eligible: 'Elimine sus aplicaciones SAML',
   },
 };
 

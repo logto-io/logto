@@ -13,9 +13,8 @@ const cloud = {
     title: '성공적으로 로그인했어요',
     description:
       '소셜 계정을 사용하여 로그인에 성공했어요. Logto의 모든 기능을 원활하게 통합하고 접근하려면 당신의 소셜 연동을 구성하는 것이 좋습니다.',
-    /** UNTRANSLATED */
     notice:
-      "Please avoid using the demo connector for production purposes. Once you've completed testing, kindly delete the demo connector and set up your own connector with your credentials.",
+      '테스트 환경에서는 데모 커넥터를 사용하지 않도록 해주세요. 테스트를 완료한 후에는 데모 커넥터를 삭제하고 자격 증명을 사용하여 직접 커넥터를 설정해 주세요.',
   },
   tenant: {
     create_tenant: '테넌트 생성하기',

@@ -13,9 +13,8 @@ const cloud = {
     title: 'لقد قمت بتسجيل الدخول بنجاح',
     description:
       'لقد قمت بتسجيل الدخول بنجاح باستخدام حسابك الاجتماعي. لضمان التكامل السلس والوصول إلى جميع ميزات Logto، نوصي بمتابعة تكوين موصلك الاجتماعي الخاص بك.',
-    /** UNTRANSLATED */
     notice:
-      "Please avoid using the demo connector for production purposes. Once you've completed testing, kindly delete the demo connector and set up your own connector with your credentials.",
+      'يرجى تجنب استخدام الموصل التجريبي لأغراض الإنتاج. بمجرد الانتهاء من الاختبار، نرجو حذف الموصل التجريبي وإعداد موصلك الخاص باستخدام بيانات الاعتماد الخاصة بك.',
   },
   tenant: {
     create_tenant: 'إنشاء مستأجر',

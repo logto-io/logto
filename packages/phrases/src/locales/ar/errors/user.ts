@@ -35,19 +35,13 @@ const user = {
   password_algorithm_required: 'مطلوب خوارزمية كلمة المرور.',
   password_and_digest: 'لا يمكنك تعيين كلمة مرور عادية ومعلومات تجزئة كلمة المرور معًا.',
   personal_access_token_name_exists: 'اسم رمز الوصول الشخصي موجود بالفعل.',
-  /** UNTRANSLATED */
-  totp_secret_invalid: 'Invalid TOTP secret supplied.',
-  /** UNTRANSLATED */
-  wrong_backup_code_format: 'Backup code format is invalid.',
-  /** UNTRANSLATED */
-  username_required: 'Username is a required identifier, you can not set it to null.',
-  /** UNTRANSLATED */
+  totp_secret_invalid: 'تم توفير سر TOTP غير صالح.',
+  wrong_backup_code_format: 'تنسيق رمز النسخ الاحتياطي غير صالح.',
+  username_required: 'اسم المستخدم هو معرف مطلوب، لا يمكنك تعيينه ليكون null.',
   email_or_phone_required:
-    'Email address or phone number is a required identifier, at least one is required.',
-  /** UNTRANSLATED */
-  email_required: 'Email address is a required identifier, you can not set it to null.',
-  /** UNTRANSLATED */
-  phone_required: 'Phone number is a required identifier, you can not set it to null.',
+    'عنوان البريد الإلكتروني أو رقم الهاتف هو معرف مطلوب، يجب تحديد واحد على الأقل.',
+  email_required: 'عنوان البريد الإلكتروني هو معرف مطلوب، لا يمكنك تعيينه ليكون null.',
+  phone_required: 'رقم الهاتف هو معرف مطلوب، لا يمكنك تعيينه ليكون null.',
 };
 
 export default Object.freeze(user);

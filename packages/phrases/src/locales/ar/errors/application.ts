@@ -21,48 +21,30 @@ const application = {
   no_legacy_secret_found: 'لا يحتوي التطبيق على سر تراثي.',
   secret_name_exists: 'اسم السر موجود بالفعل.',
   saml: {
-    /** UNTRANSLATED */
-    use_saml_app_api: 'Use `[METHOD] /saml-applications(/.*)?` API to operate SAML app.',
-    /** UNTRANSLATED */
-    saml_application_only: 'The API is only available for SAML applications.',
-    /** UNTRANSLATED */
-    acs_url_binding_not_supported:
-      'Only HTTP-POST binding is supported for receiving SAML assertions.',
-    /** UNTRANSLATED */
-    can_not_delete_active_secret: 'Can not delete the active secret.',
-    /** UNTRANSLATED */
-    no_active_secret: 'No active secret found.',
-    /** UNTRANSLATED */
-    entity_id_required: 'Entity ID is required to generate metadata.',
-    /** UNTRANSLATED */
-    name_id_format_required: 'Name ID format is required.',
-    /** UNTRANSLATED */
-    unsupported_name_id_format: 'Unsupported name ID format.',
-    /** UNTRANSLATED */
-    missing_email_address: 'User does not have an email address.',
-    /** UNTRANSLATED */
-    email_address_unverified: 'User email address is not verified.',
-    /** UNTRANSLATED */
-    invalid_certificate_pem_format: 'Invalid PEM certificate format',
-    /** UNTRANSLATED */
-    acs_url_required: 'Assertion Consumer Service URL is required.',
-    /** UNTRANSLATED */
-    private_key_required: 'Private key is required.',
-    /** UNTRANSLATED */
-    certificate_required: 'Certificate is required.',
-    /** UNTRANSLATED */
-    invalid_saml_request: 'Invalid SAML authentication request.',
-    /** UNTRANSLATED */
-    auth_request_issuer_not_match:
-      'The issuer of the SAML authentication request mismatch with service provider entity ID.',
-    /** UNTRANSLATED */
+    use_saml_app_api:
+      'استخدم واجهة برمجة التطبيقات `[METHOD] /saml-applications(/.*)?` لتشغيل تطبيق SAML.',
+    saml_application_only: 'واجهة برمجة التطبيقات متاحة فقط لتطبيقات SAML.',
+    reach_oss_limit:
+      'لا يمكنك إنشاء المزيد من تطبيقات SAML لأن الحد الأقصى {{limit}} تم الوصول إليه.',
+    acs_url_binding_not_supported: 'يدعم فقط التوزيع HTTP-POST لاستقبال إقرارات SAML.',
+    can_not_delete_active_secret: 'لا يمكن حذف السر النشط.',
+    no_active_secret: 'لم يتم العثور على سر نشط.',
+    entity_id_required: 'معرف الكيان مطلوب لإنشاء بيانات وصفية.',
+    name_id_format_required: 'مطلوب تنسيق معرف الاسم.',
+    unsupported_name_id_format: 'تنسيق معرف الاسم غير مدعوم.',
+    missing_email_address: 'المستخدم لا يمتلك عنوان بريد إلكتروني.',
+    email_address_unverified: 'لم يتم التحقق من عنوان البريد الإلكتروني للمستخدم.',
+    invalid_certificate_pem_format: 'تنسيق شهادة PEM غير صالح.',
+    acs_url_required: 'عنوان URL لخدمة مستهلك الإقرارات مطلوب.',
+    private_key_required: 'المفتاح الخاص مطلوب.',
+    certificate_required: 'الشهادة مطلوبة.',
+    invalid_saml_request: 'طلب مصادقة SAML غير صالح.',
+    auth_request_issuer_not_match: 'المرسل لطلب مصادقة SAML لا يتطابق مع معرف خدمة الكيان.',
     sp_initiated_saml_sso_session_not_found_in_cookies:
-      'Service provider initiated SAML SSO session ID not found in cookies.',
-    /** UNTRANSLATED */
+      'لم يتم العثور على معرف جلسة SAML SSO التي بدأت من قبل مزود الخدمة في ملفات تعريف الارتباط.',
     sp_initiated_saml_sso_session_not_found:
-      'Service provider initiated SAML SSO session not found.',
-    /** UNTRANSLATED */
-    state_mismatch: '`state` mismatch.',
+      'لم يتم العثور على جلسة SAML SSO التي بدأت من قبل مزود الخدمة.',
+    state_mismatch: 'عدم تطابق `state`.',
   },
 };
 

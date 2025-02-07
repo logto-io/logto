@@ -30,21 +30,15 @@ const mfa = {
   mandatory: 'Пользователям всегда нужно использовать MFA при входе',
   mandatory_tip:
     'Пользователи должны настроить MFA при первом входе или регистрации и использовать его для всех последующих входов.',
-  /** UNTRANSLATED */
-  require_mfa: 'Require MFA',
-  /** UNTRANSLATED */
+  require_mfa: 'Требуется MFA',
   require_mfa_label:
-    'Enable this to make 2-step verification mandatory for accessing your applications. If disabled, users can decide whether to enable MFA for themselves.',
-  /** UNTRANSLATED */
-  set_up_prompt: 'MFA set-up prompt',
-  /** UNTRANSLATED */
-  no_prompt: 'Do not ask users to set up MFA',
-  /** UNTRANSLATED */
+    'Включите это, чтобы обязательна была двухэтапная верификация для доступа к вашим приложениям. Если отключено, пользователи могут сами решать, включать ли MFA для себя.',
+  set_up_prompt: 'Подсказка настройки MFA',
+  no_prompt: 'Не просить пользователей настраивать MFA',
   prompt_at_sign_in_and_sign_up:
-    'Ask users to set up MFA during registration (skippable, one-time prompt)',
-  /** UNTRANSLATED */
+    'Просить пользователей настраивать MFA во время регистрации (можно пропустить, одноразовая подсказка)',
   prompt_only_at_sign_in:
-    'Ask users to set up MFA on their next sign-in attempt after registration (skippable, one-time prompt)',
+    'Просить пользователей настраивать MFA при следующей попытке входа после регистрации (можно пропустить, одноразовая подсказка)',
 };
 
 export default Object.freeze(mfa);
