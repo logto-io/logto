@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.24.0
+
+### Patch Changes
+
+- @logto/schemas@1.24.0
+
 ## 1.23.1
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.24.0
+
+### Patch Changes
+
+- Updated dependencies [1337669e1]
+  - @logto/phrases@1.17.0
+
 ## 1.23.1
 
 ## 1.23.0
