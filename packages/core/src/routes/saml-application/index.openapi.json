@@ -1,0 +1,418 @@
+{
+  "tags": [
+    {
+      "name": "SAML applications",
+      "description": "SAML (Security Assertion Markup Language) applications represent applications that use SAML protocol for single sign-on (SSO). These endpoints allow you to manage SAML applications, including their configurations and signing certificates."
+    }
+  ],
+  "components": {
+    "parameters": {
+      "saml-applicationId-root": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "The ID of the SAML application.",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "schemas": {
+      "SamlApplicationResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the SAML application."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the SAML application."
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the SAML application."
+          },
+          "customData": {
+            "type": "object",
+            "description": "Custom data for the application."
+          },
+          "acsUrl": {
+            "type": "string",
+            "description": "The Assertion Consumer Service (ACS) URL."
+          },
+          "entityId": {
+            "type": "string",
+            "description": "The SAML entity ID."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The creation time of the SAML application."
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/saml-applications/{id}/metadata": {
+      "get": {
+        "summary": "Get SAML application metadata",
+        "description": "Get the SAML metadata XML for the application.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the SAML application.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The SAML metadata XML.",
+            "content": {
+              "text/xml": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The SAML application was not found."
+          }
+        }
+      }
+    },
+    "/api/saml-applications": {
+      "post": {
+        "summary": "Create SAML application",
+        "description": "Create a new SAML application with the given configuration. A default signing certificate with 3 years lifetime will be automatically created.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the SAML application."
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Optional description of the SAML application."
+                  },
+                  "customData": {
+                    "type": "object",
+                    "description": "Optional custom data for the application."
+                  },
+                  "acsUrl": {
+                    "type": "string",
+                    "description": "The Assertion Consumer Service (ACS) URL where the SAML response will be sent."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The SAML application was created successfully."
+          },
+          "400": {
+            "description": "Invalid request body."
+          },
+          "422": {
+            "description": "Validation error. The ACS URL is invalid or other validation errors."
+          }
+        }
+      }
+    },
+    "/api/saml-applications/{id}": {
+      "get": {
+        "summary": "Get SAML application",
+        "description": "Get SAML application details by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the SAML application.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The SAML application details."
+          },
+          "404": {
+            "description": "The SAML application was not found."
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update SAML application",
+        "description": "Update SAML application details by ID.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the SAML application."
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Description of the SAML application."
+                  },
+                  "customData": {
+                    "type": "object",
+                    "description": "Custom data for the application."
+                  },
+                  "acsUrl": {
+                    "type": "string",
+                    "description": "The Assertion Consumer Service (ACS) URL."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The SAML application was updated successfully."
+          },
+          "404": {
+            "description": "The SAML application was not found."
+          },
+          "422": {
+            "description": "Validation error."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete SAML application",
+        "description": "Delete a SAML application by ID.",
+
+        "responses": {
+          "204": {
+            "description": "The SAML application was deleted successfully."
+          },
+          "404": {
+            "description": "The SAML application was not found."
+          },
+          "422": {
+            "description": "The specified application is not a SAML application."
+          }
+        }
+      }
+    },
+    "/api/saml-applications/{id}/secrets": {
+      "post": {
+        "summary": "Create SAML application secret",
+        "description": "Create a new signing certificate for the SAML application.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the SAML application.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "lifeSpanInYears": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "The lifetime of the certificate in years (minimum 1 year)."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The signing certificate was created successfully."
+          },
+          "400": {
+            "description": "Invalid request body."
+          },
+          "404": {
+            "description": "The SAML application was not found."
+          }
+        }
+      },
+      "get": {
+        "summary": "List SAML application secrets",
+        "description": "Get all signing certificates of the SAML application.",
+        "responses": {
+          "200": {
+            "description": "A list of signing certificates.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The ID of the signing certificate."
+                      },
+                      "certificate": {
+                        "type": "string",
+                        "description": "The X.509 certificate in PEM format."
+                      },
+                      "fingerprint": {
+                        "type": "string",
+                        "description": "The SHA-256 fingerprint of the certificate."
+                      },
+                      "isActive": {
+                        "type": "boolean",
+                        "description": "Whether this certificate is currently active."
+                      },
+                      "expiresAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The expiration time of the certificate."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The SAML application was not found."
+          }
+        }
+      }
+    },
+    "/api/saml-applications/{id}/secrets/{secretId}": {
+      "delete": {
+        "summary": "Delete SAML application secret",
+        "description": "Delete a signing certificate of the SAML application. Active certificates cannot be deleted.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the SAML application.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The signing certificate was deleted successfully."
+          },
+          "400": {
+            "description": "Cannot delete an active certificate."
+          },
+          "404": {
+            "description": "The SAML application or certificate was not found."
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update SAML application secret",
+        "description": "Update the status of a signing certificate.",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "active": {
+                    "type": "boolean",
+                    "description": "Whether the certificate is active."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The signing certificate was updated successfully."
+          },
+          "400": {
+            "description": "Invalid request body."
+          },
+          "404": {
+            "description": "The SAML application or certificate was not found."
+          }
+        }
+      }
+    },
+    "/api/saml-applications/{id}/callback": {
+      "get": {
+        "summary": "SAML application callback",
+        "description": "Handle the OIDC callback for SAML application and generate SAML response.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the SAML application.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The authorization code from OIDC callback."
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The state parameter from OIDC callback."
+          },
+          {
+            "name": "redirectUri",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The redirect URI for the callback."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns an HTML form that automatically submits the SAML response."
+          },
+          "400": {
+            "description": "Invalid request or OIDC error."
+          },
+          "404": {
+            "description": "The SAML application was not found."
+          }
+        }
+      }
+    }
+  }
+}
