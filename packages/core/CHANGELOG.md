@@ -1,5 +1,32 @@
 # Change Log
 
+## 1.24.0
+
+### Minor Changes
+
+- 1337669e1: add support on SAML applications
+
+  Logto now supports acting as a SAML identity provider (IdP), enabling enterprise users to achieve secure Single Sign-On (SSO) through the standardized SAML protocol. Key features include:
+
+  - Full support for SAML 2.0 protocol
+  - Flexible attribute mapping configuration
+  - Metadata auto-configuration support
+  - Enterprise-grade encryption and signing
+
+  [View full documentation](https://docs.logto.io/integrate-logto/saml-app) for more details.
+
+### Patch Changes
+
+- bf2d3007c: fix(core): trigger the `Organization.Membership.Updated` webhook when a user accepts an invitation and join an organization.
+
+  Added a new `Organization.Membership.Accepted` webhook event in the `PUT /api/organization-invitations/{id}/status` endpoint. This event will be triggered when the organization-invitation status is updated to `accepted`, and user is added to the organization.
+
+- Updated dependencies [1337669e1]
+  - @logto/console@1.21.0
+  - @logto/phrases@1.17.0
+  - @logto/schemas@1.24.0
+  - @logto/cli@1.24.0
+
 ## 1.23.1
 
 ### Patch Changes
