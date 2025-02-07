@@ -145,7 +145,15 @@ export default function organizationInvitationRoutes<T extends ManagementApiRout
         })
       );
 
-      ctx.body = await organizationInvitations.updateStatus(id, status, acceptedUserId);
+      const result = await organizationInvitations.updateStatus(id, status, acceptedUserId);
+
+      const { organizationId } = result;
+      ctx.appendDataHookContext('Organization.Membership.Updated', {
+        organizationId,
+      });
+
+      ctx.body = result;
+
       return next();
     }
   );
