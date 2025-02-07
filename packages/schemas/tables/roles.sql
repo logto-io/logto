@@ -21,5 +21,5 @@ create index roles__id
 
 create function public.check_role_type(role_id varchar(21), target_type role_type) returns boolean as
 $$ begin
-  return (select type from public.roles where id = role_id) = target_type;
+  return (select type from roles where id = role_id) = target_type;
 end; $$ language plpgsql;
