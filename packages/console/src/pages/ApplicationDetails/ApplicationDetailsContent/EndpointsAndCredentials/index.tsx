@@ -15,7 +15,11 @@ import CaretUp from '@/assets/icons/caret-up.svg?react';
 import CirclePlus from '@/assets/icons/circle-plus.svg?react';
 import Plus from '@/assets/icons/plus.svg?react';
 import FormCard from '@/components/FormCard';
-import { openIdProviderConfigPath, openIdProviderPath } from '@/consts/oidc';
+import {
+  openIdProviderConfigPath,
+  openIdProviderJwksPath,
+  openIdProviderPath,
+} from '@/consts/oidc';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import Button from '@/ds-components/Button';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
@@ -117,13 +121,22 @@ function EndpointsAndCredentials({
         </FormField>
       )}
       {tenantEndpoint && (
-        <FormField title="application_details.issuer_endpoint">
-          <CopyToClipboard
-            displayType="block"
-            value={applyCustomDomain(appendPath(tenantEndpoint, openIdProviderPath).href)}
-            variant="border"
-          />
-        </FormField>
+        <>
+          <FormField title="application_details.issuer_endpoint">
+            <CopyToClipboard
+              displayType="block"
+              value={applyCustomDomain(appendPath(tenantEndpoint, openIdProviderPath).href)}
+              variant="border"
+            />
+          </FormField>
+          <FormField title="application_details.jwks_uri">
+            <CopyToClipboard
+              displayType="block"
+              value={applyCustomDomain(appendPath(tenantEndpoint, openIdProviderJwksPath).href)}
+              variant="border"
+            />
+          </FormField>
+        </>
       )}
       {showMoreEndpoints && (
         <>
