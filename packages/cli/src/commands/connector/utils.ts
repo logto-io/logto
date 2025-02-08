@@ -144,6 +144,11 @@ const officialConnectorPrefix = '@logto/connector-';
 
 type PackageMeta = { name: string; scope: string; version: string };
 
+// NPM registry text search returns too many irrelevant results 1000+.
+// Making it impossible to filter out all official connectors in one go.
+// So we added an additional `maintainer` filter to reduce the number of irrelevant results.
+const maintainer = 'gaosun';
+
 export const fetchOfficialConnectorList = async (includingCloudConnectors = false) => {
   // See https://github.com/npm/registry/blob/master/docs/REGISTRY-API.md#get-v1search
   type FetchResult = {
@@ -156,7 +161,7 @@ export const fetchOfficialConnectorList = async (includingCloudConnectors = fals
 
   const fetchList = async (from = 0, size = 20) => {
     const parameters = new URLSearchParams({
-      text: officialConnectorPrefix,
+      text: `${officialConnectorPrefix} maintainer:${maintainer}`,
       from: String(from),
       size: String(size),
     });
@@ -188,7 +193,7 @@ export const fetchOfficialConnectorList = async (includingCloudConnectors = fals
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods
     packages.push(...objects.map(({ package: data }) => data));
 
-    if (objects.length < 20) {
+    if (rawObjects.length < 20) {
       break;
     }
   }
