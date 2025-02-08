@@ -48,6 +48,9 @@ const paywall = {
   saml_applications_oss:
     "L'app SAML aggiuntiva è disponibile con il piano Logto Enterprise. Contattaci se hai bisogno di assistenza.",
   logto_pricing_button_text: 'Prezzi del Logto Cloud',
+  /** UNTRANSLATED */
+  saml_applications:
+    'The additional SAML app is available with the Logto Enterprise plan. Contact us if you need assistance.',
   hooks:
     'Hai raggiunto il limite di {{count, number}} webhook di <planName/>. Aggiorna il piano per creare altri webhook. Non esitare a <a>contattarci</a> se hai bisogno di assistenza.',
   hooks_other:
