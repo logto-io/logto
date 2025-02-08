@@ -144,6 +144,25 @@ const officialConnectorPrefix = '@logto/connector-';
 
 type PackageMeta = { name: string; scope: string; version: string };
 
+const maintainer = 'gaosun';
+
+/**
+ * This function fetches the list of Logto official connectors from the NPM registry.
+ *
+ * @remarks
+ * This fetching logic is based on the NPM registry API.
+ * @see {@link https://github.com/npm/registry/blob/master/docs/REGISTRY-API.md#get-v1search}
+ *
+ * @remarks
+ * Known limitations of the NPM registry API:
+ * 1. The `fetchList` API request performs a 'fuzzy' search using the `text` parameter with the package name prefix `@logto/connector-`, resulting in many irrelevant results (over 1000), making it difficult to filter all official connectors.
+ * 2. The `scope:logto` search qualifier does not function as intended, failing to properly filter `@logto` scope packages.
+ *
+ * To mitigate these limitations:
+ * - We replace `scope:logto` with the `maintainer:gaosun` qualifier to reduce irrelevant results, which helps in filtering official connectors.
+ * - In addition to the API search, we filter results by checking the package name prefix `@logto/connector-`.
+ * - We continue fetching pages from the registry search API until the last page, applying the above filtering logic to compile the final list of official connectors.
+ */
 export const fetchOfficialConnectorList = async (includingCloudConnectors = false) => {
   // See https://github.com/npm/registry/blob/master/docs/REGISTRY-API.md#get-v1search
   type FetchResult = {
@@ -156,7 +175,7 @@ export const fetchOfficialConnectorList = async (includingCloudConnectors = fals
 
   const fetchList = async (from = 0, size = 20) => {
     const parameters = new URLSearchParams({
-      text: officialConnectorPrefix,
+      text: `${officialConnectorPrefix} maintainer:${maintainer}`,
       from: String(from),
       size: String(size),
     });
@@ -170,8 +189,6 @@ export const fetchOfficialConnectorList = async (includingCloudConnectors = fals
 
   const excludeList = ['mock', 'kit', ...conditionalArray(!includingCloudConnectors && 'logto')];
 
-  // The API called by `fetchList` performs a 'fuzzy' search based on the `text` parameter, which will yield many irrelevant results. We need to filter out these irrelevant results (using `name.startsWith(officialConnectorPrefix)` for filtering).
-  // Disable lint rules for business need
   // eslint-disable-next-line @silverhand/fp/no-let, @silverhand/fp/no-mutation
   for (let page = 0; ; ++page) {
     // eslint-disable-next-line no-await-in-loop
@@ -188,7 +205,7 @@ export const fetchOfficialConnectorList = async (includingCloudConnectors = fals
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods
     packages.push(...objects.map(({ package: data }) => data));
 
-    if (objects.length < 20) {
+    if (rawObjects.length < 20) {
       break;
     }
   }
