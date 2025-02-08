@@ -48,6 +48,7 @@ const paywall = {
   saml_applications_oss:
     '額外的 SAML 應用程式可在 Logto 企業版計劃中使用。如需協助，請與我們聯絡。',
   logto_pricing_button_text: 'Logto 雲端定價',
+  saml_applications: '額外的 SAML 應用程式可在 Logto 企業版計劃中使用。如需協助，請聯絡我們。',
   hooks:
     '已達到 <planName/> 的{{count, number}}個 Webhook 限制。升級計劃以創建更多 Webhook。如需任何幫助，請<a>聯繫我們</a>。',
   hooks_other:

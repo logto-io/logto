@@ -48,6 +48,8 @@ const paywall = {
   saml_applications_oss:
     'التطبيق الإضافي لـ SAML متاح مع خطة Logto المؤسسية. اتصل بنا إذا كنت بحاجة إلى مساعدة.',
   logto_pricing_button_text: 'تسعير Logto Cloud',
+  saml_applications:
+    'التطبيق الإضافي لـ SAML متاح مع خطة Logto المؤسسية. اتصل بنا إذا كنت بحاجة إلى مساعدة.',
   hooks:
     'تم الوصول إلى الحد الأقصى لعدد الويب هوك ({{count, number}}) في الخطة <planName/>. قم بترقية الخطة لإنشاء المزيد من الويب هوك. لأي مساعدة، لا تتردد في <a>الاتصال بنا</a>.',
   hooks_other:
