@@ -30,6 +30,7 @@ import connectorRoutes from './connector/index.js';
 import customPhraseRoutes from './custom-phrase.js';
 import dashboardRoutes from './dashboard.js';
 import domainRoutes from './domain.js';
+import emailTemplateRoutes from './email-template/index.js';
 import experienceApiRoutes from './experience/index.js';
 import hookRoutes from './hook.js';
 import interactionRoutes from './interaction/index.js';
@@ -102,6 +103,11 @@ const createRouters = (tenant: TenantContext) => {
   subjectTokenRoutes(managementRouter, tenant);
   accountCentersRoutes(managementRouter, tenant);
   samlApplicationRoutes(managementRouter, tenant);
+
+  // TODO: @simeng remove this condition after the feature is enabled in production
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    emailTemplateRoutes(managementRouter, tenant);
+  }
 
   const anonymousRouter: AnonymousRouter = new Router();
 

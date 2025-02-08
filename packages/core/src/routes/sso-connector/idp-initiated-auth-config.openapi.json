@@ -1,15 +1,8 @@
 {
-  "tags": [
-    {
-      "name": "Dev feature"
-    },
-    {
-      "name": "Cloud only"
-    }
-  ],
   "paths": {
     "/api/sso-connectors/{id}/idp-initiated-auth-config": {
       "get": {
+        "tags": ["Dev feature", "Cloud only"],
         "summary": "Get IdP initiated auth config",
         "description": "Get the IdP initiated authentication config of the given SAML SSO connector.",
         "responses": {
@@ -22,6 +15,7 @@
         }
       },
       "put": {
+        "tags": ["Dev feature", "Cloud only"],
         "summary": "Set IdP initiated auth config",
         "description": "Set IdP initiated authentication config for a given SAML SSO connector. Any existing IdP initiated auth config will be overwritten.",
         "requestBody": {
@@ -62,6 +56,7 @@
         }
       },
       "delete": {
+        "tags": ["Dev feature", "Cloud only"],
         "summary": "Delete IdP initiated auth config",
         "description": "Delete the IdP initiated authentication config of the given SAML SSO connector.",
         "responses": {
