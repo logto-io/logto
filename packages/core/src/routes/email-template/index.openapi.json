@@ -3,12 +3,14 @@
     {
       "name": "Email templates",
       "description": "Manage custom i18n email templates for various types of emails, such as sign-in verification codes and password resets."
+    },
+    {
+      "name": "Dev feature"
     }
   ],
   "paths": {
     "/api/email-templates": {
       "put": {
-        "tags": ["Dev feature"],
         "summary": "Replace email templates",
         "description": "Create or replace a list of email templates. If an email template with the same language tag and template type already exists, its details will be updated.",
         "requestBody": {
@@ -33,7 +35,7 @@
                               "description": "The template of the email subject."
                             },
                             "content": {
-                              "description": "Thj template of the email body."
+                              "description": "The template of the email body."
                             },
                             "contentType": {
                               "description": "The content type of the email body. (Only required by some specific email providers.)"
@@ -63,10 +65,9 @@
     },
     "/api/email-templates/{id}": {
       "delete": {
-        "tags": ["Dev feature"],
         "summary": "Delete an email template",
         "description": "Delete an email template by its ID.",
-        "response": {
+        "responses": {
           "204": {
             "description": "The email template was deleted successfully."
           },
