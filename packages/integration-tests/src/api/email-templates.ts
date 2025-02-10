@@ -12,4 +12,14 @@ export class EmailTemplatesApi {
   async delete(id: string): Promise<void> {
     await authedAdminApi.delete(`${path}/${id}`);
   }
+
+  async findById(id: string): Promise<EmailTemplate> {
+    return authedAdminApi.get(`${path}/${id}`).json<EmailTemplate>();
+  }
+
+  async findAll(
+    where?: Partial<Pick<EmailTemplate, 'languageTag' | 'templateType'>>
+  ): Promise<EmailTemplate[]> {
+    return authedAdminApi.get(path, { searchParams: where }).json<EmailTemplate[]>();
+  }
 }
