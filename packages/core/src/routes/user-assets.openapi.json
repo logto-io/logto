@@ -21,6 +21,19 @@
       "post": {
         "summary": "Upload asset",
         "description": "Upload a user asset.",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "properties": {
+                  "file": {
+                    "description": "The file asset to upload."
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "An object containing the uploaded asset metadata."
