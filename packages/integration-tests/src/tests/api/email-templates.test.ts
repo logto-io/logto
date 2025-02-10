@@ -1,4 +1,5 @@
 import { TemplateType } from '@logto/connector-kit';
+import { type EmailTemplateDetails } from '@logto/schemas';
 
 import { mockEmailTemplates } from '#src/__mocks__/email-templates.js';
 import { EmailTemplatesApiTest } from '#src/helpers/email-templates.js';
@@ -76,6 +77,25 @@ devFeatureTest.describe('email templates', () => {
 
   it('should throw 404 error when email template not found by ID', async () => {
     await expectRejects(emailTemplatesApi.findById('invalid-id'), {
+      code: 'entity.not_exists_with_id',
+      status: 404,
+    });
+  });
+
+  it('should partially update email template details by ID successfully', async () => {
+    const [template] = await emailTemplatesApi.create(mockEmailTemplates);
+
+    const updatedDetails: Partial<EmailTemplateDetails> = {
+      subject: `${template!.details.subject} updated`,
+      replyTo: 'logto test',
+    };
+
+    const updated = await emailTemplatesApi.updateTemplateDetailsById(template!.id, updatedDetails);
+    expect(updated.details).toEqual({ ...template!.details, ...updatedDetails });
+  });
+
+  it('should throw 404 when trying to partially update email template details by invalid ID', async () => {
+    await expectRejects(emailTemplatesApi.updateTemplateDetailsById('invalid-id', {}), {
       code: 'entity.not_exists_with_id',
       status: 404,
     });

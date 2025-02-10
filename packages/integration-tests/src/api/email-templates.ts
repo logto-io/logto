@@ -1,4 +1,8 @@
-import { type CreateEmailTemplate, type EmailTemplate } from '@logto/schemas';
+import {
+  type EmailTemplateDetails,
+  type CreateEmailTemplate,
+  type EmailTemplate,
+} from '@logto/schemas';
 
 import { authedAdminApi } from './index.js';
 
@@ -21,5 +25,12 @@ export class EmailTemplatesApi {
     where?: Partial<Pick<EmailTemplate, 'languageTag' | 'templateType'>>
   ): Promise<EmailTemplate[]> {
     return authedAdminApi.get(path, { searchParams: where }).json<EmailTemplate[]>();
+  }
+
+  async updateTemplateDetailsById(
+    id: string,
+    details: Partial<EmailTemplateDetails>
+  ): Promise<EmailTemplate> {
+    return authedAdminApi.patch(`${path}/${id}/details`, { json: details }).json<EmailTemplate>();
   }
 }
