@@ -2,4 +2,4 @@
 "@logto/connector-kook": patch
 ---
 
-fix(connector): fix kook connector fail with empty banner
+fix kook connector fail with empty banner in user information endpoint response
