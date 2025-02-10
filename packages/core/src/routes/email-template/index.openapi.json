@@ -148,6 +148,66 @@
           }
         }
       }
+    },
+    "/api/email-templates/language-tag/{languageTag}": {
+      "delete": {
+        "summary": "Delete email templates by language tag",
+        "description": "Delete all email templates by the language tag.",
+        "parameters": [
+          {
+            "name": "languageTag",
+            "description": "The language tag of the email template, e.g., `en` or `fr`."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The email templates were deleted successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rowCount": {
+                      "type": "number",
+                      "description": "The number of email templates deleted."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/email-templates/template-type/{templateType}": {
+      "delete": {
+        "summary": "Delete email templates by template type",
+        "description": "Delete all email templates by the template type.",
+        "parameters": [
+          {
+            "name": "templateType",
+            "description": "The type of the email template, e.g. `SignIn` or `ForgotPassword`"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The email templates were deleted successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rowCount": {
+                      "type": "number",
+                      "description": "The number of email templates deleted."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

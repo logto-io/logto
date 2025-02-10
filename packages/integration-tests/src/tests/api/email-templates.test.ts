@@ -100,4 +100,30 @@ devFeatureTest.describe('email templates', () => {
       status: 404,
     });
   });
+
+  it('should delete email templates by language tag successfully', async () => {
+    const templates = await emailTemplatesApi.create(mockEmailTemplates);
+
+    const { rowCount } = await emailTemplatesApi.deleteAllByLanguageTag('en');
+    expect(rowCount).toBe(templates.filter(({ languageTag }) => languageTag === 'en').length);
+
+    const remaining = await emailTemplatesApi.findAll({
+      languageTag: 'en',
+    });
+    expect(remaining).toHaveLength(0);
+  });
+
+  it('should delete email templates by template type successfully', async () => {
+    const templates = await emailTemplatesApi.create(mockEmailTemplates);
+
+    const { rowCount } = await emailTemplatesApi.deleteAllByTemplateType(TemplateType.SignIn);
+    expect(rowCount).toBe(
+      templates.filter(({ templateType }) => templateType === TemplateType.SignIn).length
+    );
+
+    const remaining = await emailTemplatesApi.findAll({
+      templateType: TemplateType.SignIn,
+    });
+    expect(remaining).toHaveLength(0);
+  });
 });

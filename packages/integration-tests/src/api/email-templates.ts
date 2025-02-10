@@ -2,6 +2,7 @@ import {
   type EmailTemplateDetails,
   type CreateEmailTemplate,
   type EmailTemplate,
+  type TemplateType,
 } from '@logto/schemas';
 
 import { authedAdminApi } from './index.js';
@@ -32,5 +33,17 @@ export class EmailTemplatesApi {
     details: Partial<EmailTemplateDetails>
   ): Promise<EmailTemplate> {
     return authedAdminApi.patch(`${path}/${id}/details`, { json: details }).json<EmailTemplate>();
+  }
+
+  async deleteAllByLanguageTag(languageTag: string): Promise<{ rowCount: number }> {
+    return authedAdminApi
+      .delete(`${path}/language-tag/${languageTag}`)
+      .json<{ rowCount: number }>();
+  }
+
+  async deleteAllByTemplateType(templateType: TemplateType): Promise<{ rowCount: number }> {
+    return authedAdminApi
+      .delete(`${path}/template-type/${templateType}`)
+      .json<{ rowCount: number }>();
   }
 }
