@@ -1,4 +1,4 @@
-import { EmailTemplates } from '@logto/schemas';
+import { emailTemplateDetailsGuard, EmailTemplates } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { z } from 'zod';
 
@@ -74,6 +74,35 @@ export default function emailTemplateRoutes<T extends ManagementApiRouter>(
         params: { id },
       } = ctx.guard;
       ctx.body = await emailTemplatesQueries.findById(id);
+      return next();
+    }
+  );
+
+  router.patch(
+    `${pathPrefix}/:id/details`,
+    koaGuard({
+      params: z.object({
+        id: z.string(),
+      }),
+      body: emailTemplateDetailsGuard.partial(),
+      response: EmailTemplates.guard,
+      status: [200, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { id },
+        body,
+      } = ctx.guard;
+
+      const { details } = await emailTemplatesQueries.findById(id);
+
+      ctx.body = await emailTemplatesQueries.updateById(id, {
+        details: {
+          ...details,
+          ...body,
+        },
+      });
+
       return next();
     }
   );
