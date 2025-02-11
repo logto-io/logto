@@ -2,8 +2,10 @@ import { emailTemplateDetailsGuard, EmailTemplates } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { z } from 'zod';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
+import assertThat from '../../utils/assert-that.js';
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
 const pathPrefix = '/email-templates';
@@ -127,42 +129,31 @@ export default function emailTemplateRoutes<T extends ManagementApiRouter>(
   );
 
   router.delete(
-    `${pathPrefix}/language-tag/:languageTag`,
+    `${pathPrefix}`,
     koaGuard({
-      params: z.object({
-        languageTag: z.string(),
-      }),
-      status: [200],
+      query: EmailTemplates.guard
+        .pick({
+          languageTag: true,
+          templateType: true,
+        })
+        .partial(),
       response: z.object({
         rowCount: z.number(),
       }),
+      status: [200, 422],
     }),
     async (ctx, next) => {
-      const {
-        params: { languageTag },
-      } = ctx.guard;
-      ctx.body = await emailTemplatesQueries.deleteMany({ languageTag });
-      return next();
-    }
-  );
+      const { query } = ctx.guard;
 
-  router.delete(
-    `${pathPrefix}/template-type/:templateType`,
-    koaGuard({
-      params: EmailTemplates.guard.pick({
-        templateType: true,
-      }),
-      status: [200],
-      response: z.object({
-        rowCount: z.number(),
-      }),
-    }),
-    async (ctx, next) => {
-      const {
-        params: { templateType },
-      } = ctx.guard;
+      assertThat(
+        query.languageTag ?? query.templateType,
+        new RequestError({
+          code: 'connector.email_connector.bulk_deletion_no_filter',
+          status: 422,
+        })
+      );
 
-      ctx.body = await emailTemplatesQueries.deleteMany({ templateType });
+      ctx.body = await emailTemplatesQueries.deleteMany(query);
       return next();
     }
   );

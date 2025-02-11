@@ -27,11 +27,7 @@ const methodToVerb = Object.freeze({
 
 type RouteDictionary = Record<`${OpenAPIV3.HttpMethods} ${string}`, string>;
 
-const devFeatureCustomRoutes: RouteDictionary = Object.freeze({
-  // TODO: move to the bellow list once the feature is published
-  'delete /email-templates/language-tag/:languageTag': 'DeleteAllEmailTemplatesByLanguageTag',
-  'delete /email-templates/template-type/:templateType': 'DeleteAllEmailTemplatesByTemplateType',
-});
+const devFeatureCustomRoutes: RouteDictionary = Object.freeze({});
 
 export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   // Authn

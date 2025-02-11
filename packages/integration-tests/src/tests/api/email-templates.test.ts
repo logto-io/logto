@@ -101,29 +101,51 @@ devFeatureTest.describe('email templates', () => {
     });
   });
 
-  it('should delete email templates by language tag successfully', async () => {
+  it('should delete email templates by languageTag successfully', async () => {
     const templates = await emailTemplatesApi.create(mockEmailTemplates);
-
-    const { rowCount } = await emailTemplatesApi.deleteAllByLanguageTag('en');
+    const { rowCount } = await emailTemplatesApi.deleteMany({
+      languageTag: 'en',
+    });
     expect(rowCount).toBe(templates.filter(({ languageTag }) => languageTag === 'en').length);
-
     const remaining = await emailTemplatesApi.findAll({
       languageTag: 'en',
     });
     expect(remaining).toHaveLength(0);
   });
 
-  it('should delete email templates by template type successfully', async () => {
+  it('should delete email templates by templateType successfully', async () => {
     const templates = await emailTemplatesApi.create(mockEmailTemplates);
-
-    const { rowCount } = await emailTemplatesApi.deleteAllByTemplateType(TemplateType.SignIn);
+    const { rowCount } = await emailTemplatesApi.deleteMany({
+      templateType: TemplateType.SignIn,
+    });
     expect(rowCount).toBe(
       templates.filter(({ templateType }) => templateType === TemplateType.SignIn).length
     );
-
     const remaining = await emailTemplatesApi.findAll({
       templateType: TemplateType.SignIn,
     });
     expect(remaining).toHaveLength(0);
+  });
+
+  it('should delete email template by languageTag and templateType', async () => {
+    const templates = await emailTemplatesApi.create(mockEmailTemplates);
+    const { rowCount } = await emailTemplatesApi.deleteMany({
+      languageTag: 'en',
+      templateType: TemplateType.SignIn,
+    });
+
+    expect(rowCount).toBe(
+      templates.filter(
+        ({ languageTag, templateType }) =>
+          languageTag === 'en' && templateType === TemplateType.SignIn
+      ).length
+    );
+  });
+
+  it('should throw 422 when trying to delete email templates without filter', async () => {
+    await expectRejects(emailTemplatesApi.deleteMany({}), {
+      code: 'connector.email_connector.bulk_deletion_no_filter',
+      status: 422,
+    });
   });
 });

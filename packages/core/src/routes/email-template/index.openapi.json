@@ -82,6 +82,43 @@
             "description": "The list of matched email templates. Returns empty list, if no email template is found."
           }
         }
+      },
+      "delete": {
+        "summary": "Delete email templates",
+        "description": "Bulk delete email templates by their language tag and template type.",
+        "parameters": [
+          {
+            "name": "languageTag",
+            "in": "query",
+            "description": "The language tag of the email template, e.g., `en` or `fr`."
+          },
+          {
+            "name": "templateType",
+            "in": "query",
+            "description": "The type of the email template, e.g. `SignIn` or `ForgotPassword`"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The email templates were deleted successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rowCount": {
+                      "type": "number",
+                      "description": "The number of email templates deleted."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "No filter query parameters were provided. This bulk deletion API requires at least one filter query parameter."
+          }
+        }
       }
     },
     "/api/email-templates/{id}": {
@@ -145,68 +182,6 @@
           },
           "404": {
             "description": "The email template was not found."
-          }
-        }
-      }
-    },
-    "/api/email-templates/language-tag/{languageTag}": {
-      "delete": {
-        "summary": "Delete email templates by language tag",
-        "description": "Delete all email templates by the language tag.",
-        "parameters": [
-          {
-            "name": "languageTag",
-            "in": "path",
-            "description": "The language tag of the email template, e.g., `en` or `fr`."
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The email templates were deleted successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "rowCount": {
-                      "type": "number",
-                      "description": "The number of email templates deleted."
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/email-templates/template-type/{templateType}": {
-      "delete": {
-        "summary": "Delete email templates by template type",
-        "description": "Delete all email templates by the template type.",
-        "parameters": [
-          {
-            "name": "templateType",
-            "in": "path",
-            "description": "The type of the email template, e.g. `SignIn` or `ForgotPassword`"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The email templates were deleted successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "rowCount": {
-                      "type": "number",
-                      "description": "The number of email templates deleted."
-                    }
-                  }
-                }
-              }
-            }
           }
         }
       }

@@ -35,6 +35,10 @@ const connector = {
     'You can not have multiple social connectors that have same target and platform.',
   cannot_overwrite_metadata_for_non_standard_connector:
     "This connector's 'metadata' cannot be overwritten.",
+  email_connector: {
+    bulk_deletion_no_filter:
+      'At least one filter condition must be provided to perform bulk deletion by properties. Supported properties are: {{properties, list(type:conjunction)}}.',
+  },
 };
 
 export default Object.freeze(connector);
