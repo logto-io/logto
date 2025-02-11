@@ -1,10 +1,10 @@
 {
   "tags": [
     {
-      "name": "Dev feature"
+      "name": "Cloud only"
     },
     {
-      "name": "Cloud only"
+      "name": "Dev feature"
     }
   ],
   "paths": {

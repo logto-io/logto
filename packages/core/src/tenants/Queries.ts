@@ -34,6 +34,7 @@ import { createUsersRolesQueries } from '#src/queries/users-roles.js';
 import { createVerificationStatusQueries } from '#src/queries/verification-status.js';
 
 import { AccountCenterQueries } from '../queries/account-center.js';
+import EmailTemplatesQueries from '../queries/email-templates.js';
 import { PersonalAccessTokensQueries } from '../queries/personal-access-tokens.js';
 import { VerificationRecordQueries } from '../queries/verification-records.js';
 
@@ -72,6 +73,7 @@ export default class Queries {
   verificationRecords = new VerificationRecordQueries(this.pool);
   accountCenters = new AccountCenterQueries(this.pool);
   tenants = createTenantQueries(this.pool);
+  emailTemplates = new EmailTemplatesQueries(this.pool, this.wellKnownCache);
 
   constructor(
     public readonly pool: CommonQueryMethods,

@@ -240,6 +240,7 @@ export const buildPathIdParameters = (
   rootComponent: string
 ): Record<string, OpenAPIV3.ParameterObject> => {
   const entityId = `${camelcase(rootComponent)}Id`;
+
   const shared = {
     in: 'path',
     description: `The unique identifier of the ${rootComponent
