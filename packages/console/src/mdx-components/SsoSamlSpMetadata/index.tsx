@@ -1,9 +1,11 @@
+import { conditionalString } from '@silverhand/essentials';
 import { useContext, useMemo } from 'react';
 import { z } from 'zod';
 
 import { SsoConnectorContext } from '@/contexts/SsoConnectorContextProvider';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
+import useCustomDomain from '@/hooks/use-custom-domain';
 
 import styles from './index.module.scss';
 
@@ -20,6 +22,7 @@ const samlProviderConfigGuard = z.object({
 
 function SsoSamlSpMetadata() {
   const { ssoConnector } = useContext(SsoConnectorContext);
+  const { applyDomain: applyCustomDomain } = useCustomDomain();
 
   const serviceProviderMetadata = useMemo(() => {
     if (!ssoConnector) {
@@ -49,7 +52,9 @@ function SsoSamlSpMetadata() {
         <CopyToClipboard
           displayType="block"
           variant="border"
-          value={serviceProviderMetadata?.entityId ?? ''}
+          value={conditionalString(
+            serviceProviderMetadata?.entityId && applyCustomDomain(serviceProviderMetadata.entityId)
+          )}
         />
       </FormField>
       <FormField
@@ -59,7 +64,10 @@ function SsoSamlSpMetadata() {
         <CopyToClipboard
           displayType="block"
           variant="border"
-          value={serviceProviderMetadata?.assertionConsumerServiceUrl ?? ''}
+          value={conditionalString(
+            serviceProviderMetadata?.assertionConsumerServiceUrl &&
+              applyCustomDomain(serviceProviderMetadata.assertionConsumerServiceUrl)
+          )}
         />
       </FormField>
     </div>
