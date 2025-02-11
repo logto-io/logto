@@ -3,8 +3,6 @@ import { conditional, type Optional } from '@silverhand/essentials';
 import { XMLValidator } from 'fast-xml-parser';
 import * as saml from 'samlify';
 
-import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
-
 import {
   SsoConnectorConfigErrorCodes,
   SsoConnectorError,
@@ -58,12 +56,10 @@ class SamlConnector {
 
   // Allow _idpConfig input to be undefined when constructing the connector.
   constructor(
-    tenantId: string,
+    tenantEndpoint: URL,
     ssoConnectorId: string,
     private readonly _idpConfig: SamlConnectorConfig | undefined
   ) {
-    const tenantEndpoint = getTenantEndpoint(tenantId, EnvSet.values);
-
     const assertionConsumerServiceUrl = buildAssertionConsumerServiceUrl(
       tenantEndpoint,
       ssoConnectorId

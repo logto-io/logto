@@ -57,7 +57,7 @@ export const parseConnectorConfig = (providerName: SsoProviderName, config: Json
 
 export const fetchConnectorProviderDetails = async (
   connector: SupportedSsoConnector,
-  tenantId: string,
+  tenantEndpoint: URL,
   locale: string
 ): Promise<SsoConnectorWithProviderConfig> => {
   const { providerName } = connector;
@@ -69,7 +69,7 @@ export const fetchConnectorProviderDetails = async (
     Return undefined if failed to fetch or parse the config.
   */
   const providerConfig = await trySafe(async () => {
-    const instance = new constructor(connector, tenantId);
+    const instance = new constructor(connector, tenantEndpoint);
     return instance.getConfig();
   });
 
@@ -91,11 +91,11 @@ export const fetchConnectorProviderDetails = async (
  */
 export const validateConnectorConfigConnectionStatus = async (
   connector: SingleSignOnConnectorData,
-  tenantId: string
+  tenantEndpoint: URL
 ) => {
   const { providerName } = connector;
   const { constructor } = ssoConnectorFactories[providerName];
-  const instance = new constructor(connector, tenantId);
+  const instance = new constructor(connector, tenantEndpoint);
 
   // SAML connector's idpMetadata is optional (safely catch by the getConfig method), we need to force fetch the IdP metadata here
   if (instance instanceof SamlConnector) {

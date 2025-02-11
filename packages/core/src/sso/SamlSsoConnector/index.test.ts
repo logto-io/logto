@@ -1,6 +1,7 @@
 import { SsoProviderName } from '@logto/schemas';
 
 import { mockSsoConnector as _mockSsoConnector } from '#src/__mocks__/sso.js';
+import { getTenantEndpoint, EnvSet } from '#src/env-set/index.js';
 
 import {
   SsoConnectorConfigErrorCodes,
@@ -17,7 +18,10 @@ describe('SamlSsoConnector', () => {
   it('constructor should work properly', () => {
     // eslint-disable-next-line unicorn/consistent-function-scoping
     const createSamlSsoConnector = () =>
-      new samlSsoConnectorFactory.constructor(mockSsoConnector, 'default_tenant');
+      new samlSsoConnectorFactory.constructor(
+        mockSsoConnector,
+        getTenantEndpoint('default_tenant', EnvSet.values)
+      );
 
     expect(createSamlSsoConnector).not.toThrow();
   });
@@ -26,7 +30,7 @@ describe('SamlSsoConnector', () => {
     const temporaryMockSsoConnector = { ...mockSsoConnector, config: { metadata: 123 } };
     const connector = new samlSsoConnectorFactory.constructor(
       temporaryMockSsoConnector,
-      'default_tenant'
+      getTenantEndpoint('default_tenant', EnvSet.values)
     );
 
     const { serviceProvider, identityProvider } = await connector.getConfig();
@@ -36,7 +40,10 @@ describe('SamlSsoConnector', () => {
   });
 
   it('should throw error on calling getIdpMetadata, if the config is invalid', async () => {
-    const connector = new samlSsoConnectorFactory.constructor(mockSsoConnector, 'default_tenant');
+    const connector = new samlSsoConnectorFactory.constructor(
+      mockSsoConnector,
+      getTenantEndpoint('default_tenant', EnvSet.values)
+    );
 
     await expect(async () => connector.getSamlIdpMetadata()).rejects.toThrow(
       new SsoConnectorError(SsoConnectorErrorCodes.InvalidConfig, {
@@ -59,7 +66,7 @@ describe('SamlSsoConnector', () => {
 
     const connector = new samlSsoConnectorFactory.constructor(
       temporaryMockSsoConnector,
-      'default_tenant'
+      getTenantEndpoint('default_tenant', EnvSet.values)
     );
 
     expect(connector.idpConfig).toEqual(config);

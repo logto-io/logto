@@ -16,7 +16,7 @@ import { XMLValidator } from 'fast-xml-parser';
 import saml from 'samlify';
 import { ZodError, z } from 'zod';
 
-import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
+import { type EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import {
   buildSingleSignOnUrl,
@@ -110,6 +110,7 @@ export class SamlApplication {
   public config: SamlApplicationConfig;
 
   protected tenantEndpoint: URL;
+  protected issuer: string;
   protected oidcConfig?: CamelCaseKeys<OidcConfigResponse>;
 
   private _idp?: saml.IdentityProviderInstance;
@@ -118,11 +119,11 @@ export class SamlApplication {
   constructor(
     details: SamlApplicationDetails,
     protected samlApplicationId: string,
-    protected issuer: string,
-    tenantId: string
+    protected envSet: EnvSet
   ) {
     this.config = new SamlApplicationConfig(details);
-    this.tenantEndpoint = getTenantEndpoint(tenantId, EnvSet.values);
+    this.issuer = envSet.oidc.issuer;
+    this.tenantEndpoint = envSet.endpoint;
   }
 
   public get idp(): saml.IdentityProviderInstance {

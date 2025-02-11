@@ -27,7 +27,7 @@ const samlApplicationSignInCallbackQueryParametersGuard = z
   .partial();
 
 export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter>(
-  ...[router, { id: tenantId, libraries, queries, envSet }]: RouterInitArgs<T>
+  ...[router, { queries, envSet }]: RouterInitArgs<T>
 ) {
   const {
     samlApplications: { getSamlApplicationDetailsById },
@@ -50,7 +50,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       const { id } = ctx.guard.params;
 
       const details = await getSamlApplicationDetailsById(id);
-      const samlApplication = new SamlApplication(details, id, envSet.oidc.issuer, tenantId);
+      const samlApplication = new SamlApplication(details, id, envSet);
 
       ctx.status = 200;
       ctx.body = samlApplication.idPMetadata;
@@ -134,7 +134,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       });
 
       const details = await getSamlApplicationDetailsById(id);
-      const samlApplication = new SamlApplication(details, id, envSet.oidc.issuer, tenantId);
+      const samlApplication = new SamlApplication(details, id, envSet);
 
       assertThat(
         samlApplication.config.redirectUri === samlApplication.samlAppCallbackUrl,
@@ -252,7 +252,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       });
 
       const details = await getSamlApplicationDetailsById(id);
-      const samlApplication = new SamlApplication(details, id, envSet.oidc.issuer, tenantId);
+      const samlApplication = new SamlApplication(details, id, envSet);
 
       const octetString = Object.keys(ctx.request.query)
         // eslint-disable-next-line no-restricted-syntax
@@ -361,7 +361,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       });
 
       const details = await getSamlApplicationDetailsById(id);
-      const samlApplication = new SamlApplication(details, id, envSet.oidc.issuer, tenantId);
+      const samlApplication = new SamlApplication(details, id, envSet);
 
       // Parse login request
       try {
