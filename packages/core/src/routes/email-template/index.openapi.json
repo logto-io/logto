@@ -156,6 +156,7 @@
         "parameters": [
           {
             "name": "languageTag",
+            "in": "path",
             "description": "The language tag of the email template, e.g., `en` or `fr`."
           }
         ],
@@ -186,6 +187,7 @@
         "parameters": [
           {
             "name": "templateType",
+            "in": "path",
             "description": "The type of the email template, e.g. `SignIn` or `ForgotPassword`"
           }
         ],
