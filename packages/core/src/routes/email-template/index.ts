@@ -149,6 +149,7 @@ export default function emailTemplateRoutes<T extends ManagementApiRouter>(
         query.languageTag ?? query.templateType,
         new RequestError({
           code: 'connector.email_connector.bulk_deletion_no_filter',
+          properties: ['languageTag', 'templateType'],
           status: 422,
         })
       );
