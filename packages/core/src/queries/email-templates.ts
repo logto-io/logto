@@ -86,4 +86,28 @@ export default class EmailTemplatesQueries extends SchemaQueries<
     `)
     );
   }
+
+  /**
+   * Delete multiple email templates by language tag and template type
+   *
+   * @param where - Where clause to filter email templates by language tag and template type
+   * @param where.languageTag - The language tag of the email template
+   * @param where.templateType - The type of the email template
+   */
+  async deleteMany(
+    where: Partial<Pick<EmailTemplate, 'languageTag' | 'templateType'>>
+  ): Promise<{ rowCount: number }> {
+    const { fields, table } = convertToIdentifiers(EmailTemplates);
+
+    return this.pool.query(sql`
+      delete from ${table}
+      where ${sql.join(
+        Object.entries(where).map(
+          // eslint-disable-next-line no-restricted-syntax -- Object.entries can not infer the key type properly.
+          ([key, value]) => sql`${fields[key as keyof EmailTemplate]} = ${value}`
+        ),
+        sql` and `
+      )}
+    `);
+  }
 }

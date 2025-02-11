@@ -125,4 +125,45 @@ export default function emailTemplateRoutes<T extends ManagementApiRouter>(
       return next();
     }
   );
+
+  router.delete(
+    `${pathPrefix}/language-tag/:languageTag`,
+    koaGuard({
+      params: z.object({
+        languageTag: z.string(),
+      }),
+      status: [200],
+      response: z.object({
+        rowCount: z.number(),
+      }),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { languageTag },
+      } = ctx.guard;
+      ctx.body = await emailTemplatesQueries.deleteMany({ languageTag });
+      return next();
+    }
+  );
+
+  router.delete(
+    `${pathPrefix}/template-type/:templateType`,
+    koaGuard({
+      params: EmailTemplates.guard.pick({
+        templateType: true,
+      }),
+      status: [200],
+      response: z.object({
+        rowCount: z.number(),
+      }),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { templateType },
+      } = ctx.guard;
+
+      ctx.body = await emailTemplatesQueries.deleteMany({ templateType });
+      return next();
+    }
+  );
 }
