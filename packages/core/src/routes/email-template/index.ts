@@ -31,14 +31,49 @@ export default function emailTemplateRoutes<T extends ManagementApiRouter>(
     }),
     async (ctx, next) => {
       const { body } = ctx.guard;
-
       ctx.body = await emailTemplatesQueries.upsertMany(
         body.templates.map((template) => ({
           id: generateStandardId(),
           ...template,
         }))
       );
+      return next();
+    }
+  );
 
+  router.get(
+    pathPrefix,
+    koaGuard({
+      query: EmailTemplates.guard
+        .pick({
+          languageTag: true,
+          templateType: true,
+        })
+        .partial(),
+      response: EmailTemplates.guard.array(),
+      status: [200],
+    }),
+    async (ctx, next) => {
+      const { query } = ctx.guard;
+      ctx.body = await emailTemplatesQueries.findAllWhere(query);
+      return next();
+    }
+  );
+
+  router.get(
+    `${pathPrefix}/:id`,
+    koaGuard({
+      params: z.object({
+        id: z.string(),
+      }),
+      response: EmailTemplates.guard,
+      status: [200, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { id },
+      } = ctx.guard;
+      ctx.body = await emailTemplatesQueries.findById(id);
       return next();
     }
   );

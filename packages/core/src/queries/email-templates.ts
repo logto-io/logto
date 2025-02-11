@@ -4,13 +4,19 @@ import {
   EmailTemplates,
   type CreateEmailTemplate,
 } from '@logto/schemas';
-import { type CommonQueryMethods } from '@silverhand/slonik';
+import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
 import SchemaQueries from '#src/utils/SchemaQueries.js';
 
 import { type WellKnownCache } from '../caches/well-known.js';
 import { buildInsertIntoWithPool } from '../database/insert-into.js';
-import { convertToIdentifiers, type OmitAutoSetFields } from '../utils/sql.js';
+import { expandFields } from '../database/utils.js';
+import {
+  conditionalSql,
+  convertToIdentifiers,
+  manyRows,
+  type OmitAutoSetFields,
+} from '../utils/sql.js';
 
 export default class EmailTemplatesQueries extends SchemaQueries<
   EmailTemplateKeys,
@@ -49,5 +55,35 @@ export default class EmailTemplatesQueries extends SchemaQueries<
         emailTemplates.map(async (emailTemplate) => insertIntoTransaction(emailTemplate))
       );
     });
+  }
+
+  /**
+   * Find all email templates
+   *
+   * @param where - Optional where clause to filter email templates by language tag and template type
+   * @param where.languageTag - The language tag of the email template
+   * @param where.templateType - The type of the email template
+   */
+  async findAllWhere(
+    where?: Partial<Pick<EmailTemplate, 'languageTag' | 'templateType'>>
+  ): Promise<readonly EmailTemplate[]> {
+    const { fields, table } = convertToIdentifiers(EmailTemplates);
+
+    return manyRows(
+      this.pool.query<EmailTemplate>(sql`
+      select ${expandFields(EmailTemplates)}
+      from ${table}
+      ${conditionalSql(where && Object.keys(where).length > 0 && where, (where) => {
+        return sql`where ${sql.join(
+          Object.entries(where).map(
+            // eslint-disable-next-line no-restricted-syntax -- Object.entries can not infer the key type properly.
+            ([key, value]) => sql`${fields[key as keyof EmailTemplate]} = ${value}`
+          ),
+          sql` and `
+        )}`;
+      })}
+      order by ${fields.languageTag}, ${fields.templateType}
+    `)
+    );
   }
 }
