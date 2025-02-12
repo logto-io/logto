@@ -56,16 +56,13 @@ class SamlConnector {
 
   // Allow _idpConfig input to be undefined when constructing the connector.
   constructor(
-    tenantEndpoint: URL,
+    endpoint: URL,
     ssoConnectorId: string,
     private readonly _idpConfig: SamlConnectorConfig | undefined
   ) {
-    const assertionConsumerServiceUrl = buildAssertionConsumerServiceUrl(
-      tenantEndpoint,
-      ssoConnectorId
-    );
+    const assertionConsumerServiceUrl = buildAssertionConsumerServiceUrl(endpoint, ssoConnectorId);
 
-    const spEntityId = buildSpEntityId(tenantEndpoint, ssoConnectorId);
+    const spEntityId = buildSpEntityId(endpoint, ssoConnectorId);
 
     this.serviceProviderMetadata = {
       entityId: spEntityId,
