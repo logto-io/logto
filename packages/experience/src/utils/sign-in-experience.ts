@@ -35,9 +35,10 @@ export const getSignInExperienceSettings = async (): Promise<SignInExperienceRes
         return (!ssrValue && !storageValue) || ssrValue === storageValue;
       })
     ) {
-      return data;
+      return parseSignInExperienceResponse(data);
     }
   }
+
   const response = await getSignInExperience<SignInExperienceResponse>();
   return parseSignInExperienceResponse(response);
 };
