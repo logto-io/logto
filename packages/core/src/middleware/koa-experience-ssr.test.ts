@@ -2,6 +2,7 @@ import { ssrPlaceholder } from '@logto/schemas';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
+import { i18next } from '#src/utils/i18n.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import koaExperienceSsr from './koa-experience-ssr.js';
@@ -12,6 +13,7 @@ describe('koaExperienceSsr()', () => {
   const phrases = { foo: 'bar' };
   const baseCtx = Object.freeze({
     ...createContextWithRouteParameters({}),
+    i18n: i18next,
     locale: 'en',
     query: {},
     set: jest.fn(),

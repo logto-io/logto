@@ -1,7 +1,9 @@
 import createError from 'http-errors';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
+import { i18next } from '#src/utils/i18n.js';
+
+import { createContextWithRouteParameters } from '../utils/test-utils.js';
 
 import koaErrorHandler from './koa-error-handler.js';
 
@@ -12,11 +14,15 @@ const httpError = createError(404, 'Not Found');
 describe('koaErrorHandler middleware', () => {
   const mockBody = { data: 'foo' };
 
-  const ctx = createMockContext({
-    customProperties: {
-      body: mockBody,
-    },
-  });
+  const ctx = {
+    ...createContextWithRouteParameters({
+      customProperties: {
+        body: mockBody,
+      },
+    }),
+    i18n: i18next,
+    locale: 'en',
+  };
 
   const next = jest.fn().mockReturnValue(Promise.resolve());
 
@@ -34,7 +40,7 @@ describe('koaErrorHandler middleware', () => {
     next.mockRejectedValueOnce(error);
     await koaErrorHandler()(ctx, next);
     expect(ctx.status).toEqual(error.status);
-    expect(ctx.body).toEqual(error.body);
+    expect(ctx.body).toEqual(error.toBody(ctx));
   });
 
   // Koa will handle `HttpError` with a built-in manner. Hence it needs to return 200 here.

@@ -1,6 +1,5 @@
 import { appInsights } from '@logto/app-insights/node';
 import { condObject, isObject } from '@silverhand/essentials';
-import i18next from 'i18next';
 import type { Middleware } from 'koa';
 import { errors } from 'oidc-provider';
 import { z } from 'zod';
@@ -8,6 +7,8 @@ import { z } from 'zod';
 import { EnvSet } from '#src/env-set/index.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
+
+import { type WithI18nContext } from './koa-i18next.js';
 
 /**
  * Supplementary URIs for oidc-provider errors.
@@ -81,7 +82,10 @@ const isSessionNotFound = (description?: string) =>
  *
  * @see {@link errorUris} for the list of error URIs.
  */
-export default function koaOidcErrorHandler<StateT, ContextT>(): Middleware<StateT, ContextT> {
+export default function koaOidcErrorHandler<StateT, ContextT extends WithI18nContext>(): Middleware<
+  StateT,
+  ContextT
+> {
   // eslint-disable-next-line complexity
   return async (ctx, next) => {
     try {
@@ -134,7 +138,7 @@ export default function koaOidcErrorHandler<StateT, ContextT>(): Middleware<Stat
 
         ctx.body = {
           code,
-          message: i18next.t(['errors:' + code, 'errors:oidc.provider_error_fallback'], {
+          message: ctx.i18n.t(['errors:' + code, 'errors:oidc.provider_error_fallback'], {
             code,
           }),
           error_uri: uri,

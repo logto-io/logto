@@ -17,7 +17,7 @@ import {
   ExtraParamsKey,
 } from '@logto/schemas';
 import { removeUndefinedKeys, trySafe, tryThat } from '@silverhand/essentials';
-import i18next from 'i18next';
+import { type i18n } from 'i18next';
 import { Provider, errors } from 'oidc-provider';
 import getRawBody from 'raw-body';
 import snakecaseKeys from 'snakecase-keys';
@@ -38,6 +38,7 @@ import {
 } from '#src/oidc/utils.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
+import { i18next } from '#src/utils/i18n.js';
 
 import { type SubscriptionLibrary } from '../libraries/subscription.js';
 import koaTokenUsageGuard from '../middleware/koa-token-usage-guard.js';
@@ -126,10 +127,13 @@ export default function initOidc(
           ctx.body = logoutSource.replace('${form}', form);
         },
         postLogoutSuccessSource(ctx) {
+          // eslint-disable-next-line no-restricted-syntax -- detect if i18n is available in the context @see {koaI18next middleware}
+          const i18n = 'i18n' in ctx ? (ctx.i18n as i18n) : i18next;
+
           ctx.body = logoutSuccessSource.replace(
             // eslint-disable-next-line no-template-curly-in-string
             '${message}',
-            i18next.t<string, I18nKey>('oidc.logout_success')
+            i18n.t<string, I18nKey>('oidc.logout_success')
           );
         },
       },
