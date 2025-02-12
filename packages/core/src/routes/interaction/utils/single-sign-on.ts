@@ -39,7 +39,7 @@ type AuthorizationUrlPayload = z.infer<typeof authorizationUrlPayloadGuard>;
 
 export const getSsoAuthorizationUrl = async (
   ctx: WithLogContext,
-  { provider, id: tenantId, queries }: TenantContext,
+  { provider, queries, envSet }: TenantContext,
   connectorData: SupportedSsoConnector,
   payload: AuthorizationUrlPayload
 ): Promise<string> => {
@@ -58,7 +58,7 @@ export const getSsoAuthorizationUrl = async (
     // Will throw ConnectorError if the config is invalid
     const connectorInstance = new ssoConnectorFactories[providerName].constructor(
       connectorData,
-      tenantId
+      envSet.endpoint
     );
 
     assertThat(payload, 'session.insufficient_info');
@@ -143,7 +143,7 @@ type SsoAuthenticationResult = {
  */
 export const verifySsoIdentity = async (
   ctx: WithLogContext,
-  { provider, id: tenantId }: TenantContext,
+  { provider, envSet }: TenantContext,
   connectorData: SupportedSsoConnector,
   data: Record<string, unknown>
 ): Promise<SsoAuthenticationResult> => {
@@ -159,7 +159,7 @@ export const verifySsoIdentity = async (
     // Will throw ConnectorError if the config is invalid
     const connectorInstance = new ssoConnectorFactories[providerName].constructor(
       connectorData,
-      tenantId
+      envSet.endpoint
     );
     const issuer = await connectorInstance.getIssuer();
     const userInfo = await connectorInstance.getUserInfo(singleSignOnSession, data);

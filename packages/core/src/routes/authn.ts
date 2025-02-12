@@ -198,7 +198,7 @@ export default function authnRoutes<T extends AnonymousRouter>(
       // Will throw ConnectorError if the config is invalid
       const connectorInstance = new ssoConnectorFactories[providerName].constructor(
         connectorData,
-        tenantId
+        envSet.endpoint
       );
 
       assertThat(connectorInstance instanceof SamlConnector, 'connector.unexpected_type');

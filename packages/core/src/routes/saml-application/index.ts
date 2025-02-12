@@ -10,7 +10,7 @@ import { generateStandardId } from '@logto/shared';
 import { removeUndefinedKeys } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import {
   calculateCertificateFingerprints,
@@ -27,7 +27,7 @@ import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 export default function samlApplicationRoutes<T extends ManagementApiRouter>(
-  ...[router, { id: tenantId, queries, libraries }]: RouterInitArgs<T>
+  ...[router, { id: tenantId, queries, libraries, envSet }]: RouterInitArgs<T>
 ) {
   const {
     applications: {
@@ -92,10 +92,7 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
 
       const id = generateStandardId();
       // Set the default redirect URI for SAML apps when creating a new SAML app.
-      const redirectUri = getSamlAppCallbackUrl(
-        getTenantEndpoint(tenantId, EnvSet.values),
-        id
-      ).toString();
+      const redirectUri = getSamlAppCallbackUrl(envSet.endpoint, id).toString();
 
       const application = await insertApplication(
         removeUndefinedKeys({

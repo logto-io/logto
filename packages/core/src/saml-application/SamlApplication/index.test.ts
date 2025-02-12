@@ -2,6 +2,8 @@ import { UserScope, ReservedScope } from '@logto/core-kit';
 import { NameIdFormat } from '@logto/schemas';
 import nock from 'nock';
 
+import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
+
 import { SamlApplication } from './index.js';
 
 const { jest } = import.meta;
@@ -58,7 +60,10 @@ describe('SamlApplication', () => {
   beforeEach(() => {
     // @ts-expect-error
     // eslint-disable-next-line @silverhand/fp/no-mutation
-    samlApp = new TestSamlApplication(mockDetails, mockSamlApplicationId, mockIssuer, mockTenantId);
+    samlApp = new TestSamlApplication(mockDetails, mockSamlApplicationId, {
+      oidc: { issuer: mockIssuer },
+      endpoint: getTenantEndpoint(mockTenantId, EnvSet.values),
+    });
 
     nock(mockIssuer).get('/.well-known/openid-configuration').reply(200, {
       token_endpoint: mockTokenEndpoint,
@@ -188,8 +193,10 @@ describe('SamlApplication', () => {
           attributeMapping: {},
         },
         mockSamlApplicationId,
-        mockIssuer,
-        mockTenantId
+        {
+          oidc: { issuer: mockIssuer },
+          endpoint: getTenantEndpoint(mockTenantId, EnvSet.values),
+        }
       );
 
       const scopes = app.exposedGetScopesFromAttributeMapping();
@@ -207,8 +214,10 @@ describe('SamlApplication', () => {
           attributeMapping: {},
         },
         mockSamlApplicationId,
-        mockIssuer,
-        mockTenantId
+        {
+          oidc: { issuer: mockIssuer },
+          endpoint: getTenantEndpoint(mockTenantId, EnvSet.values),
+        }
       );
 
       const scopes = app.exposedGetScopesFromAttributeMapping();
@@ -228,8 +237,10 @@ describe('SamlApplication', () => {
           },
         },
         mockSamlApplicationId,
-        mockIssuer,
-        mockTenantId
+        {
+          oidc: { issuer: mockIssuer },
+          endpoint: getTenantEndpoint(mockTenantId, EnvSet.values),
+        }
       );
 
       const scopes = app.exposedGetScopesFromAttributeMapping();
@@ -250,8 +261,10 @@ describe('SamlApplication', () => {
           },
         },
         mockSamlApplicationId,
-        mockIssuer,
-        mockTenantId
+        {
+          oidc: { issuer: mockIssuer },
+          endpoint: getTenantEndpoint(mockTenantId, EnvSet.values),
+        }
       );
 
       const scopes = app.exposedGetScopesFromAttributeMapping();
@@ -277,8 +290,10 @@ describe('SamlApplication', () => {
           },
         },
         mockSamlApplicationId,
-        mockIssuer,
-        mockTenantId
+        {
+          oidc: { issuer: mockIssuer },
+          endpoint: getTenantEndpoint(mockTenantId, EnvSet.values),
+        }
       );
 
       const scopes = app.exposedGetScopesFromAttributeMapping();
@@ -308,8 +323,10 @@ describe('SamlApplication', () => {
         // @ts-expect-error
         mockDetailsWithMapping,
         mockSamlApplicationId,
-        mockIssuer,
-        mockTenantId
+        {
+          oidc: { issuer: mockIssuer },
+          endpoint: getTenantEndpoint(mockTenantId, EnvSet.values),
+        }
       );
 
       const template = samlApp.exposedBuildLoginResponseTemplate();
@@ -353,8 +370,10 @@ describe('SamlApplication', () => {
         // @ts-expect-error
         mockDetailsWithMapping,
         mockSamlApplicationId,
-        mockIssuer,
-        mockTenantId
+        {
+          oidc: { issuer: mockIssuer },
+          endpoint: getTenantEndpoint(mockTenantId, EnvSet.values),
+        }
       );
 
       const tagValues = samlApp.exposedBuildSamlAttributesTagValues(mockUser);
@@ -382,8 +401,10 @@ describe('SamlApplication', () => {
         // @ts-expect-error
         mockDetailsWithMapping,
         mockSamlApplicationId,
-        mockIssuer,
-        mockTenantId
+        {
+          oidc: { issuer: mockIssuer },
+          endpoint: getTenantEndpoint(mockTenantId, EnvSet.values),
+        }
       );
 
       const tagValues = samlApp.exposedBuildSamlAttributesTagValues(mockUser);

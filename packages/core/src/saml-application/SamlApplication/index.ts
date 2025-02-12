@@ -16,7 +16,7 @@ import { XMLValidator } from 'fast-xml-parser';
 import saml from 'samlify';
 import { ZodError, z } from 'zod';
 
-import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
+import { type EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import {
   buildSingleSignOnUrl,
@@ -109,7 +109,8 @@ class SamlApplicationConfig {
 export class SamlApplication {
   public config: SamlApplicationConfig;
 
-  protected tenantEndpoint: URL;
+  protected endpoint: URL;
+  protected issuer: string;
   protected oidcConfig?: CamelCaseKeys<OidcConfigResponse>;
 
   private _idp?: saml.IdentityProviderInstance;
@@ -118,11 +119,11 @@ export class SamlApplication {
   constructor(
     details: SamlApplicationDetails,
     protected samlApplicationId: string,
-    protected issuer: string,
-    tenantId: string
+    protected envSet: EnvSet
   ) {
     this.config = new SamlApplicationConfig(details);
-    this.tenantEndpoint = getTenantEndpoint(tenantId, EnvSet.values);
+    this.issuer = envSet.oidc.issuer;
+    this.endpoint = envSet.endpoint;
   }
 
   public get idp(): saml.IdentityProviderInstance {
@@ -146,7 +147,7 @@ export class SamlApplication {
   }
 
   public get samlAppCallbackUrl() {
-    return getSamlAppCallbackUrl(this.tenantEndpoint, this.samlApplicationId).toString();
+    return getSamlAppCallbackUrl(this.endpoint, this.samlApplicationId).toString();
   }
 
   public async parseLoginRequest(
@@ -484,10 +485,10 @@ export class SamlApplication {
 
   private buildIdpConfig(): SamlIdentityProviderConfig {
     return {
-      entityId: buildSamlIdentityProviderEntityId(this.tenantEndpoint, this.samlApplicationId),
+      entityId: buildSamlIdentityProviderEntityId(this.endpoint, this.samlApplicationId),
       privateKey: this.config.privateKey,
       certificate: this.config.certificate,
-      singleSignOnUrl: buildSingleSignOnUrl(this.tenantEndpoint, this.samlApplicationId),
+      singleSignOnUrl: buildSingleSignOnUrl(this.endpoint, this.samlApplicationId),
       nameIdFormat: this.config.nameIdFormat,
       encryptSamlAssertion: this.config.encryption?.encryptAssertion ?? false,
     };
