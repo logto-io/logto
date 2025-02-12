@@ -253,6 +253,7 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
                   value={applyCustomDomain(
                     appendPath(
                       tenantEndpoint,
+                      '/api',
                       samlApplicationEndpointPrefix,
                       data.id,
                       samlApplicationSingleSignOnEndpointSuffix
