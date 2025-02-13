@@ -4,9 +4,12 @@ import { type PasswordPolicyChecker } from '@logto/core-kit';
 import { type User, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { condObject } from '@silverhand/essentials';
 import { argon2i } from 'hash-wasm';
+import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
+
+import { safeParseJson } from './json.js';
 
 type LegacyPassword = {
   // `openssl list -digest-algorithms` will display the available digest algorithms.
@@ -25,33 +28,31 @@ function isLegacyHashAlgorithm(algorithm: string): boolean {
 }
 
 function isLegacyPassword(value: string): [string, string[], string] | undefined {
-  try {
-    const parsed: unknown = JSON.parse(value);
-    if (
-      Array.isArray(parsed) &&
-      parsed.length === 3 &&
-      typeof parsed[0] === 'string' &&
-      Array.isArray(parsed[1]) &&
-      parsed[1].every((item) => typeof item === 'string') &&
-      parsed[1].includes('@') &&
-      typeof parsed[2] === 'string'
-    ) {
-      const algorithm = parsed[0];
-      const args = parsed[1];
-      const encryptedPassword = parsed[2];
+  const json = safeParseJson(value);
 
-      return [algorithm, args, encryptedPassword] as const;
-    }
-    return undefined;
-  } catch {
-    return undefined;
+  if (json === undefined) {
+    return;
+  }
+
+  const legacyPasswordSchema = z.tuple([
+    z.string(),
+    z.array(z.string()).refine((args) => args.includes('@'), {
+      message: "Password args must include '@' character",
+    }),
+    z.string(),
+  ]);
+
+  const parsed = legacyPasswordSchema.safeParse(json);
+
+  if (parsed.success) {
+    const [algorithm, args, encryptedPassword] = parsed.data;
+    return [algorithm, args, encryptedPassword];
   }
 }
 
 /**
- * Parse legacy password expression in format: ["hash_method",["args", "args2", "@"],"hashed_password"]
- * Example: ["sha256",["salt123", "salt12345", "@"],"hashed2345"]
- * @ is replaced with input password
+ * Parse legacy password expression in format: `['hash_method', ['args0', 'args1', '@'], 'hashed_password']` where `@` will be replaced with the input password.
+ * @example parseLegacyPassword(['sha256', ['salt123', 'salt12345', '@'], 'hashed2345'])
  */
 export const parseLegacyPassword = (passwordDigest: string | undefined): LegacyPassword => {
   assertThat(passwordDigest, new RequestError({ code: 'password.unsupported_encryption_method' }));
@@ -76,6 +77,7 @@ export const parseLegacyPassword = (passwordDigest: string | undefined): LegacyP
 
 /**
  * Execute hash calculation based on the parsed expression
+ * @returns The calculated hash as a hexadecimal string
  */
 export const executeLegacyHash = async (
   parsedExpression: LegacyPassword,
@@ -87,14 +89,16 @@ export const executeLegacyHash = async (
   const resolvedArgs = args.map((arg) => (arg === '@' ? inputPassword : arg));
   const inputString = resolvedArgs.join('');
 
-  // Use node:crypto for hash calculation
+  // Use `node:crypto` for hash calculation
   const hash = crypto.createHash(algorithm);
   hash.update(inputString);
   return hash.digest('hex');
 };
 
 /**
- * Verify legacy password
+ * Verifies if the provided input password matches the stored legacy password hash
+ * by parsing the legacy password format, calculating the hash with the same algorithm,
+ * and comparing the results. Returns false if any errors occur during verification.
  */
 export const legacyVerify = async (
   storedPassword: string,
