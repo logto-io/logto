@@ -3,7 +3,11 @@ import {
   type SamlApplicationResponse,
   type PatchSamlApplication,
   type SamlApplicationSecret,
+  type Domain,
+  DomainStatus,
+  adminTenantId,
 } from '@logto/schemas';
+import { SearchJointMode } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { removeUndefinedKeys, pick } from '@silverhand/essentials';
 
@@ -11,11 +15,16 @@ import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { EnvSet } from '../../env-set/index.js';
+import { getTenantEndpoint } from '../../env-set/utils.js';
+
 import { ensembleSamlApplication, generateKeyPairAndCertificate } from './utils.js';
+
+export type SamlApplicationLibrary = ReturnType<typeof createSamlApplicationsLibrary>;
 
 export const createSamlApplicationsLibrary = (queries: Queries) => {
   const {
-    applications: { findApplicationById, updateApplicationById },
+    applications: { findApplicationById, updateApplicationById, findApplications },
     samlApplicationSecrets: {
       insertInactiveSamlApplicationSecret,
       insertActiveSamlApplicationSecret,
@@ -111,9 +120,71 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
     });
   };
 
+  const applyCustomDomainToSamlApplicationRedirectUrls = async (
+    tenantId: string,
+    domain?: Domain
+  ) => {
+    // Skip for admin tenant and non-cloud environment.
+    if (tenantId === adminTenantId || !EnvSet.values.isCloud) {
+      return;
+    }
+
+    const samlApplications = await findApplications({
+      // Empty search to satisfy the input params type definition.
+      search: { matches: [], joint: SearchJointMode.Or, isCaseSensitive: false },
+      types: [ApplicationType.SAML],
+    });
+
+    if (!domain || domain.status !== DomainStatus.Active) {
+      for (const samlApplication of samlApplications) {
+        const newRedirectUris = samlApplication.oidcClientMetadata.redirectUris.filter((url) =>
+          url.startsWith(getTenantEndpoint(tenantId, EnvSet.values).hostname)
+        );
+
+        if (newRedirectUris.length === 1) {
+          continue;
+        }
+
+        // eslint-disable-next-line no-await-in-loop
+        await updateApplicationById(samlApplication.id, {
+          oidcClientMetadata: {
+            ...samlApplication.oidcClientMetadata,
+            redirectUris: newRedirectUris,
+          },
+        });
+      }
+    }
+
+    if (domain?.status === DomainStatus.Active) {
+      for (const samlApplication of samlApplications) {
+        const redirectUri = samlApplication.oidcClientMetadata.redirectUris.find((url) =>
+          url.startsWith(getTenantEndpoint(tenantId, EnvSet.values).hostname)
+        );
+
+        // Should not happen.
+        if (!redirectUri) {
+          continue;
+        }
+
+        const redirectUriWithCustomDomain = new URL(redirectUri);
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        redirectUriWithCustomDomain.hostname = domain.domain;
+
+        // eslint-disable-next-line no-await-in-loop
+        await updateApplicationById(samlApplication.id, {
+          oidcClientMetadata: {
+            ...samlApplication.oidcClientMetadata,
+            redirectUris: [redirectUri, redirectUriWithCustomDomain.toString()],
+          },
+        });
+      }
+    }
+  };
+
   return {
     createSamlApplicationSecret,
     findSamlApplicationById,
     updateSamlApplicationById,
+    applyCustomDomainToSamlApplicationRedirectUrls,
   };
 };

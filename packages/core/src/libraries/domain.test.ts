@@ -31,13 +31,18 @@ const { clearCustomDomainCache } = await mockEsmWithActual('#src/utils/tenant.js
 
 const { MockQueries } = await import('#src/test-utils/tenant.js');
 const { createDomainLibrary } = await import('./domain.js');
+const { createSamlApplicationsLibrary } = await import('./saml-application/saml-applications.js');
 
 const updateDomainById = jest.fn(async (_, data) => data);
 const insertDomain = jest.fn(async (data) => data);
 const findDomainById = jest.fn(async () => mockDomain);
 const deleteDomainById = jest.fn();
 const { syncDomainStatus, addDomain, deleteDomain } = createDomainLibrary(
-  new MockQueries({ domains: { updateDomainById, insertDomain, findDomainById, deleteDomainById } })
+  'mock-tenant-id',
+  new MockQueries({
+    domains: { updateDomainById, insertDomain, findDomainById, deleteDomainById },
+  }),
+  createSamlApplicationsLibrary(new MockQueries({}))
 );
 
 beforeAll(() => {
