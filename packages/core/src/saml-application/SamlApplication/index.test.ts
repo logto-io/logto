@@ -27,7 +27,7 @@ describe('SamlApplication', () => {
       url: 'https://sp.example.com/acs',
     },
     oidcClientMetadata: {
-      redirectUris: ['https://app.example.com/callback'],
+      redirectUris: ['https://logto.test/callback'],
     },
     privateKey: 'mock-private-key',
     certificate: 'mock-certificate',
@@ -116,13 +116,11 @@ describe('SamlApplication', () => {
         'utf8'
       ).toString('base64')}`;
 
-      const redirectUri = mockDetails.oidcClientMetadata.redirectUris[0]!;
-
       nock(mockEndpoint)
         .post(
           '/token',
           `grant_type=authorization_code&code=${mockCode}&client_id=${mockSamlApplicationId}&redirect_uri=${encodeURIComponent(
-            redirectUri
+            samlApp.config.redirectUri
           )}`
         )
         .matchHeader('Authorization', expectedAuthHeader)
