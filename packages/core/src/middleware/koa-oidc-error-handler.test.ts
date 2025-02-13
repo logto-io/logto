@@ -33,18 +33,14 @@ describe('koaOidcErrorHandler middleware', () => {
     });
   };
 
-  const ctx = {
-    ...createContextWithRouteParameters(),
-    i18n: i18next,
-    locale: 'en',
-  };
-
   it('should throw no errors if no errors are caught', async () => {
+    const ctx = createContextWithRouteParameters();
     await expect(koaOidcErrorHandler()(ctx, next)).resolves.not.toThrow();
   });
 
   it('should throw original error if error type is not OIDCProviderError', async () => {
     const error = new Error('err');
+    const ctx = createContextWithRouteParameters();
 
     next.mockImplementationOnce(() => {
       throw error;
@@ -54,12 +50,14 @@ describe('koaOidcErrorHandler middleware', () => {
   });
 
   it('should recognize invalid scope error', async () => {
+    const ctx = createContextWithRouteParameters();
     const error_description = 'Mock scope is invalid';
     const mockScope = 'read:foo';
     await expectErrorResponse(ctx, new errors.InvalidScope(error_description, mockScope));
   });
 
   it('should transform session not found error code', async () => {
+    const ctx = createContextWithRouteParameters();
     await expectErrorResponse(ctx, new errors.SessionNotFound('session not found'), {
       code: 'session.not_found',
       message: i18next.t('errors:session.not_found'),
@@ -69,6 +67,7 @@ describe('koaOidcErrorHandler middleware', () => {
   it('should add scope in response when needed', async () => {
     const error_description = 'Insufficient scope for access_token';
     const scope = 'read:foo';
+    const ctx = createContextWithRouteParameters();
 
     await expectErrorResponse(ctx, new errors.InsufficientScope(error_description, scope), {
       scope,
@@ -77,6 +76,7 @@ describe('koaOidcErrorHandler middleware', () => {
 
   it('should add error uri when available', async () => {
     const error = new errors.InvalidGrant('invalid grant');
+    const ctx = createContextWithRouteParameters();
 
     await expectErrorResponse(ctx, error, {
       error_uri: 'https://openid.sh/debug/invalid_grant',
@@ -85,6 +85,7 @@ describe('koaOidcErrorHandler middleware', () => {
 
   it('should handle unrecognized oidc error', async () => {
     const unrecognizedError = { error: 'some_error', error_description: 'some error description' };
+    const ctx = createContextWithRouteParameters();
 
     ctx.status = 500;
     ctx.body = unrecognizedError;

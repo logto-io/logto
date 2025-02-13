@@ -32,6 +32,14 @@ export default class RequestError extends Error {
       ...interpolation
     } = typeof input === 'string' ? { code: input } : input;
 
+    /**
+     * For the error log use only.
+     *
+     * @remarks
+     * This error message in constructor uses the global i18n instance to get the user-friendly message in the error log.
+     * It will always use the default language (en) to get the message.
+     * For client-facing error response, use the  @see toBody  method to get the error message translated to the user's language.
+     */
     const message = i18next.t<string, LogtoErrorI18nKey>(`errors:${code}`, {
       ...interpolation,
       interpolation: {
@@ -59,7 +67,7 @@ export default class RequestError extends Error {
   }
 
   /**
-   * Parse the error body with i18n context
+   * Parse the error message with i18n context
    */
   toBody(i18next: i18n): RequestErrorBody {
     return {
