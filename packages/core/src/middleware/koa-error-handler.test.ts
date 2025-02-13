@@ -40,7 +40,7 @@ describe('koaErrorHandler middleware', () => {
     next.mockRejectedValueOnce(error);
     await koaErrorHandler()(ctx, next);
     expect(ctx.status).toEqual(error.status);
-    expect(ctx.body).toEqual(error.toBody(ctx));
+    expect(ctx.body).toEqual(error.toBody(ctx.i18n));
   });
 
   // Koa will handle `HttpError` with a built-in manner. Hence it needs to return 200 here.

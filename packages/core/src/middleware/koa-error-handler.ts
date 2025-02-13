@@ -36,7 +36,7 @@ export default function koaErrorHandler<
 
       if (error instanceof RequestError) {
         ctx.status = error.status;
-        ctx.body = error.toBody(ctx);
+        ctx.body = error.toBody(ctx.i18n);
 
         return;
       }

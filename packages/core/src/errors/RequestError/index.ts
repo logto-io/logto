@@ -2,10 +2,8 @@ import type { LogtoErrorCode, LogtoErrorI18nKey } from '@logto/phrases';
 import type { RequestErrorBody, RequestErrorMetadata } from '@logto/schemas';
 import type { Optional } from '@silverhand/essentials';
 import { conditional, pick } from '@silverhand/essentials';
-import i18next from 'i18next';
+import i18next, { type i18n } from 'i18next';
 import { ZodError } from 'zod';
-
-import { type WithI18nContext } from '../../middleware/koa-i18next.js';
 
 export const formatZodError = ({ issues }: ZodError): string[] =>
   issues.map((issue) => {
@@ -52,10 +50,6 @@ export default class RequestError extends Error {
     this.#i18nInterpolation = interpolation;
   }
 
-  get body(): RequestErrorBody {
-    return pick(this, 'message', 'code', 'data', 'details');
-  }
-
   get details(): Optional<string> {
     if (this.data instanceof SyntaxError) {
       return conditional(this.data.message);
@@ -67,15 +61,15 @@ export default class RequestError extends Error {
   /**
    * Parse the error body with i18n context
    */
-  toBody(ctx: WithI18nContext): RequestErrorBody {
+  toBody(i18next: i18n): RequestErrorBody {
     return {
-      ...this.body,
-      message: this.#getI18nErrorMessage(ctx),
+      ...pick(this, 'code', 'data', 'details'),
+      message: this.#getI18nErrorMessage(i18next),
     };
   }
 
-  #getI18nErrorMessage(ctx: WithI18nContext): string {
-    return ctx.i18n.t<string, LogtoErrorI18nKey>(`errors:${this.code}`, {
+  #getI18nErrorMessage(i18next: i18n): string {
+    return i18next.t<string, LogtoErrorI18nKey>(`errors:${this.code}`, {
       ...this.#i18nInterpolation,
       interpolation: {
         escapeValue: false,
