@@ -22,8 +22,7 @@ export default class RequestError extends Error {
    *
    * @remarks
    * This message is intended for server-side logging only.
-   * For client-facing messages, use the @see toBody method which provides proper language translation.
-   * @override
+   * For client-facing messages, use the {@link toBody} method which provides proper language translation.
    */
   declare message: string;
 
@@ -70,6 +69,10 @@ export default class RequestError extends Error {
 
   /**
    * Parse the error message with i18n context
+   *
+   * @remarks
+   * This method is intended for client-facing error responses.
+   * For server-side log entries use the {@link RequestError.message} property instead.
    */
   toBody(i18next: i18n): RequestErrorBody {
     const message = i18next.t<string, LogtoErrorI18nKey>(`errors:${this.code}`, {
