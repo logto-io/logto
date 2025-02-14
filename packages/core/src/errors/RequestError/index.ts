@@ -68,7 +68,7 @@ export default class RequestError extends Error {
   }
 
   /**
-   * Parse the error message with i18n context
+   * Parse the error into response body. An i18n context is required.
    *
    * @remarks
    * This method is intended for client-facing error responses.
