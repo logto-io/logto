@@ -37,7 +37,9 @@ const insertDomain = jest.fn(async (data) => data);
 const findDomainById = jest.fn(async () => mockDomain);
 const deleteDomainById = jest.fn();
 const { syncDomainStatus, addDomain, deleteDomain } = createDomainLibrary(
-  new MockQueries({ domains: { updateDomainById, insertDomain, findDomainById, deleteDomainById } })
+  new MockQueries({
+    domains: { updateDomainById, insertDomain, findDomainById, deleteDomainById },
+  })
 );
 
 beforeAll(() => {

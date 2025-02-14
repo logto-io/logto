@@ -62,7 +62,30 @@ type SamlServiceProviderConfig = {
 };
 
 class SamlApplicationConfig {
-  constructor(private readonly _details: SamlApplicationDetails) {}
+  constructor(
+    private readonly _details: SamlApplicationDetails,
+    private readonly _endpoint: URL
+  ) {}
+
+  /**
+   * Apply custom domain to `entityId` or `redirectUri` when applicable,
+   * no need to apply custom domain for `acsUrl` since this is not a Logto hosted
+   * endpoint.
+   */
+  private normalizeUrlHost(url: string): string {
+    try {
+      const parsedUrl = new URL(url);
+      if (parsedUrl.host !== this._endpoint.host) {
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        parsedUrl.host = this._endpoint.host;
+        return parsedUrl.toString();
+      }
+      return url;
+    } catch {
+      // If the URL is invalid or not a URL at all, return original
+      return url;
+    }
+  }
 
   public get secret() {
     return this._details.secret;
@@ -70,7 +93,7 @@ class SamlApplicationConfig {
 
   public get entityId() {
     assertThat(this._details.entityId, 'application.saml.entity_id_required');
-    return this._details.entityId;
+    return this.normalizeUrlHost(this._details.entityId);
   }
 
   public get acsUrl() {
@@ -80,7 +103,7 @@ class SamlApplicationConfig {
 
   public get redirectUri() {
     assertThat(this._details.oidcClientMetadata.redirectUris[0], 'oidc.invalid_redirect_uri');
-    return this._details.oidcClientMetadata.redirectUris[0];
+    return this.normalizeUrlHost(this._details.oidcClientMetadata.redirectUris[0]);
   }
 
   public get privateKey() {
@@ -121,7 +144,7 @@ export class SamlApplication {
     protected samlApplicationId: string,
     protected envSet: EnvSet
   ) {
-    this.config = new SamlApplicationConfig(details);
+    this.config = new SamlApplicationConfig(details, envSet.endpoint);
     this.issuer = envSet.oidc.issuer;
     this.endpoint = envSet.endpoint;
   }

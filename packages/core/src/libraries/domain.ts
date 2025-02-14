@@ -54,6 +54,7 @@ export const createDomainLibrary = (queries: Queries) => {
     );
 
     const updatedDomain = await syncDomainStatusFromCloudflareData(domain, cloudflareData);
+
     await clearCustomDomainCache(domain.domain);
     return updatedDomain;
   };
