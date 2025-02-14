@@ -15,15 +15,9 @@ import {
 import { isSubdomainOf } from '#src/utils/domain.js';
 import { clearCustomDomainCache } from '#src/utils/tenant.js';
 
-import { type SamlApplicationLibrary } from './saml-application/saml-applications.js';
-
 export type DomainLibrary = ReturnType<typeof createDomainLibrary>;
 
-export const createDomainLibrary = (
-  tenantId: string,
-  queries: Queries,
-  samlApplicationsLibrary: SamlApplicationLibrary
-) => {
+export const createDomainLibrary = (queries: Queries) => {
   const {
     domains: { updateDomainById, insertDomain, findDomainById, deleteDomainById },
   } = queries;
@@ -60,11 +54,6 @@ export const createDomainLibrary = (
     );
 
     const updatedDomain = await syncDomainStatusFromCloudflareData(domain, cloudflareData);
-
-    await samlApplicationsLibrary.applyCustomDomainToSamlApplicationRedirectUrls(
-      tenantId,
-      updatedDomain
-    );
 
     await clearCustomDomainCache(domain.domain);
     return updatedDomain;
@@ -123,7 +112,6 @@ export const createDomainLibrary = (
 
     await deleteDomainById(id);
     await clearCustomDomainCache(domain.domain);
-    await samlApplicationsLibrary.applyCustomDomainToSamlApplicationRedirectUrls(tenantId);
   };
 
   return {

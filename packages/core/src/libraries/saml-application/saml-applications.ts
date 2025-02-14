@@ -19,8 +19,6 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { ensembleSamlApplication, generateKeyPairAndCertificate } from './utils.js';
 
-export type SamlApplicationLibrary = ReturnType<typeof createSamlApplicationsLibrary>;
-
 const consoleLog = new ConsoleLog(chalk.magenta('SAML app custom domain'));
 
 export const createSamlApplicationsLibrary = (queries: Queries) => {
@@ -131,14 +129,14 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
    * @example
    * // With active domain
    * const app = { redirectUris: ['https://original.example.com'] };
-   * applyCustomDomainToSamlApplicationRedirectUrls('tenant1'， { domain: 'https://custom.domain.com' });
+   * syncCustomDomainToSamlApplicationRedirectUrls('tenant1'， { domain: 'https://custom.domain.com' });
    * // redirectUris becomes ['https://original.example.com', 'https://custom.domain.com']
    *
    * @example
    * // Without active domain
    * const app = { redirectUris: ['https://original.example.com', 'https://custom.domain.com'] };
-   * applyCustomDomainToSamlApplicationRedirectUrls('tenant1');
-   * // redirectUris remains ['https://default.logto.app']
+   * syncCustomDomainToSamlApplicationRedirectUrls('tenant1');
+   * // redirectUris becomes ['https://original.example.com']
    *
    * @remarks
    * For most apps, the redirectUris are typically other domains and are not affected by Logto's custom domain. However, the redirectUris for a SAML app are Logto's endpoints (refer to the design of the SAML app). To prevent the OIDC "Invalid redirect URI" error during redirection, it is necessary to add a corresponding custom domain value to the default redirect URI in the redirectUris (which is automatically added when creating the SAML app) during the redirection process.
@@ -147,7 +145,7 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
    * Ref:
    * - SAML application: https://github.com/logto-io/rfcs-internal/pull/5
    */
-  const applyCustomDomainToSamlApplicationRedirectUrls = async (
+  const syncCustomDomainToSamlApplicationRedirectUrls = async (
     currentTenantId: string,
     domain?: Domain
   ) => {
@@ -163,58 +161,61 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
       types: [ApplicationType.SAML],
     });
 
-    // If the custom domain is deleted or not active, we should remove the custom domain from the redirect URIs.
-    if (!domain || domain.status !== DomainStatus.Active) {
-      for (const samlApplication of samlApplications) {
-        const newRedirectUris = samlApplication.oidcClientMetadata.redirectUris.filter((url) =>
-          url.startsWith(getTenantEndpoint(currentTenantId, EnvSet.values).hostname)
-        );
-
-        if (newRedirectUris.length !== 1) {
-          consoleLog.warn(
-            `Can not apply custom domain to SAML app ${samlApplication.id}, the redirect URIs do not match the current tenant's endpoint.`
-          );
-          continue;
-        }
-
-        // eslint-disable-next-line no-await-in-loop
-        await updateApplicationById(samlApplication.id, {
-          oidcClientMetadata: {
-            ...samlApplication.oidcClientMetadata,
-            redirectUris: newRedirectUris,
-          },
-        });
-      }
-    }
-
     // Apply custom domain to SAML applications' redirect URIs if the custom domain is active.
+    // eslint-disable-next-line unicorn/prefer-ternary
     if (domain?.status === DomainStatus.Active) {
-      for (const samlApplication of samlApplications) {
-        // There is only one default redirect URI for each SAML app.
-        const redirectUri = samlApplication.oidcClientMetadata.redirectUris.find((url) =>
-          url.startsWith(getTenantEndpoint(currentTenantId, EnvSet.values).hostname)
-        );
-
-        // Should not happen.
-        if (!redirectUri) {
-          consoleLog.warn(
-            `Can not apply custom domain to SAML app ${samlApplication.id}, since we can not find default redirect URI.`
+      await Promise.all(
+        samlApplications.map(async (samlApplication) => {
+          // There is only one default redirect URI for each SAML app.
+          const defaultRedirectUri = samlApplication.oidcClientMetadata.redirectUris.find((url) =>
+            url.startsWith(getTenantEndpoint(currentTenantId, EnvSet.values).hostname)
           );
-          continue;
-        }
 
-        const redirectUriWithCustomDomain = new URL(redirectUri);
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        redirectUriWithCustomDomain.hostname = domain.domain;
+          // Should not happen.
+          if (!defaultRedirectUri) {
+            consoleLog.warn(
+              `Can not apply custom domain to SAML app ${samlApplication.id}, since we can not find default redirect URI.`
+            );
+            return;
+          }
 
-        // eslint-disable-next-line no-await-in-loop
-        await updateApplicationById(samlApplication.id, {
-          oidcClientMetadata: {
-            ...samlApplication.oidcClientMetadata,
-            redirectUris: [redirectUri, redirectUriWithCustomDomain.toString()],
-          },
-        });
-      }
+          const redirectUriWithCustomDomain = new URL(defaultRedirectUri);
+          // eslint-disable-next-line @silverhand/fp/no-mutation
+          redirectUriWithCustomDomain.hostname = domain.domain;
+
+          await updateApplicationById(samlApplication.id, {
+            oidcClientMetadata: {
+              ...samlApplication.oidcClientMetadata,
+              redirectUris: [defaultRedirectUri, redirectUriWithCustomDomain.toString()],
+            },
+          });
+        })
+      );
+    } else {
+      // If the custom domain is deleted or not active, we should remove all custom domains from the redirect URIs.
+      await Promise.all(
+        samlApplications.map(async (samlApplication) => {
+          const redirectUrisWithoutCustomDomains =
+            // Filter out redirect URIs applied with custom domain.
+            samlApplication.oidcClientMetadata.redirectUris.filter((url) =>
+              url.startsWith(getTenantEndpoint(currentTenantId, EnvSet.values).hostname)
+            );
+
+          if (redirectUrisWithoutCustomDomains.length !== 1) {
+            consoleLog.warn(
+              `Can not apply custom domain to SAML app ${samlApplication.id}, the redirect URIs do not match the current tenant's endpoint.`
+            );
+            return;
+          }
+
+          await updateApplicationById(samlApplication.id, {
+            oidcClientMetadata: {
+              ...samlApplication.oidcClientMetadata,
+              redirectUris: redirectUrisWithoutCustomDomains,
+            },
+          });
+        })
+      );
     }
   };
 
@@ -222,6 +223,6 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
     createSamlApplicationSecret,
     findSamlApplicationById,
     updateSamlApplicationById,
-    applyCustomDomainToSamlApplicationRedirectUrls,
+    syncCustomDomainToSamlApplicationRedirectUrls,
   };
 };

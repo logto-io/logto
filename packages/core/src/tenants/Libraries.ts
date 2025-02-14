@@ -40,7 +40,7 @@ export default class Libraries {
   verificationStatuses = createVerificationStatusLibrary(this.queries);
   samlApplications = createSamlApplicationsLibrary(this.queries);
   roleScopes = createRoleScopeLibrary(this.queries);
-  domains = createDomainLibrary(this.tenantId, this.queries, this.samlApplications);
+  domains = createDomainLibrary(this.queries);
   protectedApps = createProtectedAppLibrary(this.queries);
   quota = createQuotaLibrary(this.cloudConnection);
   ssoConnectors = createSsoConnectorLibrary(this.queries);
