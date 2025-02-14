@@ -17,6 +17,16 @@ export const formatZodError = ({ issues }: ZodError): string[] =>
   });
 
 export default class RequestError extends Error {
+  /**
+   * Error message generated using i18n with default language (en).
+   *
+   * @remarks
+   * This message is intended for server-side logging only.
+   * For client-facing messages, use the @see toBody method which provides proper language translation.
+   * @override
+   */
+  declare message: string;
+
   code: LogtoErrorCode;
   status: number;
   expose: boolean;
@@ -32,14 +42,6 @@ export default class RequestError extends Error {
       ...interpolation
     } = typeof input === 'string' ? { code: input } : input;
 
-    /**
-     * For the error log use only.
-     *
-     * @remarks
-     * This error message in constructor uses the global i18n instance to get the user-friendly message in the error log.
-     * It will always use the default language (en) to get the message.
-     * For client-facing error response, use the  @see toBody  method to get the error message translated to the user's language.
-     */
     const message = i18next.t<string, LogtoErrorI18nKey>(`errors:${code}`, {
       ...interpolation,
       interpolation: {
@@ -70,18 +72,16 @@ export default class RequestError extends Error {
    * Parse the error message with i18n context
    */
   toBody(i18next: i18n): RequestErrorBody {
-    return {
-      ...pick(this, 'code', 'data', 'details'),
-      message: this.#getI18nErrorMessage(i18next),
-    };
-  }
-
-  #getI18nErrorMessage(i18next: i18n): string {
-    return i18next.t<string, LogtoErrorI18nKey>(`errors:${this.code}`, {
+    const message = i18next.t<string, LogtoErrorI18nKey>(`errors:${this.code}`, {
       ...this.#i18nInterpolation,
       interpolation: {
         escapeValue: false,
       },
     });
+
+    return {
+      ...pick(this, 'code', 'data', 'details'),
+      message,
+    };
   }
 }
