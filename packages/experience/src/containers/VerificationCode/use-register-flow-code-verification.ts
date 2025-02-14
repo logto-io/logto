@@ -31,7 +31,7 @@ const useRegisterFlowCodeVerification = (
   const navigate = useNavigate();
   const redirectTo = useGlobalRedirectTo();
 
-  const { signInMode } = useSieMethods();
+  const { signInMode, signInMethods } = useSieMethods();
 
   const handleError = useErrorHandler();
 
@@ -56,7 +56,10 @@ const useRegisterFlowCodeVerification = (
     const { type, value } = identifier;
 
     // Should not redirect user to sign-in if is register-only mode
-    if (signInMode === SignInMode.Register) {
+    if (
+      signInMode === SignInMode.Register ||
+      !signInMethods.find(({ identifier }) => identifier === type)?.verificationCode
+    ) {
       void showIdentifierErrorAlert(IdentifierErrorType.IdentifierAlreadyExists, type, value);
 
       return;
@@ -87,17 +90,18 @@ const useRegisterFlowCodeVerification = (
       },
     });
   }, [
-    handleError,
     identifier,
-    navigate,
-    redirectTo,
-    show,
-    showIdentifierErrorAlert,
-    preSignInErrorHandler,
     signInMode,
-    signInWithIdentifierAsync,
+    signInMethods,
+    show,
     t,
+    showIdentifierErrorAlert,
+    signInWithIdentifierAsync,
     verificationId,
+    handleError,
+    preSignInErrorHandler,
+    redirectTo,
+    navigate,
   ]);
 
   const errorHandlers = useMemo<ErrorHandlers>(
