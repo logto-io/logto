@@ -1,8 +1,7 @@
 const enterprise_sso = {
   page_title: 'SSO de la empresa',
   title: 'SSO de la empresa',
-  subtitle:
-    'Conecta el proveedor de identidad de la empresa y habilita el inicio de sesión único iniciado por el proveedor de servicios.',
+  subtitle: 'Conecta el proveedor de identidad de la empresa y habilita el inicio de sesión único.',
   create: 'Agregar conector de la empresa',
   col_connector_name: 'Nombre del conector',
   col_type: 'Tipo',

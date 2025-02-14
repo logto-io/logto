@@ -8,11 +8,9 @@ import { isCloud } from '@/consts/env';
 import { subscriptionPage } from '@/consts/pages';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
-import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import CardTitle from '@/ds-components/CardTitle';
-import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import pageLayout from '@/scss/page-layout.module.scss';
 import { isFeatureEnabled, isPaidPlan } from '@/utils/subscription';
@@ -25,12 +23,10 @@ import styles from './index.module.scss';
 const organizationsPathname = '/organizations';
 
 function Organizations() {
-  const { getDocumentationUrl } = useDocumentationUrl();
   const {
     currentSubscription: { planId, isEnterprisePlan },
     currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
-  const { isDevTenant } = useContext(TenantsContext);
 
   const { navigate } = useTenantPathname();
   const [isCreating, setIsCreating] = useState(false);
@@ -67,10 +63,7 @@ function Organizations() {
           hasAddOnTag={isPaidPlan(planId, isEnterprisePlan)}
           title="organizations.title"
           subtitle="organizations.subtitle"
-          learnMoreLink={{
-            href: getDocumentationUrl(organizationsFeatureLink),
-            targetBlank: 'noopener',
-          }}
+          learnMoreLink={{ href: organizationsFeatureLink }}
         />
         {!isOrganizationsDisabled && (
           <Button

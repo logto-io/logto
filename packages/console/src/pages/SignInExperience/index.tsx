@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import useSWR from 'swr';
 
 import RequestDataError from '@/components/RequestDataError';
+import { authFlows } from '@/consts';
 import { isCloud } from '@/consts/env';
 import CardTitle from '@/ds-components/CardTitle';
 import type { RequestError } from '@/hooks/use-api';
@@ -25,9 +26,10 @@ function PageWrapper({ children }: PageWrapperProps) {
     <SignInExperienceContextProvider>
       <div className={styles.container}>
         <CardTitle
+          className={styles.cardTitle}
           title="sign_in_exp.title"
           subtitle="sign_in_exp.description"
-          className={styles.cardTitle}
+          learnMoreLink={{ href: authFlows }}
         />
         {children}
       </div>

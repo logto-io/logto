@@ -5,7 +5,7 @@ const domain = {
     failed_to_connect: 'Échec de la connexion',
   },
   update_endpoint_notice:
-    'N’oubliez pas de mettre à jour le domaine pour l’URI de rappel du connecteur social et le point de terminaison Logto dans votre application si vous souhaitez utiliser un domaine personnalisé pour les fonctionnalités. <a>{{link}}</a>',
+    'N’oubliez pas de mettre à jour le domaine pour l’URI de rappel du connecteur social et le point de terminaison Logto dans votre application si vous souhaitez utiliser un domaine personnalisé pour les fonctionnalités.',
   error_hint:
     'Assurez-vous de mettre à jour vos enregistrements DNS. Nous continuerons à vérifier toutes les {{value}} secondes.',
   custom: {

@@ -2,7 +2,7 @@ const users = {
   page_title: 'Gerenciamento de usuários',
   title: 'Gerenciamento de usuários',
   subtitle:
-    'Gerenciar identidades de usuários, visualização de logs de usuários, redefinições de senha e exclusão de usuários',
+    'Gerenciar identidades de usuários, visualização de logs de usuários, redefinições de senha e exclusão de usuários.',
   create: 'Adicionar usuário',
   create_subtitle: 'Fornecer pelo menos um dos seguintes campos para prosseguir.',
   error_missing_identifier: 'Você deve fornecer pelo menos um identificador para criar um usuário.',

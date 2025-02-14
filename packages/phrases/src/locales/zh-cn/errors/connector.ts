@@ -30,6 +30,10 @@ const connector = {
   should_specify_target: '你需要声明 target 的值。',
   multiple_target_with_same_platform: '同一平台上，多个社交连接器不能重复使用相同的 “Target”。',
   cannot_overwrite_metadata_for_non_standard_connector: '不可覆盖该连接器的 metadata 参数。',
+  email_connector: {
+    bulk_deletion_no_filter:
+      '必须提供至少一个过滤条件才能通过属性执行批量删除。支持的属性有：{{properties, list(type:conjunction)}}。',
+  },
 };
 
 export default Object.freeze(connector);

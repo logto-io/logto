@@ -11,10 +11,9 @@ export const pricingLink = 'https://logto.io/pricing';
 export const officialWebsiteContactPageLink = 'https://logto.io/contact';
 
 /** Docs link */
-export const envTagsFeatureLink = '/docs/references/tenants/#tenant-type';
-export const organizationsFeatureLink = '/docs/recipes/organizations/';
-export const organizationConfigGuideLink = '/docs/recipes/organizations/configuration/';
-export const protectedAppLink = '/docs/recipes/protected-app/';
+export const organizationsFeatureLink = '/organizations';
+export const organizationConfigGuideLink =
+  '/authorization/organization-template/configure-organization-template';
 export const logtoThirdPartyGuideLink = '/docs/recipes/logto-as-idp/';
 export const logtoThirdPartyAppPermissionsLink =
   '/docs/recipes/logto-as-idp/permissions-management/';
@@ -24,8 +23,7 @@ export const appSpecificBrandingLink =
 export const organizationLogosForExperienceLink =
   '/docs/recipes/customize-sie/match-your-brand/#organization-specific-logos';
 export const signingKeysLink = '/docs/references/openid-connect/signing-keys-rotation/';
-export const organizationTemplateLink =
-  '/docs/recipes/organizations/understand-how-it-works/#organization-template';
+export const organizationTemplateLink = '/authorization/organization-template';
 export const organizationRoleLink =
   '/docs/recipes/organizations/understand-how-it-works/#organization-role';
 export const organizationPermissionLink =
@@ -36,6 +34,35 @@ export const organizationJit = Object.freeze({
     '/docs/recipes/organizations/just-in-time-provisioning/#enterprise-sso-provisioning',
   emailDomain: '/docs/recipes/organizations/just-in-time-provisioning/#email-domain-provisioning',
 });
+export const integrateLogto = '/integrate-logto';
+export const applicationDataStructure = '/integrate-logto/application-data-structure';
+export const thirdPartyApp =
+  '/integrate-logto/third-party-applications/oidc-oauth-third-party-applications';
+export const protectedApp = '/integrate-logto/protected-app';
+export const protectedAppLocalDev = '/integrate-logto/protected-app#local-development';
+export const protectOriginServer = '/integrate-logto/protected-app#protect-your-origin-server';
+export const backchannelLogout = '/end-user-flows/sign-out#federated-sign-out-back-channel-logout';
+export const authFlows = '/end-user-flows#authentication-flows';
+export const termsAndPrivacy = '/end-user-flows/sign-up-and-sign-in/terms-and-privacy';
+export const mfa = '/end-user-flows/mfa';
+export const connectors = '/connectors';
+export const socialConnectors = '/connectors/social-connectors';
+export const emailConnectors = '/connectors/email-connectors';
+export const enterpriseSso = '/connectors/enterprise-connectors';
+export const spInitiatedSsoFlow = '/end-user-flows/enterprise-sso/sp-initiated-sso';
+export const apiResources = '/authorization/api-resources';
+export const rbac = '/authorization/role-based-access-control';
+export const manageRolePermissions =
+  '/authorization/role-based-access-control/configure-permissions#manage-role-permissions';
+export const userManagement = '/authorization/user-management';
+export const userCustomData = '/user-management/user-data#custom-data';
+export const personalAccessToken = '/user-management/personal-access-token';
+export const webhooks = '/developers/webhooks';
+export const secureWebhooks = '/developers/webhooks/secure-webhooks';
+export const auditLogs = '/developers/audit-logs';
+export const logtoCloud = '/logto-cloud';
+export const logtoCloudTenantSettings = '/logto-cloud/tenant-settings';
+export const customDomain = '/logto-cloud/custom-domain#use-custom-domain';
 
 export const addOnPricingExplanationLink =
   'https://blog.logto.io/pricing-add-on-a-simple-explanation/';

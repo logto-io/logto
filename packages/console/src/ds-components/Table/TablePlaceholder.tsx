@@ -3,11 +3,10 @@ import { Theme } from '@logto/schemas';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { Props as TextLinkProps } from '@/ds-components/TextLink';
+import LearnMore, { type Props as LearnMoreProps } from '@/components/LearnMore';
 import useTheme from '@/hooks/use-theme';
 
 import DynamicT from '../DynamicT';
-import TextLink from '../TextLink';
 
 import styles from './TablePlaceholder.module.scss';
 
@@ -16,7 +15,7 @@ type Props = {
   readonly imageDark: ReactNode;
   readonly title: AdminConsoleKey;
   readonly description: AdminConsoleKey;
-  readonly learnMoreLink?: Pick<TextLinkProps, 'href' | 'targetBlank'>;
+  readonly learnMoreLink?: LearnMoreProps;
   readonly action: ReactNode;
 };
 
@@ -32,14 +31,7 @@ function TablePlaceholder({ image, imageDark, title, description, learnMoreLink,
       </div>
       <div className={styles.description}>
         <DynamicT forKey={description} />
-        {learnMoreLink?.href && (
-          <>
-            {' '}
-            <TextLink href={learnMoreLink.href} targetBlank={learnMoreLink.targetBlank}>
-              {t('general.learn_more')}
-            </TextLink>
-          </>
-        )}
+        {learnMoreLink?.href && <LearnMore {...learnMoreLink} />}
       </div>
       {action && <div className={styles.action}>{action}</div>}
     </div>

@@ -9,16 +9,19 @@ import Plus from '@/assets/icons/plus.svg?react';
 import EnterpriseSsoConnectorEmptyDark from '@/assets/images/sso-connector-empty-dark.svg?react';
 import EnterpriseSsoConnectorEmpty from '@/assets/images/sso-connector-empty.svg?react';
 import ItemPreview from '@/components/ItemPreview';
-import ListPage from '@/components/ListPage';
-import { defaultPageSize } from '@/consts';
+import PageMeta from '@/components/PageMeta';
+import { defaultPageSize, enterpriseSso } from '@/consts';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
+import CardTitle from '@/ds-components/CardTitle';
+import Table from '@/ds-components/Table';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import Tag from '@/ds-components/Tag';
 import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
+import pageLayout from '@/scss/page-layout.module.scss';
 import { isPaidPlan } from '@/utils/subscription';
 import { buildUrl } from '@/utils/url';
 
@@ -57,28 +60,35 @@ function EnterpriseSso() {
   const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
 
   return (
-    <ListPage
-      title={{
-        paywall: conditional(!isPaidTenant && latestProPlanId),
-        title: 'enterprise_sso.title',
-        subtitle: 'enterprise_sso.subtitle',
-        hasAddOnTag: isPaidTenant,
-      }}
-      pageMeta={{ titleKey: 'enterprise_sso.page_title' }}
-      createButton={conditional(
-        ssoConnectors?.length && {
-          title: 'enterprise_sso.create',
-          onClick: () => {
-            navigate(createEnterpriseSsoPathname);
-          },
-        }
-      )}
-      table={{
-        rowGroups: [{ key: 'enterprise_sso', data: ssoConnectors }],
-        rowIndexKey: 'id',
-        isLoading,
-        errorMessage: error?.body?.message ?? error?.message,
-        columns: [
+    <div className={pageLayout.container}>
+      <PageMeta titleKey="enterprise_sso.page_title" />
+      <div className={pageLayout.headline}>
+        <CardTitle
+          paywall={conditional(!isPaidTenant && latestProPlanId)}
+          title="enterprise_sso.title"
+          subtitle="enterprise_sso.subtitle"
+          learnMoreLink={{ href: enterpriseSso }}
+          hasAddOnTag={isPaidTenant}
+        />
+        {ssoConnectors?.length && (
+          <Button
+            icon={<Plus />}
+            type="primary"
+            size="large"
+            title="enterprise_sso.create"
+            onClick={() => {
+              navigate(createEnterpriseSsoPathname);
+            }}
+          />
+        )}
+      </div>
+      <Table
+        className={pageLayout.table}
+        rowGroups={[{ key: 'enterprise_sso', data: ssoConnectors }]}
+        rowIndexKey="id"
+        isLoading={isLoading}
+        errorMessage={error?.body?.message ?? error?.message}
+        columns={[
           {
             title: t('enterprise_sso.col_connector_name'),
             dataIndex: 'name',
@@ -125,19 +135,19 @@ function EnterpriseSso() {
                 </div>
               ),
           },
-        ],
-        rowClickHandler: ({ id }) => {
+        ]}
+        rowClickHandler={({ id }) => {
           navigate(buildDetailsPathname(id));
-        },
-        pagination: {
+        }}
+        pagination={{
           page,
           totalCount,
           pageSize,
           onChange: (page) => {
             updateSearchParameters({ page });
           },
-        },
-        placeholder: (
+        }}
+        placeholder={
           <TablePlaceholder
             image={<EnterpriseSsoConnectorEmpty />}
             imageDark={<EnterpriseSsoConnectorEmptyDark />}
@@ -155,24 +165,22 @@ function EnterpriseSso() {
               />
             }
           />
-        ),
-        onRetry: async () => mutate(undefined, true),
-      }}
-      widgets={
-        <SsoCreationModal
-          isOpen={pathname.endsWith(createEnterpriseSsoPathname)}
-          onClose={(ssoConnector) => {
-            if (ssoConnector) {
-              void mutate();
-              navigate(buildDetailsPathname(ssoConnector.id));
-              return;
-            }
+        }
+        onRetry={async () => mutate(undefined, true)}
+      />
+      <SsoCreationModal
+        isOpen={pathname.endsWith(createEnterpriseSsoPathname)}
+        onClose={(ssoConnector) => {
+          if (ssoConnector) {
+            void mutate();
+            navigate(buildDetailsPathname(ssoConnector.id));
+            return;
+          }
 
-            navigate(enterpriseSsoPathname);
-          }}
-        />
-      }
-    />
+          navigate(enterpriseSsoPathname);
+        }}
+      />
+    </div>
   );
 }
 

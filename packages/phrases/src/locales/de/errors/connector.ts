@@ -41,6 +41,10 @@ const connector = {
     'Sie können keine mehreren sozialen Connectors haben, die das gleiche Ziel und die gleiche Plattform haben.',
   cannot_overwrite_metadata_for_non_standard_connector:
     "Die 'Metadaten' dieses Connectors können nicht überschrieben werden.",
+  email_connector: {
+    bulk_deletion_no_filter:
+      'Es muss mindestens eine Filterbedingung angegeben werden, um eine Massenlöschung nach Eigenschaften durchzuführen. Unterstützte Eigenschaften sind: {{properties, list(type:conjunction)}}.',
+  },
 };
 
 export default Object.freeze(connector);

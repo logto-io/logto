@@ -11,16 +11,19 @@ import ApplicationName from '@/components/ApplicationName';
 import { LocaleDate } from '@/components/DateTime';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
-import ListPage from '@/components/ListPage';
+import PageMeta from '@/components/PageMeta';
 import UserAvatar from '@/components/UserAvatar';
-import { defaultPageSize } from '@/consts';
+import { defaultPageSize, userManagement } from '@/consts';
 import { UserDetailsTabs } from '@/consts/page-tabs';
 import Button from '@/ds-components/Button';
+import CardTitle from '@/ds-components/CardTitle';
 import Search from '@/ds-components/Search';
+import Table from '@/ds-components/Table';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
+import pageLayout from '@/scss/page-layout.module.scss';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 import { getUserTitle, getUserSubtitle } from '@/utils/user';
 
@@ -54,27 +57,34 @@ function Users() {
   const isCreating = match(createUserPathname);
 
   return (
-    <ListPage
-      title={{
-        title: 'users.title',
-        subtitle: 'users.subtitle',
-      }}
-      pageMeta={{ titleKey: 'users.page_title' }}
-      createButton={{
-        title: 'users.create',
-        onClick: () => {
-          navigate({
-            pathname: createUserPathname,
-            search,
-          });
-        },
-      }}
-      table={{
-        rowGroups: [{ key: 'users', data: users }],
-        rowIndexKey: 'id',
-        isLoading,
-        errorMessage: error?.body?.message ?? error?.message,
-        columns: [
+    <div className={pageLayout.container}>
+      <PageMeta titleKey="users.page_title" />
+      <div className={pageLayout.headline}>
+        <CardTitle
+          title="users.title"
+          subtitle="users.subtitle"
+          learnMoreLink={{ href: userManagement }}
+        />
+        <Button
+          icon={<Plus />}
+          type="primary"
+          size="large"
+          title="users.create"
+          onClick={() => {
+            navigate({
+              pathname: createUserPathname,
+              search,
+            });
+          }}
+        />
+      </div>
+      <Table
+        className={pageLayout.table}
+        rowGroups={[{ key: 'users', data: users }]}
+        rowIndexKey="id"
+        isLoading={isLoading}
+        errorMessage={error?.body?.message ?? error?.message}
+        columns={[
           {
             title: t('users.user_name'),
             dataIndex: 'name',
@@ -106,8 +116,8 @@ function Users() {
             colSpan: 5,
             render: ({ lastSignInAt }) => <LocaleDate>{lastSignInAt}</LocaleDate>,
           },
-        ],
-        filter: (
+        ]}
+        filter={
           <Search
             placeholder={t('users.search')}
             defaultValue={keyword}
@@ -119,60 +129,60 @@ function Users() {
               updateSearchParameters({ keyword: '', page: 1 });
             }}
           />
-        ),
-        placeholder: keyword ? (
-          <EmptyDataPlaceholder />
-        ) : (
-          <TablePlaceholder
-            image={<UsersEmpty />}
-            imageDark={<UsersEmptyDark />}
-            title="users.placeholder_title"
-            description="users.placeholder_description"
-            action={
-              <Button
-                title="users.create"
-                type="primary"
-                size="large"
-                icon={<Plus />}
-                onClick={() => {
-                  navigate({
-                    pathname: createUserPathname,
-                    search,
-                  });
-                }}
-              />
-            }
-          />
-        ),
-        rowClickHandler: ({ id }) => {
+        }
+        placeholder={
+          keyword ? (
+            <EmptyDataPlaceholder />
+          ) : (
+            <TablePlaceholder
+              image={<UsersEmpty />}
+              imageDark={<UsersEmptyDark />}
+              title="users.placeholder_title"
+              description="users.placeholder_description"
+              action={
+                <Button
+                  title="users.create"
+                  type="primary"
+                  size="large"
+                  icon={<Plus />}
+                  onClick={() => {
+                    navigate({
+                      pathname: createUserPathname,
+                      search,
+                    });
+                  }}
+                />
+              }
+            />
+          )
+        }
+        rowClickHandler={({ id }) => {
           navigate(buildDetailsPathname(id));
-        },
-        pagination: {
+        }}
+        pagination={{
           page,
           pageSize,
           totalCount,
           onChange: (page) => {
             updateSearchParameters({ page });
           },
-        },
-        onRetry: async () => mutate(undefined, true),
-      }}
-      widgets={
-        isCreating && (
-          <CreateForm
-            onClose={() => {
-              navigate({
-                pathname: usersPathname,
-                search,
-              });
-            }}
-            onCreate={() => {
-              void mutate();
-            }}
-          />
-        )
-      }
-    />
+        }}
+        onRetry={async () => mutate(undefined, true)}
+      />
+      {isCreating && (
+        <CreateForm
+          onClose={() => {
+            navigate({
+              pathname: usersPathname,
+              search,
+            });
+          }}
+          onCreate={() => {
+            void mutate();
+          }}
+        />
+      )}
+    </div>
   );
 }
 

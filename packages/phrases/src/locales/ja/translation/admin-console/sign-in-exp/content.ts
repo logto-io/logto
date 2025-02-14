@@ -1,9 +1,10 @@
 const content = {
   terms_of_use: {
     title: 'TERMS',
-    terms_of_use: 'Terms of use URL',
+    description: 'コンプライアンス要件を満たすために、利用規約とプライバシーを追加してください。',
+    terms_of_use: '利用規約 URL',
     terms_of_use_placeholder: 'https://your.terms.of.use/',
-    privacy_policy: 'Privacy policy URL',
+    privacy_policy: 'プライバシーポリシー URL',
     privacy_policy_placeholder: 'https://your.privacy.policy/',
     agree_to_terms: '利用規約に同意する',
     agree_policies: {

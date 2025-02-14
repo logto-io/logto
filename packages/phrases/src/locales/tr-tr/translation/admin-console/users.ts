@@ -2,7 +2,7 @@ const users = {
   page_title: 'Kullanıcı Yönetimi',
   title: 'Kullanıcı Yönetimi',
   subtitle:
-    'Kullanıcı oluşturma, kullanıcı bilgilerini düzenleme, kullanıcı kayıtlarını görüntüleme, parola sıfırlama ve kullanıcıları silme dahil olmak üzere kullanıcı kimliklerini yönetin',
+    'Kullanıcı oluşturma, kullanıcı bilgilerini düzenleme, kullanıcı kayıtlarını görüntüleme, parola sıfırlama ve kullanıcıları silme dahil olmak üzere kullanıcı kimliklerini yönetin.',
   create: 'Kullanıcı ekle',
   create_subtitle: 'Devam etmek için en az bir alanı sağlayın.',
   error_missing_identifier:

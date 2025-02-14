@@ -8,10 +8,13 @@ import Plus from '@/assets/icons/plus.svg?react';
 import ApplicationCreation from '@/components/ApplicationCreation';
 import { type SelectedGuide } from '@/components/Guide/GuideCard';
 import ApplicationPreview from '@/components/ItemPreview/ApplicationPreview';
+import LearnMore from '@/components/LearnMore';
 import PageMeta from '@/components/PageMeta';
+import { integrateLogto } from '@/consts';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
+import DynamicT from '@/ds-components/DynamicT';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import Table from '@/ds-components/Table';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
@@ -101,7 +104,15 @@ function Applications({ tab }: Props) {
     <div className={pageLayout.container}>
       <PageMeta titleKey="applications.title" />
       <div className={pageLayout.headline}>
-        <CardTitle title="applications.title" subtitle="applications.subtitle" />
+        <CardTitle
+          title="applications.title"
+          subtitle={
+            <>
+              <DynamicT forKey="applications.subtitle" />
+              <LearnMore isRelativeDocUrl href={integrateLogto} />
+            </>
+          }
+        />
         {!!totalCount && (
           <Button
             icon={<Plus />}

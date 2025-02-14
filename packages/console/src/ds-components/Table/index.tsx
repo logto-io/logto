@@ -15,7 +15,7 @@ import TableError from './TableError';
 import styles from './index.module.scss';
 import type { Column, RowGroup } from './types';
 
-export type Props<
+type Props<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = {

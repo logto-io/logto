@@ -5,7 +5,7 @@ const domain = {
     failed_to_connect: '連接失敗',
   },
   update_endpoint_notice:
-    '不要忘記在應用程序中更新社交連接器回調URI和Logto端點的域名，如果你想使用自定義域名進行功能。 <a>{{link}}</a>',
+    '不要忘記在應用程序中更新社交連接器回調URI和Logto端點的域名，如果你想使用自定義域名進行功能。',
   error_hint: '確保更新您的 DNS 記錄。我們將繼續每 {{value}} 秒檢查。',
   custom: {
     custom_domain: '自定義域名',

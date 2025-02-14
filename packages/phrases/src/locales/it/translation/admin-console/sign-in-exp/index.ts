@@ -6,7 +6,7 @@ const sign_in_exp = {
   page_title: 'Esperienza di accesso',
   title: 'Esperienza di accesso',
   description:
-    "Personalizza l'interfaccia di accesso per abbinarla al tuo marchio e visualizzala in tempo reale",
+    "Personalizza i flussi di autenticazione e l'interfaccia utente, e visualizza in anteprima l'esperienza predefinita in tempo reale.",
   tabs: {
     branding: 'Marchio',
     sign_up_and_sign_in: 'Registrazione e accesso',

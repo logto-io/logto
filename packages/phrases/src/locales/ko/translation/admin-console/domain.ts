@@ -5,7 +5,7 @@ const domain = {
     failed_to_connect: '연결 실패',
   },
   update_endpoint_notice:
-    '사용자 지정 도메인을 사용하려면 애플리케이션에서 소셜 커넥터 콜백 URI 및 Logto 엔드포인트의 도메인을 업데이트해야합니다. <a>{{link}}</a>',
+    '사용자 지정 도메인을 사용하려면 애플리케이션에서 소셜 커넥터 콜백 URI 및 Logto 엔드포인트의 도메인을 업데이트해야합니다.',
   error_hint: 'DNS 레코드를 업데이트해야합니다. {{value}}초마다 체크하도록 계속합니다.',
   custom: {
     custom_domain: '사용자 지정 도메인',

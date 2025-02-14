@@ -1,8 +1,6 @@
 const protected_app = {
   name: 'Korunaklı Uygulama',
   title: 'Korunaklı Bir Uygulama Oluştur: Kimlik doğrulamayı basitlik ve epik hızla ekleyin',
-  description:
-    'Korunaklı Uygulama güvenli bir şekilde kullanıcı oturumlarını korur ve uygulama isteklerinizi proxyler. Cloudflare Workers tarafından desteklenerek, dünya çapında üstün performanstan ve 0 ms soğuk başlatmadan faydalanın. <a>Daha fazlasını öğrenin</a>',
   fast_create: 'Hızlı oluştur',
   modal_title: 'Korunaklı Uygulama Oluştur',
   modal_subtitle:

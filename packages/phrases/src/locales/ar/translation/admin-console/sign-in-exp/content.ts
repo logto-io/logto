@@ -1,6 +1,7 @@
 const content = {
   terms_of_use: {
     title: 'الشروط',
+    description: 'إضافة الشروط والخصوصية لتلبية متطلبات الامتثال.',
     terms_of_use: 'رابط شروط الاستخدام',
     terms_of_use_placeholder: 'https://your.terms.of.use/',
     privacy_policy: 'رابط سياسة الخصوصية',

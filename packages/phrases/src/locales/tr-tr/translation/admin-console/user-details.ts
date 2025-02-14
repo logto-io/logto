@@ -110,7 +110,7 @@ const user_details = {
     title_short: 'belirteç',
     empty: 'Kullanıcının herhangi bir kişisel erişim belirteci yok.',
     create: 'Yeni belirteç oluştur',
-    tip: 'Kişisel erişim belirteçleri (PATs), kullanıcıların kimlik bilgilerini veya interaktif oturum açmayı kullanmadan erişim belirteçleri vermesini sağlamak için güvenli bir yol sunar. Bu, kaynaklara programatik erişim gerektiren CI/CD, betikler veya uygulamalar için kullanışlıdır. <a>Daha fazla bilgi edinin</a>',
+    tip: 'Kişisel erişim belirteçleri (PATs), kullanıcıların kimlik bilgilerini veya interaktif oturum açmayı kullanmadan erişim belirteçleri vermesini sağlamak için güvenli bir yol sunar. Bu, kaynaklara programatik erişim gerektiren CI/CD, betikler veya uygulamalar için kullanışlıdır.',
     value: 'Değer',
     created_at: 'Oluşturulma tarihi',
     expires_at: 'Son kullanma tarihi',

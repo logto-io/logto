@@ -1,6 +1,7 @@
 const content = {
   terms_of_use: {
     title: 'TERMS',
+    description: 'Uyumluluk gereksinimlerini karşılamak için Şartlar ve Gizlilik ekleyin.',
     terms_of_use: 'Terms of use URL',
     terms_of_use_placeholder: 'https://your.terms.of.use/',
     privacy_policy: 'Privacy policy URL',

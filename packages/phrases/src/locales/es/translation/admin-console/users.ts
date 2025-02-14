@@ -2,7 +2,7 @@ const users = {
   page_title: 'Gestión de usuarios',
   title: 'Gestión de usuarios',
   subtitle:
-    'Administrar identidades de usuario, incluyendo la creación de usuarios, la edición de información de usuario, la visualización de registros de usuario, la restablecimiento de contraseña y la eliminación de usuarios',
+    'Administrar identidades de usuario, incluyendo la creación de usuarios, la edición de información de usuario, la visualización de registros de usuario, la restablecimiento de contraseña y la eliminación de usuarios.',
   create: 'Agregar usuario',
   create_subtitle: 'Proporcione al menos uno de los siguientes campos para continuar.',
   error_missing_identifier: 'Debe proporcionar al menos un identificador para crear un usuario.',

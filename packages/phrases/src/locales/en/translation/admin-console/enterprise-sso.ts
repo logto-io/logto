@@ -1,7 +1,7 @@
 const enterprise_sso = {
   page_title: 'Enterprise SSO',
   title: 'Enterprise SSO',
-  subtitle: 'Connect the enterprise identity provider and enable SP-initiated Single Sign-On.',
+  subtitle: 'Connect the enterprise identity provider and enable Single Sign-On.',
   create: 'Add enterprise connector',
   col_connector_name: 'Connector name',
   col_type: 'Type',

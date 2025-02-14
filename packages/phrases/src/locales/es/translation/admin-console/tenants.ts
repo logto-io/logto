@@ -23,9 +23,9 @@ const tenants = {
     environment_tag_production: 'Producción',
     tenant_type: 'Tipo de inquilino',
     development_description:
-      'Solo para pruebas y no debe usarse en producción. No se requiere suscripción. Tiene todas las características profesionales pero tiene limitaciones como un banner de inicio de sesión. <a>Más información</a>',
+      'Solo para pruebas y no debe usarse en producción. No se requiere suscripción. Tiene todas las características profesionales pero tiene limitaciones como un banner de inicio de sesión.',
     production_description:
-      'Destinado para aplicaciones que son utilizadas por usuarios finales y pueden requerir una suscripción paga. <a>Más información</a>',
+      'Destinado para aplicaciones que son utilizadas por usuarios finales y pueden requerir una suscripción paga.',
     tenant_info_saved: 'Información del inquilino guardada correctamente.',
   },
   full_env_tag: {

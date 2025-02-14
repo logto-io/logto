@@ -17,6 +17,7 @@ import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import DomainStatusTag from '@/components/DomainStatusTag';
 import FormCard from '@/components/FormCard';
 import OpenExternalLink from '@/components/OpenExternalLink';
+import { protectedApp, protectedAppLocalDev, protectOriginServer } from '@/consts';
 import { isCloud } from '@/consts/env';
 import { openIdProviderConfigPath } from '@/consts/oidc';
 import Button from '@/ds-components/Button';
@@ -100,10 +101,7 @@ function ProtectedAppSettings({ data }: Props) {
       <FormCard
         title="application_details.integration"
         description="application_details.integration_description"
-        learnMoreLink={{
-          href: getDocumentationUrl('/docs/references/applications'),
-          targetBlank: 'noopener',
-        }}
+        learnMoreLink={{ href: protectedApp }}
       >
         <div className={styles.launcher}>
           <span>{t('protected_app.success_message')}</span>
@@ -158,7 +156,10 @@ function ProtectedAppSettings({ data }: Props) {
                 <Trans
                   components={{
                     a: (
-                      <TextLink to="https://docs.logto.io/docs/recipes/protected-app/#local-development" />
+                      <TextLink
+                        href={getDocumentationUrl(protectedAppLocalDev)}
+                        targetBlank="noopener"
+                      />
                     ),
                   }}
                 >
@@ -279,9 +280,7 @@ function ProtectedAppSettings({ data }: Props) {
               components={{
                 a: (
                   <TextLink
-                    href={getDocumentationUrl(
-                      '/docs/recipes/protected-app/#protect-your-origin-server'
-                    )}
+                    href={getDocumentationUrl(protectOriginServer)}
                     targetBlank="noopener"
                   />
                 ),

@@ -6,7 +6,7 @@ const sign_in_exp = {
   page_title: 'Experiência de login',
   title: 'Experiência de login',
   description:
-    'Personalize a interface do usuário de login para corresponder à sua marca e visualize em tempo real',
+    'Personalize os fluxos de autenticação e a interface do usuário, e visualize a experiência pronta para uso em tempo real.',
   tabs: {
     branding: 'Marca',
     sign_up_and_sign_in: 'Inscreva-se e faça login',

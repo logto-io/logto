@@ -31,6 +31,10 @@ const connector = {
   should_specify_target: "'목표'를 반드시 지정해야 해요.",
   multiple_target_with_same_platform: '같은 목표와 플랫폼에 여러 소셜 연동을 가질 수 없어요.',
   cannot_overwrite_metadata_for_non_standard_connector: '이 연동의 메타데이터를 덮어쓸 수 없어요.',
+  email_connector: {
+    bulk_deletion_no_filter:
+      '속성에 의한 대량 삭제를 수행하려면 하나 이상의 필터 조건을 제공해야 합니다. 지원되는 속성은 다음과 같습니다: {{properties, list(type:conjunction)}}.',
+  },
 };
 
 export default Object.freeze(connector);

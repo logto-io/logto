@@ -1,12 +1,12 @@
 const api_resources = {
   page_title: 'API-Ressourcen',
   title: 'API-Ressourcen',
-  subtitle: 'Lege APIs an, die du in deinen autorisierten Anwendungen verwenden kannst',
+  subtitle: 'Lege APIs an, die du in deinen autorisierten Anwendungen verwenden kannst.',
   create: 'API-Ressource erstellen',
   api_name: 'API-Name',
   api_name_placeholder: 'Gib einen API-Namen ein',
   api_identifier: 'API-Identifier',
-  api_identifier_placeholder: 'https://your-api-identifier/',
+  api_identifier_placeholder: 'https://your-api-identifier',
   api_identifier_tip:
     'Der eindeutige Identifikator der API-Ressource muss eine absolute URI ohne Fragmentbezeichner (#) sein. Entspricht dem <a>Ressourcenparameter</a> in OAuth 2.0.',
   default_api: 'Standard-API',
