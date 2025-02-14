@@ -37,7 +37,7 @@ export function koaReportSubscriptionUpdates<StateT, ContextT, ResponseBodyT>({
 
     // eslint-disable-next-line no-restricted-syntax
     if (methods.includes(ctx.method.toUpperCase() as Method)) {
-      await quota.reportSubscriptionUpdatesUsage(key);
+      void quota.reportSubscriptionUpdatesUsage(key);
     }
   };
 }

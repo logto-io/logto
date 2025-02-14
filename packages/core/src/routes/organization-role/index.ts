@@ -6,13 +6,11 @@ import {
   type OrganizationRoleKeys,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { condArray } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import { koaReportSubscriptionUpdates, koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 import { organizationRoleSearchKeys } from '#src/queries/organization/index.js';
 import SchemaRouter from '#src/utils/SchemaRouter.js';
 import { parseSearchOptions } from '#src/utils/search.js';
@@ -34,7 +32,6 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
           relations: { rolesScopes, rolesResourceScopes },
         },
       },
-      libraries: { quota },
     },
   ]: RouterInitArgs<T>
 ) {
@@ -45,14 +42,7 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
     unknown,
     ManagementApiRouterContext
   >(OrganizationRoles, roles, {
-    middlewares: condArray(
-      koaQuotaGuard({ key: 'organizationsLimit', quota, methods: ['POST', 'PUT'] }),
-      koaReportSubscriptionUpdates({
-        key: 'organizationsLimit',
-        quota,
-        methods: ['POST', 'PUT', 'DELETE'],
-      })
-    ),
+    middlewares: [],
     disabled: { get: true, post: true },
     errorHandler,
     searchFields: ['name'],
