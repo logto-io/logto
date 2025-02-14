@@ -17,6 +17,9 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 import type { Options } from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
 import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
+import { i18next } from '#src/utils/i18n.js';
+
+import { type WithI18nContext } from '../middleware/koa-i18next.js';
 
 /**
  *  Slonik Query Mock Utils
@@ -91,11 +94,13 @@ export const emptyMiddleware =
 
 export const createContextWithRouteParameters = (
   mockContextOptions?: Options<Record<string, unknown>>
-): Context & IRouterParamContext => {
+): WithI18nContext<Context & IRouterParamContext> => {
   const ctx = createMockContext(mockContextOptions);
 
   return {
     ...ctx,
+    body: ctx.body,
+    status: ctx.status,
     set: ctx.set,
     path: ctx.path,
     URL: ctx.URL,
@@ -105,6 +110,8 @@ export const createContextWithRouteParameters = (
     router: new Router(),
     _matchedRoute: undefined,
     _matchedRouteName: undefined,
+    i18n: i18next,
+    locale: 'en',
   };
 };
 

@@ -12,7 +12,6 @@ describe('koaExperienceSsr()', () => {
   const phrases = { foo: 'bar' };
   const baseCtx = Object.freeze({
     ...createContextWithRouteParameters({}),
-    locale: 'en',
     query: {},
     set: jest.fn(),
   });

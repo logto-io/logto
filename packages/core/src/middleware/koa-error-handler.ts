@@ -9,16 +9,18 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
+import { type WithI18nContext } from './koa-i18next.js';
+
 /**
  * The middleware to handle errors.
  *
  * Note: A context-aware console log is required to be present in the context (i.e. `ctx.console`).
  */
-export default function koaErrorHandler<StateT, ContextT, BodyT>(): Middleware<
+export default function koaErrorHandler<
   StateT,
-  ContextT,
-  BodyT | RequestErrorBody | { message: string }
-> {
+  ContextT extends WithI18nContext,
+  BodyT,
+>(): Middleware<StateT, ContextT, BodyT | RequestErrorBody | { message: string }> {
   return async (ctx, next) => {
     const consoleLog = getConsoleLogFromContext(ctx);
 
@@ -34,7 +36,7 @@ export default function koaErrorHandler<StateT, ContextT, BodyT>(): Middleware<
 
       if (error instanceof RequestError) {
         ctx.status = error.status;
-        ctx.body = error.body;
+        ctx.body = error.toBody(ctx.i18n);
 
         return;
       }

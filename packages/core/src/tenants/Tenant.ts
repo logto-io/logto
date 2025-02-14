@@ -106,11 +106,11 @@ export default class Tenant implements TenantContext {
     // Init app
     const app = new Koa();
 
+    app.use(koaI18next());
     app.use(koaErrorHandler());
     app.use(koaOidcErrorHandler());
     app.use(koaSlonikErrorHandler());
     app.use(koaConnectorErrorHandler());
-    app.use(koaI18next());
     app.use(koaCompress());
     app.use(koaSecurityHeaders(mountedApps, id));
 
