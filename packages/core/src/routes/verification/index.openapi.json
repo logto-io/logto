@@ -3,9 +3,6 @@
     {
       "name": "Verifications",
       "description": "Endpoints for creating and validating verification records, which can be used in Profile routes."
-    },
-    {
-      "name": "Dev feature"
     }
   ],
   "paths": {
@@ -29,10 +26,185 @@
         },
         "responses": {
           "201": {
-            "description": "The verification record was created successfully."
+            "description": "The verification record was created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "verificationRecordId": {
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "422": {
             "description": "The password is invalid."
+          }
+        }
+      }
+    },
+    "/api/verifications/verification-code": {
+      "post": {
+        "operationId": "CreateVerificationByVerificationCode",
+        "summary": "Create a record by verification code",
+        "description": "Create a verification record and send the code to the specified identifier. The code verification can be used to verify the given identifier.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "identifier": {
+                    "description": "The identifier (email address or phone number) to send the verification code to."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The verification code has been successfully sent.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "verificationRecordId": {
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "The connector for sending the verification code is not configured."
+          }
+        }
+      }
+    },
+    "/api/verifications/verification-code/verify": {
+      "post": {
+        "operationId": "VerifyVerificationByVerificationCode",
+        "summary": "Verify verification code",
+        "description": "Verify the provided verification code against the identifier. If successful, the verification record will be marked as verified.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "code": {
+                    "description": "The verification code to be verified."
+                  },
+                  "identifier": {
+                    "description": "The identifier (email address or phone number) to verify the code against. Must match the identifier used to send the verification code."
+                  },
+                  "verificationId": {
+                    "description": "The verification ID of the CodeVerification record."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The verification code has been successfully verified."
+          },
+          "400": {
+            "description": "The verification code is invalid or the maximum number of attempts has been exceeded. Check the error message for details."
+          },
+          "501": {
+            "description": "The connector for sending the verification code is not configured."
+          }
+        }
+      }
+    },
+    "/api/verifications/social": {
+      "post": {
+        "operationId": "CreateVerificationBySocial",
+        "summary": "Create a social verification record",
+        "description": "Create a social verification record and return the authorization URI.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "connectorId": {
+                    "description": "The Logto connector ID."
+                  },
+                  "redirectUri": {
+                    "description": "The URI to navigate back to after the user is authenticated by the connected social identity provider and has granted access to the connector."
+                  },
+                  "state": {
+                    "description": "A random string generated on the client side to prevent CSRF (Cross-Site Request Forgery) attacks."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully created the social verification record and returned the authorization URI.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "verificationRecordId": {
+                      "description": "The ID of the verification record."
+                    },
+                    "authorizationUri": {
+                      "description": "The authorization URI to navigate to for authentication and authorization in the connected social identity provider."
+                    },
+                    "expiresAt": {
+                      "description": "The expiration date and time of the verification record."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The connector specified by connectorId is not found."
+          },
+          "422": {
+            "description": "The connector specified by connectorId is not a valid social connector."
+          }
+        }
+      }
+    },
+    "/api/verifications/social/verify": {
+      "post": {
+        "operationId": "VerifyVerificationBySocial",
+        "summary": "Verify a social verification record",
+        "description": "Verify a social verification record by callback connector data, and save the user information to the record.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "connectorData": {
+                    "description": "A json object constructed from the url query params returned by the social platform. Typically it contains `code`, `state` and `redirectUri` fields."
+                  },
+                  "verificationId": {
+                    "description": "The verification ID of the SocialVerification record."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The social verification record has been successfully verified and the user information has been saved."
           }
         }
       }

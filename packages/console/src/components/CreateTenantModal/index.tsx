@@ -10,7 +10,7 @@ import CreateTenantHeaderIcon from '@/assets/icons/create-tenant-header.svg?reac
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantResponse } from '@/cloud/types/router';
 import Region, { RegionName } from '@/components/Region';
-import { isDevFeaturesEnabled } from '@/consts/env';
+import { availableRegions } from '@/consts';
 import Button from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import FormField from '@/ds-components/FormField';
@@ -125,22 +125,18 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
               rules={{ required: true }}
               render={({ field: { onChange, value, name } }) => (
                 <RadioGroup type="small" name={name} value={value} onChange={onChange}>
-                  {/* Manually maintaining the list of regions to avoid unexpected changes. We may consider using an API in the future. */}
-                  {[RegionName.EU, RegionName.US, RegionName.AU].map(
-                    (region) =>
-                      (isDevFeaturesEnabled || region !== RegionName.AU) && (
-                        <Radio
-                          key={region}
-                          title={
-                            <DangerousRaw>
-                              <Region regionName={region} />
-                            </DangerousRaw>
-                          }
-                          value={region}
-                          isDisabled={isSubmitting}
-                        />
-                      )
-                  )}
+                  {availableRegions.map((region) => (
+                    <Radio
+                      key={region}
+                      title={
+                        <DangerousRaw>
+                          <Region regionName={region} />
+                        </DangerousRaw>
+                      }
+                      value={region}
+                      isDisabled={isSubmitting}
+                    />
+                  ))}
                 </RadioGroup>
               )}
             />

@@ -1,5 +1,3 @@
-import { ReservedPlanId } from '@logto/schemas';
-import { cond } from '@silverhand/essentials';
 import { useContext, useMemo } from 'react';
 
 import { type NewSubscriptionPeriodicUsage } from '@/cloud/types/router';
@@ -9,8 +7,8 @@ import PlanDescription from '@/components/PlanDescription';
 import PlanUsage from '@/components/PlanUsage';
 import SkuName from '@/components/SkuName';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
-import { TenantsContext } from '@/contexts/TenantsProvider';
 import FormField from '@/ds-components/FormField';
+import { isPaidPlan } from '@/utils/subscription';
 
 import AddOnUsageChangesNotification from './AddOnUsageChangesNotification';
 import MauLimitExceedNotification from './MauLimitExceededNotification';
@@ -21,26 +19,11 @@ type Props = {
   readonly periodicUsage?: NewSubscriptionPeriodicUsage;
 };
 
-function CurrentPlan({ periodicUsage: rawPeriodicUsage }: Props) {
+function CurrentPlan({ periodicUsage }: Props) {
   const {
-    currentSku: { id, unitPrice },
-    currentSubscription: { upcomingInvoice, isEnterprisePlan, isAddOnAvailable, planId },
+    currentSku: { unitPrice },
+    currentSubscription: { upcomingInvoice, isEnterprisePlan, planId },
   } = useContext(SubscriptionDataContext);
-  const { currentTenant } = useContext(TenantsContext);
-
-  const periodicUsage = useMemo(
-    () =>
-      rawPeriodicUsage ??
-      cond(
-        currentTenant && {
-          mauLimit: currentTenant.usage.activeUsers,
-          tokenLimit: currentTenant.usage.tokenUsage,
-        }
-      ),
-    [currentTenant, rawPeriodicUsage]
-  );
-
-  const currentSkuId = isEnterprisePlan ? ReservedPlanId.Enterprise : id;
 
   /**
    * After the new pricing model goes live, `upcomingInvoice` will always exist. `upcomingInvoice` is updated more frequently than `currentSubscription.upcomingInvoice`.
@@ -59,25 +42,22 @@ function CurrentPlan({ periodicUsage: rawPeriodicUsage }: Props) {
     <FormCard title="subscription.current_plan" description="subscription.current_plan_description">
       <div className={styles.planInfo}>
         <div className={styles.name}>
-          <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />
+          <SkuName skuId={planId} />
         </div>
         <div className={styles.description}>
-          <PlanDescription skuId={currentSkuId} planId={planId} />
+          <PlanDescription skuId={planId} isEnterprisePlan={isEnterprisePlan} />
         </div>
       </div>
       <FormField title="subscription.plan_usage">
-        <PlanUsage periodicUsage={rawPeriodicUsage} />
+        <PlanUsage periodicUsage={periodicUsage} />
       </FormField>
       <FormField title="subscription.next_bill">
         <BillInfo cost={upcomingCost} isManagePaymentVisible={Boolean(upcomingCost)} />
       </FormField>
-      {isAddOnAvailable && !isEnterprisePlan && (
+      {isPaidPlan(planId, isEnterprisePlan) && !isEnterprisePlan && (
         <AddOnUsageChangesNotification className={styles.notification} />
       )}
-      <MauLimitExceedNotification
-        periodicUsage={rawPeriodicUsage}
-        className={styles.notification}
-      />
+      <MauLimitExceedNotification periodicUsage={periodicUsage} className={styles.notification} />
       <PaymentOverdueNotification className={styles.notification} />
     </FormCard>
   );

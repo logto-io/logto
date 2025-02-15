@@ -1,5 +1,68 @@
 # Change Log
 
+## 1.22.0
+
+### Minor Changes
+
+- 640425414: display support email and website info on experience error pages.
+
+  Added support email and website info to the error pages of the experience app. E.g. when a user tries to access a page that doesn't exist, or when the social session is not found in a social callback page. This will help users to contact support easily when they encounter an error.
+
+  You may configure the support email and website info in the sign-in experience settings page in the Logto console or through the management API.
+
+- 7ebef18e3: add account api
+
+  Introduce the new Account API, designed to give end users direct API access without needing to go through the Management API, here is the highlights:
+
+  1. Direct access: The Account API empowers end users to directly access and manage their own account profile without requiring the relay of Management API.
+  2. User profile and identities management: Users can fully manage their profiles and security settings, including the ability to update identity information like email, phone, and password, as well as manage social connections. MFA and SSO support are coming soon.
+  3. Global access control: Admin has full, global control over access settings, can customize each fields.
+  4. Seamless authorization: Authorizing is easier than ever! Simply use `client.getAccessToken()` to obtain an opaque access token for OP (Logto), and attach it to the Authorization header as `Bearer <access_token>`.
+
+  ## Get started
+
+  > ![Note]
+  > Go to the [Logto Docs](https://bump.sh/logto/doc/logto-user-api) to find full API reference.
+
+  1. Use `/api/account-center` endpoint to enable the feature, for security reason, it is disabled by default. And set fields permission for each field.
+  2. Use `client.getAccessToken()` to get the access token.
+  3. Attach the access token to the Authorization header of your request, and start interacting with the Account API directly from the frontend.
+  4. You may need to setup `logto-verification-id` header as an additional verification for some requests related to identity verification.
+
+  ## What you can do with Account API
+
+  1. Get user account profile
+  2. Update basic information including name, avatar, username and other profile information
+  3. Update password
+  4. Update primary email
+  5. Update primary phone
+  6. Manage social identities
+
+- 640425414: add unknown session redirect url in the sign-in experience settings
+
+  In certain cases, Logto may be unable to properly identify a user’s authentication session when they land on the sign-in page. This can happen if the session has expired, if the user bookmarks the sign-in URL for future access, or if they directly share the sign-in link. By default, an "unknown session" 404 error is displayed.
+
+  To improve user experience, we have added a new `unknownSessionRedirectUrl` field in the sign-in experience settings.You can configure this field to redirect users to a custom URL when an unknown session is detected. This will help users to easily navigate to your client application or website and reinitiate the authentication process automatically.
+
+### Patch Changes
+
+- Updated dependencies [640425414]
+- Updated dependencies [640425414]
+- Updated dependencies [7ebef18e3]
+- Updated dependencies [640425414]
+  - @logto/phrases@1.15.0
+  - @logto/phrases-experience@1.9.0
+  - @logto/connector-kit@4.1.0
+
+## 1.21.0
+
+### Patch Changes
+
+- Updated dependencies [bc2a0ac03]
+- Updated dependencies [3c993d59c]
+  - @logto/shared@3.1.2
+  - @logto/phrases@1.14.1
+
 ## 1.20.0
 
 ### Minor Changes

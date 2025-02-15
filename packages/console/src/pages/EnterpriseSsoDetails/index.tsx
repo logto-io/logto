@@ -1,6 +1,10 @@
-import { type SignInExperience, type SsoConnectorWithProviderConfig } from '@logto/schemas';
+import {
+  SsoProviderType,
+  type SignInExperience,
+  type SsoConnectorWithProviderConfig,
+} from '@logto/schemas';
 import { pick } from '@silverhand/essentials';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
@@ -12,6 +16,8 @@ import Skeleton from '@/components/DetailsPage/Skeleton';
 import Drawer from '@/components/Drawer';
 import PageMeta from '@/components/PageMeta';
 import { EnterpriseSsoDetailsTabs } from '@/consts';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import DynamicT from '@/ds-components/DynamicT';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
@@ -22,6 +28,7 @@ import SsoConnectorLogo from '../EnterpriseSso/SsoConnectorLogo';
 
 import Connection from './Connection';
 import Experience from './Experience';
+import IdpInitiatedAuth from './IdpInitiatedAuth';
 import SsoGuide from './SsoGuide';
 import { enterpriseSsoPathname } from './config';
 import styles from './index.module.scss';
@@ -35,6 +42,7 @@ function EnterpriseSsoDetails() {
   const { ssoConnectorId, tab } = useParams();
 
   const { isDeleted, isDeleting, onDeleteHandler } = useDeleteConnector(ssoConnectorId);
+  const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
 
   const [isReadmeOpen, setIsReadmeOpen] = useState(false);
 
@@ -58,6 +66,15 @@ function EnterpriseSsoDetails() {
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
 
   const isDarkModeEnabled = signInExperience?.color.isDarkModeEnabled ?? false;
+
+  const isIdpInitiatedAuthConfigEnabled = useMemo(
+    () =>
+      isDevFeaturesEnabled &&
+      isCloud &&
+      ssoConnector?.providerType === SsoProviderType.SAML &&
+      currentSubscriptionQuota.idpInitiatedSsoEnabled,
+    [ssoConnector, currentSubscriptionQuota]
+  );
 
   useEffect(() => {
     setIsDeleteAlertOpen(false);
@@ -136,6 +153,16 @@ function EnterpriseSsoDetails() {
             >
               <DynamicT forKey="enterprise_sso_details.tab_experience" />
             </TabNavItem>
+            {isIdpInitiatedAuthConfigEnabled && (
+              <TabNavItem
+                href={getSsoConnectorDetailsPathname(
+                  ssoConnectorId,
+                  EnterpriseSsoDetailsTabs.IdpInitiatedAuth
+                )}
+              >
+                <DynamicT forKey="enterprise_sso_details.tab_idp_initiated_auth" />
+              </TabNavItem>
+            )}
           </TabNav>
           {tab === EnterpriseSsoDetailsTabs.Experience && (
             <Experience
@@ -155,6 +182,9 @@ function EnterpriseSsoDetails() {
                 void mutate(ssoConnector);
               }}
             />
+          )}
+          {isIdpInitiatedAuthConfigEnabled && tab === EnterpriseSsoDetailsTabs.IdpInitiatedAuth && (
+            <IdpInitiatedAuth ssoConnector={ssoConnector} />
           )}
           <ConfirmModal
             isOpen={isDeleteAlertOpen}

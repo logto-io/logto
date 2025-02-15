@@ -9,6 +9,8 @@ export * from './users.js';
 export * from './sso-connector.js';
 export * from './applications.js';
 export * from './verification-records.js';
+export * from './account-centers.js';
+export * from './saml-application-configs.js';
 
 export {
   configurableConnectorMetadataGuard,

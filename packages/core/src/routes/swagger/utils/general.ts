@@ -138,9 +138,7 @@ const validateSupplementPaths = (
         if (
           isKeyInObject(operation, 'tags') &&
           Array.isArray(operation.tags) &&
-          !operation.tags.every(
-            (tag) => typeof tag === 'string' && [cloudOnlyTag, devFeatureTag].includes(tag)
-          )
+          !operation.tags.every((tag) => typeof tag === 'string' && reservedTags.has(tag))
         ) {
           throw new TypeError(
             `Cannot use \`tags\` in supplement document on path \`${path}\` and operation \`${method}\` except for tag \`${cloudOnlyTag}\` and \`${devFeatureTag}\`. Define tags in the document root instead.`

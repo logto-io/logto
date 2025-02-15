@@ -1,5 +1,5 @@
 import { type Sentinel } from '@logto/schemas';
-import type Provider from 'oidc-provider';
+import type { Provider } from 'oidc-provider';
 
 import type { EnvSet } from '#src/env-set/index.js';
 import type { CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';

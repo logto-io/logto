@@ -88,3 +88,7 @@ export const ssoConnectorWithProviderConfigGuard = SsoConnectors.guard
   );
 
 export type SsoConnectorWithProviderConfig = z.infer<typeof ssoConnectorWithProviderConfigGuard>;
+
+export enum SsoAuthenticationQueryKey {
+  SsoConnectorId = 'ssoConnectorId',
+}

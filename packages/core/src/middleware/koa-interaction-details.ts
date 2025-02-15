@@ -1,6 +1,6 @@
 import type { MiddlewareType } from 'koa';
 import { type IRouterParamContext } from 'koa-router';
-import type Provider from 'oidc-provider';
+import type { Provider } from 'oidc-provider';
 
 export type WithInteractionDetailsContext<
   ContextT extends IRouterParamContext = IRouterParamContext,

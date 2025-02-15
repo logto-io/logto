@@ -8,7 +8,13 @@ The HTTP email connector allows you to send emails via HTTP call. To use the HTT
 
 ## Set up HTTP email connector
 
-To use the HTTP email connector, you need to set up an HTTP endpoint that Logto can call. And an optional authorization token for the endpoint.
+To use the HTTP email connector, you need to set up an HTTP endpoint that Logto can call, and an optional authorization token for the endpoint.
+
+> 💡 **Tip**
+>
+> Note that to prevent errors in authentication flow, the configured `endpoint` must return a 2xx response after receiving the webhook to inform Logto that it has received the notification to send the email.
+>
+> Meanwhile, in this scenario, you need to monitor email service to ensure successful email delivery. Alternatively, you can add monitoring to your email sending API to promptly detect email delivery failures.
 
 ## Payload
 

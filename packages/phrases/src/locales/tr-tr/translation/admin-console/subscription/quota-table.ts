@@ -102,6 +102,7 @@ const quota_table = {
   included: '{{value, number}} dahil',
   included_mao: '{{value, number}} MAO dahil',
   extra_quota_price: 'Sonra aylık ${{value, number}} / sonrasında her biri',
+  extra_token_price: 'Sonra aylık ${{value, number}} / {{amount, number}} her biri',
   per_month_each: 'Aylık ${{value, number}} / her biri',
   extra_mao_price: 'Sonra MAO başına ${{value, number}}',
   per_month: 'Aylık ${{value, number}}',

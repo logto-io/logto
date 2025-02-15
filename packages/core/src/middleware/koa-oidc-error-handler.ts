@@ -95,6 +95,9 @@ export default function koaOidcErrorHandler<StateT, ContextT>(): Middleware<Stat
       // See https://github.com/panva/node-oidc-provider/blob/37d0a6cfb3c618141a44cbb904ce45659438f821/lib/shared/error_handler.js
       ctx.status = error.statusCode || 500;
       ctx.body = errorOut(error);
+
+      // Track the original error in App Insights.
+      void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
     }
 
     // Parse the `parse_error` from the query string.

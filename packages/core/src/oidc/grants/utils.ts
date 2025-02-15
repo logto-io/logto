@@ -1,7 +1,7 @@
 import { buildOrganizationUrn } from '@logto/core-kit';
 import { cond } from '@silverhand/essentials';
-import type Provider from 'oidc-provider';
-import { type Account, errors, type KoaContextWithOIDC } from 'oidc-provider';
+import { errors } from 'oidc-provider';
+import type { Provider, Account, KoaContextWithOIDC } from 'oidc-provider';
 import certificateThumbprint from 'oidc-provider/lib/helpers/certificate_thumbprint.js';
 import epochTime from 'oidc-provider/lib/helpers/epoch_time.js';
 import dpopValidate from 'oidc-provider/lib/helpers/validate_dpop.js';

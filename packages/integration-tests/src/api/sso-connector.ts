@@ -1,10 +1,13 @@
 import {
+  type CreateSsoConnectorIdpInitiatedAuthConfig,
   SsoProviderName,
   type CreateSsoConnector,
   type SsoConnector,
   type SsoConnectorProvidersResponse,
+  type SsoConnectorIdpInitiatedAuthConfig,
 } from '@logto/schemas';
 
+import { metadataXml } from '#src/__mocks__/sso-connectors-mock.js';
 import { authedAdminApi } from '#src/api/api.js';
 import { logtoUrl } from '#src/constants.js';
 import { randomString } from '#src/utils.js';
@@ -65,11 +68,29 @@ export class SsoConnectorApi {
     return connector;
   }
 
+  async createMockSamlConnector(domains: string[], connectorName?: string, metadata?: string) {
+    const connector = await this.create({
+      providerName: SsoProviderName.SAML,
+      connectorName: connectorName ?? `test-saml-${randomString()}`,
+      domains,
+      config: {
+        metadata: metadata ?? metadataXml,
+      },
+      syncProfile: true,
+    });
+
+    return connector;
+  }
+
   async create(data: Partial<CreateSsoConnector>): Promise<SsoConnector> {
     const connector = await createSsoConnector(data);
 
     this.connectorInstances.set(connector.id, connector);
     return connector;
+  }
+
+  async getSsoConnectorById(id: string) {
+    return getSsoConnectorById(id);
   }
 
   async delete(id: string) {
@@ -81,6 +102,27 @@ export class SsoConnectorApi {
     await Promise.all(
       Array.from(this.connectorInstances.keys()).map(async (id) => this.delete(id))
     );
+  }
+
+  async setSsoConnectorIdpInitiatedAuthConfig(data: CreateSsoConnectorIdpInitiatedAuthConfig) {
+    const { connectorId, ...rest } = data;
+    return authedAdminApi
+      .put(`sso-connectors/${connectorId}/idp-initiated-auth-config`, {
+        json: rest,
+      })
+      .json<SsoConnectorIdpInitiatedAuthConfig>();
+  }
+
+  async getSsoConnectorIdpInitiatedAuthConfig(connectorId: string) {
+    return authedAdminApi
+      .get(`sso-connectors/${connectorId}/idp-initiated-auth-config`)
+      .json<SsoConnectorIdpInitiatedAuthConfig>();
+  }
+
+  async deleteSsoConnectorIdpInitiatedAuthConfig(connectorId: string) {
+    return authedAdminApi
+      .delete(`sso-connectors/${connectorId}/idp-initiated-auth-config`)
+      .json<void>();
   }
 
   get firstConnectorId() {

@@ -94,6 +94,8 @@ const description = {
     'Enter you {{types, list(type: disjunction;)}} to create a new account.',
   all_account_creation_options: 'All account creation options',
   back_to_sign_in: 'Back to sign in',
+  support_email: 'Support email: <link></link>',
+  support_website: 'Support website: <link></link>',
 };
 
 export default Object.freeze(description);

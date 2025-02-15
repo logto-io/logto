@@ -1,0 +1,274 @@
+{
+  "tags": [
+    {
+      "name": "My account",
+      "description": "Account routes provide functionality for managing user profile for the end user to interact directly with access tokens."
+    }
+  ],
+  "paths": {
+    "/api/my-account": {
+      "get": {
+        "operationId": "GetProfile",
+        "summary": "Get profile",
+        "description": "Get profile for the user.",
+        "responses": {
+          "200": {
+            "description": "The profile was retrieved successfully."
+          }
+        }
+      },
+      "patch": {
+        "operationId": "UpdateProfile",
+        "summary": "Update profile",
+        "description": "Update profile for the user, only the fields that are passed in will be updated.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "The new name for the user."
+                  },
+                  "avatar": {
+                    "description": "The new avatar for the user, must be a URL."
+                  },
+                  "username": {
+                    "description": "The new username for the user, must be a valid username and unique."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The profile was updated successfully."
+          },
+          "400": {
+            "description": "The request body is invalid."
+          },
+          "422": {
+            "description": "The username is already in use."
+          }
+        }
+      }
+    },
+    "/api/my-account/profile": {
+      "patch": {
+        "operationId": "UpdateOtherProfile",
+        "summary": "Update other profile",
+        "description": "Update other profile for the user, only the fields that are passed in will be updated, to update the address, the user must have the address scope.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "familyName": {
+                    "description": "The new family name for the user."
+                  },
+                  "givenName": {
+                    "description": "The new given name for the user."
+                  },
+                  "middleName": {
+                    "description": "The new middle name for the user."
+                  },
+                  "nickname": {
+                    "description": "The new nickname for the user."
+                  },
+                  "preferredUsername": {
+                    "description": "The new preferred username for the user."
+                  },
+                  "profile": {
+                    "description": "The new profile for the user."
+                  },
+                  "website": {
+                    "description": "The new website for the user."
+                  },
+                  "gender": {
+                    "description": "The new gender for the user."
+                  },
+                  "birthdate": {
+                    "description": "The new birthdate for the user."
+                  },
+                  "zoneinfo": {
+                    "description": "The new zoneinfo for the user."
+                  },
+                  "locale": {
+                    "description": "The new locale for the user."
+                  },
+                  "address": {
+                    "description": "The new address for the user."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The profile was updated successfully."
+          }
+        }
+      }
+    },
+    "/api/my-account/password": {
+      "post": {
+        "operationId": "UpdatePassword",
+        "summary": "Update password",
+        "description": "Update password for the user, a logto-verification-id in header is required for checking sensitive permissions.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "password": {
+                    "description": "The new password for the user."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The password was updated successfully."
+          },
+          "403": {
+            "description": "Permission denied, the verification record is invalid."
+          }
+        }
+      }
+    },
+    "/api/my-account/primary-email": {
+      "post": {
+        "operationId": "UpdatePrimaryEmail",
+        "summary": "Update primary email",
+        "description": "Update primary email for the user, a logto-verification-id in header is required for checking sensitive permissions, and a new identifier verification record is required for the new email ownership verification.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "email": {
+                    "description": "The new email for the user."
+                  },
+                  "newIdentifierVerificationRecordId": {
+                    "description": "The identifier verification record ID for the new email ownership verification."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The primary email was updated successfully."
+          },
+          "400": {
+            "description": "The new verification record is invalid."
+          },
+          "403": {
+            "description": "Permission denied, the verification record is invalid."
+          }
+        }
+      },
+      "delete": {
+        "operationId": "DeletePrimaryEmail",
+        "summary": "Delete primary email",
+        "description": "Delete primary email for the user, a verification-record-id in header is required for checking sensitive permissions.",
+        "responses": {
+          "204": {
+            "description": "The primary email was deleted successfully."
+          }
+        }
+      }
+    },
+    "/api/my-account/primary-phone": {
+      "post": {
+        "operationId": "UpdatePrimaryPhone",
+        "summary": "Update primary phone",
+        "description": "Update primary phone for the user, a logto-verification-id in header is required for checking sensitive permissions, and a new identifier verification record is required for the new phone ownership verification.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "phone": {
+                    "description": "The new phone for the user."
+                  },
+                  "newIdentifierVerificationRecordId": {
+                    "description": "The identifier verification record ID for the new phone ownership verification."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The primary phone was updated successfully."
+          },
+          "400": {
+            "description": "The new verification record is invalid."
+          },
+          "403": {
+            "description": "Permission denied, the verification record is invalid."
+          }
+        }
+      },
+      "delete": {
+        "operationId": "DeletePrimaryPhone",
+        "summary": "Delete primary phone",
+        "description": "Delete primary phone for the user, a verification-record-id in header is required for checking sensitive permissions.",
+        "responses": {
+          "204": {
+            "description": "The primary phone was deleted successfully."
+          }
+        }
+      }
+    },
+    "/api/my-account/identities": {
+      "post": {
+        "operationId": "AddUserIdentities",
+        "summary": "Add a user identity",
+        "description": "Add an identity (social identity) to the user, a logto-verification-id in header is required for checking sensitive permissions, and a verification record for the social identity is required.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "newIdentifierVerificationRecordId": {
+                    "description": "The identifier verification record ID for the new social identity ownership verification."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The identity was added successfully."
+          }
+        }
+      }
+    },
+    "/api/my-account/identities/{target}": {
+      "delete": {
+        "operationId": "DeleteIdentity",
+        "summary": "Delete a user identity",
+        "description": "Delete an identity (social identity) from the user, a logto-verification-id in header is required for checking sensitive permissions.",
+        "responses": {
+          "204": {
+            "description": "The identity was deleted successfully."
+          },
+          "400": {
+            "description": "The verification record is invalid."
+          },
+          "404": {
+            "description": "The identity does not exist."
+          }
+        }
+      }
+    }
+  }
+}

@@ -25,7 +25,7 @@ type Props = {
 function Footer({ isCreationLoading, onClickCreate }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
-    currentSubscription: { planId, isAddOnAvailable, isEnterprisePlan },
+    currentSubscription: { planId, isEnterprisePlan },
     currentSubscriptionUsage: { resourcesLimit },
     currentSku,
   } = useContext(SubscriptionDataContext);
@@ -47,7 +47,7 @@ function Footer({ isCreationLoading, onClickCreate }: Props) {
         <Trans
           components={{
             a: <ContactUsPhraseLink />,
-            planName: <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />,
+            planName: <SkuName skuId={planId} />,
           }}
         >
           {t('upsell.paywall.resources', {
@@ -59,7 +59,6 @@ function Footer({ isCreationLoading, onClickCreate }: Props) {
   }
 
   if (
-    isAddOnAvailable &&
     hasReachedLimit &&
     // Just in case the enterprise plan has reached the resource limit, we still need to show charge notice.
     isPaidPlan(planId, isEnterprisePlan) &&

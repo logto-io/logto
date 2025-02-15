@@ -34,6 +34,18 @@ const reservedRoutes: Readonly<string[]> = Object.freeze([
   ...Object.values(GlobalRoute),
 ]);
 
+/**
+ * The reserved tenant ID wildcard for the last-visited tenant. Useful when specifying a console URL in
+ * the documentation or other places where the actual user tenant ID is unknown. The wildcard value "to"
+ * will be replaced by the detected last-visited tenant ID in the runtime.
+ *
+ * @example
+ * ```md
+ * [Console > Applications](https://cloud.logto.io/to/applications)
+ * ```
+ */
+export const reservedTenantIdWildcard = 'to';
+
 /** @see {@link TenantsProvider} for why `useSWR()` is not applicable for this context. */
 type Tenants = {
   tenants: readonly TenantResponse[];
@@ -118,31 +130,49 @@ function TenantsProvider({ children }: Props) {
     [currentTenantId, tenants]
   );
 
+  const resetTenants = useCallback((tenants: TenantResponse[]) => {
+    setTenants(tenants);
+    setIsInitComplete(true);
+  }, []);
+
+  const prependTenant = useCallback((tenant: TenantResponse) => {
+    setTenants((tenants) => [tenant, ...tenants]);
+  }, []);
+
+  const removeTenant = useCallback((tenantId: string) => {
+    setTenants((tenants) => tenants.filter((tenant) => tenant.id !== tenantId));
+  }, []);
+
+  const updateTenant = useCallback((tenantId: string, data: Partial<TenantResponse>) => {
+    setTenants((tenants) =>
+      tenants.map((tenant) => (tenant.id === tenantId ? { ...tenant, ...data } : tenant))
+    );
+  }, []);
+
   const memorizedContext = useMemo(
     () => ({
       tenants,
-      resetTenants: (tenants: TenantResponse[]) => {
-        setTenants(tenants);
-        setIsInitComplete(true);
-      },
-      prependTenant: (tenant: TenantResponse) => {
-        setTenants((tenants) => [tenant, ...tenants]);
-      },
-      removeTenant: (tenantId: string) => {
-        setTenants((tenants) => tenants.filter((tenant) => tenant.id !== tenantId));
-      },
-      updateTenant: (tenantId: string, data: Partial<TenantResponse>) => {
-        setTenants((tenants) =>
-          tenants.map((tenant) => (tenant.id === tenantId ? { ...tenant, ...data } : tenant))
-        );
-      },
+      resetTenants,
+      prependTenant,
+      removeTenant,
+      updateTenant,
       isInitComplete,
       currentTenantId,
       isDevTenant: currentTenant?.tag === TenantTag.Development,
       currentTenant,
       navigateTenant,
     }),
-    [currentTenant, currentTenantId, isInitComplete, navigateTenant, tenants]
+    [
+      currentTenant,
+      currentTenantId,
+      isInitComplete,
+      navigateTenant,
+      tenants,
+      resetTenants,
+      prependTenant,
+      removeTenant,
+      updateTenant,
+    ]
   );
 
   return <TenantsContext.Provider value={memorizedContext}>{children}</TenantsContext.Provider>;

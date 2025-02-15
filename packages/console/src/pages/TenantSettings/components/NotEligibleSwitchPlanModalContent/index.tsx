@@ -1,4 +1,3 @@
-import { ReservedPlanId } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -14,6 +13,7 @@ import {
 import DynamicT from '@/ds-components/DynamicT';
 import { type LogtoSkuQuota, type LogtoSkuQuotaEntries } from '@/types/skus';
 import { sortBy } from '@/utils/sort';
+import { isProPlan } from '@/utils/subscription';
 
 import styles from './index.module.scss';
 
@@ -64,7 +64,7 @@ export function NotEligibleSwitchSkuModalContent({
         >
           {t(isDowngrade ? 'downgrade_description' : 'upgrade_description')}
         </Trans>
-        {!isDowngrade && id === ReservedPlanId.Pro && t('upgrade_pro_tip')}
+        {!isDowngrade && isProPlan(id) && t('upgrade_pro_tip')}
       </div>
       <ul className={styles.list}>
         {orderedEntries.map(([quotaKey, quotaValue]) => {

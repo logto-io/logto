@@ -6,10 +6,10 @@ import dayjs from 'dayjs';
 import { tryReadResponseErrorBody } from '@/cloud/hooks/use-cloud-api';
 import { type LogtoSkuResponse } from '@/cloud/types/router';
 import { ticketSupportResponseTimeMap } from '@/consts/plan-quotas';
-import { featuredPlanIdOrder, featuredPlanIds } from '@/consts/subscriptions';
+import { featuredPlanIds, planIdOrder } from '@/consts/subscriptions';
 import { type LogtoSkuQuota } from '@/types/skus';
 
-export const addSupportQuota = (logtoSkuResponse: LogtoSkuResponse) => {
+const addSupportQuota = (logtoSkuResponse: LogtoSkuResponse) => {
   const { id, quota } = logtoSkuResponse;
 
   return {
@@ -24,15 +24,38 @@ export const addSupportQuota = (logtoSkuResponse: LogtoSkuResponse) => {
   };
 };
 
+/**
+ * Format Logto SKUs responses.
+ *
+ * - add support quota to the SKUs.
+ * - Sort the SKUs by the order of `featuredPlanIdOrder`.
+ */
+export const formatLogtoSkusResponses = (logtoSkus: LogtoSkuResponse[] | undefined) => {
+  if (!logtoSkus) {
+    return [];
+  }
+
+  return logtoSkus.map((logtoSku) => addSupportQuota(logtoSku));
+};
+
 const getSubscriptionPlanOrderById = (id: string) => {
-  const index = featuredPlanIdOrder.indexOf(id);
+  const index = planIdOrder[id];
 
   // Note: if the plan id is not in the featuredPlanIdOrder, it will be treated as the highest priority
-  return index === -1 ? Number.POSITIVE_INFINITY : index;
+  // E.g. enterprise plan.
+  return index ?? Number.POSITIVE_INFINITY;
 };
 
 export const isDowngradePlan = (fromPlanId: string, toPlanId: string) =>
   getSubscriptionPlanOrderById(fromPlanId) > getSubscriptionPlanOrderById(toPlanId);
+
+/**
+ * Check if the two plan ids are equivalent,
+ * one is grandfathered and the other is public visible featured plan.
+ */
+export const isEquivalentPlan = (fromPlanId: string, toPlanId: string) =>
+  fromPlanId !== toPlanId &&
+  getSubscriptionPlanOrderById(fromPlanId) === getSubscriptionPlanOrderById(toPlanId);
 
 type FormatPeriodOptions = {
   periodStart: Date;
@@ -78,12 +101,31 @@ export const parseExceededSkuQuotaLimitError = async (
   return [true, Object.keys(exceededQuota) as Array<keyof LogtoSkuQuota>];
 };
 
+/**
+ * Filter the featured plans (public visible) from the Logto SKUs API response.
+ * and sorted by the order of {@link planIdOrder}.
+ */
 export const pickupFeaturedLogtoSkus = (logtoSkus: LogtoSkuResponse[]): LogtoSkuResponse[] =>
-  logtoSkus.filter(({ id }) => featuredPlanIds.includes(id));
+  logtoSkus
+    .filter(({ id }) => featuredPlanIds.includes(id))
+    .slice()
+    .sort(
+      ({ id: previousId }, { id: nextId }) =>
+        getSubscriptionPlanOrderById(previousId) - getSubscriptionPlanOrderById(nextId)
+    );
 
 export const isPaidPlan = (planId: string, isEnterprisePlan: boolean) =>
-  planId === ReservedPlanId.Pro || isEnterprisePlan;
+  isProPlan(planId) || isEnterprisePlan;
 
 export const isFeatureEnabled = (quota: Nullable<number>): boolean => {
   return quota === null || quota > 0;
 };
+
+/**
+ * We may have more than one pro planId in the future.
+ * E.g grandfathered {@link ReservedPlanId.Pro} and new {@link ReservedPlanId.Pro202411}.
+ * User this function to check if the planId can be considered as a pro plan.
+ */
+export const isProPlan = (planId: string) =>
+  // eslint-disable-next-line no-restricted-syntax
+  [ReservedPlanId.Pro, ReservedPlanId.Pro202411].includes(planId as ReservedPlanId);

@@ -1,5 +1,5 @@
 // TODO: @darcyYe refactor this file later to remove disable max line comment
-
+/* eslint-disable max-lines */
 import type { Role } from '@logto/schemas';
 import {
   Applications,
@@ -147,9 +147,13 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       response: Applications.guard,
       status: [200, 400, 422, 500],
     }),
-
+    // eslint-disable-next-line complexity
     async (ctx, next) => {
       const { oidcClientMetadata, protectedAppMetadata, ...rest } = ctx.guard.body;
+
+      if (rest.type === ApplicationType.SAML) {
+        throw new RequestError('application.saml.use_saml_app_api');
+      }
 
       await Promise.all([
         rest.type === ApplicationType.MachineToMachine &&
@@ -252,7 +256,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         })
       ),
       response: Applications.guard,
-      status: [200, 404, 422, 500],
+      status: [200, 400, 404, 422, 500],
     }),
     async (ctx, next) => {
       const {
@@ -261,6 +265,11 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       } = ctx.guard;
 
       const { isAdmin, protectedAppMetadata, ...rest } = body;
+
+      const pendingUpdateApplication = await queries.applications.findApplicationById(id);
+      if (pendingUpdateApplication.type === ApplicationType.SAML) {
+        throw new RequestError('application.saml.use_saml_app_api');
+      }
 
       // @deprecated
       // User can enable the admin access of Machine-to-Machine apps by switching on a toggle on Admin Console.
@@ -292,8 +301,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       }
 
       if (protectedAppMetadata) {
-        const { type, protectedAppMetadata: originProtectedAppMetadata } =
-          await queries.applications.findApplicationById(id);
+        const { type, protectedAppMetadata: originProtectedAppMetadata } = pendingUpdateApplication;
         assertThat(type === ApplicationType.Protected, 'application.protected_application_only');
         assertThat(
           originProtectedAppMetadata,
@@ -319,9 +327,10 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         }
       }
 
-      ctx.body = await (Object.keys(rest).length > 0
-        ? queries.applications.updateApplicationById(id, rest, 'replace')
-        : queries.applications.findApplicationById(id));
+      ctx.body =
+        Object.keys(rest).length > 0
+          ? await queries.applications.updateApplicationById(id, rest, 'replace')
+          : pendingUpdateApplication;
 
       return next();
     }
@@ -332,11 +341,16 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
     koaGuard({
       params: object({ id: string().min(1) }),
       response: z.undefined(),
-      status: [204, 404, 422],
+      status: [204, 400, 404, 422],
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
       const { type, protectedAppMetadata } = await queries.applications.findApplicationById(id);
+
+      if (type === ApplicationType.SAML) {
+        throw new RequestError('application.saml.use_saml_app_api');
+      }
+
       if (type === ApplicationType.Protected && protectedAppMetadata) {
         assertThat(
           !protectedAppMetadata.customDomains || protectedAppMetadata.customDomains.length === 0,
@@ -359,3 +373,4 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
 
   applicationCustomDataRoutes(router, tenant);
 }
+/* eslint-enable max-lines */

@@ -1,4 +1,3 @@
-import { ReservedPlanId } from '@logto/schemas';
 import { cond } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useCallback, useContext, useState } from 'react';
@@ -11,8 +10,8 @@ import PageMeta from '@/components/PageMeta';
 import { OrganizationTemplateTabs, organizationTemplateLink } from '@/consts';
 import { isCloud } from '@/consts/env';
 import { subscriptionPage } from '@/consts/pages';
+import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
-import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import CardTitle from '@/ds-components/CardTitle';
@@ -22,7 +21,7 @@ import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import pageLayout from '@/scss/page-layout.module.scss';
-import { isFeatureEnabled } from '@/utils/subscription';
+import { isFeatureEnabled, isPaidPlan } from '@/utils/subscription';
 
 import Introduction from '../Organizations/Introduction';
 
@@ -34,14 +33,16 @@ function OrganizationTemplate() {
   const { getDocumentationUrl } = useDocumentationUrl();
   const [isGuideDrawerOpen, setIsGuideDrawerOpen] = useState(false);
   const {
-    currentSubscription: { planId },
+    currentSubscription: { planId, isEnterprisePlan },
     currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
-  const { isDevTenant } = useContext(TenantsContext);
+  const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
+
   const isOrganizationsDisabled =
-    isCloud &&
-    !isFeatureEnabled(currentSubscriptionQuota.organizationsLimit) &&
-    planId !== ReservedPlanId.Pro;
+    // Check if the organizations feature is disabled except for paid tenants.
+    // Paid tenants can create organizations with organization feature add-on applied to their subscription.
+    isCloud && !isFeatureEnabled(currentSubscriptionQuota.organizationsLimit) && !isPaidTenant;
+
   const { navigate } = useTenantPathname();
 
   const handleUpgradePlan = useCallback(() => {
@@ -59,7 +60,7 @@ function OrganizationTemplate() {
             href: getDocumentationUrl(organizationTemplateLink),
             targetBlank: 'noopener',
           }}
-          paywall={cond((isOrganizationsDisabled || isDevTenant) && ReservedPlanId.Pro)}
+          paywall={cond(!isPaidTenant && latestProPlanId)}
         />
         <Button
           title="application_details.check_guide"

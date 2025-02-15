@@ -14,6 +14,7 @@ import { type CloudConnectionLibrary } from './cloud-connection.js';
 
 export type QuotaLibrary = ReturnType<typeof createQuotaLibrary>;
 
+const paidReservedPlans = new Set<string>([ReservedPlanId.Pro, ReservedPlanId.Pro202411]);
 /**
  * @remarks
  * Should report usage changes to the Cloud only when the following conditions are met:
@@ -25,7 +26,7 @@ const shouldReportSubscriptionUpdates = (
   isEnterprisePlan: boolean,
   key: keyof SubscriptionQuota
 ) =>
-  (planId === ReservedPlanId.Pro || isEnterprisePlan) && isReportSubscriptionUpdatesUsageKey(key);
+  (paidReservedPlans.has(planId) || isEnterprisePlan) && isReportSubscriptionUpdatesUsageKey(key);
 
 export const createQuotaLibrary = (cloudConnection: CloudConnectionLibrary) => {
   const guardTenantUsageByKey = async (key: keyof SubscriptionUsage) => {
@@ -164,11 +165,9 @@ export const createQuotaLibrary = (cloudConnection: CloudConnectionLibrary) => {
       return;
     }
 
-    const { planId, isAddOnAvailable, isEnterprisePlan } = await getTenantSubscriptionData(
-      cloudConnection
-    );
+    const { planId, isEnterprisePlan } = await getTenantSubscriptionData(cloudConnection);
 
-    if (shouldReportSubscriptionUpdates(planId, isEnterprisePlan, key) && isAddOnAvailable) {
+    if (shouldReportSubscriptionUpdates(planId, isEnterprisePlan, key)) {
       await reportSubscriptionUpdates(cloudConnection, key);
     }
   };

@@ -17,6 +17,7 @@ import { createSocialLibrary } from '#src/libraries/social.js';
 import { createSsoConnectorLibrary } from '#src/libraries/sso-connector.js';
 import { createUserLibrary } from '#src/libraries/user.js';
 import { createVerificationStatusLibrary } from '#src/libraries/verification-status.js';
+import { createSamlApplicationsLibrary } from '#src/saml-applications/libraries/saml-applications.js';
 
 import type Queries from './Queries.js';
 
@@ -37,6 +38,7 @@ export default class Libraries {
   passcodes = createPasscodeLibrary(this.queries, this.connectors);
   applications = createApplicationLibrary(this.queries);
   verificationStatuses = createVerificationStatusLibrary(this.queries);
+  samlApplications = createSamlApplicationsLibrary(this.queries);
   roleScopes = createRoleScopeLibrary(this.queries);
   domains = createDomainLibrary(this.queries);
   protectedApps = createProtectedAppLibrary(this.queries);

@@ -6,7 +6,7 @@ import { consolePassword, consoleUsername, logtoConsoleUrl } from '#src/constant
 import { cls, dcls, waitFor } from '#src/utils.js';
 
 import ExpectPage, { ExpectPageError } from './expect-page.js';
-import { expectConfirmModalAndAct, expectToSaveChanges } from './index.js';
+import { expectConfirmModalAndAct, expectToSaveChanges, type PuppeteerInstance } from './index.js';
 
 type ExpectConsoleOptions = {
   /** The URL of the console endpoint. */
@@ -67,7 +67,9 @@ export default class ExpectConsole extends ExpectPage {
    *
    * @see {@link jest.Matchers.toMatchElement}
    */
-  async toMatchElement(...args: Parameters<jest.Matchers<unknown>['toMatchElement']>) {
+  async toMatchElement(
+    ...args: Parameters<jest.Matchers<unknown, PuppeteerInstance>['toMatchElement']>
+  ) {
     return expect(this.page).toMatchElement(...args);
   }
 

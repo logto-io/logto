@@ -2,18 +2,56 @@ import { SsoProviderName, SsoProviderType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import camelcaseKeys from 'camelcase-keys';
 import { decodeJwt } from 'jose';
+import { z } from 'zod';
 
 import assertThat from '#src/utils/assert-that.js';
 
+import OidcConnector from '../OidcConnector/index.js';
 import { fetchToken, getIdTokenClaims, getUserInfo } from '../OidcConnector/utils.js';
-import { OidcSsoConnector } from '../OidcSsoConnector/index.js';
 import { type SingleSignOnFactory } from '../index.js';
-import { SsoConnectorError, SsoConnectorErrorCodes } from '../types/error.js';
+import { type SingleSignOnConnectorData, type SingleSignOn } from '../types/connector.js';
+import {
+  SsoConnectorConfigErrorCodes,
+  SsoConnectorError,
+  SsoConnectorErrorCodes,
+} from '../types/error.js';
 import { basicOidcConnectorConfigGuard } from '../types/oidc.js';
 import { type ExtendedSocialUserInfo } from '../types/saml.js';
 import { type SingleSignOnConnectorSession } from '../types/session.js';
 
-export class AzureOidcSsoConnector extends OidcSsoConnector {
+export const azureOidcConnectorConfigGuard = basicOidcConnectorConfigGuard.extend({
+  trustUnverifiedEmail: z.boolean().optional(),
+});
+
+export class AzureOidcSsoConnector extends OidcConnector implements SingleSignOn {
+  private readonly trustUnverifiedEmail: boolean;
+
+  constructor(readonly data: SingleSignOnConnectorData) {
+    const parseConfigResult = azureOidcConnectorConfigGuard.safeParse(data.config);
+
+    if (!parseConfigResult.success) {
+      throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidConfig, {
+        config: data.config,
+        message: SsoConnectorConfigErrorCodes.InvalidConnectorConfig,
+        error: parseConfigResult.error.flatten(),
+      });
+    }
+
+    const { trustUnverifiedEmail, ...oidcConfig } = parseConfigResult.data;
+
+    super(oidcConfig);
+
+    this.trustUnverifiedEmail = trustUnverifiedEmail ?? false;
+  }
+
+  async getConfig() {
+    return this.getOidcConfig();
+  }
+
+  async getIssuer() {
+    return this.issuer;
+  }
+
   /**
    * Handle the sign-in callback from the OIDC provider and return the user info
    *
@@ -67,10 +105,13 @@ export class AzureOidcSsoConnector extends OidcSsoConnector {
       id,
       ...conditional(name && { name }),
       ...conditional(picture && { avatar: picture }),
-      ...conditional(email && email_verified && { email }),
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+      ...conditional(email && (email_verified || this.trustUnverifiedEmail) && { email }),
       ...conditional(phone && phone_verified && { phone }),
       ...camelcaseKeys(rest),
-      ...conditional(email && !email_verified && { unverifiedEmail: email }),
+      ...conditional(
+        email && !email_verified && !this.trustUnverifiedEmail && { unverifiedEmail: email }
+      ),
       ...conditional(phone && !phone_verified && { unverifiedPhone: phone }),
     };
   }
@@ -106,6 +147,6 @@ export const azureOidcSsoConnectorFactory: SingleSignOnFactory<SsoProviderName.A
   name: {
     en: 'Microsoft Entra ID (OIDC)',
   },
-  configGuard: basicOidcConnectorConfigGuard,
+  configGuard: azureOidcConnectorConfigGuard,
   constructor: AzureOidcSsoConnector,
 };

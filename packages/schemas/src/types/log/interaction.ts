@@ -96,4 +96,6 @@ export type LogKey =
       | Action.Submit
       | Action.Create}`
   | `${Prefix}.${InteractionEvent}.${Field.Verification}.${VerificationType}.${Action}`
-  | `${Prefix}.${InteractionEvent}.${Field.Identifier}.${Action.Submit}`;
+  | `${Prefix}.${InteractionEvent}.${Field.Identifier}.${Action.Submit}`
+  // IdpInitiatedSingleSignOn log, used upon receiving a SAML request from the IdP
+  | `${Prefix}.${InteractionEvent.SignIn}.${Field.Verification}.IdpInitiatedSso.${Action.Create}`;

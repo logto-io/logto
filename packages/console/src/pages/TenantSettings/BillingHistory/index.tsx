@@ -1,7 +1,6 @@
-import { ReservedPlanId } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import dayjs from 'dayjs';
-import { useCallback, useContext, useMemo } from 'react';
+import { useCallback, useContext, useEffect, useMemo } from 'react';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
@@ -18,12 +17,18 @@ import InvoiceStatusTag from './InvoiceStatusTag';
 
 function BillingHistory() {
   const cloudApi = useCloudApi();
-  const { currentTenantId } = useContext(TenantsContext);
+  const { currentTenantId, updateTenant } = useContext(TenantsContext);
   const { data: invoices, error } = useInvoices(currentTenantId);
   const isLoadingInvoices = !invoices && !error;
+
   const displayInvoices = useMemo(
     // Don't show draft invoices
     () => invoices?.filter(({ status }) => status !== 'draft'),
+    [invoices]
+  );
+
+  const openInvoices = useMemo(
+    () => invoices?.filter(({ status }) => status === 'open'),
     [invoices]
   );
 
@@ -41,6 +46,14 @@ function BillingHistory() {
     [cloudApi, currentTenantId]
   );
 
+  useEffect(() => {
+    if (openInvoices) {
+      updateTenant(currentTenantId, {
+        openInvoices,
+      });
+    }
+  }, [currentTenantId, openInvoices, updateTenant]);
+
   return (
     <div>
       <PageMeta titleKey={['tenants.tabs.billing_history', 'tenants.title']} />
@@ -51,19 +64,7 @@ function BillingHistory() {
           {
             title: <DynamicT forKey="subscription.billing_history.invoice_column" />,
             dataIndex: 'planName',
-            render: ({ skuId: rawSkuId, periodStart, periodEnd }) => {
-              /**
-               * @remarks
-               * The `skuId` should be either ReservedPlanId.Dev, ReservedPlanId.Pro, ReservedPlanId.Admin, ReservedPlanId.Free, or a random string.
-               * Except for the random string, which corresponds to the custom enterprise plan, other `skuId` values correspond to specific Reserved Plans.
-               */
-              const skuId =
-                rawSkuId &&
-                // eslint-disable-next-line no-restricted-syntax
-                (Object.values(ReservedPlanId).includes(rawSkuId as ReservedPlanId)
-                  ? rawSkuId
-                  : ReservedPlanId.Enterprise);
-
+            render: ({ skuId, periodStart, periodEnd }) => {
               return (
                 <ItemPreview
                   title={formatPeriod({ periodStart, periodEnd, displayYear: true })}

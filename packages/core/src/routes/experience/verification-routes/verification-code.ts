@@ -15,7 +15,10 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 import type ExperienceInteraction from '../classes/experience-interaction.js';
 import { withSentinel } from '../classes/libraries/sentinel-guard.js';
 import { codeVerificationIdentifierRecordTypeMap } from '../classes/utils.js';
-import { createNewCodeVerificationRecord } from '../classes/verifications/code-verification.js';
+import {
+  createNewCodeVerificationRecord,
+  getTemplateTypeByEvent,
+} from '../classes/verifications/code-verification.js';
 import { experienceRoutes } from '../const.js';
 import { type ExperienceInteractionRouterContext } from '../types.js';
 
@@ -68,7 +71,7 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
         libraries,
         queries,
         identifier,
-        interactionEvent
+        getTemplateTypeByEvent(interactionEvent)
       );
 
       await codeVerification.sendVerificationCode();

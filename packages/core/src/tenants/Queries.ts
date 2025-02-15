@@ -28,7 +28,10 @@ import UserSsoIdentityQueries from '#src/queries/user-sso-identities.js';
 import { createUserQueries } from '#src/queries/user.js';
 import { createUsersRolesQueries } from '#src/queries/users-roles.js';
 import { createVerificationStatusQueries } from '#src/queries/verification-status.js';
+import { createSamlApplicationConfigQueries } from '#src/saml-applications/queries/configs.js';
+import { createSamlApplicationSecretsQueries } from '#src/saml-applications/queries/secrets.js';
 
+import { AccountCenterQueries } from '../queries/account-center.js';
 import { PersonalAccessTokensQueries } from '../queries/personal-access-tokens.js';
 import { VerificationRecordQueries } from '../queries/verification-records.js';
 
@@ -59,8 +62,11 @@ export default class Queries {
   ssoConnectors = new SsoConnectorQueries(this.pool);
   userSsoIdentities = new UserSsoIdentityQueries(this.pool);
   subjectTokens = createSubjectTokenQueries(this.pool);
+  samlApplicationSecrets = createSamlApplicationSecretsQueries(this.pool);
+  samlApplicationConfigs = createSamlApplicationConfigQueries(this.pool);
   personalAccessTokens = new PersonalAccessTokensQueries(this.pool);
   verificationRecords = new VerificationRecordQueries(this.pool);
+  accountCenters = new AccountCenterQueries(this.pool);
   tenants = createTenantQueries(this.pool);
 
   constructor(

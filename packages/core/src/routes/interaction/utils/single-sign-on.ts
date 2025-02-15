@@ -1,5 +1,5 @@
 /* eslint-disable max-lines -- will migrate this file to the latest experience APIs */
-import { ConnectorError, type SocialUserInfo } from '@logto/connector-kit';
+import { ConnectorError } from '@logto/connector-kit';
 import { validateRedirectUrl } from '@logto/core-kit';
 import {
   InteractionEvent,
@@ -8,15 +8,20 @@ import {
   type UserSsoIdentity,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { conditional } from '@silverhand/essentials';
+import { conditional, trySafe } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { idpInitiatedSamlSsoSessionCookieName } from '#src/constants/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
+import SamlConnector from '#src/sso/SamlConnector/index.js';
 import { ssoConnectorFactories, type SingleSignOnConnectorSession } from '#src/sso/index.js';
+import { type ExtendedSocialUserInfo } from '#src/sso/types/saml.js';
 import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
+import { safeParseUnknownJson } from '#src/utils/json.js';
 
 import { type WithInteractionHooksContext } from '../middleware/koa-interaction-hooks.js';
 
@@ -34,7 +39,7 @@ type AuthorizationUrlPayload = z.infer<typeof authorizationUrlPayloadGuard>;
 
 export const getSsoAuthorizationUrl = async (
   ctx: WithLogContext,
-  { provider, id: tenantId }: TenantContext,
+  { provider, id: tenantId, queries }: TenantContext,
   connectorData: SupportedSsoConnector,
   payload: AuthorizationUrlPayload
 ): Promise<string> => {
@@ -43,6 +48,7 @@ export const getSsoAuthorizationUrl = async (
   const { createLog } = ctx;
 
   const log = createLog(`Interaction.SignIn.Identifier.SingleSignOn.Create`);
+
   log.append({
     connectorId,
     payload,
@@ -58,6 +64,53 @@ export const getSsoAuthorizationUrl = async (
     assertThat(payload, 'session.insufficient_info');
 
     const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+
+    if (
+      // TODO: Remove this check when IdP-initiated SSO is fully supported
+      EnvSet.values.isDevFeaturesEnabled &&
+      connectorInstance instanceof SamlConnector
+    ) {
+      // Check if a IdP-initiated SSO session exists
+      const sessionId = ctx.cookies.get(idpInitiatedSamlSsoSessionCookieName);
+
+      const idpInitiatedSamlSsoSession =
+        sessionId && (await queries.ssoConnectors.findIdpInitiatedSamlSsoSessionById(sessionId));
+
+      // Consume the session if it exists and the connector matches
+      if (idpInitiatedSamlSsoSession && idpInitiatedSamlSsoSession.connectorId === connectorId) {
+        log.append({ idpInitiatedSamlSsoSession });
+
+        // Clear the session cookie
+        ctx.cookies.set(idpInitiatedSamlSsoSessionCookieName, '', {
+          httpOnly: true,
+          expires: new Date(0),
+        });
+
+        // Safely clear the session record
+        void trySafe(async () => {
+          await queries.ssoConnectors.deleteIdpInitiatedSamlSsoSessionById(sessionId);
+        });
+
+        const { expiresAt, assertionContent } = idpInitiatedSamlSsoSession;
+
+        // Validate the session expiry
+        // Directly assign the SAML assertion result to the interaction and redirect to the SSO callback URL
+        if (expiresAt > Date.now()) {
+          const userInfo = connectorInstance.getUserInfoFromSamlAssertion(assertionContent);
+          const { redirectUri, state } = payload;
+          await assignSingleSignOnSessionResult(ctx, provider, {
+            redirectUri,
+            state,
+            userInfo,
+            connectorId,
+          });
+          // Redirect to the callback URL directly if the session is valid
+          const url = new URL(redirectUri);
+          url.searchParams.append('state', state);
+          return url.toString();
+        }
+      }
+    }
 
     return await connectorInstance.getAuthorizationUrl(
       { jti, ...payload, connectorId },
@@ -77,7 +130,7 @@ export const getSsoAuthorizationUrl = async (
 type SsoAuthenticationResult = {
   /** The issuer of the SSO provider, we need to store this in the user SSO identity to identify the provider. */
   issuer: string;
-  userInfo: SocialUserInfo;
+  userInfo: ExtendedSocialUserInfo;
 };
 
 /**
@@ -217,7 +270,7 @@ const signInWithSsoAuthentication = async (
 
   // Update the user's SSO identity details
   await userSsoIdentitiesQueries.updateById(id, {
-    detail: userInfo,
+    detail: safeParseUnknownJson(userInfo),
   });
 
   const { name, avatar, id: identityId } = userInfo;
@@ -280,7 +333,7 @@ const signInAndLinkWithSsoAuthentication = async (
     userId,
     identityId,
     issuer,
-    detail: userInfo,
+    detail: safeParseUnknownJson(userInfo),
   });
 
   // Sync the user name and avatar to the existing user if the connector has syncProfile enabled (sign-in)
@@ -362,7 +415,7 @@ export const registerWithSsoAuthentication = async (
     ssoConnectorId: connectorId,
     identityId: userInfo.id,
     issuer,
-    detail: userInfo,
+    detail: safeParseUnknownJson(userInfo),
   });
 
   // JIT provision for new users signing up with SSO

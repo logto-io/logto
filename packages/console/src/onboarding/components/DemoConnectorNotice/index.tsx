@@ -9,7 +9,7 @@ function DemoConnectorNotice() {
 
   return (
     <InlineNotification className={styles.notice}>
-      {t('cloud.sie.connectors.notice')}
+      {t('cloud.social_callback.notice')}
     </InlineNotification>
   );
 }

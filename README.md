@@ -26,7 +26,7 @@ Logto[^info] is an open-source Identity and Access Management (IAM) platform des
 - Follow the [quick start](https://logto.io/quick-starts/?utm_source=github&utm_medium=repo_logto) guide to begin managing authentication efficiently.
 - Check out our [📖 integrations](https://docs.logto.io/integrations?utm_source=github&utm_medium=repo_logto) to start integrating Logto with your application today.
 - A step-by-step getting started is available on 📖 [Logto docs](https://docs.logto.io/docs/get-started/welcome/?utm_source=github&utm_medium=repo_logto).
-- Visit 🎨 [Logto webstie](https://logto.io/?utm_source=github&utm_medium=repo_logto) for a brief introduction if you are new to Logto.
+- Visit 🎨 [Logto website](https://logto.io/?utm_source=github&utm_medium=repo_logto) for a brief introduction if you are new to Logto.
 
 > [!IMPORTANT]
 > [Subscribe now](https://logto.io/subscribe/?utm_source=github&utm_medium=repo_logto) to stay updated with the latest information about the Logto and receive feature updates in real-time.

@@ -1,5 +1,23 @@
 # Change Log
 
+## 1.22.0
+
+### Patch Changes
+
+- Updated dependencies [640425414]
+- Updated dependencies [7ebef18e3]
+- Updated dependencies [640425414]
+  - @logto/schemas@1.22.0
+  - @logto/connector-kit@4.1.0
+
+## 1.21.0
+
+### Patch Changes
+
+- Updated dependencies [bc2a0ac03]
+  - @logto/shared@3.1.2
+  - @logto/schemas@1.21.0
+
 ## 1.20.0
 
 ### Minor Changes

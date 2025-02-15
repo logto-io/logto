@@ -1,4 +1,4 @@
-import { ReservedPlanId, TenantRole } from '@logto/schemas';
+import { TenantRole } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -9,7 +9,7 @@ import ReactModal from 'react-modal';
 import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
 import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
 import { addOnPricingExplanationLink } from '@/consts/external-links';
-import { tenantMembersAddOnUnitPrice } from '@/consts/subscriptions';
+import { latestProPlanId, tenantMembersAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import FormField from '@/ds-components/FormField';
@@ -19,7 +19,6 @@ import TextLink from '@/ds-components/TextLink';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useUserPreferences from '@/hooks/use-user-preferences';
 import modalStyles from '@/scss/modal.module.scss';
-import { hasReachedSubscriptionQuotaLimit } from '@/utils/quota';
 import { isPaidPlan } from '@/utils/subscription';
 
 import InviteEmailsInput from '../InviteEmailsInput';
@@ -43,15 +42,15 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
   const { parseEmailOptions } = useEmailInputUtils();
   const { show } = useConfirmModal();
   const {
-    currentSubscription: { planId, isAddOnAvailable, isEnterprisePlan },
-    currentSubscriptionQuota,
-    currentSubscriptionUsage: { tenantMembersLimit },
+    currentSubscription: { planId, isEnterprisePlan },
     mutateSubscriptionQuotaAndUsages,
+    hasReachedSubscriptionQuotaLimit,
   } = useContext(SubscriptionDataContext);
   const {
     data: { tenantMembersUpsellNoticeAcknowledged },
     update,
   } = useUserPreferences();
+  const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
 
   const formMethods = useForm<InviteMemberForm>({
     defaultValues: {
@@ -82,11 +81,7 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
     [t]
   );
 
-  const hasTenantMembersReachedLimit = hasReachedSubscriptionQuotaLimit({
-    quotaKey: 'tenantMembersLimit',
-    usage: tenantMembersLimit,
-    quota: currentSubscriptionQuota,
-  });
+  const hasTenantMembersReachedLimit = hasReachedSubscriptionQuotaLimit('tenantMembersLimit');
 
   const onSubmit = handleSubmit(async ({ emails, role }) => {
     if (role === TenantRole.Admin) {
@@ -132,15 +127,14 @@ function InviteMemberModal({ isOpen, onClose }: Props) {
       <ModalLayout
         size="large"
         title="tenant_members.invite_modal.title"
-        paywall={conditional(planId !== ReservedPlanId.Pro && ReservedPlanId.Pro)}
-        hasAddOnTag={isAddOnAvailable && hasTenantMembersReachedLimit}
+        paywall={conditional(!isPaidTenant && latestProPlanId)}
+        hasAddOnTag={isPaidTenant && hasTenantMembersReachedLimit}
         subtitle="tenant_members.invite_modal.subtitle"
         footer={
           conditional(
-            isAddOnAvailable &&
-              hasTenantMembersReachedLimit &&
+            hasTenantMembersReachedLimit &&
               // Just in case the enterprise plan has reached the resource limit, we still need to show charge notice.
-              isPaidPlan(planId, isEnterprisePlan) &&
+              isPaidTenant &&
               !tenantMembersUpsellNoticeAcknowledged && (
                 <AddOnNoticeFooter
                   isLoading={isLoading}

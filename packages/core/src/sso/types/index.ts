@@ -2,7 +2,10 @@ import { type I18nPhrases } from '@logto/connector-kit';
 import { type SsoProviderType, type SsoProviderName } from '@logto/schemas';
 
 import { type AzureAdSsoConnector } from '../AzureAdSsoConnector/index.js';
-import { type AzureOidcSsoConnector } from '../AzureOidcSsoConnector/index.js';
+import {
+  type azureOidcConnectorConfigGuard,
+  type AzureOidcSsoConnector,
+} from '../AzureOidcSsoConnector/index.js';
 import {
   type googleWorkspaceSsoConnectorConfigGuard,
   type GoogleWorkspaceSsoConnector,
@@ -29,7 +32,7 @@ export type SingleSignOnConnectorConfig = {
   [SsoProviderName.AZURE_AD]: typeof samlConnectorConfigGuard;
   [SsoProviderName.GOOGLE_WORKSPACE]: typeof googleWorkspaceSsoConnectorConfigGuard;
   [SsoProviderName.OKTA]: typeof basicOidcConnectorConfigGuard;
-  [SsoProviderName.AZURE_AD_OIDC]: typeof basicOidcConnectorConfigGuard;
+  [SsoProviderName.AZURE_AD_OIDC]: typeof azureOidcConnectorConfigGuard;
 };
 
 export type SingleSignOnFactory<T extends SsoProviderName> = {

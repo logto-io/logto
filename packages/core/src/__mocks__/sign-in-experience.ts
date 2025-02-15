@@ -100,4 +100,7 @@ export const mockSignInExperience: SignInExperience = {
   },
   singleSignOnEnabled: true,
   socialSignIn: {},
+  supportEmail: null,
+  supportWebsiteUrl: null,
+  unknownSessionRedirectUrl: null,
 };

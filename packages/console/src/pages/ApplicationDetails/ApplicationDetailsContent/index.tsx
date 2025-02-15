@@ -30,13 +30,14 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { trySubmitSafe } from '@/utils/form';
 
+import Branding from '../components/Branding';
+import Permissions from '../components/Permissions';
+
 import BackchannelLogout from './BackchannelLogout';
-import Branding from './Branding';
 import EndpointsAndCredentials, { type ApplicationSecretRow } from './EndpointsAndCredentials';
 import GuideDrawer from './GuideDrawer';
 import MachineLogs from './MachineLogs';
 import MachineToMachineApplicationRoles from './MachineToMachineApplicationRoles';
-import Permissions from './Permissions';
 import RefreshTokenSettings from './RefreshTokenSettings';
 import Settings from './Settings';
 import styles from './index.module.scss';
@@ -123,7 +124,9 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
         icon={<ApplicationIcon type={data.type} isThirdParty={data.isThirdParty} />}
         title={data.name}
         primaryTag={
-          data.isThirdParty
+          // We have ensured that SAML applications are always third party in DB schema, we use `||` here to make TypeScript happy.
+          // TODO: @darcy fix this when we add SAML apps details page
+          data.isThirdParty || data.type === ApplicationType.SAML
             ? t(`${applicationTypeI18nKey.thirdParty}.title`)
             : t(`${applicationTypeI18nKey[data.type]}.title`)
         }

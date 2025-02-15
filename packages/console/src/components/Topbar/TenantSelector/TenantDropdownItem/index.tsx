@@ -1,13 +1,11 @@
 import { TenantTag } from '@logto/schemas';
 import classNames from 'classnames';
-import { useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Tick from '@/assets/icons/tick.svg?react';
 import { type TenantResponse } from '@/cloud/types/router';
 import { regionFlagMap } from '@/components/Region';
 import SkuName from '@/components/SkuName';
-import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { DropdownItem } from '@/ds-components/Dropdown';
 
 import TenantStatusTag from './TenantStatusTag';
@@ -28,16 +26,6 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
   } = tenantData;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const { logtoSkus } = useContext(SubscriptionDataContext);
-  const tenantSubscriptionSku = useMemo(
-    () => logtoSkus.find(({ id }) => id === planId),
-    [logtoSkus, planId]
-  );
-
-  if (!tenantSubscriptionSku) {
-    return null;
-  }
-
   const RegionFlag = regionFlagMap[regionName];
 
   return (
@@ -53,9 +41,7 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
             <span>{regionName}</span>
           </div>
           <span>{t(`tenants.full_env_tag.${tag}`)}</span>
-          {tag !== TenantTag.Development && (
-            <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />
-          )}
+          {tag !== TenantTag.Development && <SkuName skuId={planId} />}
         </div>
       </div>
       <Tick className={classNames(styles.checkIcon, isSelected && styles.visible)} />

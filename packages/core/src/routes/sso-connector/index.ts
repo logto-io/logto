@@ -17,8 +17,10 @@ import { isSupportedSsoConnector, isSupportedSsoProvider } from '#src/sso/utils.
 import { tableToPathname } from '#src/utils/SchemaRouter.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { EnvSet } from '../../env-set/index.js';
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
+import ssoConnectorIdpInitiatedAuthConfigRoutes from './idp-initiated-auth-config.js';
 import {
   fetchConnectorProviderDetails,
   parseConnectorConfig,
@@ -300,4 +302,11 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
       return next();
     }
   );
+
+  if (
+    EnvSet.values.isDevFeaturesEnabled &&
+    (EnvSet.values.isCloud || EnvSet.values.isIntegrationTest)
+  ) {
+    ssoConnectorIdpInitiatedAuthConfigRoutes(...args);
+  }
 }

@@ -1,4 +1,4 @@
-import { type SsoConnectorWithProviderConfig, ReservedPlanId } from '@logto/schemas';
+import { type SsoConnectorWithProviderConfig } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,15 +11,15 @@ import EnterpriseSsoConnectorEmpty from '@/assets/images/sso-connector-empty.svg
 import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
 import { defaultPageSize } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
-import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import Tag from '@/ds-components/Tag';
 import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
+import { isPaidPlan } from '@/utils/subscription';
 import { buildUrl } from '@/utils/url';
 
 import SsoConnectorLogo from './SsoConnectorLogo';
@@ -35,18 +35,13 @@ function EnterpriseSso() {
   const { pathname } = useLocation();
   const { navigate } = useTenantPathname();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { isDevTenant } = useContext(TenantsContext);
   const {
-    currentSubscription: { planId, isAddOnAvailable },
-    currentSubscriptionQuota,
+    currentSubscription: { planId, isEnterprisePlan },
   } = useContext(SubscriptionDataContext);
 
   const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
   });
-
-  const isSsoEnabled =
-    !isCloud || currentSubscriptionQuota.enterpriseSsoLimit !== 0 || planId === ReservedPlanId.Pro;
 
   const url = buildUrl('api/sso-connectors', {
     page: String(page),
@@ -59,14 +54,15 @@ function EnterpriseSso() {
 
   const isLoading = !data && !error;
   const [ssoConnectors, totalCount] = data ?? [];
+  const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
 
   return (
     <ListPage
       title={{
-        paywall: conditional((!isSsoEnabled || isDevTenant) && ReservedPlanId.Pro),
+        paywall: conditional(!isPaidTenant && latestProPlanId),
         title: 'enterprise_sso.title',
         subtitle: 'enterprise_sso.subtitle',
-        hasAddOnTag: isAddOnAvailable,
+        hasAddOnTag: isPaidTenant,
       }}
       pageMeta={{ titleKey: 'enterprise_sso.page_title' }}
       createButton={conditional(

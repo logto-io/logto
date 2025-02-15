@@ -1,4 +1,5 @@
-import { SsoConnectors } from '@logto/schemas';
+import { SsoConnectors, SsoConnectorIdpInitiatedAuthConfigs } from '@logto/schemas';
+import { z } from 'zod';
 
 export const ssoConnectorCreateGuard = SsoConnectors.createGuard
   .pick({
@@ -19,3 +20,36 @@ export const ssoConnectorPatchGuard = SsoConnectors.guard
     connectorName: true,
   })
   .partial();
+
+const autoSignInSsoConnectorIdpInitiatedAuthConfigCreateGuard =
+  SsoConnectorIdpInitiatedAuthConfigs.createGuard
+    .pick({
+      defaultApplicationId: true,
+      redirectUri: true,
+      authParameters: true,
+    })
+    .merge(
+      z.object({
+        autoSendAuthorizationRequest: z.literal(true),
+      })
+    );
+
+const clientRedirectSsoConnectorIdpInitiatedAuthConfigCreateGuard =
+  SsoConnectorIdpInitiatedAuthConfigs.createGuard
+    .pick({
+      defaultApplicationId: true,
+    })
+    .merge(
+      z.object({
+        clientIdpInitiatedAuthCallbackUri: z.string(),
+        autoSendAuthorizationRequest: z.literal(false),
+      })
+    );
+
+export const ssoConnectorIdpInitiatedAuthConfigCreateGuard = z.discriminatedUnion(
+  'autoSendAuthorizationRequest',
+  [
+    clientRedirectSsoConnectorIdpInitiatedAuthConfigCreateGuard,
+    autoSignInSsoConnectorIdpInitiatedAuthConfigCreateGuard,
+  ]
+);

@@ -1,0 +1,78 @@
+{
+  "tags": [
+    {
+      "name": "Dev feature"
+    },
+    {
+      "name": "Cloud only"
+    }
+  ],
+  "paths": {
+    "/api/sso-connectors/{id}/idp-initiated-auth-config": {
+      "get": {
+        "summary": "Get IdP initiated auth config",
+        "description": "Get the IdP initiated authentication config of the given SAML SSO connector.",
+        "responses": {
+          "200": {
+            "description": "The IdP initiated authentication config."
+          },
+          "404": {
+            "description": "SSO connector or the IdP initiated auth config not found."
+          }
+        }
+      },
+      "put": {
+        "summary": "Set IdP initiated auth config",
+        "description": "Set IdP initiated authentication config for a given SAML SSO connector. Any existing IdP initiated auth config will be overwritten.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "defaultApplicationId": {
+                    "description": "The unique identifier for the application that users will sign in to using IdP initiated authentication. The application type must be `Traditional` or `SPA`. `autoSendAuthorizationRequest` is not supported for `SPA` applications."
+                  },
+                  "autoSendAuthorizationRequest": {
+                    "description": "Whether to automatically send an authorization request to the application's OIDC authorization endpoint when a IdP initiated authentication request is received. If not provided, Logto will use the default value `false`. "
+                  },
+                  "clientIdpInitiatedAuthCallbackUri": {
+                    "description": "The callback URI for the IdP initiated authentication request. Only available when `autoSendAuthorizationRequest` is `false`. Logto will redirect the user to this URI after the IdP initiated authentication request is received. You should manually trigger the authorization request to the application's OIDC authorization endpoint at the client side."
+                  },
+                  "redirectUri": {
+                    "description": "The sign-in callback redirect URI for the application. This URI must be registered in the application's OIDC client metadata. If not provided, Logto will use the first registered redirect URI of the application. Only available when `autoSendAuthorizationRequest` is `true`."
+                  },
+                  "authParameters": {
+                    "description": "The additional parameters to be sent to the application's OIDC authorization endpoint, e.g. `resources` and `scopes`. Only available when `autoSendAuthorizationRequest` is `true`."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated IdP initiated auth config."
+          },
+          "404": {
+            "description": "SSO connector or application not found."
+          },
+          "400": {
+            "description": "The request body is invalid. The SSO connector is not a SAML connector or the application is not a Traditional web application."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete IdP initiated auth config",
+        "description": "Delete the IdP initiated authentication config of the given SAML SSO connector.",
+        "responses": {
+          "204": {
+            "description": "The IdP initiated auth config has been deleted."
+          },
+          "404": {
+            "description": "IdP initiated auth config not found for the given SSO connector."
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import { type Organization, type CreateOrganization, ReservedPlanId } from '@logto/schemas';
+import { type Organization, type CreateOrganization } from '@logto/schemas';
 import { cond, conditional } from '@silverhand/essentials';
 import { useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -10,7 +10,7 @@ import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import { isCloud } from '@/consts/env';
 import { addOnPricingExplanationLink } from '@/consts/external-links';
-import { organizationAddOnUnitPrice } from '@/consts/subscriptions';
+import { latestProPlanId, organizationAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
@@ -34,17 +34,18 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
-    currentSubscription: { planId, isAddOnAvailable, isEnterprisePlan },
+    currentSubscription: { planId, isEnterprisePlan },
     currentSubscriptionQuota,
   } = useContext(SubscriptionDataContext);
   const {
     data: { organizationUpsellNoticeAcknowledged },
     update,
   } = useUserPreferences();
+  const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
   const isOrganizationsDisabled =
-    isCloud &&
-    !isFeatureEnabled(currentSubscriptionQuota.organizationsLimit) &&
-    planId !== ReservedPlanId.Pro;
+    // Check if the organizations feature is disabled except for paid tenants.
+    // Paid tenants can create organizations with organization feature add-on applied to their subscription.
+    isCloud && !isFeatureEnabled(currentSubscriptionQuota.organizationsLimit) && !isPaidTenant;
 
   const {
     reset,
@@ -81,39 +82,35 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
     >
       <ModalLayout
         title="organizations.create_organization"
-        paywall={conditional(
-          isAddOnAvailable && planId !== ReservedPlanId.Pro && ReservedPlanId.Pro
-        )}
-        hasAddOnTag={isAddOnAvailable}
+        paywall={conditional(!isPaidTenant && latestProPlanId)}
+        hasAddOnTag={isPaidTenant}
         footer={
           cond(
-            isAddOnAvailable &&
-              // Just in case the enterprise plan has reached the resource limit, we still need to show charge notice.
-              isPaidPlan(planId, isEnterprisePlan) &&
-              !organizationUpsellNoticeAcknowledged && (
-                <AddOnNoticeFooter
-                  isLoading={isSubmitting}
-                  buttonTitle="general.create"
-                  onClick={async () => {
-                    void update({ organizationUpsellNoticeAcknowledged: true });
-                    await submit();
+            // Just in case the enterprise plan has reached the resource limit, we still need to show charge notice.
+            isPaidTenant && !organizationUpsellNoticeAcknowledged && (
+              <AddOnNoticeFooter
+                isLoading={isSubmitting}
+                buttonTitle="general.create"
+                onClick={async () => {
+                  void update({ organizationUpsellNoticeAcknowledged: true });
+                  await submit();
+                }}
+              >
+                <Trans
+                  components={{
+                    span: <span className={styles.strong} />,
+                    a: <TextLink to={addOnPricingExplanationLink} />,
                   }}
                 >
-                  <Trans
-                    components={{
-                      span: <span className={styles.strong} />,
-                      a: <TextLink to={addOnPricingExplanationLink} />,
-                    }}
-                  >
-                    {t('upsell.add_on.footer.organization', {
-                      price: organizationAddOnUnitPrice,
-                      planName: t(
-                        isEnterprisePlan ? 'subscription.enterprise' : 'subscription.pro_plan'
-                      ),
-                    })}
-                  </Trans>
-                </AddOnNoticeFooter>
-              )
+                  {t('upsell.add_on.footer.organization', {
+                    price: organizationAddOnUnitPrice,
+                    planName: t(
+                      isEnterprisePlan ? 'subscription.enterprise' : 'subscription.pro_plan'
+                    ),
+                  })}
+                </Trans>
+              </AddOnNoticeFooter>
+            )
           ) ??
           (isOrganizationsDisabled ? (
             <QuotaGuardFooter>

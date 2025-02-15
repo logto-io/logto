@@ -1,7 +1,6 @@
 import { conditional } from '@silverhand/essentials';
 import type { Context } from 'koa';
-import type { InteractionResults, PromptDetail } from 'oidc-provider';
-import type Provider from 'oidc-provider';
+import type { InteractionResults, PromptDetail, Provider } from 'oidc-provider';
 import { z } from 'zod';
 
 import type Queries from '#src/tenants/Queries.js';

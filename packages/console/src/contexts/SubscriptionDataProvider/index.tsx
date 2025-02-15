@@ -7,9 +7,6 @@ import {
   defaultSubscriptionQuota,
   defaultSubscriptionUsage,
 } from '@/consts';
-// Used in the docs
-// eslint-disable-next-line unused-imports/no-unused-imports
-import TenantAccess from '@/containers/TenantAccess';
 
 import { type FullContext } from './types';
 
@@ -32,16 +29,18 @@ export const SubscriptionDataContext = createContext<FullContext>({
   currentSubscriptionRoleScopeUsage: {},
   mutateSubscriptionQuotaAndUsages: noop,
   /* ==== For new pricing model ==== */
+  hasSurpassedSubscriptionQuotaLimit: () => false,
+  hasReachedSubscriptionQuotaLimit: () => false,
 });
 
 type Props = {
-  readonly subscriptionData: FullContext;
+  readonly subscriptionDataAndUtils: FullContext;
   readonly children: ReactNode;
 };
 
-function SubscriptionDataProvider({ children, subscriptionData }: Props) {
+function SubscriptionDataProvider({ children, subscriptionDataAndUtils }: Props) {
   return (
-    <SubscriptionDataContext.Provider value={subscriptionData}>
+    <SubscriptionDataContext.Provider value={subscriptionDataAndUtils}>
       {children}
     </SubscriptionDataContext.Provider>
   );

@@ -20,6 +20,8 @@ export const oidcConnectorConfigGuard = z
     clientSecret: z.string(),
     issuer: z.string(),
     scope: z.string().optional(),
+    // The following fields are only available for EntraID (OIDC) connector
+    trustUnverifiedEmail: z.boolean().optional(),
   })
   .partial();
 

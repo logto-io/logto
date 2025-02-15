@@ -6,7 +6,6 @@ import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import SkuName from '@/components/SkuName';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
-import { hasReachedSubscriptionQuotaLimit } from '@/utils/quota';
 
 type Props = {
   readonly isCreatingSocialConnector: boolean;
@@ -18,15 +17,11 @@ function Footer({ isCreatingSocialConnector, isCreateButtonDisabled, onClickCrea
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell.paywall' });
   const {
     currentSubscription: { planId, isEnterprisePlan },
-    currentSubscriptionUsage,
     currentSubscriptionQuota,
+    hasReachedSubscriptionQuotaLimit,
   } = useContext(SubscriptionDataContext);
 
-  const isSocialConnectorsReachLimit = hasReachedSubscriptionQuotaLimit({
-    quotaKey: 'socialConnectorsLimit',
-    usage: currentSubscriptionUsage.socialConnectorsLimit,
-    quota: currentSubscriptionQuota,
-  });
+  const isSocialConnectorsReachLimit = hasReachedSubscriptionQuotaLimit('socialConnectorsLimit');
 
   if (isCreatingSocialConnector && isSocialConnectorsReachLimit) {
     return (
@@ -34,7 +29,7 @@ function Footer({ isCreatingSocialConnector, isCreateButtonDisabled, onClickCrea
         <Trans
           components={{
             a: <ContactUsPhraseLink />,
-            planName: <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />,
+            planName: <SkuName skuId={planId} />,
           }}
         >
           {t('social_connectors', {

@@ -1,6 +1,6 @@
 import { type AdminConsoleKey } from '@logto/phrases';
 import type { Application } from '@logto/schemas';
-import { ApplicationType, ReservedPlanId } from '@logto/schemas';
+import { ApplicationType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { type ReactElement, useContext, useMemo } from 'react';
 import { useController, useForm } from 'react-hook-form';
@@ -10,6 +10,8 @@ import Modal from 'react-modal';
 import { useSWRConfig } from 'swr';
 
 import { GtagConversionId, reportConversion } from '@/components/Conversion/utils';
+import { isDevFeaturesEnabled } from '@/consts/env';
+import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
@@ -23,9 +25,18 @@ import TypeDescription from '@/pages/Applications/components/TypeDescription';
 import modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { trySubmitSafe } from '@/utils/form';
+import { isPaidPlan } from '@/utils/subscription';
 
 import Footer from './Footer';
 import styles from './index.module.scss';
+
+type AvailableApplicationTypeForCreation = Extract<
+  ApplicationType,
+  | ApplicationType.Native
+  | ApplicationType.SPA
+  | ApplicationType.Traditional
+  | ApplicationType.MachineToMachine
+>;
 
 type FormData = {
   type: ApplicationType;
@@ -57,10 +68,11 @@ function CreateForm({
     defaultValues: { type: defaultCreateType, isThirdParty: isDefaultCreateThirdParty },
   });
   const {
-    currentSubscription: { isAddOnAvailable, planId },
+    currentSubscription: { planId, isEnterprisePlan },
   } = useContext(SubscriptionDataContext);
   const { user } = useCurrentUser();
   const { mutate: mutateGlobal } = useSWRConfig();
+  const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
 
   const {
     field: { onChange, value, name, ref },
@@ -81,7 +93,13 @@ function CreateForm({
         return;
       }
 
-      const createdApp = await api.post('api/applications', { json: data }).json<Application>();
+      const appCreationEndpoint =
+        // TODO: @darcy remove this after the SAML is implemented
+        isDevFeaturesEnabled && data.type === ApplicationType.SAML
+          ? 'api/saml-applications'
+          : 'api/applications';
+
+      const createdApp = await api.post(appCreationEndpoint, { json: data }).json<Application>();
 
       // Report the conversion event after the application is created. Note that the conversion
       // should be set as count once since this will be reported multiple times.
@@ -125,13 +143,10 @@ function CreateForm({
         title="applications.create"
         subtitle={subtitleElement}
         paywall={conditional(
-          isAddOnAvailable &&
-            watch('type') === ApplicationType.MachineToMachine &&
-            planId !== ReservedPlanId.Pro &&
-            ReservedPlanId.Pro
+          !isPaidTenant && watch('type') === ApplicationType.MachineToMachine && latestProPlanId
         )}
         hasAddOnTag={
-          isAddOnAvailable &&
+          isPaidTenant &&
           watch('type') === ApplicationType.MachineToMachine &&
           hasMachineToMachineAppsReachedLimit
         }
@@ -158,8 +173,7 @@ function CreateForm({
                 onChange={onChange}
               >
                 {Object.values(ApplicationType)
-                  // Other application types (e.g. "Protected") should not show up in the creation modal
-                  .filter((value) =>
+                  .filter((value): value is AvailableApplicationTypeForCreation =>
                     [
                       ApplicationType.Native,
                       ApplicationType.SPA,

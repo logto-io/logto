@@ -10,27 +10,32 @@ type RouteResponseType<T extends { search?: unknown; body?: unknown; response?: 
 type RouteRequestBodyType<T extends { search?: unknown; body?: ZodType; response?: unknown }> =
   z.infer<NonNullable<T['body']>>;
 
-export type Subscription = RouteResponseType<GetRoutes['/api/tenants/:tenantId/subscription']>;
+/**
+ * The subscription data is fetched from the Cloud API.
+ * All the dates are in ISO 8601 format, we need to manually fix the type to string here.
+ */
+export type Subscription = Omit<
+  RouteResponseType<GetRoutes['/api/tenants/my/subscription']>,
+  'currentPeriodStart' | 'currentPeriodEnd'
+> & {
+  currentPeriodStart: string;
+  currentPeriodEnd: string;
+};
+
+type CompleteSubscriptionUsage = RouteResponseType<GetRoutes['/api/tenants/my/subscription-usage']>;
 
 /**
- * The type of the response of the `GET /api/tenants/:tenantId/subscription/quota` endpoint.
- * It is the same as the response type of `GET /api/tenants/my/subscription/quota` endpoint.
- *
  * @remarks
  * The `auditLogsRetentionDays` will be handled by cron job in Azure Functions, outdated audit logs will be removed automatically.
  */
 export type SubscriptionQuota = Omit<
-  RouteResponseType<GetRoutes['/api/tenants/:tenantId/subscription/quota']>,
+  CompleteSubscriptionUsage['quota'],
   // Since we are deprecation the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
   'auditLogsRetentionDays' | 'organizationsEnabled'
 >;
 
-/**
- * The type of the response of the `GET /api/tenants/:tenantId/subscription/usage` endpoint.
- * It is the same as the response type of `GET /api/tenants/my/subscription/usage` endpoint.
- */
 export type SubscriptionUsage = Omit<
-  RouteResponseType<GetRoutes['/api/tenants/:tenantId/subscription/usage']>,
+  CompleteSubscriptionUsage['usage'],
   // Since we are deprecation the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
   'organizationsEnabled'
 >;

@@ -1,10 +1,22 @@
 const { jest } = import.meta;
 
-const { generateTotpSecret, validateTotpToken } = await import('./totp-validation.js');
+const { generateTotpSecret, validateTotpToken, validateTotpSecret } = await import(
+  './totp-validation.js'
+);
 
 describe('generateTotpSecret', () => {
   it('should generate a secret', () => {
     expect(typeof generateTotpSecret()).toBe('string');
+  });
+});
+
+describe('validateTotpSecret', () => {
+  it('should return true on valid secret', () => {
+    expect(validateTotpSecret(generateTotpSecret())).toBe(true);
+  });
+
+  it('should return false on invalid secret', () => {
+    expect(validateTotpSecret('invalid')).toBe(false);
   });
 });
 

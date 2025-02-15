@@ -57,7 +57,7 @@ const queryDatabaseManifest = async (database) => {
     inner join pg_catalog.pg_namespace nsp
     on nsp.oid = connamespace
     where nsp.nspname = 'public'
-    order by conname asc, def asc;
+    order by conname asc, def asc, conrelid::regclass asc;
   `);
 
   const { rows: indexes } = await pool.query(/* sql */ `
@@ -277,7 +277,8 @@ const queryDatabaseData = async (database) => {
         'updated_at',
         'secret',
         'db_user',
-        'db_user_password'
+        'db_user_password',
+        'add_on_sku_id'
       );
 
       return [table_name, data.sort(buildSortByKeys(Object.keys(data[0] ?? {})))];

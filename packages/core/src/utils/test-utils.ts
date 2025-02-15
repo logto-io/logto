@@ -99,6 +99,7 @@ export const createContextWithRouteParameters = (
     set: ctx.set,
     path: ctx.path,
     URL: ctx.URL,
+    cookies: ctx.cookies,
     params: {},
     headers: {},
     router: new Router(),

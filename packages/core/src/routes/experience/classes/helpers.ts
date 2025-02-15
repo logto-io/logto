@@ -68,7 +68,7 @@ export const identifyUserByVerificationRecord = async (
    */
   syncedProfile?: Pick<
     InteractionProfile,
-    'enterpriseSsoIdentity' | 'socialIdentity' | 'avatar' | 'name'
+    'enterpriseSsoIdentity' | 'syncedEnterpriseSsoIdentity' | 'socialIdentity' | 'avatar' | 'name'
   >;
 }> => {
   // Check verification record can be used to identify a user using the `identifyUser` method.
@@ -99,7 +99,12 @@ export const identifyUserByVerificationRecord = async (
     case VerificationType.EnterpriseSso: {
       try {
         const user = await verificationRecord.identifyUser();
-        const syncedProfile = await verificationRecord.toSyncedProfile();
+        const { enterpriseSsoIdentity } = verificationRecord.toUserProfile();
+        // Sync the enterprise SSO identity details
+        const syncedProfile = {
+          syncedEnterpriseSsoIdentity: enterpriseSsoIdentity,
+          ...(await verificationRecord.toSyncedProfile()),
+        };
         return { user, syncedProfile };
       } catch (error: unknown) {
         // Auto fallback to identify the related user if the user does not exist for enterprise SSO.

@@ -9,6 +9,7 @@ import {
 } from '#src/ui-helpers/index.js';
 import {
   appendPathname,
+  dcls,
   expectNavigation,
   formatPhoneNumberToInternational,
   generateEmail,
@@ -51,6 +52,7 @@ describe('user management', () => {
 
     // Go to user details page
     await expectToClickModalAction(page, 'Check user detail');
+    await page.waitForNavigation({ waitUntil: 'networkidle0' });
     await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=name]', {
       text: 'jdoe@gmail.com',
     });
@@ -61,15 +63,23 @@ describe('user management', () => {
     if (userId) {
       expect(page.url()).toBe(new URL(`console/users/${userId}/settings`, logtoConsoleUrl).href);
     }
-    const email = await page.$eval('form input[name=primaryEmail]', (element) =>
-      element instanceof HTMLInputElement ? element.value : null
+    await expect(page).toMatchElement(
+      [dcls('main'), dcls('introduction'), dcls('title')].join(' '),
+      {
+        text: 'Authentication',
+      }
     );
-    const phone = await page.$eval('form input[name=primaryPhone]', (element) =>
-      element instanceof HTMLInputElement ? element.value : null
-    );
-    const username = await page.$eval('form input[name=username]', (element) =>
-      element instanceof HTMLInputElement ? element.value : null
-    );
+    const [email, phone, username] = await Promise.all([
+      page.$eval('form input[name=primaryEmail]', (element) =>
+        element instanceof HTMLInputElement ? element.value : null
+      ),
+      page.$eval('form input[name=primaryPhone]', (element) =>
+        element instanceof HTMLInputElement ? element.value : null
+      ),
+      page.$eval('form input[name=username]', (element) =>
+        element instanceof HTMLInputElement ? element.value : null
+      ),
+    ]);
 
     expect(email).toBe('jdoe@gmail.com');
     expect(phone).toBe('+1 810 555 5555');

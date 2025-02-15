@@ -20,6 +20,16 @@ const application = {
   should_delete_custom_domains_first: 'Should delete custom domains first.',
   no_legacy_secret_found: 'The application does not have a legacy secret.',
   secret_name_exists: 'Secret name already exists.',
+  saml: {
+    use_saml_app_api: 'Use `[METHOD] /saml-applications(/.*)?` API to operate SAML app.',
+    saml_application_only: 'The API is only available for SAML applications.',
+    acs_url_binding_not_supported:
+      'Only HTTP-POST binding is supported for receiving SAML assertions.',
+    can_not_delete_active_secret: 'Can not delete the active secret.',
+    no_active_secret: 'No active secret found.',
+    entity_id_required: 'Entity ID is required to generate metadata.',
+    invalid_certificate_pem_format: 'Invalid PEM certificate format',
+  },
 };
 
 export default Object.freeze(application);

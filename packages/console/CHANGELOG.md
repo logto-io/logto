@@ -1,5 +1,38 @@
 # Change Log
 
+## 1.19.0
+
+### Minor Changes
+
+- 640425414: add `trustUnverifiedEmail` setting for the Microsoft EntraID OIDC SSO connector
+
+  Since we launched the **EntraID OIDC SSO connector** we have received several feedbacks that their customer's email address can not be populated to Logto's user profile when signing up through the EntraID OIDC SSO connector.
+  This is because Logto only syncs verified email addresses, meaning the `email_verified` claim must be `true` in the user info response from the OIDC provider.
+
+  However, based on Microsoft's documentation, since the user's email address in manually managed by the organization, they are not verified guaranteed. This means that the `email_verified` claim will not be included in their user info response.
+
+  To address this issue, we have added a new `trustUnverifiedEmail` exclusively for the Microsoft EntraID OIDC SSO connector. When this setting is enabled, Logto will trust the email address provided by the Microsoft EntraID OIDC SSO connector even if the `email_verified` claim is not included in the user info response. This will allow users to sign up and log in to Logto using their email address without any issues. Please note this may introduce a security risk as the email address is not verified by the OIDC provider. You should only enable this setting if you trust the email address provided by the Microsoft EntraID OIDC SSO connector.
+
+  You can configure this setting in the **EntraID OIDC SSO connector** settings page in the Logto console or through the management API.
+
+- 640425414: display support email and website info on experience error pages.
+
+  Added support email and website info to the error pages of the experience app. E.g. when a user tries to access a page that doesn't exist, or when the social session is not found in a social callback page. This will help users to contact support easily when they encounter an error.
+
+  You may configure the support email and website info in the sign-in experience settings page in the Logto console or through the management API.
+
+- 640425414: add unknown session redirect url in the sign-in experience settings
+
+  In certain cases, Logto may be unable to properly identify a user’s authentication session when they land on the sign-in page. This can happen if the session has expired, if the user bookmarks the sign-in URL for future access, or if they directly share the sign-in link. By default, an "unknown session" 404 error is displayed.
+
+  To improve user experience, we have added a new `unknownSessionRedirectUrl` field in the sign-in experience settings.You can configure this field to redirect users to a custom URL when an unknown session is detected. This will help users to easily navigate to your client application or website and reinitiate the authentication process automatically.
+
+## 1.18.1
+
+### Patch Changes
+
+- 5bb937505: Connector config default values should only show up when creating new connectors
+
 ## 1.18.0
 
 ### Minor Changes

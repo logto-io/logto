@@ -1,4 +1,4 @@
-import { RoleType } from '@logto/schemas';
+import { RoleType, type ScopeResponse } from '@logto/schemas';
 import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -7,39 +7,31 @@ import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import SkuName from '@/components/SkuName';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
-import {
-  hasReachedSubscriptionQuotaLimit,
-  hasSurpassedSubscriptionQuotaLimit,
-} from '@/utils/quota';
 
 type Props = {
   readonly roleType: RoleType;
+  readonly scopes?: ScopeResponse[];
   readonly isCreating: boolean;
   readonly onClickCreate: () => void;
 };
 
-function Footer({ roleType, isCreating, onClickCreate }: Props) {
+function Footer({ roleType, scopes, isCreating, onClickCreate }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     currentSubscription: { planId, isEnterprisePlan },
     currentSubscriptionQuota,
-    currentSubscriptionUsage,
+    hasReachedSubscriptionQuotaLimit,
+    hasSurpassedSubscriptionQuotaLimit,
   } = useContext(SubscriptionDataContext);
 
-  const hasRoleReachedLimit = hasReachedSubscriptionQuotaLimit({
-    quotaKey: roleType === RoleType.User ? 'userRolesLimit' : 'machineToMachineRolesLimit',
-    usage:
-      roleType === RoleType.User
-        ? currentSubscriptionUsage.userRolesLimit
-        : currentSubscriptionUsage.machineToMachineRolesLimit,
-    quota: currentSubscriptionQuota,
-  });
+  const hasRoleReachedLimit = hasReachedSubscriptionQuotaLimit(
+    roleType === RoleType.User ? 'userRolesLimit' : 'machineToMachineRolesLimit'
+  );
 
-  const hasScopesPerRoleSurpassedLimit = hasSurpassedSubscriptionQuotaLimit({
-    quotaKey: 'scopesPerRoleLimit',
-    usage: currentSubscriptionUsage.scopesPerRoleLimit,
-    quota: currentSubscriptionQuota,
-  });
+  const hasScopesPerRoleSurpassedLimit = hasSurpassedSubscriptionQuotaLimit(
+    'scopesPerRoleLimit',
+    scopes?.length ?? 0
+  );
 
   if (hasRoleReachedLimit || hasScopesPerRoleSurpassedLimit) {
     return (
@@ -47,7 +39,7 @@ function Footer({ roleType, isCreating, onClickCreate }: Props) {
         <Trans
           components={{
             a: <ContactUsPhraseLink />,
-            planName: <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />,
+            planName: <SkuName skuId={planId} />,
           }}
         >
           {/* User roles limit paywall */}

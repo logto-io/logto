@@ -3,7 +3,10 @@ import fs from 'node:fs/promises';
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-  entry: ['src/index.ts', 'src/react.ts'],
+  entry: {
+    'account/index': 'src/account/index.ts',
+    'account/react': 'src/account/react.ts',
+  },
   format: 'esm',
   dts: true,
   clean: true,

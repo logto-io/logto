@@ -12,6 +12,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import ApplicationDetailsContent from './ApplicationDetailsContent';
 import { type ApplicationSecretRow } from './ApplicationDetailsContent/EndpointsAndCredentials';
 import GuideModal from './GuideModal';
+import SamlApplicationDetailsContent, { isSamlApplication } from './SamlApplicationDetailsContent';
 
 function ApplicationDetails() {
   const { id, guideId } = useParams();
@@ -60,14 +61,19 @@ function ApplicationDetails() {
       }}
     >
       <PageMeta titleKey="application_details.page_title" />
-      {data && oidcConfig.data && secrets.data && (
-        <ApplicationDetailsContent
-          data={data}
-          oidcConfig={oidcConfig.data}
-          secrets={secrets.data}
-          onApplicationUpdated={mutate}
-        />
-      )}
+      {data &&
+        oidcConfig.data &&
+        secrets.data &&
+        (isSamlApplication(data) ? (
+          <SamlApplicationDetailsContent data={data} />
+        ) : (
+          <ApplicationDetailsContent
+            data={data}
+            oidcConfig={oidcConfig.data}
+            secrets={secrets.data}
+            onApplicationUpdated={mutate}
+          />
+        ))}
     </DetailsPage>
   );
 }

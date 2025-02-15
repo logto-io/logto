@@ -114,16 +114,6 @@ export const initClientAndSignIn = async (
   return client;
 };
 
-export const signInAndGetProfileApi = async (username: string, password: string) => {
-  const client = await initClientAndSignIn(username, password);
-  const accessToken = await client.getAccessToken();
-  return api.extend({
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-};
-
 export const createUserWithAllRolesAndSignInToClient = async () => {
   const [{ id }, { username, password }] = await createUserWithAllRoles();
   const client = await initClientAndSignIn(username, password, {

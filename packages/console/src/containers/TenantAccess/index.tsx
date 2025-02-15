@@ -1,12 +1,13 @@
 import { useLogto } from '@logto/react';
 import { useContext, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { useSWRConfig } from 'swr';
 
 // Used in the docs
-// eslint-disable-next-line unused-imports/no-unused-imports
-import type ProtectedRoutes from '@/containers/ProtectedRoutes';
-import { TenantsContext } from '@/contexts/TenantsProvider';
+
+import { isCloud } from '@/consts/env';
+import { reservedTenantIdWildcard, TenantsContext } from '@/contexts/TenantsProvider';
+import useUserDefaultTenantId from '@/hooks/use-user-default-tenant-id';
 
 /**
  * The container that ensures the user has access to the current tenant. When the user is
@@ -43,6 +44,8 @@ export default function TenantAccess() {
   const { isAuthenticated } = useLogto();
   const { currentTenant, currentTenantId } = useContext(TenantsContext);
   const { mutate } = useSWRConfig();
+  const { pathname } = useLocation();
+  const { defaultTenantId } = useUserDefaultTenantId();
 
   // Clean the cache when the current tenant ID changes. This is required because the
   // SWR cache key is not tenant-aware.
@@ -68,13 +71,21 @@ export default function TenantAccess() {
       isAuthenticated &&
       currentTenantId &&
       // The current tenant is unavailable to the user, maybe a deleted tenant or a tenant that
-      // the user has no access to. Fall back to the home page.
+      // the user has no access to.
+      // If the current tenant ID equals the reserved wildcard "to", replace it with the last
+      // visited tenant ID and keeping the rest of the URL path, otherwise redirect to home page.
       !currentTenant
     ) {
+      if (isCloud && defaultTenantId && currentTenantId === reservedTenantIdWildcard) {
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        window.location.href = pathname.replace(reservedTenantIdWildcard, defaultTenantId);
+        return;
+      }
+
       // eslint-disable-next-line @silverhand/fp/no-mutation
       window.location.href = '/';
     }
-  }, [currentTenant, currentTenantId, isAuthenticated]);
+  }, [currentTenant, currentTenantId, isAuthenticated, pathname, defaultTenantId]);
 
   return <Outlet />;
 }

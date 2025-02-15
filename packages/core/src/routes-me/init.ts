@@ -40,7 +40,7 @@ export default function initMeApis(tenant: TenantContext): Koa {
   userAssetsRoutes(meRouter, tenant);
 
   const meApp = new Koa();
-  meApp.use(koaCors(EnvSet.values.cloudUrlSet));
+  meApp.use(koaCors([EnvSet.values.cloudUrlSet]));
   meApp.use(meRouter.routes()).use(meRouter.allowedMethods());
 
   return meApp;

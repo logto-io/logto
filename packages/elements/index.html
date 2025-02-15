@@ -5,15 +5,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Logto elements dev page</title>
-  <script type="module" src="./src/index.ts"></script>
+  <link rel="stylesheet" href="src/account/style.css">
+  <script type="module" src="src/account/index.ts"></script>
 </head>
-
-<body style="background: #111;">
-  <logto-theme-provider theme="dark">
-    <logto-user-provider>
-      <logto-profile-card></logto-profile-card>
-    </logto-user-provider>
-  </logto-theme-provider>
+<body style="background-color: #ecebf5;">
+  <logto-account-provider>
+    <logto-account-center></logto-account-center>
+  </logto-account-provider>
 </body>
+
+<script type="module">
+  import { LogtoAccountApi } from './src/account/api/index.ts';
+
+  // Replace with your logto endpoint when developing locally
+  const LOGTO_ENDPOINT = 'TEST_LOGTO_ENDPOINT';
+  const ACCESS_TOKEN = 'TEST_ACCESS_TOKEN';
+
+  const provider = document.querySelector('logto-account-provider');
+  const api = new LogtoAccountApi(LOGTO_ENDPOINT, () => ACCESS_TOKEN);
+  provider.accountApi = api;
+</script>
 
 </html>

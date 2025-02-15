@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-google",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Google web connector implementation.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {
@@ -57,14 +57,14 @@
     "@silverhand/ts-config": "6.0.0",
     "@types/node": "^20.11.20",
     "@types/supertest": "^6.0.2",
-    "@vitest/coverage-v8": "^2.0.0",
+    "@vitest/coverage-v8": "^2.1.8",
     "eslint": "^8.56.0",
     "lint-staged": "^15.0.2",
     "nock": "^13.3.1",
     "prettier": "^3.0.0",
     "supertest": "^7.0.0",
-    "tsup": "^8.1.0",
+    "tsup": "^8.3.0",
     "typescript": "^5.5.3",
-    "vitest": "^2.0.0"
+    "vitest": "^2.1.8"
   }
 }

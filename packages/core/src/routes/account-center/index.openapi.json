@@ -1,0 +1,48 @@
+{
+  "tags": [
+    {
+      "name": "Account center",
+      "description": "Customize your account API settings."
+    }
+  ],
+  "paths": {
+    "/api/account-center": {
+      "get": {
+        "operationId": "GetAccountCenterSettings",
+        "summary": "Get account center settings",
+        "description": "Get the account center settings.",
+        "responses": {
+          "200": {
+            "description": "Account center settings."
+          }
+        }
+      },
+      "patch": {
+        "operationId": "UpdateAccountCenterSettings",
+        "summary": "Update account center settings",
+        "description": "Update the account center settings with the provided settings.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "enabled": {
+                    "description": "Enable or disable the account API."
+                  },
+                  "fields": {
+                    "description": "The fields settings for the account API."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated account center settings."
+          }
+        }
+      }
+    }
+  }
+}

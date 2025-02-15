@@ -52,60 +52,72 @@ describe('koaCors() middleware', () => {
     process.env = { ...envBackup };
   });
 
-  it('should set proper CORS response headers for a single URL Set', async () => {
-    const endpoint = 'https://logto.io';
-    process.env.ENDPOINT = endpoint;
-    process.env.NODE_ENV = 'dev';
-    const urlSet = new UrlSet(false, 3001);
-    const run = koaCors(urlSet);
+  describe('with URL sets', () => {
+    it('should set proper CORS response headers for a single URL Set', async () => {
+      const endpoint = 'https://logto.io';
+      process.env.ENDPOINT = endpoint;
+      process.env.NODE_ENV = 'dev';
+      const urlSet = new UrlSet(false, 3001);
+      const run = koaCors([urlSet]);
 
-    const [ctx1, setSpy1] = mockContext('GET', endpoint + '/api');
-    await run(ctx1, noop);
-    expectCorsHeaders(setSpy1, endpoint);
+      const [ctx1, setSpy1] = mockContext('GET', endpoint + '/api');
+      await run(ctx1, noop);
+      expectCorsHeaders(setSpy1, endpoint);
 
-    const [ctx2, setSpy2] = mockContext('GET', 'http://localhost:3001/api');
-    await run(ctx2, noop);
-    expectCorsHeaders(setSpy2, 'http://localhost:3001');
+      const [ctx2, setSpy2] = mockContext('GET', 'http://localhost:3001/api');
+      await run(ctx2, noop);
+      expectCorsHeaders(setSpy2, 'http://localhost:3001');
+    });
+
+    it('should set proper CORS response headers for multiple URL Sets', async () => {
+      const endpoint = 'https://logto.io';
+      const adminEndpoint = 'https://logto.admin';
+
+      process.env.ENDPOINT = endpoint;
+      process.env.ADMIN_ENDPOINT = adminEndpoint;
+      process.env.NODE_ENV = 'dev';
+      const run = koaCors([new UrlSet(false, 3001), new UrlSet(true, 3002, 'ADMIN_')]);
+
+      const [ctx1, setSpy1] = mockContext('PUT', 'https://localhost:3002/api');
+      await run(ctx1, noop);
+      expectCorsHeaders(setSpy1, 'https://localhost:3002');
+
+      const [ctx2, setSpy2] = mockContext('POST', adminEndpoint + '/api');
+      await run(ctx2, noop);
+      expectCorsHeaders(setSpy2, adminEndpoint);
+    });
+
+    it('should set CORS response headers for localhost in production when endpoint is unavailable', async () => {
+      process.env.ENDPOINT = undefined;
+      process.env.NODE_ENV = 'production';
+      const urlSet = new UrlSet(true, 3002);
+      const run = koaCors([urlSet]);
+
+      const [ctx, setSpy] = mockContext('POST', 'https://localhost:3002/api');
+      await run(ctx, noop);
+      expectCorsHeaders(setSpy, 'https://localhost:3002');
+    });
+
+    it('should not to set CORS response headers for localhost in production when endpoint is available', async () => {
+      const endpoint = 'https://logto.io';
+      process.env.ENDPOINT = endpoint;
+      process.env.NODE_ENV = 'production';
+      const urlSet = new UrlSet(false, 3001);
+      const run = koaCors([urlSet]);
+
+      const [ctx, setSpy] = mockContext('DELETE', 'http://localhost:3001/api');
+      await run(ctx, noop);
+      expectCorsHeaders(setSpy, '');
+    });
   });
 
-  it('should set proper CORS response headers for multiple URL Sets', async () => {
-    const endpoint = 'https://logto.io';
-    const adminEndpoint = 'https://logto.admin';
+  describe('with allowed prefixes', () => {
+    it('should allow any origin if the path starts with an allowed prefix', async () => {
+      const run = koaCors([], ['/api']);
 
-    process.env.ENDPOINT = endpoint;
-    process.env.ADMIN_ENDPOINT = adminEndpoint;
-    process.env.NODE_ENV = 'dev';
-    const run = koaCors(new UrlSet(false, 3001), new UrlSet(true, 3002, 'ADMIN_'));
-
-    const [ctx1, setSpy1] = mockContext('PUT', 'https://localhost:3002/api');
-    await run(ctx1, noop);
-    expectCorsHeaders(setSpy1, 'https://localhost:3002');
-
-    const [ctx2, setSpy2] = mockContext('POST', adminEndpoint + '/api');
-    await run(ctx2, noop);
-    expectCorsHeaders(setSpy2, adminEndpoint);
-  });
-
-  it('should set CORS response headers for localhost in production when endpoint is unavailable', async () => {
-    process.env.ENDPOINT = undefined;
-    process.env.NODE_ENV = 'production';
-    const urlSet = new UrlSet(true, 3002);
-    const run = koaCors(urlSet);
-
-    const [ctx, setSpy] = mockContext('POST', 'https://localhost:3002/api');
-    await run(ctx, noop);
-    expectCorsHeaders(setSpy, 'https://localhost:3002');
-  });
-
-  it('should not to set CORS response headers for localhost in production when endpoint is available', async () => {
-    const endpoint = 'https://logto.io';
-    process.env.ENDPOINT = endpoint;
-    process.env.NODE_ENV = 'production';
-    const urlSet = new UrlSet(false, 3001);
-    const run = koaCors(urlSet);
-
-    const [ctx, setSpy] = mockContext('DELETE', 'http://localhost:3001/api');
-    await run(ctx, noop);
-    expectCorsHeaders(setSpy, '');
+      const [ctx, setSpy] = mockContext('GET', 'https://logto.io/api');
+      await run(ctx, noop);
+      expectCorsHeaders(setSpy, 'https://logto.io');
+    });
   });
 });

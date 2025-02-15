@@ -1,6 +1,6 @@
 {
   "name": "@logto/tunnel",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "A CLI tool that creates tunnel service to Logto Cloud for local development.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/logto#readme",
@@ -60,12 +60,12 @@
     "@types/adm-zip": "^0.5.5",
     "@types/node": "^20.9.5",
     "@types/yargs": "^17.0.13",
-    "@vitest/coverage-v8": "^2.0.0",
+    "@vitest/coverage-v8": "^2.1.8",
     "eslint": "^8.56.0",
     "lint-staged": "^15.0.0",
     "prettier": "^3.0.0",
     "typescript": "^5.5.3",
-    "vitest": "^2.0.0"
+    "vitest": "^2.1.8"
   },
   "eslintConfig": {
     "extends": "@silverhand",

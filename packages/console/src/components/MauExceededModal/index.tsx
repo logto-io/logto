@@ -1,5 +1,5 @@
-import { cond } from '@silverhand/essentials';
-import { useContext, useState } from 'react';
+import { conditional } from '@silverhand/essentials';
+import { useContext, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
@@ -21,7 +21,7 @@ import styles from './index.module.scss';
 
 function MauExceededModal() {
   const {
-    currentSubscription: { planId, isEnterprisePlan },
+    currentSubscription: { planId },
   } = useContext(SubscriptionDataContext);
   const { currentTenant } = useContext(TenantsContext);
 
@@ -33,17 +33,25 @@ function MauExceededModal() {
     setHasClosed(true);
   };
 
-  if (hasClosed) {
-    return null;
-  }
+  const periodicUsage = useMemo(
+    () =>
+      conditional(
+        currentTenant && {
+          mauLimit: currentTenant.usage.activeUsers,
+          tokenLimit: currentTenant.usage.tokenUsage,
+        }
+      ),
+    [currentTenant]
+  );
 
-  const isMauExceeded =
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain, prettier/prettier
-    cond(currentTenant && currentTenant.quota.mauLimit !== null &&
-        currentTenant.usage.activeUsers >= currentTenant.quota.mauLimit
-    );
+  const isMauExceeded = conditional(
+    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
+    currentTenant &&
+      currentTenant.quota.mauLimit !== null &&
+      currentTenant.usage.activeUsers >= currentTenant.quota.mauLimit
+  );
 
-  if (!isMauExceeded) {
+  if (hasClosed || !isMauExceeded) {
     return null;
   }
 
@@ -77,14 +85,14 @@ function MauExceededModal() {
         <InlineNotification severity="error">
           <Trans
             components={{
-              planName: <SkuName skuId={planId} isEnterprisePlan={isEnterprisePlan} />,
+              planName: <SkuName skuId={planId} />,
             }}
           >
             {t('upsell.mau_exceeded_modal.notification')}
           </Trans>
         </InlineNotification>
         <FormField title="subscription.plan_usage">
-          <PlanUsage />
+          <PlanUsage periodicUsage={periodicUsage} />
         </FormField>
       </ModalLayout>
     </ReactModal>

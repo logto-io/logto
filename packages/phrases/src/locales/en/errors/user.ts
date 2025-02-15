@@ -35,6 +35,13 @@ const user = {
   password_algorithm_required: 'Password algorithm is required.',
   password_and_digest: 'You cannot set both plain text password and password digest.',
   personal_access_token_name_exists: 'Personal access token name already exists.',
+  totp_secret_invalid: 'Invalid TOTP secret supplied.',
+  wrong_backup_code_format: 'Backup code format is invalid.',
+  username_required: 'Username is a required identifier, you can not set it to null.',
+  email_or_phone_required:
+    'Email address or phone number is a required identifier, at least one is required.',
+  email_required: 'Email address is a required identifier, you can not set it to null.',
+  phone_required: 'Phone number is a required identifier, you can not set it to null.',
 };
 
 export default Object.freeze(user);

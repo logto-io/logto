@@ -10,6 +10,10 @@ const api = ky.extend({
 
 export default api;
 
+export const baseApi = ky.extend({
+  prefixUrl: new URL(logtoUrl),
+});
+
 // TODO: @gao rename
 export const authedAdminApi = api.extend({
   headers: {

@@ -18,7 +18,7 @@ import {
 } from '@logto/schemas';
 import { removeUndefinedKeys, trySafe, tryThat } from '@silverhand/essentials';
 import i18next from 'i18next';
-import Provider, { errors } from 'oidc-provider';
+import { Provider, errors } from 'oidc-provider';
 import getRawBody from 'raw-body';
 import snakecaseKeys from 'snakecase-keys';
 
@@ -77,6 +77,7 @@ export default function initOidc(
     sameSite: 'lax',
     path: '/',
     signed: true,
+    overwrite: true,
   } as const);
 
   // Do NOT deconstruct variables from `envSet` earlier, since we might reload `envSet` on the fly,

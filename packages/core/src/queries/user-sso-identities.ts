@@ -10,6 +10,8 @@ import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 import SchemaQueries from '#src/utils/SchemaQueries.js';
 import { manyRows } from '#src/utils/sql.js';
 
+import { buildUpdateWhereWithPool } from '../database/update-where.js';
+
 export default class UserSsoIdentityQueries extends SchemaQueries<
   UserSsoIdentityKeys,
   CreateUserSsoIdentity,
@@ -39,5 +41,17 @@ export default class UserSsoIdentityQueries extends SchemaQueries<
         where ${sql.identifier([UserSsoIdentities.fields.userId])} = ${userId}
       `)
     );
+  }
+
+  async updateUserSsoIdentityDetailByIdentityId(
+    issuer: string,
+    identityId: string,
+    detail: UserSsoIdentity['detail']
+  ) {
+    return buildUpdateWhereWithPool(this.pool)(this.schema, true)({
+      set: { detail },
+      where: { issuer, identityId },
+      jsonbMode: 'replace',
+    });
   }
 }

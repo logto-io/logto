@@ -1,5 +1,23 @@
 # @logto/tunnel
 
+## 0.2.2
+
+### Patch Changes
+
+- Updated dependencies [bc2a0ac03]
+  - @logto/shared@3.1.2
+
+## @logto/tunnel@0.2.1
+
+### Patch Changes
+
+- 349a6a405: support range request for mp4 video source hosting
+
+  Safari browser uses range request to fetch video data, but it was not supported by the `@logto/tunnel` CLI tool. This prevents our users who want to build custom sign-in pages with video background. In order to fix this, we need to partially read the video file stream based on the `range` request header, and set proper response headers and status code (206).
+
+- Updated dependencies [3c993d59c]
+  - @logto/core-kit@2.5.1
+
 ## @logto/tunnel@0.2.0
 
 ### Minor Changes
@@ -83,4 +101,3 @@
   If all set up correctly, when you click the "sign-in" button in your application, you should be navigated to your custom sign-in page instead of Logto's built-in UI, along with valid session (cookies) that allows you to further interact with Logto experience API.
 
   Refer to [Logto tunnel documentation](https://docs.logto.dev/docs/references/tunnel-cli/) for more details.
-  

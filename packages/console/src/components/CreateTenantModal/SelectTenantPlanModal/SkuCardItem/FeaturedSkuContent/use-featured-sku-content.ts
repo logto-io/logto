@@ -10,6 +10,8 @@ import {
   freePlanPermissionsLimit,
   freePlanRoleLimit,
   proPlanAuditLogsRetentionDays,
+  // eslint-disable-next-line unused-imports/no-unused-imports -- for jsdoc usage
+  featuredPlanIds,
 } from '@/consts/subscriptions';
 
 type ContentData = {
@@ -17,6 +19,15 @@ type ContentData = {
   readonly isAvailable: boolean;
 };
 
+/**
+ * This hook is used to build the plan content on the SelectTenantPlanModal.
+ * It is used to display the features of the selected plan.
+ * Currently, all the feature content is hardcoded.
+ * For the grandfathered Pro plan and new created Pro202411 plan, the content is the same.
+ * So we don't need to differentiate them. here.
+ *
+ * @param skuId The selected sku id. Can only be one of {@link featuredPlanIds}
+ */
 const useFeaturedSkuContent = (skuId: string) => {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console.upsell.featured_plan_content',

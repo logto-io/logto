@@ -105,6 +105,8 @@ const description = {
     '{{types, list(type: disjunction;)}}を入力して新しいアカウントを作成します。',
   all_account_creation_options: 'すべてのアカウント作成オプション',
   back_to_sign_in: 'サインインに戻る',
+  support_email: 'サポートメール: <link></link>',
+  support_website: 'サポートウェブサイト: <link></link>',
 };
 
 export default Object.freeze(description);

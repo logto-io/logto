@@ -23,5 +23,8 @@ create table sign_in_experiences (
   password_policy jsonb /* @use PartialPasswordPolicy */ not null default '{}'::jsonb,
   mfa jsonb /* @use Mfa */ not null default '{}'::jsonb,
   single_sign_on_enabled boolean not null default false,
+  support_email text,
+  support_website_url text,
+  unknown_session_redirect_url text,
   primary key (tenant_id, id)
 );

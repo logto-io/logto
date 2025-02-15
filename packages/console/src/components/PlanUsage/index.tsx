@@ -1,8 +1,8 @@
 import { ReservedPlanId } from '@logto/schemas';
-import { cond, conditional } from '@silverhand/essentials';
+import { cond } from '@silverhand/essentials';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
-import { useContext, useMemo } from 'react';
+import { useContext } from 'react';
 
 import {
   type NewSubscriptionPeriodicUsage,
@@ -10,9 +10,8 @@ import {
   type NewSubscriptionQuota,
 } from '@/cloud/types/router';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
-import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
-import { formatPeriod, isPaidPlan } from '@/utils/subscription';
+import { formatPeriod, isPaidPlan, isProPlan } from '@/utils/subscription';
 
 import PlanUsageCard, { type Props as PlanUsageCardProps } from './PlanUsageCard';
 import styles from './index.module.scss';
@@ -26,7 +25,7 @@ import {
 } from './utils';
 
 type Props = {
-  readonly periodicUsage?: NewSubscriptionPeriodicUsage;
+  readonly periodicUsage: NewSubscriptionPeriodicUsage | undefined;
 };
 
 const getUsageByKey = (
@@ -58,51 +57,26 @@ const getUsageByKey = (
   return countBasedUsage[key];
 };
 
-function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
+function PlanUsage({ periodicUsage }: Props) {
   const {
     currentSubscriptionQuota,
     currentSubscriptionBasicQuota,
     currentSubscriptionUsage,
-    currentSubscription: {
-      currentPeriodStart,
-      currentPeriodEnd,
-      planId,
-      isAddOnAvailable,
-      isEnterprisePlan,
-    },
+    currentSubscription: { currentPeriodStart, currentPeriodEnd, planId, isEnterprisePlan },
   } = useContext(SubscriptionDataContext);
-  const { currentTenant } = useContext(TenantsContext);
-
-  const periodicUsage = useMemo(
-    () =>
-      rawPeriodicUsage ??
-      conditional(
-        currentTenant && {
-          mauLimit: currentTenant.usage.activeUsers,
-          tokenLimit: currentTenant.usage.tokenUsage,
-        }
-      ),
-    [currentTenant, rawPeriodicUsage]
-  );
 
   if (!periodicUsage) {
     return null;
   }
 
   const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
-  const onlyShowPeriodicUsage =
-    planId === ReservedPlanId.Free || (!isAddOnAvailable && planId === ReservedPlanId.Pro);
+  const onlyShowPeriodicUsage = planId === ReservedPlanId.Free;
 
   const usages: PlanUsageCardProps[] = usageKeys
     // Show all usages for Pro plan and only show MAU and token usage for Free plan
     .filter(
       (key) =>
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-        isAddOnAvailable ||
-        // TODO: design a flow for enterprise tenants onboarding.
-        // Show all usages for Enterprise plan since some of the enterprise tenants does not have Stripe subscription, as a result, the `isAddOnAvailable` will be undefined in this case, even if we will deprecate `isAddOnAvailable` soon, the plan usage will not be automatically fixed for these enterprise tenants.
-        isEnterprisePlan ||
-        (onlyShowPeriodicUsage && (key === 'mauLimit' || key === 'tokenLimit'))
+        isPaidTenant || (onlyShowPeriodicUsage && (key === 'mauLimit' || key === 'tokenLimit'))
     )
     .map((key) => ({
       usage: getUsageByKey(key, {
@@ -114,6 +88,7 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
       titleKey: `subscription.usage.${titleKeyMap[key]}`,
       unitPrice: usageKeyPriceMap[key],
       ...cond(
+        // We only show the usage card for MAU and token for Free plan
         (key === 'tokenLimit' || key === 'mauLimit' || isPaidTenant) && {
           quota: currentSubscriptionQuota[key],
         }
@@ -146,7 +121,7 @@ function PlanUsage({ periodicUsage: rawPeriodicUsage }: Props) {
       // Hide the quota notice for Pro plans if the basic quota is 0.
       // Per current pricing model design, it should apply to `enterpriseSsoLimit`.
       ...cond(
-        planId === ReservedPlanId.Pro &&
+        isProPlan(planId) &&
           currentSubscriptionBasicQuota[key] === 0 && {
             isQuotaNoticeHidden: true,
           }
