@@ -8,8 +8,7 @@ const subscription = {
   pro_plan: '프로 요금제',
   pro_plan_description: 'Logto와 함께 걱정 없이 비즈니스 혜택을 받으세요.',
   enterprise: '엔터프라이즈 플랜',
-  /** UNTRANSLATED */
-  enterprise_description: 'For large teams and businesses with enterprise-grade requirements.',
+  enterprise_description: '대규모 팀 및 엔터프라이즈급 요구 사항이 있는 비즈니스를 위한 것입니다.',
   admin_plan: '관리자 플랜',
   dev_plan: '개발 플랜',
   current_plan: '현재 요금제',
@@ -69,6 +68,13 @@ const subscription = {
   subscription_check_timeout: '구독 확인이 타임아웃되었습니다. 나중에 다시 확인해주세요.',
   no_subscription: '구독 없음',
   usage,
+  token_usage_notification: {
+    exceeded:
+      '할당량 한도를 100% 초과했습니다. 사용자가 제대로 로그인할 수 없습니다. 불편을 피하기 위해 즉시 업그레이드하세요.',
+    close_to_limit:
+      '토큰 사용 제한에 거의 도달했습니다. 사용량이 100%를 초과하면 Logto가 토큰을 발급하지 않습니다. 불편을 피하기 위해 무료 요금제를 업그레이드하세요.',
+    dev_plan_exceeded: '이 테넌트는 Logto의 엔티티 제한 정책에 따라 토큰 한도에 도달했습니다.',
+  },
 };
 
 export default Object.freeze(subscription);

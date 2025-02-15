@@ -4,7 +4,7 @@ const application_details = {
   check_guide: 'Revisar Guía',
   settings: 'Configuraciones',
   settings_description:
-    'An "Application" is a registered software or service that can access user info or act for a user. Applications help recognize who’s asking for what from Logto and handle the sign-in and permission. Fill in the required fields for authentication.',
+    'Un "Application" es un software o servicio registrado que puede acceder a información del usuario o actuar en nombre de un usuario. Las aplicaciones ayudan a reconocer quién está solicitando qué desde Logto y manejan el inicio de sesión y los permisos. Rellena los campos requeridos para la autenticación.',
   integration: 'Integración',
   integration_description:
     'Despliega con los trabajadores seguros de Logto, potenciados por la red global de Cloudflare para un rendimiento de primer nivel y arranques instantáneos de 0ms a nivel mundial.',
@@ -41,6 +41,8 @@ const application_details = {
   redirect_uri_placeholder_native: 'io.logto://callback',
   redirect_uri_tip:
     'El URI hacia donde se redirecciona después de que un usuario inicie sesión (correctamente o no). Consulta OpenID Connect <a>AuthRequest</a> para más información.',
+  mixed_redirect_uri_warning:
+    'Tu tipo de aplicación no es compatible con al menos uno de los URIs de redireccionamiento. No sigue las mejores prácticas y recomendamos encarecidamente mantener los URIs de redireccionamiento consistentes.',
   post_sign_out_redirect_uri: 'Post Sign-out URI de Redireccionamiento',
   post_sign_out_redirect_uris: 'Post Sign-out URIs de Redireccionamiento',
   post_sign_out_redirect_uri_placeholder: 'https://tu.pagina.com/home',
@@ -64,6 +66,8 @@ const application_details = {
   rotate_refresh_token: 'Rotar el token de refresco',
   rotate_refresh_token_label:
     'Cuando está habilitado, Logto emitirá un nuevo token de refresco para las solicitudes de token cuando ha pasado el 70 % del tiempo de vida útil (TTL) original o se cumplen ciertas condiciones. <a>Más información</a>',
+  rotate_refresh_token_label_for_public_clients:
+    'Cuando está habilitado, Logto emitirá un nuevo token de refresco para cada solicitud de token. <a>Más información</a>',
   backchannel_logout: 'Cierre de sesión por backchannel',
   backchannel_logout_description:
     'Configure el punto de cierre de sesión por backchannel de OpenID Connect y si la sesión es requerida para esta aplicación.',
@@ -179,6 +183,9 @@ const application_details = {
     create_new_secret: 'Crear nuevo secreto',
     delete_confirmation:
       'Esta acción no se puede deshacer. ¿Estás seguro de que deseas eliminar este secreto?',
+    deleted: 'El secreto ha sido eliminado exitosamente.',
+    activated: 'El secreto ha sido activado exitosamente.',
+    deactivated: 'El secreto ha sido desactivado exitosamente.',
     legacy_secret: 'Secreto heredado',
     expired: 'Expirado',
     expired_tooltip: 'Este secreto expiró el {{date}}.',
@@ -190,12 +197,66 @@ const application_details = {
         'El secreto nunca expirará. Recomendamos establecer una fecha de expiración para mayor seguridad.',
       days: '{{count}} día',
       days_other: '{{count}} días',
+      years: '{{count}} año',
+      years_other: '{{count}} años',
       created: 'El secreto {{name}} se ha creado exitosamente.',
     },
     edit_modal: {
       title: 'Editar secreto de aplicación',
       edited: 'El secreto {{name}} ha sido editado exitosamente.',
     },
+  },
+  saml_idp_config: {
+    title: 'Metadatos del IdP SAML',
+    description:
+      'Utiliza los siguientes metadatos y certificado para configurar el IdP SAML en tu aplicación.',
+    metadata_url_label: 'URL de metadatos del IdP',
+    single_sign_on_service_url_label: 'URL del servicio de inicio de sesión único',
+    idp_entity_id_label: 'ID de entidad del IdP',
+  },
+  saml_idp_certificates: {
+    title: 'Certificado de firma SAML',
+    expires_at: 'Expira en',
+    finger_print: 'Huella digital',
+    status: 'Estado',
+    active: 'Activo',
+    inactive: 'Inactivo',
+  },
+  saml_idp_name_id_format: {
+    title: 'Formato de ID de Nombre',
+    description: 'Selecciona el formato de ID de nombre del IdP SAML.',
+    persistent: 'Persistente',
+    persistent_description: 'Usar el ID de usuario de Logto como ID de Nombre',
+    transient: 'Transitorio',
+    transient_description: 'Usar un ID de usuario de una sola vez como ID de Nombre',
+    unspecified: 'No especificado',
+    unspecified_description: 'Usar el ID de usuario de Logto como ID de Nombre',
+    email_address: 'Dirección de correo electrónico',
+    email_address_description: 'Usar dirección de correo electrónico como ID de Nombre',
+  },
+  saml_encryption_config: {
+    encrypt_assertion: 'Encriptar afirmación SAML',
+    encrypt_assertion_description: 'Al habilitar esta opción, la afirmación SAML será encriptada.',
+    encrypt_then_sign: 'Encriptar y luego firmar',
+    encrypt_then_sign_description:
+      'Al habilitar esta opción, la afirmación SAML será encriptada y luego firmada; de lo contrario, la afirmación SAML será firmada y luego encriptada.',
+    certificate: 'Certificado',
+    certificate_tooltip:
+      'Copia y pega el certificado x509 que recibes de tu proveedor de servicios para encriptar la afirmación SAML.',
+    certificate_placeholder:
+      '-----BEGIN CERTIFICATE-----\nMIICYDCCAcmgAwIBA...\n-----END CERTIFICATE-----\n',
+    certificate_missing_error: 'Se requiere un certificado.',
+    certificate_invalid_format_error:
+      'Se detectó un formato de certificado inválido. Por favor, revisa el formato del certificado e intenta nuevamente.',
+  },
+  saml_app_attribute_mapping: {
+    name: 'Mapeo de atributos',
+    title: 'Mapeo de atributos base',
+    description:
+      'Añade mapeo de atributos para sincronizar el perfil de usuario desde Logto a tu aplicación.',
+    col_logto_claims: 'Valor de Logto',
+    col_sp_claims: 'Nombre del valor de tu aplicación',
+    add_button: 'Añadir otro',
   },
 };
 

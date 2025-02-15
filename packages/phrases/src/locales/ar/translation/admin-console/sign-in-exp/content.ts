@@ -24,6 +24,14 @@ const content = {
     default_language_description_fixed:
       'عند تعطيل الكشف التلقائي، اللغة الافتراضية هي اللغة الوحيدة التي سيعرضها البرنامج الخاص بك. قم بتشغيل الكشف التلقائي لتوسيع اللغة.',
   },
+  support: {
+    title: 'الدعم',
+    subtitle: 'عرض قنوات الدعم الخاصة بك على صفحات الخطأ لتوفير مساعدة سريعة للمستخدم.',
+    support_email: 'بريد الدعم الإلكتروني',
+    support_email_placeholder: 'support@email.com',
+    support_website: 'موقع الدعم الإلكتروني',
+    support_website_placeholder: 'https://your.website/support',
+  },
   manage_language: {
     title: 'إدارة اللغة',
     subtitle:

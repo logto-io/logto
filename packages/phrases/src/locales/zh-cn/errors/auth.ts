@@ -6,6 +6,7 @@ const auth = {
   expected_role_not_found: '未找到期望的 role。请检查用户 role 与权限。',
   jwt_sub_missing: 'JWT 缺失 `sub`',
   require_re_authentication: '需要重新认证以进行受保护操作。',
+  exceed_token_limit: '令牌限制已超出。请联系你的管理员。',
 };
 
 export default Object.freeze(auth);

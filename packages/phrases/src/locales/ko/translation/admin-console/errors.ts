@@ -7,6 +7,7 @@ const errors = {
   invalid_uri_format: 'URI 형식이 유효하지 않음',
   invalid_origin_format: 'URI origin 형식이 유효하지 않음',
   invalid_json_format: 'JSON 형식이 유효하지 않음',
+  invalid_parameters_format: '매개 변수 형식이 유효하지 않음',
   invalid_regex: '잘못된 정규 표현식',
   invalid_error_message_format: '오류 메세지 형식이 유효하지 않아요.',
   required_field_missing: '{{field}}을/를 입력해 주세요.',

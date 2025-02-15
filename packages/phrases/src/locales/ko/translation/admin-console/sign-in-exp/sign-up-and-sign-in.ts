@@ -66,6 +66,9 @@ const sign_up_and_sign_in = {
     enable_user_registration: '사용자 등록 활성화',
     enable_user_registration_description:
       '사용자 등록을 활성화하거나 비활성화합니다. 비활성화된 경우 사용자는 관리 콘솔에서는 추가할 수 있지만 사용자는 더 이상 로그인 UI를 통해 계정을 설정할 수 없습니다.',
+    unknown_session_redirect_url: '알 수 없는 세션 리다이렉트 URL',
+    unknown_session_redirect_url_tip:
+      '때때로 Logto는 로그인 페이지에서 사용자의 세션을 인식하지 못할 수 있어요. 예를 들어 세션이 만료되었거나 사용자가 로그인 링크를 즐겨찾기하거나 공유한 경우입니다. 기본적으로는 "알 수 없는 세션" 404 오류가 나타납니다. 사용자 경험을 향상시키기 위해, 대체 URL을 설정하여 사용자들이 다시 앱으로 리다이렉트되어 인증을 재시작할 수 있게 하세요.',
   },
 };
 

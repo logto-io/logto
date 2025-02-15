@@ -7,6 +7,7 @@ const auth = {
     '예상되는 역할을 찾을 수 없어요. 해당 사용자의 권한 또는 역할을 확인해 주세요.',
   jwt_sub_missing: 'JWT에서 `sub`를 찾을 수 없어요.',
   require_re_authentication: '보호된 작업을 수행하려면 재인증이 필요해요.',
+  exceed_token_limit: '토큰 한도를 초과했습니다. 관리자에게 문의하세요.',
 };
 
 export default Object.freeze(auth);

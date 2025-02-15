@@ -20,6 +20,32 @@ const application = {
   should_delete_custom_domains_first: '먼저 사용자 정의 도메인을 삭제해야 합니다.',
   no_legacy_secret_found: '응용 프로그램에 레거시 비밀이 없습니다.',
   secret_name_exists: '비밀 이름이 이미 존재합니다.',
+  saml: {
+    use_saml_app_api:
+      'SAML 앱을 운영하려면 `[METHOD] /saml-applications(/.*)?` API 를 사용하십시오.',
+    saml_application_only: '이 API 는 SAML 응용 프로그램에만 사용할 수 있습니다.',
+    reach_oss_limit: '{{limit}} 개의 제한에 도달했기 때문에 더 이상 SAML 앱을 만들 수 없습니다.',
+    acs_url_binding_not_supported: 'SAML 어설션을 받기 위해서는 HTTP-POST 바인딩만 지원됩니다.',
+    can_not_delete_active_secret: '활성 비밀을 삭제할 수 없습니다.',
+    no_active_secret: '활성 비밀을 찾을 수 없습니다.',
+    entity_id_required: '메타데이터 생성을 위해 엔터티 ID 가 필요합니다.',
+    name_id_format_required: 'Name ID 형식이 필요합니다.',
+    unsupported_name_id_format: '지원되지 않는 Name ID 형식입니다.',
+    missing_email_address: '사용자에게 이메일 주소가 없습니다.',
+    email_address_unverified: '사용자 이메일 주소가 인증되지 않았습니다.',
+    invalid_certificate_pem_format: '잘못된 PEM 인증서 형식입니다.',
+    acs_url_required: 'Assertion Consumer Service URL 이 필요합니다.',
+    private_key_required: '개인 키가 필요합니다.',
+    certificate_required: '인증서가 필요합니다.',
+    invalid_saml_request: '잘못된 SAML 인증 요청입니다.',
+    auth_request_issuer_not_match:
+      'SAML 인증 요청의 발급자가 서비스 제공자 엔터티 ID 와 일치하지 않습니다.',
+    sp_initiated_saml_sso_session_not_found_in_cookies:
+      '서비스 제공자가 시작한 SAML SSO 세션 ID 를 쿠키에서 찾을 수 없습니다.',
+    sp_initiated_saml_sso_session_not_found:
+      '서비스 제공자가 시작한 SAML SSO 세션을 찾을 수 없습니다.',
+    state_mismatch: '`state` 가 일치하지 않습니다.',
+  },
 };
 
 export default Object.freeze(application);

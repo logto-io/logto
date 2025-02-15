@@ -19,6 +19,34 @@ const application = {
   should_delete_custom_domains_first: 'Özel domainleri önce silmelisiniz.',
   no_legacy_secret_found: 'Uygulamanın eski bir gizli anahtarı yok.',
   secret_name_exists: 'Gizli isim zaten mevcut.',
+  saml: {
+    use_saml_app_api:
+      "`[METHOD] /saml-applications(/.*)?` API'sini SAML uygulamasını çalıştırmak için kullanın.",
+    saml_application_only: 'API sadece SAML uygulamaları için kullanılabilir.',
+    reach_oss_limit:
+      '{{limit}} sınırına ulaşıldığı için daha fazla SAML uygulaması oluşturamazsınız.',
+    acs_url_binding_not_supported:
+      'SAML iddialarını almak için sadece HTTP-POST bağlaması desteklenir.',
+    can_not_delete_active_secret: 'Aktif gizli anahtar silinemez.',
+    no_active_secret: 'Aktif gizli anahtar bulunamadı.',
+    entity_id_required: 'Meta verileri oluşturmak için Kimlik Varlığı gereklidir.',
+    name_id_format_required: 'Kimlik Adı formatı gereklidir.',
+    unsupported_name_id_format: 'Desteklenmeyen Kimlik Adı formatı.',
+    missing_email_address: 'Kullanıcının bir e-posta adresi yok.',
+    email_address_unverified: 'Kullanıcının e-posta adresi doğrulanmadı.',
+    invalid_certificate_pem_format: 'Geçersiz PEM sertifika formatı',
+    acs_url_required: "İddia Alıcısı Servisi URL'si gereklidir.",
+    private_key_required: 'Özel anahtar gereklidir.',
+    certificate_required: 'Sertifika gereklidir.',
+    invalid_saml_request: 'Geçersiz SAML kimlik doğrulama isteği.',
+    auth_request_issuer_not_match:
+      "SAML kimlik doğrulama isteğinin veren kimliği, hizmet sağlayıcı kimlik varlığı ID'si ile eşleşmiyor.",
+    sp_initiated_saml_sso_session_not_found_in_cookies:
+      "Hizmet sağlayıcı tarafından başlatılan SAML SSO oturum ID'si çerezlerde bulunamadı.",
+    sp_initiated_saml_sso_session_not_found:
+      'Hizmet sağlayıcı tarafından başlatılan SAML SSO oturumu bulunamadı.',
+    state_mismatch: '`state` uyuşmazlığı.',
+  },
 };
 
 export default Object.freeze(application);

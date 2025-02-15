@@ -9,6 +9,7 @@ const guide = {
     MachineToMachine: 'Makineden makineye',
     Protected: 'SDK Entegrasyonu Olmayan',
     ThirdParty: 'Üçüncü taraf uygulama',
+    SAML: 'SAML uygulaması',
   },
   filter: {
     title: "Framework'ü filtrele",

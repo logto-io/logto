@@ -34,6 +34,12 @@ const user = {
   password_algorithm_required: '密碼算法為必填項。',
   password_and_digest: '你不能同時設置明文密碼和密碼摘要。',
   personal_access_token_name_exists: '個人存取權杖名稱已存在。',
+  totp_secret_invalid: '提供的 TOTP 密鑰無效。',
+  wrong_backup_code_format: '備份代碼格式無效。',
+  username_required: '使用者名稱是必填識別符，你不能將其設為 null。',
+  email_or_phone_required: '電子郵件地址或手機號碼是必填識別符，至少需要一個。',
+  email_required: '電子郵件地址是必填識別符，你不能將其設為 null。',
+  phone_required: '手機號碼是必填識別符，你不能將其設為 null。',
 };
 
 export default Object.freeze(user);

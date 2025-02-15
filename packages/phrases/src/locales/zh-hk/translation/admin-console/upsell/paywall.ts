@@ -45,11 +45,14 @@ const paywall = {
     '已達到 <planName/> 的{{count, number}}個角色每個權限限制。升級計劃以添加額外的角色和權限。如需任何協助，歡迎<a>聯繫我們</a>。',
   scopes_per_role_other:
     '已達到 <planName/> 的{{count, number}}個角色每個權限限制。升級計劃以添加額外的角色和權限。如需任何協助，歡迎<a>聯繫我們</a>。',
+  saml_applications_oss: '額外的 SAML 應用程式可在 Logto 企業版計劃中使用。如需協助，請聯絡我們。',
+  logto_pricing_button_text: 'Logto Cloud 定價',
+  saml_applications: '額外的 SAML 應用程式可在 Logto 企業版計劃中使用。如需要協助，請聯絡我們。',
   hooks:
     '已達到 <planName/> 的{{count, number}}個 Webhook 限制。升級計劃以創建更多 Webhook。如需任何協助，歡迎<a>聯絡我們</a>。',
   hooks_other:
     '已達到 <planName/> 的{{count, number}}個 Webhook 限制。升級計劃以創建更多 Webhook。如需任何協助，請<a>聯絡我們</a>。',
-  mfa: '升級到付費計劃以解鎖MFA以提高安全性。如果需要任何協助，請隨時<a>聯絡我們</a>。',
+  mfa: '升級到付費計劃以解鎖 MFA 以提高安全性。如果需要任何協助，請隨時<a>聯絡我們</a>。',
   organizations: '升級至付費計劃以解鎖組織。如需要任何協助，請隨時<a>聯絡我們</a>。',
   third_party_apps:
     '藉由升級至付費計劃，將 Logto 解鎖為第三方應用程式的 IdP。如需任何協助，歡迎<a>聯絡我們</a>。',

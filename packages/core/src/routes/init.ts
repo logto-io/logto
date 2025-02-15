@@ -7,8 +7,6 @@ import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import { koaManagementApiHooks } from '#src/middleware/koa-management-api-hooks.js';
 import koaTenantGuard from '#src/middleware/koa-tenant-guard.js';
-import samlApplicationAnonymousRoutes from '#src/saml-applications/routes/anonymous.js';
-import samlApplicationRoutes from '#src/saml-applications/routes/index.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
 import koaAuth from '../middleware/koa-auth/index.js';
@@ -32,6 +30,7 @@ import connectorRoutes from './connector/index.js';
 import customPhraseRoutes from './custom-phrase.js';
 import dashboardRoutes from './dashboard.js';
 import domainRoutes from './domain.js';
+import emailTemplateRoutes from './email-template/index.js';
 import experienceApiRoutes from './experience/index.js';
 import hookRoutes from './hook.js';
 import interactionRoutes from './interaction/index.js';
@@ -42,6 +41,8 @@ import resourceRoutes from './resource.js';
 import resourceScopeRoutes from './resource.scope.js';
 import roleRoutes from './role.js';
 import roleScopeRoutes from './role.scope.js';
+import samlApplicationAnonymousRoutes from './saml-application/anonymous.js';
+import samlApplicationRoutes from './saml-application/index.js';
 import signInExperiencesRoutes from './sign-in-experience/index.js';
 import ssoConnectors from './sso-connector/index.js';
 import statusRoutes from './status.js';
@@ -101,12 +102,11 @@ const createRouters = (tenant: TenantContext) => {
   systemRoutes(managementRouter, tenant);
   subjectTokenRoutes(managementRouter, tenant);
   accountCentersRoutes(managementRouter, tenant);
-  // TODO: @darcy per our design, we will move related routes to Cloud repo and the routes will be loaded from remote.
-  if (
-    (EnvSet.values.isDevFeaturesEnabled && EnvSet.values.isCloud) ||
-    EnvSet.values.isIntegrationTest
-  ) {
-    samlApplicationRoutes(managementRouter, tenant);
+  samlApplicationRoutes(managementRouter, tenant);
+
+  // TODO: @simeng remove this condition after the feature is enabled in production
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    emailTemplateRoutes(managementRouter, tenant);
   }
 
   const anonymousRouter: AnonymousRouter = new Router();
@@ -121,13 +121,7 @@ const createRouters = (tenant: TenantContext) => {
   wellKnownRoutes(anonymousRouter, tenant);
   statusRoutes(anonymousRouter, tenant);
   authnRoutes(anonymousRouter, tenant);
-  // TODO: @darcy per our design, we will move related routes to Cloud repo and the routes will be loaded from remote.
-  if (
-    (EnvSet.values.isDevFeaturesEnabled && EnvSet.values.isCloud) ||
-    EnvSet.values.isIntegrationTest
-  ) {
-    samlApplicationAnonymousRoutes(anonymousRouter, tenant);
-  }
+  samlApplicationAnonymousRoutes(anonymousRouter, tenant);
 
   wellKnownOpenApiRoutes(anonymousRouter, {
     experienceRouters: [experienceRouter, interactionRouter],

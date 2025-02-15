@@ -1,7 +1,7 @@
 import type { LogtoErrorI18nKey } from '@logto/phrases';
-import i18next from 'i18next';
 
 import initI18n from '#src/i18n/init.js';
+import { i18next } from '#src/utils/i18n.js';
 
 import RequestError from './index.js';
 
@@ -21,7 +21,7 @@ describe('RequestError', () => {
     expect(newRequestError.code).toEqual(errorCode);
     expect(newRequestError.expose).toEqual(true);
     expect(newRequestError.message).toEqual(expectMessage);
-    expect(newRequestError.body).toEqual({
+    expect(newRequestError.toBody(i18next)).toEqual({
       code: errorCode,
       data,
       message: expectMessage,
@@ -46,7 +46,7 @@ describe('RequestError', () => {
     expect(newRequestError.code).toEqual(errorCode);
     expect(newRequestError.expose).toEqual(false);
     expect(newRequestError.message).toEqual(expectMessage);
-    expect(newRequestError.body).toEqual({
+    expect(newRequestError.toBody(i18next)).toEqual({
       code: errorCode,
       data,
       message: expectMessage,

@@ -1,3 +1,4 @@
+import { ApplicationType } from '@logto/schemas';
 import classNames from 'classnames';
 import { type Ref, forwardRef, useContext } from 'react';
 
@@ -42,8 +43,11 @@ function GuideCardGroup(
             data={guide}
             hasPaywall={
               isCloud &&
-              guide.metadata.isThirdParty &&
-              (currentSubscriptionQuota.thirdPartyApplicationsLimit === 0 || isDevTenant)
+              ((guide.metadata.isThirdParty &&
+                // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+                (currentSubscriptionQuota.thirdPartyApplicationsLimit === 0 || isDevTenant)) ||
+                (guide.metadata.target === ApplicationType.SAML &&
+                  (currentSubscriptionQuota.samlApplicationsLimit === 0 || isDevTenant)))
             }
             onClick={onClickGuide}
           />

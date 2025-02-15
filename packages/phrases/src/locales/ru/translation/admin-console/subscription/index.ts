@@ -8,8 +8,7 @@ const subscription = {
   pro_plan: 'Про план',
   pro_plan_description: 'Позволяет бизнесу использовать Logto без забот.',
   enterprise: 'Корпоративный план',
-  /** UNTRANSLATED */
-  enterprise_description: 'For large teams and businesses with enterprise-grade requirements.',
+  enterprise_description: 'Для больших команд и компаний с корпоративными требованиями.',
   admin_plan: 'План администратора',
   dev_plan: 'План для разработки',
   current_plan: 'Текущий план',
@@ -70,6 +69,14 @@ const subscription = {
   subscription_check_timeout: 'Время проверки подписки истекло. Пожалуйста, обновите позже.',
   no_subscription: 'Нет подписки',
   usage,
+  token_usage_notification: {
+    exceeded:
+      'Вы превысили 100% лимита вашей квоты. Пользователи больше не смогут правильно входить в систему. Пожалуйста, обновите план немедленно, чтобы избежать неудобств.',
+    close_to_limit:
+      'Вы почти достигли предела использования токенов. Logto перестанет предоставлять токены, если ваше использование превысит 100%. Пожалуйста, обновите Бесплатный план, чтобы избежать неудобств.',
+    dev_plan_exceeded:
+      'Этот арендатор достиг предела токенов согласно политике ограничения сущности Logto.',
+  },
 };
 
 export default Object.freeze(subscription);

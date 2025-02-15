@@ -6,6 +6,7 @@ const oidc = {
   insufficient_scope: 'Token sem escopo `{{scope}}`.',
   invalid_request: 'A solicitação é inválida.',
   invalid_grant: 'A concessão é inválida.',
+  invalid_issuer: 'Emissor inválido.',
   invalid_redirect_uri:
     '`redirect_uri` não corresponde a nenhum `redirect_uris` registrado do cliente.',
   access_denied: 'Acesso negado.',

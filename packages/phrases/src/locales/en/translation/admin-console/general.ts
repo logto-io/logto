@@ -29,6 +29,8 @@ const general = {
   edit: 'Edit',
   delete: 'Delete',
   deleted: 'Deleted',
+  activate: 'Activate',
+  deactivate: 'Deactivate',
   more_options: 'MORE OPTIONS',
   close: 'Close',
   copy: 'Copy',

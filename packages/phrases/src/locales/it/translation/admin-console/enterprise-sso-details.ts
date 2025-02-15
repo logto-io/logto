@@ -6,6 +6,7 @@ const enterprise_sso_details = {
     "Configura i connettori SSO aziendali per abilitare l'SSO degli utenti finali",
   tab_experience: 'Esperienza SSO',
   tab_connection: 'Connessione',
+  tab_idp_initiated_auth: "SSO avviato dall'IdP",
   general_settings_title: 'Generale',
   custom_branding_title: 'Display',
   custom_branding_description:
@@ -75,6 +76,47 @@ const enterprise_sso_details = {
     jwks_uri: 'Punto finale del set di chiavi JSON web',
     issuer: 'Emittente',
   },
+  idp_initiated_auth_config: {
+    card_title: "SSO avviato dall'IdP",
+    card_description:
+      'Gli utenti di solito iniziano il processo di autenticazione dalla tua app utilizzando il flusso SSO avviato dal SP. NON abilitare questa funzione a meno che non sia assolutamente necessario.',
+    enable_idp_initiated_sso: "Abilita l'SSO avviato dall'IdP",
+    enable_idp_initiated_sso_description:
+      'Consenti agli utenti aziendali di avviare il processo di autenticazione direttamente dal portale del fornitore di identità. Si prega di comprendere i potenziali rischi per la sicurezza prima di abilitare questa funzione.',
+    default_application: 'Applicazione predefinita',
+    default_application_tooltip:
+      "Applicazione di destinazione alla quale l'utente sarà reindirizzato dopo l'autenticazione.",
+    empty_applications_error:
+      'Nessuna applicazione trovata. Si prega di aggiungerne una nella sezione <a>Applicazioni</a>.',
+    empty_applications_placeholder: 'Nessuna applicazione',
+    authentication_type: 'Tipo di autenticazione',
+    auto_authentication_disabled_title: "Reindirizza al client per l'SSO avviato dal SP",
+    auto_authentication_disabled_description:
+      "Raccomandato. Reindirizza gli utenti all'applicazione client-side per avviare un'autenticazione OIDC avviata dal SP sicura. Questo preverrà gli attacchi CSRF.",
+    auto_authentication_enabled_title: "Accedi direttamente utilizzando l'SSO avviato dall'IdP",
+    auto_authentication_enabled_description:
+      "Dopo l'accesso riuscito, gli utenti saranno reindirizzati all'URI di reindirizzamento specificato con il codice di autorizzazione (Senza convalida dello stato e del PKCE).",
+    auto_authentication_disabled_app:
+      'Per app web tradizionale, applicazione a pagina singola (SPA)',
+    auto_authentication_enabled_app: 'Per app web tradizionale',
+    idp_initiated_auth_callback_uri: 'URI di callback del client',
+    idp_initiated_auth_callback_uri_tooltip:
+      "L'URI di callback del client per avviare un flusso di autenticazione SSO avviato dal SP. Un ssoConnectorId verrà aggiunto come parametro query all'URI. (es., https://tuo.domino/sso/callback?connectorId={{ssoConnectorId}})",
+    redirect_uri: 'URI di reindirizzamento post-accesso',
+    redirect_uri_tooltip:
+      "L'URI di reindirizzamento per reindirizzare gli utenti dopo l'accesso riuscito. Logto utilizzerà questo URI come URI di reindirizzamento OIDC nella richiesta di autorizzazione. Utilizza un URI dedicato per il flusso di autenticazione SSO avviato dall'IdP per una maggiore sicurezza.",
+    empty_redirect_uris_error:
+      "Nessun URI di reindirizzamento è stato registrato per l'applicazione. Si prega di aggiungerne uno per primo.",
+    redirect_uri_placeholder: 'Seleziona un URI di reindirizzamento post-accesso',
+    auth_params: 'Parametri di autenticazione aggiuntivi',
+    auth_params_tooltip:
+      'Parametri aggiuntivi da passare nella richiesta di autorizzazione. Per impostazione predefinita verranno richiesti solo gli ambiti (openid profile), puoi specificare ambiti aggiuntivi o un valore di stato esclusivo qui. (es., { "scope": "organizations email", "state": "secret_state" }).',
+  },
+  trust_unverified_email: "Considera attendibile l'email non verificata",
+  trust_unverified_email_label:
+    'Considera sempre attendibili gli indirizzi email non verificati restituiti dal fornitore di identità',
+  trust_unverified_email_tip:
+    'Il connettore Entra ID (OIDC) non restituisce il claim `email_verified`, il che significa che gli indirizzi email di Azure non sono garantiti come verificati. Per impostazione predefinita, Logto non sincronizzerà gli indirizzi email non verificati nel profilo utente. Abilita questa opzione solo se consideri attendibili tutti gli indirizzi email dal directory Entra ID.',
 };
 
 export default Object.freeze(enterprise_sso_details);

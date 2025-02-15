@@ -6,6 +6,7 @@ const oidc = {
   insufficient_scope: 'トークンにスコープ `{{scope}}` が含まれていません。',
   invalid_request: 'リクエストが無効です。',
   invalid_grant: '付与リクエストが無効です。',
+  invalid_issuer: '無効な発行者です。',
   invalid_redirect_uri:
     '`` `redirect_uri`` `は、クライアントが登録したいずれのものとも一致しませんでした```redirect_uris`。',
   access_denied: 'アクセスが拒否されました。',

@@ -8,8 +8,7 @@ const subscription = {
   pro_plan: '专业计划',
   pro_plan_description: '适用于企业付费无忧。',
   enterprise: '企业计划',
-  /** UNTRANSLATED */
-  enterprise_description: 'For large teams and businesses with enterprise-grade requirements.',
+  enterprise_description: '适用于大型团队和具有企业级需求的企业。',
   admin_plan: '管理员计划',
   dev_plan: '开发计划',
   current_plan: '当前计划',
@@ -68,6 +67,12 @@ const subscription = {
   subscription_check_timeout: '订阅检查超时，请稍后刷新。',
   no_subscription: '无订阅',
   usage,
+  token_usage_notification: {
+    exceeded: '你已超过 100% 的配额限制。用户将无法正常登录。请立即升级以避免任何不便。',
+    close_to_limit:
+      '你几乎达到了令牌使用限制。如果使用量超过 100%，Logto 将停止颁发令牌。请升级免费计划以避免任何不便。',
+    dev_plan_exceeded: '此租户已达到 Logto 实体限制政策规定的令牌限制。',
+  },
 };
 
 export default Object.freeze(subscription);

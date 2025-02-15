@@ -68,6 +68,9 @@ const sign_up_and_sign_in = {
     enable_user_registration: 'Habilitar registro de usuário',
     enable_user_registration_description:
       'Habilitar ou desabilitar o registro de usuários. Depois de desabilitado, os usuários ainda podem ser adicionados no console de administração, mas os usuários não poderão mais criar contas através da interface de login.',
+    unknown_session_redirect_url: 'URL de redirecionamento de sessão desconhecida',
+    unknown_session_redirect_url_tip:
+      'Às vezes, o Logto pode não reconhecer a sessão de um usuário na página de login, como quando uma sessão expira ou o usuário salva ou compartilha o link de login. Por padrão, um erro 404 de “sessão desconhecida” aparece. Para melhorar a experiência do usuário, defina uma URL de fallback para redirecionar os usuários de volta ao seu aplicativo e reiniciar a autenticação.',
   },
 };
 

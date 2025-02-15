@@ -1,0 +1,190 @@
+{
+  "tags": [
+    {
+      "name": "Email templates",
+      "description": "Manage custom i18n email templates for various types of emails, such as sign-in verification codes and password resets."
+    },
+    {
+      "name": "Dev feature"
+    }
+  ],
+  "paths": {
+    "/api/email-templates": {
+      "put": {
+        "summary": "Replace email templates",
+        "description": "Create or replace a list of email templates. If an email template with the same language tag and template type already exists, its details will be updated.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "templates": {
+                    "type": "array",
+                    "items": {
+                      "properties": {
+                        "languageTag": {
+                          "description": "The language tag of the email template, e.g., `en` or `fr`."
+                        },
+                        "templateType": {
+                          "description": "The type of the email template, e.g. `SignIn` or `ForgotPassword`"
+                        },
+                        "details": {
+                          "description": "The details of the email template.",
+                          "properties": {
+                            "subject": {
+                              "description": "The template of the email subject."
+                            },
+                            "content": {
+                              "description": "The template of the email body."
+                            },
+                            "contentType": {
+                              "description": "The content type of the email body. (Only required by some specific email providers.)"
+                            },
+                            "replyTo": {
+                              "description": "The reply name template of the email. If not provided, the target email address will be used. (The render logic may differ based on the email provider.)"
+                            },
+                            "sendFrom": {
+                              "description": "The send from name template of the email. If not provided, the default Logto email address will be used. (The render logic may differ based on the email provider.)"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The list of newly created or replaced email templates."
+          }
+        }
+      },
+      "get": {
+        "summary": "Get email templates",
+        "description": "Get the list of email templates.",
+        "parameters": [
+          {
+            "name": "languageTag",
+            "in": "query",
+            "description": "The language tag of the email template, e.g., `en` or `fr`."
+          },
+          {
+            "name": "templateType",
+            "in": "query",
+            "description": "The type of the email template, e.g. `SignIn` or `ForgotPassword`"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The list of matched email templates. Returns empty list, if no email template is found."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete email templates",
+        "description": "Bulk delete email templates by their language tag and template type.",
+        "parameters": [
+          {
+            "name": "languageTag",
+            "in": "query",
+            "description": "The language tag of the email template, e.g., `en` or `fr`."
+          },
+          {
+            "name": "templateType",
+            "in": "query",
+            "description": "The type of the email template, e.g. `SignIn` or `ForgotPassword`"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The email templates were deleted successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rowCount": {
+                      "type": "number",
+                      "description": "The number of email templates deleted."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "No filter query parameters were provided. This bulk deletion API requires at least one filter query parameter."
+          }
+        }
+      }
+    },
+    "/api/email-templates/{id}": {
+      "delete": {
+        "summary": "Delete an email template",
+        "description": "Delete an email template by its ID.",
+        "responses": {
+          "204": {
+            "description": "The email template was deleted successfully."
+          },
+          "404": {
+            "description": "The email template was not found."
+          }
+        }
+      },
+      "get": {
+        "summary": "Get email template by ID",
+        "description": "Get the email template by its ID.",
+        "responses": {
+          "200": {
+            "description": "The email template."
+          },
+          "404": {
+            "description": "The email template was not found."
+          }
+        }
+      }
+    },
+    "/api/email-templates/{id}/details": {
+      "patch": {
+        "summary": "Update email template details",
+        "description": "Update the details of an email template by its ID.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "subject": {
+                    "description": "The template of the email subject."
+                  },
+                  "content": {
+                    "description": "The template of the email body."
+                  },
+                  "contentType": {
+                    "description": "The content type of the email body. (Only required by some specific email providers.)"
+                  },
+                  "replyTo": {
+                    "description": "The reply name template of the email. If not provided, the target email address will be used. (The render logic may differ based on the email provider.)"
+                  },
+                  "sendFrom": {
+                    "description": "The send from name template of the email. If not provided, the default Logto email address will be used. (The render logic may differ based on the email provider.)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated email template."
+          },
+          "404": {
+            "description": "The email template was not found."
+          }
+        }
+      }
+    }
+  }
+}

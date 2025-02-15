@@ -47,11 +47,20 @@ const managementApiIdentifiableEntityNames = Object.freeze([
   'organization-role',
   'organization-scope',
   'organization-invitation',
+  'saml-application',
+  'secret',
+  'email-template',
 ]);
 
 /** Additional tags that cannot be inferred from the path. */
 const additionalTags = Object.freeze(
-  condArray<string>('Organization applications', 'Custom UI assets', 'Organization users')
+  condArray<string>(
+    'Organization applications',
+    'Custom UI assets',
+    'Organization users',
+    'SAML applications',
+    'SAML applications auth flow'
+  )
 );
 
 export const buildManagementApiBaseDocument = (

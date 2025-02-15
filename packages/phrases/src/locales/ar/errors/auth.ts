@@ -7,6 +7,7 @@ const auth = {
     'لم يتم العثور على الدور المتوقع. يرجى التحقق من أدوار المستخدم والأذونات.',
   jwt_sub_missing: 'القيمة `sub` مفقودة في JWT.',
   require_re_authentication: 'مطلوب إعادة المصادقة لإجراء حماية.',
+  exceed_token_limit: 'تم تجاوز حد الرمز. يرجى الاتصال بالمسؤول الخاص بك.',
 };
 
 export default Object.freeze(auth);

@@ -8,6 +8,7 @@ const auth = {
   jwt_sub_missing: 'Отсутствует `sub` в JWT.',
   require_re_authentication:
     'Для выполнения защищенного действия требуется повторная аутентификация.',
+  exceed_token_limit: 'Превышен лимит токенов. Пожалуйста, свяжитесь с администратором.',
 };
 
 export default Object.freeze(auth);

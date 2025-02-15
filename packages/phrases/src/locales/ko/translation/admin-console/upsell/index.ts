@@ -25,6 +25,11 @@ const upsell = {
       '현재 MAU가 <planName/>의 한도를 초과했습니다. 로그토 서비스 중단을 피하기 위해 프리미엄으로 플랜을 업그레이드하세요.',
     update_plan: '플랜 업데이트',
   },
+  token_exceeded_modal: {
+    title: '토큰 사용량이 한도를 초과했습니다. 플랜을 업그레이드하세요.',
+    notification:
+      '현재 <planName/>의 토큰 사용 한도를 초과했습니다. 사용자들이 Logto 서비스를 제대로 이용할 수 없습니다. 불편을 피하기 위해 즉시 프리미엄으로 플랜을 업그레이드하십시오.',
+  },
   payment_overdue_modal: {
     title: '청구서 지불 연체',
     notification:

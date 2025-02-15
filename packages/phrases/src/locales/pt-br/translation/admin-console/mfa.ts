@@ -30,6 +30,15 @@ const mfa = {
   mandatory: 'Os usuários sempre precisam usar o MFA no login',
   mandatory_tip:
     'Os usuários devem configurar o MFA na primeira vez do login ou inscrição e usá-lo em todos os logins futuros.',
+  require_mfa: 'Exigir MFA',
+  require_mfa_label:
+    'Ative isso para tornar a verificação em duas etapas obrigatória para acessar seus aplicativos. Se desativado, os usuários podem decidir se desejam habilitar o MFA para si mesmos.',
+  set_up_prompt: 'Prompt de configuração do MFA',
+  no_prompt: 'Não pedir aos usuários para configurar o MFA',
+  prompt_at_sign_in_and_sign_up:
+    'Pedir aos usuários para configurar MFA durante o registro (pode ser ignorado, prompt único)',
+  prompt_only_at_sign_in:
+    'Pedir aos usuários para configurar o MFA na próxima tentativa de login após o registro (pode ser ignorado, prompt único)',
 };
 
 export default Object.freeze(mfa);

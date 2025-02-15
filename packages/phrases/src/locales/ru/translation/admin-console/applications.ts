@@ -45,6 +45,11 @@ const applications = {
       subtitle: 'Приложение, защищенное Logto',
       description: 'N/А',
     },
+    saml: {
+      title: 'SAML-приложение',
+      subtitle: 'Приложение, которое используется в качестве соединителя SAML IdP',
+      description: 'Например, SAML',
+    },
     third_party: {
       title: 'Приложение сторонних разработчиков',
       subtitle:

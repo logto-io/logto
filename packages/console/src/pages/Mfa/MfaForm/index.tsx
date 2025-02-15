@@ -1,5 +1,5 @@
 import { MfaFactor, MfaPolicy, type SignInExperience } from '@logto/schemas';
-import { useContext, useMemo } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +13,7 @@ import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
-import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
+import Select from '@/ds-components/Select';
 import Switch from '@/ds-components/Switch';
 import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
@@ -24,7 +24,6 @@ import { type MfaConfigForm, type MfaConfig } from '../types';
 
 import FactorLabel from './FactorLabel';
 import UpsellNotice from './UpsellNotice';
-import { policyOptionTitleMap } from './constants';
 import styles from './index.module.scss';
 import { convertMfaFormToConfig, convertMfaConfigToForm, validateBackupCodeFactor } from './utils';
 
@@ -51,6 +50,7 @@ function MfaForm({ data, onMfaUpdated }: Props) {
     handleSubmit,
     control,
     watch,
+    setValue,
   } = useForm<MfaConfigForm>({ defaultValues: convertMfaConfigToForm(data), mode: 'onChange' });
   const api = useApi();
 
@@ -68,6 +68,32 @@ function MfaForm({ data, onMfaUpdated }: Props) {
     const { factors } = convertMfaFormToConfig(formValues);
     return factors.length === 0;
   }, [formValues, isMfaDisabled]);
+
+  useEffect(() => {
+    // Reset the `isMandatory` to false when there is no MFA factor
+    const { factors } = convertMfaFormToConfig(formValues);
+    if (factors.length === 0 && formValues.isMandatory) {
+      setValue('isMandatory', false);
+    }
+  }, [formValues, setValue]);
+
+  const mfaPolicyOptions = useMemo(
+    () => [
+      {
+        value: MfaPolicy.NoPrompt,
+        title: t('mfa.no_prompt'),
+      },
+      {
+        value: MfaPolicy.PromptAtSignInAndSignUp,
+        title: t('mfa.prompt_at_sign_in_and_sign_up'),
+      },
+      {
+        value: MfaPolicy.PromptOnlyAtSignIn,
+        title: t('mfa.prompt_only_at_sign_in'),
+      },
+    ],
+    [t]
+  );
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (formData) => {
@@ -143,28 +169,37 @@ function MfaForm({ data, onMfaUpdated }: Props) {
             />
           )}
         </FormCard>
-        <FormCard title="mfa.policy">
-          <FormField title="mfa.two_step_sign_in_policy" headlineSpacing="large">
-            <Controller
-              control={control}
-              name="policy"
-              render={({ field: { onChange, value, name } }) => (
-                <RadioGroup name={name} value={value} onChange={onChange}>
-                  {Object.values(MfaPolicy).map((policy) => {
-                    const title = policyOptionTitleMap[policy];
-                    return (
-                      <Radio
-                        key={policy}
-                        isDisabled={isPolicySettingsDisabled}
-                        title={title}
-                        value={policy}
-                      />
-                    );
-                  })}
-                </RadioGroup>
-              )}
+        <FormCard
+          title="mfa.policy"
+          description="mfa.policy_description"
+          learnMoreLink={{
+            href: getDocumentationUrl('/docs/recipes/multi-factor-auth/configure-mfa'),
+            targetBlank: 'noopener',
+          }}
+        >
+          <FormField title="mfa.require_mfa" headlineSpacing="large">
+            <Switch
+              disabled={isPolicySettingsDisabled}
+              label={t('mfa.require_mfa_label')}
+              {...register('isMandatory')}
             />
           </FormField>
+          {!formValues.isMandatory && (
+            <FormField title="mfa.set_up_prompt" headlineSpacing="large">
+              <Controller
+                control={control}
+                name="setUpPrompt"
+                render={({ field: { onChange, value } }) => (
+                  <Select
+                    value={value}
+                    options={mfaPolicyOptions}
+                    isReadOnly={isPolicySettingsDisabled}
+                    onChange={onChange}
+                  />
+                )}
+              />
+            </FormField>
+          )}
         </FormCard>
       </DetailsForm>
       <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />

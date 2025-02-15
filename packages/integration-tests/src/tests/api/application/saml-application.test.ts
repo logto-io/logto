@@ -1,6 +1,13 @@
-import { ApplicationType, BindingType } from '@logto/schemas';
+import { ApplicationType, BindingType, NameIdFormat } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 
-import { createApplication, deleteApplication, updateApplication } from '#src/api/application.js';
+import {
+  createApplication,
+  deleteApplication,
+  getApplications,
+  getApplication,
+  updateApplication,
+} from '#src/api/application.js';
 import {
   createSamlApplication,
   deleteSamlApplication,
@@ -23,6 +30,32 @@ describe('SAML application', () => {
       name: 'test',
       description: 'test',
     });
+
+    await expect(getApplication(createdSamlApplication.id)).resolves.toMatchObject(
+      expect.objectContaining({
+        oidcClientMetadata: {
+          redirectUris: [],
+          postLogoutRedirectUris: [],
+        },
+      })
+    );
+
+    expect(createdSamlApplication.nameIdFormat).toBe(NameIdFormat.Persistent);
+
+    // Check if the SAML application's OIDC metadata redirect URI is properly set.
+    // We need to do this since we do not return OIDC related info when using SAML app APIs.
+    const samlApplications = await getApplications([ApplicationType.SAML]);
+    expect(samlApplications.every(({ type }) => type === ApplicationType.SAML));
+    const pickedSamlApplication = samlApplications.find(
+      ({ id }) => id === createdSamlApplication.id
+    );
+    expect(pickedSamlApplication).toBeDefined();
+    expect(
+      samlApplications.every(
+        ({ oidcClientMetadata: { redirectUris, postLogoutRedirectUris } }) =>
+          redirectUris.length === 0 && postLogoutRedirectUris.length === 0
+      )
+    ).toBe(true);
 
     await deleteSamlApplication(createdSamlApplication.id);
   });
@@ -51,49 +84,135 @@ describe('SAML application', () => {
         binding: BindingType.Post,
         url: 'https://example.logto.io/sso/saml',
       },
+      nameIdFormat: NameIdFormat.EmailAddress,
+      encryption: {
+        encryptAssertion: true,
+        certificate:
+          '-----BEGIN CERTIFICATE-----\nMIIDDTCCAfWgAwIBAgI...\n-----END CERTIFICATE-----\n',
+        encryptThenSign: false,
+      },
     };
     const createdSamlApplication = await createSamlApplication({
       name: 'test',
       description: 'test',
       ...config,
     });
+
     expect(createdSamlApplication.entityId).toEqual(config.entityId);
     expect(createdSamlApplication.acsUrl).toEqual(config.acsUrl);
+    expect(createdSamlApplication.nameIdFormat).toEqual(config.nameIdFormat);
+    expect(createdSamlApplication.encryption).toEqual(config.encryption);
+
     await deleteSamlApplication(createdSamlApplication.id);
   });
 
-  it('should be able to update SAML application and get the updated one', async () => {
-    const createdSamlApplication = await createSamlApplication({
+  it.each([
+    {
+      name: 'Update with ACS URL only',
+      config: {
+        acsUrl: {
+          binding: BindingType.Post,
+          url: 'https://example.logto.io/sso/saml',
+        },
+        entityId: null,
+      },
+    },
+    {
+      name: 'Update with Entity ID only',
+      config: {
+        acsUrl: null,
+        entityId: 'https://example.logto.io/new-entity',
+      },
+    },
+    {
+      config: {
+        acsUrl: {
+          binding: BindingType.Post,
+          url: 'https://example.logto.io/sso/saml2',
+        },
+        entityId: 'https://example.logto.io/entity2',
+      },
+    },
+    {
+      name: 'Update with null values and attribute mapping',
+      config: {
+        acsUrl: null,
+        entityId: null,
+        attributeMapping: {
+          sub: 'sub',
+          preferred_username: 'username',
+          email: 'email_address',
+        },
+      },
+    },
+    {
+      name: 'Update with minimal attribute mapping',
+      config: {
+        attributeMapping: {
+          sub: 'sub',
+        },
+      },
+    },
+    {
+      name: 'Update with empty attribute mapping',
+      config: {
+        attributeMapping: {},
+      },
+    },
+  ])('should update SAML application - %#', async ({ name, config }) => {
+    const formattedName = name ? `updated-${name}` : undefined;
+    const initConfig = {
       name: 'test',
       description: 'test',
       entityId: 'http://example.logto.io/foo',
-    });
-    expect(createdSamlApplication.entityId).toEqual('http://example.logto.io/foo');
+    };
+    // Create initial SAML application
+    const createdSamlApplication = await createSamlApplication(initConfig);
+
+    expect(createdSamlApplication.entityId).toEqual(initConfig.entityId);
+    // Default values
     expect(createdSamlApplication.acsUrl).toEqual(null);
     expect(createdSamlApplication.attributeMapping).toEqual({});
+    expect(createdSamlApplication.nameIdFormat).toEqual(NameIdFormat.Persistent);
+    expect(createdSamlApplication.encryption).toBe(null);
 
-    const newConfig = {
-      acsUrl: {
-        binding: BindingType.Post,
-        url: 'https://example.logto.io/sso/saml',
-      },
-      entityId: null,
-    };
+    // Update application with new config
     const updatedSamlApplication = await updateSamlApplication(createdSamlApplication.id, {
-      name: 'updated',
-      ...newConfig,
+      ...conditional(name && { name: formattedName }),
+      ...config,
     });
-    expect(updatedSamlApplication.acsUrl).toEqual(newConfig.acsUrl);
-    expect(updatedSamlApplication.entityId).toEqual(newConfig.entityId);
-    expect(updatedSamlApplication.attributeMapping).toEqual({});
 
+    // Verify update was successful
+    if (config.acsUrl) {
+      expect(updatedSamlApplication.acsUrl).toEqual(config.acsUrl);
+    } else {
+      expect(updatedSamlApplication.acsUrl).toBe(null);
+    }
+
+    if (config.entityId) {
+      expect(updatedSamlApplication.entityId).toEqual(config.entityId);
+    } else {
+      expect(updatedSamlApplication.entityId).toBe(
+        config.entityId === null ? null : initConfig.entityId
+      );
+    }
+
+    if (config.attributeMapping) {
+      expect(updatedSamlApplication.attributeMapping).toEqual(config.attributeMapping);
+    } else {
+      expect(updatedSamlApplication.attributeMapping).toEqual({});
+    }
+
+    if (name) {
+      expect(updatedSamlApplication.name).toEqual(formattedName);
+    } else {
+      expect(updatedSamlApplication.name).toEqual(initConfig.name);
+    }
+
+    // Verify get returns same data
     const upToDateSamlApplication = await getSamlApplication(createdSamlApplication.id);
-
     expect(updatedSamlApplication).toEqual(upToDateSamlApplication);
-    expect(updatedSamlApplication.name).toEqual('updated');
-    expect(updatedSamlApplication.acsUrl).toEqual(newConfig.acsUrl);
-
-    await deleteSamlApplication(updatedSamlApplication.id);
+    await deleteSamlApplication(createdSamlApplication.id);
   });
 
   it('can not delete/update/get non-SAML applications with `DEL /saml-applications/:id` API', async () => {

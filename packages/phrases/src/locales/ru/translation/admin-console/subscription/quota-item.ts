@@ -171,6 +171,19 @@ const quota_item = {
     unlimited: 'Принесите свой UI',
     not_eligible: 'Удалите свои пользовательские элементы UI',
   },
+  idp_initiated_sso_enabled: {
+    name: 'Инициированное IDP SSO',
+    limited: 'Инициированное IDP SSO',
+    unlimited: 'Инициированное IDP SSO',
+    not_eligible: 'Инициированное IDP SSO не разрешено',
+  },
+  saml_applications_limit: {
+    name: 'SAML приложения',
+    limited: '{{count, number}} SAML приложение',
+    limited_other: '{{count, number}} SAML приложений',
+    unlimited: 'Неограниченное количество SAML приложений',
+    not_eligible: 'Удалите свои SAML приложения',
+  },
 };
 
 export default Object.freeze(quota_item);

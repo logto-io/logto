@@ -21,6 +21,33 @@ const application = {
   should_delete_custom_domains_first: 'まずカスタムドメインを削除する必要があります。',
   no_legacy_secret_found: 'アプリケーションにレガシーシークレットがありません。',
   secret_name_exists: 'シークレット名はすでに存在します。',
+  saml: {
+    use_saml_app_api:
+      'SAML アプリを操作するには、`[METHOD] /saml-applications(/.*)?` API を使用します。',
+    saml_application_only: 'API は SAML アプリケーションにのみ利用可能です。',
+    reach_oss_limit: 'OSS の上限 {{limit}} に達したため、これ以上 SAML アプリを作成できません。',
+    acs_url_binding_not_supported:
+      'SAML アサーションを受信するには HTTP-POST バインディングのみがサポートされています。',
+    can_not_delete_active_secret: 'アクティブなシークレットを削除できません。',
+    no_active_secret: 'アクティブなシークレットが見つかりません。',
+    entity_id_required: 'メタデータを生成するには、エンティティ ID が必要です。',
+    name_id_format_required: '名前 ID フォーマットが必要です。',
+    unsupported_name_id_format: 'サポートされていない名前 ID フォーマットです。',
+    missing_email_address: 'ユーザーにメールアドレスがありません。',
+    email_address_unverified: 'ユーザーのメールアドレスは確認されていません。',
+    invalid_certificate_pem_format: '無効な PEM 証明書フォーマット',
+    acs_url_required: 'アサーションコンシューマーサービス URL が必要です。',
+    private_key_required: '秘密鍵が必要です。',
+    certificate_required: '証明書が必要です。',
+    invalid_saml_request: '無効な SAML 認証要求です。',
+    auth_request_issuer_not_match:
+      'SAML 認証要求の発行者がサービスプロバイダーのエンティティ ID と一致しません。',
+    sp_initiated_saml_sso_session_not_found_in_cookies:
+      'サービスプロバイダーが開始した SAML SSO セッション ID がクッキーに見つかりません。',
+    sp_initiated_saml_sso_session_not_found:
+      'サービスプロバイダーが開始した SAML SSO セッションが見つかりません。',
+    state_mismatch: '`state` が一致しません。',
+  },
 };
 
 export default Object.freeze(application);

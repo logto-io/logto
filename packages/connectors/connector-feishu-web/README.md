@@ -1,22 +1,21 @@
-# 飞书网页
+# Set up social sign-in with Feishu
 
-先进企业协作与管理平台，一站式无缝办公协作，团队上下对齐目标，全面激活组织和个人。
+Feishu Web: An advanced enterprise collaboration and management platform, offering seamless office collaboration and aligning team goals to fully activate organizations and individuals.
 
-## 开始上手
+## Getting started with Feishu social sign-in
 
-飞书网页连接器是为桌面网页应用设计的。它采用了 OAuth 2.0 认证流程。
+The Feishu web connector is designed for desktop web applications and uses the OAuth 2.0 authentication process.
 
-## 注册飞书开发者账号
+## Register a Feishu developer account
 
-如果你还没有飞书开发者账号，请在 [开放平台](https://open.feishu.cn/?lang=zh-CN) 注册。
+If you do not have a Feishu developer account, please register on the [Feishu Open Platform](https://open.feishu.cn/app).
 
-## 创建应用
+## Create an application
 
-1. [开发者首页](https://open.feishu.cn/app?lang=zh-CN) 下方有 「创建企业自建应用」
-2. 填写应用名称，选择「企业自建应用」，点击「创建应用」
-3. 在左侧「安全设置中」添加相应的「重定向 URL」 `${your_logto_origin}/callback/${connector_id}`。其中 `connector_id` 在管理控制台添加了相应的连接器之后，可以在连接器的详情页中找到
-4. 左侧「凭证与基本信息」中可以获取「AppID」、「AppSecret」
-5. 左侧「应用发布」中需要发布第一个版本「AppID」、「AppSecret」才会生效
+1. On the [Developer Console](https://open.feishu.cn/app), click "Create Custom App".
+2. Fill in the application name, description, select an icon, and click "Create" button.
+3. In the left sidebar, click "Security Settings", fill in the "Redirect URL" as `${logto_endpoint}/callback/${connector_id}`. The corresponding value can be found in the `Callback URI` field on the Feishu connector details page in the Logto Console.
+4. In "Credentials & Basic Info", you can obtain the "App ID" and "App Secret".
 
 > ℹ️ **Note**
-> 应用不发布版本，所获取的「AppID」、「AppSecret」 均无法使用，或请求错误。
+> For non-enterprise internal use, you also need to click "Create a version" button in "Version Management and Release" page. The "App ID" and "App Secret" will only take effect after the application status changes to "Enabled."

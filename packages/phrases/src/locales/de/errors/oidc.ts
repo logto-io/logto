@@ -6,6 +6,7 @@ const oidc = {
   insufficient_scope: 'Token fehlt den Anwendungsbereich `{{scope}}`.',
   invalid_request: 'Anfrage ist ungültig.',
   invalid_grant: 'Grant Anfrage ist ungültig.',
+  invalid_issuer: 'Ungültiger Aussteller.',
   invalid_redirect_uri:
     '`redirect_uri` stimmt nicht mit den registrierten `redirect_uris` des Clients überein.',
   access_denied: 'Zugang verweigert.',

@@ -1,10 +1,11 @@
-import { Theme } from '@logto/schemas';
+import { ApplicationType, Theme } from '@logto/schemas';
 import classNames from 'classnames';
-import { Suspense, useCallback } from 'react';
+import { Suspense, useCallback, useContext } from 'react';
 
 import { type Guide, type GuideMetadata } from '@/assets/docs/guides/types';
 import FeatureTag, { BetaTag } from '@/components/FeatureTag';
 import { latestProPlanId } from '@/consts/subscriptions';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import useTheme from '@/hooks/use-theme';
 import { onKeyDownHandler } from '@/utils/a11y';
@@ -27,6 +28,9 @@ type Props = {
 
 function GuideCard({ data, onClick, hasBorder, hasButton, hasPaywall, isBeta }: Props) {
   const { id, Logo, DarkLogo, metadata } = data;
+  const {
+    currentSubscription: { isEnterprisePlan },
+  } = useContext(SubscriptionDataContext);
 
   const { target, name, description } = metadata;
   const buttonText = target === 'API' ? 'guide.get_started' : 'guide.start_building';
@@ -62,7 +66,12 @@ function GuideCard({ data, onClick, hasBorder, hasButton, hasPaywall, isBeta }: 
             <div className={styles.name}>{name}</div>
             {hasTags && (
               <div className={styles.tagWrapper}>
-                {hasPaywall && <FeatureTag isVisible plan={latestProPlanId} />}
+                {hasPaywall &&
+                  (target === ApplicationType.SAML ? (
+                    <FeatureTag isEnterprise isVisible={!isEnterprisePlan} />
+                  ) : (
+                    <FeatureTag isVisible plan={latestProPlanId} />
+                  ))}
                 {isBeta && <BetaTag />}
               </div>
             )}

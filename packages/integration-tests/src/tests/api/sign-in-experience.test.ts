@@ -32,7 +32,7 @@ describe('admin console sign-in experience', () => {
       termsOfUseUrl: 'mock://fake-url/terms',
       privacyPolicyUrl: 'mock://fake-url/privacy',
       mfa: {
-        policy: MfaPolicy.UserControlled,
+        policy: MfaPolicy.PromptAtSignInAndSignUp,
         factors: [],
       },
       singleSignOnEnabled: true,

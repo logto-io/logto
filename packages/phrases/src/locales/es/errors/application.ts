@@ -22,6 +22,34 @@ const application = {
   should_delete_custom_domains_first: 'Debe eliminar primero los dominios personalizados.',
   no_legacy_secret_found: 'La aplicación no tiene un secreto heredado.',
   secret_name_exists: 'El nombre del secreto ya existe.',
+  saml: {
+    use_saml_app_api:
+      'Usa la API `[METHOD] /saml-applications(/.*)?` para operar la aplicación SAML.',
+    saml_application_only: 'La API solo está disponible para aplicaciones SAML.',
+    reach_oss_limit:
+      'NO PUEDES crear más aplicaciones SAML porque se ha alcanzado el límite de {{limit}}.',
+    acs_url_binding_not_supported:
+      'Solo se admite la vinculación HTTP-POST para recibir aserciones SAML.',
+    can_not_delete_active_secret: 'No se puede eliminar el secreto activo.',
+    no_active_secret: 'No se encontró un secreto activo.',
+    entity_id_required: 'Se requiere un ID de entidad para generar metadatos.',
+    name_id_format_required: 'Se requiere el formato de ID de nombre.',
+    unsupported_name_id_format: 'Formato de ID de nombre no compatible.',
+    missing_email_address: 'El usuario no tiene una dirección de correo electrónico.',
+    email_address_unverified: 'La dirección de correo electrónico del usuario no está verificada.',
+    invalid_certificate_pem_format: 'Formato PEM de certificado no válido',
+    acs_url_required: 'La URL del Servicio de Consumidor de Aserciones es requerida.',
+    private_key_required: 'Se requiere una clave privada.',
+    certificate_required: 'Se requiere un certificado.',
+    invalid_saml_request: 'Solicitud de autenticación SAML no válida.',
+    auth_request_issuer_not_match:
+      'El emisor de la solicitud de autenticación SAML no coincide con el ID de entidad del proveedor de servicios.',
+    sp_initiated_saml_sso_session_not_found_in_cookies:
+      'No se encontró el ID de sesión SSO SAML iniciado por el proveedor de servicios en las cookies.',
+    sp_initiated_saml_sso_session_not_found:
+      'No se encontró la sesión SSO SAML iniciada por el proveedor de servicios.',
+    state_mismatch: 'Desajuste de `state`.',
+  },
 };
 
 export default Object.freeze(application);

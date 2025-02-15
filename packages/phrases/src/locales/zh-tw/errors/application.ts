@@ -17,6 +17,29 @@ const application = {
   should_delete_custom_domains_first: '應先刪除自訂域名。',
   no_legacy_secret_found: '該應用程式沒有傳統秘鑰。',
   secret_name_exists: '秘鑰名稱已存在。',
+  saml: {
+    use_saml_app_api: '使用 `[METHOD] /saml-applications(/.*)?` API 操作 SAML 應用程式。',
+    saml_application_only: '該 API 僅適用於 SAML 應用程式。',
+    reach_oss_limit: '由於已達到 {{limit}} 的限制，你無法創建更多的 SAML 應用程式。',
+    acs_url_binding_not_supported: '僅支持使用 HTTP-POST 方式接收 SAML 聲明。',
+    can_not_delete_active_secret: '無法刪除活躍的秘鑰。',
+    no_active_secret: '找不到活躍的秘鑰。',
+    entity_id_required: '需要提供實體 ID 來生成元數據。',
+    name_id_format_required: '需要提供名稱 ID 格式。',
+    unsupported_name_id_format: '不支持的名稱 ID 格式。',
+    missing_email_address: '使用者沒有電子郵件地址。',
+    email_address_unverified: '使用者的電子郵件地址未驗證。',
+    invalid_certificate_pem_format: '無效的 PEM 證書格式',
+    acs_url_required: '需要提供聲明承載者服務 URL。',
+    private_key_required: '需要提供私鑰。',
+    certificate_required: '需要提供證書。',
+    invalid_saml_request: '無效的 SAML 驗證請求。',
+    auth_request_issuer_not_match: 'SAML 驗證請求的發行者與服務提供者的實體 ID 不匹配。',
+    sp_initiated_saml_sso_session_not_found_in_cookies:
+      '在 cookie 中找不到服務提供者發起的 SAML 單點登入會話 ID。',
+    sp_initiated_saml_sso_session_not_found: '找不到服務提供者發起的 SAML 單點登入會話。',
+    state_mismatch: '`state` 不匹配。',
+  },
 };
 
 export default Object.freeze(application);

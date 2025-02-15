@@ -25,6 +25,11 @@ const upsell = {
       'Mevcut MAU, <planName/> sınırını aştı. Logto hizmetinin askıya alınmasını önlemek için premium plana hemen yükseltin.',
     update_plan: 'Planı Güncelle',
   },
+  token_exceeded_modal: {
+    title: 'Jeton kullanımı sınırı aştı. Planınızı yükseltin.',
+    notification:
+      'Belirtilen jeton kullanım sınırınızı <planName/> aştınız. Kullanıcılar Logto hizmetine düzgün bir şekilde erişemeyecektir. Herhangi bir aksaklık yaşamamak için lütfen planınızı premium seviyeye hızlıca yükseltin.',
+  },
   payment_overdue_modal: {
     title: 'Fatura ödemesi gecikti',
     notification:

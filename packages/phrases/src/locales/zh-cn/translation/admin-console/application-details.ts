@@ -38,6 +38,8 @@ const application_details = {
   redirect_uri_placeholder_native: 'io.logto://callback',
   redirect_uri_tip:
     '在用户登录完成（不论成功与否）后重定向的目标 URI。参见 OpenID Connect <a>AuthRequest</a> 以了解更多。',
+  mixed_redirect_uri_warning:
+    '你的应用程序类型与至少一个重定向 URI 不兼容。这不符合最佳实践，我们强烈建议保持重定向 URI 的一致性。',
   post_sign_out_redirect_uri: '退出登录后重定向 URI',
   post_sign_out_redirect_uris: '退出登录后重定向 URIs',
   post_sign_out_redirect_uri_placeholder: 'https://your.website.com/home',
@@ -61,6 +63,8 @@ const application_details = {
   rotate_refresh_token: '轮换刷新令牌',
   rotate_refresh_token_label:
     '启用后，当原先的刷新令牌的时效已经过去 70%，或者满足一定条件时，Logto 将会为访问令牌请求发放新的刷新令牌。<a>了解更多</a>',
+  rotate_refresh_token_label_for_public_clients:
+    '启用后，Logto 将为每个令牌请求颁发一个新的刷新令牌。<a>了解更多</a>',
   backchannel_logout: '后端通道注销',
   backchannel_logout_description: '配置 OpenID Connect 后端通道注销端点，以及该应用是否需要会话。',
   backchannel_logout_uri: '后端通道注销 URI',
@@ -162,6 +166,9 @@ const application_details = {
     never: '从不',
     create_new_secret: '创建新密钥',
     delete_confirmation: '此操作无法撤销。你确定要删除此密钥吗？',
+    deleted: '密钥已成功删除。',
+    activated: '密钥已成功激活。',
+    deactivated: '密钥已成功停用。',
     legacy_secret: '旧密钥',
     expired: '已过期',
     expired_tooltip: '此密钥已于 {{date}} 过期。',
@@ -172,12 +179,62 @@ const application_details = {
       expiration_description_never: '该密钥永不过期。我们建议设置一个到期日期以增强安全性。',
       days: '{{count}} 天',
       days_other: '{{count}} 天',
+      years: '{{count}} 年',
+      years_other: '{{count}} 年',
       created: '密钥 {{name}} 已成功创建。',
     },
     edit_modal: {
       title: '编辑应用密钥',
       edited: '密钥 {{name}} 已成功编辑。',
     },
+  },
+  saml_idp_config: {
+    title: 'SAML IdP 元数据',
+    description: '使用以下元数据和证书配置你的应用中的 SAML IdP。',
+    metadata_url_label: 'IdP 元数据 URL',
+    single_sign_on_service_url_label: '单一登录服务 URL',
+    idp_entity_id_label: 'IdP 实体 ID',
+  },
+  saml_idp_certificates: {
+    title: 'SAML 签名证书',
+    expires_at: '到期时间',
+    finger_print: '指纹',
+    status: '状态',
+    active: '活跃',
+    inactive: '非活跃',
+  },
+  saml_idp_name_id_format: {
+    title: '名称 ID 格式',
+    description: '选择 SAML IdP 的名称 ID 格式。',
+    persistent: '持久性',
+    persistent_description: '使用 Logto 用户 ID 作为名称 ID',
+    transient: '临时性',
+    transient_description: '使用一次性用户 ID 作为名称 ID',
+    unspecified: '未指定',
+    unspecified_description: '使用 Logto 用户 ID 作为名称 ID',
+    email_address: '电子邮件地址',
+    email_address_description: '使用电子邮件地址作为名称 ID',
+  },
+  saml_encryption_config: {
+    encrypt_assertion: '加密 SAML 断言',
+    encrypt_assertion_description: '启用此选项后，SAML 断言将被加密。',
+    encrypt_then_sign: '先加密后签名',
+    encrypt_then_sign_description:
+      '启用此选项后，SAML 断言将被加密然后签名；否则，SAML 断言将被签名然后加密。',
+    certificate: '证书',
+    certificate_tooltip: '复制并粘贴从你的服务提供者获取的 x509 证书以加密 SAML 断言。',
+    certificate_placeholder:
+      '-----BEGIN CERTIFICATE-----\nMIICYDCCAcmgAwIBA...\n-----END CERTIFICATE-----\n',
+    certificate_missing_error: '需要证书。',
+    certificate_invalid_format_error: '检测到证书格式无效。请检查证书格式并重试。',
+  },
+  saml_app_attribute_mapping: {
+    name: '属性映射',
+    title: '基础属性映射',
+    description: '添加属性映射以从 Logto 同步用户资料到你的应用程序。',
+    col_logto_claims: 'Logto 的值',
+    col_sp_claims: '你应用中的值名称',
+    add_button: '添加另一个',
   },
 };
 

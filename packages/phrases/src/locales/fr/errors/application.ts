@@ -24,6 +24,34 @@ const application = {
   should_delete_custom_domains_first: "Devrait d'abord supprimer les domaines personnalisés.",
   no_legacy_secret_found: "L'application n'a pas de secret hérité.",
   secret_name_exists: 'Le nom du secret existe déjà.',
+  saml: {
+    use_saml_app_api:
+      "Utilisez l'API `[METHOD] /saml-applications(/.*)?` pour gérer l'application SAML.",
+    saml_application_only: "L'API est uniquement disponible pour les applications SAML.",
+    reach_oss_limit:
+      "Vous NE POUVEZ PAS créer plus d'applications SAML car la limite de {{limit}} est atteinte.",
+    acs_url_binding_not_supported:
+      'Seul le binding HTTP-POST est pris en charge pour recevoir des assertions SAML.',
+    can_not_delete_active_secret: 'Impossible de supprimer le secret actif.',
+    no_active_secret: 'Aucun secret actif trouvé.',
+    entity_id_required: "L'identifiant de l'entité est requis pour générer les métadonnées.",
+    name_id_format_required: 'Le format Name ID est requis.',
+    unsupported_name_id_format: 'Format Name ID non pris en charge.',
+    missing_email_address: "L'utilisateur n'a pas d'adresse e-mail.",
+    email_address_unverified: "L'adresse e-mail de l'utilisateur n'est pas vérifiée.",
+    invalid_certificate_pem_format: 'Format PEM de certificat invalide',
+    acs_url_required: "L'URL du service consommateur d'assertions est requise.",
+    private_key_required: 'La clé privée est requise.',
+    certificate_required: 'Le certificat est requis.',
+    invalid_saml_request: "Requête d'authentification SAML invalide.",
+    auth_request_issuer_not_match:
+      "L'émetteur de la requête d'authentification SAML ne correspond pas à l'ID d'entité du fournisseur de service.",
+    sp_initiated_saml_sso_session_not_found_in_cookies:
+      "L'ID de session SSO SAML initiée par le fournisseur de services n'est pas trouvé dans les cookies.",
+    sp_initiated_saml_sso_session_not_found:
+      'La session SSO SAML initiée par le fournisseur de services est introuvable.',
+    state_mismatch: 'Mismatch `state`.',
+  },
 };
 
 export default Object.freeze(application);

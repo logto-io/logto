@@ -36,6 +36,13 @@ const user = {
   password_algorithm_required: 'Password algorithm is required.',
   password_and_digest: 'You cannot set both plain text password and password digest.',
   personal_access_token_name_exists: '個人用アクセス トークン名は既に存在します。',
+  totp_secret_invalid: '無効な TOTP シークレットが提供されました。',
+  wrong_backup_code_format: 'バックアップコードの形式が無効です。',
+  username_required: 'ユーザー名は必須の識別子ですので、null に設定することはできません。',
+  email_or_phone_required:
+    'メールアドレスまたは電話番号は必須の識別子であり、少なくとも1つが必要です。',
+  email_required: 'メールアドレスは必須の識別子ですので、null に設定することはできません。',
+  phone_required: '電話番号は必須の識別子ですので、null に設定することはできません。',
 };
 
 export default Object.freeze(user);

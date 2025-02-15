@@ -40,6 +40,8 @@ const application_details = {
   redirect_uri_placeholder_native: 'io.logto://callback',
   redirect_uri_tip:
     '사용자 로그인 후 리디렉트될 URI 경로입니다. 더 자세한 정보는 OpenID Connect <a>인증 요청</a>을 참조하세요.',
+  mixed_redirect_uri_warning:
+    '어플리케이션 유형이 적어도 하나의 리디렉트 URI 와 호환되지 않습니다. 이는 모범 사례를 따르지 않으며, 리디렉트 URI 들을 일관되게 유지할 것을 강력히 권장합니다.',
   post_sign_out_redirect_uri: '로그아웃 후 리디렉트 URI',
   post_sign_out_redirect_uris: '로그아웃 후 리디렉트 URIs',
   post_sign_out_redirect_uri_placeholder: 'https://your.website.com/home',
@@ -63,6 +65,8 @@ const application_details = {
   rotate_refresh_token: 'Refresh 토큰 회전',
   rotate_refresh_token_label:
     '활성화하면, 원래 TTL 중 70%가 지난 후 또는 특정 조건이 충족되면 Refresh 토큰 요청에 대해 새로운 Refresh 토큰을 발행합니다. <a>자세히 보기</a>',
+  rotate_refresh_token_label_for_public_clients:
+    '활성화되면, Logto 는 각 토큰 요청에 대해 새로운 refresh 토큰을 발행합니다. <a>자세히 보기</a>',
   backchannel_logout: '백채널 로그아웃',
   backchannel_logout_description:
     '애플리케이션에 세션이 필요한 경우 OpenID Connect 백채널 로그아웃 엔드포인트를 구성하세요.',
@@ -172,6 +176,9 @@ const application_details = {
     never: '만료되지 않음',
     create_new_secret: '새 시크릿 생성',
     delete_confirmation: '이 작업은 되돌릴 수 없습니다. 이 시크릿을 삭제하시겠습니까?',
+    deleted: '시크릿이 성공적으로 삭제되었습니다.',
+    activated: '시크릿이 성공적으로 활성화되었습니다.',
+    deactivated: '시크릿이 성공적으로 비활성화되었습니다.',
     legacy_secret: '레거시 시크릿',
     expired: '만료됨',
     expired_tooltip: '이 시크릿은 {{date}} 에 만료되었습니다.',
@@ -183,12 +190,65 @@ const application_details = {
         '이 시크릿은 만료되지 않을 것입니다. 보안을 강화하기 위해 만료 날짜를 설정하는 것을 권장합니다.',
       days: '{{count}} 일',
       days_other: '{{count}} 일',
+      years: '{{count}} 년',
+      years_other: '{{count}} 년',
       created: '시크릿 {{name}} 이(가) 성공적으로 생성되었습니다.',
     },
     edit_modal: {
       title: '애플리케이션 시크릿 편집',
       edited: '시크릿 {{name}} 이(가) 성공적으로 편집되었습니다.',
     },
+  },
+  saml_idp_config: {
+    title: 'SAML IdP 메타데이터',
+    description: '다음 메타데이터와 인증서를 사용하여 애플리케이션에서 SAML IdP 를 구성하세요.',
+    metadata_url_label: 'IdP 메타데이터 URL',
+    single_sign_on_service_url_label: '단일 로그인 서비스 URL',
+    idp_entity_id_label: 'IdP 엔티티 ID',
+  },
+  saml_idp_certificates: {
+    title: 'SAML 서명 인증서',
+    expires_at: '만료 시간',
+    finger_print: '지문',
+    status: '상태',
+    active: '활성',
+    inactive: '비활성',
+  },
+  saml_idp_name_id_format: {
+    title: '이름 ID 형식',
+    description: 'SAML IdP의 이름 ID 형식을 선택하세요.',
+    persistent: '영구',
+    persistent_description: 'Logto 사용자 ID 를 이름 ID 로 사용',
+    transient: '일시적',
+    transient_description: '일회용 사용자 ID 를 이름 ID 로 사용',
+    unspecified: '지정되지 않음',
+    unspecified_description: 'Logto 사용자 ID 를 이름 ID 로 사용',
+    email_address: '이메일 주소',
+    email_address_description: '이메일 주소를 이름 ID 로 사용',
+  },
+  saml_encryption_config: {
+    encrypt_assertion: 'SAML 주장을 암호화',
+    encrypt_assertion_description: '이 옵션을 활성화하면 SAML 주장이 암호화됩니다.',
+    encrypt_then_sign: '먼저 암호화 후 서명',
+    encrypt_then_sign_description:
+      '이 옵션을 활성화하면 SAML 주장을 암호화한 다음 서명합니다; 그렇지 않으면 SAML 주장은 서명한 다음 암호화됩니다.',
+    certificate: '인증서',
+    certificate_tooltip:
+      'SAML 주장을 암호화하기 위해 서비스 제공자로부터 받은 x509 인증서를 복사하여 붙여넣으세요.',
+    certificate_placeholder:
+      '-----BEGIN CERTIFICATE-----\nMIICYDCCAcmgAwIBA...\n-----END CERTIFICATE-----\n',
+    certificate_missing_error: '인증서가 필요합니다.',
+    certificate_invalid_format_error:
+      '잘못된 인증서 형식이 감지되었습니다. 인증서 형식을 확인하고 다시 시도하세요.',
+  },
+  saml_app_attribute_mapping: {
+    name: '속성 매핑',
+    title: '기본 속성 매핑',
+    description:
+      'Logto에서 애플리케이션으로 사용자 프로필을 동기화하기 위해 속성 매핑을 추가하세요.',
+    col_logto_claims: 'Logto 값',
+    col_sp_claims: '애플리케이션의 값 이름',
+    add_button: '다른 추가',
   },
 };
 

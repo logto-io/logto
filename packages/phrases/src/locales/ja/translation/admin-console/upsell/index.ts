@@ -25,6 +25,11 @@ const upsell = {
       '現在のMAUが<planName/>の制限を超えています。サービスの停止を回避するために、迅速にプレミアムプランにアップグレードしてください。',
     update_plan: 'プランを更新',
   },
+  token_exceeded_modal: {
+    title: 'トークン使用量が制限を超えました。プランをアップグレードしてください。',
+    notification:
+      '<planName/> のトークン使用制限を超えました。ユーザーは Logto サービスに正しくアクセスできません。ご不便をおかけしないよう、すぐにプレミアムプランにアップグレードしてください。',
+  },
   payment_overdue_modal: {
     title: '請求書の支払いが期限切れです',
     notification:

@@ -1,6 +1,6 @@
 {
   "name": "@logto/core-kit",
-  "version": "2.5.1",
+  "version": "2.5.3",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/toolkit#readme",
   "repository": {
@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@logto/language-kit": "workspace:^1.1.0",
-    "@logto/shared": "workspace:^3.1.0",
+    "@logto/shared": "workspace:^3.1.3",
     "@silverhand/essentials": "^2.9.1",
     "color": "^4.2.3"
   },
@@ -61,14 +61,14 @@
     "@types/color": "^4.0.0",
     "@types/node": "^20.9.5",
     "@types/react": "^18.3.3",
-    "@vitest/coverage-v8": "^2.1.8",
+    "@vitest/coverage-v8": "^2.1.9",
     "eslint": "^8.56.0",
     "lint-staged": "^15.0.0",
     "postcss": "^8.4.31",
     "prettier": "^3.0.0",
     "stylelint": "^15.0.0",
     "typescript": "^5.5.3",
-    "vitest": "^2.1.8"
+    "vitest": "^2.1.9"
   },
   "eslintConfig": {
     "extends": "@silverhand"

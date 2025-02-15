@@ -171,6 +171,19 @@ const quota_item = {
     unlimited: 'Ara yüzünü getir',
     not_eligible: 'Özel UI varlıklarınızı kaldırın',
   },
+  idp_initiated_sso_enabled: {
+    name: 'IDP başlatılan SSO',
+    limited: 'IDP başlatılan SSO',
+    unlimited: 'IDP başlatılan SSO',
+    not_eligible: "IDP başlatılan SSO'ya izin verilmez",
+  },
+  saml_applications_limit: {
+    name: 'SAML uygulamaları',
+    limited: '{{count, number}} SAML uygulaması',
+    limited_other: '{{count, number}} SAML uygulamaları',
+    unlimited: 'Sınırsız SAML uygulamaları',
+    not_eligible: 'SAML uygulamalarınızı kaldırın',
+  },
 };
 
 export default Object.freeze(quota_item);

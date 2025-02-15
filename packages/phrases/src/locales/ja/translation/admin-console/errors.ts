@@ -7,6 +7,7 @@ const errors = {
   invalid_uri_format: '無効なURI形式',
   invalid_origin_format: '無効なURIの起源の形式',
   invalid_json_format: '無効なJSON形式',
+  invalid_parameters_format: '無効なパラメーター形式',
   invalid_regex: '無効な正規表現',
   invalid_error_message_format: 'エラーメッセージの形式が無効です。',
   required_field_missing: "'{{field}}'を入力してください",

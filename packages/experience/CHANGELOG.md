@@ -1,5 +1,34 @@
 # Change Log
 
+## 1.11.1
+
+### Patch Changes
+
+- d2468683c: remove the image element's `cross-origin="anonymous"` attribute.
+
+  Some public image resources may not have the proper cross-origin headers configured, those images may fail to load when the `cross-origin="anonymous"` attribute is present.
+  Since those image elements are only used for display purposes, Logto does not need to access the image data, so the `cross-origin="anonymous"` attribute is not necessary.
+  To make the image elements more compatible with public image resources, remove the `cross-origin="anonymous"` attribute from the image elements.
+
+## 1.11.0
+
+### Minor Changes
+
+- f1b1d9e95: new MFA prompt policy
+
+  You can now cutomize the MFA prompt policy in the Console.
+
+  First, choose if you want to enable **Require MFA**:
+
+  - **Enable**: Users will be prompted to set up MFA during the sign-in process which cannot be skipped. If the user fails to set up MFA or deletes their MFA settings, they will be locked out of their account until they set up MFA again.
+  - **Disable**: Users can skip the MFA setup process during sign-up flow.
+
+  If you choose to **Disable**, you can choose the MFA setup prompt:
+
+  - Do not ask users to set up MFA.
+  - Ask users to set up MFA during registration (skippable, one-time prompt). **The same prompt as previous policy (UserControlled)**
+  - Ask users to set up MFA on their sign-in after registration (skippable, one-time prompt)
+
 ## 1.10.0
 
 ### Minor Changes

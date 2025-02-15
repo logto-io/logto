@@ -1,61 +1,77 @@
 const usage = {
-  /** UNTRANSLATED */
-  status_active: 'In use',
-  /** UNTRANSLATED */
-  status_inactive: 'Not in use',
+  status_active: "En cours d'utilisation",
+  status_inactive: 'Non utilisé',
+  limited_status_quota_description: '(Première {{quota}} incluse)',
+  unlimited_status_quota_description: '(Inclus)',
+  disabled_status_quota_description: '(Non inclus)',
+  usage_description_with_unlimited_quota: '{{usage}}<span> (Illimité)</span>',
+  usage_description_with_limited_quota: '{{usage}}<span> (Première {{basicQuota}} incluse)</span>',
+  usage_description_without_quota: '{{usage}}<span> (Non inclus)</span>',
   mau: {
     title: 'MAU',
-    description: '{{usage}}',
     tooltip:
       'Un MAU est un utilisateur unique qui a échangé au moins un jeton avec Logto pendant un cycle de facturation. Illimité pour le plan Pro. <a>En savoir plus</a>',
+    tooltip_for_enterprise:
+      'Un MAU est un utilisateur unique qui a échangé au moins un jeton avec Logto pendant un cycle de facturation. Illimité pour le plan Entreprise.',
   },
   organizations: {
     title: 'Organisations',
-    description: '{{usage}}',
     tooltip:
       "Fonctionnalité en supplément à un tarif fixe de ${{price, number}} par mois. Le prix n'est pas affecté par le nombre d'organisations ou leur niveau d'activité.",
+    description_for_enterprise: '(Inclus)',
+    tooltip_for_enterprise:
+      "L'inclusion dépend de votre plan. Si la fonctionnalité d'organisation n'est pas dans votre contrat initial, elle sera ajoutée à votre facture lorsque vous l'activerez. Le complément coûte ${{price, number}}/mois, indépendamment du nombre d'organisations ou de leur activité.",
+    tooltip_for_enterprise_with_numbered_basic_quota:
+      "Votre plan inclut les {{basicQuota}} premières organisations gratuitement. Si vous en avez besoin de plus, vous pouvez les ajouter avec le complément d'organisation à un tarif fixe de ${{price, number}} par mois, indépendamment du nombre d'organisations ou de leur niveau d'activité.",
   },
   mfa: {
     title: 'MFA',
-    description: '{{usage}}',
     tooltip:
       "Fonctionnalité en supplément à un tarif fixe de ${{price, number}} par mois. Le prix n'est pas affecté par le nombre de facteurs d'authentification utilisés.",
+    tooltip_for_enterprise:
+      "L'inclusion dépend de votre plan. Si la fonctionnalité MFA n'est pas dans votre contrat initial, elle sera ajoutée à votre facture lorsque vous l'activerez. Le complément coûte ${{price, number}}/mois, indépendamment du nombre de facteurs d'authentification utilisés.",
   },
   enterprise_sso: {
     title: "SSO d'entreprise",
-    description: '{{usage}}',
     tooltip:
       'Fonctionnalité en supplément avec un prix de ${{price, number}} par connexion SSO par mois.',
+    tooltip_for_enterprise:
+      'Fonctionnalité supplémentaire avec un prix de ${{price, number}} par connexion SSO par mois. Les {{basicQuota}} premières SSO sont incluses et gratuites dans votre plan basé sur un contrat.',
   },
   api_resources: {
     title: 'Ressources API',
-    description: '{{usage}} <span>(Gratuit pour les 3 premiers)</span>',
     tooltip:
       'Fonctionnalité en supplément au prix de ${{price, number}} par ressource par mois. Les 3 premières ressources API sont gratuites.',
+    tooltip_for_enterprise:
+      'Les {{basicQuota}} premières ressources API sont incluses et gratuites dans votre plan basé sur un contrat. Si vous en avez besoin de plus, ${{price, number}} par ressource API par mois.',
   },
   machine_to_machine: {
     title: 'Machine à machine',
-    description: '{{usage}} <span>(Gratuit pour le premier)</span>',
     tooltip:
       'Fonctionnalité en supplément au prix de ${{price, number}} par application par mois. La première application machine à machine est gratuite.',
+    tooltip_for_enterprise:
+      'La première application machine à machine {{basicQuota}} est gratuite dans votre plan basé sur un contrat. Si vous en avez besoin de plus, ${{price, number}} par application par mois.',
   },
   tenant_members: {
     title: 'Membres du locataire',
-    description: '{{usage}} <span>(Gratuit pour les 3 premiers)</span>',
     tooltip:
       'Fonctionnalité en supplément au prix de ${{price, number}} par membre par mois. Les 3 premiers membres du locataire sont gratuits.',
+    tooltip_for_enterprise:
+      'Les {{basicQuota}} premiers membres du locataire sont inclus et gratuits dans votre plan basé sur un contrat. Si vous en avez besoin de plus, ${{price, number}} par membre du locataire par mois.',
   },
   tokens: {
     title: 'Jetons',
-    description: '{{usage}}',
     tooltip:
-      'Fonctionnalité en supplément au prix de ${{price, number}} par million de jetons. Le premier million de jetons est inclus.',
+      'Fonctionnalité en supplément au prix de ${{price, number}} par {{tokenLimit}} de jetons. Le premier {{basicQuota}} de jetons est inclus.',
+    tooltip_for_enterprise:
+      'Le premier {{basicQuota}} de jetons est inclus et gratuit dans votre plan basé sur un contrat. Si vous en avez besoin de plus, ${{price, number}} par {{tokenLimit}} jetons par mois.',
   },
   hooks: {
     title: 'Hooks',
-    description: '{{usage}} <span>(Gratuit pour les 10 premiers)</span>',
     tooltip:
       'Fonctionnalité en supplément au prix de ${{price, number}} par hook. Les 10 premiers hooks sont inclus.',
+    tooltip_for_enterprise:
+      'Les {{basicQuota}} premiers hooks sont inclus et gratuits dans votre plan basé sur un contrat. Si vous en avez besoin de plus, ${{price, number}} par hook par mois.',
   },
   pricing: {
     add_on_changes_in_current_cycle_notice:

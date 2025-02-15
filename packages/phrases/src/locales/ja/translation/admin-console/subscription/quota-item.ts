@@ -171,6 +171,19 @@ const quota_item = {
     unlimited: 'カスタム UI',
     not_eligible: 'カスタム UI を削除してください',
   },
+  idp_initiated_sso_enabled: {
+    name: 'IDPによって開始された SSO',
+    limited: 'IDPによって開始された SSO',
+    unlimited: 'IDPによって開始された SSO',
+    not_eligible: 'IDPによって開始された SSO は許可されていません',
+  },
+  saml_applications_limit: {
+    name: 'SAML アプリケーション',
+    limited: '{{count, number}} SAML アプリケーション',
+    limited_other: '{{count, number}} SAML アプリケーション',
+    unlimited: '無制限のSAMLアプリケーション',
+    not_eligible: 'SAMLアプリケーションを削除してください',
+  },
 };
 
 export default Object.freeze(quota_item);

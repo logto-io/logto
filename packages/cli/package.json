@@ -1,6 +1,6 @@
 {
   "name": "@logto/cli",
-  "version": "1.22.0",
+  "version": "1.24.0",
   "description": "Logto CLI.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/logto#readme",
@@ -43,8 +43,8 @@
   },
   "dependencies": {
     "@logto/connector-kit": "workspace:^4.1.0",
-    "@logto/core-kit": "workspace:^2.5.0",
-    "@logto/schemas": "workspace:1.22.0",
+    "@logto/core-kit": "workspace:^2.5.2",
+    "@logto/schemas": "workspace:1.24.0",
     "@logto/shared": "workspace:^3.1.2",
     "@silverhand/essentials": "^2.9.1",
     "@silverhand/slonik": "31.0.0-beta.2",
@@ -73,14 +73,14 @@
     "@types/sinon": "^17.0.0",
     "@types/tar": "^6.1.12",
     "@types/yargs": "^17.0.13",
-    "@vitest/coverage-v8": "^2.1.8",
+    "@vitest/coverage-v8": "^2.1.9",
     "@withtyped/server": "^0.14.0",
     "eslint": "^8.56.0",
     "lint-staged": "^15.0.0",
     "prettier": "^3.0.0",
     "sinon": "^19.0.0",
     "typescript": "^5.5.3",
-    "vitest": "^2.1.8"
+    "vitest": "^2.1.9"
   },
   "eslintConfig": {
     "extends": "@silverhand",

@@ -1,60 +1,76 @@
 const usage = {
-  /** UNTRANSLATED */
-  status_active: 'In use',
-  /** UNTRANSLATED */
-  status_inactive: 'Not in use',
+  status_active: 'In Verwendung',
+  status_inactive: 'Nicht in Verwendung',
+  limited_status_quota_description: '(Erste {{quota}} inklusive)',
+  unlimited_status_quota_description: '(Inklusive)',
+  disabled_status_quota_description: '(Nicht inklusive)',
+  usage_description_with_unlimited_quota: '{{usage}}<span> (Unbegrenzt)</span>',
+  usage_description_with_limited_quota: '{{usage}}<span> (Erste {{basicQuota}} inklusive)</span>',
+  usage_description_without_quota: '{{usage}}<span> (Nicht inklusive)</span>',
   mau: {
     title: 'MAU',
-    description: '{{usage}}',
     tooltip:
       'Ein MAU ist ein eindeutiger Nutzer, der innerhalb eines Abrechnungszyklus mindestens ein Token mit Logto ausgetauscht hat. Unbegrenzt für den Pro-Plan. <a>Erfahre mehr</a>',
+    tooltip_for_enterprise:
+      'Ein MAU ist ein eindeutiger Nutzer, der innerhalb eines Abrechnungszyklus mindestens ein Token mit Logto ausgetauscht hat. Unbegrenzt für den Enterprise-Plan.',
   },
   organizations: {
     title: 'Organisationen',
-    description: '{{usage}}',
     tooltip:
       'Zusatzfeature mit einem Festpreis von ${{price, number}} pro Monat. Der Preis wird nicht von der Anzahl der Organisationen oder ihrem Aktivitätsniveau beeinflusst.',
+    description_for_enterprise: '(Inklusive)',
+    tooltip_for_enterprise:
+      'Die Aufnahme hängt von deinem Plan ab. Wenn das Organisationsfeature nicht in deinem ursprünglichen Vertrag enthalten ist, wird es deiner Rechnung hinzugefügt, wenn du es aktivierst. Das Add-on kostet ${{price, number}}/Monat, unabhängig von der Anzahl der Organisationen oder ihrem Aktivitätsniveau.',
+    tooltip_for_enterprise_with_numbered_basic_quota:
+      'Dein Plan beinhaltet die ersten {{basicQuota}} Organisationen kostenlos. Wenn du mehr benötigst, kannst du sie mit dem Organisations-Add-on zu einem Festpreis von ${{price, number}} pro Monat hinzufügen, unabhängig von der Anzahl der Organisationen oder ihrem Aktivitätsniveau.',
   },
   mfa: {
     title: 'MFA',
-    description: '{{usage}}',
     tooltip:
       'Zusatzfeature mit einem Festpreis von ${{price, number}} pro Monat. Der Preis wird nicht von der Anzahl der genutzten Authentifizierungsfaktoren beeinflusst.',
+    tooltip_for_enterprise:
+      'Die Aufnahme hängt von deinem Plan ab. Wenn das MFA-Feature nicht in deinem ursprünglichen Vertrag enthalten ist, wird es deiner Rechnung hinzugefügt, wenn du es aktivierst. Das Add-on kostet ${{price, number}}/Monat, unabhängig von der Anzahl der genutzten Authentifizierungsfaktoren.',
   },
   enterprise_sso: {
     title: 'Enterprise SSO',
-    description: '{{usage}}',
     tooltip: 'Zusatzfeature mit einem Preis von ${{price, number}} pro SSO-Verbindung pro Monat.',
+    tooltip_for_enterprise:
+      'Zusatzfeature mit einem Preis von ${{price, number}} pro SSO-Verbindung pro Monat. Die ersten {{basicQuota}} SSO sind in deinem vertragsbasierten Plan enthalten und kostenlos.',
   },
   api_resources: {
     title: 'API-Ressourcen',
-    description: '{{usage}} <span>(Kostenlos für die ersten 3)</span>',
     tooltip:
       'Zusatzfeature zu einem Preis von ${{price, number}} pro Ressource pro Monat. Die ersten 3 API-Ressourcen sind kostenlos.',
+    tooltip_for_enterprise:
+      'Die ersten {{basicQuota}} API-Ressourcen sind in deinem vertragsbasierten Plan enthalten und kostenlos. Wenn du mehr benötigst, ${{price, number}} pro API-Ressource pro Monat.',
   },
   machine_to_machine: {
     title: 'Machine-to-Machine',
-    description: '{{usage}} <span>(Kostenlos für die erste)</span>',
     tooltip:
       'Zusatzfeature zu einem Preis von ${{price, number}} pro App pro Monat. Die erste Machine-to-Machine-App ist kostenlos.',
+    tooltip_for_enterprise:
+      'Die erste {{basicQuota}} Machine-to-Machine-App ist in deinem vertragsbasierten Plan kostenlos. Wenn du mehr benötigst, ${{price, number}} pro App pro Monat.',
   },
   tenant_members: {
     title: 'Tenant-Mitglieder',
-    description: '{{usage}} <span>(Kostenlos für die ersten 3)</span>',
     tooltip:
       'Zusatzfeature zu einem Preis von ${{price, number}} pro Mitglied pro Monat. Die ersten 3 Tenant-Mitglieder sind kostenlos.',
+    tooltip_for_enterprise:
+      'Die ersten {{basicQuota}} Tenant-Mitglieder sind in deinem vertragsbasierten Plan enthalten und kostenlos. Wenn du mehr benötigst, ${{price, number}} pro Tenant-Mitglied pro Monat.',
   },
   tokens: {
     title: 'Tokens',
-    description: '{{usage}}',
     tooltip:
-      'Zusatzfeature zu einem Preis von ${{price, number}} pro Million Tokens. Die ersten 1 Million Tokens sind inklusive.',
+      'Zusatzfeature zu einem Preis von ${{price, number}} pro {{tokenLimit}} Tokens. Die ersten {{basicQuota}} Tokens sind inklusive.',
+    tooltip_for_enterprise:
+      'Die ersten {{basicQuota}} Tokens sind in deinem vertragsbasierten Plan enthalten und kostenlos. Wenn du mehr benötigst, ${{price, number}} pro {{tokenLimit}} Tokens pro Monat.',
   },
   hooks: {
     title: 'Hooks',
-    description: '{{usage}} <span>(Kostenlos für die ersten 10)</span>',
     tooltip:
       'Zusatzfeature zu einem Preis von ${{price, number}} pro Hook. Die ersten 10 Hooks sind inklusive.',
+    tooltip_for_enterprise:
+      'Die ersten {{basicQuota}} Hooks sind in deinem vertragsbasierten Plan enthalten und kostenlos. Wenn du mehr benötigst, ${{price, number}} pro Hook pro Monat.',
   },
   pricing: {
     add_on_changes_in_current_cycle_notice:

@@ -8,7 +8,7 @@ import {
   wellConfiguredSsoConnector,
   mockSamlSsoConnector,
 } from '#src/__mocks__/sso.js';
-import { EnvSet } from '#src/env-set/index.js';
+import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import { type WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
@@ -74,7 +74,8 @@ jest
 jest
   .spyOn(ssoConnectorFactories.SAML, 'constructor')
   .mockImplementation(
-    (data: SingleSignOnConnectorData) => new MockSamlSsoConnector(data, 'tenantId')
+    (data: SingleSignOnConnectorData) =>
+      new MockSamlSsoConnector(data, getTenantEndpoint('tenantId', EnvSet.values))
   );
 
 const {

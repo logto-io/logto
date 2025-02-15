@@ -6,14 +6,17 @@ import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import SkuName from '@/components/SkuName';
+import { officialWebsiteContactPageLink } from '@/consts';
 import { addOnPricingExplanationLink } from '@/consts/external-links';
 import { machineToMachineAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
-import Button from '@/ds-components/Button';
+import Button, { LinkButton } from '@/ds-components/Button';
 import TextLink from '@/ds-components/TextLink';
 import useApplicationsUsage from '@/hooks/use-applications-usage';
 import useUserPreferences from '@/hooks/use-user-preferences';
 import { isPaidPlan } from '@/utils/subscription';
+
+import createFormStyles from '../index.module.scss';
 
 import styles from './index.module.scss';
 
@@ -35,6 +38,8 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
     hasAppsReachedLimit,
     hasMachineToMachineAppsReachedLimit,
     hasThirdPartyAppsReachedLimit,
+    hasSamlAppsReachedLimit,
+    hasSamlAppsSurpassedLimit,
   } = useApplicationsUsage();
   const {
     data: { m2mUpsellNoticeAcknowledged },
@@ -88,6 +93,21 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
             {t('paywall.machine_to_machine_feature')}
           </Trans>
         </QuotaGuardFooter>
+      );
+    }
+
+    if (selectedType === ApplicationType.SAML && hasSamlAppsReachedLimit) {
+      return (
+        <div className={createFormStyles.container}>
+          <div className={createFormStyles.description}>{t('paywall.saml_applications')}</div>
+          <LinkButton
+            targetBlank
+            size="large"
+            type="primary"
+            title="general.contact_us_action"
+            href={officialWebsiteContactPageLink}
+          />
+        </div>
       );
     }
 

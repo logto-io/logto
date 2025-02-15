@@ -1,60 +1,76 @@
 const usage = {
-  /** UNTRANSLATED */
-  status_active: 'In use',
-  /** UNTRANSLATED */
-  status_inactive: 'Not in use',
+  status_active: 'W użyciu',
+  status_inactive: 'Nie w użyciu',
+  limited_status_quota_description: '(Pierwsze {{quota}} wliczone)',
+  unlimited_status_quota_description: '(Wliczone)',
+  disabled_status_quota_description: '(Nie wliczone)',
+  usage_description_with_unlimited_quota: '{{usage}}<span> (Nielimitowany)</span>',
+  usage_description_with_limited_quota: '{{usage}}<span> (Pierwsze {{basicQuota}} wliczone)</span>',
+  usage_description_without_quota: '{{usage}}<span> (Nie wliczone)</span>',
   mau: {
     title: 'MAU',
-    description: '{{usage}}',
     tooltip:
       'MAU to unikalny użytkownik, który wymienił co najmniej jeden token z Logto w ciągu cyklu rozliczeniowego. Nielimitowany w planie Pro. <a>Dowiedz się więcej</a>',
+    tooltip_for_enterprise:
+      'MAU to unikalny użytkownik, który wymienił co najmniej jeden token z Logto w ciągu cyklu rozliczeniowego. Nielimitowany w planie Enterprise.',
   },
   organizations: {
     title: 'Organizacje',
-    description: '{{usage}}',
     tooltip:
       'Funkcja dodatkowa ze stałą ceną ${{price, number}} miesięcznie. Cena nie zależy od liczby organizacji ani poziomu ich aktywności.',
+    description_for_enterprise: '(Wliczone)',
+    tooltip_for_enterprise:
+      'Wliczenie zależy od twojego planu. Jeśli funkcja organizacji nie jest w twoim początkowym kontrakcie, zostanie dodana do twojego rachunku po aktywacji. Dodatek kosztuje ${{price, number}}/miesiąc, niezależnie od liczby organizacji czy ich aktywności.',
+    tooltip_for_enterprise_with_numbered_basic_quota:
+      'Twój plan obejmuje pierwsze {{basicQuota}} organizacji za darmo. Jeśli potrzebujesz więcej, możesz je dodać z dodatkiem organizacyjnym za stawkę ${{price, number}} miesięcznie, niezależnie od liczby organizacji czy poziomu ich aktywności.',
   },
   mfa: {
     title: 'MFA',
-    description: '{{usage}}',
     tooltip:
       'Funkcja dodatkowa ze stałą ceną ${{price, number}} miesięcznie. Cena nie zależy od liczby użytych czynników uwierzytelniania.',
+    tooltip_for_enterprise:
+      'Wliczenie zależy od twojego planu. Jeśli funkcja MFA nie jest w twoim początkowym kontrakcie, zostanie dodana do twojego rachunku po aktywacji. Dodatek kosztuje ${{price, number}}/miesiąc, niezależnie od liczby użytych czynników uwierzytelniania.',
   },
   enterprise_sso: {
     title: 'Enterprise SSO',
-    description: '{{usage}}',
     tooltip: 'Funkcja dodatkowa w cenie ${{price, number}} za połączenie SSO miesięcznie.',
+    tooltip_for_enterprise:
+      'Dodatek funkcjonalny w cenie ${{price, number}} za połączenie SSO miesięcznie. Pierwsze {{basicQuota}} SSO są wliczone i darmowe w twoim kontrakcie.',
   },
   api_resources: {
     title: 'Zasoby API',
-    description: '{{usage}} <span>(Bezpłatne dla pierwszych 3)</span>',
     tooltip:
       'Funkcja dodatkowa w cenie ${{price, number}} za zasób miesięcznie. Pierwsze 3 zasoby API są darmowe.',
+    tooltip_for_enterprise:
+      'Pierwsze {{basicQuota}} zasoby API są wliczone i darmowe w twoim kontrakcie. Jeśli potrzebujesz więcej, ${{price, number}} za zasób API miesięcznie.',
   },
   machine_to_machine: {
     title: 'Machine-to-machine',
-    description: '{{usage}} <span>(Bezpłatne dla pierwszego 1)</span>',
     tooltip:
       'Funkcja dodatkowa w cenie ${{price, number}} za aplikację miesięcznie. Pierwsza aplikacja machine-to-machine jest darmowa.',
+    tooltip_for_enterprise:
+      'Pierwsza aplikacja machine-to-machine jest darmowa w twoim kontrakcie. Jeśli potrzebujesz więcej, ${{price, number}} za aplikację miesięcznie.',
   },
   tenant_members: {
     title: 'Członkowie dzierżawcy',
-    description: '{{usage}} <span>(Bezpłatne dla pierwszych 3)</span>',
     tooltip:
       'Funkcja dodatkowa w cenie ${{price, number}} za członka miesięcznie. Pierwszych 3 członków dzierżawcy jest darmowych.',
+    tooltip_for_enterprise:
+      'Pierwszych {{basicQuota}} członków dzierżawcy jest wliczonych i darmowych w twoim kontrakcie. Jeśli potrzebujesz więcej, ${{price, number}} za członka dzierżawcy miesięcznie.',
   },
   tokens: {
     title: 'Tokeny',
-    description: '{{usage}}',
     tooltip:
-      'Funkcja dodatkowa w cenie ${{price, number}} za milion tokenów. Pierwszy 1 milion tokenów jest wliczony.',
+      'Funkcja dodatkowa w cenie ${{price, number}} za {{tokenLimit}} tokenów. Pierwszy {{basicQuota}} tokenów jest wliczony.',
+    tooltip_for_enterprise:
+      'Pierwszy {{basicQuota}} tokenów jest wliczony i darmowy w twoim kontrakcie. Jeśli potrzebujesz więcej, ${{price, number}} za {{tokenLimit}} tokenów miesięcznie.',
   },
   hooks: {
     title: 'Haki',
-    description: '{{usage}} <span>(Bezpłatne dla pierwszych 10)</span>',
     tooltip:
       'Funkcja dodatkowa w cenie ${{price, number}} za hak. Pierwsze 10 haków jest wliczonych.',
+    tooltip_for_enterprise:
+      'Pierwsze {{basicQuota}} haki są wliczone i darmowe w twoim kontrakcie. Jeśli potrzebujesz więcej, ${{price, number}} za hak miesięcznie.',
   },
   pricing: {
     add_on_changes_in_current_cycle_notice:

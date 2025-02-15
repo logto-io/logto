@@ -1,6 +1,7 @@
 import type router from '@logto/cloud/routes';
+import { type ToZodObject } from '@logto/connector-kit';
 import { type RouterRoutes } from '@withtyped/client';
-import { type z, type ZodType } from 'zod';
+import { z, type ZodType } from 'zod';
 
 type GetRoutes = RouterRoutes<typeof router>['get'];
 type PostRoutes = RouterRoutes<typeof router>['post'];
@@ -56,3 +57,64 @@ export const allReportSubscriptionUpdatesUsageKeys = Object.freeze([
   'enterpriseSsoLimit',
   'hooksLimit',
 ]) satisfies readonly ReportSubscriptionUpdatesUsageKey[];
+
+const subscriptionStatusGuard = z.enum([
+  'incomplete',
+  'incomplete_expired',
+  'trialing',
+  'active',
+  'past_due',
+  'canceled',
+  'unpaid',
+  'paused',
+]);
+
+const upcomingInvoiceGuard = z.object({
+  subtotal: z.number(),
+  subtotalExcludingTax: z.number().nullable(),
+  total: z.number(),
+  totalExcludingTax: z.number().nullable(),
+}) satisfies ToZodObject<Subscription['upcomingInvoice']>;
+
+const logtoSkuQuotaGuard = z.object({
+  mauLimit: z.number().nullable(),
+  applicationsLimit: z.number().nullable(),
+  thirdPartyApplicationsLimit: z.number().nullable(),
+  scopesPerResourceLimit: z.number().nullable(),
+  socialConnectorsLimit: z.number().nullable(),
+  userRolesLimit: z.number().nullable(),
+  machineToMachineRolesLimit: z.number().nullable(),
+  scopesPerRoleLimit: z.number().nullable(),
+  hooksLimit: z.number().nullable(),
+  auditLogsRetentionDays: z.number().nullable(),
+  customJwtEnabled: z.boolean(),
+  subjectTokenEnabled: z.boolean(),
+  bringYourUiEnabled: z.boolean(),
+  tokenLimit: z.number().nullable(),
+  machineToMachineLimit: z.number().nullable(),
+  resourcesLimit: z.number().nullable(),
+  enterpriseSsoLimit: z.number().nullable(),
+  tenantMembersLimit: z.number().nullable(),
+  mfaEnabled: z.boolean(),
+  organizationsEnabled: z.boolean(),
+  organizationsLimit: z.number().nullable(),
+  idpInitiatedSsoEnabled: z.boolean(),
+  samlApplicationsLimit: z.number().nullable(),
+}) satisfies ToZodObject<SubscriptionQuota>;
+
+/**
+ * Redis cache guard for the subscription data returned from the Cloud API `/api/tenants/my/subscription`.
+ * Logto core does not have access to the zod guard of the subscription data in Cloud,
+ * so we need to manually define the guard here,
+ * it should be kept in sync with the Cloud API response.
+ */
+export const subscriptionCacheGuard = z.object({
+  id: z.string().optional(),
+  planId: z.string(),
+  currentPeriodStart: z.string(),
+  currentPeriodEnd: z.string(),
+  isEnterprisePlan: z.boolean(),
+  status: subscriptionStatusGuard,
+  upcomingInvoice: upcomingInvoiceGuard.nullable().optional(),
+  quota: logtoSkuQuotaGuard,
+}) satisfies ToZodObject<Subscription>;

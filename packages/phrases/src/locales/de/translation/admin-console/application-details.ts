@@ -42,6 +42,8 @@ const application_details = {
   redirect_uri_placeholder_native: 'io.logto://callback',
   redirect_uri_tip:
     'URI, zu dem der Benutzer nach der Anmeldung (egal ob erfolgreich oder nicht) weitergeleitet wird. Siehe OpenID Connect <a>AuthRequest</a> für weitere Informationen.',
+  mixed_redirect_uri_warning:
+    'Dein Anwendungstyp ist nicht mit mindestens einer der Umleitungs-URIs kompatibel. Es folgt nicht den bewährten Methoden und wir empfehlen dringend, die Umleitungs-URIs konsistent zu halten.',
   post_sign_out_redirect_uri: 'Umleitungs-URI nach Abmeldung',
   post_sign_out_redirect_uris: 'Umleitungs-URIs nach Abmeldung',
   post_sign_out_redirect_uri_placeholder: 'https://deine.website.de/home',
@@ -65,6 +67,8 @@ const application_details = {
   rotate_refresh_token: 'Auffrischungstoken drehen',
   rotate_refresh_token_label:
     'Wenn diese Option aktiviert ist, wird Logto ein neues Auffrischungstoken für Tokenanfragen ausgeben, wenn 70% der ursprünglichen Zeit bis zum Ablauf (TTL) verstrichen sind oder bestimmte Bedingungen erfüllt sind. <a>Erfahren Sie mehr</a>',
+  rotate_refresh_token_label_for_public_clients:
+    'Wenn aktiviert, wird Logto für jede Tokenanfrage ein neues Auffrischungstoken ausstellen. <a>Erfahren Sie mehr</a>',
   backchannel_logout: 'Backchannel-Logout',
   backchannel_logout_description:
     'Konfigurieren Sie den OpenID Connect-Backchannel-Logout-Endpunkt und ob eine Sitzung für diese Anwendung erforderlich ist.',
@@ -183,6 +187,9 @@ const application_details = {
     create_new_secret: 'Neues Geheimnis erstellen',
     delete_confirmation:
       'Diese Aktion kann nicht rückgängig gemacht werden. Sind Sie sicher, dass Sie dieses Geheimnis löschen möchten?',
+    deleted: 'Das Geheimnis wurde erfolgreich gelöscht.',
+    activated: 'Das Geheimnis wurde erfolgreich aktiviert.',
+    deactivated: 'Das Geheimnis wurde erfolgreich deaktiviert.',
     legacy_secret: 'Altes Geheimnis',
     expired: 'Abgelaufen',
     expired_tooltip: 'Dieses Geheimnis lief am {{date}} ab.',
@@ -194,12 +201,67 @@ const application_details = {
         'Das Geheimnis läuft niemals ab. Wir empfehlen, ein Ablaufdatum festzulegen, um die Sicherheit zu verbessern.',
       days: '{{count}} Tag',
       days_other: '{{count}} Tage',
+      years: '{{count}} Jahr',
+      years_other: '{{count}} Jahre',
       created: 'Das Geheimnis {{name}} wurde erfolgreich erstellt.',
     },
     edit_modal: {
       title: 'Anwendungsgeheimnis bearbeiten',
       edited: 'Das Geheimnis {{name}} wurde erfolgreich bearbeitet.',
     },
+  },
+  saml_idp_config: {
+    title: 'SAML IdP-Metadaten',
+    description:
+      'Verwenden Sie die folgenden Metadaten und das Zertifikat, um den SAML IdP in Ihrer Anwendung zu konfigurieren.',
+    metadata_url_label: 'IdP Metadaten-URL',
+    single_sign_on_service_url_label: 'Single Sign-On Dienst-URL',
+    idp_entity_id_label: 'IdP Entitäts-ID',
+  },
+  saml_idp_certificates: {
+    title: 'SAML Signaturzertifikat',
+    expires_at: 'Läuft ab am',
+    finger_print: 'Fingerabdruck',
+    status: 'Status',
+    active: 'Aktiv',
+    inactive: 'Inaktiv',
+  },
+  saml_idp_name_id_format: {
+    title: 'Name-ID-Format',
+    description: 'Wählen Sie das Name-ID-Format des SAML IdP.',
+    persistent: 'Persistent',
+    persistent_description: 'Verwende Logto-Benutzer-ID als Name ID',
+    transient: 'Transient',
+    transient_description: 'Verwende einmalige Benutzer-ID als Name ID',
+    unspecified: 'Nicht spezifiziert',
+    unspecified_description: 'Verwende Logto-Benutzer-ID als Name ID',
+    email_address: 'E-Mail-Adresse',
+    email_address_description: 'Verwende E-Mail-Adresse als Name ID',
+  },
+  saml_encryption_config: {
+    encrypt_assertion: 'Verschlüssele SAML-Aussage',
+    encrypt_assertion_description:
+      'Durch Aktivieren dieser Option wird die SAML-Aussage verschlüsselt.',
+    encrypt_then_sign: 'Verschlüsseln, dann signieren',
+    encrypt_then_sign_description:
+      'Durch Aktivieren dieser Option wird die SAML-Aussage verschlüsselt und dann signiert; andernfalls wird die SAML-Aussage signiert und dann verschlüsselt.',
+    certificate: 'Zertifikat',
+    certificate_tooltip:
+      'Kopieren und fügen Sie das x509-Zertifikat ein, das Sie von Ihrem Dienstanbieter erhalten, um die SAML-Aussage zu verschlüsseln.',
+    certificate_placeholder:
+      '-----BEGIN CERTIFICATE-----\nMIICYDCCAcmgAwIBA...\n-----END CERTIFICATE-----\n',
+    certificate_missing_error: 'Zertifikat ist erforderlich.',
+    certificate_invalid_format_error:
+      'Ungültiges Zertifikatsformat entdeckt. Bitte überprüfen Sie das Format des Zertifikats und versuchen Sie es erneut.',
+  },
+  saml_app_attribute_mapping: {
+    name: 'Attributzuordnungen',
+    title: 'Basis-Attributzuordnungen',
+    description:
+      'Fügen Sie Attributzuordnungen hinzu, um Benutzerprofile von Logto zu Ihrer Anwendung zu synchronisieren.',
+    col_logto_claims: 'Wert von Logto',
+    col_sp_claims: 'Wertname Ihrer Anwendung',
+    add_button: 'Weitere hinzufügen',
   },
 };
 

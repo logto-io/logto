@@ -5,6 +5,7 @@ import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import Tip from '@/assets/icons/tip.svg?react';
+import { type LogtoSkuResponse } from '@/cloud/types/router';
 import { addOnPricingExplanationLink } from '@/consts/external-links';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
@@ -60,6 +61,30 @@ const formatNumberTypedUsageDescription = ({
   return `${formatNumber(usage)} / ${unlimitedString}`;
 };
 
+/**
+ * The price unit returned from DB is cent, so we need to divide it by 100 to get the dollar price.
+ */
+const formatDecimalPrice = (price: number): string => {
+  return (price / 100).toFixed(2);
+};
+
+// Manually format the quota display for add-on usages
+const formatAddOnQuota = (quota?: LogtoSkuResponse['quota']) => {
+  if (!quota) {
+    return;
+  }
+
+  return {
+    ...quota,
+    ...conditional(quota.tokenLimit && { tokenLimit: formatQuotaNumber(quota.tokenLimit) }),
+  };
+};
+
+/**
+ * @param unitPrice Hardcoded add-on unit price. Only used for the tooltip.
+ * @param usageAddOnSku The add-on SKU object. Only used for the tooltip.
+ *  If provided, use the unit price and count from the SKU object first. Otherwise, fallback to the hardcoded unit price.
+ */
 export type Props = {
   readonly usage: number | boolean;
   readonly quota?: Nullable<number> | boolean;
@@ -70,6 +95,7 @@ export type Props = {
   readonly unitPrice: number;
   readonly className?: string;
   readonly isQuotaNoticeHidden?: boolean;
+  readonly usageAddOnSku?: LogtoSkuResponse;
 };
 
 function PlanUsageCard({
@@ -82,6 +108,7 @@ function PlanUsageCard({
   tooltipKey,
   className,
   isQuotaNoticeHidden,
+  usageAddOnSku,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
@@ -109,12 +136,15 @@ function PlanUsageCard({
                 }}
               >
                 {t(tooltipKey, {
-                  price: unitPrice,
+                  price: usageAddOnSku?.unitPrice
+                    ? formatDecimalPrice(usageAddOnSku.unitPrice)
+                    : unitPrice,
                   ...conditional(
                     typeof basicQuota === 'number' && {
                       basicQuota: formatQuotaNumber(basicQuota),
                     }
                   ),
+                  ...conditional(usageAddOnSku && formatAddOnQuota(usageAddOnSku.quota)),
                 })}
               </Trans>
             }
@@ -129,7 +159,10 @@ function PlanUsageCard({
         <div
           className={classNames(
             styles.description,
-            typeof usagePercent === 'number' && usagePercent >= 1 && styles.quotaExceeded
+            typeof usagePercent === 'number' &&
+              usagePercent >= 1 &&
+              !isPaidTenant &&
+              styles.quotaExceeded
           )}
         >
           <Trans

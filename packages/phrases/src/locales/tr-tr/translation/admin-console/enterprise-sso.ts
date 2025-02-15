@@ -27,7 +27,12 @@ const enterprise_sso = {
       'Yeni bir uygulama entegrasyonu oluşturun, {{name}} kimlik sağlayıcınızda SAML 2.0 ile. Ardından aşağıdaki değeri yapıştırın.',
     saml: {
       acs_url_field_name: 'Assertion consumer service URL (Reply URL)',
-      audience_uri_field_name: 'Audience URI (SP Entity ID)',
+      audience_uri_field_name: "Kitle URI'si (SP Varlık ID'si)",
+      entity_id_field_name: "Hizmet Sağlayıcı (SP) Varlık ID'si",
+      entity_id_field_tooltip:
+        "SP Varlık ID'si herhangi bir dize formatında olabilir, tipik olarak bir URI veya URL formunda bir tanımlayıcı olarak kullanılır, ancak bu zorunlu değildir.",
+      acs_url_field_placeholder: 'https://your-domain.com/api/saml/callback',
+      entity_id_field_placeholder: 'urn:your-domain.com:sp:saml:{serviceProviderId}',
     },
     oidc: {
       redirect_uri_field_name: "Yönlendirme URI'si (Geri çağrı URL'si)",

@@ -98,7 +98,7 @@ const quota_item = {
     limited: '{{count, number}} machine to machine role',
     limited_other: '{{count, number}} machine to machine roles',
     unlimited: 'Unbegrenzte Machine to machine roles',
-    not_eligible: 'Remove your machine to machine roles',
+    not_eligible: 'Entferne deine machine to machine roles',
   },
   scopes_per_role_limit: {
     name: 'Berechtigungen pro Rolle',
@@ -138,7 +138,7 @@ const quota_item = {
     name: 'Zwei-Faktor-Authentifizierung',
     limited: 'Zwei-Faktor-Authentifizierung',
     unlimited: 'Zwei-Faktor-Authentifizierung',
-    not_eligible: 'Entfernen Sie Ihre Zwei-Faktor-Authentifizierung',
+    not_eligible: 'Entferne deine Zwei-Faktor-Authentifizierung',
   },
   sso_enabled: {
     name: 'Enterprise SSO',
@@ -151,13 +151,13 @@ const quota_item = {
     limited: '{{count, number}} Mandantenmitglied',
     limited_other: '{{count, number}} Mandantenmitglieder',
     unlimited: 'Unbegrenzte Mandantenmitglieder',
-    not_eligible: 'Remove your tenant members',
+    not_eligible: 'Entferne deine Mandantenmitglieder',
   },
   custom_jwt_enabled: {
     name: 'Benutzerdefiniertes JWT',
     limited: 'Benutzerdefiniertes JWT',
     unlimited: 'Benutzerdefiniertes JWT',
-    not_eligible: 'Remove your JWT claims customizer',
+    not_eligible: 'Entferne deinen JWT-Anspruchsanpasser',
   },
   impersonation_enabled: {
     name: 'Impersonation',
@@ -170,6 +170,19 @@ const quota_item = {
     limited: 'Bring your UI',
     unlimited: 'Bring your UI',
     not_eligible: 'Entferne deine benutzerdefinierten UI-Assets',
+  },
+  idp_initiated_sso_enabled: {
+    name: 'IDP-initiiertes SSO',
+    limited: 'IDP-initiiertes SSO',
+    unlimited: 'IDP-initiiertes SSO',
+    not_eligible: 'IDP-initiiertes SSO nicht erlaubt',
+  },
+  saml_applications_limit: {
+    name: 'SAML-Anwendungen',
+    limited: '{{count, number}} SAML-Anwendung',
+    limited_other: '{{count, number}} SAML-Anwendungen',
+    unlimited: 'Unbegrenzte SAML-Anwendungen',
+    not_eligible: 'Entferne deine SAML-Anwendungen',
   },
 };
 

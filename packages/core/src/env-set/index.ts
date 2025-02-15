@@ -43,6 +43,7 @@ export class EnvSet {
 
   #pool: Optional<DatabasePool>;
   #oidc: Optional<Awaited<ReturnType<typeof loadOidcValues>>>;
+  #endpoint: Optional<URL>;
 
   constructor(
     public readonly tenantId: string,
@@ -65,6 +66,14 @@ export class EnvSet {
     return this.#oidc;
   }
 
+  get endpoint() {
+    if (!this.#endpoint) {
+      return throwNotLoadedError();
+    }
+
+    return this.#endpoint;
+  }
+
   async load(customDomain?: string) {
     const pool = await createPoolByEnv(
       this.databaseUrl,
@@ -81,10 +90,10 @@ export class EnvSet {
     });
 
     const oidcConfigs = await getOidcConfigs(consoleLog);
-    const endpoint = customDomain
+    this.#endpoint = customDomain
       ? new URL(customDomain)
       : getTenantEndpoint(this.tenantId, EnvSet.values);
-    this.#oidc = await loadOidcValues(appendPath(endpoint, '/oidc').href, oidcConfigs);
+    this.#oidc = await loadOidcValues(appendPath(this.#endpoint, '/oidc').href, oidcConfigs);
   }
 
   async end() {

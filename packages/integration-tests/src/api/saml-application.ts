@@ -28,9 +28,9 @@ export const updateSamlApplication = async (
 export const getSamlApplication = async (id: string) =>
   authedAdminApi.get(`saml-applications/${id}`).json<SamlApplicationResponse>();
 
-export const createSamlApplicationSecret = async (id: string, lifeSpanInDays: number) =>
+export const createSamlApplicationSecret = async (id: string, lifeSpanInYears: number) =>
   authedAdminApi
-    .post(`saml-applications/${id}/secrets`, { json: { lifeSpanInDays } })
+    .post(`saml-applications/${id}/secrets`, { json: { lifeSpanInYears } })
     .json<SamlApplicationSecretResponse>();
 
 export const getSamlApplicationSecrets = async (id: string) =>

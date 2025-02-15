@@ -5,6 +5,7 @@ const enterprise_sso_details = {
   readme_drawer_subtitle: 'エンドユーザーのSSOを有効にするために企業SSOコネクタを設定します',
   tab_experience: 'SSO体験',
   tab_connection: '接続',
+  tab_idp_initiated_auth: 'IdP によって開始された SSO',
   general_settings_title: '一般設定',
   custom_branding_title: '表示',
   custom_branding_description:
@@ -72,9 +73,49 @@ const enterprise_sso_details = {
     authorization_endpoint: '認可エンドポイント',
     token_endpoint: 'トークンエンドポイント',
     userinfo_endpoint: 'ユーザー情報エンドポイント',
-    jwks_uri: 'JSON Webキーセットエンドポイント',
+    jwks_uri: 'JSON Web キー セットエンドポイント',
     issuer: '発行者',
   },
+  idp_initiated_auth_config: {
+    card_title: 'IdP によって開始された SSO',
+    card_description:
+      '通常、ユーザーは SP によって開始される SSO フローを使用してアプリから認証プロセスを開始します。この機能は絶対に必要な場合にのみ有効にして下さい。',
+    enable_idp_initiated_sso: 'IdP によって開始された SSO を有効にする',
+    enable_idp_initiated_sso_description:
+      '企業ユーザーがアイデンティティプロバイダーのポータルから直接認証プロセスを開始できるようにします。この機能を有効にする前に潜在的なセキュリティリスクを確認してください。',
+    default_application: 'デフォルトアプリケーション',
+    default_application_tooltip: 'ユーザーが認証後にリダイレクトされる目標アプリケーション。',
+    empty_applications_error:
+      'アプリケーションが見つかりませんでした。「<a>アプリケーション</a>」セクションに追加してください。',
+    empty_applications_placeholder: 'アプリケーションなし',
+    authentication_type: '認証の種類',
+    auto_authentication_disabled_title:
+      'SP イニシエーテッド SSO のためにクライアントにリダイレクト',
+    auto_authentication_disabled_description:
+      '推奨: セキュアな SP イニシエーテッド OIDC 認証を開始するためにクライアント側アプリケーションにユーザーをリダイレクトします。これにより CSRF 攻撃を防止できます。',
+    auto_authentication_enabled_title: 'IdP によって開始された SSO を使用して直接サインイン',
+    auto_authentication_enabled_description:
+      'サインインが成功すると、ユーザーは特定されたリダイレクト URI に認可コードでリダイレクトされます（状態と PKCE 検証なし）。',
+    auto_authentication_disabled_app: '従来のウェブアプリ、シングルページアプリ（SPA）向け',
+    auto_authentication_enabled_app: '従来のウェブアプリ向け',
+    idp_initiated_auth_callback_uri: 'クライアント コールバック URI',
+    idp_initiated_auth_callback_uri_tooltip:
+      'SP イニシエーテッド SSO 認証フローを開始するためのクライアント コールバック URI。ssoConnectorId がクエリ パラメータとして URI に追加されます。（例: https://your.domain/sso/callback?connectorId={{ssoConnectorId}}）',
+    redirect_uri: 'サインイン後のリダイレクト URI',
+    redirect_uri_tooltip:
+      'サインインが成功した後にユーザーをリダイレクトする URI。この URI を OIDC 認証リクエストで使用されるリダイレクト URI として使用します。より良いセキュリティのため、IdP によって開始された SSO 認証フローに専用の URI を使用してください。',
+    empty_redirect_uris_error:
+      'アプリケーションのために登録されたリダイレクト URI がありません。最初に追加してください。',
+    redirect_uri_placeholder: 'サインイン後のリダイレクト URI を選択してください',
+    auth_params: '追加の認証パラメータ',
+    auth_params_tooltip:
+      '認可リクエストで渡される追加のパラメータ。デフォルトでは (openid profile) スコープのみリクエストされますが、ここで追加のスコープまたは排他的な状態値を指定できます。（例: { "scope": "organizations email", "state": "secret_state" }）。',
+  },
+  trust_unverified_email: '未検証のメールを信頼する',
+  trust_unverified_email_label:
+    'アイデンティティプロバイダーから返された未確認のメールアドレスを常に信頼する',
+  trust_unverified_email_tip:
+    'Entra ID (OIDC) コネクタは `email_verified` クレームを返さないため、Azure からのメールアドレスは確認済みであることは保証されません。デフォルトでは、Logto は未検証のメールアドレスをユーザープロファイルに同期しません。Entra ID ディレクトリからのすべてのメールアドレスを信頼する場合にのみ、このオプションを有効にしてください。',
 };
 
 export default Object.freeze(enterprise_sso_details);

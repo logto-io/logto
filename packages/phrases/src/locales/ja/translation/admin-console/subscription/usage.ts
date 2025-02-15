@@ -1,60 +1,77 @@
 const usage = {
-  /** UNTRANSLATED */
-  status_active: 'In use',
-  /** UNTRANSLATED */
-  status_inactive: 'Not in use',
+  status_active: '使用中',
+  status_inactive: '未使用',
+  limited_status_quota_description: '（最初の {{quota}} が含まれています）',
+  unlimited_status_quota_description: '（含まれています）',
+  disabled_status_quota_description: '（含まれていません）',
+  usage_description_with_unlimited_quota: '{{usage}}<span>（無制限）</span>',
+  usage_description_with_limited_quota:
+    '{{usage}}<span>（最初の {{basicQuota}} が含まれています）</span>',
+  usage_description_without_quota: '{{usage}}<span>（含まれていません）</span>',
   mau: {
     title: 'MAU',
-    description: '{{usage}}',
     tooltip:
       'MAU は、請求サイクル内で Logto と少なくとも 1 つのトークンを交換したユニーク ユーザーです。Pro プランでは無制限です。<a>さらに詳しく</a>',
+    tooltip_for_enterprise:
+      'MAU は、請求サイクル内で Logto と少なくとも 1 つのトークンを交換したユニーク ユーザーです。エンタープライズ プランでは無制限です。',
   },
   organizations: {
     title: '組織',
-    description: '{{usage}}',
     tooltip:
       '追加機能として、月額 {{price, number}} ドルの固定料金です。組織の数や活動レベルには影響されません。',
+    description_for_enterprise: '（含まれています）',
+    tooltip_for_enterprise:
+      '含有量はあなたのプランに依存します。組織機能が最初の契約に含まれていない場合、有効化した際に請求に追加されます。アドオンには、組織の数や活動とは無関係に、月額 {{price, number}} ドルの料金がかかります。',
+    tooltip_for_enterprise_with_numbered_basic_quota:
+      'あなたのプランには最初の {{basicQuota}} の組織が無料で含まれています。より多くが必要な場合は、組織アドオンを追加し、組織の数や活動レベルに関わらず、月額 {{price, number}} ドルの固定料金がかかります。',
   },
   mfa: {
     title: '多要素認証',
-    description: '{{usage}}',
     tooltip:
       '追加機能として、月額 {{price, number}} ドルの固定料金です。使用する認証要素の数には影響されません。',
+    tooltip_for_enterprise:
+      '含有量はあなたのプランに依存します。MFA 機能が最初の契約に含まれていない場合、有効化した際に請求に追加されます。アドオンには、使用する認証要素の数に関係なく、月額 {{price, number}} ドルの料金がかかります。',
   },
   enterprise_sso: {
     title: 'エンタープライズ SSO',
-    description: '{{usage}}',
     tooltip: '追加機能として、月額 {{price, number}} ドルの SSO 接続ごとの料金です。',
+    tooltip_for_enterprise:
+      'アドオン機能で、月額 {{price, number}} ドルの SSO 接続ごとの料金です。最初の {{basicQuota}} の SSO は契約ベースのプランで含まれており、無料で使用できます。',
   },
   api_resources: {
     title: 'API リソース',
-    description: '{{usage}} <span>(最初の 3 つは無料)</span>',
     tooltip:
       '追加機能として、月額 {{price, number}} ドルのリソースごとの料金です。最初の 3 つの API リソースは無料です。',
+    tooltip_for_enterprise:
+      '最初の {{basicQuota}} の API リソースは契約ベースのプランで含まれており、無料で使用できます。より多くが必要な場合、月額 {{price, number}} ドルのリソースごとの料金がかかります。',
   },
   machine_to_machine: {
     title: 'マシン対マシン',
-    description: '{{usage}} <span>(最初の 1 つは無料)</span>',
     tooltip:
       '追加機能として、月額 {{price, number}} ドルのアプリごとの料金です。最初のマシン対マシン アプリは無料です。',
+    tooltip_for_enterprise:
+      '最初の {{basicQuota}} のマシン対マシン アプリは契約ベースのプランで無料で使用できます。より多くが必要な場合、月額 {{price, number}} ドルのアプリごとの料金がかかります。',
   },
   tenant_members: {
     title: 'テナントメンバー',
-    description: '{{usage}} <span>(最初の 3 つは無料)</span>',
     tooltip:
       '追加機能として、月額 {{price, number}} ドルのメンバーごとの料金です。最初の 3 人のテナントメンバーは無料です。',
+    tooltip_for_enterprise:
+      '最初の {{basicQuota}} のテナントメンバーは契約ベースのプランで含まれており、無料で使用できます。より多くが必要な場合、月額 {{price, number}} ドルのメンバーごとの料金がかかります。',
   },
   tokens: {
     title: 'トークン',
-    description: '{{usage}}',
     tooltip:
-      '追加機能として、100 万トークンにつき {{price, number}} ドルの料金です。最初の 100 万トークンは含まれています。',
+      '追加機能として、{{tokenLimit}} トークンにつき {{price, number}} ドルの料金です。最初の {{basicQuota}} トークンは含まれています。',
+    tooltip_for_enterprise:
+      '最初の {{basicQuota}} トークンは契約ベースのプランで含まれており、無料で使用できます。より多くが必要な場合、{{tokenLimit}} トークンにつき月額 {{price, number}} ドルの料金がかかります。',
   },
   hooks: {
     title: 'フック',
-    description: '{{usage}} <span>(最初の 10 個は無料)</span>',
     tooltip:
       '追加機能として、フックごとに {{price, number}} ドルの料金です。最初の 10 個のフックは含まれています。',
+    tooltip_for_enterprise:
+      '最初の {{basicQuota}} フックは契約ベースのプランで含まれており、無料で使用できます。より多くが必要な場合、月額 {{price, number}} ドルのフックごとの料金がかかります。',
   },
   pricing: {
     add_on_changes_in_current_cycle_notice:

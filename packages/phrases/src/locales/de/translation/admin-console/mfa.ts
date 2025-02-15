@@ -30,6 +30,15 @@ const mfa = {
   mandatory: 'Benutzer müssen immer MFA bei der Anmeldung verwenden',
   mandatory_tip:
     'Benutzer müssen MFA beim ersten Mal bei der Anmeldung oder Anmeldung einrichten und es für alle zukünftigen Anmeldungen verwenden.',
+  require_mfa: 'MFA erforderlich',
+  require_mfa_label:
+    'Aktivieren Sie dies, um die Zwei-Schritt-Verifizierung für den Zugriff auf Ihre Anwendungen obligatorisch zu machen. Wenn deaktiviert, können Benutzer entscheiden, ob sie MFA für sich selbst aktivieren möchten.',
+  set_up_prompt: 'MFA-Einrichtungsaufforderung',
+  no_prompt: 'Benutzer nicht zur Einrichtung von MFA auffordern',
+  prompt_at_sign_in_and_sign_up:
+    'Benutzer bei der Registrierung zur MFA-Einrichtung auffordern (überspringbare, einmalige Aufforderung)',
+  prompt_only_at_sign_in:
+    'Benutzer bei ihrem nächsten Anmeldeversuch nach der Registrierung zur MFA-Einrichtung auffordern (überspringbare, einmalige Aufforderung)',
 };
 
 export default Object.freeze(mfa);

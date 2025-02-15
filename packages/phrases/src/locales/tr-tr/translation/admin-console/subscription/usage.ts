@@ -1,59 +1,75 @@
 const usage = {
-  /** UNTRANSLATED */
-  status_active: 'In use',
-  /** UNTRANSLATED */
-  status_inactive: 'Not in use',
+  status_active: 'Kullanımda',
+  status_inactive: 'Kullanımda değil',
+  limited_status_quota_description: '(İlk {{quota}} dahil)',
+  unlimited_status_quota_description: '(Dahil)',
+  disabled_status_quota_description: '(Dahil değil)',
+  usage_description_with_unlimited_quota: '{{usage}}<span> (Sınırsız)</span>',
+  usage_description_with_limited_quota: '{{usage}}<span> (İlk {{basicQuota}} dahil)</span>',
+  usage_description_without_quota: '{{usage}}<span> (Dahil değil)</span>',
   mau: {
     title: 'MAU',
-    description: '{{usage}}',
     tooltip:
       'Bir MAU, bir faturalandırma döngüsü içinde Logto ile en az bir token değiştirmiş benzersiz bir kullanıcıdır. Pro Plan için sınırsızdır. <a>Daha fazla bilgi edin</a>',
+    tooltip_for_enterprise:
+      'Bir MAU, Logto ile bir faturalandırma döngüsü içinde en az bir token değiştirmiş benzersiz bir kullanıcıdır. Kurumsal Plan için sınırsızdır.',
   },
   organizations: {
     title: 'Organizasyonlar',
-    description: '{{usage}}',
     tooltip:
       'Aylık {{price, number}} $ sabit ücretle ek özellik. Fiyat, organizasyon sayısı veya aktiviteleriyle değişmez.',
+    description_for_enterprise: '(Dahil)',
+    tooltip_for_enterprise:
+      "Dahil olma durumu planınıza bağlıdır. Organizasyon özelliği başlangıç sözleşmenizde yoksa, bu özelliği etkinleştirdiğinizde faturanıza eklenir. Eklenti, organizasyon sayısı veya aktiviteleri ne olursa olsun aylık ${{price, number}}'a mal olur.",
+    tooltip_for_enterprise_with_numbered_basic_quota:
+      "Planınız, ilk {{basicQuota}} organizasyonu ücretsiz olarak içerir. Daha fazlasına ihtiyacınız varsa, organizasyon eklentisi ile organizasyon sayısı veya aktivite seviyesinden bağımsız olarak aylık ${{price, number}}'a ekleyebilirsiniz.",
   },
   mfa: {
     title: 'MFA',
-    description: '{{usage}}',
     tooltip:
       'Aylık {{price, number}} $ sabit ücretle ek özellik. Fiyat, kullanılan kimlik doğrulama faktörlerinin sayısından etkilenmez.',
+    tooltip_for_enterprise:
+      "Dahil olma durumu planınıza bağlıdır. MFA özelliği başlangıç sözleşmenizde yoksa, bu özelliği etkinleştirdiğinizde faturanıza eklenir. Eklenti, kullanılan kimlik doğrulama faktörlerinin sayısından bağımsız olarak aylık ${{price, number}} 'a mal olur.",
   },
   enterprise_sso: {
     title: 'Kurumsal SSO',
-    description: '{{usage}}',
     tooltip: 'Her bir SSO bağlantısı için aylık {{price, number}} $ ücretle ek özellik.',
+    tooltip_for_enterprise:
+      'Ek bir özellik olarak, sözleşmeye dayalı planınızdaki ilk {{basicQuota}} SSO dahil edilmiştir. Daha fazla ihtiyacınız varsa, her SSO bağlantısı için aylık ${{price, number}} ücretle.',
   },
   api_resources: {
     title: 'API kaynakları',
-    description: '{{usage}} <span>(İlk 3 ücretsizdir)</span>',
     tooltip:
       'Her bir kaynak için aylık {{price, number}} $ ücretle ek özellik. İlk 3 API kaynağı ücretsizdir.',
+    tooltip_for_enterprise:
+      'Sözleşmeye dayalı planınız, ilk {{basicQuota}} API kaynağını içerir ve ücretsiz kullanım sağlar. Daha fazla ihtiyacınız varsa, her API kaynağı için aylık ${{price, number}}.',
   },
   machine_to_machine: {
     title: 'Makineden makineye',
-    description: '{{usage}} <span>(İlk 1 ücretsizdir)</span>',
     tooltip:
       'Uygulama başına aylık {{price, number}} $ ücretle ek özellik. İlk makineden makineye uygulama ücretsizdir.',
+    tooltip_for_enterprise:
+      'Sözleşmeye dayalı planınız, ilk {{basicQuota}} makineden makineye uygulamasını ücretsiz kullanım sağlar. Daha fazla ihtiyacınız varsa, her uygulama için aylık ${{price, number}}.',
   },
   tenant_members: {
     title: 'Kiracı üyeler',
-    description: '{{usage}} <span>(İlk 3 ücretsizdir)</span>',
     tooltip:
       'Üye başına aylık {{price, number}} $ ücretle ek özellik. İlk 3 kiracı üye ücretsizdir.',
+    tooltip_for_enterprise:
+      'Sözleşmeye dayalı planınız, ilk {{basicQuota}} kiracı üyeyi içerir ve ücretsiz kullanım sağlar. Daha fazla ihtiyacınız varsa, her kiracı üye için aylık ${{price, number}}.',
   },
   tokens: {
     title: 'Tokenler',
-    description: '{{usage}}',
     tooltip:
-      'Milyon token başına {{price, number}} $ ücretle ek özellik. İlk 1 milyon token dahildir.',
+      '{{tokenLimit}} token başına {{price, number}} $ ücretle ek özellik. İlk 1 {{basicQuota}} token dahildir.',
+    tooltip_for_enterprise:
+      'Sözleşmeye dayalı planınız, ilk {{basicQuota}} tokenleri içerir ve ücretsiz kullanım sağlar. Daha fazla ihtiyacınız varsa, her {{tokenLimit}} token için aylık ${{price, number}}.',
   },
   hooks: {
     title: 'Hooklar',
-    description: '{{usage}} <span>(İlk 10 ücretsizdir)</span>',
     tooltip: 'Her bir hook için {{price, number}} $ ücretle ek özellik. İlk 10 hook dahildir.',
+    tooltip_for_enterprise:
+      "Sözleşmeye dayalı planınız, ilk {{basicQuota}} hook'u içerir ve ücretsiz kullanım sağlar. Daha fazla ihtiyacınız varsa, her hook için aylık ${{price, number}}.",
   },
   pricing: {
     add_on_changes_in_current_cycle_notice:

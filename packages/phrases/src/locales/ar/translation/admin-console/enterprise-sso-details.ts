@@ -6,6 +6,7 @@ const enterprise_sso_details = {
     'قم بإعداد موصّلات SSO للشركات لتمكين تسجيل الدخول الموحد للمستخدمين النهائيين',
   tab_experience: 'تجربة SSO',
   tab_connection: 'الاتصال',
+  tab_idp_initiated_auth: 'SSO الذي يبدأ من IdP',
   general_settings_title: 'عام',
   custom_branding_title: 'العرض',
   custom_branding_description:
@@ -74,6 +75,44 @@ const enterprise_sso_details = {
     jwks_uri: 'نقطة وصول مجموعة مفاتيح JSON',
     issuer: 'المُصدر',
   },
+  idp_initiated_auth_config: {
+    card_title: 'SSO الذي يبدأ من IdP',
+    card_description:
+      'يبدأ المستخدم عادةً عملية المصادقة من تطبيقك باستخدام تدفق SSO الذي يبدأ من SP. لا تقم بتمكين هذه الميزة إلا إذا كان ذلك ضروريًا تمامًا.',
+    enable_idp_initiated_sso: 'تمكين SSO الذي يبدأ من IdP',
+    enable_idp_initiated_sso_description:
+      'السماح للمستخدمين الشركات ببدء عملية المصادقة مباشرة من بوابة موفر الهوية. يرجى فهم المخاطر الأمنية المحتملة قبل تمكين هذه الميزة.',
+    default_application: 'التطبيق الافتراضي',
+    default_application_tooltip: 'التطبيق الهدف الذي سيتم توجيه المستخدم إليه بعد المصادقة.',
+    empty_applications_error:
+      'لم يتم العثور على تطبيقات. يرجى إضافة واحدة في قسم <a>التطبيقات</a>.',
+    empty_applications_placeholder: 'لا توجد تطبيقات',
+    authentication_type: 'نوع المصادقة',
+    auto_authentication_disabled_title: 'إعادة التوجيه إلى العميل لتدفق SSO الذي يبدأ من SP',
+    auto_authentication_disabled_description:
+      'موصى به. إعادة توجيه المستخدمين إلى تطبيق الجهة العميلة لبدء المصادقة الآمنة لـ OIDC الذي يبدأ من SP. هذا سيمنع هجمات CSRF.',
+    auto_authentication_enabled_title: 'تسجيل الدخول مباشرة باستخدام SSO الذي يبدأ من IdP',
+    auto_authentication_enabled_description:
+      'بعد تسجيل الدخول بنجاح ، سيتم إعادة توجيه المستخدمين إلى URI إعادة التوجيه المحدد مع رمز التفويض (بدون تحقق من الحالة و PKCE).',
+    auto_authentication_disabled_app: 'للتطبيقات الويب التقليدية ، تطبيقات الصفحة الواحدة (SPA)',
+    auto_authentication_enabled_app: 'للتطبيقات الويب التقليدية',
+    idp_initiated_auth_callback_uri: 'URI استدعاء العميل',
+    idp_initiated_auth_callback_uri_tooltip:
+      'URI استدعاء العميل لبدء تدفق مصادقة SSO الذي يبدأ من SP. سيتم إلحاق ssoConnectorId بالـ URI كمعامل استعلام. (e.g., https://your.domain/sso/callback?connectorId={{ssoConnectorId}})',
+    redirect_uri: 'URI إعادة التوجيه بعد تسجيل الدخول',
+    redirect_uri_tooltip:
+      'URI إعادة التوجيه لإعادة توجيه المستخدمين بعد تسجيل الدخول بنجاح. سوف يستخدم Logto هذا URI كـ OIDC URI إعادة التوجيه في طلب التفويض. استخدم URI مخصص لتدفق مصادقة SSO الذي يبدأ من IdP لمزيد من الأمان.',
+    empty_redirect_uris_error: 'لم يتم تسجيل أي URI إعادة توجيه للتطبيق. يرجى إضافة واحد أولاً.',
+    redirect_uri_placeholder: 'حدد URI إعادة التوجيه بعد تسجيل الدخول',
+    auth_params: 'معلمات المصادقة الإضافية',
+    auth_params_tooltip:
+      'معلمات إضافية ليتم تمريرها في طلب التفويض. بشكل افتراضي ، سيتم طلب فقط النطاقات (openid profile)، يمكنك تحديد نطاقات إضافية أو قيمة حالة حصرية هنا. (e.g., { "scope": "organizations email", "state": "secret_state" }).',
+  },
+  trust_unverified_email: 'وثق بالبريد الإلكتروني غير المُحقق',
+  trust_unverified_email_label:
+    'ثق دائمًا في عناوين البريد الإلكتروني غير المُحقق منها التي يقدمها موفر الهوية',
+  trust_unverified_email_tip:
+    'موصل Entra ID (OIDC) لا يقدم المطالبة `email_verified`، مما يعني أن عناوين البريد الإلكتروني من Azure ليست مضمونة التحقق. بشكل افتراضي، لن يقوم Logto بمزامنة عناوين البريد الإلكتروني غير الموثوقة إلى ملف تعريف المستخدم. قم بتفعيل هذا الخيار فقط إذا كنت تثق في جميع عناوين البريد الإلكتروني من دليل Entra ID.',
 };
 
 export default Object.freeze(enterprise_sso_details);

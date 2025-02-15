@@ -40,6 +40,8 @@ const application_details = {
   redirect_uri_placeholder_native: 'io.logto://callback',
   redirect_uri_tip:
     'عنوان URI الذي يتم إعادة التوجيه إليه بعد تسجيل المستخدم (سواء نجح أم فشل). انظر OpenID Connect <a>AuthRequest</a> لمزيد من المعلومات.',
+  mixed_redirect_uri_warning:
+    'نوع التطبيق الخاص بك غير متوافق مع واحد على الأقل من عناوين URI لإعادة التوجيه. لا يتبع أفضل الممارسات ونوصي بشدة بالحفاظ على الاتساق في عناوين URI لإعادة التوجيه.',
   post_sign_out_redirect_uri: 'عنوان URI لإعادة التوجيه بعد تسجيل الخروج',
   post_sign_out_redirect_uris: 'عناوين URI لإعادة التوجيه بعد تسجيل الخروج',
   post_sign_out_redirect_uri_placeholder: 'https://your.website.com/home',
@@ -63,6 +65,8 @@ const application_details = {
   rotate_refresh_token: 'تدوير رمز التحديث',
   rotate_refresh_token_label:
     'عند التمكين ، سيصدر Logto رمز تحديث جديد لطلبات الرموز عند مرور 70٪ من وقت الحياة الأصلي (TTL) أو تلبية شروط معينة. <a>تعرف على المزيد</a>',
+  rotate_refresh_token_label_for_public_clients:
+    'عند التمكين ، سيصدر Logto رمز تحديث جديد لكل طلب رمز. <a>تعرف على المزيد</a>',
   backchannel_logout: 'تسجيل الخروج الخلفي',
   backchannel_logout_description:
     'قم بتكوين نقطة نهاية تسجيل الخروج الخلفية لـ OpenID Connect وما إذا كانت الجلسة مطلوبة لهذا التطبيق.',
@@ -175,6 +179,9 @@ const application_details = {
     create_new_secret: 'Create new secret',
     delete_confirmation:
       'This action cannot be undone. Are you sure you want to delete this secret?',
+    deleted: 'تم حذف السر بنجاح.',
+    activated: 'تم تفعيل السر بنجاح.',
+    deactivated: 'تم تعطيل السر بنجاح.',
     legacy_secret: 'Legacy secret',
     expired: 'Expired',
     expired_tooltip: 'This secret was expired on {{date}}.',
@@ -186,12 +193,63 @@ const application_details = {
         'The secret will never expire. We recommend setting an expiration date for enhanced security.',
       days: '{{count}} day',
       days_other: '{{count}} days',
-      created: 'The secret {{name}} has been successfully created.',
+      years: '{{count}} عام',
+      years_other: '{{count}} أعوام',
+      created: 'تم إنشاء السر {{name}} بنجاح.',
     },
     edit_modal: {
       title: 'Edit application secret',
-      edited: 'The secret {{name}} has been successfully edited.',
+      edited: 'تم تعديل السر {{name}} بنجاح.',
     },
+  },
+  saml_idp_config: {
+    title: 'بيانات تعريف SAML IdP',
+    description: 'استخدم البيانات التعريفية والشهادة التالية لتكوين SAML IdP في تطبيقك.',
+    metadata_url_label: 'URL لبيانات تعريف IdP',
+    single_sign_on_service_url_label: 'URL لخدمة تسجيل الدخول الموحدة',
+    idp_entity_id_label: 'معرف كيان IdP',
+  },
+  saml_idp_certificates: {
+    title: 'شهادة توقيع SAML',
+    expires_at: 'تنتهي في',
+    finger_print: 'بصمة الأصابع',
+    status: 'الحالة',
+    active: 'نشط',
+    inactive: 'غير نشط',
+  },
+  saml_idp_name_id_format: {
+    title: 'تنسيق اسم المعرف',
+    description: 'حدد تنسيق اسم المعرف لـ SAML IdP.',
+    persistent: 'مستمر',
+    persistent_description: 'استخدام معرف مستخدم Logto كاسم المعرف',
+    transient: 'مؤقت',
+    transient_description: 'استخدام معرف مستخدم مؤقت كاسم المعرف',
+    unspecified: 'غير محدد',
+    unspecified_description: 'استخدام معرف مستخدم Logto كاسم المعرف',
+    email_address: 'البريد الإلكتروني',
+    email_address_description: 'استخدام البريد الإلكتروني كاسم المعرف',
+  },
+  saml_encryption_config: {
+    encrypt_assertion: 'تشفير تأكيد SAML',
+    encrypt_assertion_description: 'بتفعيل هذا الخيار، سيتم تشفير تأكيد SAML.',
+    encrypt_then_sign: 'تشفير ثم توقيع',
+    encrypt_then_sign_description:
+      'بتفعيل هذا الخيار، سيتم تشفير تأكيد SAML ثم توقيعه؛ بخلاف ذلك، سيتم توقيع تأكيد SAML ثم تشفيره.',
+    certificate: 'شهادة',
+    certificate_tooltip: 'انسخ والصق شهادة x509 التي تحصل عليها من مزود الخدمة لتشفير تأكيد SAML.',
+    certificate_placeholder:
+      '-----BEGIN CERTIFICATE-----\nMIICYDCCAcmgAwIBA...\n-----END CERTIFICATE-----\n',
+    certificate_missing_error: 'الشهادة مطلوبة.',
+    certificate_invalid_format_error:
+      'تم اكتشاف تنسيق غير صالح للشهادة. يرجى التحقق من تنسيق الشهادة والمحاولة مرة أخرى.',
+  },
+  saml_app_attribute_mapping: {
+    name: 'تعيينات السمات',
+    title: 'تعيينات السمات الأساسية',
+    description: 'أضف تعيينات السمات لمزامنة ملف تعريف المستخدم من Logto إلى تطبيقك.',
+    col_logto_claims: 'قيمة Logto',
+    col_sp_claims: 'اسم القيمة في تطبيقك',
+    add_button: 'أضف آخر.',
   },
 };
 

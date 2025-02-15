@@ -34,6 +34,12 @@ const user = {
   password_algorithm_required: 'Password algorithm is required.',
   password_and_digest: 'You cannot set both plain text password and password digest.',
   personal_access_token_name_exists: '個人訪問令牌名稱已存在。',
+  totp_secret_invalid: '提供的 TOTP 密鑰無效。',
+  wrong_backup_code_format: '備份代碼格式無效。',
+  username_required: '用戶名是一個必需的標識符，你不能將其設為 null。',
+  email_or_phone_required: '電子郵件地址或手機號碼是一個必需的標識符，至少需要一個。',
+  email_required: '電子郵件地址是一個必需的標識符，你不能將其設為 null。',
+  phone_required: '手機號碼是一個必需的標識符，你不能將其設為 null。',
 };
 
 export default Object.freeze(user);

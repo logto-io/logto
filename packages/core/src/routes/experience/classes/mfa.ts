@@ -7,6 +7,7 @@ import {
   bindTotpGuard,
   type BindWebAuthn,
   bindWebAuthnGuard,
+  InteractionEvent,
   type JsonObject,
   MfaFactor,
   MfaPolicy,
@@ -152,7 +153,7 @@ export class Mfa {
     const { policy } = await this.signInExperienceValidator.getMfaSettings();
 
     assertThat(
-      policy === MfaPolicy.UserControlled,
+      policy !== MfaPolicy.Mandatory,
       new RequestError({
         code: 'session.mfa.mfa_policy_not_user_controlled',
         status: 422,
@@ -278,9 +279,21 @@ export class Mfa {
 
     const { mfaVerifications, logtoConfig } = await this.interactionContext.getIdentifiedUser();
 
-    // If the policy is user controlled and the user has skipped MFA, then there is nothing to check
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    if ((policy === MfaPolicy.UserControlled && this.#mfaSkipped) || isMfaSkipped(logtoConfig)) {
+    // If the policy is no prompt, then there is nothing to check
+    if (policy === MfaPolicy.NoPrompt) {
+      return;
+    }
+
+    // If the policy is not mandatory and the user has skipped MFA, then there is nothing to check
+    if (policy !== MfaPolicy.Mandatory && (this.#mfaSkipped ?? isMfaSkipped(logtoConfig))) {
+      return;
+    }
+
+    // If the policy is prompt only at sign-in, and the event is register, skip check
+    if (
+      this.interactionContext.getInteractionEvent() === InteractionEvent.Register &&
+      policy === MfaPolicy.PromptOnlyAtSignIn
+    ) {
       return;
     }
 

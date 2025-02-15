@@ -159,14 +159,19 @@ describe('fetchToken', () => {
       })
     );
 
-    expect(postMock).toBeCalledWith({
-      url: oidcConfigResponseCamelCase.tokenEndpoint,
-      form: {
+    expect(postMock).toBeCalledWith(oidcConfigResponseCamelCase.tokenEndpoint, {
+      body: new URLSearchParams({
         grant_type: 'authorization_code',
-        client_id: oidcConfig.clientId,
-        client_secret: oidcConfig.clientSecret,
         code: data.code,
+        client_id: oidcConfig.clientId,
         redirect_uri: redirectUri,
+      }).toString(),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Basic ${Buffer.from(
+          `${oidcConfig.clientId}:${oidcConfig.clientSecret}`,
+          'utf8'
+        ).toString('base64')}`,
       },
     });
   });

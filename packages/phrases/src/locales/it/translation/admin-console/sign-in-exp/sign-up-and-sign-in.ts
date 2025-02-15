@@ -69,6 +69,9 @@ const sign_up_and_sign_in = {
     enable_user_registration: 'Abilita registrazione utente',
     enable_user_registration_description:
       "Abilita o disabilita la registrazione degli utenti. Una volta disabilitata, gli utenti possono comunque essere aggiunti nella console di amministrazione, ma gli utenti non possono più creare account tramite l'interfaccia di accesso.",
+    unknown_session_redirect_url: 'URL di reindirizzamento sessione sconosciuta',
+    unknown_session_redirect_url_tip:
+      "A volte, Logto potrebbe non riconoscere la sessione di un utente nella pagina di accesso, come quando una sessione scade o l'utente aggiunge ai segnalibri o condivide il link di accesso. Per impostazione predefinita, appare un errore 404 di \"sessione sconosciuta\". Per migliorare l'esperienza utente, imposta un URL di fallback per reindirizzare gli utenti alla tua app e riavviare l'autenticazione.",
   },
 };
 

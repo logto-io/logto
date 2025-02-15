@@ -35,6 +35,13 @@ const user = {
   password_algorithm_required: 'Şifre algoritması gereklidir.',
   password_and_digest: 'Düz metin şifresini ve şifre özetini aynı anda belirleyemezsiniz.',
   personal_access_token_name_exists: 'Kişisel erişim belirteci adı zaten mevcut.',
+  totp_secret_invalid: 'Geçersiz TOTP sırrı sağlandı.',
+  wrong_backup_code_format: 'Yedek kod biçimi geçersiz.',
+  username_required: 'Kullanıcı adı gerekli bir tanımlayıcıdır, boş bırakılamaz.',
+  email_or_phone_required:
+    'E-posta adresi veya telefon numarası gerekli bir tanımlayıcıdır, en az bir tanesi gereklidir.',
+  email_required: 'E-posta adresi gerekli bir tanımlayıcıdır, boş bırakılamaz.',
+  phone_required: 'Telefon numarası gerekli bir tanımlayıcıdır, boş bırakılamaz.',
 };
 
 export default Object.freeze(user);

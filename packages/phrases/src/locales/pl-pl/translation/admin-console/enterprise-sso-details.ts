@@ -6,6 +6,7 @@ const enterprise_sso_details = {
     'Skonfiguruj konektory jednokrotnego logowania przedsiębiorstwa, aby umożliwić jednokrotne logowanie końcowym użytkownikom',
   tab_experience: 'Doświadczenie SSO',
   tab_connection: 'Połączenie',
+  tab_idp_initiated_auth: 'IdP zainicjowane SSO',
   general_settings_title: 'Ogólne',
   custom_branding_title: 'Wyświetlanie',
   custom_branding_description:
@@ -75,6 +76,47 @@ const enterprise_sso_details = {
     jwks_uri: 'Punkt końcowy kluczy web JSON',
     issuer: 'Wydawca',
   },
+  idp_initiated_auth_config: {
+    card_title: 'IdP zainicjowane SSO',
+    card_description:
+      'Użytkownik zazwyczaj rozpoczyna proces uwierzytelniania z aplikacji przy użyciu przepływu SP-zainicjowanego SSO. NIE włączaj tej funkcji, chyba że jest to absolutnie konieczne.',
+    enable_idp_initiated_sso: 'Włącz IdP zainicjowane SSO',
+    enable_idp_initiated_sso_description:
+      'Pozwól użytkownikom przedsiębiorstwa rozpocząć proces uwierzytelniania bezpośrednio z portalu dostawcy tożsamości. Proszę zrozumieć potencjalne ryzyko bezpieczeństwa przed włączeniem tej funkcji.',
+    default_application: 'Aplikacja domyślna',
+    default_application_tooltip:
+      'Docelowa aplikacja, do której użytkownik zostanie przekierowany po uwierzytelnieniu.',
+    empty_applications_error:
+      'Nie znaleziono aplikacji. Proszę dodać jedną w sekcji <a>Applications</a>.',
+    empty_applications_placeholder: 'Brak aplikacji',
+    authentication_type: 'Rodzaj uwierzytelniania',
+    auto_authentication_disabled_title: 'Przekieruj do klienta dla SP-zainicjowanego SSO',
+    auto_authentication_disabled_description:
+      'Zalecane. Przekieruj użytkowników do aplikacji po stronie klienta, aby zainicjować bezpieczne uwierzytelnianie OIDC zainicjowane przez SP. Zapobiegnie to atakom CSRF.',
+    auto_authentication_enabled_title: 'Zaloguj się bezpośrednio używając IdP zainicjowanego SSO',
+    auto_authentication_enabled_description:
+      'Po pomyślnym zalogowaniu użytkownicy zostaną przekierowani do określonego URI przekierowania z kodem autoryzacji (bez walidacji stanu i PKCE).',
+    auto_authentication_disabled_app:
+      'Dla tradycyjnych aplikacji web, aplikacji jednostronicowych (SPA)',
+    auto_authentication_enabled_app: 'Dla tradycyjnych aplikacji web',
+    idp_initiated_auth_callback_uri: 'Klient URI zwrotne',
+    idp_initiated_auth_callback_uri_tooltip:
+      'URI zwrotne klienta do zainicjowania przepływu autoryzacji SSO zainicjowanej przez SP. Identyfikator ssoConnectorId zostanie dołączony do URI jako parametr zapytania. (np. https://your.domain/sso/callback?connectorId={{ssoConnectorId}})',
+    redirect_uri: 'URI przekierowania po zalogowaniu',
+    redirect_uri_tooltip:
+      'URI przekierowania użytkowników po pomyślnym zalogowaniu. Logto użyje tego URI jako URI przekierowania OIDC w żądaniu autoryzacji. Użyj dedykowanego URI dla przepływu uwierzytelniania SSO zainicjowanego IdP dla lepszego bezpieczeństwa.',
+    empty_redirect_uris_error:
+      'Nie zarejestrowano żadnego URI przekierowania dla aplikacji. Proszę najpierw dodać.',
+    redirect_uri_placeholder: 'Wybierz URI przekierowania po zalogowaniu',
+    auth_params: 'Dodatkowe parametry uwierzytelniania',
+    auth_params_tooltip:
+      'Dodatkowe parametry do przekazania w żądaniu autoryzacji. Domyślnie domyślnie będą żądane tylko zakresy (openid profile), możesz tutaj określić dodatkowe zakresy lub wyłączną wartość stanu. (np. { "scope": "organizations email", "state": "secret_state" }).',
+  },
+  trust_unverified_email: 'Ufaj niezweryfikowanym adresom e-mail',
+  trust_unverified_email_label:
+    'Zawsze ufaj niezweryfikowanym adresom e-mail zwróconym przez dostawcę tożsamości',
+  trust_unverified_email_tip:
+    'Konektor Entra ID (OIDC) nie zwraca zgłoszenia `email_verified`, co oznacza, że adresy e-mail z Azure nie są gwarantowane jako zweryfikowane. Domyślnie Logto nie będzie synchronizować niezweryfikowanych adresów e-mail z profilem użytkownika. Włącz tę opcję tylko wtedy, gdy ufasz wszystkim adresom e-mail w katalogu Entra ID.',
 };
 
 export default Object.freeze(enterprise_sso_details);

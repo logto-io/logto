@@ -101,6 +101,7 @@ const tenants = {
   },
   status: {
     mau_exceeded: 'MAU dépassé',
+    token_exceeded: 'Jeton dépassé',
     suspended: 'Suspendu',
     overdue: 'En retard',
   },

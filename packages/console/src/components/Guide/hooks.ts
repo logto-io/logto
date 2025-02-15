@@ -1,4 +1,3 @@
-import { ApplicationType } from '@logto/schemas';
 import { useCallback, useMemo } from 'react';
 
 import { guides } from '@/assets/docs/guides';
@@ -17,6 +16,7 @@ const defaultStructuredMetadata: StructuredAppGuideMetadata = {
   Native: [],
   MachineToMachine: [],
   Protected: [],
+  SAML: [],
   ThirdParty: [],
 };
 
@@ -100,9 +100,7 @@ export const useAppGuideMetadata = (): {
           return accumulated;
         }
 
-        // We have ensured that SAML applications are always third party in DB schema, we use `||` here to make TypeScript happy.
-        // TODO: @darcy fix this when SAML third-party app guide is ready
-        if (target === ApplicationType.SAML || isThirdParty) {
+        if (isThirdParty) {
           return {
             ...accumulated,
             [thirdPartyAppCategory]: [...accumulated[thirdPartyAppCategory], guide],

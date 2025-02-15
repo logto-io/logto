@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 /** Scopes that reserved by Logto, which will be added to the auth request automatically. */
 export enum ReservedScope {
   OpenId = 'openid',
@@ -14,37 +16,58 @@ export enum ReservedResource {
   Organization = 'urn:logto:resource:organizations',
 }
 
-export type UserClaim =
+/**
+ * A comprehensive list of all available user claims that can be used in SAML applications.
+ * This array serves two purposes:
+ * 1. Acts as a single source of truth for all possible `UserClaim` values
+ * 2. Provides a runtime accessible list of all available claims
+ *
+ * Previously, `UserClaim` type was defined directly as a union type. Now, we define this array first
+ * and derive the `UserClaim` type from it using Zod. This approach maintains type safety while also
+ * making the complete list of claims available at runtime.
+ *
+ * Note: This array must include ALL possible values from `UserClaim` type.
+ * TypeScript will throw error if any value is missing.
+ */
+export const userClaimsList = [
   // OIDC standard claims
-  | 'name'
-  | 'given_name'
-  | 'family_name'
-  | 'middle_name'
-  | 'nickname'
-  | 'preferred_username'
-  | 'profile'
-  | 'picture'
-  | 'website'
-  | 'email'
-  | 'email_verified'
-  | 'gender'
-  | 'birthdate'
-  | 'zoneinfo'
-  | 'locale'
-  | 'phone_number'
-  | 'phone_number_verified'
-  | 'address'
-  | 'updated_at'
+  'name',
+  'given_name',
+  'family_name',
+  'middle_name',
+  'nickname',
+  'preferred_username',
+  'profile',
+  'picture',
+  'website',
+  'email',
+  'email_verified',
+  'gender',
+  'birthdate',
+  'zoneinfo',
+  'locale',
+  'phone_number',
+  'phone_number_verified',
+  'address',
+  'updated_at',
   // Custom claims
-  | 'username'
-  | 'roles'
-  | 'organizations'
-  | 'organization_data'
-  | 'organization_roles'
-  | 'custom_data'
-  | 'identities'
-  | 'sso_identities'
-  | 'created_at';
+  'username',
+  'roles',
+  'organizations',
+  'organization_data',
+  'organization_roles',
+  'custom_data',
+  'identities',
+  'sso_identities',
+  'created_at',
+] as const;
+
+/**
+ * Zod guard for `UserClaim` type, using `userClaimsList` as the single source of truth
+ */
+export const userClaimGuard = z.enum(userClaimsList);
+
+export type UserClaim = z.infer<typeof userClaimGuard>;
 
 /**
  * Scopes for ID Token and Userinfo Endpoint.

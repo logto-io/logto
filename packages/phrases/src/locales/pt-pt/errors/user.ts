@@ -30,12 +30,22 @@ const user = {
   role_exists: 'O id da função {{roleId}} já foi adicionado a este utilizador.',
   invalid_role_type:
     'Tipo de função inválido, não é possível atribuir uma função máquina a máquina ao utilizador.',
-  missing_mfa: 'You need to bind additional MFA before signing-in.',
-  totp_already_in_use: 'TOTP is already in use.',
-  backup_code_already_in_use: 'Backup code is already in use.',
-  password_algorithm_required: 'Password algorithm is required.',
-  password_and_digest: 'You cannot set both plain text password and password digest.',
+  missing_mfa: 'Precisas de vincular MFA adicional antes de iniciares sessão.',
+  totp_already_in_use: 'TOTP já está em uso.',
+  backup_code_already_in_use: 'Código de backup já está em uso.',
+  password_algorithm_required: 'É necessário um algoritmo de senha.',
+  password_and_digest: 'Não podes definir tanto a senha em texto simples quanto o resumo da senha.',
   personal_access_token_name_exists: 'O nome do token pessoal de acesso já existe.',
+  totp_secret_invalid: 'Foi fornecido um segredo TOTP inválido.',
+  wrong_backup_code_format: 'O formato do código de backup é inválido.',
+  username_required:
+    'Nome de utilizador é um identificador obrigatório, não podes defini-lo como nulo.',
+  email_or_phone_required:
+    'Endereço de email ou número de telefone é um identificador obrigatório, pelo menos um é necessário.',
+  email_required:
+    'Endereço de email é um identificador obrigatório, não podes defini-lo como nulo.',
+  phone_required:
+    'Número de telefone é um identificador obrigatório, não podes defini-lo como nulo.',
 };
 
 export default Object.freeze(user);

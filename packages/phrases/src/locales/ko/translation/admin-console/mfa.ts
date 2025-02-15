@@ -27,6 +27,15 @@ const mfa = {
   mandatory: '사용자는 항상 로그인 시 MFA 사용이 필요합니다',
   mandatory_tip:
     '사용자는 처음 로그인 또는 가입 시에 MFA를 설정하고 모든 향후 로그인에서 그것을 사용해야 합니다.',
+  require_mfa: 'MFA 필요',
+  require_mfa_label:
+    '애플리케이션에 액세스하기 위해 2단계 인증을 필수로 만들려면 이것을 활성화하세요. 비활성화하면 사용자가 스스로 MFA 사용 여부를 결정할 수 있습니다.',
+  set_up_prompt: 'MFA 설정 프롬프트',
+  no_prompt: '사용자에게 MFA 설정을 요청하지 않습니다',
+  prompt_at_sign_in_and_sign_up:
+    '등록 중에 사용자에게 MFA 설정을 요청합니다 (건너뛸 수 있으며, 한 번만 요청됩니다)',
+  prompt_only_at_sign_in:
+    '등록 후 다음 로그인 시도 시 사용자에게 MFA 설정을 요청합니다 (건너뛸 수 있으며, 한 번만 요청됩니다)',
 };
 
 export default Object.freeze(mfa);

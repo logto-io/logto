@@ -16,6 +16,7 @@ type BuildS3StorageParameters = {
   secretAccessKey: string;
   region?: string;
   endpoint?: string;
+  forcePathStyle?: boolean;
 };
 
 export const buildS3Storage = ({
@@ -24,6 +25,7 @@ export const buildS3Storage = ({
   secretAccessKey,
   region,
   endpoint,
+  forcePathStyle,
 }: BuildS3StorageParameters) => {
   if (!region && !endpoint) {
     throw new Error('Either region or endpoint must be provided');
@@ -35,6 +37,7 @@ export const buildS3Storage = ({
   const client = new S3Client({
     region: finalRegion,
     endpoint,
+    forcePathStyle,
     credentials: {
       accessKeyId,
       secretAccessKey,
@@ -56,6 +59,28 @@ export const buildS3Storage = ({
       return { url: `${publicUrl}/${objectKey}` };
     }
 
+    if (endpoint) {
+      // Custom endpoint URL construction
+      if (forcePathStyle) {
+        // Path-style URL: https://endpoint/bucket/key
+        return {
+          url: `${endpoint}/${bucket}/${objectKey}`,
+        };
+      }
+      // Virtual-hosted style URL: https://bucket.endpoint/key
+      return {
+        url: `${endpoint.replace(/^(https?:\/\/)/, `$1${bucket}.`)}/${objectKey}`,
+      };
+    }
+
+    // AWS S3 standard URL construction
+    if (forcePathStyle) {
+      // Path-style URL: https://s3.region.amazonaws.com/bucket/key
+      return {
+        url: `https://s3.${finalRegion}.amazonaws.com/${bucket}/${objectKey}`,
+      };
+    }
+    // Virtual-hosted style URL: https://bucket.s3.region.amazonaws.com/key
     return {
       url: `https://${bucket}.s3.${finalRegion}.amazonaws.com/${objectKey}`,
     };

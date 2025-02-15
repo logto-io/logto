@@ -19,7 +19,7 @@ const enterprise_sso = {
   },
   guide: {
     subtitle: 'Ein schrittweiser Leitfaden zur Verbindung des Unternehmensidentitätsanbieters.',
-    finish_button_text: 'Continue',
+    finish_button_text: 'Fortfahren',
   },
   basic_info: {
     title: 'Konfigurieren Sie Ihren Dienst im IdP',
@@ -27,7 +27,12 @@ const enterprise_sso = {
       'Erstellen Sie eine neue Anwendungsintegration per SAML 2.0 in Ihrem {{name}}-Identitätsanbieter. Fügen Sie dann den folgenden Wert hinzu.',
     saml: {
       acs_url_field_name: 'Zieldienst-URL für Assertionsverbrauch (Antwort-URL)',
-      audience_uri_field_name: 'Ziel-URI (SP Entity ID)',
+      audience_uri_field_name: 'Empfänger-URI (SP-Entitäts-ID)',
+      entity_id_field_name: 'Dienstanbieter (SP) Entitäts-ID',
+      entity_id_field_tooltip:
+        'Die SP-Entitäts-ID kann in jedem Zeichenfolgenformat vorliegen, typischerweise wird ein URI- oder URL-Format als Bezeichner verwendet, aber dies ist nicht zwingend erforderlich.',
+      acs_url_field_placeholder: 'https://your-domain.com/api/saml/callback',
+      entity_id_field_placeholder: 'urn:your-domain.com:sp:saml:{serviceProviderId}',
     },
     oidc: {
       redirect_uri_field_name: 'Weiterleitungs-URI (Callback-URL)',

@@ -25,6 +25,11 @@ const upsell = {
       '您当前的 MAU 已超过<planName/>的限制。请立即升级到高级计划，以避免 Logto 服务的暂停。',
     update_plan: '更新计划',
   },
+  token_exceeded_modal: {
+    title: '令牌使用超过限制。升级你的计划。',
+    notification:
+      '你已超出<planName/>令牌使用限制。用户将无法正常访问 Logto 服务。请及时升级你的计划到高级版，以避免任何不便。',
+  },
   payment_overdue_modal: {
     title: '账单逾期未付',
     notification:

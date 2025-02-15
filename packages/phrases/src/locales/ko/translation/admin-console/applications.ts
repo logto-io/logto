@@ -45,6 +45,11 @@ const applications = {
       subtitle: 'Logto로 보호되는 앱',
       description: 'N/A',
     },
+    saml: {
+      title: 'SAML 앱',
+      subtitle: 'SAML IdP 커넥터로 사용되는 앱',
+      description: '예: SAML',
+    },
     third_party: {
       title: '서드파티 앱',
       subtitle: '서드파티 IdP 커넥터로 사용되는 앱',

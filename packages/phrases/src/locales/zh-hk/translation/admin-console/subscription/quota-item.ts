@@ -171,6 +171,19 @@ const quota_item = {
     unlimited: '自帶介面',
     not_eligible: '移除您的自定義介面資產',
   },
+  idp_initiated_sso_enabled: {
+    name: 'IDP 启動的 SSO',
+    limited: 'IDP 启動的 SSO',
+    unlimited: 'IDP 启动的 SSO',
+    not_eligible: '不允許 IDP 启动的 SSO',
+  },
+  saml_applications_limit: {
+    name: 'SAML 應用程式',
+    limited: '{{count, number}} 個 SAML 應用程式',
+    limited_other: '{{count, number}} 個 SAML 應用程式',
+    unlimited: '無限 SAML 應用程式',
+    not_eligible: '刪除您的 SAML 應用程式',
+  },
 };
 
 export default Object.freeze(quota_item);

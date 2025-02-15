@@ -1,3 +1,4 @@
+import account_center from './account-center.js';
 import application from './application.js';
 import auth from './auth.js';
 import connector from './connector.js';
@@ -23,6 +24,7 @@ import subscription from './subscription.js';
 import swagger from './swagger.js';
 import user from './user.js';
 import verification_code from './verification-code.js';
+import verification_record from './verification-record.js';
 
 const errors = {
   request,
@@ -50,6 +52,8 @@ const errors = {
   application,
   organization,
   single_sign_on,
+  verification_record,
+  account_center,
 };
 
 export default Object.freeze(errors);

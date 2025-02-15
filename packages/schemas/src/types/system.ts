@@ -44,6 +44,7 @@ export const storageProviderDataGuard = z.discriminatedUnion('provider', [
     endpoint: z.string().optional(),
     region: z.string().optional(),
     bucket: z.string(),
+    forcePathStyle: z.boolean().optional(),
     accessKeyId: z.string(),
     accessSecretKey: z.string(),
     ...basicConfig,

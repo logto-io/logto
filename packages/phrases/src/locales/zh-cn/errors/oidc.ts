@@ -6,6 +6,7 @@ const oidc = {
   insufficient_scope: 'Token 缺少范围 `{{scope}}`.',
   invalid_request: '请求无效',
   invalid_grant: '授权请求无效',
+  invalid_issuer: '无效的发行者。',
   invalid_redirect_uri: '无效返回链接, 该 redirect_uri 未被此应用注册。',
   access_denied: '访问被拒绝',
   invalid_target: '请求资源无效',

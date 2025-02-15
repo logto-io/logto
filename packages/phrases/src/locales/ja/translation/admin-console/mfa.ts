@@ -29,6 +29,15 @@ const mfa = {
   mandatory: 'ユーザーは常にサインイン時にMFAの使用が必要です',
   mandatory_tip:
     'ユーザーは最初のサインインまたはサインアップ時にMFAを設定し、将来のすべてのサインインでそれを使用する必要があります。',
+  require_mfa: 'MFA を要求',
+  require_mfa_label:
+    'アプリケーションにアクセスするために 2 段階認証を必須にするには、これを有効にします。無効にすると、ユーザーは自分で MFA を有効にするかどうかを決めることができます。',
+  set_up_prompt: 'MFA の設定プロンプト',
+  no_prompt: 'MFA の設定をユーザーに求めない',
+  prompt_at_sign_in_and_sign_up:
+    '登録時にユーザーに MFA の設定を依頼します（スキップ可能、1 回限りのプロンプト）',
+  prompt_only_at_sign_in:
+    '登録後の次回サインイン時にユーザーに MFA の設定を依頼します（スキップ可能、1 回限りのプロンプト）',
 };
 
 export default Object.freeze(mfa);

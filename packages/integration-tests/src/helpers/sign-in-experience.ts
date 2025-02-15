@@ -81,7 +81,7 @@ export const enableAllPasswordSignInMethods = async (
     signIn: {
       methods: defaultPasswordSignInMethods,
     },
-    mfa: { factors: [], policy: MfaPolicy.UserControlled },
+    mfa: { factors: [], policy: MfaPolicy.PromptAtSignInAndSignUp },
   });
 
 export const resetPasswordPolicy = async () =>
@@ -102,14 +102,30 @@ export const enableAllVerificationCodeSignInMethods = async (
     signIn: {
       methods: defaultVerificationCodeSignInMethods,
     },
-    mfa: { factors: [], policy: MfaPolicy.UserControlled },
+    mfa: { factors: [], policy: MfaPolicy.PromptAtSignInAndSignUp },
   });
 
 export const enableUserControlledMfaWithTotp = async () =>
   updateSignInExperience({
     mfa: {
       factors: [MfaFactor.TOTP],
-      policy: MfaPolicy.UserControlled,
+      policy: MfaPolicy.PromptAtSignInAndSignUp,
+    },
+  });
+
+export const enableUserControlledMfaWithTotpOnlyAtSignIn = async () =>
+  updateSignInExperience({
+    mfa: {
+      factors: [MfaFactor.TOTP],
+      policy: MfaPolicy.PromptOnlyAtSignIn,
+    },
+  });
+
+export const enableUserControlledMfaWithNoPrompt = async () =>
+  updateSignInExperience({
+    mfa: {
+      factors: [MfaFactor.TOTP],
+      policy: MfaPolicy.NoPrompt,
     },
   });
 
@@ -146,7 +162,7 @@ export const enableMandatoryMfaWithWebAuthnAndBackupCode = async () =>
   });
 
 export const resetMfaSettings = async () =>
-  updateSignInExperience({ mfa: { policy: MfaPolicy.UserControlled, factors: [] } });
+  updateSignInExperience({ mfa: { policy: MfaPolicy.PromptAtSignInAndSignUp, factors: [] } });
 
 /** Enable only username and password sign-in and sign-up. */
 export const setUsernamePasswordOnly = async () => {

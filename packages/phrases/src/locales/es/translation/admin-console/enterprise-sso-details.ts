@@ -6,6 +6,7 @@ const enterprise_sso_details = {
     'Configure los conectores SSO empresariales para habilitar SSO de usuarios finales',
   tab_experience: 'Experiencia SSO',
   tab_connection: 'Conexión',
+  tab_idp_initiated_auth: 'SSO iniciado por IdP',
   general_settings_title: 'General',
   custom_branding_title: 'Visualización',
   custom_branding_description:
@@ -77,6 +78,47 @@ const enterprise_sso_details = {
     jwks_uri: 'Punto de conjunto de claves web JSON',
     issuer: 'Emisor',
   },
+  idp_initiated_auth_config: {
+    card_title: 'SSO iniciado por IdP',
+    card_description:
+      'El usuario generalmente inicia el proceso de autenticación desde su aplicación utilizando el flujo de SSO iniciado por el SP. NO habilite esta función a menos que sea absolutamente necesario.',
+    enable_idp_initiated_sso: 'Habilitar SSO iniciado por IdP',
+    enable_idp_initiated_sso_description:
+      'Permitir que los usuarios empresariales inicien el proceso de autenticación directamente desde el portal del proveedor de identidad. Comprende los posibles riesgos de seguridad antes de habilitar esta función.',
+    default_application: 'Aplicación predeterminada',
+    default_application_tooltip:
+      'Aplicación de destino a la que el usuario será redirigido después de la autenticación.',
+    empty_applications_error:
+      'No se encontraron aplicaciones. Por favor, añade una en la sección de <a>Aplicaciones</a>.',
+    empty_applications_placeholder: 'Sin aplicaciones',
+    authentication_type: 'Tipo de autenticación',
+    auto_authentication_disabled_title: 'Redirigir al cliente para SSO iniciado por SP',
+    auto_authentication_disabled_description:
+      'Recomendado. Redirige a los usuarios a la aplicación del lado del cliente para iniciar una autenticación OIDC segura iniciada por el SP. Esto evitará los ataques CSRF.',
+    auto_authentication_enabled_title: 'Iniciar sesión directamente usando el SSO iniciado por IdP',
+    auto_authentication_enabled_description:
+      'Después de un inicio de sesión exitoso, los usuarios serán redirigidos al URI de redirección especificado con el código de autorización (sin validación de estado y PKCE).',
+    auto_authentication_disabled_app:
+      'Para aplicación web tradicional, aplicación de una sola página (SPA)',
+    auto_authentication_enabled_app: 'Para aplicación web tradicional',
+    idp_initiated_auth_callback_uri: 'URI de devolución de llamada del cliente',
+    idp_initiated_auth_callback_uri_tooltip:
+      'El URI de devolución de llamada del cliente para iniciar un flujo de autenticación SSO iniciado por el SP. Un ssoConnectorId se añadirá al URI como un parámetro de consulta. (por ejemplo, https://tu.dominio/sso/callback?connectorId={{ssoConnectorId}})',
+    redirect_uri: 'URI de redirección posterior al inicio de sesión',
+    redirect_uri_tooltip:
+      'El URI de redirección para redirigir a los usuarios después de un inicio de sesión exitoso. Logto usará este URI como el URI de redirección OIDC en la solicitud de autorización. Usa un URI dedicado para el flujo de autenticación SSO iniciado por el IdP para una mejor seguridad.',
+    empty_redirect_uris_error:
+      'No se ha registrado ningún URI de redirección para la aplicación. Por favor, añade uno primero.',
+    redirect_uri_placeholder: 'Selecciona un URI de redirección posterior al inicio de sesión',
+    auth_params: 'Parámetros de autenticación adicionales',
+    auth_params_tooltip:
+      'Parámetros adicionales que se pasarán en la solicitud de autorización. Por defecto, solo se solicitarán los ámbitos (openid profile), puedes especificar ámbitos adicionales o un valor de estado exclusivo aquí. (por ejemplo, { "scope": "organizations email", "state": "secret_state" }).',
+  },
+  trust_unverified_email: 'Confiar en el correo electrónico no verificado',
+  trust_unverified_email_label:
+    'Confiar siempre en las direcciones de correo electrónico no verificadas devueltas por el proveedor de identidad',
+  trust_unverified_email_tip:
+    'El conector Entra ID (OIDC) no devuelve la reclamación `email_verified`, lo que significa que las direcciones de correo electrónico de Azure no están garantizadas como verificadas. Por defecto, Logto no sincronizará direcciones de correo electrónico no verificadas con el perfil del usuario. Habilite esta opción solo si confía en todas las direcciones de correo electrónico del directorio Entra ID.',
 };
 
 export default Object.freeze(enterprise_sso_details);

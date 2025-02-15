@@ -23,6 +23,7 @@ const application_details = {
   description_placeholder: 'Enter your application description',
   config_endpoint: 'OpenID provider configuration endpoint',
   issuer_endpoint: 'Issuer endpoint',
+  jwks_uri: 'JWKS URI',
   authorization_endpoint: 'Authorization endpoint',
   authorization_endpoint_tip:
     "The endpoint to perform authentication and authorization. It's used for OpenID Connect <a>Authentication</a>.",
@@ -180,6 +181,9 @@ const application_details = {
     create_new_secret: 'Create new secret',
     delete_confirmation:
       'This action cannot be undone. Are you sure you want to delete this secret?',
+    deleted: 'The secret has been successfully deleted.',
+    activated: 'The secret has been successfully activated.',
+    deactivated: 'The secret has been successfully deactivated.',
     legacy_secret: 'Legacy secret',
     expired: 'Expired',
     expired_tooltip: 'This secret was expired on {{date}}.',
@@ -191,6 +195,8 @@ const application_details = {
         'The secret will never expire. We recommend setting an expiration date for enhanced security.',
       days: '{{count}} day',
       days_other: '{{count}} days',
+      years: '{{count}} year',
+      years_other: '{{count}} years',
       created: 'The secret {{name}} has been successfully created.',
     },
     edit_modal: {
@@ -213,6 +219,41 @@ const application_details = {
     status: 'Status',
     active: 'Active',
     inactive: 'Inactive',
+  },
+  saml_idp_name_id_format: {
+    title: 'Name ID format',
+    description: 'Select the name ID format of the SAML IdP.',
+    persistent: 'Persistent',
+    persistent_description: 'Use Logto user ID as Name ID',
+    transient: 'Transient',
+    transient_description: 'Use one-time user ID as Name ID',
+    unspecified: 'Unspecified',
+    unspecified_description: 'Use Logto user ID as Name ID',
+    email_address: 'Email address',
+    email_address_description: 'Use email address as Name ID',
+  },
+  saml_encryption_config: {
+    encrypt_assertion: 'Encrypt SAML assertion',
+    encrypt_assertion_description: 'By enabling this option, the SAML assertion will be encrypted.',
+    encrypt_then_sign: 'Encrypt then sign',
+    encrypt_then_sign_description:
+      'By enabling this option, the SAML assertion will be encrypted and then signed; otherwise, the SAML assertion will be signed and then encrypted.',
+    certificate: 'Certificate',
+    certificate_tooltip:
+      'Copy and paste the x509 certificate you get from your service provider to encrypt the SAML assertion.',
+    certificate_placeholder:
+      '-----BEGIN CERTIFICATE-----\nMIICYDCCAcmgAwIBA...\n-----END CERTIFICATE-----\n',
+    certificate_missing_error: 'Certificate is required.',
+    certificate_invalid_format_error:
+      'Invalid certificate format detected. Please check the certificate format and try again.',
+  },
+  saml_app_attribute_mapping: {
+    name: 'Attribute mappings',
+    title: 'Base attribute mappings',
+    description: 'Add attribute mappings to sync user profile from Logto to your application.',
+    col_logto_claims: 'Value of Logto',
+    col_sp_claims: 'Value name of your application',
+    add_button: 'Add another',
   },
 };
 

@@ -25,7 +25,7 @@ export const userInfoResponseGuard = z.object({
     username: z.string(),
     identify_num: z.string(),
     avatar: z.string().url(),
-    banner: z.string().url(),
+    banner: z.union([z.string().url().nullish(), z.literal('')]),
     mobile_verified: z.boolean(),
   }),
 });

@@ -171,6 +171,19 @@ const quota_item = {
     unlimited: '맞춤 UI 사용',
     not_eligible: '맞춤 UI 자산을 제거하십시오',
   },
+  idp_initiated_sso_enabled: {
+    name: 'IDP 시작 SSO',
+    limited: 'IDP 시작 SSO',
+    unlimited: 'IDP 시작 SSO',
+    not_eligible: 'IDP 시작 SSO 허용되지 않음',
+  },
+  saml_applications_limit: {
+    name: 'SAML 애플리케이션',
+    limited: '{{count, number}} SAML 애플리케이션',
+    limited_other: '{{count, number}} SAML 애플리케이션',
+    unlimited: '무제한 SAML 애플리케이션',
+    not_eligible: 'SAML 애플리케이션을 제거하십시오',
+  },
 };
 
 export default Object.freeze(quota_item);

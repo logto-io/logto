@@ -8,6 +8,7 @@ const auth = {
   jwt_sub_missing: '`sub` manquant dans JWT.',
   require_re_authentication:
     'La ré-authentification est requise pour effectuer une action protégée.',
+  exceed_token_limit: 'Limite de jeton dépassée. Veuillez contacter votre administrateur.',
 };
 
 export default Object.freeze(auth);

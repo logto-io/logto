@@ -7,6 +7,7 @@ const auth = {
     'Nie znaleziono oczekiwanej roli. Sprawdź swoje role użytkownika oraz uprawnienia.',
   jwt_sub_missing: 'Brak `sub` w JWT.',
   require_re_authentication: 'Wymagane ponowne uwierzytelnienie, aby wykonać chronione działanie.',
+  exceed_token_limit: 'Przekroczono limit tokenów. Skontaktuj się z administratorem.',
 };
 
 export default Object.freeze(auth);

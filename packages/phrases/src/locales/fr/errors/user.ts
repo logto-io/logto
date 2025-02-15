@@ -37,6 +37,16 @@ const user = {
   password_and_digest:
     'Vous ne pouvez pas définir à la fois un mot de passe en texte brut et un digest de mot de passe.',
   personal_access_token_name_exists: "Le nom du jeton d'accès personnel existe déjà.",
+  totp_secret_invalid: 'Le secret TOTP fourni est invalide.',
+  wrong_backup_code_format: 'Le format du code de sauvegarde est invalide.',
+  username_required:
+    "Le nom d'utilisateur est un identifiant requis, vous ne pouvez pas le définir à null.",
+  email_or_phone_required:
+    "L'adresse e-mail ou le numéro de téléphone est un identifiant requis, au moins un est nécessaire.",
+  email_required:
+    "L'adresse e-mail est un identifiant requis, vous ne pouvez pas la définir à null.",
+  phone_required:
+    'Le numéro de téléphone est un identifiant requis, vous ne pouvez pas le définir à null.',
 };
 
 export default Object.freeze(user);

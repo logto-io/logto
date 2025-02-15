@@ -6,6 +6,7 @@ const oidc = {
   insufficient_scope: 'الرمز ناقص في النطاق `{{scope}}`.',
   invalid_request: 'الطلب غير صالح.',
   invalid_grant: 'طلب المنحة غير صالح.',
+  invalid_issuer: 'جهة إصدار غير صالحة.',
   invalid_redirect_uri: '`redirect_uri` لا يتطابق مع أي من `redirect_uris` المسجلة للعميل.',
   access_denied: 'تم رفض الوصول.',
   invalid_target: 'مؤشر المورد غير صالح.',

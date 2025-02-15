@@ -2,6 +2,7 @@ import { SsoProviderName } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
 import { mockSsoConnector } from '#src/__mocks__/sso.js';
+import { getTenantEndpoint, EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 
 const { jest } = import.meta;
@@ -55,7 +56,11 @@ describe('parseFactoryDetail', () => {
 describe('fetchConnectorProviderDetails', () => {
   it('providerConfig should be undefined if connector config is invalid', async () => {
     const connector = { ...mockSsoConnector, config: { clientId: 'foo' } };
-    const result = await fetchConnectorProviderDetails(connector, mockTenantId, 'en');
+    const result = await fetchConnectorProviderDetails(
+      connector,
+      getTenantEndpoint(mockTenantId, EnvSet.values),
+      'en'
+    );
 
     expect(result).toMatchObject(
       expect.objectContaining({
@@ -74,7 +79,11 @@ describe('fetchConnectorProviderDetails', () => {
     };
 
     fetchOidcConfig.mockRejectedValueOnce(new Error('mock-error'));
-    const result = await fetchConnectorProviderDetails(connector, mockTenantId, 'en');
+    const result = await fetchConnectorProviderDetails(
+      connector,
+      getTenantEndpoint(mockTenantId, EnvSet.values),
+      'en'
+    );
 
     expect(result).toMatchObject(
       expect.objectContaining({
@@ -93,7 +102,11 @@ describe('fetchConnectorProviderDetails', () => {
     };
 
     fetchOidcConfig.mockResolvedValueOnce({ tokenEndpoint: 'http://example.com/token' });
-    const result = await fetchConnectorProviderDetails(connector, mockTenantId, 'en');
+    const result = await fetchConnectorProviderDetails(
+      connector,
+      getTenantEndpoint(mockTenantId, EnvSet.values),
+      'en'
+    );
 
     expect(result).toMatchObject(
       expect.objectContaining({

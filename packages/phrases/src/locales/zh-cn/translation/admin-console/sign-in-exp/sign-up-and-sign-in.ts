@@ -62,6 +62,9 @@ const sign_up_and_sign_in = {
     enable_user_registration: '启用用户注册',
     enable_user_registration_description:
       '启用或禁用用户注册。禁用后，管理员仍然可以添加用户，但用户无法通过登录界面建立账户。',
+    unknown_session_redirect_url: '未知会话重定向 URL',
+    unknown_session_redirect_url_tip:
+      '有时，Logto 可能无法识别用户在登录页面的会话，例如会话过期，或用户收藏或分享了登录链接。默认情况下，会出现“未知会话” 404 错误。为提升用户体验，请设置一个备用 URL ，将用户重定向回你的应用程序并重新开始身份验证。',
   },
 };
 

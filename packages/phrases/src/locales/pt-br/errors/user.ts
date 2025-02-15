@@ -36,6 +36,16 @@ const user = {
   password_algorithm_required: 'Algoritmo de senha é necessário.',
   password_and_digest: 'Você não pode definir tanto senha de texto simples quanto digest de senha.',
   personal_access_token_name_exists: 'O nome do token de acesso pessoal já existe.',
+  totp_secret_invalid: 'Segredo TOTP fornecido é inválido.',
+  wrong_backup_code_format: 'Formato do código de backup é inválido.',
+  username_required:
+    'Nome de usuário é um identificador obrigatório, você não pode defini-lo como nulo.',
+  email_or_phone_required:
+    'Endereço de e-mail ou número de telefone é um identificador obrigatório, pelo menos um é necessário.',
+  email_required:
+    'Endereço de e-mail é um identificador obrigatório, você não pode defini-lo como nulo.',
+  phone_required:
+    'Número de telefone é um identificador obrigatório, você não pode defini-lo como nulo.',
 };
 
 export default Object.freeze(user);

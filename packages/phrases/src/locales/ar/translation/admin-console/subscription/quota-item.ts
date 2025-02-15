@@ -171,6 +171,19 @@ const quota_item = {
     unlimited: 'اجلب واجهة المستخدم الخاصة بك',
     not_eligible: 'قم بإزالة أصول واجهة المستخدم المخصصة الخاصة بك',
   },
+  idp_initiated_sso_enabled: {
+    name: 'تسجيل الدخول الأحادي الذي بدأه موفر الهوية',
+    limited: 'تسجيل الدخول الأحادي الذي بدأه موفر الهوية',
+    unlimited: 'تسجيل الدخول الأحادي الذي بدأه موفر الهوية',
+    not_eligible: 'تسجيل الدخول الأحادي الذي بدأه موفر الهوية غير مسموح',
+  },
+  saml_applications_limit: {
+    name: 'تطبيقات SAML',
+    limited: '{{count, number}} تطبيق SAML',
+    limited_other: '{{count, number}} تطبيقات SAML',
+    unlimited: 'عدد غير محدود من تطبيقات SAML',
+    not_eligible: 'قم بإزالة تطبيقات SAML الخاصة بك',
+  },
 };
 
 export default Object.freeze(quota_item);

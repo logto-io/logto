@@ -6,6 +6,7 @@ const enterprise_sso_details = {
     'Richten Sie Unternehmens-SSO-Connector ein, um die SSO für Endbenutzer zu aktivieren',
   tab_experience: 'SSO-Erfahrung',
   tab_connection: 'Verbindung',
+  tab_idp_initiated_auth: 'IdP-initiiertes SSO',
   general_settings_title: 'Allgemein',
   custom_branding_title: 'Anzeige',
   custom_branding_description:
@@ -78,6 +79,46 @@ const enterprise_sso_details = {
     jwks_uri: 'JSON Web Key Set-Endpunkt',
     issuer: 'Aussteller',
   },
+  idp_initiated_auth_config: {
+    card_title: 'IdP-initiiertes SSO',
+    card_description:
+      'Benutzer starten normalerweise den Authentifizierungsprozess von deiner App aus mit dem SP-initiierten SSO-Fluss. Diese Funktion NICHT aktivieren, es sei denn, es ist absolut notwendig.',
+    enable_idp_initiated_sso: 'IdP-initiiertes SSO aktivieren',
+    enable_idp_initiated_sso_description:
+      'Erlaube Unternehmensbenutzern, den Authentifizierungsprozess direkt vom Portal des Identitätsanbieters aus zu starten. Bitte verstehe die potenziellen Sicherheitsrisiken, bevor du diese Funktion aktivierst.',
+    default_application: 'Standardanwendung',
+    default_application_tooltip:
+      'Zielanwendung, zu der der Benutzer nach der Authentifizierung weitergeleitet wird.',
+    empty_applications_error:
+      'Keine Anwendungen gefunden. Bitte füge eine in der <a>Anwendungen</a> Sektion hinzu.',
+    empty_applications_placeholder: 'Keine Anwendungen',
+    authentication_type: 'Authentifizierungstyp',
+    auto_authentication_disabled_title: 'Umleitung zum Client für SP-initiiertes SSO',
+    auto_authentication_disabled_description:
+      'Empfohlen. Leite Benutzer zur Client-seitigen Anwendung weiter, um eine sichere SP-initiierte OIDC-Authentifizierung zu starten. Dadurch werden CSRF-Angriffe verhindert.',
+    auto_authentication_enabled_title: 'Direkt anmelden mit IdP-initiiertem SSO',
+    auto_authentication_enabled_description:
+      'Nach erfolgreicher Anmeldung werden Benutzer zur angegebenen Redirect-URI mit dem Autorisierungscode weitergeleitet (Ohne Status- und PKCE-Validierung).',
+    auto_authentication_disabled_app: 'Für traditionelle Webanwendung, Single-Page-App (SPA)',
+    auto_authentication_enabled_app: 'Für traditionelle Webanwendung',
+    idp_initiated_auth_callback_uri: 'Client Callback-URI',
+    idp_initiated_auth_callback_uri_tooltip:
+      'Die Client Callback-URI zum Initiieren eines SP-initiierten SSO-Authentifizierungsflusses. Eine ssoConnectorId wird der URI als Abfrageparameter hinzugefügt. (z.B., https://deine.domain/sso/callback?connectorId={{ssoConnectorId}})',
+    redirect_uri: 'Post-Login Redirect-URI',
+    redirect_uri_tooltip:
+      'Die Redirect-URI, um Benutzer nach erfolgreichem Anmelden weiterzuleiten. Logto wird diese URI als die OIDC-Redirect-URI in der Autorisierungsanforderung verwenden. Verwende eine dedizierte URI für den IdP-initiierten SSO-Authentifizierungsfluss für bessere Sicherheit.',
+    empty_redirect_uris_error:
+      'Keine Redirect-URI wurde für die Anwendung registriert. Bitte füge zuerst eine hinzu.',
+    redirect_uri_placeholder: 'Wähle eine Post-Login Redirect-URI',
+    auth_params: 'Zusätzliche Authentifizierungsparameter',
+    auth_params_tooltip:
+      'Zusätzliche Parameter, die in der Autorisierungsanforderung übergeben werden sollen. Standardmäßig werden nur (openid profile) Scopes angefordert, du kannst hier zusätzliche Scopes oder einen exklusiven State-Wert angeben. (z.B., { "scope": "organizations email", "state": "secret_state" }).',
+  },
+  trust_unverified_email: 'Unverifizierte E-Mail vertrauen',
+  trust_unverified_email_label:
+    'Vertraue immer den unverifizierten E-Mail-Adressen, die vom Identitätsanbieter zurückgegeben werden',
+  trust_unverified_email_tip:
+    'Der Entra ID (OIDC) Connector gibt den `email_verified` Anspruch nicht zurück, was bedeutet, dass E-Mail-Adressen von Azure nicht garantiert überprüft werden. Standardmäßig synchronisiert Logto keine unverifizierten E-Mail-Adressen mit dem Benutzerprofil. Aktiviere diese Option nur, wenn du allen E-Mail-Adressen aus dem Entra ID Verzeichnis vertraust.',
 };
 
 export default Object.freeze(enterprise_sso_details);

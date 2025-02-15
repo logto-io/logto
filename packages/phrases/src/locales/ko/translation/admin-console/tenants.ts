@@ -93,6 +93,7 @@ const tenants = {
   },
   status: {
     mau_exceeded: 'MAU 초과',
+    token_exceeded: '토큰 초과',
     suspended: '정지됨',
     overdue: '만료됨',
   },

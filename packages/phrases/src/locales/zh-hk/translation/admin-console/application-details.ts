@@ -38,6 +38,8 @@ const application_details = {
   redirect_uri_placeholder_native: 'io.logto://callback',
   redirect_uri_tip:
     '在使用者登入完成（不論成功與否）後重定向的目標 URI。參見 OpenID Connect <a>AuthRequest</a> 以瞭解更多。',
+  mixed_redirect_uri_warning:
+    '你的應用程式類型與至少一個重定向 URI 不兼容。這不符合最佳實踐，我們強烈建議保持重定向 URI 的一致性。',
   post_sign_out_redirect_uri: '登出後重定向 URI',
   post_sign_out_redirect_uris: '登出後重定向 URI',
   post_sign_out_redirect_uri_placeholder: 'https://your.website.com/home',
@@ -61,6 +63,8 @@ const application_details = {
   rotate_refresh_token: '旋轉刷新令牌',
   rotate_refresh_token_label:
     '啟用後，當原始 TTL 達到 70% 或滿足某些條件時就可以在令牌請求中為刷新令牌發行新的刷新令牌。 <a>了解更多。</a>',
+  rotate_refresh_token_label_for_public_clients:
+    '啟用後，Logto 將為每個令牌請求發行新的刷新令牌。 <a>了解更多</a>',
   backchannel_logout: '後台登出',
   backchannel_logout_description: '配置 OpenID Connect 後台登出端點及是否需要會話用於此應用程式。',
   backchannel_logout_uri: '後台登出 URI',
@@ -163,6 +167,9 @@ const application_details = {
     never: '永不',
     create_new_secret: '創建新密鑰',
     delete_confirmation: '此操作無法撤銷。你確定要刪除此密鑰嗎？',
+    deleted: '密鑰已成功刪除。',
+    activated: '密鑰已成功激活。',
+    deactivated: '密鑰已成功停用。',
     legacy_secret: '舊版密鑰',
     expired: '已過期',
     expired_tooltip: '此密鑰已於 {{date}} 過期。',
@@ -173,12 +180,62 @@ const application_details = {
       expiration_description_never: '此密鑰將永不過期。我們建議設置到期日期以增強安全性。',
       days: '{{count}} 天',
       days_other: '{{count}} 天',
+      years: '{{count}} 年',
+      years_other: '{{count}} 年',
       created: '密鑰 {{name}} 已成功創建。',
     },
     edit_modal: {
       title: '編輯應用程式密鑰',
       edited: '密鑰 {{name}} 已成功編輯。',
     },
+  },
+  saml_idp_config: {
+    title: 'SAML IdP 元數據',
+    description: '使用以下元數據和憑證在您的應用程式中配置 SAML IdP。',
+    metadata_url_label: 'IdP 元數據 URL',
+    single_sign_on_service_url_label: '單一登入服務 URL',
+    idp_entity_id_label: 'IdP 實體 ID',
+  },
+  saml_idp_certificates: {
+    title: 'SAML 簽名憑證',
+    expires_at: '到期於',
+    finger_print: '指紋',
+    status: '狀態',
+    active: '啟用',
+    inactive: '停用',
+  },
+  saml_idp_name_id_format: {
+    title: '名稱 ID 格式',
+    description: '選擇 SAML IdP 的名稱 ID 格式。',
+    persistent: '持久型',
+    persistent_description: '使用 Logto 使用者 ID 作為名稱 ID',
+    transient: '臨時型',
+    transient_description: '使用一次性使用者 ID 作為名稱 ID',
+    unspecified: '未指定',
+    unspecified_description: '使用 Logto 使用者 ID 作為名稱 ID',
+    email_address: '電子郵件地址',
+    email_address_description: '使用電子郵件地址作為名稱 ID',
+  },
+  saml_encryption_config: {
+    encrypt_assertion: '加密 SAML 斷言',
+    encrypt_assertion_description: '啟用此選項後，SAML 斷言將被加密。',
+    encrypt_then_sign: '先加密再簽名',
+    encrypt_then_sign_description:
+      '啟用此選項後，SAML 斷言將被加密然後簽名；否則，SAML 斷言將被簽名然後加密。',
+    certificate: '憑證',
+    certificate_tooltip: '複製並貼上從您的服務提供商獲得的 x509 憑證以加密 SAML 斷言。',
+    certificate_placeholder:
+      '-----BEGIN CERTIFICATE-----\nMIICYDCCAcmgAwIBA...\n-----END CERTIFICATE-----\n',
+    certificate_missing_error: '需要憑證。',
+    certificate_invalid_format_error: '檢測到無效的憑證格式。請檢查憑證格式並重試。',
+  },
+  saml_app_attribute_mapping: {
+    name: '屬性映射',
+    title: '基本屬性映射',
+    description: '添加屬性映射以將使用者配置檔從 Logto 同步到您的應用程式。',
+    col_logto_claims: 'Logto 的值',
+    col_sp_claims: '您的應用程式的值名稱',
+    add_button: '添加另一個',
   },
 };
 

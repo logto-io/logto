@@ -1,4 +1,9 @@
-import { SignInIdentifier, hookEvents, userInfoSelectFields } from '@logto/schemas';
+import {
+  OrganizationInvitationStatus,
+  SignInIdentifier,
+  hookEvents,
+  userInfoSelectFields,
+} from '@logto/schemas';
 import { pick } from '@silverhand/essentials';
 
 import { deleteUser } from '#src/api/admin-user.js';
@@ -10,7 +15,7 @@ import { SsoConnectorApi } from '#src/api/sso-connector.js';
 import { setEmailConnector, setSmsConnector } from '#src/helpers/connector.js';
 import { WebHookApiTest } from '#src/helpers/hook.js';
 import { registerWithEmail } from '#src/helpers/interactions.js';
-import { OrganizationApiTest } from '#src/helpers/organization.js';
+import { OrganizationApiTest, OrganizationInvitationApiTest } from '#src/helpers/organization.js';
 import { enableAllVerificationCodeSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { registerNewUserWithSso } from '#src/helpers/single-sign-on.js';
 import { UserApiTest } from '#src/helpers/user.js';
@@ -166,6 +171,37 @@ describe('manual data hook tests', () => {
         },
       });
 
+      await assertOrganizationMembershipUpdated(organization.id);
+    });
+  });
+
+  describe('organization membership update by accept organization invitation', () => {
+    const invitationApi = new OrganizationInvitationApiTest();
+
+    afterEach(async () => {
+      await invitationApi.cleanUp();
+    });
+
+    it('should trigger `Organization.Membership.Updated` event when user accept organization invitation', async () => {
+      const organization = await organizationApi.create({ name: generateName() });
+      const invitation = await invitationApi.create({
+        organizationId: organization.id,
+        invitee: generateEmail(),
+        expiresAt: Date.now() + 1_000_000,
+      });
+      expect(invitation.status).toBe('Pending');
+
+      const user = await userApi.create({
+        primaryEmail: invitation.invitee,
+      });
+
+      const updated = await invitationApi.updateStatus(
+        invitation.id,
+        OrganizationInvitationStatus.Accepted,
+        user.id
+      );
+
+      expect(updated.status).toBe('Accepted');
       await assertOrganizationMembershipUpdated(organization.id);
     });
   });

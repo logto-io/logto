@@ -44,6 +44,11 @@ const applications = {
       subtitle: 'تطبيق محمي بواسطة Logto',
       description: 'غير متوفر',
     },
+    saml: {
+      title: 'تطبيق SAML',
+      subtitle: 'تطبيق يُستخدم كموصل IdP لبروتوكول SAML',
+      description: 'على سبيل المثال، SAML',
+    },
     third_party: {
       title: 'تطبيق الجهة الخارجية',
       subtitle: 'تطبيق يستخدم كموصل IdP من جهة خارجية',

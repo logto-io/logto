@@ -7,6 +7,7 @@ const errors = {
   invalid_uri_format: '無效的 URI 格式',
   invalid_origin_format: '無效的 URI origin 格式',
   invalid_json_format: '無效的 JSON 格式',
+  invalid_parameters_format: '無效的參數格式',
   invalid_regex: '非法的正則表達式',
   invalid_error_message_format: '非法的錯誤訊息格式',
   required_field_missing: '請輸入{{field}}',

@@ -1,5 +1,24 @@
 # Change Log
 
+## 1.24.0
+
+### Patch Changes
+
+- @logto/cli@1.24.0
+
+## 1.23.1
+
+### Patch Changes
+
+- @logto/cli@1.23.1
+
+## 1.23.0
+
+### Patch Changes
+
+- Updated dependencies [217858950]
+  - @logto/cli@1.23.0
+
 ## 1.22.0
 
 ### Patch Changes

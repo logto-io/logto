@@ -23,12 +23,28 @@ const application = {
   saml: {
     use_saml_app_api: 'Use `[METHOD] /saml-applications(/.*)?` API to operate SAML app.',
     saml_application_only: 'The API is only available for SAML applications.',
+    reach_oss_limit: 'You CAN NOT create more SAML apps since the limit of {{limit}} is hit.',
     acs_url_binding_not_supported:
       'Only HTTP-POST binding is supported for receiving SAML assertions.',
     can_not_delete_active_secret: 'Can not delete the active secret.',
     no_active_secret: 'No active secret found.',
     entity_id_required: 'Entity ID is required to generate metadata.',
+    name_id_format_required: 'Name ID format is required.',
+    unsupported_name_id_format: 'Unsupported name ID format.',
+    missing_email_address: 'User does not have an email address.',
+    email_address_unverified: 'User email address is not verified.',
     invalid_certificate_pem_format: 'Invalid PEM certificate format',
+    acs_url_required: 'Assertion Consumer Service URL is required.',
+    private_key_required: 'Private key is required.',
+    certificate_required: 'Certificate is required.',
+    invalid_saml_request: 'Invalid SAML authentication request.',
+    auth_request_issuer_not_match:
+      'The issuer of the SAML authentication request mismatch with service provider entity ID.',
+    sp_initiated_saml_sso_session_not_found_in_cookies:
+      'Service provider initiated SAML SSO session ID not found in cookies.',
+    sp_initiated_saml_sso_session_not_found:
+      'Service provider initiated SAML SSO session not found.',
+    state_mismatch: '`state` mismatch.',
   },
 };
 

@@ -6,6 +6,7 @@ const oidc = {
   insufficient_scope: '缺少權限範圍 `{{scope}}`。',
   invalid_request: '請求無效',
   invalid_grant: '授權請求無效',
+  invalid_issuer: '無效的發行者。',
   invalid_redirect_uri: '無效返回鏈接, 該 redirect_uri 未被此應用注冊。',
   access_denied: '拒絶訪問',
   invalid_target: '請求資源無效',

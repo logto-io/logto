@@ -35,6 +35,13 @@ const user = {
   password_algorithm_required: 'مطلوب خوارزمية كلمة المرور.',
   password_and_digest: 'لا يمكنك تعيين كلمة مرور عادية ومعلومات تجزئة كلمة المرور معًا.',
   personal_access_token_name_exists: 'اسم رمز الوصول الشخصي موجود بالفعل.',
+  totp_secret_invalid: 'تم توفير سر TOTP غير صالح.',
+  wrong_backup_code_format: 'تنسيق رمز النسخ الاحتياطي غير صالح.',
+  username_required: 'اسم المستخدم هو معرف مطلوب، لا يمكنك تعيينه ليكون null.',
+  email_or_phone_required:
+    'عنوان البريد الإلكتروني أو رقم الهاتف هو معرف مطلوب، يجب تحديد واحد على الأقل.',
+  email_required: 'عنوان البريد الإلكتروني هو معرف مطلوب، لا يمكنك تعيينه ليكون null.',
+  phone_required: 'رقم الهاتف هو معرف مطلوب، لا يمكنك تعيينه ليكون null.',
 };
 
 export default Object.freeze(user);

@@ -28,12 +28,18 @@ const user = {
   missing_profile: '请于登录时提供必要的用户补充信息。',
   role_exists: '角色 ID {{roleId}} 已添加到此用户',
   invalid_role_type: '无效的角色类型，无法将机器到机器角色分配给用户。',
-  missing_mfa: '你需要在登录之前绑定额外的MFA。',
-  totp_already_in_use: 'TOTP已在使用中。',
+  missing_mfa: '你需要在登录之前绑定额外的 MFA。',
+  totp_already_in_use: 'TOTP 已在使用中。',
   backup_code_already_in_use: '备用代码已在使用中。',
   password_algorithm_required: '密码算法是必需的。',
   password_and_digest: 'You cannot set both plain text password and password digest.',
   personal_access_token_name_exists: '个人访问令牌名称已存在。',
+  totp_secret_invalid: '无效的 TOTP 密钥。',
+  wrong_backup_code_format: '备用代码格式无效。',
+  username_required: '用户名是必需的标识符，你不能将其设置为 null。',
+  email_or_phone_required: '邮箱地址或手机号码是必需的标识符，至少需要一个。',
+  email_required: '邮箱地址是必需的标识符，你不能将其设置为 null。',
+  phone_required: '手机号码是必需的标识符，你不能将其设置为 null。',
 };
 
 export default Object.freeze(user);

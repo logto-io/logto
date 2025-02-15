@@ -38,6 +38,16 @@ const user = {
   password_and_digest:
     'No puedes establecer una contraseña en texto plano y en formato resumido al mismo tiempo.',
   personal_access_token_name_exists: 'El nombre del token de acceso personal ya existe.',
+  totp_secret_invalid: 'Se proporcionó un secreto de TOTP inválido.',
+  wrong_backup_code_format: 'El formato del código de respaldo es inválido.',
+  username_required:
+    'El nombre de usuario es un identificador requerido, no puedes establecerlo como nulo.',
+  email_or_phone_required:
+    'La dirección de correo electrónico o el número de teléfono es un identificador requerido, se requiere al menos uno.',
+  email_required:
+    'La dirección de correo electrónico es un identificador requerido, no puedes establecerla como nula.',
+  phone_required:
+    'El número de teléfono es un identificador requerido, no puedes establecerlo como nulo.',
 };
 
 export default Object.freeze(user);

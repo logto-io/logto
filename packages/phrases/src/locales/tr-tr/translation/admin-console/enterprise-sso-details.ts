@@ -6,6 +6,7 @@ const enterprise_sso_details = {
     "Son kullanıcı SSO'yu etkinleştirmek için kurumsal SSO bağlayıcılarını kurun",
   tab_experience: 'SSO Deneyimi',
   tab_connection: 'Bağlantı',
+  tab_idp_initiated_auth: 'IdP başlatmalı SSO',
   general_settings_title: 'Genel',
   custom_branding_title: 'Ekran',
   custom_branding_description:
@@ -75,6 +76,47 @@ const enterprise_sso_details = {
     jwks_uri: 'JSON web anahtarı kümesi son noktası',
     issuer: 'Deyici',
   },
+  idp_initiated_auth_config: {
+    card_title: 'IdP başlatmalı SSO',
+    card_description:
+      'Kullanıcılar genellikle SP başlatmalı SSO akışı kullanarak uygulamanızdan kimlik doğrulama sürecine başlar. Bu özelliği yalnızca kesinlikle gerekli olduğunda etkinleştirin.',
+    enable_idp_initiated_sso: "IdP başlatmalı SSO'yu etkinleştir",
+    enable_idp_initiated_sso_description:
+      'Kurumsal kullanıcıların kimlik sağlayıcı portalından kimlik doğrulama sürecine doğrudan başlamalarına izin verin. Bu özelliği etkinleştirmeden önce olası güvenlik risklerini anlayın.',
+    default_application: 'Varsayılan uygulama',
+    default_application_tooltip:
+      'Kullanıcının kimlik doğrulama sonrası yönlendirileceği hedef uygulama.',
+    empty_applications_error:
+      '<a>Uygulamalar</a> bölümünde hiçbir uygulama bulunamadı. Lütfen bir tane ekleyin.',
+    empty_applications_placeholder: 'Uygulama yok',
+    authentication_type: 'Kimlik doğrulama türü',
+    auto_authentication_disabled_title: 'SP başlatmalı SSO için istemciye yönlendir',
+    auto_authentication_disabled_description:
+      'Önerilir. CSRF saldırılarını önlemek için kullanıcıları SP başlatmalı OIDC kimlik doğrulamasını başlatmak üzere istemci tarafı uygulamaya yönlendirin.',
+    auto_authentication_enabled_title: 'IdP başlatmalı SSO kullanarak doğrudan oturum açın',
+    auto_authentication_enabled_description:
+      "Başarılı bir oturum açmanın ardından, kullanıcılar belirtilen Yönlendirme URI'sine yetkilendirme kodu ile yönlendirilecektir (Durum ve PKCE doğrulaması olmadan).",
+    auto_authentication_disabled_app:
+      'Geleneksel web uygulamaları, tek sayfa uygulamaları (SPA) için',
+    auto_authentication_enabled_app: 'Geleneksel web uygulamaları için',
+    idp_initiated_auth_callback_uri: "İstemci geri çağırma URI'si",
+    idp_initiated_auth_callback_uri_tooltip:
+      "SP başlatmalı SSO kimlik doğrulama akışını başlatmak için istemci geri çağırma URI'si. Bir ssoConnectorId sorgu parametresi olarak URI'ye eklenecektir. (Örneğin, https://your.domain/sso/callback?connectorId={{ssoConnectorId}})",
+    redirect_uri: "Oturum sonrası yönlendirme URI'si",
+    redirect_uri_tooltip:
+      "Başarılı oturum açmadan sonra kullanıcıları yönlendirmek için kullanılacak yönlendirme URI'si. Logto, bu URI'yi yetkilendirme isteğinde OIDC yönlendirme URI'si olarak kullanacaktır. Daha iyi güvenlik için IdP başlatmalı SSO kimlik doğrulama akışı için özel bir URI kullanın.",
+    empty_redirect_uris_error:
+      "Uygulama için kayıtlı hiçbir yönlendirme URI'si bulunamadı. Lütfen önce bir tane ekleyin.",
+    redirect_uri_placeholder: "Oturum sonrası yönlendirme URI'sini seçin",
+    auth_params: 'Ek kimlik doğrulama parametreleri',
+    auth_params_tooltip:
+      'Yetkilendirme isteğine eklenmesi gereken ek parametreler. Varsayılan olarak yalnızca (openid profile) kapsamları istenecek olup, burada ek kapsamlar veya özel bir durum değeri belirtebilirsiniz. (Örneğin, { "scope": "organizations email", "state": "secret_state" }).',
+  },
+  trust_unverified_email: 'Doğrulanmamış e-postaya güven',
+  trust_unverified_email_label:
+    'Kimlik sağlayıcıdan dönen doğrulanmamış e-posta adreslerine her zaman güven',
+  trust_unverified_email_tip:
+    "Entra ID (OIDC) bağlayıcısı `email_verified` bilgisini döndürmez, bu da Azure'dan alınan e-posta adreslerinin doğrulandığının garanti edilmediği anlamına gelir. Varsayılan olarak, Logto doğrulanmamış e-posta adreslerini kullanıcı profiline senkronize etmeyecektir. Bu seçeneği yalnızca Entra ID dizininden gelen tüm e-posta adreslerine güveniyorsanız etkinleştirin.",
 };
 
 export default Object.freeze(enterprise_sso_details);

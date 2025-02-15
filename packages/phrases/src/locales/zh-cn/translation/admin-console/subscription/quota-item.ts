@@ -171,6 +171,19 @@ const quota_item = {
     unlimited: '自定义 UI',
     not_eligible: '移除你的自定义 UI 资产',
   },
+  idp_initiated_sso_enabled: {
+    name: 'IDP 启动的 SSO',
+    limited: 'IDP 启动的 SSO',
+    unlimited: 'IDP 启动的 SSO',
+    not_eligible: '不允许 IDP 启动的 SSO',
+  },
+  saml_applications_limit: {
+    name: 'SAML 应用',
+    limited: '{{count, number}} SAML 应用',
+    limited_other: '{{count, number}} SAML 应用',
+    unlimited: '无限制 SAML 应用',
+    not_eligible: '移除你的 SAML 应用',
+  },
 };
 
 export default Object.freeze(quota_item);

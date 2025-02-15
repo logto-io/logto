@@ -6,6 +6,7 @@ const oidc = {
   insufficient_scope: 'Token nie zawiera zakresu `{{scope}}`.',
   invalid_request: 'Żądanie jest nieprawidłowe.',
   invalid_grant: 'Żądanie przyznania jest nieprawidłowe.',
+  invalid_issuer: 'Nieprawidłowy wydawca.',
   invalid_redirect_uri:
     'Adres URL `redirect_uri` nie pasuje do zarejestrowanych przez klienta `redirect_uris`.',
   access_denied: 'Odmowa dostępu.',

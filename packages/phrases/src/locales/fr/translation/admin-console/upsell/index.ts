@@ -25,6 +25,11 @@ const upsell = {
       'Votre MAU actuel a dépassé la limite de <planName/>. Veuillez mettre à niveau votre plan pour passer à la version premium rapidement et éviter la suspension du service Logto.',
     update_plan: 'Mettre à jour le plan',
   },
+  token_exceeded_modal: {
+    title: "L'utilisation de jetons a dépassé la limite. Mettez à niveau votre plan.",
+    notification:
+      "Vous avez dépassé la limite d'utilisation des jetons de <planName/>. Les utilisateurs ne pourront pas accéder correctement au service Logto. Veuillez mettre à niveau votre plan vers la version premium rapidement pour éviter tout inconvénient.",
+  },
   payment_overdue_modal: {
     title: 'Paiement de facture en retard',
     notification:

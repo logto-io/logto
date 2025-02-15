@@ -35,6 +35,9 @@ const mockLibraries = {
     deleteDomain,
   },
   quota: createMockQuotaLibrary(),
+  samlApplications: {
+    syncCustomDomainToSamlApplicationRedirectUrls: jest.fn(),
+  },
 };
 
 const tenantContext = new MockTenant(undefined, { domains }, undefined, mockLibraries);

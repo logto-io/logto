@@ -61,9 +61,9 @@ const usage = {
   tokens: {
     title: 'Tokens',
     tooltip:
-      'Add-on feature priced at ${{price, number}} per million tokens. The first 1 million tokens is included.',
+      'Add-on feature priced at ${{price, number}} per {{tokenLimit}} tokens. The first {{basicQuota}} tokens is included.',
     tooltip_for_enterprise:
-      'The first {{basicQuota}} tokens is included and free to use in your contract-based plan. If you need more, ${{price, number}} per million tokens per month.',
+      'The first {{basicQuota}} tokens is included and free to use in your contract-based plan. If you need more, ${{price, number}} per {{tokenLimit}} tokens per month.',
   },
   hooks: {
     title: 'Hooks',

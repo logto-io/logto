@@ -8,6 +8,7 @@ const auth = {
   jwt_sub_missing: '`sub` fehlt in JWT.',
   require_re_authentication:
     'Zur Durchführung einer geschützten Aktion ist eine erneute Authentifizierung erforderlich.',
+  exceed_token_limit: 'Token-Limit überschritten. Bitte kontaktiere deinen Administrator.',
 };
 
 export default Object.freeze(auth);

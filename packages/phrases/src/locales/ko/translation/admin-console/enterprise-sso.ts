@@ -27,6 +27,11 @@ const enterprise_sso = {
     saml: {
       acs_url_field_name: '단언 소비자 서비스 URL (응답 URL)',
       audience_uri_field_name: '대상 URI (SP 엔터티 ID)',
+      entity_id_field_name: '서비스 제공자 (SP) 엔터티 ID',
+      entity_id_field_tooltip:
+        'SP 엔터티 ID는 URI 형식이나 URL 형식을 식별자로 사용하는 것이 일반적이지만, 반드시 그런 것은 아닙니다.',
+      acs_url_field_placeholder: 'https://your-domain.com/api/saml/callback',
+      entity_id_field_placeholder: 'urn:your-domain.com:sp:saml:{serviceProviderId}',
     },
     oidc: {
       redirect_uri_field_name: '리디렉션 URI (콜백 URL)',

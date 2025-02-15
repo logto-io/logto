@@ -5,6 +5,7 @@ const enterprise_sso_details = {
   readme_drawer_subtitle: '設置企業SSO連接器以啟用終端用戶SSO',
   tab_experience: 'SSO體驗',
   tab_connection: '連接',
+  tab_idp_initiated_auth: 'IdP 發起的 SSO',
   general_settings_title: '一般',
   custom_branding_title: '顯示',
   custom_branding_description:
@@ -35,7 +36,7 @@ const enterprise_sso_details = {
   check_connection_guide: '連接指南',
   enterprise_sso_deleted: '企業SSO連接器已成功刪除',
   delete_confirm_modal_title: '刪除企業SSO連接器',
-  delete_confirm_modal_content: '您確定要刪除此企業連接器嗎？ 身份提供者的用戶將無法使用單點登錄。',
+  delete_confirm_modal_content: '你確定要刪除此企業連接器嗎？ 身份提供者的用戶將無法使用單點登錄。',
   upload_idp_metadata_title_saml: '上傳元數據',
   upload_idp_metadata_description_saml: '配置從身份提供者複製的元數據。',
   upload_idp_metadata_title_oidc: '上傳憑證',
@@ -67,6 +68,42 @@ const enterprise_sso_details = {
     jwks_uri: 'JSON Web鍵集端點',
     issuer: '發行者',
   },
+  idp_initiated_auth_config: {
+    card_title: 'IdP 發起的 SSO',
+    card_description:
+      '用戶通常會通過 SP 發起的 SSO 流程從你的應用開始身份驗證流程。除非絕對必要，否則不要啟用此功能。',
+    enable_idp_initiated_sso: '啟用 IdP 發起的 SSO',
+    enable_idp_initiated_sso_description:
+      '允許企業用戶直接從身份提供者的門戶開始身份驗證流程。在啟用此功能之前，請了解潛在的安全風險。',
+    default_application: '默認應用程序',
+    default_application_tooltip: '身份驗證後用戶將被重定向到的目標應用程序。',
+    empty_applications_error: '未找到應用程序。 請在<a>應用程序</a>部分添加一個。',
+    empty_applications_placeholder: '沒有應用程序',
+    authentication_type: '身份驗證類型',
+    auto_authentication_disabled_title: '將用戶重定向至客戶端以進行 SP 發起的 SSO',
+    auto_authentication_disabled_description:
+      '推薦。將用戶重定向至客戶端應用程序以啟動安全的 SP 發起的 OIDC 身份驗證。這將防止 CSRF 攻擊。',
+    auto_authentication_enabled_title: '使用 IdP 發起的 SSO 直接登錄',
+    auto_authentication_enabled_description:
+      '成功登錄後，用戶將被重定向到指定的重定向 URI 並附帶授權代碼（無狀態和 PKCE 驗證）。',
+    auto_authentication_disabled_app: '針對傳統 Web 應用或單頁應用 (SPA)',
+    auto_authentication_enabled_app: '針對傳統 Web 應用',
+    idp_initiated_auth_callback_uri: '客戶端回調 URI',
+    idp_initiated_auth_callback_uri_tooltip:
+      '客戶端回調 URI 來啟動 SP 發起的 SSO 身份驗證流程。一個 ssoConnectorId 會被附加到 URI 作為查詢參數。（例如，https://your.domain/sso/callback?connectorId={{ssoConnectorId}}）',
+    redirect_uri: '登錄後重定向 URI',
+    redirect_uri_tooltip:
+      '在成功登錄後重定向用戶的 URI。Logto 將使用此 URI 作為授權請求中的 OIDC 重定向 URI。為 IdP 發起的 SSO 身份驗證流程使用專用 URI 以提高安全性。',
+    empty_redirect_uris_error: '該應用程序尚未註冊重定向 URI。請先添加一個。',
+    redirect_uri_placeholder: '選擇登錄後重定向的 URI',
+    auth_params: '附加身份驗證參數',
+    auth_params_tooltip:
+      '授權請求中要傳遞的額外參數。預設情況下只會請求 (openid profile) 範圍，你可以在這裡指定額外範圍或一個專屬的狀態值。（例如，{ "scope": "organizations email", "state": "secret_state" }）',
+  },
+  trust_unverified_email: '信任未驗證的電子郵件',
+  trust_unverified_email_label: '始終信任身份提供者返回的未驗證電子郵件地址',
+  trust_unverified_email_tip:
+    'Entra ID（OIDC）連接器不返回 `email_verified` 聲明，這意味著來自 Azure 的電子郵件地址無法保證已被驗證。預設情況下，Logto 不會將未驗證的電子郵件地址同步到用戶配置文件。只有在你信任來自 Entra ID 目錄的所有電子郵件地址時才啟用此選項。',
 };
 
 export default Object.freeze(enterprise_sso_details);

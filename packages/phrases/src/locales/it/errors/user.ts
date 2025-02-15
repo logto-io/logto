@@ -36,6 +36,14 @@ const user = {
   password_algorithm_required: "L'algoritmo della password è richiesto.",
   password_and_digest: 'Non puoi impostare sia la password in chiaro che il digest della password.',
   personal_access_token_name_exists: 'Il nome del token di accesso personale esiste già.',
+  totp_secret_invalid: 'Segreto TOTP fornito non valido.',
+  wrong_backup_code_format: 'Il formato del codice di backup è non valido.',
+  username_required: 'Il nome utente è un identificatore richiesto, non puoi impostarlo su null.',
+  email_or_phone_required:
+    "L'indirizzo email o il numero di telefono è un identificatore richiesto, ne è richiesto almeno uno.",
+  email_required: "L'indirizzo email è un identificatore richiesto, non puoi impostarlo su null.",
+  phone_required:
+    'Il numero di telefono è un identificatore richiesto, non puoi impostarlo su null.',
 };
 
 export default Object.freeze(user);

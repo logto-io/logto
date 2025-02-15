@@ -72,6 +72,9 @@ const sign_up_and_sign_in = {
     enable_user_registration: "Activer l'inscription des utilisateurs",
     enable_user_registration_description:
       "Activer ou interdire l'inscription des utilisateurs. Une fois désactivée, les utilisateurs peuvent toujours être ajoutés à la console d'administration mais ne peuvent plus créer de compte via l'interface de connexion.",
+    unknown_session_redirect_url: 'URL de redirection de session inconnue',
+    unknown_session_redirect_url_tip:
+      "Parfois, Logto peut ne pas reconnaître la session d’un utilisateur sur la page de connexion, comme lorsque la session expire ou que l’utilisateur met en signet ou partage le lien de connexion. Par défaut, une erreur 404 de “session inconnue” apparaît. Pour améliorer l'expérience utilisateur, définissez une URL de secours pour rediriger les utilisateurs vers votre application et redémarrer l'authentification.",
   },
 };
 

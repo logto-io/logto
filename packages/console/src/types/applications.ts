@@ -10,6 +10,7 @@ export const applicationTypeI18nKey = Object.freeze({
   [ApplicationType.Traditional]: 'applications.type.traditional',
   [ApplicationType.MachineToMachine]: 'applications.type.machine_to_machine',
   [ApplicationType.Protected]: 'applications.type.protected',
+  [ApplicationType.SAML]: 'applications.type.saml',
   thirdParty: 'applications.type.third_party',
 } as const);
 
@@ -24,6 +25,7 @@ export const allAppGuideCategories = Object.freeze([
   'Native',
   'Protected',
   'MachineToMachine',
+  'SAML',
   thirdPartyAppCategory,
 ] as const);
 

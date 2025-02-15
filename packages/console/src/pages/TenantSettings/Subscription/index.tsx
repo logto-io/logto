@@ -1,7 +1,9 @@
+import { type ResponseError } from '@withtyped/client';
 import { useContext, useEffect } from 'react';
 import useSWR from 'swr';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
+import { type TenantUsageAddOnSkus, type NewSubscriptionPeriodicUsage } from '@/cloud/types/router';
 import PageMeta from '@/components/PageMeta';
 import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
@@ -23,13 +25,26 @@ function Subscription() {
 
   const reservedSkus = pickupFeaturedLogtoSkus(logtoSkus);
 
-  const { data: periodicUsage, isLoading } = useSWR(
-    isCloud && `/api/tenants/${currentTenantId}/subscription/periodic-usage`,
-    async () =>
-      cloudApi.get(`/api/tenants/:tenantId/subscription/periodic-usage`, {
-        params: { tenantId: currentTenantId },
-      })
+  const { data: periodicUsage, error: periodicUsageError } = useSWR<
+    NewSubscriptionPeriodicUsage,
+    ResponseError
+  >(isCloud && `/api/tenants/${currentTenantId}/subscription/periodic-usage`, async () =>
+    cloudApi.get(`/api/tenants/:tenantId/subscription/periodic-usage`, {
+      params: { tenantId: currentTenantId },
+    })
   );
+
+  const { data: usageAddOnSkus, error: usageAddOnSkusError } = useSWR<
+    TenantUsageAddOnSkus,
+    ResponseError
+  >(isCloud && `/api/tenants/${currentTenantId}/add-on-skus`, async () =>
+    cloudApi.get(`/api/tenants/:tenantId/subscription/add-on-skus`, {
+      params: { tenantId: currentTenantId },
+    })
+  );
+
+  const isLoading =
+    (!periodicUsage && !periodicUsageError) || (!usageAddOnSkus && !usageAddOnSkusError);
 
   useEffect(() => {
     if (isCloud) {
@@ -55,7 +70,7 @@ function Subscription() {
   return (
     <div className={styles.container}>
       <PageMeta titleKey={['tenants.tabs.subscription', 'tenants.title']} />
-      <CurrentPlan periodicUsage={periodicUsage} />
+      <CurrentPlan periodicUsage={periodicUsage} usageAddOnSkus={usageAddOnSkus} />
       <PlanComparisonTable />
       <SwitchPlanActionBar
         currentSkuId={currentSku.id}

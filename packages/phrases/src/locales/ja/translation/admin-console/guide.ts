@@ -9,6 +9,7 @@ const guide = {
     MachineToMachine: 'Machine-to-machine',
     Protected: '非SDK統合',
     ThirdParty: 'サードパーティーアプリ',
+    SAML: 'SAML アプリ',
   },
   filter: {
     title: 'フレームワークを絞り込む',

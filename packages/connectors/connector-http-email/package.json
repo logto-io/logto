@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-http-email",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Email connector to send email via HTTP call.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {
@@ -55,7 +55,7 @@
     "@silverhand/ts-config": "6.0.0",
     "@types/node": "^20.11.20",
     "@types/supertest": "^6.0.2",
-    "@vitest/coverage-v8": "^2.1.8",
+    "@vitest/coverage-v8": "^2.1.9",
     "eslint": "^8.56.0",
     "lint-staged": "^15.0.2",
     "nock": "^13.3.1",
@@ -63,6 +63,6 @@
     "supertest": "^7.0.0",
     "tsup": "^8.3.0",
     "typescript": "^5.5.3",
-    "vitest": "^2.1.8"
+    "vitest": "^2.1.9"
   }
 }

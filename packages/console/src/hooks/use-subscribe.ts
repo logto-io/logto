@@ -64,7 +64,6 @@ const useSubscribe = () => {
       const { redirectUri, sessionId } = await cloudApi.post('/api/checkout-session', {
         body: {
           skuId,
-          planId,
           successCallbackUrl,
           tenantId,
           tenantName: tenantData?.name,

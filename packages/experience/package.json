@@ -1,6 +1,6 @@
 {
   "name": "@logto/experience",
-  "version": "1.10.0",
+  "version": "1.11.1",
   "license": "MPL-2.0",
   "type": "module",
   "private": true,
@@ -22,11 +22,11 @@
   "devDependencies": {
     "@jest/types": "^29.5.0",
     "@logto/connector-kit": "workspace:^4.1.0",
-    "@logto/core-kit": "workspace:^2.5.0",
+    "@logto/core-kit": "workspace:^2.5.2",
     "@logto/language-kit": "workspace:^1.1.0",
-    "@logto/phrases": "workspace:^1.15.0",
+    "@logto/phrases": "workspace:^1.16.0",
     "@logto/phrases-experience": "workspace:^1.9.0",
-    "@logto/schemas": "workspace:^1.22.0",
+    "@logto/schemas": "workspace:^1.23.1",
     "@react-spring/shared": "^9.6.1",
     "@react-spring/web": "^9.6.1",
     "@silverhand/eslint-config": "6.0.1",
@@ -85,7 +85,7 @@
     "tiny-cookie": "^2.4.1",
     "typescript": "^5.5.3",
     "use-debounced-loader": "^0.1.1",
-    "vite": "^6.0.3",
+    "vite": "^6.0.9",
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-svgr": "^4.3.0"
   },

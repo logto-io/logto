@@ -28,7 +28,12 @@ const enterprise_sso = {
       'Crea una nueva integración de aplicación mediante SAML 2.0 en tu proveedor de identidad {{name}}. Luego pega el siguiente valor en él.',
     saml: {
       acs_url_field_name: 'URL de servicio de consumidor de aserciones (URL de respuesta)',
-      audience_uri_field_name: 'URI del público (ID del SP entidad)',
+      audience_uri_field_name: 'URI del público objetivo (ID de entidad del SP)',
+      entity_id_field_name: 'ID de entidad del proveedor de servicios (SP)',
+      entity_id_field_tooltip:
+        'El ID de entidad del SP puede estar en cualquier formato de cadena, generalmente utilizando un formato de URI o un formato de URL como identificador, pero no es obligatorio.',
+      acs_url_field_placeholder: 'https://tu-dominio.com/api/saml/callback',
+      entity_id_field_placeholder: 'urn:tu-dominio.com:sp:saml:{serviceProviderId}',
     },
     oidc: {
       redirect_uri_field_name: 'URI de redireccionamiento (URL de devolución de llamada)',

@@ -37,6 +37,14 @@ const user = {
   password_and_digest:
     'Nie możesz ustawić zarówno hasła w postaci tekstu jawnego, jak i skrótu hasła.',
   personal_access_token_name_exists: 'Nazwa osobistego tokenu dostępu już istnieje.',
+  totp_secret_invalid: 'Podano nieprawidłowy sekret TOTP.',
+  wrong_backup_code_format: 'Format kodu zapasowego jest nieprawidłowy.',
+  username_required:
+    'Nazwa użytkownika jest wymagana jako identyfikator, nie możesz ustawić jej jako null.',
+  email_or_phone_required:
+    'Adres email lub numer telefonu jest wymaganym identyfikatorem, co najmniej jeden z nich jest wymagany.',
+  email_required: 'Adres email jest wymaganym identyfikatorem, nie możesz ustawić go jako null.',
+  phone_required: 'Numer telefonu jest wymaganym identyfikatorem, nie możesz ustawić go jako null.',
 };
 
 export default Object.freeze(user);

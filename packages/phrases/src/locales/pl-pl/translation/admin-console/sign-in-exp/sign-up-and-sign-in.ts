@@ -69,6 +69,9 @@ const sign_up_and_sign_in = {
     enable_user_registration: 'Włącz rejestrację użytkowników',
     enable_user_registration_description:
       'Włącz lub wyłącz rejestrację użytkowników. Po wyłączeniu użytkownicy nadal mogą być dodawani w konsoli administratora, ale nie mogą już zakładać kont za pomocą interfejsu logowania.',
+    unknown_session_redirect_url: 'Nieznany URL przekierowania sesji',
+    unknown_session_redirect_url_tip:
+      'Czasami Logto może nie rozpoznać sesji użytkownika na stronie logowania, na przykład gdy sesja wygasa lub użytkownik dodaje stronę logowania do zakładek lub udostępnia link do logowania. Domyślnie pojawia się błąd 404 „nieznana sesja”. Aby poprawić doświadczenia użytkowników, ustaw domyślny URL na przekierowanie użytkowników z powrotem do Twojej aplikacji i ponowne rozpoczęcie uwierzytelniania.',
   },
 };
 

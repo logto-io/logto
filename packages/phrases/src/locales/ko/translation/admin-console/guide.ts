@@ -9,6 +9,7 @@ const guide = {
     MachineToMachine: '기계 간 통신',
     Protected: 'SDK 통합이 없는 보호',
     ThirdParty: '타사 앱',
+    SAML: 'SAML 앱',
   },
   filter: {
     title: '프레임워크 필터',

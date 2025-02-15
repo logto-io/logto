@@ -25,10 +25,15 @@ const upsell = {
       '您當前的 MAU 已超過<planName/>的限制。請立即升級到高級計劃，以避免 Logto 服務的暫停。',
     update_plan: '更新計劃',
   },
+  token_exceeded_modal: {
+    title: 'Token 使用超出限制。請升級您的計劃。',
+    notification:
+      '你已超出<planName/>的 Token 使用限制。用戶將無法正常訪問 Logto 服務。請及時升級你的計劃至高級，以避免任何不便。',
+  },
   payment_overdue_modal: {
     title: '賬單逾期未付',
     notification:
-      '糟糕！租戶<span>{{name}}</span>的賬單支付失敗。請儘快支付賬單，以避免Logto服務中止。',
+      '糟糕！租戶<span>{{name}}</span>的賬單支付失敗。請儘快支付賬單，以避免 Logto 服務中止。',
     unpaid_bills: '未付賬單',
     update_payment: '更新支付',
   },
@@ -39,7 +44,7 @@ const upsell = {
     tenant_member: '租戶成員',
   },
   charge_notification_for_quota_limit:
-    '您已超出{{item}}配額限制。Logto將為超出配額限制的使用添加費用。計費將從新的附加定價設計發布當天開始。 <a>了解更多</a>',
+    '您已超出{{item}}配額限制。Logto 將為超出配額限制的使用添加費用。計費將從新的附加定價設計發布當天開始。 <a>了解更多</a>',
   paywall,
   featured_plan_content,
   add_on,

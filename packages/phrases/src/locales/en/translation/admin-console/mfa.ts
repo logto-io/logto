@@ -28,6 +28,15 @@ const mfa = {
   mandatory: 'Users are always required to use MFA at sign-in',
   mandatory_tip:
     'Users must set up MFA the first time at sign-in or sign-up, and use it for all future sign-ins.',
+  require_mfa: 'Require MFA',
+  require_mfa_label:
+    'Enable this to make 2-step verification mandatory for accessing your applications. If disabled, users can decide whether to enable MFA for themselves.',
+  set_up_prompt: 'MFA set-up prompt',
+  no_prompt: 'Do not ask users to set up MFA',
+  prompt_at_sign_in_and_sign_up:
+    'Ask users to set up MFA during registration (skippable, one-time prompt)',
+  prompt_only_at_sign_in:
+    'Ask users to set up MFA on their next sign-in attempt after registration (skippable, one-time prompt)',
 };
 
 export default Object.freeze(mfa);

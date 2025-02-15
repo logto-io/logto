@@ -7,6 +7,7 @@ import {
   type interaction,
   type LogKeyUnknown,
   type jwtCustomizer,
+  type saml,
 } from '@logto/schemas';
 import { conditional, conditionalArray } from '@silverhand/essentials';
 import { sql } from '@silverhand/slonik';
@@ -24,6 +25,7 @@ export type AllowedKeyPrefix =
   | token.Type
   | interaction.Prefix
   | jwtCustomizer.Prefix
+  | saml.Prefix
   | typeof LogKeyUnknown;
 
 type LogCondition = {

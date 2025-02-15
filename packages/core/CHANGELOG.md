@@ -1,5 +1,87 @@
 # Change Log
 
+## 1.24.0
+
+### Minor Changes
+
+- 1337669e1: add support on SAML applications
+
+  Logto now supports acting as a SAML identity provider (IdP), enabling enterprise users to achieve secure Single Sign-On (SSO) through the standardized SAML protocol. Key features include:
+
+  - Full support for SAML 2.0 protocol
+  - Flexible attribute mapping configuration
+  - Metadata auto-configuration support
+  - Enterprise-grade encryption and signing
+
+  [View full documentation](https://docs.logto.io/integrate-logto/saml-app) for more details.
+
+### Patch Changes
+
+- bf2d3007c: fix(core): trigger the `Organization.Membership.Updated` webhook when a user accepts an invitation and join an organization.
+
+  Added a new `Organization.Membership.Accepted` webhook event in the `PUT /api/organization-invitations/{id}/status` endpoint. This event will be triggered when the organization-invitation status is updated to `accepted`, and user is added to the organization.
+
+- Updated dependencies [1337669e1]
+  - @logto/console@1.21.0
+  - @logto/phrases@1.17.0
+  - @logto/schemas@1.24.0
+  - @logto/cli@1.24.0
+
+## 1.23.1
+
+### Patch Changes
+
+- 39cef8ea4: support custom endpoint and addressing style for S3
+- Updated dependencies [d2468683c]
+  - @logto/experience@1.11.1
+  - @logto/schemas@1.23.1
+  - @logto/cli@1.23.1
+
+## 1.23.0
+
+### Minor Changes
+
+- f1b1d9e95: new MFA prompt policy
+
+  You can now cutomize the MFA prompt policy in the Console.
+
+  First, choose if you want to enable **Require MFA**:
+
+  - **Enable**: Users will be prompted to set up MFA during the sign-in process which cannot be skipped. If the user fails to set up MFA or deletes their MFA settings, they will be locked out of their account until they set up MFA again.
+  - **Disable**: Users can skip the MFA setup process during sign-up flow.
+
+  If you choose to **Disable**, you can choose the MFA setup prompt:
+
+  - Do not ask users to set up MFA.
+  - Ask users to set up MFA during registration (skippable, one-time prompt). **The same prompt as previous policy (UserControlled)**
+  - Ask users to set up MFA on their sign-in after registration (skippable, one-time prompt)
+
+### Patch Changes
+
+- 239b81e31: loose redirect uri restrictions
+
+  Logto has been following the industry best practices for OAuth2.0 and OIDC from the start. However, in the real world, there are things we cannot control, like third-party services or operation systems like Windows.
+
+  This update relaxes restrictions on redirect URIs to allow the following:
+
+  1. A mix of native and HTTP(S) redirect URIs. For example, a native app can now use a redirect URI like `https://example.com`.
+  2. Native schemes without a period (`.`). For example, `myapp://callback` is now allowed.
+
+  When such URIs are configured, Logto Console will display a prominent warning. This change is backward-compatible and will not affect existing applications.
+
+  We hope this change will make it easier for you to integrate Logto with your applications.
+
+- Updated dependencies [217858950]
+- Updated dependencies [f1b1d9e95]
+- Updated dependencies [239b81e31]
+  - @logto/cli@1.23.0
+  - @logto/experience-legacy@1.11.0
+  - @logto/experience@1.11.0
+  - @logto/console@1.20.0
+  - @logto/phrases@1.16.0
+  - @logto/schemas@1.23.0
+  - @logto/core-kit@2.5.2
+
 ## 1.22.0
 
 ### Minor Changes

@@ -41,6 +41,8 @@ const application_details = {
   redirect_uri_placeholder_native: 'io.logto://callback',
   redirect_uri_tip:
     'Il URI di reindirizzamento dopo il login di un utente (sia riuscito che non). Vedi OpenID Connect autenticazione richiesta per ulteriori informazioni.',
+  mixed_redirect_uri_warning:
+    'Il tuo tipo di applicazione non è compatibile con almeno uno degli URI di reindirizzamento. Non segue le migliori pratiche e consigliamo vivamente di mantenere gli URI di reindirizzamento coerenti.',
   post_sign_out_redirect_uri: 'URI di reindirizzamento post disconnessione',
   post_sign_out_redirect_uris: 'URI di reindirizzamento post disconnessione',
   post_sign_out_redirect_uri_placeholder: 'https://your.website.com/home',
@@ -64,6 +66,8 @@ const application_details = {
   rotate_refresh_token: 'Ruota token di aggiornamento',
   rotate_refresh_token_label:
     'Quando abilitato, Logto emetterà un nuovo token di aggiornamento per le richieste di token quando è passato il 70% del Tempo di vita (TTL) originale o sono soddisfatte determinate condizioni. <a>Ulteriori informazioni</a>',
+  rotate_refresh_token_label_for_public_clients:
+    'Quando abilitato, Logto emetterà un nuovo token di aggiornamento per ogni richiesta di token. <a>Ulteriori informazioni</a>',
   backchannel_logout: 'Logout backchannel',
   backchannel_logout_description:
     'Configura l’endpoint di logout backchannel OpenID Connect e se la sessione è richiesta per questa applicazione.',
@@ -179,6 +183,9 @@ const application_details = {
     create_new_secret: 'Crea nuovo segreto',
     delete_confirmation:
       'Questa azione non può essere annullata. Sei sicuro di voler eliminare questo segreto?',
+    deleted: 'Il segreto è stato eliminato con successo.',
+    activated: 'Il segreto è stato attivato con successo.',
+    deactivated: 'Il segreto è stato disattivato con successo.',
     legacy_secret: 'Segreto legacy',
     expired: 'Scaduto',
     expired_tooltip: 'Questo segreto è scaduto il {{date}}.',
@@ -190,12 +197,67 @@ const application_details = {
         'Il segreto non scadrà mai. Si consiglia di impostare una data di scadenza per una maggiore sicurezza.',
       days: '{{count}} giorno',
       days_other: '{{count}} giorni',
+      years: '{{count}} anno',
+      years_other: '{{count}} anni',
       created: 'Il segreto {{name}} è stato creato con successo.',
     },
     edit_modal: {
       title: "Modifica segreto dell'applicazione",
       edited: 'Il segreto {{name}} è stato modificato con successo.',
     },
+  },
+  saml_idp_config: {
+    title: 'Metadati SAML IdP',
+    description:
+      'Usa i seguenti metadati e certificato per configurare il SAML IdP nella tua applicazione.',
+    metadata_url_label: 'URL metadati IdP',
+    single_sign_on_service_url_label: 'URL servizio single sign-on',
+    idp_entity_id_label: 'ID entità IdP',
+  },
+  saml_idp_certificates: {
+    title: 'Certificato di firma SAML',
+    expires_at: 'Scade il',
+    finger_print: 'Impronta digitale',
+    status: 'Stato',
+    active: 'Attivo',
+    inactive: 'Inattivo',
+  },
+  saml_idp_name_id_format: {
+    title: 'Formato Name ID',
+    description: 'Seleziona il formato Name ID del SAML IdP.',
+    persistent: 'Persistente',
+    persistent_description: "Usa l'ID utente Logto come Name ID",
+    transient: 'Transitorio',
+    transient_description: 'Usa un ID utente una tantum come Name ID',
+    unspecified: 'Non specificato',
+    unspecified_description: "Usa l'ID utente Logto come Name ID",
+    email_address: 'Indirizzo email',
+    email_address_description: "Usa l'indirizzo email come Name ID",
+  },
+  saml_encryption_config: {
+    encrypt_assertion: 'Cifra dichiarazione SAML',
+    encrypt_assertion_description:
+      'Abilitando questa opzione, la dichiarazione SAML verrà cifrata.',
+    encrypt_then_sign: 'Cifra poi firma',
+    encrypt_then_sign_description:
+      'Abilitando questa opzione, la dichiarazione SAML verrà cifrata e poi firmata; altrimenti, sarà firmata e poi cifrata.',
+    certificate: 'Certificato',
+    certificate_tooltip:
+      'Copia e incolla il certificato x509 ottenuto dal tuo provider di servizi per cifrare la dichiarazione SAML.',
+    certificate_placeholder:
+      '-----BEGIN CERTIFICATE-----\nMIICYDCCAcmgAwIBA...\n-----END CERTIFICATE-----\n',
+    certificate_missing_error: 'Il certificato è necessario.',
+    certificate_invalid_format_error:
+      'Rilevato formato certificato non valido. Controlla il formato del certificato e riprova.',
+  },
+  saml_app_attribute_mapping: {
+    name: 'Mappatura degli attributi',
+    title: 'Mappatura degli attributi di base',
+    description:
+      'Aggiungi mappature di attributi per sincronizzare il profilo utente da Logto alla tua applicazione.',
+    col_logto_claims: 'Valore di Logto',
+    col_sp_claims: 'Nome valore della tua applicazione',
+    add_button: 'Aggiungi un altro',
   },
 };
 

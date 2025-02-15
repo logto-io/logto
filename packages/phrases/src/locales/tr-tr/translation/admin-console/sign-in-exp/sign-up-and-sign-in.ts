@@ -68,6 +68,9 @@ const sign_up_and_sign_in = {
     enable_user_registration: 'Kullanıcı Kaydını Etkinleştir',
     enable_user_registration_description:
       'Kullanıcı kaydını etkinleştir veya devre dışı bırak. Devre dışı bırakıldığında, kullanıcılar yönetici konsolunda hala eklenilebilir, ancak kullanıcılar artık oturum açma arayüzü üzerinden hesap oluşturamaz.',
+    unknown_session_redirect_url: "Bilinmeyen oturum yönlendirme URL'si",
+    unknown_session_redirect_url_tip:
+      "Bazen oturumun süresi dolduğunda veya kullanıcı oturum açma bağlantısını yer imlerine eklediğinde ya da paylaştığında Logto, kullanıcının oturumunu oturum açma sayfasında tanımayabilir. Varsayılan olarak, “bilinmeyen oturum” 404 hatası görünür. Kullanıcı deneyimini geliştirmek için, kullanıcıları uygulamanıza geri yönlendirmek ve kimlik doğrulamasını yeniden başlatmak için bir geri dönüş URL'si ayarlayın.",
   },
 };
 

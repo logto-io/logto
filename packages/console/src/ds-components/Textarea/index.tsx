@@ -14,9 +14,14 @@ function Textarea(
   reference: ForwardedRef<HTMLTextAreaElement>
 ) {
   return (
-    <div className={classNames(styles.container, Boolean(error) && styles.error, className)}>
-      <textarea {...rest} ref={reference} />
-    </div>
+    <>
+      <div className={classNames(styles.container, Boolean(error) && styles.error, className)}>
+        <textarea {...rest} ref={reference} />
+      </div>
+      {Boolean(error) && typeof error !== 'boolean' && (
+        <div className={styles.errorMessage}>{error}</div>
+      )}
+    </>
   );
 }
 

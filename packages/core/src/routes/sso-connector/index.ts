@@ -41,6 +41,7 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
         quota,
         ssoConnectors: { getSsoConnectorById, getSsoConnectors },
       },
+      envSet,
     },
   ] = args;
 
@@ -118,7 +119,7 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
             providerName,
             config: parsedConfig,
           },
-          tenantId
+          envSet.endpoint
         );
       }
 
@@ -158,7 +159,7 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
       // Fetch provider details for each connector
       const connectorsWithProviderDetails = await Promise.all(
         connectors.map(async (connector) =>
-          fetchConnectorProviderDetails(connector, tenantId, ctx.locale)
+          fetchConnectorProviderDetails(connector, envSet.endpoint, ctx.locale)
         )
       );
 
@@ -189,7 +190,7 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
       // Fetch provider details for the connector
       const connectorWithProviderDetails = await fetchConnectorProviderDetails(
         connector,
-        tenantId,
+        envSet.endpoint,
         locale
       );
 
@@ -269,7 +270,7 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
             providerName,
             config: parsedConfig,
           },
-          tenantId
+          envSet.endpoint
         );
       }
 
@@ -293,7 +294,7 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
 
       const connectorWithProviderDetails = await fetchConnectorProviderDetails(
         connector,
-        tenantId,
+        envSet.endpoint,
         locale
       );
 
@@ -303,10 +304,8 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
     }
   );
 
-  if (
-    EnvSet.values.isDevFeaturesEnabled &&
-    (EnvSet.values.isCloud || EnvSet.values.isIntegrationTest)
-  ) {
+  // TODO: @simeng Remove this when IdP initiated SAML SSO is ready for production
+  if (EnvSet.values.isDevFeaturesEnabled) {
     ssoConnectorIdpInitiatedAuthConfigRoutes(...args);
   }
 }

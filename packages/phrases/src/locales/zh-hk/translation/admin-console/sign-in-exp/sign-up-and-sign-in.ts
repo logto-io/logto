@@ -62,6 +62,9 @@ const sign_up_and_sign_in = {
     enable_user_registration: '啟用用戶註冊',
     enable_user_registration_description:
       '啟用或禁止用戶註冊。禁用後，管理控制臺仍然可以添加用戶，但用戶無法通過登錄界面建立帳戶。',
+    unknown_session_redirect_url: '未知 Session 重新導向 URL',
+    unknown_session_redirect_url_tip:
+      '有時，Logto 可能無法識別用戶在登錄頁面的 Session，比如 Session 過期或用戶書籤或分享錄入連結時。預設顯示"未知 Session" 404 錯誤。為增強用戶體驗，設定一個回退 URL，將用戶重定向回應用程式並重啟身份認證。',
   },
 };
 

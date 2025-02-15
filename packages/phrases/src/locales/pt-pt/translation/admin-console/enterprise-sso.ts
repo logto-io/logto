@@ -27,7 +27,12 @@ const enterprise_sso = {
       'Crie uma nova integração de aplicativo usando SAML 2.0 no seu provedor de identidade {{name}}. Em seguida, cole o seguinte valor nele.',
     saml: {
       acs_url_field_name: 'URL do serviço de consumo de afirmação (URL de resposta)',
-      audience_uri_field_name: 'URI do público (ID da entidade do SP)',
+      audience_uri_field_name: 'URI do público (ID da entidade SP)',
+      entity_id_field_name: 'ID da Entidade do Provedor de Serviço (SP)',
+      entity_id_field_tooltip:
+        'O ID da Entidade SP pode estar em qualquer formato de string, geralmente usando um formato de URI ou um formato de URL como identificador, mas isso não é obrigatório.',
+      acs_url_field_placeholder: 'https://your-domain.com/api/saml/callback',
+      entity_id_field_placeholder: 'urn:your-domain.com:sp:saml:{serviceProviderId}',
     },
     oidc: {
       redirect_uri_field_name: 'URI de redirecionamento (URL de retorno)',

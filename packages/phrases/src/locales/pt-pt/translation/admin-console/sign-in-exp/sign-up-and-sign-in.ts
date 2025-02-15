@@ -68,6 +68,9 @@ const sign_up_and_sign_in = {
     enable_user_registration: 'Ativar registo de utilizadores',
     enable_user_registration_description:
       'Ativar ou desativar o registo de utilizadores. Uma vez desativado, os utilizadores ainda podem ser adicionados na consola de administração, mas os utilizadores não podem mais estabelecer contas através da interface de início de sessão.',
+    unknown_session_redirect_url: 'URL de redirecionamento de sessão desconhecida',
+    unknown_session_redirect_url_tip:
+      'Às vezes, o Logto pode não reconhecer a sessão de um utilizador na página de início de sessão, como quando uma sessão expira ou o utilizador adiciona aos favoritos ou partilha o link de início de sessão. Por padrão, aparece um erro "sessão desconhecida" 404. Para melhorar a experiência do utilizador, defina um URL de fallback para redirecionar os utilizadores de volta para a sua aplicação e reiniciar a autenticação.',
   },
 };
 
