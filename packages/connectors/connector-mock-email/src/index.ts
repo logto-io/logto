@@ -1,4 +1,4 @@
-import { assert } from '@silverhand/essentials';
+import { assert, trySafe } from '@silverhand/essentials';
 import fs from 'node:fs/promises';
 
 import type {
@@ -26,8 +26,7 @@ const sendMessage =
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, mockMailConfigGuard);
 
-    const customTemplate = getI18nTemplate && (await getI18nTemplate(type, payload.locale));
-
+    const customTemplate = await trySafe(async () => getI18nTemplate?.(type, payload.locale));
     // Fall back to the default template if the custom template is not found.
     const template =
       customTemplate ?? config.templates.find((template) => template.usageType === type);
