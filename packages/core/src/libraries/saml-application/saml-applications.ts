@@ -9,7 +9,7 @@ import {
 } from '@logto/schemas';
 import { SearchJointMode } from '@logto/schemas';
 import { generateStandardId, ConsoleLog } from '@logto/shared';
-import { removeUndefinedKeys, pick } from '@silverhand/essentials';
+import { removeUndefinedKeys, pick, deduplicate } from '@silverhand/essentials';
 import chalk from 'chalk';
 
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
@@ -123,19 +123,19 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
    * Applies custom domain configuration to SAML application redirect URIs.
    *
    * @param currentTenantId - The ID of the current tenant used for constructing default hostname URIs
-   * @param domain - Current tenant custom domain status, if there is no custom domain, pass `undefined`
+   * @param domains - Current tenant custom domain status, if there is no custom domain, pass `undefined`
    * @returns
    *
    * @example
    * // With active domain
    * const app = { redirectUris: ['https://original.example.com'] };
-   * syncCustomDomainToSamlApplicationRedirectUrls('tenant1'， { domain: 'https://custom.domain.com' });
+   * syncCustomDomainsToSamlApplicationRedirectUrls('tenant1'， { domain: 'https://custom.domain.com' });
    * // redirectUris becomes ['https://original.example.com', 'https://custom.domain.com']
    *
    * @example
    * // Without active domain
    * const app = { redirectUris: ['https://original.example.com', 'https://custom.domain.com'] };
-   * syncCustomDomainToSamlApplicationRedirectUrls('tenant1');
+   * syncCustomDomainsToSamlApplicationRedirectUrls('tenant1');
    * // redirectUris becomes ['https://original.example.com']
    *
    * @remarks
@@ -145,9 +145,9 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
    * Ref:
    * - SAML application: https://github.com/logto-io/rfcs-internal/pull/5
    */
-  const syncCustomDomainToSamlApplicationRedirectUrls = async (
+  const syncCustomDomainsToSamlApplicationRedirectUrls = async (
     currentTenantId: string,
-    domain?: Domain
+    domains: Domain[]
   ) => {
     // Skip for admin tenant and non-cloud environment.
     if (currentTenantId === adminTenantId || !EnvSet.values.isCloud) {
@@ -161,68 +161,53 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
       types: [ApplicationType.SAML],
     });
 
-    // Apply custom domain to SAML applications' redirect URIs if the custom domain is active.
-    // eslint-disable-next-line unicorn/prefer-ternary
-    if (domain?.status === DomainStatus.Active) {
-      await Promise.all(
-        samlApplications.map(async (samlApplication) => {
-          // There is only one default redirect URI for each SAML app.
-          const defaultRedirectUri = samlApplication.oidcClientMetadata.redirectUris.find((url) =>
-            url.startsWith(getTenantEndpoint(currentTenantId, EnvSet.values).hostname)
+    const applyCustomDomain = (url: string, domain: Domain): string => {
+      const parsedUrl = new URL(url);
+
+      // Apply custom domain to SAML applications' redirect URIs if the custom domain is active.
+      if (domain.status === DomainStatus.Active) {
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        parsedUrl.hostname = domain.domain;
+      }
+
+      return parsedUrl.toString();
+    };
+
+    await Promise.all(
+      samlApplications.map(async (samlApplication) => {
+        const defaultRedirectUri = samlApplication.oidcClientMetadata.redirectUris.find((url) =>
+          url.startsWith(getTenantEndpoint(currentTenantId, EnvSet.values).toString())
+        );
+
+        // Should not happen.
+        if (!defaultRedirectUri) {
+          consoleLog.warn(
+            `Can not apply custom domain to SAML app ${samlApplication.id}, since we can not find default redirect URI.`
           );
+          return;
+        }
 
-          // Should not happen.
-          if (!defaultRedirectUri) {
-            consoleLog.warn(
-              `Can not apply custom domain to SAML app ${samlApplication.id}, since we can not find default redirect URI.`
-            );
-            return;
-          }
+        const newRedirectUris = deduplicate([
+          defaultRedirectUri,
+          // If the custom domain is deleted or not active, we should remove all custom domains from the redirect URIs.
+          ...domains.map((domain) => applyCustomDomain(defaultRedirectUri, domain)),
+        ]);
 
-          const redirectUriWithCustomDomain = new URL(defaultRedirectUri);
-          // eslint-disable-next-line @silverhand/fp/no-mutation
-          redirectUriWithCustomDomain.hostname = domain.domain;
-
-          await updateApplicationById(samlApplication.id, {
-            oidcClientMetadata: {
-              ...samlApplication.oidcClientMetadata,
-              redirectUris: [defaultRedirectUri, redirectUriWithCustomDomain.toString()],
-            },
-          });
-        })
-      );
-    } else {
-      // If the custom domain is deleted or not active, we should remove all custom domains from the redirect URIs.
-      await Promise.all(
-        samlApplications.map(async (samlApplication) => {
-          const redirectUrisWithoutCustomDomains =
-            // Filter out redirect URIs applied with custom domain.
-            samlApplication.oidcClientMetadata.redirectUris.filter((url) =>
-              url.startsWith(getTenantEndpoint(currentTenantId, EnvSet.values).hostname)
-            );
-
-          if (redirectUrisWithoutCustomDomains.length !== 1) {
-            consoleLog.warn(
-              `Can not apply custom domain to SAML app ${samlApplication.id}, the redirect URIs do not match the current tenant's endpoint.`
-            );
-            return;
-          }
-
-          await updateApplicationById(samlApplication.id, {
-            oidcClientMetadata: {
-              ...samlApplication.oidcClientMetadata,
-              redirectUris: redirectUrisWithoutCustomDomains,
-            },
-          });
-        })
-      );
-    }
+        const updatedApplication = await updateApplicationById(samlApplication.id, {
+          oidcClientMetadata: {
+            ...samlApplication.oidcClientMetadata,
+            redirectUris: newRedirectUris,
+          },
+        });
+        consoleLog.info('updatedApplication', updatedApplication);
+      })
+    );
   };
 
   return {
     createSamlApplicationSecret,
     findSamlApplicationById,
     updateSamlApplicationById,
-    syncCustomDomainToSamlApplicationRedirectUrls,
+    syncCustomDomainsToSamlApplicationRedirectUrls,
   };
 };
