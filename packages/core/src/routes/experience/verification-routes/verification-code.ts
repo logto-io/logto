@@ -74,7 +74,7 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
         getTemplateTypeByEvent(interactionEvent)
       );
 
-      await codeVerification.sendVerificationCode();
+      await codeVerification.sendVerificationCode(ctx.locale);
 
       ctx.experienceInteraction.setVerificationRecord(codeVerification);
 

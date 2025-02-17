@@ -107,11 +107,13 @@ abstract class CodeVerification<T extends CodeVerificationType>
   /**
    * Send the verification code to the current `identifier`
    *
-   * @remark Instead of session jti,
+   * @param locale - The language tag detected from the user's request. If provided, it will be used to localize the message.
+   * @remarks
+   * Instead of session jti,
    * the verification id is used as `interaction_jti` to uniquely identify the passcode record in DB
    * for the current interaction.
    */
-  async sendVerificationCode() {
+  async sendVerificationCode(locale?: string) {
     const { createPasscode, sendPasscode } = this.libraries.passcodes;
 
     const verificationCode = await createPasscode(
@@ -120,7 +122,7 @@ abstract class CodeVerification<T extends CodeVerificationType>
       getPasscodeIdentifierPayload(this.identifier)
     );
 
-    await sendPasscode(verificationCode);
+    await sendPasscode(verificationCode, locale);
   }
 
   /**

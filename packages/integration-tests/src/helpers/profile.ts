@@ -1,5 +1,6 @@
 import { type LogtoConfig } from '@logto/node';
 import { demoAppApplicationId, InteractionEvent, type User } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 
 import { type InteractionPayload } from '#src/api/interaction.js';
 import { demoAppRedirectUri, logtoUrl } from '#src/constants.js';
@@ -70,7 +71,11 @@ export const initClientAndSignInForDefaultTenant = async (
 export const signInAndGetUserApi = async (
   username: string,
   password: string,
-  config?: Partial<LogtoConfig>
+  config?: Partial<LogtoConfig>,
+  /**
+   * The Accept-Language header value.
+   */
+  locale?: string
 ) => {
   const client = await initClientAndSignInForDefaultTenant(username, password, config);
   const accessToken = await client.getAccessToken();
@@ -78,6 +83,7 @@ export const signInAndGetUserApi = async (
   return baseApi.extend({
     headers: {
       Authorization: `Bearer ${accessToken}`,
+      ...conditional(locale && { 'Accept-Language': locale }),
     },
   });
 };

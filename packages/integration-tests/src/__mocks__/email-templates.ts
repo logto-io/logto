@@ -1,6 +1,8 @@
 import { type CreateEmailTemplate, TemplateType } from '@logto/schemas';
 
-export const mockEmailTemplates: Array<Omit<CreateEmailTemplate, 'id'>> = [
+export type MockEmailTemplatePayload = Omit<CreateEmailTemplate, 'id'>;
+
+export const mockEmailTemplates: MockEmailTemplatePayload[] = [
   {
     languageTag: 'en',
     templateType: TemplateType.SignIn,
