@@ -87,8 +87,8 @@ export default function verificationRoutes<T extends UserRouter>(
 
       const user = await queries.users.findUserById(userId);
       const isNewIdentifier =
-        (identifier.type === SignInIdentifier.Email && identifier.value === user.primaryEmail) ||
-        (identifier.type === SignInIdentifier.Phone && identifier.value === user.primaryPhone);
+        (identifier.type === SignInIdentifier.Email && identifier.value !== user.primaryEmail) ||
+        (identifier.type === SignInIdentifier.Phone && identifier.value !== user.primaryPhone);
 
       const codeVerification = createNewCodeVerificationRecord(
         libraries,
@@ -102,7 +102,7 @@ export default function verificationRoutes<T extends UserRouter>(
       const { expiresAt } = await insertVerificationRecord(
         codeVerification,
         queries,
-        isNewIdentifier ? userId : undefined
+        isNewIdentifier ? undefined : userId
       );
 
       ctx.body = {
