@@ -55,9 +55,10 @@ const useRegisterFlowCodeVerification = (
   const identifierExistsErrorHandler = useCallback(async () => {
     const { type, value } = identifier;
 
-    // Should not redirect user to sign-in if is register-only mode
     if (
+      // Should not redirect user to sign-in if is register-only mode
       signInMode === SignInMode.Register ||
+      // Should not redirect user to sign-in if the verification code authentication method is not enabled for sign-in
       !signInMethods.find(({ identifier }) => identifier === type)?.verificationCode
     ) {
       void showIdentifierErrorAlert(IdentifierErrorType.IdentifierAlreadyExists, type, value);
