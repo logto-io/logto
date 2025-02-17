@@ -3,4 +3,4 @@
 "@logto/phrases": patch
 ---
 
-update documentation links in Admin Console
+update documentation links in Console
