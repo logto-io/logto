@@ -1,4 +1,10 @@
-import { type SignInExperience, SignInExperiences } from '@logto/schemas';
+import {
+  type EmailTemplate,
+  EmailTemplates,
+  type SignInExperience,
+  SignInExperiences,
+} from '@logto/schemas';
+import { type Nullable } from '@silverhand/essentials';
 import { type ZodType, z } from 'zod';
 
 import { type ConnectorWellKnown, connectorWellKnownGuard } from '#src/utils/connectors/types.js';
@@ -8,6 +14,7 @@ import { BaseCache } from './base-cache.js';
 type WellKnownMap = {
   sie: SignInExperience;
   'connectors-well-known': ConnectorWellKnown[];
+  'email-templates': Nullable<EmailTemplate>;
   'custom-phrases': Record<string, unknown>;
   'custom-phrases-tags': string[];
   'tenant-cache-expires-at': number;
@@ -41,6 +48,9 @@ function getValueGuard(type: WellKnownCacheType): ZodType<WellKnownMap[typeof ty
     }
     case 'is-development-tenant': {
       return z.boolean();
+    }
+    case 'email-templates': {
+      return EmailTemplates.guard.nullable();
     }
   }
 }
