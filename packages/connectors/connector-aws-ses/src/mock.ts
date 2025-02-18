@@ -1,3 +1,5 @@
+import { type EmailTemplateDetails } from '@logto/connector-kit';
+
 export const mockedConfig = {
   accessKeyId: 'accessKeyId',
   accessKeySecret: 'accessKeySecret+cltHAJ',
@@ -30,4 +32,10 @@ export const mockedConfig = {
       subject: 'Organization invitation',
     },
   ],
+};
+export const mockGenericI18nEmailTemplate: EmailTemplateDetails = {
+  subject: 'Generic email',
+  content: 'Verification code is {{code}}',
+  replyTo: 'Reply-to {{to}}',
+  sendFrom: 'Foo',
 };

@@ -1,4 +1,4 @@
-import { assert } from '@silverhand/essentials';
+import { assert, trySafe } from '@silverhand/essentials';
 
 import type { SESv2Client, SendEmailCommand, SendEmailCommandOutput } from '@aws-sdk/client-sesv2';
 import { SESv2ServiceException } from '@aws-sdk/client-sesv2';
@@ -6,6 +6,7 @@ import type {
   CreateConnector,
   EmailConnector,
   GetConnectorConfig,
+  GetI18nEmailTemplate,
   SendMessageFunction,
 } from '@logto/connector-kit';
 import {
@@ -20,13 +21,20 @@ import { awsSesConfigGuard } from './types.js';
 import { makeClient, makeCommand, makeEmailContent } from './utils.js';
 
 const sendMessage =
-  (getConfig: GetConnectorConfig): SendMessageFunction =>
+  (
+    getConfig: GetConnectorConfig,
+    getI18nEmailTemplate?: GetI18nEmailTemplate
+  ): SendMessageFunction =>
   async (data, inputConfig) => {
     const { to, type, payload } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, awsSesConfigGuard);
     const { accessKeyId, accessKeySecret, region, templates } = config;
-    const template = templates.find((template) => template.usageType === type);
+
+    const customTemplate = await trySafe(async () => getI18nEmailTemplate?.(type, payload.locale));
+
+    // Fall back to the default template if the custom i18n template is not found.
+    const template = customTemplate ?? templates.find((template) => template.usageType === type);
 
     assert(
       template,
@@ -58,12 +66,15 @@ const sendMessage =
     }
   };
 
-const createAwsSesConnector: CreateConnector<EmailConnector> = async ({ getConfig }) => {
+const createAwsSesConnector: CreateConnector<EmailConnector> = async ({
+  getConfig,
+  getI18nEmailTemplate,
+}) => {
   return {
     metadata: defaultMetadata,
     type: ConnectorType.Email,
     configGuard: awsSesConfigGuard,
-    sendMessage: sendMessage(getConfig),
+    sendMessage: sendMessage(getConfig, getI18nEmailTemplate),
   };
 };
 
