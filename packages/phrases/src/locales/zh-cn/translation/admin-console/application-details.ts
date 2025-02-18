@@ -22,6 +22,7 @@ const application_details = {
   description_placeholder: '请输入应用描述',
   config_endpoint: 'OpenID Provider 配置端点',
   issuer_endpoint: '发行者端点',
+  jwks_uri: 'JWKS URI', // This is unchanged since it's a technical term.
   authorization_endpoint: '授权端点',
   authorization_endpoint_tip: '进行鉴权与授权的端点。用于 OpenID Connect 中的 <a>鉴权</a> 流程。',
   show_endpoint_details: '显示端点详细信息',
@@ -89,6 +90,8 @@ const application_details = {
   protect_origin_server: '保护您的源服务器',
   protect_origin_server_description:
     '确保保护源服务器免受直接访问。请参阅指南了解更多<a>详细说明</a>。',
+  third_party_settings_description:
+    '将第三方应用程序与 Logto 集成为你的身份提供者 (IdP)，使用 OIDC / OAuth 2.0，并提供用户授权同意界面。',
   session_duration: '会话持续时间（天）',
   try_it: '试一下',
   no_organization_placeholder: '找不到组织。<a>前往组织</a>',

@@ -5,7 +5,7 @@ const domain = {
     failed_to_connect: 'Falha na conexão',
   },
   update_endpoint_notice:
-    'Não se esqueça de atualizar o domínio para o URI de retorno do conector social e o ponto de extremidade de logto em seu aplicativo se você quiser usar um domínio personalizado para os recursos. <a>{{link}}</a>',
+    'Não se esqueça de atualizar o domínio para o URI de retorno do conector social e o ponto de extremidade de logto em seu aplicativo se você quiser usar um domínio personalizado para os recursos.',
   error_hint:
     'Certifique-se de atualizar seus registros DNS. Nós continuaremos a verificação a cada {{value}} segundos.',
   custom: {

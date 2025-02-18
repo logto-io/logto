@@ -1,7 +1,7 @@
 const enterprise_sso = {
   page_title: '기업 SSO',
   title: '기업 SSO',
-  subtitle: '기업 신원 공급자를 연결하고 SP-initiated 단일 로그인을 활성화합니다.',
+  subtitle: '엔터프라이즈 신원 공급자를 연결하고 SSO를 활성화합니다.',
   create: '기업 커넥터 추가',
   col_connector_name: '커넥터 이름',
   col_type: '유형',

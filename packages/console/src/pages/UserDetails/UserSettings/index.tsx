@@ -10,8 +10,9 @@ import { useOutletContext } from 'react-router-dom';
 
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
+import LearnMore from '@/components/LearnMore';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { profilePropertyReferenceLink } from '@/consts';
+import { profilePropertyReferenceLink, userCustomData } from '@/consts';
 import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
 import TextInput from '@/ds-components/TextInput';
@@ -192,7 +193,12 @@ function UserSettings() {
           </FormField>
           <FormField
             title="user_details.field_custom_data"
-            tip={t('user_details.field_custom_data_tip')}
+            tip={
+              <>
+                {t('user_details.field_custom_data_tip')}
+                <LearnMore href={userCustomData} />
+              </>
+            }
           >
             <CodeEditor language="json" value={customData.value} onChange={customData.onChange} />
           </FormField>

@@ -2,6 +2,7 @@ import { AgreeToTermsPolicy } from '@logto/schemas';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { termsAndPrivacy } from '@/consts';
 import Card from '@/ds-components/Card';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
@@ -10,6 +11,7 @@ import TextInput from '@/ds-components/TextInput';
 import { uriValidator } from '@/utils/validator';
 
 import type { SignInExperienceForm } from '../../types';
+import FormFieldDescription from '../components/FormFieldDescription';
 import FormSectionTitle from '../components/FormSectionTitle';
 
 const agreeToTermsPolicyOptions = [
@@ -40,6 +42,9 @@ function TermsForm() {
   return (
     <Card>
       <FormSectionTitle title="content.terms_of_use.title" />
+      <FormFieldDescription learnMoreLink={{ href: termsAndPrivacy }}>
+        {t('sign_in_exp.content.terms_of_use.description')}
+      </FormFieldDescription>
       <FormField title="sign_in_exp.content.terms_of_use.terms_of_use">
         <TextInput
           {...register('termsOfUseUrl', {

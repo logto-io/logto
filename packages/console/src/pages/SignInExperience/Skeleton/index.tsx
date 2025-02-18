@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 
+import { authFlows } from '@/consts';
 import CardTitle from '@/ds-components/CardTitle';
 import Spacer from '@/ds-components/Spacer';
 
@@ -12,9 +13,10 @@ function Skeleton() {
   return (
     <div className={classNames(pageStyles.container, styles.container)}>
       <CardTitle
+        className={pageStyles.cardTitle}
         title="sign_in_exp.title"
         subtitle="sign_in_exp.description"
-        className={pageStyles.cardTitle}
+        learnMoreLink={{ href: authFlows }}
       />
       <div className={classNames(pageContentStyles.tabs, styles.tabBar)} />
       <div className={classNames(pageContentStyles.content, styles.content)}>

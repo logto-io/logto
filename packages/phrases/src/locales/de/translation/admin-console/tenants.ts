@@ -23,9 +23,9 @@ const tenants = {
     environment_tag_production: 'Prod',
     tenant_type: 'Mandantentyp',
     development_description:
-      'Nur für Tests und sollte nicht in der Produktion verwendet werden. Es ist kein Abonnement erforderlich. Es verfügt über alle Pro-Funktionen, hat jedoch Einschränkungen wie ein Anmeldebanner. <a>Mehr erfahren</a>',
+      'Nur für Tests und sollte nicht in der Produktion verwendet werden. Es ist kein Abonnement erforderlich. Es verfügt über alle Pro-Funktionen, hat jedoch Einschränkungen wie ein Anmeldebanner.',
     production_description:
-      'Vorgesehen für Apps, die von Endbenutzern verwendet werden und möglicherweise ein kostenpflichtiges Abonnement erfordern. <a>Mehr erfahren</a>',
+      'Vorgesehen für Apps, die von Endbenutzern verwendet werden und möglicherweise ein kostenpflichtiges Abonnement erfordern.',
     tenant_info_saved: 'Mieterinformationen erfolgreich gespeichert.',
   },
   full_env_tag: {

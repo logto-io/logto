@@ -5,7 +5,7 @@ const domain = {
     failed_to_connect: 'Failed to connect',
   },
   update_endpoint_notice:
-    'Don’t forget to update the domain for the Social connector callback URI and Logto endpoint in your application if you want to use a custom domain for the features. <a>{{link}}</a>',
+    'Don’t forget to update the domain for the Social connector callback URI and Logto endpoint in your application if you want to use a custom domain for the features.',
   error_hint:
     'Make sure to update your DNS records. We will continue to check every {{value}} seconds.',
   custom: {

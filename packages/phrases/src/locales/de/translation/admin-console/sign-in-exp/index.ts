@@ -6,7 +6,7 @@ const sign_in_exp = {
   page_title: 'Anmeldeoberfläche',
   title: 'Anmeldeoberfläche',
   description:
-    'Passe die Benutzeroberfläche für die Anmeldung an deine Marke an und zeige eine Vorschau in Echtzeit an',
+    'Passen Sie die Authentifizierungsabläufe und die Benutzeroberfläche an, und sehen Sie sich das Erlebnis sofort an.',
   tabs: {
     branding: 'Branding',
     sign_up_and_sign_in: 'Anmeldung und Registrierung',

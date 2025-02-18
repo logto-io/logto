@@ -8,6 +8,7 @@ import ReactModal from 'react-modal';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import SkuName from '@/components/SkuName';
+import { manageRolePermissions } from '@/consts';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
@@ -75,10 +76,7 @@ function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Prop
       <ModalLayout
         title="api_resource_details.permission.create_title"
         subtitle="api_resource_details.permission.create_subtitle"
-        learnMoreLink={{
-          href: 'https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-role-permissions',
-          targetBlank: 'noopener',
-        }}
+        learnMoreLink={{ href: manageRolePermissions }}
         footer={
           isScopesPerResourceReachLimit ? (
             <QuotaGuardFooter>

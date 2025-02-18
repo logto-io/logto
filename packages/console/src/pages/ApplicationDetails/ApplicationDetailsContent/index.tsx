@@ -18,7 +18,7 @@ import Drawer from '@/components/Drawer';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import OrganizationList from '@/components/OrganizationList';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { ApplicationDetailsTabs, logtoThirdPartyGuideLink, protectedAppLink } from '@/consts';
+import { ApplicationDetailsTabs, logtoThirdPartyGuideLink, protectedApp } from '@/consts';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import TabWrapper from '@/ds-components/TabWrapper';
@@ -142,7 +142,7 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
             }
             // Open protected app docs link in new tab
             if (data.type === ApplicationType.Protected) {
-              window.open(getDocumentationUrl(protectedAppLink), '_blank');
+              window.open(getDocumentationUrl(protectedApp), '_blank');
               return;
             }
 

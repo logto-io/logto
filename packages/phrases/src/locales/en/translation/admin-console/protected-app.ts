@@ -1,8 +1,6 @@
 const protected_app = {
   name: 'Protected App',
   title: 'Create a Protected App: Add authentication with simplicity and epic speed',
-  description:
-    'Protected App securely maintains user sessions and proxies your app requests. Powered by Cloudflare Workers, enjoy the top-tier performance and 0ms cold start worldwide. <a>Learn more</a>',
   fast_create: 'Fast create',
   modal_title: 'Create Protected App',
   modal_subtitle:

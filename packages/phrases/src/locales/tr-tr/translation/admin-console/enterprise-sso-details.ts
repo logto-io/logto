@@ -8,6 +8,8 @@ const enterprise_sso_details = {
   tab_connection: 'Bağlantı',
   tab_idp_initiated_auth: 'IdP başlatmalı SSO',
   general_settings_title: 'Genel',
+  general_settings_description:
+    'Son kullanıcı deneyimini yapılandırın ve SP başlatmalı SSO akışı için kurumsal e-posta etki alanını bağlayın.',
   custom_branding_title: 'Ekran',
   custom_branding_description:
     'Son kullanıcıların Tek Oturum Açma akışında gösterilen adı ve logoyu özelleştirin. Boş olduğunda varsayılanlar kullanılır.',

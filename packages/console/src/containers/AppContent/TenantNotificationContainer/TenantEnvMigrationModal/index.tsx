@@ -7,7 +7,7 @@ import ReactModal from 'react-modal';
 import CongratsDark from '@/assets/images/congrats-dark.svg?react';
 import Congrats from '@/assets/images/congrats.svg?react';
 import Fireworks from '@/assets/images/tenant-modal-fireworks.svg?react';
-import { envTagsFeatureLink } from '@/consts';
+import { logtoCloudTenantSettings } from '@/consts';
 import Button, { LinkButton } from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import ModalLayout from '@/ds-components/ModalLayout';
@@ -68,7 +68,7 @@ function TenantEnvMigrationModal() {
               <LinkButton
                 title="tenants.dev_tenant_migration.about_tenant_type"
                 size="large"
-                href={getDocumentationUrl(envTagsFeatureLink)}
+                href={getDocumentationUrl(logtoCloudTenantSettings)}
                 targetBlank="noopener"
               />
               <Button title="general.got_it" size="large" type="primary" onClick={onClose} />

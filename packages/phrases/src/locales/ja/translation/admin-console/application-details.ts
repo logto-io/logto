@@ -24,6 +24,7 @@ const application_details = {
   description_placeholder: 'アプリケーションの説明を入力してください',
   config_endpoint: 'OpenID プロバイダ構成エンドポイント',
   issuer_endpoint: '発行者エンドポイント',
+  jwks_uri: 'JWKS URI',
   authorization_endpoint: '認可エンドポイント',
   authorization_endpoint_tip:
     '認証と認可を実行するエンドポイントです。OpenID Connect の<a>認証</a>に使用されます。',
@@ -81,27 +82,29 @@ const application_details = {
   application_deleted: 'アプリケーション{{name}}が正常に削除されました',
   redirect_uri_required: 'リダイレクト URI を少なくとも 1 つ入力する必要があります',
   app_domain_description_1:
-    'Feel free to use your domain with {{domain}} powered by Logto, which is permanently valid.',
+    'Logto によって提供される {{domain}} を使用して、ドメインを自由に利用できます。これは永久に有効です。',
   app_domain_description_2:
-    'Feel free to utilize your domain <domain>{{domain}}</domain> which is permanently valid.',
+    'Logto によって提供される <domain>{{domain}}</domain> を自由に利用できます。これは永久に有効です。',
   custom_rules: 'カスタム認証ルール',
   custom_rules_placeholder: '^/(admin|privacy)/.+',
   custom_rules_description:
-    'Set rules with regular expressions for authentication-required routes. Default: full-site protection if left blank.',
+    '認証が必要なルートのために正規表現でルールを設定します。デフォルトとして、このフィールドが空の場合、サイト全体が保護されます。',
   authentication_routes: '認証ルート',
   custom_rules_tip:
-    "Here are two case scenarios:<ol><li>To only protect routes '/admin' and '/privacy' with authentication: ^/(admin|privacy)/.*</li><li>To exclude JPG images from authentication: ^(?!.*\\.jpg$).*$</li></ol>",
+    "以下のようなケースがあります：<ol><li>認証で '/admin' と '/privacy' ルートのみを保護する: ^/(admin|privacy)/.*</li><li>JPG 画像を認証から除外する: ^(?!.*\\.jpg$).*$</li></ol>",
   authentication_routes_description:
-    'Redirect your authentication button using the specified routes. Note: These routes are irreplaceable.',
+    '指定されたルートを使用して認証ボタンをリダイレクトします。注意：これらのルートは置き換えることはできません。',
   protect_origin_server: 'オリジンサーバーを保護する',
   protect_origin_server_description:
-    'Ensure to protect your origin server from direct access. Refer to the guide for more <a>detailed instructions</a>.',
+    'オリジンサーバーへの直接アクセスを保護してください。詳細については、ガイドを参照してください。<a>詳細な手順</a>',
+  third_party_settings_description:
+    'OIDC / OAuth 2.0 を使用して Logto をアイデンティティプロバイダ（IdP）として、サードパーティアプリケーションと統合し、ユーザー承認のための同意画面を提供します。',
   session_duration: 'セッション期間（日単位）',
   try_it: 'お試しください',
-  no_organization_placeholder: 'No organization found. <a>Go to organizations</a>',
+  no_organization_placeholder: '組織が見つかりません。<a>組織に行く</a>',
   field_custom_data: 'カスタムデータ',
   field_custom_data_tip:
-    '追加のカスタムアプリケーション情報で、事前定義されたアプリケーションプロパティにリストされていないもの。たとえば、ビジネス固有の設定と構成。',
+    '事前定義されたアプリケーションプロパティにリストされていない追加のカスタムアプリケーション情報。例えば、ビジネス固有の設定と構成。',
   custom_data_invalid: 'カスタムデータは有効な JSON オブジェクトである必要があります',
   branding: {
     name: 'ブランディング',

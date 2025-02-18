@@ -23,9 +23,9 @@ const tenants = {
     environment_tag_production: 'Prod',
     tenant_type: 'Type de locataire',
     development_description:
-      "Uniquement pour les tests et ne devrait pas être utilisé en production. Aucune souscription n'est requise. Il possède toutes les fonctionnalités Pro mais présente des limitations telles qu'une bannière de connexion. <a>En savoir plus</a>",
+      "Uniquement pour les tests et ne devrait pas être utilisé en production. Aucune souscription n'est requise. Il possède toutes les fonctionnalités Pro mais présente des limitations telles qu'une bannière de connexion.",
     production_description:
-      'Destiné aux applications utilisées par les utilisateurs finaux et pouvant nécessiter une souscription payante. <a>En savoir plus</a>',
+      'Destiné aux applications utilisées par les utilisateurs finaux et pouvant nécessiter une souscription payante.',
     tenant_info_saved: 'Les informations du locataire ont été enregistrées avec succès.',
   },
   full_env_tag: {

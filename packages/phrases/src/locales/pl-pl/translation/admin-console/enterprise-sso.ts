@@ -1,8 +1,7 @@
 const enterprise_sso = {
   page_title: 'Jednolite logowanie dla przedsiębiorstw',
   title: 'Jednolite logowanie dla przedsiębiorstw',
-  subtitle:
-    'Połącz dostawcę tożsamości przedsiębiorstwa i włącz jednostronne logowanie jednolitego.',
+  subtitle: 'Podłącz dostawcę tożsamości przedsiębiorstwa i włącz jednokrotne logowanie.',
   create: 'Dodaj łącznik przedsiębiorstwa',
   col_connector_name: 'Nazwa łącznika',
   col_type: 'Typ',

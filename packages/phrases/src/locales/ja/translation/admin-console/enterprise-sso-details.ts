@@ -7,6 +7,8 @@ const enterprise_sso_details = {
   tab_connection: '接続',
   tab_idp_initiated_auth: 'IdP によって開始された SSO',
   general_settings_title: '一般設定',
+  general_settings_description:
+    'エンドユーザーの体験を構成し、SP によって開始される SSO フローのための企業メールドメインをリンクします。',
   custom_branding_title: '表示',
   custom_branding_description:
     'エンドユーザーのシングルサインオンプロセスで表示される名前とロゴをカスタマイズします。空白の場合、デフォルト値が使用されます。',

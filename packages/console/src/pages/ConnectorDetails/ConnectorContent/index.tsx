@@ -14,9 +14,9 @@ import ConnectorTester from '@/components/ConnectorTester';
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import { connectors, emailConnectors } from '@/consts';
 import useApi from '@/hooks/use-api';
 import { useConnectorFormConfigParser } from '@/hooks/use-connector-form-config-parser';
-import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { SyncProfileMode } from '@/types/connector';
 import type { ConnectorFormType } from '@/types/connector';
 import { convertResponseToForm } from '@/utils/connector-form';
@@ -33,7 +33,6 @@ type Props = {
 
 function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { getDocumentationUrl } = useDocumentationUrl();
   const api = useApi();
   const formData = useMemo(() => convertResponseToForm(connectorData), [connectorData]);
   const methods = useForm<ConnectorFormType>({
@@ -123,10 +122,7 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
           <FormCard
             title="connector_details.settings"
             description="connector_details.settings_description"
-            learnMoreLink={{
-              href: getDocumentationUrl('/docs/references/connectors'),
-              targetBlank: 'noopener',
-            }}
+            learnMoreLink={{ href: connectors }}
           >
             <BasicForm isStandard={isStandardConnector} />
           </FormCard>
@@ -137,14 +133,9 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
           <FormCard
             title="connector_details.parameter_configuration"
             description={conditional(
-              !isSocialConnector && 'connector_details.settings_description'
+              !isSocialConnector && 'connector_details.email_connector_settings_description'
             )}
-            learnMoreLink={conditional(
-              !isSocialConnector && {
-                href: getDocumentationUrl('/docs/references/connectors'),
-                targetBlank: 'noopener',
-              }
-            )}
+            learnMoreLink={conditional(!isSocialConnector && { href: emailConnectors })}
           >
             <ConfigForm
               formItems={formItems}

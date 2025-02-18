@@ -24,6 +24,7 @@ const application_details = {
   description_placeholder: 'Entrez la description de votre application',
   config_endpoint: 'Point de configuration du fournisseur OpenID',
   issuer_endpoint: 'Point de terminaison de l’émetteur',
+  jwks_uri: 'URI JWKS',
   authorization_endpoint: "Point de terminaison d'autorisation",
   authorization_endpoint_tip:
     "Le point de terminaison pour effectuer l'authentification et l'autorisation. Il est utilisé pour <a>l'authentification</a> OpenID Connect.",
@@ -96,6 +97,8 @@ const application_details = {
   protect_origin_server: "Protéger votre serveur d'origine",
   protect_origin_server_description:
     "Assurez-vous de protéger votre serveur d'origine contre un accès direct. Référez-vous au guide pour plus de <a>instructions détaillées</a>.",
+  third_party_settings_description:
+    "Intégrez des applications tierces avec Logto comme votre fournisseur d'identité (IdP) en utilisant OIDC / OAuth 2.0, avec un écran de consentement pour l'autorisation de l'utilisateur.",
   session_duration: 'Durée de la session (jours)',
   try_it: 'Essayez',
   no_organization_placeholder: 'Aucune organisation trouvée. <a>Aller aux organisations</a>',

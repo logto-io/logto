@@ -5,7 +5,7 @@ const domain = {
     failed_to_connect: 'Error de conexión',
   },
   update_endpoint_notice:
-    'No olvide actualizar el dominio para el URI de devolución de llamada del conector social y el punto final de Logto en su aplicación si desea utilizar un dominio personalizado para las funciones. <a>{{link}}</a>',
+    'No olvide actualizar el dominio para el URI de devolución de llamada del conector social y el punto final de Logto en su aplicación si desea utilizar un dominio personalizado para las funciones.',
   error_hint:
     'Asegúrese de actualizar sus registros DNS. Continuaremos verificando cada {{value}} segundos.',
   custom: {

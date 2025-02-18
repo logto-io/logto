@@ -1,10 +1,11 @@
 import { type Domain, DomainStatus } from '@logto/schemas';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
+import LearnMore from '@/components/LearnMore';
 import PageMeta from '@/components/PageMeta';
+import { customDomain as customDomainDocumentationLink } from '@/consts/external-links';
 import FormField from '@/ds-components/FormField';
-import TextLink from '@/ds-components/TextLink';
 import useApi from '@/hooks/use-api';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useCustomDomain from '@/hooks/use-custom-domain';
@@ -63,18 +64,7 @@ function TenantDomainSettings() {
           )}
           {customDomain?.status === DomainStatus.Active && (
             <div className={styles.notes}>
-              <Trans
-                components={{
-                  a: (
-                    <TextLink
-                      targetBlank="noopener"
-                      to={getDocumentationUrl('docs/recipes/custom-domain/use-custom-domain')}
-                    />
-                  ),
-                }}
-              >
-                {t('domain.update_endpoint_notice', { link: t('general.learn_more') })}
-              </Trans>
+              <LearnMore href={customDomainDocumentationLink} />
             </div>
           )}
         </FormField>

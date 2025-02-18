@@ -23,6 +23,7 @@ const application_details = {
   description_placeholder: '어플리케이션 설명을 적어주세요.',
   config_endpoint: 'OpenID Provider 구성 엔드포인트',
   issuer_endpoint: '발급자 엔드포인트',
+  jwks_uri: 'JWKS URI',
   authorization_endpoint: '인증 엔드포인트',
   authorization_endpoint_tip:
     '인증 및 권한 부여를 진행할 엔드포인트입니다. OpenID Connect <a>인증</a>에서 사용되었던 값입니다.',
@@ -95,6 +96,8 @@ const application_details = {
   protect_origin_server: '원본 서버 보호',
   protect_origin_server_description:
     '원본 서버를 직접 액세스로부터 보호하세요. 더 많은 <a>자세한 지침</a>을 위해 안내서를 참조하세요.',
+  third_party_settings_description:
+    'OIDC / OAuth 2.0 을 사용하여 Logto 를 당신의 ID 공급자 (IdP) 로 활용하여 제3자 애플리케이션을 통합하고 사용자의 권한 승인을 위한 동의 화면을 제공합니다.',
   session_duration: '세션 기간 (일)',
   try_it: '해보기',
   no_organization_placeholder: '조직을 찾을 수 없습니다. <a>조직으로 이동</a>',

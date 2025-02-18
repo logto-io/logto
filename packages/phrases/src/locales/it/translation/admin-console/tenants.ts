@@ -24,9 +24,9 @@ const tenants = {
     environment_tag_production: 'Prod',
     tenant_type: 'Tipo inquilino',
     development_description:
-      'Solo per scopi di test e non dovrebbe essere utilizzato in produzione. Non è richiesto alcun abbonamento. Ha tutte le funionalità professionali ma ha delle limitazioni come un banner di accesso. <a>Per saperne di più</a>',
+      'Solo per scopi di test e non dovrebbe essere utilizzato in produzione. Non è richiesto alcun abbonamento. Ha tutte le funionalità professionali ma ha delle limitazioni come un banner di accesso.',
     production_description:
-      'Destinato alle app utilizzate dagli utenti finali e potrebbe richiedere un abbonamento a pagamento. <a>Per saperne di più</a>',
+      'Destinato alle app utilizzate dagli utenti finali e potrebbe richiedere un abbonamento a pagamento.',
     tenant_info_saved: "Le informazioni dell'inquilino sono state salvate correttamente.",
   },
   full_env_tag: {

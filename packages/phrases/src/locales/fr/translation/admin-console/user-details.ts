@@ -112,7 +112,7 @@ const user_details = {
     title_short: 'jeton',
     empty: "L'utilisateur ne possède aucun jeton d'accès personnel.",
     create: 'Créer un nouveau jeton',
-    tip: "Les jetons d'accès personnel (PAT) offrent un moyen sécurisé pour les utilisateurs d'accorder des jetons d'accès sans utiliser leurs identifiants et connexion interactive. Ceci est utile pour les CI/CD, scripts ou applications qui doivent accéder aux ressources de manière programmatique. <a>En savoir plus</a>",
+    tip: "Les jetons d'accès personnel (PAT) offrent un moyen sécurisé pour les utilisateurs d'accorder des jetons d'accès sans utiliser leurs identifiants et connexion interactive. Ceci est utile pour les CI/CD, scripts ou applications qui doivent accéder aux ressources de manière programmatique.",
     value: 'Valeur',
     created_at: 'Créé le',
     expires_at: 'Expire le',

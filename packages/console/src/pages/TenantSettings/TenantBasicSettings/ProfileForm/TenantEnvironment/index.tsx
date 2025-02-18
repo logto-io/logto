@@ -1,10 +1,9 @@
 import { TenantTag } from '@logto/schemas';
-import { Trans, useTranslation } from 'react-i18next';
 
+import LearnMore from '@/components/LearnMore';
 import TenantEnvTag from '@/components/TenantEnvTag';
-import { envTagsFeatureLink } from '@/consts';
-import TextLink from '@/ds-components/TextLink';
-import useDocumentationUrl from '@/hooks/use-documentation-url';
+import { logtoCloudTenantSettings } from '@/consts';
+import DynamicT from '@/ds-components/DynamicT';
 
 import styles from './index.module.scss';
 
@@ -13,24 +12,18 @@ type Props = {
 };
 
 function TenantEnvironment({ tag }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { getDocumentationUrl } = useDocumentationUrl();
-
   return (
     <div className={styles.container}>
       <TenantEnvTag isAbbreviated={false} size="large" tag={tag} />
       <div className={styles.description}>
-        <Trans
-          components={{
-            a: <TextLink targetBlank="noopener" href={getDocumentationUrl(envTagsFeatureLink)} />,
-          }}
-        >
-          {t(
+        <DynamicT
+          forKey={
             tag === TenantTag.Development
               ? 'tenants.settings.development_description'
               : 'tenants.settings.production_description'
-          )}
-        </Trans>
+          }
+        />
+        {tag === TenantTag.Development && <LearnMore href={logtoCloudTenantSettings} />}
       </div>
     </div>
   );

@@ -23,9 +23,9 @@ const tenants = {
     environment_tag_production: 'Prod',
     tenant_type: 'Typ najemcy',
     development_description:
-      'Wyłącznie do testów i nie powinien być używany w produkcji. Nie jest wymagana subskrypcja. Posiada wszystkie funkcje Pro, ale ma ograniczenia, takie jak baner logowania. <a>Uzyskaj więcej informacji</a>',
+      'Wyłącznie do testów i nie powinien być używany w produkcji. Nie jest wymagana subskrypcja. Posiada wszystkie funkcje Pro, ale ma ograniczenia, takie jak baner logowania.',
     production_description:
-      'Przeznaczony dla aplikacji używanych przez użytkowników końcowych i może wymagać płatnej subskrypcji. <a>Uzyskaj więcej informacji</a>',
+      'Przeznaczony dla aplikacji używanych przez użytkowników końcowych i może wymagać płatnej subskrypcji.',
     tenant_info_saved: 'Informacje o najemcy zostały pomyślnie zapisane.',
   },
   full_env_tag: {

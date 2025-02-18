@@ -20,8 +20,8 @@ const tenants = {
     environment_tag_production: '产品',
     tenant_type: '租户类型',
     development_description:
-      '仅用于测试，不应在生产环境中使用。不需要订阅。它具有所有专业功能，但有像登录横幅之类的限制。<a>了解更多</a>',
-    production_description: '适用于由最终用户使用且可能需要付费订阅的应用程序。<a>了解更多</a>',
+      '仅用于测试，不应在生产环境中使用。不需要订阅。它具有所有专业功能，但有像登录横幅之类的限制。',
+    production_description: '适用于由最终用户使用且可能需要付费订阅的应用程序。',
     tenant_info_saved: '租户信息成功保存。',
   },
   full_env_tag: {

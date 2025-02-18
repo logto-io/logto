@@ -111,7 +111,7 @@ const user_details = {
     title_short: 'token',
     empty: 'O utilizador não possui nenhum token de acesso pessoal.',
     create: 'Criar novo token',
-    tip: 'Tokens de acesso pessoal (PATs) fornecem uma maneira segura para os utilizadores concederem tokens de acesso sem usar as suas credenciais e login interativo. Isso é útil para CI/CD, scripts ou aplicações que precisam acessar recursos programaticamente. <a>Saiba mais</a>',
+    tip: 'Tokens de acesso pessoal (PATs) fornecem uma maneira segura para os utilizadores concederem tokens de acesso sem usar as suas credenciais e login interativo. Isso é útil para CI/CD, scripts ou aplicações que precisam acessar recursos programaticamente.',
     value: 'Valor',
     created_at: 'Criado em',
     expires_at: 'Expira em',

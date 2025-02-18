@@ -18,7 +18,6 @@ import CardTitle from '@/ds-components/CardTitle';
 import DynamicT from '@/ds-components/DynamicT';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
-import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import pageLayout from '@/scss/page-layout.module.scss';
 import { isFeatureEnabled, isPaidPlan } from '@/utils/subscription';
@@ -30,7 +29,6 @@ import styles from './index.module.scss';
 const basePathname = '/organization-template';
 
 function OrganizationTemplate() {
-  const { getDocumentationUrl } = useDocumentationUrl();
   const [isGuideDrawerOpen, setIsGuideDrawerOpen] = useState(false);
   const {
     currentSubscription: { planId, isEnterprisePlan },
@@ -56,10 +54,7 @@ function OrganizationTemplate() {
         <CardTitle
           title="organization_template.title"
           subtitle="organization_template.subtitle"
-          learnMoreLink={{
-            href: getDocumentationUrl(organizationTemplateLink),
-            targetBlank: 'noopener',
-          }}
+          learnMoreLink={{ href: organizationTemplateLink }}
           paywall={cond(!isPaidTenant && latestProPlanId)}
         />
         <Button

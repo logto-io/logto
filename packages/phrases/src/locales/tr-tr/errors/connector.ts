@@ -37,6 +37,10 @@ const connector = {
     'Aynı hedefe ve platforma sahip birden fazla sosyal bağlayıcıya sahip olamazsınız.',
   cannot_overwrite_metadata_for_non_standard_connector:
     "Bu bağlayıcının 'metadata'sı üzerine yazılamaz.",
+  email_connector: {
+    bulk_deletion_no_filter:
+      'Özelliklere göre toplu silme işlemi yapmak için en az bir filtre koşulu sağlanmalıdır. Desteklenen özellikler: {{properties, list(type:conjunction)}}.',
+  },
 };
 
 export default Object.freeze(connector);

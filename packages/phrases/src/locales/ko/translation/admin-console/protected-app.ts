@@ -1,8 +1,6 @@
 const protected_app = {
   name: '보호된 앱',
   title: '보호된 앱 생성: 간편한 인증 및 뛰어난 속도로 추가하세요',
-  description:
-    '보호된 앱은 사용자 세션을 안전하게 유지하고 앱 요청을 프록시로 전달합니다. Cloudflare Workers를 통해 제공되며 전 세계에서 최고 수준의 성능과 0ms의 콜드 스타트를 경험하세요. <a>더 알아보기</a>',
   fast_create: '빠르게 생성',
   modal_title: '보호된 앱 생성',
   modal_subtitle:

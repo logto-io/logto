@@ -6,6 +6,7 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
 import MultiTextInputField from '@/components/MultiTextInputField';
+import { applicationDataStructure, thirdPartyApp } from '@/consts';
 import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -16,7 +17,6 @@ import {
 } from '@/ds-components/MultiTextInput/utils';
 import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
-import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { isJsonObject } from '@/utils/json';
 
 import ProtectedAppSettings from './ProtectedAppSettings';
@@ -53,7 +53,6 @@ type Props = {
 
 function Settings({ data }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { getDocumentationUrl } = useDocumentationUrl();
   const {
     control,
     register,
@@ -61,7 +60,7 @@ function Settings({ data }: Props) {
     formState: { errors },
   } = useFormContext<ApplicationForm>();
 
-  const { type: applicationType } = data;
+  const { type: applicationType, isThirdParty } = data;
 
   const isProtectedApp = applicationType === ApplicationType.Protected;
   const uriPatternRules: MultiTextInputRule = {
@@ -86,11 +85,8 @@ function Settings({ data }: Props) {
   return (
     <FormCard
       title="application_details.settings"
-      description="application_details.settings_description"
-      learnMoreLink={{
-        href: getDocumentationUrl('/docs/references/applications'),
-        targetBlank: 'noopener',
-      }}
+      description={`application_details.${isThirdParty ? 'third_party_' : ''}settings_description`}
+      learnMoreLink={{ href: isThirdParty ? thirdPartyApp : applicationDataStructure }}
     >
       <FormField isRequired title="application_details.application_name">
         <TextInput
