@@ -22,7 +22,7 @@ import { defaultMetadata, endpoint } from './constant.js';
 import { ContextType, sendGridMailConfigGuard } from './types.js';
 import type { PublicParameters, SendGridMailConfig } from './types.js';
 
-const buildDefaultTemplateParameters = (
+const buildParametersFromDefaultTemplate = (
   to: string,
   config: SendGridMailConfig,
   template: SendGridMailConfig['templates'][0],
@@ -44,7 +44,7 @@ const buildDefaultTemplateParameters = (
   };
 };
 
-const buildCustomTemplateParameters = (
+const buildParametersFromCustomTemplate = (
   to: string,
   config: SendGridMailConfig,
   { subject, content, replyTo, sendFrom, contentType = 'text/html' }: EmailTemplateDetails,
@@ -93,8 +93,8 @@ const sendMessage =
     const template = templates.find((template) => template.usageType === type);
 
     const parameters = customTemplate
-      ? buildCustomTemplateParameters(to, config, customTemplate, payload)
-      : template && buildDefaultTemplateParameters(to, config, template, payload);
+      ? buildParametersFromCustomTemplate(to, config, customTemplate, payload)
+      : template && buildParametersFromDefaultTemplate(to, config, template, payload);
 
     assert(parameters, new ConnectorError(ConnectorErrorCodes.TemplateNotFound));
 
