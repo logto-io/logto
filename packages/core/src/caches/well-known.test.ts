@@ -1,3 +1,4 @@
+import { TemplateType } from '@logto/schemas';
 import { TtlCache } from '@logto/shared';
 import { pick } from '@silverhand/essentials';
 
@@ -68,6 +69,16 @@ describe('Well-known cache basics', () => {
       await cache.get('custom-phrases-tags-', WellKnownCache.defaultKey)
     ).toBe(undefined);
   });
+
+  it('should be able to get, set, and delete null value', async () => {
+    const cache = new WellKnownCache(tenantId, cacheStore);
+
+    await cache.set('email-templates', 'en:SignIn', null);
+    expect(await cache.get('email-templates', 'en:SignIn')).toBe(null);
+
+    await cache.delete('email-templates', 'en:SignIn');
+    expect(await cache.get('email-templates', 'en:SignIn')).toBe(undefined);
+  });
 });
 
 describe('Well-known cache function wrappers', () => {
@@ -127,6 +138,29 @@ describe('Well-known cache function wrappers', () => {
       { foo: '1', bar: 1 },
       { foo: '2', bar: 2 },
     ]);
+  });
+
+  it('can memoize function with null value', async () => {
+    const run = jest.fn(
+      async (languageTag: string, templateType: TemplateType) =>
+        // eslint-disable-next-line @typescript-eslint/ban-types
+        new Promise<null>((resolve) => {
+          setTimeout(() => {
+            resolve(null);
+          }, 0);
+        })
+    );
+    const cache = new WellKnownCache(tenantId, cacheStore);
+    const memoized = cache.memoize(run, [
+      'email-templates',
+      (languageTag, templateType) => `${languageTag}:${templateType}`,
+    ]);
+
+    expect(await memoized('en', TemplateType.SignIn)).toBe(null);
+
+    run.mockClear();
+    expect(await cache.get('email-templates', 'en:SignIn')).toBe(null);
+    expect(run).not.toBeCalled();
   });
 
   it('can memoize function with expire time', async () => {

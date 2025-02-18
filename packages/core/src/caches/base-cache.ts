@@ -51,7 +51,10 @@ export abstract class BaseCache<CacheMapT extends Record<string, unknown>> {
   ): Promise<Optional<CacheMapT[Type]>> {
     return trySafe(async () => {
       const data = await this.cacheStore.get(this.cacheKey(type, key));
-      return this.getValueGuard(type).parse(JSON.parse(data ?? ''));
+      // Allow `null` value to be stored in the cache.
+      // If the value is `null`, we should return `null` instead of parsing it as JSON.
+      // Otherwise, treat the value as JSON and parse it.
+      return this.getValueGuard(type).parse(data === 'null' ? null : JSON.parse(data ?? ''));
     });
   }
 
@@ -146,7 +149,7 @@ export abstract class BaseCache<CacheMapT extends Record<string, unknown>> {
           // Wrap with `trySafe()` here to ignore Redis errors
           const cachedValue = await trySafe(kvCache.get(type, promiseKey));
 
-          if (cachedValue) {
+          if (cachedValue !== undefined) {
             cacheConsole.info(
               `${kvCache.name} cache hit for, ${kvCache.tenantId}, ${type}, ${promiseKey}`
             );
