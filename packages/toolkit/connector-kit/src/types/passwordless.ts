@@ -62,7 +62,7 @@ export type SendMessagePayload = {
    * @example 'en-US'
    */
   locale?: string;
-} & Record<string, string>;
+} & Record<string, unknown>;
 
 /** The guard for {@link SendMessagePayload}. */
 export const sendMessagePayloadGuard = z
@@ -71,7 +71,7 @@ export const sendMessagePayloadGuard = z
     link: z.string().optional(),
     locale: z.string().optional(),
   })
-  .catchall(z.string()) satisfies z.ZodType<SendMessagePayload>;
+  .catchall(z.unknown()) satisfies z.ZodType<SendMessagePayload>;
 
 export const urlRegEx =
   /(https?:\/\/)?(?:www\.)?[\w#%+.:=@~-]{1,256}\.[\d()A-Za-z]{1,6}\b[\w#%&()+./:=?@~-]*/;

@@ -14,6 +14,7 @@ import {
   validateConfig,
   ConnectorType,
   mockConnectorFilePaths,
+  replaceSendMessageHandlebars,
 } from '@logto/connector-kit';
 
 import { defaultMetadata } from './constant.js';
@@ -41,7 +42,15 @@ const sendMessage =
 
     await fs.writeFile(
       mockConnectorFilePaths.Email,
-      JSON.stringify({ address: to, code: payload.code, type, payload, template }) + '\n'
+      JSON.stringify({
+        address: to,
+        code: payload.code,
+        type,
+        payload,
+        template,
+        subject: replaceSendMessageHandlebars(template.subject, payload),
+        content: replaceSendMessageHandlebars(template.content, payload),
+      }) + '\n'
     );
 
     return { address: to, data: payload };
