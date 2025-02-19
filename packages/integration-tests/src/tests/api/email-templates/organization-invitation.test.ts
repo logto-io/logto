@@ -1,4 +1,4 @@
-import { TemplateType } from '@logto/connector-kit';
+import { type EmailTemplateDetails, TemplateType } from '@logto/connector-kit';
 
 import { mockEmailConnectorConfig } from '#src/__mocks__/connectors-mock.js';
 import { type MockEmailTemplatePayload } from '#src/__mocks__/email-templates.js';
@@ -8,30 +8,31 @@ import { readConnectorMessage } from '#src/helpers/index.js';
 import { OrganizationApiTest, OrganizationInvitationApiTest } from '#src/helpers/organization.js';
 import { devFeatureTest, generateEmail } from '#src/utils.js';
 
+const mockEnTemplate: MockEmailTemplatePayload = {
+  languageTag: 'en',
+  templateType: TemplateType.OrganizationInvitation,
+  details: {
+    subject: 'Organization invitation',
+    content: 'Click {{link}} to join the organization.',
+    contentType: 'text/html',
+  },
+};
+const mockDeTemplate: MockEmailTemplatePayload = {
+  ...mockEnTemplate,
+  languageTag: 'de',
+};
+const mockFrSignInTemplate: MockEmailTemplatePayload = {
+  ...mockEnTemplate,
+  languageTag: 'fr',
+  templateType: TemplateType.SignIn,
+};
+
 devFeatureTest.describe('organization invitation API with i18n email templates', () => {
   const emailTemplatesApi = new EmailTemplatesApiTest();
   const invitationApi = new OrganizationInvitationApiTest();
   const organizationApi = new OrganizationApiTest();
 
   const mockEmail = generateEmail();
-  const mockEnTemplate: MockEmailTemplatePayload = {
-    languageTag: 'en',
-    templateType: TemplateType.OrganizationInvitation,
-    details: {
-      subject: 'Test template',
-      content: 'Test value: {{code}}',
-      contentType: 'text/html',
-    },
-  };
-  const mockDeTemplate: MockEmailTemplatePayload = {
-    ...mockEnTemplate,
-    languageTag: 'de',
-  };
-  const mockFrSignInTemplate: MockEmailTemplatePayload = {
-    ...mockEnTemplate,
-    languageTag: 'fr',
-    templateType: TemplateType.SignIn,
-  };
 
   beforeAll(async () => {
     await Promise.all([
@@ -49,8 +50,6 @@ devFeatureTest.describe('organization invitation API with i18n email templates',
   });
 
   it('should read and use the i18n email template for organization invitation', async () => {
-    await setEmailConnector();
-
     const organization = await organizationApi.create({ name: 'test' });
 
     await invitationApi.create({
@@ -74,8 +73,6 @@ devFeatureTest.describe('organization invitation API with i18n email templates',
   });
 
   it('should fallback to the default language template if the i18n template is not found for the given language', async () => {
-    await setEmailConnector();
-
     const organization = await organizationApi.create({ name: 'test' });
 
     await invitationApi.create({
@@ -99,7 +96,6 @@ devFeatureTest.describe('organization invitation API with i18n email templates',
   });
 
   it('should be able to resend the email after creating an invitation with a different language', async () => {
-    await setEmailConnector();
     const organization = await organizationApi.create({ name: 'test' });
 
     const invitation = await invitationApi.create({
@@ -143,7 +139,7 @@ devFeatureTest.describe('organization invitation API with i18n email templates',
 
     const organization = await organizationApi.create({ name: 'test' });
 
-    const invitation = await invitationApi.create({
+    await invitationApi.create({
       organizationId: organization.id,
       invitee: mockEmail,
       expiresAt: Date.now() + 1_000_000,
@@ -160,6 +156,49 @@ devFeatureTest.describe('organization invitation API with i18n email templates',
       template: mockEmailConnectorConfig.templates.find(
         ({ usageType }) => usageType === TemplateType.OrganizationInvitation
       ),
+    });
+  });
+
+  it('should render the template with the extra organization information', async () => {
+    const organizationInvitationTemplate: EmailTemplateDetails = {
+      subject: 'You are invited to join {{organization.name}}',
+      content:
+        '<p>Click {{link}} to join the organization {{organization.name}}.<p><img src="{{organization.branding.logoUrl}}" />{{organization.invalid_field.foo}}',
+      contentType: 'text/html',
+    };
+
+    await emailTemplatesApi.create([
+      {
+        languageTag: 'en',
+        templateType: TemplateType.OrganizationInvitation,
+        details: organizationInvitationTemplate,
+      },
+    ]);
+
+    const organization = await organizationApi.create({
+      name: 'test',
+      branding: {
+        logoUrl: 'https://example.com/logo.png',
+      },
+    });
+
+    await invitationApi.create({
+      organizationId: organization.id,
+      invitee: mockEmail,
+      expiresAt: Date.now() + 1_000_000,
+      messagePayload: {
+        link: 'https://example.com',
+      },
+    });
+
+    await expect(readConnectorMessage('Email')).resolves.toMatchObject({
+      type: 'OrganizationInvitation',
+      payload: {
+        link: 'https://example.com',
+      },
+      template: organizationInvitationTemplate,
+      subject: `You are invited to join test`,
+      content: `<p>Click https://example.com to join the organization test.<p><img src="https://example.com/logo.png" />`,
     });
   });
 });
