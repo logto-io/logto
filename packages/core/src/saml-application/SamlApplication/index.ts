@@ -93,7 +93,7 @@ class SamlApplicationConfig {
 
   public get entityId() {
     assertThat(this._details.entityId, 'application.saml.entity_id_required');
-    return this.normalizeUrlHost(this._details.entityId);
+    return this._details.entityId;
   }
 
   public get acsUrl() {
