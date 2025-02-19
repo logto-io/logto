@@ -88,7 +88,7 @@ describe('SAML application', () => {
       encryption: {
         encryptAssertion: true,
         certificate:
-          '-----BEGIN CERTIFICATE-----\nMIIDDTCCAfWgAwIBAgI...\n-----END CERTIFICATE-----\n',
+          '-----BEGIN CERTIFICATE-----\nMIIDDTCCAfWgAwIBAgI...\n-----END CERTIFICATE-----',
         encryptThenSign: false,
       },
     };
