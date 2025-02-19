@@ -6,6 +6,7 @@ import {
   parseJsonObject,
   replaceSendMessageHandlebars,
   validateConfig,
+  getValue,
 } from './index.js';
 
 describe('validateConfig', () => {
@@ -90,5 +91,74 @@ describe('replaceSendMessageHandlebars', () => {
     expect(replaceSendMessageHandlebars(template, payload)).toEqual(
       'Your verification code is 123456'
     );
+  });
+
+  it('should replace handlebars that have nested properties with payload', () => {
+    const template =
+      'Your application name is {{application.name}}, {{ application.customData.foo }}, {{ application.customData.bar }}, {{ application.customData.baz.1 }}';
+    const payload = {
+      application: {
+        name: 'Logto',
+        customData: {
+          foo: 'foo',
+          baz: [1, '2', null],
+        },
+      },
+    };
+    expect(replaceSendMessageHandlebars(template, payload)).toEqual(
+      'Your application name is Logto, foo, , 2'
+    );
+  });
+
+  it('should not replace handlebars if root property does not exist in payload', () => {
+    const template = 'Your {{ application.name }} sign in verification code is {{ code }}';
+    const payload = {
+      code: '123456',
+    };
+
+    expect(replaceSendMessageHandlebars(template, payload)).toEqual(
+      'Your {{ application.name }} sign in verification code is 123456'
+    );
+  });
+});
+
+describe('getValue', () => {
+  it('should return value from object', () => {
+    const object = { foo: { bar: { baz: 'qux' } } };
+    expect(getValue(object, 'foo')).toEqual(object.foo);
+    expect(getValue(object, 'foo.bar')).toEqual(object.foo.bar);
+    expect(getValue(object, 'foo.bar.baz')).toEqual('qux');
+  });
+
+  it('should return value from array', () => {
+    const object = {
+      list: [
+        { name: 'name1', age: 1 },
+        { name: 'name2', age: 2 },
+      ],
+    };
+    expect(getValue(object, 'list')).toEqual(object.list);
+    expect(getValue(object, 'list.0')).toEqual(object.list[0]);
+    expect(getValue(object, 'list.0.name')).toEqual('name1');
+  });
+
+  it('should return undefined if path is not found', () => {
+    const object = { foo: { bar: { baz: 'qux' } } };
+    expect(getValue(object, 'foo.baz')).toEqual(undefined);
+    expect(getValue(object, 'foo.bar.baz.qux')).toEqual(undefined);
+  });
+
+  it('should return undefined if path is not an object', () => {
+    const object = {
+      foo: 'foo',
+      bar: 1,
+      baz: true,
+      qux: [1, '2', null],
+      quux: null,
+    };
+
+    for (const key of Object.keys(object)) {
+      expect(getValue(object, `${key}.foo`)).toEqual(undefined);
+    }
   });
 });
