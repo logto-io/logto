@@ -6,6 +6,7 @@ import { setEmailConnector } from '#src/helpers/connector.js';
 import { EmailTemplatesApiTest } from '#src/helpers/email-templates.js';
 import { readConnectorMessage } from '#src/helpers/index.js';
 import { OrganizationApiTest, OrganizationInvitationApiTest } from '#src/helpers/organization.js';
+import { UserApiTest } from '#src/helpers/user.js';
 import { devFeatureTest, generateEmail } from '#src/utils.js';
 
 const mockEnTemplate: MockEmailTemplatePayload = {
@@ -31,6 +32,7 @@ devFeatureTest.describe('organization invitation API with i18n email templates',
   const emailTemplatesApi = new EmailTemplatesApiTest();
   const invitationApi = new OrganizationInvitationApiTest();
   const organizationApi = new OrganizationApiTest();
+  const useApi = new UserApiTest();
 
   const mockEmail = generateEmail();
 
@@ -46,7 +48,7 @@ devFeatureTest.describe('organization invitation API with i18n email templates',
   });
 
   afterEach(async () => {
-    await Promise.all([organizationApi.cleanUp(), invitationApi.cleanUp()]);
+    await Promise.all([organizationApi.cleanUp(), invitationApi.cleanUp(), useApi.cleanUp()]);
   });
 
   it('should read and use the i18n email template for organization invitation', async () => {
@@ -159,32 +161,35 @@ devFeatureTest.describe('organization invitation API with i18n email templates',
     });
   });
 
-  it('should render the template with the extra organization information', async () => {
+  it('should render the template with the extra organization invitation context information', async () => {
     const organizationInvitationTemplate: EmailTemplateDetails = {
-      subject: 'You are invited to join {{organization.name}}',
+      subject: '{{inviter.name}} invite you to join {{organization.name}}',
       content:
         '<p>Click {{link}} to join the organization {{organization.name}}.<p><img src="{{organization.branding.logoUrl}}" />{{organization.invalid_field.foo}}',
       contentType: 'text/html',
     };
 
-    await emailTemplatesApi.create([
-      {
-        languageTag: 'en',
-        templateType: TemplateType.OrganizationInvitation,
-        details: organizationInvitationTemplate,
-      },
+    const [organization, inviter] = await Promise.all([
+      organizationApi.create({
+        name: 'test org',
+        branding: {
+          logoUrl: 'https://example.com/logo.png',
+        },
+      }),
+      useApi.create({ name: 'John Joe' }),
+      emailTemplatesApi.create([
+        {
+          languageTag: 'en',
+          templateType: TemplateType.OrganizationInvitation,
+          details: organizationInvitationTemplate,
+        },
+      ]),
     ]);
-
-    const organization = await organizationApi.create({
-      name: 'test',
-      branding: {
-        logoUrl: 'https://example.com/logo.png',
-      },
-    });
 
     await invitationApi.create({
       organizationId: organization.id,
       invitee: mockEmail,
+      inviterId: inviter.id,
       expiresAt: Date.now() + 1_000_000,
       messagePayload: {
         link: 'https://example.com',
@@ -195,10 +200,21 @@ devFeatureTest.describe('organization invitation API with i18n email templates',
       type: 'OrganizationInvitation',
       payload: {
         link: 'https://example.com',
+        organization: {
+          id: organization.id,
+          name: 'test org',
+          branding: {
+            logoUrl: 'https://example.com/logo.png',
+          },
+        },
+        inviter: {
+          id: inviter.id,
+          name: 'John Joe',
+        },
       },
       template: organizationInvitationTemplate,
-      subject: `You are invited to join test`,
-      content: `<p>Click https://example.com to join the organization test.<p><img src="https://example.com/logo.png" />`,
+      subject: `John Joe invite you to join test org`,
+      content: `<p>Click https://example.com to join the organization test org.<p><img src="https://example.com/logo.png" />`,
     });
   });
 });
