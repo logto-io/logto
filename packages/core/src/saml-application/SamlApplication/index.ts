@@ -91,9 +91,9 @@ class SamlApplicationConfig {
     return this._details.secret;
   }
 
-  public get entityId() {
+  public get spEntityId() {
     assertThat(this._details.entityId, 'application.saml.entity_id_required');
-    return this.normalizeUrlHost(this._details.entityId);
+    return this._details.entityId;
   }
 
   public get acsUrl() {
@@ -519,7 +519,7 @@ export class SamlApplication {
 
   private buildSpConfig(): SamlServiceProviderConfig {
     return {
-      entityId: this.config.entityId,
+      entityId: this.config.spEntityId,
       acsUrl: this.config.acsUrl,
       certificate: this.config.encryption?.certificate,
     };

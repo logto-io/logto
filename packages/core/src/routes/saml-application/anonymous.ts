@@ -285,7 +285,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         log.append({ extractResultData: extractResult.data });
 
         assertThat(
-          extractResult.data.issuer === samlApplication.config.entityId,
+          extractResult.data.issuer === samlApplication.config.spEntityId,
           'application.saml.auth_request_issuer_not_match'
         );
 
@@ -385,7 +385,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         log.append({ extractResultData: extractResult.data });
 
         assertThat(
-          extractResult.data.issuer === samlApplication.config.entityId,
+          extractResult.data.issuer === samlApplication.config.spEntityId,
           'application.saml.auth_request_issuer_not_match'
         );
 
