@@ -2,7 +2,7 @@
 "@logto/connector-kit": minor
 ---
 
-enhanced Handlebars template processing in the connector to support deep property access in email template variables.
+enhanced handlebars template processing in the connector to support nested property access in email template variables.
 
 ## Updates
 
@@ -51,5 +51,5 @@ replaceSendMessageKeysWithPayload(
   "Your application is {{application.name}}",
   {}
 );
-// 'Your application i {{application.name}}'
+// 'Your application is {{application.name}}'
 ```

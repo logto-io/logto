@@ -18,7 +18,7 @@ export const buildExtraInfo = (metadata: ConnectorMetadata) => {
   return cleanDeep(extraInfo, { emptyObjects: false });
 };
 
-export type OrganizationExtraInfo = Pick<Organization, 'id' | 'name' | 'branding' | 'customData'>;
+export type OrganizationExtraInfo = Pick<Organization, 'id' | 'name' | 'branding'>;
 
 export const buildOrganizationExtraInfo = (organization: Organization): OrganizationExtraInfo =>
-  pick(organization, 'id', 'name', 'branding', 'customData');
+  pick(organization, 'id', 'name', 'branding');

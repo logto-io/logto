@@ -161,8 +161,7 @@ devFeatureTest.describe('organization invitation API with i18n email templates',
 
   it('should render the template with the extra organization information', async () => {
     const organizationInvitationTemplate: EmailTemplateDetails = {
-      subject:
-        'You are invited by {{organization.customData.invitee}} to join {{organization.name}}',
+      subject: 'You are invited to join {{organization.name}}',
       content:
         '<p>Click {{link}} to join the organization {{organization.name}}.<p><img src="{{organization.branding.logoUrl}}" />{{organization.invalid_field.foo}}',
       contentType: 'text/html',
@@ -181,7 +180,6 @@ devFeatureTest.describe('organization invitation API with i18n email templates',
       branding: {
         logoUrl: 'https://example.com/logo.png',
       },
-      customData: { invitee: 'John Doe' },
     });
 
     await invitationApi.create({
@@ -199,7 +197,7 @@ devFeatureTest.describe('organization invitation API with i18n email templates',
         link: 'https://example.com',
       },
       template: organizationInvitationTemplate,
-      subject: `You are invited by John Doe to join test`,
+      subject: `You are invited to join test`,
       content: `<p>Click https://example.com to join the organization test.<p><img src="https://example.com/logo.png" />`,
     });
   });
