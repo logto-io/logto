@@ -78,9 +78,10 @@ export const mockConnectorFilePaths = Object.freeze({
  *
  * replaceSendMessageKeysWithPayload('Your application name is {{application.name}}', { application: { name: 'Logto' } });
  * // 'Your application name is Logto'
- * ```
+ *
  * replaceSendMessageKeysWithPayload('Your application name is {{application.name}}', { application: {}});
  * // 'Your application name is '
+ * ```
  *
  * @example
  * ```ts
@@ -90,7 +91,6 @@ export const mockConnectorFilePaths = Object.freeze({
  * replaceSendMessageKeysWithPayload('Your application name is {{application.name}}', {});
  * // 'Your application name is {{application.name}}'
  * ```
- *
  */
 export const replaceSendMessageHandlebars = (
   template: string,
