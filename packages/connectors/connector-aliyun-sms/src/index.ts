@@ -19,15 +19,7 @@ import { defaultMetadata } from './constant.js';
 import { sendSms } from './single-send-text.js';
 import type { Template } from './types.js';
 import { aliyunSmsConfigGuard, sendSmsResponseGuard } from './types.js';
-
-// When `isStrictOnRegionNumber` is true, it means the mobile phone number area code needs to be strictly matched; the default is false, for backward compatibility, as some old phone numbers do not have region codes, which would cause the method to make mistakes on validation.
-export const isChinaNumber = (to: string, isStrictOnRegionNumber?: boolean) => {
-  if (isStrictOnRegionNumber) {
-    return /^(\+86|0086|86)\d{11}$/.test(to);
-  }
-
-  return /^(\+86|0086|86)?\d{11}$/.test(to);
-};
+import { isChinaNumber } from './utils.js';
 
 const getTemplateCode = (
   { templateCode }: Template,
