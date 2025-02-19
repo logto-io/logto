@@ -271,6 +271,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
           octetString,
         });
 
+        log.append({ loginRequestResult });
         const extractResult = authRequestInfoGuard.safeParse(loginRequestResult.extract);
         log.append({ extractResult });
 
@@ -371,6 +372,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
           },
         });
 
+        log.append({ loginRequestResult });
         const extractResult = authRequestInfoGuard.safeParse(loginRequestResult.extract);
         log.append({ extractResult });
 
