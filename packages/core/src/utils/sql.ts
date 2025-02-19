@@ -36,9 +36,11 @@ export const excludeAutoSetFields = <T extends string>(fields: readonly T[]) =>
  */
 export const convertToPrimitiveOrSql = (
   key: string,
-  value: SchemaValue
+  originalValue: SchemaValue
   // eslint-disable-next-line @typescript-eslint/ban-types
 ): NonNullable<SchemaValuePrimitive> | SqlToken | null => {
+  const value = trimWhitespace(originalValue);
+
   if (value === null) {
     return null;
   }
@@ -97,4 +99,27 @@ export const manyRows = async <T>(query: Promise<QueryResult<T>>): Promise<reado
   const { rows } = await query;
 
   return rows;
+};
+
+export const trimWhitespace = (value: unknown): unknown => {
+  if (
+    value === null ||
+    value === undefined ||
+    typeof value === 'number' ||
+    typeof value === 'boolean'
+  ) {
+    return value;
+  }
+
+  if (typeof value === 'string') {
+    return value.trim();
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => trimWhitespace(item));
+  }
+
+  return Object.entries(value).reduce<Record<string, unknown>>((result, [key, value_]) => {
+    return { ...result, [key]: trimWhitespace(value_) };
+  }, {});
 };

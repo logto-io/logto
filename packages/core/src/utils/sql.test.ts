@@ -9,6 +9,7 @@ import {
   convertToIdentifiers,
   convertToTimestamp,
   conditionalSql,
+  trimWhitespace,
 } from './sql.js';
 
 const { jest } = import.meta;
@@ -131,6 +132,46 @@ describe('convertToTimestamp()', () => {
       sql: 'to_timestamp($1)',
       type: SqlToken,
       values: [time.valueOf() / 1000],
+    });
+  });
+});
+
+describe('trimWhitespace()', () => {
+  it('trims whitespace', () => {
+    expect(trimWhitespace('   foo   ')).toEqual('foo');
+  });
+
+  it('returns original value when input is null, undefined, number or boolean', () => {
+    expect(trimWhitespace(null)).toEqual(null);
+    // eslint-disable-next-line unicorn/no-useless-undefined
+    expect(trimWhitespace(undefined)).toEqual(undefined);
+    expect(trimWhitespace(123)).toEqual(123);
+    expect(trimWhitespace(true)).toEqual(true);
+    expect(trimWhitespace(false)).toEqual(false);
+  });
+
+  it('handles array input', () => {
+    expect(trimWhitespace(['   foo   ', '   bar   '])).toEqual(['foo', 'bar']);
+    expect(trimWhitespace(['   foo   ', 123, true])).toEqual(['foo', 123, true]);
+  });
+
+  it('handles object input', () => {
+    expect(trimWhitespace({ foo: '   foo   ', bar: 123, baz: false })).toMatchObject({
+      foo: 'foo',
+      bar: 123,
+      baz: false,
+    });
+  });
+
+  it('handles nested complex object input', () => {
+    expect(
+      trimWhitespace({
+        foo: { bar: '   bar   ' },
+        baz: { qux: ['   qux   '] },
+      })
+    ).toMatchObject({
+      foo: { bar: 'bar' },
+      baz: { qux: ['qux'] },
     });
   });
 });
