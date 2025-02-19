@@ -91,5 +91,11 @@ export const defaultMetadata: ConnectorMetadata = {
         },
       ],
     },
+    {
+      key: 'strictPhoneRegionNumberCheck',
+      label: 'Strict Phone Region Number Check',
+      type: ConnectorConfigFormItemType.Switch,
+      defaultValue: false,
+    },
   ],
 };

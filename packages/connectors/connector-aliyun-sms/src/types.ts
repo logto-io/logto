@@ -70,6 +70,7 @@ export const aliyunSmsConfigGuard = z.object({
         .join(', ')}) should be provided in templates.`,
     })
   ),
+  strictPhoneRegionNumberCheck: z.boolean().optional(),
 });
 
 export type AliyunSmsConfig = z.infer<typeof aliyunSmsConfigGuard>;
