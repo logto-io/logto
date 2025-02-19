@@ -1,5 +1,5 @@
 import type { AllConnector } from '@logto/connector-kit';
-import { type Connector, Connectors } from '@logto/schemas';
+import { type Connector, Connectors, type Organization, type User } from '@logto/schemas';
 import { type z } from 'zod';
 
 export { ConnectorType } from '@logto/schemas';
@@ -26,4 +26,24 @@ export type LogtoConnectorWellKnown<T extends AllConnector = AllConnector> = Pic
   'type' | 'metadata'
 > & {
   dbEntry: ConnectorWellKnown;
+};
+
+/**
+ * Public organization context info for message template payload.
+ */
+type OrganizationContextInfo = Pick<Organization, 'id' | 'name' | 'branding'>;
+/**
+ * Public user context info for message template payload.
+ */
+type UserContextInfo = Pick<
+  User,
+  'id' | 'avatar' | 'name' | 'primaryEmail' | 'primaryPhone' | 'username' | 'profile'
+>;
+
+/**
+ * The context info for organization invitation message template payload.
+ */
+export type OrganizationInvitationContextInfo = {
+  organization: OrganizationContextInfo;
+  inviter?: UserContextInfo;
 };

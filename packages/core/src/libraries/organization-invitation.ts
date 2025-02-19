@@ -5,16 +5,18 @@ import {
   type OrganizationInvitationEntity,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { removeUndefinedKeys } from '@silverhand/essentials';
+import { conditional, type Nullable, removeUndefinedKeys } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import OrganizationQueries from '#src/queries/organization/index.js';
 import { createUserQueries } from '#src/queries/user.js';
 import type Queries from '#src/tenants/Queries.js';
 import {
-  buildOrganizationExtraInfo,
-  type OrganizationExtraInfo,
+  buildOrganizationContextInfo,
+  buildUserContextInfo,
 } from '#src/utils/connectors/extra-information.js';
+
+import { type OrganizationInvitationContextInfo } from '../utils/connectors/types.js';
 
 import { type ConnectorLibrary } from './connector.js';
 
@@ -94,9 +96,12 @@ export class OrganizationInvitationLibrary {
       }
 
       if (messagePayload) {
-        const organization = await organizationQueries.findById(organizationId);
+        const templateContext = await this.getOrganizationInvitationTemplateContext(
+          organizationId,
+          inviterId
+        );
         await this.sendEmail(invitee, {
-          organization: buildOrganizationExtraInfo(organization),
+          ...templateContext,
           ...messagePayload,
         });
       }
@@ -211,11 +216,25 @@ export class OrganizationInvitationLibrary {
     });
   }
 
+  async getOrganizationInvitationTemplateContext(
+    organizationId: string,
+    inviterId?: Nullable<string>
+  ): Promise<OrganizationInvitationContextInfo> {
+    const organization = await this.queries.organizations.findById(organizationId);
+    const inviter = inviterId && (await this.queries.users.findUserById(inviterId));
+
+    return {
+      organization: buildOrganizationContextInfo(organization),
+      ...conditional(
+        inviter && {
+          inviter: buildUserContextInfo(inviter),
+        }
+      ),
+    };
+  }
+
   /** Send an organization invitation email. */
-  async sendEmail(
-    to: string,
-    payload: SendMessagePayload & { organization: OrganizationExtraInfo }
-  ) {
+  async sendEmail(to: string, payload: SendMessagePayload & OrganizationInvitationContextInfo) {
     const emailConnector = await this.connector.getMessageConnector(ConnectorType.Email);
     return emailConnector.sendMessage({
       to,

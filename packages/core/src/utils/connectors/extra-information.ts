@@ -1,5 +1,5 @@
 import { type ConnectorMetadata, ServiceConnector } from '@logto/connector-kit';
-import { type Organization } from '@logto/schemas';
+import { type User, type Organization } from '@logto/schemas';
 import { conditional, pick } from '@silverhand/essentials';
 import cleanDeep from 'clean-deep';
 import { string, object } from 'zod';
@@ -18,7 +18,8 @@ export const buildExtraInfo = (metadata: ConnectorMetadata) => {
   return cleanDeep(extraInfo, { emptyObjects: false });
 };
 
-export type OrganizationExtraInfo = Pick<Organization, 'id' | 'name' | 'branding'>;
-
-export const buildOrganizationExtraInfo = (organization: Organization): OrganizationExtraInfo =>
+export const buildOrganizationContextInfo = (organization: Organization) =>
   pick(organization, 'id', 'name', 'branding');
+
+export const buildUserContextInfo = (user: User) =>
+  pick(user, 'id', 'avatar', 'name', 'primaryEmail', 'primaryPhone', 'username', 'profile');
