@@ -5,6 +5,7 @@ import {
   type CreateEmailTemplate,
   type TemplateType,
 } from '@logto/schemas';
+import { trySafe } from '@silverhand/essentials';
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
 import SchemaQueries from '#src/utils/SchemaQueries.js';
@@ -24,6 +25,14 @@ export default class EmailTemplatesQueries extends SchemaQueries<
   CreateEmailTemplate,
   EmailTemplate
 > {
+  public readonly findByLanguageTagAndTemplateType = this.wellKnownCache.memoize(
+    this.#findByLanguageTagAndTemplateType,
+    [
+      'email-templates',
+      (templateType: TemplateType, languageTag: string) => `${languageTag}:${templateType}`,
+    ]
+  );
+
   constructor(
     pool: CommonQueryMethods,
     private readonly wellKnownCache: WellKnownCache
@@ -42,7 +51,7 @@ export default class EmailTemplatesQueries extends SchemaQueries<
   ): Promise<readonly EmailTemplate[]> {
     const { fields } = convertToIdentifiers(EmailTemplates);
 
-    return this.pool.transaction(async (transaction) => {
+    const results = await this.pool.transaction(async (transaction) => {
       const insertIntoTransaction = buildInsertIntoWithPool(transaction)(EmailTemplates, {
         returning: true,
         onConflict: {
@@ -55,6 +64,43 @@ export default class EmailTemplatesQueries extends SchemaQueries<
         emailTemplates.map(async (emailTemplate) => insertIntoTransaction(emailTemplate))
       );
     });
+
+    // Make sure to invalidate the cache after updating email templates
+    void Promise.all(
+      results.map(async ({ languageTag, templateType }) =>
+        trySafe(this.wellKnownCache.delete('email-templates', `${languageTag}:${templateType}`))
+      )
+    );
+
+    return results;
+  }
+
+  override async updateById(
+    id: string,
+    data: Partial<EmailTemplate>,
+    jsonbMode: 'replace' | 'merge' = 'replace'
+  ) {
+    const result = await super.updateById(id, data, jsonbMode);
+
+    // Make sure to invalidate the cache after updating email templates
+    void trySafe(
+      this.wellKnownCache.delete('email-templates', `${result.languageTag}:${result.templateType}`)
+    );
+
+    return result;
+  }
+
+  override async deleteById(id: string) {
+    const emailTemplate = await this.findById(id);
+    await super.deleteById(id);
+
+    // Make sure to invalidate the cache after deleting email templates
+    void trySafe(
+      this.wellKnownCache.delete(
+        'email-templates',
+        `${emailTemplate.languageTag}:${emailTemplate.templateType}`
+      )
+    );
   }
 
   /**
@@ -99,7 +145,7 @@ export default class EmailTemplatesQueries extends SchemaQueries<
   ): Promise<{ rowCount: number }> {
     const { fields, table } = convertToIdentifiers(EmailTemplates);
 
-    return this.pool.query(sql`
+    const { rows, rowCount } = await this.pool.query<EmailTemplate>(sql`
       delete from ${table}
       where ${sql.join(
         Object.entries(where).map(
@@ -108,11 +154,20 @@ export default class EmailTemplatesQueries extends SchemaQueries<
         ),
         sql` and `
       )}
+      returning *
     `);
+
+    // Make sure to invalidate the cache after deleting email templates
+    void Promise.all(
+      rows.map(async ({ languageTag, templateType }) =>
+        trySafe(this.wellKnownCache.delete('email-templates', `${languageTag}:${templateType}`))
+      )
+    );
+
+    return { rowCount };
   }
 
-  // TODO: Implement redis cache for email templates
-  async findByLanguageTagAndTemplateType(templateType: TemplateType, languageTag: string) {
+  async #findByLanguageTagAndTemplateType(templateType: TemplateType, languageTag: string) {
     const { fields, table } = convertToIdentifiers(EmailTemplates);
 
     return this.pool.maybeOne<EmailTemplate>(

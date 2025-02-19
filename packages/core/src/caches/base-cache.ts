@@ -146,7 +146,7 @@ export abstract class BaseCache<CacheMapT extends Record<string, unknown>> {
           // Wrap with `trySafe()` here to ignore Redis errors
           const cachedValue = await trySafe(kvCache.get(type, promiseKey));
 
-          if (cachedValue) {
+          if (cachedValue !== undefined) {
             cacheConsole.info(
               `${kvCache.name} cache hit for, ${kvCache.tenantId}, ${type}, ${promiseKey}`
             );
