@@ -10,6 +10,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import SchemaRouter from '#src/utils/SchemaRouter.js';
 import assertThat from '#src/utils/assert-that.js';
+import { buildOrganizationExtraInfo } from '#src/utils/connectors/extra-information.js';
 
 import { errorHandler } from '../organization/utils.js';
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
@@ -18,13 +19,13 @@ export default function organizationInvitationRoutes<T extends ManagementApiRout
   ...[
     originalRouter,
     {
-      queries: {
-        organizations: { invitations },
-      },
+      queries: { organizations },
       libraries: { organizationInvitations },
     },
   ]: RouterInitArgs<T>
 ) {
+  const { invitations } = organizations;
+
   const router = new SchemaRouter(OrganizationInvitations, invitations, {
     errorHandler,
     disabled: {
@@ -99,9 +100,13 @@ export default function organizationInvitationRoutes<T extends ManagementApiRout
         params: { id },
         body,
       } = ctx.guard;
-      const { invitee } = await invitations.findById(id);
+      const { invitee, organizationId } = await invitations.findById(id);
+      const organization = await organizations.findById(organizationId);
 
-      await organizationInvitations.sendEmail(invitee, body);
+      await organizationInvitations.sendEmail(invitee, {
+        organization: buildOrganizationExtraInfo(organization),
+        ...body,
+      });
       ctx.status = 204;
       return next();
     }
