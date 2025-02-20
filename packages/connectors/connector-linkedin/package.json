@@ -1,10 +1,10 @@
 {
   "name": "@logto/connector-linkedin",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "LinkedIn web connector implementation.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^4.0.0",
+    "@logto/connector-kit": "workspace:^4.1.1",
     "@silverhand/essentials": "^2.9.1",
     "ky": "^1.2.3",
     "query-string": "^9.0.0",

@@ -1,10 +1,10 @@
 {
   "name": "@logto/connector-vonage-sms",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Vonage SMS connector implementation.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^4.0.0",
+    "@logto/connector-kit": "workspace:^4.1.1",
     "@silverhand/essentials": "^2.9.1",
     "@vonage/auth": "^1.12.0",
     "@vonage/server-sdk": "^3.19.0",

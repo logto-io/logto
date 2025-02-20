@@ -1,6 +1,6 @@
 {
   "name": "@logto/schemas",
-  "version": "1.24.0",
+  "version": "1.24.1",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
   "type": "module",
@@ -78,12 +78,12 @@
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^4.1.0",
-    "@logto/core-kit": "workspace:^2.5.2",
-    "@logto/language-kit": "workspace:^1.1.0",
-    "@logto/phrases": "workspace:^1.17.0",
-    "@logto/phrases-experience": "workspace:^1.9.0",
-    "@logto/shared": "workspace:^3.1.2",
+    "@logto/connector-kit": "workspace:^4.1.1",
+    "@logto/core-kit": "workspace:^2.5.4",
+    "@logto/language-kit": "workspace:^1.1.1",
+    "@logto/phrases": "workspace:^1.18.0",
+    "@logto/phrases-experience": "workspace:^1.9.1",
+    "@logto/shared": "workspace:^3.1.4",
     "@withtyped/server": "^0.14.0",
     "nanoid": "^5.0.9"
   },

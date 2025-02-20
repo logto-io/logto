@@ -1,5 +1,21 @@
 # Change Log
 
+## 1.24.1
+
+### Patch Changes
+
+- cb261024b: fix cli add offical connectors command missing connectors bug
+
+  Fix the bug when running the cli commend `logto connectors add --official`, only 8 connectors are fetched from npm registry.
+  This fix update logic to query additional pages of results when fetching connectors from the npm registry.
+
+- e11e57de8: bump dependencies for security update
+- Updated dependencies [e11e57de8]
+  - @logto/connector-kit@4.1.1
+  - @logto/core-kit@2.5.4
+  - @logto/schemas@1.24.1
+  - @logto/shared@3.1.4
+
 ## 1.24.0
 
 ### Patch Changes

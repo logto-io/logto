@@ -1,5 +1,14 @@
 # @logto/tunnel
 
+## 0.2.5
+
+### Patch Changes
+
+- e11e57de8: bump dependencies for security update
+- Updated dependencies [e11e57de8]
+  - @logto/core-kit@2.5.4
+  - @logto/shared@3.1.4
+
 ## 0.2.4
 
 ### Patch Changes
