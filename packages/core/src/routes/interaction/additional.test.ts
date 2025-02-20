@@ -154,10 +154,10 @@ describe('interaction routes', () => {
       const response = await sessionRequest.post(path).send(body);
       expect(getInteractionStorage).toBeCalled();
       expect(sendVerificationCodeToIdentifier).toBeCalledWith(
-        {
+        expect.objectContaining({
           event: InteractionEvent.SignIn,
           ...body,
-        },
+        }),
         'jti',
         createLog,
         tenantContext.libraries.passcodes
