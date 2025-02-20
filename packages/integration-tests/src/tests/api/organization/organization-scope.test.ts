@@ -45,7 +45,12 @@ describe('organization scope APIs', () => {
       Array.from({ length: 30 }).map(async () => scopeApi.create({ name: 'test' + randomId() }))
     );
 
-    const scopes = await scopeApi.getList();
+    const scopes = await scopeApi.getList(
+      new URLSearchParams({
+        page: '1',
+        page_size: '20',
+      })
+    );
     expect(scopes).toHaveLength(20);
 
     const scopes2 = await scopeApi.getList(
