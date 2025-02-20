@@ -1,3 +1,4 @@
+import { appInsights } from '@logto/app-insights/node';
 import { ConnectorType, type SendMessagePayload, TemplateType } from '@logto/connector-kit';
 import {
   OrganizationInvitationStatus,
@@ -5,16 +6,19 @@ import {
   type OrganizationInvitationEntity,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { removeUndefinedKeys } from '@silverhand/essentials';
+import { conditional, type Nullable, removeUndefinedKeys } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import OrganizationQueries from '#src/queries/organization/index.js';
 import { createUserQueries } from '#src/queries/user.js';
 import type Queries from '#src/tenants/Queries.js';
 import {
-  buildOrganizationExtraInfo,
-  type OrganizationExtraInfo,
+  buildOrganizationContextInfo,
+  buildUserContextInfo,
 } from '#src/utils/connectors/extra-information.js';
+import { type OrganizationInvitationContextInfo } from '#src/utils/connectors/types.js';
+
+import { EnvSet } from '../env-set/index.js';
 
 import { type ConnectorLibrary } from './connector.js';
 
@@ -94,9 +98,13 @@ export class OrganizationInvitationLibrary {
       }
 
       if (messagePayload) {
-        const organization = await organizationQueries.findById(organizationId);
+        // TODO: @simeng remove this check after the feature is fully implemented
+        const templateContext = EnvSet.values.isDevFeaturesEnabled
+          ? await this.getOrganizationInvitationTemplateContext(organizationId, inviterId)
+          : undefined;
+
         await this.sendEmail(invitee, {
-          organization: buildOrganizationExtraInfo(organization),
+          ...templateContext,
           ...messagePayload,
         });
       }
@@ -211,11 +219,34 @@ export class OrganizationInvitationLibrary {
     });
   }
 
+  async getOrganizationInvitationTemplateContext(
+    organizationId: string,
+    inviterId?: Nullable<string>
+  ): Promise<OrganizationInvitationContextInfo> {
+    try {
+      const [organization, inviter] = await Promise.all([
+        this.queries.organizations.findById(organizationId),
+        inviterId ? this.queries.users.findUserById(inviterId) : undefined,
+      ]);
+
+      return {
+        organization: buildOrganizationContextInfo(organization),
+        ...conditional(
+          inviter && {
+            inviter: buildUserContextInfo(inviter),
+          }
+        ),
+      };
+    } catch (error: unknown) {
+      void appInsights.trackException(error);
+
+      // Should not block the verification code sending if the context information is not available.
+      return {};
+    }
+  }
+
   /** Send an organization invitation email. */
-  async sendEmail(
-    to: string,
-    payload: SendMessagePayload & { organization: OrganizationExtraInfo }
-  ) {
+  async sendEmail(to: string, payload: SendMessagePayload & OrganizationInvitationContextInfo) {
     const emailConnector = await this.connector.getMessageConnector(ConnectorType.Email);
     return emailConnector.sendMessage({
       to,

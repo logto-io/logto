@@ -11,7 +11,10 @@ import { generateStandardId } from '@logto/shared';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { type createPasscodeLibrary } from '#src/libraries/passcode.js';
+import {
+  type SendPasscodeContextPayload,
+  type createPasscodeLibrary,
+} from '#src/libraries/passcode.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -107,13 +110,13 @@ abstract class CodeVerification<T extends CodeVerificationType>
   /**
    * Send the verification code to the current `identifier`
    *
-   * @param locale - The language tag detected from the user's request. If provided, it will be used to localize the message.
+   * @param {SendPasscodeContextPayload} payload - The extra context information for the verification code template.
    * @remarks
    * Instead of session jti,
    * the verification id is used as `interaction_jti` to uniquely identify the passcode record in DB
    * for the current interaction.
    */
-  async sendVerificationCode(locale?: string) {
+  async sendVerificationCode(payload?: SendPasscodeContextPayload) {
     const { createPasscode, sendPasscode } = this.libraries.passcodes;
 
     const verificationCode = await createPasscode(
@@ -122,7 +125,7 @@ abstract class CodeVerification<T extends CodeVerificationType>
       getPasscodeIdentifierPayload(this.identifier)
     );
 
-    await sendPasscode(verificationCode, locale);
+    await sendPasscode(verificationCode, payload);
   }
 
   /**
