@@ -17,6 +17,7 @@ export const samlLogInResponseTemplate = `
         <saml:Audience>{Audience}</saml:Audience>
       </saml:AudienceRestriction>
     </saml:Conditions>
+    {AuthnStatement}
     {AttributeStatement}
   </saml:Assertion>
 </samlp:Response>`;
