@@ -6,6 +6,8 @@ type Auth = {
   scopes: Set<string>;
   /** If the request is verified by a verification record, this will be set to `true`. */
   identityVerified?: boolean;
+  /** Client ID of the OIDC access token */
+  clientId?: string;
 };
 
 export type WithAuthContext<ContextT extends IRouterParamContext = IRouterParamContext> =

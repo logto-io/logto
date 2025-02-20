@@ -45,6 +45,8 @@ type ConnectorMessageRecord = {
    * The template will be either the default template from connector config or the custom i18n template if it exists.
    */
   template?: Record<string, unknown>;
+  subject?: string;
+  content?: string;
 };
 
 /**

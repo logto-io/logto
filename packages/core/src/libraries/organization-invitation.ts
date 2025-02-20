@@ -1,3 +1,4 @@
+import { appInsights } from '@logto/app-insights/node';
 import { ConnectorType, type SendMessagePayload, TemplateType } from '@logto/connector-kit';
 import {
   OrganizationInvitationStatus,
@@ -15,8 +16,9 @@ import {
   buildOrganizationContextInfo,
   buildUserContextInfo,
 } from '#src/utils/connectors/extra-information.js';
+import { type OrganizationInvitationContextInfo } from '#src/utils/connectors/types.js';
 
-import { type OrganizationInvitationContextInfo } from '../utils/connectors/types.js';
+import { EnvSet } from '../env-set/index.js';
 
 import { type ConnectorLibrary } from './connector.js';
 
@@ -96,10 +98,11 @@ export class OrganizationInvitationLibrary {
       }
 
       if (messagePayload) {
-        const templateContext = await this.getOrganizationInvitationTemplateContext(
-          organizationId,
-          inviterId
-        );
+        // TODO: @simeng remove this check after the feature is fully implemented
+        const templateContext = EnvSet.values.isDevFeaturesEnabled
+          ? await this.getOrganizationInvitationTemplateContext(organizationId, inviterId)
+          : undefined;
+
         await this.sendEmail(invitee, {
           ...templateContext,
           ...messagePayload,
@@ -220,17 +223,26 @@ export class OrganizationInvitationLibrary {
     organizationId: string,
     inviterId?: Nullable<string>
   ): Promise<OrganizationInvitationContextInfo> {
-    const organization = await this.queries.organizations.findById(organizationId);
-    const inviter = inviterId && (await this.queries.users.findUserById(inviterId));
+    try {
+      const [organization, inviter] = await Promise.all([
+        this.queries.organizations.findById(organizationId),
+        inviterId ? this.queries.users.findUserById(inviterId) : undefined,
+      ]);
 
-    return {
-      organization: buildOrganizationContextInfo(organization),
-      ...conditional(
-        inviter && {
-          inviter: buildUserContextInfo(inviter),
-        }
-      ),
-    };
+      return {
+        organization: buildOrganizationContextInfo(organization),
+        ...conditional(
+          inviter && {
+            inviter: buildUserContextInfo(inviter),
+          }
+        ),
+      };
+    } catch (error: unknown) {
+      void appInsights.trackException(error);
+
+      // Should not block the verification code sending if the context information is not available.
+      return {};
+    }
   }
 
   /** Send an organization invitation email. */
