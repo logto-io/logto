@@ -269,8 +269,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -336,8 +336,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -394,8 +394,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -452,8 +452,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -513,8 +513,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.1
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -577,8 +577,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -641,8 +641,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -702,8 +702,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -769,8 +769,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -827,8 +827,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -885,8 +885,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -943,8 +943,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -1001,8 +1001,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -1062,8 +1062,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.1
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -1132,8 +1132,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.1
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -1193,8 +1193,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -1248,8 +1248,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -1306,8 +1306,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.1
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -1364,8 +1364,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -1422,8 +1422,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.1
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -1483,8 +1483,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.1
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -1544,8 +1544,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.1
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -1605,8 +1605,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -1663,8 +1663,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -1721,8 +1721,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -1779,8 +1779,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -1837,8 +1837,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -1895,8 +1895,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -1953,8 +1953,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -2011,8 +2011,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -2069,8 +2069,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -2136,8 +2136,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.1
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -2206,8 +2206,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.1
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -2264,8 +2264,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.1
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -2319,8 +2319,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.1
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -2383,8 +2383,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -2441,8 +2441,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -2502,8 +2502,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.1
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -2560,8 +2560,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -2624,8 +2624,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -2682,8 +2682,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -2740,8 +2740,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -2853,8 +2853,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -2911,8 +2911,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -2969,8 +2969,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -3030,8 +3030,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.1
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -3085,8 +3085,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.1
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -3140,8 +3140,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -6151,8 +6151,8 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
 
-  '@mswjs/interceptors@0.36.5':
-    resolution: {integrity: sha512-aQ8WF5zQwOdcxLsxSEk9Jd01GgGb80xxqCaiDDlewhtwqpSm8MOvUHslwPydVirasdW09++NxDNNftm1vLY8yA==}
+  '@mswjs/interceptors@0.37.6':
+    resolution: {integrity: sha512-wK+5pLK5XFmgtH3aQ2YVvA3HohS3xqV/OxuVOdNx9Wpnz7VE/fnC+e1A7ln6LFYeck7gOJ/dsZV6OLplOtAJ2w==}
     engines: {node: '>=18'}
 
   '@nodelib/fs.scandir@2.1.5':
@@ -6552,6 +6552,7 @@ packages:
   '@shopify/jest-koa-mocks@5.0.0':
     resolution: {integrity: sha512-keF5fgqAzWgC4O5uwUgQawp80IsDJdfyyMvWnIcsMaYw9CgURm4CW+v9NskUAn6AeaHd4Tkv+pWCFg/LRHHf4w==}
     engines: {node: ^14.17.0 || >=16.0.0}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   '@sideway/address@4.1.5':
     resolution: {integrity: sha512-IqO/DUQHUkPeixNQ8n0JA6102hT9CmaljNTPmQ1u8MEhBo/R4Q8eKLN/vGZxuebwOroDB4cbpjheD4+/sKFK4Q==}
@@ -11747,17 +11748,13 @@ packages:
     resolution: {integrity: sha512-WmS3EUGw+vXHlTgiUPi3NzbZNwH6+uGX0QLGgqG+aFSJ5rkX/Ee0nuwHBJfZTfQwwR8lGO819NEIwQ7CGhkdEQ==}
     deprecated: Use `change-case`
 
-  nock@13.3.1:
-    resolution: {integrity: sha512-vHnopocZuI93p2ccivFyGuUfzjq2fxNyNurp7816mlT5V5HF4SzXu8lvLrVzBbNqzs+ODooZ6OksuSUNM7Njkw==}
-    engines: {node: '>= 10.13'}
-
-  nock@14.0.0-beta.15:
-    resolution: {integrity: sha512-rp72chatxoZbR/2cYHwtb+IX6n6kkanYKGN2PKn4c12JBrj9n4xGUKFykuQHB+Gkz3fynlikFbMH2LI6VoebuQ==}
-    engines: {node: '>= 18'}
-
   nock@14.0.0-beta.5:
     resolution: {integrity: sha512-u255tf4DYvyErTlPZA9uTfXghiZZy+NflUOFONPVKZ5tP0yaHwKig28zyFOLhu8y5YcCRC+V5vDk4HHileh2iw==}
     engines: {node: '>= 18'}
+
+  nock@14.0.1:
+    resolution: {integrity: sha512-IJN4O9pturuRdn60NjQ7YkFt6Rwei7ZKaOwb1tvUIIqTgeD0SDDAX3vrqZD4wcXczeEy/AsUXxpGpP/yHqV7xg==}
+    engines: {node: '>=18.20.0 <20 || >=20.12.1'}
 
   node-fetch@2.7.0:
     resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
@@ -16374,7 +16371,7 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@mswjs/interceptors@0.36.5':
+  '@mswjs/interceptors@0.37.6':
     dependencies:
       '@open-draft/deferred-promise': 2.2.0
       '@open-draft/logger': 0.3.0
@@ -23669,23 +23666,14 @@ snapshots:
 
   no-case@4.0.0: {}
 
-  nock@13.3.1:
-    dependencies:
-      debug: 4.3.4
-      json-stringify-safe: 5.0.1
-      lodash: 4.17.21
-      propagate: 2.0.1
-    transitivePeerDependencies:
-      - supports-color
-
-  nock@14.0.0-beta.15:
-    dependencies:
-      '@mswjs/interceptors': 0.36.5
-      json-stringify-safe: 5.0.1
-      propagate: 2.0.1
-
   nock@14.0.0-beta.5:
     dependencies:
+      json-stringify-safe: 5.0.1
+      propagate: 2.0.1
+
+  nock@14.0.1:
+    dependencies:
+      '@mswjs/interceptors': 0.37.6
       json-stringify-safe: 5.0.1
       propagate: 2.0.1
 
