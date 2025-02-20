@@ -62,8 +62,8 @@ describe('organization role APIs', () => {
 
       const roles = await roleApi.getList(
         new URLSearchParams({
-          page: '1',
-          page_size: '20',
+          offset: '0',
+          limit: '20',
         })
       );
       expect(roles).toHaveLength(20);

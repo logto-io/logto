@@ -47,8 +47,8 @@ describe('organization scope APIs', () => {
 
     const scopes = await scopeApi.getList(
       new URLSearchParams({
-        page: '1',
-        page_size: '20',
+        offset: '0',
+        limit: '20',
       })
     );
     expect(scopes).toHaveLength(20);
