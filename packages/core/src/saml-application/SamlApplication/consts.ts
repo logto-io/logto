@@ -1,3 +1,5 @@
+import { type IdTokenProfileStandardClaims } from '#src/sso/types/oidc.js';
+
 export const samlLogInResponseTemplate = `
 <samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="{ID}" Version="2.0" IssueInstant="{IssueInstant}" Destination="{Destination}" InResponseTo="{InResponseTo}">
   <saml:Issuer>{Issuer}</saml:Issuer>
@@ -17,6 +19,11 @@ export const samlLogInResponseTemplate = `
         <saml:Audience>{Audience}</saml:Audience>
       </saml:AudienceRestriction>
     </saml:Conditions>
+    <saml:AuthnStatement AuthnInstant="{IssueInstant}" SessionNotOnOrAfter="{SessionNotOnOrAfter}" SessionIndex="{SessionIndex}">
+      <saml:AuthnContext>
+        <saml:AuthnContextClassRef>{AuthnContextClassRef}</saml:AuthnContextClassRef>
+      </saml:AuthnContext>
+    </saml:AuthnStatement>
     {AttributeStatement}
   </saml:Assertion>
 </samlp:Response>`;
@@ -34,3 +41,9 @@ export const samlValueXmlnsXsi = {
   boolean: samlValueXmlnsXsiBoolean,
   datetime: samlValueXmlnsXsiDatetime,
 };
+
+export const fallbackAttributes: Array<keyof IdTokenProfileStandardClaims> = [
+  'sub',
+  'email',
+  'name',
+];
