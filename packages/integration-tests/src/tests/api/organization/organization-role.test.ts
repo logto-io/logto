@@ -60,7 +60,12 @@ describe('organization role APIs', () => {
         Array.from({ length: 30 }).map(async () => roleApi.create({ name: 'test' + randomId() }))
       );
 
-      const roles = await roleApi.getList();
+      const roles = await roleApi.getList(
+        new URLSearchParams({
+          offset: '0',
+          limit: '20',
+        })
+      );
       expect(roles).toHaveLength(20);
 
       const roles2 = await roleApi.getList(

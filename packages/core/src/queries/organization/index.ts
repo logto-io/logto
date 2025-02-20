@@ -48,12 +48,12 @@ class OrganizationRolesQueries extends SchemaQueries<
   OrganizationRole
 > {
   override async findById(id: string): Promise<Readonly<OrganizationRoleWithScopes>> {
-    return this.pool.one(this.#findWithScopesSql(id));
+    return this.pool.one(this.#findWithScopesSql(id, 1, 0));
   }
 
   override async findAll(
-    limit: number,
-    offset: number,
+    limit?: number,
+    offset?: number,
     search?: SearchOptions<OrganizationRoleKeys>
   ): Promise<[totalNumber: number, rows: Readonly<OrganizationRoleWithScopes[]>]> {
     return Promise.all([
@@ -64,8 +64,8 @@ class OrganizationRolesQueries extends SchemaQueries<
 
   #findWithScopesSql(
     roleId?: string,
-    limit = 1,
-    offset = 0,
+    limit?: number,
+    offset?: number,
     search?: SearchOptions<OrganizationRoleKeys>
   ) {
     const { table, fields } = convertToIdentifiers(OrganizationRoles, true);
@@ -124,8 +124,12 @@ class OrganizationRolesQueries extends SchemaQueries<
       ${conditionalSql(this.orderBy, ({ field, order }) => {
         return sql`order by ${fields[field]} ${order === 'desc' ? sql`desc` : sql`asc`}`;
       })}
-      limit ${limit}
-      offset ${offset}
+      ${conditionalSql(limit && offset, (limit) => {
+        return sql`limit ${limit}`;
+      })}
+      ${conditionalSql(limit && offset, (offset) => {
+        return sql`offset ${offset}`;
+      })}      
     `;
   }
 }
