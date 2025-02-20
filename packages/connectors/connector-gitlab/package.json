@@ -1,11 +1,11 @@
 {
   "name": "@logto/connector-gitlab",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "GitLab social connector implementation.",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^4.0.0",
-    "@logto/connector-oauth": "workspace:^1.5.0",
-    "@logto/shared": "workspace:^3.1.1",
+    "@logto/connector-kit": "workspace:^4.1.1",
+    "@logto/connector-oauth": "workspace:^1.5.1",
+    "@logto/shared": "workspace:^3.1.4",
     "@silverhand/essentials": "^2.9.1",
     "jose": "^5.6.3",
     "ky": "^1.2.3",

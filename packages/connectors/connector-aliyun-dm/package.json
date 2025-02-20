@@ -1,9 +1,9 @@
 {
   "name": "@logto/connector-aliyun-dm",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Aliyun DM connector implementation.",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^4.0.0",
+    "@logto/connector-kit": "workspace:^4.1.1",
     "@silverhand/essentials": "^2.9.1",
     "got": "^14.0.0",
     "snakecase-keys": "^8.0.1",

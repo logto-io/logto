@@ -1,5 +1,14 @@
 # Change Log
 
+## 1.9.1
+
+### Patch Changes
+
+- e11e57de8: bump dependencies for security update
+- Updated dependencies [e11e57de8]
+  - @logto/language-kit@1.1.1
+  - @logto/core-kit@2.5.4
+
 ## 1.9.0
 
 ### Minor Changes

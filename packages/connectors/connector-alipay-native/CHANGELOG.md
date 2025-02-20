@@ -1,5 +1,13 @@
 # @logto/connector-alipay-native
 
+## 1.3.1
+
+### Patch Changes
+
+- e11e57de8: bump dependencies for security update
+- Updated dependencies [e11e57de8]
+  - @logto/connector-kit@4.1.1
+
 ## 1.3.0
 
 ### Minor Changes
