@@ -502,11 +502,14 @@ export class SamlApplication {
          * By examining the code provided in the link above, we can define all the attributes supported by the attribute mapping here. Only the attributes defined in the `loginResponseTemplate.attributes` added when creating the IdP instance will appear in the SAML response.
          */
         // Keep the `attrSub`, `attrEmail` and `attrName` attributes since attribute mapping can be empty.
-        {
-          attrSub: userInfo.sub,
-          attrEmail: userInfo.email ?? null,
-          attrName: userInfo.name ?? null,
-        };
+        Object.fromEntries(
+          fallbackAttributes.map((attribute) => [
+            generateSamlAttributeTag(attribute),
+            (typeof userInfo[attribute] === 'boolean'
+              ? String(userInfo[attribute])
+              : userInfo[attribute]) ?? null,
+          ])
+        );
   };
 
   // Used to check whether xml content is valid in format.
