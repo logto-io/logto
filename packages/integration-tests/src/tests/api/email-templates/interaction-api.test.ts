@@ -5,7 +5,7 @@ import { mockEmailConnectorConfig } from '#src/__mocks__/connectors-mock.js';
 import { type MockEmailTemplatePayload } from '#src/__mocks__/email-templates.js';
 import { putInteraction, sendVerificationCode } from '#src/api/interaction.js';
 import { initClient } from '#src/helpers/client.js';
-import { setEmailConnector } from '#src/helpers/connector.js';
+import { setEmailConnector, setSmsConnector } from '#src/helpers/connector.js';
 import { EmailTemplatesApiTest } from '#src/helpers/email-templates.js';
 import { readConnectorMessage } from '#src/helpers/index.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
@@ -28,8 +28,8 @@ devFeatureTest.describe('interaction API with i18n email templates', () => {
   const mockEmail = generateEmail();
 
   beforeAll(async () => {
+    await Promise.all([setEmailConnector(), setSmsConnector()]);
     await Promise.all([
-      setEmailConnector(),
       emailTemplatesApi.create([mockSignInTemplate]),
       enableAllVerificationCodeSignInMethods(),
     ]);
