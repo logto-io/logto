@@ -10,7 +10,7 @@ import {
   type SamlAttributeMapping,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { cond, tryThat, type Nullable } from '@silverhand/essentials';
+import { cond, tryThat, type Nullable, type Optional } from '@silverhand/essentials';
 import camelcaseKeys, { type CamelCaseKeys } from 'camelcase-keys';
 import { XMLValidator } from 'fast-xml-parser';
 import saml from 'samlify';
@@ -39,6 +39,7 @@ import {
   samlLogInResponseTemplate,
   samlAttributeNameFormatBasic,
   samlValueXmlnsXsi,
+  fallbackAttributes,
 } from './consts.js';
 import {
   buildSamlAssertionNameId,
@@ -184,10 +185,14 @@ export class SamlApplication {
     userInfo,
     relayState,
     samlRequestId,
+    sessionId,
+    sessionExpiresAt,
   }: {
     userInfo: IdTokenProfileStandardClaims;
     relayState: Nullable<string>;
     samlRequestId: Nullable<string>;
+    sessionId: Optional<string>;
+    sessionExpiresAt: Optional<string>;
   }): Promise<{ context: string; entityEndpoint: string }> => {
     // TODO: fix binding method
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -197,7 +202,7 @@ export class SamlApplication {
       null,
       'post',
       userInfo,
-      this.createSamlTemplateCallback({ userInfo, samlRequestId }),
+      this.createSamlTemplateCallback({ userInfo, samlRequestId, sessionId, sessionExpiresAt }),
       this.config.encryption?.encryptThenSign,
       relayState ?? undefined
     );
@@ -400,9 +405,13 @@ export class SamlApplication {
     ({
       userInfo,
       samlRequestId,
+      sessionId,
+      sessionExpiresAt,
     }: {
       userInfo: IdTokenProfileStandardClaims;
       samlRequestId: Nullable<string>;
+      sessionId: Optional<string>;
+      sessionExpiresAt: Optional<string>;
     }) =>
     (template: string) => {
       const assertionConsumerServiceUrl = this.sp.entityMeta.getAssertionConsumerService(
@@ -434,20 +443,12 @@ export class SamlApplication {
         NameIDFormat,
         NameID,
         InResponseTo: samlRequestId ?? 'null',
-        /**
-         * User attributes for SAML response
-         *
-         * @todo Support custom attribute mapping
-         * @see {@link https://github.com/tngan/samlify/blob/master/src/libsaml.ts#L275-L300|samlify implementation}
-         *
-         * @remarks
-         * By examining the code provided in the link above, we can define all the attributes supported by the attribute mapping here. Only the attributes defined in the `loginResponseTemplate.attributes` added when creating the IdP instance will appear in the SAML response.
-         */
-        // Keep the `attrSub`, `attrEmail` and `attrName` attributes since attribute mapping can be empty.
-        attrSub: userInfo.sub,
-        attrEmail: userInfo.email,
-        attrName: userInfo.name,
         ...this.buildSamlAttributesTagValues(userInfo),
+        // Since we currently does not distinguish the way user used to pass authentication, we set the default AuthnContextClassRef to passwordProtectedTransport.
+        AuthnContextClassRef:
+          saml.Constants.namespace.authnContextClassRef.passwordProtectedTransport,
+        SessionNotOnOrAfter: sessionExpiresAt ?? '',
+        SessionIndex: sessionId ?? '',
       };
 
       const context = saml.SamlLib.replaceTagsByValue(template, tagValues);
@@ -461,7 +462,10 @@ export class SamlApplication {
   protected readonly buildLoginResponseTemplate = () => {
     return {
       context: samlLogInResponseTemplate,
-      attributes: Object.values(this.config.attributeMapping).map((value) => ({
+      attributes: (Object.entries(this.config.attributeMapping).length > 0
+        ? Object.values(this.config.attributeMapping)
+        : fallbackAttributes
+      ).map((value) => ({
         name: value,
         valueTag: value,
         nameFormat: samlAttributeNameFormatBasic,
@@ -472,21 +476,37 @@ export class SamlApplication {
 
   protected readonly buildSamlAttributesTagValues = (
     userInfo: IdTokenProfileStandardClaims
-  ): Record<string, string> => {
-    return Object.fromEntries(
-      Object.entries(this.config.attributeMapping)
-        .map(([key, value]) => {
-          // eslint-disable-next-line no-restricted-syntax
-          return [value, userInfo[key as keyof IdTokenProfileStandardClaims] ?? null] as [
-            string,
-            unknown,
-          ];
-        })
-        .map(([key, value]) => [
-          generateSamlAttributeTag(key),
-          typeof value === 'object' ? JSON.stringify(value) : String(value),
-        ])
-    );
+  ): Record<string, Nullable<string>> => {
+    return Object.entries(this.config.attributeMapping).length > 0
+      ? Object.fromEntries(
+          Object.entries(this.config.attributeMapping)
+            .map(([key, value]) => {
+              // eslint-disable-next-line no-restricted-syntax
+              return [value, userInfo[key as keyof IdTokenProfileStandardClaims] ?? null] as [
+                string,
+                unknown,
+              ];
+            })
+            .map(([key, value]) => [
+              generateSamlAttributeTag(key),
+              typeof value === 'object' ? JSON.stringify(value) : String(value),
+            ])
+        )
+      : /**
+         * User attributes for SAML response
+         *
+         * @todo Support custom attribute mapping
+         * @see {@link https://github.com/tngan/samlify/blob/master/src/libsaml.ts#L275-L300|samlify implementation}
+         *
+         * @remarks
+         * By examining the code provided in the link above, we can define all the attributes supported by the attribute mapping here. Only the attributes defined in the `loginResponseTemplate.attributes` added when creating the IdP instance will appear in the SAML response.
+         */
+        // Keep the `attrSub`, `attrEmail` and `attrName` attributes since attribute mapping can be empty.
+        {
+          attrSub: userInfo.sub,
+          attrEmail: userInfo.email ?? null,
+          attrName: userInfo.name ?? null,
+        };
   };
 
   // Used to check whether xml content is valid in format.

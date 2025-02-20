@@ -2,7 +2,13 @@
 // TODO: refactor this file to reduce LOC
 import { authRequestInfoGuard } from '@logto/schemas';
 import { generateStandardId, generateStandardShortId } from '@logto/shared';
-import { cond, type Nullable, removeUndefinedKeys, trySafe } from '@silverhand/essentials';
+import {
+  cond,
+  type Nullable,
+  removeUndefinedKeys,
+  trySafe,
+  type Optional,
+} from '@silverhand/essentials';
 import { addMinutes } from 'date-fns';
 import { z } from 'zod';
 
@@ -151,9 +157,14 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       let relayState: Nullable<string> = null;
       // eslint-disable-next-line @silverhand/fp/no-let
       let samlRequestId: Nullable<string> = null;
+      // eslint-disable-next-line @silverhand/fp/no-let
+      let sessionId: Optional<string>;
+      // eslint-disable-next-line @silverhand/fp/no-let
+      let sessionExpiresAt: Optional<string>;
 
       if (state) {
-        const sessionId = ctx.cookies.get(spInitiatedSamlSsoSessionCookieName);
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        sessionId = ctx.cookies.get(spInitiatedSamlSsoSessionCookieName);
         assertThat(
           sessionId,
           'application.saml.sp_initiated_saml_sso_session_not_found_in_cookies'
@@ -165,6 +176,8 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         relayState = session.relayState;
         // eslint-disable-next-line @silverhand/fp/no-mutation
         samlRequestId = session.samlRequestId;
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        sessionExpiresAt = new Date(session.expiresAt).toISOString();
 
         assertThat(session.oidcState === state, 'application.saml.state_mismatch');
       }
@@ -173,11 +186,16 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       const userInfo = await samlApplication.handleOidcCallbackAndGetUserInfo({
         code,
       });
+      log.append({
+        userInfo,
+      });
 
       const { context, entityEndpoint } = await samlApplication.createSamlResponse({
         userInfo,
         relayState,
         samlRequestId,
+        sessionId,
+        sessionExpiresAt,
       });
 
       log.append({

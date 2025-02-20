@@ -17,7 +17,11 @@ export const samlLogInResponseTemplate = `
         <saml:Audience>{Audience}</saml:Audience>
       </saml:AudienceRestriction>
     </saml:Conditions>
-    {AuthnStatement}
+    <saml:AuthnStatement AuthnInstant="{IssueInstant}" SessionNotOnOrAfter="{SessionNotOnOrAfter}" SessionIndex="{SessionIndex}">
+      <saml:AuthnContext>
+        <saml:AuthnContextClassRef>{AuthnContextClassRef}</saml:AuthnContextClassRef>
+      </saml:AuthnContext>
+    </saml:AuthnStatement>
     {AttributeStatement}
   </saml:Assertion>
 </samlp:Response>`;
@@ -35,3 +39,5 @@ export const samlValueXmlnsXsi = {
   boolean: samlValueXmlnsXsiBoolean,
   datetime: samlValueXmlnsXsiDatetime,
 };
+
+export const fallbackAttributes = ['sub', 'email', 'name'];
