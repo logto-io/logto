@@ -1,6 +1,7 @@
 import type { TemplateType } from '@logto/connector-kit';
 import { templateTypeGuard, ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import type { Passcode } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { customAlphabet, nanoid } from 'nanoid';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -54,7 +55,13 @@ export const createPasscodeLibrary = (queries: Queries, connectorLibrary: Connec
     });
   };
 
-  const sendPasscode = async (passcode: Passcode) => {
+  /**
+   *
+   * @param {Passcode} passcode The passcode object being sent.
+   * @param locale The language tag detected from the user's request.
+   * If provided, it will be used to localize the message.
+   */
+  const sendPasscode = async (passcode: Passcode, locale?: string) => {
     const emailOrPhone = passcode.email ?? passcode.phone;
 
     if (!emailOrPhone) {
@@ -76,6 +83,7 @@ export const createPasscodeLibrary = (queries: Queries, connectorLibrary: Connec
       type: messageTypeResult.data,
       payload: {
         code: passcode.code,
+        ...conditional(locale && { locale }),
       },
     });
 

@@ -17,6 +17,9 @@
                   },
                   "config": {
                     "description": "Connector configuration object for testing."
+                  },
+                  "locale": {
+                    "description": "Preferred language for the message. If not set, the default language will be used. (Applicable only when custom i18n templates are configured.)"
                   }
                 }
               }

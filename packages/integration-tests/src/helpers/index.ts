@@ -40,6 +40,11 @@ type ConnectorMessageRecord = {
   code: string;
   type: string;
   payload: SendMessagePayload;
+  /**
+   * Mock email connector will insert the template into the record.
+   * The template will be either the default template from connector config or the custom i18n template if it exists.
+   */
+  template?: Record<string, unknown>;
 };
 
 /**

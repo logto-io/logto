@@ -3,6 +3,7 @@ import {
   type EmailTemplateKeys,
   EmailTemplates,
   type CreateEmailTemplate,
+  type TemplateType,
 } from '@logto/schemas';
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
@@ -25,7 +26,6 @@ export default class EmailTemplatesQueries extends SchemaQueries<
 > {
   constructor(
     pool: CommonQueryMethods,
-    // TODO: Implement redis cache for email templates
     private readonly wellKnownCache: WellKnownCache
   ) {
     super(pool, EmailTemplates);
@@ -109,5 +109,19 @@ export default class EmailTemplatesQueries extends SchemaQueries<
         sql` and `
       )}
     `);
+  }
+
+  // TODO: Implement redis cache for email templates
+  async findByLanguageTagAndTemplateType(templateType: TemplateType, languageTag: string) {
+    const { fields, table } = convertToIdentifiers(EmailTemplates);
+
+    return this.pool.maybeOne<EmailTemplate>(
+      sql`
+        select ${expandFields(EmailTemplates)}
+        from ${table}
+        where ${fields.templateType} = ${templateType}
+        and ${fields.languageTag} = ${languageTag}
+      `
+    );
   }
 }

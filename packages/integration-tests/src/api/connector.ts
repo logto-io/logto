@@ -63,17 +63,19 @@ export const sendSmsTestMessage = async (
 export const sendEmailTestMessage = async (
   connectorFactoryId: string,
   email: string,
-  config: Record<string, unknown>
-) => sendTestMessage(connectorFactoryId, 'email', email, config);
+  config: Record<string, unknown>,
+  locale?: string
+) => sendTestMessage(connectorFactoryId, 'email', email, config, locale);
 
 const sendTestMessage = async (
   connectorFactoryId: string,
   receiverType: 'phone' | 'email',
   receiver: string,
-  config: Record<string, unknown>
+  config: Record<string, unknown>,
+  locale?: string
 ) =>
   authedAdminApi.post(`connectors/${connectorFactoryId}/test`, {
-    json: { [receiverType]: receiver, config },
+    json: { [receiverType]: receiver, config, locale },
   });
 
 export const getConnectorAuthorizationUri = async (
