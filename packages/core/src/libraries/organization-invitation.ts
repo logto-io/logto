@@ -11,6 +11,10 @@ import RequestError from '#src/errors/RequestError/index.js';
 import OrganizationQueries from '#src/queries/organization/index.js';
 import { createUserQueries } from '#src/queries/user.js';
 import type Queries from '#src/tenants/Queries.js';
+import {
+  buildOrganizationExtraInfo,
+  type OrganizationExtraInfo,
+} from '#src/utils/connectors/extra-information.js';
 
 import { type ConnectorLibrary } from './connector.js';
 
@@ -90,7 +94,11 @@ export class OrganizationInvitationLibrary {
       }
 
       if (messagePayload) {
-        await this.sendEmail(invitee, messagePayload);
+        const organization = await organizationQueries.findById(organizationId);
+        await this.sendEmail(invitee, {
+          organization: buildOrganizationExtraInfo(organization),
+          ...messagePayload,
+        });
       }
 
       // Additional query to get the full invitation data
@@ -204,7 +212,10 @@ export class OrganizationInvitationLibrary {
   }
 
   /** Send an organization invitation email. */
-  async sendEmail(to: string, payload: SendMessagePayload) {
+  async sendEmail(
+    to: string,
+    payload: SendMessagePayload & { organization: OrganizationExtraInfo }
+  ) {
     const emailConnector = await this.connector.getMessageConnector(ConnectorType.Email);
     return emailConnector.sendMessage({
       to,
