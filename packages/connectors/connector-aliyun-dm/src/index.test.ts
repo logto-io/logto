@@ -1,6 +1,6 @@
 import { TemplateType } from '@logto/connector-kit';
 
-import { mockedConfigWithAllRequiredTemplates } from './mock.js';
+import { mockedConfigWithAllRequiredTemplates, mockGenericI18nEmailTemplate } from './mock.js';
 
 const getConfig = vi.fn().mockResolvedValue(mockedConfigWithAllRequiredTemplates);
 
@@ -8,6 +8,8 @@ const singleSendMail = vi.fn(() => ({
   body: JSON.stringify({ EnvId: 'env-id', RequestId: 'request-id' }),
   statusCode: 200,
 }));
+
+const getI18nEmailTemplate = vi.fn().mockResolvedValue(mockGenericI18nEmailTemplate);
 
 vi.mock('./single-send-mail.js', () => ({
   singleSendMail,
@@ -47,6 +49,24 @@ describe('sendMessage()', () => {
       expect.objectContaining({
         HtmlBody: 'Your link is https://example.com',
         Subject: 'Organization invitation',
+      }),
+      expect.anything()
+    );
+  });
+
+  it('should call singleSendMail() with custom template', async () => {
+    const toEmail = 'to@email.com';
+    const connector = await createConnector({ getConfig, getI18nEmailTemplate });
+    await connector.sendMessage({
+      to: toEmail,
+      type: TemplateType.Generic,
+      payload: { code: '1234', applicationName: 'bar' },
+    });
+    expect(singleSendMail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        HtmlBody: 'Verification code is 1234',
+        Subject: 'Generic email',
+        FromAlias: 'Foo bar',
       }),
       expect.anything()
     );

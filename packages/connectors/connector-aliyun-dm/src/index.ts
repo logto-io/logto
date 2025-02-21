@@ -1,10 +1,11 @@
-import { assert } from '@silverhand/essentials';
+import { assert, trySafe } from '@silverhand/essentials';
 import { HTTPError } from 'got';
 
 import type {
   CreateConnector,
   EmailConnector,
   GetConnectorConfig,
+  GetI18nEmailTemplate,
   SendMessageFunction,
 } from '@logto/connector-kit';
 import {
@@ -25,13 +26,20 @@ import {
 } from './types.js';
 
 const sendMessage =
-  (getConfig: GetConnectorConfig): SendMessageFunction =>
+  (
+    getConfig: GetConnectorConfig,
+    getI18nEmailTemplate?: GetI18nEmailTemplate
+  ): SendMessageFunction =>
   async (data, inputConfig) => {
     const { to, type, payload } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, aliyunDmConfigGuard);
     const { accessKeyId, accessKeySecret, accountName, fromAlias, templates } = config;
-    const template = templates.find((template) => template.usageType === type);
+
+    const customTemplate = await trySafe(async () => getI18nEmailTemplate?.(type, payload.locale));
+
+    // Fall back to the default template if the custom i18n template is not found.
+    const template = customTemplate ?? templates.find((template) => template.usageType === type);
 
     assert(
       template,
@@ -49,7 +57,9 @@ const sendMessage =
           ReplyToAddress: 'false',
           AddressType: '1',
           ToAddress: to,
-          FromAlias: fromAlias,
+          FromAlias: customTemplate?.sendFrom
+            ? replaceSendMessageHandlebars(customTemplate.sendFrom, payload)
+            : fromAlias,
           Subject: replaceSendMessageHandlebars(template.subject, payload),
           HtmlBody: replaceSendMessageHandlebars(template.content, payload),
         },
@@ -96,12 +106,15 @@ const errorHandler = (errorResponseBody: string) => {
   throw new ConnectorError(ConnectorErrorCodes.General, { errorDescription, ...rest });
 };
 
-const createAliyunDmConnector: CreateConnector<EmailConnector> = async ({ getConfig }) => {
+const createAliyunDmConnector: CreateConnector<EmailConnector> = async ({
+  getConfig,
+  getI18nEmailTemplate,
+}) => {
   return {
     metadata: defaultMetadata,
     type: ConnectorType.Email,
     configGuard: aliyunDmConfigGuard,
-    sendMessage: sendMessage(getConfig),
+    sendMessage: sendMessage(getConfig, getI18nEmailTemplate),
   };
 };
 
