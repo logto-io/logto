@@ -1,5 +1,14 @@
 # Change Log
 
+## 2.5.4
+
+### Patch Changes
+
+- e11e57de8: bump dependencies for security update
+- Updated dependencies [e11e57de8]
+  - @logto/language-kit@1.1.1
+  - @logto/shared@3.1.4
+
 ## 2.5.3
 
 ### Patch Changes

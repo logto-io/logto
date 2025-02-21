@@ -1,5 +1,18 @@
 # Change Log
 
+## 1.18.0
+
+### Minor Changes
+
+- 0b785ee0d: feat(console): display jwks uri on application details page
+
+### Patch Changes
+
+- 5086f4bd2: update documentation links in Console
+- e11e57de8: bump dependencies for security update
+- Updated dependencies [e11e57de8]
+  - @logto/language-kit@1.1.1
+
 ## 1.17.0
 
 ### Minor Changes
