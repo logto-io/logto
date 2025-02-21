@@ -24,8 +24,9 @@ devFeatureTest.describe('user account email verification API with i18n email tem
     languageTag: 'en',
     templateType: TemplateType.UserPermissionValidation,
     details: {
-      subject: 'Test template',
-      content: 'Test value: {{code}}',
+      subject:
+        '{{user.username}} verify your account {{ user.primaryEmail }} in {{ application.name }}',
+      content: 'Your verification code is: {{code}}',
       contentType: 'text/html',
     },
   };
@@ -70,6 +71,7 @@ devFeatureTest.describe('user account email verification API with i18n email tem
         locale: 'en',
       },
       template: mockEnTemplate.details,
+      subject: `${username} verify your account ${primaryEmail} in Live Preview`,
     });
 
     const newEmail = generateEmail();

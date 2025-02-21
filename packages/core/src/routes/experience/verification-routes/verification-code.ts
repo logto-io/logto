@@ -1,13 +1,19 @@
 import {
   InteractionEvent,
+  logtoCookieKey,
+  logtoUiCookieGuard,
   SentinelActivityAction,
+  SignInIdentifier,
   type VerificationCodeIdentifier,
   verificationCodeIdentifierGuard,
 } from '@logto/schemas';
 import { Action } from '@logto/schemas/lib/types/log/interaction.js';
+import { trySafe } from '@silverhand/essentials';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
+import { type PasscodeLibrary } from '#src/libraries/passcode.js';
 import { type LogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -31,6 +37,27 @@ const createVerificationCodeAuditLog = (
   const verificationType = codeVerificationIdentifierRecordTypeMap[identifier.type];
 
   return createLog(`Interaction.${interactionEvent}.Verification.${verificationType}.${action}`);
+};
+
+const buildVerificationCodeTemplateContext = async (
+  passcodeLibrary: PasscodeLibrary,
+  ctx: ExperienceInteractionRouterContext,
+  { type }: VerificationCodeIdentifier
+) => {
+  // TODO: @simeng remove dev guard when the feature is ready
+  if (!EnvSet.values.isDevFeaturesEnabled || type !== SignInIdentifier.Email) {
+    return {};
+  }
+
+  // Safely get the orgId and appId context from cookie
+  const { appId: applicationId, organizationId } =
+    trySafe(() => logtoUiCookieGuard.parse(JSON.parse(ctx.cookies.get(logtoCookieKey) ?? '{}'))) ??
+    {};
+
+  return passcodeLibrary.buildVerificationCodeContext({
+    applicationId,
+    organizationId,
+  });
 };
 
 export default function verificationCodeRoutes<T extends ExperienceInteractionRouterContext>(
@@ -74,7 +101,16 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
         getTemplateTypeByEvent(interactionEvent)
       );
 
-      await codeVerification.sendVerificationCode(ctx.locale);
+      const templateContext = await buildVerificationCodeTemplateContext(
+        libraries.passcodes,
+        ctx,
+        identifier
+      );
+
+      await codeVerification.sendVerificationCode({
+        locale: ctx.locale,
+        ...templateContext,
+      });
 
       ctx.experienceInteraction.setVerificationRecord(codeVerification);
 
