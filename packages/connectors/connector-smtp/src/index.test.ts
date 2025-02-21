@@ -167,8 +167,8 @@ describe('Test SMTP connector with custom i18n templates', () => {
       subject: 'Custom subject {{code}}',
       content: 'Your verification code is {{code}}',
       contentType: 'text/plain',
-      replyTo: `{{userName}}`,
-      sendFrom: `{{applicationName}} <notice@test.smtp>`,
+      replyTo: `{{user.primaryEmail}}`,
+      sendFrom: `{{application.name}} <notice@test.smtp>`,
     } satisfies EmailTemplateDetails);
 
     const connector = await createConnector({ getConfig, getI18nEmailTemplate });
@@ -176,7 +176,11 @@ describe('Test SMTP connector with custom i18n templates', () => {
     await connector.sendMessage({
       to: 'bar',
       type: TemplateType.SignIn,
-      payload: { code: '234567', userName: 'John Doe', applicationName: 'Test app' },
+      payload: {
+        code: '234567',
+        user: { primaryEmail: 'test@email.com' },
+        application: { name: 'Test app' },
+      },
     });
 
     expect(sendMail).toHaveBeenCalledWith({
@@ -184,7 +188,7 @@ describe('Test SMTP connector with custom i18n templates', () => {
       subject: 'Custom subject 234567',
       text: 'Your verification code is 234567',
       to: 'bar',
-      replyTo: 'John Doe',
+      replyTo: 'test@email.com',
     });
   });
 });

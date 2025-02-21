@@ -47,7 +47,7 @@ const buildParametersFromDefaultTemplate = (
 const buildParametersFromCustomTemplate = (
   to: string,
   config: SendGridMailConfig,
-  { subject, content, replyTo, sendFrom, contentType = 'text/html' }: EmailTemplateDetails,
+  { subject, content, sendFrom, contentType = 'text/html' }: EmailTemplateDetails,
   payload: SendMessagePayload
 ): PublicParameters => {
   return {
@@ -56,8 +56,7 @@ const buildParametersFromCustomTemplate = (
         to: [
           {
             email: to,
-            // If replyTo is provided, we will replace the handlebars with the payload
-            ...conditional(replyTo && { name: replaceSendMessageHandlebars(replyTo, payload) }),
+            ...conditional(config.fromName && { name: config.fromName }),
           },
         ],
       },

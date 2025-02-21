@@ -89,12 +89,11 @@ describe('SendGrid connector', () => {
       subject: 'Passcode {{code}}',
       content: '<p>Your passcode is {{code}}</p>',
       contentType: 'text/html',
-      sendFrom: '{{applicationName}}',
-      replyTo: '{{userName}}',
+      sendFrom: '{{application.name}}',
     });
 
     nockMessages({
-      personalizations: [{ to: [{ email: toEmail, name: 'John Doe' }] }],
+      personalizations: [{ to: [{ email: toEmail }] }],
       from: { email: fromEmail, name: 'Test app' },
       subject: 'Passcode 123456',
       content: [
@@ -112,8 +111,7 @@ describe('SendGrid connector', () => {
       type: TemplateType.Generic,
       payload: {
         code: '123456',
-        applicationName: 'Test app',
-        userName: 'John Doe',
+        application: { name: 'Test app' },
       },
     });
   });
