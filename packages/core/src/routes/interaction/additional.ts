@@ -16,6 +16,7 @@ import type { WithInteractionDetailsContext } from '#src//middleware/koa-interac
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import { type WithI18nContext } from '#src/middleware/koa-i18next.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -39,7 +40,7 @@ import { verifyIdentifier } from './verifications/index.js';
 import verifyProfile from './verifications/profile-verification.js';
 
 export default function additionalRoutes<T extends IRouterParamContext>(
-  router: Router<unknown, WithInteractionDetailsContext<WithLogContext<T>>>,
+  router: Router<unknown, WithInteractionDetailsContext<WithI18nContext<WithLogContext<T>>>>,
   tenant: TenantContext
 ) {
   const {
@@ -99,7 +100,7 @@ export default function additionalRoutes<T extends IRouterParamContext>(
       const { event } = getInteractionStorage(interactionDetails.result);
 
       await sendVerificationCodeToIdentifier(
-        { event, ...guard.body },
+        { event, ...guard.body, locale: ctx.locale },
         interactionDetails.jti,
         createLog,
         passcodes

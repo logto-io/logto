@@ -8,6 +8,8 @@ import type {
   ConnectorMetadata,
   GetConnectorConfig,
   GetCloudServiceClient,
+  GetI18nEmailTemplate,
+  EmailConnector,
 } from '@logto/connector-kit';
 import { ConnectorError, ConnectorErrorCodes, ConnectorType } from '@logto/connector-kit';
 import type { BaseRoutes, Router } from '@withtyped/server';
@@ -98,12 +100,14 @@ export const buildRawConnector = async <
 >(
   connectorFactory: ConnectorFactory<T, U>,
   getConnectorConfig?: GetConnectorConfig,
-  getCloudServiceClient?: GetCloudServiceClient<T>
+  getCloudServiceClient?: GetCloudServiceClient<T>,
+  getI18nEmailTemplate?: U extends EmailConnector ? GetI18nEmailTemplate : undefined
 ): Promise<{ rawConnector: U; rawMetadata: ConnectorMetadata }> => {
   const { createConnector, path: packagePath } = connectorFactory;
   const rawConnector = await createConnector({
     getConfig: getConnectorConfig ?? notImplemented,
     getCloudServiceClient,
+    getI18nEmailTemplate,
   });
   validateConnectorModule(rawConnector);
   const rawMetadata = await parseMetadata(rawConnector.metadata, packagePath);

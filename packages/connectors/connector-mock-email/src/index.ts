@@ -6,6 +6,7 @@ import type {
   SendMessageFunction,
   CreateConnector,
   EmailConnector,
+  GetI18nEmailTemplate,
 } from '@logto/connector-kit';
 import {
   ConnectorError,
@@ -19,13 +20,17 @@ import { defaultMetadata } from './constant.js';
 import { mockMailConfigGuard } from './types.js';
 
 const sendMessage =
-  (getConfig: GetConnectorConfig): SendMessageFunction =>
+  (getConfig: GetConnectorConfig, getI18nTemplate?: GetI18nEmailTemplate): SendMessageFunction =>
   async (data, inputConfig) => {
     const { to, type, payload } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, mockMailConfigGuard);
-    const { templates } = config;
-    const template = templates.find((template) => template.usageType === type);
+
+    const customTemplate = getI18nTemplate && (await getI18nTemplate(type, payload.locale));
+
+    // Fall back to the default template if the custom template is not found.
+    const template =
+      customTemplate ?? config.templates.find((template) => template.usageType === type);
 
     assert(
       template,
@@ -37,18 +42,21 @@ const sendMessage =
 
     await fs.writeFile(
       mockConnectorFilePaths.Email,
-      JSON.stringify({ address: to, code: payload.code, type, payload }) + '\n'
+      JSON.stringify({ address: to, code: payload.code, type, payload, template }) + '\n'
     );
 
     return { address: to, data: payload };
   };
 
-const createMockEmailConnector: CreateConnector<EmailConnector> = async ({ getConfig }) => {
+const createMockEmailConnector: CreateConnector<EmailConnector> = async ({
+  getConfig,
+  getI18nEmailTemplate,
+}) => {
   return {
     metadata: defaultMetadata,
     type: ConnectorType.Email,
     configGuard: mockMailConfigGuard,
-    sendMessage: sendMessage(getConfig),
+    sendMessage: sendMessage(getConfig, getI18nEmailTemplate),
   };
 };
 

@@ -97,7 +97,7 @@ export default function verificationRoutes<T extends UserRouter>(
         isNewIdentifier ? TemplateType.BindNewIdentifier : TemplateType.UserPermissionValidation
       );
 
-      await codeVerification.sendVerificationCode();
+      await codeVerification.sendVerificationCode(ctx.locale);
 
       const { expiresAt } = await insertVerificationRecord(
         codeVerification,

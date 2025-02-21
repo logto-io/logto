@@ -22,19 +22,19 @@ const getTemplateTypeByEvent = (event: InteractionEvent): TemplateType =>
   eventToTemplateTypeMap[event];
 
 export const sendVerificationCodeToIdentifier = async (
-  payload: RequestVerificationCodePayload & { event: InteractionEvent },
+  payload: RequestVerificationCodePayload & { event: InteractionEvent; locale?: string },
   jti: string,
   createLog: LogContext['createLog'],
   { createPasscode, sendPasscode }: PasscodeLibrary
 ) => {
-  const { event, ...identifier } = payload;
+  const { event, locale, ...identifier } = payload;
   const messageType = getTemplateTypeByEvent(event);
 
   const log = createLog(`Interaction.${event}.Identifier.VerificationCode.Create`);
   log.append(identifier);
 
   const verificationCode = await createPasscode(jti, messageType, identifier);
-  const { dbEntry } = await sendPasscode(verificationCode);
+  const { dbEntry } = await sendPasscode(verificationCode, locale);
 
   log.append({ connectorId: dbEntry.id });
 };
