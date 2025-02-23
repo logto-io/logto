@@ -1,5 +1,11 @@
 # @logto/tunnel
 
+## 0.2.6
+
+### Patch Changes
+
+- 6144149bb: disallow zstd compression to fix potential garbled text response
+
 ## 0.2.5
 
 ### Patch Changes
