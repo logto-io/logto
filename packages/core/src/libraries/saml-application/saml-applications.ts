@@ -193,13 +193,12 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
           ...domains.map((domain) => applyCustomDomain(defaultRedirectUri, domain)),
         ]);
 
-        const updatedApplication = await updateApplicationById(samlApplication.id, {
+        await updateApplicationById(samlApplication.id, {
           oidcClientMetadata: {
             ...samlApplication.oidcClientMetadata,
             redirectUris: newRedirectUris,
           },
         });
-        consoleLog.info('updatedApplication', updatedApplication);
       })
     );
   };
