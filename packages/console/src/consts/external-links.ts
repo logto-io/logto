@@ -54,7 +54,7 @@ export const apiResources = '/authorization/api-resources';
 export const rbac = '/authorization/role-based-access-control';
 export const manageRolePermissions =
   '/authorization/role-based-access-control/configure-permissions#manage-role-permissions';
-export const userManagement = '/authorization/user-management';
+export const userManagement = '/user-management';
 export const userCustomData = '/user-management/user-data#custom-data';
 export const personalAccessToken = '/user-management/personal-access-token';
 export const webhooks = '/developers/webhooks';
