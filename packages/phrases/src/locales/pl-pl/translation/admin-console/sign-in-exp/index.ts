@@ -6,7 +6,7 @@ const sign_in_exp = {
   page_title: 'Doświadczenie logowania',
   title: 'Doświadczenie logowania',
   description:
-    'Dostosuj interfejs logowania, aby pasował do Twojej marki i wyświetlaj w czasie rzeczywistym',
+    'Dostosuj przepływy uwierzytelniania i interfejs użytkownika, a także podglądaj gotowe rozwiązanie w czasie rzeczywistym.',
   tabs: {
     branding: 'Marka',
     sign_up_and_sign_in: 'Rejestracja i logowanie',

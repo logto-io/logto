@@ -6,7 +6,7 @@ const sign_in_exp = {
   page_title: 'Oturum Açma Deneyimi',
   title: 'Oturum Açma Deneyimi',
   description:
-    'Oturum açma kullanıcı arayüzünü markanıza uyacak şekilde özelleştirin ve gerçek zamanlı olarak görüntüleyin',
+    "Kimlik doğrulama akışlarını ve UI'yı özelleştirin ve hazır deneyimi gerçek zamanlı olarak önizleyin.",
   tabs: {
     branding: 'Markalaşma',
     sign_up_and_sign_in: 'Kaydol ve Oturum Aç',

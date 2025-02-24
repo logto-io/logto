@@ -1,7 +1,7 @@
 const enterprise_sso = {
   page_title: '企業單一登入',
   title: '企業單一登入',
-  subtitle: '連接企業身份提供者，啟用 SP 啟動的單一登入。',
+  subtitle: '連接企業身份提供者並啟用單一登入。',
   create: '新增企業連接器',
   col_connector_name: '連接器名稱',
   col_type: '類型',

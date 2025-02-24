@@ -7,6 +7,7 @@ import { useOutletContext } from 'react-router-dom';
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import { rbac } from '@/consts';
 import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
 import TextInput from '@/ds-components/TextInput';
@@ -53,10 +54,7 @@ function RoleSettings() {
         <FormCard
           title="role_details.settings"
           description="role_details.settings_description"
-          learnMoreLink={{
-            href: 'https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-roles',
-            targetBlank: 'noopener',
-          }}
+          learnMoreLink={{ href: rbac }}
         >
           <FormField isRequired title="role_details.field_name">
             <TextInput {...register('name', { required: true })} error={Boolean(errors.name)} />

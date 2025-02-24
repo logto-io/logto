@@ -102,7 +102,7 @@
     "/api/organization-roles/{id}/scopes": {
       "get": {
         "summary": "Get organization role scopes",
-        "description": "Get all organization scopes that are assigned to the specified organization role.",
+        "description": "Get organization scopes that are assigned to the specified organization role with optional pagination.",
         "responses": {
           "200": {
             "description": "A list of organization scopes."
@@ -174,7 +174,7 @@
     "/api/organization-roles/{id}/resource-scopes": {
       "get": {
         "summary": "Get organization role resource scopes",
-        "description": "Get all resource scopes that are assigned to the specified organization role.",
+        "description": "Get resource scopes that are assigned to the specified organization role with optional pagination.",
         "responses": {
           "200": {
             "description": "A list of resource scopes."

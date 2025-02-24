@@ -23,6 +23,11 @@ export const createProxy = (targetUrl: string, onProxyResponse?: OnProxyEvent['p
     ...conditional(
       hasResponseHandler && {
         on: {
+          proxyReq: (proxyRequest) => {
+            // Disable potential `zstd` compression since it's not supported by http-proxy-middleware
+            // https://github.com/chimurai/http-proxy-middleware/issues/1070
+            proxyRequest.setHeader('Accept-Encoding', 'gzip, deflate, br');
+          },
           proxyRes: onProxyResponse,
           error: (error) => {
             consoleLog.error(chalk.red(error.message));

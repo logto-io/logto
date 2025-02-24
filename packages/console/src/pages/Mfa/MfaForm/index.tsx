@@ -8,6 +8,7 @@ import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import InlineUpsell from '@/components/InlineUpsell';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import { mfa } from '@/consts';
 import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
@@ -16,7 +17,6 @@ import InlineNotification from '@/ds-components/InlineNotification';
 import Select from '@/ds-components/Select';
 import Switch from '@/ds-components/Switch';
 import useApi from '@/hooks/use-api';
-import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { trySubmitSafe } from '@/utils/form';
 import { isPaidPlan } from '@/utils/subscription';
 
@@ -42,7 +42,6 @@ function MfaForm({ data, onMfaUpdated }: Props) {
     isCloud && !currentSubscriptionQuota.mfaEnabled && !isPaidPlan(planId, isEnterprisePlan);
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { getDocumentationUrl } = useDocumentationUrl();
   const {
     register,
     reset,
@@ -126,10 +125,7 @@ function MfaForm({ data, onMfaUpdated }: Props) {
         <FormCard
           title="mfa.factors"
           description="mfa.multi_factors_description"
-          learnMoreLink={{
-            href: getDocumentationUrl('/docs/recipes/multi-factor-auth/configure-mfa'),
-            targetBlank: 'noopener',
-          }}
+          learnMoreLink={{ href: mfa }}
         >
           <FormField title="mfa.multi_factors" headlineSpacing="large">
             <div className={styles.factorField}>
@@ -172,10 +168,7 @@ function MfaForm({ data, onMfaUpdated }: Props) {
         <FormCard
           title="mfa.policy"
           description="mfa.policy_description"
-          learnMoreLink={{
-            href: getDocumentationUrl('/docs/recipes/multi-factor-auth/configure-mfa'),
-            targetBlank: 'noopener',
-          }}
+          learnMoreLink={{ href: mfa }}
         >
           <FormField title="mfa.require_mfa" headlineSpacing="large">
             <Switch

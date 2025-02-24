@@ -31,7 +31,7 @@ export default function verificationCodeRoutes<T extends AuthedMeRouter>(
     }),
     async (ctx, next) => {
       const code = await createPasscode(undefined, codeType, ctx.guard.body);
-      await sendPasscode(code);
+      await sendPasscode(code, { locale: ctx.locale });
 
       ctx.status = 204;
 

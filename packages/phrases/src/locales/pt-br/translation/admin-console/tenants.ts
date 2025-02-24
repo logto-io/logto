@@ -23,9 +23,9 @@ const tenants = {
     environment_tag_production: 'Produção',
     tenant_type: 'Tipo de locatário',
     development_description:
-      'Apenas para testes e não deve ser usado em produção. Nenhuma assinatura é necessária. Possui todos os recursos profissionais, mas com limitações como um banner de entrada. <a>Veja mais</a>',
+      'Apenas para testes e não deve ser usado em produção. Nenhuma assinatura é necessária. Possui todos os recursos profissionais, mas com limitações como um banner de entrada.',
     production_description:
-      'Destinado a aplicativos usados por usuários finais e que podem exigir uma assinatura paga. <a>Veja mais</a>',
+      'Destinado a aplicativos usados por usuários finais e que podem exigir uma assinatura paga.',
     tenant_info_saved: 'As informações do locatário foram salvas com sucesso.',
   },
   full_env_tag: {

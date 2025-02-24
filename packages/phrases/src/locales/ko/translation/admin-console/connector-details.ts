@@ -5,6 +5,8 @@ const connector_details = {
   settings: '일반 설정',
   settings_description:
     'Logto에서 연동은 중요한 역할을 해요. 연동 시스템을 통하여, 사용자들에게 비밀번호 없이 회원 가입을 하고 로그인을 할 수 있게 하거나, 소셜 계정을 통하여 로그인을 할 수 있게 도와줘요.',
+  email_connector_settings_description:
+    '이메일 전송 제공업체와 통합하여 최종 사용자에게 비밀번호가 필요 없는 이메일 등록 및 로그인을 활성화합니다.',
   parameter_configuration: '매개변수 설정',
   test_connection: '테스트',
   save_error_empty_config: '설정을 입력해 주세요.',

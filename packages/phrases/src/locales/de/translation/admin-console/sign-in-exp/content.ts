@@ -1,6 +1,8 @@
 const content = {
   terms_of_use: {
     title: 'TERMS',
+    description:
+      'Füge Nutzungsbedingungen und Datenschutzbestimmungen hinzu, um die Compliance-Anforderungen zu erfüllen.',
     terms_of_use: 'Terms of use URL',
     terms_of_use_placeholder: 'https://your.terms.of.use/',
     privacy_policy: 'Privacy policy URL',

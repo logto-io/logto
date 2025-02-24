@@ -6,7 +6,7 @@ const sign_in_exp = {
   page_title: 'Expérience de connexion',
   title: 'Expérience de connexion',
   description:
-    "Personnalisez l'interface utilisateur pour qu'elle corresponde à votre marque et consultez-la en temps réel.",
+    "Personnalisez les flux d'authentification et l'interface utilisateur, et prévisualisez l'expérience prête à l'emploi en temps réel.",
   tabs: {
     branding: 'Image de marque',
     sign_up_and_sign_in: 'Inscription et connexion',

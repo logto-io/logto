@@ -4,6 +4,8 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import Redo from '@/assets/icons/redo.svg?react';
+import LearnMore from '@/components/LearnMore';
+import { secureWebhooks } from '@/consts';
 import Button from '@/ds-components/Button';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
@@ -54,7 +56,12 @@ function SigningKeyField({ hookId, signingKey, onSigningKeyUpdated }: Props) {
   return (
     <FormField
       title="webhook_details.settings.signing_key"
-      tip={<DynamicT forKey="webhook_details.settings.signing_key_tip" />}
+      tip={
+        <>
+          <DynamicT forKey="webhook_details.settings.signing_key_tip" />
+          <LearnMore href={secureWebhooks} />
+        </>
+      }
     >
       <CopyToClipboard
         hasVisibilityToggle

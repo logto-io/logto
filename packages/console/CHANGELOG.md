@@ -1,5 +1,18 @@
 # Change Log
 
+## 1.22.0
+
+### Minor Changes
+
+- 0b785ee0d: feat(console): display jwks uri on application details page
+
+### Patch Changes
+
+- 096367ff5: add missing `/api` segment in SAML application Single-sign-on service URL
+- 5086f4bd2: update documentation links in Console
+- e11e57de8: bump dependencies for security update
+- d44007faa: apply custom domain to SAML SSO and SAML applications
+
 ## 1.21.0
 
 ### Minor Changes

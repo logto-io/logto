@@ -8,6 +8,8 @@ const enterprise_sso_details = {
   tab_connection: 'الاتصال',
   tab_idp_initiated_auth: 'SSO الذي يبدأ من IdP',
   general_settings_title: 'عام',
+  general_settings_description:
+    'قم بتكوين تجربة المستخدم النهائي وربط نطاق البريد الإلكتروني الخاص بالشركة لتدفق SSO الذي يبدأ من SP.',
   custom_branding_title: 'العرض',
   custom_branding_description:
     'قم بتخصيص الاسم والشعار المعروضين في تدفق تسجيل الدخول الموحد للمستخدمين النهائيين. عندما يكون فارغًا ، يتم استخدام القيم الافتراضية.',

@@ -9,7 +9,7 @@ import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import ImageInputs, { themeToLogoName } from '@/components/ImageInputs';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { organizationLogosForExperienceLink } from '@/consts';
+import { organizationLogosForExperienceLink, organizationsFeatureLink } from '@/consts';
 import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -94,6 +94,7 @@ function Settings() {
       <FormCard
         title="general.settings_nav"
         description="organization_details.settings_description"
+        learnMoreLink={{ href: organizationsFeatureLink }}
       >
         <FormField isRequired title="general.name">
           <TextInput

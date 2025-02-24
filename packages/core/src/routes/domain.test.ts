@@ -36,7 +36,7 @@ const mockLibraries = {
   },
   quota: createMockQuotaLibrary(),
   samlApplications: {
-    syncCustomDomainToSamlApplicationRedirectUrls: jest.fn(),
+    syncCustomDomainsToSamlApplicationRedirectUrls: jest.fn(),
   },
 };
 

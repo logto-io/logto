@@ -2,7 +2,7 @@
 // TODO: refactor this file to reduce LOC
 import { authRequestInfoGuard } from '@logto/schemas';
 import { generateStandardId, generateStandardShortId } from '@logto/shared';
-import { cond, type Nullable, removeUndefinedKeys, trySafe } from '@silverhand/essentials';
+import { cond, removeUndefinedKeys, trySafe } from '@silverhand/essentials';
 import { addMinutes } from 'date-fns';
 import { z } from 'zod';
 
@@ -15,6 +15,8 @@ import { SamlApplication } from '#src/saml-application/SamlApplication/index.js'
 import { generateAutoSubmitForm } from '#src/saml-application/SamlApplication/utils.js';
 import assertThat from '#src/utils/assert-that.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
+
+import { verifyAndGetSamlSessionData } from './utils.js';
 
 const samlApplicationSignInCallbackQueryParametersGuard = z
   .object({
@@ -147,37 +149,31 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         assertThat(redirectUri === samlApplication.samlAppCallbackUrl, 'oidc.invalid_redirect_uri');
       }
 
-      // eslint-disable-next-line @silverhand/fp/no-let
-      let relayState: Nullable<string> = null;
-      // eslint-disable-next-line @silverhand/fp/no-let
-      let samlRequestId: Nullable<string> = null;
-
-      if (state) {
-        const sessionId = ctx.cookies.get(spInitiatedSamlSsoSessionCookieName);
-        assertThat(
+      const { relayState, samlRequestId, sessionId, sessionExpiresAt } =
+        await verifyAndGetSamlSessionData(ctx, queries.samlApplicationSessions, state);
+      log.append({
+        session: {
+          relayState,
+          samlRequestId,
           sessionId,
-          'application.saml.sp_initiated_saml_sso_session_not_found_in_cookies'
-        );
-        const session = await findSessionById(sessionId);
-        assertThat(session, 'application.saml.sp_initiated_saml_sso_session_not_found');
-
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        relayState = session.relayState;
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        samlRequestId = session.samlRequestId;
-
-        assertThat(session.oidcState === state, 'application.saml.state_mismatch');
-      }
+          sessionExpiresAt,
+        },
+      });
 
       // Handle OIDC callback and get user info
       const userInfo = await samlApplication.handleOidcCallbackAndGetUserInfo({
         code,
+      });
+      log.append({
+        userInfo,
       });
 
       const { context, entityEndpoint } = await samlApplication.createSamlResponse({
         userInfo,
         relayState,
         samlRequestId,
+        sessionId,
+        sessionExpiresAt,
       });
 
       log.append({
@@ -271,6 +267,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
           octetString,
         });
 
+        log.append({ loginRequestResult });
         const extractResult = authRequestInfoGuard.safeParse(loginRequestResult.extract);
         log.append({ extractResult });
 
@@ -284,7 +281,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         log.append({ extractResultData: extractResult.data });
 
         assertThat(
-          extractResult.data.issuer === samlApplication.config.entityId,
+          extractResult.data.issuer === samlApplication.config.spEntityId,
           'application.saml.auth_request_issuer_not_match'
         );
 
@@ -371,6 +368,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
           },
         });
 
+        log.append({ loginRequestResult });
         const extractResult = authRequestInfoGuard.safeParse(loginRequestResult.extract);
         log.append({ extractResult });
 
@@ -383,7 +381,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         log.append({ extractResultData: extractResult.data });
 
         assertThat(
-          extractResult.data.issuer === samlApplication.config.entityId,
+          extractResult.data.issuer === samlApplication.config.spEntityId,
           'application.saml.auth_request_issuer_not_match'
         );
 

@@ -9,7 +9,7 @@
     "/api/organization-scopes": {
       "get": {
         "summary": "Get organization scopes",
-        "description": "Get organization scopes that match with pagination.",
+        "description": "Get organization scopes that match with optional pagination.",
         "responses": {
           "200": {
             "description": "A list of organization scopes."

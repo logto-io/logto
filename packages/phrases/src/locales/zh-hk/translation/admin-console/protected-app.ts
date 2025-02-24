@@ -1,8 +1,6 @@
 const protected_app = {
   name: '受保護應用程式',
   title: '建立一個受保護的應用程式: 透過簡潔和極速添加身分驗證',
-  description:
-    '受保護的應用程式安全地維護使用者會話並代理您的應用程式請求。由 Cloudflare Workers 提供支援，享受全球頂尖性能和 0 毫秒的全球啟動速度。 <a>了解更多</a>',
   fast_create: '快速建立',
   modal_title: '建立受保護的應用程式',
   modal_subtitle: '透過點擊啟用安全和快速保護。輕鬆為您現有的網絡應用程式添加身分驗證功能。',

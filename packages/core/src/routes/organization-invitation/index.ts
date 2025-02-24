@@ -11,6 +11,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import SchemaRouter from '#src/utils/SchemaRouter.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { EnvSet } from '../../env-set/index.js';
 import { errorHandler } from '../organization/utils.js';
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
@@ -18,13 +19,13 @@ export default function organizationInvitationRoutes<T extends ManagementApiRout
   ...[
     originalRouter,
     {
-      queries: {
-        organizations: { invitations },
-      },
+      queries: { organizations },
       libraries: { organizationInvitations },
     },
   ]: RouterInitArgs<T>
 ) {
+  const { invitations } = organizations;
+
   const router = new SchemaRouter(OrganizationInvitations, invitations, {
     errorHandler,
     disabled: {
@@ -99,9 +100,19 @@ export default function organizationInvitationRoutes<T extends ManagementApiRout
         params: { id },
         body,
       } = ctx.guard;
-      const { invitee } = await invitations.findById(id);
+      const { invitee, organizationId, inviterId } = await invitations.findById(id);
 
-      await organizationInvitations.sendEmail(invitee, body);
+      const templateContext = EnvSet.values.isDevFeaturesEnabled
+        ? await organizationInvitations.getOrganizationInvitationTemplateContext(
+            organizationId,
+            inviterId
+          )
+        : undefined;
+
+      await organizationInvitations.sendEmail(invitee, {
+        ...templateContext,
+        ...body,
+      });
       ctx.status = 204;
       return next();
     }

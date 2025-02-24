@@ -1,7 +1,7 @@
 const enterprise_sso = {
   page_title: '企業單一登入 (SSO)',
   title: '企業單一登入 (SSO)',
-  subtitle: '連接企業身份提供者並啟用服務提供者啟動的單一登入。',
+  subtitle: '連接企業身份提供者並啟用單一登入。',
   create: '新增企業連接器',
   col_connector_name: '連接器名稱',
   col_type: '類型',
@@ -21,8 +21,8 @@ const enterprise_sso = {
     finish_button_text: '繼續',
   },
   basic_info: {
-    title: '在 IdP 中配置您的服務',
-    description: '在您的{{name}}身份提供者中通過 SAML 2.0 創建新應用集成。然後將以下值貼到其中。',
+    title: '在 IdP 中配置你的服務',
+    description: '在你的 {{name}} 身份提供者中通過 SAML 2.0 創建新應用集成。然後將以下值貼到其中。',
     saml: {
       acs_url_field_name: '斷言消費服務 URL (回複 URL)',
       audience_uri_field_name: 'Audience URI (SP Entity ID)',
@@ -38,7 +38,7 @@ const enterprise_sso = {
   },
   attribute_mapping: {
     title: '屬性映射',
-    description: '同步用戶概要從 IdP 需要 `id` 和 `email`。在您的 IdP 中輸入以下聲明名稱和值。',
+    description: '同步用戶概要從 IdP 需要 `id` 和 `email`。在你的 IdP 中輸入以下聲明名稱和值。',
     col_sp_claims: '服務提供者（Logto）的值',
     col_idp_claims: '身份提供者的聲明名稱',
     idp_claim_tooltip: '身份提供者的聲明名稱',
@@ -47,7 +47,7 @@ const enterprise_sso = {
     title: '配置 IdP 元數據',
     description: '從身份提供者配置元數據',
     dropdown_trigger_text: '使用其他配置方法',
-    dropdown_title: '選擇您的配置方法',
+    dropdown_title: '選擇你的配置方法',
     metadata_format_url: '輸入元數據 URL',
     metadata_format_xml: '上傳元數據 XML 文件',
     metadata_format_manual: '手動輸入元數據細節',

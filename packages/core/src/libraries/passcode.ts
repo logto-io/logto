@@ -1,12 +1,24 @@
-import type { TemplateType } from '@logto/connector-kit';
+import { appInsights } from '@logto/app-insights/node';
+import type { SendMessagePayload, TemplateType } from '@logto/connector-kit';
 import { templateTypeGuard, ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
-import type { Passcode } from '@logto/schemas';
+import {
+  buildDemoAppDataForTenant,
+  demoAppApplicationId,
+  type Passcode,
+  type User,
+} from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { customAlphabet, nanoid } from 'nanoid';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import type Queries from '#src/tenants/Queries.js';
-import { ConnectorType } from '#src/utils/connectors/types.js';
+import {
+  buildApplicationContextInfo,
+  buildOrganizationContextInfo,
+  buildUserContextInfo,
+} from '#src/utils/connectors/extra-information.js';
+import { ConnectorType, type VerificationCodeContextInfo } from '#src/utils/connectors/types.js';
 
 export const passcodeLength = 6;
 const randomCode = customAlphabet('1234567890', passcodeLength);
@@ -15,6 +27,9 @@ export const passcodeExpiration = 10 * 60 * 1000; // 10 minutes.
 export const passcodeMaxTryCount = 10;
 
 export type PasscodeLibrary = ReturnType<typeof createPasscodeLibrary>;
+
+export type SendPasscodeContextPayload = Pick<SendMessagePayload, 'locale'> &
+  VerificationCodeContextInfo;
 
 export const createPasscodeLibrary = (queries: Queries, connectorLibrary: ConnectorLibrary) => {
   const {
@@ -54,7 +69,12 @@ export const createPasscodeLibrary = (queries: Queries, connectorLibrary: Connec
     });
   };
 
-  const sendPasscode = async (passcode: Passcode) => {
+  /**
+   *
+   * @param {Passcode} passcode The passcode object being sent.
+   * @param {SendPasscodeContextPayload} contextPayload The extra context information for the verification code email template.
+   */
+  const sendPasscode = async (passcode: Passcode, contextPayload?: SendPasscodeContextPayload) => {
     const emailOrPhone = passcode.email ?? passcode.phone;
 
     if (!emailOrPhone) {
@@ -76,6 +96,7 @@ export const createPasscodeLibrary = (queries: Queries, connectorLibrary: Connec
       type: messageTypeResult.data,
       payload: {
         code: passcode.code,
+        ...contextPayload,
       },
     });
 
@@ -122,5 +143,59 @@ export const createPasscodeLibrary = (queries: Queries, connectorLibrary: Connec
     await consumePasscode(passcode.id);
   };
 
-  return { createPasscode, sendPasscode, verifyPasscode };
+  /**
+   * Build the context information for the verification code email template.
+   * The context data may vary depending on the context of the verification code request.
+   */
+  const buildVerificationCodeContext = async ({
+    applicationId,
+    organizationId,
+    userId,
+    user,
+  }: {
+    applicationId?: string;
+    organizationId?: string;
+    userId?: string;
+    /*
+     * If available in the request context, directly providing the user object
+     * is more efficient than providing the userId.
+     */
+    user?: User;
+  }): Promise<VerificationCodeContextInfo> => {
+    try {
+      const [application, applicationSignInExperience, organization, userData] = await Promise.all([
+        applicationId
+          ? applicationId === demoAppApplicationId
+            ? buildDemoAppDataForTenant('') // Use empty string as the tenantId will be ignored here.
+            : queries.applications.findApplicationById(applicationId)
+          : undefined,
+        applicationId
+          ? queries.applicationSignInExperiences.safeFindSignInExperienceByApplicationId(
+              applicationId
+            )
+          : undefined,
+        organizationId ? queries.organizations.findById(organizationId) : undefined,
+        user ?? (userId ? queries.users.findUserById(userId) : undefined),
+      ]);
+
+      return {
+        ...conditional(
+          application && {
+            application: buildApplicationContextInfo(application, applicationSignInExperience),
+          }
+        ),
+        ...conditional(
+          organization && { organization: buildOrganizationContextInfo(organization) }
+        ),
+        ...conditional(userData && { user: buildUserContextInfo(userData) }),
+      };
+    } catch (error: unknown) {
+      void appInsights.trackException(error);
+
+      // Should not block the verification code sending if the context information is not available.
+      return {};
+    }
+  };
+
+  return { createPasscode, sendPasscode, verifyPasscode, buildVerificationCodeContext };
 };

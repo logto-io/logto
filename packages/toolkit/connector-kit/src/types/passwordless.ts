@@ -51,15 +51,27 @@ export type SendMessagePayload = {
    * @example 'https://example.com'
    */
   link?: string;
-} & Record<string, string>;
+  /**
+   * The language tag detected from the user's request. It will be used to localize the message.
+   * If provided, Logto will use the corresponding language template to send the message.
+   * If not provided, or the language template is not available, will fallback to the default language and template.
+   *
+   * @remarks
+   * For email connectors that handle email templates at the provider side, use this field to indicate the user's preferred language.
+   *
+   * @example 'en-US'
+   */
+  locale?: string;
+} & Record<string, unknown>;
 
 /** The guard for {@link SendMessagePayload}. */
 export const sendMessagePayloadGuard = z
   .object({
     code: z.string().optional(),
     link: z.string().optional(),
+    locale: z.string().optional(),
   })
-  .and(z.record(z.string())) satisfies z.ZodType<SendMessagePayload>;
+  .catchall(z.unknown()) satisfies z.ZodType<SendMessagePayload>;
 
 export const urlRegEx =
   /(https?:\/\/)?(?:www\.)?[\w#%+.:=@~-]{1,256}\.[\d()A-Za-z]{1,6}\b[\w#%&()+./:=?@~-]*/;
@@ -80,13 +92,13 @@ export type EmailServiceBranding = z.infer<typeof emailServiceBrandingGuard>;
 
 export type SendMessageData = {
   to: string;
-  type: TemplateType | VerificationCodeType;
+  type: TemplateType;
   payload: SendMessagePayload;
 };
 
 export const sendMessageDataGuard = z.object({
   to: z.string(),
-  type: templateTypeGuard.or(verificationCodeTypeGuard),
+  type: templateTypeGuard,
   payload: sendMessagePayloadGuard,
 }) satisfies z.ZodType<SendMessageData>;
 

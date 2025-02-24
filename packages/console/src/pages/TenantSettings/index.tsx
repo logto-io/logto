@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Outlet } from 'react-router-dom';
 
-import { TenantSettingsTabs } from '@/consts';
+import { logtoCloud, TenantSettingsTabs } from '@/consts';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import CardTitle from '@/ds-components/CardTitle';
 import DynamicT from '@/ds-components/DynamicT';
@@ -20,9 +20,10 @@ function TenantSettings() {
   return (
     <div className={styles.container}>
       <CardTitle
+        className={styles.cardTitle}
         title="tenants.title"
         subtitle="tenants.description"
-        className={styles.cardTitle}
+        learnMoreLink={{ href: logtoCloud }}
       />
       {isDevTenant && <DevTenantNotification className={styles.notification} />}
       <TabNav className={styles.tabs}>

@@ -1,4 +1,4 @@
-import { TemplateType } from '@logto/connector-kit';
+import { type EmailTemplateDetails, TemplateType } from '@logto/connector-kit';
 import type { Transporter } from 'nodemailer';
 import nodemailer from 'nodemailer';
 
@@ -17,6 +17,8 @@ import {
 import { smtpConfigGuard } from './types.js';
 
 const getConfig = vi.fn().mockResolvedValue(mockedConfig);
+// eslint-disable-next-line unicorn/no-useless-undefined
+const getI18nEmailTemplate = vi.fn().mockResolvedValue(undefined);
 
 const sendMail = vi.fn();
 
@@ -29,11 +31,11 @@ describe('SMTP connector', () => {
   });
 
   it('init without throwing errors', async () => {
-    await expect(createConnector({ getConfig })).resolves.not.toThrow();
+    await expect(createConnector({ getConfig, getI18nEmailTemplate })).resolves.not.toThrow();
   });
 
   it('should send mail with proper options', async () => {
-    const connector = await createConnector({ getConfig });
+    const connector = await createConnector({ getConfig, getI18nEmailTemplate });
     await connector.sendMessage({
       to: 'foo',
       type: TemplateType.Register,
@@ -49,7 +51,7 @@ describe('SMTP connector', () => {
   });
 
   it('should send mail with proper data', async () => {
-    const connector = await createConnector({ getConfig });
+    const connector = await createConnector({ getConfig, getI18nEmailTemplate });
     await connector.sendMessage({
       to: 'bar',
       type: TemplateType.SignIn,
@@ -65,7 +67,7 @@ describe('SMTP connector', () => {
   });
 
   it('should send mail with proper data (2)', async () => {
-    const connector = await createConnector({ getConfig });
+    const connector = await createConnector({ getConfig, getI18nEmailTemplate });
     await connector.sendMessage({
       to: 'baz',
       type: TemplateType.OrganizationInvitation,
@@ -86,6 +88,7 @@ describe('SMTP connector', () => {
         ...mockedConfig,
         customHeaders: { 'X-Test': 'test', 'X-Test-Another': ['test1', 'test2', 'test3'] },
       }),
+      getI18nEmailTemplate,
     });
     await connector.sendMessage({
       to: 'baz',
@@ -155,5 +158,37 @@ describe('Test config guard', () => {
     };
     const result = smtpConfigGuard.safeParse(testConfig);
     expect(result.success && result.data).toMatchObject(expect.objectContaining(testConfig));
+  });
+});
+
+describe('Test SMTP connector with custom i18n templates', () => {
+  it('should send mail with custom i18n template', async () => {
+    getI18nEmailTemplate.mockResolvedValue({
+      subject: 'Custom subject {{code}}',
+      content: 'Your verification code is {{code}}',
+      contentType: 'text/plain',
+      replyTo: `{{user.primaryEmail}}`,
+      sendFrom: `{{application.name}} <notice@test.smtp>`,
+    } satisfies EmailTemplateDetails);
+
+    const connector = await createConnector({ getConfig, getI18nEmailTemplate });
+
+    await connector.sendMessage({
+      to: 'bar',
+      type: TemplateType.SignIn,
+      payload: {
+        code: '234567',
+        user: { primaryEmail: 'test@email.com' },
+        application: { name: 'Test app' },
+      },
+    });
+
+    expect(sendMail).toHaveBeenCalledWith({
+      from: 'Test app <notice@test.smtp>',
+      subject: 'Custom subject 234567',
+      text: 'Your verification code is 234567',
+      to: 'bar',
+      replyTo: 'test@email.com',
+    });
   });
 });

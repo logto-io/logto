@@ -7,6 +7,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import type { WithAuthContext } from '#src/middleware/koa-auth/index.js';
 import koaAuth from '#src/middleware/koa-auth/index.js';
 import koaCors from '#src/middleware/koa-cors.js';
+import { type WithI18nContext } from '#src/middleware/koa-i18next.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -20,7 +21,7 @@ export default function initMeApis(tenant: TenantContext): Koa {
     throw new Error('`/me` routes should only be initialized in the admin tenant.');
   }
 
-  const meRouter = new Router<unknown, WithAuthContext>();
+  const meRouter = new Router<unknown, WithAuthContext & WithI18nContext>();
 
   meRouter.use(
     koaAuth(tenant.envSet, getManagementApiResourceIndicator(adminTenantId, 'me')),

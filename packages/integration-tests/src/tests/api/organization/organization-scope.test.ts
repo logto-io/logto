@@ -39,10 +39,14 @@ describe('organization scope APIs', () => {
     expect(scopes).toContainEqual(expect.objectContaining({ name: name2, description: null }));
   });
 
-  it('should get organization scopes with pagination', async () => {
-    // Add 20 scopes to exceed the default page size
+  it('should get organization scopes with optional pagination', async () => {
+    const pageSize = 20;
+    // Create scopes to exceed the default page size
+    const createCount = pageSize + 10;
     await Promise.all(
-      Array.from({ length: 30 }).map(async () => scopeApi.create({ name: 'test' + randomId() }))
+      Array.from({ length: createCount }).map(async () =>
+        scopeApi.create({ name: 'test' + randomId() })
+      )
     );
 
     const scopes = await scopeApi.getList(
@@ -53,6 +57,11 @@ describe('organization scope APIs', () => {
     );
     expect(scopes).toHaveLength(20);
 
+    // Should return all scopes if no pagination is provided
+    const scopes = await scopeApi.getList();
+    expect(scopes).toHaveLength(createCount);
+
+    // Should return paginated scopes based on specified page number and page size
     const scopes2 = await scopeApi.getList(
       new URLSearchParams({
         page: '2',

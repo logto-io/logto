@@ -86,6 +86,11 @@ type SchemaRouterConfig<Key extends string> = {
    * If not provided, the `schema.guard` will be used.
    */
   entityGuard?: z.ZodTypeAny;
+  /**
+   * If the GET route's pagination is optional.
+   * @default false
+   */
+  isPaginationOptional?: boolean;
 };
 
 type RelationRoutesConfig = {
@@ -313,12 +318,12 @@ export default class SchemaRouter<
 
   #addRoutes() {
     const { queries, schema, config } = this;
-    const { disabled, searchFields, idLength, entityGuard } = config;
+    const { disabled, searchFields, idLength, entityGuard, isPaginationOptional } = config;
 
     if (!disabled.get) {
       this.get(
         '/',
-        koaPagination(),
+        koaPagination({ isOptional: isPaginationOptional }),
         koaGuard({
           query: z.object({ q: z.string().optional() }),
           response: (entityGuard ?? schema.guard).array(),

@@ -1,4 +1,4 @@
-import { assert } from '@silverhand/essentials';
+import { assert, conditional, trySafe } from '@silverhand/essentials';
 import { got, HTTPError } from 'got';
 
 import type {
@@ -6,6 +6,9 @@ import type {
   SendMessageFunction,
   CreateConnector,
   EmailConnector,
+  GetI18nEmailTemplate,
+  EmailTemplateDetails,
+  SendMessagePayload,
 } from '@logto/connector-kit';
 import {
   ConnectorError,
@@ -16,42 +19,83 @@ import {
 } from '@logto/connector-kit';
 
 import { defaultMetadata, endpoint } from './constant.js';
-import { sendGridMailConfigGuard } from './types.js';
-import type { EmailData, Personalization, Content, PublicParameters } from './types.js';
+import { ContextType, sendGridMailConfigGuard } from './types.js';
+import type { PublicParameters, SendGridMailConfig } from './types.js';
+
+const buildParametersFromDefaultTemplate = (
+  to: string,
+  config: SendGridMailConfig,
+  template: SendGridMailConfig['templates'][0],
+  payload: SendMessagePayload
+): PublicParameters => {
+  return {
+    personalizations: [{ to: [{ email: to }] }],
+    from: {
+      email: config.fromEmail,
+      ...conditional(config.fromName && { name: config.fromName }),
+    },
+    subject: replaceSendMessageHandlebars(template.subject, payload),
+    content: [
+      {
+        type: template.type,
+        value: replaceSendMessageHandlebars(template.content, payload),
+      },
+    ],
+  };
+};
+
+const buildParametersFromCustomTemplate = (
+  to: string,
+  config: SendGridMailConfig,
+  { subject, content, sendFrom, contentType = 'text/html' }: EmailTemplateDetails,
+  payload: SendMessagePayload
+): PublicParameters => {
+  return {
+    personalizations: [
+      {
+        to: [
+          {
+            email: to,
+            ...conditional(config.fromName && { name: config.fromName }),
+          },
+        ],
+      },
+    ],
+    from: {
+      email: config.fromEmail,
+      // If sendFrom is provided, we will replace the handlebars with the payload
+      ...conditional(sendFrom && { name: replaceSendMessageHandlebars(sendFrom, payload) }),
+    },
+    subject: replaceSendMessageHandlebars(subject, payload),
+    content: [
+      {
+        type: contentType === 'text/html' ? ContextType.Html : ContextType.Text,
+        value: replaceSendMessageHandlebars(content, payload),
+      },
+    ],
+  };
+};
 
 const sendMessage =
-  (getConfig: GetConnectorConfig): SendMessageFunction =>
+  (
+    getConfig: GetConnectorConfig,
+    getI18nEmailTemplate?: GetI18nEmailTemplate
+  ): SendMessageFunction =>
   async (data, inputConfig) => {
     const { to, type, payload } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, sendGridMailConfigGuard);
-    const { apiKey, fromEmail, fromName, templates } = config;
+    const { apiKey, templates } = config;
+
+    const customTemplate = await trySafe(async () => getI18nEmailTemplate?.(type, payload.locale));
+
     const template = templates.find((template) => template.usageType === type);
 
-    assert(
-      template,
-      new ConnectorError(
-        ConnectorErrorCodes.TemplateNotFound,
-        `Template not found for type: ${type}`
-      )
-    );
+    const parameters = customTemplate
+      ? buildParametersFromCustomTemplate(to, config, customTemplate, payload)
+      : template && buildParametersFromDefaultTemplate(to, config, template, payload);
 
-    const toEmailData: EmailData[] = [{ email: to }];
-    const fromEmailData: EmailData = fromName
-      ? { email: fromEmail, name: fromName }
-      : { email: fromEmail };
-    const personalizations: Personalization = { to: toEmailData };
-    const content: Content = {
-      type: template.type,
-      value: replaceSendMessageHandlebars(template.content, payload),
-    };
-
-    const parameters: PublicParameters = {
-      personalizations: [personalizations],
-      from: fromEmailData,
-      subject: replaceSendMessageHandlebars(template.subject, payload),
-      content: [content],
-    };
+    assert(parameters, new ConnectorError(ConnectorErrorCodes.TemplateNotFound));
 
     try {
       return await got.post(endpoint, {
@@ -82,12 +126,15 @@ const sendMessage =
     }
   };
 
-const createSendGridMailConnector: CreateConnector<EmailConnector> = async ({ getConfig }) => {
+const createSendGridMailConnector: CreateConnector<EmailConnector> = async ({
+  getConfig,
+  getI18nEmailTemplate,
+}) => {
   return {
     metadata: defaultMetadata,
     type: ConnectorType.Email,
     configGuard: sendGridMailConfigGuard,
-    sendMessage: sendMessage(getConfig),
+    sendMessage: sendMessage(getConfig, getI18nEmailTemplate),
   };
 };
 

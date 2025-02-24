@@ -39,6 +39,10 @@ const connector = {
     'No puede tener múltiples conectores sociales que tengan el mismo objetivo y plataforma.',
   cannot_overwrite_metadata_for_non_standard_connector:
     "Los 'metadatos' de este conector no se pueden sobrescribir.",
+  email_connector: {
+    bulk_deletion_no_filter:
+      'Debe proporcionarse al menos una condición de filtro para realizar la eliminación masiva por propiedades. Las propiedades compatibles son: {{properties, list(type:conjunction)}}.',
+  },
 };
 
 export default Object.freeze(connector);

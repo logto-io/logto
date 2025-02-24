@@ -61,8 +61,11 @@ export const mockConnectorFilePaths = Object.freeze({
 
 /**
  * Replace all handlebars that match the keys in {@link SendMessagePayload} with the payload
- * values. If the payload does not contain the key, the handlebar will be replaced with an empty
- * string.
+ * values.
+ *
+ * - If the payload does not contain the root property, the handlebars will not be replaced.
+ * - If the payload contains the root property but does not contain the nested property,
+ *  the handlebars will be replaced with an empty string.
  *
  * @param template The template to replace the handlebars with.
  * @param payload The payload to replace the handlebars with.
@@ -72,21 +75,50 @@ export const mockConnectorFilePaths = Object.freeze({
  * ```ts
  * replaceSendMessageKeysWithPayload('Your verification code is {{code}}', { code: '123456' });
  * // 'Your verification code is 123456'
+ *
+ * replaceSendMessageKeysWithPayload('Your application name is {{application.name}}', { application: { name: 'Logto' } });
+ * // 'Your application name is Logto'
+ *
+ * replaceSendMessageKeysWithPayload('Your application name is {{application.name}}', { application: {}});
+ * // 'Your application name is '
  * ```
  *
  * @example
  * ```ts
  * replaceSendMessageKeysWithPayload('Your verification code is {{code}}', {});
- * // 'Your verification code is '
+ * // 'Your verification code is {{code}}'
+ *
+ * replaceSendMessageKeysWithPayload('Your application name is {{application.name}}', {});
+ * // 'Your application name is {{application.name}}'
  * ```
  */
 export const replaceSendMessageHandlebars = (
   template: string,
   payload: SendMessagePayload
 ): string => {
-  return Object.keys(payload).reduce(
-    (accumulator, key) =>
-      accumulator.replaceAll(new RegExp(`{{\\s*${key}\\s*}}`, 'g'), payload[key] ?? ''),
-    template
-  );
+  const regex = /{{\s*([\w.]+)\s*}}/g;
+
+  return template.replaceAll(regex, (handleBar, key: string) => {
+    const baseKey = key.split('.')[0];
+    // If the root variable does not exist in the payload, return the original key
+    if (!(baseKey && baseKey in payload)) {
+      return handleBar;
+    }
+
+    const value = getValue(payload, key);
+
+    return String(value ?? '');
+  });
+};
+
+export const getValue = (object: Record<string, unknown>, path: string): unknown | undefined => {
+  return path.split('.').reduce<unknown | undefined>((current, part) => {
+    // Return undefined if the current value is not an object
+    if (!current || typeof current !== 'object') {
+      return;
+    }
+
+    // eslint-disable-next-line no-restricted-syntax
+    return (current as Record<string, unknown>)[part];
+  }, object);
 };

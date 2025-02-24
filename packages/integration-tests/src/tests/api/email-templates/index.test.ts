@@ -6,7 +6,7 @@ import { EmailTemplatesApiTest } from '#src/helpers/email-templates.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { devFeatureTest } from '#src/utils.js';
 
-devFeatureTest.describe('email templates', () => {
+devFeatureTest.describe('email templates management API', () => {
   const emailTemplatesApi = new EmailTemplatesApiTest();
 
   afterEach(async () => {

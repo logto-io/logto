@@ -1,12 +1,118 @@
-import createConnector from './index.js';
-import { mockedConfig } from './mock.js';
+import nock from 'nock';
 
-const getConfig = vi.fn().mockResolvedValue(mockedConfig);
+import { TemplateType } from '@logto/connector-kit';
+
+import createConnector from './index.js';
+import { fromEmail, mockedConfig, mockedGenericEmailParameters, toEmail } from './mock.js';
+
+const getConfig = vi.fn();
+// eslint-disable-next-line unicorn/no-useless-undefined
+const getI18nEmailTemplate = vi.fn().mockResolvedValue(undefined);
+
+const connector = await createConnector({ getConfig, getI18nEmailTemplate });
+
+const nockMessages = (
+  expectation: Record<string, unknown>,
+  endpoint = 'https://api.sendgrid.com'
+) =>
+  nock(endpoint)
+    .post('/v3/mail/send')
+    .matchHeader('authorization', `Bearer ${mockedConfig.apiKey}`)
+    .reply((_, body, callback) => {
+      expect(body).toMatchObject(expectation);
+      callback(null, [200, 'OK']);
+    });
 
 describe('SendGrid connector', () => {
-  it('init without throwing errors', async () => {
-    await expect(createConnector({ getConfig })).resolves.not.toThrow();
+  beforeEach(() => {
+    nock.cleanAll();
   });
 
-  // TODO: add test cases
+  it('should send generic email with default config', async () => {
+    nockMessages(mockedGenericEmailParameters);
+
+    getConfig.mockResolvedValue(mockedConfig);
+
+    await connector.sendMessage({
+      to: toEmail,
+      type: TemplateType.Generic,
+      payload: { code: '123456' },
+    });
+  });
+
+  it('should throw error if template not found', async () => {
+    getConfig.mockResolvedValue(mockedConfig);
+
+    await expect(
+      connector.sendMessage({
+        to: toEmail,
+        type: TemplateType.OrganizationInvitation,
+        payload: { link: 'https://example.com' },
+      })
+    ).rejects.toThrowErrorMatchingInlineSnapshot('[Error: ConnectorError: template_not_found]');
+  });
+
+  it('should send organization invitation email with default config', async () => {
+    nockMessages({
+      ...mockedGenericEmailParameters,
+      subject: 'Organization invitation',
+      content: [
+        {
+          type: 'text/plain',
+          value: 'Your link is https://example.com',
+        },
+      ],
+    });
+
+    getConfig.mockResolvedValue({
+      ...mockedConfig,
+      templates: [
+        ...mockedConfig.templates,
+        {
+          usageType: 'OrganizationInvitation',
+          type: 'text/plain',
+          subject: 'Organization invitation',
+          content: 'Your link is {{link}}',
+        },
+      ],
+    });
+
+    await connector.sendMessage({
+      to: toEmail,
+      type: TemplateType.OrganizationInvitation,
+      payload: { link: 'https://example.com' },
+    });
+  });
+
+  it('should send email with custom i18n template', async () => {
+    getI18nEmailTemplate.mockResolvedValue({
+      subject: 'Passcode {{code}}',
+      content: '<p>Your passcode is {{code}}</p>',
+      contentType: 'text/html',
+      sendFrom: '{{application.name}}',
+    });
+
+    nockMessages({
+      personalizations: [{ to: [{ email: toEmail }] }],
+      from: { email: fromEmail, name: 'Test app' },
+      subject: 'Passcode 123456',
+      content: [
+        {
+          type: 'text/html',
+          value: '<p>Your passcode is 123456</p>',
+        },
+      ],
+    });
+
+    getConfig.mockResolvedValue(mockedConfig);
+
+    await connector.sendMessage({
+      to: toEmail,
+      type: TemplateType.Generic,
+      payload: {
+        code: '123456',
+        application: { name: 'Test app' },
+      },
+    });
+  });
 });

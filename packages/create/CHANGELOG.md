@@ -1,5 +1,14 @@
 # Change Log
 
+## 1.24.1
+
+### Patch Changes
+
+- e11e57de8: bump dependencies for security update
+- Updated dependencies [cb261024b]
+- Updated dependencies [e11e57de8]
+  - @logto/cli@1.24.1
+
 ## 1.24.0
 
 ### Patch Changes

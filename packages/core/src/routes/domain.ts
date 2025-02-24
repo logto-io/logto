@@ -16,7 +16,7 @@ export default function domainRoutes<T extends ManagementApiRouter>(
   } = queries;
   const {
     domains: { syncDomainStatus, addDomain, deleteDomain },
-    samlApplications: { syncCustomDomainToSamlApplicationRedirectUrls },
+    samlApplications: { syncCustomDomainsToSamlApplicationRedirectUrls },
   } = libraries;
 
   router.get(
@@ -28,12 +28,8 @@ export default function domainRoutes<T extends ManagementApiRouter>(
         domains.map(async (domain) => syncDomainStatus(domain))
       );
 
-      await trySafe(async () =>
-        Promise.all(
-          syncedDomains.map(async (syncedDomain) =>
-            syncCustomDomainToSamlApplicationRedirectUrls(tenantId, syncedDomain)
-          )
-        )
+      void trySafe(async () =>
+        syncCustomDomainsToSamlApplicationRedirectUrls(tenantId, [...syncedDomains])
       );
 
       ctx.body = syncedDomains.map((domain) => pick(domain, ...domainSelectFields));
@@ -57,7 +53,13 @@ export default function domainRoutes<T extends ManagementApiRouter>(
       const domain = await findDomainById(id);
       const syncedDomain = await syncDomainStatus(domain);
 
-      await syncCustomDomainToSamlApplicationRedirectUrls(tenantId, syncedDomain);
+      void trySafe(async () => {
+        const domains = await findAllDomains();
+        const syncedDomains = await Promise.all(
+          domains.map(async (domain) => syncDomainStatus(domain))
+        );
+        await syncCustomDomainsToSamlApplicationRedirectUrls(tenantId, [...syncedDomains]);
+      });
 
       ctx.body = pick(syncedDomain, ...domainSelectFields);
 
@@ -99,7 +101,13 @@ export default function domainRoutes<T extends ManagementApiRouter>(
       const { id } = ctx.guard.params;
       await deleteDomain(id);
 
-      await trySafe(async () => syncCustomDomainToSamlApplicationRedirectUrls(tenantId));
+      await trySafe(async () => {
+        const domains = await findAllDomains();
+        const syncedDomains = await Promise.all(
+          domains.map(async (domain) => syncDomainStatus(domain))
+        );
+        await syncCustomDomainsToSamlApplicationRedirectUrls(tenantId, [...syncedDomains]);
+      });
 
       ctx.status = 204;
 

@@ -1,5 +1,20 @@
 # Change Log
 
+## 1.24.1
+
+### Patch Changes
+
+- e11e57de8: bump dependencies for security update
+- Updated dependencies [0b785ee0d]
+- Updated dependencies [5086f4bd2]
+- Updated dependencies [e11e57de8]
+  - @logto/phrases@1.18.0
+  - @logto/connector-kit@4.1.1
+  - @logto/language-kit@1.1.1
+  - @logto/core-kit@2.5.4
+  - @logto/shared@3.1.4
+  - @logto/phrases-experience@1.9.1
+
 ## 1.24.0
 
 ### Patch Changes

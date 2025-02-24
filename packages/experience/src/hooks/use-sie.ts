@@ -9,25 +9,27 @@ import { type VerificationCodeIdentifier } from '@/types';
 
 export const useSieMethods = () => {
   const { experienceSettings } = useContext(PageContext);
-  const socialSignInSettings = experienceSettings?.socialSignIn ?? {};
-  const { identifiers, password, verify } = experienceSettings?.signUp ?? {};
+  const { password, verify } = experienceSettings?.signUp ?? {};
 
-  return {
-    signUpMethods: identifiers ?? [],
-    signUpSettings: { password, verify },
-    signInMethods:
-      experienceSettings?.signIn.methods.filter(
-        // Filter out empty settings
-        ({ password, verificationCode }) => password || verificationCode
-      ) ?? [],
-    socialSignInSettings,
-    socialConnectors: experienceSettings?.socialConnectors ?? [],
-    ssoConnectors: experienceSettings?.ssoConnectors ?? [],
-    signInMode: experienceSettings?.signInMode,
-    forgotPassword: experienceSettings?.forgotPassword,
-    customContent: experienceSettings?.customContent,
-    singleSignOnEnabled: experienceSettings?.singleSignOnEnabled,
-  };
+  return useMemo(
+    () => ({
+      signUpMethods: experienceSettings?.signUp.identifiers ?? [],
+      signUpSettings: { password, verify },
+      signInMethods:
+        experienceSettings?.signIn.methods.filter(
+          // Filter out empty settings
+          ({ password, verificationCode }) => password || verificationCode
+        ) ?? [],
+      socialSignInSettings: experienceSettings?.socialSignIn ?? {},
+      socialConnectors: experienceSettings?.socialConnectors ?? [],
+      ssoConnectors: experienceSettings?.ssoConnectors ?? [],
+      signInMode: experienceSettings?.signInMode,
+      forgotPassword: experienceSettings?.forgotPassword,
+      customContent: experienceSettings?.customContent,
+      singleSignOnEnabled: experienceSettings?.singleSignOnEnabled,
+    }),
+    [experienceSettings, password, verify]
+  );
 };
 
 export const usePasswordPolicy = () => {

@@ -127,8 +127,8 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
     }
   );
 
-  router.addRelationRoutes(rolesScopes, 'scopes');
-  router.addRelationRoutes(rolesResourceScopes, 'resource-scopes');
+  router.addRelationRoutes(rolesScopes, 'scopes', { isPaginationOptional: true });
+  router.addRelationRoutes(rolesResourceScopes, 'resource-scopes', { isPaginationOptional: true });
 
   originalRouter.use(router.routes());
 }

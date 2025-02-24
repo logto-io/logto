@@ -5,6 +5,8 @@ const connector_details = {
   settings: 'Ustawienia ogólne',
   settings_description:
     'Konektory odgrywają kluczową rolę w Logto. Dzięki nim, Logto umożliwia użytkownikom końcowym korzystanie z rejestracji lub logowania bez hasła oraz możliwości logowania się za pomocą kont społecznościowych.',
+  email_connector_settings_description:
+    'Zintegruj się ze swoim dostawcą usług e-mail, aby umożliwić użytkownikom końcowym rejestrację i logowanie bez hasła za pośrednictwem e-maila.',
   parameter_configuration: 'Konfiguracja parametru',
   test_connection: 'Test',
   save_error_empty_config: 'Proszę wprowadzić konfigurację',

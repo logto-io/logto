@@ -1,16 +1,19 @@
 import nock from 'nock';
 
-import { TemplateType } from '@logto/connector-kit';
+import { type EmailTemplateDetails, TemplateType } from '@logto/connector-kit';
 
 import createMailgunConnector from './index.js';
 import { type MailgunConfig } from './types.js';
 
 const getConfig = vi.fn();
+// eslint-disable-next-line unicorn/no-useless-undefined
+const getI18nEmailTemplate = vi.fn().mockResolvedValue(undefined);
 
 const domain = 'example.com';
 const apiKey = 'apiKey';
 const connector = await createMailgunConnector({
   getConfig,
+  getI18nEmailTemplate,
 });
 const baseConfig: Partial<MailgunConfig> = {
   domain: 'example.com',
@@ -247,5 +250,74 @@ describe('Maligun connector', () => {
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       '[Error: ConnectorError: {"statusCode":400,"body":"{\\"message\\":\\"error\\"}"}]'
     );
+  });
+
+  it('should send email with custom i18n template', async () => {
+    nockMessages({
+      from: baseConfig.from,
+      to: 'bar@example.com',
+      subject: 'Passcode 123456',
+      html: '<p>Your passcode is 123456</p>',
+      'h:Reply-To': 'Reply to foo@email.com',
+    });
+
+    getI18nEmailTemplate.mockResolvedValue({
+      subject: 'Passcode {{code}}',
+      content: '<p>Your passcode is {{code}}</p>',
+      replyTo: 'Reply to {{user.primaryEmail}}',
+    } satisfies EmailTemplateDetails);
+
+    getConfig.mockResolvedValue({
+      ...baseConfig,
+      deliveries: {
+        [TemplateType.Generic]: {
+          subject: 'Verification code is {{code}}',
+          html: '<p>Your verification code is {{code}}</p>',
+          replyTo: 'baz@example.com',
+        },
+      },
+    });
+
+    await connector.sendMessage({
+      to: 'bar@example.com',
+      type: TemplateType.Generic,
+      payload: { code: '123456', user: { primaryEmail: 'foo@email.com' } },
+    });
+  });
+
+  it('should send text email with custom i18n template', async () => {
+    nockMessages({
+      from: `Foo <${baseConfig.from}>`,
+      to: 'bar@example.com',
+      subject: 'Passcode 123456',
+      html: 'Your passcode is 123456',
+      text: 'Your passcode is 123456',
+      'h:Reply-To': 'Reply to {{user.primaryEmail}}',
+    });
+
+    getI18nEmailTemplate.mockResolvedValue({
+      subject: 'Passcode {{code}}',
+      content: 'Your passcode is {{code}}',
+      replyTo: 'Reply to {{user.primaryEmail}}',
+      contentType: 'text/plain',
+      sendFrom: `{{application.name}} <${baseConfig.from}>`,
+    } satisfies EmailTemplateDetails);
+
+    getConfig.mockResolvedValue({
+      ...baseConfig,
+      deliveries: {
+        [TemplateType.Generic]: {
+          subject: 'Verification code is {{code}}',
+          html: '<p>Your verification code is {{code}}</p>',
+          replyTo: 'no-reply@mail.com',
+        },
+      },
+    });
+
+    await connector.sendMessage({
+      to: 'bar@example.com',
+      type: TemplateType.Generic,
+      payload: { code: '123456', application: { name: 'Foo' } },
+    });
   });
 });

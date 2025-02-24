@@ -5,7 +5,8 @@ import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 const sign_in_exp = {
   page_title: 'サインインエクスペリエンス',
   title: 'サインインエクスペリエンス',
-  description: 'ブランドに合わせてサインイン UI をカスタマイズし、リアルタイムで表示できます。',
+  description:
+    '認証フローと UI をカスタマイズし、すぐに使えるエクスペリエンスをリアルタイムでプレビューします。',
   tabs: {
     branding: 'ブランディング',
     sign_up_and_sign_in: 'サインアップとサインイン',

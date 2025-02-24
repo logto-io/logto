@@ -5,7 +5,7 @@ const domain = {
     failed_to_connect: 'Bağlantı başarısız oldu',
   },
   update_endpoint_notice:
-    'Özellikleri için özel bir alan adı kullanmak istiyorsanız, uygulamanızda Sosyal bağlayıcı geri çağrı URI ve Logto uç noktası için alan adını güncellemeyi unutmayın. <a>{{link}}</a>',
+    'Özellikleri için özel bir alan adı kullanmak istiyorsanız, uygulamanızda Sosyal bağlayıcı geri çağrı URI ve Logto uç noktası için alan adını güncellemeyi unutmayın.',
   error_hint:
     'DNS kayıtlarınızı güncellediğinizden emin olunuz. {{value}} saniyede bir kontrol edeceğiz.',
   custom: {

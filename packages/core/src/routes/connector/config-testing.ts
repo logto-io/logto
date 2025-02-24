@@ -21,9 +21,10 @@ import { loadConnectorFactories } from '#src/utils/connectors/index.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 export default function connectorConfigTestingRoutes<T extends ManagementApiRouter>(
-  ...[router, { cloudConnection }]: RouterInitArgs<T>
+  ...[router, { cloudConnection, connectors }]: RouterInitArgs<T>
 ) {
   const { getClient } = cloudConnection;
+  const { getI18nEmailTemplate } = connectors;
 
   router.post(
     '/connectors/:factoryId/test',
@@ -33,6 +34,7 @@ export default function connectorConfigTestingRoutes<T extends ManagementApiRout
         phone: string().regex(phoneRegEx).optional(),
         email: string().regex(emailRegEx).optional(),
         config: jsonObjectGuard,
+        locale: string().optional(),
       }),
       status: [204, 400, 404],
     }),
@@ -41,7 +43,7 @@ export default function connectorConfigTestingRoutes<T extends ManagementApiRout
         params: { factoryId },
         body,
       } = ctx.guard;
-      const { phone, email, config } = body;
+      const { phone, email, config, locale } = body;
 
       const subject = phone ?? email;
       assertThat(subject, new RequestError({ code: 'guard.invalid_input' }));
@@ -75,7 +77,8 @@ export default function connectorConfigTestingRoutes<T extends ManagementApiRout
       } = await buildRawConnector<typeof CloudRouter, SmsConnector | EmailConnector>(
         connectorFactory,
         notImplemented,
-        conditional(ServiceConnector.Email === connectorFactory.metadata.id && getClient)
+        conditional(ServiceConnector.Email === connectorFactory.metadata.id && getClient),
+        conditional(connectorFactory.type === ConnectorType.Email && getI18nEmailTemplate)
       );
 
       await sendMessage(
@@ -84,6 +87,7 @@ export default function connectorConfigTestingRoutes<T extends ManagementApiRout
           type: TemplateType.Generic,
           payload: {
             code: '000000',
+            ...conditional(locale && { locale }),
           },
         },
         config

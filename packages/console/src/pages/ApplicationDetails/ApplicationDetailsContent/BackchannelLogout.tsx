@@ -4,6 +4,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
 import FormCard from '@/components/FormCard';
+import { backchannelLogout } from '@/consts';
 import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
 import TextInput from '@/ds-components/TextInput';
@@ -19,7 +20,7 @@ function BackchannelLogout() {
     <FormCard
       title="application_details.backchannel_logout"
       description="application_details.backchannel_logout_description"
-      learnMoreLink={{ href: 'https://openid.net/specs/openid-connect-backchannel-1_0-final.html' }}
+      learnMoreLink={{ href: backchannelLogout }}
     >
       <FormField title="application_details.backchannel_logout_uri">
         <TextInput

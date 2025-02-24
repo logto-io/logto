@@ -20,8 +20,8 @@ const tenants = {
     environment_tag_production: '生產',
     tenant_type: '租戶類型',
     development_description:
-      '僅供測試使用，不應在生產中使用。無需訂閱。它具有所有專業功能，但存在限制，例如登錄橫幅。<a>了解更多</a>',
-    production_description: '用於最終用戶使用並可能需要付費訂閱。<a>了解更多</a>',
+      '僅供測試使用，不應在生產中使用。無需訂閱。它具有所有專業功能，但存在限制，例如登錄橫幅。',
+    production_description: '用於最終用戶使用並可能需要付費訂閱。',
     tenant_info_saved: '租戶信息成功保存。',
   },
   full_env_tag: {

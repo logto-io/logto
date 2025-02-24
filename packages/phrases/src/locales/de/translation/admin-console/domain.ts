@@ -5,7 +5,7 @@ const domain = {
     failed_to_connect: 'Verbindung fehlgeschlagen',
   },
   update_endpoint_notice:
-    'Vergessen Sie nicht, die Domain für die Social-Connector-Callback-URI und den Logto-Endpunkt in Ihrer Anwendung zu aktualisieren, wenn Sie eine benutzerdefinierte Domain für die Funktionen verwenden möchten. <a>{{link}}</a>',
+    'Vergessen Sie nicht, die Domain für die Social-Connector-Callback-URI und den Logto-Endpunkt in Ihrer Anwendung zu aktualisieren, wenn Sie eine benutzerdefinierte Domain für die Funktionen verwenden möchten.',
   error_hint:
     'Stellen Sie sicher, dass Sie Ihre DNS-Einträge aktualisiert haben. Wir werden alle {{value}} Sekunden weiter überprüfen.',
   custom: {

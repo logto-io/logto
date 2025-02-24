@@ -2,7 +2,7 @@ const users = {
   page_title: 'Benutzerverwaltung',
   title: 'Benutzerverwaltung',
   subtitle:
-    'Verwalten von Benutzeridentitäten, einschließlich des Anlegens von Benutzern, Bearbeiten von Benutzerinformationen, Anzeigen von Benutzer-Logs, Zurücksetzen von Passwörtern und Löschen von Benutzern',
+    'Verwalten von Benutzeridentitäten, einschließlich des Anlegens von Benutzern, Bearbeiten von Benutzerinformationen, Anzeigen von Benutzer-Logs, Zurücksetzen von Passwörtern und Löschen von Benutzern.',
   create: 'Benutzer hinzufügen',
   create_subtitle: 'Um fortzufahren, geben Sie bitte mindestens eines der folgenden Felder an.',
   error_missing_identifier:

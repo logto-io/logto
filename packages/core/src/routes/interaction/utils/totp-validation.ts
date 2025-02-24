@@ -10,7 +10,11 @@ import { authenticator } from 'otplib';
 // eslint-disable-next-line @silverhand/fp/no-mutation
 authenticator.options = { window: 1 };
 
-export const generateTotpSecret = () => authenticator.generateSecret();
+/**
+ * Use 20 bytes (160 bits) as recommended by RFC 6238 (TOTP standard)
+ * This provides sufficient security and aligns with most 2FA implementations
+ */
+export const generateTotpSecret = () => authenticator.generateSecret(20);
 
 export const validateTotpSecret = (secret: string) => {
   const base32Regex =

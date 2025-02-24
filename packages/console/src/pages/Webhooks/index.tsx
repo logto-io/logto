@@ -11,17 +11,20 @@ import Webhook from '@/assets/icons/webhook.svg?react';
 import WebhooksEmptyDark from '@/assets/images/webhooks-empty-dark.svg?react';
 import WebhooksEmpty from '@/assets/images/webhooks-empty.svg?react';
 import ItemPreview from '@/components/ItemPreview';
-import ListPage from '@/components/ListPage';
+import PageMeta from '@/components/PageMeta';
 import SuccessRate from '@/components/SuccessRate';
-import { defaultPageSize } from '@/consts';
+import { defaultPageSize, webhooks as webhooksDocumentationLink } from '@/consts';
 import Button from '@/ds-components/Button';
+import CardTitle from '@/ds-components/CardTitle';
 import DynamicT from '@/ds-components/DynamicT';
+import Table from '@/ds-components/Table';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import Tag from '@/ds-components/Tag';
 import { type RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
+import pageLayout from '@/scss/page-layout.module.scss';
 import { buildUrl } from '@/utils/url';
 
 import CreateFormModal from './CreateFormModal';
@@ -55,21 +58,31 @@ function Webhooks() {
   const isCreating = match(createWebhookPathname);
 
   return (
-    <ListPage
-      title={{ title: 'webhooks.title', subtitle: 'webhooks.subtitle' }}
-      pageMeta={{ titleKey: 'webhooks.page_title' }}
-      createButton={{
-        title: 'webhooks.create',
-        onClick: () => {
-          navigate({ pathname: createWebhookPathname, search });
-        },
-      }}
-      table={{
-        rowGroups: [{ key: 'hooks', data: webhooks }],
-        rowIndexKey: 'id',
-        isLoading,
-        errorMessage: error?.body?.message ?? error?.message,
-        columns: [
+    <div className={pageLayout.container}>
+      <PageMeta titleKey="webhooks.page_title" />
+      <div className={pageLayout.headline}>
+        <CardTitle
+          title="webhooks.title"
+          subtitle="webhooks.subtitle"
+          learnMoreLink={{ href: webhooksDocumentationLink }}
+        />
+        <Button
+          icon={<Plus />}
+          type="primary"
+          size="large"
+          title="webhooks.create"
+          onClick={() => {
+            navigate({ pathname: createWebhookPathname, search });
+          }}
+        />
+      </div>
+      <Table
+        className={pageLayout.table}
+        rowGroups={[{ key: 'hooks', data: webhooks }]}
+        rowIndexKey="id"
+        isLoading={isLoading}
+        errorMessage={error?.body?.message ?? error?.message}
+        columns={[
           {
             title: <DynamicT forKey="webhooks.table.name" />,
             dataIndex: 'name',
@@ -119,11 +132,11 @@ function Webhooks() {
               );
             },
           },
-        ],
-        rowClickHandler: ({ id }) => {
+        ]}
+        rowClickHandler={({ id }) => {
           navigate(buildDetailsPathname(id));
-        },
-        placeholder: (
+        }}
+        placeholder={
           <TablePlaceholder
             image={<WebhooksEmpty />}
             imageDark={<WebhooksEmptyDark />}
@@ -141,34 +154,32 @@ function Webhooks() {
               />
             }
           />
-        ),
-        pagination: {
+        }
+        pagination={{
           page,
           totalCount,
           pageSize,
           onChange: (page) => {
             updateSearchParameters({ page });
           },
-        },
-      }}
-      widgets={
-        totalCount !== undefined && (
-          <CreateFormModal
-            isOpen={isCreating}
-            onClose={(createdHook?: Hook) => {
-              if (createdHook) {
-                void mutate();
-                toast.success(t('webhooks.webhook_created', { name: createdHook.name }));
-                navigate(buildDetailsPathname(createdHook.id), { replace: true });
-                return;
-              }
+        }}
+      />
+      {totalCount !== undefined && (
+        <CreateFormModal
+          isOpen={isCreating}
+          onClose={(createdHook?: Hook) => {
+            if (createdHook) {
+              void mutate();
+              toast.success(t('webhooks.webhook_created', { name: createdHook.name }));
+              navigate(buildDetailsPathname(createdHook.id), { replace: true });
+              return;
+            }
 
-              navigate({ pathname: webhooksPathname, search });
-            }}
-          />
-        )
-      }
-    />
+            navigate({ pathname: webhooksPathname, search });
+          }}
+        />
+      )}
+    </div>
   );
 }
 

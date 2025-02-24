@@ -5,7 +5,7 @@ const domain = {
     failed_to_connect: 'Connessione fallita',
   },
   update_endpoint_notice:
-    "Non dimenticare di aggiornare il dominio per l'URI di callback del connettore social e l'endpoint Logto nella tua applicazione se vuoi utilizzare un dominio personalizzato per le funzionalità. <a>{{link}}</a>",
+    "Non dimenticare di aggiornare il dominio per l'URI di callback del connettore social e l'endpoint Logto nella tua applicazione se vuoi utilizzare un dominio personalizzato per le funzionalità.",
   error_hint:
     'Assicurati di aggiornare i tuoi record DNS. Continueremo a controllarli ogni {{value}} secondi.',
   custom: {

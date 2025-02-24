@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import { spInitiatedSsoFlow } from '@/consts';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Select from '@/ds-components/Select';
@@ -170,7 +171,11 @@ function Experience({ data, isDeleted, onUpdated, isDarkModeEnabled }: Props) {
         onDiscard={reset}
         onSubmit={onSubmit}
       >
-        <FormCard title="enterprise_sso_details.general_settings_title">
+        <FormCard
+          title="enterprise_sso_details.general_settings_title"
+          description="enterprise_sso_details.general_settings_description"
+          learnMoreLink={{ href: spInitiatedSsoFlow }}
+        >
           <FormField isRequired title="enterprise_sso_details.connector_name_field_name">
             <TextInput
               {...register('connectorName', { required: true })}

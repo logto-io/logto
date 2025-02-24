@@ -108,7 +108,7 @@ const user_details = {
     title_short: 'token',
     empty: 'Użytkownik nie ma żadnych tokenów dostępu osobistego.',
     create: 'Utwórz nowy token',
-    tip: 'Tokeny dostępu osobistego (PAT) zapewniają użytkownikom bezpieczny sposób przyznawania tokenów dostępu bez użycia poświadczeń i interaktywnego logowania. Jest to przydatne dla CI/CD, skryptów lub aplikacji, które muszą programowo uzyskiwać dostęp do zasobów. <a>Dowiedz się więcej</a>',
+    tip: 'Tokeny dostępu osobistego (PAT) zapewniają użytkownikom bezpieczny sposób przyznawania tokenów dostępu bez użycia poświadczeń i interaktywnego logowania. Jest to przydatne dla CI/CD, skryptów lub aplikacji, które muszą programowo uzyskiwać dostęp do zasobów.',
     value: 'Wartość',
     created_at: 'Utworzono w dniu',
     expires_at: 'Wygasa w dniu',

@@ -1,8 +1,7 @@
 const enterprise_sso = {
   page_title: 'Unternehmens-SSO',
   title: 'Unternehmens-SSO',
-  subtitle:
-    'Verbinden Sie den Unternehmensidentitätsanbieter und aktivieren Sie das SP-gesteuerte Single Sign-On.',
+  subtitle: 'Verbinden Sie den Unternehmensidentitätsanbieter und aktivieren Sie Single Sign-On.',
   create: 'Unternehmensconnector hinzufügen',
   col_connector_name: 'Connector-Name',
   col_type: 'Typ',

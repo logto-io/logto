@@ -1,14 +1,12 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import type { ReactElement } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import { CombinedAddOnAndFeatureTag, type PaywallPlanId } from '@/components/FeatureTag';
-import type { Props as TextLinkProps } from '@/ds-components/TextLink';
+import LearnMore, { type Props as LearnMoreProps } from '@/components/LearnMore';
 
 import type DangerousRaw from '../DangerousRaw';
 import DynamicT from '../DynamicT';
-import TextLink from '../TextLink';
 
 import styles from './index.module.scss';
 
@@ -16,7 +14,7 @@ export type Props = {
   readonly title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   readonly subtitle?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   readonly size?: 'small' | 'medium' | 'large';
-  readonly learnMoreLink?: Pick<TextLinkProps, 'href' | 'targetBlank'>;
+  readonly learnMoreLink?: LearnMoreProps;
   readonly isWordWrapEnabled?: boolean;
   readonly className?: string;
   /**
@@ -40,8 +38,6 @@ function CardTitle({
   paywall,
   hasAddOnTag,
 }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
   return (
     <div className={classNames(styles.container, styles[size], className)}>
       <div className={classNames(styles.title, !isWordWrapEnabled && styles.titleEllipsis)}>
@@ -53,16 +49,7 @@ function CardTitle({
           {subtitle && (
             <span>{typeof subtitle === 'string' ? <DynamicT forKey={subtitle} /> : subtitle}</span>
           )}
-          {learnMoreLink?.href && (
-            <>
-              {/* Use a space to keep the link and the text separate.
-               * Avoid using `margin-inline-start` since it will cause an unexpected gap when the "learn more" text is at the start of a new line
-               */}{' '}
-              <TextLink href={learnMoreLink.href} targetBlank={learnMoreLink.targetBlank}>
-                {t('general.learn_more')}
-              </TextLink>
-            </>
-          )}
+          {learnMoreLink?.href && <LearnMore {...learnMoreLink} />}
         </div>
       )}
     </div>

@@ -6,7 +6,7 @@ const sign_in_exp = {
   page_title: 'Experiencia de inicio de sesión',
   title: 'Experiencia de inicio de sesión',
   description:
-    'Personalice la interfaz de inicio de sesión para que se adapte a su marca y visualice en tiempo real',
+    'Personaliza los flujos de autenticación y la interfaz de usuario, y previsualiza la experiencia lista para usar en tiempo real.',
   tabs: {
     branding: 'Branding',
     sign_up_and_sign_in: 'Registro e inicio de sesión',

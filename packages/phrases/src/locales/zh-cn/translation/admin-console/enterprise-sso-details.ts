@@ -7,6 +7,7 @@ const enterprise_sso_details = {
   tab_connection: '连接',
   tab_idp_initiated_auth: 'IdP 发起的 SSO',
   general_settings_title: '常规',
+  general_settings_description: '配置最终用户体验并链接企业电子邮件域以启动 SP 发起的 SSO 流程。',
   custom_branding_title: '显示',
   custom_branding_description:
     '自定义在最终用户单点登录流程中显示的名称和标识。如果为空，则使用默认值。',

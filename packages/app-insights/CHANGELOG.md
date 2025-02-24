@@ -1,5 +1,11 @@
 # @logto/app-insights
 
+## 2.0.1
+
+### Patch Changes
+
+- e11e57de8: bump dependencies for security update
+
 ## 2.0.0
 
 ### Major Changes

@@ -21,9 +21,9 @@ const tenants = {
     environment_tag_production: 'Prod',
     tenant_type: 'Tenant type',
     development_description:
-      "For testing only and shouldn't be used in production. No subscription is required. It has all the pro features but has limitations like a sign-in banner. <a>Learn more</a>",
+      "For testing only and shouldn't be used in production. No subscription is required. It has all the pro features but has limitations like a sign-in banner.",
     production_description:
-      'Intended for apps that are being used by end-users and may require a paid subscription. <a>Learn more</a>',
+      'Intended for apps that are being used by end-users and may require a paid subscription.',
     tenant_info_saved: 'Tenant information saved successfully.',
   },
   full_env_tag: {

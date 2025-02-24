@@ -2,7 +2,7 @@ const users = {
   page_title: 'Gestão de utilizadores',
   title: 'Gestão de utilizadores',
   subtitle:
-    'Gerencie os utilizadores, incluindo a criação, edição de informações, visualização de logs, recuperações de password e exclusões',
+    'Gerencie os utilizadores, incluindo a criação, edição de informações, visualização de logs, recuperações de password e exclusões.',
   create: 'Adicionar usuário',
   create_subtitle: 'Fornecer pelo menos um dos seguintes campos para proceder.',
   error_missing_identifier: 'Tem de fornecer pelo menos um identificador para criar um utilizador.',

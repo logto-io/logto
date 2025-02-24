@@ -1,11 +1,16 @@
 import {
   InteractionEvent,
+  logtoCookieKey,
+  logtoUiCookieGuard,
   MfaFactor,
+  type RequestVerificationCodePayload,
   requestVerificationCodePayloadGuard,
   webAuthnAuthenticationOptionsGuard,
   webAuthnRegistrationOptionsGuard,
 } from '@logto/schemas';
 import { getUserDisplayName } from '@logto/shared';
+import { trySafe } from '@silverhand/essentials';
+import { type Context } from 'koa';
 import type Router from 'koa-router';
 import { type IRouterParamContext } from 'koa-router';
 import { authenticator } from 'otplib';
@@ -13,9 +18,12 @@ import qrcode from 'qrcode';
 import { z } from 'zod';
 
 import type { WithInteractionDetailsContext } from '#src//middleware/koa-interaction-details.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { type PasscodeLibrary } from '#src/libraries/passcode.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import { type WithI18nContext } from '#src/middleware/koa-i18next.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -38,8 +46,29 @@ import {
 import { verifyIdentifier } from './verifications/index.js';
 import verifyProfile from './verifications/profile-verification.js';
 
+const buildVerificationCodeTemplateContext = async (
+  passcodeLibrary: PasscodeLibrary,
+  ctx: Context,
+  body: RequestVerificationCodePayload
+) => {
+  // TODO: @simeng remove dev guard when the feature is ready
+  if (!EnvSet.values.isDevFeaturesEnabled || !('email' in body)) {
+    return {};
+  }
+
+  // Safely get the orgId and appId context from cookie
+  const { appId: applicationId, organizationId } =
+    trySafe(() => logtoUiCookieGuard.parse(JSON.parse(ctx.cookies.get(logtoCookieKey) ?? '{}'))) ??
+    {};
+
+  return passcodeLibrary.buildVerificationCodeContext({
+    applicationId,
+    organizationId,
+  });
+};
+
 export default function additionalRoutes<T extends IRouterParamContext>(
-  router: Router<unknown, WithInteractionDetailsContext<WithLogContext<T>>>,
+  router: Router<unknown, WithInteractionDetailsContext<WithI18nContext<WithLogContext<T>>>>,
   tenant: TenantContext
 ) {
   const {
@@ -98,8 +127,10 @@ export default function additionalRoutes<T extends IRouterParamContext>(
       // Check interaction exists
       const { event } = getInteractionStorage(interactionDetails.result);
 
+      const messageContext = await buildVerificationCodeTemplateContext(passcodes, ctx, guard.body);
+
       await sendVerificationCodeToIdentifier(
-        { event, ...guard.body },
+        { event, ...guard.body, locale: ctx.locale, messageContext },
         interactionDetails.jti,
         createLog,
         passcodes

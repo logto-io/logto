@@ -33,6 +33,7 @@ export default function organizationScopeRoutes<T extends ManagementApiRouter>(
     ),
     errorHandler,
     searchFields: ['name'],
+    isPaginationOptional: true,
   });
 
   router.get(

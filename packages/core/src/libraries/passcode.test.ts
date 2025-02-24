@@ -3,9 +3,11 @@ import { ConnectorType, TemplateType } from '@logto/connector-kit';
 import { type Passcode } from '@logto/schemas';
 import { any } from 'zod';
 
-import { mockConnector, mockMetadata } from '#src/__mocks__/index.js';
+import { mockConnector, mockMetadata, mockUser } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
+
+import { buildUserContextInfo } from '../utils/connectors/extra-information.js';
 
 import {
   createPasscodeLibrary,
@@ -192,12 +194,13 @@ describe('sendPasscode', () => {
       tryCount: 0,
       createdAt: Date.now(),
     };
-    await sendPasscode(passcode);
+    await sendPasscode(passcode, { locale: 'en' });
     expect(sendMessage).toHaveBeenCalledWith({
       to: passcode.phone,
       type: passcode.type,
       payload: {
         code: passcode.code,
+        locale: 'en',
       },
     });
   });
@@ -291,5 +294,84 @@ describe('verifyPasscode', () => {
       verifyPasscode(passcode.interactionJti, passcode.type, 'invalid', { phone: 'phone' })
     ).rejects.toThrow(new RequestError('verification_code.code_mismatch'));
     expect(increasePasscodeTryCount).toHaveBeenCalledWith(passcode.id);
+  });
+});
+
+describe('buildVerificationCodeContext', () => {
+  const mockFindUserById = jest.fn().mockResolvedValue(mockUser);
+  const mockFindApplicationById = jest.fn().mockResolvedValue({ id: 'app_id', name: 'mock app' });
+  const mockFindOrganizationById = jest.fn().mockResolvedValue({ id: 'org_id', name: 'mock org' });
+  const mockFindApplicationSignInExperienceById = jest
+    .fn()
+    .mockResolvedValue({ displayName: 'mock app', branding: {} });
+
+  const { buildVerificationCodeContext } = createPasscodeLibrary(
+    new MockQueries({
+      passcodes: passcodeQueries,
+      users: {
+        findUserById: mockFindUserById,
+      },
+      applications: {
+        findApplicationById: mockFindApplicationById,
+      },
+      organizations: {
+        findById: mockFindOrganizationById,
+      },
+      applicationSignInExperiences: {
+        safeFindSignInExperienceByApplicationId: mockFindApplicationSignInExperienceById,
+      },
+    }),
+    // @ts-expect-error
+    { getMessageConnector }
+  );
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should return empty object when no context info is provided', async () => {
+    const context = await buildVerificationCodeContext({});
+    expect(context).toEqual({});
+  });
+
+  it('should return proper context info when context is provided', async () => {
+    const context = await buildVerificationCodeContext({
+      applicationId: 'app_id',
+      organizationId: 'org_id',
+      userId: 'user_id',
+    });
+
+    expect(mockFindUserById).toHaveBeenCalledWith('user_id');
+    expect(mockFindApplicationById).toHaveBeenCalledWith('app_id');
+    expect(mockFindOrganizationById).toHaveBeenCalledWith('org_id');
+    expect(mockFindApplicationSignInExperienceById).toHaveBeenCalledWith('app_id');
+
+    expect(context).toEqual({
+      application: {
+        id: 'app_id',
+        name: 'mock app',
+        branding: {},
+        displayName: 'mock app',
+      },
+      organization: {
+        id: 'org_id',
+        name: 'mock org',
+      },
+      user: buildUserContextInfo(mockUser),
+    });
+  });
+
+  it('should not call getUserById when user is provided', async () => {
+    const context = await buildVerificationCodeContext({
+      userId: 'user_id',
+      user: mockUser,
+    });
+
+    expect(mockFindUserById).not.toHaveBeenCalled();
+    expect(mockFindApplicationById).not.toHaveBeenCalled();
+    expect(mockFindOrganizationById).not.toHaveBeenCalled();
+    expect(context).toEqual({
+      user: buildUserContextInfo(mockUser),
+    });
   });
 });

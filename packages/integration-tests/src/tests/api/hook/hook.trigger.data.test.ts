@@ -299,6 +299,10 @@ describe('organization scope data hook events', () => {
     expect(organizationScopeCreateHook?.payload.event).toBe('OrganizationScope.Created');
   });
 
+  afterAll(async () => {
+    await organizationScopeApi.cleanUp();
+  });
+
   it.each(organizationScopeDataHookTestCases)(
     'test case %#: %p',
     async ({ route, event, method, endpoint, payload }) => {

@@ -57,8 +57,7 @@ function EmailServiceConnectorForm({ extraInfo }: Props) {
         href: getDocumentationUrl(
           '/docs/recipes/configure-connectors/email-connector/configure-logto-email-service/#unified-email-templates'
         ),
-        targetBlank: 'noopener',
-        linkText: 'connector_details.logto_email.template_description_link_text',
+        customI18nKey: 'connector_details.logto_email.template_description_link_text',
       }}
     >
       <FormField title="connector_details.logto_email.from_email_field">

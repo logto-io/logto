@@ -22,9 +22,9 @@ const tenants = {
     environment_tag_production: 'Prod',
     tenant_type: 'Kiracı türü',
     development_description:
-      "Yalnızca test amacıyla ve üretimde kullanılmamalıdır. Abonelik gerekli değildir. Tüm pro özelliklere sahiptir ancak giriş banner'ı gibi bazı sınırlamaları bulunmaktadır. <a>Daha fazla bilgi</a>",
+      "Yalnızca test amacıyla ve üretimde kullanılmamalıdır. Abonelik gerekli değildir. Tüm pro özelliklere sahiptir ancak giriş banner'ı gibi bazı sınırlamaları bulunmaktadır.",
     production_description:
-      'Son kullanıcılar tarafından kullanılan uygulamalar için tasarlanmıştır ve ücretli abonelik gerektirebilir. <a>Daha fazla bilgi</a>',
+      'Son kullanıcılar tarafından kullanılan uygulamalar için tasarlanmıştır ve ücretli abonelik gerektirebilir.',
     tenant_info_saved: 'Kiracı bilgileri başarıyla kaydedildi.',
   },
   full_env_tag: {

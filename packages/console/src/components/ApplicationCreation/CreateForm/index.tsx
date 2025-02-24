@@ -10,7 +10,8 @@ import Modal from 'react-modal';
 import useSWR, { useSWRConfig } from 'swr';
 
 import { GtagConversionId, reportConversion } from '@/components/Conversion/utils';
-import { pricingLink, defaultPageSize } from '@/consts';
+import LearnMore from '@/components/LearnMore';
+import { pricingLink, defaultPageSize, integrateLogto } from '@/consts';
 import { isCloud } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
@@ -131,7 +132,12 @@ function CreateForm({
 
   const subtitleElement = useMemo<AdminConsoleKey | ReactElement>(() => {
     if (!defaultCreateFrameworkName) {
-      return 'applications.subtitle';
+      return (
+        <>
+          <DynamicT forKey="applications.subtitle" />
+          <LearnMore isRelativeDocUrl href={integrateLogto} />
+        </>
+      );
     }
 
     if (isDefaultCreateThirdParty) {

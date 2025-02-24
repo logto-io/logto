@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.1.4
+
+### Patch Changes
+
+- e11e57de8: bump dependencies for security update
+
 ## 3.1.3
 
 ### Patch Changes

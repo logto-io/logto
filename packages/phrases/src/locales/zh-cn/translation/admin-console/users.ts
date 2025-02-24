@@ -1,7 +1,8 @@
 const users = {
   page_title: '用户管理',
   title: '用户管理',
-  subtitle: '管理你的用户，包括创建新用户，编辑用户资料，查看用户日志，以及重新设置密码和删除用户',
+  subtitle:
+    '管理你的用户，包括创建新用户，编辑用户资料，查看用户日志，以及重新设置密码和删除用户。',
   create: '添加用户',
   create_subtitle: '提供以下至少一项字段才能继续。',
   error_missing_identifier: '你必须提供至少一个注册标识来创建用户。',

@@ -2,8 +2,6 @@ const protected_app = {
   name: 'Aplikacja chroniona',
   title:
     'Stwórz aplikację zabezpieczoną: Dodaj uwierzytelnienie w prosty sposób i z dużą prędkością',
-  description:
-    'Aplikacja chroniona bezpiecznie zarządza sesjami użytkowników i przekierowuje żądania Twojej aplikacji. Dzięki Cloudflare Workers, ciesz się wydajnością najwyższej klasy i zerowym czasem uruchamiania globalnie. <a>Dowiedz się więcej</a>',
   fast_create: 'Szybkie tworzenie',
   modal_title: 'Utwórz aplikację chronioną',
   modal_subtitle:

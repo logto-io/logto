@@ -23,6 +23,7 @@ const application_details = {
   description_placeholder: 'Uygulama açıklamasını giriniz',
   config_endpoint: 'OpenID Sağlayıcı yapılandırma bitiş noktası',
   issuer_endpoint: 'Yayımlayıcı bitiş noktası',
+  jwks_uri: 'JWKS URI',
   authorization_endpoint: 'Yetkilendirme bitiş noktası',
   authorization_endpoint_tip:
     'Kimlik doğrulama ve yetkilendirme için bir bitiş noktası. OpenID Connect <a>Authentication</a> için kullanılır.',
@@ -95,6 +96,8 @@ const application_details = {
   protect_origin_server: 'Orjın sunucunu koru',
   protect_origin_server_description:
     'Orjın sunucunuzu doğrudan erişimden korumaya emin olun. Daha fazla <a>açıklamalı talimatlar</a> için kılavuza bakın.',
+  third_party_settings_description:
+    "Logto'yu Kimlik Sağlayıcı (IdP) olarak kullanarak üçüncü taraf uygulamaları OIDC / OAuth 2.0 ile entegre edin ve kullanıcı yetkilendirmesi için bir izin ekranı özelliği bulunmaktadır.",
   session_duration: 'Oturum süresi (gün cinsinden)',
   try_it: 'Deneyin',
   no_organization_placeholder: 'Organizasyon bulunamadı. <a>Organizasyonlara git</a>',

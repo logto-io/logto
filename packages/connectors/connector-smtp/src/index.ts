@@ -1,10 +1,13 @@
-import { assert, conditional } from '@silverhand/essentials';
+import { assert, conditional, trySafe } from '@silverhand/essentials';
 
 import type {
   GetConnectorConfig,
   CreateConnector,
   EmailConnector,
   SendMessageFunction,
+  SendMessagePayload,
+  GetI18nEmailTemplate,
+  EmailTemplateDetails,
 } from '@logto/connector-kit';
 import {
   ConnectorError,
@@ -18,15 +21,51 @@ import type Mail from 'nodemailer/lib/mailer';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport';
 
 import { defaultMetadata } from './constant.js';
-import { ContextType, smtpConfigGuard } from './types.js';
+import { ContextType, type SmtpConfig, smtpConfigGuard } from './types.js';
+
+const buildMailOptions = (
+  config: SmtpConfig,
+  template: SmtpConfig['templates'][number] | EmailTemplateDetails,
+  payload: SendMessagePayload,
+  to: string
+): Mail.Options => {
+  return {
+    to,
+    replyTo:
+      'replyTo' in template && template.replyTo
+        ? replaceSendMessageHandlebars(template.replyTo, payload)
+        : config.replyTo,
+    from:
+      'sendFrom' in template && template.sendFrom
+        ? replaceSendMessageHandlebars(template.sendFrom, payload)
+        : config.fromEmail,
+    subject: replaceSendMessageHandlebars(template.subject, payload),
+    [template.contentType === ContextType.Text ? 'text' : 'html']: replaceSendMessageHandlebars(
+      template.content,
+      payload
+    ),
+    ...conditional(
+      config.customHeaders &&
+        Object.entries(config.customHeaders).length > 0 && {
+          headers: config.customHeaders,
+        }
+    ),
+  };
+};
 
 const sendMessage =
-  (getConfig: GetConnectorConfig): SendMessageFunction =>
+  (
+    getConfig: GetConnectorConfig,
+    getI18nEmailTemplate?: GetI18nEmailTemplate
+  ): SendMessageFunction =>
   async (data, inputConfig) => {
     const { to, type, payload } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, smtpConfigGuard);
-    const template = config.templates.find((template) => template.usageType === type);
+
+    const customTemplate = await trySafe(async () => getI18nEmailTemplate?.(type, payload.locale));
+    const template =
+      customTemplate ?? config.templates.find((template) => template.usageType === type);
 
     assert(
       template,
@@ -37,27 +76,8 @@ const sendMessage =
     );
 
     const configOptions: SMTPTransport.Options = config;
-
     const transporter = nodemailer.createTransport(configOptions);
-
-    const contentsObject = parseContents(
-      replaceSendMessageHandlebars(template.content, payload),
-      template.contentType
-    );
-
-    const mailOptions: Mail.Options = {
-      to,
-      from: config.fromEmail,
-      replyTo: config.replyTo,
-      subject: replaceSendMessageHandlebars(template.subject, payload),
-      ...conditional(
-        config.customHeaders &&
-          Object.entries(config.customHeaders).length > 0 && {
-            headers: config.customHeaders,
-          }
-      ),
-      ...contentsObject,
-    };
+    const mailOptions = buildMailOptions(config, template, payload, to);
 
     try {
       return await transporter.sendMail(mailOptions);
@@ -69,23 +89,15 @@ const sendMessage =
     }
   };
 
-const parseContents = (contents: string, contentType: ContextType) => {
-  switch (contentType) {
-    case ContextType.Text: {
-      return { text: contents };
-    }
-    case ContextType.Html: {
-      return { html: contents };
-    }
-  }
-};
-
-const createSmtpConnector: CreateConnector<EmailConnector> = async ({ getConfig }) => {
+const createSmtpConnector: CreateConnector<EmailConnector> = async ({
+  getConfig,
+  getI18nEmailTemplate,
+}) => {
   return {
     metadata: defaultMetadata,
     type: ConnectorType.Email,
     configGuard: smtpConfigGuard,
-    sendMessage: sendMessage(getConfig),
+    sendMessage: sendMessage(getConfig, getI18nEmailTemplate),
   };
 };
 

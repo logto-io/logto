@@ -80,6 +80,7 @@ describe('koaOidcAuth middleware', () => {
       id: 'fooUser',
       scopes: new Set(['openid']),
       identityVerified: false,
+      clientId: mockAccessToken.clientId,
     });
   });
 

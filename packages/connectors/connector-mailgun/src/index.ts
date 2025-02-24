@@ -1,3 +1,4 @@
+import { assert, conditional, trySafe } from '@silverhand/essentials';
 import { got, HTTPError } from 'got';
 
 import type {
@@ -6,6 +7,8 @@ import type {
   CreateConnector,
   EmailConnector,
   SendMessagePayload,
+  GetI18nEmailTemplate,
+  EmailTemplateDetails,
 } from '@logto/connector-kit';
 import {
   ConnectorError,
@@ -46,17 +49,43 @@ const getDataFromDeliveryConfig = (
   };
 };
 
-const sendMessage = (getConfig: GetConnectorConfig): SendMessageFunction => {
+const getDataFromCustomTemplate = (
+  { replyTo, subject, content, contentType = 'text/html', sendFrom }: EmailTemplateDetails,
+  payload: SendMessagePayload
+): Record<string, string | undefined> => {
+  return {
+    subject: replaceSendMessageHandlebars(subject, payload),
+    'h:Reply-To': replyTo && replaceSendMessageHandlebars(replyTo, payload),
+    // Since html can render plain text, we always send the content as html
+    html: conditional(replaceSendMessageHandlebars(content, payload)),
+    // If contentType is text/plain, we will use text instead of html
+    text: conditional(
+      contentType === 'text/plain' && replaceSendMessageHandlebars(content, payload)
+    ),
+    // If provided this value will override the from value in the config
+    from: sendFrom && replaceSendMessageHandlebars(sendFrom, payload),
+  };
+};
+
+const sendMessage = (
+  getConfig: GetConnectorConfig,
+  getI18nEmailTemplate?: GetI18nEmailTemplate
+): SendMessageFunction => {
   return async ({ to, type, payload }, inputConfig) => {
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, mailgunConfigGuard);
 
     const { endpoint, domain, apiKey, from, deliveries } = config;
+
+    const customTemplate = await trySafe(async () => getI18nEmailTemplate?.(type, payload.locale));
     const template = deliveries[type] ?? deliveries[TemplateType.Generic];
 
-    if (!template) {
-      throw new ConnectorError(ConnectorErrorCodes.TemplateNotFound);
-    }
+    const data = customTemplate
+      ? getDataFromCustomTemplate(customTemplate, payload)
+      : // Fallback to the default template if the custom i18n template is not found.
+        template && getDataFromDeliveryConfig(template, payload);
+
+    assert(data, new ConnectorError(ConnectorErrorCodes.TemplateNotFound));
 
     try {
       return await got.post(
@@ -67,7 +96,7 @@ const sendMessage = (getConfig: GetConnectorConfig): SendMessageFunction => {
           form: {
             from,
             to,
-            ...removeUndefinedKeys(getDataFromDeliveryConfig(template, payload)),
+            ...removeUndefinedKeys(data),
           },
         }
       );
@@ -84,12 +113,15 @@ const sendMessage = (getConfig: GetConnectorConfig): SendMessageFunction => {
   };
 };
 
-const createMailgunMailConnector: CreateConnector<EmailConnector> = async ({ getConfig }) => {
+const createMailgunMailConnector: CreateConnector<EmailConnector> = async ({
+  getConfig,
+  getI18nEmailTemplate,
+}) => {
   return {
     metadata: defaultMetadata,
     type: ConnectorType.Email,
     configGuard: mailgunConfigGuard,
-    sendMessage: sendMessage(getConfig),
+    sendMessage: sendMessage(getConfig, getI18nEmailTemplate),
   };
 };
 

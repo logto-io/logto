@@ -79,6 +79,8 @@ describe('SamlApplication', () => {
       const result = samlApp.exposedCreateSamlTemplateCallback({
         userInfo: mockUser,
         samlRequestId: null,
+        sessionId: undefined,
+        sessionExpiresAt: undefined,
       })('ID:NameID:attrEmail:attrName');
       const generatedId = result.id.replace('ID_', '');
 

@@ -5,7 +5,7 @@ const domain = {
     failed_to_connect: 'Nieudane połączenie',
   },
   update_endpoint_notice:
-    'Nie zapomnij zaktualizować domeny dla URI wywołania łącznika społecznego i punktu końcowego Logto w swojej aplikacji, jeśli chcesz używać niestandardowej domeny dla funkcji. <a>{{link}}</a>',
+    'Nie zapomnij zaktualizować domeny dla URI wywołania łącznika społecznego i punktu końcowego Logto w swojej aplikacji, jeśli chcesz używać niestandardowej domeny dla funkcji.',
   error_hint:
     'Upewnij się, że zaktualizowałeś swoje rekordy DNS. Będziemy nadal sprawdzać co {{value}} sekund.',
   custom: {

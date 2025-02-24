@@ -8,6 +8,8 @@ const enterprise_sso_details = {
   tab_connection: 'Подключение',
   tab_idp_initiated_auth: 'SSO, инициированное IdP',
   general_settings_title: 'Общие настройки',
+  general_settings_description:
+    'Настройте пользовательский интерфейс и привяжите домен электронной почты предприятия для потока SSO, инициированного SP.',
   custom_branding_title: 'Отображение',
   custom_branding_description:
     'Настройте имя и логотип, отображаемые в потоке единого входа для конечных пользователей. При пустом значении используются значения по умолчанию.',
@@ -49,7 +51,7 @@ const enterprise_sso_details = {
   upload_idp_metadata_button_text: 'Загрузить файл метаданных XML',
   upload_signing_certificate_button_text: 'Загрузить файл сертификата подписи',
   configure_domain_field_info_text:
-    'Добавьте домен электронной почты, чтобы направить предприятийзапросы к поставщику идентичности для единого входа.',
+    'Добавьте домен электронной почты, чтобы направить предприятия запросы к поставщику идентичности для единого входа.',
   email_domain_field_required:
     'Требуется домен электронной почты для включения единой системы аутентификации предприятия.',
   upload_saml_idp_metadata_info_text_url:

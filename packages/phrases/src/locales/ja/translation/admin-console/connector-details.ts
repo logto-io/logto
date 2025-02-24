@@ -5,6 +5,8 @@ const connector_details = {
   settings: '一般設定',
   settings_description:
     'コネクタは Logto に不可欠です。Logto はコネクタのおかげでエンドユーザーがパスワードレス登録またはサインインを利用し、ソーシャルアカウントでサインインすることができる機能を提供することができます。',
+  email_connector_settings_description:
+    'メール配信プロバイダーと統合して、エンドユーザー向けにパスワードレスメール登録とサインインを有効にします。',
   parameter_configuration: 'パラメーター設定',
   test_connection: 'テスト',
   save_error_empty_config: '設定を入力してください',

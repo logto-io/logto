@@ -390,6 +390,9 @@ describe('organization user APIs', () => {
       await organizationApi.addUserRoles(organization.id, user.id, [role2.id]);
       const newScopes = await organizationApi.getUserOrganizationScopes(organization.id, user.id);
       expect(newScopes.map(({ name }) => name)).toEqual([scope1.name]);
+
+      // Clean up
+      await organizationApi.cleanUp();
     });
   });
 });
