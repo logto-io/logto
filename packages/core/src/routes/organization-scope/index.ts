@@ -19,6 +19,7 @@ export default function organizationScopeRoutes<T extends ManagementApiRouter>(
     middlewares: [],
     errorHandler,
     searchFields: ['name'],
+    isPaginationOptional: true,
   });
 
   originalRouter.use(router.routes());
