@@ -258,13 +258,13 @@ describe('Maligun connector', () => {
       to: 'bar@example.com',
       subject: 'Passcode 123456',
       html: '<p>Your passcode is 123456</p>',
-      'h:Reply-To': 'Reply to bar@example.com',
+      'h:Reply-To': 'Reply to foo@email.com',
     });
 
     getI18nEmailTemplate.mockResolvedValue({
       subject: 'Passcode {{code}}',
       content: '<p>Your passcode is {{code}}</p>',
-      replyTo: 'Reply to {{to}}',
+      replyTo: 'Reply to {{user.primaryEmail}}',
     } satisfies EmailTemplateDetails);
 
     getConfig.mockResolvedValue({
@@ -281,7 +281,7 @@ describe('Maligun connector', () => {
     await connector.sendMessage({
       to: 'bar@example.com',
       type: TemplateType.Generic,
-      payload: { code: '123456' },
+      payload: { code: '123456', user: { primaryEmail: 'foo@email.com' } },
     });
   });
 
@@ -292,15 +292,15 @@ describe('Maligun connector', () => {
       subject: 'Passcode 123456',
       html: 'Your passcode is 123456',
       text: 'Your passcode is 123456',
-      'h:Reply-To': 'Reply to bar@example.com',
+      'h:Reply-To': 'Reply to {{user.primaryEmail}}',
     });
 
     getI18nEmailTemplate.mockResolvedValue({
       subject: 'Passcode {{code}}',
       content: 'Your passcode is {{code}}',
-      replyTo: 'Reply to {{to}}',
+      replyTo: 'Reply to {{user.primaryEmail}}',
       contentType: 'text/plain',
-      sendFrom: `{{applicationName}} <${baseConfig.from}>`,
+      sendFrom: `{{application.name}} <${baseConfig.from}>`,
     } satisfies EmailTemplateDetails);
 
     getConfig.mockResolvedValue({
@@ -309,7 +309,7 @@ describe('Maligun connector', () => {
         [TemplateType.Generic]: {
           subject: 'Verification code is {{code}}',
           html: '<p>Your verification code is {{code}}</p>',
-          replyTo: 'baz@example.com',
+          replyTo: 'no-reply@mail.com',
         },
       },
     });
@@ -317,7 +317,7 @@ describe('Maligun connector', () => {
     await connector.sendMessage({
       to: 'bar@example.com',
       type: TemplateType.Generic,
-      payload: { code: '123456', applicationName: 'Foo' },
+      payload: { code: '123456', application: { name: 'Foo' } },
     });
   });
 });

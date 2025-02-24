@@ -81,10 +81,7 @@ const sendMessage = (
     const template = deliveries[type] ?? deliveries[TemplateType.Generic];
 
     const data = customTemplate
-      ? getDataFromCustomTemplate(customTemplate, {
-          ...payload,
-          to,
-        })
+      ? getDataFromCustomTemplate(customTemplate, payload)
       : // Fallback to the default template if the custom i18n template is not found.
         template && getDataFromDeliveryConfig(template, payload);
 

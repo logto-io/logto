@@ -14,16 +14,12 @@ export type EmailTemplateDetails = {
    * OPTIONAL: Custom replyTo template.
    *
    * Based on the email client, the replyTo field may be used to customize the reply-to field of the email.
-   * @remarks
-   * The original reply email value can be found in the template variables.
    */
   replyTo?: string;
   /**
    * OPTIONAL: Custom from template.
    *
    * Based on the email client, the sendFrom field may be used to customize the from field of the email.
-   * @remarks
-   * The sender email value can be found in the template variables.
    */
   sendFrom?: string;
 };
