@@ -1,5 +1,35 @@
 # Change Log
 
+## 1.24.2
+
+### Patch Changes
+
+- bca4177c6: add `AuthnStatement` to SAML app assertion response
+- 20b61e05e: refactor: adjust TOTP secret length to 20 bytes
+
+  Update the TOTP secret generation to use 20 bytes (160 bits), following the recommendation in RFC 6238 (TOTP) and RFC 4226 (HOTP).
+
+  This aligns with the standard secret length used by most 2FA applications and provides better security while maintaining compatibility with existing TOTP validators.
+
+  Reference:
+
+  - RFC 6238 (TOTP) Section 5.1: https://www.rfc-editor.org/rfc/rfc6238#section-5.1
+  - RFC 4226 (HOTP) Section 4, Requirement 6: https://www.rfc-editor.org/rfc/rfc4226#section-4
+
+- f15602f19: fix: incorrect pagination behavior in organization role scopes APIs
+
+  - Fix `/api/organization-roles/{id}/scopes` and `/api/organization-roles/{id}/resource-scopes` endpoints to:
+    - Return all scopes when no pagination parameters are provided
+    - Support optional pagination when query parameters are present
+  - Fix Console to properly display all organization role scopes on the organization template page
+
+- Updated dependencies [b0135bcd3]
+- Updated dependencies [31adfb6ac]
+  - @logto/connector-kit@4.2.0
+  - @logto/console@1.22.1
+  - @logto/schemas@1.24.2
+  - @logto/cli@1.24.2
+
 ## 1.24.1
 
 ### Patch Changes
