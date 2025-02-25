@@ -7,7 +7,7 @@
 "@logto/connector-smtp": minor
 ---
 
-add customizing email templates in multiple languages via Management API.
+feat: custom email templates in multiple languages via Management API
 
 ## Details
 
