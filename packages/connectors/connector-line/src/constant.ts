@@ -18,7 +18,7 @@ export const defaultMetadata: ConnectorMetadata = {
     ko: 'Line',
   },
   logo: './logo.svg',
-  logoDark: null,
+  logoDark: './logo-dark.svg',
   description: {
     en: 'Line is a social media platform for sharing information and connecting with friends.',
     'zh-CN': 'Line是一个分享信息和与朋友连接的社交媒体平台。',
