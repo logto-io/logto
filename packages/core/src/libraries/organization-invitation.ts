@@ -18,8 +18,6 @@ import {
 } from '#src/utils/connectors/extra-information.js';
 import { type OrganizationInvitationContextInfo } from '#src/utils/connectors/types.js';
 
-import { EnvSet } from '../env-set/index.js';
-
 import { type ConnectorLibrary } from './connector.js';
 
 /**
@@ -98,10 +96,10 @@ export class OrganizationInvitationLibrary {
       }
 
       if (messagePayload) {
-        // TODO: @simeng remove this check after the feature is fully implemented
-        const templateContext = EnvSet.values.isDevFeaturesEnabled
-          ? await this.getOrganizationInvitationTemplateContext(organizationId, inviterId)
-          : undefined;
+        const templateContext = await this.getOrganizationInvitationTemplateContext(
+          organizationId,
+          inviterId
+        );
 
         await this.sendEmail(invitee, {
           ...templateContext,

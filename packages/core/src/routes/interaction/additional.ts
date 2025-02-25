@@ -18,7 +18,6 @@ import qrcode from 'qrcode';
 import { z } from 'zod';
 
 import type { WithInteractionDetailsContext } from '#src//middleware/koa-interaction-details.js';
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type PasscodeLibrary } from '#src/libraries/passcode.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
@@ -51,8 +50,8 @@ const buildVerificationCodeTemplateContext = async (
   ctx: Context,
   body: RequestVerificationCodePayload
 ) => {
-  // TODO: @simeng remove dev guard when the feature is ready
-  if (!EnvSet.values.isDevFeaturesEnabled || !('email' in body)) {
+  // Build extra context for email verification only
+  if (!('email' in body)) {
     return {};
   }
 

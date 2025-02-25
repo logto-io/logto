@@ -9,7 +9,7 @@ import { EmailTemplatesApiTest } from '#src/helpers/email-templates.js';
 import { successfullySendVerificationCode } from '#src/helpers/experience/verification-code.js';
 import { readConnectorMessage } from '#src/helpers/index.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
-import { devFeatureTest, generateEmail } from '#src/utils.js';
+import { generateEmail } from '#src/utils.js';
 
 const mockSignInTemplate: MockEmailTemplatePayload = {
   languageTag: 'en',
@@ -21,7 +21,7 @@ const mockSignInTemplate: MockEmailTemplatePayload = {
   },
 };
 
-devFeatureTest.describe('experience API with i18n email templates', () => {
+describe('experience API with i18n email templates', () => {
   const emailTemplatesApi = new EmailTemplatesApiTest();
   const organizationApi = new OrganizationApiTest();
   const mockEmail = generateEmail();

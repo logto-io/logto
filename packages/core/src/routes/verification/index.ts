@@ -12,7 +12,6 @@ import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 
-import { EnvSet } from '../../env-set/index.js';
 import {
   buildVerificationRecordByIdAndType,
   insertVerificationRecord,
@@ -100,8 +99,7 @@ export default function verificationRoutes<T extends UserRouter>(
 
       // Build the user context information for the verification code email template.
       const emailContextPayload =
-        // TODO: @simeng remove the dev feature flag when the feature is ready for production
-        identifier.type === SignInIdentifier.Email && EnvSet.values.isDevFeaturesEnabled
+        identifier.type === SignInIdentifier.Email
           ? await libraries.passcodes.buildVerificationCodeContext({ user, applicationId })
           : undefined;
 

@@ -5,9 +5,9 @@ import { type MockEmailTemplatePayload } from '#src/__mocks__/email-templates.js
 import { sendEmailTestMessage } from '#src/api/connector.js';
 import { EmailTemplatesApiTest } from '#src/helpers/email-templates.js';
 import { readConnectorMessage } from '#src/helpers/index.js';
-import { devFeatureTest, generateEmail } from '#src/utils.js';
+import { generateEmail } from '#src/utils.js';
 
-devFeatureTest.describe('connector test message API with i18n email templates', () => {
+describe('connector test message API with i18n email templates', () => {
   const emailTemplatesApi = new EmailTemplatesApiTest();
   const mockEmail = generateEmail();
   const mockEnTemplate: MockEmailTemplatePayload = {

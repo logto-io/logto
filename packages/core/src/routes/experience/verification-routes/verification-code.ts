@@ -12,7 +12,6 @@ import { trySafe } from '@silverhand/essentials';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import { type PasscodeLibrary } from '#src/libraries/passcode.js';
 import { type LogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -44,8 +43,8 @@ const buildVerificationCodeTemplateContext = async (
   ctx: ExperienceInteractionRouterContext,
   { type }: VerificationCodeIdentifier
 ) => {
-  // TODO: @simeng remove dev guard when the feature is ready
-  if (!EnvSet.values.isDevFeaturesEnabled || type !== SignInIdentifier.Email) {
+  // Build extra context for email verification only
+  if (type !== SignInIdentifier.Email) {
     return {};
   }
 
