@@ -62,6 +62,16 @@ class OrganizationRolesQueries extends SchemaQueries<
     ]);
   }
 
+  async findAllByNames(names: string[]): Promise<Readonly<OrganizationRole[]>> {
+    const { table, fields } = convertToIdentifiers(OrganizationRoles);
+
+    return this.pool.any<OrganizationRole>(sql`
+      select ${table}.*
+      from ${table}
+      where ${fields.name} = any(${sql.array(names, 'text')})  
+    `);
+  }
+
   #findWithScopesSql(
     roleId?: string,
     limit = 1,

@@ -5,6 +5,7 @@ import {
   OrganizationRoles,
   OrganizationScopes,
 } from '@logto/schemas';
+import { deduplicate } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -69,15 +70,40 @@ export default function userRoleRelationRoutes(
     pathname,
     koaGuard({
       params: z.object(params),
-      body: z.object({ organizationRoleIds: z.string().min(1).array().nonempty() }),
+      body: z.object({
+        organizationRoleIds: z.string().min(1).array().optional(),
+        organizationRoleNames: z.string().min(1).array().optional(),
+      }),
       status: [201, 422],
     }),
     async (ctx, next) => {
       const { id, userId } = ctx.guard.params;
-      const { organizationRoleIds } = ctx.guard.body;
+      const { organizationRoleIds = [], organizationRoleNames = [] } = ctx.guard.body;
+
+      const organizationRoleIdsFromNames =
+        organizationRoleNames.length > 0
+          ? await organizations.roles.findAllByNames(organizationRoleNames)
+          : [];
+
+      const missingRoleNames = organizationRoleNames.filter(
+        (name) => !organizationRoleIdsFromNames.some((role) => role.name === name)
+      );
+
+      if (missingRoleNames.length > 0) {
+        throw new RequestError({
+          code: 'organization.role_names_not_found',
+          names: missingRoleNames,
+          status: 422,
+        });
+      }
+
+      const roleIds = deduplicate([
+        ...organizationRoleIds,
+        ...organizationRoleIdsFromNames.map(({ id }) => id),
+      ]);
 
       await organizations.relations.usersRoles.insert(
-        ...organizationRoleIds.map((roleId) => ({
+        ...roleIds.map((roleId) => ({
           organizationId: id,
           organizationRoleId: roleId,
           userId,
@@ -93,14 +119,39 @@ export default function userRoleRelationRoutes(
     pathname,
     koaGuard({
       params: z.object(params),
-      body: z.object({ organizationRoleIds: z.string().min(1).array() }),
+      body: z.object({
+        organizationRoleIds: z.string().min(1).array().optional(),
+        organizationRoleNames: z.string().min(1).array().optional(),
+      }),
       status: [204, 422],
     }),
     async (ctx, next) => {
       const { id, userId } = ctx.guard.params;
-      const { organizationRoleIds } = ctx.guard.body;
+      const { organizationRoleIds = [], organizationRoleNames = [] } = ctx.guard.body;
 
-      await organizations.relations.usersRoles.replace(id, userId, organizationRoleIds);
+      const organizationRoleIdsFromNames =
+        organizationRoleNames.length > 0
+          ? await organizations.roles.findAllByNames(organizationRoleNames)
+          : [];
+
+      const missingRoleNames = organizationRoleNames.filter(
+        (name) => !organizationRoleIdsFromNames.some((role) => role.name === name)
+      );
+
+      if (missingRoleNames.length > 0) {
+        throw new RequestError({
+          code: 'organization.role_names_not_found',
+          names: missingRoleNames,
+          status: 422,
+        });
+      }
+
+      const roleIds = deduplicate([
+        ...organizationRoleIds,
+        ...organizationRoleIdsFromNames.map(({ id }) => id),
+      ]);
+
+      await organizations.relations.usersRoles.replace(id, userId, roleIds);
 
       ctx.status = 204;
       return next();

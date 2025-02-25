@@ -349,6 +349,82 @@ describe('organization user APIs', () => {
       expect(allRoles).toHaveLength(30);
       expect(allRoles).toEqual(expect.arrayContaining(roles));
     });
+
+    it("should be able to add and get user's organization roles by role names", async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const user = await userApi.create({ username: generateTestName() });
+      const [role1, role2] = await Promise.all([
+        roleApi.create({ name: generateTestName() }),
+        roleApi.create({ name: generateTestName() }),
+      ]);
+
+      await organizationApi.addUsers(organization.id, [user.id]);
+      await organizationApi.addUserRoles(organization.id, user.id, [], [role1.name, role2.name]);
+      const roles = await organizationApi.getUserRoles(organization.id, user.id);
+      expect(roles).toContainEqual(expect.objectContaining({ id: role1.id }));
+      expect(roles).toContainEqual(expect.objectContaining({ id: role2.id }));
+    });
+
+    it('should be able to add and get users organization roles by role names and role ids', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const user = await userApi.create({ username: generateTestName() });
+      const [role1, role2] = await Promise.all([
+        roleApi.create({ name: generateTestName() }),
+        roleApi.create({ name: generateTestName() }),
+      ]);
+
+      await organizationApi.addUsers(organization.id, [user.id]);
+      await organizationApi.addUserRoles(organization.id, user.id, [role1.id], [role2.name]);
+      const roles = await organizationApi.getUserRoles(organization.id, user.id);
+      expect(roles).toContainEqual(expect.objectContaining({ id: role1.id }));
+      expect(roles).toContainEqual(expect.objectContaining({ id: role2.id }));
+    });
+
+    it('should fail when try to add role by role names that do not exist', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const user = await userApi.create({ username: generateTestName() });
+      await organizationApi.addUsers(organization.id, [user.id]);
+
+      const response = await organizationApi
+        .addUserRoles(organization.id, user.id, [], ['invalid_name'])
+        .catch((error: unknown) => error);
+      assert(response instanceof HTTPError);
+      expect(response.response.status).toBe(422);
+      expect(await response.response.json()).toMatchObject(
+        expect.objectContaining({ code: 'organization.role_names_not_found' })
+      );
+    });
+
+    it('should be able to replace user roles by role names', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const user = await userApi.create({ username: generateTestName() });
+      const [role1, role2] = await Promise.all([
+        roleApi.create({ name: generateTestName() }),
+        roleApi.create({ name: generateTestName() }),
+      ]);
+
+      await organizationApi.addUsers(organization.id, [user.id]);
+      await organizationApi.addUserRoles(organization.id, user.id, [role1.id]);
+      await organizationApi.replaceUserRoles(organization.id, user.id, [], [role2.name]);
+      const roles = await organizationApi.getUserRoles(organization.id, user.id);
+      expect(roles).toHaveLength(1);
+      expect(roles).toContainEqual(expect.objectContaining({ id: role2.id }));
+    });
+
+    it('should fail when try to replace user roles by role names that do not exist', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const user = await userApi.create({ username: generateTestName() });
+      await organizationApi.addUsers(organization.id, [user.id]);
+
+      const response = await organizationApi
+        .replaceUserRoles(organization.id, user.id, [], ['invalid_name'])
+        .catch((error: unknown) => error);
+      assert(response instanceof HTTPError);
+      expect(response.response.status).toBe(422);
+      expect(await response.response.json()).toMatchObject(
+        expect.objectContaining({ code: 'organization.role_names_not_found' })
+      );
+    });
   });
 
   describe('organization - user - organization role - organization scopes relation', () => {
