@@ -15,9 +15,9 @@ import {
   signInAndGetUserApi,
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest, generateEmail } from '#src/utils.js';
+import { generateEmail } from '#src/utils.js';
 
-devFeatureTest.describe('user account email verification API with i18n email templates', () => {
+describe('user account email verification API with i18n email templates', () => {
   const emailTemplatesApi = new EmailTemplatesApiTest();
 
   const mockEnTemplate: MockEmailTemplatePayload = {

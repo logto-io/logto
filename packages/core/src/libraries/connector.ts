@@ -15,8 +15,6 @@ import assertThat from '#src/utils/assert-that.js';
 import { loadConnectorFactories } from '#src/utils/connectors/index.js';
 import type { LogtoConnector, LogtoConnectorWellKnown } from '#src/utils/connectors/types.js';
 
-import { EnvSet } from '../env-set/index.js';
-
 import { type CloudConnectionLibrary } from './cloud-connection.js';
 
 export type ConnectorLibrary = ReturnType<typeof createConnectorLibrary>;
@@ -169,11 +167,6 @@ export const createConnectorLibrary = (
   };
 
   const getI18nEmailTemplate: GetI18nEmailTemplate = async (templateType, languageTag) => {
-    // TODO: Remove this check when the feature is enabled in production
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
-    }
-
     const { signInExperiences, emailTemplates } = queries;
 
     // If the language tag is provided, try to get the template with the language tag.

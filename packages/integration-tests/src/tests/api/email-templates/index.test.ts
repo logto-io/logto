@@ -4,9 +4,8 @@ import { type EmailTemplateDetails } from '@logto/schemas';
 import { mockEmailTemplates } from '#src/__mocks__/email-templates.js';
 import { EmailTemplatesApiTest } from '#src/helpers/email-templates.js';
 import { expectRejects } from '#src/helpers/index.js';
-import { devFeatureTest } from '#src/utils.js';
 
-devFeatureTest.describe('email templates management API', () => {
+describe('email templates management API', () => {
   const emailTemplatesApi = new EmailTemplatesApiTest();
 
   afterEach(async () => {

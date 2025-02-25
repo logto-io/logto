@@ -11,7 +11,6 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import SchemaRouter from '#src/utils/SchemaRouter.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { EnvSet } from '../../env-set/index.js';
 import { errorHandler } from '../organization/utils.js';
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
@@ -102,12 +101,11 @@ export default function organizationInvitationRoutes<T extends ManagementApiRout
       } = ctx.guard;
       const { invitee, organizationId, inviterId } = await invitations.findById(id);
 
-      const templateContext = EnvSet.values.isDevFeaturesEnabled
-        ? await organizationInvitations.getOrganizationInvitationTemplateContext(
-            organizationId,
-            inviterId
-          )
-        : undefined;
+      const templateContext =
+        await organizationInvitations.getOrganizationInvitationTemplateContext(
+          organizationId,
+          inviterId
+        );
 
       await organizationInvitations.sendEmail(invitee, {
         ...templateContext,

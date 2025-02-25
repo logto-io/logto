@@ -103,11 +103,7 @@ const createRouters = (tenant: TenantContext) => {
   subjectTokenRoutes(managementRouter, tenant);
   accountCentersRoutes(managementRouter, tenant);
   samlApplicationRoutes(managementRouter, tenant);
-
-  // TODO: @simeng remove this condition after the feature is enabled in production
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    emailTemplateRoutes(managementRouter, tenant);
-  }
+  emailTemplateRoutes(managementRouter, tenant);
 
   const anonymousRouter: AnonymousRouter = new Router();
 

@@ -3,9 +3,6 @@
     {
       "name": "Email templates",
       "description": "Manage custom i18n email templates for various types of emails, such as sign-in verification codes and password resets."
-    },
-    {
-      "name": "Dev feature"
     }
   ],
   "paths": {

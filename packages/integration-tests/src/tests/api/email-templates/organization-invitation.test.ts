@@ -7,7 +7,7 @@ import { EmailTemplatesApiTest } from '#src/helpers/email-templates.js';
 import { readConnectorMessage } from '#src/helpers/index.js';
 import { OrganizationApiTest, OrganizationInvitationApiTest } from '#src/helpers/organization.js';
 import { UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest, generateEmail } from '#src/utils.js';
+import { generateEmail } from '#src/utils.js';
 
 const mockEnTemplate: MockEmailTemplatePayload = {
   languageTag: 'en',
@@ -28,7 +28,7 @@ const mockFrSignInTemplate: MockEmailTemplatePayload = {
   templateType: TemplateType.SignIn,
 };
 
-devFeatureTest.describe('organization invitation API with i18n email templates', () => {
+describe('organization invitation API with i18n email templates', () => {
   const emailTemplatesApi = new EmailTemplatesApiTest();
   const invitationApi = new OrganizationInvitationApiTest();
   const organizationApi = new OrganizationApiTest();
