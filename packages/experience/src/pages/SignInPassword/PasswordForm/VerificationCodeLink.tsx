@@ -29,6 +29,7 @@ const VerificationCodeLink = ({ className, identifier, value }: Props) => {
       }
 
       clearErrorMessage();
+      setIsLoading(true);
       await onSubmit(...args);
       setIsLoading(false);
     },
