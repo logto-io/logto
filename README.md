@@ -18,58 +18,38 @@
 
 # Logto
 
-Logto[^info] is an open-source Identity and Access Management (IAM) platform designed to streamline Customer Identity and Access Management (CIAM) and Workforce Identity Management. With Single Sign-On (SSO), OIDC-based authentication, and Multi-Tenant SaaS capabilities, Logto offers a scalable, secure, and developer-friendly way to manage authentication for modern web and mobile application
-
-## Getting started
-- [Join now](https://discord.gg/vRvwuwgpVX) the 💬 [Logto Discord server](https://discord.gg/vRvwuwgpVX) and connect with developers! Get real-time support, share ideas, and stay updated on all things identity management.
-- Deploy today by [registering now](https://auth.logto.io/register) for a free, full featured development tenant 
-- Follow the [quick start](https://logto.io/quick-starts/?utm_source=github&utm_medium=repo_logto) guide to begin managing authentication efficiently.
-- Check out our [📖 integrations](https://docs.logto.io/integrations?utm_source=github&utm_medium=repo_logto) to start integrating Logto with your application today.
-- A step-by-step getting started is available on 📖 [Logto docs](https://docs.logto.io/docs/get-started/welcome/?utm_source=github&utm_medium=repo_logto).
-- Visit 🎨 [Logto website](https://logto.io/?utm_source=github&utm_medium=repo_logto) for a brief introduction if you are new to Logto.
-
-> [!IMPORTANT]
-> [Subscribe now](https://logto.io/subscribe/?utm_source=github&utm_medium=repo_logto) to stay updated with the latest information about the Logto and receive feature updates in real-time.
+Logto[^info] is an open-source identity and access management infrastructure for modern apps and SaaS products, supporting OIDC, OAuth 2.0 and SAML open standards for authentication and authorization.
 
 ## Key features
 
-### 🧑‍💻 Comprehensive frontend-to-backend identity solution
+### 🧑‍💻 Comprehensive frontend-to-backend identity solutions
 
-- Enables OpenID Connect (OIDC) based authentication with Logto SDKs.
+- Enables OpenID Connect (OIDC) based authentication and authorization with Logto SDKs.
 - Supports passwordless sign-in, along with various options like email, phone number, username, Google, Facebook, and other social sign-in methods.
-- Offers beautiful UI components with customizable CSS to suit your business needs.
+- Offers beautiful prebuilt UI with customizable options to suit your business needs.
 
 ### 📦 Out-of-the-box infrastructure
 
-- Includes a ready-to-use [Management API](https://openapi.logto.io/), serving as your authentication provider, thus eliminating the need for extra implementation.
-- Provides SDKs that seamlessly integrate your apps with Logto across multiple platforms and languages, tailored to your development environment.
-- Offers flexible connectors that can be scaled with community contributions and customized with SAML, OAuth, and OIDC protocols.
+- Includes a ready-to-use [Management API](https://openapi.logto.io/) that allows you to build customized functionality on top of Logto.
+- Provides various [official SDKs and guides](https://docs.logto.io/quick-starts) that help you integrate your apps with Logto across multiple platforms and languages.
+- Offers flexible [social and message connectors](https://docs.logto.io/integrations) that can be used for one-click social sign-ins and customized with SAML, OAuth, and OIDC protocols.
 
 ### 💻 Enterprise-ready solutions
 
-- Implements [role-based access control (RBAC)](https://docs.logto.io/docs/recipes/rbac/) for scalable authorization.
-- Enables user management with [audit logs](https://docs.logto.io/docs/recipes/inspect-audit-logs/) to track identity-related activities and maintain security.
-- Enables [single sign-on (SSO)](https://docs.logto.io/docs/recipes/single-sign-on/) and [multi-factor authentication (MFA)](https://docs.logto.io/docs/recipes/multi-factor-auth/) without minimal coding.
-- Leverage [Logto organizations](https://docs.logto.io/docs/recipes/organizations/understand-how-it-works/) to build [multi-tenancy](https://blog.logto.io/tenancy-models/) apps with ease.
+- Implements [role-based access control (RBAC)](https://docs.logto.io/authorization/role-based-access-control) for scalable authorization.
+- [Organizations](https://docs.logto.io/organizations/understand-how-organizations-work) is the way to build [multi-tenancy](https://blog.logto.io/tenancy-models) apps with ease.
+- Enables user management with [audit logs](https://docs.logto.io/developers/audit-logs) to track identity-related activities and maintain security.
+- Provides [single sign-on (SSO)](https://docs.logto.io/end-user-flows/enterprise-sso) and [multi-factor authentication (MFA)](https://docs.logto.io/end-user-flows/mfa) without coding.
 
-## Customer Identity Access Management (CIAM) introductory courses
-For a more approachable introduction, check out Logto’s ***Customer Identity Access Management (CIAM) introductory courses***:
-- [CIAM 101](https://blog.logto.io/ciam-101-intro-authn-sso/): Authentication, Identity, Single sign-on (SSO)
-- [CIAM 102](https://blog.logto.io/ciam-102-authz-and-rbac/): Authorization & Role-based Access Control
+## Get started
 
-## Deep dives 
-For a ***deeper understanding*** of key identity management topics, explore our [blog](https://blog.logto.io/):
-- [Understanding token exchange in OAuth/OIDC](https://blog.logto.io/token-exchange)– Learn about token-based authentication systems.
-- [Opaque token vs JWT](https://blog.logto.io/opaque-token-vs-jwt) – Discover the differences between token types for authentication.
-- [When should I use JWTs?](https://blog.logto.io/when-should-i-use-jwts) – A guide on when to use JSON Web Token (JWT) for secure authentication.
-- [Bring your own sign-in UI](https://blog.logto.io/bring-your-own-ui)– Customize your user interface (UI) with Logto Cloud for flexible authentication.
+### Logto Cloud
 
-## Launch Logto today
-### Interactive demo
+Try [Logto Cloud](https://cloud.logto.io/?sign_up=true&utm_source=github&utm_medium=repo_logto) to start the Logto journey with zero deployment overhead.
 
-- Try [Logto Cloud](https://cloud.logto.io/?sign_up=true&utm_source=github&utm_medium=repo_logto) to have the same dev experience and zero deployment overhead.
+### GitPod
 
-- If you're launching Logto [via GitPod](https://gitpod.io/#https://github.com/logto-io/demo), please wait for the message `App is running at https://3002-...gitpod.io` to appear in the terminal, press Command (**CMD**) on macOS or Ctrl on Windows, then click the URL starting with `https://3002-` to continue your Logto journey.
+You can launch Logto [via GitPod](https://gitpod.io/#https://github.com/logto-io/demo). Please wait for the message `App is running at https://3002-...gitpod.io` to appear in the terminal, press Command on macOS or Ctrl on Windows, then click the URL starting with `https://3002-` to continue your Logto journey.
 
 ### Docker Compose
 
@@ -106,8 +86,9 @@ Logto uses the [default browserslist config](https://github.com/browserslist/bro
 
 - Our team takes security seriously, especially when it relates to identity. If you find any existing or potential security issues, please do not hesitate to email 🔒 [security@logto.io](mailto:security@logto.io).
 - About other bug reports, feature requests, and feedback, you can:
-  - Directly 🙋 [open an issue](https://github.com/logto-io/logto/issues/new) on GitHub;
+  - Directly 🙋 [open an issue](https://github.com/logto-io/logto/issues/new) on GitHub if you find a bug.
   - 💬 [Join our Discord server](https://discord.gg/vRvwuwgpVX) to have a live chat.
+  - 📧 [Subscribe to our newsletter](https://logto.io/subscribe) to stay tuned on our latest articles and updates.
 
 ## Licensing
 
@@ -115,15 +96,12 @@ Logto uses the [default browserslist config](https://github.com/browserslist/bro
 
 ## Contributing
 
-We have a [contributing guideline](https://github.com/logto-io/logto/blob/master/.github/CONTRIBUTING.md) available. Feel free to [contact us](https://logto.io/contact) before coding.
-
-## Contact us
-
-**Have questions or need support?** We’re here to help! Reach out to our team anytime. If you need assistance or have inquiries about Logto, [Contact Us](https://logto.io/contact), and we’ll make sure you have everything you need to succeed.
+We have a [contributing guideline](https://github.com/logto-io/logto/blob/master/.github/CONTRIBUTING.md) available. Feel free to reach out to us before coding.
 
 ## Resources
-- [📚 Logto docs](https://docs.logto.io/?utm_source=github&utm_medium=repo_logto)
-- [📝 Logto blog](https://blog.logto.io/?utm_source=github&utm_medium=repo_logto)
+
+- [📚 Logto docs](https://docs.logto.io/?utm_source=github&utm_medium=repo_logto) for 
+- [📝 Logto blog](https://blog.logto.io/?utm_source=github&utm_medium=repo_logto) for in-depth articles, tutorials, and updates.
 - [🔗 Logto API](https://openapi.logto.io/?utm_source=github&utm_medium=repo_logto)
 - Check out our [awesome list](./AWESOME.md) of community-contributed resources.
 
