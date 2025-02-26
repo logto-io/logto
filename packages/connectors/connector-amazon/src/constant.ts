@@ -18,7 +18,7 @@ export const defaultMetadata: ConnectorMetadata = {
     ko: 'Amazon',
   },
   logo: './logo.svg',
-  logoDark: null,
+  logoDark: './logo-dark.svg',
   description: {
     en: 'Amazon is a global online marketplace for buying and selling goods.',
     'zh-CN': 'Amazon是一个全球在线市场，用于购买和销售商品。',
