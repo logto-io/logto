@@ -1,6 +1,6 @@
 {
   "name": "@logto/schemas",
-  "version": "1.24.1",
+  "version": "1.25.0",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
   "type": "module",
@@ -78,7 +78,7 @@
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^4.1.1",
+    "@logto/connector-kit": "workspace:^4.2.0",
     "@logto/core-kit": "workspace:^2.5.4",
     "@logto/language-kit": "workspace:^1.1.1",
     "@logto/phrases": "workspace:^1.18.0",
