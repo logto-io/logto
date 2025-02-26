@@ -30,6 +30,7 @@ mockEsm('hash-wasm', () => ({
 
 mockEsm('#src/utils/password.js', () => ({
   encryptPassword: jest.fn().mockResolvedValue('argon2:xxx'),
+  legacyVerify: jest.fn().mockResolvedValue(true),
 }));
 
 const { MockQueries } = await import('#src/test-utils/tenant.js');
