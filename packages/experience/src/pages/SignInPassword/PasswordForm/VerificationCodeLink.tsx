@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import SwitchIcon from '@/assets/icons/switch-icon.svg?react';
 import TextLink from '@/components/TextLink';
@@ -15,10 +15,25 @@ type Props = {
 
 const VerificationCodeLink = ({ className, identifier, value }: Props) => {
   const { setToast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
 
   const { errorMessage, clearErrorMessage, onSubmit } = useSendVerificationCode(
     UserFlow.SignIn,
     true
+  );
+
+  const onSubmitHandler = useCallback(
+    async (...args: Parameters<typeof onSubmit>) => {
+      if (isLoading) {
+        return;
+      }
+
+      clearErrorMessage();
+      setIsLoading(true);
+      await onSubmit(...args);
+      setIsLoading(false);
+    },
+    [clearErrorMessage, isLoading, onSubmit]
   );
 
   useEffect(() => {
@@ -33,8 +48,7 @@ const VerificationCodeLink = ({ className, identifier, value }: Props) => {
       text="action.sign_in_via_passcode"
       icon={<SwitchIcon />}
       onClick={() => {
-        clearErrorMessage();
-        void onSubmit({ identifier, value });
+        void onSubmitHandler({ identifier, value });
       }}
     />
   );
