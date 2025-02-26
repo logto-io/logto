@@ -16,6 +16,11 @@ import {
 } from '@/types';
 import { codeVerificationTypeMap } from '@/utils/sign-in-experience';
 
+type Payload = {
+  identifier: VerificationCodeIdentifier;
+  value: string;
+};
+
 const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) => {
   const [errorMessage, setErrorMessage] = useState<string>();
   const navigate = useNavigate();
@@ -27,11 +32,6 @@ const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) =
   const clearErrorMessage = useCallback(() => {
     setErrorMessage('');
   }, []);
-
-  type Payload = {
-    identifier: VerificationCodeIdentifier;
-    value: string;
-  };
 
   const onSubmit = useCallback(
     async ({ identifier, value }: Payload, interactionEvent?: ContinueFlowInteractionEvent) => {
