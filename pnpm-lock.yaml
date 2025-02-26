@@ -1581,8 +1581,8 @@ importers:
         version: 3.23.8
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-aac51e9
-        version: 0.2.5-aac51e9(zod@3.23.8)
+        specifier: 0.2.5-c98a257
+        version: 0.2.5-c98a257(zod@3.23.8)
       '@silverhand/eslint-config':
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
@@ -6094,10 +6094,6 @@ packages:
   '@logto/client@3.0.4':
     resolution: {integrity: sha512-XXM665zdOa8Ek1juE0xzW3hBPHVJkiaKKie0jiT7WPDYOk1fnqEaWrw594vqKFp1p0onZRgYhqKNBKUynsmb6g==}
 
-  '@logto/cloud@0.2.5-aac51e9':
-    resolution: {integrity: sha512-p/9u33xBFIuh6NRFO5D/G2rsvmZJAdnjjB6n8RxlMp34XHBuRRmiuB/KadKFQmUkPVJhDOo5hs9dgdd28ClQIA==}
-    engines: {node: ^20.9.0}
-
   '@logto/cloud@0.2.5-c98a257':
     resolution: {integrity: sha512-/xXcTtYq3aCJUEADIRlbKZJKL345cHOvimSjq/DExYJXm7PkB3iaJAwlXRcmESkPxLom1o10WDQtuV9dPNVmzA==}
     engines: {node: ^20.9.0}
@@ -6552,6 +6548,7 @@ packages:
   '@shopify/jest-koa-mocks@5.0.0':
     resolution: {integrity: sha512-keF5fgqAzWgC4O5uwUgQawp80IsDJdfyyMvWnIcsMaYw9CgURm4CW+v9NskUAn6AeaHd4Tkv+pWCFg/LRHHf4w==}
     engines: {node: ^14.17.0 || >=16.0.0}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   '@sideway/address@4.1.5':
     resolution: {integrity: sha512-IqO/DUQHUkPeixNQ8n0JA6102hT9CmaljNTPmQ1u8MEhBo/R4Q8eKLN/vGZxuebwOroDB4cbpjheD4+/sKFK4Q==}
@@ -16263,13 +16260,6 @@ snapshots:
       '@silverhand/essentials': 2.9.2
       camelcase-keys: 9.1.3
       jose: 5.9.6
-
-  '@logto/cloud@0.2.5-aac51e9(zod@3.23.8)':
-    dependencies:
-      '@silverhand/essentials': 2.9.2
-      '@withtyped/server': 0.14.0(zod@3.23.8)
-    transitivePeerDependencies:
-      - zod
 
   '@logto/cloud@0.2.5-c98a257(zod@3.23.8)':
     dependencies:
