@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.22.1
+
+### Patch Changes
+
+- 31adfb6ac: fix docs link
+
 ## 1.22.0
 
 ### Minor Changes
