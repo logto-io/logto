@@ -66,9 +66,25 @@ export class OrganizationApi extends ApiFactory<Organization, Omit<CreateOrganiz
     await authedAdminApi.delete(`${this.path}/${id}/users/${userId}`);
   }
 
-  async addUserRoles(id: string, userId: string, organizationRoleIds: string[]): Promise<void> {
+  async addUserRoles(
+    id: string,
+    userId: string,
+    organizationRoleIds: string[],
+    organizationRoleNames?: string[]
+  ): Promise<void> {
     await authedAdminApi.post(`${this.path}/${id}/users/${userId}/roles`, {
-      json: { organizationRoleIds },
+      json: { organizationRoleIds, organizationRoleNames },
+    });
+  }
+
+  async replaceUserRoles(
+    id: string,
+    userId: string,
+    organizationRoleIds: string[],
+    organizationRoleNames?: string[]
+  ): Promise<void> {
+    await authedAdminApi.put(`${this.path}/${id}/users/${userId}/roles`, {
+      json: { organizationRoleIds, organizationRoleNames },
     });
   }
 
