@@ -17,7 +17,7 @@ export const defaultMetadata: ConnectorMetadata = {
     ko: 'X',
   },
   logo: './logo.svg',
-  logoDark: null,
+  logoDark: './logo-dark.svg',
   description: {
     en: 'X (formerly Twitter) is a social media platform for real-time conversation and information sharing.',
     'zh-CN': 'X（前身为 Twitter）是一个实时对话和信息分享的社交媒体平台。',
