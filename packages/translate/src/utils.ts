@@ -125,11 +125,9 @@ export const lintLocaleFiles = async (
     targetPackages.map(async (packageName) => {
       const phrasesPath = path.join(instancePath, 'packages', packageName);
       const localesPath = path.join(phrasesPath, 'src/locales');
-      await execPromise(
-        'pnpm',
-        ['eslint', '--ext', '.ts', path.relative(phrasesPath, localesPath), '--fix'],
-        { cwd: phrasesPath }
-      );
+      await execPromise('pnpm', ['eslint', '--ext', '.ts', localesPath, '--fix'], {
+        cwd: phrasesPath,
+      });
     })
   );
 

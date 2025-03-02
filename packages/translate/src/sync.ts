@@ -1,5 +1,7 @@
-import { languages } from '@logto/language-kit';
-import { isBuiltInLanguageTag as isPhrasesBuiltInLanguageTag } from '@logto/phrases';
+import fs from 'node:fs';
+import path from 'node:path';
+
+import { isLanguageTag } from '@logto/language-kit';
 import PQueue from 'p-queue';
 import type { CommandModule } from 'yargs';
 
@@ -29,11 +31,13 @@ const sync: CommandModule<
   handler: async ({ path: inputPath, skipCoreCheck, package: packageName }) => {
     const queue = new PQueue({ concurrency: 10 });
     const instancePath = await inquireInstancePath(inputPath, skipCoreCheck);
-    const packages = packageName ? [packageName] : ['phrases', 'phrases-experience'];
+    const phrasesPath = path.join(instancePath, 'packages', packageName);
+    const localesPath = path.join(phrasesPath, 'src/locales');
+    const targetLocales = fs.readdirSync(localesPath);
     consoleLog.info(`Translating files using model ${model}`);
 
-    for (const languageTag of Object.keys(languages)) {
-      if (languageTag === baseLanguage) {
+    for (const languageTag of targetLocales) {
+      if (languageTag === baseLanguage || !isLanguageTag(languageTag)) {
         continue;
       }
 
@@ -43,17 +47,12 @@ const sync: CommandModule<
         queue,
       } satisfies Partial<TranslationOptions>;
 
-      for (const packageName of packages) {
-        /* eslint-disable no-await-in-loop */
-        if (isPhrasesBuiltInLanguageTag(languageTag)) {
-          await syncTranslation({
-            ...baseOptions,
-            packageName,
-            languageTag,
-          });
-        }
-        /* eslint-enable no-await-in-loop */
-      }
+      // eslint-disable-next-line no-await-in-loop
+      await syncTranslation({
+        ...baseOptions,
+        packageName,
+        languageTag,
+      });
     }
 
     await queue.onIdle();
