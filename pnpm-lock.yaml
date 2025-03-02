@@ -4796,7 +4796,7 @@ importers:
         specifier: workspace:^2.5.4
         version: link:../toolkit/core-kit
       '@logto/language-kit':
-        specifier: workspace:^1.1.1
+        specifier: workspace:^1.1.2
         version: link:../toolkit/language-kit
       '@logto/phrases':
         specifier: workspace:^1.18.0

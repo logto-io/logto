@@ -1,5 +1,13 @@
 # @logto/translate
 
+## 0.1.2
+
+### Patch Changes
+
+- 59f6b8eda: update translate CLI for better language and package compatibility
+- Updated dependencies [59f6b8eda]
+  - @logto/language-kit@1.1.2
+
 ## 0.1.1
 
 ### Patch Changes
