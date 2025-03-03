@@ -36,6 +36,7 @@ import hookRoutes from './hook.js';
 import interactionRoutes from './interaction/index.js';
 import logRoutes from './log.js';
 import logtoConfigRoutes from './logto-config/index.js';
+import oneTimeTokenRoutes from './one-time-tokens.js';
 import organizationRoutes from './organization/index.js';
 import resourceRoutes from './resource.js';
 import resourceScopeRoutes from './resource.scope.js';
@@ -104,6 +105,9 @@ const createRouters = (tenant: TenantContext) => {
   accountCentersRoutes(managementRouter, tenant);
   samlApplicationRoutes(managementRouter, tenant);
   emailTemplateRoutes(managementRouter, tenant);
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    oneTimeTokenRoutes(managementRouter, tenant);
+  }
 
   const anonymousRouter: AnonymousRouter = new Router();
 
