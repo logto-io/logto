@@ -38,6 +38,51 @@
           }
         }
       }
+    },
+    "/api/one-time-tokens/verify": {
+      "post": {
+        "summary": "Verify one-time token",
+        "description": "Verify a one-time token associated with an email address. If the token is valid and not expired, it will be marked as consumed.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "email": {
+                    "description": "The email address associated with the one-time token."
+                  },
+                  "token": {
+                    "description": "The one-time token to verify."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The one-time token was verified successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "isValid": {
+                      "type": "boolean",
+                      "description": "Indicates whether the token is valid."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was malformed or the token has expired."
+          },
+          "404": {
+            "description": "The one-time token was not found or is not active."
+          }
+        }
+      }
     }
   }
 }
