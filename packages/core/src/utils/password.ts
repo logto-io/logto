@@ -9,6 +9,9 @@ import { z } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { EnvSet } from '../env-set/index.js';
+import passwordEncryptionWorker from '../workers/password-encryption-worker.js';
+
 import { safeParseJson } from './json.js';
 
 type LegacyPassword = {
@@ -121,6 +124,11 @@ export const encryptPassword = async (
     method === UsersPasswordEncryptionMethod.Argon2i,
     new RequestError({ code: 'password.unsupported_encryption_method', method })
   );
+
+  // Encrypt password with Argon2i encryption method in a separate worker thread
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    return passwordEncryptionWorker.run(password);
+  }
 
   return argon2i({
     password,

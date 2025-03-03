@@ -87,6 +87,7 @@
     "p-map": "^7.0.2",
     "p-retry": "^6.0.0",
     "pg-protocol": "^1.6.0",
+    "piscina": "5.0.0-alpha.0",
     "pluralize": "^8.0.0",
     "qrcode": "^1.5.3",
     "raw-body": "^3.0.0",
@@ -154,7 +155,8 @@
     "overrides": [
       {
         "files": [
-          "*.d.ts"
+          "*.d.ts",
+          "*.config.ts"
         ],
         "rules": {
           "import/no-unused-modules": "off"
