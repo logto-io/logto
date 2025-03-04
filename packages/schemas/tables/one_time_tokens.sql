@@ -4,7 +4,7 @@ create table one_time_tokens (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
   id varchar(21) not null,
-  email varchar(256) not null,
+  email varchar(128) not null,
   token varchar(256) not null,
   context jsonb /* @use OneTimeTokenContext */ not null default '{}'::jsonb,
   status varchar(64) /* @use OneTimeTokenStatus */ not null default 'active',
@@ -13,8 +13,4 @@ create table one_time_tokens (
   primary key (id)
 );
 
-create index one_time_token__id on one_time_tokens (tenant_id, id);
-
-create index one_time_token__email on one_time_tokens (tenant_id, email);
-
-create unique index one_time_token__active_unique on one_time_tokens (tenant_id, email, token) where status = 'active';
+create index one_time_token__email_status on one_time_tokens (tenant_id, email, status);
