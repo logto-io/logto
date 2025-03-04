@@ -101,7 +101,7 @@ describe('koaSpaProxy middleware', () => {
 
       await koaSpaProxy({ mountedApps, queries })(ctx, next);
 
-      const packagePath = isDevFeaturesEnabled ? 'experience' : 'experience-legacy';
+      const packagePath = 'experience';
       const distributionPath = path.join('node_modules/@logto', packagePath, 'dist');
 
       expect(mockStaticMiddlewareFactory).toBeCalledWith(distributionPath);
