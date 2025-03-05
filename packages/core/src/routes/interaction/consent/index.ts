@@ -136,7 +136,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
               ({ resource, scopes }) => [resource.indicator, scopes.map(({ name }) => name)]
             );
 
-            // The entries whoes resource indecator is not in the prev entries
+            // The entries whose resource indicator is not present in the previous entries
             const newEntries: Array<[string, string[]]> = organizationEntries.filter(
               ([resourceIndicator]) =>
                 !entries.some(([indicator]) => indicator === resourceIndicator)
