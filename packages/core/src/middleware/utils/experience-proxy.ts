@@ -59,13 +59,9 @@ const getFeatureFlagSettings = async () => {
 export const getExperiencePackageWithFeatureFlagDetection = async <ContextT extends Context>(
   ctx: ContextT
 ) => {
-  if (EnvSet.values.isDevFeaturesEnabled) {
+  // Always use the new experience package if dev features are enabled or is OSS
+  if (EnvSet.values.isDevFeaturesEnabled || !EnvSet.values.isCloud) {
     return 'experience';
-  }
-
-  // Always use the legacy experience package if not in the cloud, until the new experience is fully rolled out
-  if (!EnvSet.values.isCloud) {
-    return 'experience-legacy';
   }
 
   const interactionSessionId = ctx.cookies.get(interactionCookieName);

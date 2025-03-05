@@ -65,7 +65,7 @@ describe('experience proxy with feature flag detection test', () => {
     stub.restore();
   });
 
-  it('should return the legacy experience package if not in the cloud', async () => {
+  it('should return the new experience package if not in the cloud', async () => {
     const stub = Sinon.stub(EnvSet, 'values').value({
       ...EnvSet.values,
       isDevFeaturesEnabled: false,
@@ -74,7 +74,7 @@ describe('experience proxy with feature flag detection test', () => {
 
     const result = await getExperiencePackageWithFeatureFlagDetection(mockContext);
 
-    expect(result).toBe('experience-legacy');
+    expect(result).toBe('experience');
     expect(mockFindSystemByKey).not.toBeCalled();
     expect(mockIsRequestInTestGroup).not.toBeCalled();
 
