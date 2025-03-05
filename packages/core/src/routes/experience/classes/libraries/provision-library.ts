@@ -55,7 +55,6 @@ export class ProvisionLibrary {
       libraries: {
         users: { generateUserId, insertUser },
       },
-      queries: { userSsoIdentities: userSsoIdentitiesQueries },
     } = this.tenantContext;
 
     const { socialIdentity, enterpriseSsoIdentity, syncedEnterpriseSsoIdentity, ...rest } = profile;
@@ -74,11 +73,7 @@ export class ProvisionLibrary {
     );
 
     if (enterpriseSsoIdentity) {
-      await userSsoIdentitiesQueries.insert({
-        id: generateStandardId(),
-        userId: user.id,
-        ...enterpriseSsoIdentity,
-      });
+      await this.addSsoIdentityToUser(user.id, enterpriseSsoIdentity);
     }
 
     if (isCreatingFirstAdminUser) {
@@ -88,7 +83,6 @@ export class ProvisionLibrary {
     await this.provisionNewUserJitOrganizations(user.id, profile);
 
     this.ctx.appendDataHookContext('User.Created', { user });
-    // TODO: log
 
     this.triggerAnalyticReports(user);
 
