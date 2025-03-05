@@ -287,6 +287,7 @@ export default class ExperienceInteraction {
     await this.profile.assertUserMandatoryProfileFulfilled();
 
     const user = await this.provisionLibrary.createUser(this.profile.data);
+    log?.append({ user });
 
     this.userId = user.id;
     this.userCache = user;
