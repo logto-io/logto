@@ -14,6 +14,7 @@ import { createHooksQueries } from '#src/queries/hooks.js';
 import { createLogQueries } from '#src/queries/log.js';
 import { createLogtoConfigQueries } from '#src/queries/logto-config.js';
 import { createOidcModelInstanceQueries } from '#src/queries/oidc-model-instance.js';
+import { createOneTimeTokenQueries } from '#src/queries/one-time-tokens.js';
 import OrganizationQueries from '#src/queries/organization/index.js';
 import { createPasscodeQueries } from '#src/queries/passcode.js';
 import { createResourceQueries } from '#src/queries/resource.js';
@@ -58,6 +59,7 @@ export default class Queries {
   applicationsRoles = createApplicationsRolesQueries(this.pool);
   verificationStatuses = createVerificationStatusQueries(this.pool);
   hooks = createHooksQueries(this.pool);
+  oneTimeTokens = createOneTimeTokenQueries(this.pool);
   domains = createDomainsQueries(this.pool);
   dailyActiveUsers = createDailyActiveUsersQueries(this.pool);
   dailyTokenUsage = createDailyTokenUsageQueries(this.pool);
