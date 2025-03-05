@@ -1,4 +1,4 @@
-import { assert, conditional } from '@silverhand/essentials';
+import { assert, conditional, deduplicate } from '@silverhand/essentials';
 import { got, HTTPError } from 'got';
 import path from 'node:path';
 
@@ -45,7 +45,7 @@ const getAuthorizationUri =
     const { clientId, clientSecret, cloudInstance, tenantId, prompts, scopes } = config;
 
     const defaultAuthCodeUrlParameters: AuthorizationUrlRequest = {
-      scopes: scopes?.split(' ') ?? defaultScopes,
+      scopes: deduplicate([...defaultScopes, ...(scopes?.split(' ') ?? [])]),
       state,
       redirectUri,
       ...conditional(prompts && prompts.length > 0 && { prompt: prompts.join(' ') }),
