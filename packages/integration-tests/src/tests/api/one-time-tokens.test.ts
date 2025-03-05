@@ -57,7 +57,9 @@ describe('one time tokens API', () => {
     const email = `foo${generateStandardId()}@bar.com`;
     const oneTimeToken = await createOneTimeToken({
       email,
-      jitOrganizationIds: ['org-1'],
+      context: {
+        jitOrganizationIds: ['org-1'],
+      },
     });
 
     const verifiedToken = await verifyOneTimeToken({
@@ -75,7 +77,9 @@ describe('one time tokens API', () => {
     const email = `foo${generateStandardId()}@bar.com`;
     const oneTimeToken = await createOneTimeToken({
       email,
-      jitOrganizationIds: ['org-1'],
+      context: {
+        jitOrganizationIds: ['org-1'],
+      },
       expiresIn: 1,
     });
 
@@ -100,7 +104,9 @@ describe('one time tokens API', () => {
     const email = `foo${generateStandardId()}@bar.com`;
     const oneTimeToken = await createOneTimeToken({
       email,
-      jitOrganizationIds: ['org-1'],
+      context: {
+        jitOrganizationIds: ['org-1'],
+      },
     });
 
     await expectRejects(
@@ -119,7 +125,9 @@ describe('one time tokens API', () => {
     const email = `foo${generateStandardId()}@bar.com`;
     await createOneTimeToken({
       email,
-      jitOrganizationIds: ['org-1'],
+      context: {
+        jitOrganizationIds: ['org-1'],
+      },
     });
 
     await expectRejects(
