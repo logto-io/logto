@@ -3,7 +3,6 @@ import crypto from 'node:crypto';
 import { type PasswordPolicyChecker } from '@logto/core-kit';
 import { type User, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { condObject } from '@silverhand/essentials';
-import { argon2i } from 'hash-wasm';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -11,6 +10,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { EnvSet } from '../env-set/index.js';
 import passwordEncryptionWorker from '../workers/password-encryption-worker.js';
+import argon2iEncrypt from '../workers/tasks/argon2i.js';
 
 import { safeParseJson } from './json.js';
 
@@ -130,15 +130,7 @@ export const encryptPassword = async (
     return passwordEncryptionWorker.run(password);
   }
 
-  return argon2i({
-    password,
-    salt: crypto.randomBytes(16),
-    iterations: 256,
-    parallelism: 1,
-    memorySize: 4096,
-    hashLength: 32,
-    outputType: 'encoded',
-  });
+  return argon2iEncrypt(password);
 };
 
 export const checkPasswordPolicyForUser = async (
