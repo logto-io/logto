@@ -42,7 +42,7 @@ Logto provides frontend-to-backend identity solutions for developers and enterpr
 - **SDKs**: SDKs for 30+ frameworks, Management API, and CLI tools.
 - **Enterprise-grade security**: MFA, SSO, RBAC, multi-tenancy isolation, and audit logs.
 
-## **Key features**
+## Key features
 
 | **Authentication** | **Authorization** | **Identity management** |
 | --- | --- | --- |
@@ -57,7 +57,7 @@ Logto provides frontend-to-backend identity solutions for developers and enterpr
 
 [🗺️ View all features→](https://logto.io/pricing#compare-features)
 
-## **Get started in 60s**
+## Get started in 60s
 
 Start building with Logto in minutes:
 
@@ -124,5 +124,6 @@ If you find Logto helpful, here's how you can support us:
 
 [MPL-2.0](LICENSE).
 
-<hr style="border:none; border-top:1px solid #eaecef;">
-<a href="#logto">⬆️ Back to top </a>
+<p align="right">
+<a href="#logto">⬆️ Back to top</a>
+</p>
