@@ -12,6 +12,7 @@ The Microsoft Azure AD connector provides a succinct way for your application to
     - [Cloud Instance](#cloud-instance)
     - [Tenant ID](#tenant-id)
     - [Prompts](#prompts)
+    - [Scopes](#scopes)
   - [References](#references)
 
 ## Set up Microsoft Azure AD in the Azure Portal
@@ -31,6 +32,7 @@ The Microsoft Azure AD connector provides a succinct way for your application to
 | tenantId      | string   |
 | cloudInstance | string   |
 | prompts       | string[] |
+| scopes        | string?  |
 
 ### Client ID
 
@@ -65,6 +67,12 @@ The `prompts` field is an array of strings that specifies the type of user inter
 - `prompt=select_account` interrupts single sign-on providing account selection experience listing all the accounts either in session or any remembered account or an option to choose to use a different account altogether.
 
 Logto will concatenate the prompts with a space as the value of `prompt` in the authorization URL.
+
+### Scopes
+
+The `scopes` field is a space-separated list of scopes the application needs. The list of scopes can be found in the [Microsoft Graph permissions reference](https://learn.microsoft.com/en-us/graph/permissions-reference).
+
+The default scopes are `User.Read`, leave this field empty unless you need other scopes.
 
 ## References
 
