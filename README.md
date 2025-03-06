@@ -30,7 +30,7 @@ Logto is the open-source auth alternative to Auth0, Cognito, and Firebase. It of
   <a href="https://logto.io/subscribe">Newsletter</a>
 </p>
 
-![Logto features](./assets/logto-features.png)
+![Logto features](./assets/logto-features.jpg)
 
 ## Why Logto?
 
