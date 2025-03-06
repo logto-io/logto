@@ -125,5 +125,5 @@ If you find Logto helpful, here's how you can support us:
 [MPL-2.0](LICENSE).
 
 <p align="right">
-<a href="#logto">⬆️ Back to top</a>
+<a href="#logto">Back to top</a> ⬆️
 </p>
