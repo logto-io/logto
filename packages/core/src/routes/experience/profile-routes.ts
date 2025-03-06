@@ -19,6 +19,8 @@ import { experienceRoutes } from './const.js';
 import { type ExperienceInteractionRouterContext } from './types.js';
 
 /**
+ * This middleware is guards the current interaction status is MFA verified (if MFA is enabled)
+ *
  * @throws {RequestError} with status 400 if current interaction is ForgotPassword
  * @throws {RequestError} with status 404 if current interaction is not identified
  * @throws {RequestError} with status 403 if MFA verification status is not verified
@@ -40,7 +42,6 @@ function verifiedInteractionGuard<
       })
     );
 
-    // Guard MFA verification status
     await experienceInteraction.guardMfaVerificationStatus();
 
     return next();
@@ -73,7 +74,7 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
         })
       );
 
-      // Guard MFA verification status for SignIn interaction only
+      //  User profile updates require MFA verification (if MFA is enabled) during the sign-in event.
       if (interactionEvent === InteractionEvent.SignIn) {
         await experienceInteraction.guardMfaVerificationStatus();
       }
