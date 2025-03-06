@@ -39,6 +39,10 @@ const tagMap = new Map([
   ['saml', 'SAML applications auth flow'],
 ]);
 
+if (EnvSet.values.isDevFeaturesEnabled) {
+  tagMap.set('one-time-tokens', 'One-time tokens');
+}
+
 /**
  * Build a tag name from the given absolute path. The function will get the root component name
  * from the path and try to find the mapping in the {@link tagMap}. If the mapping is not found,

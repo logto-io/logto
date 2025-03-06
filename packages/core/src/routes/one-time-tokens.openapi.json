@@ -1,0 +1,43 @@
+{
+  "tags": [
+    {
+      "name": "One-time tokens",
+      "description": "One-time tokens are used for various authentication and verification purposes. They are typically sent via email and have an expiration time."
+    },
+    {
+      "name": "Dev feature"
+    }
+  ],
+  "paths": {
+    "/api/one-time-tokens": {
+      "post": {
+        "summary": "Create one-time token",
+        "description": "Create a new one-time token associated with an email address. The token can be used for verification purposes and has an expiration time.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "email": {
+                    "description": "The email address to associate with the one-time token."
+                  },
+                  "expiresIn": {
+                    "description": "The expiration time in seconds. If not provided, defaults to 2 days (172,800 seconds)."
+                  },
+                  "context": {
+                    "description": "Additional context to store with the one-time token. This can be used to store arbitrary data that will be associated with the token."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The one-time token was created successfully."
+          }
+        }
+      }
+    }
+  }
+}

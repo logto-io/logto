@@ -50,6 +50,7 @@ const managementApiIdentifiableEntityNames = Object.freeze([
   'saml-application',
   'secret',
   'email-template',
+  'one-time-token',
 ]);
 
 /** Additional tags that cannot be inferred from the path. */
@@ -59,7 +60,8 @@ const additionalTags = Object.freeze(
     'Custom UI assets',
     'Organization users',
     'SAML applications',
-    'SAML applications auth flow'
+    'SAML applications auth flow',
+    EnvSet.values.isDevFeaturesEnabled && 'One-time tokens'
   )
 );
 
