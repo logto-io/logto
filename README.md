@@ -38,8 +38,8 @@ Logto provides frontend-to-backend identity solutions for developers and enterpr
 
 - **Logto Console**: A web-based interface for configuring and manage resources, offering a quick setup for sign-in experience and easy identity-management.
 - **End-user experience**: Beautiful, out-of-the-box, complete authentication flows with full customization.
-- **Logto APIs**: Logto's backend offers a suit of APIs to facilitate various AuthN and AuthZ functionalities, including Management API, Experience API and Account API.
-- **SDKs**: SDKs for 30+ frameworks, Management API, and CLI tools.
+- **Logto APIs**: Logto’s backend offers a suit of APIs to facilitate various AuthN and AuthZ functionalities.
+- **SDKs**: SDKs for 30+ frameworks, Machine-to-machine and CLI tools.
 - **Enterprise-grade security**: MFA, SSO, RBAC, multi-tenancy isolation, and audit logs.
 
 ## Key features
@@ -125,5 +125,5 @@ If you find Logto helpful, here's how you can support us:
 [MPL-2.0](LICENSE).
 
 <p align="right">
-<a href="#logto">Back to top</a> ⬆️
+⬆️ <a href="#logto">Back to top</a>
 </p>
