@@ -42,5 +42,5 @@ dump.rdb
 # Temporarily ignore SAML OpenAPI spec file (will be needed later)
 packages/core/src/saml-applications/routes/index.openapi.json
 
-# locust
+# Ignore locust(load testing script) files
 /locust
