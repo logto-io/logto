@@ -117,6 +117,7 @@ export const mockSignInExperience: SignInExperience = {
   supportEmail: null,
   supportWebsiteUrl: null,
   unknownSessionRedirectUrl: null,
+  captchaPolicy: {},
 };
 
 export const mockSignInExperienceSettings: SignInExperienceResponse = {
@@ -155,6 +156,7 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
   supportEmail: null,
   supportWebsiteUrl: null,
   unknownSessionRedirectUrl: null,
+  captchaPolicy: {},
 };
 
 const usernameSettings = {
