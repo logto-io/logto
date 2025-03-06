@@ -7,14 +7,14 @@ import { devFeatureTest } from '#src/utils.js';
 const { it, describe } = devFeatureTest;
 
 describe('one time tokens API', () => {
-  it('should create one time token with default 2 days expiration time', async () => {
+  it('should create one time token with default 10 mins expiration time', async () => {
     const email = `foo${generateStandardId()}@bar.com`;
     const oneTimeToken = await createOneTimeToken({
       email,
     });
 
     expect(oneTimeToken.expiresAt).toBeGreaterThan(Date.now());
-    expect(oneTimeToken.expiresAt).toBeLessThanOrEqual(Date.now() + 2 * 24 * 60 * 60 * 1000);
+    expect(oneTimeToken.expiresAt).toBeLessThanOrEqual(Date.now() + 10 * 60 * 1000);
     expect(oneTimeToken.status).toBe(OneTimeTokenStatus.Active);
     expect(oneTimeToken.context).toEqual({});
     expect(oneTimeToken.email).toBe(email);
@@ -39,7 +39,9 @@ describe('one time tokens API', () => {
     const email = `foo${generateStandardId()}@bar.com`;
     const oneTimeToken = await createOneTimeToken({
       email,
-      jitOrganizationIds: ['org-1'],
+      context: {
+        jitOrganizationIds: ['org-1'],
+      },
     });
 
     expect(oneTimeToken.status).toBe(OneTimeTokenStatus.Active);

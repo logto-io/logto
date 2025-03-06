@@ -1,9 +1,9 @@
-import { type OneTimeToken, type OneTimeTokenContext } from '@logto/schemas';
+import { type OneTimeToken } from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
 
 export type CreateOneTimeToken = Pick<OneTimeToken, 'email'> &
-  OneTimeTokenContext & { expiresIn?: number };
+  Partial<Pick<OneTimeToken, 'context'>> & { expiresIn?: number };
 
 export const createOneTimeToken = async (createOneTimeToken: CreateOneTimeToken) =>
   authedAdminApi

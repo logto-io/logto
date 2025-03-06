@@ -35,9 +35,6 @@
         "responses": {
           "201": {
             "description": "The one-time token was created successfully."
-          },
-          "422": {
-            "description": "The one-time token could not be created due to validation errors."
           }
         }
       }

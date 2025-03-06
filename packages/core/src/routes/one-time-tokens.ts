@@ -1,4 +1,4 @@
-import { OneTimeTokens, oneTimeTokenContextGuard } from '@logto/schemas';
+import { OneTimeTokens } from '@logto/schemas';
 import { generateStandardId, generateStandardSecret } from '@logto/shared';
 import { trySafe } from '@silverhand/essentials';
 import { addSeconds } from 'date-fns';
@@ -8,16 +8,15 @@ import koaGuard from '#src/middleware/koa-guard.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
-// Default expiration time: 2 days.
-// Both Cloudflare and Spotify are using this value.
-const defaultExpiresTime = 2 * 24 * 60 * 60;
+// Default expiration time: 10 minutes.
+const defaultExpiresTime = 10 * 60;
 
 export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
   ...[
     router,
     {
       queries: {
-        oneTimeTokens: { insertOneTimeToken, updateExpiredOneTimeTokensStatus },
+        oneTimeTokens: { insertOneTimeToken, updateExpiredOneTimeTokensStatusByEmail },
       },
     },
   ]: RouterInitArgs<T>
@@ -26,31 +25,33 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
     '/one-time-tokens',
     koaGuard({
       body: OneTimeTokens.createGuard
-        .pick({ email: true })
+        .pick({ email: true, context: true })
+        .partial({
+          context: true,
+        })
         .merge(
           z.object({
             // Expiration time in seconds.
             expiresIn: z.number().min(1).optional(),
           })
-        )
-        .merge(oneTimeTokenContextGuard),
+        ),
       response: OneTimeTokens.guard,
-      status: [201, 422],
+      status: [201],
     }),
     async (ctx, next) => {
       const { body } = ctx.guard;
-      const { email, expiresIn, ...context } = body;
+      const { expiresIn, ...rest } = body;
 
-      await trySafe(async () => updateExpiredOneTimeTokensStatus(email));
+      // TODO: add an integration test for this, once GET API is added.
+      void trySafe(async () => updateExpiredOneTimeTokensStatusByEmail(rest.email));
 
       const expiresAt = addSeconds(new Date(), expiresIn ?? defaultExpiresTime);
       const oneTimeToken = await insertOneTimeToken({
+        ...rest,
         id: generateStandardId(),
-        email,
         // TODO: export generate random string with specified length from @logto/shared.
         token: generateStandardSecret(),
         expiresAt: expiresAt.getTime(),
-        context,
       });
 
       ctx.status = 201;

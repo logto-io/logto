@@ -12,7 +12,7 @@ export const createOneTimeTokenQueries = (pool: CommonQueryMethods) => {
     returning: true,
   });
 
-  const updateExpiredOneTimeTokensStatus = async (email: string) =>
+  const updateExpiredOneTimeTokensStatusByEmail = async (email: string) =>
     pool.query(sql`
       update ${table}
       set ${fields.status} = ${OneTimeTokenStatus.Expired}
@@ -23,6 +23,6 @@ export const createOneTimeTokenQueries = (pool: CommonQueryMethods) => {
 
   return {
     insertOneTimeToken,
-    updateExpiredOneTimeTokensStatus,
+    updateExpiredOneTimeTokensStatusByEmail,
   };
 };
