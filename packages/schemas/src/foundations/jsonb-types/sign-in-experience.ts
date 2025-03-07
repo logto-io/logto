@@ -117,12 +117,42 @@ export enum MfaPolicy {
   NoPrompt = 'NoPrompt',
 }
 
+export enum OrganizationRequiredMfaPolicy {
+  /** Do not ask users to set up MFA */
+  NoPrompt = 'NoPrompt',
+  /** MFA is required for all users */
+  Mandatory = 'Mandatory',
+}
+
+export type Mfa = {
+  /** Enabled MFA factors */
+  factors: MfaFactor[];
+  /** Global MFA prompt policy */
+  policy: MfaPolicy;
+  /**
+   * The MFA policy for organization level MFA settings.
+   *
+   * @remarks
+   * This policy is used to determine the MFA prompt behavior
+   * when the user is associated with one or more organizations that
+   * require MFA.
+   *
+   * @remarks
+   * For backward compatibility, if this policy is not set,
+   * the default behavior is {@link OrganizationRequiredMfaPolicy.NoPrompt}.
+   *
+   * @remarks
+   * Regardless of this policy setting, the user will always be rejected
+   * when request for an organization access_token if the user has not set up MFA.
+   */
+  organizationRequiredMfaPolicy?: OrganizationRequiredMfaPolicy;
+};
+
 export const mfaGuard = z.object({
   factors: mfaFactorsGuard,
   policy: z.nativeEnum(MfaPolicy),
-});
-
-export type Mfa = z.infer<typeof mfaGuard>;
+  organizationRequiredMfaPolicy: z.nativeEnum(OrganizationRequiredMfaPolicy).optional(),
+}) satisfies ToZodObject<Mfa>;
 
 export const customUiAssetsGuard = z.object({
   id: z.string(),

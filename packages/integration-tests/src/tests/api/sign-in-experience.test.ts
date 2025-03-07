@@ -1,4 +1,4 @@
-import { MfaPolicy, SignInIdentifier } from '@logto/schemas';
+import { MfaPolicy, OrganizationRequiredMfaPolicy, SignInIdentifier } from '@logto/schemas';
 import { HTTPError, type ResponsePromise } from 'ky';
 
 import {
@@ -34,6 +34,7 @@ describe('admin console sign-in experience', () => {
       mfa: {
         policy: MfaPolicy.PromptAtSignInAndSignUp,
         factors: [],
+        organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.Mandatory,
       },
       singleSignOnEnabled: true,
       supportEmail: 'contact@logto.io',
