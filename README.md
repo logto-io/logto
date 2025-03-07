@@ -18,7 +18,7 @@
 
 # Logto
 
-Logto is the open-source auth alternative to Auth0, Cognito, and Firebase. It offers a complete identity solution with pre-built UI, modern protocols for authentication and authorization (OIDC/OAuth 2.0/SAML), and enterprise-grade security. Perfect for multi-device apps, SaaS products, and API services.
+Logto is the open-source auth alternative to Auth0, Cognito, and Firebase Auth. It offers a complete identity solution with pre-built UI, modern protocols for authentication and authorization (OIDC/OAuth 2.0/SAML), and enterprise-grade security. Perfect for multi-device apps, SaaS products, and API services.
 
 <p align="center">
   <a href="https://logto.io/">Website</a> |
