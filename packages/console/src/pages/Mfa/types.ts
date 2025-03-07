@@ -1,4 +1,8 @@
-import { type MfaPolicy, type SignInExperience } from '@logto/schemas';
+import {
+  type OrganizationRequiredMfaPolicy,
+  type MfaPolicy,
+  type SignInExperience,
+} from '@logto/schemas';
 
 export type MfaConfig = SignInExperience['mfa'];
 export type SignInPrompt = Exclude<MfaPolicy, MfaPolicy.UserControlled | MfaPolicy.Mandatory>;
@@ -9,4 +13,5 @@ export type MfaConfigForm = {
   backupCodeEnabled: boolean;
   isMandatory: boolean;
   setUpPrompt: SignInPrompt;
+  organizationRequiredMfaPolicy?: OrganizationRequiredMfaPolicy;
 };

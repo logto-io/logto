@@ -37,6 +37,9 @@ const mfa = {
     'Ask users to set up MFA during registration (skippable, one-time prompt)',
   prompt_only_at_sign_in:
     'Ask users to set up MFA on their next sign-in attempt after registration (skippable, one-time prompt)',
+  set_up_organization_required_mfa_prompt:
+    'MFA setup prompt for users after organization enables MFA',
+  prompt_at_sign_in_no_skip: 'Ask users to set up MFA on next sign-in (no skipping)',
 };
 
 export default Object.freeze(mfa);
