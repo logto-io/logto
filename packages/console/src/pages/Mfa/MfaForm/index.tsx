@@ -1,4 +1,10 @@
-import { MfaFactor, MfaPolicy, type SignInExperience } from '@logto/schemas';
+import {
+  adminTenantId,
+  MfaFactor,
+  MfaPolicy,
+  OrganizationRequiredMfaPolicy,
+  type SignInExperience,
+} from '@logto/schemas';
 import { useContext, useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -9,8 +15,9 @@ import FormCard from '@/components/FormCard';
 import InlineUpsell from '@/components/InlineUpsell';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { mfa } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -38,6 +45,8 @@ function MfaForm({ data, onMfaUpdated }: Props) {
     currentSubscriptionQuota,
     mutateSubscriptionQuotaAndUsages,
   } = useContext(SubscriptionDataContext);
+  const { currentTenantId } = useContext(TenantsContext);
+
   const isMfaDisabled =
     isCloud && !currentSubscriptionQuota.mfaEnabled && !isPaidPlan(planId, isEnterprisePlan);
 
@@ -94,9 +103,29 @@ function MfaForm({ data, onMfaUpdated }: Props) {
     [t]
   );
 
+  const organizationEnabledMfaPolicyOptions = useMemo(
+    () => [
+      {
+        value: OrganizationRequiredMfaPolicy.NoPrompt,
+        title: t('mfa.no_prompt'),
+      },
+      {
+        value: OrganizationRequiredMfaPolicy.Mandatory,
+        title: t('mfa.prompt_at_sign_in_no_skip'),
+      },
+    ],
+    [t]
+  );
+
+  // Only show the organization MFA policy config for the admin tenant
+  const showOrganizationMfaPolicyConfig = useMemo(
+    () => isDevFeaturesEnabled || (isCloud && currentTenantId === adminTenantId),
+    []
+  );
+
   const onSubmit = handleSubmit(
     trySubmitSafe(async (formData) => {
-      const mfaConfig = convertMfaFormToConfig(formData);
+      const mfaConfig = convertMfaFormToConfig(formData, showOrganizationMfaPolicyConfig);
       if (!validateBackupCodeFactor(mfaConfig.factors)) {
         return;
       }
@@ -186,6 +215,23 @@ function MfaForm({ data, onMfaUpdated }: Props) {
                   <Select
                     value={value}
                     options={mfaPolicyOptions}
+                    isReadOnly={isPolicySettingsDisabled}
+                    onChange={onChange}
+                  />
+                )}
+              />
+            </FormField>
+          )}
+          {!formValues.isMandatory && showOrganizationMfaPolicyConfig && (
+            <FormField title="mfa.set_up_organization_required_mfa_prompt" headlineSpacing="large">
+              <Controller
+                control={control}
+                name="organizationRequiredMfaPolicy"
+                render={({ field: { onChange, value } }) => (
+                  <Select
+                    // Fallback to `NoPrompt` if the value is not set
+                    value={value ?? OrganizationRequiredMfaPolicy.NoPrompt}
+                    options={organizationEnabledMfaPolicyOptions}
                     isReadOnly={isPolicySettingsDisabled}
                     onChange={onChange}
                   />
