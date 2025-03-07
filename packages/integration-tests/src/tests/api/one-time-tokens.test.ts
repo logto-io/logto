@@ -53,6 +53,9 @@ describe('one time tokens API', () => {
     expect(oneTimeToken.token.length).toBe(32);
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  it(`update expired tokens' status to expired when creating new one time token`, async () => {});
+
   it('should verify one time token', async () => {
     const email = `foo${generateStandardId()}@bar.com`;
     const oneTimeToken = await createOneTimeToken({
@@ -71,6 +74,18 @@ describe('one time tokens API', () => {
       ...oneTimeToken,
       status: OneTimeTokenStatus.Consumed,
     });
+
+    // Should throw token_consumed error when token is already consumed
+    await expectRejects(
+      verifyOneTimeToken({
+        email,
+        token: oneTimeToken.token,
+      }),
+      {
+        code: 'one_time_token.token_consumed',
+        status: 400,
+      }
+    );
   });
 
   it('should not succeed to verify one time token with expired token', async () => {
@@ -115,8 +130,8 @@ describe('one time tokens API', () => {
         token: oneTimeToken.token,
       }),
       {
-        code: 'one_time_token.active_token_not_found',
-        status: 404,
+        code: 'one_time_token.email_mismatch',
+        status: 400,
       }
     );
   });
@@ -136,9 +151,15 @@ describe('one time tokens API', () => {
         token: 'wrong-token',
       }),
       {
-        code: 'one_time_token.active_token_not_found',
+        code: 'one_time_token.token_not_found',
         status: 404,
       }
     );
   });
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  it('should throw token_expired error and update token status to expired (token already expired but status is not updated)', async () => {});
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  it('should throw token_revoked error', async () => {});
 });

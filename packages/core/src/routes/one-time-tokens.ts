@@ -1,12 +1,10 @@
-import { OneTimeTokenStatus, OneTimeTokens } from '@logto/schemas';
+import { OneTimeTokens } from '@logto/schemas';
 import { generateStandardId, generateStandardSecret } from '@logto/shared';
 import { trySafe } from '@silverhand/essentials';
 import { addSeconds } from 'date-fns';
 import { z } from 'zod';
 
-import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import assertThat from '#src/utils/assert-that.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
@@ -18,14 +16,10 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
     router,
     {
       queries: {
-        oneTimeTokens: {
-          insertOneTimeToken,
-          updateExpiredOneTimeTokensStatusByEmail,
-          findActiveOneTimeTokenByEmailAndToken,
-        },
+        oneTimeTokens: { insertOneTimeToken, updateExpiredOneTimeTokensStatusByEmail },
       },
       libraries: {
-        oneTimeTokens: { updateOneTimeTokenStatus },
+        oneTimeTokens: { verifyOneTimeToken },
       },
     },
   ]: RouterInitArgs<T>
@@ -81,26 +75,8 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
     }),
     async (ctx, next) => {
       const { token, email } = ctx.guard.body;
-      const oneTimeToken = await findActiveOneTimeTokenByEmailAndToken(email, token);
 
-      assertThat(
-        oneTimeToken,
-        new RequestError({ code: 'one_time_token.active_token_not_found', status: 404 })
-      );
-
-      // No need to check if the token's status is `active` since we get the token from the database and status to be `active` is one of the searching criteria.
-      if (oneTimeToken.expiresAt <= Date.now()) {
-        await updateOneTimeTokenStatus(email, token, OneTimeTokenStatus.Expired);
-        throw new RequestError('one_time_token.token_expired');
-      }
-
-      const consumedOneTimeToken = await updateOneTimeTokenStatus(
-        email,
-        token,
-        OneTimeTokenStatus.Consumed
-      );
-
-      ctx.body = consumedOneTimeToken;
+      ctx.body = await verifyOneTimeToken(token, email);
       ctx.status = 200;
       return next();
     }

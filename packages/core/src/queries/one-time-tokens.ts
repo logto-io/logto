@@ -21,32 +21,25 @@ export const createOneTimeTokenQueries = (pool: CommonQueryMethods) => {
       and ${fields.email} = ${email}
     `);
 
-  const findActiveOneTimeTokenByEmailAndToken = async (email: string, token: string) =>
+  const getOneTimeTokenByToken = async (token: string) =>
     pool.maybeOne<OneTimeToken>(sql`
       select *
       from ${table}
       where ${fields.token} = ${token}
-      and ${fields.email} = ${email}
-      and ${fields.status} = ${OneTimeTokenStatus.Active}
     `);
 
-  const updateOneTimeTokenStatus = async (
-    email: string,
-    token: string,
-    status: OneTimeTokenStatus
-  ) =>
+  const updateOneTimeTokenStatus = async (token: string, status: OneTimeTokenStatus) =>
     pool.one<OneTimeToken>(sql`
       update ${table}
       set ${fields.status} = ${status}
       where ${fields.token} = ${token}
-      and ${fields.email} = ${email}
       returning *
     `);
 
   return {
     insertOneTimeToken,
     updateExpiredOneTimeTokensStatusByEmail,
-    findActiveOneTimeTokenByEmailAndToken,
+    getOneTimeTokenByToken,
     updateOneTimeTokenStatus,
   };
 };
