@@ -86,6 +86,7 @@ type ExpectedErrorInfo = {
   code: string;
   status: number;
   messageIncludes?: string;
+  unexpectedProperties?: string[];
 };
 
 export const expectRejects = async <T = void>(
@@ -102,7 +103,7 @@ export const expectRejects = async <T = void>(
 };
 
 const expectRequestError = async <T = void>(error: unknown, expected: ExpectedErrorInfo) => {
-  const { code, status, messageIncludes } = expected;
+  const { code, status, messageIncludes, unexpectedProperties = [] } = expected;
 
   if (!(error instanceof HTTPError)) {
     fail('Error should be an instance of RequestError');
@@ -122,6 +123,10 @@ const expectRequestError = async <T = void>(error: unknown, expected: ExpectedEr
 
   if (messageIncludes) {
     expect(body.message.includes(messageIncludes)).toBeTruthy();
+  }
+
+  for (const property of unexpectedProperties) {
+    expect(body.data).not.toHaveProperty(property);
   }
 
   return body.data;
