@@ -1,4 +1,4 @@
-import { OneTimeTokens, OneTimeTokenStatus } from '@logto/schemas';
+import { OneTimeTokens, OneTimeTokenStatus, type OneTimeToken } from '@logto/schemas';
 import type { CommonQueryMethods } from '@silverhand/slonik';
 import { sql } from '@silverhand/slonik';
 
@@ -21,8 +21,25 @@ export const createOneTimeTokenQueries = (pool: CommonQueryMethods) => {
       and ${fields.email} = ${email}
     `);
 
+  const getOneTimeTokenByToken = async (token: string) =>
+    pool.maybeOne<OneTimeToken>(sql`
+      select *
+      from ${table}
+      where ${fields.token} = ${token}
+    `);
+
+  const updateOneTimeTokenStatus = async (token: string, status: OneTimeTokenStatus) =>
+    pool.one<OneTimeToken>(sql`
+      update ${table}
+      set ${fields.status} = ${status}
+      where ${fields.token} = ${token}
+      returning *
+    `);
+
   return {
     insertOneTimeToken,
     updateExpiredOneTimeTokensStatusByEmail,
+    getOneTimeTokenByToken,
+    updateOneTimeTokenStatus,
   };
 };

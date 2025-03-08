@@ -14,3 +14,5 @@ create table one_time_tokens (
 );
 
 create index one_time_token__email_status on one_time_tokens (tenant_id, email, status);
+
+create unique index one_time_token__token on one_time_tokens (tenant_id, token);
