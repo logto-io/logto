@@ -134,7 +134,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           : rest
       );
 
-      await reportSubscriptionUpdatesUsage('mfaEnabled');
+      void reportSubscriptionUpdatesUsage('mfaEnabled');
 
       return next();
     }
