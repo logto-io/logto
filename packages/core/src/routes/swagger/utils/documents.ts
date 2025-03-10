@@ -59,7 +59,8 @@ const additionalTags = Object.freeze(
     'Custom UI assets',
     'Organization users',
     'SAML applications',
-    'SAML applications auth flow'
+    'SAML applications auth flow',
+    EnvSet.values.isDevFeaturesEnabled && 'Captcha provider'
   )
 );
 

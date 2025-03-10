@@ -1,0 +1,61 @@
+{
+  "tags": [
+    {
+      "name": "Captcha provider",
+      "description": "Setup the captcha provider."
+    },
+    {
+      "name": "Dev feature"
+    }
+  ],
+  "paths": {
+    "/api/captcha-provider": {
+      "get": {
+        "operationId": "GetCaptchaProvider",
+        "summary": "Get captcha provider",
+        "description": "Get the captcha provider, you can only have one captcha provider.",
+        "responses": {
+          "200": {
+            "description": "Captcha provider."
+          },
+          "404": {
+            "description": "Captcha provider not found."
+          }
+        }
+      },
+      "put": {
+        "operationId": "UpdateCaptchaProvider",
+        "summary": "Update captcha provider",
+        "description": "Update the captcha provider with the provided settings.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "config": {
+                    "description": "The captcha provider config."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated captcha provider."
+          }
+        }
+      },
+      "delete": {
+        "operationId": "DeleteCaptchaProvider",
+        "summary": "Delete captcha provider",
+        "description": "Delete the captcha provider.",
+        "responses": {
+          "204": {
+            "description": "Captcha provider deleted."
+          }
+        }
+      }
+    }
+  }
+}
