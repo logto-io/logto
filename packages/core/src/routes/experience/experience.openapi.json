@@ -60,10 +60,10 @@
               "schema": {
                 "properties": {
                   "verificationId": {
-                    "description": "The ID of the verification record used to identify the user. <br/>- `SignIn` and `ForgotPassword` interactions: Required to verify the user's identity. <br/>- `Register` interaction: Optional. If provided, it updates the profile data with the verification record before account creation. If omitted, the account is created using existing profile data in the current interaction."
+                    "description": "The ID of the verification record used to identify the user. <br/>- For `SignIn` and `ForgotPassword` interactions: Required to verify the user's identity. <br/>- For `Register` interaction: Optional. If provided, new profile(s) will be attached to the registration session using the information from the verification record and trigger the account creation attempt. If not provided, the user account creation attempt will be triggered using the existing profile data in the interaction."
                   },
                   "linkSocialIdentity": {
-                    "description": "Applies to the SignIn interaction only, and is used when a SocialVerification type verificationId is provided. <br/>- If `true`, the user is identified using the verified email or phone number from the social identity provider, and the social identity is linked to the user's account. <br/>- If `false` or not provided, the API identifies the user solely through the social identity. <br/> This parameters is used for linking a non-existing social identity to a related user account that can be identified through the verified email or phone number."
+                    "description": "Applies only to the SignIn interaction and is used when a SocialVerification type verification ID is provided. <br/>- If `true`, the user is identified using the verified email or phone number from the social identity provider, and the social identity is linked to the user's account. <br/>- If `false` or not provided, the API identifies the user solely through the social identity. <br/>This parameter is used to link a non-existing social identity to a related user account identified by the verified email or phone number."
                   }
                 }
               }

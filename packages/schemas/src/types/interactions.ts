@@ -82,7 +82,12 @@ export const socialAuthorizationUrlPayloadGuard = z.object({
 export type SocialVerificationCallbackPayload = {
   /** The callback data from the social connector. */
   connectorData: Record<string, unknown>;
-  /**  The verification ID returned from the authorization URI. Optional for Google one tap callback */
+  /**
+   * Verification ID is used to retrieve the verification record.
+   * Throws an error if the verification record is not found.
+   *
+   * Optional for Google one tap callback as it does not have a pre-created verification record.
+   **/
   verificationId?: string;
 };
 export const socialVerificationCallbackPayloadGuard = z.object({
@@ -103,6 +108,13 @@ export const passwordVerificationPayloadGuard = z.object({
 /** Payload type for `POST /api/experience/verification/totp/verify`. */
 export type TotpVerificationVerifyPayload = {
   code: string;
+  /**
+   * Required for verifying the newly created TOTP secret verification record in the session.
+   * (For new TOTP setup use only)
+   *
+   * If not provided, a new TOTP verification will be generated and validated against the user's existing TOTP secret in their profile.
+   * (For existing TOTP verification use only)
+   */
   verificationId?: string;
 };
 export const totpVerificationVerifyPayloadGuard = z.object({
@@ -121,8 +133,12 @@ export const backupCodeVerificationVerifyPayloadGuard = z.object({
 /** Payload type for `POST /api/experience/identification`. */
 export type IdentificationApiPayload = {
   /**
-   * The ID of the verification record that is used to identify the user.
-   * Optional for the register interaction event
+   * SignIn and ForgotPassword interaction events:
+   * Required to retrieve the verification record to validate the user's identity.
+   *
+   * Register interaction event:
+   *  - If provided, new user profiles will be appended to the registration session using the verified information from the verification record.
+   *  - If not provided, the user creation process will be triggered directly using the existing profile information in the current registration session.
    */
   verificationId?: string;
   /**

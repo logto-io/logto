@@ -59,7 +59,7 @@
               "schema": {
                 "properties": {
                   "verificationId": {
-                    "description": "The ID of the Social verification record."
+                    "description": "The ID of the social verification record. Optional for Google one tap login, as it does not have a pre-created social verification record in session."
                   },
                   "connectorData": {
                     "description": "Arbitrary data returned by the social provider to complete the verification process."
