@@ -18,10 +18,11 @@ import {
   chooseRevertAlterationsByTimestamp,
 } from './utils.js';
 import { chooseAlterationsByVersion, chooseRevertAlterationsByVersion } from './version.js';
+import { pathToFileURL } from 'url';
 
 const importAlterationScript = async (filePath: string): Promise<AlterationScript> => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const module = await import(filePath);
+  const module = await import(pathToFileURL(filePath).href);
 
   // eslint-disable-next-line no-restricted-syntax
   return module.default as AlterationScript;
