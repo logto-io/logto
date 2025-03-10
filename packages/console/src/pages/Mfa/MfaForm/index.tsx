@@ -95,7 +95,7 @@ function MfaForm({ data, onMfaUpdated }: Props) {
     }
 
     // Reset the `organizationRequiredMfaPolicy` to `NoPrompt` when there is no MFA factor
-    if (formValues.organizationRequiredMfaPolicy === OrganizationRequiredMfaPolicy.Mandatory) {
+    if (formValues.organizationRequiredMfaPolicy !== OrganizationRequiredMfaPolicy.NoPrompt) {
       setValue('organizationRequiredMfaPolicy', OrganizationRequiredMfaPolicy.NoPrompt);
     }
   }, [formValues, setValue]);
