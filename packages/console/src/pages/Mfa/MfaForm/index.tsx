@@ -78,10 +78,25 @@ function MfaForm({ data, onMfaUpdated }: Props) {
   }, [formValues, isMfaDisabled]);
 
   useEffect(() => {
-    // Reset the `isMandatory` to false when there is no MFA factor
     const { factors } = convertMfaFormToConfig(formValues);
-    if (factors.length === 0 && formValues.isMandatory) {
+
+    if (factors.length > 0) {
+      return;
+    }
+
+    // Reset the `isMandatory` to false when there is no MFA factor
+    if (formValues.isMandatory) {
       setValue('isMandatory', false);
+    }
+
+    // Reset the `setUpPrompt` to `NoPrompt` when there is no MFA factor
+    if (formValues.setUpPrompt !== MfaPolicy.NoPrompt) {
+      setValue('setUpPrompt', MfaPolicy.NoPrompt);
+    }
+
+    // Reset the `organizationRequiredMfaPolicy` to `NoPrompt` when there is no MFA factor
+    if (formValues.organizationRequiredMfaPolicy === OrganizationRequiredMfaPolicy.Mandatory) {
+      setValue('organizationRequiredMfaPolicy', OrganizationRequiredMfaPolicy.NoPrompt);
     }
   }, [formValues, setValue]);
 

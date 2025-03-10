@@ -26,7 +26,6 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { EnvSet } from '../../../env-set/index.js';
 import { type InteractionContext } from '../types.js';
 
 import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
@@ -364,11 +363,6 @@ export class Mfa {
   }
 
   private async isMfaRequiredByUserOrganizations(mfaSettings: MfaSettings, userId: string) {
-    // TODO: Remove this check when the feature is enabled for production
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return false;
-    }
-
     if (mfaSettings.organizationRequiredMfaPolicy !== OrganizationRequiredMfaPolicy.Mandatory) {
       return false;
     }
