@@ -5,6 +5,7 @@ import { createDomainLibrary } from '#src/libraries/domain.js';
 import { createHookLibrary } from '#src/libraries/hook/index.js';
 import { JwtCustomizerLibrary } from '#src/libraries/jwt-customizer.js';
 import type { LogtoConfigLibrary } from '#src/libraries/logto-config.js';
+import { createOneTimeTokenLibrary } from '#src/libraries/one-time-token.js';
 import { OrganizationInvitationLibrary } from '#src/libraries/organization-invitation.js';
 import { createPasscodeLibrary } from '#src/libraries/passcode.js';
 import { createPhraseLibrary } from '#src/libraries/phrase.js';
@@ -44,6 +45,7 @@ export default class Libraries {
   protectedApps = createProtectedAppLibrary(this.queries);
   quota = createQuotaLibrary(this.cloudConnection);
   ssoConnectors = createSsoConnectorLibrary(this.queries);
+  oneTimeTokens = createOneTimeTokenLibrary(this.queries);
   signInExperiences = createSignInExperienceLibrary(
     this.queries,
     this.connectors,

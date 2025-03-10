@@ -11,3 +11,12 @@ export const createOneTimeToken = async (createOneTimeToken: CreateOneTimeToken)
       json: createOneTimeToken,
     })
     .json<OneTimeToken>();
+
+export const verifyOneTimeToken = async (
+  verifyOneTimeToken: Pick<OneTimeToken, 'email' | 'token'>
+) =>
+  authedAdminApi
+    .post('one-time-tokens/verify', {
+      json: verifyOneTimeToken,
+    })
+    .json<OneTimeToken>();

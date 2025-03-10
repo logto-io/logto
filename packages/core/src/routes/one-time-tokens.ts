@@ -18,6 +18,9 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
       queries: {
         oneTimeTokens: { insertOneTimeToken, updateExpiredOneTimeTokensStatusByEmail },
       },
+      libraries: {
+        oneTimeTokens: { verifyOneTimeToken },
+      },
     },
   ]: RouterInitArgs<T>
 ) {
@@ -56,6 +59,25 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
 
       ctx.status = 201;
       ctx.body = oneTimeToken;
+      return next();
+    }
+  );
+
+  router.post(
+    '/one-time-tokens/verify',
+    koaGuard({
+      body: OneTimeTokens.guard.pick({
+        token: true,
+        email: true,
+      }),
+      response: OneTimeTokens.guard,
+      status: [200, 400, 404],
+    }),
+    async (ctx, next) => {
+      const { token, email } = ctx.guard.body;
+
+      ctx.body = await verifyOneTimeToken(token, email);
+      ctx.status = 200;
       return next();
     }
   );
