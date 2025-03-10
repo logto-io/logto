@@ -17,8 +17,8 @@ const passwordEncryptionWorker = new Piscina<string, string>({
   filename: path.join(process.cwd(), 'build/workers/tasks/argon2i.js'),
   maxThreads: 2,
   // By default the worker will be terminated immediately after the task is completed.
-  // Starting and terminating a worker thread can ead to some performance overhead.
-  // Set the idle timeout to 5 seconds will keep the worker thread alive for concurrent requests.
+  // Since starting and terminating a worker thread can lead to some performance overhead,
+  // set the idle timeout to 5 seconds will keep the worker thread alive for concurrent requests.
   // See {@link https://piscinajs.dev/api-reference/Instance/#constructor-new-piscinaoptions} for more details
   idleTimeout: 5000,
 });
