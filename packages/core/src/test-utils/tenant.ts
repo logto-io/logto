@@ -87,14 +87,6 @@ export class MockTenant implements TenantContext {
       ...createConnectorLibrary(this.queries, this.cloudConnection),
       ...connectorsOverride,
     };
-    this.libraries = new Libraries(
-      this.id,
-      this.queries,
-      this.connectors,
-      this.cloudConnection,
-      this.logtoConfigs
-    );
-    this.setPartial('libraries', librariesOverride);
     this.sentinel = new MockSentinel();
     this.subscription = new SubscriptionLibrary(
       this.id,
@@ -102,6 +94,15 @@ export class MockTenant implements TenantContext {
       this.cloudConnection,
       new TtlCache<string, string>(60_000)
     );
+    this.libraries = new Libraries(
+      this.id,
+      this.queries,
+      this.connectors,
+      this.cloudConnection,
+      this.logtoConfigs,
+      this.subscription
+    );
+    this.setPartial('libraries', librariesOverride);
   }
 
   public async invalidateCache() {
