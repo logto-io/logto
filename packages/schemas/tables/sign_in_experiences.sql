@@ -26,5 +26,6 @@ create table sign_in_experiences (
   support_email text,
   support_website_url text,
   unknown_session_redirect_url text,
+  captcha_policy jsonb /* @use CaptchaPolicy */ not null default '{}'::jsonb,
   primary key (tenant_id, id)
 );

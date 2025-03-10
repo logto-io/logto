@@ -160,3 +160,11 @@ export const customUiAssetsGuard = z.object({
 });
 
 export type CustomUiAssets = z.infer<typeof customUiAssetsGuard>;
+
+export const captchaPolicyGuard = z.object({
+  signIn: z.boolean().optional(),
+  signUp: z.boolean().optional(),
+  forgotPassword: z.boolean().optional(),
+});
+
+export type CaptchaPolicy = z.infer<typeof captchaPolicyGuard>;
