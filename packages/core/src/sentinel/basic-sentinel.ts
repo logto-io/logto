@@ -28,6 +28,7 @@ export default class BasicSentinel extends Sentinel {
   static supportedActions = Object.freeze([
     SentinelActivityAction.Password,
     SentinelActivityAction.VerificationCode,
+    SentinelActivityAction.OneTimeToken,
   ] as const);
 
   /** The array of all supported actions in SQL format. */

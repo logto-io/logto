@@ -234,6 +234,16 @@ export class SignInExperienceValidator {
         );
         break;
       }
+      case VerificationType.OneTimeToken: {
+        const {
+          identifier: { type },
+        } = verificationRecord;
+        assertThat(
+          signInMethods.some(({ identifier }) => type === identifier),
+          new RequestError({ code: 'user.sign_in_method_not_enabled', status: 422 })
+        );
+        break;
+      }
       default: {
         throw new RequestError({ code: 'user.sign_in_method_not_enabled', status: 422 });
       }

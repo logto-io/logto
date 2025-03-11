@@ -1,4 +1,6 @@
 import {
+  type InteractionIdentifier,
+  type SignInIdentifier,
   type CreateExperienceApiPayload,
   type IdentificationApiPayload,
   type InteractionEvent,
@@ -221,5 +223,17 @@ export class ExperienceClient extends MockClient {
       headers: { cookie: this.interactionCookie },
       json: { type, verificationId },
     });
+  }
+
+  public async verifyOneTimeToken(payload: {
+    token: string;
+    identifier: InteractionIdentifier<SignInIdentifier.Email>;
+  }) {
+    return this.api
+      .post(`${experienceRoutes.verification}/one-time-token/verify`, {
+        headers: { cookie: this.interactionCookie },
+        json: payload,
+      })
+      .json<{ verificationId: string }>();
   }
 }
