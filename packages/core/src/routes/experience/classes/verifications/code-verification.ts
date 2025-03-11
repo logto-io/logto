@@ -45,13 +45,13 @@ type CodeVerificationType =
   | VerificationType.EmailVerificationCode
   | VerificationType.PhoneVerificationCode;
 
-type SinInIdentifierTypeOf = {
+type SignInIdentifierTypeOf = {
   [VerificationType.EmailVerificationCode]: SignInIdentifier.Email;
   [VerificationType.PhoneVerificationCode]: SignInIdentifier.Phone;
 };
 
 type VerificationCodeIdentifierOf<T extends CodeVerificationType> = VerificationCodeIdentifier<
-  SinInIdentifierTypeOf[T]
+  SignInIdentifierTypeOf[T]
 >;
 
 type CodeVerificationIdentifierMap = {

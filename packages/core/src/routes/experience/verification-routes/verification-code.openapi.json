@@ -77,7 +77,7 @@
                 "schema": {
                   "properties": {
                     "verificationId": {
-                      "description": "he unique ID of the verification record. Required for user identification via the `Identification` API or to bind the identifier to the user's account via the `Profile` API."
+                      "description": "The unique ID of the verification record. Required for user identification via the `Identification` API or to bind the identifier to the user's account via the `Profile` API."
                     }
                   }
                 }
