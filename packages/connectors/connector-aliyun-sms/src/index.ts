@@ -43,6 +43,7 @@ const sendMessage =
     validateConfig(config, aliyunSmsConfigGuard);
     const { accessKeyId, accessKeySecret, signName, templates, strictPhoneRegionNumberCheck } =
       config;
+
     const template = templates.find(({ usageType }) => usageType === type);
 
     assert(
@@ -53,6 +54,10 @@ const sendMessage =
       )
     );
 
+    // Aliyun SMS verification API only accepts [a-zA-Z0-9] values in the payload.
+    // We need to filter out the locale key from the payload as it may contain special characters e.g. zh-CN.
+    const { locale, ...filteredPayload } = payload;
+
     try {
       const httpResponse = await sendSms(
         {
@@ -60,7 +65,7 @@ const sendMessage =
           PhoneNumbers: to,
           SignName: signName,
           TemplateCode: getTemplateCode(template, to, strictPhoneRegionNumberCheck),
-          TemplateParam: JSON.stringify(payload),
+          TemplateParam: JSON.stringify(filteredPayload),
         },
         accessKeySecret
       );
