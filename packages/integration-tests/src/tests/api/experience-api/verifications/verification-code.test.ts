@@ -93,7 +93,7 @@ describe('Verification code verification APIs', () => {
       );
     });
 
-    it('should throw a 404 error if the verification record is overwrote by a concurrent verification request', async () => {
+    it('should throw a 404 error if the verification record is overwritten by a concurrent verification request', async () => {
       const client = await initExperienceClient();
 
       const { verificationId, code } = await successfullySendVerificationCode(client, {
