@@ -16,6 +16,7 @@ import { mfa } from './routes/mfa';
 import { organizationTemplate } from './routes/organization-template';
 import { organizations } from './routes/organizations';
 import { roles } from './routes/roles';
+import { security } from './routes/security';
 import { signInExperience } from './routes/sign-in-experience';
 import { useTenantSettings } from './routes/tenant-settings';
 import { users } from './routes/users';
@@ -40,6 +41,7 @@ export const useConsoleRoutes = () => {
         mfa,
         connectors,
         enterpriseSso,
+        security,
         webhooks,
         users,
         auditLogs,
