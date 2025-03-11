@@ -1,5 +1,7 @@
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
+import { findUp } from 'find-up';
 import { Piscina } from 'piscina';
 
 /**
@@ -12,13 +14,15 @@ import { Piscina } from 'piscina';
  * we use separate thread threads to handle the encryption process.
  */
 const passwordEncryptionWorker = new Piscina<string, string>({
-  // We cannot use `import.meta.url` here because the file structure differs between test and production builds.
-  // In production, the file is bundled, while in test mode, the original directory structure is preserved.
-  filename: path.join(process.cwd(), 'build/workers/tasks/argon2i.js'),
+  // Find the worker script file path under the build directory.
+  filename: path.join(
+    (await findUp('build', { type: 'directory', cwd: fileURLToPath(import.meta.url) })) ?? '',
+    'workers/tasks/argon2i.js'
+  ),
   maxThreads: 2,
   // By default the worker will be terminated immediately after the task is completed.
   // Since starting and terminating a worker thread can lead to some performance overhead,
-  // set the idle timeout to 5 seconds will keep the worker thread alive for concurrent requests.
+  // Set the idle timeout to 5 seconds will keep the worker thread alive for concurrent requests.
   // See {@link https://piscinajs.dev/api-reference/Instance/#constructor-new-piscinaoptions} for more details
   idleTimeout: 5000,
 });
