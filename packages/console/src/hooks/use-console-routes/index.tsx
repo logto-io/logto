@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { type RouteObject } from 'react-router-dom';
 import { safeLazy } from 'react-safe-lazy';
 
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import NotFound from '@/pages/NotFound';
 
 import { apiResources } from './routes/api-resources';
@@ -16,6 +16,7 @@ import { mfa } from './routes/mfa';
 import { organizationTemplate } from './routes/organization-template';
 import { organizations } from './routes/organizations';
 import { roles } from './routes/roles';
+import { security } from './routes/security';
 import { signInExperience } from './routes/sign-in-experience';
 import { useTenantSettings } from './routes/tenant-settings';
 import { users } from './routes/users';
@@ -40,6 +41,7 @@ export const useConsoleRoutes = () => {
         mfa,
         connectors,
         enterpriseSso,
+        isDevFeaturesEnabled && security,
         webhooks,
         users,
         auditLogs,
