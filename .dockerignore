@@ -34,3 +34,5 @@ dump.rdb
 .github
 .husky
 .vscode
+
+/assets

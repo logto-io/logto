@@ -98,15 +98,15 @@ Powered by industry-standard protocols (OIDC, OAuth, SAML), Logto empowers secur
 
 **Developer-friendly SDKs**: Install in minutes with step-by-step guides.
 
-![Logto auth SDK showcase](./assets/showcase-logto-auth-sdks.gif)
+![Logto auth SDK showcase](./assets/showcase-logto-auth-sdks.mp4)
 
 **User-friendly auth flows**: Sign-up, sign-in, Social sign-in, Google one-tap, SSO, MFA, etc.
 
-![Logto sign-in experience showcase](./assets/showcase-logto-sign-in-exeperience.gif)
+![Logto sign-in experience showcase](./assets/showcase-logto-sign-in-exeperience.mp4)
 
 **Multi-tenancy architecture**: organization RBAC, member invitations, just-in-time provision, etc.
 
-![Logto multi-tenancy showcase](./assets/showcase-logto-multi-tenancy.gif)
+![Logto multi-tenancy showcase](./assets/showcase-logto-multi-tenancy.mp4)
 
 ## Support Logto
 
