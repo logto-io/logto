@@ -85,15 +85,21 @@ export default class Tenant implements TenantContext {
     public readonly logtoConfigs = createLogtoConfigLibrary(queries),
     public readonly cloudConnection = createCloudConnectionLibrary(logtoConfigs),
     public readonly connectors = createConnectorLibrary(queries, cloudConnection),
+    public readonly subscription = new SubscriptionLibrary(
+      id,
+      queries,
+      cloudConnection,
+      redisCache
+    ),
     public readonly libraries = new Libraries(
       id,
       queries,
       connectors,
       cloudConnection,
-      logtoConfigs
+      logtoConfigs,
+      subscription
     ),
-    public readonly sentinel = new BasicSentinel(envSet.pool),
-    public readonly subscription = new SubscriptionLibrary(id, queries, cloudConnection, redisCache)
+    public readonly sentinel = new BasicSentinel(envSet.pool)
   ) {
     const isAdminTenant = id === adminTenantId;
     const mountedApps = [
