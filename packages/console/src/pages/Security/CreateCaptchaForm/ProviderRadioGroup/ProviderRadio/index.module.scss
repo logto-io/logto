@@ -1,0 +1,29 @@
+@use '@/scss/underscore' as _;
+
+.connector {
+  font: var(--font-body-2);
+  display: flex;
+  gap: _.unit(3);
+
+  .content {
+    flex: 1;
+
+    .name {
+      font: var(--font-label-2);
+      @include _.multi-line-ellipsis(1);
+    }
+
+    .connectorId {
+      margin-top: _.unit(1);
+      font: var(--font-body-3);
+      color: var(--color-text-secondary);
+    }
+
+    .description {
+      font: var(--font-body-3);
+      color: var(--color-text-secondary);
+      margin-top: _.unit(1);
+      @include _.multi-line-ellipsis(4);
+    }
+  }
+}

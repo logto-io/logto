@@ -1,0 +1,6 @@
+@use '@/scss/underscore' as _;
+
+.standardLabel {
+  font: var(--font-label-2);
+  margin: _.unit(6) 0 _.unit(4);
+}
