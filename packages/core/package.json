@@ -87,7 +87,6 @@
     "p-map": "^7.0.2",
     "p-retry": "^6.0.0",
     "pg-protocol": "^1.6.0",
-    "piscina": "5.0.0-alpha.0",
     "pluralize": "^8.0.0",
     "qrcode": "^1.5.3",
     "raw-body": "^3.0.0",
@@ -97,6 +96,7 @@
     "semver": "^7.3.8",
     "snake-case": "^4.0.0",
     "snakecase-keys": "^8.0.1",
+    "tinypool": "^1.0.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {

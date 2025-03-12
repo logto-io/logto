@@ -2,7 +2,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { findUp } from 'find-up';
-import { Piscina } from 'piscina';
+import { Tinypool } from 'tinypool';
 
 /**
  * User password encryption worker pool.
@@ -13,7 +13,7 @@ import { Piscina } from 'piscina';
  * to better protect the main thread I/O performance,
  * we use separate thread threads to handle the encryption process.
  */
-const passwordEncryptionWorker = new Piscina<string, string>({
+const passwordEncryptionWorker = new Tinypool({
   // Find the worker script file path under the build directory.
   filename: path.join(
     (await findUp('build', { type: 'directory', cwd: fileURLToPath(import.meta.url) })) ?? '',

@@ -127,7 +127,15 @@ export const encryptPassword = async (
 
   // Encrypt password with Argon2i encryption method in a separate worker thread
   if (EnvSet.values.isDevFeaturesEnabled) {
-    return passwordEncryptionWorker.run(password);
+    // eslint-disable-next-line no-restricted-syntax
+    const result = (await passwordEncryptionWorker.run(password)) as Promise<unknown>;
+
+    // Safely guard the string type
+    if (typeof result !== 'string') {
+      throw new TypeError('Invalid password encryption worker response');
+    }
+
+    return result;
   }
 
   return argon2iEncrypt(password);
