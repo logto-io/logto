@@ -12,6 +12,21 @@ const security = {
       add: 'Add CAPTCHA',
     },
   },
+  create_captcha: {
+    setup_captcha: 'Setup CAPTCHA',
+  },
+  captcha_providers: {
+    recaptcha_enterprise: {
+      name: 'reCAPTCHA Enterprise',
+      description:
+        "Google's enterprise-grade CAPTCHA solution that provides advanced threat detection and detailed security analytics to protect your website from fraudulent activities.",
+    },
+    turnstile: {
+      name: 'Turnstile',
+      description:
+        "Cloudflare's smart CAPTCHA alternative that provides non-intrusive bot protection while ensuring a seamless user experience without visual puzzles.",
+    },
+  },
 };
 
 export default Object.freeze(security);
