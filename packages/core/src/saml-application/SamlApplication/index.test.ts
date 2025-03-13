@@ -121,7 +121,7 @@ describe('SamlApplication', () => {
       nock(mockEndpoint)
         .post(
           '/token',
-          `grant_type=authorization_code&code=${mockCode}&client_id=${mockSamlApplicationId}&redirect_uri=${encodeURIComponent(
+          `grant_type=authorization_code&code=${mockCode}&redirect_uri=${encodeURIComponent(
             samlApp.config.redirectUri
           )}`
         )
