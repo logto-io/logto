@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Plus from '@/assets/icons/plus.svg?react';
@@ -10,10 +11,12 @@ import CardTitle from '@/ds-components/CardTitle';
 import FormField from '@/ds-components/FormField';
 import pageLayout from '@/scss/page-layout.module.scss';
 
+import CreateCaptchaForm from './CreateCaptchaForm';
 import styles from './index.module.scss';
 
 function Security() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const [isCreateCaptchaFormOpen, setIsCreateCaptchaFormOpen] = useState(false);
 
   return (
     <div className={pageLayout.container}>
@@ -38,11 +41,17 @@ function Security() {
             title="security.bot_protection.captcha.add"
             icon={<Plus />}
             onClick={() => {
-              // TODO: Implement captcha
+              setIsCreateCaptchaFormOpen(true);
             }}
           />
         </FormField>
       </FormCard>
+      <CreateCaptchaForm
+        isOpen={isCreateCaptchaFormOpen}
+        onClose={() => {
+          setIsCreateCaptchaFormOpen(false);
+        }}
+      />
     </div>
   );
 }
