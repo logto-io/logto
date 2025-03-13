@@ -71,6 +71,8 @@ export const handleTokenExchange = async (
     grant_type: 'authorization_code',
     code,
     ...(redirectUri ? { redirect_uri: redirectUri } : {}),
+    // No need to pass client_id and client_secret as it is already in the Authorization header
+    // For some providers like OKTA, pass client_id in the body while using client credentials authorization header will cause error
   });
 
   const headers = {
