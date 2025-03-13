@@ -163,7 +163,6 @@ describe('fetchToken', () => {
       body: new URLSearchParams({
         grant_type: 'authorization_code',
         code: data.code,
-        client_id: oidcConfig.clientId,
         redirect_uri: redirectUri,
       }).toString(),
       headers: {
