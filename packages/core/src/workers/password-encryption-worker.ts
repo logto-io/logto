@@ -1,8 +1,13 @@
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-import { findUp } from 'find-up';
+import { packageDirectory } from 'pkg-dir';
 import { Tinypool } from 'tinypool';
+
+const rootDirectory = await packageDirectory();
+
+if (!rootDirectory) {
+  throw new Error('Cannot find the root directory of the package');
+}
 
 /**
  * User password encryption worker pool.
@@ -14,15 +19,11 @@ import { Tinypool } from 'tinypool';
  * we use separate thread threads to handle the encryption process.
  */
 const passwordEncryptionWorker = new Tinypool({
-  // Find the worker script file path under the build directory.
-  filename: path.join(
-    (await findUp('build', { type: 'directory', cwd: fileURLToPath(import.meta.url) })) ?? '',
-    'workers/tasks/argon2i.js'
-  ),
+  filename: path.join(rootDirectory, 'build/workers/tasks/argon2i.js'),
   maxThreads: 2,
   // By default the worker will be terminated immediately after the task is completed.
   // Since starting and terminating a worker thread can lead to some performance overhead,
-  // Set the idle timeout to 5 seconds will keep the worker thread alive for concurrent requests.
+  // set the idle timeout to 5 seconds will keep the worker thread alive for concurrent requests.
   // See {@link https://piscinajs.dev/api-reference/Instance/#constructor-new-piscinaoptions} for more details
   idleTimeout: 5000,
 });

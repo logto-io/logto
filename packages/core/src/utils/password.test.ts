@@ -1,6 +1,8 @@
+import { UsersPasswordEncryptionMethod } from '@logto/schemas';
+
 import RequestError from '../errors/RequestError/index.js';
 
-import { executeLegacyHash, parseLegacyPassword } from './password.js';
+import { encryptPassword, executeLegacyHash, parseLegacyPassword } from './password.js';
 
 describe('parseLegacyPassword', () => {
   it('should parse valid legacy password expression', () => {
@@ -102,5 +104,26 @@ describe('executeLegacyHash', () => {
 
     const result = await executeLegacyHash(parsedExpression, inputPassword);
     expect(result).toBe(parsedExpression.encryptedPassword);
+  });
+});
+
+describe('encryptPassword', () => {
+  const unsupportedEncryptionMethod = Object.values(UsersPasswordEncryptionMethod).filter(
+    (method) => method !== UsersPasswordEncryptionMethod.Argon2i
+  );
+
+  it.each(unsupportedEncryptionMethod)(
+    'should throw error for unsupported method %s',
+    async (method) => {
+      await expect(encryptPassword('password', method)).rejects.toThrow(
+        new RequestError({ code: 'password.unsupported_encryption_method', method })
+      );
+    }
+  );
+
+  it('should encrypt password with Argon2i', async () => {
+    const password = 'password';
+    const result = await encryptPassword(password, UsersPasswordEncryptionMethod.Argon2i);
+    expect(result).not.toBe(password);
   });
 });
