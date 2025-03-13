@@ -56,24 +56,20 @@ export const fetchOidcConfig = async (
   }
 };
 
+type HandleTokenExchangePayload = {
+  code: string;
+  clientId: string;
+  clientSecret: string;
+  redirectUri?: string;
+};
+
 export const handleTokenExchange = async (
   tokenEndpoint: string,
-  {
-    code,
-    clientId,
-    clientSecret,
-    redirectUri,
-  }: {
-    code: string;
-    clientId: string;
-    clientSecret: string;
-    redirectUri?: string;
-  }
+  { code, clientId, clientSecret, redirectUri }: HandleTokenExchangePayload
 ) => {
   const tokenRequestParameters = new URLSearchParams({
     grant_type: 'authorization_code',
     code,
-    client_id: clientId,
     ...(redirectUri ? { redirect_uri: redirectUri } : {}),
   });
 
