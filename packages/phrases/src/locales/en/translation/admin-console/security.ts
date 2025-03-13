@@ -11,6 +11,7 @@ const security = {
       placeholder: 'Select a CAPTCHA provider and set up integration.',
       add: 'Add CAPTCHA',
     },
+    settings: 'Settings',
   },
   create_captcha: {
     setup_captcha: 'Setup CAPTCHA',
@@ -22,7 +23,7 @@ const security = {
         "Google's enterprise-grade CAPTCHA solution that provides advanced threat detection and detailed security analytics to protect your website from fraudulent activities.",
     },
     turnstile: {
-      name: 'Turnstile',
+      name: 'Cloudflare Turnstile',
       description:
         "Cloudflare's smart CAPTCHA alternative that provides non-intrusive bot protection while ensuring a seamless user experience without visual puzzles.",
     },
