@@ -14,7 +14,6 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { identifierCodeVerificationTypeMap } from './classes/verifications/code-verification.js';
 import { experienceRoutes } from './const.js';
 import { type ExperienceInteractionRouterContext } from './types.js';
 
@@ -85,10 +84,10 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
 
       switch (profilePayload.type) {
         case SignInIdentifier.Email:
-        case SignInIdentifier.Phone: {
-          const verificationType = identifierCodeVerificationTypeMap[profilePayload.type];
-          await experienceInteraction.profile.setProfileByVerificationRecord(
-            verificationType,
+        case SignInIdentifier.Phone:
+        case 'social': {
+          await experienceInteraction.profile.setProfileByVerificationId(
+            profilePayload.type,
             profilePayload.verificationId,
             log
           );
@@ -103,12 +102,6 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
         case 'password': {
           await experienceInteraction.profile.setPasswordDigestWithValidation(profilePayload.value);
           break;
-        }
-        case 'social': {
-          await experienceInteraction.profile.setProfileBySocialVerificationRecord(
-            profilePayload.verificationId,
-            log
-          );
         }
       }
 

@@ -102,6 +102,7 @@ export default class ExperienceInteraction {
       getIdentifiedUser: async () => this.getIdentifiedUser(),
       getVerificationRecordByTypeAndId: (type, verificationId) =>
         this.getVerificationRecordByTypeAndId(type, verificationId),
+      getVerificationRecordById: (verificationId) => this.getVerificationRecordById(verificationId),
     };
 
     if (typeof interactionData === 'string') {
@@ -303,7 +304,10 @@ export default class ExperienceInteraction {
   }
 
   /**
+   * Get the verification record by the verification id with type assertion.
+   *
    * @throws {RequestError} with 404 if the verification record is not found
+   *  or the verification type does not match.
    */
   public getVerificationRecordByTypeAndId<K extends keyof VerificationRecordMap>(
     type: K,
