@@ -1,16 +1,28 @@
-import { InteractionEvent, VerificationType } from '@logto/schemas';
+import {
+  InteractionEvent,
+  SignInIdentifier,
+  type UpdateProfileApiPayload,
+  VerificationType,
+} from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
+import assertThat from '#src/utils/assert-that.js';
 
 import { type InteractionContext, type InteractionProfile } from '../types.js';
 
 import { PasswordValidator } from './libraries/password-validator.js';
 import { ProfileValidator } from './libraries/profile-validator.js';
 import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
+
+// Supported profile types for setting the profile data through the verification record.
+type SetProfileByVerificationIdType = Exclude<
+  UpdateProfileApiPayload['type'],
+  'password' | SignInIdentifier.Username
+>;
 
 export class Profile {
   readonly profileValidator: ProfileValidator;
@@ -35,52 +47,63 @@ export class Profile {
   /**
    * Set the identified email or phone to the profile using the verification record.
    *
+   * @throws {RequestError} 404 if the verification record is not found.
    * @throws {RequestError} 422 if the profile data already exists in the current user account.
    * @throws {RequestError} 422 if the unique identifier data already exists in another user account.
    * @throws {RequestError} 422 if the email domain is SSO only.
    */
-  async setProfileByVerificationRecord(
-    type: VerificationType.EmailVerificationCode | VerificationType.PhoneVerificationCode,
+  async setProfileByVerificationId(
+    type: SetProfileByVerificationIdType,
     verificationId: string,
     log?: LogEntry
   ) {
-    const verificationRecord = this.interactionContext.getVerificationRecordByTypeAndId(
-      type,
-      verificationId
-    );
+    const verificationRecord = this.interactionContext.getVerificationRecordById(verificationId);
 
-    log?.append({
-      verification: verificationRecord.toJson(),
-    });
-
-    if (verificationRecord.type === VerificationType.EmailVerificationCode) {
-      await this.signInExperienceValidator.guardSsoOnlyEmailIdentifier(verificationRecord);
+    // Assert the verification record type matches the identifier type
+    switch (type) {
+      case SignInIdentifier.Email: {
+        assertThat(
+          verificationRecord.type === VerificationType.EmailVerificationCode,
+          new RequestError({ code: 'session.verification_session_not_found', status: 404 })
+        );
+        break;
+      }
+      case SignInIdentifier.Phone: {
+        assertThat(
+          verificationRecord.type === VerificationType.PhoneVerificationCode,
+          new RequestError({ code: 'session.verification_session_not_found', status: 404 })
+        );
+        break;
+      }
+      case 'social': {
+        assertThat(
+          verificationRecord.type === VerificationType.Social,
+          new RequestError({ code: 'session.verification_session_not_found', status: 404 })
+        );
+        break;
+      }
     }
 
-    const profile = verificationRecord.toUserProfile();
-
-    await this.setProfileWithValidation(profile);
-  }
-
-  async setProfileBySocialVerificationRecord(verificationId: string, log?: LogEntry) {
-    const verificationRecord = this.interactionContext.getVerificationRecordByTypeAndId(
-      VerificationType.Social,
-      verificationId
-    );
+    // Guard SSO only email identifier in verification record  (EmailVerificationCode, Social)
+    await this.signInExperienceValidator.guardSsoOnlyEmailIdentifier(verificationRecord);
 
     log?.append({
       verification: verificationRecord.toJson(),
     });
 
     const profile = await verificationRecord.toUserProfile();
+
     await this.setProfileWithValidation(profile);
 
-    const user = await this.safeGetIdentifiedUser();
-    const isNewUserIdentity = !user;
+    // Sync social user info to the user profile
+    if (verificationRecord.type === VerificationType.Social) {
+      const user = await this.safeGetIdentifiedUser();
+      const isNewUserIdentity = !user;
 
-    // Sync the email and phone to the user profile only for new user identity
-    const syncedProfile = await verificationRecord.toSyncedProfile(isNewUserIdentity);
-    this.unsafePrepend(syncedProfile);
+      // Sync the email and phone to the user profile only for new user identity
+      const syncedProfile = await verificationRecord.toSyncedProfile(isNewUserIdentity);
+      this.unsafePrepend(syncedProfile);
+    }
   }
 
   /**

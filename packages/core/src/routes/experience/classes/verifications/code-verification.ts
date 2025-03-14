@@ -5,7 +5,6 @@ import {
   VerificationType,
   type User,
   type VerificationCodeIdentifier,
-  type VerificationCodeSignInIdentifier,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { z } from 'zod';
@@ -67,11 +66,6 @@ export type CodeVerificationRecordData<T extends CodeVerificationType = CodeVeri
   templateType: TemplateType;
   verified: boolean;
 };
-
-export const identifierCodeVerificationTypeMap = Object.freeze({
-  [SignInIdentifier.Email]: VerificationType.EmailVerificationCode,
-  [SignInIdentifier.Phone]: VerificationType.PhoneVerificationCode,
-}) satisfies Record<VerificationCodeSignInIdentifier, CodeVerificationType>;
 
 /**
  * This is the parent class for `EmailCodeVerification` and `PhoneCodeVerification`. Not publicly exposed.
