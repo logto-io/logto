@@ -13,3 +13,5 @@ export const isDevFeaturesEnabled =
   !isProduction ||
   yes(normalizeEnv(import.meta.env.DEV_FEATURES_ENABLED)) ||
   yes(localStorage.getItem(storageKeys.isDevFeaturesEnabled));
+
+export const consoleEmbedPricingUrl = normalizeEnv(import.meta.env.CONSOLE_EMBED_PRICING_URL);

@@ -48,6 +48,9 @@ const buildConfig = (mode: string): UserConfig => ({
     'import.meta.env.ADMIN_ENDPOINT': JSON.stringify(process.env.ADMIN_ENDPOINT),
     'import.meta.env.DEV_FEATURES_ENABLED': JSON.stringify(process.env.DEV_FEATURES_ENABLED),
     'import.meta.env.INTEGRATION_TEST': JSON.stringify(process.env.INTEGRATION_TEST),
+    'import.meta.env.CONSOLE_EMBED_PRICING_URL': JSON.stringify(
+      process.env.CONSOLE_EMBED_PRICING_URL
+    ),
     // `@withtyped/client` needs this to be defined. We can optimize this later.
     'process.env': {},
   },
