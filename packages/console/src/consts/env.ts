@@ -13,3 +13,8 @@ export const isDevFeaturesEnabled =
   !isProduction ||
   yes(normalizeEnv(import.meta.env.DEV_FEATURES_ENABLED)) ||
   yes(localStorage.getItem(storageKeys.isDevFeaturesEnabled));
+
+export const consoleEmbedPricingLink = {
+  domain: normalizeEnv(import.meta.env.EMBED_PRICING_LINK_DOMAIN),
+  path: normalizeEnv(import.meta.env.EMBED_PRICING_LINK_PATH),
+};

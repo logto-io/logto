@@ -12,8 +12,8 @@ import { pickupFeaturedLogtoSkus } from '@/utils/subscription';
 
 import Skeleton from '../components/Skeleton';
 
+import ConsoleEmbedPricing from './ConsoleEmbedPricing';
 import CurrentPlan from './CurrentPlan';
-import PlanComparisonTable from './PlanComparisonTable';
 import SwitchPlanActionBar from './SwitchPlanActionBar';
 import styles from './index.module.scss';
 
@@ -71,7 +71,7 @@ function Subscription() {
     <div className={styles.container}>
       <PageMeta titleKey={['tenants.tabs.subscription', 'tenants.title']} />
       <CurrentPlan periodicUsage={periodicUsage} usageAddOnSkus={usageAddOnSkus} />
-      <PlanComparisonTable />
+      <ConsoleEmbedPricing />
       <SwitchPlanActionBar
         currentSkuId={currentSku.id}
         logtoSkus={reservedSkus}

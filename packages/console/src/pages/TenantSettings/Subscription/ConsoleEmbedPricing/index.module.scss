@@ -1,0 +1,13 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  flex: 1;
+  padding: _.unit(4) _.unit(6);
+}
+
+.iframe {
+  content-visibility: auto;
+  border: none;
+  width: 100%;
+  overflow-y: visible;
+}
