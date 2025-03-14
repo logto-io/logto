@@ -1,17 +1,19 @@
 import type { AdminConsoleKey } from '@logto/phrases';
+import { type ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
 import Close from '@/assets/icons/close.svg?react';
 import CardTitle from '@/ds-components/CardTitle';
+import type DangerousRaw from '@/ds-components/DangerousRaw';
 import IconButton from '@/ds-components/IconButton';
 import Spacer from '@/ds-components/Spacer';
 
 import styles from './index.module.scss';
 
 type Props = {
-  readonly title?: AdminConsoleKey;
-  readonly subtitle?: AdminConsoleKey;
+  readonly title?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
+  readonly subtitle?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   readonly isOpen: boolean;
   readonly children: React.ReactNode;
   readonly onClose?: () => void;
