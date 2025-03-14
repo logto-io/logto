@@ -202,7 +202,7 @@ describe('buildLoginPromptUrl', () => {
 
   it('should return the correct url containing token and login_hint ', () => {
     expect(buildLoginPromptUrl({ token: 'token_value', login_hint: 'user@mail.com' })).toBe(
-      'token/token_value?login_hint=user%40mail.com'
+      'token/token_value?login_hint=user%40mail.com&fallback=sign-in'
     );
   });
 });
