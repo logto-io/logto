@@ -8,6 +8,7 @@ export const azureADConfigGuard = z.object({
   cloudInstance: z.string(),
   tenantId: z.string(),
   prompts: oidcPromptsGuard,
+  scopes: z.string().optional(),
 });
 
 export type AzureADConfig = z.infer<typeof azureADConfigGuard>;

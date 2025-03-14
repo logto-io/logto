@@ -1,4 +1,4 @@
-import { assert, conditional } from '@silverhand/essentials';
+import { assert, conditional, deduplicate } from '@silverhand/essentials';
 import { got, HTTPError } from 'got';
 import path from 'node:path';
 
@@ -19,7 +19,12 @@ import {
   parseJson,
 } from '@logto/connector-kit';
 
-import { scopes, defaultMetadata, defaultTimeout, graphAPIEndpoint } from './constant.js';
+import {
+  scopes as defaultScopes,
+  defaultMetadata,
+  defaultTimeout,
+  graphAPIEndpoint,
+} from './constant.js';
 import type { AzureADConfig } from './types.js';
 import {
   azureADConfigGuard,
@@ -37,10 +42,10 @@ const getAuthorizationUri =
     const config = await getConfig(defaultMetadata.id);
 
     validateConfig(config, azureADConfigGuard);
-    const { clientId, clientSecret, cloudInstance, tenantId, prompts } = config;
+    const { clientId, clientSecret, cloudInstance, tenantId, prompts, scopes } = config;
 
     const defaultAuthCodeUrlParameters: AuthorizationUrlRequest = {
-      scopes,
+      scopes: deduplicate([...defaultScopes, ...(scopes?.split(' ') ?? [])]),
       state,
       redirectUri,
       ...conditional(prompts && prompts.length > 0 && { prompt: prompts.join(' ') }),
