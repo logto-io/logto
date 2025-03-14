@@ -19,6 +19,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import koaInteractionDetails from '#src/middleware/koa-interaction-details.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { EnvSet } from '../../env-set/index.js';
 import { type AnonymousRouter, type RouterInitArgs } from '../types.js';
 
 import experienceAnonymousRoutes from './anonymous-routes/index.js';
@@ -31,6 +32,7 @@ import { type ExperienceInteractionRouterContext } from './types.js';
 import backupCodeVerificationRoutes from './verification-routes/backup-code-verification.js';
 import enterpriseSsoVerificationRoutes from './verification-routes/enterprise-sso-verification.js';
 import newPasswordIdentityVerificationRoutes from './verification-routes/new-password-identity-verification.js';
+import oneTimeTokenRoutes from './verification-routes/one-time-token.js';
 import passwordVerificationRoutes from './verification-routes/password-verification.js';
 import socialVerificationRoutes from './verification-routes/social-verification.js';
 import totpVerificationRoutes from './verification-routes/totp-verification.js';
@@ -187,6 +189,9 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
   webAuthnVerificationRoute(experienceRouter, tenant);
   backupCodeVerificationRoutes(experienceRouter, tenant);
   newPasswordIdentityVerificationRoutes(experienceRouter, tenant);
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    oneTimeTokenRoutes(experienceRouter, tenant);
+  }
 
   profileRoutes(experienceRouter, tenant);
   experienceAnonymousRoutes(experienceRouter, tenant);

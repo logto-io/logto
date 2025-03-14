@@ -1,0 +1,54 @@
+{
+  "tags": [
+    {
+      "name": "Dev feature"
+    }
+  ],
+  "paths": {
+    "/api/experience/verification/one-time-token/verify": {
+      "post": {
+        "operationId": "VerifyOneTimeTokenVerification",
+        "summary": "Verify one-time token",
+        "description": "Verify the provided one-time token against the user's email. If successful, the verification record will be marked as verified.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "token": {
+                    "description": "The one-time token to be verified."
+                  },
+                  "identifier": {
+                    "description": "The unique user identifier.  <br/> Currently, only `email` is accepted."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The one-time token was successfully verified.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "verificationId": {
+                      "description": "The unique ID of the verification record. Required for user identification via the `Identification` API or to bind the identifier to the user's account via the `Profile` API."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The one-time token is invalid or the maximum number of attempts has been exceeded. Check the error message for details."
+          },
+          "404": {
+            "description": "Verification record not found."
+          }
+        }
+      }
+    }
+  }
+}

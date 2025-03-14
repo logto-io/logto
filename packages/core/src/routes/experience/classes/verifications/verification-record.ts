@@ -23,7 +23,8 @@ type IdentifierVerificationType =
   | VerificationType.PhoneVerificationCode
   | VerificationType.Password
   | VerificationType.Social
-  | VerificationType.EnterpriseSso;
+  | VerificationType.EnterpriseSso
+  | VerificationType.OneTimeToken;
 
 /**
  * The abstract class for all identifier verification records.

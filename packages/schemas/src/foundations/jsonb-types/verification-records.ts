@@ -10,6 +10,7 @@ export enum VerificationType {
   WebAuthn = 'WebAuthn',
   BackupCode = 'BackupCode',
   NewPasswordIdentity = 'NewPasswordIdentity',
+  OneTimeToken = 'OneTimeToken',
 }
 
 export const verificationTypeGuard = z.nativeEnum(VerificationType);

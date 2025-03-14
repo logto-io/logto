@@ -27,6 +27,11 @@ import {
   type NewPasswordIdentityVerificationRecordData,
 } from './new-password-identity-verification.js';
 import {
+  OneTimeTokenVerification,
+  oneTimeTokenVerificationRecordDataGuard,
+  type OneTimeTokenVerificationRecordData,
+} from './one-time-token-verification.js';
+import {
   PasswordVerification,
   passwordVerificationRecordDataGuard,
   type PasswordVerificationRecordData,
@@ -57,7 +62,8 @@ export type VerificationRecordData =
   | TotpVerificationRecordData
   | BackupCodeVerificationRecordData
   | WebAuthnVerificationRecordData
-  | NewPasswordIdentityVerificationRecordData;
+  | NewPasswordIdentityVerificationRecordData
+  | OneTimeTokenVerificationRecordData;
 
 // This is to ensure the keys of the map are the same as the type of the verification record
 type VerificationRecordInterfaceMap = {
@@ -75,6 +81,7 @@ export type VerificationRecordMap = AssertVerificationMap<{
   [VerificationType.BackupCode]: BackupCodeVerification;
   [VerificationType.WebAuthn]: WebAuthnVerification;
   [VerificationType.NewPasswordIdentity]: NewPasswordIdentityVerification;
+  [VerificationType.OneTimeToken]: OneTimeTokenVerification;
 }>;
 
 type ValueOf<T> = T[keyof T];
@@ -98,6 +105,7 @@ export const verificationRecordDataGuard = z.discriminatedUnion('type', [
   backupCodeVerificationRecordDataGuard,
   webAuthnVerificationRecordDataGuard,
   newPasswordIdentityVerificationRecordDataGuard,
+  oneTimeTokenVerificationRecordDataGuard,
 ]);
 
 /**
@@ -135,6 +143,9 @@ export const buildVerificationRecord = (
     }
     case VerificationType.NewPasswordIdentity: {
       return new NewPasswordIdentityVerification(libraries, queries, data);
+    }
+    case VerificationType.OneTimeToken: {
+      return new OneTimeTokenVerification(libraries, queries, data);
     }
   }
 };

@@ -30,7 +30,8 @@ export const getNewUserProfileFromVerificationRecord = async (
   switch (verificationRecord.type) {
     case VerificationType.NewPasswordIdentity:
     case VerificationType.EmailVerificationCode:
-    case VerificationType.PhoneVerificationCode: {
+    case VerificationType.PhoneVerificationCode:
+    case VerificationType.OneTimeToken: {
       return verificationRecord.toUserProfile();
     }
     case VerificationType.EnterpriseSso:
@@ -56,6 +57,7 @@ export const getNewUserProfileFromVerificationRecord = async (
  * @throws {RequestError} -400 if the verification record is not verified.
  * @throws {RequestError} -404 if the user is not found.
  */
+// eslint-disable-next-line complexity
 export const identifyUserByVerificationRecord = async (
   verificationRecord: VerificationRecord,
   linkSocialIdentity?: boolean
@@ -81,7 +83,8 @@ export const identifyUserByVerificationRecord = async (
   switch (verificationRecord.type) {
     case VerificationType.Password:
     case VerificationType.EmailVerificationCode:
-    case VerificationType.PhoneVerificationCode: {
+    case VerificationType.PhoneVerificationCode:
+    case VerificationType.OneTimeToken: {
       return { user: await verificationRecord.identifyUser() };
     }
     case VerificationType.Social: {

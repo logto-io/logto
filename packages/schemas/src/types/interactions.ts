@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import { z } from 'zod';
 
@@ -129,6 +130,22 @@ export type BackupCodeVerificationVerifyPayload = {
 export const backupCodeVerificationVerifyPayloadGuard = z.object({
   code: z.string().min(1),
 }) satisfies ToZodObject<BackupCodeVerificationVerifyPayload>;
+
+/** Payload type for `POST /api/experience/verification/one-time-token/verify` */
+export type OneTimeTokenVerificationVerifyPayload = {
+  /**
+   * The email address that the one-time token was sent to. Currently only email identifier is supported.
+   */
+  identifier: InteractionIdentifier<SignInIdentifier.Email>;
+  token: string;
+};
+export const oneTimeTokenVerificationVerifyPayloadGuard = z.object({
+  identifier: z.object({
+    type: z.literal(SignInIdentifier.Email),
+    value: z.string().regex(emailRegEx),
+  }),
+  token: z.string().min(1),
+}) satisfies ToZodObject<OneTimeTokenVerificationVerifyPayload>;
 
 /** Payload type for `POST /api/experience/identification`. */
 export type IdentificationApiPayload = {
@@ -432,3 +449,4 @@ export const verifyMfaResultGuard = z.object({
 });
 
 export type VerifyMfaResult = z.infer<typeof verifyMfaResultGuard>;
+/* eslint-enable max-lines */
