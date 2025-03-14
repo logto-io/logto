@@ -1,8 +1,16 @@
 import { type RouteObject } from 'react-router-dom';
+import { safeLazy } from 'react-safe-lazy';
 
-import Security from '@/pages/Security';
+const Security = safeLazy(async () => import('@/pages/Security'));
+const CaptchaDetails = safeLazy(async () => import('@/pages/CaptchaDetails'));
 
 export const security: RouteObject = {
   path: 'security',
-  children: [{ index: true, element: <Security /> }],
+  children: [
+    { index: true, element: <Security /> },
+    {
+      path: 'captcha',
+      element: <CaptchaDetails />,
+    },
+  ],
 };
