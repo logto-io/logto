@@ -22,7 +22,7 @@
     "prepublishOnly": "pnpm build"
   },
   "engines": {
-    "node": "^20.9.0"
+    "node": "^22.13.0"
   },
   "eslintConfig": {
     "extends": "@silverhand",

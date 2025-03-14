@@ -38,7 +38,7 @@
     "test:ci": "pnpm run test --coverage"
   },
   "engines": {
-    "node": "^20.9.0"
+    "node": "^22.13.0"
   },
   "bugs": {
     "url": "https://github.com/logto-io/logto/issues"
@@ -60,7 +60,7 @@
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/ts-config": "6.0.0",
     "@types/mocha": "^10.0.9",
-    "@types/node": "^20.9.5",
+    "@types/node": "^22.13.0",
     "@web/dev-server": "^0.4.6",
     "@web/dev-server-esbuild": "^1.0.2",
     "@web/test-runner": "^0.19.0",

@@ -1,5 +1,5 @@
 ###### [STAGE] Build ######
-FROM node:20-alpine as builder
+FROM node:22-alpine as builder
 WORKDIR /etc/logto
 ENV CI=true
 
@@ -7,7 +7,7 @@ ENV CI=true
 ENV PUPPETEER_SKIP_DOWNLOAD=true
 
 ### Install toolchain ###
-RUN npm add --location=global pnpm@^9.0.0
+RUN npm add --location=global pnpm@^9.15
 # https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md#node-gyp-alpine
 RUN apk add --no-cache python3 make g++ rsync
 
@@ -37,7 +37,7 @@ RUN NODE_ENV=production pnpm i
 RUN rm -rf .scripts pnpm-*.yaml packages/cloud
 
 ###### [STAGE] Seal ######
-FROM node:20-alpine as app
+FROM node:22-alpine as app
 WORKDIR /etc/logto
 COPY --from=builder /etc/logto .
 RUN mkdir -p /etc/logto/packages/cli/alteration-scripts && chmod g+w /etc/logto/packages/cli/alteration-scripts

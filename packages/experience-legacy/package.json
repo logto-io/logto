@@ -90,7 +90,7 @@
     "vite-plugin-svgr": "^4.3.0"
   },
   "engines": {
-    "node": "^20.9.0"
+    "node": "^22.13.0"
   },
   "stylelint": {
     "extends": "@silverhand/eslint-config-react/.stylelintrc"

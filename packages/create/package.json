@@ -12,7 +12,7 @@
   },
   "scripts": {},
   "engines": {
-    "node": "^20.9.0"
+    "node": "^22.13.0"
   },
   "dependencies": {
     "@logto/cli": "workspace:^1.25.0"

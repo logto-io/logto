@@ -35,7 +35,7 @@
     "@silverhand/essentials": "^2.9.1",
     "@silverhand/ts-config": "6.0.0",
     "@types/jest": "^29.4.0",
-    "@types/node": "^20.9.5",
+    "@types/node": "^22.13.0",
     "dotenv": "^16.4.5",
     "eslint": "^8.56.0",
     "expect-puppeteer": "^10.1.4",
@@ -53,7 +53,7 @@
     "zod": "^3.23.8"
   },
   "engines": {
-    "node": "^20.9.0"
+    "node": "^22.13.0"
   },
   "eslintConfig": {
     "extends": "@silverhand"
