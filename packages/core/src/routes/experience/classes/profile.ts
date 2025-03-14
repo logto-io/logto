@@ -59,11 +59,6 @@ export class Profile {
   ) {
     const verificationRecord = this.interactionContext.getVerificationRecordById(verificationId);
 
-    assertThat(
-      verificationRecord,
-      new RequestError({ code: 'session.verification_session_not_found', status: 404 })
-    );
-
     // Assert the verification record type matches the identifier type
     switch (type) {
       case SignInIdentifier.Email: {

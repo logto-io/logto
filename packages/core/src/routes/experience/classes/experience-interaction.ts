@@ -199,13 +199,8 @@ export default class ExperienceInteraction {
     const verificationRecord = this.getVerificationRecordById(verificationId);
 
     log?.append({
-      verification: verificationRecord?.toJson(),
+      verification: verificationRecord.toJson(),
     });
-
-    assertThat(
-      verificationRecord,
-      new RequestError({ code: 'session.verification_session_not_found', status: 404 })
-    );
 
     await this.signInExperienceValidator.guardIdentificationMethod(
       this.interactionEvent,
@@ -266,11 +261,6 @@ export default class ExperienceInteraction {
 
     if (verificationId) {
       const verificationRecord = this.getVerificationRecordById(verificationId);
-
-      assertThat(
-        verificationRecord,
-        new RequestError({ code: 'session.verification_session_not_found', status: 404 })
-      );
 
       log?.append({
         verification: verificationRecord.toJson(),
@@ -538,8 +528,20 @@ export default class ExperienceInteraction {
     return this.userCache;
   }
 
+  /**
+   * @throws {RequestError} with 404 if the verification record is not found
+   */
   private getVerificationRecordById(verificationId: string) {
-    return this.verificationRecordsArray.find((record) => record.id === verificationId);
+    const verificationRecord = this.verificationRecordsArray.find(
+      (record) => record.id === verificationId
+    );
+
+    assertThat(
+      verificationRecord,
+      new RequestError({ code: 'session.verification_session_not_found', status: 404 })
+    );
+
+    return verificationRecord;
   }
 
   private get hasVerifiedSsoIdentity() {

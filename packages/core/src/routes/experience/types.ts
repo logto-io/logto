@@ -86,7 +86,7 @@ export const interactionProfileGuard = Users.createGuard
 export type InteractionContext = {
   getInteractionEvent: () => InteractionEvent;
   getIdentifiedUser: () => Promise<User>;
-  getVerificationRecordById: (verificationId: string) => VerificationRecord | undefined;
+  getVerificationRecordById: (verificationId: string) => VerificationRecord;
   getVerificationRecordByTypeAndId: <K extends keyof VerificationRecordMap>(
     type: K,
     verificationId: string
