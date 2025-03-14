@@ -1,7 +1,7 @@
 import { condString, joinPath } from '@silverhand/essentials';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { consoleEmbedPricingLink } from '@/consts/env';
+import { consoleEmbedPricingUrl } from '@/consts/env';
 import Card from '@/ds-components/Card';
 import useTheme from '@/hooks/use-theme';
 import useUserPreferences from '@/hooks/use-user-preferences';
@@ -38,17 +38,20 @@ function ConsoleEmbedPricing() {
   } = useUserPreferences();
 
   const pricingContentUrl = useMemo(() => {
-    const url = new URL(
+    const baseUrl = new URL(condString(consoleEmbedPricingUrl));
+    const { origin, pathname } = baseUrl;
+
+    const localizedUrl = new URL(
       joinPath(
         // Ignore language tag if it's English
         condString(language !== 'en' && language),
-        condString(consoleEmbedPricingLink.path)
+        pathname
       ),
-      consoleEmbedPricingLink.domain
+      origin
     );
-    url.searchParams.set('theme', theme);
+    localizedUrl.searchParams.set('theme', theme);
 
-    return url;
+    return localizedUrl;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     /**
