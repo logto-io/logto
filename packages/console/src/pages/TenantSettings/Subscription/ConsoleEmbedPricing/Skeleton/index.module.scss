@@ -1,0 +1,30 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  width: 100%;
+  padding: _.unit(4);
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: _.unit(8);
+
+  .shimmer {
+    width: 25%;
+    height: _.unit(12);
+    border-radius: 8px;
+    @include _.shimmering-animation;
+  }
+}
+
+.contentRow {
+  margin-bottom: _.unit(4);
+
+  .shimmer {
+    width: 100%;
+    height: _.unit(12);
+    border-radius: 8px;
+    @include _.shimmering-animation;
+  }
+}

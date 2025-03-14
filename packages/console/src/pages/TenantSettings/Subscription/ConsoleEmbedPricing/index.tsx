@@ -6,6 +6,7 @@ import Card from '@/ds-components/Card';
 import useTheme from '@/hooks/use-theme';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
+import Skeleton from './Skeleton';
 import styles from './index.module.scss';
 
 const websiteSender = 'website_console_embed_pricing';
@@ -136,6 +137,7 @@ function ConsoleEmbedPricing() {
 
   return (
     <Card className={styles.container}>
+      {!iframeLoaded && <Skeleton />}
       <iframe
         ref={pricingContentRef}
         className={styles.iframe}
@@ -143,6 +145,7 @@ function ConsoleEmbedPricing() {
         sandbox={undefined}
         title="Console embed pricing table"
         height={height}
+        style={{ display: iframeLoaded ? 'block' : 'none' }}
       />
     </Card>
   );
