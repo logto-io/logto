@@ -17,6 +17,8 @@ const sign_in_experiences = {
   at_least_one_authentication_factor: 'You have to select at least one authentication factor.',
   backup_code_cannot_be_enabled_alone: 'Backup code cannot be enabled alone.',
   duplicated_mfa_factors: 'Duplicated MFA factors.',
+  duplicated_sign_up_identifiers: 'Duplicate sign-up identifiers detected.',
+  missing_sign_up_identifiers: 'Primary sign-up identifier cannot be empty.',
 };
 
 export default Object.freeze(sign_in_experiences);
