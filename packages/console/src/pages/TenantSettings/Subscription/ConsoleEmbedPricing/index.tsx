@@ -1,4 +1,4 @@
-import { condString } from '@silverhand/essentials';
+import { condString, joinPath } from '@silverhand/essentials';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { consoleEmbedPricingLink } from '@/consts/env';
@@ -39,8 +39,11 @@ function ConsoleEmbedPricing() {
 
   const pricingContentUrl = useMemo(() => {
     const url = new URL(
-      // Ignore language tag if it's English
-      `${condString(language !== 'en' && language)}${consoleEmbedPricingLink.path}`,
+      joinPath(
+        // Ignore language tag if it's English
+        condString(language !== 'en' && language),
+        condString(consoleEmbedPricingLink.path)
+      ),
       consoleEmbedPricingLink.domain
     );
     url.searchParams.set('theme', theme);
