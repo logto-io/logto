@@ -39,7 +39,7 @@ type RegionFlagProps = {
   readonly width?: number;
 };
 
-export function RegionFlag({ regionName, width }: RegionFlagProps) {
+export function RegionFlag({ regionName, width = 16 }: RegionFlagProps) {
   const Flag = regionFlagMap[regionName];
   return Flag ? <Flag width={width} /> : null;
 }
