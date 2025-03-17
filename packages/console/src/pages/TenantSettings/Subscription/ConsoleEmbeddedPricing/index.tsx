@@ -1,7 +1,7 @@
 import { condString, joinPath } from '@silverhand/essentials';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { consoleEmbedPricingUrl } from '@/consts/env';
+import { consoleEmbeddedPricingUrl } from '@/consts/env';
 import Card from '@/ds-components/Card';
 import useTheme from '@/hooks/use-theme';
 import useUserPreferences from '@/hooks/use-user-preferences';
@@ -27,7 +27,7 @@ type MessageData = {
   };
 };
 
-function ConsoleEmbedPricing() {
+function ConsoleEmbeddedPricing() {
   const [height, setHeight] = useState<number | undefined>(window.innerHeight);
   const pricingContentRef = useRef<HTMLIFrameElement>(null);
   const [iframeLoaded, setIframeLoaded] = useState(false);
@@ -38,7 +38,7 @@ function ConsoleEmbedPricing() {
   } = useUserPreferences();
 
   const pricingContentUrl = useMemo(() => {
-    const baseUrl = new URL(condString(consoleEmbedPricingUrl));
+    const baseUrl = new URL(condString(consoleEmbeddedPricingUrl));
     const { origin, pathname } = baseUrl;
 
     const localizedUrl = new URL(
@@ -157,4 +157,4 @@ function ConsoleEmbedPricing() {
   );
 }
 
-export default ConsoleEmbedPricing;
+export default ConsoleEmbeddedPricing;

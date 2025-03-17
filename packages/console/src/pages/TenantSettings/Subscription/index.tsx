@@ -12,7 +12,7 @@ import { pickupFeaturedLogtoSkus } from '@/utils/subscription';
 
 import Skeleton from '../components/Skeleton';
 
-import ConsoleEmbedPricing from './ConsoleEmbedPricing';
+import ConsoleEmbeddedPricing from './ConsoleEmbeddedPricing';
 import CurrentPlan from './CurrentPlan';
 import PlanComparisonTable from './PlanComparisonTable';
 import SwitchPlanActionBar from './SwitchPlanActionBar';
@@ -72,7 +72,7 @@ function Subscription() {
     <div className={styles.container}>
       <PageMeta titleKey={['tenants.tabs.subscription', 'tenants.title']} />
       <CurrentPlan periodicUsage={periodicUsage} usageAddOnSkus={usageAddOnSkus} />
-      {isDevFeaturesEnabled ? <ConsoleEmbedPricing /> : <PlanComparisonTable />}
+      {isDevFeaturesEnabled ? <ConsoleEmbeddedPricing /> : <PlanComparisonTable />}
       <SwitchPlanActionBar
         currentSkuId={currentSku.id}
         logtoSkus={reservedSkus}
