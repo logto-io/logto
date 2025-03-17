@@ -28,6 +28,18 @@ const security = {
         "Cloudflare's smart CAPTCHA alternative that provides non-intrusive bot protection while ensuring a seamless user experience without visual puzzles.",
     },
   },
+  captcha_details: {
+    back_to_security: 'Back to security',
+    page_title: 'CAPTCHA details',
+    check_readme: 'Check README',
+    connection: 'Connection',
+    description: 'Configure your captcha connections.',
+    site_key: 'Site key',
+    secret_key: 'Secret key',
+    deletion_description: 'Are you sure you want to delete this CAPTCHA provider?',
+    captcha_deleted: 'CAPTCHA provider deleted successfully',
+    setup_captcha: 'Setup CAPTCHA',
+  },
 };
 
 export default Object.freeze(security);

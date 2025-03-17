@@ -7,4 +7,5 @@ export type CaptchaProviderMetadata = {
   logo: SvgComponent;
   logoDark: SvgComponent;
   description: AdminConsoleKey;
+  readme: string;
 };
