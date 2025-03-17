@@ -56,7 +56,7 @@ function Region({ isComingSoon = false, regionName, className }: Props) {
   return (
     <span className={classNames(styles.wrapper, className)}>
       <RegionFlag regionName={regionName} />
-      <span>{regionDisplayNameMap[regionName]}</span>
+      <span>{getRegionDisplayName(regionName)}</span>
       {isComingSoon && <span className={styles.comingSoon}>{`(${t('general.coming_soon')})`}</span>}
     </span>
   );
