@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import Region, { regionDisplayNameMap } from '@/components/Region';
+import Region, { getRegionDisplayName } from '@/components/Region';
 import { trustAndSecurityLink } from '@/consts';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import TextLink from '@/ds-components/TextLink';
@@ -26,7 +26,7 @@ function TenantRegion() {
             a: <TextLink targetBlank="noopener" href={trustAndSecurityLink} />,
           }}
         >
-          {t('tenants.settings.tenant_region_tip', { region: regionDisplayNameMap[regionName] })}
+          {t('tenants.settings.tenant_region_tip', { region: getRegionDisplayName(regionName) })}
         </Trans>
       </div>
     </div>
