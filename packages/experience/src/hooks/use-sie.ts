@@ -25,6 +25,7 @@ type UseSieMethodsReturnType = {
    * @see {useRequiredProfileErrorHandler} for more information.
    */
   signUpMethods: SignInIdentifier[];
+  passwordRequiredForSignUp: boolean;
   signInMethods: SignInExperienceResponse['signIn']['methods'];
   socialSignInSettings: SignInExperienceResponse['socialSignIn'];
   socialConnectors: SignInExperienceResponse['socialConnectors'];
@@ -102,6 +103,11 @@ export const useSieMethods = (): UseSieMethodsReturnType => {
     [experienceSettings?.signInMode, signInMethods]
   );
 
+  const passwordRequiredForSignUp = useMemo(() => {
+    const { signUp } = experienceSettings ?? {};
+    return signUp?.password ?? false;
+  }, [experienceSettings]);
+
   return useMemo(
     () => ({
       signUpMethods,
@@ -113,13 +119,21 @@ export const useSieMethods = (): UseSieMethodsReturnType => {
       forgotPassword: experienceSettings?.forgotPassword,
       customContent: experienceSettings?.customContent,
       singleSignOnEnabled: experienceSettings?.singleSignOnEnabled,
+      passwordRequiredForSignUp,
       isVerificationCodeEnabledForSignUp,
       isVerificationCodeEnabledForSignIn,
     }),
     [
       signUpMethods,
       signInMethods,
-      experienceSettings,
+      experienceSettings?.socialSignIn,
+      experienceSettings?.socialConnectors,
+      experienceSettings?.ssoConnectors,
+      experienceSettings?.signInMode,
+      experienceSettings?.forgotPassword,
+      experienceSettings?.customContent,
+      experienceSettings?.singleSignOnEnabled,
+      passwordRequiredForSignUp,
       isVerificationCodeEnabledForSignUp,
       isVerificationCodeEnabledForSignIn,
     ]
