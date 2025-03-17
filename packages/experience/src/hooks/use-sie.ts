@@ -1,25 +1,111 @@
 import { PasswordPolicyChecker, passwordPolicyGuard } from '@logto/core-kit';
-import { SignInIdentifier } from '@logto/schemas';
+import {
+  AlternativeSignUpIdentifier,
+  SignInIdentifier,
+  SignInMode,
+  type VerificationCodeSignInIdentifier,
+} from '@logto/schemas';
 import { condArray } from '@silverhand/essentials';
-import { useContext, useMemo } from 'react';
+import { useContext, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
-import { type VerificationCodeIdentifier } from '@/types';
+import { isDevFeaturesEnabled } from '@/constants/env';
+// eslint-disable-next-line unused-imports/no-unused-imports -- type only import
+import type useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
+import { type SignInExperienceResponse, type VerificationCodeIdentifier } from '@/types';
 
-export const useSieMethods = () => {
+type UseSieMethodsReturnType = {
+  /**
+   * Primary sign-up identifiers, used to render the first screen form of the registration flow.
+   *
+   * @remarks
+   * Currently secondary identifiers are not used when rendering the first screen form.
+   * Additional identifiers must be applied in the following user profile fulfillment step.
+   * @see {useRequiredProfileErrorHandler} for more information.
+   */
+  signUpMethods: SignInIdentifier[];
+  signInMethods: SignInExperienceResponse['signIn']['methods'];
+  socialSignInSettings: SignInExperienceResponse['socialSignIn'];
+  socialConnectors: SignInExperienceResponse['socialConnectors'];
+  ssoConnectors: SignInExperienceResponse['ssoConnectors'];
+  signInMode: SignInExperienceResponse['signInMode'] | undefined;
+  forgotPassword: SignInExperienceResponse['forgotPassword'] | undefined;
+  customContent: SignInExperienceResponse['customContent'] | undefined;
+  singleSignOnEnabled: boolean | undefined;
+  /**
+   * Check if the given verification code identifier is enabled for sign-up.
+   * Used in the verification code sign-in flow, if the verified email/phone number has not been registered,
+   * and the identifier type is enabled for sign-up, allow the user to sign-up with the identifier directly.
+   */
+  isVerificationCodeEnabledForSignUp: (type: VerificationCodeSignInIdentifier) => boolean;
+  /**
+   * Check if the given verification code identifier is enabled for sign-in.
+   * Used in the verification code sign-up flow, if the verified email/phone number has been registered,
+   * and the identifier type is enabled for sign-in, allow the user to sign-in with the identifier directly.
+   */
+  isVerificationCodeEnabledForSignIn: (type: VerificationCodeSignInIdentifier) => boolean;
+};
+
+export const useSieMethods = (): UseSieMethodsReturnType => {
   const { experienceSettings } = useContext(PageContext);
-  const { password, verify } = experienceSettings?.signUp ?? {};
+
+  const signUpMethods = useMemo(
+    () => experienceSettings?.signUp.identifiers ?? [],
+    [experienceSettings]
+  );
+
+  const secondaryIdentifiers = useMemo(() => {
+    return (
+      experienceSettings?.signUp.secondaryIdentifiers?.map(({ identifier }) => identifier) ?? []
+    );
+  }, [experienceSettings]);
+
+  const isVerificationCodeEnabledForSignUp = useCallback(
+    (type: VerificationCodeSignInIdentifier) => {
+      if (experienceSettings?.signInMode === SignInMode.SignIn) {
+        return false;
+      }
+
+      // TODO: Remove this check when the feature is enabled for all environments
+      if (isDevFeaturesEnabled) {
+        // Return true if the identifier is enabled for sign-up either as a primary or secondary identifier
+        return (
+          signUpMethods.includes(type) ||
+          secondaryIdentifiers.includes(type) ||
+          secondaryIdentifiers.includes(AlternativeSignUpIdentifier.EmailOrPhone)
+        );
+      }
+
+      return signUpMethods.includes(type);
+    },
+    [secondaryIdentifiers, signUpMethods, experienceSettings]
+  );
+
+  const signInMethods = useMemo(
+    () =>
+      experienceSettings?.signIn.methods.filter(
+        // Filter out empty settings
+        ({ password, verificationCode }) => password || verificationCode
+      ) ?? [],
+    [experienceSettings]
+  );
+
+  const isVerificationCodeEnabledForSignIn = useCallback(
+    (type: VerificationCodeSignInIdentifier) => {
+      if (experienceSettings?.signInMode === SignInMode.Register) {
+        return false;
+      }
+
+      return Boolean(signInMethods.find(({ identifier }) => identifier === type)?.verificationCode);
+    },
+    [experienceSettings?.signInMode, signInMethods]
+  );
 
   return useMemo(
     () => ({
-      signUpMethods: experienceSettings?.signUp.identifiers ?? [],
-      signUpSettings: { password, verify },
-      signInMethods:
-        experienceSettings?.signIn.methods.filter(
-          // Filter out empty settings
-          ({ password, verificationCode }) => password || verificationCode
-        ) ?? [],
+      signUpMethods,
+      signInMethods,
       socialSignInSettings: experienceSettings?.socialSignIn ?? {},
       socialConnectors: experienceSettings?.socialConnectors ?? [],
       ssoConnectors: experienceSettings?.ssoConnectors ?? [],
@@ -27,8 +113,16 @@ export const useSieMethods = () => {
       forgotPassword: experienceSettings?.forgotPassword,
       customContent: experienceSettings?.customContent,
       singleSignOnEnabled: experienceSettings?.singleSignOnEnabled,
+      isVerificationCodeEnabledForSignUp,
+      isVerificationCodeEnabledForSignIn,
     }),
-    [experienceSettings, password, verify]
+    [
+      signUpMethods,
+      signInMethods,
+      experienceSettings,
+      isVerificationCodeEnabledForSignUp,
+      isVerificationCodeEnabledForSignIn,
+    ]
   );
 };
 
