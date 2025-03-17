@@ -20,8 +20,14 @@ RUN pnpm i
 ARG dev_features_enabled
 ENV DEV_FEATURES_ENABLED=${dev_features_enabled}
 
+### Set console embed pricing URL
+### It is used to render pricing content on the cloud subscription page
+ARG console_embed_pricing_url
+ENV CONSOLE_EMBED_PRICING_URL=${console_embed_pricing_url}
+
 ARG applicationinsights_connection_string
 ENV APPLICATIONINSIGHTS_CONNECTION_STRING=${applicationinsights_connection_string}
+
 RUN pnpm -r build
 
 ### Add official connectors ###
