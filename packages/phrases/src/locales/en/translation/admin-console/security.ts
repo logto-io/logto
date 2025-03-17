@@ -36,6 +36,7 @@ const security = {
     back_to_security: 'Back to security',
     page_title: 'CAPTCHA details',
     check_readme: 'Check README',
+    options_change_captcha: 'Change CAPTCHA provider',
     connection: 'Connection',
     description: 'Configure your captcha connections.',
     site_key: 'Site key',

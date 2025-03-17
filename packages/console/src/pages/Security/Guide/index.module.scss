@@ -1,0 +1,118 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-base);
+  height: 100vh;
+  overflow-x: auto;
+
+  .header {
+    display: flex;
+    align-items: center;
+    background: none;
+    height: 64px;
+    padding: 0 _.unit(21) 0 _.unit(2);
+
+    button {
+      margin-inline-start: _.unit(4);
+    }
+
+    .separator {
+      @include _.vertical-bar;
+      height: 20px;
+      margin-block: 0;
+      margin-inline: _.unit(4) _.unit(5);
+    }
+
+    .closeIcon {
+      color: var(--color-text-secondary);
+    }
+  }
+
+  .content {
+    flex: 1;
+    display: flex;
+    overflow: auto;
+    justify-content: center;
+    min-width: min-content;
+    padding: _.unit(2) _.unit(6) _.unit(6);
+
+    > * {
+      flex: 1;
+      max-width: 800px;
+      min-width: 400px;
+    }
+
+    .readme {
+      display: flex;
+      flex-direction: column;
+      background-color: var(--color-layer-1);
+      border: 1.5px solid var(--color-focused-variant);
+      border-radius: 16px;
+      margin: 0 _.unit(6) 0 0;
+      overflow-y: auto;
+      position: sticky;
+      top: 0;
+
+      .readmeTitle {
+        font: var(--font-title-2);
+        padding: _.unit(5) _.unit(6) _.unit(4);
+        border-bottom: 1px solid var(--color-focused-variant);
+      }
+
+      .readmeContent {
+        flex: 1;
+        padding: 0 _.unit(6) _.unit(4);
+
+        h2 {
+          color: var(--color-text);
+        }
+
+        h3 {
+          color: var(--color-text-secondary);
+        }
+      }
+    }
+
+    .setup {
+      padding-bottom: _.unit(6);
+
+      .block {
+        background-color: var(--color-layer-1);
+        border-radius: 16px;
+        padding: 0 _.unit(6) _.unit(6);
+        margin-bottom: _.unit(4);
+
+        .blockTitle {
+          font: var(--font-title-2);
+          padding: _.unit(5) 0 _.unit(6);
+          display: flex;
+          align-items: center;
+          gap: _.unit(4);
+
+          .number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: var(--color-focused-variant);
+            color: var(--color-primary);
+            font: var(--font-title-2);
+            text-align: center;
+            line-height: 28px;
+          }
+        }
+      }
+
+      .footer {
+        padding-bottom: _.unit(10);
+        display: flex;
+        justify-content: right;
+      }
+    }
+
+    form + div {
+      margin-top: _.unit(6);
+    }
+  }
+}

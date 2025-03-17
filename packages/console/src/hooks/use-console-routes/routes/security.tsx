@@ -8,6 +8,7 @@ export const security: RouteObject = {
   path: 'security',
   children: [
     { index: true, element: <Security /> },
+    { path: 'guide/:guideId', element: <Security /> },
     {
       path: 'captcha',
       element: <CaptchaDetails />,

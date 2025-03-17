@@ -4,6 +4,7 @@ import Modal from 'react-modal';
 
 import Button from '@/ds-components/Button';
 import ModalLayout from '@/ds-components/ModalLayout';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import modalStyles from '@/scss/modal.module.scss';
 
 import ProviderRadioGroup from './ProviderRadioGroup';
@@ -15,6 +16,7 @@ type Props = {
 
 function CreateCaptchaForm({ onClose, isOpen: isFormOpen }: Props) {
   const [provider, setProvider] = useState<CaptchaType>();
+  const { navigate } = useTenantPathname();
 
   const handleClose = () => {
     onClose?.();
@@ -37,7 +39,7 @@ function CreateCaptchaForm({ onClose, isOpen: isFormOpen }: Props) {
             type="primary"
             disabled={!provider}
             onClick={() => {
-              // TODO: Implement captcha
+              navigate(`/security/guide/${provider}`);
             }}
           />
         }
