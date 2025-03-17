@@ -27,7 +27,12 @@ const buildConfig = (mode: string): UserConfig => ({
     viteCompression({ disable: mode === 'development', algorithm: 'brotliCompress' }),
   ],
   define: {
-    'import.meta.env.DEV_FEATURES_ENABLED': JSON.stringify(process.env.DEV_FEATURES_ENABLED),
+    // Experience package does not support ESM unit test yet, can not use import.meta.env
+    // so we need to define the environment variables here.
+    'process.env': {
+      NODE_ENV: process.env.NODE_ENV,
+      DEV_FEATURES_ENABLED: process.env.DEV_FEATURES_ENABLED,
+    },
   },
   build: {
     // Use the same browserslist configuration as in README.md.
