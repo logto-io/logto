@@ -1,0 +1,7 @@
+@use '@/scss/underscore' as _;
+
+.group {
+  gap: _.unit(4);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
