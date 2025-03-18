@@ -11,11 +11,11 @@ export const turnstileConfigGuard = z.object({
   secretKey: z.string(),
 });
 
-// TODO @wangsijie verify the config schema when implementing RecaptchaEnterprise
 export const recaptchaEnterpriseConfigGuard = z.object({
   type: z.literal(CaptchaType.RecaptchaEnterprise),
   siteKey: z.string(),
   secretKey: z.string(),
+  projectId: z.string(),
 });
 
 export const captchaConfigGuard = z.discriminatedUnion('type', [

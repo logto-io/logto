@@ -34,6 +34,7 @@ describe('captcha provider', () => {
         type: CaptchaType.RecaptchaEnterprise,
         siteKey: 'site_key',
         secretKey: 'secret_key',
+        projectId: 'project_id',
       },
     });
 
@@ -44,6 +45,7 @@ describe('captcha provider', () => {
         type: CaptchaType.RecaptchaEnterprise,
         siteKey: 'site_key',
         secretKey: 'secret_key',
+        projectId: 'project_id',
       },
     });
   });

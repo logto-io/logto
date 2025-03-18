@@ -41,6 +41,7 @@ const security = {
     description: 'Configure your captcha connections.',
     site_key: 'Site key',
     secret_key: 'Secret key',
+    project_id: 'Project ID',
     deletion_description: 'Are you sure you want to delete this CAPTCHA provider?',
     captcha_deleted: 'CAPTCHA provider deleted successfully',
     setup_captcha: 'Setup CAPTCHA',

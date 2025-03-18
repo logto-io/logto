@@ -8,4 +8,5 @@ export type CaptchaProviderMetadata = {
   logoDark: SvgComponent;
   description: AdminConsoleKey;
   readme: string;
+  requiredFields: Array<'siteKey' | 'secretKey' | 'projectId'>;
 };
