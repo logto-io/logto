@@ -228,7 +228,7 @@ describe('validate sign-up', () => {
       {
         identifier: AlternativeSignUpIdentifier.EmailOrPhone,
       },
-    ])('should not throw when identifier is %p and verify is not true', async (identifier) => {
+    ])('should throw when identifier is %p and verify is not true', async (identifier) => {
       expect(() => {
         validateSignUp(
           {
