@@ -21,6 +21,12 @@ const error = {
   timeout: "Délai d'attente de la requête dépassé. Veuillez réessayer plus tard.",
   password_rejected,
   sso_not_enabled: "La authentification unique n'est pas activée pour ce compte de messagerie.",
+  /** UNTRANSLATED */
+  invalid_link: 'Invalid link',
+  /** UNTRANSLATED */
+  invalid_link_description: 'Your magic link may have expired or is no longer valid.',
+  /** UNTRANSLATED */
+  something_went_wrong: 'Something went wrong.',
 };
 
 export default Object.freeze(error);

@@ -19,6 +19,12 @@ const error = {
   timeout: 'Timeout della richiesta. Si prega di riprovare più tardi.',
   password_rejected,
   sso_not_enabled: 'Single sign-on non abilitato per questo account email.',
+  /** UNTRANSLATED */
+  invalid_link: 'Invalid link',
+  /** UNTRANSLATED */
+  invalid_link_description: 'Your magic link may have expired or is no longer valid.',
+  /** UNTRANSLATED */
+  something_went_wrong: 'Something went wrong.',
 };
 
 export default Object.freeze(error);
