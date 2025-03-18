@@ -10,7 +10,7 @@ import { type Subscription } from '#src/utils/subscription/types.js';
 
 import { type CloudConnectionLibrary } from './cloud-connection.js';
 
-const maxSubscriptionCacheTtl = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+const maxSubscriptionCacheTtl = 24 * 60 * 60; // 24 hours in seconds
 
 /**
  * Return the expiration time of the subscription cache in seconds.
@@ -23,7 +23,7 @@ const getSubscriptionCacheExpiration = (currentPeriodEnd: string) => {
   return Math.min(Math.max(expiration, 0), maxSubscriptionCacheTtl);
 };
 
-const tokenUsageCacheTtl = 60 * 60 * 1000; // 1 hour
+const tokenUsageCacheTtl = 60 * 60 * 1000; // 1 hour in milliseconds
 /**
  *
  * @param to The end date of the token usage period.
