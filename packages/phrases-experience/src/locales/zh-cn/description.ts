@@ -10,6 +10,8 @@ const description = {
   sign_in: '登录',
   privacy_policy: '隐私政策',
   create_account: '创建帐号',
+  /** UNTRANSLATED */
+  switch_account: 'Switch account',
   or: '或',
   and: '和',
   enter_passcode: '验证码已经发送至你的{{ address }} {{target}}',
@@ -90,6 +92,11 @@ const description = {
   back_to_sign_in: '返回登录',
   support_email: '支持邮箱：<link></link>',
   support_website: '支持网站：<link></link>',
+  /** UNTRANSLATED */
+  account_mismatch_title: 'You are currently signed in as {{account}}',
+  /** UNTRANSLATED */
+  account_mismatch_description:
+    'Please switch to the account that associated with this magic link, and try again.',
 };
 
 export default Object.freeze(description);
