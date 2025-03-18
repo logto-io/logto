@@ -3,6 +3,7 @@ import { conditional } from '@silverhand/essentials';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { DragDropProvider, DraggableItem } from '@/ds-components/DragDrop';
 import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 
@@ -102,15 +103,16 @@ function SignInMethodEditBox() {
                 render={({ field: { value }, fieldState: { error } }) => (
                   <SignInMethodItem
                     signInMethod={value}
-                    isPasswordCheckable={identifier !== SignInIdentifier.Username}
-                    isVerificationCodeCheckable={
-                      /**
-                       * Verification code settings are only editable when password is mandatory for sign-up.
-                       * Note: Email and phone number identifiers always require verification during sign-up at the moment.
-                       */
-                      !isSignUpVerificationRequired || isSignUpPasswordRequired
+                    isPasswordCheckable={
+                      identifier !== SignInIdentifier.Username &&
+                      (isDevFeaturesEnabled || !isSignUpPasswordRequired)
                     }
-                    isDeletable={!requiredSignInIdentifiers.includes(identifier)}
+                    isVerificationCodeCheckable={
+                      !(isSignUpVerificationRequired && !isSignUpPasswordRequired)
+                    }
+                    isDeletable={
+                      isDevFeaturesEnabled || !requiredSignInIdentifiers.includes(identifier)
+                    }
                     requiredConnectors={requiredConnectors}
                     hasError={Boolean(error)}
                     errorMessage={error?.message}
