@@ -5,7 +5,7 @@ import useSWR from 'swr';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantUsageAddOnSkus, type NewSubscriptionPeriodicUsage } from '@/cloud/types/router';
 import PageMeta from '@/components/PageMeta';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { pickupFeaturedLogtoSkus } from '@/utils/subscription';
@@ -14,7 +14,6 @@ import Skeleton from '../components/Skeleton';
 
 import ConsoleEmbeddedPricing from './ConsoleEmbeddedPricing';
 import CurrentPlan from './CurrentPlan';
-import PlanComparisonTable from './PlanComparisonTable';
 import SwitchPlanActionBar from './SwitchPlanActionBar';
 import styles from './index.module.scss';
 
@@ -72,7 +71,7 @@ function Subscription() {
     <div className={styles.container}>
       <PageMeta titleKey={['tenants.tabs.subscription', 'tenants.title']} />
       <CurrentPlan periodicUsage={periodicUsage} usageAddOnSkus={usageAddOnSkus} />
-      {isDevFeaturesEnabled ? <ConsoleEmbeddedPricing /> : <PlanComparisonTable />}
+      <ConsoleEmbeddedPricing />
       <SwitchPlanActionBar
         currentSkuId={currentSku.id}
         logtoSkus={reservedSkus}
