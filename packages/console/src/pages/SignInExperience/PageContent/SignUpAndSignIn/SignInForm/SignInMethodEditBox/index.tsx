@@ -102,11 +102,13 @@ function SignInMethodEditBox() {
                 render={({ field: { value }, fieldState: { error } }) => (
                   <SignInMethodItem
                     signInMethod={value}
-                    isPasswordCheckable={
-                      identifier !== SignInIdentifier.Username && !isSignUpPasswordRequired
-                    }
+                    isPasswordCheckable={identifier !== SignInIdentifier.Username}
                     isVerificationCodeCheckable={
-                      !(isSignUpVerificationRequired && !isSignUpPasswordRequired)
+                      /**
+                       * Verification code settings are only editable when password is mandatory for sign-up.
+                       * Note: Email and phone number identifiers always require verification during sign-up at the moment.
+                       */
+                      !isSignUpVerificationRequired || isSignUpPasswordRequired
                     }
                     isDeletable={!requiredSignInIdentifiers.includes(identifier)}
                     requiredConnectors={requiredConnectors}

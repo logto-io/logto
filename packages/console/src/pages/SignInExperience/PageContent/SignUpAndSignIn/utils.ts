@@ -1,42 +1,9 @@
 import { type ConnectorType, SignInIdentifier } from '@logto/schemas';
 
-import type { SignUpForm } from '../../types';
-import { SignUpIdentifier } from '../../types';
+import { type SignUpIdentifier } from '../../types';
 import { signUpIdentifiersMapping } from '../constants';
 
 import { identifierRequiredConnectorMapping } from './constants';
-
-export const getSignInMethodPasswordCheckState = (
-  signInIdentifier: SignInIdentifier,
-  signUpConfig: SignUpForm,
-  currentCheckState: boolean
-) => {
-  if (signInIdentifier === SignInIdentifier.Username) {
-    return currentCheckState;
-  }
-
-  const { password: isSignUpPasswordRequired } = signUpConfig;
-
-  return isSignUpPasswordRequired || currentCheckState;
-};
-
-export const getSignInMethodVerificationCodeCheckState = (
-  signInIdentifier: SignInIdentifier,
-  signUpConfig: SignUpForm,
-  currentCheckState: boolean
-) => {
-  if (signInIdentifier === SignInIdentifier.Username) {
-    return currentCheckState;
-  }
-
-  const { identifier: signUpIdentifier, password: isSignUpPasswordRequired } = signUpConfig;
-
-  if (SignUpIdentifier.None !== signUpIdentifier && !isSignUpPasswordRequired) {
-    return true;
-  }
-
-  return currentCheckState;
-};
 
 export const createSignInMethod = (identifier: SignInIdentifier) => ({
   identifier,
@@ -45,6 +12,13 @@ export const createSignInMethod = (identifier: SignInIdentifier) => ({
   isPasswordPrimary: true,
 });
 
+/**
+ * Check if the verification is required for the given sign-up identifier.
+ *
+ * - Email
+ * - Phone
+ * - EmailOrSms
+ */
 export const isVerificationRequiredSignUpIdentifiers = (signUpIdentifier: SignUpIdentifier) => {
   const identifiers = signUpIdentifiersMapping[signUpIdentifier];
 
