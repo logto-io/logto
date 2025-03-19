@@ -5,7 +5,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { type SubscriptionLibrary } from '#src/libraries/subscription.js';
 import assertThat from '#src/utils/assert-that.js';
 import {
-  getRealtimeTenantSubscriptionData,
+  getTenantUsageData,
   reportSubscriptionUpdates,
   isReportSubscriptionUpdatesUsageKey,
 } from '#src/utils/subscription/index.js';
@@ -53,7 +53,7 @@ export const createQuotaLibrary = (
       return;
     }
 
-    const { usage: fullUsage } = await getRealtimeTenantSubscriptionData(cloudConnection);
+    const { usage: fullUsage } = await getTenantUsageData(cloudConnection);
 
     // Type `SubscriptionQuota` and type `SubscriptionUsage` are sharing keys, this design helps us to compare the usage with the quota limit in a easier way.
     const { [key]: limit } = fullQuota;
@@ -120,7 +120,7 @@ export const createQuotaLibrary = (
       quota: { scopesPerResourceLimit, scopesPerRoleLimit },
       resources,
       roles,
-    } = await getRealtimeTenantSubscriptionData(cloudConnection);
+    } = await getTenantUsageData(cloudConnection);
     const usage = (entityName === 'resources' ? resources[entityId] : roles[entityId]) ?? 0;
 
     if (entityName === 'resources') {

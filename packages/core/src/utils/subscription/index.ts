@@ -31,7 +31,7 @@ export const getTenantSubscription = async (
  * Get real-time subscription data from Logto Cloud service, including quota, usage, resources, and roles.
  * Since the core service computing resources may locate in another region other than the Cloud service, the response could take few seconds.
  */
-export const getRealtimeTenantSubscriptionData = async (
+export const getTenantUsageData = async (
   cloudConnection: CloudConnectionLibrary
 ): Promise<{
   quota: SubscriptionQuota;
