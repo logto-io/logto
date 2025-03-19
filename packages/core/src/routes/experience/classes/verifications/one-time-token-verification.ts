@@ -83,8 +83,13 @@ export class OneTimeTokenVerification
    * Verifies if the one-time token matches the record in database with the provided email.
    */
   async verify(token: string) {
-    await this.libraries.oneTimeTokens.verifyOneTimeToken(token, this.identifier.value);
+    const oneTimeToken = await this.libraries.oneTimeTokens.verifyOneTimeToken(
+      token,
+      this.identifier.value
+    );
     this.verified = true;
+
+    return oneTimeToken;
   }
 
   async identifyUser(): Promise<User> {

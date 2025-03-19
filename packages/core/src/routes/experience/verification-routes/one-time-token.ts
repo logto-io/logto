@@ -1,4 +1,5 @@
 import {
+  OneTimeTokens,
   oneTimeTokenVerificationVerifyPayloadGuard,
   SentinelActivityAction,
   VerificationType,
@@ -27,6 +28,7 @@ export default function oneTimeTokenVerificationRoutes<
       body: oneTimeTokenVerificationVerifyPayloadGuard,
       response: z.object({
         verificationId: z.string(),
+        token: OneTimeTokens.guard,
       }),
       status: [200, 400, 404],
     }),
@@ -48,7 +50,7 @@ export default function oneTimeTokenVerificationRoutes<
 
       ctx.experienceInteraction.setVerificationRecord(oneTimeTokenVerificationRecord);
 
-      await withSentinel(
+      const tokenRecord = await withSentinel(
         {
           sentinel,
           action: SentinelActivityAction.OneTimeToken,
@@ -65,6 +67,7 @@ export default function oneTimeTokenVerificationRoutes<
 
       ctx.body = {
         verificationId: oneTimeTokenVerificationRecord.id,
+        token: tokenRecord,
       };
 
       return next();
