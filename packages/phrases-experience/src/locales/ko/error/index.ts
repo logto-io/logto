@@ -19,6 +19,12 @@ const error = {
   timeout: '요청 시간이 초과되었어요. 잠시 후에 다시 시도해 주세요.',
   password_rejected,
   sso_not_enabled: '이 이메일 계정에 대해 단일 로그인이 활성화되지 않았어요.',
+  /** UNTRANSLATED */
+  invalid_link: 'Invalid link',
+  /** UNTRANSLATED */
+  invalid_link_description: 'Your magic link may have expired or is no longer valid.',
+  /** UNTRANSLATED */
+  something_went_wrong: 'Something went wrong.',
 };
 
 export default Object.freeze(error);

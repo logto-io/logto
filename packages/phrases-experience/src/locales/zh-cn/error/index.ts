@@ -19,6 +19,12 @@ const error = {
   timeout: '请求超时，请稍后重试。',
   password_rejected,
   sso_not_enabled: '此邮箱账户未启用单点登录。',
+  /** UNTRANSLATED */
+  invalid_link: 'Invalid link',
+  /** UNTRANSLATED */
+  invalid_link_description: 'Your magic link may have expired or is no longer valid.',
+  /** UNTRANSLATED */
+  something_went_wrong: 'Something went wrong.',
 };
 
 export default Object.freeze(error);

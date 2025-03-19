@@ -20,6 +20,12 @@ const error = {
   timeout: 'Czas żądania upłynął. Proszę spróbuj ponownie później.',
   password_rejected,
   sso_not_enabled: 'Pojedyncze logowanie nie jest włączony dla tego konta e-mail.',
+  /** UNTRANSLATED */
+  invalid_link: 'Invalid link',
+  /** UNTRANSLATED */
+  invalid_link_description: 'Your magic link may have expired or is no longer valid.',
+  /** UNTRANSLATED */
+  something_went_wrong: 'Something went wrong.',
 };
 
 export default Object.freeze(error);

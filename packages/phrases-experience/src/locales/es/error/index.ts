@@ -21,6 +21,12 @@ const error = {
   password_rejected,
   sso_not_enabled:
     'El inicio de sesión único no está habilitado para esta cuenta de correo electrónico.',
+  /** UNTRANSLATED */
+  invalid_link: 'Invalid link',
+  /** UNTRANSLATED */
+  invalid_link_description: 'Your magic link may have expired or is no longer valid.',
+  /** UNTRANSLATED */
+  something_went_wrong: 'Something went wrong.',
 };
 
 export default Object.freeze(error);

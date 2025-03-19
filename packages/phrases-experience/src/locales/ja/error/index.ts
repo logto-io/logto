@@ -20,6 +20,12 @@ const error = {
   timeout: 'リクエストタイムアウト。後でもう一度お試しください。',
   password_rejected,
   sso_not_enabled: 'このメールアカウントではシングルサインオンが有効になっていません。',
+  /** UNTRANSLATED */
+  invalid_link: 'Invalid link',
+  /** UNTRANSLATED */
+  invalid_link_description: 'Your magic link may have expired or is no longer valid.',
+  /** UNTRANSLATED */
+  something_went_wrong: 'Something went wrong.',
 };
 
 export default Object.freeze(error);

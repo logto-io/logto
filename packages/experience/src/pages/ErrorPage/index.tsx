@@ -1,6 +1,6 @@
 import { Theme } from '@logto/schemas';
 import type { TFuncKey } from 'i18next';
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 
 import StaticPageLayout from '@/Layout/StaticPageLayout';
 import PageContext from '@/Providers/PageContextProvider/PageContext';
@@ -19,22 +19,40 @@ type Props = {
   readonly rawMessage?: string;
 };
 
+const determineErrorKeysBySearchParams = ():
+  | { titleKey: TFuncKey; messageKey: TFuncKey }
+  | undefined => {
+  const searchParams = new URLSearchParams(window.location.search);
+
+  if (searchParams.get('code')?.startsWith('one_time_token.')) {
+    return { titleKey: 'error.invalid_link', messageKey: 'error.invalid_link_description' };
+  }
+
+  return undefined;
+};
+
+/**
+ * Error page that accepts data from other pages or directly from the URL params.
+ */
 const ErrorPage = ({ title = 'description.not_found', message, rawMessage }: Props) => {
   const { theme } = useContext(PageContext);
-  const errorMessage = Boolean(rawMessage ?? message);
+  const { titleKey = title, messageKey = message } = determineErrorKeysBySearchParams() ?? {};
+
+  const errorMessage = useMemo(
+    () => rawMessage ?? <DynamicT forKey={messageKey} />,
+    [rawMessage, messageKey]
+  );
 
   return (
     <StaticPageLayout>
-      <PageMeta titleKey={title} />
+      <PageMeta titleKey={titleKey} />
       {history.length > 1 && <NavBar />}
       <div className={styles.container}>
         {theme === Theme.Light ? <EmptyState /> : <EmptyStateDark />}
         <div className={styles.title}>
-          <DynamicT forKey={title} />
+          <DynamicT forKey={titleKey} />
         </div>
-        {errorMessage && (
-          <div className={styles.message}>{rawMessage ?? <DynamicT forKey={message} />}</div>
-        )}
+        {errorMessage && <div className={styles.message}>{errorMessage}</div>}
         <SupportInfo />
       </div>
     </StaticPageLayout>
