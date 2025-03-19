@@ -28,6 +28,7 @@ export {
 
 export * from './mfa';
 export * from './social';
+export * from './one-time-token';
 
 export const registerWithVerifiedIdentifier = async (verificationId: string) => {
   await updateInteractionEvent(InteractionEvent.Register);

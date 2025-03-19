@@ -24,6 +24,7 @@ import MfaVerification from './pages/MfaVerification';
 import BackupCodeVerification from './pages/MfaVerification/BackupCodeVerification';
 import TotpVerification from './pages/MfaVerification/TotpVerification';
 import WebAuthnVerification from './pages/MfaVerification/WebAuthnVerification';
+import OneTimeToken from './pages/OneTimeToken';
 import Register from './pages/Register';
 import RegisterPassword from './pages/RegisterPassword';
 import ResetPassword from './pages/ResetPassword';
@@ -61,7 +62,7 @@ const App = () => {
                     element={<SocialSignInWebCallback />}
                   />
                   <Route path="direct/:method/:target?" element={<DirectSignIn />} />
-
+                  <Route path="token/:token" element={<OneTimeToken />} />
                   <Route element={<AppLayout />}>
                     <Route
                       path="unknown-session"
@@ -153,8 +154,7 @@ const App = () => {
                       path={experience.routes.resetPassword}
                       element={<ResetPasswordLanding />}
                     />
-
-                    <Route path="*" element={<ErrorPage />} />
+                    <Route path="*" element={<ErrorPage title="description.not_found" />} />
                   </Route>
                 </Route>
               </Routes>
