@@ -2,9 +2,10 @@ import { ReservedPlanId } from '@logto/schemas';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { type SubscriptionLibrary } from '#src/libraries/subscription.js';
 import assertThat from '#src/utils/assert-that.js';
 import {
-  getTenantSubscriptionData,
+  getTenantUsageData,
   reportSubscriptionUpdates,
   isReportSubscriptionUpdatesUsageKey,
 } from '#src/utils/subscription/index.js';
@@ -28,7 +29,10 @@ const shouldReportSubscriptionUpdates = (
 ) =>
   (paidReservedPlans.has(planId) || isEnterprisePlan) && isReportSubscriptionUpdatesUsageKey(key);
 
-export const createQuotaLibrary = (cloudConnection: CloudConnectionLibrary) => {
+export const createQuotaLibrary = (
+  cloudConnection: CloudConnectionLibrary,
+  subscription: SubscriptionLibrary
+) => {
   const guardTenantUsageByKey = async (key: keyof SubscriptionUsage) => {
     const { isCloud, isIntegrationTest } = EnvSet.values;
 
@@ -42,17 +46,14 @@ export const createQuotaLibrary = (cloudConnection: CloudConnectionLibrary) => {
       return;
     }
 
-    const {
-      planId,
-      quota: fullQuota,
-      usage: fullUsage,
-      isEnterprisePlan,
-    } = await getTenantSubscriptionData(cloudConnection);
+    const { planId, isEnterprisePlan, quota: fullQuota } = await subscription.getSubscriptionData();
 
     // Do not block Pro/Enterprise plan from adding add-on resources.
     if (shouldReportSubscriptionUpdates(planId, isEnterprisePlan, key)) {
       return;
     }
+
+    const { usage: fullUsage } = await getTenantUsageData(cloudConnection);
 
     // Type `SubscriptionQuota` and type `SubscriptionUsage` are sharing keys, this design helps us to compare the usage with the quota limit in a easier way.
     const { [key]: limit } = fullQuota;
@@ -119,7 +120,7 @@ export const createQuotaLibrary = (cloudConnection: CloudConnectionLibrary) => {
       quota: { scopesPerResourceLimit, scopesPerRoleLimit },
       resources,
       roles,
-    } = await getTenantSubscriptionData(cloudConnection);
+    } = await getTenantUsageData(cloudConnection);
     const usage = (entityName === 'resources' ? resources[entityId] : roles[entityId]) ?? 0;
 
     if (entityName === 'resources') {
@@ -165,7 +166,7 @@ export const createQuotaLibrary = (cloudConnection: CloudConnectionLibrary) => {
       return;
     }
 
-    const { planId, isEnterprisePlan } = await getTenantSubscriptionData(cloudConnection);
+    const { planId, isEnterprisePlan } = await subscription.getSubscriptionData();
 
     if (shouldReportSubscriptionUpdates(planId, isEnterprisePlan, key)) {
       await reportSubscriptionUpdates(cloudConnection, key);
