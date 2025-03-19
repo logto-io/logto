@@ -32,6 +32,7 @@ import BasicSentinel from '#src/sentinel/basic-sentinel.js';
 
 import { redisCache } from '../caches/index.js';
 import { SubscriptionLibrary } from '../libraries/subscription.js';
+import koaConsentGuard from '../middleware/koa-consent-guard.js';
 
 import Libraries from './Libraries.js';
 import Queries from './Queries.js';
@@ -201,7 +202,10 @@ export default class Tenant implements TenantContext {
       compose([
         koaExperienceSsr(libraries, queries),
         koaSpaSessionGuard(provider, queries),
-        mount(`/${experience.routes.consent}`, koaAutoConsent(provider, queries)),
+        mount(
+          `/${experience.routes.consent}`,
+          compose([koaConsentGuard(provider, queries), koaAutoConsent(provider, queries)])
+        ),
         koaSpaProxy({ mountedApps, queries }),
       ])
     );

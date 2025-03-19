@@ -1,7 +1,7 @@
-import { AgreeToTermsPolicy, SignInMode } from '@logto/schemas';
+import { AgreeToTermsPolicy, ExtraParamsKey, SignInMode } from '@logto/schemas';
 import { useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 
 import LandingPageLayout from '@/Layout/LandingPageLayout';
 import SingleSignOnFormModeContextProvider from '@/Providers/SingleSignOnFormModeContextProvider';
@@ -26,6 +26,7 @@ const RegisterFooter = () => {
     useSieMethods();
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const navigate = useNavigate();
+  const [params] = useSearchParams();
 
   const { showSingleSignOnForm } = useContext(SingleSignOnFormModeContext);
 
@@ -40,6 +41,12 @@ const RegisterFooter = () => {
 
     navigate('/single-sign-on/email');
   }, [agreeToTermsPolicy, navigate, termsValidation]);
+
+  if (params.get(ExtraParamsKey.OneTimeToken)) {
+    return (
+      <Navigate replace to={{ pathname: '/one-time-token', search: `?${params.toString()}` }} />
+    );
+  }
 
   /* Hide footers when showing Single Sign On form */
   if (showSingleSignOnForm) {
