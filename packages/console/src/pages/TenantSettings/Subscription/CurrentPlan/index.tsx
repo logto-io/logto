@@ -54,7 +54,10 @@ function CurrentPlan({ periodicUsage, usageAddOnSkus }: Props) {
         <PlanUsage periodicUsage={periodicUsage} usageAddOnSkus={usageAddOnSkus} />
       </FormField>
       <FormField title="subscription.next_bill">
-        <BillInfo cost={upcomingCost} isManagePaymentVisible={Boolean(upcomingCost)} />
+        <BillInfo
+          cost={upcomingCost}
+          isManagePaymentVisible={isPaidPlan(planId, isEnterprisePlan)}
+        />
       </FormField>
       {isPaidPlan(planId, isEnterprisePlan) && !isEnterprisePlan && (
         <AddOnUsageChangesNotification className={styles.notification} />
