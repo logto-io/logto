@@ -39,6 +39,10 @@ const mfa = {
     'Chiedi agli utenti di configurare MFA durante la registrazione (facoltativo, messaggio unico)',
   prompt_only_at_sign_in:
     'Chiedi agli utenti di configurare MFA al loro prossimo tentativo di accesso dopo la registrazione (facoltativo, messaggio unico)',
+  set_up_organization_required_mfa_prompt:
+    "Messaggio di configurazione MFA per gli utenti dopo che l'organizzazione abilita MFA",
+  prompt_at_sign_in_no_skip:
+    'Chiedi agli utenti di configurare MFA al prossimo accesso (senza possibilità di saltare)',
 };
 
 export default Object.freeze(mfa);

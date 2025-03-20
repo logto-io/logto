@@ -10,6 +10,7 @@ import jwt_customizer from './jwt-customizer.js';
 import localization from './localization.js';
 import log from './log.js';
 import oidc from './oidc.js';
+import one_time_token from './one-time-token.js';
 import organization from './organization.js';
 import password from './password.js';
 import request from './request.js';
@@ -54,6 +55,7 @@ const errors = {
   single_sign_on,
   verification_record,
   account_center,
+  one_time_token,
 };
 
 export default Object.freeze(errors);

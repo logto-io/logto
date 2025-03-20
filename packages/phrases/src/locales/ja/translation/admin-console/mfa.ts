@@ -38,6 +38,9 @@ const mfa = {
     '登録時にユーザーに MFA の設定を依頼します（スキップ可能、1 回限りのプロンプト）',
   prompt_only_at_sign_in:
     '登録後の次回サインイン時にユーザーに MFA の設定を依頼します（スキップ可能、1 回限りのプロンプト）',
+  set_up_organization_required_mfa_prompt:
+    '組織が MFA を有効にした後のユーザーの MFA 設定プロンプト',
+  prompt_at_sign_in_no_skip: '次回サインイン時にユーザーに MFA の設定を依頼します（スキップ不可）',
 };
 
 export default Object.freeze(mfa);

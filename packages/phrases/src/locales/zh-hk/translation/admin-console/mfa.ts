@@ -29,6 +29,8 @@ const mfa = {
   no_prompt: '不要求用戶設置 MFA',
   prompt_at_sign_in_and_sign_up: '在註冊期間要求用戶設置 MFA（可跳過的一次性提示）',
   prompt_only_at_sign_in: '在註冊後的下次登錄嘗試時要求用戶設置 MFA（可跳過的一次性提示）',
+  set_up_organization_required_mfa_prompt: '組織啟用 MFA 後要求用戶設置的 MFA 提示',
+  prompt_at_sign_in_no_skip: '在下次登錄時要求用戶設置 MFA（不可跳過）',
 };
 
 export default Object.freeze(mfa);

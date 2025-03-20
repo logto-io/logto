@@ -30,6 +30,7 @@ import profile from './profile.js';
 import protected_app from './protected-app.js';
 import role_details from './role-details.js';
 import roles from './roles.js';
+import security from './security.js';
 import session_expired from './session-expired.js';
 import sign_in_exp from './sign-in-exp/index.js';
 import signing_keys from './signing-keys.js';
@@ -63,6 +64,7 @@ const admin_console = {
   connector_details,
   enterprise_sso,
   enterprise_sso_details,
+  security,
   get_started,
   users,
   user_details,

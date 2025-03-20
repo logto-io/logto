@@ -6,6 +6,7 @@ const tabs = {
   sign_in_experience: '登录体验',
   connectors: '连接器',
   enterprise_sso: '企业SSO',
+  security: '安全',
   webhooks: 'Webhooks',
   organizations: '组织',
   users: '用户管理',

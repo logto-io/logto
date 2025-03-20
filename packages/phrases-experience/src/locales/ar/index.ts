@@ -1,3 +1,5 @@
+import { type DeepPartial } from '@silverhand/essentials';
+
 import type { LocalePhrase } from '../../types.js';
 
 import action from './action.js';
@@ -22,6 +24,6 @@ const ar = {
     development_tenant,
     user_scopes,
   },
-} satisfies LocalePhrase;
+} satisfies DeepPartial<LocalePhrase>;
 
 export default Object.freeze(ar);

@@ -6,6 +6,7 @@ const tabs = {
   sign_in_experience: '로그인 경험',
   connectors: '연동',
   enterprise_sso: '기업 SSO',
+  security: '보안',
   webhooks: '웹훅',
   organizations: '조직',
   users: '사용자 관리',

@@ -6,6 +6,7 @@ const tabs = {
   sign_in_experience: 'Esperienza di accesso',
   connectors: 'Connettori',
   enterprise_sso: 'SSO Enterprise',
+  security: 'Sicurezza',
   webhooks: 'Webhooks',
   organizations: 'Organizzazioni',
   users: 'Gestione utenti',

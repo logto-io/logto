@@ -6,6 +6,7 @@ const tabs = {
   sign_in_experience: 'サインイン',
   connectors: 'コネクタ',
   enterprise_sso: 'エンタープライズSSO',
+  security: 'セキュリティ',
   webhooks: 'Webhooks',
   organizations: '組織',
   users: 'ユーザー管理',

@@ -74,30 +74,19 @@ const description = {
   single_sign_on_connectors_list:
     "La tua azienda ha abilitato il Single Sign-On per l'account email {{email}}. Puoi continuare ad accedere con i seguenti fornitori di SSO.",
   single_sign_on_enabled: 'Il Single Sign-On è abilitato per questo account',
-  /** UNTRANSLATED */
-  authorize_title: 'Authorize {{name}}',
-  /** UNTRANSLATED */
-  request_permission: '{{name}} is requesting access to:',
-  /** UNTRANSLATED */
-  grant_organization_access: 'Grant the organization access:',
-  /** UNTRANSLATED */
-  authorize_personal_data_usage: 'Authorize the use of your personal data:',
-  /** UNTRANSLATED */
-  authorize_organization_access: 'Authorize access to the specific organization:',
-  /** UNTRANSLATED */
-  user_scopes: 'Personal user data',
-  /** UNTRANSLATED */
-  organization_scopes: 'Organization access',
-  /** UNTRANSLATED */
-  authorize_agreement: `By authorizing the access, you agree to the {{name}}'s <link></link>.`,
-  /** UNTRANSLATED */
-  authorize_agreement_with_redirect: `By authorizing the access, you agree to the {{name}}'s <link></link>, and will be redirected to {{uri}}.`,
-  /** UNTRANSLATED */
-  not_you: 'Not you?',
-  /** UNTRANSLATED */
-  user_id: 'User ID: {{id}}',
-  /** UNTRANSLATED */
-  redirect_to: 'You will be redirected to {{name}}.',
+  authorize_title: 'Autorizza {{name}}',
+  request_permission: '{{name}} sta richiedendo accesso a:',
+  grant_organization_access: "Concedi accesso all'organizzazione:",
+  authorize_personal_data_usage: "Autorizza l'utilizzo dei tuoi dati personali:",
+  authorize_organization_access: "Autorizza l'accesso all'organizzazione specifica:",
+  user_scopes: 'Dati utente personali',
+  organization_scopes: "Accesso all'organizzazione",
+  authorize_agreement: "Autorizzando l'accesso, accetti i <link></link> di {{name}}.",
+  authorize_agreement_with_redirect:
+    "Autorizzando l'accesso, accetti i <link></link> di {{name}}, e sarai reindirizzato a {{uri}}.",
+  not_you: 'Non sei tu?',
+  user_id: 'ID utente: {{id}}',
+  redirect_to: 'Sarai reindirizzato a {{name}}.',
   auto_agreement: 'Continuando, accetti i <link></link>.',
   identifier_sign_in_description:
     'Inserisci il tuo {{types, list(type: disjunction;)}} per accedere.',
