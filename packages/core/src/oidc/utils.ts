@@ -108,7 +108,6 @@ export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown):
       : experience.routes[firstScreenRouteMapping[firstScreenKey]];
 
   const directSignIn = params[ExtraParamsKey.DirectSignIn];
-  const token = params[ExtraParamsKey.Token];
   const searchParams = new URLSearchParams();
   const getSearchParamString = () => (searchParams.size > 0 ? `?${searchParams.toString()}` : '');
 
@@ -123,13 +122,9 @@ export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown):
   }
 
   appendExtraParam(ExtraParamsKey.OrganizationId);
+  appendExtraParam(ExtraParamsKey.OneTimeToken);
   appendExtraParam(ExtraParamsKey.LoginHint);
   appendExtraParam(ExtraParamsKey.Identifier);
-
-  if (token) {
-    searchParams.append('fallback', firstScreen);
-    return path.join('token', token) + getSearchParamString();
-  }
 
   if (directSignIn) {
     searchParams.append('fallback', firstScreen);

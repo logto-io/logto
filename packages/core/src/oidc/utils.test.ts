@@ -201,8 +201,8 @@ describe('buildLoginPromptUrl', () => {
   });
 
   it('should return the correct url containing token and login_hint ', () => {
-    expect(buildLoginPromptUrl({ token: 'token_value', login_hint: 'user@mail.com' })).toBe(
-      'token/token_value?login_hint=user%40mail.com&fallback=sign-in'
-    );
+    expect(
+      buildLoginPromptUrl({ one_time_token: 'token_value', login_hint: 'user@mail.com' })
+    ).toBe('sign-in?one_time_token=token_value&login_hint=user%40mail.com');
   });
 });
