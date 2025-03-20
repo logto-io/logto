@@ -9,17 +9,13 @@ import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import FormField from '@/ds-components/FormField';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
+import { type CaptchaFormType } from '@/pages/Security/types';
 import { trySubmitSafe } from '@/utils/form';
 
 type Props = {
   readonly isDeleted: boolean;
   readonly captchaProvider: CaptchaProvider;
   readonly onUpdate: (captchaProvider?: CaptchaProvider) => void;
-};
-
-type CaptchaFormType = {
-  siteKey: string;
-  secretKey: string;
 };
 
 function CaptchaContent({ isDeleted, captchaProvider, onUpdate }: Props) {

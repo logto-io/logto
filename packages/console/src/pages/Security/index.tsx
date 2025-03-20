@@ -1,9 +1,11 @@
-import { type CaptchaPolicy, type SignInExperience } from '@logto/schemas';
+import { CaptchaType, type CaptchaPolicy, type SignInExperience } from '@logto/schemas';
 import classNames from 'classnames';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { useNavigate, useParams } from 'react-router-dom';
+import { z } from 'zod';
 
 import Plus from '@/assets/icons/plus.svg?react';
 import DetailsForm from '@/components/DetailsForm';
@@ -20,11 +22,13 @@ import { trySubmitSafe } from '@/utils/form';
 
 import CaptchaCard from './CaptchaCard';
 import CreateCaptchaForm from './CreateCaptchaForm';
+import Guide from './Guide';
 import RequiredFlows from './RequiredFlows';
 import styles from './index.module.scss';
 import useDataFetch from './use-data-fetch';
 
 function Security() {
+  const { guideId } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isCreateCaptchaFormOpen, setIsCreateCaptchaFormOpen] = useState(false);
   const { data, isLoading } = useDataFetch();
@@ -44,7 +48,6 @@ function Security() {
   const api = useApi();
 
   const onSubmit = trySubmitSafe(async (data: CaptchaPolicy) => {
-    console.log('data', data);
     const { captchaPolicy } = await api
       .patch('api/sign-in-exp', {
         json: { captchaPolicy: data },
@@ -53,6 +56,20 @@ function Security() {
     reset(captchaPolicy);
     toast.success(t('general.saved'));
   });
+
+  const guideType = z.nativeEnum(CaptchaType).safeParse(guideId);
+  const navigate = useNavigate();
+
+  if (guideType.success) {
+    return (
+      <Guide
+        type={guideType.data}
+        onClose={() => {
+          navigate('/security');
+        }}
+      />
+    );
+  }
 
   return (
     <div className={styles.container}>

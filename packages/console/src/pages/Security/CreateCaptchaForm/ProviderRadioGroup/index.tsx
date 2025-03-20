@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 
+import useDataFetch from '../../use-data-fetch';
 import { captchaProviders } from '../constants';
 
 import ProviderRadio from './ProviderRadio';
@@ -14,6 +15,8 @@ type Props = {
 };
 
 function ProviderRadioGroup({ value, onChange }: Props) {
+  const { data } = useDataFetch();
+
   return (
     <RadioGroup
       name="provider"
@@ -25,11 +28,13 @@ function ProviderRadioGroup({ value, onChange }: Props) {
         onChange(selected);
       }}
     >
-      {captchaProviders.map((provider) => (
-        <Radio key={provider.type} value={provider.type}>
-          <ProviderRadio data={provider} />
-        </Radio>
-      ))}
+      {captchaProviders
+        .filter((provider) => provider.type !== data?.config.type)
+        .map((provider) => (
+          <Radio key={provider.type} value={provider.type}>
+            <ProviderRadio data={provider} />
+          </Radio>
+        ))}
     </RadioGroup>
   );
 }

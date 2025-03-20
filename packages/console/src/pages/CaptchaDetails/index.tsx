@@ -6,6 +6,7 @@ import useSWR, { useSWRConfig } from 'swr';
 
 import Delete from '@/assets/icons/delete.svg?react';
 import File from '@/assets/icons/file.svg?react';
+import Reset from '@/assets/icons/reset.svg?react';
 import DetailsPage from '@/components/DetailsPage';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import Drawer from '@/components/Drawer';
@@ -19,6 +20,7 @@ import useApi from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import CaptchaLogo from '../Security/CaptchaLogo';
+import CreateCaptchaForm from '../Security/CreateCaptchaForm';
 import { captchaProviders } from '../Security/CreateCaptchaForm/constants';
 
 import CaptchaContent from './CaptchaContent';
@@ -38,6 +40,7 @@ function CaptchaDetails() {
 
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isCreateCaptchaFormOpen, setIsCreateCaptchaFormOpen] = useState(false);
 
   const captchaMetadata = useMemo(() => {
     if (!data) {
@@ -100,6 +103,13 @@ function CaptchaDetails() {
             }}
             actionMenuItems={[
               {
+                title: 'security.captcha_details.options_change_captcha',
+                icon: <Reset />,
+                onClick: () => {
+                  setIsCreateCaptchaFormOpen(true);
+                },
+              },
+              {
                 type: 'danger',
                 title: 'general.delete',
                 icon: <Delete />,
@@ -142,6 +152,12 @@ function CaptchaDetails() {
           >
             {t('security.captcha_details.deletion_description')}
           </ConfirmModal>
+          <CreateCaptchaForm
+            isOpen={isCreateCaptchaFormOpen}
+            onClose={() => {
+              setIsCreateCaptchaFormOpen(false);
+            }}
+          />
         </>
       )}
     </DetailsPage>
