@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useBlocker, useLocation } from 'react-router-dom';
 
@@ -15,6 +15,16 @@ function UnsavedChangesAlertModal({ hasUnsavedChanges, parentPath, onConfirm }: 
   const { pathname } = useLocation();
   const blocker = useBlocker(hasUnsavedChanges);
 
+  const isNavigatingWithinParent = useCallback(
+    (targetPath: string): boolean => {
+      return Boolean(parentPath && targetPath.startsWith(parentPath));
+    },
+    [parentPath]
+  );
+
+  const shouldBlock =
+    blocker.state === 'blocked' && !isNavigatingWithinParent(blocker.location.pathname);
+
   // Reset the blocker if the conditions are met.
   useEffect(() => {
     if (blocker.state !== 'blocked') {
@@ -26,14 +36,14 @@ function UnsavedChangesAlertModal({ hasUnsavedChanges, parentPath, onConfirm }: 
       blocker.reset();
       return;
     }
-    if (parentPath && targetPathname.startsWith(parentPath)) {
+    if (isNavigatingWithinParent(targetPathname)) {
       blocker.proceed();
     }
-  }, [blocker, pathname, hasUnsavedChanges, parentPath]);
+  }, [blocker, pathname, hasUnsavedChanges, parentPath, isNavigatingWithinParent]);
 
   return (
     <ConfirmModal
-      isOpen={blocker.state === 'blocked'}
+      isOpen={shouldBlock}
       confirmButtonText="general.leave_page"
       cancelButtonText="general.stay_on_page"
       onCancel={blocker.reset}
