@@ -1,4 +1,5 @@
 import type { CaptchaProvider } from '@logto/schemas';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -6,9 +7,9 @@ import { useTranslation } from 'react-i18next';
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import FormField from '@/ds-components/FormField';
-import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
+import CaptchaFormFields from '@/pages/Security/CaptchaFormFields';
+import { captchaProviders } from '@/pages/Security/CreateCaptchaForm/constants';
 import { type CaptchaFormType } from '@/pages/Security/types';
 import { trySubmitSafe } from '@/utils/form';
 
@@ -20,6 +21,9 @@ type Props = {
 
 function CaptchaContent({ isDeleted, captchaProvider, onUpdate }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const metadata = captchaProviders.find(
+    (provider) => provider.type === captchaProvider.config.type
+  );
   const api = useApi();
   const {
     formState: { isSubmitting, isDirty, errors },
@@ -28,11 +32,12 @@ function CaptchaContent({ isDeleted, captchaProvider, onUpdate }: Props) {
     register,
   } = useForm<CaptchaFormType>({
     reValidateMode: 'onBlur',
-    defaultValues: {
-      siteKey: captchaProvider.config.siteKey,
-      secretKey: captchaProvider.config.secretKey,
-    },
+    defaultValues: captchaProvider.config,
   });
+
+  useEffect(() => {
+    reset(captchaProvider.config);
+  }, [captchaProvider.config, reset]);
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (data) => {
@@ -46,14 +51,15 @@ function CaptchaContent({ isDeleted, captchaProvider, onUpdate }: Props) {
           },
         })
         .json<CaptchaProvider>();
-      reset({
-        siteKey: updatedCaptchaProvider.config.siteKey,
-        secretKey: updatedCaptchaProvider.config.secretKey,
-      });
+      reset(updatedCaptchaProvider.config);
       onUpdate(updatedCaptchaProvider);
       toast.success(t('general.saved'));
     })
   );
+
+  if (!metadata) {
+    return null;
+  }
 
   return (
     <>
@@ -71,18 +77,7 @@ function CaptchaContent({ isDeleted, captchaProvider, onUpdate }: Props) {
           description="security.captcha_details.description"
           learnMoreLink={{ href: '/security/captcha' }}
         >
-          <FormField title="security.captcha_details.site_key">
-            <TextInput
-              error={Boolean(errors.siteKey)}
-              {...register('siteKey', { required: true })}
-            />
-          </FormField>
-          <FormField title="security.captcha_details.secret_key">
-            <TextInput
-              error={Boolean(errors.secretKey)}
-              {...register('secretKey', { required: true })}
-            />
-          </FormField>
+          <CaptchaFormFields metadata={metadata} errors={errors} register={register} />
         </FormCard>
       </DetailsForm>
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />

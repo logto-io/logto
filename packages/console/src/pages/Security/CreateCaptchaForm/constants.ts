@@ -13,6 +13,7 @@ export const captchaProviders: CaptchaProviderMetadata[] = [
     logoDark: recaptchaEnterprise,
     description: 'security.captcha_providers.recaptcha_enterprise.description',
     readme: 'readme',
+    requiredFields: ['siteKey', 'secretKey', 'projectId'],
   },
   {
     name: 'security.captcha_providers.turnstile.name',
@@ -21,5 +22,6 @@ export const captchaProviders: CaptchaProviderMetadata[] = [
     logoDark: turnstile,
     description: 'security.captcha_providers.turnstile.description',
     readme: 'readme',
+    requiredFields: ['siteKey', 'secretKey'],
   },
 ];

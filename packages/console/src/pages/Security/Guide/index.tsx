@@ -9,16 +9,15 @@ import Markdown from '@/components/Markdown';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
 import DynamicT from '@/ds-components/DynamicT';
-import FormField from '@/ds-components/FormField';
 import IconButton from '@/ds-components/IconButton';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
-import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { splitMarkdownByTitle } from '@/pages/Connectors/utils';
 import modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 
+import CaptchaFormFields from '../CaptchaFormFields';
 import { captchaProviders } from '../CreateCaptchaForm/constants';
 import { type CaptchaFormType } from '../types';
 
@@ -40,6 +39,7 @@ function Guide({ type, onClose }: Props) {
     defaultValues: {
       siteKey: '',
       secretKey: '',
+      projectId: '',
     },
   });
 
@@ -117,18 +117,11 @@ function Guide({ type, onClose }: Props) {
                     <div className={styles.number}>1</div>
                     <div>{t('connectors.guide.parameter_configuration')}</div>
                   </div>
-                  <FormField title="security.captcha_details.site_key">
-                    <TextInput
-                      error={Boolean(errors.siteKey)}
-                      {...register('siteKey', { required: true })}
-                    />
-                  </FormField>
-                  <FormField title="security.captcha_details.secret_key">
-                    <TextInput
-                      error={Boolean(errors.secretKey)}
-                      {...register('secretKey', { required: true })}
-                    />
-                  </FormField>
+                  <CaptchaFormFields
+                    metadata={captchaMetadata}
+                    errors={errors}
+                    register={register}
+                  />
                 </div>
                 <div className={styles.footer}>
                   <Button
