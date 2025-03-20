@@ -26,9 +26,9 @@ const role_details = {
     assign_subtitle:
       'Assegna autorizzazioni a questo ruolo. Il ruolo acquisirà le autorizzazioni aggiunte e gli utenti con questo ruolo erediteranno queste autorizzazioni.',
     assign_form_field: 'Assegna permessi',
-    added_text_one: '{{count, number}} permesso aggiunto',
+    added_text: '{{count, number}} permesso aggiunto',
     added_text_other: '{{count, number}} autorizzazioni aggiunte',
-    api_permission_count_one: '{{count, number}} permesso',
+    api_permission_count: '{{count, number}} permesso',
     api_permission_count_other: '{{count, number}} autorizzazioni',
     confirm_assign: 'Assegna permessi',
     permission_assigned:

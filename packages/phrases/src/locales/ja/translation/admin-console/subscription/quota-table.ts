@@ -87,7 +87,7 @@ const quota_table = {
   unlimited: '無制限',
   contact: 'お問い合わせ',
   monthly_price: '${{value, number}}/mo',
-  days_one: '{{count, number}} 日',
+  days: '{{count, number}} 日',
   days_other: '{{count, number}} 日',
   add_on: 'アドオン',
   tier: 'レベル{{value, number}}: ',

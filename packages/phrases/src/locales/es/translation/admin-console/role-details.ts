@@ -26,9 +26,9 @@ const role_details = {
     assign_subtitle:
       'Asigne permisos a este rol. El rol adquirirá los permisos agregados y los usuarios con este rol heredarán estos permisos.',
     assign_form_field: 'Asignar permisos',
-    added_text_one: '{{count, number}} permiso agregado',
+    added_text: '{{count, number}} permiso agregado',
     added_text_other: '{{count, number}} permisos agregados',
-    api_permission_count_one: '{{count, number}} permiso',
+    api_permission_count: '{{count, number}} permiso',
     api_permission_count_other: '{{count, number}} permisos',
     confirm_assign: 'Asignar permisos',
     permission_assigned: 'Los permisos seleccionados se asignaron correctamente a este rol',

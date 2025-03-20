@@ -26,9 +26,9 @@ const role_details = {
     assign_subtitle:
       'Attribuez des autorisations à ce rôle. Le rôle acquerra les autorisations ajoutées, et les utilisateurs avec ce rôle hériteront de ces autorisations.',
     assign_form_field: 'Attribuer des autorisations',
-    added_text_one: '{{count, number}} autorisation ajoutée',
+    added_text: '{{count, number}} autorisation ajoutée',
     added_text_other: '{{count, number}} autorisations ajoutées',
-    api_permission_count_one: '{{count, number}} autorisation',
+    api_permission_count: '{{count, number}} autorisation',
     api_permission_count_other: '{{count, number}} autorisations',
     confirm_assign: 'Attribuer des autorisations',
     permission_assigned: 'Les autorisations sélectionnées ont été attribuées avec succès à ce rôle',

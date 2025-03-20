@@ -49,7 +49,7 @@ const general = {
   continue: 'Continuar',
   page_info: '{{min, number}}-{{max, number}} de {{total, number}}',
   learn_more: 'Saber mais',
-  tab_error_one: '{{count, number}} erro',
+  tab_error: '{{count, number}} erro',
   tab_error_other: '{{count, number}} erros',
   skip_for_now: 'Saltar por agora',
   remove: 'Remover',

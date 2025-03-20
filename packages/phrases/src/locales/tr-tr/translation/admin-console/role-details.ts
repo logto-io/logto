@@ -26,9 +26,9 @@ const role_details = {
     assign_subtitle:
       'Bu role izinler atanır. Rol, eklenen izinleri alır ve bu role sahip kullanıcılar bu izinleri devralır.',
     assign_form_field: 'İzinleri Ata',
-    added_text_one: '{{count, number}} izin eklendi',
+    added_text: '{{count, number}} izin eklendi',
     added_text_other: '{{count, number}} izinler eklendi',
-    api_permission_count_one: '{{count, number}} izin',
+    api_permission_count: '{{count, number}} izin',
     api_permission_count_other: '{{count, number}} izinler',
     confirm_assign: 'İzinleri Ata',
     permission_assigned: 'Seçilen izinler bu role başarıyla atandı',

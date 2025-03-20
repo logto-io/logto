@@ -50,7 +50,7 @@ const general = {
   continue: 'Devam et',
   page_info: '{{min, number}}-{{max, number}} / {{total, number}}',
   learn_more: 'Daha fazla bilgi edinin',
-  tab_error_one: '{{count, number}} hata',
+  tab_error: '{{count, number}} hata',
   tab_error_other: '{{count, number}} hata',
   skip_for_now: 'Şimdilik atla',
   remove: 'Kaldır',

@@ -26,9 +26,9 @@ const role_details = {
     assign_subtitle:
       'Assign permissions to this role. The role will gain the added permissions, and users with this role will inherit these permissions.',
     assign_form_field: 'Assign permissions',
-    added_text_one: '{{count, number}} permission added',
+    added_text: '{{count, number}} permission added',
     added_text_other: '{{count, number}} permissions added',
-    api_permission_count_one: '{{count, number}} permission',
+    api_permission_count: '{{count, number}} permission',
     api_permission_count_other: '{{count, number}} permissions',
     confirm_assign: 'Assign permissions',
     permission_assigned: 'The selected permissions were successfully assigned to this role',

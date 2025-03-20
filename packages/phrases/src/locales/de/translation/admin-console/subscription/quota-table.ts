@@ -87,7 +87,7 @@ const quota_table = {
   unlimited: 'Unbegrenzt',
   contact: 'Kontakt',
   monthly_price: '${{value, number}}/Monat',
-  days_one: '{{count, number}} Tag',
+  days: '{{count, number}} Tag',
   days_other: '{{count, number}} Tage',
   add_on: 'Zusatzleistung',
   tier: 'Stufe{{value, number}}: ',
