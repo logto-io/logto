@@ -40,6 +40,10 @@ const mfa = {
     'Preguntar a los usuarios si desean configurar MFA durante el registro (omitible, solicitud única)',
   prompt_only_at_sign_in:
     'Preguntar a los usuarios si desean configurar MFA en su siguiente intento de inicio de sesión después del registro (omitible, solicitud única)',
+  set_up_organization_required_mfa_prompt:
+    'Sugerencia de configuración de MFA para usuarios después de que la organización habilita MFA',
+  prompt_at_sign_in_no_skip:
+    'Pedir a los usuarios que configuren MFA en el próximo inicio de sesión (sin omitir)',
 };
 
 export default Object.freeze(mfa);

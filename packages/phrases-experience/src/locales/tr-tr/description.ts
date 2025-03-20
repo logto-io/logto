@@ -72,30 +72,18 @@ const description = {
   single_sign_on_connectors_list:
     'Şirketiniz, {{email}} e-posta hesabı için Tekli Oturum Açmayı (Single Sign-On) etkinleştirdi. Aşağıdaki SSO sağlayıcıları ile oturum açmaya devam edebilirsiniz.',
   single_sign_on_enabled: 'Bu hesapta Tekli Oturum Açma etkinleştirildi.',
-  /** UNTRANSLATED */
-  authorize_title: 'Authorize {{name}}',
-  /** UNTRANSLATED */
-  request_permission: '{{name}} is requesting access to:',
-  /** UNTRANSLATED */
-  grant_organization_access: 'Grant the organization access:',
-  /** UNTRANSLATED */
-  authorize_personal_data_usage: 'Authorize the use of your personal data:',
-  /** UNTRANSLATED */
-  authorize_organization_access: 'Authorize access to the specific organization:',
-  /** UNTRANSLATED */
-  user_scopes: 'Personal user data',
-  /** UNTRANSLATED */
-  organization_scopes: 'Organization access',
-  /** UNTRANSLATED */
-  authorize_agreement: `By authorizing the access, you agree to the {{name}}'s <link></link>.`,
-  /** UNTRANSLATED */
-  authorize_agreement_with_redirect: `By authorizing the access, you agree to the {{name}}'s <link></link>, and will be redirected to {{uri}}.`,
-  /** UNTRANSLATED */
-  not_you: 'Not you?',
-  /** UNTRANSLATED */
-  user_id: 'User ID: {{id}}',
-  /** UNTRANSLATED */
-  redirect_to: 'You will be redirected to {{name}}.',
+  authorize_title: '授权 {{name}}',
+  request_permission: '{{name}} 请求访问权限：',
+  grant_organization_access: '授予组织访问权限：',
+  authorize_personal_data_usage: '授权使用你的个人数据：',
+  authorize_organization_access: '授权访问特定的组织：',
+  user_scopes: '个人用户数据',
+  organization_scopes: '组织访问',
+  authorize_agreement: `通过授权访问，你同意 {{name}} 的 <link></link>。`,
+  authorize_agreement_with_redirect: `通过授权访问，你同意 {{name}} 的 <link></link>，并将被重定向到 {{uri}}。`,
+  not_you: '不是你？',
+  user_id: '用户 ID：{{id}}',
+  redirect_to: '你将被重定向到 {{name}}。',
   auto_agreement: 'Devam ederek <link></link> kabul etmiş oluyorsunuz.',
   identifier_sign_in_description: 'Oturum açmak için {{types, list(type: disjunction;)}} girin.',
   all_sign_in_options: 'Tüm oturum açma seçenekleri',

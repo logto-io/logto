@@ -77,30 +77,18 @@ const description = {
     'Su empresa ha habilitado el inicio de sesión único (Single Sign-On) para la cuenta de correo electrónico {{email}}. Puede continuar iniciando sesión con los siguientes proveedores de SSO.',
   single_sign_on_enabled:
     'El inicio de sesión único (Single Sign-On) está habilitado para esta cuenta',
-  /** UNTRANSLATED */
-  authorize_title: 'Authorize {{name}}',
-  /** UNTRANSLATED */
-  request_permission: '{{name}} is requesting access to:',
-  /** UNTRANSLATED */
-  grant_organization_access: 'Grant the organization access:',
-  /** UNTRANSLATED */
-  authorize_personal_data_usage: 'Authorize the use of your personal data:',
-  /** UNTRANSLATED */
-  authorize_organization_access: 'Authorize access to the specific organization:',
-  /** UNTRANSLATED */
-  user_scopes: 'Personal user data',
-  /** UNTRANSLATED */
-  organization_scopes: 'Organization access',
-  /** UNTRANSLATED */
-  authorize_agreement: `By authorizing the access, you agree to the {{name}}'s <link></link>.`,
-  /** UNTRANSLATED */
-  authorize_agreement_with_redirect: `By authorizing the access, you agree to the {{name}}'s <link></link>, and will be redirected to {{uri}}.`,
-  /** UNTRANSLATED */
-  not_you: 'Not you?',
-  /** UNTRANSLATED */
-  user_id: 'User ID: {{id}}',
-  /** UNTRANSLATED */
-  redirect_to: 'You will be redirected to {{name}}.',
+  authorize_title: 'Autorizar {{name}}',
+  request_permission: '{{name}} solicita acceso a:',
+  grant_organization_access: 'Otorgar acceso a la organización:',
+  authorize_personal_data_usage: 'Autorizar el uso de tus datos personales:',
+  authorize_organization_access: 'Autorizar acceso a la organización específica:',
+  user_scopes: 'Datos personales del usuario',
+  organization_scopes: 'Acceso a la organización',
+  authorize_agreement: `Al autorizar el acceso, aceptas los <link></link> de {{name}}.`,
+  authorize_agreement_with_redirect: `Al autorizar el acceso, aceptas los <link></link> de {{name}}, y serás redirigido a {{uri}}.`,
+  not_you: '¿No eres tú?',
+  user_id: 'ID de usuario: {{id}}',
+  redirect_to: 'Serás redirigido a {{name}}.',
   auto_agreement: 'Al continuar, acepta los <link></link>.',
   identifier_sign_in_description:
     'Ingrese su {{types, list(type: disjunction;)}} para iniciar sesión.',

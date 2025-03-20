@@ -40,6 +40,10 @@ const mfa = {
     "Demander aux utilisateurs de configurer MFA lors de l'inscription (optionnel, invitation unique)",
   prompt_only_at_sign_in:
     "Demander aux utilisateurs de configurer MFA lors de leur prochaine tentative de connexion après l'inscription (optionnel, invitation unique)",
+  set_up_organization_required_mfa_prompt:
+    "Invite de configuration MFA pour les utilisateurs après que l'organisation a activé MFA",
+  prompt_at_sign_in_no_skip:
+    'Demander aux utilisateurs de configurer MFA lors de la prochaine connexion (pas de possibilité de passer)',
 };
 
 export default Object.freeze(mfa);

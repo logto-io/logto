@@ -74,30 +74,18 @@ const description = {
   single_sign_on_connectors_list:
     'あなたの企業は、メールアカウント{{email}}に対してシングルサインオンを有効にしました。以下のSSOプロバイダーを使用してサインインを続けることができます。',
   single_sign_on_enabled: 'このアカウントではシングル サインオンが有効になっています',
-  /** UNTRANSLATED */
-  authorize_title: 'Authorize {{name}}',
-  /** UNTRANSLATED */
-  request_permission: '{{name}} is requesting access to:',
-  /** UNTRANSLATED */
-  grant_organization_access: 'Grant the organization access:',
-  /** UNTRANSLATED */
-  authorize_personal_data_usage: 'Authorize the use of your personal data:',
-  /** UNTRANSLATED */
-  authorize_organization_access: 'Authorize access to the specific organization:',
-  /** UNTRANSLATED */
-  user_scopes: 'Personal user data',
-  /** UNTRANSLATED */
-  organization_scopes: 'Organization access',
-  /** UNTRANSLATED */
-  authorize_agreement: `By authorizing the access, you agree to the {{name}}'s <link></link>.`,
-  /** UNTRANSLATED */
-  authorize_agreement_with_redirect: `By authorizing the access, you agree to the {{name}}'s <link></link>, and will be redirected to {{uri}}.`,
-  /** UNTRANSLATED */
-  not_you: 'Not you?',
-  /** UNTRANSLATED */
-  user_id: 'User ID: {{id}}',
-  /** UNTRANSLATED */
-  redirect_to: 'You will be redirected to {{name}}.',
+  authorize_title: '{{name}} を承認する',
+  request_permission: '{{name}} が以下へのアクセスを要求しています：',
+  grant_organization_access: '組織へのアクセスを許可する：',
+  authorize_personal_data_usage: '個人データの使用を承認する：',
+  authorize_organization_access: '特定の組織へのアクセスを承認する：',
+  user_scopes: '個人ユーザーデータ',
+  organization_scopes: '組織へのアクセス',
+  authorize_agreement: `アクセスを承認することで、{{name}} の<link></link>に同意したことになります。`,
+  authorize_agreement_with_redirect: `アクセスを承認することで、{{name}} の<link></link>に同意し、{{uri}} にリダイレクトされます。`,
+  not_you: 'あなたではありませんか？',
+  user_id: 'ユーザー ID: {{id}}',
+  redirect_to: '{{name}} にリダイレクトされます。',
   auto_agreement: '続行することで、<link></link>に同意したことになります。',
   identifier_sign_in_description: '{{types, list(type: disjunction;)}}を入力してサインインします。',
   all_sign_in_options: 'すべてのサインインオプション',

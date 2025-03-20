@@ -84,21 +84,15 @@ const description = {
   user_id: 'معرف المستخدم: {{id}}',
   redirect_to: 'سيتم توجيهك إلى {{name}}.',
   auto_agreement: 'من خلال المتابعة، فإنك توافق على <link></link>.',
-  /** UNTRANSLATED */
-  identifier_sign_in_description: 'Enter you {{types, list(type: disjunction;)}} to sign in.',
-  /** UNTRANSLATED */
-  all_sign_in_options: 'All sign-in options',
-  /** UNTRANSLATED */
+  identifier_sign_in_description:
+    'أدخل {{types, list(type: disjunction;)}} الخاص بك لتسجيل الدخول.',
+  all_sign_in_options: 'جميع خيارات تسجيل الدخول',
   identifier_register_description:
-    'Enter you {{types, list(type: disjunction;)}} to create a new account.',
-  /** UNTRANSLATED */
-  all_account_creation_options: 'All account creation options',
-  /** UNTRANSLATED */
-  back_to_sign_in: 'Back to sign in',
-  /** UNTRANSLATED */
-  support_email: 'Support email: <link></link>',
-  /** UNTRANSLATED */
-  support_website: 'Support website: <link></link>',
+    'أدخل {{types, list(type: disjunction;)}} الخاص بك لإنشاء حساب جديد.',
+  all_account_creation_options: 'جميع خيارات إنشاء الحساب',
+  back_to_sign_in: 'العودة إلى تسجيل الدخول',
+  support_email: 'البريد الإلكتروني للدعم: <link></link>',
+  support_website: 'موقع الدعم: <link></link>',
 };
 
 export default Object.freeze(description);
