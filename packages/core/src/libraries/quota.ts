@@ -12,6 +12,7 @@ import {
 import { type SubscriptionQuota, type SubscriptionUsage } from '#src/utils/subscription/types.js';
 
 import { type CloudConnectionLibrary } from './cloud-connection.js';
+import { type SelfComputedUsage } from './tenant-usage.js';
 
 export type QuotaLibrary = ReturnType<typeof createQuotaLibrary>;
 
@@ -31,7 +32,8 @@ const shouldReportSubscriptionUpdates = (
 
 export const createQuotaLibrary = (
   cloudConnection: CloudConnectionLibrary,
-  subscription: SubscriptionLibrary
+  subscription: SubscriptionLibrary,
+  selfComputedUsage: SelfComputedUsage
 ) => {
   const guardTenantUsageByKey = async (key: keyof SubscriptionUsage) => {
     const { isCloud } = EnvSet.values;
@@ -48,11 +50,20 @@ export const createQuotaLibrary = (
       return;
     }
 
-    const { usage: fullUsage } = await getTenantUsageData(cloudConnection);
+    const { usage: fullUsage } =
+      key === 'tenantMembersLimit'
+        ? await getTenantUsageData(cloudConnection)
+        : // `tenantMembersLimit` need to compute from admin tenant level
+          await selfComputedUsage.getTenantUsage();
 
     // Type `SubscriptionQuota` and type `SubscriptionUsage` are sharing keys, this design helps us to compare the usage with the quota limit in a easier way.
     const { [key]: limit } = fullQuota;
-    const { [key]: usage } = fullUsage;
+    /**
+     * `tenantMembersLimit` need to compute from admin tenant level, in previous code, we use cloud API to request tenant members count when necessary,
+     * otherwise, we use self computed usage.
+     * Since self computed usage do not include `tenantMembersLimit`, we need to manually add it to the usage object.
+     */
+    const { [key]: usage } = { tenantMembersLimit: 0, ...fullUsage };
 
     if (limit === null) {
       return;
@@ -108,10 +119,14 @@ export const createQuotaLibrary = (
 
     const {
       quota: { scopesPerResourceLimit, scopesPerRoleLimit },
-      resources,
-      roles,
-    } = await getTenantUsageData(cloudConnection);
-    const usage = (entityName === 'resources' ? resources[entityId] : roles[entityId]) ?? 0;
+    } = await subscription.getSubscriptionData();
+
+    const usage =
+      (entityName === 'resources'
+        ? // eslint-disable-next-line unicorn/no-await-expression-member
+          (await selfComputedUsage.getScopesForResourcesTenantUsage())[entityId]
+        : // eslint-disable-next-line unicorn/no-await-expression-member
+          (await selfComputedUsage.getScopesForRolesTenantUsage())[entityId]) ?? 0;
 
     if (entityName === 'resources') {
       assertThat(

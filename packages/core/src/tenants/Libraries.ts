@@ -18,6 +18,7 @@ import { createSignInExperienceLibrary } from '#src/libraries/sign-in-experience
 import { createSocialLibrary } from '#src/libraries/social.js';
 import { createSsoConnectorLibrary } from '#src/libraries/sso-connector.js';
 import { type SubscriptionLibrary } from '#src/libraries/subscription.js';
+import { SelfComputedUsage } from '#src/libraries/tenant-usage.js';
 import { createUserLibrary } from '#src/libraries/user.js';
 import { createVerificationStatusLibrary } from '#src/libraries/verification-status.js';
 
@@ -44,7 +45,14 @@ export default class Libraries {
   roleScopes = createRoleScopeLibrary(this.queries);
   domains = createDomainLibrary(this.queries);
   protectedApps = createProtectedAppLibrary(this.queries);
-  quota = createQuotaLibrary(this.cloudConnection, this.subscription);
+
+  selfComputedTenantUsage = new SelfComputedUsage(
+    this.queries.pool,
+    this.connectors,
+    this.tenantId
+  );
+
+  quota = createQuotaLibrary(this.cloudConnection, this.subscription, this.selfComputedTenantUsage);
   ssoConnectors = createSsoConnectorLibrary(this.queries);
   oneTimeTokens = createOneTimeTokenLibrary(this.queries);
   signInExperiences = createSignInExperienceLibrary(
