@@ -96,8 +96,6 @@ const firstScreenRouteMapping: Record<FirstScreen, keyof typeof experience.route
   [FirstScreen.SignInDeprecated]: 'signIn',
 };
 
-// Note: this eslint comment can be removed once the dev feature flag is removed
-
 export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown): string => {
   const firstScreenKey =
     params[ExtraParamsKey.FirstScreen] ??
@@ -113,21 +111,20 @@ export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown):
   const searchParams = new URLSearchParams();
   const getSearchParamString = () => (searchParams.size > 0 ? `?${searchParams.toString()}` : '');
 
+  const appendExtraParam = (key: keyof ExtraParamsObject) => {
+    if (params[key]) {
+      searchParams.append(key, params[key]);
+    }
+  };
+
   if (appId) {
     searchParams.append('app_id', String(appId));
   }
 
-  if (params[ExtraParamsKey.OrganizationId]) {
-    searchParams.append(ExtraParamsKey.OrganizationId, params[ExtraParamsKey.OrganizationId]);
-  }
-
-  if (params[ExtraParamsKey.LoginHint]) {
-    searchParams.append(ExtraParamsKey.LoginHint, params[ExtraParamsKey.LoginHint]);
-  }
-
-  if (params[ExtraParamsKey.Identifier]) {
-    searchParams.append(ExtraParamsKey.Identifier, params[ExtraParamsKey.Identifier]);
-  }
+  appendExtraParam(ExtraParamsKey.OrganizationId);
+  appendExtraParam(ExtraParamsKey.OneTimeToken);
+  appendExtraParam(ExtraParamsKey.LoginHint);
+  appendExtraParam(ExtraParamsKey.Identifier);
 
   if (directSignIn) {
     searchParams.append('fallback', firstScreen);

@@ -58,6 +58,10 @@ export enum ExtraParamsKey {
    * @see {@link SignInIdentifier} for available values.
    */
   Identifier = 'identifier',
+  /**
+   * The one-time token used as a proof for the user's identity. Example use case: Magic link.
+   */
+  OneTimeToken = 'one_time_token',
 }
 
 /** @deprecated Use {@link FirstScreen} instead. */
@@ -85,6 +89,7 @@ export const extraParamsObjectGuard = z
     [ExtraParamsKey.OrganizationId]: z.string(),
     [ExtraParamsKey.LoginHint]: z.string(),
     [ExtraParamsKey.Identifier]: z.string(),
+    [ExtraParamsKey.OneTimeToken]: z.string(),
   })
   .partial() satisfies ToZodObject<ExtraParamsObject>;
 
@@ -95,4 +100,5 @@ export type ExtraParamsObject = Partial<{
   [ExtraParamsKey.OrganizationId]: string;
   [ExtraParamsKey.LoginHint]: string;
   [ExtraParamsKey.Identifier]: string;
+  [ExtraParamsKey.OneTimeToken]: string;
 }>;
