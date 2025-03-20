@@ -60,9 +60,18 @@ const description = {
   password_requirements: 'متطلبات كلمة المرور {{items, list}}.',
   password_requirement: {
     length_one: 'يتطلب حرف واحد على الأقل',
+    length_two: 'يتطلب {{count}} حرفان على الأقل',
+    length_few: 'يتطلب {{count}} أحرف على الأقل',
+    length_many: 'يتطلب {{count}} حرفًا على الأقل',
     length_other: 'يتطلب {{count}} أحرف على الأقل',
     character_types_one:
       'يجب أن يحتوي على حرف واحد على الأقل من الأحرف الكبيرة والصغيرة والأرقام والرموز',
+    character_types_two:
+      'يجب أن يحتوي على {{count}} أنواع على الأقل من الأحرف الكبيرة والصغيرة والأرقام والرموز',
+    character_types_few:
+      'يجب أن يحتوي على {{count}} أنواع على الأقل من الأحرف الكبيرة والصغيرة والأرقام والرموز',
+    character_types_many:
+      'يجب أن يحتوي على {{count}} أنواع على الأقل من الأحرف الكبيرة والصغيرة والأرقام والرموز',
     character_types_other:
       'يجب أن يحتوي على {{count}} أنواع على الأقل من الأحرف الكبيرة والصغيرة والأرقام والرموز',
   },

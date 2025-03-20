@@ -26,9 +26,9 @@ const role_details = {
     assign_subtitle:
       'Weisen Sie dieser Rolle Berechtigungen zu. Die Rolle erhält die hinzugefügten Berechtigungen, und Benutzer mit dieser Rolle erben diese Berechtigungen.',
     assign_form_field: 'Berechtigungen zuweisen',
-    added_text_one: 'Ein Berechtigung hinzugefügt',
+    added_text: 'Ein Berechtigung hinzugefügt',
     added_text_other: '{{count, number}} Berechtigungen hinzugefügt',
-    api_permission_count_one: '{{count, number}} Berechtigung',
+    api_permission_count: '{{count, number}} Berechtigung',
     api_permission_count_other: '{{count, number}} Berechtigungen',
     confirm_assign: 'Berechtigungen zuweisen',
     permission_assigned:

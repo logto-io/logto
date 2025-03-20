@@ -49,7 +49,7 @@ const general = {
   continue: 'متابعة',
   page_info: '{{min, number}}-{{max, number}} من {{total, number}}',
   learn_more: 'معرفة المزيد',
-  tab_error_one: '{{count, number}} خطأ',
+  tab_error: '{{count, number}} خطأ',
   tab_error_other: '{{count, number}} أخطاء',
   skip_for_now: 'تخطي للآن',
   remove: 'إزالة',

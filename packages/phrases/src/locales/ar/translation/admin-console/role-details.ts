@@ -26,9 +26,9 @@ const role_details = {
     assign_subtitle:
       'تعيين الأذونات لهذا الدور. سيحصل الدور على الأذونات المضافة، وسيكون للمستخدمين بهذا الدور هذه الأذونات.',
     assign_form_field: 'تعيين الأذونات',
-    added_text_one: 'تمت إضافة {{count, number}} أذونة',
+    added_text: 'تمت إضافة {{count, number}} أذونة',
     added_text_other: 'تمت إضافة {{count, number}} أذونة',
-    api_permission_count_one: '{{count, number}} أذونة',
+    api_permission_count: '{{count, number}} أذونة',
     api_permission_count_other: '{{count, number}} أذونة',
     confirm_assign: 'تعيين الأذونات',
     permission_assigned: 'تم تعيين الأذونات المحددة بنجاح لهذا الدور',

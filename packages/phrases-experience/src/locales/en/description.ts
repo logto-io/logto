@@ -64,9 +64,18 @@ const description = {
   password_requirements: 'Password {{items, list}}.',
   password_requirement: {
     length_one: 'requires a minimum of {{count}} character',
+    length_two: 'requires a minimum of {{count}} characters',
+    length_few: 'requires a minimum of {{count}} characters',
+    length_many: 'requires a minimum of {{count}} characters',
     length_other: 'requires a minimum of {{count}} characters',
     character_types_one:
       'should contain at least {{count}} type of uppercase letters, lowercase letters, digits, and symbols',
+    character_types_two:
+      'should contain at least {{count}} types of uppercase letters, lowercase letters, digits, and symbols',
+    character_types_few:
+      'should contain at least {{count}} types of uppercase letters, lowercase letters, digits, and symbols',
+    character_types_many:
+      'should contain at least {{count}} types of uppercase letters, lowercase letters, digits, and symbols',
     character_types_other:
       'should contain at least {{count}} types of uppercase letters, lowercase letters, digits, and symbols',
   },

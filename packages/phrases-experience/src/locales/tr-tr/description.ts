@@ -62,8 +62,14 @@ const description = {
   password_requirements: 'Şifre {{items, list}}.',
   password_requirement: {
     length_one: 'en az {{count}} karakter gerektirir',
+    length_two: '{{count}} 个字符',
+    length_few: '{{count}} 个字符',
+    length_many: '{{count}} 个字符',
     length_other: 'en az {{count}} karakter gerektirir',
     character_types_one: 'en az {{count}} tane büyük harf, küçük harf, rakam ve sembol içermelidir',
+    character_types_two: '应至少包含 {{count}} 种大写字母、小写字母、数字和符号',
+    character_types_few: '应至少包含 {{count}} 种大写字母、小写字母、数字和符号',
+    character_types_many: '应至少包含 {{count}} 种大写字母、小写字母、数字和符号',
     character_types_other:
       'en az {{count}} tane büyük harf, küçük harf, rakam ve sembol içermelidir',
   },

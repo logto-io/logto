@@ -61,9 +61,18 @@ const description = {
   password_requirements: 'Senha {{items, list}}.',
   password_requirement: {
     length_one: 'requer no mínimo 1 caractere.',
+    length_two: 'requer no mínimo {{count}} caracteres',
+    length_few: 'requer no mínimo {{count}} caracteres',
+    length_many: 'requer no mínimo {{count}} caracteres',
     length_other: 'requer no mínimo {{count}} caracteres.',
     character_types_one:
       'deve conter pelo menos 1 tipo de letra maiúscula, letra minúscula, dígito e símbolo.',
+    character_types_two:
+      'deve conter pelo menos {{count}} tipos de letras maiúsculas, letras minúsculas, dígitos e símbolos',
+    character_types_few:
+      'deve conter pelo menos {{count}} tipos de letras maiúsculas, letras minúsculas, dígitos e símbolos',
+    character_types_many:
+      'deve conter pelo menos {{count}} tipos de letras maiúsculas, letras minúsculas, dígitos e símbolos',
     character_types_other:
       'deve conter pelo menos {{count}} tipos de letra maiúscula, letra minúscula, dígito e símbolo.',
   },

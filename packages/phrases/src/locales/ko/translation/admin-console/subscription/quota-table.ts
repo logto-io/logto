@@ -87,7 +87,7 @@ const quota_table = {
   unlimited: '무제한',
   contact: '문의',
   monthly_price: '${{value, number}}/월',
-  days_one: '{{count, number}} 일',
+  days: '{{count, number}} 일',
   days_other: '{{count, number}} 일',
   add_on: '부가 기능',
   tier: '레벨{{value, number}}: ',

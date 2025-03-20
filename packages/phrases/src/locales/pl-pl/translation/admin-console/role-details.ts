@@ -26,9 +26,9 @@ const role_details = {
     assign_subtitle:
       'Przypisz uprawnienia do tej roli. Rola zyska dodane uprawnienia, a użytkownicy z tą rolą odziedziczą te uprawnienia.',
     assign_form_field: 'Przypisz uprawnienia',
-    added_text_one: '{{count, number}} uprawnienie dodane',
+    added_text: '{{count, number}} uprawnienie dodane',
     added_text_other: '{{count, number}} uprawnień dodanych',
-    api_permission_count_one: '{{count, number}} uprawnienie',
+    api_permission_count: '{{count, number}} uprawnienie',
     api_permission_count_other: '{{count, number}} uprawnień',
     confirm_assign: 'Przypisz uprawnienia',
     permission_assigned: 'Wybrane uprawnienia zostały pomyślnie przypisane do tej roli',

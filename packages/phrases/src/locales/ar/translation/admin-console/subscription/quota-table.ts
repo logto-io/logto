@@ -87,7 +87,7 @@ const quota_table = {
   unlimited: 'غير محدود',
   contact: 'اتصل',
   monthly_price: '${{value, number}}/شهر',
-  days_one: '{{count, number}} يوم',
+  days: '{{count, number}} يوم',
   days_other: '{{count, number}} أيام',
   add_on: 'إضافة',
   tier: 'المستوى {{value, number}}: ',

@@ -26,9 +26,9 @@ const role_details = {
     assign_subtitle:
       'Atribua permissões a esta função. A função irá obter as permissões adicionadas e os utilizadores com esta função herdarão essas permissões.',
     assign_form_field: 'Atribuir permissões',
-    added_text_one: '{{count, number}} permissão adicionada',
+    added_text: '{{count, number}} permissão adicionada',
     added_text_other: '{{count, number}} permissões adicionadas',
-    api_permission_count_one: '{{count, number}} permissão',
+    api_permission_count: '{{count, number}} permissão',
     api_permission_count_other: '{{count, number}} permissões',
     confirm_assign: 'Atribuir Permissões',
     permission_assigned: 'As permissões selecionadas foram atribuídas com sucesso a esta função',

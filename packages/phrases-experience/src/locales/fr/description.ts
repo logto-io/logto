@@ -66,9 +66,18 @@ const description = {
   password_requirements: 'Mot de passe {{items, list}}.',
   password_requirement: {
     length_one: 'doit contenir au minimum {{count}} caractère',
+    length_two: 'doit contenir au minimum {{count}} caractères',
+    length_few: 'doit contenir au minimum {{count}} caractères',
+    length_many: 'doit contenir au minimum {{count}} caractères',
     length_other: 'doit contenir au minimum {{count}} caractères',
     character_types_one:
       'doit contenir au moins {{count}} type de lettres majuscules, lettres minuscules, chiffres et symboles',
+    character_types_two:
+      'doit contenir au moins {{count}} types de lettres majuscules, lettres minuscules, chiffres et symboles',
+    character_types_few:
+      'doit contenir au moins {{count}} types de lettres majuscules, lettres minuscules, chiffres et symboles',
+    character_types_many:
+      'doit contenir au moins {{count}} types de lettres majuscules, lettres minuscules, chiffres et symboles',
     character_types_other:
       'doit contenir au moins {{count}} types de lettres majuscules, lettres minuscules, chiffres et symboles',
   },

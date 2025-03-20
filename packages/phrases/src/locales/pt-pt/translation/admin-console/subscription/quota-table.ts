@@ -87,7 +87,7 @@ const quota_table = {
   unlimited: 'Ilimitado',
   contact: 'Contactar',
   monthly_price: '${{value, number}}/mês',
-  days_one: '{{count, number}} dia',
+  days: '{{count, number}} dia',
   days_other: '{{count, number}} dias',
   add_on: 'Suplemento',
   tier: 'Nível{{value, number}}: ',

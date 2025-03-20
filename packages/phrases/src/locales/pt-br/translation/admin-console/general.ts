@@ -50,7 +50,7 @@ const general = {
   continue: 'Continuar',
   page_info: '{{min, number}}-{{max, number}} de {{total, number}}',
   learn_more: 'Saiba mais',
-  tab_error_one: '{{count, number}} erro',
+  tab_error: '{{count, number}} erro',
   tab_error_other: '{{count, number}} erros',
   skip_for_now: 'Pular por agora',
   remove: 'Remover',

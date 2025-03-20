@@ -26,9 +26,9 @@ const role_details = {
     assign_subtitle:
       '이 역할에 권한을 할당해요. 이 역할은 추가된 권한을 할당받고, 이 역할을 가진 이용자들은 이 권한들을 상속받을 거예요.',
     assign_form_field: '권한 할당',
-    added_text_one: '권한 {{count, number}}개 추가됨',
+    added_text: '권한 {{count, number}}개 추가됨',
     added_text_other: '권한 {{count, number}}개 추가됨',
-    api_permission_count_one: '권한 {{count, number}}개',
+    api_permission_count: '권한 {{count, number}}개',
     api_permission_count_other: '권한 {{count, number}}개',
     confirm_assign: '권한 할당',
     permission_assigned: '선택된 권한들이 이 역할에 성공적으로 할당되었어요.',

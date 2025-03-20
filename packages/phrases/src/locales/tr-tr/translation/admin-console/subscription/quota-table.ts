@@ -87,7 +87,7 @@ const quota_table = {
   unlimited: 'Sınırsız',
   contact: 'İletişim',
   monthly_price: '${{value, number}} / ay',
-  days_one: '{{count, number}} gün',
+  days: '{{count, number}} gün',
   days_other: '{{count, number}} gün',
   add_on: 'Ek Hizmet',
   tier: 'Seviye{{value, number}}: ',

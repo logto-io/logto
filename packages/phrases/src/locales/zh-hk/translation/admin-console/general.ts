@@ -49,7 +49,7 @@ const general = {
   continue: '繼續',
   page_info: '{{min, number}}-{{max, number}} 共 {{total, number}} 條',
   learn_more: '了解更多',
-  tab_error_one: '{{count, number}} 個錯誤',
+  tab_error: '{{count, number}} 個錯誤',
   tab_error_other: '{{count, number}} 個錯誤',
   skip_for_now: '先跳過',
   remove: '移除',

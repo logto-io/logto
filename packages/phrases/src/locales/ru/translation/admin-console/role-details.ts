@@ -26,9 +26,9 @@ const role_details = {
     assign_subtitle:
       'Назначить разрешения этой роли. Роли будут получать добавленные разрешения, а пользователи с этой ролью будут наследовать эти разрешения.',
     assign_form_field: 'Назначить разрешения',
-    added_text_one: '{{count, number}} разрешение добавлено',
+    added_text: '{{count, number}} разрешение добавлено',
     added_text_other: '{{count, number}} разрешений добавлено',
-    api_permission_count_one: '{{count, number}} разрешение',
+    api_permission_count: '{{count, number}} разрешение',
     api_permission_count_other: '{{count, number}} разрешений',
     confirm_assign: 'Назначить Разрешения',
     permission_assigned: 'Выбранные разрешения были успешно назначены этой роли',

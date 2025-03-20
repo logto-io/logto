@@ -87,7 +87,7 @@ const quota_table = {
   unlimited: 'Неограниченно',
   contact: 'Связаться',
   monthly_price: '$ {{value, number}} /мес.',
-  days_one: '{{count, number}} день',
+  days: '{{count, number}} день',
   days_other: '{{count, number}} дней',
   add_on: 'Дополнительно',
   tier: 'Уровень {{value, number}}: ',

@@ -26,9 +26,9 @@ const role_details = {
     assign_subtitle:
       'このロールに許可を割り当てます。ロールに追加された許可がこのロールを持つユーザーにも適用されます。',
     assign_form_field: '許可を割り当てる',
-    added_text_one: '{{count, number}} 個の許可が追加されました',
+    added_text: '{{count, number}} 個の許可が追加されました',
     added_text_other: '{{count, number}} 個の許可が追加されました',
-    api_permission_count_one: '{{count, number}} 個の許可',
+    api_permission_count: '{{count, number}} 個の許可',
     api_permission_count_other: '{{count, number}} 個の許可',
     confirm_assign: '許可を割り当てる',
     permission_assigned: '選択した許可はこのロールに正常に割り当てられました。',

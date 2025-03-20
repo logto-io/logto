@@ -65,9 +65,18 @@ const description = {
   password_requirements: 'Contraseña {{items, lista}}.',
   password_requirement: {
     length_one: 'requiere un mínimo de {{count}} carácter',
+    length_two: 'requiere un mínimo de {{count}} caracteres',
+    length_few: 'requiere un mínimo de {{count}} caracteres',
+    length_many: 'requiere un mínimo de {{count}} caracteres',
     length_other: 'requiere un mínimo de {{count}} caracteres',
     character_types_one:
       'debe contener al menos {{count}} tipo de letras mayúsculas, letras minúsculas, dígitos y símbolos',
+    character_types_two:
+      'debe contener al menos {{count}} tipos de letras mayúsculas, letras minúsculas, dígitos y símbolos',
+    character_types_few:
+      'debe contener al menos {{count}} tipos de letras mayúsculas, letras minúsculas, dígitos y símbolos',
+    character_types_many:
+      'debe contener al menos {{count}} tipos de letras mayúsculas, letras minúsculas, dígitos y símbolos',
     character_types_other:
       'debe contener al menos {{count}} tipos de letras mayúsculas, letras minúsculas, dígitos y símbolos',
   },
