@@ -66,9 +66,18 @@ const description = {
   password_requirements: 'Passwort {{items, list}}.',
   password_requirement: {
     length_one: 'erfordert mindestens {{count}} Zeichen',
+    length_two: 'erfordert mindestens {{count}} Zeichen',
+    length_few: 'erfordert mindestens {{count}} Zeichen',
+    length_many: 'erfordert mindestens {{count}} Zeichen',
     length_other: 'erfordert mindestens {{count}} Zeichen',
     character_types_one:
       'sollte mindestens {{count}} Kategorie der folgenden Zeichenarten enthalten: Großbuchstaben, Kleinbuchstaben, Zahlen und Symbole',
+    character_types_two:
+      'sollte mindestens {{count}} Kategorien der folgenden Zeichenarten enthalten: Großbuchstaben, Kleinbuchstaben, Zahlen und Symbole',
+    character_types_few:
+      'sollte mindestens {{count}} Kategorien der folgenden Zeichenarten enthalten: Großbuchstaben, Kleinbuchstaben, Zahlen und Symbole',
+    character_types_many:
+      'sollte mindestens {{count}} Kategorien der folgenden Zeichenarten enthalten: Großbuchstaben, Kleinbuchstaben, Zahlen und Symbole',
     character_types_other:
       'sollte mindestens {{count}} Kategorien der folgenden Zeichenarten enthalten: Großbuchstaben, Kleinbuchstaben, Zahlen und Symbole',
   },

@@ -64,9 +64,18 @@ const description = {
   password_requirements: 'Wymagania dotyczące hasła {{items, list}}.',
   password_requirement: {
     length_one: 'wymaga co najmniej {{count}} znaku',
+    length_two: 'wymaga co najmniej {{count}} znaków',
+    length_few: 'wymaga co najmniej {{count}} znaków',
+    length_many: 'wymaga co najmniej {{count}} znaków',
     length_other: 'wymaga co najmniej {{count}} znaków',
     character_types_one:
       'powinno zawierać co najmniej {{count}} rodzaj liter wielkich, małych liter, cyfr i symboli',
+    character_types_two:
+      'powinno zawierać co najmniej {{count}} rodzaje liter wielkich, małych liter, cyfr i symboli',
+    character_types_few:
+      'powinno zawierać co najmniej {{count}} rodzaje liter wielkich, małych liter, cyfr i symboli',
+    character_types_many:
+      'powinno zawierać co najmniej {{count}} rodzaje liter wielkich, małych liter, cyfr i symboli',
     character_types_other:
       'powinno zawierać co najmniej {{count}} rodzaje liter wielkich, małych liter, cyfr i symboli',
   },
