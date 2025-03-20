@@ -48,7 +48,7 @@
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
     "@silverhand/essentials": "^2.9.1",
-    "applicationinsights": "^2.9.5"
+    "applicationinsights": "^3.0.0"
   },
   "peerDependencies": {
     "tslib": "^2.4.1"
