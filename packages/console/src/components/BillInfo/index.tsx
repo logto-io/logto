@@ -11,6 +11,7 @@ import IconButton from '@/ds-components/IconButton';
 import TextLink from '@/ds-components/TextLink';
 import { ToggleTip } from '@/ds-components/Tip';
 import useSubscribe from '@/hooks/use-subscribe';
+import { isPaidPlan } from '@/utils/subscription';
 
 import styles from './index.module.scss';
 
@@ -24,7 +25,7 @@ function BillInfo({ cost, isManagePaymentVisible }: Props) {
   const { visitManagePaymentPage } = useSubscribe();
   const [isLoading, setIsLoading] = useState(false);
   const {
-    currentSubscription: { isEnterprisePlan },
+    currentSubscription: { isEnterprisePlan, planId },
   } = useContext(SubscriptionDataContext);
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -34,7 +35,7 @@ function BillInfo({ cost, isManagePaymentVisible }: Props) {
       <div className={styles.billInfo}>
         <div className={styles.price}>
           <span>{`$${(cost / 100).toLocaleString()}`}</span>
-          {cost > 0 && (
+          {isPaidPlan(planId, isEnterprisePlan) && (
             <ToggleTip content={<DynamicT forKey="subscription.next_bill_tip" />}>
               <IconButton size="small">
                 <Tip />
