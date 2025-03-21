@@ -1,23 +1,29 @@
 import { passwordPolicyGuard } from '@logto/core-kit';
 import {
+  AlternativeSignUpIdentifier,
+  SignInIdentifier,
   SignInMode,
   type SignInExperience,
   type SignUp,
-  type SignInIdentifier,
 } from '@logto/schemas';
-import { isSameArray } from '@silverhand/essentials';
+import { conditional, isSameArray } from '@silverhand/essentials';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { emptyBranding } from '@/types/sign-in-experience';
 import { removeFalsyValues } from '@/utils/object';
 
 import {
+  type SignUpIdentifier,
   type UpdateSignInExperienceData,
   type SignInExperienceForm,
   type SignUpForm,
-  type SignUpIdentifier,
 } from '../../types';
 import { signUpIdentifiersMapping } from '../constants';
 
+/**
+ * @deprecated
+ * TODO: remove this once the multi sign-up identifier feature is fully implemented.
+ */
 const mapIdentifiersToSignUpIdentifier = (identifiers: SignInIdentifier[]): SignUpIdentifier => {
   for (const [signUpIdentifier, mappedIdentifiers] of Object.entries(signUpIdentifiersMapping)) {
     if (isSameArray(identifiers, mappedIdentifiers)) {
@@ -28,17 +34,101 @@ const mapIdentifiersToSignUpIdentifier = (identifiers: SignInIdentifier[]): Sign
   throw new Error('Invalid identifiers in the sign up settings.');
 };
 
+/**
+ * For backward compatibility,
+ * we need to safely parse the @see {SignUp['identifiers']} to the @see {SignUpForm['identifiers']} format.
+ */
+const parsePrimaryIdentifier = (identifiers: SignInIdentifier[]): SignUpForm['identifiers'] => {
+  if (identifiers.length === 0) {
+    return [];
+  }
+
+  if (identifiers.length === 1 && identifiers[0]) {
+    return [
+      {
+        identifier: identifiers[0],
+      },
+    ];
+  }
+
+  if (
+    identifiers.length === 2 &&
+    identifiers.includes(SignInIdentifier.Email) &&
+    identifiers.includes(SignInIdentifier.Phone)
+  ) {
+    return [
+      {
+        identifier: AlternativeSignUpIdentifier.EmailOrPhone,
+      },
+    ];
+  }
+
+  throw new Error('Invalid identifiers in the sign up settings.');
+};
+
+const signUpIdentifiersParser = {
+  /**
+   * Merge the @see {SignUp['identifiers']} with the @see {SignUp['secondaryIdentifiers']}
+   * into one @see {SignUpForm['identifiers']} form field.
+   */
+  toSignUpForm: (
+    identifiers: SignInIdentifier[],
+    secondaryIdentifiers: SignUp['secondaryIdentifiers'] = []
+  ): SignUpForm['identifiers'] => {
+    const primarySignUpIdentifier = parsePrimaryIdentifier(identifiers);
+    return [
+      ...primarySignUpIdentifier,
+      ...secondaryIdentifiers.map(({ identifier }) => ({ identifier })),
+    ];
+  },
+  /**
+   * For backward compatibility,
+   * we need to split the @see {SignUpForm['identifiers']} into @see {SignUp['identifiers']}
+   * and @see {SignUp['secondaryIdentifiers']} two fields.
+   */
+  toSieData: (
+    signUpIdentifiers: SignUpForm['identifiers']
+  ): Pick<SignUp, 'identifiers' | 'secondaryIdentifiers'> => {
+    const primaryIdentifier = signUpIdentifiers[0];
+
+    const identifiers = primaryIdentifier
+      ? primaryIdentifier.identifier === AlternativeSignUpIdentifier.EmailOrPhone
+        ? [SignInIdentifier.Email, SignInIdentifier.Phone]
+        : [primaryIdentifier.identifier]
+      : [];
+
+    const secondaryIdentifiers = signUpIdentifiers.slice(1).map(({ identifier }) => ({
+      identifier,
+      // For email or phone, we always set the `verify` flag to true.
+      ...conditional(identifier !== SignInIdentifier.Username && { verify: true }),
+    }));
+
+    return {
+      identifiers,
+      secondaryIdentifiers,
+    };
+  },
+};
+
 export const signUpFormDataParser = {
   fromSignUp: (data: SignUp): SignUpForm => {
-    const { identifiers, ...signUpData } = data;
+    const { identifiers, secondaryIdentifiers, ...signUpData } = data;
 
     return {
       identifier: mapIdentifiersToSignUpIdentifier(identifiers),
+      identifiers: signUpIdentifiersParser.toSignUpForm(identifiers, secondaryIdentifiers),
       ...signUpData,
     };
   },
   toSignUp: (formData: SignUpForm): SignUp => {
-    const { identifier, ...signUpFormData } = formData;
+    const { identifier, identifiers, ...signUpFormData } = formData;
+
+    if (isDevFeaturesEnabled) {
+      return {
+        ...signUpIdentifiersParser.toSieData(identifiers),
+        ...signUpFormData,
+      };
+    }
 
     return {
       identifiers: signUpIdentifiersMapping[identifier],

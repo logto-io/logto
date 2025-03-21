@@ -24,6 +24,7 @@ const sign_up_and_sign_in = {
     description:
       'Users can sign in using any of the options available. Adjust the layout by drag and dropping below options.',
     add_sign_in_method: 'Add sign-in method',
+    add_sign_up_method: 'Add sign-up method',
     password_auth: 'Password',
     verification_code_auth: 'Verification code',
     auth_swap_tip: 'Swap the options below to determine which appears first in the flow.',

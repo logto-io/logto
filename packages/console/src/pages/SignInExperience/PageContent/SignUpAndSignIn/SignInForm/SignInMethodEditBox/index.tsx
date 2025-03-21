@@ -10,7 +10,11 @@ import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 import type { SignInExperienceForm } from '../../../../types';
 import { signInIdentifiers, signUpIdentifiersMapping } from '../../../constants';
 import { identifierRequiredConnectorMapping } from '../../constants';
-import { getSignUpRequiredConnectorTypes, createSignInMethod } from '../../utils';
+import {
+  getSignUpRequiredConnectorTypes,
+  createSignInMethod,
+  getSignUpIdentifiersRequiredConnectors,
+} from '../../utils';
 
 import AddButton from './AddButton';
 import SignInMethodItem from './SignInMethodItem';
@@ -44,12 +48,17 @@ function SignInMethodEditBox() {
 
   const {
     identifier: signUpIdentifier,
+    identifiers: signUpIdentifiers,
     password: isSignUpPasswordRequired,
     verify: isSignUpVerificationRequired,
   } = signUp;
 
   const requiredSignInIdentifiers = signUpIdentifiersMapping[signUpIdentifier];
-  const ignoredWarningConnectors = getSignUpRequiredConnectorTypes(signUpIdentifier);
+
+  // TODO: Remove this dev feature guard when multi sign-up identifiers are launched
+  const ignoredWarningConnectors = isDevFeaturesEnabled
+    ? getSignUpIdentifiersRequiredConnectors(signUpIdentifiers.map(({ identifier }) => identifier))
+    : getSignUpRequiredConnectorTypes(signUpIdentifier);
 
   const signInIdentifierOptions = signInIdentifiers.filter((candidateIdentifier) =>
     fields.every(({ identifier }) => identifier !== candidateIdentifier)
