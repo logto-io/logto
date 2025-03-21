@@ -47,15 +47,6 @@ export const validateSignIn = (
     })
   );
 
-  if (signUp.password) {
-    assertThat(
-      signIn.methods.every(({ password }) => password),
-      new RequestError({
-        code: 'sign_in_experiences.password_sign_in_must_be_enabled',
-      })
-    );
-  }
-
   if (signUp.verify && !signUp.password) {
     assertThat(
       signIn.methods.every(

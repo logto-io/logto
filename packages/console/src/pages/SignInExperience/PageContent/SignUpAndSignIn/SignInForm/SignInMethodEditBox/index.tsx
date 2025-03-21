@@ -3,6 +3,7 @@ import { conditional } from '@silverhand/essentials';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { DragDropProvider, DraggableItem } from '@/ds-components/DragDrop';
 import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 
@@ -103,12 +104,15 @@ function SignInMethodEditBox() {
                   <SignInMethodItem
                     signInMethod={value}
                     isPasswordCheckable={
-                      identifier !== SignInIdentifier.Username && !isSignUpPasswordRequired
+                      identifier !== SignInIdentifier.Username &&
+                      (isDevFeaturesEnabled || !isSignUpPasswordRequired)
                     }
                     isVerificationCodeCheckable={
                       !(isSignUpVerificationRequired && !isSignUpPasswordRequired)
                     }
-                    isDeletable={!requiredSignInIdentifiers.includes(identifier)}
+                    isDeletable={
+                      isDevFeaturesEnabled || !requiredSignInIdentifiers.includes(identifier)
+                    }
                     requiredConnectors={requiredConnectors}
                     hasError={Boolean(error)}
                     errorMessage={error?.message}
