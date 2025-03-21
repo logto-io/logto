@@ -25,6 +25,7 @@ jobs:
         uses: silverhand-io/actions-node-pnpm-run-steps@v5
         with:
           pnpm-version: 9
+          node-version: ^22.13
 
       - name: Prepack
         run: pnpm prepack

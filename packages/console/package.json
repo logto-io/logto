@@ -122,7 +122,7 @@
     "zod-to-ts": "^1.2.0"
   },
   "engines": {
-    "node": "^20.9.0"
+    "node": "^22.13.0"
   },
   "stylelint": {
     "extends": "@silverhand/eslint-config-react/.stylelintrc"

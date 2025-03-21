@@ -36,7 +36,7 @@
     "prepack": "pnpm build"
   },
   "engines": {
-    "node": "^20.9.0"
+    "node": "^22.13.0"
   },
   "bugs": {
     "url": "https://github.com/logto-io/logto/issues"
@@ -68,7 +68,7 @@
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/ts-config": "6.0.0",
     "@types/inquirer": "^9.0.0",
-    "@types/node": "^20.9.5",
+    "@types/node": "^22.13.0",
     "@types/semver": "^7.3.12",
     "@types/sinon": "^17.0.0",
     "@types/tar": "^6.1.12",

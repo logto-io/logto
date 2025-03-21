@@ -33,12 +33,12 @@
     "husky": "^9.0.0",
     "pg": "^8.8.0",
     "tsup": "^8.3.0",
-    "typescript": "^5.0.0",
+    "typescript": "^5.5.3",
     "vite": "^6.0.9"
   },
   "engines": {
-    "node": "^20.9.0",
-    "pnpm": "^9.0.0"
+    "node": "^22.13.0",
+    "pnpm": "^9.15.0"
   },
   "pnpm": {
     "overrides": {

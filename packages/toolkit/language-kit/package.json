@@ -30,7 +30,7 @@
     "test:ci": "pnpm run test --silent --coverage"
   },
   "engines": {
-    "node": "^20.9.0"
+    "node": "^22.13.0"
   },
   "optionalDependencies": {
     "zod": "^3.23.8"
@@ -38,7 +38,7 @@
   "devDependencies": {
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/ts-config": "6.0.0",
-    "@types/node": "^20.9.5",
+    "@types/node": "^22.13.0",
     "@vitest/coverage-v8": "^2.1.9",
     "eslint": "^8.56.0",
     "lint-staged": "^15.0.0",

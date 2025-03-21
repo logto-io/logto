@@ -15,7 +15,7 @@
     "@shopify/jest-koa-mocks": "^5.0.0",
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/ts-config": "6.0.0",
-    "@types/node": "^20.11.20",
+    "@types/node": "^22.13.0",
     "@types/supertest": "^6.0.2",
     "@vitest/coverage-v8": "^2.1.9",
     "eslint": "^8.56.0",
@@ -50,7 +50,7 @@
     "prepublishOnly": "pnpm build"
   },
   "engines": {
-    "node": "^20.9.0"
+    "node": "^22.13.0"
   },
   "eslintConfig": {
     "extends": "@silverhand",

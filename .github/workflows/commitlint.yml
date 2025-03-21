@@ -24,6 +24,7 @@ jobs:
         uses: silverhand-io/actions-node-pnpm-run-steps@v5
         with:
           pnpm-version: 9
+          node-version: ^22.13
 
       - name: Commitlint
         # Credit to https://stackoverflow.com/a/67365254/12514940
