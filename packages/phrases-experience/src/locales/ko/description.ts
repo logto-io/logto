@@ -10,6 +10,8 @@ const description = {
   sign_in: '로그인',
   privacy_policy: '개인정보처리방침',
   create_account: '계정 생성',
+  /** UNTRANSLATED */
+  switch_account: 'Switch account',
   or: '또는',
   and: '그리고',
   enter_passcode: '{{address}} {{target}} 으로 비밀번호가 전송되었어요.',
@@ -96,6 +98,11 @@ const description = {
   back_to_sign_in: '로그인으로 돌아가기',
   support_email: '지원 이메일: <link></link>',
   support_website: '지원 웹사이트: <link></link>',
+  /** UNTRANSLATED */
+  account_mismatch_title: 'You are currently signed in as {{account}}',
+  /** UNTRANSLATED */
+  account_mismatch_description:
+    'Please switch to the account that associated with this magic link, and try again.',
 };
 
 export default Object.freeze(description);

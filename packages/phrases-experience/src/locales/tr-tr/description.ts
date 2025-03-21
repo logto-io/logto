@@ -10,6 +10,8 @@ const description = {
   sign_in: 'Giriş Yap',
   privacy_policy: 'Gizlilik Politikası',
   create_account: 'Hesap Oluştur',
+  /** UNTRANSLATED */
+  switch_account: 'Switch account',
   or: 'veya',
   and: 've',
   enter_passcode: 'Doğrulama kodu {{address}} {{target}} adresinize gönderildi',
@@ -99,6 +101,11 @@ const description = {
   back_to_sign_in: 'Girişe dön',
   support_email: 'Destek e-postası: <link></link>',
   support_website: 'Destek web sitesi: <link></link>',
+  /** UNTRANSLATED */
+  account_mismatch_title: 'You are currently signed in as {{account}}',
+  /** UNTRANSLATED */
+  account_mismatch_description:
+    'Please switch to the account that associated with this magic link, and try again.',
 };
 
 export default Object.freeze(description);
