@@ -62,6 +62,13 @@ export const defaultMetadata: ConnectorMetadata = {
         value: prompt,
       })),
     },
+    {
+      key: 'scopes',
+      type: ConnectorConfigFormItemType.Text,
+      required: false,
+      label: 'Scopes',
+      placeholder: '<scope1> <scope2>',
+    },
   ],
 };
 
