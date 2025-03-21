@@ -1,5 +1,32 @@
 # Change Log
 
+## 1.26.0
+
+### Minor Changes
+
+- 3594e1316: refactor: switch to `@logto/experience` package with latest [Experience API](https://openapi.logto.io/group/endpoint-experience)
+
+  In this release, we have transitioned the user sign-in experience from the legacy `@logto/experience-legacy` package to the latest `@logto/experience` package. This change fully adopts our new [Experience API](https://openapi.logto.io/group/endpoint-experience), enhancing the underlying architecture while maintaining the same user experience.
+
+  - Package update: The user sign-in experience now utilizes the `@logto/experience` package by default.
+    API Transition: The new package leverages our latest [Experience API](https://openapi.logto.io/group/endpoint-experience).
+  - No feature changes: Users will notice no changes in functionality or experience compared to the previous implementation.
+
+### Patch Changes
+
+- 7b342f7ef: remove `client_id` from OIDC SSO connector's token request body for better compatibility
+
+  This updates addresses an issue with client authentication methods in the token request process. Previously, the `client_id` was included in the request body while also using the authentication header for client credentials authentication.
+
+  This dual method of client authentication can lead to errors with certain OIDC providers, such as Okta, which only support one authentication method at a time.
+
+  ### Key changes
+
+  Removal of `client_id` from request body: The `client_id` parameter has been removed from the token request body. According to the [OAuth 2.0 specification](https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3), `client_id` in the body is required only for public clients.
+
+  - @logto/schemas@1.26.0
+  - @logto/cli@1.26.0
+
 ## 1.25.0
 
 ### Minor Changes
