@@ -50,11 +50,8 @@ const VerificationCode = () => {
 
   const { type, value } = cachedIdentifierInputValue;
 
-  // SignIn Method not enabled
   const methodSettings = signInMethods.find((method) => method.identifier === type);
-  if (!methodSettings && flow !== UserFlow.ForgotPassword) {
-    return <ErrorPage />;
-  }
+  const hasPasswordButton = userFlow === UserFlow.SignIn && methodSettings?.password;
 
   // VerificationId not found
   const verificationId = verificationIdsMap[codeVerificationTypeMap[type]];
@@ -76,7 +73,7 @@ const VerificationCode = () => {
         flow={userFlow}
         identifier={cachedIdentifierInputValue}
         verificationId={verificationId}
-        hasPasswordButton={userFlow === UserFlow.SignIn && methodSettings?.password}
+        hasPasswordButton={hasPasswordButton}
       />
     </SecondaryPageLayout>
   );
