@@ -42,7 +42,7 @@ const description = {
   set_password: 'Set password',
   password_changed: 'Password changed',
   no_account: 'No account yet? ',
-  have_account: 'Already had an account?',
+  have_account: 'Already have an account?',
   enter_password: 'Enter password',
   enter_password_for: 'Sign in with the password to {{method}} {{value}}',
   enter_username: 'Set username',
