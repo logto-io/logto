@@ -1,13 +1,13 @@
 @use '@/scss/underscore' as _;
 
-.identifierItem {
+.signUpMethodItem {
   display: flex;
   align-items: center;
   margin: _.unit(2) 0;
   gap: _.unit(2);
 }
 
-.identifier {
+.signUpMethod {
   display: flex;
   align-items: center;
   height: 44px;

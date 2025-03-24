@@ -4,7 +4,7 @@ import {
   goToAdminConsole,
   expectToSaveChanges,
 } from '#src/ui-helpers/index.js';
-import { expectNavigation, appendPathname } from '#src/utils.js';
+import { expectNavigation, appendPathname, devFeatureDisabledTest } from '#src/utils.js';
 
 import { expectToSaveSignInExperience, waitForFormCard } from '../helpers.js';
 
@@ -51,7 +51,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
     await waitForFormCard(page, 'SOCIAL SIGN-IN');
   });
 
-  describe('cases that no connector is setup', () => {
+  devFeatureDisabledTest.describe('cases that no connector is setup', () => {
     describe('email address as sign-up identifier', () => {
       afterAll(async () => {
         await expectToResetSignUpAndSignInConfig(page, false);
@@ -174,7 +174,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
     });
   });
 
-  describe('cases that only Email connector is setup', () => {
+  devFeatureDisabledTest.describe('cases that only Email connector is setup', () => {
     beforeAll(async () => {
       // Email connector
       await expectToSetupPasswordlessConnector(page, testSendgridConnector);
@@ -240,7 +240,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
     });
   });
 
-  describe('cases that only SMS connector is setup', () => {
+  devFeatureDisabledTest.describe('cases that only SMS connector is setup', () => {
     beforeAll(async () => {
       // SMS connector
       await expectToSetupPasswordlessConnector(page, testTwilioConnector);

@@ -33,8 +33,8 @@ function SignUpIdentifierItem({
 
   return (
     <div>
-      <div key={identifier} className={styles.identifierItem}>
-        <div className={classNames(styles.identifier, hasError && styles.error)}>
+      <div key={identifier} className={styles.signUpMethodItem}>
+        <div className={classNames(styles.signUpMethod, hasError && styles.error)}>
           <Draggable className={styles.draggableIcon} />
           {t(
             `sign_in_exp.sign_up_and_sign_in.identifiers_${

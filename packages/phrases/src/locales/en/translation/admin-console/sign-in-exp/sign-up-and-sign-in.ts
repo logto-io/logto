@@ -8,9 +8,8 @@ const sign_up_and_sign_in = {
   or: 'or',
   sign_up: {
     title: 'SIGN UP',
-    sign_up_identifier: 'Sign-up identifier',
-    identifier_description:
-      'The sign-up identifier is required for account creation and must be included in your sign-in screen.',
+    sign_up_identifier: 'Sign-up identifiers',
+    identifier_description: 'The sign-up identifier is required for account creation.',
     sign_up_authentication: 'Authentication setting for sign-up',
     authentication_description:
       'All selected actions will be obligatory for users to complete the flow.',
