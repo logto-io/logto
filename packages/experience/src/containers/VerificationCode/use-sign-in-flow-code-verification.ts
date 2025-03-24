@@ -1,7 +1,6 @@
 import {
   InteractionEvent,
   SignInIdentifier,
-  SignInMode,
   type VerificationCodeIdentifier,
 } from '@logto/schemas';
 import { useCallback, useMemo } from 'react';
@@ -30,7 +29,7 @@ const useSignInFlowCodeVerification = (
   const { show } = useConfirmModal();
   const navigate = useNavigate();
   const redirectTo = useGlobalRedirectTo();
-  const { signInMode, signUpMethods } = useSieMethods();
+  const { isVerificationCodeEnabledForSignUp } = useSieMethods();
   const handleError = useErrorHandler();
   const registerWithIdentifierAsync = useApi(registerWithVerifiedIdentifier);
   const asyncSignInWithVerificationCodeIdentifier = useApi(identifyWithVerificationCode);
@@ -49,8 +48,8 @@ const useSignInFlowCodeVerification = (
   const identifierNotExistErrorHandler = useCallback(async () => {
     const { type, value } = identifier;
 
-    // Should not redirect user to register if is sign-in only mode or bind social flow
-    if (signInMode === SignInMode.SignIn || !signUpMethods.includes(type)) {
+    // Should not redirect user to register if is sign-in only mode
+    if (!isVerificationCodeEnabledForSignUp(type)) {
       void showIdentifierErrorAlert(IdentifierErrorType.IdentifierNotExist, type, value);
 
       return;
@@ -82,8 +81,7 @@ const useSignInFlowCodeVerification = (
     });
   }, [
     identifier,
-    signInMode,
-    signUpMethods,
+    isVerificationCodeEnabledForSignUp,
     show,
     t,
     showIdentifierErrorAlert,

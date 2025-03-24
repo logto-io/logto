@@ -1,7 +1,6 @@
 import {
   InteractionEvent,
   SignInIdentifier,
-  SignInMode,
   type VerificationCodeIdentifier,
 } from '@logto/schemas';
 import { useCallback, useMemo } from 'react';
@@ -31,7 +30,7 @@ const useRegisterFlowCodeVerification = (
   const navigate = useNavigate();
   const redirectTo = useGlobalRedirectTo();
 
-  const { signInMode, signInMethods } = useSieMethods();
+  const { isVerificationCodeEnabledForSignIn } = useSieMethods();
 
   const handleError = useErrorHandler();
 
@@ -55,14 +54,8 @@ const useRegisterFlowCodeVerification = (
   const identifierExistsErrorHandler = useCallback(async () => {
     const { type, value } = identifier;
 
-    if (
-      // Should not redirect user to sign-in if is register-only mode
-      signInMode === SignInMode.Register ||
-      // Should not redirect user to sign-in if the verification code authentication method is not enabled for sign-in
-      !signInMethods.find(({ identifier }) => identifier === type)?.verificationCode
-    ) {
+    if (!isVerificationCodeEnabledForSignIn(type)) {
       void showIdentifierErrorAlert(IdentifierErrorType.IdentifierAlreadyExists, type, value);
-
       return;
     }
 
@@ -92,8 +85,7 @@ const useRegisterFlowCodeVerification = (
     });
   }, [
     identifier,
-    signInMode,
-    signInMethods,
+    isVerificationCodeEnabledForSignIn,
     show,
     t,
     showIdentifierErrorAlert,

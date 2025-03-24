@@ -9,9 +9,9 @@ import useApi from '@/hooks/use-api';
 import { usePromiseConfirmModal } from '@/hooks/use-confirm-modal';
 import useErrorHandler, { type ErrorHandlers } from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
-import useMfaErrorHandler from '@/hooks/use-mfa-error-handler';
 import usePasswordPolicyChecker from '@/hooks/use-password-policy-checker';
 import usePasswordRejectionErrorHandler from '@/hooks/use-password-rejection-handler';
+import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
 import { usePasswordPolicy, useSieMethods } from '@/hooks/use-sie';
 
 import ErrorPage from '../ErrorPage';
@@ -31,7 +31,7 @@ const RegisterPassword = () => {
   const asyncRegisterPassword = useApi(continueRegisterWithPassword);
   const handleError = useErrorHandler();
 
-  const mfaErrorHandler = useMfaErrorHandler({ replace: true });
+  const preSignInErrorHandler = usePreSignInErrorHandler({ replace: true });
   const passwordRejectionErrorHandler = usePasswordRejectionErrorHandler({ setErrorMessage });
 
   const errorHandlers: ErrorHandlers = useMemo(
@@ -41,10 +41,10 @@ const RegisterPassword = () => {
         await show({ type: 'alert', ModalContent: error.message, cancelText: 'action.got_it' });
         navigate(-1);
       },
-      ...mfaErrorHandler,
+      ...preSignInErrorHandler,
       ...passwordRejectionErrorHandler,
     }),
-    [mfaErrorHandler, passwordRejectionErrorHandler, show, navigate]
+    [preSignInErrorHandler, passwordRejectionErrorHandler, show, navigate]
   );
 
   const onSubmitHandler = useCallback(
