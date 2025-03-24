@@ -7,7 +7,7 @@ import {
   goToAdminConsole,
   waitForToast,
 } from '#src/ui-helpers/index.js';
-import { expectNavigation, appendPathname } from '#src/utils.js';
+import { expectNavigation, appendPathname, devFeatureDisabledTest } from '#src/utils.js';
 
 import { expectToSaveSignInExperience, waitForFormCard } from '../helpers.js';
 
@@ -70,7 +70,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
     await waitForFormCard(page, 'SOCIAL SIGN-IN');
   });
 
-  describe('email as sign-up identifier (verify only)', () => {
+  devFeatureDisabledTest.describe('email as sign-up identifier (verify only)', () => {
     afterAll(async () => {
       await expectToResetSignUpAndSignInConfig(page);
     });
@@ -165,7 +165,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
     });
   });
 
-  describe('email as sign-up identifier (password & verify)', () => {
+  devFeatureDisabledTest.describe('email as sign-up identifier (password & verify)', () => {
     afterAll(async () => {
       await expectToResetSignUpAndSignInConfig(page);
     });
@@ -245,7 +245,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
     });
   });
 
-  describe('phone as sign-up identifier (verify only)', () => {
+  devFeatureDisabledTest.describe('phone as sign-up identifier (verify only)', () => {
     afterAll(async () => {
       await expectToResetSignUpAndSignInConfig(page);
     });
@@ -312,7 +312,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
     });
   });
 
-  describe('phone as sign-up identifier (password & verify)', () => {
+  devFeatureDisabledTest.describe('phone as sign-up identifier (password & verify)', () => {
     afterAll(async () => {
       await expectToResetSignUpAndSignInConfig(page);
     });
@@ -357,7 +357,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
     });
   });
 
-  describe('email or phone as sign-up identifier (verify only)', () => {
+  devFeatureDisabledTest.describe('email or phone as sign-up identifier (verify only)', () => {
     afterAll(async () => {
       await expectToResetSignUpAndSignInConfig(page);
     });
@@ -419,68 +419,71 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
     });
   });
 
-  describe('email or phone as sign-up identifier (password & verify)', () => {
-    afterAll(async () => {
-      await expectToResetSignUpAndSignInConfig(page);
-    });
-
-    it('select email or phone as sign-up identifier and enable password settings for sign-up', async () => {
-      await expectToSelectSignUpIdentifier(page, 'Email address or phone number');
-      // Username will be added in later tests
-      await expectToRemoveSignInMethod(page, 'Username');
-
-      /**
-       * Sign-in method
-       * - Email address: password + verification code
-       * - Phone number: password + verification code
-       */
-      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
-    });
-
-    it('update sign-in method configs', async () => {
-      /**
-       * Sign-in method
-       * - Email address: verification code + password
-       * - Phone number: verification code + password
-       */
-      await expectToSwapSignInMethodAuthnOption(page, 'Email address');
-      await expectToSwapSignInMethodAuthnOption(page, 'Phone number');
-      await expectToSaveSignInExperience(page);
-
-      /**
-       * Sign-in method
-       * - Email address: password
-       * - Phone number: verification code + password
-       */
-      await expectToClickSignInMethodAuthnOption(page, {
-        method: 'Email address',
-        option: 'Verification code',
+  devFeatureDisabledTest.describe(
+    'email or phone as sign-up identifier (password & verify)',
+    () => {
+      afterAll(async () => {
+        await expectToResetSignUpAndSignInConfig(page);
       });
-      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
 
-      /**
-       * Sign-in method
-       * - Email address: password
-       * - Phone number: password
-       */
-      await expectToClickSignInMethodAuthnOption(page, {
-        method: 'Phone number',
-        option: 'Verification code',
+      it('select email or phone as sign-up identifier and enable password settings for sign-up', async () => {
+        await expectToSelectSignUpIdentifier(page, 'Email address or phone number');
+        // Username will be added in later tests
+        await expectToRemoveSignInMethod(page, 'Username');
+
+        /**
+         * Sign-in method
+         * - Email address: password + verification code
+         * - Phone number: password + verification code
+         */
+        await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
       });
-      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
 
-      /**
-       * Sign-in method
-       * - Email address: password
-       * - Phone number: password
-       * - Username: password
-       */
-      await expectToAddSignInMethod(page, 'Username');
-      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
-    });
-  });
+      it('update sign-in method configs', async () => {
+        /**
+         * Sign-in method
+         * - Email address: verification code + password
+         * - Phone number: verification code + password
+         */
+        await expectToSwapSignInMethodAuthnOption(page, 'Email address');
+        await expectToSwapSignInMethodAuthnOption(page, 'Phone number');
+        await expectToSaveSignInExperience(page);
 
-  describe('not applicable as sign-up identifier', () => {
+        /**
+         * Sign-in method
+         * - Email address: password
+         * - Phone number: verification code + password
+         */
+        await expectToClickSignInMethodAuthnOption(page, {
+          method: 'Email address',
+          option: 'Verification code',
+        });
+        await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
+
+        /**
+         * Sign-in method
+         * - Email address: password
+         * - Phone number: password
+         */
+        await expectToClickSignInMethodAuthnOption(page, {
+          method: 'Phone number',
+          option: 'Verification code',
+        });
+        await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
+
+        /**
+         * Sign-in method
+         * - Email address: password
+         * - Phone number: password
+         * - Username: password
+         */
+        await expectToAddSignInMethod(page, 'Username');
+        await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
+      });
+    }
+  );
+
+  devFeatureDisabledTest.describe('not applicable as sign-up identifier', () => {
     afterAll(async () => {
       await expectToResetSignUpAndSignInConfig(page);
     });
