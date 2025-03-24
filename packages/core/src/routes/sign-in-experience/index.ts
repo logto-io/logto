@@ -96,11 +96,11 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         validateSignUp(signUp, connectors);
       }
 
-      if (signIn && signUp) {
-        validateSignIn(signIn, signUp, connectors);
-      } else if (signIn) {
-        const signInExperience = await findDefaultSignInExperience();
-        validateSignIn(signIn, signInExperience.signUp, connectors);
+      if (signIn) {
+        const { signUp: signUpSettings } = signUp
+          ? { signUp }
+          : await findDefaultSignInExperience();
+        validateSignIn(signIn, signUpSettings, connectors);
       }
 
       if (mfa) {
