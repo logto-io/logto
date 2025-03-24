@@ -20,6 +20,9 @@ const error = {
   timeout: 'リクエストタイムアウト。後でもう一度お試しください。',
   password_rejected,
   sso_not_enabled: 'このメールアカウントではシングルサインオンが有効になっていません。',
+  invalid_link: '無効なリンク',
+  invalid_link_description: 'ワンタイムトークンの有効期限が切れているか、無効になっています。',
+  something_went_wrong: '問題が発生しました。',
 };
 
 export default Object.freeze(error);

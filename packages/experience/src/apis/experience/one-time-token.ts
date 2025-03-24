@@ -5,7 +5,7 @@ import api from '../api';
 import { experienceApiRoutes, type VerificationResponse } from './const';
 import { initInteraction } from './interaction';
 
-export const verifyOneTimeToken = async (payload: OneTimeTokenVerificationVerifyPayload) => {
+export const registerWithOneTimeToken = async (payload: OneTimeTokenVerificationVerifyPayload) => {
   await initInteraction(InteractionEvent.Register);
 
   return api

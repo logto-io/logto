@@ -1,40 +1,48 @@
-import { AgreeToTermsPolicy, SignInIdentifier } from '@logto/schemas';
+import {
+  AgreeToTermsPolicy,
+  InteractionEvent,
+  SignInIdentifier,
+  type RequestErrorBody,
+} from '@logto/schemas';
+import { condString } from '@silverhand/essentials';
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import {
   identifyAndSubmitInteraction,
   signInWithVerifiedIdentifier,
-  verifyOneTimeToken,
+  registerWithOneTimeToken,
 } from '@/apis/experience';
 import LoadingLayer from '@/components/LoadingLayer';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
-import useFallbackRoute from '@/hooks/use-fallback-route';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import useLoginHint from '@/hooks/use-login-hint';
 import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
 import useTerms from '@/hooks/use-terms';
 
 import ErrorPage from '../ErrorPage';
-import SwitchAccount from '../SwitchAccount';
 
 const OneTimeToken = () => {
   const { token } = useParams();
-  const fallback = useFallbackRoute();
   const email = useLoginHint();
-  const [mismatchedAccount, setMismatchedAccount] = useState<string>();
-  const [oneTimeTokenError, setOneTimeTokenError] = useState<unknown>();
+  const [oneTimeTokenError, setOneTimeTokenError] = useState<RequestErrorBody | boolean>();
 
-  const asyncRegisterWithOneTimeToken = useApi(identifyAndSubmitInteraction);
+  const asyncIdentifyUserAndSubmit = useApi(identifyAndSubmitInteraction);
   const asyncSignInWithVerifiedIdentifier = useApi(signInWithVerifiedIdentifier);
-  const asyncVerifyOneTimeToken = useApi(verifyOneTimeToken);
+  const asyncRegisterWithOneTimeToken = useApi(registerWithOneTimeToken);
 
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const handleError = useErrorHandler();
   const redirectTo = useGlobalRedirectTo();
   const preSignInErrorHandler = usePreSignInErrorHandler();
+  const preRegisterErrorHandler = usePreSignInErrorHandler({
+    interactionEvent: InteractionEvent.Register,
+  });
 
+  /**
+   * Update interaction event to `SignIn`, and then identify user and submit.
+   */
   const signInWithOneTimeToken = useCallback(
     async (verificationId: string) => {
       const [error, result] = await asyncSignInWithVerifiedIdentifier(verificationId);
@@ -51,15 +59,20 @@ const OneTimeToken = () => {
     [preSignInErrorHandler, asyncSignInWithVerifiedIdentifier, handleError, redirectTo]
   );
 
-  const registerWithOneTimeToken = useCallback(
+  /**
+   * Always try to submit the one-time token interaction with `Register` event first.
+   * If the email already exists, call the `signInWithOneTimeToken` function instead.
+   */
+  const submit = useCallback(
     async (verificationId: string) => {
-      const [error, result] = await asyncRegisterWithOneTimeToken({ verificationId });
+      const [error, result] = await asyncIdentifyUserAndSubmit({ verificationId });
 
       if (error) {
         await handleError(error, {
           'user.email_already_in_use': async () => {
             await signInWithOneTimeToken(verificationId);
           },
+          ...preRegisterErrorHandler,
         });
         return;
       }
@@ -68,70 +81,68 @@ const OneTimeToken = () => {
         await redirectTo(result.redirectTo);
       }
     },
-    [asyncRegisterWithOneTimeToken, handleError, redirectTo, signInWithOneTimeToken]
+    [
+      preRegisterErrorHandler,
+      asyncIdentifyUserAndSubmit,
+      handleError,
+      redirectTo,
+      signInWithOneTimeToken,
+    ]
   );
 
   useEffect(() => {
     (async () => {
-      if (token && email) {
-        /**
-         * Check if the user has agreed to the terms and privacy policy before navigating to the 3rd-party social sign-in page
-         * when the policy is set to `Manual`
-         */
-        if (agreeToTermsPolicy === AgreeToTermsPolicy.Manual && !(await termsValidation())) {
-          return;
-        }
-        const [error, result] = await asyncVerifyOneTimeToken({
-          token,
-          identifier: { type: SignInIdentifier.Email, value: email },
-        });
-
-        if (error) {
-          await handleError(error, {
-            'one_time_token.email_mismatch': () => {
-              setMismatchedAccount(email);
-            },
-            'one_time_token.token_expired': () => {
-              setOneTimeTokenError(error);
-            },
-            'one_time_token.token_consumed': () => {
-              setOneTimeTokenError(error);
-            },
-            'one_time_token.token_revoked': () => {
-              setOneTimeTokenError(error);
-            },
-            'one_time_token.token_not_found': () => {
-              setOneTimeTokenError(error);
-            },
-          });
-          return;
-        }
-
-        if (!result?.verificationId) {
-          return;
-        }
-        await registerWithOneTimeToken(result.verificationId);
+      if (!token || !email) {
+        setOneTimeTokenError(true);
+        return;
       }
 
-      window.location.replace('/' + fallback);
+      /**
+       * Check if the user has agreed to the terms and privacy policy before navigating to the 3rd-party social sign-in page
+       * when the policy is set to `Manual`
+       */
+      if (agreeToTermsPolicy === AgreeToTermsPolicy.Manual && !(await termsValidation())) {
+        return;
+      }
+
+      const [error, result] = await asyncRegisterWithOneTimeToken({
+        token,
+        identifier: { type: SignInIdentifier.Email, value: email },
+      });
+
+      if (error) {
+        await handleError(error, {
+          global: (error: RequestErrorBody) => {
+            setOneTimeTokenError(error);
+          },
+        });
+        return;
+      }
+
+      if (!result?.verificationId) {
+        return;
+      }
+
+      await submit(result.verificationId);
     })();
   }, [
     agreeToTermsPolicy,
     email,
-    fallback,
     token,
-    asyncVerifyOneTimeToken,
+    asyncRegisterWithOneTimeToken,
     handleError,
-    registerWithOneTimeToken,
     termsValidation,
+    submit,
   ]);
 
-  if (mismatchedAccount) {
-    return <SwitchAccount account={mismatchedAccount} />;
-  }
-
   if (oneTimeTokenError) {
-    return <ErrorPage title="error.invalid_link" message="error.invalid_link_description" />;
+    return (
+      <ErrorPage
+        title="error.invalid_link"
+        message="error.invalid_link_description"
+        rawMessage={condString(typeof oneTimeTokenError !== 'boolean' && oneTimeTokenError.message)}
+      />
+    );
   }
 
   return <LoadingLayer />;

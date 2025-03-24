@@ -20,6 +20,9 @@ const error = {
   timeout: 'Tempo limite de sessão. Volte e faça login novamente.',
   password_rejected,
   sso_not_enabled: 'O Single Sign-On não está habilitado para esta conta de e-mail.',
+  invalid_link: 'Link inválido',
+  invalid_link_description: 'O teu token de uso único pode ter expirado ou já não ser válido.',
+  something_went_wrong: 'Algo correu mal.',
 };
 
 export default Object.freeze(error);

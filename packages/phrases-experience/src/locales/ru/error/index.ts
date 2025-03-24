@@ -20,6 +20,10 @@ const error = {
   timeout: 'Время ожидания истекло. Пожалуйста, повторите попытку позднее.',
   password_rejected,
   sso_not_enabled: 'Односторонняя авторизация не включена для этого аккаунта электронной почты.',
+  invalid_link: 'Неверная ссылка',
+  invalid_link_description:
+    'Ваш одноразовый токен мог истечь или больше не является действительным.',
+  something_went_wrong: 'Что-то пошло не так.',
 };
 
 export default Object.freeze(error);

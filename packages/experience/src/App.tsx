@@ -7,6 +7,7 @@ import LoadingLayerProvider from './Providers/LoadingLayerProvider';
 import PageContextProvider from './Providers/PageContextProvider';
 import SettingsProvider from './Providers/SettingsProvider';
 import UserInteractionContextProvider from './Providers/UserInteractionContextProvider';
+import { isDevFeaturesEnabled } from './constants/env';
 import DevelopmentTenantNotification from './containers/DevelopmentTenantNotification';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
@@ -62,8 +63,10 @@ const App = () => {
                     element={<SocialSignInWebCallback />}
                   />
                   <Route path="direct/:method/:target?" element={<DirectSignIn />} />
-                  <Route path="token/:token" element={<OneTimeToken />} />
                   <Route element={<AppLayout />}>
+                    {isDevFeaturesEnabled && (
+                      <Route path="one-time-token/:token" element={<OneTimeToken />} />
+                    )}
                     <Route
                       path="unknown-session"
                       element={<ErrorPage message="error.invalid_session" />}
@@ -154,7 +157,7 @@ const App = () => {
                       path={experience.routes.resetPassword}
                       element={<ResetPasswordLanding />}
                     />
-                    <Route path="*" element={<ErrorPage title="description.not_found" />} />
+                    <Route path="*" element={<ErrorPage />} />
                   </Route>
                 </Route>
               </Routes>

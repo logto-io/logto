@@ -19,6 +19,9 @@ const error = {
   timeout: '请求超时，请稍后重试。',
   password_rejected,
   sso_not_enabled: '此邮箱账户未启用单点登录。',
+  invalid_link: '无效的链接',
+  invalid_link_description: '你的一次性令牌可能已过期或不再有效。',
+  something_went_wrong: '出现错误。',
 };
 
 export default Object.freeze(error);
