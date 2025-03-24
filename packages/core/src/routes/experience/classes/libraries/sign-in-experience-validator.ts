@@ -173,11 +173,6 @@ export class SignInExperienceValidator {
       mandatoryUserProfile.add(mandatoryPrimaryIdentifier);
     }
 
-    // Check for mandatory password
-    if (password) {
-      mandatoryUserProfile.add(MissingProfile.password);
-    }
-
     // TODO: Remove this dev feature check
     // Check for mandatory secondary identifiers
     if (EnvSet.values.isDevFeaturesEnabled) {
@@ -201,6 +196,11 @@ export class SignInExperienceValidator {
           }
         }
       }
+    }
+
+    // Check for mandatory password
+    if (password) {
+      mandatoryUserProfile.add(MissingProfile.password);
     }
 
     return mandatoryUserProfile;
