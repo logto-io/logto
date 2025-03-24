@@ -80,19 +80,25 @@ function SignUpForm() {
     const signInMethods = getValues('signIn.methods');
     const { password, identifiers } = signUp;
 
+    const enabledSignUpIdentifiers = identifiers.reduce<SignInIdentifier[]>(
+      (identifiers, { identifier: signUpIdentifier }) => {
+        if (signUpIdentifier === AlternativeSignUpIdentifier.EmailOrPhone) {
+          return [...identifiers, SignInIdentifier.Email, SignInIdentifier.Phone];
+        }
+
+        return [...identifiers, signUpIdentifier];
+      },
+      []
+    );
+
     // Note: Auto append newly assigned sign-up identifiers to the sign-in methods list if they don't already exist
     // User may remove them manually if they don't want to use it for sign-in.
-    const mergedSignInMethods = identifiers.reduce((methods, { identifier: signUpIdentifier }) => {
+    const mergedSignInMethods = enabledSignUpIdentifiers.reduce((methods, signUpIdentifier) => {
       if (signInMethods.some(({ identifier }) => identifier === signUpIdentifier)) {
         return methods;
       }
 
-      const newSignInMethods =
-        signUpIdentifier === AlternativeSignUpIdentifier.EmailOrPhone
-          ? [createSignInMethod(SignInIdentifier.Email), createSignInMethod(SignInIdentifier.Phone)]
-          : [createSignInMethod(signUpIdentifier)];
-
-      return [...methods, ...newSignInMethods];
+      return [...methods, createSignInMethod(signUpIdentifier)];
     }, signInMethods);
 
     setValue(
