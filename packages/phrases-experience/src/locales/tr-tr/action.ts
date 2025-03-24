@@ -31,6 +31,8 @@ const action = {
   single_sign_on: 'Tek oturum açma',
   authorize: 'Yetkilendir',
   use_another_account: 'Başka bir hesap kullan',
+  /** UNTRANSLATED */
+  back_to_current_account: 'Back to current account',
 };
 
 export default Object.freeze(action);

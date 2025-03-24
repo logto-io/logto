@@ -106,9 +106,9 @@ const description = {
   back_to_sign_in: 'Back to sign in',
   support_email: 'Support email: <link></link>',
   support_website: 'Support website: <link></link>',
-  account_mismatch_title: 'You are currently signed in as {{account}}',
-  account_mismatch_description:
-    'Please switch to the account that associated with this magic link, and try again.',
+  switch_account_title: 'You are currently signed in as {{account}}',
+  switch_account_description:
+    'To continue, you will be signed out of the current account, and switch to the new account automatically.',
 };
 
 export default Object.freeze(description);

@@ -31,6 +31,8 @@ const action = {
   single_sign_on: 'Pojedyncze logowanie',
   authorize: 'Autoryzować',
   use_another_account: 'Użyj innego konta',
+  /** UNTRANSLATED */
+  back_to_current_account: 'Back to current account',
 };
 
 export default Object.freeze(action);

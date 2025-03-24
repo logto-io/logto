@@ -10,8 +10,7 @@ const description = {
   sign_in: 'Anmelden',
   privacy_policy: 'Datenschutzrichtlinien',
   create_account: 'Konto erstellen',
-  /** UNTRANSLATED */
-  switch_account: 'Switch account',
+  switch_account: 'Konto wechseln',
   or: 'oder',
   and: 'und',
   enter_passcode: 'Der Bestätigungscode wurde an deine {{address}} gesendet',
@@ -110,11 +109,9 @@ const description = {
   back_to_sign_in: 'Zurück zur Anmeldung',
   support_email: 'Support-E-Mail: <link></link>',
   support_website: 'Support-Website: <link></link>',
-  /** UNTRANSLATED */
-  account_mismatch_title: 'You are currently signed in as {{account}}',
-  /** UNTRANSLATED */
-  account_mismatch_description:
-    'Please switch to the account that associated with this magic link, and try again.',
+  switch_account_title: 'Du bist derzeit als {{account}} angemeldet',
+  switch_account_description:
+    'Um fortzufahren, wirst du vom aktuellen Konto abgemeldet und automatisch zum neuen Konto gewechselt.',
 };
 
 export default Object.freeze(description);

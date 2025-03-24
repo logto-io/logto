@@ -109,10 +109,10 @@ const description = {
   support_email: 'Email wsparcia: <link></link>',
   support_website: 'Strona wsparcia: <link></link>',
   /** UNTRANSLATED */
-  account_mismatch_title: 'You are currently signed in as {{account}}',
+  switch_account_title: 'You are currently signed in as {{account}}',
   /** UNTRANSLATED */
-  account_mismatch_description:
-    'Please switch to the account that associated with this magic link, and try again.',
+  switch_account_description:
+    'To continue, you will be signed out of the current account, and switch to the new account automatically.',
 };
 
 export default Object.freeze(description);

@@ -10,8 +10,7 @@ const description = {
   sign_in: 'サインイン',
   privacy_policy: 'プライバシーポリシー',
   create_account: 'アカウントを作成する',
-  /** UNTRANSLATED */
-  switch_account: 'Switch account',
+  switch_account: 'アカウントを切り替える',
   or: 'または',
   and: '及び',
   enter_passcode: '確認コードが{{address}} {{target}}に送信されました',
@@ -103,11 +102,9 @@ const description = {
   back_to_sign_in: 'サインインに戻る',
   support_email: 'サポートメール: <link></link>',
   support_website: 'サポートウェブサイト: <link></link>',
-  /** UNTRANSLATED */
-  account_mismatch_title: 'You are currently signed in as {{account}}',
-  /** UNTRANSLATED */
-  account_mismatch_description:
-    'Please switch to the account that associated with this magic link, and try again.',
+  switch_account_title: '現在 {{account}} としてサインインしています',
+  switch_account_description:
+    '続行するには、現在のアカウントからサインアウトし、新しいアカウントに自動的に切り替わります。',
 };
 
 export default Object.freeze(description);

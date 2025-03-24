@@ -31,6 +31,7 @@ const action = {
   single_sign_on: 'シングルサインオン',
   authorize: '認証する',
   use_another_account: '別のアカウントを使用する',
+  back_to_current_account: '現在のアカウントに戻る',
 };
 
 export default Object.freeze(action);

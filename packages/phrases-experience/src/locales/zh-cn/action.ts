@@ -31,6 +31,8 @@ const action = {
   single_sign_on: '单点登录',
   authorize: '授权',
   use_another_account: '使用另一个账号',
+  /** UNTRANSLATED */
+  back_to_current_account: 'Back to current account',
 };
 
 export default Object.freeze(action);

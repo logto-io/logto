@@ -8,16 +8,12 @@
 
 .title {
   margin-top: _.unit(8);
-  text-align: center;
+  font: var(--font-label-2);
 }
 
 .message {
-  @include _.text-hint;
-  text-align: center;
-}
-
-.support {
-  margin-top: _.unit(4);
+  margin-top: _.unit(6);
+  font: var(--font-body-2);
 }
 
 .logo {
@@ -26,7 +22,15 @@
   @include _.image-align-center;
 }
 
+.userProfile {
+  width: 100%;
+}
+
 .button {
+  margin-top: _.unit(2);
+}
+
+.linkButton {
   margin-top: _.unit(6);
 }
 
@@ -35,21 +39,11 @@
     @include _.title;
     margin-bottom: _.unit(4);
   }
-
-  .backButton {
-    @include _.full-width;
-    margin-bottom: _.unit(4);
-  }
 }
 
 :global(body.desktop) {
   .title {
     @include _.title-desktop;
     margin-bottom: _.unit(2);
-  }
-
-  .backButton {
-    @include _.full-width;
-    margin-bottom: _.unit(12);
   }
 }
