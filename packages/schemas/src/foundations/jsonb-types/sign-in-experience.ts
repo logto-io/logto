@@ -57,8 +57,10 @@ export enum AlternativeSignUpIdentifier {
   EmailOrPhone = 'emailOrPhone',
 }
 
+export type SignUpIdentifier = SignInIdentifier | AlternativeSignUpIdentifier;
+
 type RequiredSignUpIdentifierSettings = {
-  identifier: SignInIdentifier | AlternativeSignUpIdentifier;
+  identifier: SignUpIdentifier;
   /**
    * For `email` and `phone` identifiers only. If `true`, the user must verify the email or phone number.
    */
