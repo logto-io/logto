@@ -22,6 +22,7 @@ overrides:
   rollup@>=4.0.0 <4.22.4: ^4.22.4
   vite@>=5.0.0 <5.4.12: ^5.4.12
   ws@>=8.0.0 <8.17.1: ^8.18.0
+  xml-crypto@3.0.1: ^3.2.1
 
 importers:
 
@@ -7680,6 +7681,10 @@ packages:
   '@withtyped/shared@0.2.2':
     resolution: {integrity: sha512-Vpcj12NqaoZ8M5Z/1kffheI9FBZEm9goed0THmgTcMKXLHjXSRbMZMp0olVxovEgaTIAydshqJOQUXKZMctIZw==}
 
+  '@xmldom/xmldom@0.8.10':
+    resolution: {integrity: sha512-2WALfTl4xo2SkGCYRt6rDTFfk9R1czmBvUQy12gK2KuRKIpWEhcbbzy8EZXtz/jkRqHX8bFEc6FC1HjX4TUWYw==}
+    engines: {node: '>=10.0.0'}
+
   '@xmldom/xmldom@0.8.7':
     resolution: {integrity: sha512-sI1Ly2cODlWStkINzqGrZ8K6n+MTSbAeQnAipGyL+KZCXuHaRlj2gyyy8B/9MvsFFqN7XHryQnB2QwhzvJXovg==}
     engines: {node: '>=10.0.0'}
@@ -14241,9 +14246,9 @@ packages:
       utf-8-validate:
         optional: true
 
-  xml-crypto@3.0.1:
-    resolution: {integrity: sha512-7XrwB3ujd95KCO6+u9fidb8ajvRJvIfGNWD0XLJoTWlBKz+tFpUzEYxsN+Il/6/gHtEs1RgRh2RH+TzhcWBZUw==}
-    engines: {node: '>=0.4.0'}
+  xml-crypto@3.2.1:
+    resolution: {integrity: sha512-0GUNbPtQt+PLMsC5HoZRONX+K6NBJEqpXe/lsvrFj0EqfpGPpVfJKGE7a5jCg8s2+Wkrf/2U1G41kIH+zC9eyQ==}
+    engines: {node: '>=4.0.0'}
 
   xml-escape@1.1.0:
     resolution: {integrity: sha512-B/T4sDK8Z6aUh/qNr7mjKAwwncIljFuUP+DO/D5hloYFj+90O88z8Wf7oSucZTHxBAsC1/CTP4rtx/x1Uf72Mg==}
@@ -18584,6 +18589,8 @@ snapshots:
       zod: 3.23.8
 
   '@withtyped/shared@0.2.2': {}
+
+  '@xmldom/xmldom@0.8.10': {}
 
   '@xmldom/xmldom@0.8.7': {}
 
@@ -25204,7 +25211,7 @@ snapshots:
       pako: 1.0.11
       uuid: 8.3.2
       xml: 1.0.1
-      xml-crypto: 3.0.1
+      xml-crypto: 3.2.1
       xml-escape: 1.1.0
       xpath: 0.0.32
 
@@ -26711,9 +26718,9 @@ snapshots:
 
   ws@8.18.0: {}
 
-  xml-crypto@3.0.1:
+  xml-crypto@3.2.1:
     dependencies:
-      '@xmldom/xmldom': 0.8.7
+      '@xmldom/xmldom': 0.8.10
       xpath: 0.0.32
 
   xml-escape@1.1.0: {}
