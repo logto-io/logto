@@ -18,7 +18,7 @@ import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import useLoginHint from '@/hooks/use-login-hint';
-import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
+import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
 import useTerms from '@/hooks/use-terms';
 
 import ErrorPage from '../ErrorPage';
@@ -35,10 +35,8 @@ const OneTimeToken = () => {
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const handleError = useErrorHandler();
   const redirectTo = useGlobalRedirectTo();
-  const preSignInErrorHandler = usePreSignInErrorHandler();
-  const preRegisterErrorHandler = usePreSignInErrorHandler({
-    interactionEvent: InteractionEvent.Register,
-  });
+  const preSignInErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.SignIn);
+  const preRegisterErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.Register);
 
   /**
    * Update interaction event to `SignIn`, and then identify user and submit.
