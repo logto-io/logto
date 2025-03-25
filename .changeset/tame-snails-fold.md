@@ -3,7 +3,7 @@
 "@logto/translate": patch
 ---
 
-utility method `isLanguageTag` should be case insensitive.
+make method `isLanguageTag` case-insensitive
 
 The language tags should be case insensitive. In `phrases` and `phrases-experience` packages, the language tags are all in lowercase. However, in the language kit, the language tags are in mixed cases, such as `pt-BR` and `zh-CN`.
 
