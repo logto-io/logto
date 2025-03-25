@@ -11,8 +11,8 @@ import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import usePasswordPolicyChecker from '@/hooks/use-password-policy-checker';
 import usePasswordRejectionErrorHandler from '@/hooks/use-password-rejection-handler';
-import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
 import { usePasswordPolicy } from '@/hooks/use-sie';
+import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
 import { type ContinueFlowInteractionEvent } from '@/types';
 
 type Props = {
@@ -35,7 +35,9 @@ const SetPassword = ({ interactionEvent }: Props) => {
   const handleError = useErrorHandler();
 
   const passwordRejectionErrorHandler = usePasswordRejectionErrorHandler({ setErrorMessage });
-  const preSignInErrorHandler = usePreSignInErrorHandler({ interactionEvent, replace: true });
+  const submitInteractionErrorHandler = useSubmitInteractionErrorHandler(interactionEvent, {
+    replace: true,
+  });
 
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
@@ -43,10 +45,10 @@ const SetPassword = ({ interactionEvent }: Props) => {
         await show({ type: 'alert', ModalContent: error.message, cancelText: 'action.got_it' });
         navigate(-1);
       },
-      ...preSignInErrorHandler,
+      ...submitInteractionErrorHandler,
       ...passwordRejectionErrorHandler,
     }),
-    [navigate, passwordRejectionErrorHandler, preSignInErrorHandler, show]
+    [navigate, passwordRejectionErrorHandler, submitInteractionErrorHandler, show]
   );
 
   const onSubmitHandler = useCallback(

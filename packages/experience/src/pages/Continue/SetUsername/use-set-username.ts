@@ -6,7 +6,7 @@ import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
-import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
+import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
 import { type ContinueFlowInteractionEvent } from '@/types';
 
 const useSetUsername = (interactionEvent: ContinueFlowInteractionEvent) => {
@@ -20,18 +20,16 @@ const useSetUsername = (interactionEvent: ContinueFlowInteractionEvent) => {
   const handleError = useErrorHandler();
   const redirectTo = useGlobalRedirectTo();
 
-  const preSignInErrorHandler = usePreSignInErrorHandler({
-    interactionEvent,
-  });
+  const submitInteractionErrorHandler = useSubmitInteractionErrorHandler(interactionEvent);
 
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
       'user.username_already_in_use': (error) => {
         setErrorMessage(error.message);
       },
-      ...preSignInErrorHandler,
+      ...submitInteractionErrorHandler,
     }),
-    [preSignInErrorHandler]
+    [submitInteractionErrorHandler]
   );
 
   const onSubmit = useCallback(

@@ -1,3 +1,4 @@
+import { InteractionEvent } from '@logto/schemas';
 import { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,8 +7,8 @@ import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
-import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
+import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
 
 const useRegisterWithUsername = () => {
   const navigate = useNavigate();
@@ -30,7 +31,9 @@ const useRegisterWithUsername = () => {
     []
   );
 
-  const preSignInErrorHandler = usePreSignInErrorHandler({ replace: true });
+  const preRegisterErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.Register, {
+    replace: true,
+  });
 
   const handleError = useErrorHandler();
   const asyncRegister = useApi(registerWithUsername);
@@ -41,14 +44,14 @@ const useRegisterWithUsername = () => {
     const [error, result] = await asyncSubmitInteraction();
 
     if (error) {
-      await handleError(error, preSignInErrorHandler);
+      await handleError(error, preRegisterErrorHandler);
       return;
     }
 
     if (result) {
       await redirectTo(result.redirectTo);
     }
-  }, [asyncSubmitInteraction, handleError, preSignInErrorHandler, redirectTo]);
+  }, [asyncSubmitInteraction, handleError, preRegisterErrorHandler, redirectTo]);
 
   const onSubmit = useCallback(
     async (username: string) => {

@@ -1,4 +1,4 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,8 +11,8 @@ import useErrorHandler, { type ErrorHandlers } from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import usePasswordPolicyChecker from '@/hooks/use-password-policy-checker';
 import usePasswordRejectionErrorHandler from '@/hooks/use-password-rejection-handler';
-import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
 import { usePasswordPolicy, useSieMethods } from '@/hooks/use-sie';
+import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
 
 import ErrorPage from '../ErrorPage';
 
@@ -31,7 +31,9 @@ const RegisterPassword = () => {
   const asyncRegisterPassword = useApi(continueRegisterWithPassword);
   const handleError = useErrorHandler();
 
-  const preSignInErrorHandler = usePreSignInErrorHandler({ replace: true });
+  const preRegisterErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.Register, {
+    replace: true,
+  });
   const passwordRejectionErrorHandler = usePasswordRejectionErrorHandler({ setErrorMessage });
 
   const errorHandlers: ErrorHandlers = useMemo(
@@ -41,10 +43,10 @@ const RegisterPassword = () => {
         await show({ type: 'alert', ModalContent: error.message, cancelText: 'action.got_it' });
         navigate(-1);
       },
-      ...preSignInErrorHandler,
+      ...preRegisterErrorHandler,
       ...passwordRejectionErrorHandler,
     }),
-    [preSignInErrorHandler, passwordRejectionErrorHandler, show, navigate]
+    [preRegisterErrorHandler, passwordRejectionErrorHandler, show, navigate]
   );
 
   const onSubmitHandler = useCallback(

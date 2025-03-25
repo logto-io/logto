@@ -7,7 +7,7 @@ import { registerWithVerifiedIdentifier } from '@/apis/experience';
 import useApi from './use-api';
 import useErrorHandler from './use-error-handler';
 import useGlobalRedirectTo from './use-global-redirect-to';
-import usePreSignInErrorHandler from './use-pre-sign-in-error-handler';
+import useSubmitInteractionErrorHandler from './use-submit-interaction-error-handler';
 import useTerms from './use-terms';
 
 const useSocialRegister = (connectorId: string, replace?: boolean) => {
@@ -17,10 +17,9 @@ const useSocialRegister = (connectorId: string, replace?: boolean) => {
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const navigate = useNavigate();
 
-  const preRegisterErrorHandler = usePreSignInErrorHandler({
+  const preRegisterErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.Register, {
     linkSocial: connectorId,
     replace,
-    interactionEvent: InteractionEvent.Register,
   });
 
   return useCallback(

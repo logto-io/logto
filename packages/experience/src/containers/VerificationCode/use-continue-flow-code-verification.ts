@@ -1,5 +1,5 @@
 import type { VerificationCodeIdentifier } from '@logto/schemas';
-import { VerificationType } from '@logto/schemas';
+import { InteractionEvent, VerificationType } from '@logto/schemas';
 import { useCallback, useContext, useMemo } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
@@ -10,7 +10,7 @@ import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
-import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
+import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
 import { SearchParameters } from '@/types';
 
 import useGeneralVerificationCodeErrorHandler from './use-general-verification-code-error-handler';
@@ -27,7 +27,7 @@ const useContinueFlowCodeVerification = (
 
   const { state } = useLocation();
   const { verificationIdsMap } = useContext(UserInteractionContext);
-  const interactionEvent = getInteractionEventFromState(state);
+  const interactionEvent = getInteractionEventFromState(state) ?? InteractionEvent.SignIn;
 
   const handleError = useErrorHandler();
   const verifyVerificationCode = useApi(updateProfileWithVerificationCode);
@@ -35,7 +35,9 @@ const useContinueFlowCodeVerification = (
   const { generalVerificationCodeErrorHandlers, errorMessage, clearErrorMessage } =
     useGeneralVerificationCodeErrorHandler();
 
-  const preSignInErrorHandler = usePreSignInErrorHandler({ replace: true, interactionEvent });
+  const submitInteractionErrorHandler = useSubmitInteractionErrorHandler(interactionEvent, {
+    replace: true,
+  });
 
   const showIdentifierErrorAlert = useIdentifierErrorAlert();
   const showLinkSocialConfirmModal = useLinkSocialConfirmModal();
@@ -65,10 +67,14 @@ const useContinueFlowCodeVerification = (
     () => ({
       'user.phone_already_in_use': identifierExistsErrorHandler,
       'user.email_already_in_use': identifierExistsErrorHandler,
-      ...preSignInErrorHandler,
+      ...submitInteractionErrorHandler,
       ...generalVerificationCodeErrorHandlers,
     }),
-    [preSignInErrorHandler, generalVerificationCodeErrorHandlers, identifierExistsErrorHandler]
+    [
+      submitInteractionErrorHandler,
+      generalVerificationCodeErrorHandlers,
+      identifierExistsErrorHandler,
+    ]
   );
 
   const onSubmit = useCallback(

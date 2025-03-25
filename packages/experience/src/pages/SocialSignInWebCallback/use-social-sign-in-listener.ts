@@ -16,9 +16,9 @@ import useBindSocialRelatedUser from '@/containers/SocialLinkAccount/use-social-
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
-import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
 import useSocialRegister from '@/hooks/use-social-register';
+import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
 import useToast from '@/hooks/use-toast';
 import { socialAccountNotExistErrorDataGuard } from '@/types/guard';
 import { parseQueryParameters } from '@/utils';
@@ -102,7 +102,9 @@ const useSocialSignInListener = (connectorId: string) => {
     [navigate, setToast]
   );
 
-  const preSignInErrorHandler = usePreSignInErrorHandler({ replace: true });
+  const preSignInErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.SignIn, {
+    replace: true,
+  });
 
   const signInWithSocialErrorHandlers: ErrorHandlers = useMemo(
     () => ({
