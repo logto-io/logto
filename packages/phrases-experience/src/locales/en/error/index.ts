@@ -19,6 +19,9 @@ const error = {
   timeout: 'Request timeout. Please try again later.',
   password_rejected,
   sso_not_enabled: 'Single Sign-On is not enabled for this email account.',
+  invalid_link: 'Invalid link',
+  invalid_link_description: 'Your one-time token may have expired or is no longer valid.',
+  something_went_wrong: 'Something went wrong.',
 };
 
 export default Object.freeze(error);

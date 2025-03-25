@@ -21,6 +21,9 @@ const error = {
   password_rejected,
   sso_not_enabled:
     'El inicio de sesión único no está habilitado para esta cuenta de correo electrónico.',
+  invalid_link: 'Enlace no válido',
+  invalid_link_description: 'Tu token de un solo uso puede haber expirado o ya no ser válido.',
+  something_went_wrong: 'Algo salió mal.',
 };
 
 export default Object.freeze(error);

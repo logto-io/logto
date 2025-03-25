@@ -19,6 +19,9 @@ const error = {
   timeout: 'Timeout della richiesta. Si prega di riprovare più tardi.',
   password_rejected,
   sso_not_enabled: 'Single sign-on non abilitato per questo account email.',
+  invalid_link: 'Link invalido',
+  invalid_link_description: 'Il tuo token monouso potrebbe essere scaduto o non è più valido.',
+  something_went_wrong: 'Qualcosa è andato storto.',
 };
 
 export default Object.freeze(error);

@@ -19,6 +19,9 @@ const error = {
   timeout: '요청 시간이 초과되었어요. 잠시 후에 다시 시도해 주세요.',
   password_rejected,
   sso_not_enabled: '이 이메일 계정에 대해 단일 로그인이 활성화되지 않았어요.',
+  invalid_link: '유효하지 않은 링크',
+  invalid_link_description: '일회성 토큰이 만료되었거나 더 이상 유효하지 않을 수 있어요.',
+  something_went_wrong: '문제가 발생했어요.',
 };
 
 export default Object.freeze(error);

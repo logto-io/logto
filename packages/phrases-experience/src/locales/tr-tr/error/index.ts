@@ -19,6 +19,10 @@ const error = {
   timeout: 'Oturum zaman aşımına uğradı. Lütfen geri dönüp tekrar giriş yapınız.',
   password_rejected,
   sso_not_enabled: 'Bu e-posta hesabı için tek oturum açma etkin değil.',
+  invalid_link: 'Geçersiz bağlantı',
+  invalid_link_description:
+    'Tek kullanımlık belirtecin süresi dolmuş olabilir veya artık geçerli değil.',
+  something_went_wrong: 'Bir şeyler yanlış gitti.',
 };
 
 export default Object.freeze(error);

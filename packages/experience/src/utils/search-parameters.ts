@@ -13,6 +13,12 @@ export const searchKeys = Object.freeze({
   appId: 'app_id',
 } satisfies Record<SearchKeysCamelCase, string>);
 
+/**
+ * The one-time token used as verification method.
+ * Example usage: Magic link
+ */
+export const oneTimeTokenSearchKey = 'one_time_token';
+
 export const handleSearchParametersData = () => {
   const { search } = window.location;
 
@@ -34,9 +40,14 @@ export const handleSearchParametersData = () => {
     }
   }
 
-  window.history.replaceState(
-    {},
-    '',
-    window.location.pathname + condString(parameters.size > 0 && `?${parameters.toString()}`)
-  );
+  const conditionalParamString = condString(parameters.size > 0 && `?${parameters.toString()}`);
+
+  // Check one-time token existence, and redirect to the `/one-time-token` route.
+  const oneTimeToken = parameters.get(oneTimeTokenSearchKey);
+  if (oneTimeToken) {
+    window.history.replaceState({}, '', '/one-time-token/' + oneTimeToken + conditionalParamString);
+    return;
+  }
+
+  window.history.replaceState({}, '', window.location.pathname + conditionalParamString);
 };

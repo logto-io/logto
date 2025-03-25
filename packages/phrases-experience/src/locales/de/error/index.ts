@@ -19,6 +19,10 @@ const error = {
   timeout: 'Zeitüberschreitung. Bitte melde dich erneut an.',
   password_rejected,
   sso_not_enabled: 'Single Sign-On ist für dieses E-Mail-Konto nicht aktiviert.',
+  invalid_link: 'Ungültiger Link',
+  invalid_link_description:
+    'Dein einmaliger Token ist möglicherweise abgelaufen oder nicht mehr gültig.',
+  something_went_wrong: 'Etwas ist schiefgegangen.',
 };
 
 export default Object.freeze(error);
