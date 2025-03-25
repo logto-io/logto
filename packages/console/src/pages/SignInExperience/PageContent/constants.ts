@@ -7,6 +7,10 @@ export const signUpIdentifiers = Object.values(SignUpIdentifier);
 
 export const signInIdentifiers = Object.values(SignInIdentifier);
 
+/**
+ * @deprecated
+ * TODO: remove this once the multi sign-up identifier feature is fully implemented.
+ */
 export const signUpIdentifiersMapping: { [key in SignUpIdentifier]: SignInIdentifier[] } = {
   [SignUpIdentifier.Username]: [SignInIdentifier.Username],
   [SignUpIdentifier.Email]: [SignInIdentifier.Email],

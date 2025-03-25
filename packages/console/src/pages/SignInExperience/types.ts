@@ -1,5 +1,10 @@
 import { type PasswordPolicy } from '@logto/core-kit';
-import { type SignUp, type SignInExperience, type SignInIdentifier } from '@logto/schemas';
+import {
+  type SignUp,
+  type SignInExperience,
+  type SignInIdentifier,
+  type SignUpIdentifier as SignUpIdentifierMethod,
+} from '@logto/schemas';
 
 export enum SignInExperienceTab {
   Branding = 'branding',
@@ -8,6 +13,9 @@ export enum SignInExperienceTab {
   PasswordPolicy = 'password-policy',
 }
 
+/**
+ * @deprecated
+ */
 export enum SignUpIdentifier {
   Email = 'email',
   Phone = 'phone',
@@ -16,8 +24,24 @@ export enum SignUpIdentifier {
   None = 'none',
 }
 
-export type SignUpForm = Omit<SignUp, 'identifiers'> & {
+export type SignUpForm = Omit<SignUp, 'identifiers' | 'secondaryIdentifiers'> & {
+  /**
+   * TODO: remove this field after the multi sign-up identifier feature is fully implemented.
+   * @deprecated
+   */
   identifier: SignUpIdentifier;
+  /**
+   * New identifiers field that merges the `signUpIdentifier` and `secondaryIdentifiers` fields
+   **/
+  identifiers: Array<{
+    /**
+     * Wrapped the identifier value into an object to make it manageable using the `useFieldArray` hook.
+     * `useFieldArray` requires the array item to be an object.
+     * Also for the future benefit, we may add `verify` field to the identifier object, once we support
+     * unverified email/phone as the sign-up identifier.
+     */
+    identifier: SignUpIdentifierMethod;
+  }>;
 };
 
 export type SignInExperienceForm = Omit<

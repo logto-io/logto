@@ -8,9 +8,8 @@ const sign_up_and_sign_in = {
   or: 'or',
   sign_up: {
     title: 'SIGN UP',
-    sign_up_identifier: 'Sign-up identifier',
-    identifier_description:
-      'The sign-up identifier is required for account creation and must be included in your sign-in screen.',
+    sign_up_identifier: 'Sign-up identifiers',
+    identifier_description: 'The sign-up identifier is required for account creation.',
     sign_up_authentication: 'Authentication setting for sign-up',
     authentication_description:
       'All selected actions will be obligatory for users to complete the flow.',
@@ -24,6 +23,7 @@ const sign_up_and_sign_in = {
     description:
       'Users can sign in using any of the options available. Adjust the layout by drag and dropping below options.',
     add_sign_in_method: 'Add sign-in method',
+    add_sign_up_method: 'Add sign-up method',
     password_auth: 'Password',
     verification_code_auth: 'Verification code',
     auth_swap_tip: 'Swap the options below to determine which appears first in the flow.',

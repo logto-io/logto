@@ -1,7 +1,10 @@
+import { SignInIdentifier } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
+import { useCallback } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import Card from '@/ds-components/Card';
 import Checkbox from '@/ds-components/Checkbox';
 import FormField from '@/ds-components/FormField';
@@ -19,11 +22,9 @@ import {
 } from '../../constants';
 import ConnectorSetupWarning from '../components/ConnectorSetupWarning';
 import {
+  createSignInMethod,
   getSignUpRequiredConnectorTypes,
   isVerificationRequiredSignUpIdentifiers,
-  createSignInMethod,
-  getSignInMethodPasswordCheckState,
-  getSignInMethodVerificationCodeCheckState,
 } from '../utils';
 
 import styles from './index.module.scss';
@@ -38,41 +39,42 @@ function SignUpForm() {
     trigger,
     formState: { errors, submitCount },
   } = useFormContext<SignInExperienceForm>();
+
   const { isConnectorTypeEnabled } = useEnabledConnectorTypes();
 
   const signUp = watch('signUp');
-
   const { identifier: signUpIdentifier } = signUp;
-
   const isUsernamePasswordSignUp = signUpIdentifier === SignUpIdentifier.Username;
 
-  const postSignUpIdentifierChange = (signUpIdentifier: SignUpIdentifier) => {
-    if (signUpIdentifier === SignUpIdentifier.Username) {
-      setValue('signUp.password', true);
-      setValue('signUp.verify', false);
+  const postSignUpIdentifierChange = useCallback(
+    (signUpIdentifier: SignUpIdentifier) => {
+      if (signUpIdentifier === SignUpIdentifier.Username) {
+        setValue('signUp.password', true);
+        setValue('signUp.verify', false);
+        return;
+      }
 
-      return;
-    }
+      if (signUpIdentifier === SignUpIdentifier.None) {
+        setValue('signUp.password', false);
+        setValue('signUp.verify', false);
+        return;
+      }
 
-    if (signUpIdentifier === SignUpIdentifier.None) {
-      setValue('signUp.password', false);
-      setValue('signUp.verify', false);
-
-      return;
-    }
-
-    if (isVerificationRequiredSignUpIdentifiers(signUpIdentifier)) {
-      setValue('signUp.verify', true);
-    }
-  };
+      if (isVerificationRequiredSignUpIdentifiers(signUpIdentifier)) {
+        setValue('signUp.verify', true);
+      }
+    },
+    [setValue]
+  );
 
   const refreshSignInMethods = () => {
     const signInMethods = getValues('signIn.methods');
-    const { identifier: signUpIdentifier } = signUp;
+    const { verify, password, identifier } = signUp;
+    const enabledSignUpIdentifiers = signUpIdentifiersMapping[identifier];
 
-    // Note: append required sign-in methods according to the sign-up identifier config
-    const requiredSignInIdentifiers = signUpIdentifiersMapping[signUpIdentifier];
-    const allSignInMethods = requiredSignInIdentifiers.reduce((methods, requiredIdentifier) => {
+    // Auto append newly assigned sign-up identifiers to the sign-in methods list if they don't already exist
+    // User may remove them manually if they don't want to use it for sign-in.
+    const mergedSignInMethods = enabledSignUpIdentifiers.reduce((methods, requiredIdentifier) => {
       if (signInMethods.some(({ identifier }) => identifier === requiredIdentifier)) {
         return methods;
       }
@@ -80,20 +82,26 @@ function SignUpForm() {
       return [...methods, createSignInMethod(requiredIdentifier)];
     }, signInMethods);
 
+    // Note: if verification is required, but password is not set for sign-up, then
+    // make sure all the email and phone sign-in methods have verification code enabled.
+    const isVerificationCodeRequired = verify && !password;
+
     setValue(
       'signIn.methods',
       // Note: refresh sign-in authentications according to the sign-up authentications config
-      allSignInMethods.map((method) => {
-        const { identifier, password, verificationCode } = method;
+      mergedSignInMethods.map((method) => {
+        const { identifier } = method;
+
+        if (identifier === SignInIdentifier.Username) {
+          return method;
+        }
 
         return {
           ...method,
-          password: getSignInMethodPasswordCheckState(identifier, signUp, password),
-          verificationCode: getSignInMethodVerificationCodeCheckState(
-            identifier,
-            signUp,
-            verificationCode
-          ),
+          // Auto enabled password for email and phone sign-in methods if password is required for sign-up.
+          // User may disable it manually if they don't want to use password for email or phone sign-in.
+          password: method.password || password,
+          verificationCode: isVerificationCodeRequired ? true : method.verificationCode,
         };
       })
     );
@@ -170,10 +178,11 @@ function SignUpForm() {
               render={({ field: { value, onChange } }) => (
                 <Checkbox
                   label={t('sign_in_exp.sign_up_and_sign_in.sign_up.set_a_password_option')}
-                  disabled={isUsernamePasswordSignUp}
+                  disabled={!isDevFeaturesEnabled && isUsernamePasswordSignUp}
                   checked={value}
                   tooltip={conditional(
-                    isUsernamePasswordSignUp &&
+                    !isDevFeaturesEnabled &&
+                      isUsernamePasswordSignUp &&
                       t('sign_in_exp.sign_up_and_sign_in.tip.set_a_password')
                   )}
                   onChange={(value) => {

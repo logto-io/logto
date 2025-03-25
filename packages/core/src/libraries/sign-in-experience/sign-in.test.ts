@@ -113,33 +113,6 @@ describe('validate sign-in', () => {
     });
   });
 
-  it('throws when sign up requires set a password and sign in password is not enabled', () => {
-    expect(() => {
-      validateSignIn(
-        {
-          methods: [
-            {
-              ...mockSignInMethod,
-              identifier: SignInIdentifier.Email,
-              password: false,
-              verificationCode: true,
-            },
-          ],
-        },
-        {
-          ...mockSignUp,
-          identifiers: [SignInIdentifier.Email],
-          password: true,
-        },
-        enabledConnectors
-      );
-    }).toMatchError(
-      new RequestError({
-        code: 'sign_in_experiences.password_sign_in_must_be_enabled',
-      })
-    );
-  });
-
   it('throws when sign up only requires verify and sign in verification code is not enabled', () => {
     expect(() => {
       validateSignIn(

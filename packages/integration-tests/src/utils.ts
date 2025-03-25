@@ -132,3 +132,8 @@ export const devFeatureTest = Object.freeze({
   it: isDevFeaturesEnabled ? it : it.skip,
   describe: isDevFeaturesEnabled ? describe : describe.skip,
 });
+
+export const devFeatureDisabledTest = Object.freeze({
+  it: isDevFeaturesEnabled ? it.skip : it,
+  describe: isDevFeaturesEnabled ? describe.skip : describe,
+});
