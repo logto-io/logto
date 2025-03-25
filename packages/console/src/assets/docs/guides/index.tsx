@@ -41,6 +41,7 @@ import webPython from './web-python/index';
 import webRuby from './web-ruby/index';
 import webSveltekit from './web-sveltekit/index';
 import webWordpress from './web-wordpress/index';
+import webWordpressPlugin from './web-wordpress-plugin';
 
 export const guides: Readonly<Guide[]> = Object.freeze([
   {
@@ -218,6 +219,14 @@ export const guides: Readonly<Guide[]> = Object.freeze([
     DarkLogo: undefined,
     Component: safeLazy(async () => import('./web-wordpress/README.mdx')),
     metadata: webWordpress,
+  },
+  {
+    order: 2.3,
+    id: 'web-wordpress-plugin',
+    Logo: safeLazy(async () => import('./web-wordpress-plugin/logo.svg?react')),
+    DarkLogo: undefined,
+    Component: safeLazy(async () => import('./web-wordpress-plugin/README.mdx')),
+    metadata: webWordpressPlugin,
   },
   {
     order: 3,
