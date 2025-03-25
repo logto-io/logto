@@ -22,15 +22,8 @@ function SignUpForm() {
     setValue,
     getValues,
     trigger,
-    formState: { submitCount, dirtyFields },
+    formState: { submitCount },
   } = useFormContext<SignInExperienceForm>();
-
-  // Note: `useWatch` is a hook that returns the updated value on every render.
-  // Unlike `watch`, it doesn't require a re-render to get the updated value (alway return the current ref).
-  const signUp = useWatch({
-    control,
-    name: 'signUp',
-  });
 
   const signUpIdentifiers = useWatch({
     control,
