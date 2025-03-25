@@ -20,7 +20,7 @@ overrides:
   path-to-regexp@>=4.0.0 <6.3.0: ^6.3.0
   puppeteer-core@<23.10.3: ^23.10.3
   rollup@>=4.0.0 <4.22.4: ^4.22.4
-  vite@>=5.0.0 <5.4.12: ^5.4.12
+  vite@>=5.0.0 <5.4.12: ^6.0.12
   ws@>=8.0.0 <8.17.1: ^8.18.0
   xml-crypto@3.0.1: ^3.2.1
 
@@ -58,7 +58,7 @@ importers:
         version: 8.8.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.0.2)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.0.2)(yaml@2.4.5)
       typescript:
         specifier: ^5.0.0
         version: 5.0.2
@@ -89,7 +89,7 @@ importers:
         version: 20.10.4
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.10.4)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -104,7 +104,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.10.4)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/cli:
     dependencies:
@@ -198,7 +198,7 @@ importers:
         version: 17.0.13
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.10.4)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       '@withtyped/server':
         specifier: ^0.14.0
         version: 0.14.0(zod@3.23.8)
@@ -219,7 +219,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.10.4)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-alipay-native:
     dependencies:
@@ -262,7 +262,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -280,13 +280,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-alipay-web:
     dependencies:
@@ -329,7 +329,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -347,13 +347,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-aliyun-dm:
     dependencies:
@@ -387,7 +387,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -405,13 +405,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-aliyun-sms:
     dependencies:
@@ -445,7 +445,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -463,13 +463,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-amazon:
     dependencies:
@@ -506,7 +506,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.8
-        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -524,13 +524,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.8
-        version: 2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-apple:
     dependencies:
@@ -570,7 +570,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -588,13 +588,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-aws-ses:
     dependencies:
@@ -634,7 +634,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -652,13 +652,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-azuread:
     dependencies:
@@ -695,7 +695,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -713,13 +713,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-dingtalk-web:
     dependencies:
@@ -762,7 +762,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -780,13 +780,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-discord:
     dependencies:
@@ -820,7 +820,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -838,13 +838,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-facebook:
     dependencies:
@@ -878,7 +878,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -896,13 +896,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-feishu-web:
     dependencies:
@@ -936,7 +936,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -954,13 +954,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-gatewayapi-sms:
     dependencies:
@@ -994,7 +994,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1012,13 +1012,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-github:
     dependencies:
@@ -1055,7 +1055,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1073,13 +1073,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-gitlab:
     dependencies:
@@ -1125,7 +1125,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1143,13 +1143,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-google:
     dependencies:
@@ -1186,7 +1186,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1204,13 +1204,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-http-email:
     dependencies:
@@ -1241,7 +1241,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1259,13 +1259,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-huggingface:
     dependencies:
@@ -1299,7 +1299,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1317,13 +1317,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-kakao:
     dependencies:
@@ -1357,7 +1357,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1375,13 +1375,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-kook:
     dependencies:
@@ -1415,7 +1415,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1433,13 +1433,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-line:
     dependencies:
@@ -1476,7 +1476,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.8
-        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1494,13 +1494,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.8
-        version: 2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-linkedin:
     dependencies:
@@ -1537,7 +1537,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.8
-        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1555,13 +1555,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.8
-        version: 2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-logto-email:
     dependencies:
@@ -1598,7 +1598,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1616,13 +1616,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-logto-sms:
     dependencies:
@@ -1656,7 +1656,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1674,13 +1674,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-logto-social-demo:
     dependencies:
@@ -1714,7 +1714,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1732,13 +1732,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-mailgun:
     dependencies:
@@ -1772,7 +1772,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1790,13 +1790,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-mock-email:
     dependencies:
@@ -1830,7 +1830,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1848,13 +1848,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-mock-email-alternative:
     dependencies:
@@ -1888,7 +1888,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1906,13 +1906,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-mock-sms:
     dependencies:
@@ -1946,7 +1946,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1964,13 +1964,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-mock-social:
     dependencies:
@@ -2004,7 +2004,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2022,13 +2022,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-naver:
     dependencies:
@@ -2062,7 +2062,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2080,13 +2080,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-oauth2:
     dependencies:
@@ -2129,7 +2129,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2147,13 +2147,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-oidc:
     dependencies:
@@ -2199,7 +2199,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2217,13 +2217,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-patreon:
     dependencies:
@@ -2257,7 +2257,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2275,13 +2275,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-postmark:
     dependencies:
@@ -2312,7 +2312,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2330,13 +2330,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-saml:
     dependencies:
@@ -2376,7 +2376,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2394,13 +2394,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-sendgrid-email:
     dependencies:
@@ -2434,7 +2434,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2452,13 +2452,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-slack:
     dependencies:
@@ -2495,7 +2495,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.8
-        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2513,13 +2513,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.8
-        version: 2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-smsaero:
     dependencies:
@@ -2553,7 +2553,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2571,13 +2571,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-smtp:
     dependencies:
@@ -2617,7 +2617,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2635,13 +2635,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-tencent-sms:
     dependencies:
@@ -2675,7 +2675,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2693,13 +2693,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-twilio-sms:
     dependencies:
@@ -2733,7 +2733,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2751,13 +2751,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-vonage-sms:
     dependencies:
@@ -2791,7 +2791,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2806,13 +2806,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-wechat-native:
     dependencies:
@@ -2846,7 +2846,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2864,13 +2864,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-wechat-web:
     dependencies:
@@ -2904,7 +2904,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2922,13 +2922,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-wecom:
     dependencies:
@@ -2962,7 +2962,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.10.4)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2980,13 +2980,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.10.4)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-x:
     dependencies:
@@ -3023,7 +3023,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.8
-        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -3041,13 +3041,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.8
-        version: 2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-xiaomi:
     dependencies:
@@ -3078,7 +3078,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -3096,13 +3096,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-yunpian-sms:
     dependencies:
@@ -3133,7 +3133,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -3151,13 +3151,13 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/console:
     devDependencies:
@@ -3776,7 +3776,7 @@ importers:
         version: 7.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -3809,7 +3809,7 @@ importers:
         version: 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       '@silverhand/eslint-config-react':
         specifier: 6.0.2
-        version: 6.0.2(eslint@8.57.0)(postcss@8.5.1)(prettier@3.0.0)(stylelint@15.11.0(typescript@5.5.3))(typescript@5.5.3)
+        version: 6.0.2(eslint@8.57.0)(postcss@8.5.3)(prettier@3.0.0)(stylelint@15.11.0(typescript@5.5.3))(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.5.3)
@@ -3945,7 +3945,7 @@ importers:
         version: 3.0.0
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
 
   packages/experience:
     devDependencies:
@@ -4447,7 +4447,7 @@ importers:
         version: 23.10.3(typescript@5.5.3)
       tsup:
         specifier: ^8.3.0
-        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5)
+        version: 8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -4573,7 +4573,7 @@ importers:
         version: 0.0.33
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.10.4)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       camelcase:
         specifier: ^8.0.0
         version: 8.0.0
@@ -4600,7 +4600,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.10.4)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/shared:
     dependencies:
@@ -4634,7 +4634,7 @@ importers:
         version: 20.10.4
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.10.4)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -4649,7 +4649,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.10.4)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/toolkit/connector-kit:
     dependencies:
@@ -4681,7 +4681,7 @@ importers:
         version: 20.10.4
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.10.4)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -4696,7 +4696,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.10.4)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/toolkit/core-kit:
     dependencies:
@@ -4740,7 +4740,7 @@ importers:
         version: 18.3.3
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.10.4)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -4761,7 +4761,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.10.4)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/toolkit/language-kit:
     optionalDependencies:
@@ -4780,7 +4780,7 @@ importers:
         version: 20.10.4
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.10.4)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -4795,7 +4795,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.10.4)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/translate:
     dependencies:
@@ -4865,7 +4865,7 @@ importers:
         version: 17.0.13
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -4932,7 +4932,7 @@ importers:
         version: 17.0.13
       '@vitest/coverage-v8':
         specifier: ^2.1.9
-        version: 2.1.9(vitest@2.1.9(@types/node@20.17.19)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))
+        version: 2.1.9(vitest@2.1.9(@types/node@20.17.19)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -4947,7 +4947,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^2.1.9
-        version: 2.1.9(@types/node@20.17.19)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+        version: 2.1.9(@types/node@20.17.19)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
 packages:
 
@@ -6559,6 +6559,7 @@ packages:
   '@shopify/jest-koa-mocks@5.0.0':
     resolution: {integrity: sha512-keF5fgqAzWgC4O5uwUgQawp80IsDJdfyyMvWnIcsMaYw9CgURm4CW+v9NskUAn6AeaHd4Tkv+pWCFg/LRHHf4w==}
     engines: {node: ^14.17.0 || >=16.0.0}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   '@sideway/address@4.1.5':
     resolution: {integrity: sha512-IqO/DUQHUkPeixNQ8n0JA6102hT9CmaljNTPmQ1u8MEhBo/R4Q8eKLN/vGZxuebwOroDB4cbpjheD4+/sKFK4Q==}
@@ -7510,7 +7511,7 @@ packages:
     resolution: {integrity: sha512-m/V2syj5CuVnaxcUJOQRel/Wr31FFXRFlnOoq1TVtkCxsY5veGMTEmpWHndrhB2U8ScHtCQB1e+4hWYExQc6Lg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
-      vite: ^5.4.12
+      vite: ^6.0.12
 
   '@vitest/coverage-v8@2.1.9':
     resolution: {integrity: sha512-Z2cOr0ksM00MpEfyVE8KXIYPEcBFxdbLSs56L8PO0QQMxt/6bDj45uQfxoc96v05KW3clk7vvgP0qfDit9DmfQ==}
@@ -7528,7 +7529,7 @@ packages:
     resolution: {integrity: sha512-tVL6uJgoUdi6icpxmdrn5YNo3g3Dxv+IHJBr0GXHaEdTcw3F+cPKnsXFhli6nO+f/6SDKPHEK1UN+k+TQv0Ehg==}
     peerDependencies:
       msw: ^2.4.9
-      vite: ^5.4.12
+      vite: ^6.0.12
     peerDependenciesMeta:
       msw:
         optional: true
@@ -12389,6 +12390,10 @@ packages:
     resolution: {integrity: sha512-6oz2beyjc5VMn/KV1pPw8fliQkhBXrVn1Z3TVyqZxU8kZpzEKhBdmCFqI6ZbmGtamQvQGuU1sgPTk8ZrXDD7jQ==}
     engines: {node: ^10 || ^12 || >=14}
 
+  postcss@8.5.3:
+    resolution: {integrity: sha512-dle9A3yYxlBSrt8Fu+IpjGT8SY8hN0mlaA6GY8t0P5PjIOZemULz/E2Bnm/2dcUOena75OTNkHI76uZBNUUq3A==}
+    engines: {node: ^10 || ^12 || >=14}
+
   postgres-array@2.0.0:
     resolution: {integrity: sha512-VpZrUqU5A69eQyW2c5CA1jtLecCsN2U/bD6VilrFDWq5+5UIEVO7nazS3TEcHf1zuPYO/sqGvUvW62g86RXZuA==}
     engines: {node: '>=4'}
@@ -13995,28 +14000,33 @@ packages:
   vite-plugin-compression@0.5.1:
     resolution: {integrity: sha512-5QJKBDc+gNYVqL/skgFAP81Yuzo9R+EAf19d+EtsMF/i8kFUpNi3J/H01QD3Oo8zBQn+NzoCIFkpPLynoOzaJg==}
     peerDependencies:
-      vite: ^5.4.12
+      vite: ^6.0.12
 
   vite-plugin-svgr@4.3.0:
     resolution: {integrity: sha512-Jy9qLB2/PyWklpYy0xk0UU3TlU0t2UMpJXZvf+hWII1lAmRHrOUKi11Uw8N3rxoNk7atZNYO3pR3vI1f7oi+6w==}
     peerDependencies:
-      vite: ^5.4.12
+      vite: ^6.0.12
 
-  vite@5.4.14:
-    resolution: {integrity: sha512-EK5cY7Q1D8JNhSaPKVK4pwBFvaTmZxEnoKXLG/U9gmdDcihQGNzFlgIvaxezFR4glP1LsuiedwMBqCXH3wZccA==}
-    engines: {node: ^18.0.0 || >=20.0.0}
+  vite@6.0.11:
+    resolution: {integrity: sha512-4VL9mQPKoHy4+FE0NnRE/kbY51TOfaknxAjt3fJbGJxhIpBZiqVzlZDEesWWsuREXHwNdAoOFZ9MkPEVXczHwg==}
+    engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
     peerDependencies:
-      '@types/node': ^18.0.0 || >=20.0.0
+      '@types/node': ^18.0.0 || ^20.0.0 || >=22.0.0
+      jiti: '>=1.21.0'
       less: '*'
       lightningcss: ^1.21.0
       sass: '*'
       sass-embedded: '*'
       stylus: '*'
       sugarss: '*'
-      terser: ^5.4.0
+      terser: ^5.16.0
+      tsx: ^4.8.1
+      yaml: ^2.4.2
     peerDependenciesMeta:
       '@types/node':
+        optional: true
+      jiti:
         optional: true
       less:
         optional: true
@@ -14032,9 +14042,13 @@ packages:
         optional: true
       terser:
         optional: true
+      tsx:
+        optional: true
+      yaml:
+        optional: true
 
-  vite@6.0.11:
-    resolution: {integrity: sha512-4VL9mQPKoHy4+FE0NnRE/kbY51TOfaknxAjt3fJbGJxhIpBZiqVzlZDEesWWsuREXHwNdAoOFZ9MkPEVXczHwg==}
+  vite@6.2.3:
+    resolution: {integrity: sha512-IzwM54g4y9JA/xAeBPNaDXiBF8Jsgl3VBQ2YQ/wOY6fyW3xMdSoltIV3Bo59DErdqdE6RxUfv8W69DvUorE4Eg==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
     peerDependencies:
@@ -16837,14 +16851,14 @@ snapshots:
       - supports-color
       - typescript
 
-  '@silverhand/eslint-config-react@6.0.2(eslint@8.57.0)(postcss@8.5.1)(prettier@3.0.0)(stylelint@15.11.0(typescript@5.5.3))(typescript@5.5.3)':
+  '@silverhand/eslint-config-react@6.0.2(eslint@8.57.0)(postcss@8.5.3)(prettier@3.0.0)(stylelint@15.11.0(typescript@5.5.3))(typescript@5.5.3)':
     dependencies:
       '@silverhand/eslint-config': 6.0.1(eslint@8.57.0)(prettier@3.0.0)(typescript@5.5.3)
       eslint-config-xo-react: 0.27.0(eslint-plugin-react-hooks@4.6.0(eslint@8.57.0))(eslint-plugin-react@7.34.1(eslint@8.57.0))(eslint@8.57.0)
       eslint-plugin-jsx-a11y: 6.8.0(eslint@8.57.0)
       eslint-plugin-react: 7.34.1(eslint@8.57.0)
       eslint-plugin-react-hooks: 4.6.0(eslint@8.57.0)
-      postcss-scss: 4.0.9(postcss@8.5.1)
+      postcss-scss: 4.0.9(postcss@8.5.3)
       stylelint: 15.11.0(typescript@5.5.3)
       stylelint-config-xo: 0.22.0(stylelint@15.11.0(typescript@5.5.3))
       stylelint-scss: 6.2.1(stylelint@15.11.0(typescript@5.5.3))
@@ -18042,7 +18056,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/coverage-v8@2.1.9(vitest@2.1.9(@types/node@20.10.4)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))':
+  '@vitest/coverage-v8@2.1.9(vitest@2.1.9(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -18056,11 +18070,11 @@ snapshots:
       std-env: 3.8.0
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
-      vitest: 2.1.9(@types/node@20.10.4)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+      vitest: 2.1.9(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/coverage-v8@2.1.9(vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))':
+  '@vitest/coverage-v8@2.1.9(vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -18074,11 +18088,11 @@ snapshots:
       std-env: 3.8.0
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
-      vitest: 2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+      vitest: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/coverage-v8@2.1.9(vitest@2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))':
+  '@vitest/coverage-v8@2.1.9(vitest@2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -18092,11 +18106,11 @@ snapshots:
       std-env: 3.8.0
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
-      vitest: 2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+      vitest: 2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/coverage-v8@2.1.9(vitest@2.1.9(@types/node@20.17.19)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8))':
+  '@vitest/coverage-v8@2.1.9(vitest@2.1.9(@types/node@20.17.19)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -18110,7 +18124,7 @@ snapshots:
       std-env: 3.8.0
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
-      vitest: 2.1.9(@types/node@20.17.19)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)
+      vitest: 2.1.9(@types/node@20.17.19)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
     transitivePeerDependencies:
       - supports-color
 
@@ -18121,37 +18135,37 @@ snapshots:
       chai: 5.1.2
       tinyrainbow: 1.2.0
 
-  '@vitest/mocker@2.1.9(vite@5.4.14(@types/node@20.10.4)(lightningcss@1.25.1)(sass@1.77.8))':
+  '@vitest/mocker@2.1.9(vite@6.2.3(@types/node@20.10.4)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))':
     dependencies:
       '@vitest/spy': 2.1.9
       estree-walker: 3.0.3
       magic-string: 0.30.17
     optionalDependencies:
-      vite: 5.4.14(@types/node@20.10.4)(lightningcss@1.25.1)(sass@1.77.8)
+      vite: 6.2.3(@types/node@20.10.4)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
-  '@vitest/mocker@2.1.9(vite@5.4.14(@types/node@20.11.20)(lightningcss@1.25.1)(sass@1.77.8))':
+  '@vitest/mocker@2.1.9(vite@6.2.3(@types/node@20.11.20)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))':
     dependencies:
       '@vitest/spy': 2.1.9
       estree-walker: 3.0.3
       magic-string: 0.30.17
     optionalDependencies:
-      vite: 5.4.14(@types/node@20.11.20)(lightningcss@1.25.1)(sass@1.77.8)
+      vite: 6.2.3(@types/node@20.11.20)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
-  '@vitest/mocker@2.1.9(vite@5.4.14(@types/node@20.12.7)(lightningcss@1.25.1)(sass@1.77.8))':
+  '@vitest/mocker@2.1.9(vite@6.2.3(@types/node@20.12.7)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))':
     dependencies:
       '@vitest/spy': 2.1.9
       estree-walker: 3.0.3
       magic-string: 0.30.17
     optionalDependencies:
-      vite: 5.4.14(@types/node@20.12.7)(lightningcss@1.25.1)(sass@1.77.8)
+      vite: 6.2.3(@types/node@20.12.7)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
-  '@vitest/mocker@2.1.9(vite@5.4.14(@types/node@20.17.19)(lightningcss@1.25.1)(sass@1.77.8))':
+  '@vitest/mocker@2.1.9(vite@6.2.3(@types/node@20.17.19)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))':
     dependencies:
       '@vitest/spy': 2.1.9
       estree-walker: 3.0.3
       magic-string: 0.30.17
     optionalDependencies:
-      vite: 5.4.14(@types/node@20.17.19)(lightningcss@1.25.1)(sass@1.77.8)
+      vite: 6.2.3(@types/node@20.17.19)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   '@vitest/pretty-format@2.1.9':
     dependencies:
@@ -24280,12 +24294,12 @@ snapshots:
 
   possible-typed-array-names@1.0.0: {}
 
-  postcss-load-config@6.0.1(jiti@1.21.0)(postcss@8.5.1)(yaml@2.4.5):
+  postcss-load-config@6.0.1(jiti@1.21.0)(postcss@8.5.3)(yaml@2.4.5):
     dependencies:
       lilconfig: 3.1.2
     optionalDependencies:
       jiti: 1.21.0
-      postcss: 8.5.1
+      postcss: 8.5.3
       yaml: 2.4.5
 
   postcss-media-query-parser@0.2.3: {}
@@ -24370,9 +24384,9 @@ snapshots:
     dependencies:
       postcss: 8.4.39
 
-  postcss-scss@4.0.9(postcss@8.5.1):
+  postcss-scss@4.0.9(postcss@8.5.3):
     dependencies:
-      postcss: 8.5.1
+      postcss: 8.5.3
 
   postcss-selector-parser@6.0.16:
     dependencies:
@@ -24411,6 +24425,12 @@ snapshots:
       source-map-js: 1.2.1
 
   postcss@8.5.1:
+    dependencies:
+      nanoid: 3.3.8
+      picocolors: 1.1.1
+      source-map-js: 1.2.1
+
+  postcss@8.5.3:
     dependencies:
       nanoid: 3.3.8
       picocolors: 1.1.1
@@ -25978,7 +25998,7 @@ snapshots:
 
   tsscmp@1.0.6: {}
 
-  tsup@8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.0.2)(yaml@2.4.5):
+  tsup@8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.0.2)(yaml@2.4.5):
     dependencies:
       bundle-require: 5.0.0(esbuild@0.25.0)
       cac: 6.7.14
@@ -25989,7 +26009,7 @@ snapshots:
       execa: 5.1.1
       joycon: 3.1.1
       picocolors: 1.1.1
-      postcss-load-config: 6.0.1(jiti@1.21.0)(postcss@8.5.1)(yaml@2.4.5)
+      postcss-load-config: 6.0.1(jiti@1.21.0)(postcss@8.5.3)(yaml@2.4.5)
       resolve-from: 5.0.0
       rollup: 4.24.0
       source-map: 0.8.0-beta.0
@@ -25998,7 +26018,7 @@ snapshots:
       tree-kill: 1.2.2
     optionalDependencies:
       '@swc/core': 1.3.52(@swc/helpers@0.5.1)
-      postcss: 8.5.1
+      postcss: 8.5.3
       typescript: 5.0.2
     transitivePeerDependencies:
       - jiti
@@ -26006,7 +26026,7 @@ snapshots:
       - tsx
       - yaml
 
-  tsup@8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.1)(typescript@5.5.3)(yaml@2.4.5):
+  tsup@8.3.0(@swc/core@1.3.52(@swc/helpers@0.5.1))(jiti@1.21.0)(postcss@8.5.3)(typescript@5.5.3)(yaml@2.4.5):
     dependencies:
       bundle-require: 5.0.0(esbuild@0.25.0)
       cac: 6.7.14
@@ -26017,7 +26037,7 @@ snapshots:
       execa: 5.1.1
       joycon: 3.1.1
       picocolors: 1.1.1
-      postcss-load-config: 6.0.1(jiti@1.21.0)(postcss@8.5.1)(yaml@2.4.5)
+      postcss-load-config: 6.0.1(jiti@1.21.0)(postcss@8.5.3)(yaml@2.4.5)
       resolve-from: 5.0.0
       rollup: 4.24.0
       source-map: 0.8.0-beta.0
@@ -26026,7 +26046,7 @@ snapshots:
       tree-kill: 1.2.2
     optionalDependencies:
       '@swc/core': 1.3.52(@swc/helpers@0.5.1)
-      postcss: 8.5.1
+      postcss: 8.5.3
       typescript: 5.5.3
     transitivePeerDependencies:
       - jiti
@@ -26262,15 +26282,16 @@ snapshots:
       unist-util-stringify-position: 4.0.0
       vfile-message: 4.0.2
 
-  vite-node@2.1.9(@types/node@20.10.4)(lightningcss@1.25.1)(sass@1.77.8):
+  vite-node@2.1.9(@types/node@20.10.4)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5):
     dependencies:
       cac: 6.7.14
       debug: 4.4.0
       es-module-lexer: 1.6.0
       pathe: 1.1.2
-      vite: 5.4.14(@types/node@20.10.4)(lightningcss@1.25.1)(sass@1.77.8)
+      vite: 6.2.3(@types/node@20.10.4)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
     transitivePeerDependencies:
       - '@types/node'
+      - jiti
       - less
       - lightningcss
       - sass
@@ -26279,16 +26300,19 @@ snapshots:
       - sugarss
       - supports-color
       - terser
+      - tsx
+      - yaml
 
-  vite-node@2.1.9(@types/node@20.11.20)(lightningcss@1.25.1)(sass@1.77.8):
+  vite-node@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5):
     dependencies:
       cac: 6.7.14
       debug: 4.4.0
       es-module-lexer: 1.6.0
       pathe: 1.1.2
-      vite: 5.4.14(@types/node@20.11.20)(lightningcss@1.25.1)(sass@1.77.8)
+      vite: 6.2.3(@types/node@20.11.20)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
     transitivePeerDependencies:
       - '@types/node'
+      - jiti
       - less
       - lightningcss
       - sass
@@ -26297,16 +26321,19 @@ snapshots:
       - sugarss
       - supports-color
       - terser
+      - tsx
+      - yaml
 
-  vite-node@2.1.9(@types/node@20.12.7)(lightningcss@1.25.1)(sass@1.77.8):
+  vite-node@2.1.9(@types/node@20.12.7)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5):
     dependencies:
       cac: 6.7.14
       debug: 4.4.0
       es-module-lexer: 1.6.0
       pathe: 1.1.2
-      vite: 5.4.14(@types/node@20.12.7)(lightningcss@1.25.1)(sass@1.77.8)
+      vite: 6.2.3(@types/node@20.12.7)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
     transitivePeerDependencies:
       - '@types/node'
+      - jiti
       - less
       - lightningcss
       - sass
@@ -26315,16 +26342,19 @@ snapshots:
       - sugarss
       - supports-color
       - terser
+      - tsx
+      - yaml
 
-  vite-node@2.1.9(@types/node@20.17.19)(lightningcss@1.25.1)(sass@1.77.8):
+  vite-node@2.1.9(@types/node@20.17.19)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5):
     dependencies:
       cac: 6.7.14
       debug: 4.4.0
       es-module-lexer: 1.6.0
       pathe: 1.1.2
-      vite: 5.4.14(@types/node@20.17.19)(lightningcss@1.25.1)(sass@1.77.8)
+      vite: 6.2.3(@types/node@20.17.19)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
     transitivePeerDependencies:
       - '@types/node'
+      - jiti
       - less
       - lightningcss
       - sass
@@ -26333,6 +26363,8 @@ snapshots:
       - sugarss
       - supports-color
       - terser
+      - tsx
+      - yaml
 
   vite-plugin-compression@0.5.1(vite@6.0.11(@types/node@20.17.19)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)):
     dependencies:
@@ -26354,50 +26386,6 @@ snapshots:
       - supports-color
       - typescript
 
-  vite@5.4.14(@types/node@20.10.4)(lightningcss@1.25.1)(sass@1.77.8):
-    dependencies:
-      esbuild: 0.25.0
-      postcss: 8.5.1
-      rollup: 4.34.2
-    optionalDependencies:
-      '@types/node': 20.10.4
-      fsevents: 2.3.3
-      lightningcss: 1.25.1
-      sass: 1.77.8
-
-  vite@5.4.14(@types/node@20.11.20)(lightningcss@1.25.1)(sass@1.77.8):
-    dependencies:
-      esbuild: 0.25.0
-      postcss: 8.5.1
-      rollup: 4.34.2
-    optionalDependencies:
-      '@types/node': 20.11.20
-      fsevents: 2.3.3
-      lightningcss: 1.25.1
-      sass: 1.77.8
-
-  vite@5.4.14(@types/node@20.12.7)(lightningcss@1.25.1)(sass@1.77.8):
-    dependencies:
-      esbuild: 0.25.0
-      postcss: 8.5.1
-      rollup: 4.34.2
-    optionalDependencies:
-      '@types/node': 20.12.7
-      fsevents: 2.3.3
-      lightningcss: 1.25.1
-      sass: 1.77.8
-
-  vite@5.4.14(@types/node@20.17.19)(lightningcss@1.25.1)(sass@1.77.8):
-    dependencies:
-      esbuild: 0.25.0
-      postcss: 8.5.1
-      rollup: 4.34.2
-    optionalDependencies:
-      '@types/node': 20.17.19
-      fsevents: 2.3.3
-      lightningcss: 1.25.1
-      sass: 1.77.8
-
   vite@6.0.11(@types/node@20.17.19)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5):
     dependencies:
       esbuild: 0.25.0
@@ -26411,10 +26399,62 @@ snapshots:
       sass: 1.77.8
       yaml: 2.4.5
 
-  vitest@2.1.9(@types/node@20.10.4)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8):
+  vite@6.2.3(@types/node@20.10.4)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5):
+    dependencies:
+      esbuild: 0.25.0
+      postcss: 8.5.3
+      rollup: 4.34.2
+    optionalDependencies:
+      '@types/node': 20.10.4
+      fsevents: 2.3.3
+      jiti: 1.21.0
+      lightningcss: 1.25.1
+      sass: 1.77.8
+      yaml: 2.4.5
+
+  vite@6.2.3(@types/node@20.11.20)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5):
+    dependencies:
+      esbuild: 0.25.0
+      postcss: 8.5.3
+      rollup: 4.34.2
+    optionalDependencies:
+      '@types/node': 20.11.20
+      fsevents: 2.3.3
+      jiti: 1.21.0
+      lightningcss: 1.25.1
+      sass: 1.77.8
+      yaml: 2.4.5
+
+  vite@6.2.3(@types/node@20.12.7)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5):
+    dependencies:
+      esbuild: 0.25.0
+      postcss: 8.5.3
+      rollup: 4.34.2
+    optionalDependencies:
+      '@types/node': 20.12.7
+      fsevents: 2.3.3
+      jiti: 1.21.0
+      lightningcss: 1.25.1
+      sass: 1.77.8
+      yaml: 2.4.5
+
+  vite@6.2.3(@types/node@20.17.19)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5):
+    dependencies:
+      esbuild: 0.25.0
+      postcss: 8.5.3
+      rollup: 4.34.2
+    optionalDependencies:
+      '@types/node': 20.17.19
+      fsevents: 2.3.3
+      jiti: 1.21.0
+      lightningcss: 1.25.1
+      sass: 1.77.8
+      yaml: 2.4.5
+
+  vitest@2.1.9(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5):
     dependencies:
       '@vitest/expect': 2.1.9
-      '@vitest/mocker': 2.1.9(vite@5.4.14(@types/node@20.10.4)(lightningcss@1.25.1)(sass@1.77.8))
+      '@vitest/mocker': 2.1.9(vite@6.2.3(@types/node@20.10.4)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       '@vitest/pretty-format': 2.1.9
       '@vitest/runner': 2.1.9
       '@vitest/snapshot': 2.1.9
@@ -26430,13 +26470,14 @@ snapshots:
       tinyexec: 0.3.2
       tinypool: 1.0.2
       tinyrainbow: 1.2.0
-      vite: 5.4.14(@types/node@20.10.4)(lightningcss@1.25.1)(sass@1.77.8)
-      vite-node: 2.1.9(@types/node@20.10.4)(lightningcss@1.25.1)(sass@1.77.8)
+      vite: 6.2.3(@types/node@20.10.4)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+      vite-node: 2.1.9(@types/node@20.10.4)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 20.10.4
       jsdom: 20.0.2
     transitivePeerDependencies:
+      - jiti
       - less
       - lightningcss
       - msw
@@ -26446,11 +26487,13 @@ snapshots:
       - sugarss
       - supports-color
       - terser
+      - tsx
+      - yaml
 
-  vitest@2.1.9(@types/node@20.11.20)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8):
+  vitest@2.1.9(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5):
     dependencies:
       '@vitest/expect': 2.1.9
-      '@vitest/mocker': 2.1.9(vite@5.4.14(@types/node@20.11.20)(lightningcss@1.25.1)(sass@1.77.8))
+      '@vitest/mocker': 2.1.9(vite@6.2.3(@types/node@20.11.20)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       '@vitest/pretty-format': 2.1.9
       '@vitest/runner': 2.1.9
       '@vitest/snapshot': 2.1.9
@@ -26466,13 +26509,14 @@ snapshots:
       tinyexec: 0.3.2
       tinypool: 1.0.2
       tinyrainbow: 1.2.0
-      vite: 5.4.14(@types/node@20.11.20)(lightningcss@1.25.1)(sass@1.77.8)
-      vite-node: 2.1.9(@types/node@20.11.20)(lightningcss@1.25.1)(sass@1.77.8)
+      vite: 6.2.3(@types/node@20.11.20)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+      vite-node: 2.1.9(@types/node@20.11.20)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 20.11.20
       jsdom: 20.0.2
     transitivePeerDependencies:
+      - jiti
       - less
       - lightningcss
       - msw
@@ -26482,11 +26526,13 @@ snapshots:
       - sugarss
       - supports-color
       - terser
+      - tsx
+      - yaml
 
-  vitest@2.1.9(@types/node@20.12.7)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8):
+  vitest@2.1.9(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5):
     dependencies:
       '@vitest/expect': 2.1.9
-      '@vitest/mocker': 2.1.9(vite@5.4.14(@types/node@20.12.7)(lightningcss@1.25.1)(sass@1.77.8))
+      '@vitest/mocker': 2.1.9(vite@6.2.3(@types/node@20.12.7)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       '@vitest/pretty-format': 2.1.9
       '@vitest/runner': 2.1.9
       '@vitest/snapshot': 2.1.9
@@ -26502,13 +26548,14 @@ snapshots:
       tinyexec: 0.3.2
       tinypool: 1.0.2
       tinyrainbow: 1.2.0
-      vite: 5.4.14(@types/node@20.12.7)(lightningcss@1.25.1)(sass@1.77.8)
-      vite-node: 2.1.9(@types/node@20.12.7)(lightningcss@1.25.1)(sass@1.77.8)
+      vite: 6.2.3(@types/node@20.12.7)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+      vite-node: 2.1.9(@types/node@20.12.7)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 20.12.7
       jsdom: 20.0.2
     transitivePeerDependencies:
+      - jiti
       - less
       - lightningcss
       - msw
@@ -26518,11 +26565,13 @@ snapshots:
       - sugarss
       - supports-color
       - terser
+      - tsx
+      - yaml
 
-  vitest@2.1.9(@types/node@20.17.19)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8):
+  vitest@2.1.9(@types/node@20.17.19)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5):
     dependencies:
       '@vitest/expect': 2.1.9
-      '@vitest/mocker': 2.1.9(vite@5.4.14(@types/node@20.17.19)(lightningcss@1.25.1)(sass@1.77.8))
+      '@vitest/mocker': 2.1.9(vite@6.2.3(@types/node@20.17.19)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       '@vitest/pretty-format': 2.1.9
       '@vitest/runner': 2.1.9
       '@vitest/snapshot': 2.1.9
@@ -26538,13 +26587,14 @@ snapshots:
       tinyexec: 0.3.2
       tinypool: 1.0.2
       tinyrainbow: 1.2.0
-      vite: 5.4.14(@types/node@20.17.19)(lightningcss@1.25.1)(sass@1.77.8)
-      vite-node: 2.1.9(@types/node@20.17.19)(lightningcss@1.25.1)(sass@1.77.8)
+      vite: 6.2.3(@types/node@20.17.19)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+      vite-node: 2.1.9(@types/node@20.17.19)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 20.17.19
       jsdom: 20.0.2
     transitivePeerDependencies:
+      - jiti
       - less
       - lightningcss
       - msw
@@ -26554,6 +26604,8 @@ snapshots:
       - sugarss
       - supports-color
       - terser
+      - tsx
+      - yaml
 
   void-elements@3.1.0: {}
 
