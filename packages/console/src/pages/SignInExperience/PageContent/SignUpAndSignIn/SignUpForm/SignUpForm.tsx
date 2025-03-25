@@ -1,5 +1,5 @@
 import { AlternativeSignUpIdentifier, SignInIdentifier } from '@logto/schemas';
-import { useEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -22,15 +22,8 @@ function SignUpForm() {
     setValue,
     getValues,
     trigger,
-    formState: { submitCount, dirtyFields },
+    formState: { submitCount },
   } = useFormContext<SignInExperienceForm>();
-
-  // Note: `useWatch` is a hook that returns the updated value on every render.
-  // Unlike `watch`, it doesn't require a re-render to get the updated value (alway return the current ref).
-  const signUp = useWatch({
-    control,
-    name: 'signUp',
-  });
 
   const signUpIdentifiers = useWatch({
     control,
@@ -44,40 +37,11 @@ function SignUpForm() {
     };
   }, [signUpIdentifiers]);
 
-  // Should sync the sign-up identifier auth settings when the sign-up identifiers changed
-  // TODO: need to check with designer
-  useEffect(() => {
-    // Only trigger the effect when the identifiers field is dirty
-    const isIdentifiersDirty = dirtyFields.signUp?.identifiers;
-    if (!isIdentifiersDirty) {
-      return;
-    }
-
-    const identifiers = signUpIdentifiers.map(({ identifier }) => identifier);
-    if (identifiers.length === 0) {
-      setValue('signUp.password', false);
-      setValue('signUp.verify', false);
-      return;
-    }
-
-    if (identifiers.includes(SignInIdentifier.Username)) {
-      setValue('signUp.password', true);
-    }
-
-    // Disable verification when the primary identifier is username,
-    // otherwise enable it for the rest of the identifiers (email, phone, emailOrPhone)
-    setValue('signUp.verify', identifiers[0] !== SignInIdentifier.Username);
-  }, [dirtyFields.signUp?.identifiers, setValue, signUpIdentifiers]);
-
   // Sync sign-in methods when sign-up methods change
-  useEffect(() => {
-    // Only trigger the effect when the sign-up field is dirty
-    const isIdentifiersDirty = dirtyFields.signUp;
-    if (!isIdentifiersDirty) {
-      return;
-    }
-
+  const syncSignInMethods = useCallback(() => {
     const signInMethods = getValues('signIn.methods');
+    const signUp = getValues('signUp');
+
     const { password, identifiers } = signUp;
 
     const enabledSignUpIdentifiers = identifiers.reduce<SignInIdentifier[]>(
@@ -129,7 +93,7 @@ function SignUpForm() {
         void trigger('signIn.methods');
       }, 0);
     }
-  }, [dirtyFields.signUp, getValues, setValue, signUp, submitCount, trigger]);
+  }, [getValues, setValue, submitCount, trigger]);
 
   return (
     <Card>
@@ -138,7 +102,7 @@ function SignUpForm() {
         <FormFieldDescription>
           {t('sign_in_exp.sign_up_and_sign_in.sign_up.identifier_description')}
         </FormFieldDescription>
-        <SignUpIdentifiersEditBox />
+        <SignUpIdentifiersEditBox syncSignInMethods={syncSignInMethods} />
       </FormField>
       {shouldShowAuthenticationFields && (
         <FormField title="sign_in_exp.sign_up_and_sign_in.sign_up.sign_up_authentication">
@@ -153,7 +117,10 @@ function SignUpForm() {
                 <Checkbox
                   label={t('sign_in_exp.sign_up_and_sign_in.sign_up.set_a_password_option')}
                   checked={value}
-                  onChange={onChange}
+                  onChange={(value) => {
+                    onChange(value);
+                    syncSignInMethods();
+                  }}
                 />
               )}
             />

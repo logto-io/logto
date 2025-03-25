@@ -4,7 +4,7 @@ import {
   type SignUpIdentifier,
 } from '@logto/schemas';
 import { t } from 'i18next';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
 import { DragDropProvider, DraggableItem } from '@/ds-components/DragDrop';
@@ -29,8 +29,15 @@ const emailOrPhoneOption = {
 
 const signUpIdentifierOptions = [...signInIdentifierOptions, emailOrPhoneOption];
 
-function SignUpIdentifiersEditBox() {
-  const { control } = useFormContext<SignInExperienceForm>();
+type Props = {
+  /**
+   * Sync the sign-in methods when the sign-up settings change.
+   */
+  readonly syncSignInMethods: () => void;
+};
+
+function SignUpIdentifiersEditBox({ syncSignInMethods }: Props) {
+  const { control, getValues, setValue } = useFormContext<SignInExperienceForm>();
 
   const signUpIdentifiers = useWatch({ control, name: 'signUp.identifiers' });
 
@@ -40,6 +47,37 @@ function SignUpIdentifiersEditBox() {
     control,
     name: 'signUp.identifiers',
   });
+
+  // Revalidate the primary identifier authentication fields when the identifiers change
+  const onSignUpIdentifiersChange = useCallback(() => {
+    const identifiers = getValues('signUp.identifiers').map(({ identifier }) => identifier);
+    setValue('signUp.verify', identifiers[0] !== SignInIdentifier.Username);
+    syncSignInMethods();
+  }, [getValues, setValue, syncSignInMethods]);
+
+  const onDeleteSignUpIdentifier = useCallback(() => {
+    const identifiers = getValues('signUp.identifiers').map(({ identifier }) => identifier);
+
+    if (identifiers.length === 0) {
+      setValue('signUp.password', false);
+      setValue('signUp.verify', false);
+      // Password changed need to sync sign-in methods
+      syncSignInMethods();
+      return;
+    }
+
+    onSignUpIdentifiersChange();
+  }, [getValues, onSignUpIdentifiersChange, setValue, syncSignInMethods]);
+
+  const onAppendSignUpIdentifier = useCallback(
+    (identifier: SignUpIdentifier) => {
+      if (identifier === SignInIdentifier.Username) {
+        setValue('signUp.password', true);
+      }
+      onSignUpIdentifiersChange();
+    },
+    [onSignUpIdentifiersChange, setValue]
+  );
 
   const options = useMemo<
     Array<{
@@ -89,7 +127,10 @@ function SignUpIdentifiersEditBox() {
               key={id}
               id={id}
               sortIndex={index}
-              moveItem={swap}
+              moveItem={(dragIndex, hoverIndex) => {
+                swap(dragIndex, hoverIndex);
+                onSignUpIdentifiersChange();
+              }}
               className={styles.draggleItemContainer}
             >
               <Controller
@@ -121,6 +162,7 @@ function SignUpIdentifiersEditBox() {
                     errorMessage={error?.message}
                     onDelete={() => {
                       remove(index);
+                      onDeleteSignUpIdentifier();
                     }}
                   />
                 )}
@@ -135,6 +177,7 @@ function SignUpIdentifiersEditBox() {
         hasSelectedIdentifiers={signUpIdentifiers.length > 0}
         onSelected={(identifier) => {
           append({ identifier });
+          onAppendSignUpIdentifier(identifier);
         }}
       />
     </div>

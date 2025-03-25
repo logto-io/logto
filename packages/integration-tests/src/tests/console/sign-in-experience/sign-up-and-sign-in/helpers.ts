@@ -226,3 +226,79 @@ export const expectErrorsOnNavTab = async (
     text: error,
   });
 };
+
+/* eslint-disable no-await-in-loop */
+
+const cleanUpAllSignUpMethods = async (page: Page) => {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-constant-condition
+  while (true) {
+    const signUpItems = await page.$$('div[class$=signUpMethodItem]');
+    if (signUpItems.length === 0) {
+      break;
+    }
+    await expect(signUpItems[0]).toClick('button:last-of-type');
+    await waitFor(100);
+  }
+};
+
+const cleanUpAllSignInMethods = async (page: Page) => {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-constant-condition
+  while (true) {
+    const signInItems = await page.$$('div[class$=signInMethodItem]');
+    if (signInItems.length === 0) {
+      break;
+    }
+    await expect(signInItems[0]).toClick('div[class$=anchor] button:last-of-type');
+    await waitFor(100);
+  }
+};
+
+export const cleanUpSignInAndSignUpIdentifiers = async (page: Page, needSave = true) => {
+  const signUpItems = await page.$$('div[class$=signUpMethodItem]');
+  const signInItems = await page.$$('div[class$=signInMethodItem]');
+
+  // Directly return if there is no sign-up or sign-in method
+  if (signUpItems.length === 0 && signInItems.length === 0) {
+    return;
+  }
+
+  await cleanUpAllSignUpMethods(page);
+  await cleanUpAllSignInMethods(page);
+
+  if (needSave) {
+    await waitFor(100);
+    await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
+  }
+};
+
+export const resetSignUpAndSignInConfigToUsernamePassword = async (page: Page) => {
+  await cleanUpSignInAndSignUpIdentifiers(page, false);
+  await expectToAddSignUpMethod(page, 'Username', false);
+  await waitFor(100);
+  await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
+};
+
+export const expectToAddSignUpMethod = async (page: Page, method: string, isAddAnother = true) => {
+  const signUpMethodsField = await expect(page).toMatchElement(
+    'div[class$=field]:has(div[class$=headline] > div[class$=title])',
+    {
+      text: 'Sign-up identifiers',
+    }
+  );
+
+  // Click Add another
+  await expect(signUpMethodsField).toClick('button span', {
+    text: isAddAnother ? 'Add another' : 'Add sign-up method',
+  });
+
+  // Wait for the dropdown to be rendered in the correct position
+  await waitFor(100);
+  await expect(page).toClick('.ReactModalPortal div[class$=dropdownContainer] div[role=menuitem]', {
+    text: method,
+  });
+
+  await page.waitForSelector('.ReactModalPortal div[class$=dropdownContainer]', {
+    hidden: true,
+  });
+};
+/* eslint-enable no-await-in-loop */
