@@ -172,9 +172,11 @@ export const identificationApiPayloadGuard = z.object({
 /** Payload type for `POST /api/experience`. */
 export type CreateExperienceApiPayload = {
   interactionEvent: InteractionEvent;
+  captchaToken?: string;
 };
 export const CreateExperienceApiPayloadGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent),
+  captchaToken: z.string().optional(),
 }) satisfies ToZodObject<CreateExperienceApiPayload>;
 
 /** Payload type for `POST /api/experience/profile */

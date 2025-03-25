@@ -28,11 +28,20 @@ import {
 export const signInWithPassword = async ({
   identifier,
   password,
+  captchaToken,
 }: {
   identifier: InteractionIdentifier;
   password: string;
+  captchaToken?: string;
 }) => {
-  const client = await initExperienceClient();
+  const client = await initExperienceClient(
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    captchaToken
+  );
 
   const { verificationId } = await client.verifyPassword({
     identifier,

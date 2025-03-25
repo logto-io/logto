@@ -7,6 +7,7 @@ import {
 import { z } from 'zod';
 
 import { type SignInExperience, SignInExperiences } from '../db-entries/index.js';
+import { CaptchaType } from '../foundations/jsonb-types/index.js';
 import { type ToZodObject } from '../utils/zod.js';
 
 import { type SsoConnectorMetadata, ssoConnectorMetadataGuard } from './sso-connector.js';
@@ -39,6 +40,10 @@ export type FullSignInExperience = SignInExperience & {
    * minimal data needed here.
    */
   googleOneTap?: GoogleOneTapConfig & { clientId: string; connectorId: string };
+  captchaConfig?: {
+    type: CaptchaType;
+    siteKey: string;
+  };
 };
 
 export const fullSignInExperienceGuard = SignInExperiences.guard.extend({
@@ -56,5 +61,11 @@ export const fullSignInExperienceGuard = SignInExperiences.guard.extend({
   isDevelopmentTenant: z.boolean(),
   googleOneTap: googleOneTapConfigGuard
     .extend({ clientId: z.string(), connectorId: z.string() })
+    .optional(),
+  captchaConfig: z
+    .object({
+      type: z.nativeEnum(CaptchaType),
+      siteKey: z.string(),
+    })
     .optional(),
 }) satisfies ToZodObject<FullSignInExperience>;

@@ -3,6 +3,7 @@ import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import {
   mockAliyunDmConnector,
   mockAliyunSmsConnector,
+  mockCaptchaProvider,
   mockFacebookConnector,
   mockGithubConnector,
   mockGoogleConnector,
@@ -51,6 +52,7 @@ const tenantContext = new MockTenant(
     signInExperiences: sieQueries,
     users: { hasActiveUsers: jest.fn().mockResolvedValue(true) },
     ssoConnectors: { findAll: getSsoConnectors },
+    captchaProviders: { findCaptchaProvider: jest.fn().mockResolvedValue(mockCaptchaProvider) },
   },
   { getLogtoConnectors }
 );
