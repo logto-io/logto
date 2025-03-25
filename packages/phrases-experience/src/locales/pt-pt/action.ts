@@ -31,6 +31,7 @@ const action = {
   single_sign_on: 'Logon Único',
   authorize: '授权',
   use_another_account: '使用其他账户',
+  back_to_current_account: 'Voltar à conta atual',
 };
 
 export default Object.freeze(action);

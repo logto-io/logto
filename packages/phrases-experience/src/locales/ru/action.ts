@@ -31,6 +31,7 @@ const action = {
   single_sign_on: 'Единый вход',
   authorize: 'Авторизовать',
   use_another_account: 'Использовать другой аккаунт',
+  back_to_current_account: 'Назад к текущему аккаунту',
 };
 
 export default Object.freeze(action);

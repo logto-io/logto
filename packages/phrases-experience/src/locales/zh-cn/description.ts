@@ -10,6 +10,7 @@ const description = {
   sign_in: '登录',
   privacy_policy: '隐私政策',
   create_account: '创建帐号',
+  switch_account: '切换账户',
   or: '或',
   and: '和',
   enter_passcode: '验证码已经发送至你的{{ address }} {{target}}',
@@ -68,7 +69,7 @@ const description = {
   use: '使用',
   single_sign_on_email_form: '输入你的企业电子邮件地址',
   single_sign_on_connectors_list:
-    '你的企业已为电子邮件账户 {{email}} 启用了单点登录。你可以继续使用以下SSO提供商进行登录。',
+    '你的企业已为电子邮件账户 {{email}} 启用了单点登录。你可以继续使用以下 SSO 提供商进行登录。',
   single_sign_on_enabled: '该帐户已启用单点登录',
   authorize_title: '授权给 {{name}}',
   request_permission: '{{name}} 需要权限：',
@@ -90,6 +91,8 @@ const description = {
   back_to_sign_in: '返回登录',
   support_email: '支持邮箱：<link></link>',
   support_website: '支持网站：<link></link>',
+  switch_account_title: '你当前登录的账号是 {{account}}',
+  switch_account_description: '要继续，你将退出当前账户，并自动切换到新账户。',
 };
 
 export default Object.freeze(description);

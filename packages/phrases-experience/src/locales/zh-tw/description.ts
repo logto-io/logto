@@ -10,6 +10,7 @@ const description = {
   sign_in: '登錄',
   privacy_policy: '隱私政策',
   create_account: '創建帳號',
+  switch_account: '切換帳號',
   or: '或',
   and: '和',
   enter_passcode: '驗證碼已經發送至你的{{address}} {{target}}',
@@ -90,6 +91,8 @@ const description = {
   back_to_sign_in: '返回登入',
   support_email: '支援郵箱: <link></link>',
   support_website: '支援網站: <link></link>',
+  switch_account_title: '目前以 {{account}} 登錄',
+  switch_account_description: '若要繼續，你將退出當前帳號，並自動切換到新帳號。',
 };
 
 export default Object.freeze(description);

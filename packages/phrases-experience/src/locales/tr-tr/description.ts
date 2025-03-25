@@ -10,6 +10,7 @@ const description = {
   sign_in: 'Giriş Yap',
   privacy_policy: 'Gizlilik Politikası',
   create_account: 'Hesap Oluştur',
+  switch_account: 'Hesabı değiştir',
   or: 'veya',
   and: 've',
   enter_passcode: 'Doğrulama kodu {{address}} {{target}} adresinize gönderildi',
@@ -99,6 +100,9 @@ const description = {
   back_to_sign_in: 'Girişe dön',
   support_email: 'Destek e-postası: <link></link>',
   support_website: 'Destek web sitesi: <link></link>',
+  switch_account_title: 'Şu anda {{account}} olarak oturum açtınız',
+  switch_account_description:
+    'Devam etmek için, mevcut hesaptan çıkış yapacak ve otomatik olarak yeni hesaba geçeceksiniz.',
 };
 
 export default Object.freeze(description);

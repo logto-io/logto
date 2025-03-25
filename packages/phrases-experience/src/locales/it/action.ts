@@ -31,6 +31,7 @@ const action = {
   single_sign_on: 'Single Sign-On',
   authorize: 'Autorizza',
   use_another_account: 'Usa un altro account',
+  back_to_current_account: "Torna all'account attuale",
 };
 
 export default Object.freeze(action);

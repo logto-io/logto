@@ -10,6 +10,7 @@ const description = {
   sign_in: 'Sign in',
   privacy_policy: 'Privacy Policy',
   create_account: 'Create account',
+  switch_account: 'Switch account',
   or: 'or',
   and: 'and',
   enter_passcode: 'The verification code has been sent to your {{address}} {{target}}',
@@ -105,6 +106,9 @@ const description = {
   back_to_sign_in: 'Back to sign in',
   support_email: 'Support email: <link></link>',
   support_website: 'Support website: <link></link>',
+  switch_account_title: 'You are currently signed in as {{account}}',
+  switch_account_description:
+    'To continue, you will be signed out of the current account, and switch to the new account automatically.',
 };
 
 export default Object.freeze(description);

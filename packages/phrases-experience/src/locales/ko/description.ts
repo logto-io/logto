@@ -10,6 +10,7 @@ const description = {
   sign_in: '로그인',
   privacy_policy: '개인정보처리방침',
   create_account: '계정 생성',
+  switch_account: '계정 전환',
   or: '또는',
   and: '그리고',
   enter_passcode: '{{address}} {{target}} 으로 비밀번호가 전송되었어요.',
@@ -96,6 +97,9 @@ const description = {
   back_to_sign_in: '로그인으로 돌아가기',
   support_email: '지원 이메일: <link></link>',
   support_website: '지원 웹사이트: <link></link>',
+  switch_account_title: '현재 {{account}}으로 로그인 중입니다',
+  switch_account_description:
+    '계속 진행하려면 현재 계정에서 로그아웃되고 새 계정으로 자동 전환됩니다.',
 };
 
 export default Object.freeze(description);

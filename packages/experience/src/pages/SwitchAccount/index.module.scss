@@ -1,0 +1,49 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  flex: 1;
+  @include _.flex-column;
+  @include _.full-width;
+}
+
+.title {
+  margin-top: _.unit(8);
+  font: var(--font-label-2);
+}
+
+.message {
+  margin-top: _.unit(6);
+  font: var(--font-body-2);
+}
+
+.logo {
+  height: 40px;
+  width: auto;
+  @include _.image-align-center;
+}
+
+.userProfile {
+  width: 100%;
+}
+
+.button {
+  margin-top: _.unit(2);
+}
+
+.linkButton {
+  margin-top: _.unit(6);
+}
+
+:global(body.mobile) {
+  .title {
+    @include _.title;
+    margin-bottom: _.unit(4);
+  }
+}
+
+:global(body.desktop) {
+  .title {
+    @include _.title-desktop;
+    margin-bottom: _.unit(2);
+  }
+}

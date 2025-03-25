@@ -10,6 +10,7 @@ const description = {
   sign_in: 'Iniciar sesión',
   privacy_policy: 'Política de privacidad',
   create_account: 'Crear cuenta',
+  switch_account: 'Cambiar cuenta',
   or: 'o',
   and: 'y',
   enter_passcode: 'El código de verificación ha sido enviado a su {{address}} {{target}}',
@@ -108,6 +109,9 @@ const description = {
   back_to_sign_in: 'Volver a iniciar sesión',
   support_email: 'Correo electrónico de soporte: <link></link>',
   support_website: 'Sitio web de soporte: <link></link>',
+  switch_account_title: 'Actualmente has iniciado sesión como {{account}}',
+  switch_account_description:
+    'Para continuar, se cerrará la sesión de la cuenta actual, y se cambiará automáticamente a la nueva cuenta.',
 };
 
 export default Object.freeze(description);
