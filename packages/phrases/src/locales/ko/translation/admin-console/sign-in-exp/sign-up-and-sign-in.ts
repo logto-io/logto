@@ -19,8 +19,7 @@ const sign_up_and_sign_in = {
   sign_in: {
     title: '로그인',
     sign_in_identifier_and_auth: '로그인을 위한 ID 그리고 인증 설정',
-    description:
-      '사용자는 주어진 옵션 중에 아무 방법으로 로그인할 수 있어요. 주어진 옵션을 드래그하여 조절해 주세요.',
+    description: '사용자는 주어진 옵션 중에 아무 방법으로 로그인할 수 있어요. ',
     add_sign_in_method: '로그인 방법 추가',
     add_sign_up_method: '회원가입 방법 추가',
     password_auth: '비밀번호',

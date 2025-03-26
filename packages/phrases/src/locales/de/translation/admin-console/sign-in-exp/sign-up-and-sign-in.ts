@@ -21,8 +21,7 @@ const sign_up_and_sign_in = {
   sign_in: {
     title: 'ANMELDEN',
     sign_in_identifier_and_auth: 'Anmeldeidentifier und Authentifizierungseinstellungen',
-    description:
-      'Benutzer können sich über jede der verfügbaren Optionen anmelden. Passen Sie das Layout an, indem Sie die folgenden Optionen per Drag & Drop anordnen.',
+    description: 'Benutzer können sich über jede der verfügbaren Optionen anmelden.',
     add_sign_in_method: 'Anmeldemethode hinzufügen',
     add_sign_up_method: 'Anmeldemethode hinzufügen',
     password_auth: 'Passwort',

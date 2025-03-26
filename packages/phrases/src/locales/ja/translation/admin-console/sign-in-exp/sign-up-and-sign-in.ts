@@ -21,8 +21,7 @@ const sign_up_and_sign_in = {
   sign_in: {
     title: 'サインイン',
     sign_in_identifier_and_auth: 'サインインの識別子と認証設定',
-    description:
-      'ユーザーは利用可能なすべてのオプションを使用してサインインできます。下のオプションをドラッグ＆ドロップしてレイアウトを調整してください。',
+    description: 'ユーザーは利用可能なすべてのオプションを使用してサインインできます',
     add_sign_in_method: 'サインイン方法を追加',
     add_sign_up_method: 'サインアップ方法を追加',
     password_auth: 'パスワード',

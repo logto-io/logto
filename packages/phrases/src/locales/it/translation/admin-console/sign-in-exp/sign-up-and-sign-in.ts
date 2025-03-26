@@ -22,8 +22,7 @@ const sign_up_and_sign_in = {
   sign_in: {
     title: 'ACCEDI',
     sign_in_identifier_and_auth: "Identificatore e impostazioni di autenticazione per l'accesso",
-    description:
-      'Gli utenti possono accedere utilizzando una qualsiasi delle opzioni disponibili. Regola il layout trascinando e rilasciando le opzioni sottostanti.',
+    description: 'Gli utenti possono accedere utilizzando una qualsiasi delle opzioni disponibili.',
     add_sign_in_method: 'Aggiungi metodo di accesso',
     add_sign_up_method: 'Aggiungi metodo di registrazione',
     password_auth: 'Password',

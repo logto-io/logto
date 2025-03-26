@@ -24,7 +24,7 @@ const sign_up_and_sign_in = {
     sign_in_identifier_and_auth:
       "Identificateurs et paramètres d'authentification pour la connexion",
     description:
-      "Les utilisateurs peuvent se connecter en utilisant n'importe quelle option disponible. Ajustez la mise en page en faisant glisser et en déposant les options ci-dessous.",
+      "Les utilisateurs peuvent se connecter en utilisant n'importe quelle option disponible.",
     add_sign_in_method: 'Ajouter une méthode de connexion',
     add_sign_up_method: "Ajouter une méthode d'inscription",
     password_auth: 'Mot de passe',

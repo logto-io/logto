@@ -24,7 +24,7 @@ const sign_up_and_sign_in = {
     sign_in_identifier_and_auth:
       'Identificador y configuración de autenticación para iniciar sesión',
     description:
-      'Los usuarios pueden iniciar sesión usando cualquiera de las opciones disponibles. Ajusta el diseño arrastrando y soltando las opciones a continuación.',
+      'Los usuarios pueden iniciar sesión usando cualquiera de las opciones disponibles.',
     add_sign_in_method: 'Agregar método de inicio de sesión',
     add_sign_up_method: 'Agregar método de registro',
     password_auth: 'Contraseña',

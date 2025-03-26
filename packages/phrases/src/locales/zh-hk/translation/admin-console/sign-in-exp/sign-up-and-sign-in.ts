@@ -19,7 +19,7 @@ const sign_up_and_sign_in = {
   sign_in: {
     title: '登錄',
     sign_in_identifier_and_auth: '登錄標識和身份認證設置',
-    description: '用戶可以使用任何可用的選項進行登錄。拖拽選項即可調整頁面佈局。',
+    description: '用戶可以使用任何可用的選項進行登錄。',
     add_sign_in_method: '添加登錄方式',
     add_sign_up_method: '添加註冊方式',
     password_auth: '密碼',

@@ -21,8 +21,7 @@ const sign_up_and_sign_in = {
   sign_in: {
     title: 'SIGN IN',
     sign_in_identifier_and_auth: 'Identifier and authentication settings for sign-in',
-    description:
-      'Users can sign in using any of the options available. Adjust the layout by drag and dropping below options.',
+    description: 'Users can sign in using any of the options available.',
     add_sign_in_method: 'Add sign-in method',
     add_sign_up_method: 'Add sign-up method',
     password_auth: 'Password',

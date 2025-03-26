@@ -21,8 +21,7 @@ const sign_up_and_sign_in = {
   sign_in: {
     title: 'LOGOWANIE',
     sign_in_identifier_and_auth: 'Identyfikator i ustawienia uwierzytelniania dla logowania',
-    description:
-      'Użytkownicy mogą się zalogować za pomocą dowolnej dostępnej opcji. Dostosuj układ, przeciągając i upuszczając poniżej opcji.',
+    description: 'Użytkownicy mogą się zalogować za pomocą dowolnej dostępnej opcji.',
     add_sign_in_method: 'Dodaj metodę logowania',
     add_sign_up_method: 'Dodaj metodę rejestracji',
     password_auth: 'Hasło',

@@ -19,7 +19,7 @@ const sign_up_and_sign_in = {
   sign_in: {
     title: '登录',
     sign_in_identifier_and_auth: '登录标识和身份认证设置',
-    description: '用户可以使用任何可用的选项进行登录。拖拽选项即可调整页面布局。',
+    description: '用户可以使用任何可用的选项进行登录。',
     add_sign_in_method: '添加登录方式',
     add_sign_up_method: '添加注册方式',
     password_auth: '密码',
