@@ -32,13 +32,14 @@ export const getInteractionEventFromState = (state: unknown) => {
 export const sendVerificationCodeApi = async (
   flow: UserFlow,
   identifier: VerificationCodeIdentifier,
-  interactionEvent?: ContinueFlowInteractionEvent
+  interactionEvent?: ContinueFlowInteractionEvent,
+  captchaToken?: string
 ) => {
   if (flow === UserFlow.Continue) {
     return sendVerificationCode(interactionEvent ?? InteractionEvent.SignIn, identifier);
   }
 
   const event = userFlowToInteractionEventMap[flow];
-  await initInteraction(event);
+  await initInteraction(event, captchaToken);
   return sendVerificationCode(event, identifier);
 };

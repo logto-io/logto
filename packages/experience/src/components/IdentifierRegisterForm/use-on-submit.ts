@@ -30,9 +30,9 @@ const useOnSubmit = () => {
   }, [clearSendVerificationCodeErrorMessage, clearUsernameRegisterErrorMessage]);
 
   const onSubmit = useCallback(
-    async (identifier: SignInIdentifier, value: string) => {
+    async (identifier: SignInIdentifier, value: string, captchaToken?: string) => {
       if (identifier === SignInIdentifier.Username) {
-        await registerWithUsername(value);
+        await registerWithUsername(value, captchaToken);
 
         return;
       }
@@ -46,7 +46,7 @@ const useOnSubmit = () => {
         }
       }
 
-      await sendVerificationCode({ identifier, value });
+      await sendVerificationCode({ identifier, value }, undefined, captchaToken);
     },
     [checkSingleSignOn, registerWithUsername, sendVerificationCode, ssoConnectors.length]
   );

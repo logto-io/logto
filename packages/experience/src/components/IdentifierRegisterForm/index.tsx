@@ -10,7 +10,9 @@ import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import { SmartInputField } from '@/components/InputFields';
 import type { IdentifierInputValue } from '@/components/InputFields/SmartInputField';
+import CaptchaBox from '@/containers/CaptchaBox';
 import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
+import useCaptcha from '@/hooks/use-captcha';
 import usePrefilledIdentifier from '@/hooks/use-prefilled-identifier';
 import useSingleSignOnWatch from '@/hooks/use-single-sign-on-watch';
 import useTerms from '@/hooks/use-terms';
@@ -33,6 +35,7 @@ type FormState = {
 const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) => {
   const { t } = useTranslation();
   const { termsValidation, agreeToTermsPolicy } = useTerms();
+  const { setCaptchaToken, isCaptchaRequired, captchaToken, captchaConfig } = useCaptcha();
 
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit();
 
@@ -84,7 +87,7 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
           return;
         }
 
-        await onSubmit(type, value);
+        await onSubmit(type, value, captchaToken);
       })(event);
     },
     [
@@ -96,6 +99,7 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
       setIdentifierInputValue,
       showSingleSignOnForm,
       termsValidation,
+      captchaToken,
     ]
   );
 
@@ -134,13 +138,13 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
           />
         )}
       />
-
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
-
       {showSingleSignOnForm && (
         <div className={styles.message}>{t('description.single_sign_on_enabled')}</div>
       )}
-
+      {isCaptchaRequired && (
+        <CaptchaBox setCaptchaToken={setCaptchaToken} captchaConfig={captchaConfig} />
+      )}
       {/**
        * Have to use css to hide the terms element.
        * Remove element from dom will trigger a form re-render.
@@ -157,15 +161,14 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
           agreeToTermsPolicy === AgreeToTermsPolicy.Automatic && styles.hidden
         )}
       />
-
       <Button
         name="submit"
         title={showSingleSignOnForm ? 'action.single_sign_on' : 'action.create_account'}
         icon={showSingleSignOnForm ? <LockIcon /> : undefined}
         htmlType="submit"
         isLoading={isSubmitting}
+        disabled={isCaptchaRequired && !captchaToken}
       />
-
       <input hidden type="submit" />
     </form>
   );
