@@ -2,7 +2,9 @@ import classNames from 'classnames';
 import type { ReactNode } from 'react';
 import { useLayoutEffect, useState } from 'react';
 
-import { Tooltip } from '@/ds-components/Tip';
+import Tip from '@/assets/icons/tip.svg?react';
+import IconButton from '@/ds-components/IconButton';
+import { ToggleTip, Tooltip } from '@/ds-components/Tip';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import styles from './index.module.scss';
@@ -17,6 +19,7 @@ type Props = {
   readonly label?: ReactNode;
   readonly className?: string;
   readonly tooltip?: ReactNode;
+  readonly suffixTooltip?: ReactNode;
 };
 
 function Checkbox({
@@ -27,6 +30,7 @@ function Checkbox({
   label,
   className,
   tooltip,
+  suffixTooltip,
 }: Props) {
   const [isIndeterminate, setIsIndeterminate] = useState(indeterminate);
 
@@ -104,6 +108,17 @@ function Checkbox({
         </Tooltip>
         {label && <span className={styles.label}>{label}</span>}
       </div>
+      {suffixTooltip && (
+        <ToggleTip
+          anchorClassName={styles.toggleTipButton}
+          content={suffixTooltip}
+          horizontalAlign="start"
+        >
+          <IconButton size="small">
+            <Tip />
+          </IconButton>
+        </ToggleTip>
+      )}
     </div>
   );
 }

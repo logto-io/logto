@@ -4,7 +4,7 @@ import {
   type SignUpIdentifier,
 } from '@logto/schemas';
 import { t } from 'i18next';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
 import { DragDropProvider, DraggableItem } from '@/ds-components/DragDrop';
@@ -12,7 +12,7 @@ import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 import { type SignInExperienceForm } from '@/pages/SignInExperience/types';
 
 import IdentifiersAddButton from '../../components/IdentifiersAddButton';
-import { getSignUpIdentifiersRequiredConnectors } from '../../utils';
+import { createSignInMethod, getSignUpIdentifiersRequiredConnectors } from '../../utils';
 
 import SignUpIdentifierItem from './SignUpIdentifierItem';
 import styles from './index.module.scss';
@@ -29,15 +29,14 @@ const emailOrPhoneOption = {
 
 const signUpIdentifierOptions = [...signInIdentifierOptions, emailOrPhoneOption];
 
-type Props = {
-  /**
-   * Sync the sign-in methods when the sign-up settings change.
-   */
-  readonly syncSignInMethods: () => void;
-};
-
-function SignUpIdentifiersEditBox({ syncSignInMethods }: Props) {
-  const { control, getValues, setValue } = useFormContext<SignInExperienceForm>();
+function SignUpIdentifiersEditBox() {
+  const {
+    control,
+    getValues,
+    setValue,
+    trigger,
+    formState: { submitCount },
+  } = useFormContext<SignInExperienceForm>();
 
   const signUpIdentifiers = useWatch({ control, name: 'signUp.identifiers' });
 
@@ -48,36 +47,69 @@ function SignUpIdentifiersEditBox({ syncSignInMethods }: Props) {
     name: 'signUp.identifiers',
   });
 
-  // Revalidate the primary identifier authentication fields when the identifiers change
-  const onSignUpIdentifiersChange = useCallback(() => {
-    const identifiers = getValues('signUp.identifiers').map(({ identifier }) => identifier);
-    setValue('signUp.verify', identifiers[0] !== SignInIdentifier.Username);
-    syncSignInMethods();
-  }, [getValues, setValue, syncSignInMethods]);
+  /**
+   * Append the sign-in methods based on the selected sign-up identifier.
+   */
+  const appendSignInMethods = useCallback(
+    (identifier: SignUpIdentifier) => {
+      const signInMethods = getValues('signIn.methods');
+      const signInMethodsSet = new Set(signInMethods.map(({ identifier }) => identifier));
 
-  const onDeleteSignUpIdentifier = useCallback(() => {
-    const identifiers = getValues('signUp.identifiers').map(({ identifier }) => identifier);
+      const newSignUpIdentifiers =
+        identifier === AlternativeSignUpIdentifier.EmailOrPhone
+          ? [SignInIdentifier.Email, SignInIdentifier.Phone]
+          : [identifier];
 
-    if (identifiers.length === 0) {
-      setValue('signUp.password', false);
-      setValue('signUp.verify', false);
-      // Password changed need to sync sign-in methods
-      syncSignInMethods();
-      return;
-    }
+      const newSignInMethods = newSignUpIdentifiers.filter(
+        (identifier) => !signInMethodsSet.has(identifier)
+      );
 
-    onSignUpIdentifiersChange();
-  }, [getValues, onSignUpIdentifiersChange, setValue, syncSignInMethods]);
+      if (newSignInMethods.length === 0) {
+        return;
+      }
+
+      setValue(
+        'signIn.methods',
+        signInMethods.concat(newSignInMethods.map((identifier) => createSignInMethod(identifier))),
+        {
+          shouldDirty: true,
+        }
+      );
+
+      if (submitCount) {
+        // Wait for the form re-render before validating the new data.
+        setTimeout(() => {
+          void trigger('signIn.methods');
+        }, 0);
+      }
+    },
+    [getValues, setValue, submitCount, trigger]
+  );
 
   const onAppendSignUpIdentifier = useCallback(
     (identifier: SignUpIdentifier) => {
+      appendSignInMethods(identifier);
+
       if (identifier === SignInIdentifier.Username) {
-        setValue('signUp.password', true);
+        setValue('signUp.password', true, {
+          // Make sure to trigger the on password change hook
+          shouldDirty: true,
+        });
       }
-      onSignUpIdentifiersChange();
     },
-    [onSignUpIdentifiersChange, setValue]
+    [appendSignInMethods, setValue]
   );
+
+  useEffect(() => {
+    if (signUpIdentifierOptions.length === 0) {
+      setValue('signUp.password', false, { shouldDirty: true });
+    }
+
+    const isSignUpVerify = signUpIdentifiers.some(
+      ({ identifier }) => identifier !== SignInIdentifier.Username
+    );
+    setValue('signUp.verify', isSignUpVerify, { shouldDirty: true });
+  }, [setValue, signUpIdentifiers]);
 
   const options = useMemo<
     Array<{
@@ -131,10 +163,7 @@ function SignUpIdentifiersEditBox({ syncSignInMethods }: Props) {
               key={id}
               id={id}
               sortIndex={index}
-              moveItem={(dragIndex, hoverIndex) => {
-                swap(dragIndex, hoverIndex);
-                onSignUpIdentifiersChange();
-              }}
+              moveItem={swap}
               className={styles.draggleItemContainer}
             >
               <Controller
@@ -166,7 +195,6 @@ function SignUpIdentifiersEditBox({ syncSignInMethods }: Props) {
                     errorMessage={error?.message}
                     onDelete={() => {
                       remove(index);
-                      onDeleteSignUpIdentifier();
                     }}
                   />
                 )}

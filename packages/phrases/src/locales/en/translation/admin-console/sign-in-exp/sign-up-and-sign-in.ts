@@ -11,6 +11,8 @@ const sign_up_and_sign_in = {
     sign_up_identifier: 'Sign-up identifiers',
     identifier_description: 'The sign-up identifier is required for account creation.',
     sign_up_authentication: 'Authentication setting for sign-up',
+    verification_tip:
+      'Users must verify the email or phone number you’ve configured by entering a verification code during sign-up.',
     authentication_description:
       'All selected actions will be obligatory for users to complete the flow.',
     set_a_password_option: 'Create your password',
@@ -47,7 +49,7 @@ const sign_up_and_sign_in = {
   tip: {
     set_a_password: 'A unique set of a password to your username is a must.',
     verify_at_sign_up:
-      'We currently only support verified email. Your user base may contain a large number of poor-quality email addresses if no validation.',
+      'We currently only support verified email and phone. Your user base may contain a large number of poor-quality email addresses or phone numbers if no validation.',
     password_auth:
       'This is essential as you have enabled the option to set a password during the sign-up process.',
     verification_code_auth:
