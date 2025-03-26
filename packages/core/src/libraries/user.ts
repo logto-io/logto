@@ -264,6 +264,7 @@ export const createUserLibrary = (queries: Queries) => {
         email: string;
         /** The SSO connector ID to determine JIT organizations. */
         ssoConnectorId?: undefined;
+        organizationIds?: undefined;
       }
     | {
         /** The user ID to provision organizations for. */
@@ -272,6 +273,13 @@ export const createUserLibrary = (queries: Queries) => {
         email?: undefined;
         /** The SSO connector ID to determine JIT organizations. */
         ssoConnectorId: string;
+        organizationIds?: undefined;
+      }
+    | {
+        userId: string;
+        email?: undefined;
+        ssoConnectorId?: undefined;
+        organizationIds: string[];
       };
 
   // TODO: If the user's email is not verified, we should not provision the user into any organization.
@@ -283,12 +291,14 @@ export const createUserLibrary = (queries: Queries) => {
     userId,
     email,
     ssoConnectorId,
+    organizationIds,
   }: ProvisionOrganizationsParams): Promise<readonly JitOrganization[]> => {
     const userEmailDomain = email?.split('@')[1];
     const jitOrganizations = condArray(
       userEmailDomain &&
         (await organizations.jit.emailDomains.getJitOrganizations(userEmailDomain)),
-      ssoConnectorId && (await organizations.jit.ssoConnectors.getJitOrganizations(ssoConnectorId))
+      ssoConnectorId && (await organizations.jit.ssoConnectors.getJitOrganizations(ssoConnectorId)),
+      organizationIds && (await organizations.jit.getJitOrganizationsByIds(organizationIds))
     );
 
     if (jitOrganizations.length === 0) {
