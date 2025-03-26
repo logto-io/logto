@@ -163,7 +163,7 @@ export const getIdTokenClaims = async (
       });
     }
 
-    const result = idTokenProfileStandardClaimsGuard.safeParse(payload);
+    const result = idTokenProfileStandardClaimsGuard.catchall(z.unknown()).safeParse(payload);
 
     if (!result.success) {
       throw new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {

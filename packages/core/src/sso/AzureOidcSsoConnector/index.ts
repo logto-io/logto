@@ -94,12 +94,28 @@ export class AzureOidcSsoConnector extends OidcConnector implements SingleSignOn
         ? { issuer: oidcConfig.issuer.replace('{tenantid}', decodeToken.tid) }
         : {};
 
-    // Verify the id token and get the user id
-    const { sub: id } = await getIdTokenClaims(idToken, oidcConfig, nonce, jwtVerifyOptions);
-
+    // Verify the id token and get the claims
+    const idTokenClaims = await getIdTokenClaims(idToken, oidcConfig, nonce, jwtVerifyOptions);
     // Fetch user info from the userinfo endpoint
-    const { sub, name, picture, email, email_verified, phone, phone_verified, ...rest } =
-      await getUserInfo(accessToken, oidcConfig.userinfoEndpoint);
+    const userInfoClaims = await getUserInfo(accessToken, oidcConfig.userinfoEndpoint);
+
+    // Merge the claims from id token and userinfo endpoint as in Azure AD, some claims are only available in the userinfo endpoint
+    const mergedClaims = {
+      ...idTokenClaims,
+      // Userinfo claims should have higher priority
+      ...userInfoClaims,
+    };
+
+    const {
+      sub: id,
+      name,
+      picture,
+      email,
+      email_verified,
+      phone,
+      phone_verified,
+      ...rest
+    } = mergedClaims;
 
     return {
       id,
