@@ -83,35 +83,39 @@ function SignUpIdentifiersEditBox({ syncSignInMethods }: Props) {
     Array<{
       value: SignUpIdentifier;
       label: string;
+      disabled?: boolean;
     }>
   >(() => {
     const identifiersSet = new Set(signUpIdentifiers.map(({ identifier }) => identifier));
+    const availableOptions = signUpIdentifierOptions.filter(
+      ({ value }) => !identifiersSet.has(value)
+    );
 
-    return signUpIdentifierOptions.filter(({ value }) => {
-      // Basic condition: filter out if identifiers include the value
-      if (identifiersSet.has(value)) {
-        return false;
+    return availableOptions.map(({ value, label }) => {
+      // Disable email and phone options if email or phone is selected
+      if (value === SignInIdentifier.Email || value === SignInIdentifier.Phone) {
+        return {
+          value,
+          label,
+          disabled: identifiersSet.has(AlternativeSignUpIdentifier.EmailOrPhone),
+        };
       }
 
-      // Condition 2: If identifiers include EmailOrPhone, filter out Email and Phone
-      if (
-        identifiersSet.has(AlternativeSignUpIdentifier.EmailOrPhone) &&
-        (value === SignInIdentifier.Email || value === SignInIdentifier.Phone)
-      ) {
-        return false;
+      // Disable emailOrPhone option if email or phone is selected
+      if (value === AlternativeSignUpIdentifier.EmailOrPhone) {
+        return {
+          value,
+          label,
+          disabled:
+            identifiersSet.has(SignInIdentifier.Email) ||
+            identifiersSet.has(SignInIdentifier.Phone),
+        };
       }
 
-      // Condition 3: If identifiers include Email or Phone, filter out EmailOrPhone
-      if (
-        (identifiersSet.has(SignInIdentifier.Email) ||
-          identifiersSet.has(SignInIdentifier.Phone)) &&
-        value === AlternativeSignUpIdentifier.EmailOrPhone
-      ) {
-        return false;
-      }
-
-      // If none of the conditions matched, keep the value
-      return true;
+      return {
+        value,
+        label,
+      };
     });
   }, [signUpIdentifiers]);
 

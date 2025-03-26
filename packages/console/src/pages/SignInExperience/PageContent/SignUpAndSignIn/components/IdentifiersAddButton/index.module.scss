@@ -1,7 +1,14 @@
+@use '@/scss/underscore' as _;
+
 .addAnotherIdentifierDropdown {
   min-width: 208px;
 }
 
 .addIdentifierDropDown {
   min-width: unset;
+}
+
+.disabledDropdownItem {
+  cursor: not-allowed;
+  color: var(--color-placeholder);
 }
