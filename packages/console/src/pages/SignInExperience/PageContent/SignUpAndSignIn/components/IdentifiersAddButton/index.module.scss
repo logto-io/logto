@@ -11,4 +11,8 @@
 .disabledDropdownItem {
   cursor: not-allowed;
   color: var(--color-placeholder);
+
+  &:hover {
+    background-color: transparent;
+  }
 }
