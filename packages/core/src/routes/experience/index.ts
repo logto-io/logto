@@ -60,16 +60,24 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     koaGuard({
       body: z.object({
         interactionEvent: z.nativeEnum(InteractionEvent),
+        captchaToken: z.string().optional(),
       }),
-      status: [204],
+      // 422 is returned if the captcha verification fails
+      status: [204, 422],
     }),
     async (ctx, next) => {
-      const { interactionEvent } = ctx.guard.body;
+      const { interactionEvent, captchaToken } = ctx.guard.body;
       const { createLog } = ctx;
 
       createLog(`Interaction.${interactionEvent}.Create`);
 
       const experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionEvent);
+
+      // Verify the captcha if provided, this is optional,
+      // whether the captcha is required is determined and guarded when submitting the interaction.
+      if (EnvSet.values.isDevFeaturesEnabled && captchaToken) {
+        await experienceInteraction.verifyCaptcha(captchaToken);
+      }
 
       // Save new experience interaction instance.
       // This will overwrite any existing interaction data in the storage.

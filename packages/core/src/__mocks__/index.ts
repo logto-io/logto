@@ -30,6 +30,7 @@ export * from './protected-app.js';
 export * from './sign-in-experience.js';
 export * from './sso.js';
 export * from './user.js';
+export * from './captcha.js';
 
 export const mockApplication: Application = {
   tenantId: 'fake_tenant',

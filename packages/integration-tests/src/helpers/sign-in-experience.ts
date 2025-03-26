@@ -198,3 +198,21 @@ export const setLanguage = async (
       autoDetect,
     },
   });
+
+export const enableCaptcha = async () =>
+  updateSignInExperience({
+    captchaPolicy: {
+      signIn: true,
+      signUp: true,
+      forgotPassword: true,
+    },
+  });
+
+export const disableCaptcha = async () =>
+  updateSignInExperience({
+    captchaPolicy: {
+      signIn: false,
+      signUp: false,
+      forgotPassword: false,
+    },
+  });

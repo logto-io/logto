@@ -52,6 +52,11 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
       const { organizationId, appId } = ctx.guard.query;
       ctx.body = await getFullSignInExperience({ locale: ctx.locale, organizationId, appId });
 
+      if (!EnvSet.values.isDevFeaturesEnabled) {
+        // eslint-disable-next-line @silverhand/fp/no-delete
+        delete ctx.body.captchaConfig;
+      }
+
       return next();
     }
   );

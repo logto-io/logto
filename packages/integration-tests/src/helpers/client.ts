@@ -23,12 +23,13 @@ export const initExperienceClient = async (
   config?: Partial<LogtoConfig>,
   redirectUri?: string,
   options: Omit<SignInOptions, 'redirectUri'> = {},
-  api?: KyInstance
+  api?: KyInstance,
+  captchaToken?: string
 ) => {
   const client = new ExperienceClient(config, api);
   await client.initSession(redirectUri, options);
   assert(client.interactionCookie, new Error('Session not found'));
-  await client.initInteraction({ interactionEvent });
+  await client.initInteraction({ interactionEvent, captchaToken });
 
   return client;
 };

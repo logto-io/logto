@@ -1,9 +1,10 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { builtInLanguages } from '@logto/phrases-experience';
-import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
+import { CaptchaType, type CreateSignInExperience, type SignInExperience } from '@logto/schemas';
 import { TtlCache } from '@logto/shared';
 
 import {
+  mockCaptchaProvider,
   mockGithubConnector,
   mockGoogleConnector,
   mockSignInExperience,
@@ -43,11 +44,17 @@ const signInExperiences = {
 };
 const { findDefaultSignInExperience, updateDefaultSignInExperience } = signInExperiences;
 
+const captchaProviders = {
+  findCaptchaProvider: jest.fn(),
+};
+const { findCaptchaProvider } = captchaProviders;
+
 const { MockQueries } = await import('#src/test-utils/tenant.js');
 
 const queries = new MockQueries({
   customPhrases,
   signInExperiences,
+  captchaProviders,
 });
 const connectorLibrary = createConnectorLibrary(queries, {
   getClient: jest.fn(),
@@ -64,14 +71,18 @@ const cloudConnection = createCloudConnectionLibrary({
 const getLogtoConnectors = jest.spyOn(connectorLibrary, 'getLogtoConnectors');
 
 const { createSignInExperienceLibrary } = await import('./index.js');
-const { validateLanguageInfo, removeUnavailableSocialConnectorTargets, getFullSignInExperience } =
-  createSignInExperienceLibrary(
-    queries,
-    connectorLibrary,
-    mockSsoConnectorLibrary,
-    cloudConnection,
-    new WellKnownCache('foo', new TtlCache())
-  );
+const {
+  validateLanguageInfo,
+  removeUnavailableSocialConnectorTargets,
+  getFullSignInExperience,
+  findCaptchaPublicConfig,
+} = createSignInExperienceLibrary(
+  queries,
+  connectorLibrary,
+  mockSsoConnectorLibrary,
+  cloudConnection,
+  new WellKnownCache('foo', new TtlCache())
+);
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -175,6 +186,7 @@ describe('getFullSignInExperience()', () => {
       ],
       isDevelopmentTenant: false,
       googleOneTap: undefined,
+      captchaConfig: undefined,
     });
   });
 
@@ -217,6 +229,7 @@ describe('getFullSignInExperience()', () => {
         clientId: 'fake_client_id',
         connectorId: 'google',
       },
+      captchaConfig: undefined,
     });
   });
 });
@@ -285,5 +298,27 @@ describe('get sso connectors', () => {
         darkLogo: connectorFactory.logoDark,
       },
     ]);
+  });
+});
+
+describe('findCaptchaPublicConfig', () => {
+  it('should return captcha public config', async () => {
+    findCaptchaProvider.mockResolvedValueOnce(mockCaptchaProvider);
+
+    const captchaPublicConfig = await findCaptchaPublicConfig();
+
+    expect(captchaPublicConfig).toEqual({
+      type: CaptchaType.Turnstile,
+      siteKey: 'captcha_site_key',
+    });
+  });
+
+  it('should return undefined if captcha provider is not found', async () => {
+    // eslint-disable-next-line unicorn/no-useless-undefined
+    findCaptchaProvider.mockResolvedValueOnce(undefined);
+
+    const captchaPublicConfig = await findCaptchaPublicConfig();
+
+    expect(captchaPublicConfig).toBeUndefined();
   });
 });

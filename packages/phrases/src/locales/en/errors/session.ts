@@ -44,6 +44,8 @@ const session = {
     mfa_factor_not_enabled: 'MFA factor is not enabled.',
   },
   sso_enabled: 'Single sign on is enabled for this given email. Please sign in with SSO.',
+  captcha_required: 'Captcha is required.',
+  captcha_failed: 'Captcha verification failed.',
 };
 
 export default Object.freeze(session);
