@@ -45,7 +45,7 @@
     "react-i18next": "^12.3.1",
     "stylelint": "^15.0.0",
     "typescript": "^5.5.3",
-    "vite": "^6.0.9",
+    "vite": "^6.1.2",
     "vite-plugin-compression": "^0.5.1",
     "zod": "^3.23.8"
   },
