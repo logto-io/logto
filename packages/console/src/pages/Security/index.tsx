@@ -22,8 +22,8 @@ import { trySubmitSafe } from '@/utils/form';
 
 import CaptchaCard from './CaptchaCard';
 import CreateCaptchaForm from './CreateCaptchaForm';
+import EnableCaptcha from './EnableCaptcha';
 import Guide from './Guide';
-import RequiredFlows from './RequiredFlows';
 import styles from './index.module.scss';
 import useDataFetch from './use-data-fetch';
 
@@ -34,9 +34,7 @@ function Security() {
   const { data, isLoading } = useDataFetch();
   const formMethods = useForm<CaptchaPolicy>({
     defaultValues: {
-      signUp: false,
-      signIn: false,
-      forgotPassword: false,
+      enabled: false,
     },
     mode: 'onBlur',
   });
@@ -103,7 +101,7 @@ function Security() {
                 {data ? (
                   <>
                     <CaptchaCard captchaProvider={data} />
-                    <RequiredFlows />
+                    <EnableCaptcha />
                   </>
                 ) : (
                   <Button
