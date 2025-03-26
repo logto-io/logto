@@ -248,7 +248,9 @@ describe('experience api hook trigger', () => {
     const dataHook = webHookApi.hooks.get('dataHookEventListener')!;
     const user = userApi.users.find(({ username: name }) => name === username)!;
 
-    const client = await initExperienceClient(InteractionEvent.ForgotPassword);
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.ForgotPassword,
+    });
     await identifyUserWithEmailVerificationCode(client, email);
     await client.resetPassword({ password: newPassword });
     await client.submitInteraction();

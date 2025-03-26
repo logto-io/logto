@@ -298,6 +298,7 @@ export default class ExperienceInteraction {
       await this.save();
     }
 
+    await this.guardCaptcha();
     await this.profile.assertUserMandatoryProfileFulfilled();
 
     const user = await this.provisionLibrary.createUser(this.profile.data);
@@ -428,10 +429,7 @@ export default class ExperienceInteraction {
       queries: { users: userQueries, userSsoIdentities: userSsoIdentityQueries },
     } = this.tenant;
 
-    if (EnvSet.values.isDevFeaturesEnabled && !this.captcha.verified && !this.captcha.skipped) {
-      // Check if the captcha is required for the current interaction
-      await this.signInExperienceValidator.guardCaptcha(this.interactionEvent);
-    }
+    await this.guardCaptcha();
 
     // Identified
     const user = await this.getIdentifiedUser();
@@ -605,6 +603,18 @@ export default class ExperienceInteraction {
     const ssoVerificationRecord = this.verificationRecords.get(VerificationType.EnterpriseSso);
 
     return Boolean(ssoVerificationRecord?.isVerified);
+  }
+
+  private async guardCaptcha() {
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return;
+    }
+
+    if (this.captcha.verified || this.captcha.skipped) {
+      return;
+    }
+
+    await this.signInExperienceValidator.guardCaptcha();
   }
 
   /**

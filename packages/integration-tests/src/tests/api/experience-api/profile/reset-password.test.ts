@@ -55,7 +55,9 @@ describe('Reset Password', () => {
   });
 
   it('should throw 404 if the interaction is not identified', async () => {
-    const client = await initExperienceClient(InteractionEvent.ForgotPassword);
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.ForgotPassword,
+    });
 
     await expectRejects(client.resetPassword({ password: 'password' }), {
       status: 404,
@@ -66,7 +68,9 @@ describe('Reset Password', () => {
   it('should throw 422 if identify the user using VerificationType other than CodeVerification', async () => {
     const { username, password } = generateNewUserProfile({ username: true, password: true });
     await userApi.create({ username, password });
-    const client = await initExperienceClient(InteractionEvent.ForgotPassword);
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.ForgotPassword,
+    });
 
     const { verificationId } = await client.verifyPassword({
       identifier: { type: SignInIdentifier.Username, value: username },
@@ -85,7 +89,9 @@ describe('Reset Password', () => {
       password: true,
     });
     await userApi.create({ primaryEmail, password });
-    const client = await initExperienceClient(InteractionEvent.ForgotPassword);
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.ForgotPassword,
+    });
 
     await identifyForgotPasswordInteraction(client, primaryEmail);
 
@@ -115,7 +121,9 @@ describe('Reset Password', () => {
 
     await userApi.create({ primaryEmail, password });
 
-    const client = await initExperienceClient(InteractionEvent.ForgotPassword);
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.ForgotPassword,
+    });
 
     await identifyForgotPasswordInteraction(client, primaryEmail);
 
@@ -134,7 +142,9 @@ describe('Reset Password', () => {
 
     const newPassword = generatePassword();
 
-    const client = await initExperienceClient(InteractionEvent.ForgotPassword);
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.ForgotPassword,
+    });
 
     await identifyForgotPasswordInteraction(client, primaryEmail);
 

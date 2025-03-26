@@ -40,7 +40,9 @@ describe('Register interaction with one-time token happy path', () => {
   });
 
   it('should successfully register a new user with a magic link containing a one-time token', async () => {
-    const client = await initExperienceClient(InteractionEvent.Register);
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.Register,
+    });
 
     const oneTimeToken = await createOneTimeToken({
       email: 'foo@logto.io',
@@ -72,7 +74,9 @@ describe('Register interaction with one-time token happy path', () => {
       email: userProfile.primaryEmail,
     });
 
-    const client = await initExperienceClient(InteractionEvent.Register);
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.Register,
+    });
 
     const { verificationId } = await client.verifyOneTimeToken({
       token: oneTimeToken.token,
@@ -111,7 +115,9 @@ describe('Register interaction with one-time token happy path', () => {
       },
     });
 
-    const client = await initExperienceClient(InteractionEvent.Register);
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.Register,
+    });
 
     const oneTimeToken = await createOneTimeToken({
       email: 'bar@logto.io',

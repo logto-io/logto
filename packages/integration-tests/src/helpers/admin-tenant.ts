@@ -80,13 +80,12 @@ export const putInteraction = async (cookie: string, payload: InteractionPayload
     .json();
 
 export const initAdminExperienceClient = async (config?: Partial<LogtoConfig>) =>
-  initExperienceClient(
-    InteractionEvent.SignIn,
-    { endpoint: logtoConsoleUrl, appId: adminConsoleApplicationId, ...config },
-    adminConsoleRedirectUri,
-    undefined,
-    adminTenantApi
-  );
+  initExperienceClient({
+    interactionEvent: InteractionEvent.SignIn,
+    config: { endpoint: logtoConsoleUrl, appId: adminConsoleApplicationId, ...config },
+    redirectUri: adminConsoleRedirectUri,
+    api: adminTenantApi,
+  });
 
 export const initClientAndSignIn = async (
   username: string,

@@ -52,7 +52,9 @@ describe('Bind MFA APIs sad path', () => {
     it('should throw not supported error when binding TOTP on ForgotPassword interaction', async () => {
       const { username, password } = generateNewUserProfile({ username: true, password: true });
       await userApi.create({ username, password });
-      const client = await initExperienceClient(InteractionEvent.ForgotPassword);
+      const client = await initExperienceClient({
+        interactionEvent: InteractionEvent.ForgotPassword,
+      });
 
       await expectRejects(client.skipMfaBinding(), {
         code: 'session.not_supported_for_forgot_password',

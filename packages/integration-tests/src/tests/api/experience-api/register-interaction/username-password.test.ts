@@ -52,7 +52,9 @@ describe('register new user with username and password', () => {
     const existUsername = generateUsername();
     await userApi.create({ username: existUsername });
 
-    const client = await initExperienceClient(InteractionEvent.Register);
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.Register,
+    });
 
     await expectRejects(
       client.updateProfile({ type: SignInIdentifier.Username, value: existUsername }),
@@ -117,7 +119,9 @@ devFeatureTest.describe(
           primaryEmail: true,
         });
 
-        const client = await initExperienceClient(InteractionEvent.Register);
+        const client = await initExperienceClient({
+          interactionEvent: InteractionEvent.Register,
+        });
 
         await client.updateProfile({ type: SignInIdentifier.Username, value: username });
         await client.updateProfile({ type: 'password', value: password });
