@@ -12,10 +12,11 @@ type SubmitInteractionResponse = {
   redirectTo: string;
 };
 
-export const initInteraction = async (interactionEvent: InteractionEvent) =>
+export const initInteraction = async (interactionEvent: InteractionEvent, captchaToken?: string) =>
   api.put(`${experienceApiRoutes.prefix}`, {
     json: {
       interactionEvent,
+      captchaToken,
     },
   });
 

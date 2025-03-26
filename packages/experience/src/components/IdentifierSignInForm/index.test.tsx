@@ -160,6 +160,7 @@ describe('IdentifierSignInForm', () => {
                     ? `${getDefaultCountryCallingCode()}${value}`
                     : value,
               },
+              undefined,
               undefined
             );
             expect(mockedNavigate).not.toBeCalled();

@@ -105,7 +105,8 @@ describe('continue with email or phone', () => {
             type: identifier,
             value: identifier === SignInIdentifier.Phone ? `${countryCode}${input}` : input,
           },
-          InteractionEvent.Register
+          InteractionEvent.Register,
+          undefined
         );
       });
     }

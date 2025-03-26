@@ -185,7 +185,7 @@ describe('<IdentifierRegisterForm />', () => {
       });
 
       await waitFor(() => {
-        expect(registerWithUsername).toBeCalledWith('username');
+        expect(registerWithUsername).toBeCalledWith('username', undefined);
       });
     });
   });
@@ -248,6 +248,7 @@ describe('<IdentifierRegisterForm />', () => {
               type: SignInIdentifier.Email,
               value: 'foo@logto.io',
             },
+            undefined,
             undefined
           );
         });
@@ -312,6 +313,7 @@ describe('<IdentifierRegisterForm />', () => {
               type: SignInIdentifier.Phone,
               value: `${getDefaultCountryCallingCode()}8573333333`,
             },
+            undefined,
             undefined
           );
         });
@@ -357,6 +359,7 @@ describe('<IdentifierRegisterForm />', () => {
             type: SignInIdentifier.Email,
             value: email,
           },
+          undefined,
           undefined
         );
       });
@@ -398,6 +401,7 @@ describe('<IdentifierRegisterForm />', () => {
             type: SignInIdentifier.Email,
             value: email,
           },
+          undefined,
           undefined
         );
       });
