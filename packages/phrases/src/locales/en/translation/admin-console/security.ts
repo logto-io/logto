@@ -12,10 +12,9 @@ const security = {
       add: 'Add CAPTCHA',
     },
     settings: 'Settings',
-    captcha_required_flows: 'CAPTCHA required flows',
-    sign_up: 'Sign up',
-    sign_in: 'Sign in',
-    forgot_password: 'Forgot password',
+    enable_captcha: 'Enable CAPTCHA',
+    enable_captcha_description:
+      'Enable CAPTCHA verification for sign-up, sign-in, and password recovery flows.',
   },
   create_captcha: {
     setup_captcha: 'Setup CAPTCHA',
