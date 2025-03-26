@@ -42,7 +42,9 @@ describe('should reject the email registration if the email domain is enabled fo
   });
 
   it('should block email verification code registration', async () => {
-    const client = await initExperienceClient(InteractionEvent.Register);
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.Register,
+    });
 
     const { verificationId, code } = await successfullySendVerificationCode(client, {
       identifier,
@@ -67,7 +69,9 @@ describe('should reject the email registration if the email domain is enabled fo
   });
 
   it('should block email profile update', async () => {
-    const client = await initExperienceClient(InteractionEvent.Register);
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.Register,
+    });
 
     const { verificationId, code } = await successfullySendVerificationCode(client, {
       identifier,
@@ -110,7 +114,9 @@ describe('should reject the email registration if the email domain is enabled fo
 
     it('should block social register with SSO only email identifier', async () => {
       const connectorId = connectorIdMap.get(mockSocialConnectorId)!;
-      const client = await initExperienceClient(InteractionEvent.Register);
+      const client = await initExperienceClient({
+        interactionEvent: InteractionEvent.Register,
+      });
 
       const { verificationId } = await successFullyCreateSocialVerification(client, connectorId, {
         redirectUri,
@@ -141,7 +147,9 @@ describe('should reject the email registration if the email domain is enabled fo
 
     it('should block social link email with SSO only email identifier', async () => {
       const connectorId = connectorIdMap.get(mockSocialConnectorId)!;
-      const client = await initExperienceClient(InteractionEvent.Register);
+      const client = await initExperienceClient({
+        interactionEvent: InteractionEvent.Register,
+      });
 
       const { verificationId } = await successFullyCreateSocialVerification(client, connectorId, {
         redirectUri,

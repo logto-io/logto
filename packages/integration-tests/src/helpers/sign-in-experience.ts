@@ -202,17 +202,13 @@ export const setLanguage = async (
 export const enableCaptcha = async () =>
   updateSignInExperience({
     captchaPolicy: {
-      signIn: true,
-      signUp: true,
-      forgotPassword: true,
+      enabled: true,
     },
   });
 
 export const disableCaptcha = async () =>
   updateSignInExperience({
     captchaPolicy: {
-      signIn: false,
-      signUp: false,
-      forgotPassword: false,
+      enabled: false,
     },
   });

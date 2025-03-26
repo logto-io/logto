@@ -31,7 +31,9 @@ describe('PUT /experience API', () => {
   });
 
   it('should throw if trying to update interaction event from ForgotPassword to others', async () => {
-    const client = await initExperienceClient(InteractionEvent.ForgotPassword);
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.ForgotPassword,
+    });
 
     await expectRejects(
       client.updateInteractionEvent({ interactionEvent: InteractionEvent.SignIn }),

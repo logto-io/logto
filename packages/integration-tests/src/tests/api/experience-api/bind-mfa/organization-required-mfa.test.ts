@@ -90,7 +90,9 @@ describe('Organization required MFA policy', () => {
       const { username, password } = generateNewUserProfile({ username: true, password: true });
 
       // Register user and skip MFA
-      const client = await initExperienceClient(InteractionEvent.Register);
+      const client = await initExperienceClient({
+        interactionEvent: InteractionEvent.Register,
+      });
       const { verificationId } = await client.createNewPasswordIdentityVerification({
         identifier: {
           type: SignInIdentifier.Username,

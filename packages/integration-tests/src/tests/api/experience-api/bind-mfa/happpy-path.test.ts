@@ -44,7 +44,9 @@ describe('Bind MFA APIs happy path', () => {
 
     it('should bind TOTP on register', async () => {
       const { username, password } = generateNewUserProfile({ username: true, password: true });
-      const client = await initExperienceClient(InteractionEvent.Register);
+      const client = await initExperienceClient({
+        interactionEvent: InteractionEvent.Register,
+      });
 
       const { verificationId } = await client.createNewPasswordIdentityVerification({
         identifier: {
@@ -131,7 +133,9 @@ describe('Bind MFA APIs happy path', () => {
 
     it('should able to skip MFA binding on register', async () => {
       const { username, password } = generateNewUserProfile({ username: true, password: true });
-      const client = await initExperienceClient(InteractionEvent.Register);
+      const client = await initExperienceClient({
+        interactionEvent: InteractionEvent.Register,
+      });
 
       const { verificationId } = await client.createNewPasswordIdentityVerification({
         identifier: {
@@ -192,7 +196,9 @@ describe('Bind MFA APIs happy path', () => {
 
     it('should able to register without MFA', async () => {
       const { username, password } = generateNewUserProfile({ username: true, password: true });
-      const client = await initExperienceClient(InteractionEvent.Register);
+      const client = await initExperienceClient({
+        interactionEvent: InteractionEvent.Register,
+      });
 
       const { verificationId } = await client.createNewPasswordIdentityVerification({
         identifier: {
@@ -236,7 +242,9 @@ describe('Bind MFA APIs happy path', () => {
 
     it('should able to register without MFA', async () => {
       const { username, password } = generateNewUserProfile({ username: true, password: true });
-      const client = await initExperienceClient(InteractionEvent.Register);
+      const client = await initExperienceClient({
+        interactionEvent: InteractionEvent.Register,
+      });
 
       const { verificationId } = await client.createNewPasswordIdentityVerification({
         identifier: {
@@ -272,7 +280,9 @@ describe('Bind MFA APIs happy path', () => {
 
     it('should bind TOTP and backup codes on register', async () => {
       const { username, password } = generateNewUserProfile({ username: true, password: true });
-      const client = await initExperienceClient(InteractionEvent.Register);
+      const client = await initExperienceClient({
+        interactionEvent: InteractionEvent.Register,
+      });
 
       const { verificationId } = await client.createNewPasswordIdentityVerification({
         identifier: {

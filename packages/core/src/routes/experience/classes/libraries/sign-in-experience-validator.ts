@@ -240,24 +240,14 @@ export class SignInExperienceValidator {
 
   /**
    * Guard the captcha required based on the captcha policy.
-   * Only call this method if captcha is not verified.
-   *
-   * @param event The interaction event.
+   * Only call this method if captcha is not verified or skipped.
    *
    * @throws {RequestError} with 422 if the captcha is required
    */
-  public async guardCaptcha(event: InteractionEvent) {
+  public async guardCaptcha() {
     const { captchaPolicy } = await this.getSignInExperienceData();
 
-    if (event === InteractionEvent.SignIn && !captchaPolicy.signIn) {
-      return;
-    }
-
-    if (event === InteractionEvent.Register && !captchaPolicy.signUp) {
-      return;
-    }
-
-    if (event === InteractionEvent.ForgotPassword && !captchaPolicy.forgotPassword) {
+    if (!captchaPolicy.enabled) {
       return;
     }
 

@@ -39,9 +39,12 @@ describe('experience API with i18n email templates', () => {
       name: 'test org',
     });
 
-    const client = await initExperienceClient(undefined, undefined, undefined, {
-      extraParams: {
-        organization_id: organization.id,
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.SignIn,
+      options: {
+        extraParams: {
+          organization_id: organization.id,
+        },
       },
     });
 
@@ -77,7 +80,9 @@ describe('experience API with i18n email templates', () => {
       ({ usageType }) => usageType === 'ForgotPassword'
     )!;
 
-    const client = await initExperienceClient();
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.ForgotPassword,
+    });
     const { code } = await successfullySendVerificationCode(client, {
       interactionEvent: InteractionEvent.ForgotPassword,
       identifier: {

@@ -74,7 +74,9 @@ describe('Register interaction with verification code happy path', () => {
           value: userProfile[identifiersTypeToUserProfile[identifierType]]!,
         };
 
-        const client = await initExperienceClient(InteractionEvent.Register);
+        const client = await initExperienceClient({
+          interactionEvent: InteractionEvent.Register,
+        });
 
         const { verificationId, code } = await successfullySendVerificationCode(client, {
           identifier,
@@ -136,7 +138,9 @@ describe('Register interaction with verification code happy path', () => {
           value: userProfile[identifiersTypeToUserProfile[identifierType]]!,
         };
 
-        const client = await initExperienceClient(InteractionEvent.Register);
+        const client = await initExperienceClient({
+          interactionEvent: InteractionEvent.Register,
+        });
 
         const { verificationId, code } = await successfullySendVerificationCode(client, {
           identifier,
@@ -218,7 +222,9 @@ devFeatureTest.describe('username as secondary identifier', () => {
         value: identifierType === SignInIdentifier.Email ? generateEmail() : generatePhone(),
       };
 
-      const client = await initExperienceClient(InteractionEvent.Register);
+      const client = await initExperienceClient({
+        interactionEvent: InteractionEvent.Register,
+      });
       const { verificationId, code } = await successfullySendVerificationCode(client, {
         identifier,
         interactionEvent: InteractionEvent.Register,
