@@ -101,7 +101,7 @@ function SignUpIdentifiersEditBox() {
   );
 
   useEffect(() => {
-    if (signUpIdentifierOptions.length === 0) {
+    if (signUpIdentifiers.length === 0) {
       setValue('signUp.password', false, { shouldDirty: true });
     }
 
