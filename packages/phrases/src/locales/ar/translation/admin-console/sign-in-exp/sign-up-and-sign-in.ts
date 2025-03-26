@@ -9,8 +9,7 @@ const sign_up_and_sign_in = {
   sign_up: {
     title: 'التسجيل',
     sign_up_identifier: 'معرف التسجيل',
-    identifier_description:
-      'معرف التسجيل مطلوب لإنشاء الحساب ويجب أن يتم تضمينه في شاشة تسجيل الدخول الخاصة بك.',
+    identifier_description: 'جميع معرّفات التسجيل المحددة مطلوبة عند إنشاء حساب جديد.',
     sign_up_authentication: 'إعدادات المصادقة للتسجيل',
     authentication_description: 'سيكون على المستخدمين إكمال جميع الإجراءات المحددة في التدفق.',
     set_a_password_option: 'إنشاء كلمة المرور الخاصة بك',
@@ -23,6 +22,7 @@ const sign_up_and_sign_in = {
     description:
       'يمكن للمستخدمين تسجيل الدخول باستخدام أي من الخيارات المتاحة. قم بضبط التخطيط عن طريق سحب وإسقاط الخيارات أدناه.',
     add_sign_in_method: 'إضافة طريقة تسجيل الدخول',
+    add_sign_up_method: 'إضافة طريقة التسجيل',
     password_auth: 'كلمة المرور',
     verification_code_auth: 'رمز التحقق',
     auth_swap_tip: 'قم بتبديل الخيارات أدناه لتحديد الظهور الأول في التدفق.',

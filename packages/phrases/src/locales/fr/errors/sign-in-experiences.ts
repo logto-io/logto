@@ -22,6 +22,8 @@ const sign_in_experiences = {
     "Vous devez sélectionner au moins un facteur d'authentification.",
   backup_code_cannot_be_enabled_alone: 'Le code de sauvegarde ne peut être activé seul.',
   duplicated_mfa_factors: 'Facteurs de MFA en double.',
+  duplicated_sign_up_identifiers: "Des identifiants d'inscription en double ont été détectés.",
+  missing_sign_up_identifiers: "L'identifiant principal d'inscription ne peut pas être vide.",
 };
 
 export default Object.freeze(sign_in_experiences);

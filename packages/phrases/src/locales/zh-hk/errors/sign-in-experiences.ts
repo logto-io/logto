@@ -13,6 +13,8 @@ const sign_in_experiences = {
   at_least_one_authentication_factor: '至少要選擇一個登錄要素',
   backup_code_cannot_be_enabled_alone: 'Backup code cannot be enabled alone.',
   duplicated_mfa_factors: 'Duplicated MFA factors.',
+  duplicated_sign_up_identifiers: '檢測到重複的註冊標識符。',
+  missing_sign_up_identifiers: '主要的註冊標識符不能為空。',
 };
 
 export default Object.freeze(sign_in_experiences);

@@ -10,7 +10,7 @@ const sign_up_and_sign_in = {
     title: 'KAYDOL',
     sign_up_identifier: 'Kayıt tanımlayıcı',
     identifier_description:
-      'Hesap oluşturmak için kayıt tanımlayıcı gereklidir ve giriş ekranınıza dahil edilmelidir.',
+      'Yeni bir hesap oluştururken seçilen tüm kayıt tanımlayıcılar gereklidir.',
     sign_up_authentication: 'Kaydolma doğrulama ayarları',
     authentication_description:
       'Seçilen tüm işlemler, kullanıcıların akışı tamamlamaları zorunlu olacaktır.',
@@ -24,6 +24,7 @@ const sign_up_and_sign_in = {
     description:
       'Kullanıcılar mevcut seçeneklerden herhangi biriyle oturum açabilir. Aşağıdaki seçenekleri sürükleyip bırakarak düzenleyin.',
     add_sign_in_method: 'Oturum açma yöntemi ekle',
+    add_sign_up_method: 'Kayıt yöntemi ekle',
     password_auth: 'Şifre',
     verification_code_auth: 'Doğrulama kodu',
     auth_swap_tip:

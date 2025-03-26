@@ -20,6 +20,9 @@ const sign_in_experiences = {
   at_least_one_authentication_factor: 'Вы должны выбрать как минимум один фактор аутентификации.',
   backup_code_cannot_be_enabled_alone: 'Резервный код не может быть включен самостоятельно.',
   duplicated_mfa_factors: 'Факторы MFA не должны повторяться.',
+  duplicated_sign_up_identifiers: 'Обнаружены дублирующие идентификаторы создания учетной записи.',
+  missing_sign_up_identifiers:
+    'Основной идентификатор создания учетной записи не может быть пустым.',
 };
 
 export default Object.freeze(sign_in_experiences);

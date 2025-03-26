@@ -10,7 +10,7 @@ const sign_up_and_sign_in = {
     title: 'REGISTO',
     sign_up_identifier: 'Identificador de registo',
     identifier_description:
-      'O identificador de registo é necessário para a criação de conta e deve ser incluído no ecrã de início de sessão.',
+      'Todos os identificadores de registo selecionados são necessários ao criar uma nova conta.',
     sign_up_authentication: 'Definição de autenticação para registo',
     authentication_description:
       'Todas as ações selecionadas serão obrigatórias para os utilizadores concluir o processo de registo.',
@@ -24,6 +24,7 @@ const sign_up_and_sign_in = {
     description:
       'Os utilizadores podem iniciar sessão usando qualquer uma das opções disponíveis. Ajuste a disposição arrastando e soltando as opções abaixo.',
     add_sign_in_method: 'Adicionar Método de Início de Sessão',
+    add_sign_up_method: 'Adicionar método de inscrição',
     password_auth: 'Senha',
     verification_code_auth: 'Código de verificação',
     auth_swap_tip: 'Alterne as opções abaixo para determinar qual aparece primeiro no processo.',

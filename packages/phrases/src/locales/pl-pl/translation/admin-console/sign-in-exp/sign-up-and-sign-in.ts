@@ -10,7 +10,7 @@ const sign_up_and_sign_in = {
     title: 'REJESTRACJA',
     sign_up_identifier: 'Identyfikator rejestracji',
     identifier_description:
-      'Identyfikator rejestracji jest wymagany do utworzenia konta i musi być uwzględniony na ekranie logowania.',
+      'Wszystkie wybrane identyfikatory rejestracji są wymagane przy tworzeniu nowego konta.',
     sign_up_authentication: 'Ustawienia uwierzytelniania dla rejestracji',
     authentication_description:
       'Wszystkie wybrane czynności będą obowiązkowe dla użytkowników, aby ukończyć proces rejestracji.',
@@ -24,6 +24,7 @@ const sign_up_and_sign_in = {
     description:
       'Użytkownicy mogą się zalogować za pomocą dowolnej dostępnej opcji. Dostosuj układ, przeciągając i upuszczając poniżej opcji.',
     add_sign_in_method: 'Dodaj metodę logowania',
+    add_sign_up_method: 'Dodaj metodę rejestracji',
     password_auth: 'Hasło',
     verification_code_auth: 'Kod weryfikacyjny',
     auth_swap_tip:
@@ -60,7 +61,7 @@ const sign_up_and_sign_in = {
     title: 'USTAWIENIA ZAAWANSOWANE',
     enable_single_sign_on: 'Włącz jednokrotne logowanie przedsiębiorstwa (SSO)',
     enable_single_sign_on_description:
-      'Enable users to sign-in to the application using Single Sign-On with their enterprise identities.',
+      'Włącz użytkownikom logowanie się do aplikacji za pomocą jednokrotnego logowania przy użyciu ich tożsamości przedsiębiorstwa.',
     single_sign_on_hint: {
       prefix: 'Przejdź do ',
       link: '"Enterprise SSO"',

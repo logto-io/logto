@@ -10,7 +10,7 @@ const sign_up_and_sign_in = {
     title: 'サインアップ',
     sign_up_identifier: 'サインアップ識別子',
     identifier_description:
-      'サインアップ識別子はアカウント作成に必要で、サインイン画面に含める必要があります。',
+      '新しいアカウントを作成する際に、すべての選択されたサインアップ識別子が必要です。',
     sign_up_authentication: 'サインアップの認証設定',
     authentication_description:
       '選択したすべてのアクションは、ユーザーがフローを完了するために必須です。',
@@ -24,6 +24,7 @@ const sign_up_and_sign_in = {
     description:
       'ユーザーは利用可能なすべてのオプションを使用してサインインできます。下のオプションをドラッグ＆ドロップしてレイアウトを調整してください。',
     add_sign_in_method: 'サインイン方法を追加',
+    add_sign_up_method: 'サインアップ方法を追加',
     password_auth: 'パスワード',
     verification_code_auth: '確認コード',
     auth_swap_tip: '以下のオプションを交換して、フローで最初に表示されるオプションを決定します。',

@@ -18,6 +18,8 @@ const sign_in_experiences = {
   at_least_one_authentication_factor: 'En az bir doğrulama faktörü seçmelisiniz.',
   backup_code_cannot_be_enabled_alone: 'Yedek kod yalnız başına etkinleştirilemez.',
   duplicated_mfa_factors: 'Yinelenen MFA faktörleri.',
+  duplicated_sign_up_identifiers: 'Yinelenen kayıt kimlikleri tespit edildi.',
+  missing_sign_up_identifiers: 'Birincil kayıt kimliği boş olamaz.',
 };
 
 export default Object.freeze(sign_in_experiences);

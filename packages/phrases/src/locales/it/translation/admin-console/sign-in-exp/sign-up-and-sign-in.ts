@@ -10,7 +10,7 @@ const sign_up_and_sign_in = {
     title: 'REGISTRATI',
     sign_up_identifier: 'Identificatore di registrazione',
     identifier_description:
-      "L'identificatore di registrazione è necessario per la creazione dell'account e deve essere incluso nella schermata di accesso.",
+      'Tutti gli identificatori di registrazione selezionati sono richiesti quando si crea un nuovo account.',
     sign_up_authentication: "Impostazione dell'autenticazione per la registrazione",
     authentication_description:
       'Tutte le azioni selezionate saranno obbligatorie per gli utenti per completare il flusso.',
@@ -25,6 +25,7 @@ const sign_up_and_sign_in = {
     description:
       'Gli utenti possono accedere utilizzando una qualsiasi delle opzioni disponibili. Regola il layout trascinando e rilasciando le opzioni sottostanti.',
     add_sign_in_method: 'Aggiungi metodo di accesso',
+    add_sign_up_method: 'Aggiungi metodo di registrazione',
     password_auth: 'Password',
     verification_code_auth: 'Codice di verifica',
     auth_swap_tip: 'Scambia le opzioni sottostanti per determinare quale appare prima nel flusso.',

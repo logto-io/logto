@@ -10,7 +10,7 @@ const sign_up_and_sign_in = {
     title: 'ANMELDEN',
     sign_up_identifier: 'Anmeldeidentifier',
     identifier_description:
-      'Der Anmeldeidentifier ist erforderlich für die Kontoerstellung und muss in Ihrem Anmeldefenster enthalten sein.',
+      'Alle ausgewählten Anmeldekennungen sind erforderlich, wenn ein neues Konto erstellt wird.',
     sign_up_authentication: 'Authentifizierungseinstellung für die Anmeldung',
     authentication_description:
       'Alle ausgewählten Aktionen sind für Benutzer verpflichtend, um den Vorgang abzuschließen.',
@@ -24,6 +24,7 @@ const sign_up_and_sign_in = {
     description:
       'Benutzer können sich über jede der verfügbaren Optionen anmelden. Passen Sie das Layout an, indem Sie die folgenden Optionen per Drag & Drop anordnen.',
     add_sign_in_method: 'Anmeldemethode hinzufügen',
+    add_sign_up_method: 'Anmeldemethode hinzufügen',
     password_auth: 'Passwort',
     verification_code_auth: 'Verifizierungscode',
     auth_swap_tip:

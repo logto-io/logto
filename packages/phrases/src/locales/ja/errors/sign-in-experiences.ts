@@ -20,6 +20,8 @@ const sign_in_experiences = {
   at_least_one_authentication_factor: '認証ファクタを1つ以上選択する必要があります。',
   backup_code_cannot_be_enabled_alone: 'バックアップコードは単独で有効にできません。',
   duplicated_mfa_factors: '重複したMFAファクタです。',
+  duplicated_sign_up_identifiers: '重複したサインアップ識別子が検出されました。',
+  missing_sign_up_identifiers: '主要なサインアップ識別子を空にすることはできません。',
 };
 
 export default Object.freeze(sign_in_experiences);
