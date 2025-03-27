@@ -15,6 +15,7 @@ type MethodsType = 'sign-in' | 'sign-up';
 type Options<T> = Array<{
   value: T;
   label: string;
+  disabled?: boolean;
 }>;
 
 type Props<T> = {
@@ -60,10 +61,14 @@ function IdentifiersAddButton<T extends SignInIdentifier | SignUpIdentifier>({
       )}
       isDropdownFullWidth={!hasSelectedIdentifiers}
     >
-      {options.map(({ value, label }) => (
+      {options.map(({ value, label, disabled }) => (
         <DropdownItem
           key={value}
+          className={disabled ? styles.disabledDropdownItem : undefined}
           onClick={() => {
+            if (disabled) {
+              return;
+            }
             onSelected(value);
           }}
         >
