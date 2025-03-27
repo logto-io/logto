@@ -1,6 +1,12 @@
 /* eslint-disable max-lines */
 import { type ToZodObject } from '@logto/connector-kit';
-import { InteractionEvent, VerificationType, type User } from '@logto/schemas';
+import {
+  InteractionEvent,
+  type OneTimeTokenContext,
+  oneTimeTokenContextGuard,
+  VerificationType,
+  type User,
+} from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
@@ -37,6 +43,7 @@ import {
   type VerificationRecordData,
   type VerificationRecordMap,
 } from './verifications/index.js';
+import { isOneTimeTokenVerificationRecordData } from './verifications/one-time-token-verification.js';
 import { VerificationRecordsMap } from './verifications/verification-records-map.js';
 
 type InteractionStorage = {
@@ -45,6 +52,7 @@ type InteractionStorage = {
   profile?: InteractionProfile;
   mfa?: MfaData;
   verificationRecords?: VerificationRecordData[];
+  oneTimeTokenContext?: OneTimeTokenContext;
   captcha?: {
     verified: boolean;
     skipped: boolean;
@@ -57,6 +65,7 @@ const interactionStorageGuard = z.object({
   profile: interactionProfileGuard.optional(),
   mfa: mfaDataGuard.optional(),
   verificationRecords: verificationRecordDataGuard.array().optional(),
+  oneTimeTokenContext: oneTimeTokenContextGuard.optional(),
   captcha: z
     .object({
       verified: z.boolean(),
@@ -84,6 +93,7 @@ export default class ExperienceInteraction {
   /** The userId of the user for the current interaction. Only available once the user is identified. */
   private userId?: string;
   private userCache?: User;
+  private oneTimeTokenContext?: OneTimeTokenContext;
   /** The captcha verification status for the current interaction. */
   private readonly captcha = {
     verified: false,
@@ -148,6 +158,7 @@ export default class ExperienceInteraction {
         verified: false,
         skipped: false,
       },
+      oneTimeTokenContext,
     } = result.data;
 
     this.#interactionEvent = interactionEvent;
@@ -155,6 +166,7 @@ export default class ExperienceInteraction {
     this.profile = new Profile(libraries, queries, profile, interactionContext);
     this.mfa = new Mfa(libraries, queries, mfa, interactionContext);
     this.captcha = captcha;
+    this.oneTimeTokenContext = oneTimeTokenContext;
 
     for (const record of verificationRecords) {
       const instance = buildVerificationRecord(libraries, queries, record);
@@ -284,15 +296,21 @@ export default class ExperienceInteraction {
 
     if (verificationId) {
       const verificationRecord = this.getVerificationRecordById(verificationId);
+      const verificationData = verificationRecord.toJson();
 
       log?.append({
-        verification: verificationRecord.toJson(),
+        verification: verificationData,
       });
 
       await this.signInExperienceValidator.guardSsoOnlyEmailIdentifier(verificationRecord);
       const identifierProfile = await getNewUserProfileFromVerificationRecord(verificationRecord);
 
       await this.profile.setProfileWithValidation(identifierProfile);
+
+      this.oneTimeTokenContext = conditional(
+        isOneTimeTokenVerificationRecordData(verificationData) &&
+          verificationData.oneTimeTokenContext
+      );
 
       // Save the updated profile data to the interaction storage
       await this.save();
@@ -301,7 +319,10 @@ export default class ExperienceInteraction {
     await this.guardCaptcha();
     await this.profile.assertUserMandatoryProfileFulfilled();
 
-    const user = await this.provisionLibrary.createUser(this.profile.data);
+    const user = await this.provisionLibrary.createUser(
+      this.profile.data,
+      this.oneTimeTokenContext?.jitOrganizationIds
+    );
     log?.append({ user });
 
     this.userId = user.id;
@@ -539,7 +560,7 @@ export default class ExperienceInteraction {
 
   /** Convert the current interaction to JSON, so that it can be stored as the OIDC provider interaction result */
   public toJson(): InteractionStorage {
-    const { interactionEvent, userId, captcha } = this;
+    const { interactionEvent, userId, captcha, oneTimeTokenContext } = this;
 
     return {
       interactionEvent,
@@ -547,6 +568,7 @@ export default class ExperienceInteraction {
       profile: this.profile.data,
       mfa: this.mfa.data,
       verificationRecords: this.verificationRecordsArray.map((record) => record.toJson()),
+      oneTimeTokenContext,
       captcha,
     };
   }

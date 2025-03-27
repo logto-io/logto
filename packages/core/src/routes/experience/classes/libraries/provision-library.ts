@@ -16,7 +16,7 @@ import {
   type UserOnboardingData,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { conditional, conditionalArray, trySafe } from '@silverhand/essentials';
+import { condArray, conditional, conditionalArray, trySafe } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -36,6 +36,10 @@ type OrganizationProvisionPayload =
   | {
       userId: string;
       ssoConnectorId: string;
+    }
+  | {
+      userId: string;
+      organizationIds: string[];
     };
 
 export class ProvisionLibrary {
@@ -50,7 +54,7 @@ export class ProvisionLibrary {
    * - Provision all JIT organizations for the user if necessary.
    * - Assign the first user to the admin role and the default tenant organization membership. [OSS only]
    */
-  async createUser(profile: InteractionProfile) {
+  async createUser(profile: InteractionProfile, jitOrganizationIds?: string[]) {
     const {
       libraries: {
         users: { generateUserId, insertUser },
@@ -80,7 +84,7 @@ export class ProvisionLibrary {
       await this.provisionForFirstAdminUser(user);
     }
 
-    await this.provisionNewUserJitOrganizations(user.id, profile);
+    await this.provisionNewUserJitOrganizations(user.id, profile, jitOrganizationIds);
 
     this.ctx.appendDataHookContext('User.Created', { user });
 
@@ -197,19 +201,33 @@ export class ProvisionLibrary {
    */
   private async provisionNewUserJitOrganizations(
     userId: string,
-    { primaryEmail, enterpriseSsoIdentity }: InteractionProfile
+    { primaryEmail, enterpriseSsoIdentity }: InteractionProfile,
+    extraJitOrganizationIds?: string[]
   ) {
+    const extraJitOrganizations = condArray(
+      extraJitOrganizationIds &&
+        (await this.provisionJitOrganization({
+          userId,
+          organizationIds: extraJitOrganizationIds,
+        }))
+    );
     if (enterpriseSsoIdentity) {
-      return this.provisionJitOrganization({
-        userId,
-        ssoConnectorId: enterpriseSsoIdentity.ssoConnectorId,
-      });
+      return [
+        ...extraJitOrganizations,
+        ...(await this.provisionJitOrganization({
+          userId,
+          ssoConnectorId: enterpriseSsoIdentity.ssoConnectorId,
+        })),
+      ];
     }
     if (primaryEmail) {
-      return this.provisionJitOrganization({
-        userId,
-        email: primaryEmail,
-      });
+      return [
+        ...extraJitOrganizations,
+        ...(await this.provisionJitOrganization({
+          userId,
+          email: primaryEmail,
+        })),
+      ];
     }
   }
 

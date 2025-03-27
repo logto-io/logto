@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import {
   type Organization,
   type CreateOrganization,
@@ -32,7 +33,7 @@ import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
 import { ApplicationRelationQueries } from './application-relations.js';
 import { ApplicationRoleRelationQueries } from './application-role-relations.js';
-import { EmailDomainQueries } from './email-domains.js';
+import { EmailDomainQueries, type JitOrganization } from './email-domains.js';
 import { SsoConnectorQueries } from './sso-connectors.js';
 import { UserRelationQueries } from './user-relations.js';
 import { UserRoleRelationQueries } from './user-role-relations.js';
@@ -318,6 +319,7 @@ export default class OrganizationQueries extends SchemaQueries<
       OrganizationRoles
     ),
     ssoConnectors: new SsoConnectorQueries(this.pool),
+    getJitOrganizationsByIds: this.getJitOrganizationsByIds.bind(this),
   };
 
   constructor(pool: CommonQueryMethods) {
@@ -351,4 +353,25 @@ export default class OrganizationQueries extends SchemaQueries<
         ) as "hasMfaConfigured";
     `);
   }
+
+  private async getJitOrganizationsByIds(
+    organizationIds: string[]
+  ): Promise<readonly JitOrganization[]> {
+    if (organizationIds.length === 0) {
+      return [];
+    }
+    const { table, fields } = convertToIdentifiers(OrganizationJitRoles, true);
+    return this.pool.any<JitOrganization>(sql`
+      select
+        ${fields.organizationId},
+        array_remove(
+          array_agg(${fields.organizationRoleId}),
+          null
+        ) as "organizationRoleIds"
+      from ${table}
+      where ${fields.organizationId} in (${sql.join(organizationIds, sql`, `)})
+      group by ${fields.organizationId}
+    `);
+  }
 }
+/* eslint-enable max-lines */
