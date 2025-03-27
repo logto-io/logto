@@ -137,21 +137,6 @@ export class ProfileValidator {
   ): Set<MissingProfile> {
     const missingProfile = new Set<MissingProfile>();
 
-    if (mandatoryUserProfile.has(MissingProfile.password)) {
-      const isUserPasswordSet = user
-        ? // Social and enterprise SSO identities can take place the role of password
-          Boolean(user.passwordEncrypted) || Object.keys(user.identities).length > 0
-        : false;
-
-      const isProfilePasswordSet = Boolean(
-        profile.passwordEncrypted ?? profile.socialIdentity ?? profile.enterpriseSsoIdentity
-      );
-
-      if (!isUserPasswordSet && !isProfilePasswordSet) {
-        missingProfile.add(MissingProfile.password);
-      }
-    }
-
     if (mandatoryUserProfile.has(MissingProfile.username) && !user?.username && !profile.username) {
       missingProfile.add(MissingProfile.username);
     }
@@ -180,6 +165,21 @@ export class ProfileValidator {
       !profile.primaryPhone
     ) {
       missingProfile.add(MissingProfile.phone);
+    }
+
+    if (mandatoryUserProfile.has(MissingProfile.password)) {
+      const isUserPasswordSet = user
+        ? // Social and enterprise SSO identities can take place the role of password
+          Boolean(user.passwordEncrypted) || Object.keys(user.identities).length > 0
+        : false;
+
+      const isProfilePasswordSet = Boolean(
+        profile.passwordEncrypted ?? profile.socialIdentity ?? profile.enterpriseSsoIdentity
+      );
+
+      if (!isUserPasswordSet && !isProfilePasswordSet) {
+        missingProfile.add(MissingProfile.password);
+      }
     }
 
     return missingProfile;

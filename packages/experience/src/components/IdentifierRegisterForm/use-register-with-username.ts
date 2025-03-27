@@ -16,7 +16,7 @@ const useRegisterWithUsername = () => {
 
   const [errorMessage, setErrorMessage] = useState<string>();
 
-  const { passwordRequiredForSignUp } = useSieMethods();
+  const { passwordRequiredForSignUp, secondaryIdentifiers } = useSieMethods();
 
   const clearErrorMessage = useCallback(() => {
     setErrorMessage('');
@@ -39,7 +39,6 @@ const useRegisterWithUsername = () => {
   const asyncRegister = useApi(registerWithUsername);
 
   const asyncSubmitInteraction = useApi(identifyAndSubmitInteraction);
-
   const onSubmitInteraction = useCallback(async () => {
     const [error, result] = await asyncSubmitInteraction();
 
@@ -62,18 +61,20 @@ const useRegisterWithUsername = () => {
         return;
       }
 
-      // If password is required for sign up, navigate to the password page
-      if (passwordRequiredForSignUp) {
+      // If password is required and no secondary identifiers are present, (current behavior without multi-sign-up identifiers support)
+      // navigate to password screen directly
+      if (passwordRequiredForSignUp && secondaryIdentifiers.length === 0) {
         navigate('password');
         return;
       }
 
-      // Otherwise, identify and submit interaction
+      // Otherwise, identify and submit interaction let the backend decide the next step
       await onSubmitInteraction();
     },
     [
       asyncRegister,
       passwordRequiredForSignUp,
+      secondaryIdentifiers.length,
       onSubmitInteraction,
       handleError,
       usernameErrorHandlers,

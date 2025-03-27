@@ -3,6 +3,7 @@ import {
   AlternativeSignUpIdentifier,
   SignInIdentifier,
   SignInMode,
+  type SignUpIdentifier,
   type VerificationCodeSignInIdentifier,
 } from '@logto/schemas';
 import { condArray } from '@silverhand/essentials';
@@ -25,6 +26,7 @@ type UseSieMethodsReturnType = {
    * @see {useRequiredProfileErrorHandler} for more information.
    */
   signUpMethods: SignInIdentifier[];
+  secondaryIdentifiers: SignUpIdentifier[];
   passwordRequiredForSignUp: boolean;
   signInMethods: SignInExperienceResponse['signIn']['methods'];
   socialSignInSettings: SignInExperienceResponse['socialSignIn'];
@@ -112,6 +114,7 @@ export const useSieMethods = (): UseSieMethodsReturnType => {
     () => ({
       signUpMethods,
       signInMethods,
+      secondaryIdentifiers,
       socialSignInSettings: experienceSettings?.socialSignIn ?? {},
       socialConnectors: experienceSettings?.socialConnectors ?? [],
       ssoConnectors: experienceSettings?.ssoConnectors ?? [],
