@@ -1,7 +1,7 @@
-import { AgreeToTermsPolicy, SignInMode } from '@logto/schemas';
+import { AgreeToTermsPolicy, ExtraParamsKey, SignInMode } from '@logto/schemas';
 import { useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 
 import LandingPageLayout from '@/Layout/LandingPageLayout';
 import SingleSignOnFormModeContextProvider from '@/Providers/SingleSignOnFormModeContextProvider';
@@ -24,6 +24,7 @@ const SignInFooters = () => {
   const { t } = useTranslation();
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const navigate = useNavigate();
+  const [params] = useSearchParams();
 
   const { signInMethods, signUpMethods, socialConnectors, signInMode, singleSignOnEnabled } =
     useSieMethods();
@@ -94,6 +95,7 @@ const SignInFooters = () => {
 const SignIn = () => {
   const { signInMethods, socialConnectors, signInMode } = useSieMethods();
   const { agreeToTermsPolicy } = useTerms();
+  const [params] = useSearchParams();
 
   if (!signInMode) {
     return <ErrorPage />;
@@ -101,6 +103,12 @@ const SignIn = () => {
 
   if (signInMode === SignInMode.Register) {
     return <Navigate to="/register" />;
+  }
+
+  if (params.get(ExtraParamsKey.OneTimeToken)) {
+    return (
+      <Navigate replace to={{ pathname: '/one-time-token', search: `?${params.toString()}` }} />
+    );
   }
 
   return (

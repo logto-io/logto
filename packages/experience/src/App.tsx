@@ -39,6 +39,7 @@ import SocialLanding from './pages/SocialLanding';
 import SocialLinkAccount from './pages/SocialLinkAccount';
 import SocialSignInWebCallback from './pages/SocialSignInWebCallback';
 import Springboard from './pages/Springboard';
+import SwitchAccount from './pages/SwitchAccount';
 import VerificationCode from './pages/VerificationCode';
 import { UserMfaFlow } from './types';
 import { handleSearchParametersData } from './utils/search-parameters';
@@ -65,7 +66,10 @@ const App = () => {
                   <Route path="direct/:method/:target?" element={<DirectSignIn />} />
                   <Route element={<AppLayout />}>
                     {isDevFeaturesEnabled && (
-                      <Route path="one-time-token/:token" element={<OneTimeToken />} />
+                      <>
+                        <Route path="one-time-token" element={<OneTimeToken />} />
+                        <Route path={experience.routes.switchAccount} element={<SwitchAccount />} />
+                      </>
                     )}
                     <Route
                       path="unknown-session"

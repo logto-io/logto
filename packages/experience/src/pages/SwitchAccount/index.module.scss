@@ -9,11 +9,13 @@
 .title {
   margin-top: _.unit(8);
   font: var(--font-label-2);
+  align-self: flex-start;
 }
 
 .message {
   margin-top: _.unit(6);
   font: var(--font-body-2);
+  align-self: flex-start;
 }
 
 .logo {
@@ -36,14 +38,12 @@
 
 :global(body.mobile) {
   .title {
-    @include _.title;
     margin-bottom: _.unit(4);
   }
 }
 
 :global(body.desktop) {
   .title {
-    @include _.title-desktop;
     margin-bottom: _.unit(2);
   }
 }

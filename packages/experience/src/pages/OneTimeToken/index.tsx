@@ -1,12 +1,13 @@
 import {
   AgreeToTermsPolicy,
+  ExtraParamsKey,
   InteractionEvent,
   SignInIdentifier,
   type RequestErrorBody,
 } from '@logto/schemas';
 import { condString } from '@silverhand/essentials';
 import { useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 import {
   identifyAndSubmitInteraction,
@@ -17,15 +18,13 @@ import LoadingLayer from '@/components/LoadingLayer';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
-import useLoginHint from '@/hooks/use-login-hint';
 import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
 import useTerms from '@/hooks/use-terms';
 
 import ErrorPage from '../ErrorPage';
 
 const OneTimeToken = () => {
-  const { token } = useParams();
-  const email = useLoginHint();
+  const [params] = useSearchParams();
   const [oneTimeTokenError, setOneTimeTokenError] = useState<RequestErrorBody | boolean>();
 
   const asyncIdentifyUserAndSubmit = useApi(identifyAndSubmitInteraction);
@@ -90,6 +89,8 @@ const OneTimeToken = () => {
 
   useEffect(() => {
     (async () => {
+      const token = params.get(ExtraParamsKey.OneTimeToken);
+      const email = params.get(ExtraParamsKey.LoginHint);
       if (!token || !email) {
         setOneTimeTokenError(true);
         return;
@@ -125,8 +126,7 @@ const OneTimeToken = () => {
     })();
   }, [
     agreeToTermsPolicy,
-    email,
-    token,
+    params,
     asyncRegisterWithOneTimeToken,
     handleError,
     termsValidation,
