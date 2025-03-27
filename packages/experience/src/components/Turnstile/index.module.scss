@@ -1,0 +1,7 @@
+@use '@/scss/underscore' as _;
+
+.turnstile {
+  display: flex;
+  justify-content: center;
+  margin-bottom: _.unit(2);
+}
