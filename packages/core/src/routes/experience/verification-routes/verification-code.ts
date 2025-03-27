@@ -74,10 +74,11 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
         verificationId: z.string(),
       }),
       // 501: connector not found
-      status: [200, 400, 404, 501],
+      status: [200, 400, 404, 422, 501],
     }),
     async (ctx, next) => {
       const { identifier, interactionEvent } = ctx.guard.body;
+      await ctx.experienceInteraction.guardCaptcha();
 
       const log = createVerificationCodeAuditLog(
         ctx,
