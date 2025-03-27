@@ -75,6 +75,3 @@ const useSignUpPasswordListeners = () => {
 };
 
 export default useSignUpPasswordListeners;
-function trigger(arg0: string) {
-  throw new Error('Function not implemented.');
-}
