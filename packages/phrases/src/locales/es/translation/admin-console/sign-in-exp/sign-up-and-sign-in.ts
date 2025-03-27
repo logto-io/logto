@@ -10,7 +10,7 @@ const sign_up_and_sign_in = {
     title: 'REGISTRARSE',
     sign_up_identifier: 'Identificador de registro',
     identifier_description:
-      'El identificador de registro es necesario para la creación de la cuenta y debe incluirse en la pantalla de inicio de sesión.',
+      'Se requieren todos los identificadores de registro seleccionados al crear una nueva cuenta.',
     sign_up_authentication: 'Configuración de autenticación para el registro',
     authentication_description:
       'Todas las acciones seleccionadas serán obligatorias para que los usuarios completen el proceso.',
@@ -24,8 +24,9 @@ const sign_up_and_sign_in = {
     sign_in_identifier_and_auth:
       'Identificador y configuración de autenticación para iniciar sesión',
     description:
-      'Los usuarios pueden iniciar sesión usando cualquiera de las opciones disponibles. Ajusta el diseño arrastrando y soltando las opciones a continuación.',
+      'Los usuarios pueden iniciar sesión usando cualquiera de las opciones disponibles.',
     add_sign_in_method: 'Agregar método de inicio de sesión',
+    add_sign_up_method: 'Agregar método de registro',
     password_auth: 'Contraseña',
     verification_code_auth: 'Código de verificación',
     auth_swap_tip:

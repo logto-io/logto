@@ -21,6 +21,8 @@ const sign_in_experiences = {
     'Sie müssen mindestens einen Authentifizierungsfaktor auswählen.',
   backup_code_cannot_be_enabled_alone: 'Backup-Code kann nicht alleine aktiviert werden.',
   duplicated_mfa_factors: 'Duplizierte MFA-Faktoren.',
+  duplicated_sign_up_identifiers: 'Doppelte Anmeldekennungen erkannt.',
+  missing_sign_up_identifiers: 'Primäre Anmeldekennung darf nicht leer sein.',
 };
 
 export default Object.freeze(sign_in_experiences);

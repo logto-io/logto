@@ -20,6 +20,8 @@ const sign_in_experiences = {
   at_least_one_authentication_factor: 'Debe seleccionar al menos un factor de autenticación.',
   backup_code_cannot_be_enabled_alone: 'El código de respaldo no se puede habilitar solo.',
   duplicated_mfa_factors: 'Factores MFA duplicados.',
+  duplicated_sign_up_identifiers: 'Identificadores de registro duplicados detectados.',
+  missing_sign_up_identifiers: 'El identificador de registro principal no puede estar vacío.',
 };
 
 export default Object.freeze(sign_in_experiences);

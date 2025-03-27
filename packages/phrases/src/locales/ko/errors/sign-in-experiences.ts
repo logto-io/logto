@@ -17,6 +17,8 @@ const sign_in_experiences = {
   at_least_one_authentication_factor: '최소한 하나의 인증 방법을 선택해야 해요.',
   backup_code_cannot_be_enabled_alone: '백업 코드는 단독으로 활성화할 수 없습니다.',
   duplicated_mfa_factors: '중복된 MFA 인증 요소입니다.',
+  duplicated_sign_up_identifiers: '중복된 회원가입 식별자가 감지되었습니다.',
+  missing_sign_up_identifiers: '기본 회원가입 식별자는 비워 둘 수 없습니다.',
 };
 
 export default Object.freeze(sign_in_experiences);

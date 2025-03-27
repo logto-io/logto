@@ -9,8 +9,7 @@ const sign_up_and_sign_in = {
   sign_up: {
     title: '회원가입',
     sign_up_identifier: '회원가입 ID',
-    identifier_description:
-      '회원가입 ID는 계정을 생성하기 위해 필수이며, 회원가입 화면에서 반드시 포함되어야 해요.',
+    identifier_description: '새 계정을 만들 때 모든 선택한 회원가입 식별자가 필요합니다.',
     sign_up_authentication: '회원가입 인증 설정',
     authentication_description: '선택된 모든 작업들은 사용자가 모두 마무리해야 해요.',
     set_a_password_option: '비밀번호 생성',
@@ -20,9 +19,9 @@ const sign_up_and_sign_in = {
   sign_in: {
     title: '로그인',
     sign_in_identifier_and_auth: '로그인을 위한 ID 그리고 인증 설정',
-    description:
-      '사용자는 주어진 옵션 중에 아무 방법으로 로그인할 수 있어요. 주어진 옵션을 드래그하여 조절해 주세요.',
+    description: '사용자는 주어진 옵션 중에 아무 방법으로 로그인할 수 있어요. ',
     add_sign_in_method: '로그인 방법 추가',
+    add_sign_up_method: '회원가입 방법 추가',
     password_auth: '비밀번호',
     verification_code_auth: '인증 코드',
     auth_swap_tip: '아래 옵션을 변경하여 흐름에 가장 먼저 나타나는 옵션을 설정할 수 있어요.',

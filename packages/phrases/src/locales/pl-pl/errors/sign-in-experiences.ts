@@ -19,6 +19,8 @@ const sign_in_experiences = {
   at_least_one_authentication_factor: 'Musisz wybrać co najmniej jeden czynnik uwierzytelniający.',
   backup_code_cannot_be_enabled_alone: 'Kod zapasowy nie może być włączony samodzielnie.',
   duplicated_mfa_factors: 'Powielone czynniki MFA.',
+  duplicated_sign_up_identifiers: 'Wykryto zduplikowane identyfikatory rejestracji.',
+  missing_sign_up_identifiers: 'Podstawowy identyfikator rejestracji nie może być pusty.',
 };
 
 export default Object.freeze(sign_in_experiences);

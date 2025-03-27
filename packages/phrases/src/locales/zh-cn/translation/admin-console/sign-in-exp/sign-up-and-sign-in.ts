@@ -9,7 +9,7 @@ const sign_up_and_sign_in = {
   sign_up: {
     title: '注册',
     sign_up_identifier: '注册标识',
-    identifier_description: '创建账户时你需要设定注册标识。这些信息在用户登录时，属于必选项。',
+    identifier_description: '创建新账户时，所有选定的注册标识都是必需的。',
     sign_up_authentication: '注册身份认证设置',
     authentication_description: '注册时，你的用户将要完成以下所有勾选的任务。',
     set_a_password_option: '创建密码',
@@ -19,8 +19,9 @@ const sign_up_and_sign_in = {
   sign_in: {
     title: '登录',
     sign_in_identifier_and_auth: '登录标识和身份认证设置',
-    description: '用户可以使用任何可用的选项进行登录。拖拽选项即可调整页面布局。',
+    description: '用户可以使用任何可用的选项进行登录。',
     add_sign_in_method: '添加登录方式',
+    add_sign_up_method: '添加注册方式',
     password_auth: '密码',
     verification_code_auth: '验证码',
     auth_swap_tip: '交换以下选项的位置即可设定它们在用户登录流程中出现的先后。',

@@ -9,7 +9,7 @@ const sign_up_and_sign_in = {
   sign_up: {
     title: '註冊',
     sign_up_identifier: '註冊標識',
-    identifier_description: '創建帳戶時你需要設定註冊標識。這些資訊在用戶登錄時，屬於必選項。',
+    identifier_description: '創建新帳戶時，所有選擇的註冊標識都是必需的。',
     sign_up_authentication: '註冊身份認證設置',
     authentication_description: '註冊時，你的用戶將要完成以下所有勾選的任務。',
     set_a_password_option: '創建密碼',
@@ -19,8 +19,9 @@ const sign_up_and_sign_in = {
   sign_in: {
     title: '登錄',
     sign_in_identifier_and_auth: '登錄標識和身份認證設置',
-    description: '用戶可以使用任何可用的選項進行登錄。拖拽選項即可調整頁面佈局。',
+    description: '用戶可以使用任何可用的選項進行登錄。',
     add_sign_in_method: '添加登錄方式',
+    add_sign_up_method: '添加註冊方式',
     password_auth: '密碼',
     verification_code_auth: '驗證碼',
     auth_swap_tip: '交換以下選項的位置即可設定它們在用戶登錄流程中出現的先後。',

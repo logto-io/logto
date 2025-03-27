@@ -10,7 +10,7 @@ const sign_up_and_sign_in = {
     title: 'INSCREVER-SE',
     sign_up_identifier: 'Identificador de inscrição',
     identifier_description:
-      'O identificador de inscrição é necessário para a criação da conta e deve ser incluído na tela de login.',
+      'Todos os identificadores de inscrição selecionados são obrigatórios ao criar uma nova conta.',
     sign_up_authentication: 'Configuração de autenticação para inscrição',
     authentication_description:
       'Todas as ações selecionadas serão obrigatórias para os usuários completarem o fluxo.',
@@ -21,9 +21,9 @@ const sign_up_and_sign_in = {
   sign_in: {
     title: 'ENTRAR',
     sign_in_identifier_and_auth: 'Configurações de identificador e autenticação para login',
-    description:
-      'Os usuários podem entrar usando qualquer uma das opções disponíveis. Ajuste o layout arrastando e soltando as opções abaixo.',
+    description: 'Os usuários podem entrar usando qualquer uma das opções disponíveis.',
     add_sign_in_method: 'Adicionar método de login',
+    add_sign_up_method: 'Adicionar método de inscrição',
     password_auth: 'Senha',
     verification_code_auth: 'Código de verificação',
     auth_swap_tip: 'Troque as opções abaixo para determinar qual aparece primeiro no fluxo.',

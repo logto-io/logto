@@ -10,7 +10,7 @@ const sign_up_and_sign_in = {
     title: 'INSCRIPTION',
     sign_up_identifier: "Identificateur d'inscription",
     identifier_description:
-      "L'identificateur d'inscription est nécessaire pour la création de compte et doit être inclus dans vote écran de connexion.",
+      "Tous les identifiants d'inscription sélectionnés sont requis lors de la création d'un nouveau compte.",
     sign_up_authentication: "Paramètres d'authentification pour l'inscription",
     authentication_description:
       "Toutes les actions sélectionnées seront obligatoires pour que les utilisateurs terminent le processus d'inscription.",
@@ -24,8 +24,9 @@ const sign_up_and_sign_in = {
     sign_in_identifier_and_auth:
       "Identificateurs et paramètres d'authentification pour la connexion",
     description:
-      "Les utilisateurs peuvent se connecter en utilisant n'importe quelle option disponible. Ajustez la mise en page en faisant glisser et en déposant les options ci-dessous.",
+      "Les utilisateurs peuvent se connecter en utilisant n'importe quelle option disponible.",
     add_sign_in_method: 'Ajouter une méthode de connexion',
+    add_sign_up_method: "Ajouter une méthode d'inscription",
     password_auth: 'Mot de passe',
     verification_code_auth: 'Code de vérification',
     auth_swap_tip:

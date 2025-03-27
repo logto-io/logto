@@ -9,7 +9,8 @@ const sign_up_and_sign_in = {
   sign_up: {
     title: 'SIGN UP',
     sign_up_identifier: 'Sign-up identifiers',
-    identifier_description: 'The sign-up identifier is required for account creation.',
+    identifier_description:
+      'All selected sign-up identifiers are required when creating a new account.',
     sign_up_authentication: 'Authentication setting for sign-up',
     verification_tip:
       'Users must verify the email or phone number you’ve configured by entering a verification code during sign-up.',
@@ -22,8 +23,7 @@ const sign_up_and_sign_in = {
   sign_in: {
     title: 'SIGN IN',
     sign_in_identifier_and_auth: 'Identifier and authentication settings for sign-in',
-    description:
-      'Users can sign in using any of the options available. Adjust the layout by drag and dropping below options.',
+    description: 'Users can sign in using any of the options available.',
     add_sign_in_method: 'Add sign-in method',
     add_sign_up_method: 'Add sign-up method',
     password_auth: 'Password',
