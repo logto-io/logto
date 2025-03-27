@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import Draggable from '@/assets/icons/draggable.svg?react';
 import Minus from '@/assets/icons/minus.svg?react';
 import SwitchArrowIcon from '@/assets/icons/switch-arrow.svg?react';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import Checkbox from '@/ds-components/Checkbox';
 import IconButton from '@/ds-components/IconButton';
 import { Tooltip } from '@/ds-components/Tip';
@@ -66,7 +67,10 @@ function SignInMethodItem({
               checked={password}
               disabled={!isPasswordCheckable}
               tooltip={conditional(
-                !isPasswordCheckable && t('sign_in_exp.sign_up_and_sign_in.tip.password_auth')
+                // TODO:remove the password tool tip
+                !isDevFeaturesEnabled &&
+                  !isPasswordCheckable &&
+                  t('sign_in_exp.sign_up_and_sign_in.tip.password_auth')
               )}
               onChange={(checked) => {
                 onVerificationStateChange('password', checked);

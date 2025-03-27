@@ -51,13 +51,11 @@ const validatePasswordlessIdentifiers = (
   { identifiers, secondaryIdentifiers = [], verify }: SignUp,
   enabledConnectors: LogtoConnector[]
 ) => {
-  const primaryIdentifiers = new Set(identifiers);
-
   if (
-    primaryIdentifiers.has(SignInIdentifier.Email) ||
-    primaryIdentifiers.has(SignInIdentifier.Phone)
+    identifiers.some((identifier) => identifier !== SignInIdentifier.Username) ||
+    secondaryIdentifiers.some(({ identifier }) => identifier !== SignInIdentifier.Username)
   ) {
-    // Primary passwordless identifiers must have verify enabled.
+    // Passwordless identifiers must have verify enabled.
     assertThat(
       verify,
       new RequestError({
@@ -76,6 +74,7 @@ const validatePasswordlessIdentifiers = (
     );
   }
 
+  const primaryIdentifiers = new Set(identifiers);
   const secondaryIdentifiersSet = new Set(secondaryIdentifiers.map((item) => item.identifier));
 
   // Assert email connector is enabled

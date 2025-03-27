@@ -80,7 +80,9 @@ function SignInMethodEditBox() {
         return !isSignUpVerificationRequired;
       }
 
-      // If the sign-in identifier is also enabled for sign-up.
+      // If the email or phone sign-in method is enabled as one of the sign-up identifiers
+      // and password is not required for sign-up, then verification code is required and uncheckable.
+      // This is to ensure new users can sign in without password.
       const signUpVerificationRequired = signUpIdentifiers.some(
         (signUpIdentifier) =>
           signUpIdentifier === identifier ||

@@ -102,7 +102,7 @@ devFeatureTest.describe(
           signUp: {
             identifiers: [SignInIdentifier.Username],
             password: true,
-            verify: false,
+            verify: true,
             secondaryIdentifiers: [
               {
                 identifier: secondaryIdentifier,

@@ -1,0 +1,69 @@
+import { SignInIdentifier } from '@logto/schemas';
+import { useEffect, useRef } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
+
+import { type SignInExperienceForm } from '@/pages/SignInExperience/types';
+
+/**
+ * This hook listens to the password field changes in the sign-up form,
+ * and updates the sign-in methods accordingly.
+ *
+ * - if the password is enabled for sign-up, then it will be enabled for all sign-in methods.
+ * - if the password is not required for sign-up, then verification code authentication method is required for email and phone sign-in methods.
+ */
+const useSignUpPasswordListeners = () => {
+  const {
+    control,
+    getValues,
+    setValue,
+    trigger,
+    formState: { submitCount },
+  } = useFormContext<SignInExperienceForm>();
+
+  const isFirstMount = useRef(true);
+
+  const signUpPassword = useWatch({ control, name: 'signUp.password' });
+
+  useEffect(() => {
+    // Only sync the password settings on updates (skip the first mount)
+    if (isFirstMount.current) {
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      isFirstMount.current = false;
+      return;
+    }
+
+    const signInMethods = getValues('signIn.methods');
+
+    setValue(
+      'signIn.methods',
+      signInMethods.map((method) => {
+        if (method.identifier === SignInIdentifier.Username) {
+          // No need to mutate the username method
+          return method;
+        }
+
+        return {
+          ...method,
+          // Auto enabled password for all sign-in methods,
+          // if the password is enabled for sign-up
+          password: method.password || signUpPassword,
+          // If password is not required for sign-up,
+          // then verification code authentication method is required for email and phone sign-in methods
+          verificationCode: signUpPassword ? method.verificationCode : true,
+        };
+      }),
+      {
+        shouldDirty: true,
+      }
+    );
+
+    if (submitCount) {
+      // Wait for the form re-render before validating the new data.
+      setTimeout(() => {
+        void trigger('signIn.methods');
+      }, 0);
+    }
+  }, [getValues, setValue, signUpPassword, submitCount, trigger]);
+};
+
+export default useSignUpPasswordListeners;

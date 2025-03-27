@@ -125,6 +125,7 @@ describe('validate sign-up', () => {
         validateSignUp(
           {
             ...mockSignUp,
+            verify: true,
             secondaryIdentifiers: [{ identifier: SignInIdentifier.Email, verify: true }],
           },
           []
@@ -142,6 +143,7 @@ describe('validate sign-up', () => {
         validateSignUp(
           {
             ...mockSignUp,
+            verify: true,
             secondaryIdentifiers: [{ identifier: SignInIdentifier.Phone, verify: true }],
           },
           []
@@ -159,6 +161,7 @@ describe('validate sign-up', () => {
         validateSignUp(
           {
             ...mockSignUp,
+            verify: true,
             secondaryIdentifiers: [
               { identifier: AlternativeSignUpIdentifier.EmailOrPhone, verify: true },
             ],
@@ -228,12 +231,45 @@ describe('validate sign-up', () => {
       {
         identifier: AlternativeSignUpIdentifier.EmailOrPhone,
       },
-    ])('should throw when identifier is %p and verify is not true', async (identifier) => {
+    ])(
+      'should throw when identifier is %p and verify is not true for each identifier',
+      async (identifier) => {
+        expect(() => {
+          validateSignUp(
+            {
+              ...mockSignUp,
+              secondaryIdentifiers: [identifier],
+            },
+            enabledConnectors
+          );
+        }).toMatchError(
+          new RequestError({
+            code: 'sign_in_experiences.passwordless_requires_verify',
+          })
+        );
+      }
+    );
+
+    test.each([
+      {
+        identifier: SignInIdentifier.Email,
+        verify: true,
+      },
+      {
+        identifier: SignInIdentifier.Phone,
+        verify: true,
+      },
+      {
+        identifier: AlternativeSignUpIdentifier.EmailOrPhone,
+        verify: true,
+      },
+    ])('should throw when identifier is %p and signUp.verify is not true', async (identifier) => {
       expect(() => {
         validateSignUp(
           {
             ...mockSignUp,
             secondaryIdentifiers: [identifier],
+            verify: false,
           },
           enabledConnectors
         );

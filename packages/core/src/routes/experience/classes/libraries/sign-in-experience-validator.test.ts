@@ -405,7 +405,7 @@ describe('SignInExperienceValidator', () => {
         {
           identifiers: [SignInIdentifier.Phone, SignInIdentifier.Email],
           password: true,
-          verify: false,
+          verify: true,
         },
         new Set([MissingProfile.password, MissingProfile.emailOrPhone]),
       ],
@@ -432,7 +432,7 @@ describe('SignInExperienceValidator', () => {
         signUp: {
           identifiers: [SignInIdentifier.Email, SignInIdentifier.Username],
           password: true,
-          verify: false,
+          verify: true,
         },
       });
       const signInExperienceValidator = new SignInExperienceValidator(
@@ -465,7 +465,7 @@ describe('SignInExperienceValidator', () => {
           {
             identifiers: [SignInIdentifier.Username],
             password: true,
-            verify: false,
+            verify: true,
             secondaryIdentifiers: [
               { identifier: SignInIdentifier.Email },
               { identifier: SignInIdentifier.Phone },
