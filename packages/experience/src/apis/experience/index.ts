@@ -30,11 +30,33 @@ export * from './mfa';
 export * from './social';
 export * from './one-time-token';
 
+/**
+ * For sign-in flow user identity not found error handling use.
+ *
+ * If the identity is not found, but the verification record is verified,
+ * allow the user registration with the verified identifier.
+ *
+ * Supported verification types:
+ * - email verification code
+ * - phone number verification code
+ * - social sign-in
+ * - SSO sign-in
+ */
 export const registerWithVerifiedIdentifier = async (verificationId: string) => {
   await updateInteractionEvent(InteractionEvent.Register);
   return identifyAndSubmitInteraction({ verificationId });
 };
 
+/**
+ * For sign-up flow user identifier already exists error handling user.
+ *
+ * If the identifier has been registered by an existing user,
+ * allow the user to sign-in with the verified identifier directly.
+ *
+ * Supported verification types:
+ * - email verification code
+ * - phone number verification code
+ */
 export const signInWithVerifiedIdentifier = async (verificationId: string) => {
   await updateInteractionEvent(InteractionEvent.SignIn);
   return identifyAndSubmitInteraction({ verificationId });
