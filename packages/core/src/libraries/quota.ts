@@ -34,15 +34,10 @@ export const createQuotaLibrary = (
   subscription: SubscriptionLibrary
 ) => {
   const guardTenantUsageByKey = async (key: keyof SubscriptionUsage) => {
-    const { isCloud, isIntegrationTest } = EnvSet.values;
+    const { isCloud } = EnvSet.values;
 
     // Cloud only feature, skip in non-cloud environments
     if (!isCloud) {
-      return;
-    }
-
-    // Disable in integration tests
-    if (isIntegrationTest) {
       return;
     }
 
@@ -104,15 +99,10 @@ export const createQuotaLibrary = (
   };
 
   const guardEntityScopesUsage = async (entityName: 'resources' | 'roles', entityId: string) => {
-    const { isCloud, isIntegrationTest } = EnvSet.values;
+    const { isCloud } = EnvSet.values;
 
     // Cloud only feature, skip in non-cloud environments
     if (!isCloud) {
-      return;
-    }
-
-    // Disable in integration tests
-    if (isIntegrationTest) {
       return;
     }
 
