@@ -56,6 +56,8 @@ const sign_up_and_sign_in = {
       'This is essential as you have only enabled the option to provide verification code when signing up. You’re free to uncheck the box when password set-up is allowed at the sign-up process.',
     delete_sign_in_method:
       'This is essential as you have selected {{identifier}} as a required identifier.',
+    password_disabled_notification:
+      'The "Create your password" option is disabled for username sign-up, which may prevent users from signing in. Confirm to proceed with saving.',
   },
   advanced_options: {
     title: 'ADVANCED OPTIONS',

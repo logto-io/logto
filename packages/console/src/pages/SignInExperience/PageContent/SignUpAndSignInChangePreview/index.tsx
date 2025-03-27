@@ -1,6 +1,7 @@
 import type { SignInExperience } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
+import PasswordDisabledNotification from './PasswordDisabledNotification';
 import SignUpAndSignInDiffSection from './SignUpAndSignInDiffSection';
 import styles from './index.module.scss';
 
@@ -25,6 +26,7 @@ function SignUpAndSignInChangePreview({ before, after }: Props) {
           <SignUpAndSignInDiffSection isAfter before={before} after={after} />
         </div>
       </div>
+      <PasswordDisabledNotification after={after} className={styles.notification} />
     </div>
   );
 }
