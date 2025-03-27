@@ -557,6 +557,18 @@ export default class ExperienceInteraction {
     }
   }
 
+  async guardCaptcha() {
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return;
+    }
+
+    if (this.captcha.verified || this.captcha.skipped) {
+      return;
+    }
+
+    await this.signInExperienceValidator.guardCaptcha();
+  }
+
   /** Convert the current interaction to JSON, so that it can be stored as the OIDC provider interaction result */
   public toJson(): InteractionStorage {
     const { interactionEvent, userId, captcha } = this;
@@ -623,18 +635,6 @@ export default class ExperienceInteraction {
     const ssoVerificationRecord = this.verificationRecords.get(VerificationType.EnterpriseSso);
 
     return Boolean(ssoVerificationRecord?.isVerified);
-  }
-
-  private async guardCaptcha() {
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
-    }
-
-    if (this.captcha.verified || this.captcha.skipped) {
-      return;
-    }
-
-    await this.signInExperienceValidator.guardCaptcha();
   }
 
   /**

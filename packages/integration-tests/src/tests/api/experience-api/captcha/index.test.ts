@@ -1,4 +1,4 @@
-import { ConnectorType, SignInIdentifier } from '@logto/schemas';
+import { ConnectorType, InteractionEvent, SignInIdentifier } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 
 import { mockSocialConnectorId } from '#src/__mocks__/connectors-mock.js';
@@ -6,7 +6,12 @@ import { deleteUser } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { SsoConnectorApi } from '#src/api/sso-connector.js';
 import { setAlwaysFailCaptcha, setAlwaysPassCaptcha } from '#src/helpers/captcha.js';
-import { clearConnectorsByTypes, setSocialConnector } from '#src/helpers/connector.js';
+import { initExperienceClient } from '#src/helpers/client.js';
+import {
+  clearConnectorsByTypes,
+  setEmailConnector,
+  setSocialConnector,
+} from '#src/helpers/connector.js';
 import {
   registerNewUserUsernamePassword,
   signInWithEnterpriseSso,
@@ -21,6 +26,8 @@ import {
 } from '#src/helpers/sign-in-experience.js';
 import { UserApiTest, generateNewUser, generateNewUserProfile } from '#src/helpers/user.js';
 import { devFeatureTest, generateEmail } from '#src/utils.js';
+
+import { successfullySendVerificationCode } from '../../../../helpers/experience/verification-code.js';
 
 const { describe, it } = devFeatureTest;
 
@@ -208,6 +215,54 @@ describe('captcha', () => {
         true
       );
       await deleteUser(userId);
+    });
+  });
+
+  describe('verification code', () => {
+    beforeAll(async () => {
+      await setEmailConnector();
+    });
+
+    it('should fail to send verification code without captcha token', async () => {
+      const { userProfile } = await generateNewUser({
+        primaryEmail: true,
+        password: true,
+      });
+
+      const client = await initExperienceClient({
+        interactionEvent: InteractionEvent.Register,
+      });
+
+      await expectRejects(
+        client.sendVerificationCode({
+          identifier: {
+            type: SignInIdentifier.Email,
+            value: userProfile.primaryEmail,
+          },
+          interactionEvent: InteractionEvent.Register,
+        }),
+        {
+          code: 'session.captcha_required',
+          status: 422,
+        }
+      );
+    });
+
+    it('should be able to send verification code with captcha token', async () => {
+      const { userProfile } = await generateNewUser({
+        primaryEmail: true,
+        password: true,
+      });
+
+      const client = await initExperienceClient({
+        interactionEvent: InteractionEvent.Register,
+        captchaToken: 'captcha-token',
+      });
+
+      await successfullySendVerificationCode(client, {
+        identifier: { type: SignInIdentifier.Email, value: userProfile.primaryEmail },
+        interactionEvent: InteractionEvent.Register,
+      });
     });
   });
 });
