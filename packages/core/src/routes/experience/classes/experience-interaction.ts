@@ -1,12 +1,6 @@
 /* eslint-disable max-lines */
 import { type ToZodObject } from '@logto/connector-kit';
-import {
-  InteractionEvent,
-  type OneTimeTokenContext,
-  oneTimeTokenContextGuard,
-  VerificationType,
-  type User,
-} from '@logto/schemas';
+import { InteractionEvent, VerificationType, type User } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
@@ -43,7 +37,6 @@ import {
   type VerificationRecordData,
   type VerificationRecordMap,
 } from './verifications/index.js';
-import { isOneTimeTokenVerificationRecordData } from './verifications/one-time-token-verification.js';
 import { VerificationRecordsMap } from './verifications/verification-records-map.js';
 
 type InteractionStorage = {
@@ -52,10 +45,6 @@ type InteractionStorage = {
   profile?: InteractionProfile;
   mfa?: MfaData;
   verificationRecords?: VerificationRecordData[];
-  oneTimeToken?: {
-    verified: boolean;
-    context?: OneTimeTokenContext;
-  };
   captcha?: {
     verified: boolean;
     skipped: boolean;
@@ -68,12 +57,6 @@ const interactionStorageGuard = z.object({
   profile: interactionProfileGuard.optional(),
   mfa: mfaDataGuard.optional(),
   verificationRecords: verificationRecordDataGuard.array().optional(),
-  oneTimeToken: z
-    .object({
-      verified: z.boolean(),
-      context: oneTimeTokenContextGuard.optional(),
-    })
-    .optional(),
   captcha: z
     .object({
       verified: z.boolean(),
@@ -101,10 +84,6 @@ export default class ExperienceInteraction {
   /** The userId of the user for the current interaction. Only available once the user is identified. */
   private userId?: string;
   private userCache?: User;
-  private oneTimeToken?: {
-    verified: boolean;
-    context?: OneTimeTokenContext;
-  };
 
   /** The captcha verification status for the current interaction. */
   private readonly captcha = {
@@ -170,7 +149,6 @@ export default class ExperienceInteraction {
         verified: false,
         skipped: false,
       },
-      oneTimeToken,
     } = result.data;
 
     this.#interactionEvent = interactionEvent;
@@ -178,7 +156,6 @@ export default class ExperienceInteraction {
     this.profile = new Profile(libraries, queries, profile, interactionContext);
     this.mfa = new Mfa(libraries, queries, mfa, interactionContext);
     this.captcha = captcha;
-    this.oneTimeToken = oneTimeToken;
 
     for (const record of verificationRecords) {
       const instance = buildVerificationRecord(libraries, queries, record);
@@ -204,9 +181,10 @@ export default class ExperienceInteraction {
    * @throws RequestError with 400 if the interaction event is not `ForgotPassword` and the current interaction event is `ForgotPassword`
    */
   public async setInteractionEvent(interactionEvent: InteractionEvent) {
-    if (!this.oneTimeToken?.verified) {
-      await this.signInExperienceValidator.guardInteractionEvent(interactionEvent);
-    }
+    await this.signInExperienceValidator.guardInteractionEvent(
+      interactionEvent,
+      this.verificationRecords.get(VerificationType.OneTimeToken)?.isVerified
+    );
 
     // `ForgotPassword` interaction event can not interchanged with other events
     assertThat(
@@ -319,27 +297,18 @@ export default class ExperienceInteraction {
 
       await this.profile.setProfileWithValidation(identifierProfile);
 
-      if (isOneTimeTokenVerificationRecordData(verificationData)) {
-        this.oneTimeToken = {
-          verified: verificationData.verified,
-          context: verificationData.oneTimeTokenContext,
-        };
-      }
-
       // Save the updated profile data to the interaction storage
       await this.save();
     }
 
-    if (!this.oneTimeToken?.verified) {
-      await this.signInExperienceValidator.guardInteractionEvent(InteractionEvent.Register);
-    }
+    await this.signInExperienceValidator.guardInteractionEvent(
+      InteractionEvent.Register,
+      this.verificationRecords.get(VerificationType.OneTimeToken)?.isVerified
+    );
     await this.guardCaptcha();
     await this.profile.assertUserMandatoryProfileFulfilled();
 
-    const user = await this.provisionLibrary.createUser(
-      this.profile.data,
-      this.oneTimeToken?.context?.jitOrganizationIds
-    );
+    const user = await this.provisionLibrary.createUser(this.profile.data);
     log?.append({ user });
 
     this.userId = user.id;
@@ -513,8 +482,13 @@ export default class ExperienceInteraction {
       await this.mfa.assertUserMandatoryMfaFulfilled();
     }
 
-    const { socialIdentity, enterpriseSsoIdentity, syncedEnterpriseSsoIdentity, ...rest } =
-      this.profile.data;
+    const {
+      socialIdentity,
+      enterpriseSsoIdentity,
+      syncedEnterpriseSsoIdentity,
+      jitOrganizationIds,
+      ...rest
+    } = this.profile.data;
     const { mfaSkipped, mfaVerifications } = this.mfa.toUserMfaVerifications();
 
     // Update user profile
@@ -560,6 +534,14 @@ export default class ExperienceInteraction {
       await this.provisionLibrary.addSsoIdentityToUser(user.id, enterpriseSsoIdentity);
     }
 
+    // Provision organizations for one-time token that carries organization IDs in the context.
+    if (jitOrganizationIds) {
+      await this.provisionLibrary.provisionJitOrganization({
+        userId: user.id,
+        organizationIds: jitOrganizationIds,
+      });
+    }
+
     const { provider } = this.tenant;
 
     const redirectTo = await provider.interactionResult(this.ctx.req, this.ctx.res, {
@@ -577,7 +559,7 @@ export default class ExperienceInteraction {
 
   /** Convert the current interaction to JSON, so that it can be stored as the OIDC provider interaction result */
   public toJson(): InteractionStorage {
-    const { interactionEvent, userId, captcha, oneTimeToken } = this;
+    const { interactionEvent, userId, captcha } = this;
 
     return {
       interactionEvent,
@@ -585,7 +567,6 @@ export default class ExperienceInteraction {
       profile: this.profile.data,
       mfa: this.mfa.data,
       verificationRecords: this.verificationRecordsArray.map((record) => record.toJson()),
-      oneTimeToken,
       captcha,
     };
   }

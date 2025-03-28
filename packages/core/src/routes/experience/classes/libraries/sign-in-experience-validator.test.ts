@@ -18,6 +18,7 @@ import { MockTenant } from '#src/test-utils/tenant.js';
 import { createNewCodeVerificationRecord } from '../verifications/code-verification.js';
 import { EnterpriseSsoVerification } from '../verifications/enterprise-sso-verification.js';
 import { type VerificationRecord } from '../verifications/index.js';
+import { OneTimeTokenVerification } from '../verifications/one-time-token-verification.js';
 import { PasswordVerification } from '../verifications/password-verification.js';
 import { SocialVerification } from '../verifications/social-verification.js';
 
@@ -83,6 +84,17 @@ const socialVerificationRecord = new SocialVerification(mockTenant.libraries, mo
   },
 });
 
+const oneTimeTokenVerificationRecord = new OneTimeTokenVerification(
+  mockTenant.libraries,
+  mockTenant.queries,
+  {
+    id: 'one_time_token_verification_id',
+    type: VerificationType.OneTimeToken,
+    identifier: { type: SignInIdentifier.Email, value: 'foo@logto.io' },
+    verified: true,
+  }
+);
+
 describe('SignInExperienceValidator', () => {
   describe('guardInteractionEvent', () => {
     it('SignInMode.Register', async () => {
@@ -122,6 +134,15 @@ describe('SignInExperienceValidator', () => {
       await expect(
         signInExperienceSettings.guardInteractionEvent(InteractionEvent.Register)
       ).rejects.toMatchError(new RequestError({ code: 'auth.forbidden', status: 403 }));
+
+      // Should not throw if there's a verified one-time token. In this case, even the registration
+      // is turned off, the user can still register.
+      await expect(
+        signInExperienceSettings.guardInteractionEvent(
+          InteractionEvent.Register,
+          oneTimeTokenVerificationRecord.isVerified
+        )
+      ).resolves.not.toThrow();
 
       await expect(
         signInExperienceSettings.guardInteractionEvent(InteractionEvent.SignIn)

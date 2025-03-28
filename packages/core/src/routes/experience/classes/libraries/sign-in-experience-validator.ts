@@ -83,9 +83,11 @@ export class SignInExperienceValidator {
   ) {}
 
   /**
+   * @param event - The interaction event to guard
+   * @param hasVerifiedOneTimeToken - Whether there is a verified one-time token verification record
    * @throws {RequestError} with status 403 if the interaction event is not allowed
    */
-  public async guardInteractionEvent(event: InteractionEvent) {
+  public async guardInteractionEvent(event: InteractionEvent, hasVerifiedOneTimeToken = false) {
     const { signInMode } = await this.getSignInExperienceData();
 
     switch (event) {
@@ -98,7 +100,10 @@ export class SignInExperienceValidator {
       }
       case InteractionEvent.Register: {
         assertThat(
-          signInMode !== SignInMode.SignIn,
+          signInMode !== SignInMode.SignIn ||
+            // This guarantees new users can still be created through one-time token
+            // authentication even if the registration is turned off.
+            hasVerifiedOneTimeToken,
           new RequestError({ code: 'auth.forbidden', status: 403 })
         );
         break;
@@ -113,7 +118,9 @@ export class SignInExperienceValidator {
     event: InteractionEvent.ForgotPassword | InteractionEvent.SignIn,
     verificationRecord: VerificationRecord
   ) {
-    await this.guardInteractionEvent(event);
+    const hasVerifiedOneTimeToken =
+      verificationRecord.type === VerificationType.OneTimeToken && verificationRecord.isVerified;
+    await this.guardInteractionEvent(event, hasVerifiedOneTimeToken);
 
     switch (event) {
       case InteractionEvent.SignIn: {

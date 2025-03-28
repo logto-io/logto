@@ -70,7 +70,12 @@ export const identifyUserByVerificationRecord = async (
    */
   syncedProfile?: Pick<
     InteractionProfile,
-    'enterpriseSsoIdentity' | 'syncedEnterpriseSsoIdentity' | 'socialIdentity' | 'avatar' | 'name'
+    | 'enterpriseSsoIdentity'
+    | 'syncedEnterpriseSsoIdentity'
+    | 'jitOrganizationIds'
+    | 'socialIdentity'
+    | 'avatar'
+    | 'name'
   >;
 }> => {
   // Check verification record can be used to identify a user using the `identifyUser` method.
@@ -83,9 +88,18 @@ export const identifyUserByVerificationRecord = async (
   switch (verificationRecord.type) {
     case VerificationType.Password:
     case VerificationType.EmailVerificationCode:
-    case VerificationType.PhoneVerificationCode:
+    case VerificationType.PhoneVerificationCode: {
+      return {
+        user: await verificationRecord.identifyUser(),
+      };
+    }
     case VerificationType.OneTimeToken: {
-      return { user: await verificationRecord.identifyUser() };
+      return {
+        user: await verificationRecord.identifyUser(),
+        syncedProfile: {
+          jitOrganizationIds: verificationRecord.oneTimeTokenContext?.jitOrganizationIds,
+        },
+      };
     }
     case VerificationType.Social: {
       const user = linkSocialIdentity
