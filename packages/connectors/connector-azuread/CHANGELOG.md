@@ -1,5 +1,11 @@
 # @logto/connector-azuread
 
+## 1.4.2
+
+### Patch Changes
+
+- 9b6dbf28e: add `scopes` configuration field for Microsoft Azure AD connector
+
 ## 1.4.1
 
 ### Patch Changes

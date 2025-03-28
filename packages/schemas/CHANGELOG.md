@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.26.0
+
+### Patch Changes
+
+- Updated dependencies [5da01bc47]
+  - @logto/language-kit@1.1.3
+
 ## 1.25.0
 
 ### Minor Changes
