@@ -18,7 +18,6 @@ import assertThat from '#src/utils/assert-that.js';
 import { type InteractionProfile } from '../../types.js';
 import { findUserByIdentifier } from '../utils.js';
 
-import { type VerificationRecordData } from './index.js';
 import { type IdentifierVerificationRecord } from './verification-record.js';
 
 export type OneTimeTokenVerificationRecordData = {
@@ -131,8 +130,9 @@ export class OneTimeTokenVerification
     );
 
     const { value } = this.identifier;
+    const { jitOrganizationIds } = this.context ?? {};
 
-    return { primaryEmail: value };
+    return { primaryEmail: value, jitOrganizationIds };
   }
 
   toJson(): OneTimeTokenVerificationRecordData {
@@ -141,9 +141,3 @@ export class OneTimeTokenVerification
     return { id, type, identifier, verified, oneTimeTokenContext: context };
   }
 }
-
-export const isOneTimeTokenVerificationRecordData = (
-  data?: VerificationRecordData
-): data is OneTimeTokenVerificationRecordData => {
-  return oneTimeTokenVerificationRecordDataGuard.safeParse(data).success;
-};

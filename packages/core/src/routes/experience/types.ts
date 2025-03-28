@@ -33,6 +33,10 @@ export type InteractionProfile = {
     UserSsoIdentity,
     'identityId' | 'ssoConnectorId' | 'issuer' | 'detail'
   >;
+  /**
+   * This is from one-time token verification. User will be automatically added to the specified organizations.
+   */
+  jitOrganizationIds?: string[];
   // Syncing the existing enterprise SSO identity detail
   syncedEnterpriseSsoIdentity?: Pick<UserSsoIdentity, 'identityId' | 'issuer' | 'detail'>;
 } & Pick<
@@ -78,6 +82,7 @@ export const interactionProfileGuard = Users.createGuard
         detail: true,
       })
       .optional(),
+    jitOrganizationIds: z.array(z.string()).optional(),
   }) satisfies ToZodObject<InteractionProfile>;
 
 /**
