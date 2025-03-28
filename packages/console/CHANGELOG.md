@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.23.0
+
+### Minor Changes
+
+- dc13cc73d: feat(console): add Logto WordPress plugin guide
+
 ## 1.22.1
 
 ### Patch Changes
