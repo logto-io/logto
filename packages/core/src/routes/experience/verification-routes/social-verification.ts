@@ -142,6 +142,8 @@ export default function socialVerificationRoutes<T extends ExperienceInteraction
       );
 
       await socialVerificationRecord.verify(ctx, tenantContext, connectorData);
+      // Skip captcha for social verification, as it's already verified by the connector
+      ctx.experienceInteraction.skipCaptcha();
       await ctx.experienceInteraction.save();
 
       // The input verificationId may be undefined if it's a Google one tap callback

@@ -1,11 +1,17 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { ConnectorType, SignInIdentifier } from '@logto/schemas';
+import { generateStandardId } from '@logto/shared';
 
+import { mockSocialConnectorId } from '#src/__mocks__/connectors-mock.js';
 import { deleteUser } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
+import { SsoConnectorApi } from '#src/api/sso-connector.js';
 import { setAlwaysFailCaptcha, setAlwaysPassCaptcha } from '#src/helpers/captcha.js';
+import { clearConnectorsByTypes, setSocialConnector } from '#src/helpers/connector.js';
 import {
   registerNewUserUsernamePassword,
+  signInWithEnterpriseSso,
   signInWithPassword,
+  signInWithSocial,
 } from '#src/helpers/experience/index.js';
 import { expectRejects } from '#src/helpers/index.js';
 import {
@@ -13,8 +19,8 @@ import {
   enableAllPasswordSignInMethods,
   enableCaptcha,
 } from '#src/helpers/sign-in-experience.js';
-import { generateNewUser, generateNewUserProfile } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
+import { UserApiTest, generateNewUser, generateNewUserProfile } from '#src/helpers/user.js';
+import { devFeatureTest, generateEmail } from '#src/utils.js';
 
 const { describe, it } = devFeatureTest;
 
@@ -132,6 +138,75 @@ describe('captcha', () => {
 
       // Register again with the same username, ensure the user is not created
       const userId = await registerNewUserUsernamePassword(username, password, 'captcha-token');
+      await deleteUser(userId);
+    });
+  });
+
+  describe('social verification', () => {
+    const connectorIdMap = new Map<string, string>();
+    const socialUserId = generateStandardId();
+
+    beforeAll(async () => {
+      await clearConnectorsByTypes([ConnectorType.Social]);
+      const { id: socialConnectorId } = await setSocialConnector();
+      connectorIdMap.set(mockSocialConnectorId, socialConnectorId);
+      await updateSignInExperience({
+        signUp: {
+          identifiers: [],
+          password: true,
+          verify: false,
+        },
+        passwordPolicy: {},
+      });
+    });
+
+    afterAll(async () => {
+      await clearConnectorsByTypes([ConnectorType.Social]);
+    });
+
+    it('should skip captcha for social registration', async () => {
+      const userId = await signInWithSocial(
+        connectorIdMap.get(mockSocialConnectorId)!,
+        {
+          id: socialUserId,
+        },
+        {
+          registerNewUser: true,
+        }
+      );
+      await deleteUser(userId);
+    });
+  });
+
+  describe('enterprise sso verification', () => {
+    const ssoConnectorApi = new SsoConnectorApi();
+    const domain = 'foo.com';
+    const enterpriseSsoIdentityId = generateStandardId();
+    const email = generateEmail(domain);
+    const userApi = new UserApiTest();
+
+    beforeAll(async () => {
+      await ssoConnectorApi.createMockOidcConnector([domain]);
+      await updateSignInExperience({
+        singleSignOnEnabled: true,
+        signUp: { identifiers: [], password: false, verify: false },
+      });
+    });
+
+    afterAll(async () => {
+      await Promise.all([ssoConnectorApi.cleanUp(), userApi.cleanUp()]);
+    });
+
+    it('should skip captcha for enterprise sso verification', async () => {
+      const userId = await signInWithEnterpriseSso(
+        ssoConnectorApi.firstConnectorId!,
+        {
+          sub: enterpriseSsoIdentityId,
+          email,
+          email_verified: true,
+        },
+        true
+      );
       await deleteUser(userId);
     });
   });
