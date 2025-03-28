@@ -1,8 +1,10 @@
 import { UserScope } from '@logto/core-kit';
 import {
   applicationSignInExperienceGuard,
+  buildDemoAppDataForTenant,
   type ConsentInfoResponse,
   consentInfoResponseGuard,
+  demoAppApplicationId,
   Organizations,
   publicApplicationGuard,
   publicUserInfoGuard,
@@ -222,7 +224,10 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       const { accountId } = session;
 
-      const application = await queries.applications.findApplicationById(clientId);
+      const application =
+        clientId === demoAppApplicationId
+          ? buildDemoAppDataForTenant('')
+          : await queries.applications.findApplicationById(clientId);
 
       const applicationSignInExperience =
         await queries.applicationSignInExperiences.safeFindSignInExperienceByApplicationId(

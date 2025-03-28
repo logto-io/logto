@@ -90,6 +90,24 @@ const Main = () => {
     };
   }, []);
 
+  // Handle one-time token authentication
+  useEffect(() => {
+    const oneTimeToken = params.get('one_time_token');
+    const loginHint = params.get('login_hint');
+
+    if (oneTimeToken && loginHint) {
+      void signIn({
+        redirectUri: window.location.origin + window.location.pathname,
+        extraParams: Object.fromEntries(
+          new URLSearchParams([
+            ...new URLSearchParams(config.signInExtraParams).entries(),
+            ...new URLSearchParams(window.location.search).entries(),
+          ]).entries()
+        ),
+      });
+    }
+  }, [config.signInExtraParams, params, signIn]);
+
   if (isInCallback) {
     return <Callback />;
   }
