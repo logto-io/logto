@@ -52,8 +52,6 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
         // Hide the entrance of adding SAML social connectors, users should go to Enterprise SSO if they want to use SAML.
         // Should not remove the SAML factory from GET /connector-factories API, since that could break the existing SAML connectors.
         .filter(({ id }) => id !== 'saml')
-        // Hide the entrance of adding Vonage SMS connector
-        .filter(({ id }) => id !== 'vonage-sms')
     );
 
     return allGroups
