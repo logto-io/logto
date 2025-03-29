@@ -1,6 +1,7 @@
 const action = {
   sign_in: '登录',
   continue: '继续',
+  continue_as: '以 {{name}} 身份继续',
   create_account: '注册',
   create_account_without_linking: '创建新帐户',
   create: '注册',

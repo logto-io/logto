@@ -1,6 +1,7 @@
 const action = {
   sign_in: 'Accedi',
   continue: 'Continua',
+  continue_as: 'Continua come {{name}}',
   create_account: 'Crea account',
   create_account_without_linking: 'Creare uno nuovo invece',
   create: 'Crea',

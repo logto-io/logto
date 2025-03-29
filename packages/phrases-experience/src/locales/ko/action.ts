@@ -1,6 +1,7 @@
 const action = {
   sign_in: '로그인',
   continue: '계속',
+  continue_as: '{{name}}(으)로 계속',
   create_account: '계정 생성',
   create_account_without_linking: '대신 새로 만들기',
   create: '생성',

@@ -1,6 +1,7 @@
 const action = {
   sign_in: 'تسجيل الدخول',
   continue: 'متابعة',
+  continue_as: 'المتابعة كـ {{name}}',
   create_account: 'إنشاء حساب',
   create_account_without_linking: 'إنشاء حساب جديد بدلاً من الربط',
   create: 'إنشاء',

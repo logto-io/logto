@@ -1,14 +1,14 @@
 const user_scopes = {
   descriptions: {
-    custom_data: '你的自定义数据',
-    email: '你的电子邮件地址',
-    phone: '你的电话号码',
-    profile: '你的名字、用户名、头像和其他个人信息',
-    roles: '你的角色',
-    identities: '你关联的社交身份',
-    'urn:logto:scope:organizations': '你的组织信息',
-    'urn:logto:scope:organization_roles': '你的组织角色',
-    address: '你的地址',
+    custom_data: 'Os teus dados personalizados',
+    email: 'O teu endereço de e-mail',
+    phone: 'O teu número de telefone',
+    profile: 'O teu nome, nome de utilizador, avatar e outras informações pessoais',
+    roles: 'Os teus papéis',
+    identities: 'As tuas identidades sociais associadas',
+    'urn:logto:scope:organizations': 'As tuas informações de organização',
+    'urn:logto:scope:organization_roles': 'Os teus papéis na organização',
+    address: 'A tua morada',
   },
 };
 

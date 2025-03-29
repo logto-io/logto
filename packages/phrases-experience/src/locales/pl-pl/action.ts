@@ -1,6 +1,7 @@
 const action = {
   sign_in: 'Zaloguj się',
   continue: 'Kontynuuj',
+  continue_as: 'Kontynuuj jako {{name}}',
   create_account: 'Utwórz konto',
   create_account_without_linking: 'Zamiast tego utwórz nowy',
   create: 'Utwórz',
@@ -29,7 +30,7 @@ const action = {
   verify_via_passkey: 'Weryfikacja za pomocą klucza dostępu',
   download: 'Pobierz',
   single_sign_on: 'Pojedyncze logowanie',
-  authorize: 'Autoryzować',
+  authorize: 'Autoryzuj',
   use_another_account: 'Użyj innego konta',
   back_to_current_account: 'Powróć do bieżącego konta',
 };

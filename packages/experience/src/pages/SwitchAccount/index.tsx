@@ -81,8 +81,8 @@ const SwitchAccount = () => {
           className={styles.button}
           type="primary"
           size="large"
-          title="action.switch_to"
-          i18nProps={{ method: loginHint }}
+          title="action.continue_as"
+          i18nProps={{ name: loginHint }}
           onClick={() => {
             navigate(
               { pathname: '/one-time-token', search: `?${params.toString()}` },
