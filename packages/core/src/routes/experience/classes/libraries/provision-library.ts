@@ -54,7 +54,7 @@ export class ProvisionLibrary {
    * - Provision all JIT organizations for the user if necessary.
    * - Assign the first user to the admin role and the default tenant organization membership. [OSS only]
    */
-  async createUser(profile: InteractionProfile, jitOrganizationIds?: string[]) {
+  async createUser(profile: InteractionProfile) {
     const {
       libraries: {
         users: { generateUserId, insertUser },
@@ -84,7 +84,7 @@ export class ProvisionLibrary {
       await this.provisionForFirstAdminUser(user);
     }
 
-    await this.provisionNewUserJitOrganizations(user.id, profile, jitOrganizationIds);
+    await this.provisionNewUserJitOrganizations(user.id, profile);
 
     this.ctx.appendDataHookContext('User.Created', { user });
 
@@ -108,6 +108,26 @@ export class ProvisionLibrary {
     });
 
     await this.provisionNewUserJitOrganizations(userId, { enterpriseSsoIdentity });
+  }
+
+  /**
+   * Add the user to the specified organizations. This function is called when an existing
+   * user is invited to organization(s) by admin through one-time token (e.g. Magic link).
+   */
+  async provisionJitOrganization(payload: OrganizationProvisionPayload) {
+    const {
+      libraries: { users: usersLibraries },
+    } = this.tenantContext;
+
+    const provisionedOrganizations = await usersLibraries.provisionOrganizations(payload);
+
+    for (const { organizationId } of provisionedOrganizations) {
+      this.ctx.appendDataHookContext('Organization.Membership.Updated', {
+        organizationId,
+      });
+    }
+
+    return provisionedOrganizations;
   }
 
   /**
@@ -201,14 +221,13 @@ export class ProvisionLibrary {
    */
   private async provisionNewUserJitOrganizations(
     userId: string,
-    { primaryEmail, enterpriseSsoIdentity }: InteractionProfile,
-    extraJitOrganizationIds?: string[]
+    { primaryEmail, enterpriseSsoIdentity, jitOrganizationIds }: InteractionProfile
   ) {
     const extraJitOrganizations = condArray(
-      extraJitOrganizationIds &&
+      jitOrganizationIds &&
         (await this.provisionJitOrganization({
           userId,
-          organizationIds: extraJitOrganizationIds,
+          organizationIds: jitOrganizationIds,
         }))
     );
     if (enterpriseSsoIdentity) {
@@ -257,22 +276,6 @@ export class ProvisionLibrary {
       userId: id,
       organizationRoleId: getTenantRole(TenantRole.Admin).id,
     });
-  }
-
-  private async provisionJitOrganization(payload: OrganizationProvisionPayload) {
-    const {
-      libraries: { users: usersLibraries },
-    } = this.tenantContext;
-
-    const provisionedOrganizations = await usersLibraries.provisionOrganizations(payload);
-
-    for (const { organizationId } of provisionedOrganizations) {
-      this.ctx.appendDataHookContext('Organization.Membership.Updated', {
-        organizationId,
-      });
-    }
-
-    return provisionedOrganizations;
   }
 
   private readonly getInitialUserRoles = (
