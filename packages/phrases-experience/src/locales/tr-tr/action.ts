@@ -1,6 +1,7 @@
 const action = {
   sign_in: 'Giriş Yap',
   continue: 'İlerle',
+  continue_as: '{{name}} olarak devam et',
   create_account: 'Hesap Oluştur',
   create_account_without_linking: 'Bunun yerine yenisini oluştur',
   create: 'Oluştur',
