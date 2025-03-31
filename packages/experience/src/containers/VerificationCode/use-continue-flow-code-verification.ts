@@ -1,12 +1,11 @@
 import type { VerificationCodeIdentifier } from '@logto/schemas';
 import { InteractionEvent, VerificationType } from '@logto/schemas';
 import { useCallback, useContext, useMemo } from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { updateProfileWithVerificationCode } from '@/apis/experience';
 import { getInteractionEventFromState } from '@/apis/utils';
-import { isDevFeaturesEnabled } from '@/constants/env';
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
@@ -27,6 +26,7 @@ const useContinueFlowCodeVerification = (
 ) => {
   const [searchParameters] = useSearchParams();
   const redirectTo = useGlobalRedirectTo();
+  const navigate = useNavigate();
 
   const { state } = useLocation();
   const { verificationIdsMap } = useContext(UserInteractionContext);
@@ -64,18 +64,22 @@ const useContinueFlowCodeVerification = (
 
     const { type, value } = identifier;
 
-    // TODO: remove this dev feature check after the feature is fully implemented
     // This is to ensure a consistent user experience during the registration process.
     // If email or phone number has been enabled as additional sign-up identifiers,
     // and user trying to provide an email/phone number that already exists in the system,
     // prompt the user to sign in with the existing identifier.
     // @see {user-register-flow-code-verification.ts} for more details.
     if (
-      isDevFeaturesEnabled &&
       interactionEvent === InteractionEvent.Register &&
       isVerificationCodeEnabledForSignIn(type)
     ) {
-      showSignInWithExistIdentifierConfirmModal({ identifier, verificationId });
+      showSignInWithExistIdentifierConfirmModal({
+        identifier,
+        verificationId,
+        onCanceled: () => {
+          navigate(-1);
+        },
+      });
       return;
     }
 

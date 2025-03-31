@@ -37,6 +37,9 @@
                         },
                         "verify": {
                           "description": "Whether the user is required to verify their email/phone when signing-up."
+                        },
+                        "secondaryIdentifiers": {
+                          "description": "Additional identifiers required during sign-up. Once specified, users will be prompted to provide these identifiers when creating an account."
                         }
                       }
                     },

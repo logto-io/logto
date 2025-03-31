@@ -3,7 +3,6 @@ import { diff } from 'deep-object-diff';
 import type { DeepRequired, FieldErrorsImpl } from 'react-hook-form';
 
 import type { SignInExperienceForm, SignInMethod, SignInMethodsObject } from '../../types';
-import { SignUpIdentifier } from '../../types';
 
 export const convertToSignInMethodsObject = (signInMethods: SignInMethod[]): SignInMethodsObject =>
   signInMethods.reduce<SignInMethodsObject>(
@@ -54,16 +53,12 @@ export const getSignUpAndSignInErrorCount = (
   errors: FieldErrorsImpl<DeepRequired<SignInExperienceForm>>,
   formData: SignInExperienceForm
 ) => {
-  const signUpIdentifier = formData.signUp.identifier;
-  /**
-   * Note: we treat the `emailOrSms` sign-up identifier as 2 errors when it's invalid.
-   */
-  const signUpIdentifierRelatedErrorCount =
-    signUpIdentifier === SignUpIdentifier.EmailOrSms ? 2 : 1;
-
   const { signUp, signIn } = errors;
 
-  const signUpErrorCount = signUp?.identifier ? signUpIdentifierRelatedErrorCount : 0;
+  const signUpIdentifiersError = signUp?.identifiers;
+  const signUpErrorCount = Array.isArray(signUpIdentifiersError)
+    ? signUpIdentifiersError.filter(Boolean).length
+    : 0;
 
   const signInMethodErrors = signIn?.methods;
 

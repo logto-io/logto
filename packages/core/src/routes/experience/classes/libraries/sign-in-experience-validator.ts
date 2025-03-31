@@ -8,7 +8,6 @@ import {
   VerificationType,
 } from '@logto/schemas';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -173,27 +172,23 @@ export class SignInExperienceValidator {
       mandatoryUserProfile.add(mandatoryPrimaryIdentifier);
     }
 
-    // TODO: Remove this dev feature check
-    // Check for mandatory secondary identifiers
-    if (EnvSet.values.isDevFeaturesEnabled) {
-      for (const { identifier } of secondaryIdentifiers) {
-        switch (identifier) {
-          case SignInIdentifier.Email: {
-            mandatoryUserProfile.add(MissingProfile.email);
-            continue;
-          }
-          case SignInIdentifier.Phone: {
-            mandatoryUserProfile.add(MissingProfile.phone);
-            continue;
-          }
-          case SignInIdentifier.Username: {
-            mandatoryUserProfile.add(MissingProfile.username);
-            continue;
-          }
-          case AlternativeSignUpIdentifier.EmailOrPhone: {
-            mandatoryUserProfile.add(MissingProfile.emailOrPhone);
-            continue;
-          }
+    for (const { identifier } of secondaryIdentifiers) {
+      switch (identifier) {
+        case SignInIdentifier.Email: {
+          mandatoryUserProfile.add(MissingProfile.email);
+          continue;
+        }
+        case SignInIdentifier.Phone: {
+          mandatoryUserProfile.add(MissingProfile.phone);
+          continue;
+        }
+        case SignInIdentifier.Username: {
+          mandatoryUserProfile.add(MissingProfile.username);
+          continue;
+        }
+        case AlternativeSignUpIdentifier.EmailOrPhone: {
+          mandatoryUserProfile.add(MissingProfile.emailOrPhone);
+          continue;
         }
       }
     }

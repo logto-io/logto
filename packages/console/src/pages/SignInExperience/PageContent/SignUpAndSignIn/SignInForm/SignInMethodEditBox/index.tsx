@@ -4,18 +4,13 @@ import { useCallback } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { DragDropProvider, DraggableItem } from '@/ds-components/DragDrop';
 import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 
 import type { SignInExperienceForm } from '../../../../types';
-import { signInIdentifiers, signUpIdentifiersMapping } from '../../../constants';
+import { signInIdentifiers } from '../../../constants';
 import { identifierRequiredConnectorMapping } from '../../constants';
-import {
-  getSignUpRequiredConnectorTypes,
-  createSignInMethod,
-  getSignUpIdentifiersRequiredConnectors,
-} from '../../utils';
+import { createSignInMethod, getSignUpIdentifiersRequiredConnectors } from '../../utils';
 
 import AddButton from './AddButton';
 import SignInMethodItem from './SignInMethodItem';
@@ -47,20 +42,11 @@ function SignInMethodEditBox() {
 
   const { isConnectorTypeEnabled } = useEnabledConnectorTypes();
 
-  const {
-    identifier: signUpIdentifier,
-    identifiers,
-    password: isSignUpPasswordRequired,
-    verify: isSignUpVerificationRequired,
-  } = signUp;
+  const { identifiers, password: isSignUpPasswordRequired } = signUp;
 
-  const requiredSignInIdentifiers = signUpIdentifiersMapping[signUpIdentifier];
   const signUpIdentifiers = identifiers.map(({ identifier }) => identifier);
 
-  // TODO: Remove this dev feature guard when multi sign-up identifiers are launched
-  const ignoredWarningConnectors = isDevFeaturesEnabled
-    ? getSignUpIdentifiersRequiredConnectors(signUpIdentifiers)
-    : getSignUpRequiredConnectorTypes(signUpIdentifier);
+  const ignoredWarningConnectors = getSignUpIdentifiersRequiredConnectors(signUpIdentifiers);
 
   const signInIdentifierOptions = signInIdentifiers.filter((candidateIdentifier) =>
     fields.every(({ identifier }) => identifier !== candidateIdentifier)
@@ -76,10 +62,6 @@ function SignInMethodEditBox() {
         return true;
       }
 
-      if (!isDevFeaturesEnabled) {
-        return !isSignUpVerificationRequired;
-      }
-
       // If the email or phone sign-in method is enabled as one of the sign-up identifiers
       // and password is not required for sign-up, then verification code is required and uncheckable.
       // This is to ensure new users can sign in without password.
@@ -91,7 +73,7 @@ function SignInMethodEditBox() {
 
       return !signUpVerificationRequired;
     },
-    [isSignUpPasswordRequired, isSignUpVerificationRequired, signUpIdentifiers]
+    [isSignUpPasswordRequired, signUpIdentifiers]
   );
 
   return (
@@ -141,15 +123,10 @@ function SignInMethodEditBox() {
                 }}
                 render={({ field: { value }, fieldState: { error } }) => (
                   <SignInMethodItem
+                    isDeletable
                     signInMethod={value}
-                    isPasswordCheckable={
-                      identifier !== SignInIdentifier.Username &&
-                      (isDevFeaturesEnabled || !isSignUpPasswordRequired)
-                    }
+                    isPasswordCheckable={identifier !== SignInIdentifier.Username}
                     isVerificationCodeCheckable={isVerificationCodeCheckable(value.identifier)}
-                    isDeletable={
-                      isDevFeaturesEnabled || !requiredSignInIdentifiers.includes(identifier)
-                    }
                     requiredConnectors={requiredConnectors}
                     hasError={Boolean(error)}
                     errorMessage={error?.message}

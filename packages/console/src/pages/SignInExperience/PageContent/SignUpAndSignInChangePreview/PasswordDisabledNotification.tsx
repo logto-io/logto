@@ -2,7 +2,6 @@ import { SignInIdentifier, type SignInExperience } from '@logto/schemas';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import InlineNotification from '@/ds-components/InlineNotification';
 
 import { signUpFormDataParser } from '../utils/parser';
@@ -18,10 +17,6 @@ function PasswordDisabledNotification({ after, className }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const shouldShowNotification = useMemo(() => {
-    if (!isDevFeaturesEnabled) {
-      return false;
-    }
-
     return (
       identifiers.length === 1 &&
       identifiers[0]?.identifier === SignInIdentifier.Username &&

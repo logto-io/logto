@@ -47,6 +47,18 @@ function SignUpIdentifiersEditBox() {
     name: 'signUp.identifiers',
   });
 
+  // Revalidate the sign-up and sign-in methods,
+  //  when appending or removing sign-up identifiers.
+  const revalidateForm = useCallback(() => {
+    if (submitCount > 0) {
+      // Wait for the form re-render before validating the new data.
+      setTimeout(() => {
+        void trigger('signUp.identifiers');
+        void trigger('signIn.methods');
+      }, 0);
+    }
+  }, [submitCount, trigger]);
+
   /**
    * Append the sign-in methods based on the selected sign-up identifier.
    */
@@ -75,15 +87,8 @@ function SignUpIdentifiersEditBox() {
           shouldDirty: true,
         }
       );
-
-      if (submitCount) {
-        // Wait for the form re-render before validating the new data.
-        setTimeout(() => {
-          void trigger('signIn.methods');
-        }, 0);
-      }
     },
-    [getValues, setValue, submitCount, trigger]
+    [getValues, setValue]
   );
 
   const onAppendSignUpIdentifier = useCallback(
@@ -195,6 +200,7 @@ function SignUpIdentifiersEditBox() {
                     errorMessage={error?.message}
                     onDelete={() => {
                       remove(index);
+                      revalidateForm();
                     }}
                   />
                 )}
@@ -209,6 +215,7 @@ function SignUpIdentifiersEditBox() {
         hasSelectedIdentifiers={signUpIdentifiers.length > 0}
         onSelected={(identifier) => {
           append({ identifier });
+          revalidateForm();
           onAppendSignUpIdentifier(identifier);
         }}
       />
