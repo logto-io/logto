@@ -1,5 +1,5 @@
 const tabs = {
-  get_started: 'Começo',
+  get_started: 'Começar',
   dashboard: 'Painel',
   applications: 'Aplicações',
   api_resources: 'Recursos API',
@@ -14,7 +14,7 @@ const tabs = {
   roles: 'Funções',
   docs: 'Documentação',
   tenant_settings: 'Definições do inquilino',
-  mfa: 'Autenticação multi-fator',
+  mfa: 'Autenticação multifator',
   customize_jwt: 'JWT personalizado',
   signing_keys: 'Chaves de assinatura',
   organization_template: 'Modelo de organização',

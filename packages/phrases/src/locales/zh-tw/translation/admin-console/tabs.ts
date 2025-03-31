@@ -5,7 +5,7 @@ const tabs = {
   api_resources: 'API 資源',
   sign_in_experience: '登入體驗',
   connectors: '連接器',
-  enterprise_sso: 'Enterprise SSO',
+  enterprise_sso: '企業 SSO',
   security: '安全',
   webhooks: 'Webhooks',
   organizations: '組織',
@@ -14,10 +14,10 @@ const tabs = {
   roles: '角色',
   docs: '文件',
   tenant_settings: '租戶設定',
-  mfa: '多重認證',
+  mfa: '多重驗證',
   customize_jwt: '自訂 JWT',
-  signing_keys: '簽署密鑰',
-  organization_template: '組織模板',
+  signing_keys: '簽署金鑰',
+  organization_template: '組織範本',
 };
 
 export default Object.freeze(tabs);

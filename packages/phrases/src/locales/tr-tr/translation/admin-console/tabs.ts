@@ -6,7 +6,7 @@ const tabs = {
   sign_in_experience: 'Oturum Açma Deneyimi',
   connectors: 'Connectors',
   enterprise_sso: 'Kurumsal SSO',
-  security: '安全',
+  security: 'Güvenlik',
   webhooks: 'Webhooks',
   organizations: 'Organizasyonlar',
   users: 'Kullanıcı Yönetimi',
