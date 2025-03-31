@@ -65,6 +65,9 @@ const useSignUpPasswordListeners = () => {
       }
     );
 
+    // By default, the react-hook-form triggers validation only after the first submit.
+    // To keep the form validation behavior consistent, we trigger the validation manually
+    // if the form has been submitted at least once.
     if (submitCountRef.current > 0) {
       // Wait for the form re-render before validating the new data.
       setTimeout(() => {
