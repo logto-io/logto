@@ -9,15 +9,15 @@ feat: support multiple sign-up identifiers in sign-in experience
 
 ## New update
 
-Introduces a new optional field, `secondaryIdentifiers`, to the sign-in experience sign-up settings. This enhancement allows developers to specify additional required user identifiers during the user sign-up process. Available options include `email`, `phone`, `username` and `emailOrPhone`.
+Introduces a new optional field, `secondaryIdentifiers`, to the sign-in experience sign-up settings. This enhancement allows developers to specify multiple required user identifiers during the user sign-up process. Available options include `email`, `phone`, `username` and `emailOrPhone`.
 
-### Explanation of the difference between `identifiers` and new `secondaryIdentifiers`
+### Explanation of the difference between `signUp.identifiers` and new `signUp.secondaryIdentifiers`
 
-The existing `identifiers` field represents the sign-up identifiers enabled for user sign-up and is an array type. In this legacy setup, if multiple identifiers are provided, users can complete the sign-up process using any one of them. The only multi-value case allowed is `[email, phone]`, which signifies that users can provide either an email or a phone number.
+The existing `signUp.identifiers` field represents the sign-up identifiers enabled for user sign-up and is an array type. In this legacy setup, if multiple identifiers are provided, users can complete the sign-up process using any one of them. The only multi-value case allowed is `[email, phone]`, which signifies that users can provide either an email or a phone number.
 
 To enhance flexibility and support multiple required sign-up identifiers, the existing `signUp.identifiers` field does not suffice. To maintain backward compatibility with existing data, we have introduced this new `secondaryIdentifiers` field.
 
-Unlike the `identifiers` field, the `secondaryIdentifiers` array follows an `AND` logic, meaning that all elements listed in this field are required during the sign-up process, in addition to the primary `identifiers`. This new field also accommodates the `emailOrPhone` case by defining an exclusive `emailOrPhone` value type, which indicates that either a phone number or an email address must be provided.
+Unlike the `signUp.identifiers` field, the `signUp.secondaryIdentifiers` array follows an `AND` logic, meaning that all elements listed in this field are required during the sign-up process, in addition to the primary identifiers. This new field also accommodates the `emailOrPhone` case by defining an exclusive `emailOrPhone` value type, which indicates that either a phone number or an email address must be provided.
 
 In summary, while `identifiers` allows for optional selection among email and phone, `secondaryIdentifiers` enforces mandatory inclusion of all specified identifiers.
 
@@ -84,7 +84,7 @@ In summary, while `identifiers` allows for optional selection among email and ph
 
 The sign-up flow is now split into two stages:
 
-- Primary identifiers (`signUp.identifiers`) are collected in the first-screen registration screen
+- Primary identifiers (`signUp.identifiers`) are collected in the first-screen registration screen.
 - Secondary identifiers (`signUp.secondaryIdentifiers`) are requested in subsequent steps after the primary registration has been submitted.
 
 ## Other refactors
