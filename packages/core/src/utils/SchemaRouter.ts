@@ -1,9 +1,10 @@
+/* eslint-disable max-lines */
 import { type DataHookEvent, type GeneratedSchema, type SchemaLike } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { type DeepPartial, isPlainObject } from '@silverhand/essentials';
 import camelcase from 'camelcase';
 import deepmerge from 'deepmerge';
-import { type Context, type MiddlewareType } from 'koa';
+import { type Context, type Middleware } from 'koa';
 import Router, { type IRouterParamContext } from 'koa-router';
 import { z } from 'zod';
 
@@ -26,7 +27,26 @@ const defaultConfig = Object.freeze({
     deleteById: false,
   },
   searchFields: [],
+  middlewares: [],
 });
+
+type RouteMethod = 'get' | 'post' | 'put' | 'delete' | 'patch';
+
+type MiddlewareScope = {
+  /** Apply to native routes of SchemaRouter, e.g. GET /, POST /, GET /:id, etc. */
+  native?: boolean | RouteMethod[];
+  /** Apply to relation routes, e.g. GET /:id/relations, POST /:id/relations, etc. */
+  relation?: boolean | RouteMethod[];
+};
+
+type SchemaMiddleware = Middleware;
+
+type MiddlewareConfig = {
+  /** The middlewares to apply */
+  middlewares: SchemaMiddleware[];
+  /** Define the scope where the middlewares will be applied */
+  scope?: MiddlewareScope;
+};
 
 /**
  * Generate the pathname for from a table name.
@@ -65,7 +85,7 @@ type SchemaRouterConfig<Key extends string> = {
     deleteById: boolean;
   };
   /** Middlewares that are used before creating API routes */
-  middlewares?: MiddlewareType[];
+  middlewares?: MiddlewareConfig[];
   /** A custom error handler for the router before throwing the error. */
   errorHandler?: (error: unknown) => void;
   /** The fields that can be searched for the `GET /` route. */
@@ -139,8 +159,13 @@ export default class SchemaRouter<
 
     this.config = deepmerge(defaultConfig, config, { isMergeableObject: isPlainObject });
 
+    // Apply global middlewares (those without specific scope)
     if (this.config.middlewares?.length) {
-      this.use(...this.config.middlewares);
+      for (const { middlewares, scope } of this.config.middlewares) {
+        if (!scope) {
+          this.use(...middlewares);
+        }
+      }
     }
 
     if (this.config.errorHandler) {
@@ -408,4 +433,39 @@ export default class SchemaRouter<
       );
     }
   }
+
+  // eslint-disable-next-line complexity
+  #findQualifiedMiddlewares(method: RouteMethod, isForRelationRoute = false) {
+    const pickedMiddlewares: Middleware[] = [];
+
+    for (const { middlewares, scope } of this.config.middlewares ?? []) {
+      // We have dealt with the global middlewares.
+      if (!scope) {
+        continue;
+      }
+
+      if (
+        isForRelationRoute &&
+        scope.relation !== undefined &&
+        ((typeof scope.relation === 'boolean' && scope.relation) ||
+          (Array.isArray(scope.relation) && scope.relation.includes(method)))
+      ) {
+        // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+        pickedMiddlewares.push(...middlewares);
+      }
+
+      if (
+        !isForRelationRoute &&
+        scope.native !== undefined &&
+        ((typeof scope.native === 'boolean' && scope.native) ||
+          (Array.isArray(scope.native) && scope.native.includes(method)))
+      ) {
+        // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+        pickedMiddlewares.push(...middlewares);
+      }
+    }
+
+    return pickedMiddlewares;
+  }
 }
+/* eslint-enable max-lines */
