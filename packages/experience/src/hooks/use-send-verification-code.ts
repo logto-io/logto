@@ -34,14 +34,19 @@ const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) =
   }, []);
 
   const onSubmit = useCallback(
-    async ({ identifier, value }: Payload, interactionEvent?: ContinueFlowInteractionEvent) => {
+    async (
+      { identifier, value }: Payload,
+      interactionEvent?: ContinueFlowInteractionEvent,
+      captchaToken?: string
+    ) => {
       const [error, result] = await asyncSendVerificationCode(
         flow,
         {
           type: identifier,
           value,
         },
-        interactionEvent
+        interactionEvent,
+        captchaToken
       );
 
       if (error) {

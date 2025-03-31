@@ -75,8 +75,8 @@ export const signInWithPasswordIdentifier = async (payload: PasswordVerification
   return identifyAndSubmitInteraction({ verificationId });
 };
 
-export const registerWithUsername = async (username: string) => {
-  await initInteraction(InteractionEvent.Register);
+export const registerWithUsername = async (username: string, captchaToken?: string) => {
+  await initInteraction(InteractionEvent.Register, captchaToken);
 
   return updateProfile({ type: SignInIdentifier.Username, value: username });
 };

@@ -91,6 +91,7 @@ describe('ForgotPasswordForm', () => {
               type: identifier,
               value,
             },
+            undefined,
             undefined
           );
           expect(mockedNavigate).toBeCalledWith(
