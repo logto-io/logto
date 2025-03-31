@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.26.0
+
+### Patch Changes
+
+- Updated dependencies [13d04d776]
+  - @logto/schemas@1.26.0
+
 ## 1.25.0
 
 ### Patch Changes

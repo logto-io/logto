@@ -1,6 +1,6 @@
 {
   "name": "@logto/translate",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A CLI tool that helps translate phrases and experience-phrases to i18n resources.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/logto#readme",
@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "@logto/core-kit": "workspace:^2.5.4",
-    "@logto/language-kit": "workspace:^1.1.2",
+    "@logto/language-kit": "workspace:^1.1.3",
     "@logto/phrases": "workspace:^1.18.0",
     "@logto/phrases-experience": "workspace:^1.9.1",
     "@logto/shared": "workspace:^3.1.4",
