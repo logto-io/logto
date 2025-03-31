@@ -360,17 +360,19 @@ export default class OrganizationQueries extends SchemaQueries<
     if (organizationIds.length === 0) {
       return [];
     }
-    const { table, fields } = convertToIdentifiers(OrganizationJitRoles, true);
+    const organization = convertToIdentifiers(Organizations, true);
+    const organizationJitRoles = convertToIdentifiers(OrganizationJitRoles, true);
     return this.pool.any<JitOrganization>(sql`
       select
-        ${fields.organizationId},
+        ${organization.fields.id} as "organizationId",
         array_remove(
-          array_agg(${fields.organizationRoleId}),
+          array_agg(${organizationJitRoles.fields.organizationRoleId}),
           null
         ) as "organizationRoleIds"
-      from ${table}
-      where ${fields.organizationId} in (${sql.join(organizationIds, sql`, `)})
-      group by ${fields.organizationId}
+      from ${organization.table} left join ${organizationJitRoles.table}
+        on ${organization.fields.id} = ${organizationJitRoles.fields.organizationId}
+      where ${organization.fields.id} in (${sql.join(organizationIds, sql`, `)})
+      group by ${organization.fields.id}
     `);
   }
 }
