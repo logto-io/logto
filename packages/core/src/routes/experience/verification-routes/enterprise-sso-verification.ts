@@ -118,7 +118,8 @@ export default function enterpriseSsoVerificationRoutes<
       );
 
       await enterpriseSsoVerificationRecord.verify(ctx, tenantContext, connectorData);
-
+      // Skip captcha for enterprise sso verification, as it's already verified by the connector
+      ctx.experienceInteraction.skipCaptcha();
       await ctx.experienceInteraction.save();
 
       ctx.body = {
