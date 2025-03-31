@@ -1,7 +1,7 @@
 import type { VerificationCodeIdentifier } from '@logto/schemas';
 import { InteractionEvent, VerificationType } from '@logto/schemas';
 import { useCallback, useContext, useMemo } from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { updateProfileWithVerificationCode } from '@/apis/experience';
@@ -26,6 +26,7 @@ const useContinueFlowCodeVerification = (
 ) => {
   const [searchParameters] = useSearchParams();
   const redirectTo = useGlobalRedirectTo();
+  const navigate = useNavigate();
 
   const { state } = useLocation();
   const { verificationIdsMap } = useContext(UserInteractionContext);
@@ -72,7 +73,13 @@ const useContinueFlowCodeVerification = (
       interactionEvent === InteractionEvent.Register &&
       isVerificationCodeEnabledForSignIn(type)
     ) {
-      showSignInWithExistIdentifierConfirmModal({ identifier, verificationId });
+      showSignInWithExistIdentifierConfirmModal({
+        identifier,
+        verificationId,
+        onCanceled: () => {
+          navigate(-1);
+        },
+      });
       return;
     }
 
