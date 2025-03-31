@@ -19,7 +19,7 @@ import {
 import { expectRejects } from '#src/helpers/index.js';
 import { enableAllVerificationCodeSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser, generateNewUserProfile } from '#src/helpers/user.js';
-import { devFeatureTest, generateEmail, generatePhone } from '#src/utils.js';
+import { generateEmail, generatePhone } from '#src/utils.js';
 
 const verificationIdentifierType: readonly [SignInIdentifier.Email, SignInIdentifier.Phone] =
   Object.freeze([SignInIdentifier.Email, SignInIdentifier.Phone]);
@@ -198,7 +198,7 @@ describe('Register interaction with verification code happy path', () => {
   });
 });
 
-devFeatureTest.describe('username as secondary identifier', () => {
+describe('username as secondary identifier', () => {
   beforeAll(async () => {
     await updateSignInExperience({
       signUp: {

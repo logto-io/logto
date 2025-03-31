@@ -6,33 +6,16 @@ import {
   type SignInExperience,
   type SignUp,
 } from '@logto/schemas';
-import { conditional, isSameArray } from '@silverhand/essentials';
+import { conditional } from '@silverhand/essentials';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { emptyBranding } from '@/types/sign-in-experience';
 import { removeFalsyValues } from '@/utils/object';
 
 import {
-  type SignUpIdentifier,
   type UpdateSignInExperienceData,
   type SignInExperienceForm,
   type SignUpForm,
 } from '../../types';
-import { signUpIdentifiersMapping } from '../constants';
-
-/**
- * @deprecated
- * TODO: remove this once the multi sign-up identifier feature is fully implemented.
- */
-const mapIdentifiersToSignUpIdentifier = (identifiers: SignInIdentifier[]): SignUpIdentifier => {
-  for (const [signUpIdentifier, mappedIdentifiers] of Object.entries(signUpIdentifiersMapping)) {
-    if (isSameArray(identifiers, mappedIdentifiers)) {
-      // eslint-disable-next-line no-restricted-syntax
-      return signUpIdentifier as SignUpIdentifier;
-    }
-  }
-  throw new Error('Invalid identifiers in the sign up settings.');
-};
 
 /**
  * For backward compatibility,
@@ -115,23 +98,15 @@ export const signUpFormDataParser = {
     const { identifiers, secondaryIdentifiers, ...signUpData } = data;
 
     return {
-      identifier: mapIdentifiersToSignUpIdentifier(identifiers),
       identifiers: signUpIdentifiersParser.toSignUpForm(identifiers, secondaryIdentifiers),
       ...signUpData,
     };
   },
   toSignUp: (formData: SignUpForm): SignUp => {
-    const { identifier, identifiers, ...signUpFormData } = formData;
-
-    if (isDevFeaturesEnabled) {
-      return {
-        ...signUpIdentifiersParser.toSieData(identifiers),
-        ...signUpFormData,
-      };
-    }
+    const { identifiers, ...signUpFormData } = formData;
 
     return {
-      identifiers: signUpIdentifiersMapping[identifier],
+      ...signUpIdentifiersParser.toSieData(identifiers),
       ...signUpFormData,
     };
   },

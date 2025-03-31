@@ -21,7 +21,7 @@ import {
 import { expectRejects } from '#src/helpers/index.js';
 import { enableAllVerificationCodeSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser, generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest, generateUsername } from '#src/utils.js';
+import { generateUsername } from '#src/utils.js';
 
 const verificationIdentifierType: readonly [SignInIdentifier.Email, SignInIdentifier.Phone] =
   Object.freeze([SignInIdentifier.Email, SignInIdentifier.Phone]);
@@ -106,140 +106,137 @@ describe('register new user with username and password', () => {
   });
 });
 
-devFeatureTest.describe(
-  'register new user with username and password with secondary identifiers',
-  () => {
-    beforeAll(async () => {
-      await Promise.all([setEmailConnector(), setSmsConnector()]);
-    });
+describe('register new user with username and password with secondary identifiers', () => {
+  beforeAll(async () => {
+    await Promise.all([setEmailConnector(), setSmsConnector()]);
+  });
 
-    it.each([SignInIdentifier.Email, AlternativeSignUpIdentifier.EmailOrPhone])(
-      'set %s as secondary identifier',
-      async (secondaryIdentifier) => {
-        await enableAllVerificationCodeSignInMethods({
-          identifiers: [SignInIdentifier.Username],
-          password: true,
-          verify: true,
-          secondaryIdentifiers: [
-            {
-              identifier: secondaryIdentifier,
-              verify: true,
-            },
-          ],
-        });
-
-        const { username, password, primaryEmail } = generateNewUserProfile({
-          username: true,
-          password: true,
-          primaryEmail: true,
-        });
-
-        const client = await initExperienceClient({
-          interactionEvent: InteractionEvent.Register,
-        });
-
-        await client.updateProfile({ type: SignInIdentifier.Username, value: username });
-        await client.updateProfile({ type: 'password', value: password });
-
-        await expectRejects(client.identifyUser(), {
-          status: 422,
-          code: 'user.missing_profile',
-        });
-
-        await fulfillUserEmail(client, primaryEmail);
-
-        await client.identifyUser();
-        const { redirectTo } = await client.submitInteraction();
-        const userId = await processSession(client, redirectTo);
-        await logoutClient(client);
-
-        await signInWithPassword({
-          identifier: {
-            type: SignInIdentifier.Username,
-            value: username,
-          },
-          password,
-        });
-
-        await signInWithPassword({
-          identifier: {
-            type: SignInIdentifier.Email,
-            value: primaryEmail,
-          },
-          password,
-        });
-
-        await deleteUser(userId);
-      }
-    );
-
-    it.each(verificationIdentifierType)(
-      'should fail to sign-up with existing %s as secondary identifier, and directly sign-in instead',
-      async (identifierType) => {
-        await enableAllVerificationCodeSignInMethods({
-          identifiers: [SignInIdentifier.Username],
-          password: true,
-          verify: true,
-          secondaryIdentifiers: [
-            {
-              identifier: AlternativeSignUpIdentifier.EmailOrPhone,
-              verify: true,
-            },
-          ],
-        });
-
-        const { userProfile, user } = await generateNewUser({
-          [identifiersTypeToUserProfile[identifierType]]: true,
-          username: true,
-          password: true,
-        });
-
-        const client = await initExperienceClient({
-          interactionEvent: InteractionEvent.Register,
-        });
-
-        await client.updateProfile({ type: SignInIdentifier.Username, value: generateUsername() });
-
-        const identifier: VerificationCodeIdentifier = {
-          type: identifierType,
-          value: userProfile[identifiersTypeToUserProfile[identifierType]]!,
-        };
-
-        const { verificationId, code } = await successfullySendVerificationCode(client, {
-          identifier,
-          interactionEvent: InteractionEvent.Register,
-        });
-
-        await successfullyVerifyVerificationCode(client, {
-          identifier,
-          verificationId,
-          code,
-        });
-
-        await expectRejects(
-          client.identifyUser({
-            verificationId,
-          }),
+  it.each([SignInIdentifier.Email, AlternativeSignUpIdentifier.EmailOrPhone])(
+    'set %s as secondary identifier',
+    async (secondaryIdentifier) => {
+      await enableAllVerificationCodeSignInMethods({
+        identifiers: [SignInIdentifier.Username],
+        password: true,
+        verify: true,
+        secondaryIdentifiers: [
           {
-            code: `user.${identifierType}_already_in_use`,
-            status: 422,
-          }
-        );
+            identifier: secondaryIdentifier,
+            verify: true,
+          },
+        ],
+      });
 
-        await client.updateInteractionEvent({
-          interactionEvent: InteractionEvent.SignIn,
-        });
+      const { username, password, primaryEmail } = generateNewUserProfile({
+        username: true,
+        password: true,
+        primaryEmail: true,
+      });
 
-        await client.identifyUser({
+      const client = await initExperienceClient({
+        interactionEvent: InteractionEvent.Register,
+      });
+
+      await client.updateProfile({ type: SignInIdentifier.Username, value: username });
+      await client.updateProfile({ type: 'password', value: password });
+
+      await expectRejects(client.identifyUser(), {
+        status: 422,
+        code: 'user.missing_profile',
+      });
+
+      await fulfillUserEmail(client, primaryEmail);
+
+      await client.identifyUser();
+      const { redirectTo } = await client.submitInteraction();
+      const userId = await processSession(client, redirectTo);
+      await logoutClient(client);
+
+      await signInWithPassword({
+        identifier: {
+          type: SignInIdentifier.Username,
+          value: username,
+        },
+        password,
+      });
+
+      await signInWithPassword({
+        identifier: {
+          type: SignInIdentifier.Email,
+          value: primaryEmail,
+        },
+        password,
+      });
+
+      await deleteUser(userId);
+    }
+  );
+
+  it.each(verificationIdentifierType)(
+    'should fail to sign-up with existing %s as secondary identifier, and directly sign-in instead',
+    async (identifierType) => {
+      await enableAllVerificationCodeSignInMethods({
+        identifiers: [SignInIdentifier.Username],
+        password: true,
+        verify: true,
+        secondaryIdentifiers: [
+          {
+            identifier: AlternativeSignUpIdentifier.EmailOrPhone,
+            verify: true,
+          },
+        ],
+      });
+
+      const { userProfile, user } = await generateNewUser({
+        [identifiersTypeToUserProfile[identifierType]]: true,
+        username: true,
+        password: true,
+      });
+
+      const client = await initExperienceClient({
+        interactionEvent: InteractionEvent.Register,
+      });
+
+      await client.updateProfile({ type: SignInIdentifier.Username, value: generateUsername() });
+
+      const identifier: VerificationCodeIdentifier = {
+        type: identifierType,
+        value: userProfile[identifiersTypeToUserProfile[identifierType]]!,
+      };
+
+      const { verificationId, code } = await successfullySendVerificationCode(client, {
+        identifier,
+        interactionEvent: InteractionEvent.Register,
+      });
+
+      await successfullyVerifyVerificationCode(client, {
+        identifier,
+        verificationId,
+        code,
+      });
+
+      await expectRejects(
+        client.identifyUser({
           verificationId,
-        });
+        }),
+        {
+          code: `user.${identifierType}_already_in_use`,
+          status: 422,
+        }
+      );
 
-        const { redirectTo } = await client.submitInteraction();
-        await processSession(client, redirectTo);
-        await logoutClient(client);
+      await client.updateInteractionEvent({
+        interactionEvent: InteractionEvent.SignIn,
+      });
 
-        await deleteUser(user.id);
-      }
-    );
-  }
-);
+      await client.identifyUser({
+        verificationId,
+      });
+
+      const { redirectTo } = await client.submitInteraction();
+      await processSession(client, redirectTo);
+      await logoutClient(client);
+
+      await deleteUser(user.id);
+    }
+  );
+});

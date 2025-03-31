@@ -1,23 +1,9 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import { SignInIdentifier } from '@logto/schemas';
 
-import { SignUpIdentifier } from '../types';
-
-export const signUpIdentifiers = Object.values(SignUpIdentifier);
+import { type SignUpIdentifier } from '../types';
 
 export const signInIdentifiers = Object.values(SignInIdentifier);
-
-/**
- * @deprecated
- * TODO: remove this once the multi sign-up identifier feature is fully implemented.
- */
-export const signUpIdentifiersMapping: { [key in SignUpIdentifier]: SignInIdentifier[] } = {
-  [SignUpIdentifier.Username]: [SignInIdentifier.Username],
-  [SignUpIdentifier.Email]: [SignInIdentifier.Email],
-  [SignUpIdentifier.Phone]: [SignInIdentifier.Phone],
-  [SignUpIdentifier.EmailOrSms]: [SignInIdentifier.Email, SignInIdentifier.Phone],
-  [SignUpIdentifier.None]: [],
-};
 
 type SignInIdentifierPhrase = {
   [key in SignInIdentifier]: AdminConsoleKey;
@@ -32,11 +18,3 @@ export const signInIdentifierPhrase = Object.freeze({
 type SignUpIdentifierPhrase = {
   [key in SignUpIdentifier]: AdminConsoleKey;
 };
-
-export const signUpIdentifierPhrase = Object.freeze({
-  [SignUpIdentifier.Email]: 'sign_in_exp.sign_up_and_sign_in.identifiers_email',
-  [SignUpIdentifier.Phone]: 'sign_in_exp.sign_up_and_sign_in.identifiers_phone',
-  [SignUpIdentifier.Username]: 'sign_in_exp.sign_up_and_sign_in.identifiers_username',
-  [SignUpIdentifier.EmailOrSms]: 'sign_in_exp.sign_up_and_sign_in.identifiers_email_or_sms',
-  [SignUpIdentifier.None]: 'sign_in_exp.sign_up_and_sign_in.identifiers_none',
-}) satisfies SignUpIdentifierPhrase;

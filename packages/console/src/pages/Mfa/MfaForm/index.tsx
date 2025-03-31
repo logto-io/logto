@@ -135,7 +135,7 @@ function MfaForm({ data, onMfaUpdated }: Props) {
   // Only show the organization MFA policy config for the admin tenant
   const showOrganizationMfaPolicyConfig = useMemo(
     () => isDevFeaturesEnabled || (isCloud && currentTenantId === adminTenantId),
-    []
+    [currentTenantId]
   );
 
   const onSubmit = handleSubmit(

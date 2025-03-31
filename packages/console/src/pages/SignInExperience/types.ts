@@ -26,11 +26,6 @@ export enum SignUpIdentifier {
 
 export type SignUpForm = Omit<SignUp, 'identifiers' | 'secondaryIdentifiers'> & {
   /**
-   * TODO: remove this field after the multi sign-up identifier feature is fully implemented.
-   * @deprecated
-   */
-  identifier: SignUpIdentifier;
-  /**
    * New identifiers field that merges the `signUpIdentifier` and `secondaryIdentifiers` fields
    **/
   identifiers: Array<{

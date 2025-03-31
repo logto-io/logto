@@ -1,9 +1,7 @@
 import type { SignInExperience } from '@logto/schemas';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
-
 import SignInDiffSection from './SignInDiffSection';
-import SignUpDiffSection, { NewSignUpDiffSection } from './SignUpDiffSection';
+import SignUpDiffSection from './SignUpDiffSection';
 import SocialTargetsDiffSection from './SocialTargetsDiffSection';
 
 type Props = {
@@ -15,11 +13,7 @@ type Props = {
 function SignUpAndSignInDiffSection({ before, after, isAfter = false }: Props) {
   return (
     <>
-      {isDevFeaturesEnabled ? (
-        <NewSignUpDiffSection before={before.signUp} after={after.signUp} isAfter={isAfter} />
-      ) : (
-        <SignUpDiffSection before={before.signUp} after={after.signUp} isAfter={isAfter} />
-      )}
+      <SignUpDiffSection before={before.signUp} after={after.signUp} isAfter={isAfter} />
       <SignInDiffSection
         before={before.signIn.methods}
         after={after.signIn.methods}

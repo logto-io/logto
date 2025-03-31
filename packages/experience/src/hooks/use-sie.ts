@@ -11,7 +11,6 @@ import { useContext, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
-import { isDevFeaturesEnabled } from '@/constants/env';
 // eslint-disable-next-line unused-imports/no-unused-imports -- type only import
 import type useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
 import { type SignInExperienceResponse, type VerificationCodeIdentifier } from '@/types';
@@ -70,17 +69,11 @@ export const useSieMethods = (): UseSieMethodsReturnType => {
         return false;
       }
 
-      // TODO: Remove this check when the feature is enabled for all environments
-      if (isDevFeaturesEnabled) {
-        // Return true if the identifier is enabled for sign-up either as a primary or secondary identifier
-        return (
-          signUpMethods.includes(type) ||
-          secondaryIdentifiers.includes(type) ||
-          secondaryIdentifiers.includes(AlternativeSignUpIdentifier.EmailOrPhone)
-        );
-      }
-
-      return signUpMethods.includes(type);
+      return (
+        signUpMethods.includes(type) ||
+        secondaryIdentifiers.includes(type) ||
+        secondaryIdentifiers.includes(AlternativeSignUpIdentifier.EmailOrPhone)
+      );
     },
     [secondaryIdentifiers, signUpMethods, experienceSettings]
   );
