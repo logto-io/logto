@@ -1,6 +1,6 @@
 {
   "name": "@logto/cli",
-  "version": "1.25.0",
+  "version": "1.26.0",
   "description": "Logto CLI.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/logto#readme",
@@ -44,7 +44,7 @@
   "dependencies": {
     "@logto/connector-kit": "workspace:^4.2.0",
     "@logto/core-kit": "workspace:^2.5.4",
-    "@logto/schemas": "workspace:1.25.0",
+    "@logto/schemas": "workspace:1.26.0",
     "@logto/shared": "workspace:^3.1.4",
     "@silverhand/essentials": "^2.9.1",
     "@silverhand/slonik": "31.0.0-beta.2",

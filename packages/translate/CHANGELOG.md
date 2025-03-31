@@ -1,5 +1,19 @@
 # @logto/translate
 
+## 0.1.3
+
+### Patch Changes
+
+- 552a36848: improve openai prompt to better support i18n plural form suffixes
+- 5da01bc47: make method `isLanguageTag` case-insensitive
+
+  The language tags should be case insensitive. In `phrases` and `phrases-experience` packages, the language tags are all in lowercase. However, in the language kit, the language tags are in mixed cases, such as `pt-BR` and `zh-CN`.
+
+  Therefore, some of the i18n phrases were not translated by the translate CLI tool. The fix is to update the language kit to ignore cases in `isLanguageTag` function, so that the previously mismatched language tags can be detected and translated.
+
+- Updated dependencies [5da01bc47]
+  - @logto/language-kit@1.1.3
+
 ## 0.1.2
 
 ### Patch Changes

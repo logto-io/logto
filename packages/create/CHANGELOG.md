@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.26.0
+
+### Patch Changes
+
+- @logto/cli@1.26.0
+
 ## 1.25.0
 
 ### Patch Changes
