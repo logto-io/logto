@@ -5,6 +5,7 @@ import { type DeepPartial, isPlainObject } from '@silverhand/essentials';
 import camelcase from 'camelcase';
 import deepmerge from 'deepmerge';
 import { type Context, type Middleware } from 'koa';
+import compose from 'koa-compose';
 import Router, { type IRouterParamContext } from 'koa-router';
 import { z } from 'zod';
 
@@ -39,7 +40,11 @@ type MiddlewareScope = {
   relation?: boolean | RouteMethod[];
 };
 
-type SchemaMiddleware = Middleware;
+type SchemaMiddleware<
+  StateT = unknown,
+  ContextT extends IRouterParamContext = IRouterParamContext,
+  ResponseBodyT = unknown,
+> = Middleware<StateT, ContextT, ResponseBodyT>;
 
 type MiddlewareConfig = {
   /** The middlewares to apply */
@@ -434,9 +439,23 @@ export default class SchemaRouter<
     }
   }
 
-  // eslint-disable-next-line complexity
-  #findQualifiedMiddlewares(method: RouteMethod, isForRelationRoute = false) {
-    const pickedMiddlewares: Middleware[] = [];
+  #ensembleQualifiedMiddlewares<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
+    method: RouteMethod,
+    isForRelationRoute = false
+  ): Middleware<StateT, ContextT, ResponseBodyT> {
+    const pickedMiddlewares: Array<Middleware<StateT, ContextT, ResponseBodyT>> = [];
+
+    const evaluateScope = (scopeValue?: boolean | RouteMethod[]): boolean => {
+      if (scopeValue === undefined) {
+        return false;
+      }
+
+      if (typeof scopeValue === 'boolean') {
+        return scopeValue;
+      }
+
+      return Array.isArray(scopeValue) && scopeValue.includes(method);
+    };
 
     for (const { middlewares, scope } of this.config.middlewares ?? []) {
       // We have dealt with the global middlewares.
@@ -444,28 +463,24 @@ export default class SchemaRouter<
         continue;
       }
 
-      if (
-        isForRelationRoute &&
-        scope.relation !== undefined &&
-        ((typeof scope.relation === 'boolean' && scope.relation) ||
-          (Array.isArray(scope.relation) && scope.relation.includes(method)))
-      ) {
-        // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-        pickedMiddlewares.push(...middlewares);
-      }
+      const shouldAddForRelation = isForRelationRoute && evaluateScope(scope.relation);
+      const shouldAddForNative = !isForRelationRoute && evaluateScope(scope.native);
 
-      if (
-        !isForRelationRoute &&
-        scope.native !== undefined &&
-        ((typeof scope.native === 'boolean' && scope.native) ||
-          (Array.isArray(scope.native) && scope.native.includes(method)))
-      ) {
-        // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-        pickedMiddlewares.push(...middlewares);
+      if (shouldAddForRelation || shouldAddForNative) {
+        for (const middleware of middlewares) {
+          const typedMiddleware: Middleware<StateT, ContextT, ResponseBodyT> = async (
+            context,
+            next
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+          ) => middleware(context, next);
+
+          // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+          pickedMiddlewares.push(typedMiddleware);
+        }
       }
     }
 
-    return pickedMiddlewares;
+    return compose(pickedMiddlewares);
   }
 }
 /* eslint-enable max-lines */
