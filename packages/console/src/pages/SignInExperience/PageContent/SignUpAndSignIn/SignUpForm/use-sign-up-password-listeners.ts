@@ -24,6 +24,15 @@ const useSignUpPasswordListeners = () => {
 
   const signUpPassword = useWatch({ control, name: 'signUp.password' });
 
+  // We create a ref to store the submit count
+  // to avoid the password update effect to be triggered by the submit count change.
+  const submitCountRef = useRef(submitCount);
+
+  useEffect(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    submitCountRef.current = submitCount;
+  }, [submitCount]);
+
   useEffect(() => {
     // Only sync the password settings on updates (skip the first mount)
     if (isFirstMount.current) {
@@ -31,7 +40,6 @@ const useSignUpPasswordListeners = () => {
       isFirstMount.current = false;
       return;
     }
-
     const signInMethods = getValues('signIn.methods');
 
     setValue(
@@ -57,13 +65,16 @@ const useSignUpPasswordListeners = () => {
       }
     );
 
-    if (submitCount) {
+    // By default, the react-hook-form triggers validation only after the first submit.
+    // To keep the form validation behavior consistent, we trigger the validation manually
+    // if the form has been submitted at least once.
+    if (submitCountRef.current > 0) {
       // Wait for the form re-render before validating the new data.
       setTimeout(() => {
         void trigger('signIn.methods');
       }, 0);
     }
-  }, [getValues, setValue, signUpPassword, submitCount, trigger]);
+  }, [getValues, setValue, signUpPassword, trigger]);
 };
 
 export default useSignUpPasswordListeners;
