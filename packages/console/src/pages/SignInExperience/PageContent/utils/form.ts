@@ -55,8 +55,6 @@ export const getSignUpAndSignInErrorCount = (
 ) => {
   const { signUp, signIn } = errors;
 
-  console.log(signUp?.identifiers);
-
   const signUpIdentifiersError = signUp?.identifiers;
   const signUpErrorCount = Array.isArray(signUpIdentifiersError)
     ? signUpIdentifiersError.filter(Boolean).length
