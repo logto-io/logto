@@ -93,13 +93,14 @@ describe('smoke testing for console admin account creation and sign-in', () => {
 
     // Switch back to English
     await switchToLanguage(page, 'English');
+    await expect(page).toMatchElement('html[lang=en][dir=ltr]');
   });
 
   it('can sign out of admin console', async () => {
     await expect(page).toClick('div[class$=topbar] > div[class$=container]');
 
-    // Try awaiting for 500ms before clicking sign-out button
-    await waitFor(500);
+    // Try awaiting for 1000ms before clicking sign-out button
+    await waitFor(1000);
 
     await expectNavigation(
       expect(page).toClick(
