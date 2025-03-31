@@ -1,5 +1,5 @@
 import { type OrganizationWithFeatured, Organizations, featuredUserGuard } from '@logto/schemas';
-import { condArray, yes } from '@silverhand/essentials';
+import { yes } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -30,14 +30,28 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
   ] = args;
 
   const router = new SchemaRouter(Organizations, organizations, {
-    middlewares: condArray(
-      koaQuotaGuard({ key: 'organizationsLimit', quota, methods: ['POST', 'PUT'] }),
-      koaReportSubscriptionUpdates({
-        key: 'organizationsLimit',
-        quota,
-        methods: ['POST', 'PUT', 'DELETE'],
-      })
-    ),
+    middlewares: [
+      {
+        middlewares: [
+          koaQuotaGuard({ key: 'organizationsLimit', quota, methods: ['POST', 'PUT'] }),
+        ],
+        scope: {
+          native: ['post', 'put'],
+        },
+      },
+      {
+        middlewares: [
+          koaReportSubscriptionUpdates({
+            key: 'organizationsLimit',
+            quota,
+            methods: ['POST', 'PUT', 'DELETE'],
+          }),
+        ],
+        scope: {
+          native: ['post', 'put', 'delete'],
+        },
+      },
+    ],
     errorHandler,
     searchFields: ['name'],
     disabled: { get: true },

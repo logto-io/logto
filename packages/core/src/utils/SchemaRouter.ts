@@ -1,9 +1,11 @@
+/* eslint-disable max-lines */
 import { type DataHookEvent, type GeneratedSchema, type SchemaLike } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { type DeepPartial, isPlainObject } from '@silverhand/essentials';
 import camelcase from 'camelcase';
 import deepmerge from 'deepmerge';
-import { type Context, type MiddlewareType } from 'koa';
+import { type Context, type Middleware } from 'koa';
+import compose from 'koa-compose';
 import Router, { type IRouterParamContext } from 'koa-router';
 import { z } from 'zod';
 
@@ -26,7 +28,30 @@ const defaultConfig = Object.freeze({
     deleteById: false,
   },
   searchFields: [],
+  middlewares: [],
 });
+
+type RouteMethod = 'get' | 'post' | 'put' | 'delete' | 'patch';
+
+type MiddlewareScope = {
+  /** Apply to native routes of SchemaRouter, e.g. GET /, POST /, GET /:id, etc. */
+  native?: boolean | RouteMethod[];
+  /** Apply to relation routes, e.g. GET /:id/relations, POST /:id/relations, etc. */
+  relation?: boolean | RouteMethod[];
+};
+
+type SchemaMiddleware<
+  StateT = unknown,
+  ContextT extends IRouterParamContext = IRouterParamContext,
+  ResponseBodyT = unknown,
+> = Middleware<StateT, ContextT, ResponseBodyT>;
+
+type MiddlewareConfig = {
+  /** The middlewares to apply */
+  middlewares: SchemaMiddleware[];
+  /** Define the scope where the middlewares will be applied */
+  scope?: MiddlewareScope;
+};
 
 /**
  * Generate the pathname for from a table name.
@@ -65,7 +90,7 @@ type SchemaRouterConfig<Key extends string> = {
     deleteById: boolean;
   };
   /** Middlewares that are used before creating API routes */
-  middlewares?: MiddlewareType[];
+  middlewares?: MiddlewareConfig[];
   /** A custom error handler for the router before throwing the error. */
   errorHandler?: (error: unknown) => void;
   /** The fields that can be searched for the `GET /` route. */
@@ -139,8 +164,13 @@ export default class SchemaRouter<
 
     this.config = deepmerge(defaultConfig, config, { isMergeableObject: isPlainObject });
 
+    // Apply global middlewares (those without specific scope)
     if (this.config.middlewares?.length) {
-      this.use(...this.config.middlewares);
+      for (const { middlewares, scope } of this.config.middlewares) {
+        if (!scope) {
+          this.use(...middlewares);
+        }
+      }
     }
 
     if (this.config.errorHandler) {
@@ -222,6 +252,7 @@ export default class SchemaRouter<
           response: relationSchema.guard.array(),
           status: [200, 404],
         }),
+        this.#ensembleQualifiedMiddlewares('get', true),
         async (ctx, next) => {
           const { id } = ctx.guard.params;
 
@@ -250,6 +281,7 @@ export default class SchemaRouter<
         body: z.object({ [columns.relationSchemaIds]: z.string().min(1).array().nonempty() }),
         status: [201, 422],
       }),
+      this.#ensembleQualifiedMiddlewares('post', true),
       async (ctx, next) => {
         const {
           params: { id },
@@ -275,6 +307,7 @@ export default class SchemaRouter<
         body: z.object({ [columns.relationSchemaIds]: z.string().min(1).array() }),
         status: [204, 422],
       }),
+      this.#ensembleQualifiedMiddlewares('put', true),
       async (ctx, next) => {
         const {
           params: { id },
@@ -296,6 +329,7 @@ export default class SchemaRouter<
           .extend({ [relationSchemaId]: z.string().min(1) }),
         status: [204, 422],
       }),
+      this.#ensembleQualifiedMiddlewares('delete', true),
       async (ctx, next) => {
         const {
           params: { id, [relationSchemaId]: relationId },
@@ -329,6 +363,7 @@ export default class SchemaRouter<
           response: (entityGuard ?? schema.guard).array(),
           status: [200],
         }),
+        this.#ensembleQualifiedMiddlewares('get'),
         async (ctx, next) => {
           const search = parseSearchOptions(searchFields, ctx.guard.query);
           const { limit, offset } = ctx.pagination;
@@ -350,6 +385,7 @@ export default class SchemaRouter<
           response: entityGuard ?? schema.guard,
           status: [201], // TODO: 409/422 for conflict?
         }),
+        this.#ensembleQualifiedMiddlewares('post'),
         async (ctx, next) => {
           // eslint-disable-next-line no-restricted-syntax -- `.omit()` doesn't play well with generics
           ctx.body = await queries.insert({
@@ -370,6 +406,7 @@ export default class SchemaRouter<
           response: entityGuard ?? schema.guard,
           status: [200, 404],
         }),
+        this.#ensembleQualifiedMiddlewares('get'),
         async (ctx, next) => {
           ctx.body = await queries.findById(ctx.guard.params.id);
           return next();
@@ -386,6 +423,7 @@ export default class SchemaRouter<
           response: entityGuard ?? schema.guard,
           status: [200, 404], // TODO: 409/422 for conflict?
         }),
+        this.#ensembleQualifiedMiddlewares('patch'),
         async (ctx, next) => {
           ctx.body = await queries.updateById(ctx.guard.params.id, ctx.guard.body);
           return next();
@@ -400,6 +438,7 @@ export default class SchemaRouter<
           params: z.object({ id: z.string().min(1) }),
           status: [204, 404],
         }),
+        this.#ensembleQualifiedMiddlewares('delete'),
         async (ctx, next) => {
           await queries.deleteById(ctx.guard.params.id);
           ctx.status = 204;
@@ -408,4 +447,49 @@ export default class SchemaRouter<
       );
     }
   }
+
+  #ensembleQualifiedMiddlewares<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
+    method: RouteMethod,
+    isForRelationRoute = false
+  ): Middleware<StateT, ContextT, ResponseBodyT> {
+    const pickedMiddlewares: Array<Middleware<StateT, ContextT, ResponseBodyT>> = [];
+
+    const evaluateScope = (scopeValue?: boolean | RouteMethod[]): boolean => {
+      if (scopeValue === undefined) {
+        return false;
+      }
+
+      if (typeof scopeValue === 'boolean') {
+        return scopeValue;
+      }
+
+      return Array.isArray(scopeValue) && scopeValue.includes(method);
+    };
+
+    for (const { middlewares, scope } of this.config.middlewares ?? []) {
+      // We have dealt with the global middlewares.
+      if (!scope) {
+        continue;
+      }
+
+      const shouldAddForRelation = isForRelationRoute && evaluateScope(scope.relation);
+      const shouldAddForNative = !isForRelationRoute && evaluateScope(scope.native);
+
+      if (shouldAddForRelation || shouldAddForNative) {
+        for (const middleware of middlewares) {
+          const typedMiddleware: Middleware<StateT, ContextT, ResponseBodyT> = async (
+            context,
+            next
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+          ) => middleware(context, next);
+
+          // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+          pickedMiddlewares.push(typedMiddleware);
+        }
+      }
+    }
+
+    return compose(pickedMiddlewares);
+  }
 }
+/* eslint-enable max-lines */
