@@ -40,8 +40,10 @@ const mfa = {
     'Kaydolurken kullanıcılardan MFA kurmalarını isteyin (atlanabilir, tek seferlik istek)',
   prompt_only_at_sign_in:
     'Kayıttan sonraki ilk giriş denemelerinde kullanıcılardan MFA kurmalarını isteyin (atlanabilir, tek seferlik istek)',
-  set_up_organization_required_mfa_prompt: '组织启用 MFA 后，提示用户设置 MFA',
-  prompt_at_sign_in_no_skip: '在下次登录时要求用户设置 MFA（不可跳过）',
+  set_up_organization_required_mfa_prompt:
+    "Organizasyon MFA'yı etkinleştirdikten sonra kullanıcılardan MFA kurmalarını isteyin",
+  prompt_at_sign_in_no_skip:
+    'Bir sonraki girişte kullanıcılardan MFA kurmalarını isteyin (atlanamaz)',
 };
 
 export default Object.freeze(mfa);

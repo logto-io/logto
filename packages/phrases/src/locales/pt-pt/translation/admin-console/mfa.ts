@@ -39,7 +39,8 @@ const mfa = {
     'Pedir aos usuários para configurar o MFA durante o registo (pode ser ignorado, prompt único)',
   prompt_only_at_sign_in:
     'Pedir aos usuários para configurar o MFA na próxima tentativa de início de sessão após o registo (pode ser ignorado, prompt único)',
-  set_up_organization_required_mfa_prompt: 'MFA 设置提示，适用于组织启用 MFA 后的用户',
+  set_up_organization_required_mfa_prompt:
+    'Prompt de configuração do MFA para utilizadores após a ativação do MFA pela organização',
   prompt_at_sign_in_no_skip: '要求用户在下次登录时设置 MFA（不可跳过）',
 };
 

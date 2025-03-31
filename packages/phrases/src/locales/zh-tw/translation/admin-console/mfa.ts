@@ -1,6 +1,6 @@
 const mfa = {
   title: '多因素身份驗證',
-  description: '添加多因素身份驗證以提升您登錄體驗的安全性。',
+  description: '添加多因素身份驗證以提升你登錄體驗的安全性。',
   factors: '因素',
   multi_factors: '多因素',
   multi_factors_description: '用戶需要驗證啟用的其中一個因素以進行兩步驗證。',
@@ -14,7 +14,7 @@ const mfa = {
   backup_code: '備份代碼',
   backup_code_description: '在用戶設置任何MFA方法後生成10個一次性備份代碼。',
   backup_code_setup_hint: '當用戶無法驗證上述MFA因素時，使用備份選項。',
-  backup_code_error_hint: '要使用備份代碼，您需要至少再添加一種MFA方法以成功進行用戶身份驗證。',
+  backup_code_error_hint: '要使用備份代碼，你需要至少再添加一種MFA方法以成功進行用戶身份驗證。',
   policy: '策略',
   policy_description: '設置登錄和註冊流程的MFA策略。',
   two_step_sign_in_policy: '登錄時的雙步驗證策略',
@@ -26,11 +26,11 @@ const mfa = {
   require_mfa_label:
     '啟用此功能可使雙步驗證成為訪問你的應用的必須步驟。如果禁用，用戶可以自行決定是否啟用 MFA。',
   set_up_prompt: 'MFA 設定提示',
-  no_prompt: '不要要求用戶設置 MFA',
+  no_prompt: '不要求用戶設置 MFA',
   prompt_at_sign_in_and_sign_up: '在註冊期間提示用戶設置 MFA（可跳過，一次性提示）',
   prompt_only_at_sign_in: '在註冊後用戶的下一次登錄嘗試時提示設置 MFA（可跳過，一次性提示）',
-  set_up_organization_required_mfa_prompt: '组织启用 MFA 后的用戶 MFA 设置提示',
-  prompt_at_sign_in_no_skip: '在用戶的下次登錄时要求設置 MFA（不可跳过）',
+  set_up_organization_required_mfa_prompt: '組織啟用 MFA 後的用戶 MFA 設置提示',
+  prompt_at_sign_in_no_skip: '在用戶的下次登錄時要求設置 MFA（不可跳過）',
 };
 
 export default Object.freeze(mfa);
