@@ -110,7 +110,7 @@ describe('backchannel logout', () => {
     await expectConsole.end();
 
     // Give some time for redirecting and processing the backchannel logout request
-    await waitFor(100);
+    await waitFor(500);
 
     expect(mockServer.history.length).toBe(1);
     // Only check method and pathname since we trust the `oidc-provider` library's implementation
