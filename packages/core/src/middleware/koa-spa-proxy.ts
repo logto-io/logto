@@ -71,6 +71,9 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
       ctx.request.path = '/';
     }
 
+    // Add a header to indicate which static package is being served
+    ctx.set('Logto-Static-Package', packagePath);
+
     return spaProxy(ctx, next);
   };
 }

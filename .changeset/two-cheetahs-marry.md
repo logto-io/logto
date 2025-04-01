@@ -4,7 +4,7 @@
 
 clean up legacy experience package
 
-The migration to the new experience package is now complete, offering improved flexibility and maintainability through our Experience API. (see release 1.26.0 for more details)
+The migration to the new experience package is now complete, offering improved flexibility and maintainability through our Experience API. (see release [1.26.0](https://github.com/logto-io/logto/releases/tag/v1.26.0) for more details)
 
 Key updates:
 
