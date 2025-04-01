@@ -25,7 +25,7 @@ import ErrorPage from '../ErrorPage';
 
 const OneTimeToken = () => {
   const [params] = useSearchParams();
-  const [oneTimeTokenError, setOneTimeTokenError] = useState<RequestErrorBody | boolean>();
+  const [oneTimeTokenError, setOneTimeTokenError] = useState<string | boolean>();
 
   const asyncIdentifyUserAndSubmit = useApi(identifyAndSubmitInteraction);
   const asyncSignInWithVerifiedIdentifier = useApi(signInWithVerifiedIdentifier);
@@ -91,6 +91,13 @@ const OneTimeToken = () => {
     (async () => {
       const token = params.get(ExtraParamsKey.OneTimeToken);
       const email = params.get(ExtraParamsKey.LoginHint);
+      const errorMessage = params.get('errorMessage');
+
+      if (errorMessage) {
+        setOneTimeTokenError(errorMessage);
+        return;
+      }
+
       if (!token || !email) {
         setOneTimeTokenError(true);
         return;
@@ -112,7 +119,7 @@ const OneTimeToken = () => {
       if (error) {
         await handleError(error, {
           global: (error: RequestErrorBody) => {
-            setOneTimeTokenError(error);
+            setOneTimeTokenError(error.message);
           },
         });
         return;
@@ -139,7 +146,7 @@ const OneTimeToken = () => {
         isNavbarHidden
         title="error.invalid_link"
         message="error.invalid_link_description"
-        rawMessage={condString(typeof oneTimeTokenError !== 'boolean' && oneTimeTokenError.message)}
+        rawMessage={condString(typeof oneTimeTokenError !== 'boolean' && oneTimeTokenError)}
       />
     );
   }

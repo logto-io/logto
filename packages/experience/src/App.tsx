@@ -69,7 +69,7 @@ const App = () => {
                     <Route element={<AppLayout />}>
                       {isDevFeaturesEnabled && (
                         <>
-                          <Route path="one-time-token" element={<OneTimeToken />} />
+                          <Route path={experience.routes.oneTimeToken} element={<OneTimeToken />} />
                           <Route
                             path={experience.routes.switchAccount}
                             element={<SwitchAccount />}

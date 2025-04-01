@@ -1,7 +1,8 @@
+import { OneTimeTokenStatus } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { MockQueries } from '#src/test-utils/tenant.js';
+import { MockTenant } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import koaConsentGuard from './koa-consent-guard.js';
@@ -12,11 +13,36 @@ describe('koaConsentGuard middleware', () => {
   const provider = new Provider('https://logto.test');
   const interactionDetails = jest.spyOn(provider, 'interactionDetails');
 
-  const mockQueries = new MockQueries({
-    users: {
-      findUserById: jest.fn().mockResolvedValue({ primaryEmail: 'foo@example.com' }),
+  const checkOneTimeToken = jest.fn().mockResolvedValue({
+    token: 'token_value',
+    email: 'foo@example.com',
+    status: OneTimeTokenStatus.Active,
+    context: {
+      jitOrganizationIds: ['org_id'],
     },
   });
+  const updateOneTimeTokenStatus = jest.fn().mockResolvedValue({
+    token: 'token_value',
+    status: OneTimeTokenStatus.Consumed,
+    context: {
+      jitOrganizationIds: ['org_id'],
+    },
+  });
+  const provisionOrganizations = jest.fn();
+
+  const mockTenant = new MockTenant(
+    provider,
+    {
+      users: {
+        findUserById: jest.fn().mockResolvedValue({ primaryEmail: 'foo@example.com' }),
+      },
+    },
+    undefined,
+    {
+      oneTimeTokens: { checkOneTimeToken, updateOneTimeTokenStatus },
+      users: { provisionOrganizations },
+    }
+  );
 
   const next = jest.fn();
 
@@ -33,7 +59,7 @@ describe('koaConsentGuard middleware', () => {
     const ctx = createContextWithRouteParameters({
       url: `/consent`,
     });
-    const guard = koaConsentGuard(provider, mockQueries);
+    const guard = koaConsentGuard(provider, mockTenant.libraries, mockTenant.queries);
 
     await expect(guard(ctx, next)).rejects.toThrow(new RequestError({ code: 'session.not_found' }));
   });
@@ -47,10 +73,10 @@ describe('koaConsentGuard middleware', () => {
     const ctx = createContextWithRouteParameters({
       url: `/consent`,
     });
-    const guard = koaConsentGuard(provider, mockQueries);
+    const guard = koaConsentGuard(provider, mockTenant.libraries, mockTenant.queries);
 
     await guard(ctx, next);
-    expect(mockQueries.users.findUserById).not.toHaveBeenCalled();
+    expect(mockTenant.queries.users.findUserById).not.toHaveBeenCalled();
     expect(next).toHaveBeenCalled();
   });
 
@@ -63,12 +89,44 @@ describe('koaConsentGuard middleware', () => {
     const ctx = createContextWithRouteParameters({
       url: `/consent`,
     });
-    const guard = koaConsentGuard(provider, mockQueries);
+    const guard = koaConsentGuard(provider, mockTenant.libraries, mockTenant.queries);
 
     await guard(ctx, jest.fn());
     expect(ctx.redirect).toHaveBeenCalledWith(
       expect.stringContaining('switch-account?login_hint=bar%40example.com&one_time_token=abcdefg')
     );
+  });
+
+  it('should provision user to organizations on consent, if a valid one-time token is provided and there are organizations in token context', async () => {
+    interactionDetails.mockResolvedValue({
+      params: { one_time_token: 'token_value', login_hint: 'foo@example.com' },
+      // @ts-expect-error
+      session: { accountId: 'foo' },
+    });
+    checkOneTimeToken.mockResolvedValue({
+      token: 'token_value',
+      email: 'foo@example.com',
+      status: OneTimeTokenStatus.Active,
+      context: {
+        jitOrganizationIds: ['org_id'],
+      },
+    });
+    const ctx = createContextWithRouteParameters({
+      url: `/consent`,
+    });
+    const guard = koaConsentGuard(provider, mockTenant.libraries, mockTenant.queries);
+
+    await guard(ctx, next);
+
+    expect(provisionOrganizations).toHaveBeenCalledWith({
+      userId: 'foo',
+      organizationIds: ['org_id'],
+    });
+    expect(updateOneTimeTokenStatus).toHaveBeenCalledWith(
+      'token_value',
+      OneTimeTokenStatus.Consumed
+    );
+    expect(next).toHaveBeenCalled();
   });
 
   it('should call next middleware if validations pass', async () => {
@@ -80,9 +138,29 @@ describe('koaConsentGuard middleware', () => {
       // @ts-expect-error
       session: { accountId: 'foo' },
     });
-    const guard = koaConsentGuard(provider, mockQueries);
+    const guard = koaConsentGuard(provider, mockTenant.libraries, mockTenant.queries);
 
     await guard(ctx, next);
     expect(next).toHaveBeenCalled();
+  });
+
+  it('should navigate to `/one-time-token` route with error message in URL params, if the one-time token is not valid', async () => {
+    interactionDetails.mockResolvedValue({
+      params: { one_time_token: 'token_value', login_hint: 'foo@example.com' },
+      // @ts-expect-error
+      session: { accountId: 'foo' },
+    });
+    checkOneTimeToken.mockImplementationOnce(() => {
+      throw new RequestError('one_time_token.token_expired');
+    });
+    const ctx = createContextWithRouteParameters({
+      url: `/consent`,
+    });
+    const guard = koaConsentGuard(provider, mockTenant.libraries, mockTenant.queries);
+
+    await guard(ctx, next);
+    expect(ctx.redirect).toHaveBeenCalledWith(
+      expect.stringContaining('one-time-token?errorMessage=The token is expired.')
+    );
   });
 });

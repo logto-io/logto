@@ -1,4 +1,4 @@
-import { type ConsentInfoResponse } from '@logto/schemas';
+import { experience, type ConsentInfoResponse } from '@logto/schemas';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -82,7 +82,7 @@ const SwitchAccount = () => {
           i18nProps={{ name: loginHint }}
           onClick={() => {
             navigate(
-              { pathname: '/one-time-token', search: `?${params.toString()}` },
+              { pathname: `/${experience.routes.oneTimeToken}`, search: `?${params.toString()}` },
               { replace: true }
             );
           }}
