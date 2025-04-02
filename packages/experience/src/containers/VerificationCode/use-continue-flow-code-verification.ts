@@ -88,6 +88,7 @@ const useContinueFlowCodeVerification = (
     identifier,
     interactionEvent,
     isVerificationCodeEnabledForSignIn,
+    navigate,
     searchParameters,
     showIdentifierErrorAlert,
     showLinkSocialConfirmModal,
