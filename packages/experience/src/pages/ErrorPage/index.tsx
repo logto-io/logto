@@ -17,16 +17,22 @@ type Props = {
   readonly title?: TFuncKey;
   readonly message?: TFuncKey;
   readonly rawMessage?: string;
+  readonly isNavbarHidden?: boolean;
 };
 
-const ErrorPage = ({ title = 'description.not_found', message, rawMessage }: Props) => {
+const ErrorPage = ({
+  title = 'description.not_found',
+  message,
+  rawMessage,
+  isNavbarHidden,
+}: Props) => {
   const { theme } = useContext(PageContext);
   const errorMessage = Boolean(rawMessage ?? message);
 
   return (
     <StaticPageLayout>
       <PageMeta titleKey={title} />
-      {history.length > 1 && <NavBar />}
+      {history.length > 1 && <NavBar isHidden={isNavbarHidden} />}
       <div className={styles.container}>
         {theme === Theme.Light ? <EmptyState /> : <EmptyStateDark />}
         <div className={styles.title}>
