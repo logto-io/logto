@@ -1,6 +1,6 @@
 @use '@/scss/underscore' as _;
 
-.turnstile {
+.captchaBox {
   display: flex;
   justify-content: center;
   margin-bottom: _.unit(2);
