@@ -38,7 +38,7 @@ const usePasswordSignIn = () => {
   );
 
   const onSubmit = useCallback(
-    async (payload: PasswordVerificationPayload) => {
+    async (payload: PasswordVerificationPayload, captchaToken?: string) => {
       const { identifier } = payload;
 
       // Check if the email is registered with any SSO connectors. If the email is registered with any SSO connectors, we should not proceed to the next step
@@ -50,7 +50,7 @@ const usePasswordSignIn = () => {
         }
       }
 
-      const [error, result] = await asyncSignIn(payload);
+      const [error, result] = await asyncSignIn(payload, captchaToken);
 
       if (error) {
         await handleError(error, errorHandlers);

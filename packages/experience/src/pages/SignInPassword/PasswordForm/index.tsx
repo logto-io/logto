@@ -4,11 +4,13 @@ import { useCallback, useContext, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import CaptchaContext from '@/Providers/CaptchaContextProvider/CaptchaContext';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import { PasswordInputField } from '@/components/InputFields';
 import type { IdentifierInputValue } from '@/components/InputFields/SmartInputField';
+import CaptchaBox from '@/containers/CaptchaBox';
 import ForgotPasswordLink from '@/containers/ForgotPasswordLink';
 import usePasswordSignIn from '@/hooks/use-password-sign-in';
 import { useForgotPasswordSettings } from '@/hooks/use-sie';
@@ -42,6 +44,7 @@ const PasswordForm = ({
   const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn();
   const { setIdentifierInputValue } = useContext(UserInteractionContext);
   const { isForgotPasswordEnabled } = useForgotPasswordSettings();
+  const { executeCaptcha } = useContext(CaptchaContext);
 
   const {
     register,
@@ -76,13 +79,16 @@ const PasswordForm = ({
 
         setIdentifierInputValue({ type, value });
 
-        await onSubmit({
-          identifier: { type, value },
-          password,
-        });
+        await onSubmit(
+          {
+            identifier: { type, value },
+            password,
+          },
+          await executeCaptcha()
+        );
       })(event);
     },
-    [clearErrorMessage, handleSubmit, onSubmit, setIdentifierInputValue]
+    [clearErrorMessage, handleSubmit, onSubmit, setIdentifierInputValue, executeCaptcha]
   );
 
   return (
@@ -107,6 +113,8 @@ const PasswordForm = ({
         errorMessage={errors.password?.message}
         {...register('password', { required: t('error.password_required') })}
       />
+
+      <CaptchaBox />
 
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 

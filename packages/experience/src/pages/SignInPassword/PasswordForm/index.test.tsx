@@ -71,13 +71,16 @@ describe('PasswordSignInForm', () => {
       });
 
       await waitFor(() => {
-        expect(signInWithPasswordIdentifier).toBeCalledWith({
-          identifier: {
-            type: identifier,
-            value,
+        expect(signInWithPasswordIdentifier).toBeCalledWith(
+          {
+            identifier: {
+              type: identifier,
+              value,
+            },
+            password,
           },
-          password,
-        });
+          undefined
+        );
       });
 
       if (isVerificationCodeEnabled) {

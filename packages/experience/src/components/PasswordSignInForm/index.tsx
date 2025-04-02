@@ -4,12 +4,14 @@ import { useCallback, useContext, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import CaptchaContext from '@/Providers/CaptchaContextProvider/CaptchaContext';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import LockIcon from '@/assets/icons/lock.svg?react';
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import { SmartInputField, PasswordInputField } from '@/components/InputFields';
 import type { IdentifierInputValue } from '@/components/InputFields/SmartInputField';
+import CaptchaBox from '@/containers/CaptchaBox';
 import ForgotPasswordLink from '@/containers/ForgotPasswordLink';
 import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
 import usePasswordSignIn from '@/hooks/use-password-sign-in';
@@ -41,6 +43,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const { setIdentifierInputValue } = useContext(UserInteractionContext);
   const prefilledIdentifier = usePrefilledIdentifier({ enabledIdentifiers: signInMethods });
+  const { executeCaptcha } = useContext(CaptchaContext);
 
   const {
     watch,
@@ -81,10 +84,13 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
           return;
         }
 
-        await onSubmit({
-          identifier: { type, value },
-          password,
-        });
+        await onSubmit(
+          {
+            identifier: { type, value },
+            password,
+          },
+          await executeCaptcha()
+        );
       })(event);
     },
     [
@@ -96,6 +102,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
       setIdentifierInputValue,
       showSingleSignOnForm,
       termsValidation,
+      executeCaptcha,
     ]
   );
 
@@ -147,6 +154,8 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
           {...register('password', { required: t('error.password_required') })}
         />
       )}
+
+      <CaptchaBox />
 
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
