@@ -41,12 +41,9 @@ const useSignInWithExistIdentifierConfirmModal = () => {
 
   const signInWithIdentifierAsync = useApi(signInWithVerifiedIdentifier);
 
-  const submitInteractionErrorHandler = useSubmitInteractionErrorHandler(
-    InteractionEvent.Register,
-    {
-      replace: true,
-    }
-  );
+  const submitInteractionErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.SignIn, {
+    replace: true,
+  });
 
   return useCallback(
     ({ identifier: { type, value }, verificationId, onCanceled }: CallbackProps) => {
