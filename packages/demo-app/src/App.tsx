@@ -97,6 +97,7 @@ const Main = () => {
 
     if (oneTimeToken && loginHint) {
       void signIn({
+        clearTokens: false,
         redirectUri: window.location.origin + window.location.pathname,
         extraParams: Object.fromEntries(
           new URLSearchParams([
