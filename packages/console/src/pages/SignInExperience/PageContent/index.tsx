@@ -33,7 +33,7 @@ import {
   getContentErrorCount,
   hasSignUpAndSignInConfigChanged,
 } from './utils/form';
-import { sieFormDataParser } from './utils/parser';
+import { sieFormDataParser, signInExperienceDataDefaultValueParser } from './utils/parser';
 
 const PageTab = TabNavItem<`../${SignInExperienceTab}`>;
 
@@ -96,9 +96,10 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
       }
 
       const formatted = sieFormDataParser.toSignInExperience(formData);
+      const original = signInExperienceDataDefaultValueParser(data);
 
       // Sign-in methods changed, need to show confirm modal first.
-      if (!hasSignUpAndSignInConfigChanged(data, formatted)) {
+      if (!hasSignUpAndSignInConfigChanged(original, formatted)) {
         setDataToCompare(formatted);
 
         return;
