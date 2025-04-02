@@ -163,3 +163,27 @@ export const sieFormDataParser = {
     mfa: undefined,
   }),
 };
+
+/**
+ * The data parser takes the raw data from the API,
+ * and fulfills the default values for the missing fields.
+ * This is to ensure the data consistency between the form and the remote model.
+ * So it won't trigger the form diff modal when the user hasn't changed anything.
+ *
+ * Affected fields:
+ * - `signUp.secondaryIdentifiers`: This field is optional in the data schema,
+ *  but through the form, we always fill it with an empty array.
+ */
+export const signInExperienceDataDefaultValueParser = (
+  data: SignInExperience
+): SignInExperience => {
+  const { signUp } = data;
+
+  return {
+    ...data,
+    signUp: {
+      ...signUp,
+      secondaryIdentifiers: signUp.secondaryIdentifiers ?? [],
+    },
+  };
+};
