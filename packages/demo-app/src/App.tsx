@@ -29,6 +29,7 @@ const Main = () => {
   const [showDevPanel, setShowDevPanel] = useState(getLocalData('ui').showDevPanel ?? false);
   const error = params.get('error');
   const errorDescription = params.get('error_description');
+  const redirectUri = window.location.origin + window.location.pathname;
 
   const toggleDevPanel = useCallback(() => {
     setShowDevPanel((previous) => {
@@ -42,6 +43,11 @@ const Main = () => {
       return;
     }
 
+    const oneTimeToken = params.get('one_time_token');
+    const loginHint = params.get('login_hint');
+
+    const hasMagicLinkParams = Boolean(oneTimeToken && loginHint);
+
     const loadIdTokenClaims = async () => {
       const userInfo = await getIdTokenClaims();
       setUser(userInfo ?? { sub: 'N/A', username: 'N/A' });
@@ -52,19 +58,28 @@ const Main = () => {
       void loadIdTokenClaims();
     }
 
+    const extraParams = Object.fromEntries(
+      new URLSearchParams([
+        ...new URLSearchParams(config.signInExtraParams).entries(),
+        ...new URLSearchParams(window.location.search).entries(),
+      ]).entries()
+    );
+
     // If user is not authenticated, redirect to sign-in page
     if (!isAuthenticated) {
+      void signIn({ redirectUri, extraParams });
+    }
+
+    if (isAuthenticated && hasMagicLinkParams) {
       void signIn({
-        redirectUri: window.location.origin + window.location.pathname,
-        extraParams: Object.fromEntries(
-          new URLSearchParams([
-            ...new URLSearchParams(config.signInExtraParams).entries(),
-            ...new URLSearchParams(window.location.search).entries(),
-          ]).entries()
-        ),
+        clearTokens: false,
+        redirectUri,
+        extraParams,
       });
+      window.history.replaceState({}, '', window.location.pathname);
     }
   }, [
+    params,
     config.signInExtraParams,
     error,
     getIdTokenClaims,
@@ -73,6 +88,7 @@ const Main = () => {
     isLoading,
     signIn,
     user,
+    redirectUri,
   ]);
 
   useEffect(() => {
@@ -89,25 +105,6 @@ const Main = () => {
         .removeEventListener('change', onThemeChange);
     };
   }, []);
-
-  // Handle one-time token authentication
-  useEffect(() => {
-    const oneTimeToken = params.get('one_time_token');
-    const loginHint = params.get('login_hint');
-
-    if (oneTimeToken && loginHint) {
-      void signIn({
-        clearTokens: false,
-        redirectUri: window.location.origin + window.location.pathname,
-        extraParams: Object.fromEntries(
-          new URLSearchParams([
-            ...new URLSearchParams(config.signInExtraParams).entries(),
-            ...new URLSearchParams(window.location.search).entries(),
-          ]).entries()
-        ),
-      });
-    }
-  }, [config.signInExtraParams, params, signIn]);
 
   if (isInCallback) {
     return <Callback />;
