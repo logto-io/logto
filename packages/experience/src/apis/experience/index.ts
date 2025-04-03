@@ -63,8 +63,11 @@ export const signInWithVerifiedIdentifier = async (verificationId: string) => {
 };
 
 // Password APIs
-export const signInWithPasswordIdentifier = async (payload: PasswordVerificationPayload) => {
-  await initInteraction(InteractionEvent.SignIn);
+export const signInWithPasswordIdentifier = async (
+  payload: PasswordVerificationPayload,
+  captchaToken?: string
+) => {
+  await initInteraction(InteractionEvent.SignIn, captchaToken);
 
   const { verificationId } = await api
     .post(`${experienceApiRoutes.verification}/password`, {
