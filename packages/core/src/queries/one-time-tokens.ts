@@ -2,6 +2,7 @@ import { OneTimeTokens, OneTimeTokenStatus, type OneTimeToken } from '@logto/sch
 import type { CommonQueryMethods } from '@silverhand/slonik';
 import { sql } from '@silverhand/slonik';
 
+import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
 
@@ -11,6 +12,8 @@ export const createOneTimeTokenQueries = (pool: CommonQueryMethods) => {
   const insertOneTimeToken = buildInsertIntoWithPool(pool)(OneTimeTokens, {
     returning: true,
   });
+
+  const getOneTimeTokenById = buildFindEntityByIdWithPool(pool)(OneTimeTokens);
 
   const updateExpiredOneTimeTokensStatusByEmail = async (email: string) =>
     pool.query(sql`
@@ -39,6 +42,7 @@ export const createOneTimeTokenQueries = (pool: CommonQueryMethods) => {
   return {
     insertOneTimeToken,
     updateExpiredOneTimeTokensStatusByEmail,
+    getOneTimeTokenById,
     getOneTimeTokenByToken,
     updateOneTimeTokenStatus,
   };
