@@ -42,6 +42,7 @@ import { i18next } from '#src/utils/i18n.js';
 
 import { type SubscriptionLibrary } from '../libraries/subscription.js';
 import koaTokenUsageGuard from '../middleware/koa-token-usage-guard.js';
+import { getConsoleLogFromContext } from '../utils/console.js';
 
 import defaults from './defaults.js';
 import {
@@ -140,8 +141,11 @@ export default function initOidc(
       // https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#featuresresourceindicators
       resourceIndicators: {
         enabled: true,
-        defaultResource: async () => {
+        defaultResource: async (ctx) => {
+          const console = getConsoleLogFromContext(ctx);
+          console.plain('findDefaultResource', new Date().toISOString());
           const resource = await findDefaultResource();
+          console.plain('findDefaultResource done', new Date().toISOString());
           // The default implementation returns `undefined` - https://github.com/panva/node-oidc-provider/blob/0c52469f08b0a4a1854d90a96546a3f7aa090e5e/lib/helpers/defaults.js#L195
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           return resource?.indicator ?? undefined!;
@@ -149,7 +153,12 @@ export default function initOidc(
         // Disable the auto use of authorization_code granted resource feature
         useGrantedResource: () => false,
         getResourceServerInfo: async (ctx, indicator) => {
+          const console = getConsoleLogFromContext(ctx);
+          console.plain('getResourceServerInfo', new Date().toISOString());
+
           const resourceServer = await findResource(queries, indicator);
+
+          console.plain('getResourceServerInfo found resourceServer', new Date().toISOString());
 
           if (!resourceServer) {
             throw new errors.InvalidTarget();
@@ -171,6 +180,8 @@ export default function initOidc(
             userId,
           });
 
+          console.plain('getResourceServerInfo found scopes', new Date().toISOString());
+
           // Need to filter out the unsupported scopes for the third-party application.
           if (client && (await isThirdPartyApplication(queries, client.clientId))) {
             // Get application consent resource scopes, from RBAC roles
@@ -187,6 +198,8 @@ export default function initOidc(
               scope: filteredScopes.map(({ name }) => name).join(' '),
             };
           }
+
+          console.plain('getResourceServerInfo done', new Date().toISOString());
 
           return {
             ...getSharedResourceServerData(envSet),
@@ -239,6 +252,8 @@ export default function initOidc(
     },
     extraParams: Object.values(ExtraParamsKey),
     extraTokenClaims: async (ctx, token) => {
+      const console = getConsoleLogFromContext(ctx);
+      console.plain('extraTokenClaims', new Date().toISOString());
       const [tokenExchangeClaims, organizationApiResourceClaims, jwtCustomizedClaims] =
         await Promise.all([
           getExtraTokenClaimsForTokenExchange(ctx, token),
@@ -252,6 +267,7 @@ export default function initOidc(
           }),
         ]);
 
+      console.plain('extraTokenClaims done', new Date().toISOString());
       if (!organizationApiResourceClaims && !jwtCustomizedClaims && !tokenExchangeClaims) {
         return;
       }
@@ -276,22 +292,27 @@ export default function initOidc(
     // Note node-provider will append `claims` here to the default claims instead of overriding
     claims: userClaims,
     // https://github.com/panva/node-oidc-provider/tree/main/docs#findaccount
-    findAccount: async (_ctx, sub) => {
+    findAccount: async (ctx, sub) => {
+      const console = getConsoleLogFromContext(ctx);
+      console.plain('findAccount', new Date().toISOString());
       // The user may be deleted after the token is issued
       const user = await tryThat(findUserById(sub), () => {
         throw new errors.InvalidGrant('user not found');
       });
 
+      console.plain('findAccount done', new Date().toISOString());
+
       return {
         accountId: sub,
         claims: async (use, scope, claims, rejected) => {
+          console.plain('claims', new Date().toISOString());
           assert(
             use === 'id_token' || use === 'userinfo',
             'use should be either `id_token` or `userinfo`'
           );
           const acceptedClaims = getAcceptedUserClaims(use, scope, claims, rejected);
 
-          return snakecaseKeys(
+          const data = snakecaseKeys(
             {
               /**
                * The manual `sub` assignment is required because:
@@ -307,6 +328,9 @@ export default function initOidc(
               deep: false,
             }
           );
+
+          console.plain('claims done', new Date().toISOString());
+          return data;
         },
       };
     },
@@ -370,6 +394,14 @@ export default function initOidc(
 
   addOidcEventListeners(oidc, queries);
   registerGrants(oidc, envSet, queries);
+
+  // Log time before and after the request
+  oidc.use(async (ctx, next) => {
+    const console = getConsoleLogFromContext(ctx);
+    console.plain('=== oidc middleware start ===', new Date().toISOString());
+    await next();
+    console.plain('=== oidc middleware end ===', new Date().toISOString());
+  });
 
   // Provide audit log context for event listeners
   oidc.use(koaAuditLog(queries));

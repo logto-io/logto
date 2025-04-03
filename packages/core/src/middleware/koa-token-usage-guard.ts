@@ -8,6 +8,8 @@ import { type SubscriptionLibrary } from '#src/libraries/subscription.js';
 import assertThat from '#src/utils/assert-that.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
+import { getConsoleLogFromContext } from '../utils/console.js';
+
 const guardedPlanIds = new Set<string>([ReservedPlanId.Free, ReservedPlanId.Development]);
 
 /**
@@ -38,6 +40,9 @@ export default function koaTokenUsageGuard<StateT, ContextT, ResponseBodyT>(
       return next();
     }
 
+    const consoleLog = getConsoleLogFromContext(ctx);
+    consoleLog.plain('Token usage guard', new Date().toISOString());
+
     try {
       const {
         planId,
@@ -46,7 +51,10 @@ export default function koaTokenUsageGuard<StateT, ContextT, ResponseBodyT>(
         quota: { tokenLimit },
       } = await subscriptionLibrary.getSubscriptionData();
 
+      consoleLog.plain('Found subscription data', new Date().toISOString());
+
       if (!guardedPlanIds.has(planId)) {
+        consoleLog.plain('Plan is not guarded, skip token usage guard', new Date().toISOString());
         await next();
         return;
       }
@@ -55,6 +63,8 @@ export default function koaTokenUsageGuard<StateT, ContextT, ResponseBodyT>(
         from: new Date(currentPeriodStart),
         to: new Date(currentPeriodEnd),
       });
+
+      consoleLog.plain('Found token usage', new Date().toISOString());
 
       assertThat(
         tokenLimit === null || tokenUsage < tokenLimit,
