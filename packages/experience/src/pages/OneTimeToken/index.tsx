@@ -6,9 +6,10 @@ import {
   type RequestErrorBody,
 } from '@logto/schemas';
 import { condString } from '@silverhand/essentials';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import {
   identifyAndSubmitInteraction,
   signInWithVerifiedIdentifier,
@@ -31,6 +32,7 @@ const OneTimeToken = () => {
   const asyncSignInWithVerifiedIdentifier = useApi(signInWithVerifiedIdentifier);
   const asyncRegisterWithOneTimeToken = useApi(registerWithOneTimeToken);
 
+  const { setIdentifierInputValue } = useContext(UserInteractionContext);
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const handleError = useErrorHandler();
   const redirectTo = useGlobalRedirectTo();
@@ -129,6 +131,10 @@ const OneTimeToken = () => {
         return;
       }
 
+      // Set email identifier to the <HiddenIdentifierInput />, so that when being asked for fulfilling
+      // the password later, the browser password manager can pick up both the email and the password.
+      setIdentifierInputValue({ type: SignInIdentifier.Email, value: email });
+
       await submit(result.verificationId);
     })();
   }, [
@@ -136,8 +142,9 @@ const OneTimeToken = () => {
     params,
     asyncRegisterWithOneTimeToken,
     handleError,
-    termsValidation,
+    setIdentifierInputValue,
     submit,
+    termsValidation,
   ]);
 
   if (oneTimeTokenError) {
