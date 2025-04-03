@@ -204,7 +204,10 @@ export default class Tenant implements TenantContext {
         koaSpaSessionGuard(provider, queries),
         mount(
           `/${experience.routes.consent}`,
-          compose([koaConsentGuard(provider, queries), koaAutoConsent(provider, queries)])
+          compose([
+            koaConsentGuard(provider, libraries, queries),
+            koaAutoConsent(provider, queries),
+          ])
         ),
         koaSpaProxy({ mountedApps, queries }),
       ])

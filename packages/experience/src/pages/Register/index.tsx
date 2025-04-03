@@ -1,4 +1,4 @@
-import { AgreeToTermsPolicy, ExtraParamsKey, SignInMode } from '@logto/schemas';
+import { AgreeToTermsPolicy, experience, ExtraParamsKey, SignInMode } from '@logto/schemas';
 import { useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
@@ -44,7 +44,10 @@ const RegisterFooter = () => {
 
   if (params.get(ExtraParamsKey.OneTimeToken)) {
     return (
-      <Navigate replace to={{ pathname: '/one-time-token', search: `?${params.toString()}` }} />
+      <Navigate
+        replace
+        to={{ pathname: `/${experience.routes.oneTimeToken}`, search: `?${params.toString()}` }}
+      />
     );
   }
 

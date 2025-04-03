@@ -14,7 +14,7 @@ export const createOneTimeTokenLibrary = (queries: Queries) => {
     return updateOneTimeTokenStatusQuery(token, status);
   };
 
-  const verifyOneTimeToken = async (token: string, email: string) => {
+  const checkOneTimeToken = async (token: string, email: string) => {
     const oneTimeToken = await getOneTimeTokenByToken(token);
 
     assertThat(
@@ -39,8 +39,14 @@ export const createOneTimeTokenLibrary = (queries: Queries) => {
     );
     assertThat(oneTimeToken.status !== OneTimeTokenStatus.Revoked, 'one_time_token.token_revoked');
 
+    return oneTimeToken;
+  };
+
+  const verifyOneTimeToken = async (token: string, email: string) => {
+    await checkOneTimeToken(token, email);
+
     return updateOneTimeTokenStatus(token, OneTimeTokenStatus.Consumed);
   };
 
-  return { updateOneTimeTokenStatus, verifyOneTimeToken };
+  return { checkOneTimeToken, updateOneTimeTokenStatus, verifyOneTimeToken };
 };
