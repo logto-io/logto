@@ -5,9 +5,17 @@ import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
 export const createOneTimeTokenLibrary = (queries: Queries) => {
-  const { updateOneTimeTokenStatus: updateOneTimeTokenStatusQuery, getOneTimeTokenByToken } =
-    queries.oneTimeTokens;
+  const {
+    updateOneTimeTokenStatus: updateOneTimeTokenStatusQuery,
+    getOneTimeTokenById,
+    getOneTimeTokenByToken,
+  } = queries.oneTimeTokens;
 
+  const updateOneTimeTokenStatusById = async (id: string, status: OneTimeTokenStatus) => {
+    const oneTimeTokenRecord = await getOneTimeTokenById(id);
+
+    return updateOneTimeTokenStatus(oneTimeTokenRecord.token, status);
+  };
   const updateOneTimeTokenStatus = async (token: string, status: OneTimeTokenStatus) => {
     assertThat(status !== OneTimeTokenStatus.Active, 'one_time_token.cannot_reactivate_token');
 
@@ -48,5 +56,10 @@ export const createOneTimeTokenLibrary = (queries: Queries) => {
     return updateOneTimeTokenStatus(token, OneTimeTokenStatus.Consumed);
   };
 
-  return { checkOneTimeToken, updateOneTimeTokenStatus, verifyOneTimeToken };
+  return {
+    checkOneTimeToken,
+    updateOneTimeTokenStatus,
+    updateOneTimeTokenStatusById,
+    verifyOneTimeToken,
+  };
 };
