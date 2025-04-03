@@ -149,7 +149,7 @@ describe('Patreon connector', () => {
 
     const connector = await createConnector({ getConfig });
     await expect(connector.getUserInfo({ code: 'code' }, getSessionMock)).rejects.toStrictEqual(
-      new ConnectorError(ConnectorErrorCodes.General)
+      new ConnectorError(ConnectorErrorCodes.General, '')
     );
   });
 });
