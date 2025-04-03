@@ -20,3 +20,6 @@ export const verifyOneTimeToken = async (
       json: verifyOneTimeToken,
     })
     .json<OneTimeToken>();
+
+export const getOneTimeTokenById = async (id: string) =>
+  authedAdminApi.get(`one-time-tokens/${id}`).json<OneTimeToken>();

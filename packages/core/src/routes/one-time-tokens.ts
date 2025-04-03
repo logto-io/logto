@@ -16,7 +16,11 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
     router,
     {
       queries: {
-        oneTimeTokens: { insertOneTimeToken, updateExpiredOneTimeTokensStatusByEmail },
+        oneTimeTokens: {
+          insertOneTimeToken,
+          updateExpiredOneTimeTokensStatusByEmail,
+          getOneTimeTokenById,
+        },
       },
       libraries: {
         oneTimeTokens: { verifyOneTimeToken },
@@ -24,6 +28,25 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
     },
   ]: RouterInitArgs<T>
 ) {
+  router.get(
+    '/one-time-tokens/:id',
+    koaGuard({
+      params: z.object({
+        id: z.string().min(1),
+      }),
+      response: OneTimeTokens.guard,
+      status: [200, 400, 404],
+    }),
+    async (ctx, next) => {
+      const { params } = ctx.guard;
+      const { id } = params;
+
+      const oneTimeToken = await getOneTimeTokenById(id);
+      ctx.body = oneTimeToken;
+      ctx.status = 200;
+      return next();
+    }
+  );
   router.post(
     '/one-time-tokens',
     koaGuard({
@@ -45,7 +68,6 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
       const { body } = ctx.guard;
       const { expiresIn, ...rest } = body;
 
-      // TODO: add an integration test for this, once GET API is added.
       void trySafe(async () => updateExpiredOneTimeTokensStatusByEmail(rest.email));
 
       const expiresAt = addSeconds(new Date(), expiresIn ?? defaultExpiresTime);
