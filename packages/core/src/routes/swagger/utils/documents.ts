@@ -27,7 +27,8 @@ import {
 } from './general.js';
 import { buildPathIdParameters, customParameters, mergeParameters } from './parameters.js';
 
-// Add more components here to cover more ID parameters in paths. For example, if there is a
+// Add more components here to cover more ID parameters in paths. For example, if there is a new API
+// identifiable entity `/api/entities`, and you want to use `/api/entities/{id}`, add the entity here.
 const managementApiIdentifiableEntityNames = Object.freeze([
   'key',
   'connector-factory',
@@ -50,6 +51,7 @@ const managementApiIdentifiableEntityNames = Object.freeze([
   'saml-application',
   'secret',
   'email-template',
+  'one-time-token',
 ]);
 
 /** Additional tags that cannot be inferred from the path. */
