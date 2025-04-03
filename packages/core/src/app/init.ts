@@ -15,6 +15,8 @@ import { TenantNotFoundError, tenantPool } from '#src/tenants/index.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import { getTenantId } from '#src/utils/tenant.js';
 
+import { getConsoleLogFromContext } from '../utils/console.js';
+
 const logListening = (type: 'core' | 'admin' = 'core') => {
   const urlSet = type === 'core' ? EnvSet.values.urlSet : EnvSet.values.adminUrlSet;
   const consoleLog = new ConsoleLog(chalk.magenta(type));
@@ -54,7 +56,13 @@ export default async function initApp(app: Koa): Promise<void> {
       return next();
     }
 
+    const console = ctx.URL.pathname.startsWith('/oidc/token')
+      ? getConsoleLogFromContext(ctx)
+      : undefined;
+
+    console?.plain('Tenant context start', new Date().toISOString());
     const [tenantId, isCustomDomain] = await getTenantId(ctx.URL);
+    console?.plain('Found tenantId:', tenantId, new Date().toISOString());
 
     if (!tenantId) {
       ctx.status = 404;
@@ -71,14 +79,18 @@ export default async function initApp(app: Koa): Promise<void> {
       void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
     });
 
+    console?.plain('Found tenant', new Date().toISOString());
+
     if (!tenant) {
       return next();
     }
 
     try {
       tenant.requestStart();
+      console?.plain('Tenant middleware start', new Date().toISOString());
       await tenant.run(ctx, next);
       tenant.requestEnd();
+      console?.plain('Tenant middleware end', new Date().toISOString());
     } catch (error: unknown) {
       tenant.requestEnd();
       void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));

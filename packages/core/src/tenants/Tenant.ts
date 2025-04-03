@@ -33,6 +33,7 @@ import BasicSentinel from '#src/sentinel/basic-sentinel.js';
 import { redisCache } from '../caches/index.js';
 import { SubscriptionLibrary } from '../libraries/subscription.js';
 import koaConsentGuard from '../middleware/koa-consent-guard.js';
+import { getConsoleLogFromContext } from '../utils/console.js';
 
 import Libraries from './Libraries.js';
 import Queries from './Queries.js';
@@ -113,6 +114,14 @@ export default class Tenant implements TenantContext {
     // Init app
     const app = new Koa();
 
+    app.use(async (ctx, next) => {
+      const console = ctx.URL.pathname.startsWith('/oidc/token')
+        ? getConsoleLogFromContext(ctx)
+        : undefined;
+      console?.plain('Inside tenant app start', new Date().toISOString());
+      await next();
+      console?.plain('Inside tenant app end', new Date().toISOString());
+    });
     app.use(koaI18next());
     app.use(koaErrorHandler());
     app.use(koaOidcErrorHandler());
