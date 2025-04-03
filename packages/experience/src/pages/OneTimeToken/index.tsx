@@ -136,6 +136,7 @@ const OneTimeToken = () => {
   if (oneTimeTokenError) {
     return (
       <ErrorPage
+        isNavbarHidden
         title="error.invalid_link"
         message="error.invalid_link_description"
         rawMessage={condString(typeof oneTimeTokenError !== 'boolean' && oneTimeTokenError.message)}
