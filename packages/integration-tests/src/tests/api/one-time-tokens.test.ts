@@ -84,7 +84,7 @@ describe('one-time tokens API', () => {
       expiresIn: 1,
     });
 
-    await waitFor(100);
+    await waitFor(1001);
     await createOneTimeToken({ email });
 
     const reFetchedToken = await getOneTimeTokenById(oneTimeToken.id);
@@ -134,9 +134,7 @@ describe('one-time tokens API', () => {
     });
 
     // Wait for the token to be expired
-    await new Promise((resolve) => {
-      setTimeout(resolve, 2000);
-    });
+    await waitFor(1001);
 
     await expectRejects(
       verifyOneTimeToken({
