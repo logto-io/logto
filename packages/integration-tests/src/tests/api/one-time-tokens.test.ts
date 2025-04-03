@@ -72,7 +72,7 @@ describe('one-time tokens API', () => {
 
   it('should throw when getting a non-existent one-time token', async () => {
     await expectRejects(getOneTimeTokenById('non-existent-id'), {
-      code: 'entity.not_found',
+      code: 'entity.not_exists_with_id',
       status: 404,
     });
   });
@@ -87,7 +87,8 @@ describe('one-time tokens API', () => {
     await waitFor(100);
     await createOneTimeToken({ email });
 
-    expect(oneTimeToken.status).toBe(OneTimeTokenStatus.Expired);
+    const reFetchedToken = await getOneTimeTokenById(oneTimeToken.id);
+    expect(reFetchedToken.status).toBe(OneTimeTokenStatus.Expired);
   });
 
   it('should verify one-time token', async () => {
