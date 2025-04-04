@@ -1,10 +1,12 @@
+import { emailRegEx } from '@logto/core-kit';
 import { OneTimeTokens, oneTimeTokenStatusGuard } from '@logto/schemas';
 import { generateStandardId, generateStandardSecret } from '@logto/shared';
-import { trySafe } from '@silverhand/essentials';
+import { cond, trySafe } from '@silverhand/essentials';
 import { addSeconds } from 'date-fns';
 import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
+import koaPagination from '#src/middleware/koa-pagination.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
@@ -18,8 +20,10 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
       queries: {
         oneTimeTokens: {
           deleteOneTimeTokenById,
+          findTotalNumberOfOneTimeTokens,
           insertOneTimeToken,
           updateExpiredOneTimeTokensStatusByEmail,
+          getOneTimeTokens,
           getOneTimeTokenById,
         },
       },
@@ -29,6 +33,34 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
     },
   ]: RouterInitArgs<T>
 ) {
+  router.get(
+    '/one-time-tokens',
+    koaPagination({ isOptional: true }),
+    koaGuard({
+      query: z.object({
+        email: z.string().regex(emailRegEx).optional(),
+        status: oneTimeTokenStatusGuard.optional(),
+      }),
+      response: z.array(OneTimeTokens.guard),
+      status: 200,
+    }),
+    async (ctx, next) => {
+      const { guard, pagination } = ctx;
+      const { email, status } = guard.query;
+      const { disabled: isPaginationDisabled } = pagination;
+
+      const [{ count }, oneTimeTokens] = await Promise.all([
+        findTotalNumberOfOneTimeTokens(),
+        getOneTimeTokens({ email, status }, cond(!isPaginationDisabled && pagination)),
+      ]);
+
+      ctx.pagination.totalCount = count;
+      ctx.body = oneTimeTokens;
+      ctx.status = 200;
+      return next();
+    }
+  );
+
   router.get(
     '/one-time-tokens/:id',
     koaGuard({
