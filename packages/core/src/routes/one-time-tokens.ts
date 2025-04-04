@@ -1,4 +1,4 @@
-import { OneTimeTokens } from '@logto/schemas';
+import { OneTimeTokens, oneTimeTokenStatusGuard } from '@logto/schemas';
 import { generateStandardId, generateStandardSecret } from '@logto/shared';
 import { trySafe } from '@silverhand/essentials';
 import { addSeconds } from 'date-fns';
@@ -23,7 +23,7 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
         },
       },
       libraries: {
-        oneTimeTokens: { verifyOneTimeToken },
+        oneTimeTokens: { verifyOneTimeToken, updateOneTimeTokenStatusById },
       },
     },
   ]: RouterInitArgs<T>
@@ -99,6 +99,30 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
       const { token, email } = ctx.guard.body;
 
       ctx.body = await verifyOneTimeToken(token, email);
+      ctx.status = 200;
+      return next();
+    }
+  );
+
+  router.put(
+    '/one-time-tokens/:id/status',
+    koaGuard({
+      params: z.object({
+        id: z.string().min(1),
+      }),
+      body: z.object({
+        status: oneTimeTokenStatusGuard,
+      }),
+      response: OneTimeTokens.guard,
+      status: [200, 400, 404],
+    }),
+    async (ctx, next) => {
+      const { params, body } = ctx.guard;
+      const { id } = params;
+      const { status } = body;
+
+      const oneTimeToken = await updateOneTimeTokenStatusById(id, status);
+      ctx.body = oneTimeToken;
       ctx.status = 200;
       return next();
     }

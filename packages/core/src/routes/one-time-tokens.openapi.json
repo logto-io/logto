@@ -76,6 +76,30 @@
           }
         }
       }
+    },
+    "/api/one-time-tokens/{id}/status": {
+      "put": {
+        "summary": "Update one-time token status",
+        "description": "Update the status of a one-time token by its ID. This can be used to mark the token as consumed or expired.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "status": {
+                    "description": "The new status of the one-time token."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The one-time token status was updated successfully."
+          }
+        }
+      }
     }
   }
 }
