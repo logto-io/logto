@@ -143,9 +143,9 @@ export default function initOidc(
         enabled: true,
         defaultResource: async (ctx) => {
           const console = getConsoleLogFromContext(ctx);
-          console.plain('findDefaultResource', new Date().toISOString());
+          console.plain('findDefaultResource');
           const resource = await findDefaultResource();
-          console.plain('findDefaultResource done', new Date().toISOString());
+          console.plain('findDefaultResource done');
           // The default implementation returns `undefined` - https://github.com/panva/node-oidc-provider/blob/0c52469f08b0a4a1854d90a96546a3f7aa090e5e/lib/helpers/defaults.js#L195
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           return resource?.indicator ?? undefined!;
@@ -154,11 +154,11 @@ export default function initOidc(
         useGrantedResource: () => false,
         getResourceServerInfo: async (ctx, indicator) => {
           const console = getConsoleLogFromContext(ctx);
-          console.plain('getResourceServerInfo', new Date().toISOString());
+          console.plain('getResourceServerInfo');
 
           const resourceServer = await findResource(queries, indicator);
 
-          console.plain('getResourceServerInfo found resourceServer', new Date().toISOString());
+          console.plain('getResourceServerInfo found resourceServer');
 
           if (!resourceServer) {
             throw new errors.InvalidTarget();
@@ -180,7 +180,7 @@ export default function initOidc(
             userId,
           });
 
-          console.plain('getResourceServerInfo found scopes', new Date().toISOString());
+          console.plain('getResourceServerInfo found scopes');
 
           // Need to filter out the unsupported scopes for the third-party application.
           if (client && (await isThirdPartyApplication(queries, client.clientId))) {
@@ -199,7 +199,7 @@ export default function initOidc(
             };
           }
 
-          console.plain('getResourceServerInfo done', new Date().toISOString());
+          console.plain('getResourceServerInfo done');
 
           return {
             ...getSharedResourceServerData(envSet),
@@ -253,7 +253,7 @@ export default function initOidc(
     extraParams: Object.values(ExtraParamsKey),
     extraTokenClaims: async (ctx, token) => {
       const console = getConsoleLogFromContext(ctx);
-      console.plain('extraTokenClaims', new Date().toISOString());
+      console.plain('extraTokenClaims');
       const [tokenExchangeClaims, organizationApiResourceClaims, jwtCustomizedClaims] =
         await Promise.all([
           getExtraTokenClaimsForTokenExchange(ctx, token),
@@ -267,7 +267,7 @@ export default function initOidc(
           }),
         ]);
 
-      console.plain('extraTokenClaims done', new Date().toISOString());
+      console.plain('extraTokenClaims done');
       if (!organizationApiResourceClaims && !jwtCustomizedClaims && !tokenExchangeClaims) {
         return;
       }
@@ -294,18 +294,18 @@ export default function initOidc(
     // https://github.com/panva/node-oidc-provider/tree/main/docs#findaccount
     findAccount: async (ctx, sub) => {
       const console = getConsoleLogFromContext(ctx);
-      console.plain('findAccount', new Date().toISOString());
+      console.plain('findAccount');
       // The user may be deleted after the token is issued
       const user = await tryThat(findUserById(sub), () => {
         throw new errors.InvalidGrant('user not found');
       });
 
-      console.plain('findAccount done', new Date().toISOString());
+      console.plain('findAccount done');
 
       return {
         accountId: sub,
         claims: async (use, scope, claims, rejected) => {
-          console.plain('claims', new Date().toISOString());
+          console.plain('claims');
           assert(
             use === 'id_token' || use === 'userinfo',
             'use should be either `id_token` or `userinfo`'
@@ -329,7 +329,7 @@ export default function initOidc(
             }
           );
 
-          console.plain('claims done', new Date().toISOString());
+          console.plain('claims done');
           return data;
         },
       };
@@ -398,9 +398,9 @@ export default function initOidc(
   // Log time before and after the request
   oidc.use(async (ctx, next) => {
     const console = getConsoleLogFromContext(ctx);
-    console.plain('=== oidc middleware start ===', new Date().toISOString());
+    console.plain('=== oidc middleware start ===');
     await next();
-    console.plain('=== oidc middleware end ===', new Date().toISOString());
+    console.plain('=== oidc middleware end ===');
   });
 
   // Provide audit log context for event listeners

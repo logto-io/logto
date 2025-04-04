@@ -41,7 +41,7 @@ export default function koaTokenUsageGuard<StateT, ContextT, ResponseBodyT>(
     }
 
     const consoleLog = getConsoleLogFromContext(ctx);
-    consoleLog.plain('Token usage guard', new Date().toISOString());
+    consoleLog.plain('Token usage guard');
 
     try {
       const {
@@ -51,10 +51,10 @@ export default function koaTokenUsageGuard<StateT, ContextT, ResponseBodyT>(
         quota: { tokenLimit },
       } = await subscriptionLibrary.getSubscriptionData();
 
-      consoleLog.plain('Found subscription data', new Date().toISOString());
+      consoleLog.plain('Found subscription data');
 
       if (!guardedPlanIds.has(planId)) {
-        consoleLog.plain('Plan is not guarded, skip token usage guard', new Date().toISOString());
+        consoleLog.plain('Plan is not guarded, skip token usage guard');
         await next();
         return;
       }
@@ -64,7 +64,7 @@ export default function koaTokenUsageGuard<StateT, ContextT, ResponseBodyT>(
         to: new Date(currentPeriodEnd),
       });
 
-      consoleLog.plain('Found token usage', new Date().toISOString());
+      consoleLog.plain('Found token usage');
 
       assertThat(
         tokenLimit === null || tokenUsage < tokenLimit,

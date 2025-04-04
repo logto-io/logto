@@ -118,9 +118,9 @@ export default class Tenant implements TenantContext {
       const console = ctx.URL.pathname.startsWith('/oidc/token')
         ? getConsoleLogFromContext(ctx)
         : undefined;
-      console?.plain('Inside tenant app start', new Date().toISOString());
+      console?.plain('Inside tenant app start');
       await next();
-      console?.plain('Inside tenant app end', new Date().toISOString());
+      console?.plain('Inside tenant app end');
     });
     app.use(koaI18next());
     app.use(koaErrorHandler());

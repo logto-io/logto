@@ -60,9 +60,9 @@ export default async function initApp(app: Koa): Promise<void> {
       ? getConsoleLogFromContext(ctx)
       : undefined;
 
-    console?.plain('Tenant context start', new Date().toISOString());
+    console?.plain('Tenant context start');
     const [tenantId, isCustomDomain] = await getTenantId(ctx.URL);
-    console?.plain('Found tenantId:', tenantId, new Date().toISOString());
+    console?.plain('Found tenantId:', tenantId);
 
     if (!tenantId) {
       ctx.status = 404;
@@ -79,7 +79,7 @@ export default async function initApp(app: Koa): Promise<void> {
       void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
     });
 
-    console?.plain('Found tenant', new Date().toISOString());
+    console?.plain('Found tenant');
 
     if (!tenant) {
       return next();
@@ -87,10 +87,10 @@ export default async function initApp(app: Koa): Promise<void> {
 
     try {
       tenant.requestStart();
-      console?.plain('Tenant middleware start', new Date().toISOString());
+      console?.plain('Tenant middleware start');
       await tenant.run(ctx, next);
       tenant.requestEnd();
-      console?.plain('Tenant middleware end', new Date().toISOString());
+      console?.plain('Tenant middleware end');
     } catch (error: unknown) {
       tenant.requestEnd();
       void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
