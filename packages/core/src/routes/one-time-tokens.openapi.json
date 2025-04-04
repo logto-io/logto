@@ -48,6 +48,15 @@
             "description": "The one-time token found by ID."
           }
         }
+      },
+      "delete": {
+        "summary": "Delete one-time token by ID",
+        "description": "Delete a one-time token by its ID.",
+        "responses": {
+          "204": {
+            "description": "The one-time token was deleted successfully."
+          }
+        }
       }
     },
     "/api/one-time-tokens/verify": {
