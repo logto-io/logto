@@ -305,7 +305,7 @@ export default function initOidc(
       return {
         accountId: sub,
         claims: async (use, scope, claims, rejected) => {
-          console.plain('claims');
+          console.plain('claims', claims, rejected);
           assert(
             use === 'id_token' || use === 'userinfo',
             'use should be either `id_token` or `userinfo`'
@@ -321,7 +321,13 @@ export default function initOidc(
                */
               sub,
               ...Object.fromEntries(
-                await getUserClaimsData(user, acceptedClaims, libraries.users, organizations)
+                await getUserClaimsData(
+                  user,
+                  acceptedClaims,
+                  libraries.users,
+                  organizations,
+                  console
+                )
               ),
             },
             {

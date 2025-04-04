@@ -11,6 +11,8 @@ import { type SnakeCaseKeys } from 'snakecase-keys';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 
+import { type ConsoleLog } from '#src/packages/shared/lib/index.js';
+
 type UserProfileClaimSnakeCase = keyof SnakeCaseKeys<UserProfile>;
 
 const claimToUserKey: Readonly<
@@ -72,12 +74,17 @@ export const getUserClaimsData = async (
   user: User,
   claims: UserClaim[],
   userLibrary: Libraries['users'],
-  organizationQueries: Queries['organizations']
+  organizationQueries: Queries['organizations'],
+  console: ConsoleLog
 ): Promise<ReadonlyArray<[UserClaim, unknown]>> => {
-  const organizations = cond(
+  const organizationsPromise = cond(
     claims.some((claim) => claim.startsWith('organization')) &&
-      (await organizationQueries.relations.users.getOrganizationsByUserId(user.id))
+      organizationQueries.relations.users.getOrganizationsByUserId(user.id)
   );
+
+  if (organizationsPromise) {
+    console.plain('[claims] created organizations promise');
+  }
 
   return Promise.all(
     claims.map(async (claim) => {
@@ -91,15 +98,23 @@ export const getUserClaimsData = async (
           return [claim, Boolean(user.primaryPhone)];
         }
         case 'roles': {
+          console.plain('[claims] fulfilling roles claim');
           const roles = await userLibrary.findUserRoles(user.id);
+          console.plain('[claims] fulfilled roles claim');
           return [claim, roles.map(({ name }) => name)];
         }
         case 'organizations': {
-          assert(organizations, 'organizations should be defined');
+          assert(organizationsPromise, 'organizations promise should be defined');
+          console.plain('[claims] fulfilling organizations claim');
+          const organizations = await organizationsPromise;
+          console.plain('[claims] fulfilled organizations claim');
           return [claim, organizations.map(({ id }) => id)];
         }
         case 'organization_roles': {
-          assert(organizations, 'organizations should be defined');
+          assert(organizationsPromise, 'organizations promise should be defined');
+          console.plain('[claims] fulfilling organization_roles claim');
+          const organizations = await organizationsPromise;
+          console.plain('[claims] fulfilled organization_roles claim');
           return [
             claim,
             organizations.flatMap(({ id, organizationRoles }) =>
@@ -108,14 +123,19 @@ export const getUserClaimsData = async (
           ];
         }
         case 'organization_data': {
-          assert(organizations, 'organizations should be defined');
+          assert(organizationsPromise, 'organizations promise should be defined');
+          console.plain('[claims] fulfilling organization_data claim');
+          const organizations = await organizationsPromise;
+          console.plain('[claims] fulfilled organization_data claim');
           return [
             claim,
             organizations.map((element) => pick(element, 'id', 'name', 'description')),
           ];
         }
         case 'sso_identities': {
+          console.plain('[claims] fulfilling sso_identities claim');
           const ssoIdentities = await userLibrary.findUserSsoIdentities(user.id);
+          console.plain('[claims] fulfilled sso_identities claim');
           return [
             claim,
             ssoIdentities.map(({ issuer, identityId, detail }) => ({ issuer, identityId, detail })),
