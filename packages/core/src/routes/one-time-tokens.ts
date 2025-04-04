@@ -17,6 +17,7 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
     {
       queries: {
         oneTimeTokens: {
+          deleteOneTimeTokenById,
           insertOneTimeToken,
           updateExpiredOneTimeTokensStatusByEmail,
           getOneTimeTokenById,
@@ -124,6 +125,24 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
       const oneTimeToken = await updateOneTimeTokenStatusById(id, status);
       ctx.body = oneTimeToken;
       ctx.status = 200;
+      return next();
+    }
+  );
+
+  router.delete(
+    '/one-time-tokens/:id',
+    koaGuard({
+      params: z.object({
+        id: z.string().min(1),
+      }),
+      status: [200, 400, 404],
+    }),
+    async (ctx, next) => {
+      const { params } = ctx.guard;
+      const { id } = params;
+
+      await deleteOneTimeTokenById(id);
+      ctx.status = 204;
       return next();
     }
   );

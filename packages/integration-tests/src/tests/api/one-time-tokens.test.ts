@@ -6,6 +6,7 @@ import {
   verifyOneTimeToken,
   getOneTimeTokenById,
   updateOneTimeTokenStatus,
+  deleteOneTimeTokenById,
 } from '#src/api/one-time-token.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { devFeatureTest, waitFor } from '#src/utils.js';
@@ -25,6 +26,8 @@ describe('one-time tokens API', () => {
     expect(oneTimeToken.context).toEqual({});
     expect(oneTimeToken.email).toBe(email);
     expect(oneTimeToken.token.length).toBe(32);
+
+    void deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should create one-time token with custom expiration time', async () => {
@@ -39,6 +42,8 @@ describe('one-time tokens API', () => {
     expect(oneTimeToken.status).toBe(OneTimeTokenStatus.Active);
     expect(oneTimeToken.email).toBe(email);
     expect(oneTimeToken.token.length).toBe(32);
+
+    void deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should create one-time token with `applicationIds` and `jitOrganizationIds` configured', async () => {
@@ -56,6 +61,8 @@ describe('one-time tokens API', () => {
       jitOrganizationIds: ['org-1'],
     });
     expect(oneTimeToken.token.length).toBe(32);
+
+    void deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should be able to get one-time token by its ID', async () => {
@@ -69,6 +76,8 @@ describe('one-time tokens API', () => {
 
     const token = await getOneTimeTokenById(oneTimeToken.id);
     expect(token).toEqual(oneTimeToken);
+
+    void deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should throw when getting a non-existent one-time token', async () => {
@@ -86,10 +95,13 @@ describe('one-time tokens API', () => {
     });
 
     await waitFor(1001);
-    await createOneTimeToken({ email });
+    const newOneTimeToken = await createOneTimeToken({ email });
 
     const reFetchedToken = await getOneTimeTokenById(oneTimeToken.id);
     expect(reFetchedToken.status).toBe(OneTimeTokenStatus.Expired);
+
+    void deleteOneTimeTokenById(oneTimeToken.id);
+    void deleteOneTimeTokenById(newOneTimeToken.id);
   });
 
   it('should verify one-time token', async () => {
@@ -122,6 +134,8 @@ describe('one-time tokens API', () => {
         status: 400,
       }
     );
+
+    void deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should not succeed to verify one-time token with expired token', async () => {
@@ -147,6 +161,8 @@ describe('one-time tokens API', () => {
         status: 400,
       }
     );
+
+    void deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should not succeed to verify one-time token wrong email', async () => {
@@ -168,11 +184,13 @@ describe('one-time tokens API', () => {
         status: 400,
       }
     );
+
+    void deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should not succeed to verify one-time token wrong token', async () => {
     const email = `foo${generateStandardId()}@bar.com`;
-    await createOneTimeToken({
+    const oneTimeToken = await createOneTimeToken({
       email,
       context: {
         jitOrganizationIds: ['org-1'],
@@ -189,6 +207,7 @@ describe('one-time tokens API', () => {
         status: 404,
       }
     );
+    void deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should throw token_expired error and update token status to expired (token already expired but status is not updated)', async () => {
@@ -210,6 +229,8 @@ describe('one-time tokens API', () => {
 
     const updatedToken = await getOneTimeTokenById(oneTimeToken.id);
     expect(updatedToken.status).toBe(OneTimeTokenStatus.Expired);
+
+    void deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should be able to revoke a token by updating the status', async () => {
@@ -220,6 +241,8 @@ describe('one-time tokens API', () => {
 
     const updatedToken = await getOneTimeTokenById(oneTimeToken.id);
     expect(updatedToken.status).toBe(OneTimeTokenStatus.Revoked);
+
+    void deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should throw when trying to re-activate a token', async () => {
@@ -230,6 +253,8 @@ describe('one-time tokens API', () => {
       code: 'one_time_token.cannot_reactivate_token',
       status: 400,
     });
+
+    void deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should throw when verifying a revoked token', async () => {
@@ -248,5 +273,26 @@ describe('one-time tokens API', () => {
         status: 400,
       }
     );
+
+    void deleteOneTimeTokenById(oneTimeToken.id);
+  });
+
+  it('should throw when trying to delete a non-existent one-time token', async () => {
+    await expectRejects(deleteOneTimeTokenById('non-existent-id'), {
+      code: 'entity.not_found',
+      status: 404,
+    });
+  });
+
+  it('should delete the one-time token successfully', async () => {
+    const email = `foo${generateStandardId()}@bar.com`;
+    const oneTimeToken = await createOneTimeToken({ email });
+
+    await deleteOneTimeTokenById(oneTimeToken.id);
+
+    await expectRejects(getOneTimeTokenById(oneTimeToken.id), {
+      code: 'entity.not_exists_with_id',
+      status: 404,
+    });
   });
 });
