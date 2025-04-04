@@ -16,6 +16,9 @@ create table resources (
 create index resources__id
   on resources (tenant_id, id);
 
+create index resources__indicator
+  on resources (tenant_id, indicator);
+
 create unique index resources__is_default_true
   on resources (tenant_id)
   where is_default = true;
