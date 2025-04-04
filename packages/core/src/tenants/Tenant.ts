@@ -130,6 +130,15 @@ export default class Tenant implements TenantContext {
     app.use(koaCompress());
     app.use(koaSecurityHeaders(mountedApps, id));
 
+    app.use(async (ctx, next) => {
+      const console = ctx.URL.pathname.startsWith('/oidc/token')
+        ? getConsoleLogFromContext(ctx)
+        : undefined;
+      console?.plain('Core middleware start');
+      await next();
+      console?.plain('Core middleware end');
+    });
+
     // Mount OIDC
     const provider = initOidc(
       envSet,

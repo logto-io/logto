@@ -34,6 +34,8 @@ import { type EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { getConsoleLogFromContext } from '../../utils/console.js';
+
 import {
   handleClientCertificate,
   handleDPoP,
@@ -87,11 +89,17 @@ export const buildHandler: (
   // @gao: I believe the presence of the param is validated by required parameters of this grant.
   // Add `String` to make TS happy.
   let refreshTokenValue = String(params.refresh_token);
+
+  const console = getConsoleLogFromContext(ctx);
+
+  console.plain('[grant] refresh_token');
   let refreshToken = await RefreshToken.find(refreshTokenValue, { ignoreExpiration: true });
 
   if (!refreshToken) {
     throw new InvalidGrant('refresh token not found');
   }
+
+  console.plain('[grant] found refresh token');
 
   if (refreshToken.clientId !== client.clientId) {
     throw new InvalidGrant('client mismatch');
@@ -108,6 +116,8 @@ export const buildHandler: (
   const grant = await Grant.find(refreshToken.grantId, {
     ignoreExpiration: true,
   });
+
+  console.plain('[grant] found grant');
 
   if (!grant) {
     throw new InvalidGrant('grant not found');
@@ -144,6 +154,8 @@ export const buildHandler: (
   // `RefreshToken` but it's actually available.
   const account = await Account.findAccount(ctx, refreshToken.accountId, refreshToken);
 
+  console.plain('[grant] found account');
+
   if (!account) {
     throw new InvalidGrant('refresh token invalid (referenced account not found)');
   }
@@ -161,6 +173,8 @@ export const buildHandler: (
 
   const { organizationId } = await checkOrganizationAccess(ctx, queries, account);
 
+  console.plain('[grant] check organization access done');
+
   /* === RFC 0001 === */
   if (
     organizationId && // Validate if the refresh token has the required scope from RFC 0001.
@@ -174,7 +188,9 @@ export const buildHandler: (
     rotateRefreshToken === true ||
     (typeof rotateRefreshToken === 'function' && (await rotateRefreshToken(ctx)))
   ) {
+    console.plain('[grant] rotating refresh token');
     await refreshToken.consume();
+    console.plain('[grant] refresh token consumed');
     ctx.oidc.entity('RotatedRefreshToken', refreshToken);
 
     refreshToken = new RefreshToken({
@@ -204,6 +220,7 @@ export const buildHandler: (
 
     ctx.oidc.entity('RefreshToken', refreshToken);
     refreshTokenValue = await refreshToken.save();
+    console.plain('[grant] refresh token saved');
   }
 
   const at = new AccessToken({
@@ -219,6 +236,8 @@ export const buildHandler: (
 
   await handleDPoP(ctx, at, refreshToken);
   await handleClientCertificate(ctx, at, refreshToken);
+
+  console.plain('[grant] handle dpop and client certificate done');
 
   if (at.gty && !at.gty.endsWith(gty)) {
     at.gty = `${at.gty} ${gty}`;
@@ -245,12 +264,15 @@ export const buildHandler: (
     });
     /* === End RFC 0001 === */
   } else {
+    console.plain('[grant] handle resource server');
     const resource = await resolveResource(
       ctx,
       refreshToken,
       { userinfo, resourceIndicators },
       scope
     );
+
+    console.plain('[grant] resource resolved');
 
     if (resource) {
       const resourceServerInfo = await resourceIndicators.getResourceServerInfo(
@@ -266,14 +288,18 @@ export const buildHandler: (
         // @ts-expect-error -- code from oidc-provider
         [...scope].filter(Set.prototype.has.bind(at.resourceServer.scopes))
       );
+      console.plain('[grant] resource server info resolved');
     } else {
       at.claims = refreshToken.claims;
       at.scope = grant.getOIDCScopeFiltered(scope);
     }
+    console.plain('[grant] handle resource server done');
   }
 
   ctx.oidc.entity('AccessToken', at);
   const accessToken = await at.save();
+
+  console.plain('[grant] access token saved');
 
   let idToken;
   if (scope.has('openid')) {
@@ -290,6 +316,8 @@ export const buildHandler: (
       },
       { ctx }
     );
+
+    console.plain('[grant] id token claims resolved');
 
     // eslint-disable-next-line unicorn/prefer-ternary
     if (conformIdTokenClaims && userinfo.enabled && !at.aud) {
@@ -309,6 +337,7 @@ export const buildHandler: (
     token.set('sid', refreshToken.sid);
 
     idToken = await token.issue({ use: 'idtoken' });
+    console.plain('[grant] id token issued');
   }
 
   ctx.body = {
