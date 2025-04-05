@@ -1,12 +1,14 @@
 import { OneTimeTokenStatus } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 
+import { authedAdminApi } from '#src/api/api.js';
 import {
   createOneTimeToken,
   verifyOneTimeToken,
   getOneTimeTokenById,
   updateOneTimeTokenStatus,
   deleteOneTimeTokenById,
+  getOneTimeTokens,
 } from '#src/api/one-time-token.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { devFeatureTest, waitFor } from '#src/utils.js';
@@ -294,5 +296,55 @@ describe('one-time tokens API', () => {
       code: 'entity.not_exists_with_id',
       status: 404,
     });
+  });
+
+  it('should be able to batch fetch one-time tokens', async () => {
+    const email = `foo${generateStandardId()}@bar.com`;
+    const oneTimeToken1 = await createOneTimeToken({ email });
+    const oneTimeToken2 = await createOneTimeToken({ email });
+    const oneTimeToken3 = await createOneTimeToken({ email });
+
+    const tokens = await getOneTimeTokens();
+    expect(tokens).toEqual(expect.arrayContaining([oneTimeToken1, oneTimeToken2, oneTimeToken3]));
+
+    const response = await authedAdminApi.get('one-time-tokens?page=1&page_size=2');
+    expect(response.headers.get('Total-Number')).toBe('3');
+    expect(await response.json()).toEqual(expect.arrayContaining([oneTimeToken2, oneTimeToken3]));
+
+    void deleteOneTimeTokenById(oneTimeToken1.id);
+    void deleteOneTimeTokenById(oneTimeToken2.id);
+    void deleteOneTimeTokenById(oneTimeToken3.id);
+  });
+
+  it('should be able fetch list of one-time tokens with query params', async () => {
+    const fooEmail = `foo${generateStandardId()}@bar.com`;
+    const barEmail = `bar${generateStandardId()}@bar.com`;
+    const [oneTimeToken1, oneTimeToken2, oneTimeToken3] = await Promise.all([
+      createOneTimeToken({ email: fooEmail }),
+      createOneTimeToken({ email: fooEmail }),
+      createOneTimeToken({ email: barEmail }),
+    ]);
+
+    const tokens = await getOneTimeTokens({ email: fooEmail });
+    expect(tokens).toEqual(expect.arrayContaining([oneTimeToken1, oneTimeToken2]));
+
+    await updateOneTimeTokenStatus(oneTimeToken1.id, OneTimeTokenStatus.Revoked);
+    await verifyOneTimeToken({ email: fooEmail, token: oneTimeToken2.token });
+
+    const revokedTokens = await getOneTimeTokens({ status: OneTimeTokenStatus.Revoked });
+    expect(revokedTokens).toEqual([{ ...oneTimeToken1, status: OneTimeTokenStatus.Revoked }]);
+
+    const consumedTokens = await getOneTimeTokens({ status: OneTimeTokenStatus.Consumed });
+    expect(consumedTokens).toEqual([{ ...oneTimeToken2, status: OneTimeTokenStatus.Consumed }]);
+
+    const activeBarTokens = await getOneTimeTokens({
+      email: barEmail,
+      status: OneTimeTokenStatus.Active,
+    });
+    expect(activeBarTokens).toEqual([oneTimeToken3]);
+
+    void deleteOneTimeTokenById(oneTimeToken1.id);
+    void deleteOneTimeTokenById(oneTimeToken2.id);
+    void deleteOneTimeTokenById(oneTimeToken3.id);
   });
 });
