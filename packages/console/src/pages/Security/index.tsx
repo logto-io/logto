@@ -31,7 +31,7 @@ function Security() {
   const { guideId } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isCreateCaptchaFormOpen, setIsCreateCaptchaFormOpen] = useState(false);
-  const { data, isLoading } = useDataFetch();
+  const { data, error, isLoading } = useDataFetch();
   const formMethods = useForm<CaptchaPolicy>({
     defaultValues: {
       enabled: false,
@@ -98,7 +98,7 @@ function Security() {
                 <div className={styles.description}>
                   {t('security.bot_protection.captcha.placeholder')}
                 </div>
-                {data ? (
+                {data && (!error || error.status !== 404) ? (
                   <>
                     <CaptchaCard captchaProvider={data} />
                     <EnableCaptcha />
