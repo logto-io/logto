@@ -5,6 +5,7 @@ import {
   createOneTimeToken,
   verifyOneTimeToken,
   getOneTimeTokenById,
+  updateOneTimeTokenStatus,
 } from '#src/api/one-time-token.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { devFeatureTest, waitFor } from '#src/utils.js';
@@ -190,9 +191,62 @@ describe('one-time tokens API', () => {
     );
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  it('should throw token_expired error and update token status to expired (token already expired but status is not updated)', async () => {});
+  it('should throw token_expired error and update token status to expired (token already expired but status is not updated)', async () => {
+    const email = `foo${generateStandardId()}@bar.com`;
+    const oneTimeToken = await createOneTimeToken({ email, expiresIn: 1 });
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  it('should throw token_revoked error', async () => {});
+    await waitFor(1001);
+
+    await expectRejects(
+      verifyOneTimeToken({
+        email,
+        token: oneTimeToken.token,
+      }),
+      {
+        code: 'one_time_token.token_expired',
+        status: 400,
+      }
+    );
+
+    const updatedToken = await getOneTimeTokenById(oneTimeToken.id);
+    expect(updatedToken.status).toBe(OneTimeTokenStatus.Expired);
+  });
+
+  it('should be able to revoke a token by updating the status', async () => {
+    const email = `foo${generateStandardId()}@bar.com`;
+    const oneTimeToken = await createOneTimeToken({ email, expiresIn: 1 });
+
+    await updateOneTimeTokenStatus(oneTimeToken.id, OneTimeTokenStatus.Revoked);
+
+    const updatedToken = await getOneTimeTokenById(oneTimeToken.id);
+    expect(updatedToken.status).toBe(OneTimeTokenStatus.Revoked);
+  });
+
+  it('should throw when trying to re-activate a token', async () => {
+    const email = `foo${generateStandardId()}@bar.com`;
+    const oneTimeToken = await createOneTimeToken({ email, expiresIn: 1 });
+
+    await expectRejects(updateOneTimeTokenStatus(oneTimeToken.id, OneTimeTokenStatus.Active), {
+      code: 'one_time_token.cannot_reactivate_token',
+      status: 400,
+    });
+  });
+
+  it('should throw when verifying a revoked token', async () => {
+    const email = `foo${generateStandardId()}@bar.com`;
+    const oneTimeToken = await createOneTimeToken({ email });
+
+    await updateOneTimeTokenStatus(oneTimeToken.id, OneTimeTokenStatus.Revoked);
+
+    await expectRejects(
+      verifyOneTimeToken({
+        email,
+        token: oneTimeToken.token,
+      }),
+      {
+        code: 'one_time_token.token_revoked',
+        status: 400,
+      }
+    );
+  });
 });
