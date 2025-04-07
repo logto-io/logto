@@ -10,6 +10,29 @@
   ],
   "paths": {
     "/api/one-time-tokens": {
+      "get": {
+        "summary": "Get one-time tokens",
+        "description": "Get a list of one-time tokens, filtering by email and status, with optional pagination.",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "Filter one-time tokens by email address.",
+            "required": false
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter one-time tokens by status.",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of one-time tokens."
+          }
+        }
+      },
       "post": {
         "summary": "Create one-time token",
         "description": "Create a new one-time token associated with an email address. The token can be used for verification purposes and has an expiration time.",
