@@ -20,9 +20,6 @@ import {
   getSamlApplicationMetadata,
 } from '#src/api/saml-application.js';
 import { expectRejects } from '#src/helpers/index.js';
-import { devFeatureTest } from '#src/utils.js';
-
-const { it, describe } = devFeatureTest;
 
 describe('SAML application', () => {
   it('should create and delete a SAML application successfully', async () => {
