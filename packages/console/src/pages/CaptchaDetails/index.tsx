@@ -66,11 +66,13 @@ function CaptchaDetails() {
       setIsDeleted(true);
 
       toast.success(t('security.captcha_details.captcha_deleted'));
-      await mutateGlobal('api/captcha-provider');
 
       navigate('/security', {
         replace: true,
       });
+      // Need to reload the page because the /security page and the current page are using the same
+      // api endpoint, and this endpoint will return 404 after the deletion.
+      window.location.reload();
     } finally {
       setIsDeleting(false);
     }

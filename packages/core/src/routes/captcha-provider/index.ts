@@ -13,6 +13,7 @@ export default function captchaProviderRoutes<T extends ManagementApiRouter>(
   const [router, { queries }] = args;
   const { findCaptchaProvider, upsertCaptchaProvider, deleteCaptchaProvider } =
     queries.captchaProviders;
+  const { updateDefaultSignInExperience } = queries.signInExperiences;
   router.get(
     '/captcha-provider',
     koaGuard({
@@ -51,6 +52,13 @@ export default function captchaProviderRoutes<T extends ManagementApiRouter>(
         config,
       });
 
+      // Enable in sign in experience
+      await updateDefaultSignInExperience({
+        captchaPolicy: {
+          enabled: true,
+        },
+      });
+
       return next();
     }
   );
@@ -63,6 +71,12 @@ export default function captchaProviderRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       await deleteCaptchaProvider();
 
+      // Disable in sign in experience
+      await updateDefaultSignInExperience({
+        captchaPolicy: {
+          enabled: false,
+        },
+      });
       ctx.status = 204;
 
       return next();
