@@ -1,6 +1,8 @@
 import { type AdminConsoleKey } from '@logto/phrases';
 import { type CaptchaType } from '@logto/schemas';
 
+type FormField = 'siteKey' | 'secretKey' | 'projectId';
+
 export type CaptchaProviderMetadata = {
   name: AdminConsoleKey;
   type: CaptchaType;
@@ -8,5 +10,8 @@ export type CaptchaProviderMetadata = {
   logoDark: SvgComponent;
   description: AdminConsoleKey;
   readme: string;
-  requiredFields: Array<'siteKey' | 'secretKey' | 'projectId'>;
+  requiredFields: Array<{
+    field: FormField;
+    label: AdminConsoleKey;
+  }>;
 };
