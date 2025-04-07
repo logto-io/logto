@@ -13,23 +13,27 @@ type Props = {
 };
 
 function CaptchaFormFields({ metadata, errors, register }: Props) {
+  const siteKeyField = metadata.requiredFields.find((field) => field.field === 'siteKey');
+  const secretKeyField = metadata.requiredFields.find((field) => field.field === 'secretKey');
+  const projectIdField = metadata.requiredFields.find((field) => field.field === 'projectId');
+
   return (
     <>
-      {metadata.requiredFields.includes('siteKey') && (
-        <FormField title="security.captcha_details.site_key">
+      {siteKeyField && (
+        <FormField title={siteKeyField.label}>
           <TextInput error={Boolean(errors.siteKey)} {...register('siteKey', { required: true })} />
         </FormField>
       )}
-      {metadata.requiredFields.includes('secretKey') && (
-        <FormField title="security.captcha_details.secret_key">
+      {secretKeyField && (
+        <FormField title={secretKeyField.label}>
           <TextInput
             error={Boolean(errors.secretKey)}
             {...register('secretKey', { required: true })}
           />
         </FormField>
       )}
-      {metadata.requiredFields.includes('projectId') && (
-        <FormField title="security.captcha_details.project_id">
+      {projectIdField && (
+        <FormField title={projectIdField.label}>
           <TextInput
             error={Boolean(errors.projectId)}
             {...register('projectId', { required: true })}

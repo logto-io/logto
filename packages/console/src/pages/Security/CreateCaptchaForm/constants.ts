@@ -13,7 +13,20 @@ export const captchaProviders: CaptchaProviderMetadata[] = [
     logoDark: recaptchaEnterprise,
     description: 'security.captcha_providers.recaptcha_enterprise.description',
     readme: 'readme',
-    requiredFields: ['siteKey', 'secretKey', 'projectId'],
+    requiredFields: [
+      {
+        field: 'siteKey',
+        label: 'security.captcha_details.recaptcha_key_id',
+      },
+      {
+        field: 'secretKey',
+        label: 'security.captcha_details.recaptcha_api_key',
+      },
+      {
+        field: 'projectId',
+        label: 'security.captcha_details.project_id',
+      },
+    ],
   },
   {
     name: 'security.captcha_providers.turnstile.name',
@@ -22,6 +35,15 @@ export const captchaProviders: CaptchaProviderMetadata[] = [
     logoDark: turnstile,
     description: 'security.captcha_providers.turnstile.description',
     readme: 'readme',
-    requiredFields: ['siteKey', 'secretKey'],
+    requiredFields: [
+      {
+        field: 'siteKey',
+        label: 'security.captcha_details.site_key',
+      },
+      {
+        field: 'secretKey',
+        label: 'security.captcha_details.secret_key',
+      },
+    ],
   },
 ];
