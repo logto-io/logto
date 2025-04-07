@@ -1,41 +1,43 @@
-import { ReservedPlanId } from '@logto/schemas';
+import { ReservedPlanId, ConnectorType } from '@logto/schemas';
+import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type SubscriptionLibrary } from '#src/libraries/subscription.js';
 import assertThat from '#src/utils/assert-that.js';
 import {
-  getTenantUsageData,
   reportSubscriptionUpdates,
   isReportSubscriptionUpdatesUsageKey,
+  getTenantUsageData,
 } from '#src/utils/subscription/index.js';
 import { type SubscriptionQuota, type SubscriptionUsage } from '#src/utils/subscription/types.js';
 
-import { type CloudConnectionLibrary } from './cloud-connection.js';
-import { type SelfComputedUsage } from './tenant-usage.js';
+import TenantUsageQuery from '../queries/tenant-usage/index.js';
+import {
+  tenantUsageGuard,
+  selfComputedSubscriptionUsageGuard,
+  type SelfComputedTenantUsage,
+} from '../queries/tenant-usage/types.js';
 
-export type QuotaLibrary = ReturnType<typeof createQuotaLibrary>;
+import { type CloudConnectionLibrary } from './cloud-connection.js';
+import { type ConnectorLibrary } from './connector.js';
 
 const paidReservedPlans = new Set<string>([ReservedPlanId.Pro, ReservedPlanId.Pro202411]);
-/**
- * @remarks
- * Should report usage changes to the Cloud only when the following conditions are met:
- * 1. The tenant is either on Pro plan or Enterprise plan.
- * 2. The usage key is add-on related usage key.
- */
-const shouldReportSubscriptionUpdates = (
-  planId: string,
-  isEnterprisePlan: boolean,
-  key: keyof SubscriptionQuota
-) =>
-  (paidReservedPlans.has(planId) || isEnterprisePlan) && isReportSubscriptionUpdatesUsageKey(key);
 
-export const createQuotaLibrary = (
-  cloudConnection: CloudConnectionLibrary,
-  subscription: SubscriptionLibrary,
-  selfComputedUsage: SelfComputedUsage
-) => {
-  const guardTenantUsageByKey = async (key: keyof SubscriptionUsage) => {
+export class QuotaLibrary {
+  private readonly sqlBuilder: TenantUsageQuery;
+
+  constructor(
+    public readonly pool: CommonQueryMethods,
+    public readonly connectorLibrary: ConnectorLibrary,
+    public readonly tenantId: string,
+    private readonly cloudConnection: CloudConnectionLibrary,
+    private readonly subscription: SubscriptionLibrary
+  ) {
+    this.sqlBuilder = new TenantUsageQuery(tenantId);
+  }
+
+  guardTenantUsageByKey = async (key: keyof SubscriptionUsage) => {
     const { isCloud } = EnvSet.values;
 
     // Cloud only feature, skip in non-cloud environments
@@ -43,18 +45,22 @@ export const createQuotaLibrary = (
       return;
     }
 
-    const { planId, isEnterprisePlan, quota: fullQuota } = await subscription.getSubscriptionData();
+    const {
+      planId,
+      isEnterprisePlan,
+      quota: fullQuota,
+    } = await this.subscription.getSubscriptionData();
 
     // Do not block Pro/Enterprise plan from adding add-on resources.
-    if (shouldReportSubscriptionUpdates(planId, isEnterprisePlan, key)) {
+    if (this.shouldReportSubscriptionUpdates(planId, isEnterprisePlan, key)) {
       return;
     }
 
     const { usage: fullUsage } =
       key === 'tenantMembersLimit'
-        ? await getTenantUsageData(cloudConnection)
+        ? await getTenantUsageData(this.cloudConnection)
         : // `tenantMembersLimit` need to compute from admin tenant level
-          await selfComputedUsage.getTenantUsage();
+          await this.getTenantUsage();
 
     // Type `SubscriptionQuota` and type `SubscriptionUsage` are sharing keys, this design helps us to compare the usage with the quota limit in a easier way.
     const { [key]: limit } = fullQuota;
@@ -109,7 +115,7 @@ export const createQuotaLibrary = (
     throw new TypeError('Unsupported subscription quota type');
   };
 
-  const guardEntityScopesUsage = async (entityName: 'resources' | 'roles', entityId: string) => {
+  guardEntityScopesUsage = async (entityName: 'resources' | 'roles', entityId: string) => {
     const { isCloud } = EnvSet.values;
 
     // Cloud only feature, skip in non-cloud environments
@@ -119,14 +125,14 @@ export const createQuotaLibrary = (
 
     const {
       quota: { scopesPerResourceLimit, scopesPerRoleLimit },
-    } = await subscription.getSubscriptionData();
+    } = await this.subscription.getSubscriptionData();
 
     const usage =
       (entityName === 'resources'
         ? // eslint-disable-next-line unicorn/no-await-expression-member
-          (await selfComputedUsage.getScopesForResourcesTenantUsage())[entityId]
+          (await this.getScopesForResourcesTenantUsage())[entityId]
         : // eslint-disable-next-line unicorn/no-await-expression-member
-          (await selfComputedUsage.getScopesForRolesTenantUsage())[entityId]) ?? 0;
+          (await this.getScopesForRolesTenantUsage())[entityId]) ?? 0;
 
     if (entityName === 'resources') {
       assertThat(
@@ -158,7 +164,7 @@ export const createQuotaLibrary = (
     );
   };
 
-  const reportSubscriptionUpdatesUsage = async (key: keyof SubscriptionUsage) => {
+  reportSubscriptionUpdatesUsage = async (key: keyof SubscriptionUsage) => {
     const { isCloud, isIntegrationTest } = EnvSet.values;
 
     // Cloud only feature, skip in non-cloud environments
@@ -171,16 +177,106 @@ export const createQuotaLibrary = (
       return;
     }
 
-    const { planId, isEnterprisePlan } = await subscription.getSubscriptionData();
+    const { planId, isEnterprisePlan } = await this.subscription.getSubscriptionData();
 
-    if (shouldReportSubscriptionUpdates(planId, isEnterprisePlan, key)) {
-      await reportSubscriptionUpdates(cloudConnection, key);
+    if (this.shouldReportSubscriptionUpdates(planId, isEnterprisePlan, key)) {
+      await reportSubscriptionUpdates(this.cloudConnection, key);
     }
   };
 
-  return {
-    guardTenantUsageByKey,
-    guardEntityScopesUsage,
-    reportSubscriptionUpdatesUsage,
-  };
-};
+  public async getTenantUsage(): Promise<{ usage: SelfComputedTenantUsage }> {
+    const rawUsage = await this.getRawTenantUsage();
+
+    const connectors = await this.connectorLibrary.getLogtoConnectors();
+    const socialConnectors = connectors.filter(
+      (connector) => connector.type === ConnectorType.Social
+    );
+
+    const unparsedUsage: SelfComputedTenantUsage = {
+      applicationsLimit: Number(rawUsage.applicationsLimit),
+      thirdPartyApplicationsLimit: Number(rawUsage.thirdPartyApplicationsLimit),
+      scopesPerResourceLimit: Number(rawUsage.scopesPerResourceLimit), // Max scopes per resource
+      userRolesLimit: Number(rawUsage.userRolesLimit),
+      machineToMachineRolesLimit: Number(rawUsage.machineToMachineRolesLimit),
+      scopesPerRoleLimit: Number(rawUsage.scopesPerRoleLimit), // Max scopes per role
+      hooksLimit: Number(rawUsage.hooksLimit),
+      customJwtEnabled: rawUsage.customJwtEnabled,
+      bringYourUiEnabled: rawUsage.bringYourUiEnabled,
+      /** Add-on quotas start */
+      machineToMachineLimit: Number(rawUsage.machineToMachineLimit),
+      resourcesLimit: Number(rawUsage.resourcesLimit),
+      enterpriseSsoLimit: Number(rawUsage.enterpriseSsoLimit),
+      mfaEnabled: rawUsage.mfaEnabled,
+      /** Enterprise only add-on quotas */
+      idpInitiatedSsoEnabled: rawUsage.idpInitiatedSsoEnabled,
+      samlApplicationsLimit: Number(rawUsage.samlApplicationsLimit),
+      socialConnectorsLimit: socialConnectors.length,
+      organizationsLimit: Number(rawUsage.organizationsLimit),
+      /**
+       * We can not calculate the quota usage since there is no related DB configuration for such feature.
+       * Whether the feature is enabled depends on the `quota` defined for each plan/SKU.
+       * If we mark this value as always `true`, it could block the subscription downgrade (to free plan) since in free plan we do not allow impersonation feature.
+       */
+      subjectTokenEnabled: false,
+    };
+
+    return { usage: selfComputedSubscriptionUsageGuard.parse(unparsedUsage) };
+  }
+
+  public async getScopesForRolesTenantUsage() {
+    const records = await this.pool.any<{ roleId: string; count: string }>(
+      this.sqlBuilder.countScopesForRoles()
+    );
+
+    return Object.fromEntries(records.map(({ roleId, count }) => [roleId, Number(count)]));
+  }
+
+  public async getScopesForResourcesTenantUsage() {
+    const records = await this.pool.any<{ resourceId: string; count: string }>(
+      this.sqlBuilder.countScopesForResources()
+    );
+
+    return Object.fromEntries(records.map(({ resourceId, count }) => [resourceId, Number(count)]));
+  }
+
+  private async getRawTenantUsage() {
+    const usage = await this.pool.one(sql`
+        select ${sql.join(
+          [
+            this.sqlBuilder.countAllApplications(),
+            this.sqlBuilder.countThirdPartyApplications(),
+            this.sqlBuilder.countMachineToMachineApplications(),
+            this.sqlBuilder.countMaxScopesPerResource(),
+            this.sqlBuilder.countUserRoles(),
+            this.sqlBuilder.countMachineToMachineRoles(),
+            this.sqlBuilder.countMaxScopesPerRole(),
+            this.sqlBuilder.countHooks(),
+            this.sqlBuilder.isCustomJwtEnabled(),
+            this.sqlBuilder.isBringYourUiEnabled(),
+            this.sqlBuilder.countResources(),
+            this.sqlBuilder.countEnterpriseSso(),
+            this.sqlBuilder.isMfaEnabled(),
+            this.sqlBuilder.countOrganizations(),
+            this.sqlBuilder.isIdpInitiatedSsoEnabled(),
+            this.sqlBuilder.countSamlApplications(),
+          ].map(([query, key]) => sql`(${query}) as '${key}'`),
+          sql`, `
+        )}
+      `);
+
+    return tenantUsageGuard.parse(usage);
+  }
+
+  /**
+   * @remarks
+   * Should report usage changes to the Cloud only when the following conditions are met:
+   * 1. The tenant is either on Pro plan or Enterprise plan.
+   * 2. The usage key is add-on related usage key.
+   */
+  private readonly shouldReportSubscriptionUpdates = (
+    planId: string,
+    isEnterprisePlan: boolean,
+    key: keyof SubscriptionQuota
+  ) =>
+    (paidReservedPlans.has(planId) || isEnterprisePlan) && isReportSubscriptionUpdatesUsageKey(key);
+}

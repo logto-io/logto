@@ -10,7 +10,7 @@ import { OrganizationInvitationLibrary } from '#src/libraries/organization-invit
 import { createPasscodeLibrary } from '#src/libraries/passcode.js';
 import { createPhraseLibrary } from '#src/libraries/phrase.js';
 import { createProtectedAppLibrary } from '#src/libraries/protected-app.js';
-import { createQuotaLibrary } from '#src/libraries/quota.js';
+import { QuotaLibrary } from '#src/libraries/quota.js';
 import { createRoleScopeLibrary } from '#src/libraries/role-scope.js';
 import { createSamlApplicationsLibrary } from '#src/libraries/saml-application/saml-applications.js';
 import { createScopeLibrary } from '#src/libraries/scope.js';
@@ -18,7 +18,6 @@ import { createSignInExperienceLibrary } from '#src/libraries/sign-in-experience
 import { createSocialLibrary } from '#src/libraries/social.js';
 import { createSsoConnectorLibrary } from '#src/libraries/sso-connector.js';
 import { type SubscriptionLibrary } from '#src/libraries/subscription.js';
-import { SelfComputedUsage } from '#src/libraries/tenant-usage.js';
 import { createUserLibrary } from '#src/libraries/user.js';
 import { createVerificationStatusLibrary } from '#src/libraries/verification-status.js';
 
@@ -46,13 +45,14 @@ export default class Libraries {
   domains = createDomainLibrary(this.queries);
   protectedApps = createProtectedAppLibrary(this.queries);
 
-  selfComputedTenantUsage = new SelfComputedUsage(
+  quota = new QuotaLibrary(
     this.queries.pool,
     this.connectors,
-    this.tenantId
+    this.tenantId,
+    this.cloudConnection,
+    this.subscription
   );
 
-  quota = createQuotaLibrary(this.cloudConnection, this.subscription, this.selfComputedTenantUsage);
   ssoConnectors = createSsoConnectorLibrary(this.queries);
   oneTimeTokens = createOneTimeTokenLibrary(this.queries);
   signInExperiences = createSignInExperienceLibrary(
