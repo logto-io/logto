@@ -127,12 +127,10 @@ export class QuotaLibrary {
       quota: { scopesPerResourceLimit, scopesPerRoleLimit },
     } = await this.subscription.getSubscriptionData();
 
-    const usage =
-      (entityName === 'resources'
-        ? // eslint-disable-next-line unicorn/no-await-expression-member
-          (await this.getScopesForResourcesTenantUsage())[entityId]
-        : // eslint-disable-next-line unicorn/no-await-expression-member
-          (await this.getScopesForRolesTenantUsage())[entityId]) ?? 0;
+    const { [entityName]: usage = 0 } =
+      entityName === 'resources'
+        ? await this.getScopesForResourcesTenantUsage()
+        : await this.getScopesForRolesTenantUsage();
 
     if (entityName === 'resources') {
       assertThat(
@@ -193,25 +191,25 @@ export class QuotaLibrary {
     );
 
     const unparsedUsage: SelfComputedTenantUsage = {
-      applicationsLimit: Number(rawUsage.applicationsLimit),
-      thirdPartyApplicationsLimit: Number(rawUsage.thirdPartyApplicationsLimit),
-      scopesPerResourceLimit: Number(rawUsage.scopesPerResourceLimit), // Max scopes per resource
-      userRolesLimit: Number(rawUsage.userRolesLimit),
-      machineToMachineRolesLimit: Number(rawUsage.machineToMachineRolesLimit),
-      scopesPerRoleLimit: Number(rawUsage.scopesPerRoleLimit), // Max scopes per role
-      hooksLimit: Number(rawUsage.hooksLimit),
+      applicationsLimit: rawUsage.applicationsLimit,
+      thirdPartyApplicationsLimit: rawUsage.thirdPartyApplicationsLimit,
+      scopesPerResourceLimit: rawUsage.scopesPerResourceLimit, // Max scopes per resource
+      userRolesLimit: rawUsage.userRolesLimit,
+      machineToMachineRolesLimit: rawUsage.machineToMachineRolesLimit,
+      scopesPerRoleLimit: rawUsage.scopesPerRoleLimit, // Max scopes per role
+      hooksLimit: rawUsage.hooksLimit,
       customJwtEnabled: rawUsage.customJwtEnabled,
       bringYourUiEnabled: rawUsage.bringYourUiEnabled,
       /** Add-on quotas start */
-      machineToMachineLimit: Number(rawUsage.machineToMachineLimit),
-      resourcesLimit: Number(rawUsage.resourcesLimit),
-      enterpriseSsoLimit: Number(rawUsage.enterpriseSsoLimit),
+      machineToMachineLimit: rawUsage.machineToMachineLimit,
+      resourcesLimit: rawUsage.resourcesLimit,
+      enterpriseSsoLimit: rawUsage.enterpriseSsoLimit,
       mfaEnabled: rawUsage.mfaEnabled,
       /** Enterprise only add-on quotas */
       idpInitiatedSsoEnabled: rawUsage.idpInitiatedSsoEnabled,
-      samlApplicationsLimit: Number(rawUsage.samlApplicationsLimit),
+      samlApplicationsLimit: rawUsage.samlApplicationsLimit,
       socialConnectorsLimit: socialConnectors.length,
-      organizationsLimit: Number(rawUsage.organizationsLimit),
+      organizationsLimit: rawUsage.organizationsLimit,
       /**
        * We can not calculate the quota usage since there is no related DB configuration for such feature.
        * Whether the feature is enabled depends on the `quota` defined for each plan/SKU.

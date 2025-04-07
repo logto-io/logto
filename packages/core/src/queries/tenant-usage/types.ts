@@ -4,47 +4,40 @@ import { z } from 'zod';
 import { type SubscriptionUsage } from '#src/utils/subscription/types.js';
 
 /**
- * A generic type that converts all number properties in T to type V
- */
-type ConvertNumberProperties<T, V> = {
-  [K in keyof T]: T[K] extends number ? V : T[K];
-};
-
-/**
- * TenantUsage type that converts all number properties in SubscriptionUsage to string
+ * TenantUsage type that is based on SubscriptionUsage but with specific fields omitted
+ * Note: Although we use z.string().transform(Number) in the guard, the actual type is still number
+ * because the transform function converts the string input to number output
  */
 export type TenantUsage = Omit<
-  ConvertNumberProperties<SubscriptionUsage, string>,
+  SubscriptionUsage,
   'socialConnectorsLimit' | 'subjectTokenEnabled' | 'tenantMembersLimit'
 >;
 
 /**
- * Guard for TenantUsage that uses string validators for all number properties
+ * Guard for TenantUsage that accepts string inputs and transforms them to numbers
+ * This is why we use z.string().transform(Number) instead of z.number()
  */
 export const tenantUsageGuard = z.object({
-  applicationsLimit: z.string(),
-  thirdPartyApplicationsLimit: z.string(),
-  scopesPerResourceLimit: z.string(),
-  // SocialConnectorsLimit: z.string(),
-  userRolesLimit: z.string(),
-  machineToMachineRolesLimit: z.string(),
-  scopesPerRoleLimit: z.string(),
-  hooksLimit: z.string(),
+  applicationsLimit: z.string().transform(Number),
+  thirdPartyApplicationsLimit: z.string().transform(Number),
+  scopesPerResourceLimit: z.string().transform(Number),
+  userRolesLimit: z.string().transform(Number),
+  machineToMachineRolesLimit: z.string().transform(Number),
+  scopesPerRoleLimit: z.string().transform(Number),
+  hooksLimit: z.string().transform(Number),
   customJwtEnabled: z.boolean(),
-  // SubjectTokenEnabled: z.boolean(),
   bringYourUiEnabled: z.boolean(),
   /** Add-on quotas start */
-  machineToMachineLimit: z.string(),
-  resourcesLimit: z.string(),
-  enterpriseSsoLimit: z.string(),
-  // TenantMembersLimit: z.string(),
+  machineToMachineLimit: z.string().transform(Number),
+  resourcesLimit: z.string().transform(Number),
+  enterpriseSsoLimit: z.string().transform(Number),
   mfaEnabled: z.boolean(),
-  organizationsLimit: z.string(),
+  organizationsLimit: z.string().transform(Number),
   /** Enterprise only add-on quotas */
   idpInitiatedSsoEnabled: z.boolean(),
-  samlApplicationsLimit: z.string(),
+  samlApplicationsLimit: z.string().transform(Number),
   /** Add-on quotas end */
-}) satisfies ToZodObject<TenantUsage>;
+}); // Type assertion to specify input type as string
 
 export type SelfComputedTenantUsage = Omit<SubscriptionUsage, 'tenantMembersLimit'>;
 
