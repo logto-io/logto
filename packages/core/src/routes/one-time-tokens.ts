@@ -1,4 +1,4 @@
-import { OneTimeTokens } from '@logto/schemas';
+import { OneTimeTokens, oneTimeTokenStatusGuard } from '@logto/schemas';
 import { generateStandardId, generateStandardSecret } from '@logto/shared';
 import { trySafe } from '@silverhand/essentials';
 import { addSeconds } from 'date-fns';
@@ -16,14 +16,37 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
     router,
     {
       queries: {
-        oneTimeTokens: { insertOneTimeToken, updateExpiredOneTimeTokensStatusByEmail },
+        oneTimeTokens: {
+          insertOneTimeToken,
+          updateExpiredOneTimeTokensStatusByEmail,
+          getOneTimeTokenById,
+        },
       },
       libraries: {
-        oneTimeTokens: { verifyOneTimeToken },
+        oneTimeTokens: { verifyOneTimeToken, updateOneTimeTokenStatusById },
       },
     },
   ]: RouterInitArgs<T>
 ) {
+  router.get(
+    '/one-time-tokens/:id',
+    koaGuard({
+      params: z.object({
+        id: z.string().min(1),
+      }),
+      response: OneTimeTokens.guard,
+      status: [200, 400, 404],
+    }),
+    async (ctx, next) => {
+      const { params } = ctx.guard;
+      const { id } = params;
+
+      const oneTimeToken = await getOneTimeTokenById(id);
+      ctx.body = oneTimeToken;
+      ctx.status = 200;
+      return next();
+    }
+  );
   router.post(
     '/one-time-tokens',
     koaGuard({
@@ -45,7 +68,6 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
       const { body } = ctx.guard;
       const { expiresIn, ...rest } = body;
 
-      // TODO: add an integration test for this, once GET API is added.
       void trySafe(async () => updateExpiredOneTimeTokensStatusByEmail(rest.email));
 
       const expiresAt = addSeconds(new Date(), expiresIn ?? defaultExpiresTime);
@@ -77,6 +99,30 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
       const { token, email } = ctx.guard.body;
 
       ctx.body = await verifyOneTimeToken(token, email);
+      ctx.status = 200;
+      return next();
+    }
+  );
+
+  router.put(
+    '/one-time-tokens/:id/status',
+    koaGuard({
+      params: z.object({
+        id: z.string().min(1),
+      }),
+      body: z.object({
+        status: oneTimeTokenStatusGuard,
+      }),
+      response: OneTimeTokens.guard,
+      status: [200, 400, 404],
+    }),
+    async (ctx, next) => {
+      const { params, body } = ctx.guard;
+      const { id } = params;
+      const { status } = body;
+
+      const oneTimeToken = await updateOneTimeTokenStatusById(id, status);
+      ctx.body = oneTimeToken;
       ctx.status = 200;
       return next();
     }

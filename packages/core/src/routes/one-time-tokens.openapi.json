@@ -39,6 +39,17 @@
         }
       }
     },
+    "/api/one-time-tokens/{id}": {
+      "get": {
+        "summary": "Get one-time token by ID",
+        "description": "Get a one-time token by its ID.",
+        "responses": {
+          "200": {
+            "description": "The one-time token found by ID."
+          }
+        }
+      }
+    },
     "/api/one-time-tokens/verify": {
       "post": {
         "summary": "Verify one-time token",
@@ -62,12 +73,30 @@
         "responses": {
           "200": {
             "description": "The one-time token was verified successfully."
-          },
-          "400": {
-            "description": "The token has been consumed or is expired, or the email does not match."
-          },
-          "404": {
-            "description": "The one-time token was not found or is not active."
+          }
+        }
+      }
+    },
+    "/api/one-time-tokens/{id}/status": {
+      "put": {
+        "summary": "Update one-time token status",
+        "description": "Update the status of a one-time token by its ID. This can be used to mark the token as consumed or expired.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "status": {
+                    "description": "The new status of the one-time token."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The one-time token status was updated successfully."
           }
         }
       }

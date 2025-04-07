@@ -1,4 +1,4 @@
-import { type OneTimeToken } from '@logto/schemas';
+import { type OneTimeTokenStatus, type OneTimeToken } from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
 
@@ -18,5 +18,15 @@ export const verifyOneTimeToken = async (
   authedAdminApi
     .post('one-time-tokens/verify', {
       json: verifyOneTimeToken,
+    })
+    .json<OneTimeToken>();
+
+export const getOneTimeTokenById = async (id: string) =>
+  authedAdminApi.get(`one-time-tokens/${id}`).json<OneTimeToken>();
+
+export const updateOneTimeTokenStatus = async (id: string, status: OneTimeTokenStatus) =>
+  authedAdminApi
+    .put(`one-time-tokens/${id}/status`, {
+      json: { status },
     })
     .json<OneTimeToken>();
