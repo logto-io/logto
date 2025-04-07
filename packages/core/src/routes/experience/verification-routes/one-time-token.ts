@@ -61,6 +61,8 @@ export default function oneTimeTokenVerificationRoutes<
         oneTimeTokenVerificationRecord.verify(token)
       );
 
+      // Skip CAPTCHA for one-time token flow
+      ctx.experienceInteraction.skipCaptcha();
       await ctx.experienceInteraction.save();
 
       ctx.body = {
