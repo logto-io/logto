@@ -104,4 +104,5 @@ export const mockSignInExperience: SignInExperience = {
   supportWebsiteUrl: null,
   unknownSessionRedirectUrl: null,
   captchaPolicy: {},
+  sentinelPolicy: {},
 };
