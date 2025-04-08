@@ -127,7 +127,7 @@ export class QuotaLibrary {
       quota: { scopesPerResourceLimit, scopesPerRoleLimit },
     } = await this.subscription.getSubscriptionData();
 
-    const { [entityName]: usage = 0 } =
+    const { [entityId]: usage = 0 } =
       entityName === 'resources'
         ? await this.getScopesForResourcesTenantUsage()
         : await this.getScopesForRolesTenantUsage();
