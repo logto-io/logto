@@ -21,21 +21,31 @@ import type { TaggedTemplateLiteralInvocation } from '@silverhand/slonik';
 
 import { convertToIdentifiers } from '#src/utils/sql.js';
 
-import { type TenantUsage } from './types.js';
-
-const { table: applicationsTable, fields: applicationsFields } = convertToIdentifiers(Applications);
-const { table: scopesTable, fields: scopesFields } = convertToIdentifiers(Scopes);
-const { table: resourcesTable, fields: resourcesFields } = convertToIdentifiers(Resources);
-const { table: rolesTable, fields: rolesFields } = convertToIdentifiers(Roles);
-const { table: rolesScopesTable, fields: rolesScopesFields } = convertToIdentifiers(RolesScopes);
-const { table: hooksTable } = convertToIdentifiers(Hooks);
-const { table: logtoConfigsTable, fields: logtoConfigsFields } = convertToIdentifiers(LogtoConfigs);
-const { table: signInExperiencesTable, fields: signInExperiencesFields } =
-  convertToIdentifiers(SignInExperiences);
-const { table: ssoConnectorsTable } = convertToIdentifiers(SsoConnectors);
-const { table: organizationsTable } = convertToIdentifiers(Organizations);
+const { table: applicationsTable, fields: applicationsFields } = convertToIdentifiers(
+  Applications,
+  true
+);
+const { table: scopesTable, fields: scopesFields } = convertToIdentifiers(Scopes, true);
+const { table: resourcesTable, fields: resourcesFields } = convertToIdentifiers(Resources, true);
+const { table: rolesTable, fields: rolesFields } = convertToIdentifiers(Roles, true);
+const { table: rolesScopesTable, fields: rolesScopesFields } = convertToIdentifiers(
+  RolesScopes,
+  true
+);
+const { table: hooksTable } = convertToIdentifiers(Hooks, true);
+const { table: logtoConfigsTable, fields: logtoConfigsFields } = convertToIdentifiers(
+  LogtoConfigs,
+  true
+);
+const { table: signInExperiencesTable, fields: signInExperiencesFields } = convertToIdentifiers(
+  SignInExperiences,
+  true
+);
+const { table: ssoConnectorsTable } = convertToIdentifiers(SsoConnectors, true);
+const { table: organizationsTable } = convertToIdentifiers(Organizations, true);
 const { table: ssoConnectorIdpInitiatedAuthConfigsTable } = convertToIdentifiers(
-  SsoConnectorIdpInitiatedAuthConfigs
+  SsoConnectorIdpInitiatedAuthConfigs,
+  true
 );
 
 export default class TenantUsageQuery {
@@ -43,7 +53,7 @@ export default class TenantUsageQuery {
 
   public readonly countAllApplications = (): [
     TaggedTemplateLiteralInvocation,
-    keyof TenantUsage,
+    TaggedTemplateLiteralInvocation,
   ] => {
     return [
       sql`
@@ -51,13 +61,13 @@ export default class TenantUsageQuery {
           count(*)
         from ${applicationsTable}
       `,
-      'applicationsLimit',
+      sql`applicationsLimit`,
     ];
   };
 
   public readonly countThirdPartyApplications = (): [
     TaggedTemplateLiteralInvocation,
-    keyof TenantUsage,
+    TaggedTemplateLiteralInvocation,
   ] => {
     return [
       sql`
@@ -66,13 +76,13 @@ export default class TenantUsageQuery {
         from ${applicationsTable}
         where ${applicationsFields.isThirdParty} = true
       `,
-      'thirdPartyApplicationsLimit',
+      sql`thirdPartyApplicationsLimit`,
     ];
   };
 
   public readonly countMachineToMachineApplications = (): [
     TaggedTemplateLiteralInvocation,
-    keyof TenantUsage,
+    TaggedTemplateLiteralInvocation,
   ] => {
     return [
       sql`
@@ -81,13 +91,13 @@ export default class TenantUsageQuery {
         from ${applicationsTable}
         where ${applicationsFields.type} = ${ApplicationType.MachineToMachine}
       `,
-      'machineToMachineLimit',
+      sql`machineToMachineLimit`,
     ];
   };
 
   public readonly countMaxScopesPerResource = (): [
     TaggedTemplateLiteralInvocation,
-    keyof TenantUsage,
+    TaggedTemplateLiteralInvocation,
   ] => {
     return [
       sql`
@@ -99,11 +109,14 @@ export default class TenantUsageQuery {
           group by ${scopesFields.resourceId}
         ) select coalesce(max(count), 0) from cte
       `,
-      'scopesPerResourceLimit',
+      sql`scopesPerResourceLimit`,
     ];
   };
 
-  public readonly countUserRoles = (): [TaggedTemplateLiteralInvocation, keyof TenantUsage] => {
+  public readonly countUserRoles = (): [
+    TaggedTemplateLiteralInvocation,
+    TaggedTemplateLiteralInvocation,
+  ] => {
     return [
       sql`
         select
@@ -111,13 +124,13 @@ export default class TenantUsageQuery {
         from ${rolesTable}
         where ${rolesFields.type} = ${RoleType.User}
       `,
-      'userRolesLimit',
+      sql`userRolesLimit`,
     ];
   };
 
   public readonly countMachineToMachineRoles = (): [
     TaggedTemplateLiteralInvocation,
-    keyof TenantUsage,
+    TaggedTemplateLiteralInvocation,
   ] => {
     return [
       sql`
@@ -127,13 +140,13 @@ export default class TenantUsageQuery {
         where ${rolesFields.type} = ${RoleType.MachineToMachine}
         and ${rolesFields.name} != ${InternalRole.Admin}
       `,
-      'machineToMachineRolesLimit',
+      sql`machineToMachineRolesLimit`,
     ];
   };
 
   public readonly countMaxScopesPerRole = (): [
     TaggedTemplateLiteralInvocation,
-    keyof TenantUsage,
+    TaggedTemplateLiteralInvocation,
   ] => {
     return [
       sql`
@@ -144,22 +157,28 @@ export default class TenantUsageQuery {
           group by ${rolesFields.id}
         ) select coalesce(max(count), 0) from cte
       `,
-      'scopesPerRoleLimit',
+      sql`scopesPerRoleLimit`,
     ];
   };
 
-  public readonly countHooks = (): [TaggedTemplateLiteralInvocation, keyof TenantUsage] => {
+  public readonly countHooks = (): [
+    TaggedTemplateLiteralInvocation,
+    TaggedTemplateLiteralInvocation,
+  ] => {
     return [
       sql`
         select
           count(*)
         from ${hooksTable}
       `,
-      'hooksLimit',
+      sql`hooksLimit`,
     ];
   };
 
-  public readonly isCustomJwtEnabled = (): [TaggedTemplateLiteralInvocation, keyof TenantUsage] => {
+  public readonly isCustomJwtEnabled = (): [
+    TaggedTemplateLiteralInvocation,
+    TaggedTemplateLiteralInvocation,
+  ] => {
     return [
       sql`
         select exists (
@@ -170,13 +189,13 @@ export default class TenantUsageQuery {
           )})
         )
       `,
-      'customJwtEnabled',
+      sql`customJwtEnabled`,
     ];
   };
 
   public readonly isBringYourUiEnabled = (): [
     TaggedTemplateLiteralInvocation,
-    keyof TenantUsage,
+    TaggedTemplateLiteralInvocation,
   ] => {
     return [
       sql`
@@ -185,11 +204,14 @@ export default class TenantUsageQuery {
           where ${signInExperiencesFields.customUiAssets} is not null
         )
       `,
-      'bringYourUiEnabled',
+      sql`bringYourUiEnabled`,
     ];
   };
 
-  public readonly countResources = (): [TaggedTemplateLiteralInvocation, keyof TenantUsage] => {
+  public readonly countResources = (): [
+    TaggedTemplateLiteralInvocation,
+    TaggedTemplateLiteralInvocation,
+  ] => {
     return [
       sql`
         select
@@ -197,22 +219,28 @@ export default class TenantUsageQuery {
         from ${resourcesTable}
         where ${resourcesFields.indicator} != ${getManagementApiResourceIndicator(this.tenantId)}
       `,
-      'resourcesLimit',
+      sql`resourcesLimit`,
     ];
   };
 
-  public readonly countEnterpriseSso = (): [TaggedTemplateLiteralInvocation, keyof TenantUsage] => {
+  public readonly countEnterpriseSso = (): [
+    TaggedTemplateLiteralInvocation,
+    TaggedTemplateLiteralInvocation,
+  ] => {
     return [
       sql`
         select
           count(*)
         from ${ssoConnectorsTable}
       `,
-      'enterpriseSsoLimit',
+      sql`enterpriseSsoLimit`,
     ];
   };
 
-  public readonly isMfaEnabled = (): [TaggedTemplateLiteralInvocation, keyof TenantUsage] => {
+  public readonly isMfaEnabled = (): [
+    TaggedTemplateLiteralInvocation,
+    TaggedTemplateLiteralInvocation,
+  ] => {
     return [
       sql`
         select exists (
@@ -220,24 +248,27 @@ export default class TenantUsageQuery {
           where jsonb_array_length(${signInExperiencesFields.mfa}->'factors') > 0
         )
       `,
-      'mfaEnabled',
+      sql`mfaEnabled`,
     ];
   };
 
-  public readonly countOrganizations = (): [TaggedTemplateLiteralInvocation, keyof TenantUsage] => {
+  public readonly countOrganizations = (): [
+    TaggedTemplateLiteralInvocation,
+    TaggedTemplateLiteralInvocation,
+  ] => {
     return [
       sql`
         select
           count(*)
         from ${organizationsTable}
       `,
-      'organizationsLimit',
+      sql`organizationsLimit`,
     ];
   };
 
   public readonly isIdpInitiatedSsoEnabled = (): [
     TaggedTemplateLiteralInvocation,
-    keyof TenantUsage,
+    TaggedTemplateLiteralInvocation,
   ] => {
     return [
       sql`
@@ -245,13 +276,13 @@ export default class TenantUsageQuery {
           select * from ${ssoConnectorIdpInitiatedAuthConfigsTable}
         )
     `,
-      'idpInitiatedSsoEnabled',
+      sql`idpInitiatedSsoEnabled`,
     ];
   };
 
   public readonly countSamlApplications = (): [
     TaggedTemplateLiteralInvocation,
-    keyof TenantUsage,
+    TaggedTemplateLiteralInvocation,
   ] => {
     return [
       sql`
@@ -260,7 +291,7 @@ export default class TenantUsageQuery {
         from ${applicationsTable}
         where ${applicationsFields.type} = ${ApplicationType.SAML}
       `,
-      'samlApplicationsLimit',
+      sql`samlApplicationsLimit`,
     ];
   };
 

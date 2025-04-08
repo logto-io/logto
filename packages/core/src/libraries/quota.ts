@@ -238,29 +238,30 @@ export class QuotaLibrary {
   }
 
   private async getRawTenantUsage() {
-    const usage = await this.pool.one(sql`
-        select ${sql.join(
-          [
-            this.sqlBuilder.countAllApplications(),
-            this.sqlBuilder.countThirdPartyApplications(),
-            this.sqlBuilder.countMachineToMachineApplications(),
-            this.sqlBuilder.countMaxScopesPerResource(),
-            this.sqlBuilder.countUserRoles(),
-            this.sqlBuilder.countMachineToMachineRoles(),
-            this.sqlBuilder.countMaxScopesPerRole(),
-            this.sqlBuilder.countHooks(),
-            this.sqlBuilder.isCustomJwtEnabled(),
-            this.sqlBuilder.isBringYourUiEnabled(),
-            this.sqlBuilder.countResources(),
-            this.sqlBuilder.countEnterpriseSso(),
-            this.sqlBuilder.isMfaEnabled(),
-            this.sqlBuilder.countOrganizations(),
-            this.sqlBuilder.isIdpInitiatedSsoEnabled(),
-            this.sqlBuilder.countSamlApplications(),
-          ].map(([query, key]) => sql`(${query}) as '${key}'`),
-          sql`, `
-        )}
-      `);
+    const sqlQuery = sql`
+      select ${sql.join(
+        [
+          this.sqlBuilder.countAllApplications(),
+          this.sqlBuilder.countThirdPartyApplications(),
+          this.sqlBuilder.countMachineToMachineApplications(),
+          this.sqlBuilder.countMaxScopesPerResource(),
+          this.sqlBuilder.countUserRoles(),
+          this.sqlBuilder.countMachineToMachineRoles(),
+          this.sqlBuilder.countMaxScopesPerRole(),
+          this.sqlBuilder.countHooks(),
+          this.sqlBuilder.isCustomJwtEnabled(),
+          this.sqlBuilder.isBringYourUiEnabled(),
+          this.sqlBuilder.countResources(),
+          this.sqlBuilder.countEnterpriseSso(),
+          this.sqlBuilder.isMfaEnabled(),
+          this.sqlBuilder.countOrganizations(),
+          this.sqlBuilder.isIdpInitiatedSsoEnabled(),
+          this.sqlBuilder.countSamlApplications(),
+        ].map(([query, key]) => sql`(${query}) as "${key}"`),
+        sql`, `
+      )}
+    `;
+    const usage = await this.pool.one(sqlQuery);
 
     return tenantUsageGuard.parse(usage);
   }
