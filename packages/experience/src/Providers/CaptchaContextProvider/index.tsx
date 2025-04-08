@@ -1,4 +1,4 @@
-import { CaptchaType } from '@logto/schemas';
+import { CaptchaType, Theme } from '@logto/schemas';
 import { useMemo, useContext, useCallback, useEffect, useRef } from 'react';
 
 import { isDevFeaturesEnabled } from '@/constants/env';
@@ -14,7 +14,7 @@ type Props = {
 };
 
 const CaptchaContextProvider = ({ children }: Props) => {
-  const { experienceSettings } = useContext(PageContext);
+  const { experienceSettings, theme } = useContext(PageContext);
   const widgetRef = useRef<HTMLDivElement>(null);
 
   const captchaPolicy = experienceSettings?.captchaPolicy;
@@ -55,6 +55,7 @@ const CaptchaContextProvider = ({ children }: Props) => {
 
         window.turnstile.render(widgetRef.current, {
           sitekey: captchaConfig.siteKey,
+          theme: theme === Theme.Light ? 'light' : 'dark',
           callback: (token: string) => {
             resolve(token);
           },
@@ -69,7 +70,7 @@ const CaptchaContextProvider = ({ children }: Props) => {
     return window.grecaptcha.enterprise.execute(captchaConfig.siteKey, {
       action: 'interaction',
     });
-  }, [captchaConfig, isCaptchaRequired]);
+  }, [captchaConfig, isCaptchaRequired, theme]);
 
   useEffect(() => {
     initCaptcha();
