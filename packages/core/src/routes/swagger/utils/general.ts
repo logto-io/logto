@@ -37,11 +37,8 @@ const tagMap = new Map([
   ['.well-known', 'Well-known'],
   ['saml-applications', 'SAML applications'],
   ['saml', 'SAML applications auth flow'],
+  ['one-time-tokens', 'One-time tokens'],
 ]);
-
-if (EnvSet.values.isDevFeaturesEnabled) {
-  tagMap.set('one-time-tokens', 'One-time tokens');
-}
 
 /**
  * Build a tag name from the given absolute path. The function will get the root component name
