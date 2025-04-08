@@ -197,9 +197,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
   webAuthnVerificationRoute(experienceRouter, tenant);
   backupCodeVerificationRoutes(experienceRouter, tenant);
   newPasswordIdentityVerificationRoutes(experienceRouter, tenant);
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    oneTimeTokenRoutes(experienceRouter, tenant);
-  }
+  oneTimeTokenRoutes(experienceRouter, tenant);
 
   profileRoutes(experienceRouter, tenant);
   experienceAnonymousRoutes(experienceRouter, tenant);

@@ -11,9 +11,7 @@ import {
   getOneTimeTokens,
 } from '#src/api/one-time-token.js';
 import { expectRejects } from '#src/helpers/index.js';
-import { devFeatureTest, waitFor } from '#src/utils.js';
-
-const { it, describe } = devFeatureTest;
+import { waitFor } from '#src/utils.js';
 
 describe('one-time tokens API', () => {
   it('should create one-time token with default 10 mins expiration time', async () => {

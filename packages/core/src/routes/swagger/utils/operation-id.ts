@@ -28,8 +28,6 @@ const methodToVerb = Object.freeze({
 type RouteDictionary = Record<`${OpenAPIV3.HttpMethods} ${string}`, string>;
 
 const devFeatureCustomRoutes: RouteDictionary = Object.freeze({
-  'post /one-time-tokens': 'AddOneTimeTokens',
-  'post /one-time-tokens/verify': 'VerifyOneTimeToken',
   'post /sentinel-activities/delete': 'DeleteSentinelActivities',
 });
 
@@ -87,6 +85,9 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   'get /.well-known/sign-in-exp': 'GetSignInExperienceConfig',
   // Custom UI assets
   'post /sign-in-exp/default/custom-ui-assets': 'UploadCustomUiAssets',
+  // One-time tokens
+  'post /one-time-tokens': 'AddOneTimeTokens',
+  'post /one-time-tokens/verify': 'VerifyOneTimeToken',
   ...(EnvSet.values.isDevFeaturesEnabled ? devFeatureCustomRoutes : {}),
 } satisfies RouteDictionary); // Key assertion doesn't work without `satisfies`
 

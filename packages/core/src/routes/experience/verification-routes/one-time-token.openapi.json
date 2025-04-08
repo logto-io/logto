@@ -1,9 +1,4 @@
 {
-  "tags": [
-    {
-      "name": "Dev feature"
-    }
-  ],
   "paths": {
     "/api/experience/verification/one-time-token/verify": {
       "post": {
