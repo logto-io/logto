@@ -42,7 +42,7 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
         status: oneTimeTokenStatusGuard.optional(),
       }),
       response: z.array(OneTimeTokens.guard),
-      status: 200,
+      status: [200, 400],
     }),
     async (ctx, next) => {
       const { guard, pagination } = ctx;
@@ -95,7 +95,7 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
           })
         ),
       response: OneTimeTokens.guard,
-      status: [201],
+      status: [201, 400],
     }),
     async (ctx, next) => {
       const { body } = ctx.guard;
@@ -167,7 +167,7 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
       params: z.object({
         id: z.string().min(1),
       }),
-      status: [200, 400, 404],
+      status: [204, 400, 404],
     }),
     async (ctx, next) => {
       const { params } = ctx.guard;
