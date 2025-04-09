@@ -14,7 +14,10 @@ import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 import { addMinutes } from 'date-fns';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
+import type Queries from '#src/tenants/Queries.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
+
+import { EnvSet } from '../env-set/index.js';
 
 const { fields, table } = convertToIdentifiers(SentinelActivities);
 
@@ -30,6 +33,17 @@ export default class BasicSentinel extends Sentinel {
     SentinelActivityAction.VerificationCode,
     SentinelActivityAction.OneTimeToken,
   ] as const);
+
+  /**
+   * The default policy for this sentinel.
+   *
+   * - `maxAttempts`: 5
+   * - `lockoutDuration`: 10 minutes
+   */
+  static defaultPolicy = Object.freeze({
+    maxAttempts: 5,
+    lockoutDuration: 10,
+  });
 
   /** The array of all supported actions in SQL format. */
   static supportedActionArray = sql.array(BasicSentinel.supportedActions, 'varchar');
@@ -55,8 +69,12 @@ export default class BasicSentinel extends Sentinel {
    * designed to be used as an isolated module that can be separated from the core business logic.
    *
    * @param pool A database pool with methods {@link CommonQueryMethods}.
+   * @param {Queries} queries Tenant-level queries.
    */
-  constructor(protected readonly pool: CommonQueryMethods) {
+  constructor(
+    protected readonly pool: CommonQueryMethods,
+    protected readonly queries: Queries
+  ) {
     super();
   }
 
@@ -111,6 +129,24 @@ export default class BasicSentinel extends Sentinel {
     return blocked && [SentinelDecision.Blocked, blocked.decisionExpiresAt];
   }
 
+  protected async getSentinelPolicy() {
+    // TODO: remove this check when the sentinel policy is fully integrated into the system.
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return BasicSentinel.defaultPolicy;
+    }
+
+    const {
+      signInExperiences: { findDefaultSignInExperience },
+    } = this.queries;
+
+    const { sentinelPolicy } = await findDefaultSignInExperience();
+
+    return {
+      ...BasicSentinel.defaultPolicy,
+      ...sentinelPolicy,
+    };
+  }
+
   protected async decide(
     query: Pick<SentinelActivity, 'targetType' | 'targetHash' | 'actionResult'>
   ): Promise<SentinelDecisionTuple> {
@@ -129,10 +165,13 @@ export default class BasicSentinel extends Sentinel {
         and ${fields.decision} != ${SentinelDecision.Blocked}
         and ${fields.createdAt} > now() - interval '1 hour'
     `);
+    const { maxAttempts, lockoutDuration } = await this.getSentinelPolicy();
+
     const now = new Date();
 
-    return failedAttempts + (query.actionResult === SentinelActionResult.Failed ? 1 : 0) >= 5
-      ? [SentinelDecision.Blocked, addMinutes(now, 10).valueOf()]
+    return failedAttempts + (query.actionResult === SentinelActionResult.Failed ? 1 : 0) >=
+      maxAttempts
+      ? [SentinelDecision.Blocked, addMinutes(now, lockoutDuration).valueOf()]
       : [SentinelDecision.Allowed, now.valueOf()];
   }
 }
