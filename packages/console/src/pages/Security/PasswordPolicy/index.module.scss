@@ -1,0 +1,34 @@
+@use '@/scss/underscore' as _;
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.title {
+  @include _.section-head-1;
+  color: var(--color-neutral-variant-60);
+}
+
+.formFieldDescription {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+  margin: _.unit(1) 0 _.unit(2);
+}
+
+
+.minLength > div[class*='container'] {
+  // From Figma design
+  max-width: 156px;
+}
+
+.characterTypes {
+  display: flex;
+  gap: _.unit(6);
+}
+
+.textarea {
+  margin-inline-start: _.unit(7);
+  margin-top: _.unit(2);
+}

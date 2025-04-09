@@ -19,5 +19,9 @@ export const security: RouteObject = {
       path: `${SecurityTabs.Captcha}/details`,
       element: <CaptchaDetails />,
     },
+    {
+      path: SecurityTabs.PasswordPolicy,
+      element: <Security tab={SecurityTabs.PasswordPolicy} />,
+    },
   ],
 };

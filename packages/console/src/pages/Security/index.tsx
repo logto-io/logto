@@ -1,12 +1,15 @@
+import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
 import PageMeta from '@/components/PageMeta';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { security } from '@/consts/external-links';
 import CardTitle from '@/ds-components/CardTitle';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import pageLayout from '@/scss/page-layout.module.scss';
 
 import Captcha from './Captcha';
+import PasswordPolicy from './PasswordPolicy';
 import styles from './index.module.scss';
 import { SecurityTabs } from './types';
 
@@ -18,7 +21,7 @@ function Security({ tab }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
-    <div className={pageLayout.container}>
+    <div className={classNames(pageLayout.container, styles.noPaddingBottom)}>
       <PageMeta titleKey="security.page_title" />
       <div className={pageLayout.headline}>
         <CardTitle
@@ -34,8 +37,18 @@ function Security({ tab }: Props) {
         >
           {t('security.tabs.captcha')}
         </TabNavItem>
+        {isDevFeaturesEnabled && (
+          <TabNavItem
+            href={`/security/${SecurityTabs.PasswordPolicy}`}
+            isActive={tab === SecurityTabs.PasswordPolicy}
+          >
+            {t('security.tabs.password_policy')}
+          </TabNavItem>
+        )}
       </TabNav>
       {tab === SecurityTabs.Captcha && <Captcha />}
+      {/** TODO: Remove the dev feature guard */}
+      {tab === SecurityTabs.PasswordPolicy && isDevFeaturesEnabled && <PasswordPolicy />}
     </div>
   );
 }
