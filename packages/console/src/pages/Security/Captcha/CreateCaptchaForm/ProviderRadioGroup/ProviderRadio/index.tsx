@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 
 import DynamicT from '@/ds-components/DynamicT';
-import CaptchaLogo from '@/pages/Security/CaptchaLogo';
+import CaptchaLogo from '@/pages/Security/Captcha/CaptchaLogo';
 
 import { type CaptchaProviderMetadata } from '../../types';
 

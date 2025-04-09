@@ -1,17 +1,5 @@
 @use '@/scss/underscore' as _;
 
-.container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-}
-
-.headline {
-  margin-bottom: _.unit(4);
-}
-
-.description {
-  font: var(--font-body-2);
-  color: var(--color-text-secondary);
-  margin-bottom: _.unit(3);
+.tabs {
+  margin: _.unit(4) 0;
 }

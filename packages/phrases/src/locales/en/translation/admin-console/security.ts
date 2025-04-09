@@ -2,6 +2,9 @@ const security = {
   page_title: 'Security',
   title: 'Security',
   subtitle: 'Configure advanced protection against sophisticated attacks.',
+  tabs: {
+    captcha: 'CAPTCHA',
+  },
   bot_protection: {
     title: 'Bot protection',
     description:
