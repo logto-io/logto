@@ -12,6 +12,8 @@ const sign_up_and_sign_in = {
     identifier_description:
       'Todos os identificadores de inscrição selecionados são obrigatórios ao criar uma nova conta.',
     sign_up_authentication: 'Configuração de autenticação para inscrição',
+    verification_tip:
+      'Os usuários devem verificar o e-mail ou número de telefone que você configurou inserindo um código de verificação durante a inscrição.',
     authentication_description:
       'Todas as ações selecionadas serão obrigatórias para os usuários completarem o fluxo.',
     set_a_password_option: 'Crie sua senha',
@@ -54,6 +56,8 @@ const sign_up_and_sign_in = {
       'Isso é essencial, pois você habilitou apenas a opção de fornecer o código de verificação ao se inscrever. Você pode desmarcar a caixa quando a configuração de senha for permitida no processo de inscrição.',
     delete_sign_in_method:
       'Isso é essencial, pois você selecionou {{identifier}} como um identificador obrigatório.',
+    password_disabled_notification:
+      'A opção "Crie sua senha" está desativada para inscrição com nome de usuário, o que pode impedir que os usuários façam login. Confirme para continuar com a salvamento.',
   },
   advanced_options: {
     title: 'OPÇÕES AVANÇADAS',

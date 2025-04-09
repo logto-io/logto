@@ -12,6 +12,8 @@ const sign_up_and_sign_in = {
     identifier_description:
       'Alle ausgewählten Anmeldekennungen sind erforderlich, wenn ein neues Konto erstellt wird.',
     sign_up_authentication: 'Authentifizierungseinstellung für die Anmeldung',
+    verification_tip:
+      'Benutzer müssen die von dir konfigurierte E-Mail-Adresse oder Telefonnummer durch Eingabe eines Bestätigungscodes bei der Anmeldung überprüfen.',
     authentication_description:
       'Alle ausgewählten Aktionen sind für Benutzer verpflichtend, um den Vorgang abzuschließen.',
     set_a_password_option: 'Erstellen Sie Ihr Passwort',
@@ -55,6 +57,8 @@ const sign_up_and_sign_in = {
       'Dies ist unerlässlich, da Sie nur die Möglichkeit aktiviert haben, einen Verifizierungscode bei der Anmeldung bereitzustellen. Sie können das Kontrollkästchen deaktivieren, wenn die Passworteinrichtung im Anmeldeprozess erlaubt ist.',
     delete_sign_in_method:
       'Dies ist unerlässlich, da Sie {{identifier}} als obligatorischen Identifier ausgewählt haben.',
+    password_disabled_notification:
+      'Die Option "Erstellen Sie Ihr Passwort" ist für die Anmeldung mit Benutzername deaktiviert, was Benutzer daran hindern könnte, sich anzumelden. Bestätigen Sie, um mit dem Speichern fortzufahren.',
   },
   advanced_options: {
     title: 'ERWEITERTE OPTIONEN',

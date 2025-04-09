@@ -37,6 +37,8 @@ const session = {
     mfa_factor_not_enabled: 'MFA 因素未啟用。',
   },
   sso_enabled: '該郵箱已開啟單點登錄，請使用 SSO 登錄。',
+  captcha_required: '需要驗證碼。',
+  captcha_failed: '驗證碼驗證失敗。',
 };
 
 export default Object.freeze(session);

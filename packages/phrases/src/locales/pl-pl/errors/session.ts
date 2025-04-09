@@ -46,6 +46,8 @@ const session = {
     mfa_factor_not_enabled: 'Czynnik MFA nie jest włączony.',
   },
   sso_enabled: 'Single sign on jest włączony dla tego adresu e-mail. Zaloguj się za pomocą SSO.',
+  captcha_required: 'Wymagana jest captcha.',
+  captcha_failed: 'Weryfikacja captchy nie powiodła się.',
 };
 
 export default Object.freeze(session);

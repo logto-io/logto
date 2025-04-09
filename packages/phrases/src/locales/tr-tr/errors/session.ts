@@ -45,6 +45,8 @@ const session = {
     mfa_factor_not_enabled: 'MFA faktörü etkin değil.',
   },
   sso_enabled: 'Bu e-posta için tek oturum açma etkin. Lütfen SSO ile oturum açın.',
+  captcha_required: 'Captcha gereklidir.',
+  captcha_failed: 'Captcha doğrulaması başarısız oldu.',
 };
 
 export default Object.freeze(session);

@@ -12,10 +12,9 @@ const security = {
       add: 'CAPTCHA を追加',
     },
     settings: '設定',
-    captcha_required_flows: 'CAPTCHA が必要なフロー',
-    sign_up: 'サインアップ',
-    sign_in: 'サインイン',
-    forgot_password: 'パスワードを忘れた',
+    enable_captcha: 'CAPTCHA を有効化',
+    enable_captcha_description:
+      'サインアップ、サインイン、パスワード回復フローに CAPTCHA 検証を有効にします。',
   },
   create_captcha: {
     setup_captcha: 'CAPTCHA をセットアップ',
@@ -42,6 +41,8 @@ const security = {
     site_key: 'サイトキー',
     secret_key: 'シークレットキー',
     project_id: 'プロジェクト ID',
+    recaptcha_key_id: 'reCAPTCHA キー ID',
+    recaptcha_api_key: 'プロジェクトの API キー',
     deletion_description: 'この CAPTCHA プロバイダーを削除してもよろしいですか？',
     captcha_deleted: 'CAPTCHA プロバイダーが正常に削除されました',
     setup_captcha: 'CAPTCHA をセットアップ',

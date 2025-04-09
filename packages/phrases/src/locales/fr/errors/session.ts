@@ -51,6 +51,8 @@ const session = {
   },
   sso_enabled:
     'La connexion unique est activée pour cet e-mail donné. Veuillez vous connecter avec SSO.',
+  captcha_required: 'Le captcha est requis.',
+  captcha_failed: 'La vérification du captcha a échoué.',
 };
 
 export default Object.freeze(session);

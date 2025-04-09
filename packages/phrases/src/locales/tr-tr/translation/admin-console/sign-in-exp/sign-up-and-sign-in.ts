@@ -12,6 +12,8 @@ const sign_up_and_sign_in = {
     identifier_description:
       'Yeni bir hesap oluştururken seçilen tüm kayıt tanımlayıcılar gereklidir.',
     sign_up_authentication: 'Kaydolma doğrulama ayarları',
+    verification_tip:
+      'Kullanıcılar, kaydolma sırasında bir doğrulama kodu girerek yapılandırdığınız e-posta veya telefon numarasını doğrulamalıdır.',
     authentication_description:
       'Seçilen tüm işlemler, kullanıcıların akışı tamamlamaları zorunlu olacaktır.',
     set_a_password_option: 'Şifrenizi oluşturun',
@@ -54,6 +56,8 @@ const sign_up_and_sign_in = {
     verification_code_auth:
       'Bu, yalnızca doğrulama kodu sağlama seçeneğini etkinleştirdiğiniz için önemlidir. Kayıt işlemi sırasında şifre oluşturma izni verildiğinde kutuyu kaldırabilirsiniz.',
     delete_sign_in_method: 'Bu, {{identifier}} gerekliliğini belirlediğiniz için önemlidir.',
+    password_disabled_notification:
+      'Kullanıcı adı ile kaydolma için "Şifrenizi oluşturun" seçeneği devre dışı bırakıldı, bu da kullanıcıların oturum açmasını engelleyebilir. Kaydetmeye devam etmek için onaylayın.',
   },
   advanced_options: {
     title: 'GELİŞMİŞ SEÇENEKLER',

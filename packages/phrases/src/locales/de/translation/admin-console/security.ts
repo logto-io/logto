@@ -12,10 +12,9 @@ const security = {
       add: 'CAPTCHA hinzufügen',
     },
     settings: 'Einstellungen',
-    captcha_required_flows: 'Erforderliche CAPTCHA-Abläufe',
-    sign_up: 'Registrieren',
-    sign_in: 'Anmelden',
-    forgot_password: 'Passwort vergessen',
+    enable_captcha: 'CAPTCHA aktivieren',
+    enable_captcha_description:
+      'Aktivieren Sie die CAPTCHA-Verifizierung für Anmelde-, Anmelde- und Passwortwiederherstellungsabläufe.',
   },
   create_captcha: {
     setup_captcha: 'CAPTCHA einrichten',
@@ -42,6 +41,8 @@ const security = {
     site_key: 'Seitenschlüssel',
     secret_key: 'Geheimschlüssel',
     project_id: 'Projekt-ID',
+    recaptcha_key_id: 'reCAPTCHA-Schlüssel-ID',
+    recaptcha_api_key: 'API-Schlüssel des Projekts',
     deletion_description: 'Sind Sie sicher, dass Sie diesen CAPTCHA-Anbieter löschen möchten?',
     captcha_deleted: 'CAPTCHA-Anbieter erfolgreich gelöscht',
     setup_captcha: 'CAPTCHA einrichten',

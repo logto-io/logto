@@ -12,6 +12,8 @@ const sign_up_and_sign_in = {
     identifier_description:
       "Tous les identifiants d'inscription sélectionnés sont requis lors de la création d'un nouveau compte.",
     sign_up_authentication: "Paramètres d'authentification pour l'inscription",
+    verification_tip:
+      "Les utilisateurs doivent vérifier l'adresse e-mail ou le numéro de téléphone que vous avez configuré en entrant un code de vérification lors de l'inscription.",
     authentication_description:
       "Toutes les actions sélectionnées seront obligatoires pour que les utilisateurs terminent le processus d'inscription.",
     set_a_password_option: 'Créer votre mot de passe',
@@ -59,6 +61,8 @@ const sign_up_and_sign_in = {
       "Ceci est essentiel car vous avez uniquement activé l'option de fourniture d'un code de vérification lors de l'inscription. Vous pouvez décocher la case lorsque la configuration d'un mot de passe est autorisée lors du processus d'inscription.",
     delete_sign_in_method:
       'Ceci est essentiel car vous avez sélectionné {{identifier}} comme identificateur requis.',
+    password_disabled_notification:
+      "L'option \"Créer votre mot de passe\" est désactivée pour l'inscription avec un nom d'utilisateur, ce qui peut empêcher les utilisateurs de se connecter. Confirmez pour procéder à l'enregistrement.",
   },
   advanced_options: {
     title: 'OPTIONS AVANCÉES',

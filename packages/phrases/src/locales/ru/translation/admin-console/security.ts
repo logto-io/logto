@@ -12,10 +12,9 @@ const security = {
       add: 'Добавить CAPTCHA',
     },
     settings: 'Настройки',
-    captcha_required_flows: 'Требуемые потоки CAPTCHA',
-    sign_up: 'Регистрация',
-    sign_in: 'Вход',
-    forgot_password: 'Забыли пароль',
+    enable_captcha: 'Включить CAPTCHA',
+    enable_captcha_description:
+      'Включите проверку CAPTCHA для регистрации, входа в систему и восстановления пароля.',
   },
   create_captcha: {
     setup_captcha: 'Настройка CAPTCHA',
@@ -42,6 +41,8 @@ const security = {
     site_key: 'Ключ сайта',
     secret_key: 'Секретный ключ',
     project_id: 'ID проекта',
+    recaptcha_key_id: 'ID ключа reCAPTCHA',
+    recaptcha_api_key: 'API-ключ проекта',
     deletion_description: 'Вы уверены, что хотите удалить этого поставщика CAPTCHA?',
     captcha_deleted: 'Поставщик CAPTCHA успешно удалён',
     setup_captcha: 'Настройка CAPTCHA',

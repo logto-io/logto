@@ -42,6 +42,8 @@ const session = {
     mfa_factor_not_enabled: 'MFA 요소가 활성화되지 않았습니다.',
   },
   sso_enabled: '이 이메일로는 SSO가 활성화되어 있어요. SSO로 로그인해 주세요.',
+  captcha_required: 'Captcha 가 필요해요.',
+  captcha_failed: 'Captcha 인증에 실패했어요.',
 };
 
 export default Object.freeze(session);

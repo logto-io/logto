@@ -12,6 +12,8 @@ const sign_up_and_sign_in = {
     identifier_description:
       '新しいアカウントを作成する際に、すべての選択されたサインアップ識別子が必要です。',
     sign_up_authentication: 'サインアップの認証設定',
+    verification_tip:
+      'ユーザーはサインアップ中に確認コードを入力することで、設定されたメールや電話番号を確認する必要があります。',
     authentication_description:
       '選択したすべてのアクションは、ユーザーがフローを完了するために必須です。',
     set_a_password_option: 'パスワードの設定',
@@ -53,6 +55,8 @@ const sign_up_and_sign_in = {
     verification_code_auth:
       'これは、サインアップ時に確認コードの提供オプションのみを有効にした場合に必要です。サインアッププロセスでパスワード設定を許可する場合は、ボックスのチェックを外してもかまいません。',
     delete_sign_in_method: 'これは {{identifier}} を必須の識別子として選択した場合に必要です。',
+    password_disabled_notification:
+      'ユーザー名のサインアップで「パスワードを作成する」オプションが無効になっており、ユーザーがサインインできない可能性があります。保存を続行するには確認してください。',
   },
   advanced_options: {
     title: '高度なオプション',

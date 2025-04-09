@@ -11,6 +11,8 @@ const sign_up_and_sign_in = {
     sign_up_identifier: '회원가입 ID',
     identifier_description: '새 계정을 만들 때 모든 선택한 회원가입 식별자가 필요합니다.',
     sign_up_authentication: '회원가입 인증 설정',
+    verification_tip:
+      '사용자는 회원가입 시 인증 코드를 입력하여 설정한 이메일 또는 전화번호를 인증해야 합니다.',
     authentication_description: '선택된 모든 작업들은 사용자가 모두 마무리해야 해요.',
     set_a_password_option: '비밀번호 생성',
     verify_at_sign_up_option: '회원가입 인증',
@@ -51,6 +53,8 @@ const sign_up_and_sign_in = {
     verification_code_auth:
       '가입 시 인증 코드를 제공하는 옵션만 활성화했기 때문에 이것은 필수예요. 회원가입에서 비밀번호 설정이 허용되면 이 옵션을 취소할 수 있어요.',
     delete_sign_in_method: '{{identifier}}를 필수 ID로 설정했기 때문에 이 옵션은 필수예요.',
+    password_disabled_notification:
+      '\'사용자 이름으로 회원가입할 때 "비밀번호 생성" 옵션이 비활성화되어 있어 사용자가 로그인하지 못할 수 있습니다. 저장을 진행하시겠습니까?\'',
   },
   advanced_options: {
     title: '고급 옵션',

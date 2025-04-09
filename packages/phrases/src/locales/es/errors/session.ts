@@ -50,6 +50,8 @@ const session = {
   },
   sso_enabled:
     'El inicio de sesión único está habilitado para este correo electrónico dado. Inicie sesión con SSO, por favor.',
+  captcha_required: 'Se requiere captcha.',
+  captcha_failed: 'La verificación del captcha falló.',
 };
 
 export default Object.freeze(session);

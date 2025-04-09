@@ -12,10 +12,9 @@ const security = {
       add: 'CAPTCHA ekle',
     },
     settings: 'Ayarlar',
-    captcha_required_flows: 'CAPTCHA gerektiren akışlar',
-    sign_up: 'Kayıt ol',
-    sign_in: 'Giriş yap',
-    forgot_password: 'Şifremi unuttum',
+    enable_captcha: "CAPTCHA'yı Etkinleştir",
+    enable_captcha_description:
+      'Kayıt olma, giriş yapma ve şifre kurtarma işlemleri için CAPTCHA doğrulamasını etkinleştirin.',
   },
   create_captcha: {
     setup_captcha: "CAPTCHA'yı ayarla",
@@ -42,6 +41,8 @@ const security = {
     site_key: 'Site anahtarı',
     secret_key: 'Gizli anahtar',
     project_id: 'Proje ID',
+    recaptcha_key_id: 'reCAPTCHA anahtar ID',
+    recaptcha_api_key: 'Projenin API anahtarı',
     deletion_description: 'Bu CAPTCHA sağlayıcısını silmek istediğinizden emin misiniz?',
     captcha_deleted: 'CAPTCHA sağlayıcısı başarıyla silindi',
     setup_captcha: "CAPTCHA'yı ayarla",

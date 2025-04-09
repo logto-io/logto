@@ -12,6 +12,8 @@ const sign_up_and_sign_in = {
     identifier_description:
       'Se requieren todos los identificadores de registro seleccionados al crear una nueva cuenta.',
     sign_up_authentication: 'Configuración de autenticación para el registro',
+    verification_tip:
+      'Los usuarios deben verificar el correo electrónico o el número de teléfono que hayas configurado ingresando un código de verificación durante el registro.',
     authentication_description:
       'Todas las acciones seleccionadas serán obligatorias para que los usuarios completen el proceso.',
     set_a_password_option: 'Crear una contraseña',
@@ -59,6 +61,8 @@ const sign_up_and_sign_in = {
       'Es esencial ya que solo has habilitado la opción de proporcionar un código de verificación al registrarse. Se puede desactivar la opción si se permite la configuración de contraseña durante el proceso de registro.',
     delete_sign_in_method:
       'Es esencial ya que has seleccionado {{identifier}} como identificador obligatorio.',
+    password_disabled_notification:
+      'La opción "Crear tu contraseña" está deshabilitada para el registro con nombre de usuario, lo que puede impedir que los usuarios inicien sesión. Confirma para proceder con el guardado.',
   },
   advanced_options: {
     title: 'OPCIONES AVANZADAS',
