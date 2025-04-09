@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import {
   Applications,
   ApplicationType,
@@ -17,9 +18,11 @@ import {
   InternalRole,
 } from '@logto/schemas';
 import { sql } from '@silverhand/slonik';
-import type { TaggedTemplateLiteralInvocation } from '@silverhand/slonik';
+import type { CommonQueryMethods, TaggedTemplateLiteralInvocation } from '@silverhand/slonik';
 
 import { convertToIdentifiers } from '#src/utils/sql.js';
+
+import { tenantUsageGuard } from './types.js';
 
 const { table: applicationsTable, fields: applicationsFields } = convertToIdentifiers(
   Applications,
@@ -49,9 +52,57 @@ const { table: ssoConnectorIdpInitiatedAuthConfigsTable } = convertToIdentifiers
 );
 
 export default class TenantUsageQuery {
-  constructor(public readonly tenantId: string) {}
+  constructor(
+    private readonly pool: CommonQueryMethods,
+    private readonly tenantId: string
+  ) {}
 
-  public readonly countAllApplications = (): [
+  public async getRawTenantUsage() {
+    const sqlQuery = sql`
+      select ${sql.join(
+        [
+          this.countAllApplications(),
+          this.countThirdPartyApplications(),
+          this.countMachineToMachineApplications(),
+          this.countMaxScopesPerResource(),
+          this.countUserRoles(),
+          this.countMachineToMachineRoles(),
+          this.countMaxScopesPerRole(),
+          this.countHooks(),
+          this.isCustomJwtEnabled(),
+          this.isBringYourUiEnabled(),
+          this.countResources(),
+          this.countEnterpriseSso(),
+          this.isMfaEnabled(),
+          this.countOrganizations(),
+          this.isIdpInitiatedSsoEnabled(),
+          this.countSamlApplications(),
+        ].map(([query, key]) => sql`(${query}) as "${key}"`),
+        sql`, `
+      )}
+    `;
+    const usage = await this.pool.one(sqlQuery);
+
+    return tenantUsageGuard.parse(usage);
+  }
+
+  public async getScopesForRolesTenantUsage() {
+    const records = await this.pool.any<{ roleId: string; count: string }>(
+      this.countScopesForRoles()
+    );
+
+    return Object.fromEntries(records.map(({ roleId, count }) => [roleId, Number(count)]));
+  }
+
+  public async getScopesForResourcesTenantUsage() {
+    const records = await this.pool.any<{ resourceId: string; count: string }>(
+      this.countScopesForResources()
+    );
+
+    return Object.fromEntries(records.map(({ resourceId, count }) => [resourceId, Number(count)]));
+  }
+
+  private readonly countAllApplications = (): [
     TaggedTemplateLiteralInvocation,
     TaggedTemplateLiteralInvocation,
   ] => {
@@ -65,7 +116,7 @@ export default class TenantUsageQuery {
     ];
   };
 
-  public readonly countThirdPartyApplications = (): [
+  private readonly countThirdPartyApplications = (): [
     TaggedTemplateLiteralInvocation,
     TaggedTemplateLiteralInvocation,
   ] => {
@@ -80,7 +131,7 @@ export default class TenantUsageQuery {
     ];
   };
 
-  public readonly countMachineToMachineApplications = (): [
+  private readonly countMachineToMachineApplications = (): [
     TaggedTemplateLiteralInvocation,
     TaggedTemplateLiteralInvocation,
   ] => {
@@ -95,7 +146,7 @@ export default class TenantUsageQuery {
     ];
   };
 
-  public readonly countMaxScopesPerResource = (): [
+  private readonly countMaxScopesPerResource = (): [
     TaggedTemplateLiteralInvocation,
     TaggedTemplateLiteralInvocation,
   ] => {
@@ -113,7 +164,7 @@ export default class TenantUsageQuery {
     ];
   };
 
-  public readonly countUserRoles = (): [
+  private readonly countUserRoles = (): [
     TaggedTemplateLiteralInvocation,
     TaggedTemplateLiteralInvocation,
   ] => {
@@ -128,7 +179,7 @@ export default class TenantUsageQuery {
     ];
   };
 
-  public readonly countMachineToMachineRoles = (): [
+  private readonly countMachineToMachineRoles = (): [
     TaggedTemplateLiteralInvocation,
     TaggedTemplateLiteralInvocation,
   ] => {
@@ -144,7 +195,7 @@ export default class TenantUsageQuery {
     ];
   };
 
-  public readonly countMaxScopesPerRole = (): [
+  private readonly countMaxScopesPerRole = (): [
     TaggedTemplateLiteralInvocation,
     TaggedTemplateLiteralInvocation,
   ] => {
@@ -161,7 +212,7 @@ export default class TenantUsageQuery {
     ];
   };
 
-  public readonly countHooks = (): [
+  private readonly countHooks = (): [
     TaggedTemplateLiteralInvocation,
     TaggedTemplateLiteralInvocation,
   ] => {
@@ -175,7 +226,7 @@ export default class TenantUsageQuery {
     ];
   };
 
-  public readonly isCustomJwtEnabled = (): [
+  private readonly isCustomJwtEnabled = (): [
     TaggedTemplateLiteralInvocation,
     TaggedTemplateLiteralInvocation,
   ] => {
@@ -193,7 +244,7 @@ export default class TenantUsageQuery {
     ];
   };
 
-  public readonly isBringYourUiEnabled = (): [
+  private readonly isBringYourUiEnabled = (): [
     TaggedTemplateLiteralInvocation,
     TaggedTemplateLiteralInvocation,
   ] => {
@@ -208,7 +259,7 @@ export default class TenantUsageQuery {
     ];
   };
 
-  public readonly countResources = (): [
+  private readonly countResources = (): [
     TaggedTemplateLiteralInvocation,
     TaggedTemplateLiteralInvocation,
   ] => {
@@ -223,7 +274,7 @@ export default class TenantUsageQuery {
     ];
   };
 
-  public readonly countEnterpriseSso = (): [
+  private readonly countEnterpriseSso = (): [
     TaggedTemplateLiteralInvocation,
     TaggedTemplateLiteralInvocation,
   ] => {
@@ -237,7 +288,7 @@ export default class TenantUsageQuery {
     ];
   };
 
-  public readonly isMfaEnabled = (): [
+  private readonly isMfaEnabled = (): [
     TaggedTemplateLiteralInvocation,
     TaggedTemplateLiteralInvocation,
   ] => {
@@ -252,7 +303,7 @@ export default class TenantUsageQuery {
     ];
   };
 
-  public readonly countOrganizations = (): [
+  private readonly countOrganizations = (): [
     TaggedTemplateLiteralInvocation,
     TaggedTemplateLiteralInvocation,
   ] => {
@@ -266,7 +317,7 @@ export default class TenantUsageQuery {
     ];
   };
 
-  public readonly isIdpInitiatedSsoEnabled = (): [
+  private readonly isIdpInitiatedSsoEnabled = (): [
     TaggedTemplateLiteralInvocation,
     TaggedTemplateLiteralInvocation,
   ] => {
@@ -280,7 +331,7 @@ export default class TenantUsageQuery {
     ];
   };
 
-  public readonly countSamlApplications = (): [
+  private readonly countSamlApplications = (): [
     TaggedTemplateLiteralInvocation,
     TaggedTemplateLiteralInvocation,
   ] => {
@@ -295,7 +346,7 @@ export default class TenantUsageQuery {
     ];
   };
 
-  public readonly countScopesForResources = (): TaggedTemplateLiteralInvocation => {
+  private readonly countScopesForResources = (): TaggedTemplateLiteralInvocation => {
     return sql`
       select ${scopesFields.resourceId}, count(*) as count
       from ${scopesTable}
@@ -305,7 +356,7 @@ export default class TenantUsageQuery {
     `;
   };
 
-  public readonly countScopesForRoles = (): TaggedTemplateLiteralInvocation => {
+  private readonly countScopesForRoles = (): TaggedTemplateLiteralInvocation => {
     return sql`
       select ${rolesScopesFields.roleId}, count(*) as count
       from ${rolesScopesTable}
@@ -315,3 +366,4 @@ export default class TenantUsageQuery {
     `;
   };
 }
+/* eslint-enable max-lines */

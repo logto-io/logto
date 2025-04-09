@@ -1,5 +1,5 @@
 import { ReservedPlanId, ConnectorType } from '@logto/schemas';
-import { sql, type CommonQueryMethods } from '@silverhand/slonik';
+import { type CommonQueryMethods } from '@silverhand/slonik';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -14,7 +14,6 @@ import { type SubscriptionQuota, type SubscriptionUsage } from '#src/utils/subsc
 
 import TenantUsageQuery from '../queries/tenant-usage/index.js';
 import {
-  tenantUsageGuard,
   selfComputedSubscriptionUsageGuard,
   type SelfComputedTenantUsage,
 } from '../queries/tenant-usage/types.js';
@@ -25,7 +24,7 @@ import { type ConnectorLibrary } from './connector.js';
 const paidReservedPlans = new Set<string>([ReservedPlanId.Pro, ReservedPlanId.Pro202411]);
 
 export class QuotaLibrary {
-  private readonly sqlBuilder: TenantUsageQuery;
+  private readonly tenantUsageQuery: TenantUsageQuery;
 
   constructor(
     public readonly pool: CommonQueryMethods,
@@ -34,7 +33,7 @@ export class QuotaLibrary {
     private readonly cloudConnection: CloudConnectionLibrary,
     private readonly subscription: SubscriptionLibrary
   ) {
-    this.sqlBuilder = new TenantUsageQuery(tenantId);
+    this.tenantUsageQuery = new TenantUsageQuery(pool, tenantId);
   }
 
   guardTenantUsageByKey = async (key: keyof SubscriptionUsage) => {
@@ -183,7 +182,7 @@ export class QuotaLibrary {
   };
 
   public async getTenantUsage(): Promise<{ usage: SelfComputedTenantUsage }> {
-    const rawUsage = await this.getRawTenantUsage();
+    const rawUsage = await this.tenantUsageQuery.getRawTenantUsage();
 
     const connectors = await this.connectorLibrary.getLogtoConnectors();
     const socialConnectors = connectors.filter(
@@ -222,48 +221,11 @@ export class QuotaLibrary {
   }
 
   public async getScopesForRolesTenantUsage() {
-    const records = await this.pool.any<{ roleId: string; count: string }>(
-      this.sqlBuilder.countScopesForRoles()
-    );
-
-    return Object.fromEntries(records.map(({ roleId, count }) => [roleId, Number(count)]));
+    return this.tenantUsageQuery.getScopesForRolesTenantUsage();
   }
 
   public async getScopesForResourcesTenantUsage() {
-    const records = await this.pool.any<{ resourceId: string; count: string }>(
-      this.sqlBuilder.countScopesForResources()
-    );
-
-    return Object.fromEntries(records.map(({ resourceId, count }) => [resourceId, Number(count)]));
-  }
-
-  private async getRawTenantUsage() {
-    const sqlQuery = sql`
-      select ${sql.join(
-        [
-          this.sqlBuilder.countAllApplications(),
-          this.sqlBuilder.countThirdPartyApplications(),
-          this.sqlBuilder.countMachineToMachineApplications(),
-          this.sqlBuilder.countMaxScopesPerResource(),
-          this.sqlBuilder.countUserRoles(),
-          this.sqlBuilder.countMachineToMachineRoles(),
-          this.sqlBuilder.countMaxScopesPerRole(),
-          this.sqlBuilder.countHooks(),
-          this.sqlBuilder.isCustomJwtEnabled(),
-          this.sqlBuilder.isBringYourUiEnabled(),
-          this.sqlBuilder.countResources(),
-          this.sqlBuilder.countEnterpriseSso(),
-          this.sqlBuilder.isMfaEnabled(),
-          this.sqlBuilder.countOrganizations(),
-          this.sqlBuilder.isIdpInitiatedSsoEnabled(),
-          this.sqlBuilder.countSamlApplications(),
-        ].map(([query, key]) => sql`(${query}) as "${key}"`),
-        sql`, `
-      )}
-    `;
-    const usage = await this.pool.one(sqlQuery);
-
-    return tenantUsageGuard.parse(usage);
+    return this.tenantUsageQuery.getScopesForResourcesTenantUsage();
   }
 
   /**
