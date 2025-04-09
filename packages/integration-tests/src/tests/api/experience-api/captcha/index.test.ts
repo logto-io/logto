@@ -1,12 +1,13 @@
-import { ConnectorType, InteractionEvent, SignInIdentifier } from '@logto/schemas';
+import { ConnectorType, InteractionEvent, SignInIdentifier, SignInMode } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 
 import { mockSocialConnectorId } from '#src/__mocks__/connectors-mock.js';
 import { deleteUser } from '#src/api/admin-user.js';
+import { createOneTimeToken } from '#src/api/one-time-token.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { SsoConnectorApi } from '#src/api/sso-connector.js';
 import { setAlwaysFailCaptcha, setAlwaysPassCaptcha } from '#src/helpers/captcha.js';
-import { initExperienceClient } from '#src/helpers/client.js';
+import { initExperienceClient, processSession } from '#src/helpers/client.js';
 import {
   clearConnectorsByTypes,
   setEmailConnector,
@@ -214,6 +215,64 @@ describe('captcha', () => {
         },
         true
       );
+      await deleteUser(userId);
+    });
+  });
+
+  describe('one-time token verification', () => {
+    beforeAll(async () => {
+      await setEmailConnector();
+      await updateSignInExperience({
+        signInMode: SignInMode.SignInAndRegister,
+        signUp: {
+          identifiers: [SignInIdentifier.Email],
+          password: false,
+          verify: true,
+        },
+        signIn: {
+          methods: [
+            {
+              identifier: SignInIdentifier.Username,
+              password: true,
+              verificationCode: false,
+              isPasswordPrimary: true,
+            },
+            {
+              identifier: SignInIdentifier.Email,
+              password: true,
+              verificationCode: true,
+              isPasswordPrimary: false,
+            },
+          ],
+        },
+      });
+    });
+
+    afterAll(async () => {
+      await clearConnectorsByTypes([ConnectorType.Email]);
+    });
+
+    it('should skip captcha for one-time token registration', async () => {
+      const client = await initExperienceClient({
+        interactionEvent: InteractionEvent.Register,
+      });
+
+      const oneTimeToken = await createOneTimeToken({
+        email: 'foo@logto.io',
+      });
+
+      const { verificationId } = await client.verifyOneTimeToken({
+        token: oneTimeToken.token,
+        identifier: {
+          type: SignInIdentifier.Email,
+          value: 'foo@logto.io',
+        },
+      });
+
+      await client.identifyUser({ verificationId });
+
+      const { redirectTo } = await client.submitInteraction();
+      const userId = await processSession(client, redirectTo);
       await deleteUser(userId);
     });
   });
