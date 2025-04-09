@@ -17,6 +17,7 @@ import { splitMarkdownByTitle } from '@/pages/Connectors/utils';
 import modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 
+import { SecurityTabs } from '../../types';
 import CaptchaFormFields from '../CaptchaFormFields';
 import { captchaProviders } from '../CreateCaptchaForm/constants';
 import { type CaptchaFormType } from '../types';
@@ -71,7 +72,7 @@ function Guide({ type, onClose }: Props) {
       await mutate(provider);
 
       toast.success(t('general.saved'));
-      navigate('/security/captcha');
+      navigate(`/security/${SecurityTabs.Captcha}/details`);
     })
   );
 

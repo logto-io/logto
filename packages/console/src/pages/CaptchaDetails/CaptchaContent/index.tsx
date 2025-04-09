@@ -8,9 +8,9 @@ import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
-import CaptchaFormFields from '@/pages/Security/CaptchaFormFields';
-import { captchaProviders } from '@/pages/Security/CreateCaptchaForm/constants';
-import { type CaptchaFormType } from '@/pages/Security/types';
+import CaptchaFormFields from '@/pages/Security/Captcha/CaptchaFormFields';
+import { captchaProviders } from '@/pages/Security/Captcha/CreateCaptchaForm/constants';
+import { type CaptchaFormType } from '@/pages/Security/Captcha/types';
 import { trySubmitSafe } from '@/utils/form';
 
 type Props = {

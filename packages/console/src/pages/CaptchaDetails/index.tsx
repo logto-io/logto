@@ -15,11 +15,10 @@ import DynamicT from '@/ds-components/DynamicT';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useApi from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
-
-import CaptchaLogo from '../Security/CaptchaLogo';
-import CreateCaptchaForm from '../Security/CreateCaptchaForm';
-import { captchaProviders } from '../Security/CreateCaptchaForm/constants';
-import useDataFetch from '../Security/use-data-fetch';
+import CaptchaLogo from '@/pages/Security/Captcha/CaptchaLogo';
+import CreateCaptchaForm from '@/pages/Security/Captcha/CreateCaptchaForm';
+import { captchaProviders } from '@/pages/Security/Captcha/CreateCaptchaForm/constants';
+import useDataFetch from '@/pages/Security/Captcha/use-data-fetch';
 
 import CaptchaContent from './CaptchaContent';
 import styles from './index.module.scss';
