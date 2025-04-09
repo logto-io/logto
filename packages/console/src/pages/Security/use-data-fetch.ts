@@ -8,7 +8,7 @@ import { shouldRetryOnError } from '@/utils/request';
 
 const useDataFetch = () => {
   const apiPath = 'api/captcha-provider';
-  const fetchApi = useApi({ hideErrorToast: true });
+  const fetchApi = useApi({ hideErrorToast: ['entity.not_found'] });
   const fetcher = useSwrFetcher<CaptchaProvider>(fetchApi);
 
   const { isLoading, data, mutate, error } = useSWR<CaptchaProvider, ResponseError>(apiPath, {
