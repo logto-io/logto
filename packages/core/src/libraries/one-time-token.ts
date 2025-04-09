@@ -12,9 +12,9 @@ export const createOneTimeTokenLibrary = (queries: Queries) => {
   } = queries.oneTimeTokens;
 
   const updateOneTimeTokenStatusById = async (id: string, status: OneTimeTokenStatus) => {
-    const oneTimeTokenRecord = await getOneTimeTokenById(id);
+    const oneTimeToken = await getOneTimeTokenById(id);
 
-    return updateOneTimeTokenStatus(oneTimeTokenRecord.token, status);
+    return updateOneTimeTokenStatus(oneTimeToken.token, status);
   };
   const updateOneTimeTokenStatus = async (token: string, status: OneTimeTokenStatus) => {
     assertThat(status !== OneTimeTokenStatus.Active, 'one_time_token.cannot_reactivate_token');
@@ -25,10 +25,6 @@ export const createOneTimeTokenLibrary = (queries: Queries) => {
   const checkOneTimeToken = async (token: string, email: string) => {
     const oneTimeToken = await getOneTimeTokenByToken(token);
 
-    assertThat(
-      oneTimeToken,
-      new RequestError({ code: 'one_time_token.token_not_found', status: 404 })
-    );
     assertThat(oneTimeToken.email === email, 'one_time_token.email_mismatch');
 
     if (

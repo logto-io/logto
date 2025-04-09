@@ -89,6 +89,38 @@ describe('one-time tokens API', () => {
     });
   });
 
+  it('should return expired status when the expiration time is passed', async () => {
+    const email = `foo${generateStandardId()}@bar.com`;
+    const oneTimeToken1 = await createOneTimeToken({
+      email,
+      expiresIn: 1,
+    });
+    const oneTimeToken2 = await createOneTimeToken({
+      email,
+      expiresIn: 600,
+    });
+
+    await waitFor(1001);
+    const [token1, token2] = await Promise.all([
+      getOneTimeTokenById(oneTimeToken1.id),
+      getOneTimeTokenById(oneTimeToken2.id),
+    ]);
+    expect(token1.status).toBe(OneTimeTokenStatus.Expired);
+    expect(token2.status).toBe(OneTimeTokenStatus.Active);
+
+    const tokens = await getOneTimeTokens({ email });
+    expect(tokens).toHaveLength(2);
+    expect(tokens).toEqual(
+      expect.arrayContaining([
+        { ...oneTimeToken1, status: OneTimeTokenStatus.Expired },
+        { ...oneTimeToken2, status: OneTimeTokenStatus.Active },
+      ])
+    );
+
+    void deleteOneTimeTokenById(oneTimeToken1.id);
+    void deleteOneTimeTokenById(oneTimeToken2.id);
+  });
+
   it(`update expired tokens' status to expired when creating new one-time token`, async () => {
     const email = `foo${generateStandardId()}@bar.com`;
     const oneTimeToken = await createOneTimeToken({
