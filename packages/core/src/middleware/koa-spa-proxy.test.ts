@@ -86,49 +86,41 @@ describe('koaSpaProxy middleware', () => {
     stub.restore();
   });
 
-  it.each([true, false])(
-    'production env should call the proxy middleware if path does not hit the ui file directory: devFeatureEnabled %p',
-    async (isDevFeaturesEnabled) => {
-      const stub = Sinon.stub(EnvSet, 'values').value({
-        ...EnvSet.values,
-        isProduction: true,
-        isDevFeaturesEnabled,
-      });
+  it('production env should call the proxy middleware if path does not hit the ui file directory', async () => {
+    const stub = Sinon.stub(EnvSet, 'values').value({
+      ...EnvSet.values,
+      isProduction: true,
+    });
 
-      const ctx = createContextWithRouteParameters({
-        url: '/sign-in',
-      });
+    const ctx = createContextWithRouteParameters({
+      url: '/sign-in',
+    });
 
-      await koaSpaProxy({ mountedApps, queries })(ctx, next);
+    await koaSpaProxy({ mountedApps, queries })(ctx, next);
 
-      const packagePath = 'experience';
-      const distributionPath = path.join('node_modules/@logto', packagePath, 'dist');
+    const packagePath = 'experience';
+    const distributionPath = path.join('node_modules/@logto', packagePath, 'dist');
 
-      expect(mockStaticMiddlewareFactory).toBeCalledWith(distributionPath);
-      stub.restore();
-    }
-  );
+    expect(mockStaticMiddlewareFactory).toBeCalledWith(distributionPath);
+    stub.restore();
+  });
 
-  it.each([true, false])(
-    'should serve custom UI assets if user uploaded them: : devFeatureEnabled %p',
-    async (isDevFeaturesEnabled) => {
-      const stub = Sinon.stub(EnvSet, 'values').value({
-        ...EnvSet.values,
-        isDevFeaturesEnabled,
-      });
+  it('should serve custom UI assets if user uploaded them', async () => {
+    const stub = Sinon.stub(EnvSet, 'values').value({
+      ...EnvSet.values,
+    });
 
-      const customUiAssets = { id: 'custom-ui-assets', createdAt: Date.now() };
-      mockFindDefaultSignInExperience.mockResolvedValue({ customUiAssets });
+    const customUiAssets = { id: 'custom-ui-assets', createdAt: Date.now() };
+    mockFindDefaultSignInExperience.mockResolvedValue({ customUiAssets });
 
-      const ctx = createContextWithRouteParameters({
-        url: '/sign-in',
-      });
+    const ctx = createContextWithRouteParameters({
+      url: '/sign-in',
+    });
 
-      await koaSpaProxy({ mountedApps, queries })(ctx, next);
-      expect(mockCustomUiAssetsMiddleware).toBeCalled();
-      expect(mockStaticMiddleware).not.toBeCalled();
-      expect(mockProxyMiddleware).not.toBeCalled();
-      stub.restore();
-    }
-  );
+    await koaSpaProxy({ mountedApps, queries })(ctx, next);
+    expect(mockCustomUiAssetsMiddleware).toBeCalled();
+    expect(mockStaticMiddleware).not.toBeCalled();
+    expect(mockProxyMiddleware).not.toBeCalled();
+    stub.restore();
+  });
 });
