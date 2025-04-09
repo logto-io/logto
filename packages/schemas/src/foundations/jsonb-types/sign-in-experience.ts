@@ -238,11 +238,11 @@ export type CaptchaPolicy = z.infer<typeof captchaPolicyGuard>;
 
 export type SentinelPolicy = {
   /**
-   * The maximum number of attempts before the user is blocked.
+   * Maximum failed attempts allowed in one hour before blocking the user.
    */
   maxAttempts?: number;
   /**
-   * The time period in seconds to lock the user out after exceeding the maximum number of attempts.
+   * Lockout duration in minutes after exceeding the maximum failed attempts.
    */
   lockoutDuration?: number;
 };
