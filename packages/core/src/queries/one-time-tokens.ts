@@ -48,7 +48,7 @@ export const createOneTimeTokenQueries = (pool: CommonQueryMethods) => {
 
     assertThat(
       oneTimeToken,
-      new RequestError({ code: 'one_time_token.token_not_found', status: 404 })
+      new RequestError({ code: 'one_time_token.token_not_found', token, status: 404 })
     );
 
     return oneTimeToken;

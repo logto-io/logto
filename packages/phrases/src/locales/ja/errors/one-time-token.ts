@@ -1,5 +1,5 @@
 const one_time_token = {
-  token_not_found: '指定されたメールとトークンでアクティブなトークンが見つかりません。',
+  token_not_found: 'トークン {{token}} が見つかりません。',
   email_mismatch: '指定されたトークンとメールが一致しません。',
   token_expired: 'トークンの有効期限が切れています。',
   token_consumed: 'トークンが既に使用されています。',

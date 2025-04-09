@@ -1,5 +1,5 @@
 const one_time_token = {
-  token_not_found: 'Active token not found with given email and token.',
+  token_not_found: 'Token {{token}} not found.',
   email_mismatch: 'Email mismatch with given token.',
   token_expired: 'The token is expired.',
   token_consumed: 'The token has been consumed.',
