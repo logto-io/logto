@@ -1,5 +1,5 @@
 const one_time_token = {
-  token_not_found: 'Активный токен не найден по указанной электронной почте и токену.',
+  token_not_found: 'Токен {{token}} не найден.',
   email_mismatch: 'Электронная почта не соответствует указанному токену.',
   token_expired: 'Токен истек.',
   token_consumed: 'Токен был использован.',

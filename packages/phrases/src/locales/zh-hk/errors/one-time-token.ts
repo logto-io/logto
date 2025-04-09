@@ -1,5 +1,5 @@
 const one_time_token = {
-  token_not_found: '找不到與指定電郵和令牌匹配的有效令牌。',
+  token_not_found: '找不到令牌 {{token}}。',
   email_mismatch: '電郵與指定令牌不匹配。',
   token_expired: '令牌已過期。',
   token_consumed: '令牌已被使用。',

@@ -1,5 +1,5 @@
 const one_time_token = {
-  token_not_found: 'Nie znaleziono aktywnego tokenu pasującego do podanego adresu e-mail i tokenu.',
+  token_not_found: 'Token {{token}} nie znaleziony.',
   email_mismatch: 'Adres e-mail nie pasuje do podanego tokenu.',
   token_expired: 'Token wygasł.',
   token_consumed: 'Token został użyty.',
