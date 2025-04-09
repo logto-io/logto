@@ -38,6 +38,7 @@ import { AccountCenterQueries } from '../queries/account-center.js';
 import { CaptchaProviderQueries } from '../queries/captcha-providers.js';
 import EmailTemplatesQueries from '../queries/email-templates.js';
 import { PersonalAccessTokensQueries } from '../queries/personal-access-tokens.js';
+import TenantUsageQuery from '../queries/tenant-usage/index.js';
 import { VerificationRecordQueries } from '../queries/verification-records.js';
 
 export default class Queries {
@@ -76,6 +77,7 @@ export default class Queries {
   verificationRecords = new VerificationRecordQueries(this.pool);
   accountCenters = new AccountCenterQueries(this.pool);
   tenants = createTenantQueries(this.pool);
+  tenantUsage = new TenantUsageQuery(this.pool);
   emailTemplates = new EmailTemplatesQueries(this.pool, this.wellKnownCache);
   captchaProviders = new CaptchaProviderQueries(this.pool);
 

@@ -23,7 +23,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
   const { findUserById } = queries.users;
   const {
     signInExperiences: { validateLanguageInfo },
-    quota: { guardTenantUsageByKey, reportSubscriptionUpdatesUsage },
+    quota,
   } = libraries;
   const { getLogtoConnectors } = connectors;
 
@@ -105,7 +105,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
 
       if (mfa) {
         if (mfa.factors.length > 0) {
-          await guardTenantUsageByKey('mfaEnabled');
+          await quota.guardTenantUsageByKey('mfaEnabled');
         }
         validateMfa(mfa);
       }
@@ -134,7 +134,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           : rest
       );
 
-      void reportSubscriptionUpdatesUsage('mfaEnabled');
+      void quota.reportSubscriptionUpdatesUsage('mfaEnabled');
 
       return next();
     }

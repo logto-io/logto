@@ -10,7 +10,7 @@ import { OrganizationInvitationLibrary } from '#src/libraries/organization-invit
 import { createPasscodeLibrary } from '#src/libraries/passcode.js';
 import { createPhraseLibrary } from '#src/libraries/phrase.js';
 import { createProtectedAppLibrary } from '#src/libraries/protected-app.js';
-import { createQuotaLibrary } from '#src/libraries/quota.js';
+import { QuotaLibrary } from '#src/libraries/quota.js';
 import { createRoleScopeLibrary } from '#src/libraries/role-scope.js';
 import { createSamlApplicationsLibrary } from '#src/libraries/saml-application/saml-applications.js';
 import { createScopeLibrary } from '#src/libraries/scope.js';
@@ -44,7 +44,15 @@ export default class Libraries {
   roleScopes = createRoleScopeLibrary(this.queries);
   domains = createDomainLibrary(this.queries);
   protectedApps = createProtectedAppLibrary(this.queries);
-  quota = createQuotaLibrary(this.cloudConnection, this.subscription);
+
+  quota = new QuotaLibrary(
+    this.tenantId,
+    this.queries,
+    this.connectors,
+    this.cloudConnection,
+    this.subscription
+  );
+
   ssoConnectors = createSsoConnectorLibrary(this.queries);
   oneTimeTokens = createOneTimeTokenLibrary(this.queries);
   signInExperiences = createSignInExperienceLibrary(
