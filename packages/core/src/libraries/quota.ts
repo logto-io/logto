@@ -123,8 +123,8 @@ export class QuotaLibrary {
 
     const { [entityId]: usage = 0 } =
       entityName === 'resources'
-        ? await this.getScopesForResourcesTenantUsage()
-        : await this.getScopesForRolesTenantUsage();
+        ? await this.queries.tenantUsage.getScopesForResourcesTenantUsage(this.tenantId)
+        : await this.queries.tenantUsage.getScopesForRolesTenantUsage();
 
     if (entityName === 'resources') {
       assertThat(
@@ -177,9 +177,11 @@ export class QuotaLibrary {
   };
 
   public async getTenantUsage(): Promise<{ usage: SelfComputedTenantUsage }> {
-    const rawUsage = await this.queries.tenantUsage.getRawTenantUsage(this.tenantId);
+    const [rawUsage, connectors] = await Promise.all([
+      this.queries.tenantUsage.getRawTenantUsage(this.tenantId),
+      this.connectorLibrary.getLogtoConnectors(),
+    ]);
 
-    const connectors = await this.connectorLibrary.getLogtoConnectors();
     const socialConnectors = connectors.filter(
       (connector) => connector.type === ConnectorType.Social
     );
@@ -213,14 +215,6 @@ export class QuotaLibrary {
     };
 
     return { usage: selfComputedSubscriptionUsageGuard.parse(unparsedUsage) };
-  }
-
-  public async getScopesForRolesTenantUsage() {
-    return this.queries.tenantUsage.getScopesForRolesTenantUsage();
-  }
-
-  public async getScopesForResourcesTenantUsage() {
-    return this.queries.tenantUsage.getScopesForResourcesTenantUsage(this.tenantId);
   }
 
   /**
