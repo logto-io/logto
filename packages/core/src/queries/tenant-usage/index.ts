@@ -52,26 +52,23 @@ const { table: ssoConnectorIdpInitiatedAuthConfigsTable } = convertToIdentifiers
 );
 
 export default class TenantUsageQuery {
-  constructor(
-    private readonly pool: CommonQueryMethods,
-    private readonly tenantId: string
-  ) {}
+  constructor(private readonly pool: CommonQueryMethods) {}
 
-  public async getRawTenantUsage() {
+  public async getRawTenantUsage(tenantId: string) {
     const sqlQuery = sql`
       select ${sql.join(
         [
           this.countAllApplications(),
           this.countThirdPartyApplications(),
           this.countMachineToMachineApplications(),
-          this.countMaxScopesPerResource(),
+          this.countMaxScopesPerResource(tenantId),
           this.countUserRoles(),
           this.countMachineToMachineRoles(),
           this.countMaxScopesPerRole(),
           this.countHooks(),
           this.isCustomJwtEnabled(),
           this.isBringYourUiEnabled(),
-          this.countResources(),
+          this.countResources(tenantId),
           this.countEnterpriseSso(),
           this.isMfaEnabled(),
           this.countOrganizations(),
@@ -94,9 +91,9 @@ export default class TenantUsageQuery {
     return Object.fromEntries(records.map(({ roleId, count }) => [roleId, Number(count)]));
   }
 
-  public async getScopesForResourcesTenantUsage() {
+  public async getScopesForResourcesTenantUsage(tenantId: string) {
     const records = await this.pool.any<{ resourceId: string; count: string }>(
-      this.countScopesForResources()
+      this.countScopesForResources(tenantId)
     );
 
     return Object.fromEntries(records.map(({ resourceId, count }) => [resourceId, Number(count)]));
@@ -146,17 +143,16 @@ export default class TenantUsageQuery {
     ];
   };
 
-  private readonly countMaxScopesPerResource = (): [
-    TaggedTemplateLiteralInvocation,
-    TaggedTemplateLiteralInvocation,
-  ] => {
+  private readonly countMaxScopesPerResource = (
+    tenantId: string
+  ): [TaggedTemplateLiteralInvocation, TaggedTemplateLiteralInvocation] => {
     return [
       sql`
         with cte as (
           select ${scopesFields.resourceId}, count(*) as count
           from ${scopesTable}
           join ${resourcesTable} on ${scopesFields.resourceId} = ${resourcesFields.id}
-          where ${resourcesFields.indicator} != ${getManagementApiResourceIndicator(this.tenantId)}
+          where ${resourcesFields.indicator} != ${getManagementApiResourceIndicator(tenantId)}
           group by ${scopesFields.resourceId}
         ) select coalesce(max(count), 0) from cte
       `,
@@ -259,16 +255,15 @@ export default class TenantUsageQuery {
     ];
   };
 
-  private readonly countResources = (): [
-    TaggedTemplateLiteralInvocation,
-    TaggedTemplateLiteralInvocation,
-  ] => {
+  private readonly countResources = (
+    tenantId: string
+  ): [TaggedTemplateLiteralInvocation, TaggedTemplateLiteralInvocation] => {
     return [
       sql`
         select
           count(*)
         from ${resourcesTable}
-        where ${resourcesFields.indicator} != ${getManagementApiResourceIndicator(this.tenantId)}
+        where ${resourcesFields.indicator} != ${getManagementApiResourceIndicator(tenantId)}
       `,
       sql`resourcesLimit`,
     ];
@@ -346,12 +341,14 @@ export default class TenantUsageQuery {
     ];
   };
 
-  private readonly countScopesForResources = (): TaggedTemplateLiteralInvocation => {
+  private readonly countScopesForResources = (
+    tenantId: string
+  ): TaggedTemplateLiteralInvocation => {
     return sql`
       select ${scopesFields.resourceId}, count(*) as count
       from ${scopesTable}
       join ${resourcesTable} on ${scopesFields.resourceId} = ${resourcesFields.id}
-      where ${resourcesFields.indicator} != ${getManagementApiResourceIndicator(this.tenantId)}
+      where ${resourcesFields.indicator} != ${getManagementApiResourceIndicator(tenantId)}
       group by ${scopesFields.resourceId}
     `;
   };

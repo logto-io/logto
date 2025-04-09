@@ -1,5 +1,4 @@
 import { ReservedPlanId, ConnectorType } from '@logto/schemas';
-import { type CommonQueryMethods } from '@silverhand/slonik';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -12,11 +11,11 @@ import {
 } from '#src/utils/subscription/index.js';
 import { type SubscriptionQuota, type SubscriptionUsage } from '#src/utils/subscription/types.js';
 
-import TenantUsageQuery from '../queries/tenant-usage/index.js';
 import {
   selfComputedSubscriptionUsageGuard,
   type SelfComputedTenantUsage,
 } from '../queries/tenant-usage/types.js';
+import type Queries from '../tenants/Queries.js';
 
 import { type CloudConnectionLibrary } from './cloud-connection.js';
 import { type ConnectorLibrary } from './connector.js';
@@ -24,17 +23,13 @@ import { type ConnectorLibrary } from './connector.js';
 const paidReservedPlans = new Set<string>([ReservedPlanId.Pro, ReservedPlanId.Pro202411]);
 
 export class QuotaLibrary {
-  private readonly tenantUsageQuery: TenantUsageQuery;
-
   constructor(
-    public readonly pool: CommonQueryMethods,
-    public readonly connectorLibrary: ConnectorLibrary,
     public readonly tenantId: string,
+    public readonly queries: Queries,
+    public readonly connectorLibrary: ConnectorLibrary,
     private readonly cloudConnection: CloudConnectionLibrary,
     private readonly subscription: SubscriptionLibrary
-  ) {
-    this.tenantUsageQuery = new TenantUsageQuery(pool, tenantId);
-  }
+  ) {}
 
   guardTenantUsageByKey = async (key: keyof SubscriptionUsage) => {
     const { isCloud } = EnvSet.values;
@@ -182,7 +177,7 @@ export class QuotaLibrary {
   };
 
   public async getTenantUsage(): Promise<{ usage: SelfComputedTenantUsage }> {
-    const rawUsage = await this.tenantUsageQuery.getRawTenantUsage();
+    const rawUsage = await this.queries.tenantUsage.getRawTenantUsage(this.tenantId);
 
     const connectors = await this.connectorLibrary.getLogtoConnectors();
     const socialConnectors = connectors.filter(
@@ -221,11 +216,11 @@ export class QuotaLibrary {
   }
 
   public async getScopesForRolesTenantUsage() {
-    return this.tenantUsageQuery.getScopesForRolesTenantUsage();
+    return this.queries.tenantUsage.getScopesForRolesTenantUsage();
   }
 
   public async getScopesForResourcesTenantUsage() {
-    return this.tenantUsageQuery.getScopesForResourcesTenantUsage();
+    return this.queries.tenantUsage.getScopesForResourcesTenantUsage(this.tenantId);
   }
 
   /**

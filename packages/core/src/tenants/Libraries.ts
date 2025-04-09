@@ -46,9 +46,9 @@ export default class Libraries {
   protectedApps = createProtectedAppLibrary(this.queries);
 
   quota = new QuotaLibrary(
-    this.queries.pool,
-    this.connectors,
     this.tenantId,
+    this.queries,
+    this.connectors,
     this.cloudConnection,
     this.subscription
   );

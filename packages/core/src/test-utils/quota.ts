@@ -3,17 +3,17 @@ import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import { QuotaLibrary } from '#src/libraries/quota.js';
 import type { SubscriptionLibrary } from '#src/libraries/subscription.js';
 
-import { createMockCommonQueryMethods } from './query.js';
+import { MockQueries } from './tenant.js';
 
 const { jest } = import.meta;
 
 class MockQuotaLibrary extends QuotaLibrary {
   constructor() {
     super(
-      createMockCommonQueryMethods(),
+      'mock-tenant-id',
+      new MockQueries(),
       // eslint-disable-next-line no-restricted-syntax
       {} as ConnectorLibrary,
-      'mock-tenant-id',
       // eslint-disable-next-line no-restricted-syntax
       {} as CloudConnectionLibrary,
       // eslint-disable-next-line no-restricted-syntax
