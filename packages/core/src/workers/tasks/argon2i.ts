@@ -8,6 +8,7 @@ import { argon2i } from 'hash-wasm';
  * This method follows the recommended configuration settings from the [OWASP Password Storage Cheat Sheet](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Password_Storage_Cheat_Sheet.md?utm_source=chatgpt.com#argon2id),
  * balancing CPU and memory usage while providing a high level of security.
  */
+// eslint-disable-next-line import/no-unused-modules -- dynamic import by node worker
 export default async function argon2iEncrypt(password: string): Promise<string> {
   return argon2i({
     password,

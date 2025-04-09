@@ -8,9 +8,7 @@ import { z } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { EnvSet } from '../env-set/index.js';
 import passwordEncryptionWorker from '../workers/password-encryption-worker.js';
-import argon2iEncrypt from '../workers/tasks/argon2i.js';
 
 import { safeParseJson } from './json.js';
 
@@ -126,17 +124,13 @@ export const encryptPassword = async (
   );
 
   // Encrypt password with Argon2i encryption method in a separate worker thread
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    const result: unknown = await passwordEncryptionWorker.run(password);
+  const result: unknown = await passwordEncryptionWorker.run(password);
 
-    if (typeof result !== 'string') {
-      throw new TypeError('Invalid password encryption worker response');
-    }
-
-    return result;
+  if (typeof result !== 'string') {
+    throw new TypeError('Invalid password encryption worker response');
   }
 
-  return argon2iEncrypt(password);
+  return result;
 };
 
 export const checkPasswordPolicyForUser = async (
