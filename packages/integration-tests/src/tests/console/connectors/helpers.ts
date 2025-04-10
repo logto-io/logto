@@ -47,8 +47,8 @@ export const expectToSelectConnector = async (
     connectorType === ConnectorType.Email
       ? 'Set up email connector'
       : connectorType === ConnectorType.Sms
-      ? 'Set up SMS connector'
-      : 'Add Social Connector'
+        ? 'Set up SMS connector'
+        : 'Add Social Connector'
   );
 
   if (groupFactoryId) {

@@ -49,10 +49,10 @@ const useConnectors = () => {
   const getConnectorLogo = useCallback(
     ({ connector, type }: FindConnectorByIdResult) => {
       if (type === 'sso') {
-        return theme === Theme.Dark ? connector.darkLogo ?? connector.logo : connector.logo;
+        return theme === Theme.Dark ? (connector.darkLogo ?? connector.logo) : connector.logo;
       }
 
-      return theme === Theme.Dark ? connector.logoDark ?? connector.logo : connector.logo;
+      return theme === Theme.Dark ? (connector.logoDark ?? connector.logo) : connector.logo;
     },
     [theme]
   );

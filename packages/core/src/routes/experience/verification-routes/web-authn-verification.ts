@@ -55,9 +55,8 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
         experienceInteraction.identifiedUserId
       );
 
-      const registrationOptions = await webAuthnVerification.generateWebAuthnRegistrationOptions(
-        ctx
-      );
+      const registrationOptions =
+        await webAuthnVerification.generateWebAuthnRegistrationOptions(ctx);
 
       experienceInteraction.setVerificationRecord(webAuthnVerification);
 

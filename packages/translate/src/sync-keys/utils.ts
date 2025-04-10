@@ -330,7 +330,7 @@ const traverseNode = async (
 
           await traverseNode(
             [value, keyStructure.structure],
-            Array.isArray(existingValue) ? {} : existingValue ?? {},
+            Array.isArray(existingValue) ? {} : (existingValue ?? {}),
             path.join(targetDirectory, keyStructure.filePath)
           );
         }
@@ -343,7 +343,7 @@ const traverseNode = async (
           );
           await traverseObject(
             [value, keyStructure?.structure ?? {}],
-            Array.isArray(existingValue) ? {} : existingValue ?? {},
+            Array.isArray(existingValue) ? {} : (existingValue ?? {}),
             tabSize + 2
           );
           await fs.appendFile(

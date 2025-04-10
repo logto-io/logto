@@ -25,14 +25,10 @@ type TableInfo<
   guard: z.ZodType<Schema, z.ZodTypeDef, unknown>;
 };
 
-type InferSchema<T> = T extends TableInfo<
-  infer _,
-  infer _,
-  Extract<keyof (infer Schema), string>,
-  infer Schema
->
-  ? Schema
-  : never;
+type InferSchema<T> =
+  T extends TableInfo<infer _, infer _, Extract<keyof (infer Schema), string>, infer Schema>
+    ? Schema
+    : never;
 
 type CamelCaseIdObject<T extends string> = KeysToCamelCase<{
   [Key in `${T}_id`]: string;

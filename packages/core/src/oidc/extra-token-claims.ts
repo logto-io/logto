@@ -156,8 +156,8 @@ export const getExtraTokenClaimsForJwtCustomization = async (
       isTokenClientCredentials || token.gty !== GrantType.TokenExchange
         ? undefined
         : subjectTokenResult.success
-        ? await queries.subjectTokens.findSubjectToken(subjectTokenResult.data.subjectTokenId)
-        : undefined;
+          ? await queries.subjectTokens.findSubjectToken(subjectTokenResult.data.subjectTokenId)
+          : undefined;
 
     const payload: CustomJwtFetcher = {
       script,

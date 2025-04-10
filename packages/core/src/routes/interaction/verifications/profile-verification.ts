@@ -192,9 +192,8 @@ export default async function verifyProfile(
 
   const passwordProfile = passwordProfileResult.data;
 
-  const { passwordEncrypted: oldPasswordEncrypted, passwordEncryptionMethod } = await findUserById(
-    accountId
-  );
+  const { passwordEncrypted: oldPasswordEncrypted, passwordEncryptionMethod } =
+    await findUserById(accountId);
 
   // Only compare password if the encryption method (algorithm) is Argon2i
   // if the user is migrated, this check will be skipped

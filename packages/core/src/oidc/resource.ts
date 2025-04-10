@@ -157,9 +157,8 @@ export const filterResourceScopesForTheThirdPartyApplication = async (
   if (isReservedResource(indicator)) {
     switch (indicator) {
       case ReservedResource.Organization: {
-        const userConsentOrganizationScopes = await getApplicationUserConsentOrganizationScopes(
-          applicationId
-        );
+        const userConsentOrganizationScopes =
+          await getApplicationUserConsentOrganizationScopes(applicationId);
 
         // Filter out the organization scopes that are not enabled in the application
         return scopes.filter(({ id: organizationScopeId }) =>

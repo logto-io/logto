@@ -136,9 +136,8 @@ function Guide({ connector, onClose }: Props) {
       } catch (error: unknown) {
         if (error instanceof HTTPError) {
           const { response } = error;
-          const metadata = await response.json<
-            RequestErrorBody<{ connectorName: Record<string, string> }>
-          >();
+          const metadata =
+            await response.json<RequestErrorBody<{ connectorName: Record<string, string> }>>();
 
           if (metadata.code === targetErrorCode) {
             setConflictConnectorName(metadata.data.connectorName);

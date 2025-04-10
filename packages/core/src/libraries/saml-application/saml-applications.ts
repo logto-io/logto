@@ -47,9 +47,8 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
     lifeSpanInYears: number;
     isActive?: boolean;
   }): Promise<SamlApplicationSecret> => {
-    const { privateKey, certificate, notAfter } = await generateKeyPairAndCertificate(
-      lifeSpanInYears
-    );
+    const { privateKey, certificate, notAfter } =
+      await generateKeyPairAndCertificate(lifeSpanInYears);
 
     const createObject = {
       id: generateStandardId(),

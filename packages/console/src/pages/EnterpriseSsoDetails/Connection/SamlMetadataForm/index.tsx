@@ -265,8 +265,8 @@ function SamlMetadataForm({ config, providerConfig }: SamlMetadataFormProps) {
             formFormat === FormFormat.Url
               ? 'enterprise_sso_details.upload_saml_idp_metadata_info_text_url'
               : formFormat === FormFormat.Xml
-              ? 'enterprise_sso_details.upload_saml_idp_metadata_info_text_xml'
-              : 'enterprise_sso_details.upload_saml_idp_metadata_info_text_manual'
+                ? 'enterprise_sso_details.upload_saml_idp_metadata_info_text_xml'
+                : 'enterprise_sso_details.upload_saml_idp_metadata_info_text_manual'
           )}
         </InlineNotification>
       )}
