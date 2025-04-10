@@ -76,7 +76,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         query: { removeUnusedDemoSocialConnector },
         body: { socialSignInConnectorTargets, ...rest },
       } = ctx.guard;
-      const { languageInfo, signUp, signIn, mfa } = rest;
+      const { languageInfo, signUp, signIn, mfa, captchaPolicy } = rest;
 
       if (languageInfo) {
         await validateLanguageInfo(languageInfo);
@@ -108,6 +108,10 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           await quota.guardTenantUsageByKey('mfaEnabled');
         }
         validateMfa(mfa);
+      }
+
+      if (captchaPolicy?.enabled) {
+        await quota.guardTenantUsageByKey('captchaEnabled');
       }
 
       // Remove unused demo social connectors, those that are not selected in onboarding SIE config.

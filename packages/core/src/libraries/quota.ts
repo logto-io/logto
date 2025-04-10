@@ -212,6 +212,7 @@ export class QuotaLibrary {
        * If we mark this value as always `true`, it could block the subscription downgrade (to free plan) since in free plan we do not allow impersonation feature.
        */
       subjectTokenEnabled: false,
+      captchaEnabled: rawUsage.captchaEnabled,
     };
 
     return { usage: selfComputedSubscriptionUsageGuard.parse(unparsedUsage) };
