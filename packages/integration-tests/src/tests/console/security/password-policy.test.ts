@@ -1,15 +1,23 @@
 import ExpectConsole from '#src/ui-helpers/expect-console.js';
 import { getInputValue } from '#src/ui-helpers/index.js';
-import { devFeatureDisabledTest } from '#src/utils.js';
+import { dcls, devFeatureTest } from '#src/utils.js';
 
 const expectConsole = new ExpectConsole(await browser.newPage());
 
-devFeatureDisabledTest.describe('sign-in experience: password policy', () => {
-  it('navigates to sign-in experience page', async () => {
+devFeatureTest.describe('security: password policy', () => {
+  it('navigates to security page', async () => {
     await expectConsole.start();
-    await expectConsole.gotoPage('/sign-in-experience', 'Sign-in experience');
+    await expectConsole.gotoPage('/security', 'Security');
     await expectConsole.toClickTab('Password policy');
-    await expectConsole.toExpectCards('PASSWORD REQUIREMENTS', 'PASSWORD REJECTION');
+
+    await Promise.all(
+      ['PASSWORD REQUIREMENTS', 'PASSWORD REJECTION'].map(async (title) => {
+        return expect(expectConsole.page).toMatchElement([dcls('card'), dcls('title')].join(' '), {
+          text: new RegExp(title, 'i'),
+          visible: true,
+        });
+      })
+    );
   });
 
   it('should be able to set minimum length', async () => {
@@ -38,7 +46,7 @@ devFeatureDisabledTest.describe('sign-in experience: password policy', () => {
   });
 
   it('should be able to see character types selections', async () => {
-    const inputs = await expectConsole.getFieldInputs('Character types');
+    const inputs = await expectConsole.getFieldInputs('required character types');
 
     for (const input of inputs) {
       // eslint-disable-next-line no-await-in-loop
