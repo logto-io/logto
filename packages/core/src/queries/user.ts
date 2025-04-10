@@ -11,6 +11,9 @@ import type { Search } from '#src/utils/search.js';
 import { buildConditionsFromSearch } from '#src/utils/search.js';
 import type { OmitAutoSetFields } from '#src/utils/sql.js';
 import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
+import { getValidPhoneNumber } from '#src/utils/user.js';
+
+import { buildInsertIntoWithPool } from '../database/insert-into.js';
 
 const { table, fields } = convertToIdentifiers(Users);
 
@@ -220,7 +223,29 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     id: string,
     set: Partial<OmitAutoSetFields<CreateUser>>,
     jsonbMode: 'replace' | 'merge' = 'merge'
-  ) => updateUser({ set, where: { id }, jsonbMode });
+  ) => {
+    const phoneNumber = typeof set.primaryPhone === 'string' ? set.primaryPhone : undefined;
+    const validPhoneNumber = phoneNumber ? getValidPhoneNumber(phoneNumber) : undefined;
+
+    return updateUser({
+      set: { ...set, ...(validPhoneNumber && { primaryPhone: validPhoneNumber }) },
+      where: { id },
+      jsonbMode,
+    });
+  };
+
+  const insertUserQuery = buildInsertIntoWithPool(pool)(Users, {
+    returning: true,
+  });
+
+  const insertUser = async (data: OmitAutoSetFields<CreateUser>) => {
+    const phoneNumber = typeof data.primaryPhone === 'string' ? data.primaryPhone : undefined;
+    const validPhoneNumber = phoneNumber ? getValidPhoneNumber(phoneNumber) : undefined;
+    return insertUserQuery({
+      ...data,
+      ...(validPhoneNumber && { primaryPhone: validPhoneNumber }),
+    });
+  };
 
   const deleteUserById = async (id: string) => {
     const { rowCount } = await pool.query(sql`
@@ -276,6 +301,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     findUsers,
     findUsersByIds,
     updateUserById,
+    insertUser,
     deleteUserById,
     deleteUserIdentity,
     hasActiveUsers,

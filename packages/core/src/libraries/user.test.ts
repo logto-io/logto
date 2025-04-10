@@ -225,15 +225,11 @@ describe('verifyUserPassword()', () => {
     };
     it('migrates password to Argon2', async () => {
       await verifyUserPassword(user, 'password');
-      expect(updateUserById).toHaveBeenCalledWith(
-        user.id,
-        {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          passwordEncrypted: expect.stringContaining('argon2'),
-          passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
-        },
-        undefined
-      );
+      expect(updateUserById).toHaveBeenCalledWith(user.id, {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        passwordEncrypted: expect.stringContaining('argon2'),
+        passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+      });
     });
   });
 });
@@ -275,15 +271,11 @@ describe('addUserMfaVerification()', () => {
       type: MfaFactor.TOTP,
       secret: 'secret',
     });
-    expect(updateUserById).toHaveBeenCalledWith(
-      mockUser.id,
-      {
-        mfaVerifications: [
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          { type: MfaFactor.TOTP, key: 'secret', id: expect.anything(), createdAt },
-        ],
-      },
-      undefined
-    );
+    expect(updateUserById).toHaveBeenCalledWith(mockUser.id, {
+      mfaVerifications: [
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        { type: MfaFactor.TOTP, key: 'secret', id: expect.anything(), createdAt },
+      ],
+    });
   });
 });

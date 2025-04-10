@@ -24,20 +24,12 @@ const { mockEsm } = createMockUtils(jest);
 const findUserById = jest.fn();
 const updateUserById = jest.fn();
 
-const tenantContext = new MockTenant(
-  undefined,
-  {
-    users: {
-      findUserById,
-    },
+const tenantContext = new MockTenant(undefined, {
+  users: {
+    findUserById,
+    updateUserById,
   },
-  undefined,
-  {
-    users: {
-      updateUserById,
-    },
-  }
-);
+});
 
 const { validateTotpToken } = mockEsm('../utils/totp-validation.js', () => ({
   validateTotpToken: jest.fn().mockReturnValue(true),

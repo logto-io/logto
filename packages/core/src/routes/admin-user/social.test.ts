@@ -37,6 +37,12 @@ const mockedQueries = {
     hasUserWithIdentity: mockHasUserWithIdentity,
     deleteUserById: jest.fn(),
     deleteUserIdentity: jest.fn(),
+    updateUserById: jest.fn(
+      async (_, data: Partial<CreateUser>): Promise<User> => ({
+        ...mockUser,
+        ...data,
+      })
+    ),
   },
 } satisfies Partial2<Queries>;
 
@@ -49,12 +55,6 @@ const usersLibraries = {
         ...removeUndefinedKeys(user), // No undefined values will be returned from database
       },
     ]
-  ),
-  updateUserById: jest.fn(
-    async (_, data: Partial<CreateUser>): Promise<User> => ({
-      ...mockUser,
-      ...data,
-    })
   ),
 } satisfies Partial<Libraries['users']>;
 
@@ -77,8 +77,7 @@ const mockedConnectors = {
   },
 };
 
-const { findUserById, deleteUserIdentity } = mockedQueries.users;
-const { updateUserById } = usersLibraries;
+const { findUserById, deleteUserIdentity, updateUserById } = mockedQueries.users;
 
 const adminUserSocialRoutes = await pickDefault(import('./social.js'));
 

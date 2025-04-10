@@ -225,7 +225,7 @@ export const handleSsoAuthentication = async (
 
   // SignIn
   if (userSsoIdentity) {
-    return signInWithSsoAuthentication(ctx, queries, libraries, {
+    return signInWithSsoAuthentication(ctx, queries, {
       connectorData,
       userSsoIdentity,
       ssoAuthentication,
@@ -254,8 +254,7 @@ export const handleSsoAuthentication = async (
 
 const signInWithSsoAuthentication = async (
   ctx: WithLogContext,
-  { userSsoIdentities: userSsoIdentitiesQueries }: Queries,
-  { users: usersLibraries }: Libraries,
+  { userSsoIdentities: userSsoIdentitiesQueries, users: usersQueries }: Queries,
   {
     connectorData: { id: connectorId, syncProfile },
     userSsoIdentity: { id, userId },
@@ -286,7 +285,7 @@ const signInWithSsoAuthentication = async (
       }
     : undefined;
 
-  await usersLibraries.updateUserById(userId, {
+  await usersQueries.updateUserById(userId, {
     ...syncingProfile,
     lastSignInAt: Date.now(),
   });
@@ -309,7 +308,7 @@ const signInWithSsoAuthentication = async (
 
 const signInAndLinkWithSsoAuthentication = async (
   ctx: WithInteractionHooksContext<WithLogContext>,
-  { userSsoIdentities: userSsoIdentitiesQueries }: Queries,
+  { userSsoIdentities: userSsoIdentitiesQueries, users: usersQueries }: Queries,
   { users: usersLibraries }: Libraries,
   {
     connectorData: { id: connectorId, syncProfile },
@@ -345,7 +344,7 @@ const signInAndLinkWithSsoAuthentication = async (
       }
     : undefined;
 
-  await usersLibraries.updateUserById(userId, {
+  await usersQueries.updateUserById(userId, {
     ...syncingProfile,
     lastSignInAt: Date.now(),
   });

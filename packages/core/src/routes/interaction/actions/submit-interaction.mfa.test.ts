@@ -47,16 +47,16 @@ const userQueries = {
   hasActiveUsers: jest.fn().mockResolvedValue(true),
   hasUserWithEmail: jest.fn().mockResolvedValue(false),
   hasUserWithPhone: jest.fn().mockResolvedValue(false),
+  updateUserById: jest.fn(),
 };
 
-const { hasActiveUsers } = userQueries;
+const { hasActiveUsers, updateUserById } = userQueries;
 
 const userLibraries = {
   generateUserId: jest.fn().mockResolvedValue('uid'),
   insertUser: jest.fn().mockResolvedValue([{}, { organizationIds: [] }]),
-  updateUserById: jest.fn(),
 };
-const { generateUserId, insertUser, updateUserById } = userLibraries;
+const { generateUserId, insertUser } = userLibraries;
 
 const submitInteraction = await pickDefault(import('./submit-interaction.js'));
 const now = Date.now();

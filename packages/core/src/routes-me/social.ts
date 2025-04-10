@@ -22,11 +22,8 @@ export default function socialRoutes<T extends AuthedMeRouter>(
 ) {
   const {
     queries: {
-      users: { findUserById, deleteUserIdentity, hasUserWithIdentity },
+      users: { findUserById, deleteUserIdentity, hasUserWithIdentity, updateUserById },
       signInExperiences: { findDefaultSignInExperience },
-    },
-    libraries: {
-      users: { updateUserById },
     },
     connectors: { getLogtoConnectors, getLogtoConnectorById },
   } = tenant;

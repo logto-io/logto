@@ -25,6 +25,12 @@ const mockedQueries = {
     hasUserWithPhone: jest.fn(async () => mockHasUserWithPhone()),
     deleteUserById: jest.fn(),
     deleteUserIdentity: jest.fn(),
+    updateUserById: jest.fn(
+      async (_, data: Partial<CreateUser>): Promise<User> => ({
+        ...mockUser,
+        ...data,
+      })
+    ),
   },
 } satisfies Partial2<Queries>;
 
@@ -32,7 +38,7 @@ const mockHasUser = jest.fn(async () => false);
 const mockHasUserWithEmail = jest.fn(async () => false);
 const mockHasUserWithPhone = jest.fn(async () => false);
 
-const { findUserById } = mockedQueries.users;
+const { findUserById, updateUserById } = mockedQueries.users;
 
 await mockEsmWithActual('../interaction/utils/totp-validation.js', () => ({
   generateTotpSecret: jest.fn().mockReturnValue('totp_secret'),
@@ -52,17 +58,9 @@ const mockLibraries = {
         },
       ]
     ),
-    updateUserById: jest.fn(
-      async (_, data: Partial<CreateUser>): Promise<User> => ({
-        ...mockUser,
-        ...data,
-      })
-    ),
     addUserMfaVerification: jest.fn(),
   },
 } satisfies Partial2<Libraries>;
-
-const { updateUserById } = mockLibraries.users;
 
 const codes = [
   'd94c2f29ae',

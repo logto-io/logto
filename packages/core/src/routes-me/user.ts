@@ -18,11 +18,11 @@ export default function userRoutes<T extends AuthedMeRouter>(
 ) {
   const {
     queries: {
-      users: { findUserById },
+      users: { findUserById, updateUserById },
       signInExperiences: { findDefaultSignInExperience },
     },
     libraries: {
-      users: { checkIdentifierCollision, verifyUserPassword, updateUserById },
+      users: { checkIdentifierCollision, verifyUserPassword },
       verificationStatuses: { createVerificationStatus, checkVerificationStatus },
     },
   } = tenant;

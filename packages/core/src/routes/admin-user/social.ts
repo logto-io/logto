@@ -20,10 +20,7 @@ export default function adminUserSocialRoutes<T extends ManagementApiRouter>(
 ) {
   const {
     queries: {
-      users: { findUserById, hasUserWithIdentity, deleteUserIdentity },
-    },
-    libraries: {
-      users: { updateUserById },
+      users: { findUserById, hasUserWithIdentity, deleteUserIdentity, updateUserById },
     },
     connectors: { getLogtoConnectorById },
   } = tenant;

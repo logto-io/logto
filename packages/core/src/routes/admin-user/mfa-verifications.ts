@@ -24,12 +24,12 @@ export default function adminUserMfaVerificationsRoutes<T extends ManagementApiR
     {
       queries,
       libraries: {
-        users: { addUserMfaVerification, updateUserById },
+        users: { addUserMfaVerification },
       },
     },
   ] = args;
   const {
-    users: { findUserById },
+    users: { findUserById, updateUserById },
   } = queries;
 
   router.get(

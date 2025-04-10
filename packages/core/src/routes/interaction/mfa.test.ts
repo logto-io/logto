@@ -76,11 +76,6 @@ const tenantContext = new MockTenant(
     },
     users: {
       findUserById: jest.fn().mockResolvedValue(mockUserWithMfaVerifications),
-    },
-  },
-  undefined,
-  {
-    users: {
       updateUserById,
     },
   }
