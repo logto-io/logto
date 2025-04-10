@@ -2,21 +2,21 @@ import { FormCardSkeleton } from '@/components/FormCard';
 import PageMeta from '@/components/PageMeta';
 import RequestDataError from '@/components/RequestDataError';
 
-import PasswordPolicyForm from './PasswordPolicyForm';
+import GeneralForm from './GeneralForm';
 import styles from './index.module.scss';
-import usePasswordPolicy from './use-password-policy';
+import useDataFetch from './use-data-fetch';
 
-function PasswordPolicy() {
-  const { isLoading, data, error, mutate } = usePasswordPolicy();
+function General() {
+  const { isLoading, formData, error, mutate } = useDataFetch();
 
   return (
     <div className={styles.content}>
-      <PageMeta titleKey={['security.tabs.password_policy', 'security.page_title']} />
+      <PageMeta titleKey={['security.tabs.general', 'security.page_title']} />
       {isLoading ? <FormCardSkeleton formFieldCount={2} /> : null}
       {error && <RequestDataError error={error} onRetry={mutate} />}
-      {data && <PasswordPolicyForm data={data} />}
+      {formData && <GeneralForm formData={formData} />}
     </div>
   );
 }
 
-export default PasswordPolicy;
+export default General;

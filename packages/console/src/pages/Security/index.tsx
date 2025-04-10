@@ -9,6 +9,7 @@ import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import pageLayout from '@/scss/page-layout.module.scss';
 
 import Captcha from './Captcha';
+import General from './General';
 import PasswordPolicy from './PasswordPolicy';
 import styles from './index.module.scss';
 import { SecurityTabs } from './types';
@@ -45,10 +46,19 @@ function Security({ tab }: Props) {
             {t('security.tabs.password_policy')}
           </TabNavItem>
         )}
+        {isDevFeaturesEnabled && (
+          <TabNavItem
+            href={`/security/${SecurityTabs.General}`}
+            isActive={tab === SecurityTabs.General}
+          >
+            {t('security.tabs.general')}
+          </TabNavItem>
+        )}
       </TabNav>
       {tab === SecurityTabs.Captcha && <Captcha />}
       {/** TODO: Remove the dev feature guard */}
       {tab === SecurityTabs.PasswordPolicy && isDevFeaturesEnabled && <PasswordPolicy />}
+      {tab === SecurityTabs.General && isDevFeaturesEnabled && <General />}
     </div>
   );
 }

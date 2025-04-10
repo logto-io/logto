@@ -7,6 +7,7 @@ import {
   SentinelActivities,
   SentinelActionResult,
   SentinelActivityAction,
+  defaultSentinelPolicy,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { type Nullable } from '@silverhand/essentials';
@@ -33,17 +34,6 @@ export default class BasicSentinel extends Sentinel {
     SentinelActivityAction.VerificationCode,
     SentinelActivityAction.OneTimeToken,
   ] as const);
-
-  /**
-   * The default policy for this sentinel.
-   *
-   * - `maxAttempts`: 5
-   * - `lockoutDuration`: 10 minutes
-   */
-  static defaultPolicy = Object.freeze({
-    maxAttempts: 5,
-    lockoutDuration: 10,
-  });
 
   /** The array of all supported actions in SQL format. */
   static supportedActionArray = sql.array(BasicSentinel.supportedActions, 'varchar');
@@ -132,7 +122,7 @@ export default class BasicSentinel extends Sentinel {
   protected async getSentinelPolicy() {
     // TODO: remove this check when the sentinel policy is fully integrated into the system.
     if (!EnvSet.values.isDevFeaturesEnabled) {
-      return BasicSentinel.defaultPolicy;
+      return defaultSentinelPolicy;
     }
 
     const {
@@ -142,7 +132,7 @@ export default class BasicSentinel extends Sentinel {
     const { sentinelPolicy } = await findDefaultSignInExperience();
 
     return {
-      ...BasicSentinel.defaultPolicy,
+      ...defaultSentinelPolicy,
       ...sentinelPolicy,
     };
   }
