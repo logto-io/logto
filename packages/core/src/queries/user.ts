@@ -11,7 +11,7 @@ import type { Search } from '#src/utils/search.js';
 import { buildConditionsFromSearch } from '#src/utils/search.js';
 import type { OmitAutoSetFields } from '#src/utils/sql.js';
 import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
-import { getValidPhoneNumber } from '#src/utils/user.js';
+import { validatePhoneNumber } from '#src/utils/user.js';
 
 import { buildInsertIntoWithPool } from '../database/insert-into.js';
 
@@ -224,14 +224,11 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     set: Partial<OmitAutoSetFields<CreateUser>>,
     jsonbMode: 'replace' | 'merge' = 'merge'
   ) => {
-    const phoneNumber = typeof set.primaryPhone === 'string' ? set.primaryPhone : undefined;
-    const validPhoneNumber = phoneNumber ? getValidPhoneNumber(phoneNumber) : undefined;
+    if (typeof set.primaryPhone === 'string') {
+      validatePhoneNumber(set.primaryPhone);
+    }
 
-    return updateUser({
-      set: { ...set, ...(validPhoneNumber && { primaryPhone: validPhoneNumber }) },
-      where: { id },
-      jsonbMode,
-    });
+    return updateUser({ set, where: { id }, jsonbMode });
   };
 
   const insertUserQuery = buildInsertIntoWithPool(pool)(Users, {
@@ -239,12 +236,11 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
   });
 
   const insertUser = async (data: OmitAutoSetFields<CreateUser>) => {
-    const phoneNumber = typeof data.primaryPhone === 'string' ? data.primaryPhone : undefined;
-    const validPhoneNumber = phoneNumber ? getValidPhoneNumber(phoneNumber) : undefined;
-    return insertUserQuery({
-      ...data,
-      ...(validPhoneNumber && { primaryPhone: validPhoneNumber }),
-    });
+    if (typeof data.primaryPhone === 'string') {
+      validatePhoneNumber(data.primaryPhone);
+    }
+
+    return insertUserQuery(data);
   };
 
   const deleteUserById = async (id: string) => {

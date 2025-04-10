@@ -90,3 +90,7 @@ export const getValidPhoneNumber = (phone: string): string => {
     throw error;
   }
 };
+
+export const validatePhoneNumber = (phone: string): void => {
+  getValidPhoneNumber(phone);
+};
