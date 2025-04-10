@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 
 import DynamicT from '@/ds-components/DynamicT';
 
+import { CombinedAddOnAndFeatureTag, type PaywallPlanId } from '../FeatureTag';
 import LearnMore, { type Props as LearnMoreProps } from '../LearnMore';
 
 import FormCardLayout from './FormCardLayout';
@@ -15,6 +16,7 @@ export type Props = {
   readonly descriptionInterpolation?: Record<string, unknown>;
   readonly learnMoreLink?: LearnMoreProps;
   readonly children: ReactNode;
+  readonly paywall?: PaywallPlanId;
 };
 
 function FormCard({
@@ -24,6 +26,7 @@ function FormCard({
   descriptionInterpolation,
   learnMoreLink,
   children,
+  paywall,
 }: Props) {
   return (
     <FormCardLayout
@@ -32,6 +35,7 @@ function FormCard({
           <div className={styles.title}>
             <DynamicT forKey={title} />
             {tag}
+            <CombinedAddOnAndFeatureTag paywall={paywall} />
           </div>
           {description && (
             <div className={styles.description}>
