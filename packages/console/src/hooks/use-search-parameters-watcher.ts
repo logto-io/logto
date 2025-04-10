@@ -49,8 +49,9 @@ const useSearchParametersWatcher = <T extends Parameters>(
         const locationParameterValue = searchParameters.get(parameterKey);
         const parameterValue =
           typeof defaultValue === 'string'
-            ? locationParameterValue ?? defaultValue
-            : conditional(locationParameterValue && Number(locationParameterValue)) ?? defaultValue;
+            ? (locationParameterValue ?? defaultValue)
+            : (conditional(locationParameterValue && Number(locationParameterValue)) ??
+              defaultValue);
 
         return [parameterKey, parameterValue];
       })

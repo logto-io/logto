@@ -367,9 +367,8 @@ export class Mfa {
       return false;
     }
 
-    const organizations = await this.queries.organizations.relations.users.getOrganizationsByUserId(
-      userId
-    );
+    const organizations =
+      await this.queries.organizations.relations.users.getOrganizationsByUserId(userId);
 
     return organizations.some(({ isMfaRequired }) => isMfaRequired);
   }

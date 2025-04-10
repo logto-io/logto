@@ -82,7 +82,7 @@ export const convertResponseToForm = (connector: ConnectorResponse): ConnectorFo
     logo: logo ?? '',
     logoDark: logoDark ?? '',
     target: conditional(
-      type === ConnectorType.Social && (isStandard ? target : metadata.target ?? target)
+      type === ConnectorType.Social && (isStandard ? target : (metadata.target ?? target))
     ),
     syncProfile: syncProfile ? SyncProfileMode.EachSignIn : SyncProfileMode.OnlyAtRegister,
     jsonConfig: JSON.stringify(config, null, 2),

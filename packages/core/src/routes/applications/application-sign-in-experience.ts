@@ -49,9 +49,8 @@ function applicationSignInExperienceRoutes<T extends ManagementApiRouter>(
 
       await findApplicationById(applicationId);
 
-      const applicationSignInExperience = await safeFindSignInExperienceByApplicationId(
-        applicationId
-      );
+      const applicationSignInExperience =
+        await safeFindSignInExperienceByApplicationId(applicationId);
 
       if (applicationSignInExperience) {
         const updatedApplicationSignInExperience = await updateByApplicationId(applicationId, body);
@@ -91,9 +90,8 @@ function applicationSignInExperienceRoutes<T extends ManagementApiRouter>(
 
       await findApplicationById(applicationId);
 
-      const applicationSignInExperience = await safeFindSignInExperienceByApplicationId(
-        applicationId
-      );
+      const applicationSignInExperience =
+        await safeFindSignInExperienceByApplicationId(applicationId);
 
       if (!applicationSignInExperience) {
         throw new RequestError({

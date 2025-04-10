@@ -160,9 +160,8 @@ devFeatureTest.describe('SAML IdP initiated authentication config', () => {
           state: 'private_state',
         };
 
-        const existingConfig = await ssoConnectorsApi.getSsoConnectorIdpInitiatedAuthConfig(
-          connectorId
-        );
+        const existingConfig =
+          await ssoConnectorsApi.getSsoConnectorIdpInitiatedAuthConfig(connectorId);
 
         expect(existingConfig).not.toBeNull();
 
@@ -264,9 +263,8 @@ devFeatureTest.describe('SAML IdP initiated authentication config', () => {
       it('should be able to update the existing IdP-initiated authentication configuration for a SAML SSO connector', async () => {
         const connectorId = ssoConnectors.get('saml')!.id;
 
-        const existingConfig = await ssoConnectorsApi.getSsoConnectorIdpInitiatedAuthConfig(
-          connectorId
-        );
+        const existingConfig =
+          await ssoConnectorsApi.getSsoConnectorIdpInitiatedAuthConfig(connectorId);
 
         expect(existingConfig.clientIdpInitiatedAuthCallbackUri).not.toBeNull();
         expect(existingConfig.autoSendAuthorizationRequest).toBe(false);

@@ -260,9 +260,8 @@ export default function additionalRoutes<T extends IRouterParamContext>(
 
       if (isSignInInteractionResult(profileVerifiedInteraction)) {
         const { accountId } = profileVerifiedInteraction;
-        const { id, username, primaryEmail, primaryPhone, mfaVerifications } = await findUserById(
-          accountId
-        );
+        const { id, username, primaryEmail, primaryPhone, mfaVerifications } =
+          await findUserById(accountId);
         const options = await generateWebAuthnRegistrationOptions({
           rpId: ctx.URL.hostname,
           user: {

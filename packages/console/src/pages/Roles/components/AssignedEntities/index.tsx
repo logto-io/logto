@@ -47,8 +47,8 @@ function AssignedEntities({ entities, count, type }: Props) {
                 ? 'roles.user_counts'
                 : 'roles.application_counts'
               : type === RoleType.User
-              ? 'roles.user_count'
-              : 'roles.application_count'
+                ? 'roles.user_count'
+                : 'roles.application_count'
           }
           interpolation={{ count }}
         />

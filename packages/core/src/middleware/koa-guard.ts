@@ -210,7 +210,7 @@ export default function koaGuard<
     };
 
     try {
-      await (body ?? files
+      await ((body ?? files)
         ? koaBody<StateT, ContextT>({ multipart: Boolean(files) })(ctx, async () =>
             guard(ctx, next)
           )

@@ -35,7 +35,7 @@
     "prepublishOnly": "pnpm build"
   },
   "engines": {
-    "node": "^20.9.0"
+    "node": "^20.19.0"
   },
   "eslintConfig": {
     "extends": "@silverhand",
@@ -62,7 +62,7 @@
     "eslint": "^8.56.0",
     "lint-staged": "^15.0.2",
     "nock": "^13.3.1",
-    "prettier": "^3.0.0",
+    "prettier": "^3.5.3",
     "supertest": "^7.0.0",
     "tsup": "^8.3.0",
     "typescript": "^5.5.3",
