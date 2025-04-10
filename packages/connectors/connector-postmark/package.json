@@ -18,7 +18,7 @@
     "eslint": "^8.56.0",
     "lint-staged": "^15.0.2",
     "nock": "14.0.0-beta.15",
-    "prettier": "^3.0.0",
+    "prettier": "^3.5.3",
     "supertest": "^7.0.0",
     "tsup": "^8.3.0",
     "typescript": "^5.5.3",
