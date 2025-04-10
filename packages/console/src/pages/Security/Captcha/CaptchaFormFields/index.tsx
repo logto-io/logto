@@ -20,12 +20,12 @@ function CaptchaFormFields({ metadata, errors, register }: Props) {
   return (
     <>
       {siteKeyField && (
-        <FormField title={siteKeyField.label}>
+        <FormField isRequired title={siteKeyField.label}>
           <TextInput error={Boolean(errors.siteKey)} {...register('siteKey', { required: true })} />
         </FormField>
       )}
       {secretKeyField && (
-        <FormField title={secretKeyField.label}>
+        <FormField isRequired title={secretKeyField.label}>
           <TextInput
             error={Boolean(errors.secretKey)}
             {...register('secretKey', { required: true })}
@@ -33,7 +33,7 @@ function CaptchaFormFields({ metadata, errors, register }: Props) {
         </FormField>
       )}
       {projectIdField && (
-        <FormField title={projectIdField.label}>
+        <FormField isRequired title={projectIdField.label}>
           <TextInput
             error={Boolean(errors.projectId)}
             {...register('projectId', { required: true })}
