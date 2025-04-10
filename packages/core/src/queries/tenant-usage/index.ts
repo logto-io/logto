@@ -74,6 +74,7 @@ export default class TenantUsageQuery {
           this.countOrganizations(),
           this.isIdpInitiatedSsoEnabled(),
           this.countSamlApplications(),
+          this.isCaptchaEnabled(),
         ].map(([query, key]) => sql`(${query}) as "${key}"`),
         sql`, `
       )}
@@ -361,6 +362,21 @@ export default class TenantUsageQuery {
       where ${rolesFields.name} != ${InternalRole.Admin}
       group by ${rolesScopesFields.roleId}
     `;
+  };
+
+  private readonly isCaptchaEnabled = (): [
+    TaggedTemplateLiteralInvocation,
+    TaggedTemplateLiteralInvocation,
+  ] => {
+    return [
+      sql`
+        select exists (
+          select * from ${signInExperiencesTable}
+          where ${signInExperiencesFields.captchaPolicy}->>'enabled' = 'true'
+        )
+      `,
+      sql`captchaEnabled`,
+    ];
   };
 }
 /* eslint-enable max-lines */
