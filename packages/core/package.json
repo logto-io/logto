@@ -139,7 +139,7 @@
     "typescript": "^5.5.3"
   },
   "engines": {
-    "node": "^20.9.0"
+    "node": "^20.19.0"
   },
   "eslintConfig": {
     "extends": "@silverhand",
