@@ -23,7 +23,8 @@ export type ConsoleTitle =
   | 'Sign-in experience'
   | 'Organizations'
   | 'API resources'
-  | 'Organization template';
+  | 'Organization template'
+  | 'Security';
 
 export default class ExpectConsole extends ExpectPage {
   readonly options: Required<ExpectConsoleOptions>;
@@ -179,7 +180,8 @@ export default class ExpectConsole extends ExpectPage {
     const fieldTitle = await expect(this.page).toMatchElement(
       // Use `:has()` for a quick and dirty way to match the field title.
       // Not harmful in most cases.
-      `${dcls('field')}:has(${dcls('title')})`,
+      // Exclude the `fields` class to avoid matching the `.fields` wrapper in `DetailsForm`
+      `${dcls('field')}:not([class*="fields"]):has(${dcls('title')})`,
       {
         text: new RegExp(title, 'i'),
         visible: true,

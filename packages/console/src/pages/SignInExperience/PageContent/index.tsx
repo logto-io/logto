@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useApi from '@/hooks/use-api';
@@ -131,7 +132,9 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
         <PageTab href="../content" errorCount={getContentErrorCount(errors)}>
           {t('sign_in_exp.tabs.content')}
         </PageTab>
-        <PageTab href="../password-policy">{t('sign_in_exp.tabs.password_policy')}</PageTab>
+        {!isDevFeaturesEnabled && (
+          <PageTab href="../password-policy">{t('sign_in_exp.tabs.password_policy')}</PageTab>
+        )}
       </TabNav>
       <div className={styles.content}>
         <div className={classNames(styles.contentTop, isDirty && styles.withSubmitActionBar)}>
@@ -140,7 +143,9 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
               <Branding isActive={tab === SignInExperienceTab.Branding} />
               <SignUpAndSignIn isActive={tab === SignInExperienceTab.SignUpAndSignIn} />
               <Content isActive={tab === SignInExperienceTab.Content} />
-              <PasswordPolicy isActive={tab === SignInExperienceTab.PasswordPolicy} />
+              {!isDevFeaturesEnabled && (
+                <PasswordPolicy isActive={tab === SignInExperienceTab.PasswordPolicy} />
+              )}
             </form>
           </FormProvider>
           {formData.id && (
