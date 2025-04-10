@@ -13,6 +13,7 @@ export enum Field {
   BindMfa = 'BindMfa',
   Mfa = 'Mfa',
   Verification = 'Verification',
+  Captcha = 'Captcha',
 }
 
 /** Method to verify the identifier */
@@ -75,6 +76,7 @@ export enum Action {
  */
 export type LogKey =
   | `${Prefix}.${Action.Create | Action.End}`
+  | `${Prefix}.${Action.Create}.${Field.Captcha}`
   | `${Prefix}.${InteractionEvent}.${Action.Create | Action.Update | Action.Submit}`
   | `${Prefix}.${InteractionEvent}.${Field.Profile}.${
       | Action.Update // PATCH profile
