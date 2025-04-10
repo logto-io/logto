@@ -49,6 +49,8 @@ const session = {
   },
   sso_enabled:
     'Einmaliges Anmelden ist für diese gegebene E-Mail aktiviert. Bitte melden Sie sich mit SSO an.',
+  captcha_required: 'Captcha ist erforderlich.',
+  captcha_failed: 'Captcha-Verifizierung fehlgeschlagen.',
 };
 
 export default Object.freeze(session);

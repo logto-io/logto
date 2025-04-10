@@ -46,6 +46,8 @@ const session = {
   },
   sso_enabled:
     'このメールアドレスではシングルサインオンが有効になっています。SSO でサインインしてください。',
+  captcha_required: 'Captcha が必要です。',
+  captcha_failed: 'Captcha 検証に失敗しました。',
 };
 
 export default Object.freeze(session);

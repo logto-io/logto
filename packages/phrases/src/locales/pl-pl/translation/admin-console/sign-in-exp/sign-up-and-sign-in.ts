@@ -12,6 +12,8 @@ const sign_up_and_sign_in = {
     identifier_description:
       'Wszystkie wybrane identyfikatory rejestracji są wymagane przy tworzeniu nowego konta.',
     sign_up_authentication: 'Ustawienia uwierzytelniania dla rejestracji',
+    verification_tip:
+      'Użytkownicy muszą zweryfikować skonfigurowany adres e-mail lub numer telefonu, wprowadzając kod weryfikacyjny podczas rejestracji.',
     authentication_description:
       'Wszystkie wybrane czynności będą obowiązkowe dla użytkowników, aby ukończyć proces rejestracji.',
     set_a_password_option: 'Utwórz hasło',
@@ -55,6 +57,8 @@ const sign_up_and_sign_in = {
       'Jest to istotne, ponieważ umożliwiłeś wyłącznie opcję podania kodu weryfikacyjnego podczas rejestracji. Możesz odznaczyć pole wyboru, gdy dozwolone jest ustawienie hasła podczas procesu rejestracji.',
     delete_sign_in_method:
       'Jest to istotne, ponieważ wybrałeś {{identifier}} jako wymagany identyfikator.',
+    password_disabled_notification:
+      'Opcja "Utwórz hasło" jest wyłączona dla rejestracji z użyciem nazwy użytkownika, co może uniemożliwić użytkownikom zalogowanie się. Potwierdź, aby kontynuować zapisywanie.',
   },
   advanced_options: {
     title: 'USTAWIENIA ZAAWANSOWANE',

@@ -12,6 +12,8 @@ const sign_up_and_sign_in = {
     identifier_description:
       'Todos os identificadores de registo selecionados são necessários ao criar uma nova conta.',
     sign_up_authentication: 'Definição de autenticação para registo',
+    verification_tip:
+      'Os usuários devem verificar o email ou número de telefone que configurou inserindo um código de verificação durante o registo.',
     authentication_description:
       'Todas as ações selecionadas serão obrigatórias para os utilizadores concluir o processo de registo.',
     set_a_password_option: 'Criar uma senha',
@@ -54,6 +56,8 @@ const sign_up_and_sign_in = {
       'Isto é essencial uma vez que apenas ativou a opção de fornecer um código de verificação ao registar-se. É livre de desmarcar a caixa quando a configuração da senha é permitida durante o processo de registo.',
     delete_sign_in_method:
       'Isto é essencial uma vez que selecionou {{identifier}} como um identificador obrigatório.',
+    password_disabled_notification:
+      'A opção "Criar sua senha" está desativada para registo de nome de utilizador, o que pode impedir os usuários de iniciarem sessão. Confirme para continuar com a gravação.',
   },
   advanced_options: {
     title: 'OPÇÕES AVANÇADAS',

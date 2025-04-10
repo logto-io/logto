@@ -37,6 +37,8 @@ const session = {
     mfa_factor_not_enabled: 'MFA 因素未启用。',
   },
   sso_enabled: '该邮箱已开启单点登录，请使用 SSO 登录。',
+  captcha_required: '需要验证码。',
+  captcha_failed: '验证码验证失败。',
 };
 
 export default Object.freeze(session);

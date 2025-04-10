@@ -39,6 +39,8 @@ const session = {
   },
   sso_enabled:
     'تم تمكين تسجيل الدخول الموحد لهذا البريد الإلكتروني المحدد. يرجى تسجيل الدخول باستخدام SSO.',
+  captcha_required: 'مطلوب التحقق من Captcha.',
+  captcha_failed: 'فشل التحقق من Captcha.',
 };
 
 export default Object.freeze(session);

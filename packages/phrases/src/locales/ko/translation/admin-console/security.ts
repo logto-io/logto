@@ -41,10 +41,9 @@ const security = {
       add: 'CAPTCHA 추가',
     },
     settings: '설정',
-    captcha_required_flows: 'CAPTCHA 필요 흐름',
-    sign_up: '회원가입',
-    sign_in: '로그인',
-    forgot_password: '비밀번호 찾기',
+    enable_captcha: 'CAPTCHA 활성화',
+    enable_captcha_description:
+      '회원가입, 로그인, 비밀번호 복구 흐름에 대해 CAPTCHA 검증을 활성화합니다.',
   },
   create_captcha: {
     setup_captcha: 'CAPTCHA 설정',
@@ -71,6 +70,8 @@ const security = {
     site_key: '사이트 키',
     secret_key: '비밀 키',
     project_id: '프로젝트 ID',
+    recaptcha_key_id: 'reCAPTCHA 키 ID',
+    recaptcha_api_key: '프로젝트의 API 키',
     deletion_description: '이 CAPTCHA 제공자를 삭제하시겠습니까?',
     captcha_deleted: 'CAPTCHA 제공자가 성공적으로 삭제되었습니다',
     setup_captcha: 'CAPTCHA 설정',

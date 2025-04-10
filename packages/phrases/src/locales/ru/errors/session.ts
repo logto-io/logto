@@ -47,6 +47,8 @@ const session = {
   },
   sso_enabled:
     'Единый вход в систему включен для этого указанного адреса электронной почты. Войдите в систему с помощью SSO.',
+  captcha_required: 'Требуется Capctha.',
+  captcha_failed: 'Проверка Captcha не удалась.',
 };
 
 export default Object.freeze(session);

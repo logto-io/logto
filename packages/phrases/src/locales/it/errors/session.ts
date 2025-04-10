@@ -47,6 +47,8 @@ const session = {
     mfa_factor_not_enabled: 'Il fattore MFA non è abilitato.',
   },
   sso_enabled: "L'accesso singolo è abilitato per questa email. Accedi con SSO.",
+  captcha_required: 'È richiesto il Captcha.',
+  captcha_failed: 'La verifica del Captcha non è riuscita.',
 };
 
 export default Object.freeze(session);

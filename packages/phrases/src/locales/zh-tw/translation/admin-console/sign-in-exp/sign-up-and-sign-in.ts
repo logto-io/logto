@@ -11,6 +11,7 @@ const sign_up_and_sign_in = {
     sign_up_identifier: '註冊標誌',
     identifier_description: '創建新帳戶時，所有選擇的註冊標誌都是必需的。',
     sign_up_authentication: '註冊身分驗證設置',
+    verification_tip: '用戶必須在註冊時通過輸入驗證碼來驗證你配置的電子郵件或手機號碼。',
     authentication_description: '在註冊時，你的使用者將必須完成所有勾選的任務。',
     set_a_password_option: '建立密碼',
     verify_at_sign_up_option: '驗證身分',
@@ -49,6 +50,8 @@ const sign_up_and_sign_in = {
     verification_code_auth:
       '因註冊設置啟用了驗證碼標誌，驗證碼屬於使用者必選項，啟用密碼註冊後，你可以選擇關閉驗證碼登入。',
     delete_sign_in_method: '因註冊設置啟用了{{identifier}}標誌。在使用者登入時，這些資訊是必填的。',
+    password_disabled_notification:
+      '用於使用者名稱註冊的"設置密碼"選項已被禁用，可能會阻止使用者登入。確認後繼續保存。',
   },
   advanced_options: {
     title: '進階選項',

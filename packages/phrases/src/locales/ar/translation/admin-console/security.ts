@@ -40,10 +40,9 @@ const security = {
       add: 'إضافة CAPTCHA',
     },
     settings: 'الإعدادات',
-    captcha_required_flows: 'التدفقات التي تحتاج إلى CAPTCHA',
-    sign_up: 'التسجيل',
-    sign_in: 'تسجيل الدخول',
-    forgot_password: 'نسيت كلمة المرور',
+    enable_captcha: 'تفعيل CAPTCHA',
+    enable_captcha_description:
+      'تفعيل التحقق CAPTCHA لعمليات التسجيل وتسجيل الدخول واستعادة كلمة المرور.',
   },
   create_captcha: {
     setup_captcha: 'إعداد CAPTCHA',
@@ -70,6 +69,8 @@ const security = {
     site_key: 'مفتاح الموقع',
     secret_key: 'المفتاح السري',
     project_id: 'معرف المشروع',
+    recaptcha_key_id: 'معرّف مفتاح reCAPTCHA',
+    recaptcha_api_key: 'مفتاح API للمشروع',
     deletion_description: 'هل أنت متأكد أنك تريد حذف مزود CAPTCHA هذا؟',
     captcha_deleted: 'تم حذف موفر CAPTCHA بنجاح',
     setup_captcha: 'إعداد CAPTCHA',
