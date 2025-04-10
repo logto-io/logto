@@ -18,8 +18,6 @@ import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import SamlConnector from '#src/sso/SamlConnector/index.js';
 import { ssoConnectorFactories, type SingleSignOnConnectorSession } from '#src/sso/index.js';
 import { type ExtendedSocialUserInfo } from '#src/sso/types/saml.js';
-import type Libraries from '#src/tenants/Libraries.js';
-import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { safeParseUnknownJson } from '#src/utils/json.js';
@@ -212,8 +210,7 @@ export const handleSsoAuthentication = async (
   connectorData: SupportedSsoConnector,
   ssoAuthentication: SsoAuthenticationResult
 ): Promise<string> => {
-  const { createLog } = ctx;
-  const { provider, queries, libraries } = tenant;
+  const { queries } = tenant;
   const { userSsoIdentities: userSsoIdentitiesQueries, users: usersQueries } = queries;
   const { issuer, userInfo } = ssoAuthentication;
 
@@ -225,7 +222,7 @@ export const handleSsoAuthentication = async (
 
   // SignIn
   if (userSsoIdentity) {
-    return signInWithSsoAuthentication(ctx, queries, {
+    return signInWithSsoAuthentication(ctx, tenant, {
       connectorData,
       userSsoIdentity,
       ssoAuthentication,
@@ -236,7 +233,7 @@ export const handleSsoAuthentication = async (
 
   // SignIn and link with existing user account with a same email
   if (user) {
-    return signInAndLinkWithSsoAuthentication(ctx, queries, libraries, {
+    return signInAndLinkWithSsoAuthentication(ctx, tenant, {
       connectorData,
       user,
       ssoAuthentication,
@@ -253,8 +250,8 @@ export const handleSsoAuthentication = async (
 };
 
 const signInWithSsoAuthentication = async (
-  ctx: WithLogContext,
-  { userSsoIdentities: userSsoIdentitiesQueries, users: usersQueries }: Queries,
+  ctx: WithInteractionHooksContext<WithLogContext>,
+  { queries: { userSsoIdentities: userSsoIdentitiesQueries, users: usersQueries } }: TenantContext,
   {
     connectorData: { id: connectorId, syncProfile },
     userSsoIdentity: { id, userId },
@@ -308,8 +305,10 @@ const signInWithSsoAuthentication = async (
 
 const signInAndLinkWithSsoAuthentication = async (
   ctx: WithInteractionHooksContext<WithLogContext>,
-  { userSsoIdentities: userSsoIdentitiesQueries, users: usersQueries }: Queries,
-  { users: usersLibraries }: Libraries,
+  {
+    queries: { userSsoIdentities: userSsoIdentitiesQueries, users: usersQueries },
+    libraries: { users: usersLibrary },
+  }: TenantContext,
   {
     connectorData: { id: connectorId, syncProfile },
     user: { id: userId },
@@ -350,7 +349,7 @@ const signInAndLinkWithSsoAuthentication = async (
   });
 
   // JIT provision for existing users signing in with SSO for the first time
-  const provisionedOrganizations = await usersLibraries.provisionOrganizations({
+  const provisionedOrganizations = await usersLibrary.provisionOrganizations({
     userId,
     ssoConnectorId: connectorId,
   });

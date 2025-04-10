@@ -44,17 +44,17 @@ const userQueries = {
     identities: { google: { userId: 'googleId', details: {} } },
     mfaVerifications: [],
   }),
+  updateUserById: jest.fn(),
   hasActiveUsers: jest.fn().mockResolvedValue(true),
   hasUserWithEmail: jest.fn().mockResolvedValue(false),
   hasUserWithPhone: jest.fn().mockResolvedValue(false),
-  updateUserById: jest.fn(),
 };
 
 const { hasActiveUsers, updateUserById } = userQueries;
 
 const userLibraries = {
   generateUserId: jest.fn().mockResolvedValue('uid'),
-  insertUser: jest.fn().mockResolvedValue([{}, { organizationIds: [] }]),
+  insertUser: jest.fn().mockResolvedValue([{}, { organizations: [] }]),
 };
 const { generateUserId, insertUser } = userLibraries;
 

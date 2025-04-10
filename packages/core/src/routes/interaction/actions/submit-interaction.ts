@@ -221,7 +221,7 @@ async function handleSubmitSignIn(
   tenantContext: TenantContext,
   log?: LogEntry
 ) {
-  const { provider, queries, libraries } = tenantContext;
+  const { provider, queries } = tenantContext;
   const { findUserById, updateUserById } = queries.users;
 
   const { accountId } = interaction;

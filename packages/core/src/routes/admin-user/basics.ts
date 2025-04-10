@@ -28,9 +28,9 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       deleteUserById,
       findUserById,
       hasUser,
+      updateUserById,
       hasUserWithEmail,
       hasUserWithPhone,
-      updateUserById,
     },
   } = queries;
   const {

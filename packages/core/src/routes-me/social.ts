@@ -22,7 +22,7 @@ export default function socialRoutes<T extends AuthedMeRouter>(
 ) {
   const {
     queries: {
-      users: { findUserById, deleteUserIdentity, hasUserWithIdentity, updateUserById },
+      users: { findUserById, updateUserById, deleteUserIdentity, hasUserWithIdentity },
       signInExperiences: { findDefaultSignInExperience },
     },
     connectors: { getLogtoConnectors, getLogtoConnectorById },
