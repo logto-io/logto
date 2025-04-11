@@ -3329,8 +3329,8 @@ importers:
         specifier: ^1.2.3
         version: 1.2.3
       libphonenumber-js:
-        specifier: ^1.10.51
-        version: 1.10.51
+        specifier: ^1.12.6
+        version: 1.12.6
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -3607,6 +3607,9 @@ importers:
       ky:
         specifier: ^1.2.3
         version: 1.2.3
+      libphonenumber-js:
+        specifier: ^1.12.6
+        version: 1.12.6
       lru-cache:
         specifier: ^11.0.0
         version: 11.0.0
@@ -3972,6 +3975,9 @@ importers:
       '@logto/schemas':
         specifier: workspace:^1.26.0
         version: link:../schemas
+      '@logto/shared':
+        specifier: workspace:^3.1.4
+        version: link:../shared
       '@react-spring/shared':
         specifier: ^9.6.1
         version: 9.6.1(react@18.3.1)
@@ -4084,8 +4090,8 @@ importers:
         specifier: ^1.2.3
         version: 1.2.3
       libphonenumber-js:
-        specifier: ^1.10.51
-        version: 1.10.51
+        specifier: ^1.11.1
+        version: 1.11.1
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -4409,8 +4415,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       libphonenumber-js:
-        specifier: ^1.9.49
-        version: 1.10.51
+        specifier: ^1.12.6
+        version: 1.12.6
       nanoid:
         specifier: ^5.0.9
         version: 5.0.9
@@ -11088,11 +11094,14 @@ packages:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
 
-  libphonenumber-js@1.10.51:
-    resolution: {integrity: sha512-vY2I+rQwrDQzoPds0JeTEpeWzbUJgqoV0O4v31PauHBb/e+1KCXKylHcDnBMgJZ9fH9mErsEbROJY3Z3JtqEmg==}
+  libphonenumber-js@1.11.1:
+    resolution: {integrity: sha512-Wze1LPwcnzvcKGcRHFGFECTaLzxOtujwpf924difr5zniyYv1C2PiW0419qDR7m8lKDxsImu5mwxFuXhXpjmvw==}
 
   libphonenumber-js@1.11.12:
     resolution: {integrity: sha512-QkJn9/D7zZ1ucvT++TQSvZuSA2xAWeUytU+DiEQwbPKLyrDpvbul2AFs1CGbRAPpSCCk47aRAb5DX5mmcayp4g==}
+
+  libphonenumber-js@1.12.6:
+    resolution: {integrity: sha512-PJiS4ETaUfCOFLpmtKzAbqZQjCCKVu2OhTV4SVNNE7c2nu/dACvtCqj4L0i/KWNnIgRv7yrILvBj5Lonv5Ncxw==}
 
   lighthouse-logger@1.4.2:
     resolution: {integrity: sha512-gPWxznF6TKmUHrOQjlVo2UbaL2EJ71mb2CCeRs/2qBpi4L/g4LUVc9+3lKQ6DTUZwJswfM7ainGrLO1+fOqa2g==}
@@ -22954,9 +22963,11 @@ snapshots:
       prelude-ls: 1.2.1
       type-check: 0.4.0
 
-  libphonenumber-js@1.10.51: {}
+  libphonenumber-js@1.11.1: {}
 
   libphonenumber-js@1.11.12: {}
+
+  libphonenumber-js@1.12.6: {}
 
   lighthouse-logger@1.4.2:
     dependencies:

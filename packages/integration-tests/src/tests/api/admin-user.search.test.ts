@@ -35,7 +35,6 @@ describe('admin console user search params', () => {
       'jerry swift jr jr',
     ];
     const emailSuffix = ['@gmail.com', '@foo.bar', '@geek.best'];
-    const phonePrefix = ['101', '102', '202'];
 
     // eslint-disable-next-line @silverhand/fp/no-mutation
     users = await Promise.all(
@@ -47,8 +46,7 @@ describe('admin console user search params', () => {
           .map((segment) => segment[0]!.toUpperCase() + segment.slice(1))
           .join(' ');
         const primaryEmail = username + emailSuffix[index % emailSuffix.length]!;
-        const primaryPhone =
-          phonePrefix[index % phonePrefix.length]! + index.toString().padStart(5, '0');
+        const primaryPhone = '1310805' + index.toString().padStart(4, '0');
 
         return createUserByAdmin({ username: prefix + username, primaryEmail, primaryPhone, name });
       })
@@ -74,7 +72,7 @@ describe('admin console user search params', () => {
     });
 
     it('should search primaryPhone', async () => {
-      const { headers, json } = await getUsers<User[]>([['search', '%0000%']]);
+      const { headers, json } = await getUsers<User[]>([['search', '%000%']]);
 
       expect(headers.get('total-number')).toEqual('10');
       expect(

@@ -1,11 +1,11 @@
 import type { BindMfa, CreateUser, Scope, User } from '@logto/schemas';
-import { RoleType, Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
-import { generateStandardId, generateStandardShortId } from '@logto/shared';
-import { condArray, deduplicateByKey, type Nullable } from '@silverhand/essentials';
+import { RoleType, UsersPasswordEncryptionMethod } from '@logto/schemas';
+import { generateStandardShortId, generateStandardId } from '@logto/shared';
+import type { Nullable } from '@silverhand/essentials';
+import { deduplicateByKey, condArray } from '@silverhand/essentials';
 import { argon2Verify, bcryptVerify, md5, sha1, sha256 } from 'hash-wasm';
 import pRetry from 'p-retry';
 
-import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type JitOrganization } from '#src/queries/organization/email-domains.js';
@@ -33,6 +33,7 @@ export const createUserLibrary = (queries: Queries) => {
       hasUserWithIdentity,
       findUsersByIds,
       updateUserById,
+      insertUser: insertUserQuery,
       findUserById,
     },
     usersRoles: { findUsersRolesByRoleId, findUsersRolesByUserId },
@@ -70,10 +71,6 @@ export const createUserLibrary = (queries: Queries) => {
     assertThat(parameterRoles.length === roleNames.length, 'role.default_role_missing');
 
     return pool.transaction(async (connection) => {
-      const insertUserQuery = buildInsertIntoWithPool(connection)(Users, {
-        returning: true,
-      });
-
       const user = await insertUserQuery(data);
       const roles = deduplicateByKey([...parameterRoles, ...defaultRoles], 'id');
 

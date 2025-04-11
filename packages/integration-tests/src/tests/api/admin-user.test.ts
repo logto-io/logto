@@ -155,6 +155,14 @@ describe('admin console user management', () => {
     });
   });
 
+  it('should respond 422 when update user with invalid phone', async () => {
+    const user = await createUserByAdmin();
+    await expectRejects(updateUser(user.id, { primaryPhone: '13110000000' }), {
+      code: 'user.invalid_phone',
+      status: 422,
+    });
+  });
+
   it('should fail when update userinfo with conflict identifiers', async () => {
     const [username, primaryEmail, primaryPhone] = [
       generateUsername(),

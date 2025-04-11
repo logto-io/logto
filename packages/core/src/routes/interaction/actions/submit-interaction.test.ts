@@ -52,13 +52,13 @@ const userQueries = {
     identities: { google: { userId: 'googleId', details: {} } },
     mfaVerifications: [],
   }),
-  updateUserById: jest.fn(async (id: string, user: Partial<User>) => user as User),
   hasActiveUsers: jest.fn().mockResolvedValue(true),
   hasUserWithEmail: jest.fn().mockResolvedValue(false),
   hasUserWithPhone: jest.fn().mockResolvedValue(false),
+  updateUserById: jest.fn(async (id: string, user: Partial<User>) => user as User),
 };
 
-const { hasActiveUsers, updateUserById, hasUserWithEmail, hasUserWithPhone } = userQueries;
+const { hasActiveUsers, hasUserWithEmail, hasUserWithPhone, updateUserById } = userQueries;
 
 const userLibraries = {
   generateUserId: jest.fn().mockResolvedValue('uid'),

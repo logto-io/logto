@@ -2,7 +2,7 @@ import { emailRegEx, usernameRegEx } from '@logto/core-kit';
 import type { User } from '@logto/schemas';
 import { parsePhoneNumber } from '@logto/shared/universal';
 import { conditionalString, trySafe } from '@silverhand/essentials';
-import { parsePhoneNumberWithError } from 'libphonenumber-js';
+import { parsePhoneNumberWithError } from 'libphonenumber-js/mobile';
 import { useForm, useController } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
