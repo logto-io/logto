@@ -381,11 +381,12 @@ export default class ExperienceInteraction {
    * @throws {RequestError} with 422 if the captcha verification fails
    */
   public async verifyCaptcha(token: string) {
+    const log = this.ctx.createLog('Interaction.Create.Captcha');
     const captchaProvider = await this.tenant.queries.captchaProviders.findCaptchaProvider();
 
     assertThat(captchaProvider, new RequestError({ code: 'session.captcha_failed', status: 422 }));
 
-    const captchaValidator = new CaptchaValidator(captchaProvider);
+    const captchaValidator = new CaptchaValidator(captchaProvider, log);
     const isVerified = await captchaValidator.verifyCaptcha(token);
 
     assertThat(isVerified, new RequestError({ code: 'session.captcha_failed', status: 422 }));
