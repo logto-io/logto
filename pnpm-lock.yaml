@@ -94,7 +94,7 @@ importers:
         version: 20.10.4
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -109,7 +109,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/cli:
     dependencies:
@@ -203,7 +203,7 @@ importers:
         version: 17.0.13
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       '@withtyped/server':
         specifier: ^0.14.0
         version: 0.14.0(zod@3.23.8)
@@ -224,7 +224,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-alipay-native:
     dependencies:
@@ -267,7 +267,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -275,8 +275,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -291,7 +291,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-alipay-web:
     dependencies:
@@ -334,7 +334,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -342,8 +342,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -358,7 +358,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-aliyun-dm:
     dependencies:
@@ -392,7 +392,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -400,8 +400,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -416,7 +416,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-aliyun-sms:
     dependencies:
@@ -450,7 +450,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -458,8 +458,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -474,7 +474,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-amazon:
     dependencies:
@@ -511,7 +511,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -519,8 +519,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.3
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -535,7 +535,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-apple:
     dependencies:
@@ -575,7 +575,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -583,8 +583,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -599,7 +599,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-aws-ses:
     dependencies:
@@ -639,7 +639,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -647,8 +647,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -663,7 +663,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-azuread:
     dependencies:
@@ -700,7 +700,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -708,8 +708,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -724,7 +724,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-dingtalk-web:
     dependencies:
@@ -767,7 +767,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -775,8 +775,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -791,7 +791,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-discord:
     dependencies:
@@ -825,7 +825,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -833,8 +833,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -849,7 +849,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-facebook:
     dependencies:
@@ -883,7 +883,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -891,8 +891,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -907,7 +907,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-feishu-web:
     dependencies:
@@ -941,7 +941,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -949,8 +949,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -965,7 +965,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-gatewayapi-sms:
     dependencies:
@@ -999,7 +999,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1007,8 +1007,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1023,7 +1023,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-github:
     dependencies:
@@ -1060,7 +1060,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1068,8 +1068,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.3
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1084,7 +1084,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-gitlab:
     dependencies:
@@ -1130,7 +1130,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1138,8 +1138,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.3
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1154,7 +1154,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-google:
     dependencies:
@@ -1191,7 +1191,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1199,8 +1199,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1215,7 +1215,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-http-email:
     dependencies:
@@ -1246,7 +1246,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1254,8 +1254,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1270,7 +1270,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-huggingface:
     dependencies:
@@ -1304,7 +1304,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1312,8 +1312,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.3
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1328,7 +1328,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-kakao:
     dependencies:
@@ -1362,7 +1362,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1370,8 +1370,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1386,7 +1386,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-kook:
     dependencies:
@@ -1420,7 +1420,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1428,8 +1428,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.3
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1444,7 +1444,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-line:
     dependencies:
@@ -1481,7 +1481,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1489,8 +1489,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.3
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1505,7 +1505,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-linkedin:
     dependencies:
@@ -1542,7 +1542,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1550,8 +1550,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.3
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1566,7 +1566,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-logto-email:
     dependencies:
@@ -1603,7 +1603,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1611,8 +1611,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1627,7 +1627,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-logto-sms:
     dependencies:
@@ -1661,7 +1661,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1669,8 +1669,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1685,7 +1685,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-logto-social-demo:
     dependencies:
@@ -1719,7 +1719,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1727,8 +1727,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1743,7 +1743,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-mailgun:
     dependencies:
@@ -1777,7 +1777,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1785,8 +1785,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1801,7 +1801,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-mock-email:
     dependencies:
@@ -1835,7 +1835,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1843,8 +1843,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1859,7 +1859,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-mock-email-alternative:
     dependencies:
@@ -1893,7 +1893,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1901,8 +1901,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1917,7 +1917,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-mock-sms:
     dependencies:
@@ -1951,7 +1951,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -1959,8 +1959,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1975,7 +1975,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-mock-social:
     dependencies:
@@ -2009,7 +2009,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2017,8 +2017,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2033,7 +2033,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-naver:
     dependencies:
@@ -2067,7 +2067,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2075,8 +2075,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2091,7 +2091,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-oauth2:
     dependencies:
@@ -2134,7 +2134,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2142,8 +2142,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.3
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2158,7 +2158,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-oidc:
     dependencies:
@@ -2204,7 +2204,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2212,8 +2212,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.3
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2228,7 +2228,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-patreon:
     dependencies:
@@ -2262,7 +2262,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2270,8 +2270,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.3
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2286,7 +2286,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-postmark:
     dependencies:
@@ -2317,7 +2317,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2325,8 +2325,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.3
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2341,7 +2341,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-saml:
     dependencies:
@@ -2381,7 +2381,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2389,8 +2389,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2405,7 +2405,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-sendgrid-email:
     dependencies:
@@ -2439,7 +2439,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2447,8 +2447,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2463,7 +2463,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-slack:
     dependencies:
@@ -2500,7 +2500,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2508,8 +2508,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.3
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2524,7 +2524,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-smsaero:
     dependencies:
@@ -2558,7 +2558,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2566,8 +2566,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2582,7 +2582,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-smtp:
     dependencies:
@@ -2622,7 +2622,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2630,8 +2630,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2646,7 +2646,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-tencent-sms:
     dependencies:
@@ -2680,7 +2680,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2688,8 +2688,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2704,7 +2704,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-twilio-sms:
     dependencies:
@@ -2738,7 +2738,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2746,8 +2746,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2762,7 +2762,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-vonage-sms:
     dependencies:
@@ -2796,7 +2796,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2817,7 +2817,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-wechat-native:
     dependencies:
@@ -2851,7 +2851,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2859,8 +2859,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2875,7 +2875,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-wechat-web:
     dependencies:
@@ -2909,7 +2909,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2917,8 +2917,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2933,7 +2933,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-wecom:
     dependencies:
@@ -2967,7 +2967,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -2975,8 +2975,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2991,7 +2991,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-x:
     dependencies:
@@ -3028,7 +3028,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -3036,8 +3036,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.3
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -3052,7 +3052,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-xiaomi:
     dependencies:
@@ -3083,7 +3083,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -3091,8 +3091,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.3
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -3107,7 +3107,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/connectors/connector-yunpian-sms:
     dependencies:
@@ -3138,7 +3138,7 @@ importers:
         version: 6.0.2
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -3146,8 +3146,8 @@ importers:
         specifier: ^15.0.2
         version: 15.0.2
       nock:
-        specifier: ^13.3.1
-        version: 13.3.1
+        specifier: ^14.0.0
+        version: 14.0.3
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -3162,7 +3162,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/console:
     devDependencies:
@@ -4368,7 +4368,7 @@ importers:
         version: 0.0.33
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       camelcase:
         specifier: ^8.0.0
         version: 8.0.0
@@ -4395,7 +4395,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/shared:
     dependencies:
@@ -4429,7 +4429,7 @@ importers:
         version: 20.10.4
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -4444,7 +4444,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/toolkit/connector-kit:
     dependencies:
@@ -4476,7 +4476,7 @@ importers:
         version: 20.10.4
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -4491,7 +4491,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/toolkit/core-kit:
     dependencies:
@@ -4535,7 +4535,7 @@ importers:
         version: 18.3.3
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -4556,7 +4556,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/toolkit/language-kit:
     optionalDependencies:
@@ -4575,7 +4575,7 @@ importers:
         version: 20.10.4
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -4590,7 +4590,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
   packages/translate:
     dependencies:
@@ -4660,7 +4660,7 @@ importers:
         version: 17.0.13
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -4727,7 +4727,7 @@ importers:
         version: 17.0.13
       '@vitest/coverage-v8':
         specifier: ^3.1.1
-        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.17.19)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+        version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.17.19)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -4742,7 +4742,7 @@ importers:
         version: 5.5.3
       vitest:
         specifier: ^3.1.1
-        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.17.19)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+        version: 3.1.1(@types/debug@4.1.12)(@types/node@20.17.19)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
 
 packages:
 
@@ -4772,6 +4772,9 @@ packages:
     resolution: {integrity: sha512-9Kt7EuS/7WbMAUv2gSziqjvxwDbFSg3Xeyfuj5laUODX8o/k/CpsAKiQ8W7/R88eXFTMbJYg6+7uAmOWNKmwnw==}
     peerDependencies:
       openapi-types: '>=7'
+
+  '@asamuzakjp/css-color@3.1.1':
+    resolution: {integrity: sha512-hpRD68SV2OMcZCsrbdkccTw5FXjNDLo5OuqSHyHZfwweGsDWZwDJ2+gONyNAbazZclobMirACLw0lk8WVxIqxA==}
 
   '@authenio/samlify-node-xmllint@2.0.0':
     resolution: {integrity: sha512-V9cQ0CHqu3JwOmbSecGPUnzIES5kHxD00FEZKnWh90ksQUJG5/TscV2r9XLbKp7MlRMOSUfWxecM35xPSLFdSg==}
@@ -5478,15 +5481,43 @@ packages:
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
     engines: {node: '>=12'}
 
+  '@csstools/color-helpers@5.0.2':
+    resolution: {integrity: sha512-JqWH1vsgdGcw2RR6VliXXdA0/59LttzlU8UlRT/iUUsEeWfYq8I+K0yhihEUTTHLRm1EXvpsCx3083EU15ecsA==}
+    engines: {node: '>=18'}
+
+  '@csstools/css-calc@2.1.2':
+    resolution: {integrity: sha512-TklMyb3uBB28b5uQdxjReG4L80NxAqgrECqLZFQbyLekwwlcDDS8r3f07DKqeo8C4926Br0gf/ZDe17Zv4wIuw==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@csstools/css-parser-algorithms': ^3.0.4
+      '@csstools/css-tokenizer': ^3.0.3
+
+  '@csstools/css-color-parser@3.0.8':
+    resolution: {integrity: sha512-pdwotQjCCnRPuNi06jFuP68cykU1f3ZWExLe/8MQ1LOs8Xq+fTkYgd+2V8mWUWMrOn9iS2HftPVaMZDaXzGbhQ==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@csstools/css-parser-algorithms': ^3.0.4
+      '@csstools/css-tokenizer': ^3.0.3
+
   '@csstools/css-parser-algorithms@2.6.1':
     resolution: {integrity: sha512-ubEkAaTfVZa+WwGhs5jbo5Xfqpeaybr/RvWzvFxRs4jfq16wH8l8Ty/QEEpINxll4xhuGfdMbipRyz5QZh9+FA==}
     engines: {node: ^14 || ^16 || >=18}
     peerDependencies:
       '@csstools/css-tokenizer': ^2.2.4
 
+  '@csstools/css-parser-algorithms@3.0.4':
+    resolution: {integrity: sha512-Up7rBoV77rv29d3uKHUIVubz1BTcgyUK72IvCQAbfbMv584xHcGKCKbWh7i8hPrRJ7qU4Y8IO3IY9m+iTB7P3A==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@csstools/css-tokenizer': ^3.0.3
+
   '@csstools/css-tokenizer@2.2.4':
     resolution: {integrity: sha512-PuWRAewQLbDhGeTvFuq2oClaSCKPIBmHyIobCV39JHRYN0byDcUWJl5baPeNUcqrjtdMNqFooE0FGl31I3JOqw==}
     engines: {node: ^14 || ^16 || >=18}
+
+  '@csstools/css-tokenizer@3.0.3':
+    resolution: {integrity: sha512-UJnjoFsmxfKUdNYdWgOB0mWUypuLvAfQPH1+pyvRJs6euowbFkFC6P13w1l8mJyi3vxYMxc9kld5jZEGRQs6bw==}
+    engines: {node: '>=18'}
 
   '@csstools/media-query-list-parser@2.1.9':
     resolution: {integrity: sha512-qqGuFfbn4rUmyOB0u8CVISIp5FfJ5GAR3mBrZ9/TKndHakdnm6pY0L/fbLcpPnrzwCyyTEZl1nUcXAYHEWneTA==}
@@ -6108,8 +6139,8 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
 
-  '@mswjs/interceptors@0.36.5':
-    resolution: {integrity: sha512-aQ8WF5zQwOdcxLsxSEk9Jd01GgGb80xxqCaiDDlewhtwqpSm8MOvUHslwPydVirasdW09++NxDNNftm1vLY8yA==}
+  '@mswjs/interceptors@0.38.2':
+    resolution: {integrity: sha512-jS/XP42rw1K+WmJPC39i/aAKvNGQrjn7V85RALvozYqBy+KjFkq6pL+ZXSBCM0sNJalFoaCCWqZE0TuK2Mn99g==}
     engines: {node: '>=18'}
 
   '@nodelib/fs.scandir@2.1.5':
@@ -8632,6 +8663,10 @@ packages:
     resolution: {integrity: sha512-AZL67abkUzIuvcHqk7c09cezpGNcxUxU4Ioi/05xHk4DQeTkWmGYftIE6ctU6AEt+Gn4n1lDStOtj7FKycP71A==}
     engines: {node: '>=8'}
 
+  cssstyle@4.3.0:
+    resolution: {integrity: sha512-6r0NiY0xizYqfBvWp1G7WXJ06/bZyrk7Dc6PHql82C/pKGUTKu4yAX4Y8JPamb1ob9nBKuxWzCGTRuGwU3yxJQ==}
+    engines: {node: '>=18'}
+
   csstype@3.0.11:
     resolution: {integrity: sha512-sa6P2wJ+CAbgyy4KFssIb/JNMLxFvKF1pCYCSXS8ZMuqZnMsrxqI2E5sPyoTpxoPU/gVZMzr2zjOfg8GIZOMsw==}
 
@@ -8834,6 +8869,10 @@ packages:
     resolution: {integrity: sha512-Jy/tj3ldjZJo63sVAvg6LHt2mHvl4V6AgRAmNDtLdm7faqtsx+aJG42rsyCo9JCoRVKwPFzKlIPx3DIibwSIaQ==}
     engines: {node: '>=12'}
 
+  data-urls@5.0.0:
+    resolution: {integrity: sha512-ZYP5VBHshaDAiVZxjbRVcFJpc+4xGgT0bK3vzy1HLN8jTO975HEbuYzZJcHoQEY5K1a0z8YayJkyVETa08eNTg==}
+    engines: {node: '>=18'}
+
   data-view-buffer@1.0.1:
     resolution: {integrity: sha512-0lht7OugA5x3iJLOWFhWK/5ehONdprk0ISXqVFn/NFrDu+cuc8iADFrGQz5BnRK7LLU3JmkbXSxaqX+/mXYtUA==}
     engines: {node: '>= 0.4'}
@@ -8932,6 +8971,9 @@ packages:
 
   decimal.js@10.4.2:
     resolution: {integrity: sha512-ic1yEvwT6GuvaYwBLLY6/aFFgjZdySKTE8en/fkU3QICTmRtgtSlFn0u0BXN06InZwtfCelR7j8LRiDI/02iGA==}
+
+  decimal.js@10.5.0:
+    resolution: {integrity: sha512-8vDa8Qxvr/+d94hSh5P3IJwI5t8/c0KsMp+g8bNw9cY2icONa5aPfvKeieW1WlG0WQYwwhJ7mjui2xtiePQSXw==}
 
   decode-named-character-reference@1.0.1:
     resolution: {integrity: sha512-YV/0HQHreRwKb7uBopyIkLG17jG6Sv2qUchk9qSoVJ2f+flwRsPNBO0hAnjt6mTNYUT+vw9Gy2ihXg4sUWPi2w==}
@@ -10126,6 +10168,10 @@ packages:
     resolution: {integrity: sha512-oWv4T4yJ52iKrufjnyZPkrN0CH3QnrUqdB6In1g5Fe1mia8GmF36gnfNySxoZtxD5+NmYw1EElVXiBk93UeskA==}
     engines: {node: '>=12'}
 
+  html-encoding-sniffer@4.0.0:
+    resolution: {integrity: sha512-Y22oTqIU4uuPgEemfz7NDJz6OeKf12Lsu+QC+s3BVpda64lTiMYCyGwg5ki4vFxkMwQdeZDl2adZoqUgdFuTgQ==}
+    engines: {node: '>=18'}
+
   html-escaper@2.0.2:
     resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
 
@@ -10885,6 +10931,15 @@ packages:
       canvas:
         optional: true
 
+  jsdom@26.0.0:
+    resolution: {integrity: sha512-BZYDGVAIriBWTpIxYzrXjv3E/4u8+/pSG5bQdIYCbNCGOvsPkDQfTVLAIXAf9ETdCpduCVTkDe2NNZ8NIwUVzw==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      canvas: ^3.0.0
+    peerDependenciesMeta:
+      canvas:
+        optional: true
+
   jsesc@0.5.0:
     resolution: {integrity: sha512-uZz5UnB7u4T9LvwmFqXii7pZSouaRPorGs5who1Ip7VO0wxanFvBL7GkM6dTHlgX+jhBApRetaWpnDabOeTcnA==}
     hasBin: true
@@ -11337,6 +11392,9 @@ packages:
   lru-cache@10.2.0:
     resolution: {integrity: sha512-2bIM8x+VAf6JT4bKAljS1qUWgMsqZRPGJS6FSahIMPVvctcNhyVp7AJu7quxOW9jwkryBReKZY5tY5JYv2n/7Q==}
     engines: {node: 14 || >=16.14}
+
+  lru-cache@10.4.3:
+    resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
 
   lru-cache@11.0.0:
     resolution: {integrity: sha512-Qv32eSV1RSCfhY3fpPE2GNZ8jgM9X7rdAfemLWqTUxwiyIC4jJ6Sy0fZ8H+oLWevO6i4/bizg7c8d8i6bxrzbA==}
@@ -11851,17 +11909,13 @@ packages:
     resolution: {integrity: sha512-WmS3EUGw+vXHlTgiUPi3NzbZNwH6+uGX0QLGgqG+aFSJ5rkX/Ee0nuwHBJfZTfQwwR8lGO819NEIwQ7CGhkdEQ==}
     deprecated: Use `change-case`
 
-  nock@13.3.1:
-    resolution: {integrity: sha512-vHnopocZuI93p2ccivFyGuUfzjq2fxNyNurp7816mlT5V5HF4SzXu8lvLrVzBbNqzs+ODooZ6OksuSUNM7Njkw==}
-    engines: {node: '>= 10.13'}
-
-  nock@14.0.0-beta.15:
-    resolution: {integrity: sha512-rp72chatxoZbR/2cYHwtb+IX6n6kkanYKGN2PKn4c12JBrj9n4xGUKFykuQHB+Gkz3fynlikFbMH2LI6VoebuQ==}
-    engines: {node: '>= 18'}
-
   nock@14.0.0-beta.5:
     resolution: {integrity: sha512-u255tf4DYvyErTlPZA9uTfXghiZZy+NflUOFONPVKZ5tP0yaHwKig28zyFOLhu8y5YcCRC+V5vDk4HHileh2iw==}
     engines: {node: '>= 18'}
+
+  nock@14.0.3:
+    resolution: {integrity: sha512-sJ9RNmCuYBqXDmGZZHgZ1D1441MqFOU4T5aeLGVGEB4OWI/2LM0mZlkfBQzQKdOfJypL+2nPPBugXKjixBn4kQ==}
+    engines: {node: '>=18.20.0 <20 || >=20.12.1'}
 
   node-fetch@2.7.0:
     resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
@@ -11929,6 +11983,9 @@ packages:
 
   nwsapi@2.2.2:
     resolution: {integrity: sha512-90yv+6538zuvUMnN+zCr8LuV6bPFdq50304114vJYJ8RDyK8D5O9Phpbd6SZWgI7PwzmmfN1upeOJlvybDSgCw==}
+
+  nwsapi@2.2.20:
+    resolution: {integrity: sha512-/ieB+mDe4MrrKMT8z+mQL8klXydZWGR5Dowt4RAGKbJ3kIGEx3X4ljUo+6V73IXtUPWgfOlU5B9MlGxFO5T+cA==}
 
   obj-props@1.4.0:
     resolution: {integrity: sha512-p7p/7ltzPDiBs6DqxOrIbtRdwxxVRBj5ROukeNb9RgA+fawhrz5n2hpNz8DDmYR//tviJSj7nUnlppGmONkjiQ==}
@@ -12174,6 +12231,9 @@ packages:
 
   parse5@7.1.1:
     resolution: {integrity: sha512-kwpuwzB+px5WUg9pyK0IcK/shltJN5/OVhQagxhCQNtT9Y9QRZqNY2e1cmbu/paRh5LMnz/oVTVLBpjFmMZhSg==}
+
+  parse5@7.2.1:
+    resolution: {integrity: sha512-BuBYQYlv1ckiPdQi/ohiivi9Sagc9JG+Ozs0r7b/0iK3sKmrb0b9FdWdBbOdx6hBCM/F9Ir82ofnBhtZOjCRPQ==}
 
   parseurl@1.3.3:
     resolution: {integrity: sha512-CiyeOxFT/JZyN5m0z9PfXw4SCBJ6Sygz1Dpl0wqjlhDEGGBP1GnsUVEL0p63hoG1fcj3fHynXi9NYO4nWOL+qQ==}
@@ -13115,6 +13175,9 @@ packages:
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
 
+  rrweb-cssom@0.8.0:
+    resolution: {integrity: sha512-guoltQEx+9aMf2gDZ0s62EcV8lsXR+0w8915TC3ITdn2YueuNjdAYh/levpU9nFaoChh9RUS5ZdQMrKfVEN9tw==}
+
   run-async@2.4.1:
     resolution: {integrity: sha512-tvVnVv01b8c1RrA6Ep7JkStj85Guv/YrMcwqYQnwjsAS2cTmmPGBBjAjpCW7RrSodNSoE2/qg9O4bceNvUuDgQ==}
     engines: {node: '>=0.12.0'}
@@ -13727,6 +13790,13 @@ packages:
     resolution: {integrity: sha512-n1cw8k1k0x4pgA2+9XrOkFydTerNcJ1zWCO5Nn9scWHTD+5tp8dghT2x1uduQePZTZgd3Tupf+x9BxJjeJi77Q==}
     engines: {node: '>=14.0.0'}
 
+  tldts-core@6.1.85:
+    resolution: {integrity: sha512-DTjUVvxckL1fIoPSb3KE7ISNtkWSawZdpfxGxwiIrZoO6EbHVDXXUIlIuWympPaeS+BLGyggozX/HTMsRAdsoA==}
+
+  tldts@6.1.85:
+    resolution: {integrity: sha512-gBdZ1RjCSevRPFix/hpaUWeak2/RNUZB4/8frF1r5uYMHjFptkiT0JXIebWvgI/0ZHXvxaUDDJshiA0j6GdL3w==}
+    hasBin: true
+
   tmp@0.0.33:
     resolution: {integrity: sha512-jRCJlojKnZ3addtTOjdIqoRuPEKBvNXcGYqzO6zWZX8KfKEpnGY5jfggJQ3EjKuu8D4bJRr0y+cYJFmYbImXGw==}
     engines: {node: '>=0.6.0'}
@@ -13754,6 +13824,10 @@ packages:
     resolution: {integrity: sha512-aX/y5pVRkfRnfmuX+OdbSdXvPe6ieKX/G2s7e98f4poJHnqH3281gDPm/metm6E/WRamfx7WC4HUqkWHfQHprw==}
     engines: {node: '>=6'}
 
+  tough-cookie@5.1.2:
+    resolution: {integrity: sha512-FVDYdxtnj0G6Qm/DhNPSb8Ju59ULcup3tuJxkFb5K8Bv2pUXILbf0xZWU8PX8Ov19OXljbUyveOFwRMwkXzO+A==}
+    engines: {node: '>=16'}
+
   tr46@0.0.3:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
 
@@ -13766,6 +13840,10 @@ packages:
 
   tr46@5.0.0:
     resolution: {integrity: sha512-tk2G5R2KRwBd+ZN0zaEXpmzdKyOYksXwywulIX95MBODjSzMIuQnQ3m8JxgbhnL1LeVo7lqQKsYa1O3Htl7K5g==}
+    engines: {node: '>=18'}
+
+  tr46@5.1.0:
+    resolution: {integrity: sha512-IUWnUK7ADYR5Sl1fZlO1INDUhVhatWl7BtJWsIhwJ0UAK7ilzzIa8uIqOO/aYVWHZPJkKbEL+362wrzoeRF7bw==}
     engines: {node: '>=18'}
 
   tree-kill@1.2.2:
@@ -14222,6 +14300,10 @@ packages:
     resolution: {integrity: sha512-3WFqGEgSXIyGhOmAFtlicJNMjEps8b1MG31NCA0/vOF9+nKMUW1ckhi9cnNHmf88Rzw5V+dwIwsm2C7X8k9aQg==}
     engines: {node: '>=12'}
 
+  w3c-xmlserializer@5.0.0:
+    resolution: {integrity: sha512-o8qghlI8NZHU1lLPrpi2+Uq7abh4GGPpYANlalzWxyWteJOCsr/P+oPBA49TOLu5FTZO4d3F9MnWJfiMo4BkmA==}
+    engines: {node: '>=18'}
+
   wait-on@8.0.1:
     resolution: {integrity: sha512-1wWQOyR2LVVtaqrcIL2+OM+x7bkpmzVROa0Nf6FryXkS+er5Sa1kzFGjzZRqLnHa3n1rACFLeTwUqE1ETL9Mig==}
     engines: {node: '>=12.0.0'}
@@ -14253,9 +14335,17 @@ packages:
     resolution: {integrity: sha512-p41ogyeMUrw3jWclHWTQg1k05DSVXPLcVxRTYsXUk+ZooOCZLcoYgPZ/HL/D/N+uQPOtcp1me1WhBEaX02mhWg==}
     engines: {node: '>=12'}
 
+  whatwg-encoding@3.1.1:
+    resolution: {integrity: sha512-6qN4hJdMwfYBtE3YBTTHhoeuUrDBPZmbQaxWAqSALV/MeEnR5z1xd8UKud2RAkFoPkmB+hli1TZSnyi84xz1vQ==}
+    engines: {node: '>=18'}
+
   whatwg-mimetype@3.0.0:
     resolution: {integrity: sha512-nt+N2dzIutVRxARx1nghPKGv1xHikU7HKdfafKkLNLindmPU/ch3U31NOCGGA/dmPcmb1VlofO0vnKAcsm0o/Q==}
     engines: {node: '>=12'}
+
+  whatwg-mimetype@4.0.0:
+    resolution: {integrity: sha512-QaKxh0eNIi2mE9p2vEdzfagOKHCcj1pJ56EEHGQOVxp8r9/iszLUUV7v89x9O1p/T+NlTM5W7jW6+cz4Fq1YVg==}
+    engines: {node: '>=18'}
 
   whatwg-url@11.0.0:
     resolution: {integrity: sha512-RKT8HExMpoYx4igMiVMY83lN6UeITKJlBQ+vR/8ZJ8OCdSiN3RwCq+9gH0+Xzj0+5IrM6i4j/6LuvzbZIQgEcQ==}
@@ -14263,6 +14353,10 @@ packages:
 
   whatwg-url@14.0.0:
     resolution: {integrity: sha512-1lfMEm2IEr7RIV+f4lUNPOqfFL+pO+Xw3fJSqmjX9AbXcXcYOkCe1P6+9VBZB6n94af16NfZf+sSk0JCBZC9aw==}
+    engines: {node: '>=18'}
+
+  whatwg-url@14.2.0:
+    resolution: {integrity: sha512-De72GdQZzNTUBBChsXueQUnPKDkg/5A5zp7pFDuQAj5UFoENpiACU0wlCvzpAGnTkj++ihpKwKyYewn/XNUbKw==}
     engines: {node: '>=18'}
 
   whatwg-url@5.0.0:
@@ -14372,6 +14466,10 @@ packages:
   xml-name-validator@4.0.0:
     resolution: {integrity: sha512-ICP2e+jsHvAj2E2lIHxa5tjXRlKDJo4IdvPvCXbXQGdzSfmSpNVyIKMvoZHjDY9DP0zV17iI85o90vRFXNccRw==}
     engines: {node: '>=12'}
+
+  xml-name-validator@5.0.0:
+    resolution: {integrity: sha512-EvGK8EJ3DhaHfbRlETOWAS5pO9MZITeauHKJyb8wyajUfQUenkIg2MvLDTZ4T/TgIcm3HU0TFBgWWboAZ30UHg==}
+    engines: {node: '>=18'}
 
   xml2js@0.5.0:
     resolution: {integrity: sha512-drPFnkQJik/O+uPKpqSgr22mpuFHqKdbS835iAQrUC73L2F5WkboIRd63ai/2Yg6I1jzifPFKH2NTK+cfglkIA==}
@@ -14510,6 +14608,14 @@ snapshots:
       ajv-draft-04: 1.0.0(ajv@8.12.0)
       call-me-maybe: 1.0.2
       openapi-types: 12.1.3
+
+  '@asamuzakjp/css-color@3.1.1':
+    dependencies:
+      '@csstools/css-calc': 2.1.2(@csstools/css-parser-algorithms@3.0.4(@csstools/css-tokenizer@3.0.3))(@csstools/css-tokenizer@3.0.3)
+      '@csstools/css-color-parser': 3.0.8(@csstools/css-parser-algorithms@3.0.4(@csstools/css-tokenizer@3.0.3))(@csstools/css-tokenizer@3.0.3)
+      '@csstools/css-parser-algorithms': 3.0.4(@csstools/css-tokenizer@3.0.3)
+      '@csstools/css-tokenizer': 3.0.3
+      lru-cache: 10.4.3
 
   '@authenio/samlify-node-xmllint@2.0.0(samlify@2.8.11)':
     dependencies:
@@ -15859,11 +15965,31 @@ snapshots:
       '@jridgewell/trace-mapping': 0.3.9
     optional: true
 
+  '@csstools/color-helpers@5.0.2': {}
+
+  '@csstools/css-calc@2.1.2(@csstools/css-parser-algorithms@3.0.4(@csstools/css-tokenizer@3.0.3))(@csstools/css-tokenizer@3.0.3)':
+    dependencies:
+      '@csstools/css-parser-algorithms': 3.0.4(@csstools/css-tokenizer@3.0.3)
+      '@csstools/css-tokenizer': 3.0.3
+
+  '@csstools/css-color-parser@3.0.8(@csstools/css-parser-algorithms@3.0.4(@csstools/css-tokenizer@3.0.3))(@csstools/css-tokenizer@3.0.3)':
+    dependencies:
+      '@csstools/color-helpers': 5.0.2
+      '@csstools/css-calc': 2.1.2(@csstools/css-parser-algorithms@3.0.4(@csstools/css-tokenizer@3.0.3))(@csstools/css-tokenizer@3.0.3)
+      '@csstools/css-parser-algorithms': 3.0.4(@csstools/css-tokenizer@3.0.3)
+      '@csstools/css-tokenizer': 3.0.3
+
   '@csstools/css-parser-algorithms@2.6.1(@csstools/css-tokenizer@2.2.4)':
     dependencies:
       '@csstools/css-tokenizer': 2.2.4
 
+  '@csstools/css-parser-algorithms@3.0.4(@csstools/css-tokenizer@3.0.3)':
+    dependencies:
+      '@csstools/css-tokenizer': 3.0.3
+
   '@csstools/css-tokenizer@2.2.4': {}
+
+  '@csstools/css-tokenizer@3.0.3': {}
 
   '@csstools/media-query-list-parser@2.1.9(@csstools/css-parser-algorithms@2.6.1(@csstools/css-tokenizer@2.2.4))(@csstools/css-tokenizer@2.2.4)':
     dependencies:
@@ -16584,14 +16710,20 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@mswjs/interceptors@0.36.5':
+  '@mswjs/interceptors@0.38.2':
     dependencies:
       '@open-draft/deferred-promise': 2.2.0
       '@open-draft/logger': 0.3.0
       '@open-draft/until': 2.1.0
       is-node-process: 1.2.0
+      jsdom: 26.0.0
       outvariant: 1.4.3
       strict-event-emitter: 0.5.1
+    transitivePeerDependencies:
+      - bufferutil
+      - canvas
+      - supports-color
+      - utf-8-validate
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -18294,7 +18426,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/coverage-v8@3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))':
+  '@vitest/coverage-v8@3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 1.0.2
@@ -18308,11 +18440,11 @@ snapshots:
       std-env: 3.8.1
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+      vitest: 3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/coverage-v8@3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))':
+  '@vitest/coverage-v8@3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 1.0.2
@@ -18326,11 +18458,11 @@ snapshots:
       std-env: 3.8.1
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+      vitest: 3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/coverage-v8@3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))':
+  '@vitest/coverage-v8@3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 1.0.2
@@ -18344,11 +18476,11 @@ snapshots:
       std-env: 3.8.1
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+      vitest: 3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/coverage-v8@3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.17.19)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))':
+  '@vitest/coverage-v8@3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.17.19)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 1.0.2
@@ -18362,7 +18494,7 @@ snapshots:
       std-env: 3.8.1
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.1.1(@types/debug@4.1.12)(@types/node@20.17.19)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
+      vitest: 3.1.1(@types/debug@4.1.12)(@types/node@20.17.19)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
     transitivePeerDependencies:
       - supports-color
 
@@ -19802,6 +19934,11 @@ snapshots:
     dependencies:
       cssom: 0.3.8
 
+  cssstyle@4.3.0:
+    dependencies:
+      '@asamuzakjp/css-color': 3.1.1
+      rrweb-cssom: 0.8.0
+
   csstype@3.0.11: {}
 
   csv-generate@3.4.3: {}
@@ -20029,6 +20166,11 @@ snapshots:
       whatwg-mimetype: 3.0.0
       whatwg-url: 11.0.0
 
+  data-urls@5.0.0:
+    dependencies:
+      whatwg-mimetype: 4.0.0
+      whatwg-url: 14.2.0
+
   data-view-buffer@1.0.1:
     dependencies:
       call-bind: 1.0.7
@@ -20095,6 +20237,8 @@ snapshots:
   decimal.js-light@2.5.1: {}
 
   decimal.js@10.4.2: {}
+
+  decimal.js@10.5.0: {}
 
   decode-named-character-reference@1.0.1:
     dependencies:
@@ -21572,6 +21716,10 @@ snapshots:
     dependencies:
       whatwg-encoding: 2.0.0
 
+  html-encoding-sniffer@4.0.0:
+    dependencies:
+      whatwg-encoding: 3.1.1
+
   html-escaper@2.0.2: {}
 
   html-parse-stringify@3.0.1:
@@ -21627,7 +21775,7 @@ snapshots:
 
   http-proxy-agent@7.0.2:
     dependencies:
-      agent-base: 7.1.0
+      agent-base: 7.1.3
       debug: 4.4.0
     transitivePeerDependencies:
       - supports-color
@@ -22681,6 +22829,34 @@ snapshots:
       - supports-color
       - utf-8-validate
 
+  jsdom@26.0.0:
+    dependencies:
+      cssstyle: 4.3.0
+      data-urls: 5.0.0
+      decimal.js: 10.5.0
+      form-data: 4.0.1
+      html-encoding-sniffer: 4.0.0
+      http-proxy-agent: 7.0.2
+      https-proxy-agent: 7.0.6
+      is-potential-custom-element-name: 1.0.1
+      nwsapi: 2.2.20
+      parse5: 7.2.1
+      rrweb-cssom: 0.8.0
+      saxes: 6.0.0
+      symbol-tree: 3.2.4
+      tough-cookie: 5.1.2
+      w3c-xmlserializer: 5.0.0
+      webidl-conversions: 7.0.0
+      whatwg-encoding: 3.1.1
+      whatwg-mimetype: 4.0.0
+      whatwg-url: 14.2.0
+      ws: 8.18.0
+      xml-name-validator: 5.0.0
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
   jsesc@0.5.0: {}
 
   jsesc@2.5.2: {}
@@ -23189,6 +23365,8 @@ snapshots:
       highlight.js: 10.7.3
 
   lru-cache@10.2.0: {}
+
+  lru-cache@10.4.3: {}
 
   lru-cache@11.0.0: {}
 
@@ -24040,25 +24218,21 @@ snapshots:
 
   no-case@4.0.0: {}
 
-  nock@13.3.1:
-    dependencies:
-      debug: 4.3.4
-      json-stringify-safe: 5.0.1
-      lodash: 4.17.21
-      propagate: 2.0.1
-    transitivePeerDependencies:
-      - supports-color
-
-  nock@14.0.0-beta.15:
-    dependencies:
-      '@mswjs/interceptors': 0.36.5
-      json-stringify-safe: 5.0.1
-      propagate: 2.0.1
-
   nock@14.0.0-beta.5:
     dependencies:
       json-stringify-safe: 5.0.1
       propagate: 2.0.1
+
+  nock@14.0.3:
+    dependencies:
+      '@mswjs/interceptors': 0.38.2
+      json-stringify-safe: 5.0.1
+      propagate: 2.0.1
+    transitivePeerDependencies:
+      - bufferutil
+      - canvas
+      - supports-color
+      - utf-8-validate
 
   node-fetch@2.7.0:
     dependencies:
@@ -24133,6 +24307,8 @@ snapshots:
       path-key: 4.0.0
 
   nwsapi@2.2.2: {}
+
+  nwsapi@2.2.20: {}
 
   obj-props@1.4.0: {}
 
@@ -24424,6 +24600,10 @@ snapshots:
   parse5@6.0.1: {}
 
   parse5@7.1.1:
+    dependencies:
+      entities: 4.5.0
+
+  parse5@7.2.1:
     dependencies:
       entities: 4.5.0
 
@@ -25506,6 +25686,8 @@ snapshots:
       '@rollup/rollup-win32-x64-msvc': 4.39.0
       fsevents: 2.3.3
 
+  rrweb-cssom@0.8.0: {}
+
   run-async@2.4.1: {}
 
   run-parallel@1.2.0:
@@ -26217,6 +26399,12 @@ snapshots:
 
   tinyspy@3.0.2: {}
 
+  tldts-core@6.1.85: {}
+
+  tldts@6.1.85:
+    dependencies:
+      tldts-core: 6.1.85
+
   tmp@0.0.33:
     dependencies:
       os-tmpdir: 1.0.2
@@ -26240,6 +26428,10 @@ snapshots:
       universalify: 0.2.0
       url-parse: 1.5.10
 
+  tough-cookie@5.1.2:
+    dependencies:
+      tldts: 6.1.85
+
   tr46@0.0.3: {}
 
   tr46@1.0.1:
@@ -26251,6 +26443,10 @@ snapshots:
       punycode: 2.3.0
 
   tr46@5.0.0:
+    dependencies:
+      punycode: 2.3.1
+
+  tr46@5.1.0:
     dependencies:
       punycode: 2.3.1
 
@@ -26831,7 +27027,7 @@ snapshots:
       sass: 1.77.8
       yaml: 2.4.5
 
-  vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5):
+  vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.10.4)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5):
     dependencies:
       '@vitest/expect': 3.1.1
       '@vitest/mocker': 3.1.1(vite@6.2.4(@types/node@20.10.4)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
@@ -26856,7 +27052,7 @@ snapshots:
     optionalDependencies:
       '@types/debug': 4.1.12
       '@types/node': 20.10.4
-      jsdom: 20.0.2
+      jsdom: 26.0.0
     transitivePeerDependencies:
       - jiti
       - less
@@ -26871,7 +27067,7 @@ snapshots:
       - tsx
       - yaml
 
-  vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5):
+  vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.11.20)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5):
     dependencies:
       '@vitest/expect': 3.1.1
       '@vitest/mocker': 3.1.1(vite@6.2.4(@types/node@20.11.20)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
@@ -26896,7 +27092,7 @@ snapshots:
     optionalDependencies:
       '@types/debug': 4.1.12
       '@types/node': 20.11.20
-      jsdom: 20.0.2
+      jsdom: 26.0.0
     transitivePeerDependencies:
       - jiti
       - less
@@ -26911,7 +27107,7 @@ snapshots:
       - tsx
       - yaml
 
-  vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5):
+  vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.12.7)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5):
     dependencies:
       '@vitest/expect': 3.1.1
       '@vitest/mocker': 3.1.1(vite@6.2.4(@types/node@20.12.7)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
@@ -26936,7 +27132,7 @@ snapshots:
     optionalDependencies:
       '@types/debug': 4.1.12
       '@types/node': 20.12.7
-      jsdom: 20.0.2
+      jsdom: 26.0.0
     transitivePeerDependencies:
       - jiti
       - less
@@ -26951,7 +27147,7 @@ snapshots:
       - tsx
       - yaml
 
-  vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.17.19)(jiti@1.21.0)(jsdom@20.0.2)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5):
+  vitest@3.1.1(@types/debug@4.1.12)(@types/node@20.17.19)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5):
     dependencies:
       '@vitest/expect': 3.1.1
       '@vitest/mocker': 3.1.1(vite@6.2.4(@types/node@20.17.19)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
@@ -26976,7 +27172,7 @@ snapshots:
     optionalDependencies:
       '@types/debug': 4.1.12
       '@types/node': 20.17.19
-      jsdom: 20.0.2
+      jsdom: 26.0.0
     transitivePeerDependencies:
       - jiti
       - less
@@ -26996,6 +27192,10 @@ snapshots:
   w3c-xmlserializer@3.0.0:
     dependencies:
       xml-name-validator: 4.0.0
+
+  w3c-xmlserializer@5.0.0:
+    dependencies:
+      xml-name-validator: 5.0.0
 
   wait-on@8.0.1:
     dependencies:
@@ -27031,7 +27231,13 @@ snapshots:
     dependencies:
       iconv-lite: 0.6.3
 
+  whatwg-encoding@3.1.1:
+    dependencies:
+      iconv-lite: 0.6.3
+
   whatwg-mimetype@3.0.0: {}
+
+  whatwg-mimetype@4.0.0: {}
 
   whatwg-url@11.0.0:
     dependencies:
@@ -27041,6 +27247,11 @@ snapshots:
   whatwg-url@14.0.0:
     dependencies:
       tr46: 5.0.0
+      webidl-conversions: 7.0.0
+
+  whatwg-url@14.2.0:
+    dependencies:
+      tr46: 5.1.0
       webidl-conversions: 7.0.0
 
   whatwg-url@5.0.0:
@@ -27162,6 +27373,8 @@ snapshots:
   xml-escape@1.1.0: {}
 
   xml-name-validator@4.0.0: {}
+
+  xml-name-validator@5.0.0: {}
 
   xml2js@0.5.0:
     dependencies:
