@@ -100,7 +100,7 @@ export default class Tenant implements TenantContext {
       logtoConfigs,
       subscription
     ),
-    public readonly sentinel = new BasicSentinel(envSet.pool)
+    public readonly sentinel = new BasicSentinel(envSet.pool, queries)
   ) {
     const isAdminTenant = id === adminTenantId;
     const mountedApps = [
