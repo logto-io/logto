@@ -1,3 +1,4 @@
+import { yes } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import { oauth2ConfigGuard } from '@logto/connector-oauth';
@@ -29,6 +30,19 @@ export const idTokenProfileStandardClaimsGuard = z.object({
   profile: z.string().nullish(),
   nonce: z.string().nullish(),
 });
+
+// Extend `idTokenProfileStandardClaimsGuard` by accepting string-typed boolean claims.
+export const idTokenProfileStandardClaimsGuardAcceptingStringTypedBooleanClaims =
+  idTokenProfileStandardClaimsGuard.omit({ email_verified: true, phone_verified: true }).extend({
+    email_verified: z
+      .boolean()
+      .nullish()
+      .or(z.string().transform((value: string) => yes(value))),
+    phone_verified: z
+      .boolean()
+      .nullish()
+      .or(z.string().transform((value: string) => yes(value))),
+  });
 
 export const userProfileGuard = z.object({
   id: z.preprocess(String, z.string()),
@@ -79,6 +93,7 @@ export type IdTokenVerificationConfig = z.infer<typeof idTokenVerificationConfig
 export const oidcConnectorConfigGuard = oauth2ConfigGuard.extend({
   // Override `scope` to ensure it contains 'openid'.
   scope: z.string().transform(scopePostProcessor),
+  acceptStringTypedBooleanClaims: z.boolean().optional().default(false),
   idTokenVerificationConfig: idTokenVerificationConfigGuard,
   authRequestOptionalConfig: authRequestOptionalConfigGuard.optional(),
   customConfig: z.record(z.string()).optional(),

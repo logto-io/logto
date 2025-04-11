@@ -36,6 +36,15 @@ export const defaultMetadata: ConnectorMetadata = {
       required: true,
     },
     {
+      key: 'acceptStringTypedBooleanClaims',
+      label: 'Accept String-typed Boolean Claims',
+      description:
+        'Whether to accept string-typed boolean claims. For standard OIDC protocol, some claims such as `email_verified` and `phone_verified` are boolean-typed, but some providers may return them as string-typed. Enabling this option will convert string-typed boolean claims to boolean-typed.',
+      type: ConnectorConfigFormItemType.Switch,
+      required: false,
+      defaultValue: false,
+    },
+    {
       key: 'idTokenVerificationConfig',
       label: 'ID Token Verification Config',
       type: ConnectorConfigFormItemType.Json,

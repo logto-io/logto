@@ -20,7 +20,11 @@ import { createRemoteJWKSet, jwtVerify } from 'jose';
 import { HTTPError } from 'ky';
 
 import { defaultMetadata } from './constant.js';
-import { idTokenProfileStandardClaimsGuard, oidcConnectorConfigGuard } from './types.js';
+import {
+  idTokenProfileStandardClaimsGuard,
+  idTokenProfileStandardClaimsGuardAcceptingStringTypedBooleanClaims,
+  oidcConnectorConfigGuard,
+} from './types.js';
 import { getIdToken } from './utils.js';
 
 const generateNonce = () => generateStandardId();
@@ -103,7 +107,9 @@ const getUserInfo =
         }
       );
 
-      const result = idTokenProfileStandardClaimsGuard.safeParse(payload);
+      const result = parsedConfig.acceptStringTypedBooleanClaims
+        ? idTokenProfileStandardClaimsGuardAcceptingStringTypedBooleanClaims.safeParse(payload)
+        : idTokenProfileStandardClaimsGuard.safeParse(payload);
 
       if (!result.success) {
         throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid, result.error);
