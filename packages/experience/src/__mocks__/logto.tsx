@@ -118,6 +118,7 @@ export const mockSignInExperience: SignInExperience = {
   supportWebsiteUrl: null,
   unknownSessionRedirectUrl: null,
   captchaPolicy: {},
+  sentinelPolicy: {},
 };
 
 export const mockSignInExperienceSettings: SignInExperienceResponse = {
@@ -157,6 +158,7 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
   supportWebsiteUrl: null,
   unknownSessionRedirectUrl: null,
   captchaPolicy: {},
+  sentinelPolicy: {},
 };
 
 const usernameSettings = {

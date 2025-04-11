@@ -235,3 +235,19 @@ export const captchaPolicyGuard = z.object({
 });
 
 export type CaptchaPolicy = z.infer<typeof captchaPolicyGuard>;
+
+export type SentinelPolicy = {
+  /**
+   * Maximum failed attempts allowed in one hour before blocking the user.
+   */
+  maxAttempts?: number;
+  /**
+   * Lockout duration in minutes after exceeding the maximum failed attempts.
+   */
+  lockoutDuration?: number;
+};
+
+export const sentinelPolicyGuard = z.object({
+  maxAttempts: z.number().optional(),
+  lockoutDuration: z.number().optional(),
+}) satisfies ToZodObject<SentinelPolicy>;
