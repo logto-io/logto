@@ -50,7 +50,7 @@
     "zod": "^3.23.8"
   },
   "engines": {
-    "node": "^20.19.0"
+    "node": "^22.14.0"
   },
   "eslintConfig": {
     "extends": "@silverhand/react"

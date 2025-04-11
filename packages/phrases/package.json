@@ -27,7 +27,7 @@
     "prepack": "pnpm build"
   },
   "engines": {
-    "node": "^20.19.0"
+    "node": "^22.14.0"
   },
   "bugs": {
     "url": "https://github.com/logto-io/logto/issues"
