@@ -38,6 +38,7 @@ import { AccountCenterQueries } from '../queries/account-center.js';
 import { CaptchaProviderQueries } from '../queries/captcha-providers.js';
 import EmailTemplatesQueries from '../queries/email-templates.js';
 import { PersonalAccessTokensQueries } from '../queries/personal-access-tokens.js';
+import { createSentinelActivitiesQueries } from '../queries/sentinel-activities.js';
 import TenantUsageQuery from '../queries/tenant-usage/index.js';
 import { VerificationRecordQueries } from '../queries/verification-records.js';
 
@@ -80,6 +81,7 @@ export default class Queries {
   tenantUsage = new TenantUsageQuery(this.pool);
   emailTemplates = new EmailTemplatesQueries(this.pool, this.wellKnownCache);
   captchaProviders = new CaptchaProviderQueries(this.pool);
+  sentinelActivities = createSentinelActivitiesQueries(this.pool);
 
   constructor(
     public readonly pool: CommonQueryMethods,
