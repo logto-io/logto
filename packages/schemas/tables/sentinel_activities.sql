@@ -28,5 +28,8 @@ create table sentinel_activities (
 create index sentinel_activities__id
   on sentinel_activities (tenant_id, id);
 
+create index sentinel_activities__target_type_target_hash
+  on sentinel_activities (tenant_id, target_type, target_hash);
+
 create index sentinel_activities__target_type_target_hash_action_action_result_decision
   on sentinel_activities (tenant_id, target_type, target_hash, action, action_result, decision);
