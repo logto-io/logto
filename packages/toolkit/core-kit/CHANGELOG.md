@@ -1,5 +1,17 @@
 # Change Log
 
+## 2.6.0
+
+### Minor Changes
+
+- a172ddb53: update Node.js version requirement to ^20.19.0
+
+### Patch Changes
+
+- Updated dependencies [a172ddb53]
+  - @logto/language-kit@1.2.0
+  - @logto/shared@3.2.0
+
 ## 2.5.4
 
 ### Patch Changes

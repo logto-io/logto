@@ -1,5 +1,16 @@
 # @logto/connector-mailgun
 
+## 1.5.0
+
+### Minor Changes
+
+- a172ddb53: update Node.js version requirement to ^20.19.0
+
+### Patch Changes
+
+- Updated dependencies [a172ddb53]
+  - @logto/connector-kit@4.3.0
+
 ## 1.4.0
 
 ### Minor Changes
