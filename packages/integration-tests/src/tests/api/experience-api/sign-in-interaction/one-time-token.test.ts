@@ -1,6 +1,13 @@
-import { InteractionEvent, OneTimeTokenStatus, SignInIdentifier, SignInMode } from '@logto/schemas';
+import {
+  CaptchaType,
+  InteractionEvent,
+  OneTimeTokenStatus,
+  SignInIdentifier,
+  SignInMode,
+} from '@logto/schemas';
 
 import { deleteUser } from '#src/api/admin-user.js';
+import { deleteCaptchaProvider, updateCaptchaProvider } from '#src/api/captcha-provider.js';
 import { updateSignInExperience } from '#src/api/index.js';
 import {
   createOneTimeToken,
@@ -14,9 +21,13 @@ import { devFeatureTest, waitFor } from '#src/utils.js';
 
 const { it, describe } = devFeatureTest;
 
-describe('Sign-in interaction with one-time token', async () => {
-  const { user, userProfile } = await generateNewUser({ primaryEmail: true, password: true });
+const { user, userProfile } = await generateNewUser({
+  username: true,
+  primaryEmail: true,
+  password: true,
+});
 
+describe('Sign-in interaction with one-time token', () => {
   it('should successfully sign-in with a one-time token', async () => {
     const client = await initExperienceClient({
       interactionEvent: InteractionEvent.SignIn,
@@ -121,7 +132,7 @@ describe('Sign-in interaction with one-time token', async () => {
       email: userProfile.primaryEmail,
     });
 
-    await updateOneTimeTokenStatus(oneTimeToken.token, OneTimeTokenStatus.Revoked);
+    await updateOneTimeTokenStatus(oneTimeToken.id, OneTimeTokenStatus.Revoked);
 
     await expectRejects(
       client.verifyOneTimeToken({
@@ -178,7 +189,42 @@ describe('Sign-in interaction with one-time token', async () => {
     expect(userId).toBe(user.id);
 
     await logoutClient(client);
-    void deleteUser(userId);
     void deleteOneTimeTokenById(oneTimeToken.id);
+  });
+
+  it('should bypass the captcha check when using one-time token', async () => {
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.SignIn,
+    });
+
+    await updateCaptchaProvider({
+      config: {
+        type: CaptchaType.Turnstile,
+        siteKey: 'site_key',
+        secretKey: 'secret_key',
+      },
+    });
+
+    const oneTimeToken = await createOneTimeToken({
+      email: userProfile.primaryEmail,
+    });
+
+    const { verificationId } = await client.verifyOneTimeToken({
+      token: oneTimeToken.token,
+      identifier: { type: SignInIdentifier.Email, value: userProfile.primaryEmail },
+    });
+
+    await client.identifyUser({ verificationId });
+    const { redirectTo } = await client.submitInteraction();
+    const userId = await processSession(client, redirectTo);
+
+    expect(userId).toBe(user.id);
+
+    await Promise.all([
+      logoutClient(client),
+      deleteCaptchaProvider(),
+      deleteUser(userId),
+      deleteOneTimeTokenById(oneTimeToken.id),
+    ]);
   });
 });

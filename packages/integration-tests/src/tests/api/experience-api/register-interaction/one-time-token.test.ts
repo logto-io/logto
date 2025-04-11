@@ -6,7 +6,7 @@ import { initExperienceClient, logoutClient, processSession } from '#src/helpers
 import { setEmailConnector } from '#src/helpers/connector.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { generateNewUser } from '#src/helpers/user.js';
-import { generatePassword, devFeatureTest } from '#src/utils.js';
+import { generateUsername, generatePassword, devFeatureTest } from '#src/utils.js';
 
 const { it, describe } = devFeatureTest;
 
@@ -219,6 +219,8 @@ describe('Register interaction with one-time token', () => {
       },
     });
 
+    await client.updateProfile({ type: SignInIdentifier.Username, value: generateUsername() });
+    await client.updateProfile({ type: 'password', value: generatePassword() });
     await client.identifyUser({ verificationId });
 
     const { redirectTo } = await client.submitInteraction();
