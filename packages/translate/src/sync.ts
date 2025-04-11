@@ -5,7 +5,7 @@ import { isLanguageTag } from '@logto/language-kit';
 import PQueue from 'p-queue';
 import type { CommandModule } from 'yargs';
 
-import { model, syncTranslation } from './openai.js';
+import { getModel, syncTranslation } from './openai.js';
 import {
   inquireInstancePath,
   lintLocaleFiles,
@@ -34,7 +34,7 @@ const sync: CommandModule<
     const phrasesPath = path.join(instancePath, 'packages', packageName);
     const localesPath = path.join(phrasesPath, 'src/locales');
     const targetLocales = fs.readdirSync(localesPath);
-    consoleLog.info(`Translating files using model ${model}`);
+    consoleLog.info(`Translating files using model ${getModel()}`);
 
     for (const languageTag of targetLocales) {
       if (languageTag === baseLanguage || !isLanguageTag(languageTag)) {
