@@ -3,9 +3,6 @@
     {
       "name": "One-time tokens",
       "description": "One-time tokens are used for various authentication and verification purposes. They are typically sent via email and have an expiration time."
-    },
-    {
-      "name": "Dev feature"
     }
   ],
   "paths": {
