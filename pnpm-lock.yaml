@@ -3395,8 +3395,8 @@ importers:
         specifier: ^2.2.0
         version: 2.2.0(csstype@3.0.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-i18next:
-        specifier: ^12.3.1
-        version: 12.3.1(i18next@22.4.15)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^15.0.0
+        version: 15.4.1(i18next@22.4.15)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-markdown:
         specifier: ^9.0.0
         version: 9.0.0(@types/react@18.3.3)(react@18.3.1)
@@ -3858,8 +3858,8 @@ importers:
         specifier: ^6.1.0
         version: 6.1.0(react@18.3.1)
       react-i18next:
-        specifier: ^12.3.1
-        version: 12.3.1(i18next@22.4.15)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^15.0.0
+        version: 15.4.1(i18next@22.4.15)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       stylelint:
         specifier: ^15.0.0
         version: 15.11.0(typescript@5.5.3)
@@ -4114,8 +4114,8 @@ importers:
         specifier: ^7.53.0
         version: 7.53.0(react@18.3.1)
       react-i18next:
-        specifier: ^12.3.1
-        version: 12.3.1(i18next@22.4.15)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^15.0.0
+        version: 15.4.1(i18next@22.4.15)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-modal:
         specifier: ^3.15.1
         version: 3.15.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -12765,10 +12765,10 @@ packages:
       react: '>=16'
       react-dom: '>=16'
 
-  react-i18next@12.3.1:
-    resolution: {integrity: sha512-5v8E2XjZDFzK7K87eSwC7AJcAkcLt5xYZ4+yTPDAW1i7C93oOY1dnr4BaQM7un4Hm+GmghuiPvevWwlca5PwDA==}
+  react-i18next@15.4.1:
+    resolution: {integrity: sha512-ahGab+IaSgZmNPYXdV1n+OYky95TGpFwnKRflX/16dY04DsYYKHtVLjeny7sBSCREEcoMbAgSkFiGLF5g5Oofw==}
     peerDependencies:
-      i18next: '>= 19.0.0'
+      i18next: '>= 23.2.3'
       react: '>= 16.8.0'
       react-dom: '*'
       react-native: '*'
@@ -25012,7 +25012,7 @@ snapshots:
     transitivePeerDependencies:
       - csstype
 
-  react-i18next@12.3.1(i18next@22.4.15)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  react-i18next@15.4.1(i18next@22.4.15)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@babel/runtime': 7.27.0
       html-parse-stringify: 3.0.1
