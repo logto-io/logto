@@ -23,5 +23,9 @@ export const security: RouteObject = {
       path: SecurityTabs.PasswordPolicy,
       element: <Security tab={SecurityTabs.PasswordPolicy} />,
     },
+    {
+      path: SecurityTabs.General,
+      element: <Security tab={SecurityTabs.General} />,
+    },
   ],
 };

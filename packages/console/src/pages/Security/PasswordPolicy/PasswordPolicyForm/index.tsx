@@ -29,7 +29,6 @@ type Props = {
 
 function PasswordPolicyForm({ data }: Props) {
   const api = useApi();
-
   const { mutate: mutateGlobal } = useSWRConfig();
 
   const { t } = useTranslation(undefined, {

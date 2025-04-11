@@ -23,6 +23,23 @@ const password_policy = {
   custom_words_placeholder: 'Your service name, company name, etc.',
 };
 
+const sentinel_policy = {
+  card_title: 'Identifier lockout',
+  card_description:
+    'Lock an identifier provisionally after multiple failed authentication (e.g., sign-in with consecutive incorrect password or verification code) to prevent brute force access.',
+  max_attempts: {
+    title: 'Maximum failed attempts',
+    description:
+      'Limit consecutive failed sign-ins per identifier. Exceeding this limit trigger a temporary block.',
+    error_message: 'Maximum failed attempts must be greater than 0.',
+  },
+  lockout_duration: {
+    title: 'Lockout duration (minutes)',
+    description: 'Block sign-ins for a period after exceeding the maximum failed attempts limit.',
+    error_message: 'Lockout duration must be at least 1 minute.',
+  },
+};
+
 const security = {
   page_title: 'Security',
   title: 'Security',
@@ -30,6 +47,7 @@ const security = {
   tabs: {
     captcha: 'CAPTCHA',
     password_policy: 'Password policy',
+    general: 'General',
   },
   bot_protection: {
     title: 'Bot protection',
@@ -77,6 +95,7 @@ const security = {
     setup_captcha: 'Setup CAPTCHA',
   },
   password_policy,
+  sentinel_policy,
 };
 
 export default Object.freeze(security);
