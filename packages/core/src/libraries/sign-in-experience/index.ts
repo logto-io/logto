@@ -190,14 +190,12 @@ export const createSignInExperienceLibrary = (
       isDevelopmentTenant,
       organizationOverride,
       appSignInExperience,
-      captchaConfig,
     ] = await Promise.all([
       findDefaultSignInExperience(),
       getLogtoConnectors(),
       getIsDevelopmentTenant(),
       getOrganizationOverride(organizationId),
       findApplicationSignInExperience(appId),
-      findCaptchaPublicConfig(),
     ]);
 
     // Always return empty array if single-sign-on is disabled
@@ -258,6 +256,14 @@ export const createSignInExperienceLibrary = (
       return pick(appSignInExperience, 'branding', 'color');
     };
 
+    const getCaptchaConfig = async () => {
+      if (!signInExperience.captchaPolicy.enabled) {
+        return;
+      }
+
+      return findCaptchaPublicConfig();
+    };
+
     return {
       ...deepmerge(
         deepmerge(signInExperience, getAppSignInExperience()),
@@ -268,7 +274,7 @@ export const createSignInExperienceLibrary = (
       forgotPassword,
       isDevelopmentTenant,
       googleOneTap: getGoogleOneTap(),
-      captchaConfig,
+      captchaConfig: await getCaptchaConfig(),
     };
   };
 
