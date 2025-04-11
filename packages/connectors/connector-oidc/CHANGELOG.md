@@ -1,5 +1,18 @@
 # @logto/connector-oidc
 
+## 1.5.0
+
+### Minor Changes
+
+- a172ddb53: update Node.js version requirement to ^20.19.0
+
+### Patch Changes
+
+- Updated dependencies [a172ddb53]
+  - @logto/connector-oauth@1.6.0
+  - @logto/connector-kit@4.3.0
+  - @logto/shared@3.2.0
+
 ## 1.4.1
 
 ### Patch Changes

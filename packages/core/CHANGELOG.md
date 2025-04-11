@@ -1,5 +1,44 @@
 # Change Log
 
+## 1.27.0
+
+### Minor Changes
+
+- a172ddb53: update Node.js version requirement to ^20.19.0
+
+### Patch Changes
+
+- 7dbcedaa1: move password encyption to separate worker thread
+
+  This update refactors the password encryption process by moving it to a separate Node.js worker thread. The Argon2i encryption method, known for its resource-intensive and time-consuming nature, is now handled in a dedicated worker. This change aims to prevent the encryption process from blocking other requests, thereby improving the overall performance and responsiveness of the application.
+
+- cfedfb306: clean up legacy experience package
+
+  The migration to the new experience package is now complete, offering improved flexibility and maintainability through our Experience API. (see release [1.26.0](https://github.com/logto-io/logto/releases/tag/v1.26.0) for more details)
+
+  Key updates:
+
+  - Removed feature flags and migration-related logic
+  - Cleaned up transitional code used during gradual rollout
+  - Deprecated and removed `@logto/experience-legacy` package
+  - Fully adopted `@logto/experience` package with Experience API for all user interactions
+
+  This marks the completion of our authentication UI modernization, providing a more maintainable and extensible foundation for future enhancements.
+
+- Updated dependencies [a172ddb53]
+  - @logto/connector-kit@4.3.0
+  - @logto/language-kit@1.2.0
+  - @logto/phrases-experience@1.10.0
+  - @logto/core-kit@2.6.0
+  - @logto/app-insights@2.1.0
+  - @logto/experience@1.13.0
+  - @logto/demo-app@1.5.0
+  - @logto/console@1.24.0
+  - @logto/phrases@1.19.0
+  - @logto/schemas@1.27.0
+  - @logto/shared@3.2.0
+  - @logto/cli@1.27.0
+
 ## 1.26.0
 
 ### Minor Changes
