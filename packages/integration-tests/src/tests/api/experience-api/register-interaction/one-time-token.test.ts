@@ -6,11 +6,11 @@ import { initExperienceClient, logoutClient, processSession } from '#src/helpers
 import { setEmailConnector } from '#src/helpers/connector.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { generateNewUser } from '#src/helpers/user.js';
-import { generatePassword, devFeatureTest } from '#src/utils.js';
+import { generateUsername, generatePassword, devFeatureTest } from '#src/utils.js';
 
 const { it, describe } = devFeatureTest;
 
-describe('Register interaction with one-time token happy path', () => {
+describe('Register interaction with one-time token', () => {
   beforeAll(async () => {
     await setEmailConnector();
     await updateSignInExperience({
@@ -175,6 +175,52 @@ describe('Register interaction with one-time token happy path', () => {
       },
     });
 
+    await client.identifyUser({ verificationId });
+
+    const { redirectTo } = await client.submitInteraction();
+    const userId = await processSession(client, redirectTo);
+    await logoutClient(client);
+    await deleteUser(userId);
+  });
+
+  it('should allow user one-time token registration even if the sign-in identifier does NOT support email', async () => {
+    await updateSignInExperience({
+      signInMode: SignInMode.SignIn,
+      signUp: {
+        identifiers: [SignInIdentifier.Username],
+        password: true,
+        verify: false,
+      },
+      signIn: {
+        methods: [
+          {
+            identifier: SignInIdentifier.Username,
+            password: true,
+            verificationCode: false,
+            isPasswordPrimary: true,
+          },
+        ],
+      },
+    });
+
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.Register,
+    });
+
+    const oneTimeToken = await createOneTimeToken({
+      email: 'foo@logto.io',
+    });
+
+    const { verificationId } = await client.verifyOneTimeToken({
+      token: oneTimeToken.token,
+      identifier: {
+        type: SignInIdentifier.Email,
+        value: 'foo@logto.io',
+      },
+    });
+
+    await client.updateProfile({ type: SignInIdentifier.Username, value: generateUsername() });
+    await client.updateProfile({ type: 'password', value: generatePassword() });
     await client.identifyUser({ verificationId });
 
     const { redirectTo } = await client.submitInteraction();

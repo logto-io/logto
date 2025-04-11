@@ -119,7 +119,12 @@ export class SignInExperienceValidator {
   ) {
     const hasVerifiedOneTimeToken =
       verificationRecord.type === VerificationType.OneTimeToken && verificationRecord.isVerified;
-    await this.guardInteractionEvent(event, hasVerifiedOneTimeToken);
+
+    if (hasVerifiedOneTimeToken) {
+      return;
+    }
+
+    await this.guardInteractionEvent(event);
 
     switch (event) {
       case InteractionEvent.SignIn: {
@@ -286,23 +291,14 @@ export class SignInExperienceValidator {
         break;
       }
 
+      case VerificationType.OneTimeToken:
       case VerificationType.Social: {
-        // No need to verify social verification method
+        // No need to verify one-time token and social verification methods
         break;
       }
       case VerificationType.EnterpriseSso: {
         assertThat(
           singleSignOnEnabled,
-          new RequestError({ code: 'user.sign_in_method_not_enabled', status: 422 })
-        );
-        break;
-      }
-      case VerificationType.OneTimeToken: {
-        const {
-          identifier: { type },
-        } = verificationRecord;
-        assertThat(
-          signInMethods.some(({ identifier }) => type === identifier),
           new RequestError({ code: 'user.sign_in_method_not_enabled', status: 422 })
         );
         break;
