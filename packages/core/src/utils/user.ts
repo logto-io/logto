@@ -66,7 +66,8 @@ export const transpileUserProfileResponse = (
   };
 };
 
-export const getValidPhoneNumber = (phone: string): string => {
+// Not used yet, may be used in the future, keep as a individual method.
+const getValidPhoneNumber = (phone: string): string => {
   if (!phone) {
     return phone;
   }

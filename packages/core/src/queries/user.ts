@@ -224,7 +224,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     set: Partial<OmitAutoSetFields<CreateUser>>,
     jsonbMode: 'replace' | 'merge' = 'merge'
   ) => {
-    if (typeof set.primaryPhone === 'string') {
+    if (set.primaryPhone) {
       validatePhoneNumber(set.primaryPhone);
     }
 
@@ -236,7 +236,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
   });
 
   const insertUser = async (data: OmitAutoSetFields<CreateUser>) => {
-    if (typeof data.primaryPhone === 'string') {
+    if (data.primaryPhone) {
       validatePhoneNumber(data.primaryPhone);
     }
 
