@@ -21,7 +21,7 @@ jobs:
         uses: silverhand-io/actions-node-pnpm-run-steps@v5
         with:
           pnpm-version: 9
-          node-version: ^20.19.0
+          node-version: ^22.14.0
 
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v6
