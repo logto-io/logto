@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import auFlag from './assets/au.svg?react';
 import euFlag from './assets/eu.svg?react';
+import crescLabJpFlag from './assets/jp.svg?react';
 import usFlag from './assets/us.svg?react';
 import styles from './index.module.scss';
 
@@ -12,12 +13,14 @@ export enum RegionName {
   EU = 'EU',
   US = 'US',
   AU = 'AU',
+  CrescLabJP = 'CRESCLAB_JP',
 }
 
 const regionDisplayNameMap: Readonly<Record<string, string>> = Object.freeze({
   [RegionName.EU]: 'Europe',
   [RegionName.US]: 'West US',
   [RegionName.AU]: 'Australia',
+  [RegionName.CrescLabJP]: 'Japan',
 });
 
 /**
@@ -32,6 +35,7 @@ const regionFlagMap: Readonly<Record<string, FunctionComponent<React.SVGProps<SV
     [RegionName.EU]: euFlag,
     [RegionName.US]: usFlag,
     [RegionName.AU]: auFlag,
+    [RegionName.CrescLabJP]: crescLabJpFlag,
   });
 
 type RegionFlagProps = {
