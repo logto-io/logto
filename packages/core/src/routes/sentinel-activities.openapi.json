@@ -1,0 +1,24 @@
+{
+  "tags": [
+    {
+      "name": "Sentinel activities",
+      "description": "Sentinel activities are used to track and manage user authentication attempts, including successful and failed attempts. Based on your sentinel policy settings, Logto will automatically block users after a certain number of failed attempts. This helps to prevent unauthorized access and protect sensitive data. "
+    },
+    {
+      "name": "Dev feature"
+    }
+  ],
+  "paths": {
+    "/api/sentinel-activities/delete": {
+      "post": {
+        "summary": "Bulk delete sentinel activities",
+        "description": "Remove sentinel activity reports based on the provided target value(identifier).Use this endpoint to unblock users who may be locked out due to too many failed authentication attempts.",
+        "responses": {
+          "204": {
+            "description": "Activities deleted successfully."
+          }
+        }
+      }
+    }
+  }
+}

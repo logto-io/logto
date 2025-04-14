@@ -116,6 +116,7 @@ export default class BasicSentinel extends Sentinel {
         and ${fields.decisionExpiresAt} > now()
       limit 1
     `);
+
     return blocked && [SentinelDecision.Blocked, blocked.decisionExpiresAt];
   }
 
@@ -155,6 +156,7 @@ export default class BasicSentinel extends Sentinel {
         and ${fields.decision} != ${SentinelDecision.Blocked}
         and ${fields.createdAt} > now() - interval '1 hour'
     `);
+
     const { maxAttempts, lockoutDuration } = await this.getSentinelPolicy();
 
     const now = new Date();

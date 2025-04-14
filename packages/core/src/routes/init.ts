@@ -45,6 +45,7 @@ import roleRoutes from './role.js';
 import roleScopeRoutes from './role.scope.js';
 import samlApplicationAnonymousRoutes from './saml-application/anonymous.js';
 import samlApplicationRoutes from './saml-application/index.js';
+import sentinelActivitiesRoutes from './sentinel-activities.js';
 import signInExperiencesRoutes from './sign-in-experience/index.js';
 import ssoConnectors from './sso-connector/index.js';
 import statusRoutes from './status.js';
@@ -109,6 +110,10 @@ const createRouters = (tenant: TenantContext) => {
   if (EnvSet.values.isDevFeaturesEnabled) {
     oneTimeTokenRoutes(managementRouter, tenant);
     captchaProviderRoutes(managementRouter, tenant);
+  }
+
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    sentinelActivitiesRoutes(managementRouter, tenant);
   }
 
   const anonymousRouter: AnonymousRouter = new Router();
