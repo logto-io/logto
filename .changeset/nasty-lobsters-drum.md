@@ -68,4 +68,4 @@
 "@logto/cli": minor
 ---
 
-update Node.js version requirement to ^20.19.0
+bump node version to ^22.14.0
