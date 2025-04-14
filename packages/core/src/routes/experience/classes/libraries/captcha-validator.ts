@@ -7,6 +7,8 @@ import {
 import ky from 'ky';
 import { z } from 'zod';
 
+import { type LogEntry } from '#src/middleware/koa-audit-log.js';
+
 function isRecaptchaEnterprise(
   config: CaptchaProvider['config']
 ): config is RecaptchaEnterpriseConfig {
@@ -18,7 +20,10 @@ function isTurnstile(config: CaptchaProvider['config']): config is TurnstileConf
 }
 
 export class CaptchaValidator {
-  constructor(private readonly captchaProvider: CaptchaProvider) {}
+  constructor(
+    private readonly captchaProvider: CaptchaProvider,
+    private readonly log: LogEntry
+  ) {}
 
   public async verifyCaptcha(captchaToken: string): Promise<boolean> {
     const { config } = this.captchaProvider;
@@ -53,8 +58,18 @@ export class CaptchaValidator {
 
       const response = responseGuard.parse(result);
 
+      this.log.append({
+        success: response.success,
+        errorMessage: response['error-codes']?.join(', '),
+      });
+
       return response.success;
     } catch {
+      this.log.append({
+        success: false,
+        errorMessage: 'Failed to get the result from Cloudflare Turnstile',
+      });
+
       return false;
     }
   }
@@ -94,8 +109,20 @@ export class CaptchaValidator {
       } = responseGuard.parse(result);
 
       // TODO: customize the score threshold
-      return valid && score >= 0.5;
+      const success = valid && score >= 0.5;
+
+      this.log.append({
+        success,
+        score,
+      });
+
+      return success;
     } catch {
+      this.log.append({
+        success: false,
+        errorMessage: 'Failed to get the result from Google Recaptcha Enterprise',
+      });
+
       return false;
     }
   }
