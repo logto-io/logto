@@ -1,7 +1,7 @@
 import { execSync } from 'node:child_process';
-import changesetConfig from '../.changeset/config.json' assert { type: 'json' };
+import changesetConfig from '../.changeset/config.json' with { type: 'json' };
 
-export { default as changesetConfig } from '../.changeset/config.json' assert { type: 'json' };
+export { default as changesetConfig } from '../.changeset/config.json' with { type: 'json' };
 
 export const corePackageName = '@logto/core';
 /** @type {Array<{ name: string; version?: string; path: string; private: boolean; }>} */
