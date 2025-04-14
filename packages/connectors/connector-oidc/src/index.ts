@@ -22,7 +22,7 @@ import { HTTPError } from 'ky';
 import { defaultMetadata } from './constant.js';
 import {
   idTokenProfileStandardClaimsGuard,
-  idTokenProfileStandardClaimsGuardAcceptingStringTypedBooleanClaims,
+  idTokenClaimsGuardWithStringBooleans,
   oidcConnectorConfigGuard,
 } from './types.js';
 import { getIdToken } from './utils.js';
@@ -108,7 +108,7 @@ const getUserInfo =
       );
 
       const result = parsedConfig.acceptStringTypedBooleanClaims
-        ? idTokenProfileStandardClaimsGuardAcceptingStringTypedBooleanClaims.safeParse(payload)
+        ? idTokenClaimsGuardWithStringBooleans.safeParse(payload)
         : idTokenProfileStandardClaimsGuard.safeParse(payload);
 
       if (!result.success) {

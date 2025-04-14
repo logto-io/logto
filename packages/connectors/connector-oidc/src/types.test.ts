@@ -1,7 +1,4 @@
-import {
-  scopePostProcessor,
-  idTokenProfileStandardClaimsGuardAcceptingStringTypedBooleanClaims,
-} from './types.js';
+import { scopePostProcessor, idTokenClaimsGuardWithStringBooleans } from './types.js';
 
 describe('scopePostProcessor', () => {
   it('`openid` will be added if not exists (with empty string)', () => {
@@ -17,9 +14,9 @@ describe('scopePostProcessor', () => {
   });
 });
 
-describe('idTokenProfileStandardClaimsGuardAcceptingStringTypedBooleanClaims', () => {
+describe('idTokenClaimsGuardWithStringBooleans', () => {
   it('should accept boolean values for email_verified and phone_verified', () => {
-    const result = idTokenProfileStandardClaimsGuardAcceptingStringTypedBooleanClaims.parse({
+    const result = idTokenClaimsGuardWithStringBooleans.parse({
       sub: 'subject',
       email_verified: true,
       phone_verified: false,
@@ -33,7 +30,7 @@ describe('idTokenProfileStandardClaimsGuardAcceptingStringTypedBooleanClaims', (
   });
 
   it('should accept null values for email_verified and phone_verified', () => {
-    const result = idTokenProfileStandardClaimsGuardAcceptingStringTypedBooleanClaims.parse({
+    const result = idTokenClaimsGuardWithStringBooleans.parse({
       sub: 'subject',
       email_verified: null,
       phone_verified: null,
@@ -47,7 +44,7 @@ describe('idTokenProfileStandardClaimsGuardAcceptingStringTypedBooleanClaims', (
   });
 
   it('should transform string "true" to boolean true for email_verified and phone_verified', () => {
-    const result = idTokenProfileStandardClaimsGuardAcceptingStringTypedBooleanClaims.parse({
+    const result = idTokenClaimsGuardWithStringBooleans.parse({
       sub: 'subject',
       email_verified: 'true',
       phone_verified: 'TRUE',
@@ -61,7 +58,7 @@ describe('idTokenProfileStandardClaimsGuardAcceptingStringTypedBooleanClaims', (
   });
 
   it('should transform string "false" to boolean false for email_verified and phone_verified', () => {
-    const result = idTokenProfileStandardClaimsGuardAcceptingStringTypedBooleanClaims.parse({
+    const result = idTokenClaimsGuardWithStringBooleans.parse({
       sub: 'subject',
       email_verified: 'false',
       phone_verified: 'FALSE',
@@ -75,7 +72,7 @@ describe('idTokenProfileStandardClaimsGuardAcceptingStringTypedBooleanClaims', (
   });
 
   it('should transform string "0" to boolean false for email_verified and phone_verified', () => {
-    const result = idTokenProfileStandardClaimsGuardAcceptingStringTypedBooleanClaims.parse({
+    const result = idTokenClaimsGuardWithStringBooleans.parse({
       sub: 'subject',
       email_verified: '0',
       phone_verified: '0',
@@ -89,7 +86,7 @@ describe('idTokenProfileStandardClaimsGuardAcceptingStringTypedBooleanClaims', (
   });
 
   it('should transform string "1" to boolean true for email_verified and phone_verified', () => {
-    const result = idTokenProfileStandardClaimsGuardAcceptingStringTypedBooleanClaims.parse({
+    const result = idTokenClaimsGuardWithStringBooleans.parse({
       sub: 'subject',
       email_verified: '1',
       phone_verified: '1',
@@ -103,7 +100,7 @@ describe('idTokenProfileStandardClaimsGuardAcceptingStringTypedBooleanClaims', (
   });
 
   it('should accept other standard claims', () => {
-    const result = idTokenProfileStandardClaimsGuardAcceptingStringTypedBooleanClaims.parse({
+    const result = idTokenClaimsGuardWithStringBooleans.parse({
       sub: 'subject',
       name: 'John Doe',
       email: 'john@example.com',

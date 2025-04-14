@@ -32,16 +32,17 @@ export const idTokenProfileStandardClaimsGuard = z.object({
 });
 
 // Extend `idTokenProfileStandardClaimsGuard` by accepting string-typed boolean claims.
-export const idTokenProfileStandardClaimsGuardAcceptingStringTypedBooleanClaims =
-  idTokenProfileStandardClaimsGuard.omit({ email_verified: true, phone_verified: true }).extend({
+export const idTokenClaimsGuardWithStringBooleans = idTokenProfileStandardClaimsGuard
+  .omit({ email_verified: true, phone_verified: true })
+  .extend({
     email_verified: z
       .boolean()
-      .nullish()
-      .or(z.string().transform((value: string) => yes(value))),
+      .or(z.string().transform((value: string) => yes(value)))
+      .nullish(),
     phone_verified: z
       .boolean()
-      .nullish()
-      .or(z.string().transform((value: string) => yes(value))),
+      .or(z.string().transform((value: string) => yes(value)))
+      .nullish(),
   });
 
 export const userProfileGuard = z.object({
