@@ -1,18 +1,21 @@
 import { type SignInExperience } from '@logto/schemas';
-import { type ChangeEvent } from 'react';
+import { useState, type ChangeEvent } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useSWRConfig } from 'swr';
 
+import UnlockIcon from '@/assets/icons/unlock.svg?react';
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import NumericInput from '@/ds-components/TextInput/NumericInput';
 import useApi from '@/hooks/use-api';
 import { trySubmitSafe } from '@/utils/form';
 
+import SentinelUnlockModal from '../SentinelUnlockModal';
 import { generalFormParser, type GeneralFormData } from '../use-data-fetch';
 
 import styles from './index.module.scss';
@@ -24,6 +27,7 @@ type Props = {
 function GeneralForm({ formData }: Props) {
   const api = useApi();
   const { mutate: mutateGlobal } = useSWRConfig();
+  const [showUnlockModal, setShowUnlockModal] = useState(false);
 
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console.security',
@@ -142,9 +146,27 @@ function GeneralForm({ formData }: Props) {
               )}
             />
           </FormField>
+          <FormField title="security.sentinel_policy.manual_unlock.title">
+            <div className={styles.fieldDescription}>
+              {t('sentinel_policy.manual_unlock.description')}
+            </div>
+            <Button
+              title="security.sentinel_policy.manual_unlock.unblock_by_identifiers"
+              icon={<UnlockIcon />}
+              onClick={() => {
+                setShowUnlockModal(true);
+              }}
+            />
+          </FormField>
         </FormCard>
       </DetailsForm>
       <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />
+      <SentinelUnlockModal
+        isOpen={showUnlockModal}
+        onClose={() => {
+          setShowUnlockModal(false);
+        }}
+      />
     </>
   );
 }
