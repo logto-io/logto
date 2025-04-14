@@ -43,7 +43,7 @@ export const loadConnector = async (
     default: { dependencies },
     // eslint-disable-next-line no-restricted-syntax
   } = (await import(path.join(connectorPath, 'package.json'), {
-    assert: { type: 'json' },
+    with: { type: 'json' },
   })) as { default: Record<string, unknown> };
 
   checkConnectorKitVersion(dependencies, ignoreVersionMismatch);
