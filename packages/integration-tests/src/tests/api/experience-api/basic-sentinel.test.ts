@@ -147,8 +147,6 @@ devFeatureTest.describe('basic sentinel', () => {
     });
 
     it('should unblock the identifier by calling management API', async () => {
-      console.log(username);
-
       await authedAdminApi.post('sentinel-activities/delete', {
         json: {
           targetType: 'User',

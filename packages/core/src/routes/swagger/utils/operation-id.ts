@@ -30,6 +30,7 @@ type RouteDictionary = Record<`${OpenAPIV3.HttpMethods} ${string}`, string>;
 const devFeatureCustomRoutes: RouteDictionary = Object.freeze({
   'post /one-time-tokens': 'AddOneTimeTokens',
   'post /one-time-tokens/verify': 'VerifyOneTimeToken',
+  'post /sentinel-activities/delete': 'DeleteSentinelActivities',
 });
 
 export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
