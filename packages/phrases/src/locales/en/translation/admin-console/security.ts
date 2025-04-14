@@ -38,6 +38,20 @@ const sentinel_policy = {
     description: 'Block sign-ins for a period after exceeding the maximum failed attempts limit.',
     error_message: 'Lockout duration must be at least 1 minute.',
   },
+  manual_unlock: {
+    title: 'Manual unlock',
+    description:
+      'Unlock users immediately by confirming their identity and entering their identifier.',
+    unblock_by_identifiers: 'Unblock by identifier',
+    modal_description_1:
+      'An identifier was temporarily locked due to multiple failed sign-in/sign-up attempts. To protect security, access will automatically restore after the lockout duration.',
+    modal_description_2:
+      ' Only unlock manually if you’ve confirmed the user’s identity and ensured no unauthorized access attempts.',
+    placeholder: 'Enter identifiers (e.g., email or username)',
+    confirm_button_text: 'Unlock now',
+    success_toast: 'Unlocked successfully',
+    duplicate_identifier_error: 'Identifier already added',
+  },
 };
 
 const security = {
