@@ -53,6 +53,10 @@ const CaptchaContextProvider = ({ children }: Props) => {
           return;
         }
 
+        // Clear the dom element first
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        widgetRef.current.innerHTML = '';
+
         window.turnstile.render(widgetRef.current, {
           sitekey: captchaConfig.siteKey,
           theme: theme === Theme.Light ? 'light' : 'dark',
