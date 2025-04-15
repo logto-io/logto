@@ -7,6 +7,6 @@ import type { SentinelPolicy } from '../foundations/index.js';
  * - `lockoutDuration`: 10 minutes
  */
 export const defaultSentinelPolicy = Object.freeze({
-  maxAttempts: 5,
-  lockoutDuration: 10,
+  maxAttempts: 100,
+  lockoutDuration: 60,
 } satisfies SentinelPolicy);
