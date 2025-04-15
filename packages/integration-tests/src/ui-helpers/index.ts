@@ -1,5 +1,11 @@
 import { ConnectorType } from '@logto/connector-kit';
-import { SignInMode, SignInIdentifier, type PartialPasswordPolicy } from '@logto/schemas';
+import {
+  SignInMode,
+  SignInIdentifier,
+  type PartialPasswordPolicy,
+  type SentinelPolicy,
+} from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { type ElementHandle, type Browser, type Page, type Frame } from 'puppeteer';
 
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
@@ -158,7 +164,10 @@ export const getInputValue = async (input: ElementHandle<HTMLInputElement>) => {
  *
  * @param passwordPolicy The password policy to partially update the existing one.
  */
-export const setupUsernameAndEmailExperience = async (passwordPolicy?: PartialPasswordPolicy) => {
+export const setupUsernameAndEmailExperience = async (
+  passwordPolicy?: PartialPasswordPolicy,
+  sentinelPolicy?: SentinelPolicy
+) => {
   await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
   await setEmailConnector();
   await updateSignInExperience({
@@ -186,6 +195,7 @@ export const setupUsernameAndEmailExperience = async (passwordPolicy?: PartialPa
         },
       ],
     },
-    passwordPolicy,
+    ...conditional(passwordPolicy && { passwordPolicy }),
+    ...conditional(sentinelPolicy && { sentinelPolicy }),
   });
 };

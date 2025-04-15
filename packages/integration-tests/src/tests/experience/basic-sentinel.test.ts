@@ -1,10 +1,26 @@
-import { demoAppUrl } from '#src/constants.js';
+import { demoAppUrl, isDevFeaturesEnabled } from '#src/constants.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
 import { setupUsernameAndEmailExperience } from '#src/ui-helpers/index.js';
 
 describe('basic sentinel', () => {
   beforeAll(async () => {
-    await setupUsernameAndEmailExperience();
+    await setupUsernameAndEmailExperience(
+      undefined,
+      isDevFeaturesEnabled
+        ? /**
+           * The default policy settings is way too big for the test.
+           * We need to override it to make the test.
+           * Update the sign-in experience to use the legacy policy settings:
+           *
+           * - maxAttempts: 5
+           * - lockoutDuration: 10 minutes
+           */
+          {
+            maxAttempts: 5,
+            lockoutDuration: 10,
+          }
+        : undefined
+    );
   });
 
   it('should block a non-existing identifier after 5 failed attempts in 1 hour', async () => {

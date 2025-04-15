@@ -20,6 +20,13 @@ import { convertToIdentifiers } from '#src/utils/sql.js';
 
 import { EnvSet } from '../env-set/index.js';
 
+// TODO: Remove this when the sentinel policy is fully integrated into the system.
+// This is a legacy sentinel policy that is used to sync with the current sentinel policy on production
+const legacyDefaultSentinelPolicy = {
+  maxAttempts: 5,
+  lockoutDuration: 10,
+};
+
 const { fields, table } = convertToIdentifiers(SentinelActivities);
 
 /**
@@ -123,7 +130,7 @@ export default class BasicSentinel extends Sentinel {
   protected async getSentinelPolicy() {
     // TODO: remove this check when the sentinel policy is fully integrated into the system.
     if (!EnvSet.values.isDevFeaturesEnabled) {
-      return defaultSentinelPolicy;
+      return legacyDefaultSentinelPolicy;
     }
 
     const {

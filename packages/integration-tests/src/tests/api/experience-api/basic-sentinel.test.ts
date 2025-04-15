@@ -1,6 +1,7 @@
 import { SignInIdentifier } from '@logto/schemas';
 
 import { authedAdminApi } from '#src/api/api.js';
+import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { initExperienceClient } from '#src/helpers/client.js';
 import { signInWithPassword } from '#src/helpers/experience/index.js';
 import { expectRejects } from '#src/helpers/index.js';
@@ -11,6 +12,20 @@ import { devFeatureTest, generateUsername } from '#src/utils.js';
 devFeatureTest.describe('basic sentinel', () => {
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
+    /**
+     * The default policy settings is way too big for the test.
+     * We need to override it to make the test.
+     * Update the sign-in experience to use the legacy policy settings:
+     *
+     * - maxAttempts: 5
+     * - lockoutDuration: 10 minutes
+     */
+    await updateSignInExperience({
+      sentinelPolicy: {
+        maxAttempts: 5,
+        lockoutDuration: 10,
+      },
+    });
   });
 
   describe('sign-in with non-existing username and password', () => {
