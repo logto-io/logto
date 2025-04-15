@@ -1,3 +1,4 @@
+import { yes } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import { oauth2ConfigGuard } from '@logto/connector-oauth';
@@ -5,7 +6,9 @@ import { oauth2ConfigGuard } from '@logto/connector-oauth';
 const scopeOpenid = 'openid';
 export const delimiter = /[ +]/;
 
-// Space-delimited 'scope' MUST contain 'openid', see https://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth
+/**
+ * Space-delimited 'scope' MUST contain 'openid', see https://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth
+ */
 export const scopePostProcessor = (scope: string) => {
   const splitScopes = scope.split(delimiter).filter(Boolean);
 
@@ -16,8 +19,10 @@ export const scopePostProcessor = (scope: string) => {
   return scope;
 };
 
-// See https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims.
-// We only concern a subset of them, and social identity provider usually does not provide a complete set of them.
+/**
+ * See https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims.
+ * We only concern a subset of them, and social identity provider usually does not provide a complete set of them.
+ */
 export const idTokenProfileStandardClaimsGuard = z.object({
   sub: z.string(),
   name: z.string().nullish(),
@@ -29,6 +34,22 @@ export const idTokenProfileStandardClaimsGuard = z.object({
   profile: z.string().nullish(),
   nonce: z.string().nullish(),
 });
+
+/**
+ * Extend `idTokenProfileStandardClaimsGuard` by accepting string-typed boolean claims.
+ */
+export const idTokenClaimsGuardWithStringBooleans = idTokenProfileStandardClaimsGuard
+  .omit({ email_verified: true, phone_verified: true })
+  .extend({
+    email_verified: z
+      .boolean()
+      .or(z.string().transform((value: string) => yes(value)))
+      .nullish(),
+    phone_verified: z
+      .boolean()
+      .or(z.string().transform((value: string) => yes(value)))
+      .nullish(),
+  });
 
 export const userProfileGuard = z.object({
   id: z.preprocess(String, z.string()),
@@ -57,7 +78,9 @@ export const authRequestOptionalConfigGuard = z
   })
   .partial();
 
-// See https://github.com/panva/jose/blob/main/docs/interfaces/jwt_verify.JWTVerifyOptions.md for details.
+/**
+ * See https://github.com/panva/jose/blob/main/docs/interfaces/jwt_verify.JWTVerifyOptions.md for details.
+ */
 export const idTokenVerificationConfigGuard = z.object({ jwksUri: z.string() }).merge(
   z
     .object({
@@ -79,6 +102,7 @@ export type IdTokenVerificationConfig = z.infer<typeof idTokenVerificationConfig
 export const oidcConnectorConfigGuard = oauth2ConfigGuard.extend({
   // Override `scope` to ensure it contains 'openid'.
   scope: z.string().transform(scopePostProcessor),
+  acceptStringTypedBooleanClaims: z.boolean().optional().default(false),
   idTokenVerificationConfig: idTokenVerificationConfigGuard,
   authRequestOptionalConfig: authRequestOptionalConfigGuard.optional(),
   customConfig: z.record(z.string()).optional(),
