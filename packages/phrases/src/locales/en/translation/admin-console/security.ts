@@ -107,6 +107,7 @@ const security = {
       confirm_button_text: 'Unlock now',
       success_toast: 'Unlocked successfully',
       duplicate_identifier_error: 'Identifier already added',
+      empty_identifier_error: 'Please enter at least one identifier',
     },
   },
 };

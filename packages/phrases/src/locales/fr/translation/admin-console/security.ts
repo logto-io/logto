@@ -112,6 +112,7 @@ const security = {
       confirm_button_text: 'Déverrouiller maintenant',
       success_toast: 'Déverrouillé avec succès',
       duplicate_identifier_error: 'Identifiant déjà ajouté',
+      empty_identifier_error: 'Veuillez saisir au moins un identifiant',
     },
   },
 };

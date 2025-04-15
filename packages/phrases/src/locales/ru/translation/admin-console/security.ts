@@ -110,6 +110,7 @@ const security = {
       confirm_button_text: 'Разблокировать сейчас',
       success_toast: 'Успешно разблокировано',
       duplicate_identifier_error: 'Идентификатор уже добавлен',
+      empty_identifier_error: 'Пожалуйста, введите как минимум один идентификатор',
     },
   },
 };

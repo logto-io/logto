@@ -109,6 +109,7 @@ const security = {
       confirm_button_text: 'Odblokuj teraz',
       success_toast: 'Pomyślnie odblokowano',
       duplicate_identifier_error: 'Identyfikator już dodany',
+      empty_identifier_error: 'Proszę wprowadzić co najmniej jeden identyfikator',
     },
   },
 };

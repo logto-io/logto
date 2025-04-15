@@ -107,6 +107,7 @@ const security = {
       confirm_button_text: '今すぐ解除',
       success_toast: '正常に解除されました',
       duplicate_identifier_error: '識別子は既に追加されています',
+      empty_identifier_error: '少なくとも 1 つの識別子を入力してください',
     },
   },
 };
