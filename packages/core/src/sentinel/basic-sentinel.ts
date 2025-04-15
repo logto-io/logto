@@ -8,6 +8,7 @@ import {
   SentinelActionResult,
   SentinelActivityAction,
   defaultSentinelPolicy,
+  type SentinelPolicy,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { type Nullable } from '@silverhand/essentials';
@@ -22,10 +23,10 @@ import { EnvSet } from '../env-set/index.js';
 
 // TODO: Remove this when the sentinel policy is fully integrated into the system.
 // This is a legacy sentinel policy that is used to sync with the current sentinel policy on production
-const legacyDefaultSentinelPolicy = {
+const legacyDefaultSentinelPolicy = Object.freeze({
   maxAttempts: 5,
   lockoutDuration: 10,
-};
+}) satisfies SentinelPolicy;
 
 const { fields, table } = convertToIdentifiers(SentinelActivities);
 
