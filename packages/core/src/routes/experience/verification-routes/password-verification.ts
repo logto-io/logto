@@ -48,6 +48,7 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
 
       await withSentinel(
         {
+          ctx,
           sentinel,
           action: SentinelActivityAction.Password,
           identifier,

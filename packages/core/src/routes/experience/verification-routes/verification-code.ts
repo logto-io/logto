@@ -164,6 +164,7 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
 
       await withSentinel(
         {
+          ctx,
           sentinel,
           action: SentinelActivityAction.VerificationCode,
           identifier,

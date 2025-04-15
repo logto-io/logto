@@ -9,7 +9,7 @@ import {
 import { sha256 } from 'hash-wasm';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { i18next } from '#src/utils/i18n.js';
+import { type WithI18nContext } from '#src/middleware/koa-i18next.js';
 
 /**
  * Applies a sentinel guard to a verification promise.
@@ -26,11 +26,13 @@ import { i18next } from '#src/utils/i18n.js';
  */
 export async function withSentinel<T>(
   {
+    ctx: { i18n },
     sentinel,
     action,
     identifier,
     payload,
   }: {
+    ctx: WithI18nContext;
     sentinel: Sentinel;
     action: SentinelActivityAction;
     identifier: VerificationIdentifier;
@@ -57,7 +59,7 @@ export async function withSentinel<T>(
   });
 
   if (decision === SentinelDecision.Blocked) {
-    const rtf = new Intl.RelativeTimeFormat([...i18next.languages]);
+    const rtf = new Intl.RelativeTimeFormat([...i18n.languages]);
     throw new RequestError({
       code: 'session.verification_blocked_too_many_attempts',
       relativeTime: rtf.format(Math.round((decisionExpiresAt - Date.now()) / 1000 / 60), 'minute'),

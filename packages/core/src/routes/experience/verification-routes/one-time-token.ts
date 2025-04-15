@@ -50,6 +50,7 @@ export default function oneTimeTokenVerificationRoutes<
 
       await withSentinel(
         {
+          ctx,
           sentinel,
           action: SentinelActivityAction.OneTimeToken,
           identifier,
