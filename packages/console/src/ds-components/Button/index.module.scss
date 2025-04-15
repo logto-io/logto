@@ -96,6 +96,10 @@
     &:disabled {
       border-color: var(--color-border);
       color: var(--color-neutral-70);
+
+      .icon {
+        color: var(--color-neutral-70);
+      }
     }
 
     &:focus-visible {
