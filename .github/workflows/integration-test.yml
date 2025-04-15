@@ -49,6 +49,7 @@ jobs:
           logto-artifact: integration-test-${{ github.sha }}-dev-features-${{ env.DEV_FEATURES_ENABLED }}
           test-target: ${{ matrix.target }}
           pnpm-version: 9
+          node-version: ^22.14.0
 
   # Automatically rerun the workflow since the integration tests are moody
   # From this genius: https://github.com/orgs/community/discussions/67654#discussioncomment-8038649
