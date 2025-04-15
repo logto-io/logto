@@ -21,7 +21,7 @@ Turnstile is a CAPTCHA service that helps protect your website from spam and abu
 3. Fill out the form with the following details:
    - **Widget name**: Any name you want to give to the widget
    - **Hostname**: Logto's endpoint domain, e.g. https://[tenant-id].logto.app
-   - **Widget Mode**: Leave as default
+   - **Widget Mode**: You can leave as default, or choose the one suits you best
 
 ## Get the site key and secret key
 
