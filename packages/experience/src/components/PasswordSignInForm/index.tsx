@@ -155,8 +155,6 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
         />
       )}
 
-      <CaptchaBox />
-
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
       {isForgotPasswordEnabled && !showSingleSignOnForm && (
@@ -180,6 +178,8 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
           agreeToTermsPolicy !== AgreeToTermsPolicy.Manual && styles.hidden
         )}
       />
+
+      <CaptchaBox />
 
       <Button
         name="submit"
