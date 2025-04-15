@@ -22,6 +22,7 @@ const error = {
   invalid_link: '유효하지 않은 링크',
   invalid_link_description: '일회성 토큰이 만료되었거나 더 이상 유효하지 않을 수 있어요.',
   something_went_wrong: '문제가 발생했어요.',
+  captcha_verification_failed: '캡차 검증에 실패했어요.',
 };
 
 export default Object.freeze(error);

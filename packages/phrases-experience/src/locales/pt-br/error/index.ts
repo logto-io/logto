@@ -22,6 +22,7 @@ const error = {
   invalid_link: 'Link inválido',
   invalid_link_description: 'Seu token de uso único pode ter expirado ou não é mais válido.',
   something_went_wrong: 'Algo deu errado.',
+  captcha_verification_failed: 'Falha na verificação do captcha.',
 };
 
 export default Object.freeze(error);

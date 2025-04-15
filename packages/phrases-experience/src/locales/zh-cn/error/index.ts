@@ -21,6 +21,7 @@ const error = {
   sso_not_enabled: '此邮箱账户未启用单点登录。',
   invalid_link: '无效的链接',
   invalid_link_description: '你的一次性令牌可能已过期或不再有效。',
+  captcha_verification_failed: '验证码验证失败。',
   something_went_wrong: '出现错误。',
 };
 

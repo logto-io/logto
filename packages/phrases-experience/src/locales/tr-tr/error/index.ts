@@ -23,6 +23,7 @@ const error = {
   invalid_link_description:
     'Tek kullanımlık belirtecin süresi dolmuş olabilir veya artık geçerli değil.',
   something_went_wrong: 'Bir şeyler yanlış gitti.',
+  captcha_verification_failed: 'Captcha doğrulama hatası.',
 };
 
 export default Object.freeze(error);

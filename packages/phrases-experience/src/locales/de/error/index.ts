@@ -22,6 +22,7 @@ const error = {
   invalid_link: 'Ungültiger Link',
   invalid_link_description:
     'Dein einmaliger Token ist möglicherweise abgelaufen oder nicht mehr gültig.',
+  captcha_verification_failed: 'Fehler beim Captcha-Verifizierung.',
   something_went_wrong: 'Etwas ist schiefgegangen.',
 };
 

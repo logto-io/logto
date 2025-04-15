@@ -24,6 +24,7 @@ const error = {
   invalid_link_description:
     'Ваш одноразовый токен мог истечь или больше не является действительным.',
   something_went_wrong: 'Что-то пошло не так.',
+  captcha_verification_failed: 'Не удалось проверить капчу.',
 };
 
 export default Object.freeze(error);
