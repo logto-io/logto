@@ -67,7 +67,13 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
 
     const spaDistributionFiles = await fs.readdir(distributionPath);
 
-    if (!spaDistributionFiles.some((file) => requestPath.startsWith('/' + file))) {
+    // Fall back to root if the request is not for a SPA distribution file
+    // We should exclude the `/assets` folder here since it should return 404 if the file is not
+    // found
+    if (
+      !requestPath.startsWith('/assets/') &&
+      !spaDistributionFiles.some((file) => requestPath.startsWith('/' + file))
+    ) {
       ctx.request.path = '/';
     }
 
