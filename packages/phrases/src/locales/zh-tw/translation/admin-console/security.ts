@@ -5,6 +5,7 @@ const security = {
   tabs: {
     captcha: 'CAPTCHA',
     password_policy: '密碼政策',
+    general: '一般',
   },
   bot_protection: {
     title: '機器人保護',
@@ -51,6 +52,7 @@ const security = {
   },
   password_policy: {
     password_requirements: '密碼需求',
+    password_requirements_description: '加強密碼需求以防範憑證填充及弱密碼攻擊。',
     minimum_length: '最小長度',
     minimum_length_description:
       '美國國家標準與技術研究所 (NIST) 建議網路產品需至少使用 <a>8 個字元</a>。',
@@ -63,14 +65,41 @@ const security = {
     breached_passwords: '遭破解的密碼',
     breached_passwords_description: '拒絕之前在密碼洩漏資料庫中找到的密碼。',
     restricted_phrases: '限制低安全性片語',
-    restricted_phrases_tooltip: '除非您結合 3 個或更多的額外字元，否則密碼應避免使用這些片語。',
+    restricted_phrases_tooltip: '除非你結合 3 個或更多的額外字元，否則密碼應避免使用這些片語。',
     repetitive_or_sequential_characters: '重複或連續字元',
     repetitive_or_sequential_characters_description: '例如：“AAAA”，“1234”，和“abcd”。',
     user_information: '用戶資訊',
     user_information_description: '例如，電子郵件地址，電話號碼，用戶名等。',
     custom_words: '自訂字詞',
     custom_words_description: '個性化上下文相關的字詞，不區分大小寫，每行一個。',
-    custom_words_placeholder: '您的服務名稱，公司名稱等。',
+    custom_words_placeholder: '你的服務名稱，公司名稱等。',
+  },
+  sentinel_policy: {
+    card_title: '識別符鎖定',
+    card_description:
+      '在多次驗證失敗後暫時鎖定一個識別符（例如，持續輸入錯誤密碼或驗證碼的登入），以防止暴力破解訪問。',
+    max_attempts: {
+      title: '最大失敗嘗試次數',
+      description: '限制每個識別符的連續登入失敗次數。超過此限制會觸發臨時封鎖。',
+      error_message: '最大失敗嘗試次數必須大於 0。',
+    },
+    lockout_duration: {
+      title: '鎖定持續時間（分鐘）',
+      description: '在超過最大失敗嘗試次數限制後，封鎖登入一段時間。',
+      error_message: '鎖定持續時間必須至少 1 分鐘。',
+    },
+    manual_unlock: {
+      title: '手動解鎖',
+      description: '通過確認用戶身份並輸入其識別符立即解鎖用戶。',
+      unblock_by_identifiers: '按識別符解鎖',
+      modal_description_1:
+        '由於多次嘗試登入/註冊失敗，一個識別符被暫時鎖定。為了保護安全，訪問將在鎖定持續時間後自動恢復。',
+      modal_description_2: ' 只有在你確認用戶身份並確保沒有未經授權的訪問嘗試後，才手動解鎖。',
+      placeholder: '輸入識別符（電子郵件地址 / 電話號碼 / 用戶名）',
+      confirm_button_text: '立即解鎖',
+      success_toast: '解鎖成功',
+      duplicate_identifier_error: '識別符已添加',
+    },
   },
 };
 

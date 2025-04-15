@@ -5,6 +5,7 @@ const security = {
   tabs: {
     captcha: 'CAPTCHA',
     password_policy: 'Politica password',
+    general: 'Generale',
   },
   bot_protection: {
     title: 'Protezione dei bot',
@@ -53,6 +54,8 @@ const security = {
   },
   password_policy: {
     password_requirements: 'Requisiti per la password',
+    password_requirements_description:
+      'Migliora i requisiti della password per difendersi dagli attacchi di credential stuffing e password deboli.',
     minimum_length: 'Lunghezza minima',
     minimum_length_description:
       'NIST consiglia di utilizzare almeno 8 caratteri per i prodotti web.',
@@ -78,6 +81,37 @@ const security = {
     custom_words_description:
       'Personalizza parole specifiche del contesto, non case-sensitive, una per riga.',
     custom_words_placeholder: "Nome del tuo servizio, nome dell'azienda, ecc.",
+  },
+  sentinel_policy: {
+    card_title: 'Blocco identificatore',
+    card_description:
+      "Blocca temporaneamente un identificatore dopo più tentativi di autenticazione falliti (ad esempio, accessi con password o codice di verifica errati consecutivi) per prevenire l'accesso tramite forza bruta.",
+    max_attempts: {
+      title: 'Massimo tentativi falliti',
+      description:
+        'Limita i tentativi consecutivi di accesso non riusciti per identificatore. Superare questo limite attiverà un blocco temporaneo.',
+      error_message: 'Il massimo dei tentativi falliti deve essere maggiore di 0.',
+    },
+    lockout_duration: {
+      title: 'Durata del blocco (minuti)',
+      description:
+        'Blocca gli accessi per un periodo dopo aver superato il limite massimo di tentativi falliti.',
+      error_message: 'La durata del blocco deve essere almeno 1 minuto.',
+    },
+    manual_unlock: {
+      title: 'Sblocco manuale',
+      description:
+        'Sblocca gli utenti immediatamente confermando la loro identità e inserendo il loro identificatore.',
+      unblock_by_identifiers: 'Sblocca tramite identificatore',
+      modal_description_1:
+        "Un identificatore è stato temporaneamente bloccato a causa di più tentativi di accesso/registrazione falliti. Per proteggere la sicurezza, l'accesso verrà automaticamente ripristinato dopo la durata del blocco.",
+      modal_description_2:
+        "Sblocca manualmente solo se hai confermato l'identità dell'utente e assicurato che non vi siano tentativi di accesso non autorizzati.",
+      placeholder: 'Inserisci identificatori (indirizzo email / numero di telefono / nome utente)',
+      confirm_button_text: 'Sblocca adesso',
+      success_toast: 'Sbloccato con successo',
+      duplicate_identifier_error: 'Identificatore già aggiunto',
+    },
   },
 };
 

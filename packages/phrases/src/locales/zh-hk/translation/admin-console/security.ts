@@ -5,6 +5,7 @@ const security = {
   tabs: {
     captcha: 'CAPTCHA',
     password_policy: '密碼策略',
+    general: '一般',
   },
   bot_protection: {
     title: '機器人保護',
@@ -51,6 +52,7 @@ const security = {
   },
   password_policy: {
     password_requirements: '密碼要求',
+    password_requirements_description: '增強密碼要求以防禦憑證填充和弱密碼攻擊。',
     minimum_length: '最小長度',
     minimum_length_description: 'NIST 建議在 Web 產品中使用至少 8 個字符。',
     minimum_length_error: '最小長度必須介於{{min}}和{{max}}之間（包括{{min}}和{{max}}）。',
@@ -70,6 +72,33 @@ const security = {
     custom_words: '自定義詞彙',
     custom_words_description: '個性化上下文特定的詞彙，不區分大小寫，每行一個詞。',
     custom_words_placeholder: '您的服務名稱、公司名稱等等。',
+  },
+  sentinel_policy: {
+    card_title: '識別鎖定',
+    card_description:
+      '在多次驗證失敗後（例如，連續輸入錯誤密碼或驗證碼登入）暫時鎖定一個識別符，以防止暴力訪問。',
+    max_attempts: {
+      title: '最大失敗嘗試次數',
+      description: '限制每個識別符的連續失敗登入次數。超過此限制將觸發臨時封鎖。',
+      error_message: '最大失敗嘗試次數必須大於 0。',
+    },
+    lockout_duration: {
+      title: '封鎖時長（分鐘）',
+      description: '在超過最大失敗嘗試次數後，封鎖一段時間。',
+      error_message: '封鎖時長必須至少為 1 分鐘。',
+    },
+    manual_unlock: {
+      title: '手動解鎖',
+      description: '通過確認用戶身份並輸入識別符立即解鎖用戶。',
+      unblock_by_identifiers: '按照識別符解鎖',
+      modal_description_1:
+        '由於多次登入/註冊嘗試失敗而暫時鎖定了一個識別符。為了保護安全，訪問將在封鎖時長後自動恢復。',
+      modal_description_2: ' 只有在確認用戶身份並確保沒有未授權的訪問嘗試後才進行手動解鎖。',
+      placeholder: '輸入識別符（郵件地址/電話號碼/用戶名）',
+      confirm_button_text: '立即解鎖',
+      success_toast: '解鎖成功',
+      duplicate_identifier_error: '識別符已添加',
+    },
   },
 };
 

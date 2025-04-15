@@ -5,6 +5,7 @@ const security = {
   tabs: {
     captcha: 'CAPTCHA',
     password_policy: 'Política de contraseña',
+    general: 'General',
   },
   bot_protection: {
     title: 'Protección contra bots',
@@ -53,6 +54,8 @@ const security = {
   },
   password_policy: {
     password_requirements: 'Requisitos de contraseña',
+    password_requirements_description:
+      'Mejora los requisitos de contraseña para defenderse contra ataques de relleno de credenciales y contraseñas débiles.',
     minimum_length: 'Longitud mínima',
     minimum_length_description:
       'NIST sugiere usar <a>al menos 8 caracteres</a> para productos web.',
@@ -77,6 +80,38 @@ const security = {
     custom_words_description:
       'Personaliza las palabras específicas del contexto, sin importar las mayúsculas y minúsculas, y una por línea.',
     custom_words_placeholder: 'Nombre de su servicio, nombre de la empresa, etc.',
+  },
+  sentinel_policy: {
+    card_title: 'Bloqueo de identificador',
+    card_description:
+      'Bloquear un identificador provisionalmente después de múltiples fallos de autenticación (por ejemplo, inicio de sesión con contraseña o código de verificación incorrectos consecutivos) para prevenir el acceso por fuerza bruta.',
+    max_attempts: {
+      title: 'Máximos intentos fallidos',
+      description:
+        'Limitar inicios de sesión fallidos consecutivos por identificador. Exceder este límite activa un bloqueo temporal.',
+      error_message: 'Los máximos intentos fallidos deben ser mayores que 0.',
+    },
+    lockout_duration: {
+      title: 'Duración del bloqueo (minutos)',
+      description:
+        'Bloquear inicios de sesión por un periodo después de exceder el límite de intentos fallidos.',
+      error_message: 'La duración del bloqueo debe ser al menos de 1 minuto.',
+    },
+    manual_unlock: {
+      title: 'Desbloqueo manual',
+      description:
+        'Desbloquear usuarios inmediatamente confirmando su identidad e ingresando su identificador.',
+      unblock_by_identifiers: 'Desbloquear por identificador',
+      modal_description_1:
+        'Un identificador se bloqueó temporalmente debido a múltiples intentos de inicio/registro fallidos. Para proteger la seguridad, el acceso se restaurará automáticamente después de la duración del bloqueo.',
+      modal_description_2:
+        ' Solo desbloquear manualmente si has confirmado la identidad del usuario y asegurado que no hubo intentos de acceso no autorizados.',
+      placeholder:
+        'Ingresa identificadores (correo electrónico / número de teléfono / nombre de usuario)',
+      confirm_button_text: 'Desbloquear ahora',
+      success_toast: 'Desbloqueado con éxito',
+      duplicate_identifier_error: 'Identificador ya agregado',
+    },
   },
 };
 

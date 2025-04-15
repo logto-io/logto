@@ -5,6 +5,7 @@ const security = {
   tabs: {
     captcha: 'CAPTCHA',
     password_policy: 'パスワードポリシー',
+    general: '一般設定',
   },
   bot_protection: {
     title: 'ボット保護',
@@ -53,6 +54,8 @@ const security = {
   },
   password_policy: {
     password_requirements: 'パスワードの要件',
+    password_requirements_description:
+      '資格情報の詰め込み攻撃や弱いパスワード攻撃に対抗するため、パスワードの要件を強化します。',
     minimum_length: '最小の長さ',
     minimum_length_description:
       'NISTは、Web製品に対して少なくとも8文字を使用することを提案しています。',
@@ -76,6 +79,35 @@ const security = {
     custom_words_description:
       '特定の文脈に関連するワードを、大文字小文字を区別せずに、1つの行に1つずつ追加します。',
     custom_words_placeholder: 'サービス名、会社名など',
+  },
+  sentinel_policy: {
+    card_title: '識別子によるロックアウト',
+    card_description:
+      '複数の認証失敗（例：連続した間違ったパスワードや確認コードでのサインイン）後に、一時的に識別子をロックしてブルートフォースアクセスを防ぎます。',
+    max_attempts: {
+      title: '最大失敗試行回数',
+      description:
+        '識別子ごとに連続したサインイン試行の失敗を制限します。この制限を超えると、一時的なブロックが発生します。',
+      error_message: '最大失敗試行回数は 0 より大きくなければなりません。',
+    },
+    lockout_duration: {
+      title: 'ロックアウト期間（分）',
+      description: '最大の失敗試行回数を超えた後、一定期間サインインをブロックします。',
+      error_message: 'ロックアウト期間は少なくとも 1 分でなければなりません。',
+    },
+    manual_unlock: {
+      title: '手動での解除',
+      description: 'ユーザーの身元確認と識別子の入力により、即座にロックを解除します。',
+      unblock_by_identifiers: '識別子での解除',
+      modal_description_1:
+        '識別子はサインイン/サインアップの複数の失敗により一時的にロックされました。セキュリティを保護するため、ロックアウト期間後にアクセスが自動的に復元されます。',
+      modal_description_2:
+        'ユーザーの身元を確認し、無許可のアクセス試行がないことを確認した場合にのみ、手動でロックを解除してください。',
+      placeholder: '識別子を入力してください (メールアドレス / 電話番号 / ユーザー名)',
+      confirm_button_text: '今すぐ解除',
+      success_toast: '正常に解除されました',
+      duplicate_identifier_error: '識別子は既に追加されています',
+    },
   },
 };
 

@@ -5,6 +5,7 @@ const security = {
   tabs: {
     captcha: 'CAPTCHA',
     password_policy: 'Passwortpolitik',
+    general: 'Allgemein',
   },
   bot_protection: {
     title: 'Bot-Schutz',
@@ -53,6 +54,8 @@ const security = {
   },
   password_policy: {
     password_requirements: 'Passwortanforderungen',
+    password_requirements_description:
+      'Verbessern Sie die Passwortanforderungen, um sich gegen Anmeldeübergriffe und Angriffe mit schwachen Passwörtern zu verteidigen.',
     minimum_length: 'Mindestlänge',
     minimum_length_description:
       'NIST schlägt vor, <a>mindestens 8 Zeichen</a> für Webprodukte zu verwenden.',
@@ -77,6 +80,37 @@ const security = {
     custom_words_description:
       'Personalisierte kontextspezifische Wörter, Groß-/Kleinschreibung wird nicht beachtet, ein Wort pro Zeile.',
     custom_words_placeholder: 'Name Ihres Dienstes, Firmenname, etc.',
+  },
+  sentinel_policy: {
+    card_title: 'Identifier-Sperre',
+    card_description:
+      'Sperrt einen Bezeichner vorübergehend nach mehreren fehlgeschlagenen Authentifizierungen (z.B. Anmeldung mit aufeinanderfolgenden falschen Passwörtern oder Bestätigungscodes), um Brute-Force-Zugriffe zu verhindern.',
+    max_attempts: {
+      title: 'Maximale fehlgeschlagene Versuche',
+      description:
+        'Begrenzen Sie aufeinanderfolgende fehlgeschlagene Anmeldungen pro Bezeichner. Das Überschreiten dieses Limits löst eine temporäre Sperre aus.',
+      error_message: 'Maximale fehlgeschlagene Versuche müssen größer als 0 sein.',
+    },
+    lockout_duration: {
+      title: 'Sperrdauer (Minuten)',
+      description:
+        'Sperren Sie Anmeldungen für eine Zeit, nachdem das Maximum an fehlgeschlagenen Versuchen überschritten wurde.',
+      error_message: 'Die Sperrdauer muss mindestens 1 Minute betragen.',
+    },
+    manual_unlock: {
+      title: 'Manuelle Entsperrung',
+      description:
+        'Entsperren Sie Benutzer sofort, indem Sie ihre Identität bestätigen und ihren Bezeichner eingeben.',
+      unblock_by_identifiers: 'Über Bezeichner entsperren',
+      modal_description_1:
+        'Ein Bezeichner wurde vorübergehend aufgrund mehrerer fehlgeschlagener Anmelde-/Registrierungsversuche gesperrt. Um die Sicherheit zu schützen, wird der Zugriff nach der Sperrdauer automatisch wiederhergestellt.',
+      modal_description_2:
+        ' Entsperren Sie manuell nur, wenn Sie die Identität des Benutzers bestätigt haben und sicherstellen, dass keine unbefugten Zugriffsversuche vorliegen.',
+      placeholder: 'Bezeichner eingeben (E-Mail-Adresse / Telefonnummer / Benutzername)',
+      confirm_button_text: 'Jetzt entsperren',
+      success_toast: 'Erfolgreich entsperrt',
+      duplicate_identifier_error: 'Bezeichner bereits hinzugefügt',
+    },
   },
 };
 
