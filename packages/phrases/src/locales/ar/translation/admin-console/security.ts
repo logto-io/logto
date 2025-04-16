@@ -104,6 +104,7 @@ const security = {
       confirm_button_text: 'افتح الآن',
       success_toast: 'تم الفتح بنجاح',
       duplicate_identifier_error: 'تمت إضافة الهوية بالفعل',
+      empty_identifier_error: 'يرجى إدخال معرف واحد على الأقل',
     },
   },
 };

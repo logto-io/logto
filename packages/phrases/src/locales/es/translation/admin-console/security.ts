@@ -111,6 +111,7 @@ const security = {
       confirm_button_text: 'Desbloquear ahora',
       success_toast: 'Desbloqueado con éxito',
       duplicate_identifier_error: 'Identificador ya agregado',
+      empty_identifier_error: 'Por favor, ingresa al menos un identificador',
     },
   },
 };

@@ -108,6 +108,7 @@ const security = {
       confirm_button_text: 'Şimdi kilidini aç',
       success_toast: 'Başarıyla kilidi açıldı',
       duplicate_identifier_error: 'Kimlik zaten eklendi',
+      empty_identifier_error: 'Lütfen en az bir kimlik girin',
     },
   },
 };

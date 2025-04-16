@@ -98,6 +98,7 @@ const security = {
       confirm_button_text: '立即解鎖',
       success_toast: '解鎖成功',
       duplicate_identifier_error: '識別符已添加',
+      empty_identifier_error: '請輸入至少一個識別符',
     },
   },
 };

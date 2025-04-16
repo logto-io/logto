@@ -110,6 +110,7 @@ const security = {
       confirm_button_text: 'Jetzt entsperren',
       success_toast: 'Erfolgreich entsperrt',
       duplicate_identifier_error: 'Bezeichner bereits hinzugefügt',
+      empty_identifier_error: 'Bitte geben Sie mindestens einen Bezeichner ein',
     },
   },
 };

@@ -98,6 +98,7 @@ const security = {
       confirm_button_text: '立即解锁',
       success_toast: '解锁成功',
       duplicate_identifier_error: '标识符已添加',
+      empty_identifier_error: '请输入至少一个标识符',
     },
   },
 };

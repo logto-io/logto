@@ -105,6 +105,7 @@ const security = {
       confirm_button_text: '지금 잠금 해제',
       success_toast: '성공적으로 잠금 해제되었습니다',
       duplicate_identifier_error: '식별자가 이미 추가되었습니다',
+      empty_identifier_error: '최소 하나의 식별자를 입력하세요',
     },
   },
 };

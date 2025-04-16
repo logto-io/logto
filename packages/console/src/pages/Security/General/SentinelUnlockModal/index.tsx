@@ -68,8 +68,6 @@ function SentinelUnlockModal({ isOpen, onClose }: Props) {
     })
   );
 
-  const identifiers = watch('identifiers');
-
   return (
     <Modal
       isOpen={isOpen}
@@ -84,7 +82,6 @@ function SentinelUnlockModal({ isOpen, onClose }: Props) {
             <Button isLoading={isSubmitting} title="general.cancel" onClick={onCloseHandler} />
             <Button
               isLoading={isSubmitting}
-              disabled={identifiers.length === 0}
               type="primary"
               title="security.sentinel_policy.manual_unlock.confirm_button_text"
               onClick={onSubmit}
@@ -103,6 +100,14 @@ function SentinelUnlockModal({ isOpen, onClose }: Props) {
             <Controller
               name="identifiers"
               control={control}
+              rules={{
+                validate: (value) => {
+                  if (value.length === 0) {
+                    return t('sentinel_policy.manual_unlock.empty_identifier_error');
+                  }
+                  return true;
+                },
+              }}
               render={({ field: { onChange, value } }) => (
                 <MultiOptionInput
                   values={value}

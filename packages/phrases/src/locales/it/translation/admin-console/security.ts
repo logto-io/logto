@@ -111,6 +111,7 @@ const security = {
       confirm_button_text: 'Sblocca adesso',
       success_toast: 'Sbloccato con successo',
       duplicate_identifier_error: 'Identificatore già aggiunto',
+      empty_identifier_error: 'Inserisci almeno un identificatore',
     },
   },
 };

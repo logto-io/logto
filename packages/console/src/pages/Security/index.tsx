@@ -32,12 +32,6 @@ function Security({ tab }: Props) {
         />
       </div>
       <TabNav className={styles.tabs}>
-        <TabNavItem
-          href={`/security/${SecurityTabs.Captcha}`}
-          isActive={tab === SecurityTabs.Captcha}
-        >
-          {t('security.tabs.captcha')}
-        </TabNavItem>
         {isDevFeaturesEnabled && (
           <TabNavItem
             href={`/security/${SecurityTabs.PasswordPolicy}`}
@@ -46,6 +40,12 @@ function Security({ tab }: Props) {
             {t('security.tabs.password_policy')}
           </TabNavItem>
         )}
+        <TabNavItem
+          href={`/security/${SecurityTabs.Captcha}`}
+          isActive={tab === SecurityTabs.Captcha}
+        >
+          {t('security.tabs.captcha')}
+        </TabNavItem>
         {isDevFeaturesEnabled && (
           <TabNavItem
             href={`/security/${SecurityTabs.General}`}
