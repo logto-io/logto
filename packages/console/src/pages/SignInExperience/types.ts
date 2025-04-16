@@ -86,7 +86,7 @@ export type SignInMethodsObject = Record<
  * as they are not managed by the sign-in experience page.
  *
  * - Those keys should be omitted from the form data.
- * - Those keys should be ommited from the submitted data.
+ * - Those keys should be omitted from the submitted data.
  * - Those keys should not be used in any data comparison logic.
  */
 export type SignInExperiencePageManagedData = Omit<SignInExperience, OmittedSignInExperienceKeys>;
