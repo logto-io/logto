@@ -19,8 +19,11 @@ import { trySubmitSafe } from '@/utils/form';
 import Preview from '../components/Preview';
 import { SignInExperienceContext } from '../contexts/SignInExperienceContextProvider';
 import usePreviewConfigs from '../hooks/use-preview-configs';
-import { SignInExperienceTab } from '../types';
-import { type SignInExperienceForm } from '../types';
+import {
+  SignInExperienceTab,
+  type SignInExperiencePageManagedData,
+  type SignInExperienceForm,
+} from '../types';
 
 import Branding from './Branding';
 import Content from './Content';
@@ -34,7 +37,7 @@ import {
   getContentErrorCount,
   hasSignUpAndSignInConfigChanged,
 } from './utils/form';
-import { sieFormDataParser, signInExperienceDataDefaultValueParser } from './utils/parser';
+import { sieFormDataParser, signInExperienceToUpdatedDataParser } from './utils/parser';
 
 const PageTab = TabNavItem<`../${SignInExperienceTab}`>;
 
@@ -52,7 +55,7 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
   const { getPathname } = useTenantPathname();
   const { isUploading, cancelUpload } = useContext(SignInExperienceContext);
 
-  const [dataToCompare, setDataToCompare] = useState<SignInExperience>();
+  const [dataToCompare, setDataToCompare] = useState<SignInExperiencePageManagedData>();
 
   const methods = useForm<SignInExperienceForm>({
     defaultValues: sieFormDataParser.fromSignInExperience(data),
@@ -76,7 +79,7 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
     try {
       const updatedData = await api
         .patch('api/sign-in-exp', {
-          json: sieFormDataParser.toUpdateSignInExperienceData(getValues()),
+          json: sieFormDataParser.toSignInExperience(getValues()),
         })
         .json<SignInExperience>();
 
@@ -97,7 +100,7 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
       }
 
       const formatted = sieFormDataParser.toSignInExperience(formData);
-      const original = signInExperienceDataDefaultValueParser(data);
+      const original = signInExperienceToUpdatedDataParser(data);
 
       // Sign-in methods changed, need to show confirm modal first.
       if (!hasSignUpAndSignInConfigChanged(original, formatted)) {

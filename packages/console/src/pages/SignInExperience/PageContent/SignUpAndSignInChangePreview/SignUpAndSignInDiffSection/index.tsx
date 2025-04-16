@@ -1,12 +1,12 @@
-import type { SignInExperience } from '@logto/schemas';
+import { type SignInExperiencePageManagedData } from '@/pages/SignInExperience/types';
 
 import SignInDiffSection from './SignInDiffSection';
 import SignUpDiffSection from './SignUpDiffSection';
 import SocialTargetsDiffSection from './SocialTargetsDiffSection';
 
 type Props = {
-  readonly before: SignInExperience;
-  readonly after: SignInExperience;
+  readonly before: SignInExperiencePageManagedData;
+  readonly after: SignInExperiencePageManagedData;
   readonly isAfter?: boolean;
 };
 

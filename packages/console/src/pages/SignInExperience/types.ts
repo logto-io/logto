@@ -6,6 +6,16 @@ import {
   type SignUpIdentifier as SignUpIdentifierMethod,
 } from '@logto/schemas';
 
+// TODO: Should also remove password policy from the sign-in experience once the security is ready
+/**
+ * Omit the `mfa`, `captchaPolicy`, and `sentinelPolicy` fields from the sign-in experience.
+ * Since those fields are not managed by the sign-in experience page.
+ */
+type OmittedSignInExperienceKeys = keyof Pick<
+  SignInExperience,
+  'mfa' | 'captchaPolicy' | 'sentinelPolicy'
+>;
+
 export enum SignInExperienceTab {
   Branding = 'branding',
   SignUpAndSignIn = 'sign-up-and-sign-in',
@@ -41,7 +51,7 @@ export type SignUpForm = Omit<SignUp, 'identifiers' | 'secondaryIdentifiers'> & 
 
 export type SignInExperienceForm = Omit<
   SignInExperience,
-  'signUp' | 'customCss' | 'passwordPolicy'
+  'signUp' | 'customCss' | 'passwordPolicy' | OmittedSignInExperienceKeys
 > & {
   customCss?: string; // Code editor components can not properly handle null value, manually transform null to undefined instead.
   signUp: SignUpForm;
@@ -70,10 +80,13 @@ export type SignInMethodsObject = Record<
   { password: boolean; verificationCode: boolean }
 >;
 
-export type UpdateSignInExperienceData = Omit<SignInExperience, 'mfa'> & {
-  /**
-   * `mfa` data will not be updated in the sign-in experience page.
-   * Hard code it to `undefined` to have a better type checking when constructing the update data.
-   */
-  mfa: undefined;
-};
+/**
+ * The managed data of the sign-in experience page.
+ * This type omits the properties defined in @see {OmittedSignInExperienceKeys},
+ * as they are not managed by the sign-in experience page.
+ *
+ * - Those keys should be omitted from the form data.
+ * - Those keys should be omitted from the submitted data.
+ * - Those keys should not be used in any data comparison logic.
+ */
+export type SignInExperiencePageManagedData = Omit<SignInExperience, OmittedSignInExperienceKeys>;

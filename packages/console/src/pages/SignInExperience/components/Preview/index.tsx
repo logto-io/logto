@@ -1,6 +1,6 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { languages as uiLanguageNameMapping } from '@logto/language-kit';
-import { type SignInExperience, Theme } from '@logto/schemas';
+import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,13 +13,15 @@ import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useConnectorGroups from '@/hooks/use-connector-groups';
 import useUiLanguages from '@/hooks/use-ui-languages';
 
+import { type SignInExperiencePageManagedData } from '../../types';
+
 import styles from './index.module.scss';
 
 type Props = {
   readonly isLivePreviewDisabled?: boolean;
   readonly isLivePreviewEntryInvisible?: boolean;
   readonly isPreviewIframeDisabled?: boolean;
-  readonly signInExperience?: SignInExperience;
+  readonly signInExperience?: SignInExperiencePageManagedData;
   readonly className?: string;
 };
 
