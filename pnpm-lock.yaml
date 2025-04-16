@@ -4337,13 +4337,13 @@ importers:
         version: link:../shared
       '@withtyped/server':
         specifier: ^0.14.0
-        version: 0.14.0(zod@3.23.8)
+        version: 0.14.0(zod@3.24.2)
       nanoid:
         specifier: ^5.0.9
         version: 5.0.9
       zod:
         specifier: ^3.23.8
-        version: 3.23.8
+        version: 3.24.2
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -4695,8 +4695,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       http-proxy-middleware:
-        specifier: ^3.0.3
-        version: 3.0.3
+        specifier: ^3.0.5
+        version: 3.0.5
       mime:
         specifier: ^4.0.4
         version: 4.0.4
@@ -7278,8 +7278,8 @@ packages:
   '@types/http-errors@2.0.4':
     resolution: {integrity: sha512-D0CFMMtydbJAegzOyHjtiKPLlvnm3iTZyZRSZoLq2mRhDdmLfIWOCYPfQJ4cu2erKghU++QvjcUjp/5h7hESpA==}
 
-  '@types/http-proxy@1.17.15':
-    resolution: {integrity: sha512-25g5atgiVNTIv0LBDTg1H74Hvayx0ajtJPLLcYE3whFv75J0pWNtOBzaXJQgDTmrX1bx5U9YC2w/n65BN1HwRQ==}
+  '@types/http-proxy@1.17.16':
+    resolution: {integrity: sha512-sdWoUajOB1cd0A8cRRQ1cfyWNbmFKLAqBB89Y8x5iYyG/mkJHc0YUH8pdWBy2omi9qtCpiIgGjuwO0dQST2l5w==}
 
   '@types/inquirer@9.0.3':
     resolution: {integrity: sha512-CzNkWqQftcmk2jaCWdBTf9Sm7xSw4rkI1zpU/Udw3HX5//adEZUIm9STtoRP1qgWj0CWQtJ9UTvqmO2NNjhMJw==}
@@ -10212,8 +10212,8 @@ packages:
     resolution: {integrity: sha512-T1gkAiYYDWYx3V5Bmyu7HcfcvL7mUrTWiM6yOfa3PIphViJ/gFPbvidQ+veqSOHci/PxBcDabeUNCzpOODJZig==}
     engines: {node: '>= 14'}
 
-  http-proxy-middleware@3.0.3:
-    resolution: {integrity: sha512-usY0HG5nyDUwtqpiZdETNbmKtw3QQ1jwYFZ9wi5iHzX2BcILwQKtYDJPo7XHTsu5Z0B2Hj3W9NNnbd+AjFWjqg==}
+  http-proxy-middleware@3.0.5:
+    resolution: {integrity: sha512-GLZZm1X38BPY4lkXA01jhwxvDoOkkXqjgVyUzVxiEK4iuRu03PZoYHhHRwxnfhQMDuaxi3vVri0YgSro/1oWqg==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
 
   http-proxy@1.18.1:
@@ -17984,7 +17984,7 @@ snapshots:
 
   '@types/http-errors@2.0.4': {}
 
-  '@types/http-proxy@1.17.15':
+  '@types/http-proxy@1.17.16':
     dependencies:
       '@types/node': 22.14.1
 
@@ -18855,6 +18855,13 @@ snapshots:
       '@withtyped/shared': 0.2.2
       nanoid: 5.0.9
       zod: 3.23.8
+
+  '@withtyped/server@0.14.0(zod@3.24.2)':
+    dependencies:
+      '@silverhand/essentials': 2.9.1
+      '@withtyped/shared': 0.2.2
+      nanoid: 5.0.9
+      zod: 3.24.2
 
   '@withtyped/shared@0.2.2': {}
 
@@ -21645,9 +21652,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  http-proxy-middleware@3.0.3:
+  http-proxy-middleware@3.0.5:
     dependencies:
-      '@types/http-proxy': 1.17.15
+      '@types/http-proxy': 1.17.16
       debug: 4.4.0
       http-proxy: 1.18.1(debug@4.4.0)
       is-glob: 4.0.3
