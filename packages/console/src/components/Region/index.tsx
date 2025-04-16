@@ -1,27 +1,23 @@
+import { type PublicRegionName } from '@logto/cloud/routes';
 import classNames from 'classnames';
 import { type FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import auFlag from './assets/au.svg?react';
 import euFlag from './assets/eu.svg?react';
-import crescLabJpFlag from './assets/jp.svg?react';
+import jpFlag from './assets/jp.svg?react';
 import usFlag from './assets/us.svg?react';
 import styles from './index.module.scss';
 
-// TODO: This is a copy from `@logto/cloud-models`, make a SSoT for this later
-export enum RegionName {
-  EU = 'EU',
-  US = 'US',
-  AU = 'AU',
-  CrescLabJP = 'CRESCLAB_JP',
-}
+export const defaultRegionName = 'EU' satisfies PublicRegionName;
 
-const regionDisplayNameMap: Readonly<Record<string, string>> = Object.freeze({
-  [RegionName.EU]: 'Europe',
-  [RegionName.US]: 'West US',
-  [RegionName.AU]: 'Australia',
-  [RegionName.CrescLabJP]: 'Japan',
-});
+const regionDisplayNameMap: Readonly<Record<PublicRegionName, string> & Record<string, string>> =
+  Object.freeze({
+    EU: 'Europe',
+    US: 'West US',
+    AU: 'Australia',
+    JP: 'Japan',
+  });
 
 /**
  * Get the display name of the region. If the region is not in the map, return the original region
@@ -32,10 +28,10 @@ export const getRegionDisplayName = (regionName: string) =>
 
 const regionFlagMap: Readonly<Record<string, FunctionComponent<React.SVGProps<SVGSVGElement>>>> =
   Object.freeze({
-    [RegionName.EU]: euFlag,
-    [RegionName.US]: usFlag,
-    [RegionName.AU]: auFlag,
-    [RegionName.CrescLabJP]: crescLabJpFlag,
+    EU: euFlag,
+    US: usFlag,
+    AU: auFlag,
+    JP: jpFlag,
   });
 
 type RegionFlagProps = {
@@ -44,12 +40,15 @@ type RegionFlagProps = {
 };
 
 export function RegionFlag({ regionName, width = 16 }: RegionFlagProps) {
-  const Flag = regionFlagMap[regionName];
+  // If the region name is not in the map, try to find a part of the region name that matches
+  // the keys in the map. E.g. "WEST_US" will match "US" and return the US flag.
+  const Flag =
+    regionFlagMap[regionName] ?? regionName.split('_').find((part) => regionFlagMap[part]);
   return Flag ? <Flag width={width} /> : null;
 }
 
 type Props = {
-  readonly regionName: RegionName;
+  readonly regionName: string;
   readonly isComingSoon?: boolean;
   readonly className?: string;
 };
