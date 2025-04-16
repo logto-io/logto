@@ -120,10 +120,9 @@ const ForgotPasswordForm = ({ className, autoFocus, defaultValue = '', enabledTy
         )}
       />
 
-      <CaptchaBox />
-
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
+      <CaptchaBox />
       <Button title="action.continue" htmlType="submit" isLoading={isSubmitting} />
 
       <input hidden type="submit" />

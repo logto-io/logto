@@ -114,14 +114,13 @@ const PasswordForm = ({
         {...register('password', { required: t('error.password_required') })}
       />
 
-      <CaptchaBox />
-
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
       {isForgotPasswordEnabled && (
         <ForgotPasswordLink className={styles.link} identifier={identifier} value={value} />
       )}
 
+      <CaptchaBox />
       <Button title="action.continue" name="submit" htmlType="submit" isLoading={isSubmitting} />
 
       {identifier !== SignInIdentifier.Username && isVerificationCodeEnabled && (
