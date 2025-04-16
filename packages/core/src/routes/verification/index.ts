@@ -47,6 +47,7 @@ export default function verificationRoutes<T extends UserRouter>(
       });
       await withSentinel(
         {
+          ctx,
           sentinel,
           action: SentinelActivityAction.Password,
           identifier: {
@@ -151,6 +152,7 @@ export default function verificationRoutes<T extends UserRouter>(
 
       await withSentinel(
         {
+          ctx,
           sentinel,
           action: SentinelActivityAction.VerificationCode,
           identifier,

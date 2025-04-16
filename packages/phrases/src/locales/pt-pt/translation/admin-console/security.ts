@@ -1,31 +1,3 @@
-const password_policy = {
-  password_requirements: 'Requisitos de password',
-  minimum_length: 'Comprimento mínimo',
-  minimum_length_description:
-    'O NIST sugere o uso de <a>pelo menos 8 caracteres</a> para produtos web.',
-  minimum_length_error: 'O comprimento mínimo deve estar entre {{min}} e {{max}} (inclusive).',
-  minimum_required_char_types: 'Tipos de caracteres mínimos necessários',
-  minimum_required_char_types_description:
-    'Tipos de caracteres: letras maiúsculas (A-Z), letras minúsculas (a-z), números (0-9) e símbolos especiais ({{symbols}}).',
-  password_rejection: 'Rejeição de password',
-  compromised_passwords: 'Passwords comprometidos',
-  breached_passwords: 'Passwords violados',
-  breached_passwords_description:
-    'Recusar passwords encontradas anteriormente em bancos de dados de violação.',
-  restricted_phrases: 'Frases de baixa segurança restritas',
-  restricted_phrases_tooltip:
-    'Your password should avoid these phrases unless you combine with 3 or more extra characters.',
-  repetitive_or_sequential_characters: 'Caracteres repetitivos ou sequenciais',
-  repetitive_or_sequential_characters_description: 'Ex., "AAAA", "1234" e "abcd".',
-  user_information: 'Informações do utilizador',
-  user_information_description:
-    'Ex., endereço de email, número de telefone, nome de utilizador, etc.',
-  custom_words: 'Palavras personalizadas',
-  custom_words_description:
-    'Personalize palavras específicas do contexto, não diferenciando maiúsculas de minúsculas e uma por linha.',
-  custom_words_placeholder: 'Nome de seu serviço, nome da empresa, etc.',
-};
-
 const security = {
   page_title: 'Segurança',
   title: 'Segurança',
@@ -33,6 +5,7 @@ const security = {
   tabs: {
     captcha: 'CAPTCHA',
     password_policy: 'Política de password',
+    general: 'Geral',
   },
   bot_protection: {
     title: 'Proteção contra bots',
@@ -79,7 +52,67 @@ const security = {
     captcha_deleted: 'Fornecedor de CAPTCHA eliminado com sucesso',
     setup_captcha: 'Configurar CAPTCHA',
   },
-  password_policy,
+  password_policy: {
+    password_requirements: 'Requisitos de password',
+    password_requirements_description:
+      'Aprimorar os requisitos de senha para se defender contra ataques de stuffing de credenciais e senhas fracas. ',
+    minimum_length: 'Comprimento mínimo',
+    minimum_length_description:
+      'O NIST sugere o uso de <a>pelo menos 8 caracteres</a> para produtos web.',
+    minimum_length_error: 'O comprimento mínimo deve estar entre {{min}} e {{max}} (inclusive).',
+    minimum_required_char_types: 'Tipos de caracteres mínimos necessários',
+    minimum_required_char_types_description:
+      'Tipos de caracteres: letras maiúsculas (A-Z), letras minúsculas (a-z), números (0-9) e símbolos especiais ({{symbols}}).',
+    password_rejection: 'Rejeição de password',
+    compromised_passwords: 'Passwords comprometidos',
+    breached_passwords: 'Passwords violados',
+    breached_passwords_description:
+      'Recusar passwords encontradas anteriormente em bancos de dados de violação.',
+    restricted_phrases: 'Frases de baixa segurança restritas',
+    restricted_phrases_tooltip:
+      'Your password should avoid these phrases unless you combine with 3 or more extra characters.',
+    repetitive_or_sequential_characters: 'Caracteres repetitivos ou sequenciais',
+    repetitive_or_sequential_characters_description: 'Ex., "AAAA", "1234" e "abcd".',
+    user_information: 'Informações do utilizador',
+    user_information_description:
+      'Ex., endereço de email, número de telefone, nome de utilizador, etc.',
+    custom_words: 'Palavras personalizadas',
+    custom_words_description:
+      'Personalize palavras específicas do contexto, não diferenciando maiúsculas de minúsculas e uma por linha.',
+    custom_words_placeholder: 'Nome de seu serviço, nome da empresa, etc.',
+  },
+  sentinel_policy: {
+    card_title: 'Bloqueio de identificador',
+    card_description:
+      'Bloqueie um identificador provisoriamente após várias tentativas de autenticação falhadas (por exemplo, login com senha incorreta consecutiva ou código de verificação) para evitar acesso por força bruta.',
+    max_attempts: {
+      title: 'Máximo de tentativas falhadas',
+      description:
+        'Limite as tentativas de login consecutivas falhadas por identificador. Exceder este limite aciona um bloqueio temporário.',
+      error_message: 'O máximo de tentativas falhadas deve ser maior que 0.',
+    },
+    lockout_duration: {
+      title: 'Duração do bloqueio (minutos)',
+      description:
+        'Bloquear login por um período após exceder o limite máximo de tentativas falhadas.',
+      error_message: 'A duração do bloqueio deve ser de pelo menos 1 minuto.',
+    },
+    manual_unlock: {
+      title: 'Desbloqueio manual',
+      description:
+        'Desbloqueie usuários imediatamente confirmando sua identidade e inserindo seu identificador.',
+      unblock_by_identifiers: 'Desbloquear por identificador',
+      modal_description_1:
+        'Um identificador foi temporariamente bloqueado devido a várias tentativas de login/registro falhadas. Para proteger a segurança, o acesso será restaurado automaticamente após a duração do bloqueio.',
+      modal_description_2:
+        'Desbloqueie manualmente apenas se você tiver certeza da identidade do usuário e garantido que não houve tentativas de acesso não autorizado.',
+      placeholder:
+        'Insira identificadores (endereço de email / número de telefone / nome de utilizador)',
+      confirm_button_text: 'Desbloquear agora',
+      success_toast: 'Desbloqueado com sucesso',
+      duplicate_identifier_error: 'Identificador já adicionado',
+    },
+  },
 };
 
 export default Object.freeze(security);

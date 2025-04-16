@@ -1,59 +1,3 @@
-const password_policy = {
-  password_requirements: 'Password requirements',
-  minimum_length: 'Minimum length',
-  minimum_length_description: 'NIST suggests using <a>at least 8 characters</a> for web products.',
-  minimum_length_error: 'Minimum length must be between {{min}} and {{max}} (inclusive).',
-  minimum_required_char_types: 'Minimum required character types',
-  minimum_required_char_types_description:
-    'Character types: uppercase (A-Z), lowercase (a-z), numbers (0-9), and special symbols ({{symbols}}).',
-  password_rejection: 'Password rejection',
-  compromised_passwords: 'Reject compromised password',
-  breached_passwords: 'Breached passwords',
-  breached_passwords_description: 'Reject passwords previously found in breach databases.',
-  restricted_phrases: 'Restrict low-security phrases',
-  restricted_phrases_tooltip:
-    'Your password should avoid these phrases unless you combine with 3 or more extra characters.',
-  repetitive_or_sequential_characters: 'Repetitive or sequential characters',
-  repetitive_or_sequential_characters_description: 'E.g., "AAAA", "1234", and "abcd".',
-  user_information: 'User information',
-  user_information_description: 'E.g., email address, phone number, username, etc.',
-  custom_words: 'Custom words',
-  custom_words_description:
-    'Personalize context-specific words, case-insensitive, and one per line.',
-  custom_words_placeholder: 'Your service name, company name, etc.',
-};
-
-const sentinel_policy = {
-  card_title: 'Identifier lockout',
-  card_description:
-    'Lock an identifier provisionally after multiple failed authentication (e.g., sign-in with consecutive incorrect password or verification code) to prevent brute force access.',
-  max_attempts: {
-    title: 'Maximum failed attempts',
-    description:
-      'Limit consecutive failed sign-ins per identifier. Exceeding this limit trigger a temporary block.',
-    error_message: 'Maximum failed attempts must be greater than 0.',
-  },
-  lockout_duration: {
-    title: 'Lockout duration (minutes)',
-    description: 'Block sign-ins for a period after exceeding the maximum failed attempts limit.',
-    error_message: 'Lockout duration must be at least 1 minute.',
-  },
-  manual_unlock: {
-    title: 'Manual unlock',
-    description:
-      'Unlock users immediately by confirming their identity and entering their identifier.',
-    unblock_by_identifiers: 'Unblock by identifier',
-    modal_description_1:
-      'An identifier was temporarily locked due to multiple failed sign-in/sign-up attempts. To protect security, access will automatically restore after the lockout duration.',
-    modal_description_2:
-      ' Only unlock manually if you’ve confirmed the user’s identity and ensured no unauthorized access attempts.',
-    placeholder: 'Enter identifiers (e.g., email or username)',
-    confirm_button_text: 'Unlock now',
-    success_toast: 'Unlocked successfully',
-    duplicate_identifier_error: 'Identifier already added',
-  },
-};
-
 const security = {
   page_title: 'Security',
   title: 'Security',
@@ -108,8 +52,63 @@ const security = {
     captcha_deleted: 'CAPTCHA provider deleted successfully',
     setup_captcha: 'Setup CAPTCHA',
   },
-  password_policy,
-  sentinel_policy,
+  password_policy: {
+    password_requirements: 'Password requirements',
+    password_requirements_description:
+      'Enhance password requirements to defend against credential stuffing and weak password attacks. ',
+    minimum_length: 'Minimum length',
+    minimum_length_description:
+      'NIST suggests using <a>at least 8 characters</a> for web products.',
+    minimum_length_error: 'Minimum length must be between {{min}} and {{max}} (inclusive).',
+    minimum_required_char_types: 'Minimum required character types',
+    minimum_required_char_types_description:
+      'Character types: uppercase (A-Z), lowercase (a-z), numbers (0-9), and special symbols ({{symbols}}).',
+    password_rejection: 'Password rejection',
+    compromised_passwords: 'Reject compromised password',
+    breached_passwords: 'Breached passwords',
+    breached_passwords_description: 'Reject passwords previously found in breach databases.',
+    restricted_phrases: 'Restrict low-security phrases',
+    restricted_phrases_tooltip:
+      'Your password should avoid these phrases unless you combine with 3 or more extra characters.',
+    repetitive_or_sequential_characters: 'Repetitive or sequential characters',
+    repetitive_or_sequential_characters_description: 'E.g., "AAAA", "1234", and "abcd".',
+    user_information: 'User information',
+    user_information_description: 'E.g., email address, phone number, username, etc.',
+    custom_words: 'Custom words',
+    custom_words_description:
+      'Personalize context-specific words, case-insensitive, and one per line.',
+    custom_words_placeholder: 'Your service name, company name, etc.',
+  },
+  sentinel_policy: {
+    card_title: 'Identifier lockout',
+    card_description:
+      'Lock an identifier provisionally after multiple failed authentication (e.g., sign-in with consecutive incorrect password or verification code) to prevent brute force access.',
+    max_attempts: {
+      title: 'Maximum failed attempts',
+      description:
+        'Limit consecutive failed sign-ins per identifier. Exceeding this limit trigger a temporary block.',
+      error_message: 'Maximum failed attempts must be greater than 0.',
+    },
+    lockout_duration: {
+      title: 'Lockout duration (minutes)',
+      description: 'Block sign-ins for a period after exceeding the maximum failed attempts limit.',
+      error_message: 'Lockout duration must be at least 1 minute.',
+    },
+    manual_unlock: {
+      title: 'Manual unlock',
+      description:
+        'Unlock users immediately by confirming their identity and entering their identifier.',
+      unblock_by_identifiers: 'Unblock by identifier',
+      modal_description_1:
+        'An identifier was temporarily locked due to multiple failed sign-in/sign-up attempts. To protect security, access will automatically restore after the lockout duration.',
+      modal_description_2:
+        ' Only unlock manually if you’ve confirmed the user’s identity and ensured no unauthorized access attempts.',
+      placeholder: 'Enter identifiers (email address / phone number / username)',
+      confirm_button_text: 'Unlock now',
+      success_toast: 'Unlocked successfully',
+      duplicate_identifier_error: 'Identifier already added',
+    },
+  },
 };
 
 export default Object.freeze(security);

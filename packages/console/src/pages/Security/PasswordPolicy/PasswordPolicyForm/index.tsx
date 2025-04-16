@@ -10,6 +10,7 @@ import { useSWRConfig } from 'swr';
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import { passwordPolicy } from '@/consts';
 import FormField from '@/ds-components/FormField';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import NumericInput from '@/ds-components/TextInput/NumericInput';
@@ -85,7 +86,13 @@ function PasswordPolicyForm({ data }: Props) {
           onSubmit={onSubmit}
           onDiscard={reset}
         >
-          <FormCard title="security.password_policy.password_requirements">
+          <FormCard
+            title="security.password_policy.password_requirements"
+            description="security.password_policy.password_requirements_description"
+            learnMoreLink={{
+              href: passwordPolicy,
+            }}
+          >
             <FormField title="security.password_policy.minimum_length">
               <div className={styles.formFieldDescription}>
                 <Trans
