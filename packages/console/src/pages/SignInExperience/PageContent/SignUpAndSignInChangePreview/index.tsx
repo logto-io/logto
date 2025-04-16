@@ -1,13 +1,14 @@
-import type { SignInExperience } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
+
+import { type SignInExperiencePageManagedData } from '../../types';
 
 import PasswordDisabledNotification from './PasswordDisabledNotification';
 import SignUpAndSignInDiffSection from './SignUpAndSignInDiffSection';
 import styles from './index.module.scss';
 
 type Props = {
-  readonly before: SignInExperience;
-  readonly after: SignInExperience;
+  readonly before: SignInExperiencePageManagedData;
+  readonly after: SignInExperiencePageManagedData;
 };
 
 function SignUpAndSignInChangePreview({ before, after }: Props) {

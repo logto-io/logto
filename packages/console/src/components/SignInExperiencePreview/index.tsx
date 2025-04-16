@@ -1,18 +1,10 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { Theme, ConnectorType } from '@logto/schemas';
-import type { ConnectorMetadata, SignInExperience, ConnectorResponse } from '@logto/schemas';
+import type { ConnectorMetadata, ConnectorResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { format } from 'date-fns';
-import {
-  useContext,
-  useRef,
-  useMemo,
-  useCallback,
-  useEffect,
-  useState,
-  type ReactNode,
-} from 'react';
+import { useContext, useRef, useMemo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
@@ -20,6 +12,7 @@ import PhoneInfo from '@/assets/images/phone-info.svg?react';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import type { RequestError } from '@/hooks/use-api';
 import useUiLanguages from '@/hooks/use-ui-languages';
+import { type SignInExperiencePageManagedData } from '@/pages/SignInExperience/types';
 
 import styles from './index.module.scss';
 import { PreviewPlatform } from './types';
@@ -30,7 +23,7 @@ type Props = {
   readonly platform: PreviewPlatform;
   readonly mode: Theme;
   readonly language?: LanguageTag;
-  readonly signInExperience?: SignInExperience;
+  readonly signInExperience?: SignInExperiencePageManagedData;
   /**
    * The Logto endpoint to use for the preview. If not provided, the current tenant endpoint from
    * the `AppDataContext` will be used.
@@ -42,10 +35,6 @@ type Props = {
    */
   // eslint-disable-next-line react/boolean-prop-naming
   readonly disabled?: boolean;
-  /**
-   * The placeholder to show when the preview is disabled.
-   */
-  readonly disabledPlaceholder?: ReactNode;
 };
 
 function SignInExperiencePreview({
@@ -55,7 +44,6 @@ function SignInExperiencePreview({
   signInExperience,
   endpoint: endpointInput,
   disabled = false,
-  disabledPlaceholder,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 

@@ -1,13 +1,14 @@
-import { SignInIdentifier, type SignInExperience } from '@logto/schemas';
+import { SignInIdentifier } from '@logto/schemas';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import InlineNotification from '@/ds-components/InlineNotification';
 
+import { type SignInExperiencePageManagedData } from '../../types';
 import { signUpFormDataParser } from '../utils/parser';
 
 type Props = {
-  readonly after: SignInExperience;
+  readonly after: SignInExperiencePageManagedData;
   readonly className?: string;
 };
 

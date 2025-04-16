@@ -12,7 +12,7 @@ import { emptyBranding } from '@/types/sign-in-experience';
 import { removeFalsyValues } from '@/utils/object';
 
 import {
-  type UpdateSignInExperienceData,
+  type SignInExperiencePageManagedData,
   type SignInExperienceForm,
   type SignUpForm,
 } from '../../types';
@@ -114,12 +114,23 @@ export const signUpFormDataParser = {
 
 export const sieFormDataParser = {
   fromSignInExperience: (data: SignInExperience): SignInExperienceForm => {
-    const { signUp, signInMode, customCss, branding, passwordPolicy } = data;
+    const {
+      signUp,
+      customCss,
+      branding,
+      passwordPolicy,
+      // Start: Remove the omitted fields from the data
+      mfa,
+      captchaPolicy,
+      sentinelPolicy,
+      // End: Remove the omitted fields from the data
+      ...rest
+    } = data;
 
     return {
-      ...data,
+      ...rest,
       signUp: signUpFormDataParser.fromSignUp(signUp),
-      createAccountEnabled: signInMode !== SignInMode.SignIn,
+      createAccountEnabled: rest.signInMode !== SignInMode.SignIn,
       customCss: customCss ?? undefined,
       branding: {
         ...emptyBranding,
@@ -133,7 +144,7 @@ export const sieFormDataParser = {
       },
     };
   },
-  toSignInExperience: (formData: SignInExperienceForm): SignInExperience => {
+  toSignInExperience: (formData: SignInExperienceForm): SignInExperiencePageManagedData => {
     const {
       branding,
       createAccountEnabled,
@@ -158,29 +169,38 @@ export const sieFormDataParser = {
       },
     };
   },
-  toUpdateSignInExperienceData: (formData: SignInExperienceForm): UpdateSignInExperienceData => ({
-    ...sieFormDataParser.toSignInExperience(formData),
-    mfa: undefined,
-  }),
 };
 
 /**
  * The data parser takes the raw data from the API,
- * and fulfills the default values for the missing fields.
+ * - fulfills the default values for the missing fields.
+ * - removes the omitted fields from the data, convert the @see {SignInExperience} to the @see {SignInExperiencePageManagedData}
+ *
  * This is to ensure the data consistency between the form and the remote model.
  * So it won't trigger the form diff modal when the user hasn't changed anything.
  *
  * Affected fields:
  * - `signUp.secondaryIdentifiers`: This field is optional in the data schema,
  *  but through the form, we always fill it with an empty array.
+ * - `mfa`: This field is omitted in the data schema,
+ * - `captchaPolicy`: This field is omitted in the data schema,
+ * - `sentinelPolicy`: This field is omitted in the data schema,
  */
-export const signInExperienceDataDefaultValueParser = (
+export const signInExperienceToUpdatedDataParser = (
   data: SignInExperience
-): SignInExperience => {
-  const { signUp } = data;
+): SignInExperiencePageManagedData => {
+  const {
+    signUp,
+    // Start: Remove the omitted fields from the data
+    mfa,
+    captchaPolicy,
+    sentinelPolicy,
+    // End: Remove the omitted fields from the data
+    ...rest
+  } = data;
 
   return {
-    ...data,
+    ...rest,
     signUp: {
       ...signUp,
       secondaryIdentifiers: signUp.secondaryIdentifiers ?? [],
