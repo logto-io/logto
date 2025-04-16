@@ -43,6 +43,7 @@ const sentinel = new TestSentinel(
 );
 const mockedTime = new Date('2021-01-01T00:00:00.000Z').valueOf();
 const mockedDefaultBlockedTime = addMinutes(mockedTime, 10).valueOf();
+
 const customSentinelPolicy = {
   maxAttempts: 7,
   lockoutDuration: 15,
@@ -61,6 +62,22 @@ afterEach(() => {
 });
 
 describe('BasicSentinel -> reportActivity()', () => {
+  // eslint-disable-next-line @silverhand/fp/no-let
+  let stub: Sinon.SinonStub;
+
+  // TODO: Remove this when the sentinel policy is fully integrated into the system.
+  beforeAll(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    stub = Sinon.stub(EnvSet, 'values').value({
+      ...EnvSet.values,
+      isDevFeaturesEnabled: false,
+    });
+  });
+
+  afterAll(() => {
+    stub.restore();
+  });
+
   beforeEach(() => {
     findDefaultSignInExperienceMock.mockResolvedValue(mockSignInExperience);
   });
@@ -94,6 +111,22 @@ describe('BasicSentinel -> reportActivity()', () => {
 });
 
 describe('BasicSentinel -> decide()', () => {
+  // eslint-disable-next-line @silverhand/fp/no-let
+  let stub: Sinon.SinonStub;
+
+  // TODO: Remove this when the sentinel policy is fully integrated into the system.
+  beforeAll(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    stub = Sinon.stub(EnvSet, 'values').value({
+      ...EnvSet.values,
+      isDevFeaturesEnabled: false,
+    });
+  });
+
+  afterAll(() => {
+    stub.restore();
+  });
+
   beforeEach(() => {
     findDefaultSignInExperienceMock.mockResolvedValue(mockSignInExperience);
   });
@@ -160,6 +193,20 @@ describe('BasicSentinel  with custom policy', () => {
       ...mockSignInExperience,
       sentinelPolicy: customSentinelPolicy,
     });
+  });
+
+  it('should insert an activity', async () => {
+    methods.maybeOne.mockResolvedValueOnce(null);
+    methods.oneFirst.mockResolvedValueOnce(0);
+
+    const activity = createMockActivityReport();
+    const decision = await sentinel.reportActivity(activity);
+
+    expect(decision).toStrictEqual([SentinelDecision.Allowed, mockedTime]);
+    expect(methods.query).toHaveBeenCalledTimes(1);
+    expect(methods.query).toHaveBeenCalledWith(
+      expectSqlString('insert into "sentinel_activities"')
+    );
   });
 
   it('should insert a blocked activity', async () => {
