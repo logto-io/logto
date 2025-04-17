@@ -6,7 +6,7 @@
 
 add one-time token verification method to support magic link authentication
 
-Application developers can now use the "one-time token" to compose magic links, and send them to the end user's email.
+You can now use the "one-time token" to compose magic links, and send them to the end user's email.
 With a magic link, one can register a new account or sign in directly to the application, without the need to enter a password, or input verification codes.
 
 You can also use magic link to invite users to your organizations.
@@ -19,7 +19,7 @@ POST /api/one-time-tokens
 
 Request payload:
 
-```json
+```jsonc
 {
   "email": "user@example.com",
   // Optional. Defaults to 600 (10 mins).
