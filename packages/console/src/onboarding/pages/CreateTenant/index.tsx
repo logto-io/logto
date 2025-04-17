@@ -13,7 +13,7 @@ import ActionBar from '@/components/ActionBar';
 import { GtagConversionId, reportConversion } from '@/components/Conversion/utils';
 import { type CreateTenantData } from '@/components/CreateTenantModal/types';
 import PageMeta from '@/components/PageMeta';
-import Region, { RegionName } from '@/components/Region';
+import Region, { defaultRegionName } from '@/components/Region';
 import { availableRegions } from '@/consts';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
@@ -34,7 +34,7 @@ type CreateTenantForm = Omit<CreateTenantData, 'tag'> & { collaboratorEmails: In
 
 function CreateTenant() {
   const methods = useForm<CreateTenantForm>({
-    defaultValues: { name: 'My project', regionName: RegionName.EU, collaboratorEmails: [] },
+    defaultValues: { name: 'My project', regionName: defaultRegionName, collaboratorEmails: [] },
   });
   const {
     control,

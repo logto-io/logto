@@ -9,7 +9,7 @@ import CreateTenantHeaderIconDark from '@/assets/icons/create-tenant-header-dark
 import CreateTenantHeaderIcon from '@/assets/icons/create-tenant-header.svg?react';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantResponse } from '@/cloud/types/router';
-import Region, { RegionName } from '@/components/Region';
+import Region, { defaultRegionName } from '@/components/Region';
 import { availableRegions } from '@/consts';
 import Button from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
@@ -37,7 +37,10 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
   const [tenantData, setTenantData] = useState<CreateTenantData>();
   const theme = useTheme();
 
-  const defaultValues = { tag: TenantTag.Development, regionName: RegionName.EU };
+  const defaultValues = Object.freeze({
+    tag: TenantTag.Development,
+    regionName: defaultRegionName,
+  });
   const methods = useForm<CreateTenantData>({
     defaultValues,
   });
