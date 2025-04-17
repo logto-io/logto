@@ -85,6 +85,7 @@ export const defaultLogtoSku: LogtoSkuResponse = {
     bringYourUiEnabled: true,
     idpInitiatedSsoEnabled: false,
     captchaEnabled: true,
+    securityFeaturesEnabled: true,
   },
 };
 
@@ -113,6 +114,7 @@ export const defaultSubscriptionQuota: NewSubscriptionQuota = {
   idpInitiatedSsoEnabled: false,
   samlApplicationsLimit: 0,
   captchaEnabled: false,
+  securityFeaturesEnabled: false,
 };
 
 export const defaultSubscriptionUsage: NewSubscriptionCountBasedUsage = {
@@ -136,6 +138,7 @@ export const defaultSubscriptionUsage: NewSubscriptionCountBasedUsage = {
   idpInitiatedSsoEnabled: false,
   samlApplicationsLimit: 0,
   captchaEnabled: false,
+  securityFeaturesEnabled: false,
 };
 
 const getAdminTenantEndpoint = () => {
