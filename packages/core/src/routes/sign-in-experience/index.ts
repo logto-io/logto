@@ -8,6 +8,7 @@ import { validateSignUp, validateSignIn } from '#src/libraries/sign-in-experienc
 import { validateMfa } from '#src/libraries/sign-in-experience/mfa.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
+import { EnvSet } from '../../env-set/index.js';
 import RequestError from '../../errors/RequestError/index.js';
 import { checkPasswordPolicyForUser } from '../../utils/password.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
@@ -71,12 +72,13 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
       status: [200, 400, 404, 422],
     }),
 
+    // eslint-disable-next-line complexity
     async (ctx, next) => {
       const {
         query: { removeUnusedDemoSocialConnector },
         body: { socialSignInConnectorTargets, ...rest },
       } = ctx.guard;
-      const { languageInfo, signUp, signIn, mfa } = rest;
+      const { languageInfo, signUp, signIn, mfa, sentinelPolicy } = rest;
 
       if (languageInfo) {
         await validateLanguageInfo(languageInfo);
@@ -108,6 +110,13 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           await quota.guardTenantUsageByKey('mfaEnabled');
         }
         validateMfa(mfa);
+      }
+
+      // TODO: Remove this when sentinel policy paywall is implemented
+      if (sentinelPolicy && !EnvSet.values.isDevFeaturesEnabled) {
+        throw new RequestError('request.invalid_input', {
+          message: 'Sentinel policy is not supported',
+        });
       }
 
       // Remove unused demo social connectors, those that are not selected in onboarding SIE config.
