@@ -1,6 +1,6 @@
 import { type PublicRegionName } from '@logto/cloud/routes';
 import classNames from 'classnames';
-import { type FunctionComponent } from 'react';
+import { useMemo, type FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import auFlag from './assets/au.svg?react';
@@ -40,10 +40,16 @@ type RegionFlagProps = {
 };
 
 export function RegionFlag({ regionName, width = 16 }: RegionFlagProps) {
-  // If the region name is not in the map, try to find a part of the region name that matches
-  // the keys in the map. E.g. "WEST_US" will match "US" and return the US flag.
-  const Flag =
-    regionFlagMap[regionName] ?? regionName.split('_').find((part) => regionFlagMap[part]);
+  // Try to find a part of the region name that matches the keys in the map. E.g. "WEST_US" will
+  // match "US" and return the US flag.
+  const Flag = useMemo(
+    () =>
+      regionName
+        .split('_')
+        .map((part) => regionFlagMap[part])
+        .find(Boolean),
+    [regionName]
+  );
   return Flag ? <Flag width={width} /> : null;
 }
 
