@@ -38,7 +38,7 @@ function ConsoleEmbeddedPricing() {
   } = useUserPreferences();
 
   const pricingContentUrl = useMemo(() => {
-    const baseUrl = new URL(condString(consoleEmbeddedPricingUrl));
+    const baseUrl = new URL(consoleEmbeddedPricingUrl);
     const { origin, pathname } = baseUrl;
 
     const localizedUrl = new URL(

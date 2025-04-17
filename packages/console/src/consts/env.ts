@@ -14,4 +14,6 @@ export const isDevFeaturesEnabled =
   yes(normalizeEnv(import.meta.env.DEV_FEATURES_ENABLED)) ||
   yes(localStorage.getItem(storageKeys.isDevFeaturesEnabled));
 
-export const consoleEmbeddedPricingUrl = normalizeEnv(import.meta.env.CONSOLE_EMBEDDED_PRICING_URL);
+export const consoleEmbeddedPricingUrl =
+  normalizeEnv(import.meta.env.CONSOLE_EMBEDDED_PRICING_URL) ??
+  'https://logto.io/console-embedded-pricing';
