@@ -27,6 +27,7 @@ export const tenantUsageGuard = z.object({
   enterpriseSsoLimit: z.number(),
   mfaEnabled: z.boolean(),
   organizationsLimit: z.number(),
+  securityFeaturesEnabled: z.boolean(),
   /** Enterprise only add-on quotas */
   idpInitiatedSsoEnabled: z.boolean(),
   samlApplicationsLimit: z.number(),
@@ -56,6 +57,7 @@ export const selfComputedSubscriptionUsageGuard = z.object({
   enterpriseSsoLimit: z.number(),
   mfaEnabled: z.boolean(),
   organizationsLimit: z.number(),
+  securityFeaturesEnabled: z.boolean(),
   /** Enterprise only add-on quotas */
   idpInitiatedSsoEnabled: z.boolean(),
   samlApplicationsLimit: z.number(),
