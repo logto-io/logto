@@ -107,8 +107,8 @@ const createRouters = (tenant: TenantContext) => {
   accountCentersRoutes(managementRouter, tenant);
   samlApplicationRoutes(managementRouter, tenant);
   emailTemplateRoutes(managementRouter, tenant);
+  oneTimeTokenRoutes(managementRouter, tenant);
   if (EnvSet.values.isDevFeaturesEnabled) {
-    oneTimeTokenRoutes(managementRouter, tenant);
     captchaProviderRoutes(managementRouter, tenant);
   }
 
