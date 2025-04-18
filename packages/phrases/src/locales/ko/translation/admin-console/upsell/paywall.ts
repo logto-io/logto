@@ -71,9 +71,8 @@ const paywall = {
       '사용자 정의 JWT 기능 및 프리미엄 혜택을 위해 유료 플랜으로 업그레이드하세요. 궁금한 점이 있으면 <a>문의하세요</a>.',
   },
   bring_your_ui: '사용자 정의 UI 기능과 프리미엄 혜택을 위해 유료 플랜으로 업그레이드하세요.',
-  /** UNTRANSLATED */
   security_features:
-    "Unlock advanced security features by upgrading to the Pro plan. Don't hesitate to <a>contact us</a> if you have any questions.",
+    '고급 보안 기능을 Pro 플랜으로 업그레이드하여 잠금 해제하세요. 궁금한 점이 있으면 <a>문의하세요</a>.',
 };
 
 export default Object.freeze(paywall);

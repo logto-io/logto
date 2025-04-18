@@ -72,9 +72,8 @@ const paywall = {
   },
   bring_your_ui:
     'Обновите план до платного, чтобы использовать собственный интерфейс и получать премиальные преимущества.',
-  /** UNTRANSLATED */
   security_features:
-    "Unlock advanced security features by upgrading to the Pro plan. Don't hesitate to <a>contact us</a> if you have any questions.",
+    'Разблокируйте расширенные функции безопасности, обновив план до Pro. Не стесняйтесь <a>связаться с нами</a>, если у вас есть какие-либо вопросы.',
 };
 
 export default Object.freeze(paywall);

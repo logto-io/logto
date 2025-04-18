@@ -1,9 +1,8 @@
 const add_on = {
   mfa_inline_notification:
     'MFA стоит ${{price, number}} в месяц в дополнение к {{planName}}. Первый месяц рассчитывается пропорционально в зависимости от вашего расчетного цикла. <a>Узнайте больше</a>',
-  /** UNTRANSLATED */
   security_features_inline_notification:
-    'Enable CAPTCHA, custom lockout experience, and other advanced security features—all included in an add-on bundle for just ${{price, number}}/month.',
+    'Включите CAPTCHA, нестандартное время блокировки и другие расширенные функции безопасности — все это включено в пакет дополнений всего за ${{price, number}}/месяц.',
   footer: {
     api_resource:
       'Дополнительные ресурсы стоят <span>${{price, number}} в месяц / каждый</span>. Первый месяц рассчитывается пропорционально в зависимости от вашего расчетного цикла. <a>Узнайте больше</a>',

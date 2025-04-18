@@ -72,9 +72,8 @@ const paywall = {
   },
   bring_your_ui:
     'Ulepsz do płatnego planu, aby uzyskać funkcję własnego interfejsu użytkownika i korzyści premium.',
-  /** UNTRANSLATED */
   security_features:
-    "Unlock advanced security features by upgrading to the Pro plan. Don't hesitate to <a>contact us</a> if you have any questions.",
+    'Odblokuj zaawansowane funkcje bezpieczeństwa, ulepszając do planu Pro. Nie wahaj się <a>skontaktować z nami</a>, jeśli masz jakieś pytania.',
 };
 
 export default Object.freeze(paywall);

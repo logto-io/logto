@@ -185,24 +185,16 @@ const quota_item = {
     not_eligible: 'SAML 애플리케이션을 제거하십시오',
   },
   captcha_enabled: {
-    /** UNTRANSLATED */
     name: 'CAPTCHA',
-    /** UNTRANSLATED */
     limited: 'CAPTCHA',
-    /** UNTRANSLATED */
     unlimited: 'CAPTCHA',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your CAPTCHA',
+    not_eligible: 'CAPTCHA 를 제거하십시오',
   },
   security_features_enabled: {
-    /** UNTRANSLATED */
-    name: 'Advanced security',
-    /** UNTRANSLATED */
-    limited: 'Advanced security',
-    /** UNTRANSLATED */
-    unlimited: 'Advanced security',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your advanced security settings',
+    name: '고급 보안',
+    limited: '고급 보안',
+    unlimited: '고급 보안',
+    not_eligible: '고급 보안 설정을 제거하십시오',
   },
 };
 

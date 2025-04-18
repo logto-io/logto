@@ -85,11 +85,9 @@ const security = {
     card_description:
       'Временно заблокируйте идентификатор после нескольких неудачных попыток аутентификации (например, вход с последовательным неверным паролем или кодом проверки), чтобы предотвратить грубый доступ.',
     enable_sentinel_policy: {
-      /** UNTRANSLATED */
-      title: 'Customize lockout experience',
-      /** UNTRANSLATED */
+      title: 'Настроить опыт блокировки',
       description:
-        'Allow customization of the maximum failed login attempts before lockout, lockout duration, and immediate manual unlock.',
+        'Позволяет настроить максимальное число неудачных попыток входа до блокировки, продолжительность блокировки и возможность немедленного ручного разблокирования.',
     },
     max_attempts: {
       title: 'Максимальное количество неудачных попыток',

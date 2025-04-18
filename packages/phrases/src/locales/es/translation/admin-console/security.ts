@@ -86,11 +86,9 @@ const security = {
     card_description:
       'Bloquear un identificador provisionalmente después de múltiples fallos de autenticación (por ejemplo, inicio de sesión con contraseña o código de verificación incorrectos consecutivos) para prevenir el acceso por fuerza bruta.',
     enable_sentinel_policy: {
-      /** UNTRANSLATED */
-      title: 'Customize lockout experience',
-      /** UNTRANSLATED */
+      title: 'Personalizar experiencia de bloqueo',
       description:
-        'Allow customization of the maximum failed login attempts before lockout, lockout duration, and immediate manual unlock.',
+        'Permitir la personalización de los intentos de inicio de sesión fallidos máximos antes del bloqueo, la duración del bloqueo y el desbloqueo manual inmediato.',
     },
     max_attempts: {
       title: 'Máximos intentos fallidos',
