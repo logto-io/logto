@@ -83,6 +83,13 @@ const security = {
     card_title: 'Kimlik kilitleme',
     card_description:
       'Brute force erişimini önlemek için, birden fazla başarısız kimlik doğrulama denemesinden sonra (örneğin, ardışık hatalı parola veya doğrulama kodu ile oturum açma) bir kimliği geçici olarak kilitleyin.',
+    enable_sentinel_policy: {
+      /** UNTRANSLATED */
+      title: 'Customize lockout experience',
+      /** UNTRANSLATED */
+      description:
+        'Allow customization of the maximum failed login attempts before lockout, lockout duration, and immediate manual unlock.',
+    },
     max_attempts: {
       title: 'Maksimum başarısız deneme',
       description:

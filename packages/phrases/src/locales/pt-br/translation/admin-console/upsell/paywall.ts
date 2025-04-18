@@ -72,6 +72,9 @@ const paywall = {
   },
   bring_your_ui:
     'Atualize para um plano pago para trazer sua funcionalidade de UI personalizada e benefícios premium.',
+  /** UNTRANSLATED */
+  security_features:
+    "Unlock advanced security features by upgrading to the Pro plan. Don't hesitate to <a>contact us</a> if you have any questions.",
 };
 
 export default Object.freeze(paywall);

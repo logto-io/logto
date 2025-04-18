@@ -66,6 +66,9 @@ const paywall = {
       '升級至付費計劃以獲得自訂 JWT 功能和專業服務。如有任何問題，歡迎隨時<a>聯絡我們</a>。',
   },
   bring_your_ui: '升級至付費計劃，以使用您的自定義 UI 功能和享受高級福利。',
+  /** UNTRANSLATED */
+  security_features:
+    "Unlock advanced security features by upgrading to the Pro plan. Don't hesitate to <a>contact us</a> if you have any questions.",
 };
 
 export default Object.freeze(paywall);

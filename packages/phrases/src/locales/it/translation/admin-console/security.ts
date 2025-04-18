@@ -86,6 +86,13 @@ const security = {
     card_title: 'Blocco identificatore',
     card_description:
       "Blocca temporaneamente un identificatore dopo più tentativi di autenticazione falliti (ad esempio, accessi con password o codice di verifica errati consecutivi) per prevenire l'accesso tramite forza bruta.",
+    enable_sentinel_policy: {
+      /** UNTRANSLATED */
+      title: 'Customize lockout experience',
+      /** UNTRANSLATED */
+      description:
+        'Allow customization of the maximum failed login attempts before lockout, lockout duration, and immediate manual unlock.',
+    },
     max_attempts: {
       title: 'Massimo tentativi falliti',
       description:
