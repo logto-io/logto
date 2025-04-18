@@ -7,20 +7,53 @@ import { type RequestError } from '@/hooks/use-api';
 type RequiredSentinelPolicy = Required<Pick<SentinelPolicy, keyof SentinelPolicy>>;
 
 export type GeneralFormData = {
-  sentinelPolicy: RequiredSentinelPolicy;
+  sentinelPolicyEnabled: boolean; // Can be true or false
+  sentinelPolicy: RequiredSentinelPolicy; // Optional, but will be required if sentinelPolicyEnabled is true
 };
 
 export const generalFormParser = {
-  fromSignInExperience: ({ sentinelPolicy }: SignInExperience): GeneralFormData => ({
-    sentinelPolicy: {
-      // Fallback to default values if not provided
-      ...defaultSentinelPolicy,
-      ...sentinelPolicy,
-    },
-  }),
-  toSignInExperience: (formData: GeneralFormData): Pick<SignInExperience, 'sentinelPolicy'> => ({
-    sentinelPolicy: formData.sentinelPolicy,
-  }),
+  /**
+   * @remarks
+   * The {@link SentinelPolicy} is a required field in the SignInExperience schema.
+   * The default value is an empty object.
+   *
+   * If the object is empty, it is treated as disabled.
+   * If it contains properties, it is treated as enabled.
+   *
+   */
+  fromSignInExperience: ({ sentinelPolicy }: SignInExperience): GeneralFormData => {
+    const sentinelPolicyEnabled = Object.keys(sentinelPolicy).length > 0;
+
+    return {
+      sentinelPolicyEnabled,
+      /** @remarks
+       * Since all the properties are optional, for form display purposes, if the sentinelPolicy is enabled (not empty),
+       * we always merge it with the default value, (makes all the properties required).
+       * If the sentinelPolicy is disabled (empty), we return the default value.
+       *
+       * So that the form can always display all the properties values correctly.
+       */
+      sentinelPolicy: sentinelPolicyEnabled
+        ? {
+            ...defaultSentinelPolicy,
+            ...sentinelPolicy,
+          }
+        : defaultSentinelPolicy,
+    };
+  },
+  toSignInExperience: (formData: GeneralFormData): Pick<SignInExperience, 'sentinelPolicy'> => {
+    const { sentinelPolicyEnabled, sentinelPolicy } = formData;
+
+    if (!sentinelPolicyEnabled) {
+      return {
+        sentinelPolicy: {},
+      };
+    }
+
+    return {
+      sentinelPolicy,
+    };
+  },
 };
 
 const useDataFetch = () => {

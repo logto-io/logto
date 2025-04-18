@@ -9,7 +9,7 @@ import Error from '@/assets/icons/toast-error.svg?react';
 import Success from '@/assets/icons/toast-success.svg?react';
 import type { Props as TextLinkProps } from '@/ds-components/TextLink';
 
-import Button from '../Button';
+import Button, { type Props as ButtonProps } from '../Button';
 import DynamicT from '../DynamicT';
 import TextLink from '../TextLink';
 
@@ -26,6 +26,7 @@ type Props = {
   readonly hasIcon?: boolean;
   readonly isActionLoading?: boolean;
   readonly className?: string;
+  readonly actionButtonProps?: Pick<ButtonProps, 'type' | 'size'>;
 };
 
 function NotificationIcon({ severity }: Required<Pick<Props, 'severity'>>) {
@@ -56,6 +57,7 @@ function InlineNotification(
     variant = 'plain',
     hasIcon = true,
     isActionLoading = false,
+    actionButtonProps,
     className,
   }: Props,
   ref?: Ref<HTMLDivElement>
@@ -87,6 +89,7 @@ function InlineNotification(
             title={action}
             type="text"
             size="small"
+            {...actionButtonProps}
             isLoading={isActionLoading}
             onClick={onClick}
           />

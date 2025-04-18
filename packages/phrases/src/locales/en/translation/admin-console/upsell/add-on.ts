@@ -1,6 +1,8 @@
 const add_on = {
   mfa_inline_notification:
     'MFA is a ${{price, number}} per mo add-on for the {{planName}}. First month prorated based on your billing cycle. <a>Learn more</a>',
+  security_features_inline_notification:
+    'Enable CAPTCHA, custom lockout experience, and other advanced security features—all included in an add-on bundle for just ${{price, number}}/month.',
   footer: {
     api_resource:
       'Additional resources cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
