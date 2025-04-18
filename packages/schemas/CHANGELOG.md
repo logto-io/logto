@@ -1,5 +1,21 @@
 # Change Log
 
+## 1.27.0
+
+### Minor Changes
+
+- 2961d355d: bump node version to ^22.14.0
+
+### Patch Changes
+
+- Updated dependencies [2961d355d]
+  - @logto/connector-kit@4.3.0
+  - @logto/language-kit@1.2.0
+  - @logto/phrases-experience@1.10.0
+  - @logto/core-kit@2.6.0
+  - @logto/phrases@1.19.0
+  - @logto/shared@3.2.0
+
 ## 1.26.0
 
 ### Minor Changes
