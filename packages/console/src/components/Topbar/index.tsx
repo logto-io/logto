@@ -18,6 +18,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import ContactModal from './ContactModal';
+import InkeepAskAi from './InkeepAskAi';
 import TenantSelector from './TenantSelector';
 import UserInfo from './UserInfo';
 import styles from './index.module.scss';
@@ -52,6 +53,7 @@ function Topbar({ className, hideTenantSelector, hideTitle }: Props) {
         </>
       )}
       <Spacer />
+      <InkeepAskAi className={styles.button} />
       <DocumentButton />
       <HelpButton />
       {!isCloud && <VersionButton />}

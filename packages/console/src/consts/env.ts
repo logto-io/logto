@@ -17,3 +17,5 @@ export const isDevFeaturesEnabled =
 export const consoleEmbeddedPricingUrl =
   normalizeEnv(import.meta.env.CONSOLE_EMBEDDED_PRICING_URL) ??
   'https://logto.io/console-embedded-pricing';
+
+export const inkeepApiKey = normalizeEnv(import.meta.env.INKEEP_API_KEY);

@@ -1,9 +1,14 @@
 @use '@logto/core-kit/scss/console-themes' as themes;
+@use '@/scss/underscore' as _;
 
 .light {
   @include themes.light;
+
+  --inkeep-logto-icon: #{_.inkeep-logto-icon(#c9c5d0)};
 }
 
 .dark {
   @include themes.dark;
+
+  --inkeep-logto-icon: #{_.inkeep-logto-icon(#5f5d67)};
 }
