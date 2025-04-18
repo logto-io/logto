@@ -1,7 +1,9 @@
 import { CaptchaType, Theme } from '@logto/schemas';
 import { useMemo, useContext, useCallback, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { isDevFeaturesEnabled } from '@/constants/env';
+import useToast from '@/hooks/use-toast';
 
 import PageContext from '../PageContextProvider/PageContext';
 
@@ -16,6 +18,8 @@ type Props = {
 const CaptchaContextProvider = ({ children }: Props) => {
   const { experienceSettings, theme } = useContext(PageContext);
   const widgetRef = useRef<HTMLDivElement>(null);
+  const { setToast } = useToast();
+  const { t } = useTranslation();
 
   const captchaPolicy = experienceSettings?.captchaPolicy;
   const captchaConfig = experienceSettings?.captchaConfig;
@@ -47,7 +51,7 @@ const CaptchaContextProvider = ({ children }: Props) => {
     }
 
     if (captchaConfig.type === CaptchaType.Turnstile) {
-      return new Promise<string | undefined>((resolve) => {
+      return new Promise<string | undefined>((resolve, reject) => {
         if (!window.turnstile || !widgetRef.current) {
           resolve(undefined);
           return;
@@ -63,6 +67,10 @@ const CaptchaContextProvider = ({ children }: Props) => {
           callback: (token: string) => {
             resolve(token);
           },
+          'error-callback': (errorCode) => {
+            setToast(t('error.captcha_verification_failed'));
+            reject(new Error(`Turnstile error: ${errorCode}`));
+          },
         });
       });
     }
@@ -74,7 +82,7 @@ const CaptchaContextProvider = ({ children }: Props) => {
     return window.grecaptcha.enterprise.execute(captchaConfig.siteKey, {
       action: 'interaction',
     });
-  }, [captchaConfig, isCaptchaRequired, theme]);
+  }, [isCaptchaRequired, captchaConfig, theme, setToast, t]);
 
   useEffect(() => {
     initCaptcha();

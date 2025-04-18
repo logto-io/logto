@@ -21,6 +21,7 @@ const error = {
   sso_not_enabled: 'Single sign-on non abilitato per questo account email.',
   invalid_link: 'Link invalido',
   invalid_link_description: 'Il tuo token monouso potrebbe essere scaduto o non è più valido.',
+  captcha_verification_failed: 'Errore durante la verifica del captcha.',
   something_went_wrong: 'Qualcosa è andato storto.',
 };
 

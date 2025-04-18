@@ -23,6 +23,7 @@ const error = {
     'El inicio de sesión único no está habilitado para esta cuenta de correo electrónico.',
   invalid_link: 'Enlace no válido',
   invalid_link_description: 'Tu token de un solo uso puede haber expirado o ya no ser válido.',
+  captcha_verification_failed: 'Error al verificar el captcha.',
   something_went_wrong: 'Algo salió mal.',
 };
 

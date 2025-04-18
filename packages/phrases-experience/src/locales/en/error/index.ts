@@ -21,6 +21,7 @@ const error = {
   sso_not_enabled: 'Single Sign-On is not enabled for this email account.',
   invalid_link: 'Invalid link',
   invalid_link_description: 'Your one-time token may have expired or is no longer valid.',
+  captcha_verification_failed: 'Failed to perform captcha verification.',
   something_went_wrong: 'Something went wrong.',
 };
 

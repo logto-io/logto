@@ -21,6 +21,7 @@ const error = {
   sso_not_enabled: 'تسجيل الدخول الموحد غير ممكّن لحساب البريد الإلكتروني هذا.',
   invalid_link: 'رابط غير صالح',
   invalid_link_description: 'ربما يكون رمز الدخول المؤقت قد انتهى أو لم يعد صالحًا.',
+  captcha_verification_failed: 'فشل التحقق من رمز التحقق.',
   something_went_wrong: 'حدث خطأ ما.',
 };
 

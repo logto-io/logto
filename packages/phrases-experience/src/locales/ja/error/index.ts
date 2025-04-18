@@ -22,6 +22,7 @@ const error = {
   sso_not_enabled: 'このメールアカウントではシングルサインオンが有効になっていません。',
   invalid_link: '無効なリンク',
   invalid_link_description: 'ワンタイムトークンの有効期限が切れているか、無効になっています。',
+  captcha_verification_failed: 'キャプチャーの検証に失敗しました。',
   something_went_wrong: '問題が発生しました。',
 };
 
