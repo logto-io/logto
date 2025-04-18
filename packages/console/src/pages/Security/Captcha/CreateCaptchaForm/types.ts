@@ -13,5 +13,6 @@ export type CaptchaProviderMetadata = {
   requiredFields: Array<{
     field: FormField;
     label: AdminConsoleKey;
+    placeholder: AdminConsoleKey;
   }>;
 };

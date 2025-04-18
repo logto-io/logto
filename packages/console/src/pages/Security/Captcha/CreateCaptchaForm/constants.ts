@@ -85,14 +85,17 @@ export const captchaProviders: CaptchaProviderMetadata[] = [
       {
         field: 'siteKey',
         label: 'security.captcha_details.recaptcha_key_id',
+        placeholder: 'security.captcha_details.recaptcha_key_id',
       },
       {
         field: 'secretKey',
         label: 'security.captcha_details.recaptcha_api_key',
+        placeholder: 'security.captcha_details.recaptcha_api_key',
       },
       {
         field: 'projectId',
         label: 'security.captcha_details.project_id',
+        placeholder: 'security.captcha_details.project_id',
       },
     ],
   },
@@ -107,10 +110,12 @@ export const captchaProviders: CaptchaProviderMetadata[] = [
       {
         field: 'siteKey',
         label: 'security.captcha_details.site_key',
+        placeholder: 'security.captcha_details.site_key',
       },
       {
         field: 'secretKey',
         label: 'security.captcha_details.secret_key',
+        placeholder: 'security.captcha_details.secret_key',
       },
     ],
   },
