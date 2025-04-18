@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { type RouteObject } from 'react-router-dom';
 import { safeLazy } from 'react-safe-lazy';
 
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import NotFound from '@/pages/NotFound';
 
 import { apiResources } from './routes/api-resources';
@@ -41,7 +41,7 @@ export const useConsoleRoutes = () => {
         mfa,
         connectors,
         enterpriseSso,
-        isDevFeaturesEnabled && security,
+        security,
         webhooks,
         users,
         auditLogs,

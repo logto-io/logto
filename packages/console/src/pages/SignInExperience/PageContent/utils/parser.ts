@@ -1,4 +1,3 @@
-import { passwordPolicyGuard } from '@logto/core-kit';
 import {
   AlternativeSignUpIdentifier,
   SignInIdentifier,
@@ -19,7 +18,7 @@ import {
 
 /**
  * For backward compatibility,
- * we need to safely parse the @see {SignUp['identifiers']} to the @see {SignUpForm['identifiers']} format.
+ * we need to safely parse the {@link SignUp.identifiers} to the {@link SignUpForm.identifiers} format.
  */
 const parsePrimaryIdentifier = (identifiers: SignInIdentifier[]): SignUpForm['identifiers'] => {
   if (identifiers.length === 0) {
@@ -118,8 +117,8 @@ export const sieFormDataParser = {
       signUp,
       customCss,
       branding,
-      passwordPolicy,
       // Start: Remove the omitted fields from the data
+      passwordPolicy,
       mfa,
       captchaPolicy,
       sentinelPolicy,
@@ -136,23 +135,10 @@ export const sieFormDataParser = {
         ...emptyBranding,
         ...branding,
       },
-      /** Parse password policy with default values. */
-      passwordPolicy: {
-        ...passwordPolicyGuard.parse(passwordPolicy),
-        customWords: passwordPolicy.rejects?.words?.join('\n') ?? '',
-        isCustomWordsEnabled: Boolean(passwordPolicy.rejects?.words?.length),
-      },
     };
   },
   toSignInExperience: (formData: SignInExperienceForm): SignInExperiencePageManagedData => {
-    const {
-      branding,
-      createAccountEnabled,
-      signUp,
-      customCss,
-      /** Remove the custom words related properties since they are not used in the remote model. */
-      passwordPolicy: { isCustomWordsEnabled, customWords, ...passwordPolicy },
-    } = formData;
+    const { branding, createAccountEnabled, signUp, customCss } = formData;
 
     return {
       ...formData,
@@ -160,13 +146,6 @@ export const sieFormDataParser = {
       signUp: signUpFormDataParser.toSignUp(signUp),
       signInMode: createAccountEnabled ? SignInMode.SignInAndRegister : SignInMode.SignIn,
       customCss: customCss?.length ? customCss : null,
-      passwordPolicy: {
-        ...passwordPolicy,
-        rejects: {
-          ...passwordPolicy.rejects,
-          words: isCustomWordsEnabled ? customWords.split('\n').filter(Boolean) : [],
-        },
-      },
     };
   },
 };
@@ -174,7 +153,7 @@ export const sieFormDataParser = {
 /**
  * The data parser takes the raw data from the API,
  * - fulfills the default values for the missing fields.
- * - removes the omitted fields from the data, convert the @see {SignInExperience} to the @see {SignInExperiencePageManagedData}
+ * - removes the omitted fields from the data, convert the {@link SignInExperience} to the {@link SignInExperiencePageManagedData}
  *
  * This is to ensure the data consistency between the form and the remote model.
  * So it won't trigger the form diff modal when the user hasn't changed anything.
@@ -182,9 +161,10 @@ export const sieFormDataParser = {
  * Affected fields:
  * - `signUp.secondaryIdentifiers`: This field is optional in the data schema,
  *  but through the form, we always fill it with an empty array.
- * - `mfa`: This field is omitted in the data schema,
- * - `captchaPolicy`: This field is omitted in the data schema,
- * - `sentinelPolicy`: This field is omitted in the data schema,
+ * - `mfa`: This field is omitted in the sign-in experience form.
+ * - `passwordPolicy`: This field is omitted in the sign-in experience form.
+ * - `captchaPolicy`: This field is omitted in the sign-in experience form.
+ * - `sentinelPolicy`: This field is omitted in the sign-in experience form.
  */
 export const signInExperienceToUpdatedDataParser = (
   data: SignInExperience
@@ -193,6 +173,7 @@ export const signInExperienceToUpdatedDataParser = (
     signUp,
     // Start: Remove the omitted fields from the data
     mfa,
+    passwordPolicy,
     captchaPolicy,
     sentinelPolicy,
     // End: Remove the omitted fields from the data

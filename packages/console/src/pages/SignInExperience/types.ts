@@ -1,4 +1,3 @@
-import { type PasswordPolicy } from '@logto/core-kit';
 import {
   type SignUp,
   type SignInExperience,
@@ -6,21 +5,19 @@ import {
   type SignUpIdentifier as SignUpIdentifierMethod,
 } from '@logto/schemas';
 
-// TODO: Should also remove password policy from the sign-in experience once the security is ready
 /**
- * Omit the `mfa`, `captchaPolicy`, and `sentinelPolicy` fields from the sign-in experience.
+ * Omit the `mfa`, `captchaPolicy`, 'passwordPolicy', and `sentinelPolicy` fields from the sign-in experience.
  * Since those fields are not managed by the sign-in experience page.
  */
 type OmittedSignInExperienceKeys = keyof Pick<
   SignInExperience,
-  'mfa' | 'captchaPolicy' | 'sentinelPolicy'
+  'mfa' | 'captchaPolicy' | 'sentinelPolicy' | 'passwordPolicy'
 >;
 
 export enum SignInExperienceTab {
   Branding = 'branding',
   SignUpAndSignIn = 'sign-up-and-sign-in',
   Content = 'content',
-  PasswordPolicy = 'password-policy',
 }
 
 /**
@@ -55,21 +52,6 @@ export type SignInExperienceForm = Omit<
 > & {
   customCss?: string; // Code editor components can not properly handle null value, manually transform null to undefined instead.
   signUp: SignUpForm;
-  /** The parsed password policy object. All properties are required. */
-  passwordPolicy: PasswordPolicy & {
-    /**
-     * The custom words separated by line breaks.
-     *
-     * This property is only used for UI display.
-     */
-    customWords: string;
-    /**
-     * Whether the custom words feature is enabled. Default value will be true if `rejects.words` is not empty.
-     *
-     * This property is only used for UI display.
-     */
-    isCustomWordsEnabled: boolean;
-  };
   createAccountEnabled: boolean;
 };
 
