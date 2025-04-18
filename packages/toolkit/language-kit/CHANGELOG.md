@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.2.0
+
+### Minor Changes
+
+- 2961d355d: bump node version to ^22.14.0
+
 ## 1.1.3
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # Change Log
 
+## 4.3.0
+
+### Minor Changes
+
+- 2961d355d: bump node version to ^22.14.0
+
+### Patch Changes
+
+- Updated dependencies [2961d355d]
+  - @logto/language-kit@1.2.0
+
 ## 4.2.0
 
 ### Minor Changes

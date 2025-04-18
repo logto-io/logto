@@ -1,5 +1,92 @@
 # Change Log
 
+## 1.27.0
+
+### Minor Changes
+
+- 6fafcefef: add one-time token verification method to support magic link authentication
+
+  You can now use the "one-time token" to compose magic links, and send them to the end user's email.
+  With a magic link, one can register a new account or sign in directly to the application, without the need to enter a password, or input verification codes.
+
+  You can also use magic link to invite users to your organizations.
+
+  ### Example API request to create a one-time token
+
+  ```bash
+  POST /api/one-time-tokens
+  ```
+
+  Request payload:
+
+  ```jsonc
+  {
+    "email": "user@example.com",
+    // Optional. Defaults to 600 (10 mins).
+    "expiresIn": 3600,
+    // Optional. User will be provisioned to the specified organizations upon successful verification.
+    "context": {
+      "jitOrganizationIds": ["your-org-id"],
+    },
+  }
+  ```
+
+  ### Compose your magic link
+
+  After you get the one-time token, you can compose a magic link and send it to the end user's email address. The magic link should at least contain the token and the user email as parameters, and should navigate to a landing page in your own application. E.g. `https://yourapp.com/landing-page`.
+
+  Here's a simple example of what the magic link may look like:
+
+  ```http
+  https://yourapp.com/landing-page?token=YHwbXSXxQfL02IoxFqr1hGvkB13uTqcd&email=user@example.com
+  ```
+
+  Refer to [our docs](https://docs.logto.io/docs/end-user-flows/one-time-token) for more details.
+
+- 2961d355d: bump node version to ^22.14.0
+
+### Patch Changes
+
+- f41938257: respond 404 for non-existing paths in `/assets`
+
+  Our single-page application proxy now responds with a 404 for non-existing paths in `/assets` instead of falling back to the `index.html` file.
+
+  This prevents the browser and CDN from caching the `index.html` file for non-existing paths in `/assets`, which can lead to confusion and unexpected behavior.
+  Since the `/assets` path is used only for static assets, it is safe and improves the user experience.
+
+- 7dbcedaa1: move password encyption to separate worker thread
+
+  This update refactors the password encryption process by moving it to a separate Node.js worker thread. The Argon2i encryption method, known for its resource-intensive and time-consuming nature, is now handled in a dedicated worker. This change aims to prevent the encryption process from blocking other requests, thereby improving the overall performance and responsiveness of the application.
+
+- cfedfb306: clean up legacy experience package
+
+  The migration to the new experience package is now complete, offering improved flexibility and maintainability through our Experience API. (see release [1.26.0](https://github.com/logto-io/logto/releases/tag/v1.26.0) for more details)
+
+  Key updates:
+
+  - Removed feature flags and migration-related logic
+  - Cleaned up transitional code used during gradual rollout
+  - Deprecated and removed `@logto/experience-legacy` package
+  - Fully adopted `@logto/experience` package with Experience API for all user interactions
+
+  This marks the completion of our authentication UI modernization, providing a more maintainable and extensible foundation for future enhancements.
+
+- Updated dependencies [6fafcefef]
+- Updated dependencies [2961d355d]
+- Updated dependencies [83e7be741]
+  - @logto/experience@1.13.0
+  - @logto/connector-kit@4.3.0
+  - @logto/language-kit@1.2.0
+  - @logto/phrases-experience@1.10.0
+  - @logto/core-kit@2.6.0
+  - @logto/app-insights@2.1.0
+  - @logto/demo-app@1.5.0
+  - @logto/console@1.24.0
+  - @logto/phrases@1.19.0
+  - @logto/schemas@1.27.0
+  - @logto/shared@3.2.0
+  - @logto/cli@1.27.0
+
 ## 1.26.0
 
 ### Minor Changes
