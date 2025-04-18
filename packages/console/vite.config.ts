@@ -64,6 +64,12 @@ const buildConfig = (mode: string): UserConfig => ({
             return 'cytoscape';
           }
 
+          // When this dependency is introduced by @inkeep/cxkit-react, it will cause runtime errors
+          // if it is not bundled with react.
+          if (id.includes('/hastscript/')) {
+            return 'react';
+          }
+
           for (const largePackage of [
             'libphonenumber-js',
             'mermaid',
