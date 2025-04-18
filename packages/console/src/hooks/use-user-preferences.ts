@@ -27,7 +27,7 @@ const userPreferencesGuard = z.object({
   tenantMembersUpsellNoticeAcknowledged: z.boolean().optional(),
   enterpriseSsoUpsellNoticeAcknowledged: z.boolean().optional(),
   addOnChangesInCurrentCycleNoticeAcknowledged: z.boolean().optional(),
-  sencurityFeaturesUpsellNoticeAcknowledged: z.boolean().optional(),
+  securityFeaturesUpsellNoticeAcknowledged: z.boolean().optional(),
   /* === Add on feature related fields === */
 });
 

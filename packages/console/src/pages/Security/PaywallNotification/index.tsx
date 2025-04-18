@@ -18,7 +18,7 @@ function PaywallNotification({ className }: Props) {
   const { isFreeTenant, isPaidTenant } = usePaywall();
 
   const {
-    data: { sencurityFeaturesUpsellNoticeAcknowledged },
+    data: { securityFeaturesUpsellNoticeAcknowledged },
     update,
   } = useUserPreferences();
 
@@ -46,12 +46,12 @@ function PaywallNotification({ className }: Props) {
     );
   }
 
-  if (isPaidTenant && !sencurityFeaturesUpsellNoticeAcknowledged) {
+  if (isPaidTenant && !securityFeaturesUpsellNoticeAcknowledged) {
     return (
       <InlineNotification
         className={className}
         action="general.got_it"
-        onClick={async () => update({ sencurityFeaturesUpsellNoticeAcknowledged: true })}
+        onClick={async () => update({ securityFeaturesUpsellNoticeAcknowledged: true })}
       >
         {t('upsell.add_on.security_features_inline_notification', {
           price: securityFeaturesAddOnUnitPrice,
