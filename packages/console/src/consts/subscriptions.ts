@@ -21,6 +21,7 @@ export const enterpriseSsoAddOnUnitPrice = 48;
 export const organizationAddOnUnitPrice = 48;
 export const tokenAddOnUnitPrice = 80;
 export const hooksAddOnUnitPrice = 2;
+export const securityFeaturesAddOnUnitPrice = 48;
 /* === Add-on unit price (in USD) === */
 
 /**

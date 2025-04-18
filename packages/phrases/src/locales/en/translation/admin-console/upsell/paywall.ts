@@ -72,7 +72,7 @@ const paywall = {
   },
   bring_your_ui:
     'Upgrade to a paid plan for bring your custom UI functionality and premium benefits.',
-  captcha:
+  security_features:
     "Unlock advanced security features by upgrading to the Pro plan. Don't hesitate to <a>contact us</a> if you have any questions.",
 };
 

@@ -83,6 +83,11 @@ const security = {
     card_title: 'Identifier lockout',
     card_description:
       'Lock an identifier provisionally after multiple failed authentication (e.g., sign-in with consecutive incorrect password or verification code) to prevent brute force access.',
+    enable_sentinel_policy: {
+      title: 'Customize lockout experience',
+      description:
+        'Allow customization of the maximum failed login attempts before lockout, lockout duration, and immediate manual unlock.',
+    },
     max_attempts: {
       title: 'Maximum failed attempts',
       description:
