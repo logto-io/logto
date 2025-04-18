@@ -1,6 +1,8 @@
 const add_on = {
   mfa_inline_notification:
     'MFA ist ein Add-on für ${{price, number}} pro Monat für den {{planName}}. Der erste Monat wird anteilig basierend auf deinem Abrechnungszyklus berechnet. <a>Erfahre mehr</a>',
+  security_features_inline_notification:
+    'Aktiviere CAPTCHA, individuelle Sperrerfahrung und andere erweiterte Sicherheitsfunktionen - alles in einem Add-on-Paket für nur ${{price, number}}/Monat enthalten.',
   footer: {
     api_resource:
       'Zusätzliche Ressourcen kosten <span>${{price, number}} pro Monat / Stück</span>. Der erste Monat wird anteilig basierend auf deinem Abrechnungszyklus berechnet. <a>Erfahre mehr</a>',

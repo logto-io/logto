@@ -184,6 +184,18 @@ const quota_item = {
     unlimited: '무제한 SAML 애플리케이션',
     not_eligible: 'SAML 애플리케이션을 제거하십시오',
   },
+  captcha_enabled: {
+    name: 'CAPTCHA',
+    limited: 'CAPTCHA',
+    unlimited: 'CAPTCHA',
+    not_eligible: 'CAPTCHA 를 제거하십시오',
+  },
+  security_features_enabled: {
+    name: '고급 보안',
+    limited: '고급 보안',
+    unlimited: '고급 보안',
+    not_eligible: '고급 보안 설정을 제거하십시오',
+  },
 };
 
 export default Object.freeze(quota_item);

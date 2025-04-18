@@ -1,6 +1,8 @@
 const add_on = {
   mfa_inline_notification:
     'MFA es un complemento de ${{price, number}} por mes para el {{planName}}. Primer mes prorrateado según tu ciclo de facturación. <a>Aprende más</a>',
+  security_features_inline_notification:
+    'Habilita CAPTCHA, experiencia de bloqueo personalizada y otras características de seguridad avanzadas, todas incluidas en un paquete complementario por solo ${{price, number}}/mes.',
   footer: {
     api_resource:
       'Los recursos adicionales cuestan <span>${{price, number}} por mes / cada uno</span>. Primer mes prorrateado según tu ciclo de facturación. <a>Aprende más</a>',

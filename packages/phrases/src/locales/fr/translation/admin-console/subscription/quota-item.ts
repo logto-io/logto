@@ -184,6 +184,18 @@ const quota_item = {
     unlimited: 'Applications SAML illimitées',
     not_eligible: 'Supprimez vos applications SAML',
   },
+  captcha_enabled: {
+    name: 'CAPTCHA',
+    limited: 'CAPTCHA',
+    unlimited: 'CAPTCHA',
+    not_eligible: 'Supprimez votre CAPTCHA',
+  },
+  security_features_enabled: {
+    name: 'Sécurité avancée',
+    limited: 'Sécurité avancée',
+    unlimited: 'Sécurité avancée',
+    not_eligible: 'Supprimez vos paramètres de sécurité avancés',
+  },
 };
 
 export default Object.freeze(quota_item);

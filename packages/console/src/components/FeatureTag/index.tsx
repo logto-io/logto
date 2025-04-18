@@ -103,11 +103,18 @@ function FeatureTag(props: Props) {
 
 export default FeatureTag;
 
+export const addOnLabels = {
+  addOn: 'Add-on',
+  addOnBundle: 'Add-on (bundle)',
+} as const;
+
 type CombinedAddOnAndFeatureTagProps = {
   readonly hasAddOnTag?: boolean;
   readonly className?: string;
   /** The minimum plan required to use the feature. */
   readonly paywall?: PaywallPlanId;
+  /** Customize the add-on lable: currently only used by bundled add-ons  */
+  readonly addOnLabel?: (typeof addOnLabels)[keyof typeof addOnLabels];
 };
 
 /**
@@ -115,7 +122,7 @@ type CombinedAddOnAndFeatureTagProps = {
  * and dev features are enabled. Otherwise, it will be `FeatureTag` with the `paywall` prop.
  */
 export function CombinedAddOnAndFeatureTag(props: CombinedAddOnAndFeatureTagProps) {
-  const { hasAddOnTag, className, paywall } = props;
+  const { hasAddOnTag, className, paywall, addOnLabel = addOnLabels.addOn } = props;
   const {
     currentSubscription: { planId, isEnterprisePlan },
   } = useContext(SubscriptionDataContext);
@@ -128,7 +135,9 @@ export function CombinedAddOnAndFeatureTag(props: CombinedAddOnAndFeatureTagProp
   // Show the "Add-on" tag for Pro plan.
   if (hasAddOnTag && isCloud && isProPlan(planId)) {
     return (
-      <div className={classNames(styles.tag, styles.beta, styles.addOn, className)}>Add-on</div>
+      <div className={classNames(styles.tag, styles.beta, styles.addOn, className)}>
+        {addOnLabel}
+      </div>
     );
   }
 

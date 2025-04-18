@@ -184,6 +184,18 @@ const quota_item = {
     unlimited: '無制限のSAMLアプリケーション',
     not_eligible: 'SAMLアプリケーションを削除してください',
   },
+  captcha_enabled: {
+    name: 'CAPTCHA',
+    limited: 'CAPTCHA',
+    unlimited: 'CAPTCHA',
+    not_eligible: 'あなたの CAPTCHA を削除してください',
+  },
+  security_features_enabled: {
+    name: '高度なセキュリティ',
+    limited: '高度なセキュリティ',
+    unlimited: '高度なセキュリティ',
+    not_eligible: '高度なセキュリティ設定を削除してください',
+  },
 };
 
 export default Object.freeze(quota_item);

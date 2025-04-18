@@ -72,6 +72,8 @@ const paywall = {
   },
   bring_your_ui:
     'カスタム UI 機能とプレミアム特典を利用するには、有料プランにアップグレードしてください。',
+  security_features:
+    'Pro プランにアップグレードして、高度なセキュリティ機能を解除してください。質問があれば、お気軽に<a>お問い合わせ</a>ください。',
 };
 
 export default Object.freeze(paywall);

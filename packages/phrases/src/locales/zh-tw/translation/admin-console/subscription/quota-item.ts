@@ -184,6 +184,18 @@ const quota_item = {
     unlimited: '不限 SAML 應用程式數',
     not_eligible: '移除你的 SAML 應用程式',
   },
+  captcha_enabled: {
+    name: '驗證碼',
+    limited: '驗證碼',
+    unlimited: '驗證碼',
+    not_eligible: '移除你的驗證碼',
+  },
+  security_features_enabled: {
+    name: '進階安全',
+    limited: '進階安全',
+    unlimited: '進階安全',
+    not_eligible: '移除你的進階安全設定',
+  },
 };
 
 export default Object.freeze(quota_item);
