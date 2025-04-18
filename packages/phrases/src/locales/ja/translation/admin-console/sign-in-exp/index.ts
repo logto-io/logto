@@ -1,5 +1,4 @@
 import content from './content.js';
-import password_policy from './password-policy.js';
 import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 
 const sign_in_exp = {
@@ -87,7 +86,6 @@ const sign_in_exp = {
   },
   sign_up_and_sign_in,
   content,
-  password_policy,
   setup_warning: {
     no_connector_sms:
       'まだ SMS コネクタが設定されていません。構成を完了する前に、この方法でのサインインはできません。<a>{{link}}</a>「コネクタ」に移動してください',

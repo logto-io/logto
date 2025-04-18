@@ -8,10 +8,8 @@ import {
   SignInMode,
   VerificationType,
 } from '@logto/schemas';
-import Sinon, { type SinonStub } from 'sinon';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
@@ -466,21 +464,6 @@ describe('SignInExperienceValidator', () => {
     });
 
     describe('getMandatoryUserProfileBySignUpMethods with secondary identifiers provided', () => {
-      // eslint-disable-next-line @silverhand/fp/no-let
-      let stub: SinonStub;
-
-      beforeAll(() => {
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        stub = Sinon.stub(EnvSet, 'values').value({
-          ...EnvSet.values,
-          isDevFeatureEnabled: true,
-        });
-      });
-
-      afterAll(() => {
-        stub.restore();
-      });
-
       const testCases: Array<[SignInExperience['signUp'], Set<MissingProfile>]> = [
         [
           {

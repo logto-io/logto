@@ -8,7 +8,6 @@ import {
   SentinelActionResult,
   SentinelActivityAction,
   defaultSentinelPolicy,
-  type SentinelPolicy,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { type Nullable } from '@silverhand/essentials';
@@ -18,15 +17,6 @@ import { addMinutes } from 'date-fns';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import type Queries from '#src/tenants/Queries.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
-
-import { EnvSet } from '../env-set/index.js';
-
-// TODO: Remove this when the sentinel policy is fully integrated into the system.
-// This is a legacy sentinel policy that is used to sync with the current sentinel policy on production
-const legacyDefaultSentinelPolicy = Object.freeze({
-  maxAttempts: 5,
-  lockoutDuration: 10,
-}) satisfies SentinelPolicy;
 
 const { fields, table } = convertToIdentifiers(SentinelActivities);
 
@@ -129,11 +119,6 @@ export default class BasicSentinel extends Sentinel {
   }
 
   protected async getSentinelPolicy() {
-    // TODO: remove this check when the sentinel policy is fully integrated into the system.
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return legacyDefaultSentinelPolicy;
-    }
-
     const {
       signInExperiences: { findDefaultSignInExperience },
     } = this.queries;

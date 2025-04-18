@@ -8,7 +8,6 @@ import { useParams } from 'react-router-dom';
 
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useApi from '@/hooks/use-api';
@@ -27,7 +26,6 @@ import {
 
 import Branding from './Branding';
 import Content from './Content';
-import PasswordPolicy from './PasswordPolicy';
 import SignUpAndSignIn from './SignUpAndSignIn';
 import SignUpAndSignInChangePreview from './SignUpAndSignInChangePreview';
 import styles from './index.module.scss';
@@ -135,9 +133,6 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
         <PageTab href="../content" errorCount={getContentErrorCount(errors)}>
           {t('sign_in_exp.tabs.content')}
         </PageTab>
-        {!isDevFeaturesEnabled && (
-          <PageTab href="../password-policy">{t('sign_in_exp.tabs.password_policy')}</PageTab>
-        )}
       </TabNav>
       <div className={styles.content}>
         <div className={classNames(styles.contentTop, isDirty && styles.withSubmitActionBar)}>
@@ -146,9 +141,6 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
               <Branding isActive={tab === SignInExperienceTab.Branding} />
               <SignUpAndSignIn isActive={tab === SignInExperienceTab.SignUpAndSignIn} />
               <Content isActive={tab === SignInExperienceTab.Content} />
-              {!isDevFeaturesEnabled && (
-                <PasswordPolicy isActive={tab === SignInExperienceTab.PasswordPolicy} />
-              )}
             </form>
           </FormProvider>
           {formData.id && (
