@@ -78,11 +78,8 @@ const security = {
     card_description:
       '在多次驗證失敗後（例如，連續輸入錯誤密碼或驗證碼登入）暫時鎖定一個識別符，以防止暴力訪問。',
     enable_sentinel_policy: {
-      /** UNTRANSLATED */
-      title: 'Customize lockout experience',
-      /** UNTRANSLATED */
-      description:
-        'Allow customization of the maximum failed login attempts before lockout, lockout duration, and immediate manual unlock.',
+      title: '自定義鎖定體驗',
+      description: '允許自定義超過鎖定前的最多失敗登入嘗試次數、鎖定時長及立即手動解鎖。',
     },
     max_attempts: {
       title: '最大失敗嘗試次數',

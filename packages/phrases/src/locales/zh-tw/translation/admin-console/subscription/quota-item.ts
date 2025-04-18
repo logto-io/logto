@@ -185,24 +185,16 @@ const quota_item = {
     not_eligible: '移除你的 SAML 應用程式',
   },
   captcha_enabled: {
-    /** UNTRANSLATED */
-    name: 'CAPTCHA',
-    /** UNTRANSLATED */
-    limited: 'CAPTCHA',
-    /** UNTRANSLATED */
-    unlimited: 'CAPTCHA',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your CAPTCHA',
+    name: '驗證碼',
+    limited: '驗證碼',
+    unlimited: '驗證碼',
+    not_eligible: '移除你的驗證碼',
   },
   security_features_enabled: {
-    /** UNTRANSLATED */
-    name: 'Advanced security',
-    /** UNTRANSLATED */
-    limited: 'Advanced security',
-    /** UNTRANSLATED */
-    unlimited: 'Advanced security',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your advanced security settings',
+    name: '進階安全',
+    limited: '進階安全',
+    unlimited: '進階安全',
+    not_eligible: '移除你的進階安全設定',
   },
 };
 

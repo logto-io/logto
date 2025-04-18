@@ -185,24 +185,16 @@ const quota_item = {
     not_eligible: 'قم بإزالة تطبيقات SAML الخاصة بك',
   },
   captcha_enabled: {
-    /** UNTRANSLATED */
     name: 'CAPTCHA',
-    /** UNTRANSLATED */
     limited: 'CAPTCHA',
-    /** UNTRANSLATED */
     unlimited: 'CAPTCHA',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your CAPTCHA',
+    not_eligible: 'قم بإزالة CAPTCHA الخاص بك',
   },
   security_features_enabled: {
-    /** UNTRANSLATED */
-    name: 'Advanced security',
-    /** UNTRANSLATED */
-    limited: 'Advanced security',
-    /** UNTRANSLATED */
-    unlimited: 'Advanced security',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your advanced security settings',
+    name: 'الأمان المتقدّم',
+    limited: 'الأمان المتقدّم',
+    unlimited: 'الأمان المتقدّم',
+    not_eligible: 'قم بإزالة إعدادات الأمان المتقدّمة الخاصة بك',
   },
 };
 

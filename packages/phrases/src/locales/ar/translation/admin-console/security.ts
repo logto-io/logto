@@ -83,11 +83,9 @@ const security = {
     card_description:
       'قفل الهوية بشكل مؤقت بعد فشل مصادقات متعددة (على سبيل المثال، تسجيل الدخول باستخدام كلمة مرور أو رمز تحقق غير صحيح بشكل متتالٍ) لمنع الوصول العشوائي.',
     enable_sentinel_policy: {
-      /** UNTRANSLATED */
-      title: 'Customize lockout experience',
-      /** UNTRANSLATED */
+      title: 'تخصيص تجربة القفل',
       description:
-        'Allow customization of the maximum failed login attempts before lockout, lockout duration, and immediate manual unlock.',
+        'السماح بتخصيص الحد الأقصى لمحاولات تسجيل الدخول الفاشلة قبل القفل، ومدة القفل، والفتح اليدوي الفوري.',
     },
     max_attempts: {
       title: 'الحد الأقصى لمحاولات الفشل',

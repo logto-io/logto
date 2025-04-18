@@ -185,24 +185,16 @@ const quota_item = {
     not_eligible: 'Rimuovi le tue applicazioni SAML',
   },
   captcha_enabled: {
-    /** UNTRANSLATED */
     name: 'CAPTCHA',
-    /** UNTRANSLATED */
     limited: 'CAPTCHA',
-    /** UNTRANSLATED */
     unlimited: 'CAPTCHA',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your CAPTCHA',
+    not_eligible: 'Rimuovi il tuo CAPTCHA',
   },
   security_features_enabled: {
-    /** UNTRANSLATED */
-    name: 'Advanced security',
-    /** UNTRANSLATED */
-    limited: 'Advanced security',
-    /** UNTRANSLATED */
-    unlimited: 'Advanced security',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your advanced security settings',
+    name: 'Sicurezza avanzata',
+    limited: 'Sicurezza avanzata',
+    unlimited: 'Sicurezza avanzata',
+    not_eligible: 'Rimuovi le tue impostazioni di sicurezza avanzata',
   },
 };
 

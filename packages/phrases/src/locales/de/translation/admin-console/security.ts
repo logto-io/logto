@@ -86,11 +86,9 @@ const security = {
     card_description:
       'Sperrt einen Bezeichner vorübergehend nach mehreren fehlgeschlagenen Authentifizierungen (z.B. Anmeldung mit aufeinanderfolgenden falschen Passwörtern oder Bestätigungscodes), um Brute-Force-Zugriffe zu verhindern.',
     enable_sentinel_policy: {
-      /** UNTRANSLATED */
-      title: 'Customize lockout experience',
-      /** UNTRANSLATED */
+      title: 'Sperrerfahrung anpassen',
       description:
-        'Allow customization of the maximum failed login attempts before lockout, lockout duration, and immediate manual unlock.',
+        'Erlaubt die Anpassung der maximalen fehlgeschlagenen Anmeldeversuche vor der Sperre, der Sperrdauer und der sofortigen manuellen Entsperrung.',
     },
     max_attempts: {
       title: 'Maximale fehlgeschlagene Versuche',

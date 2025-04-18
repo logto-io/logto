@@ -185,24 +185,16 @@ const quota_item = {
     not_eligible: 'SAMLアプリケーションを削除してください',
   },
   captcha_enabled: {
-    /** UNTRANSLATED */
     name: 'CAPTCHA',
-    /** UNTRANSLATED */
     limited: 'CAPTCHA',
-    /** UNTRANSLATED */
     unlimited: 'CAPTCHA',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your CAPTCHA',
+    not_eligible: 'あなたの CAPTCHA を削除してください',
   },
   security_features_enabled: {
-    /** UNTRANSLATED */
-    name: 'Advanced security',
-    /** UNTRANSLATED */
-    limited: 'Advanced security',
-    /** UNTRANSLATED */
-    unlimited: 'Advanced security',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your advanced security settings',
+    name: '高度なセキュリティ',
+    limited: '高度なセキュリティ',
+    unlimited: '高度なセキュリティ',
+    not_eligible: '高度なセキュリティ設定を削除してください',
   },
 };
 

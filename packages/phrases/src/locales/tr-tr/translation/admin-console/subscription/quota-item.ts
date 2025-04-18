@@ -185,24 +185,16 @@ const quota_item = {
     not_eligible: 'SAML uygulamalarınızı kaldırın',
   },
   captcha_enabled: {
-    /** UNTRANSLATED */
     name: 'CAPTCHA',
-    /** UNTRANSLATED */
     limited: 'CAPTCHA',
-    /** UNTRANSLATED */
     unlimited: 'CAPTCHA',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your CAPTCHA',
+    not_eligible: "CAPTCHA'yı kaldırın",
   },
   security_features_enabled: {
-    /** UNTRANSLATED */
-    name: 'Advanced security',
-    /** UNTRANSLATED */
-    limited: 'Advanced security',
-    /** UNTRANSLATED */
-    unlimited: 'Advanced security',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your advanced security settings',
+    name: 'Gelişmiş güvenlik',
+    limited: 'Gelişmiş güvenlik',
+    unlimited: 'Gelişmiş güvenlik',
+    not_eligible: 'Gelişmiş güvenlik ayarlarınızı kaldırın',
   },
 };
 
