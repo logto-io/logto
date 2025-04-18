@@ -1,9 +1,16 @@
 /* eslint-disable max-lines */
 import { type ToZodObject } from '@logto/connector-kit';
-import { InteractionEvent, VerificationType, type User } from '@logto/schemas';
+import {
+  InteractionEvent,
+  VerificationType,
+  type User,
+  ExperienceRedisCacheKey,
+  type CaptchaProvider,
+} from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { SignInExperienceCache } from '#src/caches/sign-in-experience.js';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
@@ -91,6 +98,8 @@ export default class ExperienceInteraction {
     skipped: false,
   };
 
+  private readonly getCaptchaProvider: () => Promise<CaptchaProvider | undefined>;
+
   /** The interaction event for the current interaction. */
   #interactionEvent: InteractionEvent;
 
@@ -123,6 +132,21 @@ export default class ExperienceInteraction {
         this.getVerificationRecordByTypeAndId(type, verificationId),
       getVerificationRecordById: (verificationId) => this.getVerificationRecordById(verificationId),
     };
+
+    // Use cache if the tenant has a cache store
+    // The cache will be invalidated when the captcha provider is updated
+    // in PUT endpoint of /api/captcha-providers/:id
+    if (tenant.cacheStore) {
+      const experienceCache = new SignInExperienceCache(tenant.id, tenant.cacheStore);
+      this.getCaptchaProvider = experienceCache.memoize(
+        async () => this.tenant.queries.captchaProviders.findCaptchaProvider(),
+        [ExperienceRedisCacheKey.CaptchaProvider],
+        () => 30 * 60 // 30 minutes
+      );
+    } else {
+      this.getCaptchaProvider = async () =>
+        this.tenant.queries.captchaProviders.findCaptchaProvider();
+    }
 
     if (typeof interactionData === 'string') {
       this.#interactionEvent = interactionData;
@@ -382,7 +406,7 @@ export default class ExperienceInteraction {
    */
   public async verifyCaptcha(token: string) {
     const log = this.ctx.createLog('Interaction.Create.Captcha');
-    const captchaProvider = await this.tenant.queries.captchaProviders.findCaptchaProvider();
+    const captchaProvider = await this.getCaptchaProvider();
 
     assertThat(captchaProvider, new RequestError({ code: 'session.captcha_failed', status: 422 }));
 

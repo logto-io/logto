@@ -6,6 +6,8 @@ import type { CloudConnectionLibrary } from '#src/libraries/cloud-connection.js'
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import type { LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 
+import type { CacheStore } from '../caches/index.js';
+
 import type Libraries from './Libraries.js';
 import type Queries from './Queries.js';
 
@@ -19,5 +21,6 @@ export default abstract class TenantContext {
   public abstract readonly connectors: ConnectorLibrary;
   public abstract readonly libraries: Libraries;
   public abstract readonly sentinel: Sentinel;
+  public abstract readonly cacheStore?: CacheStore;
   public abstract invalidateCache(): Promise<void>;
 }

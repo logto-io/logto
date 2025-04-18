@@ -10,7 +10,9 @@ import {
   VerificationType,
 } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
+import { trySafe } from '@silverhand/essentials';
 
+import { mockCaptchaProvider } from '#src/__mocks__/captcha.js';
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import { type InsertUserResult } from '#src/libraries/user.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
@@ -55,6 +57,9 @@ const signInExperiences = {
   }),
   updateDefaultSignInExperience: jest.fn(),
 };
+const captchaProviders = {
+  findCaptchaProvider: jest.fn().mockResolvedValue(mockCaptchaProvider),
+};
 
 const mockProviderInteractionDetails = jest
   .fn()
@@ -68,6 +73,7 @@ describe('ExperienceInteraction class', () => {
     {
       users: userQueries,
       signInExperiences,
+      captchaProviders,
     },
     undefined,
     { users: userLibraries, ssoConnectors }
@@ -124,6 +130,21 @@ describe('ExperienceInteraction class', () => {
         userId: 'uid',
         email: mockEmail,
       });
+    });
+  });
+
+  describe('get captcha provider', () => {
+    it('should get captcha provider from cache', async () => {
+      const experienceInteraction = new ExperienceInteraction(
+        ctx,
+        tenant,
+        InteractionEvent.Register
+      );
+      // Ignore the verification error
+      await trySafe(async () => experienceInteraction.verifyCaptcha('token'));
+      expect(tenant.queries.captchaProviders.findCaptchaProvider).toHaveBeenCalled();
+      await trySafe(async () => experienceInteraction.verifyCaptcha('token'));
+      expect(tenant.queries.captchaProviders.findCaptchaProvider).toHaveBeenCalledTimes(1);
     });
   });
 });

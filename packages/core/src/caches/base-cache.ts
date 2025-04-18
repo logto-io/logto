@@ -71,7 +71,7 @@ export abstract class BaseCache<CacheMapT extends Record<string, unknown>> {
   }
 
   /** Delete value from the inner cache store for the given type and key. */
-  async delete(type: CacheKeyOf<CacheMapT>, key: string) {
+  async delete(type: CacheKeyOf<CacheMapT>, key: string = BaseCache.defaultKey) {
     return this.cacheStore.delete(this.cacheKey(type, key));
   }
 
