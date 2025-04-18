@@ -5,6 +5,14 @@ import turnstile from '@/assets/images/turnstile.svg?react';
 
 import { type CaptchaProviderMetadata } from './types';
 
+const enableCaptchaReadme = `
+## Enable CAPTCHA
+
+Remember to enable CAPTCHA bot protection after you have set up the CAPTCHA provider.
+
+Go to the Security page, find the CAPTCHA tab, and switch on the toggle button of "Enable CAPTCHA".
+`;
+
 const turnstileReadme = `
 # Cloudflare Turnstile
 
@@ -27,6 +35,8 @@ Turnstile is a CAPTCHA service that helps protect your website from spam and abu
 
 1. Navigate to a widget you just created, and click **Manage widget**.
 2. Scroll down to the bottom and copy the **Site key** and **Secret key**.
+
+${enableCaptchaReadme}
 `;
 
 const reCAPTCHAEnterpriseReadme = `
@@ -59,6 +69,8 @@ reCAPTCHA Enterprise is a Google service that protects websites from fraud and a
 ## Get project ID
 
 1. Copy the **Project ID** from the [home page of Google Cloud Console](https://console.cloud.google.com/welcome).
+
+${enableCaptchaReadme}
 `;
 
 export const captchaProviders: CaptchaProviderMetadata[] = [
