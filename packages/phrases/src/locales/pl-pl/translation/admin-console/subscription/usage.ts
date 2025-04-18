@@ -72,6 +72,11 @@ const usage = {
     tooltip_for_enterprise:
       'Pierwsze {{basicQuota}} haki są wliczone i darmowe w twoim kontrakcie. Jeśli potrzebujesz więcej, ${{price, number}} za hak miesięcznie.',
   },
+  security_features: {
+    title: 'Zaawansowane zabezpieczenia',
+    tooltip:
+      'Funkcja dodatkowa z ceną ${{price, number}}/miesiąc za pełny pakiet zaawansowanych zabezpieczeń, w tym CAPTCHA, blokada identyfikatora, blokada e-mail (wkrótce) i inne.',
+  },
   pricing: {
     add_on_changes_in_current_cycle_notice:
       'Jeśli dokonasz jakichkolwiek zmian w bieżącym cyklu rozliczeniowym, Twój następny rachunek może być nieco wyższy w pierwszym miesiącu po zmianie. Będzie to cena bazowa ${{price, number}} plus koszty funkcji dodatkowych za nierozliczone użycie z bieżącego cyklu i pełne opłaty za kolejny cykl. <a>Dowiedz się więcej</a>',

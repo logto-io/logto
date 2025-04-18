@@ -71,6 +71,11 @@ const usage = {
     tooltip_for_enterprise:
       "Sözleşmeye dayalı planınız, ilk {{basicQuota}} hook'u içerir ve ücretsiz kullanım sağlar. Daha fazla ihtiyacınız varsa, her hook için aylık ${{price, number}}.",
   },
+  security_features: {
+    title: 'Gelişmiş güvenlik',
+    tooltip:
+      'CAPTCHA, kimlik kilitleme, e-posta engelleme listesi (yakında geliyor) ve daha fazlasını içeren tam gelişmiş güvenlik paketi için ayda ${{price, number}} karşılığında ek özellik.',
+  },
   pricing: {
     add_on_changes_in_current_cycle_notice:
       'Mevcut faturalandırma döngüsü sırasında herhangi bir değişiklik yaparsanız, değişiklikten sonraki ilk ay için faturanız biraz daha yüksek olabilir. Bu, mevcut döngüden faturalanmamış kullanım için ek maliyet artı bir sonraki döngü için tam ücret ile birlikte {{price, number}} $ taban fiyat olacaktır. <a>Daha fazla bilgi edin</a>',

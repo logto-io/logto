@@ -19,7 +19,7 @@ const usage = {
     tooltip: '附加功能，每月固定费用为 ${{price, number}} 。组织的数量或其活动水平不影响价格。',
     description_for_enterprise: '（已包含）',
     tooltip_for_enterprise:
-      '根据你的计划而定。如果组织功能不在你的初始合同中，当你激活它时，将会添加到你的账单中。附加费用为 ${{price, number}}/月，无论组织的数量或其活动如何。',
+      '根据你的计划而定。如果组织功能不在你的初始合同中，当你激活它时，将会添加到你的账单中。附加费用为 ${{price, number}}/月，无论组织的数量或活动如何。',
     tooltip_for_enterprise_with_numbered_basic_quota:
       '你的计划包括前 {{basicQuota}} 个组织免费。如果需要更多，可以按月以每月 ${{price, number}} 的固定价格添加组织，不管组织的数量或活动水平如何。',
   },
@@ -65,6 +65,11 @@ const usage = {
     tooltip: '附加功能，每个钩子价格为 ${{price, number}} 。前十个钩子包含在内。',
     tooltip_for_enterprise:
       '合同计划包括前 {{basicQuota}} 个钩子，免费使用。如果需要更多，每个钩子每月 ${{price, number}}。',
+  },
+  security_features: {
+    title: '高级安全',
+    tooltip:
+      '附加功能，完整的高级安全包价格为 ${{price, number}}/月，包括 CAPTCHA、标识符锁定、电子邮件黑名单（即将推出）等。',
   },
   pricing: {
     add_on_changes_in_current_cycle_notice:

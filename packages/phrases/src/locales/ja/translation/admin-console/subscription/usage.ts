@@ -73,6 +73,11 @@ const usage = {
     tooltip_for_enterprise:
       '最初の {{basicQuota}} フックは契約ベースのプランで含まれており、無料で使用できます。より多くが必要な場合、月額 {{price, number}} ドルのフックごとの料金がかかります。',
   },
+  security_features: {
+    title: '高度なセキュリティ',
+    tooltip:
+      '追加機能として、CAPTCHA、識別子ロックアウト、メールブロックリスト（近日登場）を含む完全な高度なセキュリティバンドルで、月額 {{price, number}} ドルです。',
+  },
   pricing: {
     add_on_changes_in_current_cycle_notice:
       '現在の請求サイクル中に変更を行った場合、次の請求書には変更後の最初の月に少し高くなる可能性があります。それは {{price, number}} ドルの基本価格に、未請求の使用の追加機能の費用と、次のサイクルの全額が加算されます。<a>さらに詳しく</a>',

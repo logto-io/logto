@@ -66,6 +66,11 @@ const usage = {
     tooltip_for_enterprise:
       '你的合約計劃中包含前 {{basicQuota}} 個鉤子並可免費使用。如果你需要更多，每個鉤子每月 ${{price, number}}。',
   },
+  security_features: {
+    title: '高級安全性',
+    tooltip:
+      '附加功能，完整高級安全性捆綁包的價格為 ${{price, number}}/月，包括 CAPTCHA、標識鎖定、電子郵件阻止名單（即將推出）等。',
+  },
   pricing: {
     add_on_changes_in_current_cycle_notice:
       '如果你在當前計費周期內做出任何更改，則下個月的費用可能會略高。它將是 ${{price, number}} 的基本價格，加上當前周期未出賬用量的附加費用，以及下個周期的全額費用。<a>了解更多</a>',

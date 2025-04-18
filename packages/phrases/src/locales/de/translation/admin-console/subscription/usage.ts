@@ -72,6 +72,11 @@ const usage = {
     tooltip_for_enterprise:
       'Die ersten {{basicQuota}} Hooks sind in deinem vertragsbasierten Plan enthalten und kostenlos. Wenn du mehr benötigst, ${{price, number}} pro Hook pro Monat.',
   },
+  security_features: {
+    title: 'Erweiterte Sicherheit',
+    tooltip:
+      'Zusatzfeature mit einem Preis von ${{price, number}}/Monat für das vollständige erweiterte Sicherheitsbündel, einschließlich CAPTCHA, Identifikator-Sperre, E-Mail-Blockliste (in Kürze verfügbar) und mehr.',
+  },
   pricing: {
     add_on_changes_in_current_cycle_notice:
       'Wenn du während des aktuellen Abrechnungszyklus Änderungen vornimmst, kann deine nächste Rechnung im ersten Monat nach der Änderung leicht höher ausfallen. Es wird ein Basispreis von ${{price, number}} plus Zusatzkosten für unberechnete Nutzung aus dem aktuellen Zyklus und die volle Gebühr für den nächsten Zyklus berechnet. <a>Erfahre mehr</a>',
