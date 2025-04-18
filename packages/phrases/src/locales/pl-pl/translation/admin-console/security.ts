@@ -84,6 +84,13 @@ const security = {
     card_title: 'Blokada identyfikatora',
     card_description:
       'Tymczasowo zablokuj identyfikator po kilku nieudanych próbach uwierzytelnienia (np. logowanie z kolejnymi nieprawidłowymi hasłami lub kodami weryfikacyjnymi), aby zapobiec dostępowi siłowemu.',
+    enable_sentinel_policy: {
+      /** UNTRANSLATED */
+      title: 'Customize lockout experience',
+      /** UNTRANSLATED */
+      description:
+        'Allow customization of the maximum failed login attempts before lockout, lockout duration, and immediate manual unlock.',
+    },
     max_attempts: {
       title: 'Maksymalna liczba nieudanych prób',
       description:

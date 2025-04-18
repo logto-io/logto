@@ -184,6 +184,26 @@ const quota_item = {
     unlimited: 'Unbegrenzte SAML-Anwendungen',
     not_eligible: 'Entferne deine SAML-Anwendungen',
   },
+  captcha_enabled: {
+    /** UNTRANSLATED */
+    name: 'CAPTCHA',
+    /** UNTRANSLATED */
+    limited: 'CAPTCHA',
+    /** UNTRANSLATED */
+    unlimited: 'CAPTCHA',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your CAPTCHA',
+  },
+  security_features_enabled: {
+    /** UNTRANSLATED */
+    name: 'Advanced security',
+    /** UNTRANSLATED */
+    limited: 'Advanced security',
+    /** UNTRANSLATED */
+    unlimited: 'Advanced security',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your advanced security settings',
+  },
 };
 
 export default Object.freeze(quota_item);

@@ -72,6 +72,9 @@ const paywall = {
   },
   bring_your_ui:
     'カスタム UI 機能とプレミアム特典を利用するには、有料プランにアップグレードしてください。',
+  /** UNTRANSLATED */
+  security_features:
+    "Unlock advanced security features by upgrading to the Pro plan. Don't hesitate to <a>contact us</a> if you have any questions.",
 };
 
 export default Object.freeze(paywall);

@@ -1,6 +1,9 @@
 const add_on = {
   mfa_inline_notification:
     'MFA 는 {{planName}}에 대한 월 ${{price, number}} 추가 기능입니다. 첫 번째 달은 청구 주기에 따라 비례 배분됩니다. <a>자세히 알아보기</a>',
+  /** UNTRANSLATED */
+  security_features_inline_notification:
+    'Enable CAPTCHA, custom lockout experience, and other advanced security features—all included in an add-on bundle for just ${{price, number}}/month.',
   footer: {
     api_resource:
       '추가 리소스는 월 ${{price, number}} / 개당 비용이 청구됩니다. 첫 번째 달은 청구 주기에 따라 비례 배분됩니다. <a>자세히 알아보기</a>',

@@ -1,6 +1,9 @@
 const add_on = {
   mfa_inline_notification:
     "L'authentification multifacteur (MFA) est un complément à ${{price, number}} par mois pour le {{planName}}. Le premier mois est calculé au prorata en fonction de votre cycle de facturation. <a>En savoir plus</a>",
+  /** UNTRANSLATED */
+  security_features_inline_notification:
+    'Enable CAPTCHA, custom lockout experience, and other advanced security features—all included in an add-on bundle for just ${{price, number}}/month.',
   footer: {
     api_resource:
       'Les ressources supplémentaires coûtent <span>${{price, number}} par mois / chacune</span>. Le premier mois est calculé au prorata en fonction de votre cycle de facturation. <a>En savoir plus</a>',

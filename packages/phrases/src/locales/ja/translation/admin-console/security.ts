@@ -84,6 +84,13 @@ const security = {
     card_title: '識別子によるロックアウト',
     card_description:
       '複数の認証失敗（例：連続した間違ったパスワードや確認コードでのサインイン）後に、一時的に識別子をロックしてブルートフォースアクセスを防ぎます。',
+    enable_sentinel_policy: {
+      /** UNTRANSLATED */
+      title: 'Customize lockout experience',
+      /** UNTRANSLATED */
+      description:
+        'Allow customization of the maximum failed login attempts before lockout, lockout duration, and immediate manual unlock.',
+    },
     max_attempts: {
       title: '最大失敗試行回数',
       description:

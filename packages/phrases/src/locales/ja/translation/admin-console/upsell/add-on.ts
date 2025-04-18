@@ -1,6 +1,9 @@
 const add_on = {
   mfa_inline_notification:
     'MFA は {{planName}} のアドオンとして月額 ${{price, number}} です。初月は請求サイクルに基づいて日割り計算されます。<a>詳細はこちら</a>',
+  /** UNTRANSLATED */
+  security_features_inline_notification:
+    'Enable CAPTCHA, custom lockout experience, and other advanced security features—all included in an add-on bundle for just ${{price, number}}/month.',
   footer: {
     api_resource:
       '追加リソースは <span>月額 ${{price, number}} / 個</span> です。初月は請求サイクルに基づいて日割り計算されます。<a>詳細はこちら</a>',

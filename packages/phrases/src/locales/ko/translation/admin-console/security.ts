@@ -82,6 +82,13 @@ const security = {
     card_title: '식별자 잠금',
     card_description:
       '여러 번의 인증 실패(예: 연속적으로 잘못된 비밀번호 또는 인증 코드로 로그인) 후 식별자를 임시로 잠가서 무차별 접근을 방지합니다.',
+    enable_sentinel_policy: {
+      /** UNTRANSLATED */
+      title: 'Customize lockout experience',
+      /** UNTRANSLATED */
+      description:
+        'Allow customization of the maximum failed login attempts before lockout, lockout duration, and immediate manual unlock.',
+    },
     max_attempts: {
       title: '최대 실패 시도 횟수',
       description:
