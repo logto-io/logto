@@ -36,10 +36,13 @@
   ],
   "cSpell.words": [
     "Alipay",
+    "backchannel",
     "CIAM",
     "codecov",
+    "deepmerge",
     "hasura",
     "huggingface",
+    "Inkeep",
     "Logto",
     "mailgun",
     "oidc",
@@ -54,8 +57,6 @@
     "timestamptz",
     "topbar",
     "upsell",
-    "withtyped",
-    "backchannel",
-    "deepmerge"
+    "withtyped"
   ]
 }
