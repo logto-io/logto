@@ -52,13 +52,6 @@ export default function captchaProviderRoutes<T extends ManagementApiRouter>(
         config,
       });
 
-      // Enable in sign in experience
-      await updateDefaultSignInExperience({
-        captchaPolicy: {
-          enabled: true,
-        },
-      });
-
       return next();
     }
   );
