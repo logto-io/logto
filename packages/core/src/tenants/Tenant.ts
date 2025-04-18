@@ -70,6 +70,7 @@ export default class Tenant implements TenantContext {
 
   public readonly provider: Provider;
   public readonly run: MiddlewareType;
+  public readonly cacheStore?: CacheStore;
 
   private readonly app: Koa;
 
@@ -109,6 +110,7 @@ export default class Tenant implements TenantContext {
     ];
 
     this.envSet = envSet;
+    this.cacheStore = redisCache;
 
     // Init app
     const app = new Koa();
@@ -143,6 +145,7 @@ export default class Tenant implements TenantContext {
       envSet,
       sentinel,
       invalidateCache: this.invalidateCache.bind(this),
+      cacheStore: redisCache,
     };
 
     // Sign-in experience callback via form submission

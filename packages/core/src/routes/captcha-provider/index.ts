@@ -1,6 +1,7 @@
-import { CaptchaProviders, captchaConfigGuard } from '@logto/schemas';
+import { CaptchaProviders, ExperienceRedisCacheKey, captchaConfigGuard } from '@logto/schemas';
 import { z } from 'zod';
 
+import { SignInExperienceCache } from '#src/caches/sign-in-experience.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
 import RequestError from '../../errors/RequestError/index.js';
@@ -10,7 +11,7 @@ import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 export default function captchaProviderRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>
 ) {
-  const [router, { queries }] = args;
+  const [router, { queries, id: tenantId, cacheStore }] = args;
   const { findCaptchaProvider, upsertCaptchaProvider, deleteCaptchaProvider } =
     queries.captchaProviders;
   const { updateDefaultSignInExperience } = queries.signInExperiences;
@@ -51,6 +52,12 @@ export default function captchaProviderRoutes<T extends ManagementApiRouter>(
       ctx.body = await upsertCaptchaProvider({
         config,
       });
+
+      // Clear the cache in sign-in experience
+      if (cacheStore) {
+        const signInExperienceCache = new SignInExperienceCache(tenantId, cacheStore);
+        await signInExperienceCache.delete(ExperienceRedisCacheKey.CaptchaProvider);
+      }
 
       return next();
     }

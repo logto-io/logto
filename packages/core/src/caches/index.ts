@@ -162,3 +162,5 @@ export const redisCacheFactory = (): RedisCacheBase => {
 };
 
 export const redisCache = redisCacheFactory();
+
+export { type CacheStore } from './types.js';

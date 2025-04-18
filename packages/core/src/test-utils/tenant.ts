@@ -2,6 +2,7 @@ import { type Sentinel } from '@logto/schemas';
 import { TtlCache } from '@logto/shared';
 import { createMockPool, createMockQueryResult } from '@silverhand/slonik';
 
+import { type CacheStore } from '#src/caches/index.js';
 import { WellKnownCache } from '#src/caches/well-known.js';
 import type { CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 import { createCloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
@@ -69,6 +70,7 @@ export class MockTenant implements TenantContext {
   public connectors: ConnectorLibrary;
   public libraries: Libraries;
   public sentinel: Sentinel;
+  public cacheStore?: CacheStore;
   public readonly subscription: SubscriptionLibrary;
 
   // eslint-disable-next-line max-params
@@ -88,11 +90,12 @@ export class MockTenant implements TenantContext {
       ...connectorsOverride,
     };
     this.sentinel = new MockSentinel();
+    this.cacheStore = new TtlCache<string, string>(60_000);
     this.subscription = new SubscriptionLibrary(
       this.id,
       this.queries,
       this.cloudConnection,
-      new TtlCache<string, string>(60_000)
+      this.cacheStore
     );
     this.libraries = new Libraries(
       this.id,

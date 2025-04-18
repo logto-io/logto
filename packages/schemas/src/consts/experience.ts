@@ -13,3 +13,13 @@ const routes = Object.freeze({
 export const experience = Object.freeze({
   routes,
 } as const);
+
+/**
+ * Experience related Redis cache keys.
+ *
+ * We use Redis to cache the experience verification related data like CAPTCHA provider config
+ * to reduce the number of requests to the database.
+ */
+export enum ExperienceRedisCacheKey {
+  CaptchaProvider = 'captcha-provider',
+}
