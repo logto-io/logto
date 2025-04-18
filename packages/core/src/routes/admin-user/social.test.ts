@@ -34,15 +34,15 @@ const mockedQueries = {
       }
       return mockUser;
     }),
+    hasUserWithIdentity: mockHasUserWithIdentity,
+    deleteUserById: jest.fn(),
+    deleteUserIdentity: jest.fn(),
     updateUserById: jest.fn(
       async (_, data: Partial<CreateUser>): Promise<User> => ({
         ...mockUser,
         ...data,
       })
     ),
-    hasUserWithIdentity: mockHasUserWithIdentity,
-    deleteUserById: jest.fn(),
-    deleteUserIdentity: jest.fn(),
   },
 } satisfies Partial2<Queries>;
 
@@ -77,7 +77,7 @@ const mockedConnectors = {
   },
 };
 
-const { findUserById, updateUserById, deleteUserIdentity } = mockedQueries.users;
+const { findUserById, deleteUserIdentity, updateUserById } = mockedQueries.users;
 
 const adminUserSocialRoutes = await pickDefault(import('./social.js'));
 

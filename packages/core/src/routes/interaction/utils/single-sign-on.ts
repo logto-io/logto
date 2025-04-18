@@ -18,7 +18,6 @@ import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import SamlConnector from '#src/sso/SamlConnector/index.js';
 import { ssoConnectorFactories, type SingleSignOnConnectorSession } from '#src/sso/index.js';
 import { type ExtendedSocialUserInfo } from '#src/sso/types/saml.js';
-import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { safeParseUnknownJson } from '#src/utils/json.js';
@@ -223,7 +222,7 @@ export const handleSsoAuthentication = async (
 
   // SignIn
   if (userSsoIdentity) {
-    return signInWithSsoAuthentication(ctx, queries, {
+    return signInWithSsoAuthentication(ctx, tenant, {
       connectorData,
       userSsoIdentity,
       ssoAuthentication,
@@ -252,7 +251,7 @@ export const handleSsoAuthentication = async (
 
 const signInWithSsoAuthentication = async (
   ctx: WithInteractionHooksContext<WithLogContext>,
-  { userSsoIdentities: userSsoIdentitiesQueries, users: usersQueries }: Queries,
+  { queries: { userSsoIdentities: userSsoIdentitiesQueries, users: usersQueries } }: TenantContext,
   {
     connectorData: { id: connectorId, syncProfile },
     userSsoIdentity: { id, userId },

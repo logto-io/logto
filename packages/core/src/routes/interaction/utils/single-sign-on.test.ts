@@ -106,8 +106,8 @@ describe('Single sign on util methods tests', () => {
         insert: insertUserSsoIdentityMock,
       },
       users: {
-        updateUserById: updateUserMock,
         findUserByEmail: findUserByEmailMock,
+        updateUserById: updateUserMock,
       },
       ssoConnectors: {
         findIdpInitiatedSamlSsoSessionById: findIdpInitiatedSamlSsoSessionMock,

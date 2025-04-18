@@ -11,6 +11,9 @@ import type { Search } from '#src/utils/search.js';
 import { buildConditionsFromSearch } from '#src/utils/search.js';
 import type { OmitAutoSetFields } from '#src/utils/sql.js';
 import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
+import { validatePhoneNumber } from '#src/utils/user.js';
+
+import { buildInsertIntoWithPool } from '../database/insert-into.js';
 
 const { table, fields } = convertToIdentifiers(Users);
 
@@ -220,7 +223,25 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     id: string,
     set: Partial<OmitAutoSetFields<CreateUser>>,
     jsonbMode: 'replace' | 'merge' = 'merge'
-  ) => updateUser({ set, where: { id }, jsonbMode });
+  ) => {
+    if (set.primaryPhone) {
+      validatePhoneNumber(set.primaryPhone);
+    }
+
+    return updateUser({ set, where: { id }, jsonbMode });
+  };
+
+  const insertUserQuery = buildInsertIntoWithPool(pool)(Users, {
+    returning: true,
+  });
+
+  const insertUser = async (data: OmitAutoSetFields<CreateUser>) => {
+    if (data.primaryPhone) {
+      validatePhoneNumber(data.primaryPhone);
+    }
+
+    return insertUserQuery(data);
+  };
 
   const deleteUserById = async (id: string) => {
     const { rowCount } = await pool.query(sql`
@@ -276,6 +297,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     findUsers,
     findUsersByIds,
     updateUserById,
+    insertUser,
     deleteUserById,
     deleteUserIdentity,
     hasActiveUsers,
