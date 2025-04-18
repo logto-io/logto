@@ -73,6 +73,11 @@ const usage = {
     tooltip_for_enterprise:
       'Os primeiros {{basicQuota}} hooks estão incluídos e são gratuitos no teu plano baseado em contrato. Se precisares de mais, ${{price, number}} por hook por mês.',
   },
+  security_features: {
+    title: 'Segurança avançada',
+    tooltip:
+      'Funcionalidade adicional com um preço de ${{price, number}}/mês para o pacote completo de segurança avançada, incluindo CAPTCHA, bloqueio de identificador, lista de bloqueio de e-mails (em breve), e mais.',
+  },
   pricing: {
     add_on_changes_in_current_cycle_notice:
       'Se fizeres alterações durante o ciclo de faturação atual, a tua próxima fatura poderá ser ligeiramente mais alta no primeiro mês após a alteração. Será o preço base de ${{price, number}} mais os custos adicionais para o uso não faturado do ciclo atual e a cobrança total para o próximo ciclo. <a>Saiba mais</a>',

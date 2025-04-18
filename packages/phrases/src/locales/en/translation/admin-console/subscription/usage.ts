@@ -72,6 +72,11 @@ const usage = {
     tooltip_for_enterprise:
       'The first {{basicQuota}} hooks are included and free to use in your contract-based plan. If you need more, ${{price, number}} per hook per month.',
   },
+  security_features: {
+    title: 'Advanced security',
+    tooltip:
+      'Add-on feature with a price of ${{price, number}}/month for the full advanced security bundle, including CAPTCHA, identifier lockout, email blocklist (coming soon), and more.',
+  },
   pricing: {
     add_on_changes_in_current_cycle_notice:
       'If you make any changes during the current billing cycle, your next bill may be slightly higher for the first month after the change. It will be ${{price, number}} base price plus add-on costs for unbilled usage from the current cycle and the full charge for the next cycle. <a>Learn more</a>',

@@ -73,6 +73,11 @@ const usage = {
     tooltip_for_enterprise:
       'Los primeros {{basicQuota}} ganchos están incluidos y son gratuitos en tu plan basado en contrato. Si necesitas más, ${{price, number}} por gancho por mes.',
   },
+  security_features: {
+    title: 'Seguridad avanzada',
+    tooltip:
+      'Función adicional con un precio de ${{price, number}}/mes para el paquete completo de seguridad avanzada, que incluye CAPTCHA, bloqueo de identificador, lista de bloqueo de correos electrónicos (próximamente) y más.',
+  },
   pricing: {
     add_on_changes_in_current_cycle_notice:
       'Si realizas algún cambio durante el ciclo de facturación actual, tu próximo recibo puede ser ligeramente más alto durante el primer mes después del cambio. Será ${{price, number}} como precio base más los costos adicionales por el uso no facturado del ciclo actual y el cargo completo para el próximo ciclo. <a>Más información</a>',
