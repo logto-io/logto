@@ -111,10 +111,7 @@ const createRouters = (tenant: TenantContext) => {
   if (EnvSet.values.isDevFeaturesEnabled) {
     captchaProviderRoutes(managementRouter, tenant);
   }
-
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    sentinelActivitiesRoutes(managementRouter, tenant);
-  }
+  sentinelActivitiesRoutes(managementRouter, tenant);
 
   const anonymousRouter: AnonymousRouter = new Router();
 

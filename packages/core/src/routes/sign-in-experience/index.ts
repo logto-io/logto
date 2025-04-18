@@ -8,7 +8,6 @@ import { validateSignUp, validateSignIn } from '#src/libraries/sign-in-experienc
 import { validateMfa } from '#src/libraries/sign-in-experience/mfa.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
-import { EnvSet } from '../../env-set/index.js';
 import RequestError from '../../errors/RequestError/index.js';
 import { checkPasswordPolicyForUser } from '../../utils/password.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
@@ -112,13 +111,6 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         validateMfa(mfa);
       }
 
-      // TODO: remove this check when we support security features
-      if ((sentinelPolicy ?? captchaPolicy) && !EnvSet.values.isDevFeaturesEnabled) {
-        throw new RequestError('request.invalid_input', {
-          message: 'Sentinel policy is not supported',
-        });
-      }
-
       // Guard the quota for the security features enabled. Guarded properties are:
       // - sentinelPolicy: if sentinelPolicy is not empty object, security features are guarded
       // - captchaPolicy: if captchaPolicy is enabled, security features are guarded
@@ -153,8 +145,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
 
       void quota.reportSubscriptionUpdatesUsage('mfaEnabled');
 
-      // TODO: remove this check when we support security features
-      if (EnvSet.values.isDevFeaturesEnabled && (sentinelPolicy ?? captchaPolicy)) {
+      if (sentinelPolicy ?? captchaPolicy) {
         void quota.reportSubscriptionUpdatesUsage('securityFeaturesEnabled');
       }
 

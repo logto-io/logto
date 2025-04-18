@@ -6,12 +6,10 @@ import {
   SentinelDecision,
 } from '@logto/schemas';
 import { addMinutes } from 'date-fns';
-import Sinon from 'sinon';
 
 import { createMockCommonQueryMethods, expectSqlString } from '#src/test-utils/query.js';
 
 import { mockSignInExperience } from '../__mocks__/sign-in-experience.js';
-import { EnvSet } from '../env-set/index.js';
 import { MockQueries } from '../test-utils/tenant.js';
 
 import BasicSentinel from './basic-sentinel.js';
@@ -42,12 +40,13 @@ const sentinel = new TestSentinel(
   })
 );
 const mockedTime = new Date('2021-01-01T00:00:00.000Z').valueOf();
-const mockedDefaultBlockedTime = addMinutes(mockedTime, 10).valueOf();
+const mockedDefaultBlockedTime = addMinutes(mockedTime, 60).valueOf();
 
 const customSentinelPolicy = {
   maxAttempts: 7,
   lockoutDuration: 15,
 };
+
 const mockedCustomBlockedTime = addMinutes(
   mockedTime,
   customSentinelPolicy.lockoutDuration
@@ -62,22 +61,6 @@ afterEach(() => {
 });
 
 describe('BasicSentinel -> reportActivity()', () => {
-  // eslint-disable-next-line @silverhand/fp/no-let
-  let stub: Sinon.SinonStub;
-
-  // TODO: Remove this when the sentinel policy is fully integrated into the system.
-  beforeAll(() => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    stub = Sinon.stub(EnvSet, 'values').value({
-      ...EnvSet.values,
-      isDevFeaturesEnabled: false,
-    });
-  });
-
-  afterAll(() => {
-    stub.restore();
-  });
-
   beforeEach(() => {
     findDefaultSignInExperienceMock.mockResolvedValue(mockSignInExperience);
   });
@@ -111,22 +94,6 @@ describe('BasicSentinel -> reportActivity()', () => {
 });
 
 describe('BasicSentinel -> decide()', () => {
-  // eslint-disable-next-line @silverhand/fp/no-let
-  let stub: Sinon.SinonStub;
-
-  // TODO: Remove this when the sentinel policy is fully integrated into the system.
-  beforeAll(() => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    stub = Sinon.stub(EnvSet, 'values').value({
-      ...EnvSet.values,
-      isDevFeaturesEnabled: false,
-    });
-  });
-
-  afterAll(() => {
-    stub.restore();
-  });
-
   beforeEach(() => {
     findDefaultSignInExperienceMock.mockResolvedValue(mockSignInExperience);
   });
@@ -140,27 +107,27 @@ describe('BasicSentinel -> decide()', () => {
     expect(decision).toEqual([SentinelDecision.Blocked, existingBlockedTime]);
   });
 
-  it('should return allowed if the activity is not blocked and there are less than 5 failed attempts', async () => {
+  it('should return allowed if the activity is not blocked and there are less than 100 failed attempts', async () => {
     methods.maybeOne.mockResolvedValueOnce(null);
-    methods.oneFirst.mockResolvedValueOnce(4);
+    methods.oneFirst.mockResolvedValueOnce(99);
 
     const activity = createMockActivityReport();
     const decision = await sentinel.decide(activity);
     expect(decision).toEqual([SentinelDecision.Allowed, mockedTime]);
   });
 
-  it('should return blocked if the activity is not blocked and there are 5 failed attempts', async () => {
+  it('should return blocked if the activity is not blocked and there are 100 failed attempts', async () => {
     methods.maybeOne.mockResolvedValueOnce(null);
-    methods.oneFirst.mockResolvedValueOnce(5);
+    methods.oneFirst.mockResolvedValueOnce(100);
 
     const activity = createMockActivityReport();
     const decision = await sentinel.decide(activity);
     expect(decision).toEqual([SentinelDecision.Blocked, mockedDefaultBlockedTime]);
   });
 
-  it('should return blocked if the activity is not blocked and there are 4 failed attempts and the current activity is failed', async () => {
+  it('should return blocked if the activity is not blocked and there are 99 failed attempts and the current activity is failed', async () => {
     methods.maybeOne.mockResolvedValueOnce(null);
-    methods.oneFirst.mockResolvedValueOnce(4);
+    methods.oneFirst.mockResolvedValueOnce(99);
 
     const activity = createMockActivityReport();
     // eslint-disable-next-line @silverhand/fp/no-mutation
@@ -171,23 +138,6 @@ describe('BasicSentinel -> decide()', () => {
 });
 
 describe('BasicSentinel  with custom policy', () => {
-  // eslint-disable-next-line @silverhand/fp/no-let
-  let stub: Sinon.SinonStub;
-
-  // TODO: Remove this when the sentinel policy is fully integrated into the system.
-  beforeAll(() => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    stub = Sinon.stub(EnvSet, 'values').value({
-      ...EnvSet.values,
-      isProduction: true,
-      isDevFeaturesEnabled: true,
-    });
-  });
-
-  afterAll(() => {
-    stub.restore();
-  });
-
   beforeEach(() => {
     findDefaultSignInExperienceMock.mockResolvedValue({
       ...mockSignInExperience,
