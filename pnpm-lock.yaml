@@ -1587,8 +1587,8 @@ importers:
         version: 3.23.8
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-631f4a7
-        version: 0.2.5-631f4a7(zod@3.23.8)
+        specifier: 0.2.5-4f7a3b5
+        version: 0.2.5-4f7a3b5(zod@3.23.8)
       '@silverhand/eslint-config':
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.5.3)(typescript@5.5.3)
@@ -3176,8 +3176,8 @@ importers:
         specifier: ^29.5.0
         version: 29.5.0
       '@logto/cloud':
-        specifier: 0.2.5-631f4a7
-        version: 0.2.5-631f4a7(zod@3.23.8)
+        specifier: 0.2.5-4f7a3b5
+        version: 0.2.5-4f7a3b5(zod@3.23.8)
       '@logto/connector-kit':
         specifier: workspace:^4.2.0
         version: link:../toolkit/connector-kit
@@ -3675,8 +3675,8 @@ importers:
         version: 3.23.8
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-c98a257
-        version: 0.2.5-c98a257(zod@3.23.8)
+        specifier: 0.2.5-4f7a3b5
+        version: 0.2.5-4f7a3b5(zod@3.23.8)
       '@silverhand/eslint-config':
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.5.3)(typescript@5.5.3)
@@ -6113,13 +6113,9 @@ packages:
   '@logto/client@3.1.1':
     resolution: {integrity: sha512-IYhZqP/hzBhNn3u0MpJD/0MSiPRbxt5sYgDXOkhXmNxRnAnXQOBk57+zNmAT3CqCiERJovriEpLM6eVVsLc3ow==}
 
-  '@logto/cloud@0.2.5-631f4a7':
-    resolution: {integrity: sha512-mhIIWuFjXzFjPGxXGQKmo7ER+JA+wEoc7ADIYvn0PHdvdeabgOB7gzz0LL7InyqTkIxR9nVbnkOBfroJ26S2KQ==}
+  '@logto/cloud@0.2.5-4f7a3b5':
+    resolution: {integrity: sha512-wMhFZDdIyI+Cr9mtsaM5Mn1sbTc0XdY/NuAeIE/9oI3psZHHZxwkJL7X3UdiqxJEMunuKepFDA6QFF0JEzXImA==}
     engines: {node: ^22.14.0}
-
-  '@logto/cloud@0.2.5-c98a257':
-    resolution: {integrity: sha512-/xXcTtYq3aCJUEADIRlbKZJKL345cHOvimSjq/DExYJXm7PkB3iaJAwlXRcmESkPxLom1o10WDQtuV9dPNVmzA==}
-    engines: {node: ^20.9.0}
 
   '@logto/js@5.1.0':
     resolution: {integrity: sha512-sOpGv31P6EKBhIGcVuso+aRFzIgOSy7OQO+UmpiABscsRloiOLKTzpUodnz1y3/khtTlmuwrClUricHc4Fxdjg==}
@@ -17600,14 +17596,7 @@ snapshots:
       camelcase-keys: 9.1.3
       jose: 5.9.6
 
-  '@logto/cloud@0.2.5-631f4a7(zod@3.23.8)':
-    dependencies:
-      '@silverhand/essentials': 2.9.2
-      '@withtyped/server': 0.14.0(zod@3.23.8)
-    transitivePeerDependencies:
-      - zod
-
-  '@logto/cloud@0.2.5-c98a257(zod@3.23.8)':
+  '@logto/cloud@0.2.5-4f7a3b5(zod@3.23.8)':
     dependencies:
       '@silverhand/essentials': 2.9.2
       '@withtyped/server': 0.14.0(zod@3.23.8)

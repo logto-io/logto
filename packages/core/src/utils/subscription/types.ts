@@ -31,14 +31,19 @@ type CompleteSubscriptionUsage = RouteResponseType<GetRoutes['/api/tenants/my/su
  */
 export type SubscriptionQuota = Omit<
   CompleteSubscriptionUsage['quota'],
+  | 'auditLogsRetentionDays'
   // Since we are deprecation the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
-  'auditLogsRetentionDays' | 'organizationsEnabled'
+  | 'organizationsEnabled'
+  // Since we will deprecate the `captchaEnabled` key soon (use `securityFeaturesEnabled` instead), we exclude it from the usage keys for now to avoid confusion.
+  | 'captchaEnabled'
 >;
 
 export type SubscriptionUsage = Omit<
   CompleteSubscriptionUsage['usage'],
   // Since we are deprecation the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
-  'organizationsEnabled'
+  | 'organizationsEnabled'
+  // Since we will deprecate the `captchaEnabled` key soon (use `securityFeaturesEnabled` instead), we exclude it from the usage keys for now to avoid confusion.
+  | 'captchaEnabled'
 >;
 
 export type ReportSubscriptionUpdatesUsageKey = Exclude<
@@ -56,6 +61,7 @@ export const allReportSubscriptionUpdatesUsageKeys = Object.freeze([
   'tenantMembersLimit',
   'enterpriseSsoLimit',
   'hooksLimit',
+  'securityFeaturesEnabled',
 ]) satisfies readonly ReportSubscriptionUpdatesUsageKey[];
 
 const subscriptionStatusGuard = z.enum([
@@ -100,6 +106,12 @@ const logtoSkuQuotaGuard = z.object({
   organizationsLimit: z.number().nullable(),
   idpInitiatedSsoEnabled: z.boolean(),
   samlApplicationsLimit: z.number().nullable(),
+  /**
+   * @deprecated
+   * TODO: @sijie remove this
+   */
+  captchaEnabled: z.boolean(),
+  securityFeaturesEnabled: z.boolean(),
 }) satisfies ToZodObject<SubscriptionQuota>;
 
 /**

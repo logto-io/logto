@@ -69,7 +69,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         )
         .partial(),
       response: SignInExperiences.guard,
-      status: [200, 400, 404, 422],
+      status: [200, 400, 404, 422, 403],
     }),
 
     // eslint-disable-next-line complexity
@@ -78,7 +78,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         query: { removeUnusedDemoSocialConnector },
         body: { socialSignInConnectorTargets, ...rest },
       } = ctx.guard;
-      const { languageInfo, signUp, signIn, mfa, sentinelPolicy } = rest;
+      const { languageInfo, signUp, signIn, mfa, sentinelPolicy, captchaPolicy } = rest;
 
       if (languageInfo) {
         await validateLanguageInfo(languageInfo);
@@ -112,11 +112,19 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         validateMfa(mfa);
       }
 
-      // TODO: Remove this when sentinel policy paywall is implemented
-      if (sentinelPolicy && !EnvSet.values.isDevFeaturesEnabled) {
+      // TODO: remove this check when we support security features
+      if ((sentinelPolicy ?? captchaPolicy) && !EnvSet.values.isDevFeaturesEnabled) {
         throw new RequestError('request.invalid_input', {
           message: 'Sentinel policy is not supported',
         });
+      }
+
+      // Guard the quota for the security features enabled. Guarded properties are:
+      // - sentinelPolicy: if sentinelPolicy is not empty object, security features are guarded
+      // - captchaPolicy: if captchaPolicy is enabled, security features are guarded
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+      if ((sentinelPolicy && Object.keys(sentinelPolicy).length > 0) || captchaPolicy?.enabled) {
+        await quota.guardTenantUsageByKey('securityFeaturesEnabled');
       }
 
       // Remove unused demo social connectors, those that are not selected in onboarding SIE config.
@@ -144,6 +152,11 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
       );
 
       void quota.reportSubscriptionUpdatesUsage('mfaEnabled');
+
+      // TODO: remove this check when we support security features
+      if (EnvSet.values.isDevFeaturesEnabled && (sentinelPolicy ?? captchaPolicy)) {
+        void quota.reportSubscriptionUpdatesUsage('securityFeaturesEnabled');
+      }
 
       return next();
     }

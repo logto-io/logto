@@ -37,6 +37,8 @@ export const mockQuota = {
   bringYourUiEnabled: false,
   idpInitiatedSsoEnabled: false,
   samlApplicationsLimit: 0,
+  securityFeaturesEnabled: false,
+  captchaEnabled: false,
 };
 
 export const mockSubscriptionData: Subscription = {

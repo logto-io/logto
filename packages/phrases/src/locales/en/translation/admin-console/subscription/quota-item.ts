@@ -190,6 +190,12 @@ const quota_item = {
     unlimited: 'CAPTCHA',
     not_eligible: 'Remove your CAPTCHA',
   },
+  security_features_enabled: {
+    name: 'Advanced security',
+    limited: 'Advanced security',
+    unlimited: 'Advanced security',
+    not_eligible: 'Remove your advanced security settings',
+  },
 };
 
 export default Object.freeze(quota_item);

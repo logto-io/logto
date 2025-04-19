@@ -201,6 +201,7 @@ export class QuotaLibrary {
       resourcesLimit: rawUsage.resourcesLimit,
       enterpriseSsoLimit: rawUsage.enterpriseSsoLimit,
       mfaEnabled: rawUsage.mfaEnabled,
+      securityFeaturesEnabled: rawUsage.securityFeaturesEnabled,
       /** Enterprise only add-on quotas */
       idpInitiatedSsoEnabled: rawUsage.idpInitiatedSsoEnabled,
       samlApplicationsLimit: rawUsage.samlApplicationsLimit,
