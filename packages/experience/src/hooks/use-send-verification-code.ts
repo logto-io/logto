@@ -5,6 +5,7 @@ import { conditional } from '@silverhand/essentials';
 import { useCallback, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import CaptchaContext from '@/Providers/CaptchaContextProvider/CaptchaContext';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { sendVerificationCodeApi } from '@/apis/utils';
 import useApi from '@/hooks/use-api';
@@ -24,6 +25,7 @@ type Payload = {
 const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) => {
   const [errorMessage, setErrorMessage] = useState<string>();
   const navigate = useNavigate();
+  const { executeCaptcha } = useContext(CaptchaContext);
 
   const handleError = useErrorHandler();
   const asyncSendVerificationCode = useApi(sendVerificationCodeApi);
@@ -34,11 +36,9 @@ const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) =
   }, []);
 
   const onSubmit = useCallback(
-    async (
-      { identifier, value }: Payload,
-      interactionEvent?: ContinueFlowInteractionEvent,
-      captchaToken?: string
-    ) => {
+    async ({ identifier, value }: Payload, interactionEvent?: ContinueFlowInteractionEvent) => {
+      const captchaToken = await executeCaptcha();
+
       const [error, result] = await asyncSendVerificationCode(
         flow,
         {

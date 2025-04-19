@@ -3,8 +3,9 @@ import {
   SignInIdentifier,
   type PasswordVerificationPayload,
 } from '@logto/schemas';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState, useContext } from 'react';
 
+import CaptchaContext from '@/Providers/CaptchaContextProvider/CaptchaContext';
 import { signInWithPasswordIdentifier } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import useCheckSingleSignOn from '@/hooks/use-check-single-sign-on';
@@ -18,6 +19,7 @@ const usePasswordSignIn = () => {
   const [errorMessage, setErrorMessage] = useState<string>();
   const { onSubmit: checkSingleSignOn } = useCheckSingleSignOn();
   const redirectTo = useGlobalRedirectTo();
+  const { executeCaptcha } = useContext(CaptchaContext);
 
   const clearErrorMessage = useCallback(() => {
     setErrorMessage('');
@@ -38,8 +40,9 @@ const usePasswordSignIn = () => {
   );
 
   const onSubmit = useCallback(
-    async (payload: PasswordVerificationPayload, captchaToken?: string) => {
+    async (payload: PasswordVerificationPayload) => {
       const { identifier } = payload;
+      const captchaToken = await executeCaptcha();
 
       // Check if the email is registered with any SSO connectors. If the email is registered with any SSO connectors, we should not proceed to the next step
       if (identifier.type === SignInIdentifier.Email) {

@@ -3,7 +3,6 @@ import { useCallback, useContext, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import CaptchaContext from '@/Providers/CaptchaContextProvider/CaptchaContext';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
@@ -36,7 +35,6 @@ const ForgotPasswordForm = ({ className, autoFocus, defaultValue = '', enabledTy
   const { errorMessage, clearErrorMessage, onSubmit } = useSendVerificationCode(
     UserFlow.ForgotPassword
   );
-  const { executeCaptcha } = useContext(CaptchaContext);
 
   const { setForgotPasswordIdentifierInputValue } = useContext(UserInteractionContext);
 
@@ -71,16 +69,10 @@ const ForgotPasswordForm = ({ className, autoFocus, defaultValue = '', enabledTy
         // Cache or update the forgot password identifier input value
         setForgotPasswordIdentifierInputValue({ type, value });
 
-        await onSubmit({ identifier: type, value }, undefined, await executeCaptcha());
+        await onSubmit({ identifier: type, value });
       })(event);
     },
-    [
-      clearErrorMessage,
-      handleSubmit,
-      onSubmit,
-      setForgotPasswordIdentifierInputValue,
-      executeCaptcha,
-    ]
+    [clearErrorMessage, handleSubmit, onSubmit, setForgotPasswordIdentifierInputValue]
   );
 
   return (

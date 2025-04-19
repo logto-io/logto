@@ -4,7 +4,6 @@ import { useCallback, useContext, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import CaptchaContext from '@/Providers/CaptchaContextProvider/CaptchaContext';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
@@ -44,7 +43,6 @@ const PasswordForm = ({
   const { errorMessage, clearErrorMessage, onSubmit } = usePasswordSignIn();
   const { setIdentifierInputValue } = useContext(UserInteractionContext);
   const { isForgotPasswordEnabled } = useForgotPasswordSettings();
-  const { executeCaptcha } = useContext(CaptchaContext);
 
   const {
     register,
@@ -79,16 +77,13 @@ const PasswordForm = ({
 
         setIdentifierInputValue({ type, value });
 
-        await onSubmit(
-          {
-            identifier: { type, value },
-            password,
-          },
-          await executeCaptcha()
-        );
+        await onSubmit({
+          identifier: { type, value },
+          password,
+        });
       })(event);
     },
-    [clearErrorMessage, handleSubmit, onSubmit, setIdentifierInputValue, executeCaptcha]
+    [clearErrorMessage, handleSubmit, onSubmit, setIdentifierInputValue]
   );
 
   return (
