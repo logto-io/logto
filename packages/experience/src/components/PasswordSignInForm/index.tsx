@@ -4,7 +4,6 @@ import { useCallback, useContext, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import CaptchaContext from '@/Providers/CaptchaContextProvider/CaptchaContext';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import LockIcon from '@/assets/icons/lock.svg?react';
 import Button from '@/components/Button';
@@ -43,7 +42,6 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const { setIdentifierInputValue } = useContext(UserInteractionContext);
   const prefilledIdentifier = usePrefilledIdentifier({ enabledIdentifiers: signInMethods });
-  const { executeCaptcha } = useContext(CaptchaContext);
 
   const {
     watch,
@@ -84,13 +82,10 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
           return;
         }
 
-        await onSubmit(
-          {
-            identifier: { type, value },
-            password,
-          },
-          await executeCaptcha()
-        );
+        await onSubmit({
+          identifier: { type, value },
+          password,
+        });
       })(event);
     },
     [
@@ -102,7 +97,6 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
       setIdentifierInputValue,
       showSingleSignOnForm,
       termsValidation,
-      executeCaptcha,
     ]
   );
 
