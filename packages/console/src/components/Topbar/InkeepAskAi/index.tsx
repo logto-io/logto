@@ -5,7 +5,6 @@ import { type ReactNode, useState } from 'react';
 
 import AskAiIconDark from '@/assets/icons/logto-ai-bot-dark.svg?react';
 import AskAiIcon from '@/assets/icons/logto-ai-bot.svg?react';
-import { inkeepApiKey, isCloud } from '@/consts/env';
 import useInkeepConfigs from '@/hooks/use-inkeep-configs';
 import useTheme from '@/hooks/use-theme';
 import { onKeyDownHandler } from '@/utils/a11y';
@@ -26,10 +25,6 @@ function InkeepAskAi({ className }: Props) {
   const inkeepConfigs = useInkeepConfigs();
   const Icon = iconMap[theme];
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  if (!isCloud || !inkeepApiKey) {
-    return null;
-  }
 
   return (
     <>
