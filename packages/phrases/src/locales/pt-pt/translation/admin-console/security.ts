@@ -85,6 +85,11 @@ const security = {
     card_title: 'Bloqueio de identificador',
     card_description:
       'Bloqueie um identificador provisoriamente após várias tentativas de autenticação falhadas (por exemplo, login com senha incorreta consecutiva ou código de verificação) para evitar acesso por força bruta.',
+    enable_sentinel_policy: {
+      title: 'Personalizar experiência de bloqueio',
+      description:
+        'Permitir a personalização do máximo de tentativas de login falhadas antes do bloqueio, duração do bloqueio, e desbloqueio manual imediato.',
+    },
     max_attempts: {
       title: 'Máximo de tentativas falhadas',
       description:

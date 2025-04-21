@@ -85,6 +85,11 @@ const security = {
     card_title: 'Identifier-Sperre',
     card_description:
       'Sperrt einen Bezeichner vorübergehend nach mehreren fehlgeschlagenen Authentifizierungen (z.B. Anmeldung mit aufeinanderfolgenden falschen Passwörtern oder Bestätigungscodes), um Brute-Force-Zugriffe zu verhindern.',
+    enable_sentinel_policy: {
+      title: 'Sperrerfahrung anpassen',
+      description:
+        'Erlaubt die Anpassung der maximalen fehlgeschlagenen Anmeldeversuche vor der Sperre, der Sperrdauer und der sofortigen manuellen Entsperrung.',
+    },
     max_attempts: {
       title: 'Maximale fehlgeschlagene Versuche',
       description:

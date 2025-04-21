@@ -67,6 +67,8 @@ const paywall = {
       '升級至付費計劃以解鎖自訂 JWT 功能和高級福利。如果有任何問題，請隨時<a>聯繫我們</a>。',
   },
   bring_your_ui: '升級到付費計劃以獲得自訂 UI 功能和高級福利。',
+  security_features:
+    '通過升級到 Pro 計劃解鎖高級安全功能。如果你有任何問題，請隨時<a>聯繫我們</a>。',
 };
 
 export default Object.freeze(paywall);

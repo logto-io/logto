@@ -172,8 +172,8 @@ const quota_item = {
     not_eligible: '移除您的自定義介面資產',
   },
   idp_initiated_sso_enabled: {
-    name: 'IDP 启動的 SSO',
-    limited: 'IDP 启動的 SSO',
+    name: 'IDP 启动的 SSO',
+    limited: 'IDP 启动的 SSO',
     unlimited: 'IDP 启动的 SSO',
     not_eligible: '不允許 IDP 启动的 SSO',
   },
@@ -183,6 +183,18 @@ const quota_item = {
     limited_other: '{{count, number}} 個 SAML 應用程式',
     unlimited: '無限 SAML 應用程式',
     not_eligible: '刪除您的 SAML 應用程式',
+  },
+  captcha_enabled: {
+    name: '驗證碼',
+    limited: '驗證碼',
+    unlimited: '驗證碼',
+    not_eligible: '刪除您的驗證碼',
+  },
+  security_features_enabled: {
+    name: '高級安全',
+    limited: '高級安全',
+    unlimited: '高級安全',
+    not_eligible: '移除您的高級安全設置',
   },
 };
 

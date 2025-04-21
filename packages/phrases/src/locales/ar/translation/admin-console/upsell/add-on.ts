@@ -1,6 +1,8 @@
 const add_on = {
   mfa_inline_notification:
     'MFA هو إضافة بتكلفة ${{price, number}} شهريًا لخطة {{planName}}. الشهر الأول محسوب استنادًا إلى دورة الفوترة الخاصة بك. <a>تعرف أكثر</a>',
+  security_features_inline_notification:
+    'تمكين CAPTCHA، وتخصيص تجربة الطرد، والميزات الأمنية المتقدمة الأخرى — جميعها متضمنة في حزمة إضافية مقابل فقط ${{price, number}}/الشهر.',
   footer: {
     api_resource:
       'تكلف الموارد الإضافية <span>${{price, number}} شهريًا / لكل واحدة</span>. الشهر الأول محسوب استنادًا إلى دورة الفوترة الخاصة بك. <a>تعرف أكثر</a>',

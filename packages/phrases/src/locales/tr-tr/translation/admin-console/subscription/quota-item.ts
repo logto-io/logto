@@ -184,6 +184,18 @@ const quota_item = {
     unlimited: 'Sınırsız SAML uygulamaları',
     not_eligible: 'SAML uygulamalarınızı kaldırın',
   },
+  captcha_enabled: {
+    name: 'CAPTCHA',
+    limited: 'CAPTCHA',
+    unlimited: 'CAPTCHA',
+    not_eligible: "CAPTCHA'yı kaldırın",
+  },
+  security_features_enabled: {
+    name: 'Gelişmiş güvenlik',
+    limited: 'Gelişmiş güvenlik',
+    unlimited: 'Gelişmiş güvenlik',
+    not_eligible: 'Gelişmiş güvenlik ayarlarınızı kaldırın',
+  },
 };
 
 export default Object.freeze(quota_item);

@@ -86,6 +86,11 @@ const security = {
     card_title: 'Verrouillage des identifiants',
     card_description:
       "Verrouillez provisoirement un identifiant après plusieurs tentatives d'authentification échouées (par exemple, connexion avec mot de passe incorrect ou code de vérification) pour empêcher l'accès par force brute.",
+    enable_sentinel_policy: {
+      title: "Personnaliser l'expérience de verrouillage",
+      description:
+        'Permettre la personnalisation des tentatives de connexion échouées maximales avant le verrouillage, la durée du verrouillage, et le déverrouillage manuel immédiat.',
+    },
     max_attempts: {
       title: 'Tentatives échouées maximum',
       description:

@@ -72,6 +72,8 @@ const paywall = {
   },
   bring_your_ui:
     'Upgrade auf einen kostenpflichtigen Plan für benutzerdefinierte UI-Funktionalität und Premium-Vorteile.',
+  security_features:
+    'Schalten Sie erweiterte Sicherheitsfunktionen durch ein Upgrade auf den Pro-Plan frei. Zögern Sie nicht, uns zu <a>kontaktieren</a>, wenn Sie Fragen haben.',
 };
 
 export default Object.freeze(paywall);

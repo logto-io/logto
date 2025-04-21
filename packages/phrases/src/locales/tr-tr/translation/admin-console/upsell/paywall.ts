@@ -72,6 +72,8 @@ const paywall = {
   },
   bring_your_ui:
     'Özel kullanıcı arayüzü işlevselliği ve prim avantajları için ücretli bir plana geçin.',
+  security_features:
+    'Gelişmiş güvenlik özelliklerinin kilidini açmak için Pro planına yükseltin. Sorularınız varsa, <a>bizimle iletişime geçmekten</a> çekinmeyin.',
 };
 
 export default Object.freeze(paywall);

@@ -72,6 +72,8 @@ const paywall = {
   },
   bring_your_ui:
     'Atualize para um plano pago para trazer a funcionalidade da sua própria UI personalizada e benefícios premium.',
+  security_features:
+    'Desbloqueie recursos avançados de segurança ao atualizar para o plano Pro. Não hesite em <a>contactar-nos</a> se tiver alguma dúvida.',
 };
 
 export default Object.freeze(paywall);

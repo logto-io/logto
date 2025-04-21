@@ -1,6 +1,8 @@
 const add_on = {
   mfa_inline_notification:
     'MFA 是 {{planName}} 的每月 ${{price, number}} 附加功能。第一個月根據你的計費週期按比例計算。<a>了解更多</a>',
+  security_features_inline_notification:
+    '啟用 CAPTCHA、自定義鎖定體驗以及其他高級安全功能——每月只需 ${{price, number}}，即可享受全部附加服務。',
   footer: {
     api_resource:
       '附加資源每月每個 ${{price, number}}。第一個月根據你的計費週期按比例計算。<a>了解更多</a>',

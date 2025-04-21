@@ -1,6 +1,8 @@
 const add_on = {
   mfa_inline_notification:
     'MFA, {{planName}} için aylık ${{price, number}} tutarında ek bir özelliktir. İlk ay faturalandırma döngünüze göre orantılı olarak hesaplanır. <a>Daha fazla bilgi edinin</a>',
+  security_features_inline_notification:
+    "CAPTCHA'yı etkinleştirin, özel kilitleme deneyimi ve diğer gelişmiş güvenlik özelliklerini ayda sadece ${{price, number}} karşılığında ek bir paket içinde alın.",
   footer: {
     api_resource:
       'Ek kaynaklar aylık <span>${{price, number}} / adet</span> tutarındadır. İlk ay faturalandırma döngünüze göre orantılı olarak hesaplanır. <a>Daha fazla bilgi edinin</a>',
