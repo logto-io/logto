@@ -1,4 +1,5 @@
 import { type InkeepSettings } from '@inkeep/cxkit-react';
+import { themes } from 'prism-react-renderer';
 import { useMemo } from 'react';
 
 import logtoAiBotDark from '@/assets/icons/logto-ai-bot-dark.svg?url';
@@ -33,7 +34,26 @@ const customStyles = `
     height: 20px;
     background: var(--inkeep-logto-icon) center/60px 20px no-repeat;
   }
-}`;
+}
+.ikp-codeblock-header {
+  background-color: var(--ikp-color-gray-dark-800);
+
+  .ikp-codeblock-header-language {
+    color: var(--ikp-color-gray-400);
+  }
+
+  .ikp-codeblock-copy-button {
+    color: var(--ikp-color-white-alpha-700);
+    
+    &:hover {
+      color: var(--ikp-color-white-alpha-950);
+    }
+  }
+}
+.ikp-codeblock-highlighter {
+  background-color: var(--ikp-color-gray-dark-900);
+}
+`;
 
 const useInkeepConfigs = () => {
   const theme = useTheme();
@@ -53,6 +73,10 @@ const useInkeepConfigs = () => {
             },
           },
           theme: {
+            syntaxHighlighter: {
+              lightTheme: themes.dracula,
+              darkTheme: themes.dracula,
+            },
             styles: [
               {
                 key: 'custom-styles',

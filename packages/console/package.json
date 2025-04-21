@@ -89,6 +89,7 @@
     "postcss": "^8.4.39",
     "postcss-modules": "^6.0.0",
     "prettier": "^3.5.3",
+    "prism-react-renderer": "^2.4.1",
     "prop-types": "^15.8.1",
     "property-information": "^6.2.0",
     "react": "^18.3.1",

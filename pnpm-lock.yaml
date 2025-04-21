@@ -3358,6 +3358,9 @@ importers:
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
+      prism-react-renderer:
+        specifier: ^2.4.1
+        version: 2.4.1(react@18.3.1)
       prop-types:
         specifier: ^15.8.1
         version: 15.8.1
