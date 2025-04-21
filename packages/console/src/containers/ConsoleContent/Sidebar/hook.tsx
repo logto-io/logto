@@ -20,7 +20,7 @@ import SecurityLock from '@/assets/icons/security-lock.svg?react';
 import Security from '@/assets/icons/security.svg?react';
 import EnterpriseSso from '@/assets/icons/single-sign-on.svg?react';
 import Web from '@/assets/icons/web.svg?react';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 
 type SidebarItem = {
   Icon: FC;
@@ -91,7 +91,6 @@ export const useSidebarMenuItems = (): {
         {
           Icon: Security,
           title: 'security',
-          isHidden: !isDevFeaturesEnabled,
         },
       ],
     },
