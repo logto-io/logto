@@ -20,6 +20,7 @@ const CaptchaContextProvider = ({ children }: Props) => {
   const widgetRef = useRef<HTMLDivElement>(null);
   const { setToast } = useToast();
   const { t } = useTranslation();
+  const { setLoading } = useContext(PageContext);
 
   const captchaPolicy = experienceSettings?.captchaPolicy;
   const captchaConfig = experienceSettings?.captchaConfig;
@@ -84,6 +85,18 @@ const CaptchaContextProvider = ({ children }: Props) => {
     });
   }, [isCaptchaRequired, captchaConfig, theme, setToast, t]);
 
+  const executeCaptchaWithLoading = useCallback(async () => {
+    setLoading(true);
+    try {
+      const token = await executeCaptcha();
+      setLoading(false);
+      return token;
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
+  }, [executeCaptcha, setLoading]);
+
   useEffect(() => {
     initCaptcha();
   }, [initCaptcha]);
@@ -91,11 +104,11 @@ const CaptchaContextProvider = ({ children }: Props) => {
   const captchaContext = useMemo<CaptchaContextType>(
     () => ({
       isCaptchaRequired,
-      executeCaptcha,
+      executeCaptcha: executeCaptchaWithLoading,
       captchaConfig,
       widgetRef,
     }),
-    [isCaptchaRequired, executeCaptcha, captchaConfig, widgetRef]
+    [isCaptchaRequired, executeCaptchaWithLoading, captchaConfig, widgetRef]
   );
 
   return <CaptchaContext.Provider value={captchaContext}>{children}</CaptchaContext.Provider>;
