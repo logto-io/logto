@@ -53,7 +53,7 @@ function Topbar({ className, hideTenantSelector, hideTitle }: Props) {
         </>
       )}
       <Spacer />
-      {isDevFeaturesEnabled && <InkeepAskAi className={styles.button} />}
+      {isDevFeaturesEnabled && isCloud && <InkeepAskAi className={styles.button} />}
       <DocumentButton />
       <HelpButton />
       {!isCloud && <VersionButton />}
