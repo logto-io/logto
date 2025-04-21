@@ -37,4 +37,5 @@ export const skuQuotaItemOrder: Array<keyof LogtoSkuQuota> = [
   'ticketSupportResponseTime',
 ];
 
-export const comingSoonSkuQuotaKeys: Array<keyof LogtoSkuQuota> = [];
+// TODO @sijie: remove this once the captcha paywall is ready
+export const comingSoonSkuQuotaKeys: Array<keyof LogtoSkuQuota> = ['captchaEnabled'];
