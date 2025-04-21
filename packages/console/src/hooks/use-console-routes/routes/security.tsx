@@ -9,7 +9,7 @@ const CaptchaDetails = safeLazy(async () => import('@/pages/CaptchaDetails'));
 export const security: RouteObject = {
   path: 'security',
   children: [
-    { index: true, element: <Navigate replace to={SecurityTabs.Captcha} /> },
+    { index: true, element: <Navigate replace to={SecurityTabs.PasswordPolicy} /> },
     { path: SecurityTabs.Captcha, element: <Security tab={SecurityTabs.Captcha} /> },
     {
       path: `${SecurityTabs.Captcha}/guide/:guideId`,
