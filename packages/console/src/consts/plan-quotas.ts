@@ -2,6 +2,8 @@ import { ReservedPlanId } from '@logto/schemas';
 
 import { type LogtoSkuQuota } from '@/types/skus';
 
+import { isDevFeaturesEnabled } from './env';
+
 /**
  * Manually add this support quota item to the plan since it will be compared in the downgrade plan notification modal.
  */
@@ -37,5 +39,7 @@ export const skuQuotaItemOrder: Array<keyof LogtoSkuQuota> = [
   'ticketSupportResponseTime',
 ];
 
-// TODO @sijie: remove this once the captcha paywall is ready
-export const comingSoonSkuQuotaKeys: Array<keyof LogtoSkuQuota> = ['captchaEnabled'];
+// TODO: @simeng @sijie remove this when the coming soon features are removed from the plan
+export const comingSoonSkuQuotaKeys: Array<keyof LogtoSkuQuota> = isDevFeaturesEnabled
+  ? ['captchaEnabled']
+  : ['captchaEnabled', 'securityFeaturesEnabled'];
