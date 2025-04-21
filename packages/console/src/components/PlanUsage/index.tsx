@@ -10,6 +10,7 @@ import {
   type NewSubscriptionQuota,
   type TenantUsageAddOnSkus,
 } from '@/cloud/types/router';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import { formatPeriod, isPaidPlan, isProPlan } from '@/utils/subscription';
@@ -80,6 +81,8 @@ function PlanUsage({ periodicUsage, usageAddOnSkus }: Props) {
       (key) =>
         isPaidTenant || (onlyShowPeriodicUsage && (key === 'mauLimit' || key === 'tokenLimit'))
     )
+    // TODO: @simeng remove this when the advance security features are ready
+    .filter((key) => key !== 'securityFeaturesEnabled' || isDevFeaturesEnabled)
     .map((key) => ({
       usage: getUsageByKey(key, {
         periodicUsage,
