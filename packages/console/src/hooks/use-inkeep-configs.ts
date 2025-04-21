@@ -1,6 +1,5 @@
 import { type InkeepSettings } from '@inkeep/cxkit-react';
 import { useMemo } from 'react';
-import { a11yDark as a11yDarkTheme } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import logtoAiBotDark from '@/assets/icons/logto-ai-bot-dark.svg?url';
 import logtoAiBot from '@/assets/icons/logto-ai-bot.svg?url';
@@ -54,10 +53,6 @@ const useInkeepConfigs = () => {
             },
           },
           theme: {
-            syntaxHighlighter: {
-              lightTheme: a11yDarkTheme,
-              darkTheme: a11yDarkTheme,
-            },
             styles: [
               {
                 key: 'custom-styles',

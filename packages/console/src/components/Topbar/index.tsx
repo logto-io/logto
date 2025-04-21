@@ -9,7 +9,7 @@ import DocumentIcon from '@/assets/icons/document-nav-button.svg?react';
 import CloudLogo from '@/assets/images/cloud-logo.svg?react';
 import Logo from '@/assets/images/logo.svg?react';
 import { githubReleasesLink } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import DynamicT from '@/ds-components/DynamicT';
 import Spacer from '@/ds-components/Spacer';
 import TextLink from '@/ds-components/TextLink';
@@ -53,7 +53,7 @@ function Topbar({ className, hideTenantSelector, hideTitle }: Props) {
         </>
       )}
       <Spacer />
-      <InkeepAskAi className={styles.button} />
+      {isDevFeaturesEnabled && <InkeepAskAi className={styles.button} />}
       <DocumentButton />
       <HelpButton />
       {!isCloud && <VersionButton />}
