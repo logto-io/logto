@@ -4,7 +4,6 @@ import { useCallback, useContext, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import CaptchaContext from '@/Providers/CaptchaContextProvider/CaptchaContext';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import LockIcon from '@/assets/icons/lock.svg?react';
 import Button from '@/components/Button';
@@ -35,7 +34,6 @@ type FormState = {
 const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) => {
   const { t } = useTranslation();
   const { termsValidation, agreeToTermsPolicy } = useTerms();
-  const { executeCaptcha } = useContext(CaptchaContext);
 
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit();
 
@@ -87,7 +85,7 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
           return;
         }
 
-        await onSubmit(type, value, await executeCaptcha());
+        await onSubmit(type, value);
       })(event);
     },
     [
@@ -99,7 +97,6 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
       setIdentifierInputValue,
       showSingleSignOnForm,
       termsValidation,
-      executeCaptcha,
     ]
   );
 

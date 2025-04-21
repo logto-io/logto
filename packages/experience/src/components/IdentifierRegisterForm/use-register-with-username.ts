@@ -1,7 +1,8 @@
 import { InteractionEvent } from '@logto/schemas';
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import CaptchaContext from '@/Providers/CaptchaContextProvider/CaptchaContext';
 import { identifyAndSubmitInteraction, registerWithUsername } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
@@ -13,6 +14,7 @@ import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-err
 const useRegisterWithUsername = () => {
   const navigate = useNavigate();
   const redirectTo = useGlobalRedirectTo();
+  const { executeCaptcha } = useContext(CaptchaContext);
 
   const [errorMessage, setErrorMessage] = useState<string>();
 
@@ -53,7 +55,8 @@ const useRegisterWithUsername = () => {
   }, [asyncSubmitInteraction, handleError, preRegisterErrorHandler, redirectTo]);
 
   const onSubmit = useCallback(
-    async (username: string, captchaToken?: string) => {
+    async (username: string) => {
+      const captchaToken = await executeCaptcha();
       const [error] = await asyncRegister(username, captchaToken);
 
       if (error) {
