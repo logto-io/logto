@@ -64,6 +64,10 @@ const buildConfig = (mode: string): UserConfig => ({
             return 'cytoscape';
           }
 
+          if (/\/node_modules\/(|@inkeep|@radix-ui|prism-react-renderer)\//.test(id)) {
+            return '@inkeep';
+          }
+
           // When this dependency is introduced by @inkeep/cxkit-react, it will cause runtime errors
           // if it is not bundled with react.
           if (id.includes('/hastscript/')) {
