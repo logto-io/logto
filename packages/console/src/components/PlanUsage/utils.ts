@@ -10,6 +10,7 @@ import {
   organizationAddOnUnitPrice,
   tokenAddOnUnitPrice,
   hooksAddOnUnitPrice,
+  securityFeaturesAddOnUnitPrice,
 } from '@/consts/subscriptions';
 
 export type UsageKey = Pick<
@@ -23,6 +24,7 @@ export type UsageKey = Pick<
   | 'tenantMembersLimit'
   | 'tokenLimit'
   | 'hooksLimit'
+  | 'securityFeaturesEnabled'
 >;
 
 // We decide not to show `hooksLimit` usage in console for now.
@@ -35,6 +37,7 @@ export const usageKeys: Array<keyof UsageKey> = [
   'machineToMachineLimit',
   'tenantMembersLimit',
   'tokenLimit',
+  'securityFeaturesEnabled',
 ];
 
 export const usageKeyPriceMap: Record<keyof UsageKey, number> = {
@@ -47,6 +50,7 @@ export const usageKeyPriceMap: Record<keyof UsageKey, number> = {
   tenantMembersLimit: tenantMembersAddOnUnitPrice,
   tokenLimit: tokenAddOnUnitPrice,
   hooksLimit: hooksAddOnUnitPrice,
+  securityFeaturesEnabled: securityFeaturesAddOnUnitPrice,
 };
 
 export const titleKeyMap: Record<
@@ -62,6 +66,7 @@ export const titleKeyMap: Record<
   tenantMembersLimit: 'tenant_members.title',
   tokenLimit: 'tokens.title',
   hooksLimit: 'hooks.title',
+  securityFeaturesEnabled: 'security_features.title',
 };
 
 export const tooltipKeyMap: Record<
@@ -77,6 +82,7 @@ export const tooltipKeyMap: Record<
   tenantMembersLimit: 'tenant_members.tooltip',
   tokenLimit: 'tokens.tooltip',
   hooksLimit: 'hooks.tooltip',
+  securityFeaturesEnabled: 'security_features.tooltip',
 };
 
 export const enterpriseTooltipKeyMap: Record<
@@ -92,6 +98,7 @@ export const enterpriseTooltipKeyMap: Record<
   tenantMembersLimit: 'tenant_members.tooltip_for_enterprise',
   tokenLimit: 'tokens.tooltip_for_enterprise',
   hooksLimit: 'hooks.tooltip_for_enterprise',
+  securityFeaturesEnabled: 'security_features.tooltip',
 };
 
 export const formatNumber = (number: number): string => {

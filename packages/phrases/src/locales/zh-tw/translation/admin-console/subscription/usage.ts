@@ -66,6 +66,11 @@ const usage = {
     tooltip_for_enterprise:
       '合同方案中包含前 {{basicQuota}} 個鉤子免費使用。如果你需要更多，每個鉤子每月 ${{price, number}}。',
   },
+  security_features: {
+    title: '進階安全性',
+    tooltip:
+      '附加功能，完整進階安全性套件的月費為 ${{price, number}}，包括 CAPTCHA、身份鎖定、電子郵件黑名單（即將推出）等。',
+  },
   pricing: {
     add_on_changes_in_current_cycle_notice:
       '如果在當前計費週期內進行任何變更，下一個月的賬單可能會稍微高一些。它將是 ${{price, number}} 的基礎價格，加上來自當前週期的未計費使用的附加費用，以及下個週期的全額收費。<a>了解更多</a>',

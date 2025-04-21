@@ -72,6 +72,11 @@ const usage = {
     tooltip_for_enterprise:
       '플랜에는 처음 {{basicQuota}} 개의 훅이 포함되어 무료로 사용할 수 있습니다. 더 필요하다면, 매달 훅당 ${{price, number}} 입니다.',
   },
+  security_features: {
+    title: '고급 보안',
+    tooltip:
+      'CAPTCHA, 식별자 잠금, 이메일 차단 목록 (출시 예정) 등을 포함한 전체 고급 보안 번들에 대해 매달 ${{price, number}} 의 추가 기능입니다.',
+  },
   pricing: {
     add_on_changes_in_current_cycle_notice:
       '현재 청구 주기 동안 변경 사항이 발생하면 변경 후 첫 달 동안 다음 청구서가 약간 높을 수 있습니다. 청구서에는 현재 주기의 청구되지 않은 사용량에 대한 추가 비용과 다음 주기의 전체 요금이 부과된 기본 가격 ${{price, number}} 가 포함됩니다. <a>자세히 알아보기</a>',
