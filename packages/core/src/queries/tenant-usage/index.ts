@@ -50,6 +50,10 @@ const { table: ssoConnectorIdpInitiatedAuthConfigsTable } = convertToIdentifiers
   SsoConnectorIdpInitiatedAuthConfigs,
   true
 );
+const { table: signInExperienceTable, fields: signInExperienceFields } = convertToIdentifiers(
+  SignInExperiences,
+  true
+);
 
 export default class TenantUsageQuery {
   constructor(private readonly pool: CommonQueryMethods) {}
@@ -74,6 +78,7 @@ export default class TenantUsageQuery {
           this.countOrganizations(),
           this.isIdpInitiatedSsoEnabled(),
           this.countSamlApplications(),
+          this.isSecurityFeaturesEnabled(),
         ].map(([query, key]) => sql`(${query}) as "${key}"`),
         sql`, `
       )}
@@ -361,6 +366,23 @@ export default class TenantUsageQuery {
       where ${rolesFields.name} != ${InternalRole.Admin}
       group by ${rolesScopesFields.roleId}
     `;
+  };
+
+  private readonly isSecurityFeaturesEnabled = (): [
+    TaggedTemplateLiteralInvocation,
+    TaggedTemplateLiteralInvocation,
+  ] => {
+    return [
+      sql`
+        select exists (
+          select * from ${signInExperienceTable}
+          where ${signInExperienceFields.captchaPolicy}->>'enabled' = 'true'
+          or ${signInExperienceFields.sentinelPolicy}->>'maxAttempts' is not null
+          or ${signInExperienceFields.sentinelPolicy}->>'lockoutDuration' is not null
+        )
+    `,
+      sql`securityFeaturesEnabled`,
+    ];
   };
 }
 /* eslint-enable max-lines */
