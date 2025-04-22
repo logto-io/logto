@@ -129,28 +129,6 @@ const useInkeepConfigs = () => {
               },
             ],
           },
-          transformSource: (source) => {
-            const urlConfig = {
-              'docs.logto.io': 'Docs',
-              'blog.logto.io': 'Blogs',
-              'openapi.logto.io': 'APIs',
-              'auth-wiki.logto.io': 'Auth Wiki',
-              'logto.io': 'Websites',
-            } as const;
-
-            const tab = Object.entries(urlConfig).find(([pattern]) =>
-              source.url.includes(pattern)
-            )?.[1];
-
-            if (!tab) {
-              return source;
-            }
-
-            return {
-              ...source,
-              tabs: [...(source.tabs ?? []), tab],
-            };
-          },
         },
         aiChatSettings: {
           aiAssistantAvatar: theme === 'dark' ? logtoAiBotDark : logtoAiBot,
@@ -195,18 +173,6 @@ const useInkeepConfigs = () => {
                 url: 'https://github.com/logto-io/logto/issues/new/choose',
               },
             },
-          ],
-        },
-        searchSettings: {
-          debounceTimeMs: 300,
-          tabs: [
-            ['Docs', { isAlwaysVisible: true }],
-            'APIs',
-            'GitHub',
-            'Blogs',
-            'Auth Wiki',
-            'Websites',
-            'All',
           ],
         },
       }) satisfies InkeepSettings,
