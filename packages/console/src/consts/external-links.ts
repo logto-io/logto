@@ -51,7 +51,8 @@ export const emailConnectors = '/connectors/email-connectors';
 export const enterpriseSso = '/connectors/enterprise-connectors';
 export const security = '/security';
 export const captcha = '/security/captcha';
-export const sentinel = '/security/sentinel';
+export const sentinel = '/security/identifier-lockout';
+export const passwordPolicy = '/security/password-policy';
 export const spInitiatedSsoFlow = '/end-user-flows/enterprise-sso/sp-initiated-sso';
 export const apiResources = '/authorization/api-resources';
 export const rbac = '/authorization/role-based-access-control';
@@ -66,8 +67,6 @@ export const auditLogs = '/developers/audit-logs';
 export const logtoCloud = '/logto-cloud';
 export const logtoCloudTenantSettings = '/logto-cloud/tenant-settings';
 export const customDomain = '/logto-cloud/custom-domain#use-custom-domain';
-export const passwordPolicy =
-  '/end-user-flows/sign-up-and-sign-in/reset-password#set-up-password-policy';
 
 export const addOnPricingExplanationLink =
   'https://blog.logto.io/pricing-add-on-a-simple-explanation/';
