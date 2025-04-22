@@ -35,10 +35,6 @@ const customStyles = `
     background: var(--inkeep-logto-icon) center/60px 20px no-repeat;
   }
 }
-[dir="rtl"] .ikp-ai-chat-tagline__container {
-  direction: ltr;
-  left: -84px;
-}
 .ikp-codeblock-header {
   background-color: var(--ikp-color-gray-dark-800);
 
@@ -59,9 +55,47 @@ const customStyles = `
 }
 `;
 
+const customRtlStyles = `
+.ikp-modal__content {
+  direction: rtl;
+
+  .ikp-ai-chat-message-header {
+    padding-inline: 0.75rem 1.5rem;
+  }
+
+  .ikp-ai-chat-message-content-wrapper {
+    padding-inline-end: 0.75rem;
+    text-align: right;
+  }
+
+  .ikp-ai-chat-disclaimer {
+    margin-inline: auto 0;
+  }
+
+  .ikp-ai-chat-input {
+    margin-inline: 0.25rem 0.5rem;
+  }
+
+  .ikp-ai-chat-input__send-button {
+    transform: scaleX(-1);
+  }
+
+  .ikp-ai-chat-tagline__container {
+    direction: ltr;
+    left: -84px;
+  }
+}
+
+.ikp-ai-chat-message-sources {
+  direction: ltr;
+  text-align: left;
+}
+`;
+
 const useInkeepConfigs = () => {
   const theme = useTheme();
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.inkeep_ai_bot' });
+  const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console.inkeep_ai_bot' });
+  const isRtl = i18n.dir() === 'rtl';
 
   return useMemo(
     (): InkeepSettings =>
@@ -87,6 +121,11 @@ const useInkeepConfigs = () => {
                 key: 'custom-styles',
                 type: 'style',
                 value: customStyles,
+              },
+              {
+                key: 'custom-rtl-styles',
+                type: 'style',
+                value: isRtl ? customRtlStyles : '',
               },
             ],
           },
