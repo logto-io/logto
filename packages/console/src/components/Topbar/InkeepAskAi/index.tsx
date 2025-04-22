@@ -2,6 +2,7 @@ import { InkeepModalChat } from '@inkeep/cxkit-react';
 import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
 import { type ReactNode, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import AskAiIconDark from '@/assets/icons/logto-ai-bot-dark.svg?react';
 import AskAiIcon from '@/assets/icons/logto-ai-bot.svg?react';
@@ -25,12 +26,13 @@ function InkeepAskAi({ className }: Props) {
   const inkeepConfigs = useInkeepConfigs();
   const Icon = iconMap[theme];
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
     <>
       <div
         tabIndex={0}
-        aria-label="Ask AI"
+        aria-label={t('inkeep_ai_bot.ask_ai_label')}
         role="button"
         className={classNames(styles.askAiButton, className)}
         onClick={() => {
@@ -41,7 +43,7 @@ function InkeepAskAi({ className }: Props) {
         })}
       >
         {Icon}
-        Ask AI
+        {t('inkeep_ai_bot.ask_ai_label')}
       </div>
       <InkeepModalChat
         {...inkeepConfigs}

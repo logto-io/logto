@@ -19,7 +19,7 @@ const jwt_claims = {
   custom_jwt_item: 'Custom claims {{for}}',
   delete_modal_title: 'Delete custom claims',
   delete_modal_content: 'Are you sure you want to delete the custom claims?',
-  clear: 'Clear',
+  clear: 'Start over',
   cleared: 'Cleared',
   restore: 'Restore defaults',
   restored: 'Restored',

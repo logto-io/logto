@@ -1,6 +1,7 @@
 import { type InkeepSettings } from '@inkeep/cxkit-react';
 import { themes } from 'prism-react-renderer';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import logtoAiBotDark from '@/assets/icons/logto-ai-bot-dark.svg?url';
 import logtoAiBot from '@/assets/icons/logto-ai-bot.svg?url';
@@ -9,8 +10,7 @@ import { inkeepApiKey } from '@/consts/env';
 import useTheme from './use-theme';
 
 const customStyles = `
-.ikp-ai-chat-tagline__container,
-.ikp-ai-search-tagline__container {
+.ikp-ai-chat-tagline__container {
   position: relative;
   color: var(--color-neutral-variant-80);
 
@@ -35,6 +35,10 @@ const customStyles = `
     background: var(--inkeep-logto-icon) center/60px 20px no-repeat;
   }
 }
+[dir="rtl"] .ikp-ai-chat-tagline__container {
+  direction: ltr;
+  left: -84px;
+}
 .ikp-codeblock-header {
   background-color: var(--ikp-color-gray-dark-800);
 
@@ -57,6 +61,7 @@ const customStyles = `
 
 const useInkeepConfigs = () => {
   const theme = useTheme();
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.inkeep_ai_bot' });
 
   return useMemo(
     (): InkeepSettings =>
@@ -111,26 +116,25 @@ const useInkeepConfigs = () => {
         aiChatSettings: {
           aiAssistantAvatar: theme === 'dark' ? logtoAiBotDark : logtoAiBot,
           aiAssistantName: 'Logto AI',
-          exampleQuestions: [
-            'Quickstart guide for Logto setup',
-            'Configure multi-tenancy architecture',
-            'How to integrate user profile?',
-          ],
+          introMessage: t('intro_message'),
+          exampleQuestionsLabel: t('example_questions_label'),
+          exampleQuestions: t('example_questions', { returnObjects: true }),
           disclaimerSettings: {
             isEnabled: true,
-            label: 'Logto AI disclaimer',
-            tooltip: 'Responses are AI-generated and may require verification.',
+            label: t('disclaimer_label'),
+            tooltip: t('disclaimer_tooltip'),
           },
+          placeholder: t('chat_placeholder'),
           toolbarButtonLabels: {
-            clear: 'Start Over',
-            stop: 'Stop',
-            copyChat: 'Copy Chat',
-            getHelp: 'Get Help',
+            clear: t('clear'),
+            stop: t('stop'),
+            copyChat: t('copy_chat'),
+            getHelp: t('get_help'),
           },
           getHelpOptions: [
             {
               icon: { builtIn: 'IoChatbubblesOutline' },
-              name: 'Contact',
+              name: t('contact'),
               action: {
                 type: 'open_link',
                 url: 'https://logto.io/contact',
@@ -138,7 +142,7 @@ const useInkeepConfigs = () => {
             },
             {
               icon: { builtIn: 'FaDiscord' },
-              name: 'Discord',
+              name: t('discord'),
               action: {
                 type: 'open_link',
                 url: 'https://discord.com/invite/UEPaF3j5e6',
@@ -167,7 +171,7 @@ const useInkeepConfigs = () => {
           ],
         },
       }) satisfies InkeepSettings,
-    [theme]
+    [theme, t]
   );
 };
 
