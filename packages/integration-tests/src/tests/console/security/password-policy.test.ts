@@ -1,10 +1,10 @@
 import ExpectConsole from '#src/ui-helpers/expect-console.js';
 import { getInputValue } from '#src/ui-helpers/index.js';
-import { dcls, devFeatureTest } from '#src/utils.js';
+import { dcls } from '#src/utils.js';
 
 const expectConsole = new ExpectConsole(await browser.newPage());
 
-devFeatureTest.describe('security: password policy', () => {
+describe('security: password policy', () => {
   it('navigates to security page', async () => {
     await expectConsole.start();
     await expectConsole.gotoPage('/security', 'Security');

@@ -2,7 +2,6 @@ import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
 import PageMeta from '@/components/PageMeta';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { security } from '@/consts/external-links';
 import CardTitle from '@/ds-components/CardTitle';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
@@ -32,33 +31,28 @@ function Security({ tab }: Props) {
         />
       </div>
       <TabNav className={styles.tabs}>
-        {isDevFeaturesEnabled && (
-          <TabNavItem
-            href={`/security/${SecurityTabs.PasswordPolicy}`}
-            isActive={tab === SecurityTabs.PasswordPolicy}
-          >
-            {t('security.tabs.password_policy')}
-          </TabNavItem>
-        )}
+        <TabNavItem
+          href={`/security/${SecurityTabs.PasswordPolicy}`}
+          isActive={tab === SecurityTabs.PasswordPolicy}
+        >
+          {t('security.tabs.password_policy')}
+        </TabNavItem>
         <TabNavItem
           href={`/security/${SecurityTabs.Captcha}`}
           isActive={tab === SecurityTabs.Captcha}
         >
           {t('security.tabs.captcha')}
         </TabNavItem>
-        {isDevFeaturesEnabled && (
-          <TabNavItem
-            href={`/security/${SecurityTabs.General}`}
-            isActive={tab === SecurityTabs.General}
-          >
-            {t('security.tabs.general')}
-          </TabNavItem>
-        )}
+        <TabNavItem
+          href={`/security/${SecurityTabs.General}`}
+          isActive={tab === SecurityTabs.General}
+        >
+          {t('security.tabs.general')}
+        </TabNavItem>
       </TabNav>
       {tab === SecurityTabs.Captcha && <Captcha />}
-      {/** TODO: Remove the dev feature guard */}
-      {tab === SecurityTabs.PasswordPolicy && isDevFeaturesEnabled && <PasswordPolicy />}
-      {tab === SecurityTabs.General && isDevFeaturesEnabled && <General />}
+      {tab === SecurityTabs.PasswordPolicy && <PasswordPolicy />}
+      {tab === SecurityTabs.General && <General />}
     </div>
   );
 }

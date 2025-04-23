@@ -7,9 +7,9 @@ import { signInWithPassword } from '#src/helpers/experience/index.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest, generateUsername } from '#src/utils.js';
+import { generateUsername } from '#src/utils.js';
 
-devFeatureTest.describe('basic sentinel', () => {
+describe('basic sentinel', () => {
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
     /**
