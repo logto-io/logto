@@ -15,6 +15,7 @@ import errors from './errors.js';
 import general from './general.js';
 import get_started from './get-started.js';
 import guide from './guide.js';
+import inkeep_ai_bot from './inkeep-ai-bot.js';
 import invitation from './invitation.js';
 import jwt_claims from './jwt-claims.js';
 import log_details from './log-details.js';
@@ -99,6 +100,7 @@ const admin_console = {
   signing_keys,
   organization_template,
   organization_role_details,
+  inkeep_ai_bot,
 };
 
 export default Object.freeze(admin_console);

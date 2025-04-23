@@ -1,6 +1,7 @@
 import { type InkeepSettings } from '@inkeep/cxkit-react';
 import { themes } from 'prism-react-renderer';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import logtoAiBotDark from '@/assets/icons/logto-ai-bot-dark.svg?url';
 import logtoAiBot from '@/assets/icons/logto-ai-bot.svg?url';
@@ -9,8 +10,7 @@ import { inkeepApiKey } from '@/consts/env';
 import useTheme from './use-theme';
 
 const customStyles = `
-.ikp-ai-chat-tagline__container,
-.ikp-ai-search-tagline__container {
+.ikp-ai-chat-tagline__container {
   position: relative;
   color: var(--color-neutral-variant-80);
 
@@ -55,8 +55,47 @@ const customStyles = `
 }
 `;
 
+const customRtlStyles = `
+.ikp-modal__content {
+  direction: rtl;
+
+  .ikp-ai-chat-message-header {
+    padding-inline: 0.75rem 1.5rem;
+  }
+
+  .ikp-ai-chat-message-content-wrapper {
+    padding-inline-end: 0.75rem;
+    text-align: right;
+  }
+
+  .ikp-ai-chat-disclaimer {
+    margin-inline: auto 0;
+  }
+
+  .ikp-ai-chat-input {
+    margin-inline: 0.25rem 0.5rem;
+  }
+
+  .ikp-ai-chat-input__send-button {
+    transform: scaleX(-1);
+  }
+
+  .ikp-ai-chat-tagline__container {
+    direction: ltr;
+    left: -84px;
+  }
+}
+
+.ikp-ai-chat-message-sources {
+  direction: ltr;
+  text-align: left;
+}
+`;
+
 const useInkeepConfigs = () => {
   const theme = useTheme();
+  const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console.inkeep_ai_bot' });
+  const isRtl = i18n.dir() === 'rtl';
 
   return useMemo(
     (): InkeepSettings =>
@@ -83,54 +122,36 @@ const useInkeepConfigs = () => {
                 type: 'style',
                 value: customStyles,
               },
+              {
+                key: 'custom-rtl-styles',
+                type: 'style',
+                value: isRtl ? customRtlStyles : '',
+              },
             ],
-          },
-          transformSource: (source) => {
-            const urlConfig = {
-              'docs.logto.io': 'Docs',
-              'blog.logto.io': 'Blogs',
-              'openapi.logto.io': 'APIs',
-              'auth-wiki.logto.io': 'Auth Wiki',
-              'logto.io': 'Websites',
-            } as const;
-
-            const tab = Object.entries(urlConfig).find(([pattern]) =>
-              source.url.includes(pattern)
-            )?.[1];
-
-            if (!tab) {
-              return source;
-            }
-
-            return {
-              ...source,
-              tabs: [...(source.tabs ?? []), tab],
-            };
           },
         },
         aiChatSettings: {
           aiAssistantAvatar: theme === 'dark' ? logtoAiBotDark : logtoAiBot,
           aiAssistantName: 'Logto AI',
-          exampleQuestions: [
-            'Quickstart guide for Logto setup',
-            'Configure multi-tenancy architecture',
-            'How to integrate user profile?',
-          ],
+          introMessage: t('intro_message'),
+          exampleQuestionsLabel: t('example_questions_label'),
+          exampleQuestions: t('example_questions', { returnObjects: true }),
           disclaimerSettings: {
             isEnabled: true,
-            label: 'Logto AI disclaimer',
-            tooltip: 'Responses are AI-generated and may require verification.',
+            label: t('disclaimer_label'),
+            tooltip: t('disclaimer_tooltip'),
           },
+          placeholder: t('chat_placeholder'),
           toolbarButtonLabels: {
-            clear: 'Start Over',
-            stop: 'Stop',
-            copyChat: 'Copy Chat',
-            getHelp: 'Get Help',
+            clear: t('clear'),
+            stop: t('stop'),
+            copyChat: t('copy_chat'),
+            getHelp: t('get_help'),
           },
           getHelpOptions: [
             {
               icon: { builtIn: 'IoChatbubblesOutline' },
-              name: 'Contact',
+              name: t('contact'),
               action: {
                 type: 'open_link',
                 url: 'https://logto.io/contact',
@@ -138,7 +159,7 @@ const useInkeepConfigs = () => {
             },
             {
               icon: { builtIn: 'FaDiscord' },
-              name: 'Discord',
+              name: t('discord'),
               action: {
                 type: 'open_link',
                 url: 'https://discord.com/invite/UEPaF3j5e6',
@@ -154,20 +175,8 @@ const useInkeepConfigs = () => {
             },
           ],
         },
-        searchSettings: {
-          debounceTimeMs: 300,
-          tabs: [
-            ['Docs', { isAlwaysVisible: true }],
-            'APIs',
-            'GitHub',
-            'Blogs',
-            'Auth Wiki',
-            'Websites',
-            'All',
-          ],
-        },
       }) satisfies InkeepSettings,
-    [theme]
+    [theme, t]
   );
 };
 
