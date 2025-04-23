@@ -26,11 +26,9 @@ import {
   enableCaptcha,
 } from '#src/helpers/sign-in-experience.js';
 import { UserApiTest, generateNewUser, generateNewUserProfile } from '#src/helpers/user.js';
-import { devFeatureTest, generateEmail } from '#src/utils.js';
+import { generateEmail } from '#src/utils.js';
 
 import { successfullySendVerificationCode } from '../../../../helpers/experience/verification-code.js';
-
-const { describe, it } = devFeatureTest;
 
 describe('captcha', () => {
   beforeAll(async () => {

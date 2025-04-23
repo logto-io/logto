@@ -17,7 +17,7 @@ import {
 import { initExperienceClient, logoutClient, processSession } from '#src/helpers/client.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { generateNewUser } from '#src/helpers/user.js';
-import { devFeatureTest, waitFor } from '#src/utils.js';
+import { waitFor } from '#src/utils.js';
 
 const { user, userProfile } = await generateNewUser({
   username: true,
@@ -190,8 +190,7 @@ describe('Sign-in interaction with one-time token', () => {
     void deleteOneTimeTokenById(oneTimeToken.id);
   });
 
-  // @sijie @charles Remove the dev feature guard from this test when captcha is released
-  devFeatureTest.it('should bypass the captcha check when using one-time token', async () => {
+  it('should bypass the captcha check when using one-time token', async () => {
     const client = await initExperienceClient({
       interactionEvent: InteractionEvent.SignIn,
     });

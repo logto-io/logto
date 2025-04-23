@@ -3,9 +3,6 @@
     {
       "name": "Captcha provider",
       "description": "Setup the captcha provider."
-    },
-    {
-      "name": "Dev feature"
     }
   ],
   "paths": {

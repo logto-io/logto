@@ -4,7 +4,6 @@ import { InteractionEvent, VerificationType, type User } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -559,10 +558,6 @@ export default class ExperienceInteraction {
   }
 
   async guardCaptcha() {
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
-    }
-
     if (this.captcha.verified || this.captcha.skipped) {
       return;
     }

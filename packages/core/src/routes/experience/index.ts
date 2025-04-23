@@ -19,7 +19,6 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import koaInteractionDetails from '#src/middleware/koa-interaction-details.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { EnvSet } from '../../env-set/index.js';
 import { type AnonymousRouter, type RouterInitArgs } from '../types.js';
 
 import experienceAnonymousRoutes from './anonymous-routes/index.js';
@@ -75,7 +74,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
 
       // Verify the captcha if provided, this is optional,
       // whether the captcha is required is determined and guarded when submitting the interaction.
-      if (EnvSet.values.isDevFeaturesEnabled && captchaToken) {
+      if (captchaToken) {
         await experienceInteraction.verifyCaptcha(captchaToken);
       }
 
