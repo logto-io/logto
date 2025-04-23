@@ -84,7 +84,7 @@ const security = {
   sentinel_policy: {
     card_title: 'Bloqueio de identificador',
     card_description:
-      'Bloqueie um identificador provisoriamente após múltiplas autenticações falhas (por exemplo, login com senha ou código de verificação incorreto consecutivo) para prevenir acesso por força bruta.',
+      'O bloqueio está disponível para todos os usuários com configurações padrão, mas você pode personalizá-lo para ter mais controle.\n\nBloqueie temporariamente um identificador após várias tentativas de autenticação falhas (por exemplo, senha incorreta consecutiva ou código de verificação) para evitar acesso por força bruta.',
     enable_sentinel_policy: {
       title: 'Personalizar experiência de bloqueio',
       description:
@@ -93,7 +93,7 @@ const security = {
     max_attempts: {
       title: 'Máximo de tentativas falhas',
       description:
-        'Limite de tentativas consecutivas de login falho por identificador. Exceder esse limite aciona um bloqueio temporário.',
+        'Bloqueie temporariamente um identificador após atingir o número máximo de tentativas de login falhas em uma hora.',
       error_message: 'O máximo de tentativas falhas deve ser maior que 0.',
     },
     lockout_duration: {

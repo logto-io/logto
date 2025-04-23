@@ -84,7 +84,7 @@ const security = {
   sentinel_policy: {
     card_title: 'Identifier-Sperre',
     card_description:
-      'Sperrt einen Bezeichner vorübergehend nach mehreren fehlgeschlagenen Authentifizierungen (z.B. Anmeldung mit aufeinanderfolgenden falschen Passwörtern oder Bestätigungscodes), um Brute-Force-Zugriffe zu verhindern.',
+      'Sperren ist für alle Benutzer mit Standardeinstellungen verfügbar, aber Sie können es anpassen, um mehr Kontrolle zu haben.\n\nSperren Sie einen Bezeichner vorübergehend nach mehreren fehlgeschlagenen Authentifizierungsversuchen (z. B. aufeinanderfolgende falsche Passwörter oder Verifizierungscodes), um Brute-Force-Zugriffe zu verhindern.',
     enable_sentinel_policy: {
       title: 'Sperrerfahrung anpassen',
       description:
@@ -93,7 +93,7 @@ const security = {
     max_attempts: {
       title: 'Maximale fehlgeschlagene Versuche',
       description:
-        'Begrenzen Sie aufeinanderfolgende fehlgeschlagene Anmeldungen pro Bezeichner. Das Überschreiten dieses Limits löst eine temporäre Sperre aus.',
+        'Einen Bezeichner vorübergehend sperren, nachdem die maximale Anzahl gescheiterter Anmeldeversuche innerhalb einer Stunde erreicht wurde.',
       error_message: 'Maximale fehlgeschlagene Versuche müssen größer als 0 sein.',
     },
     lockout_duration: {

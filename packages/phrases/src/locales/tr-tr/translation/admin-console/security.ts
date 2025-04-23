@@ -82,7 +82,7 @@ const security = {
   sentinel_policy: {
     card_title: 'Kimlik kilitleme',
     card_description:
-      'Brute force erişimini önlemek için, birden fazla başarısız kimlik doğrulama denemesinden sonra (örneğin, ardışık hatalı parola veya doğrulama kodu ile oturum açma) bir kimliği geçici olarak kilitleyin.',
+      'Tüm kullanıcılar için varsayılan ayarlarla kilitleme kullanılabilir, ancak daha fazla kontrol için özelleştirebilirsiniz.\n\nBirden fazla başarısız kimlik doğrulama denemesinden sonra (örneğin, ardışık yanlış parola veya doğrulama kodu) bir kimliğin geçici olarak kilitlenmesini sağlayarak kaba kuvvet erişimini önleyin.',
     enable_sentinel_policy: {
       title: 'Kilitleme deneyimini özelleştir',
       description:
@@ -91,7 +91,7 @@ const security = {
     max_attempts: {
       title: 'Maksimum başarısız deneme',
       description:
-        'Kimlik başına ardışık başarısız oturum açma denemelerini sınırlayın. Bu sınırın aşılması, geçici bir engellemeyi tetikler.',
+        'Bir saat içinde maksimum başarısız oturum açma deneme sayısına ulaşıldığında bir kimliği geçici olarak kilitleyin.',
       error_message: "Maksimum başarısız deneme sayısı 0'dan büyük olmalıdır.",
     },
     lockout_duration: {
