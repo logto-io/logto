@@ -6,9 +6,6 @@ import {
   updateCaptchaProvider,
 } from '#src/api/captcha-provider.js';
 import { expectRejects } from '#src/helpers/index.js';
-import { devFeatureTest } from '#src/utils.js';
-
-const { describe, it } = devFeatureTest;
 
 describe('captcha provider', () => {
   it('should update and get captcha provider successfully', async () => {

@@ -157,10 +157,6 @@ export const createSignInExperienceLibrary = (
    * @returns The public config of the captcha provider.
    */
   const findCaptchaPublicConfig = async () => {
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
-    }
-
     const provider = await findCaptchaProvider();
 
     if (!provider) {

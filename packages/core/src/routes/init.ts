@@ -108,9 +108,7 @@ const createRouters = (tenant: TenantContext) => {
   samlApplicationRoutes(managementRouter, tenant);
   emailTemplateRoutes(managementRouter, tenant);
   oneTimeTokenRoutes(managementRouter, tenant);
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    captchaProviderRoutes(managementRouter, tenant);
-  }
+  captchaProviderRoutes(managementRouter, tenant);
   sentinelActivitiesRoutes(managementRouter, tenant);
 
   const anonymousRouter: AnonymousRouter = new Router();

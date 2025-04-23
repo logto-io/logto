@@ -2,7 +2,6 @@ import { CaptchaType, Theme } from '@logto/schemas';
 import { useMemo, useContext, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { isDevFeaturesEnabled } from '@/constants/env';
 import useToast from '@/hooks/use-toast';
 
 import PageContext from '../PageContextProvider/PageContext';
@@ -25,7 +24,7 @@ const CaptchaContextProvider = ({ children }: Props) => {
   const captchaPolicy = experienceSettings?.captchaPolicy;
   const captchaConfig = experienceSettings?.captchaConfig;
 
-  const isCaptchaRequired = Boolean(isDevFeaturesEnabled && captchaPolicy?.enabled);
+  const isCaptchaRequired = Boolean(captchaPolicy?.enabled);
 
   const initCaptcha = useCallback(() => {
     if (!isCaptchaRequired || !captchaConfig) {
