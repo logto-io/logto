@@ -82,8 +82,10 @@ const security = {
   },
   sentinel_policy: {
     card_title: 'Blokada identyfikatora',
-    card_description:
-      'Tymczasowo zablokuj identyfikator po kilku nieudanych próbach uwierzytelnienia (np. logowanie z kolejnymi nieprawidłowymi hasłami lub kodami weryfikacyjnymi), aby zapobiec dostępowi siłowemu.',
+    card_description_1:
+      'Blokada jest dostępna dla wszystkich użytkowników z domyślnymi ustawieniami, ale możesz dostosować ją dla większej kontroli.',
+    card_description_2:
+      'Tymczasowo zablokuj identyfikator po wielu nieudanych próbach uwierzytelnienia (np. kolejnych błędnych hasłach lub kodach weryfikacyjnych), aby zapobiec dostępom typu brute force.',
     enable_sentinel_policy: {
       title: 'Dostosuj doświadczenie blokady',
       description:
@@ -92,7 +94,7 @@ const security = {
     max_attempts: {
       title: 'Maksymalna liczba nieudanych prób',
       description:
-        'Ogranicz kolejne nieudane logowania na identyfikator. Przekroczenie tego limitu uruchamia tymczasową blokadę.',
+        'Tymczasowo zablokuj identyfikator po osiągnięciu maksymalnej liczby nieudanych prób logowania w ciągu godziny.',
       error_message: 'Maksymalna liczba nieudanych prób musi być większa niż 0.',
     },
     lockout_duration: {

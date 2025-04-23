@@ -81,8 +81,10 @@ const security = {
   },
   sentinel_policy: {
     card_title: 'Identifier lockout',
-    card_description:
-      'Lock an identifier provisionally after multiple failed authentication (e.g., sign-in with consecutive incorrect password or verification code) to prevent brute force access.',
+    card_description_1:
+      'Lockout is available to all users with default settings, but you can customize it for more control.',
+    card_description_2:
+      'Temporarily lock an identifier after multiple failed authentication attempts (e.g., consecutive incorrect password or verification code) to prevent brute force access.',
     enable_sentinel_policy: {
       title: 'Customize lockout experience',
       description:
@@ -91,7 +93,7 @@ const security = {
     max_attempts: {
       title: 'Maximum failed attempts',
       description:
-        'Limit consecutive failed sign-ins per identifier. Exceeding this limit trigger a temporary block.',
+        'Temporarily lock an identifier after reaching the maximum number of failed login attempts in an hour.',
       error_message: 'Maximum failed attempts must be greater than 0.',
     },
     lockout_duration: {

@@ -84,8 +84,10 @@ const security = {
   },
   sentinel_policy: {
     card_title: 'Blocco identificatore',
-    card_description:
-      "Blocca temporaneamente un identificatore dopo più tentativi di autenticazione falliti (ad esempio, accessi con password o codice di verifica errati consecutivi) per prevenire l'accesso tramite forza bruta.",
+    card_description_1:
+      'Il blocco è disponibile per tutti gli utenti con impostazioni predefinite, ma puoi personalizzarlo per avere maggiore controllo.',
+    card_description_2:
+      "Blocca temporaneamente un identificatore dopo più tentativi di autenticazione falliti (ad esempio, password o codici di verifica errati consecutivi) per prevenire l'accesso con forza bruta.",
     enable_sentinel_policy: {
       title: "Personalizza l'esperienza di blocco",
       description:
@@ -94,7 +96,7 @@ const security = {
     max_attempts: {
       title: 'Massimo tentativi falliti',
       description:
-        'Limita i tentativi consecutivi di accesso non riusciti per identificatore. Superare questo limite attiverà un blocco temporaneo.',
+        "Blocca temporaneamente un identificatore dopo aver raggiunto il numero massimo di tentativi di accesso falliti in un'ora.",
       error_message: 'Il massimo dei tentativi falliti deve essere maggiore di 0.',
     },
     lockout_duration: {

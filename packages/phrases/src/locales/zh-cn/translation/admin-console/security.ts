@@ -75,15 +75,16 @@ const security = {
   },
   sentinel_policy: {
     card_title: '标识符锁定',
-    card_description:
-      '在多次身份验证失败后临时锁定标识符（例如，连续输入错误的密码或验证码登录），以防止暴力访问。',
+    card_description_1: '锁定可用于所有用户，具有默认设置，但你可以自定义以获得更多控制。',
+    card_description_2:
+      '在多次失败的身份验证尝试（例如，连续错误的密码或验证码）后，临时锁定标识符以防止暴力访问。',
     enable_sentinel_policy: {
       title: '自定义锁定体验',
       description: '允许自定义锁定前的最大失败登录尝试次数、锁定持续时间及立即手动解锁。',
     },
     max_attempts: {
       title: '最大失败尝试次数',
-      description: '限制每个标识符的连续失败登录次数。超过此限制将触发临时阻止。',
+      description: '在达到一小时内最大失败登录尝试次数后，暂时锁定标识符。',
       error_message: '最大失败尝试次数必须大于 0。',
     },
     lockout_duration: {

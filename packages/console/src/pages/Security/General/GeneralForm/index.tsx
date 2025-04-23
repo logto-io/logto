@@ -90,7 +90,14 @@ function GeneralForm({ formData }: Props) {
       >
         <FormCard
           title="security.sentinel_policy.card_title"
-          description="security.sentinel_policy.card_description"
+          descriptions={[
+            {
+              key: 'security.sentinel_policy.card_description_1',
+            },
+            {
+              key: 'security.sentinel_policy.card_description_2',
+            },
+          ]}
           learnMoreLink={{ href: sentinel }}
           tag={
             <CombinedAddOnAndFeatureTag

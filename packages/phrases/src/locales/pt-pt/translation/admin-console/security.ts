@@ -70,7 +70,7 @@ const security = {
       'Recusar passwords encontradas anteriormente em bancos de dados de violação.',
     restricted_phrases: 'Frases de baixa segurança restritas',
     restricted_phrases_tooltip:
-      'Your password should avoid these phrases unless you combine with 3 or more extra characters.',
+      'A tua password deve evitar essas frases, a menos que combines com 3 ou mais caracteres adicionais.',
     repetitive_or_sequential_characters: 'Caracteres repetitivos ou sequenciais',
     repetitive_or_sequential_characters_description: 'Ex., "AAAA", "1234" e "abcd".',
     user_information: 'Informações do utilizador',
@@ -83,8 +83,10 @@ const security = {
   },
   sentinel_policy: {
     card_title: 'Bloqueio de identificador',
-    card_description:
-      'Bloqueie um identificador provisoriamente após várias tentativas de autenticação falhadas (por exemplo, login com senha incorreta consecutiva ou código de verificação) para evitar acesso por força bruta.',
+    card_description_1:
+      'O bloqueio está disponível para todos os utilizadores com configurações padrão, mas pode personalizá-lo para obter mais controlo.',
+    card_description_2:
+      'Bloqueie temporariamente um identificador após várias tentativas de autenticação falhadas (por exemplo, senha ou código de verificação incorretos consecutivos) para evitar acesso por força bruta.',
     enable_sentinel_policy: {
       title: 'Personalizar experiência de bloqueio',
       description:
@@ -93,7 +95,7 @@ const security = {
     max_attempts: {
       title: 'Máximo de tentativas falhadas',
       description:
-        'Limite as tentativas de login consecutivas falhadas por identificador. Exceder este limite aciona um bloqueio temporário.',
+        'Bloqueia temporariamente um identificador após atingir o número máximo de tentativas de login falhadas em uma hora.',
       error_message: 'O máximo de tentativas falhadas deve ser maior que 0.',
     },
     lockout_duration: {

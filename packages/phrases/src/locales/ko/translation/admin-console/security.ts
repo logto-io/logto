@@ -55,7 +55,7 @@ const security = {
   password_policy: {
     password_requirements: '비밀번호 요구사항',
     password_requirements_description:
-      '사용자 자격 증명 탈취 및 약한 비밀번호 공격을 방어하기 위해 비밀번호 요구사항을 강화하세요. ',
+      '사용자 자격 증명 탈취 및 약한 비밀번호 공격을 방어하기 위해 비밀번호 요구사항을 강화하세요.',
     minimum_length: '최소 길이',
     minimum_length_description: 'NIST는 <a>최소 8자리</a>를 권장합니다.',
     minimum_length_error: '최소 길이는 {{min}} ~ {{max}}(포함) 사이여야 합니다.',
@@ -80,8 +80,10 @@ const security = {
   },
   sentinel_policy: {
     card_title: '식별자 잠금',
-    card_description:
-      '여러 번의 인증 실패(예: 연속적으로 잘못된 비밀번호 또는 인증 코드로 로그인) 후 식별자를 임시로 잠가서 무차별 접근을 방지합니다.',
+    card_description_1:
+      '잠금은 기본 설정으로 모든 사용자에게 제공되지만, 더 많은 제어를 위해 사용자 정의할 수 있습니다.',
+    card_description_2:
+      '무차별 대입 공격을 방지하기 위해 여러 번 인증 실패 시 (예: 연속적인 비밀번호 또는 인증 코드 오류) 식별자를 일시적으로 잠급니다.',
     enable_sentinel_policy: {
       title: '잠금 경험 사용자 정의',
       description:
@@ -89,8 +91,7 @@ const security = {
     },
     max_attempts: {
       title: '최대 실패 시도 횟수',
-      description:
-        '식별자별로 연속 실패 로그인 횟수를 제한합니다. 이 한도를 초과하면 임시 차단이 발생합니다.',
+      description: '최대 로그인 시도 실패 횟수에 도달하면 식별자를 임시로 잠급니다.',
       error_message: '최대 실패 시도 횟수는 0보다 커야 합니다.',
     },
     lockout_duration: {

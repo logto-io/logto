@@ -82,8 +82,10 @@ const security = {
   },
   sentinel_policy: {
     card_title: '識別子によるロックアウト',
-    card_description:
-      '複数の認証失敗（例：連続した間違ったパスワードや確認コードでのサインイン）後に、一時的に識別子をロックしてブルートフォースアクセスを防ぎます。',
+    card_description_1:
+      'ロックアウトはデフォルト設定で全てのユーザーが利用可能ですが、より詳細な制御のためにカスタマイズできます。',
+    card_description_2:
+      '複数の認証失敗（例：連続した誤ったパスワードや認証コード）の後に識別子を一時的にロックし、ブルートフォースアクセスを防ぎます。',
     enable_sentinel_policy: {
       title: 'ロックアウト体験をカスタマイズ',
       description:
@@ -91,8 +93,7 @@ const security = {
     },
     max_attempts: {
       title: '最大失敗試行回数',
-      description:
-        '識別子ごとに連続したサインイン試行の失敗を制限します。この制限を超えると、一時的なブロックが発生します。',
+      description: '最大失敗ログイン試行回数に達した後に識別子を一時的にロックします。',
       error_message: '最大失敗試行回数は 0 より大きくなければなりません。',
     },
     lockout_duration: {

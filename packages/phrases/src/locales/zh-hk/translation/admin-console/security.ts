@@ -75,15 +75,17 @@ const security = {
   },
   sentinel_policy: {
     card_title: '識別鎖定',
-    card_description:
-      '在多次驗證失敗後（例如，連續輸入錯誤密碼或驗證碼登入）暫時鎖定一個識別符，以防止暴力訪問。',
+    card_description_1:
+      '鎖定功能適用於所有用戶，並具備預設設定，但你可以自訂這些設定以獲得更好的控制。',
+    card_description_2:
+      '在多次身份驗證失敗（例如，連續輸入錯誤的密碼或驗證碼）後暫時鎖定一個識別符，以防止暴力破解。',
     enable_sentinel_policy: {
       title: '自定義鎖定體驗',
       description: '允許自定義超過鎖定前的最多失敗登入嘗試次數、鎖定時長及立即手動解鎖。',
     },
     max_attempts: {
       title: '最大失敗嘗試次數',
-      description: '限制每個識別符的連續失敗登入次數。超過此限制將觸發臨時封鎖。',
+      description: '在一小時內達到最大失敗登入嘗試次數後暫時鎖定一個識別符。',
       error_message: '最大失敗嘗試次數必須大於 0。',
     },
     lockout_duration: {
