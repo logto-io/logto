@@ -74,7 +74,7 @@ function CaptchaContent({ isDeleted, captchaProvider, onUpdate }: Props) {
       >
         <FormCard
           title="security.captcha_details.setup_captcha"
-          description="security.captcha_details.description"
+          description={metadata.description}
           learnMoreLink={{ href: '/security/captcha' }}
         >
           <CaptchaFormFields metadata={metadata} errors={errors} register={register} />

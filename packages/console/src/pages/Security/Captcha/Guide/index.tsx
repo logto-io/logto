@@ -103,11 +103,7 @@ function Guide({ type, onClose }: Props) {
             <Close className={styles.closeIcon} />
           </IconButton>
           <div className={styles.separator} />
-          <CardTitle
-            size="small"
-            title={<DynamicT forKey={name} />}
-            subtitle={<DynamicT forKey={description} />}
-          />
+          <CardTitle size="small" title={<DynamicT forKey={name} />} />
         </div>
         <div className={styles.content}>
           <OverlayScrollbar className={styles.readme}>
