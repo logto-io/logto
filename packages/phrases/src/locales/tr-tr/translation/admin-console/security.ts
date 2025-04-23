@@ -81,10 +81,8 @@ const security = {
   },
   sentinel_policy: {
     card_title: 'Kimlik kilitleme',
-    card_description_1:
-      'Kilitleme, varsayılan ayarlarla tüm kullanıcılar için mevcuttur, ancak daha fazla kontrol için bunu özelleştirebilirsiniz.',
-    card_description_2:
-      'Bruteforce erişimini önlemek için birden fazla başarısız kimlik doğrulama girişiminden (örneğin, ardışık yanlış parola veya doğrulama kodu) sonra bir tanımlayıcıyı geçici olarak kilitleyin.',
+    card_description:
+      'Tüm kullanıcılar için varsayılan ayarlarla kilitleme kullanılabilir, ancak daha fazla kontrol için özelleştirebilirsiniz.\n\nBirden fazla başarısız kimlik doğrulama denemesinden sonra (örneğin, ardışık yanlış parola veya doğrulama kodu) bir kimliğin geçici olarak kilitlenmesini sağlayarak kaba kuvvet erişimini önleyin.',
     enable_sentinel_policy: {
       title: 'Kilitleme deneyimini özelleştir',
       description:

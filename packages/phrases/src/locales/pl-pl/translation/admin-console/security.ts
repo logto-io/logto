@@ -82,10 +82,8 @@ const security = {
   },
   sentinel_policy: {
     card_title: 'Blokada identyfikatora',
-    card_description_1:
-      'Blokada jest dostępna dla wszystkich użytkowników z domyślnymi ustawieniami, ale możesz dostosować ją dla większej kontroli.',
-    card_description_2:
-      'Tymczasowo zablokuj identyfikator po wielu nieudanych próbach uwierzytelnienia (np. kolejnych błędnych hasłach lub kodach weryfikacyjnych), aby zapobiec dostępom typu brute force.',
+    card_description:
+      'Blokada jest dostępna dla wszystkich użytkowników z ustawieniami domyślnymi, ale możesz ją dostosować dla większej kontroli.\n\nTymczasowo zablokuj identyfikator po wielu nieudanych próbach uwierzytelnienia (np. z rzędu niepoprawne hasło lub kod weryfikacyjny), aby zapobiec dostępowi siłowemu.',
     enable_sentinel_policy: {
       title: 'Dostosuj doświadczenie blokady',
       description:

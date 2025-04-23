@@ -83,10 +83,8 @@ const security = {
   },
   sentinel_policy: {
     card_title: 'Identifier-Sperre',
-    card_description_1:
-      'Die Sperre steht allen Benutzern mit Standardeinstellungen zur Verfügung, aber Sie können sie anpassen, um mehr Kontrolle zu erhalten.',
-    card_description_2:
-      'Sperren Sie vorübergehend einen Bezeichner nach mehreren fehlgeschlagenen Authentifizierungsversuchen (z. B. aufeinanderfolgend falsches Passwort oder Bestätigungscode), um Brute-Force-Zugriffe zu verhindern.',
+    card_description:
+      'Sperren ist für alle Benutzer mit Standardeinstellungen verfügbar, aber Sie können es anpassen, um mehr Kontrolle zu haben.\n\nSperren Sie einen Bezeichner vorübergehend nach mehreren fehlgeschlagenen Authentifizierungsversuchen (z. B. aufeinanderfolgende falsche Passwörter oder Verifizierungscodes), um Brute-Force-Zugriffe zu verhindern.',
     enable_sentinel_policy: {
       title: 'Sperrerfahrung anpassen',
       description:

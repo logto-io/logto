@@ -81,10 +81,8 @@ const security = {
   },
   sentinel_policy: {
     card_title: 'Identifier lockout',
-    card_description_1:
-      'Lockout is available to all users with default settings, but you can customize it for more control.',
-    card_description_2:
-      'Temporarily lock an identifier after multiple failed authentication attempts (e.g., consecutive incorrect password or verification code) to prevent brute force access.',
+    card_description:
+      'Lockout is available to all users with default settings, but you can customize it for more control.\n\nTemporarily lock an identifier after multiple failed authentication attempts (e.g., consecutive incorrect password or verification code) to prevent brute force access.',
     enable_sentinel_policy: {
       title: 'Customize lockout experience',
       description:

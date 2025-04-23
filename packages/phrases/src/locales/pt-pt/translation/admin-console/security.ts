@@ -83,10 +83,8 @@ const security = {
   },
   sentinel_policy: {
     card_title: 'Bloqueio de identificador',
-    card_description_1:
-      'O bloqueio está disponível para todos os utilizadores com configurações padrão, mas pode personalizá-lo para obter mais controlo.',
-    card_description_2:
-      'Bloqueie temporariamente um identificador após várias tentativas de autenticação falhadas (por exemplo, senha ou código de verificação incorretos consecutivos) para evitar acesso por força bruta.',
+    card_description:
+      'O bloqueio está disponível para todos os utilizadores com configurações padrão, mas podes personalizá-lo para maior controle.\n\nBloqueia temporariamente um identificador após várias tentativas de autenticação falhadas (por exemplo, uma sequência de senhas ou códigos de verificação incorretos) para impedir acesso por força bruta.',
     enable_sentinel_policy: {
       title: 'Personalizar experiência de bloqueio',
       description:

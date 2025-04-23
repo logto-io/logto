@@ -14,7 +14,3 @@
   color: var(--color-text-secondary);
   white-space: pre-line;
 }
-
-.descriptions:not(:last-child) {
-  margin-bottom: _.unit(4);
-}

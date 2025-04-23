@@ -76,9 +76,8 @@ const security = {
   },
   sentinel_policy: {
     card_title: '識別符鎖定',
-    card_description_1: '鎖定對所有用戶均可用，並使用默認設置，但你可以自訂以獲得更大的控制權。',
-    card_description_2:
-      '多次認證失敗後（例如，連續密碼或驗證碼錯誤），暫時鎖定識別符以防止暴力破解。',
+    card_description:
+      '鎖定對所有用戶都可用並帶有預設設置，但你可以自訂以獲得更多控制。\n\n在多次認證失敗（例如，連續密碼或驗證碼錯誤）後暫時鎖定識別符，以防止暴力破解。',
     enable_sentinel_policy: {
       title: '自訂鎖定體驗',
       description: '允許自訂在鎖定之前的最大失敗登入嘗試次數、鎖定持續時間和立即手動解鎖。',

@@ -80,10 +80,8 @@ const security = {
   },
   sentinel_policy: {
     card_title: '식별자 잠금',
-    card_description_1:
-      '잠금은 기본 설정으로 모든 사용자에게 제공되지만, 더 많은 제어를 위해 사용자 정의할 수 있습니다.',
-    card_description_2:
-      '무차별 대입 공격을 방지하기 위해 여러 번 인증 실패 시 (예: 연속적인 비밀번호 또는 인증 코드 오류) 식별자를 일시적으로 잠급니다.',
+    card_description:
+      '잠금은 기본 설정으로 모든 사용자에게 제공되며, 더 많은 제어를 위해 사용자 정의할 수 있습니다.\n\n여러 번의 인증 실패 시도 (예: 연속적으로 잘못된 비밀번호 또는 인증 코드) 후에 식별자를 임시로 잠가 강제 접근을 방지합니다.',
     enable_sentinel_policy: {
       title: '잠금 경험 사용자 정의',
       description:

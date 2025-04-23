@@ -84,10 +84,8 @@ const security = {
   },
   sentinel_policy: {
     card_title: 'Blocco identificatore',
-    card_description_1:
-      'Il blocco è disponibile per tutti gli utenti con impostazioni predefinite, ma puoi personalizzarlo per avere maggiore controllo.',
-    card_description_2:
-      "Blocca temporaneamente un identificatore dopo più tentativi di autenticazione falliti (ad esempio, password o codici di verifica errati consecutivi) per prevenire l'accesso con forza bruta.",
+    card_description:
+      'Il blocco è disponibile per tutti gli utenti con impostazioni predefinite, ma puoi personalizzarlo per avere un maggiore controllo.\n\nBlocca temporaneamente un identificatore dopo diversi tentativi di autenticazione falliti (ad esempio, password o codice di verifica consecutivi errati) per prevenire accessi forzati.',
     enable_sentinel_policy: {
       title: "Personalizza l'esperienza di blocco",
       description:
