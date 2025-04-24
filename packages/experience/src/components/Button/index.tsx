@@ -53,12 +53,7 @@ const Button = ({
         className
       )}
       type={htmlType}
-      onClick={(event) => {
-        if (isLoading) {
-          return;
-        }
-        onClick?.(event);
-      }}
+      onClick={onClick}
       {...rest}
     >
       <span
