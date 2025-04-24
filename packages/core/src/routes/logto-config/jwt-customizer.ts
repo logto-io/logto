@@ -81,7 +81,8 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
       const { key, body } = getJwtTokenKeyAndBody(tokenTypePath, rawBody);
 
       // Deploy first to avoid the case where the JWT customizer was saved to DB but not deployed successfully.
-      if (!isIntegrationTest) {
+      // Apply Cloudflare Workers deployment when doing integration tests on Cloud.
+      if (!isIntegrationTest || isCloud) {
         await libraries.jwtCustomizers.deployJwtCustomizerScript(getConsoleLogFromContext(ctx), {
           key,
           value: body,
@@ -116,7 +117,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
     }),
     koaQuotaGuard({ key: 'customJwtEnabled', quota: libraries.quota }),
     async (ctx, next) => {
-      const { isIntegrationTest } = EnvSet.values;
+      const { isCloud, isIntegrationTest } = EnvSet.values;
 
       const {
         params: { tokenTypePath },
@@ -125,7 +126,8 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
       const { key, body } = getJwtTokenKeyAndBody(tokenTypePath, rawBody);
 
       // Deploy first to avoid the case where the JWT customizer was saved to DB but not deployed successfully.
-      if (!isIntegrationTest) {
+      // Apply Cloudflare Workers deployment when doing integration tests on Cloud.
+      if (!isIntegrationTest || isCloud) {
         await libraries.jwtCustomizers.deployJwtCustomizerScript(getConsoleLogFromContext(ctx), {
           key,
           value: body,
@@ -185,7 +187,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
       status: [204, 404],
     }),
     async (ctx, next) => {
-      const { isIntegrationTest } = EnvSet.values;
+      const { isCloud, isIntegrationTest } = EnvSet.values;
 
       const {
         params: { tokenTypePath },
@@ -197,7 +199,8 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
           : LogtoJwtTokenKey.ClientCredentials;
 
       // Undeploy the script first to avoid the case where the JWT customizer was deleted from DB but worker script not updated successfully.
-      if (!isIntegrationTest) {
+      // Apply Cloudflare Workers deployment when doing integration tests on Cloud.
+      if (!isIntegrationTest || isCloud) {
         await libraries.jwtCustomizers.undeployJwtCustomizerScript(
           getConsoleLogFromContext(ctx),
           tokenKey
