@@ -43,22 +43,18 @@ const Button = ({
 
   return (
     <button
-      disabled={isDisabled}
+      disabled={isDisabled || isLoading}
       className={classNames(
         styles.button,
         styles[type],
         styles[size],
         isDisabled && styles.disabled,
-        isLoadingActive && styles.loading,
+        isLoading && styles.loading,
+        isLoadingActive && styles.loadingActive,
         className
       )}
       type={htmlType}
-      onClick={(event) => {
-        if (isLoading) {
-          return;
-        }
-        onClick?.(event);
-      }}
+      onClick={onClick}
       {...rest}
     >
       <span

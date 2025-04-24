@@ -46,12 +46,7 @@ const SocialLinkButton = ({
         className
       )}
       type="button"
-      onClick={() => {
-        if (isLoading) {
-          return;
-        }
-        onClick?.();
-      }}
+      onClick={onClick}
     >
       {logo && !isLoadingActive && (
         <img src={logo} alt={target} className={socialLinkButtonStyles.icon} />
