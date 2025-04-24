@@ -57,13 +57,17 @@ const SetPassword = ({
 
   const onSubmitHandler = useCallback(
     (event?: React.FormEvent<HTMLFormElement>) => {
+      if (isSubmitting) {
+        return;
+      }
+
       clearErrorMessage?.();
 
       void handleSubmit(async (data) => {
         await onSubmit(data.newPassword);
       })(event);
     },
-    [clearErrorMessage, handleSubmit, onSubmit]
+    [clearErrorMessage, handleSubmit, isSubmitting, onSubmit]
   );
 
   return (

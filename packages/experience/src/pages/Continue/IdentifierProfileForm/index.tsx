@@ -62,6 +62,10 @@ const IdentifierProfileForm = ({
 
   const onSubmitHandler = useCallback(
     (event?: React.FormEvent<HTMLFormElement>) => {
+      if (isSubmitting) {
+        return;
+      }
+
       clearErrorMessage?.();
 
       void handleSubmit(async ({ identifier: { type, value } }) => {
@@ -72,7 +76,7 @@ const IdentifierProfileForm = ({
         await onSubmit?.(type, value);
       })(event);
     },
-    [clearErrorMessage, handleSubmit, onSubmit]
+    [clearErrorMessage, handleSubmit, isSubmitting, onSubmit]
   );
 
   return (

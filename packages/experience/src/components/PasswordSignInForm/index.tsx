@@ -63,6 +63,10 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
+      if (isSubmitting) {
+        return;
+      }
+
       clearErrorMessage();
 
       await handleSubmit(async ({ identifier: { type, value }, password }) => {
@@ -92,6 +96,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
       agreeToTermsPolicy,
       clearErrorMessage,
       handleSubmit,
+      isSubmitting,
       navigateToSingleSignOn,
       onSubmit,
       setIdentifierInputValue,
