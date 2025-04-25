@@ -1,3 +1,5 @@
+import { pathToFileURL } from 'node:url';
+
 import type { AlterationScript } from '@logto/schemas/lib/types/alteration.js';
 import { conditionalString } from '@silverhand/essentials';
 import type { CommonQueryMethods, DatabasePool } from '@silverhand/slonik';
@@ -18,7 +20,6 @@ import {
   chooseRevertAlterationsByTimestamp,
 } from './utils.js';
 import { chooseAlterationsByVersion, chooseRevertAlterationsByVersion } from './version.js';
-import { pathToFileURL } from 'url';
 
 const importAlterationScript = async (filePath: string): Promise<AlterationScript> => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
