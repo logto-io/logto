@@ -1,0 +1,7 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  position: fixed;
+  inset: 0;
+  @include _.flex-column;
+}
