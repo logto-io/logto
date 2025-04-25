@@ -1,5 +1,5 @@
 import i18next from 'i18next';
-import type { CountryCode, CountryCallingCode, E164Number } from 'libphonenumber-js/mobile';
+import type { CountryCode, CountryCallingCode } from 'libphonenumber-js/mobile';
 import {
   getCountries,
   getCountryCallingCode,
@@ -86,7 +86,7 @@ export const getCountryList = (): CountryMetaData[] => {
   ];
 };
 
-export const parseE164Number = (value: string): E164Number | '' => {
+export const parseE164Number = (value: string) => {
   if (!value || value.startsWith('+')) {
     return value;
   }
