@@ -1,25 +1,29 @@
-import action from "./action.js";
-import description from "./description.js";
-import development_tenant from "./development-tenant.js";
-import error from "./error/index.js";
-import input from "./input.js";
-import list from "./list.js";
-import mfa from "./mfa.js";
-import secondary from "./secondary.js";
-import user_scopes from "./user-scopes.js";
+import { type DeepPartial } from '@silverhand/essentials';
 
-const ukUA = {
-	translation: {
-		input,
-		secondary,
-		action,
-		description,
-		error,
-		list,
-		mfa,
-		development_tenant,
-		user_scopes,
-	},
-};
+import type { LocalePhrase } from '../../types.js';
 
-export default Object.freeze(ukUA);
+import action from './action.js';
+import description from './description.js';
+import development_tenant from './development-tenant.js';
+import error from './error/index.js';
+import input from './input.js';
+import list from './list.js';
+import mfa from './mfa.js';
+import secondary from './secondary.js';
+import user_scopes from './user-scopes.js';
+
+const uk_ua = {
+  translation: {
+    input,
+    secondary,
+    action,
+    description,
+    error,
+    list,
+    mfa,
+    development_tenant,
+    user_scopes,
+  },
+} satisfies DeepPartial<LocalePhrase>;
+
+export default Object.freeze(uk_ua);
