@@ -69,7 +69,6 @@ function CustomUiForm() {
       </FormField>
       {isCloud && (
         <FormField
-          isBeta
           title="sign_in_exp.custom_ui.bring_your_ui_title"
           description={
             <Trans
