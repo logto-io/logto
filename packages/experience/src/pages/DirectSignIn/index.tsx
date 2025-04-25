@@ -1,11 +1,13 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import LoadingLayer from '@/components/LoadingLayer';
+import { LoadingIconWithContainer } from '@/components/LoadingLayer';
 import useSocial from '@/containers/SocialSignInList/use-social';
 import useFallbackRoute from '@/hooks/use-fallback-route';
 import { useSieMethods } from '@/hooks/use-sie';
 import useSingleSignOn from '@/hooks/use-single-sign-on';
+
+import styles from './index.module.scss';
 
 const DirectSignIn = () => {
   const { method, target } = useParams();
@@ -35,6 +37,10 @@ const DirectSignIn = () => {
     window.location.replace('/' + fallback);
   }, [fallback, invokeSocialSignIn, invokeSso, method, socialConnectors, ssoConnectors, target]);
 
-  return <LoadingLayer />;
+  return (
+    <div className={styles.container}>
+      <LoadingIconWithContainer />
+    </div>
+  );
 };
 export default DirectSignIn;

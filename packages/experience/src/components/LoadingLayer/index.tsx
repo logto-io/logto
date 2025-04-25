@@ -5,11 +5,15 @@ import styles from './index.module.scss';
 
 export { default as LoadingIcon } from './LoadingIcon';
 
+export const LoadingIconWithContainer = () => (
+  <div className={styles.container}>
+    <LoadingIcon />
+  </div>
+);
+
 const LoadingLayer = () => (
   <LoadingMask>
-    <div className={styles.container}>
-      <LoadingIcon />
-    </div>
+    <LoadingIconWithContainer />
   </LoadingMask>
 );
 
