@@ -21,8 +21,7 @@ const error = {
   sso_not_enabled: 'Єдиний вхід (SSO) не ввімкнено для цього облікового запису.',
   invalid_link: 'Недійсне посилання',
   invalid_link_description: 'Ваш одноразовий токен міг спливти або більше не є дійсним.',
-  /** UNTRANSLATED */
-  captcha_verification_failed: 'Failed to perform captcha verification.',
+  captcha_verification_failed: 'Не вдалося пройти перевірку капчи.',
   something_went_wrong: 'Щось пішло не так.',
 };
 

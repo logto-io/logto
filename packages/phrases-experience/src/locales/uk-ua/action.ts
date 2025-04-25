@@ -1,8 +1,7 @@
 const action = {
   sign_in: 'Увійти',
   continue: 'Продовжити',
-  /** UNTRANSLATED */
-  continue_as: 'Continue as {{name}}',
+  continue_as: 'Продовжити як {{name}}',
   create_account: 'Створити обліковий запис',
   create_account_without_linking: 'Створити новий замість цього',
   create: 'Створити',
