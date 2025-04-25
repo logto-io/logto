@@ -36,32 +36,24 @@ The following is an example of App Router:
 <Tabs>
 
 <TabItem value="v5" label="Next Auth v5">
-  <Code className="language-ts">
-    {`import NextAuth from 'next-auth';
+
+Set the environment variables:
+
+<Code className="language-env">
+{`AUTH_LOGTO_ISSUER='${props.endpoint}oidc',
+AUTH_LOGTO_ID='${props.app.id}',
+AUTH_LOGTO_SECRET='${props.secrets[0]?.value ?? props.app.secret}'
+`}
+</Code>
+
+Configure the provider:
+
+<Code className="language-ts">
+{`import NextAuth from 'next-auth';
+import Logto from 'next-auth/providers/logto';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  providers: [
-    {
-      id: 'logto',
-      name: 'Logto',
-      type: 'oidc',
-      issuer: '${props.endpoint}oidc',
-      clientId: '${props.app.id}',
-      clientSecret: '${props.secrets[0]?.value ?? props.app.secret}',
-      authorization: {
-        params: { scope: 'openid offline_access profile email' },
-      },
-      profile(profile) {
-        // You can customize the user profile mapping here
-        return {
-          id: profile.sub,
-          name: profile.name ?? profile.username,
-          email: profile.email,
-          image: profile.picture,
-        };
-      },
-    },
-  ],
+  providers: [Logto],
 });`}
 </Code>
 </TabItem>
