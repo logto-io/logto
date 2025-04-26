@@ -23,14 +23,14 @@ const mockedQueries = {
     hasUser: jest.fn(async () => mockHasUser()),
     hasUserWithEmail: jest.fn(async () => mockHasUserWithEmail()),
     hasUserWithPhone: jest.fn(async () => mockHasUserWithPhone()),
+    deleteUserById: jest.fn(),
+    deleteUserIdentity: jest.fn(),
     updateUserById: jest.fn(
       async (_, data: Partial<CreateUser>): Promise<User> => ({
         ...mockUser,
         ...data,
       })
     ),
-    deleteUserById: jest.fn(),
-    deleteUserIdentity: jest.fn(),
   },
 } satisfies Partial2<Queries>;
 
@@ -47,17 +47,20 @@ await mockEsmWithActual('../interaction/utils/backup-code-validation.js', () => 
   generateBackupCodes: jest.fn().mockReturnValue(['code']),
 }));
 
-const usersLibraries = {
-  generateUserId: jest.fn(async () => 'fooId'),
-  insertUser: jest.fn(
-    async (user: CreateUser): Promise<InsertUserResult> => [
-      {
-        ...mockUser,
-        ...removeUndefinedKeys(user), // No undefined values will be returned from database
-      },
-    ]
-  ),
-} satisfies Partial<Libraries['users']>;
+const mockLibraries = {
+  users: {
+    generateUserId: jest.fn(async () => 'fooId'),
+    insertUser: jest.fn(
+      async (user: CreateUser): Promise<InsertUserResult> => [
+        {
+          ...mockUser,
+          ...removeUndefinedKeys(user), // No undefined values will be returned from database
+        },
+      ]
+    ),
+    addUserMfaVerification: jest.fn(),
+  },
+} satisfies Partial2<Libraries>;
 
 const codes = [
   'd94c2f29ae',
@@ -75,9 +78,7 @@ const codes = [
 const adminUserRoutes = await pickDefault(import('./mfa-verifications.js'));
 
 describe('adminUserRoutes', () => {
-  const tenantContext = new MockTenant(undefined, mockedQueries, undefined, {
-    users: usersLibraries,
-  });
+  const tenantContext = new MockTenant(undefined, mockedQueries, undefined, mockLibraries);
   const userRequest = createRequester({ authedRoutes: adminUserRoutes, tenantContext });
 
   afterEach(() => {

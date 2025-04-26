@@ -259,6 +259,7 @@ describe('addUserMfaVerification()', () => {
   beforeAll(() => {
     jest.useFakeTimers();
     jest.setSystemTime(new Date(createdAt));
+    jest.clearAllMocks();
   });
 
   afterAll(() => {
@@ -266,10 +267,15 @@ describe('addUserMfaVerification()', () => {
   });
 
   it('update user with new mfa verification', async () => {
-    await addUserMfaVerification(mockUser.id, { type: MfaFactor.TOTP, secret: 'secret' });
+    await addUserMfaVerification(mockUser.id, {
+      type: MfaFactor.TOTP,
+      secret: 'secret',
+    });
     expect(updateUserById).toHaveBeenCalledWith(mockUser.id, {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      mfaVerifications: [{ type: MfaFactor.TOTP, key: 'secret', id: expect.anything(), createdAt }],
+      mfaVerifications: [
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        { type: MfaFactor.TOTP, key: 'secret', id: expect.anything(), createdAt },
+      ],
     });
   });
 });

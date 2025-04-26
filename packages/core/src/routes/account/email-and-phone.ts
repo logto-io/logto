@@ -114,7 +114,7 @@ export default function emailAndPhoneRoutes<T extends UserRouter>(...args: Route
         phone: z.string().regex(phoneRegEx),
         newIdentifierVerificationRecordId: z.string(),
       }),
-      status: [204, 400, 401],
+      status: [204, 400, 401, 422],
     }),
     async (ctx, next) => {
       const { id: userId, scopes, identityVerified } = ctx.auth;
