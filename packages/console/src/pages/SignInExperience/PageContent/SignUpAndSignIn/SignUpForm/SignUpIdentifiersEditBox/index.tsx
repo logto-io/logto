@@ -4,7 +4,7 @@ import {
   type SignUpIdentifier,
 } from '@logto/schemas';
 import { t } from 'i18next';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
 import { DragDropProvider, DraggableItem } from '@/ds-components/DragDrop';
@@ -95,6 +95,12 @@ function SignUpIdentifiersEditBox() {
     (identifier: SignUpIdentifier) => {
       appendSignInMethods(identifier);
 
+      /**
+       * If username is added as a sign-up identifier, we should check "Create your password" checkbox.
+       * However, this code might not take effect if the checkbox is not rendered in the form yet.
+       * In such case, we should handle the logic in a `useEffect` hook in the parent component.
+       * @see SignUpForm
+       */
       if (identifier === SignInIdentifier.Username) {
         setValue('signUp.password', true, {
           // Make sure to trigger the on password change hook
@@ -104,17 +110,6 @@ function SignUpIdentifiersEditBox() {
     },
     [appendSignInMethods, setValue]
   );
-
-  useEffect(() => {
-    if (signUpIdentifiers.length === 0) {
-      setValue('signUp.password', false, { shouldDirty: true });
-    }
-
-    const isSignUpVerify = signUpIdentifiers.some(
-      ({ identifier }) => identifier !== SignInIdentifier.Username
-    );
-    setValue('signUp.verify', isSignUpVerify, { shouldDirty: true });
-  }, [setValue, signUpIdentifiers]);
 
   const options = useMemo<
     Array<{
