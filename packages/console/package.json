@@ -101,7 +101,7 @@
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.2.3",
     "react-helmet": "^6.1.0",
-    "react-hook-form": "^7.43.9",
+    "react-hook-form": "^7.56.1",
     "react-hot-toast": "^2.2.0",
     "react-i18next": "^12.3.1",
     "react-markdown": "^9.0.0",
@@ -120,7 +120,7 @@
     "vite": "^6.2.6",
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-svgr": "^4.3.0",
-    "zod": "^3.23.8",
+    "zod": "^3.24.2",
     "zod-to-ts": "^1.2.0"
   },
   "engines": {

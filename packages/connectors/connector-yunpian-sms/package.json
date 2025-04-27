@@ -7,7 +7,7 @@
     "@logto/connector-kit": "workspace:^4.1.1",
     "@silverhand/essentials": "^2.9.1",
     "got": "^14.0.0",
-    "zod": "^3.23.8"
+    "zod": "^3.24.2"
   },
   "main": "./lib/index.js",
   "module": "./lib/index.js",

@@ -97,7 +97,7 @@
     "snake-case": "^4.0.0",
     "snakecase-keys": "^8.0.1",
     "tinypool": "^1.0.2",
-    "zod": "^3.23.8"
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@logto/cloud": "0.2.5-4f7a3b5",

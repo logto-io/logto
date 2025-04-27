@@ -7,7 +7,7 @@
     "@logto/connector-kit": "workspace:^4.1.1",
     "@silverhand/essentials": "^2.9.0",
     "postmark": "^4.0.5",
-    "zod": "^3.22.4"
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "6.0.1",
