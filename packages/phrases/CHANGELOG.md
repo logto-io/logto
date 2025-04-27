@@ -1,5 +1,31 @@
 # Change Log
 
+## 1.19.0
+
+### Minor Changes
+
+- 2961d355d: bump node version to ^22.14.0
+- 0a76f3389: add captcha bot protection
+
+  You can now enable CAPTCHA bot protection for your sign-in experience with providers like Google reCAPTCHA enterprise and Cloudflare Turnstile.
+
+  To enable CAPTCHA bot protection, you need to:
+
+  1. Go to Console > Security > CAPTCHA > Bot protection.
+  2. Select the CAPTCHA provider you want to use.
+  3. Configure the CAPTCHA provider.
+  4. Save the settings.
+  5. Enable CAPTCHA in the Security page.
+
+  Then take a preview of your sign-in experience to see the CAPTCHA in action.
+
+- e69ea0373: feat: add new security features related phrases
+
+### Patch Changes
+
+- Updated dependencies [2961d355d]
+  - @logto/language-kit@1.2.0
+
 ## 1.18.0
 
 ### Minor Changes

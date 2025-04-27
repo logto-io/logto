@@ -1,5 +1,57 @@
 # Change Log
 
+## 1.27.0
+
+### Minor Changes
+
+- e69ea0373: feat: add new `sentinelPolicy` field to the `signInExperience` settings
+
+  We have introduced a new field, `sentinelPolicy`, in the `signInExperience` settings. This field allows customization of lockout settings for identifiers in your Logto application. By default, it is set to an empty object, which means the default lockout policy will apply. The properties of the new field are as follows:
+
+  ```ts
+  type SentinelPolicy = {
+    maxAttempts?: number;
+    lockoutDuration?: number;
+  };
+  ```
+
+  1. Maximum failed attempts:
+
+     - This limits the number of consecutive failed authentication attempts per identifier within an hour. If the limit is exceeded, the identifier will be temporarily locked out.
+     - Default Value: 100
+
+  2. Lockout duration (minutes):
+
+     - This specifies the period during which all authentication attempts for the given identifier are blocked after exceeding the maximum failed attempts.
+     - Default Value: 60 minutes
+
+- 2961d355d: bump node version to ^22.14.0
+- 0a76f3389: add captcha bot protection
+
+  You can now enable CAPTCHA bot protection for your sign-in experience with providers like Google reCAPTCHA enterprise and Cloudflare Turnstile.
+
+  To enable CAPTCHA bot protection, you need to:
+
+  1. Go to Console > Security > CAPTCHA > Bot protection.
+  2. Select the CAPTCHA provider you want to use.
+  3. Configure the CAPTCHA provider.
+  4. Save the settings.
+  5. Enable CAPTCHA in the Security page.
+
+  Then take a preview of your sign-in experience to see the CAPTCHA in action.
+
+### Patch Changes
+
+- Updated dependencies [2961d355d]
+- Updated dependencies [0a76f3389]
+- Updated dependencies [e69ea0373]
+  - @logto/connector-kit@4.3.0
+  - @logto/language-kit@1.2.0
+  - @logto/phrases-experience@1.10.0
+  - @logto/core-kit@2.6.0
+  - @logto/phrases@1.19.0
+  - @logto/shared@3.2.0
+
 ## 1.26.0
 
 ### Minor Changes
