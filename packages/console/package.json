@@ -101,7 +101,7 @@
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.2.3",
     "react-helmet": "^6.1.0",
-    "react-hook-form": "^7.43.9",
+    "react-hook-form": "^7.56.1",
     "react-hot-toast": "^2.2.0",
     "react-i18next": "^12.3.1",
     "react-markdown": "^9.0.0",

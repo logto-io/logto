@@ -3379,8 +3379,8 @@ importers:
         specifier: ^6.1.0
         version: 6.1.0(react@18.3.1)
       react-hook-form:
-        specifier: ^7.43.9
-        version: 7.43.9(react@18.3.1)
+        specifier: ^7.56.1
+        version: 7.56.1(react@18.3.1)
       react-hot-toast:
         specifier: ^2.2.0
         version: 2.2.0(csstype@3.1.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -4101,8 +4101,8 @@ importers:
         specifier: ^6.1.0
         version: 6.1.0(react@18.3.1)
       react-hook-form:
-        specifier: ^7.53.0
-        version: 7.53.0(react@18.3.1)
+        specifier: ^7.56.1
+        version: 7.56.1(react@18.3.1)
       react-i18next:
         specifier: ^12.3.1
         version: 12.3.1(i18next@22.4.15)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -4446,10 +4446,10 @@ importers:
         version: 2.9.1
       '@withtyped/client':
         specifier: ^0.8.8
-        version: 0.8.8(zod@3.23.8)
+        version: 0.8.8(zod@3.24.2)
       '@withtyped/server':
         specifier: ^0.14.0
-        version: 0.14.0(zod@3.23.8)
+        version: 0.14.0(zod@3.24.2)
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -4481,7 +4481,7 @@ importers:
     optionalDependencies:
       zod:
         specifier: ^3.23.8
-        version: 3.23.8
+        version: 3.24.2
 
   packages/toolkit/core-kit:
     dependencies:
@@ -4546,7 +4546,7 @@ importers:
     optionalDependencies:
       zod:
         specifier: ^3.23.8
-        version: 3.23.8
+        version: 3.24.2
 
   packages/toolkit/language-kit:
     devDependencies:
@@ -4580,7 +4580,7 @@ importers:
     optionalDependencies:
       zod:
         specifier: ^3.23.8
-        version: 3.23.8
+        version: 3.24.2
 
   packages/translate:
     dependencies:
@@ -13322,20 +13322,14 @@ packages:
     peerDependencies:
       react: '>=16.3.0'
 
-  react-hook-form@7.43.9:
-    resolution: {integrity: sha512-AUDN3Pz2NSeoxQ7Hs6OhQhDr6gtF9YRuutGDwPQqhSUAHJSgGl2VeY3qN19MG0SucpjgDiuMJ4iC5T5uB+eaNQ==}
-    engines: {node: '>=12.22.0'}
-    peerDependencies:
-      react: ^16.8.0 || ^17 || ^18
-
-  react-hook-form@7.53.0:
-    resolution: {integrity: sha512-M1n3HhqCww6S2hxLxciEXy2oISPnAzxY7gvwVPrtlczTM/1dDadXgUxDpHMrMTblDOcm/AXtXxHwZ3jpg1mqKQ==}
+  react-hook-form@7.54.2:
+    resolution: {integrity: sha512-eHpAUgUjWbZocoQYUHposymRb4ZP6d0uwUnooL2uOybA9/3tPUvoAKqEWK1WaSiTxxOfTpffNZP7QwlnM3/gEg==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
 
-  react-hook-form@7.54.2:
-    resolution: {integrity: sha512-eHpAUgUjWbZocoQYUHposymRb4ZP6d0uwUnooL2uOybA9/3tPUvoAKqEWK1WaSiTxxOfTpffNZP7QwlnM3/gEg==}
+  react-hook-form@7.56.1:
+    resolution: {integrity: sha512-qWAVokhSpshhcEuQDSANHx3jiAEFzu2HAaaQIzi/r9FNPm1ioAvuJSD4EuZzWd7Al7nTRKcKPnBKO7sRn+zavQ==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
@@ -20025,12 +20019,26 @@ snapshots:
     transitivePeerDependencies:
       - zod
 
+  '@withtyped/client@0.8.8(zod@3.24.2)':
+    dependencies:
+      '@withtyped/server': 0.14.0(zod@3.24.2)
+      '@withtyped/shared': 0.2.2
+    transitivePeerDependencies:
+      - zod
+
   '@withtyped/server@0.14.0(zod@3.23.8)':
     dependencies:
       '@silverhand/essentials': 2.9.1
       '@withtyped/shared': 0.2.2
       nanoid: 5.0.9
       zod: 3.23.8
+
+  '@withtyped/server@0.14.0(zod@3.24.2)':
+    dependencies:
+      '@silverhand/essentials': 2.9.1
+      '@withtyped/shared': 0.2.2
+      nanoid: 5.0.9
+      zod: 3.24.2
 
   '@withtyped/shared@0.2.2': {}
 
@@ -26196,15 +26204,11 @@ snapshots:
       react-fast-compare: 3.2.1
       react-side-effect: 2.1.2(react@18.3.1)
 
-  react-hook-form@7.43.9(react@18.3.1):
-    dependencies:
-      react: 18.3.1
-
-  react-hook-form@7.53.0(react@18.3.1):
-    dependencies:
-      react: 18.3.1
-
   react-hook-form@7.54.2(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+
+  react-hook-form@7.56.1(react@18.3.1):
     dependencies:
       react: 18.3.1
 
