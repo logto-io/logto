@@ -6,12 +6,12 @@ import {
 } from '@logto/schemas';
 
 /**
- * Omit the `mfa`, `captchaPolicy`, 'passwordPolicy', and `sentinelPolicy` fields from the sign-in experience.
+ * Omit the `mfa`, `captchaPolicy`, 'passwordPolicy', `sentinelPolicy` and `emailBlocklistPolicy` fields from the sign-in experience.
  * Since those fields are not managed by the sign-in experience page.
  */
 type OmittedSignInExperienceKeys = keyof Pick<
   SignInExperience,
-  'mfa' | 'captchaPolicy' | 'sentinelPolicy' | 'passwordPolicy'
+  'mfa' | 'captchaPolicy' | 'sentinelPolicy' | 'passwordPolicy' | 'emailBlocklistPolicy'
 >;
 
 export enum SignInExperienceTab {
@@ -48,7 +48,7 @@ export type SignUpForm = Omit<SignUp, 'identifiers' | 'secondaryIdentifiers'> & 
 
 export type SignInExperienceForm = Omit<
   SignInExperience,
-  'signUp' | 'customCss' | 'passwordPolicy' | OmittedSignInExperienceKeys
+  'signUp' | 'customCss' | OmittedSignInExperienceKeys
 > & {
   customCss?: string; // Code editor components can not properly handle null value, manually transform null to undefined instead.
   signUp: SignUpForm;

@@ -122,6 +122,7 @@ export const sieFormDataParser = {
       mfa,
       captchaPolicy,
       sentinelPolicy,
+      emailBlocklistPolicy,
       // End: Remove the omitted fields from the data
       ...rest
     } = data;
@@ -161,10 +162,11 @@ export const sieFormDataParser = {
  * Affected fields:
  * - `signUp.secondaryIdentifiers`: This field is optional in the data schema,
  *  but through the form, we always fill it with an empty array.
- * - `mfa`: This field is omitted in the sign-in experience form.
- * - `passwordPolicy`: This field is omitted in the sign-in experience form.
- * - `captchaPolicy`: This field is omitted in the sign-in experience form.
- * - `sentinelPolicy`: This field is omitted in the sign-in experience form.
+ * - `mfa`
+ * - `passwordPolicy`
+ * - `captchaPolicy`
+ * - `sentinelPolicy`
+ * - `emailBlocklistPolicy`
  */
 export const signInExperienceToUpdatedDataParser = (
   data: SignInExperience
@@ -176,6 +178,7 @@ export const signInExperienceToUpdatedDataParser = (
     passwordPolicy,
     captchaPolicy,
     sentinelPolicy,
+    emailBlocklistPolicy,
     // End: Remove the omitted fields from the data
     ...rest
   } = data;

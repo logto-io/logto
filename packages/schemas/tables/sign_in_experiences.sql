@@ -28,5 +28,6 @@ create table sign_in_experiences (
   unknown_session_redirect_url text,
   captcha_policy jsonb /* @use CaptchaPolicy */ not null default '{}'::jsonb,
   sentinel_policy jsonb /* @use SentinelPolicy */ not null default '{}'::jsonb,
+  email_blocklist_policy jsonb /* @use EmailBlocklistPolicy */ not null default '{}'::jsonb,
   primary key (tenant_id, id)
 );

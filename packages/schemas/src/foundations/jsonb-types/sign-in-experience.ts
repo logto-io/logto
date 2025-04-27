@@ -251,3 +251,30 @@ export const sentinelPolicyGuard = z.object({
   maxAttempts: z.number().optional(),
   lockoutDuration: z.number().optional(),
 }) satisfies ToZodObject<SentinelPolicy>;
+
+/**
+ * Email blocklist policy.
+ *
+ * @remarks
+ * This policy is used to block specific email addresses or domains from signing up.
+ */
+export type EmailBlocklistPolicy = {
+  blockDisposableAddresses?: boolean;
+  blockSubaddressing?: boolean;
+  /**
+   * Custom blocklist of email addresses or domains.
+   *
+   * @example
+   * Email address: abc@xyx.com
+   *
+   * @example
+   * Domain name: @xyz.com
+   */
+  customBlocklist?: string[];
+};
+
+export const emailBlocklistPolicyGuard = z.object({
+  blockDisposableAddresses: z.boolean().optional(),
+  blockSubaddressing: z.boolean().optional(),
+  customBlocklist: z.string().array().optional(),
+}) satisfies ToZodObject<EmailBlocklistPolicy>;
