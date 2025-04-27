@@ -1,5 +1,17 @@
 # Change Log
 
+## 1.27.0
+
+### Minor Changes
+
+- 2961d355d: bump node version to ^22.14.0
+
+### Patch Changes
+
+- Updated dependencies [2961d355d]
+- Updated dependencies [83e7be741]
+  - @logto/cli@1.27.0
+
 ## 1.26.0
 
 ### Patch Changes

@@ -1,5 +1,24 @@
 # @logto/connector-oidc
 
+## 1.5.0
+
+### Minor Changes
+
+- 2961d355d: bump node version to ^22.14.0
+
+### Patch Changes
+
+- 752d406bd: support string-typed boolean claims
+
+  Add an optional `acceptStringTypedBooleanClaims` configuration to `OidcConnectorConfig`, with default value `false`.
+  For standard OIDC protocol, some claims such as `email_verified` and `phone_verified` are boolean-typed, but some providers may return them as string-typed. Enabling this option will convert string-typed boolean claims to boolean-typed, which provides better compatibility.
+  By enabling this configuration, the connector will accept string-typed boolean ID token claims, such as `email_verified` and `phone_verified`.
+
+- Updated dependencies [2961d355d]
+  - @logto/connector-oauth@1.6.0
+  - @logto/connector-kit@4.3.0
+  - @logto/shared@3.2.0
+
 ## 1.4.1
 
 ### Patch Changes

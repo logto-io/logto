@@ -1,5 +1,32 @@
 # Change Log
 
+## 1.24.0
+
+### Minor Changes
+
+- 2961d355d: bump node version to ^22.14.0
+- 0a76f3389: add captcha bot protection
+
+  You can now enable CAPTCHA bot protection for your sign-in experience with providers like Google reCAPTCHA enterprise and Cloudflare Turnstile.
+
+  To enable CAPTCHA bot protection, you need to:
+
+  1. Go to Console > Security > CAPTCHA > Bot protection.
+  2. Select the CAPTCHA provider you want to use.
+  3. Configure the CAPTCHA provider.
+  4. Save the settings.
+  5. Enable CAPTCHA in the Security page.
+
+  Then take a preview of your sign-in experience to see the CAPTCHA in action.
+
+- e69ea0373: feat: introduced new `security` section to Logto console.
+
+  We have introduced a new security section in the Logto console, which includes the following features:
+
+  - Password policy: This feature has been migrated from the signInExperience section to the new security section.
+  - CAPTCHA: Enable CAPTCHA for sign-up, sign-in, and password recovery to mitigate automated threats.
+  - Identifier lockout: Temporarily lock an identifier after multiple failed authentication attempts (e.g., consecutive incorrect passwords or verification codes) to prevent brute force access.
+
 ## 1.23.0
 
 ### Minor Changes

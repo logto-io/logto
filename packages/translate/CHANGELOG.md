@@ -1,5 +1,23 @@
 # @logto/translate
 
+## 0.2.0
+
+### Minor Changes
+
+- 2961d355d: bump node version to ^22.14.0
+
+### Patch Changes
+
+- 23b6fe588: should correctly read modal name from env
+- Updated dependencies [2961d355d]
+- Updated dependencies [0a76f3389]
+- Updated dependencies [e69ea0373]
+  - @logto/language-kit@1.2.0
+  - @logto/phrases-experience@1.10.0
+  - @logto/core-kit@2.6.0
+  - @logto/phrases@1.19.0
+  - @logto/shared@3.2.0
+
 ## 0.1.3
 
 ### Patch Changes
