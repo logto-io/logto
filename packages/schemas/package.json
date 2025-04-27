@@ -88,6 +88,6 @@
     "nanoid": "^5.0.9"
   },
   "peerDependencies": {
-    "zod": "^3.23.8"
+    "zod": "^3.24.2"
   }
 }
