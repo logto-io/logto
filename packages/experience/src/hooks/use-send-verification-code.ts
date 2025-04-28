@@ -82,7 +82,15 @@ const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) =
         );
       }
     },
-    [asyncSendVerificationCode, flow, handleError, navigate, replaceCurrentPage, setVerificationId]
+    [
+      asyncSendVerificationCode,
+      flow,
+      handleError,
+      navigate,
+      replaceCurrentPage,
+      setVerificationId,
+      executeCaptcha,
+    ]
   );
 
   return {

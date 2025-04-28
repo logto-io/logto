@@ -65,7 +65,7 @@ const usePasswordSignIn = () => {
         await redirectTo(result.redirectTo);
       }
     },
-    [asyncSignIn, checkSingleSignOn, errorHandlers, handleError, redirectTo]
+    [asyncSignIn, checkSingleSignOn, errorHandlers, handleError, redirectTo, executeCaptcha]
   );
 
   return {
