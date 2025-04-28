@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import useSWR, { useSWRConfig } from 'swr';
 
-import { GtagConversionId, reportConversion } from '@/components/Conversion/utils';
 import LearnMore from '@/components/LearnMore';
 import { pricingLink, defaultPageSize, integrateLogto } from '@/consts';
 import { isCloud } from '@/consts/env';
@@ -118,10 +117,6 @@ function CreateForm({
         data.type === ApplicationType.SAML ? 'api/saml-applications' : 'api/applications';
 
       const createdApp = await api.post(appCreationEndpoint, { json: data }).json<Application>();
-
-      // Report the conversion event after the application is created. Note that the conversion
-      // should be set as count once since this will be reported multiple times.
-      reportConversion({ gtagId: GtagConversionId.CreateFirstApp, transactionId: user?.id });
 
       toast.success(t('applications.application_created'));
       // Trigger a refetch of the applications list

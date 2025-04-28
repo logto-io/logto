@@ -6,7 +6,6 @@ import Modal from 'react-modal';
 
 import { useCloudApi, toastResponseError } from '@/cloud/hooks/use-cloud-api';
 import { type TenantResponse, type LogtoSkuResponse } from '@/cloud/types/router';
-import { GtagConversionId, reportToGoogle } from '@/components/Conversion/utils';
 import { pricingLink } from '@/consts';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import ModalLayout from '@/ds-components/ModalLayout';
@@ -49,7 +48,6 @@ function SelectTenantPlanModal({ tenantData, onClose }: Props) {
         const { name, tag, regionName } = tenantData;
         const newTenant = await cloudApi.post('/api/tenants', { body: { name, tag, regionName } });
 
-        reportToGoogle(GtagConversionId.CreateProductionTenant, { transactionId: newTenant.id });
         onClose(newTenant);
         return;
       }

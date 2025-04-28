@@ -10,7 +10,7 @@ import CreateTenantHeaderIconDark from '@/assets/icons/create-tenant-header-dark
 import CreateTenantHeaderIcon from '@/assets/icons/create-tenant-header.svg?react';
 import { createTenantApi, useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import ActionBar from '@/components/ActionBar';
-import { GtagConversionId, reportConversion } from '@/components/Conversion/utils';
+import { reportConversion } from '@/components/Conversion/utils';
 import { type CreateTenantData } from '@/components/CreateTenantModal/types';
 import PageMeta from '@/components/PageMeta';
 import Region, { defaultRegionName } from '@/components/Region';
@@ -68,7 +68,6 @@ function CreateTenant() {
   const onCreateClick = handleSubmit(
     trySubmitSafe(async ({ name, regionName, collaboratorEmails }: CreateTenantForm) => {
       reportConversion({
-        gtagId: GtagConversionId.SignUp,
         redditType: 'SignUp',
         transactionId: user?.id,
       });

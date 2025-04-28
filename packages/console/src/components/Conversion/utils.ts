@@ -1,19 +1,6 @@
-import { cond } from '@silverhand/essentials';
 import debug from 'debug';
 
 const log = debug('conversion');
-
-export const gtagAwTrackingId = 'AW-11124811245';
-export enum GtagConversionId {
-  /** This ID indicates a user has truly signed up for Logto Cloud. */
-  SignUp = 'AW-11192640559/ZuqUCLvNpasYEK_IiNkp',
-  /** This ID indicates a user has created their first app. */
-  CreateFirstApp = 'AW-11192640559/jbsaCPS67q8ZEK_IiNkp',
-  /** This ID indicates a user has created a production tenant. */
-  CreateProductionTenant = 'AW-11192640559/m04fCMDrxI0ZEK_IiNkp',
-  /** This ID indicates a user has purchased a Pro plan. */
-  PurchaseProPlan = 'AW-11192640559/WjCtCKHCtpgZEK_IiNkp',
-}
 
 export const redditPixelId = 't2_ggt11omdo';
 /** The data domain to aggregate the data for Plausible. */
@@ -75,48 +62,15 @@ const reportToReddit = (redditType: RedditReportType) => {
   return true;
 };
 
-export const reportToGoogle = (
-  gtagId: GtagConversionId,
-  { transactionId }: { transactionId?: string } = {}
-) => {
-  if (!window.gtag) {
-    log('report:', 'window.gtag is not available');
-    return false;
-  }
-
-  const run = async () => {
-    const transaction = cond(transactionId && { transaction_id: await sha256(transactionId) });
-
-    log('report:', 'gtagId =', gtagId, 'transaction =', transaction);
-    window.gtag?.('event', 'conversion', {
-      send_to: gtagId,
-      ...transaction,
-    });
-  };
-
-  void run();
-
-  return true;
-};
-
 type ReportConversionOptions = {
   transactionId?: string;
-  gtagId?: GtagConversionId;
   redditType?: RedditReportType;
 };
 
-export const reportConversion = ({
-  gtagId,
-  redditType,
-  transactionId,
-}: ReportConversionOptions) => {
+export const reportConversion = ({ redditType, transactionId }: ReportConversionOptions) => {
   if (!shouldReport) {
-    log('skip reporting conversion:', { gtagId, redditType, transactionId });
+    log('skip reporting conversion:', { redditType, transactionId });
     return;
-  }
-
-  if (gtagId) {
-    reportToGoogle(gtagId, { transactionId });
   }
 
   if (redditType) {

@@ -3,40 +3,11 @@ import { Helmet } from 'react-helmet';
 
 import useCurrentUser from '@/hooks/use-current-user';
 
-import {
-  shouldReport,
-  gtagAwTrackingId,
-  redditPixelId,
-  hashEmail,
-  plausibleDataDomain,
-} from './utils';
+import { shouldReport, redditPixelId, hashEmail, plausibleDataDomain } from './utils';
 
 type ScriptProps = {
   readonly userEmailHash?: string;
 };
-
-function GoogleScripts({ userEmailHash }: ScriptProps) {
-  if (!userEmailHash) {
-    return null;
-  }
-
-  return (
-    <Helmet>
-      <script
-        async
-        crossOrigin="anonymous"
-        src={`https://www.googletagmanager.com/gtag/js?id=${gtagAwTrackingId}`}
-      />
-      <script>{`
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', '${gtagAwTrackingId}', { 'allow_enhanced_conversions': true });
-        gtag('set', 'user_data', { 'sha256_email_address': '${userEmailHash}' });
-      `}</script>
-    </Helmet>
-  );
-}
 
 function RedditScripts({ userEmailHash }: ScriptProps) {
   if (!userEmailHash) {
@@ -100,7 +71,6 @@ export function GlobalScripts() {
   return (
     <>
       <PlausibleScripts />
-      <GoogleScripts userEmailHash={userEmailHash} />
       <RedditScripts userEmailHash={userEmailHash} />
     </>
   );
