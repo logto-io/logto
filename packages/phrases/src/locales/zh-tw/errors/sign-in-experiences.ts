@@ -14,6 +14,9 @@ const sign_in_experiences = {
   duplicated_mfa_factors: '重複的 MFA 要素。',
   duplicated_sign_up_identifiers: '檢測到重複的註冊識別符。',
   missing_sign_up_identifiers: '主要註冊識別符不能為空。',
+  invalid_custom_email_blocklist_format:
+    '無效的自訂電子郵件封鎖清單項目：{{items, list(type:conjunction)}}。每個項目必須是有效的電子郵件地址或電子郵件域，例如：foo@example.com 或 @example.com。',
+  duplicate_custom_email_blocklist_items: '檢測到重複的自訂電子郵件封鎖清單項目。',
 };
 
 export default Object.freeze(sign_in_experiences);

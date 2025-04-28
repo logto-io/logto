@@ -24,6 +24,10 @@ const sign_in_experiences = {
   duplicated_mfa_factors: 'Facteurs de MFA en double.',
   duplicated_sign_up_identifiers: "Des identifiants d'inscription en double ont été détectés.",
   missing_sign_up_identifiers: "L'identifiant principal d'inscription ne peut pas être vide.",
+  invalid_custom_email_blocklist_format:
+    "Articles non valides de la liste de blocage d'e-mails personnalisés : {{items, list(type:conjunction)}}. Chaque élément doit être une adresse e-mail ou un domaine de messagerie valide, par exemple, foo@example.com ou @example.com.",
+  duplicate_custom_email_blocklist_items:
+    "Éléments en double détectés dans la liste de blocage d'e-mails personnalisés.",
 };
 
 export default Object.freeze(sign_in_experiences);

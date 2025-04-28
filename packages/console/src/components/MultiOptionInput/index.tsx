@@ -24,6 +24,8 @@ type Props<T> = {
   readonly validateInput: (text: string) => CanBePromise<{ value: T } | string>;
   readonly error?: string | boolean;
   readonly placeholder?: string;
+  // eslint-disable-next-line react/boolean-prop-naming -- align with input props
+  readonly disabled?: boolean;
 };
 
 function MultiOptionInput<T>({
@@ -38,6 +40,7 @@ function MultiOptionInput<T>({
   error,
   placeholder,
   validateInput,
+  disabled,
 }: Props<T>) {
   const ref = useRef<HTMLInputElement>(null);
   const [focusedValueId, setFocusedValueId] = useState<Nullable<string>>(null);
@@ -82,13 +85,24 @@ function MultiOptionInput<T>({
   return (
     <>
       <div
-        className={classNames(styles.input, Boolean(error) && styles.error, className)}
+        className={classNames(
+          styles.input,
+          Boolean(error) && styles.error,
+          disabled && styles.disabled,
+          className
+        )}
         role="button"
         tabIndex={0}
         onKeyDown={onKeyDownHandler(() => {
+          if (disabled) {
+            return;
+          }
           ref.current?.focus();
         })}
         onClick={() => {
+          if (disabled) {
+            return;
+          }
           ref.current?.focus();
         }}
       >
@@ -126,6 +140,7 @@ function MultiOptionInput<T>({
           ))}
           <input
             ref={ref}
+            disabled={disabled}
             value={currentValue}
             onKeyDown={async (event) => {
               switch (event.key) {

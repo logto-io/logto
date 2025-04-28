@@ -5,6 +5,7 @@ const security = {
   tabs: {
     captcha: '验证码',
     password_policy: '密码策略',
+    blocklist: '阻止列表',
     general: '常规',
   },
   bot_protection: {
@@ -103,6 +104,27 @@ const security = {
       success_toast: '解锁成功',
       duplicate_identifier_error: '标识符已添加',
       empty_identifier_error: '请输入至少一个标识符',
+    },
+  },
+  blocklist: {
+    card_title: '电子邮件阻止列表',
+    card_description: '通过阻止高风险或不受欢迎的电子邮件地址来控制用户群。',
+    disposable_email: {
+      title: '阻止一次性电子邮件地址',
+      description:
+        '启用此功能以拒绝使用一次性或临时电子邮件地址的注册尝试，这可以防止垃圾邮件并提高用户质量。',
+    },
+    email_subaddressing: {
+      title: '阻止电子邮件子地址',
+      description:
+        '启用以防止用户使用带有加号（+）及附加字符的电子邮件子地址（例如，user+alias@foo.com）。',
+    },
+    custom_email_address: {
+      title: '阻止自定义电子邮件地址',
+      description: '添加特定电子邮件域或电子邮件地址，无法通过 UI 注册或链接。',
+      placeholder: '输入被阻止的电子邮件地址或域名（例如，bar@example.com，@example.com）',
+      duplicate_error: '电子邮件地址或域名已添加',
+      invalid_format_error: '必须是有效的电子邮件地址（bar@example.com）或域（@example.com）',
     },
   },
 };

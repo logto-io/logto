@@ -5,6 +5,7 @@ const security = {
   tabs: {
     captcha: 'CAPTCHA',
     password_policy: '密碼政策',
+    blocklist: '封鎖名單',
     general: '一般',
   },
   bot_protection: {
@@ -104,6 +105,27 @@ const security = {
       success_toast: '解鎖成功',
       duplicate_identifier_error: '識別符已添加',
       empty_identifier_error: '請輸入至少一個識別符',
+    },
+  },
+  blocklist: {
+    card_title: '電子郵件封鎖名單',
+    card_description: '通過封鎖高風險或不需要的電子郵件地址來控管你的用戶群。',
+    disposable_email: {
+      title: '封鎖一次性電子郵件地址',
+      description:
+        '啟用以拒絕使用一次性或臨時電子郵件地址的註冊嘗試，這樣可以防止垃圾郵件並提高用戶質量。',
+    },
+    email_subaddressing: {
+      title: '封鎖電子郵件子地址',
+      description:
+        '啟用以防止用戶使用包含加號（+）和其他字符的電子郵件子地址（例如，user+alias@foo.com）。',
+    },
+    custom_email_address: {
+      title: '封鎖自訂電子郵件地址',
+      description: '添加無法註冊或通過 UI 連結的特定電子郵件域或電子郵件地址。',
+      placeholder: '輸入被封鎖的電子郵件地址或域（例如，bar@example.com, @example.com）',
+      duplicate_error: '電子郵件地址或域已添加',
+      invalid_format_error: '必須是有效的電子郵件地址(bar@example.com)或域(@example.com)',
     },
   },
 };

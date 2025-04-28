@@ -23,6 +23,10 @@ const sign_in_experiences = {
   duplicated_sign_up_identifiers: 'Обнаружены дублирующие идентификаторы создания учетной записи.',
   missing_sign_up_identifiers:
     'Основной идентификатор создания учетной записи не может быть пустым.',
+  invalid_custom_email_blocklist_format:
+    'Неверный формат пользовательского списка блокировки электронной почты: {{items, list(type:conjunction)}}. Каждый элемент должен быть действительным адресом электронной почты или доменом, например, foo@example.com или @example.com.',
+  duplicate_custom_email_blocklist_items:
+    'Обнаружены дублирующиеся элементы пользовательского списка блокировки электронной почты.',
 };
 
 export default Object.freeze(sign_in_experiences);

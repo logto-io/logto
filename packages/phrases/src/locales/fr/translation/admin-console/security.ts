@@ -5,6 +5,7 @@ const security = {
   tabs: {
     captcha: 'CAPTCHA',
     password_policy: 'Politique de mot de passe',
+    blocklist: 'Liste de blocage',
     general: 'Général',
   },
   bot_protection: {
@@ -118,6 +119,31 @@ const security = {
       success_toast: 'Déverrouillé avec succès',
       duplicate_identifier_error: 'Identifiant déjà ajouté',
       empty_identifier_error: 'Veuillez saisir au moins un identifiant',
+    },
+  },
+  blocklist: {
+    card_title: "Liste de blocage d'email",
+    card_description:
+      "Prenez le contrôle de votre base d'utilisateurs en bloquant les adresses e-mail à haut risque ou indésirables.",
+    disposable_email: {
+      title: 'Bloquer les adresses e-mail temporaires',
+      description:
+        "Activez pour rejeter toute tentative d'inscription utilisant une adresse e-mail jetable, ce qui peut prévenir le spam et améliorer la qualité des utilisateurs.",
+    },
+    email_subaddressing: {
+      title: 'Bloquer le sous-adressage des e-mails',
+      description:
+        "Activez pour empêcher les utilisateurs d'utiliser des sous-adresses avec un signe plus (+) et des caractères supplémentaires (ex. : user+alias@foo.com).",
+    },
+    custom_email_address: {
+      title: 'Bloquer les adresses e-mail personnalisées',
+      description:
+        "Ajoutez des domaines ou des adresses e-mail spécifiques qui ne peuvent pas s'inscrire ou se lier via l'interface utilisateur.",
+      placeholder:
+        "Entrez l'adresse email ou le domaine bloqué (ex. : bar@example.com, @example.com)",
+      duplicate_error: 'Adresse e-mail ou domaine déjà ajouté',
+      invalid_format_error:
+        'Doit être une adresse e-mail valide (bar@example.com) ou un domaine (@example.com)',
     },
   },
 };

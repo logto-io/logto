@@ -1,11 +1,10 @@
+import { emailOrEmailDomainRegex } from '@logto/core-kit';
 import { type EmailBlocklistPolicy } from '@logto/schemas';
 import { conditional, deduplicate } from '@silverhand/essentials';
 
 import { EnvSet } from '../../env-set/index.js';
 import RequestError from '../../errors/RequestError/index.js';
 import assertThat from '../../utils/assert-that.js';
-
-const emailOrEmailDomainRegex = /^\S+@\S+\.\S+|^@\S+\.\S+$/;
 
 const validateCustomBlockListFormat = (list: string[]) => {
   const invalidItems = new Set();

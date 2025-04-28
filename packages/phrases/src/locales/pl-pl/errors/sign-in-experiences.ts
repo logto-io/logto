@@ -21,6 +21,10 @@ const sign_in_experiences = {
   duplicated_mfa_factors: 'Powielone czynniki MFA.',
   duplicated_sign_up_identifiers: 'Wykryto zduplikowane identyfikatory rejestracji.',
   missing_sign_up_identifiers: 'Podstawowy identyfikator rejestracji nie może być pusty.',
+  invalid_custom_email_blocklist_format:
+    'Nieprawidłowe elementy niestandardowej listy blokowanych adresów e-mail: {{items, list(type:conjunction)}}. Każdy element musi być prawidłowym adresem e-mail lub domeną, np. foo@example.com lub @example.com.',
+  duplicate_custom_email_blocklist_items:
+    'Wykryto zduplikowane elementy niestandardowej listy blokowanych adresów e-mail.',
 };
 
 export default Object.freeze(sign_in_experiences);

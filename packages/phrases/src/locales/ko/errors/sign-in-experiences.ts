@@ -19,6 +19,10 @@ const sign_in_experiences = {
   duplicated_mfa_factors: '중복된 MFA 인증 요소입니다.',
   duplicated_sign_up_identifiers: '중복된 회원가입 식별자가 감지되었습니다.',
   missing_sign_up_identifiers: '기본 회원가입 식별자는 비워 둘 수 없습니다.',
+  invalid_custom_email_blocklist_format:
+    '잘못된 사용자 정의 이메일 차단 목록 항목: {{items, list(type:conjunction)}}. 각 항목은 유효한 이메일 주소 또는 이메일 도메인이어야 합니다. 예: foo@example.com 또는 @example.com.',
+  duplicate_custom_email_blocklist_items:
+    '중복된 사용자 정의 이메일 차단 목록 항목이 감지되었습니다.',
 };
 
 export default Object.freeze(sign_in_experiences);

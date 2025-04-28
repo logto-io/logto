@@ -22,6 +22,10 @@ const sign_in_experiences = {
   duplicated_mfa_factors: 'Fatores MFA duplicados.',
   duplicated_sign_up_identifiers: 'Identificadores de inscrição duplicados detectados.',
   missing_sign_up_identifiers: 'O identificador de inscrição principal não pode estar vazio.',
+  invalid_custom_email_blocklist_format:
+    'Itens da lista de bloqueio de email personalizada inválidos: {{items, list(type:conjunction)}}. Cada item deve ser um endereço de email ou domínio de email válido, ex.: foo@example.com ou @example.com.',
+  duplicate_custom_email_blocklist_items:
+    'Itens duplicados na lista de bloqueio de email personalizada detectados.',
 };
 
 export default Object.freeze(sign_in_experiences);

@@ -79,6 +79,20 @@
     outline-color: var(--color-focused-variant);
   }
 
+  &.disabled {
+    background: var(--color-layer-2);
+    cursor: not-allowed;
+
+    &:active {
+      pointer-events: none;
+    }
+
+    &:focus-within {
+      border-color: var(--color-border);
+      outline-color: transparent;
+    }
+  }
+
   &.error {
     border-color: var(--color-error);
 
@@ -98,3 +112,4 @@ canvas {
   margin-top: _.unit(1);
   white-space: pre-wrap;
 }
+

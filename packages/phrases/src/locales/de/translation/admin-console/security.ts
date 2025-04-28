@@ -5,6 +5,7 @@ const security = {
   tabs: {
     captcha: 'CAPTCHA',
     password_policy: 'Passwortpolitik',
+    blocklist: 'Blockliste',
     general: 'Allgemein',
   },
   bot_protection: {
@@ -116,6 +117,31 @@ const security = {
       success_toast: 'Erfolgreich entsperrt',
       duplicate_identifier_error: 'Bezeichner bereits hinzugefügt',
       empty_identifier_error: 'Bitte geben Sie mindestens einen Bezeichner ein',
+    },
+  },
+  blocklist: {
+    card_title: 'E-Mail-Blockliste',
+    card_description:
+      'Kontrollieren Sie Ihre Benutzerdatenbank, indem Sie risikoreiche oder unerwünschte E-Mail-Adressen blockieren.',
+    disposable_email: {
+      title: 'Blockieren temporärer E-Mail-Adressen',
+      description:
+        'Aktivieren Sie die Ablehnung von Anmeldungsversuchen mit temporären oder Wegwerf-E-Mail-Adressen, um Spam zu verhindern und die Benutzerqualität zu verbessern.',
+    },
+    email_subaddressing: {
+      title: 'Blockieren von E-Mail-Subaddressing',
+      description:
+        'Aktivieren Sie, um zu verhindern, dass Benutzer E-Mail-Subadressen mit einem Pluszeichen (+) und zusätzlichen Zeichen verwenden (zum Beispiel, user+alias@foo.com).',
+    },
+    custom_email_address: {
+      title: 'Benutzerdefinierte E-Mail-Adressen blockieren',
+      description:
+        'Fügen Sie spezifische E-Mail-Domains oder E-Mail-Adressen hinzu, die nicht registrieren oder über die Benutzeroberfläche verknüpfen können.',
+      placeholder:
+        'Geben Sie die blockierte E-Mail-Adresse oder Domain ein (zum Beispiel, bar@example.com, @example.com)',
+      duplicate_error: 'E-Mail-Adresse oder Domain bereits hinzugefügt',
+      invalid_format_error:
+        'Muss eine gültige E-Mail-Adresse (bar@example.com) oder Domain (@example.com) sein',
     },
   },
 };

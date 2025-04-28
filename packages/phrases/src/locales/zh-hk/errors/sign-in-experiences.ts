@@ -11,10 +11,13 @@ const sign_in_experiences = {
   code_sign_in_must_be_enabled: '必須在註冊中不要求設置密碼時啟用驗證碼登錄。',
   unsupported_default_language: '{{language}} 無法選擇作為默認語言。',
   at_least_one_authentication_factor: '至少要選擇一個登錄要素',
-  backup_code_cannot_be_enabled_alone: 'Backup code cannot be enabled alone.',
-  duplicated_mfa_factors: 'Duplicated MFA factors.',
+  backup_code_cannot_be_enabled_alone: '備份代碼不能單獨啟用。',
+  duplicated_mfa_factors: '檢測到重複的多因子驗證因素。',
   duplicated_sign_up_identifiers: '檢測到重複的註冊標識符。',
   missing_sign_up_identifiers: '主要的註冊標識符不能為空。',
+  invalid_custom_email_blocklist_format:
+    '無效的自定義電子郵件黑名單條目：{{items, list(type:conjunction)}}。每個條目必須是有效的電子郵件地址或電子郵件域，例如，foo@example.com 或 @example.com。',
+  duplicate_custom_email_blocklist_items: '檢測到重複的自定義電子郵件黑名單項目。',
 };
 
 export default Object.freeze(sign_in_experiences);

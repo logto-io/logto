@@ -52,6 +52,7 @@ export const enterpriseSso = '/connectors/enterprise-connectors';
 export const security = '/security';
 export const captcha = '/security/captcha';
 export const sentinel = '/security/identifier-lockout';
+export const emailBlocklist = '/security/blocklist';
 export const passwordPolicy = '/security/password-policy';
 export const spInitiatedSsoFlow = '/end-user-flows/enterprise-sso/sp-initiated-sso';
 export const apiResources = '/authorization/api-resources';

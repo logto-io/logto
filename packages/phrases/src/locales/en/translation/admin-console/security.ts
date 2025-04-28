@@ -5,6 +5,7 @@ const security = {
   tabs: {
     captcha: 'CAPTCHA',
     password_policy: 'Password policy',
+    blocklist: 'Blocklist',
     general: 'General',
   },
   bot_protection: {
@@ -113,6 +114,31 @@ const security = {
       success_toast: 'Unlocked successfully',
       duplicate_identifier_error: 'Identifier already added',
       empty_identifier_error: 'Please enter at least one identifier',
+    },
+  },
+  blocklist: {
+    card_title: 'Email blocklist',
+    card_description:
+      'Take control of your user base by blocking high-risk or unwanted email addresses.',
+    disposable_email: {
+      title: 'Block disposable email addresses',
+      description:
+        'Enable to reject any sign-up attempts using a disposable or throwaway email address, which can prevent spam and improve user quality.',
+    },
+    email_subaddressing: {
+      title: 'Block email subaddressing',
+      description:
+        'Enable to prevent users from using email subaddresses with a plus sign (+) and additional characters (e.g., user+alias@foo.com).',
+    },
+    custom_email_address: {
+      title: 'Block custom email addresses',
+      description:
+        'Add specific email domains or email address which cannot register or link via the UI.',
+      placeholder:
+        'Enter the blocked email address or domain (e.g., bar@example.com, @example.com)',
+      duplicate_error: 'Email address or domain already added',
+      invalid_format_error:
+        'Must be a valid email address(bar@example.com) or domain(@example.com)',
     },
   },
 };
