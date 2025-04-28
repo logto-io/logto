@@ -207,7 +207,7 @@ export const seedTables = async (
     connection.query(insertInto(createDefaultAccountCenter(adminTenantId), AccountCenters.table)),
   ]);
 
-  // The below seed data is for the Logto Cloud only. We put it here for the sack of simplicity.
+  // The below seed data is for the Logto Cloud only. We put it here for the sake of simplicity.
   // The data is not harmful for OSS, since they are all admin tenant data. OSS will not use them
   // and they cannot be seen by the Console.
   await Promise.all([
