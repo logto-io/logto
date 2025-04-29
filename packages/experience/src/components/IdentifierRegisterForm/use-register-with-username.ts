@@ -82,6 +82,7 @@ const useRegisterWithUsername = () => {
       handleError,
       usernameErrorHandlers,
       navigate,
+      executeCaptcha,
     ]
   );
 

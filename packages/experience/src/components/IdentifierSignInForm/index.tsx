@@ -10,6 +10,7 @@ import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import { SmartInputField } from '@/components/InputFields';
 import type { IdentifierInputValue } from '@/components/InputFields/SmartInputField';
+import CaptchaBox from '@/containers/CaptchaBox';
 import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
 import usePrefilledIdentifier from '@/hooks/use-prefilled-identifier';
 import useSingleSignOnWatch from '@/hooks/use-single-sign-on-watch';
@@ -155,6 +156,7 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
         )}
       />
 
+      <CaptchaBox />
       <Button
         name="submit"
         title={showSingleSignOnForm ? 'action.single_sign_on' : 'action.sign_in'}
