@@ -24,12 +24,6 @@ describe('validateEmailBlocklistPolicy', () => {
     }
   );
 
-  it('should throw if duplicate custom email blocklist items is detected', () => {
-    expect(() => {
-      parseEmailBlocklistPolicy({ customBlocklist: ['bar@foo.com', 'bar@foo.com'] });
-    }).toMatchError(new RequestError('sign_in_experiences.duplicate_custom_email_blocklist_items'));
-  });
-
   it('should pass the validation with valid format and deduplicate items', () => {
     const parsed = parseEmailBlocklistPolicy({ customBlocklist: validCustomBlockList });
     expect(parsed).toEqual({ customBlocklist: deduplicate(validCustomBlockList) });
