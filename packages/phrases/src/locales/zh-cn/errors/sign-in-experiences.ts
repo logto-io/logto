@@ -16,7 +16,6 @@ const sign_in_experiences = {
   missing_sign_up_identifiers: '主要的注册标识符不能为空。',
   invalid_custom_email_blocklist_format:
     '无效的自定义电子邮件黑名单项目：{{items, list(type:conjunction)}}。每个项目必须是有效的电子邮件地址或电子邮件域，例如，foo@example.com 或 @example.com。',
-  duplicate_custom_email_blocklist_items: '检测到重复的自定义电子邮件黑名单项目。',
 };
 
 export default Object.freeze(sign_in_experiences);

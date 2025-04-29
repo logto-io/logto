@@ -17,7 +17,6 @@ const sign_in_experiences = {
   missing_sign_up_identifiers: '主要的註冊標識符不能為空。',
   invalid_custom_email_blocklist_format:
     '無效的自定義電子郵件黑名單條目：{{items, list(type:conjunction)}}。每個條目必須是有效的電子郵件地址或電子郵件域，例如，foo@example.com 或 @example.com。',
-  duplicate_custom_email_blocklist_items: '檢測到重複的自定義電子郵件黑名單項目。',
 };
 
 export default Object.freeze(sign_in_experiences);

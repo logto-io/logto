@@ -24,8 +24,6 @@ const sign_in_experiences = {
   missing_sign_up_identifiers: '主要なサインアップ識別子を空にすることはできません。',
   invalid_custom_email_blocklist_format:
     '無効なカスタムメールブロックリスト項目: {{items, list(type:conjunction)}} 。各項目は有効なメールアドレスまたはメールドメインである必要があります。例: foo@example.com または @example.com 。',
-  duplicate_custom_email_blocklist_items:
-    '重複したカスタムメールブロックリスト項目が検出されました。',
 };
 
 export default Object.freeze(sign_in_experiences);

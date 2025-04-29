@@ -22,8 +22,6 @@ const sign_in_experiences = {
   missing_sign_up_identifiers: 'Birincil kayıt kimliği boş olamaz.',
   invalid_custom_email_blocklist_format:
     'Geçersiz özel e-posta engelleme listesi öğeleri: {{items, list(type:conjunction)}}. Her öğe, geçerli bir e-posta adresi veya e-posta alan adı olmalıdır, örneğin, foo@example.com veya @example.com.',
-  duplicate_custom_email_blocklist_items:
-    'Yinelenen özel e-posta engelleme listesi öğeleri tespit edildi.',
 };
 
 export default Object.freeze(sign_in_experiences);
