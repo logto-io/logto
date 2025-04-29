@@ -1,20 +1,18 @@
 import { DemoConnector } from '@logto/connector-kit';
 import { PasswordPolicyChecker } from '@logto/core-kit';
 import { ConnectorType, SignInExperiences } from '@logto/schemas';
-import { tryThat } from '@silverhand/essentials';
+import { conditional, tryThat } from '@silverhand/essentials';
 import { literal, object, string, z } from 'zod';
 
 import {
   validateSignUp,
   validateSignIn,
-  validateEmailBlocklistPolicy,
+  parseEmailBlocklistPolicy,
 } from '#src/libraries/sign-in-experience/index.js';
 import { validateMfa } from '#src/libraries/sign-in-experience/mfa.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
-import { EnvSet } from '../../env-set/index.js';
 import RequestError from '../../errors/RequestError/index.js';
-import assertThat from '../../utils/assert-that.js';
 import { checkPasswordPolicyForUser } from '../../utils/password.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
@@ -81,17 +79,9 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const {
         query: { removeUnusedDemoSocialConnector },
-        body: { socialSignInConnectorTargets, ...rest },
+        body: { socialSignInConnectorTargets, emailBlocklistPolicy, ...rest },
       } = ctx.guard;
-      const {
-        languageInfo,
-        signUp,
-        signIn,
-        mfa,
-        sentinelPolicy,
-        captchaPolicy,
-        emailBlocklistPolicy,
-      } = rest;
+      const { languageInfo, signUp, signIn, mfa, sentinelPolicy, captchaPolicy } = rest;
 
       if (languageInfo) {
         await validateLanguageInfo(languageInfo);
@@ -125,18 +115,6 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         validateMfa(mfa);
       }
 
-      if (emailBlocklistPolicy) {
-        // TODO: @simeng remove this validation when the feature is ready
-        assertThat(
-          EnvSet.values.isDevFeaturesEnabled,
-          new RequestError('request.invalid_input', {
-            details: 'Email block list policy is not supported in this environment',
-          })
-        );
-
-        validateEmailBlocklistPolicy(emailBlocklistPolicy);
-      }
-
       // Guard the quota for the security features enabled. Guarded properties are:
       // - sentinelPolicy: if sentinelPolicy is not empty object, security features are guarded
       // - captchaPolicy: if captchaPolicy is enabled, security features are guarded
@@ -160,14 +138,21 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         );
       }
 
-      ctx.body = await updateDefaultSignInExperience(
-        filteredSocialSignInConnectorTargets
-          ? {
-              ...rest,
-              socialSignInConnectorTargets: filteredSocialSignInConnectorTargets,
-            }
-          : rest
-      );
+      const payload = {
+        ...rest,
+        ...conditional(
+          filteredSocialSignInConnectorTargets && {
+            socialSignInConnectorTargets: filteredSocialSignInConnectorTargets,
+          }
+        ),
+        ...conditional(
+          emailBlocklistPolicy && {
+            emailBlocklistPolicy: parseEmailBlocklistPolicy(emailBlocklistPolicy),
+          }
+        ),
+      };
+
+      ctx.body = await updateDefaultSignInExperience(payload);
 
       void quota.reportSubscriptionUpdatesUsage('mfaEnabled');
 

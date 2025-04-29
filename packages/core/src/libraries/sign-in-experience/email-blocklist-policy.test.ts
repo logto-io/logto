@@ -1,9 +1,9 @@
 import RequestError from '../../errors/RequestError/index.js';
 
-import { validateEmailBlocklistPolicy } from './email-blocklist-policy.js';
+import { parseEmailBlocklistPolicy } from './email-blocklist-policy.js';
 
 const invalidCustomBlockList = ['bar', 'bar@foo', '@foo', '@foo.', 'bar@foo.'];
-const validCustomBlockList = ['bar@foo.com', '@foo.com', 'abc.bar@foo.xyz'];
+const validCustomBlockList = ['bar@foo.com', '@foo.com', 'abc.bar@foo.xyz', 'bar@foo.com'];
 
 describe('validateEmailBlocklistPolicy', () => {
   it.each(invalidCustomBlockList)(
@@ -11,7 +11,7 @@ describe('validateEmailBlocklistPolicy', () => {
     (item) => {
       const emailBlocklistPolicy = { customBlocklist: [item] };
       expect(() => {
-        validateEmailBlocklistPolicy(emailBlocklistPolicy);
+        parseEmailBlocklistPolicy(emailBlocklistPolicy);
       }).toMatchError(
         new RequestError({
           code: 'sign_in_experiences.invalid_custom_email_blocklist_format',
@@ -24,13 +24,12 @@ describe('validateEmailBlocklistPolicy', () => {
 
   it('should throw if duplicate custom email blocklist items is detected', () => {
     expect(() => {
-      validateEmailBlocklistPolicy({ customBlocklist: ['bar@foo.com', 'bar@foo.com'] });
+      parseEmailBlocklistPolicy({ customBlocklist: ['bar@foo.com', 'bar@foo.com'] });
     }).toMatchError(new RequestError('sign_in_experiences.duplicate_custom_email_blocklist_items'));
   });
 
-  it('should pass the validation with valid format', () => {
-    expect(() => {
-      validateEmailBlocklistPolicy({ customBlocklist: validCustomBlockList });
-    }).not.toThrow();
+  it('should pass the validation with valid format and deduplicate items', () => {
+    const parsed = parseEmailBlocklistPolicy({ customBlocklist: ['bar@foo.com', 'bar@foo.com'] });
+    expect(parsed).toEqual(['bar@foo.com']);
   });
 });

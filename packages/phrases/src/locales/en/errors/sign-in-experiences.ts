@@ -21,7 +21,6 @@ const sign_in_experiences = {
   missing_sign_up_identifiers: 'Primary sign-up identifier cannot be empty.',
   invalid_custom_email_blocklist_format:
     'Invalid custom email blocklist items: {{items, list(type:conjunction)}}. Each item must be a valid email address or email domain, e.g., foo@example.com or @example.com.',
-  duplicate_custom_email_blocklist_items: 'Duplicate custom email blocklist items detected.',
 };
 
 export default Object.freeze(sign_in_experiences);

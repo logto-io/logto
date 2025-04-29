@@ -1,11 +1,13 @@
 import { type EmailBlocklistPolicy } from '@logto/schemas';
-import { deduplicate } from '@silverhand/essentials';
+import { conditional, deduplicate } from '@silverhand/essentials';
 
+import { EnvSet } from '../../env-set/index.js';
 import RequestError from '../../errors/RequestError/index.js';
+import assertThat from '../../utils/assert-that.js';
 
 const emailOrEmailDomainRegex = /^\S+@\S+\.\S+|^@\S+\.\S+$/;
 
-const validateCustomBlockList = (list: string[]) => {
+const validateCustomBlockListFormat = (list: string[]) => {
   const invalidItems = new Set();
 
   for (const item of list) {
@@ -17,9 +19,9 @@ const validateCustomBlockList = (list: string[]) => {
   return invalidItems;
 };
 
-export const validateEmailBlocklistPolicy = (emailBlocklistPolicy: EmailBlocklistPolicy) => {
-  const { customBlocklist = [] } = emailBlocklistPolicy;
-  const invalidItems = validateCustomBlockList(customBlocklist);
+const parseCustomBlocklist = (customBlocklist: string[]) => {
+  const deduplicated = deduplicate(customBlocklist);
+  const invalidItems = validateCustomBlockListFormat(deduplicated);
 
   if (invalidItems.size > 0) {
     throw new RequestError({
@@ -29,9 +31,28 @@ export const validateEmailBlocklistPolicy = (emailBlocklistPolicy: EmailBlocklis
     });
   }
 
-  const deduplicateList = deduplicate(customBlocklist);
+  return deduplicated;
+};
 
-  if (deduplicateList.length !== customBlocklist.length) {
-    throw new RequestError('sign_in_experiences.duplicate_custom_email_blocklist_items');
-  }
+/**
+ * This function will deduplicate the custom blocklist (if not undefined) and validate the format of each item.
+ * If any item is invalid, it throws a RequestError with the details of the invalid items.
+ */
+export const parseEmailBlocklistPolicy = (
+  emailBlocklistPolicy: EmailBlocklistPolicy
+): EmailBlocklistPolicy => {
+  // TODO: @simeng remove this validation when the feature is ready
+  assertThat(
+    EnvSet.values.isDevFeaturesEnabled,
+    new RequestError('request.invalid_input', {
+      details: 'Email block list policy is not supported in this environment',
+    })
+  );
+
+  const { customBlocklist, ...rest } = emailBlocklistPolicy;
+
+  return {
+    ...rest,
+    ...conditional(customBlocklist && { customBlocklist: parseCustomBlocklist(customBlocklist) }),
+  };
 };
