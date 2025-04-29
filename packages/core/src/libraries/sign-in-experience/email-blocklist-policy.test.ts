@@ -1,3 +1,5 @@
+import { deduplicate } from '@silverhand/essentials';
+
 import RequestError from '../../errors/RequestError/index.js';
 
 import { parseEmailBlocklistPolicy } from './email-blocklist-policy.js';
@@ -29,7 +31,7 @@ describe('validateEmailBlocklistPolicy', () => {
   });
 
   it('should pass the validation with valid format and deduplicate items', () => {
-    const parsed = parseEmailBlocklistPolicy({ customBlocklist: ['bar@foo.com', 'bar@foo.com'] });
-    expect(parsed).toEqual(['bar@foo.com']);
+    const parsed = parseEmailBlocklistPolicy({ customBlocklist: validCustomBlockList });
+    expect(parsed).toEqual({ customBlocklist: deduplicate(validCustomBlockList) });
   });
 });
