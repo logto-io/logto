@@ -2342,8 +2342,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       samlify:
-        specifier: 2.8.11
-        version: 2.8.11
+        specifier: 2.9.1
+        version: 2.9.1
       snakecase-keys:
         specifier: ^8.0.1
         version: 8.0.1
@@ -3446,7 +3446,7 @@ importers:
     dependencies:
       '@authenio/samlify-node-xmllint':
         specifier: ^2.0.0
-        version: 2.0.0(samlify@2.8.11)
+        version: 2.0.0(samlify@2.9.1)
       '@aws-sdk/client-s3':
         specifier: ^3.556.0
         version: 3.556.0
@@ -3643,8 +3643,8 @@ importers:
         specifier: ^7.11.0
         version: 7.21.1
       samlify:
-        specifier: 2.8.11
-        version: 2.8.11
+        specifier: 2.9.1
+        version: 2.9.1
       semver:
         specifier: ^7.3.8
         version: 7.7.1
@@ -13620,8 +13620,8 @@ packages:
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  samlify@2.8.11:
-    resolution: {integrity: sha512-EDO9CMba0rtHSek2NyUcS8brIxK1E521X5fT+1qLKTRkm1dddITeuPqU8/by4Lcf95ngMKjsn5Z600eVhXDqxQ==}
+  samlify@2.9.1:
+    resolution: {integrity: sha512-VFite2x9RLrz4zJ0rfhJU2CSPbV/V2o6I0EdRfoa8AJVsM/dQlVF9ibbR2TJ3nKSHqf2tpCy/AZZ2O/+tynnbQ==}
 
   sass@1.77.8:
     resolution: {integrity: sha512-4UHg6prsrycW20fqLGPShtEvo/WyHRVRHwOP4DzkUrObWoWI05QBSfzU71TVB7PFaL104TwNaHpjlWXAZbQiNQ==}
@@ -14994,14 +14994,14 @@ snapshots:
       '@csstools/css-tokenizer': 3.0.3
       lru-cache: 10.4.3
 
-  '@authenio/samlify-node-xmllint@2.0.0(samlify@2.8.11)':
+  '@authenio/samlify-node-xmllint@2.0.0(samlify@2.9.1)':
     dependencies:
       node-xmllint: 1.0.0
-      samlify: 2.8.11
+      samlify: 2.9.1
 
   '@authenio/xml-encryption@2.0.2':
     dependencies:
-      '@xmldom/xmldom': 0.8.7
+      '@xmldom/xmldom': 0.8.10
       escape-html: 1.0.3
       xpath: 0.0.32
 
@@ -26259,10 +26259,10 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
-  samlify@2.8.11:
+  samlify@2.9.1:
     dependencies:
       '@authenio/xml-encryption': 2.0.2
-      '@xmldom/xmldom': 0.8.7
+      '@xmldom/xmldom': 0.8.10
       camelcase: 6.3.0
       node-forge: 1.3.1
       node-rsa: 1.1.1
