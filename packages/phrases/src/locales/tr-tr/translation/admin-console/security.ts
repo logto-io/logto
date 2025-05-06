@@ -5,6 +5,7 @@ const security = {
   tabs: {
     captcha: 'CAPTCHA',
     password_policy: 'Parola politikası',
+    blocklist: 'Engellenen liste',
     general: 'Genel',
   },
   bot_protection: {
@@ -114,6 +115,31 @@ const security = {
       success_toast: 'Başarıyla kilidi açıldı',
       duplicate_identifier_error: 'Kimlik zaten eklendi',
       empty_identifier_error: 'Lütfen en az bir kimlik girin',
+    },
+  },
+  blocklist: {
+    card_title: 'E-posta engelleme listesi',
+    card_description:
+      'Yüksek riskli veya istenmeyen e-posta adreslerini engelleyerek kullanıcı tabanınızı kontrol edin.',
+    disposable_email: {
+      title: 'Geçici e-posta adreslerini engelle',
+      description:
+        'Spamı önlemek ve kullanıcı kalitesini artırmak için geçici veya tek kullanımlık e-posta adresleri kullanılarak yapılan kayıt denemelerini reddetmek için etkinleştirin.',
+    },
+    email_subaddressing: {
+      title: 'E-posta alt adlandırmasını engelle',
+      description:
+        'Kullanıcıların artı işareti (+) ve ek karakterler (örn., user+alias@foo.com) ile e-posta alt adreslerini kullanmasını önlemek için etkinleştirin.',
+    },
+    custom_email_address: {
+      title: 'Özel e-posta adreslerini engelle',
+      description:
+        'Belirli e-posta alan adlarını veya kullanıcı arayüzü aracılığıyla kaydolamayacak veya bağlantı kuramayacak e-posta adreslerini ekleyin.',
+      placeholder:
+        'Engellenen e-posta adresini veya alan adını girin (örn., bar@example.com, @example.com)',
+      duplicate_error: 'E-posta adresi veya alan adı zaten eklendi',
+      invalid_format_error:
+        'Geçerli bir e-posta adresi (bar@example.com) veya alan adı (@example.com) olmalıdır',
     },
   },
 };

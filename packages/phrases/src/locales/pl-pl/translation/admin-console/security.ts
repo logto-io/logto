@@ -5,6 +5,7 @@ const security = {
   tabs: {
     captcha: 'CAPTCHA',
     password_policy: 'Polityka haseł',
+    blocklist: 'Lista blokad',
     general: 'Ogólne',
   },
   bot_protection: {
@@ -115,6 +116,31 @@ const security = {
       success_toast: 'Pomyślnie odblokowano',
       duplicate_identifier_error: 'Identyfikator już dodany',
       empty_identifier_error: 'Proszę wprowadzić co najmniej jeden identyfikator',
+    },
+  },
+  blocklist: {
+    card_title: 'Lista blokad email',
+    card_description:
+      'Przejmij kontrolę nad bazą użytkowników, blokując adresy email o wysokim ryzyku lub niepożądane.',
+    disposable_email: {
+      title: 'Zablokuj jednorazowe adresy email',
+      description:
+        'Włącz, aby odrzucać wszelkie próby rejestracji przy użyciu jednorazowego lub tymczasowego adresu email, co może zapobiec spamowi i poprawić jakość użytkowników.',
+    },
+    email_subaddressing: {
+      title: 'Zablokuj podadresacje email',
+      description:
+        'Włącz, aby zapobiec użytkownikom przed używaniem podadresów email z plusem (+) i dodatkowymi znakami (np. user+alias@foo.com).',
+    },
+    custom_email_address: {
+      title: 'Zablokuj niestandardowe adresy email',
+      description:
+        'Dodaj określone domeny email lub adresy email, które nie mogą się rejestrować lub powiązać przez UI.',
+      placeholder:
+        'Wprowadź zablokowany adres email lub domenę (np. bar@example.com, @example.com)',
+      duplicate_error: 'Adres email lub domena już dodana',
+      invalid_format_error:
+        'Musi być ważnym adresem email(bar@example.com) lub domeną(@example.com)',
     },
   },
 };

@@ -1,6 +1,7 @@
 import { Navigate, type RouteObject } from 'react-router-dom';
 import { safeLazy } from 'react-safe-lazy';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { SecurityTabs } from '@/pages/Security/types';
 
 const Security = safeLazy(async () => import('@/pages/Security'));
@@ -26,6 +27,15 @@ export const security: RouteObject = {
     {
       path: SecurityTabs.General,
       element: <Security tab={SecurityTabs.General} />,
+    },
+    {
+      path: SecurityTabs.Blocklist,
+      // TODO: @simeng remove dev feature guard
+      element: isDevFeaturesEnabled ? (
+        <Security tab={SecurityTabs.Blocklist} />
+      ) : (
+        <Navigate replace to={SecurityTabs.PasswordPolicy} />
+      ),
     },
   ],
 };

@@ -19,6 +19,8 @@ const sign_in_experiences = {
   duplicated_mfa_factors: 'عوامل MFA مكررة.',
   duplicated_sign_up_identifiers: 'تم اكتشاف معرفات تسجيل مكررة.',
   missing_sign_up_identifiers: 'لا يمكن أن يكون معرف التسجيل الأساسي فارغًا.',
+  invalid_custom_email_blocklist_format:
+    'عناصر قائمة البريد الإلكتروني المحظورة المخصصة غير صالحة: {{items, list(type:conjunction)}}. يجب أن يكون كل عنصر عنوان بريد إلكتروني أو نطاق بريد إلكتروني صالحًا، مثلاً، foo@example.com أو @example.com.',
 };
 
 export default Object.freeze(sign_in_experiences);

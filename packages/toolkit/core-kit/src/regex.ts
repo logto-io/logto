@@ -1,4 +1,6 @@
 export const emailRegEx = /^\S+@\S+\.\S+$/;
+/** Validates full email address or email domain. */
+export const emailOrEmailDomainRegex = /^\S+@\S+\.\S+|^@\S+\.\S+$/;
 export const phoneRegEx = /^\d+$/;
 export const phoneInputRegEx = /^\+?[\d-( )]+$/;
 export const usernameRegEx = /^[A-Z_a-z]\w*$/;

@@ -23,6 +23,8 @@ const sign_in_experiences = {
   duplicated_mfa_factors: 'Duplizierte MFA-Faktoren.',
   duplicated_sign_up_identifiers: 'Doppelte Anmeldekennungen erkannt.',
   missing_sign_up_identifiers: 'Primäre Anmeldekennung darf nicht leer sein.',
+  invalid_custom_email_blocklist_format:
+    'Ungültige benutzerdefinierte E-Mail-Sperrlistenpunkte: {{items, list(type:conjunction)}}. Jedes Element muss eine gültige E-Mail-Adresse oder Domain sein, z. B. foo@example.com oder @example.com.',
 };
 
 export default Object.freeze(sign_in_experiences);

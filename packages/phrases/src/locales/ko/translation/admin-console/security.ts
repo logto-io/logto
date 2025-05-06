@@ -5,6 +5,7 @@ const security = {
   tabs: {
     captcha: 'CAPTCHA',
     password_policy: '비밀번호 정책',
+    blocklist: '차단 목록',
     general: '일반',
   },
   bot_protection: {
@@ -66,7 +67,7 @@ const security = {
     compromised_passwords: '위험한 비밀번호',
     breached_passwords: '유출된 비밀번호',
     breached_passwords_description: '이전에 유출된 비밀번호를 거부합니다.',
-    restricted_phrases: '보안속에 좋지 않은 구구절',
+    restricted_phrases: '보안에 좋지 않은 구문',
     restricted_phrases_tooltip:
       '3글자 이상의 다른 글자와 함께 조합하지 않는 한 이러한 구문을 피하세요.',
     repetitive_or_sequential_characters: '반복된 혹은 순차적인 문자',
@@ -110,6 +111,29 @@ const security = {
       success_toast: '성공적으로 잠금 해제되었습니다',
       duplicate_identifier_error: '식별자가 이미 추가되었습니다',
       empty_identifier_error: '최소 하나의 식별자를 입력하세요',
+    },
+  },
+  blocklist: {
+    card_title: '이메일 차단 목록',
+    card_description: '높은 위험 또는 원치 않는 이메일 주소를 차단하여 사용자 기반을 제어합니다.',
+    disposable_email: {
+      title: '일회용 이메일 주소 차단',
+      description:
+        '일회용 또는 임시 이메일 주소를 사용한 가입 시도를 거부하도록 활성화하여 스팸을 방지하고 사용자 품질을 향상시킬 수 있습니다.',
+    },
+    email_subaddressing: {
+      title: '이메일 서브주소 차단',
+      description:
+        '사용자가 플러스 기호 (+)와 추가 문자를 사용하여 이메일 서브주소를 사용하는 것을 방지하도록 활성화합니다 (예: user+alias@foo.com).',
+    },
+    custom_email_address: {
+      title: '사용자 정의 이메일 주소 차단',
+      description:
+        '등록하거나 UI를 통해 연결할 수 없는 특정 이메일 도메인 또는 이메일 주소를 추가합니다.',
+      placeholder: '차단된 이메일 주소 또는 도메인 입력 (예: bar@example.com, @example.com)',
+      duplicate_error: '이미 추가된 이메일 주소 또는 도메인입니다',
+      invalid_format_error:
+        '유효한 이메일 주소(bar@example.com) 또는 도메인(@example.com)이어야 합니다',
     },
   },
 };

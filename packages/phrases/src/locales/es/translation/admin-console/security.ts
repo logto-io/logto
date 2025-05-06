@@ -5,6 +5,7 @@ const security = {
   tabs: {
     captcha: 'CAPTCHA',
     password_policy: 'Política de contraseña',
+    blocklist: 'Lista de bloqueados',
     general: 'General',
   },
   bot_protection: {
@@ -117,6 +118,31 @@ const security = {
       success_toast: 'Desbloqueado con éxito',
       duplicate_identifier_error: 'Identificador ya agregado',
       empty_identifier_error: 'Por favor, ingresa al menos un identificador',
+    },
+  },
+  blocklist: {
+    card_title: 'Lista de bloqueo de correos electrónicos',
+    card_description:
+      'Toma el control de tu base de usuarios al bloquear direcciones de correo electrónico de alto riesgo o no deseadas.',
+    disposable_email: {
+      title: 'Bloquear direcciones de correo electrónico desechables',
+      description:
+        'Habilita el rechazo de cualquier intento de registro utilizando una dirección de correo desechable o de un solo uso, lo que puede prevenir el spam y mejorar la calidad del usuario.',
+    },
+    email_subaddressing: {
+      title: 'Bloquear subdirecciones de correo electrónico',
+      description:
+        'Habilita para evitar que los usuarios utilicen subdirecciones de correo electrónico con un signo más (+) y caracteres adicionales (por ejemplo, usuario+alias@foo.com).',
+    },
+    custom_email_address: {
+      title: 'Bloquear direcciones de correo electrónico personalizadas',
+      description:
+        'Agrega dominios de correo específicos o direcciones de correo electrónico que no pueden registrarse o vincularse a través de la interfaz de usuario.',
+      placeholder:
+        'Ingresa la dirección de correo electrónico o dominio bloqueado (por ejemplo, bar@example.com, @example.com)',
+      duplicate_error: 'La dirección de correo electrónico o el dominio ya fue agregado',
+      invalid_format_error:
+        'Debe ser una dirección de correo electrónico válida (bar@example.com) o un dominio (@example.com)',
     },
   },
 };

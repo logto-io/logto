@@ -5,6 +5,7 @@ const security = {
   tabs: {
     captcha: 'CAPTCHA',
     password_policy: 'パスワードポリシー',
+    blocklist: 'ブロックリスト',
     general: '一般設定',
   },
   bot_protection: {
@@ -112,6 +113,31 @@ const security = {
       success_toast: '正常に解除されました',
       duplicate_identifier_error: '識別子は既に追加されています',
       empty_identifier_error: '少なくとも 1 つの識別子を入力してください',
+    },
+  },
+  blocklist: {
+    card_title: 'メールブロックリスト',
+    card_description:
+      'ハイリスクまたは不要なメールアドレスをブロックすることで、ユーザーベースを制御します。',
+    disposable_email: {
+      title: '使い捨てメールアドレスをブロック',
+      description:
+        'スパムを防止し、ユーザーの質を向上させるために、使い捨てや一時のメールアドレスを使用したサインアップ試行を拒否することを有効にします。',
+    },
+    email_subaddressing: {
+      title: 'メールサブアドレッシングをブロック',
+      description:
+        'プラス記号 （+） と追加文字（例：user+alias@foo.com）を使ったメールサブアドレスの使用を防ぐことを有効にします。',
+    },
+    custom_email_address: {
+      title: 'カスタムメールアドレスをブロック',
+      description:
+        'UI を介して登録またはリンクできない特定のメールドメインまたはメールアドレスを追加します。',
+      placeholder:
+        'ブロックするメールアドレスまたはドメインを入力してください（例：bar@example.com、@example.com）',
+      duplicate_error: 'メールアドレスまたはドメインは既に追加されています',
+      invalid_format_error:
+        '有効なメールアドレス（bar@example.com）またはドメイン（@example.com）である必要があります',
     },
   },
 };
