@@ -40,7 +40,7 @@ const useDataFetch = () => {
   }, [data]);
 
   return {
-    isLoading: isLoading && !error,
+    isLoading,
     formData,
     error,
     mutate,
@@ -53,7 +53,7 @@ function Blocklist() {
   return (
     <div className={styles.content}>
       <PageMeta titleKey={['security.tabs.blocklist', 'security.page_title']} />
-      {isLoading ? <FormCardSkeleton formFieldCount={2} /> : null}
+      {isLoading && <FormCardSkeleton formFieldCount={2} />}
       {error && <RequestDataError error={error} onRetry={mutate} />}
       {formData && <BlocklistForm formData={formData} />}
     </div>
