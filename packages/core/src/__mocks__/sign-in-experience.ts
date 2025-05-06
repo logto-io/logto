@@ -105,4 +105,5 @@ export const mockSignInExperience: SignInExperience = {
   unknownSessionRedirectUrl: null,
   captchaPolicy: {},
   sentinelPolicy: {},
+  emailBlocklistPolicy: {},
 };

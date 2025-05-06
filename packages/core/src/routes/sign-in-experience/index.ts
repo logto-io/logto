@@ -1,10 +1,14 @@
 import { DemoConnector } from '@logto/connector-kit';
 import { PasswordPolicyChecker } from '@logto/core-kit';
 import { ConnectorType, SignInExperiences } from '@logto/schemas';
-import { tryThat } from '@silverhand/essentials';
+import { conditional, tryThat } from '@silverhand/essentials';
 import { literal, object, string, z } from 'zod';
 
-import { validateSignUp, validateSignIn } from '#src/libraries/sign-in-experience/index.js';
+import {
+  validateSignUp,
+  validateSignIn,
+  parseEmailBlocklistPolicy,
+} from '#src/libraries/sign-in-experience/index.js';
 import { validateMfa } from '#src/libraries/sign-in-experience/mfa.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
@@ -75,7 +79,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const {
         query: { removeUnusedDemoSocialConnector },
-        body: { socialSignInConnectorTargets, ...rest },
+        body: { socialSignInConnectorTargets, emailBlocklistPolicy, ...rest },
       } = ctx.guard;
       const { languageInfo, signUp, signIn, mfa, sentinelPolicy, captchaPolicy } = rest;
 
@@ -119,8 +123,8 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         await quota.guardTenantUsageByKey('securityFeaturesEnabled');
       }
 
-      // Remove unused demo social connectors, those that are not selected in onboarding SIE config.
       if (removeUnusedDemoSocialConnector && filteredSocialSignInConnectorTargets) {
+        // Remove unused demo social connectors, those that are not selected in onboarding SIE config.
         await Promise.all(
           connectors
             .filter((connector) => {
@@ -134,14 +138,21 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         );
       }
 
-      ctx.body = await updateDefaultSignInExperience(
-        filteredSocialSignInConnectorTargets
-          ? {
-              ...rest,
-              socialSignInConnectorTargets: filteredSocialSignInConnectorTargets,
-            }
-          : rest
-      );
+      const payload = {
+        ...rest,
+        ...conditional(
+          filteredSocialSignInConnectorTargets && {
+            socialSignInConnectorTargets: filteredSocialSignInConnectorTargets,
+          }
+        ),
+        ...conditional(
+          emailBlocklistPolicy && {
+            emailBlocklistPolicy: parseEmailBlocklistPolicy(emailBlocklistPolicy),
+          }
+        ),
+      };
+
+      ctx.body = await updateDefaultSignInExperience(payload);
 
       void quota.reportSubscriptionUpdatesUsage('mfaEnabled');
 

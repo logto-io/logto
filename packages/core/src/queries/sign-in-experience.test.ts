@@ -38,12 +38,13 @@ describe('sign-in-experience query', () => {
     socialSignIn: JSON.stringify(mockSignInExperience.socialSignIn),
     captchaPolicy: JSON.stringify(mockSignInExperience.captchaPolicy),
     sentinelPolicy: JSON.stringify(mockSignInExperience.sentinelPolicy),
+    emailBlocklistPolicy: JSON.stringify(mockSignInExperience.emailBlocklistPolicy),
   };
 
   it('findDefaultSignInExperience', async () => {
     /* eslint-disable sql/no-unsafe-query */
     const expectSql = `
-      select "tenant_id", "id", "color", "branding", "language_info", "terms_of_use_url", "privacy_policy_url", "agree_to_terms_policy", "sign_in", "sign_up", "social_sign_in", "social_sign_in_connector_targets", "sign_in_mode", "custom_css", "custom_content", "custom_ui_assets", "password_policy", "mfa", "single_sign_on_enabled", "support_email", "support_website_url", "unknown_session_redirect_url", "captcha_policy", "sentinel_policy"
+      select "tenant_id", "id", "color", "branding", "language_info", "terms_of_use_url", "privacy_policy_url", "agree_to_terms_policy", "sign_in", "sign_up", "social_sign_in", "social_sign_in_connector_targets", "sign_in_mode", "custom_css", "custom_content", "custom_ui_assets", "password_policy", "mfa", "single_sign_on_enabled", "support_email", "support_website_url", "unknown_session_redirect_url", "captcha_policy", "sentinel_policy", "email_blocklist_policy"
       from "sign_in_experiences"
       where "id"=$1
     `;
