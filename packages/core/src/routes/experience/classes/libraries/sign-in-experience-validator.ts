@@ -8,16 +8,20 @@ import {
   VerificationType,
 } from '@logto/schemas';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { validateEmailAgainstBlocklistPolicy } from '#src/libraries/sign-in-experience/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { type EnterpriseSsoVerification } from '../verifications/enterprise-sso-verification.js';
 import { type VerificationRecord } from '../verifications/index.js';
 
 const getEmailIdentifierFromVerificationRecord = (verificationRecord: VerificationRecord) => {
   switch (verificationRecord.type) {
     case VerificationType.Password:
+    case VerificationType.OneTimeToken:
     case VerificationType.EmailVerificationCode:
     case VerificationType.PhoneVerificationCode: {
       const {
@@ -29,6 +33,10 @@ const getEmailIdentifierFromVerificationRecord = (verificationRecord: Verificati
     case VerificationType.Social: {
       const { socialUserInfo } = verificationRecord;
       return socialUserInfo?.email;
+    }
+    case VerificationType.EnterpriseSso: {
+      const { enterpriseSsoUserInfo } = verificationRecord;
+      return enterpriseSsoUserInfo?.email;
     }
     default: {
       break;
@@ -222,7 +230,9 @@ export class SignInExperienceValidator {
    *
    * @throws {RequestError} with status 422 if the email identifier is SSO enabled
    **/
-  public async guardSsoOnlyEmailIdentifier(verificationRecord: VerificationRecord) {
+  public async guardSsoOnlyEmailIdentifier(
+    verificationRecord: Exclude<VerificationRecord, EnterpriseSsoVerification>
+  ) {
     const emailIdentifier = getEmailIdentifierFromVerificationRecord(verificationRecord);
 
     if (!emailIdentifier) {
@@ -259,6 +269,27 @@ export class SignInExperienceValidator {
     }
 
     throw new RequestError({ code: 'session.captcha_required', status: 422 });
+  }
+
+  /**
+   * Guard the email address is not in the blocklist.
+   *
+   * @remarks
+   * Use this method to guard the email address or domain is not in the blocklist.
+   * - guard disposable email domain if enabled
+   * - guard email subaddessing if enabled
+   * - guard custom email address/domain if provided
+   */
+  public async guardEmailBlocklist(verificationRecord: VerificationRecord) {
+    const email = getEmailIdentifierFromVerificationRecord(verificationRecord);
+
+    // TODO: Remove this once the dev feature is ready
+    if (!EnvSet.values.isDevFeaturesEnabled || !email) {
+      return;
+    }
+
+    const { emailBlocklistPolicy } = await this.getSignInExperienceData();
+    await validateEmailAgainstBlocklistPolicy(emailBlocklistPolicy, email);
   }
 
   /**
@@ -308,7 +339,9 @@ export class SignInExperienceValidator {
       }
     }
 
-    await this.guardSsoOnlyEmailIdentifier(verificationRecord);
+    if (verificationRecord.type !== VerificationType.EnterpriseSso) {
+      await this.guardSsoOnlyEmailIdentifier(verificationRecord);
+    }
   }
 
   /** Forgot password only supports verification code type verification record */

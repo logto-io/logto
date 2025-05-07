@@ -48,6 +48,15 @@ const session = {
     'このメールアドレスではシングルサインオンが有効になっています。SSO でサインインしてください。',
   captcha_required: 'Captcha が必要です。',
   captcha_failed: 'Captcha 検証に失敗しました。',
+  email_blocklist: {
+    /** UNTRANSLATED */
+    invalid_email: 'Invalid email address.',
+    /** UNTRANSLATED */
+    email_subaddressing_not_allowed: 'Email subaddressing is not allowed.',
+    /** UNTRANSLATED */
+    email_not_allowed:
+      'The email address "{{email}}" is restricted. Please choose a different one.',
+  },
 };
 
 export default Object.freeze(session);

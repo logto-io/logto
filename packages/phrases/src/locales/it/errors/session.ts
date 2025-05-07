@@ -49,6 +49,15 @@ const session = {
   sso_enabled: "L'accesso singolo è abilitato per questa email. Accedi con SSO.",
   captcha_required: 'È richiesto il Captcha.',
   captcha_failed: 'La verifica del Captcha non è riuscita.',
+  email_blocklist: {
+    /** UNTRANSLATED */
+    invalid_email: 'Invalid email address.',
+    /** UNTRANSLATED */
+    email_subaddressing_not_allowed: 'Email subaddressing is not allowed.',
+    /** UNTRANSLATED */
+    email_not_allowed:
+      'The email address "{{email}}" is restricted. Please choose a different one.',
+  },
 };
 
 export default Object.freeze(session);
