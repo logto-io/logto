@@ -1,5 +1,14 @@
 # Change Log
 
+## 1.27.1
+
+### Patch Changes
+
+- Updated dependencies [c1dfbfdd2]
+  - @logto/experience@1.13.1
+  - @logto/schemas@1.27.1
+  - @logto/cli@1.27.1
+
 ## 1.27.0
 
 ### Minor Changes
