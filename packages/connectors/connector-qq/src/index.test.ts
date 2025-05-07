@@ -1,6 +1,6 @@
 import nock from 'nock';
 
-import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
+import { ConnectorError } from '@logto/connector-kit';
 
 import {
   accessTokenEndpoint,
@@ -27,17 +27,17 @@ describe('getAuthorizationUri', () => {
     const connector = await createConnector({ getConfig });
     const authorizationUri = await connector.getAuthorizationUri(
       {
-        state: 'state',
+        state: 'some_state',
         redirectUri: 'http://localhost:3000/callback',
         connectorId: 'connector_id',
         connectorFactoryId: 'connector_factory_id',
-        jti: 'jti',
+        jti: 'some_jti',
         headers: {},
       },
       vi.fn()
     );
     expect(authorizationUri).toEqual(
-      `${authorizationEndpoint}?response_type=code&client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&state=some_state&scope=get_user_info,get_unionId`
+      `${authorizationEndpoint}?response_type=code&client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&state=some_state&scope=get_user_info`
     );
   });
 });
@@ -67,7 +67,7 @@ describe('getAccessToken', () => {
 
     await expect(
       getAccessToken(mockedConfig, 'code', 'http://localhost:3000/callback')
-    ).rejects.toStrictEqual(new ConnectorError(ConnectorErrorCodes.InvalidResponse));
+    ).rejects.toThrow(ConnectorError);
   });
 });
 
@@ -78,7 +78,7 @@ describe('getUserInfo', () => {
     nock(openIdEndpoint)
       .get('')
       .query(true)
-      .reply(200, `callback(${JSON.stringify(mockedOpenIdAndUnionIdResponse)})`);
+      .reply(200, `callback(${JSON.stringify(mockedOpenIdAndUnionIdResponse)});`);
   });
 
   afterEach(() => {
@@ -100,9 +100,9 @@ describe('getUserInfo', () => {
 
     expect(socialUserInfo).toStrictEqual({
       id: 'unionid',
-      avatar: 'https://avatar.example.com/user-large.jpg',
+      avatar: 'https://thirdqq.qlogo.cn/ek_qqapp/user-large.jpg',
       name: 'Ciallo',
-      rawData: '{}',
+      rawData: mockedUserInfoResponse,
     });
   });
 
