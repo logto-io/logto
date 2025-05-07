@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.13.1
+
+### Patch Changes
+
+- c1dfbfdd2: add CAPTCHA box to identifier sign in form
+
 ## 1.13.0
 
 ### Minor Changes
