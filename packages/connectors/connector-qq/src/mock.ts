@@ -6,7 +6,7 @@ export const mockedConfig = {
 
 export const mockedAccessTokenResponse = {
   access_token: 'access_token',
-  expires_in: 3600,
+  expires_in: '3600',
   refresh_token: 'refresh_token',
 };
 
