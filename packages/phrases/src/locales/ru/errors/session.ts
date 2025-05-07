@@ -49,6 +49,15 @@ const session = {
     'Единый вход в систему включен для этого указанного адреса электронной почты. Войдите в систему с помощью SSO.',
   captcha_required: 'Требуется Capctha.',
   captcha_failed: 'Проверка Captcha не удалась.',
+  email_blocklist: {
+    /** UNTRANSLATED */
+    invalid_email: 'Invalid email address.',
+    /** UNTRANSLATED */
+    email_subaddressing_not_allowed: 'Email subaddressing is not allowed.',
+    /** UNTRANSLATED */
+    email_not_allowed:
+      'The email address "{{email}}" is restricted. Please choose a different one.',
+  },
 };
 
 export default Object.freeze(session);
