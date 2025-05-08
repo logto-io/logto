@@ -1,3 +1,6 @@
+import { ConnectorType, InteractionEvent, SignInIdentifier } from '@logto/schemas';
+import { generateStandardId } from '@logto/shared';
+
 import { mockSocialConnectorId } from '#src/__mocks__/connectors-mock.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { SsoConnectorApi } from '#src/api/sso-connector.js';
@@ -17,8 +20,6 @@ import {
 } from '#src/helpers/experience/verification-code.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { devFeatureTest, generateEmail } from '#src/utils.js';
-import { ConnectorType, InteractionEvent, SignInIdentifier } from '@logto/schemas';
-import { generateStandardId } from '@logto/shared';
 
 devFeatureTest.describe(
   'should reject the email registration if the email is in the blocklist',
