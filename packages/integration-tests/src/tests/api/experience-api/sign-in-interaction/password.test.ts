@@ -1,6 +1,7 @@
 import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
 
 import { deleteUser, getUser } from '#src/api/admin-user.js';
+import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { initExperienceClient, logoutClient, processSession } from '#src/helpers/client.js';
 import { setEmailConnector, setSmsConnector } from '#src/helpers/connector.js';
 import {
@@ -18,7 +19,6 @@ import {
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import { devFeatureTest, generateEmail } from '#src/utils.js';
-import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 
 const identifiersTypeToUserProfile = Object.freeze({
   username: 'username',
