@@ -17,7 +17,8 @@ import {
   enableAllVerificationCodeSignInMethods,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
-import { generateEmail } from '#src/utils.js';
+import { devFeatureTest, generateEmail } from '#src/utils.js';
+import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 
 const identifiersTypeToUserProfile = Object.freeze({
   username: 'username',
@@ -99,6 +100,50 @@ describe('sign-in with password verification happy path', () => {
     const { primaryEmail: syncedEmail } = await getUser(user.id);
 
     expect(syncedEmail).toBe(primaryEmail);
+
+    await deleteUser(user.id);
+  });
+
+  devFeatureTest.it('should throw 422 if the fulfilled email is in the blocklist', async () => {
+    const blockEmail = generateEmail();
+    await updateSignInExperience({
+      emailBlocklistPolicy: {
+        customBlocklist: [blockEmail],
+      },
+    });
+
+    const { userProfile, user } = await generateNewUser({
+      username: true,
+      password: true,
+    });
+
+    const { username, password } = userProfile;
+    const client = await initExperienceClient();
+
+    await identifyUserWithUsernamePassword(client, username, password);
+    await expectRejects(client.submitInteraction(), {
+      code: 'user.missing_profile',
+      status: 422,
+    });
+
+    const { verificationId, code: verificationCode } = await successfullySendVerificationCode(
+      client,
+      {
+        identifier: { type: SignInIdentifier.Email, value: blockEmail },
+        interactionEvent: InteractionEvent.SignIn,
+      }
+    );
+
+    await successfullyVerifyVerificationCode(client, {
+      identifier: { type: SignInIdentifier.Email, value: blockEmail },
+      verificationId,
+      code: verificationCode,
+    });
+
+    await expectRejects(client.updateProfile({ type: SignInIdentifier.Email, verificationId }), {
+      code: 'session.email_blocklist.email_not_allowed',
+      status: 422,
+    });
 
     await deleteUser(user.id);
   });
