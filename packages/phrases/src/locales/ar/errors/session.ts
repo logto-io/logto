@@ -41,6 +41,15 @@ const session = {
     'تم تمكين تسجيل الدخول الموحد لهذا البريد الإلكتروني المحدد. يرجى تسجيل الدخول باستخدام SSO.',
   captcha_required: 'مطلوب التحقق من Captcha.',
   captcha_failed: 'فشل التحقق من Captcha.',
+  email_blocklist: {
+    /** UNTRANSLATED */
+    invalid_email: 'Invalid email address.',
+    /** UNTRANSLATED */
+    email_subaddressing_not_allowed: 'Email subaddressing is not allowed.',
+    /** UNTRANSLATED */
+    email_not_allowed:
+      'The email address "{{email}}" is restricted. Please choose a different one.',
+  },
 };
 
 export default Object.freeze(session);

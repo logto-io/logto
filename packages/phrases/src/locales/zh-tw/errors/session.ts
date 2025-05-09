@@ -39,6 +39,15 @@ const session = {
   sso_enabled: '該郵箱已開啟單點登錄，請使用 SSO 登錄。',
   captcha_required: '需要驗證碼。',
   captcha_failed: '驗證碼驗證失敗。',
+  email_blocklist: {
+    /** UNTRANSLATED */
+    invalid_email: 'Invalid email address.',
+    /** UNTRANSLATED */
+    email_subaddressing_not_allowed: 'Email subaddressing is not allowed.',
+    /** UNTRANSLATED */
+    email_not_allowed:
+      'The email address "{{email}}" is restricted. Please choose a different one.',
+  },
 };
 
 export default Object.freeze(session);

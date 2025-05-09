@@ -291,11 +291,14 @@ export default class ExperienceInteraction {
         verification: verificationData,
       });
 
-      await this.signInExperienceValidator.guardSsoOnlyEmailIdentifier(verificationRecord);
+      if (verificationRecord.type !== VerificationType.EnterpriseSso) {
+        await this.signInExperienceValidator.guardSsoOnlyEmailIdentifier(verificationRecord);
+      }
+      await this.signInExperienceValidator.guardEmailBlocklist(verificationRecord);
+
       const identifierProfile = await getNewUserProfileFromVerificationRecord(verificationRecord);
 
       await this.profile.setProfileWithValidation(identifierProfile);
-
       // Save the updated profile data to the interaction storage
       await this.save();
     }
