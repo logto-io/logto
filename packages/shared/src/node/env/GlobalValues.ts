@@ -124,6 +124,19 @@ export default class GlobalValues {
     return this.urlSet.endpoint;
   }
 
+  /**
+   * For cloud use only.
+   * Define regional Azure function app endpoint and key to enable the Logto Azure Functions integration.
+   * This is the prerequisite of the calling on `@logto/azure-functions`.
+   */
+  public get azureFunctionAppEndpoint() {
+    return getEnv('AZURE_FUNCTION_APP_ENDPOINT');
+  }
+
+  public get azureFunctionAppKey() {
+    return getEnv('AZURE_FUNCTION_APP_KEY');
+  }
+
   constructor() {
     if (this.isPathBasedMultiTenancy) {
       console.warn(
