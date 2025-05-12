@@ -4,7 +4,9 @@ import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 
+import { EnvSet } from '../../env-set/index.js';
 import RequestError from '../../errors/RequestError/index.js';
+import { validateEmailAgainstBlocklistPolicy } from '../../libraries/sign-in-experience/email-blocklist-policy.js';
 import { buildVerificationRecordByIdAndType } from '../../libraries/verification.js';
 import assertThat from '../../utils/assert-that.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
@@ -45,6 +47,13 @@ export default function emailAndPhoneRoutes<T extends UserRouter>(...args: Route
       );
 
       assertThat(scopes.has(UserScope.Email), 'auth.unauthorized');
+
+      // TODO: remove this when the feature is ready @simeng
+      // Validate email blocklist policy
+      if (EnvSet.values.isDevFeaturesEnabled) {
+        const { emailBlocklistPolicy } = await findDefaultSignInExperience();
+        await validateEmailAgainstBlocklistPolicy(emailBlocklistPolicy, email);
+      }
 
       // Check new identifier
       const newVerificationRecord = await buildVerificationRecordByIdAndType({

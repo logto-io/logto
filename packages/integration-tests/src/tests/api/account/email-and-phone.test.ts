@@ -10,6 +10,7 @@ import {
   updatePrimaryEmail,
   updatePrimaryPhone,
 } from '#src/api/my-account.js';
+import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import {
   createAndVerifyVerificationCode,
   createVerificationRecordByPassword,
@@ -22,7 +23,7 @@ import {
   signInAndGetUserApi,
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
-import { generateEmail, generatePhone } from '#src/utils.js';
+import { devFeatureTest, generateEmail, generatePhone } from '#src/utils.js';
 
 describe('account (email and phone)', () => {
   beforeAll(async () => {
@@ -134,6 +135,36 @@ describe('account (email and phone)', () => {
 
       const userInfo = await getUserInfo(api);
       expect(userInfo).toHaveProperty('primaryEmail', newEmail);
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    devFeatureTest.it('should reject the email if the email is in the blocklist', async () => {
+      const email = generateEmail();
+      await updateSignInExperience({
+        emailBlocklistPolicy: {
+          customBlocklist: [email],
+        },
+      });
+
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Email],
+      });
+
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
+      const newVerificationRecordId = await createAndVerifyVerificationCode(api, {
+        type: SignInIdentifier.Email,
+        value: email,
+      });
+
+      await expectRejects(
+        updatePrimaryEmail(api, email, verificationRecordId, newVerificationRecordId),
+        {
+          code: 'session.email_blocklist.email_not_allowed',
+          status: 422,
+        }
+      );
 
       await deleteDefaultTenantUser(user.id);
     });
