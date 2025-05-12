@@ -75,7 +75,7 @@ const disposableEmailDomainValidationResponseGuard = z.object({
 const validateDisposableEmailDomain = async (email: string) => {
   // TODO: Skip the validation for integration test for now
   if (EnvSet.values.isIntegrationTest) {
-    return false;
+    return;
   }
   assertThat(
     EnvSet.values.azureFunctionAppEndpoint,
