@@ -51,6 +51,8 @@ const session = {
   captcha_failed: 'Проверка Captcha не удалась.',
   email_blocklist: {
     /** UNTRANSLATED */
+    disposable_email_validation_failed: 'Email address validation failed.',
+    /** UNTRANSLATED */
     invalid_email: 'Invalid email address.',
     /** UNTRANSLATED */
     email_subaddressing_not_allowed: 'Email subaddressing is not allowed.',

@@ -47,6 +47,7 @@ const session = {
   captcha_required: 'Captcha is required.',
   captcha_failed: 'Captcha verification failed.',
   email_blocklist: {
+    disposable_email_validation_failed: 'Email address validation failed.',
     invalid_email: 'Invalid email address.',
     email_subaddressing_not_allowed: 'Email subaddressing is not allowed.',
     email_not_allowed:

@@ -77,35 +77,48 @@ const validateDisposableEmailDomain = async (email: string) => {
   if (EnvSet.values.isIntegrationTest) {
     return;
   }
-  assertThat(
-    EnvSet.values.azureFunctionAppEndpoint,
-    new Error('Environment variable AZURE_FUNCTION_APP_ENDPOINT is not set')
-  );
 
-  const result = await got
-    .post(
-      new URL('/api/disposable-email-domain-validation', EnvSet.values.azureFunctionAppEndpoint),
-      {
-        json: {
-          email,
-        },
-        headers: {
-          'x-functions-key': EnvSet.values.azureFunctionAppKey,
-        },
-      }
-    )
-    .json<unknown>();
+  try {
+    assertThat(
+      EnvSet.values.azureFunctionAppEndpoint,
+      new Error('Environment variable AZURE_FUNCTION_APP_ENDPOINT is not set')
+    );
 
-  const { isDisposable } = disposableEmailDomainValidationResponseGuard.parse(result);
+    const result = await got
+      .post(
+        new URL('/api/disposable-email-domain-validation', EnvSet.values.azureFunctionAppEndpoint),
+        {
+          json: {
+            email,
+          },
+          headers: {
+            'x-functions-key': EnvSet.values.azureFunctionAppKey,
+          },
+        }
+      )
+      .json<unknown>();
 
-  assertThat(
-    !isDisposable,
-    new RequestError({
-      code: 'session.email_blocklist.email_not_allowed',
-      status: 422,
-      email,
-    })
-  );
+    const { isDisposable } = disposableEmailDomainValidationResponseGuard.parse(result);
+
+    assertThat(
+      !isDisposable,
+      new RequestError({
+        code: 'session.email_blocklist.email_not_allowed',
+        status: 422,
+        email,
+      })
+    );
+  } catch (error: unknown) {
+    if (error instanceof RequestError) {
+      throw error;
+    }
+
+    throw new RequestError({
+      code: 'session.email_blocklist.disposable_email_validation_failed',
+      status: 500,
+      error,
+    });
+  }
 };
 
 /**
