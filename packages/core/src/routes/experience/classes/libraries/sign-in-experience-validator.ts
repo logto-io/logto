@@ -281,10 +281,13 @@ export class SignInExperienceValidator {
    * - guard custom email address/domain if provided
    */
   public async guardEmailBlocklist(verificationRecord: VerificationRecord) {
-    const email = getEmailIdentifierFromVerificationRecord(verificationRecord);
-
     // TODO: Remove this once the dev feature is ready
-    if (!EnvSet.values.isDevFeaturesEnabled || !email) {
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return;
+    }
+
+    const email = getEmailIdentifierFromVerificationRecord(verificationRecord);
+    if (!email) {
       return;
     }
 
