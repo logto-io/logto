@@ -87,6 +87,8 @@ export class Profile {
     // Guard SSO only email identifier in verification record  (EmailVerificationCode, Social)
     await this.signInExperienceValidator.guardSsoOnlyEmailIdentifier(verificationRecord);
 
+    await this.signInExperienceValidator.guardEmailBlocklist(verificationRecord);
+
     log?.append({
       verification: verificationRecord.toJson(),
     });
@@ -99,7 +101,6 @@ export class Profile {
     if (verificationRecord.type === VerificationType.Social) {
       const user = await this.safeGetIdentifiedUser();
       const isNewUserIdentity = !user;
-
       // Sync the email and phone to the user profile only for new user identity
       const syncedProfile = await verificationRecord.toSyncedProfile(isNewUserIdentity);
       this.unsafePrepend(syncedProfile);
@@ -120,6 +121,7 @@ export class Profile {
     }
 
     await this.profileValidator.guardProfileUniquenessAcrossUsers(profile);
+
     this.unsafeSet(profile);
   }
 

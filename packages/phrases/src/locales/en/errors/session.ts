@@ -46,6 +46,12 @@ const session = {
   sso_enabled: 'Single sign on is enabled for this given email. Please sign in with SSO.',
   captcha_required: 'Captcha is required.',
   captcha_failed: 'Captcha verification failed.',
+  email_blocklist: {
+    invalid_email: 'Invalid email address.',
+    email_subaddressing_not_allowed: 'Email subaddressing is not allowed.',
+    email_not_allowed:
+      'The email address "{{email}}" is restricted. Please choose a different one.',
+  },
 };
 
 export default Object.freeze(session);

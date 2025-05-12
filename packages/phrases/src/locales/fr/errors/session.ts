@@ -53,6 +53,15 @@ const session = {
     'La connexion unique est activée pour cet e-mail donné. Veuillez vous connecter avec SSO.',
   captcha_required: 'Le captcha est requis.',
   captcha_failed: 'La vérification du captcha a échoué.',
+  email_blocklist: {
+    /** UNTRANSLATED */
+    invalid_email: 'Invalid email address.',
+    /** UNTRANSLATED */
+    email_subaddressing_not_allowed: 'Email subaddressing is not allowed.',
+    /** UNTRANSLATED */
+    email_not_allowed:
+      'The email address "{{email}}" is restricted. Please choose a different one.',
+  },
 };
 
 export default Object.freeze(session);
