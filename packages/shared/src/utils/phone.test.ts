@@ -13,7 +13,7 @@ describe('parsePhoneNumber', () => {
     expect(parsePhoneNumber(phoneNumber)).toEqual('12025550123');
   });
 
-  it('parsePhoneNumber should srtip the leading 0', () => {
+  it('parsePhoneNumber should strip the leading 0', () => {
     const phoneNumber = '610412345678';
     expect(parsePhoneNumber(phoneNumber)).toEqual('61412345678');
   });

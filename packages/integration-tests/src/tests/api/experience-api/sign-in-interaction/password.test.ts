@@ -199,8 +199,6 @@ describe('phone number sanitisation sign-in test +61 412 345 678', () => {
         password,
       });
 
-      console.log(user.primaryPhone);
-
       await signInWithPassword({
         identifier: {
           type: SignInIdentifier.Phone,
