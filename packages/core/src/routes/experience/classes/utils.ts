@@ -24,7 +24,7 @@ export const findUserByIdentifier = async (
       return userQuery.findUserByEmail(value);
     }
     case SignInIdentifier.Phone: {
-      return userQuery.findUserByPhone(value);
+      return userQuery.findUserByNormalizedPhone(value);
     }
     case AdditionalIdentifier.UserId: {
       return userQuery.findUserById(value);
