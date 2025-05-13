@@ -227,7 +227,6 @@ const getUserInfo =
         throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
       }
 
-      // Ok?
       if (result.data.ret !== 0) {
         throw new ConnectorError(ConnectorErrorCodes.General, {
           ret: result.data.ret,

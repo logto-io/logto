@@ -100,8 +100,8 @@ describe('getUserInfo', () => {
 
     expect(socialUserInfo).toStrictEqual({
       id: 'unionid',
-      avatar: 'https://thirdqq.qlogo.cn/ek_qqapp/user-large.jpg',
-      name: 'Ciallo',
+      avatar: 'https://example.com/example.jpg',
+      name: 'nickname',
       rawData: mockedUserInfoResponse,
     });
   });

@@ -1,25 +1,25 @@
-# QQ Social Connector
+# QQ social connector
 
-The official Logto connector for QQ social sign-in [中文文档](https://github.com/logto-io/logto/tree/master/packages/connectors/connector-qq/README.zh.md)
+The official Logto connector for QQ social sign-in [中文文档](https://github.com/logto-io/logto/tree/master/packages/connectors/connector-qq/README.zh-CN.md)
 
 **Table of Contents**
 
-- [QQ Social Connector](#qq-social-connector)
-  - [Get Started](#get-started)
-  - [Configure QQ Connect Application](#configure-qq-connect-application)
-  - [Permission Requirements](#permission-requirements)
-  - [Test QQ Connector](#test-qq-connector)
-  - [References](#references)
+- [QQ social connector](#qq-social-connector)
+- [Get started](#get-started)
+- [Configure QQ Connect application](#configure-qq-connect-application)
+- [Permission requirements](#permission-requirements)
+- [Test QQ connector](#test-qq-connector)
+- [References](#references)
 
 QQ is a social platform by Tencent with over 600 million users. This connector helps end-users sign in to your application using their QQ accounts.
 
-## Get Started
+## Get started
 
 1. Create a developer account on [QQ Connect platform](https://connect.qq.com/)
 2. Access the [Application Management](https://connect.qq.com/manage.html)
 3. Create a new application (if you don't already have one)
 
-## Configure QQ Connect Application
+## Configure QQ Connect application
 
 1. Access the [Application Management](https://connect.qq.com/manage.html)
 2. Configure the OAuth settings:
@@ -29,7 +29,7 @@ QQ is a social platform by Tencent with over 600 million users. This connector h
 3. Get the `APP ID` and `APP Key` from the application info page
 4. Fill in the values from step 3 to the `clientId` and `clientSecret` fields in the Logto Admin Console
 
-## Permission Requirements
+## Permission requirements
 
 To use this connector, you need to apply for the following permissions on the QQ Connect platform:
 
@@ -40,7 +40,7 @@ To use this connector, you need to apply for the following permissions on the QQ
    This is used to obtain the user's basic information, such as nickname and avatar.
    By default, if no scope parameter is set, the system will use this permission.
 
-## Test QQ Connector
+## Test QQ connector
 
 That's it! Don't forget to enable the connector in the [Sign-in Experience](https://{logto_endpoint}/console/connectors/social).
 
