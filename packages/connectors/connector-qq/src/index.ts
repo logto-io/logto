@@ -32,6 +32,14 @@ import {
   authResponseGuard,
 } from './types.js';
 
+/**
+ * Handles the authorization callback from the QQ OAuth 2.0 service.
+ * Processes the callback parameters and returns the authorization code.
+ *
+ * @param parameterObject - The parameter object from the callback request.
+ * @returns The parsed authorization response containing the authorization code.
+ * @throws ConnectorError If the callback contains an error or is invalid.
+ */
 const authorizationCallbackHandler = async (parameterObject: unknown) => {
   const result = authResponseGuard.safeParse(parameterObject);
 
@@ -53,6 +61,13 @@ const authorizationCallbackHandler = async (parameterObject: unknown) => {
   return result.data;
 };
 
+/**
+ * Creates the authorization URI used to redirect the user to the QQ login page.
+ *
+ * @param getConfig - A function to retrieve the connector configuration.
+ * @returns A function that generates the QQ authorization URL.
+ * @see https://wiki.connect.qq.com/%e4%bd%bf%e7%94%a8authorization_code%e8%8e%b7%e5%8f%96access_token
+ */
 const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
   async ({ state, redirectUri }) => {
@@ -71,6 +86,16 @@ const getAuthorizationUri =
     return `${authorizationEndpoint}?${queryParameters.toString()}`;
   };
 
+/**
+ * Obtains the QQ access token using the authorization code.
+ *
+ * @param config      - QQ connector configuration, including clientId and clientSecret.
+ * @param code        - The authorization code received from the QQ authorization endpoint.
+ * @param redirectUri - The redirect URI used in the authorization request.
+ * @returns An object containing the access token.
+ * @throws ConnectorError If the request fails or the response is invalid.
+ * @see https://wiki.connect.qq.com/%e4%bd%bf%e7%94%a8authorization_code%e8%8e%b7%e5%8f%96access_token
+ */
 export const getAccessToken = async (config: QQConfig, code: string, redirectUri: string) => {
   const { clientId: client_id, clientSecret: client_secret } = config;
 
@@ -112,6 +137,15 @@ export const getAccessToken = async (config: QQConfig, code: string, redirectUri
   }
 };
 
+/**
+ * Retrieves the user's OpenID and UnionID.
+ * UnionID uniquely identifies the user across different QQ applications.
+ *
+ * @param accessToken - The access token obtained from getAccessToken.
+ * @returns An object containing unionid and openid.
+ * @throws ConnectorError If the UnionID is not found or the request fails.
+ * @see https://wiki.connect.qq.com/unionid%e4%bb%8b%e7%bb%8d
+ */
 const getOpenIdAndUnionId = async (accessToken: string) => {
   try {
     const httpResponse = await got.get(openIdEndpoint, {
@@ -123,6 +157,8 @@ const getOpenIdAndUnionId = async (accessToken: string) => {
       timeout: { request: defaultTimeout },
     });
 
+    // QQ API returns a JSONP response, so we need to extract the JSON part
+    // by removing the callback function wrapper.
     const jsonText = httpResponse.body.replace(/^callback\((.*)\);$/, '$1');
     const result = openIdAndUnionIdResponseGuard.safeParse(parseJson(jsonText));
 
@@ -142,6 +178,7 @@ const getOpenIdAndUnionId = async (accessToken: string) => {
 
     return { unionid, openid };
   } catch (error: unknown) {
+    // https://wiki.connect.qq.com/%e5%85%ac%e5%85%b1%e8%bf%94%e5%9b%9e%e7%a0%81%e8%af%b4%e6%98%8e
     if (error instanceof HTTPError) {
       const { statusCode, body: rawBody } = error.response;
 
@@ -155,6 +192,13 @@ const getOpenIdAndUnionId = async (accessToken: string) => {
   }
 };
 
+/**
+ * Retrieves user information from QQ using the obtained access token and OpenID.
+ *
+ * @param getConfig - A function to retrieve the connector configuration.
+ * @returns A function that fetches user data from QQ.
+ * @see https://wiki.connect.qq.com/openapi%e8%b0%83%e7%94%a8%e8%af%b4%e6%98%8e_oauth2-0
+ */
 const getUserInfo =
   (getConfig: GetConnectorConfig): GetUserInfo =>
   async (data) => {
@@ -196,6 +240,7 @@ const getUserInfo =
       return {
         id: unionid,
         name: nickname,
+        // Here, we extract the links of the two largest (clearest) profile pictures for storage.
         avatar: figureurl_qq_2 ?? figureurl_qq_1,
         rawData: result.data,
       };
