@@ -21,13 +21,13 @@
 Logto is the open-source auth alternative to Auth0, Cognito, and Firebase Auth. It offers a complete identity solution with pre-built UI, modern protocols for authentication and authorization (OIDC/OAuth 2.0/SAML), and enterprise-grade security. Perfect for multi-device apps, SaaS products, and API services.
 
 <p align="center">
-  <a href="https://logto.io/">Website</a> |
-  <a href="https://cloud.logto.io/">Live demo</a> |
-  <a href="https://docs.logto.io">Documentation</a> |
-  <a href="https://openapi.logto.io/">API</a> |
-  <a href="https://blog.logto.io/">Blog</a> |
-  <a href="https://auth-wiki.logto.io/">Auth Wiki</a> |
-  <a href="https://logto.io/subscribe">Newsletter</a>
+  <a href="https://logto.io/">website</a> •
+  <a href="https://cloud.logto.io/">cloud</a> •
+  <a href="https://docs.logto.io">docs</a> •
+  <a href="https://openapi.logto.io/">api</a> •
+  <a href="https://blog.logto.io/">blog</a> •
+  <a href="https://auth-wiki.logto.io/">auth wiki</a> •
+  <a href="https://logto.io/subscribe">newsletter</a>
 </p>
 
 ![Logto features](./assets/logto-features.jpg)
@@ -55,7 +55,7 @@ Logto provides frontend-to-backend identity solutions for developers and enterpr
 
 **UI toolkit:** Prebuilt auth flows • Custom UI • Dark mode • i18n • Custom domain
 
-[🗺️ View all features→](https://logto.io/pricing#compare-features)
+[🗺️ View all features →](https://logto.io/pricing#compare-features)
 
 ## Get started in 60s
 
