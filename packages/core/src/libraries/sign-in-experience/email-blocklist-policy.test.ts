@@ -6,12 +6,13 @@ import RequestError from '#src/errors/RequestError/index.js';
 import {
   parseEmailBlocklistPolicy,
   validateEmailAgainstBlocklistPolicy,
+  isEmailBlocklistPolicyEnabled,
 } from './email-blocklist-policy.js';
 
 const invalidCustomBlockList = ['bar', 'bar@foo', '@foo', '@foo.', 'bar@foo.'];
 const validCustomBlockList = ['bar@foo.com', '@foo.com', 'abc.bar@foo.xyz', 'bar@foo.com'];
 
-describe('validateEmailBlocklistPolicy', () => {
+describe('parseEmailBlocklistPolicy', () => {
   it.each(invalidCustomBlockList)(
     'should throw error for invalid custom block list item: %s',
     (item) => {
@@ -86,5 +87,46 @@ describe('validateEmailAgainstBlocklistPolicy', () => {
     await expect(
       validateEmailAgainstBlocklistPolicy(emailBlocklistPolicy, 'test@bar.com')
     ).resolves.not.toThrow();
+  });
+});
+
+describe('isEmailBlocklistPolicyEnabled', () => {
+  it('isEmailBlocklistPolicyEnabled should return true if any of the blocklist policies are enabled', () => {
+    const emailBlocklistPolicy: EmailBlocklistPolicy = {
+      blockDisposableAddresses: false,
+      blockSubaddressing: false,
+      customBlocklist: [],
+    };
+
+    expect(
+      isEmailBlocklistPolicyEnabled({
+        ...emailBlocklistPolicy,
+        blockDisposableAddresses: true,
+      })
+    ).toBe(true);
+
+    expect(
+      isEmailBlocklistPolicyEnabled({
+        ...emailBlocklistPolicy,
+        blockSubaddressing: true,
+      })
+    ).toBe(true);
+
+    expect(
+      isEmailBlocklistPolicyEnabled({
+        ...emailBlocklistPolicy,
+        customBlocklist: ['@bar.com'],
+      })
+    ).toBe(true);
+  });
+
+  it('isEmailBlocklistPolicyEnabled should return false if all blocklist policies are disabled', () => {
+    const emailBlocklistPolicy: EmailBlocklistPolicy = {
+      blockDisposableAddresses: false,
+      blockSubaddressing: false,
+      customBlocklist: [],
+    };
+
+    expect(isEmailBlocklistPolicyEnabled(emailBlocklistPolicy)).toBe(false);
   });
 });

@@ -181,3 +181,15 @@ export const validateEmailAgainstBlocklistPolicy = async (
     );
   }
 };
+
+export const isEmailBlocklistPolicyEnabled = (emailBlockListPolicy: EmailBlocklistPolicy) => {
+  const { blockDisposableAddresses, blockSubaddressing, customBlocklist } = emailBlockListPolicy;
+
+  /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
+  return (
+    blockDisposableAddresses ||
+    blockSubaddressing ||
+    (customBlocklist && customBlocklist.length > 0)
+  );
+  /* eslint-enable @typescript-eslint/prefer-nullish-coalescing */
+};

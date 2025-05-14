@@ -8,6 +8,7 @@ import {
   validateSignUp,
   validateSignIn,
   parseEmailBlocklistPolicy,
+  isEmailBlocklistPolicyEnabled,
 } from '#src/libraries/sign-in-experience/index.js';
 import { validateMfa } from '#src/libraries/sign-in-experience/mfa.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -115,13 +116,19 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         validateMfa(mfa);
       }
 
+      /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
       // Guard the quota for the security features enabled. Guarded properties are:
       // - sentinelPolicy: if sentinelPolicy is not empty object, security features are guarded
       // - captchaPolicy: if captchaPolicy is enabled, security features are guarded
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-      if ((sentinelPolicy && Object.keys(sentinelPolicy).length > 0) || captchaPolicy?.enabled) {
+      // - emailBlocklistPolicy: if any of the blocklist policies are enabled, security features are guarded
+      if (
+        (sentinelPolicy && Object.keys(sentinelPolicy).length > 0) ||
+        (emailBlocklistPolicy && isEmailBlocklistPolicyEnabled(emailBlocklistPolicy)) ||
+        captchaPolicy?.enabled
+      ) {
         await quota.guardTenantUsageByKey('securityFeaturesEnabled');
       }
+      /* eslint-enable @typescript-eslint/prefer-nullish-coalescing */
 
       if (removeUnusedDemoSocialConnector && filteredSocialSignInConnectorTargets) {
         // Remove unused demo social connectors, those that are not selected in onboarding SIE config.
@@ -156,7 +163,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
 
       void quota.reportSubscriptionUpdatesUsage('mfaEnabled');
 
-      if (sentinelPolicy ?? captchaPolicy) {
+      if (sentinelPolicy ?? captchaPolicy ?? emailBlocklistPolicy) {
         void quota.reportSubscriptionUpdatesUsage('securityFeaturesEnabled');
       }
 

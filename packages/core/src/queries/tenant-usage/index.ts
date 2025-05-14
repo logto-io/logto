@@ -374,12 +374,18 @@ export default class TenantUsageQuery {
   ] => {
     return [
       sql`
-        select exists (
-          select * from ${signInExperienceTable}
-          where ${signInExperienceFields.captchaPolicy}->>'enabled' = 'true'
-          or ${signInExperienceFields.sentinelPolicy}->>'maxAttempts' is not null
-          or ${signInExperienceFields.sentinelPolicy}->>'lockoutDuration' is not null
-        )
+        select 
+          CASE 
+            WHEN ${signInExperienceFields.captchaPolicy}->>'enabled' = 'true' THEN true
+            WHEN ${signInExperienceFields.sentinelPolicy}->>'maxAttempts' is not null THEN true
+            WHEN ${signInExperienceFields.sentinelPolicy}->>'lockoutDuration' is not null THEN true
+            WHEN ${signInExperienceFields.emailBlocklistPolicy} ->> 'blockDisposableAddresses' = 'true' THEN true
+            WHEN ${signInExperienceFields.emailBlocklistPolicy} ->> 'blockSubaddressing' = 'true' THEN true
+            WHEN ${signInExperienceFields.emailBlocklistPolicy} ->> 'customBlocklist' is not null 
+                AND jsonb_array_length(${signInExperienceFields.emailBlocklistPolicy} -> 'customBlocklist') > 0 THEN true
+            ELSE false
+          END as isSecurityFeaturesEnabled
+        from ${signInExperienceTable}
     `,
       sql`securityFeaturesEnabled`,
     ];
