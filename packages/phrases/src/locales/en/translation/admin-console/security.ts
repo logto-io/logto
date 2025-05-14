@@ -128,7 +128,7 @@ const security = {
     email_subaddressing: {
       title: 'Block email subaddressing',
       description:
-        'Enable to prevent users from using email subaddresses with a plus sign (+) and additional characters (e.g., user+alias@foo.com).',
+        'Enable to reject any sign-up attempts from using email subaddresses with a plus sign (+) and additional characters (e.g., user+alias@foo.com).',
     },
     custom_email_address: {
       title: 'Block custom email addresses',

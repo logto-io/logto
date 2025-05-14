@@ -130,7 +130,7 @@ const security = {
     email_subaddressing: {
       title: 'Zablokuj podadresacje email',
       description:
-        'Włącz, aby zapobiec użytkownikom przed używaniem podadresów email z plusem (+) i dodatkowymi znakami (np. user+alias@foo.com).',
+        'Włącz, aby odrzucać wszelkie próby rejestracji przy użyciu podadresów email z plusem (+) i dodatkowymi znakami (np. user+alias@foo.com).',
     },
     custom_email_address: {
       title: 'Zablokuj niestandardowe adresy email',

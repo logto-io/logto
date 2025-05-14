@@ -45,15 +45,10 @@ const session = {
   captcha_required: 'Captcha 가 필요해요.',
   captcha_failed: 'Captcha 인증에 실패했어요.',
   email_blocklist: {
-    /** UNTRANSLATED */
-    disposable_email_validation_failed: 'Email address validation failed.',
-    /** UNTRANSLATED */
-    invalid_email: 'Invalid email address.',
-    /** UNTRANSLATED */
-    email_subaddressing_not_allowed: 'Email subaddressing is not allowed.',
-    /** UNTRANSLATED */
-    email_not_allowed:
-      'The email address "{{email}}" is restricted. Please choose a different one.',
+    disposable_email_validation_failed: '이메일 주소 유효성 검사에 실패했어요.',
+    invalid_email: '유효하지 않은 이메일 주소예요.',
+    email_subaddressing_not_allowed: '이메일 서브어드레싱은 허용되지 않아요.',
+    email_not_allowed: '이메일 주소 "{{email}}" 는 제한되어 있어요. 다른 주소를 선택해 주세요.',
   },
 };
 

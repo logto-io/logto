@@ -72,7 +72,7 @@ const security = {
     user_information_description: '例如：郵件地址、電話號碼、用戶名等等。',
     custom_words: '自定義詞彙',
     custom_words_description: '個性化上下文特定的詞彙，不區分大小寫，每行一個詞。',
-    custom_words_placeholder: '您的服務名稱、公司名稱等等。',
+    custom_words_placeholder: '你的服務名稱、公司名稱等等。',
   },
   sentinel_policy: {
     card_title: '識別鎖定',
@@ -117,7 +117,7 @@ const security = {
     email_subaddressing: {
       title: '封鎖電子郵件子地址',
       description:
-        '啟用後將防止用戶使用帶有加號 (+) 和額外字符的電子郵件子地址（例如 user+alias@foo.com）。',
+        '啟用以拒絕使用帶有加號（+）和其他字符（例如 user+alias@foo.com）的電子郵件子地址的註冊嘗試。',
     },
     custom_email_address: {
       title: '封鎖自定義電子郵件地址',

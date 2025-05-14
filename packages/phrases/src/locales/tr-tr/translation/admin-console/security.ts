@@ -129,7 +129,7 @@ const security = {
     email_subaddressing: {
       title: 'E-posta alt adlandırmasını engelle',
       description:
-        'Kullanıcıların artı işareti (+) ve ek karakterler (örn., user+alias@foo.com) ile e-posta alt adreslerini kullanmasını önlemek için etkinleştirin.',
+        'Artı işareti (+) ve ek karakterler ile e-posta alt adresleri kullanılarak yapılan kayıt girişimlerini reddetmek için etkinleştirin (örn., user+alias@foo.com).',
     },
     custom_email_address: {
       title: 'Özel e-posta adreslerini engelle',
