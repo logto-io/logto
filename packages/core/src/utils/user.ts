@@ -6,7 +6,7 @@ import {
   type User,
   type UserMfaVerificationResponse,
 } from '@logto/schemas';
-import { parseE164PhoneNumberWithError, ParseError } from '@logto/shared/universal';
+import { PhoneNumberParser } from '@logto/shared/universal';
 import { pick } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -73,22 +73,9 @@ const getValidPhoneNumber = (phone: string): string => {
   }
 
   try {
-    const phoneNumber = parseE164PhoneNumberWithError(phone);
-
-    if (!phoneNumber.isValid()) {
-      throw new RequestError({ code: 'user.invalid_phone', status: 422 });
-    }
-
-    const { number } = phoneNumber;
-    if (typeof number !== 'string') {
-      throw new RequestError({ code: 'user.invalid_phone', status: 422 });
-    }
-    return number.slice(1);
+    return PhoneNumberParser.parse(phone).number;
   } catch (error) {
-    if (error instanceof ParseError) {
-      throw new RequestError({ code: 'user.invalid_phone', status: 422 }, error);
-    }
-    throw error;
+    throw new RequestError({ code: 'user.invalid_phone', status: 422 }, error);
   }
 };
 

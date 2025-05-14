@@ -65,7 +65,7 @@
     "jest-transformer-svg": "^2.0.0",
     "js-base64": "^3.7.5",
     "ky": "^1.2.3",
-    "libphonenumber-js": "^1.11.1",
+    "libphonenumber-js": "^1.12.6",
     "lint-staged": "^15.0.0",
     "postcss": "^8.4.31",
     "postcss-modules": "^6.0.0",

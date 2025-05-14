@@ -1,4 +1,4 @@
-import { parseE164PhoneNumberWithError } from '@logto/shared/universal';
+import { PhoneNumberParser } from '@logto/shared/universal';
 import i18next from 'i18next';
 import type { CountryCode, CountryCallingCode } from 'libphonenumber-js/mobile';
 import { getCountries, getCountryCallingCode } from 'libphonenumber-js/mobile';
@@ -85,7 +85,7 @@ export const getCountryList = (): CountryMetaData[] => {
 
 export const formatPhoneNumberWithCountryCallingCode = (number: string) => {
   try {
-    const phoneNumber = parseE164PhoneNumberWithError(number);
+    const phoneNumber = PhoneNumberParser.parse(number);
 
     return `+${phoneNumber.countryCallingCode} ${phoneNumber.nationalNumber}`;
   } catch {
@@ -95,7 +95,7 @@ export const formatPhoneNumberWithCountryCallingCode = (number: string) => {
 
 export const parsePhoneNumber = (value: string) => {
   try {
-    const phoneNumber = parseE164PhoneNumberWithError(value);
+    const phoneNumber = PhoneNumberParser.parse(value);
 
     return {
       countryCallingCode: phoneNumber.countryCallingCode,

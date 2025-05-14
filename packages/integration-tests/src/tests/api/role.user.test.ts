@@ -1,7 +1,7 @@
 import { RoleType } from '@logto/schemas';
 import { HTTPError } from 'ky';
 
-import { createUser } from '#src/api/index.js';
+import { createUser, updateUser } from '#src/api/index.js';
 import {
   assignUsersToRole,
   createRole,
@@ -41,11 +41,15 @@ describe('roles users', () => {
     });
 
     // Can not create user with invalid phone number.
-    await expectRejects(createUser({ name: 'user002', primaryPhone: '123456789' }), {
+    await expectRejects(createUser({ name: 'user002', primaryPhone: '99999' }), {
       code: 'user.invalid_phone',
       status: 422,
     });
     const user2 = await createUser({ name: 'user002', primaryPhone: generatePhone() });
+    await expectRejects(updateUser(user2.id, { primaryPhone: '99999' }), {
+      code: 'user.invalid_phone',
+      status: 422,
+    });
 
     const user3 = await createUser({ username: 'username3', primaryEmail: 'user3@logto.io' });
     await assignUsersToRole([user1.id, user2.id, user3.id], role.id);

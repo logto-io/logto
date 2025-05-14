@@ -1,6 +1,6 @@
 import { usernameRegEx, emailRegEx } from '@logto/core-kit';
 import { SignInIdentifier } from '@logto/schemas';
-import { parseE164PhoneNumberWithError } from '@logto/shared/universal';
+import { PhoneNumberParser } from '@logto/shared/universal';
 import i18next from 'i18next';
 import type { TFuncKey } from 'i18next';
 import { ParseError } from 'libphonenumber-js/mobile';
@@ -33,7 +33,7 @@ export const validateEmail = (email: string): ErrorType | undefined => {
 
 export const validatePhone = (value: string): ErrorType | undefined => {
   try {
-    const phoneNumber = parseE164PhoneNumberWithError(value);
+    const phoneNumber = PhoneNumberParser.parse(value);
 
     if (!phoneNumber.isValid()) {
       return 'invalid_phone';

@@ -348,7 +348,11 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     return updateUser({
       set: {
         ...set,
-        ...cond(set.primaryPhone && { primaryPhone: new PhoneNumberParser(set.primaryPhone).internationalNumber }),
+        ...cond(
+          set.primaryPhone && {
+            primaryPhone: new PhoneNumberParser(set.primaryPhone).internationalNumber,
+          }
+        ),
       },
       where: { id },
       jsonbMode,
@@ -366,7 +370,11 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
 
     return insertUserQuery({
       ...data,
-      ...cond(data.primaryPhone && { primaryPhone: new PhoneNumberParser(data.primaryPhone).internationalNumber }),
+      ...cond(
+        data.primaryPhone && {
+          primaryPhone: new PhoneNumberParser(data.primaryPhone).internationalNumber,
+        }
+      ),
     });
   };
 
