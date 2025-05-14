@@ -30,7 +30,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       hasUser,
       updateUserById,
       hasUserWithEmail,
-      hasUserWithPhone,
+      hasUserWithNormalizedPhone,
     },
   } = queries;
   const {
@@ -191,7 +191,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         })
       );
       assertThat(
-        !primaryPhone || !(await hasUserWithPhone(primaryPhone)),
+        !primaryPhone || !(await hasUserWithNormalizedPhone(primaryPhone)),
         new RequestError({ code: 'user.phone_already_in_use', status: 422 })
       );
 

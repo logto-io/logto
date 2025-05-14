@@ -258,14 +258,16 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
 
     if (isNewUser) {
       const {
-        users: { hasUserWithEmail, hasUserWithPhone },
+        users: { hasUserWithEmail, hasUserWithNormalizedPhone },
       } = this.queries;
 
       return {
         // Sync the email only if the email is not used by other users
         ...conditional(primaryEmail && !(await hasUserWithEmail(primaryEmail)) && { primaryEmail }),
         // Sync the phone only if the phone is not used by other users
-        ...conditional(primaryPhone && !(await hasUserWithPhone(primaryPhone)) && { primaryPhone }),
+        ...conditional(
+          primaryPhone && !(await hasUserWithNormalizedPhone(primaryPhone)) && { primaryPhone }
+        ),
         ...conditional(name && { name }),
         ...conditional(avatar && { avatar }),
       };

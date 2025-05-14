@@ -10,7 +10,8 @@ export class ProfileValidator {
   constructor(private readonly queries: Queries) {}
 
   public async guardProfileUniquenessAcrossUsers(profile: InteractionProfile = {}) {
-    const { hasUser, hasUserWithEmail, hasUserWithPhone, hasUserWithIdentity } = this.queries.users;
+    const { hasUser, hasUserWithEmail, hasUserWithNormalizedPhone, hasUserWithIdentity } =
+      this.queries.users;
     const { userSsoIdentities } = this.queries;
 
     const { username, primaryEmail, primaryPhone, socialIdentity, enterpriseSsoIdentity } = profile;
@@ -37,7 +38,7 @@ export class ProfileValidator {
 
     if (primaryPhone) {
       assertThat(
-        !(await hasUserWithPhone(primaryPhone)),
+        !(await hasUserWithNormalizedPhone(primaryPhone)),
         new RequestError({
           code: 'user.phone_already_in_use',
           status: 422,

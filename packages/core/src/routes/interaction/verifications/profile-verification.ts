@@ -62,7 +62,8 @@ const verifyProfileNotRegisteredByOtherUserAccount = async (
   { username, email, phone, connectorId }: Profile,
   identifiers: Identifier[] = []
 ) => {
-  const { hasUser, hasUserWithEmail, hasUserWithPhone, hasUserWithIdentity } = queries.users;
+  const { hasUser, hasUserWithEmail, hasUserWithNormalizedPhone, hasUserWithIdentity } =
+    queries.users;
 
   if (username) {
     assertThat(
@@ -86,7 +87,7 @@ const verifyProfileNotRegisteredByOtherUserAccount = async (
 
   if (phone) {
     assertThat(
-      !(await hasUserWithPhone(phone)),
+      !(await hasUserWithNormalizedPhone(phone)),
       new RequestError({
         code: 'user.phone_already_in_use',
         status: 422,

@@ -17,9 +17,11 @@ const { mockEsm } = createMockUtils(jest);
 
 const findUserById = jest.fn();
 const hasUserWithEmail = jest.fn();
-const hasUserWithPhone = jest.fn();
+const hasUserWithNormalizedPhone = jest.fn();
 
-const { users } = new MockQueries({ users: { findUserById, hasUserWithEmail, hasUserWithPhone } });
+const { users } = new MockQueries({
+  users: { findUserById, hasUserWithEmail, hasUserWithNormalizedPhone },
+});
 
 const { isUserPasswordSet } = mockEsm('../utils/index.js', () => ({
   isUserPasswordSet: jest.fn(),
@@ -228,7 +230,7 @@ describe('validateMandatoryUserProfile', () => {
     });
 
     it('sign-in identifier includes social with verified phone but phone occupied should throw', async () => {
-      hasUserWithPhone.mockResolvedValueOnce(true);
+      hasUserWithNormalizedPhone.mockResolvedValueOnce(true);
 
       await expect(
         validateMandatoryUserProfile(users, phoneRequiredCtx, {
@@ -247,7 +249,7 @@ describe('validateMandatoryUserProfile', () => {
     });
 
     it('register identifier includes social with verified phone but phone occupied should throw', async () => {
-      hasUserWithPhone.mockResolvedValueOnce(true);
+      hasUserWithNormalizedPhone.mockResolvedValueOnce(true);
 
       await expect(
         validateMandatoryUserProfile(users, phoneRequiredCtx, {
@@ -267,7 +269,7 @@ describe('validateMandatoryUserProfile', () => {
     });
 
     it('identifier includes social with verified phone should not throw', async () => {
-      hasUserWithPhone.mockResolvedValueOnce(false);
+      hasUserWithNormalizedPhone.mockResolvedValueOnce(false);
 
       const updatedInteraction = await validateMandatoryUserProfile(users, phoneRequiredCtx, {
         ...interaction,
