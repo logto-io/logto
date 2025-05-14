@@ -376,5 +376,37 @@ describe('admin console user management', () => {
         await deleteUser(user.id);
       }
     );
+
+    it.each(testCases)(
+      'should failed to update user with phone number conflict',
+      async ({ existing, newCreated }) => {
+        const user = await createUserByAdmin({
+          primaryPhone: existing,
+        });
+
+        const newUser = await createUserByAdmin({
+          username: generateUsername(),
+        });
+
+        await expectRejects(
+          updateUser(newUser.id, {
+            primaryPhone: newCreated,
+          }),
+          {
+            code: 'user.phone_already_in_use',
+            status: 422,
+          }
+        );
+
+        // Should allow update existing user
+        await expect(async () => {
+          await updateUser(user.id, {
+            primaryPhone: newCreated,
+          });
+        }).resolves.not.toThrow();
+
+        await Promise.all([deleteUser(user.id), deleteUser(newUser.id)]);
+      }
+    );
   });
 });
