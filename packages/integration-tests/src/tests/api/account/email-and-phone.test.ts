@@ -374,7 +374,7 @@ describe('account (email and phone)', () => {
       ]);
     });
 
-    it('new phone with  with leading zero format format, existing phone use standard international format', async () => {
+    it('new phone with leading zero format, existing phone uses standard international format', async () => {
       // We use the country code 64 as New Zealand local phone number cloud have leading zero.
       const primaryPhone = `64${generateNationalPhoneNumber()}`;
       const { internationalNumber, internationalNumberWithLeadingZero } = new PhoneNumberParser(
