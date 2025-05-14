@@ -6,6 +6,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { registerWithVerifiedIdentifier, signInWithSso } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
+import useEmailBlockedErrorHandler from '@/hooks/use-email-blocked-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import { useSieMethods } from '@/hooks/use-sie';
@@ -16,6 +17,8 @@ import { validateState } from '@/utils/social-connectors';
 
 const useSingleSignOnRegister = () => {
   const handleError = useErrorHandler();
+  const emailBlockedErrorHandler = useEmailBlockedErrorHandler();
+
   const request = useApi(registerWithVerifiedIdentifier);
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const navigate = useNavigate();
@@ -36,7 +39,7 @@ const useSingleSignOnRegister = () => {
       const [error, result] = await request(verificationId);
 
       if (error) {
-        await handleError(error);
+        await handleError(error, emailBlockedErrorHandler);
 
         return;
       }
@@ -45,7 +48,15 @@ const useSingleSignOnRegister = () => {
         await redirectTo(result.redirectTo);
       }
     },
-    [agreeToTermsPolicy, handleError, navigate, redirectTo, request, termsValidation]
+    [
+      agreeToTermsPolicy,
+      emailBlockedErrorHandler,
+      handleError,
+      navigate,
+      redirectTo,
+      request,
+      termsValidation,
+    ]
   );
 };
 
