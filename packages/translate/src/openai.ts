@@ -19,7 +19,7 @@ import {
 } from './utils.js';
 
 // The full list of OPENAI model can be found at https://platform.openai.com/docs/models.
-export const getModel = () => process.env.OPENAI_MODEL_NAME ?? 'gpt-4o-2024-08-06';
+export const getModel = () => process.env.OPENAI_MODEL_NAME ?? 'gpt-4.1';
 
 export const createOpenaiApi = () => {
   const proxy = getProxy();
@@ -130,12 +130,12 @@ export const createFullTranslation = async ({
   if (verbose) {
     consoleLog.info(
       'Found ' +
-        String(localeFiles.length) +
-        ' file' +
-        conditionalString(localeFiles.length !== 1 && 's') +
-        ' in ' +
-        packageName +
-        ' to create'
+      String(localeFiles.length) +
+      ' file' +
+      conditionalString(localeFiles.length !== 1 && 's') +
+      ' in ' +
+      packageName +
+      ' to create'
     );
   }
 
@@ -174,12 +174,12 @@ export const syncTranslation = async ({
   if (verbose) {
     consoleLog.info(
       'Found ' +
-        String(localeFiles.length) +
-        ' file' +
-        conditionalString(localeFiles.length !== 1 && 's') +
-        ' in ' +
-        packageName +
-        ' to translate'
+      String(localeFiles.length) +
+      ' file' +
+      conditionalString(localeFiles.length !== 1 && 's') +
+      ' in ' +
+      packageName +
+      ' to translate'
     );
   }
 
