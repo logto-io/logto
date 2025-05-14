@@ -1,5 +1,6 @@
 import { emailOrEmailDomainRegex } from '@logto/core-kit';
 import { type SignInExperience, type EmailBlocklistPolicy } from '@logto/schemas';
+import { useContext } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +14,7 @@ import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { emailBlocklist } from '@/consts';
 import { isCloud } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
 import useApi from '@/hooks/use-api';
@@ -31,6 +33,7 @@ function BlocklistForm({ formData }: Props) {
   const api = useApi();
   const { mutate: mutateGlobal } = useSWRConfig();
   const { isFreeTenant } = usePaywall();
+  const { mutateSubscriptionQuotaAndUsages } = useContext(SubscriptionDataContext);
 
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console.security',
@@ -70,6 +73,7 @@ function BlocklistForm({ formData }: Props) {
       reset(emailBlocklistPolicy);
       // Global mutate the SIE data
       await mutateGlobal('api/sign-in-exp');
+      mutateSubscriptionQuotaAndUsages();
       toast.success(globalT('general.saved'));
     })
   );

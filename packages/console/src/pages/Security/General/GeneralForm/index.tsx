@@ -1,5 +1,5 @@
 import { type SignInExperience } from '@logto/schemas';
-import { useState, type ChangeEvent } from 'react';
+import { useContext, useState, type ChangeEvent } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +12,7 @@ import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { sentinel } from '@/consts';
 import { latestProPlanId } from '@/consts/subscriptions';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
@@ -35,6 +36,7 @@ function GeneralForm({ formData }: Props) {
   const { mutate: mutateGlobal } = useSWRConfig();
   const [showUnlockModal, setShowUnlockModal] = useState(false);
   const { isFreeTenant } = usePaywall();
+  const { mutateSubscriptionQuotaAndUsages } = useContext(SubscriptionDataContext);
 
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console.security',
@@ -74,6 +76,7 @@ function GeneralForm({ formData }: Props) {
 
       // Global mutate the SIE data
       await mutateGlobal('api/sign-in-exp');
+      mutateSubscriptionQuotaAndUsages();
 
       toast.success(globalT('general.saved'));
     })
