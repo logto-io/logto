@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 
 import { type ContinueFlowInteractionEvent } from '@/types';
 
+import useEmailBlockedErrorHandler from './use-email-blocked-error-handler';
 import { type ErrorHandlers } from './use-error-handler';
 import useMfaErrorHandler, {
   type Options as UseMfaVerificationErrorHandlerOptions,
@@ -36,13 +37,15 @@ const useSubmitInteractionErrorHandler = (
     ...rest,
   });
   const mfaErrorHandler = useMfaErrorHandler({ replace });
+  const emailBlockedErrorHandler = useEmailBlockedErrorHandler();
 
   return useMemo(
     () => ({
+      ...emailBlockedErrorHandler,
       ...requiredProfileErrorHandler,
       ...mfaErrorHandler,
     }),
-    [mfaErrorHandler, requiredProfileErrorHandler]
+    [emailBlockedErrorHandler, mfaErrorHandler, requiredProfileErrorHandler]
   );
 };
 

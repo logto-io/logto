@@ -46,6 +46,8 @@ const session = {
   captcha_failed: 'Captcha 인증에 실패했어요.',
   email_blocklist: {
     /** UNTRANSLATED */
+    disposable_email_validation_failed: 'Email address validation failed.',
+    /** UNTRANSLATED */
     invalid_email: 'Invalid email address.',
     /** UNTRANSLATED */
     email_subaddressing_not_allowed: 'Email subaddressing is not allowed.',

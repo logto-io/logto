@@ -1,6 +1,8 @@
 import { emailOrEmailDomainRegex } from '@logto/core-kit';
 import { type EmailBlocklistPolicy } from '@logto/schemas';
 import { conditional, deduplicate } from '@silverhand/essentials';
+import { got } from 'got';
+import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -50,10 +52,73 @@ export const parseEmailBlocklistPolicy = (
 
   const { customBlocklist, ...rest } = emailBlocklistPolicy;
 
+  // BlockDisposableAddresses is not supported for OSS.
+  if (rest.blockDisposableAddresses) {
+    assertThat(
+      EnvSet.values.isCloud,
+      new RequestError('request.invalid_input', {
+        details: 'blockDisposableAddresses is not supported in this environment',
+      })
+    );
+  }
+
   return {
     ...rest,
     ...conditional(customBlocklist && { customBlocklist: parseCustomBlocklist(customBlocklist) }),
   };
+};
+
+const disposableEmailDomainValidationResponseGuard = z.object({
+  isDisposable: z.boolean(),
+});
+
+const validateDisposableEmailDomain = async (email: string) => {
+  // TODO: Skip the validation for integration test for now
+  if (EnvSet.values.isIntegrationTest) {
+    return;
+  }
+
+  try {
+    assertThat(
+      EnvSet.values.azureFunctionAppEndpoint,
+      new Error('Environment variable AZURE_FUNCTION_APP_ENDPOINT is not set')
+    );
+
+    const result = await got
+      .post(
+        new URL('/api/disposable-email-domain-validation', EnvSet.values.azureFunctionAppEndpoint),
+        {
+          json: {
+            email,
+          },
+          headers: {
+            'x-functions-key': EnvSet.values.azureFunctionAppKey,
+          },
+        }
+      )
+      .json<unknown>();
+
+    const { isDisposable } = disposableEmailDomainValidationResponseGuard.parse(result);
+
+    assertThat(
+      !isDisposable,
+      new RequestError({
+        code: 'session.email_blocklist.email_not_allowed',
+        status: 422,
+        email,
+      })
+    );
+  } catch (error: unknown) {
+    if (error instanceof RequestError) {
+      throw error;
+    }
+
+    throw new RequestError({
+      code: 'session.email_blocklist.disposable_email_validation_failed',
+      status: 500,
+      error,
+    });
+  }
 };
 
 /**
@@ -80,7 +145,7 @@ export const validateEmailAgainstBlocklistPolicy = async (
 
   // Guard disposable email domain if enabled
   if (EnvSet.values.isCloud && blockDisposableAddresses) {
-    // TODO: call Azure function
+    await validateDisposableEmailDomain(email);
   }
 
   // Guard email subaddressing if enabled
