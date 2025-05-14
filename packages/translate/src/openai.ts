@@ -130,12 +130,12 @@ export const createFullTranslation = async ({
   if (verbose) {
     consoleLog.info(
       'Found ' +
-      String(localeFiles.length) +
-      ' file' +
-      conditionalString(localeFiles.length !== 1 && 's') +
-      ' in ' +
-      packageName +
-      ' to create'
+        String(localeFiles.length) +
+        ' file' +
+        conditionalString(localeFiles.length !== 1 && 's') +
+        ' in ' +
+        packageName +
+        ' to create'
     );
   }
 
@@ -174,12 +174,12 @@ export const syncTranslation = async ({
   if (verbose) {
     consoleLog.info(
       'Found ' +
-      String(localeFiles.length) +
-      ' file' +
-      conditionalString(localeFiles.length !== 1 && 's') +
-      ' in ' +
-      packageName +
-      ' to translate'
+        String(localeFiles.length) +
+        ' file' +
+        conditionalString(localeFiles.length !== 1 && 's') +
+        ' in ' +
+        packageName +
+        ' to translate'
     );
   }
 
