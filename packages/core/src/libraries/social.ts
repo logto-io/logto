@@ -36,7 +36,7 @@ const getUserInfoFromInteractionResult = async (
 };
 
 export const createSocialLibrary = (queries: Queries, connectorLibrary: ConnectorLibrary) => {
-  const { findUserByEmail, findUserByPhone } = queries.users;
+  const { findUserByEmail, findUserByNormalizedPhone } = queries.users;
   const { getLogtoConnectorById } = connectorLibrary;
 
   const getConnector = async (connectorId: string): Promise<LogtoConnector> => {
@@ -85,7 +85,7 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
     info: SocialUserInfo
   ): Promise<Nullable<[{ type: 'email' | 'phone'; value: string }, User]>> => {
     if (info.phone) {
-      const user = await findUserByPhone(info.phone);
+      const user = await findUserByNormalizedPhone(info.phone);
 
       if (user) {
         return [{ type: 'phone', value: info.phone }, user];

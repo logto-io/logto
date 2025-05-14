@@ -1,6 +1,7 @@
 import type { User, CreateUser } from '@logto/schemas';
 import { Users } from '@logto/schemas';
-import { conditionalArray, pick } from '@silverhand/essentials';
+import { PhoneNumberParser } from '@logto/shared';
+import { conditionalArray, type Nullable, pick } from '@silverhand/essentials';
 import type { CommonQueryMethods } from '@silverhand/slonik';
 import { sql } from '@silverhand/slonik';
 
@@ -85,6 +86,71 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
       where ${fields.primaryPhone}=${phone}
     `);
 
+  /**
+   * Find user by phone with normalized match.
+   *
+   * @remarks
+   * In some countries, local phone numbers are often entered with a leading '0'.
+   * However, in the international format that includes the country code, this leading '0' should be removed.
+   * The previous implementation did not handle this correctly, causing the combination of country code + 0 + local number
+   *  to be treated as different from country code + local number in the Logto system.
+   * Both formats should be considered the same phone number.
+   *
+   * To address this, this function will:
+   *
+   * 1. Normalize the input phone number by separating it into a standard country code and a local number without the leading '0'.
+   * 2. Query the user by the phone number both with and without the leading '0'.
+   *  If one match is found, return that account. If multiple matches exist (e.g., a user registered two accounts with the same phone number, one with a leading '0' and one without), return the exact match.
+   * 3. If the phone number cannot be normalized, attempt to find it with an exact match.
+   *
+   * @example
+   * - DB: 61 0412 345 678
+   * - input: 61 412 345 678
+   * - return : user with 61 0412 345 678
+   *
+   * @example
+   * - DB: 61 412 345 678
+   * - input: 61 0412 345 678
+   * - return : user with 61 412 345 678
+   *
+   * @example
+   * - DB: 61 0412 345 678, 61 412 345 678
+   * - input: 61 0412 345 678
+   * - return : user with 61 0412 345 678
+   */
+  const findUserByNormalizedPhone = async (phone: string): Promise<Nullable<User>> => {
+    const phoneNumberParser = new PhoneNumberParser(phone);
+
+    const { internationalNumber, internationalNumberWithLeadingZero, isValid } = phoneNumberParser;
+
+    // If the phone number is not a valid international phone number, return the user with the exact match.
+    if (!isValid || !internationalNumber || !internationalNumberWithLeadingZero) {
+      return findUserByPhone(phone);
+    }
+
+    const users = await pool.any<User>(sql`
+      select ${sql.join(Object.values(fields), sql`,`)}
+      from ${table}
+      where ${fields.primaryPhone}=${internationalNumber}
+      or ${fields.primaryPhone}=${internationalNumberWithLeadingZero}
+      order by ${fields.createdAt} desc
+    `);
+
+    if (users.length === 0) {
+      return null;
+    }
+
+    // If only one user is found, return that user.
+    if (users.length === 1) {
+      return users[0] ?? null;
+    }
+
+    // Incase user has created two different accounts with the same phone number, one with leading '0' and one without.
+    // If more than one user is found, return the user with the exact match.
+    // Otherwise, return the first found user, which should be the be the latest one.
+    return users.find((user) => user.primaryPhone === phone) ?? users[0] ?? null;
+  };
+
   const findUserById = async (id: string): Promise<User> =>
     pool.one<User>(sql`
       select ${sql.join(Object.values(fields), sql`,`)}
@@ -128,6 +194,9 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
       ${conditionalSql(excludeUserId, (id) => sql`and ${fields.id}<>${id}`)}
     `);
 
+  /**
+   * Find user by phone with exact match.
+   */
   const hasUserWithPhone = async (phone: string, excludeUserId?: string) =>
     pool.exists(sql`
       select ${fields.primaryPhone}
@@ -265,6 +334,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     findUserByUsername,
     findUserByEmail,
     findUserByPhone,
+    findUserByNormalizedPhone,
     findUserById,
     findUserByIdentity,
     hasUser,
