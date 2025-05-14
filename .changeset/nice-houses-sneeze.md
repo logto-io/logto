@@ -2,7 +2,7 @@
 "@logto/core": minor
 ---
 
-feat: enhanced user lookup by phone with phone number normalization.
+refactor: enhanced user lookup by phone with phone number normalization
 
 In some countries, local phone numbers are often entered with a leading '0'. However, in the context of the international format this leading '0' should be stripped. E.g., +61 (0)2 1234 5678 should be normalized to +61 2 1234 5678.
 

@@ -27,7 +27,7 @@ const identifiersTypeToUserProfile = Object.freeze({
   userId: '',
 });
 
-describe.skip('sign-in with password verification happy path', () => {
+describe('sign-in with password verification happy path', () => {
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
     await Promise.all([setEmailConnector(), setSmsConnector()]);
