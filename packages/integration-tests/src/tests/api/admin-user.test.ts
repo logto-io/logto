@@ -399,11 +399,11 @@ describe('admin console user management', () => {
         );
 
         // Should allow update existing user
-        await expect(async () => {
-          await updateUser(user.id, {
+        await expect(
+          updateUser(user.id, {
             primaryPhone: newCreated,
-          });
-        }).resolves.not.toThrow();
+          })
+        ).resolves.not.toThrow();
 
         await Promise.all([deleteUser(user.id), deleteUser(newUser.id)]);
       }
