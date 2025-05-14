@@ -244,8 +244,8 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     return pool.exists(sql`
       select ${fields.primaryPhone}
       from ${table}
-      where ${fields.primaryPhone}=${internationalNumber}
-      or ${fields.primaryPhone}=${internationalNumberWithLeadingZero}
+      where (${fields.primaryPhone}=${internationalNumber}
+      or ${fields.primaryPhone}=${internationalNumberWithLeadingZero})
       ${conditionalSql(excludeUserId, (id) => sql`and ${fields.id}<>${id}`)}
     `);
   };
