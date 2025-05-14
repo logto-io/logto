@@ -18,7 +18,9 @@
 
 # Logto
 
-Logto is the open-source auth alternative to Auth0, Cognito, and Firebase Auth. It offers a complete identity solution with pre-built UI, modern protocols for authentication and authorization (OIDC/OAuth 2.0/SAML), and enterprise-grade security. Perfect for multi-device apps, SaaS products, and API services.
+**Logto is the modern, open-source identity platform for SaaS and AI apps.**
+
+It takes the pain out of OIDC and OAuth 2.1 and makes it easy to build secure, production-ready auth with multi-tenancy, enterprise SSO, and RBAC.
 
 <p align="center">
   <a href="https://logto.io/">website</a> •
@@ -34,34 +36,24 @@ Logto is the open-source auth alternative to Auth0, Cognito, and Firebase Auth. 
 
 ## Why Logto?
 
-Logto provides frontend-to-backend identity solutions for developers and enterprise with:
+Built for teams scaling SaaS, AI, and agent-based platforms without the usual auth headaches.
 
-- **Logto Console**: A web-based interface for configuring and manage resources, offering a quick setup for sign-in experience and easy identity-management.
-- **End-user experience**: Beautiful, out-of-the-box, complete authentication flows with full customization.
-- **Logto APIs**: Logto’s backend offers a suit of APIs to facilitate various AuthN and AuthZ functionalities.
-- **SDKs**: SDKs for 30+ frameworks, Machine-to-machine and CLI tools.
-- **Enterprise-grade security**: MFA, SSO, RBAC, multi-tenancy isolation, and audit logs.
+With Logto, you get:
 
-## Key features
+- Multi-tenancy, enterprise SSO, and RBAC: ready to use, no workarounds.
+- Pre-built sign-in flows, customizable UIs, and SDKs for 30+ frameworks.
+- Full support for OIDC, OAuth 2.1, and SAML without the protocol pain.
+- Works out-of-the-box for Model Context Protocol and agent-based AI architectures.
 
-| **Authentication** | **Authorization** | **Identity management** |
-| --- | --- | --- |
-| Email/SMS passwordless | API protection | Identity federation (Omni sign-in for multiple apps) |
-| Social sign-in (OIDC/OAuth 2.0) | User role-based access control | Multi-tenancy management (Invitation/JIT/Org-level MFA) |
-| Enterprise SSO (SAML/OIDC) | M2M role-based access control | User management (Profile/Invitation/Migration) |
-| MFA (TOTP/Passkey/Backup) | Organization templates | User Impersonation |
-| Personal access token | JWT / Opaque toke validation | Audit Logs |
-| OAuth consent screen | Custom token claims | Webhooks |
+[🗺️ See all features →](https://docs.logto.io/?ref=readme)
 
-**UI toolkit:** Prebuilt auth flows • Custom UI • Dark mode • i18n • Custom domain
+## Get started
 
-[🗺️ View all features →](https://logto.io/pricing#compare-features)
+Pick your path:
 
-## Get started in 60s
-
-Start building with Logto in minutes:
-
-- **GitPod:** [Launch Logto on GitPod](https://gitpod.io/#https://github.com/logto-io/demo). Wait for the message `App is running at https://3002-...gitpod.io` , then click the URL starting with `https://3002-` to continue.
+- [**Logto Cloud**](https://cloud.logto.io/?sign_up=true&ref=readme): The fastest way to try Logto. Fully managed, zero setup.
+- [**Launch Logto in GitPod**](https://gitpod.io/#https://github.com/logto-io/demo): Start Logto OSS in seconds.
+  Wait for the message `App is running at https://3002-...gitpod.io` , then click the URL starting with `https://3002-` to continue.
 - **Local development:**  
   ```bash
   # Using Docker Compose(requires Docker Desktop)
@@ -71,40 +63,33 @@ Start building with Logto in minutes:
   # Using Node.js (requires PostgreSQL)
   npm init @logto
   ```
-    
-- **Logto Cloud:** No deployment required! Get started with [Logto Cloud](https://cloud.logto.io/?sign_up=true&utm_source=github&utm_medium=repo_logto).
 
-[📚 Full installation guide →](https://docs.logto.io/logto-oss/get-started-with-oss)
+[📚 Full OSS installation guide →](https://docs.logto.io/logto-oss/get-started-with-oss?ref=readme)
 
-## Integration ecosystem
+## Integrate anywhere
 
-Powered by industry-standard protocols (OIDC, OAuth, SAML), Logto empowers secure integration across your services, third-party platforms, and identity providers.
+Logto supports all your apps, APIs, and services with industry-standard protocols.
 
-**Unlimited application integration:**
+- SDKs for 30+ frameworks: React, Next.js, Angular, Vue, Flutter, Go, Python, and more.
+- Connect to any IdP: Google, Facebook, Azure AD, Okta, and more.
+- Flexible integration: SPAs, web apps, mobile apps, APIs, M2M, CLI tools.
+- Ready for Model Context Protocol and agent-based architectures.
 
-- **SDKs and guides**: Android, Angular, React, Next.js, Flutter, Go, Python, Vue, and 30+ more.
-- **Custom integration**: Traditional web, SPAs, Native apps, M2M apps, OAuth third-party apps, and SAML apps.
+[🚀 Explore quick starts →](https://docs.logto.io/quick-starts?ref=readme)
 
-[📚 Explore quick starts →](https://docs.logto.io/quick-starts)
-
-**Universal identity provider (IdP) connection:** 
-
-- **Social sign-in**: Google, Facebook, Apple, Microsoft, GitHub, Line, and more. Fully customizable via OIDC/OAuth 2.0.
-- **Enterprise Single Sign-On**: Azure AD, Google Workspace, Okta, and more. Fully customizable via OIDC/SAML.
-
-[📚 Explore all connectors →](https://docs.logto.io/integrations)
+[🔌 See all connectors →](https://docs.logto.io/integrations?ref=readme)
 
 ## Showcase
 
-**Developer-friendly SDKs**: Install in minutes with step-by-step guides.
+**Developer-first SDKs**: Install in minutes with clear guides.
 
 ![Logto auth SDK showcase](./assets/showcase-logto-auth-sdks.gif)
 
-**User-friendly auth flows**: Sign-up, sign-in, Social sign-in, Google one-tap, SSO, MFA, etc.
+**User-friendly auth flows**: Sign-up, sign-in, social login, Google One Tap, MFA, SSO.
 
 ![Logto sign-in experience showcase](./assets/showcase-logto-sign-in-exeperience.gif)
 
-**Multi-tenancy architecture**: organization RBAC, member invitations, just-in-time provision, etc.
+**Multi-tenancy & organizations**: Organization RBAC, member invites, just-in-time provisioning, and more.
 
 ![Logto multi-tenancy showcase](./assets/showcase-logto-multi-tenancy.gif)
 
