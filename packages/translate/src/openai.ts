@@ -19,7 +19,7 @@ import {
 } from './utils.js';
 
 // The full list of OPENAI model can be found at https://platform.openai.com/docs/models.
-export const getModel = () => process.env.OPENAI_MODEL_NAME ?? 'gpt-4o-2024-08-06';
+export const getModel = () => process.env.OPENAI_MODEL_NAME ?? 'gpt-4.1';
 
 export const createOpenaiApi = () => {
   const proxy = getProxy();

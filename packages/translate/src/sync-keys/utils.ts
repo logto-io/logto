@@ -1,8 +1,8 @@
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, statSync } from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import { tryThat } from '@silverhand/essentials';
+import { trySafe, tryThat } from '@silverhand/essentials';
 import ts from 'typescript';
 
 import { consoleLog } from '../utils.js';
@@ -94,6 +94,12 @@ type ParsedTuple = readonly [NestedPhraseObject, FileStructure];
  *
  */
 export const parseLocaleFiles = (filePath: string): ParsedTuple => {
+  const fileStat = trySafe(() => statSync(filePath));
+
+  if (!fileStat?.isFile()) {
+    return [{}, {}];
+  }
+
   const content = readFileSync(filePath, 'utf8');
   const ast = ts.createSourceFile(filePath, content, ts.ScriptTarget.Latest, true);
   const importIdentifierPath = new Map<string, string>();
