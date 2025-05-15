@@ -33,6 +33,7 @@ import {
   generatePhone,
   generatePassword,
   randomString,
+  generateNationalPhoneNumber,
 } from '#src/utils.js';
 
 describe('admin console user management', () => {
@@ -332,5 +333,80 @@ describe('admin console user management', () => {
       code: 'guard.invalid_input',
       status: 400,
     });
+  });
+
+  describe('create and update user phone number with normalization', () => {
+    const nationalNumber = generateNationalPhoneNumber();
+    const countryCode = '61';
+
+    const internationalFormatNumber = `${countryCode}${nationalNumber}`;
+    const leadingZeroFormatNumber = `${countryCode}0${nationalNumber}`;
+
+    const testCases: Array<{
+      existing: string;
+      newCreated: string;
+    }> = [
+      {
+        existing: internationalFormatNumber,
+        newCreated: leadingZeroFormatNumber,
+      },
+      {
+        existing: leadingZeroFormatNumber,
+        newCreated: internationalFormatNumber,
+      },
+    ];
+
+    it.each(testCases)(
+      'should failed to create user with phone number conflict',
+      async ({ existing, newCreated }) => {
+        const user = await createUserByAdmin({
+          primaryPhone: existing,
+        });
+
+        await expectRejects(
+          createUserByAdmin({
+            primaryPhone: newCreated,
+          }),
+          {
+            code: 'user.phone_already_in_use',
+            status: 422,
+          }
+        );
+
+        await deleteUser(user.id);
+      }
+    );
+
+    it.each(testCases)(
+      'should failed to update user with phone number conflict',
+      async ({ existing, newCreated }) => {
+        const user = await createUserByAdmin({
+          primaryPhone: existing,
+        });
+
+        const newUser = await createUserByAdmin({
+          username: generateUsername(),
+        });
+
+        await expectRejects(
+          updateUser(newUser.id, {
+            primaryPhone: newCreated,
+          }),
+          {
+            code: 'user.phone_already_in_use',
+            status: 422,
+          }
+        );
+
+        // Should allow update existing user
+        await expect(
+          updateUser(user.id, {
+            primaryPhone: newCreated,
+          })
+        ).resolves.not.toThrow();
+
+        await Promise.all([deleteUser(user.id), deleteUser(newUser.id)]);
+      }
+    );
   });
 });

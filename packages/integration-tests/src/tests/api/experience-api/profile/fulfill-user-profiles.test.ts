@@ -22,7 +22,7 @@ import {
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { generateEmail } from '#src/utils.js';
+import { generateEmail, generateNationalPhoneNumber } from '#src/utils.js';
 
 describe('Fulfill User Profiles', () => {
   const userApi = new UserApiTest();
@@ -113,6 +113,62 @@ describe('Fulfill User Profiles', () => {
       status: 422,
       code: 'user.email_already_in_use',
     });
+  });
+
+  describe('phone number collision detect with normalization', () => {
+    const nationalNumber = generateNationalPhoneNumber();
+    const countryCode = '49';
+    const internationalPhoneNumber = `${countryCode}${nationalNumber}`;
+    const withLeadingZeroPhoneNumber = `${countryCode}0${nationalNumber}`;
+
+    const testCases: Array<{
+      existing: string;
+      newCreated: string;
+    }> = [
+      {
+        existing: internationalPhoneNumber,
+        newCreated: withLeadingZeroPhoneNumber,
+      },
+      {
+        existing: withLeadingZeroPhoneNumber,
+        newCreated: internationalPhoneNumber,
+      },
+    ];
+
+    it.each(testCases)(
+      'should throw 422 if the phone number %existing is used by another user',
+      async ({ existing, newCreated }) => {
+        await userApi.create({ primaryPhone: existing });
+
+        const { username, password } = generateNewUserProfile({ username: true, password: true });
+        await userApi.create({ username, password });
+
+        const client = await initExperienceClient();
+        await identifyUserWithUsernamePassword(client, username, password);
+
+        const { verificationId, code: verificationCode } = await successfullySendVerificationCode(
+          client,
+          {
+            identifier: { type: SignInIdentifier.Phone, value: newCreated },
+            interactionEvent: InteractionEvent.SignIn,
+          }
+        );
+
+        await successfullyVerifyVerificationCode(client, {
+          identifier: { type: SignInIdentifier.Phone, value: newCreated },
+          verificationId,
+          code: verificationCode,
+        });
+
+        await expectRejects(
+          client.updateProfile({ type: SignInIdentifier.Phone, verificationId }),
+          {
+            status: 422,
+            code: 'user.phone_already_in_use',
+          }
+        );
+      }
+    );
   });
 
   describe('MFA verification status is required', () => {

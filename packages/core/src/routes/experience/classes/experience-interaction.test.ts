@@ -33,7 +33,7 @@ const mockEmail = 'foo@bar.com';
 const userQueries = {
   hasActiveUsers: jest.fn().mockResolvedValue(false),
   hasUserWithEmail: jest.fn().mockResolvedValue(false),
-  hasUserWithPhone: jest.fn().mockResolvedValue(false),
+  hasUserWithNormalizedPhone: jest.fn().mockResolvedValue(false),
   hasUserWithIdentity: jest.fn().mockResolvedValue(false),
 };
 const userLibraries = {

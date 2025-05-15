@@ -208,35 +208,4 @@ describe('phone number sanitisation sign-in test +61 412 345 678', () => {
       });
     }
   );
-
-  it('should sign-in with extact phone number if multiple account is found', async () => {
-    const passwordA = generatePassword();
-    const passwordB = generatePassword();
-
-    await userApi.create({
-      primaryPhone: testPhoneNumber,
-      password: passwordA,
-    });
-
-    await userApi.create({
-      primaryPhone: testPhoneNumberWithLeadingZero,
-      password: passwordB,
-    });
-
-    await signInWithPassword({
-      identifier: {
-        type: SignInIdentifier.Phone,
-        value: testPhoneNumber,
-      },
-      password: passwordA,
-    });
-
-    await signInWithPassword({
-      identifier: {
-        type: SignInIdentifier.Phone,
-        value: testPhoneNumberWithLeadingZero,
-      },
-      password: passwordB,
-    });
-  });
 });

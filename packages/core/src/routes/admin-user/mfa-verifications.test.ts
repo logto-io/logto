@@ -20,23 +20,14 @@ const { mockEsmWithActual } = createMockUtils(jest);
 const mockedQueries = {
   users: {
     findUserById: jest.fn(async (id: string) => mockUser),
-    hasUser: jest.fn(async () => mockHasUser()),
-    hasUserWithEmail: jest.fn(async () => mockHasUserWithEmail()),
-    hasUserWithPhone: jest.fn(async () => mockHasUserWithPhone()),
     updateUserById: jest.fn(
       async (_, data: Partial<CreateUser>): Promise<User> => ({
         ...mockUser,
         ...data,
       })
     ),
-    deleteUserById: jest.fn(),
-    deleteUserIdentity: jest.fn(),
   },
 } satisfies Partial2<Queries>;
-
-const mockHasUser = jest.fn(async () => false);
-const mockHasUserWithEmail = jest.fn(async () => false);
-const mockHasUserWithPhone = jest.fn(async () => false);
 
 const { findUserById, updateUserById } = mockedQueries.users;
 

@@ -177,7 +177,7 @@ const fillMissingProfileWithSocialIdentity = async (
   ) {
     // Check Phone not taken
     assertThat(
-      !(await userQueries.hasUserWithPhone(phone)),
+      !(await userQueries.hasUserWithNormalizedPhone(phone)),
       new RequestError(
         { code: 'user.missing_profile', status: 422 },
         {

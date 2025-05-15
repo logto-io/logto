@@ -79,6 +79,9 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
       where lower(${fields.primaryEmail})=lower(${email})
     `);
 
+  /**
+   * Find user by phone with exact match.
+   */
   const findUserByPhone = async (phone: string) =>
     pool.maybeOne<User>(sql`
       select ${sql.join(Object.values(fields), sql`,`)}
@@ -195,7 +198,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     `);
 
   /**
-   * Find user by phone with exact match.
+   * Checks if a user exists in the database with an exact match on their phone number.
    */
   const hasUserWithPhone = async (phone: string, excludeUserId?: string) =>
     pool.exists(sql`
@@ -204,6 +207,51 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
       where ${fields.primaryPhone}=${phone}
       ${conditionalSql(excludeUserId, (id) => sql`and ${fields.id}<>${id}`)}
     `);
+
+  /**
+   * Checks if a user exists in the database with a phone number that matches the provided
+   * number in either normalized format or with a leading '0'.
+   *
+   * @remarks
+   * This function normalizes the input phone number to account for variations in formatting.
+   * It checks for the existence of a user with the same phone number in two formats:
+   * - Standard international format (e.g., 61412345678)
+   * - International format with a leading '0' before the local number (e.g., 610412345678)
+   *
+   * If the provided phone number is not a valid international format, it falls back to checking
+   * for an exact match using the `hasUserWithPhone` function.
+   *
+   * @param phone - The phone number to check for user existence.
+   * @param excludeUserId - (Optional) If provided, excludes the user with this ID from the search,
+   * allowing for updates without false positives.
+   *
+   * @example
+   * // Database contains: 610412345678
+   * hasUserWithNormalizedPhone(61412345678); // returns: true
+   *
+   *  @example
+   * // Database contains: 61412345678
+   * hasUserWithNormalizedPhone(610412345678); // returns: true
+   */
+  const hasUserWithNormalizedPhone = async (phone: string, excludeUserId?: string) => {
+    const phoneNumberParser = new PhoneNumberParser(phone);
+
+    const { internationalNumber, internationalNumberWithLeadingZero, isValid } = phoneNumberParser;
+
+    // If the phone number is not a valid international phone number, find user with exact match.
+    if (!isValid || !internationalNumber || !internationalNumberWithLeadingZero) {
+      return hasUserWithPhone(phone, excludeUserId);
+    }
+
+    // Check if the user exists with any of the two formats.
+    return pool.exists(sql`
+      select ${fields.primaryPhone}
+      from ${table}
+      where (${fields.primaryPhone}=${internationalNumber}
+      or ${fields.primaryPhone}=${internationalNumberWithLeadingZero})
+      ${conditionalSql(excludeUserId, (id) => sql`and ${fields.id}<>${id}`)}
+    `);
+  };
 
   const hasUserWithIdentity = async (target: string, userId: string, excludeUserId?: string) =>
     pool.exists(
@@ -341,6 +389,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     hasUserWithId,
     hasUserWithEmail,
     hasUserWithPhone,
+    hasUserWithNormalizedPhone,
     hasUserWithIdentity,
     countUsers,
     findUsers,

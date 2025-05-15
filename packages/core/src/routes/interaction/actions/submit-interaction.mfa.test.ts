@@ -47,7 +47,7 @@ const userQueries = {
   updateUserById: jest.fn(),
   hasActiveUsers: jest.fn().mockResolvedValue(true),
   hasUserWithEmail: jest.fn().mockResolvedValue(false),
-  hasUserWithPhone: jest.fn().mockResolvedValue(false),
+  hasUserWithNormalizedPhone: jest.fn().mockResolvedValue(false),
 };
 
 const { hasActiveUsers, updateUserById } = userQueries;

@@ -53,7 +53,7 @@ const getSocialSyncProfile = async (
 
 /* Parse the user profile from the new linked Social identity */
 const parseNewSocialProfile = async (
-  { users: { hasUserWithEmail, hasUserWithPhone } }: Queries,
+  { users: { hasUserWithEmail, hasUserWithNormalizedPhone } }: Queries,
   { getLogtoConnectorById }: ConnectorLibrary,
   socialIdentifier: SocialIdentifier,
   user?: User
@@ -78,7 +78,9 @@ const parseNewSocialProfile = async (
       // Sync the email only if the email is not used by other users
       ...conditional(email && !(await hasUserWithEmail(email)) && { primaryEmail: email }),
       // Sync the phone only if the phone is not used by other users
-      ...conditional(phone && !(await hasUserWithPhone(phone)) && { primaryPhone: phone }),
+      ...conditional(
+        phone && !(await hasUserWithNormalizedPhone(phone)) && { primaryPhone: phone }
+      ),
     };
   }
 

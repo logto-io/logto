@@ -43,6 +43,17 @@ export const generatePhone = (isE164?: boolean) => {
   return plus + countryAndAreaCode + centralOfficeCode + phoneNumber;
 };
 
+/**
+ * This method only generates a local phone number without a country code.
+ */
+export const generateNationalPhoneNumber = () => {
+  const areaCode = randomInt(100, 999).toString();
+  const centralOfficeCode = randomInt(100, 999).toString();
+  const phoneNumber = randomInt(0, 10_000).toString().padStart(4, '0');
+
+  return areaCode + centralOfficeCode + phoneNumber;
+};
+
 export const formatPhoneNumberToInternational = (phoneNumber: string) =>
   phoneNumber.slice(0, 2) +
   ' ' +

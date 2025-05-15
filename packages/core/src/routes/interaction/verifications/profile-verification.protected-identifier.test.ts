@@ -14,7 +14,7 @@ const tenantContext = new MockTenant(
     users: {
       findUserById: jest.fn().mockResolvedValue({ id: 'foo' }),
       hasUserWithEmail: jest.fn().mockResolvedValue(false),
-      hasUserWithPhone: jest.fn().mockResolvedValue(false),
+      hasUserWithNormalizedPhone: jest.fn().mockResolvedValue(false),
       hasUserWithIdentity: jest.fn().mockResolvedValue(false),
     },
   },

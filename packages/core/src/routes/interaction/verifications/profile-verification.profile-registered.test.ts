@@ -12,10 +12,10 @@ const userQueries = {
   hasUser: jest.fn().mockResolvedValue(false),
   findUserById: jest.fn().mockResolvedValue({ id: 'foo' }),
   hasUserWithEmail: jest.fn().mockResolvedValue(false),
-  hasUserWithPhone: jest.fn().mockResolvedValue(false),
+  hasUserWithNormalizedPhone: jest.fn().mockResolvedValue(false),
   hasUserWithIdentity: jest.fn().mockResolvedValue(false),
 };
-const { hasUser, hasUserWithEmail, hasUserWithPhone, hasUserWithIdentity } = userQueries;
+const { hasUser, hasUserWithEmail, hasUserWithNormalizedPhone, hasUserWithIdentity } = userQueries;
 
 const getLogtoConnectorById = jest.fn().mockResolvedValue({
   metadata: { target: 'logto' },
@@ -74,7 +74,7 @@ describe('profile registered validation', () => {
   });
 
   it('phone is registered', async () => {
-    hasUserWithPhone.mockResolvedValueOnce(true);
+    hasUserWithNormalizedPhone.mockResolvedValueOnce(true);
     const interaction = {
       ...baseInteraction,
       profile: {

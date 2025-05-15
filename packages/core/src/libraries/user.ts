@@ -29,7 +29,7 @@ export const createUserLibrary = (queries: Queries) => {
       hasUser,
       hasUserWithEmail,
       hasUserWithId,
-      hasUserWithPhone,
+      hasUserWithNormalizedPhone,
       hasUserWithIdentity,
       findUsersByIds,
       updateUserById,
@@ -103,7 +103,7 @@ export const createUserLibrary = (queries: Queries) => {
       throw new RequestError({ code: 'user.email_already_in_use', status: 422 });
     }
 
-    if (primaryPhone && (await hasUserWithPhone(primaryPhone, excludeUserId))) {
+    if (primaryPhone && (await hasUserWithNormalizedPhone(primaryPhone, excludeUserId))) {
       throw new RequestError({ code: 'user.phone_already_in_use', status: 422 });
     }
 
