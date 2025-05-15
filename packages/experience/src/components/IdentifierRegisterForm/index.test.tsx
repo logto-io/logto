@@ -161,7 +161,7 @@ describe('<IdentifierRegisterForm />', () => {
     test('submit properly', async () => {
       const { getByText, queryByText, container } = renderForm();
       const submitButton = getByText('action.create_account');
-      const termsButton = getByText('description.agree_with_terms');
+
       const usernameInput = container.querySelector('input[name=identifier]');
 
       assert(usernameInput, new Error('username input not found'));
@@ -176,12 +176,9 @@ describe('<IdentifierRegisterForm />', () => {
         expect(registerWithUsername).not.toBeCalled();
       });
 
+      const agreeButton = getByText('Agree');
       act(() => {
-        fireEvent.click(termsButton);
-      });
-
-      act(() => {
-        fireEvent.submit(submitButton);
+        fireEvent.click(agreeButton);
       });
 
       await waitFor(() => {
