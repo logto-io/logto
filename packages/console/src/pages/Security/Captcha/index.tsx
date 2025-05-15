@@ -1,5 +1,5 @@
 import { CaptchaType, type CaptchaPolicy, type SignInExperience } from '@logto/schemas';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +13,7 @@ import FormCard, { FormCardSkeleton } from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { captcha } from '@/consts/external-links';
 import { latestProPlanId } from '@/consts/subscriptions';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import useApi from '@/hooks/use-api';
@@ -32,6 +33,7 @@ function Captcha() {
   const { guideId } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { isFreeTenant } = usePaywall();
+  const { mutateSubscriptionQuotaAndUsages } = useContext(SubscriptionDataContext);
 
   const [isCreateCaptchaFormOpen, setIsCreateCaptchaFormOpen] = useState(false);
   const { data, isLoading } = useDataFetch();
@@ -55,6 +57,7 @@ function Captcha() {
       })
       .json<SignInExperience>();
     reset(captchaPolicy);
+    mutateSubscriptionQuotaAndUsages();
     toast.success(t('general.saved'));
   });
 
