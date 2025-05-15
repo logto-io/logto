@@ -42,15 +42,10 @@ const session = {
   captcha_required: 'مطلوب التحقق من Captcha.',
   captcha_failed: 'فشل التحقق من Captcha.',
   email_blocklist: {
-    /** UNTRANSLATED */
-    disposable_email_validation_failed: 'Email address validation failed.',
-    /** UNTRANSLATED */
-    invalid_email: 'Invalid email address.',
-    /** UNTRANSLATED */
-    email_subaddressing_not_allowed: 'Email subaddressing is not allowed.',
-    /** UNTRANSLATED */
-    email_not_allowed:
-      'The email address "{{email}}" is restricted. Please choose a different one.',
+    disposable_email_validation_failed: 'فشل التحقق من عنوان البريد الإلكتروني.',
+    invalid_email: 'عنوان البريد الإلكتروني غير صالح.',
+    email_subaddressing_not_allowed: 'لا يُسمح بتوجيه البريد الإلكتروني الإضافي.',
+    email_not_allowed: 'عنوان البريد الإلكتروني "{{email}}" مقيد. يرجى اختيار عنوان آخر.',
   },
 };
 

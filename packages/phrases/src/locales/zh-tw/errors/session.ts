@@ -40,15 +40,10 @@ const session = {
   captcha_required: '需要驗證碼。',
   captcha_failed: '驗證碼驗證失敗。',
   email_blocklist: {
-    /** UNTRANSLATED */
-    disposable_email_validation_failed: 'Email address validation failed.',
-    /** UNTRANSLATED */
-    invalid_email: 'Invalid email address.',
-    /** UNTRANSLATED */
-    email_subaddressing_not_allowed: 'Email subaddressing is not allowed.',
-    /** UNTRANSLATED */
-    email_not_allowed:
-      'The email address "{{email}}" is restricted. Please choose a different one.',
+    disposable_email_validation_failed: '電子郵件地址驗證失敗。',
+    invalid_email: '無效的電子郵件地址。',
+    email_subaddressing_not_allowed: '不允許使用電子郵件子地址。',
+    email_not_allowed: '電子郵件地址 "{{email}}" 受到限制。請選擇不同的地址。',
   },
 };
 

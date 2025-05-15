@@ -49,15 +49,11 @@ const session = {
   captcha_required: 'Captcha が必要です。',
   captcha_failed: 'Captcha 検証に失敗しました。',
   email_blocklist: {
-    /** UNTRANSLATED */
-    disposable_email_validation_failed: 'Email address validation failed.',
-    /** UNTRANSLATED */
-    invalid_email: 'Invalid email address.',
-    /** UNTRANSLATED */
-    email_subaddressing_not_allowed: 'Email subaddressing is not allowed.',
-    /** UNTRANSLATED */
+    disposable_email_validation_failed: 'メールアドレスの検証に失敗しました。',
+    invalid_email: '無効なメールアドレス。',
+    email_subaddressing_not_allowed: 'メールのサブアドレッシングは許可されていません。',
     email_not_allowed:
-      'The email address "{{email}}" is restricted. Please choose a different one.',
+      'メールアドレス "{{email}}" は制限されています。別のものを選択してください。',
   },
 };
 

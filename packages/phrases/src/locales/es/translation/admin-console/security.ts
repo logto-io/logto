@@ -132,7 +132,7 @@ const security = {
     email_subaddressing: {
       title: 'Bloquear subdirecciones de correo electrónico',
       description:
-        'Habilita para evitar que los usuarios utilicen subdirecciones de correo electrónico con un signo más (+) y caracteres adicionales (por ejemplo, usuario+alias@foo.com).',
+        'Habilita el rechazo de cualquier intento de registro utilizando subdirecciones de correo electrónico con un signo más (+) y caracteres adicionales (por ejemplo, usuario+alias@foo.com).',
     },
     custom_email_address: {
       title: 'Bloquear direcciones de correo electrónico personalizadas',

@@ -50,15 +50,11 @@ const session = {
   captcha_required: 'Требуется Capctha.',
   captcha_failed: 'Проверка Captcha не удалась.',
   email_blocklist: {
-    /** UNTRANSLATED */
-    disposable_email_validation_failed: 'Email address validation failed.',
-    /** UNTRANSLATED */
-    invalid_email: 'Invalid email address.',
-    /** UNTRANSLATED */
-    email_subaddressing_not_allowed: 'Email subaddressing is not allowed.',
-    /** UNTRANSLATED */
+    disposable_email_validation_failed: 'Проверка адреса электронной почты не удалась.',
+    invalid_email: 'Недействительный адрес электронной почты.',
+    email_subaddressing_not_allowed: 'Субадресация электронной почты не разрешена.',
     email_not_allowed:
-      'The email address "{{email}}" is restricted. Please choose a different one.',
+      'Адрес электронной почты "{{email}}" ограничен. Пожалуйста, выберите другой.',
   },
 };
 

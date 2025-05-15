@@ -52,15 +52,10 @@ const session = {
   captcha_required: 'Captcha ist erforderlich.',
   captcha_failed: 'Captcha-Verifizierung fehlgeschlagen.',
   email_blocklist: {
-    /** UNTRANSLATED */
-    disposable_email_validation_failed: 'Email address validation failed.',
-    /** UNTRANSLATED */
-    invalid_email: 'Invalid email address.',
-    /** UNTRANSLATED */
-    email_subaddressing_not_allowed: 'Email subaddressing is not allowed.',
-    /** UNTRANSLATED */
-    email_not_allowed:
-      'The email address "{{email}}" is restricted. Please choose a different one.',
+    disposable_email_validation_failed: 'E-Mail-Adressvalidierung fehlgeschlagen.',
+    invalid_email: 'Ungültige E-Mail-Adresse.',
+    email_subaddressing_not_allowed: 'E-Mail-Subadressierung ist nicht erlaubt.',
+    email_not_allowed: 'Die E-Mail-Adresse "{{email}}" ist eingeschränkt. Bitte wähle eine andere.',
   },
 };
 

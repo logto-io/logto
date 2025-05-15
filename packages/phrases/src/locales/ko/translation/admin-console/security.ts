@@ -124,7 +124,7 @@ const security = {
     email_subaddressing: {
       title: '이메일 서브주소 차단',
       description:
-        '사용자가 플러스 기호 (+)와 추가 문자를 사용하여 이메일 서브주소를 사용하는 것을 방지하도록 활성화합니다 (예: user+alias@foo.com).',
+        '이용하여 가입 시도를 거부하도록 활성화하면 더하기 기호 (+) 및 추가 문자가 있는 이메일 서브주소에서 등록 시도 (예: user+alias@foo.com)를 거부할 수 있습니다.',
     },
     custom_email_address: {
       title: '사용자 정의 이메일 주소 차단',

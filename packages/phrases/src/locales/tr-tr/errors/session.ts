@@ -48,15 +48,10 @@ const session = {
   captcha_required: 'Captcha gereklidir.',
   captcha_failed: 'Captcha doğrulaması başarısız oldu.',
   email_blocklist: {
-    /** UNTRANSLATED */
-    disposable_email_validation_failed: 'Email address validation failed.',
-    /** UNTRANSLATED */
-    invalid_email: 'Invalid email address.',
-    /** UNTRANSLATED */
-    email_subaddressing_not_allowed: 'Email subaddressing is not allowed.',
-    /** UNTRANSLATED */
-    email_not_allowed:
-      'The email address "{{email}}" is restricted. Please choose a different one.',
+    disposable_email_validation_failed: 'E-posta adresi doğrulaması başarısız oldu.',
+    invalid_email: 'Geçersiz e-posta adresi.',
+    email_subaddressing_not_allowed: 'E-posta alt adreslemesine izin verilmiyor.',
+    email_not_allowed: 'Kısıtlanmış e-posta adresi "{{email}}". Lütfen farklı bir tane seçiniz.',
   },
 };
 

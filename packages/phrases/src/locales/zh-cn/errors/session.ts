@@ -40,15 +40,10 @@ const session = {
   captcha_required: '需要验证码。',
   captcha_failed: '验证码验证失败。',
   email_blocklist: {
-    /** UNTRANSLATED */
-    disposable_email_validation_failed: 'Email address validation failed.',
-    /** UNTRANSLATED */
-    invalid_email: 'Invalid email address.',
-    /** UNTRANSLATED */
-    email_subaddressing_not_allowed: 'Email subaddressing is not allowed.',
-    /** UNTRANSLATED */
-    email_not_allowed:
-      'The email address "{{email}}" is restricted. Please choose a different one.',
+    disposable_email_validation_failed: '电子邮件地址验证失败。',
+    invalid_email: '无效的电子邮件地址。',
+    email_subaddressing_not_allowed: '不允许电子邮件子地址。',
+    email_not_allowed: '电子邮件地址 "{{email}}" 受限。请选择其他地址。',
   },
 };
 

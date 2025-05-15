@@ -127,7 +127,7 @@ const security = {
     email_subaddressing: {
       title: 'メールサブアドレッシングをブロック',
       description:
-        'プラス記号 （+） と追加文字（例：user+alias@foo.com）を使ったメールサブアドレスの使用を防ぐことを有効にします。',
+        'メールサブアドレスをプラス記号（+）と追加の文字（例：user+alias@foo.com）で使用するサインアップ試行を拒否できるようにします。',
     },
     custom_email_address: {
       title: 'カスタムメールアドレスをブロック',

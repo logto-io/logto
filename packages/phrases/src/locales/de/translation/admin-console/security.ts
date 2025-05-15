@@ -131,7 +131,7 @@ const security = {
     email_subaddressing: {
       title: 'Blockieren von E-Mail-Subaddressing',
       description:
-        'Aktivieren Sie, um zu verhindern, dass Benutzer E-Mail-Subadressen mit einem Pluszeichen (+) und zusätzlichen Zeichen verwenden (zum Beispiel, user+alias@foo.com).',
+        'Aktivieren Sie die Ablehnung von Anmeldungsversuchen mit E-Mail-Subadressen, die ein Pluszeichen (+) und zusätzliche Zeichen enthalten (z. B. user+alias@foo.com).',
     },
     custom_email_address: {
       title: 'Benutzerdefinierte E-Mail-Adressen blockieren',

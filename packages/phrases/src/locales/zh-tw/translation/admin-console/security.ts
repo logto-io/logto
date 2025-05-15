@@ -118,7 +118,7 @@ const security = {
     email_subaddressing: {
       title: '封鎖電子郵件子地址',
       description:
-        '啟用以防止用戶使用包含加號（+）和其他字符的電子郵件子地址（例如，user+alias@foo.com）。',
+        '啟用以拒絕任何使用加號 (+) 和額外字元（例如，user+alias@foo.com）的電子郵件子地址進行註冊嘗試。',
     },
     custom_email_address: {
       title: '封鎖自訂電子郵件地址',

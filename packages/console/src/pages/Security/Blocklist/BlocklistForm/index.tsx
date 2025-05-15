@@ -116,6 +116,9 @@ function BlocklistForm({ formData }: Props) {
             />
           </FormField>
           <FormField title="security.blocklist.custom_email_address.title">
+            <div className={styles.fieldDescription}>
+              {t('blocklist.custom_email_address.description')}
+            </div>
             <Controller
               name="customBlocklist"
               control={control}
