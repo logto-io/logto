@@ -198,7 +198,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     `);
 
   /**
-   * Has user with phone number with exact match.
+   * Checks if a user exists in the database with an exact match on their phone number.
    */
   const hasUserWithPhone = async (phone: string, excludeUserId?: string) =>
     pool.exists(sql`
@@ -209,26 +209,29 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     `);
 
   /**
-   * Has user with phone number with normalized match.
+   * Checks if a user exists in the database with a phone number that matches the provided
+   * number in either normalized format or with a leading '0'.
    *
    * @remarks
-   * This function is used to check if a user exists that has the same phone number as the one provided.
-   * It will use the normalized phone number to check for the existence of phone numbers in the database in both formats:
-   * - standard international format: 61412345678
-   * - international format with leading '0' before the local number: 610412345678
+   * This function normalizes the input phone number to account for variations in formatting.
+   * It checks for the existence of a user with the same phone number in two formats:
+   * - Standard international format (e.g., 61412345678)
+   * - International format with a leading '0' before the local number (e.g., 610412345678)
    *
-   * We will treat the two formats as the same phone number.
-   * @see {findUserByNormalizedPhone} for more context
+   * If the provided phone number is not a valid international format, it falls back to checking
+   * for an exact match using the `hasUserWithPhone` function.
+   *
+   * @param phone - The phone number to check for user existence.
+   * @param excludeUserId - (Optional) If provided, excludes the user with this ID from the search,
+   * allowing for updates without false positives.
    *
    * @example
-   * - DB: 610412345678
-   * - hasUserWithNormalizedPhone(61412345678)
-   * - return : true
+   * // Database contains: 610412345678
+   * hasUserWithNormalizedPhone(61412345678); // returns: true
    *
-   * @example
-   * - DB: 61412345678
-   * - hasUserWithNormalizedPhone(610412345678)
-   * - return : true
+   *  @example
+   * // Database contains: 61412345678
+   * hasUserWithNormalizedPhone(610412345678); // returns: true
    */
   const hasUserWithNormalizedPhone = async (phone: string, excludeUserId?: string) => {
     const phoneNumberParser = new PhoneNumberParser(phone);
