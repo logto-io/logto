@@ -121,15 +121,18 @@ class OidcConnector {
       })
     );
 
-    // Verify the id token and get the user id
-    const { sub: id } = await getIdTokenClaims(idToken, oidcConfig, nonce);
+    // Verify the id token and get the user claims
+    const idTokenClaims = await getIdTokenClaims(idToken, oidcConfig, nonce);
 
-    // Fetch user info from the userinfo endpoint
+    // If userinfo endpoint is not provided, use the id token claims as user info,
+    // otherwise, fetch the user info from the userinfo endpoint
     const { sub, name, picture, email, email_verified, phone, phone_verified, ...rest } =
-      await getUserInfo(accessToken, oidcConfig.userinfoEndpoint);
+      oidcConfig.userinfoEndpoint
+        ? await getUserInfo(accessToken, oidcConfig.userinfoEndpoint)
+        : idTokenClaims;
 
     return {
-      id,
+      id: sub,
       ...conditional(name && { name }),
       ...conditional(picture && { avatar: picture }),
       ...conditional(email && email_verified && { email }),

@@ -345,6 +345,12 @@ export class SamlApplication {
     accessToken: string;
   }): Promise<IdTokenProfileStandardClaims & Record<string, unknown>> => {
     const { userinfoEndpoint } = await this.fetchOidcConfig();
+
+    // We reuse the fetchOidcConfig function from SSO connector to fetch the OIDC config.
+    // userinfo endpoint is not required in the OIDC config.
+    // But it is mandatory in Logto OIDC flow. So we should always have a userinfo endpoint.
+    assertThat(userinfoEndpoint, new Error('Userinfo endpoint is not available'));
+
     const body = await getRawUserInfoResponse(accessToken, userinfoEndpoint);
     const result = idTokenProfileStandardClaimsGuard
       .catchall(z.unknown())
