@@ -32,7 +32,7 @@ It takes the pain out of OIDC and OAuth 2.1 and makes it easy to build secure, p
   <a href="https://logto.io/subscribe">newsletter</a>
 </p>
 
-![Logto features](./assets/logto-features.jpg)
+![Logto features](./assets/logto-features.png)
 
 ## Why Logto?
 
