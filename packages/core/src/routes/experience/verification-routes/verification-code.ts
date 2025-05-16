@@ -101,7 +101,7 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
         getTemplateTypeByEvent(interactionEvent)
       );
 
-      // Pre validate the email agaist email blocklist if the interaction event is register
+      // Pre validate the email against email blocklist if the interaction event is register
       if (
         interactionEvent === InteractionEvent.Register &&
         identifier.type === SignInIdentifier.Email
