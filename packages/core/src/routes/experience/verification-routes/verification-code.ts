@@ -101,6 +101,16 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
         getTemplateTypeByEvent(interactionEvent)
       );
 
+      // Pre validate the email against email blocklist if the interaction event is register
+      if (
+        interactionEvent === InteractionEvent.Register &&
+        identifier.type === SignInIdentifier.Email
+      ) {
+        await ctx.experienceInteraction.signInExperienceValidator.guardEmailBlocklist(
+          codeVerification
+        );
+      }
+
       const templateContext = await buildVerificationCodeTemplateContext(
         libraries.passcodes,
         ctx,

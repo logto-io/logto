@@ -56,6 +56,12 @@ const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) =
               identifier === SignInIdentifier.Email ? 'invalid_email' : 'invalid_phone'
             );
           },
+          'session.email_blocklist.email_not_allowed': (error) => {
+            setErrorMessage(error.message);
+          },
+          'session.email_blocklist.email_subaddressing_not_allowed': (error) => {
+            setErrorMessage(error.message);
+          },
         });
 
         return;
