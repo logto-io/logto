@@ -1,6 +1,6 @@
 {
   "name": "@logto/schemas",
-  "version": "1.27.0",
+  "version": "1.28.0",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
   "type": "module",
@@ -83,7 +83,7 @@
     "@logto/language-kit": "workspace:^1.2.0",
     "@logto/phrases": "workspace:^1.19.0",
     "@logto/phrases-experience": "workspace:^1.10.0",
-    "@logto/shared": "workspace:^3.2.0",
+    "@logto/shared": "workspace:^3.3.0",
     "@withtyped/server": "^0.14.0",
     "nanoid": "^5.0.9"
   },
