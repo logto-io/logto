@@ -14,10 +14,6 @@ import {
   successFullyCreateSocialVerification,
   successFullyVerifySocialAuthorization,
 } from '#src/helpers/experience/social-verification.js';
-import {
-  successfullySendVerificationCode,
-  successfullyVerifyVerificationCode,
-} from '#src/helpers/experience/verification-code.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { devFeatureTest, generateEmail } from '#src/utils.js';
 
@@ -57,33 +53,10 @@ devFeatureTest.describe(
         interactionEvent: InteractionEvent.Register,
       });
 
-      const { verificationId, code } = await successfullySendVerificationCode(client, {
-        identifier,
-        interactionEvent: InteractionEvent.Register,
-      });
-
-      await successfullyVerifyVerificationCode(client, {
-        identifier,
-        verificationId,
-        code,
-      });
-
-      // Should reject the registration directly
       await expectRejects(
-        client.identifyUser({
-          verificationId,
-        }),
-        {
-          code: 'session.email_blocklist.email_subaddressing_not_allowed',
-          status: 422,
-        }
-      );
-
-      // Should reject the profile creation
-      await expectRejects(
-        client.updateProfile({
-          type: SignInIdentifier.Email,
-          verificationId,
+        client.sendVerificationCode({
+          identifier,
+          interactionEvent: InteractionEvent.Register,
         }),
         {
           code: 'session.email_blocklist.email_subaddressing_not_allowed',
@@ -104,33 +77,10 @@ devFeatureTest.describe(
         interactionEvent: InteractionEvent.Register,
       });
 
-      const { verificationId, code } = await successfullySendVerificationCode(client, {
-        identifier,
-        interactionEvent: InteractionEvent.Register,
-      });
-
-      await successfullyVerifyVerificationCode(client, {
-        identifier,
-        verificationId,
-        code,
-      });
-
-      // Should reject the registration directly
       await expectRejects(
-        client.identifyUser({
-          verificationId,
-        }),
-        {
-          code: errorCode,
-          status: 422,
-        }
-      );
-
-      // Should reject the profile creation
-      await expectRejects(
-        client.updateProfile({
-          type: SignInIdentifier.Email,
-          verificationId,
+        client.sendVerificationCode({
+          identifier,
+          interactionEvent: InteractionEvent.Register,
         }),
         {
           code: errorCode,
