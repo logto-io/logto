@@ -71,7 +71,7 @@ function CaptchaDetails() {
 
   return (
     <DetailsPage
-      backLink="/security"
+      backLink="/security/captcha"
       backLinkTitle="security.captcha_details.back_to_security"
       isLoading={isLoading}
       error={error}
