@@ -145,11 +145,6 @@ export const validateEmailAgainstBlocklistPolicy = async (
 
   assertThat(domain, new RequestError('session.email_blocklist.invalid_email'));
 
-  // Guard disposable email domain if enabled
-  if (blockDisposableAddresses) {
-    await validateDisposableEmailDomain(email);
-  }
-
   // Guard email subaddressing if enabled
   if (blockSubaddressing) {
     const subaddressingRegex = new RegExp(`^.*\\+.*@${domain}$`);
@@ -181,6 +176,11 @@ export const validateEmailAgainstBlocklistPolicy = async (
         email,
       })
     );
+  }
+
+  // Guard disposable email domain if enabled
+  if (blockDisposableAddresses) {
+    await validateDisposableEmailDomain(email);
   }
 };
 
