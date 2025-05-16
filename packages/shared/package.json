@@ -62,7 +62,7 @@
     "@silverhand/essentials": "^2.9.1",
     "chalk": "^5.3.0",
     "find-up": "^7.0.0",
-    "libphonenumber-js": "^1.9.49",
+    "libphonenumber-js": "^1.12.6",
     "nanoid": "^5.0.9"
   }
 }

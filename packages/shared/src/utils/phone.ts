@@ -48,8 +48,7 @@ export const parsePhoneNumber = (phone: string, throwError?: true) => {
  */
 export const formatToInternationalPhoneNumber = (phone: string) => {
   try {
-    const phoneNumber = phone.startsWith('+') ? phone : `+${phone}`;
-    return parsePhoneNumberWithError(phoneNumber).formatInternational();
+    return parsePhoneNumberWithError(parseE164Number(phone)).formatInternational();
   } catch {
     console.error(`Invalid phone number: ${phone}`);
     return phone;

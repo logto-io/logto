@@ -6,7 +6,10 @@ import {
   type User,
   type UserMfaVerificationResponse,
 } from '@logto/schemas';
+import { PhoneNumberParser } from '@logto/shared/universal';
 import { pick } from '@silverhand/essentials';
+
+import RequestError from '#src/errors/RequestError/index.js';
 
 export const transpileUserMfaVerifications = (
   mfaVerifications: User['mfaVerifications']
@@ -61,4 +64,21 @@ export const transpileUserProfileResponse = (
     hasPassword: Boolean(user.passwordEncrypted),
     ...(ssoIdentities && { ssoIdentities }),
   };
+};
+
+// Not used yet, may be used in the future, keep as a individual method.
+const getValidPhoneNumber = (phone: string): string => {
+  if (!phone) {
+    return phone;
+  }
+
+  try {
+    return PhoneNumberParser.parse(phone).number;
+  } catch (error) {
+    throw new RequestError({ code: 'user.invalid_phone', status: 422 }, error);
+  }
+};
+
+export const validatePhoneNumber = (phone: string): void => {
+  getValidPhoneNumber(phone);
 };
