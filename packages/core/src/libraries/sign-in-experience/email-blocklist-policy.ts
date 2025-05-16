@@ -45,7 +45,8 @@ export const parseEmailBlocklistPolicy = (
   // TODO: @simeng remove this validation when the feature is ready
   assertThat(
     EnvSet.values.isDevFeaturesEnabled,
-    new RequestError('request.invalid_input', {
+    new RequestError({
+      code: 'request.invalid_input',
       details: 'Email block list policy is not supported in this environment',
     })
   );
@@ -56,8 +57,9 @@ export const parseEmailBlocklistPolicy = (
   if (rest.blockDisposableAddresses) {
     assertThat(
       EnvSet.values.isCloud,
-      new RequestError('request.invalid_input', {
-        details: 'blockDisposableAddresses is not supported in this environment',
+      new RequestError({
+        code: 'request.invalid_input',
+        details: 'Disposable email domain validation is not supported in this environment',
       })
     );
   }
@@ -144,7 +146,7 @@ export const validateEmailAgainstBlocklistPolicy = async (
   assertThat(domain, new RequestError('session.email_blocklist.invalid_email'));
 
   // Guard disposable email domain if enabled
-  if (EnvSet.values.isCloud && blockDisposableAddresses) {
+  if (blockDisposableAddresses) {
     await validateDisposableEmailDomain(email);
   }
 
