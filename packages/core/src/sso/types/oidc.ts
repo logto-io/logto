@@ -36,7 +36,7 @@ export type BasicOidcConnectorConfig = z.infer<typeof basicOidcConnectorConfigGu
 export const oidcConfigResponseGuard = z.object({
   authorization_endpoint: z.string(),
   token_endpoint: z.string(),
-  userinfo_endpoint: z.string(),
+  userinfo_endpoint: z.string().optional(),
   jwks_uri: z.string(),
   issuer: z.string(),
 });
