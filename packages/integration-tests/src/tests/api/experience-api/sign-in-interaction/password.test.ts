@@ -18,7 +18,7 @@ import {
   enableAllVerificationCodeSignInMethods,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest, generateEmail, generatePassword } from '#src/utils.js';
+import { generateEmail, generatePassword } from '#src/utils.js';
 
 const identifiersTypeToUserProfile = Object.freeze({
   username: 'username',
@@ -104,7 +104,7 @@ describe('sign-in with password verification happy path', () => {
     await deleteUser(user.id);
   });
 
-  devFeatureTest.it('should throw 422 if the fulfilled email is in the blocklist', async () => {
+  it('should throw 422 if the fulfilled email is in the blocklist', async () => {
     const blockEmail = generateEmail();
     await updateSignInExperience({
       emailBlocklistPolicy: {

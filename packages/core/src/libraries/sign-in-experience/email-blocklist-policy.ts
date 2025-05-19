@@ -42,15 +42,6 @@ const parseCustomBlocklist = (customBlocklist: string[]) => {
 export const parseEmailBlocklistPolicy = (
   emailBlocklistPolicy: EmailBlocklistPolicy
 ): EmailBlocklistPolicy => {
-  // TODO: @simeng remove this validation when the feature is ready
-  assertThat(
-    EnvSet.values.isDevFeaturesEnabled,
-    new RequestError({
-      code: 'request.invalid_input',
-      details: 'Email block list policy is not supported in this environment',
-    })
-  );
-
   const { customBlocklist, ...rest } = emailBlocklistPolicy;
 
   // BlockDisposableAddresses is not supported for OSS.

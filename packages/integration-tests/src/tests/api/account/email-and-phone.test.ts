@@ -25,12 +25,7 @@ import {
   signInAndGetUserApi,
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
-import {
-  devFeatureTest,
-  generateEmail,
-  generatePhone,
-  generateNationalPhoneNumber,
-} from '#src/utils.js';
+import { generateEmail, generatePhone, generateNationalPhoneNumber } from '#src/utils.js';
 
 describe('account (email and phone)', () => {
   beforeAll(async () => {
@@ -146,7 +141,7 @@ describe('account (email and phone)', () => {
       await deleteDefaultTenantUser(user.id);
     });
 
-    devFeatureTest.it('should reject the email if the email is in the blocklist', async () => {
+    it('should reject the email if the email is in the blocklist', async () => {
       const email = generateEmail();
       await updateSignInExperience({
         emailBlocklistPolicy: {

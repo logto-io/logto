@@ -8,7 +8,6 @@ import {
   VerificationType,
 } from '@logto/schemas';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { validateEmailAgainstBlocklistPolicy } from '#src/libraries/sign-in-experience/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -281,11 +280,6 @@ export class SignInExperienceValidator {
    * - guard custom email address/domain if provided
    */
   public async guardEmailBlocklist(verificationRecord: VerificationRecord) {
-    // TODO: Remove this once the dev feature is ready
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
-    }
-
     const email = getEmailIdentifierFromVerificationRecord(verificationRecord);
     if (!email) {
       return;
