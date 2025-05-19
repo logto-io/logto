@@ -38,6 +38,7 @@ import webOutline from './web-outline/index';
 import webPassport from './web-passport/index';
 import webPhp from './web-php/index';
 import webPython from './web-python/index';
+import webRemix from './web-remix';
 import webRuby from './web-ruby/index';
 import webSveltekit from './web-sveltekit/index';
 import webWordpress from './web-wordpress/index';
@@ -107,6 +108,14 @@ export const guides: Readonly<Guide[]> = Object.freeze([
     DarkLogo: undefined,
     Component: safeLazy(async () => import('./web-sveltekit/README.mdx')),
     metadata: webSveltekit,
+  },
+  {
+    order: 1.2,
+    id: 'web-remix',
+    Logo: safeLazy(async () => import('./web-remix/logo.svg?react')),
+    DarkLogo: safeLazy(async () => import('./web-remix/logo-dark.svg?react')),
+    Component: safeLazy(async () => import('./web-remix/README.mdx')),
+    metadata: webRemix,
   },
   {
     order: 1.3,
