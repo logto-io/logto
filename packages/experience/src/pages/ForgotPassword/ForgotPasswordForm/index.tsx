@@ -59,6 +59,10 @@ const ForgotPasswordForm = ({ className, autoFocus, defaultValue = '', enabledTy
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
+      if (isSubmitting) {
+        return;
+      }
+
       clearErrorMessage();
 
       void handleSubmit(async ({ identifier: { type, value } }) => {
@@ -72,7 +76,7 @@ const ForgotPasswordForm = ({ className, autoFocus, defaultValue = '', enabledTy
         await onSubmit({ identifier: type, value });
       })(event);
     },
-    [clearErrorMessage, handleSubmit, onSubmit, setForgotPasswordIdentifierInputValue]
+    [clearErrorMessage, handleSubmit, isSubmitting, onSubmit, setForgotPasswordIdentifierInputValue]
   );
 
   return (
