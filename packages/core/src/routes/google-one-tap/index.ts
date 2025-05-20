@@ -1,5 +1,7 @@
 import { GoogleConnector } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
+import { ConsoleLog } from '@logto/shared';
+import chalk from 'chalk';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -7,6 +9,8 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 
 import koaGuard from '../../middleware/koa-guard.js';
 import type { AnonymousRouter } from '../types.js';
+
+const consoleLog = new ConsoleLog(chalk.magenta('google-one-tap'));
 
 export default function googleOneTapRoutes<T extends AnonymousRouter>(
   router: T,
@@ -34,10 +38,27 @@ export default function googleOneTapRoutes<T extends AnonymousRouter>(
     async (ctx, next) => {
       // Check CORS origin
       const origin = ctx.get('origin');
-      const { isProduction } = EnvSet.values;
+      consoleLog.info(`origin: ${origin}`);
 
-      // Allow any port of localhost for local development
-      if (origin.includes('localhost')) {
+      const { isProduction, isIntegrationTest } = EnvSet.values;
+      consoleLog.info(`isProduction: ${isProduction}`);
+      consoleLog.info(`isIntegrationTest: ${isIntegrationTest}`);
+
+      // List of allowed local development origins
+      const localDevelopmentOrigins = [
+        'localhost', // Localhost with any port
+        '127.0.0.1', // IPv4 loopback
+        '0.0.0.0', // All interfaces
+        '[::1]', // IPv6 loopback
+        '.local', // MDNS domains (especially for macOS)
+        'host.docker.internal', // Docker host from container
+      ];
+
+      // Allow local development origins
+      if (
+        (!isProduction || isIntegrationTest) &&
+        localDevelopmentOrigins.some((item) => origin.includes(item))
+      ) {
         ctx.set('Access-Control-Allow-Origin', origin);
       }
       // In production, only allow *.logto.io or *.logto.dev domains to access

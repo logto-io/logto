@@ -12,7 +12,7 @@
     "/api/google-one-tap/config": {
       "get": {
         "summary": "Get Google One Tap configuration",
-        "description": "Get the Google One Tap configuration for client-side integration. This endpoint is only available when dev features are enabled.",
+        "description": "Get the Google One Tap configuration for client-side integration.",
         "responses": {
           "200": {
             "description": "The Google One Tap configuration was retrieved successfully.",
