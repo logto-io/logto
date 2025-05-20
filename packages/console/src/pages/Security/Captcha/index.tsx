@@ -105,7 +105,10 @@ function Captcha() {
                   {t('security.bot_protection.captcha.placeholder')}
                 </div>
                 {data && !isFreeTenant ? (
-                  <CaptchaCard captchaProvider={data} />
+                  <>
+                    <CaptchaCard captchaProvider={data} />
+                    <EnableCaptcha />
+                  </>
                 ) : (
                   <Button
                     title="security.bot_protection.captcha.add"
@@ -116,7 +119,6 @@ function Captcha() {
                     }}
                   />
                 )}
-                <EnableCaptcha disabled={isFreeTenant || !data} />
               </FormField>
             </FormCard>
           </DetailsForm>

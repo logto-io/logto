@@ -10,12 +10,7 @@ import { type RequestError } from '@/hooks/use-api';
 
 import styles from './index.module.scss';
 
-type Props = {
-  // eslint-disable-next-line react/boolean-prop-naming
-  readonly disabled?: boolean;
-};
-
-function EnableCaptcha({ disabled }: Props) {
+function EnableCaptcha() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { register, reset } = useFormContext<CaptchaPolicy>();
   const { data, isLoading } = useSWR<SignInExperience, RequestError>('api/sign-in-exp');
@@ -37,7 +32,6 @@ function EnableCaptcha({ disabled }: Props) {
           <Switch
             label={t('security.bot_protection.enable_captcha_description')}
             {...register('enabled')}
-            disabled={disabled}
           />
         </div>
       </FormField>
