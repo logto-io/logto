@@ -1,29 +1,20 @@
-import { type CaptchaPolicy, type SignInExperience } from '@logto/schemas';
-import { useEffect } from 'react';
+import { type CaptchaPolicy } from '@logto/schemas';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import useSWR from 'swr';
 
 import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
-import { type RequestError } from '@/hooks/use-api';
 
 import styles from './index.module.scss';
 
-function EnableCaptcha() {
+type Props = {
+  // eslint-disable-next-line react/boolean-prop-naming
+  readonly disabled?: boolean;
+};
+
+function EnableCaptcha({ disabled }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { register, reset } = useFormContext<CaptchaPolicy>();
-  const { data, isLoading } = useSWR<SignInExperience, RequestError>('api/sign-in-exp');
-
-  useEffect(() => {
-    if (data) {
-      reset(data.captchaPolicy);
-    }
-  }, [data, reset]);
-
-  if (isLoading) {
-    return null;
-  }
+  const { register } = useFormContext<CaptchaPolicy>();
 
   return (
     <div className={styles.container}>
@@ -32,6 +23,7 @@ function EnableCaptcha() {
           <Switch
             label={t('security.bot_protection.enable_captcha_description')}
             {...register('enabled')}
+            disabled={disabled}
           />
         </div>
       </FormField>
