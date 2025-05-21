@@ -24,9 +24,9 @@ export const transpileUserMfaVerifications = (
     }
 
     if (type === MfaFactor.WebAuthn) {
-      const { agent } = verification;
+      const { agent, name } = verification;
 
-      return { id, createdAt, type, agent };
+      return { id, createdAt, type, agent, name };
     }
 
     return { id, createdAt, type };
