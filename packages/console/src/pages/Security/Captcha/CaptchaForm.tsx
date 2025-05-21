@@ -3,6 +3,7 @@ import { useContext, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { useSWRConfig } from 'swr';
 
 import Plus from '@/assets/icons/plus.svg?react';
 import DetailsForm from '@/components/DetailsForm';
@@ -45,6 +46,8 @@ function CaptchaForm({ captchaProvider, formData }: Props) {
   } = formMethods;
   const api = useApi();
 
+  const { mutate: mutateGlobal } = useSWRConfig();
+
   const onSubmit = trySubmitSafe(async (data: CaptchaPolicy) => {
     const { captchaPolicy } = await api
       .patch('api/sign-in-exp', {
@@ -53,6 +56,9 @@ function CaptchaForm({ captchaProvider, formData }: Props) {
       .json<SignInExperience>();
     reset(captchaPolicy);
     mutateSubscriptionQuotaAndUsages();
+
+    // Global mutate the SIE data
+    await mutateGlobal('api/sign-in-exp');
     toast.success(t('general.saved'));
   });
 
