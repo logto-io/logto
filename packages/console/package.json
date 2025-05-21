@@ -117,6 +117,7 @@
     "stylelint": "^15.0.0",
     "swr": "^2.2.0",
     "typescript": "^5.5.3",
+    "ua-parser-js": "^2.0.3",
     "vite": "^6.2.7",
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-svgr": "^4.3.0",

@@ -22,13 +22,13 @@ type Props = MfaFactorNameProps & {
   readonly tooltip?: ReactNode;
 };
 
-function MfaFactorTitle({ type, tooltip }: Props) {
+function MfaFactorTitle({ type, tooltip, ...props }: Props) {
   const Icon = factorIcon[type];
 
   return (
     <div className={styles.factorTitle}>
       <Icon className={styles.factorIcon} />
-      <MfaFactorName type={type} />
+      <MfaFactorName type={type} {...props} />
       {tooltip && (
         <ToggleTip anchorClassName={styles.factorTip} content={tooltip}>
           <IconButton size="small">

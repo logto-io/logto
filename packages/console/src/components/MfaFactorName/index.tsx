@@ -1,7 +1,11 @@
 import { type AdminConsoleKey } from '@logto/phrases';
 import { MfaFactor } from '@logto/schemas';
+import { useMemo } from 'react';
+import { UAParser as parseUa } from 'ua-parser-js';
 
 import DynamicT from '@/ds-components/DynamicT';
+
+import styles from './index.module.scss';
 
 const factorNameLabel: Record<MfaFactor, AdminConsoleKey> = {
   [MfaFactor.TOTP]: 'mfa.totp',
@@ -11,9 +15,34 @@ const factorNameLabel: Record<MfaFactor, AdminConsoleKey> = {
 
 export type Props = {
   readonly type: MfaFactor;
+  readonly agent?: string;
+  readonly name?: string;
 };
 
-function MfaFactorName({ type }: Props) {
+function MfaFactorName({ type, agent, name }: Props) {
+  const passKeyName = useMemo(() => {
+    if (type !== MfaFactor.WebAuthn) {
+      return null;
+    }
+
+    if (name) {
+      return name;
+    }
+
+    const { browser, os } = parseUa(agent);
+
+    return `${browser.name} on ${os.name}`;
+  }, [type, name, agent]);
+
+  if (passKeyName) {
+    return (
+      <div>
+        <DynamicT forKey={factorNameLabel[type]} />
+        <div className={styles.description}>{passKeyName}</div>
+      </div>
+    );
+  }
+
   return <DynamicT forKey={factorNameLabel[type]} />;
 }
 
