@@ -33,6 +33,7 @@ import dashboardRoutes from './dashboard.js';
 import domainRoutes from './domain.js';
 import emailTemplateRoutes from './email-template/index.js';
 import experienceApiRoutes from './experience/index.js';
+import googleOneTapRoutes from './google-one-tap/index.js';
 import hookRoutes from './hook.js';
 import interactionRoutes from './interaction/index.js';
 import logRoutes from './log.js';
@@ -124,6 +125,7 @@ const createRouters = (tenant: TenantContext) => {
   statusRoutes(anonymousRouter, tenant);
   authnRoutes(anonymousRouter, tenant);
   samlApplicationAnonymousRoutes(anonymousRouter, tenant);
+  googleOneTapRoutes(anonymousRouter, tenant);
 
   wellKnownOpenApiRoutes(anonymousRouter, {
     experienceRouters: [experienceRouter, interactionRouter],
