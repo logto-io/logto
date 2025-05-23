@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.28.0
+
+### Patch Changes
+
+- Updated dependencies [35bbc4399]
+  - @logto/shared@3.3.0
+  - @logto/schemas@1.28.0
+
 ## 1.27.0
 
 ### Minor Changes

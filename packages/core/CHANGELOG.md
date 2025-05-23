@@ -1,5 +1,63 @@
 # Change Log
 
+## 1.28.0
+
+### Minor Changes
+
+- 35bbc4399: add phone number validation and parsing to ensure the correct format when updating an existing user’s primary phone number or creating a new user with a phone number
+- 613305ec8: refactor: make the `userinfo_endpoint` field optional in the OIDC connector configuration to support providers like Azure AD B2C that do not expose a userinfo endpoint
+
+  Azure AD B2C SSO applications do not provide a userinfo_endpoint in their OIDC metadata. This has been a blocker for users attempting to integrate Azure AD B2C SSO with Logto, as our current implementation strictly follows the OIDC spec and relies on the userinfo endpoint to retrieve user claims after authentication.
+
+  - Updated the OIDC config response schema to make the userinfo_endpoint optional for OIDC based SSO providers.
+  - If the `userinfo_endpoint` is missing from the provider's OIDC metadata, the system will now extract user data directly from the `id_token` claims.
+  - If the `userinfo_endpoint` is present, the system will continue to retrieve user claims by calling the endpoint (existing behavior).
+
+  `userinfo_endpoint` is a standard OIDC field that specifies the endpoint for retrieving user information. For most of the OIDC providers, this update will not affect this existing implementation. However, for Azure AD B2C, this change allows users to successfully authenticate and retrieve user claims without the need for a userinfo endpoint.
+
+- e8df19b7e: feat: introduce email blocklist policy
+
+  We have added a new `emailBlocklistPolicy` in the `signInExperience` settings. This policy allows you to customize the email restriction rules for all users. Once this policy is set, users will be restricted from signing up or linking their accounts with any email addresses that are against the specified blocklist.
+  This feature is particularly useful for organizations that want to prevent users from signing up with personal email addresses or any other specific domains.
+
+  Available settings include:
+
+  - `customBlocklist`: A custom blocklist of email addresses or domains that you want to restrict.
+  - `blockSubaddressing`: Restrict email subaddressing (e.g., 'user+tag@example.com').
+
+- 494148355: refactor: enhanced user lookup by phone with phone number normalization
+
+  In some countries, local phone numbers are often entered with a leading '0'. However, in the context of the international format this leading '0' should be stripped. E.g., +61 (0)2 1234 5678 should be normalized to +61 2 1234 5678.
+
+  In the previous implementation, Logto did not normalize the user's phone number during the user sign-up process. Both 61021345678 and 61212345678 were considered as valid phone numbers, and we do not normalize them before storing them in the database. This could lead to confusion when users try to sign-in with their phone numbers, as they may not remember the exact format they used during sign-up. Users may also end up with different accounts for the same phone number, depending on how they entered it during sign-up.
+
+  To address this issue, especially for legacy users, we have added a new enhenced user lookup by phone with either format (with or without leading '0') to the user sign-in process. This means that users can now sign-in with either format of their phone number, and Logto will try to match it with the one stored in the database, even if they might have different formats. This will help to reduce confusion and improve the user experience when logging in with phone numbers.
+
+  For example:
+
+  - If a user signs up with the phone number +61 2 1234 5678, they can now sign-in with either +61 2 1234 5678 or +61 02 1234 5678.
+  - The same applies to the phone number +61 02 1234 5678, which can be used to sign-in with either +61 2 1234 5678 or +61 02 1234 5678.
+
+  For users who might have created two different accounts with the same phone number but different formats. The lookup process will always return the one with an exact match. This means that if a user has two accounts with the same phone number but different formats, they will still be able to sign-in with either format, but they will only be able to access the account that matches the format they used during sign-up.
+
+  For example:
+
+  - If a user has two accounts with the phone numbers +61 2 1234 5678 and +61 02 1234 5678. They will need to sign-in to each account using the exact format they used during sign-up.
+
+  related github issue [#7371](https://github.com/logto-io/logto/issues/7371).
+
+### Patch Changes
+
+- Updated dependencies [35bbc4399]
+- Updated dependencies [80112708d]
+- Updated dependencies [e8df19b7e]
+- Updated dependencies [c1dfbfdd2]
+  - @logto/experience@1.14.0
+  - @logto/console@1.25.0
+  - @logto/shared@3.3.0
+  - @logto/schemas@1.28.0
+  - @logto/cli@1.28.0
+
 ## 1.27.0
 
 ### Minor Changes

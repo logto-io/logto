@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-qq",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "QQ web connector implementation.",
   "author": "Yen Harvey. <2117555041@qq.com>",
   "dependencies": {
