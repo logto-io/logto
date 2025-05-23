@@ -18,7 +18,7 @@
 
 # Logto
 
-**Logto is the modern, open-source identity infrastructure for SaaS and AI apps.**
+**Logto is the modern, open-source auth infrastructure for SaaS and AI apps.**
 
 It takes the pain out of OIDC and OAuth 2.1 and makes it easy to build secure, production-ready auth with multi-tenancy, enterprise SSO, and RBAC.
 
