@@ -129,5 +129,8 @@
   "stylelint": {
     "extends": "@silverhand/eslint-config-react/.stylelintrc"
   },
-  "prettier": "@silverhand/eslint-config/.prettierrc"
+  "prettier": "@silverhand/eslint-config/.prettierrc",
+  "dependencies": {
+    "ua-parser-js": "^2.0.3"
+  }
 }

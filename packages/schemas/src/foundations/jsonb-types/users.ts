@@ -96,6 +96,7 @@ export const mfaVerificationWebAuthn = z.object({
   transports: webAuthnTransportGuard.array().optional(),
   counter: z.number(),
   agent: z.string(),
+  name: z.string().optional(),
 });
 
 export type MfaVerificationWebAuthn = z.infer<typeof mfaVerificationWebAuthn>;

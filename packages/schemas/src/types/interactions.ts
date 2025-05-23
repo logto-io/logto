@@ -428,6 +428,7 @@ export const bindWebAuthnGuard = z.object({
   transports: webAuthnTransportGuard.array(),
   counter: z.number(),
   agent: z.string(),
+  name: z.string().optional(),
 });
 
 export type BindWebAuthn = z.infer<typeof bindWebAuthnGuard>;
