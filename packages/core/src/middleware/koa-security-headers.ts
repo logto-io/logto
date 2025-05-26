@@ -154,6 +154,13 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
         ],
         connectSrc: ["'self'", logtoOrigin, ...adminOrigins, ...coreOrigins, ...developmentOrigins],
         frameSrc: ["'self'", ...adminOrigins, ...coreOrigins],
+        frameAncestors: [
+          "'self'",
+          ...adminOrigins,
+          ...conditionalArray(isProduction && logtoOrigin),
+          ...developmentOrigins,
+          ...conditionalArray(!isProduction && 'http://localhost:*'), // Benefit local dev.
+        ],
       },
     },
   };
@@ -168,6 +175,14 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
       requestPath.startsWith(`/${AdminApps.Welcome}`)
     ) {
       await helmetPromise(consoleSecurityHeaderSettings, req, res);
+
+      // Special handling for AuthStatusChecker to allow iframe storage access
+      if (requestPath.includes('/auth-status-checker')) {
+        // Add Permissions-Policy header to allow storage access in iframe
+        res.setHeader('Permissions-Policy', 'storage-access=*');
+        // Add Document-Policy header for better iframe storage support
+        res.setHeader('Document-Policy', 'js-profiling=false');
+      }
 
       return next();
     }
