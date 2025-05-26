@@ -9,6 +9,7 @@ import NotFound from '@/pages/NotFound';
 import { apiResources } from './routes/api-resources';
 import { applications } from './routes/applications';
 import { auditLogs } from './routes/audit-logs';
+import { authStatusChecker } from './routes/auth-status-checker';
 import { connectors } from './routes/connectors';
 import { customizeJwt } from './routes/customize-jwt';
 import { enterpriseSso } from './routes/enterprise-sso';
@@ -35,6 +36,7 @@ export const useConsoleRoutes = () => {
         { path: '*', element: <NotFound /> },
         { path: 'get-started', element: <GetStarted /> },
         { path: 'dashboard', element: <Dashboard /> },
+        authStatusChecker,
         applications,
         apiResources,
         signInExperience,
