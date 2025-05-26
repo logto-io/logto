@@ -1,5 +1,22 @@
 # Change Log
 
+## 1.25.0
+
+### Minor Changes
+
+- 35bbc4399: add phone number validation and parsing to ensure the correct format when updating an existing user’s primary phone number or creating a new user with a phone number
+- e8df19b7e: feat: introduce email blocklist settings page
+
+  Add a new email blocklist settings page to the Logto console under the Security section. This page allows administrators to manage the email blocklist policy for end users. Use this policy to restrict users from signing up or linking their accounts with any email addresses that are against the specified blocklist.
+
+### Patch Changes
+
+- 80112708d: always show enable CAPTCHA toggle
+
+  Even if there is no CAPTCHA provider, the toggle will be shown but disabled.
+
+  Also the back link of the captcha details page is changed to `/security/captcha`.
+
 ## 1.24.0
 
 ### Minor Changes
