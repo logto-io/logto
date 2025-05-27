@@ -113,6 +113,14 @@ export const enableUserControlledMfaWithTotp = async () =>
     },
   });
 
+export const enableUserControlledMfaWithTotpAndWebAuthn = async () =>
+  updateSignInExperience({
+    mfa: {
+      factors: [MfaFactor.TOTP, MfaFactor.WebAuthn],
+      policy: MfaPolicy.NoPrompt,
+    },
+  });
+
 export const enableUserControlledMfaWithTotpOnlyAtSignIn = async () =>
   updateSignInExperience({
     mfa: {

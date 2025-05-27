@@ -208,6 +208,62 @@
           }
         }
       }
+    },
+    "/api/verifications/web-authn/registration": {
+      "post": {
+        "tags": ["Dev feature"],
+        "operationId": "GenerateWebAuthnRegistrationOptions",
+        "summary": "Generate WebAuthn registration options",
+        "description": "Generate WebAuthn registration options for the user to register a new WebAuthn device.",
+        "responses": {
+          "200": {
+            "description": "Successfully generated the WebAuthn registration options.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "registrationOptions": {
+                      "type": "object"
+                    },
+                    "verificationRecordId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/verifications/web-authn/registration/verify": {
+      "post": {
+        "tags": ["Dev feature"],
+        "operationId": "VerifyWebAuthnRegistration",
+        "summary": "Verify WebAuthn registration",
+        "description": "Verify the WebAuthn registration by the user's response.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "verificationId": {
+                    "description": "The ID of the verification record."
+                  },
+                  "payload": {
+                    "description": "The payload of the WebAuthn device."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The WebAuthn registration has been successfully verified."
+          }
+        }
+      }
     }
   }
 }

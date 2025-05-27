@@ -22,6 +22,7 @@ export const accountCenterFieldControlGuard = z
     username: z.nativeEnum(AccountCenterControlValue),
     social: z.nativeEnum(AccountCenterControlValue),
     customData: z.nativeEnum(AccountCenterControlValue),
+    mfa: z.nativeEnum(AccountCenterControlValue),
   })
   .partial();
 
