@@ -43,6 +43,7 @@ export const userMfaVerificationResponseGuard = z
     createdAt: z.string(),
     type: z.nativeEnum(MfaFactor),
     agent: z.string().optional(),
+    name: z.string().optional(),
     remainCodes: z.number().optional(),
   })
   .array();
