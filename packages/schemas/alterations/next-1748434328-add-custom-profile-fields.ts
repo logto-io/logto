@@ -1,0 +1,54 @@
+import { sql } from '@silverhand/slonik';
+
+import type { AlterationScript } from '../lib/types/alteration.js';
+
+import { applyTableRls, dropTableRls } from './utils/1704934999-tables.js';
+
+const alteration: AlterationScript = {
+  up: async (pool) => {
+    await pool.query(sql`
+      create type custom_profile_field_type
+        as enum ('Text', 'Number', 'Date', 'Checkbox', 'Select', 'Url', 'Regex', 'Address', 'Fullname');
+
+      create table custom_profile_fields (
+        tenant_id varchar(21) not null
+          references tenants (id) on update cascade on delete cascade,
+        id varchar(21) not null,
+        name varchar(128) not null default '',
+        type custom_profile_field_type not null,
+        label varchar(128) not null default '',
+        description varchar(256),
+        required boolean not null default false,
+        placeholder varchar(256),
+        min_length int4,
+        max_length int4,
+        min_value int4,
+        max_value int4,
+        format varchar(128),
+        options jsonb /* @use FieldOptions */,
+        parts jsonb /* @use FieldParts */,
+        created_at timestamptz not null default(now()),
+        primary key (id),
+        constraint custom_profile_fields__name
+          unique (tenant_id, name)
+      );
+
+      alter table sign_in_experiences
+        add column collect_user_profile_fields jsonb /* @use CollectUserProfileFields */ not null default '[]'::jsonb;
+    `);
+
+    await applyTableRls(pool, 'custom_profile_fields');
+  },
+  down: async (pool) => {
+    await dropTableRls(pool, 'custom_profile_fields');
+    await pool.query(sql`
+      drop table if exists custom_profile_fields;
+      drop type if exists custom_profile_field_type;
+
+      alter table sign_in_experiences
+        drop column collect_user_profile_fields;
+    `);
+  },
+};
+
+export default alteration;
