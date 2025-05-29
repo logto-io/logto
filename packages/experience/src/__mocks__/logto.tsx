@@ -120,6 +120,7 @@ export const mockSignInExperience: SignInExperience = {
   captchaPolicy: {},
   sentinelPolicy: {},
   emailBlocklistPolicy: {},
+  collectUserProfileFields: [],
 };
 
 export const mockSignInExperienceSettings: SignInExperienceResponse = {
@@ -161,6 +162,7 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
   captchaPolicy: {},
   sentinelPolicy: {},
   emailBlocklistPolicy: {},
+  collectUserProfileFields: [],
 };
 
 const usernameSettings = {

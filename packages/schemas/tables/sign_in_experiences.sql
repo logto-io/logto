@@ -29,5 +29,6 @@ create table sign_in_experiences (
   captcha_policy jsonb /* @use CaptchaPolicy */ not null default '{}'::jsonb,
   sentinel_policy jsonb /* @use SentinelPolicy */ not null default '{}'::jsonb,
   email_blocklist_policy jsonb /* @use EmailBlocklistPolicy */ not null default '{}'::jsonb,
+  collect_user_profile_fields jsonb /* @use CollectUserProfileFields */ not null default '[]'::jsonb,
   primary key (tenant_id, id)
 );
