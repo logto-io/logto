@@ -286,10 +286,39 @@
                   },
                   "type": {
                     "description": "The type of the MFA verification."
+                  },
+                  "name": {
+                    "description": "The name of the MFA verification, if not provided, the name will be generated from user agent."
                   }
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/my-account/mfa-verifications/{verificationId}/name": {
+      "patch": {
+        "tags": ["Dev feature"],
+        "operationId": "UpdateMfaVerificationName",
+        "summary": "Update a MFA verification name",
+        "description": "Update a MFA verification name, a logto-verification-id in header is required for checking sensitive permissions. Only WebAuthn is supported for now.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "The name of the MFA verification."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The MFA verification name was updated successfully."
           }
         }
       }
