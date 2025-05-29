@@ -29,6 +29,7 @@ type RouteDictionary = Record<`${OpenAPIV3.HttpMethods} ${string}`, string>;
 
 const devFeatureCustomRoutes: RouteDictionary = Object.freeze({
   'get /google-one-tap/config': 'GetGoogleOneTapConfig',
+  'post /google-one-tap/verify': 'VerifyGoogleOneTapToken',
 });
 
 export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
