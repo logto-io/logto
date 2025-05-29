@@ -21,6 +21,8 @@ import { type SubscriptionLibrary } from '#src/libraries/subscription.js';
 import { createUserLibrary } from '#src/libraries/user.js';
 import { createVerificationStatusLibrary } from '#src/libraries/verification-status.js';
 
+import { createCustomProfileFieldsLibrary } from '../libraries/custom-profile-fields.js';
+
 import type Queries from './Queries.js';
 
 export default class Libraries {
@@ -68,6 +70,8 @@ export default class Libraries {
     this.queries,
     this.connectors
   );
+
+  customProfileFields = createCustomProfileFieldsLibrary(this.queries);
 
   constructor(
     public readonly tenantId: string,
