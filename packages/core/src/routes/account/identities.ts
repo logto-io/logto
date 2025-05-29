@@ -40,7 +40,7 @@ export default function identitiesRoutes<T extends UserRouter>(
       const { fields } = ctx.accountCenter;
       assertThat(
         fields.social === AccountCenterControlValue.Edit,
-        'account_center.filed_not_editable'
+        'account_center.field_not_editable'
       );
 
       assertThat(scopes.has(UserScope.Identities), 'auth.unauthorized');
@@ -98,7 +98,7 @@ export default function identitiesRoutes<T extends UserRouter>(
       const { fields } = ctx.accountCenter;
       assertThat(
         fields.social === AccountCenterControlValue.Edit,
-        'account_center.filed_not_editable'
+        'account_center.field_not_editable'
       );
 
       assertThat(scopes.has(UserScope.Identities), 'auth.unauthorized');

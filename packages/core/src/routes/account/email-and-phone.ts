@@ -42,7 +42,7 @@ export default function emailAndPhoneRoutes<T extends UserRouter>(...args: Route
       const { fields } = ctx.accountCenter;
       assertThat(
         fields.email === AccountCenterControlValue.Edit,
-        'account_center.filed_not_editable'
+        'account_center.field_not_editable'
       );
 
       assertThat(scopes.has(UserScope.Email), 'auth.unauthorized');
@@ -87,7 +87,7 @@ export default function emailAndPhoneRoutes<T extends UserRouter>(...args: Route
       const { fields } = ctx.accountCenter;
       assertThat(
         fields.email === AccountCenterControlValue.Edit,
-        'account_center.filed_not_editable'
+        'account_center.field_not_editable'
       );
 
       assertThat(scopes.has(UserScope.Email), 'auth.unauthorized');
@@ -131,7 +131,7 @@ export default function emailAndPhoneRoutes<T extends UserRouter>(...args: Route
       const { fields } = ctx.accountCenter;
       assertThat(
         fields.phone === AccountCenterControlValue.Edit,
-        'account_center.filed_not_editable'
+        'account_center.field_not_editable'
       );
 
       assertThat(scopes.has(UserScope.Phone), 'auth.unauthorized');
@@ -172,7 +172,7 @@ export default function emailAndPhoneRoutes<T extends UserRouter>(...args: Route
       const { fields } = ctx.accountCenter;
       assertThat(
         fields.phone === AccountCenterControlValue.Edit,
-        'account_center.filed_not_editable'
+        'account_center.field_not_editable'
       );
 
       assertThat(scopes.has(UserScope.Phone), 'auth.unauthorized');

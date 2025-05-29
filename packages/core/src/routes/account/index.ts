@@ -69,15 +69,15 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
 
       assertThat(
         name === undefined || fields.name === AccountCenterControlValue.Edit,
-        'account_center.filed_not_editable'
+        'account_center.field_not_editable'
       );
       assertThat(
         avatar === undefined || fields.avatar === AccountCenterControlValue.Edit,
-        'account_center.filed_not_editable'
+        'account_center.field_not_editable'
       );
       assertThat(
         username === undefined || fields.username === AccountCenterControlValue.Edit,
-        'account_center.filed_not_editable'
+        'account_center.field_not_editable'
       );
       assertThat(scopes.has(UserScope.Profile), 'auth.unauthorized');
 
@@ -122,7 +122,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
 
       assertThat(
         fields.profile === AccountCenterControlValue.Edit,
-        'account_center.filed_not_editable'
+        'account_center.field_not_editable'
       );
       assertThat(scopes.has(UserScope.Profile), 'auth.unauthorized');
 
@@ -159,7 +159,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
       const { fields } = ctx.accountCenter;
       assertThat(
         fields.password === AccountCenterControlValue.Edit,
-        'account_center.filed_not_editable'
+        'account_center.field_not_editable'
       );
 
       const user = await findUserById(userId);

@@ -40,7 +40,7 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
       const { fields } = ctx.accountCenter;
       assertThat(
         fields.mfa === AccountCenterControlValue.Edit,
-        'account_center.filed_not_editable'
+        'account_center.field_not_editable'
       );
 
       assertThat(scopes.has(UserScope.Identities), 'auth.unauthorized');
@@ -107,7 +107,7 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
       const { fields } = ctx.accountCenter;
       assertThat(
         fields.mfa === AccountCenterControlValue.Edit,
-        'account_center.filed_not_editable'
+        'account_center.field_not_editable'
       );
 
       assertThat(scopes.has(UserScope.Identities), 'auth.unauthorized');
@@ -131,6 +131,47 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
 
       ctx.status = 200;
+
+      return next();
+    }
+  );
+
+  router.delete(
+    `${accountApiPrefix}/mfa-verifications/:verificationId`,
+    koaGuard({
+      params: z.object({
+        verificationId: z.string(),
+      }),
+      status: [204, 400, 401],
+    }),
+    async (ctx, next) => {
+      const { id: userId, scopes, identityVerified } = ctx.auth;
+      assertThat(
+        identityVerified,
+        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
+      );
+      const { fields } = ctx.accountCenter;
+      assertThat(
+        fields.mfa === AccountCenterControlValue.Edit,
+        'account_center.field_not_editable'
+      );
+      assertThat(scopes.has(UserScope.Identities), 'auth.unauthorized');
+
+      const user = await findUserById(userId);
+      const mfaVerification = user.mfaVerifications.find(
+        (mfaVerification) => mfaVerification.id === ctx.guard.params.verificationId
+      );
+      assertThat(mfaVerification, 'verification_record.not_found');
+
+      const updatedUser = await updateUserById(userId, {
+        mfaVerifications: user.mfaVerifications.filter(
+          (mfaVerification) => mfaVerification.id !== ctx.guard.params.verificationId
+        ),
+      });
+
+      ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
+
+      ctx.status = 204;
 
       return next();
     }

@@ -24,7 +24,7 @@ import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.
 import { generateEmail, generatePhone } from '#src/utils.js';
 
 const expectedError = {
-  code: 'account_center.filed_not_editable',
+  code: 'account_center.field_not_editable',
   status: 400,
 };
 
@@ -63,26 +63,26 @@ describe('account center fields disabled', () => {
     const api = await signInAndGetUserApi(username, password);
 
     await expectRejects(updateUser(api, { name: 'name' }), {
-      code: 'account_center.filed_not_editable',
+      code: 'account_center.field_not_editable',
       status: 400,
     });
     await expectRejects(updateUser(api, { avatar: 'https://example.com/avatar.png' }), {
-      code: 'account_center.filed_not_editable',
+      code: 'account_center.field_not_editable',
       status: 400,
     });
     await expectRejects(updateUser(api, { username: 'username' }), {
-      code: 'account_center.filed_not_editable',
+      code: 'account_center.field_not_editable',
       status: 400,
     });
 
     await expectRejects(updateOtherProfile(api, { profile: 'profile' }), {
-      code: 'account_center.filed_not_editable',
+      code: 'account_center.field_not_editable',
       status: 400,
     });
 
     const verificationRecordId = await createVerificationRecordByPassword(api, password);
     await expectRejects(updatePassword(api, verificationRecordId, 'new-password'), {
-      code: 'account_center.filed_not_editable',
+      code: 'account_center.field_not_editable',
       status: 400,
     });
 
