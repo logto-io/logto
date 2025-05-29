@@ -19,10 +19,14 @@ import Checkpoint from '../../fragments/_checkpoint.md';
 Execute in the project root directory:
 
 ```bash
-go get github.com/logto-io/go
+# Install the core package for accessing predefined values and types
+go get github.com/logto-io/go/v2/core
+
+# Install the client package for interacting with the Logto
+go get github.com/logto-io/go/v2/client
 ```
 
-Add the `github.com/logto-io/go/client` package to your application code:
+Add `github.com/logto-io/go/v2/core` and `github.com/logto-io/go/v2/client` packages to your application code:
 
 ```go title="main.go"
 package main
@@ -30,7 +34,8 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	// Add dependency
-	"github.com/logto-io/go/client"
+	"github.com/logto-io/go/v2/core"
+	"github.com/logto-io/go/v2/client"
 )
 
 func main() {
@@ -58,7 +63,7 @@ Logto SDK provides a `Storage` interface, you can implement a `Storage` adapter 
 
 The `Storage` type in the Logto SDK is as follows:
 
-```go title="github.com/logto-io/client/storage.go"
+```go title="storage.go"
 package client
 
 type Storage interface {
@@ -78,7 +83,7 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/memstore"
 	"github.com/gin-gonic/gin"
-	"github.com/logto-io/go/client"
+	"github.com/logto-io/go/v2/client"
 )
 
 func main() {
