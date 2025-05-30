@@ -322,6 +322,19 @@
           }
         }
       }
+    },
+    "/api/my-account/mfa-verifications/{verificationId}": {
+      "delete": {
+        "tags": ["Dev feature"],
+        "operationId": "DeleteMfaVerification",
+        "summary": "Delete a MFA verification",
+        "description": "Delete a MFA verification, a logto-verification-id in header is required for checking sensitive permissions. Only WebAuthn is supported for now.",
+        "responses": {
+          "204": {
+            "description": "The MFA verification was deleted successfully."
+          }
+        }
+      }
     }
   }
 }
