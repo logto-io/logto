@@ -271,6 +271,17 @@
       }
     },
     "/api/my-account/mfa-verifications": {
+      "get": {
+        "tags": ["Dev feature"],
+        "operationId": "GetMfaVerifications",
+        "summary": "Get MFA verifications",
+        "description": "Get MFA verifications for the user.",
+        "responses": {
+          "200": {
+            "description": "The MFA verifications were retrieved successfully."
+          }
+        }
+      },
       "post": {
         "tags": ["Dev feature"],
         "operationId": "AddMfaVerification",
