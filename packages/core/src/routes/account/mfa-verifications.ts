@@ -1,5 +1,10 @@
 import { UserScope } from '@logto/core-kit';
-import { VerificationType, MfaFactor, AccountCenterControlValue } from '@logto/schemas';
+import {
+  VerificationType,
+  MfaFactor,
+  AccountCenterControlValue,
+  userMfaVerificationResponseGuard,
+} from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { z } from 'zod';
 
@@ -8,6 +13,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import RequestError from '../../errors/RequestError/index.js';
 import { buildVerificationRecordByIdAndType } from '../../libraries/verification.js';
 import assertThat from '../../utils/assert-that.js';
+import { transpileUserMfaVerifications } from '../../utils/user.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
 import { accountApiPrefix } from './constants.js';
@@ -19,6 +25,37 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
     users: { updateUserById, findUserById },
     signInExperiences: { findDefaultSignInExperience },
   } = queries;
+
+  router.get(
+    `${accountApiPrefix}/mfa-verifications`,
+    koaGuard({
+      response: userMfaVerificationResponseGuard,
+      status: [200, 400, 401],
+    }),
+    async (ctx, next) => {
+      const { id: userId, scopes } = ctx.auth;
+      const { fields } = ctx.accountCenter;
+
+      // If MFA field is not enabled, return empty array
+      if (
+        fields.mfa !== AccountCenterControlValue.Edit &&
+        fields.mfa !== AccountCenterControlValue.ReadOnly
+      ) {
+        ctx.status = 200;
+        ctx.body = {
+          mfaVerifications: [],
+        };
+        return next();
+      }
+
+      assertThat(scopes.has(UserScope.Identities), 'auth.unauthorized');
+
+      const user = await findUserById(userId);
+      ctx.body = transpileUserMfaVerifications(user.mfaVerifications);
+
+      return next();
+    }
+  );
 
   router.post(
     `${accountApiPrefix}/mfa-verifications`,
