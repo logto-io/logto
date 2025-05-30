@@ -1,17 +1,20 @@
 import { TemplateType } from '@logto/connector-kit';
 import {
   AdditionalIdentifier,
+  bindWebAuthnPayloadGuard,
   SentinelActivityAction,
   SignInIdentifier,
   socialAuthorizationUrlPayloadGuard,
   socialVerificationCallbackPayloadGuard,
   verificationCodeIdentifierGuard,
   VerificationType,
+  webAuthnRegistrationOptionsGuard,
 } from '@logto/schemas';
 import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 
+import { EnvSet } from '../../env-set/index.js';
 import {
   buildVerificationRecordByIdAndType,
   insertVerificationRecord,
@@ -21,6 +24,7 @@ import { withSentinel } from '../experience/classes/libraries/sentinel-guard.js'
 import { createNewCodeVerificationRecord } from '../experience/classes/verifications/code-verification.js';
 import { PasswordVerification } from '../experience/classes/verifications/password-verification.js';
 import { SocialVerification } from '../experience/classes/verifications/social-verification.js';
+import { WebAuthnVerification } from '../experience/classes/verifications/web-authn-verification.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
 export const verificationApiPrefix = '/verifications';
@@ -240,6 +244,72 @@ export default function verificationRoutes<T extends UserRouter>(
 
       ctx.body = {
         verificationRecordId,
+      };
+
+      return next();
+    }
+  );
+
+  if (!EnvSet.values.isDevFeaturesEnabled) {
+    return;
+  }
+
+  router.post(
+    `${verificationApiPrefix}/web-authn/registration`,
+    koaGuard({
+      response: z.object({
+        verificationRecordId: z.string(),
+        registrationOptions: webAuthnRegistrationOptionsGuard,
+        expiresAt: z.string(),
+      }),
+      status: [200],
+    }),
+    async (ctx, next) => {
+      const { id: userId } = ctx.auth;
+
+      const webAuthnVerification = WebAuthnVerification.create(libraries, queries, userId);
+
+      const registrationOptions =
+        await webAuthnVerification.generateWebAuthnRegistrationOptions(ctx);
+
+      const { expiresAt } = await insertVerificationRecord(webAuthnVerification, queries, userId);
+
+      ctx.body = {
+        verificationRecordId: webAuthnVerification.id,
+        registrationOptions,
+        expiresAt: new Date(expiresAt).toISOString(),
+      };
+
+      return next();
+    }
+  );
+
+  router.post(
+    `${verificationApiPrefix}/web-authn/registration/verify`,
+    koaGuard({
+      body: z.object({
+        verificationRecordId: z.string(),
+        payload: bindWebAuthnPayloadGuard,
+      }),
+      response: z.object({
+        verificationRecordId: z.string(),
+      }),
+      status: [200, 400, 404],
+    }),
+    async (ctx, next) => {
+      const { verificationRecordId, payload } = ctx.guard.body;
+
+      const webAuthnVerification = await buildVerificationRecordByIdAndType({
+        type: VerificationType.WebAuthn,
+        id: verificationRecordId,
+        queries,
+        libraries,
+      });
+      await webAuthnVerification.verifyWebAuthnRegistration(ctx, payload);
+      await updateVerificationRecord(webAuthnVerification, queries);
+
+      ctx.body = {
+        verificationRecordId: webAuthnVerification.id,
       };
 
       return next();

@@ -269,6 +269,30 @@
           }
         }
       }
+    },
+    "/api/my-account/mfa-verifications": {
+      "post": {
+        "tags": ["Dev feature"],
+        "operationId": "AddMfaVerification",
+        "summary": "Add a MFA verification",
+        "description": "Add a MFA verification to the user, a logto-verification-id in header is required for checking sensitive permissions. Only WebAuthn is supported for now, a new identifier verification record is required for the webauthn registration verification.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "newIdentifierVerificationRecordId": {
+                    "description": "The identifier verification record ID for the new WebAuthn registration verification."
+                  },
+                  "type": {
+                    "description": "The type of the MFA verification."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

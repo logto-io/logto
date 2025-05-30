@@ -9,6 +9,7 @@ import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 
+import { EnvSet } from '../../env-set/index.js';
 import RequestError from '../../errors/RequestError/index.js';
 import { encryptUserPassword } from '../../libraries/user.utils.js';
 import assertThat from '../../utils/assert-that.js';
@@ -18,6 +19,7 @@ import type { UserRouter, RouterInitArgs } from '../types.js';
 import { accountApiPrefix } from './constants.js';
 import emailAndPhoneRoutes from './email-and-phone.js';
 import identitiesRoutes from './identities.js';
+import mfaVerificationsRoutes from './mfa-verifications.js';
 import koaAccountCenter from './middlewares/koa-account-center.js';
 import { getAccountCenterFilteredProfile, getScopedProfile } from './utils/get-scoped-profile.js';
 
@@ -181,4 +183,8 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
 
   emailAndPhoneRoutes(...args);
   identitiesRoutes(...args);
+
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    mfaVerificationsRoutes(...args);
+  }
 }

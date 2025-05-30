@@ -83,7 +83,7 @@ export const removeConnectorMessage = async (
 };
 
 type ExpectedErrorInfo = {
-  code: string;
+  code?: string;
   status: number;
   messageIncludes?: string;
   unexpectedProperties?: string[];
