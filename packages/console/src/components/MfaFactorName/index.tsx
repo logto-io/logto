@@ -29,6 +29,10 @@ function MfaFactorName({ type, agent, name }: Props) {
       return name;
     }
 
+    if (!agent) {
+      return null;
+    }
+
     const { browser, os } = parseUa(agent);
 
     return `${browser.name} on ${os.name}`;
