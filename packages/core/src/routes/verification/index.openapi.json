@@ -247,7 +247,7 @@
             "application/json": {
               "schema": {
                 "properties": {
-                  "verificationId": {
+                  "verificationRecordId": {
                     "description": "The ID of the verification record."
                   },
                   "payload": {
