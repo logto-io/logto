@@ -1,4 +1,9 @@
-import { AccountCenters, accountCenterFieldControlGuard } from '@logto/schemas';
+import {
+  AccountCenters,
+  accountCenterFieldControlGuard,
+  webauthnRelatedOriginsGuard,
+} from '@logto/schemas';
+import { deduplicate } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -29,18 +34,23 @@ export default function accountCentersRoutes<T extends ManagementApiRouter>(
       body: z.object({
         enabled: z.boolean().optional(),
         fields: accountCenterFieldControlGuard.optional(),
+        webauthnRelatedOrigins: webauthnRelatedOriginsGuard.optional(),
       }),
       response: AccountCenters.guard,
       status: [200],
     }),
 
     async (ctx, next) => {
-      const { enabled, fields } = ctx.guard.body;
+      const { enabled, fields, webauthnRelatedOrigins } = ctx.guard.body;
+
       // Make sure the account center exists
       await findDefaultAccountCenter();
       const updatedAccountCenter = await updateDefaultAccountCenter({
         enabled,
         fields,
+        webauthnRelatedOrigins: webauthnRelatedOrigins
+          ? deduplicate(webauthnRelatedOrigins)
+          : undefined,
       });
 
       ctx.body = updatedAccountCenter;

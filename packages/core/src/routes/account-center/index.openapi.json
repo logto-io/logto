@@ -31,6 +31,9 @@
                   },
                   "fields": {
                     "description": "The fields settings for the account API."
+                  },
+                  "webauthnRelatedOrigins": {
+                    "description": "The allowed domains for webauthn."
                   }
                 }
               }
