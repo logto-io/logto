@@ -39,6 +39,7 @@ import logRoutes from './log.js';
 import logtoConfigRoutes from './logto-config/index.js';
 import oneTimeTokenRoutes from './one-time-tokens.js';
 import organizationRoutes from './organization/index.js';
+import publicWellKnownRoutes from './public-wellknown.js';
 import resourceRoutes from './resource.js';
 import resourceScopeRoutes from './resource.scope.js';
 import roleRoutes from './role.js';
@@ -155,4 +156,13 @@ export default function initApis(tenant: TenantContext): Koa {
   }
 
   return apisApp;
+}
+
+export function initPublicWellKnownApis(tenant: TenantContext): Koa {
+  const globalApisApp = new Koa();
+  const anonymousRouter: AnonymousRouter = new Router();
+  publicWellKnownRoutes(anonymousRouter, tenant);
+  globalApisApp.use(anonymousRouter.routes()).use(anonymousRouter.allowedMethods());
+
+  return globalApisApp;
 }

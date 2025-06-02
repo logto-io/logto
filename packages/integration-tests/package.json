@@ -13,10 +13,11 @@
     "check": "tsc --noEmit",
     "build": "tsup",
     "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "test": "pnpm build && pnpm test:api && pnpm test:experience && pnpm test:console",
+    "test": "pnpm build && pnpm test:api && pnpm test:experience && pnpm test:console && pnpm test:well-known",
     "test:api": "pnpm test:only -i ./lib/tests/api/",
     "test:experience": "pnpm test:only -i --config=jest.config.ui.js ./lib/tests/experience/",
     "test:console": "pnpm test:only -i --config=jest.config.ui.js ./lib/tests/console/",
+    "test:well-known": "pnpm test:only -i ./lib/tests/well-known/",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "start": "pnpm test"

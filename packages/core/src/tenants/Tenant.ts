@@ -26,7 +26,7 @@ import koaSpaProxy from '#src/middleware/koa-spa-proxy.js';
 import koaSpaSessionGuard from '#src/middleware/koa-spa-session-guard.js';
 import initOidc from '#src/oidc/init.js';
 import { mountCallbackRouter } from '#src/routes/callback.js';
-import initApis from '#src/routes/init.js';
+import initApis, { initPublicWellKnownApis } from '#src/routes/init.js';
 import initMeApis from '#src/routes-me/init.js';
 import BasicSentinel from '#src/sentinel/basic-sentinel.js';
 
@@ -147,6 +147,11 @@ export default class Tenant implements TenantContext {
 
     // Sign-in experience callback via form submission
     mountCallbackRouter(app);
+
+    if (EnvSet.values.isDevFeaturesEnabled) {
+      // Mount global well-known APIs
+      app.use(mount('/.well-known', initPublicWellKnownApis(tenantContext)));
+    }
 
     // Mount APIs
     app.use(mount('/api', initApis(tenantContext)));

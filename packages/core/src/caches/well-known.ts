@@ -3,6 +3,8 @@ import {
   EmailTemplates,
   type SignInExperience,
   SignInExperiences,
+  type AccountCenter,
+  AccountCenters,
 } from '@logto/schemas';
 import { type Nullable } from '@silverhand/essentials';
 import { type ZodType, z } from 'zod';
@@ -20,6 +22,7 @@ type WellKnownMap = {
   'tenant-cache-expires-at': number;
   // Currently, tenant type cannot be updated once created. So it's safe to cache.
   'is-development-tenant': boolean;
+  'account-center': AccountCenter;
 };
 
 type WellKnownCacheType = keyof WellKnownMap;
@@ -51,6 +54,9 @@ function getValueGuard(type: WellKnownCacheType): ZodType<WellKnownMap[typeof ty
     }
     case 'email-templates': {
       return EmailTemplates.guard.nullable();
+    }
+    case 'account-center': {
+      return AccountCenters.guard;
     }
   }
 }

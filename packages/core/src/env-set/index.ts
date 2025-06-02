@@ -17,6 +17,7 @@ export enum UserApps {
   Api = 'api',
   Oidc = 'oidc',
   DemoApp = 'demo-app',
+  WellKnown = '.well-known',
 }
 
 /** Apps (also paths) ONLY for the admin tenant. */

@@ -76,7 +76,7 @@ export default class Queries {
   samlApplications = createSamlApplicationQueries(this.pool);
   personalAccessTokens = new PersonalAccessTokensQueries(this.pool);
   verificationRecords = new VerificationRecordQueries(this.pool);
-  accountCenters = new AccountCenterQueries(this.pool);
+  accountCenters = new AccountCenterQueries(this.pool, this.wellKnownCache);
   tenants = createTenantQueries(this.pool);
   tenantUsage = new TenantUsageQuery(this.pool);
   emailTemplates = new EmailTemplatesQueries(this.pool, this.wellKnownCache);
