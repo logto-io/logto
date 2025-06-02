@@ -117,15 +117,12 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
    * Keep it as the single source of truth for generating the WebAuthn registration options.
    * TODO: Consider relocating the function under a shared folder
    */
-  async generateWebAuthnRegistrationOptions(
-    ctx: WithLogContext
-  ): Promise<WebAuthnRegistrationOptions> {
-    const { hostname } = ctx.URL;
+  async generateWebAuthnRegistrationOptions(rpId: string): Promise<WebAuthnRegistrationOptions> {
     const user = await this.findUser();
 
     const registrationOptions = await generateWebAuthnRegistrationOptions({
       user,
-      rpId: hostname,
+      rpId,
     });
 
     this.registrationChallenge = registrationOptions.challenge;
@@ -146,20 +143,20 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
     ctx: WithLogContext,
     payload: Omit<BindWebAuthnPayload, 'type'>
   ) {
-    const { hostname, origin } = ctx.URL;
     const {
       request: {
         headers: { 'user-agent': userAgent = '' },
       },
+      origin,
     } = ctx;
+    const { webauthnRelatedOrigins } = await this.queries.accountCenters.findDefaultAccountCenter();
 
     assertThat(this.registrationChallenge, 'session.mfa.pending_info_not_found');
 
     const { verified, registrationInfo } = await verifyWebAuthnRegistration(
       payload,
       this.registrationChallenge,
-      hostname,
-      origin
+      [origin, ...webauthnRelatedOrigins]
     );
 
     assertThat(verified, 'session.mfa.webauthn_verification_failed');

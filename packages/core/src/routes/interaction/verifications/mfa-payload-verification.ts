@@ -92,12 +92,9 @@ const verifyBindWebAuthn = async (
 
   const { type, ...rest } = payload;
   const { challenge } = pendingMfa;
-  const { verified, registrationInfo } = await verifyWebAuthnRegistration(
-    rest,
-    challenge,
-    rpId,
-    origin
-  );
+  const { verified, registrationInfo } = await verifyWebAuthnRegistration(rest, challenge, [
+    origin,
+  ]);
 
   assertThat(verified, 'session.mfa.webauthn_verification_failed');
   assertThat(registrationInfo, 'session.mfa.webauthn_verification_failed');

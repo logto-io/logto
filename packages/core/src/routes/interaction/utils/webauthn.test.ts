@@ -54,7 +54,7 @@ describe('generateWebAuthnRegistrationOptions', () => {
 describe('verifyWebAuthnRegistration', () => {
   it('should verify registration response', async () => {
     await expect(
-      verifyWebAuthnRegistration(mockBindWebAuthnPayload, 'challenge', rpId, origin)
+      verifyWebAuthnRegistration(mockBindWebAuthnPayload, 'challenge', [origin])
     ).resolves.toHaveProperty('verified', true);
     expect(verifyRegistrationResponse).toHaveBeenCalled();
   });
