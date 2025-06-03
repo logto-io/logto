@@ -49,7 +49,7 @@ export default class UserSsoIdentityQueries extends SchemaQueries<
     detail: UserSsoIdentity['detail']
   ) {
     return buildUpdateWhereWithPool(this.pool)(this.schema, true)({
-      set: { detail },
+      set: { detail, updatedAt: Date.now() },
       where: { issuer, identityId },
       jsonbMode: 'replace',
     });

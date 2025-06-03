@@ -11,6 +11,7 @@ create table user_sso_identities (
   identity_id varchar(128) not null,
   detail jsonb /* @use JsonObject */ not null default '{}'::jsonb,
   created_at timestamp not null default(now()),
+  updated_at timestamp,
   sso_connector_id
     varchar(128) not null
     references sso_connectors (id) on update cascade on delete cascade,
