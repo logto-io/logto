@@ -85,9 +85,13 @@ describe('enterprise sso sign-in and sign-up', () => {
     const { name, ssoIdentities } = await getUser(userId, true);
 
     expect(name).toBe('John Doe');
-    expect(ssoIdentities?.some((identity) => identity.identityId === enterpriseSsoIdentityId)).toBe(
-      true
+
+    const enterpriseSsoIdentity = ssoIdentities?.find(
+      (identity) => identity.identityId === enterpriseSsoIdentityId
     );
+
+    expect(enterpriseSsoIdentity).toBeTruthy();
+    expect(enterpriseSsoIdentity?.updatedAt).not.toBeNull();
 
     await deleteUser(userId);
   });
