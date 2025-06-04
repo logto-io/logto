@@ -39,7 +39,6 @@ describe('sign-in-experience query', () => {
     captchaPolicy: JSON.stringify(mockSignInExperience.captchaPolicy),
     sentinelPolicy: JSON.stringify(mockSignInExperience.sentinelPolicy),
     emailBlocklistPolicy: JSON.stringify(mockSignInExperience.emailBlocklistPolicy),
-    collectUserProfileFields: JSON.stringify(mockSignInExperience.collectUserProfileFields),
   };
 
   it('findDefaultSignInExperience', async () => {

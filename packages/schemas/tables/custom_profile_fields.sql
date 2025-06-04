@@ -19,7 +19,19 @@ create table custom_profile_fields (
   options jsonb /* @use FieldOptions */,
   parts jsonb /* @use FieldParts */,
   created_at timestamptz not null default(now()),
+  sie_order int2 not null default 0,
   primary key (id),
   constraint custom_profile_fields__name
-    unique (tenant_id, name)
+    unique (tenant_id, name),
+  constraint custom_profile_fields__sie_order
+    unique (tenant_id, sie_order)
 );
+
+create or replace function custom_profile_fields__increment_sie_order() returns trigger as
+$$ begin
+  new.sie_order = (select coalesce(max(sie_order), 0) from custom_profile_fields where tenant_id = new.tenant_id) + 1;
+  return new;
+end; $$ language plpgsql;
+
+create trigger custom_profile_fields__increment_sie_order before insert on custom_profile_fields
+  for each row execute procedure custom_profile_fields__increment_sie_order();
