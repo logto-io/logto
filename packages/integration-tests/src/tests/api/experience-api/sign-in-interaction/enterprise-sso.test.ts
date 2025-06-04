@@ -38,7 +38,7 @@ describe('enterprise sso sign-in and sign-up', () => {
     await Promise.all([ssoConnectorApi.cleanUp(), userApi.cleanUp()]);
   });
 
-  it('should successfully sign-up with enterprise sso and sync email', async () => {
+  it('should successfully sign-up with enterprise sso and sync email and sync SSO profile on the next sign-in', async () => {
     const userId = await signInWithEnterpriseSso(
       ssoConnectorApi.firstConnectorId!,
       {
@@ -50,11 +50,10 @@ describe('enterprise sso sign-in and sign-up', () => {
     );
 
     const { primaryEmail } = await getUser(userId);
-    expect(primaryEmail).toBe(email);
-  });
 
-  it('should successfully sign-in with enterprise sso', async () => {
-    const userId = await signInWithEnterpriseSso(ssoConnectorApi.firstConnectorId!, {
+    expect(primaryEmail).toBe(email);
+
+    await signInWithEnterpriseSso(ssoConnectorApi.firstConnectorId!, {
       sub: enterpriseSsoIdentityId,
       email,
       email_verified: true,
@@ -71,6 +70,7 @@ describe('enterprise sso sign-in and sign-up', () => {
     const { userProfile, user } = await generateNewUser({
       primaryEmail: true,
     });
+
     const { primaryEmail } = userProfile;
 
     const userId = await signInWithEnterpriseSso(ssoConnectorApi.firstConnectorId!, {
