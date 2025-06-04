@@ -278,7 +278,3 @@ export const emailBlocklistPolicyGuard = z.object({
   blockSubaddressing: z.boolean().optional(),
   customBlocklist: z.string().array().optional(),
 }) satisfies ToZodObject<EmailBlocklistPolicy>;
-
-export const collectUserProfileFieldsGuard = z.string().array();
-
-export type CollectUserProfileFields = z.infer<typeof collectUserProfileFieldsGuard>;
