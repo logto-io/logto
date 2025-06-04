@@ -25,16 +25,16 @@ export type FieldParts = z.infer<typeof fieldPartsGuard>;
 
 export enum ProfileFieldType {
   /* Primitive types */
-  Text = 'text',
-  Number = 'number',
-  Date = 'date',
-  Checkbox = 'checkbox',
-  Dropdown = 'dropdown',
-  Url = 'url',
-  Regex = 'regex',
+  Text = 'Text',
+  Number = 'Number',
+  Date = 'Date',
+  Checkbox = 'Checkbox',
+  Select = 'Select',
+  Url = 'Url',
+  Regex = 'Regex',
   /* Composite types */
-  Address = 'address',
-  Fullname = 'fullname',
+  Address = 'Address',
+  Fullname = 'Fullname',
 }
 
 export type BaseProfileField = {
@@ -67,8 +67,8 @@ export type CheckboxProfileField = BaseProfileField & {
   options?: Array<{ label: string; value: string }>;
 };
 
-export type DropdownProfileField = BaseProfileField & {
-  type: ProfileFieldType.Dropdown;
+export type SelectProfileField = BaseProfileField & {
+  type: ProfileFieldType.Select;
   options?: Array<{ label: string; value: string }>;
 };
 
@@ -91,7 +91,7 @@ export type UserProfileField =
   | NumberProfileField
   | DateProfileField
   | CheckboxProfileField
-  | DropdownProfileField
+  | SelectProfileField
   | AddressProfileField
   | FullnameProfileField;
 
@@ -138,7 +138,7 @@ export const profileFieldsMetadata: ProfileFieldsMetadata = Object.freeze({
     ],
   },
   gender: {
-    type: ProfileFieldType.Dropdown,
+    type: ProfileFieldType.Select,
     options: [
       { label: 'Male', value: 'male' },
       { label: 'Female', value: 'female' },
