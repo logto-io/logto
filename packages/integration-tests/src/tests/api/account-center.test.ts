@@ -23,6 +23,7 @@ describe('account center', () => {
       fields: {
         username: AccountCenterControlValue.Edit,
       },
+      webauthnRelatedOrigins: ['https://example.com'],
     };
 
     const updatedAccountCenter = await updateAccountCenter(accountCenter);

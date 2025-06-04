@@ -27,3 +27,7 @@ export const accountCenterFieldControlGuard = z
   .partial();
 
 export type AccountCenterFieldControl = z.infer<typeof accountCenterFieldControlGuard>;
+
+export const webauthnRelatedOriginsGuard = z.array(z.string());
+
+export type WebauthnRelatedOrigins = z.infer<typeof webauthnRelatedOriginsGuard>;
