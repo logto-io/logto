@@ -105,7 +105,6 @@ export class ProvisionLibrary {
       id: generateStandardId(),
       userId,
       ...enterpriseSsoIdentity,
-      updatedAt: Date.now(),
     });
 
     await this.provisionNewUserJitOrganizations(userId, { enterpriseSsoIdentity });
