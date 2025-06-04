@@ -322,6 +322,30 @@
           }
         }
       }
+    },
+    "/api/my-account/mfa-verifications/{verificationId}": {
+      "delete": {
+        "tags": ["Dev feature"],
+        "parameters": [
+          {
+            "name": "verificationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the MFA verification to delete."
+          }
+        ],
+        "operationId": "DeleteMfaVerification",
+        "summary": "Delete an MFA verification",
+        "description": "Delete an MFA verification, a logto-verification-id in header is required for checking sensitive permissions.",
+        "responses": {
+          "204": {
+            "description": "The MFA verification was deleted successfully."
+          }
+        }
+      }
     }
   }
 }
