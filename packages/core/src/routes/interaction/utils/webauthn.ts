@@ -64,8 +64,7 @@ export const generateWebAuthnRegistrationOptions = async ({
 export const verifyWebAuthnRegistration = async (
   payload: Omit<BindWebAuthnPayload, 'type'>,
   challenge: string,
-  rpId: string,
-  origin: string
+  origins: string[]
 ) => {
   const options: VerifyRegistrationResponseOpts = {
     response: {
@@ -73,8 +72,7 @@ export const verifyWebAuthnRegistration = async (
       type: 'public-key',
     },
     expectedChallenge: challenge,
-    expectedOrigin: origin,
-    expectedRPID: rpId,
+    expectedOrigin: origins,
     requireUserVerification: false,
   };
   return verifyRegistrationResponse(options);

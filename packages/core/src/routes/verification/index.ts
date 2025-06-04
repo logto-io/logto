@@ -14,7 +14,7 @@ import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 
-import { EnvSet } from '../../env-set/index.js';
+import { EnvSet, getTenantEndpoint } from '../../env-set/index.js';
 import {
   buildVerificationRecordByIdAndType,
   insertVerificationRecord,
@@ -267,10 +267,19 @@ export default function verificationRoutes<T extends UserRouter>(
     async (ctx, next) => {
       const { id: userId } = ctx.auth;
 
+      // If custom domain is enabled, use the custom domain as the RP ID.
+      // Otherwise, use the default tenant hostname as the RP ID.
+      // The background is that a passkey must be registered with a specific RP ID, which is a domain.
+      // In the future, we will support specifying the RP ID.
+      const domain = await queries.domains.findActiveDomain(tenantContext.id);
+      const rpId = domain
+        ? domain.domain
+        : getTenantEndpoint(tenantContext.id, EnvSet.values).hostname;
+
       const webAuthnVerification = WebAuthnVerification.create(libraries, queries, userId);
 
       const registrationOptions =
-        await webAuthnVerification.generateWebAuthnRegistrationOptions(ctx);
+        await webAuthnVerification.generateWebAuthnRegistrationOptions(rpId);
 
       const { expiresAt } = await insertVerificationRecord(webAuthnVerification, queries, userId);
 
