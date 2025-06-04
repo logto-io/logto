@@ -1,4 +1,4 @@
-import { InteractionEvent, MfaFactor, SignInIdentifier } from '@logto/schemas';
+import { InteractionEvent, MfaFactor, SignInIdentifier, SignInMode } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 
 import { createUserMfaVerification, deleteUser, getUser } from '#src/api/admin-user.js';
@@ -30,6 +30,7 @@ describe('enterprise sso sign-in and sign-up', () => {
     await ssoConnectorApi.createMockOidcConnector([domain]);
     await updateSignInExperience({
       singleSignOnEnabled: true,
+      signInMode: SignInMode.SignInAndRegister,
       signUp: { identifiers: [], password: false, verify: false },
     });
   });
