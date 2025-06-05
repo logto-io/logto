@@ -1,4 +1,4 @@
-import { InteractionEvent, MfaFactor, SignInIdentifier } from '@logto/schemas';
+import { InteractionEvent, MfaFactor, SignInIdentifier, SignInMode } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 
 import { createUserMfaVerification, deleteUser, getUser } from '#src/api/admin-user.js';
@@ -30,6 +30,7 @@ describe('enterprise sso sign-in and sign-up', () => {
     await ssoConnectorApi.createMockOidcConnector([domain]);
     await updateSignInExperience({
       singleSignOnEnabled: true,
+      signInMode: SignInMode.SignInAndRegister,
       signUp: { identifiers: [], password: false, verify: false },
     });
   });
@@ -38,7 +39,7 @@ describe('enterprise sso sign-in and sign-up', () => {
     await Promise.all([ssoConnectorApi.cleanUp(), userApi.cleanUp()]);
   });
 
-  it('should successfully sign-up with enterprise sso and sync email', async () => {
+  it('should successfully sign-up with enterprise sso and sync email and sync SSO profile on the next sign-in', async () => {
     const userId = await signInWithEnterpriseSso(
       ssoConnectorApi.firstConnectorId!,
       {
@@ -50,11 +51,10 @@ describe('enterprise sso sign-in and sign-up', () => {
     );
 
     const { primaryEmail } = await getUser(userId);
-    expect(primaryEmail).toBe(email);
-  });
 
-  it('should successfully sign-in with enterprise sso', async () => {
-    const userId = await signInWithEnterpriseSso(ssoConnectorApi.firstConnectorId!, {
+    expect(primaryEmail).toBe(email);
+
+    await signInWithEnterpriseSso(ssoConnectorApi.firstConnectorId!, {
       sub: enterpriseSsoIdentityId,
       email,
       email_verified: true,
@@ -71,6 +71,7 @@ describe('enterprise sso sign-in and sign-up', () => {
     const { userProfile, user } = await generateNewUser({
       primaryEmail: true,
     });
+
     const { primaryEmail } = userProfile;
 
     const userId = await signInWithEnterpriseSso(ssoConnectorApi.firstConnectorId!, {
@@ -85,9 +86,13 @@ describe('enterprise sso sign-in and sign-up', () => {
     const { name, ssoIdentities } = await getUser(userId, true);
 
     expect(name).toBe('John Doe');
-    expect(ssoIdentities?.some((identity) => identity.identityId === enterpriseSsoIdentityId)).toBe(
-      true
+
+    const enterpriseSsoIdentity = ssoIdentities?.find(
+      (identity) => identity.identityId === enterpriseSsoIdentityId
     );
+
+    expect(enterpriseSsoIdentity).toBeTruthy();
+    expect(enterpriseSsoIdentity?.updatedAt).not.toBeNull();
 
     await deleteUser(userId);
   });
