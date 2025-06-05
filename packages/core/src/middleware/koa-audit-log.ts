@@ -11,6 +11,8 @@ import type Queries from '#src/tenants/Queries.js';
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 
+const sensitiveDataKeys = Object.freeze(['password', 'secret']);
+
 const filterSensitiveData = (data: Record<string, unknown>): Record<string, unknown> => {
   return Object.fromEntries(
     Object.entries(data).map(([key, value]) => {
@@ -18,7 +20,7 @@ const filterSensitiveData = (data: Record<string, unknown>): Record<string, unkn
         return [key, filterSensitiveData(value)];
       }
 
-      return [key, key === 'password' ? '******' : value];
+      return [key, sensitiveDataKeys.includes(key) ? '******' : value];
     })
   );
 };
