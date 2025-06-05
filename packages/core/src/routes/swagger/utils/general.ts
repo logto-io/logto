@@ -38,6 +38,7 @@ const tagMap = new Map([
   ['saml-applications', 'SAML applications'],
   ['saml', 'SAML applications auth flow'],
   ['one-time-tokens', 'One-time tokens'],
+  ...(EnvSet.values.isDevFeaturesEnabled ? ([['google-one-tap', 'Google One Tap']] as const) : []),
 ]);
 
 /**
