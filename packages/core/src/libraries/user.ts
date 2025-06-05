@@ -42,7 +42,7 @@ export const createUserLibrary = (queries: Queries) => {
     organizations,
     oidcModelInstances: { revokeInstanceByUserId },
     userSsoIdentities,
-    oidcSessionExtensions: { deleteByAccountId: deleteSessionExtensionsByAccountId },
+    oidcSessionExtensions,
   } = queries;
 
   const generateUserId = async (retries = 500) =>
@@ -245,7 +245,7 @@ export const createUserLibrary = (queries: Queries) => {
       revokeInstanceByUserId('AccessToken', userId),
       revokeInstanceByUserId('RefreshToken', userId),
       revokeInstanceByUserId('Session', userId),
-      deleteSessionExtensionsByAccountId(userId),
+      oidcSessionExtensions.deleteByAccountId(userId),
     ]);
   };
 
