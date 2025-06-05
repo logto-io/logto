@@ -1,3 +1,4 @@
+import { jsonObjectGuard } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import type { Context } from 'koa';
 import type { InteractionResults, PromptDetail, Provider } from 'oidc-provider';
@@ -67,6 +68,51 @@ export const getMissingScopes = (prompt: PromptDetail) => {
   return missingScopesGuard.parse(prompt.details);
 };
 
+/**
+ * Persists the interaction's `lastSubmission` information to the session for future reference.
+ *
+ * @remarks
+ * Interaction lifecycle:
+ * 1. User visits the /authorization endpoint. No session is found, so a new `login` interaction is created and the user is prompted to log in.
+ * 2. The user completes and submits the `login` interaction with their authenticated `accountId` and interaction details.
+ * 3. The `login` interaction is destroyed and removed from the `oidc_model_instances` database.
+ * 4. A new authentication session is created with the `accountId` and saved to the `oidc_model_instances` database.
+ * 5. If no grant is found, a new `consent` interaction is created and the user is prompted to provide consent.
+ * 6. The user completes the consent form or is auto-consented for the requested scopes, then submits the `consent` interaction with the `grantId`.
+ * 7. The `consent` interaction is destroyed and removed from the `oidc_model_instances` database.
+ * 8. A new `Grant` is created and saved to the database, and the session is updated with the grant information.
+ *
+ * In the OIDC provider implementation, a user authentication session is created only after a successful `login` interaction submission.
+ * The original interaction instance is then destroyed and removed from the `oidc_model_instances` database, making it impossible to retrieve the user's original interaction details for the active session.
+ * To address this, we manually persist the `lastSubmission` information from the interaction details to the session.
+ *
+ * This function should be called at the user consent step, after the authentication session is created
+ * and before the `consent` interaction is destroyed. It retrieves both the session uid and `lastSubmission` from the interaction details,
+ * and stores them in the `oidc_session_extensions` table.
+ */
+const saveInteractionLastSubmissionToSession = async (
+  queries: Queries,
+  interactionDetails: Awaited<ReturnType<Provider['interactionDetails']>>
+) => {
+  const { session, lastSubmission } = interactionDetails;
+
+  if (!session || !lastSubmission) {
+    return;
+  }
+
+  const { oidcSessionExtensions } = queries;
+  const result = jsonObjectGuard.safeParse(lastSubmission);
+
+  if (result.success) {
+    // Persist the last submission to the session extensions
+    await oidcSessionExtensions.insert({
+      sessionUid: session.uid,
+      accountId: session.accountId,
+      lastSubmission: result.data,
+    });
+  }
+};
+
 export const consent = async ({
   ctx,
   provider,
@@ -98,7 +144,10 @@ export const consent = async ({
     conditional(grantId && (await provider.Grant.find(grantId))) ??
     new provider.Grant({ accountId, clientId: String(client_id) });
 
-  await saveUserFirstConsentedAppId(queries, accountId, String(client_id));
+  await Promise.all([
+    saveUserFirstConsentedAppId(queries, accountId, String(client_id)),
+    saveInteractionLastSubmissionToSession(queries, interactionDetails),
+  ]);
 
   // Fulfill missing scopes
   if (missingOIDCScopes.length > 0) {

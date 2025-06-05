@@ -6,6 +6,7 @@ import { getConsoleLogFromContext } from '#src/utils/console.js';
 import { grantListener, grantRevocationListener } from './grant.js';
 import { interactionEndedListener, interactionStartedListener } from './interaction.js';
 import { recordActiveUsers } from './record-active-users.js';
+import { deleteSessionExtensions } from './session.js';
 
 /**
  * @see {@link https://github.com/panva/node-oidc-provider/blob/v7.x/docs/README.md#im-getting-a-client-authentication-failed-error-with-no-details Getting auth error with no details?}
@@ -28,6 +29,20 @@ export const addOidcEventListeners = (provider: Provider, queries: Queries) => {
   provider.addListener('interaction.ended', interactionEndedListener);
   provider.addListener('server_error', (ctx, error) => {
     getConsoleLogFromContext(ctx).error('server_error:', error);
+  });
+
+  /**
+   * Cascade delete OIDC session extensions by uid on session destroy.
+   *
+   * @remark
+   * Since the session ID (jti) can be rotated, we have to use the session UID as the unique identifier.
+   * @see {@link https://github.com/panva/node-oidc-provider/blob/main/lib/models/session.js#L117} for more details.
+   *
+   * Session UID was stored as an jsonb field in the `oidc_model_instances` table. We can not use it as a foreign key constraint
+   * Need to manually delete the session extensions when the session is destroyed.
+   */
+  provider.addListener('session.destroyed', async (session) => {
+    return deleteSessionExtensions(queries, session);
   });
 
   // Record token usage.

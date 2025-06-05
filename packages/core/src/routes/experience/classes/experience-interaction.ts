@@ -549,6 +549,8 @@ export default class ExperienceInteraction {
 
     const redirectTo = await provider.interactionResult(this.ctx.req, this.ctx.res, {
       login: { accountId: user.id },
+      // Persist the interaction status to the OIDC session after interaction submission
+      ...this.toJson(),
     });
 
     this.ctx.body = { redirectTo };
