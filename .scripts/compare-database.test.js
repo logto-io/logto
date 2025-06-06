@@ -120,6 +120,39 @@ runTest('deepSort - arrays with objects', () => {
   assert.deepStrictEqual(result, expected);
 });
 
+runTest('deepSort - arrays with nested objects', () => {
+  const input1 = {
+    logto_skus: [
+      { type: 'AddOn', quota: { tokenLimit: 10_000 }, is_default: false },
+      { type: 'AddOn', quota: { tokenLimit: 100 }, is_default: true },
+      { type: 'AddOn', quota: { enterpriseSsoLimit: null }, is_default: true },
+    ],
+  };
+  
+  const input2 = {
+    logto_skus: [
+      { type: 'AddOn', quota: { enterpriseSsoLimit: null }, is_default: true },
+      { quota: { tokenLimit: 10_000 }, is_default: false, type: 'AddOn' },
+      { type: 'AddOn', quota: { tokenLimit: 100 }, is_default: true },
+    ],
+  };
+  
+  // Expected order based on sorting logic:
+  // 1. First by is_default: false < true
+  // 2. Then by quota keys: enterpriseSsoLimit < tokenLimit (alphabetical)
+  // 3. Then by quota values and other properties
+  const expected = {
+    logto_skus: [
+      { is_default: false, quota: { tokenLimit: 10_000 }, type: 'AddOn' },
+      { is_default: true, quota: { enterpriseSsoLimit: null }, type: 'AddOn' },
+      { is_default: true, quota: { tokenLimit: 100 }, type: 'AddOn' },
+    ],
+  };
+  
+  assert.deepStrictEqual(deepSort(input1), expected);
+  assert.deepStrictEqual(deepSort(input2), expected);
+});
+
 runTest('deepSort - complex nested structure', () => {
   const input = {
     users: [
