@@ -6,7 +6,7 @@ import {
   type User,
   type UserSsoIdentity,
   type EnterpriseSsoVerificationRecordData,
-  enterPriseSsoVerificationRecordDataGuard,
+  enterpriseSsoVerificationRecordDataGuard,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
@@ -30,7 +30,7 @@ import { type IdentifierVerificationRecord } from './verification-record.js';
 
 export {
   type EnterpriseSsoVerificationRecordData,
-  enterPriseSsoVerificationRecordDataGuard,
+  enterpriseSsoVerificationRecordDataGuard,
 } from '@logto/schemas';
 
 export class EnterpriseSsoVerification
@@ -58,7 +58,7 @@ export class EnterpriseSsoVerification
     data: EnterpriseSsoVerificationRecordData
   ) {
     const { id, connectorId, enterpriseSsoUserInfo, issuer } =
-      enterPriseSsoVerificationRecordDataGuard.parse(data);
+      enterpriseSsoVerificationRecordDataGuard.parse(data);
 
     this.id = id;
     this.connectorId = connectorId;

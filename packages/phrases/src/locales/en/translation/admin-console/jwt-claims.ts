@@ -35,6 +35,11 @@ const jwt_claims = {
     subtitle:
       'Use `context.grant` input parameter to provide vital grant info, only available for token exchange.',
   },
+  interaction_data: {
+    title: 'User interaction context',
+    subtitle:
+      "Use the context.interaction parameter to retrieve details about the user's sign-in interaction during the current session.",
+  },
   token_data: {
     title: 'Token payload',
     subtitle: 'Use `token` input parameter for current access token payload. ',

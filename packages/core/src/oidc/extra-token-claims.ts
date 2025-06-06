@@ -7,11 +7,17 @@ import {
   type CustomJwtFetcher,
   GrantType,
   CustomJwtErrorCode,
+  jwtCustomizerUserInteractionContextGuard,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 import { ResponseError } from '@withtyped/client';
-import { errors, type KoaContextWithOIDC, type UnknownObject } from 'oidc-provider';
+import {
+  type AccessToken,
+  errors,
+  type KoaContextWithOIDC,
+  type UnknownObject,
+} from 'oidc-provider';
 import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -84,6 +90,42 @@ export const getExtraTokenClaimsForTokenExchange = async (
   return result.data;
 };
 
+/**
+ * Retrieves the user's lasted submitted interaction data from the OIDC session extension.
+ *
+ * @returns The formatted interaction data if available for the given session UID and account ID.
+ *  Otherwise, returns `undefined`.
+ *
+ */
+const getInteractionLastSubmission = async (
+  queries: Queries,
+  { accountId, sessionUid }: AccessToken
+) => {
+  if (!EnvSet.values.isDevFeaturesEnabled) {
+    return;
+  }
+
+  // Session UID and account ID are required to fetch the interaction data.
+  if (!accountId || !sessionUid) {
+    return;
+  }
+
+  const { oidcSessionExtensions } = queries;
+  const sessionExtension = await oidcSessionExtensions.findBySessionUid(sessionUid);
+  if (!sessionExtension || sessionExtension.accountId !== accountId) {
+    return;
+  }
+
+  const { lastSubmission } = sessionExtension;
+  const interactionData = jwtCustomizerUserInteractionContextGuard.safeParse(lastSubmission);
+
+  if (!interactionData.success) {
+    return;
+  }
+
+  return interactionData.data;
+};
+
 /* eslint-disable complexity */
 export const getExtraTokenClaimsForJwtCustomization = async (
   ctx: KoaContextWithOIDC,
@@ -147,6 +189,10 @@ export const getExtraTokenClaimsForJwtCustomization = async (
         (await libraries.jwtCustomizers.getUserContext(token.accountId))
     );
 
+    const interactionContext = isTokenClientCredentials
+      ? undefined
+      : await getInteractionLastSubmission(queries, token);
+
     const subjectTokenResult = z
       .object({
         subjectTokenId: z.string(),
@@ -178,6 +224,11 @@ export const getExtraTokenClaimsForJwtCustomization = async (
                     type: GrantType.TokenExchange,
                     subjectTokenContext: subjectToken.context,
                   },
+                }
+              ),
+              ...conditional(
+                interactionContext && {
+                  interaction: interactionContext,
                 }
               ),
             },
