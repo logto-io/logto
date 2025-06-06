@@ -123,9 +123,9 @@ const jwtCustomizerUserInteractionVerificationRecordGuard = z.discriminatedUnion
 ]);
 
 export const jwtCustomizerUserInteractionContextGuard = z.object({
-  interactionEvent: z.nativeEnum(InteractionEvent).optional(),
-  userId: z.string().optional(),
-  verificationRecords: jwtCustomizerUserInteractionVerificationRecordGuard.array().optional(),
+  interactionEvent: z.nativeEnum(InteractionEvent),
+  userId: z.string(),
+  verificationRecords: jwtCustomizerUserInteractionVerificationRecordGuard.array(),
 });
 
 export type JwtCustomizerUserInteractionContext = z.infer<
