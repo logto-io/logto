@@ -1,4 +1,3 @@
-import { type ToZodObject } from '@logto/connector-kit';
 import {
   VerificationType,
   type JsonObject,
@@ -6,10 +5,11 @@ import {
   type SupportedSsoConnector,
   type User,
   type UserSsoIdentity,
+  type EnterpriseSsoVerificationRecordData,
+  enterPriseSsoVerificationRecordDataGuard,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
-import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
@@ -17,7 +17,7 @@ import {
   getSsoAuthorizationUrl,
   verifySsoIdentity,
 } from '#src/routes/interaction/utils/single-sign-on.js';
-import { extendedSocialUserInfoGuard, type ExtendedSocialUserInfo } from '#src/sso/types/saml.js';
+import { type ExtendedSocialUserInfo } from '#src/sso/types/saml.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -28,25 +28,10 @@ import type { InteractionProfile } from '../../types.js';
 
 import { type IdentifierVerificationRecord } from './verification-record.js';
 
-/** The JSON data type for the EnterpriseSsoVerification record stored in the interaction storage */
-export type EnterpriseSsoVerificationRecordData = {
-  id: string;
-  connectorId: string;
-  type: VerificationType.EnterpriseSso;
-  /**
-   * The enterprise SSO identity returned by the connector.
-   */
-  enterpriseSsoUserInfo?: ExtendedSocialUserInfo;
-  issuer?: string;
-};
-
-export const enterPriseSsoVerificationRecordDataGuard = z.object({
-  id: z.string(),
-  connectorId: z.string(),
-  type: z.literal(VerificationType.EnterpriseSso),
-  enterpriseSsoUserInfo: extendedSocialUserInfoGuard.optional(),
-  issuer: z.string().optional(),
-}) satisfies ToZodObject<EnterpriseSsoVerificationRecordData>;
+export {
+  type EnterpriseSsoVerificationRecordData,
+  enterPriseSsoVerificationRecordDataGuard,
+} from '@logto/schemas';
 
 export class EnterpriseSsoVerification
   implements IdentifierVerificationRecord<VerificationType.EnterpriseSso>

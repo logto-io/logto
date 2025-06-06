@@ -1,12 +1,11 @@
-import { type ToZodObject } from '@logto/connector-kit';
 import {
   MfaFactor,
   VerificationType,
   type BindBackupCode,
   type MfaVerificationBackupCode,
+  type BackupCodeVerificationRecordData,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { z } from 'zod';
 
 import { generateBackupCodes } from '#src/routes/interaction/utils/backup-code-validation.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -15,22 +14,10 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { type MfaVerificationRecord } from './verification-record.js';
 
-export type BackupCodeVerificationRecordData = {
-  id: string;
-  type: VerificationType.BackupCode;
-  /** UserId is required for backup code verification */
-  userId: string;
-  code?: string;
-  backupCodes?: string[];
-};
-
-export const backupCodeVerificationRecordDataGuard = z.object({
-  id: z.string(),
-  type: z.literal(VerificationType.BackupCode),
-  userId: z.string(),
-  code: z.string().optional(),
-  backupCodes: z.string().array().optional(),
-}) satisfies ToZodObject<BackupCodeVerificationRecordData>;
+export {
+  type BackupCodeVerificationRecordData,
+  backupCodeVerificationRecordDataGuard,
+} from '@logto/schemas';
 
 export class BackupCodeVerification implements MfaVerificationRecord<VerificationType.BackupCode> {
   /**

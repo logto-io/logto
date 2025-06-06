@@ -1,9 +1,6 @@
 import {
   type ConnectorSession,
-  connectorSessionGuard,
-  socialUserInfoGuard,
   type SocialUserInfo,
-  type ToZodObject,
   ConnectorType,
   type SocialConnector,
   GoogleConnector,
@@ -13,10 +10,11 @@ import {
   type JsonObject,
   type SocialAuthorizationUrlPayload,
   type User,
+  type SocialVerificationRecordData,
+  socialVerificationRecordDataGuard,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
-import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
@@ -34,28 +32,10 @@ import type { InteractionProfile } from '../../types.js';
 
 import { type IdentifierVerificationRecord } from './verification-record.js';
 
-/** The JSON data type for the SocialVerification record stored in the interaction storage */
-export type SocialVerificationRecordData = {
-  id: string;
-  connectorId: string;
-  type: VerificationType.Social;
-  /**
-   * The social identity returned by the connector.
-   */
-  socialUserInfo?: SocialUserInfo;
-  /**
-   * The connector session result
-   */
-  connectorSession?: ConnectorSession;
-};
-
-export const socialVerificationRecordDataGuard = z.object({
-  id: z.string(),
-  connectorId: z.string(),
-  type: z.literal(VerificationType.Social),
-  socialUserInfo: socialUserInfoGuard.optional(),
-  connectorSession: connectorSessionGuard.optional(),
-}) satisfies ToZodObject<SocialVerificationRecordData>;
+export {
+  type SocialVerificationRecordData,
+  socialVerificationRecordDataGuard,
+} from '@logto/schemas';
 
 type SocialAuthorizationSessionStorageType = 'interactionSession' | 'verificationRecord';
 
