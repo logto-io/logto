@@ -1,6 +1,8 @@
 import { socialUserInfoGuard } from '@logto/connector-kit';
 import { z } from 'zod';
 
+export { type ExtendedSocialUserInfo, extendedSocialUserInfoGuard } from '@logto/schemas';
+
 // Since the SAML SSO user info will extend the basic social user info (will contain extra info like `organization`, `role` etc.), but for now we haven't decide what should be included in extended user info, so we just use the basic social user info guard here to keep SSOT.
 const samlAttributeMappingGuard = socialUserInfoGuard
   .pick({
@@ -76,7 +78,3 @@ const samlMetadataGuard = z.object({
 });
 
 export type SamlMetadata = z.infer<typeof samlMetadataGuard>;
-
-// Saml assertion returned user attribute value
-export const extendedSocialUserInfoGuard = socialUserInfoGuard.catchall(z.unknown());
-export type ExtendedSocialUserInfo = z.infer<typeof extendedSocialUserInfoGuard>;

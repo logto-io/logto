@@ -1,12 +1,10 @@
-import { type ToZodObject } from '@logto/connector-kit';
 import {
   type VerificationIdentifier,
   VerificationType,
   type User,
-  verificationIdentifierGuard,
+  type PasswordVerificationRecordData,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -17,19 +15,10 @@ import { findUserByIdentifier } from '../utils.js';
 
 import { type IdentifierVerificationRecord } from './verification-record.js';
 
-export type PasswordVerificationRecordData = {
-  id: string;
-  type: VerificationType.Password;
-  identifier: VerificationIdentifier;
-  verified: boolean;
-};
-
-export const passwordVerificationRecordDataGuard = z.object({
-  id: z.string(),
-  type: z.literal(VerificationType.Password),
-  identifier: verificationIdentifierGuard,
-  verified: z.boolean(),
-}) satisfies ToZodObject<PasswordVerificationRecordData>;
+export {
+  type PasswordVerificationRecordData,
+  passwordVerificationRecordDataGuard,
+} from '@logto/schemas';
 
 export class PasswordVerification
   implements IdentifierVerificationRecord<VerificationType.Password>
