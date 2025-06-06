@@ -1,10 +1,13 @@
-import { TemplateType, type ToZodObject } from '@logto/connector-kit';
+import { TemplateType } from '@logto/connector-kit';
 import {
   type InteractionEvent,
   SignInIdentifier,
   VerificationType,
   type User,
+  type CodeVerificationType,
+  type VerificationCodeIdentifierOf,
   type VerificationCodeIdentifier,
+  type CodeVerificationRecordData,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { z } from 'zod';
@@ -21,6 +24,12 @@ import assertThat from '#src/utils/assert-that.js';
 import { findUserByIdentifier } from '../utils.js';
 
 import { type IdentifierVerificationRecord } from './verification-record.js';
+
+export {
+  type CodeVerificationRecordData,
+  emailCodeVerificationRecordDataGuard,
+  phoneCodeVerificationRecordDataGuard,
+} from '@logto/schemas';
 
 const eventToTemplateTypeMap: Record<InteractionEvent, TemplateType> = {
   SignIn: TemplateType.SignIn,
@@ -40,31 +49,9 @@ const getPasscodeIdentifierPayload = (
 ): Parameters<ReturnType<typeof createPasscodeLibrary>['createPasscode']>[2] =>
   identifier.type === 'email' ? { email: identifier.value } : { phone: identifier.value };
 
-type CodeVerificationType =
-  | VerificationType.EmailVerificationCode
-  | VerificationType.PhoneVerificationCode;
-
-type SignInIdentifierTypeOf = {
-  [VerificationType.EmailVerificationCode]: SignInIdentifier.Email;
-  [VerificationType.PhoneVerificationCode]: SignInIdentifier.Phone;
-};
-
-type VerificationCodeIdentifierOf<T extends CodeVerificationType> = VerificationCodeIdentifier<
-  SignInIdentifierTypeOf[T]
->;
-
 type CodeVerificationIdentifierMap = {
   [VerificationType.EmailVerificationCode]: { primaryEmail: string };
   [VerificationType.PhoneVerificationCode]: { primaryPhone: string };
-};
-
-/** The JSON data type for the `CodeVerification` record */
-export type CodeVerificationRecordData<T extends CodeVerificationType = CodeVerificationType> = {
-  id: string;
-  type: T;
-  identifier: VerificationCodeIdentifierOf<T>;
-  templateType: TemplateType;
-  verified: boolean;
 };
 
 /**
@@ -215,14 +202,6 @@ export class EmailCodeVerification extends CodeVerification<VerificationType.Ema
   }
 }
 
-export const emailCodeVerificationRecordDataGuard = basicCodeVerificationRecordDataGuard.extend({
-  type: z.literal(VerificationType.EmailVerificationCode),
-  identifier: z.object({
-    type: z.literal(SignInIdentifier.Email),
-    value: z.string(),
-  }),
-}) satisfies ToZodObject<CodeVerificationRecordData<VerificationType.EmailVerificationCode>>;
-
 /**
  * A verification code class that verifies a given phone identifier.
  *
@@ -247,14 +226,6 @@ export class PhoneCodeVerification extends CodeVerification<VerificationType.Pho
     return { primaryPhone: value };
   }
 }
-
-export const phoneCodeVerificationRecordDataGuard = basicCodeVerificationRecordDataGuard.extend({
-  type: z.literal(VerificationType.PhoneVerificationCode),
-  identifier: z.object({
-    type: z.literal(SignInIdentifier.Phone),
-    value: z.string(),
-  }),
-}) satisfies ToZodObject<CodeVerificationRecordData<VerificationType.PhoneVerificationCode>>;
 
 /**
  * Factory method to create a new `EmailCodeVerification` / `PhoneCodeVerification` record using the given identifier.

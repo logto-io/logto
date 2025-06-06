@@ -1,18 +1,17 @@
-import { type ToZodObject } from '@logto/connector-kit';
 import {
   type BindWebAuthn,
-  bindWebAuthnGuard,
   type BindWebAuthnPayload,
   MfaFactor,
   VerificationType,
   type WebAuthnRegistrationOptions,
   type WebAuthnVerificationPayload,
+  type WebAuthnVerificationRecordData,
+  webAuthnVerificationRecordDataGuard,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import { isoBase64URL } from '@simplewebauthn/server/helpers';
 import { type PublicKeyCredentialRequestOptionsJSON } from 'node_modules/@simplewebauthn/server/esm/deps.js';
-import { z } from 'zod';
 
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import {
@@ -27,28 +26,10 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { type MfaVerificationRecord } from './verification-record.js';
 
-export type WebAuthnVerificationRecordData = {
-  id: string;
-  type: VerificationType.WebAuthn;
-  /** UserId is required for verifying or binding new TOTP */
-  userId: string;
-  verified: boolean;
-  /** The challenge generated for the WebAuthn registration */
-  registrationChallenge?: string;
-  /** The challenge generated for the WebAuthn authentication */
-  authenticationChallenge?: string;
-  registrationInfo?: BindWebAuthn;
-};
-
-export const webAuthnVerificationRecordDataGuard = z.object({
-  id: z.string(),
-  type: z.literal(VerificationType.WebAuthn),
-  userId: z.string(),
-  verified: z.boolean(),
-  registrationChallenge: z.string().optional(),
-  authenticationChallenge: z.string().optional(),
-  registrationInfo: bindWebAuthnGuard.optional(),
-}) satisfies ToZodObject<WebAuthnVerificationRecordData>;
+export {
+  type WebAuthnVerificationRecordData,
+  webAuthnVerificationRecordDataGuard,
+} from '@logto/schemas';
 
 export class WebAuthnVerification implements MfaVerificationRecord<VerificationType.WebAuthn> {
   /**

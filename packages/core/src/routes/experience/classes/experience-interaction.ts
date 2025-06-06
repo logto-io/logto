@@ -1,8 +1,6 @@
 /* eslint-disable max-lines */
-import { type ToZodObject } from '@logto/connector-kit';
 import { InteractionEvent, VerificationType, type User } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
@@ -10,10 +8,10 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import {
-  interactionProfileGuard,
+  interactionStorageGuard,
+  type InteractionStorage,
   type Interaction,
   type InteractionContext,
-  type InteractionProfile,
   type WithHooksAndLogsContext,
 } from '../types.js';
 
@@ -26,43 +24,15 @@ import { CaptchaValidator } from './libraries/captcha-validator.js';
 import { MfaValidator } from './libraries/mfa-validator.js';
 import { ProvisionLibrary } from './libraries/provision-library.js';
 import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
-import { Mfa, mfaDataGuard, userMfaDataKey, type MfaData } from './mfa.js';
+import { Mfa, userMfaDataKey } from './mfa.js';
 import { Profile } from './profile.js';
 import { toUserSocialIdentityData } from './utils.js';
 import {
   buildVerificationRecord,
-  verificationRecordDataGuard,
   type VerificationRecord,
-  type VerificationRecordData,
   type VerificationRecordMap,
 } from './verifications/index.js';
 import { VerificationRecordsMap } from './verifications/verification-records-map.js';
-
-type InteractionStorage = {
-  interactionEvent: InteractionEvent;
-  userId?: string;
-  profile?: InteractionProfile;
-  mfa?: MfaData;
-  verificationRecords?: VerificationRecordData[];
-  captcha?: {
-    verified: boolean;
-    skipped: boolean;
-  };
-};
-
-const interactionStorageGuard = z.object({
-  interactionEvent: z.nativeEnum(InteractionEvent),
-  userId: z.string().optional(),
-  profile: interactionProfileGuard.optional(),
-  mfa: mfaDataGuard.optional(),
-  verificationRecords: verificationRecordDataGuard.array().optional(),
-  captcha: z
-    .object({
-      verified: z.boolean(),
-      skipped: z.boolean(),
-    })
-    .optional(),
-}) satisfies ToZodObject<InteractionStorage>;
 
 /**
  * Interaction is a short-lived session session that is initiated when a user starts an interaction flow with the Logto platform.
