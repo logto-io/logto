@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.29.0
+
+### Patch Changes
+
+- Updated dependencies [f2c0a05ac]
+  - @logto/schemas@1.29.0
+
 ## 1.28.0
 
 ### Patch Changes
