@@ -211,7 +211,6 @@
     },
     "/api/verifications/web-authn/registration": {
       "post": {
-        "tags": ["Dev feature"],
         "operationId": "GenerateWebAuthnRegistrationOptions",
         "summary": "Generate WebAuthn registration options",
         "description": "Generate WebAuthn registration options for the user to register a new WebAuthn device.",
@@ -238,7 +237,6 @@
     },
     "/api/verifications/web-authn/registration/verify": {
       "post": {
-        "tags": ["Dev feature"],
         "operationId": "VerifyWebAuthnRegistration",
         "summary": "Verify WebAuthn registration",
         "description": "Verify the WebAuthn registration by the user's response.",

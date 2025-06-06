@@ -17,9 +17,6 @@ import {
   enableUserControlledMfaWithTotpAndWebAuthn,
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest } from '#src/utils.js';
-
-const { describe, it } = devFeatureTest;
 
 describe('my-account (mfa)', () => {
   beforeAll(async () => {

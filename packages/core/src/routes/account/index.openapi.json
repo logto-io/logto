@@ -272,7 +272,6 @@
     },
     "/api/my-account/mfa-verifications": {
       "get": {
-        "tags": ["Dev feature"],
         "operationId": "GetMfaVerifications",
         "summary": "Get MFA verifications",
         "description": "Get MFA verifications for the user.",
@@ -283,7 +282,6 @@
         }
       },
       "post": {
-        "tags": ["Dev feature"],
         "operationId": "AddMfaVerification",
         "summary": "Add a MFA verification",
         "description": "Add a MFA verification to the user, a logto-verification-id in header is required for checking sensitive permissions. Only WebAuthn is supported for now, a new identifier verification record is required for the webauthn registration verification.",
@@ -310,7 +308,6 @@
     },
     "/api/my-account/mfa-verifications/{verificationId}/name": {
       "patch": {
-        "tags": ["Dev feature"],
         "operationId": "UpdateMfaVerificationName",
         "summary": "Update a MFA verification name",
         "description": "Update a MFA verification name, a logto-verification-id in header is required for checking sensitive permissions. Only WebAuthn is supported for now.",
@@ -336,7 +333,6 @@
     },
     "/api/my-account/mfa-verifications/{verificationId}": {
       "delete": {
-        "tags": ["Dev feature"],
         "parameters": [
           {
             "name": "verificationId",

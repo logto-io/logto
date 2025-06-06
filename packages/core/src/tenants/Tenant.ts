@@ -148,10 +148,8 @@ export default class Tenant implements TenantContext {
     // Sign-in experience callback via form submission
     mountCallbackRouter(app);
 
-    if (EnvSet.values.isDevFeaturesEnabled) {
-      // Mount global well-known APIs
-      app.use(mount('/.well-known', initPublicWellKnownApis(tenantContext)));
-    }
+    // Mount global well-known APIs
+    app.use(mount('/.well-known', initPublicWellKnownApis(tenantContext)));
 
     // Mount APIs
     app.use(mount('/api', initApis(tenantContext)));
