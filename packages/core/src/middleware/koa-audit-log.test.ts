@@ -1,9 +1,11 @@
 import type { LogKey } from '@logto/schemas';
-import { LogResult } from '@logto/schemas';
+import { LogResult, VerificationType } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 import i18next from 'i18next';
 
 import { mockId, mockIdGenerators } from '#src/test-utils/nanoid.js';
+
+import { type TotpVerificationRecordData } from '../routes/experience/classes/verifications/totp-verification.js';
 
 import type { WithLogContext, LogPayload } from './koa-audit-log.js';
 
@@ -149,6 +151,49 @@ describe('koaAuditLog middleware', () => {
       payload: {
         ...mockPayload,
         ...maskedAdditionalMockPayload,
+        key: logKey,
+        result: LogResult.Success,
+        ip,
+        userAgent,
+      },
+    });
+  });
+
+  it('should filter TOTP secret in log', async () => {
+    // @ts-expect-error
+    const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
+      ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
+    };
+    ctx.request.ip = ip;
+
+    const mockVerificationData: TotpVerificationRecordData = {
+      id: mockId,
+      userId: 'foo',
+      verified: true,
+      type: VerificationType.TOTP,
+      secret: 'foo_secret',
+    };
+
+    const maskedMockVerificationData: TotpVerificationRecordData = {
+      ...mockVerificationData,
+      secret: '******',
+    };
+
+    const next = async () => {
+      const log = ctx.createLog(logKey);
+      log.append(mockPayload);
+      log.append({
+        verifications: [mockVerificationData],
+      });
+    };
+    await koaLog(queries)(ctx, next);
+
+    expect(insertLog).toBeCalledWith({
+      id: mockId,
+      key: logKey,
+      payload: {
+        ...mockPayload,
+        verifications: [maskedMockVerificationData],
         key: logKey,
         result: LogResult.Success,
         ip,
