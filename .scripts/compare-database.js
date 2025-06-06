@@ -10,11 +10,34 @@ const omitArray = (arrayOfObjects, ...keys) =>
 
 // Exported utility functions for testing
 export const autoCompare = (a, b) => {
+  // Handle null values first
+  if (a === null && b === null) return 0;
+  if (a === null) return -1; // null comes before other values
+  if (b === null) return 1;
+
+  // Handle undefined values
+  if (a === undefined && b === undefined) return 0;
+  if (a === undefined) return -1; // undefined comes before other values
+  if (b === undefined) return 1;
+
+  // Compare types
   if (typeof a !== typeof b) {
     return (typeof a).localeCompare(typeof b);
   }
 
-  if (typeof a === 'object' && a !== null && b !== null) {
+  // Handle arrays
+  if (Array.isArray(a) && Array.isArray(b)) {
+    for (let i = 0; i < Math.min(a.length, b.length); i++) {
+      const comparison = autoCompare(a[i], b[i]);
+      if (comparison !== 0) {
+        return comparison;
+      }
+    }
+    return a.length - b.length;
+  }
+
+  // Handle objects (but not arrays)
+  if (typeof a === 'object' && !Array.isArray(a)) {
     const aKeys = Object.keys(a).sort();
     const bKeys = Object.keys(b).sort();
 
@@ -31,6 +54,17 @@ export const autoCompare = (a, b) => {
     return aKeys.length - bKeys.length;
   }
 
+  // Handle numbers
+  if (typeof a === 'number' && typeof b === 'number') {
+    return a - b;
+  }
+
+  // Handle booleans
+  if (typeof a === 'boolean' && typeof b === 'boolean') {
+    return a === b ? 0 : (a ? 1 : -1); // false < true
+  }
+
+  // Handle strings and other primitives
   return String(a).localeCompare(String(b));
 };
 
