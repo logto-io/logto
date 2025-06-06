@@ -4,6 +4,7 @@ import {
   clientCredentialsPayloadTypeDefinition,
   jwtCustomizerUserContextTypeDefinition,
   jwtCustomizerGrantContextTypeDefinition,
+  jwtCustomizerUserInteractionContextTypeDefinition,
   jwtCustomizerApiContextTypeDefinition,
 } from '@/consts/jwt-customizer-type-definition';
 
@@ -15,6 +16,7 @@ export {
   clientCredentialsPayloadTypeDefinition,
   jwtCustomizerUserContextTypeDefinition,
   jwtCustomizerGrantContextTypeDefinition,
+  jwtCustomizerUserInteractionContextTypeDefinition,
 } from '@/consts/jwt-customizer-type-definition';
 
 export const buildAccessTokenJwtCustomizerContextTsDefinition = () => {
@@ -24,7 +26,9 @@ export const buildAccessTokenJwtCustomizerContextTsDefinition = () => {
 
   declare ${jwtCustomizerApiContextTypeDefinition}
 
-  declare ${accessTokenPayloadTypeDefinition}`;
+  declare ${accessTokenPayloadTypeDefinition}
+  
+  declare ${jwtCustomizerUserInteractionContextTypeDefinition}`;
 };
 
 export const buildClientCredentialsJwtCustomizerContextTsDefinition = () =>

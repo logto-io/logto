@@ -18,7 +18,7 @@ import {
 } from './code-verification.js';
 import {
   EnterpriseSsoVerification,
-  enterPriseSsoVerificationRecordDataGuard,
+  enterpriseSsoVerificationRecordDataGuard,
   type EnterpriseSsoVerificationRecordData,
 } from './enterprise-sso-verification.js';
 import {
@@ -100,7 +100,7 @@ export const verificationRecordDataGuard = z.discriminatedUnion('type', [
   emailCodeVerificationRecordDataGuard,
   phoneCodeVerificationRecordDataGuard,
   socialVerificationRecordDataGuard,
-  enterPriseSsoVerificationRecordDataGuard,
+  enterpriseSsoVerificationRecordDataGuard,
   totpVerificationRecordDataGuard,
   backupCodeVerificationRecordDataGuard,
   webAuthnVerificationRecordDataGuard,

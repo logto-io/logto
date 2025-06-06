@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { type JwtCustomizerForm } from '@/pages/CustomizeJwtDetails/type';
 import {
   denyAccessCodeExample,
@@ -18,6 +19,7 @@ import {
   clientCredentialsPayloadTypeDefinition,
   jwtCustomizerUserContextTypeDefinition,
   jwtCustomizerGrantContextTypeDefinition,
+  jwtCustomizerUserInteractionContextTypeDefinition,
 } from '@/pages/CustomizeJwtDetails/utils/type-definitions';
 
 import tabContentStyles from '../index.module.scss';
@@ -92,6 +94,24 @@ function InstructionTab({ isActive }: Props) {
             className={styles.sampleCode}
             value={jwtCustomizerGrantContextTypeDefinition}
             height="180px"
+            theme="logto-dark"
+            options={typeDefinitionCodeEditorOptions}
+          />
+        </GuideCard>
+      )}
+      {tokenType === LogtoJwtTokenKeyType.AccessToken && isDevFeaturesEnabled && (
+        <GuideCard
+          name={CardType.InteractionData}
+          isExpanded={expendCard === CardType.InteractionData}
+          setExpanded={(expand) => {
+            setExpendCard(expand ? CardType.InteractionData : undefined);
+          }}
+        >
+          <Editor
+            language="typescript"
+            className={styles.sampleCode}
+            value={`declare ${jwtCustomizerUserInteractionContextTypeDefinition}`}
+            height="400px"
             theme="logto-dark"
             options={typeDefinitionCodeEditorOptions}
           />

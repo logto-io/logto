@@ -1,4 +1,4 @@
-import { jsonObjectGuard } from '@logto/connector-kit';
+import { jsonGuard, jsonObjectGuard, socialUserInfoGuard } from '@logto/connector-kit';
 import { type ZodType, z } from 'zod';
 
 import {
@@ -10,9 +10,22 @@ import {
   type UserSsoIdentity,
 } from '../../db-entries/index.js';
 import { mfaFactorsGuard, type MfaFactors } from '../../foundations/index.js';
+import { InteractionEvent } from '../interactions.js';
 import { GrantType } from '../oidc-config.js';
 import { scopeResponseGuard, type ScopeResponse } from '../scope.js';
 import { userInfoGuard, type UserInfo } from '../user.js';
+import { backupCodeVerificationRecordDataGuard } from '../verification-records/backup-code-verification.js';
+import {
+  emailCodeVerificationRecordDataGuard,
+  phoneCodeVerificationRecordDataGuard,
+} from '../verification-records/code-verification.js';
+import { enterpriseSsoVerificationRecordDataGuard } from '../verification-records/enterprise-sso-verification.js';
+import { newPasswordIdentityVerificationRecordDataGuard } from '../verification-records/new-password-identity-verification.js';
+import { oneTimeTokenVerificationRecordDataGuard } from '../verification-records/one-time-token-verification.js';
+import { passwordVerificationRecordDataGuard } from '../verification-records/password-verification.js';
+import { socialVerificationRecordDataGuard } from '../verification-records/social-verification.js';
+import { totpVerificationRecordDataGuard } from '../verification-records/totp-verification.js';
+import { webAuthnVerificationRecordDataGuard } from '../verification-records/web-authn-verification.js';
 
 import { accessTokenPayloadGuard, clientCredentialsPayloadGuard } from './oidc-provider.js';
 
@@ -75,6 +88,50 @@ export const jwtCustomizerGrantContextGuard = z.object({
 
 export type JwtCustomizerGrantContext = z.infer<typeof jwtCustomizerGrantContextGuard>;
 
+// Unlike the verification record guard defined in experience interaction,
+// we need to omit sensitive fields like MFA code and secrets from some of the verification record.
+const jwtCustomizerUserInteractionVerificationRecordGuard = z.discriminatedUnion('type', [
+  passwordVerificationRecordDataGuard,
+  emailCodeVerificationRecordDataGuard,
+  phoneCodeVerificationRecordDataGuard,
+  socialVerificationRecordDataGuard.omit({
+    connectorSession: true,
+  }),
+  enterpriseSsoVerificationRecordDataGuard.extend({
+    // The original `enterpriseSsoUserInfo` field type is extended with `socialUserInfo` with `catchall(unknown)`.
+    // However, the unknown type may cause error when using the `sql.jsonb` function in Slonik.
+    // See {@logto/cli/src/queries/logto-config.ts#updateValueByKey} for more reference.
+    // So we use `socialUserInfoGuard.catchall(jsonGuard)` to ensure the type is JSON serializable.
+    enterpriseSsoUserInfo: socialUserInfoGuard.catchall(jsonGuard).optional(),
+  }),
+  totpVerificationRecordDataGuard.omit({
+    secret: true,
+  }),
+  backupCodeVerificationRecordDataGuard.omit({
+    backupCodes: true,
+  }),
+  webAuthnVerificationRecordDataGuard.omit({
+    registrationChallenge: true,
+    authenticationChallenge: true,
+    registrationInfo: true,
+  }),
+  oneTimeTokenVerificationRecordDataGuard,
+  newPasswordIdentityVerificationRecordDataGuard.omit({
+    passwordEncrypted: true,
+    passwordEncryptionMethod: true,
+  }),
+]);
+
+export const jwtCustomizerUserInteractionContextGuard = z.object({
+  interactionEvent: z.nativeEnum(InteractionEvent).optional(),
+  userId: z.string().optional(),
+  verificationRecords: jwtCustomizerUserInteractionVerificationRecordGuard.array().optional(),
+});
+
+export type JwtCustomizerUserInteractionContext = z.infer<
+  typeof jwtCustomizerUserInteractionContextGuard
+>;
+
 export const accessTokenJwtCustomizerGuard = jwtCustomizerGuard
   .extend({
     // Use partial token guard since users customization may not rely on all fields.
@@ -83,6 +140,7 @@ export const accessTokenJwtCustomizerGuard = jwtCustomizerGuard
       .object({
         user: jwtCustomizerUserContextGuard.partial(),
         grant: jwtCustomizerGrantContextGuard.partial().optional(),
+        interaction: jwtCustomizerUserInteractionContextGuard.partial().optional(),
       })
       .optional(),
   })
