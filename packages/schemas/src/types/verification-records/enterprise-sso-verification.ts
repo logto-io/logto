@@ -17,7 +17,7 @@ export type EnterpriseSsoVerificationRecordData = {
   issuer?: string;
 };
 
-export const enterPriseSsoVerificationRecordDataGuard = z.object({
+export const enterpriseSsoVerificationRecordDataGuard = z.object({
   id: z.string(),
   connectorId: z.string(),
   type: z.literal(VerificationType.EnterpriseSso),

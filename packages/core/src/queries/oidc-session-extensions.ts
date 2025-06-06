@@ -1,4 +1,4 @@
-import { OidcSessionExtensions } from '@logto/schemas';
+import { OidcSessionExtensions, type OidcSessionExtension } from '@logto/schemas';
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
 import { buildInsertIntoWithPool } from '../database/insert-into.js';
@@ -28,6 +28,14 @@ export class OidcSessionExtensionsQueries {
     await this.pool.query(sql`
       delete from ${table}
         where ${fields.accountId} = ${accountId}
+    `);
+  }
+
+  async findBySessionUid(sessionUid: string) {
+    return this.pool.maybeOne<OidcSessionExtension>(sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+        from ${table}
+        where ${fields.sessionUid} = ${sessionUid}
     `);
   }
 }
