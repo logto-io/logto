@@ -1,3 +1,4 @@
+import { buildOrganizationUrn } from '@logto/core-kit';
 import { ApplicationType, GrantType, type Resource } from '@logto/schemas';
 import { formUrlEncodedHeaders } from '@logto/shared';
 
@@ -10,6 +11,7 @@ import {
 } from '#src/api/application.js';
 import { createResource, deleteResource } from '#src/api/resource.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
+import { OrganizationApiTest } from '#src/helpers/organization.js';
 import { generatePassword, generateUsername, getAccessTokenPayload } from '#src/utils.js';
 
 const tokenType = 'urn:logto:token-type:personal_access_token';
@@ -200,5 +202,30 @@ describe('Token Exchange (Personal Access Token)', () => {
         }),
       })
     ).rejects.toThrow();
+  });
+
+  it('should be able to exchange an organization token', async () => {
+    const organizationApi = new OrganizationApiTest();
+    const organization = await organizationApi.create({ name: 'foo' });
+    await organizationApi.addUsers(organization.id, [testUserId]);
+
+    const body = await oidcApi
+      .post('token', {
+        headers: {
+          ...formUrlEncodedHeaders,
+          Authorization: authorizationHeader,
+        },
+        body: new URLSearchParams({
+          grant_type: GrantType.TokenExchange,
+          subject_token: testToken,
+          subject_token_type: tokenType,
+          organization_id: organization.id,
+        }),
+      })
+      .json<{ access_token: string }>();
+
+    const payload = getAccessTokenPayload(body.access_token);
+    expect(payload).toHaveProperty('aud', buildOrganizationUrn(organization.id));
+    expect(payload).toHaveProperty('sub', testUserId);
   });
 });
