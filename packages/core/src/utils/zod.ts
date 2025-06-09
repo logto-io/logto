@@ -1,5 +1,5 @@
 import { languages, languageTagGuard } from '@logto/language-kit';
-import { jsonObjectGuard, translationGuard } from '@logto/schemas';
+import { jsonGuard, jsonObjectGuard, translationGuard } from '@logto/schemas';
 import type { ValuesOf } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
 import type { OpenAPIV3 } from 'openapi-types';
@@ -152,6 +152,36 @@ export const zodTypeToSwagger = (
     return {
       type: 'object',
       description: 'arbitrary',
+    };
+  }
+
+  if (config === jsonGuard) {
+    return {
+      oneOf: [
+        {
+          type: 'object',
+          description: 'arbitrary JSON object',
+        },
+        {
+          type: 'array',
+          items: {
+            oneOf: [
+              { type: 'string' },
+              { type: 'number' },
+              { type: 'boolean' },
+              { nullable: true },
+              {
+                type: 'object',
+                description: 'arbitrary JSON object',
+              },
+            ],
+          },
+        },
+        { type: 'string' },
+        { type: 'number' },
+        { type: 'boolean' },
+      ],
+      nullable: true,
     };
   }
 
