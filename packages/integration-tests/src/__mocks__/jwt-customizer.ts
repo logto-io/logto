@@ -1,5 +1,7 @@
 import {
   InteractionEvent,
+  type JwtCustomizerUserInteractionContext,
+  SignInIdentifier,
   VerificationType,
   type AccessTokenPayload,
   type ClientCredentialsPayload,
@@ -59,19 +61,27 @@ export const accessTokenJwtCustomizerPayload = {
     interaction: {
       interactionEvent: InteractionEvent.SignIn,
       userId: '123',
-      VerificationRecords: [
+      verificationRecords: [
         {
           id: 'verification_123',
           type: VerificationType.Password,
+          identifier: {
+            type: SignInIdentifier.Email,
+            value: 'foo@example.com',
+          },
           verified: true,
         },
       ],
-    },
+    } satisfies JwtCustomizerUserInteractionContext,
   },
 };
 
 export const accessTokenSampleScript = `const getCustomJwtClaims = async ({ token, context, environmentVariables }) => {
-  return { user_id: context?.user?.id ?? 'unknown', hasPassword: context?.user?.hasPassword };
+  const { interaction } = context;
+
+  const verificationRecord = interaction?.verificationRecords?.[0];
+
+  return { user_id: context?.user?.id ?? 'unknown', hasPassword: context?.user?.hasPassword, interactionEvent: interaction?.interactionEvent, verificationType: verificationRecord?.type };
 };`;
 
 export const accessTokenAccessDeniedSampleScript = `const getCustomJwtClaims = async ({ token, context, environmentVariables, api }) => {

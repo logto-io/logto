@@ -1,7 +1,13 @@
 import path from 'node:path';
 
 import { fetchTokenByRefreshToken } from '@logto/js';
-import { InteractionEvent, type Resource, RoleType } from '@logto/schemas';
+import {
+  InteractionEvent,
+  type Resource,
+  RoleType,
+  SignInIdentifier,
+  VerificationType,
+} from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 
@@ -21,7 +27,7 @@ import { assignUsersToRole, createRole, deleteRole } from '#src/api/role.js';
 import { createScope, deleteScope } from '#src/api/scope.js';
 import MockClient, { defaultConfig } from '#src/client/index.js';
 import { logtoUrl } from '#src/constants.js';
-import { processSession } from '#src/helpers/client.js';
+import { initExperienceClient, processSession } from '#src/helpers/client.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateUsername, generatePassword, getAccessTokenPayload } from '#src/utils.js';
@@ -107,15 +113,24 @@ describe('get access token', () => {
       script: accessTokenSampleScript,
     });
 
-    const client = new MockClient({
-      resources: [testApiResourceInfo.indicator],
-      scopes: testApiScopeNames,
+    const client = await initExperienceClient({
+      config: {
+        resources: [testApiResourceInfo.indicator],
+        scopes: testApiScopeNames,
+      },
     });
-    await client.initSession();
-    await client.successSend(putInteraction, {
-      event: InteractionEvent.SignIn,
-      identifier: { username: guestUsername, password },
+
+    const { verificationId } = await client.verifyPassword({
+      identifier: {
+        type: SignInIdentifier.Username,
+        value: guestUsername,
+      },
+      password,
     });
+    await client.identifyUser({
+      verificationId,
+    });
+
     const { redirectTo } = await client.submitInteraction();
     await processSession(client, redirectTo);
     const accessToken = await client.getAccessToken(testApiResourceInfo.indicator);
@@ -127,6 +142,14 @@ describe('get access token', () => {
     expect(getAccessTokenPayload(accessToken)).toHaveProperty('user_id', guestUserId);
     // The guest user has password.
     expect(getAccessTokenPayload(accessToken)).toHaveProperty('hasPassword', true);
+    expect(getAccessTokenPayload(accessToken)).toHaveProperty(
+      'interactionEvent',
+      InteractionEvent.SignIn
+    );
+    expect(getAccessTokenPayload(accessToken)).toHaveProperty(
+      'verificationType',
+      VerificationType.Password
+    );
 
     await deleteJwtCustomizer('access-token');
   });
