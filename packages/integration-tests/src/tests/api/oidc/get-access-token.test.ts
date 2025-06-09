@@ -26,7 +26,7 @@ import {
 import { assignUsersToRole, createRole, deleteRole } from '#src/api/role.js';
 import { createScope, deleteScope } from '#src/api/scope.js';
 import MockClient, { defaultConfig } from '#src/client/index.js';
-import { logtoUrl } from '#src/constants.js';
+import { isDevFeaturesEnabled, logtoUrl } from '#src/constants.js';
 import { initExperienceClient, processSession } from '#src/helpers/client.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
@@ -142,14 +142,17 @@ describe('get access token', () => {
     expect(getAccessTokenPayload(accessToken)).toHaveProperty('user_id', guestUserId);
     // The guest user has password.
     expect(getAccessTokenPayload(accessToken)).toHaveProperty('hasPassword', true);
-    expect(getAccessTokenPayload(accessToken)).toHaveProperty(
-      'interactionEvent',
-      InteractionEvent.SignIn
-    );
-    expect(getAccessTokenPayload(accessToken)).toHaveProperty(
-      'verificationType',
-      VerificationType.Password
-    );
+
+    if (isDevFeaturesEnabled) {
+      expect(getAccessTokenPayload(accessToken)).toHaveProperty(
+        'interactionEvent',
+        InteractionEvent.SignIn
+      );
+      expect(getAccessTokenPayload(accessToken)).toHaveProperty(
+        'verificationType',
+        VerificationType.Password
+      );
+    }
 
     await deleteJwtCustomizer('access-token');
   });
