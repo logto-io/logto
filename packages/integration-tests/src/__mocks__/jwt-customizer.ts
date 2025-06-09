@@ -1,4 +1,9 @@
-import { type AccessTokenPayload, type ClientCredentialsPayload } from '@logto/schemas';
+import {
+  InteractionEvent,
+  VerificationType,
+  type AccessTokenPayload,
+  type ClientCredentialsPayload,
+} from '@logto/schemas';
 
 const standardTokenPayloadData = {
   jti: 'f1d3d2d1-1f2d-3d4e-5d6f-7d8a9d0e1d2',
@@ -50,6 +55,17 @@ export const accessTokenJwtCustomizerPayload = {
       roles: [],
       organizations: [],
       organizationRoles: [],
+    },
+    interaction: {
+      interactionEvent: InteractionEvent.SignIn,
+      userId: '123',
+      VerificationRecords: [
+        {
+          id: 'verification_123',
+          type: VerificationType.Password,
+          verified: true,
+        },
+      ],
     },
   },
 };
