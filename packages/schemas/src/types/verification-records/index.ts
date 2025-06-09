@@ -1,6 +1,6 @@
 /**
- * This file define the data types and guards for verification records in Logto.
- * We keep these definitions in @logto/schemas to ensure it can be share accross different packages.
+ * This file defines the data types and guards for verification records in Logto.
+ * We keep these definitions in @logto/schemas to ensure it can be shared accross different packages.
  *
  * Check {@link @logto/core/src/routes/experience/classes/verifications} for the implementation of verification records.
  */
