@@ -31,3 +31,4 @@ export * from './sign-in-experience.js';
 export * from './subject-token.js';
 export * from './ssr.js';
 export * from './saml-application.js';
+export * from './verification-records/index.js';

@@ -1,7 +1,7 @@
 import { type SocialUserInfo, socialUserInfoGuard, type ToZodObject } from '@logto/connector-kit';
 import {
   type CreateUser,
-  type InteractionEvent,
+  InteractionEvent,
   type User,
   Users,
   UserSsoIdentities,
@@ -15,9 +15,12 @@ import { type WithInteractionDetailsContext } from '#src/middleware/koa-interact
 
 import { type WithI18nContext } from '../../middleware/koa-i18next.js';
 
+import { mfaDataGuard, type MfaData } from './classes/mfa.js';
 import {
+  type VerificationRecordData,
   type VerificationRecord,
   type VerificationRecordMap,
+  verificationRecordDataGuard,
 } from './classes/verifications/index.js';
 import { type WithExperienceInteractionHooksContext } from './middleware/koa-experience-interaction-hooks.js';
 import { type WithExperienceInteractionContext } from './middleware/koa-experience-interaction.js';
@@ -50,7 +53,7 @@ export type InteractionProfile = {
   | 'passwordEncryptionMethod'
 >;
 
-export const interactionProfileGuard = Users.createGuard
+const interactionProfileGuard = Users.createGuard
   .pick({
     avatar: true,
     name: true,
@@ -108,3 +111,34 @@ export type ExperienceInteractionRouterContext<ContextT extends WithLogContext =
 export type WithHooksAndLogsContext<ContextT extends WithLogContext = WithLogContext> = ContextT &
   WithInteractionDetailsContext &
   WithExperienceInteractionHooksContext;
+
+/**
+ * Interaction storage is used to store the interaction data during the interaction process.
+ * It is used to pass data between different interaction steps and to store the interaction state.
+ * It is stored in the oidc provider interaction session.
+ */
+export type InteractionStorage = {
+  interactionEvent: InteractionEvent;
+  userId?: string;
+  profile?: InteractionProfile;
+  mfa?: MfaData;
+  verificationRecords?: VerificationRecordData[];
+  captcha?: {
+    verified: boolean;
+    skipped: boolean;
+  };
+};
+
+export const interactionStorageGuard = z.object({
+  interactionEvent: z.nativeEnum(InteractionEvent),
+  userId: z.string().optional(),
+  profile: interactionProfileGuard.optional(),
+  mfa: mfaDataGuard.optional(),
+  verificationRecords: verificationRecordDataGuard.array().optional(),
+  captcha: z
+    .object({
+      verified: z.boolean(),
+      skipped: z.boolean(),
+    })
+    .optional(),
+}) satisfies ToZodObject<InteractionStorage>;

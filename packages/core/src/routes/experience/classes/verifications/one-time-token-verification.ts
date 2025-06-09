@@ -1,14 +1,12 @@
-import { type ToZodObject } from '@logto/connector-kit';
 import {
   type InteractionIdentifier,
   type OneTimeTokenContext,
-  oneTimeTokenContextGuard,
-  SignInIdentifier,
+  type SignInIdentifier,
   type User,
   VerificationType,
+  type OneTimeTokenVerificationRecordData,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -20,24 +18,10 @@ import { findUserByIdentifier } from '../utils.js';
 
 import { type IdentifierVerificationRecord } from './verification-record.js';
 
-export type OneTimeTokenVerificationRecordData = {
-  id: string;
-  type: VerificationType.OneTimeToken;
-  identifier: InteractionIdentifier<SignInIdentifier.Email>;
-  verified: boolean;
-  oneTimeTokenContext?: OneTimeTokenContext;
-};
-
-export const oneTimeTokenVerificationRecordDataGuard = z.object({
-  id: z.string(),
-  type: z.literal(VerificationType.OneTimeToken),
-  verified: z.boolean(),
-  identifier: z.object({
-    type: z.literal(SignInIdentifier.Email),
-    value: z.string(),
-  }),
-  oneTimeTokenContext: oneTimeTokenContextGuard.optional(),
-}) satisfies ToZodObject<OneTimeTokenVerificationRecordData>;
+export {
+  type OneTimeTokenVerificationRecordData,
+  oneTimeTokenVerificationRecordDataGuard,
+} from '@logto/schemas';
 
 export class OneTimeTokenVerification
   implements IdentifierVerificationRecord<VerificationType.OneTimeToken>

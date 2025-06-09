@@ -1,15 +1,15 @@
-import { type ToZodObject } from '@logto/connector-kit';
 import {
   MfaFactor,
   VerificationType,
   type BindTotp,
   type MfaVerificationTotp,
   type User,
+  type TotpVerificationRecordData,
+  totpVerificationRecordDataGuard,
 } from '@logto/schemas';
 import { generateStandardId, getUserDisplayName } from '@logto/shared';
 import { authenticator } from 'otplib';
 import qrcode from 'qrcode';
-import { z } from 'zod';
 
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import {
@@ -22,6 +22,8 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { type MfaVerificationRecord } from './verification-record.js';
 
+export { type TotpVerificationRecordData, totpVerificationRecordDataGuard } from '@logto/schemas';
+
 const defaultDisplayName = 'Unnamed User';
 
 // Type assertion for the user's TOTP mfa verification settings
@@ -29,23 +31,6 @@ const findUserTotp = (
   mfaVerifications: User['mfaVerifications']
 ): MfaVerificationTotp | undefined =>
   mfaVerifications.find((mfa): mfa is MfaVerificationTotp => mfa.type === MfaFactor.TOTP);
-
-export type TotpVerificationRecordData = {
-  id: string;
-  type: VerificationType.TOTP;
-  /** UserId is required for verifying or binding new TOTP */
-  userId: string;
-  secret?: string;
-  verified: boolean;
-};
-
-export const totpVerificationRecordDataGuard = z.object({
-  id: z.string(),
-  type: z.literal(VerificationType.TOTP),
-  userId: z.string(),
-  secret: z.string().optional(),
-  verified: z.boolean(),
-}) satisfies ToZodObject<TotpVerificationRecordData>;
 
 export class TotpVerification implements MfaVerificationRecord<VerificationType.TOTP> {
   /**

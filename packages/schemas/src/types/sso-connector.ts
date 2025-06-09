@@ -1,3 +1,4 @@
+import { socialUserInfoGuard } from '@logto/connector-kit';
 import { z } from 'zod';
 
 import { SsoConnectors, type SsoConnector } from '../db-entries/sso-connector.js';
@@ -92,3 +93,7 @@ export type SsoConnectorWithProviderConfig = z.infer<typeof ssoConnectorWithProv
 export enum SsoAuthenticationQueryKey {
   SsoConnectorId = 'ssoConnectorId',
 }
+
+// Saml assertion returned user attribute value
+export const extendedSocialUserInfoGuard = socialUserInfoGuard.catchall(z.unknown());
+export type ExtendedSocialUserInfo = z.infer<typeof extendedSocialUserInfoGuard>;
