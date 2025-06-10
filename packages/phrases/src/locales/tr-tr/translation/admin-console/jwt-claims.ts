@@ -37,6 +37,11 @@ const jwt_claims = {
     subtitle:
       '`veri.yetki` giriş parametresini kullanarak önemli yetki bilgilerini sağlayın, sadece belge değişimi için kullanılabilir.',
   },
+  interaction_data: {
+    title: 'Kullanıcı etkileşim bağlamı',
+    subtitle:
+      'Kullanıcının etkileşim ayrıntılarına, mevcut kimlik doğrulama oturumu için `context.interaction` parametresini kullanarak erişin, `interactionEvent`, `userId` ve `verificationRecords` dahil.',
+  },
   token_data: {
     title: 'Belge verisi',
     subtitle: '`belge` giriş parametresini mevcut erişim belgesi yükü için kullanın. ',

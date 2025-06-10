@@ -38,6 +38,11 @@ const jwt_claims = {
     subtitle:
       'Użyj parametru wejściowego `context.grant`, aby dostarczyć istotne informacje dotyczące przyznania, dostępne tylko przy wymianie tokenu.',
   },
+  interaction_data: {
+    title: 'Kontekst interakcji użytkownika',
+    subtitle:
+      'Użyj parametru `context.interaction`, aby uzyskać dostęp do szczegółów interakcji użytkownika dla bieżącej sesji uwierzytelniania, w tym `interactionEvent`, `userId`, i `verificationRecords`.',
+  },
   token_data: {
     title: 'Dane tokenu',
     subtitle: 'Użyj parametru wejściowego `token`, aby uzyskać bieżący ładunek tokenu dostępu.',

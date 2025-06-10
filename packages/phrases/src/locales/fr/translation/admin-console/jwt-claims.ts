@@ -39,6 +39,11 @@ const jwt_claims = {
     subtitle:
       'Utilisez le paramètre d’entrée `context.grant` pour fournir des informations cruciales sur les subventions, uniquement disponibles pour l’échange de jetons.',
   },
+  interaction_data: {
+    title: "Contexte d'interaction utilisateur",
+    subtitle:
+      "Utilisez le paramètre `context.interaction` pour accéder aux détails de l'interaction de l'utilisateur pour la session d'authentification en cours, y compris `interactionEvent`, `userId` et `verificationRecords`.",
+  },
   token_data: {
     title: 'Données du jeton',
     subtitle: "Utilisez le paramètre d'entrée `token` pour le payload du jeton d'accès actuel. ",

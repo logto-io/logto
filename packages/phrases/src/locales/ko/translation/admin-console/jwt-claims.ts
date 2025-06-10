@@ -35,6 +35,11 @@ const jwt_claims = {
     subtitle:
       '`context.grant` 입력 매개변수를 사용하여 중요한 Grant 정보를 제공하고, 이 정보는 오직 토큰 교환에만 사용할 수 있습니다.',
   },
+  interaction_data: {
+    title: '사용자 상호작용 컨텍스트',
+    subtitle:
+      '`context.interaction` 매개변수를 사용하여 현재 인증 세션에 대한 사용자의 상호작용 세부 정보에 접근합니다. 여기에는 `interactionEvent`, `userId`, `verificationRecords`가 포함됩니다.',
+  },
   token_data: {
     title: '토큰 데이터',
     subtitle: '현재 액세스 토큰 페이로드에 대한 `token` 입력 매개변수 사용.',
