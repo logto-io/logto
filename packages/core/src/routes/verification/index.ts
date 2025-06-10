@@ -250,10 +250,6 @@ export default function verificationRoutes<T extends UserRouter>(
     }
   );
 
-  if (!EnvSet.values.isDevFeaturesEnabled) {
-    return;
-  }
-
   router.post(
     `${verificationApiPrefix}/web-authn/registration`,
     koaGuard({

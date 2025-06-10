@@ -9,7 +9,6 @@ import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 
-import { EnvSet } from '../../env-set/index.js';
 import RequestError from '../../errors/RequestError/index.js';
 import { encryptUserPassword } from '../../libraries/user.utils.js';
 import assertThat from '../../utils/assert-that.js';
@@ -183,8 +182,5 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
 
   emailAndPhoneRoutes(...args);
   identitiesRoutes(...args);
-
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    mfaVerificationsRoutes(...args);
-  }
+  mfaVerificationsRoutes(...args);
 }
