@@ -8,7 +8,7 @@
  */
 
 import assert from 'node:assert';
-import { autoCompare, deepSort } from './compare-database.js';
+import { autoCompare, deepSort, normalizeDefinition } from './compare-database.js';
 
 // Test helper function
 const runTest = (testName, testFn) => {
@@ -211,4 +211,102 @@ runTest('deepSort - mixed types in array', () => {
   const result = deepSort(input);
   
   assert.deepStrictEqual(result, expected);
+});
+
+// Test cases for normalizeDefinition function
+runTest('normalizeDefinition - single line without leading/trailing spaces', () => {
+  const input = 'CREATE FUNCTION test() RETURNS void';
+  const expected = 'CREATE FUNCTION test() RETURNS void';
+  const result = normalizeDefinition(input);
+  
+  assert.strictEqual(result, expected);
+});
+
+runTest('normalizeDefinition - single line with leading/trailing spaces', () => {
+  const input = '  CREATE FUNCTION test() RETURNS void  ';
+  const expected = 'CREATE FUNCTION test() RETURNS void';
+  const result = normalizeDefinition(input);
+  
+  assert.strictEqual(result, expected);
+});
+
+runTest('normalizeDefinition - multi-line with various indentation', () => {
+  const input = `CREATE OR REPLACE FUNCTION test_function()
+    RETURNS trigger
+    LANGUAGE plpgsql
+  AS $function$
+    BEGIN
+      IF NEW.status IS NULL THEN
+        NEW.status := 'active';
+      END IF;
+      RETURN NEW;
+    END;
+  $function$`;
+  
+  const expected = `CREATE OR REPLACE FUNCTION test_function()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $function$
+BEGIN
+IF NEW.status IS NULL THEN
+NEW.status := 'active';
+END IF;
+RETURN NEW;
+END;
+$function$`;
+  
+  const result = normalizeDefinition(input);
+  assert.strictEqual(result, expected);
+});
+
+runTest('normalizeDefinition - trigger action statement', () => {
+  const input = `  BEGIN
+    UPDATE table1 SET updated_at = NOW() WHERE id = NEW.id;
+    INSERT INTO audit_log (table_name, action) VALUES ('table1', 'UPDATE');
+      RETURN NEW;
+  END  `;
+  
+  const expected = `BEGIN
+UPDATE table1 SET updated_at = NOW() WHERE id = NEW.id;
+INSERT INTO audit_log (table_name, action) VALUES ('table1', 'UPDATE');
+RETURN NEW;
+END`;
+  
+  const result = normalizeDefinition(input);
+  assert.strictEqual(result, expected);
+});
+
+runTest('normalizeDefinition - empty lines and mixed spacing', () => {
+  const input = `  CREATE FUNCTION complex_func()
+
+    RETURNS TABLE(id integer, name text)
+  AS $$
+    SELECT id, name
+      FROM users
+        WHERE active = true;
+  $$`;
+  
+  const expected = `CREATE FUNCTION complex_func()
+
+RETURNS TABLE(id integer, name text)
+AS $$
+SELECT id, name
+FROM users
+WHERE active = true;
+$$`;
+  
+  const result = normalizeDefinition(input);
+  assert.strictEqual(result, expected);
+});
+
+runTest('normalizeDefinition - non-string input', () => {
+  assert.strictEqual(normalizeDefinition(null), null);
+  assert.strictEqual(normalizeDefinition(undefined), undefined);
+  assert.strictEqual(normalizeDefinition(123), 123);
+  assert.deepStrictEqual(normalizeDefinition({ key: 'value' }), { key: 'value' });
+});
+
+runTest('normalizeDefinition - empty string', () => {
+  assert.strictEqual(normalizeDefinition(''), '');
+  assert.strictEqual(normalizeDefinition('   '), '');
 });
