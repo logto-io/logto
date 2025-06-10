@@ -25,20 +25,25 @@ import RequestError from '#src/errors/RequestError/index.js';
 
 type GenerateWebAuthnRegistrationOptionsParameters = {
   rpId: string;
-  user: Pick<User, 'id' | 'username' | 'primaryEmail' | 'primaryPhone' | 'mfaVerifications'>;
+  user: Pick<
+    User,
+    'id' | 'name' | 'username' | 'primaryEmail' | 'primaryPhone' | 'mfaVerifications'
+  >;
 };
 
 export const generateWebAuthnRegistrationOptions = async ({
   rpId,
   user,
 }: GenerateWebAuthnRegistrationOptionsParameters): Promise<WebAuthnRegistrationOptions> => {
-  const { username, primaryEmail, primaryPhone, id, mfaVerifications } = user;
+  const { username, name, primaryEmail, primaryPhone, id, mfaVerifications } = user;
 
   const options: GenerateRegistrationOptionsOpts = {
     rpName: rpId,
     rpID: rpId,
     userID: Uint8Array.from(Buffer.from(id)),
     userName: getUserDisplayName({ username, primaryEmail, primaryPhone }) ?? 'Unnamed User',
+    userDisplayName:
+      getUserDisplayName({ name, username, primaryEmail, primaryPhone }) ?? 'Unnamed User',
     timeout: 60_000,
     attestationType: 'none',
     excludeCredentials: mfaVerifications

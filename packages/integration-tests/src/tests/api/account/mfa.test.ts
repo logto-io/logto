@@ -44,6 +44,7 @@ describe('my-account (mfa)', () => {
 
       expect(verificationRecordId).toBeTruthy();
       expect(registrationOptions.rp.name).toBe('localhost');
+      expect(registrationOptions.user.displayName).toBe(user.username);
 
       await deleteDefaultTenantUser(user.id);
     });
