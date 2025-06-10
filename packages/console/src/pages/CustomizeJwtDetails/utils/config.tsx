@@ -34,7 +34,7 @@ declare interface CustomJwtClaims extends Record<string, any> {}
  * 
  * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} user - The user info associated with the token.
  * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerGrantContext}} [grant] - The grant context associated with the token.
- * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserInteractionContext}} [interaction] - The user interaction context associated with the token.
+ * ${isDevFeaturesEnabled ? `@param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserInteractionContext}} [interaction] - The user interaction context associated with the token.` : ''}
  */
 declare type Context = {
   /**
@@ -48,7 +48,7 @@ declare type Context = {
   /**
    * The user interaction context associated with the token.
    */
-  interaction?: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserInteractionContext};
+  ${isDevFeaturesEnabled ? `interaction?: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserInteractionContext};` : ''}
 }
 
 declare type Payload = {
@@ -59,9 +59,9 @@ declare type Payload = {
   /**
    * Logto internal data that can be used to pass additional information.
    *
-   * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} user
-   * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerGrantContext}} [grant]
-   * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserInteractionContext}} [interaction]
+   * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} user
+   * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerGrantContext}} [grant]
+   * ${isDevFeaturesEnabled ? `@param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserInteractionContext}} [interaction]` : ''}
    */
   context: Context;
   /**

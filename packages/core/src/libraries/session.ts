@@ -7,6 +7,8 @@ import { z } from 'zod';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { EnvSet } from '../env-set/index.js';
+
 const updateInteractionResult = async (
   ctx: Context,
   provider: Provider,
@@ -94,6 +96,11 @@ const saveInteractionLastSubmissionToSession = async (
   queries: Queries,
   interactionDetails: Awaited<ReturnType<Provider['interactionDetails']>>
 ) => {
+  // TODO: Remove this check when the feature is ready to be released. @simeng
+  if (!EnvSet.values.isDevFeaturesEnabled) {
+    return;
+  }
+
   const { session, lastSubmission } = interactionDetails;
 
   if (!session || !lastSubmission) {
