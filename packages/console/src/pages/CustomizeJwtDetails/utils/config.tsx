@@ -8,11 +8,9 @@ import {
   InteractionEvent,
 } from '@logto/schemas';
 import { type EditorProps } from '@monaco-editor/react';
-import { conditional } from '@silverhand/essentials';
 
 import TokenFileIcon from '@/assets/icons/token-file-icon.svg?react';
 import UserFileIcon from '@/assets/icons/user-file-icon.svg?react';
-import { isDevFeaturesEnabled } from '@/consts/env.js';
 
 import type { ModelSettings } from '../MainContent/MonacoCodeEditor/type.js';
 
@@ -34,7 +32,7 @@ declare interface CustomJwtClaims extends Record<string, any> {}
  * 
  * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} user - The user info associated with the token.
  * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerGrantContext}} [grant] - The grant context associated with the token.
- * ${isDevFeaturesEnabled ? `@param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserInteractionContext}} [interaction] - The user interaction context associated with the token.` : ''}
+ * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserInteractionContext}} [interaction] - The user interaction context associated with the token.
  */
 declare type Context = {
   /**
@@ -48,7 +46,7 @@ declare type Context = {
   /**
    * The user interaction context associated with the token.
    */
-  ${isDevFeaturesEnabled ? `interaction?: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserInteractionContext};` : ''}
+  interaction?: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserInteractionContext};
 }
 
 declare type Payload = {
@@ -59,9 +57,9 @@ declare type Payload = {
   /**
    * Logto internal data that can be used to pass additional information.
    *
-   * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} user
-   * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerGrantContext}} [grant]
-   * ${isDevFeaturesEnabled ? `@param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserInteractionContext}} [interaction]` : ''}
+   * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} user
+   * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerGrantContext}} [grant]
+   * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserInteractionContext}} [interaction]
    */
   context: Context;
   /**
@@ -275,7 +273,7 @@ const defaultUserInteractionContext: Partial<JwtCustomizerUserInteractionContext
 export const defaultUserTokenContextData = {
   user: defaultUserContext,
   grant: defaultGrantContext,
-  ...conditional(isDevFeaturesEnabled && { interaction: defaultUserInteractionContext }),
+  interaction: defaultUserInteractionContext,
 };
 
 export const accessTokenPayloadTestModel: ModelSettings = {
