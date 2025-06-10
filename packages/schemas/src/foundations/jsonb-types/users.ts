@@ -25,6 +25,15 @@ export type UserProfile = Partial<{
   }>;
 }>;
 
+export const addressGuard = z.object({
+  formatted: z.string().optional(),
+  streetAddress: z.string().optional(),
+  locality: z.string().optional(),
+  region: z.string().optional(),
+  postalCode: z.string().optional(),
+  country: z.string().optional(),
+});
+
 export const userProfileGuard = (
   z.object({
     familyName: z.string(),
@@ -38,20 +47,13 @@ export const userProfileGuard = (
     birthdate: z.string(),
     zoneinfo: z.string(),
     locale: z.string(),
-    address: z
-      .object({
-        formatted: z.string(),
-        streetAddress: z.string(),
-        locality: z.string(),
-        region: z.string(),
-        postalCode: z.string(),
-        country: z.string(),
-      })
-      .partial(),
+    address: addressGuard,
   }) satisfies z.ZodType<Required<UserProfile>>
 ).partial();
 
 export const userProfileKeys = Object.freeze(userProfileGuard.keyof().options);
+
+export const userProfileAddressKeys = Object.freeze(addressGuard.keyof().options);
 
 export const roleNamesGuard = z.string().array();
 

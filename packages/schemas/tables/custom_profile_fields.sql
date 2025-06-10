@@ -5,7 +5,7 @@ create table custom_profile_fields (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
   id varchar(21) not null,
-  name varchar(128) not null default '',
+  name varchar(128) not null,
   type custom_profile_field_type not null,
   label varchar(128) not null default '',
   description varchar(256),
@@ -29,7 +29,13 @@ create table custom_profile_fields (
 
 create or replace function custom_profile_fields__increment_sie_order() returns trigger as
 $$ begin
-  new.sie_order = (select coalesce(max(sie_order), 0) from custom_profile_fields where tenant_id = new.tenant_id) + 1;
+  new.sie_order = (
+    select coalesce(max(sie_order), 0)
+    from custom_profile_fields
+    where tenant_id = (
+      select id from tenants where db_user = current_user
+    )
+  ) + 1;
   return new;
 end; $$ language plpgsql;
 
