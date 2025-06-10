@@ -35,6 +35,11 @@ const jwt_claims = {
     subtitle:
       '`context.grant`入力パラメータを使用して重要なグラント情報を提供します。これはトークン交換のためにのみ使用できます。',
   },
+  interaction_data: {
+    title: 'ユーザーインタラクションコンテキスト',
+    subtitle:
+      '`context.interaction` パラメーターを使用して、現在の認証セッションにおけるユーザーのインタラクション詳細にアクセスします。包含されるのは `interactionEvent`、`userId`、`verificationRecords` です。',
+  },
   token_data: {
     title: 'トークンデータ',
     subtitle: '現在のアクセストークンペイロードに対して`token`入力パラメータを使用します。',

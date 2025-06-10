@@ -33,6 +33,11 @@ const jwt_claims = {
     title: '授权数据',
     subtitle: '使用`context.grant`输入参数提供重要的授权信息，仅适用于令牌交换。',
   },
+  interaction_data: {
+    title: '用户交互上下文',
+    subtitle:
+      '使用 `context.interaction` 参数访问当前身份验证会话的用户交互详细信息，包括 `interactionEvent`、`userId` 和 `verificationRecords`。',
+  },
   token_data: {
     title: '令牌数据',
     subtitle: '使用`token`输入参数查看当前访问令牌负载。',

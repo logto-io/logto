@@ -33,6 +33,11 @@ const jwt_claims = {
     title: '授權數據',
     subtitle: '使用 `context.grant` 輸入參數提供重要的授權信息，只適用於權杖交換。',
   },
+  interaction_data: {
+    title: '用戶交互上下文',
+    subtitle:
+      '使用 `context.interaction` 參數訪問當前身份驗證會話的用戶交互詳情，包括 `interactionEvent`、`userId` 和 `verificationRecords`。',
+  },
   token_data: {
     title: '權杖數據',
     subtitle: '使用 `token` 輸入參數查看當前存取權杖有效負載。',

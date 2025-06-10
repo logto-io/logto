@@ -38,7 +38,7 @@ const jwt_claims = {
   interaction_data: {
     title: 'User interaction context',
     subtitle:
-      "Use the context.interaction parameter to retrieve details about the user's sign-in interaction during the current session.",
+      "Use the `context.interaction` parameter to access the user's interaction details for the current authentication session, including `interactionEvent`, `userId`, and `verificationRecords`.",
   },
   token_data: {
     title: 'Token payload',

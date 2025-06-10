@@ -35,6 +35,11 @@ const jwt_claims = {
     subtitle:
       'استخدم معلمة الإدخال `context.grant` لتوفير معلومات المنحة الحيوية، متاحة فقط لتبادل الرموز.',
   },
+  interaction_data: {
+    title: 'سياق تفاعل المستخدم',
+    subtitle:
+      'استخدم المعلمة `context.interaction` للوصول إلى تفاصيل تفاعل المستخدم في جلسة المصادقة الحالية، بما في ذلك `interactionEvent`, `userId`, و `verificationRecords`.',
+  },
   token_data: {
     title: 'بيانات الرمز',
     subtitle: 'استخدم معلمة الإدخال `token` لحمولة رمز الوصول الحالي.',

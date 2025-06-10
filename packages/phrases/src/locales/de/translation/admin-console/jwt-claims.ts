@@ -40,6 +40,11 @@ const jwt_claims = {
     subtitle:
       'Verwenden Sie den `context.grant` Eingabeparameter, um wichtige Informationen zu gewähren, nur für den Token-Austausch verfügbar.',
   },
+  interaction_data: {
+    title: 'Benutzerinteraktionskontext',
+    subtitle:
+      'Verwenden Sie den Parameter `context.interaction`, um auf die Interaktionsdetails des Benutzers der aktuellen Authentifizierungssitzung zuzugreifen, einschließlich `interactionEvent`, `userId` und `verificationRecords`.',
+  },
   token_data: {
     title: 'Token-Daten',
     subtitle: 'Verwenden Sie den `token` Eingabeparameter für die aktuelle Zugriffstoken-Payload.',
