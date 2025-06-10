@@ -7,6 +7,9 @@ import { applyTableRls, dropTableRls } from './utils/1704934999-tables.js';
 const alteration: AlterationScript = {
   up: async (pool) => {
     await pool.query(sql`
+      create type custom_profile_field_type
+        as enum ('Text', 'Number', 'Date', 'Checkbox', 'Select', 'Url', 'Regex', 'Address', 'Fullname');
+
       create table custom_profile_fields (
         tenant_id varchar(21) not null
           references tenants (id) on update cascade on delete cascade,
