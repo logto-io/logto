@@ -115,16 +115,18 @@ const useSubscribe = () => {
 
   const visitManagePaymentPage = async (tenantId: string) => {
     try {
+      const currentUrl = window.location.href;
       const { redirectUri } = await cloudApi.post('/api/tenants/:tenantId/stripe-customer-portal', {
         params: {
           tenantId,
         },
         body: {
-          callbackUrl: window.location.href,
+          callbackUrl: currentUrl,
         },
       });
 
-      window.open(redirectUri, '_blank', 'noopener,noreferrer');
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      window.location.href = redirectUri;
     } catch (error: unknown) {
       void toastResponseError(error);
     }
