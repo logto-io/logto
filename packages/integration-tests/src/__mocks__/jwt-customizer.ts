@@ -1,4 +1,11 @@
-import { type AccessTokenPayload, type ClientCredentialsPayload } from '@logto/schemas';
+import {
+  InteractionEvent,
+  type JwtCustomizerUserInteractionContext,
+  SignInIdentifier,
+  VerificationType,
+  type AccessTokenPayload,
+  type ClientCredentialsPayload,
+} from '@logto/schemas';
 
 const standardTokenPayloadData = {
   jti: 'f1d3d2d1-1f2d-3d4e-5d6f-7d8a9d0e1d2',
@@ -51,11 +58,30 @@ export const accessTokenJwtCustomizerPayload = {
       organizations: [],
       organizationRoles: [],
     },
+    interaction: {
+      interactionEvent: InteractionEvent.SignIn,
+      userId: '123',
+      verificationRecords: [
+        {
+          id: 'verification_123',
+          type: VerificationType.Password,
+          identifier: {
+            type: SignInIdentifier.Email,
+            value: 'foo@example.com',
+          },
+          verified: true,
+        },
+      ],
+    } satisfies JwtCustomizerUserInteractionContext,
   },
 };
 
 export const accessTokenSampleScript = `const getCustomJwtClaims = async ({ token, context, environmentVariables }) => {
-  return { user_id: context?.user?.id ?? 'unknown', hasPassword: context?.user?.hasPassword };
+  const { interaction } = context;
+
+  const verificationRecord = interaction?.verificationRecords?.[0];
+
+  return { user_id: context?.user?.id ?? 'unknown', hasPassword: context?.user?.hasPassword, interactionEvent: interaction?.interactionEvent, verificationType: verificationRecord?.type };
 };`;
 
 export const accessTokenAccessDeniedSampleScript = `const getCustomJwtClaims = async ({ token, context, environmentVariables, api }) => {

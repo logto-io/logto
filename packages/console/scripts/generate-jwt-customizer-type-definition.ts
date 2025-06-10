@@ -5,6 +5,7 @@ import {
   clientCredentialsPayloadGuard,
   jwtCustomizerGrantContextGuard,
   jwtCustomizerUserContextGuard,
+  jwtCustomizerUserInteractionContextGuard,
 } from '@logto/schemas';
 import prettier from 'prettier';
 import { type ZodTypeAny } from 'zod';
@@ -17,6 +18,7 @@ const filePath = 'src/consts/jwt-customizer-type-definition.ts';
 const typeIdentifiers = `export enum JwtCustomizerTypeDefinitionKey {
   JwtCustomizerUserContext = 'JwtCustomizerUserContext',
   JwtCustomizerGrantContext = 'JwtCustomizerGrantContext',
+  JwtCustomizerUserInteractionContext = 'JwtCustomizerUserInteractionContext',
   AccessTokenPayload = 'AccessTokenPayload',
   ClientCredentialsPayload = 'ClientCredentialsPayload',
   EnvironmentVariables = 'EnvironmentVariables',
@@ -41,6 +43,30 @@ const inferTsDefinitionFromZod = (zodSchema: ZodTypeAny, identifier: string): st
   return `type ${identifier} = ${typeDefinition};`;
 };
 
+/**
+ * EnterpriseSsoUserInfo zod guard uses `catchall(jsonGuard)` to extend the type to allow any additional properties.
+ * However, the `catchall()` schema is not recognized by zod-to-ts,
+ * so it will not generate the index signature for the type.
+ * To fix this, we manually add the index signature to the type definition.
+ *
+ * Map the `enterpriseSsoUserInfo?: { ... } | undefined;` to
+ * `enterpriseSsoUserInfo?: { ...; [k: string]?: unknown; } | undefined;`
+ */
+const addIndexSignatureToEnterpriseSsoUserInfo = (source: string) => {
+  // 1. Capture in segments: prefix = "enterpriseSsoUserInfo?: {"
+  //    body   = {...original properties...}
+  //    suffix = "} | undefined;" (may include a semicolon/space)
+  const blockReg = /(\benterpriseSsoUserInfo\?\s*:\s*{)([\S\s]*?)(}\s*\|\s*undefined\s*;?)/g;
+
+  return source.replaceAll(blockReg, (full, prefix: string, body: string, suffix: string) => {
+    // 2. Add the fallback index signature to the body
+    const indent = '    ';
+    const addition = `${indent}[k: string]?: unknown;\n`;
+
+    return `${prefix}${body}${addition}${suffix}`;
+  });
+};
+
 // Create the jwt-customizer-type-definition.ts file
 const createJwtCustomizerTypeDefinitions = async () => {
   const jwtCustomizerUserContextTypeDefinition = inferTsDefinitionFromZod(
@@ -52,6 +78,14 @@ const createJwtCustomizerTypeDefinitions = async () => {
     jwtCustomizerGrantContextGuard,
     'JwtCustomizerGrantContext'
   );
+
+  const jwtCustomizerUserInteractionContextTypeDefinition =
+    addIndexSignatureToEnterpriseSsoUserInfo(
+      inferTsDefinitionFromZod(
+        jwtCustomizerUserInteractionContextGuard,
+        'JwtCustomizerUserInteractionContext'
+      )
+    );
 
   const accessTokenPayloadTypeDefinition = inferTsDefinitionFromZod(
     accessTokenPayloadGuard,
@@ -69,6 +103,8 @@ ${typeIdentifiers}
 export const jwtCustomizerUserContextTypeDefinition = \`${jwtCustomizerUserContextTypeDefinition}\`;
 
 export const jwtCustomizerGrantContextTypeDefinition = \`${jwtCustomizerGrantContextTypeDefinition}\`;
+
+export const jwtCustomizerUserInteractionContextTypeDefinition = \`${jwtCustomizerUserInteractionContextTypeDefinition}\`;
 
 export const accessTokenPayloadTypeDefinition = \`${accessTokenPayloadTypeDefinition}\`;
 
