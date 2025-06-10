@@ -2,6 +2,7 @@ import account_center from './account-center.js';
 import application from './application.js';
 import auth from './auth.js';
 import connector from './connector.js';
+import custom_profile_fields from './custom-profile-fields.js';
 import domain from './domain.js';
 import entity from './entity.js';
 import guard from './guard.js';
@@ -56,6 +57,7 @@ const errors = {
   verification_record,
   account_center,
   one_time_token,
+  custom_profile_fields,
 };
 
 export default Object.freeze(errors);

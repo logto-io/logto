@@ -78,6 +78,20 @@ export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<St
             status: 422,
           });
         }
+
+        if (error.constraint === 'custom_profile_fields__name') {
+          throw new RequestError({
+            code: 'custom_profile_fields.name_exists',
+            status: 422,
+          });
+        }
+
+        if (error.constraint === 'custom_profile_fields__sie_order') {
+          throw new RequestError({
+            code: 'custom_profile_fields.conflicted_sie_order',
+            status: 422,
+          });
+        }
       }
 
       if (error instanceof CheckIntegrityConstraintViolationError) {
