@@ -101,6 +101,7 @@ const getInteractionLastSubmission = async (
   queries: Queries,
   { accountId, sessionUid }: AccessToken
 ) => {
+  // TODO: Remove this check when the feature is ready to be released. @simeng
   if (!EnvSet.values.isDevFeaturesEnabled) {
     return;
   }
