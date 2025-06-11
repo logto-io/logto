@@ -18,9 +18,7 @@ create table user_social_identities (
   primary key (tenant_id, id),
   constraint user_social_identities__target__identity_id
     unique (tenant_id, target, identity_id)
-)
-
-
+);
 
 create trigger set_updated_at
   before update on user_social_identities
