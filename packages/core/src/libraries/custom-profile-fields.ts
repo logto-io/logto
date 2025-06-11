@@ -60,7 +60,9 @@ export const createCustomProfileFieldsLibrary = (queries: Queries) => {
 const validateCustomProfileField = (data: CreateCustomProfileFieldData) => {
   switch (data.type) {
     case CustomProfileFieldType.Text: {
-      const { minLength, maxLength } = textProfileFieldGuard.parse(data);
+      const {
+        config: { minLength, maxLength },
+      } = textProfileFieldGuard.parse(data);
       assertThat(
         minLength && maxLength && minLength <= maxLength,
         'custom_profile_fields.invalid_min_max_input'
@@ -68,7 +70,9 @@ const validateCustomProfileField = (data: CreateCustomProfileFieldData) => {
       break;
     }
     case CustomProfileFieldType.Number: {
-      const { minValue, maxValue } = numberProfileFieldGuard.parse(data);
+      const {
+        config: { minValue, maxValue },
+      } = numberProfileFieldGuard.parse(data);
       assertThat(
         minValue && maxValue && minValue <= maxValue,
         'custom_profile_fields.invalid_min_max_input'
@@ -76,28 +80,28 @@ const validateCustomProfileField = (data: CreateCustomProfileFieldData) => {
       break;
     }
     case CustomProfileFieldType.Checkbox: {
-      const { options } = checkboxProfileFieldGuard.parse(data);
-      assertThat(options.length > 0, 'custom_profile_fields.invalid_options');
+      const { config } = checkboxProfileFieldGuard.parse(data);
+      assertThat(config.options.length > 0, 'custom_profile_fields.invalid_options');
       break;
     }
     case CustomProfileFieldType.Select: {
-      const { options } = selectProfileFieldGuard.parse(data);
-      assertThat(options.length > 0, 'custom_profile_fields.invalid_options');
+      const { config } = selectProfileFieldGuard.parse(data);
+      assertThat(config.options.length > 0, 'custom_profile_fields.invalid_options');
       break;
     }
     case CustomProfileFieldType.Regex: {
-      const { format } = regexProfileFieldGuard.parse(data);
-      assertThat(isValidRegEx(format), 'custom_profile_fields.invalid_regex_format');
+      const { config } = regexProfileFieldGuard.parse(data);
+      assertThat(isValidRegEx(config.format), 'custom_profile_fields.invalid_regex_format');
       break;
     }
     case CustomProfileFieldType.Address: {
-      const { parts } = addressProfileFieldGuard.parse(data);
-      assertThat(parts.length > 0, 'custom_profile_fields.invalid_address_parts');
+      const { config } = addressProfileFieldGuard.parse(data);
+      assertThat(config.parts.length > 0, 'custom_profile_fields.invalid_address_parts');
       break;
     }
     case CustomProfileFieldType.Fullname: {
-      const { parts } = fullnameProfileFieldGuard.parse(data);
-      assertThat(parts.length > 0, 'custom_profile_fields.invalid_fullname_parts');
+      const { config } = fullnameProfileFieldGuard.parse(data);
+      assertThat(config.parts.length > 0, 'custom_profile_fields.invalid_fullname_parts');
       break;
     }
     case CustomProfileFieldType.Url: {
