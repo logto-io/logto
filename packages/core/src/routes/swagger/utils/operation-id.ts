@@ -28,7 +28,12 @@ const methodToVerb = Object.freeze({
 type RouteDictionary = Record<`${OpenAPIV3.HttpMethods} ${string}`, string>;
 
 const devFeatureCustomRoutes: RouteDictionary = Object.freeze({
+  'get /custom-profile-fields': 'FindAllCustomProfileFields',
+  'get /custom-profile-fields/{id}': 'FindCustomProfileFieldById',
   'post /custom-profile-fields': 'CreateCustomProfileField',
+  'patch /custom-profile-fields/{id}': 'UpdateCustomProfileFieldById',
+  'delete /custom-profile-fields/{id}': 'DeleteCustomProfileFieldById',
+  'put /custom-profile-fields/sie-order': 'UpdateCustomProfileFieldsSieOrder',
 });
 
 export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
