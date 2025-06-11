@@ -4,37 +4,25 @@ import { z } from 'zod';
 import { CustomProfileFields } from '../db-entries/index.js';
 import { Users } from '../db-entries/user.js';
 import {
+  CustomProfileFieldType,
+  customProfileFieldTypeGuard,
   type UserProfile,
   userProfileAddressKeys,
   userProfileGuard,
-} from '../foundations/jsonb-types/users.js';
-
-export enum ProfileFieldType {
-  /* Primitive types */
-  Text = 'Text',
-  Number = 'Number',
-  Date = 'Date',
-  Checkbox = 'Checkbox',
-  Select = 'Select',
-  Url = 'Url',
-  Regex = 'Regex',
-  /* Composite types */
-  Address = 'Address',
-  Fullname = 'Fullname',
-}
+} from '../foundations/index.js';
 
 export type BaseProfileField = {
   name: string;
   label?: string;
   description?: string;
-  type: ProfileFieldType;
+  type: CustomProfileFieldType;
   required?: boolean;
   placeholder?: string;
 };
 
 const baseProfileFieldGuard = z.object({
   name: z.string(),
-  type: z.nativeEnum(ProfileFieldType),
+  type: customProfileFieldTypeGuard,
   label: z.string(),
   description: z.string().optional(),
   required: z.boolean().optional(),
@@ -42,98 +30,128 @@ const baseProfileFieldGuard = z.object({
 });
 
 export type TextProfileField = BaseProfileField & {
-  type: ProfileFieldType.Text;
-  minLength?: number;
-  maxLength?: number;
+  type: CustomProfileFieldType.Text;
+  config: {
+    minLength?: number;
+    maxLength?: number;
+  };
 };
 
 export const textProfileFieldGuard = baseProfileFieldGuard.extend({
-  type: z.literal(ProfileFieldType.Text),
-  minLength: z.number().optional(),
-  maxLength: z.number().optional(),
+  type: z.literal(CustomProfileFieldType.Text),
+  config: z.object({
+    minLength: z.number().optional(),
+    maxLength: z.number().optional(),
+  }),
 }) satisfies ToZodObject<TextProfileField>;
 
 export type NumberProfileField = BaseProfileField & {
-  type: ProfileFieldType.Number;
-  minValue?: number;
-  maxValue?: number;
+  type: CustomProfileFieldType.Number;
+  config: {
+    minValue?: number;
+    maxValue?: number;
+  };
 };
 
 export const numberProfileFieldGuard = baseProfileFieldGuard.extend({
-  type: z.literal(ProfileFieldType.Number),
-  minValue: z.number().optional(),
-  maxValue: z.number().optional(),
+  type: z.literal(CustomProfileFieldType.Number),
+  config: z.object({
+    minValue: z.number().optional(),
+    maxValue: z.number().optional(),
+  }),
 }) satisfies ToZodObject<NumberProfileField>;
 
 export type DateProfileField = BaseProfileField & {
-  type: ProfileFieldType.Date;
-  format: string;
+  type: CustomProfileFieldType.Date;
+  config: {
+    format: string;
+  };
 };
 
 export const dateProfileFieldGuard = baseProfileFieldGuard.extend({
-  type: z.literal(ProfileFieldType.Date),
-  format: z.string(),
+  type: z.literal(CustomProfileFieldType.Date),
+  config: z.object({
+    format: z.string(),
+  }),
 }) satisfies ToZodObject<DateProfileField>;
 
 export type CheckboxProfileField = BaseProfileField & {
-  type: ProfileFieldType.Checkbox;
-  options: Array<{ label: string; value: string }>;
+  type: CustomProfileFieldType.Checkbox;
+  config: {
+    options: Array<{ label: string; value: string }>;
+  };
 };
 
 export const checkboxProfileFieldGuard = baseProfileFieldGuard.extend({
-  type: z.literal(ProfileFieldType.Checkbox),
-  options: z.array(z.object({ label: z.string(), value: z.string() })),
+  type: z.literal(CustomProfileFieldType.Checkbox),
+  config: z.object({
+    options: z.array(z.object({ label: z.string(), value: z.string() })),
+  }),
 }) satisfies ToZodObject<CheckboxProfileField>;
 
 export type SelectProfileField = BaseProfileField & {
-  type: ProfileFieldType.Select;
-  options: Array<{ label: string; value: string }>;
+  type: CustomProfileFieldType.Select;
+  config: {
+    options: Array<{ label: string; value: string }>;
+  };
 };
 
 export const selectProfileFieldGuard = baseProfileFieldGuard.extend({
-  type: z.literal(ProfileFieldType.Select),
-  options: z.array(z.object({ label: z.string(), value: z.string() })),
+  type: z.literal(CustomProfileFieldType.Select),
+  config: z.object({
+    options: z.array(z.object({ label: z.string(), value: z.string() })),
+  }),
 }) satisfies ToZodObject<SelectProfileField>;
 
 export type UrlProfileField = BaseProfileField & {
-  type: ProfileFieldType.Url;
+  type: CustomProfileFieldType.Url;
 };
 
 export const urlProfileFieldGuard = baseProfileFieldGuard.extend({
-  type: z.literal(ProfileFieldType.Url),
+  type: z.literal(CustomProfileFieldType.Url),
 }) satisfies ToZodObject<UrlProfileField>;
 
 export type RegexProfileField = BaseProfileField & {
-  type: ProfileFieldType.Regex;
-  format: string;
+  type: CustomProfileFieldType.Regex;
+  config: {
+    format: string;
+  };
 };
 
 export const regexProfileFieldGuard = baseProfileFieldGuard.extend({
-  type: z.literal(ProfileFieldType.Regex),
-  format: z.string(),
+  type: z.literal(CustomProfileFieldType.Regex),
+  config: z.object({
+    format: z.string(),
+  }),
 }) satisfies ToZodObject<RegexProfileField>;
 
 export type AddressProfileField = BaseProfileField & {
-  type: ProfileFieldType.Address;
-  parts: Array<{ key: keyof Exclude<UserProfile['address'], undefined>; enabled: boolean }>;
+  type: CustomProfileFieldType.Address;
+  config: {
+    parts: Array<{ key: keyof Exclude<UserProfile['address'], undefined>; enabled: boolean }>;
+  };
 };
 
 export const addressProfileFieldGuard = baseProfileFieldGuard.extend({
-  type: z.literal(ProfileFieldType.Address),
-  parts: z.array(
-    z.object({
-      key: z.enum(userProfileAddressKeys),
-      enabled: z.boolean(),
-    })
-  ),
+  type: z.literal(CustomProfileFieldType.Address),
+  config: z.object({
+    parts: z.array(
+      z.object({
+        key: z.enum(userProfileAddressKeys),
+        enabled: z.boolean(),
+      })
+    ),
+  }),
 }) satisfies ToZodObject<AddressProfileField>;
 
 export type FullnameProfileField = BaseProfileField & {
-  type: ProfileFieldType.Fullname;
-  parts: Array<{
-    key: keyof Pick<UserProfile, 'givenName' | 'middleName' | 'familyName'>;
-    enabled: boolean;
-  }>;
+  type: CustomProfileFieldType.Fullname;
+  config: {
+    parts: Array<{
+      key: keyof Pick<UserProfile, 'givenName' | 'middleName' | 'familyName'>;
+      enabled: boolean;
+    }>;
+  };
 };
 
 const fullnameKeys = userProfileGuard
@@ -145,8 +163,10 @@ const fullnameKeys = userProfileGuard
   .keyof().options;
 
 export const fullnameProfileFieldGuard = baseProfileFieldGuard.extend({
-  type: z.literal(ProfileFieldType.Fullname),
-  parts: z.array(z.object({ key: z.enum(fullnameKeys), enabled: z.boolean() })),
+  type: z.literal(CustomProfileFieldType.Fullname),
+  config: z.object({
+    parts: z.array(z.object({ key: z.enum(fullnameKeys), enabled: z.boolean() })),
+  }),
 }) satisfies ToZodObject<FullnameProfileField>;
 
 export type UserProfileField =
