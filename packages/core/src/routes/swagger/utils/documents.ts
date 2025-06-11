@@ -52,6 +52,7 @@ const managementApiIdentifiableEntityNames = Object.freeze([
   'secret',
   'email-template',
   'one-time-token',
+  'custom-profile-field',
 ]);
 
 /** Additional tags that cannot be inferred from the path. */
@@ -63,8 +64,7 @@ const additionalTags = Object.freeze(
     'SAML applications',
     'SAML applications auth flow',
     'One-time tokens',
-    'Captcha provider',
-    EnvSet.values.isDevFeaturesEnabled && 'Custom profile fields'
+    'Captcha provider'
   )
 );
 
