@@ -1,20 +1,12 @@
 const custom_profile_fields = {
-  /** UNTRANSLATED */
-  entity_not_exists_with_ids: 'Cannot find entities with the given IDs: {{ids}}',
-  /** UNTRANSLATED */
-  invalid_min_max_input: 'Invalid min and max input.',
-  /** UNTRANSLATED */
-  invalid_options: 'Invalid field options.',
-  /** UNTRANSLATED */
-  invalid_regex_format: 'Invalid regex format.',
-  /** UNTRANSLATED */
-  invalid_address_parts: 'Invalid address parts.',
-  /** UNTRANSLATED */
-  invalid_fullname_parts: 'Invalid fullname parts.',
-  /** UNTRANSLATED */
-  name_exists: 'Field already exists with the given name.',
-  /** UNTRANSLATED */
-  conflicted_sie_order: 'Conflicted field order value for Sign-in Experience.',
+  entity_not_exists_with_ids: 'Kann die Entitäten mit den angegebenen IDs nicht finden: {{ids}}',
+  invalid_min_max_input: 'Ungültige Eingabe für Minimum und Maximum.',
+  invalid_options: 'Ungültige Feldoptionen.',
+  invalid_regex_format: 'Ungültiges Regex-Format.',
+  invalid_address_parts: 'Ungültige Adressbestandteile.',
+  invalid_fullname_parts: 'Ungültige Vor- und Nachnamenangaben.',
+  name_exists: 'Ein Feld mit diesem Namen existiert bereits.',
+  conflicted_sie_order: 'Konflikt im Feldreihenfolgewert für die Sign-in Experience.',
 };
 
 export default Object.freeze(custom_profile_fields);
