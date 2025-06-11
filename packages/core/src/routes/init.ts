@@ -29,6 +29,7 @@ import authnRoutes from './authn.js';
 import captchaProviderRoutes from './captcha-provider/index.js';
 import connectorRoutes from './connector/index.js';
 import customPhraseRoutes from './custom-phrase.js';
+import customProfileFieldsRoutes from './custom-profile-fields.js';
 import dashboardRoutes from './dashboard.js';
 import domainRoutes from './domain.js';
 import emailTemplateRoutes from './email-template/index.js';
@@ -111,6 +112,9 @@ const createRouters = (tenant: TenantContext) => {
   oneTimeTokenRoutes(managementRouter, tenant);
   captchaProviderRoutes(managementRouter, tenant);
   sentinelActivitiesRoutes(managementRouter, tenant);
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    customProfileFieldsRoutes(managementRouter, tenant);
+  }
 
   const anonymousRouter: AnonymousRouter = new Router();
 

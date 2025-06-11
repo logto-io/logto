@@ -40,6 +40,10 @@ const tagMap = new Map([
   ['one-time-tokens', 'One-time tokens'],
 ]);
 
+if (EnvSet.values.isDevFeaturesEnabled) {
+  tagMap.set('custom-profile-fields', 'Custom profile fields');
+}
+
 /**
  * Build a tag name from the given absolute path. The function will get the root component name
  * from the path and try to find the mapping in the {@link tagMap}. If the mapping is not found,

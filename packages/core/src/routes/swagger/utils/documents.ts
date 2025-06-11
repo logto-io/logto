@@ -63,7 +63,8 @@ const additionalTags = Object.freeze(
     'SAML applications',
     'SAML applications auth flow',
     'One-time tokens',
-    'Captcha provider'
+    'Captcha provider',
+    EnvSet.values.isDevFeaturesEnabled && 'Custom profile fields'
   )
 );
 

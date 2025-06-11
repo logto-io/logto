@@ -1,0 +1,117 @@
+{
+  "tags": [
+    {
+      "name": "Dev feature"
+    }
+  ],
+  "paths": {
+    "/api/custom-profile-fields": {
+      "get": {
+        "operationId": "FindAllCustomProfileFields",
+        "summary": "Find all custom profile fields",
+        "description": "Find all custom profile fields.",
+        "responses": {
+          "200": {
+            "description": "Custom profile fields ordered by sieOrder (Sign-in Experience order)."
+          }
+        }
+      },
+      "post": {
+        "operationId": "CreateCustomProfileField",
+        "summary": "Create a custom profile field",
+        "description": "Create a custom profile field.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCustomProfileFieldData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Custom profile field created successfully."
+          }
+        }
+      }
+    },
+    "/api/custom-profile-fields/{id}": {
+      "get": {
+        "operationId": "FindCustomProfileFieldById",
+        "summary": "Find a custom profile field by id",
+        "description": "Find a custom profile field by id.",
+        "responses": {
+          "200": {
+            "description": "Custom profile field found successfully."
+          }
+        }
+      },
+      "patch": {
+        "operationId": "UpdateCustomProfileFieldById",
+        "summary": "Update a custom profile field by id",
+        "description": "Update a custom profile field by id.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCustomProfileFieldData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Custom profile field updated successfully."
+          }
+        }
+      },
+      "delete": {
+        "operationId": "DeleteCustomProfileFieldById",
+        "summary": "Delete a custom profile field by id",
+        "description": "Delete a custom profile field by id.",
+        "responses": {
+          "204": {
+            "description": "Custom profile field deleted successfully."
+          }
+        }
+      }
+    },
+    "/api/custom-profile-fields/sie-order": {
+      "put": {
+        "operationId": "UpdateCustomProfileFieldsSieOrder",
+        "summary": "Update the display order of the custom profile fields in Sign-in Experience.",
+        "description": "Update the display order of the custom profile fields in Sign-in Experience.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "order": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "sieOrder": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Custom profile fields updated successfully."
+          }
+        }
+      }
+    }
+  }
+}
