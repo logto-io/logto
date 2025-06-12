@@ -12,9 +12,7 @@ create table custom_profile_fields (
   sie_order int2 not null default 0,
   primary key (id),
   constraint custom_profile_fields__name
-    unique (tenant_id, name),
-  constraint custom_profile_fields__sie_order
-    unique (tenant_id, sie_order)
+    unique (tenant_id, name)
 );
 
 create or replace function custom_profile_fields__increment_sie_order() returns trigger as
