@@ -22,7 +22,8 @@
     "ci:build": "pnpm -r build",
     "ci:lint": "pnpm -r --parallel --workspace-concurrency=0 lint",
     "ci:stylelint": "pnpm -r --parallel --workspace-concurrency=0 stylelint",
-    "ci:test": "pnpm -r --parallel --workspace-concurrency=0 test:ci"
+    "test:scripts": "node .scripts/compare-database.test.js",
+    "ci:test": "pnpm -r --parallel --workspace-concurrency=0 test:ci && pnpm test:scripts"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",

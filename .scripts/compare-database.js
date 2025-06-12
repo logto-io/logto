@@ -8,6 +8,94 @@ const omit = (object, ...keys) =>
 const omitArray = (arrayOfObjects, ...keys) =>
   arrayOfObjects.map((value) => omit(value, ...keys));
 
+// Exported utility functions for testing
+export const autoCompare = (a, b) => {
+  // Handle null values first
+  if (a === null && b === null) return 0;
+  if (a === null) return -1; // null comes before other values
+  if (b === null) return 1;
+
+  // Handle undefined values
+  if (a === undefined && b === undefined) return 0;
+  if (a === undefined) return -1; // undefined comes before other values
+  if (b === undefined) return 1;
+
+  // Compare types
+  if (typeof a !== typeof b) {
+    return (typeof a).localeCompare(typeof b);
+  }
+
+  // Handle arrays
+  if (Array.isArray(a) && Array.isArray(b)) {
+    for (let i = 0; i < Math.min(a.length, b.length); i++) {
+      const comparison = autoCompare(a[i], b[i]);
+      if (comparison !== 0) {
+        return comparison;
+      }
+    }
+    return a.length - b.length;
+  }
+
+  // Handle objects (but not arrays)
+  if (typeof a === 'object' && !Array.isArray(a)) {
+    const aKeys = Object.keys(a).sort();
+    const bKeys = Object.keys(b).sort();
+
+    for (let i = 0; i < Math.min(aKeys.length, bKeys.length); i++) {
+      if (aKeys[i] !== bKeys[i]) {
+        return aKeys[i].localeCompare(bKeys[i]);
+      }
+      const comparison = autoCompare(a[aKeys[i]], b[bKeys[i]]);
+      if (comparison !== 0) {
+        return comparison;
+      }
+    }
+
+    return aKeys.length - bKeys.length;
+  }
+
+  // Handle numbers
+  if (typeof a === 'number' && typeof b === 'number') {
+    return a - b;
+  }
+
+  // Handle booleans
+  if (typeof a === 'boolean' && typeof b === 'boolean') {
+    return a === b ? 0 : (a ? 1 : -1); // false < true
+  }
+
+  // Handle strings and other primitives
+  return String(a).localeCompare(String(b));
+};
+
+export const deepSort = (obj) => {
+  if (Array.isArray(obj)) {
+    return obj.map(deepSort).sort(autoCompare);
+  }
+  
+  if (obj && typeof obj === 'object') {
+    const sorted = {};
+    Object.keys(obj).sort().forEach(key => {
+      sorted[key] = deepSort(obj[key]);
+    });
+    return sorted;
+  }
+  
+  return obj;
+};
+
+// Function to normalize function/trigger definitions by stripping whitespace from each line
+export const normalizeDefinition = (definition) => {
+  if (typeof definition !== 'string') {
+    return definition;
+  }
+  
+  return definition
+    .split('\n')
+    .map(line => line.trim())
+    .join('\n');
+};
+
 const schemas = ['cloud', 'public'];
 const schemasArray = `(${schemas.map((schema) => `'${schema}'`).join(', ')})`;
 
@@ -160,6 +248,18 @@ const queryDatabaseManifest = async (database) => {
     return { policyname, ...rest };
   };
 
+  // Normalize function definitions by stripping whitespace from each line
+  const normalizeFuncDefinition = ({ definition, ...rest }) => ({
+    ...rest,
+    definition: normalizeDefinition(definition),
+  });
+
+  // Normalize trigger action statements by stripping whitespace from each line
+  const normalizeTriggerAction = ({ action_statement, ...rest }) => ({
+    ...rest,
+    action_statement: normalizeDefinition(action_statement),
+  });
+
   // Omit generated ids and values
   return {
     tables: omitArray(tables, 'table_catalog'),
@@ -194,8 +294,8 @@ const queryDatabaseManifest = async (database) => {
       'conexclop'
     ),
     indexes,
-    funcs,
-    triggers: omitArray(triggers, 'trigger_catalog', 'event_object_catalog'),
+    funcs: funcs.map(normalizeFuncDefinition),
+    triggers: omitArray(triggers, 'trigger_catalog', 'event_object_catalog').map(normalizeTriggerAction),
     policies: policies.map(normalizeRoles).map(normalizePolicyname),
     columnGrants: omitArray(columnGrants, 'table_catalog').map(
       normalizeGrantee
@@ -204,53 +304,18 @@ const queryDatabaseManifest = async (database) => {
   };
 };
 
-const [, , database1, database2] = process.argv;
-
-console.log('Compare database manifest between', database1, 'and', database2);
-
-const manifests = [
-  await queryDatabaseManifest(database1),
-  await queryDatabaseManifest(database2),
-];
-
-tryCompare(...manifests);
-
-const autoCompare = (a, b) => {
-  if (typeof a !== typeof b) {
-    return (typeof a).localeCompare(typeof b);
-  }
-
-  if (typeof a === 'object' && a !== null && b !== null) {
-    const aKeys = Object.keys(a).sort();
-    const bKeys = Object.keys(b).sort();
-
-    for (let i = 0; i < Math.min(aKeys.length, bKeys.length); i++) {
-      if (aKeys[i] !== bKeys[i]) {
-        return aKeys[i].localeCompare(bKeys[i]);
-      }
-      const comparison = autoCompare(a[aKeys[i]], b[bKeys[i]]);
-      if (comparison !== 0) {
-        return comparison;
-      }
-    }
-
-    return aKeys.length - bKeys.length;
-  }
-
-  return String(a).localeCompare(String(b));
-};
-
 const buildSortByKeys = (keys) => (a, b) => {
   const found = keys.find((key) => a[key] !== b[key]);
   return found ? autoCompare(a[found], b[found]) : 0;
 };
 
-const queryDatabaseData = async (database) => {
+const queryDatabaseData = async (database, manifests) => {
   const pool = new pg.Pool({
     database,
     user: 'postgres',
     password: 'postgres',
   });
+
   const result = await Promise.all(
     manifests[0].tables.map(async ({ table_schema, table_name }) => {
       const { rows } = await pool.query(
@@ -262,7 +327,7 @@ const queryDatabaseData = async (database) => {
         const data = omitArray(rows, 'value');
         return [
           table_name,
-          data.sort(buildSortByKeys(Object.keys(data[0] ?? {}))),
+          data.map(deepSort).sort(buildSortByKeys(Object.keys(data[0] ?? {}))),
         ];
       }
 
@@ -281,16 +346,30 @@ const queryDatabaseData = async (database) => {
         'add_on_sku_id'
       );
 
-      return [table_name, data.sort(buildSortByKeys(Object.keys(data[0] ?? {})))];
+      return [table_name, data.map(deepSort).sort(buildSortByKeys(Object.keys(data[0] ?? {})))];
     })
   );
 
   return Object.fromEntries(result);
 };
 
-console.log('Compare database data between', database1, 'and', database2);
+// Only run the main logic when this file is executed directly
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const [, , database1, database2] = process.argv;
 
-tryCompare(
-  await queryDatabaseData(database1),
-  await queryDatabaseData(database2)
-);
+  console.log('Compare database manifest between', database1, 'and', database2);
+
+  const manifests = [
+    await queryDatabaseManifest(database1),
+    await queryDatabaseManifest(database2),
+  ];
+
+  tryCompare(...manifests);
+
+  console.log('Compare database data between', database1, 'and', database2);
+
+  tryCompare(
+    await queryDatabaseData(database1, manifests),
+    await queryDatabaseData(database2, manifests)
+  );
+}
