@@ -66,7 +66,7 @@ describe('my-account (mfa)', () => {
         .replaceAll('/', '_')
         .replace(/=+$/, '');
 
-      // This 500 error is expected because the mock registration response
+      // This error is expected because the mock registration response
       // can not pass the server side validation.
       await expectRejects(
         verifyWebAuthnRegistration(api, verificationRecordId, {
@@ -87,8 +87,8 @@ describe('my-account (mfa)', () => {
           clientExtensionResults: {},
         }),
         {
-          code: undefined,
-          status: 500,
+          code: 'session.mfa.webauthn_verification_failed',
+          status: 400,
         }
       );
 

@@ -80,7 +80,15 @@ export const verifyWebAuthnRegistration = async (
     expectedOrigin: origins,
     requireUserVerification: false,
   };
-  return verifyRegistrationResponse(options);
+
+  try {
+    return await verifyRegistrationResponse(options);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    throw new RequestError('session.mfa.webauthn_verification_failed', {
+      message,
+    });
+  }
 };
 
 export const generateWebAuthnAuthenticationOptions = async ({
