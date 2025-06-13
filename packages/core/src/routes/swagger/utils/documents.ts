@@ -52,6 +52,7 @@ const managementApiIdentifiableEntityNames = Object.freeze([
   'secret',
   'email-template',
   'one-time-token',
+  ...(EnvSet.values.isDevFeaturesEnabled ? ['google-one-tap'] : []),
 ]);
 
 /** Additional tags that cannot be inferred from the path. */
@@ -63,7 +64,8 @@ const additionalTags = Object.freeze(
     'SAML applications',
     'SAML applications auth flow',
     'One-time tokens',
-    'Captcha provider'
+    'Captcha provider',
+    EnvSet.values.isDevFeaturesEnabled && 'Google One Tap'
   )
 );
 
