@@ -144,6 +144,24 @@ export const createTables = async (
   return { password };
 };
 
+export const createViews = async (connection: DatabaseTransactionConnection) => {
+  const viewDirectory = getPathInModule('@logto/schemas', 'views');
+  const directoryFiles = await readdir(viewDirectory);
+  const tableFiles = directoryFiles.filter((file) => file.endsWith('.sql'));
+  const queries = await Promise.all(
+    tableFiles.map<Promise<[string, string]>>(async (file) => [
+      file,
+      await readFile(path.join(viewDirectory, file), 'utf8'),
+    ])
+  );
+
+  /* eslint-disable no-await-in-loop */
+  for (const [, query] of queries) {
+    await connection.query(sql`${sql.raw(query)}`);
+  }
+  /* eslint-enable no-await-in-loop */
+};
+
 export const seedTables = async (
   connection: DatabaseTransactionConnection,
   latestTimestamp: number,

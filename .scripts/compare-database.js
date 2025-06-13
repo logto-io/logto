@@ -109,6 +109,16 @@ const queryDatabaseManifest = async (database) => {
       and grantee != 'postgres'
     order by table_schema, grantee, table_name, privilege_type;
   `);
+  
+  const { rows: views } = await pool.query(/* sql */ `
+    select 
+      table_schema,
+      table_name,
+      view_definition
+    from information_schema.views
+    where table_schema in ${schemasArray}
+    order by table_schema, table_name;
+  `);
 
   // This function removes the last segment of grantee since Logto will use 'logto_tenant_fresh/alteration' for the role name.
   const normalizeRoleName = (roleName) => {
@@ -201,6 +211,7 @@ const queryDatabaseManifest = async (database) => {
       normalizeGrantee
     ),
     tableGrants: omitArray(tableGrants, 'table_catalog').map(normalizeGrantee),
+    views
   };
 };
 
