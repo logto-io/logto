@@ -1,5 +1,28 @@
 # Change Log
 
+## 1.29.0
+
+### Minor Changes
+
+- f2c0a05ac: added an `updated_at` field to the `user_sso_identities` table to track the last update time for each record.
+
+  On each successfull SSO sign-in, the `updated_at` field will be set to the current timestamp. This allows for better tracking of when a user's SSO identity was authenticated and updated.
+
+- db77aad7a: feat: introduced new `oidc_session_extensions` table
+
+  This change introduces a new table named `oidc_session_extensions` to the Logto database schema. This table is designed to store additional user session-related data for OpenID Connect (OIDC) sessions, allowing for more flexible and extensible session management.
+
+- 50d50f73b: manage WebAuthn passkeys in Account API
+
+  You can now manage WebAuthn passkeys in Account API, including:
+
+  1. Bind a WebAuthn passkey to the user's account through your website.
+  2. Manage the passkeys in the user's account.
+
+  We implemented [Related Origin Requests](https://passkeys.dev/docs/advanced/related-origins/) so that you can manage the WebAuthn passkeys in your website which has a different domain from the Logto's sign-in page.
+
+  To learn more, checkout the [documentation](https://docs.logto.io/end-user-flows/account-settings/by-account-api).
+
 ## 1.28.0
 
 ### Patch Changes

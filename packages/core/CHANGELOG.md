@@ -1,5 +1,70 @@
 # Change Log
 
+## 1.29.0
+
+### Minor Changes
+
+- f2c0a05ac: added an `updated_at` field to the `user_sso_identities` table to track the last update time for each record.
+
+  On each successfull SSO sign-in, the `updated_at` field will be set to the current timestamp. This allows for better tracking of when a user's SSO identity was authenticated and updated.
+
+- 50d50f73b: manage WebAuthn passkeys in Account API
+
+  You can now manage WebAuthn passkeys in Account API, including:
+
+  1. Bind a WebAuthn passkey to the user's account through your website.
+  2. Manage the passkeys in the user's account.
+
+  We implemented [Related Origin Requests](https://passkeys.dev/docs/advanced/related-origins/) so that you can manage the WebAuthn passkeys in your website which has a different domain from the Logto's sign-in page.
+
+  To learn more, checkout the [documentation](https://docs.logto.io/end-user-flows/account-settings/by-account-api).
+
+- db77aad7a: feat: add user interaction details to the custom token claims context
+
+  This update introduces a key feature that allows the storage of user interaction details in the `oidc_session_extensions` table for future reference.
+
+  Developers can now access user interaction data associated with the current token's authentication session through the context in the custom token claims script, enabling the creation of tailored token claims.
+
+  Key Changes:
+
+  - Store interaction details: User interaction details are now stored in the oidc_session_extensions table, providing a historical reference for the associated authentication session.
+  - Access user interaction details: In the custom token claims script, developers can retrieve user interaction details through the `context.interaction` property, allowing for the creation of dynamic and context-aware token claims. Logto will use the `sessionUid` to query the `oidc_session_extensions` table and retrieve the user interaction details.
+  - Interaction Context Includes:
+    - `interactionEvent`: The event that triggered the interaction, such as `SignIn`, `Register`.
+    - `userId`: The unique identifier of the user involved in the interaction.
+    - `verificationRecords`: An array of verification records, providing details about the verification methods used for user identification and any MFA verification if enabled.
+
+  Example Use Case:
+  Developers can read the verification records from the interaction context. If an Enterprise SSO verification record is found, they can pass the user profile from the Enterprise SSO identities as additional token claims.
+
+  ```ts
+  const ssoVerification = verifications.find(
+    (record) => record.type === "EnterpriseSso",
+  );
+
+  if (ssoVerification) {
+    return {
+      enterpriseSsoIdentityId:
+        enterpriseSsoVerification?.enterpriseSsoUserInfo?.id,
+      familyName: enterpriseSsoVerification?.enterpriseSsoUserInfo?.familyName,
+    };
+  }
+  ```
+
+### Patch Changes
+
+- 3cf7ee141: fix potential WebAuthn registration errors by specifying the displayName
+
+  This is an optional field, but it's actually required by some browsers. For example, when using Chrome on Windows 11 with the "Use other devices" option (scanning QR code), an empty displayName will cause the registration to fail.
+
+- Updated dependencies [f2c0a05ac]
+- Updated dependencies [db77aad7a]
+- Updated dependencies [db77aad7a]
+- Updated dependencies [50d50f73b]
+  - @logto/schemas@1.29.0
+  - @logto/console@1.26.0
+  - @logto/cli@1.29.0
+
 ## 1.28.0
 
 ### Minor Changes
