@@ -7,6 +7,7 @@ import { createApplicationQueries } from '#src/queries/application.js';
 import { createApplicationsRolesQueries } from '#src/queries/applications-roles.js';
 import { createConnectorQueries } from '#src/queries/connector.js';
 import { createCustomPhraseQueries } from '#src/queries/custom-phrase.js';
+import { createCustomProfileFieldsQueries } from '#src/queries/custom-profile-fields.js';
 import { createDailyActiveUsersQueries } from '#src/queries/daily-active-user.js';
 import { createDailyTokenUsageQueries } from '#src/queries/daily-token-usage.js';
 import { createDomainsQueries } from '#src/queries/domains.js';
@@ -49,6 +50,7 @@ export default class Queries {
   applicationSignInExperiences = createApplicationSignInExperienceQueries(this.pool);
   connectors = createConnectorQueries(this.pool, this.wellKnownCache);
   customPhrases = createCustomPhraseQueries(this.pool, this.wellKnownCache);
+  customProfileFields = createCustomProfileFieldsQueries(this.pool);
   logs = createLogQueries(this.pool);
   oidcModelInstances = createOidcModelInstanceQueries(this.pool);
   passcodes = createPasscodeQueries(this.pool);

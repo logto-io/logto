@@ -52,6 +52,7 @@ const managementApiIdentifiableEntityNames = Object.freeze([
   'secret',
   'email-template',
   'one-time-token',
+  'custom-profile-field',
 ]);
 
 /** Additional tags that cannot be inferred from the path. */

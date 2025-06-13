@@ -27,7 +27,9 @@ const methodToVerb = Object.freeze({
 
 type RouteDictionary = Record<`${OpenAPIV3.HttpMethods} ${string}`, string>;
 
-const devFeatureCustomRoutes: RouteDictionary = Object.freeze({});
+const devFeatureCustomRoutes: RouteDictionary = Object.freeze({
+  'put /custom-profile-fields/sie-order': 'UpdateCustomProfileFieldsSieOrder',
+});
 
 export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   // Authn
