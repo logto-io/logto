@@ -1,6 +1,12 @@
 import { describe, it, expect } from 'vitest';
 
-import { parseType, getType, splitTableFieldDefinitions } from './utils.js';
+import {
+  parseType,
+  getType,
+  splitTableFieldDefinitions,
+  parseTableView,
+  extractViewName,
+} from './utils.js';
 
 describe('splitTableFieldDefinitions', () => {
   it('splitTableFieldDefinitions should split at each comma that is not in the parentheses', () => {
@@ -94,5 +100,28 @@ describe('parseType', () => {
       nullable: false,
       hasDefaultValue: true,
     });
+  });
+});
+
+describe('parse view', () => {
+  const viewName = 'custom_user_view';
+  const createViewSql = [
+    `
+      create view ${viewName} as
+      select id, name from user where active = true;
+    `,
+    `
+      -- some comments --
+      create view ${viewName} if not exists as
+      select id, name from user where active = true;
+    `,
+  ];
+
+  it('parsetTableView', () => {
+    expect(parseTableView(`create table user /* @view ${viewName} */`)).toBe(viewName);
+  });
+
+  it.each(createViewSql)('should parse the view name from the create view sql: %s', (sql) => {
+    expect(extractViewName(sql)).toBe(viewName);
   });
 });

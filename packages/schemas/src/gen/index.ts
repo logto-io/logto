@@ -22,9 +22,12 @@ import {
   stripLeadingJsDocComments as stripLeadingJsDocumentComments,
   getLeadingJsDocComments as getLeadingJsDocumentComments,
   parseTableView,
+  extractViewName,
 } from './utils.js';
 
 const directory = 'tables';
+const viewDirectory = `views`;
+
 const constrainedKeywords = [
   'primary',
   'foreign',
@@ -39,6 +42,16 @@ const getOutputFileName = (file: string) => pluralize(file.slice(0, -4).replaceA
 
 const generate = async () => {
   const files = await fs.readdir(directory);
+  const views = await fs.readdir(viewDirectory);
+
+  const availableViews = await Promise.all(
+    views
+      .filter((file) => file.endsWith('.sql'))
+      .map(async (file) => {
+        const content = await fs.readFile(path.join(viewDirectory, file), { encoding: 'utf8' });
+        return extractViewName(content);
+      })
+  );
 
   const generated = await Promise.all(
     files
@@ -64,6 +77,11 @@ const generate = async () => {
           .map<Table>(([{ prefix, body }, raw]) => {
             const name = normalizeWhitespaces(prefix).split(' ')[2];
             const view = parseTableView(prefix);
+
+            assert(
+              !view || availableViews.includes(view),
+              `View with given name ${view} does not exist`
+            );
 
             assert(name, 'Missing table name: ' + prefix);
 

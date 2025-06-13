@@ -232,3 +232,11 @@ export const parseType = (tableFieldDefinition: string): Field => {
 export const parseTableView = (tablePrefix: string): string | undefined => {
   return /\/\* @view (.*) \*\//.exec(tablePrefix)?.[1]?.trim();
 };
+
+/**
+ * Extracts the view name from a CREATE VIEW SQL statement.
+ */
+export const extractViewName = (sql: string): string | undefined => {
+  const match = /create\s+view\s+(?:if\s+not\s+exists\s+)?(\w+)/i.exec(sql);
+  return match?.[1];
+};

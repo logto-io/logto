@@ -1,4 +1,3 @@
---- Create user with social identies view ---
 create view users_with_social_identities as
 --- select all columns from users table except identities,
 select
