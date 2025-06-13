@@ -228,3 +228,7 @@ export const parseType = (tableFieldDefinition: string): Field => {
     nullable,
   };
 };
+
+export const parseTableView = (tablePrefix: string): string | undefined => {
+  return /\/\* @view (.*) \*\//.exec(tablePrefix)?.[1]?.trim();
+};

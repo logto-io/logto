@@ -2,7 +2,7 @@
 
 create type users_password_encryption_method as enum ('Argon2i', 'Argon2id', 'Argon2d', 'SHA1', 'SHA256', 'MD5', 'Bcrypt', 'Legacy');
 
-create table users (
+create table users /* @view users_with_social_identities  */ (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
   id varchar(12) not null,

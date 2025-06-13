@@ -74,7 +74,7 @@ type FieldIdentifiers<Key extends string> = {
 };
 
 export const convertToIdentifiers = <Key extends string>(
-  { table, fields }: Table<Key>,
+  { table, fields, view }: Table<Key>,
   withPrefix = false
 ) => {
   const fieldsIdentifiers = Object.entries<string>(fields).map<[Key, IdentifierSqlToken]>(
@@ -84,6 +84,7 @@ export const convertToIdentifiers = <Key extends string>(
 
   return {
     table: sql.identifier([table]),
+    view: sql.identifier([view]),
     // Key value inferred from the original fields directly
     // eslint-disable-next-line no-restricted-syntax
     fields: Object.fromEntries(fieldsIdentifiers) as FieldIdentifiers<Key>,

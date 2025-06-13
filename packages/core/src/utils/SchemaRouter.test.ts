@@ -23,6 +23,7 @@ describe('SchemaRouter', () => {
   const schema: GeneratedSchema<'id' | 'name', CreateSchema, Schema> = {
     table: 'test_tables',
     tableSingular: 'test_table',
+    view: 'test_tables_view',
     fields: {
       id: 'id',
       name: 'name',

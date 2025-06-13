@@ -21,6 +21,7 @@ import {
   stripLeadingJsDocComments as stripComments,
   stripLeadingJsDocComments as stripLeadingJsDocumentComments,
   getLeadingJsDocComments as getLeadingJsDocumentComments,
+  parseTableView,
 } from './utils.js';
 
 const directory = 'tables';
@@ -62,6 +63,8 @@ const generate = async () => {
           .filter((value): value is NonNullable<[ParenthesesMatch, string]> => Boolean(value[0]))
           .map<Table>(([{ prefix, body }, raw]) => {
             const name = normalizeWhitespaces(prefix).split(' ')[2];
+            const view = parseTableView(prefix);
+
             assert(name, 'Missing table name: ' + prefix);
 
             const comments = getLeadingJsDocumentComments(raw);
@@ -77,7 +80,7 @@ const generate = async () => {
               )
               .map<Field>((value) => parseType(value));
 
-            return { name, comments, fields };
+            return { name, comments, fields, view };
           });
 
         // Parse enum statements

@@ -28,6 +28,9 @@ export type Table = {
   name: string;
   /** The JSDoc comment for the table. */
   comments?: string;
+  /** If specified, represents a database view created for this table
+   *  that provides customized data access or transformations. */
+  view?: string;
   fields: Field[];
 };
 
