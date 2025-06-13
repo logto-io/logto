@@ -1,9 +1,9 @@
 /* parent_table = users */
 
 --- Create user with social identies view ---
-CREATE OR REPLACE VIEW users_with_social_identities AS
+create view users_with_social_identities as
 --- select all columns from users table except identities,
-SELECT
+select
   u.tenant_id,
   u.id,
   u.username,
@@ -26,17 +26,17 @@ SELECT
   u.identities || COALESCE(
     (
       -- Aggregate social identities from user_social_identities table
-      SELECT jsonb_object_agg(
+      select jsonb_object_agg(
         usi.target,
         jsonb_build_object(
           'userId', usi.identity_id,
           'details', usi.details
         )
       )
-      FROM user_social_identities usi
-      WHERE usi.user_id = u.id AND usi.tenant_id = u.tenant_id
+      from user_social_identities usi
+      where usi.user_id = u.id and usi.tenant_id = u.tenant_id
     ),
     '{}'::jsonb
     -- join with existing identities
-  )  AS identities
-FROM users u;
+  ) as identities
+from users u;
