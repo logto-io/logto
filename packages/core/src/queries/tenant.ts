@@ -7,6 +7,7 @@ const createTenantQueries = (pool: CommonQueryMethods) => {
   const { table, fields } = convertToIdentifiers({
     table: Tenants.tableName,
     fields: Tenants.rawKeys,
+    view: Tenants.tableName,
   });
 
   const findTenantSuspendStatusById = async (

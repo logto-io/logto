@@ -77,15 +77,17 @@ describe('convertToPrimitiveOrSql()', () => {
 
 describe('convertToIdentifiers()', () => {
   const table = 'foo';
+  const view = 'foo_view';
   const fields = {
     fooBar: 'foo_bar',
     baz: 'baz',
   };
-  const data: Table<string> = { table, fields };
+  const data: Table<string> = { table, fields, view };
 
   it('converts table to correct identifiers', () => {
     expect(convertToIdentifiers(data)).toEqual({
       table: sql.identifier([table]),
+      view: sql.identifier([view]),
       fields: {
         fooBar: sql.identifier([fields.fooBar]),
         baz: sql.identifier([fields.baz]),
@@ -96,6 +98,7 @@ describe('convertToIdentifiers()', () => {
   it('converts table to correct identifiers with prefix', () => {
     expect(convertToIdentifiers(data, true)).toEqual({
       table: sql.identifier([table]),
+      view: sql.identifier([view]),
       fields: {
         fooBar: sql.identifier([table, fields.fooBar]),
         baz: sql.identifier([table, fields.baz]),

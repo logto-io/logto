@@ -23,12 +23,18 @@ export type GeneratedSchema<
   Schema extends SchemaLike<Key>,
   Table extends string = string,
   TableSingular extends string = string,
+  View extends string = string,
 > = Readonly<{
   table: Table;
   tableSingular: TableSingular;
   fields: {
     [key in Key]: string;
   };
+  /**
+   * The view name for the schema.
+   * If not specified, the view name will be the same as the table name.
+   */
+  view: View;
   fieldKeys: readonly Key[];
   createGuard: Guard<CreateSchema>;
   guard: Guard<Schema>;
