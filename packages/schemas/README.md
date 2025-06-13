@@ -10,6 +10,7 @@ The Logto CLI will pick up all necessary SQL queries in `tables/` and `src/model
 2. Run `tables/*.sql` with the snippet `/* init_order = <number> */` in ascending order of `<number>`
 3. Run `tables/*.sql` without the `init_order` snippet in ascending order of filename (`tables/`) or table name (`src/models/`)
 4. Run `tables/_after_all.sql`
+5. Run `views/*.sql`
 
 Additional rules for step 2 and 3:
 
