@@ -117,7 +117,7 @@ describe('parse view', () => {
     `,
   ];
 
-  it('parsetTableView', () => {
+  it('parseTableView', () => {
     expect(parseTableView(`create table user /* @view ${viewName} */`)).toBe(viewName);
   });
 
