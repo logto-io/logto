@@ -7,7 +7,7 @@ import { consoleLog, oraPromise } from '../../../utils.js';
 import { getLatestAlterationTimestamp } from '../alteration/index.js';
 import { getAlterationDirectory } from '../alteration/utils.js';
 
-import { createTables, seedCloud, seedTables, seedTest } from './tables.js';
+import { createTables, createViews, seedCloud, seedTables, seedTest } from './tables.js';
 
 export const seedByPool = async (
   pool: DatabasePool,
@@ -28,6 +28,10 @@ export const seedByPool = async (
 
     const tableInfo = await oraPromise(createTables(connection, encryptBaseRole), {
       text: 'Create tables',
+    });
+
+    await oraPromise(createViews(connection), {
+      text: 'Create views',
     });
 
     if (tableInfo.password.length > 0) {
