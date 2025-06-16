@@ -57,10 +57,8 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
                 "properties": {
                   "idToken": {
-                    "type": "string",
                     "description": "The Google ID Token from Google One Tap"
                   }
                 }
@@ -74,23 +72,17 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
                   "properties": {
                     "oneTimeToken": {
-                      "type": "string",
                       "description": "The generated one-time token for authentication"
                     },
                     "isNewUser": {
-                      "type": "boolean",
                       "description": "Whether this is a new user (registration) or existing user (login)"
                     },
                     "email": {
-                      "type": "string",
-                      "format": "email",
                       "description": "The verified email address from the Google ID Token"
                     }
-                  },
-                  "required": ["oneTimeToken", "isNewUser", "email"]
+                  }
                 }
               }
             }

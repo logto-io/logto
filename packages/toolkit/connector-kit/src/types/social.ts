@@ -131,6 +131,7 @@ export const GoogleConnector = Object.freeze({
   target: 'google',
   /** The factory ID of the official Google connector. */
   factoryId: 'google-universal',
+  // TODO: update google connector as well, keep it unchanged for now since it's out of scope.
   /**
    * The URI of the Google JWKS. Used to verify the Google-issued JWT.
    * @see {@link https://developers.google.com/identity/gsi/web/guides/verify-google-id-token | Verify the Google ID token on your server side}

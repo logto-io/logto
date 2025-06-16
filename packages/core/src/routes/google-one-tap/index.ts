@@ -5,11 +5,11 @@ import { trySafe, tryThat } from '@silverhand/essentials';
 import chalk from 'chalk';
 import { addSeconds } from 'date-fns';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
-import type { Context } from 'koa';
 import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import koaAnonymousCors from '#src/middleware/koa-anonymous-cors.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
 
@@ -20,61 +20,6 @@ const consoleLog = new ConsoleLog(chalk.magenta('google-one-tap'));
 
 // Default expiration time: 10 minutes.
 const defaultExpiresTime = 10 * 60;
-
-// List of allowed local development origins
-const localDevelopmentOrigins = [
-  'localhost', // Localhost with any port
-  '127.0.0.1', // IPv4 loopback
-  '0.0.0.0', // All interfaces
-  '[::1]', // IPv6 loopback
-  '.local', // MDNS domains (especially for macOS)
-  'host.docker.internal', // Docker host from container
-];
-
-// List of allowed production domain suffixes
-const productionDomainSuffixes = ['.logto.io', '.logto.dev'];
-
-/**
- * Check CORS origin and set appropriate headers
- */
-const setCorsHeaders = (ctx: Context, allowedMethods: string) => {
-  const origin = ctx.get('origin');
-
-  const { isProduction, isIntegrationTest } = EnvSet.values;
-
-  // Only show debug logs in non-production environments
-  if (!isProduction) {
-    consoleLog.info(`origin: ${origin}`);
-    consoleLog.info(`isIntegrationTest: ${isIntegrationTest}`);
-  }
-
-  // Allow local development origins
-  if (
-    (!isProduction || isIntegrationTest) &&
-    localDevelopmentOrigins.some((item) => origin.includes(item))
-  ) {
-    ctx.set('Access-Control-Allow-Origin', origin);
-  }
-  // In production, only allow *.logto.io or *.logto.dev domains to access
-  else if (isProduction && productionDomainSuffixes.some((suffix) => origin.endsWith(suffix))) {
-    ctx.set('Access-Control-Allow-Origin', origin);
-  } else {
-    throw new RequestError({ code: 'auth.forbidden', status: 403 });
-  }
-
-  ctx.set('Access-Control-Allow-Methods', allowedMethods);
-  ctx.set('Access-Control-Allow-Headers', 'Content-Type');
-};
-
-/**
- * Handle OPTIONS preflight requests
- */
-const handleOptionsRequest = async (ctx: Context, next: () => Promise<void>) => {
-  if (ctx.method === 'OPTIONS') {
-    ctx.status = 204;
-    return next();
-  }
-};
 
 /**
  * Get and validate Google One Tap connector configuration
@@ -121,6 +66,7 @@ export default function googleOneTapRoutes<T extends AnonymousRouter>(
 
   router.get(
     '/google-one-tap/config',
+    koaAnonymousCors('GET'),
     koaGuard({
       status: [200, 204, 400, 403, 404],
       response: GoogleConnector.configGuard
@@ -131,10 +77,6 @@ export default function googleOneTapRoutes<T extends AnonymousRouter>(
         .optional(),
     }),
     async (ctx, next) => {
-      setCorsHeaders(ctx, 'GET, OPTIONS');
-
-      await handleOptionsRequest(ctx, next);
-
       const {
         config: { clientId, oneTap },
       } = await getGoogleOneTapConnector(getLogtoConnectors);
@@ -147,6 +89,7 @@ export default function googleOneTapRoutes<T extends AnonymousRouter>(
 
   router.post(
     '/google-one-tap/verify',
+    koaAnonymousCors('POST'),
     koaGuard({
       body: z.object({
         idToken: z.string(),
@@ -159,10 +102,6 @@ export default function googleOneTapRoutes<T extends AnonymousRouter>(
       status: [200, 204, 400, 403, 404],
     }),
     async (ctx, next) => {
-      setCorsHeaders(ctx, 'POST, OPTIONS');
-
-      await handleOptionsRequest(ctx, next);
-
       const { idToken } = ctx.guard.body;
 
       const {
