@@ -4,8 +4,6 @@ import camelcaseKeys from 'camelcase-keys';
 import { decodeJwt } from 'jose';
 import { z } from 'zod';
 
-import assertThat from '#src/utils/assert-that.js';
-
 import OidcConnector from '../OidcConnector/index.js';
 import { fetchToken, getIdTokenClaims, getUserInfo } from '../OidcConnector/utils.js';
 import { type SingleSignOnFactory } from '../index.js';
@@ -76,13 +74,6 @@ export class AzureOidcSsoConnector extends OidcConnector implements SingleSignOn
     // Fetch token from the OIDC provider using authorization code
     const { idToken, accessToken } = await fetchToken(oidcConfig, data, redirectUri);
 
-    assertThat(
-      accessToken,
-      new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
-        message: 'The access token is missing from the response.',
-      })
-    );
-
     // Need to decode the id token to get the tenant id
     const decodeToken = decodeJwt(idToken);
 
@@ -97,9 +88,10 @@ export class AzureOidcSsoConnector extends OidcConnector implements SingleSignOn
     // Verify the id token and get the claims
     const idTokenClaims = await getIdTokenClaims(idToken, oidcConfig, nonce, jwtVerifyOptions);
     // Fetch user info from the userinfo endpoint
-    const userInfoClaims = oidcConfig.userinfoEndpoint
-      ? await getUserInfo(accessToken, oidcConfig.userinfoEndpoint)
-      : undefined;
+    const userInfoClaims =
+      oidcConfig.userinfoEndpoint && accessToken
+        ? await getUserInfo(accessToken, oidcConfig.userinfoEndpoint)
+        : undefined;
 
     // Merge the claims from id token and userinfo endpoint as in Azure AD, some claims are only available in the userinfo endpoint
     const mergedClaims = {
