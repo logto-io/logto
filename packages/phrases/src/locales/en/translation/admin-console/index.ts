@@ -2,6 +2,7 @@ import api_resource_details from './api-resource-details.js';
 import api_resources from './api-resources.js';
 import application_details from './application-details.js';
 import applications from './applications.js';
+import auth_status from './auth-status.js';
 import cloud from './cloud.js';
 import components from './components.js';
 import connector_details from './connector-details.js';
@@ -101,6 +102,7 @@ const admin_console = {
   organization_template,
   organization_role_details,
   inkeep_ai_bot,
+  auth_status,
 };
 
 export default Object.freeze(admin_console);
