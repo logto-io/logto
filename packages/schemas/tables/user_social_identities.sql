@@ -9,9 +9,6 @@ create table user_social_identities (
   target varchar(256) not null,
   /** Provider user identity id */
   identity_id varchar(256) not null,
-  /** Connector id is nullable, we intend to keep the social identity even if the connector is deleted */
-  connector_id varchar(128)
-    references connectors (id) on update cascade on delete set null,
   details jsonb /* @use JsonObject */ not null default '{}'::jsonb,
   created_at timestamptz not null default(now()),
   updated_at timestamptz not null default(now()),

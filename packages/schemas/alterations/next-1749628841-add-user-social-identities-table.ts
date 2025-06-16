@@ -15,8 +15,6 @@ const alteration: AlterationScript = {
           references users (id) on update cascade on delete cascade,
         target varchar(256) not null,
         identity_id varchar(256) not null,
-        connector_id varchar(128)
-          references connectors (id) on update cascade on delete set null,
         details jsonb /* @use JsonObject */ not null default '{}'::jsonb,
         created_at timestamptz not null default(now()),
         updated_at timestamptz not null default(now()),
