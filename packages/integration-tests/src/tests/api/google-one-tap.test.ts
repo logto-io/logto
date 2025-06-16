@@ -74,7 +74,7 @@ describe('Google One Tap API', () => {
     });
   });
 
-  it('should return 400 if Google connector config is invalid', async () => {
+  it('should return a valid response structure even if the Google connector config is mocked as invalid', async () => {
     // Clean up and set up Google connector with invalid config
     await cleanUpGoogleConnector();
 

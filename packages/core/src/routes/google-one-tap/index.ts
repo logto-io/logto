@@ -38,11 +38,13 @@ export default function googleOneTapRoutes<T extends AnonymousRouter>(
     async (ctx, next) => {
       // Check CORS origin
       const origin = ctx.get('origin');
-      consoleLog.info(`origin: ${origin}`);
-
       const { isProduction, isIntegrationTest } = EnvSet.values;
-      consoleLog.info(`isProduction: ${isProduction}`);
-      consoleLog.info(`isIntegrationTest: ${isIntegrationTest}`);
+
+      // Only show debug logs in non-production environments
+      if (!isProduction) {
+        consoleLog.info(`origin: ${origin}`);
+        consoleLog.info(`isIntegrationTest: ${isIntegrationTest}`);
+      }
 
       // List of allowed local development origins
       const localDevelopmentOrigins = [
@@ -54,6 +56,9 @@ export default function googleOneTapRoutes<T extends AnonymousRouter>(
         'host.docker.internal', // Docker host from container
       ];
 
+      // List of allowed production domain suffixes
+      const productionDomainSuffixes = ['.logto.io', '.logto.dev'];
+
       // Allow local development origins
       if (
         (!isProduction || isIntegrationTest) &&
@@ -61,8 +66,8 @@ export default function googleOneTapRoutes<T extends AnonymousRouter>(
       ) {
         ctx.set('Access-Control-Allow-Origin', origin);
       }
-      // In production, only allow *.logto.io or *.logto.dev domains to access
-      else if (isProduction && (origin.endsWith('.logto.io') || origin.endsWith('.logto.dev'))) {
+      // In production, only allow specified domain suffixes to access
+      else if (isProduction && productionDomainSuffixes.some((suffix) => origin.endsWith(suffix))) {
         ctx.set('Access-Control-Allow-Origin', origin);
       } else {
         throw new RequestError({ code: 'auth.forbidden', status: 403 });
