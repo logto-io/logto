@@ -1,80 +1,22 @@
+import psl from 'psl';
+
 import { DOMAIN_WHITELIST, STORAGE_ACCESS_TEST_KEY } from './consts';
 import type { CheckAdminTokenMessage } from './types';
 import { AuthMessageType } from './types';
 
-// Common two-level TLDs (country code + generic)
-// We can add more TLDs here if needed.
-const COMMON_TWO_LEVEL_TLDS = new Set([
-  'co.uk',
-  'co.jp',
-  'co.kr',
-  'co.za',
-  'co.in',
-  'co.nz',
-  'co.il',
-  'co.th',
-  'com.au',
-  'com.br',
-  'com.cn',
-  'com.mx',
-  'com.sg',
-  'com.tw',
-  'com.tr',
-  'net.au',
-  'net.br',
-  'net.cn',
-  'net.uk',
-  'org.au',
-  'org.br',
-  'org.cn',
-  'org.uk',
-  'edu.au',
-  'edu.br',
-  'edu.cn',
-  'edu.uk',
-  'gov.au',
-  'gov.br',
-  'gov.cn',
-  'gov.uk',
-  'ac.uk',
-  'ac.jp',
-  'ac.kr',
-  'ac.za',
-  'ac.in',
-  'ac.nz',
-  'ac.il',
-  'ac.th',
-]);
-
 /**
- * Check if a string is a known two-level TLD
- */
-const isKnownTwoLevelTLD = (tld: string): boolean => {
-  return COMMON_TWO_LEVEL_TLDS.has(tld);
-};
-
-/**
- * Extract the effective top-level domain from a hostname
- * Handles both simple TLDs (.com, .org) and compound TLDs (.co.uk, .com.au)
+ * Extract the effective top-level domain from a hostname using psl library
+ * This replaces the previous manual implementation with a more accurate one
  */
 const getEffectiveTLD = (hostname: string): string => {
-  const parts = hostname.toLowerCase().split('.');
+  const parsed = psl.parse(hostname.toLowerCase());
 
-  if (parts.length < 2) {
-    return hostname;
+  // Check if parsing was successful and return the domain, otherwise return original hostname
+  if ('domain' in parsed && parsed.domain) {
+    return parsed.domain;
   }
 
-  // Check for compound TLDs
-  if (parts.length >= 3) {
-    const lastTwoParts = parts.slice(-2).join('.');
-    if (isKnownTwoLevelTLD(lastTwoParts)) {
-      // For compound TLDs, return domain + compound TLD (e.g., "example.co.uk")
-      return parts.slice(-3).join('.');
-    }
-  }
-
-  // For simple TLDs, return domain + TLD (e.g., "example.com")
-  return parts.slice(-2).join('.');
+  return hostname;
 };
 
 /**
@@ -119,7 +61,7 @@ export const isValidOrigin = (eventOrigin: string, currentOrigin: string): boole
       return true;
     }
 
-    // 3. Same effective top-level domain
+    // 3. Same effective top-level domain (using psl library)
     if (currentHostname.includes('.') && eventHostname.includes('.')) {
       const currentTLD = getEffectiveTLD(currentHostname);
       const eventTLD = getEffectiveTLD(eventHostname);
