@@ -44,11 +44,6 @@ const alteration: AlterationScript = {
         identity_value jsonb;
         existing_targets text[];
       begin
-        -- skip sync if this is an update and identities haven't changed
-        if tg_op = 'UPDATE' and new.identities is not distinct from old.identities then
-          return new;
-        end if;
-
         -- extract all target keys from the new identities jsonb
         select array_agg(key) into existing_targets
         from jsonb_object_keys(new.identities) as key;
