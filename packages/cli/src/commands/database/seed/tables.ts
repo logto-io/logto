@@ -85,21 +85,9 @@ const lifecycleNames: readonly string[] = Object.freeze([
   'after_each',
 ] satisfies Lifecycle[]);
 
-export const createTables = async (
-  connection: DatabaseTransactionConnection,
-  encryptBaseRole: boolean
-): Promise<{ password: string }> => {
-  const tableDirectory = getPathInModule('@logto/schemas', 'tables');
-  const directoryFiles = await readdir(tableDirectory);
-  const tableFiles = directoryFiles.filter((file) => file.endsWith('.sql'));
-  const queries = await Promise.all(
-    tableFiles.map<Promise<[string, string]>>(async (file) => [
-      file,
-      await readFile(path.join(tableDirectory, file), 'utf8'),
-    ])
-  );
-
-  const runLifecycleQuery = async (
+const buildRunLifeCycleQuery =
+  (connection: DatabaseTransactionConnection, queries: Array<[string, string]>) =>
+  async (
     lifecycle: Lifecycle,
     parameters: { name?: string; database?: string; password?: string } = {}
   ) => {
@@ -118,6 +106,22 @@ export const createTables = async (
       );
     }
   };
+
+export const createTables = async (
+  connection: DatabaseTransactionConnection,
+  encryptBaseRole: boolean
+): Promise<{ password: string }> => {
+  const tableDirectory = getPathInModule('@logto/schemas', 'tables');
+  const directoryFiles = await readdir(tableDirectory);
+  const tableFiles = directoryFiles.filter((file) => file.endsWith('.sql'));
+  const queries = await Promise.all(
+    tableFiles.map<Promise<[string, string]>>(async (file) => [
+      file,
+      await readFile(path.join(tableDirectory, file), 'utf8'),
+    ])
+  );
+
+  const runLifecycleQuery = buildRunLifeCycleQuery(connection, queries);
 
   const allQueries: Array<[string, string]> = [
     [Tenants.tableName, Tenants.raw],
@@ -155,9 +159,15 @@ export const createViews = async (connection: DatabaseTransactionConnection) => 
     ])
   );
 
+  const runLifecycleQuery = buildRunLifeCycleQuery(connection, queries);
+  const database = await getDatabaseName(connection, true);
+
+  const viewQueries = queries.filter(([file]) => !lifecycleNames.includes(file.slice(1, -4)));
+
   /* eslint-disable no-await-in-loop */
-  for (const [, query] of queries) {
+  for (const [file, query] of viewQueries) {
     await connection.query(sql`${sql.raw(query)}`);
+    await runLifecycleQuery('after_each', { name: file.split('.')[0], database });
   }
   /* eslint-enable no-await-in-loop */
 };

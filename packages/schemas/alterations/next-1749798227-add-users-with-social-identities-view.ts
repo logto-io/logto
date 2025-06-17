@@ -2,10 +2,15 @@ import { sql } from '@silverhand/slonik';
 
 import type { AlterationScript } from '../lib/types/alteration.js';
 
+import { grantViewAccess } from './utils/1749798227-views.js';
+
 const alteration: AlterationScript = {
   up: async (pool) => {
     await pool.query(sql`
-      create view users_with_social_identities as
+      create view users_with_social_identities
+      --- enforce row-level security policies for interactions with this view
+      with (security_barrier = true, security_invoker = true)
+      as
       --- select all columns from users table except identities,
       select
         u.tenant_id,
@@ -45,6 +50,8 @@ const alteration: AlterationScript = {
         ) as identities
       from users u;
     `);
+
+    await grantViewAccess(pool, 'users_with_social_identities');
   },
   down: async (pool) => {
     await pool.query(sql`

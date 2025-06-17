@@ -1,7 +1,7 @@
-/* parent_table = users */
-
---- Create user with social identies view ---
-create view users_with_social_identities as
+create view users_with_social_identities
+--- enforce row-level security policies for interactions with this view
+with (security_barrier = true, security_invoker = true)
+as
 --- select all columns from users table except identities,
 select
   u.tenant_id,
