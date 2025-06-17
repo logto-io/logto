@@ -29,7 +29,7 @@ import { EnvSet } from '#src/env-set/index.js';
  * - This middleware: Flexible, URL Set-based, suitable for authenticated APIs
  * - Anonymous CORS: Strict whitelist, domain suffix-based, for anonymous sensitive APIs
  *
- * @see {@link koaAnonymousCors} for strict anonymous API CORS handling
+ * @see {@link koaLogtoAnonymousOriginCors} and {@link koaLogtoAnonymousMethodsCors} for strict Logto anonymous API CORS handling
  */
 
 /**
