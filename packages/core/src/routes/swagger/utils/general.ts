@@ -190,7 +190,7 @@ const internalPaths = Object.freeze([
     message: 'This path is for admin tenant only, skip it.',
   },
   {
-    path: '/api/users/:userId/identity-relations',
+    path: '/api/users/{userId}/identity-relations',
     message: 'This path is for integration tests only, skip it.',
   },
 ]);
