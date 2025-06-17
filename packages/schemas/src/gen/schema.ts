@@ -36,7 +36,7 @@ const printComments = (
       ).join('')
   );
 
-export const generateSchema = ({ name, comments, fields }: TableWithType) => {
+export const generateSchema = ({ name, comments, fields, view }: TableWithType) => {
   const modelName = pluralize(camelcase(name, { pascalCase: true }), 1);
   const databaseEntryType = `Create${modelName}`;
 
@@ -130,10 +130,10 @@ export const generateSchema = ({ name, comments, fields }: TableWithType) => {
       ${modelName}Keys,
       ${databaseEntryType},
       ${modelName},
-      '${name}',
+      '${view ?? name}',
       '${pluralize(name, 1)}'
     > = Object.freeze({`,
-    `  table: '${name}',`,
+    `  table: '${view ?? name}',`,
     `  tableSingular: '${pluralize(name, 1)}',`,
     '  fields: {',
     ...fields.map(({ name }) => `    ${camelcase(name)}: '${name}',`),
