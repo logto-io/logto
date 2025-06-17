@@ -8,7 +8,7 @@
     "@silverhand/essentials": "^2.9.1",
     "@vonage/auth": "^1.12.0",
     "@vonage/server-sdk": "^3.19.0",
-    "zod": "3.24.3"
+    "zod": "3.25.67"
   },
   "main": "./lib/index.js",
   "module": "./lib/index.js",
