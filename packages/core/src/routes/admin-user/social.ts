@@ -4,6 +4,7 @@ import {
   identityGuard,
   identitiesGuard,
   userProfileResponseGuard,
+  UserSocialIdentityRelations,
 } from '@logto/schemas';
 import { has } from '@silverhand/essentials';
 import { object, record, string, unknown } from 'zod';
@@ -12,6 +13,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { EnvSet } from '../../env-set/index.js';
 import { transpileUserProfileResponse } from '../../utils/user.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
@@ -21,6 +23,7 @@ export default function adminUserSocialRoutes<T extends ManagementApiRouter>(
   const {
     queries: {
       users: { findUserById, updateUserById, hasUserWithIdentity, deleteUserIdentity },
+      userSocialIdentityRelations: { findUserSocialIdentityIdsByUserId },
     },
     connectors: { getLogtoConnectorById },
   } = tenant;
@@ -154,4 +157,30 @@ export default function adminUserSocialRoutes<T extends ManagementApiRouter>(
       return next();
     }
   );
+
+  /**
+   * This route is for integration tests only.
+   * It retrieves the social identity relations of a user by their user ID.
+   */
+  if (EnvSet.values.isIntegrationTest) {
+    router.get(
+      '/users/:userId/identity-relations',
+      koaGuard({
+        params: object({ userId: string() }),
+        response: UserSocialIdentityRelations.guard.array(),
+        status: [200],
+      }),
+      async (ctx, next) => {
+        const {
+          params: { userId },
+        } = ctx.guard;
+
+        const identityRelations = await findUserSocialIdentityIdsByUserId(userId);
+
+        ctx.body = identityRelations;
+
+        return next();
+      }
+    );
+  }
 }

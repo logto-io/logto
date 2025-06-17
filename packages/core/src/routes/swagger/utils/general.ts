@@ -184,6 +184,17 @@ export const validateSupplement = (
   }
 };
 
+const internalPaths = Object.freeze([
+  {
+    path: '/api/.well-known/endpoints/{tenantId}',
+    message: 'This path is for admin tenant only, skip it.',
+  },
+  {
+    path: '/api/users/:userId/identity-relations',
+    message: 'This path is for integration tests only, skip it.',
+  },
+]);
+
 /**
  * Check if the given OpenAPI document is valid for being served as the swagger document:
  *
@@ -201,8 +212,8 @@ export const validateSwaggerDocument = (document: OpenAPIV3.Document) => {
       continue;
     }
 
-    // This path is for admin tenant only, skip it.
-    if (path === '/api/.well-known/endpoints/{tenantId}') {
+    // This path is for internal user only skip it
+    if (internalPaths.some(({ path: internalPath }) => internalPath === path)) {
       continue;
     }
 

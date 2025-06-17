@@ -41,6 +41,7 @@ import { OidcSessionExtensionsQueries } from '../queries/oidc-session-extensions
 import { PersonalAccessTokensQueries } from '../queries/personal-access-tokens.js';
 import { createSentinelActivitiesQueries } from '../queries/sentinel-activities.js';
 import TenantUsageQuery from '../queries/tenant-usage/index.js';
+import { createUserSocialIdentityRelationsQueries } from '../queries/user-social-identity-relations.js';
 import { VerificationRecordQueries } from '../queries/verification-records.js';
 
 export default class Queries {
@@ -84,6 +85,7 @@ export default class Queries {
   captchaProviders = new CaptchaProviderQueries(this.pool);
   sentinelActivities = createSentinelActivitiesQueries(this.pool);
   oidcSessionExtensions = new OidcSessionExtensionsQueries(this.pool);
+  userSocialIdentityRelations = createUserSocialIdentityRelationsQueries(this.pool);
 
   constructor(
     public readonly pool: CommonQueryMethods,

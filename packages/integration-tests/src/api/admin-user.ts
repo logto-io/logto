@@ -8,6 +8,7 @@ import type {
   PersonalAccessToken,
   Role,
   User,
+  UserSocialIdentityRelation,
   UserSsoIdentity,
   UsersPasswordEncryptionMethod,
 } from '@logto/schemas';
@@ -157,3 +158,9 @@ export const updatePersonalAccessToken = async (
       json: body,
     })
     .json<PersonalAccessToken>();
+
+export const getUserIdentityRelations = async (userId: string) => {
+  return authedAdminApi
+    .get(`users/${userId}/identity-relations`)
+    .json<UserSocialIdentityRelation[]>();
+};
