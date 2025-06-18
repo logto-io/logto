@@ -10,7 +10,7 @@
     "got": "^14.0.0",
     "iconv-lite": "^0.6.3",
     "snakecase-keys": "^8.0.1",
-    "zod": "3.24.3"
+    "zod": "3.25.67"
   },
   "devDependencies": {
     "@shopify/jest-koa-mocks": "^5.0.0",

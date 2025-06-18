@@ -40,7 +40,7 @@
     "@withtyped/server": "^0.14.0"
   },
   "optionalDependencies": {
-    "zod": "3.24.3"
+    "zod": "3.25.67"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "6.0.1",

@@ -54,7 +54,7 @@
     "p-queue": "^8.0.0",
     "typescript": "^5.5.3",
     "yargs": "^17.6.0",
-    "zod": "3.24.3"
+    "zod": "3.25.67"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "6.0.1",
