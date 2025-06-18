@@ -214,6 +214,10 @@ export const validateSwaggerDocument = (document: OpenAPIV3.Document) => {
 
     // This path is for internal user only skip it
     if (internalPaths.some(({ path: internalPath }) => internalPath === path)) {
+      const message = internalPaths.find(
+        ({ path: internalPath }) => internalPath === path
+      )?.message;
+      devConsole.warn(`Path \`${path}\` is skipped. ${message}`);
       continue;
     }
 

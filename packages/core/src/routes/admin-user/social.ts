@@ -161,6 +161,12 @@ export default function adminUserSocialRoutes<T extends ManagementApiRouter>(
   /**
    * This route is for integration tests only.
    * It retrieves the social identity relations of a user by their user ID.
+   *
+   * @remarks
+   * Since the `user_social_identity_relations` table is only created for indexing and joining purposes,
+   * currently we do not have a public API that directly retrieves the social identity relations of a user.
+   * To better test the successful user social relation syncing logic,
+   * we provide this route for integration tests. This API may help us direcly test the syncing results.
    */
   if (EnvSet.values.isIntegrationTest) {
     router.get(

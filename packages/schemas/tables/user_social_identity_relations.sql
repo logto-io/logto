@@ -1,5 +1,6 @@
 /* init_order = 2 */
 
+/** This table is used for user social identites indexing and foreign table joins use only. Always use the `users` table as the SSOT for user social identitys data.  This table is read only, it uses a trigger to sync relations automatically from `users` table. Any write operation should be performed on the `Users` table instead */
 create table user_social_identity_relations (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
@@ -15,16 +16,7 @@ create table user_social_identity_relations (
     unique (tenant_id, target, identity_id)
 );
 
-/**
- * Trigger function to sync user social identity relations after identities are updated.
- * This will ensure that the `user_social_identity_relations` table is kept in sync
- * with the identities field in the `users` table.
- * 
- * It handles both insertions and updates to the `identities` field.
- * - for new identities, it inserts new records into the `user_social_identity_relations` table.
- * - for existing identities, it updates the `identity_id` if the target already exists.
- * - for identities that no longer exist in the `identities` field, it deletes the corresponding records
- */
+/** Trigger function to sync user social identity relations after identities are updated. This will ensure that the `user_social_identity_relations` table is kept in sync with the identities field in the `users` table. */
 create function sync_user_social_identity_relations()
 returns trigger as $$
 declare
