@@ -1,0 +1,53 @@
+{
+  "tags": [
+    {
+      "name": "Google One Tap",
+      "description": "Google One Tap integration API endpoints for client-side configuration."
+    },
+    {
+      "name": "Dev feature"
+    }
+  ],
+  "paths": {
+    "/api/google-one-tap/config": {
+      "get": {
+        "summary": "Get Google One Tap configuration",
+        "description": "Get the Google One Tap configuration for client-side integration.",
+        "responses": {
+          "200": {
+            "description": "The Google One Tap configuration was retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "clientId": {
+                      "type": "string",
+                      "description": "The Google OAuth client ID"
+                    },
+                    "oneTap": {
+                      "type": "object",
+                      "description": "Google One Tap specific configuration"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No content for OPTIONS requests"
+          },
+          "400": {
+            "description": "The connector configuration is invalid"
+          },
+          "403": {
+            "description": "Access forbidden, either due to CORS restrictions or feature not enabled"
+          },
+          "404": {
+            "description": "Google connector not found"
+          }
+        }
+      }
+    }
+  }
+}
