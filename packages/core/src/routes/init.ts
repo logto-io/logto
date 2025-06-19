@@ -5,6 +5,7 @@ import Router from 'koa-router';
 import { EnvSet } from '#src/env-set/index.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
+import { koaLogtoAnonymousOriginCors } from '#src/middleware/koa-logto-anonymous-cors.js';
 import { koaManagementApiHooks } from '#src/middleware/koa-management-api-hooks.js';
 import koaTenantGuard from '#src/middleware/koa-tenant-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -113,7 +114,14 @@ const createRouters = (tenant: TenantContext) => {
   captchaProviderRoutes(managementRouter, tenant);
   sentinelActivitiesRoutes(managementRouter, tenant);
 
+  // General anonymous router for publicly accessible APIs
   const anonymousRouter: AnonymousRouter = new Router();
+
+  // Logto anonymous router for APIs that require Logto domain whitelist
+  // These APIs use koa-logto-anonymous-cors middleware to restrict access
+  // to only Logto-related domains (*.logto.io, *.logto.dev, etc.)
+  const logtoAnonymousRouter: AnonymousRouter = new Router();
+  logtoAnonymousRouter.use(koaLogtoAnonymousOriginCors());
 
   const userRouter: UserRouter = new Router();
   userRouter.use(koaOidcAuth(tenant));
@@ -122,15 +130,18 @@ const createRouters = (tenant: TenantContext) => {
   accountRoutes(userRouter, tenant);
   verificationRoutes(userRouter, tenant);
 
+  // General anonymous APIs - publicly accessible
   wellKnownRoutes(anonymousRouter, tenant);
   statusRoutes(anonymousRouter, tenant);
   authnRoutes(anonymousRouter, tenant);
   samlApplicationAnonymousRoutes(anonymousRouter, tenant);
-  googleOneTapRoutes(anonymousRouter, tenant);
+
+  // Logto anonymous APIs - restricted to Logto domains only
+  googleOneTapRoutes(logtoAnonymousRouter, tenant);
 
   wellKnownOpenApiRoutes(anonymousRouter, {
     experienceRouters: [experienceRouter, interactionRouter],
-    managementRouters: [managementRouter, anonymousRouter],
+    managementRouters: [managementRouter, anonymousRouter, logtoAnonymousRouter],
     userRouters: [userRouter],
   });
 
@@ -138,13 +149,21 @@ const createRouters = (tenant: TenantContext) => {
   swaggerRoutes(anonymousRouter, [
     managementRouter,
     anonymousRouter,
+    logtoAnonymousRouter,
     experienceRouter,
     userRouter,
     // TODO: interactionRouter should be removed from swagger.json
     interactionRouter,
   ]);
 
-  return [experienceRouter, interactionRouter, managementRouter, anonymousRouter, userRouter];
+  return [
+    experienceRouter,
+    interactionRouter,
+    managementRouter,
+    anonymousRouter,
+    logtoAnonymousRouter,
+    userRouter,
+  ];
 };
 
 export default function initApis(tenant: TenantContext): Koa {
