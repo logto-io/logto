@@ -10,7 +10,7 @@ const alteration: AlterationScript = {
       create table secrets (
         tenant_id varchar(21) not null
           references tenants (id) on update cascade on delete cascade,
-        id varchar(36) not null primary key,
+        id varchar(21) not null primary key,
         user_id varchar(21) not null 
           references users (id) on update cascade on delete cascade,
         type text /* @user SecretType */ not null,
@@ -22,7 +22,7 @@ const alteration: AlterationScript = {
         auth_tag bytea not null,
         /** The encrypted secret data. e.g. { access_token, refresh_token }*/
         ciphertext bytea not null,
-        /** The medadata associated with the secret. */
+        /** The metadata associated with the secret. */
         metadata jsonb not null default '{}'::jsonb,
         created_at timestamptz not null default(now()),
         updated_at timestamptz not null default(now())
