@@ -34,7 +34,7 @@ const alteration: AlterationScript = {
         foreign key (tenant_id, sso_connector_issuer, sso_identity_id)
           references user_sso_identities (tenant_id, issuer, identity_id) on update cascade,
         /** Ensure that each secret is associated with a social connector or SSO connector, but not both at the same time. */
-        constraint secret_connector_relations__connector_id__sso_connector_id__check
+        constraint secret_connector_relations__connector_id__sso_connector_id
           check (
             (
               connector_id is not null and social_connector_target is not null and social_identity_id is not null and
