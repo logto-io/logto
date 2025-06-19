@@ -54,12 +54,17 @@ export const buildSamlAssertionNameId = (
   });
 };
 
-export const generateAutoSubmitForm = (actionUrl: string, samlResponse: string): string => {
+export const generateAutoSubmitForm = (
+  actionUrl: string,
+  samlResponse: string,
+  relayState?: string
+): string => {
   return `
     <html>
       <body>
         <form id="redirectForm" action="${actionUrl}" method="POST">
           <input type="hidden" name="SAMLResponse" value="${samlResponse}" />
+          ${relayState ? `<input type="hidden" name="RelayState" value="${relayState}" />` : ''}
         </form>
         <script>
           window.onload = function() {

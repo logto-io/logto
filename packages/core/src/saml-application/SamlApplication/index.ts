@@ -10,7 +10,7 @@ import {
   type SamlAttributeMapping,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { cond, tryThat, type Nullable, type Optional } from '@silverhand/essentials';
+import { cond, conditional, tryThat, type Nullable, type Optional } from '@silverhand/essentials';
 import camelcaseKeys, { type CamelCaseKeys } from 'camelcase-keys';
 import { XMLValidator } from 'fast-xml-parser';
 import saml from 'samlify';
@@ -193,7 +193,12 @@ export class SamlApplication {
     samlRequestId: Nullable<string>;
     sessionId: Optional<string>;
     sessionExpiresAt: Optional<string>;
-  }): Promise<{ context: string; entityEndpoint: string }> => {
+  }): Promise<{
+    context: string;
+    entityEndpoint: string;
+    relayState?: string;
+  }> => {
+    const optionalRelayState = conditional(relayState);
     // TODO: fix binding method
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { context, entityEndpoint } = await this.idp.createLoginResponse(
@@ -204,11 +209,11 @@ export class SamlApplication {
       userInfo,
       this.createSamlTemplateCallback({ userInfo, samlRequestId, sessionId, sessionExpiresAt }),
       this.config.encryption?.encryptThenSign,
-      relayState ?? undefined
+      optionalRelayState
     );
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    return { context, entityEndpoint };
+    return { context, entityEndpoint, relayState: optionalRelayState };
   };
 
   // Helper functions for SAML callback

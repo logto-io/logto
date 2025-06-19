@@ -90,4 +90,35 @@ describe('generateAutoSubmitForm', () => {
     expect(result).toContain('action="https://example.com/acs?param=value&other=123"');
     expect(result).toContain('value="response+with/special=characters&"');
   });
+
+  it('should include RelayState field when relayState is provided', () => {
+    const actionUrl = 'https://example.com/acs';
+    const samlResponse = 'base64EncodedSamlResponse';
+    const relayState = 'some-relay-state-value';
+
+    const result = generateAutoSubmitForm(actionUrl, samlResponse, relayState);
+
+    expect(result).toContain(`<input type="hidden" name="SAMLResponse" value="${samlResponse}" />`);
+    expect(result).toContain(`<input type="hidden" name="RelayState" value="${relayState}" />`);
+  });
+
+  it('should not include RelayState field when relayState is not provided', () => {
+    const actionUrl = 'https://example.com/acs';
+    const samlResponse = 'base64EncodedSamlResponse';
+
+    const result = generateAutoSubmitForm(actionUrl, samlResponse);
+
+    expect(result).toContain(`<input type="hidden" name="SAMLResponse" value="${samlResponse}" />`);
+    expect(result).not.toContain('name="RelayState"');
+  });
+
+  it('should properly escape special characters in relayState', () => {
+    const actionUrl = 'https://example.com/acs';
+    const samlResponse = 'base64EncodedSamlResponse';
+    const relayState = 'relay+state/with&special=characters';
+
+    const result = generateAutoSubmitForm(actionUrl, samlResponse, relayState);
+
+    expect(result).toContain(`<input type="hidden" name="RelayState" value="${relayState}" />`);
+  });
 });

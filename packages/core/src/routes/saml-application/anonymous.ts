@@ -168,7 +168,11 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         userInfo,
       });
 
-      const { context, entityEndpoint } = await samlApplication.createSamlResponse({
+      const {
+        context,
+        entityEndpoint,
+        relayState: returnedRelayState,
+      } = await samlApplication.createSamlResponse({
         userInfo,
         relayState,
         samlRequestId,
@@ -179,10 +183,11 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       log.append({
         context,
         entityEndpoint,
+        returnedRelayState,
       });
 
       // Return auto-submit form
-      ctx.body = generateAutoSubmitForm(entityEndpoint, context);
+      ctx.body = generateAutoSubmitForm(entityEndpoint, context, returnedRelayState);
 
       // Reset cookies and state only after the whole process is done.
       if (state) {
