@@ -14,7 +14,7 @@ create table secrets (
   auth_tag bytea not null,
   /** The encrypted secret data. e.g. { access_token, refresh_token } */
   ciphertext bytea not null,
-  /** The medadata associated with the secret. */
+  /** The metadata associated with the secret. */
   metadata jsonb /* @use JsonObject */ not null default '{}'::jsonb,
   created_at timestamptz not null default(now()),
   updated_at timestamptz not null default(now())
