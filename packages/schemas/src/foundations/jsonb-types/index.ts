@@ -15,6 +15,7 @@ export * from './email-templates.js';
 export * from './one-time-tokens.js';
 export * from './captcha.js';
 export * from './custom-profile-fields.js';
+export * from './secrets.js';
 
 export {
   configurableConnectorMetadataGuard,
