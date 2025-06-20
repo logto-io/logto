@@ -1,7 +1,7 @@
 import { AuthMessageType } from './types';
 import { isCheckAdminTokenMessage, isValidOrigin } from './utils';
 
-describe('AuthStatusChecker Utils', () => {
+describe('AuthStatus Utils', () => {
   describe('isValidOrigin', () => {
     it('should return true for exact same origin', () => {
       expect(isValidOrigin('https://console.logto.io', 'https://console.logto.io')).toBe(true);
@@ -79,7 +79,7 @@ describe('AuthStatusChecker Utils', () => {
   describe('isCheckAdminTokenMessage', () => {
     it('should return true for valid CheckAdminTokenMessage', () => {
       const validMessage = {
-        type: AuthMessageType.CHECK_ADMIN_TOKEN,
+        type: AuthMessageType.CheckAdminToken,
         requestId: 'test-request-id',
       };
       expect(isCheckAdminTokenMessage(validMessage)).toBe(true);
@@ -87,15 +87,15 @@ describe('AuthStatusChecker Utils', () => {
 
     it('should return true for valid CheckAdminTokenMessage without requestId', () => {
       const validMessage = {
-        type: AuthMessageType.CHECK_ADMIN_TOKEN,
+        type: AuthMessageType.CheckAdminToken,
       };
       expect(isCheckAdminTokenMessage(validMessage)).toBe(true);
     });
 
     it('should return false for invalid message types', () => {
       expect(isCheckAdminTokenMessage({ type: 'INVALID_TYPE' })).toBe(false);
-      expect(isCheckAdminTokenMessage({ type: AuthMessageType.ADMIN_TOKEN_STATUS })).toBe(false);
-      expect(isCheckAdminTokenMessage({ type: AuthMessageType.ADMIN_TOKEN_ERROR })).toBe(false);
+      expect(isCheckAdminTokenMessage({ type: AuthMessageType.AdminTokenStatus })).toBe(false);
+      expect(isCheckAdminTokenMessage({ type: AuthMessageType.AdminTokenError })).toBe(false);
     });
 
     it('should return false for non-object values', () => {

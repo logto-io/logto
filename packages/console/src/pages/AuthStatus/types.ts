@@ -1,20 +1,20 @@
 // Message type constants
 export const enum AuthMessageType {
-  CHECK_ADMIN_TOKEN = 'CHECK_ADMIN_TOKEN',
-  ADMIN_TOKEN_STATUS = 'ADMIN_TOKEN_STATUS',
-  ADMIN_TOKEN_ERROR = 'ADMIN_TOKEN_ERROR',
+  CheckAdminToken = 'CheckAdminToken',
+  AdminTokenStatus = 'AdminTokenStatus',
+  AdminTokenError = 'AdminTokenError',
 }
 
 // Request message type
 export type CheckAdminTokenMessage = {
-  type: AuthMessageType.CHECK_ADMIN_TOKEN;
+  type: AuthMessageType.CheckAdminToken;
   requestId?: string;
 };
 
 // Response message types
 export type AdminTokenStatusMessage = {
-  type: AuthMessageType.ADMIN_TOKEN_STATUS;
-  hasToken: boolean;
+  type: AuthMessageType.AdminTokenStatus;
+  isAuthenticated: boolean;
   requestId?: string;
   debugInfo?: {
     isInIframe: boolean;
@@ -25,7 +25,7 @@ export type AdminTokenStatusMessage = {
 };
 
 export type AdminTokenErrorMessage = {
-  type: AuthMessageType.ADMIN_TOKEN_ERROR;
+  type: AuthMessageType.AdminTokenError;
   error: string;
   requestId?: string;
   debugInfo?: {

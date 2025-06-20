@@ -1,6 +1,6 @@
 import psl from 'psl';
 
-import { DOMAIN_WHITELIST, STORAGE_ACCESS_TEST_KEY } from './consts';
+import { domainWhitelist, STORAGE_ACCESS_TEST_KEY } from './consts';
 import type { CheckAdminTokenMessage } from './types';
 import { AuthMessageType } from './types';
 
@@ -72,7 +72,7 @@ export const isValidOrigin = (eventOrigin: string, currentOrigin: string): boole
     }
 
     // 4. Check whitelist patterns
-    for (const pattern of DOMAIN_WHITELIST) {
+    for (const pattern of domainWhitelist) {
       if (matchesWildcard(eventHostname, pattern)) {
         return true;
       }
@@ -92,7 +92,7 @@ export const isCheckAdminTokenMessage = (data: unknown): data is CheckAdminToken
   }
 
   return (
-    Object.hasOwn(data, 'type') && Reflect.get(data, 'type') === AuthMessageType.CHECK_ADMIN_TOKEN
+    Object.hasOwn(data, 'type') && Reflect.get(data, 'type') === AuthMessageType.CheckAdminToken
   );
 };
 
