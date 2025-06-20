@@ -8,82 +8,6 @@ const omit = (object, ...keys) =>
 const omitArray = (arrayOfObjects, ...keys) =>
   arrayOfObjects.map((value) => omit(value, ...keys));
 
-// Exported utility functions for testing
-export const autoCompare = (a, b) => {
-  // Handle null values first
-  if (a === null && b === null) return 0;
-  if (a === null) return -1; // null comes before other values
-  if (b === null) return 1;
-
-  // Handle undefined values
-  if (a === undefined && b === undefined) return 0;
-  if (a === undefined) return -1; // undefined comes before other values
-  if (b === undefined) return 1;
-
-  // Compare types
-  if (typeof a !== typeof b) {
-    return (typeof a).localeCompare(typeof b);
-  }
-
-  // Handle arrays
-  if (Array.isArray(a) && Array.isArray(b)) {
-    for (let i = 0; i < Math.min(a.length, b.length); i++) {
-      const comparison = autoCompare(a[i], b[i]);
-      if (comparison !== 0) {
-        return comparison;
-      }
-    }
-    return a.length - b.length;
-  }
-
-  // Handle objects (but not arrays)
-  if (typeof a === 'object' && !Array.isArray(a)) {
-    const aKeys = Object.keys(a).sort();
-    const bKeys = Object.keys(b).sort();
-
-    for (let i = 0; i < Math.min(aKeys.length, bKeys.length); i++) {
-      if (aKeys[i] !== bKeys[i]) {
-        return aKeys[i].localeCompare(bKeys[i]);
-      }
-      const comparison = autoCompare(a[aKeys[i]], b[bKeys[i]]);
-      if (comparison !== 0) {
-        return comparison;
-      }
-    }
-
-    return aKeys.length - bKeys.length;
-  }
-
-  // Handle numbers
-  if (typeof a === 'number' && typeof b === 'number') {
-    return a - b;
-  }
-
-  // Handle booleans
-  if (typeof a === 'boolean' && typeof b === 'boolean') {
-    return a === b ? 0 : (a ? 1 : -1); // false < true
-  }
-
-  // Handle strings and other primitives
-  return String(a).localeCompare(String(b));
-};
-
-export const deepSort = (obj) => {
-  if (Array.isArray(obj)) {
-    return obj.map(deepSort).sort(autoCompare);
-  }
-  
-  if (obj && typeof obj === 'object') {
-    const sorted = {};
-    Object.keys(obj).sort().forEach(key => {
-      sorted[key] = deepSort(obj[key]);
-    });
-    return sorted;
-  }
-  
-  return obj;
-};
-
 // Function to normalize function/trigger definitions by stripping whitespace from each line
 export const normalizeDefinition = (definition) => {
   if (typeof definition !== 'string') {
@@ -304,8 +228,62 @@ const queryDatabaseManifest = async (database) => {
   };
 };
 
-const buildSortByKeys = (keys) => (a, b) => {
-  const found = keys.find((key) => a[key] !== b[key]);
+// Export utility functions first
+export const autoCompare = (a, b) => {
+  if (typeof a !== typeof b) {
+    return (typeof a).localeCompare(typeof b);
+  }
+
+  if (typeof a === 'object' && a !== null && b !== null) {
+    const aKeys = Object.keys(a).sort();
+    const bKeys = Object.keys(b).sort();
+
+    for (let i = 0; i < Math.min(aKeys.length, bKeys.length); i++) {
+      if (aKeys[i] !== bKeys[i]) {
+        return aKeys[i].localeCompare(bKeys[i]);
+      }
+      const comparison = autoCompare(a[aKeys[i]], b[bKeys[i]]);
+      if (comparison !== 0) {
+        return comparison;
+      }
+    }
+
+    return aKeys.length - bKeys.length;
+  }
+
+  return String(a).localeCompare(String(b));
+};
+
+// Function to evaluate the complexity of a value
+// Higher values indicate more complex types that should be compared first
+export const getValueComplexity = (value) => {
+  if (value === null || value === undefined) return 0;
+  if (typeof value === 'boolean') return 1;
+  if (typeof value === 'number') return 2;
+  if (typeof value === 'string') return 3;
+  if (Array.isArray(value)) return 4;
+  if (typeof value === 'object') return 5;
+  return 0;
+};
+
+export const buildSortByKeys = (keys) => (a, b) => {
+  // Sort keys based on value complexity and then find the first differing key
+  const sortedKeys = keys.slice().sort((keyA, keyB) => {
+    const complexityA = Math.max(getValueComplexity(a[keyA]), getValueComplexity(b[keyA]));
+    const complexityB = Math.max(getValueComplexity(a[keyB]), getValueComplexity(b[keyB]));
+    
+    // Sort by complexity descending (more complex first), then by key name ascending
+    if (complexityA !== complexityB) {
+      return complexityB - complexityA;
+    }
+    return keyA.localeCompare(keyB);
+  });
+  
+  // Use deep comparison instead of reference comparison for objects
+  const found = sortedKeys.find((key) => {
+    const comparison = autoCompare(a[key], b[key]);
+    return comparison !== 0;
+  });
   return found ? autoCompare(a[found], b[found]) : 0;
 };
 
@@ -327,7 +305,7 @@ const queryDatabaseData = async (database, manifests) => {
         const data = omitArray(rows, 'value');
         return [
           table_name,
-          data.map(deepSort).sort(buildSortByKeys(Object.keys(data[0] ?? {}))),
+          data.sort(buildSortByKeys(Object.keys(data[0] ?? {}))),
         ];
       }
 
@@ -346,15 +324,17 @@ const queryDatabaseData = async (database, manifests) => {
         'add_on_sku_id'
       );
 
-      return [table_name, data.map(deepSort).sort(buildSortByKeys(Object.keys(data[0] ?? {})))];
+      return [table_name, data.sort(buildSortByKeys(Object.keys(data[0] ?? {})))];
     })
   );
 
   return Object.fromEntries(result);
 };
 
-// Only run the main logic when this file is executed directly
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Main execution logic - only runs when file is executed directly
+const isMainModule = import.meta.url === new URL(process.argv[1], 'file://').href;
+
+if (isMainModule) {
   const [, , database1, database2] = process.argv;
 
   console.log('Compare database manifest between', database1, 'and', database2);
