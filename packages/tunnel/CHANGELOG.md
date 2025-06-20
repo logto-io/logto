@@ -1,5 +1,11 @@
 # @logto/tunnel
 
+## 0.3.2
+
+### Patch Changes
+
+- 37e692888: security updates for dependencies
+
 ## 0.3.1
 
 ### Patch Changes
