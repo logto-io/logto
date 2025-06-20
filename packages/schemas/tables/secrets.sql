@@ -5,7 +5,7 @@ create table secrets (
   id varchar(21) not null primary key,
   user_id varchar(21) not null 
     references users (id) on update cascade on delete cascade,
-  type text /* @use SecretType */ not null,
+  type varchar(256) /* @use SecretType */ not null,
   /** Encrypted data encryption key (DEK) for the secret. */
   encrypted_dek bytea not null,
   /** Initialization vector for the secret encryption. */
