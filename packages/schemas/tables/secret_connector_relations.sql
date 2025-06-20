@@ -100,7 +100,7 @@ create trigger delete_secret_before_sso_identity_delete
   execute procedure delete_secret_on_sso_identity_delete();
 
 
-/** Trigger function to delete associalted secrets when social identities is deleted. */
+/** Trigger function to delete associated secrets when social identities is deleted. */
 create function delete_secrets_on_social_identity_delete()
 returns trigger as $$
 declare
@@ -108,7 +108,7 @@ declare
   old_identity jsonb;
   new_identity jsonb;
 begin
-  -- Loop over eold identies to detect deletions or modificaitons
+  -- Loop over old identities to detect deletions or modifications
   for target in select jsonb_object_keys(old.identities)
   loop
     old_identity := old.identities -> target;
