@@ -3,12 +3,13 @@ import { useMemo } from 'react';
 import { type RouteObject } from 'react-router-dom';
 import { safeLazy } from 'react-safe-lazy';
 
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import NotFound from '@/pages/NotFound';
 
 import { apiResources } from './routes/api-resources';
 import { applications } from './routes/applications';
 import { auditLogs } from './routes/audit-logs';
+import { authStatus } from './routes/auth-status';
 import { connectors } from './routes/connectors';
 import { customizeJwt } from './routes/customize-jwt';
 import { enterpriseSso } from './routes/enterprise-sso';
@@ -35,6 +36,7 @@ export const useConsoleRoutes = () => {
         { path: '*', element: <NotFound /> },
         { path: 'get-started', element: <GetStarted /> },
         { path: 'dashboard', element: <Dashboard /> },
+        isDevFeaturesEnabled && authStatus,
         applications,
         apiResources,
         signInExperience,
