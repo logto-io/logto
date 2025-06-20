@@ -5,7 +5,7 @@ on:
   pull_request_target:
     types: [opened, edited, synchronize, reopened]
 
-concurrency: 
+concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Add labels
-        uses: silverhand-io/actions-add-labels-run-steps@v1.2.1
+        uses: silverhand-io/actions-add-labels-run-steps@v1.2.2
         with:
           title: ${{ github.event.pull_request.title || github.event.issue.title }}
           github-token: ${{ github.token }}
@@ -96,7 +96,7 @@ jobs:
             return `#### COMPARE TO \`master\`\n**Total Size Diff** ${format(diff)}\n${
               result.length ? `\n<details>\n<summary><b>Diff by File</b></summary>\n\n${filesHeader}${filesData}</details>\n` : ''
             }`;
-      
+
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
           message: |
