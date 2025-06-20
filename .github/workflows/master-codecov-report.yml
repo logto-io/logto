@@ -30,14 +30,14 @@ jobs:
         run: pnpm ci:test
 
       - name: Codecov Core
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           flags: core
           directory: ./packages/core
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Codecov UI
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           flags: experience
           directory: ./packages/experience
