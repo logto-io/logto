@@ -19,7 +19,7 @@ const alteration: AlterationScript = {
         sso_connector_id varchar(128)
           references sso_connectors (id) on update cascade,
         /** The target of the social connector. e.g. 'github', 'google', etc. */
-        social_connector_target text,
+        social_connector_target varchar(256),
         /** User social identity ID foreign reference. Only present for secrets that store social identity tokens. */
         social_identity_id varchar(128),
         /** User sso connector issuer. Only present for secrets that store SSO connector tokens. */
