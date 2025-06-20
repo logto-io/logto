@@ -2,6 +2,7 @@ import { UserScope } from '@logto/core-kit';
 import { MfaFactor } from '@logto/schemas';
 
 import { enableAllAccountCenterFields } from '#src/api/account-center.js';
+import { generateTotpSecret } from '#src/api/my-account.js';
 import {
   createWebAuthnRegistrationOptions,
   verifyWebAuthnRegistration,
@@ -17,6 +18,7 @@ import {
   enableUserControlledMfaWithTotpAndWebAuthn,
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
+import { devFeatureTest } from '#src/utils.js';
 
 describe('my-account (mfa)', () => {
   beforeAll(async () => {
@@ -27,6 +29,21 @@ describe('my-account (mfa)', () => {
 
   afterAll(async () => {
     await resetMfaSettings();
+  });
+
+  devFeatureTest.describe('POST /my-account/mfa-verifications/totp-secret/generate', () => {
+    devFeatureTest.it('should be able to generate totp secret', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+
+      const { secret } = await generateTotpSecret(api);
+
+      expect(secret).toBeTruthy();
+
+      await deleteDefaultTenantUser(user.id);
+    });
   });
 
   describe('POST /my-account/mfa-verifications/web-authn/registration', () => {

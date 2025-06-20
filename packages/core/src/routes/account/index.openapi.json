@@ -306,6 +306,19 @@
         }
       }
     },
+    "/api/my-account/mfa-verifications/totp-secret/generate": {
+      "post": {
+        "operationId": "GenerateTotpSecret",
+        "summary": "Generate a TOTP secret",
+        "tags": ["Dev feature"],
+        "description": "Generate a TOTP secret for the user.",
+        "responses": {
+          "200": {
+            "description": "The TOTP secret was generated successfully."
+          }
+        }
+      }
+    },
     "/api/my-account/mfa-verifications/{verificationId}/name": {
       "patch": {
         "operationId": "UpdateMfaVerificationName",

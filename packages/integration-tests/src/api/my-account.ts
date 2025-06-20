@@ -74,3 +74,6 @@ export const updateOtherProfile = async (api: KyInstance, body: Record<string, u
 
 export const getUserInfo = async (api: KyInstance) =>
   api.get('api/my-account').json<Partial<UserProfileResponse>>();
+
+export const generateTotpSecret = async (api: KyInstance) =>
+  api.post('api/my-account/mfa-verifications/totp-secret/generate').json<{ secret: string }>();
