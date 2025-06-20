@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.13.1
+
+### Patch Changes
+
+- 3cf7ee141: fix potential WebAuthn registration errors by specifying the displayName
+
+  This is an optional field, but it's actually required by some browsers. For example, when using Chrome on Windows 11 with the "Use other devices" option (scanning QR code), an empty displayName will cause the registration to fail.
+
 ## 1.13.0
 
 ### Minor Changes
