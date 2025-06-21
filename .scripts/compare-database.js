@@ -8,6 +8,18 @@ const omit = (object, ...keys) =>
 const omitArray = (arrayOfObjects, ...keys) =>
   arrayOfObjects.map((value) => omit(value, ...keys));
 
+// Function to normalize function/trigger definitions by stripping whitespace from each line
+export const normalizeDefinition = (definition) => {
+  if (typeof definition !== 'string') {
+    return definition;
+  }
+  
+  return definition
+    .split('\n')
+    .map(line => line.trim())
+    .join('\n');
+};
+
 const schemas = ['cloud', 'public'];
 const schemasArray = `(${schemas.map((schema) => `'${schema}'`).join(', ')})`;
 
@@ -160,6 +172,18 @@ const queryDatabaseManifest = async (database) => {
     return { policyname, ...rest };
   };
 
+  // Normalize function definitions by stripping whitespace from each line
+  const normalizeFuncDefinition = ({ definition, ...rest }) => ({
+    ...rest,
+    definition: normalizeDefinition(definition),
+  });
+
+  // Normalize trigger action statements by stripping whitespace from each line
+  const normalizeTriggerAction = ({ action_statement, ...rest }) => ({
+    ...rest,
+    action_statement: normalizeDefinition(action_statement),
+  });
+
   // Omit generated ids and values
   return {
     tables: omitArray(tables, 'table_catalog'),
@@ -194,8 +218,8 @@ const queryDatabaseManifest = async (database) => {
       'conexclop'
     ),
     indexes,
-    funcs,
-    triggers: omitArray(triggers, 'trigger_catalog', 'event_object_catalog'),
+    funcs: funcs.map(normalizeFuncDefinition),
+    triggers: omitArray(triggers, 'trigger_catalog', 'event_object_catalog').map(normalizeTriggerAction),
     policies: policies.map(normalizeRoles).map(normalizePolicyname),
     columnGrants: omitArray(columnGrants, 'table_catalog').map(
       normalizeGrantee
@@ -204,18 +228,8 @@ const queryDatabaseManifest = async (database) => {
   };
 };
 
-const [, , database1, database2] = process.argv;
-
-console.log('Compare database manifest between', database1, 'and', database2);
-
-const manifests = [
-  await queryDatabaseManifest(database1),
-  await queryDatabaseManifest(database2),
-];
-
-tryCompare(...manifests);
-
-const autoCompare = (a, b) => {
+// Export utility functions first
+export const autoCompare = (a, b) => {
   if (typeof a !== typeof b) {
     return (typeof a).localeCompare(typeof b);
   }
@@ -240,17 +254,46 @@ const autoCompare = (a, b) => {
   return String(a).localeCompare(String(b));
 };
 
-const buildSortByKeys = (keys) => (a, b) => {
-  const found = keys.find((key) => a[key] !== b[key]);
+// Function to evaluate the complexity of a value
+// Higher values indicate more complex types that should be compared first
+export const getValueComplexity = (value) => {
+  if (value === null || value === undefined) return 0;
+  if (typeof value === 'boolean') return 1;
+  if (typeof value === 'number') return 2;
+  if (typeof value === 'string') return 3;
+  if (Array.isArray(value)) return 4;
+  if (typeof value === 'object') return 5;
+  return 0;
+};
+
+export const buildSortByKeys = (keys) => (a, b) => {
+  // Sort keys based on value complexity and then find the first differing key
+  const sortedKeys = keys.slice().sort((keyA, keyB) => {
+    const complexityA = Math.max(getValueComplexity(a[keyA]), getValueComplexity(b[keyA]));
+    const complexityB = Math.max(getValueComplexity(a[keyB]), getValueComplexity(b[keyB]));
+    
+    // Sort by complexity descending (more complex first), then by key name ascending
+    if (complexityA !== complexityB) {
+      return complexityB - complexityA;
+    }
+    return keyA.localeCompare(keyB);
+  });
+  
+  // Use deep comparison instead of reference comparison for objects
+  const found = sortedKeys.find((key) => {
+    const comparison = autoCompare(a[key], b[key]);
+    return comparison !== 0;
+  });
   return found ? autoCompare(a[found], b[found]) : 0;
 };
 
-const queryDatabaseData = async (database) => {
+const queryDatabaseData = async (database, manifests) => {
   const pool = new pg.Pool({
     database,
     user: 'postgres',
     password: 'postgres',
   });
+
   const result = await Promise.all(
     manifests[0].tables.map(async ({ table_schema, table_name }) => {
       const { rows } = await pool.query(
@@ -288,9 +331,25 @@ const queryDatabaseData = async (database) => {
   return Object.fromEntries(result);
 };
 
-console.log('Compare database data between', database1, 'and', database2);
+// Main execution logic - only runs when file is executed directly
+const isMainModule = import.meta.url === new URL(process.argv[1], 'file://').href;
 
-tryCompare(
-  await queryDatabaseData(database1),
-  await queryDatabaseData(database2)
-);
+if (isMainModule) {
+  const [, , database1, database2] = process.argv;
+
+  console.log('Compare database manifest between', database1, 'and', database2);
+
+  const manifests = [
+    await queryDatabaseManifest(database1),
+    await queryDatabaseManifest(database2),
+  ];
+
+  tryCompare(...manifests);
+
+  console.log('Compare database data between', database1, 'and', database2);
+
+  tryCompare(
+    await queryDatabaseData(database1, manifests),
+    await queryDatabaseData(database2, manifests)
+  );
+}
