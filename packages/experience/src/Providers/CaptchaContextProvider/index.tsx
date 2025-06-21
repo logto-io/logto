@@ -70,6 +70,7 @@ const CaptchaContextProvider = ({ children }: Props) => {
             setToast(t('error.captcha_verification_failed'));
             reject(new Error(`Turnstile error: ${errorCode}`));
           },
+          size: 'flexible',
         });
       });
     }
