@@ -53,8 +53,7 @@ const managementApiIdentifiableEntityNames = Object.freeze(
     'secret',
     'email-template',
     'one-time-token',
-    EnvSet.values.isDevFeaturesEnabled && 'google-one-tap',
-    EnvSet.values.isDevFeaturesEnabled && 'custom-profile-field'
+    EnvSet.values.isDevFeaturesEnabled && 'google-one-tap'
   )
 );
 

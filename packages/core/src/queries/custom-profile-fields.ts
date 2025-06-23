@@ -5,8 +5,6 @@ import {
 } from '@logto/schemas';
 import { type CommonQueryMethods, sql } from '@silverhand/slonik';
 
-import { buildDeleteByIdWithPool } from '#src/database/delete-by-id.js';
-import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
@@ -22,13 +20,19 @@ export const createCustomProfileFieldsQueries = (pool: CommonQueryMethods) => {
     `);
   };
 
-  const findCustomProfileFieldById = buildFindEntityByIdWithPool(pool)(CustomProfileFields);
+  const findCustomProfileFieldByName = async (name: string) => {
+    return pool.maybeOne<CustomProfileField>(sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where ${fields.name} = ${name}
+    `);
+  };
 
-  const findCustomProfileFieldsByIds = async (ids: string[]) => {
+  const findCustomProfileFieldsByNames = async (names: string[]) => {
     return pool.any<CustomProfileField>(sql`
       select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
-      where ${fields.id} in (${sql.join(ids, sql`, `)})
+      where ${fields.name} in (${sql.join(names, sql`, `)})
       order by ${fields.sieOrder}
     `);
   };
@@ -37,9 +41,14 @@ export const createCustomProfileFieldsQueries = (pool: CommonQueryMethods) => {
     returning: true,
   });
 
-  const updateCustomProfileFieldsById = buildUpdateWhereWithPool(pool)(CustomProfileFields, true);
+  const updateCustomProfileFieldsByName = buildUpdateWhereWithPool(pool)(CustomProfileFields, true);
 
-  const deleteCustomProfileFieldsById = buildDeleteByIdWithPool(pool, CustomProfileFields.table);
+  const deleteCustomProfileFieldsByName = async (name: string) => {
+    return pool.any(sql`
+      delete from ${table}
+      where ${fields.name} = ${name}
+    `);
+  };
 
   /**
    * Update the display order of the custom profile fields in Sign-in Experience.
@@ -49,21 +58,21 @@ export const createCustomProfileFieldsQueries = (pool: CommonQueryMethods) => {
       update ${table}
       set ${fields.sieOrder} = t.new_sie_order::smallint
       from (values ${sql.join(
-        data.map(({ id, sieOrder }) => sql`(${id}, ${sieOrder})`),
+        data.map(({ name, sieOrder }) => sql`(${name}, ${sieOrder})`),
         sql`,`
-      )}) t(id, new_sie_order)
-      where ${table}.${fields.id} = t.id
+      )}) t(name, new_sie_order)
+      where ${table}.${fields.name} = t.name
       returning *
     `);
   };
 
   return {
     findAllCustomProfileFields,
-    findCustomProfileFieldById,
-    findCustomProfileFieldsByIds,
+    findCustomProfileFieldByName,
+    findCustomProfileFieldsByNames,
     insertCustomProfileFields,
-    updateCustomProfileFieldsById,
-    deleteCustomProfileFieldsById,
+    updateCustomProfileFieldsByName,
+    deleteCustomProfileFieldsByName,
     updateFieldOrderInSignInExperience,
   };
 };

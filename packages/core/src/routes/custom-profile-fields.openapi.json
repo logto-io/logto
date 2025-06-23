@@ -21,85 +21,22 @@
       },
       "post": {
         "summary": "Create a custom profile field",
-        "description": "Create a custom profile field.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "type": {
-                    "type": "string"
-                  },
-                  "label": {
-                    "type": "string"
-                  },
-                  "description": {
-                    "type": "string"
-                  },
-                  "required": {
-                    "type": "boolean"
-                  },
-                  "config": {
-                    "type": "object",
-                    "properties": {
-                      "placeholder": {
-                        "type": "string"
-                      },
-                      "minLength": {
-                        "type": "integer"
-                      },
-                      "maxLength": {
-                        "type": "integer"
-                      },
-                      "minValue": {
-                        "type": "integer"
-                      },
-                      "maxValue": {
-                        "type": "integer"
-                      },
-                      "format": {
-                        "type": "string"
-                      },
-                      "options": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "label": {
-                              "type": "string"
-                            },
-                            "value": {
-                              "type": "string"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
+        "description": "Create a custom profile field."
       }
     },
-    "/api/custom-profile-fields/{id}": {
+    "/api/custom-profile-fields/{name}": {
       "get": {
-        "summary": "Get a custom profile field by id",
-        "description": "Get a custom profile field by id.",
+        "summary": "Get a custom profile field by name",
+        "description": "Get a custom profile field by name.",
         "responses": {
           "200": {
             "description": "Custom profile field found successfully."
           }
         }
       },
-      "patch": {
-        "summary": "Update a custom profile field by id",
-        "description": "Update a custom profile field by id.",
+      "put": {
+        "summary": "Update a custom profile field by name",
+        "description": "Update a custom profile field by name.",
         "responses": {
           "200": {
             "description": "Custom profile field updated successfully."
@@ -107,8 +44,8 @@
         }
       },
       "delete": {
-        "summary": "Delete a custom profile field by id",
-        "description": "Delete a custom profile field by id.",
+        "summary": "Delete a custom profile field by name",
+        "description": "Delete a custom profile field by name.",
         "responses": {
           "204": {
             "description": "Custom profile field deleted successfully."
@@ -117,34 +54,9 @@
       }
     },
     "/api/custom-profile-fields/sie-order": {
-      "put": {
+      "post": {
         "summary": "Update the display order of the custom profile fields in Sign-in Experience.",
         "description": "Update the display order of the custom profile fields in Sign-in Experience.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "order": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string"
-                        },
-                        "sieOrder": {
-                          "type": "integer"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Custom profile fields updated successfully."

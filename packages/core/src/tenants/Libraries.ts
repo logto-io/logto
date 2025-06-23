@@ -1,6 +1,7 @@
 import { createApplicationLibrary } from '#src/libraries/application.js';
 import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
+import { createCustomProfileFieldsLibrary } from '#src/libraries/custom-profile-fields/index.js';
 import { createDomainLibrary } from '#src/libraries/domain.js';
 import { createHookLibrary } from '#src/libraries/hook/index.js';
 import { JwtCustomizerLibrary } from '#src/libraries/jwt-customizer.js';
@@ -20,8 +21,6 @@ import { createSsoConnectorLibrary } from '#src/libraries/sso-connector.js';
 import { type SubscriptionLibrary } from '#src/libraries/subscription.js';
 import { createUserLibrary } from '#src/libraries/user.js';
 import { createVerificationStatusLibrary } from '#src/libraries/verification-status.js';
-
-import { createCustomProfileFieldsLibrary } from '../libraries/custom-profile-fields.js';
 
 import type Queries from './Queries.js';
 

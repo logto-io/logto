@@ -30,12 +30,10 @@ type RouteDictionary = Record<`${OpenAPIV3.HttpMethods} ${string}`, string>;
 const devFeatureCustomRoutes: RouteDictionary = Object.freeze({
   'get /google-one-tap/config': 'GetGoogleOneTapConfig',
   'post /google-one-tap/verify': 'VerifyGoogleOneTapToken',
-  'get /custom-profile-fields': 'FindAllCustomProfileFields',
-  'get /custom-profile-fields/{id}': 'FindCustomProfileFieldById',
-  'post /custom-profile-fields': 'CreateCustomProfileField',
-  'patch /custom-profile-fields/{id}': 'UpdateCustomProfileFieldById',
-  'delete /custom-profile-fields/{id}': 'DeleteCustomProfileFieldById',
-  'put /custom-profile-fields/sie-order': 'UpdateCustomProfileFieldsSieOrder',
+  'get /custom-profile-fields/:name': 'GetCustomProfileFieldByName',
+  'put /custom-profile-fields/:name': 'UpdateCustomProfileFieldByName',
+  'delete /custom-profile-fields/:name': 'DeleteCustomProfileFieldByName',
+  'post /custom-profile-fields/sie-order': 'UpdateCustomProfileFieldsSieOrder',
 });
 
 export const customRoutes: Readonly<RouteDictionary> = Object.freeze({

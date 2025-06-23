@@ -1,4 +1,13 @@
-import { CustomProfileFieldType } from '@logto/schemas';
+import {
+  CustomProfileFieldType,
+  type TextProfileField,
+  type DateProfileField,
+  type SelectProfileField,
+  type FullnameProfileField,
+  type UrlProfileField,
+  type AddressProfileField,
+  type CheckboxProfileField,
+} from '@logto/schemas';
 
 export const primaryEmailData = {
   name: `primaryEmail`,
@@ -10,7 +19,7 @@ export const primaryEmailData = {
     minLength: 5,
     maxLength: 50,
   },
-};
+} satisfies TextProfileField;
 
 export const birthDateData = {
   name: `birthDate`,
@@ -21,7 +30,7 @@ export const birthDateData = {
     placeholder: '2000-01-01',
     format: 'MM-DD-YYYY',
   },
-};
+} satisfies DateProfileField;
 
 export const genderData = {
   name: `gender`,
@@ -36,7 +45,7 @@ export const genderData = {
       { label: 'Other', value: 'other' },
     ],
   },
-};
+} satisfies SelectProfileField;
 
 export const websiteData = {
   name: `website`,
@@ -45,7 +54,7 @@ export const websiteData = {
   config: {
     placeholder: 'https://www.example.com',
   },
-};
+} satisfies UrlProfileField;
 
 export const addressData = {
   name: `address`,
@@ -53,7 +62,6 @@ export const addressData = {
   label: 'Address',
   required: true,
   config: {
-    placeholder: '123 Main St',
     parts: [
       { key: 'streetAddress', enabled: true },
       { key: 'locality', enabled: true },
@@ -62,7 +70,7 @@ export const addressData = {
       { key: 'country', enabled: true },
     ],
   },
-};
+} satisfies AddressProfileField;
 
 export const fullnameData = {
   name: `fullname`,
@@ -70,10 +78,22 @@ export const fullnameData = {
   label: 'Full name',
   required: true,
   config: {
-    placeholder: 'John Doe',
     parts: [
       { key: 'givenName', enabled: true },
       { key: 'familyName', enabled: true },
     ],
   },
-};
+} satisfies FullnameProfileField;
+
+export const genericCheckboxData = {
+  name: `checkbox`,
+  type: CustomProfileFieldType.Checkbox,
+  label: "I'm a checkbox",
+  required: true,
+  config: {
+    options: [
+      { label: 'Option 1', value: 'option1' },
+      { label: 'Option 2', value: 'option2' },
+    ],
+  },
+} satisfies CheckboxProfileField;

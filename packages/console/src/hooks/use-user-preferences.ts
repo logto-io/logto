@@ -1,5 +1,5 @@
 import { builtInLanguages as builtInConsoleLanguages } from '@logto/phrases';
-import type { Theme } from '@logto/schemas';
+import { consoleUserPreferenceKey, type Theme } from '@logto/schemas';
 import { useContext, useEffect, useMemo } from 'react';
 import { z } from 'zod';
 
@@ -8,8 +8,6 @@ import type { DynamicAppearanceMode } from '@/types/appearance-mode';
 import { appearanceModeGuard } from '@/types/appearance-mode';
 
 import useCurrentUser from './use-current-user';
-
-const adminConsolePreferencesKey = 'adminConsolePreferences';
 
 const userPreferencesGuard = z.object({
   language: z.enum(builtInConsoleLanguages).optional(),
@@ -49,20 +47,20 @@ const useUserPreferences = () => {
 
   const userPreferences = useMemo(() => {
     const parsed = z
-      .object({ [adminConsolePreferencesKey]: userPreferencesGuard })
+      .object({ [consoleUserPreferenceKey]: userPreferencesGuard })
       .safeParse(customData);
 
     return parsed.success
       ? {
           ...defaultUserPreferences,
-          ...parsed.data[adminConsolePreferencesKey],
+          ...parsed.data[consoleUserPreferenceKey],
         }
       : defaultUserPreferences;
   }, [customData]);
 
   const update = async (data: Partial<UserPreferences>) => {
     await updateCustomData({
-      [adminConsolePreferencesKey]: {
+      [consoleUserPreferenceKey]: {
         ...userPreferences,
         ...data,
       },

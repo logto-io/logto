@@ -1,8 +1,8 @@
 import {
   CustomProfileFields,
-  createCustomProfileFieldDataGuard,
-  updateCustomProfileFieldDataGuard,
   updateCustomProfileFieldSieOrderGuard,
+  customProfileFieldUnionGuard,
+  updateCustomProfileFieldDataGuard,
 } from '@logto/schemas';
 import { z } from 'zod';
 
@@ -15,12 +15,11 @@ export default function customProfileFieldsRoutes<T extends ManagementApiRouter>
 ) {
   const {
     findAllCustomProfileFields,
-    findCustomProfileFieldById,
-    updateCustomProfileFieldsById,
-    deleteCustomProfileFieldsById,
+    findCustomProfileFieldByName,
+    deleteCustomProfileFieldsByName,
   } = queries.customProfileFields;
 
-  const { createCustomProfileField, updateCustomProfileFieldsSieOrder } =
+  const { createCustomProfileField, updateCustomProfileField, updateCustomProfileFieldsSieOrder } =
     libraries.customProfileFields;
 
   router.get(
@@ -37,10 +36,10 @@ export default function customProfileFieldsRoutes<T extends ManagementApiRouter>
   );
 
   router.get(
-    '/custom-profile-fields/:id',
+    '/custom-profile-fields/:name',
     koaGuard({
       params: z.object({
-        id: z.string().min(1),
+        name: z.string().min(1),
       }),
       response: CustomProfileFields.guard,
       status: [200, 404],
@@ -48,17 +47,18 @@ export default function customProfileFieldsRoutes<T extends ManagementApiRouter>
     async (ctx, next) => {
       const { params } = ctx.guard;
 
-      ctx.body = await findCustomProfileFieldById(params.id);
+      ctx.body = await findCustomProfileFieldByName(params.name);
       ctx.status = 200;
       return next();
     }
   );
+
   router.post(
     '/custom-profile-fields',
     koaGuard({
-      body: createCustomProfileFieldDataGuard,
+      body: customProfileFieldUnionGuard,
       response: CustomProfileFields.guard,
-      status: [201],
+      status: [201, 400],
     }),
     async (ctx, next) => {
       const { body } = ctx.guard;
@@ -69,25 +69,20 @@ export default function customProfileFieldsRoutes<T extends ManagementApiRouter>
     }
   );
 
-  router.patch(
-    '/custom-profile-fields/:id',
+  router.put(
+    '/custom-profile-fields/:name',
     koaGuard({
       params: z.object({
-        id: z.string().min(1),
+        name: z.string().min(1),
       }),
       body: updateCustomProfileFieldDataGuard,
       response: CustomProfileFields.guard,
-      status: [200, 404],
+      status: [200, 400, 404],
     }),
     async (ctx, next) => {
       const { params, body } = ctx.guard;
-      const { id } = params;
 
-      const customProfileField = await updateCustomProfileFieldsById({
-        where: { id },
-        set: body,
-        jsonbMode: 'merge',
-      });
+      const customProfileField = await updateCustomProfileField(params.name, body);
 
       ctx.body = customProfileField;
       ctx.status = 200;
@@ -96,25 +91,24 @@ export default function customProfileFieldsRoutes<T extends ManagementApiRouter>
   );
 
   router.delete(
-    '/custom-profile-fields/:id',
+    '/custom-profile-fields/:name',
     koaGuard({
       params: z.object({
-        id: z.string().min(1),
+        name: z.string().min(1),
       }),
       status: [204, 404],
     }),
     async (ctx, next) => {
       const { params } = ctx.guard;
-      const { id } = params;
 
-      await deleteCustomProfileFieldsById(id);
+      await deleteCustomProfileFieldsByName(params.name);
 
       ctx.status = 204;
       return next();
     }
   );
 
-  router.put(
+  router.post(
     '/custom-profile-fields/sie-order',
     koaGuard({
       body: z.object({

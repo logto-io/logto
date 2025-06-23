@@ -1,4 +1,4 @@
-import { defaultTenantId as ossDefaultTenantId } from '@logto/schemas';
+import { defaultTenantIdKey, defaultTenantId as ossDefaultTenantId } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 import { useCallback, useContext, useMemo } from 'react';
 import { z } from 'zod';
@@ -7,8 +7,6 @@ import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
 import useCurrentUser from './use-current-user';
-
-const key = 'defaultTenantId';
 
 /**
  * A hook that gets the default tenant ID for the current user from user's `customData`.
@@ -21,7 +19,10 @@ const useUserDefaultTenantId = () => {
   const { tenants } = useContext(TenantsContext);
   /** The current stored default tenant ID in the user's `customData`. */
   const storedId = useMemo(
-    () => trySafe(() => z.object({ [key]: z.string() }).parse(customData)[key]),
+    () =>
+      trySafe(
+        () => z.object({ [defaultTenantIdKey]: z.string() }).parse(customData)[defaultTenantIdKey]
+      ),
     [customData]
   );
 
@@ -48,7 +49,7 @@ const useUserDefaultTenantId = () => {
       }
 
       await updateCustomData({
-        [key]: tenantId,
+        [defaultTenantIdKey]: tenantId,
       });
     },
     [updateCustomData]

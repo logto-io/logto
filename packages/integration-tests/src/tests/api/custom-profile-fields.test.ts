@@ -1,4 +1,4 @@
-import { CustomProfileFieldType } from '@logto/schemas';
+import { CustomProfileFieldType, type FullnameProfileField } from '@logto/schemas';
 
 import {
   primaryEmailData,
@@ -10,10 +10,10 @@ import {
 } from '#src/__mocks__/profile-fields-mock.js';
 import {
   createCustomProfileField,
-  deleteCustomProfileFieldById,
-  findCustomProfileFieldById,
+  deleteCustomProfileFieldByName,
+  findCustomProfileFieldByName,
   findAllCustomProfileFields,
-  updateCustomProfileFieldById,
+  updateCustomProfileFieldByName,
   updateCustomProfileFieldsSieOrder,
 } from '#src/api/index.js';
 import { expectRejects } from '#src/helpers/index.js';
@@ -22,7 +22,7 @@ import { devFeatureTest } from '#src/utils.js';
 const { describe, it } = devFeatureTest;
 
 describe('custom profile fields API', () => {
-  it('should create custom profile field and find it by ID', async () => {
+  it('should create custom profile field and find it by name', async () => {
     const customProfileField = await createCustomProfileField(primaryEmailData);
 
     expect(customProfileField).toMatchObject({
@@ -30,10 +30,10 @@ describe('custom profile fields API', () => {
       sieOrder: 1,
     });
 
-    const foundCustomProfileField = await findCustomProfileFieldById(customProfileField.id);
+    const foundCustomProfileField = await findCustomProfileFieldByName(customProfileField.name);
     expect(foundCustomProfileField).toMatchObject(customProfileField);
 
-    void deleteCustomProfileFieldById(customProfileField.id);
+    void deleteCustomProfileFieldByName(customProfileField.name);
   });
 
   it('should fail to create if field name is empty', async () => {
@@ -44,7 +44,7 @@ describe('custom profile fields API', () => {
         label: 'Email address',
       }),
       {
-        code: 'guard.invalid_input',
+        code: 'custom_profile_fields.invalid_name',
         status: 400,
       }
     );
@@ -72,7 +72,43 @@ describe('custom profile fields API', () => {
       status: 422,
     });
 
-    void deleteCustomProfileFieldById(emailField.id);
+    void deleteCustomProfileFieldByName(emailField.name);
+  });
+
+  it('should fail to create if field name is invalid format', async () => {
+    await expectRejects(
+      createCustomProfileField({
+        name: '',
+        type: CustomProfileFieldType.Text,
+        label: 'Invalid name',
+      }),
+      {
+        code: 'custom_profile_fields.invalid_name',
+        status: 400,
+      }
+    );
+    await expectRejects(
+      createCustomProfileField({
+        name: 'customData.test',
+        type: CustomProfileFieldType.Text,
+        label: 'Invalid name',
+      }),
+      {
+        code: 'custom_profile_fields.invalid_name',
+        status: 400,
+      }
+    );
+    await expectRejects(
+      createCustomProfileField({
+        name: '123-456',
+        type: CustomProfileFieldType.Text,
+        label: 'Invalid name',
+      }),
+      {
+        code: 'custom_profile_fields.invalid_name',
+        status: 400,
+      }
+    );
   });
 
   it('should update custom profile field', async () => {
@@ -85,17 +121,21 @@ describe('custom profile fields API', () => {
     });
 
     const dataToUpdate = {
+      ...fullnameData,
       description: 'Your fullname (Given name and family name)',
       config: {
-        placeholder: 'Please enter your fullname',
         parts: [
           { key: 'givenName', enabled: true },
           { key: 'middleName', enabled: true },
           { key: 'familyName', enabled: true },
         ],
       },
-    };
-    const updatedFullnameField = await updateCustomProfileFieldById(fullnameField.id, dataToUpdate);
+    } satisfies Partial<FullnameProfileField>;
+
+    const updatedFullnameField = await updateCustomProfileFieldByName(
+      fullnameField.name,
+      dataToUpdate
+    );
 
     expect(updatedFullnameField).toMatchObject({
       ...fullnameData,
@@ -103,46 +143,33 @@ describe('custom profile fields API', () => {
       ...dataToUpdate,
     });
 
-    void deleteCustomProfileFieldById(emailField.id);
-    void deleteCustomProfileFieldById(fullnameField.id);
+    void deleteCustomProfileFieldByName(emailField.name);
+    void deleteCustomProfileFieldByName(fullnameField.name);
   });
 
-  it('should not be able to update the name, type, and sieOrder', async () => {
+  it('should not be able to update the name, and sieOrder', async () => {
     const emailField = await createCustomProfileField(primaryEmailData);
 
-    await updateCustomProfileFieldById(emailField.id, {
-      // @ts-expect-error Invalid update
+    const updatedField = await updateCustomProfileFieldByName(primaryEmailData.name, {
+      ...primaryEmailData,
+      // @ts-expect-error Invalid update name and type
       name: 'newName',
-      type: CustomProfileFieldType.Regex,
       sieOrder: 5,
       label: 'New label',
     });
 
-    expect(emailField).toMatchObject({
-      ...primaryEmailData,
-      sieOrder: 1,
+    // Only label is updated, name and sieOrder are not changed
+    expect(updatedField).toMatchObject({
+      ...emailField,
+      label: 'New label',
     });
 
-    void deleteCustomProfileFieldById(emailField.id);
+    void deleteCustomProfileFieldByName(emailField.name);
   });
 
-  it('should fail to find custom profile field by invalid ID', async () => {
-    await expectRejects(findCustomProfileFieldById('invalid-id'), {
-      code: 'entity.not_exists_with_id',
-      status: 404,
-    });
-  });
-
-  it('should fail to update custom profile field by invalid ID', async () => {
-    await expectRejects(updateCustomProfileFieldById('invalid-id', { label: 'hello' }), {
+  it('should fail to update custom profile field by non-existent name', async () => {
+    await expectRejects(updateCustomProfileFieldByName('nonExistName', primaryEmailData), {
       code: 'entity.not_exists',
-      status: 404,
-    });
-  });
-
-  it('should fail to delete custom profile field by invalid ID', async () => {
-    await expectRejects(deleteCustomProfileFieldById('invalid-id'), {
-      code: 'entity.not_found',
       status: 404,
     });
   });
@@ -166,9 +193,9 @@ describe('custom profile fields API', () => {
     });
 
     await updateCustomProfileFieldsSieOrder([
-      { id: websiteField.id, sieOrder: 3 },
-      { id: addressField.id, sieOrder: 5 },
-      { id: birthDateField.id, sieOrder: 4 },
+      { name: websiteField.name, sieOrder: 3 },
+      { name: addressField.name, sieOrder: 5 },
+      { name: birthDateField.name, sieOrder: 4 },
     ]);
 
     const fields = await findAllCustomProfileFields();
@@ -198,9 +225,9 @@ describe('custom profile fields API', () => {
       sieOrder: 6,
     });
 
-    void deleteCustomProfileFieldById(websiteField.id);
-    void deleteCustomProfileFieldById(addressField.id);
-    void deleteCustomProfileFieldById(birthDateField.id);
-    void deleteCustomProfileFieldById(genderField.id);
+    void deleteCustomProfileFieldByName(websiteField.name);
+    void deleteCustomProfileFieldByName(addressField.name);
+    void deleteCustomProfileFieldByName(birthDateField.name);
+    void deleteCustomProfileFieldByName(genderField.name);
   });
 });
