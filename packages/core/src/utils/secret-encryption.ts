@@ -46,7 +46,7 @@ const encryprSecret = (plainTextSecret: string): EncryptedSecret => {
 const decriptSecret = ({ iv, authTag, ciphertext, encryptedDek }: EncryptedSecret): string => {
   assertThat(
     EnvSet.values.secretVaultKek,
-    new Error('The key encryption key (KEK) for the secret vault is found.')
+    new Error('The key encryption key (KEK) for the secret vault is not found.')
   );
 
   const kek = Buffer.from(EnvSet.values.secretVaultKek, 'base64');

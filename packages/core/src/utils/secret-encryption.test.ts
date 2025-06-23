@@ -7,7 +7,7 @@ import { EnvSet } from '#src/env-set/index.js';
 
 import { encryptTokens, decryptTokens } from './secret-encryption.js';
 
-describe('secrety encryption', () => {
+describe('secret encryption', () => {
   const mockKek = crypto.randomBytes(32).toString('base64');
 
   it('should successfully encrypt and decrypt token', () => {
