@@ -8,18 +8,6 @@ const omit = (object, ...keys) =>
 const omitArray = (arrayOfObjects, ...keys) =>
   arrayOfObjects.map((value) => omit(value, ...keys));
 
-// Function to normalize function/trigger definitions by stripping whitespace from each line
-export const normalizeDefinition = (definition) => {
-  if (typeof definition !== 'string') {
-    return definition;
-  }
-  
-  return definition
-    .split('\n')
-    .map(line => line.trim())
-    .join('\n');
-};
-
 const schemas = ['cloud', 'public'];
 const schemasArray = `(${schemas.map((schema) => `'${schema}'`).join(', ')})`;
 
@@ -172,18 +160,6 @@ const queryDatabaseManifest = async (database) => {
     return { policyname, ...rest };
   };
 
-  // Normalize function definitions by stripping whitespace from each line
-  const normalizeFuncDefinition = ({ definition, ...rest }) => ({
-    ...rest,
-    definition: normalizeDefinition(definition),
-  });
-
-  // Normalize trigger action statements by stripping whitespace from each line
-  const normalizeTriggerAction = ({ action_statement, ...rest }) => ({
-    ...rest,
-    action_statement: normalizeDefinition(action_statement),
-  });
-
   // Omit generated ids and values
   return {
     tables: omitArray(tables, 'table_catalog'),
@@ -218,8 +194,8 @@ const queryDatabaseManifest = async (database) => {
       'conexclop'
     ),
     indexes,
-    funcs: funcs.map(normalizeFuncDefinition),
-    triggers: omitArray(triggers, 'trigger_catalog', 'event_object_catalog').map(normalizeTriggerAction),
+    funcs,
+    triggers: omitArray(triggers, 'trigger_catalog', 'event_object_catalog'),
     policies: policies.map(normalizeRoles).map(normalizePolicyname),
     columnGrants: omitArray(columnGrants, 'table_catalog').map(
       normalizeGrantee
