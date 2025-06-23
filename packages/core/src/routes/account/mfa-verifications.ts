@@ -15,7 +15,7 @@ import RequestError from '../../errors/RequestError/index.js';
 import { buildVerificationRecordByIdAndType } from '../../libraries/verification.js';
 import assertThat from '../../utils/assert-that.js';
 import { transpileUserMfaVerifications } from '../../utils/user.js';
-import { generateTotpSecret } from '../interaction/utils/totp-validation.js';
+import { generateTotpSecret, validateTotpSecret } from '../interaction/utils/totp-validation.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
 import { accountApiPrefix } from './constants.js';
@@ -59,11 +59,17 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
   router.post(
     `${accountApiPrefix}/mfa-verifications`,
     koaGuard({
-      body: z.object({
-        type: z.literal(MfaFactor.WebAuthn),
-        newIdentifierVerificationRecordId: z.string(),
-        name: z.string().optional(),
-      }),
+      body: z.discriminatedUnion('type', [
+        z.object({
+          type: z.literal(MfaFactor.WebAuthn),
+          newIdentifierVerificationRecordId: z.string(),
+          name: z.string().optional(),
+        }),
+        z.object({
+          type: z.literal(MfaFactor.TOTP),
+          secret: z.string(),
+        }),
+      ]),
       status: [204, 400, 401],
     }),
     async (ctx, next) => {
@@ -72,7 +78,6 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
         identityVerified,
         new RequestError({ code: 'verification_record.permission_denied', status: 401 })
       );
-      const { newIdentifierVerificationRecordId, name } = ctx.guard.body;
       const { fields } = ctx.accountCenter;
       assertThat(
         fields.mfa === AccountCenterControlValue.Edit,
@@ -84,39 +89,72 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
         new RequestError({ code: 'auth.unauthorized', status: 401 })
       );
 
-      // Check new identifier
-      const newVerificationRecord = await buildVerificationRecordByIdAndType({
-        type: VerificationType.WebAuthn,
-        id: newIdentifierVerificationRecordId,
-        queries,
-        libraries,
-      });
-      assertThat(newVerificationRecord.isVerified, 'verification_record.not_found');
-
-      const bindMfa = newVerificationRecord.toBindMfa();
+      // Feature flag check, throw 500
+      if (!EnvSet.values.isDevFeaturesEnabled && ctx.guard.body.type === MfaFactor.TOTP) {
+        throw new Error('TOTP is not supported yet');
+      }
 
       const user = await findUserById(userId);
 
-      // Check sign in experience, if webauthn is enabled
+      // Check sign in experience, if mfa factor is enabled
       const { mfa } = await findDefaultSignInExperience();
-      assertThat(
-        mfa.factors.includes(MfaFactor.WebAuthn),
-        new RequestError({ code: 'session.mfa.mfa_factor_not_enabled', status: 400 })
-      );
+      assertThat(mfa.factors.includes(ctx.guard.body.type), 'session.mfa.mfa_factor_not_enabled');
 
-      const updatedUser = await updateUserById(userId, {
-        mfaVerifications: [
-          ...user.mfaVerifications,
-          {
-            ...bindMfa,
-            id: generateStandardId(),
-            createdAt: new Date().toISOString(),
-            name,
-          },
-        ],
-      });
+      if (ctx.guard.body.type === MfaFactor.TOTP) {
+        // A user can only bind one TOTP factor
+        assertThat(
+          user.mfaVerifications.every(({ type }) => type !== MfaFactor.TOTP),
+          new RequestError({
+            code: 'user.totp_already_in_use',
+            status: 422,
+          })
+        );
 
-      ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
+        // Check secret
+        assertThat(validateTotpSecret(ctx.guard.body.secret), 'user.totp_secret_invalid');
+
+        const updatedUser = await updateUserById(userId, {
+          mfaVerifications: [
+            ...user.mfaVerifications,
+            {
+              id: generateStandardId(),
+              createdAt: new Date().toISOString(),
+              type: MfaFactor.TOTP,
+              key: ctx.guard.body.secret,
+            },
+          ],
+        });
+
+        ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
+
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      } else if (ctx.guard.body.type === MfaFactor.WebAuthn) {
+        const { newIdentifierVerificationRecordId, name } = ctx.guard.body;
+        // Check new identifier
+        const newVerificationRecord = await buildVerificationRecordByIdAndType({
+          type: VerificationType.WebAuthn,
+          id: newIdentifierVerificationRecordId,
+          queries,
+          libraries,
+        });
+        assertThat(newVerificationRecord.isVerified, 'verification_record.not_found');
+
+        const bindMfa = newVerificationRecord.toBindMfa();
+
+        const updatedUser = await updateUserById(userId, {
+          mfaVerifications: [
+            ...user.mfaVerifications,
+            {
+              ...bindMfa,
+              id: generateStandardId(),
+              createdAt: new Date().toISOString(),
+              name,
+            },
+          ],
+        });
+
+        ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
+      }
 
       ctx.status = 204;
 

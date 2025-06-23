@@ -2,8 +2,13 @@ import { UserScope } from '@logto/core-kit';
 import { MfaFactor } from '@logto/schemas';
 
 import { enableAllAccountCenterFields } from '#src/api/account-center.js';
-import { generateTotpSecret } from '#src/api/my-account.js';
 import {
+  addMfaVerification,
+  generateTotpSecret,
+  getMfaVerifications,
+} from '#src/api/my-account.js';
+import {
+  createVerificationRecordByPassword,
   createWebAuthnRegistrationOptions,
   verifyWebAuthnRegistration,
 } from '#src/api/verification-record.js';
@@ -41,6 +46,53 @@ describe('my-account (mfa)', () => {
       const { secret } = await generateTotpSecret(api);
 
       expect(secret).toBeTruthy();
+
+      await deleteDefaultTenantUser(user.id);
+    });
+  });
+
+  devFeatureTest.describe('POST /my-account/mfa-verifications', () => {
+    devFeatureTest.it('should be able to add totp verification', async () => {
+      await enableAllAccountCenterFields();
+
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+      const { secret } = await generateTotpSecret(api);
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
+
+      await addMfaVerification(api, verificationRecordId, {
+        type: MfaFactor.TOTP,
+        secret,
+      });
+      const mfaVerifications = await getMfaVerifications(api);
+
+      expect(mfaVerifications).toHaveLength(1);
+      expect(mfaVerifications[0]?.type).toBe(MfaFactor.TOTP);
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    devFeatureTest.it('should fail if totp secret is invalid', async () => {
+      await enableAllAccountCenterFields();
+
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
+
+      await expectRejects(
+        addMfaVerification(api, verificationRecordId, {
+          type: MfaFactor.TOTP,
+          secret: 'invalid-totp-secret',
+        }),
+        {
+          code: 'user.totp_secret_invalid',
+          status: 400,
+        }
+      );
 
       await deleteDefaultTenantUser(user.id);
     });
