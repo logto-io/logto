@@ -6,42 +6,47 @@
 
 .debugContainer {
   padding: _.unit(5);
-  font-family: Monaco, Menlo, 'Ubuntu Mono', monospace;
-  font-size: 12px;
+  font: var(--font-code);
 }
 
 .debugHeader {
   margin-bottom: _.unit(5);
-  padding: _.unit(2.5);
-  background-color: var(--color-neutral-10);
+  padding: _.unit(2);
+  background: var(--color-layer-2);
   border-radius: _.unit(1);
 
   .title {
-    margin: 0 0 _.unit(2.5) 0;
-    font-size: 16px;
-    font-weight: 600;
+    margin: 0 0 _.unit(2) 0;
+    font: var(--font-title-2);
   }
 
   .info {
-    margin: _.unit(1.25) 0;
+    margin: _.unit(1) 0;
     color: var(--color-text-secondary);
+
+    .tokenContainer {
+      display: flex;
+      align-items: center;
+      gap: _.unit(2);
+      margin-top: _.unit(1);
+    }
   }
 
   .controls {
-    margin-top: _.unit(2.5);
+    margin-top: _.unit(2);
     display: flex;
-    gap: _.unit(2.5);
+    gap: _.unit(2);
     flex-wrap: wrap;
   }
 
   .button {
-    padding: _.unit(1.25) _.unit(2.5);
+    padding: _.unit(1) _.unit(2);
     background: var(--color-primary);
     color: var(--color-on-primary);
     border: none;
     border-radius: _.unit(1);
     cursor: pointer;
-    font-size: 12px;
+    font: var(--font-label-3);
     transition: background-color 0.2s ease;
 
     &:hover {
@@ -49,11 +54,11 @@
     }
 
     &.secondary {
-      background: var(--color-neutral-20);
+      background: var(--color-layer-2);
       color: var(--color-text);
 
       &:hover {
-        background: var(--color-neutral-30);
+        background: var(--color-hover);
       }
     }
   }
@@ -67,15 +72,14 @@
   background: var(--color-layer-1);
 
   .logsHeader {
-    padding: _.unit(2.5);
-    background-color: var(--color-neutral-10);
+    padding: _.unit(2);
+    background: var(--color-layer-2);
     border-bottom: 1px solid var(--color-border);
-    font-weight: 600;
-    font-size: 14px;
+    font: var(--font-label-2);
   }
 
   .logsContent {
-    padding: _.unit(2.5);
+    padding: _.unit(2);
 
     .emptyState {
       color: var(--color-text-secondary);
@@ -86,9 +90,9 @@
 
 .logEntry {
   margin-bottom: _.unit(2);
-  padding: _.unit(1.25);
-  border-radius: _.unit(0.5);
-  border-left: 3px solid var(--color-neutral-40);
+  padding: _.unit(1);
+  border-radius: _.unit(1);
+  border-left: _.unit(1) solid var(--color-border);
 
   &.error {
     background-color: var(--color-error-container);
@@ -106,13 +110,13 @@
   }
 
   &.info {
-    background-color: var(--color-neutral-05);
-    border-left-color: var(--color-neutral-40);
+    background: var(--color-layer-1);
+    border-left-color: var(--color-border);
   }
 
   .logHeader {
-    font-weight: 600;
-    margin-bottom: _.unit(1.25);
+    font: var(--font-title-3);
+    margin-bottom: _.unit(1);
 
     &.error {
       color: var(--color-error);
@@ -132,14 +136,13 @@
   }
 
   .logData {
-    margin: _.unit(1.25) 0 0 0;
-    font-size: 10px;
+    margin: _.unit(1) 0 0 0;
+    font: var(--font-section-head-2);
     color: var(--color-text-secondary);
     white-space: pre-wrap;
-    font-family: Monaco, Menlo, 'Ubuntu Mono', monospace;
     background: var(--color-layer-2);
     padding: _.unit(1);
-    border-radius: _.unit(0.5);
+    border-radius: _.unit(1);
     overflow-x: auto;
   }
 }

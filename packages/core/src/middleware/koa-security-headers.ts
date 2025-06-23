@@ -30,7 +30,8 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
   mountedApps: string[],
   tenantId: string
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> {
-  const { isProduction, isCloud, urlSet, adminUrlSet, cloudUrlSet } = EnvSet.values;
+  const { isProduction, isDevFeaturesEnabled, isCloud, urlSet, adminUrlSet, cloudUrlSet } =
+    EnvSet.values;
 
   const tenantEndpointOrigin = getTenantEndpoint(tenantId, EnvSet.values).origin;
   // Logto Cloud uses cloud service to serve the admin console; while Logto OSS uses a fixed path under the admin URL set.
@@ -44,8 +45,17 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
           `ws://localhost:${port}`,
           `http://localhost:${port}`,
         ]),
+        // Benefit local dev.
+        'http://localhost:3000', // From local dev docs/website etc.
+        'http://localhost:3002', // From local dev console.
+        'http://localhost:5173', // From local website
+        'http://localhost:5174', // From local blog
       ];
   const logtoOrigin = 'https://*.logto.io';
+  const logtoDevOrigins = [
+    'https://*.logto.dev', // From Logto dev environment
+    'https://*.logto-docs.pages.dev', // From Logto docs CI build page
+  ];
   /** Google Sign-In (GSI) origin for Google One Tap. */
   const gsiOrigin = 'https://accounts.google.com/gsi/';
 
@@ -154,12 +164,13 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
         ],
         connectSrc: ["'self'", logtoOrigin, ...adminOrigins, ...coreOrigins, ...developmentOrigins],
         frameSrc: ["'self'", ...adminOrigins, ...coreOrigins],
+        // Allow being loaded by iframe
         frameAncestors: [
           "'self'",
           ...adminOrigins,
           ...conditionalArray(isProduction && logtoOrigin),
           ...developmentOrigins,
-          ...conditionalArray(!isProduction && 'http://localhost:*'), // Benefit local dev.
+          ...conditionalArray(isDevFeaturesEnabled && logtoDevOrigins),
         ],
       },
     },

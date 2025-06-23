@@ -1,16 +1,12 @@
-import { useLogto } from '@logto/react';
-import { type Optional, yes } from '@silverhand/essentials';
 import classNames from 'classnames';
-import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PageMeta from '@/components/PageMeta';
+import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import pageLayout from '@/scss/page-layout.module.scss';
 
-import { DEBUG_MODE_KEY } from './consts';
-import { useAuthStatusInitialization, usePostMessageHandler } from './hooks';
+import { useAuthStatus } from './hooks';
 import styles from './index.module.scss';
-import type { DebugLogEntry } from './types';
 
 /**
  * Cross-domain authentication status checker page
@@ -19,70 +15,9 @@ import type { DebugLogEntry } from './types';
  */
 function AuthStatus() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const [debugLogs, setDebugLogs] = useState<DebugLogEntry[]>([]);
-  const [currentToken, setCurrentToken] = useState<Optional<string>>(undefined);
-  const { isAuthenticated, getIdToken } = useLogto();
 
-  // Calculate initial debug mode state based on URL params and localStorage
-  const initialDebugMode = useMemo(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const debugParam = urlParams.get('debug');
-    const debugFlag = localStorage.getItem(DEBUG_MODE_KEY);
-
-    return yes(debugParam) || yes(debugFlag);
-  }, []);
-
-  const [isDebugMode, setIsDebugMode] = useState(initialDebugMode);
-
-  // Add debug log entry
-  const addDebugLog = useCallback(
-    (type: DebugLogEntry['type'], message: string, data?: unknown) => {
-      // Skip logging if debug mode is not enabled.
-      if (!isDebugMode) {
-        return;
-      }
-
-      const logEntry: DebugLogEntry = {
-        timestamp: new Date().toISOString(),
-        type,
-        message,
-        data,
-      };
-
-      console.log(`[AuthStatus] ${type.toUpperCase()}: ${message}`, data);
-      setDebugLogs((previous) => [...previous, logEntry]);
-    },
-    [isDebugMode]
-  );
-
-  // Monitor token changes
-  useEffect(() => {
-    const fetchToken = async () => {
-      const token = await getIdToken();
-      setCurrentToken(token ?? undefined);
-      addDebugLog('info', `Current token status: ${token ? 'present' : 'absent'}`, {
-        tokenLength: token?.length,
-      });
-    };
-
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    fetchToken();
-  }, [addDebugLog, getIdToken]);
-
-  // Use custom hooks to handle initialization and message processing
-  useAuthStatusInitialization(addDebugLog);
-  usePostMessageHandler(isAuthenticated, addDebugLog);
-
-  const clearDebugLogs = useCallback(() => {
-    setDebugLogs([]);
-  }, []);
-
-  const toggleDebugMode = useCallback(() => {
-    const newDebugMode = !isDebugMode;
-    setIsDebugMode(newDebugMode);
-    localStorage.setItem(DEBUG_MODE_KEY, newDebugMode.toString());
-    addDebugLog('info', `Debug mode ${newDebugMode ? 'enabled' : 'disabled'}`);
-  }, [addDebugLog, isDebugMode]);
+  // Use the comprehensive hook for all functionality
+  const { isDebugMode, debugLogs, currentToken, clearDebugLogs, toggleDebugMode } = useAuthStatus();
 
   if (!isDebugMode) {
     return (
@@ -102,9 +37,22 @@ function AuthStatus() {
         <h2 className={styles.title}>Auth Status Checker - Debug Mode</h2>
         <p className={styles.info}>Origin: {window.location.origin}</p>
         <p className={styles.info}>In iframe: {window === window.top ? 'No' : 'Yes'}</p>
-        <p className={styles.info}>
-          Current token: {currentToken ? `Present (${currentToken.slice(0, 20)}...)` : 'Absent'}
-        </p>
+        <div className={styles.info}>
+          Current token:{' '}
+          {currentToken ? (
+            <div className={styles.tokenContainer}>
+              <span>Present ({currentToken.slice(0, 20)}...)</span>
+              <CopyToClipboard
+                value={currentToken}
+                variant="icon"
+                size="small"
+                displayType="inline"
+              />
+            </div>
+          ) : (
+            'Absent'
+          )}
+        </div>
 
         <div className={styles.controls}>
           <button className={classNames(styles.button, styles.secondary)} onClick={clearDebugLogs}>
@@ -122,12 +70,8 @@ function AuthStatus() {
           {debugLogs.length === 0 ? (
             <div className={styles.emptyState}>No logs yet...</div>
           ) : (
-            debugLogs.map((log, index) => (
-              <div
-                // eslint-disable-next-line react/no-array-index-key
-                key={index}
-                className={classNames(styles.logEntry, styles[log.type])}
-              >
+            debugLogs.map((log) => (
+              <div key={log.timestamp} className={classNames(styles.logEntry, styles[log.type])}>
                 <div className={classNames(styles.logHeader, styles[log.type])}>
                   [{log.timestamp.split('T')[1]?.split('.')[0] ?? 'unknown'}]{' '}
                   {log.type.toUpperCase()}: {log.message}

@@ -1,5 +1,8 @@
-import { useCallback, useEffect } from 'react';
+import { useLogto } from '@logto/react';
+import { type Optional, yes } from '@silverhand/essentials';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { debugModeKey } from './consts';
 import type { AdminTokenErrorMessage, AdminTokenStatusMessage, DebugLogEntry } from './types';
 import { AuthMessageType } from './types';
 import {
@@ -10,11 +13,57 @@ import {
 } from './utils';
 
 /**
- * Hook for handling component initialization and debug logging
+ * Comprehensive hook for managing all AuthStatus functionality
  */
-export const useAuthStatusInitialization = (
-  addDebugLog: (type: DebugLogEntry['type'], message: string, data?: unknown) => void
-) => {
+export const useAuthStatus = () => {
+  const { isAuthenticated, getIdToken } = useLogto();
+
+  // Calculate initial debug mode state based on URL params and localStorage
+  const initialDebugMode = useMemo(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const debugParam = urlParams.get('debug');
+    const debugFlag = localStorage.getItem(debugModeKey);
+
+    return yes(debugParam) || yes(debugFlag);
+  }, []);
+
+  const [isDebugMode, setIsDebugMode] = useState(initialDebugMode);
+  const [debugLogs, setDebugLogs] = useState<DebugLogEntry[]>([]);
+  const [currentToken, setCurrentToken] = useState<Optional<string>>();
+
+  // Add debug log entry
+  const addDebugLog = useCallback(
+    (type: DebugLogEntry['type'], message: string, data?: unknown) => {
+      // Skip logging if debug mode is not enabled.
+      if (!isDebugMode) {
+        return;
+      }
+
+      const logEntry: DebugLogEntry = {
+        timestamp: new Date().toISOString(),
+        type,
+        message,
+        data,
+      };
+
+      console.log(`[AuthStatus] ${type.toUpperCase()}: ${message}`, data);
+      setDebugLogs((previous) => [...previous, logEntry]);
+    },
+    [isDebugMode]
+  );
+
+  const clearDebugLogs = useCallback(() => {
+    setDebugLogs([]);
+  }, []);
+
+  const toggleDebugMode = useCallback(() => {
+    const newDebugMode = !isDebugMode;
+    setIsDebugMode(newDebugMode);
+    localStorage.setItem(debugModeKey, newDebugMode.toString());
+    addDebugLog('info', `Debug mode ${newDebugMode ? 'enabled' : 'disabled'}`);
+  }, [addDebugLog, isDebugMode]);
+
+  // Component initialization
   useEffect(() => {
     addDebugLog('info', 'AuthStatus component mounted', {
       origin: window.location.origin,
@@ -23,15 +72,22 @@ export const useAuthStatusInitialization = (
       userAgent: navigator.userAgent,
     });
   }, [addDebugLog]);
-};
 
-/**
- * Hook for handling postMessage events and auth status checking
- */
-export const usePostMessageHandler = (
-  isAuthenticated: boolean,
-  addDebugLog: (type: DebugLogEntry['type'], message: string, data?: unknown) => void
-) => {
+  // Monitor token changes
+  useEffect(() => {
+    const fetchToken = async () => {
+      const token = await getIdToken();
+      setCurrentToken(token ?? undefined);
+      addDebugLog('info', `Current token status: ${token ? 'present' : 'absent'}`, {
+        tokenLength: token?.length,
+      });
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    fetchToken();
+  }, [addDebugLog, getIdToken]);
+
+  // Handle postMessage events
   const handleMessage = useCallback(
     async (event: MessageEvent) => {
       addDebugLog('received', `Message from ${event.origin}`, {
@@ -144,6 +200,7 @@ export const usePostMessageHandler = (
     [addDebugLog, isAuthenticated]
   );
 
+  // Set up message event listener
   useEffect(() => {
     // Add event listener for postMessage immediately
     window.addEventListener('message', handleMessage);
@@ -155,4 +212,12 @@ export const usePostMessageHandler = (
       addDebugLog('info', 'Message event listener removed');
     };
   }, [addDebugLog, handleMessage]);
+
+  return {
+    isDebugMode,
+    debugLogs,
+    currentToken,
+    clearDebugLogs,
+    toggleDebugMode,
+  };
 };

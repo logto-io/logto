@@ -1,6 +1,6 @@
 import psl from 'psl';
 
-import { domainWhitelist, STORAGE_ACCESS_TEST_KEY } from './consts';
+import { domainWhitelist, storageAccessTestKey } from './consts';
 import type { CheckAdminTokenMessage } from './types';
 import { AuthMessageType } from './types';
 
@@ -98,14 +98,16 @@ export const isCheckAdminTokenMessage = (data: unknown): data is CheckAdminToken
 
 /**
  * Check if localStorage is accessible in the current context
+ *
+ * When using Logto SDK methods like `isAuthenticated` or `getIdToken()` in an iframe, they actually
+ * retrieve tokens from `localStorage`, so we need to check if `localStorage` is accessible.
  */
 export const checkStorageAccess = (): { accessible: boolean; error?: string } => {
   try {
     // Test if we can access localStorage
-    const testKey = STORAGE_ACCESS_TEST_KEY;
-    localStorage.setItem(testKey, 'test');
-    const testValue = localStorage.getItem(testKey);
-    localStorage.removeItem(testKey);
+    localStorage.setItem(storageAccessTestKey, 'test');
+    const testValue = localStorage.getItem(storageAccessTestKey);
+    localStorage.removeItem(storageAccessTestKey);
 
     if (testValue !== 'test') {
       return { accessible: false, error: 'localStorage read/write test failed' };
