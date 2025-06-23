@@ -54,13 +54,46 @@ describe('admin console user management', () => {
     expect(userDetailsWithSsoIdentities.ssoIdentities).toStrictEqual([]);
   });
 
-  it('should create user with password digest successfully', async () => {
-    const user = await createUserByAdmin({
-      passwordDigest: '5f4dcc3b5aa765d61d8327deb882cf99',
-      passwordAlgorithm: UsersPasswordEncryptionMethod.MD5,
+  describe('create user with password digest', () => {
+    it('should create user with password digest successfully', async () => {
+      const user = await createUserByAdmin({
+        passwordDigest: '5f4dcc3b5aa765d61d8327deb882cf99',
+        passwordAlgorithm: UsersPasswordEncryptionMethod.MD5,
+      });
+
+      await expect(verifyUserPassword(user.id, 'password')).resolves.not.toThrow();
     });
 
-    await expect(verifyUserPassword(user.id, 'password')).resolves.not.toThrow();
+    it('should create user with password digest length 256', async () => {
+      const user = await createUserByAdmin({
+        passwordDigest: 'a'.repeat(256),
+        passwordAlgorithm: UsersPasswordEncryptionMethod.MD5,
+      });
+      expect(user).not.toBeNull();
+    });
+
+    it('should fail to create user with password digest if password digest is too long (257)', async () => {
+      await expectRejects(
+        createUserByAdmin({
+          passwordDigest: 'a'.repeat(257),
+          passwordAlgorithm: UsersPasswordEncryptionMethod.MD5,
+        }),
+        {
+          code: 'guard.invalid_input',
+          status: 400,
+        }
+      );
+    });
+
+    it('should create user with legacy password digest', async () => {
+      const user = await createUserByAdmin({
+        passwordDigest:
+          '["sha512", ["@"], "b109f3bbbc244eb82441917ed06d618b9008dd09b3befd1b5e07394c706a8bb980b1d7785e5976ec049b46df5f1326af5a2ea6d103fd07c95385ffab0cacbc86"]',
+        passwordAlgorithm: UsersPasswordEncryptionMethod.Legacy,
+      });
+
+      await expect(verifyUserPassword(user.id, 'password')).resolves.not.toThrow();
+    });
   });
 
   it('should create user with custom data and profile successfully', async () => {

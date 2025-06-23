@@ -149,7 +149,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         primaryEmail: string().regex(emailRegEx),
         username: string().regex(usernameRegEx),
         password: string().min(1),
-        passwordDigest: string(),
+        passwordDigest: string().max(256),
         passwordAlgorithm: nativeEnum(UsersPasswordEncryptionMethod),
         name: string(),
         avatar: string().url().or(literal('')).nullable(),
