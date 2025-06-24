@@ -10,10 +10,12 @@ import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 
+import { EnvSet } from '../../env-set/index.js';
 import RequestError from '../../errors/RequestError/index.js';
 import { buildVerificationRecordByIdAndType } from '../../libraries/verification.js';
 import assertThat from '../../utils/assert-that.js';
 import { transpileUserMfaVerifications } from '../../utils/user.js';
+import { generateTotpSecret } from '../interaction/utils/totp-validation.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
 import { accountApiPrefix } from './constants.js';
@@ -121,6 +123,23 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
       return next();
     }
   );
+
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    router.post(
+      `${accountApiPrefix}/mfa-verifications/totp-secret/generate`,
+      koaGuard({
+        status: [200],
+      }),
+      async (ctx, next) => {
+        const secret = generateTotpSecret();
+        ctx.body = {
+          secret,
+        };
+
+        return next();
+      }
+    );
+  }
 
   // Update mfa verification name, only support webauthn
   router.patch(
