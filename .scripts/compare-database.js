@@ -230,33 +230,13 @@ export const autoCompare = (a, b) => {
   return String(a).localeCompare(String(b));
 };
 
-// Function to evaluate the complexity of a value
-// Higher values indicate more complex types that should be compared first
-export const getValueComplexity = (value) => {
-  if (value === null || value === undefined) return 0;
-  if (typeof value === 'boolean') return 1;
-  if (typeof value === 'number') return 2;
-  if (typeof value === 'string') return 3;
-  if (Array.isArray(value)) return 4;
-  if (typeof value === 'object') return 5;
-  return 0;
-};
-
 export const buildSortByKeys = (keys) => (a, b) => {
-  // Sort keys based on value complexity and then find the first differing key
-  const sortedKeys = keys.slice().sort((keyA, keyB) => {
-    const complexityA = Math.max(getValueComplexity(a[keyA]), getValueComplexity(b[keyA]));
-    const complexityB = Math.max(getValueComplexity(a[keyB]), getValueComplexity(b[keyB]));
-    
-    // Sort by complexity descending (more complex first), then by key name ascending
-    if (complexityA !== complexityB) {
-      return complexityB - complexityA;
-    }
-    return keyA.localeCompare(keyB);
-  });
+  // Filter out keys where either value is boolean, then use original strategy
+  const filteredKeys = keys.filter((key) => 
+    typeof a[key] !== 'boolean' && typeof b[key] !== 'boolean'
+  );
   
-  // Use deep comparison instead of reference comparison for objects
-  const found = sortedKeys.find((key) => {
+  const found = filteredKeys.find((key) => {
     const comparison = autoCompare(a[key], b[key]);
     return comparison !== 0;
   });

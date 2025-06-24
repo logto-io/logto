@@ -8,7 +8,7 @@
  */
 
 import assert from 'node:assert';
-import { autoCompare, buildSortByKeys, getValueComplexity } from './compare-database.js';
+import { autoCompare, buildSortByKeys } from './compare-database.js';
 
 // Test helper function
 const runTest = (testName, testFn) => {
@@ -199,18 +199,6 @@ runTest('autoCompare - buildSortByKeys integration for database data', () => {
   // Verify that the sorting is based on complexity (metadata object should be compared first)
   const comparison = autoCompare(sorted1, sorted2);
   assert.strictEqual(comparison, 0); // Should be identical
-});
-
-// Test cases for getValueComplexity function
-runTest('getValueComplexity - returns correct complexity scores', () => {
-  assert.strictEqual(getValueComplexity(null), 0);
-  assert.strictEqual(getValueComplexity(undefined), 0);
-  assert.strictEqual(getValueComplexity(true), 1);
-  assert.strictEqual(getValueComplexity(false), 1);
-  assert.strictEqual(getValueComplexity(42), 2);
-  assert.strictEqual(getValueComplexity('string'), 3);
-  assert.strictEqual(getValueComplexity([1, 2, 3]), 4);
-  assert.strictEqual(getValueComplexity({ key: 'value' }), 5);
 });
 
 // Test cases for buildSortByKeys with complexity sorting
