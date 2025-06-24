@@ -6,6 +6,7 @@ import {
   addMfaVerification,
   deleteMfaVerification,
   generateTotpSecret,
+  generateBackupCodes,
   getMfaVerifications,
 } from '#src/api/my-account.js';
 import {
@@ -22,6 +23,7 @@ import {
 import {
   enableAllPasswordSignInMethods,
   enableUserControlledMfaWithTotpAndWebAuthn,
+  enableAllUserControlledMfaFactors,
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
 import { devFeatureTest } from '#src/utils.js';
@@ -47,6 +49,23 @@ describe('my-account (mfa)', () => {
       const { secret } = await generateTotpSecret(api);
 
       expect(secret).toBeTruthy();
+
+      await deleteDefaultTenantUser(user.id);
+    });
+  });
+
+  devFeatureTest.describe('POST /my-account/mfa-verifications/backup-codes/generate', () => {
+    devFeatureTest.it('should be able to generate backup codes', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+
+      const { codes } = await generateBackupCodes(api);
+
+      expect(codes).toBeTruthy();
+      expect(codes).toHaveLength(10);
+      expect(codes.every((code) => typeof code === 'string' && code.length > 0)).toBe(true);
 
       await deleteDefaultTenantUser(user.id);
     });
@@ -199,5 +218,116 @@ describe('my-account (mfa)', () => {
 
       await deleteDefaultTenantUser(user.id);
     });
+  });
+
+  devFeatureTest.describe('POST /my-account/mfa-verifications (backup codes)', () => {
+    beforeAll(async () => {
+      await enableAllUserControlledMfaFactors();
+    });
+
+    afterAll(async () => {
+      await resetMfaSettings();
+    });
+
+    devFeatureTest.it('should be able to add backup codes after TOTP', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+      const { secret } = await generateTotpSecret(api);
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
+
+      // Add TOTP first
+      await addMfaVerification(api, verificationRecordId, {
+        type: MfaFactor.TOTP,
+        secret,
+      });
+
+      // Add backup codes
+      const { codes } = await generateBackupCodes(api);
+      const backupVerificationRecordId = await createVerificationRecordByPassword(api, password);
+      await addMfaVerification(api, backupVerificationRecordId, {
+        type: MfaFactor.BackupCode,
+        codes,
+      });
+
+      const mfaVerifications = await getMfaVerifications(api);
+      expect(mfaVerifications).toHaveLength(2);
+
+      const backupCodeVerification = mfaVerifications.find(
+        (verification) => verification.type === MfaFactor.BackupCode
+      );
+      expect(backupCodeVerification).toBeDefined();
+      expect(backupCodeVerification?.remainCodes).toBe(10);
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    devFeatureTest.it('should fail to add backup codes without other MFA factor', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
+
+      const { codes } = await generateBackupCodes(api);
+      await expectRejects(
+        addMfaVerification(api, verificationRecordId, {
+          type: MfaFactor.BackupCode,
+          codes,
+        }),
+        {
+          code: 'session.mfa.backup_code_can_not_be_alone',
+          status: 422,
+        }
+      );
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    devFeatureTest.it(
+      'should fail to add backup codes when already has active backup codes',
+      async () => {
+        const { user, username, password } = await createDefaultTenantUserWithPassword();
+        const api = await signInAndGetUserApi(username, password, {
+          scopes: [UserScope.Profile, UserScope.Identities],
+        });
+        const { secret } = await generateTotpSecret(api);
+        const verificationRecordId = await createVerificationRecordByPassword(api, password);
+
+        // Add TOTP first
+        await addMfaVerification(api, verificationRecordId, {
+          type: MfaFactor.TOTP,
+          secret,
+        });
+
+        // Add backup codes
+        const { codes } = await generateBackupCodes(api);
+        const backupVerificationRecordId = await createVerificationRecordByPassword(api, password);
+        await addMfaVerification(api, backupVerificationRecordId, {
+          type: MfaFactor.BackupCode,
+          codes,
+        });
+
+        // Try to add backup codes again
+        const { codes: secondCodes } = await generateBackupCodes(api);
+        const secondBackupVerificationRecordId = await createVerificationRecordByPassword(
+          api,
+          password
+        );
+        await expectRejects(
+          addMfaVerification(api, secondBackupVerificationRecordId, {
+            type: MfaFactor.BackupCode,
+            codes: secondCodes,
+          }),
+          {
+            code: 'user.backup_code_already_in_use',
+            status: 422,
+          }
+        );
+
+        await deleteDefaultTenantUser(user.id);
+      }
+    );
   });
 });

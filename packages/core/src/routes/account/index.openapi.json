@@ -323,6 +323,24 @@
                       }
                     },
                     "required": ["type", "secret"]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": ["BackupCode"],
+                        "description": "The type of the MFA verification, for backup codes, one user can only bind one set of backup codes and requires at least one other MFA factor."
+                      },
+                      "codes": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Array of backup codes. Use the generate endpoint to create codes."
+                      }
+                    },
+                    "required": ["type", "codes"]
                   }
                 ]
               }
@@ -340,6 +358,19 @@
         "responses": {
           "200": {
             "description": "The TOTP secret was generated successfully."
+          }
+        }
+      }
+    },
+    "/api/my-account/mfa-verifications/backup-codes/generate": {
+      "post": {
+        "operationId": "GenerateMyAccountBackupCodes",
+        "summary": "Generate backup codes",
+        "tags": ["Dev feature"],
+        "description": "Generate backup codes for the user.",
+        "responses": {
+          "200": {
+            "description": "The backup codes were generated successfully."
           }
         }
       }

@@ -15,6 +15,10 @@ import RequestError from '../../errors/RequestError/index.js';
 import { buildVerificationRecordByIdAndType } from '../../libraries/verification.js';
 import assertThat from '../../utils/assert-that.js';
 import { transpileUserMfaVerifications } from '../../utils/user.js';
+import {
+  generateBackupCodes,
+  validateBackupCodes,
+} from '../interaction/utils/backup-code-validation.js';
 import { generateTotpSecret, validateTotpSecret } from '../interaction/utils/totp-validation.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
@@ -69,8 +73,12 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
           type: z.literal(MfaFactor.TOTP),
           secret: z.string(),
         }),
+        z.object({
+          type: z.literal(MfaFactor.BackupCode),
+          codes: z.string().array(),
+        }),
       ]),
-      status: [204, 400, 401],
+      status: [204, 400, 401, 422],
     }),
     async (ctx, next) => {
       const { id: userId, scopes, identityVerified } = ctx.auth;
@@ -100,60 +108,110 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
       const { mfa } = await findDefaultSignInExperience();
       assertThat(mfa.factors.includes(ctx.guard.body.type), 'session.mfa.mfa_factor_not_enabled');
 
-      if (ctx.guard.body.type === MfaFactor.TOTP) {
-        // A user can only bind one TOTP factor
-        assertThat(
-          user.mfaVerifications.every(({ type }) => type !== MfaFactor.TOTP),
-          new RequestError({
-            code: 'user.totp_already_in_use',
-            status: 422,
-          })
-        );
+      switch (ctx.guard.body.type) {
+        case MfaFactor.TOTP: {
+          // A user can only bind one TOTP factor
+          assertThat(
+            user.mfaVerifications.every(({ type }) => type !== MfaFactor.TOTP),
+            new RequestError({
+              code: 'user.totp_already_in_use',
+              status: 422,
+            })
+          );
 
-        // Check secret
-        assertThat(validateTotpSecret(ctx.guard.body.secret), 'user.totp_secret_invalid');
+          // Check secret
+          assertThat(validateTotpSecret(ctx.guard.body.secret), 'user.totp_secret_invalid');
 
-        const updatedUser = await updateUserById(userId, {
-          mfaVerifications: [
-            ...user.mfaVerifications,
-            {
-              id: generateStandardId(),
-              createdAt: new Date().toISOString(),
-              type: MfaFactor.TOTP,
-              key: ctx.guard.body.secret,
-            },
-          ],
-        });
+          const updatedUser = await updateUserById(userId, {
+            mfaVerifications: [
+              ...user.mfaVerifications,
+              {
+                id: generateStandardId(),
+                createdAt: new Date().toISOString(),
+                type: MfaFactor.TOTP,
+                key: ctx.guard.body.secret,
+              },
+            ],
+          });
 
-        ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
+          ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
 
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      } else if (ctx.guard.body.type === MfaFactor.WebAuthn) {
-        const { newIdentifierVerificationRecordId, name } = ctx.guard.body;
-        // Check new identifier
-        const newVerificationRecord = await buildVerificationRecordByIdAndType({
-          type: VerificationType.WebAuthn,
-          id: newIdentifierVerificationRecordId,
-          queries,
-          libraries,
-        });
-        assertThat(newVerificationRecord.isVerified, 'verification_record.not_found');
+          break;
+        }
+        case MfaFactor.BackupCode: {
+          // A user can only bind one available backup code factor
+          assertThat(
+            user.mfaVerifications.every(
+              (verification) =>
+                verification.type !== MfaFactor.BackupCode ||
+                verification.codes.every(({ usedAt }) => usedAt)
+            ),
+            new RequestError({
+              code: 'user.backup_code_already_in_use',
+              status: 422,
+            })
+          );
+          assertThat(
+            user.mfaVerifications.some(({ type }) => type !== MfaFactor.BackupCode),
+            new RequestError({
+              code: 'session.mfa.backup_code_can_not_be_alone',
+              status: 422,
+            })
+          );
+          assertThat(
+            validateBackupCodes(ctx.guard.body.codes),
+            new RequestError({
+              code: 'user.wrong_backup_code_format',
+              status: 422,
+            })
+          );
+          const { codes } = ctx.guard.body;
+          const updatedUser = await updateUserById(userId, {
+            mfaVerifications: [
+              ...user.mfaVerifications,
+              {
+                id: generateStandardId(),
+                createdAt: new Date().toISOString(),
+                type: MfaFactor.BackupCode,
+                codes: codes.map((code) => ({ code })),
+              },
+            ],
+          });
 
-        const bindMfa = newVerificationRecord.toBindMfa();
+          ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
 
-        const updatedUser = await updateUserById(userId, {
-          mfaVerifications: [
-            ...user.mfaVerifications,
-            {
-              ...bindMfa,
-              id: generateStandardId(),
-              createdAt: new Date().toISOString(),
-              name,
-            },
-          ],
-        });
+          break;
+        }
+        case MfaFactor.WebAuthn: {
+          const { newIdentifierVerificationRecordId, name } = ctx.guard.body;
+          // Check new identifier
+          const newVerificationRecord = await buildVerificationRecordByIdAndType({
+            type: VerificationType.WebAuthn,
+            id: newIdentifierVerificationRecordId,
+            queries,
+            libraries,
+          });
+          assertThat(newVerificationRecord.isVerified, 'verification_record.not_found');
 
-        ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
+          const bindMfa = newVerificationRecord.toBindMfa();
+
+          const updatedUser = await updateUserById(userId, {
+            mfaVerifications: [
+              ...user.mfaVerifications,
+              {
+                ...bindMfa,
+                id: generateStandardId(),
+                createdAt: new Date().toISOString(),
+                name,
+              },
+            ],
+          });
+
+          ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
+
+          break;
+        }
+        // No default
       }
 
       ctx.status = 204;
@@ -172,6 +230,21 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
         const secret = generateTotpSecret();
         ctx.body = {
           secret,
+        };
+
+        return next();
+      }
+    );
+
+    router.post(
+      `${accountApiPrefix}/mfa-verifications/backup-codes/generate`,
+      koaGuard({
+        status: [200],
+      }),
+      async (ctx, next) => {
+        const codes = generateBackupCodes();
+        ctx.body = {
+          codes,
         };
 
         return next();
