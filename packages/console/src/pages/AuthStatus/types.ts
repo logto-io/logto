@@ -39,6 +39,7 @@ export type AdminTokenErrorMessage = {
 
 // Debug log entry type
 export type DebugLogEntry = {
+  id: string;
   timestamp: string;
   type: 'received' | 'sent' | 'error' | 'info';
   message: string;

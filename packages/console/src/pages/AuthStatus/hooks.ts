@@ -1,4 +1,5 @@
 import { useLogto } from '@logto/react';
+import { generateStandardId } from '@logto/shared/universal';
 import { type Optional, yes } from '@silverhand/essentials';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -40,6 +41,7 @@ export const useAuthStatus = () => {
       }
 
       const logEntry: DebugLogEntry = {
+        id: generateStandardId(),
         timestamp: new Date().toISOString(),
         type,
         message,
@@ -161,7 +163,10 @@ export const useAuthStatus = () => {
             debugInfo,
           };
 
-          addDebugLog('sent', 'Sending success response', response);
+          addDebugLog('sent', 'Sending success response', {
+            response,
+            targetOrigin: event.origin,
+          });
 
           // Send response back to the requesting origin
           if (source && 'postMessage' in source) {

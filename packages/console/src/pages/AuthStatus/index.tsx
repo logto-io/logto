@@ -71,7 +71,7 @@ function AuthStatus() {
             <div className={styles.emptyState}>No logs yet...</div>
           ) : (
             debugLogs.map((log) => (
-              <div key={log.timestamp} className={classNames(styles.logEntry, styles[log.type])}>
+              <div key={log.id} className={classNames(styles.logEntry, styles[log.type])}>
                 <div className={classNames(styles.logHeader, styles[log.type])}>
                   [{log.timestamp.split('T')[1]?.split('.')[0] ?? 'unknown'}]{' '}
                   {log.type.toUpperCase()}: {log.message}
