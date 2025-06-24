@@ -204,18 +204,8 @@ const queryDatabaseManifest = async (database) => {
   };
 };
 
-const [, , database1, database2] = process.argv;
-
-console.log('Compare database manifest between', database1, 'and', database2);
-
-const manifests = [
-  await queryDatabaseManifest(database1),
-  await queryDatabaseManifest(database2),
-];
-
-tryCompare(...manifests);
-
-const autoCompare = (a, b) => {
+// Export utility functions first
+export const autoCompare = (a, b) => {
   if (typeof a !== typeof b) {
     return (typeof a).localeCompare(typeof b);
   }
@@ -240,17 +230,26 @@ const autoCompare = (a, b) => {
   return String(a).localeCompare(String(b));
 };
 
-const buildSortByKeys = (keys) => (a, b) => {
-  const found = keys.find((key) => a[key] !== b[key]);
+export const buildSortByKeys = (keys) => (a, b) => {
+  // Filter out keys where either value is boolean, then use original strategy
+  const filteredKeys = keys.filter((key) => 
+    typeof a[key] !== 'boolean' && typeof b[key] !== 'boolean'
+  );
+  
+  const found = filteredKeys.find((key) => {
+    const comparison = autoCompare(a[key], b[key]);
+    return comparison !== 0;
+  });
   return found ? autoCompare(a[found], b[found]) : 0;
 };
 
-const queryDatabaseData = async (database) => {
+const queryDatabaseData = async (database, manifests) => {
   const pool = new pg.Pool({
     database,
     user: 'postgres',
     password: 'postgres',
   });
+
   const result = await Promise.all(
     manifests[0].tables.map(async ({ table_schema, table_name }) => {
       const { rows } = await pool.query(
@@ -288,9 +287,25 @@ const queryDatabaseData = async (database) => {
   return Object.fromEntries(result);
 };
 
-console.log('Compare database data between', database1, 'and', database2);
+// Main execution logic - only runs when file is executed directly
+const isMainModule = import.meta.url === new URL(process.argv[1], 'file://').href;
 
-tryCompare(
-  await queryDatabaseData(database1),
-  await queryDatabaseData(database2)
-);
+if (isMainModule) {
+  const [, , database1, database2] = process.argv;
+
+  console.log('Compare database manifest between', database1, 'and', database2);
+
+  const manifests = [
+    await queryDatabaseManifest(database1),
+    await queryDatabaseManifest(database2),
+  ];
+
+  tryCompare(...manifests);
+
+  console.log('Compare database data between', database1, 'and', database2);
+
+  tryCompare(
+    await queryDatabaseData(database1, manifests),
+    await queryDatabaseData(database2, manifests)
+  );
+}
