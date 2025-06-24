@@ -81,6 +81,13 @@ export const generateTotpSecret = async (api: KyInstance) =>
 export const generateBackupCodes = async (api: KyInstance) =>
   api.post('api/my-account/mfa-verifications/backup-codes/generate').json<{ codes: string[] }>();
 
+export const getBackupCodes = async (api: KyInstance, verificationRecordId: string) =>
+  api
+    .get('api/my-account/mfa-verifications/backup-codes', {
+      headers: { [verificationRecordIdHeader]: verificationRecordId },
+    })
+    .json<{ codes: Array<{ code: string; usedAt?: string }> }>();
+
 export const getMfaVerifications = async (api: KyInstance) =>
   api.get('api/my-account/mfa-verifications').json<UserMfaVerificationResponse>();
 

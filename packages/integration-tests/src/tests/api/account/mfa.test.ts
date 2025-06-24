@@ -7,6 +7,7 @@ import {
   deleteMfaVerification,
   generateTotpSecret,
   generateBackupCodes,
+  getBackupCodes,
   getMfaVerifications,
 } from '#src/api/my-account.js';
 import {
@@ -329,5 +330,95 @@ describe('my-account (mfa)', () => {
         await deleteDefaultTenantUser(user.id);
       }
     );
+  });
+
+  devFeatureTest.describe('GET /my-account/mfa-verifications/backup-codes', () => {
+    beforeAll(async () => {
+      await enableAllUserControlledMfaFactors();
+    });
+
+    afterAll(async () => {
+      await resetMfaSettings();
+    });
+
+    devFeatureTest.it('should be able to get backup codes after adding them', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+      const { secret } = await generateTotpSecret(api);
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
+
+      // Add TOTP first
+      await addMfaVerification(api, verificationRecordId, {
+        type: MfaFactor.TOTP,
+        secret,
+      });
+
+      // Add backup codes
+      const { codes } = await generateBackupCodes(api);
+      const backupVerificationRecordId = await createVerificationRecordByPassword(api, password);
+      await addMfaVerification(api, backupVerificationRecordId, {
+        type: MfaFactor.BackupCode,
+        codes,
+      });
+
+      // Get backup codes
+      const getBackupCodesRecordId = await createVerificationRecordByPassword(api, password);
+      const { codes: retrievedCodes } = await getBackupCodes(api, getBackupCodesRecordId);
+
+      expect(retrievedCodes).toHaveLength(10);
+      expect(retrievedCodes.map(({ code }) => code)).toEqual(expect.arrayContaining(codes));
+      expect(retrievedCodes.every(({ usedAt }) => !usedAt)).toBe(true);
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    devFeatureTest.it('should fail to get backup codes without identity verification', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+      const { secret } = await generateTotpSecret(api);
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
+
+      // Add TOTP first
+      await addMfaVerification(api, verificationRecordId, {
+        type: MfaFactor.TOTP,
+        secret,
+      });
+
+      // Add backup codes
+      const { codes } = await generateBackupCodes(api);
+      const backupVerificationRecordId = await createVerificationRecordByPassword(api, password);
+      await addMfaVerification(api, backupVerificationRecordId, {
+        type: MfaFactor.BackupCode,
+        codes,
+      });
+
+      // Try to get backup codes without identity verification (no verification record ID)
+      await expectRejects(getBackupCodes(api, ''), {
+        code: 'verification_record.permission_denied',
+        status: 401,
+      });
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    devFeatureTest.it('should fail to get backup codes when no backup codes exist', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
+
+      await expectRejects(getBackupCodes(api, verificationRecordId), {
+        code: 'verification_record.not_found',
+        status: 404,
+      });
+
+      await deleteDefaultTenantUser(user.id);
+    });
   });
 });
