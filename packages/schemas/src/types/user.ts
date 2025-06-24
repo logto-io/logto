@@ -87,3 +87,6 @@ export const featuredUserGuard = Users.guard.pick({
   avatar: true,
   name: true,
 }) satisfies z.ZodType<FeaturedUser>;
+
+export const consoleUserPreferenceKey = 'adminConsolePreferences';
+export const guideRequestsKey = 'guideRequests';

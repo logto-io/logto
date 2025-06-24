@@ -29,31 +29,33 @@ import { buildPathIdParameters, customParameters, mergeParameters } from './para
 
 // Add more components here to cover more ID parameters in paths. For example, if there is a new API
 // identifiable entity `/api/entities`, and you want to use `/api/entities/{id}`, add the entity here.
-const managementApiIdentifiableEntityNames = Object.freeze([
-  'key',
-  'connector-factory',
-  'factory',
-  'application',
-  'connector',
-  'sso-connector',
-  'resource',
-  'user',
-  'log',
-  'role',
-  'scope',
-  'hook',
-  'domain',
-  'verification',
-  'organization',
-  'organization-role',
-  'organization-scope',
-  'organization-invitation',
-  'saml-application',
-  'secret',
-  'email-template',
-  'one-time-token',
-  ...(EnvSet.values.isDevFeaturesEnabled ? ['google-one-tap'] : []),
-]);
+const managementApiIdentifiableEntityNames = Object.freeze(
+  condArray<string>(
+    'key',
+    'connector-factory',
+    'factory',
+    'application',
+    'connector',
+    'sso-connector',
+    'resource',
+    'user',
+    'log',
+    'role',
+    'scope',
+    'hook',
+    'domain',
+    'verification',
+    'organization',
+    'organization-role',
+    'organization-scope',
+    'organization-invitation',
+    'saml-application',
+    'secret',
+    'email-template',
+    'one-time-token',
+    EnvSet.values.isDevFeaturesEnabled && 'google-one-tap'
+  )
+);
 
 /** Additional tags that cannot be inferred from the path. */
 const additionalTags = Object.freeze(
@@ -65,7 +67,8 @@ const additionalTags = Object.freeze(
     'SAML applications auth flow',
     'One-time tokens',
     'Captcha provider',
-    ...(EnvSet.values.isDevFeaturesEnabled ? ['Google One Tap'] : [])
+    EnvSet.values.isDevFeaturesEnabled && 'Google One Tap',
+    EnvSet.values.isDevFeaturesEnabled && 'Custom profile fields'
   )
 );
 

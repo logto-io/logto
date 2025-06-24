@@ -1,7 +1,6 @@
 import { type ToZodObject } from '@logto/connector-kit';
 import { z } from 'zod';
 
-import { CustomProfileFields } from '../db-entries/index.js';
 import { Users } from '../db-entries/user.js';
 import {
   CustomProfileFieldType,
@@ -17,7 +16,6 @@ export type BaseProfileField = {
   description?: string;
   type: CustomProfileFieldType;
   required?: boolean;
-  placeholder?: string;
 };
 
 const baseProfileFieldGuard = z.object({
@@ -26,12 +24,12 @@ const baseProfileFieldGuard = z.object({
   label: z.string(),
   description: z.string().optional(),
   required: z.boolean().optional(),
-  placeholder: z.string().optional(),
 });
 
 export type TextProfileField = BaseProfileField & {
   type: CustomProfileFieldType.Text;
-  config: {
+  config?: {
+    placeholder?: string;
     minLength?: number;
     maxLength?: number;
   };
@@ -39,15 +37,19 @@ export type TextProfileField = BaseProfileField & {
 
 export const textProfileFieldGuard = baseProfileFieldGuard.extend({
   type: z.literal(CustomProfileFieldType.Text),
-  config: z.object({
-    minLength: z.number().optional(),
-    maxLength: z.number().optional(),
-  }),
+  config: z
+    .object({
+      placeholder: z.string().optional(),
+      minLength: z.number().optional(),
+      maxLength: z.number().optional(),
+    })
+    .optional(),
 }) satisfies ToZodObject<TextProfileField>;
 
 export type NumberProfileField = BaseProfileField & {
   type: CustomProfileFieldType.Number;
-  config: {
+  config?: {
+    placeholder?: string;
     minValue?: number;
     maxValue?: number;
   };
@@ -55,24 +57,31 @@ export type NumberProfileField = BaseProfileField & {
 
 export const numberProfileFieldGuard = baseProfileFieldGuard.extend({
   type: z.literal(CustomProfileFieldType.Number),
-  config: z.object({
-    minValue: z.number().optional(),
-    maxValue: z.number().optional(),
-  }),
+  config: z
+    .object({
+      placeholder: z.string().optional(),
+      minValue: z.number().optional(),
+      maxValue: z.number().optional(),
+    })
+    .optional(),
 }) satisfies ToZodObject<NumberProfileField>;
 
 export type DateProfileField = BaseProfileField & {
   type: CustomProfileFieldType.Date;
-  config: {
+  config?: {
+    placeholder?: string;
     format: string;
   };
 };
 
 export const dateProfileFieldGuard = baseProfileFieldGuard.extend({
   type: z.literal(CustomProfileFieldType.Date),
-  config: z.object({
-    format: z.string(),
-  }),
+  config: z
+    .object({
+      placeholder: z.string().optional(),
+      format: z.string(),
+    })
+    .optional(),
 }) satisfies ToZodObject<DateProfileField>;
 
 export type CheckboxProfileField = BaseProfileField & {
@@ -92,6 +101,7 @@ export const checkboxProfileFieldGuard = baseProfileFieldGuard.extend({
 export type SelectProfileField = BaseProfileField & {
   type: CustomProfileFieldType.Select;
   config: {
+    placeholder?: string;
     options: Array<{ label: string; value: string }>;
   };
 };
@@ -99,21 +109,31 @@ export type SelectProfileField = BaseProfileField & {
 export const selectProfileFieldGuard = baseProfileFieldGuard.extend({
   type: z.literal(CustomProfileFieldType.Select),
   config: z.object({
+    placeholder: z.string().optional(),
     options: z.array(z.object({ label: z.string(), value: z.string() })),
   }),
 }) satisfies ToZodObject<SelectProfileField>;
 
 export type UrlProfileField = BaseProfileField & {
   type: CustomProfileFieldType.Url;
+  config?: {
+    placeholder?: string;
+  };
 };
 
 export const urlProfileFieldGuard = baseProfileFieldGuard.extend({
   type: z.literal(CustomProfileFieldType.Url),
+  config: z
+    .object({
+      placeholder: z.string().optional(),
+    })
+    .optional(),
 }) satisfies ToZodObject<UrlProfileField>;
 
 export type RegexProfileField = BaseProfileField & {
   type: CustomProfileFieldType.Regex;
   config: {
+    placeholder?: string;
     format: string;
   };
 };
@@ -121,6 +141,7 @@ export type RegexProfileField = BaseProfileField & {
 export const regexProfileFieldGuard = baseProfileFieldGuard.extend({
   type: z.literal(CustomProfileFieldType.Regex),
   config: z.object({
+    placeholder: z.string().optional(),
     format: z.string(),
   }),
 }) satisfies ToZodObject<RegexProfileField>;
@@ -169,18 +190,7 @@ export const fullnameProfileFieldGuard = baseProfileFieldGuard.extend({
   }),
 }) satisfies ToZodObject<FullnameProfileField>;
 
-export type UserProfileField =
-  | TextProfileField
-  | NumberProfileField
-  | DateProfileField
-  | CheckboxProfileField
-  | SelectProfileField
-  | UrlProfileField
-  | RegexProfileField
-  | AddressProfileField
-  | FullnameProfileField;
-
-export const userProfileFieldGuard = z.discriminatedUnion('type', [
+export const customProfileFieldUnionGuard = z.discriminatedUnion('type', [
   textProfileFieldGuard,
   numberProfileFieldGuard,
   dateProfileFieldGuard,
@@ -192,9 +202,16 @@ export const userProfileFieldGuard = z.discriminatedUnion('type', [
   fullnameProfileFieldGuard,
 ]);
 
-export const userProfileFieldsGuard = z.record(userProfileFieldGuard);
-
-export type UserProfileFields = z.infer<typeof userProfileFieldsGuard>;
+export type CustomProfileFieldUnion =
+  | TextProfileField
+  | NumberProfileField
+  | DateProfileField
+  | CheckboxProfileField
+  | SelectProfileField
+  | UrlProfileField
+  | RegexProfileField
+  | AddressProfileField
+  | FullnameProfileField;
 
 export const builtInCustomProfileFieldKeys = Object.freeze(
   userProfileGuard
@@ -209,28 +226,22 @@ export const builtInCustomProfileFieldKeys = Object.freeze(
     .keyof().options
 );
 
-export const createCustomProfileFieldDataGuard = CustomProfileFields.createGuard.omit({
-  tenantId: true,
-  id: true,
-  createdAt: true,
-  sieOrder: true,
-});
-
-export type CreateCustomProfileFieldData = z.infer<typeof createCustomProfileFieldDataGuard>;
-
-export const updateCustomProfileFieldDataGuard = CustomProfileFields.updateGuard.omit({
-  tenantId: true,
-  id: true,
-  name: true,
-  type: true,
-  createdAt: true,
-  sieOrder: true,
-});
+export const updateCustomProfileFieldDataGuard = z.discriminatedUnion('type', [
+  textProfileFieldGuard.omit({ name: true }),
+  numberProfileFieldGuard.omit({ name: true }),
+  dateProfileFieldGuard.omit({ name: true }),
+  checkboxProfileFieldGuard.omit({ name: true }),
+  selectProfileFieldGuard.omit({ name: true }),
+  urlProfileFieldGuard.omit({ name: true }),
+  regexProfileFieldGuard.omit({ name: true }),
+  addressProfileFieldGuard.omit({ name: true }),
+  fullnameProfileFieldGuard.omit({ name: true }),
+]);
 
 export type UpdateCustomProfileFieldData = z.infer<typeof updateCustomProfileFieldDataGuard>;
 
 export const updateCustomProfileFieldSieOrderGuard = z.object({
-  id: z.string(),
+  name: z.string(),
   sieOrder: z.number(),
 });
 

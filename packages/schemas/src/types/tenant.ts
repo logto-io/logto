@@ -4,3 +4,5 @@ export enum TenantTag {
   /* A production tenant must have an associated subscription plan, even if it's a free plan. */
   Production = 'production',
 }
+
+export const defaultTenantIdKey = 'defaultTenantId';

@@ -1,4 +1,5 @@
 import { type AdminConsoleKey } from '@logto/phrases';
+import { guideRequestsKey } from '@logto/schemas';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -33,13 +34,13 @@ export default function RequestForm({
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { customData, updateCustomData } = useCurrentUser();
-  const guideRequests = customData?.guideRequests;
+  const guideRequests = customData?.[guideRequestsKey];
 
   const submit = async () => {
     setIsLoading(true);
     try {
       await updateCustomData({
-        guideRequests: Array.isArray(guideRequests)
+        [guideRequestsKey]: Array.isArray(guideRequests)
           ? guideRequests.concat(inputValue)
           : [inputValue],
       });

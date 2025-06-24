@@ -1,6 +1,6 @@
 const custom_profile_fields = {
-  entity_not_exists_with_ids:
-    'Não foi possível encontrar as entidades com os IDs fornecidos: {{ids}}',
+  /** UNTRANSLATED */
+  entity_not_exists_with_names: 'Cannot find entities with the given names: {{names}}',
   invalid_min_max_input: 'Entrada mínima ou máxima inválida.',
   invalid_options: 'Opções de campo inválidas.',
   invalid_regex_format: 'Formato de regex inválido.',
@@ -9,6 +9,8 @@ const custom_profile_fields = {
   name_exists: 'Já existe um campo com o nome fornecido.',
   conflicted_sie_order:
     'Valor de ordem do campo em conflito para a experiência de início de sessão.',
+  /** UNTRANSLATED */
+  invalid_name: 'Invalid field name, only letters or numbers are allowed, case sensitive.',
 };
 
 export default Object.freeze(custom_profile_fields);

@@ -1,6 +1,7 @@
 import { createApplicationLibrary } from '#src/libraries/application.js';
 import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
+import { createCustomProfileFieldsLibrary } from '#src/libraries/custom-profile-fields/index.js';
 import { createDomainLibrary } from '#src/libraries/domain.js';
 import { createHookLibrary } from '#src/libraries/hook/index.js';
 import { JwtCustomizerLibrary } from '#src/libraries/jwt-customizer.js';
@@ -68,6 +69,8 @@ export default class Libraries {
     this.queries,
     this.connectors
   );
+
+  customProfileFields = createCustomProfileFieldsLibrary(this.queries);
 
   constructor(
     public readonly tenantId: string,
