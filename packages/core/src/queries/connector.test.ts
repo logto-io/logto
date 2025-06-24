@@ -184,6 +184,7 @@ describe('connector queries', () => {
       expect(values).toEqual([
         connector.id,
         connector.syncProfile,
+        connector.enableTokenStorage,
         connector.connectorId,
         connector.config,
         connector.metadata,
