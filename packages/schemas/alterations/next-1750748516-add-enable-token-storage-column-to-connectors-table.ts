@@ -6,7 +6,7 @@ const alteration: AlterationScript = {
   up: async (pool) => {
     await pool.query(sql`
       alter table connectors
-      add column enable_token_storage enable_token_storage boolean not null default FALSE,
+      add column enable_token_storage boolean not null default FALSE;
     `);
   },
   down: async (pool) => {

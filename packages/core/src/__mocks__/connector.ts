@@ -43,6 +43,7 @@ export const mockConnector: Connector = {
   config: {},
   createdAt: 1_234_567_890_123,
   syncProfile: false,
+  enableTokenStorage: false,
   metadata: {},
   connectorId: 'id',
 };
@@ -257,6 +258,7 @@ export const mockSocialConnectors: LogtoConnector[] = [
       config: {},
       createdAt: 1_234_567_890_123,
       syncProfile: false,
+      enableTokenStorage: false,
       metadata: {},
       connectorId: 'id0',
     },
@@ -274,6 +276,7 @@ export const mockSocialConnectors: LogtoConnector[] = [
       config: {},
       createdAt: 1_234_567_890_123,
       syncProfile: false,
+      enableTokenStorage: false,
       metadata: {},
       connectorId: 'id1',
     },
