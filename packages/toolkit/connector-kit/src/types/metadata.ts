@@ -39,6 +39,15 @@ export type I18nPhrases = { en: string } & {
 export type SocialConnectorMetadata = {
   platform: Nullable<ConnectorPlatform>;
   isStandard?: boolean;
+  /**
+   * Indicates whether the connector supports token storage.
+   *
+   * @remark
+   * Previously, social connectors did not expose access tokens to Logto.
+   * We are gradually migrating existing social connectors to support token storage.
+   * Use this field to indicate whether the connector supports token storage.
+   */
+  isTokenStorageSupported?: boolean;
 };
 
 export const socialConnectorMetadataGuard = z.object({
@@ -46,6 +55,7 @@ export const socialConnectorMetadataGuard = z.object({
   platform: z.nativeEnum(ConnectorPlatform).nullable(),
   // Indicates custom connector that follows standard protocol. Currently supported standard connectors are OIDC, OAuth2, and SAML2
   isStandard: z.boolean().optional(),
+  isTokenStorageSupported: z.boolean().optional(),
 }) satisfies ToZodObject<SocialConnectorMetadata>;
 
 export type ConnectorMetadata = {
