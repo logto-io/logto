@@ -53,6 +53,10 @@ const session = {
     email_subaddressing_not_allowed: 'E-posta alt adreslemesine izin verilmiyor.',
     email_not_allowed: 'Kısıtlanmış e-posta adresi "{{email}}". Lütfen farklı bir tane seçiniz.',
   },
+  google_one_tap: {
+    invalid_id_token: 'Geçersiz Google Kimliği Jetonu.',
+    unverified_email: 'Doğrulanmamış e-posta.',
+  },
 };
 
 export default Object.freeze(session);

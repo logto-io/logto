@@ -54,6 +54,10 @@ const session = {
     email_subaddressing_not_allowed: 'Dodawanie subadresów do emaila nie jest dozwolone.',
     email_not_allowed: 'Adres email "{{email}}" jest zastrzeżony. Proszę wybrać inny.',
   },
+  google_one_tap: {
+    invalid_id_token: 'Nieprawidłowy token ID Google.',
+    unverified_email: 'Niezweryfikowany email.',
+  },
 };
 
 export default Object.freeze(session);

@@ -34,6 +34,7 @@ const connector = {
     bulk_deletion_no_filter:
       '必須提供至少一個過濾條件才能根據屬性進行批量刪除。支援的屬性有：{{properties, list(type:conjunction)}}。',
   },
+  token_storage_not_supported: '此連接器不支援 token 存儲。',
 };
 
 export default Object.freeze(connector);

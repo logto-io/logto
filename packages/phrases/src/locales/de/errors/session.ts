@@ -57,6 +57,10 @@ const session = {
     email_subaddressing_not_allowed: 'E-Mail-Subadressierung ist nicht erlaubt.',
     email_not_allowed: 'Die E-Mail-Adresse "{{email}}" ist eingeschränkt. Bitte wähle eine andere.',
   },
+  google_one_tap: {
+    invalid_id_token: 'Ungültiges Google-ID-Token.',
+    unverified_email: 'Unbestätigte E-Mail.',
+  },
 };
 
 export default Object.freeze(session);

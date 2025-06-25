@@ -38,6 +38,7 @@ const connector = {
     bulk_deletion_no_filter:
       'يجب تقديم شرط واحد على الأقل لإجراء حذف جماعي حسب الخصائص. الخصائص المدعومة هي: {{properties, list(type:conjunction)}}.',
   },
+  token_storage_not_supported: 'هذا الموصل لا يدعم تخزين الرموز.',
 };
 
 export default Object.freeze(connector);

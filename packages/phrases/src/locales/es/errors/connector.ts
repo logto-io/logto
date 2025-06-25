@@ -43,6 +43,7 @@ const connector = {
     bulk_deletion_no_filter:
       'Debe proporcionarse al menos una condición de filtro para realizar la eliminación masiva por propiedades. Las propiedades compatibles son: {{properties, list(type:conjunction)}}.',
   },
+  token_storage_not_supported: 'Este conector no admite el almacenamiento de tokens.',
 };
 
 export default Object.freeze(connector);

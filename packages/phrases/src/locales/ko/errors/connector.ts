@@ -35,6 +35,7 @@ const connector = {
     bulk_deletion_no_filter:
       '속성에 의한 대량 삭제를 수행하려면 하나 이상의 필터 조건을 제공해야 합니다. 지원되는 속성은 다음과 같습니다: {{properties, list(type:conjunction)}}.',
   },
+  token_storage_not_supported: '이 커넥터는 토큰 저장을 지원하지 않습니다.',
 };
 
 export default Object.freeze(connector);

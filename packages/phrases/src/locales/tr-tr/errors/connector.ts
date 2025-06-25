@@ -41,6 +41,7 @@ const connector = {
     bulk_deletion_no_filter:
       'Özelliklere göre toplu silme işlemi yapmak için en az bir filtre koşulu sağlanmalıdır. Desteklenen özellikler: {{properties, list(type:conjunction)}}.',
   },
+  token_storage_not_supported: 'Bu bağdaştırıcı token depolamayı desteklemiyor.',
 };
 
 export default Object.freeze(connector);

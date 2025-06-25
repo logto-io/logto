@@ -45,6 +45,7 @@ const connector = {
     bulk_deletion_no_filter:
       'Es muss mindestens eine Filterbedingung angegeben werden, um eine Massenlöschung nach Eigenschaften durchzuführen. Unterstützte Eigenschaften sind: {{properties, list(type:conjunction)}}.',
   },
+  token_storage_not_supported: 'Dieser Connector unterstützt keine Token-Speicherung.',
 };
 
 export default Object.freeze(connector);

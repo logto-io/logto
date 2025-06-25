@@ -50,6 +50,10 @@ const session = {
     email_subaddressing_not_allowed: '이메일 서브어드레싱은 허용되지 않아요.',
     email_not_allowed: '이메일 주소 "{{email}}" 는 제한되어 있어요. 다른 주소를 선택해 주세요.',
   },
+  google_one_tap: {
+    invalid_id_token: '유효하지 않은 Google ID 토큰이에요.',
+    unverified_email: '확인되지 않은 이메일 주소예요.',
+  },
 };
 
 export default Object.freeze(session);
