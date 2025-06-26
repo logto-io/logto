@@ -78,6 +78,9 @@ export const getUserInfo = async (api: KyInstance) =>
 export const generateTotpSecret = async (api: KyInstance) =>
   api.post('api/my-account/mfa-verifications/totp-secret/generate').json<{ secret: string }>();
 
+export const generateBackupCodes = async (api: KyInstance) =>
+  api.post('api/my-account/mfa-verifications/backup-codes/generate').json<{ codes: string[] }>();
+
 export const getMfaVerifications = async (api: KyInstance) =>
   api.get('api/my-account/mfa-verifications').json<UserMfaVerificationResponse>();
 
