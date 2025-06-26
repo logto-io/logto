@@ -1,0 +1,22 @@
+diff --git a/assets/cjs_shims.js b/assets/cjs_shims.js
+index eb051dba01dc82ab5207bb9eeccaf3a13f241ede..aa7c1881211654b9dcc9907bb4e897de8b50bd49 100644
+--- a/assets/cjs_shims.js
++++ b/assets/cjs_shims.js
+@@ -3,10 +3,12 @@
+ // if we export it as `const importMetaUrl = ... __filename ...`
+ // But using a function will not cause this issue
+ 
+-const getImportMetaUrl = () =>
+-  typeof document === 'undefined'
+-    ? new URL(`file:${__filename}`).href
+-    : (document.currentScript && document.currentScript.src) ||
+-      new URL('main.js', document.baseURI).href
++const getImportMetaUrl = () => 
++  typeof document === "undefined" 
++    ? new URL(`file:${__filename}`).href 
++    // Applied suggested fix from https://gist.github.com/jackfromeast/36f98bf7542d11835c883c1d175d9b92
++    : (document.currentScript && document.currentScript.tagName.toUpperCase() === 'SCRIPT') 
++      ? document.currentScript.src 
++      : new URL("main.js", document.baseURI).href;
+ 
+ export const importMetaUrl = /* @__PURE__ */ getImportMetaUrl()
