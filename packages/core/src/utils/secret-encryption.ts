@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
 
-import { type TokenRecord, tokenRecrodGuard, type EncryptedSecret } from '@logto/schemas';
+import { type TokenSet, tokenSetGuard, type EncryptedSecret } from '@logto/schemas';
 
 import { EnvSet } from '../env-set/index.js';
 
@@ -69,12 +69,12 @@ const decriptSecret = ({ iv, authTag, ciphertext, encryptedDek }: EncryptedSecre
   return Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString('utf8');
 };
 
-export const encryptTokens = (tokens: TokenRecord): EncryptedSecret => {
+export const encryptTokens = (tokens: TokenSet): EncryptedSecret => {
   const tokensString = JSON.stringify(tokens);
   return encryprSecret(tokensString);
 };
 
-export const decryptTokens = (encryptedSecret: EncryptedSecret): TokenRecord => {
+export const decryptTokens = (encryptedSecret: EncryptedSecret): TokenSet => {
   const decryptedString = decriptSecret(encryptedSecret);
-  return tokenRecrodGuard.parse(JSON.parse(decryptedString));
+  return tokenSetGuard.parse(JSON.parse(decryptedString));
 };

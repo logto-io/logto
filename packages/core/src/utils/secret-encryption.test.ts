@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
 
-import { type TokenRecord } from '@logto/schemas';
+import { type TokenSet } from '@logto/schemas';
 import Sinon from 'sinon';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -16,9 +16,9 @@ describe('secret encryption', () => {
       secretVaultKek: mockKek,
     });
 
-    const mockToken: TokenRecord = {
-      accessToken: crypto.randomBytes(32).toString('hex'),
-      refreshToken: crypto.randomBytes(32).toString('hex'),
+    const mockToken: TokenSet = {
+      access_token: crypto.randomBytes(32).toString('hex'),
+      refresh_token: crypto.randomBytes(32).toString('hex'),
     };
 
     const encryptedSecret = encryptTokens(mockToken);
