@@ -1,4 +1,4 @@
-import { type UserProfileResponse } from '@logto/schemas';
+import { type UserMfaVerificationResponse, type UserProfileResponse } from '@logto/schemas';
 import { type KyInstance } from 'ky';
 
 const verificationRecordIdHeader = 'logto-verification-id';
@@ -77,3 +77,16 @@ export const getUserInfo = async (api: KyInstance) =>
 
 export const generateTotpSecret = async (api: KyInstance) =>
   api.post('api/my-account/mfa-verifications/totp-secret/generate').json<{ secret: string }>();
+
+export const getMfaVerifications = async (api: KyInstance) =>
+  api.get('api/my-account/mfa-verifications').json<UserMfaVerificationResponse>();
+
+export const addMfaVerification = async (
+  api: KyInstance,
+  verificationRecordId: string,
+  body: Record<string, unknown>
+) =>
+  api.post('api/my-account/mfa-verifications', {
+    json: body,
+    headers: { [verificationRecordIdHeader]: verificationRecordId },
+  });

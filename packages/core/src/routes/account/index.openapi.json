@@ -284,22 +284,47 @@
       "post": {
         "operationId": "AddMfaVerification",
         "summary": "Add a MFA verification",
-        "description": "Add a MFA verification to the user, a logto-verification-id in header is required for checking sensitive permissions. Only WebAuthn is supported for now, a new identifier verification record is required for the webauthn registration verification.",
+        "description": "Add a MFA verification to the user, a logto-verification-id in header is required for checking sensitive permissions.",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "properties": {
-                  "newIdentifierVerificationRecordId": {
-                    "description": "The identifier verification record ID for the new WebAuthn registration verification."
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": ["WebAuthn"],
+                        "description": "The type of the MFA verification."
+                      },
+                      "newIdentifierVerificationRecordId": {
+                        "type": "string",
+                        "description": "The identifier verification record ID for the new WebAuthn registration verification."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The name of the MFA verification, if not provided, the name will be generated from user agent."
+                      }
+                    },
+                    "required": ["type", "newIdentifierVerificationRecordId"]
                   },
-                  "type": {
-                    "description": "The type of the MFA verification."
-                  },
-                  "name": {
-                    "description": "The name of the MFA verification, if not provided, the name will be generated from user agent."
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": ["TOTP"],
+                        "description": "The type of the MFA verification, for TOTP, one user can only bind one TOTP factor."
+                      },
+                      "secret": {
+                        "type": "string",
+                        "description": "The TOTP secret for the MFA verification. Use the generate endpoint to create a secret, and verify the generated code with the user before binding to make sure the user has setup the secret in their authenticator app."
+                      }
+                    },
+                    "required": ["type", "secret"]
                   }
-                }
+                ]
               }
             }
           }
