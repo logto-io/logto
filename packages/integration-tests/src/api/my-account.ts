@@ -90,3 +90,12 @@ export const addMfaVerification = async (
     json: body,
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
+
+export const deleteMfaVerification = async (
+  api: KyInstance,
+  verificationId: string,
+  verificationRecordId: string
+) =>
+  api.delete(`api/my-account/mfa-verifications/${verificationId}`, {
+    headers: { [verificationRecordIdHeader]: verificationRecordId },
+  });

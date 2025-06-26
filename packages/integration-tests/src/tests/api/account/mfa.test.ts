@@ -4,6 +4,7 @@ import { MfaFactor } from '@logto/schemas';
 import { enableAllAccountCenterFields } from '#src/api/account-center.js';
 import {
   addMfaVerification,
+  deleteMfaVerification,
   generateTotpSecret,
   getMfaVerifications,
 } from '#src/api/my-account.js';
@@ -93,6 +94,41 @@ describe('my-account (mfa)', () => {
           status: 400,
         }
       );
+
+      await deleteDefaultTenantUser(user.id);
+    });
+  });
+
+  devFeatureTest.describe('DELETE /my-account/mfa-verifications/:verificationId', () => {
+    devFeatureTest.it('should be able to delete totp verification', async () => {
+      await enableAllAccountCenterFields();
+
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+      const { secret } = await generateTotpSecret(api);
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
+
+      // Add TOTP verification
+      await addMfaVerification(api, verificationRecordId, {
+        type: MfaFactor.TOTP,
+        secret,
+      });
+
+      const mfaVerifications = await getMfaVerifications(api);
+      expect(mfaVerifications).toHaveLength(1);
+      expect(mfaVerifications[0]?.type).toBe(MfaFactor.TOTP);
+
+      const totpVerificationId = mfaVerifications[0]?.id;
+      expect(totpVerificationId).toBeTruthy();
+
+      // Delete TOTP verification
+      const deleteVerificationRecordId = await createVerificationRecordByPassword(api, password);
+      await deleteMfaVerification(api, totpVerificationId!, deleteVerificationRecordId);
+
+      const updatedMfaVerifications = await getMfaVerifications(api);
+      expect(updatedMfaVerifications).toHaveLength(0);
 
       await deleteDefaultTenantUser(user.id);
     });
