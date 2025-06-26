@@ -27,7 +27,7 @@ jobs:
       - uses: logto-io/actions-package-logto-artifact@v3
         with:
           artifact-name: integration-test-${{ github.sha }}-dev-features-${{ matrix.dev-features-enabled }}
-          pnpm-version: 9
+          pnpm-version: 10
 
   run-logto:
     strategy:
@@ -48,7 +48,7 @@ jobs:
         with:
           logto-artifact: integration-test-${{ github.sha }}-dev-features-${{ env.DEV_FEATURES_ENABLED }}
           test-target: ${{ matrix.target }}
-          pnpm-version: 9
+          pnpm-version: 10
           node-version: ^22.14.0
 
   # Automatically rerun the workflow since the integration tests are moody
