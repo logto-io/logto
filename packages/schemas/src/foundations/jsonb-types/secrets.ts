@@ -9,3 +9,14 @@ export enum SecretType {
 }
 
 export const secretTypeGuard = z.nativeEnum(SecretType);
+
+export type BufferLike = Buffer;
+
+export const bufferLikeGuard = z.custom<BufferLike>(
+  (value) => {
+    return Buffer.isBuffer(value);
+  },
+  {
+    message: 'Invalid Buffer instance',
+  }
+);

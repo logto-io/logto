@@ -7,13 +7,13 @@ create table secrets (
     references users (id) on update cascade on delete cascade,
   type varchar(256) /* @use SecretType */ not null,
   /** Encrypted data encryption key (DEK) for the secret. */
-  encrypted_dek bytea not null,
+  encrypted_dek bytea /* @use BufferLike */ not null,
   /** Initialization vector for the secret encryption. */
-  iv bytea not null,
+  iv bytea /* @use BufferLike */ not null,
   /** Authentication tag for the secret encryption. */
-  auth_tag bytea not null,
+  auth_tag bytea /* @use BufferLike */ not null,
   /** The encrypted secret data. e.g. { access_token, refresh_token } */
-  ciphertext bytea not null,
+  ciphertext bytea /* @use BufferLike */ not null,
   /** The metadata associated with the secret. */
   metadata jsonb /* @use JsonObject */ not null default '{}'::jsonb,
   created_at timestamptz not null default(now()),

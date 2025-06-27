@@ -137,6 +137,14 @@ export default class GlobalValues {
     return getEnv('AZURE_FUNCTION_APP_KEY');
   }
 
+  /**
+   * The key encryption key (KEK) for the secret vault.
+   * It is used to encrypt and decrypt secret DEKs (data encryption keys) in the secret vault.
+   */
+  public get secretVaultKek() {
+    return getEnv('SECRET_VAULT_KEK');
+  }
+
   constructor() {
     if (this.isPathBasedMultiTenancy) {
       console.warn(
