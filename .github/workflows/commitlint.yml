@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v5
         with:
-          pnpm-version: 9
+          pnpm-version: 10
           node-version: ^22.14.0
 
       - name: Commitlint

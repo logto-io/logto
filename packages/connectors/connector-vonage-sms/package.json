@@ -61,7 +61,7 @@
     "lint-staged": "^15.0.2",
     "prettier": "^3.5.3",
     "supertest": "^7.0.0",
-    "tsup": "^8.3.0",
+    "tsup": "^8.5.0",
     "typescript": "^5.5.3",
     "vitest": "^3.1.1"
   }
