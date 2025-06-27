@@ -96,6 +96,7 @@ const jwtCustomizerUserInteractionVerificationRecordGuard = z.discriminatedUnion
   phoneCodeVerificationRecordDataGuard,
   socialVerificationRecordDataGuard.omit({
     connectorSession: true,
+    encryptedTokenSet: true,
   }),
   enterpriseSsoVerificationRecordDataGuard.extend({
     // The original `enterpriseSsoUserInfo` field type is extended with `socialUserInfo` with `catchall(unknown)`.
