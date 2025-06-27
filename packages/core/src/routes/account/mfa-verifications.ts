@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { UserScope } from '@logto/core-kit';
 import {
   VerificationType,
@@ -250,6 +251,42 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
         return next();
       }
     );
+
+    router.get(
+      `${accountApiPrefix}/mfa-verifications/backup-codes`,
+      koaGuard({
+        status: [200, 401, 404],
+      }),
+      async (ctx, next) => {
+        const { id: userId, scopes, identityVerified } = ctx.auth;
+
+        assertThat(
+          identityVerified,
+          new RequestError({ code: 'verification_record.permission_denied', status: 401 })
+        );
+
+        assertThat(
+          scopes.has(UserScope.Identities),
+          new RequestError({ code: 'auth.unauthorized', status: 401 })
+        );
+
+        const user = await findUserById(userId);
+        const backupCodeVerification = user.mfaVerifications.find(
+          (verification) => verification.type === MfaFactor.BackupCode
+        );
+
+        assertThat(
+          backupCodeVerification,
+          new RequestError({ code: 'verification_record.not_found', status: 404 })
+        );
+
+        ctx.body = {
+          codes: backupCodeVerification.codes.map(({ code, usedAt }) => ({ code, usedAt })),
+        };
+
+        return next();
+      }
+    );
   }
 
   // Update mfa verification name, only support webauthn
@@ -350,3 +387,4 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
     }
   );
 }
+/* eslint-enable max-lines */

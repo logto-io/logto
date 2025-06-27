@@ -375,6 +375,25 @@
         }
       }
     },
+    "/api/my-account/mfa-verifications/backup-codes": {
+      "get": {
+        "operationId": "GetBackupCodes",
+        "summary": "Get backup codes",
+        "tags": ["Dev feature"],
+        "description": "Get all backup codes for the user with their usage status. Requires identity verification.",
+        "responses": {
+          "200": {
+            "description": "The backup codes were retrieved successfully."
+          },
+          "401": {
+            "description": "Unauthorized or identity verification required."
+          },
+          "404": {
+            "description": "No backup codes found for the user."
+          }
+        }
+      }
+    },
     "/api/my-account/mfa-verifications/{verificationId}/name": {
       "patch": {
         "operationId": "UpdateMfaVerificationName",
