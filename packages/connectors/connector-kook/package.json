@@ -48,7 +48,7 @@
     "@logto/connector-oauth": "workspace:^1.6.0",
     "@silverhand/essentials": "^2.9.1",
     "ky": "^1.2.3",
-    "zod": "3.24.3"
+    "zod": "3.25.67"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "6.0.1",

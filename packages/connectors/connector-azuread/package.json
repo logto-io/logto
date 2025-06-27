@@ -9,7 +9,7 @@
     "@silverhand/essentials": "^2.9.1",
     "got": "^14.0.0",
     "snakecase-keys": "^8.0.1",
-    "zod": "3.24.3"
+    "zod": "3.25.67"
   },
   "main": "./lib/index.js",
   "module": "./lib/index.js",

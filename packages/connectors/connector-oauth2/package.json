@@ -11,7 +11,7 @@
     "ky": "^1.2.3",
     "query-string": "^9.0.0",
     "snakecase-keys": "^8.0.1",
-    "zod": "3.24.3"
+    "zod": "3.25.67"
   },
   "main": "./lib/index.js",
   "module": "./lib/index.js",
