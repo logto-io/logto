@@ -40,12 +40,12 @@ const alteration: AlterationScript = {
         secret_id varchar(21) not null
           references secrets (id) on update cascade on delete cascade,
         /** Social connector ID foreign reference. Only present for secrets that store social connector tokens. Note: avoid directly cascading deletes here, need to delete the secrets first.*/
-        connector_id varchar(128)
+        connector_id varchar(128) not null
           references connectors (id) on update cascade,
         /** The target of the social connector. e.g. 'github', 'google', etc. */
-        target varchar(256),
+        target varchar(256) not null,
         /** User social identity ID foreign reference. Only present for secrets that store social identity tokens. */
-        identity_id varchar(128),
+        identity_id varchar(128) not null,
         primary key (tenant_id, secret_id),
         /** Ensures that each social identity is associated with only one secret. */
         constraint secret_social_connector_relations__target__identity_id
@@ -121,12 +121,12 @@ const alteration: AlterationScript = {
         secret_id varchar(21) not null
           references secrets (id) on update cascade on delete cascade,
         /** SSO connector ID foreign reference. Only present for secrets that store SSO connector tokens. Note: avoid directly cascading deletes here, need to delete the secrets first.*/
-        sso_connector_id varchar(128)
+        sso_connector_id varchar(128) not null
           references sso_connectors (id) on update cascade,
         /** User SSO connector issuer. Only present for secrets that store SSO connector tokens. */
-        issuer varchar(256),
+        issuer varchar(256) not null,
         /** User SSO identity ID. Only present for secrets that store SSO identity tokens. */
-        identity_id varchar(128),
+        identity_id varchar(128) not null,
         primary key (tenant_id, secret_id),
         /** Ensures that each SSO identity is associated with only one secret. */
         foreign key (tenant_id, issuer, identity_id)
