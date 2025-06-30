@@ -43,6 +43,7 @@ const connector = {
     bulk_deletion_no_filter:
       'Au moins une condition de filtre doit être fournie pour effectuer une suppression en masse par propriétés. Les propriétés prises en charge sont : {{properties, list(type:conjunction)}}.',
   },
+  token_storage_not_supported: 'Ce connecteur ne prend pas en charge le stockage des jetons.',
 };
 
 export default Object.freeze(connector);

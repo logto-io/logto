@@ -173,8 +173,8 @@ describe('connector queries', () => {
     };
 
     const expectSql = `
-      insert into "connectors" ("id", "sync_profile", "connector_id", "config", "metadata")
-      values ($1, $2, $3, $4, $5)
+      insert into "connectors" ("id", "sync_profile", "enable_token_storage", "connector_id", "config", "metadata")
+      values ($1, $2, $3, $4, $5, $6)
       returning *
     `;
 
@@ -184,6 +184,7 @@ describe('connector queries', () => {
       expect(values).toEqual([
         connector.id,
         connector.syncProfile,
+        connector.enableTokenStorage,
         connector.connectorId,
         connector.config,
         connector.metadata,

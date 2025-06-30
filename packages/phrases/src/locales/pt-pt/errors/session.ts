@@ -59,6 +59,10 @@ const session = {
     email_not_allowed:
       'O endereço de email "{{email}}" é restrito. Por favor, escolha um diferente.',
   },
+  google_one_tap: {
+    invalid_id_token: 'Token de ID do Google inválido.',
+    unverified_email: 'Email não verificado.',
+  },
 };
 
 export default Object.freeze(session);

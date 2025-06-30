@@ -47,6 +47,10 @@ const session = {
     email_subaddressing_not_allowed: 'لا يُسمح بتوجيه البريد الإلكتروني الإضافي.',
     email_not_allowed: 'عنوان البريد الإلكتروني "{{email}}" مقيد. يرجى اختيار عنوان آخر.',
   },
+  google_one_tap: {
+    invalid_id_token: 'رمز معرف Google غير صالح.',
+    unverified_email: 'البريد الإلكتروني غير مُحقق.',
+  },
 };
 
 export default Object.freeze(session);

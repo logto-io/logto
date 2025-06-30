@@ -43,6 +43,7 @@ const connector = {
     bulk_deletion_no_filter:
       'Należy podać co najmniej jeden warunek filtrowania, aby wykonać masowe usuwanie według właściwości. Obsługiwane właściwości to: {{properties, list(type:conjunction)}}.',
   },
+  token_storage_not_supported: 'Ten łącznik nie obsługuje przechowywania tokenów.',
 };
 
 export default Object.freeze(connector);

@@ -34,6 +34,7 @@ const connector = {
     bulk_deletion_no_filter:
       '必须提供至少一个过滤条件才能通过属性执行批量删除。支持的属性有：{{properties, list(type:conjunction)}}。',
   },
+  token_storage_not_supported: '此连接器不支持令牌存储。',
 };
 
 export default Object.freeze(connector);

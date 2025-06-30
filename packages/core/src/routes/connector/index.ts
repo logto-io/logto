@@ -15,6 +15,7 @@ import { buildExtraInfo } from '#src/utils/connectors/extra-information.js';
 import { loadConnectorFactories, transpileLogtoConnector } from '#src/utils/connectors/index.js';
 import { checkSocialConnectorTargetAndPlatformUniqueness } from '#src/utils/connectors/platform.js';
 
+import { EnvSet } from '../../env-set/index.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 import connectorAuthorizationUriRoutes from './authorization-uri.js';
@@ -59,6 +60,7 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
           connectorId: true,
           metadata: true,
           syncProfile: true,
+          enableTokenStorage: true,
         })
         /* 
           Currently the id can not be locked until the connector is successfully created.
@@ -70,9 +72,10 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
       response: connectorResponseGuard,
       status: [200, 400, 403, 422],
     }),
+    // eslint-disable-next-line complexity
     async (ctx, next) => {
       const {
-        body: { id: proposedId, connectorId, metadata, config, syncProfile },
+        body: { id: proposedId, connectorId, metadata, config, syncProfile, enableTokenStorage },
       } = ctx.guard;
 
       const connectorFactories = await loadConnectorFactories();
@@ -134,12 +137,29 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
         validateConfig(config, connectorFactory.configGuard);
       }
 
+      if (enableTokenStorage) {
+        // TODO: remove this check once the feature is enabled in production.
+        assertThat(
+          EnvSet.values.isDevFeaturesEnabled,
+          new RequestError('request.feature_not_supported')
+        );
+
+        assertThat(
+          connectorFactory.type === ConnectorType.Social &&
+            connectorFactory.metadata.isTokenStorageSupported,
+          new RequestError({
+            code: 'connector.token_storage_not_supported',
+            status: 422,
+          })
+        );
+      }
+
       const insertConnectorId = proposedId ?? generateStandardShortId();
 
       await insertConnector({
         id: insertConnectorId,
         connectorId,
-        ...cleanDeep({ syncProfile, config, metadata }),
+        ...cleanDeep({ syncProfile, config, metadata, enableTokenStorage }),
       });
 
       /**
@@ -233,7 +253,7 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
     koaGuard({
       params: object({ id: string().min(1) }),
       body: Connectors.createGuard
-        .pick({ config: true, metadata: true, syncProfile: true })
+        .pick({ config: true, metadata: true, syncProfile: true, enableTokenStorage: true })
         .partial(),
       response: connectorResponseGuard,
       status: [200, 400, 404, 422],
@@ -241,7 +261,7 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const {
         params: { id },
-        body: { config, metadata, syncProfile },
+        body: { config, metadata, syncProfile, enableTokenStorage },
       } = ctx.guard;
 
       const { type, validateConfig, metadata: originalMetadata } = await getLogtoConnectorById(id);
@@ -265,6 +285,22 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
         assertThat(
           type === ConnectorType.Social,
           new RequestError({ code: 'connector.invalid_type_for_syncing_profile', status: 422 })
+        );
+      }
+
+      if (enableTokenStorage) {
+        // TODO: remove this check once the feature is enabled in production.
+        assertThat(
+          EnvSet.values.isDevFeaturesEnabled,
+          new RequestError('request.feature_not_supported')
+        );
+
+        assertThat(
+          type === ConnectorType.Social && originalMetadata.isTokenStorageSupported,
+          new RequestError({
+            code: 'connector.token_storage_not_supported',
+            status: 422,
+          })
         );
       }
 

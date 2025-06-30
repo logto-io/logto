@@ -81,6 +81,7 @@ export const mockConnector0: Connector = {
   config: {},
   createdAt: 1_234_567_890_123,
   syncProfile: false,
+  enableTokenStorage: false,
   metadata: {},
   connectorId: 'id0',
 };
@@ -91,6 +92,7 @@ export const mockConnector1: Connector = {
   config: {},
   createdAt: 1_234_567_890_234,
   syncProfile: false,
+  enableTokenStorage: false,
   metadata: {},
   connectorId: 'id1',
 };
@@ -101,6 +103,7 @@ export const mockConnector2: Connector = {
   config: {},
   createdAt: 1_234_567_890_345,
   syncProfile: false,
+  enableTokenStorage: false,
   metadata: {},
   connectorId: 'id2',
 };
@@ -111,6 +114,7 @@ export const mockConnector3: Connector = {
   config: {},
   createdAt: 1_234_567_890_456,
   syncProfile: false,
+  enableTokenStorage: false,
   metadata: {},
   connectorId: 'id3',
 };
@@ -121,6 +125,7 @@ export const mockConnector4: Connector = {
   config: {},
   createdAt: 1_234_567_890_567,
   syncProfile: false,
+  enableTokenStorage: false,
   metadata: {},
   connectorId: 'id4',
 };
@@ -131,6 +136,7 @@ export const mockConnector5: Connector = {
   config: {},
   createdAt: 1_234_567_890_567,
   syncProfile: false,
+  enableTokenStorage: false,
   metadata: {},
   connectorId: 'id5',
 };
@@ -141,6 +147,7 @@ export const mockConnector6: Connector = {
   config: {},
   createdAt: 1_234_567_890_567,
   syncProfile: false,
+  enableTokenStorage: false,
   metadata: {},
   connectorId: 'id6',
 };

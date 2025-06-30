@@ -39,6 +39,7 @@ const connector = {
     bulk_deletion_no_filter:
       'At least one filter condition must be provided to perform bulk deletion by properties. Supported properties are: {{properties, list(type:conjunction)}}.',
   },
+  token_storage_not_supported: 'This connector does not support token storage. ',
 };
 
 export default Object.freeze(connector);

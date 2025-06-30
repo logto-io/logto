@@ -12,6 +12,7 @@ const connectors: Connector[] = [
     config: { foo: 'bar' },
     createdAt: 0,
     syncProfile: false,
+    enableTokenStorage: false,
     connectorId: 'id',
     metadata: {},
   },

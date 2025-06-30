@@ -56,6 +56,10 @@ const session = {
     email_not_allowed:
       'Адрес электронной почты "{{email}}" ограничен. Пожалуйста, выберите другой.',
   },
+  google_one_tap: {
+    invalid_id_token: 'Недействительный токен Google ID.',
+    unverified_email: 'Неподтверждённая электронная почта.',
+  },
 };
 
 export default Object.freeze(session);

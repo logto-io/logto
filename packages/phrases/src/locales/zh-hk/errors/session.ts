@@ -45,6 +45,10 @@ const session = {
     email_subaddressing_not_allowed: '不允許使用電子郵件子地址。',
     email_not_allowed: '電子郵件地址 "{{email}}" 受限。請選擇其他地址。',
   },
+  google_one_tap: {
+    invalid_id_token: '無效的 Google ID Token。',
+    unverified_email: '未驗證的電子郵件。',
+  },
 };
 
 export default Object.freeze(session);

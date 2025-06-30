@@ -41,6 +41,7 @@ const connector = {
     bulk_deletion_no_filter:
       'Для массового удаления по характеристикам необходимо предоставить хотя бы одно условие фильтрации. Поддерживаемые свойства: {{properties, list(type:conjunction)}}.',
   },
+  token_storage_not_supported: 'Этот коннектор не поддерживает хранение токенов. ',
 };
 
 export default Object.freeze(connector);
