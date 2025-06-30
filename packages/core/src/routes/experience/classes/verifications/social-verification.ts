@@ -15,6 +15,7 @@ import {
   socialVerificationRecordDataGuard,
   type SocialConnectorPayload,
   type EncryptedTokenSet,
+  type SecretSocialConnectorRelationPayload,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
@@ -43,6 +44,11 @@ export {
 } from '@logto/schemas';
 
 type SocialAuthorizationSessionStorageType = 'interactionSession' | 'verificationRecord';
+
+export type SocialConnectorTokenSetSecret = {
+  encryptedTokenSet: EncryptedTokenSet;
+  socialConnectorRelationPayload: SecretSocialConnectorRelationPayload;
+};
 
 export class SocialVerification implements IdentifierVerificationRecord<VerificationType.Social> {
   /**
@@ -287,14 +293,40 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
       : {};
   }
 
+  async getTokenSetSecret(): Promise<SocialConnectorTokenSetSecret | undefined> {
+    // TODO: Remove this guard once the token vault feature is ready
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return;
+    }
+
+    // Not verified or token set not found
+    if (!this.socialUserInfo || !this.encryptedTokenSet) {
+      return;
+    }
+
+    const {
+      metadata: { target },
+    } = await this.getConnectorData();
+
+    return {
+      encryptedTokenSet: this.encryptedTokenSet,
+      socialConnectorRelationPayload: {
+        connectorId: this.connectorId,
+        target,
+        identityId: this.socialUserInfo.id,
+      },
+    };
+  }
+
   toJson(): SocialVerificationRecordData {
-    const { id, connectorId, type, socialUserInfo, connectorSession } = this;
+    const { id, connectorId, type, socialUserInfo, encryptedTokenSet, connectorSession } = this;
 
     return {
       id,
       connectorId,
       type,
       socialUserInfo,
+      encryptedTokenSet,
       connectorSession,
     };
   }

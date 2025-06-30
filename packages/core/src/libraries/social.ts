@@ -1,7 +1,8 @@
 import type { GetSession, SocialUserInfo, TokenResponse } from '@logto/connector-kit';
 import { socialUserInfoGuard } from '@logto/connector-kit';
-import type { EncryptedTokenSet, User } from '@logto/schemas';
+import type { EncryptedTokenSet, SecretSocialConnectorRelationPayload, User } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
+import { generateStandardId } from '@logto/shared';
 import { conditional, type Nullable } from '@silverhand/essentials';
 import type { InteractionResults } from 'oidc-provider';
 import { z } from 'zod';
@@ -12,7 +13,11 @@ import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
 
-import { encryptTokens } from '../utils/secret-encryption.js';
+import {
+  deserializeEncryptedSecret,
+  encryptTokens,
+  serializeEncryptedSecret,
+} from '../utils/secret-encryption.js';
 
 const getUserInfoFromInteractionResult = async (
   connectorId: string,
@@ -37,7 +42,7 @@ const getUserInfoFromInteractionResult = async (
   return result.socialUserInfo.userInfo;
 };
 
-const encryptTokenRespones = (tokenResponse?: TokenResponse): EncryptedTokenSet | undefined => {
+const encryptTokenResponse = (tokenResponse?: TokenResponse): EncryptedTokenSet | undefined => {
   if (!tokenResponse?.access_token) {
     return;
   }
@@ -62,10 +67,12 @@ const encryptTokenRespones = (tokenResponse?: TokenResponse): EncryptedTokenSet 
   });
 
   return {
-    encryptedTokenSet,
-    scope,
-    tokenType,
-    expiresAt,
+    encryptedTokenSetBase64: serializeEncryptedSecret(encryptedTokenSet),
+    metadata: {
+      scope,
+      tokenType,
+      expiresAt,
+    },
   };
 };
 
@@ -148,7 +155,7 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
         getConnectorSession
       );
 
-      const encryptedTokenSet = encryptTokenRespones(tokenResponse);
+      const encryptedTokenSet = encryptTokenResponse(tokenResponse);
 
       return {
         userInfo,
@@ -190,11 +197,35 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
     return null;
   };
 
+  const upsertSocialTokenSetSecret = async (
+    userId: string,
+    {
+      encryptedTokenSet,
+      socialConnectorRelationPayload,
+    }: {
+      encryptedTokenSet: EncryptedTokenSet;
+      socialConnectorRelationPayload: SecretSocialConnectorRelationPayload;
+    }
+  ) => {
+    const { encryptedTokenSetBase64, metadata } = encryptedTokenSet;
+
+    return queries.secrets.upsertSocialTokenSetSecret(
+      {
+        id: generateStandardId(),
+        userId,
+        ...deserializeEncryptedSecret(encryptedTokenSetBase64),
+        metadata,
+      },
+      socialConnectorRelationPayload
+    );
+  };
+
   return {
     getConnector,
     getUserInfo,
     getUserInfoWithOptionalTokenResponse,
     getUserInfoFromInteractionResult,
     findSocialRelatedUser,
+    upsertSocialTokenSetSecret,
   };
 };

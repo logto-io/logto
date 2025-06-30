@@ -76,6 +76,7 @@ export const identifyUserByVerificationRecord = async (
     | 'socialIdentity'
     | 'avatar'
     | 'name'
+    | 'socialConnectorTokenSetSecret'
   >;
 }> => {
   // Check verification record can be used to identify a user using the `identifyUser` method.
@@ -109,6 +110,7 @@ export const identifyUserByVerificationRecord = async (
       const syncedProfile = {
         ...(await verificationRecord.toSyncedProfile()),
         ...conditional(linkSocialIdentity && (await verificationRecord.toUserProfile())),
+        socialConnectorTokenSetSecret: await verificationRecord.getTokenSetSecret(),
       };
 
       return { user, syncedProfile };

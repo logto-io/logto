@@ -26,6 +26,7 @@ import { createSamlApplicationQueries } from '#src/queries/saml-application/inde
 import { createSamlApplicationSecretsQueries } from '#src/queries/saml-application/secrets.js';
 import { createSamlApplicationSessionQueries } from '#src/queries/saml-application/sessions.js';
 import { createScopeQueries } from '#src/queries/scope.js';
+import SecretQuery from '#src/queries/secret.js';
 import { createSignInExperienceQueries } from '#src/queries/sign-in-experience.js';
 import SsoConnectorQueries from '#src/queries/sso-connectors.js';
 import { createSubjectTokenQueries } from '#src/queries/subject-token.js';
@@ -86,6 +87,7 @@ export default class Queries {
   captchaProviders = new CaptchaProviderQueries(this.pool);
   sentinelActivities = createSentinelActivitiesQueries(this.pool);
   oidcSessionExtensions = new OidcSessionExtensionsQueries(this.pool);
+  secrets = new SecretQuery(this.pool);
 
   constructor(
     public readonly pool: CommonQueryMethods,

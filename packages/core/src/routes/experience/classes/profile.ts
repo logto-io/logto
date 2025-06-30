@@ -193,6 +193,11 @@ export class Profile {
     );
   }
 
+  /**
+   * Set profile without validation.
+   * - skip profile uniqueness check.
+   * - skip profile existence check in the current user account.
+   */
   unsafeSet(profile: InteractionProfile) {
     this.#data = {
       ...this.#data,
