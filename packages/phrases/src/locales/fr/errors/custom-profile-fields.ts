@@ -10,6 +10,8 @@ const custom_profile_fields = {
   conflicted_sie_order: "Valeur d'ordre de champ en conflit pour l'expérience de connexion.",
   invalid_name:
     'Nom de champ invalide, seules les lettres ou les chiffres sont autorisés, sensible à la casse.',
+  name_conflict_sign_in_identifier:
+    'Nom de champ invalide. {{name}} est un identifiant de connexion réservé.',
 };
 
 export default Object.freeze(custom_profile_fields);

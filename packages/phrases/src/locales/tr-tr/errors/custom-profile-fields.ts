@@ -9,6 +9,8 @@ const custom_profile_fields = {
   conflicted_sie_order: 'Oturum Açma Deneyimi için çakışan alan sırası değeri.',
   invalid_name:
     'Geçersiz alan adı, sadece harfler veya sayılar kullanılabilir, büyük/küçük harf duyarlıdır.',
+  name_conflict_sign_in_identifier:
+    'Geçersiz alan adı. {{name}} rezerve edilmiş bir oturum açma tanımlayıcısıdır.',
 };
 
 export default Object.freeze(custom_profile_fields);

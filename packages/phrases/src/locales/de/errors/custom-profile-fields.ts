@@ -10,6 +10,8 @@ const custom_profile_fields = {
   conflicted_sie_order: 'Konflikt im Feldreihenfolgewert für die Sign-in Experience.',
   invalid_name:
     'Ungültiger Feldname, nur Buchstaben oder Zahlen sind erlaubt, Groß- und Kleinschreibung beachten.',
+  name_conflict_sign_in_identifier:
+    'Ungültiger Feldname. {{name}} ist eine reservierte Anmeldekennung.',
 };
 
 export default Object.freeze(custom_profile_fields);

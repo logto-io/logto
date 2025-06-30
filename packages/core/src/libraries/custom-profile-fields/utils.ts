@@ -27,6 +27,14 @@ const reservedCustomDataKeys = Object.freeze([
   defaultTenantIdKey,
 ]);
 
+const reservedSignInIdentifierKeys = Object.freeze([
+  'username',
+  'primaryEmail',
+  'primaryPhone',
+  'email',
+  'phone',
+]);
+
 type ValidateCustomProfileField = (
   data: { name: string; type: CustomProfileFieldType } & Record<string, unknown>
 ) => void;
@@ -98,15 +106,19 @@ const validateDateProfileField: ValidateCustomProfileField = (data) => {
   }
 };
 
-const validateFieldKey = (key: string) => {
-  assertThat(/^[\dA-Za-z]+$/.test(key), 'custom_profile_fields.invalid_name');
-  assertThat(!reservedCustomDataKeys.includes(key), 'custom_profile_fields.name_exists');
+const validateFieldName = (name: string) => {
+  assertThat(/^[\dA-Za-z]+$/.test(name), 'custom_profile_fields.invalid_name');
+  assertThat(!reservedCustomDataKeys.includes(name), 'custom_profile_fields.name_exists');
+  assertThat(
+    !reservedSignInIdentifierKeys.includes(name),
+    new RequestError({ code: 'custom_profile_fields.name_conflict_sign_in_identifier', name })
+  );
 };
 
 export const validateCustomProfileFieldData: ValidateCustomProfileField = (data) => {
   const { name, type } = data;
 
-  validateFieldKey(name);
+  validateFieldName(name);
 
   switch (type) {
     case CustomProfileFieldType.Text: {

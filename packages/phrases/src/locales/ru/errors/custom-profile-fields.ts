@@ -8,6 +8,8 @@ const custom_profile_fields = {
   name_exists: 'Поле с таким именем уже существует.',
   conflicted_sie_order: 'Конфликт значения порядка поля для опыта входа.',
   invalid_name: 'Неверное имя поля, допускаются только буквы или цифры, чувствительно к регистру.',
+  name_conflict_sign_in_identifier:
+    'Недопустимое имя поля. {{name}} является зарезервированным идентификатором входа.',
 };
 
 export default Object.freeze(custom_profile_fields);

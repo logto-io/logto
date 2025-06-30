@@ -9,6 +9,8 @@ const custom_profile_fields = {
   conflicted_sie_order: 'Konfliktowa wartość kolejności pola dla Sign-in Experience.',
   invalid_name:
     'Nieprawidłowa nazwa pola, dozwolone są tylko litery lub cyfry, rozróżniana wielkość liter.',
+  name_conflict_sign_in_identifier:
+    'Nieprawidłowa nazwa pola. {{name}} jest zarezerwowanym identyfikatorem logowania.',
 };
 
 export default Object.freeze(custom_profile_fields);

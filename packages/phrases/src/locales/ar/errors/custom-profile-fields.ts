@@ -8,6 +8,7 @@ const custom_profile_fields = {
   name_exists: 'هناك حقل بالفعل بهذا الاسم.',
   conflicted_sie_order: 'هناك تعارض في ترتيب الحقول لتجربة تسجيل الدخول.',
   invalid_name: 'اسم الحقل غير صالح ، يُسمح فقط بالأحرف أو الأرقام ، مع مراعاة حالة الأحرف.',
+  name_conflict_sign_in_identifier: 'اسم الحقل غير صالح. {{name}} هو معرف تسجيل دخول محجوز.',
 };
 
 export default Object.freeze(custom_profile_fields);

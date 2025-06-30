@@ -8,6 +8,7 @@ const custom_profile_fields = {
   name_exists: '已存在具有该名称的字段。',
   conflicted_sie_order: '登录体验的字段顺序值冲突。',
   invalid_name: '无效的字段名称，只允许字母或数字，区分大小写。',
+  name_conflict_sign_in_identifier: '无效的字段名称。{{name}} 是保留的登录标识符。',
 };
 
 export default Object.freeze(custom_profile_fields);

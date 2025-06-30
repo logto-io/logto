@@ -10,6 +10,8 @@ const custom_profile_fields = {
     'Valor de orden de campo en conflicto para la experiencia de inicio de sesión.',
   invalid_name:
     'Nombre de campo no válido, solo se permiten letras o números, distingue entre mayúsculas y minúsculas.',
+  name_conflict_sign_in_identifier:
+    'Nombre de campo no válido. {{name}} es un identificador reservado para iniciar sesión.',
 };
 
 export default Object.freeze(custom_profile_fields);
