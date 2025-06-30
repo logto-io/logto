@@ -37,7 +37,7 @@ create trigger delete_secrets_before_social_connector_delete
   execute procedure delete_secrets_on_social_connector_delete();
 
 
-/** Trigger function to delete associated secrets when social identities is deleted. */
+/** Trigger function to delete associated secrets when social identities are deleted. */
 create function delete_secrets_on_social_identity_delete()
 returns trigger as $$
 declare
