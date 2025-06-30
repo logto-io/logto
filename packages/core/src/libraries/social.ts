@@ -1,8 +1,8 @@
-import type { GetSession, SocialUserInfo } from '@logto/connector-kit';
+import type { GetSession, SocialUserInfo, TokenResponse } from '@logto/connector-kit';
 import { socialUserInfoGuard } from '@logto/connector-kit';
-import type { User } from '@logto/schemas';
+import type { EncryptedTokenSet, User } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
-import type { Nullable } from '@silverhand/essentials';
+import { conditional, type Nullable } from '@silverhand/essentials';
 import type { InteractionResults } from 'oidc-provider';
 import { z } from 'zod';
 
@@ -11,6 +11,8 @@ import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
+
+import { encryptTokens } from '../utils/secret-encryption.js';
 
 const getUserInfoFromInteractionResult = async (
   connectorId: string,
@@ -33,6 +35,38 @@ const getUserInfoFromInteractionResult = async (
   assertThat(result.socialUserInfo.connectorId === connectorId, 'session.connector_id_mismatch');
 
   return result.socialUserInfo.userInfo;
+};
+
+const encryptTokenRespones = (tokenResponse?: TokenResponse): EncryptedTokenSet | undefined => {
+  if (!tokenResponse?.access_token) {
+    return;
+  }
+
+  const {
+    access_token,
+    id_token,
+    refresh_token,
+    scope,
+    token_type: tokenType,
+    expires_in,
+  } = tokenResponse;
+
+  const requestedAt = Math.floor(Date.now() / 1000);
+
+  const expiresAt = expires_in && requestedAt + expires_in;
+
+  const encryptedTokenSet = encryptTokens({
+    access_token,
+    ...conditional(id_token && { id_token }),
+    ...conditional(refresh_token && { refresh_token }),
+  });
+
+  return {
+    encryptedTokenSet,
+    scope,
+    tokenType,
+    expiresAt,
+  };
 };
 
 export const createSocialLibrary = (queries: Queries, connectorLibrary: ConnectorLibrary) => {
@@ -75,6 +109,59 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
   };
 
   /**
+   * Retrieves user information from a social connector, and optionally includes the token response.
+   *
+   * @remarks
+   * If the connector supports and has enabled token storage,
+   * this function returns both the user info and the token response from the social provider.
+   * Otherwise return the userInfo only.
+   */
+  const getUserInfoWithOptionalTokenResponse = async (
+    connectorId: string,
+    data: unknown,
+    getConnectorSession: GetSession
+  ): Promise<{
+    userInfo: SocialUserInfo;
+    encryptedTokenSet?: EncryptedTokenSet;
+  }> => {
+    const connector = await getConnector(connectorId);
+
+    assertThat(
+      connector.type === ConnectorType.Social,
+      new RequestError({
+        code: 'session.invalid_connector_id',
+        status: 422,
+        connectorId,
+      })
+    );
+
+    const {
+      metadata: { isTokenStorageSupported },
+      dbEntry: { enableTokenStorage },
+      getUserInfo,
+      getTokenResponseAndUserInfo,
+    } = connector;
+
+    if (enableTokenStorage && isTokenStorageSupported && getTokenResponseAndUserInfo) {
+      const { userInfo, tokenResponse } = await getTokenResponseAndUserInfo(
+        data,
+        getConnectorSession
+      );
+
+      const encryptedTokenSet = encryptTokenRespones(tokenResponse);
+
+      return {
+        userInfo,
+        encryptedTokenSet,
+      };
+    }
+
+    return {
+      userInfo: await getUserInfo(data, getConnectorSession),
+    };
+  };
+
+  /**
    * Find user by phone/email from social user info.
    * if both phone and email exist, take phone for priority.
    *
@@ -106,6 +193,7 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
   return {
     getConnector,
     getUserInfo,
+    getUserInfoWithOptionalTokenResponse,
     getUserInfoFromInteractionResult,
     findSocialRelatedUser,
   };

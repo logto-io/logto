@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import {
   type ConnectorSession,
   type SocialUserInfo,
@@ -12,14 +13,18 @@ import {
   type User,
   type SocialVerificationRecordData,
   socialVerificationRecordDataGuard,
+  type SocialConnectorPayload,
+  type EncryptedTokenSet,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import {
   createSocialAuthorizationUrl,
+  getConnectorSessionResult,
   verifySocialIdentity,
 } from '#src/routes/interaction/utils/social-verification.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -55,6 +60,7 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
   public readonly type = VerificationType.Social;
   public readonly connectorId: string;
   public socialUserInfo?: SocialUserInfo;
+  public encryptedTokenSet?: EncryptedTokenSet;
   public connectorSession: ConnectorSession;
   private connectorDataCache?: LogtoConnector;
 
@@ -63,12 +69,13 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     private readonly queries: Queries,
     data: SocialVerificationRecordData
   ) {
-    const { id, connectorId, socialUserInfo, connectorSession } =
+    const { id, connectorId, socialUserInfo, encryptedTokenSet, connectorSession } =
       socialVerificationRecordDataGuard.parse(data);
 
     this.id = id;
     this.connectorId = connectorId;
     this.socialUserInfo = socialUserInfo;
+    this.encryptedTokenSet = encryptedTokenSet;
     this.connectorSession = connectorSession ?? {};
   }
 
@@ -144,6 +151,21 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     connectorData: JsonObject,
     connectorSessionType: SocialAuthorizationSessionStorageType = 'interactionSession'
   ) {
+    // TODO: Remove the dev feature guard once the new social verification flow is fully implemented.
+    if (EnvSet.values.isDevFeaturesEnabled) {
+      const { userInfo, encryptedTokenSet } = await this.verifySocialIdentity(
+        { connectorId: this.connectorId, connectorData },
+        ctx,
+        tenantContext,
+        connectorSessionType
+      );
+
+      this.socialUserInfo = userInfo;
+      this.encryptedTokenSet = encryptedTokenSet;
+      return;
+    }
+
+    // TODO: remove this legacy implementation
     const socialUserInfo =
       connectorSessionType === 'verificationRecord'
         ? // For the profile API, find the connector session result from the current verification record directly.
@@ -362,6 +384,8 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
   /**
    * Internal method to verify the social identity.
    *
+   * @deprecated
+   *
    * @remarks
    * This method is a alternative to the {@link verifySocialIdentity} method in the interaction/utils/social-verification.ts file.
    * Verify the social identity using the connector data received from the client and the connector session stored in the current verification record.
@@ -369,7 +393,6 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
    */
   private async verifySocialIdentityInternally(connectorData: JsonObject, ctx: WithLogContext) {
     const connector = await this.getConnectorData();
-
     // Verify the CSRF token if it's a Google connector and has credential (a Google One Tap verification)
     if (
       connector.metadata.id === GoogleConnector.factoryId &&
@@ -391,4 +414,59 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
 
     return socialUserInfo;
   }
+
+  /**
+   * Verify the social identity
+   *
+   * @param {SocialAuthorizationSessionStorageType} connectorSessionType - Connector session storage type, default is 'interactionSession'.
+   *
+   * @remarks
+   *
+   * - For Experience API: This method uses the connector session result stored in the provider's interactionDetails to verify the social identity.
+   * - For Profile/Account API: This method uses the connector session stores in the current verification record directly.
+   *
+   * @remarks
+   * If the connector has token storage enabled and supports token response, this method will return the user info along with the token responses.
+   * Otherwise, it will only return the user info.
+   */
+  private async verifySocialIdentity(
+    { connectorId, connectorData }: SocialConnectorPayload,
+    ctx: WithLogContext,
+    { provider }: TenantContext,
+    connectorSessionType: SocialAuthorizationSessionStorageType
+  ) {
+    const connector = await this.getConnectorData();
+
+    // Verify the CSRF token if it's a Google connector and has credential (a Google One Tap verification)
+    if (
+      connector.metadata.id === GoogleConnector.factoryId &&
+      connectorData[GoogleConnector.oneTapParams.credential]
+    ) {
+      const csrfToken = connectorData[GoogleConnector.oneTapParams.csrfToken];
+      const value = ctx.cookies.get(GoogleConnector.oneTapParams.csrfToken);
+      assertThat(value === csrfToken, 'session.csrf_token_mismatch');
+    }
+
+    // Get the connector session from the current verification record
+    if (connectorSessionType === 'verificationRecord') {
+      assertThat(
+        this.connectorSession,
+        new RequestError({ code: 'session.connector_validation_session_not_found', status: 400 })
+      );
+
+      return this.libraries.socials.getUserInfoWithOptionalTokenResponse(
+        connectorId,
+        connectorData,
+        async () => this.connectorSession
+      );
+    }
+
+    // Get the connector session from the provider's interactionDetails
+    return this.libraries.socials.getUserInfoWithOptionalTokenResponse(
+      connectorId,
+      connectorData,
+      async () => getConnectorSessionResult(ctx, provider)
+    );
+  }
 }
+/* eslint-enable max-lines */

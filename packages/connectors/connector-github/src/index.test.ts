@@ -49,7 +49,7 @@ describe('getAccessToken', () => {
       scope: 'scope',
       token_type: 'token_type',
     });
-    const { accessToken } = await getAccessToken(mockedConfig, { code: 'code' });
+    const { access_token: accessToken } = await getAccessToken(mockedConfig, { code: 'code' });
     expect(accessToken).toEqual('access_token');
   });
 
