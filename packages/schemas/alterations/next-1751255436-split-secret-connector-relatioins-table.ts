@@ -77,15 +77,15 @@ const alteration: AlterationScript = {
       create function delete_secrets_on_social_identity_delete()
       returns trigger as $$
       declare
-        target text;
+        identity_target text;
         old_identity jsonb;
         new_identity jsonb;
       begin
         -- Loop over old identities to detect deletions or modifications
-        for target in select jsonb_object_keys(old.identities)
+        for identity_target in select jsonb_object_keys(old.identities)
         loop
-          old_identity := old.identities -> target;
-          new_identity := new.identities -> target;
+          old_identity := old.identities -> identity_target;
+          new_identity := new.identities -> identity_target;
 
           -- If the identity was deleted or modified, delete the associated secret
           if new_identity is null or (new_identity->>'userId') is distinct from (old_identity->>'userId') then
@@ -94,7 +94,7 @@ const alteration: AlterationScript = {
             using secret_social_connector_relations
             where secrets.id = secret_social_connector_relations.secret_id
             -- Ensure we are deleting the correct social identity
-            and secret_social_connector_relations.target = target
+            and secret_social_connector_relations.target = identity_target
             and secret_social_connector_relations.identity_id = old_identity->>'userId'
             -- Ensure we delete the correct user's secret
             and secrets.user_id = old.id;
