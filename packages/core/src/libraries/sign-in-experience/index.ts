@@ -275,7 +275,7 @@ export const createSignInExperienceLibrary = (
       isDevelopmentTenant,
       googleOneTap: getGoogleOneTap(),
       captchaConfig: await getCaptchaConfig(),
-      ...cond(EnvSet.values.isDevFeaturesEnabled && { customProfileFields }),
+      ...cond(EnvSet.values.isDevFeaturesEnabled && customProfileFields && { customProfileFields }),
     };
   };
 
