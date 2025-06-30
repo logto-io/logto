@@ -6,7 +6,12 @@ import {
 } from '@logto/connector-kit';
 import { z } from 'zod';
 
-import { type SignInExperience, SignInExperiences } from '../db-entries/index.js';
+import {
+  type CustomProfileField,
+  CustomProfileFields,
+  type SignInExperience,
+  SignInExperiences,
+} from '../db-entries/index.js';
 import { CaptchaType } from '../foundations/jsonb-types/index.js';
 import { type ToZodObject } from '../utils/zod.js';
 
@@ -44,6 +49,7 @@ export type FullSignInExperience = SignInExperience & {
     type: CaptchaType;
     siteKey: string;
   };
+  customProfileFields?: Readonly<CustomProfileField[]>;
 };
 
 export const fullSignInExperienceGuard = SignInExperiences.guard.extend({
@@ -68,4 +74,6 @@ export const fullSignInExperienceGuard = SignInExperiences.guard.extend({
       siteKey: z.string(),
     })
     .optional(),
+  // @charles TODO: Remove `optional` before release
+  customProfileFields: CustomProfileFields.guard.array().optional(),
 }) satisfies ToZodObject<FullSignInExperience>;

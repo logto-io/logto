@@ -49,12 +49,18 @@ const captchaProviders = {
 };
 const { findCaptchaProvider } = captchaProviders;
 
+const customProfileFields = {
+  findAllCustomProfileFields: jest.fn(),
+};
+const { findAllCustomProfileFields } = customProfileFields;
+
 const { MockQueries } = await import('#src/test-utils/tenant.js');
 
 const queries = new MockQueries({
   customPhrases,
   signInExperiences,
   captchaProviders,
+  customProfileFields,
 });
 const connectorLibrary = createConnectorLibrary(queries, {
   getClient: jest.fn(),
