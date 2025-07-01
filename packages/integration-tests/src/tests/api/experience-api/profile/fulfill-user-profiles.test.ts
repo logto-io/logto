@@ -2,8 +2,8 @@ import { ConnectorType } from '@logto/connector-kit';
 import { InteractionEvent, MfaFactor, SignInIdentifier } from '@logto/schemas';
 import { authenticator } from 'otplib';
 
-import { createUserMfaVerification } from '#src/api/admin-user.js';
-import { initExperienceClient } from '#src/helpers/client.js';
+import { createUserMfaVerification, deleteUser, getUser } from '#src/api/admin-user.js';
+import { initExperienceClient, logoutClient, processSession } from '#src/helpers/client.js';
 import {
   clearConnectorsByTypes,
   setEmailConnector,
@@ -113,6 +113,59 @@ describe('Fulfill User Profiles', () => {
       status: 422,
       code: 'user.email_already_in_use',
     });
+  });
+
+  it('should update custom profile fields successfully', async () => {
+    const { username, password } = generateNewUserProfile({ username: true, password: true });
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.Register,
+    });
+    await client.updateProfile({ type: SignInIdentifier.Username, value: username });
+    await client.updateProfile({ type: 'password', value: password });
+    await client.updateProfile({
+      type: 'profile',
+      values: {
+        name: 'John Doe',
+        avatar: 'https://example.com/avatar.jpg',
+        preferredUsername: 'john',
+        givenName: 'John',
+        familyName: 'Doe',
+        gender: 'male',
+        birthdate: '1990-01-01',
+        zoneinfo: 'UTC',
+        locale: 'en',
+        website: 'https://example.com',
+        customField1: 'customValue1',
+        customField2: 'customValue2',
+      },
+    });
+
+    await client.identifyUser();
+    const { redirectTo } = await client.submitInteraction();
+    const userId = await processSession(client, redirectTo);
+
+    const user = await getUser(userId);
+    expect(user).toMatchObject({
+      name: 'John Doe',
+      avatar: 'https://example.com/avatar.jpg',
+      profile: {
+        preferredUsername: 'john',
+        givenName: 'John',
+        familyName: 'Doe',
+        gender: 'male',
+        birthdate: '1990-01-01',
+        zoneinfo: 'UTC',
+        locale: 'en',
+        website: 'https://example.com',
+      },
+      customData: {
+        customField1: 'customValue1',
+        customField2: 'customValue2',
+      },
+    });
+
+    await logoutClient(client);
+    await deleteUser(userId);
   });
 
   describe('phone number collision detect with normalization', () => {
