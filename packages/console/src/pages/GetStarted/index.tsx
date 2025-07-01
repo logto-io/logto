@@ -105,7 +105,7 @@ function GetStarted() {
   );
 
   const shouldShowConvertToProductionCard = useMemo(() => {
-    // Todo: @xiaoyijun feature flag for dev to pro
+    // Todo: @xiaoyijun feature flag for dev-to-pro
     if (!isDevFeaturesEnabled) {
       return false;
     }

@@ -6,6 +6,7 @@ import ConvertToProductionModal from '@/components/ConvertToProductionModal';
 import LearnMore from '@/components/LearnMore';
 import TenantEnvTag from '@/components/TenantEnvTag';
 import { logtoCloudTenantSettings } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 
@@ -33,7 +34,8 @@ function TenantEnvironment({ tag }: Props) {
           {tag === TenantTag.Development && <LearnMore href={logtoCloudTenantSettings} />}
         </div>
       </div>
-      {tag === TenantTag.Development && (
+      {/* Todo: @xiaoyijun feature flag for dev-to-pro */}
+      {isDevFeaturesEnabled && tag === TenantTag.Development && (
         <>
           <Button
             className={styles.button}
