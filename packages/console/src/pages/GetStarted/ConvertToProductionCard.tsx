@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import CreateTenantHeaderDark from '@/assets/icons/create-tenant-header-dark.svg?react';
 import CreateTenantHeader from '@/assets/icons/create-tenant-header.svg?react';
+import ConvertToProductionModal from '@/components/ConvertToProductionModal';
 import { contactEmailLink } from '@/consts';
 import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
@@ -20,6 +22,7 @@ function ConvertToProductionCard() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.get_started' });
   const theme = useTheme();
   const TenantIcon = icons[theme];
+  const [isConvertModalOpen, setIsConvertModalOpen] = useState(false);
 
   return (
     <Card className={styles.card}>
@@ -43,8 +46,20 @@ function ConvertToProductionCard() {
           </div>
         </div>
         <Spacer />
-        <Button title="get_started.convert_to_production.convert_button" type="outline" />
+        <Button
+          title="get_started.convert_to_production.convert_button"
+          type="outline"
+          onClick={() => {
+            setIsConvertModalOpen(true);
+          }}
+        />
       </div>
+      <ConvertToProductionModal
+        isOpen={isConvertModalOpen}
+        onClose={() => {
+          setIsConvertModalOpen(false);
+        }}
+      />
     </Card>
   );
 }
