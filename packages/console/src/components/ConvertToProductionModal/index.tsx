@@ -53,6 +53,8 @@ function ConvertToProductionModal({ isOpen, onClose }: Props) {
         planId: proSku.id,
         tenantId: currentTenantId,
       });
+
+      onClose();
     } catch (error: unknown) {
       void toastResponseError(error);
     } finally {
