@@ -4,6 +4,7 @@ import {
   identityGuard,
   identitiesGuard,
   userProfileResponseGuard,
+  desensitizedSocialTokenSetSecretGuard,
 } from '@logto/schemas';
 import { has } from '@silverhand/essentials';
 import { object, record, string, unknown } from 'zod';
@@ -12,6 +13,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { EnvSet } from '../../env-set/index.js';
 import { transpileUserProfileResponse } from '../../utils/user.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
@@ -21,6 +23,7 @@ export default function adminUserSocialRoutes<T extends ManagementApiRouter>(
   const {
     queries: {
       users: { findUserById, updateUserById, hasUserWithIdentity, deleteUserIdentity },
+      secrets: secretQueries,
     },
     connectors: { getLogtoConnectorById },
   } = tenant;
@@ -154,4 +157,40 @@ export default function adminUserSocialRoutes<T extends ManagementApiRouter>(
       return next();
     }
   );
+
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    router.get(
+      '/users/:userId/identities/:target/secret',
+      koaGuard({
+        params: object({ userId: string(), target: string() }),
+        response: desensitizedSocialTokenSetSecretGuard,
+        status: [200, 404],
+      }),
+      async (ctx, next) => {
+        const {
+          params: { userId, target },
+        } = ctx.guard;
+
+        const { identities } = await findUserById(userId);
+        if (!has(identities, target)) {
+          throw new RequestError({ code: 'user.identity_not_exist', status: 404 });
+        }
+
+        const secret = await secretQueries.findSocialTokenSetSecretByUserIdAndTarget(
+          userId,
+          target
+        );
+
+        if (!secret) {
+          throw new RequestError({ code: 'entity.not_found', status: 404 });
+        }
+
+        const { encryptedDek, iv, authTag, ciphertext, ...rest } = secret;
+
+        ctx.body = rest;
+
+        return next();
+      }
+    );
+  }
 }

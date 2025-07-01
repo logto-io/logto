@@ -7,6 +7,7 @@ import {
   type SecretSocialConnectorRelationPayload,
   SecretSocialConnectorRelations,
   SecretType,
+  type SocialTokenSetSecret,
 } from '@logto/schemas';
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
@@ -14,8 +15,8 @@ import { buildInsertIntoWithPool } from '../database/insert-into.js';
 import SchemaQueries from '../utils/SchemaQueries.js';
 import { convertToIdentifiers } from '../utils/sql.js';
 
-const secrets = convertToIdentifiers(Secrets);
-const secretSocialConnectorRelations = convertToIdentifiers(SecretSocialConnectorRelations);
+const secrets = convertToIdentifiers(Secrets, true);
+const secretSocialConnectorRelations = convertToIdentifiers(SecretSocialConnectorRelations, true);
 
 class SecretQueries extends SchemaQueries<SecretKeys, CreateSecret, Secret> {
   constructor(pool: CommonQueryMethods) {
@@ -60,6 +61,24 @@ class SecretQueries extends SchemaQueries<SecretKeys, CreateSecret, Secret> {
         ...socialConnectorRelationPayload,
       });
     });
+  }
+
+  /**
+   * For user federated token exchange use, we need to find the secret by user id and social target.
+   */
+  public async findSocialTokenSetSecretByUserIdAndTarget(userId: string, target: string) {
+    return this.pool.maybeOne<SocialTokenSetSecret>(sql`
+        select ${sql.join(Object.values(secrets.fields), sql`, `)},
+          ${secretSocialConnectorRelations.fields.connectorId},
+          ${secretSocialConnectorRelations.fields.identityId},
+          ${secretSocialConnectorRelations.fields.target}
+        from ${secrets.table}
+        join ${secretSocialConnectorRelations.table}
+          on ${secrets.fields.id} = ${secretSocialConnectorRelations.fields.secretId}
+        where ${secrets.fields.userId} = ${userId}
+          and ${secrets.fields.type} = ${SecretType.FederatedTokenSet}
+          and ${secretSocialConnectorRelations.fields.target} = ${target}
+    `);
   }
 }
 
