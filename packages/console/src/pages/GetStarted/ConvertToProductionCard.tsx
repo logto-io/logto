@@ -1,0 +1,52 @@
+import { Trans, useTranslation } from 'react-i18next';
+
+import CreateTenantHeaderDark from '@/assets/icons/create-tenant-header-dark.svg?react';
+import CreateTenantHeader from '@/assets/icons/create-tenant-header.svg?react';
+import { contactEmailLink } from '@/consts';
+import Button from '@/ds-components/Button';
+import Card from '@/ds-components/Card';
+import Spacer from '@/ds-components/Spacer';
+import TextLink from '@/ds-components/TextLink';
+import useTheme from '@/hooks/use-theme';
+
+import styles from './index.module.scss';
+
+const icons = {
+  light: CreateTenantHeader,
+  dark: CreateTenantHeaderDark,
+};
+
+function ConvertToProductionCard() {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.get_started' });
+  const theme = useTheme();
+  const TenantIcon = icons[theme];
+
+  return (
+    <Card className={styles.card}>
+      <div className={styles.title}>{t('convert_to_production.card_title')}</div>
+      <div className={styles.borderBox}>
+        <div className={styles.rowWrapper}>
+          <div className={styles.icon}>
+            <TenantIcon />
+          </div>
+          <div className={styles.columnWrapper}>
+            <div className={styles.title}>{t('convert_to_production.title')}</div>
+            <div className={styles.subtitle}>
+              <Trans
+                components={{
+                  a: <TextLink href={contactEmailLink} targetBlank="noopener" />,
+                }}
+              >
+                {t('convert_to_production.subtitle')}
+              </Trans>
+            </div>
+          </div>
+        </div>
+        <Spacer />
+        <Button title="get_started.convert_to_production.convert_button" type="outline" />
+      </div>
+    </Card>
+  );
+}
+
+export default ConvertToProductionCard;
