@@ -5,6 +5,7 @@ import { TtlCache } from '@logto/shared';
 
 import {
   mockCaptchaProvider,
+  mockCustomProfileFields,
   mockGithubConnector,
   mockGoogleConnector,
   mockSignInExperience,
@@ -170,6 +171,7 @@ describe('getFullSignInExperience()', () => {
     mockSsoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValueOnce([
       wellConfiguredSsoConnector,
     ]);
+    findAllCustomProfileFields.mockResolvedValueOnce(mockCustomProfileFields);
 
     const fullSignInExperience = await getFullSignInExperience({ locale: 'en' });
     const connectorFactory = ssoConnectorFactories[wellConfiguredSsoConnector.providerName];
@@ -193,6 +195,7 @@ describe('getFullSignInExperience()', () => {
       isDevelopmentTenant: false,
       googleOneTap: undefined,
       captchaConfig: undefined,
+      customProfileFields: mockCustomProfileFields,
     });
   });
 
