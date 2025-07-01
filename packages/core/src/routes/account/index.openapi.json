@@ -139,6 +139,39 @@
         }
       }
     },
+    "/api/my-account/mfa-settings": {
+      "get": {
+        "operationId": "GetMfaSettings",
+        "summary": "Get MFA settings",
+        "tags": ["Dev feature"],
+        "description": "Get MFA settings for the user. This endpoint requires the Identities scope. Returns current MFA configuration preferences.",
+        "responses": {
+          "200": {
+            "description": "The MFA settings were retrieved successfully."
+          },
+          "401": {
+            "description": "Permission denied, insufficient scope or MFA field not enabled."
+          }
+        }
+      },
+      "patch": {
+        "operationId": "UpdateMfaSettings",
+        "summary": "Update MFA settings",
+        "tags": ["Dev feature"],
+        "description": "Update MFA settings for the user. This endpoint requires identity verification and the Identities scope. Controls whether MFA verification is required during sign-in when the user has MFA configured.",
+        "responses": {
+          "204": {
+            "description": "The MFA settings were updated successfully."
+          },
+          "400": {
+            "description": "The request body is invalid."
+          },
+          "401": {
+            "description": "Permission denied, identity verification is required or insufficient scope."
+          }
+        }
+      }
+    },
     "/api/my-account/primary-email": {
       "post": {
         "operationId": "UpdatePrimaryEmail",
