@@ -53,6 +53,7 @@ const localDevelopmentOrigins = [
 
 // List of allowed production domain suffixes
 const productionDomainSuffixes = [
+  'logto.io', // Official website
   '.logto.io', // Production domain
   '.logto.dev', // Development domain
   ...(EnvSet.values.isDevFeaturesEnabled ? ['.logto-docs.pages.dev'] : []), // Logto Docs CI preview domain, for testing purposes
@@ -110,7 +111,10 @@ export function koaLogtoAnonymousOriginCors<StateT, ContextT, ResponseBodyT>(): 
       }
 
       // In production, only allow *.logto.io or *.logto.dev domains to access
-      if (isProduction && productionDomainSuffixes.some((suffix) => origin.endsWith(suffix))) {
+      if (
+        (isProduction || isIntegrationTest) &&
+        productionDomainSuffixes.some((suffix) => origin.endsWith(suffix))
+      ) {
         return origin;
       }
 
@@ -118,6 +122,8 @@ export function koaLogtoAnonymousOriginCors<StateT, ContextT, ResponseBodyT>(): 
       throw new RequestError({ code: 'auth.forbidden', status: 403 });
     },
     allowHeaders: ['Content-Type'],
+    // Preflight request will be cached for 10 minutes
+    maxAge: 600,
   });
 }
 
@@ -150,7 +156,6 @@ export function koaLogtoAnonymousMethodsCors<StateT, ContextT, ResponseBodyT>(
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   return cors({
     allowMethods: allowedMethods.split(',').map((method) => method.trim()),
-    allowHeaders: ['Content-Type'],
   });
 }
 

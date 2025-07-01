@@ -89,7 +89,7 @@ export default function googleOneTapRoutes<T extends AnonymousRouter>(
 
   router.post(
     '/google-one-tap/verify',
-    koaLogtoAnonymousMethodsCors('POST'),
+    koaLogtoAnonymousMethodsCors('POST,OPTIONS'),
     koaGuard({
       body: z.object({
         idToken: z.string(),

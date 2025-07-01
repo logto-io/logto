@@ -171,6 +171,7 @@ describe('Logto Anonymous CORS Integration Tests', () => {
         ];
 
         await Promise.all(
+          // eslint-disable-next-line max-nested-callbacks
           testCases.map(async (origin) => {
             const [ctx] = mockContext('GET', origin);
             await expect(run(ctx, noop)).rejects.toThrow();
@@ -502,7 +503,12 @@ describe('exported constants', () => {
   });
 
   it('should export productionDomainSuffixes', () => {
-    expect(productionDomainSuffixes).toEqual(['.logto.io', '.logto.dev', '.logto-docs.pages.dev']);
+    expect(productionDomainSuffixes).toEqual([
+      'logto.io',
+      '.logto.io',
+      '.logto.dev',
+      '.logto-docs.pages.dev',
+    ]);
   });
 
   it('should have non-empty origin arrays', () => {
