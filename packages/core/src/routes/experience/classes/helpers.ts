@@ -43,7 +43,13 @@ export const getNewUserProfileFromVerificationRecord = async (
         verificationRecord.toSyncedProfile(true),
       ]);
 
-      return { ...identityProfile, ...syncedProfile };
+      // TODO: Remove this check once enterprise SSO support getTokenSetSecret
+      const socialConnectorTokenSetSecret =
+        verificationRecord.type === VerificationType.Social
+          ? await verificationRecord.getTokenSetSecret()
+          : undefined;
+
+      return { ...identityProfile, ...syncedProfile, socialConnectorTokenSetSecret };
     }
     default: {
       // Unsupported verification type for user creation, such as MFA verification.

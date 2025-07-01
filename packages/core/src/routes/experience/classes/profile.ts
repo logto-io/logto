@@ -101,9 +101,14 @@ export class Profile {
     if (verificationRecord.type === VerificationType.Social) {
       const user = await this.safeGetIdentifiedUser();
       const isNewUserIdentity = !user;
+
       // Sync the email and phone to the user profile only for new user identity
       const syncedProfile = await verificationRecord.toSyncedProfile(isNewUserIdentity);
       this.unsafePrepend(syncedProfile);
+
+      // Sync the social connector token set secret to the user profile
+      const socialConnectorTokenSetSecret = await verificationRecord.getTokenSetSecret();
+      this.unsafePrepend({ socialConnectorTokenSetSecret });
     }
   }
 

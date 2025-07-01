@@ -58,10 +58,18 @@ export class ProvisionLibrary {
     const {
       libraries: {
         users: { generateUserId, insertUser },
+        socials: { upsertSocialTokenSetSecret },
       },
     } = this.tenantContext;
 
-    const { socialIdentity, enterpriseSsoIdentity, syncedEnterpriseSsoIdentity, ...rest } = profile;
+    const {
+      socialIdentity,
+      enterpriseSsoIdentity,
+      syncedEnterpriseSsoIdentity,
+      jitOrganizationIds,
+      socialConnectorTokenSetSecret,
+      ...rest
+    } = profile;
 
     const { isCreatingFirstAdminUser, initialUserRoles, customData } =
       await this.getUserProvisionContext(profile);
@@ -82,6 +90,10 @@ export class ProvisionLibrary {
 
     if (isCreatingFirstAdminUser) {
       await this.provisionForFirstAdminUser(user);
+    }
+
+    if (socialConnectorTokenSetSecret) {
+      await upsertSocialTokenSetSecret(user.id, socialConnectorTokenSetSecret);
     }
 
     await this.provisionNewUserJitOrganizations(user.id, profile);
