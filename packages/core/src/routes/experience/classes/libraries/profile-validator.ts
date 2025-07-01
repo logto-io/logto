@@ -1,4 +1,14 @@
-import { type User, MissingProfile } from '@logto/schemas';
+import {
+  type User,
+  type JsonObject,
+  jsonObjectGuard,
+  MissingProfile,
+  type UserProfile,
+  userProfileGuard,
+  userProfileKeys,
+  Users,
+} from '@logto/schemas';
+import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -184,5 +194,43 @@ export class ProfileValidator {
     }
 
     return missingProfile;
+  }
+
+  /**
+   * Parse and split profile data into built-in and custom fields based on the provided keys.
+   * @param values The profile data to parse
+   * @returns Object containing `name`, `avatar`, `profile` and `customData`
+   */
+  public validateAndParseCustomProfile(values: Record<string, unknown>): {
+    name?: string;
+    avatar?: string;
+    profile: UserProfile;
+    customData: JsonObject;
+  } {
+    const forbiddenKeysGuard = Users.createGuard
+      .pick({ username: true, primaryEmail: true, primaryPhone: true })
+      .extend({ email: z.string().nullable().optional(), phone: z.string().nullable().optional() });
+
+    const forbiddenFields = forbiddenKeysGuard.parse(values);
+    assertThat(Object.keys(forbiddenFields).length === 0, 'request.invalid_input');
+
+    const { name, avatar } = z.object({ name: z.string(), avatar: z.string() }).parse(values);
+    const profile = userProfileGuard.parse(values);
+
+    const profileKeys = new Set<string>([
+      ...Users.createGuard
+        .pick({
+          avatar: true,
+          name: true,
+        })
+        .keyof().options,
+      ...userProfileKeys,
+    ]);
+
+    const customData = jsonObjectGuard.parse(
+      Object.fromEntries(Object.entries(values).filter(([key]) => !profileKeys.has(key)))
+    );
+
+    return { name, avatar, profile, customData };
   }
 }

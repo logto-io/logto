@@ -103,6 +103,13 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
           await experienceInteraction.profile.setPasswordDigestWithValidation(profilePayload.value);
           break;
         }
+        case 'profile': {
+          const { validateAndParseCustomProfile } = experienceInteraction.profile.profileValidator;
+          await experienceInteraction.profile.setProfileWithValidation(
+            validateAndParseCustomProfile(profilePayload.values)
+          );
+          break;
+        }
       }
 
       await experienceInteraction.save();
