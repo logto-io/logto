@@ -15,7 +15,7 @@ import { type SelectedGuide } from '@/components/Guide/GuideCard';
 import GuideCardGroup from '@/components/Guide/GuideCardGroup';
 import { useApiGuideMetadata, useAppGuideMetadata } from '@/components/Guide/hooks';
 import PageMeta from '@/components/PageMeta';
-import { ConnectorsTabs } from '@/consts';
+import { ConnectorsTabs, convertToProductionThresholdDays } from '@/consts';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -116,10 +116,7 @@ function GetStarted() {
 
     const daysSinceCreation = dayjs().diff(dayjs(currentTenant.createdAt), 'day');
 
-    /**
-     * Show the card after the tenant is 14 days old.
-     */
-    return daysSinceCreation >= 14;
+    return daysSinceCreation >= convertToProductionThresholdDays;
   }, [isDevTenant, currentTenant]);
 
   return (

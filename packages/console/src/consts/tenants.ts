@@ -163,3 +163,6 @@ export const availableRegions = Object.freeze([
   'AU',
   'JP',
 ] as const satisfies PublicRegionName[]);
+
+// The threshold days to show the convert to production card in the get started page
+export const convertToProductionThresholdDays = 14;
