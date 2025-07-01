@@ -28,7 +28,7 @@ const alteration: AlterationScript = {
         execute procedure delete_secret_on_sso_identity_delete();
     `);
 
-    /** Trigger function to delete associated secrets when social identities is deleted. */
+    /** Trigger function to delete associated secrets when social identities are deleted. */
     await pool.query(sql`
       create function delete_secrets_on_social_identity_delete()
       returns trigger as $$
