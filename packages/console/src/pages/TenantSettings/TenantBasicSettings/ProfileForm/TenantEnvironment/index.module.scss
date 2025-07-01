@@ -1,6 +1,9 @@
 @use '@/scss/underscore' as _;
 
 .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: _.unit(5.5) _.unit(6);
   border: 1px solid var(--color-divider);
   border-radius: 12px;
@@ -10,4 +13,8 @@
   margin-top: _.unit(2);
   font: var(--font-body-2);
   color: var(--color-text-secondary);
+}
+
+.button {
+  margin-inline-start: _.unit(6);
 }

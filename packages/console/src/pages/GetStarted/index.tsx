@@ -120,7 +120,7 @@ function GetStarted() {
      * Show the card after the tenant is 14 days old.
      */
     return daysSinceCreation >= 14;
-  }, [isCloud, isDevTenant, currentTenant]);
+  }, [isDevTenant, currentTenant]);
 
   return (
     <div className={styles.container}>
