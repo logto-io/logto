@@ -5,6 +5,7 @@ import { TtlCache } from '@logto/shared';
 
 import {
   mockCaptchaProvider,
+  mockCustomProfileFields,
   mockGithubConnector,
   mockGoogleConnector,
   mockSignInExperience,
@@ -49,12 +50,18 @@ const captchaProviders = {
 };
 const { findCaptchaProvider } = captchaProviders;
 
+const customProfileFields = {
+  findAllCustomProfileFields: jest.fn(),
+};
+const { findAllCustomProfileFields } = customProfileFields;
+
 const { MockQueries } = await import('#src/test-utils/tenant.js');
 
 const queries = new MockQueries({
   customPhrases,
   signInExperiences,
   captchaProviders,
+  customProfileFields,
 });
 const connectorLibrary = createConnectorLibrary(queries, {
   getClient: jest.fn(),
@@ -164,6 +171,7 @@ describe('getFullSignInExperience()', () => {
     mockSsoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValueOnce([
       wellConfiguredSsoConnector,
     ]);
+    findAllCustomProfileFields.mockResolvedValueOnce(mockCustomProfileFields);
 
     const fullSignInExperience = await getFullSignInExperience({ locale: 'en' });
     const connectorFactory = ssoConnectorFactories[wellConfiguredSsoConnector.providerName];
@@ -187,6 +195,7 @@ describe('getFullSignInExperience()', () => {
       isDevelopmentTenant: false,
       googleOneTap: undefined,
       captchaConfig: undefined,
+      customProfileFields: mockCustomProfileFields,
     });
   });
 

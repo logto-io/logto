@@ -1,11 +1,21 @@
-import { type SignInExperience, type Translation, type SsoConnectorMetadata } from '@logto/schemas';
+import {
+  type SignInExperience,
+  type Translation,
+  type SsoConnectorMetadata,
+  type CustomProfileField,
+} from '@logto/schemas';
 import { HTTPError } from 'ky';
 
+import { fullnameData } from '#src/__mocks__/profile-fields-mock.js';
 import api, { adminTenantApi, authedAdminApi } from '#src/api/api.js';
-import { updateSignInExperience } from '#src/api/index.js';
+import {
+  createCustomProfileField,
+  deleteCustomProfileFieldByName,
+  updateSignInExperience,
+} from '#src/api/index.js';
 import { createSsoConnector, deleteSsoConnectorById } from '#src/api/sso-connector.js';
 import { newOidcSsoConnectorPayload } from '#src/constants.js';
-import { generateSsoConnectorName } from '#src/utils.js';
+import { devFeatureTest, generateSsoConnectorName } from '#src/utils.js';
 
 describe('.well-known api', () => {
   it('should return tenant endpoint URL for any given tenant id', async () => {
@@ -149,6 +159,20 @@ describe('.well-known api', () => {
       expect(signInExperience.ssoConnectors.length).toBe(0);
 
       await deleteSsoConnectorById(id);
+    });
+  });
+
+  devFeatureTest.describe('custom profile fields', () => {
+    devFeatureTest.it('should get the custom profile fields in sign-in experience', async () => {
+      const fullnameField = await createCustomProfileField(fullnameData);
+      const signInExperience = await api
+        .get('.well-known/sign-in-exp')
+        .json<SignInExperience & { customProfileFields: CustomProfileField[] }>();
+
+      expect(signInExperience.customProfileFields.length).toBeGreaterThan(0);
+      expect(signInExperience.customProfileFields).toContainEqual(fullnameField);
+
+      void deleteCustomProfileFieldByName(fullnameData.name);
     });
   });
 });
