@@ -8,12 +8,14 @@ import { OnboardingApp } from '@/onboarding';
 import AcceptInvitation from '@/pages/AcceptInvitation';
 import Callback from '@/pages/Callback';
 import CheckoutSuccessCallback from '@/pages/CheckoutSuccessCallback';
+import OneTimeTokenLanding from '@/pages/OneTimeTokenLanding';
 import Profile from '@/pages/Profile';
 import HandleSocialCallback from '@/pages/Profile/containers/HandleSocialCallback';
 
 import styles from './AppRoutes.module.scss';
 import Main from './pages/Main';
 import SocialDemoCallback from './pages/SocialDemoCallback';
+import { isDevFeaturesEnabled } from '@/consts/env';
 
 /** Renders necessary routes when the user is not in a tenant context. */
 function AppRoutes() {
@@ -23,6 +25,9 @@ function AppRoutes() {
         <Routes>
           <Route path={GlobalAnonymousRoute.Callback} element={<Callback />} />
           <Route path={GlobalAnonymousRoute.SocialDemoCallback} element={<SocialDemoCallback />} />
+          {isDevFeaturesEnabled && (
+            <Route path={GlobalAnonymousRoute.OneTimeTokenLanding} element={<OneTimeTokenLanding />} />
+          )}
           <Route element={<ProtectedRoutes />}>
             <Route
               path={`${GlobalRoute.AcceptInvitation}/:invitationId`}
