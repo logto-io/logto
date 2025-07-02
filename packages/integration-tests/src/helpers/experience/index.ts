@@ -173,7 +173,6 @@ export const signInWithSocial = async (
   options?: {
     registerNewUser?: boolean;
     linkSocial?: boolean;
-    tokenResponse?: TokenResponse;
   }
 ) => {
   const state = 'state';

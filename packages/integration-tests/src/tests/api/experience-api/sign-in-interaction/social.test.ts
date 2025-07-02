@@ -26,7 +26,7 @@ describe('social sign-in and sign-up', () => {
     id_token: 'mid_token',
     access_token: 'access_token',
     token_type: 'bearer',
-    scope: 'openid ',
+    scope: 'openid',
     expires_in: 3600,
   };
 
