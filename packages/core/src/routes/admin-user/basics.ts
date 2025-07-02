@@ -15,6 +15,7 @@ import { encryptUserPassword } from '#src/libraries/user.utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { EnvSet } from '../../env-set/index.js';
 import { parseLegacyPassword } from '../../utils/password.js';
 import { transpileUserProfileResponse } from '../../utils/user.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
@@ -239,6 +240,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         avatar: string().url().or(literal('')).nullable(),
         customData: jsonObjectGuard,
         profile: userProfileGuard,
+        requireMfaOnSignIn: boolean(),
       }).partial(),
       response: userProfileResponseGuard,
       status: [200, 404, 422],
@@ -248,6 +250,11 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         params: { userId },
         body,
       } = ctx.guard;
+
+      // Guard requireMfaOnSignIn field with dev feature flag
+      if (body.requireMfaOnSignIn !== undefined && !EnvSet.values.isDevFeaturesEnabled) {
+        throw new Error('requireMfaOnSignIn is not supported yet');
+      }
 
       await findUserById(userId);
       await checkIdentifierCollision(body, userId);

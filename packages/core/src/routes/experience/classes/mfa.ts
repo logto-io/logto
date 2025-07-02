@@ -288,7 +288,13 @@ export class Mfa {
       mfaVerifications,
       logtoConfig,
       id: userId,
+      requireMfaOnSignIn,
     } = await this.interactionContext.getIdentifiedUser();
+
+    // If user has explicitly disabled requireMfaOnSignIn, skip MFA fulfillment check
+    if (!requireMfaOnSignIn) {
+      return;
+    }
 
     const isMfaRequiredByUserOrganizations = await this.isMfaRequiredByUserOrganizations(
       mfaSettings,

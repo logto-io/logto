@@ -108,9 +108,19 @@ export class MfaValidator {
     return this.userEnabledMfaVerifications.length > 0;
   }
 
+  /**
+   * Check if MFA is required for this user during sign-in.
+   * MFA is required if:
+   * 1. User has requireMfaOnSignIn = true AND has enabled MFA factors
+   * 2. If requireMfaOnSignIn = false, MFA is never required regardless of MFA factors
+   */
+  get isMfaRequired() {
+    return this.user.requireMfaOnSignIn && this.isMfaEnabled;
+  }
+
   isMfaVerified(verificationRecords: VerificationRecord[]) {
-    // MFA validation is not enabled
-    if (!this.isMfaEnabled) {
+    // MFA validation is not required
+    if (!this.isMfaRequired) {
       return true;
     }
 

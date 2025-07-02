@@ -51,6 +51,10 @@
                   },
                   "customData": {
                     "description": "Custom data object to update for the given user ID. Note this will replace the entire custom data object.\n\nIf you want to perform a partial update, use the `PATCH /api/users/{userId}/custom-data` endpoint instead."
+                  },
+                  "requireMfaOnSignIn": {
+                    "description": "Whether to require multi-factor authentication (MFA) for this user during sign-in. When set to false, the user can sign in without MFA verification even if they have MFA factors configured. Defaults to true.",
+                    "type": "boolean"
                   }
                 }
               }

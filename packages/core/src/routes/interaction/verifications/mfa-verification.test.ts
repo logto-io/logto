@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import crypto from 'node:crypto';
 
 import { PasswordPolicyChecker } from '@logto/core-kit';
@@ -405,4 +406,105 @@ describe('verifyMfa', () => {
       )
     );
   });
+
+  describe('requireMfaOnSignIn behavior', () => {
+    it('should require MFA when requireMfaOnSignIn = true and user has MFA factors', async () => {
+      findUserById.mockResolvedValueOnce({
+        ...mockUserWithMfaVerifications,
+        requireMfaOnSignIn: true,
+      });
+      await expect(
+        verifyMfa(baseCtx, tenantContext, {
+          ...signInInteraction,
+          verifiedMfa: undefined,
+        })
+      ).rejects.toMatchError(
+        new RequestError(
+          {
+            code: 'session.mfa.require_mfa_verification',
+            status: 403,
+          },
+          {
+            availableFactors: [MfaFactor.TOTP],
+          }
+        )
+      );
+    });
+
+    it('should not require MFA when requireMfaOnSignIn = true but user has no MFA factors', async () => {
+      findUserById.mockResolvedValueOnce({
+        ...mockUser,
+        requireMfaOnSignIn: true,
+        mfaVerifications: [],
+      });
+      await expect(
+        verifyMfa(baseCtx, tenantContext, {
+          ...signInInteraction,
+          verifiedMfa: undefined,
+        })
+      ).resolves.not.toThrow();
+    });
+
+    it('should not require MFA when requireMfaOnSignIn = false even if user has MFA factors', async () => {
+      findUserById.mockResolvedValueOnce({
+        ...mockUserWithMfaVerifications,
+        requireMfaOnSignIn: false,
+      });
+      await expect(
+        verifyMfa(baseCtx, tenantContext, {
+          ...signInInteraction,
+          verifiedMfa: undefined,
+        })
+      ).resolves.not.toThrow();
+    });
+
+    it('should not require MFA when requireMfaOnSignIn = false and user has no MFA factors', async () => {
+      findUserById.mockResolvedValueOnce({
+        ...mockUser,
+        requireMfaOnSignIn: false,
+        mfaVerifications: [],
+      });
+      await expect(
+        verifyMfa(baseCtx, tenantContext, {
+          ...signInInteraction,
+          verifiedMfa: undefined,
+        })
+      ).resolves.not.toThrow();
+    });
+
+    it('should pass MFA verification when requireMfaOnSignIn = true, user has MFA factors, and verifiedMfa is provided', async () => {
+      findUserById.mockResolvedValueOnce({
+        ...mockUserWithMfaVerifications,
+        requireMfaOnSignIn: true,
+      });
+      await expect(
+        verifyMfa(baseCtx, tenantContext, {
+          ...signInInteraction,
+          verifiedMfa: {
+            type: MfaFactor.TOTP,
+            id: 'id',
+          },
+        })
+      ).resolves.not.toThrow();
+    });
+
+    it('should work with multiple MFA factors and requireMfaOnSignIn = false', async () => {
+      findUserById.mockResolvedValueOnce({
+        ...mockUser,
+        requireMfaOnSignIn: false,
+        mfaVerifications: [
+          mockUserTotpMfaVerification,
+          mockUserWebAuthnMfaVerification,
+          mockUserBackupCodeMfaVerification,
+        ],
+      });
+      await expect(
+        verifyMfa(allFactorsEnabledCtx, tenantContext, {
+          ...signInInteraction,
+          verifiedMfa: undefined,
+        })
+      ).resolves.not.toThrow();
+    });
+  });
 });
+/* eslint-enable max-lines */

@@ -66,7 +66,8 @@ export const verifyMfa = async (
   } = ctx;
   const { accountId, verifiedMfa } = interaction;
 
-  const { mfaVerifications } = await tenant.queries.users.findUserById(accountId);
+  const user = await tenant.queries.users.findUserById(accountId);
+  const { mfaVerifications, requireMfaOnSignIn } = user;
   const availableUserVerifications = mfaVerifications
     .filter((verification) => {
       // Only allow MFA that is configured in sign-in experience
@@ -105,7 +106,12 @@ export const verifyMfa = async (
       );
     });
 
-  if (availableUserVerifications.length > 0) {
+  // MFA is required if:
+  // 1. User has requireMfaOnSignIn = true AND has enabled MFA factors
+  // 2. If requireMfaOnSignIn = false, MFA is never required regardless of MFA factors
+  const isMfaRequired = requireMfaOnSignIn && availableUserVerifications.length > 0;
+
+  if (isMfaRequired) {
     assertThat(
       verifiedMfa,
       new RequestError(
