@@ -1,7 +1,9 @@
 import { type SocialUserInfo, socialUserInfoGuard, type ToZodObject } from '@logto/connector-kit';
 import {
   type CreateUser,
+  encryptedTokenSetGuard,
   InteractionEvent,
+  secretSocialConnectorRelationPayloadGuard,
   type User,
   Users,
   UserSsoIdentities,
@@ -22,6 +24,7 @@ import {
   type VerificationRecordMap,
   verificationRecordDataGuard,
 } from './classes/verifications/index.js';
+import { type SocialConnectorTokenSetSecret } from './classes/verifications/social-verification.js';
 import { type WithExperienceInteractionHooksContext } from './middleware/koa-experience-interaction-hooks.js';
 import { type WithExperienceInteractionContext } from './middleware/koa-experience-interaction.js';
 
@@ -42,6 +45,10 @@ export type InteractionProfile = {
   jitOrganizationIds?: string[];
   // Syncing the existing enterprise SSO identity detail
   syncedEnterpriseSsoIdentity?: Pick<UserSsoIdentity, 'identityId' | 'issuer' | 'detail'>;
+  /**
+   * Store encrypted token set from a social verification record.  If present, Logto will save this token set in the Secret Vault for future use by the user.
+   */
+  socialConnectorTokenSetSecret?: SocialConnectorTokenSetSecret;
 } & Pick<
   CreateUser,
   | 'avatar'
@@ -86,6 +93,12 @@ const interactionProfileGuard = Users.createGuard
       })
       .optional(),
     jitOrganizationIds: z.array(z.string()).optional(),
+    socialConnectorTokenSetSecret: z
+      .object({
+        encryptedTokenSet: encryptedTokenSetGuard,
+        socialConnectorRelationPayload: secretSocialConnectorRelationPayloadGuard,
+      })
+      .optional(),
   }) satisfies ToZodObject<InteractionProfile>;
 
 /**

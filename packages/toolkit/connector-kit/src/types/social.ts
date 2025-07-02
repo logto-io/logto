@@ -91,9 +91,50 @@ export type GetSession = () => Promise<ConnectorSession>;
 
 export type SetSession = (storage: ConnectorSession) => Promise<void>;
 
+/**
+ * Generic response type for OAuth 2.0 and OIDC based social connectors' token endpoint.
+ *
+ * @remarks
+ * Some social connector may not follow the exact format, need to be standardized at the connector level.
+ */
+export type TokenResponse = {
+  /** Only applicable to OIDC. */
+  id_token?: string;
+  access_token?: string;
+  refresh_token?: string;
+  expires_in?: number;
+  scope?: string;
+  token_type?: string;
+};
+
+export const tokenResponseGuard = z.object({
+  id_token: z.string().optional(),
+  access_token: z.string().optional(),
+  refresh_token: z.string().optional(),
+  expires_in: z.number().optional(),
+  scope: z.string().optional(),
+  token_type: z.string().optional(),
+}) satisfies ToZodObject<TokenResponse>;
+
+export type GetTokenResponseAndUserInfo = (
+  data: unknown,
+  getSession: GetSession
+) => Promise<{
+  tokenResponse?: TokenResponse;
+  userInfo: SocialUserInfo;
+}>;
+
 export type SocialConnector = BaseConnector<ConnectorType.Social> & {
   getAuthorizationUri: GetAuthorizationUri;
   getUserInfo: GetUserInfo;
+  /**
+   * A function that retrieves the token response and user info from the social provider.
+   *
+   * @remarks
+   * If the social connector has token storage enabled, use this function to retrieve the token response,
+   * otherwise, use `getUserInfo` to retrieve the user info directly.
+   */
+  getTokenResponseAndUserInfo?: GetTokenResponseAndUserInfo;
   validateSamlAssertion?: ValidateSamlAssertion;
 };
 

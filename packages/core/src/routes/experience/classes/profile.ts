@@ -101,9 +101,14 @@ export class Profile {
     if (verificationRecord.type === VerificationType.Social) {
       const user = await this.safeGetIdentifiedUser();
       const isNewUserIdentity = !user;
+
       // Sync the email and phone to the user profile only for new user identity
       const syncedProfile = await verificationRecord.toSyncedProfile(isNewUserIdentity);
       this.unsafePrepend(syncedProfile);
+
+      // Sync the social connector token set secret to the user profile
+      const socialConnectorTokenSetSecret = await verificationRecord.getTokenSetSecret();
+      this.unsafePrepend({ socialConnectorTokenSetSecret });
     }
   }
 
@@ -193,6 +198,11 @@ export class Profile {
     );
   }
 
+  /**
+   * Set profile without validation.
+   * - skip profile uniqueness check.
+   * - skip profile existence check in the current user account.
+   */
   unsafeSet(profile: InteractionProfile) {
     this.#data = {
       ...this.#data,

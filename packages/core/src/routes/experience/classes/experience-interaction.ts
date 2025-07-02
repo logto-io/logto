@@ -407,6 +407,9 @@ export default class ExperienceInteraction {
   public async submit() {
     const {
       queries: { users: userQueries, userSsoIdentities: userSsoIdentityQueries },
+      libraries: {
+        socials: { upsertSocialTokenSetSecret },
+      },
     } = this.tenant;
 
     await this.guardCaptcha();
@@ -460,6 +463,7 @@ export default class ExperienceInteraction {
       enterpriseSsoIdentity,
       syncedEnterpriseSsoIdentity,
       jitOrganizationIds,
+      socialConnectorTokenSetSecret,
       ...rest
     } = this.profile.data;
     const { mfaSkipped, mfaVerifications } = this.mfa.toUserMfaVerifications();
@@ -505,6 +509,11 @@ export default class ExperienceInteraction {
 
     if (enterpriseSsoIdentity) {
       await this.provisionLibrary.addSsoIdentityToUser(user.id, enterpriseSsoIdentity);
+    }
+
+    // Sync social token set secret
+    if (socialConnectorTokenSetSecret) {
+      await upsertSocialTokenSetSecret(user.id, socialConnectorTokenSetSecret);
     }
 
     // Provision organizations for one-time token that carries organization IDs in the context.
