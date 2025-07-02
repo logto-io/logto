@@ -115,7 +115,7 @@ describe('Fulfill User Profiles', () => {
     });
   });
 
-  it('should update custom profile fields successfully', async () => {
+  it('should update extra profile fields successfully', async () => {
     const { username, password } = generateNewUserProfile({ username: true, password: true });
     const client = await initExperienceClient({
       interactionEvent: InteractionEvent.Register,
@@ -123,7 +123,7 @@ describe('Fulfill User Profiles', () => {
     await client.updateProfile({ type: SignInIdentifier.Username, value: username });
     await client.updateProfile({ type: 'password', value: password });
     await client.updateProfile({
-      type: 'profile',
+      type: 'extraProfile',
       values: {
         name: 'John Doe',
         avatar: 'https://example.com/avatar.jpg',

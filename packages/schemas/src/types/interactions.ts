@@ -202,7 +202,7 @@ export const updateProfileApiPayloadGuard = z.discriminatedUnion('type', [
     verificationId: z.string(),
   }),
   z.object({
-    type: z.literal('profile'),
+    type: z.literal('extraProfile'),
     values: z.record(z.unknown()),
   }),
 ]);
