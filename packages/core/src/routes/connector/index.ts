@@ -319,6 +319,7 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
           config: conditional(config && (cleanDeep(config) as JsonObject)),
           metadata: conditional(metadata && cleanDeep(metadata)),
           syncProfile,
+          enableTokenStorage,
         },
         where: { id },
         jsonbMode: 'replace',
