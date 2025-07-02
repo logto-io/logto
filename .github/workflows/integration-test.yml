@@ -41,6 +41,7 @@ jobs:
     env:
       INTEGRATION_TEST: true
       DEV_FEATURES_ENABLED: ${{ matrix.dev-features-enabled }}
+      SECRET_VAULT_KEK: ${{ secrets.SECRET_VAULT_KEK }}
       DB_URL: postgres://postgres:postgres@localhost:5432/postgres
 
     steps:
