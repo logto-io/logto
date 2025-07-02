@@ -45,12 +45,16 @@ export const deleteConnectorById = async (id: string, api: KyInstance = authedAd
 
 export const updateConnectorConfig = async (
   id: string,
-  config: Record<string, unknown>,
-  metadata?: Record<string, unknown>
+  body: {
+    config?: Record<string, unknown>;
+    metadata?: Record<string, unknown>;
+    enableTokenStorage?: boolean;
+    syncProfile?: boolean;
+  }
 ) =>
   authedAdminApi
     .patch(`connectors/${id}`, {
-      json: { config, metadata },
+      json: body,
     })
     .json<ConnectorResponse>();
 
