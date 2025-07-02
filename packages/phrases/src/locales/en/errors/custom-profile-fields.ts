@@ -8,6 +8,8 @@ const custom_profile_fields = {
   name_exists: 'Field already exists with the given name.',
   conflicted_sie_order: 'Conflicted field order value for Sign-in Experience.',
   invalid_name: 'Invalid field name, only letters or numbers are allowed, case sensitive.',
+  name_conflict_sign_in_identifier:
+    'Invalid field name. {{name}} is a reserved sign-in identifier.',
 };
 
 export default Object.freeze(custom_profile_fields);

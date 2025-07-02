@@ -1,7 +1,7 @@
 import { CustomProfileFieldType, type FullnameProfileField } from '@logto/schemas';
 
 import {
-  primaryEmailData,
+  nameData,
   fullnameData,
   birthDateData,
   genderData,
@@ -23,10 +23,10 @@ const { describe, it } = devFeatureTest;
 
 describe('custom profile fields API', () => {
   it('should create custom profile field and find it by name', async () => {
-    const customProfileField = await createCustomProfileField(primaryEmailData);
+    const customProfileField = await createCustomProfileField(nameData);
 
     expect(customProfileField).toMatchObject({
-      ...primaryEmailData,
+      ...nameData,
       sieOrder: 1,
     });
 
@@ -66,13 +66,13 @@ describe('custom profile fields API', () => {
   });
 
   it('should fail to create if field name is conflicted', async () => {
-    const emailField = await createCustomProfileField(primaryEmailData);
-    await expectRejects(createCustomProfileField(primaryEmailData), {
+    const nameField = await createCustomProfileField(nameData);
+    await expectRejects(createCustomProfileField(nameData), {
       code: 'custom_profile_fields.name_exists',
       status: 422,
     });
 
-    void deleteCustomProfileFieldByName(emailField.name);
+    void deleteCustomProfileFieldByName(nameField.name);
   });
 
   it('should fail to create if field name is invalid format', async () => {
@@ -111,8 +111,22 @@ describe('custom profile fields API', () => {
     );
   });
 
+  it('should fail to create if field name is conflict with sign-in identifier', async () => {
+    await expectRejects(
+      createCustomProfileField({
+        name: 'primaryEmail',
+        type: CustomProfileFieldType.Text,
+        label: 'Email address',
+      }),
+      {
+        code: 'custom_profile_fields.name_conflict_sign_in_identifier',
+        status: 400,
+      }
+    );
+  });
+
   it('should update custom profile field', async () => {
-    const emailField = await createCustomProfileField(primaryEmailData);
+    const nameField = await createCustomProfileField(nameData);
     const fullnameField = await createCustomProfileField(fullnameData);
 
     expect(fullnameField).toMatchObject({
@@ -143,15 +157,15 @@ describe('custom profile fields API', () => {
       ...dataToUpdate,
     });
 
-    void deleteCustomProfileFieldByName(emailField.name);
+    void deleteCustomProfileFieldByName(nameField.name);
     void deleteCustomProfileFieldByName(fullnameField.name);
   });
 
   it('should not be able to update the name, and sieOrder', async () => {
-    const emailField = await createCustomProfileField(primaryEmailData);
+    const nameField = await createCustomProfileField(nameData);
 
-    const updatedField = await updateCustomProfileFieldByName(primaryEmailData.name, {
-      ...primaryEmailData,
+    const updatedField = await updateCustomProfileFieldByName(nameField.name, {
+      ...nameData,
       // @ts-expect-error Invalid update name and type
       name: 'newName',
       sieOrder: 5,
@@ -160,15 +174,15 @@ describe('custom profile fields API', () => {
 
     // Only label is updated, name and sieOrder are not changed
     expect(updatedField).toMatchObject({
-      ...emailField,
+      ...nameField,
       label: 'New label',
     });
 
-    void deleteCustomProfileFieldByName(emailField.name);
+    void deleteCustomProfileFieldByName(nameField.name);
   });
 
   it('should fail to update custom profile field by non-existent name', async () => {
-    await expectRejects(updateCustomProfileFieldByName('nonExistName', primaryEmailData), {
+    await expectRejects(updateCustomProfileFieldByName('nonExistName', nameData), {
       code: 'entity.not_exists',
       status: 404,
     });

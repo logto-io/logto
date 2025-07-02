@@ -9,6 +9,8 @@ const custom_profile_fields = {
   conflicted_sie_order: 'サインイン体験のフィールド順序の値が重複しています。',
   invalid_name:
     'フィールド名が無効です。文字または数字のみが許可され、大文字小文字が区別されます。',
+  name_conflict_sign_in_identifier:
+    '無効なフィールド名です。{{name}} は予約されたサインイン識別子です。',
 };
 
 export default Object.freeze(custom_profile_fields);

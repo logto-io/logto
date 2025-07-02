@@ -9,13 +9,13 @@ import {
   type CheckboxProfileField,
 } from '@logto/schemas';
 
-export const primaryEmailData = {
-  name: `primaryEmail`,
+export const nameData = {
+  name: `name`,
   type: CustomProfileFieldType.Text,
-  label: 'Email address',
+  label: 'Name',
   required: true,
   config: {
-    placeholder: 'foo@bar.com',
+    placeholder: 'John Doe',
     minLength: 5,
     maxLength: 50,
   },

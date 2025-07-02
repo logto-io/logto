@@ -9,6 +9,8 @@ const custom_profile_fields = {
   conflicted_sie_order: "Valore dell'ordine del campo in conflitto per Sign-in Experience.",
   invalid_name:
     'Nome del campo non valido, sono consentite solo lettere o numeri, sensibili alle maiuscole.',
+  name_conflict_sign_in_identifier:
+    "Nome del campo non valido. {{name}} è un identificatore riservato per l'accesso.",
 };
 
 export default Object.freeze(custom_profile_fields);
