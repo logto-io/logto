@@ -87,11 +87,11 @@ export default function googleOneTapRoutes<T extends AnonymousRouter>(
     }
   );
 
-  router.post(
+  router.get(
     '/google-one-tap/verify',
-    koaLogtoAnonymousMethodsCors('POST,OPTIONS'),
+    koaLogtoAnonymousMethodsCors('GET'),
     koaGuard({
-      body: z.object({
+      query: z.object({
         idToken: z.string(),
       }),
       response: z.object({
@@ -102,7 +102,7 @@ export default function googleOneTapRoutes<T extends AnonymousRouter>(
       status: [200, 204, 400, 403, 404],
     }),
     async (ctx, next) => {
-      const { idToken } = ctx.guard.body;
+      const { idToken } = ctx.guard.query;
 
       const {
         config: { clientId },

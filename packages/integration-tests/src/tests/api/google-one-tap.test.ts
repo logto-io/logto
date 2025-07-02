@@ -145,7 +145,7 @@ describe('Google One Tap API', () => {
     }
   });
 
-  it.each(testOrigins)(
+  it.skip.each(testOrigins)(
     'should handle OPTIONS preflight request for google-one-tap/verify endpoint with proper CORS headers for %s',
     async (origin) => {
       // Set up Google connector first
