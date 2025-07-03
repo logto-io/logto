@@ -5,8 +5,9 @@ import {
   MissingProfile,
   type UserProfile,
   userProfileGuard,
-  userProfileKeys,
-  Users,
+  signInIdentifierKeyGuard,
+  reservedCustomDataKeyGuard,
+  builtInCustomProfileFieldKeys,
 } from '@logto/schemas';
 import { z } from 'zod';
 
@@ -207,28 +208,30 @@ export class ProfileValidator {
     profile: UserProfile;
     customData: JsonObject;
   } {
-    const forbiddenKeysGuard = Users.createGuard
-      .pick({ username: true, primaryEmail: true, primaryPhone: true })
-      .extend({ email: z.string().nullable().optional(), phone: z.string().nullable().optional() });
+    const conflictedSignInIdentifierKeys = Object.keys(signInIdentifierKeyGuard.parse(values));
+    assertThat(
+      conflictedSignInIdentifierKeys.length === 0,
+      new RequestError({
+        code: 'custom_profile_fields.name_conflict_sign_in_identifier',
+        name: conflictedSignInIdentifierKeys.join(', '),
+      })
+    );
 
-    const forbiddenFields = forbiddenKeysGuard.parse(values);
-    assertThat(Object.keys(forbiddenFields).length === 0, 'request.invalid_input');
+    const conflictedCustomDataKeys = Object.keys(reservedCustomDataKeyGuard.parse(values));
+    assertThat(
+      conflictedCustomDataKeys.length === 0,
+      new RequestError({
+        code: 'custom_profile_fields.name_conflict_custom_data',
+        name: conflictedCustomDataKeys.join(', '),
+      })
+    );
 
     const { name, avatar } = z.object({ name: z.string(), avatar: z.string() }).parse(values);
     const profile = userProfileGuard.parse(values);
 
-    const profileKeys = new Set<string>([
-      ...Users.createGuard
-        .pick({
-          avatar: true,
-          name: true,
-        })
-        .keyof().options,
-      ...userProfileKeys,
-    ]);
-
+    const builtInProfileKeys = new Set<string>(builtInCustomProfileFieldKeys);
     const customData = jsonObjectGuard.parse(
-      Object.fromEntries(Object.entries(values).filter(([key]) => !profileKeys.has(key)))
+      Object.fromEntries(Object.entries(values).filter(([key]) => !builtInProfileKeys.has(key)))
     );
 
     return { name, avatar, profile, customData };

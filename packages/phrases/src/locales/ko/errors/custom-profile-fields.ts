@@ -9,7 +9,9 @@ const custom_profile_fields = {
   conflicted_sie_order: 'Sign-in Experience 용 필드 순서 값이 충돌합니다.',
   invalid_name: '필드 이름이 올바르지 않습니다. 대소문자를 구분하며, 문자 또는 숫자만 허용됩니다.',
   name_conflict_sign_in_identifier:
-    '필드 이름이 올바르지 않습니다. {{name}} 은(는) 예약된 로그인 식별자입니다.',
+    '필드 이름이 올바르지 않습니다. {{name}} 는 예약된 로그인 식별자 키입니다.',
+  name_conflict_custom_data:
+    '필드 이름이 올바르지 않습니다. {{name}} 는 예약된 사용자 정의 데이터 키입니다.',
 };
 
 export default Object.freeze(custom_profile_fields);

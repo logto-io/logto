@@ -9,7 +9,8 @@ const custom_profile_fields = {
   conflicted_sie_order: 'Conflicted field order value for Sign-in Experience.',
   invalid_name: 'Invalid field name, only letters or numbers are allowed, case sensitive.',
   name_conflict_sign_in_identifier:
-    'Invalid field name. {{name}} is a reserved sign-in identifier.',
+    'Invalid field name. {{name}} is a reserved sign-in identifier key.',
+  name_conflict_custom_data: 'Invalid field name. {{name}} is a reserved custom data key.',
 };
 
 export default Object.freeze(custom_profile_fields);

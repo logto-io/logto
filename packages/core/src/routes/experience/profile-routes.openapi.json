@@ -11,10 +11,13 @@
               "schema": {
                 "properties": {
                   "type": {
-                    "description": "The type of profile data to add. `email`, `phone`, `username`, `password`, etc."
+                    "description": "The type of profile data to add. Available options: `email`, `phone`, `username`, `password`, `social`, or `extraProfile`."
                   },
                   "value": {
                     "description": "The plain text value of the profile data. Only supported for profile data types that does not require verification, such as `username` and `password`."
+                  },
+                  "values": {
+                    "description": "The extra profile data to add. Only supported for `extraProfile` type. The data will be validated and split into standard user profile attributes and custom user profile attributes. The standard user profile attributes will be set to the user profile, whereas the custom user profile attributes will be set to the user custom data."
                   },
                   "verificationId": {
                     "description": "The ID of the verification record used to verify the profile data. Required for profile data types that require verification, such as `email`, `phone` and `social`."

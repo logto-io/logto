@@ -104,7 +104,7 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
           break;
         }
         /**
-         * Handle non-identifier user profile attributes. The submitted data will be validated and splitted into
+         * Handle non-identifier user profile attributes. The submitted data will be validated and split into
          * standard user profile attributes and custom user profile attributes. The standard user profile attributes
          * will be set to the user profile, and the custom user profile attributes will be set to the user custom data.
          */
