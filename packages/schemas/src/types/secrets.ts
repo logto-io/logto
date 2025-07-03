@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 import { SecretSocialConnectorRelations } from '../db-entries/secret-social-connector-relation.js';
 import { type CreateSecret, Secrets } from '../db-entries/secret.js';
+import { SecretType } from '../foundations/index.js';
 
 export const encryptedSecretGuard = Secrets.guard.pick({
   encryptedDek: true,
@@ -48,4 +49,31 @@ export const secretSocialConnectorRelationPayloadGuard =
 
 export type SecretSocialConnectorRelationPayload = z.infer<
   typeof secretSocialConnectorRelationPayloadGuard
+>;
+
+export const socialTokenSetSecretGuard = Secrets.guard.extend({
+  type: z.literal(SecretType.FederatedTokenSet),
+  metadata: socialConnectorTokenSetMetadataGuard,
+  connectorId: z.string(),
+  identityId: z.string(),
+  target: z.string(),
+});
+
+/**
+ * Social token set secret type
+ * - Secret type is `FederatedTokenSet`
+ * - Metadata is the social connector token set metadata
+ * - Joined with the social connector relation
+ */
+export type SocialTokenSetSecret = z.infer<typeof socialTokenSetSecretGuard>;
+
+export const desensitizedSocialTokenSetSecretGuard = socialTokenSetSecretGuard.omit({
+  encryptedDek: true,
+  iv: true,
+  authTag: true,
+  ciphertext: true,
+});
+
+export type DesensitizedSocialTokenSetSecret = z.infer<
+  typeof desensitizedSocialTokenSetSecretGuard
 >;
