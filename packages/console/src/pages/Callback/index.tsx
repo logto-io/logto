@@ -3,8 +3,8 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import AppLoading from '@/components/AppLoading';
-import { consumeSavedRedirect } from '@/utils/storage';
 import { isDevFeaturesEnabled } from '@/consts/env';
+import { consumeSavedRedirect } from '@/utils/storage';
 
 /** The global callback page for all sign-in redirects from Logto main flow. */
 function Callback() {

@@ -17,25 +17,15 @@ function OneTimeTokenLanding() {
   const navigate = useNavigate();
   const { isAuthenticated, signIn } = useLogto();
   const [searchParams] = useSearchParams();
-  const { navigateTenant, currentTenantId } = useContext(TenantsContext);
+  const { navigateTenant } = useContext(TenantsContext);
   const redirectUri = useRedirectUri();
 
+  const oneTimeToken = searchParams.get(OneTimeTokenLandingSearchParams.OneTimeToken);
+  const email = searchParams.get(OneTimeTokenLandingSearchParams.Email);
+
   useEffect(() => {
-    if (isAuthenticated) {
-      // If we have a current tenant, navigate to it
-      if (currentTenantId) {
-        navigateTenant(currentTenantId);
-      } else {
-        // Otherwise navigate to root, which will handle tenant selection
-        navigate('/', { replace: true });
-      }
-      return;
-    }
-
-    const oneTimeToken = searchParams.get(OneTimeTokenLandingSearchParams.OneTimeToken);
-    const email = searchParams.get(OneTimeTokenLandingSearchParams.Email);
-
-    if (!oneTimeToken || !email) {
+    if (isAuthenticated || !oneTimeToken || !email) {
+      // Navigate to root, which will handle tenant selection
       navigate('/', { replace: true });
       return;
     }
@@ -52,7 +42,7 @@ function OneTimeTokenLanding() {
         [ExtraParamsKey.LoginHint]: email,
       },
     });
-  }, [isAuthenticated, navigate, currentTenantId, navigateTenant, searchParams, signIn, redirectUri]);
+  }, [isAuthenticated, navigate, navigateTenant, signIn, redirectUri, oneTimeToken, email]);
 
   return <AppLoading />;
 }
