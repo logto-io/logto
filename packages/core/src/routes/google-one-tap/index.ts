@@ -14,6 +14,7 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
 
 import koaGuard from '../../middleware/koa-guard.js';
+import type Queries from '../../tenants/Queries.js';
 import type { AnonymousRouter } from '../types.js';
 
 const consoleLog = new ConsoleLog(chalk.magenta('google-one-tap'));
@@ -46,6 +47,78 @@ const getGoogleOneTapConnector = async (getLogtoConnectors: () => Promise<LogtoC
   }
 
   return { connector: googleOneTapConnector, config: configResult.data };
+};
+
+/**
+ * Verify Google One Tap ID token and create one-time token
+ */
+const verifyGoogleOneTapToken = async (
+  idToken: string,
+  getLogtoConnectors: () => Promise<LogtoConnector[]>,
+  findUserByIdentity: Queries['users']['findUserByIdentity'],
+  insertOneTimeToken: Queries['oneTimeTokens']['insertOneTimeToken'],
+  updateExpiredOneTimeTokensStatusByEmail: Queries['oneTimeTokens']['updateExpiredOneTimeTokensStatusByEmail']
+) => {
+  const {
+    config: { clientId },
+  } = await getGoogleOneTapConnector(getLogtoConnectors);
+
+  // Verify Google ID Token
+  const { payload } = await tryThat(
+    async () =>
+      jwtVerify(idToken, createRemoteJWKSet(new URL(GoogleConnector.jwksUri)), {
+        issuer: GoogleConnector.issuer,
+        audience: clientId,
+        clockTolerance: 10,
+      }),
+    (error) => {
+      throw new RequestError({
+        code: 'session.google_one_tap.invalid_id_token',
+        status: 400,
+        details: error,
+      });
+    }
+  );
+
+  const { sub: googleUserId, email, email_verified } = payload;
+
+  if (!email || !email_verified) {
+    throw new RequestError({
+      code: 'session.google_one_tap.unverified_email',
+      status: 400,
+    });
+  }
+
+  // Check if user exists with this Google identity
+  const existingUser = await findUserByIdentity(GoogleConnector.target, String(googleUserId));
+  const isNewUser = !existingUser;
+
+  // Create one-time token with appropriate context
+  const expiresAt = addSeconds(new Date(), defaultExpiresTime);
+  const oneTimeToken = await insertOneTimeToken({
+    id: generateStandardId(),
+    email: String(email),
+    token: generateStandardSecret(),
+    expiresAt: expiresAt.getTime(),
+    context: {
+      // Add jitOrganizationIds if this is for registration
+      ...(isNewUser && { jitOrganizationIds: [] }),
+    },
+  });
+
+  // Clean up any expired tokens for this email
+  await trySafe(
+    async () => updateExpiredOneTimeTokensStatusByEmail(String(email)),
+    (error) => {
+      consoleLog.error('Failed to clean up expired tokens:', error);
+    }
+  );
+
+  return {
+    oneTimeToken: oneTimeToken.token,
+    isNewUser,
+    email: String(email),
+  };
 };
 
 export default function googleOneTapRoutes<T extends AnonymousRouter>(
@@ -104,67 +177,48 @@ export default function googleOneTapRoutes<T extends AnonymousRouter>(
     async (ctx, next) => {
       const { idToken } = ctx.guard.query;
 
-      const {
-        config: { clientId },
-      } = await getGoogleOneTapConnector(getLogtoConnectors);
-
-      // Verify Google ID Token
-      const { payload } = await tryThat(
-        async () =>
-          jwtVerify(idToken, createRemoteJWKSet(new URL(GoogleConnector.jwksUri)), {
-            issuer: GoogleConnector.issuer,
-            audience: clientId,
-            clockTolerance: 10,
-          }),
-        (error) => {
-          throw new RequestError({
-            code: 'session.google_one_tap.invalid_id_token',
-            status: 400,
-            details: error,
-          });
-        }
-      );
-
-      const { sub: googleUserId, email, email_verified } = payload;
-
-      if (!email || !email_verified) {
-        throw new RequestError({
-          code: 'session.google_one_tap.unverified_email',
-          status: 400,
-        });
-      }
-
-      // Check if user exists with this Google identity
-      const existingUser = await findUserByIdentity(GoogleConnector.target, String(googleUserId));
-      const isNewUser = !existingUser;
-
-      // Create one-time token with appropriate context
-      const expiresAt = addSeconds(new Date(), defaultExpiresTime);
-      const oneTimeToken = await insertOneTimeToken({
-        id: generateStandardId(),
-        email: String(email),
-        token: generateStandardSecret(),
-        expiresAt: expiresAt.getTime(),
-        context: {
-          // Add jitOrganizationIds if this is for registration
-          ...(isNewUser && { jitOrganizationIds: [] }),
-        },
-      });
-
-      // Clean up any expired tokens for this email
-      await trySafe(
-        async () => updateExpiredOneTimeTokensStatusByEmail(String(email)),
-        (error) => {
-          consoleLog.error('Failed to clean up expired tokens:', error);
-        }
+      const result = await verifyGoogleOneTapToken(
+        idToken,
+        getLogtoConnectors,
+        findUserByIdentity,
+        insertOneTimeToken,
+        updateExpiredOneTimeTokensStatusByEmail
       );
 
       ctx.status = 200;
-      ctx.body = {
-        oneTimeToken: oneTimeToken.token,
-        isNewUser,
-        email: String(email),
-      };
+      ctx.body = result;
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/google-one-tap/verify',
+    koaLogtoAnonymousMethodsCors('POST,OPTIONS'),
+    koaGuard({
+      body: z.object({
+        idToken: z.string(),
+      }),
+      response: z.object({
+        oneTimeToken: z.string(),
+        isNewUser: z.boolean(),
+        email: z.string(),
+      }),
+      status: [200, 204, 400, 403, 404],
+    }),
+    async (ctx, next) => {
+      const { idToken } = ctx.guard.body;
+
+      const result = await verifyGoogleOneTapToken(
+        idToken,
+        getLogtoConnectors,
+        findUserByIdentity,
+        insertOneTimeToken,
+        updateExpiredOneTimeTokensStatusByEmail
+      );
+
+      ctx.status = 200;
+      ctx.body = result;
 
       return next();
     }

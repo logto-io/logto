@@ -93,6 +93,40 @@
             "description": "Google connector not found"
           }
         }
+      },
+      "post": {
+        "summary": "Verify Google One Tap ID Token and generate magic link",
+        "description": "Verify the Google One Tap ID Token, check if the user exists, and generate a magic link for authentication. If the user exists, generates a login magic link; otherwise, generates a registration magic link.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "idToken": {
+                    "description": "The Google ID Token from Google One Tap"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The ID Token was verified successfully and one-time token was generated."
+          },
+          "204": {
+            "description": "No content for OPTIONS preflight requests"
+          },
+          "400": {
+            "description": "Invalid ID Token, unverified email, or other validation errors"
+          },
+          "403": {
+            "description": "Access forbidden, either due to CORS restrictions or feature not enabled"
+          },
+          "404": {
+            "description": "Google connector not found"
+          }
+        }
       }
     }
   }

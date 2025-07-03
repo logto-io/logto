@@ -29,7 +29,8 @@ type RouteDictionary = Record<`${OpenAPIV3.HttpMethods} ${string}`, string>;
 
 const devFeatureCustomRoutes: RouteDictionary = Object.freeze({
   'get /google-one-tap/config': 'GetGoogleOneTapConfig',
-  'get /google-one-tap/verify': 'VerifyGoogleOneTapToken',
+  'get /google-one-tap/verify': 'GetGoogleOneTapVerify',
+  'post /google-one-tap/verify': 'VerifyGoogleOneTapToken',
   'get /custom-profile-fields/:name': 'GetCustomProfileFieldByName',
   'put /custom-profile-fields/:name': 'UpdateCustomProfileFieldByName',
   'delete /custom-profile-fields/:name': 'DeleteCustomProfileFieldByName',
