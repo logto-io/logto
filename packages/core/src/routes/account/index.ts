@@ -4,6 +4,7 @@ import {
   userProfileGuard,
   AccountCenterControlValue,
   SignInIdentifier,
+  jsonObjectGuard,
 } from '@logto/schemas';
 import { z } from 'zod';
 
@@ -57,6 +58,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
         name: z.string().nullable().optional(),
         avatar: z.string().url().nullable().optional(),
         username: z.string().regex(usernameRegEx).nullable().optional(),
+        customData: jsonObjectGuard.optional(),
       }),
       response: userProfileResponseGuard.partial(),
       status: [200, 400, 422],
@@ -64,7 +66,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
     async (ctx, next) => {
       const { id: userId, scopes } = ctx.auth;
       const { body } = ctx.guard;
-      const { name, avatar, username } = body;
+      const { name, avatar, username, customData } = body;
       const { fields } = ctx.accountCenter;
 
       assertThat(
@@ -79,7 +81,14 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
         username === undefined || fields.username === AccountCenterControlValue.Edit,
         'account_center.field_not_editable'
       );
+      assertThat(
+        customData === undefined || fields.customData === AccountCenterControlValue.Edit,
+        'account_center.field_not_editable'
+      );
       assertThat(scopes.has(UserScope.Profile), 'auth.unauthorized');
+      if (customData !== undefined) {
+        assertThat(scopes.has(UserScope.CustomData), 'auth.unauthorized');
+      }
 
       if (username !== undefined) {
         if (username === null) {
@@ -93,11 +102,16 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
         }
       }
 
-      const updatedUser = await updateUserById(userId, {
-        name,
-        avatar,
-        username,
-      });
+      const updatedUser = await updateUserById(
+        userId,
+        {
+          name,
+          avatar,
+          username,
+          ...(customData !== undefined && { customData }),
+        },
+        'replace'
+      );
 
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
 
