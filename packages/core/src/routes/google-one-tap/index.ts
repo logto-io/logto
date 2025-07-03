@@ -9,7 +9,7 @@ import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { koaLogtoAnonymousOriginCors } from '#src/middleware/koa-logto-anonymous-cors.js';
+// Import { koaLogtoAnonymousOriginCors } from '#src/middleware/koa-logto-anonymous-cors.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
 
@@ -139,7 +139,7 @@ export default function googleOneTapRoutes<T extends AnonymousRouter>(
 
   router.get(
     '/google-one-tap/config',
-    koaLogtoAnonymousOriginCors('GET'),
+    // KoaLogtoAnonymousOriginCors('GET'),
     koaGuard({
       status: [200, 204, 400, 403, 404],
       response: GoogleConnector.configGuard
@@ -162,7 +162,7 @@ export default function googleOneTapRoutes<T extends AnonymousRouter>(
 
   router.get(
     '/google-one-tap/verify',
-    koaLogtoAnonymousOriginCors('GET'),
+    // KoaLogtoAnonymousOriginCors('GET'),
     koaGuard({
       query: z.object({
         idToken: z.string(),
@@ -194,7 +194,7 @@ export default function googleOneTapRoutes<T extends AnonymousRouter>(
 
   router.post(
     '/google-one-tap/verify',
-    koaLogtoAnonymousOriginCors('POST,OPTIONS'),
+    // KoaLogtoAnonymousOriginCors('POST,OPTIONS'),
     koaGuard({
       body: z.object({
         idToken: z.string(),
