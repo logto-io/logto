@@ -478,6 +478,41 @@
           }
         }
       }
+    },
+    "/api/my-account/mfa-verifications/totp/verify": {
+      "post": {
+        "operationId": "VerifyTotpMfa",
+        "summary": "Verify TOTP MFA code",
+        "tags": ["Dev feature"],
+        "description": "Verify a TOTP code using the user's existing TOTP MFA factor. This endpoint is used to authenticate the user with their configured TOTP device.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "code": {
+                    "description": "The 6-digit TOTP code from the user's authenticator app."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The TOTP code was verified successfully."
+          },
+          "400": {
+            "description": "The request body is invalid."
+          },
+          "401": {
+            "description": "Permission denied, insufficient scope or MFA field not enabled."
+          },
+          "422": {
+            "description": "The TOTP code is invalid or the user does not have a TOTP factor configured."
+          }
+        }
+      }
     }
   }
 }
