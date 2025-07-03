@@ -1,6 +1,5 @@
 import { useLogto } from '@logto/react';
-import { FirstScreen } from '@logto/schemas';
-import { yes } from '@silverhand/essentials';
+import { ExtraParamsKey } from '@logto/schemas';
 import { useContext, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -11,7 +10,6 @@ import useRedirectUri from '@/hooks/use-redirect-uri';
 enum OneTimeTokenLandingSearchParams {
   OneTimeToken = 'one_time_token',
   Email = 'email',
-  IsNewUser = 'is_new_user',
 }
 
 /** The one-time token landing page for sign-in with one-time tokens. */
@@ -38,8 +36,6 @@ function OneTimeTokenLanding() {
     const oneTimeToken = searchParams.get(OneTimeTokenLandingSearchParams.OneTimeToken);
     const email = searchParams.get(OneTimeTokenLandingSearchParams.Email);
 
-    const isNewUser = yes(searchParams.get(OneTimeTokenLandingSearchParams.IsNewUser));
-
     if (!oneTimeToken || !email) {
       navigate('/', { replace: true });
       return;
@@ -54,10 +50,9 @@ function OneTimeTokenLanding() {
         await signIn({
           redirectUri,
           clearTokens: false,
-          firstScreen: isNewUser ? FirstScreen.Register : FirstScreen.SignIn,
           extraParams: {
-            one_time_token: oneTimeToken,
-            login_hint: email,
+            [ExtraParamsKey.OneTimeToken]: oneTimeToken,
+            [ExtraParamsKey.LoginHint]: email,
           },
         });
       } catch {
