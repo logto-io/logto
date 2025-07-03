@@ -123,6 +123,14 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
         );
       }
 
+      if (rest.enableTokenStorage) {
+        // TODO: remove this check once the feature is enabled in production.
+        assertThat(
+          EnvSet.values.isDevFeaturesEnabled,
+          new RequestError('request.feature_not_supported')
+        );
+      }
+
       const connector = await ssoConnectors.insert({
         id: connectorId,
         providerName,
@@ -271,6 +279,14 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
             config: parsedConfig,
           },
           envSet.endpoint
+        );
+      }
+
+      if (rest.enableTokenStorage) {
+        // TODO: remove this check once the feature is enabled in production.
+        assertThat(
+          EnvSet.values.isDevFeaturesEnabled,
+          new RequestError('request.feature_not_supported')
         );
       }
 
