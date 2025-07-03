@@ -1,12 +1,12 @@
 import { useLogto } from '@logto/react';
+import { FirstScreen } from '@logto/schemas';
+import { yes } from '@silverhand/essentials';
 import { useContext, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import useRedirectUri from '@/hooks/use-redirect-uri';
 
 import AppLoading from '@/components/AppLoading';
 import { TenantsContext } from '@/contexts/TenantsProvider';
-import { FirstScreen } from '@logto/schemas';
-import { yes } from '@silverhand/essentials';
+import useRedirectUri from '@/hooks/use-redirect-uri';
 
 enum OneTimeTokenLandingSearchParams {
   OneTimeToken = 'one_time_token',
@@ -60,7 +60,7 @@ function OneTimeTokenLanding() {
             login_hint: email,
           },
         });
-      } catch (error) {
+      } catch {
         navigate('/', { replace: true });
       }
     };

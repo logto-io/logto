@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 import DelayedSuspenseFallback from '@/components/DelayedSuspenseFallback';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import { GlobalAnonymousRoute, GlobalRoute } from '@/contexts/TenantsProvider';
 import { OnboardingApp } from '@/onboarding';
@@ -15,7 +16,6 @@ import HandleSocialCallback from '@/pages/Profile/containers/HandleSocialCallbac
 import styles from './AppRoutes.module.scss';
 import Main from './pages/Main';
 import SocialDemoCallback from './pages/SocialDemoCallback';
-import { isDevFeaturesEnabled } from '@/consts/env';
 
 /** Renders necessary routes when the user is not in a tenant context. */
 function AppRoutes() {
@@ -26,7 +26,10 @@ function AppRoutes() {
           <Route path={GlobalAnonymousRoute.Callback} element={<Callback />} />
           <Route path={GlobalAnonymousRoute.SocialDemoCallback} element={<SocialDemoCallback />} />
           {isDevFeaturesEnabled && (
-            <Route path={GlobalAnonymousRoute.OneTimeTokenLanding} element={<OneTimeTokenLanding />} />
+            <Route
+              path={GlobalAnonymousRoute.OneTimeTokenLanding}
+              element={<OneTimeTokenLanding />}
+            />
           )}
           <Route element={<ProtectedRoutes />}>
             <Route
