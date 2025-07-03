@@ -34,7 +34,7 @@ import dashboardRoutes from './dashboard.js';
 import domainRoutes from './domain.js';
 import emailTemplateRoutes from './email-template/index.js';
 import experienceApiRoutes from './experience/index.js';
-import googleOneTapRoutes from './google-one-tap/index.js';
+import googleOneTapRoutes, { googleOneTapApiPrefix } from './google-one-tap/index.js';
 import hookRoutes from './hook.js';
 import interactionRoutes from './interaction/index.js';
 import logRoutes from './log.js';
@@ -171,7 +171,12 @@ const createRouters = (tenant: TenantContext) => {
 export default function initApis(tenant: TenantContext): Koa {
   const apisApp = new Koa();
   const { adminUrlSet, cloudUrlSet } = EnvSet.values;
-  apisApp.use(koaCors([adminUrlSet, cloudUrlSet], [accountApiPrefix, verificationApiPrefix]));
+  apisApp.use(
+    koaCors(
+      [adminUrlSet, cloudUrlSet],
+      [accountApiPrefix, verificationApiPrefix, googleOneTapApiPrefix]
+    )
+  );
   apisApp.use(koaBodyEtag());
 
   for (const router of createRouters(tenant)) {

@@ -22,6 +22,8 @@ const consoleLog = new ConsoleLog(chalk.magenta('google-one-tap'));
 // Default expiration time: 10 minutes.
 const defaultExpiresTime = 10 * 60;
 
+export const googleOneTapApiPrefix = '/google-one-tap';
+
 /**
  * Get and validate Google One Tap connector configuration
  */
@@ -138,7 +140,7 @@ export default function googleOneTapRoutes<T extends AnonymousRouter>(
   }
 
   router.get(
-    '/google-one-tap/config',
+    `${googleOneTapApiPrefix}/config`,
     // KoaLogtoAnonymousOriginCors('GET'),
     koaGuard({
       status: [200, 204, 400, 403, 404],
@@ -161,7 +163,7 @@ export default function googleOneTapRoutes<T extends AnonymousRouter>(
   );
 
   router.get(
-    '/google-one-tap/verify',
+    `${googleOneTapApiPrefix}/verify`,
     // KoaLogtoAnonymousOriginCors('GET'),
     koaGuard({
       query: z.object({
@@ -193,7 +195,7 @@ export default function googleOneTapRoutes<T extends AnonymousRouter>(
   );
 
   router.post(
-    '/google-one-tap/verify',
+    `${googleOneTapApiPrefix}/verify`,
     // KoaLogtoAnonymousOriginCors('POST,OPTIONS'),
     koaGuard({
       body: z.object({
