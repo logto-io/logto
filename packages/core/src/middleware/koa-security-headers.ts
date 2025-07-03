@@ -140,7 +140,12 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
         // WARNING (high risk): Need to allow self-hosted terms of use page loaded in an iframe
         frameSrc: ["'self'", 'https:', gsiOrigin],
         // Allow being loaded by console preview iframe
-        frameAncestors: ["'self'", ...adminOrigins],
+        frameAncestors: [
+          "'self'",
+          ...adminOrigins,
+          ...conditionalArray(isProduction && logtoOrigin),
+          ...conditionalArray(isDevFeaturesEnabled && logtoDevOrigins),
+        ],
         defaultSrc: ["'self'", gsiOrigin],
       },
     },
