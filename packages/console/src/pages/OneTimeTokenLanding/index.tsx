@@ -15,7 +15,7 @@ enum OneTimeTokenLandingSearchParams {
 /** The one-time token landing page for sign-in with one-time tokens. */
 function OneTimeTokenLanding() {
   const navigate = useNavigate();
-  const { isAuthenticated, signIn, isLoading } = useLogto();
+  const { isAuthenticated, signIn } = useLogto();
   const [searchParams] = useSearchParams();
   const { navigateTenant, currentTenantId } = useContext(TenantsContext);
   const redirectUri = useRedirectUri();
@@ -29,10 +29,9 @@ function OneTimeTokenLanding() {
         // Otherwise navigate to root, which will handle tenant selection
         navigate('/', { replace: true });
       }
+      return;
     }
-  }, [isAuthenticated, navigate, currentTenantId, navigateTenant]);
 
-  useEffect(() => {
     const oneTimeToken = searchParams.get(OneTimeTokenLandingSearchParams.OneTimeToken);
     const email = searchParams.get(OneTimeTokenLandingSearchParams.Email);
 
@@ -41,27 +40,15 @@ function OneTimeTokenLanding() {
       return;
     }
 
-    if (isLoading || isAuthenticated) {
-      return;
-    }
-
-    const handleSignIn = async () => {
-      try {
-        await signIn({
-          redirectUri,
-          clearTokens: false,
-          extraParams: {
-            [ExtraParamsKey.OneTimeToken]: oneTimeToken,
-            [ExtraParamsKey.LoginHint]: email,
-          },
-        });
-      } catch {
-        navigate('/', { replace: true });
-      }
-    };
-
-    void handleSignIn();
-  }, [searchParams, signIn, isLoading, isAuthenticated, navigate, redirectUri]);
+    void signIn({
+      redirectUri,
+      clearTokens: false,
+      extraParams: {
+        [ExtraParamsKey.OneTimeToken]: oneTimeToken,
+        [ExtraParamsKey.LoginHint]: email,
+      },
+    });
+  }, [isAuthenticated, navigate, currentTenantId, navigateTenant, searchParams, signIn, redirectUri]);
 
   return <AppLoading />;
 }
