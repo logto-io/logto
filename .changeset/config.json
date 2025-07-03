@@ -4,6 +4,7 @@
   "commit": false,
   "//": "CAUTION: When updating the fields below, you should also update README accordingly.",
   "fixed": [[
+    "@logto/api",
     "@logto/core",
     "@logto/schemas",
     "@logto/cli",

@@ -1,0 +1,49 @@
+{
+  "name": "@logto/api",
+  "version": "0.0.0",
+  "description": "Logto API types and clients.",
+  "author": "Silverhand Inc. <contact@silverhand.io>",
+  "homepage": "https://github.com/logto-io/logto#readme",
+  "license": "MPL-2.0",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "lib/index.js",
+  "exports": {
+    "./management": "./lib/management/index.js"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/logto-io/logto.git"
+  },
+  "bugs": {
+    "url": "https://github.com/logto-io/logto/issues"
+  },
+  "scripts": {
+    "prepublishOnly": "pnpm generate-types && pnpm build",
+    "generate-types": "./generate-types.sh",
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "engines": {
+    "node": "^22.14.0"
+  },
+  "dependencies": {
+    "openapi-fetch": "^0.14.0"
+  },
+  "devDependencies": {
+    "@silverhand/eslint-config": "6.0.1",
+    "@silverhand/ts-config": "6.0.0",
+    "eslint": "^8.57.0",
+    "openapi-typescript": "^7.8.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.5.3"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand"
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc"
+}
