@@ -86,11 +86,9 @@ const productionDomainSuffixes = [
  *
  * @throws {RequestError} 403 Forbidden when request origin is not in the Logto whitelist
  */
-export function koaLogtoAnonymousOriginCors<StateT, ContextT, ResponseBodyT>(): MiddlewareType<
-  StateT,
-  ContextT,
-  ResponseBodyT
-> {
+export function koaLogtoAnonymousOriginCors<StateT, ContextT, ResponseBodyT>(
+  allowedMethods = ''
+): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   return cors({
     origin: (ctx) => {
       const origin = ctx.get('origin');
@@ -122,6 +120,7 @@ export function koaLogtoAnonymousOriginCors<StateT, ContextT, ResponseBodyT>(): 
       throw new RequestError({ code: 'auth.forbidden', status: 403 });
     },
     allowHeaders: ['Content-Type'],
+    allowMethods: allowedMethods.split(',').map((method) => method.trim()),
     // Preflight request will be cached for 10 minutes
     maxAge: 600,
   });

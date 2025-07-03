@@ -5,7 +5,6 @@ import Router from 'koa-router';
 import { EnvSet } from '#src/env-set/index.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
-import { koaLogtoAnonymousOriginCors } from '#src/middleware/koa-logto-anonymous-cors.js';
 import { koaManagementApiHooks } from '#src/middleware/koa-management-api-hooks.js';
 import koaTenantGuard from '#src/middleware/koa-tenant-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -125,7 +124,6 @@ const createRouters = (tenant: TenantContext) => {
   // These APIs use koa-logto-anonymous-cors middleware to restrict access
   // to only Logto-related domains (*.logto.io, *.logto.dev, etc.)
   const logtoAnonymousRouter: AnonymousRouter = new Router();
-  logtoAnonymousRouter.use(koaLogtoAnonymousOriginCors());
 
   const userRouter: UserRouter = new Router();
   userRouter.use(koaOidcAuth(tenant));
