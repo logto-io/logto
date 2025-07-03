@@ -34,6 +34,13 @@ const get_started = {
     },
     create_roles: 'Create roles',
   },
+  convert_to_production: {
+    card_title: 'Ready to go live? Don’t forget to launch your production setup!',
+    title: "Don't keep your project stuck in dev mode",
+    subtitle:
+      "You're using a dev tenant for free testing. To go live, create or convert to a production tenant. Need something custom? <a>Contact us</a>",
+    convert_button: 'Convert to production tenant',
+  },
   view_all: 'View all →',
 };
 

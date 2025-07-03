@@ -48,6 +48,24 @@ const upsell = {
   paywall,
   featured_plan_content,
   add_on,
+  convert_to_production_modal: {
+    title: 'You are going to change your development tenant to production tenant',
+    description:
+      'Ready to Go Live? Converting this dev tenant to a production tenant unlocks full functionality',
+    benefits: {
+      stable_environment: 'For end-users: A stable environment for real use.',
+      keep_pro_features:
+        'Keep Pro features: You are going to subscribe to Pro plan. <a>View Pro features.</a>',
+      no_dev_restrictions:
+        'No dev restrictions: Removes entity and resource system limits and the sign-in banner.',
+    },
+    cards: {
+      dev_description: 'Testing purposes',
+      prod_description: 'Real production',
+      convert_label: 'convert',
+    },
+    button: 'Convert to production tenant',
+  },
 };
 
 export default Object.freeze(upsell);

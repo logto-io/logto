@@ -1,0 +1,115 @@
+@use '@/scss/underscore' as _;
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(6);
+}
+
+.description {
+  font: var(--font-label-2);
+}
+
+.benefits {
+  .benefitsList {
+    margin: 0;
+    padding-left: _.unit(5);
+    display: flex;
+    flex-direction: column;
+    gap: _.unit(3);
+
+    li {
+      font: var(--font-body-2);
+      align-items: center;
+      gap: _.unit(1);
+      list-style: disc;
+    }
+  }
+
+  .proFeaturesLink {
+    color: var(--color-primary);
+    font-weight: 500;
+    text-decoration: none;
+    margin-left: _.unit(1);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.conversionCards {
+  padding: _.unit(10) _.unit(25);
+  background: var(--color-layer-light);
+  border-radius: _.unit(2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: _.unit(2);
+}
+
+.card {
+  width: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: _.unit(4);
+
+  .cardContent {
+    width: 100%;
+    height: 92px;
+    padding: _.unit(5);
+    background: var(--color-bg-layer-1);
+    border-radius: _.unit(2);
+    border: 1px solid var(--color-on-info-container);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: _.unit(1.5);
+  }
+}
+
+.cardTitle {
+  font: var(--font-title-2);
+  text-align: center;
+}
+
+.cardDescription {
+  color: var(--color-text-secondary);
+  font: var(--font-body-2);
+  text-align: center;
+}
+
+.convertWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  transform: translateY(_.unit(-4));
+  flex-shrink: 0;
+}
+
+.convertLine {
+  width: 100%;
+  height: auto;
+  color: inherit;
+}
+
+.convertLabel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: _.unit(1) _.unit(2);
+  background: var(--color-layer-light);
+  border-radius: _.unit(1);
+  font: var(--font-body-3);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
