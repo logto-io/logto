@@ -16,7 +16,7 @@ export enum GlobalAnonymousRoute {
   Callback = '/callback',
   SocialDemoCallback = '/social-demo-callback',
   /** The one-time token landing page. */
-  OneTimeTokenLanding = '/token',
+  OneTimeTokenLanding = '/one-time-token',
 }
 
 /**
