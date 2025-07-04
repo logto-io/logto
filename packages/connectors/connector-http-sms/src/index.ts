@@ -28,7 +28,7 @@ const sendMessage =
     try {
       return await got.post(endpoint, {
         headers: {
-          Authorization: authorization,
+          ...(authorization && { Authorization: authorization }),
           'Content-Type': 'application/json',
         },
         json: {
