@@ -31,7 +31,7 @@
     "precommit": "lint-staged",
     "prepublishOnly": "pnpm generate-types && pnpm build",
     "generate-types": "./generate-types.sh",
-    "build": "tsc -p tsconfig.build.json",
+    "build": "./check-types.sh && rm -rf lib/ && tsc -p tsconfig.build.json",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "test": "vitest src",

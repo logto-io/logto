@@ -17,12 +17,13 @@ So, we are using our own "grouping" release strategy in this monorepo:
 
 The release group that includes the Logto core service and its schemas and cli, which consists of the following packages:
 
-- @logto/core (main)
-- @logto/schemas
+- @logto/api
 - @logto/cli
+- @logto/core (main)
 - @logto/create
+- @logto/schemas
 
-Their versions will be always in sync, and forms our main release.
+Their versions will be always in sync, and forms our main release group.
 
 ### Others
 
