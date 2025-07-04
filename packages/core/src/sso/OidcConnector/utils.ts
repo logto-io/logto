@@ -98,7 +98,7 @@ export const fetchToken = async (
   { tokenEndpoint, clientId, clientSecret }: BaseOidcConfig,
   data: unknown,
   redirectUri: string
-): Promise<CamelCaseKeys<OidcTokenResponse>> => {
+): Promise<OidcTokenResponse> => {
   const result = oidcAuthorizationResponseGuard.safeParse(data);
 
   if (!result.success) {
@@ -127,7 +127,7 @@ export const fetchToken = async (
       });
     }
 
-    return camelcaseKeys(exchangeResult.data);
+    return exchangeResult.data;
   } catch (error: unknown) {
     if (error instanceof SsoConnectorError) {
       throw error;

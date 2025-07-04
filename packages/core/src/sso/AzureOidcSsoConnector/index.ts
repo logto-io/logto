@@ -13,7 +13,7 @@ import {
   SsoConnectorError,
   SsoConnectorErrorCodes,
 } from '../types/error.js';
-import { basicOidcConnectorConfigGuard } from '../types/oidc.js';
+import { basicOidcConnectorConfigGuard, type OidcTokenResponse } from '../types/oidc.js';
 import { type ExtendedSocialUserInfo } from '../types/saml.js';
 import { type SingleSignOnConnectorSession } from '../types/session.js';
 
@@ -57,7 +57,7 @@ export class AzureOidcSsoConnector extends OidcConnector implements SingleSignOn
    * @param connectorSession The connector session data from the oidc provider session storage
    * @returns The user info from the OIDC provider
    *
-   * @remarks folked from OidcSsoConnector. Override the getUserInfo method's sync user info logic.
+   * @remarks forked from OidcSsoConnector. Override the getUserInfo method's sync user info logic.
    * The email_verified and phone_verified are returned from Azure AD's userinfo endpoint.
    * @see https://learn.microsoft.com/en-us/answers/questions/812672/microsoft-openid-connect-getting-verified-email
    * It is unsafe to trust the unverified email and phone number in Logto's context. As we are using the verified email and phone number to identify the user.
@@ -67,12 +67,13 @@ export class AzureOidcSsoConnector extends OidcConnector implements SingleSignOn
   override async getUserInfo(
     connectorSession: SingleSignOnConnectorSession,
     data: unknown
-  ): Promise<ExtendedSocialUserInfo> {
+  ): Promise<{ userInfo: ExtendedSocialUserInfo; tokenResponse?: OidcTokenResponse }> {
     const oidcConfig = await this.getOidcConfig();
     const { nonce, redirectUri } = connectorSession;
 
     // Fetch token from the OIDC provider using authorization code
-    const { idToken, accessToken } = await fetchToken(oidcConfig, data, redirectUri);
+    const tokenResponse = await fetchToken(oidcConfig, data, redirectUri);
+    const { accessToken, idToken } = camelcaseKeys(tokenResponse);
 
     // Need to decode the id token to get the tenant id
     const decodeToken = decodeJwt(idToken);
@@ -111,7 +112,7 @@ export class AzureOidcSsoConnector extends OidcConnector implements SingleSignOn
       ...rest
     } = mergedClaims;
 
-    return {
+    const userInfo = {
       id,
       ...conditional(name && { name }),
       ...conditional(picture && { avatar: picture }),
@@ -124,6 +125,8 @@ export class AzureOidcSsoConnector extends OidcConnector implements SingleSignOn
       ),
       ...conditional(phone && !phone_verified && { unverifiedPhone: phone }),
     };
+
+    return { userInfo, tokenResponse };
   }
 }
 

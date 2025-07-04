@@ -161,7 +161,7 @@ export const verifySsoIdentity = async (
       envSet.endpoint
     );
     const issuer = await connectorInstance.getIssuer();
-    const userInfo = await connectorInstance.getUserInfo(singleSignOnSession, data);
+    const { userInfo } = await connectorInstance.getUserInfo(singleSignOnSession, data);
 
     log.append({ issuer, userInfo });
 
