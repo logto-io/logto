@@ -7,12 +7,15 @@ import {
   mockSocialConnectorTarget,
 } from '#src/__mocks__/connectors-mock.js';
 import { enableAllAccountCenterFields } from '#src/api/account-center.js';
+import { getUserIdentityTokenSetRecord } from '#src/api/admin-user.js';
+import { updateConnectorConfig } from '#src/api/connector.js';
 import { deleteIdentity, getUserInfo, updateIdentities } from '#src/api/my-account.js';
 import {
   createSocialVerificationRecord,
   createVerificationRecordByPassword,
   verifySocialAuthorization,
 } from '#src/api/verification-record.js';
+import { isDevFeaturesEnabled } from '#src/constants.js';
 import {
   clearConnectorsByTypes,
   setEmailConnector,
@@ -37,10 +40,21 @@ describe('my-account (social)', () => {
     await enableAllAccountCenterFields();
 
     await clearConnectorsByTypes([ConnectorType.Social]);
-    const { id: socialConnectorId } = await setSocialConnector();
-    const { id: emailConnectorId } = await setEmailConnector();
+
+    const [{ id: socialConnectorId }, { id: emailConnectorId }] = await Promise.all([
+      setSocialConnector(),
+      setEmailConnector(),
+    ]);
+
     connectorIdMap.set(mockSocialConnectorId, socialConnectorId);
     connectorIdMap.set(mockEmailConnectorId, emailConnectorId);
+
+    // TODO: Remove this once we have token storage enabled
+    if (isDevFeaturesEnabled) {
+      await updateConnectorConfig(socialConnectorId, {
+        enableTokenStorage: true,
+      });
+    }
   });
 
   afterAll(async () => {
@@ -144,6 +158,12 @@ describe('my-account (social)', () => {
           scopes: [UserScope.Profile, UserScope.Identities],
         });
 
+        const mockTokenResponse = {
+          access_token: 'access_token',
+          expires_in: 3600,
+          scope: 'profile',
+        };
+
         const { verificationRecordId: newVerificationRecordId } =
           await createSocialVerificationRecord(
             api,
@@ -154,12 +174,23 @@ describe('my-account (social)', () => {
 
         await verifySocialAuthorization(api, newVerificationRecordId, {
           code: authorizationCode,
+          tokenResponse: mockTokenResponse,
         });
 
         const verificationRecordId = await createVerificationRecordByPassword(api, password);
         await updateIdentities(api, verificationRecordId, newVerificationRecordId);
         const userInfo = await getUserInfo(api);
         expect(userInfo.identities).toHaveProperty(mockSocialConnectorTarget);
+
+        // TODO: Remove this once we have token storage enabled
+        if (isDevFeaturesEnabled) {
+          const tokenSetRecord = await getUserIdentityTokenSetRecord(
+            user.id,
+            mockSocialConnectorTarget
+          );
+          expect(tokenSetRecord).not.toBeNull();
+          expect(tokenSetRecord.metadata.scope).toBe(mockTokenResponse.scope);
+        }
 
         await deleteDefaultTenantUser(user.id);
       });

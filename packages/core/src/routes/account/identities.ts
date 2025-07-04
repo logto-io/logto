@@ -20,6 +20,7 @@ export default function identitiesRoutes<T extends UserRouter>(
 
   const {
     users: { checkIdentifierCollision },
+    socials: { upsertSocialTokenSetSecret },
   } = libraries;
 
   router.post(
@@ -75,6 +76,12 @@ export default function identitiesRoutes<T extends UserRouter>(
       });
 
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
+
+      const tokenSetSecret = await newVerificationRecord.getTokenSetSecret();
+
+      if (tokenSetSecret) {
+        await upsertSocialTokenSetSecret(user.id, tokenSetSecret);
+      }
 
       ctx.status = 204;
 

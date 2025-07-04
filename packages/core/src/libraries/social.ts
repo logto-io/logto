@@ -1,3 +1,4 @@
+import { appInsights } from '@logto/app-insights/node';
 import type { GetSession, SocialUserInfo, TokenResponse } from '@logto/connector-kit';
 import { socialUserInfoGuard } from '@logto/connector-kit';
 import type { EncryptedTokenSet, SecretSocialConnectorRelationPayload, User } from '@logto/schemas';
@@ -47,33 +48,39 @@ const encryptTokenResponse = (tokenResponse?: TokenResponse): EncryptedTokenSet 
     return;
   }
 
-  const {
-    access_token,
-    id_token,
-    refresh_token,
-    scope,
-    token_type: tokenType,
-    expires_in,
-  } = tokenResponse;
-
-  const requestedAt = Math.floor(Date.now() / 1000);
-
-  const expiresAt = expires_in && requestedAt + expires_in;
-
-  const encryptedTokenSet = encryptTokens({
-    access_token,
-    ...conditional(id_token && { id_token }),
-    ...conditional(refresh_token && { refresh_token }),
-  });
-
-  return {
-    encryptedTokenSetBase64: serializeEncryptedSecret(encryptedTokenSet),
-    metadata: {
+  try {
+    const {
+      access_token,
+      id_token,
+      refresh_token,
       scope,
-      tokenType,
-      expiresAt,
-    },
-  };
+      token_type: tokenType,
+      expires_in,
+    } = tokenResponse;
+
+    const requestedAt = Math.floor(Date.now() / 1000);
+
+    const expiresAt = expires_in && requestedAt + expires_in;
+
+    const encryptedTokenSet = encryptTokens({
+      access_token,
+      ...conditional(id_token && { id_token }),
+      ...conditional(refresh_token && { refresh_token }),
+    });
+
+    return {
+      encryptedTokenSetBase64: serializeEncryptedSecret(encryptedTokenSet),
+      metadata: {
+        scope,
+        tokenType,
+        expiresAt,
+      },
+    };
+  } catch (error: unknown) {
+    // Token encryption should not break the normal social authentication flow
+    // Return undefined to indicate no token response is available
+    void appInsights.trackException(error);
+  }
 };
 
 export const createSocialLibrary = (queries: Queries, connectorLibrary: ConnectorLibrary) => {
@@ -209,15 +216,20 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
   ) => {
     const { encryptedTokenSetBase64, metadata } = encryptedTokenSet;
 
-    return queries.secrets.upsertSocialTokenSetSecret(
-      {
-        id: generateStandardId(),
-        userId,
-        ...deserializeEncryptedSecret(encryptedTokenSetBase64),
-        metadata,
-      },
-      socialConnectorRelationPayload
-    );
+    try {
+      await queries.secrets.upsertSocialTokenSetSecret(
+        {
+          id: generateStandardId(),
+          userId,
+          ...deserializeEncryptedSecret(encryptedTokenSetBase64),
+          metadata,
+        },
+        socialConnectorRelationPayload
+      );
+    } catch (error: unknown) {
+      // Upsert token set secret should not break the normal social authentication and link flow
+      void appInsights.trackException(error);
+    }
   };
 
   return {
