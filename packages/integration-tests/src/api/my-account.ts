@@ -111,14 +111,14 @@ export const deleteMfaVerification = async (
   });
 
 export const getMfaSettings = async (api: KyInstance) =>
-  api.get('api/my-account/mfa-settings').json<{ requireMfaOnSignIn: boolean }>();
+  api.get('api/my-account/mfa-settings').json<{ skipMfaOnSignIn: boolean }>();
 
 export const updateMfaSettings = async (
   api: KyInstance,
   verificationRecordId: string,
-  requireMfaOnSignIn: boolean
+  skipMfaOnSignIn: boolean
 ) =>
   api.patch('api/my-account/mfa-settings', {
-    json: { requireMfaOnSignIn },
+    json: { skipMfaOnSignIn },
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });

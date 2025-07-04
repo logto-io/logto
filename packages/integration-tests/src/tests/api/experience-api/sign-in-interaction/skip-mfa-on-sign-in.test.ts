@@ -17,7 +17,7 @@ import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.
 import { UserApiTest } from '#src/helpers/user.js';
 import { devFeatureTest } from '#src/utils.js';
 
-devFeatureTest.describe('requireMfaOnSignIn user setting', () => {
+devFeatureTest.describe('skipMfaOnSignIn user setting', () => {
   const userApi = new UserApiTest();
 
   beforeAll(async () => {
@@ -40,15 +40,15 @@ devFeatureTest.describe('requireMfaOnSignIn user setting', () => {
   });
 
   devFeatureTest.describe('MFA bypass functionality', () => {
-    devFeatureTest.it('should bypass MFA when requireMfaOnSignIn is false', async () => {
+    devFeatureTest.it('should bypass MFA when skipMfaOnSignIn is true', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password, {
         scopes: [UserScope.Profile, UserScope.Identities],
       });
 
-      // Disable MFA requirement for this user
+      // Enable MFA skip for this user
       const verificationRecordId = await createVerificationRecordByPassword(api, password);
-      await updateMfaSettings(api, verificationRecordId, false);
+      await updateMfaSettings(api, verificationRecordId, true);
 
       // Set up MFA factor (should be bypassed)
       await createUserMfaVerification(user.id, MfaFactor.TOTP);
@@ -87,7 +87,7 @@ devFeatureTest.describe('requireMfaOnSignIn user setting', () => {
       const client = await initExperienceClient();
       await identifyUserWithUsernamePassword(client, username, password);
 
-      // Should still require MFA due to Mandatory policy (ignoring user's requireMfaOnSignIn = false)
+      // Should still require MFA due to Mandatory policy (ignoring user's skipMfaOnSignIn = true)
       await expect(client.submitInteraction()).rejects.toThrow();
 
       await deleteDefaultTenantUser(user.id);

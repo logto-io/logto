@@ -29,7 +29,7 @@ devFeatureTest.describe('my-account (mfa-settings)', () => {
       const mfaSettings = await getMfaSettings(api);
 
       expect(mfaSettings).toEqual({
-        requireMfaOnSignIn: true, // Default value from database schema
+        skipMfaOnSignIn: false, // Default value (MFA required)
       });
 
       await deleteDefaultTenantUser(user.id);
@@ -86,7 +86,7 @@ devFeatureTest.describe('my-account (mfa-settings)', () => {
       const mfaSettings = await getMfaSettings(api);
 
       expect(mfaSettings).toEqual({
-        requireMfaOnSignIn: true,
+        skipMfaOnSignIn: false,
       });
 
       await deleteDefaultTenantUser(user.id);
@@ -104,20 +104,20 @@ devFeatureTest.describe('my-account (mfa-settings)', () => {
       // Create verification record
       const verificationRecordId = await createVerificationRecordByPassword(api, password);
 
-      // Update MFA settings
-      await updateMfaSettings(api, verificationRecordId, false);
+      // Update MFA settings to skip MFA
+      await updateMfaSettings(api, verificationRecordId, true);
 
       // Verify the change
       const mfaSettings = await getMfaSettings(api);
-      expect(mfaSettings.requireMfaOnSignIn).toBe(false);
+      expect(mfaSettings.skipMfaOnSignIn).toBe(true);
 
-      // Update back to true
+      // Update back to require MFA
       const verificationRecordId2 = await createVerificationRecordByPassword(api, password);
-      await updateMfaSettings(api, verificationRecordId2, true);
+      await updateMfaSettings(api, verificationRecordId2, false);
 
       // Verify the change again
       const mfaSettings2 = await getMfaSettings(api);
-      expect(mfaSettings2.requireMfaOnSignIn).toBe(true);
+      expect(mfaSettings2.skipMfaOnSignIn).toBe(false);
 
       await deleteDefaultTenantUser(user.id);
     });
@@ -130,7 +130,7 @@ devFeatureTest.describe('my-account (mfa-settings)', () => {
 
       const verificationRecordId = await createVerificationRecordByPassword(api, password);
 
-      await expectRejects(updateMfaSettings(api, verificationRecordId, false), {
+      await expectRejects(updateMfaSettings(api, verificationRecordId, true), {
         code: 'auth.unauthorized',
         status: 401,
       });
@@ -145,7 +145,7 @@ devFeatureTest.describe('my-account (mfa-settings)', () => {
       });
 
       // Try to update without verification record
-      await expectRejects(updateMfaSettings(api, 'invalid-verification-id', false), {
+      await expectRejects(updateMfaSettings(api, 'invalid-verification-id', true), {
         code: 'verification_record.permission_denied',
         status: 401,
       });
@@ -166,7 +166,7 @@ devFeatureTest.describe('my-account (mfa-settings)', () => {
 
       const verificationRecordId = await createVerificationRecordByPassword(api, password);
 
-      await expectRejects(updateMfaSettings(api, verificationRecordId, false), {
+      await expectRejects(updateMfaSettings(api, verificationRecordId, true), {
         code: 'account_center.field_not_editable',
         status: 400,
       });
@@ -188,7 +188,7 @@ devFeatureTest.describe('my-account (mfa-settings)', () => {
 
       const verificationRecordId = await createVerificationRecordByPassword(api, password);
 
-      await expectRejects(updateMfaSettings(api, verificationRecordId, false), {
+      await expectRejects(updateMfaSettings(api, verificationRecordId, true), {
         code: 'account_center.field_not_editable',
         status: 400,
       });

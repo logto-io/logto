@@ -3,6 +3,7 @@ import {
   InteractionEvent,
   adminConsoleApplicationId,
   adminTenantId,
+  userMfaDataKey,
   type CreateUser,
   type User,
 } from '@logto/schemas';
@@ -20,7 +21,6 @@ import type {
   VerifiedRegisterInteractionResult,
   VerifiedSignInInteractionResult,
 } from '../types/index.js';
-import { userMfaDataKey } from '../verifications/mfa-verification.js';
 
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
