@@ -7,6 +7,7 @@ import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import { GlobalAnonymousRoute, GlobalRoute } from '@/contexts/TenantsProvider';
 import { OnboardingApp } from '@/onboarding';
 import AcceptInvitation from '@/pages/AcceptInvitation';
+import AuthStatus from '@/pages/AuthStatus';
 import Callback from '@/pages/Callback';
 import CheckoutSuccessCallback from '@/pages/CheckoutSuccessCallback';
 import OneTimeTokenLanding from '@/pages/OneTimeTokenLanding';
@@ -26,10 +27,13 @@ function AppRoutes() {
           <Route path={GlobalAnonymousRoute.Callback} element={<Callback />} />
           <Route path={GlobalAnonymousRoute.SocialDemoCallback} element={<SocialDemoCallback />} />
           {isDevFeaturesEnabled && (
-            <Route
-              path={GlobalAnonymousRoute.OneTimeTokenLanding}
-              element={<OneTimeTokenLanding />}
-            />
+            <>
+              <Route
+                path={GlobalAnonymousRoute.OneTimeTokenLanding}
+                element={<OneTimeTokenLanding />}
+              />
+              <Route path={GlobalAnonymousRoute.AuthStatus} element={<AuthStatus />} />
+            </>
           )}
           <Route element={<ProtectedRoutes />}>
             <Route
