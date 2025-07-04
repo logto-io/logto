@@ -17,6 +17,8 @@ export enum GlobalAnonymousRoute {
   SocialDemoCallback = '/social-demo-callback',
   /** The one-time token landing page. */
   OneTimeTokenLanding = '/one-time-token',
+  /** The global auth status checker route for iframe usage. */
+  AuthStatus = '/auth-status',
 }
 
 /**

@@ -9,7 +9,7 @@ import { useAuthStatus } from './hooks';
 import styles from './index.module.scss';
 
 /**
- * Cross-domain authentication status checker page
+ * Global auth status checker page for cross-domain authentication status checking.
  * This page is designed to be embedded as an iframe to check login status
  * across same-origin subdomains and localhost for development.
  */
