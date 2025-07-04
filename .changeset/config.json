@@ -3,12 +3,15 @@
   "changelog": "@changesets/cli/changelog",
   "commit": false,
   "//": "CAUTION: When updating the fields below, you should also update README accordingly.",
-  "fixed": [[
-    "@logto/core",
-    "@logto/schemas",
-    "@logto/cli",
-    "@logto/create"
-  ]],
+  "fixed": [
+    [
+      "@logto/api",
+      "@logto/cli",
+      "@logto/core",
+      "@logto/create",
+      "@logto/schemas"
+    ]
+  ],
   "linked": [],
   "//": "END OF CAUTION",
   "access": "restricted",
