@@ -9,7 +9,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "main": "lib/index.js",
   "exports": {
     "./management": {
       "default": "./lib/management.js",
