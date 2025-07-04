@@ -16,5 +16,5 @@ while ! curl -sf http://localhost:3001/api/status > /dev/null; do
   elapsed=$((elapsed + interval))
 done
 
-pnpm exec openapi-typescript http://localhost:3001/api/swagger.json --output src/generated-types/management.ts
+pnpm exec openapi-typescript http://localhost:3001/api/.well-known/management.openapi.json --output src/generated-types/management.ts
 docker compose down

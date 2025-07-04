@@ -54,3 +54,15 @@ const { apiClient } = createManagementApi('default', {
 ### API documentation
 
 For detailed API documentation, refer to the [Logto Management API documentation](https://openapi.logto.io/).
+
+## Development
+
+To avoid unnecessary build time in CI, full type generation only happens before publishing. The `build` script will generate mock types if no types are found.
+
+To explicitly generate types, run:
+
+```bash
+pnpm generate-types
+```
+
+This will start a local Docker Compose environment, generate types by fetching the OpenAPI endpoints, and then shut down the environment.
