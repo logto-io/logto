@@ -1,4 +1,11 @@
-type Second = number;
+/** Indicates the number of seconds. */
+type Seconds = number;
+
+export type AccessToken = {
+  value: string;
+  expiresAt: Seconds;
+  scope?: string;
+};
 
 export class ClientCredentialsError extends Error {
   constructor(message: string) {
@@ -16,7 +23,7 @@ export type ClientCredentialsOptions = {
    * The time in seconds before the access token expires to consider it valid.
    * @default 60
    */
-  accessTokenExpiryLeeway?: Second;
+  accessTokenExpiryLeeway?: Seconds;
 };
 
 /**
@@ -24,27 +31,25 @@ export type ClientCredentialsOptions = {
  * and provides methods to retrieve it, ensuring the token is valid and refreshing it when necessary.
  */
 export class ClientCredentials {
-  protected accessToken?: string;
-  protected accessTokenExpiresAt?: Second;
+  protected accessToken?: AccessToken;
 
-  get AccessTokenExpiryLeeway(): Second {
+  get accessTokenExpiryLeeway(): Seconds {
     return this.options.accessTokenExpiryLeeway ?? 60;
   }
 
-  constructor(protected options: ClientCredentialsOptions) { }
+  constructor(protected options: ClientCredentialsOptions) {}
 
   /**
    * Retrieves the access token, refreshing it if necessary.
    * @returns The access token as a string.
    */
-  async getAccessToken(): Promise<string> {
+  async getAccessToken(): Promise<AccessToken> {
     const now = new Date();
 
     // If the access token is not set or has expired, refresh it
     if (
-      !this.accessToken ||
-      !this.accessTokenExpiresAt ||
-      this.accessTokenExpiresAt <= Math.floor(now.getTime() / 1000) + this.AccessTokenExpiryLeeway
+      !this.accessToken?.expiresAt ||
+      this.accessToken.expiresAt <= Math.floor(now.getTime() / 1000) + this.accessTokenExpiryLeeway
     ) {
       const response = await fetch(this.options.tokenEndpoint, {
         method: 'POST',
@@ -75,8 +80,11 @@ export class ClientCredentials {
         throw new ClientCredentialsError('Invalid or missing expires_in in token response');
       }
 
-      this.accessToken = String(data.access_token);
-      this.accessTokenExpiresAt = Math.floor(now.getTime() / 1000) + data.expires_in;
+      this.accessToken = {
+        value: String(data.access_token),
+        expiresAt: Math.floor(now.getTime() / 1000) + data.expires_in,
+        scope: 'scope' in data && typeof data.scope === 'string' ? data.scope : undefined,
+      };
     }
 
     return this.accessToken;

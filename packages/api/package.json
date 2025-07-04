@@ -11,7 +11,11 @@
   },
   "main": "lib/index.js",
   "exports": {
-    "./management": "./lib/management/index.js"
+    "./management": {
+      "default": "./lib/management.js",
+      "types": "./lib/management.d.ts",
+      "import": "./lib/management.js"
+    }
   },
   "files": [
     "lib"
@@ -24,9 +28,14 @@
     "url": "https://github.com/logto-io/logto/issues"
   },
   "scripts": {
+    "precommit": "lint-staged",
     "prepublishOnly": "pnpm generate-types && pnpm build",
     "generate-types": "./generate-types.sh",
-    "build": "tsc -p tsconfig.build.json"
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "eslint --ext .ts src",
+    "lint:report": "pnpm lint --format json --output-file report.json",
+    "test": "vitest src",
+    "test:ci": "pnpm run test --silent --coverage"
   },
   "engines": {
     "node": "^22.14.0"
@@ -37,12 +46,17 @@
   "devDependencies": {
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/ts-config": "6.0.0",
+    "@vitest/coverage-v8": "^3.1.1",
     "eslint": "^8.57.0",
     "openapi-typescript": "^7.8.0",
     "prettier": "^3.5.3",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "vitest": "^3.1.1"
   },
   "eslintConfig": {
+    "ignorePatterns": [
+      "src/generated-types/*"
+    ],
     "extends": "@silverhand"
   },
   "prettier": "@silverhand/eslint-config/.prettierrc"
