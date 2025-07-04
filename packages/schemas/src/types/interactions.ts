@@ -201,6 +201,10 @@ export const updateProfileApiPayloadGuard = z.discriminatedUnion('type', [
     type: z.literal('social'),
     verificationId: z.string(),
   }),
+  z.object({
+    type: z.literal('extraProfile'),
+    values: z.record(z.string().regex(/^[\dA-Za-z]+$/), z.unknown()),
+  }),
 ]);
 export type UpdateProfileApiPayload = z.infer<typeof updateProfileApiPayloadGuard>;
 

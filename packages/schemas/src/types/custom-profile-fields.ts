@@ -10,6 +10,10 @@ import {
   userProfileGuard,
 } from '../foundations/index.js';
 
+import { userOnboardingDataKey } from './onboarding.js';
+import { defaultTenantIdKey } from './tenant.js';
+import { consoleUserPreferenceKey, guideRequestsKey } from './user.js';
+
 export type BaseProfileField = {
   name: string;
   label?: string;
@@ -218,8 +222,6 @@ export const builtInCustomProfileFieldKeys = Object.freeze(
     .merge(
       Users.createGuard.pick({
         name: true,
-        primaryEmail: true,
-        primaryPhone: true,
         avatar: true,
       })
     )
@@ -248,3 +250,31 @@ export const updateCustomProfileFieldSieOrderGuard = z.object({
 export type UpdateCustomProfileFieldSieOrder = z.infer<
   typeof updateCustomProfileFieldSieOrderGuard
 >;
+
+export const signInIdentifierKeyGuard = Users.createGuard
+  .pick({
+    username: true,
+    primaryEmail: true,
+    primaryPhone: true,
+  })
+  .extend({
+    email: z.string().nullable().optional(),
+    phone: z.string().nullable().optional(),
+  });
+
+export const reservedCustomDataKeyGuard = z
+  .object({
+    [userOnboardingDataKey]: z.string(),
+    [guideRequestsKey]: z.string(),
+    [consoleUserPreferenceKey]: z.string(),
+    [defaultTenantIdKey]: z.string(),
+  })
+  .partial();
+
+export const reservedCustomDataKeys = Object.freeze(reservedCustomDataKeyGuard.keyof().options);
+
+/**
+ * Disallow sign-in identifiers related field keys in custom profile fields, as this is conflicting
+ * with the built-in sign-in/sign-up experience flows.
+ */
+export const reservedSignInIdentifierKeys = Object.freeze(signInIdentifierKeyGuard.keyof().options);

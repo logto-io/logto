@@ -58,6 +58,8 @@ export type InteractionProfile = {
   | 'primaryPhone'
   | 'passwordEncrypted'
   | 'passwordEncryptionMethod'
+  | 'profile'
+  | 'customData'
 >;
 
 const interactionProfileGuard = Users.createGuard
@@ -69,6 +71,8 @@ const interactionProfileGuard = Users.createGuard
     primaryPhone: true,
     passwordEncrypted: true,
     passwordEncryptionMethod: true,
+    profile: true,
+    customData: true,
   })
   .extend({
     socialIdentity: z

@@ -10,7 +10,9 @@ const custom_profile_fields = {
   invalid_name:
     'Nome del campo non valido, sono consentite solo lettere o numeri, sensibili alle maiuscole.',
   name_conflict_sign_in_identifier:
-    "Nome del campo non valido. {{name}} è un identificatore riservato per l'accesso.",
+    'Nome del campo non valido. {{name}} è una chiave riservata di identificatore di accesso.',
+  name_conflict_custom_data:
+    'Nome del campo non valido. {{name}} è una chiave riservata per i dati personalizzati.',
 };
 
 export default Object.freeze(custom_profile_fields);

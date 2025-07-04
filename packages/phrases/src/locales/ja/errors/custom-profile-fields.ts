@@ -10,7 +10,9 @@ const custom_profile_fields = {
   invalid_name:
     'フィールド名が無効です。文字または数字のみが許可され、大文字小文字が区別されます。',
   name_conflict_sign_in_identifier:
-    '無効なフィールド名です。{{name}} は予約されたサインイン識別子です。',
+    '無効なフィールド名です。{{name}} は予約されたサインイン識別子キーです。',
+  name_conflict_custom_data:
+    '無効なフィールド名です。{{name}} は予約されたカスタムデータキーです。',
 };
 
 export default Object.freeze(custom_profile_fields);

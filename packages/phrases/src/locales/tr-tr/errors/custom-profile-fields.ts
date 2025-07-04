@@ -10,7 +10,8 @@ const custom_profile_fields = {
   invalid_name:
     'Geçersiz alan adı, sadece harfler veya sayılar kullanılabilir, büyük/küçük harf duyarlıdır.',
   name_conflict_sign_in_identifier:
-    'Geçersiz alan adı. {{name}} rezerve edilmiş bir oturum açma tanımlayıcısıdır.',
+    'Geçersiz alan adı. {{name}} ayrılmış bir oturum açma belirteci anahtarıdır.',
+  name_conflict_custom_data: 'Geçersiz alan adı. {{name}} ayrılmış bir özel veri anahtarıdır.',
 };
 
 export default Object.freeze(custom_profile_fields);

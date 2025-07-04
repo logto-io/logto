@@ -21,7 +21,7 @@ import { SignInExperienceValidator } from './libraries/sign-in-experience-valida
 // Supported profile types for setting the profile data through the verification record.
 type SetProfileByVerificationIdType = Exclude<
   UpdateProfileApiPayload['type'],
-  'password' | SignInIdentifier.Username
+  'password' | SignInIdentifier.Username | 'extraProfile'
 >;
 
 export class Profile {
