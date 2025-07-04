@@ -61,12 +61,13 @@ export const verifyMfa = async (
 ): Promise<AccountVerifiedInteractionResult> => {
   const {
     signInExperience: {
-      mfa: { factors },
+      mfa: { factors, policy },
     },
   } = ctx;
   const { accountId, verifiedMfa } = interaction;
 
-  const { mfaVerifications } = await tenant.queries.users.findUserById(accountId);
+  const { mfaVerifications, requireMfaOnSignIn } =
+    await tenant.queries.users.findUserById(accountId);
   const availableUserVerifications = mfaVerifications
     .filter((verification) => {
       // Only allow MFA that is configured in sign-in experience
@@ -106,8 +107,9 @@ export const verifyMfa = async (
     });
 
   if (availableUserVerifications.length > 0) {
+    const canSkipMfa = !requireMfaOnSignIn && policy !== MfaPolicy.Mandatory;
     assertThat(
-      verifiedMfa,
+      canSkipMfa || verifiedMfa,
       new RequestError(
         {
           code: 'session.mfa.require_mfa_verification',
