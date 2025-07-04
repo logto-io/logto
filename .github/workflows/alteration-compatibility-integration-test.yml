@@ -70,8 +70,8 @@ jobs:
     env:
       INTEGRATION_TEST: true
       DEV_FEATURES_ENABLED: false
-      # Key encryption key (KEK) for the secret vault
-      SECRET_VAULT_KEK: ${{ secrets.SECRET_VAULT_KEK }}
+      # Key encryption key (KEK) for the secret vault. (For integration tests use only.)
+      SECRET_VAULT_KEK: DtPWS09unRXGuRScB60qXqCSsrjd22dUlXt/0oZgxSo=
       DB_URL: postgres://postgres:postgres@localhost:5432/postgres
 
     steps:
