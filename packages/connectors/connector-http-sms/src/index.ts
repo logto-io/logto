@@ -54,7 +54,10 @@ const sendMessage =
         throw new ConnectorError(ConnectorErrorCodes.General, rawBody);
       }
 
-      throw new ConnectorError(ConnectorErrorCodes.General, error);
+      throw new ConnectorError(
+        ConnectorErrorCodes.General,
+        error instanceof Error ? error.message : String(error)
+      );
     }
   };
 
