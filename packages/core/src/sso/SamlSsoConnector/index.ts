@@ -99,7 +99,7 @@ export class SamlSsoConnector extends SamlConnector implements SingleSignOn {
   async getUserInfo({ userInfo }: SingleSignOnConnectorSession) {
     assertThat(userInfo, new RequestError('session.connector_session_not_found'));
 
-    return userInfo;
+    return { userInfo };
   }
 }
 
