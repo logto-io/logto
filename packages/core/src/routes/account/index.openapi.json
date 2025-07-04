@@ -34,6 +34,10 @@
                   },
                   "username": {
                     "description": "The new username for the user, must be a valid username and unique."
+                  },
+                  "customData": {
+                    "description": "The new custom data for the user. This will completely replace the existing customData. Requires CustomData scope.",
+                    "type": "object"
                   }
                 }
               }

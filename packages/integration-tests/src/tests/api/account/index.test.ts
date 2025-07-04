@@ -212,6 +212,69 @@ describe('account', () => {
       await deleteDefaultTenantUser(user.id);
       await deleteDefaultTenantUser(user2.id);
     });
+
+    it('should be able to update customData', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.CustomData],
+      });
+      const customData = { level: 'premium', preferences: { theme: 'dark' } };
+
+      const response = await updateUser(api, { customData });
+      expect(response).toMatchObject({ customData });
+
+      const userInfo = await getUserInfo(api);
+      expect(userInfo).toHaveProperty('customData', customData);
+
+      // Check if the hook is triggered
+      const hook = webHookApi.hooks.get(hookName)!;
+      await assertHookLogResult(hook, 'User.Data.Updated', {
+        hookPayload: {
+          event: 'User.Data.Updated',
+          data: expect.objectContaining({
+            customData,
+          }),
+        },
+      });
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should fail to update customData without CustomData scope', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password);
+      const customData = { level: 'premium' };
+
+      await expectRejects(updateUser(api, { customData }), {
+        code: 'auth.unauthorized',
+        status: 400,
+      });
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should be able to update customData multiple times', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.CustomData],
+      });
+
+      // First set some custom data
+      const firstData = { test: 'value' };
+      await updateUser(api, { customData: firstData });
+
+      // Then update with different data (replaces existing, consistent with admin API)
+      const secondData = { newField: 'newValue', number: 42 };
+      const response = await updateUser(api, { customData: secondData });
+
+      // Expect replaced data since customData updates replace rather than merge (consistent with admin API)
+      expect(response).toMatchObject({ customData: secondData });
+
+      const userInfo = await getUserInfo(api);
+      expect(userInfo).toHaveProperty('customData', secondData);
+
+      await deleteDefaultTenantUser(user.id);
+    });
   });
 
   describe('PATCH /my-account/profile', () => {
