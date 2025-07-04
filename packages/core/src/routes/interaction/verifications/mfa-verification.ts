@@ -3,12 +3,13 @@ import {
   InteractionEvent,
   MfaFactor,
   MfaPolicy,
+  userMfaDataGuard,
+  userMfaDataKey,
   type JsonObject,
   type MfaVerification,
 } from '@logto/schemas';
 import { type Context } from 'koa';
 import type { Provider } from 'oidc-provider';
-import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
@@ -66,8 +67,7 @@ export const verifyMfa = async (
   } = ctx;
   const { accountId, verifiedMfa } = interaction;
 
-  const { mfaVerifications, requireMfaOnSignIn } =
-    await tenant.queries.users.findUserById(accountId);
+  const { mfaVerifications, logtoConfig } = await tenant.queries.users.findUserById(accountId);
   const availableUserVerifications = mfaVerifications
     .filter((verification) => {
       // Only allow MFA that is configured in sign-in experience
@@ -107,9 +107,11 @@ export const verifyMfa = async (
     });
 
   if (availableUserVerifications.length > 0) {
-    const canSkipMfa = !requireMfaOnSignIn && policy !== MfaPolicy.Mandatory;
+    const mfaData = userMfaDataGuard.safeParse(logtoConfig[userMfaDataKey]);
+    const skipMfaOnSignIn = mfaData.success ? mfaData.data.skipMfaOnSignIn : undefined;
+    const canSkipMfa = skipMfaOnSignIn && policy !== MfaPolicy.Mandatory;
     assertThat(
-      canSkipMfa || verifiedMfa,
+      Boolean(canSkipMfa) || Boolean(verifiedMfa),
       new RequestError(
         {
           code: 'session.mfa.require_mfa_verification',
@@ -125,18 +127,12 @@ export const verifyMfa = async (
   return interaction;
 };
 
-export const userMfaDataKey = 'mfa';
 /**
  * Check if the user has skipped MFA binding
  */
 const isMfaSkipped = (logtoConfig: JsonObject): boolean => {
-  const userMfaDataGuard = z.object({
-    skipped: z.boolean().optional(),
-  });
-
-  const parsed = z.object({ [userMfaDataKey]: userMfaDataGuard }).safeParse(logtoConfig);
-
-  return parsed.success ? parsed.data[userMfaDataKey].skipped === true : false;
+  const parsed = userMfaDataGuard.safeParse(logtoConfig[userMfaDataKey]);
+  return parsed.success ? parsed.data.skipped === true : false;
 };
 
 export const validateMandatoryBindMfa = async (

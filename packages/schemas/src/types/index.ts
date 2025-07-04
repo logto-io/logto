@@ -34,3 +34,4 @@ export * from './saml-application.js';
 export * from './verification-records/index.js';
 export * from './custom-profile-fields.js';
 export * from './secrets.js';
+export * from './user-logto-config.js';

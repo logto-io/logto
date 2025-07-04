@@ -21,7 +21,6 @@ create table users (
   custom_data jsonb /* @use JsonObject */ not null default '{}'::jsonb,
   logto_config jsonb /* @use JsonObject */ not null default '{}'::jsonb,
   mfa_verifications jsonb /* @use MfaVerifications */ not null default '[]'::jsonb,
-  require_mfa_on_sign_in boolean not null default true,
   is_suspended boolean not null default false,
   last_sign_in_at timestamptz,
   created_at timestamptz not null default (now()),

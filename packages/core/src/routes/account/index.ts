@@ -4,6 +4,8 @@ import {
   userProfileGuard,
   AccountCenterControlValue,
   SignInIdentifier,
+  userMfaDataGuard,
+  userMfaDataKey,
 } from '@logto/schemas';
 import { z } from 'zod';
 
@@ -186,7 +188,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
       `${accountApiPrefix}/mfa-settings`,
       koaGuard({
         response: z.object({
-          requireMfaOnSignIn: z.boolean(),
+          skipMfaOnSignIn: z.boolean(),
         }),
         status: [200, 400, 401],
       }),
@@ -205,9 +207,10 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
         );
 
         const user = await findUserById(userId);
-        ctx.body = {
-          requireMfaOnSignIn: user.requireMfaOnSignIn,
-        };
+        const mfaData = userMfaDataGuard.safeParse(user.logtoConfig[userMfaDataKey]);
+        const skipMfaOnSignIn = mfaData.success ? (mfaData.data.skipMfaOnSignIn ?? false) : false;
+
+        ctx.body = { skipMfaOnSignIn };
 
         return next();
       }
@@ -217,7 +220,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
       `${accountApiPrefix}/mfa-settings`,
       koaGuard({
         body: z.object({
-          requireMfaOnSignIn: z.boolean(),
+          skipMfaOnSignIn: z.boolean(),
         }),
         status: [204, 400, 401],
       }),
@@ -232,15 +235,24 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
           scopes.has(UserScope.Identities),
           new RequestError({ code: 'auth.unauthorized', status: 401 })
         );
-        const { requireMfaOnSignIn } = ctx.guard.body;
+        const { skipMfaOnSignIn } = ctx.guard.body;
         const { fields } = ctx.accountCenter;
         assertThat(
           fields.mfa === AccountCenterControlValue.Edit,
           new RequestError({ code: 'account_center.field_not_editable', status: 400 })
         );
 
+        const user = await findUserById(userId);
+        const existingMfaData = userMfaDataGuard.safeParse(user.logtoConfig[userMfaDataKey]);
+
         const updatedUser = await updateUserById(userId, {
-          requireMfaOnSignIn,
+          logtoConfig: {
+            ...user.logtoConfig,
+            [userMfaDataKey]: {
+              ...(existingMfaData.success ? existingMfaData.data : {}),
+              skipMfaOnSignIn,
+            },
+          },
         });
 
         ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });

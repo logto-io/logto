@@ -2,6 +2,8 @@ import {
   MfaFactor,
   MfaPolicy,
   VerificationType,
+  userMfaDataGuard,
+  userMfaDataKey,
   type Mfa,
   type MfaVerification,
   type User,
@@ -108,7 +110,10 @@ export class MfaValidator {
   get isMfaEnabled() {
     // Users can manually disable MFA verification requirement for sign-in,
     // but if the MFA policy is set to mandatory, this setting will be ignored.
-    if (!this.user.requireMfaOnSignIn && this.mfaSettings.policy !== MfaPolicy.Mandatory) {
+    const mfaData = userMfaDataGuard.safeParse(this.user.logtoConfig[userMfaDataKey]);
+    const skipMfaOnSignIn = mfaData.success ? mfaData.data.skipMfaOnSignIn : undefined;
+
+    if (skipMfaOnSignIn && this.mfaSettings.policy !== MfaPolicy.Mandatory) {
       return false;
     }
 
