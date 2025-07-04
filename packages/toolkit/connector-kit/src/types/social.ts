@@ -116,6 +116,12 @@ export const tokenResponseGuard = z.object({
   token_type: z.string().optional(),
 }) satisfies ToZodObject<TokenResponse>;
 
+export const googleOneTapIdTokenPayloadGuard = z.object({
+  sub: z.string(),
+  email: z.string(),
+  email_verified: z.boolean(),
+});
+
 export type GetTokenResponseAndUserInfo = (
   data: unknown,
   getSession: GetSession
@@ -193,6 +199,8 @@ export const GoogleConnector = Object.freeze({
     prompts: oidcPromptsGuard,
     oneTap: googleOneTapConfigGuard.optional(),
   }) satisfies ToZodObject<GoogleConnectorConfig>,
+  // Use this key in One Time Token context to store the Google Identity Sub from Google One Tap.
+  oneTimeTokenContextKey: 'googleIdentitySub',
 });
 
 export type GoogleConnectorConfig = {

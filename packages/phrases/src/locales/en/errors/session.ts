@@ -55,6 +55,7 @@ const session = {
   },
   google_one_tap: {
     invalid_id_token: 'Invalid Google ID Token.',
+    invalid_id_token_payload: 'Invalid Google ID Token payload.',
     unverified_email: 'Unverified email.',
   },
 };
