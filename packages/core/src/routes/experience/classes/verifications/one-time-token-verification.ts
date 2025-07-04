@@ -1,3 +1,4 @@
+import { GoogleConnector } from '@logto/connector-kit';
 import {
   type InteractionIdentifier,
   type OneTimeTokenContext,
@@ -7,6 +8,7 @@ import {
   type OneTimeTokenVerificationRecordData,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
+import { conditional } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -114,9 +116,23 @@ export class OneTimeTokenVerification
     );
 
     const { value } = this.identifier;
-    const { jitOrganizationIds } = this.context ?? {};
+    const { jitOrganizationIds, [GoogleConnector.oneTimeTokenContextKey]: googleUserId } =
+      this.context ?? {};
 
-    return { primaryEmail: value, jitOrganizationIds };
+    return {
+      primaryEmail: value,
+      jitOrganizationIds,
+      ...conditional(
+        googleUserId && {
+          socialIdentity: {
+            target: GoogleConnector.target,
+            userInfo: {
+              id: googleUserId,
+            },
+          },
+        }
+      ),
+    };
   }
 
   toJson(): OneTimeTokenVerificationRecordData {
