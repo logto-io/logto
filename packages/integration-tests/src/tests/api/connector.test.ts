@@ -85,7 +85,9 @@ test('connector set-up flow', async () => {
    * We will test updating to the invalid connector config, that is the case not covered above.
    */
   await expect(
-    updateConnectorConfig(connectorIdMap.get(mockSocialConnectorId)!, mockSmsConnectorConfig)
+    updateConnectorConfig(connectorIdMap.get(mockSocialConnectorId)!, {
+      config: mockSmsConnectorConfig,
+    })
   ).rejects.toThrow(HTTPError);
   // To confirm the failed updating request above did not modify the original config,
   // we check: the mock connector config should stay the same.
@@ -93,7 +95,9 @@ test('connector set-up flow', async () => {
   expect(mockSocialConnector.config).toEqual(mockSocialConnectorConfig);
   const { config: updatedConfig } = await updateConnectorConfig(
     connectorIdMap.get(mockSocialConnectorId)!,
-    mockSocialConnectorNewConfig
+    {
+      config: mockSocialConnectorNewConfig,
+    }
   );
   expect(updatedConfig).toEqual(mockSocialConnectorNewConfig);
 
@@ -187,10 +191,15 @@ test('create duplicated social connector', async () => {
 test('override metadata for non-standard social connector', async () => {
   await cleanUpConnectorTable();
   const { id } = await postConnector({ connectorId: mockSocialConnectorId });
-  await expectRejects(updateConnectorConfig(id, {}, { target: 'target' }), {
-    code: 'connector.cannot_overwrite_metadata_for_non_standard_connector',
-    status: 400,
-  });
+  await expectRejects(
+    updateConnectorConfig(id, {
+      metadata: { target: 'target' },
+    }),
+    {
+      code: 'connector.cannot_overwrite_metadata_for_non_standard_connector',
+      status: 400,
+    }
+  );
 });
 
 test('send SMS/email test message', async () => {

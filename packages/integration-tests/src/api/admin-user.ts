@@ -1,5 +1,6 @@
 import type {
   CreatePersonalAccessToken,
+  DesensitizedSocialTokenSetSecret,
   Identities,
   Identity,
   MfaFactor,
@@ -115,6 +116,11 @@ export const putUserIdentity = async (userId: string, target: string, identity: 
 
 export const verifyUserPassword = async (userId: string, password: string) =>
   authedAdminApi.post(`users/${userId}/password/verify`, { json: { password } });
+
+export const getUserIdentityTokenSetRecord = async (userId: string, target: string) =>
+  authedAdminApi
+    .get(`users/${userId}/identities/${target}/secret`)
+    .json<DesensitizedSocialTokenSetSecret>();
 
 export const getUserMfaVerifications = async (userId: string) =>
   authedAdminApi.get(`users/${userId}/mfa-verifications`).json<MfaVerification[]>();
