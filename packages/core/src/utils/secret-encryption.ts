@@ -143,7 +143,7 @@ export const encryptTokenResponse = (
   // Convert expires_in to a number if it's a string
   // Some providers like Azure may return expires_in as a string.
   const expiresIn = typeof expires_in === 'string' ? Number.parseInt(expires_in, 10) : expires_in;
-  const expiresAt = expiresIn && requestedAt + expiresIn;
+  const expiresAt = conditional(expiresIn !== undefined && requestedAt + expiresIn);
 
   const encryptedTokenSet = encryptTokens({
     access_token,
