@@ -513,6 +513,41 @@
           }
         }
       }
+    },
+    "/api/my-account/mfa-verifications/backup-code/verify": {
+      "post": {
+        "operationId": "VerifyBackupCodeMfa",
+        "summary": "Verify backup code MFA",
+        "tags": ["Dev feature"],
+        "description": "Verify a backup code using the user's existing backup code MFA factor. This endpoint is used to authenticate the user with their backup codes. Once used, the backup code cannot be used again.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "code": {
+                    "description": "The 10-digit backup code (hex characters a-f and 0-9)."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The backup code was verified successfully and marked as used."
+          },
+          "400": {
+            "description": "The request body is invalid."
+          },
+          "401": {
+            "description": "Permission denied, insufficient scope or MFA field not enabled."
+          },
+          "422": {
+            "description": "The backup code is invalid, already used, or the user does not have backup codes configured."
+          }
+        }
+      }
     }
   }
 }

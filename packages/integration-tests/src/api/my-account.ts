@@ -127,3 +127,8 @@ export const verifyTotpMfa = async (api: KyInstance, code: string) =>
   api.post('api/my-account/mfa-verifications/totp/verify', {
     json: { code },
   });
+
+export const verifyBackupCodeMfa = async (api: KyInstance, code: string) =>
+  api.post('api/my-account/mfa-verifications/backup-code/verify', {
+    json: { code },
+  });

@@ -441,6 +441,88 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
         return next();
       }
     );
+
+    router.post(
+      `${accountApiPrefix}/mfa-verifications/backup-code/verify`,
+      koaGuard({
+        body: z.object({
+          code: z.string().regex(/^[\da-f]{10}$/i),
+        }),
+        status: [204, 400, 401, 422],
+      }),
+      async (ctx, next) => {
+        const { id: userId, scopes } = ctx.auth;
+        const { code } = ctx.guard.body;
+        const { fields } = ctx.accountCenter;
+
+        assertThat(
+          fields.mfa === AccountCenterControlValue.Edit ||
+            fields.mfa === AccountCenterControlValue.ReadOnly,
+          'account_center.field_not_enabled'
+        );
+
+        assertThat(
+          scopes.has(UserScope.Identities),
+          new RequestError({ code: 'auth.unauthorized', status: 401 })
+        );
+
+        // Check sign in experience, if backup code factor is enabled
+        const { mfa } = await findDefaultSignInExperience();
+        assertThat(
+          mfa.factors.includes(MfaFactor.BackupCode),
+          'session.mfa.mfa_factor_not_enabled'
+        );
+
+        const user = await findUserById(userId);
+        const backupCodeVerification = user.mfaVerifications.find(
+          (verification) => verification.type === MfaFactor.BackupCode
+        );
+
+        assertThat(
+          backupCodeVerification,
+          new RequestError({ code: 'session.mfa.mfa_factor_not_enabled', status: 422 })
+        );
+
+        // Check if the backup code exists and has not been used
+        const validCode = backupCodeVerification.codes.find(
+          (backupCode) => backupCode.code === code && !backupCode.usedAt
+        );
+
+        assertThat(
+          validCode,
+          new RequestError({ code: 'session.mfa.invalid_backup_code', status: 422 })
+        );
+
+        // Mark the backup code as used
+        const updatedUser = await updateUserById(userId, {
+          mfaVerifications: user.mfaVerifications.map((mfa) => {
+            if (mfa.id !== backupCodeVerification.id || mfa.type !== MfaFactor.BackupCode) {
+              return mfa;
+            }
+
+            return {
+              ...mfa,
+              codes: mfa.codes.map((backupCode) => {
+                if (backupCode.code !== code) {
+                  return backupCode;
+                }
+
+                return {
+                  ...backupCode,
+                  usedAt: new Date().toISOString(),
+                };
+              }),
+            };
+          }),
+        });
+
+        ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
+
+        ctx.status = 204;
+
+        return next();
+      }
+    );
   }
 }
 /* eslint-enable max-lines */
