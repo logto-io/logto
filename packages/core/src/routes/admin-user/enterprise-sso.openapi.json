@@ -1,6 +1,6 @@
 {
   "paths": {
-    "/api/users/{userId}/enterprise-sso-identities/:ssoConnectorId": {
+    "/api/users/{userId}/enterprise-sso-identities/{ssoConnectorId}": {
       "get": {
         "tags": ["Dev feature"],
         "parameters": [],
