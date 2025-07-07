@@ -5,6 +5,8 @@ import {
   MfaFactor,
   AccountCenterControlValue,
   userMfaVerificationResponseGuard,
+  webAuthnAuthenticationOptionsGuard,
+  webAuthnVerificationPayloadGuard,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { z } from 'zod';
@@ -13,9 +15,14 @@ import koaGuard from '#src/middleware/koa-guard.js';
 
 import { EnvSet } from '../../env-set/index.js';
 import RequestError from '../../errors/RequestError/index.js';
-import { buildVerificationRecordByIdAndType } from '../../libraries/verification.js';
+import {
+  buildVerificationRecordByIdAndType,
+  insertVerificationRecord,
+  updateVerificationRecord,
+} from '../../libraries/verification.js';
 import assertThat from '../../utils/assert-that.js';
 import { transpileUserMfaVerifications } from '../../utils/user.js';
+import { WebAuthnVerification } from '../experience/classes/verifications/web-authn-verification.js';
 import {
   generateBackupCodes,
   validateBackupCodes,
@@ -391,7 +398,6 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
     }
   );
 
-  // MFA verification endpoints for existing factors
   if (EnvSet.values.isDevFeaturesEnabled) {
     router.post(
       `${accountApiPrefix}/mfa-verifications/totp/verify`,
@@ -517,6 +523,112 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
         });
 
         ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
+
+        ctx.status = 204;
+
+        return next();
+      }
+    );
+
+    router.post(
+      `${accountApiPrefix}/mfa-verifications/webauthn/authentication`,
+      koaGuard({
+        status: [200, 400, 401, 422],
+        response: z.object({
+          verificationId: z.string(),
+          authenticationOptions: webAuthnAuthenticationOptionsGuard,
+        }),
+      }),
+      async (ctx, next) => {
+        const { id: userId, scopes } = ctx.auth;
+        const { fields } = ctx.accountCenter;
+
+        assertThat(
+          fields.mfa === AccountCenterControlValue.Edit ||
+            fields.mfa === AccountCenterControlValue.ReadOnly,
+          'account_center.field_not_enabled'
+        );
+
+        assertThat(
+          scopes.has(UserScope.Identities),
+          new RequestError({ code: 'auth.unauthorized', status: 401 })
+        );
+
+        const { mfa } = await findDefaultSignInExperience();
+        assertThat(mfa.factors.includes(MfaFactor.WebAuthn), 'session.mfa.mfa_factor_not_enabled');
+
+        const user = await findUserById(userId);
+        const webAuthnVerifications = user.mfaVerifications.filter(
+          (verification) => verification.type === MfaFactor.WebAuthn
+        );
+
+        assertThat(
+          webAuthnVerifications.length > 0,
+          new RequestError({ code: 'session.mfa.mfa_factor_not_enabled', status: 422 })
+        );
+
+        const webAuthnVerification = WebAuthnVerification.create(libraries, queries, userId);
+        const authenticationOptions =
+          await webAuthnVerification.generateWebAuthnAuthenticationOptions(ctx);
+        const { expiresAt } = await insertVerificationRecord(webAuthnVerification, queries, userId);
+
+        ctx.body = {
+          verificationId: webAuthnVerification.id,
+          authenticationOptions,
+          expiresAt: new Date(expiresAt).toISOString(),
+        };
+
+        return next();
+      }
+    );
+
+    router.post(
+      `${accountApiPrefix}/mfa-verifications/webauthn/verify`,
+      koaGuard({
+        body: z.object({
+          verificationRecordId: z.string(),
+          payload: webAuthnVerificationPayloadGuard.omit({ type: true }),
+        }),
+        status: [204, 400, 401, 422],
+      }),
+      async (ctx, next) => {
+        const { id: userId, scopes } = ctx.auth;
+        const { verificationRecordId, payload } = ctx.guard.body;
+        const { fields } = ctx.accountCenter;
+
+        assertThat(
+          fields.mfa === AccountCenterControlValue.Edit ||
+            fields.mfa === AccountCenterControlValue.ReadOnly,
+          'account_center.field_not_enabled'
+        );
+
+        assertThat(
+          scopes.has(UserScope.Identities),
+          new RequestError({ code: 'auth.unauthorized', status: 401 })
+        );
+
+        // Check sign in experience, if WebAuthn factor is enabled
+        const { mfa } = await findDefaultSignInExperience();
+        assertThat(mfa.factors.includes(MfaFactor.WebAuthn), 'session.mfa.mfa_factor_not_enabled');
+
+        const user = await findUserById(userId);
+        const webAuthnVerifications = user.mfaVerifications.filter(
+          (verification) => verification.type === MfaFactor.WebAuthn
+        );
+
+        assertThat(
+          webAuthnVerifications.length > 0,
+          new RequestError({ code: 'session.mfa.mfa_factor_not_enabled', status: 422 })
+        );
+
+        const verificationRecord = await buildVerificationRecordByIdAndType({
+          type: VerificationType.WebAuthn,
+          id: verificationRecordId,
+          queries,
+          libraries,
+        });
+        await verificationRecord.verifyWebAuthnAuthentication(ctx, payload);
+        await updateVerificationRecord(verificationRecord, queries);
 
         ctx.status = 204;
 

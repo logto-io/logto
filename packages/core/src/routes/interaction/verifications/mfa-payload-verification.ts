@@ -186,7 +186,7 @@ async function verifyWebAuthn(
     payload,
     challenge: pendingMfa.challenge,
     rpId,
-    origin,
+    origins: [origin],
     mfaVerifications,
   });
 

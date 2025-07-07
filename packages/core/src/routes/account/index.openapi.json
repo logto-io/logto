@@ -548,6 +548,50 @@
           }
         }
       }
+    },
+    "/api/my-account/mfa-verifications/webauthn/authentication": {
+      "post": {
+        "operationId": "GenerateWebAuthnAuthenticationOptions",
+        "summary": "Generate WebAuthn authentication challenge",
+        "tags": ["Dev feature"],
+        "description": "Generate WebAuthn authentication options and challenge for the user's existing WebAuthn MFA factors. This endpoint creates a verification record with an authentication challenge that the user's WebAuthn device will need to respond to. The returned verification ID must be used in the subsequent verify endpoint.",
+        "responses": {
+          "200": {
+            "description": "WebAuthn authentication options generated successfully."
+          },
+          "400": {
+            "description": "The request is invalid."
+          },
+          "401": {
+            "description": "Permission denied, insufficient scope or MFA field not enabled."
+          },
+          "422": {
+            "description": "The user does not have WebAuthn factors configured or WebAuthn is not enabled."
+          }
+        }
+      }
+    },
+    "/api/my-account/mfa-verifications/webauthn/verify": {
+      "post": {
+        "operationId": "VerifyWebAuthnMfa",
+        "summary": "Verify WebAuthn MFA",
+        "tags": ["Dev feature"],
+        "description": "Verify a WebAuthn credential using the user's existing WebAuthn MFA factor. This endpoint is used to authenticate the user with their configured WebAuthn device (passkey, security key, etc.). The verification requires a previously created verification record with an authentication challenge.",
+        "responses": {
+          "204": {
+            "description": "The WebAuthn credential was verified successfully."
+          },
+          "400": {
+            "description": "The request body is invalid."
+          },
+          "401": {
+            "description": "Permission denied, insufficient scope or MFA field not enabled."
+          },
+          "422": {
+            "description": "The WebAuthn verification failed, verification record not found, or the user does not have WebAuthn factors configured."
+          }
+        }
+      }
     }
   }
 }

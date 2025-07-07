@@ -198,6 +198,7 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
   ) {
     const { hostname, origin } = ctx.URL;
     const { mfaVerifications } = await this.findUser();
+    const { webauthnRelatedOrigins } = await this.queries.accountCenters.findDefaultAccountCenter();
 
     assertThat(this.authenticationChallenge, 'session.mfa.pending_info_not_found');
 
@@ -205,7 +206,7 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
       payload,
       challenge: this.authenticationChallenge,
       rpId: hostname,
-      origin,
+      origins: [origin, ...webauthnRelatedOrigins],
       mfaVerifications,
     });
 

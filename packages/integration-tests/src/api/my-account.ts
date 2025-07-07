@@ -132,3 +132,46 @@ export const verifyBackupCodeMfa = async (api: KyInstance, code: string) =>
   api.post('api/my-account/mfa-verifications/backup-code/verify', {
     json: { code },
   });
+
+export const generateWebAuthnAuthenticationOptions = async (api: KyInstance) =>
+  api.post('api/my-account/mfa-verifications/webauthn/authentication').json<{
+    verificationId: string;
+    authenticationOptions: {
+      challenge: string;
+      timeout: number;
+      rpId: string;
+      allowCredentials: Array<{
+        id: string;
+        type: 'public-key';
+        transports?: string[];
+      }>;
+      userVerification: 'required' | 'preferred' | 'discouraged';
+    };
+  }>();
+
+export const verifyWebAuthnMfa = async (
+  api: KyInstance,
+  verificationRecordId: string,
+  payload: {
+    id: string;
+    rawId: string;
+    response: {
+      authenticatorData: string;
+      clientDataJSON: string;
+      signature: string;
+      userHandle?: string;
+    };
+    type: 'WebAuthn';
+    clientExtensionResults: {
+      appid?: boolean;
+      crepProps?: {
+        rk?: boolean;
+      };
+      hmacCreateSecret?: boolean;
+    };
+    authenticatorAttachment?: 'platform' | 'cross-platform';
+  }
+) =>
+  api.post('api/my-account/mfa-verifications/webauthn/verify', {
+    json: { verificationRecordId, payload },
+  });

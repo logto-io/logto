@@ -124,7 +124,7 @@ type VerifyWebAuthnAuthenticationParameters = {
   payload: Omit<WebAuthnVerificationPayload, 'type'>;
   challenge: string;
   rpId: string;
-  origin: string;
+  origins: string[];
   mfaVerifications: MfaVerifications;
 };
 
@@ -132,7 +132,7 @@ export const verifyWebAuthnAuthentication = async ({
   payload,
   challenge,
   rpId,
-  origin,
+  origins,
   mfaVerifications,
 }: VerifyWebAuthnAuthenticationParameters): Promise<{
   result: false | VerifyMfaResult;
@@ -158,7 +158,7 @@ export const verifyWebAuthnAuthentication = async ({
       type: 'public-key',
     },
     expectedChallenge: challenge,
-    expectedOrigin: origin,
+    expectedOrigin: origins,
     expectedRPID: rpId,
     authenticator: {
       credentialPublicKey: isoBase64URL.toBuffer(publicKey),

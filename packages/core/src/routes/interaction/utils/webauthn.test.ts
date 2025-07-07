@@ -91,7 +91,7 @@ describe('verifyWebAuthnAuthentication', () => {
         },
         challenge: 'challenge',
         rpId,
-        origin,
+        origins: [origin],
         mfaVerifications: [mockUserWebAuthnMfaVerification],
       })
     ).resolves.toMatchObject({
@@ -110,7 +110,7 @@ describe('verifyWebAuthnAuthentication', () => {
         },
         challenge: 'challenge',
         rpId,
-        origin,
+        origins: [origin],
         mfaVerifications: [mockUserWebAuthnMfaVerification],
       })
     ).resolves.toMatchObject({

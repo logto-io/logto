@@ -9,6 +9,8 @@ import {
   generateTotpSecret,
   verifyBackupCodeMfa,
   verifyTotpMfa,
+  verifyWebAuthnMfa,
+  generateWebAuthnAuthenticationOptions,
 } from '#src/api/my-account.js';
 import { createVerificationRecordByPassword } from '#src/api/verification-record.js';
 import { expectRejects } from '#src/helpers/index.js';
@@ -259,5 +261,101 @@ describe('my-account (mfa verification)', () => {
 
       await deleteDefaultTenantUser(user.id);
     });
+  });
+
+  devFeatureTest.describe('POST /my-account/mfa-verifications/webauthn/authentication', () => {
+    it('should fail when user has no WebAuthn factor', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+
+      // Try to generate authentication challenge without having WebAuthn configured
+      await expectRejects(generateWebAuthnAuthenticationOptions(api), {
+        code: 'session.mfa.mfa_factor_not_enabled',
+        status: 422,
+      });
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should fail without required scope', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile], // Missing UserScope.Identities
+      });
+
+      await expectRejects(generateWebAuthnAuthenticationOptions(api), {
+        code: 'auth.unauthorized',
+        status: 401,
+      });
+
+      await deleteDefaultTenantUser(user.id);
+    });
+  });
+
+  devFeatureTest.describe('POST /my-account/mfa-verifications/webauthn/verify', () => {
+    it('should fail when user has no WebAuthn factor', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+
+      // Create a dummy verification record ID and payload
+      const verificationRecordId = 'dummy-verification-record-id';
+      const payload = {
+        id: 'dummy-credential-id',
+        rawId: 'dummy-raw-id',
+        response: {
+          authenticatorData: 'dummy-authenticator-data',
+          clientDataJSON: 'dummy-client-data-json',
+          signature: 'dummy-signature',
+        },
+        type: 'WebAuthn' as const,
+        clientExtensionResults: {},
+        authenticatorAttachment: 'platform' as const,
+      };
+
+      // Try to verify WebAuthn without having WebAuthn configured
+      await expectRejects(verifyWebAuthnMfa(api, verificationRecordId, payload), {
+        code: 'session.mfa.mfa_factor_not_enabled',
+        status: 422,
+      });
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should fail without required scope', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile], // Missing UserScope.Identities
+      });
+
+      const verificationRecordId = 'dummy-verification-record-id';
+      const payload = {
+        id: 'dummy-credential-id',
+        rawId: 'dummy-raw-id',
+        response: {
+          authenticatorData: 'dummy-authenticator-data',
+          clientDataJSON: 'dummy-client-data-json',
+          signature: 'dummy-signature',
+        },
+        type: 'WebAuthn' as const,
+        clientExtensionResults: {},
+        authenticatorAttachment: 'platform' as const,
+      };
+
+      await expectRejects(verifyWebAuthnMfa(api, verificationRecordId, payload), {
+        code: 'auth.unauthorized',
+        status: 401,
+      });
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    // Note: Testing actual WebAuthn verification requires browser-like environment
+    // and WebAuthn API simulation, which is complex for integration tests.
+    // The endpoint is tested for basic validation and error cases above.
+    // Manual testing is required for full WebAuthn flow.
   });
 });
