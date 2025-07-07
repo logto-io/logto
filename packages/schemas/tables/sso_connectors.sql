@@ -16,6 +16,8 @@ create table sso_connectors (
   branding jsonb /* @use SsoBranding */ not null default '{}'::jsonb,
   /** Determines whether to synchronize the user's profile on each login. */
   sync_profile boolean not null default FALSE,
+  /** Whether the token storage is enabled for this connector. Only applied for OAuth2/OIDC SSO connectors. */
+  enable_token_storage boolean not null default FALSE,
   /** When the SSO connector was created. */
   created_at timestamptz not null default(now()),
   primary key (id),
