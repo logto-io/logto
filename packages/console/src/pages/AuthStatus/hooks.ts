@@ -48,7 +48,7 @@ export const useAuthStatus = () => {
         data,
       };
 
-      console.log(`[AuthStatus] ${type.toUpperCase()}: ${message}`, data);
+      console.log(`[AuthStatus] ${type.toUpperCase()}: ${message}`, JSON.stringify(data, null, 2));
       setDebugLogs((previous) => [...previous, logEntry]);
     },
     [isDebugMode]
