@@ -6,6 +6,8 @@ import {
   tokenSetGuard,
   type EncryptedSecret,
   type EncryptedTokenSet,
+  type EnterpriseSsoTokenSetSecret,
+  type SocialTokenSetSecret,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
@@ -159,4 +161,16 @@ export const encryptTokenResponse = (
       expiresAt,
     },
   };
+};
+
+export const desensitizeTokenSetSecret = <
+  T extends EnterpriseSsoTokenSetSecret | SocialTokenSetSecret,
+>({
+  encryptedDek,
+  iv,
+  authTag,
+  ciphertext,
+  ...rest
+}: T): Omit<T, 'encryptedDek' | 'iv' | 'authTag' | 'ciphertext'> => {
+  return rest;
 };

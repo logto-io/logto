@@ -105,3 +105,14 @@ export const enterpriseSsoTokenSetSecretGuard = Secrets.guard.extend({
  * - Joined with the Enterprise SSO connector relation
  */
 export type EnterpriseSsoTokenSetSecret = z.infer<typeof enterpriseSsoTokenSetSecretGuard>;
+
+export const desensitizedEnterpriseSsoTokenSetSecretGuard = enterpriseSsoTokenSetSecretGuard.omit({
+  encryptedDek: true,
+  iv: true,
+  authTag: true,
+  ciphertext: true,
+});
+
+export type DesensitizedEnterpriseSsoTokenSetSecret = z.infer<
+  typeof desensitizedEnterpriseSsoTokenSetSecretGuard
+>;

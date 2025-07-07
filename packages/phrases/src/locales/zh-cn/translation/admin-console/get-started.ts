@@ -32,6 +32,13 @@ const get_started = {
     },
     create_roles: '创建角色',
   },
+  convert_to_production: {
+    card_title: '准备上线了吗？别忘了启动你的生产环境设置！',
+    title: '不要让你的项目停留在开发模式',
+    subtitle:
+      '你正在使用开发租户进行免费测试。要上线，请创建或转换为生产租户。需要自定义内容？<a>联系我们</a>',
+    convert_button: '转换为生产租户',
+  },
   view_all: '查看全部 →',
 };
 

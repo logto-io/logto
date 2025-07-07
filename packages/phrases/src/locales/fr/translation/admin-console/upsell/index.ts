@@ -48,6 +48,25 @@ const upsell = {
   paywall,
   featured_plan_content,
   add_on,
+  convert_to_production_modal: {
+    title: 'Vous allez changer votre locataire de développement en locataire de production',
+    description:
+      'Prêt à passer en ligne ? Convertir ce locataire dev en locataire de production débloquera toutes les fonctionnalités',
+    benefits: {
+      stable_environment:
+        'Pour les utilisateurs finaux : Un environnement stable pour un usage réel.',
+      keep_pro_features:
+        'Conservez les fonctionnalités Pro : vous allez vous abonner au plan Pro. <a>Voir les fonctionnalités Pro.</a>',
+      no_dev_restrictions:
+        "Pas de restrictions de développement : Supprime les limites du système d'entité et de ressource et la bannière de connexion.",
+    },
+    cards: {
+      dev_description: 'À des fins de test',
+      prod_description: 'Production réelle',
+      convert_label: 'convertir',
+    },
+    button: 'Convertir en locataire de production',
+  },
 };
 
 export default Object.freeze(upsell);

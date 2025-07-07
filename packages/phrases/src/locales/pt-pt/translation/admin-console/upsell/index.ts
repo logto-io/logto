@@ -48,6 +48,25 @@ const upsell = {
   paywall,
   featured_plan_content,
   add_on,
+  convert_to_production_modal: {
+    title:
+      'Você está prestes a mudar o seu inquilino de desenvolvimento para inquilino de produção',
+    description:
+      'Pronto para entrar em funcionamento? Converter este inquilino de desenvolvimento para um inquilino de produção desbloqueia a funcionalidade completa',
+    benefits: {
+      stable_environment: 'Para utilizadores finais: Um ambiente estável para uso real.',
+      keep_pro_features:
+        'Mantenha os recursos Pro: Você vai assinar o plano Pro. <a>Ver recursos Pro.</a>',
+      no_dev_restrictions:
+        'Sem restrições de desenvolvimento: Remove os limites de entidade e sistema de recursos e o banner de login.',
+    },
+    cards: {
+      dev_description: 'Para fins de teste',
+      prod_description: 'Produção real',
+      convert_label: 'converter',
+    },
+    button: 'Converter para inquilino de produção',
+  },
 };
 
 export default Object.freeze(upsell);

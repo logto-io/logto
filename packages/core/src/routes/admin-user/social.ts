@@ -9,12 +9,13 @@ import {
 import { has } from '@silverhand/essentials';
 import { object, record, string, unknown } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
+import { desensitizeTokenSetSecret } from '#src/utils/secret-encryption.js';
+import { transpileUserProfileResponse } from '#src/utils/user.js';
 
-import { EnvSet } from '../../env-set/index.js';
-import { transpileUserProfileResponse } from '../../utils/user.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 export default function adminUserSocialRoutes<T extends ManagementApiRouter>(
@@ -185,9 +186,7 @@ export default function adminUserSocialRoutes<T extends ManagementApiRouter>(
           throw new RequestError({ code: 'entity.not_found', status: 404 });
         }
 
-        const { encryptedDek, iv, authTag, ciphertext, ...rest } = secret;
-
-        ctx.body = rest;
+        ctx.body = desensitizeTokenSetSecret(secret);
 
         return next();
       }

@@ -42,6 +42,8 @@ const user = {
     'E-posta adresi veya telefon numarası gerekli bir tanımlayıcıdır, en az bir tanesi gereklidir.',
   email_required: 'E-posta adresi gerekli bir tanımlayıcıdır, boş bırakılamaz.',
   phone_required: 'Telefon numarası gerekli bir tanımlayıcıdır, boş bırakılamaz.',
+  enterprise_sso_identity_not_exists:
+    'Kullanıcının belirtilen SSO bağlantı kimliği ile bağlantılı bir kurumsal kimliği yoktur: {{ ssoConnectorId }}.',
 };
 
 export default Object.freeze(user);

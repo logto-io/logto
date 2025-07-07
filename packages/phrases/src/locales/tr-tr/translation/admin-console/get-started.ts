@@ -36,6 +36,13 @@ const get_started = {
     },
     create_roles: 'Roller oluştur',
   },
+  convert_to_production: {
+    card_title: 'Yayınlamaya hazır mısınız? Üretim kurulumunuzu başlatmayı unutmayın!',
+    title: 'Projenizi geliştirme modunda kalmasın',
+    subtitle:
+      'Ücretsiz test için bir geliştirici kiracısı kullanıyorsunuz. Yayına geçmek için bir üretim kiracısı oluşturun veya dönüştürün. Özel bir şeye mi ihtiyacınız var? <a>Bizimle iletişime geçin</a>',
+    convert_button: 'Üretim kiracısına dönüştür',
+  },
   view_all: 'Hepsini görüntüle →',
 };
 

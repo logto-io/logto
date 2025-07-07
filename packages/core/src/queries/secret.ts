@@ -1,6 +1,7 @@
 import {
   type CreateSecret,
   type CreateSocialTokenSetSecret,
+  type EnterpriseSsoTokenSetSecret,
   type Secret,
   type SecretEnterpriseSsoConnectorRelationPayload,
   SecretEnterpriseSsoConnectorRelations,
@@ -118,6 +119,27 @@ class SecretQueries extends SchemaQueries<SecretKeys, CreateSecret, Secret> {
         ...ssoConnectorRelationPayload,
       });
     });
+  }
+
+  /**
+   * For user federated token exchange use, we need to find the secret by user id and SSO connector.
+   */
+  public async findEnterpriseSsoTokenSetSecretByUserIdAndConnectorId(
+    userId: string,
+    ssoConnectorId: string
+  ) {
+    return this.pool.maybeOne<EnterpriseSsoTokenSetSecret>(sql`
+      select ${sql.join(Object.values(secrets.fields), sql`, `)},
+          ${secretEnterpriseSsoConnectorRelations.fields.ssoConnectorId},
+          ${secretEnterpriseSsoConnectorRelations.fields.identityId},
+          ${secretEnterpriseSsoConnectorRelations.fields.issuer}
+        from ${secrets.table}
+        join ${secretEnterpriseSsoConnectorRelations.table}
+          on ${secrets.fields.id} = ${secretEnterpriseSsoConnectorRelations.fields.secretId}
+        where ${secrets.fields.userId} = ${userId}
+          and ${secrets.fields.type} = ${SecretType.FederatedTokenSet}
+          and ${secretEnterpriseSsoConnectorRelations.fields.ssoConnectorId} = ${ssoConnectorId}
+    `);
   }
 }
 

@@ -32,6 +32,13 @@ const get_started = {
     },
     create_roles: '創建角色',
   },
+  convert_to_production: {
+    card_title: '準備好上線了嗎？不要忘記發佈你的生產環境設置！',
+    title: '不要讓你的專案卡在開發模式',
+    subtitle:
+      '你正在使用一個開發租戶進行免費測試。要上線，請創建或轉換為生產租戶。需要定制方案嗎？<a>聯絡我們</a>',
+    convert_button: '轉換為生產租戶',
+  },
   view_all: '查看全部 →',
 };
 

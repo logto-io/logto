@@ -48,6 +48,21 @@ const upsell = {
   paywall,
   featured_plan_content,
   add_on,
+  convert_to_production_modal: {
+    title: '你即將把開發租戶轉換為生產租戶',
+    description: '準備好上線了嗎？將此開發租戶轉換為生產租戶以解鎖全部功能',
+    benefits: {
+      stable_environment: '對終端用戶：提供穩定的實際使用環境。',
+      keep_pro_features: '保留專業版功能：你將訂閱專業版計劃。 <a>查看專業版功能。</a>',
+      no_dev_restrictions: '沒有開發限制：移除實體和資源系統限制及登錄橫幅。',
+    },
+    cards: {
+      dev_description: '測試用途',
+      prod_description: '實際生產',
+      convert_label: '轉換',
+    },
+    button: '轉換為生產租戶',
+  },
 };
 
 export default Object.freeze(upsell);

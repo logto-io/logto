@@ -48,6 +48,24 @@ const upsell = {
   paywall,
   featured_plan_content,
   add_on,
+  convert_to_production_modal: {
+    title: 'Sie werden Ihren Entwicklungstenant in einen Produktionstenant umwandeln',
+    description:
+      'Bereit für den Live-Betrieb? Die Umwandlung dieses Entw-Tenant in einen Produkt-Tenant schaltet die volle Funktionalität frei',
+    benefits: {
+      stable_environment: 'Für Endbenutzer: Eine stabile Umgebung für den realen Einsatz.',
+      keep_pro_features:
+        'Pro-Funktionen behalten: Sie werden den Pro-Plan abonnieren. <a>Pro-Funktionen ansehen.</a>',
+      no_dev_restrictions:
+        'Keine Entwicklerbeschränkungen: Entfernt Entitäts- und Ressourcensystemlimits sowie das Anmeldebanner.',
+    },
+    cards: {
+      dev_description: 'Testzwecke',
+      prod_description: 'Echte Produktion',
+      convert_label: 'umwandeln',
+    },
+    button: 'In Produkt-Tenant umwandeln',
+  },
 };
 
 export default Object.freeze(upsell);

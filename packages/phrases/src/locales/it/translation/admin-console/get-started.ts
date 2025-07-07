@@ -36,6 +36,14 @@ const get_started = {
     },
     create_roles: 'Crea ruoli',
   },
+  convert_to_production: {
+    card_title:
+      'Pronto per andare in diretta? Non dimenticare di avviare la configurazione di produzione!',
+    title: 'Non lasciare il tuo progetto bloccato in modalità sviluppo',
+    subtitle:
+      'Stai usando un tenant di sviluppo per il test gratuito. Per andare in diretta, crea o converti a un tenant di produzione. Hai bisogno di qualcosa di personalizzato? <a>Contattaci</a>',
+    convert_button: 'Converti a tenant di produzione',
+  },
   view_all: 'Visualizza tutto →',
 };
 

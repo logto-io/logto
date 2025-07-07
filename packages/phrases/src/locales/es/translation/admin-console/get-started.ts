@@ -36,6 +36,13 @@ const get_started = {
     },
     create_roles: 'Crear roles',
   },
+  convert_to_production: {
+    card_title: '¿Listo para salir en vivo? ¡No olvides lanzar tu configuración de producción!',
+    title: 'No dejes tu proyecto atascado en modo desarrollo',
+    subtitle:
+      'Estás usando un inquilino de desarrollo para pruebas gratuitas. Para salir en vivo, crea o convierte a un inquilino de producción. ¿Necesitas algo personalizado? <a>Contáctanos</a>',
+    convert_button: 'Convertir a inquilino de producción',
+  },
   view_all: 'Ver todo →',
 };
 
