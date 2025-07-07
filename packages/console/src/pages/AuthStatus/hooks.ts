@@ -239,5 +239,6 @@ export const useAuthStatus = () => {
     currentToken,
     clearDebugLogs,
     toggleDebugMode,
+    isAuthenticated,
   };
 };

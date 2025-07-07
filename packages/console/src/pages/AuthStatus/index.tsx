@@ -17,7 +17,14 @@ function AuthStatus() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   // Use the comprehensive hook for all functionality
-  const { isDebugMode, debugLogs, currentToken, clearDebugLogs, toggleDebugMode } = useAuthStatus();
+  const {
+    isDebugMode,
+    debugLogs,
+    currentToken,
+    clearDebugLogs,
+    toggleDebugMode,
+    isAuthenticated,
+  } = useAuthStatus();
 
   if (!isDebugMode) {
     return (
@@ -37,6 +44,7 @@ function AuthStatus() {
         <h2 className={styles.title}>Auth Status Checker - Debug Mode</h2>
         <p className={styles.info}>Origin: {window.location.origin}</p>
         <p className={styles.info}>In iframe: {window === window.top ? 'No' : 'Yes'}</p>
+        <p className={styles.info}>Is authenticated: {isAuthenticated ? 'Yes' : 'No'}</p>
         <div className={styles.info}>
           Current token:{' '}
           {currentToken ? (
