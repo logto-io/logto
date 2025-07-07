@@ -75,19 +75,20 @@ export const useAuthStatus = () => {
     });
   }, [addDebugLog]);
 
-  // Monitor token changes
+  // Monitor token changes and authentication state together
   useEffect(() => {
     const fetchToken = async () => {
       const token = await getIdToken();
       setCurrentToken(token ?? undefined);
       addDebugLog('info', `Current token status: ${token ? 'present' : 'absent'}`, {
         tokenLength: token?.length,
+        isAuthenticated,
       });
     };
 
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     fetchToken();
-  }, [addDebugLog, getIdToken]);
+  }, [addDebugLog, getIdToken, isAuthenticated]);
 
   // Handle postMessage events
   const handleMessage = useCallback(
@@ -156,9 +157,23 @@ export const useAuthStatus = () => {
             throw new Error(`localStorage not accessible: ${storageCheck.error}`);
           }
 
+          // Get fresh authentication state at message handling time to avoid race conditions
+          const freshToken = await getIdToken();
+          const freshIsAuthenticated = Boolean(freshToken);
+
+          // Update current token state to ensure consistency
+          setCurrentToken(freshToken ?? undefined);
+
+          addDebugLog('info', 'Fresh authentication state check', {
+            freshToken: freshToken ? 'present' : 'absent',
+            freshIsAuthenticated,
+            cachedIsAuthenticated: isAuthenticated,
+            tokenLength: freshToken?.length,
+          });
+
           const response: AdminTokenStatusMessage = {
             type: AuthMessageType.AdminTokenStatus,
-            isAuthenticated,
+            isAuthenticated: freshIsAuthenticated,
             requestId,
             debugInfo,
           };
@@ -202,7 +217,7 @@ export const useAuthStatus = () => {
         addDebugLog('error', 'Invalid message format received', event.data);
       }
     },
-    [addDebugLog, isAuthenticated]
+    [addDebugLog, isAuthenticated, getIdToken]
   );
 
   // Set up message event listener
