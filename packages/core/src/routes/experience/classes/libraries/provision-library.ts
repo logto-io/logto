@@ -59,6 +59,7 @@ export class ProvisionLibrary {
       libraries: {
         users: { generateUserId, insertUser },
         socials: { upsertSocialTokenSetSecret },
+        ssoConnectors: { upsertEnterpriseSsoTokenSetSecret },
       },
     } = this.tenantContext;
 
@@ -68,6 +69,7 @@ export class ProvisionLibrary {
       syncedEnterpriseSsoIdentity,
       jitOrganizationIds,
       socialConnectorTokenSetSecret,
+      enterpriseSsoConnectorTokenSetSecret,
       ...rest
     } = profile;
 
@@ -94,6 +96,10 @@ export class ProvisionLibrary {
 
     if (socialConnectorTokenSetSecret) {
       await upsertSocialTokenSetSecret(user.id, socialConnectorTokenSetSecret);
+    }
+
+    if (enterpriseSsoConnectorTokenSetSecret) {
+      await upsertEnterpriseSsoTokenSetSecret(user.id, enterpriseSsoConnectorTokenSetSecret);
     }
 
     await this.provisionNewUserJitOrganizations(user.id, profile);

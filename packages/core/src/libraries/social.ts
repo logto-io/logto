@@ -1,10 +1,10 @@
 import { appInsights } from '@logto/app-insights/node';
-import type { GetSession, SocialUserInfo, TokenResponse } from '@logto/connector-kit';
+import type { GetSession, SocialUserInfo } from '@logto/connector-kit';
 import { socialUserInfoGuard } from '@logto/connector-kit';
 import type { EncryptedTokenSet, SecretSocialConnectorRelationPayload, User } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { conditional, type Nullable } from '@silverhand/essentials';
+import { trySafe, type Nullable } from '@silverhand/essentials';
 import type { InteractionResults } from 'oidc-provider';
 import { z } from 'zod';
 
@@ -14,11 +14,7 @@ import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
 
-import {
-  deserializeEncryptedSecret,
-  encryptTokens,
-  serializeEncryptedSecret,
-} from '../utils/secret-encryption.js';
+import { deserializeEncryptedSecret, encryptTokenResponse } from '../utils/secret-encryption.js';
 
 const getUserInfoFromInteractionResult = async (
   connectorId: string,
@@ -41,46 +37,6 @@ const getUserInfoFromInteractionResult = async (
   assertThat(result.socialUserInfo.connectorId === connectorId, 'session.connector_id_mismatch');
 
   return result.socialUserInfo.userInfo;
-};
-
-const encryptTokenResponse = (tokenResponse?: TokenResponse): EncryptedTokenSet | undefined => {
-  if (!tokenResponse?.access_token) {
-    return;
-  }
-
-  try {
-    const {
-      access_token,
-      id_token,
-      refresh_token,
-      scope,
-      token_type: tokenType,
-      expires_in,
-    } = tokenResponse;
-
-    const requestedAt = Math.floor(Date.now() / 1000);
-
-    const expiresAt = expires_in && requestedAt + expires_in;
-
-    const encryptedTokenSet = encryptTokens({
-      access_token,
-      ...conditional(id_token && { id_token }),
-      ...conditional(refresh_token && { refresh_token }),
-    });
-
-    return {
-      encryptedTokenSetBase64: serializeEncryptedSecret(encryptedTokenSet),
-      metadata: {
-        scope,
-        tokenType,
-        expiresAt,
-      },
-    };
-  } catch (error: unknown) {
-    // Token encryption should not break the normal social authentication flow
-    // Return undefined to indicate no token response is available
-    void appInsights.trackException(error);
-  }
 };
 
 export const createSocialLibrary = (queries: Queries, connectorLibrary: ConnectorLibrary) => {
@@ -162,7 +118,13 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
         getConnectorSession
       );
 
-      const encryptedTokenSet = encryptTokenResponse(tokenResponse);
+      const encryptedTokenSet = trySafe(
+        () => encryptTokenResponse(tokenResponse),
+        (error) => {
+          // If the token response cannot be encrypted, we log the error but continue to return user info.
+          void appInsights.trackException(error);
+        }
+      );
 
       return {
         userInfo,

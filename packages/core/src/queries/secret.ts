@@ -2,6 +2,8 @@ import {
   type CreateSecret,
   type CreateSocialTokenSetSecret,
   type Secret,
+  type SecretEnterpriseSsoConnectorRelationPayload,
+  SecretEnterpriseSsoConnectorRelations,
   type SecretKeys,
   Secrets,
   type SecretSocialConnectorRelationPayload,
@@ -17,6 +19,10 @@ import { convertToIdentifiers } from '../utils/sql.js';
 
 const secrets = convertToIdentifiers(Secrets, true);
 const secretSocialConnectorRelations = convertToIdentifiers(SecretSocialConnectorRelations, true);
+const secretEnterpriseSsoConnectorRelations = convertToIdentifiers(
+  SecretEnterpriseSsoConnectorRelations,
+  true
+);
 
 class SecretQueries extends SchemaQueries<SecretKeys, CreateSecret, Secret> {
   constructor(pool: CommonQueryMethods) {
@@ -79,6 +85,39 @@ class SecretQueries extends SchemaQueries<SecretKeys, CreateSecret, Secret> {
           and ${secrets.fields.type} = ${SecretType.FederatedTokenSet}
           and ${secretSocialConnectorRelations.fields.target} = ${target}
     `);
+  }
+
+  public async upsertEnterpriseSsoTokenSetSecret(
+    secret: Omit<CreateSocialTokenSetSecret, 'type'>,
+    ssoConnectorRelationPayload: SecretEnterpriseSsoConnectorRelationPayload
+  ) {
+    return this.pool.transaction(async (transaction) => {
+      // Delete any existing secret for the same identity and issuer
+      // This is to ensure only one secret exists for a given identity
+      await transaction.query(sql`
+        delete from ${secrets.table}
+        using ${secretEnterpriseSsoConnectorRelations.table}
+        where ${secrets.fields.id} = ${secretEnterpriseSsoConnectorRelations.fields.secretId}
+          and ${secrets.fields.userId} = ${secret.userId}
+          and ${secretEnterpriseSsoConnectorRelations.fields.issuer} = ${ssoConnectorRelationPayload.issuer}
+      `);
+
+      // Insert new secrets
+      const insertInto = buildInsertIntoWithPool(transaction)(Secrets, { returning: true });
+      const newSecret = await insertInto({
+        ...secret,
+        type: SecretType.FederatedTokenSet,
+      });
+
+      // Insert enterprise SSO connector relation
+      const insertEnterpriseSsoRelations = buildInsertIntoWithPool(transaction)(
+        SecretEnterpriseSsoConnectorRelations
+      );
+      await insertEnterpriseSsoRelations({
+        secretId: newSecret.id,
+        ...ssoConnectorRelationPayload,
+      });
+    });
   }
 }
 

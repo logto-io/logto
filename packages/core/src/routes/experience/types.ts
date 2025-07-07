@@ -3,6 +3,7 @@ import {
   type CreateUser,
   encryptedTokenSetGuard,
   InteractionEvent,
+  secretEnterpriseSsoConnectorRelationPayloadGuard,
   secretSocialConnectorRelationPayloadGuard,
   type User,
   Users,
@@ -18,6 +19,7 @@ import { type WithInteractionDetailsContext } from '#src/middleware/koa-interact
 import { type WithI18nContext } from '../../middleware/koa-i18next.js';
 
 import { mfaDataGuard, type MfaData } from './classes/mfa.js';
+import { type EnterpriseSsoConnectorTokenSetSecret } from './classes/verifications/enterprise-sso-verification.js';
 import {
   type VerificationRecordData,
   type VerificationRecord,
@@ -49,6 +51,10 @@ export type InteractionProfile = {
    * Store encrypted token set from a social verification record.  If present, Logto will save this token set in the Secret Vault for future use by the user.
    */
   socialConnectorTokenSetSecret?: SocialConnectorTokenSetSecret;
+  /**
+   * Store encrypted token set from a enterprise SSO verification record.  If present, Logto will save this token set in the Secret Vault for future use by the user.
+   */
+  enterpriseSsoConnectorTokenSetSecret?: EnterpriseSsoConnectorTokenSetSecret;
 } & Pick<
   CreateUser,
   | 'avatar'
@@ -97,6 +103,12 @@ const interactionProfileGuard = Users.createGuard
       .object({
         encryptedTokenSet: encryptedTokenSetGuard,
         socialConnectorRelationPayload: secretSocialConnectorRelationPayloadGuard,
+      })
+      .optional(),
+    enterpriseSsoConnectorTokenSetSecret: z
+      .object({
+        encryptedTokenSet: encryptedTokenSetGuard,
+        enterpriseSsoConnectorRelationPayload: secretEnterpriseSsoConnectorRelationPayloadGuard,
       })
       .optional(),
   }) satisfies ToZodObject<InteractionProfile>;

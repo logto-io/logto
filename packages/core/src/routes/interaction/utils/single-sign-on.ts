@@ -1,7 +1,9 @@
 /* eslint-disable max-lines -- will migrate this file to the latest experience APIs */
+import { appInsights } from '@logto/app-insights/node';
 import { ConnectorError } from '@logto/connector-kit';
 import { validateRedirectUrl } from '@logto/core-kit';
 import {
+  type EncryptedTokenSet,
   InteractionEvent,
   type SupportedSsoConnector,
   type User,
@@ -22,6 +24,8 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { safeParseUnknownJson } from '#src/utils/json.js';
 
+import OidcConnector from '../../../sso/OidcConnector/index.js';
+import { encryptTokenResponse } from '../../../utils/secret-encryption.js';
 import { type WithInteractionHooksContext } from '../middleware/koa-interaction-hooks.js';
 
 import {
@@ -130,6 +134,12 @@ type SsoAuthenticationResult = {
   /** The issuer of the SSO provider, we need to store this in the user SSO identity to identify the provider. */
   issuer: string;
   userInfo: ExtendedSocialUserInfo;
+  /**
+   * Only applied to the OIDC connectors.
+   * If the SSO connector has token storage enabled,
+   * this will contain the encrypted token set from the OIDC provider.
+   */
+  encryptedTokenSet?: EncryptedTokenSet;
 };
 
 /**
@@ -160,10 +170,38 @@ export const verifySsoIdentity = async (
       connectorData,
       envSet.endpoint
     );
-    const issuer = await connectorInstance.getIssuer();
-    const { userInfo } = await connectorInstance.getUserInfo(singleSignOnSession, data);
 
-    log.append({ issuer, userInfo });
+    const { enableTokenStorage } = connectorData;
+
+    const issuer = await connectorInstance.getIssuer();
+
+    // TODO: remove the dev feature guard when token storage is ready
+    if (EnvSet.values.isDevFeaturesEnabled && connectorInstance instanceof OidcConnector) {
+      const { userInfo, tokenResponse } = await connectorInstance.getUserInfo(
+        singleSignOnSession,
+        data
+      );
+
+      log.append({ issuer, userInfo });
+
+      return {
+        issuer,
+        userInfo,
+        encryptedTokenSet: conditional(
+          enableTokenStorage &&
+            tokenResponse &&
+            trySafe(
+              () => encryptTokenResponse(tokenResponse),
+              (error) => {
+                // If the token response cannot be encrypted, we log the error but continue to return user info.
+                void appInsights.trackException(error);
+              }
+            )
+        ),
+      };
+    }
+
+    const { userInfo } = await connectorInstance.getUserInfo(singleSignOnSession, data);
 
     return {
       issuer,

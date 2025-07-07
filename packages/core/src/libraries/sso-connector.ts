@@ -1,3 +1,4 @@
+import { appInsights } from '@logto/app-insights/node';
 import { type DirectSignInOptions, Prompt, QueryKey, ReservedScope, UserScope } from '@logto/js';
 import {
   ApplicationType,
@@ -5,6 +6,8 @@ import {
   type CreateSsoConnectorIdpInitiatedAuthConfig,
   type SupportedSsoConnector,
   type SsoConnectorIdpInitiatedAuthConfig,
+  type EncryptedTokenSet,
+  type SecretEnterpriseSsoConnectorRelationPayload,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { assert, deduplicate, trySafe } from '@silverhand/essentials';
@@ -16,6 +19,8 @@ import { isSupportedSsoConnector } from '#src/sso/utils.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 import { type OmitAutoSetFields } from '#src/utils/sql.js';
+
+import { deserializeEncryptedSecret } from '../utils/secret-encryption.js';
 
 export type SsoConnectorLibrary = ReturnType<typeof createSsoConnectorLibrary>;
 
@@ -213,6 +218,34 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
     return new URL(`${issuer}/auth?${queryParameters.toString()}`);
   };
 
+  const upsertEnterpriseSsoTokenSetSecret = async (
+    userId: string,
+    {
+      encryptedTokenSet,
+      enterpriseSsoConnectorRelationPayload,
+    }: {
+      encryptedTokenSet: EncryptedTokenSet;
+      enterpriseSsoConnectorRelationPayload: SecretEnterpriseSsoConnectorRelationPayload;
+    }
+  ) => {
+    const { encryptedTokenSetBase64, metadata } = encryptedTokenSet;
+
+    try {
+      await queries.secrets.upsertEnterpriseSsoTokenSetSecret(
+        {
+          id: generateStandardId(),
+          userId,
+          ...deserializeEncryptedSecret(encryptedTokenSetBase64),
+          metadata,
+        },
+        enterpriseSsoConnectorRelationPayload
+      );
+    } catch (error: unknown) {
+      // Upsert token set secret should not break the normal social authentication and link flow
+      void appInsights.trackException(error);
+    }
+  };
+
   return {
     getSsoConnectors,
     getAvailableSsoConnectors,
@@ -220,5 +253,6 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
     createSsoConnectorIdpInitiatedAuthConfig,
     createIdpInitiatedSamlSsoSession,
     getIdpInitiatedSamlSsoSignInUrl,
+    upsertEnterpriseSsoTokenSetSecret,
   };
 };
