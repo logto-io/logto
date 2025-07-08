@@ -1,4 +1,4 @@
-import { GoogleConnector } from '@logto/connector-kit';
+import { GoogleConnector, googleOneTapIdTokenPayloadGuard } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
 import { ConsoleLog, generateStandardId, generateStandardSecret } from '@logto/shared';
 import { trySafe, tryThat } from '@silverhand/essentials';
@@ -124,9 +124,19 @@ export default function googleOneTapRoutes<T extends AnonymousRouter>(
         }
       );
 
-      const { sub: googleUserId, email, email_verified } = payload;
+      const parsedPayload = googleOneTapIdTokenPayloadGuard.safeParse(payload);
 
-      if (!email || !email_verified) {
+      if (!parsedPayload.success) {
+        throw new RequestError({
+          code: 'session.google_one_tap.invalid_id_token_payload',
+          status: 400,
+          details: parsedPayload.error.flatten(),
+        });
+      }
+
+      const { sub: googleUserId, email, email_verified: emailVerified } = parsedPayload.data;
+
+      if (!email || !emailVerified) {
         throw new RequestError({
           code: 'session.google_one_tap.unverified_email',
           status: 400,
@@ -134,7 +144,7 @@ export default function googleOneTapRoutes<T extends AnonymousRouter>(
       }
 
       // Check if user exists with this Google identity
-      const existingUser = await findUserByIdentity(GoogleConnector.target, String(googleUserId));
+      const existingUser = await findUserByIdentity(GoogleConnector.target, googleUserId);
       const isNewUser = !existingUser;
 
       // Create one-time token with appropriate context
@@ -147,6 +157,7 @@ export default function googleOneTapRoutes<T extends AnonymousRouter>(
         context: {
           // Add jitOrganizationIds if this is for registration
           ...(isNewUser && { jitOrganizationIds: [] }),
+          [GoogleConnector.oneTimeTokenContextKey]: googleUserId,
         },
       });
 
@@ -162,7 +173,7 @@ export default function googleOneTapRoutes<T extends AnonymousRouter>(
       ctx.body = {
         oneTimeToken: oneTimeToken.token,
         isNewUser,
-        email: String(email),
+        email,
       };
 
       return next();
