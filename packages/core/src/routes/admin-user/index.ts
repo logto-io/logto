@@ -1,4 +1,5 @@
-import { EnvSet } from '../../env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
+
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 import adminUserBasicsRoutes from './basics.js';
