@@ -39,7 +39,7 @@ describe('enterprise sso sign-in and sign-up', () => {
   };
 
   beforeAll(async () => {
-    await ssoConnectorApi.createMockOidcConnector([domain], undefined, true);
+    await ssoConnectorApi.createMockOidcConnector([domain], undefined, isDevFeaturesEnabled);
     await updateSignInExperience({
       singleSignOnEnabled: true,
       signInMode: SignInMode.SignInAndRegister,
