@@ -8,7 +8,8 @@ const custom_profile_fields = {
   name_exists: '已有具有該名稱的欄位存在。',
   conflicted_sie_order: '登入體驗欄位順序值有衝突。',
   invalid_name: '欄位名稱無效，只允許字母或數字，區分大小寫。',
-  name_conflict_sign_in_identifier: '欄位名稱無效。{{name}} 是登入識別用的保留字。',
+  name_conflict_sign_in_identifier: '欄位名稱無效。{{name}} 是保留的登入識別鍵。',
+  name_conflict_custom_data: '欄位名稱無效。{{name}} 是保留的自定義資料鍵。',
 };
 
 export default Object.freeze(custom_profile_fields);

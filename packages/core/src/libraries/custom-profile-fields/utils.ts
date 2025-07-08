@@ -10,30 +10,13 @@ import {
   urlProfileFieldGuard,
   addressProfileFieldGuard,
   CustomProfileFieldType,
-  userOnboardingDataKey,
-  guideRequestsKey,
-  consoleUserPreferenceKey,
-  defaultTenantIdKey,
+  reservedCustomDataKeys,
+  reservedSignInIdentifierKeys,
 } from '@logto/schemas';
 import { ZodError } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
-
-const reservedCustomDataKeys = Object.freeze([
-  userOnboardingDataKey,
-  guideRequestsKey,
-  consoleUserPreferenceKey,
-  defaultTenantIdKey,
-]);
-
-const reservedSignInIdentifierKeys = Object.freeze([
-  'username',
-  'primaryEmail',
-  'primaryPhone',
-  'email',
-  'phone',
-]);
 
 type ValidateCustomProfileField = (
   data: { name: string; type: CustomProfileFieldType } & Record<string, unknown>
@@ -108,9 +91,12 @@ const validateDateProfileField: ValidateCustomProfileField = (data) => {
 
 const validateFieldName = (name: string) => {
   assertThat(/^[\dA-Za-z]+$/.test(name), 'custom_profile_fields.invalid_name');
-  assertThat(!reservedCustomDataKeys.includes(name), 'custom_profile_fields.name_exists');
   assertThat(
-    !reservedSignInIdentifierKeys.includes(name),
+    !new Set<string>(reservedCustomDataKeys).has(name),
+    new RequestError({ code: 'custom_profile_fields.name_conflict_custom_data', name })
+  );
+  assertThat(
+    !new Set<string>(reservedSignInIdentifierKeys).has(name),
     new RequestError({ code: 'custom_profile_fields.name_conflict_sign_in_identifier', name })
   );
 };
