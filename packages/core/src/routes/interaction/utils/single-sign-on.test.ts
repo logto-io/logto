@@ -197,8 +197,9 @@ describe('Single sign on util methods tests', () => {
       };
 
       getSingleSignOnSessionResultMock.mockResolvedValueOnce(session);
-
-      getUserInfoMock.mockResolvedValueOnce({ id: 'id', email: 'email' });
+      getUserInfoMock.mockResolvedValueOnce({
+        userInfo: { id: 'id', email: 'email' },
+      });
       getIssuerMock.mockReturnValueOnce('https://example.com');
 
       const result = await getSsoAuthentication(
