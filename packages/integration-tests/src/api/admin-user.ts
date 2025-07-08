@@ -1,5 +1,6 @@
 import type {
   CreatePersonalAccessToken,
+  DesensitizedEnterpriseSsoTokenSetSecret,
   DesensitizedSocialTokenSetSecret,
   Identities,
   Identity,
@@ -163,3 +164,9 @@ export const updatePersonalAccessToken = async (
       json: body,
     })
     .json<PersonalAccessToken>();
+
+export const getUserSsoIdentity = async (userId: string, connectorId: string) =>
+  authedAdminApi.get(`users/${userId}/sso-identities/${connectorId}`).json<{
+    enterpriseSsoIdentity: UserSsoIdentity;
+    tokenSet?: DesensitizedEnterpriseSsoTokenSetSecret;
+  }>();

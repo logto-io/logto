@@ -13,7 +13,7 @@ export default function adminUserEnterpriseSsoRoutes<T extends ManagementApiRout
   ...[router, tenant]: RouterInitArgs<T>
 ) {
   router.get(
-    '/users/:userId/enterprise-sso-identities/:ssoConnectorId',
+    '/users/:userId/sso-identities/:ssoConnectorId',
     koaGuard({
       params: object({
         userId: string(),

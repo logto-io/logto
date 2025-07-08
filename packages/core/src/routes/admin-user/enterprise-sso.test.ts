@@ -82,7 +82,7 @@ describe('Enterprise SSO Routes', () => {
     ]);
 
     const response = await userRequest.get(
-      `/users/${mockUser.id}/enterprise-sso-identities/${mockSsoConnectorId}`
+      `/users/${mockUser.id}/sso-identities/${mockSsoConnectorId}`
     );
 
     expect(mockFindUserById).toHaveBeenCalledWith(mockUser.id);
@@ -97,7 +97,7 @@ describe('Enterprise SSO Routes', () => {
     mockFindEnterpriseSsoTokenSetSecret.mockResolvedValueOnce(null);
 
     const response = await userRequest.get(
-      `/users/${mockUser.id}/enterprise-sso-identities/${mockSsoConnectorId}`
+      `/users/${mockUser.id}/sso-identities/${mockSsoConnectorId}`
     );
 
     expect(mockFindUserById).toHaveBeenCalledWith(mockUser.id);
@@ -117,7 +117,7 @@ describe('Enterprise SSO Routes', () => {
     mockFindUserSsoIdentities.mockResolvedValueOnce([mockSsoIdentity]);
 
     const response = await userRequest.get(
-      `/users/${mockUser.id}/enterprise-sso-identities/${mockSsoConnectorId}`
+      `/users/${mockUser.id}/sso-identities/${mockSsoConnectorId}`
     );
     expect(mockFindUserById).toHaveBeenCalledWith(mockUser.id);
     expect(mockFindUserSsoIdentities).toHaveBeenCalledWith(mockUser.id);
