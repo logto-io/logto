@@ -122,8 +122,3 @@ export const updateMfaSettings = async (
     json: { skipMfaOnSignIn },
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
-
-export const verifyTotpMfa = async (api: KyInstance, code: string) =>
-  api.post('api/my-account/mfa-verifications/totp/verify', {
-    json: { code },
-  });
