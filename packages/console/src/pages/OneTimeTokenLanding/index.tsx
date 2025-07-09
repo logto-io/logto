@@ -26,7 +26,9 @@ function OneTimeTokenLanding() {
 
   const oneTimeToken = searchParams.get(OneTimeTokenLandingSearchParams.OneTimeToken);
   const email = searchParams.get(OneTimeTokenLandingSearchParams.Email);
-  const googleOneTapCredential = searchParams.get(OneTimeTokenLandingSearchParams.GoogleOneTapCredential);
+  const googleOneTapCredential = searchParams.get(
+    OneTimeTokenLandingSearchParams.GoogleOneTapCredential
+  );
 
   useEffect(() => {
     if (isAuthenticated || !oneTimeToken || !email || !googleOneTapCredential) {
@@ -48,7 +50,16 @@ function OneTimeTokenLanding() {
         [ExtraParamsKey.GoogleOneTapCredential]: googleOneTapCredential,
       },
     });
-  }, [isAuthenticated, navigate, navigateTenant, signIn, redirectUri, oneTimeToken, email, googleOneTapCredential]);
+  }, [
+    isAuthenticated,
+    navigate,
+    navigateTenant,
+    signIn,
+    redirectUri,
+    oneTimeToken,
+    email,
+    googleOneTapCredential,
+  ]);
 
   return <AppLoading />;
 }

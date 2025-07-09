@@ -9,6 +9,10 @@ export type GoogleOneTapVerificationRecordData = {
   id: string;
   type: VerificationType.GoogleOneTap;
   /**
+   * The connector ID.
+   */
+  connectorId: string;
+  /**
    * The Google ID token credential
    */
   credential?: string;
@@ -37,6 +41,7 @@ export type GoogleOneTapVerificationRecordData = {
 export const googleOneTapVerificationRecordDataGuard = z.object({
   id: z.string(),
   type: z.literal(VerificationType.GoogleOneTap),
+  connectorId: z.string(),
   credential: z.string().optional(),
   verified: z.boolean(),
   email: z.string().optional(),

@@ -119,6 +119,7 @@ export const verificationRecordDataGuard = z.discriminatedUnion('type', [
 /**
  * The factory method to build a new `VerificationRecord` instance based on the provided `VerificationRecordData`.
  */
+// eslint-disable-next-line complexity
 export const buildVerificationRecord = (
   libraries: Libraries,
   queries: Queries,

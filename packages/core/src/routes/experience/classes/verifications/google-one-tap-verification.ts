@@ -1,7 +1,7 @@
 import { GoogleConnector } from '@logto/connector-kit';
 import {
   type GoogleOneTapVerificationRecordData,
-  SignInIdentifier,
+  googleOneTapVerificationRecordDataGuard,
   type User,
   VerificationType,
 } from '@logto/schemas';
@@ -26,9 +26,10 @@ export class GoogleOneTapVerification
   implements IdentifierVerificationRecord<VerificationType.GoogleOneTap>
 {
   /** Factory method to create a new `GoogleOneTapVerification` record */
-  static create(libraries: Libraries, queries: Queries) {
+  static create(libraries: Libraries, queries: Queries, connectorId: string) {
     return new GoogleOneTapVerification(libraries, queries, {
       id: generateStandardId(),
+      connectorId,
       type: VerificationType.GoogleOneTap,
       verified: false,
     });
@@ -36,6 +37,7 @@ export class GoogleOneTapVerification
 
   readonly type = VerificationType.GoogleOneTap;
   readonly id: string;
+  readonly connectorId: string;
   private credential?: string;
   private verified: boolean;
   private email?: string;
@@ -48,9 +50,11 @@ export class GoogleOneTapVerification
     private readonly queries: Queries,
     data: GoogleOneTapVerificationRecordData
   ) {
-    const { id, verified, credential, email, googleUserId, name, avatar } = data;
+    const { id, connectorId, verified, credential, email, googleUserId, name, avatar } =
+      googleOneTapVerificationRecordDataGuard.parse(data);
 
     this.id = id;
+    this.connectorId = connectorId;
     this.verified = verified;
     this.credential = credential;
     this.email = email;
@@ -77,7 +81,7 @@ export class GoogleOneTapVerification
   async verify(credential: string) {
     // Get Google connector configuration
     const { getConnector } = this.libraries.socials;
-    const googleConnector = await getConnector(GoogleConnector.factoryId);
+    const googleConnector = await getConnector(this.connectorId);
 
     assertThat(googleConnector, new RequestError({ code: 'connector.not_found', status: 404 }));
 
@@ -150,17 +154,12 @@ export class GoogleOneTapVerification
     );
 
     const { getConnector } = this.libraries.socials;
-    const googleConnector = await getConnector(GoogleConnector.factoryId);
+    const googleConnector = await getConnector(this.connectorId);
     const { target } = googleConnector.metadata;
 
     const user = await this.queries.users.findUserByIdentity(target, this.googleUserId);
 
-    assertThat(
-      user,
-      new RequestError(
-        { code: 'user.identity_not_exist', status: 404 },
-      )
-    );
+    assertThat(user, new RequestError({ code: 'user.identity_not_exist', status: 404 }));
 
     return user;
   }
@@ -188,7 +187,7 @@ export class GoogleOneTapVerification
     );
 
     const { getConnector } = this.libraries.socials;
-    const googleConnector = await getConnector(GoogleConnector.factoryId);
+    const googleConnector = await getConnector(this.connectorId);
     const { target } = googleConnector.metadata;
 
     return {
@@ -242,11 +241,12 @@ export class GoogleOneTapVerification
   }
 
   toJson(): GoogleOneTapVerificationRecordData {
-    const { id, type, verified, credential, email, googleUserId, name, avatar } = this;
+    const { id, type, verified, credential, email, googleUserId, name, avatar, connectorId } = this;
 
     return {
       id,
       type,
+      connectorId,
       verified,
       credential,
       email,
