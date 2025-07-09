@@ -10,6 +10,10 @@ import useRedirectUri from '@/hooks/use-redirect-uri';
 enum OneTimeTokenLandingSearchParams {
   OneTimeToken = 'one_time_token',
   Email = 'email',
+  /**
+   * The Google One Tap credential used as a proof for the user's identity.
+   */
+  GoogleOneTapCredential = 'google_one_tap_credential',
 }
 
 /** The one-time token landing page for sign-in with one-time tokens. */
@@ -22,9 +26,10 @@ function OneTimeTokenLanding() {
 
   const oneTimeToken = searchParams.get(OneTimeTokenLandingSearchParams.OneTimeToken);
   const email = searchParams.get(OneTimeTokenLandingSearchParams.Email);
+  const googleOneTapCredential = searchParams.get(OneTimeTokenLandingSearchParams.GoogleOneTapCredential);
 
   useEffect(() => {
-    if (isAuthenticated || !oneTimeToken || !email) {
+    if (isAuthenticated || !oneTimeToken || !email || !googleOneTapCredential) {
       // Navigate to root, which will handle tenant selection
       navigate('/', { replace: true });
       return;
@@ -40,9 +45,10 @@ function OneTimeTokenLanding() {
       extraParams: {
         [ExtraParamsKey.OneTimeToken]: oneTimeToken,
         [ExtraParamsKey.LoginHint]: email,
+        [ExtraParamsKey.GoogleOneTapCredential]: googleOneTapCredential,
       },
     });
-  }, [isAuthenticated, navigate, navigateTenant, signIn, redirectUri, oneTimeToken, email]);
+  }, [isAuthenticated, navigate, navigateTenant, signIn, redirectUri, oneTimeToken, email, googleOneTapCredential]);
 
   return <AppLoading />;
 }
