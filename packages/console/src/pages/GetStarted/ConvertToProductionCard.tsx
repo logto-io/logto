@@ -1,27 +1,18 @@
 import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import CreateTenantHeaderDark from '@/assets/icons/create-tenant-header-dark.svg?react';
-import CreateTenantHeader from '@/assets/icons/create-tenant-header.svg?react';
+import ConvertTenantHeaderIcon from '@/assets/icons/convert-tenant-header.svg?react';
 import ConvertToProductionModal from '@/components/ConvertToProductionModal';
 import { contactEmailLink } from '@/consts';
 import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import Spacer from '@/ds-components/Spacer';
 import TextLink from '@/ds-components/TextLink';
-import useTheme from '@/hooks/use-theme';
 
 import styles from './index.module.scss';
 
-const icons = {
-  light: CreateTenantHeader,
-  dark: CreateTenantHeaderDark,
-};
-
 function ConvertToProductionCard() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.get_started' });
-  const theme = useTheme();
-  const TenantIcon = icons[theme];
   const [isConvertModalOpen, setIsConvertModalOpen] = useState(false);
 
   return (
@@ -30,7 +21,7 @@ function ConvertToProductionCard() {
       <div className={styles.borderBox}>
         <div className={styles.rowWrapper}>
           <div className={styles.icon}>
-            <TenantIcon />
+            <ConvertTenantHeaderIcon />
           </div>
           <div className={styles.columnWrapper}>
             <div className={styles.title}>{t('convert_to_production.title')}</div>
