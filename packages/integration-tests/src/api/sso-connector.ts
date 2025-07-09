@@ -52,7 +52,11 @@ export const clearSsoConnectors = async () => {
 export class SsoConnectorApi {
   readonly connectorInstances = new Map<string, SsoConnector>();
 
-  async createMockOidcConnector(domains: string[], connectorName?: string) {
+  async createMockOidcConnector(
+    domains: string[],
+    connectorName?: string,
+    enableTokenStorage?: boolean
+  ) {
     const connector = await this.create({
       providerName: SsoProviderName.OIDC,
       connectorName: connectorName ?? `test-oidc-${randomString()}`,
@@ -63,6 +67,7 @@ export class SsoConnectorApi {
         issuer: `${logtoUrl}/oidc`,
       },
       syncProfile: true,
+      enableTokenStorage,
     });
 
     return connector;

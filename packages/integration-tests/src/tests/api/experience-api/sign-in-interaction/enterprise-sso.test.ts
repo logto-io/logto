@@ -1,9 +1,15 @@
 import { InteractionEvent, MfaFactor, SignInIdentifier, SignInMode } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 
-import { createUserMfaVerification, deleteUser, getUser } from '#src/api/admin-user.js';
+import {
+  createUserMfaVerification,
+  deleteUser,
+  getUser,
+  getUserSsoIdentity,
+} from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { SsoConnectorApi } from '#src/api/sso-connector.js';
+import { isDevFeaturesEnabled } from '#src/constants.js';
 import { initExperienceClient } from '#src/helpers/client.js';
 import { setEmailConnector, setSmsConnector } from '#src/helpers/connector.js';
 import { signInWithEnterpriseSso } from '#src/helpers/experience/index.js';
@@ -25,9 +31,15 @@ describe('enterprise sso sign-in and sign-up', () => {
   const enterpriseSsoIdentityId = generateStandardId();
   const email = generateEmail(domain);
   const userApi = new UserApiTest();
+  const mockTokenResponse = {
+    id_token: 'mock-id-token',
+    access_token: 'mock-access-token',
+    scope: 'openid',
+    expires_in: 3600,
+  };
 
   beforeAll(async () => {
-    await ssoConnectorApi.createMockOidcConnector([domain]);
+    await ssoConnectorApi.createMockOidcConnector([domain], undefined, isDevFeaturesEnabled);
     await updateSignInExperience({
       singleSignOnEnabled: true,
       signInMode: SignInMode.SignInAndRegister,
@@ -46,23 +58,45 @@ describe('enterprise sso sign-in and sign-up', () => {
         sub: enterpriseSsoIdentityId,
         email,
         email_verified: true,
+        tokenResponse: mockTokenResponse,
       },
       true
     );
 
     const { primaryEmail } = await getUser(userId);
-
     expect(primaryEmail).toBe(email);
+
+    if (isDevFeaturesEnabled) {
+      const { enterpriseSsoIdentity, tokenSet } = await getUserSsoIdentity(
+        userId,
+        ssoConnectorApi.firstConnectorId!
+      );
+
+      expect(enterpriseSsoIdentity.identityId).toBe(enterpriseSsoIdentityId);
+      expect(tokenSet?.identityId).toBe(enterpriseSsoIdentityId);
+      expect(tokenSet?.ssoConnectorId).toBe(ssoConnectorApi.firstConnectorId);
+      expect(tokenSet?.metadata.scope).toBe(mockTokenResponse.scope);
+    }
 
     await signInWithEnterpriseSso(ssoConnectorApi.firstConnectorId!, {
       sub: enterpriseSsoIdentityId,
       email,
       email_verified: true,
       name: 'John Doe',
+      tokenResponse: {
+        ...mockTokenResponse,
+        scope: 'openid profile email',
+      },
     });
 
     const { name } = await getUser(userId);
     expect(name).toBe('John Doe');
+
+    // Should update the token set
+    if (isDevFeaturesEnabled) {
+      const { tokenSet } = await getUserSsoIdentity(userId, ssoConnectorApi.firstConnectorId!);
+      expect(tokenSet?.metadata.scope).toBe('openid profile email');
+    }
 
     await deleteUser(userId);
   });

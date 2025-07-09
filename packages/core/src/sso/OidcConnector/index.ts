@@ -19,7 +19,7 @@ import {
   type SingleSignOnConnectorSession,
 } from '../types/session.js';
 
-import { mockGetUserInfo } from './test-utils.js';
+import { mockGetTokenResponse, mockGetUserInfo } from './test-utils.js';
 import { fetchOidcConfig, fetchToken, getIdTokenClaims, getUserInfo } from './utils.js';
 
 /**
@@ -108,6 +108,7 @@ class OidcConnector {
     if (isIntegrationTest) {
       return {
         userInfo: mockGetUserInfo(connectorSession, data),
+        tokenResponse: mockGetTokenResponse(data),
       };
     }
 
