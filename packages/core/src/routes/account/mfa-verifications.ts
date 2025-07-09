@@ -11,7 +11,6 @@ import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 
-import { EnvSet } from '../../env-set/index.js';
 import RequestError from '../../errors/RequestError/index.js';
 import { buildVerificationRecordByIdAndType } from '../../libraries/verification.js';
 import assertThat from '../../utils/assert-that.js';
@@ -101,11 +100,6 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
         scopes.has(UserScope.Identities),
         new RequestError({ code: 'auth.unauthorized', status: 401 })
       );
-
-      // Feature flag check, throw 500
-      if (!EnvSet.values.isDevFeaturesEnabled && ctx.guard.body.type === MfaFactor.TOTP) {
-        throw new Error('TOTP is not supported yet');
-      }
 
       const user = await findUserById(userId);
 
@@ -225,73 +219,71 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
     }
   );
 
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    router.post(
-      `${accountApiPrefix}/mfa-verifications/totp-secret/generate`,
-      koaGuard({
-        status: [200],
-      }),
-      async (ctx, next) => {
-        const secret = generateTotpSecret();
-        ctx.body = {
-          secret,
-        };
+  router.post(
+    `${accountApiPrefix}/mfa-verifications/totp-secret/generate`,
+    koaGuard({
+      status: [200],
+    }),
+    async (ctx, next) => {
+      const secret = generateTotpSecret();
+      ctx.body = {
+        secret,
+      };
 
-        return next();
-      }
-    );
+      return next();
+    }
+  );
 
-    router.post(
-      `${accountApiPrefix}/mfa-verifications/backup-codes/generate`,
-      koaGuard({
-        status: [200],
-      }),
-      async (ctx, next) => {
-        const codes = generateBackupCodes();
-        ctx.body = {
-          codes,
-        };
+  router.post(
+    `${accountApiPrefix}/mfa-verifications/backup-codes/generate`,
+    koaGuard({
+      status: [200],
+    }),
+    async (ctx, next) => {
+      const codes = generateBackupCodes();
+      ctx.body = {
+        codes,
+      };
 
-        return next();
-      }
-    );
+      return next();
+    }
+  );
 
-    router.get(
-      `${accountApiPrefix}/mfa-verifications/backup-codes`,
-      koaGuard({
-        status: [200, 401, 404],
-      }),
-      async (ctx, next) => {
-        const { id: userId, scopes, identityVerified } = ctx.auth;
+  router.get(
+    `${accountApiPrefix}/mfa-verifications/backup-codes`,
+    koaGuard({
+      status: [200, 401, 404],
+    }),
+    async (ctx, next) => {
+      const { id: userId, scopes, identityVerified } = ctx.auth;
 
-        assertThat(
-          identityVerified,
-          new RequestError({ code: 'verification_record.permission_denied', status: 401 })
-        );
+      assertThat(
+        identityVerified,
+        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
+      );
 
-        assertThat(
-          scopes.has(UserScope.Identities),
-          new RequestError({ code: 'auth.unauthorized', status: 401 })
-        );
+      assertThat(
+        scopes.has(UserScope.Identities),
+        new RequestError({ code: 'auth.unauthorized', status: 401 })
+      );
 
-        const user = await findUserById(userId);
-        const backupCodeVerification = user.mfaVerifications.find(
-          (verification) => verification.type === MfaFactor.BackupCode
-        );
+      const user = await findUserById(userId);
+      const backupCodeVerification = user.mfaVerifications.find(
+        (verification) => verification.type === MfaFactor.BackupCode
+      );
 
-        assertThat(
-          backupCodeVerification,
-          new RequestError({ code: 'verification_record.not_found', status: 404 })
-        );
+      assertThat(
+        backupCodeVerification,
+        new RequestError({ code: 'verification_record.not_found', status: 404 })
+      );
 
-        ctx.body = {
-          codes: backupCodeVerification.codes.map(({ code, usedAt }) => ({ code, usedAt })),
-        };
+      ctx.body = {
+        codes: backupCodeVerification.codes.map(({ code, usedAt }) => ({ code, usedAt })),
+      };
 
-        return next();
-      }
-    );
-  }
+      return next();
+    }
+  );
 
   // Update mfa verification name, only support webauthn
   router.patch(
@@ -391,56 +383,53 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
     }
   );
 
-  // MFA verification endpoints for existing factors
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    router.post(
-      `${accountApiPrefix}/mfa-verifications/totp/verify`,
-      koaGuard({
-        body: z.object({
-          code: z.string().min(6).max(6),
-        }),
-        status: [204, 400, 401, 422],
+  router.post(
+    `${accountApiPrefix}/mfa-verifications/totp/verify`,
+    koaGuard({
+      body: z.object({
+        code: z.string().min(6).max(6),
       }),
-      async (ctx, next) => {
-        const { id: userId, scopes } = ctx.auth;
-        const { code } = ctx.guard.body;
-        const { fields } = ctx.accountCenter;
+      status: [204, 400, 401, 422],
+    }),
+    async (ctx, next) => {
+      const { id: userId, scopes } = ctx.auth;
+      const { code } = ctx.guard.body;
+      const { fields } = ctx.accountCenter;
 
-        assertThat(
-          fields.mfa === AccountCenterControlValue.Edit ||
-            fields.mfa === AccountCenterControlValue.ReadOnly,
-          'account_center.field_not_enabled'
-        );
+      assertThat(
+        fields.mfa === AccountCenterControlValue.Edit ||
+          fields.mfa === AccountCenterControlValue.ReadOnly,
+        'account_center.field_not_enabled'
+      );
 
-        assertThat(
-          scopes.has(UserScope.Identities),
-          new RequestError({ code: 'auth.unauthorized', status: 401 })
-        );
+      assertThat(
+        scopes.has(UserScope.Identities),
+        new RequestError({ code: 'auth.unauthorized', status: 401 })
+      );
 
-        // Check sign in experience, if TOTP factor is enabled
-        const { mfa } = await findDefaultSignInExperience();
-        assertThat(mfa.factors.includes(MfaFactor.TOTP), 'session.mfa.mfa_factor_not_enabled');
+      // Check sign in experience, if TOTP factor is enabled
+      const { mfa } = await findDefaultSignInExperience();
+      assertThat(mfa.factors.includes(MfaFactor.TOTP), 'session.mfa.mfa_factor_not_enabled');
 
-        const user = await findUserById(userId);
-        const totpVerification = user.mfaVerifications.find(
-          (verification) => verification.type === MfaFactor.TOTP
-        );
+      const user = await findUserById(userId);
+      const totpVerification = user.mfaVerifications.find(
+        (verification) => verification.type === MfaFactor.TOTP
+      );
 
-        assertThat(
-          totpVerification,
-          new RequestError({ code: 'session.mfa.mfa_factor_not_enabled', status: 422 })
-        );
+      assertThat(
+        totpVerification,
+        new RequestError({ code: 'session.mfa.mfa_factor_not_enabled', status: 422 })
+      );
 
-        assertThat(
-          validateTotpToken(totpVerification.key, code),
-          new RequestError({ code: 'session.mfa.invalid_totp_code', status: 422 })
-        );
+      assertThat(
+        validateTotpToken(totpVerification.key, code),
+        new RequestError({ code: 'session.mfa.invalid_totp_code', status: 422 })
+      );
 
-        ctx.status = 204;
+      ctx.status = 204;
 
-        return next();
-      }
-    );
-  }
+      return next();
+    }
+  );
 }
 /* eslint-enable max-lines */

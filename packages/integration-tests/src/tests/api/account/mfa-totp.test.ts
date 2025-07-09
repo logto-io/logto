@@ -20,7 +20,6 @@ import {
   enableUserControlledMfaWithTotpAndWebAuthn,
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest } from '#src/utils.js';
 
 describe('my-account (mfa - TOTP)', () => {
   beforeAll(async () => {
@@ -33,8 +32,8 @@ describe('my-account (mfa - TOTP)', () => {
     await resetMfaSettings();
   });
 
-  devFeatureTest.describe('POST /my-account/mfa-verifications/totp-secret/generate', () => {
-    devFeatureTest.it('should be able to generate totp secret', async () => {
+  describe('POST /my-account/mfa-verifications/totp-secret/generate', () => {
+    it('should be able to generate totp secret', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password, {
         scopes: [UserScope.Profile, UserScope.Identities],
@@ -48,8 +47,8 @@ describe('my-account (mfa - TOTP)', () => {
     });
   });
 
-  devFeatureTest.describe('POST /my-account/mfa-verifications (TOTP)', () => {
-    devFeatureTest.it('should be able to add totp verification', async () => {
+  describe('POST /my-account/mfa-verifications (TOTP)', () => {
+    it('should be able to add totp verification', async () => {
       await enableAllAccountCenterFields();
 
       const { user, username, password } = await createDefaultTenantUserWithPassword();
@@ -71,7 +70,7 @@ describe('my-account (mfa - TOTP)', () => {
       await deleteDefaultTenantUser(user.id);
     });
 
-    devFeatureTest.it('should fail if totp secret is invalid', async () => {
+    it('should fail if totp secret is invalid', async () => {
       await enableAllAccountCenterFields();
 
       const { user, username, password } = await createDefaultTenantUserWithPassword();
@@ -95,8 +94,8 @@ describe('my-account (mfa - TOTP)', () => {
     });
   });
 
-  devFeatureTest.describe('DELETE /my-account/mfa-verifications/:verificationId (TOTP)', () => {
-    devFeatureTest.it('should be able to delete totp verification', async () => {
+  describe('DELETE /my-account/mfa-verifications/:verificationId (TOTP)', () => {
+    it('should be able to delete totp verification', async () => {
       await enableAllAccountCenterFields();
 
       const { user, username, password } = await createDefaultTenantUserWithPassword();

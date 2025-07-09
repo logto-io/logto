@@ -15,9 +15,8 @@ import {
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
 
-devFeatureTest.describe('skipMfaOnSignIn user setting', () => {
+describe('skipMfaOnSignIn user setting', () => {
   const userApi = new UserApiTest();
 
   beforeAll(async () => {
@@ -39,8 +38,8 @@ devFeatureTest.describe('skipMfaOnSignIn user setting', () => {
     await userApi.cleanUp();
   });
 
-  devFeatureTest.describe('MFA bypass functionality', () => {
-    devFeatureTest.it('should bypass MFA when skipMfaOnSignIn is true', async () => {
+  describe('MFA bypass functionality', () => {
+    it('should bypass MFA when skipMfaOnSignIn is true', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password, {
         scopes: [UserScope.Profile, UserScope.Identities],
@@ -63,8 +62,8 @@ devFeatureTest.describe('skipMfaOnSignIn user setting', () => {
     });
   });
 
-  devFeatureTest.describe('Mandatory MFA policy override', () => {
-    devFeatureTest.it('should ignore user setting when MFA policy is Mandatory', async () => {
+  describe('Mandatory MFA policy override', () => {
+    it('should ignore user setting when MFA policy is Mandatory', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
 
       // First, set up MFA factor and disable MFA requirement using the user API
