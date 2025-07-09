@@ -98,13 +98,17 @@ const jwtCustomizerUserInteractionVerificationRecordGuard = z.discriminatedUnion
     connectorSession: true,
     encryptedTokenSet: true,
   }),
-  enterpriseSsoVerificationRecordDataGuard.extend({
-    // The original `enterpriseSsoUserInfo` field type is extended with `socialUserInfo` with `catchall(unknown)`.
-    // However, the unknown type may cause error when using the `sql.jsonb` function in Slonik.
-    // See {@logto/cli/src/queries/logto-config.ts#updateValueByKey} for more reference.
-    // So we use `socialUserInfoGuard.catchall(jsonGuard)` to ensure the type is JSON serializable.
-    enterpriseSsoUserInfo: socialUserInfoGuard.catchall(jsonGuard).optional(),
-  }),
+  enterpriseSsoVerificationRecordDataGuard
+    .omit({
+      encryptedTokenSet: true,
+    })
+    .extend({
+      // The original `enterpriseSsoUserInfo` field type is extended with `socialUserInfo` with `catchall(unknown)`.
+      // However, the unknown type may cause error when using the `sql.jsonb` function in Slonik.
+      // See {@logto/cli/src/queries/logto-config.ts#updateValueByKey} for more reference.
+      // So we use `socialUserInfoGuard.catchall(jsonGuard)` to ensure the type is JSON serializable.
+      enterpriseSsoUserInfo: socialUserInfoGuard.catchall(jsonGuard).optional(),
+    }),
   totpVerificationRecordDataGuard.omit({
     secret: true,
   }),

@@ -102,7 +102,8 @@ export type TokenResponse = {
   id_token?: string;
   access_token?: string;
   refresh_token?: string;
-  expires_in?: number;
+  /** Some providers like Azure may return expires_in as a string. */
+  expires_in?: number | string;
   scope?: string;
   token_type?: string;
 };
@@ -111,7 +112,7 @@ export const tokenResponseGuard = z.object({
   id_token: z.string().optional(),
   access_token: z.string().optional(),
   refresh_token: z.string().optional(),
-  expires_in: z.number().optional(),
+  expires_in: z.number().or(z.string()).optional(),
   scope: z.string().optional(),
   token_type: z.string().optional(),
 }) satisfies ToZodObject<TokenResponse>;

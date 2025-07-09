@@ -409,6 +409,7 @@ export default class ExperienceInteraction {
       queries: { users: userQueries, userSsoIdentities: userSsoIdentityQueries },
       libraries: {
         socials: { upsertSocialTokenSetSecret },
+        ssoConnectors: { upsertEnterpriseSsoTokenSetSecret },
       },
     } = this.tenant;
 
@@ -464,6 +465,7 @@ export default class ExperienceInteraction {
       syncedEnterpriseSsoIdentity,
       jitOrganizationIds,
       socialConnectorTokenSetSecret,
+      enterpriseSsoConnectorTokenSetSecret,
       ...rest
     } = this.profile.data;
     const { mfaSkipped, mfaVerifications } = this.mfa.toUserMfaVerifications();
@@ -514,6 +516,11 @@ export default class ExperienceInteraction {
     // Sync social token set secret
     if (socialConnectorTokenSetSecret) {
       await upsertSocialTokenSetSecret(user.id, socialConnectorTokenSetSecret);
+    }
+
+    // Sync enterprise sso token set secret
+    if (enterpriseSsoConnectorTokenSetSecret) {
+      await upsertEnterpriseSsoTokenSetSecret(user.id, enterpriseSsoConnectorTokenSetSecret);
     }
 
     // Provision organizations for one-time token that carries organization IDs in the context.

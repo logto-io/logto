@@ -1,6 +1,13 @@
 import crypto from 'node:crypto';
 
-import { type TokenSet, tokenSetGuard, type EncryptedSecret } from '@logto/schemas';
+import type { TokenResponse } from '@logto/connector-kit';
+import {
+  type TokenSet,
+  tokenSetGuard,
+  type EncryptedSecret,
+  type EncryptedTokenSet,
+} from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import { EnvSet } from '../env-set/index.js';
@@ -112,5 +119,44 @@ export const deserializeEncryptedSecret = (base64String: string): EncryptedSecre
     authTag: Buffer.from(serialized.authTag, 'base64'),
     ciphertext: Buffer.from(serialized.ciphertext, 'base64'),
     encryptedDek: Buffer.from(serialized.encryptedDek, 'base64'),
+  };
+};
+
+export const encryptTokenResponse = (
+  tokenResponse?: TokenResponse
+): EncryptedTokenSet | undefined => {
+  if (!tokenResponse?.access_token) {
+    return;
+  }
+
+  const {
+    access_token,
+    id_token,
+    refresh_token,
+    scope,
+    token_type: tokenType,
+    expires_in,
+  } = tokenResponse;
+
+  const requestedAt = Math.floor(Date.now() / 1000);
+
+  // Convert expires_in to a number if it's a string
+  // Some providers like Azure may return expires_in as a string.
+  const expiresIn = typeof expires_in === 'string' ? Number.parseInt(expires_in, 10) : expires_in;
+  const expiresAt = conditional(expiresIn !== undefined && requestedAt + expiresIn);
+
+  const encryptedTokenSet = encryptTokens({
+    access_token,
+    ...conditional(id_token && { id_token }),
+    ...conditional(refresh_token && { refresh_token }),
+  });
+
+  return {
+    encryptedTokenSetBase64: serializeEncryptedSecret(encryptedTokenSet),
+    metadata: {
+      scope,
+      tokenType,
+      expiresAt,
+    },
   };
 };

@@ -43,13 +43,16 @@ export const getNewUserProfileFromVerificationRecord = async (
         verificationRecord.toSyncedProfile(true),
       ]);
 
-      // TODO: Remove this check once enterprise SSO support getTokenSetSecret
-      const socialConnectorTokenSetSecret =
+      const tokenSetSecretProfile =
         verificationRecord.type === VerificationType.Social
-          ? await verificationRecord.getTokenSetSecret()
-          : undefined;
+          ? { socialConnectorTokenSetSecret: await verificationRecord.getTokenSetSecret() }
+          : { enterpriseSsoConnectorTokenSetSecret: verificationRecord.getTokenSetSecret() };
 
-      return { ...identityProfile, ...syncedProfile, socialConnectorTokenSetSecret };
+      return {
+        ...identityProfile,
+        ...syncedProfile,
+        ...tokenSetSecretProfile,
+      };
     }
     default: {
       // Unsupported verification type for user creation, such as MFA verification.
@@ -83,6 +86,7 @@ export const identifyUserByVerificationRecord = async (
     | 'avatar'
     | 'name'
     | 'socialConnectorTokenSetSecret'
+    | 'enterpriseSsoConnectorTokenSetSecret'
   >;
 }> => {
   // Check verification record can be used to identify a user using the `identifyUser` method.
@@ -129,6 +133,7 @@ export const identifyUserByVerificationRecord = async (
         const syncedProfile = {
           syncedEnterpriseSsoIdentity: enterpriseSsoIdentity,
           ...(await verificationRecord.toSyncedProfile()),
+          enterpriseSsoConnectorTokenSetSecret: verificationRecord.getTokenSetSecret(),
         };
         return { user, syncedProfile };
       } catch (error: unknown) {
@@ -139,6 +144,7 @@ export const identifyUserByVerificationRecord = async (
           const syncedProfile = {
             ...verificationRecord.toUserProfile(),
             ...(await verificationRecord.toSyncedProfile()),
+            enterpriseSsoConnectorTokenSetSecret: verificationRecord.getTokenSetSecret(),
           };
           return { user, syncedProfile };
         }

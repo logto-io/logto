@@ -215,6 +215,7 @@ describe('Single sign on util methods tests', () => {
       expect(result).toStrictEqual({
         issuer: 'https://example.com',
         userInfo: { id: 'id', email: 'email' },
+        encryptedTokenSet: undefined,
       });
 
       expect(assignSingleSignOnAuthenticationResultMock).toBeCalledWith(mockContext, mockProvider, {
