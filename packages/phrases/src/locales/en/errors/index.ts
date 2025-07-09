@@ -24,6 +24,7 @@ import single_sign_on from './single-sign-on.js';
 import storage from './storage.js';
 import subscription from './subscription.js';
 import swagger from './swagger.js';
+import third_party_token_exchange from './third-party-token-exchange.js';
 import user from './user.js';
 import verification_code from './verification-code.js';
 import verification_record from './verification-record.js';
@@ -58,6 +59,7 @@ const errors = {
   account_center,
   one_time_token,
   custom_profile_fields,
+  third_party_token_exchange,
 };
 
 export default Object.freeze(errors);

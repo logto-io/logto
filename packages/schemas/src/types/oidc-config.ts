@@ -13,4 +13,5 @@ export enum GrantType {
   RefreshToken = 'refresh_token',
   ClientCredentials = 'client_credentials',
   TokenExchange = 'urn:ietf:params:oauth:grant-type:token-exchange',
+  FederatedThirdPartyTokenExchange = 'urn:logto:params:oauth:grant-type:federated-third-party-access-token',
 }
