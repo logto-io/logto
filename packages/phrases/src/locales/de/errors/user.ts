@@ -48,6 +48,8 @@ const user = {
     'E-Mail-Adresse oder Telefonnummer ist ein erforderlicher Bezeichner, mindestens eine ist erforderlich.',
   email_required: 'E-Mail-Adresse ist ein erforderlicher Bezeichner, sie kann nicht null sein.',
   phone_required: 'Telefonnummer ist ein erforderlicher Bezeichner, sie kann nicht null sein.',
+  enterprise_sso_identity_not_exists:
+    'Der Benutzer hat keine Unternehmensidentität, die mit der angegebenen SSO-Konnektor-ID verknüpft ist: {{ ssoConnectorId }}.',
 };
 
 export default Object.freeze(user);

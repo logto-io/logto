@@ -1,0 +1,20 @@
+{
+  "paths": {
+    "/api/users/{userId}/enterprise-sso-identities/{ssoConnectorId}": {
+      "get": {
+        "tags": ["Dev feature"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The enterprise SSO identity is retrieved."
+          },
+          "404": {
+            "description": "User enterprise SSO identity not found."
+          }
+        },
+        "summary": "Retrieve enterprise SSO identity of user by SSO connector ID",
+        "description": "Retrieves the user's enterprise SSO identity and associated token set record (if token storage is enabled for the SSO connector) by SSO connector ID."
+      }
+    }
+  }
+}

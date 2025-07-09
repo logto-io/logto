@@ -40,6 +40,8 @@ const user = {
   email_or_phone_required: '電子郵件地址或手機號碼是必填識別符，至少需要一個。',
   email_required: '電子郵件地址是必填識別符，你不能將其設為 null。',
   phone_required: '手機號碼是必填識別符，你不能將其設為 null。',
+  enterprise_sso_identity_not_exists:
+    '該使用者沒有企業身份鏈接到指定的 SSO 連接器 ID：{{ ssoConnectorId }}。',
 };
 
 export default Object.freeze(user);

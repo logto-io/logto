@@ -48,6 +48,21 @@ const upsell = {
   paywall,
   featured_plan_content,
   add_on,
+  convert_to_production_modal: {
+    title: '你将要把开发租户更改为生产租户',
+    description: '准备上线了吗？将此开发租户转换为生产租户可以解锁全部功能',
+    benefits: {
+      stable_environment: '针对终端用户：一个稳定的实际使用环境。',
+      keep_pro_features: '保留 Pro 功能：你将订阅 Pro 计划。<a>查看 Pro 功能。</a>',
+      no_dev_restrictions: '无开发限制：移除实体和资源系统限制以及登录横幅。',
+    },
+    cards: {
+      dev_description: '测试目的',
+      prod_description: '真实生产',
+      convert_label: '转换',
+    },
+    button: '转换为生产租户',
+  },
 };
 
 export default Object.freeze(upsell);

@@ -32,6 +32,13 @@ const get_started = {
     },
     create_roles: '역할 생성',
   },
+  convert_to_production: {
+    card_title: '라이브 준비가 되셨나요? 프로덕션 설정을 시작하는 것을 잊지 마세요!',
+    title: '프로젝트를 개발 모드에 두지 마세요',
+    subtitle:
+      '무료 테스트를 위해 개발 테넌트를 사용하고 있습니다. 라이브로 전환하려면 프로덕션 테넌트를 생성하거나 변환하세요. 맞춤 설정이 필요하신가요? <a>문의하기</a>',
+    convert_button: '프로덕션 테넌트로 변환',
+  },
   view_all: '모두 보기 →',
 };
 

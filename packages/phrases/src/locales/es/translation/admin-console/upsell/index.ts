@@ -48,6 +48,24 @@ const upsell = {
   paywall,
   featured_plan_content,
   add_on,
+  convert_to_production_modal: {
+    title: 'Vas a cambiar tu tenant de desarrollo a tenant de producción',
+    description:
+      '¿Listo para lanzar? Convertir este tenant de desarrollo en un tenant de producción desbloquea la funcionalidad completa',
+    benefits: {
+      stable_environment: 'Para los usuarios finales: Un entorno estable para uso real.',
+      keep_pro_features:
+        'Mantén las características Pro: Vas a suscribirte al plan Pro. <a>Ver características Pro.</a>',
+      no_dev_restrictions:
+        'Sin restricciones de desarrollo: Elimina los límites del sistema de entidades y recursos y el banner de inicio de sesión.',
+    },
+    cards: {
+      dev_description: 'Propósitos de prueba',
+      prod_description: 'Producción real',
+      convert_label: 'convertir',
+    },
+    button: 'Convertir a tenant de producción',
+  },
 };
 
 export default Object.freeze(upsell);

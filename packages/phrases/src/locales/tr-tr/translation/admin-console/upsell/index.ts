@@ -48,6 +48,24 @@ const upsell = {
   paywall,
   featured_plan_content,
   add_on,
+  convert_to_production_modal: {
+    title: 'Geliştirme kiracınızı üretim kiracısına dönüştürüyorsunuz',
+    description:
+      'Yayın yapmaya hazır mısınız? Bu geliştirme kiracısını üretim kiracısına dönüştürmek, tüm işlevselliğin kilidini açar',
+    benefits: {
+      stable_environment: 'Son kullanıcılar için: Gerçek kullanım için kararlı bir ortam.',
+      keep_pro_features:
+        'Pro özelliklerini koruyun: Pro planına abone olacaksınız. <a>Pro özelliklerini görüntüleyin.</a>',
+      no_dev_restrictions:
+        'Geliştirme kısıtlamaları yok: Varlık ve kaynak sistem sınırlarını ve oturum açma bannerını kaldırır.',
+    },
+    cards: {
+      dev_description: 'Test amaçlı',
+      prod_description: 'Gerçek üretim',
+      convert_label: 'dönüştür',
+    },
+    button: 'Üretim kiracısına dönüştür',
+  },
 };
 
 export default Object.freeze(upsell);

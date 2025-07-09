@@ -42,6 +42,8 @@ const user = {
     '이메일 주소 또는 휴대전화번호는 필수 식별자이며, 적어도 하나는 필요합니다.',
   email_required: '이메일 주소는 필수 식별자이며, null 로 설정할 수 없습니다.',
   phone_required: '휴대전화번호는 필수 식별자이며, null 로 설정할 수 없습니다.',
+  enterprise_sso_identity_not_exists:
+    '사용자는 지정된 SSO 커넥터 ID: {{ssoConnectorId}}에 연결된 엔터프라이즈 아이덴티티가 없습니다.',
 };
 
 export default Object.freeze(user);

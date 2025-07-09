@@ -48,6 +48,8 @@ const user = {
     'La dirección de correo electrónico es un identificador requerido, no puedes establecerla como nula.',
   phone_required:
     'El número de teléfono es un identificador requerido, no puedes establecerlo como nulo.',
+  enterprise_sso_identity_not_exists:
+    'El usuario no tiene una identidad empresarial vinculada al ID de conector SSO especificado: {{ ssoConnectorId }}.',
 };
 
 export default Object.freeze(user);

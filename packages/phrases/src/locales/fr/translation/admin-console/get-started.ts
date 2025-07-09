@@ -38,6 +38,14 @@ const get_started = {
     },
     create_roles: 'Créer des rôles',
   },
+  convert_to_production: {
+    card_title:
+      "Prêt à passer en direct? N'oubliez pas de lancer votre configuration de production!",
+    title: 'Ne laissez pas votre projet bloqué en mode dev',
+    subtitle:
+      'Vous utilisez un locataire de développement pour les tests gratuits. Pour passer en direct, créez ou convertissez en un locataire de production. Besoin de quelque chose de personnalisé? <a>Contactez-nous</a>',
+    convert_button: 'Convertir en locataire de production',
+  },
   view_all: 'Tout afficher →',
 };
 
