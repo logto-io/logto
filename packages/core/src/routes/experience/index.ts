@@ -30,6 +30,7 @@ import profileRoutes from './profile-routes.js';
 import { type ExperienceInteractionRouterContext } from './types.js';
 import backupCodeVerificationRoutes from './verification-routes/backup-code-verification.js';
 import enterpriseSsoVerificationRoutes from './verification-routes/enterprise-sso-verification.js';
+import googleOneTapVerificationRoutes from './verification-routes/google-one-tap-verification.js';
 import newPasswordIdentityVerificationRoutes from './verification-routes/new-password-identity-verification.js';
 import oneTimeTokenRoutes from './verification-routes/one-time-token.js';
 import passwordVerificationRoutes from './verification-routes/password-verification.js';
@@ -197,6 +198,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
   backupCodeVerificationRoutes(experienceRouter, tenant);
   newPasswordIdentityVerificationRoutes(experienceRouter, tenant);
   oneTimeTokenRoutes(experienceRouter, tenant);
+  googleOneTapVerificationRoutes(experienceRouter, tenant);
 
   profileRoutes(experienceRouter, tenant);
   experienceAnonymousRoutes(experienceRouter, tenant);

@@ -24,7 +24,8 @@ type IdentifierVerificationType =
   | VerificationType.Password
   | VerificationType.Social
   | VerificationType.EnterpriseSso
-  | VerificationType.OneTimeToken;
+  | VerificationType.OneTimeToken
+  | VerificationType.GoogleOneTap;
 
 /**
  * The abstract class for all identifier verification records.

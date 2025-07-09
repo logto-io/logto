@@ -9,6 +9,7 @@ export * from './verification-type.js';
 export * from './backup-code-verification.js';
 export * from './code-verification.js';
 export * from './enterprise-sso-verification.js';
+export * from './google-one-tap-verification.js';
 export * from './new-password-identity-verification.js';
 export * from './one-time-token-verification.js';
 export * from './password-verification.js';

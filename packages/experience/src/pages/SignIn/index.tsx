@@ -114,6 +114,15 @@ const SignIn = () => {
     );
   }
 
+  if (params.get(ExtraParamsKey.GoogleOneTapCredential)) {
+    return (
+      <Navigate
+        replace
+        to={{ pathname: `/${experience.routes.googleOneTap}`, search: `?${params.toString()}` }}
+      />
+    );
+  }
+
   return (
     <LandingPageLayout title="description.sign_in_to_your_account">
       <GoogleOneTap context="signin" />

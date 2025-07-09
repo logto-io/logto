@@ -20,6 +20,7 @@ import {
   phoneCodeVerificationRecordDataGuard,
 } from '../verification-records/code-verification.js';
 import { enterpriseSsoVerificationRecordDataGuard } from '../verification-records/enterprise-sso-verification.js';
+import { googleOneTapVerificationRecordDataGuard } from '../verification-records/google-one-tap-verification.js';
 import { newPasswordIdentityVerificationRecordDataGuard } from '../verification-records/new-password-identity-verification.js';
 import { oneTimeTokenVerificationRecordDataGuard } from '../verification-records/one-time-token-verification.js';
 import { passwordVerificationRecordDataGuard } from '../verification-records/password-verification.js';
@@ -121,6 +122,7 @@ const jwtCustomizerUserInteractionVerificationRecordGuard = z.discriminatedUnion
     registrationInfo: true,
   }),
   oneTimeTokenVerificationRecordDataGuard,
+  googleOneTapVerificationRecordDataGuard,
   newPasswordIdentityVerificationRecordDataGuard.omit({
     passwordEncrypted: true,
     passwordEncryptionMethod: true,

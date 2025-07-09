@@ -125,6 +125,7 @@ export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown):
   appendExtraParam(ExtraParamsKey.OneTimeToken);
   appendExtraParam(ExtraParamsKey.LoginHint);
   appendExtraParam(ExtraParamsKey.Identifier);
+  appendExtraParam(ExtraParamsKey.GoogleOneTapCredential);
 
   if (directSignIn) {
     searchParams.append('fallback', firstScreen);

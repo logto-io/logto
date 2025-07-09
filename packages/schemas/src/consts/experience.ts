@@ -8,6 +8,7 @@ const routes = Object.freeze({
   identifierRegister: 'identifier-register',
   switchAccount: 'switch-account',
   oneTimeToken: 'one-time-token',
+  googleOneTap: 'google-one-tap',
 } as const);
 
 export const experience = Object.freeze({

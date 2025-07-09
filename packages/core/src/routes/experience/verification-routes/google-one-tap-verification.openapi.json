@@ -1,0 +1,58 @@
+{
+  "tags": [
+    {
+      "name": "Experience API",
+      "description": "Experience API routes for user interaction flow (RFC 0004)."
+    }
+  ],
+  "paths": {
+    "/api/experience/verification/google-one-tap/verify": {
+      "post": {
+        "operationId": "VerifyGoogleOneTapCredential",
+        "summary": "Verify Google One Tap credential",
+        "description": "Verify a Google One Tap credential (ID token) and create a verification record.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "credential": {
+                    "type": "string",
+                    "description": "The Google One Tap credential (ID token)"
+                  }
+                },
+                "required": ["credential"],
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The Google One Tap credential was successfully verified.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "verificationId": {
+                      "type": "string",
+                      "description": "The verification record ID"
+                    }
+                  },
+                  "required": ["verificationId"],
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request. The credential is invalid or malformed."
+          },
+          "404": {
+            "description": "Google connector not found or not configured."
+          }
+        }
+      }
+    }
+  }
+}

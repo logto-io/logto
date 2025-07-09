@@ -11,6 +11,7 @@ export enum VerificationType {
   BackupCode = 'BackupCode',
   NewPasswordIdentity = 'NewPasswordIdentity',
   OneTimeToken = 'OneTimeToken',
+  GoogleOneTap = 'GoogleOneTap',
 }
 
 export const verificationTypeGuard = z.nativeEnum(VerificationType);

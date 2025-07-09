@@ -159,6 +159,33 @@ export const googleOneTapConfigGuard = z.object({
 }) satisfies ToZodObject<GoogleOneTapConfig>;
 
 /**
+ * The payload of the Google ID token.
+ *
+ * @see {@link https://developers.google.com/identity/openid-connect/openid-connect#an-id-tokens-payload | An ID token's payload}
+ */
+export type GoogleIdTokenPayload = {
+  sub: string;
+  email: string;
+  email_verified: boolean;
+  name?: string;
+  picture?: string;
+  given_name?: string;
+  family_name?: string;
+  locale?: string;
+};
+
+export const googleIdTokenPayloadGuard = z.object({
+  sub: z.string(),
+  email: z.string(),
+  email_verified: z.boolean(),
+  name: z.string().optional(),
+  picture: z.string().optional(),
+  given_name: z.string().optional(),
+  family_name: z.string().optional(),
+  locale: z.string().optional(),
+}) satisfies ToZodObject<GoogleIdTokenPayload>;
+
+/**
  * An object that contains the configuration for the official Google connector.
  *
  * @remarks
@@ -194,6 +221,7 @@ export const GoogleConnector = Object.freeze({
     prompts: oidcPromptsGuard,
     oneTap: googleOneTapConfigGuard.optional(),
   }) satisfies ToZodObject<GoogleConnectorConfig>,
+  googleIdTokenPayloadGuard,
 });
 
 export type GoogleConnectorConfig = {

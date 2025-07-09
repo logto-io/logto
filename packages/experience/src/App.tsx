@@ -15,6 +15,7 @@ import Continue from './pages/Continue';
 import DirectSignIn from './pages/DirectSignIn';
 import ErrorPage from './pages/ErrorPage';
 import ForgotPassword from './pages/ForgotPassword';
+import GoogleOneTap from './pages/GoogleOneTap';
 import IdentifierRegister from './pages/IdentifierRegister';
 import IdentifierSignIn from './pages/IdentifierSignIn';
 import MfaBinding from './pages/MfaBinding';
@@ -67,6 +68,7 @@ const App = () => {
                     <Route path="direct/:method/:target?" element={<DirectSignIn />} />
                     <Route element={<AppLayout />}>
                       <Route path={experience.routes.oneTimeToken} element={<OneTimeToken />} />
+                      <Route path={experience.routes.googleOneTap} element={<GoogleOneTap />} />
                       <Route path={experience.routes.switchAccount} element={<SwitchAccount />} />
                       <Route
                         path="unknown-session"

@@ -112,6 +112,12 @@ export const identifyUserByVerificationRecord = async (
         },
       };
     }
+    case VerificationType.GoogleOneTap: {
+      return {
+        user: await verificationRecord.identifyUser(),
+        syncedProfile: await verificationRecord.toUserProfile(),
+      };
+    }
     case VerificationType.Social: {
       const user = linkSocialIdentity
         ? await verificationRecord.identifyRelatedUser()

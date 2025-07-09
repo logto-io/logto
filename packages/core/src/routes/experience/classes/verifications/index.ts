@@ -22,6 +22,11 @@ import {
   type EnterpriseSsoVerificationRecordData,
 } from './enterprise-sso-verification.js';
 import {
+  GoogleOneTapVerification,
+  googleOneTapVerificationRecordDataGuard,
+  type GoogleOneTapVerificationRecordData,
+} from './google-one-tap-verification.js';
+import {
   NewPasswordIdentityVerification,
   newPasswordIdentityVerificationRecordDataGuard,
   type NewPasswordIdentityVerificationRecordData,
@@ -63,7 +68,8 @@ export type VerificationRecordData =
   | BackupCodeVerificationRecordData
   | WebAuthnVerificationRecordData
   | NewPasswordIdentityVerificationRecordData
-  | OneTimeTokenVerificationRecordData;
+  | OneTimeTokenVerificationRecordData
+  | GoogleOneTapVerificationRecordData;
 
 // This is to ensure the keys of the map are the same as the type of the verification record
 type VerificationRecordInterfaceMap = {
@@ -82,6 +88,7 @@ export type VerificationRecordMap = AssertVerificationMap<{
   [VerificationType.WebAuthn]: WebAuthnVerification;
   [VerificationType.NewPasswordIdentity]: NewPasswordIdentityVerification;
   [VerificationType.OneTimeToken]: OneTimeTokenVerification;
+  [VerificationType.GoogleOneTap]: GoogleOneTapVerification;
 }>;
 
 type ValueOf<T> = T[keyof T];
@@ -106,6 +113,7 @@ export const verificationRecordDataGuard = z.discriminatedUnion('type', [
   webAuthnVerificationRecordDataGuard,
   newPasswordIdentityVerificationRecordDataGuard,
   oneTimeTokenVerificationRecordDataGuard,
+  googleOneTapVerificationRecordDataGuard,
 ]);
 
 /**
@@ -146,6 +154,9 @@ export const buildVerificationRecord = (
     }
     case VerificationType.OneTimeToken: {
       return new OneTimeTokenVerification(libraries, queries, data);
+    }
+    case VerificationType.GoogleOneTap: {
+      return new GoogleOneTapVerification(libraries, queries, data);
     }
   }
 };

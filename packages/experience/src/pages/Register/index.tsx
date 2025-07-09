@@ -51,6 +51,15 @@ const RegisterFooter = () => {
     );
   }
 
+  if (params.get(ExtraParamsKey.GoogleOneTapCredential)) {
+    return (
+      <Navigate
+        replace
+        to={{ pathname: `/${experience.routes.googleOneTap}`, search: `?${params.toString()}` }}
+      />
+    );
+  }
+
   /* Hide footers when showing Single Sign On form */
   if (showSingleSignOnForm) {
     return null;
