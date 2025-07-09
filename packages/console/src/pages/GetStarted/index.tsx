@@ -16,7 +16,7 @@ import GuideCardGroup from '@/components/Guide/GuideCardGroup';
 import { useApiGuideMetadata, useAppGuideMetadata } from '@/components/Guide/hooks';
 import PageMeta from '@/components/PageMeta';
 import { ConnectorsTabs, convertToProductionThresholdDays } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { LinkButton } from '@/ds-components/Button';
@@ -105,11 +105,6 @@ function GetStarted() {
   );
 
   const shouldShowConvertToProductionCard = useMemo(() => {
-    // Todo: @xiaoyijun feature flag for dev-to-pro
-    if (!isDevFeaturesEnabled) {
-      return false;
-    }
-
     if (!isCloud || !isDevTenant || !currentTenant) {
       return false;
     }
