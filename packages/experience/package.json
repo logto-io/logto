@@ -67,6 +67,8 @@
     "ky": "^1.2.3",
     "libphonenumber-js": "^1.12.6",
     "lint-staged": "^15.0.0",
+    "overlayscrollbars": "^2.0.2",
+    "overlayscrollbars-react": "^0.5.0",
     "postcss": "^8.4.31",
     "postcss-modules": "^6.0.0",
     "prettier": "^3.5.3",
