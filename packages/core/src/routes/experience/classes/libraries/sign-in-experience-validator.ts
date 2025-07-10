@@ -320,6 +320,7 @@ export class SignInExperienceValidator {
       }
 
       case VerificationType.OneTimeToken:
+      case VerificationType.GoogleOneTap:
       case VerificationType.Social: {
         // No need to verify one-time token and social verification methods
         break;

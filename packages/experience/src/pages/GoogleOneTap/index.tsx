@@ -111,8 +111,8 @@ const GoogleOneTap = () => {
         // There's an existing session that doesn't match the Google credential
         // Redirect to switch account page for user to choose
         const switchAccountParams = new URLSearchParams({
-          login_hint: verifiedEmail,
-          google_one_tap_credential: credential,
+          [ExtraParamsKey.LoginHint]: verifiedEmail,
+          [ExtraParamsKey.GoogleOneTapCredential]: credential,
         });
         navigate(`/${experience.routes.switchAccount}?${switchAccountParams.toString()}`, {
           replace: true,

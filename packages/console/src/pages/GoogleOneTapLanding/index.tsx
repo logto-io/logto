@@ -7,24 +7,20 @@ import AppLoading from '@/components/AppLoading';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useRedirectUri from '@/hooks/use-redirect-uri';
 
-enum OneTimeTokenLandingSearchParams {
-  OneTimeToken = 'one_time_token',
-  Email = 'email',
-}
-
-/** The one-time token landing page for sign-in with one-time tokens. */
-function OneTimeTokenLanding() {
+/** The Google One Tap landing page for sign-in with Google One Tap. */
+function GoogleOneTapLanding() {
   const navigate = useNavigate();
   const { isAuthenticated, signIn } = useLogto();
   const [searchParams] = useSearchParams();
   const { navigateTenant } = useContext(TenantsContext);
   const redirectUri = useRedirectUri();
 
-  const oneTimeToken = searchParams.get(OneTimeTokenLandingSearchParams.OneTimeToken);
-  const email = searchParams.get(OneTimeTokenLandingSearchParams.Email);
+  const googleOneTapCredential = searchParams.get(
+    ExtraParamsKey.GoogleOneTapCredential
+  );
 
   useEffect(() => {
-    if (isAuthenticated || !(oneTimeToken && email)) {
+    if (isAuthenticated || !googleOneTapCredential) {
       // Navigate to root, which will handle tenant selection
       navigate('/', { replace: true });
       return;
@@ -38,13 +34,19 @@ function OneTimeTokenLanding() {
        */
       clearTokens: false,
       extraParams: {
-        [ExtraParamsKey.OneTimeToken]: oneTimeToken,
-        [ExtraParamsKey.LoginHint]: email,
+        [ExtraParamsKey.GoogleOneTapCredential]: googleOneTapCredential,
       },
     });
-  }, [isAuthenticated, navigate, navigateTenant, signIn, redirectUri, oneTimeToken, email]);
+  }, [
+    isAuthenticated,
+    navigate,
+    navigateTenant,
+    signIn,
+    redirectUri,
+    googleOneTapCredential,
+  ]);
 
   return <AppLoading />;
 }
 
-export default OneTimeTokenLanding;
+export default GoogleOneTapLanding;

@@ -10,6 +10,7 @@ import AcceptInvitation from '@/pages/AcceptInvitation';
 import AuthStatus from '@/pages/AuthStatus';
 import Callback from '@/pages/Callback';
 import CheckoutSuccessCallback from '@/pages/CheckoutSuccessCallback';
+import GoogleOneTapLanding from '@/pages/GoogleOneTapLanding';
 import OneTimeTokenLanding from '@/pages/OneTimeTokenLanding';
 import Profile from '@/pages/Profile';
 import HandleSocialCallback from '@/pages/Profile/containers/HandleSocialCallback';
@@ -31,6 +32,10 @@ function AppRoutes() {
               <Route
                 path={GlobalAnonymousRoute.OneTimeTokenLanding}
                 element={<OneTimeTokenLanding />}
+              />
+              <Route
+                path={GlobalAnonymousRoute.GoogleOneTapLanding}
+                element={<GoogleOneTapLanding />}
               />
               <Route path={GlobalAnonymousRoute.AuthStatus} element={<AuthStatus />} />
             </>
