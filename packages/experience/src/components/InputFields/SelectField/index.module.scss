@@ -1,0 +1,15 @@
+@use '@/scss/underscore' as _;
+
+.select {
+  cursor: pointer;
+  position: relative;
+
+  input {
+    cursor: pointer;
+  }
+}
+
+.dropdown {
+  padding: _.unit(1);
+  max-height: 288px;
+}

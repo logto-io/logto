@@ -1,0 +1,33 @@
+/* stylelint-disable selector-class-pattern */
+.os-scrollbar {
+  &.os-theme-dark,
+  &.os-theme-light {
+    &.os-scrollbar-vertical {
+      width: 12px;
+      padding: 8px 2px;
+
+      .os-scrollbar-handle {
+        min-height: 40px;
+      }
+    }
+
+    &.os-scrollbar-horizontal {
+      height: 12px;
+      padding: 2px 8px;
+
+      .os-scrollbar-handle {
+        min-width: 40px;
+      }
+    }
+  }
+
+  &.os-theme-dark,
+  &.os-theme-light,
+  &.os-theme-dark.os-scrollbar:hover,
+  &.os-theme-light.os-scrollbar:hover {
+    .os-scrollbar-track .os-scrollbar-handle {
+      background: var(--color-neutral-variant-80);
+    }
+  }
+}
+/* stylelint-enable selector-class-pattern */

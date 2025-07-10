@@ -4154,6 +4154,12 @@ importers:
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
+      overlayscrollbars:
+        specifier: ^2.0.2
+        version: 2.0.3
+      overlayscrollbars-react:
+        specifier: ^0.5.0
+        version: 0.5.0(overlayscrollbars@2.0.3)(react@18.3.1)
       postcss:
         specifier: ^8.4.31
         version: 8.5.3
