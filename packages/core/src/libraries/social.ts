@@ -3,8 +3,9 @@ import type { GetSession, SocialUserInfo } from '@logto/connector-kit';
 import { socialUserInfoGuard } from '@logto/connector-kit';
 import type { EncryptedTokenSet, SecretSocialConnectorRelationPayload, User } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
-import { generateStandardId } from '@logto/shared';
+import { ConsoleLog, generateStandardId } from '@logto/shared';
 import { trySafe, type Nullable } from '@silverhand/essentials';
+import chalk from 'chalk';
 import type { InteractionResults } from 'oidc-provider';
 import { z } from 'zod';
 
@@ -15,6 +16,8 @@ import assertThat from '#src/utils/assert-that.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
 
 import { deserializeEncryptedSecret, encryptTokenResponse } from '../utils/secret-encryption.js';
+
+const consoleLog = new ConsoleLog(chalk.magenta('Social'));
 
 const getUserInfoFromInteractionResult = async (
   connectorId: string,
@@ -44,15 +47,30 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
   const { getLogtoConnectorById } = connectorLibrary;
 
   const getConnector = async (connectorId: string): Promise<LogtoConnector> => {
+    consoleLog.info('[Social] Debug: Attempting to get connector with ID:', connectorId);
     try {
-      return await getLogtoConnectorById(connectorId);
+      const connector = await getLogtoConnectorById(connectorId);
+      consoleLog.info('[Social] Debug: Successfully retrieved connector:', {
+        id: connector.dbEntry.id,
+        type: connector.type,
+        metadataId: connector.metadata.id,
+        target: connector.metadata.target,
+      });
+      return connector;
     } catch (error: unknown) {
+      consoleLog.error(
+        '[Social] Error: Failed to get connector with ID:',
+        connectorId,
+        'Error:',
+        error
+      );
       // Throw a new error with status 422 when connector not found.
       if (error instanceof RequestError && error.code === 'entity.not_found') {
         throw new RequestError({
           code: 'session.invalid_connector_id',
           status: 422,
           connectorId,
+          details: `Connector with ID "${connectorId}" not found in database`,
         });
       }
       throw error;
@@ -72,6 +90,7 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
         code: 'session.invalid_connector_id',
         status: 422,
         connectorId,
+        details: `Connector "${connectorId}" is not a Social connector (type: ${connector.type})`,
       })
     );
 

@@ -79,9 +79,24 @@ export class GoogleOneTapVerification
    * Verify the Google One Tap credential (ID token) using Google's public keys
    */
   async verify(credential: string) {
+    console.log('[GoogleOneTap] Debug: Starting verification with connectorId:', this.connectorId);
+    
     // Get Google connector configuration
     const { getConnector } = this.libraries.socials;
-    const googleConnector = await getConnector(this.connectorId);
+    
+    let googleConnector;
+    try {
+      googleConnector = await getConnector(this.connectorId);
+      console.log('[GoogleOneTap] Debug: Successfully retrieved connector:', {
+        id: googleConnector.dbEntry.id,
+        type: googleConnector.type,
+        metadataId: googleConnector.metadata.id,
+        target: googleConnector.metadata.target,
+      });
+    } catch (error) {
+      console.error('[GoogleOneTap] Error: Failed to get connector with ID:', this.connectorId, 'Error:', error);
+      throw error;
+    }
 
     assertThat(googleConnector, new RequestError({ code: 'connector.not_found', status: 404 }));
 
