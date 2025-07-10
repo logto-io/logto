@@ -31,7 +31,7 @@ function OneTimeTokenLanding() {
   );
 
   useEffect(() => {
-    if (isAuthenticated || !oneTimeToken || !email || !googleOneTapCredential) {
+    if (isAuthenticated || !(oneTimeToken && email) || !googleOneTapCredential) {
       // Navigate to root, which will handle tenant selection
       navigate('/', { replace: true });
       return;
