@@ -10,7 +10,7 @@ import { errors } from 'oidc-provider';
 import revoke from 'oidc-provider/lib/helpers/revoke.js';
 import validatePresence from 'oidc-provider/lib/helpers/validate_presence.js';
 
-import { type EnvSet } from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -166,6 +166,9 @@ export const buildHandler: (
 ) => Parameters<Provider['registerGrantType']>[1] = (envSet, queries) => async (ctx, next) => {
   const { client, params, provider } = ctx.oidc;
   const { RefreshToken, Account, Grant } = provider;
+
+  // TODO: remove this dev feature guard
+  assertThat(EnvSet.values.isDevFeaturesEnabled, new InvalidRequest('Invalid grant type'));
 
   /* === Start standard OIDC refresh token  validation  === */
   assertThat(params, new InvalidGrant('parameters must be available'));

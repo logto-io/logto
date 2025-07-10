@@ -17,20 +17,27 @@ import {
   buildLoginPromptUrl,
 } from './utils.js';
 
+const clientApplicationGrantTypes = Object.freeze([
+  GrantType.AuthorizationCode,
+  GrantType.RefreshToken,
+  GrantType.TokenExchange,
+  GrantType.FederatedThirdPartyTokenExchange,
+] as const);
+
 describe('getConstantClientMetadata()', () => {
   expect(getConstantClientMetadata(mockEnvSet, ApplicationType.SPA)).toEqual({
     application_type: 'web',
-    grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken, GrantType.TokenExchange],
+    grant_types: clientApplicationGrantTypes,
     token_endpoint_auth_method: 'none',
   });
   expect(getConstantClientMetadata(mockEnvSet, ApplicationType.Native)).toEqual({
     application_type: 'native',
-    grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken, GrantType.TokenExchange],
+    grant_types: clientApplicationGrantTypes,
     token_endpoint_auth_method: 'none',
   });
   expect(getConstantClientMetadata(mockEnvSet, ApplicationType.Traditional)).toEqual({
     application_type: 'web',
-    grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken, GrantType.TokenExchange],
+    grant_types: clientApplicationGrantTypes,
     token_endpoint_auth_method: 'client_secret_basic',
   });
   expect(getConstantClientMetadata(mockEnvSet, ApplicationType.MachineToMachine)).toEqual({
