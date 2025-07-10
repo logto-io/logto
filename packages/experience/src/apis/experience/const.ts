@@ -12,3 +12,7 @@ export const experienceApiRoutes = Object.freeze({
 export type VerificationResponse = {
   verificationId: string;
 };
+
+export type GoogleOneTapVerificationResponse = VerificationResponse & {
+  verifiedEmail: string;
+};

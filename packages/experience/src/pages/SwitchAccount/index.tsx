@@ -32,6 +32,8 @@ const SwitchAccount = () => {
 
   const [params] = useSearchParams();
   const loginHint = params.get('login_hint');
+  const oneTimeToken = params.get('one_time_token');
+  const googleOneTapCredential = params.get('google_one_tap_credential');
 
   useEffect(() => {
     (async () => {
@@ -81,10 +83,12 @@ const SwitchAccount = () => {
           title="action.continue_as"
           i18nProps={{ name: loginHint }}
           onClick={() => {
-            navigate(
-              { pathname: `/${experience.routes.oneTimeToken}`, search: `?${params.toString()}` },
-              { replace: true }
-            );
+            // Determine the target route based on which authentication method is being used
+            const targetRoute = googleOneTapCredential
+              ? `/${experience.routes.googleOneTap}`
+              : `/${experience.routes.oneTimeToken}`;
+
+            navigate({ pathname: targetRoute, search: `?${params.toString()}` }, { replace: true });
           }}
         />
         <div className={styles.linkButton}>

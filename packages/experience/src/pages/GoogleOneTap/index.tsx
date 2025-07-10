@@ -1,26 +1,129 @@
-import { ExtraParamsKey, AgreeToTermsPolicy, type RequestErrorBody } from '@logto/schemas';
+import {
+  ExtraParamsKey,
+  AgreeToTermsPolicy,
+  type RequestErrorBody,
+  experience,
+  InteractionEvent,
+} from '@logto/schemas';
 import { condString } from '@silverhand/essentials';
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useEffect, useState, useCallback } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 
+import { getConsentInfo } from '@/apis/consent';
 import { verifyGoogleOneTapCredential } from '@/apis/experience/google-one-tap';
-import { identifyAndSubmitInteraction } from '@/apis/experience/interaction';
+import {
+  identifyAndSubmitInteraction,
+  updateInteractionEvent,
+} from '@/apis/experience/interaction';
 import LoadingLayer from '@/components/LoadingLayer';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
+import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
 import useTerms from '@/hooks/use-terms';
 import ErrorPage from '@/pages/ErrorPage';
 
 const GoogleOneTap = () => {
   const [searchParams] = useSearchParams();
   const [googleOneTapError, setGoogleOneTapError] = useState<string | boolean>();
+  const navigate = useNavigate();
 
   const asyncVerifyGoogleOneTapCredential = useApi(verifyGoogleOneTapCredential);
   const asyncIdentifyAndSubmitInteraction = useApi(identifyAndSubmitInteraction);
+  const asyncUpdateInteractionEvent = useApi(updateInteractionEvent);
+  const asyncGetConsentInfo = useApi(getConsentInfo);
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const handleError = useErrorHandler();
   const redirectTo = useGlobalRedirectTo();
+  const preRegisterErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.Register);
+
+  // Reusable error handler for setting Google One Tap errors
+  const setGoogleOneTapErrorHandler = useCallback((error: RequestErrorBody) => {
+    setGoogleOneTapError(error.message);
+  }, []);
+
+  /**
+   * Register with Google One Tap credential when account doesn't exist
+   */
+  const registerWithGoogleOneTap = useCallback(
+    async (verificationId: string) => {
+      await asyncUpdateInteractionEvent(InteractionEvent.Register);
+      const [error, result] = await asyncIdentifyAndSubmitInteraction({ verificationId });
+
+      if (error) {
+        await handleError(error, preRegisterErrorHandler);
+        return;
+      }
+
+      if (result?.redirectTo) {
+        await redirectTo(result.redirectTo);
+      }
+    },
+    [
+      asyncUpdateInteractionEvent,
+      asyncIdentifyAndSubmitInteraction,
+      handleError,
+      preRegisterErrorHandler,
+      redirectTo,
+    ]
+  );
+
+  /**
+   * Submit Google One Tap interaction. Try to sign in first, if account doesn't exist, register.
+   * Similar to OneTimeToken pattern.
+   */
+  const submitGoogleOneTap = useCallback(
+    async (verificationId: string) => {
+      const [error, result] = await asyncIdentifyAndSubmitInteraction({ verificationId });
+
+      if (error) {
+        await handleError(error, {
+          'user.identity_not_exist': async () => {
+            await registerWithGoogleOneTap(verificationId);
+          },
+          global: setGoogleOneTapErrorHandler,
+        });
+        return;
+      }
+
+      if (result?.redirectTo) {
+        await redirectTo(result.redirectTo);
+      }
+    },
+    [
+      asyncIdentifyAndSubmitInteraction,
+      handleError,
+      registerWithGoogleOneTap,
+      redirectTo,
+      setGoogleOneTapErrorHandler,
+    ]
+  );
+
+  /**
+   * Check for existing session and submit GoogleOneTap with proper account switching
+   */
+  const checkSessionAndSubmit = useCallback(
+    async (credential: string, verificationId: string, verifiedEmail: string) => {
+      // Check for existing session
+      const [consentError, consentResult] = await asyncGetConsentInfo();
+
+      if (!consentError && consentResult && consentResult.user.primaryEmail !== verifiedEmail) {
+        // There's an existing session that doesn't match the Google credential
+        // Redirect to switch account page for user to choose
+        const switchAccountParams = new URLSearchParams({
+          login_hint: verifiedEmail,
+          google_one_tap_credential: credential,
+        });
+        navigate(`/${experience.routes.switchAccount}?${switchAccountParams.toString()}`, {
+          replace: true,
+        });
+        return;
+      }
+
+      await submitGoogleOneTap(verificationId);
+    },
+    [asyncGetConsentInfo, submitGoogleOneTap, navigate]
+  );
 
   useEffect(() => {
     (async () => {
@@ -45,15 +148,14 @@ const GoogleOneTap = () => {
         return;
       }
 
+      // First, verify the Google One Tap credential to get accurate user information
       const [verifyError, verifyResult] = await asyncVerifyGoogleOneTapCredential({
         credential,
       });
 
       if (verifyError) {
         await handleError(verifyError, {
-          global: (error: RequestErrorBody) => {
-            setGoogleOneTapError(error.message);
-          },
+          global: setGoogleOneTapErrorHandler,
         });
         return;
       }
@@ -62,31 +164,22 @@ const GoogleOneTap = () => {
         return;
       }
 
-      const [submitError, submitResult] = await asyncIdentifyAndSubmitInteraction({
-        verificationId: verifyResult.verificationId,
-      });
-
-      if (submitError) {
-        await handleError(submitError, {
-          global: (error: RequestErrorBody) => {
-            setGoogleOneTapError(error.message);
-          },
-        });
-        return;
-      }
-
-      if (submitResult?.redirectTo) {
-        await redirectTo(submitResult.redirectTo);
-      }
+      // Now check for existing session using the verified credential
+      // This ensures we use the accurate email from the verified Google ID token
+      await checkSessionAndSubmit(
+        credential,
+        verifyResult.verificationId,
+        verifyResult.verifiedEmail
+      );
     })();
   }, [
     agreeToTermsPolicy,
     searchParams,
     asyncVerifyGoogleOneTapCredential,
-    asyncIdentifyAndSubmitInteraction,
     handleError,
     termsValidation,
-    redirectTo,
+    setGoogleOneTapErrorHandler,
+    checkSessionAndSubmit,
   ]);
 
   if (googleOneTapError) {

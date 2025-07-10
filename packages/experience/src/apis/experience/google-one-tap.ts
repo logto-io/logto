@@ -2,7 +2,7 @@ import { InteractionEvent, type GoogleOneTapVerificationVerifyPayload } from '@l
 
 import api from '../api';
 
-import { experienceApiRoutes, type VerificationResponse } from './const';
+import { experienceApiRoutes, type GoogleOneTapVerificationResponse } from './const';
 import { initInteraction } from './interaction';
 
 export const verifyGoogleOneTapCredential = async (
@@ -14,5 +14,5 @@ export const verifyGoogleOneTapCredential = async (
     .post(`${experienceApiRoutes.verification}/google-one-tap/verify`, {
       json: payload,
     })
-    .json<VerificationResponse>();
+    .json<GoogleOneTapVerificationResponse>();
 };

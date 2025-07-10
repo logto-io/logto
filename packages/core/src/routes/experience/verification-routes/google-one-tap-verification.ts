@@ -60,6 +60,7 @@ export default function googleOneTapVerificationRoutes<
       body: googleOneTapVerificationVerifyPayloadGuard,
       response: z.object({
         verificationId: z.string(),
+        verifiedEmail: z.string(),
       }),
       status: [200, 400, 404],
     }),
@@ -95,6 +96,7 @@ export default function googleOneTapVerificationRoutes<
 
       ctx.body = {
         verificationId: googleOneTapVerificationRecord.id,
+        verifiedEmail: googleOneTapVerificationRecord.verifiedEmail,
       };
 
       return next();
