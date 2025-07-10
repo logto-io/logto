@@ -20,11 +20,7 @@ import {
   generateBackupCodes,
   validateBackupCodes,
 } from '../interaction/utils/backup-code-validation.js';
-import {
-  generateTotpSecret,
-  validateTotpSecret,
-  validateTotpToken,
-} from '../interaction/utils/totp-validation.js';
+import { generateTotpSecret, validateTotpSecret } from '../interaction/utils/totp-validation.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
 import { accountApiPrefix } from './constants.js';
@@ -390,57 +386,5 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
       return next();
     }
   );
-
-  // MFA verification endpoints for existing factors
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    router.post(
-      `${accountApiPrefix}/mfa-verifications/totp/verify`,
-      koaGuard({
-        body: z.object({
-          code: z.string().min(6).max(6),
-        }),
-        status: [204, 400, 401, 422],
-      }),
-      async (ctx, next) => {
-        const { id: userId, scopes } = ctx.auth;
-        const { code } = ctx.guard.body;
-        const { fields } = ctx.accountCenter;
-
-        assertThat(
-          fields.mfa === AccountCenterControlValue.Edit ||
-            fields.mfa === AccountCenterControlValue.ReadOnly,
-          'account_center.field_not_enabled'
-        );
-
-        assertThat(
-          scopes.has(UserScope.Identities),
-          new RequestError({ code: 'auth.unauthorized', status: 401 })
-        );
-
-        // Check sign in experience, if TOTP factor is enabled
-        const { mfa } = await findDefaultSignInExperience();
-        assertThat(mfa.factors.includes(MfaFactor.TOTP), 'session.mfa.mfa_factor_not_enabled');
-
-        const user = await findUserById(userId);
-        const totpVerification = user.mfaVerifications.find(
-          (verification) => verification.type === MfaFactor.TOTP
-        );
-
-        assertThat(
-          totpVerification,
-          new RequestError({ code: 'session.mfa.mfa_factor_not_enabled', status: 422 })
-        );
-
-        assertThat(
-          validateTotpToken(totpVerification.key, code),
-          new RequestError({ code: 'session.mfa.invalid_totp_code', status: 422 })
-        );
-
-        ctx.status = 204;
-
-        return next();
-      }
-    );
-  }
 }
 /* eslint-enable max-lines */
