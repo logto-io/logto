@@ -43,6 +43,14 @@ export const convertToPrimitiveOrSql = (
     return null;
   }
 
+  // If the value is a buffer or a binary data, return it directly.
+  // secret vault table use only
+  if (Buffer.isBuffer(value)) {
+    // For bytea columns, we need to pass the buffer as a raw value
+    // slonik should handle Buffer objects correctly for bytea columns
+    return sql.binary(value);
+  }
+
   if (typeof value === 'object') {
     return JSON.stringify(value);
   }

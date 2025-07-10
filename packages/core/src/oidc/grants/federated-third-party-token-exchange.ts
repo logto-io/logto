@@ -17,7 +17,7 @@ import assertThat from '#src/utils/assert-that.js';
 import RequestError from '../../errors/RequestError/index.js';
 import { decryptTokens } from '../../utils/secret-encryption.js';
 
-const { InvalidClient, InvalidGrant, InvalidTarget } = errors;
+const { InvalidClient, InvalidGrant, InvalidRequest } = errors;
 
 enum FederatedThirdPartyTokenExchangeTokenType {
   ThirdPartyAccessToken = 'urn:logto:token-type:federated_third_party_access_token',
@@ -57,12 +57,12 @@ const validateTokenTypes = (params: UnknownObject): void => {
 
   assertThat(
     subjectTokenType === SubjectTokenType.RefreshToken,
-    new InvalidGrant('Invalid subject token type')
+    new InvalidRequest('Invalid subject token type')
   );
 
   assertThat(
     requestedTokenType === FederatedThirdPartyTokenExchangeTokenType.ThirdPartyAccessToken,
-    new InvalidGrant('Invalid requested token type')
+    new InvalidRequest('Invalid requested token type')
   );
 };
 
@@ -76,13 +76,13 @@ const validateTokenTypes = (params: UnknownObject): void => {
  */
 const parseConnectorParameter = (params: UnknownObject): ConnectorTarget => {
   const connector = String(params.connector);
-  assertThat(connector, new InvalidTarget('connector must be provided'));
+  assertThat(connector, new InvalidRequest('connector must be provided'));
 
   const [targetType, targetValue] = connector.split(':');
   assertThat(
     (targetType === ThirdPartyProviderType.Social || targetType === ThirdPartyProviderType.SSO) &&
       targetValue,
-    new InvalidTarget(
+    new InvalidRequest(
       'Invalid connector format, expected "social:<target>" or "sso:<connector-id>"'
     )
   );
