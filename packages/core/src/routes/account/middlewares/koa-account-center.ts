@@ -13,14 +13,14 @@ import { accountApiPrefix } from '../constants.js';
 export type WithAccountCenterContext<ContextT extends IRouterParamContext = IRouterParamContext> =
   ContextT & { accountCenter: AccountCenter };
 
-const getSocialTokenRequestPathRegex = new RegExp(
-  `^/${accountApiPrefix}/identities/[^/]+/access-token$`
+const getThirdPartyTokenRequestPathRegex = new RegExp(
+  `^${accountApiPrefix}/(identities|sso-identities)/[^/]+/access-token$`
 );
 
 const isGetThirdPartyTokenRequest = <ContextT extends Context>({
   request: { method, path },
 }: ContextT) => {
-  return method === 'GET' && getSocialTokenRequestPathRegex.test(path);
+  return method === 'GET' && getThirdPartyTokenRequestPathRegex.test(path);
 };
 
 /**

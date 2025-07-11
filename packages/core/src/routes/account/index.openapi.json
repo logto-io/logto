@@ -503,7 +503,7 @@
         "operationId": "GetEnterpriseSsoIdentityAccessToken",
         "tags": ["Dev feature"],
         "summary": "Retrieve the access token issued by a third-party enterprise SSO provider",
-        "description": "This API retrieves the access token issued by a third-party  enterprise SSO provider for a given SSO connector ID. \nAccess is only available if token storage is enabled for the corresponding connector.\nWhen a user authenticates through a SSO provider, Logto automatically stores the provider’s tokens in an encrypted form.\nYou can use this API to securely retrieve the stored access token and use it to access third-party APIs on behalf of the user.",
+        "description": "This API retrieves the access token issued by a third-party enterprise SSO provider for a given SSO connector ID. \nAccess is only available if token storage is enabled for the corresponding connector.\nWhen a user authenticates through a SSO provider, Logto automatically stores the provider’s tokens in an encrypted form.\nYou can use this API to securely retrieve the stored access token and use it to access third-party APIs on behalf of the user.",
         "responses": {
           "200": {
             "description": "The access token was retrieved successfully."
