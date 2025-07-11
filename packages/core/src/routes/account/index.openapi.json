@@ -478,6 +478,44 @@
           }
         }
       }
+    },
+    "/api/my-account/identities/{target}/access-token": {
+      "get": {
+        "operationId": "GetSocialIdentityAccessToken",
+        "tags": ["Dev feature"],
+        "summary": "Retrieve the access token issued by a third-party social provider",
+        "description": "This API retrieves the access token issued by a third-party social provider for a given social target. \nAccess is only available if token storage is enabled for the corresponding social connector.\nWhen a user authenticates through a social provider, Logto automatically stores the provider’s tokens in an encrypted form.\nYou can use this API to securely retrieve the stored access token and use it to access third-party APIs on behalf of the user.",
+        "responses": {
+          "200": {
+            "description": "The access token was retrieved successfully."
+          },
+          "404": {
+            "description": "The social identity does not exist or the access token is not available."
+          },
+          "401": {
+            "description": "Permission denied, the access_token is expired and the offline_access scope is not granted or expired."
+          }
+        }
+      }
+    },
+    "/api/my-account/sso-identities/{connectorId}/access-token": {
+      "get": {
+        "operationId": "GetEnterpriseSsoIdentityAccessToken",
+        "tags": ["Dev feature"],
+        "summary": "Retrieve the access token issued by a third-party enterprise SSO provider",
+        "description": "This API retrieves the access token issued by a third-party  enterprise SSO provider for a given SSO connector ID. \nAccess is only available if token storage is enabled for the corresponding connector.\nWhen a user authenticates through a SSO provider, Logto automatically stores the provider’s tokens in an encrypted form.\nYou can use this API to securely retrieve the stored access token and use it to access third-party APIs on behalf of the user.",
+        "responses": {
+          "200": {
+            "description": "The access token was retrieved successfully."
+          },
+          "404": {
+            "description": "The SSO connector does not exist or the access token is not available."
+          },
+          "401": {
+            "description": "Permission denied, the access_token is expired and the offline_access scope is not granted or expired."
+          }
+        }
+      }
     }
   }
 }
