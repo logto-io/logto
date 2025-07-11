@@ -1,3 +1,4 @@
+import { tokenResponseGuard } from '@logto/connector-kit';
 import { z } from 'zod';
 
 import { SecretEnterpriseSsoConnectorRelations } from '../db-entries/secret-enterprise-sso-connector-relation.js';
@@ -115,4 +116,19 @@ export const desensitizedEnterpriseSsoTokenSetSecretGuard = enterpriseSsoTokenSe
 
 export type DesensitizedEnterpriseSsoTokenSetSecret = z.infer<
   typeof desensitizedEnterpriseSsoTokenSetSecretGuard
+>;
+
+export const getThirdPartyAccessTokenResponseGuard = tokenResponseGuard
+  .pick({
+    access_token: true,
+    scope: true,
+    token_type: true,
+    expires_in: true,
+  })
+  .extend({
+    access_token: z.string(),
+  });
+
+export type GetThirdPartyAccessTokenResponse = z.infer<
+  typeof getThirdPartyAccessTokenResponseGuard
 >;

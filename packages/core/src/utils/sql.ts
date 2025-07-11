@@ -43,6 +43,13 @@ export const convertToPrimitiveOrSql = (
     return null;
   }
 
+  // For Buffer values, we convert them to binary SQL tokens,
+  // Slonik will handle the binary data correctly into `bytea` typed column.
+  // Only used for the secret vault table.
+  if (Buffer.isBuffer(value)) {
+    return sql.binary(value);
+  }
+
   if (typeof value === 'object') {
     return JSON.stringify(value);
   }

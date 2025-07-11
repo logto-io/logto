@@ -18,6 +18,7 @@ import request from './request.js';
 import resource from './resource.js';
 import role from './role.js';
 import scope from './scope.js';
+import secrets from './secrets.js';
 import session from './session.js';
 import sign_in_experiences from './sign-in-experiences.js';
 import single_sign_on from './single-sign-on.js';
@@ -58,6 +59,7 @@ const errors = {
   account_center,
   one_time_token,
   custom_profile_fields,
+  secrets,
 };
 
 export default Object.freeze(errors);

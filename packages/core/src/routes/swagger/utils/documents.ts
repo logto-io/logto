@@ -170,7 +170,7 @@ export const buildExperienceApiBaseDocument = (
   tags: [...tags].map((tag) => ({ name: tag })),
 });
 
-const userApiIdentifiableEntityNames = Object.freeze(['profile', 'verification']);
+const userApiIdentifiableEntityNames = Object.freeze(['profile', 'verification', 'connector']);
 
 export const buildUserApiBaseDocument = (
   pathMap: Map<string, OpenAPIV3.PathItemObject>,

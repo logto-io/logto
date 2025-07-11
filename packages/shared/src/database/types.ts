@@ -1,4 +1,4 @@
-export type SchemaValuePrimitive = string | number | boolean | undefined;
+export type SchemaValuePrimitive = string | number | boolean | undefined | Buffer;
 export type SchemaValue =
   | SchemaValuePrimitive
   | Record<string, unknown>
