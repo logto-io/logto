@@ -37,7 +37,7 @@
     "test:ci": "pnpm run test --silent --coverage"
   },
   "engines": {
-    "node": "^22.14.0"
+    "node": "^22.14.0 || ^24.0.0"
   },
   "dependencies": {
     "openapi-fetch": "^0.14.0"
