@@ -10,6 +10,7 @@ export const connectorResponseGuard = Connectors.guard
   .pick({
     id: true,
     syncProfile: true,
+    enableTokenStorage: true,
     config: true,
     metadata: true,
     connectorId: true,

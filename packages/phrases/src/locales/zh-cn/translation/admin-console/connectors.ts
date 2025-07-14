@@ -59,6 +59,15 @@ const connectors = {
     sync_profile_only_at_sign_up: '首次注册时同步',
     sync_profile_each_sign_in: '每次登录时同步',
     sync_profile_tip: '同步用户的用户名、头像等个人资料信息',
+    enable_token_storage: {
+      /** UNTRANSLATED */
+      title: 'Store tokens for persistent API access',
+      /** UNTRANSLATED */
+      description:
+        'Store access and refresh tokens in the Secret Vault. Allows automated API calls without repeated user consent. Example: let your AI Agent add events to Google Calendar with persistent authorization. <a>Lear how to call third-party APIs</a>',
+      /** UNTRANSLATED */
+      tip: 'Tips: For standard OAuth/OIDC identity provider, the `offline_access` scope must be included to obtain a refresh token, preventing repeated user consent prompts. ',
+    },
     callback_uri: 'Callback URI',
     callback_uri_description:
       '也称为重定向 URI，在社交授权后，用户将被发送回 Logto 的 URI，复制并粘贴到社交提供者的配置页面中。',

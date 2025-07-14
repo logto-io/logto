@@ -48,7 +48,7 @@ export const transpileLogtoConnector = async (
   return {
     type,
     ...metadata,
-    ...pick(dbEntry, 'id', 'connectorId', 'syncProfile', 'metadata'),
+    ...pick(dbEntry, 'id', 'connectorId', 'syncProfile', 'metadata', 'enableTokenStorage'),
     isDemo,
     extraInfo,
     // Hide demo connector config

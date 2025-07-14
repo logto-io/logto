@@ -65,6 +65,15 @@ const connectors = {
     sync_profile_each_sign_in: 'サインインごとに同期する',
     sync_profile_tip:
       '基本プロファイル（ユーザーの名前やアバターなど）をソーシャルプロバイダから同期します。',
+    enable_token_storage: {
+      /** UNTRANSLATED */
+      title: 'Store tokens for persistent API access',
+      /** UNTRANSLATED */
+      description:
+        'Store access and refresh tokens in the Secret Vault. Allows automated API calls without repeated user consent. Example: let your AI Agent add events to Google Calendar with persistent authorization. <a>Lear how to call third-party APIs</a>',
+      /** UNTRANSLATED */
+      tip: 'Tips: For standard OAuth/OIDC identity provider, the `offline_access` scope must be included to obtain a refresh token, preventing repeated user consent prompts. ',
+    },
     callback_uri: 'Callback URI',
     callback_uri_description:
       'Redirect URI もしくはコールバック URI とも呼ばれ、Logto に戻る URI です。コピーしてソーシャルプロバイダの構成ページに貼り付けてください。',

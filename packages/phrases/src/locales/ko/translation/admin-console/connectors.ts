@@ -63,6 +63,15 @@ const connectors = {
     sync_profile_only_at_sign_up: '회원가입할 때 동기화',
     sync_profile_each_sign_in: '로그인할 때마다 동기화',
     sync_profile_tip: '이름과 아바타와 같은 기본적인 사용자 프로필을 동기화해요.',
+    enable_token_storage: {
+      /** UNTRANSLATED */
+      title: 'Store tokens for persistent API access',
+      /** UNTRANSLATED */
+      description:
+        'Store access and refresh tokens in the Secret Vault. Allows automated API calls without repeated user consent. Example: let your AI Agent add events to Google Calendar with persistent authorization. <a>Lear how to call third-party APIs</a>',
+      /** UNTRANSLATED */
+      tip: 'Tips: For standard OAuth/OIDC identity provider, the `offline_access` scope must be included to obtain a refresh token, preventing repeated user consent prompts. ',
+    },
     callback_uri: 'Callback URI',
     callback_uri_description:
       '리다이렉트 URI라고도 불려요. 사용자의 소셜 인증 이후 되돌아올 Logto URI예요. 소셜 공급자의 설정 페이지에 붙여넣으세요.',

@@ -66,6 +66,15 @@ const connectors = {
     sync_profile_each_sign_in: 'قم بمزامنة في كل مرة تسجيل دخول',
     sync_profile_tip:
       'قم بمزامنة الملف الشخصي الأساسي من موفر الخدمة الاجتماعية ، مثل أسماء المستخدمين وصورهم الرمزية.',
+    enable_token_storage: {
+      /** UNTRANSLATED */
+      title: 'Store tokens for persistent API access',
+      /** UNTRANSLATED */
+      description:
+        'Store access and refresh tokens in the Secret Vault. Allows automated API calls without repeated user consent. Example: let your AI Agent add events to Google Calendar with persistent authorization. <a>Lear how to call third-party APIs</a>',
+      /** UNTRANSLATED */
+      tip: 'Tips: For standard OAuth/OIDC identity provider, the `offline_access` scope must be included to obtain a refresh token, preventing repeated user consent prompts. ',
+    },
     callback_uri: 'عنوان URI للرد',
     callback_uri_description:
       'يُطلق عليه أيضًا اسم عنوان URI للتوجيه ، وهو عنوان URI في Logto الذي سيتم إرسال المستخدمين إليه بعد المصادقة الاجتماعية ، قم بنسخه ولصقه في صفحة تكوين مزود الخدمة الاجتماعية.',
