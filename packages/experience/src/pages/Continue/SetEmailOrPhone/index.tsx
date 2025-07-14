@@ -13,7 +13,10 @@ import IdentifierProfileForm from '../IdentifierProfileForm';
 
 import SocialIdentityNotification from './SocialIdentityNotification';
 
-export type VerificationCodeProfileType = Exclude<MissingProfile, 'username' | 'password'>;
+export type VerificationCodeProfileType = Exclude<
+  MissingProfile,
+  'username' | 'password' | 'extraProfile'
+>;
 
 type Props = {
   readonly missingProfile: VerificationCodeProfileType;

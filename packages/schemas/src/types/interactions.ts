@@ -300,6 +300,7 @@ export enum MissingProfile {
   phone = 'phone',
   password = 'password',
   emailOrPhone = 'emailOrPhone',
+  extraProfile = 'extraProfile',
 }
 
 export const bindTotpPayloadGuard = z.object({

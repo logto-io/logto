@@ -1,5 +1,6 @@
 import {
   InteractionEvent,
+  MissingProfile,
   SignInIdentifier,
   type UpdateProfileApiPayload,
   VerificationType,
@@ -182,19 +183,30 @@ export class Profile {
     const mandatoryProfileFields =
       await this.signInExperienceValidator.getMandatoryUserProfileBySignUpMethods();
 
-    const missingProfile = this.profileValidator.getMissingUserProfile(
+    const missingMandatoryProfile = this.profileValidator.getMissingUserProfile(
       this.#data,
       mandatoryProfileFields,
       user
     );
 
-    if (missingProfile.size === 0) {
-      return;
-    }
+    assertThat(
+      missingMandatoryProfile.size === 0,
+      new RequestError(
+        { code: 'user.missing_profile', status: 422 },
+        { missingProfile: [...missingMandatoryProfile] }
+      )
+    );
 
-    throw new RequestError(
-      { code: 'user.missing_profile', status: 422 },
-      { missingProfile: [...missingProfile] }
+    assertThat(
+      this.interactionContext.getInteractionEvent() !== InteractionEvent.Register ||
+        !(await this.profileValidator.hasMissingExtraProfileFields(this.#data, user)),
+      new RequestError(
+        {
+          code: 'user.missing_profile',
+          status: 422,
+        },
+        { missingProfile: [MissingProfile.extraProfile] }
+      )
     );
   }
 

@@ -197,6 +197,28 @@ export class ProfileValidator {
     return missingProfile;
   }
 
+  public async hasMissingExtraProfileFields(profile: InteractionProfile, user?: User) {
+    const customProfileFields = await this.queries.customProfileFields.findAllCustomProfileFields();
+    const mandatoryCustomProfileFields = customProfileFields.filter(({ required }) => required);
+
+    for (const { name } of mandatoryCustomProfileFields) {
+      const foundInUser =
+        this.hasField(user, name) ||
+        this.hasField(user?.profile, name) ||
+        this.hasField(user?.customData, name);
+      const foundInProfile =
+        this.hasField(profile, name) ||
+        this.hasField(profile.profile, name) ||
+        this.hasField(profile.customData, name);
+
+      if (!foundInUser && !foundInProfile) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   /**
    * Parse and split profile data into built-in and custom fields based on the provided keys.
    * @param values The profile data to parse
@@ -235,5 +257,14 @@ export class ProfileValidator {
     );
 
     return { name, avatar, profile, customData };
+  }
+
+  private hasField(object: unknown, field: string): boolean {
+    if (!object || typeof object !== 'object') {
+      return false;
+    }
+    return Object.entries(object).some(
+      ([key, value]) => key === field && value !== null && value !== undefined
+    );
   }
 }
