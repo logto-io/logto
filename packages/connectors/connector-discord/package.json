@@ -4,7 +4,7 @@
   "description": "Discord connector implementation.",
   "author": "ZR3SYSTEMS. <https://github.com/FlurryNight>",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^4.3.0",
+    "@logto/connector-kit": "workspace:^",
     "@silverhand/essentials": "^2.9.1",
     "got": "^14.0.0",
     "snakecase-keys": "^8.0.1",

@@ -1,5 +1,5 @@
 ---
-"@logto/api": major
+"@logto/api": minor
 ---
 
 init Logto API SDK
