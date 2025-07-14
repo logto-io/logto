@@ -20,7 +20,12 @@ import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 import { type OmitAutoSetFields } from '#src/utils/sql.js';
 
-import { deserializeEncryptedSecret } from '../utils/secret-encryption.js';
+import OidcConnector from '../sso/OidcConnector/index.js';
+import {
+  deserializeEncryptedSecret,
+  encryptTokenResponse,
+  isValidAccessTokenResponse,
+} from '../utils/secret-encryption.js';
 
 export type SsoConnectorLibrary = ReturnType<typeof createSsoConnectorLibrary>;
 
@@ -246,6 +251,48 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
     }
   };
 
+  const refreshTokenSetSecret = async (
+    ssoConnectorId: string,
+    secretId: string,
+    refreshToken: string
+  ) => {
+    const connector = await getSsoConnectorById(ssoConnectorId);
+    const connectorInstance = new ssoConnectorFactories[connector.providerName].constructor(
+      connector,
+      // Placeholder, not used in OIDC SSO connectors
+      // Avoid importing unnecessary envSet to this method
+      new URL('http://auth.logto.io')
+    );
+
+    assertThat(
+      connectorInstance instanceof OidcConnector && connector.enableTokenStorage,
+      new RequestError({
+        code: 'connector.token_storage_not_supported',
+        status: 422,
+      })
+    );
+
+    const tokenResponse = await connectorInstance.getTokenByRefreshToken(refreshToken);
+
+    assertThat(
+      isValidAccessTokenResponse(tokenResponse),
+      new RequestError('connector.invalid_response')
+    );
+
+    const { tokenSecret, metadata } = encryptTokenResponse(tokenResponse);
+    const { access_token } = tokenResponse;
+
+    await queries.secrets.updateById(secretId, {
+      ...tokenSecret,
+      metadata,
+    });
+
+    return {
+      access_token,
+      metadata,
+    };
+  };
+
   return {
     getSsoConnectors,
     getAvailableSsoConnectors,
@@ -254,5 +301,6 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
     createIdpInitiatedSamlSsoSession,
     getIdpInitiatedSamlSsoSignInUrl,
     upsertEnterpriseSsoTokenSetSecret,
+    refreshTokenSetSecret,
   };
 };

@@ -124,13 +124,18 @@ export const deserializeEncryptedSecret = (base64String: string): EncryptedSecre
   };
 };
 
-export const encryptTokenResponse = (
-  tokenResponse?: TokenResponse
-): EncryptedTokenSet | undefined => {
-  if (!tokenResponse?.access_token) {
-    return;
-  }
+type TokenResponseWithAccessToken = TokenResponse & { access_token: string };
 
+/**
+ * We only process token responses that contain an `access_token`.
+ */
+export const isValidAccessTokenResponse = (
+  tokenResponse?: TokenResponse
+): tokenResponse is TokenResponseWithAccessToken => {
+  return Boolean(tokenResponse?.access_token);
+};
+
+export const encryptTokenResponse = (tokenResponse: TokenResponseWithAccessToken) => {
   const {
     access_token,
     id_token,
@@ -147,19 +152,34 @@ export const encryptTokenResponse = (
   const expiresIn = typeof expires_in === 'string' ? Number.parseInt(expires_in, 10) : expires_in;
   const expiresAt = conditional(expiresIn !== undefined && requestedAt + expiresIn);
 
-  const encryptedTokenSet = encryptTokens({
+  const tokenSecret = encryptTokens({
     access_token,
     ...conditional(id_token && { id_token }),
     ...conditional(refresh_token && { refresh_token }),
   });
 
   return {
-    encryptedTokenSetBase64: serializeEncryptedSecret(encryptedTokenSet),
+    tokenSecret,
     metadata: {
-      scope,
-      tokenType,
-      expiresAt,
+      ...conditional(scope && { scope }),
+      ...conditional(tokenType && { tokenType }),
+      ...conditional(expiresAt && { expiresAt }),
     },
+  };
+};
+
+export const encryptAndSerializeTokenResponse = (
+  tokenResponse?: TokenResponse
+): EncryptedTokenSet | undefined => {
+  if (!isValidAccessTokenResponse(tokenResponse)) {
+    return;
+  }
+
+  const { tokenSecret, metadata } = encryptTokenResponse(tokenResponse);
+
+  return {
+    encryptedTokenSetBase64: serializeEncryptedSecret(tokenSecret),
+    metadata,
   };
 };
 

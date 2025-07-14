@@ -17,15 +17,15 @@ import { idpInitiatedSamlSsoSessionCookieName } from '#src/constants/index.js';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
+import OidcConnector from '#src/sso/OidcConnector/index.js';
 import SamlConnector from '#src/sso/SamlConnector/index.js';
 import { ssoConnectorFactories, type SingleSignOnConnectorSession } from '#src/sso/index.js';
 import { type ExtendedSocialUserInfo } from '#src/sso/types/saml.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { safeParseUnknownJson } from '#src/utils/json.js';
+import { encryptAndSerializeTokenResponse } from '#src/utils/secret-encryption.js';
 
-import OidcConnector from '../../../sso/OidcConnector/index.js';
-import { encryptTokenResponse } from '../../../utils/secret-encryption.js';
 import { type WithInteractionHooksContext } from '../middleware/koa-interaction-hooks.js';
 
 import {
@@ -191,7 +191,7 @@ export const verifySsoIdentity = async (
           enableTokenStorage &&
             tokenResponse &&
             trySafe(
-              () => encryptTokenResponse(tokenResponse),
+              () => encryptAndSerializeTokenResponse(tokenResponse),
               (error) => {
                 // If the token response cannot be encrypted, we log the error but continue to return user info.
                 void appInsights.trackException(error);
