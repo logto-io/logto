@@ -1,3 +1,4 @@
+import { type Nullable } from '@silverhand/essentials';
 import { useRef, useState } from 'react';
 
 import Dropdown, { DropdownItem } from '@/components/Dropdown';
@@ -9,7 +10,7 @@ import styles from './index.module.scss';
 type Props = {
   readonly options: Array<{ value: string; label: string }>;
   readonly value?: string;
-  readonly description?: string;
+  readonly description?: Nullable<string>;
   readonly label?: string;
   readonly placeholder?: string;
   readonly errorMessage?: string;

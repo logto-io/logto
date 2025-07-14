@@ -27,7 +27,7 @@ export type Props = Omit<HTMLProps<HTMLInputElement>, 'prefix'> & {
   readonly suffix?: ReactElement;
   readonly isSuffixFocusVisible?: boolean;
   readonly label?: string;
-  readonly description?: string;
+  readonly description?: Nullable<string>;
 };
 
 const InputField = (
