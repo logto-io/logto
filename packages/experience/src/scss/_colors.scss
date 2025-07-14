@@ -8,6 +8,7 @@
   --color-static-dark-type-primary: #f7f8f8; // For loading icon use
   --color-shadow-1: 0 4px 8px rgba(0, 0, 0, 8%);
   --color-shadow-2: 0 4px 8px rgba(0, 0, 0, 2%);
+  --color-shadow-2-reversed: 0 -4px 8px rgba(0, 0, 0, 2%);
 }
 
 @mixin light {
