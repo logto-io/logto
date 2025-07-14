@@ -104,6 +104,7 @@ const description = {
   switch_account_title: 'Şu anda {{account}} olarak oturum açtınız',
   switch_account_description:
     'Devam etmek için, mevcut hesaptan çıkış yapacak ve otomatik olarak yeni hesaba geçeceksiniz.',
+  about_yourself: 'Kendinizden bahsedin',
 };
 
 export default Object.freeze(description);

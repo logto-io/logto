@@ -105,6 +105,7 @@ const description = {
   switch_account_title: '現在 {{account}} としてサインインしています',
   switch_account_description:
     '続行するには、現在のアカウントからサインアウトし、新しいアカウントに自動的に切り替わります。',
+  about_yourself: 'あなたについて教えてください',
 };
 
 export default Object.freeze(description);

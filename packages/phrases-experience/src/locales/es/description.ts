@@ -112,6 +112,7 @@ const description = {
   switch_account_title: 'Actualmente has iniciado sesión como {{account}}',
   switch_account_description:
     'Para continuar, se cerrará la sesión de la cuenta actual, y se cambiará automáticamente a la nueva cuenta.',
+  about_yourself: 'Cuéntanos sobre ti',
 };
 
 export default Object.freeze(description);
