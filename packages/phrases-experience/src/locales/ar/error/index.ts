@@ -3,6 +3,8 @@ import password_rejected from './password-rejected.js';
 const error = {
   general_required: `{{types, list(type: disjunction;)}} مطلوب`,
   general_invalid: `{{types, list(type: disjunction;)}} غير صالح`,
+  invalid_min_max_input: 'يجب أن تكون قيمة الإدخال بين {{minValue}} و {{maxValue}}',
+  invalid_min_max_length: 'يجب أن يكون طول قيمة الإدخال بين {{minLength}} و {{maxLength}}',
   username_required: 'اسم المستخدم مطلوب',
   password_required: 'كلمة المرور مطلوبة',
   username_exists: 'اسم المستخدم موجود بالفعل',

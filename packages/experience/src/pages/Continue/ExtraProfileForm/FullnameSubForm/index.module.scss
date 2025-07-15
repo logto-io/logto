@@ -2,22 +2,35 @@
 
 .fullnameContainer {
   display: flex;
-  gap: _.unit(3);
+  flex-direction: column;
+  gap: _.unit(1);
 
-  .inputField {
-    flex: 1;
-  }
-
-  &.vertical {
-    flex-direction: column;
+  .flexWrapper {
+    display: flex;
+    gap: _.unit(3);
 
     .inputField {
-      flex: none;
-      width: 100%;
+      flex: 1;
+    }
+
+    &.vertical {
+      flex-direction: column;
+
+      .inputField {
+        flex: none;
+        width: 100%;
+      }
     }
   }
 }
 
 .description {
   @include _.text-hint;
+  margin-inline-start: _.unit(0.5);
+}
+
+.errorMessage {
+  font: var(--font-body-2);
+  color: var(--color-danger-default);
+  margin-inline-start: _.unit(0.5);
 }

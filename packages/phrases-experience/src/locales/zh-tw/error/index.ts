@@ -3,6 +3,8 @@ import password_rejected from './password-rejected.js';
 const error = {
   general_required: '{{types, list(type: disjunction;)}}必填',
   general_invalid: '無效的{{types, list(type: disjunction;)}}',
+  invalid_min_max_input: '輸入的值應該在 {{minValue}} 到 {{maxValue}} 之間',
+  invalid_min_max_length: '輸入值的長度應該在 {{minLength}} 到 {{maxLength}} 之間',
   username_required: '使用者名稱必填',
   password_required: '密碼必填',
   username_exists: '使用者名稱已存在',
@@ -21,8 +23,8 @@ const error = {
   sso_not_enabled: '此郵箱帳戶未啟用單一登錄。',
   invalid_link: '無效的鏈接',
   invalid_link_description: '你的一次性令牌可能已過期或不再有效。',
-  something_went_wrong: '出了些問題。',
   captcha_verification_failed: '驗證碼驗證失敗。',
+  something_went_wrong: '出了些問題。',
 };
 
 export default Object.freeze(error);

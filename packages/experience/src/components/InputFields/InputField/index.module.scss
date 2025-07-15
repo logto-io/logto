@@ -109,9 +109,10 @@
 }
 
 .description {
-  font: var(--font-body-3);
+  font: var(--font-body-2);
   color: var(--color-type-secondary);
   padding-top: _.unit(1);
+  margin-inline-start: _.unit(0.5);
 }
 
 .errorMessage {

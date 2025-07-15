@@ -4,7 +4,7 @@ import * as s from 'superstruct';
 
 import { extraProfileFieldNamesGuard } from '@/types/guard';
 
-export const useFieldLabel = () => {
+const useFieldLabel = () => {
   const { t } = useTranslation();
 
   const getFieldLabel = useCallback(
@@ -21,3 +21,5 @@ export const useFieldLabel = () => {
 
   return getFieldLabel;
 };
+
+export default useFieldLabel;
