@@ -44,7 +44,7 @@ export const defaultMetadata: ConnectorMetadata = {
       type: ConnectorConfigFormItemType.MultilineText,
       label: 'Scope',
       required: false,
-      description: "The `scope` determines permissions granted by the user's authorization. ",
+      description: "The `scope` determines permissions granted by the user's authorization.",
     },
   ],
 };
