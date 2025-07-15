@@ -217,15 +217,19 @@ export type CustomProfileFieldUnion =
   | AddressProfileField
   | FullnameProfileField;
 
+export const nameAndAvatarGuard = z
+  .object({
+    name: z.string(),
+    avatar: z.string().url().or(z.literal('')),
+  })
+  .partial();
+
+export const builtInProfileGuard = nameAndAvatarGuard.merge(
+  z.object({ profile: userProfileGuard })
+);
+
 export const builtInCustomProfileFieldKeys = Object.freeze(
-  userProfileGuard
-    .merge(
-      Users.createGuard.pick({
-        name: true,
-        avatar: true,
-      })
-    )
-    .keyof().options
+  builtInProfileGuard.merge(userProfileGuard).keyof().options
 );
 
 export const updateCustomProfileFieldDataGuard = z.discriminatedUnion('type', [

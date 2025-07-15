@@ -8,8 +8,8 @@ import {
   signInIdentifierKeyGuard,
   reservedCustomDataKeyGuard,
   builtInCustomProfileFieldKeys,
+  nameAndAvatarGuard,
 } from '@logto/schemas';
-import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -199,9 +199,16 @@ export class ProfileValidator {
 
   public async hasMissingExtraProfileFields(profile: InteractionProfile, user?: User) {
     const customProfileFields = await this.queries.customProfileFields.findAllCustomProfileFields();
-    const mandatoryCustomProfileFields = customProfileFields.filter(({ required }) => required);
+    const mandatoryCustomProfileFieldNames = customProfileFields
+      .filter(({ required }) => required)
+      .reduce((accumulator, currentField) => {
+        if (currentField.name === 'fullname') {
+          return [...accumulator, ...(currentField.config.parts?.map(({ key }) => key) ?? [])];
+        }
+        return [...accumulator, currentField.name];
+      }, new Array<string>());
 
-    for (const { name } of mandatoryCustomProfileFields) {
+    for (const name of mandatoryCustomProfileFieldNames) {
       const foundInUser =
         this.hasField(user, name) ||
         this.hasField(user?.profile, name) ||
@@ -248,7 +255,7 @@ export class ProfileValidator {
       })
     );
 
-    const { name, avatar } = z.object({ name: z.string(), avatar: z.string() }).parse(values);
+    const { name, avatar } = nameAndAvatarGuard.parse(values);
     const profile = userProfileGuard.parse(values);
 
     const builtInProfileKeys = new Set<string>(builtInCustomProfileFieldKeys);

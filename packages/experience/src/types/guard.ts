@@ -178,14 +178,16 @@ export const extraProfileFieldNamesGuard = s.union([
   s.literal('address.country'),
 ]);
 
-export const addressFieldValueGuard = s.object({
-  formatted: s.optional(s.string()),
-  streetAddress: s.optional(s.string()),
-  locality: s.optional(s.string()),
-  region: s.optional(s.string()),
-  postalCode: s.optional(s.string()),
-  country: s.optional(s.string()),
-});
+export const addressFieldValueGuard = s.optional(
+  s.object({
+    formatted: s.optional(s.string()),
+    streetAddress: s.optional(s.string()),
+    locality: s.optional(s.string()),
+    region: s.optional(s.string()),
+    postalCode: s.optional(s.string()),
+    country: s.optional(s.string()),
+  })
+);
 
 export const addressFieldConfigGuard = s.object({
   parts: s.array(
@@ -203,11 +205,13 @@ export const addressFieldConfigGuard = s.object({
   ),
 });
 
-export const fullnameFieldValueGuard = s.object({
-  givenName: s.optional(s.string()),
-  middleName: s.optional(s.string()),
-  familyName: s.optional(s.string()),
-});
+export const fullnameFieldValueGuard = s.optional(
+  s.object({
+    givenName: s.optional(s.string()),
+    middleName: s.optional(s.string()),
+    familyName: s.optional(s.string()),
+  })
+);
 
 export const fullnameFieldConfigGuard = s.object({
   parts: s.array(
