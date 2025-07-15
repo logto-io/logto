@@ -1,0 +1,23 @@
+@use '@/scss/underscore' as _;
+
+.fullnameContainer {
+  display: flex;
+  gap: _.unit(3);
+
+  .inputField {
+    flex: 1;
+  }
+
+  &.vertical {
+    flex-direction: column;
+
+    .inputField {
+      flex: none;
+      width: 100%;
+    }
+  }
+}
+
+.description {
+  @include _.text-hint;
+}

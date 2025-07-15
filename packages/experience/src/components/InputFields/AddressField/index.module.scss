@@ -1,0 +1,22 @@
+@use '@/scss/underscore' as _;
+
+.addressGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: _.unit(3);
+
+  .inputField {
+    flex: 1;
+    flex-basis: 100%;
+
+    &.halfSize {
+      flex: 1;
+      flex-basis: 50%;
+    }
+  }
+}
+
+.description {
+  margin-top: _.unit(-2);
+  @include _.text-hint;
+}
