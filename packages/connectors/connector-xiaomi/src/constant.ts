@@ -40,10 +40,10 @@ export const defaultMetadata: ConnectorMetadata = {
     },
     {
       key: 'scope',
-      type: ConnectorConfigFormItemType.Text,
+      type: ConnectorConfigFormItemType.MultilineText,
       label: 'Scope',
       required: false,
-      placeholder: '<scope>',
+      placeholder: 'Enter the scopes (separated by a space)',
       description: 'The scope determines permissions granted by the user.',
     },
     {

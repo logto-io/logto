@@ -54,12 +54,11 @@ export const defaultMetadata: ConnectorMetadata = {
     },
     {
       key: 'scope',
-      type: ConnectorConfigFormItemType.Text,
+      type: ConnectorConfigFormItemType.MultilineText,
       required: false,
       label: 'Scope',
-      placeholder: '<scope>',
-      description:
-        "The `scope` determines permissions granted by the user's authorization. If you are not sure what to enter, do not worry, just leave it blank.",
+      placeholder: 'Enter the scopes (separated by a space)',
+      description: "The `scope` determines permissions granted by the user's authorization. ",
     },
   ],
 };
