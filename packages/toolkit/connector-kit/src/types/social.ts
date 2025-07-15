@@ -125,6 +125,8 @@ export type GetTokenResponseAndUserInfo = (
   userInfo: SocialUserInfo;
 }>;
 
+export type GetAccessTokenByRefreshToken = (refreshToken: string) => Promise<TokenResponse>;
+
 export type SocialConnector = BaseConnector<ConnectorType.Social> & {
   getAuthorizationUri: GetAuthorizationUri;
   getUserInfo: GetUserInfo;
@@ -136,6 +138,12 @@ export type SocialConnector = BaseConnector<ConnectorType.Social> & {
    * otherwise, use `getUserInfo` to retrieve the user info directly.
    */
   getTokenResponseAndUserInfo?: GetTokenResponseAndUserInfo;
+  /**
+   * @remarks
+   * If the social connector has token storage enabled,
+   * this function can be used to retrieve the access token by the refresh token.
+   */
+  getAccessTokenByRefreshToken?: GetAccessTokenByRefreshToken;
   validateSamlAssertion?: ValidateSamlAssertion;
 };
 

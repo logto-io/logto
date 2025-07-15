@@ -14,7 +14,12 @@ import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
 
-import { deserializeEncryptedSecret, encryptTokenResponse } from '../utils/secret-encryption.js';
+import {
+  deserializeEncryptedSecret,
+  encryptAndSerializeTokenResponse,
+  encryptTokenResponse,
+  isValidAccessTokenResponse,
+} from '../utils/secret-encryption.js';
 
 const getUserInfoFromInteractionResult = async (
   connectorId: string,
@@ -119,7 +124,7 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
       );
 
       const encryptedTokenSet = trySafe(
-        () => encryptTokenResponse(tokenResponse),
+        () => encryptAndSerializeTokenResponse(tokenResponse),
         (error) => {
           // If the token response cannot be encrypted, we log the error but continue to return user info.
           void appInsights.trackException(error);
@@ -194,6 +199,64 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
     }
   };
 
+  /**
+   * Refreshes the token set secret by using the provided refresh token.
+   *
+   * - Fetches the latest token response using the refresh token.
+   * - Updates the secret using the latest encrypted token response.
+   * - Returns the access token and metadata from the updated secret.
+   */
+  const refreshTokenSetSecret = async (
+    connectorId: string,
+    secretId: string,
+    refreshToken: string
+  ) => {
+    const connector = await getConnector(connectorId);
+
+    assertThat(
+      connector.type === ConnectorType.Social,
+      new RequestError({
+        code: 'session.invalid_connector_id',
+        status: 422,
+        connectorId,
+      })
+    );
+
+    const {
+      metadata: { isTokenStorageSupported },
+      dbEntry: { enableTokenStorage },
+      getAccessTokenByRefreshToken,
+    } = connector;
+
+    assertThat(
+      isTokenStorageSupported && enableTokenStorage && getAccessTokenByRefreshToken,
+      new RequestError({
+        code: 'connector.token_storage_not_supported',
+        status: 422,
+      })
+    );
+
+    const tokenResponse = await getAccessTokenByRefreshToken(refreshToken);
+
+    assertThat(
+      isValidAccessTokenResponse(tokenResponse),
+      new RequestError('connector.invalid_response')
+    );
+
+    const { tokenSecret, metadata } = encryptTokenResponse(tokenResponse);
+    const { access_token } = tokenResponse;
+
+    await queries.secrets.updateById(secretId, {
+      ...tokenSecret,
+      metadata,
+    });
+
+    return {
+      access_token,
+      metadata,
+    };
+  };
+
   return {
     getConnector,
     getUserInfo,
@@ -201,5 +264,6 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
     getUserInfoFromInteractionResult,
     findSocialRelatedUser,
     upsertSocialTokenSetSecret,
+    refreshTokenSetSecret,
   };
 };

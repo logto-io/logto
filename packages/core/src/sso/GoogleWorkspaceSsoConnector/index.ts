@@ -1,5 +1,7 @@
 import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import { SsoProviderName, SsoProviderType } from '@logto/schemas';
+import { generateStandardId } from '@logto/shared/universal';
+import snakecaseKeys from 'snakecase-keys';
 
 import OidcConnector from '../OidcConnector/index.js';
 import { type SingleSignOnFactory } from '../index.js';
@@ -26,12 +28,47 @@ export class GoogleWorkspaceSsoConnector extends OidcConnector implements Single
     });
   }
 
-  // Always use select_account prompt for Google Workspace SSO.
+  /**
+   * Override the standard getOidcConfig method for Google Workspace SSO.
+   * - Set the `prompt` to `select_account` to ensure the user can choose an account.
+   * - Remove `offline_access` from the scope as Google Workspace SSO does not support it.
+   * - Add `access_type=offline` if `offline_access` is in the scope.
+   * {@link https://developers.google.com/identity/protocols/oauth2/web-server#offline}
+   */
   override async getAuthorizationUrl(
-    payload: { state: string; redirectUri: string; connectorId: string },
+    {
+      state,
+      redirectUri,
+      connectorId,
+    }: { state: string; redirectUri: string; connectorId: string },
     setSession: CreateSingleSignOnSession
   ) {
-    return super.getAuthorizationUrl(payload, setSession, 'select_account');
+    const oidcConfig = await this.getOidcConfig();
+    const nonce = generateStandardId();
+    const isOfflineAccess = oidcConfig.scope.includes('offline_access');
+
+    await setSession({ nonce, redirectUri, connectorId, state });
+
+    const queryParameters = new URLSearchParams({
+      state,
+      nonce,
+      ...snakecaseKeys({
+        clientId: oidcConfig.clientId,
+        responseType: 'code',
+        redirectUri,
+      }),
+      // Always use select_account prompt for Google Workspace SSO.
+      prompt: 'select_account consent',
+      // Remove offline_access from scope if it exists, as Google Workspace SSO does not support it.
+      scope: oidcConfig.scope.replace('offline_access', '').trim(),
+      // Add `access_type=offline` if `offline_access` is in the scope.
+      ...(isOfflineAccess && { access_type: 'offline' }),
+      // Include granted scopes to ensure the user can see the scopes they are consenting to.
+      // Recommended by Google for better user experience.
+      include_granted_scopes: 'true',
+    });
+
+    return `${oidcConfig.authorizationEndpoint}?${queryParameters.toString()}`;
   }
 
   async getConfig() {

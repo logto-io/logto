@@ -1,3 +1,4 @@
+import { type TokenResponse } from '@logto/connector-kit';
 import { type ExtendedSocialUserInfo } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared/universal';
 import { conditional } from '@silverhand/essentials';
@@ -20,7 +21,13 @@ import {
 } from '../types/session.js';
 
 import { mockGetTokenResponse, mockGetUserInfo } from './test-utils.js';
-import { fetchOidcConfig, fetchToken, getIdTokenClaims, getUserInfo } from './utils.js';
+import {
+  fetchOidcConfig,
+  fetchToken,
+  getIdTokenClaims,
+  getTokenByRefreshToken,
+  getUserInfo,
+} from './utils.js';
 
 /**
  * OIDC connector
@@ -147,6 +154,11 @@ class OidcConnector {
       },
       tokenResponse,
     };
+  }
+
+  async getTokenByRefreshToken(refreshToken: string): Promise<TokenResponse> {
+    const oidcConfig = await this.getOidcConfig();
+    return getTokenByRefreshToken(oidcConfig, refreshToken);
   }
 }
 

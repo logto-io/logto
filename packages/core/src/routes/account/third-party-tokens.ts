@@ -3,12 +3,14 @@ import {
   getThirdPartyAccessTokenResponseGuard,
   type GetThirdPartyAccessTokenResponse,
   type SocialTokenSetSecret,
+  type TokenSetMetadata,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import { decryptTokens } from '#src/utils/secret-encryption.js';
 
@@ -16,18 +18,34 @@ import { type UserRouter, type RouterInitArgs } from '../types.js';
 
 import { accountApiPrefix } from './constants.js';
 
+const isSocialTokenSetSecret = (
+  tokenSetSecret: SocialTokenSetSecret | EnterpriseSsoTokenSetSecret
+): tokenSetSecret is SocialTokenSetSecret =>
+  'connectorId' in tokenSetSecret && 'target' in tokenSetSecret;
+
+const formatTokenResponse = (
+  access_token: string,
+  metadata: TokenSetMetadata,
+  now = Math.floor(Date.now() / 1000)
+) => {
+  const { expiresAt, scope, tokenType } = metadata;
+
+  const expires_in = expiresAt ? expiresAt - now : undefined;
+
+  return {
+    access_token,
+    ...conditional(scope && { scope }),
+    ...conditional(tokenType && { token_type: tokenType }),
+    ...conditional(expires_in && { expires_in }),
+  };
+};
+
 const getAccessToken = async (
+  { socials, ssoConnectors }: Libraries,
   { secrets }: Queries,
   tokenSetSecret: SocialTokenSetSecret | EnterpriseSsoTokenSetSecret
 ): Promise<GetThirdPartyAccessTokenResponse> => {
-  const {
-    id,
-    metadata: { expiresAt, scope, tokenType },
-    iv,
-    encryptedDek,
-    ciphertext,
-    authTag,
-  } = tokenSetSecret;
+  const { id, metadata, iv, encryptedDek, ciphertext, authTag } = tokenSetSecret;
 
   const { access_token, refresh_token } = decryptTokens({
     iv,
@@ -43,21 +61,22 @@ const getAccessToken = async (
     });
   }
 
+  const { expiresAt } = metadata;
   const now = Math.floor(Date.now() / 1000);
 
   if (!expiresAt || now < expiresAt) {
-    const expires_in = expiresAt ? expiresAt - now : undefined;
-    return {
-      access_token,
-      ...conditional(scope && { scope }),
-      ...conditional(tokenType && { token_type: tokenType }),
-      ...conditional(expires_in && { expires_in }),
-    };
+    return formatTokenResponse(access_token, metadata, now);
   }
 
-  // TODO: if refresh_token is available, we should refresh the token and update the secret.
+  if (refresh_token) {
+    const refreshedResponse = isSocialTokenSetSecret(tokenSetSecret)
+      ? await socials.refreshTokenSetSecret(tokenSetSecret.connectorId, id, refresh_token)
+      : await ssoConnectors.refreshTokenSetSecret(tokenSetSecret.ssoConnectorId, id, refresh_token);
 
-  await secrets.deleteById(id);
+    return formatTokenResponse(refreshedResponse.access_token, metadata);
+  }
+
+  // Await secrets.deleteById(id);
   throw new RequestError({
     code: 'secrets.third_party_token_set.access_token_expired',
     status: 401,
@@ -65,7 +84,7 @@ const getAccessToken = async (
 };
 
 export default function thirdPartyTokensRoutes<T extends UserRouter>(
-  ...[router, { queries }]: RouterInitArgs<T>
+  ...[router, { queries, libraries }]: RouterInitArgs<T>
 ) {
   const { secrets: secretsQueries } = queries;
 
@@ -75,7 +94,7 @@ export default function thirdPartyTokensRoutes<T extends UserRouter>(
       params: z.object({
         target: z.string().min(1),
       }),
-      status: [200, 404, 401],
+      status: [200, 404, 401, 422],
       response: getThirdPartyAccessTokenResponseGuard,
     }),
     async (ctx, next) => {
@@ -94,7 +113,7 @@ export default function thirdPartyTokensRoutes<T extends UserRouter>(
         });
       }
 
-      ctx.body = await getAccessToken(queries, tokenSetSecret);
+      ctx.body = await getAccessToken(libraries, queries, tokenSetSecret);
 
       return next();
     }
@@ -126,7 +145,7 @@ export default function thirdPartyTokensRoutes<T extends UserRouter>(
         });
       }
 
-      ctx.body = await getAccessToken(queries, tokenSetSecret);
+      ctx.body = await getAccessToken(libraries, queries, tokenSetSecret);
 
       return next();
     }
