@@ -77,16 +77,13 @@ export const useAuthStatus = () => {
 
   // Monitor token changes
   useEffect(() => {
-    const fetchToken = async () => {
+    (async () => {
       const token = await getIdToken();
       setCurrentToken(token ?? undefined);
       addDebugLog('info', `Current token status: ${token ? 'present' : 'absent'}`, {
         tokenLength: token?.length,
       });
-    };
-
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    fetchToken();
+    })();
   }, [addDebugLog, getIdToken]);
 
   // Handle postMessage events
@@ -158,13 +155,15 @@ export const useAuthStatus = () => {
 
           const response: AdminTokenStatusMessage = {
             type: AuthMessageType.AdminTokenStatus,
-            isAuthenticated,
+            isAuthenticated: isAuthenticated ?? Boolean(currentToken),
             requestId,
             debugInfo,
           };
 
           addDebugLog('sent', 'Sending success response', {
             response,
+            isAuthenticated,
+            currentToken,
             targetOrigin: event.origin,
           });
 
