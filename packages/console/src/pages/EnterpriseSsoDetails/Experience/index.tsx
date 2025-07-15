@@ -1,25 +1,32 @@
+/* eslint-disable max-lines */
 import {
   type SsoConnector,
   type SsoConnectorWithProviderConfig,
   type RequestErrorBody,
+  SsoProviderType,
 } from '@logto/schemas';
 import { generateStandardShortId } from '@logto/shared/universal';
 import { conditional } from '@silverhand/essentials';
 import cleanDeep from 'clean-deep';
 import { HTTPError } from 'ky';
+import { useMemo } from 'react';
 import { useForm, Controller, FormProvider } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { spInitiatedSsoFlow } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Select from '@/ds-components/Select';
+import Switch from '@/ds-components/Switch';
 import TextInput from '@/ds-components/TextInput';
+import TextLink from '@/ds-components/TextLink';
 import useApi from '@/hooks/use-api';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
 import { SyncProfileMode } from '@/types/connector';
 import { trySubmitSafe } from '@/utils/form';
@@ -37,7 +44,14 @@ import styles from './index.module.scss';
 
 type DataType = Pick<
   SsoConnectorWithProviderConfig,
-  'branding' | 'connectorName' | 'domains' | 'syncProfile' | 'id' | 'name'
+  | 'branding'
+  | 'connectorName'
+  | 'domains'
+  | 'syncProfile'
+  | 'id'
+  | 'name'
+  | 'enableTokenStorage'
+  | 'providerType'
 >;
 
 type Props = {
@@ -50,29 +64,36 @@ type Props = {
 export type FormType = Pick<SsoConnector, 'branding' | 'connectorName'> &
   DomainsFormType & {
     syncProfile: SyncProfileMode;
+    enableTokenStorage?: boolean;
   };
 
 const duplicateConnectorNameErrorCode = 'single_sign_on.duplicate_connector_name';
 
 const dataToFormParser = (data: DataType) => {
-  const { branding, connectorName, domains, syncProfile } = data;
+  const { branding, connectorName, domains, syncProfile, enableTokenStorage, providerType } = data;
   return {
     branding,
     connectorName,
     domains: domains.map((domain) => ({ value: domain, id: generateStandardShortId() })),
     syncProfile: syncProfile ? SyncProfileMode.EachSignIn : SyncProfileMode.OnlyAtRegister,
+    ...conditional(
+      // TODO: Remove dev feature flag after the token storage feature is stable.
+      isDevFeaturesEnabled && providerType === SsoProviderType.OIDC && { enableTokenStorage }
+    ),
   };
 };
 
 const formDataToSsoConnectorParser = (
   formData: FormType
 ): Pick<SsoConnector, 'branding' | 'connectorName' | 'domains' | 'syncProfile'> => {
-  const { branding, connectorName, domains, syncProfile } = formData;
+  const { branding, connectorName, domains, syncProfile, enableTokenStorage } = formData;
   return {
     branding,
     connectorName,
     domains: domains.map(({ value }) => value),
     syncProfile: syncProfile === SyncProfileMode.EachSignIn,
+    // TODO: Remove dev feature flag after the token storage feature is stable.
+    ...conditional(isDevFeaturesEnabled && { enableTokenStorage }),
   };
 };
 
@@ -80,17 +101,21 @@ function Experience({ data, isDeleted, onUpdated, isDarkModeEnabled }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { isReady: isUserAssetsServiceReady } = useUserAssetsService();
   const api = useApi({ hideErrorToast: true });
+  const { getDocumentationUrl } = useDocumentationUrl();
 
-  const syncProfileOptions = [
-    {
-      value: SyncProfileMode.OnlyAtRegister,
-      title: t('enterprise_sso_details.sync_profile_option.register_only'),
-    },
-    {
-      value: SyncProfileMode.EachSignIn,
-      title: t('enterprise_sso_details.sync_profile_option.each_sign_in'),
-    },
-  ];
+  const syncProfileOptions = useMemo(
+    () => [
+      {
+        value: SyncProfileMode.OnlyAtRegister,
+        title: t('enterprise_sso_details.sync_profile_option.register_only'),
+      },
+      {
+        value: SyncProfileMode.EachSignIn,
+        title: t('enterprise_sso_details.sync_profile_option.each_sign_in'),
+      },
+    ],
+    []
+  );
 
   const formMethods = useForm<FormType>({ defaultValues: dataToFormParser(data) });
   const {
@@ -163,6 +188,8 @@ function Experience({ data, isDeleted, onUpdated, isDarkModeEnabled }: Props) {
     })
   );
 
+  const isTokenStorageEnabled = watch('enableTokenStorage');
+
   return (
     <FormProvider {...formMethods}>
       <DetailsForm
@@ -227,6 +254,43 @@ function Experience({ data, isDeleted, onUpdated, isDarkModeEnabled }: Props) {
               )}
             />
           </FormField>
+          {isDevFeaturesEnabled && data.providerType === SsoProviderType.OIDC && (
+            <>
+              <FormField title="connectors.guide.enable_token_storage.title">
+                <Controller
+                  name="enableTokenStorage"
+                  control={control}
+                  defaultValue={false}
+                  render={({ field }) => (
+                    <Switch
+                      label={
+                        <Trans
+                          components={{
+                            a: (
+                              <TextLink
+                                href={getDocumentationUrl(
+                                  '/docs/references/connectors/#token-storage'
+                                )}
+                                targetBlank="noopener"
+                              />
+                            ),
+                          }}
+                          i18nKey="admin_console.connectors.guide.enable_token_storage.description"
+                        />
+                      }
+                      checked={field.value}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+              </FormField>
+              {isTokenStorageEnabled && (
+                <div className={styles.description}>
+                  {t('connectors.guide.enable_token_storage.tip')}
+                </div>
+              )}
+            </>
+          )}
         </FormCard>
         <FormCard
           title="enterprise_sso_details.custom_branding_title"
@@ -278,3 +342,4 @@ function Experience({ data, isDeleted, onUpdated, isDarkModeEnabled }: Props) {
 }
 
 export default Experience;
+/* eslint-enable max-lines */
