@@ -8,6 +8,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import useSWR from 'swr';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import DynamicT from '@/ds-components/DynamicT';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextLink from '@/ds-components/TextLink';
@@ -140,21 +141,23 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
       >
         {isLoading && <Skeleton />}
         {factoriesError?.message ?? connectorsError?.message}
-        <div className={styles.label}>
-          <Trans
-            components={{
-              a: (
-                <TextLink
-                  href={getDocumentationUrl('/integrations')}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                />
-              ),
-            }}
-          >
-            {t('connectors.create_form.third_party_connectors')}
-          </Trans>
-        </div>
+        {isDevFeaturesEnabled && (
+          <div className={styles.label}>
+            <Trans
+              components={{
+                a: (
+                  <TextLink
+                    href={getDocumentationUrl('/integrations')}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  />
+                ),
+              }}
+            >
+              {t('connectors.create_form.third_party_connectors')}
+            </Trans>
+          </div>
+        )}
         <ConnectorRadioGroup
           name="group"
           groups={defaultGroups}
