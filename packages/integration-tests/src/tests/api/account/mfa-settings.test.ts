@@ -105,19 +105,13 @@ devFeatureTest.describe('my-account (mfa-settings)', () => {
       const verificationRecordId = await createVerificationRecordByPassword(api, password);
 
       // Update MFA settings to skip MFA
-      await updateMfaSettings(api, verificationRecordId, true);
-
-      // Verify the change
-      const mfaSettings = await getMfaSettings(api);
-      expect(mfaSettings.skipMfaOnSignIn).toBe(true);
+      const updateResponse = await updateMfaSettings(api, verificationRecordId, true);
+      expect(updateResponse).toEqual({ skipMfaOnSignIn: true });
 
       // Update back to require MFA
       const verificationRecordId2 = await createVerificationRecordByPassword(api, password);
-      await updateMfaSettings(api, verificationRecordId2, false);
-
-      // Verify the change again
-      const mfaSettings2 = await getMfaSettings(api);
-      expect(mfaSettings2.skipMfaOnSignIn).toBe(false);
+      const updateResponse2 = await updateMfaSettings(api, verificationRecordId2, false);
+      expect(updateResponse2).toEqual({ skipMfaOnSignIn: false });
 
       await deleteDefaultTenantUser(user.id);
     });
