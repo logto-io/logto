@@ -1,9 +1,7 @@
 const secrets = {
   third_party_token_set: {
-    /** UNTRANSLATED */
-    token_not_found: 'Token record not found.',
-    /** UNTRANSLATED */
-    access_token_expired: 'The access token has expired. Please reconnect your account.',
+    token_not_found: 'No se encontró el registro del token.',
+    access_token_expired: 'El token de acceso ha expirado. Por favor, vuelve a conectar tu cuenta.',
   },
 };
 

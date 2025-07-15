@@ -67,13 +67,10 @@ const connectors = {
     sync_profile_tip:
       'Синхронизируйте базовый профиль из социального провайдера, такой как имена пользователей и их аватары.',
     enable_token_storage: {
-      /** UNTRANSLATED */
-      title: 'Store tokens for persistent API access',
-      /** UNTRANSLATED */
+      title: 'Храните токены для постоянного доступа к API',
       description:
-        'Store access and refresh tokens in the Secret Vault. Allows automated API calls without repeated user consent. Example: let your AI Agent add events to Google Calendar with persistent authorization. <a>Learn how to call third-party APIs</a>',
-      /** UNTRANSLATED */
-      tip: 'Tips: For standard OAuth/OIDC identity provider, the `offline_access` scope must be included to obtain a refresh token, preventing repeated user consent prompts. ',
+        'Храните токены доступа и обновления в Secret Vault. Позволяет автоматическим вызовам API без повторного согласия пользователя. Пример: позвольте вашему AI Agent добавлять события в Google Calendar с постоянной авторизацией. <a>Узнайте, как вызывать сторонние API</a>',
+      tip: 'Советы: Для стандартного поставщика идентификации OAuth/OIDC область `offline_access` должна быть включена для получения токена обновления, предотвращая повторные запросы согласия пользователя.',
     },
     callback_uri: 'URI обратного вызова',
     callback_uri_description:
@@ -90,6 +87,12 @@ const connectors = {
   drawer_subtitle: 'Следуйте инструкциям, чтобы интегрировать свой коннектор',
   unknown: 'Неизвестный коннектор',
   standard_connectors: 'стандартные разъемы',
+  create_form: {
+    third_party_connectors:
+      'Интегрируйте сторонних поставщиков для быстрого социального входа, связывания социальных учетных записей и доступа к API. <a>Узнать больше</a>',
+    standard_connectors:
+      'Или вы можете настроить свой социальный коннектор с помощью стандартного протокола.',
+  },
 };
 
 export default Object.freeze(connectors);
