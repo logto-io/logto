@@ -60,13 +60,10 @@ const connectors = {
     sync_profile_each_sign_in: '每次登錄時同步',
     sync_profile_tip: '同步用戶的用戶名、頭像等個人資料信息',
     enable_token_storage: {
-      /** UNTRANSLATED */
-      title: 'Store tokens for persistent API access',
-      /** UNTRANSLATED */
+      title: '存儲令牌以持續訪問 API',
       description:
-        'Store access and refresh tokens in the Secret Vault. Allows automated API calls without repeated user consent. Example: let your AI Agent add events to Google Calendar with persistent authorization. <a>Lear how to call third-party APIs</a>',
-      /** UNTRANSLATED */
-      tip: 'Tips: For standard OAuth/OIDC identity provider, the `offline_access` scope must be included to obtain a refresh token, preventing repeated user consent prompts. ',
+        '在 Secret Vault 中存儲訪問和刷新令牌。允許自動 API 調用而無需重複用戶授權。例如：讓你的 AI 代理通過持續授權添加事件到 Google 日曆。<a>了解如何調用第三方 API</a>',
+      tip: '提示：對於標準的 OAuth/OIDC 身份供應商，必須包含 `offline_access` 範圍才能獲取刷新令牌，從而防止重複用戶授權提示。',
     },
     callback_uri: 'Callback URI',
     callback_uri_description:
@@ -83,6 +80,11 @@ const connectors = {
   drawer_subtitle: '參考以下步驟完善或修改你的連接器設置',
   unknown: '未知連接器',
   standard_connectors: '標準連接器',
+  create_form: {
+    third_party_connectors:
+      '集成第三方提供商以快速進行社交登入、社交帳號連接和 API 訪問。<a>了解更多</a>',
+    standard_connectors: '或者你可以通過標準協議來自定義你的社交連接器。',
+  },
 };
 
 export default Object.freeze(connectors);

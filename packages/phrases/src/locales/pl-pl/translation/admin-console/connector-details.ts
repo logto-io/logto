@@ -4,7 +4,9 @@ const connector_details = {
   check_readme: 'Sprawdź README',
   settings: 'Ustawienia ogólne',
   settings_description:
-    'Konektory odgrywają kluczową rolę w Logto. Dzięki nim, Logto umożliwia użytkownikom końcowym korzystanie z rejestracji lub logowania bez hasła oraz możliwości logowania się za pomocą kont społecznościowych.',
+    'Integracja z dostawcami zewnętrznymi w celu szybkiego logowania społecznościowego i łączenia kont społecznościowych',
+  setting_description_with_token_storage_supported:
+    'Integracja z dostawcami zewnętrznymi w celu szybkiego logowania społecznościowego, łączenia kont społecznościowych i dostępu do API.',
   email_connector_settings_description:
     'Zintegruj się ze swoim dostawcą usług e-mail, aby umożliwić użytkownikom końcowym rejestrację i logowanie bez hasła za pośrednictwem e-maila.',
   parameter_configuration: 'Konfiguracja parametru',
