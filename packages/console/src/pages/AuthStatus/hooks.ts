@@ -58,22 +58,46 @@ export const useAuthStatus = () => {
     setDebugLogs([]);
   }, []);
 
+  // Get all localStorage items for debugging
+  const getLocalStorageItems = useCallback(() => {
+    const items: Record<string, string | null> = {};
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key) {
+          items[key] = localStorage.getItem(key);
+        }
+      }
+    } catch (error) {
+      addDebugLog('error', 'Failed to access localStorage for debugging', error);
+    }
+    return items;
+  }, [addDebugLog]);
+
   const toggleDebugMode = useCallback(() => {
     const newDebugMode = !isDebugMode;
     setIsDebugMode(newDebugMode);
     localStorage.setItem(debugModeKey, newDebugMode.toString());
-    addDebugLog('info', `Debug mode ${newDebugMode ? 'enabled' : 'disabled'}`);
-  }, [addDebugLog, isDebugMode]);
+    
+    if (newDebugMode) {
+      const localStorageItems = getLocalStorageItems();
+      addDebugLog('info', `Debug mode enabled`, { localStorageItems });
+    } else {
+      addDebugLog('info', `Debug mode disabled`);
+    }
+  }, [addDebugLog, isDebugMode, getLocalStorageItems]);
 
   // Component initialization
   useEffect(() => {
+    const localStorageItems = getLocalStorageItems();
     addDebugLog('info', 'AuthStatus component mounted', {
       origin: window.location.origin,
       hostname: window.location.hostname,
       isInIframe: window !== window.top,
       userAgent: navigator.userAgent,
+      localStorageItems,
     });
-  }, [addDebugLog]);
+  }, [addDebugLog, getLocalStorageItems]);
 
   // Monitor token changes
   useEffect(() => {
@@ -142,10 +166,12 @@ export const useAuthStatus = () => {
           hostname: currentHostname,
         };
 
+        const localStorageItems = getLocalStorageItems();
         addDebugLog('info', 'Storage access check completed', {
           storageCheck,
           storageAccessResult,
           debugInfo,
+          localStorageItems,
         });
 
         try {
@@ -223,5 +249,6 @@ export const useAuthStatus = () => {
     currentToken,
     clearDebugLogs,
     toggleDebugMode,
+    getLocalStorageItems,
   };
 };
