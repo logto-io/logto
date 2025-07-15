@@ -61,6 +61,7 @@ export class GoogleWorkspaceSsoConnector extends OidcConnector implements Single
       prompt: 'select_account consent',
       // Remove offline_access from scope if it exists, as Google Workspace SSO does not support it.
       scope: oidcConfig.scope.replace('offline_access', '').trim(),
+      // Add `access_type=offline` if `offline_access` is in the scope.
       ...(isOfflineAccess && { access_type: 'offline' }),
       // Include granted scopes to ensure the user can see the scopes they are consenting to.
       // Recommended by Google for better user experience.

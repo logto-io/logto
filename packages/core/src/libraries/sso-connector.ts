@@ -251,6 +251,13 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
     }
   };
 
+  /**
+   * Refreshes the token set secret by using the provided refresh token.
+   *
+   * - Fetches the latest token response using the refresh token.
+   * - Updates the secret using the latest encrypted token response.
+   * - Returns the access token and metadata from the updated secret.
+   */
   const refreshTokenSetSecret = async (
     ssoConnectorId: string,
     secretId: string,

@@ -109,7 +109,7 @@ export const getAccessToken = async (config: GithubConfig, codeObject: { code: s
 /**
  * {@link https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/refreshing-user-access-tokens#refreshing-a-user-access-token-with-a-refresh-token}
  */
-export const _getAccessTokenByRefreshToken = async (config: GithubConfig, refreshToken: string) => {
+const _getAccessTokenByRefreshToken = async (config: GithubConfig, refreshToken: string) => {
   const { clientId: client_id, clientSecret: client_secret } = config;
 
   const httpResponse = await ky
