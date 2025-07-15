@@ -52,7 +52,7 @@ export const defaultMetadata: ConnectorMetadata = {
     },
     {
       key: 'scope',
-      type: ConnectorConfigFormItemType.Text,
+      type: ConnectorConfigFormItemType.MultilineText,
       label: 'Scope',
       required: false,
       placeholder: 'get_user_info,get_unionId',

@@ -1,5 +1,5 @@
 export const mockedConfig = {
   clientId: '<client-id>',
   clientSecret: '<client-secret>',
-  scode: '<scope>',
+  scode: 'Enter the scopes (separated by a space)',
 };

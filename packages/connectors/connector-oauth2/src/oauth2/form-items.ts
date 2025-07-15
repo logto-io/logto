@@ -90,7 +90,7 @@ export const tokenEndpointAuthOptionsFormItems: ConnectorConfigFormItem[] = [
 export const scopeFormItem: ConnectorConfigFormItem = Object.freeze({
   key: 'scope',
   label: 'Scope',
-  type: ConnectorConfigFormItemType.Text,
+  type: ConnectorConfigFormItemType.MultilineText,
   required: false,
-  placeholder: '<space-delimited-scope>',
+  placeholder: 'Enter the scopes (separated by a space)',
 });
