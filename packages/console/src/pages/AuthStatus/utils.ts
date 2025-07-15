@@ -3,6 +3,7 @@ import psl from 'psl';
 import { domainWhitelist, storageAccessTestKey } from './consts';
 import type { CheckAdminTokenMessage } from './types';
 import { AuthMessageType } from './types';
+import { generateStandardId } from '@logto/shared/universal';
 
 /**
  * Extract the effective top-level domain from a hostname using psl library
@@ -105,11 +106,12 @@ export const isCheckAdminTokenMessage = (data: unknown): data is CheckAdminToken
 export const checkStorageAccess = (): { accessible: boolean; error?: string } => {
   try {
     // Test if we can access localStorage
-    localStorage.setItem(storageAccessTestKey, 'test');
-    const testValue = localStorage.getItem(storageAccessTestKey);
+    const testValue = generateStandardId();
+    localStorage.setItem(storageAccessTestKey, testValue);
+    const testValueRetrieved = localStorage.getItem(storageAccessTestKey);
     localStorage.removeItem(storageAccessTestKey);
 
-    if (testValue !== 'test') {
+    if (testValue !== testValueRetrieved) {
       return { accessible: false, error: 'localStorage read/write test failed' };
     }
 
