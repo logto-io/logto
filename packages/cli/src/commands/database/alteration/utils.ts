@@ -14,12 +14,33 @@ const alterationFilenameRegex = /-([\d.]+)-?.*\.js$/;
 
 export const getTimestampFromFilename = (filename: string) => {
   const match = alterationFilenameRegex.exec(filename);
+  const timestampPart = match?.[1];
 
-  if (!match?.[1]) {
+  if (!timestampPart) {
     throw new Error(`Can not get timestamp: ${filename}`);
   }
 
-  return Number(match[1]);
+  /**
+   * We support the timestamp with or without a suffix.
+   *
+   * - `next-1663923770-a.js`
+   * - `next-1663923770.1-c.js`
+   */
+  const [baseTimestamp] = timestampPart.split('.');
+
+  /**
+   * Validate the baseTimestamp digit length. The timestamp should be formatted in second precision.
+   *
+   * E.g. Math.ceil(Date.now() / 1000)
+   *
+   * Should Throw an error if the timestamp is greater than 10 digits.
+   * This is to ensure that the timestamp is in seconds, not milliseconds.
+   */
+  if (!baseTimestamp || baseTimestamp.length > 10) {
+    throw new Error(`Invalid timestamp format in filename: ${filename}`);
+  }
+
+  return Number(timestampPart);
 };
 
 export const getAlterationDirectory = () => getPathInModule('@logto/schemas', 'alterations-js');
