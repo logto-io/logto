@@ -26,4 +26,5 @@ export type ConnectorFormType = {
   formConfig: Record<string, unknown>;
   /** The raw config data. */
   rawConfig: JsonObject;
+  enableTokenStorage?: boolean;
 };

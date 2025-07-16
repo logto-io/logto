@@ -68,6 +68,15 @@ const connectors = {
     sync_profile_each_sign_in: 'Toujours effectuer une synchronisation à chaque connexion',
     sync_profile_tip:
       'Synchronisez le profil de base du fournisseur social, tel que les noms des utilisateurs et leurs avatars.',
+    enable_token_storage: {
+      /** UNTRANSLATED */
+      title: 'Store tokens for persistent API access',
+      /** UNTRANSLATED */
+      description:
+        'Store access and refresh tokens in the Secret Vault. Allows automated API calls without repeated user consent. Example: let your AI Agent add events to Google Calendar with persistent authorization. <a>Lear how to call third-party APIs</a>',
+      /** UNTRANSLATED */
+      tip: 'Tips: For standard OAuth/OIDC identity provider, the `offline_access` scope must be included to obtain a refresh token, preventing repeated user consent prompts. ',
+    },
     callback_uri: 'URI de rappel',
     callback_uri_description:
       "Également appelée URI de redirection, c'est l'URI dans Logto où les utilisateurs seront renvoyés après l'autorisation sociale, copiez et collez sur la page de configuration du fournisseur social.",

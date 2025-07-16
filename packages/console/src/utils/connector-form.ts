@@ -3,6 +3,7 @@ import { ConnectorConfigFormItemType, ConnectorType } from '@logto/connector-kit
 import { type ConnectorFactoryResponse, type ConnectorResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { SyncProfileMode, type ConnectorFormType } from '@/types/connector';
 import { safeParseJson } from '@/utils/json';
 
@@ -73,7 +74,8 @@ export const parseFormConfig = (
 };
 
 export const convertResponseToForm = (connector: ConnectorResponse): ConnectorFormType => {
-  const { metadata, type, config, syncProfile, isStandard, formItems, target } = connector;
+  const { metadata, type, config, syncProfile, isStandard, formItems, target, enableTokenStorage } =
+    connector;
   const { name, logo, logoDark } = metadata;
   const formConfig = conditional(formItems && initFormData(formItems, config)) ?? {};
 
@@ -88,6 +90,8 @@ export const convertResponseToForm = (connector: ConnectorResponse): ConnectorFo
     jsonConfig: JSON.stringify(config, null, 2),
     formConfig,
     rawConfig: config,
+    // TODO: Remove dev feature guard when token storage is ready for release
+    ...conditional(isDevFeaturesEnabled && { enableTokenStorage }),
   };
 };
 
