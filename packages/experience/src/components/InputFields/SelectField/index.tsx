@@ -39,6 +39,7 @@ const SelectField = ({
         label={label}
         description={description}
         placeholder={placeholder}
+        isDanger={!!errorMessage}
         errorMessage={errorMessage}
         value={currentValue}
         onClick={() => {

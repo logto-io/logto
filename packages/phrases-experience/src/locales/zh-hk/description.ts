@@ -93,6 +93,7 @@ const description = {
   support_website: '支持網站：<link></link>',
   switch_account_title: '你當前以 {{account}} 登錄',
   switch_account_description: '要繼續，你將退出當前帳號，並自動切換到新帳號。',
+  about_yourself: '講講你自己',
 };
 
 export default Object.freeze(description);

@@ -3,6 +3,8 @@ import password_rejected from './password-rejected.js';
 const error = {
   general_required: `{{types, list(type: disjunction;)}} jest wymagany`,
   general_invalid: `{{types, list(type: disjunction;)}} jest nieprawidłowe`,
+  invalid_min_max_input: 'Wartość powinna być pomiędzy {{minValue}} a {{maxValue}}',
+  invalid_min_max_length: 'Długość wartości powinna być pomiędzy {{minLength}} a {{maxLength}}',
   username_required: 'Nazwa użytkownika jest wymagana',
   password_required: 'Hasło jest wymagane',
   username_exists: 'Nazwa użytkownika już istnieje',
@@ -22,8 +24,8 @@ const error = {
   sso_not_enabled: 'Pojedyncze logowanie nie jest włączony dla tego konta e-mail.',
   invalid_link: 'Nieprawidłowy link',
   invalid_link_description: 'Twój jednorazowy token mógł wygasnąć lub nie jest już ważny.',
-  something_went_wrong: 'Coś poszło nie tak.',
   captcha_verification_failed: 'Weryfikacja captcha nie powiodła się.',
+  something_went_wrong: 'Coś poszło nie tak.',
 };
 
 export default Object.freeze(error);

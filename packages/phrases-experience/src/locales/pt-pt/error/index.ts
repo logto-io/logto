@@ -3,6 +3,9 @@ import password_rejected from './password-rejected.js';
 const error = {
   general_required: '{{types, list(type: disjunction;)}} is necessário',
   general_invalid: 'O {{types, list(type: disjunction;)}} é inválido',
+  invalid_min_max_input: 'O valor de entrada deve estar entre {{minValue}} e {{maxValue}}',
+  invalid_min_max_length:
+    'O comprimento do valor de entrada deve estar entre {{minLength}} e {{maxLength}}',
   username_required: 'Utilizador necessário',
   password_required: 'Password necessária',
   username_exists: 'O nome de utilizador já existe',
@@ -22,8 +25,8 @@ const error = {
   sso_not_enabled: 'O Single Sign-On não está habilitado para esta conta de e-mail.',
   invalid_link: 'Link inválido',
   invalid_link_description: 'O teu token de uso único pode ter expirado ou já não ser válido.',
-  something_went_wrong: 'Algo correu mal.',
   captcha_verification_failed: 'Falha na verificação do captcha.',
+  something_went_wrong: 'Algo correu mal.',
 };
 
 export default Object.freeze(error);

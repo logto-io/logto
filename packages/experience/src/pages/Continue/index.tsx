@@ -6,6 +6,7 @@ import ErrorPage from '@/pages/ErrorPage';
 import { continueFlowStateGuard } from '@/types/guard';
 
 import SetEmailOrPhone from './SetEmailOrPhone';
+import SetExtraProfile from './SetExtraProfile';
 import SetPassword from './SetPassword';
 import SetUsername from './SetUsername';
 
@@ -39,6 +40,10 @@ const Continue = () => {
     method === MissingProfile.emailOrPhone
   ) {
     return <SetEmailOrPhone missingProfile={method} interactionEvent={interactionEvent} />;
+  }
+
+  if (method === 'extra-profile') {
+    return <SetExtraProfile interactionEvent={interactionEvent} />;
   }
 
   return <ErrorPage />;

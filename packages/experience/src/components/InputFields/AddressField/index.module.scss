@@ -1,22 +1,28 @@
 @use '@/scss/underscore' as _;
 
 .addressGroup {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(2, 1fr);
   gap: _.unit(3);
 
   .inputField {
-    flex: 1;
-    flex-basis: 100%;
+    grid-column: span 2;
 
     &.halfSize {
-      flex: 1;
-      flex-basis: 50%;
+      grid-column: span 1;
     }
   }
 }
 
-.description {
+.description,
+.errorMessage {
   margin-top: _.unit(-2);
+  margin-inline-start: _.unit(0.5);
+  grid-column: span 2;
   @include _.text-hint;
+}
+
+.errorMessage {
+  color: var(--color-danger-default);
 }

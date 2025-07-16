@@ -3,6 +3,8 @@ import password_rejected from './password-rejected.js';
 const error = {
   general_required: '{{types, list(type: disjunction;)}}은/는 필수예요.',
   general_invalid: '{{types, list(type: disjunction;)}}은/는 유효하지 않아요.',
+  invalid_min_max_input: '입력값은 {{minValue}}에서 {{maxValue}} 사이여야 해요',
+  invalid_min_max_length: '입력값의 길이는 {{minLength}}에서 {{maxLength}} 사이여야 해요',
   username_required: '사용자 이름은 필수예요.',
   password_required: '비밀번호는 필수예요.',
   username_exists: '사용자 이름이 이미 존재해요.',
@@ -21,8 +23,8 @@ const error = {
   sso_not_enabled: '이 이메일 계정에 대해 단일 로그인이 활성화되지 않았어요.',
   invalid_link: '유효하지 않은 링크',
   invalid_link_description: '일회성 토큰이 만료되었거나 더 이상 유효하지 않을 수 있어요.',
-  something_went_wrong: '문제가 발생했어요.',
   captcha_verification_failed: '캡차 검증에 실패했어요.',
+  something_went_wrong: '문제가 발생했어요.',
 };
 
 export default Object.freeze(error);

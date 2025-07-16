@@ -1,12 +1,20 @@
 import { consoleUserPreferenceKey } from '@logto/schemas';
 
+import { mockUser } from '#src/__mocks__/user.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
 
 import { ProfileValidator } from './profile-validator.js';
 
+const { jest } = import.meta;
+
 describe('ProfileValidator', () => {
-  const queries = new MockQueries();
+  const mockFindAllCustomProfileFields = jest.fn();
+  const queries = new MockQueries({
+    customProfileFields: {
+      findAllCustomProfileFields: mockFindAllCustomProfileFields,
+    },
+  });
   const profileValidator = new ProfileValidator(queries);
 
   describe('validateAndParseCustomProfile', () => {
@@ -103,6 +111,60 @@ describe('ProfileValidator', () => {
           name: consoleUserPreferenceKey,
         }).message
       );
+    });
+  });
+
+  describe('hasMissingExtraProfileFields', () => {
+    it('should return true if missing mandatory custom profile fields', async () => {
+      mockFindAllCustomProfileFields.mockResolvedValue([
+        {
+          type: 'Text',
+          name: 'name',
+          required: true,
+        },
+      ]);
+      expect(await profileValidator.hasMissingExtraProfileFields({})).toBe(true);
+    });
+    it('should return false if mandatory custom profile fields are provided', async () => {
+      mockFindAllCustomProfileFields.mockResolvedValue([
+        {
+          type: 'Text',
+          name: 'name',
+          required: true,
+        },
+      ]);
+      expect(await profileValidator.hasMissingExtraProfileFields({ name: 'John Doe' })).toBe(false);
+      expect(
+        await profileValidator.hasMissingExtraProfileFields({}, { ...mockUser, name: 'John Doe' })
+      ).toBe(false);
+    });
+    it('should check "fullname" field into "givenName", "middleName" and "familyName" instead of fullname', async () => {
+      mockFindAllCustomProfileFields.mockResolvedValue([
+        {
+          type: 'Fullname',
+          name: 'fullname',
+          required: true,
+          config: {
+            parts: [
+              { key: 'givenName', enabled: true },
+              { key: 'middleName', enabled: true },
+              { key: 'familyName', enabled: true },
+            ],
+          },
+        },
+      ]);
+      expect(await profileValidator.hasMissingExtraProfileFields({ name: 'John Doe' })).toBe(true);
+      expect(
+        await profileValidator.hasMissingExtraProfileFields({
+          profile: { givenName: 'John', middleName: 'M', familyName: 'Doe' },
+        })
+      ).toBe(false);
+      expect(
+        await profileValidator.hasMissingExtraProfileFields(
+          {},
+          { ...mockUser, profile: { givenName: 'John', middleName: 'M', familyName: 'Doe' } }
+        )
+      ).toBe(false);
     });
   });
 });

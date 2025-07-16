@@ -133,7 +133,7 @@ const InputField = (
           isFocused={isFocused}
         />
       </div>
-      {description && <p className={styles.description}>{description}</p>}
+      {description && <div className={styles.description}>{description}</div>}
       {errorMessages && (
         <ErrorMessage className={styles.errorMessage}>
           {errorMessages.length > 1 ? (

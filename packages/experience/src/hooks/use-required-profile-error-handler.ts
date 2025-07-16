@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { validate } from 'superstruct';
 
+import { isDevFeaturesEnabled } from '@/constants/env';
 import { UserFlow, SearchParameters, type ContinueFlowInteractionEvent } from '@/types';
 import { missingProfileErrorDataGuard } from '@/types/guard';
 import { queryStringify } from '@/utils';
@@ -62,6 +63,17 @@ const useRequiredProfileErrorHandler = ({
               },
               { replace, state: { interactionEvent } }
             );
+            break;
+          }
+          case MissingProfile.extraProfile: {
+            if (isDevFeaturesEnabled) {
+              navigate(
+                {
+                  pathname: `/${UserFlow.Continue}/extra-profile`,
+                },
+                { replace, state: { interactionEvent } }
+              );
+            }
             break;
           }
 

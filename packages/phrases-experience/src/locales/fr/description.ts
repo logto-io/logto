@@ -112,6 +112,7 @@ const description = {
   switch_account_title: 'Vous êtes actuellement connecté en tant que {{account}}',
   switch_account_description:
     'Pour continuer, vous serez déconnecté du compte actuel, et le passage au nouveau compte se fera automatiquement.',
+  about_yourself: 'Parlez-nous de vous',
 };
 
 export default Object.freeze(description);

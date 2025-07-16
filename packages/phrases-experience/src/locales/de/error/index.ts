@@ -3,6 +3,9 @@ import password_rejected from './password-rejected.js';
 const error = {
   general_required: '{{types, list(type: disjunction;)}} ist erforderlich',
   general_invalid: 'Die {{types, list(type: disjunction;)}} is ungültig',
+  invalid_min_max_input: 'Der Eingabewert sollte zwischen {{minValue}} und {{maxValue}} liegen',
+  invalid_min_max_length:
+    'Die Länge des Eingabewerts sollte zwischen {{minLength}} und {{maxLength}} liegen',
   username_required: 'Benutzername ist erforderlich',
   password_required: 'Passwort ist erforderlich',
   username_exists: 'Benutzername existiert bereits',
