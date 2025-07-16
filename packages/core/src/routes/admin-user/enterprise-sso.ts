@@ -1,5 +1,5 @@
 import { desensitizedEnterpriseSsoTokenSetSecretGuard, UserSsoIdentities } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
+import { conditional, yes } from '@silverhand/essentials';
 import { object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -19,15 +19,19 @@ export default function adminUserEnterpriseSsoRoutes<T extends ManagementApiRout
         userId: string(),
         ssoConnectorId: string(),
       }),
+      query: object({
+        includeTokenSet: string().optional(),
+      }),
       response: object({
-        enterpriseSsoIdentity: UserSsoIdentities.guard,
-        tokenSet: desensitizedEnterpriseSsoTokenSetSecretGuard.optional(),
+        ssoIdentity: UserSsoIdentities.guard,
+        tokenSecret: desensitizedEnterpriseSsoTokenSetSecretGuard.optional(),
       }),
       status: [200, 404],
     }),
     async (ctx, next) => {
       const {
         params: { userId, ssoConnectorId },
+        query: { includeTokenSet },
       } = ctx.guard;
 
       const {
@@ -41,20 +45,27 @@ export default function adminUserEnterpriseSsoRoutes<T extends ManagementApiRout
       } = tenant;
 
       // Check if the user exists
-      const user = await findUserById(userId);
+      await findUserById(userId);
 
       const ssoIdentities = await findUserSsoIdentities(userId);
-      const enterpriseSsoIdentity = ssoIdentities.find(
+      const ssoIdentity = ssoIdentities.find(
         (identity) => identity.ssoConnectorId === ssoConnectorId
       );
 
       assertThat(
-        enterpriseSsoIdentity,
+        ssoIdentity,
         new RequestError({
           code: 'user.enterprise_sso_identity_not_exists',
           status: 404,
         })
       );
+
+      if (!yes(includeTokenSet)) {
+        ctx.body = {
+          ssoIdentity,
+        };
+        return next();
+      }
 
       const tokenSetSecret =
         await secretsQueries.findEnterpriseSsoTokenSetSecretByUserIdAndConnectorId(
@@ -63,8 +74,8 @@ export default function adminUserEnterpriseSsoRoutes<T extends ManagementApiRout
         );
 
       ctx.body = {
-        enterpriseSsoIdentity,
-        tokenSet: conditional(tokenSetSecret && desensitizeTokenSetSecret(tokenSetSecret)),
+        ssoIdentity,
+        tokenSecret: conditional(tokenSetSecret && desensitizeTokenSetSecret(tokenSetSecret)),
       };
 
       return next();

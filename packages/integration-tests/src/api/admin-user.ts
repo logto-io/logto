@@ -118,11 +118,6 @@ export const putUserIdentity = async (userId: string, target: string, identity: 
 export const verifyUserPassword = async (userId: string, password: string) =>
   authedAdminApi.post(`users/${userId}/password/verify`, { json: { password } });
 
-export const getUserIdentityTokenSetRecord = async (userId: string, target: string) =>
-  authedAdminApi
-    .get(`users/${userId}/identities/${target}/secret`)
-    .json<DesensitizedSocialTokenSetSecret>();
-
 export const getUserMfaVerifications = async (userId: string) =>
   authedAdminApi.get(`users/${userId}/mfa-verifications`).json<MfaVerification[]>();
 
@@ -165,8 +160,38 @@ export const updatePersonalAccessToken = async (
     })
     .json<PersonalAccessToken>();
 
-export const getUserSsoIdentity = async (userId: string, connectorId: string) =>
-  authedAdminApi.get(`users/${userId}/sso-identities/${connectorId}`).json<{
-    enterpriseSsoIdentity: UserSsoIdentity;
-    tokenSet?: DesensitizedEnterpriseSsoTokenSetSecret;
-  }>();
+export const getUserIdentity = async (
+  userId: string,
+  target: string,
+  includeTokenSecret = true
+) => {
+  const searchParams = new URLSearchParams({
+    ...conditional(includeTokenSecret && { includeTokenSecret: 'true' }),
+  });
+
+  return authedAdminApi
+    .get(`users/${userId}/identities/${target}`, {
+      searchParams,
+    })
+    .json<{
+      identity: Identity;
+      tokenSecret?: DesensitizedSocialTokenSetSecret;
+    }>();
+};
+
+export const getUserSsoIdentity = async (
+  userId: string,
+  connectorId: string,
+  includeTokenSecret = true
+) => {
+  const searchParams = new URLSearchParams({
+    ...conditional(includeTokenSecret && { includeTokenSet: 'true' }),
+  });
+
+  return authedAdminApi
+    .get(`users/${userId}/sso-identities/${connectorId}`, { searchParams })
+    .json<{
+      ssoIdentity: UserSsoIdentity;
+      tokenSecret?: DesensitizedEnterpriseSsoTokenSetSecret;
+    }>();
+};

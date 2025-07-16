@@ -67,22 +67,40 @@
             }
           }
         }
-      }
-    },
-    "/api/users/{userId}/identities/{target}/secret": {
+      },
       "get": {
+        "summary": "Retrieve a user's social identity and associated token storage .",
+        "description": "This API retrieves the social identity and its associated token set for the specified user from the Logto Secret Vault. The token set will only be available if token storage is enabled for the corresponding social connector.",
         "tags": ["Dev feature"],
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "includeTokenSecret",
+            "description": "Whether to include the token secret in the response. Defaults to false. Token storage must be supported and enabled by the connector to return the token secret."
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Token set record of the social identity. (For security reasons, encrypted token details will be omitted from the response.)"
+            "description": "Returns the user's social identity and associated token storage.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "identity": {
+                      "description": "The user's social identity."
+                    },
+                    "tokenSecret": {
+                      "description": "The desensitized token set secret associated with the user's social identity.\nThis field is included only if the `includeTokenSecret` query parameter is provided and the corresponding connector has token storage enabled."
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "User social identity not found, or no token set record exists for the user's social identity."
+            "description": "User social identity not found."
           }
-        },
-        "summary": "Retrieve the social provider token set for the current user.",
-        "description": "This API retrieves the token set record associated with the current user's social identity from the Logto Secret Vault. The operation is only available if the corresponding social connector has token set storage enabled. If a token set record exists for the user's social identity, it will be returned.  "
+        }
       }
     }
   }

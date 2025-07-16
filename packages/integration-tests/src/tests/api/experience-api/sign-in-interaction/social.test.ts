@@ -5,7 +5,7 @@ import {
   mockSocialConnectorId,
   mockSocialConnectorTarget,
 } from '#src/__mocks__/connectors-mock.js';
-import { deleteUser, getUser, getUserIdentityTokenSetRecord } from '#src/api/admin-user.js';
+import { deleteUser, getUser, getUserIdentity } from '#src/api/admin-user.js';
 import { updateConnectorConfig } from '#src/api/connector.js';
 import { isDevFeaturesEnabled } from '#src/constants.js';
 import {
@@ -74,9 +74,8 @@ describe('social sign-in and sign-up', () => {
 
     // TODO: Remove this once we have token storage enabled
     if (isDevFeaturesEnabled) {
-      const tokenSetRecord = await getUserIdentityTokenSetRecord(userId, mockSocialConnectorTarget);
-      expect(tokenSetRecord).not.toBeNull();
-      expect(tokenSetRecord.metadata.scope).toBe(mockTokenResponse.scope);
+      const { tokenSecret } = await getUserIdentity(userId, mockSocialConnectorTarget);
+      expect(tokenSecret?.metadata.scope).toBe(mockTokenResponse.scope);
     }
   });
 
@@ -121,11 +120,9 @@ describe('social sign-in and sign-up', () => {
     expect(name).toBe('John Doe');
 
     if (isDevFeaturesEnabled) {
-      const tokenSetRecord = await getUserIdentityTokenSetRecord(userId, mockSocialConnectorTarget);
-      expect(tokenSetRecord).not.toBeNull();
-      expect(tokenSetRecord.metadata.scope).toBe('openid profile email');
+      const { tokenSecret } = await getUserIdentity(userId, mockSocialConnectorTarget);
+      expect(tokenSecret?.metadata.scope).toBe('openid profile email');
     }
-
     await deleteUser(userId);
   });
 
@@ -154,9 +151,8 @@ describe('social sign-in and sign-up', () => {
     expect(name).toBe('Foo Bar');
 
     if (isDevFeaturesEnabled) {
-      const tokenSetRecord = await getUserIdentityTokenSetRecord(userId, mockSocialConnectorTarget);
-      expect(tokenSetRecord).not.toBeNull();
-      expect(tokenSetRecord.metadata.scope).toBe('openid profile phone');
+      const { tokenSecret } = await getUserIdentity(userId, mockSocialConnectorTarget);
+      expect(tokenSecret?.metadata.scope).toBe('openid profile phone');
     }
 
     await deleteUser(userId);
