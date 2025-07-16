@@ -1,7 +1,7 @@
 import type { CreateUser, Role, User } from '@logto/schemas';
 import { RoleType } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
-import { removeUndefinedKeys } from '@silverhand/essentials';
+import { type Nullable, removeUndefinedKeys } from '@silverhand/essentials';
 
 import { mockUser, mockUserList, mockUserListResponse } from '#src/__mocks__/index.js';
 import { type InsertUserResult } from '#src/libraries/user.js';
@@ -19,6 +19,19 @@ const filterUsersWithSearch = (users: User[], search: string) =>
     [user.username, user.primaryEmail, user.primaryPhone, user.name].some((value) =>
       value ? !value.includes(search) : false
     )
+  );
+
+const filterUsersWithSearchAndFilterSuspended = (
+  users: User[],
+  search: string,
+  filters: { isSuspended: Nullable<string> }
+) =>
+  users.filter(
+    (user) =>
+      String(user.isSuspended) === filters.isSuspended &&
+      [user.username, user.primaryEmail, user.primaryPhone, user.name].some((value) =>
+        value ? !value.includes(search) : false
+      )
   );
 
 const mockedQueries = {
@@ -93,6 +106,22 @@ describe('adminUserRoutes', () => {
     expect(response.header).toHaveProperty(
       'total-number',
       `${filterUsersWithSearch(mockUserList, search).length}`
+    );
+  });
+
+  it('GET /users should return matched data with filter isSuspended', async () => {
+    const search = 'foo';
+    const isSuspended = 'false';
+    const response = await userRequest.get('/users').send({ search, isSuspended });
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual(
+      filterUsersWithSearchAndFilterSuspended(mockUserList, search, { isSuspended }).map((user) =>
+        transpileUserProfileResponse(user)
+      )
+    );
+    expect(response.header).toHaveProperty(
+      'total-number',
+      `${filterUsersWithSearchAndFilterSuspended(mockUserList, search, { isSuspended }).length}`
     );
   });
 });
