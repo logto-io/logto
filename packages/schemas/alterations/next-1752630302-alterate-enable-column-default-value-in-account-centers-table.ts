@@ -6,13 +6,13 @@ const alteration: AlterationScript = {
   up: async (pool) => {
     await pool.query(sql`
       alter table account_centers
-      alter column enable default true;
+      alter column enabled set default true;
     `);
   },
   down: async (pool) => {
     await pool.query(sql`
       alter table account_centers
-      alter column enable default false;
+      alter column enabled set default false;
     `);
   },
 };
