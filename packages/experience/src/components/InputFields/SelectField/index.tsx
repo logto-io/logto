@@ -14,6 +14,7 @@ type Props = {
   readonly label?: string;
   readonly placeholder?: string;
   readonly errorMessage?: string;
+  readonly onBlur: () => void;
   readonly onChange: (value: string) => void;
 };
 
@@ -24,6 +25,7 @@ const SelectField = ({
   label,
   placeholder,
   errorMessage,
+  onBlur,
   onChange,
 }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -45,6 +47,7 @@ const SelectField = ({
         onClick={() => {
           setIsOpen(true);
         }}
+        onBlur={onBlur}
       />
       <Dropdown
         isFullWidth

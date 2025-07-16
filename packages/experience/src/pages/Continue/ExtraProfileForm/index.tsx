@@ -54,7 +54,7 @@ const ExtraProfileForm = ({ customProfileFields, defaultValues, onSubmit }: Prop
               control={control}
               name={name}
               rules={{ validate: (value) => validateField(value, field) }}
-              render={({ field: { onChange, value } }) => {
+              render={({ field: { onBlur, onChange, value } }) => {
                 if (type === CustomProfileFieldType.Address) {
                   s.assert(value, addressFieldValueGuard);
                   s.assert(config, addressFieldConfigGuard);
@@ -64,6 +64,7 @@ const ExtraProfileForm = ({ customProfileFields, defaultValues, onSubmit }: Prop
                       value={value}
                       description={description}
                       errorMessage={errors[name]?.message}
+                      onBlur={onBlur}
                       onChange={onChange}
                     />
                   );
@@ -83,6 +84,7 @@ const ExtraProfileForm = ({ customProfileFields, defaultValues, onSubmit }: Prop
                       value={value}
                       description={description}
                       errorMessage={errors[name]?.message}
+                      onBlur={onBlur}
                       onChange={onChange}
                     />
                   );
@@ -96,6 +98,7 @@ const ExtraProfileForm = ({ customProfileFields, defaultValues, onSubmit }: Prop
                     errorMessage={errors[name]?.message}
                     placeholder={config.placeholder ?? config.format}
                     onChange={onChange}
+                    onBlur={onBlur}
                   />
                 );
               }}

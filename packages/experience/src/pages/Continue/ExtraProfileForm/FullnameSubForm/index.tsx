@@ -45,12 +45,13 @@ const FullnameSubForm = ({ field }: Props) => {
             name={key}
             control={control}
             rules={{ required }}
-            render={({ field: { onChange, value } }) => (
+            render={({ field: { onBlur, onChange, value } }) => (
               <InputField
                 className={styles.inputField}
                 label={t(`profile.${key}`)}
                 value={value ?? ''}
                 isDanger={hasFullnameError}
+                onBlur={onBlur}
                 onChange={onChange}
               />
             )}
