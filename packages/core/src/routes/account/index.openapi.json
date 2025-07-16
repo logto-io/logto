@@ -164,7 +164,7 @@
         "tags": ["Dev feature"],
         "description": "Update MFA settings for the user. This endpoint requires identity verification and the Identities scope. Controls whether MFA verification is required during sign-in when the user has MFA configured.",
         "responses": {
-          "204": {
+          "200": {
             "description": "The MFA settings were updated successfully."
           },
           "400": {

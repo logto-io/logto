@@ -238,7 +238,10 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
         body: z.object({
           skipMfaOnSignIn: z.boolean(),
         }),
-        status: [204, 400, 401],
+        response: z.object({
+          skipMfaOnSignIn: z.boolean(),
+        }),
+        status: [200, 400, 401],
       }),
       async (ctx, next) => {
         const { id: userId, identityVerified, scopes } = ctx.auth;
@@ -273,7 +276,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
 
         ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
 
-        ctx.status = 204;
+        ctx.body = { skipMfaOnSignIn };
 
         return next();
       }

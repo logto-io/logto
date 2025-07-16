@@ -118,7 +118,9 @@ export const updateMfaSettings = async (
   verificationRecordId: string,
   skipMfaOnSignIn: boolean
 ) =>
-  api.patch('api/my-account/mfa-settings', {
-    json: { skipMfaOnSignIn },
-    headers: { [verificationRecordIdHeader]: verificationRecordId },
-  });
+  api
+    .patch('api/my-account/mfa-settings', {
+      json: { skipMfaOnSignIn },
+      headers: { [verificationRecordIdHeader]: verificationRecordId },
+    })
+    .json<{ skipMfaOnSignIn: boolean }>();
