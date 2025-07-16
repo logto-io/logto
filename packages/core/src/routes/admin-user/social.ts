@@ -201,7 +201,7 @@ export default function adminUserSocialRoutes<T extends ManagementApiRouter>(
           identity: identities[target],
           ...conditional(
             secret && {
-              secret: desensitizeTokenSetSecret(secret),
+              tokenSecret: desensitizeTokenSetSecret(secret),
             }
           ),
         };

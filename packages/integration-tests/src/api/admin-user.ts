@@ -185,7 +185,7 @@ export const getUserSsoIdentity = async (
   includeTokenSecret = true
 ) => {
   const searchParams = new URLSearchParams({
-    ...conditional(includeTokenSecret && { includeTokenSet: 'true' }),
+    ...conditional(includeTokenSecret && { includeTokenSecret: 'true' }),
   });
 
   return authedAdminApi

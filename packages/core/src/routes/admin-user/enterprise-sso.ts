@@ -20,7 +20,7 @@ export default function adminUserEnterpriseSsoRoutes<T extends ManagementApiRout
         ssoConnectorId: string(),
       }),
       query: object({
-        includeTokenSet: string().optional(),
+        includeTokenSecret: string().optional(),
       }),
       response: object({
         ssoIdentity: UserSsoIdentities.guard,
@@ -31,7 +31,7 @@ export default function adminUserEnterpriseSsoRoutes<T extends ManagementApiRout
     async (ctx, next) => {
       const {
         params: { userId, ssoConnectorId },
-        query: { includeTokenSet },
+        query: { includeTokenSecret },
       } = ctx.guard;
 
       const {
@@ -60,7 +60,7 @@ export default function adminUserEnterpriseSsoRoutes<T extends ManagementApiRout
         })
       );
 
-      if (!yes(includeTokenSet)) {
+      if (!yes(includeTokenSecret)) {
         ctx.body = {
           ssoIdentity,
         };
