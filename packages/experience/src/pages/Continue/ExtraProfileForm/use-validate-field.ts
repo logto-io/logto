@@ -23,7 +23,6 @@ const isValidAddressField = (value: unknown, config: CustomProfileFieldConfig): 
 const isValidDateField = (value: unknown, config: CustomProfileFieldConfig): boolean => {
   s.assert(value, s.string());
   s.assert(config.format, s.string());
-
   const parsedDate = parse(value, config.format, new Date(), {
     useAdditionalDayOfYearTokens: true,
     useAdditionalWeekYearTokens: true,
@@ -34,8 +33,8 @@ const isValidDateField = (value: unknown, config: CustomProfileFieldConfig): boo
 
 const isValidRegexField = (value: unknown, config: CustomProfileFieldConfig): boolean => {
   s.assert(value, s.string());
-
-  const regex = new RegExp(config.format ?? '');
+  s.assert(config.format, s.string());
+  const regex = new RegExp(config.format);
   return regex.test(value);
 };
 
@@ -47,7 +46,6 @@ const isValidUrlField = (value: unknown): boolean => {
 
 const isValidNumberRange = (value: unknown, config: CustomProfileFieldConfig): boolean => {
   s.assert(value, s.string());
-
   const parsedNumber = Number(value);
   return (
     !Number.isNaN(parsedNumber) &&
@@ -72,10 +70,12 @@ const useValidateField = () => {
   const validate = useCallback(
     (value: unknown, field: CustomProfileField) => {
       const { type, name, label, required, config } = field;
-      const generalInvalidMessage = t('error.general_invalid', {
-        types: [getFieldLabel(name, label)],
-      });
+      const labelWithI18nFallback = getFieldLabel(name, label);
+      const generalInvalidMessage = t('error.general_invalid', { types: [labelWithI18nFallback] });
 
+      if (!value) {
+        return !required || t('error.general_required', { types: [labelWithI18nFallback] });
+      }
       if (type === CustomProfileFieldType.Address) {
         return !required || isValidAddressField(value, config) || generalInvalidMessage;
       }
