@@ -2,7 +2,7 @@
   "paths": {
     "/api/users/{userId}/sso-identities/{ssoConnectorId}": {
       "get": {
-        "summary": "Retrieve a user's enterprise SSO identity and associated token storage (if token storage is enabled).",
+        "summary": "Retrieve a user's enterprise SSO identity and associated token secret (if token storage is enabled).",
         "description": "This API retrieves the user's enterprise SSO identity and associated token set record from the Logto Secret Vault. The token set will only be available if token storage is enabled for the corresponding SSO connector.",
         "tags": ["Dev feature"],
         "parameters": [
@@ -14,7 +14,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Returns the user's enterprise SSO identity and associated token storage.",
+            "description": "Returns the user's enterprise SSO identity and associated token secret.",
             "content": {
               "application/json": {
                 "schema": {
@@ -32,6 +32,42 @@
           },
           "404": {
             "description": "User enterprise SSO identity not found."
+          }
+        }
+      }
+    },
+    "/api/users/{userId}/all-identities": {
+      "get": {
+        "summary": "Retrieve social identities, enterprise SSO identities and associated token secret (if token storage is enabled) for a user.",
+        "description": "This API retrieves all identities (social and enterprise SSO) for a user, along with their associated token set records from the Logto Secret Vault. The token sets will only be available if token storage is enabled for the corresponding identity connector.",
+        "tags": ["Dev feature"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "includeTokenSecret",
+            "description": "Whether to include the token secret in the response. Defaults to false. Token storage must be supported and enabled by the connector to return the token secret."
+          }
+        ],
+        "response": {
+          "200": {
+            "description": "Returns the user's social identities, enterprise SSO identities and associated token secret.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "socialIdentities": {
+                      "description": "The user's social identities."
+                    },
+                    "ssoIdentities": {
+                      "description": "The user's enterprise SSO identities."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found."
           }
         }
       }
