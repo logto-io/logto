@@ -28,7 +28,7 @@
       transition: transform 0.2s ease-in-out;
 
       &.up {
-        transform: translateY(50%) rotate(180deg);
+        transform: translateY(-50%) rotate(180deg);
       }
     }
   }
