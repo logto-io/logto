@@ -14,10 +14,11 @@ type Props = {
   readonly parts?: AddressProfileField['config']['parts'];
   readonly description?: Nullable<string>;
   readonly errorMessage?: string;
+  readonly onBlur: () => void;
   readonly onChange: (value: UserProfile['address']) => void;
 };
 
-const AddressField = ({ value, parts, description, errorMessage, onChange }: Props) => {
+const AddressField = ({ value, parts, description, errorMessage, onBlur, onChange }: Props) => {
   const { t } = useTranslation();
   const enabledParts = useMemo(() => parts?.filter(({ enabled }) => enabled), [parts]);
 
@@ -33,6 +34,7 @@ const AddressField = ({ value, parts, description, errorMessage, onChange }: Pro
           label={t(`profile.address.${key}`)}
           value={value?.[key] ?? ''}
           isDanger={!!errorMessage}
+          onBlur={onBlur}
           onChange={(event) => {
             const newValue = { ...value, [key]: event.currentTarget.value };
             onChange(key === 'formatted' ? newValue : formatAddress(newValue));
