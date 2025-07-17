@@ -140,7 +140,7 @@ importers:
         specifier: workspace:^
         version: link:../toolkit/core-kit
       '@logto/schemas':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^
@@ -3575,16 +3575,16 @@ importers:
         specifier: workspace:^
         version: link:../toolkit/connector-kit
       '@logto/console':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../console
       '@logto/core-kit':
         specifier: workspace:^
         version: link:../toolkit/core-kit
       '@logto/demo-app':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../demo-app
       '@logto/experience':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../experience
       '@logto/js':
         specifier: ^5.1.0
