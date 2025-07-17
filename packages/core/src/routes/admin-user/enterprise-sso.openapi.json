@@ -48,7 +48,7 @@
             "description": "Whether to include the token secret in the response. Defaults to false. Token storage must be supported and enabled by the connector to return the token secret."
           }
         ],
-        "response": {
+        "responses": {
           "200": {
             "description": "Returns the user's social identities, enterprise SSO identities and associated token secret.",
             "content": {
