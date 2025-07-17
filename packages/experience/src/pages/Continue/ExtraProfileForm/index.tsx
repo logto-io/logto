@@ -4,10 +4,9 @@ import * as s from 'superstruct';
 
 import Button from '@/components/Button';
 import { InputField } from '@/components/InputFields';
-import AddressField from '@/components/InputFields/AddressField';
 import SelectField from '@/components/InputFields/SelectField';
-import { addressFieldConfigGuard, addressFieldValueGuard } from '@/types/guard';
 
+import AddressSubForm from './AddressSubForm';
 import FullnameSubForm from './FullnameSubForm';
 import styles from './index.module.scss';
 import useFieldLabel from './use-field-label';
@@ -56,18 +55,7 @@ const ExtraProfileForm = ({ customProfileFields, defaultValues, onSubmit }: Prop
               rules={{ validate: (value) => validateField(value, field) }}
               render={({ field: { onBlur, onChange, value } }) => {
                 if (type === CustomProfileFieldType.Address) {
-                  s.assert(value, addressFieldValueGuard);
-                  s.assert(config, addressFieldConfigGuard);
-                  return (
-                    <AddressField
-                      parts={config.parts}
-                      value={value}
-                      description={description}
-                      errorMessage={errors[name]?.message}
-                      onBlur={onBlur}
-                      onChange={onChange}
-                    />
-                  );
+                  return <AddressSubForm field={field} />;
                 }
 
                 s.assert(value, s.optional(s.string()));
