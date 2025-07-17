@@ -1,7 +1,5 @@
 import { CustomProfileFieldType, type CustomProfileField } from '@logto/schemas';
-import { cond } from '@silverhand/essentials';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 import * as s from 'superstruct';
 
 import Button from '@/components/Button';
@@ -22,7 +20,6 @@ type Props = {
 };
 
 const ExtraProfileForm = ({ customProfileFields, defaultValues, onSubmit }: Props) => {
-  const { t } = useTranslation();
   const getFieldLabel = useFieldLabel();
   const validateField = useValidateField();
   const methods = useForm<Record<string, unknown>>({
@@ -50,18 +47,13 @@ const ExtraProfileForm = ({ customProfileFields, defaultValues, onSubmit }: Prop
           if (field.type === CustomProfileFieldType.Fullname) {
             return <FullnameSubForm key={field.name} field={field} />;
           }
-          const { name, type, required, label, description, config } = field;
+          const { name, type, label, description, config } = field;
           return (
             <Controller
               key={name}
               control={control}
               name={name}
-              rules={{
-                required: cond(
-                  required && t('error.general_required', { types: [getFieldLabel(name, label)] })
-                ),
-                validate: (value) => validateField(value, field),
-              }}
+              rules={{ validate: (value) => validateField(value, field) }}
               render={({ field: { onChange, value } }) => {
                 if (type === CustomProfileFieldType.Address) {
                   s.assert(value, addressFieldValueGuard);

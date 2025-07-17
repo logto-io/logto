@@ -27,7 +27,7 @@ const validateTextProfileField: ValidateCustomProfileField = (data) => {
   const { minLength, maxLength } = config ?? {};
 
   assertThat(
-    minLength !== undefined && maxLength !== undefined && minLength <= maxLength,
+    minLength === undefined || maxLength === undefined || minLength <= maxLength,
     'custom_profile_fields.invalid_min_max_input'
   );
 };
@@ -37,7 +37,7 @@ const validateNumberProfileField: ValidateCustomProfileField = (data) => {
   const { minValue, maxValue } = config ?? {};
 
   assertThat(
-    minValue !== undefined && maxValue !== undefined && minValue <= maxValue,
+    minValue === undefined || maxValue === undefined || minValue <= maxValue,
     'custom_profile_fields.invalid_min_max_input'
   );
 };
