@@ -1,6 +1,8 @@
 import { type Nullable } from '@silverhand/essentials';
+import classNames from 'classnames';
 import { useRef, useState } from 'react';
 
+import ArrowDown from '@/assets/icons/arrow-down.svg?react';
 import Dropdown, { DropdownItem } from '@/components/Dropdown';
 
 import InputField from '../InputField';
@@ -35,42 +37,47 @@ const SelectField = ({
   );
 
   return (
-    <div ref={ref} className={styles.select}>
-      <InputField
-        readOnly
-        label={label}
-        description={description}
-        placeholder={placeholder}
-        isDanger={!!errorMessage}
-        errorMessage={errorMessage}
-        value={currentValue}
-        onClick={() => {
-          setIsOpen(true);
-        }}
-        onBlur={onBlur}
-      />
-      <Dropdown
-        isFullWidth
-        anchorRef={ref}
-        className={styles.dropdown}
-        isOpen={isOpen}
-        horizontalAlign="start"
-        onClose={() => {
-          setIsOpen(false);
-        }}
-      >
-        {options.map((option) => (
-          <DropdownItem
-            key={option.value}
-            onClick={() => {
-              onChange(option.value);
-              setCurrentValue(option.label);
-            }}
-          >
-            {option.label}
-          </DropdownItem>
-        ))}
-      </Dropdown>
+    <div className={styles.selectContainer}>
+      <div ref={ref} className={styles.select}>
+        <InputField
+          readOnly
+          label={label}
+          placeholder={placeholder}
+          isDanger={!!errorMessage}
+          value={currentValue}
+          onClick={() => {
+            setIsOpen(true);
+          }}
+          onBlur={onBlur}
+        />
+        <Dropdown
+          isFullWidth
+          anchorRef={ref}
+          className={styles.dropdown}
+          isOpen={isOpen}
+          horizontalAlign="start"
+          onClose={() => {
+            setIsOpen(false);
+          }}
+        >
+          {options.map((option) => (
+            <DropdownItem
+              key={option.value}
+              onClick={() => {
+                onChange(option.value);
+                setCurrentValue(option.label);
+              }}
+            >
+              {option.label}
+            </DropdownItem>
+          ))}
+        </Dropdown>
+        <div className={classNames(styles.arrow, isOpen && styles.up)}>
+          <ArrowDown />
+        </div>
+      </div>
+      {description && <div className={styles.description}>{description}</div>}
+      {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
     </div>
   );
 };
