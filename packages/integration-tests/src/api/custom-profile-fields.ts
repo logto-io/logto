@@ -31,7 +31,7 @@ export const updateCustomProfileFieldsSieOrder = async (
   order: UpdateCustomProfileFieldSieOrder[]
 ) =>
   authedAdminApi
-    .post('custom-profile-fields/sie-order', {
+    .post('custom-profile-fields/properties/sie-order', {
       json: { order },
     })
     .json<CustomProfileField[]>();
