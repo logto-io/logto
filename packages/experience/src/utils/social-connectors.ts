@@ -23,24 +23,44 @@ export const storeState = (state: string, connectorId: string) => {
   sessionStorage.setItem(`${storageStateKeyPrefix}:${connectorId}`, state);
 };
 
+const deleteState = (connectorId: string) => {
+  const storageKey = `${storageStateKeyPrefix}:${connectorId}`;
+  sessionStorage.removeItem(storageKey);
+  console.log('deleteState', storageKey);
+};
+
 /**
  * Validate the state parameter from the social connector callback. If the state parameter is empty
  * or invalid, it will return false.
  */
-export const validateState = (state: string | undefined, connectorId: string): boolean => {
+export const validateState = (
+  state: string | undefined,
+  connectorId: string,
+  keepState = false
+): boolean => {
   if (!state) {
     return false;
   }
 
   const storageKey = `${storageStateKeyPrefix}:${connectorId}`;
   const stateStorage = sessionStorage.getItem(storageKey);
-  sessionStorage.removeItem(storageKey);
+
+  if (!keepState) {
+    deleteState(connectorId);
+  }
+
+  console.log('storageKey', storageKey);
+  console.log('stateStorage', stateStorage);
 
   return stateStorage === state;
 };
 
-export const validateGoogleOneTapCsrfToken = (csrfToken?: string): boolean =>
-  Boolean(csrfToken && getCookie(GoogleConnector.oneTapParams.csrfToken) === csrfToken);
+export const validateGoogleOneTapCsrfToken = (csrfToken?: string): boolean => {
+  const csrfTokenFromCookie = getCookie(GoogleConnector.oneTapParams.csrfToken);
+  console.log('csrfTokenFromCookie', csrfTokenFromCookie);
+  console.log('csrfToken', csrfToken);
+  return Boolean(csrfToken && csrfTokenFromCookie === csrfToken);
+};
 
 /**
  * Native Social Redirect Utility Methods

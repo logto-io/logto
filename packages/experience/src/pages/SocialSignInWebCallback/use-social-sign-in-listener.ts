@@ -28,7 +28,7 @@ import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-err
 import useToast from '@/hooks/use-toast';
 import { socialAccountNotExistErrorDataGuard } from '@/types/guard';
 import { parseQueryParameters } from '@/utils';
-import { validateState } from '@/utils/social-connectors';
+import { validateGoogleOneTapCsrfToken, validateState } from '@/utils/social-connectors';
 
 const useSocialSignInListener = (connectorId: string) => {
   const [loading, setLoading] = useState(true);
@@ -126,8 +126,10 @@ const useSocialSignInListener = (connectorId: string) => {
       // Check for external Google One Tap credentials from extraParams
       const { [ExtraParamsKey.GoogleOneTapCredential]: externalCredential, ...rest } = data;
       if (externalCredential && typeof externalCredential === 'string') {
+        console.log('before init interaction...');
         // External Google One Tap flow - initialize interaction for external scenario
         await asyncInitInteraction(InteractionEvent.SignIn);
+        console.log('after init interaction...');
       }
 
       const [error, result] = await verifySocial(connectorId, {
@@ -204,17 +206,70 @@ const useSocialSignInListener = (connectorId: string) => {
     // Experience built-in Google One Tap always contains the `csrfToken`
     const isExternalCredential = isGoogleOneTap && !rest[GoogleConnector.oneTapParams.csrfToken];
 
+    console.log('isGoogleOneTap', isGoogleOneTap);
+    console.log('isExternalCredential', isExternalCredential);
+    console.log('rest', JSON.stringify(rest, null, 2));
+    console.log('csrfToken', rest[GoogleConnector.oneTapParams.csrfToken]);
+    console.log('state', state);
+    console.log(
+      'validateGoogleOneTapCsrfToken',
+      validateGoogleOneTapCsrfToken(rest[GoogleConnector.oneTapParams.csrfToken])
+    );
+
     // Cleanup the search parameters once it's consumed
     setSearchParameters({}, { replace: true });
 
-    if (!(validateState(state, connectorId) || (isGoogleOneTap && !isExternalCredential))) {
+    console.log('isGoogleOneTap && isExternalCredential', isGoogleOneTap && isExternalCredential);
+    console.log(
+      'isGoogleOneTap && !isExternalCredential && validateGoogleOneTapCsrfToken(rest[GoogleConnector.oneTapParams.csrfToken])',
+      isGoogleOneTap &&
+        !isExternalCredential &&
+        validateGoogleOneTapCsrfToken(rest[GoogleConnector.oneTapParams.csrfToken])
+    );
+    console.log(
+      '(!isGoogleOneTap && validateState(state, connectorId))',
+      !isGoogleOneTap && validateState(state, connectorId, true)
+    );
+
+    // Validate authentication parameters based on different scenarios:
+    // 1. Normal social login: requires valid state parameter for CSRF protection
+    // 2. Google One Tap from Experience app: requires valid CSRF token
+    // 3. Google One Tap from external website: no validation needed (already verified by Google)
+    const isValidAuth =
+      // Case 1: Normal social login (not Google One Tap) - validate state parameter
+      (!isGoogleOneTap && validateState(state, connectorId)) ||
+      // Case 2: Google One Tap from Experience app (has CSRF token) - validate CSRF token
+      (isGoogleOneTap &&
+        !isExternalCredential &&
+        validateGoogleOneTapCsrfToken(rest[GoogleConnector.oneTapParams.csrfToken])) ||
+      // Case 3: Google One Tap from external website (no CSRF token) - always valid
+      (isGoogleOneTap && isExternalCredential);
+
+    console.log('isValidAuth', isValidAuth);
+
+    if (!isValidAuth) {
       setToast(t('error.invalid_connector_auth'));
       navigate('/' + experience.routes.signIn);
       return;
     }
 
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    if (!(verificationIdRef.current || (isGoogleOneTap && !isExternalCredential))) {
+    console.log('verificationIdRef.current', verificationIdRef.current);
+
+    // Validate session based on different scenarios:
+    // 1. Normal social login: requires valid verificationId
+    // 2. Google One Tap from Experience app: requires valid CSRF token
+    // 3. Google One Tap from external website: no validation needed (already verified by Google)
+    const isValidSession =
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+      verificationIdRef.current ||
+      (isGoogleOneTap &&
+        !isExternalCredential &&
+        validateGoogleOneTapCsrfToken(rest[GoogleConnector.oneTapParams.csrfToken])) ||
+      (isGoogleOneTap && isExternalCredential);
+
+    console.log('isValidSession', isValidSession);
+
+    if (!isValidSession) {
       setToast(t('error.invalid_session'));
       navigate('/' + experience.routes.signIn);
       return;
