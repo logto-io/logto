@@ -75,6 +75,7 @@ const general = {
   or: 'Or',
   reset: 'Reset',
   generate: 'Generate',
+  manage: 'Manage',
 };
 
 export default Object.freeze(general);
