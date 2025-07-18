@@ -99,6 +99,9 @@ const SignIn = () => {
   const [params] = useSearchParams();
   const { experienceSettings } = useContext(PageContext);
 
+  console.log('experienceSettings', JSON.stringify(experienceSettings, null, 2));
+  console.log('params', params.toString());
+
   if (!signInMode) {
     return <ErrorPage />;
   }

@@ -28,7 +28,7 @@ import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-err
 import useToast from '@/hooks/use-toast';
 import { socialAccountNotExistErrorDataGuard } from '@/types/guard';
 import { parseQueryParameters } from '@/utils';
-import { validateState } from '@/utils/social-connectors';
+import { validateGoogleOneTapCsrfToken, validateState } from '@/utils/social-connectors';
 
 const useSocialSignInListener = (connectorId: string) => {
   const [loading, setLoading] = useState(true);
@@ -204,17 +204,40 @@ const useSocialSignInListener = (connectorId: string) => {
     // Experience built-in Google One Tap always contains the `csrfToken`
     const isExternalCredential = isGoogleOneTap && !rest[GoogleConnector.oneTapParams.csrfToken];
 
+    console.log('isGoogleOneTap', isGoogleOneTap);
+    console.log('isExternalCredential', isExternalCredential);
+    console.log('rest', JSON.stringify(rest, null, 2));
+    console.log('csrfToken', rest[GoogleConnector.oneTapParams.csrfToken]);
+    console.log(
+      'validateGoogleOneTapCsrfToken',
+      validateGoogleOneTapCsrfToken(rest[GoogleConnector.oneTapParams.csrfToken])
+    );
+
     // Cleanup the search parameters once it's consumed
     setSearchParameters({}, { replace: true });
 
-    if (!(validateState(state, connectorId) || (isGoogleOneTap && !isExternalCredential))) {
+    if (
+      !(
+        validateState(state, connectorId) ||
+        (isGoogleOneTap &&
+          !isExternalCredential &&
+          validateGoogleOneTapCsrfToken(rest[GoogleConnector.oneTapParams.csrfToken])) ||
+        (isGoogleOneTap && isExternalCredential)
+      )
+    ) {
       setToast(t('error.invalid_connector_auth'));
       navigate('/' + experience.routes.signIn);
       return;
     }
 
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    if (!(verificationIdRef.current || (isGoogleOneTap && !isExternalCredential))) {
+    if (
+      !verificationIdRef.current &&
+      !(
+        isGoogleOneTap &&
+        !isExternalCredential &&
+        validateGoogleOneTapCsrfToken(rest[GoogleConnector.oneTapParams.csrfToken])
+      )
+    ) {
       setToast(t('error.invalid_session'));
       navigate('/' + experience.routes.signIn);
       return;
