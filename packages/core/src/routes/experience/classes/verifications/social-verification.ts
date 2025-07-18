@@ -156,6 +156,7 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     ctx: WithLogContext,
     tenantContext: TenantContext,
     connectorData: JsonObject,
+    isExternalWebsiteGoogleOneTap = false,
     connectorSessionType: SocialAuthorizationSessionStorageType = 'interactionSession'
   ) {
     const { userInfo, encryptedTokenSet } = await this.verifySocialIdentity(
@@ -416,14 +417,16 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     { connectorId, connectorData }: SocialConnectorPayload,
     ctx: WithLogContext,
     { provider }: TenantContext,
-    connectorSessionType: SocialAuthorizationSessionStorageType
+    connectorSessionType: SocialAuthorizationSessionStorageType,
+    isExternalWebsiteGoogleOneTap = false
   ) {
     const connector = await this.getConnectorData();
 
     // Verify the CSRF token if it's a Google connector and has credential (a Google One Tap verification)
     if (
       connector.metadata.id === GoogleConnector.factoryId &&
-      connectorData[GoogleConnector.oneTapParams.credential]
+      connectorData[GoogleConnector.oneTapParams.credential] &&
+      !isExternalWebsiteGoogleOneTap
     ) {
       const csrfToken = connectorData[GoogleConnector.oneTapParams.csrfToken];
       const value = ctx.cookies.get(GoogleConnector.oneTapParams.csrfToken);

@@ -94,7 +94,7 @@ export default function socialVerificationRoutes<T extends ExperienceInteraction
     }),
     async (ctx, next) => {
       const { connectorId } = ctx.guard.params;
-      const { connectorData, verificationId } = ctx.guard.body;
+      const { connectorData, verificationId, isExternalWebsiteGoogleOneTap } = ctx.guard.body;
       const { verificationAuditLog } = ctx;
       const {
         socials: { getConnector },
@@ -144,7 +144,12 @@ export default function socialVerificationRoutes<T extends ExperienceInteraction
         new RequestError({ code: 'session.verification_session_not_found', status: 404 })
       );
 
-      await socialVerificationRecord.verify(ctx, tenantContext, connectorData);
+      await socialVerificationRecord.verify(
+        ctx,
+        tenantContext,
+        connectorData,
+        isExternalWebsiteGoogleOneTap
+      );
       // Skip captcha for social verification, as it's already verified by the connector
       ctx.experienceInteraction.skipCaptcha();
       await ctx.experienceInteraction.save();
