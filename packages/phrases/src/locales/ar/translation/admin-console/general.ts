@@ -75,6 +75,8 @@ const general = {
   or: 'أو',
   reset: 'إعادة تعيين',
   generate: 'إنشاء',
+  /** UNTRANSLATED */
+  manage: 'Manage',
 };
 
 export default Object.freeze(general);
