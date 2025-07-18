@@ -1,6 +1,12 @@
 import { GoogleConnector } from '@logto/connector-kit';
 import type { RequestErrorBody } from '@logto/schemas';
-import { InteractionEvent, SignInMode, VerificationType, experience } from '@logto/schemas';
+import {
+  ExtraParamsKey,
+  InteractionEvent,
+  SignInMode,
+  VerificationType,
+  experience,
+} from '@logto/schemas';
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -117,8 +123,10 @@ const useSocialSignInListener = (connectorId: string) => {
 
   const verifySocialCallbackData = useCallback(
     async (connectorId: string, data: Record<string, unknown>) => {
-      // When the callback is called from Google One Tap, the interaction event was not set yet.
-      if (data[GoogleConnector.oneTapParams.csrfToken]) {
+      // Check for external Google One Tap credentials from extraParams
+      const { [ExtraParamsKey.GoogleOneTapCredential]: externalCredential, ...rest } = data;
+      if (externalCredential && typeof externalCredential === 'string') {
+        // External Google One Tap flow - initialize interaction for external scenario
         await asyncInitInteraction(InteractionEvent.SignIn);
       }
 
@@ -127,7 +135,13 @@ const useSocialSignInListener = (connectorId: string) => {
         connectorData: {
           // For validation use only
           redirectUri: `${window.location.origin}/callback/${connectorId}`,
-          ...data,
+          // Not using `conditional` here to make type inference work.
+          ...(externalCredential && typeof externalCredential === 'string'
+            ? {
+                [GoogleConnector.oneTapParams.credential]: externalCredential,
+              }
+            : {}),
+          ...rest,
         },
       });
 
@@ -184,20 +198,46 @@ const useSocialSignInListener = (connectorId: string) => {
 
     const { state, ...rest } = parseQueryParameters(searchParameters);
 
-    const isGoogleOneTap = validateGoogleOneTapCsrfToken(
-      rest[GoogleConnector.oneTapParams.csrfToken]
+    // Google One Tap always contains the `credential`
+    const isGoogleOneTap = Boolean(rest[ExtraParamsKey.GoogleOneTapCredential]);
+    // External Google One Tap always contains the `credential` and doesn't contain the `csrfToken`
+    // Experience built-in Google One Tap always contains the `csrfToken`
+    const isExternalCredential = isGoogleOneTap && !rest[GoogleConnector.oneTapParams.csrfToken];
+
+    console.log('isGoogleOneTap', isGoogleOneTap);
+    console.log('isExternalCredential', isExternalCredential);
+    console.log('rest', JSON.stringify(rest, null, 2));
+    console.log('csrfToken', rest[GoogleConnector.oneTapParams.csrfToken]);
+    console.log(
+      'validateGoogleOneTapCsrfToken',
+      validateGoogleOneTapCsrfToken(rest[GoogleConnector.oneTapParams.csrfToken])
     );
 
     // Cleanup the search parameters once it's consumed
     setSearchParameters({}, { replace: true });
 
-    if (!validateState(state, connectorId) && !isGoogleOneTap) {
+    if (
+      !(
+        validateState(state, connectorId) ||
+        (isGoogleOneTap &&
+          !isExternalCredential &&
+          validateGoogleOneTapCsrfToken(rest[GoogleConnector.oneTapParams.csrfToken])) ||
+        (isGoogleOneTap && isExternalCredential)
+      )
+    ) {
       setToast(t('error.invalid_connector_auth'));
       navigate('/' + experience.routes.signIn);
       return;
     }
 
-    if (!verificationIdRef.current && !isGoogleOneTap) {
+    if (
+      !verificationIdRef.current &&
+      !(
+        isGoogleOneTap &&
+        !isExternalCredential &&
+        validateGoogleOneTapCsrfToken(rest[GoogleConnector.oneTapParams.csrfToken])
+      )
+    ) {
       setToast(t('error.invalid_session'));
       navigate('/' + experience.routes.signIn);
       return;
