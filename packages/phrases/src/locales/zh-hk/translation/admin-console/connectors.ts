@@ -60,15 +60,12 @@ const connectors = {
     sync_profile_each_sign_in: '每次登錄時同步',
     sync_profile_tip: '同步用戶的用戶名、頭像等個人資料信息',
     enable_token_storage: {
-      /** UNTRANSLATED */
-      title: 'Store tokens for persistent API access',
-      /** UNTRANSLATED */
+      title: '存儲令牌以持續訪問 API',
       description:
-        'Store access and refresh tokens in the Secret Vault. Allows automated API calls without repeated user consent. Example: let your AI Agent add events to Google Calendar with persistent authorization. <a>Lear how to call third-party APIs</a>',
-      /** UNTRANSLATED */
-      tip: 'Tips: For standard OAuth/OIDC identity provider, the `offline_access` scope must be included to obtain a refresh token, preventing repeated user consent prompts. ',
+        '在 Secret Vault 中存儲訪問和刷新令牌。允許自動 API 調用而無需用戶重複授權。例如：讓你的 AI Agent 在持續授權下向 Google 日曆添加事件。<a>了解如何調用第三方 API</a>',
+      tip: '提示：對於標準的 OAuth/OIDC 身份提供商，必須包含 `offline_access` 範圍才能獲取刷新令牌，避免用戶重複授權提示。',
     },
-    callback_uri: 'Callback URI',
+    callback_uri: '回調 URI',
     callback_uri_description:
       '也稱為重定向 URI，在社交授權後，用戶將被發送回 Logto 的 URI，復制並粘貼到社交提供者的配置頁面中。',
     acs_url: 'Assertion consumer service URL',
@@ -83,6 +80,11 @@ const connectors = {
   drawer_subtitle: '參考以下步驟完善或修改你的連接器設置',
   unknown: '未知連接器',
   standard_connectors: '標準連接器',
+  create_form: {
+    third_party_connectors:
+      '集成第三方提供商以快速社交登錄、社交帳戶鏈接和 API 訪問。<a>了解更多</a>',
+    standard_connectors: '或者，你可以通過標準協議自定義你的社交連接器。',
+  },
 };
 
 export default Object.freeze(connectors);

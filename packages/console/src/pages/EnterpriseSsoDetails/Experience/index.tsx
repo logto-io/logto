@@ -72,7 +72,13 @@ const duplicateConnectorNameErrorCode = 'single_sign_on.duplicate_connector_name
 const dataToFormParser = (data: DataType) => {
   const { branding, connectorName, domains, syncProfile, enableTokenStorage, providerType } = data;
   return {
-    branding,
+    // Fallback to the empty string to avoid expected `isDirty` status.
+    // As input fields will automatically set undefined value to empty string.
+    branding: {
+      displayName: branding.displayName ?? '',
+      logo: branding.logo ?? '',
+      darkLogo: branding.darkLogo ?? '',
+    },
     connectorName,
     domains: domains.map((domain) => ({ value: domain, id: generateStandardShortId() })),
     syncProfile: syncProfile ? SyncProfileMode.EachSignIn : SyncProfileMode.OnlyAtRegister,

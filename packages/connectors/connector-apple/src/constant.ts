@@ -36,7 +36,7 @@ export const defaultMetadata: ConnectorMetadata = {
     },
     {
       key: 'scope',
-      type: ConnectorConfigFormItemType.Text,
+      type: ConnectorConfigFormItemType.MultilineText,
       required: false,
       label: 'Scope',
       placeholder: 'email name',

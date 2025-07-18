@@ -87,6 +87,11 @@ const connectors = {
   drawer_subtitle: 'Follow the instructions to integrate your connector',
   unknown: 'Unknown Connector',
   standard_connectors: 'Standard connectors',
+  create_form: {
+    third_party_connectors:
+      'Integrate third-party providers for quick social sign-in, social account linking, and API access. <a>Learn more</a>',
+    standard_connectors: 'Or you can customize your social connector by a standard protocol.',
+  },
 };
 
 export default Object.freeze(connectors);

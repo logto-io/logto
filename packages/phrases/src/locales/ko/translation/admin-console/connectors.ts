@@ -64,13 +64,10 @@ const connectors = {
     sync_profile_each_sign_in: '로그인할 때마다 동기화',
     sync_profile_tip: '이름과 아바타와 같은 기본적인 사용자 프로필을 동기화해요.',
     enable_token_storage: {
-      /** UNTRANSLATED */
-      title: 'Store tokens for persistent API access',
-      /** UNTRANSLATED */
+      title: '지속적인 API 액세스를 위한 토큰 저장',
       description:
-        'Store access and refresh tokens in the Secret Vault. Allows automated API calls without repeated user consent. Example: let your AI Agent add events to Google Calendar with persistent authorization. <a>Lear how to call third-party APIs</a>',
-      /** UNTRANSLATED */
-      tip: 'Tips: For standard OAuth/OIDC identity provider, the `offline_access` scope must be included to obtain a refresh token, preventing repeated user consent prompts. ',
+        'Secret Vault에 액세스 및 새로 고침 토큰을 저장하세요. 사용자의 반복적인 동의 없이 자동 API 호출을 허용합니다. 예: 지속적인 권한 부여로 여러분의 AI 에이전트가 Google 캘린더에 이벤트를 추가하도록 하세요. <a>타사 API 호출 방법 알아보기</a>',
+      tip: '팁: 표준 OAuth/OIDC 식별 제공자의 경우 refresh token을 얻기 위해 `offline_access` 범위를 포함해야 하며, 사용자에게 반복적인 동의 요청이 발생하지 않습니다.',
     },
     callback_uri: 'Callback URI',
     callback_uri_description:
@@ -87,6 +84,11 @@ const connectors = {
   drawer_subtitle: '연동하기 위해 가이드를 따라 주세요.',
   unknown: '알 수 없는 연동',
   standard_connectors: '기본 커넥터',
+  create_form: {
+    third_party_connectors:
+      '타사 공급자를 통합하여 빠른 소셜 로그인, 소셜 계정 연결, API 액세스를 제공합니다. <a>자세히 알아보기</a>',
+    standard_connectors: '또는 표준 프로토콜로 사용자의 소셜 커넥터를 맞춤화할 수 있습니다.',
+  },
 };
 
 export default Object.freeze(connectors);
