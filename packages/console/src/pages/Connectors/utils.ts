@@ -27,6 +27,7 @@ export const getConnectorGroups = <
           target: item.target,
           type: item.type,
           isStandard: item.isStandard,
+          isTokenStorageSupported: item.isTokenStorageSupported,
           connectors: [item],
         },
       ];
