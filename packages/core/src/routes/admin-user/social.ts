@@ -4,7 +4,7 @@ import {
   identityGuard,
   identitiesGuard,
   userProfileResponseGuard,
-  desensitizedSocialTokenSetSecretGuard,
+  getUserSocialIdentityResponseGuard,
 } from '@logto/schemas';
 import { conditional, has, yes } from '@silverhand/essentials';
 import { object, record, string, unknown } from 'zod';
@@ -167,10 +167,7 @@ export default function adminUserSocialRoutes<T extends ManagementApiRouter>(
         query: object({
           includeTokenSecret: string().optional(),
         }),
-        response: object({
-          identity: identityGuard,
-          tokenSecret: desensitizedSocialTokenSetSecretGuard.optional(),
-        }),
+        response: getUserSocialIdentityResponseGuard,
         status: [200, 404],
       }),
       async (ctx, next) => {

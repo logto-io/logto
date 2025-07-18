@@ -141,6 +141,34 @@ class SecretQueries extends SchemaQueries<SecretKeys, CreateSecret, Secret> {
           and ${secretEnterpriseSsoConnectorRelations.fields.ssoConnectorId} = ${ssoConnectorId}
     `);
   }
+
+  public async findSocialTokenSetSecretsByUserId(userId: string) {
+    return this.pool.many<SocialTokenSetSecret>(sql`
+      select ${sql.join(Object.values(secrets.fields), sql`, `)},
+          ${secretSocialConnectorRelations.fields.connectorId},
+          ${secretSocialConnectorRelations.fields.identityId},
+          ${secretSocialConnectorRelations.fields.target}
+        from ${secrets.table}
+        join ${secretSocialConnectorRelations.table}
+          on ${secrets.fields.id} = ${secretSocialConnectorRelations.fields.secretId}
+        where ${secrets.fields.userId} = ${userId}
+          and ${secrets.fields.type} = ${SecretType.FederatedTokenSet}
+    `);
+  }
+
+  public async findEnterpriseSsoTokenSetSecretsByUserId(userId: string) {
+    return this.pool.many<EnterpriseSsoTokenSetSecret>(sql`
+      select ${sql.join(Object.values(secrets.fields), sql`, `)},
+          ${secretEnterpriseSsoConnectorRelations.fields.ssoConnectorId},
+          ${secretEnterpriseSsoConnectorRelations.fields.identityId},
+          ${secretEnterpriseSsoConnectorRelations.fields.issuer}
+        from ${secrets.table}
+        join ${secretEnterpriseSsoConnectorRelations.table}
+          on ${secrets.fields.id} = ${secretEnterpriseSsoConnectorRelations.fields.secretId}
+        where ${secrets.fields.userId} = ${userId}
+          and ${secrets.fields.type} = ${SecretType.FederatedTokenSet}
+    `);
+  }
 }
 
 export default SecretQueries;

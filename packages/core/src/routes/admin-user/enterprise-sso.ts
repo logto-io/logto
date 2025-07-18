@@ -1,4 +1,8 @@
-import { desensitizedEnterpriseSsoTokenSetSecretGuard, UserSsoIdentities } from '@logto/schemas';
+import {
+  type GetUserAllIdentitiesResponse,
+  getUserAllIdentitiesResponseGuard,
+  getUserSsoIdentityResponseGuard,
+} from '@logto/schemas';
 import { conditional, yes } from '@silverhand/essentials';
 import { object, string } from 'zod';
 
@@ -12,6 +16,16 @@ import { type RouterInitArgs, type ManagementApiRouter } from '../types.js';
 export default function adminUserEnterpriseSsoRoutes<T extends ManagementApiRouter>(
   ...[router, tenant]: RouterInitArgs<T>
 ) {
+  const {
+    queries: {
+      users: { findUserById },
+      secrets: secretsQueries,
+    },
+    libraries: {
+      users: { findUserSsoIdentities },
+    },
+  } = tenant;
+
   router.get(
     '/users/:userId/sso-identities/:ssoConnectorId',
     koaGuard({
@@ -22,10 +36,7 @@ export default function adminUserEnterpriseSsoRoutes<T extends ManagementApiRout
       query: object({
         includeTokenSecret: string().optional(),
       }),
-      response: object({
-        ssoIdentity: UserSsoIdentities.guard,
-        tokenSecret: desensitizedEnterpriseSsoTokenSetSecretGuard.optional(),
-      }),
+      response: getUserSsoIdentityResponseGuard,
       status: [200, 404],
     }),
     async (ctx, next) => {
@@ -33,16 +44,6 @@ export default function adminUserEnterpriseSsoRoutes<T extends ManagementApiRout
         params: { userId, ssoConnectorId },
         query: { includeTokenSecret },
       } = ctx.guard;
-
-      const {
-        queries: {
-          users: { findUserById },
-          secrets: secretsQueries,
-        },
-        libraries: {
-          users: { findUserSsoIdentities },
-        },
-      } = tenant;
 
       // Check if the user exists
       await findUserById(userId);
@@ -76,6 +77,84 @@ export default function adminUserEnterpriseSsoRoutes<T extends ManagementApiRout
       ctx.body = {
         ssoIdentity,
         tokenSecret: conditional(tokenSetSecret && desensitizeTokenSetSecret(tokenSetSecret)),
+      };
+
+      return next();
+    }
+  );
+
+  router.get(
+    '/users/:userId/all-identities',
+    koaGuard({
+      params: object({ userId: string() }),
+      query: object({
+        includeTokenSecret: string().optional(),
+      }),
+      response: getUserAllIdentitiesResponseGuard,
+      status: [200, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId },
+        query: { includeTokenSecret },
+      } = ctx.guard;
+
+      // Throws 404 if user not exist
+      const user = await findUserById(userId);
+
+      const socialIdentities: GetUserAllIdentitiesResponse['socialIdentities'] = Object.entries(
+        user.identities
+      ).map(([target, identity]) => ({
+        target,
+        identity,
+      }));
+
+      const rawSsoIdentities = await findUserSsoIdentities(userId);
+      const ssoIdentities: GetUserAllIdentitiesResponse['ssoIdentities'] = rawSsoIdentities.map(
+        (ssoIdentity) => ({
+          ssoConnectorId: ssoIdentity.ssoConnectorId,
+          ssoIdentity,
+        })
+      );
+
+      if (!includeTokenSecret) {
+        ctx.body = {
+          socialIdentities,
+          ssoIdentities,
+        };
+        return next();
+      }
+
+      const [socialTokenSecrets, enterpriseSsoTokenSecrets] = await Promise.all([
+        secretsQueries.findSocialTokenSetSecretsByUserId(userId),
+        secretsQueries.findEnterpriseSsoTokenSetSecretsByUserId(userId),
+      ]);
+
+      const socialSecretMap = new Map(socialTokenSecrets.map((secret) => [secret.target, secret]));
+      const socialIdentitiesWithTokenSecret: GetUserAllIdentitiesResponse['socialIdentities'] =
+        socialIdentities.map((socialIdentity) => {
+          const secret = socialSecretMap.get(socialIdentity.target);
+          return {
+            ...socialIdentity,
+            tokenSecret: conditional(secret && desensitizeTokenSetSecret(secret)),
+          };
+        });
+
+      const enterpriseSsoSecretMap = new Map(
+        enterpriseSsoTokenSecrets.map((secret) => [secret.ssoConnectorId, secret])
+      );
+      const ssoIdentitiesWithTokenSecret: GetUserAllIdentitiesResponse['ssoIdentities'] =
+        ssoIdentities.map((ssoIdentity) => {
+          const secret = enterpriseSsoSecretMap.get(ssoIdentity.ssoConnectorId);
+          return {
+            ...ssoIdentity,
+            tokenSecret: conditional(secret && desensitizeTokenSetSecret(secret)),
+          };
+        });
+
+      ctx.body = {
+        socialIdentities: socialIdentitiesWithTokenSecret,
+        ssoIdentities: ssoIdentitiesWithTokenSecret,
       };
 
       return next();
