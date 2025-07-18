@@ -54,7 +54,8 @@ export const createSocialAuthorizationUrl = async (
 export const verifySocialIdentity = async (
   { connectorId, connectorData }: SocialConnectorPayload,
   ctx: WithLogContext,
-  { provider, libraries }: TenantContext
+  { provider, libraries }: TenantContext,
+  isExternalWebsiteGoogleOneTap = false
 ): Promise<SocialUserInfo> => {
   const {
     socials: { getUserInfo, getConnector },
@@ -69,7 +70,8 @@ export const verifySocialIdentity = async (
   // verification)
   if (
     connector.metadata.id === GoogleConnector.factoryId &&
-    connectorData[GoogleConnector.oneTapParams.credential]
+    connectorData[GoogleConnector.oneTapParams.credential] &&
+    !isExternalWebsiteGoogleOneTap
   ) {
     const csrfToken = connectorData[GoogleConnector.oneTapParams.csrfToken];
     const value = ctx.cookies.get(GoogleConnector.oneTapParams.csrfToken);
