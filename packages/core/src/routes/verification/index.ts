@@ -223,6 +223,7 @@ export default function verificationRoutes<T extends UserRouter>(
         })
         .extend({
           verificationRecordId: z.string(),
+          isExternalWebsiteGoogleOneTap: z.boolean().optional().default(false),
         }),
       response: z.object({
         verificationRecordId: z.string(),
@@ -230,7 +231,7 @@ export default function verificationRoutes<T extends UserRouter>(
       status: [200, 400, 404, 422],
     }),
     async (ctx, next) => {
-      const { connectorData, verificationRecordId } = ctx.guard.body;
+      const { connectorData, verificationRecordId, isExternalWebsiteGoogleOneTap } = ctx.guard.body;
 
       const socialVerification = await buildVerificationRecordByIdAndType({
         type: VerificationType.Social,
@@ -239,7 +240,13 @@ export default function verificationRoutes<T extends UserRouter>(
         libraries,
       });
 
-      await socialVerification.verify(ctx, tenantContext, connectorData, 'verificationRecord');
+      await socialVerification.verify(
+        ctx,
+        tenantContext,
+        connectorData,
+        isExternalWebsiteGoogleOneTap,
+        'verificationRecord'
+      );
 
       await updateVerificationRecord(socialVerification, queries);
 
