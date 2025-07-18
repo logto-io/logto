@@ -72,12 +72,10 @@ const useValidateField = () => {
       const { type, name, label, required, config } = field;
       const labelWithI18nFallback = getFieldLabel(name, label);
       const generalInvalidMessage = t('error.general_invalid', { types: [labelWithI18nFallback] });
+      const generalRequireMessage = t('error.general_required', { types: [labelWithI18nFallback] });
 
       if (!value) {
-        return !required || t('error.general_required', { types: [labelWithI18nFallback] });
-      }
-      if (type === CustomProfileFieldType.Address) {
-        return !required || isValidAddressField(value, config) || generalInvalidMessage;
+        return !required || generalRequireMessage;
       }
 
       if (type === CustomProfileFieldType.Date) {

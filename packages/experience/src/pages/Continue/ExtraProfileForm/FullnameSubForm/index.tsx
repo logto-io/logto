@@ -50,7 +50,7 @@ const FullnameSubForm = ({ field }: Props) => {
                 className={styles.inputField}
                 label={t(`profile.${key}`)}
                 value={value ?? ''}
-                isDanger={hasFullnameError}
+                isDanger={!!errors[key]}
                 onBlur={onBlur}
                 onChange={onChange}
               />
