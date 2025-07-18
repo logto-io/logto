@@ -390,7 +390,6 @@
       "post": {
         "operationId": "GenerateTotpSecret",
         "summary": "Generate a TOTP secret",
-        "tags": ["Dev feature"],
         "description": "Generate a TOTP secret for the user.",
         "responses": {
           "200": {
@@ -403,7 +402,6 @@
       "post": {
         "operationId": "GenerateMyAccountBackupCodes",
         "summary": "Generate backup codes",
-        "tags": ["Dev feature"],
         "description": "Generate backup codes for the user.",
         "responses": {
           "200": {
@@ -416,7 +414,6 @@
       "get": {
         "operationId": "GetBackupCodes",
         "summary": "Get backup codes",
-        "tags": ["Dev feature"],
         "description": "Get all backup codes for the user with their usage status. Requires identity verification.",
         "responses": {
           "200": {
