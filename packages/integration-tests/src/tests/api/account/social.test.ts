@@ -7,7 +7,7 @@ import {
   mockSocialConnectorTarget,
 } from '#src/__mocks__/connectors-mock.js';
 import { enableAllAccountCenterFields } from '#src/api/account-center.js';
-import { getUserIdentityTokenSetRecord } from '#src/api/admin-user.js';
+import { getUserIdentity } from '#src/api/admin-user.js';
 import { updateConnectorConfig } from '#src/api/connector.js';
 import { deleteIdentity, getUserInfo, updateIdentities } from '#src/api/my-account.js';
 import {
@@ -184,12 +184,8 @@ describe('my-account (social)', () => {
 
         // TODO: Remove this once we have token storage enabled
         if (isDevFeaturesEnabled) {
-          const tokenSetRecord = await getUserIdentityTokenSetRecord(
-            user.id,
-            mockSocialConnectorTarget
-          );
-          expect(tokenSetRecord).not.toBeNull();
-          expect(tokenSetRecord.metadata.scope).toBe(mockTokenResponse.scope);
+          const { tokenSecret } = await getUserIdentity(user.id, mockSocialConnectorTarget);
+          expect(tokenSecret?.metadata.scope).toBe(mockTokenResponse.scope);
         }
 
         await deleteDefaultTenantUser(user.id);

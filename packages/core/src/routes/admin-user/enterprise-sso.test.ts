@@ -92,7 +92,7 @@ describe('Enterprise SSO Routes', () => {
     expect(response.status).toBe(404);
   });
 
-  it('should return the enterprise SSO identity properly', async () => {
+  it('should return the enterprise SSO identity only', async () => {
     mockFindUserSsoIdentities.mockResolvedValueOnce([mockSsoIdentity]);
     mockFindEnterpriseSsoTokenSetSecret.mockResolvedValueOnce(null);
 
@@ -102,13 +102,31 @@ describe('Enterprise SSO Routes', () => {
 
     expect(mockFindUserById).toHaveBeenCalledWith(mockUser.id);
     expect(mockFindUserSsoIdentities).toHaveBeenCalledWith(mockUser.id);
+    expect(mockFindEnterpriseSsoTokenSetSecret).not.toBeCalled();
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      ssoIdentity: mockSsoIdentity,
+    });
+  });
+
+  it('should return the enterprise SSO identity properly only if token secret is not found', async () => {
+    mockFindUserSsoIdentities.mockResolvedValueOnce([mockSsoIdentity]);
+    mockFindEnterpriseSsoTokenSetSecret.mockResolvedValueOnce(null);
+
+    const response = await userRequest.get(
+      `/users/${mockUser.id}/sso-identities/${mockSsoConnectorId}?includeTokenSecret=true`
+    );
+
+    expect(mockFindUserById).toHaveBeenCalledWith(mockUser.id);
+    expect(mockFindUserSsoIdentities).toHaveBeenCalledWith(mockUser.id);
     expect(mockFindEnterpriseSsoTokenSetSecret).toHaveBeenCalledWith(
       mockUser.id,
       mockSsoConnectorId
     );
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
-      enterpriseSsoIdentity: mockSsoIdentity,
+      ssoIdentity: mockSsoIdentity,
     });
   });
 
@@ -117,7 +135,7 @@ describe('Enterprise SSO Routes', () => {
     mockFindUserSsoIdentities.mockResolvedValueOnce([mockSsoIdentity]);
 
     const response = await userRequest.get(
-      `/users/${mockUser.id}/sso-identities/${mockSsoConnectorId}`
+      `/users/${mockUser.id}/sso-identities/${mockSsoConnectorId}?includeTokenSecret=true`
     );
     expect(mockFindUserById).toHaveBeenCalledWith(mockUser.id);
     expect(mockFindUserSsoIdentities).toHaveBeenCalledWith(mockUser.id);
@@ -127,8 +145,8 @@ describe('Enterprise SSO Routes', () => {
     );
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
-      enterpriseSsoIdentity: mockSsoIdentity,
-      tokenSet: desensitizeTokenSetSecret(mockTokenSetSecret),
+      ssoIdentity: mockSsoIdentity,
+      tokenSecret: desensitizeTokenSetSecret(mockTokenSetSecret),
     });
   });
 });

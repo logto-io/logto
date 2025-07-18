@@ -67,15 +67,15 @@ describe('enterprise sso sign-in and sign-up', () => {
     expect(primaryEmail).toBe(email);
 
     if (isDevFeaturesEnabled) {
-      const { enterpriseSsoIdentity, tokenSet } = await getUserSsoIdentity(
+      const { ssoIdentity, tokenSecret } = await getUserSsoIdentity(
         userId,
         ssoConnectorApi.firstConnectorId!
       );
 
-      expect(enterpriseSsoIdentity.identityId).toBe(enterpriseSsoIdentityId);
-      expect(tokenSet?.identityId).toBe(enterpriseSsoIdentityId);
-      expect(tokenSet?.ssoConnectorId).toBe(ssoConnectorApi.firstConnectorId);
-      expect(tokenSet?.metadata.scope).toBe(mockTokenResponse.scope);
+      expect(ssoIdentity.identityId).toBe(enterpriseSsoIdentityId);
+      expect(tokenSecret?.identityId).toBe(enterpriseSsoIdentityId);
+      expect(tokenSecret?.ssoConnectorId).toBe(ssoConnectorApi.firstConnectorId);
+      expect(tokenSecret?.metadata.scope).toBe(mockTokenResponse.scope);
     }
 
     await signInWithEnterpriseSso(ssoConnectorApi.firstConnectorId!, {
@@ -94,8 +94,8 @@ describe('enterprise sso sign-in and sign-up', () => {
 
     // Should update the token set
     if (isDevFeaturesEnabled) {
-      const { tokenSet } = await getUserSsoIdentity(userId, ssoConnectorApi.firstConnectorId!);
-      expect(tokenSet?.metadata.scope).toBe('openid profile email');
+      const { tokenSecret } = await getUserSsoIdentity(userId, ssoConnectorApi.firstConnectorId!);
+      expect(tokenSecret?.metadata.scope).toBe('openid profile email');
     }
 
     await deleteUser(userId);
