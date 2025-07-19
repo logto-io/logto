@@ -5,5 +5,6 @@ export const experienceRoutes = {
   identification: `${prefix}/identification`,
   profile: `${prefix}/profile`,
   mfa: `${prefix}/profile/mfa`,
+  interaction: `${prefix}/interaction`,
   prefix,
 };
