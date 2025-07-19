@@ -17,8 +17,8 @@ import { initExperienceClient, logoutClient, processSession } from '../client.js
 import { expectRejects } from '../index.js';
 
 import {
-  successFullyCreateSocialVerification,
-  successFullyVerifySocialAuthorization,
+  successfullyCreateSocialVerification,
+  successfullyVerifySocialAuthorization,
 } from './social-verification.js';
 import {
   successfullySendVerificationCode,
@@ -180,14 +180,14 @@ export const signInWithSocial = async (
 
   const client = await initExperienceClient();
 
-  const { verificationId } = await successFullyCreateSocialVerification(client, connectorId, {
+  const { verificationId } = await successfullyCreateSocialVerification(client, connectorId, {
     redirectUri,
     state,
   });
 
   const { id, ...rest } = socialUserInfo;
 
-  await successFullyVerifySocialAuthorization(client, connectorId, {
+  await successfullyVerifySocialAuthorization(client, connectorId, {
     verificationId,
     connectorData: {
       state,

@@ -11,8 +11,8 @@ import {
   setSocialConnector,
 } from '#src/helpers/connector.js';
 import {
-  successFullyCreateSocialVerification,
-  successFullyVerifySocialAuthorization,
+  successfullyCreateSocialVerification,
+  successfullyVerifySocialAuthorization,
 } from '#src/helpers/experience/social-verification.js';
 import {
   successfullySendVerificationCode,
@@ -118,12 +118,12 @@ describe('should reject the email registration if the email domain is enabled fo
         interactionEvent: InteractionEvent.Register,
       });
 
-      const { verificationId } = await successFullyCreateSocialVerification(client, connectorId, {
+      const { verificationId } = await successfullyCreateSocialVerification(client, connectorId, {
         redirectUri,
         state,
       });
 
-      await successFullyVerifySocialAuthorization(client, connectorId, {
+      await successfullyVerifySocialAuthorization(client, connectorId, {
         verificationId,
         connectorData: {
           state,
@@ -151,12 +151,12 @@ describe('should reject the email registration if the email domain is enabled fo
         interactionEvent: InteractionEvent.Register,
       });
 
-      const { verificationId } = await successFullyCreateSocialVerification(client, connectorId, {
+      const { verificationId } = await successfullyCreateSocialVerification(client, connectorId, {
         redirectUri,
         state,
       });
 
-      await successFullyVerifySocialAuthorization(client, connectorId, {
+      await successfullyVerifySocialAuthorization(client, connectorId, {
         verificationId,
         connectorData: {
           state,
