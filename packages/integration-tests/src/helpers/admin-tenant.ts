@@ -22,8 +22,8 @@ import { initClient, initExperienceClient, processSession } from '#src/helpers/c
 import { generatePassword, generateUsername } from '#src/utils.js';
 
 import {
-  successFullyCreateSocialVerification,
-  successFullyVerifySocialAuthorization,
+  successfullyCreateSocialVerification,
+  successfullyVerifySocialAuthorization,
 } from './experience/social-verification.js';
 
 export const resourceDefault = getManagementApiResourceIndicator(defaultTenantId);
@@ -135,14 +135,14 @@ export const signUpWithSocialAndSignInToClient = async (
     scopes: [PredefinedScope.All],
   });
 
-  const { verificationId } = await successFullyCreateSocialVerification(client, connectorId, {
+  const { verificationId } = await successfullyCreateSocialVerification(client, connectorId, {
     redirectUri,
     state,
   });
 
   const { id, ...rest } = socialUserInfo;
 
-  await successFullyVerifySocialAuthorization(client, connectorId, {
+  await successfullyVerifySocialAuthorization(client, connectorId, {
     verificationId,
     connectorData: {
       state,

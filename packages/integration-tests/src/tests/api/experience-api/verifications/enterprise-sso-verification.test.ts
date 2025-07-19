@@ -7,10 +7,10 @@ import { ExperienceClient } from '#src/client/experience/index.js';
 import { initExperienceClient } from '#src/helpers/client.js';
 import { clearConnectorsByTypes, setSocialConnector } from '#src/helpers/connector.js';
 import {
-  successFullyCreateEnterpriseSsoVerification,
-  successFullyVerifyEnterpriseSsoAuthorization,
+  successfullyCreateEnterpriseSsoVerification,
+  successfullyVerifyEnterpriseSsoAuthorization,
 } from '#src/helpers/experience/enterprise-sso-verification.js';
-import { successFullyCreateSocialVerification } from '#src/helpers/experience/social-verification.js';
+import { successfullyCreateSocialVerification } from '#src/helpers/experience/social-verification.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { generateUserId, randomString } from '#src/utils.js';
 
@@ -105,7 +105,7 @@ describe('enterprise sso verification', () => {
       const client = await initExperienceClient();
       const connectorId = ssoConnectorApi.firstConnectorId!;
 
-      await successFullyCreateEnterpriseSsoVerification(client, connectorId, {
+      await successfullyCreateEnterpriseSsoVerification(client, connectorId, {
         redirectUri,
         state,
       });
@@ -128,7 +128,7 @@ describe('enterprise sso verification', () => {
       const client = await initExperienceClient();
       const connectorId = socialConnectorIdMap.get(mockSocialConnectorId)!;
 
-      const { verificationId } = await successFullyCreateSocialVerification(client, connectorId, {
+      const { verificationId } = await successfullyCreateSocialVerification(client, connectorId, {
         redirectUri,
         state,
       });
@@ -151,7 +151,7 @@ describe('enterprise sso verification', () => {
       const client = await initExperienceClient();
       const connectorId = ssoConnectorApi.firstConnectorId!;
 
-      const { verificationId } = await successFullyCreateEnterpriseSsoVerification(
+      const { verificationId } = await successfullyCreateEnterpriseSsoVerification(
         client,
         connectorId,
         {
@@ -178,7 +178,7 @@ describe('enterprise sso verification', () => {
       const client = await initExperienceClient();
       const connectorId = ssoConnectorApi.firstConnectorId!;
 
-      const { verificationId } = await successFullyCreateEnterpriseSsoVerification(
+      const { verificationId } = await successfullyCreateEnterpriseSsoVerification(
         client,
         connectorId,
         {
@@ -190,7 +190,7 @@ describe('enterprise sso verification', () => {
       // Pass the sub value as a callback connectorData to mock the SsoConnector.getUserInfo return value.
       const fakeSsoIdentitySub = generateUserId();
 
-      await successFullyVerifyEnterpriseSsoAuthorization(client, connectorId, {
+      await successfullyVerifyEnterpriseSsoAuthorization(client, connectorId, {
         verificationId,
         connectorData: {
           authorizationCode,

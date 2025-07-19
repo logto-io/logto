@@ -9,8 +9,8 @@ import {
   setSocialConnector,
 } from '#src/helpers/connector.js';
 import {
-  successFullyCreateSocialVerification,
-  successFullyVerifySocialAuthorization,
+  successfullyCreateSocialVerification,
+  successfullyVerifySocialAuthorization,
 } from '#src/helpers/experience/social-verification.js';
 import { expectRejects } from '#src/helpers/index.js';
 
@@ -96,7 +96,7 @@ describe('social verification', () => {
       const client = await initExperienceClient();
       const connectorId = connectorIdMap.get(mockSocialConnectorId)!;
 
-      await successFullyCreateSocialVerification(client, connectorId, {
+      await successfullyCreateSocialVerification(client, connectorId, {
         redirectUri,
         state,
       });
@@ -108,7 +108,7 @@ describe('social verification', () => {
       const client = await initExperienceClient();
       const connectorId = connectorIdMap.get(mockSocialConnectorId)!;
 
-      await successFullyCreateSocialVerification(client, connectorId, {
+      await successfullyCreateSocialVerification(client, connectorId, {
         redirectUri,
         state,
       });
@@ -181,12 +181,12 @@ describe('social verification', () => {
       const client = await initExperienceClient();
       const connectorId = connectorIdMap.get(mockSocialConnectorId)!;
 
-      const { verificationId } = await successFullyCreateSocialVerification(client, connectorId, {
+      const { verificationId } = await successfullyCreateSocialVerification(client, connectorId, {
         redirectUri,
         state,
       });
 
-      await successFullyVerifySocialAuthorization(client, connectorId, {
+      await successfullyVerifySocialAuthorization(client, connectorId, {
         verificationId,
         connectorData: {
           code: authorizationCode,

@@ -1,6 +1,6 @@
 import { type ExperienceClient } from '#src/client/experience/index.js';
 
-export const successFullyCreateEnterpriseSsoVerification = async (
+export const successfullyCreateEnterpriseSsoVerification = async (
   client: ExperienceClient,
   connectorId: string,
   payload: {
@@ -22,7 +22,7 @@ export const successFullyCreateEnterpriseSsoVerification = async (
   };
 };
 
-export const successFullyVerifyEnterpriseSsoAuthorization = async (
+export const successfullyVerifyEnterpriseSsoAuthorization = async (
   client: ExperienceClient,
   connectorId: string,
   payload: {

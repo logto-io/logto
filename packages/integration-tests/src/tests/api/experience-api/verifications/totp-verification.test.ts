@@ -5,7 +5,7 @@ import { createUserMfaVerification } from '#src/api/admin-user.js';
 import { initExperienceClient } from '#src/helpers/client.js';
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
 import {
-  successFullyCreateNewTotpSecret,
+  successfullyCreateNewTotpSecret,
   successfullyVerifyTotp,
 } from '#src/helpers/experience/totp-verification.js';
 import { expectRejects } from '#src/helpers/index.js';
@@ -40,7 +40,7 @@ describe('TOTP verification APIs', () => {
 
       await identifyUserWithUsernamePassword(client, username, password);
 
-      await successFullyCreateNewTotpSecret(client);
+      await successfullyCreateNewTotpSecret(client);
     });
   });
 
@@ -81,7 +81,7 @@ describe('TOTP verification APIs', () => {
 
       await identifyUserWithUsernamePassword(client, username, password);
 
-      const { verificationId } = await successFullyCreateNewTotpSecret(client);
+      const { verificationId } = await successfullyCreateNewTotpSecret(client);
 
       await expectRejects(client.verifyTotp({ code: '1234', verificationId }), {
         code: 'session.mfa.invalid_totp_code',
@@ -94,7 +94,7 @@ describe('TOTP verification APIs', () => {
 
       await identifyUserWithUsernamePassword(client, username, password);
 
-      const { verificationId, secret } = await successFullyCreateNewTotpSecret(client);
+      const { verificationId, secret } = await successfullyCreateNewTotpSecret(client);
       const code = authenticator.generate(secret);
 
       await successfullyVerifyTotp(client, { code, verificationId });

@@ -15,13 +15,13 @@ import {
   setSocialConnector,
 } from '#src/helpers/connector.js';
 import {
-  successFullyCreateEnterpriseSsoVerification,
-  successFullyVerifyEnterpriseSsoAuthorization,
+  successfullyCreateEnterpriseSsoVerification,
+  successfullyVerifyEnterpriseSsoAuthorization,
 } from '#src/helpers/experience/enterprise-sso-verification.js';
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
 import {
-  successFullyCreateSocialVerification,
-  successFullyVerifySocialAuthorization,
+  successfullyCreateSocialVerification,
+  successfullyVerifySocialAuthorization,
 } from '#src/helpers/experience/social-verification.js';
 import {
   successfullySendVerificationCode,
@@ -341,13 +341,13 @@ devFeatureTest.describe('GET /experience/interaction', () => {
 
     const client = await initExperienceClient({ interactionEvent: InteractionEvent.Register });
 
-    const { verificationId } = await successFullyCreateSocialVerification(
+    const { verificationId } = await successfullyCreateSocialVerification(
       client,
       socialConnectorId,
       { redirectUri, state }
     );
 
-    await successFullyVerifySocialAuthorization(client, socialConnectorId, {
+    await successfullyVerifySocialAuthorization(client, socialConnectorId, {
       verificationId,
       connectorData: { code: authorizationCode, userId: '12345', email, name: 'John Doe' },
     });
@@ -384,7 +384,7 @@ devFeatureTest.describe('GET /experience/interaction', () => {
     const client = await initExperienceClient({ interactionEvent: InteractionEvent.Register });
 
     // Create enterprise SSO verification
-    const { verificationId } = await successFullyCreateEnterpriseSsoVerification(
+    const { verificationId } = await successfullyCreateEnterpriseSsoVerification(
       client,
       connectorId,
       { redirectUri, state }
@@ -392,7 +392,7 @@ devFeatureTest.describe('GET /experience/interaction', () => {
 
     const fakeSsoIdentitySub = generateUserId();
     // Verify enterprise SSO authorization with basic format (similar to verification test)
-    await successFullyVerifyEnterpriseSsoAuthorization(client, connectorId, {
+    await successfullyVerifyEnterpriseSsoAuthorization(client, connectorId, {
       verificationId,
       connectorData: {
         code,

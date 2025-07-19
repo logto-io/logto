@@ -1,6 +1,6 @@
 import { type ExperienceClient } from '#src/client/experience/index.js';
 
-export const successFullyCreateSocialVerification = async (
+export const successfullyCreateSocialVerification = async (
   client: ExperienceClient,
   connectorId: string,
   payload: {
@@ -22,7 +22,7 @@ export const successFullyCreateSocialVerification = async (
   };
 };
 
-export const successFullyVerifySocialAuthorization = async (
+export const successfullyVerifySocialAuthorization = async (
   client: ExperienceClient,
   connectorId: string,
   payload: {

@@ -15,8 +15,8 @@ import {
 } from '#src/helpers/connector.js';
 import { signInWithSocial } from '#src/helpers/experience/index.js';
 import {
-  successFullyCreateSocialVerification,
-  successFullyVerifySocialAuthorization,
+  successfullyCreateSocialVerification,
+  successfullyVerifySocialAuthorization,
 } from '#src/helpers/experience/social-verification.js';
 import {
   successfullySendVerificationCode,
@@ -66,12 +66,12 @@ describe('fulfill missing username ', () => {
     const connectorId = connectorIdMap.get(mockSocialConnectorId)!;
 
     const client = await initExperienceClient();
-    const { verificationId } = await successFullyCreateSocialVerification(client, connectorId, {
+    const { verificationId } = await successfullyCreateSocialVerification(client, connectorId, {
       redirectUri,
       state,
     });
 
-    await successFullyVerifySocialAuthorization(client, connectorId, {
+    await successfullyVerifySocialAuthorization(client, connectorId, {
       verificationId,
       connectorData: {
         state,
@@ -133,12 +133,12 @@ describe('fulfill missing username ', () => {
     const connectorId = connectorIdMap.get(mockSocialConnectorId)!;
 
     const client = await initExperienceClient();
-    const { verificationId } = await successFullyCreateSocialVerification(client, connectorId, {
+    const { verificationId } = await successfullyCreateSocialVerification(client, connectorId, {
       redirectUri,
       state,
     });
 
-    await successFullyVerifySocialAuthorization(client, connectorId, {
+    await successfullyVerifySocialAuthorization(client, connectorId, {
       verificationId,
       connectorData: {
         state,
@@ -200,12 +200,12 @@ describe('fulfill missing username ', () => {
 
     const client = await initExperienceClient();
 
-    const { verificationId } = await successFullyCreateSocialVerification(client, connectorId, {
+    const { verificationId } = await successfullyCreateSocialVerification(client, connectorId, {
       redirectUri,
       state,
     });
 
-    await successFullyVerifySocialAuthorization(client, connectorId, {
+    await successfullyVerifySocialAuthorization(client, connectorId, {
       verificationId,
       connectorData: {
         state,
