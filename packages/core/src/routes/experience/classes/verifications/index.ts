@@ -108,6 +108,36 @@ export const verificationRecordDataGuard = z.discriminatedUnion('type', [
   oneTimeTokenVerificationRecordDataGuard,
 ]);
 
+export const publicVerificationRecordDataGuard = z.discriminatedUnion('type', [
+  passwordVerificationRecordDataGuard,
+  emailCodeVerificationRecordDataGuard,
+  phoneCodeVerificationRecordDataGuard,
+  socialVerificationRecordDataGuard.omit({
+    encryptedTokenSet: true,
+    connectorSession: true,
+  }),
+  enterpriseSsoVerificationRecordDataGuard.omit({
+    encryptedTokenSet: true,
+  }),
+  totpVerificationRecordDataGuard.omit({
+    secret: true,
+  }),
+  backupCodeVerificationRecordDataGuard.omit({
+    code: true,
+    backupCodes: true,
+  }),
+  webAuthnVerificationRecordDataGuard.omit({
+    registrationInfo: true,
+    registrationChallenge: true,
+    authenticationChallenge: true,
+  }),
+  newPasswordIdentityVerificationRecordDataGuard.omit({
+    passwordEncrypted: true,
+    passwordEncryptionMethod: true,
+  }),
+  oneTimeTokenVerificationRecordDataGuard,
+]);
+
 /**
  * The factory method to build a new `VerificationRecord` instance based on the provided `VerificationRecordData`.
  */

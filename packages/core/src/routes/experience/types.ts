@@ -1,4 +1,9 @@
-import { type SocialUserInfo, socialUserInfoGuard, type ToZodObject } from '@logto/connector-kit';
+import {
+  type SocialUserInfo,
+  socialUserInfoGuard,
+  type TemplateType,
+  type ToZodObject,
+} from '@logto/connector-kit';
 import {
   type CreateUser,
   encryptedTokenSetGuard,
@@ -9,6 +14,8 @@ import {
   Users,
   UserSsoIdentities,
   type UserSsoIdentity,
+  type VerificationIdentifier,
+  type VerificationType,
 } from '@logto/schemas';
 import type { Provider } from 'oidc-provider';
 import { z } from 'zod';
@@ -25,6 +32,7 @@ import {
   type VerificationRecord,
   type VerificationRecordMap,
   verificationRecordDataGuard,
+  publicVerificationRecordDataGuard,
 } from './classes/verifications/index.js';
 import { type SocialConnectorTokenSetSecret } from './classes/verifications/social-verification.js';
 import { type WithExperienceInteractionHooksContext } from './middleware/koa-experience-interaction-hooks.js';
@@ -171,3 +179,69 @@ export const interactionStorageGuard = z.object({
     })
     .optional(),
 }) satisfies ToZodObject<InteractionStorage>;
+
+export type PublicInteractionStorageData = {
+  interactionEvent: InteractionEvent;
+  userId?: string;
+  profile?: Partial<
+    Pick<
+      User,
+      'avatar' | 'name' | 'username' | 'primaryEmail' | 'primaryPhone' | 'profile' | 'customData'
+    >
+  > & {
+    socialIdentity?: {
+      target: string;
+      userInfo: SocialUserInfo;
+    };
+    enterpriseSsoIdentity?: {
+      identityId: string;
+      ssoConnectorId: string;
+      issuer: string;
+      detail: Record<string, unknown>;
+    };
+    syncedEnterpriseSsoIdentity?: {
+      identityId: string;
+      issuer: string;
+      detail: Record<string, unknown>;
+    };
+    jitOrganizationIds?: string[];
+  };
+  verificationRecords?: Array<{
+    id: string;
+    type: VerificationType;
+    verified?: boolean;
+    identifier?: VerificationIdentifier;
+    userId?: string;
+    connectorId?: string;
+    templateType?: TemplateType;
+    socialUserInfo?: SocialUserInfo;
+    enterpriseSsoUserInfo?: Record<string, unknown>;
+    oneTimeTokenContext?: Record<string, unknown>;
+  }>;
+  captcha?: {
+    verified: boolean;
+    skipped: boolean;
+  };
+};
+
+/**
+ * Public interaction response type that excludes sensitive information
+ * but includes data needed for client-side logic and form pre-population
+ */
+export const publicInteractionStorageGuard = z.object({
+  interactionEvent: z.nativeEnum(InteractionEvent),
+  userId: z.string().optional(),
+  profile: interactionProfileGuard.omit({
+    passwordEncrypted: true,
+    passwordEncryptionMethod: true,
+    socialConnectorTokenSetSecret: true,
+    enterpriseSsoConnectorTokenSetSecret: true,
+  }),
+  verificationRecords: publicVerificationRecordDataGuard.array().optional(),
+  captcha: z
+    .object({
+      verified: z.boolean(),
+      skipped: z.boolean(),
+    })
+    .optional(),
+}) satisfies ToZodObject<PublicInteractionStorageData>;

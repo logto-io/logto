@@ -13,10 +13,7 @@ import {
 import MockClient from '#src/client/index.js';
 
 import { experienceRoutes } from './const.js';
-
-type RedirectResponse = {
-  redirectTo: string;
-};
+import type { PublicInteractionStorageData, RedirectResponse } from './types.js';
 
 export class ExperienceClient extends MockClient {
   public async identifyUser(payload: IdentificationApiPayload = {}) {
@@ -235,5 +232,13 @@ export class ExperienceClient extends MockClient {
         json: payload,
       })
       .json<{ verificationId: string }>();
+  }
+
+  public async getInteractionData() {
+    return this.api
+      .get(experienceRoutes.interaction, {
+        headers: { cookie: this.interactionCookie },
+      })
+      .json<PublicInteractionStorageData>();
   }
 }
