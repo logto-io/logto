@@ -14,7 +14,10 @@
           {
             "name": "includeExecutionStats",
             "in": "query",
-            "description": "Whether to include execution stats in the response."
+            "description": "Whether to include execution stats in the response.",
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "responses": {
@@ -69,7 +72,10 @@
           {
             "name": "includeExecutionStats",
             "in": "query",
-            "description": "Whether to include execution stats in the response."
+            "description": "Whether to include execution stats in the response.",
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "responses": {
@@ -133,7 +139,10 @@
           {
             "name": "logKey",
             "in": "query",
-            "description": "The log key to filter logs."
+            "description": "The log key to filter logs.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {

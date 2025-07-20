@@ -262,12 +262,14 @@ export class ProfileValidator {
     assertThat(
       conflictedCustomDataKeys.length === 0,
       new RequestError({
-        code: 'custom_profile_fields.name_conflict_custom_data',
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, no-restricted-syntax, @typescript-eslint/no-explicit-any
+        code: 'custom_profile_fields.name_conflict_custom_data' as any,
         name: conflictedCustomDataKeys.join(', '),
       })
     );
 
     const { name, avatar } = nameAndAvatarGuard.parse(values);
+
     const profile = userProfileGuard.parse(values);
 
     const builtInProfileKeys = new Set<string>(builtInCustomProfileFieldKeys);

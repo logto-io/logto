@@ -201,6 +201,21 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
       const id = await generateUserId();
 
+      const passwordData = await (async () => {
+        if (password) {
+          return encryptUserPassword(password);
+        }
+
+        if (passwordDigest) {
+          return {
+            passwordEncrypted: passwordDigest,
+            passwordEncryptionMethod: passwordAlgorithm,
+          };
+        }
+
+        return {};
+      })();
+
       const [user] = await insertUser(
         {
           id,
@@ -210,13 +225,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
           name,
           avatar,
           ...conditional(customData && { customData }),
-          ...conditional(password && (await encryptUserPassword(password))),
-          ...conditional(
-            passwordDigest && {
-              passwordEncrypted: passwordDigest,
-              passwordEncryptionMethod: passwordAlgorithm,
-            }
-          ),
+          ...passwordData,
           ...conditional(profile && { profile }),
         },
         []

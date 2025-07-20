@@ -179,6 +179,7 @@ export type InteractionStorage = {
     verified: boolean;
     skipped: boolean;
   };
+  encryptedClientSecret?: string;
 };
 
 export const interactionStorageGuard = z.object({
@@ -193,6 +194,7 @@ export const interactionStorageGuard = z.object({
       skipped: z.boolean(),
     })
     .optional(),
+  encryptedClientSecret: z.string().optional(),
 }) satisfies ToZodObject<InteractionStorage>;
 
 export type SanitizedInteractionStorageData = {

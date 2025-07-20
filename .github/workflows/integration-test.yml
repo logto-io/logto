@@ -1,9 +1,6 @@
 name: Integration Test
 
 on:
-  push:
-    branches:
-      - master
   pull_request:
 
 concurrency:
@@ -52,16 +49,3 @@ jobs:
           test-target: ${{ matrix.target }}
           pnpm-version: 10
           node-version: ^22.14.0
-
-  # Automatically rerun the workflow since the integration tests are moody
-  # From this genius: https://github.com/orgs/community/discussions/67654#discussioncomment-8038649
-  rerun-on-failure:
-    needs: run-logto
-    if: failure() && fromJSON(github.run_attempt) < 3
-    runs-on: ubuntu-22.04
-    steps:
-      - env:
-          GH_REPO: ${{ github.repository }}
-          GH_TOKEN: ${{ github.token }}
-          GH_DEBUG: api
-        run: gh workflow run rerun.yml -r ${{ github.head_ref || github.ref_name }} -F run_id=${{ github.run_id }}

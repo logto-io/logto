@@ -85,13 +85,13 @@ const {
   removeUnavailableSocialConnectorTargets,
   getFullSignInExperience,
   findCaptchaPublicConfig,
-} = createSignInExperienceLibrary(
+} = createSignInExperienceLibrary({
   queries,
   connectorLibrary,
-  mockSsoConnectorLibrary,
+  ssoConnectorLibrary: mockSsoConnectorLibrary,
   cloudConnection,
-  new WellKnownCache('foo', new TtlCache())
-);
+  wellKnownCache: new WellKnownCache('foo', new TtlCache()),
+});
 
 beforeEach(() => {
   jest.clearAllMocks();

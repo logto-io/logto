@@ -9,6 +9,7 @@ import {
 import { oidcApi } from '#src/api/api.js';
 import {
   createApplication,
+  deleteApplication,
   getApplicationRoles,
   assignRolesToApplication,
   deleteRoleFromApplication,
@@ -129,6 +130,12 @@ describe('admin console application management (roles)', () => {
 
   // This case tests GET operation on applications and filter by `types` parameter and `search` parameter.
   it('search applications with specified keyword, types and other parameters', async () => {
+    // Clean up any existing applications that might match our search pattern
+    const existingApps = await getApplications(
+      [ApplicationType.SPA, ApplicationType.MachineToMachine],
+      { search: '%002%' }
+    );
+    await Promise.all(existingApps.map(async (app) => deleteApplication(app.id)));
     await createApplication('test-m2m-app-001', ApplicationType.MachineToMachine);
     const m2mApp002 = await createApplication('test-m2m-app-002', ApplicationType.MachineToMachine);
     await createApplication('test-spa-app-001', ApplicationType.SPA);

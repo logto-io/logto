@@ -75,7 +75,10 @@
           {
             "in": "query",
             "name": "includeTokenSecret",
-            "description": "Whether to include the token secret in the response. Defaults to false. Token storage must be supported and enabled by the connector to return the token secret."
+            "description": "Whether to include the token secret in the response. Defaults to false. Token storage must be supported and enabled by the connector to return the token secret.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {

@@ -22,7 +22,8 @@ describe('basic sentinel', () => {
   });
 
   it('should block a non-existing identifier after 5 failed attempts in 1 hour', async () => {
-    const experience = new ExpectExperience(await browser.newPage(), { forgotPassword: true });
+    const page = await browser.newPage();
+    const experience = new ExpectExperience(page, { forgotPassword: true });
     // Open the demo app and navigate to the sign-in page
     await experience.startWith(demoAppUrl, 'sign-in');
     await experience.toFillInput('identifier', 'nonexisting_username_9', { submit: true });
@@ -49,7 +50,8 @@ describe('basic sentinel', () => {
   });
 
   it('should block failed attempts from both password and verification code', async () => {
-    const experience = new ExpectExperience(await browser.newPage(), { forgotPassword: true });
+    const page = await browser.newPage();
+    const experience = new ExpectExperience(page, { forgotPassword: true });
     // Open the demo app and navigate to the sign-in page
     await experience.startWith(demoAppUrl, 'sign-in');
     await experience.toFillInput('identifier', 'test_basic_sentinel_7@foo.com', { submit: true });

@@ -12,7 +12,11 @@
           {
             "in": "query",
             "name": "includeSsoIdentities",
-            "description": "If it's provided with a truthy value (`true`, `1`, `yes`), each user in the response will include a `ssoIdentities` property containing a list of SSO identities associated with the user."
+            "description": "If it's provided with a truthy value (`true`, `1`, `yes`), each user in the response will include a `ssoIdentities` property containing a list of SSO identities associated with the user.",
+            "schema": {
+              "type": "string",
+              "enum": ["true", "1", "yes", "false", "0", "no"]
+            }
           }
         ],
         "responses": {

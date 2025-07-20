@@ -125,16 +125,14 @@ export const filterAndParseMissingResourceScopes = async ({
           // Although the "missingResourceScopes" from the prompt details are already filtered,
           // there may be duplicated scopes from either resources or organization resources.
           const filteredScopes = isThirdPartyApp
-            ? await filterResourceScopesForTheThirdPartyApplication(
+            ? await filterResourceScopesForTheThirdPartyApplication({
                 libraries,
                 applicationId,
-                resourceIndicator,
+                indicator: resourceIndicator,
                 scopes,
-                {
-                  includeOrganizationResourceScopes: Boolean(organizationId),
-                  includeResourceScopes: !organizationId,
-                }
-              )
+                includeOrganizationResourceScopes: Boolean(organizationId),
+                includeResourceScopes: !organizationId,
+              })
             : scopes;
 
           return [

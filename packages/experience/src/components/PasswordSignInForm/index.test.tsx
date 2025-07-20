@@ -39,6 +39,14 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedNavigate,
 }));
 
+jest.mock('@/hooks/use-password-interceptor', () => ({
+  __esModule: true,
+  default: jest.fn(() => ({
+    processPassword: jest.fn(async (password: string) => password),
+    handleSecretManagement: jest.fn(),
+  })),
+}));
+
 describe('UsernamePasswordSignInForm', () => {
   afterEach(() => {
     jest.clearAllMocks();

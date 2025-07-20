@@ -1,4 +1,4 @@
-import { jsonObjectGuard } from '@logto/schemas';
+import { jsonObjectGuard, type JsonObject } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import type { Context } from 'koa';
 import type { InteractionResults, PromptDetail, Provider } from 'oidc-provider';
@@ -92,7 +92,8 @@ export const getMissingScopes = (prompt: PromptDetail) => {
  */
 const saveInteractionLastSubmissionToSession = async (
   queries: Queries,
-  interactionDetails: Awaited<ReturnType<Provider['interactionDetails']>>
+  interactionDetails: Awaited<ReturnType<Provider['interactionDetails']>>,
+  provider: Provider
 ) => {
   const { session, lastSubmission } = interactionDetails;
 
@@ -101,14 +102,34 @@ const saveInteractionLastSubmissionToSession = async (
   }
 
   const { oidcSessionExtensions } = queries;
-  const result = jsonObjectGuard.safeParse(lastSubmission);
+  const submissionResult = jsonObjectGuard.safeParse(lastSubmission);
 
-  if (result.success) {
-    // Persist the last submission to the session extensions
+  if (submissionResult.success) {
+    // For experience API, check if the submission contains the experience interaction data
+    const hasExperienceData = Boolean('_experienceInteractionData' in submissionResult.data);
+
+    // Type guard for experience interaction data
+    const getExperienceData = (data: JsonObject): JsonObject => {
+      if (
+        '_experienceInteractionData' in data &&
+        typeof data._experienceInteractionData === 'object' &&
+        data._experienceInteractionData !== null
+      ) {
+        const experienceDataResult = jsonObjectGuard.safeParse(data._experienceInteractionData);
+        return experienceDataResult.success ? experienceDataResult.data : data;
+      }
+      return data;
+    };
+
+    const dataToSave = hasExperienceData
+      ? getExperienceData(submissionResult.data)
+      : submissionResult.data;
+
+    // Persist the submission to the session extensions
     await oidcSessionExtensions.insert({
       sessionUid: session.uid,
       accountId: session.accountId,
-      lastSubmission: result.data,
+      lastSubmission: dataToSave,
     });
   }
 };
@@ -146,7 +167,7 @@ export const consent = async ({
 
   await Promise.all([
     saveUserFirstConsentedAppId(queries, accountId, String(client_id)),
-    saveInteractionLastSubmissionToSession(queries, interactionDetails),
+    saveInteractionLastSubmissionToSession(queries, interactionDetails, provider),
   ]);
 
   // Fulfill missing scopes

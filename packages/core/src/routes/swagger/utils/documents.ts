@@ -70,6 +70,14 @@ const additionalTags = Object.freeze(
   )
 );
 
+/** Additional tags for experience API that cannot be inferred from the path. */
+const experienceAdditionalTags = Object.freeze([
+  {
+    name: 'Experience secret',
+    description: 'Experience API endpoints for encrypted secret management',
+  },
+]);
+
 export const buildManagementApiBaseDocument = (
   pathMap: Map<string, OpenAPIV3.PathItemObject>,
   tags: Set<string>,
@@ -165,7 +173,7 @@ export const buildExperienceApiBaseDocument = (
       customParameters()
     ),
   },
-  tags: [...tags].map((tag) => ({ name: tag })),
+  tags: [...Array.from(tags).map((tag) => ({ name: tag })), ...experienceAdditionalTags],
 });
 
 const userApiIdentifiableEntityNames = Object.freeze(['profile', 'verification', 'connector']);
@@ -225,7 +233,7 @@ export const buildUserApiBaseDocument = (
 export const getSupplementDocuments = async (
   directory = 'routes',
   option?: FindSupplementFilesOptions
-) => {
+): Promise<Array<DeepPartial<OpenAPIV3.Document>>> => {
   // Find supplemental documents
   const routesDirectory = await findUp(directory, {
     type: 'directory',
@@ -236,12 +244,13 @@ export const getSupplementDocuments = async (
   const supplementPaths = await findSupplementFiles(routesDirectory, option);
 
   const allSupplementDocuments = await Promise.all(
-    supplementPaths.map(async (path) =>
-      removeUnnecessaryOperations(
-        // eslint-disable-next-line no-restricted-syntax -- trust the type here as we'll validate it later
-        JSON.parse(await fs.readFile(path, 'utf8')) as DeepPartial<OpenAPIV3.Document>
-      )
-    )
+    supplementPaths.map(async (path) => {
+      const content = await fs.readFile(path, 'utf8');
+      const parsed: unknown = JSON.parse(content);
+      // We trust the JSON structure since these are internal OpenAPI documents
+      // eslint-disable-next-line no-restricted-syntax
+      return removeUnnecessaryOperations(parsed as DeepPartial<OpenAPIV3.Document>);
+    })
   );
 
   // Filter out supplement documents that are for dev features when dev features are disabled.
@@ -258,11 +267,30 @@ export const assembleSwaggerDocument = <ContextT extends IRouterParamContext>(
   supplementDocuments: Array<DeepPartial<OpenAPIV3.Document>>,
   baseDocument: OpenAPIV3.Document,
   ctx: ContextT
-) => {
+): OpenAPIV3.Document => {
   const data = supplementDocuments.reduce<OpenAPIV3.Document>(
     (document, supplement) =>
       deepmerge<OpenAPIV3.Document, DeepPartial<OpenAPIV3.Document>>(document, supplement, {
-        arrayMerge: mergeParameters,
+        arrayMerge: (target, source, options): unknown[] => {
+          // If the array is a parameter array (contains objects with 'name' property), use mergeParameters
+          if (
+            target.length > 0 &&
+            typeof target[0] === 'object' &&
+            target[0] !== null &&
+            'name' in target[0]
+          ) {
+            return mergeParameters(target, source);
+          }
+          // For other arrays (like 'required' arrays), use unique merge to avoid duplicates
+          if (
+            target.every((item) => typeof item === 'string') &&
+            source.every((item: unknown) => typeof item === 'string')
+          ) {
+            return [...new Set([...target, ...source])];
+          }
+          // Default to deepmerge's default array merge
+          return deepmerge(target, source);
+        },
       }),
     baseDocument
   );

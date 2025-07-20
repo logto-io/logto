@@ -92,14 +92,14 @@ export default class Tenant implements TenantContext {
       cloudConnection,
       redisCache
     ),
-    public readonly libraries = new Libraries(
-      id,
+    public readonly libraries = new Libraries({
+      tenantId: id,
       queries,
       connectors,
       cloudConnection,
       logtoConfigs,
-      subscription
-    ),
+      subscription,
+    }),
     public readonly sentinel = new BasicSentinel(envSet.pool, queries)
   ) {
     const isAdminTenant = id === adminTenantId;
@@ -122,14 +122,14 @@ export default class Tenant implements TenantContext {
     app.use(koaSecurityHeaders(mountedApps, id));
 
     // Mount OIDC
-    const provider = initOidc(
+    const provider = initOidc({
       envSet,
       queries,
       libraries,
       logtoConfigs,
       cloudConnection,
-      subscription
-    );
+      subscription,
+    });
     app.use(mount('/oidc', provider.app));
 
     const tenantContext: TenantContext = {

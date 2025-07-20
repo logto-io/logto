@@ -76,8 +76,11 @@ export const findSupplementFiles = async (
 ) => {
   const result: string[] = [];
 
-  for (const file of await fs.readdir(directory)) {
-    const stats = await fs.stat(path.join(directory, file));
+  const files = await fs.readdir(directory);
+
+  for (const file of files) {
+    const filePath = path.join(directory, file);
+    const stats = await fs.stat(filePath);
 
     if (
       // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
@@ -88,7 +91,12 @@ export const findSupplementFiles = async (
     }
 
     if (stats.isDirectory()) {
-      result.push(...(await findSupplementFiles(path.join(directory, file))));
+      // When recursing, don't pass the includeDirectories option
+      // as we've already filtered at the top level
+      const recursiveOptions = option?.excludeDirectories
+        ? { excludeDirectories: option.excludeDirectories }
+        : undefined;
+      result.push(...(await findSupplementFiles(path.join(directory, file), recursiveOptions)));
     } else if (file.endsWith('.openapi.json')) {
       result.push(path.join(directory, file));
     }
@@ -300,7 +308,7 @@ export const removeUnnecessaryOperations = (
   return document;
 };
 
-export const shouldThrow = () => !EnvSet.values.isProduction || EnvSet.values.isIntegrationTest;
+export const shouldThrow = () => !EnvSet.values.isProduction && !EnvSet.values.isIntegrationTest;
 
 /**
  * Remove all other properties when "$ref" is present in an object. Supplemental documents may

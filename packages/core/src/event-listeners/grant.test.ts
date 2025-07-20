@@ -23,13 +23,14 @@ const entities = {
 
 const baseCallArgs = { applicationId, sessionId, userId };
 
-const testGrantListener = (
-  parameters: { grant_type: string } & Record<string, unknown>,
-  body: Record<string, string>,
-  expectLogKey: LogKey,
-  expectLogTokenTypes: token.TokenType[],
-  expectError?: Error
-) => {
+const testGrantListener = (options: {
+  parameters: { grant_type: string } & Record<string, unknown>;
+  body: Record<string, string>;
+  expectLogKey: LogKey;
+  expectLogTokenTypes: token.TokenType[];
+  expectError?: Error;
+}) => {
+  const { parameters, body, expectLogKey, expectLogTokenTypes, expectError } = options;
   const ctx = {
     ...createContextWithRouteParameters(),
     createLog: log.createLog,
@@ -55,56 +56,64 @@ describe('grantSuccessListener', () => {
   });
 
   it('should log type ExchangeTokenBy when grant type is authorization_code', () => {
-    testGrantListener(
-      { grant_type: 'authorization_code', code: 'codeValue' },
-      {
+    testGrantListener({
+      parameters: { grant_type: 'authorization_code', code: 'codeValue' },
+      body: {
         access_token: 'newAccessTokenValue',
         refresh_token: 'newRefreshTokenValue',
         id_token: 'newIdToken',
       },
-      'ExchangeTokenBy.AuthorizationCode',
-      [token.TokenType.AccessToken, token.TokenType.RefreshToken, token.TokenType.IdToken]
-    );
+      expectLogKey: 'ExchangeTokenBy.AuthorizationCode',
+      expectLogTokenTypes: [
+        token.TokenType.AccessToken,
+        token.TokenType.RefreshToken,
+        token.TokenType.IdToken,
+      ],
+    });
   });
 
   it('should log type ExchangeTokenBy when grant type is refresh_code', () => {
-    testGrantListener(
-      { grant_type: 'refresh_token', refresh_token: 'refreshTokenValue' },
-      {
+    testGrantListener({
+      parameters: { grant_type: 'refresh_token', refresh_token: 'refreshTokenValue' },
+      body: {
         access_token: 'newAccessTokenValue',
         refresh_token: 'newRefreshTokenValue',
         id_token: 'newIdToken',
       },
-      'ExchangeTokenBy.RefreshToken',
-      [token.TokenType.AccessToken, token.TokenType.RefreshToken, token.TokenType.IdToken]
-    );
+      expectLogKey: 'ExchangeTokenBy.RefreshToken',
+      expectLogTokenTypes: [
+        token.TokenType.AccessToken,
+        token.TokenType.RefreshToken,
+        token.TokenType.IdToken,
+      ],
+    });
   });
 
   test('issued field should not contain "idToken" when there is no issued idToken', () => {
-    testGrantListener(
-      { grant_type: 'refresh_token', refresh_token: 'refreshTokenValue' },
-      { access_token: 'newAccessTokenValue', refresh_token: 'newRefreshTokenValue' },
-      'ExchangeTokenBy.RefreshToken',
-      [token.TokenType.AccessToken, token.TokenType.RefreshToken]
-    );
+    testGrantListener({
+      parameters: { grant_type: 'refresh_token', refresh_token: 'refreshTokenValue' },
+      body: { access_token: 'newAccessTokenValue', refresh_token: 'newRefreshTokenValue' },
+      expectLogKey: 'ExchangeTokenBy.RefreshToken',
+      expectLogTokenTypes: [token.TokenType.AccessToken, token.TokenType.RefreshToken],
+    });
   });
 
   it('should log type ExchangeTokenBy when grant type is client_credentials', () => {
-    testGrantListener(
-      { grant_type: 'client_credentials' },
-      { access_token: 'newAccessTokenValue' },
-      'ExchangeTokenBy.ClientCredentials',
-      [token.TokenType.AccessToken]
-    );
+    testGrantListener({
+      parameters: { grant_type: 'client_credentials' },
+      body: { access_token: 'newAccessTokenValue' },
+      expectLogKey: 'ExchangeTokenBy.ClientCredentials',
+      expectLogTokenTypes: [token.TokenType.AccessToken],
+    });
   });
 
   it('should log type ExchangeTokenBy when grant type is unknown', () => {
-    testGrantListener(
-      { grant_type: 'foo' },
-      { access_token: 'newAccessTokenValue' },
-      'ExchangeTokenBy.Unknown',
-      [token.TokenType.AccessToken]
-    );
+    testGrantListener({
+      parameters: { grant_type: 'foo' },
+      body: { access_token: 'newAccessTokenValue' },
+      expectLogKey: 'ExchangeTokenBy.Unknown',
+      expectLogTokenTypes: [token.TokenType.AccessToken],
+    });
   });
 });
 
@@ -116,27 +125,31 @@ describe('grantErrorListener', () => {
   });
 
   it('should log type ExchangeTokenBy when error occurred', () => {
-    testGrantListener(
-      { grant_type: 'authorization_code', code: 'codeValue' },
-      {
+    testGrantListener({
+      parameters: { grant_type: 'authorization_code', code: 'codeValue' },
+      body: {
         access_token: 'newAccessTokenValue',
         refresh_token: 'newRefreshTokenValue',
         id_token: 'newIdToken',
       },
-      'ExchangeTokenBy.AuthorizationCode',
-      [token.TokenType.AccessToken, token.TokenType.RefreshToken, token.TokenType.IdToken],
-      new Error(errorMessage)
-    );
+      expectLogKey: 'ExchangeTokenBy.AuthorizationCode',
+      expectLogTokenTypes: [
+        token.TokenType.AccessToken,
+        token.TokenType.RefreshToken,
+        token.TokenType.IdToken,
+      ],
+      expectError: new Error(errorMessage),
+    });
   });
 
   it('should log unknown grant when error occurred', () => {
-    testGrantListener(
-      { grant_type: 'foo', code: 'codeValue' },
-      { access_token: 'newAccessTokenValue' },
-      'ExchangeTokenBy.Unknown',
-      [token.TokenType.AccessToken],
-      new Error(errorMessage)
-    );
+    testGrantListener({
+      parameters: { grant_type: 'foo', code: 'codeValue' },
+      body: { access_token: 'newAccessTokenValue' },
+      expectLogKey: 'ExchangeTokenBy.Unknown',
+      expectLogTokenTypes: [token.TokenType.AccessToken],
+      expectError: new Error(errorMessage),
+    });
   });
 });
 

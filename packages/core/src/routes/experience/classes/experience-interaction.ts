@@ -63,6 +63,9 @@ export default class ExperienceInteraction {
     skipped: false,
   };
 
+  /** The encrypted client secret for zero-knowledge encryption. */
+  private encryptedClientSecret?: string;
+
   /** The interaction event for the current interaction. */
   #interactionEvent: InteractionEvent;
 
@@ -122,6 +125,7 @@ export default class ExperienceInteraction {
         verified: false,
         skipped: false,
       },
+      encryptedClientSecret,
     } = result.data;
 
     this.#interactionEvent = interactionEvent;
@@ -129,6 +133,7 @@ export default class ExperienceInteraction {
     this.profile = new Profile(libraries, queries, profile, interactionContext);
     this.mfa = new Mfa(libraries, queries, mfa, interactionContext);
     this.captcha = captcha;
+    this.encryptedClientSecret = encryptedClientSecret;
 
     for (const record of verificationRecords) {
       const instance = buildVerificationRecord(libraries, queries, record);
@@ -586,7 +591,7 @@ export default class ExperienceInteraction {
 
   /** Convert the current interaction to JSON, so that it can be stored as the OIDC provider interaction result */
   public toJson(): InteractionStorage {
-    const { interactionEvent, userId, captcha } = this;
+    const { interactionEvent, userId, captcha, encryptedClientSecret } = this;
 
     return {
       interactionEvent,
@@ -595,6 +600,49 @@ export default class ExperienceInteraction {
       mfa: this.mfa.data,
       verificationRecords: this.verificationRecordsArray.map((record) => record.toJson()),
       captcha,
+      encryptedClientSecret,
+    };
+  }
+
+  /**
+   * Set the encrypted client secret for zero-knowledge encryption.
+   */
+  public setEncryptedClientSecret(encryptedClientSecret: string) {
+    this.encryptedClientSecret = encryptedClientSecret;
+  }
+
+  /**
+   * Get the encrypted client secret for zero-knowledge encryption.
+   */
+  public getEncryptedClientSecret() {
+    return this.encryptedClientSecret;
+  }
+
+  /**
+   * Convert the current interaction to JWT customizer interaction context format
+   * for use in JWT customization.
+   */
+  public getJwtCustomizerInteractionContext() {
+    return {
+      interactionEvent: this.interactionEvent,
+      userId: this.userId ?? '',
+      verificationRecords: this.verificationRecordsArray.map((record) => {
+        const baseRecord = {
+          id: record.id,
+          type: record.type,
+          verified: record.isVerified,
+        };
+
+        // Only include identifier for records that have one
+        if ('identifier' in record) {
+          return {
+            ...baseRecord,
+            identifier: record.identifier,
+          };
+        }
+
+        return baseRecord;
+      }),
     };
   }
 

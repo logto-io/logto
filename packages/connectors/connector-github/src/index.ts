@@ -14,7 +14,6 @@ import type {
   CreateConnector,
   GetConnectorConfig,
   GetTokenResponseAndUserInfo,
-  GetAccessTokenByRefreshToken,
 } from '@logto/connector-kit';
 import ky, { HTTPError } from 'ky';
 
@@ -102,37 +101,6 @@ export const getAccessToken = async (config: GithubConfig, codeObject: { code: s
   const { access_token: accessToken } = result.data;
 
   assert(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
-
-  return result.data;
-};
-
-/**
- * {@link https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/refreshing-user-access-tokens#refreshing-a-user-access-token-with-a-refresh-token}
- */
-const _getAccessTokenByRefreshToken = async (config: GithubConfig, refreshToken: string) => {
-  const { clientId: client_id, clientSecret: client_secret } = config;
-
-  const httpResponse = await ky
-    .post(accessTokenEndpoint, {
-      body: new URLSearchParams({
-        client_id,
-        client_secret,
-        refresh_token: refreshToken,
-        grant_type: 'refresh_token',
-      }),
-      timeout: defaultTimeout,
-    })
-    .json();
-
-  const result = accessTokenResponseGuard.safeParse(httpResponse);
-
-  if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-  }
-
-  const { access_token } = result.data;
-
-  assert(access_token, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
 
   return result.data;
 };
@@ -229,25 +197,6 @@ const getUserInfo =
     return _getUserInfo(accessToken);
   };
 
-const getAccessTokenByRefreshToken =
-  (getConfig: GetConnectorConfig): GetAccessTokenByRefreshToken =>
-  async (refreshToken: string) => {
-    const config = await getConfig(defaultMetadata.id);
-    validateConfig(config, githubConfigGuard);
-
-    try {
-      return await _getAccessTokenByRefreshToken(config, refreshToken);
-    } catch (error: unknown) {
-      if (error instanceof HTTPError) {
-        const { body: rawBody } = error.response;
-
-        throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(rawBody));
-      }
-
-      throw error;
-    }
-  };
-
 const createGithubConnector: CreateConnector<SocialConnector> = async ({ getConfig }) => {
   return {
     metadata: defaultMetadata,
@@ -256,7 +205,6 @@ const createGithubConnector: CreateConnector<SocialConnector> = async ({ getConf
     getAuthorizationUri: getAuthorizationUri(getConfig),
     getUserInfo: getUserInfo(getConfig),
     getTokenResponseAndUserInfo: getTokenResponseAndUserInfo(getConfig),
-    getAccessTokenByRefreshToken: getAccessTokenByRefreshToken(getConfig),
   };
 };
 

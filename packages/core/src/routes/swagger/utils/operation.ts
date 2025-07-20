@@ -83,7 +83,7 @@ const buildOperation = (
             description,
             content: {
               'application/json': {
-                schema: response && zodTypeToSwagger(response),
+                schema: response ? zodTypeToSwagger(response) : undefined,
               },
             },
           },

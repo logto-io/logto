@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import assert from 'node:assert';
 
 import { RoleType } from '@logto/schemas';
@@ -477,3 +478,4 @@ describe('organization user APIs', () => {
     });
   });
 });
+/* eslint-enable max-lines */

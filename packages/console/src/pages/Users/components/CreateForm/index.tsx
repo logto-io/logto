@@ -18,6 +18,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 import { generateRandomPassword } from '@/utils/password';
+import { splitPassword } from '@/utils/zero-knowledge-password';
 
 import styles from './index.module.scss';
 
@@ -77,13 +78,15 @@ function CreateForm({ onClose, onCreate }: Props) {
         return;
       }
 
-      const password = generateRandomPassword();
+      const fullPassword = generateRandomPassword();
+
+      const { serverPassword } = await splitPassword(fullPassword);
 
       const { primaryPhone } = data;
 
       const userData = {
         ...data,
-        password,
+        password: serverPassword,
         ...conditional(primaryPhone && { primaryPhone: parsePhoneNumber(primaryPhone) }),
       };
 
@@ -97,7 +100,7 @@ function CreateForm({ onClose, onCreate }: Props) {
 
         setCreatedUserInfo({
           user: createdUser,
-          password,
+          password: fullPassword,
         });
 
         onCreate();

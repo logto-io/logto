@@ -14,6 +14,11 @@ import { expectRejects } from '#src/helpers/index.js';
 import { waitFor } from '#src/utils.js';
 
 describe('one-time tokens API', () => {
+  beforeAll(async () => {
+    // Clear all one-time tokens before running tests
+    const allTokens = await getOneTimeTokens();
+    await Promise.all(allTokens.map(async (token) => deleteOneTimeTokenById(token.id)));
+  });
   it('should create one-time token with default 10 mins expiration time', async () => {
     const email = `foo${generateStandardId()}@bar.com`;
     const oneTimeToken = await createOneTimeToken({
@@ -27,7 +32,7 @@ describe('one-time tokens API', () => {
     expect(oneTimeToken.email).toBe(email);
     expect(oneTimeToken.token.length).toBe(32);
 
-    void deleteOneTimeTokenById(oneTimeToken.id);
+    await deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should create one-time token with custom expiration time', async () => {
@@ -43,7 +48,7 @@ describe('one-time tokens API', () => {
     expect(oneTimeToken.email).toBe(email);
     expect(oneTimeToken.token.length).toBe(32);
 
-    void deleteOneTimeTokenById(oneTimeToken.id);
+    await deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should create one-time token with `applicationIds` and `jitOrganizationIds` configured', async () => {
@@ -62,7 +67,7 @@ describe('one-time tokens API', () => {
     });
     expect(oneTimeToken.token.length).toBe(32);
 
-    void deleteOneTimeTokenById(oneTimeToken.id);
+    await deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should be able to get one-time token by its ID', async () => {
@@ -77,7 +82,7 @@ describe('one-time tokens API', () => {
     const token = await getOneTimeTokenById(oneTimeToken.id);
     expect(token).toEqual(oneTimeToken);
 
-    void deleteOneTimeTokenById(oneTimeToken.id);
+    await deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should throw when getting a non-existent one-time token', async () => {
@@ -115,8 +120,8 @@ describe('one-time tokens API', () => {
       ])
     );
 
-    void deleteOneTimeTokenById(oneTimeToken1.id);
-    void deleteOneTimeTokenById(oneTimeToken2.id);
+    await deleteOneTimeTokenById(oneTimeToken1.id);
+    await deleteOneTimeTokenById(oneTimeToken2.id);
   });
 
   it(`update expired tokens' status to expired when creating new one-time token`, async () => {
@@ -132,8 +137,8 @@ describe('one-time tokens API', () => {
     const reFetchedToken = await getOneTimeTokenById(oneTimeToken.id);
     expect(reFetchedToken.status).toBe(OneTimeTokenStatus.Expired);
 
-    void deleteOneTimeTokenById(oneTimeToken.id);
-    void deleteOneTimeTokenById(newOneTimeToken.id);
+    await deleteOneTimeTokenById(oneTimeToken.id);
+    await deleteOneTimeTokenById(newOneTimeToken.id);
   });
 
   it('should verify one-time token', async () => {
@@ -167,7 +172,7 @@ describe('one-time tokens API', () => {
       }
     );
 
-    void deleteOneTimeTokenById(oneTimeToken.id);
+    await deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should not succeed to verify one-time token with expired token', async () => {
@@ -194,7 +199,7 @@ describe('one-time tokens API', () => {
       }
     );
 
-    void deleteOneTimeTokenById(oneTimeToken.id);
+    await deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should not succeed to verify one-time token wrong email', async () => {
@@ -217,7 +222,7 @@ describe('one-time tokens API', () => {
       }
     );
 
-    void deleteOneTimeTokenById(oneTimeToken.id);
+    await deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should not succeed to verify one-time token wrong token', async () => {
@@ -239,7 +244,7 @@ describe('one-time tokens API', () => {
         status: 404,
       }
     );
-    void deleteOneTimeTokenById(oneTimeToken.id);
+    await deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should throw token_expired error and update token status to expired (token already expired but status is not updated)', async () => {
@@ -262,7 +267,7 @@ describe('one-time tokens API', () => {
     const updatedToken = await getOneTimeTokenById(oneTimeToken.id);
     expect(updatedToken.status).toBe(OneTimeTokenStatus.Expired);
 
-    void deleteOneTimeTokenById(oneTimeToken.id);
+    await deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should be able to revoke a token by updating the status', async () => {
@@ -274,7 +279,7 @@ describe('one-time tokens API', () => {
     const updatedToken = await getOneTimeTokenById(oneTimeToken.id);
     expect(updatedToken.status).toBe(OneTimeTokenStatus.Revoked);
 
-    void deleteOneTimeTokenById(oneTimeToken.id);
+    await deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should throw when trying to re-activate a token', async () => {
@@ -286,7 +291,7 @@ describe('one-time tokens API', () => {
       status: 400,
     });
 
-    void deleteOneTimeTokenById(oneTimeToken.id);
+    await deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should throw when verifying a revoked token', async () => {
@@ -306,7 +311,7 @@ describe('one-time tokens API', () => {
       }
     );
 
-    void deleteOneTimeTokenById(oneTimeToken.id);
+    await deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should throw when trying to delete a non-existent one-time token', async () => {
@@ -330,6 +335,13 @@ describe('one-time tokens API', () => {
 
   it('should be able to batch fetch one-time tokens', async () => {
     const email = `foo${generateStandardId()}@bar.com`;
+
+    // Clean up any existing tokens with this email first
+    const existingTokensResponse = await authedAdminApi.get(
+      `one-time-tokens?email=${encodeURIComponent(email)}`
+    );
+    const existingTokens = await existingTokensResponse.json<Array<{ id: string }>>();
+    await Promise.all(existingTokens.map(async (token) => deleteOneTimeTokenById(token.id)));
     const oneTimeToken1 = await createOneTimeToken({ email });
     const oneTimeToken2 = await createOneTimeToken({ email });
     const oneTimeToken3 = await createOneTimeToken({ email });
@@ -337,13 +349,15 @@ describe('one-time tokens API', () => {
     const tokens = await getOneTimeTokens();
     expect(tokens).toEqual(expect.arrayContaining([oneTimeToken1, oneTimeToken2, oneTimeToken3]));
 
-    const response = await authedAdminApi.get('one-time-tokens?page=1&page_size=2');
+    const response = await authedAdminApi.get(
+      `one-time-tokens?email=${encodeURIComponent(email)}&page=1&page_size=2`
+    );
     expect(response.headers.get('Total-Number')).toBe('3');
     expect(await response.json()).toEqual(expect.arrayContaining([oneTimeToken2, oneTimeToken3]));
 
-    void deleteOneTimeTokenById(oneTimeToken1.id);
-    void deleteOneTimeTokenById(oneTimeToken2.id);
-    void deleteOneTimeTokenById(oneTimeToken3.id);
+    await deleteOneTimeTokenById(oneTimeToken1.id);
+    await deleteOneTimeTokenById(oneTimeToken2.id);
+    await deleteOneTimeTokenById(oneTimeToken3.id);
   });
 
   it('should be able fetch list of one-time tokens with query params', async () => {
@@ -361,10 +375,16 @@ describe('one-time tokens API', () => {
     await updateOneTimeTokenStatus(oneTimeToken1.id, OneTimeTokenStatus.Revoked);
     await verifyOneTimeToken({ email: fooEmail, token: oneTimeToken2.token });
 
-    const revokedTokens = await getOneTimeTokens({ status: OneTimeTokenStatus.Revoked });
+    const revokedTokens = await getOneTimeTokens({
+      email: fooEmail,
+      status: OneTimeTokenStatus.Revoked,
+    });
     expect(revokedTokens).toEqual([{ ...oneTimeToken1, status: OneTimeTokenStatus.Revoked }]);
 
-    const consumedTokens = await getOneTimeTokens({ status: OneTimeTokenStatus.Consumed });
+    const consumedTokens = await getOneTimeTokens({
+      email: fooEmail,
+      status: OneTimeTokenStatus.Consumed,
+    });
     expect(consumedTokens).toEqual([{ ...oneTimeToken2, status: OneTimeTokenStatus.Consumed }]);
 
     const activeBarTokens = await getOneTimeTokens({
@@ -373,8 +393,8 @@ describe('one-time tokens API', () => {
     });
     expect(activeBarTokens).toEqual([oneTimeToken3]);
 
-    void deleteOneTimeTokenById(oneTimeToken1.id);
-    void deleteOneTimeTokenById(oneTimeToken2.id);
-    void deleteOneTimeTokenById(oneTimeToken3.id);
+    await deleteOneTimeTokenById(oneTimeToken1.id);
+    await deleteOneTimeTokenById(oneTimeToken2.id);
+    await deleteOneTimeTokenById(oneTimeToken3.id);
   });
 });

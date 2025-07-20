@@ -84,6 +84,11 @@ export default class ExpectExperience extends ExpectPage {
    */
   async startWith(initialUrl = demoAppUrl, type: ExperienceType = 'sign-in') {
     await this.toStart(initialUrl);
+
+    // If we're starting from the demo app, wait for it to redirect to sign-in
+    if (initialUrl === demoAppUrl) {
+      await this.waitForPathname('sign-in');
+    }
     this.toBeAt('sign-in');
 
     if (type === 'register') {

@@ -32,7 +32,8 @@ const useRequiredProfileErrorHandler = ({
   const requiredProfileErrorHandler = useMemo<ErrorHandlers>(
     () => ({
       'user.missing_profile': (error) => {
-        const [, data] = validate(error.data, missingProfileErrorDataGuard);
+        const result = validate(error.data, missingProfileErrorDataGuard);
+        const data = result[1];
 
         // Required as a sign up method but missing in the user profile
         const missingProfile = data?.missingProfile[0];

@@ -136,16 +136,22 @@ export const isThirdPartyApplication = async ({ applications }: Queries, applica
  *
  * Available resource scopes can be found using {@link findResourceScopes}.
  */
-export const filterResourceScopesForTheThirdPartyApplication = async (
-  libraries: Libraries,
-  applicationId: string,
-  indicator: string,
-  scopes: ReadonlyArray<{ name: string; id: string }>,
-  {
+export const filterResourceScopesForTheThirdPartyApplication = async (options: {
+  libraries: Libraries;
+  applicationId: string;
+  indicator: string;
+  scopes: ReadonlyArray<{ name: string; id: string }>;
+  includeOrganizationResourceScopes?: boolean;
+  includeResourceScopes?: boolean;
+}) => {
+  const {
+    libraries,
+    applicationId,
+    indicator,
+    scopes,
     includeOrganizationResourceScopes = true,
     includeResourceScopes = true,
-  }: { includeOrganizationResourceScopes?: boolean; includeResourceScopes?: boolean } = {}
-) => {
+  } = options;
   const {
     applications: {
       getApplicationUserConsentOrganizationScopes,

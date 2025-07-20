@@ -47,7 +47,11 @@
           {
             "name": "name",
             "in": "path",
-            "description": "The name of the token."
+            "description": "The name of the token.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -63,7 +67,11 @@
           {
             "name": "name",
             "in": "path",
-            "description": "The name of the token."
+            "description": "The name of the token.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {

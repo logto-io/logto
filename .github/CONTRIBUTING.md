@@ -33,7 +33,7 @@ If something doesn't work as expected, search in [Issues](https://github.com/log
 Usually, we'll confirm the details in the issue thread, and you can work on the Pull Request in the meantime.
 
 > **Warning**
-> 
+>
 > Do not report a security issue directly in the public GitHub Issues, since someone may take advantage of it before the fix. Send an email to [security@logto.io](mailto:security@logto.io) instead.
 
 ### Connectors
@@ -111,6 +111,116 @@ pnpm dev
 ```
 
 The command will watch the changes in most of the packages and restart services when needed.
+
+## Running Integration Tests
+
+The integration tests require special setup since they test the complete Logto system including authentication flows and database operations.
+
+### Quick Start
+
+1. **Reset test database** (creates fresh PostgreSQL container):
+   ```bash
+   cd packages/integration-tests
+   ./reset-test-db.sh
+   ```
+
+2. **Link mock connectors** (from root directory):
+   ```bash
+   pnpm cli connector link --mock -p .
+   ```
+
+   Then add the required mock connectors:
+   ```bash
+   pnpm cli connector add @logto/connector-mock-social @logto/connector-mock-email @logto/connector-mock-sms -p .
+   ```
+
+3. **Set up mock Cloudflare configuration** (required for domain tests):
+   ```bash
+   DB_URL="postgres://postgres:p0stgr3s@localhost:5432/logto_test" pnpm cli db system set cloudflareHostnameProvider '{"zoneId":"mock-zone-id","apiToken":""}'
+   ```
+
+4. **Kill any existing processes on test ports**:
+   ```bash
+   lsof -ti:3001,3002,3003 | xargs kill -9 2>/dev/null || true
+   ```
+
+5. **Build in production mode** (from root directory):
+   ```bash
+   export NODE_ENV=production DB_URL="postgres://postgres:p0stgr3s@localhost:5432/logto_test" INTEGRATION_TEST=1 DEV_FEATURES_ENABLED=false SECRET_VAULT_KEK=DtPWS09unRXGuRScB60qXqCSsrjd22dUlXt/0oZgxSo=
+   pnpm -r build
+   ```
+
+6. **Start production server** (from root directory):
+   ```bash
+   export NODE_ENV=production DB_URL="postgres://postgres:p0stgr3s@localhost:5432/logto_test" INTEGRATION_TEST=1 DEV_FEATURES_ENABLED=false SECRET_VAULT_KEK=DtPWS09unRXGuRScB60qXqCSsrjd22dUlXt/0oZgxSo=
+   pnpm start
+   ```
+
+   Wait for the server to fully start - you should see. Then wait 10 seconds more or they're moody:
+   - `core     info Core app is running at http://localhost:3001/`
+   - `admin    info Admin app is running at http://localhost:3002/`
+
+7. **Run tests** (in a new terminal):
+   ```bash
+   cd packages/integration-tests
+   pnpm run test:api          # Run API tests only
+   pnpm run test:experience   # Run experience tests only
+   pnpm run test:console      # Run console tests only
+   pnpm run test              # Run all integration tests
+   ```
+
+### Database Isolation
+
+• **Complete isolation**: Each test run should use a fresh database for reliable results
+• **Reset script**: Use `./reset-test-db.sh` to completely recreate PostgreSQL container
+• **Clean state**: Script drops container, creates fresh one, and seeds with test data
+• **Mock connectors**: Must be re-added after database reset
+• **Cloudflare config**: Must be re-added after database reset
+
+### Key Requirements
+
+• **PostgreSQL container**: Docker container named `logto-postgres-dev` on port 5432
+• **Integration test mode**: `INTEGRATION_TEST=1` enables development authentication headers
+• **Test database**: Use `logto_test` database for isolation from development data
+• **Mock connectors**: Required for testing social, email, and SMS functionality
+• **Production mode**: Tests must run against production build (`NODE_ENV=production`)
+• **Cloudflare mock**: Mock hostname provider configuration required for domain tests
+
+### Environment Variables
+
+The project includes a `.env.test` file with all required environment variables:
+
+• `NODE_ENV=production`: Must run in production mode for tests to pass correctly
+• `INTEGRATION_TEST=1`: Enables development authentication mode
+• `DB_URL`: Test database connection string
+• `DEV_FEATURES_ENABLED=false`: Disables development features for consistent testing
+• `SECRET_VAULT_KEK`: Key encryption key for the secret vault (test-only value)
+• `INTEGRATION_TESTS_LOGTO_URL`: Logto core URL (defaults to `http://localhost:3001`)
+• `INTEGRATION_TESTS_LOGTO_CONSOLE_URL`: Console URL (defaults to `http://localhost:3002`)
+
+### Troubleshooting
+
+• **401 Unauthorized**: Missing `INTEGRATION_TEST=1` or database not seeded
+• **Database errors**: Run `./reset-test-db.sh` to create fresh database
+• **Connector errors**: Re-add mock connectors after database reset
+• **Port conflicts**: Kill existing processes with `lsof -ti:3001,3002,3003 | xargs kill -9`
+• **Test pollution**: Always reset database before running test suites
+• **SPA proxy 404 errors**: Ensure you're running in production mode (`NODE_ENV=production`)
+• **Connection refused**: Wait for server to fully start before running tests
+• **Environment not loaded**: Export all environment variables before starting the server
+• **Domain test failures**: Ensure mock Cloudflare config is set in database
+• **Duplicate connector error**: Run `pnpm cli connector link --mock` before adding mock connectors
+
+### Expected Test Results
+
+With proper setup including all mock configurations, you should achieve:
+
+• **Expected Success Rate**: ~98-100% of test suites should pass locally
+• **Possible Failures**:
+  - **Occasional timeouts**: Some tests may timeout on slower machines
+  - **Race conditions**: Rare failures due to timing issues
+
+The CI/CD pipeline uses the same configuration steps shown above. Following these instructions should give you the same results as CI/CD. If you're seeing failures after following all steps, the tests themselves may have issues that need investigation.
 
 ## Make changes
 

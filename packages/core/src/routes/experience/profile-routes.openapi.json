@@ -44,22 +44,80 @@
             "description": "The user profile can not been processed, check error message for more details. <br/>- The profile data is invalid or conflicts with existing user data. <br/>- The profile data is already in use by another user account. <br/>- The email address is enterprise SSO enabled, can only be linked through the SSO connector."
           }
         }
+      },
+      "get": {
+        "operationId": "GetExperienceUserProfile",
+        "summary": "Get user profile",
+        "description": "Get the current user's profile including encrypted secret for zero-knowledge authentication. Requires the user to be authenticated in the experience interaction.",
+        "responses": {
+          "200": {
+            "description": "User profile retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "encryptedSecret": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "Encrypted secret for zero-knowledge authentication, null if not available."
+                    }
+                  },
+                  "required": ["encryptedSecret"]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, user not authenticated in the experience interaction."
+          },
+          "404": {
+            "description": "User not found or interaction not identified."
+          }
+        }
       }
     },
     "/api/experience/profile/password": {
       "put": {
-        "operationId": "ResetUserPassword",
-        "summary": "Reset user password",
-        "description": "Reset the user's password. (`ForgotPassword` interaction only)",
+        "operationId": "UpdateUserPassword",
+        "summary": "Update user password",
+        "description": "Update the user's password. Supports both ForgotPassword flow (with just new password) and authenticated password change (with old password verification and zero-knowledge encryption).",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "properties": {
-                  "password": {
-                    "description": "The new password to update. The password must meet the password policy requirements and can not be the same as the current password."
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "password": {
+                        "type": "string",
+                        "description": "The new password to set (ForgotPassword flow only). The password must meet the password policy requirements and can not be the same as the current password."
+                      }
+                    },
+                    "required": ["password"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "oldPassword": {
+                        "type": "string",
+                        "description": "The current password for verification (authenticated flow only)."
+                      },
+                      "newPassword": {
+                        "type": "string",
+                        "description": "The new password to set (authenticated flow only)."
+                      },
+                      "encryptedSecret": {
+                        "type": "string",
+                        "description": "Optional encrypted secret for zero-knowledge authentication (authenticated flow only)."
+                      }
+                    },
+                    "required": ["oldPassword", "newPassword"],
+                    "additionalProperties": false
                   }
-                }
+                ]
               }
             }
           }
@@ -69,7 +127,13 @@
             "description": "The password has been successfully updated."
           },
           "400": {
-            "description": "The current interaction event is not `ForgotPassword`. The password can only be updated through the `ForgotPassword` interaction."
+            "description": "Bad request, invalid input data or unsupported interaction type."
+          },
+          "401": {
+            "description": "Unauthorized, user not authenticated (authenticated flow only)."
+          },
+          "403": {
+            "description": "Forbidden, old password verification failed (authenticated flow only)."
           },
           "404": {
             "description": "The user has not been identified yet. The user must be identified before updating the password."

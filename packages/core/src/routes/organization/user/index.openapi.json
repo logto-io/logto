@@ -64,7 +64,10 @@
           {
             "name": "q",
             "in": "query",
-            "description": "The query to filter users. It will match multiple fields of users, including ID, name, username, email, and phone number.\n\nIf not provided, all users will be returned."
+            "description": "The query to filter users. It will match multiple fields of users, including ID, name, username, email, and phone number.\n\nIf not provided, all users will be returned.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {

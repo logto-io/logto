@@ -22,6 +22,7 @@ import {
   ZodUnknown,
   ZodDefault,
   ZodIntersection,
+  ZodUndefined,
 } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -311,6 +312,12 @@ export const zodTypeToSwagger = (
   if (config instanceof ZodIntersection) {
     return {
       allOf: [zodTypeToSwagger(config._def.left), zodTypeToSwagger(config._def.right)],
+    };
+  }
+
+  if (config instanceof ZodUndefined) {
+    return {
+      nullable: true,
     };
   }
 

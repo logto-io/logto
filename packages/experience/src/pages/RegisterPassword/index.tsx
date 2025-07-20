@@ -9,6 +9,7 @@ import useApi from '@/hooks/use-api';
 import { usePromiseConfirmModal } from '@/hooks/use-confirm-modal';
 import useErrorHandler, { type ErrorHandlers } from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
+import usePasswordInterceptor from '@/hooks/use-password-interceptor';
 import usePasswordPolicyChecker from '@/hooks/use-password-policy-checker';
 import usePasswordRejectionErrorHandler from '@/hooks/use-password-rejection-handler';
 import { usePasswordPolicy, useSieMethods } from '@/hooks/use-sie';
@@ -30,6 +31,7 @@ const RegisterPassword = () => {
   const checkPassword = usePasswordPolicyChecker({ setErrorMessage });
   const asyncRegisterPassword = useApi(continueRegisterWithPassword);
   const handleError = useErrorHandler();
+  const { processPassword, handleSecretManagement } = usePasswordInterceptor();
 
   const preRegisterErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.Register, {
     replace: true,
@@ -57,18 +59,52 @@ const RegisterPassword = () => {
         return;
       }
 
-      const [error, result] = await asyncRegisterPassword(password);
+      // Check if we need to handle zero-knowledge encryption
+      const publicKey = new URLSearchParams(window.location.search).get('public_key');
 
-      if (error) {
-        await handleError(error, errorHandlers);
-        return;
-      }
+      if (publicKey) {
+        // Process password to get server password for zero-knowledge flow
+        const serverPassword = await processPassword(password);
+        // Use the enhanced registration flow with secret management
+        const [error, result] = await asyncRegisterPassword(
+          serverPassword,
+          async (encryptedSecret) => {
+            // For registration, we use a dummy verification ID as it's not needed
+            await handleSecretManagement('registration', encryptedSecret);
+          }
+        );
 
-      if (result) {
-        await redirectTo(result.redirectTo);
+        if (error) {
+          await handleError(error, errorHandlers);
+          return;
+        }
+
+        if (result?.redirectTo) {
+          await redirectTo(result.redirectTo);
+        }
+      } else {
+        // Use the standard flow without password processing
+        const [error, result] = await asyncRegisterPassword(password);
+
+        if (error) {
+          await handleError(error, errorHandlers);
+          return;
+        }
+
+        if (result?.redirectTo) {
+          await redirectTo(result.redirectTo);
+        }
       }
     },
-    [asyncRegisterPassword, checkPassword, errorHandlers, handleError, redirectTo]
+    [
+      asyncRegisterPassword,
+      checkPassword,
+      errorHandlers,
+      handleError,
+      redirectTo,
+      processPassword,
+      handleSecretManagement,
+    ]
   );
 
   const {

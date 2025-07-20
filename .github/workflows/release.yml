@@ -1,9 +1,7 @@
 name: Release
 
 on:
-  push:
-    branches:
-      - master
+  pull_request:
   workflow_dispatch:
 
 concurrency:
@@ -28,8 +26,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ghcr.io/logto-io/logto
-            svhd/logto
+            ghcr.io/markwylde/logto
           # https://github.com/docker/metadata-action#typesemver
           tags: |
             type=semver,pattern={{version}}
@@ -37,18 +34,12 @@ jobs:
             type=semver,pattern={{major}}
             type=edge
 
-      - name: Login to DockerHub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: silverhand-bot
-          password: ${{ secrets.BOT_PAT }}
+          username: markwylde
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Depot
         uses: depot/setup-action@v1
@@ -69,6 +60,7 @@ jobs:
     if: ${{ !startsWith(github.ref, 'refs/tags/')}}
     runs-on: ubuntu-latest
     permissions:
+      packages: write
       contents: read
       id-token: write
 
@@ -82,24 +74,18 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ghcr.io/logto-io/logto
-            svhd/logto
+            ghcr.io/markwylde/logto
           tags: |
             type=edge
-
-      - name: Login to DockerHub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+            type=ref,event=branch
+            type=ref,event=pr
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          registry: |
-            ghcr.io
-          username: silverhand-bot
-          password: ${{ secrets.BOT_PAT }}
+          registry: ghcr.io
+          username: markwylde
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -112,44 +98,6 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-
-  # Publish packages and create git tags if needed
-  publish-and-tag:
-    runs-on: ubuntu-latest
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTOMATION_TOKEN }}
-
-    if: ${{ !startsWith(github.ref, 'refs/tags/') }}
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          # Set Git operations with the bot PAT since we have tag protection rule
-          token: ${{ secrets.BOT_PAT }}
-          fetch-depth: 0
-
-      - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v5
-        with:
-          pnpm-version: 10
-          node-version: ^22.14.0
-
-      - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v6
-        with:
-          gpg_private_key: ${{ secrets.BOT_GPG_KEY }}
-          passphrase: ${{ secrets.BOT_GPG_PASSPHRASE }}
-          git_user_signingkey: true
-          git_commit_gpgsign: true
-          git_tag_gpgsign: true
-
-      - name: Configure Git user
-        run: |
-          git config --global user.email bot@silverhand.io
-          git config --global user.name silverhand-bot
-
-      - name: Publish
-        run: node .scripts/publish.js
 
   create-github-release:
     environment: release
@@ -176,7 +124,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          token: ${{ secrets.BOT_PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           body: ""
           files: /tmp/logto.tar.gz
           append_body: true

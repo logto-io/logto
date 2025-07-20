@@ -27,6 +27,7 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
       status: [200, 400, 401, 422],
       response: z.object({
         verificationId: z.string(),
+        encryptedSecret: z.string().nullable().optional(),
       }),
     }),
     koaExperienceVerificationsAuditLog({
@@ -63,7 +64,14 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
       experienceInteraction.setVerificationRecord(passwordVerification);
       await experienceInteraction.save();
 
-      ctx.body = { verificationId: passwordVerification.id };
+      // Get the user's encrypted secret if it exists
+      const user = await passwordVerification.identifyUser();
+      const { encryptedSecret } = user;
+
+      ctx.body = {
+        verificationId: passwordVerification.id,
+        encryptedSecret,
+      };
 
       ctx.status = 200;
 

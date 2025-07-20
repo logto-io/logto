@@ -13,6 +13,7 @@ import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
 import { useStaticApi } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
+import { splitPassword } from '@/utils/zero-knowledge-password';
 
 import ExperienceLikeModal from '../../components/ExperienceLikeModal';
 import { handleError, parseLocationState } from '../../utils';
@@ -53,7 +54,9 @@ function VerifyPasswordModal() {
     clearErrors();
     void handleSubmit(async ({ password }) => {
       try {
-        await api.post(`me/password/verify`, { json: { password } });
+        const { serverPassword } = await splitPassword(password);
+
+        await api.post(`me/password/verify`, { json: { password: serverPassword } });
         reset();
         navigate('../change-password', { state });
       } catch (error: unknown) {

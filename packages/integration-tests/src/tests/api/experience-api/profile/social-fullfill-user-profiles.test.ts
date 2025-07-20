@@ -11,6 +11,7 @@ import { initExperienceClient, logoutClient, processSession } from '#src/helpers
 import {
   clearConnectorsByTypes,
   setEmailConnector,
+  setSmsConnector,
   setSocialConnector,
 } from '#src/helpers/connector.js';
 import { signInWithSocial } from '#src/helpers/experience/index.js';
@@ -39,17 +40,18 @@ describe('fulfill missing username ', () => {
   const connectorIdMap = new Map<string, string>();
 
   beforeAll(async () => {
-    await clearConnectorsByTypes([ConnectorType.Social, ConnectorType.Email]);
+    await clearConnectorsByTypes([ConnectorType.Social, ConnectorType.Email, ConnectorType.Sms]);
 
     const [{ id: socialConnectorId }] = await Promise.all([
       setSocialConnector(),
       setEmailConnector(),
+      setSmsConnector(),
     ]);
     connectorIdMap.set(mockSocialConnectorId, socialConnectorId);
   });
 
   afterAll(async () => {
-    await clearConnectorsByTypes([ConnectorType.Social]);
+    await clearConnectorsByTypes([ConnectorType.Social, ConnectorType.Email, ConnectorType.Sms]);
     // Reset sign-up methods to default
     await enableAllPasswordSignInMethods();
   });

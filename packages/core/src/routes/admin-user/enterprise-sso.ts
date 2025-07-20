@@ -56,7 +56,8 @@ export default function adminUserEnterpriseSsoRoutes<T extends ManagementApiRout
       assertThat(
         ssoIdentity,
         new RequestError({
-          code: 'user.enterprise_sso_identity_not_exists',
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, no-restricted-syntax, @typescript-eslint/no-explicit-any
+          code: 'user.enterprise_sso_identity_not_exists' as any,
           status: 404,
         })
       );
@@ -76,6 +77,7 @@ export default function adminUserEnterpriseSsoRoutes<T extends ManagementApiRout
 
       ctx.body = {
         ssoIdentity,
+
         tokenSecret: conditional(tokenSetSecret && desensitizeTokenSetSecret(tokenSetSecret)),
       };
 

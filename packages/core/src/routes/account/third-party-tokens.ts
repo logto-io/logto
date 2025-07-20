@@ -38,7 +38,9 @@ const formatTokenResponse = (
 
   return {
     access_token,
+
     ...conditional(scope && { scope }),
+
     ...conditional(tokenType && { token_type: tokenType }),
     ...conditional(expires_in && { expires_in }),
   };
@@ -53,14 +55,18 @@ const getAccessToken = async (
 
   const { access_token, refresh_token } = decryptTokens({
     iv,
+
     encryptedDek,
+
     ciphertext,
+
     authTag,
   });
 
   if (!access_token) {
     throw new RequestError({
-      code: 'secrets.third_party_token_set.token_not_found',
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, no-restricted-syntax, @typescript-eslint/no-explicit-any
+      code: 'secrets.third_party_token_set.token_not_found' as any,
       status: 404,
     });
   }
@@ -82,7 +88,8 @@ const getAccessToken = async (
 
   await secrets.deleteById(id);
   throw new RequestError({
-    code: 'secrets.third_party_token_set.access_token_expired',
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, no-restricted-syntax, @typescript-eslint/no-explicit-any
+    code: 'secrets.third_party_token_set.access_token_expired' as any,
     status: 401,
   });
 };
@@ -106,10 +113,12 @@ export default function thirdPartyTokensRoutes<T extends UserRouter>(
         target: z.string().min(1),
       }),
       status: [200, 404, 401, 422],
+
       response: getThirdPartyAccessTokenResponseGuard,
     }),
     async (ctx, next) => {
       const { id: userId } = ctx.auth;
+
       const { target } = ctx.guard.params;
 
       const tokenSetSecret = await secretsQueries.findSocialTokenSetSecretByUserIdAndTarget(
@@ -119,7 +128,8 @@ export default function thirdPartyTokensRoutes<T extends UserRouter>(
 
       if (!tokenSetSecret) {
         throw new RequestError({
-          code: 'secrets.third_party_token_set.token_not_found',
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, no-restricted-syntax, @typescript-eslint/no-explicit-any
+          code: 'secrets.third_party_token_set.token_not_found' as any,
           status: 404,
         });
       }
@@ -137,10 +147,12 @@ export default function thirdPartyTokensRoutes<T extends UserRouter>(
         connectorId: z.string().min(1),
       }),
       status: [200, 404, 401],
+
       response: getThirdPartyAccessTokenResponseGuard,
     }),
     async (ctx, next) => {
       const { id: userId } = ctx.auth;
+
       const { connectorId } = ctx.guard.params;
 
       const tokenSetSecret =
@@ -151,7 +163,8 @@ export default function thirdPartyTokensRoutes<T extends UserRouter>(
 
       if (!tokenSetSecret) {
         throw new RequestError({
-          code: 'secrets.third_party_token_set.token_not_found',
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, no-restricted-syntax, @typescript-eslint/no-explicit-any
+          code: 'secrets.third_party_token_set.token_not_found' as any,
           status: 404,
         });
       }

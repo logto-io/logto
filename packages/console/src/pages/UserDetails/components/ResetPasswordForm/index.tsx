@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import useApi from '@/hooks/use-api';
 import { generateRandomPassword } from '@/utils/password';
+import { splitPassword } from '@/utils/zero-knowledge-password';
 
 type Props = {
   readonly userId: string;
@@ -20,11 +21,17 @@ function ResetPasswordForm({ onClose, userId, hasPassword }: Props) {
   const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async () => {
-    const password = generateRandomPassword();
+    const fullPassword = generateRandomPassword();
     setIsLoading(true);
-    await api.patch(`api/users/${userId}/password`, { json: { password } }).json<User>();
+
+    const { serverPassword } = await splitPassword(fullPassword);
+
+    await api
+      .patch(`api/users/${userId}/password`, { json: { password: serverPassword } })
+      .json<User>();
     setIsLoading(false);
-    onClose?.(password);
+
+    onClose?.(fullPassword);
   };
 
   return (

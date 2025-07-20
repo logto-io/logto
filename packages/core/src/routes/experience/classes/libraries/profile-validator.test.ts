@@ -104,7 +104,8 @@ describe('ProfileValidator', () => {
         })
       ).toThrow(
         new RequestError({
-          code: 'custom_profile_fields.name_conflict_custom_data',
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+          code: 'custom_profile_fields.name_conflict_custom_data' as any,
           name: consoleUserPreferenceKey,
         }).message
       );

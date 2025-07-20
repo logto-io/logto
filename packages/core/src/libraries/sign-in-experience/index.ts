@@ -32,13 +32,20 @@ export const developmentTenantPlanId = 'dev';
 
 export type SignInExperienceLibrary = ReturnType<typeof createSignInExperienceLibrary>;
 
-export const createSignInExperienceLibrary = (
-  queries: Queries,
-  { getLogtoConnectors }: ConnectorLibrary,
-  { getAvailableSsoConnectors }: SsoConnectorLibrary,
-  cloudConnection: CloudConnectionLibrary,
-  wellKnownCache: WellKnownCache
-) => {
+export const createSignInExperienceLibrary = (options: {
+  queries: Queries;
+  connectorLibrary: ConnectorLibrary;
+  ssoConnectorLibrary: SsoConnectorLibrary;
+  cloudConnection: CloudConnectionLibrary;
+  wellKnownCache: WellKnownCache;
+}) => {
+  const {
+    queries,
+    connectorLibrary: { getLogtoConnectors },
+    ssoConnectorLibrary: { getAvailableSsoConnectors },
+    cloudConnection,
+    wellKnownCache,
+  } = options;
   const {
     customPhrases: { findAllCustomLanguageTags },
     signInExperiences: { findDefaultSignInExperience, updateDefaultSignInExperience },

@@ -94,14 +94,14 @@ export class MockTenant implements TenantContext {
       this.cloudConnection,
       new TtlCache<string, string>(60_000)
     );
-    this.libraries = new Libraries(
-      this.id,
-      this.queries,
-      this.connectors,
-      this.cloudConnection,
-      this.logtoConfigs,
-      this.subscription
-    );
+    this.libraries = new Libraries({
+      tenantId: this.id,
+      queries: this.queries,
+      connectors: this.connectors,
+      cloudConnection: this.cloudConnection,
+      logtoConfigs: this.logtoConfigs,
+      subscription: this.subscription,
+    });
     this.setPartial('libraries', librariesOverride);
   }
 

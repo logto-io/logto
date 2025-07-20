@@ -1,3 +1,6 @@
+// eslint-disable-next-line n/prefer-global/text-decoder, n/prefer-global/text-encoder
+import { TextDecoder, TextEncoder } from 'node:util';
+
 import { type LocalePhrase } from '@logto/phrases-experience';
 import { ssrPlaceholder } from '@logto/schemas';
 import { type DeepPartial } from '@silverhand/essentials';
@@ -37,3 +40,14 @@ void setupI18nForTesting();
 
 // eslint-disable-next-line @silverhand/fp/no-mutating-methods
 Object.defineProperty(global, 'logtoSsr', { value: ssrPlaceholder });
+
+// Add TextDecoder polyfill for Jest
+// eslint-disable-next-line @silverhand/fp/no-mutating-methods
+Object.defineProperty(global, 'TextDecoder', {
+  value: TextDecoder,
+});
+
+// eslint-disable-next-line @silverhand/fp/no-mutating-methods
+Object.defineProperty(global, 'TextEncoder', {
+  value: TextEncoder,
+});

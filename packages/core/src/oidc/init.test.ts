@@ -8,7 +8,14 @@ describe('oidc provider init', () => {
     const { queries, libraries, logtoConfigs, cloudConnection, subscription } = new MockTenant();
 
     expect(() =>
-      initOidc(mockEnvSet, queries, libraries, logtoConfigs, cloudConnection, subscription)
+      initOidc({
+        envSet: mockEnvSet,
+        queries,
+        libraries,
+        logtoConfigs,
+        cloudConnection,
+        subscription,
+      })
     ).not.toThrow();
   });
 });

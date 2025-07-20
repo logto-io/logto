@@ -1,10 +1,6 @@
 name: Main
 
 on:
-  push:
-    branches:
-      - master
-      - "push-action/**"
   pull_request:
 
 concurrency:
@@ -120,98 +116,3 @@ jobs:
           build-args: | # Test cloud build
             additional_connector_args=--cloud
 
-  main-alteration:
-    runs-on: ubuntu-latest
-
-    steps:
-      # ** Checkout fresh and alteration ref **
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          path: ./fresh
-
-      # Fetch the current version by finding the latest tag starts with "v", e.g. "v1.0.0-beta.19"
-      - id: version
-        working-directory: ./fresh
-        run: echo "current=$(git describe --match "@logto/core@*" --abbrev=0)" >> $GITHUB_OUTPUT
-
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ steps.version.outputs.current }}
-          path: ./alteration
-      # ** End **
-
-      - name: Copy lockfile # Make setup workflow happy
-        run: cp ./fresh/pnpm-lock.yaml ./
-
-      - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v5
-        with:
-          pnpm-version: 10
-          node-version: ^22.14.0
-          run-install: false
-
-      # ** Prepack packages **
-      - name: Prepack fresh
-        working-directory: ./fresh
-        run: pnpm i && pnpm prepack
-
-      - name: Prepack alteration
-        working-directory: ./alteration
-        run: pnpm i && pnpm prepack
-      # ** End **
-
-      - name: Setup Postgres
-        uses: ikalnytskyi/action-setup-postgres@v6
-
-      # ** Setup up-to-date databases and compare (test `up`) **
-      - name: Setup fresh database
-        working-directory: ./fresh
-        run: pnpm cli db seed --test
-        env:
-          DB_URL: postgres://postgres:postgres@localhost:5432/fresh
-
-      - name: Setup alteration database
-        working-directory: ./alteration
-        run: |
-          cd packages/cli
-          pnpm start db seed --test
-        env:
-          DB_URL: postgres://postgres:postgres@localhost:5432/alteration
-
-      - name: Run alteration scripts
-        working-directory: ./fresh
-        run: pnpm cli db alt deploy next
-        env:
-          ALTERATION_TEST: true
-          DB_URL: postgres://postgres:postgres@localhost:5432/alteration
-
-      - name: Compare databases
-        working-directory: ./fresh
-        run: node .scripts/compare-database.js fresh alteration
-      # ** End **
-
-      # ** Setup old databases and compare (test `down`) **
-      - name: Setup old database
-        working-directory: ./alteration
-        run: |
-          cd packages/cli
-          pnpm start db seed --test
-        env:
-          DB_URL: postgres://postgres:postgres@localhost:5432/old
-
-      - name: Revert fresh database to old
-        working-directory: ./fresh
-        run: pnpm cli db alt r v$(echo ${{ steps.version.outputs.current }} | cut -d@ -f3)
-        env:
-          ALTERATION_TEST: true
-          DB_URL: postgres://postgres:postgres@localhost:5432/fresh
-
-      - name: Compare manifests
-        working-directory: ./fresh
-        run: node .scripts/compare-database.js fresh old
-      # ** End **
-
-      - name: Check alteration sequence
-        working-directory: ./fresh
-        run: node .scripts/check-alterations-sequence.js

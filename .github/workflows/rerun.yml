@@ -5,7 +5,9 @@ on:
   workflow_dispatch:
     inputs:
       run_id:
+        description: 'The ID of the workflow run to rerun (failed jobs only)'
         required: true
+        type: string
 jobs:
   rerun:
     runs-on: ubuntu-latest

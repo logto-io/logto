@@ -21,6 +21,14 @@ describe('admin console user search params', () => {
   let users: User[] = [];
 
   beforeAll(async () => {
+    // Clean up any existing users that might interfere with our tests
+    const { json: existingUsers } = await getUsers<User[]>([['search', '%000%']]);
+    await Promise.all(
+      existingUsers
+        .filter((user) => user.username?.startsWith('search_'))
+        .map(async (user) => deleteUser(user.id))
+    );
+
     const prefix = `search_`;
     const rawNames = [
       'tom scott',

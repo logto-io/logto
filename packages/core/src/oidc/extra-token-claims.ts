@@ -8,6 +8,7 @@ import {
   GrantType,
   CustomJwtErrorCode,
   jwtCustomizerUserInteractionContextGuard,
+  type InteractionEvent,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
@@ -91,6 +92,52 @@ export const getExtraTokenClaimsForTokenExchange = async (
 };
 
 /**
+ * Converts InteractionStorage format to JwtCustomizerUserInteractionContext format
+ */
+const convertInteractionStorageToJwtCustomizerContext = (
+  interactionStorage: unknown
+):
+  | { interactionEvent: InteractionEvent; userId: string; verificationRecords: unknown[] }
+  | undefined => {
+  if (!interactionStorage || typeof interactionStorage !== 'object') {
+    return;
+  }
+
+  // eslint-disable-next-line no-restricted-syntax
+  const storage = interactionStorage as Record<string, unknown>;
+  const { interactionEvent, userId, verificationRecords } = storage;
+
+  if (
+    !interactionEvent ||
+    typeof interactionEvent !== 'string' ||
+    !userId ||
+    typeof userId !== 'string' ||
+    !Array.isArray(verificationRecords)
+  ) {
+    return;
+  }
+
+  return {
+    // eslint-disable-next-line no-restricted-syntax
+    interactionEvent: interactionEvent as InteractionEvent,
+    userId,
+    verificationRecords: verificationRecords.map((record: unknown) => {
+      if (!record || typeof record !== 'object') {
+        return { id: '', type: '', verified: false, identifier: undefined };
+      }
+      // eslint-disable-next-line no-restricted-syntax
+      const recordObject = record as Record<string, unknown>;
+      return {
+        id: recordObject.id,
+        type: recordObject.type,
+        verified: Boolean(recordObject.verified),
+        identifier: recordObject.identifier,
+      };
+    }),
+  };
+};
+
+/**
  * Retrieves the user's lasted submitted interaction data from the OIDC session extension.
  *
  * @returns The formatted interaction data if available for the given session UID and account ID.
@@ -113,13 +160,26 @@ const getInteractionLastSubmission = async (
   }
 
   const { lastSubmission } = sessionExtension;
-  const interactionData = jwtCustomizerUserInteractionContextGuard.safeParse(lastSubmission);
 
-  if (!interactionData.success) {
-    return;
+  // First try to parse as JwtCustomizerUserInteractionContext (legacy format)
+  const legacyInteractionData = jwtCustomizerUserInteractionContextGuard.safeParse(lastSubmission);
+
+  if (legacyInteractionData.success) {
+    return legacyInteractionData.data;
   }
 
-  return interactionData.data;
+  // If that fails, try to convert from InteractionStorage format (new experience API format)
+  const convertedInteractionData = convertInteractionStorageToJwtCustomizerContext(lastSubmission);
+
+  if (convertedInteractionData) {
+    // Validate the converted data
+    const validatedData =
+      jwtCustomizerUserInteractionContextGuard.safeParse(convertedInteractionData);
+
+    if (validatedData.success) {
+      return validatedData.data;
+    }
+  }
 };
 
 /* eslint-disable complexity */

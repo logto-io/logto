@@ -88,13 +88,25 @@ export class JwtCustomizerLibrary {
     }
   }
 
-  constructor(
-    private readonly queries: Queries,
-    private readonly logtoConfigs: LogtoConfigLibrary,
-    private readonly cloudConnection: CloudConnectionLibrary,
-    private readonly userLibrary: UserLibrary,
-    private readonly scopeLibrary: ScopeLibrary
-  ) {}
+  public readonly queries: Queries;
+  public readonly logtoConfigs: LogtoConfigLibrary;
+  public readonly cloudConnection: CloudConnectionLibrary;
+  public readonly userLibrary: UserLibrary;
+  public readonly scopeLibrary: ScopeLibrary;
+
+  constructor(options: {
+    queries: Queries;
+    logtoConfigs: LogtoConfigLibrary;
+    cloudConnection: CloudConnectionLibrary;
+    userLibrary: UserLibrary;
+    scopeLibrary: ScopeLibrary;
+  }) {
+    this.queries = options.queries;
+    this.logtoConfigs = options.logtoConfigs;
+    this.cloudConnection = options.cloudConnection;
+    this.userLibrary = options.userLibrary;
+    this.scopeLibrary = options.scopeLibrary;
+  }
 
   /**
    * We does not include org roles' scopes for the following reason:
@@ -107,9 +119,9 @@ export class JwtCustomizerLibrary {
     const fullSsoIdentities = await this.userLibrary.findUserSsoIdentities(userId);
     const roles = await this.userLibrary.findUserRoles(userId);
     const rolesScopes = await this.queries.rolesScopes.findRolesScopesByRoleIds(
-      roles.map(({ id }) => id)
+      roles.map(({ id }: { id: string }) => id)
     );
-    const scopeIds = rolesScopes.map(({ scopeId }) => scopeId);
+    const scopeIds = rolesScopes.map(({ scopeId }: { scopeId: string }) => scopeId);
     const scopes = await this.queries.scopes.findScopesByIds(scopeIds);
     const scopesWithResources = await this.scopeLibrary.attachResourceToScopes(scopes);
     const organizationsWithRoles =
@@ -118,22 +130,32 @@ export class JwtCustomizerLibrary {
       ...pick(user, ...userInfoSelectFields),
       hasPassword: Boolean(user.passwordEncrypted),
       ssoIdentities: fullSsoIdentities.map(pickState('issuer', 'identityId', 'detail')),
-      mfaVerificationFactors: deduplicate(user.mfaVerifications.map(({ type }) => type)),
-      roles: roles.map((role) => {
+      mfaVerificationFactors: deduplicate(
+        user.mfaVerifications.map(({ type }: { type: string }) => type)
+      ),
+      roles: roles.map((role: { id: string; name: string; description: string }) => {
         const scopeIds = new Set(
-          rolesScopes.filter(({ roleId }) => roleId === role.id).map(({ scopeId }) => scopeId)
+          rolesScopes
+            .filter(({ roleId }: { roleId: string }) => roleId === role.id)
+            .map(({ scopeId }: { scopeId: string }) => scopeId)
         );
         return {
           ...pick(role, 'id', 'name', 'description'),
           scopes: scopesWithResources
-            .filter(({ id }) => scopeIds.has(id))
+            .filter(({ id }: { id: string }) => scopeIds.has(id))
             .map(pickState('id', 'name', 'description', 'resourceId', 'resource')),
         };
       }),
       organizations: organizationsWithRoles.map(pickState('id', 'name', 'description')),
       organizationRoles: organizationsWithRoles.flatMap(
-        ({ id: organizationId, organizationRoles }) =>
-          organizationRoles.map(({ id: roleId, name: roleName }) => ({
+        ({
+          id: organizationId,
+          organizationRoles,
+        }: {
+          id: string;
+          organizationRoles: Array<{ id: string; name: string }>;
+        }) =>
+          organizationRoles.map(({ id: roleId, name: roleName }: { id: string; name: string }) => ({
             organizationId,
             roleId,
             roleName,

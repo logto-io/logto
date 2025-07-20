@@ -88,6 +88,7 @@
     "superstruct": "^2.0.0",
     "tiny-cookie": "^2.4.1",
     "typescript": "^5.5.3",
+    "uint8array-extras": "^1.4.0",
     "use-debounced-loader": "^0.1.1",
     "vite": "^6.2.7",
     "vite-plugin-compression": "^0.5.1",

@@ -7,18 +7,39 @@ import { MockQueries } from './tenant.js';
 
 const { jest } = import.meta;
 
+// eslint-disable-next-line @typescript-eslint/consistent-type-assertions, no-restricted-syntax
+const mockConnectorLibrary = {
+  getConnectorConfig: jest.fn(),
+  getLogtoConnectors: jest.fn(),
+  getLogtoConnectorsWellKnown: jest.fn(),
+  getLogtoConnectorById: jest.fn(),
+  getLogtoConnectorByTargetAndPlatform: jest.fn(),
+  getMessageConnector: jest.fn(),
+  getI18nEmailTemplate: jest.fn(),
+} as ConnectorLibrary;
+
+// eslint-disable-next-line no-restricted-syntax
+const mockCloudConnectionLibrary = {
+  getCloudConnectionData: jest.fn(),
+  getAccessToken: jest.fn(),
+  getClient: jest.fn(),
+} as unknown as CloudConnectionLibrary;
+
+// eslint-disable-next-line no-restricted-syntax
+const mockSubscriptionLibrary = {
+  getSubscriptionData: jest.fn(),
+  getTenantTokenUsage: jest.fn(),
+} as unknown as SubscriptionLibrary;
+
 class MockQuotaLibrary extends QuotaLibrary {
   constructor() {
-    super(
-      'mock-tenant-id',
-      new MockQueries(),
-      // eslint-disable-next-line no-restricted-syntax
-      {} as ConnectorLibrary,
-      // eslint-disable-next-line no-restricted-syntax
-      {} as CloudConnectionLibrary,
-      // eslint-disable-next-line no-restricted-syntax
-      {} as SubscriptionLibrary
-    );
+    super({
+      tenantId: 'mock-tenant-id',
+      queries: new MockQueries(),
+      connectorLibrary: mockConnectorLibrary,
+      cloudConnection: mockCloudConnectionLibrary,
+      subscription: mockSubscriptionLibrary,
+    });
   }
 
   // Override the methods with jest mock functions

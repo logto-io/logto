@@ -191,7 +191,8 @@ export const verifySsoIdentity = async (
             // Only store the token response if it contains an access token.
             tokenResponse?.access_token &&
             trySafe(
-              () => encryptAndSerializeTokenResponse(tokenResponse),
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, no-restricted-syntax, @typescript-eslint/no-explicit-any
+              () => encryptAndSerializeTokenResponse(tokenResponse as any),
               (error) => {
                 // If the token response cannot be encrypted, we log the error but continue to return user info.
                 void appInsights.trackException(error);

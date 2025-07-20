@@ -116,6 +116,7 @@ class SecretQueries extends SchemaQueries<SecretKeys, CreateSecret, Secret> {
       const insertEnterpriseSsoRelations = buildInsertIntoWithPool(transaction)(
         SecretEnterpriseSsoConnectorRelations
       );
+
       await insertEnterpriseSsoRelations({
         secretId: newSecret.id,
         ...ssoConnectorRelationPayload,

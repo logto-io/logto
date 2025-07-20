@@ -141,6 +141,85 @@
             "description": "Permission denied, the verification record is invalid."
           }
         }
+      },
+      "put": {
+        "operationId": "ChangePassword",
+        "summary": "Change password",
+        "description": "Change password for the user with old password verification. Supports zero-knowledge encryption for enhanced security.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "oldPassword": {
+                    "type": "string",
+                    "description": "The current password for verification."
+                  },
+                  "newPassword": {
+                    "type": "string",
+                    "description": "The new password to set."
+                  },
+                  "encryptedSecret": {
+                    "type": "string",
+                    "description": "Optional encrypted secret for zero-knowledge authentication."
+                  }
+                },
+                "required": ["oldPassword", "newPassword"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The password was changed successfully."
+          },
+          "400": {
+            "description": "Bad request, invalid input data."
+          },
+          "401": {
+            "description": "Unauthorized, authentication required."
+          },
+          "403": {
+            "description": "Forbidden, old password verification failed."
+          },
+          "422": {
+            "description": "Unprocessable entity, password validation failed."
+          }
+        }
+      }
+    },
+    "/api/my-account/password/profile": {
+      "get": {
+        "operationId": "GetPasswordProfile",
+        "summary": "Get password profile",
+        "description": "Get password status and encrypted secret for the user. Used for zero-knowledge password change operations.",
+        "responses": {
+          "200": {
+            "description": "Password profile retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "hasPassword": {
+                      "type": "boolean",
+                      "description": "Whether the user has a password set."
+                    },
+                    "encryptedSecret": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "Encrypted secret for zero-knowledge authentication, null if not available."
+                    }
+                  },
+                  "required": ["hasPassword", "encryptedSecret"]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, authentication required."
+          }
+        }
       }
     },
     "/api/my-account/mfa-settings": {

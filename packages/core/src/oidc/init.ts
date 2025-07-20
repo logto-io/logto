@@ -63,14 +63,15 @@ import { getAcceptedUserClaims, getUserClaimsData } from './scope.js';
 // Temporarily removed 'EdDSA' since it's not supported by browser yet
 const supportedSigningAlgs = Object.freeze(['RS256', 'PS256', 'ES256', 'ES384', 'ES512'] as const);
 
-export default function initOidc(
-  envSet: EnvSet,
-  queries: Queries,
-  libraries: Libraries,
-  logtoConfigs: LogtoConfigLibrary,
-  cloudConnection: CloudConnectionLibrary,
-  subscription: SubscriptionLibrary
-): Provider {
+export default function initOidc(options: {
+  envSet: EnvSet;
+  queries: Queries;
+  libraries: Libraries;
+  logtoConfigs: LogtoConfigLibrary;
+  cloudConnection: CloudConnectionLibrary;
+  subscription: SubscriptionLibrary;
+}): Provider {
+  const { envSet, queries, libraries, logtoConfigs, cloudConnection, subscription } = options;
   const {
     resources: { findDefaultResource },
     users: { findUserById },
@@ -175,12 +176,12 @@ export default function initOidc(
           // Need to filter out the unsupported scopes for the third-party application.
           if (client && (await isThirdPartyApplication(queries, client.clientId))) {
             // Get application consent resource scopes, from RBAC roles
-            const filteredScopes = await filterResourceScopesForTheThirdPartyApplication(
+            const filteredScopes = await filterResourceScopesForTheThirdPartyApplication({
               libraries,
-              client.clientId,
+              applicationId: client.clientId,
               indicator,
-              scopes
-            );
+              scopes,
+            });
 
             return {
               ...getSharedResourceServerData(envSet),

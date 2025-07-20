@@ -25,60 +25,95 @@ import { createVerificationStatusLibrary } from '#src/libraries/verification-sta
 import type Queries from './Queries.js';
 
 export default class Libraries {
-  users = createUserLibrary(this.queries);
-  phrases = createPhraseLibrary(this.queries);
-  hooks = createHookLibrary(this.queries);
-  scopes = createScopeLibrary(this.queries);
-  socials = createSocialLibrary(this.queries, this.connectors);
-  jwtCustomizers = new JwtCustomizerLibrary(
-    this.queries,
-    this.logtoConfigs,
-    this.cloudConnection,
-    this.users,
-    this.scopes
-  );
+  users!: ReturnType<typeof createUserLibrary>;
+  phrases!: ReturnType<typeof createPhraseLibrary>;
+  hooks!: ReturnType<typeof createHookLibrary>;
+  scopes!: ReturnType<typeof createScopeLibrary>;
+  socials!: ReturnType<typeof createSocialLibrary>;
+  jwtCustomizers!: JwtCustomizerLibrary;
+  passcodes!: ReturnType<typeof createPasscodeLibrary>;
+  applications!: ReturnType<typeof createApplicationLibrary>;
+  verificationStatuses!: ReturnType<typeof createVerificationStatusLibrary>;
+  samlApplications!: ReturnType<typeof createSamlApplicationsLibrary>;
+  roleScopes!: ReturnType<typeof createRoleScopeLibrary>;
+  domains!: ReturnType<typeof createDomainLibrary>;
+  protectedApps!: ReturnType<typeof createProtectedAppLibrary>;
+  quota!: QuotaLibrary;
+  ssoConnectors!: ReturnType<typeof createSsoConnectorLibrary>;
+  oneTimeTokens!: ReturnType<typeof createOneTimeTokenLibrary>;
+  signInExperiences!: ReturnType<typeof createSignInExperienceLibrary>;
+  organizationInvitations!: OrganizationInvitationLibrary;
+  customProfileFields!: ReturnType<typeof createCustomProfileFieldsLibrary>;
 
-  passcodes = createPasscodeLibrary(this.queries, this.connectors);
-  applications = createApplicationLibrary(this.queries);
-  verificationStatuses = createVerificationStatusLibrary(this.queries);
-  samlApplications = createSamlApplicationsLibrary(this.queries);
-  roleScopes = createRoleScopeLibrary(this.queries);
-  domains = createDomainLibrary(this.queries);
-  protectedApps = createProtectedAppLibrary(this.queries);
+  public readonly tenantId: string;
+  private readonly queries: Queries;
+  // Explicitly passing connector library to eliminate dependency issue
+  private readonly connectors: ConnectorLibrary;
+  private readonly cloudConnection: CloudConnectionLibrary;
+  private readonly logtoConfigs: LogtoConfigLibrary;
+  private readonly subscription: SubscriptionLibrary;
 
-  quota = new QuotaLibrary(
-    this.tenantId,
-    this.queries,
-    this.connectors,
-    this.cloudConnection,
-    this.subscription
-  );
+  constructor(options: {
+    tenantId: string;
+    queries: Queries;
+    connectors: ConnectorLibrary;
+    cloudConnection: CloudConnectionLibrary;
+    logtoConfigs: LogtoConfigLibrary;
+    subscription: SubscriptionLibrary;
+  }) {
+    this.tenantId = options.tenantId;
+    this.queries = options.queries;
+    this.connectors = options.connectors;
+    this.cloudConnection = options.cloudConnection;
+    this.logtoConfigs = options.logtoConfigs;
+    this.subscription = options.subscription;
 
-  ssoConnectors = createSsoConnectorLibrary(this.queries);
-  oneTimeTokens = createOneTimeTokenLibrary(this.queries);
-  signInExperiences = createSignInExperienceLibrary(
-    this.queries,
-    this.connectors,
-    this.ssoConnectors,
-    this.cloudConnection,
-    this.queries.wellKnownCache
-  );
+    // Initialize libraries after constructor properties are set
+    this.users = createUserLibrary(this.queries);
+    this.phrases = createPhraseLibrary(this.queries);
+    this.hooks = createHookLibrary(this.queries);
+    this.scopes = createScopeLibrary(this.queries);
+    this.socials = createSocialLibrary(this.queries, this.connectors);
+    this.jwtCustomizers = new JwtCustomizerLibrary({
+      queries: this.queries,
+      logtoConfigs: this.logtoConfigs,
+      cloudConnection: this.cloudConnection,
+      userLibrary: this.users,
+      scopeLibrary: this.scopes,
+    });
 
-  organizationInvitations = new OrganizationInvitationLibrary(
-    this.tenantId,
-    this.queries,
-    this.connectors
-  );
+    this.passcodes = createPasscodeLibrary(this.queries, this.connectors);
+    this.applications = createApplicationLibrary(this.queries);
+    this.verificationStatuses = createVerificationStatusLibrary(this.queries);
+    this.samlApplications = createSamlApplicationsLibrary(this.queries);
+    this.roleScopes = createRoleScopeLibrary(this.queries);
+    this.domains = createDomainLibrary(this.queries);
+    this.protectedApps = createProtectedAppLibrary(this.queries);
 
-  customProfileFields = createCustomProfileFieldsLibrary(this.queries);
+    this.quota = new QuotaLibrary({
+      tenantId: this.tenantId,
+      queries: this.queries,
+      connectorLibrary: this.connectors,
+      cloudConnection: this.cloudConnection,
+      subscription: this.subscription,
+    });
 
-  constructor(
-    public readonly tenantId: string,
-    private readonly queries: Queries,
-    // Explicitly passing connector library to eliminate dependency issue
-    private readonly connectors: ConnectorLibrary,
-    private readonly cloudConnection: CloudConnectionLibrary,
-    private readonly logtoConfigs: LogtoConfigLibrary,
-    private readonly subscription: SubscriptionLibrary
-  ) {}
+    this.ssoConnectors = createSsoConnectorLibrary(this.queries);
+    this.oneTimeTokens = createOneTimeTokenLibrary(this.queries);
+    this.signInExperiences = createSignInExperienceLibrary({
+      queries: this.queries,
+      connectorLibrary: this.connectors,
+      ssoConnectorLibrary: this.ssoConnectors,
+      cloudConnection: this.cloudConnection,
+      wellKnownCache: this.queries.wellKnownCache,
+    });
+
+    this.organizationInvitations = new OrganizationInvitationLibrary(
+      this.tenantId,
+      this.queries,
+      this.connectors
+    );
+
+    this.customProfileFields = createCustomProfileFieldsLibrary(this.queries);
+  }
 }
