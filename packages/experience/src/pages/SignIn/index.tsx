@@ -99,12 +99,6 @@ const SignIn = () => {
   const [params] = useSearchParams();
   const { experienceSettings } = useContext(PageContext);
 
-  console.log(
-    'experienceSettings.googleOneTap',
-    JSON.stringify(experienceSettings?.googleOneTap, null, 2)
-  );
-  console.log('params', params.toString());
-
   if (!signInMode) {
     return <ErrorPage />;
   }

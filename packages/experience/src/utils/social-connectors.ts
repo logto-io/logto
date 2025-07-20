@@ -26,7 +26,6 @@ export const storeState = (state: string, connectorId: string) => {
 const deleteState = (connectorId: string) => {
   const storageKey = `${storageStateKeyPrefix}:${connectorId}`;
   sessionStorage.removeItem(storageKey);
-  console.log('deleteState', storageKey);
 };
 
 /**
@@ -49,16 +48,11 @@ export const validateState = (
     deleteState(connectorId);
   }
 
-  console.log('storageKey', storageKey);
-  console.log('stateStorage', stateStorage);
-
   return stateStorage === state;
 };
 
 export const validateGoogleOneTapCsrfToken = (csrfToken?: string): boolean => {
   const csrfTokenFromCookie = getCookie(GoogleConnector.oneTapParams.csrfToken);
-  console.log('csrfTokenFromCookie', csrfTokenFromCookie);
-  console.log('csrfToken', csrfToken);
   return Boolean(csrfToken && csrfTokenFromCookie === csrfToken);
 };
 

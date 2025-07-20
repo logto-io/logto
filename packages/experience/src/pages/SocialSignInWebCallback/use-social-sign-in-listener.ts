@@ -55,9 +55,6 @@ const useSocialSignInListener = (connectorId: string) => {
   const accountNotExistErrorHandler = useCallback(
     async (error: RequestErrorBody) => {
       const [, data] = validate(error.data, socialAccountNotExistErrorDataGuard);
-
-      console.log('accountNotExistErrorHandler', data);
-
       const { relatedUser } = data ?? {};
       const verificationId = verificationIdRef.current;
 
@@ -130,10 +127,8 @@ const useSocialSignInListener = (connectorId: string) => {
       // Check for external Google One Tap credentials from extraParams
       const { [ExtraParamsKey.GoogleOneTapCredential]: externalCredential, ...rest } = data;
       if (externalCredential && typeof externalCredential === 'string') {
-        console.log('before init interaction...');
         // External Google One Tap flow - initialize interaction for external scenario
         await asyncInitInteraction(InteractionEvent.SignIn);
-        console.log('after init interaction...');
       }
 
       const [error, result] = await verifySocial(connectorId, {
@@ -219,34 +214,8 @@ const useSocialSignInListener = (connectorId: string) => {
         )
     );
 
-    console.log('=== Google One Tap Debug Info ===');
-    console.log('isGoogleOneTap:', isGoogleOneTap);
-    console.log('isExternalCredential:', isExternalCredential);
-    console.log('connectorId:', connectorId);
-    console.log('state:', state);
-    console.log('rest:', JSON.stringify(rest, null, 2));
-    console.log('csrfToken from params:', rest[GoogleConnector.oneTapParams.csrfToken]);
-    console.log(
-      'validateGoogleOneTapCsrfToken result:',
-      rest[GoogleConnector.oneTapParams.csrfToken]
-        ? validateGoogleOneTapCsrfToken(rest[GoogleConnector.oneTapParams.csrfToken])
-        : 'No CSRF token provided'
-    );
-
     // Cleanup the search parameters once it's consumed
     setSearchParameters({}, { replace: true });
-
-    console.log('isGoogleOneTap && isExternalCredential', isGoogleOneTap && isExternalCredential);
-    console.log(
-      'isGoogleOneTap && !isExternalCredential && validateGoogleOneTapCsrfToken(rest[GoogleConnector.oneTapParams.csrfToken])',
-      isGoogleOneTap &&
-        !isExternalCredential &&
-        validateGoogleOneTapCsrfToken(rest[GoogleConnector.oneTapParams.csrfToken])
-    );
-    console.log(
-      '(!isGoogleOneTap && validateState(state, connectorId))',
-      !isGoogleOneTap && validateState(state, connectorId, true)
-    );
 
     // Validate authentication parameters based on different scenarios:
     // 1. Normal social login: requires valid state parameter for CSRF protection
@@ -272,16 +241,11 @@ const useSocialSignInListener = (connectorId: string) => {
 
     const isValidAuth = getAuthValidationResult();
 
-    console.log('=== Auth Validation ===');
-    console.log('isValidAuth:', isValidAuth);
-
     if (!isValidAuth) {
       setToast(t('error.invalid_connector_auth'));
       navigate('/' + experience.routes.signIn);
       return;
     }
-
-    console.log('verificationIdRef.current', verificationIdRef.current);
 
     // Validate session based on different scenarios:
     // 1. Normal social login: requires valid verificationId
@@ -309,10 +273,6 @@ const useSocialSignInListener = (connectorId: string) => {
     };
 
     const isValidSession = getSessionValidationResult();
-
-    console.log('=== Session Validation ===');
-    console.log('verificationIdRef.current:', verificationIdRef.current);
-    console.log('isValidSession:', isValidSession);
 
     if (!isValidSession) {
       setToast(t('error.invalid_session'));
