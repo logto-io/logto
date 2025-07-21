@@ -4,7 +4,6 @@ import assert from 'node:assert';
 import { readFileSync } from 'node:fs';
 import querystring from 'node:querystring';
 
-import { GoogleConnector } from '@logto/connector-kit';
 import { userClaims } from '@logto/core-kit';
 import type { I18nKey } from '@logto/phrases';
 import {
@@ -17,7 +16,7 @@ import {
   type LogtoUiCookie,
   ExtraParamsKey,
 } from '@logto/schemas';
-import { conditional, removeUndefinedKeys, trySafe, tryThat } from '@silverhand/essentials';
+import { removeUndefinedKeys, trySafe, tryThat } from '@silverhand/essentials';
 import { type i18n } from 'i18next';
 import { Provider, errors } from 'oidc-provider';
 import getRawBody from 'raw-body';
@@ -41,7 +40,6 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import { i18next } from '#src/utils/i18n.js';
 
-import { type ConnectorLibrary } from '../libraries/connector.js';
 import { type SubscriptionLibrary } from '../libraries/subscription.js';
 import koaTokenUsageGuard from '../middleware/koa-token-usage-guard.js';
 
@@ -70,16 +68,13 @@ export default function initOidc(
   libraries: Libraries,
   logtoConfigs: LogtoConfigLibrary,
   cloudConnection: CloudConnectionLibrary,
-  subscription: SubscriptionLibrary,
-  connectors: ConnectorLibrary
+  subscription: SubscriptionLibrary
 ): Provider {
   const {
     resources: { findDefaultResource },
     users: { findUserById },
     organizations,
-    signInExperiences: { findDefaultSignInExperience },
   } = queries;
-  const { getLogtoConnectors } = connectors;
   const logoutSource = readFileSync('static/html/logout.html', 'utf8');
   const logoutSuccessSource = readFileSync('static/html/post-logout/index.html', 'utf8');
 
@@ -212,7 +207,7 @@ export default function initOidc(
       );
     },
     interactions: {
-      url: async (ctx, { params: { client_id: appId }, prompt }) => {
+      url: (ctx, { params: { client_id: appId }, prompt }) => {
         const params = trySafe(() => extraParamsObjectGuard.parse(ctx.oidc.params ?? {})) ?? {};
 
         // Cookies are required to apply the correct server-side rendering
@@ -229,20 +224,7 @@ export default function initOidc(
 
         switch (prompt.name) {
           case 'login': {
-            const connectors = await getLogtoConnectors();
-            const { socialSignInConnectorTargets } = await findDefaultSignInExperience();
-            const googleConnector =
-              socialSignInConnectorTargets.includes(GoogleConnector.target) &&
-              connectors.find(({ metadata }) => metadata.id === GoogleConnector.factoryId);
-
-            return (
-              '/' +
-              buildLoginPromptUrl(
-                params,
-                appId,
-                conditional(googleConnector && googleConnector.dbEntry.id)
-              )
-            );
+            return '/' + buildLoginPromptUrl(params, appId);
           }
 
           case 'consent': {
