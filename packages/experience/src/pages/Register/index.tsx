@@ -1,10 +1,9 @@
-import { AgreeToTermsPolicy, ExtraParamsKey, SignInMode } from '@logto/schemas';
+import { AgreeToTermsPolicy, SignInMode } from '@logto/schemas';
 import { useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 
 import LandingPageLayout from '@/Layout/LandingPageLayout';
-import PageContext from '@/Providers/PageContextProvider/PageContext';
 import SingleSignOnFormModeContextProvider from '@/Providers/SingleSignOnFormModeContextProvider';
 import SingleSignOnFormModeContext from '@/Providers/SingleSignOnFormModeContextProvider/SingleSignOnFormModeContext';
 import Divider from '@/components/Divider';
@@ -95,8 +94,6 @@ const RegisterFooter = () => {
 const Register = () => {
   const { signUpMethods, socialConnectors, signInMode } = useSieMethods();
   const { agreeToTermsPolicy } = useTerms();
-  const [params] = useSearchParams();
-  const { experienceSettings } = useContext(PageContext);
 
   if (!signInMode) {
     return <ErrorPage />;
@@ -104,22 +101,6 @@ const Register = () => {
 
   if (signInMode === SignInMode.SignIn) {
     return <Navigate to="/sign-in" />;
-  }
-
-  // External Google One Tap credential detection
-  if (
-    params.get(ExtraParamsKey.GoogleOneTapCredential) &&
-    experienceSettings?.googleOneTap?.connectorId
-  ) {
-    return (
-      <Navigate
-        replace
-        to={{
-          pathname: `/callback/${experienceSettings.googleOneTap.connectorId}`,
-          search: `?${params.toString()}`,
-        }}
-      />
-    );
   }
 
   return (
