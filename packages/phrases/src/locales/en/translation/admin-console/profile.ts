@@ -107,6 +107,29 @@ const profile = {
   unlink_confirm_text: 'Yes, unlink',
   unlink_reminder:
     'Users will not be able to sign in with the <span></span> account if you unlink it. Are you sure to proceed?',
+  fields: {
+    name: 'Name',
+    avatar: 'Avatar',
+    familyName: 'Family name',
+    givenName: 'Given name',
+    middleName: 'Middle name',
+    nickname: 'Nickname',
+    preferredUsername: 'Preferred username',
+    profile: 'Profile',
+    website: 'Website',
+    gender: 'Gender',
+    birthdate: 'Birthdate',
+    zoneinfo: 'Timezone',
+    locale: 'Language',
+    address: {
+      formatted: 'Address',
+      streetAddress: 'Street address',
+      locality: 'City',
+      region: 'State',
+      postalCode: 'Zip code',
+      country: 'Country',
+    },
+  },
 };
 
 export default Object.freeze(profile);

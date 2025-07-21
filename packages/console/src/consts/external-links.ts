@@ -45,6 +45,7 @@ export const backchannelLogout = '/end-user-flows/sign-out#federated-sign-out-ba
 export const authFlows = '/end-user-flows#authentication-flows';
 export const termsAndPrivacy = '/end-user-flows/sign-up-and-sign-in/terms-and-privacy';
 export const mfa = '/end-user-flows/mfa';
+export const collectUserProfile = '/end-user-flows/collect-user-profile';
 export const connectors = '/connectors';
 export const socialConnectors = '/connectors/social-connectors';
 export const emailConnectors = '/connectors/email-connectors';
