@@ -8,8 +8,9 @@ import {
   type EncryptedTokenSet,
   type EnterpriseSsoTokenSetSecret,
   type SocialTokenSetSecret,
+  type DesensitizedTokenSetSecret,
 } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
+import { conditional, trySafe } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import { EnvSet } from '../env-set/index.js';
@@ -191,6 +192,11 @@ export const desensitizeTokenSetSecret = <
   authTag,
   ciphertext,
   ...rest
-}: T): Omit<T, 'encryptedDek' | 'iv' | 'authTag' | 'ciphertext'> => {
-  return rest;
+}: T): DesensitizedTokenSetSecret<T> => {
+  const tokenSet = trySafe(() => decryptTokens({ encryptedDek, iv, authTag, ciphertext }));
+
+  return {
+    ...rest,
+    hasRefreshToken: Boolean(tokenSet?.refresh_token),
+  };
 };

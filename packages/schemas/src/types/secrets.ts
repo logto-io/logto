@@ -1,5 +1,5 @@
 import { tokenResponseGuard } from '@logto/connector-kit';
-import { z } from 'zod';
+import { boolean, z } from 'zod';
 
 import { SecretEnterpriseSsoConnectorRelations } from '../db-entries/secret-enterprise-sso-connector-relation.js';
 import { SecretSocialConnectorRelations } from '../db-entries/secret-social-connector-relation.js';
@@ -80,12 +80,16 @@ export const socialTokenSetSecretGuard = Secrets.guard.extend({
  */
 export type SocialTokenSetSecret = z.infer<typeof socialTokenSetSecretGuard>;
 
-export const desensitizedSocialTokenSetSecretGuard = socialTokenSetSecretGuard.omit({
-  encryptedDek: true,
-  iv: true,
-  authTag: true,
-  ciphertext: true,
-});
+export const desensitizedSocialTokenSetSecretGuard = socialTokenSetSecretGuard
+  .omit({
+    encryptedDek: true,
+    iv: true,
+    authTag: true,
+    ciphertext: true,
+  })
+  .extend({
+    hasRefreshToken: boolean(),
+  });
 
 export type DesensitizedSocialTokenSetSecret = z.infer<
   typeof desensitizedSocialTokenSetSecretGuard
@@ -107,16 +111,26 @@ export const enterpriseSsoTokenSetSecretGuard = Secrets.guard.extend({
  */
 export type EnterpriseSsoTokenSetSecret = z.infer<typeof enterpriseSsoTokenSetSecretGuard>;
 
-export const desensitizedEnterpriseSsoTokenSetSecretGuard = enterpriseSsoTokenSetSecretGuard.omit({
-  encryptedDek: true,
-  iv: true,
-  authTag: true,
-  ciphertext: true,
-});
+export const desensitizedEnterpriseSsoTokenSetSecretGuard = enterpriseSsoTokenSetSecretGuard
+  .omit({
+    encryptedDek: true,
+    iv: true,
+    authTag: true,
+    ciphertext: true,
+  })
+  .extend({
+    hasRefreshToken: boolean(),
+  });
 
 export type DesensitizedEnterpriseSsoTokenSetSecret = z.infer<
   typeof desensitizedEnterpriseSsoTokenSetSecretGuard
 >;
+
+export type DesensitizedTokenSetSecret<
+  T extends SocialTokenSetSecret | EnterpriseSsoTokenSetSecret,
+> = Omit<T, 'encryptedDek' | 'iv' | 'authTag' | 'ciphertext'> & {
+  hasRefreshToken: boolean;
+};
 
 export const getThirdPartyAccessTokenResponseGuard = tokenResponseGuard
   .pick({
