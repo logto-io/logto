@@ -195,6 +195,8 @@ export const GoogleConnector = Object.freeze({
     csrfToken: 'g_csrf_token',
     /** The parameter Google One Tap uses to carry the ID token. */
     credential: 'credential',
+    /** The parameter Google One Tap uses to carry the ID token from the external website. This should be aligned with {@link ExtraParamsKey.GoogleOneTapCredential}. */
+    externalCredential: 'google_one_tap_credential',
   }),
   configGuard: z.object({
     clientId: z.string(),
@@ -216,4 +218,22 @@ export type GoogleConnectorConfig = {
    * @link https://developers.google.com/identity/protocols/oauth2/web-server#offline
    */
   offlineAccess?: boolean;
+};
+
+export const isGoogleOneTap = (data: Record<string, unknown>) => {
+  return (
+    Boolean(data[GoogleConnector.oneTapParams.externalCredential]) ||
+    (Boolean(data[GoogleConnector.oneTapParams.credential]) &&
+      Boolean(data[GoogleConnector.oneTapParams.csrfToken]))
+  );
+};
+
+export const isExternalGoogleOneTap = (data: Record<string, unknown>) => {
+  return Boolean(
+    data[GoogleConnector.oneTapParams.externalCredential] &&
+      !(
+        data[GoogleConnector.oneTapParams.csrfToken] ??
+        data[GoogleConnector.oneTapParams.credential]
+      )
+  );
 };

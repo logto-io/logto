@@ -4,6 +4,7 @@ import {
   ConnectorType,
   type SocialConnector,
   GoogleConnector,
+  isExternalGoogleOneTap as isExternalGoogleOneTapChecker,
 } from '@logto/connector-kit';
 import {
   VerificationType,
@@ -156,7 +157,6 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     ctx: WithLogContext,
     tenantContext: TenantContext,
     connectorData: JsonObject,
-    isExternalWebsiteGoogleOneTap = false,
     connectorSessionType: SocialAuthorizationSessionStorageType = 'interactionSession'
   ) {
     const { userInfo, encryptedTokenSet } = await this.verifySocialIdentity(
@@ -417,10 +417,10 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     { connectorId, connectorData }: SocialConnectorPayload,
     ctx: WithLogContext,
     { provider }: TenantContext,
-    connectorSessionType: SocialAuthorizationSessionStorageType,
-    isExternalWebsiteGoogleOneTap = false
+    connectorSessionType: SocialAuthorizationSessionStorageType
   ) {
     const connector = await this.getConnectorData();
+    const isExternalWebsiteGoogleOneTap = isExternalGoogleOneTapChecker(connectorData);
 
     // Verify the CSRF token if it's a Google connector and has credential (a Google One Tap verification)
     if (
