@@ -19,6 +19,8 @@ export enum GlobalAnonymousRoute {
   OneTimeTokenLanding = '/one-time-token',
   /** The global auth status checker route for iframe usage. */
   AuthStatus = '/auth-status',
+  /** The external Google One Tap landing page for external website integration. */
+  ExternalGoogleOneTapLanding = '/external-google-one-tap',
 }
 
 /**
