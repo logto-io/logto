@@ -76,7 +76,8 @@ function TokenStorage<T extends ConnectorType>({ type, tokenSecret, connector, m
       refreshTokenStatus: metadata?.hasRefreshToken ? 'available' : 'not_available',
       createdAt: createdAt ? formatDate(createdAt) : '-',
       updatedAt: updatedAt ? formatDate(updatedAt) : '-',
-      expiresAt: metadata?.expiresAt ? formatDate(metadata.expiresAt) : '-',
+      // `expiresAt` is in seconds, so we multiply by 1000 to convert to milliseconds for formatting
+      expiresAt: metadata?.expiresAt ? formatDate(metadata.expiresAt * 1000) : '-',
       scope: metadata?.scope,
     };
   }, [isTokenStorageSupported, tokenSecret]);
