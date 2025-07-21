@@ -1,9 +1,4 @@
-import {
-  type SocialUserInfo,
-  socialUserInfoGuard,
-  type TemplateType,
-  type ToZodObject,
-} from '@logto/connector-kit';
+import { type SocialUserInfo, socialUserInfoGuard, type ToZodObject } from '@logto/connector-kit';
 import {
   type CreateUser,
   encryptedTokenSetGuard,
@@ -14,8 +9,6 @@ import {
   Users,
   UserSsoIdentities,
   type UserSsoIdentity,
-  type VerificationIdentifier,
-  type VerificationType,
 } from '@logto/schemas';
 import type { Provider } from 'oidc-provider';
 import { z } from 'zod';
