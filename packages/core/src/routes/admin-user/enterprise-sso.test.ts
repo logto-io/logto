@@ -58,6 +58,7 @@ describe('Enterprise SSO Routes', () => {
     encryptedDek: Buffer.from(''),
     metadata: {
       scope: 'foo bar',
+      hasRefreshToken: false,
     },
     ssoConnectorId: mockSsoConnectorId,
     issuer: mockSsoIdentity.issuer,

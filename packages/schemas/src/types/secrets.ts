@@ -1,5 +1,5 @@
 import { tokenResponseGuard } from '@logto/connector-kit';
-import { boolean, z } from 'zod';
+import { z } from 'zod';
 
 import { SecretEnterpriseSsoConnectorRelations } from '../db-entries/secret-enterprise-sso-connector-relation.js';
 import { SecretSocialConnectorRelations } from '../db-entries/secret-social-connector-relation.js';
@@ -27,6 +27,7 @@ export const tokenSetMetadataGuard = z.object({
   scope: z.string().optional(),
   expiresAt: z.number().optional(),
   tokenType: z.string().optional(),
+  hasRefreshToken: z.boolean(),
 });
 
 export type TokenSetMetadata = z.infer<typeof tokenSetMetadataGuard>;
@@ -80,16 +81,12 @@ export const socialTokenSetSecretGuard = Secrets.guard.extend({
  */
 export type SocialTokenSetSecret = z.infer<typeof socialTokenSetSecretGuard>;
 
-export const desensitizedSocialTokenSetSecretGuard = socialTokenSetSecretGuard
-  .omit({
-    encryptedDek: true,
-    iv: true,
-    authTag: true,
-    ciphertext: true,
-  })
-  .extend({
-    hasRefreshToken: boolean(),
-  });
+export const desensitizedSocialTokenSetSecretGuard = socialTokenSetSecretGuard.omit({
+  encryptedDek: true,
+  iv: true,
+  authTag: true,
+  ciphertext: true,
+});
 
 export type DesensitizedSocialTokenSetSecret = z.infer<
   typeof desensitizedSocialTokenSetSecretGuard
@@ -111,16 +108,12 @@ export const enterpriseSsoTokenSetSecretGuard = Secrets.guard.extend({
  */
 export type EnterpriseSsoTokenSetSecret = z.infer<typeof enterpriseSsoTokenSetSecretGuard>;
 
-export const desensitizedEnterpriseSsoTokenSetSecretGuard = enterpriseSsoTokenSetSecretGuard
-  .omit({
-    encryptedDek: true,
-    iv: true,
-    authTag: true,
-    ciphertext: true,
-  })
-  .extend({
-    hasRefreshToken: boolean(),
-  });
+export const desensitizedEnterpriseSsoTokenSetSecretGuard = enterpriseSsoTokenSetSecretGuard.omit({
+  encryptedDek: true,
+  iv: true,
+  authTag: true,
+  ciphertext: true,
+});
 
 export type DesensitizedEnterpriseSsoTokenSetSecret = z.infer<
   typeof desensitizedEnterpriseSsoTokenSetSecretGuard
@@ -128,9 +121,7 @@ export type DesensitizedEnterpriseSsoTokenSetSecret = z.infer<
 
 export type DesensitizedTokenSetSecret<
   T extends SocialTokenSetSecret | EnterpriseSsoTokenSetSecret,
-> = Omit<T, 'encryptedDek' | 'iv' | 'authTag' | 'ciphertext'> & {
-  hasRefreshToken: boolean;
-};
+> = Omit<T, 'encryptedDek' | 'iv' | 'authTag' | 'ciphertext'>;
 
 export const getThirdPartyAccessTokenResponseGuard = tokenResponseGuard
   .pick({

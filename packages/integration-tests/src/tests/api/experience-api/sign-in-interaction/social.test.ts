@@ -76,6 +76,7 @@ describe('social sign-in and sign-up', () => {
     if (isDevFeaturesEnabled) {
       const { tokenSecret } = await getUserIdentity(userId, mockSocialConnectorTarget);
       expect(tokenSecret?.metadata.scope).toBe(mockTokenResponse.scope);
+      expect(tokenSecret?.metadata.hasRefreshToken).toBe(false);
     }
   });
 
@@ -123,7 +124,7 @@ describe('social sign-in and sign-up', () => {
     if (isDevFeaturesEnabled) {
       const { tokenSecret } = await getUserIdentity(userId, mockSocialConnectorTarget);
       expect(tokenSecret?.metadata.scope).toBe('openid profile email');
-      expect(tokenSecret?.hasRefreshToken).toBe(true);
+      expect(tokenSecret?.metadata.hasRefreshToken).toBe(true);
     }
     await deleteUser(userId);
   });
