@@ -28,7 +28,7 @@ import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-err
 import useToast from '@/hooks/use-toast';
 import { socialAccountNotExistErrorDataGuard } from '@/types/guard';
 import { parseQueryParameters } from '@/utils';
-import { validateGoogleOneTapCsrfToken, validateState } from '@/utils/social-connectors';
+import { getAuthValidationResult, getSessionValidationResult } from '@/utils/social-connectors';
 
 const useSocialSignInListener = (connectorId: string) => {
   const [loading, setLoading] = useState(true);
@@ -216,29 +216,13 @@ const useSocialSignInListener = (connectorId: string) => {
     // Cleanup the search parameters once it's consumed
     setSearchParameters({}, { replace: true });
 
-    // Validate authentication parameters based on different scenarios:
-    // 1. Normal social login: requires valid state parameter for CSRF protection
-    // 2. Google One Tap from external website: no validation needed (already verified by Google)
-    // 3. Google One Tap from Experience app: validate CSRF token if present
-    const getAuthValidationResult = () => {
-      if (!isGoogleOneTap) {
-        // Case 1: Normal social login (not Google One Tap) - validate state parameter
-        return validateState(state, connectorId);
-      }
-
-      if (isExternalCredential) {
-        // Case 2: Google One Tap from external website (no CSRF token) - always valid
-        return true;
-      }
-
-      // Case 3: Google One Tap from Experience app
-      // Check if CSRF token is present and validate it
-      // This handles the case where Google One Tap doesn't properly set CSRF token
-      const csrfToken = rest[GoogleConnector.oneTapParams.csrfToken];
-      return validateGoogleOneTapCsrfToken(csrfToken);
-    };
-
-    const isValidAuth = getAuthValidationResult();
+    const isValidAuth = getAuthValidationResult({
+      isGoogleOneTap,
+      state,
+      connectorId,
+      isExternalCredential,
+      params: rest,
+    });
 
     if (!isValidAuth) {
       setToast(t('error.invalid_connector_auth'));
@@ -246,32 +230,12 @@ const useSocialSignInListener = (connectorId: string) => {
       return;
     }
 
-    // Validate session based on different scenarios:
-    // 1. Normal social login: requires valid verificationId
-    // 2. Google One Tap from Experience app: allow if CSRF token valid
-    // 3. Google One Tap from external website: always valid (Google verified)
-    const getSessionValidationResult = () => {
-      // If we have a verificationId, it's always valid (normal flow)
-      if (verificationIdRef.current) {
-        return true;
-      }
-
-      if (!isGoogleOneTap) {
-        // Normal social login without verificationId is invalid
-        return false;
-      }
-
-      if (isExternalCredential) {
-        // External Google One Tap always valid
-        return true;
-      }
-
-      // Experience Google One Tap: allow if CSRF token valid or missing
-      const csrfToken = rest[GoogleConnector.oneTapParams.csrfToken];
-      return validateGoogleOneTapCsrfToken(csrfToken);
-    };
-
-    const isValidSession = getSessionValidationResult();
+    const isValidSession = getSessionValidationResult({
+      verificationId: verificationIdRef.current,
+      isGoogleOneTap,
+      isExternalCredential,
+      params: rest,
+    });
 
     if (!isValidSession) {
       setToast(t('error.invalid_session'));
