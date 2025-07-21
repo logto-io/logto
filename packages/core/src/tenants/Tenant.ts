@@ -128,8 +128,7 @@ export default class Tenant implements TenantContext {
       libraries,
       logtoConfigs,
       cloudConnection,
-      subscription,
-      connectors
+      subscription
     );
     app.use(mount('/oidc', provider.app));
 

@@ -1,5 +1,6 @@
 import path from 'node:path';
 
+import { GoogleConnector } from '@logto/connector-kit';
 import type { CustomClientMetadata, ExtraParamsObject, OidcClientMetadata } from '@logto/schemas';
 import {
   ApplicationType,
@@ -96,11 +97,8 @@ const firstScreenRouteMapping: Record<FirstScreen, keyof typeof experience.route
   [FirstScreen.SignInDeprecated]: 'signIn',
 };
 
-export const buildLoginPromptUrl = (
-  params: ExtraParamsObject,
-  appId?: unknown,
-  googleOneTapConnectorId?: string
-): string => {
+// eslint-disable-next-line complexity
+export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown): string => {
   const firstScreenKey =
     params[ExtraParamsKey.FirstScreen] ??
     params[ExtraParamsKey.InteractionMode] ??
@@ -133,13 +131,15 @@ export const buildLoginPromptUrl = (
   appendExtraParam(ExtraParamsKey.LoginHint);
   appendExtraParam(ExtraParamsKey.Identifier);
 
-  if (googleOneTapCredential && googleOneTapConnectorId) {
-    return path.join(`callback/${googleOneTapConnectorId}`) + getSearchParamString();
-  }
-
-  if (directSignIn) {
+  // Reuse DirectSignIn page to handle Google One Tap credential.
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  if (directSignIn || googleOneTapCredential) {
     searchParams.append('fallback', firstScreen);
-    const [method, target] = directSignIn.split(':');
+    const [method, target] =
+      directSignIn?.split(':') ??
+      // Only add Google connector fallback when Google One Tap credential is present.
+      conditional(googleOneTapCredential && ['social', GoogleConnector.target]) ??
+      [];
     return path.join('direct', method ?? '', target ?? '') + getSearchParamString();
   }
 

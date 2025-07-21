@@ -24,6 +24,7 @@ const SignInFooters = () => {
   const { t } = useTranslation();
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const navigate = useNavigate();
+  const [params] = useSearchParams();
 
   const { signInMethods, signUpMethods, socialConnectors, signInMode, singleSignOnEnabled } =
     useSieMethods();
