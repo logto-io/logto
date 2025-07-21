@@ -1,4 +1,8 @@
-import { GoogleConnector } from '@logto/connector-kit';
+import {
+  GoogleConnector,
+  isExternalGoogleOneTap as isExternalGoogleOneTapChecker,
+  isGoogleOneTap as isGoogleOneTapChecker,
+} from '@logto/connector-kit';
 import type { RequestErrorBody } from '@logto/schemas';
 import {
   ExtraParamsKey,
@@ -123,13 +127,14 @@ const useSocialSignInListener = (connectorId: string) => {
 
   const verifySocialCallbackData = useCallback(
     async (connectorId: string, data: Record<string, unknown>) => {
+      const isGoogleOneTap = isGoogleOneTapChecker(data);
       // Check for external Google One Tap credentials from extraParams
-      const { [ExtraParamsKey.GoogleOneTapCredential]: externalCredential, ...rest } = data;
-      if (externalCredential && typeof externalCredential === 'string') {
+      if (isGoogleOneTap) {
         // External Google One Tap flow - initialize interaction for external scenario
         await asyncInitInteraction(InteractionEvent.SignIn);
       }
 
+      const { [ExtraParamsKey.GoogleOneTapCredential]: externalCredential, ...rest } = data;
       const [error, result] = await verifySocial(connectorId, {
         verificationId: verificationIdRef.current,
         connectorData: {
@@ -199,19 +204,10 @@ const useSocialSignInListener = (connectorId: string) => {
     const { state, ...rest } = parseQueryParameters(searchParameters);
 
     // Google One Tap always contains the `credential`
-    const isGoogleOneTap =
-      Boolean(rest[ExtraParamsKey.GoogleOneTapCredential]) ||
-      (Boolean(rest[GoogleConnector.oneTapParams.credential]) &&
-        Boolean(rest[GoogleConnector.oneTapParams.csrfToken]));
+    const isGoogleOneTap = isGoogleOneTapChecker(rest);
     // External Google One Tap always contains the `credential` and doesn't contain the `csrfToken`
     // Experience built-in Google One Tap always contains the `csrfToken`
-    const isExternalCredential = Boolean(
-      rest[ExtraParamsKey.GoogleOneTapCredential] &&
-        !(
-          rest[GoogleConnector.oneTapParams.csrfToken] ??
-          rest[GoogleConnector.oneTapParams.credential]
-        )
-    );
+    const isExternalCredential = isExternalGoogleOneTapChecker(rest);
 
     // Cleanup the search parameters once it's consumed
     setSearchParameters({}, { replace: true });

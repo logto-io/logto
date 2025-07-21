@@ -86,10 +86,6 @@ export type SocialVerificationCallbackPayload = {
   /** The callback data from the social connector. */
   connectorData: Record<string, unknown>;
   /**
-   * Whether the callback is from an external website Google One Tap.
-   */
-  isExternalWebsiteGoogleOneTap?: boolean;
-  /**
    * Verification ID is used to retrieve the verification record.
    * Throws an error if the verification record is not found.
    *
@@ -100,7 +96,6 @@ export type SocialVerificationCallbackPayload = {
 export const socialVerificationCallbackPayloadGuard = z.object({
   connectorData: jsonObjectGuard,
   verificationId: z.string().optional(),
-  isExternalWebsiteGoogleOneTap: z.boolean().optional(),
 }) satisfies ToZodObject<SocialVerificationCallbackPayload>;
 
 /** Payload type for `POST /api/experience/verification/password`. */

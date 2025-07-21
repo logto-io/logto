@@ -1,5 +1,9 @@
 import type { ConnectorSession, SocialUserInfo } from '@logto/connector-kit';
-import { connectorSessionGuard, GoogleConnector } from '@logto/connector-kit';
+import {
+  connectorSessionGuard,
+  GoogleConnector,
+  isExternalGoogleOneTap,
+} from '@logto/connector-kit';
 import type { SocialConnectorPayload } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import type { Context } from 'koa';
@@ -55,8 +59,7 @@ export const createSocialAuthorizationUrl = async (
 export const verifySocialIdentity = async (
   { connectorId, connectorData }: SocialConnectorPayload,
   ctx: WithLogContext,
-  { provider, libraries }: TenantContext,
-  isExternalWebsiteGoogleOneTap = false
+  { provider, libraries }: TenantContext
 ): Promise<SocialUserInfo> => {
   const {
     socials: { getUserInfo, getConnector },
@@ -66,6 +69,7 @@ export const verifySocialIdentity = async (
   log.append({ connectorId, connectorData });
 
   const connector = await getConnector(connectorId);
+  const isExternalWebsiteGoogleOneTap = isExternalGoogleOneTap(connectorData);
 
   // Verify the CSRF token if it's a Google connector and has credential (a Google One Tap
   // verification)

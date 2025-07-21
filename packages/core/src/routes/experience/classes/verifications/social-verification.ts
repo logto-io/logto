@@ -5,6 +5,7 @@ import {
   ConnectorType,
   type SocialConnector,
   GoogleConnector,
+  isExternalGoogleOneTap as isExternalGoogleOneTapChecker,
 } from '@logto/connector-kit';
 import {
   VerificationType,
@@ -159,7 +160,6 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     ctx: WithLogContext,
     tenantContext: TenantContext,
     connectorData: JsonObject,
-    isExternalWebsiteGoogleOneTap = false,
     connectorSessionType: SocialAuthorizationSessionStorageType = 'interactionSession'
   ) {
     // TODO: Remove the dev feature guard once the new social verification flow is fully implemented.
@@ -168,8 +168,7 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
         { connectorId: this.connectorId, connectorData },
         ctx,
         tenantContext,
-        connectorSessionType,
-        isExternalWebsiteGoogleOneTap
+        connectorSessionType
       );
 
       this.socialUserInfo = userInfo;
@@ -181,17 +180,12 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     const socialUserInfo =
       connectorSessionType === 'verificationRecord'
         ? // For the profile API, find the connector session result from the current verification record directly.
-          await this.verifySocialIdentityInternally(
-            connectorData,
-            ctx,
-            isExternalWebsiteGoogleOneTap
-          )
+          await this.verifySocialIdentityInternally(connectorData, ctx)
         : // For the experience API, fetch the connector session result from the provider's interactionDetails.
           await verifySocialIdentity(
             { connectorId: this.connectorId, connectorData },
             ctx,
-            tenantContext,
-            isExternalWebsiteGoogleOneTap
+            tenantContext
           );
 
     this.socialUserInfo = socialUserInfo;
@@ -441,11 +435,8 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
    * Verify the social identity using the connector data received from the client and the connector session stored in the current verification record.
    * This method can be used for both experience and profile APIs, w/o OIDC interaction context.
    */
-  private async verifySocialIdentityInternally(
-    connectorData: JsonObject,
-    ctx: WithLogContext,
-    isExternalWebsiteGoogleOneTap = false
-  ) {
+  private async verifySocialIdentityInternally(connectorData: JsonObject, ctx: WithLogContext) {
+    const isExternalWebsiteGoogleOneTap = isExternalGoogleOneTapChecker(connectorData);
     const connector = await this.getConnectorData();
     // Verify the CSRF token if it's a Google connector and has credential (a Google One Tap verification)
     if (
@@ -488,10 +479,10 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     { connectorId, connectorData }: SocialConnectorPayload,
     ctx: WithLogContext,
     { provider }: TenantContext,
-    connectorSessionType: SocialAuthorizationSessionStorageType,
-    isExternalWebsiteGoogleOneTap = false
+    connectorSessionType: SocialAuthorizationSessionStorageType
   ) {
     const connector = await this.getConnectorData();
+    const isExternalWebsiteGoogleOneTap = isExternalGoogleOneTapChecker(connectorData);
 
     // Verify the CSRF token if it's a Google connector and has credential (a Google One Tap verification)
     if (
