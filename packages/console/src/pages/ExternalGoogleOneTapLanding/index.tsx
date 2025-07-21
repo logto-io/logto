@@ -32,7 +32,7 @@ function ExternalGoogleOneTapLanding() {
     void signIn({
       redirectUri,
       /**
-       * Can not clear tokens here since user may already have tokens and let user select which account to keep.
+       * Cannot clear tokens here since the user may already have tokens and let the user select which account to keep.
        * We can hence clear tokens in the <Callback /> page.
        */
       clearTokens: false,
