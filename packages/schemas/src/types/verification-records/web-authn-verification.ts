@@ -27,3 +27,15 @@ export const webAuthnVerificationRecordDataGuard = z.object({
   authenticationChallenge: z.string().optional(),
   registrationInfo: bindWebAuthnGuard.optional(),
 }) satisfies ToZodObject<WebAuthnVerificationRecordData>;
+
+export type SanitizedWebAuthnVerificationRecordData = Omit<
+  WebAuthnVerificationRecordData,
+  'registrationInfo' | 'registrationChallenge' | 'authenticationChallenge'
+>;
+
+export const sanitizedWebAuthnVerificationRecordDataGuard =
+  webAuthnVerificationRecordDataGuard.omit({
+    registrationInfo: true,
+    registrationChallenge: true,
+    authenticationChallenge: true,
+  }) satisfies ToZodObject<SanitizedWebAuthnVerificationRecordData>;

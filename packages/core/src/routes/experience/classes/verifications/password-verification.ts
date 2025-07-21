@@ -111,4 +111,8 @@ export class PasswordVerification
       verified,
     };
   }
+
+  toSanitizedJson(): PasswordVerificationRecordData {
+    return this.toJson();
+  }
 }

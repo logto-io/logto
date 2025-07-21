@@ -16,6 +16,7 @@ export abstract class VerificationRecord<
   abstract get isVerified(): boolean;
 
   abstract toJson(): Json;
+  abstract toSanitizedJson(): Json;
 }
 
 type IdentifierVerificationType =

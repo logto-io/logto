@@ -27,3 +27,13 @@ export const enterpriseSsoVerificationRecordDataGuard = z.object({
   encryptedTokenSet: encryptedTokenSetGuard.optional(),
   issuer: z.string().optional(),
 }) satisfies ToZodObject<EnterpriseSsoVerificationRecordData>;
+
+export type SanitizedEnterpriseSsoVerificationRecordData = Omit<
+  EnterpriseSsoVerificationRecordData,
+  'encryptedTokenSet'
+>;
+
+export const sanitizedEnterpriseSsoVerificationRecordDataGuard =
+  enterpriseSsoVerificationRecordDataGuard.omit({
+    encryptedTokenSet: true,
+  }) satisfies ToZodObject<SanitizedEnterpriseSsoVerificationRecordData>;

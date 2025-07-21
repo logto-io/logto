@@ -35,3 +35,13 @@ export const socialVerificationRecordDataGuard = z.object({
   encryptedTokenSet: encryptedTokenSetGuard.optional(),
   connectorSession: connectorSessionGuard.optional(),
 }) satisfies ToZodObject<SocialVerificationRecordData>;
+
+export type SanitizedSocialVerificationRecordData = Omit<
+  SocialVerificationRecordData,
+  'encryptedTokenSet' | 'connectorSession'
+>;
+
+export const sanitizedSocialVerificationRecordDataGuard = socialVerificationRecordDataGuard.omit({
+  encryptedTokenSet: true,
+  connectorSession: true,
+}) satisfies ToZodObject<SanitizedSocialVerificationRecordData>;

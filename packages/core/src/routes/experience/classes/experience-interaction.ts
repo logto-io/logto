@@ -13,6 +13,7 @@ import {
   type Interaction,
   type InteractionContext,
   type WithHooksAndLogsContext,
+  type SanitizedInteractionStorageData,
 } from '../types.js';
 
 import {
@@ -566,6 +567,19 @@ export default class ExperienceInteraction {
       profile: this.profile.data,
       mfa: this.mfa.data,
       verificationRecords: this.verificationRecordsArray.map((record) => record.toJson()),
+      captcha,
+    };
+  }
+
+  public toSanitizedJson(): SanitizedInteractionStorageData {
+    const { interactionEvent, userId, captcha } = this;
+
+    return {
+      interactionEvent,
+      userId,
+      profile: this.profile.sanitizedData,
+      mfa: this.mfa.sanitizedData,
+      verificationRecords: this.verificationRecordsArray.map((record) => record.toSanitizedJson()),
       captcha,
     };
   }

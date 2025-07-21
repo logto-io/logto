@@ -13,6 +13,7 @@ import {
   type User,
   type SocialVerificationRecordData,
   socialVerificationRecordDataGuard,
+  type SanitizedSocialVerificationRecordData,
   type SocialConnectorPayload,
   type EncryptedTokenSet,
   type SecretSocialConnectorRelationPayload,
@@ -40,7 +41,9 @@ import { type IdentifierVerificationRecord } from './verification-record.js';
 
 export {
   type SocialVerificationRecordData,
+  type SanitizedSocialVerificationRecordData,
   socialVerificationRecordDataGuard,
+  sanitizedSocialVerificationRecordDataGuard,
 } from '@logto/schemas';
 
 type SocialAuthorizationSessionStorageType = 'interactionSession' | 'verificationRecord';
@@ -319,16 +322,22 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
   }
 
   toJson(): SocialVerificationRecordData {
-    const { id, connectorId, type, socialUserInfo, encryptedTokenSet, connectorSession } = this;
+    const { id, type, connectorId, socialUserInfo, encryptedTokenSet, connectorSession } = this;
 
     return {
       id,
-      connectorId,
       type,
+      connectorId,
       socialUserInfo,
       encryptedTokenSet,
       connectorSession,
     };
+  }
+
+  toSanitizedJson(): SanitizedSocialVerificationRecordData {
+    const { id, type, connectorId, socialUserInfo } = this;
+
+    return { id, type, connectorId, socialUserInfo };
   }
 
   private async findUserBySocialIdentity(): Promise<User | undefined> {

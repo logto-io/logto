@@ -5,7 +5,7 @@ import {
   type UpdateProfileApiPayload,
   VerificationType,
 } from '@logto/schemas';
-import { trySafe } from '@silverhand/essentials';
+import { pick, trySafe } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
@@ -13,7 +13,11 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { type InteractionContext, type InteractionProfile } from '../types.js';
+import type {
+  SanitizedInteractionProfile,
+  InteractionContext,
+  InteractionProfile,
+} from '../types.js';
 
 import { PasswordValidator } from './libraries/password-validator.js';
 import { ProfileValidator } from './libraries/profile-validator.js';
@@ -43,6 +47,23 @@ export class Profile {
 
   get data() {
     return this.#data;
+  }
+
+  get sanitizedData(): SanitizedInteractionProfile {
+    return pick(
+      this.#data,
+      'avatar',
+      'name',
+      'username',
+      'primaryEmail',
+      'primaryPhone',
+      'profile',
+      'customData',
+      'socialIdentity',
+      'enterpriseSsoIdentity',
+      'jitOrganizationIds',
+      'syncedEnterpriseSsoIdentity'
+    );
   }
 
   /**

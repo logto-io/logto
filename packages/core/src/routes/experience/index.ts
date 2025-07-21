@@ -24,12 +24,14 @@ import { type AnonymousRouter, type RouterInitArgs } from '../types.js';
 
 import experienceAnonymousRoutes from './anonymous-routes/index.js';
 import ExperienceInteraction from './classes/experience-interaction.js';
-import { sanitizeInteractionData } from './classes/utils.js';
 import { experienceRoutes } from './const.js';
 import { koaExperienceInteractionHooks } from './middleware/koa-experience-interaction-hooks.js';
 import koaExperienceInteraction from './middleware/koa-experience-interaction.js';
 import profileRoutes from './profile-routes.js';
-import { publicInteractionStorageGuard, type ExperienceInteractionRouterContext } from './types.js';
+import {
+  sanitizedInteractionStorageGuard,
+  type ExperienceInteractionRouterContext,
+} from './types.js';
 import backupCodeVerificationRoutes from './verification-routes/backup-code-verification.js';
 import enterpriseSsoVerificationRoutes from './verification-routes/enterprise-sso-verification.js';
 import newPasswordIdentityVerificationRoutes from './verification-routes/new-password-identity-verification.js';
@@ -196,12 +198,12 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       `${experienceRoutes.interaction}`,
       koaGuard({
         status: [200],
-        response: publicInteractionStorageGuard,
+        response: sanitizedInteractionStorageGuard,
       }),
       async (ctx, next) => {
         const { experienceInteraction } = ctx;
 
-        ctx.body = sanitizeInteractionData(experienceInteraction);
+        ctx.body = experienceInteraction.toSanitizedJson();
         ctx.status = 200;
         return next();
       }

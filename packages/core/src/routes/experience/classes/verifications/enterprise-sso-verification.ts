@@ -7,6 +7,7 @@ import {
   type UserSsoIdentity,
   type EnterpriseSsoVerificationRecordData,
   enterpriseSsoVerificationRecordDataGuard,
+  type SanitizedEnterpriseSsoVerificationRecordData,
   type EncryptedTokenSet,
   type SecretEnterpriseSsoConnectorRelationPayload,
 } from '@logto/schemas';
@@ -33,7 +34,9 @@ import { type IdentifierVerificationRecord } from './verification-record.js';
 
 export {
   type EnterpriseSsoVerificationRecordData,
+  type SanitizedEnterpriseSsoVerificationRecordData,
   enterpriseSsoVerificationRecordDataGuard,
+  sanitizedEnterpriseSsoVerificationRecordDataGuard,
 } from '@logto/schemas';
 
 export type EnterpriseSsoConnectorTokenSetSecret = {
@@ -238,16 +241,22 @@ export class EnterpriseSsoVerification
   }
 
   toJson(): EnterpriseSsoVerificationRecordData {
-    const { id, connectorId, type, enterpriseSsoUserInfo, issuer, encryptedTokenSet } = this;
+    const { id, type, connectorId, enterpriseSsoUserInfo, encryptedTokenSet, issuer } = this;
 
     return {
       id,
-      connectorId,
       type,
+      connectorId,
       enterpriseSsoUserInfo,
-      issuer,
       encryptedTokenSet,
+      issuer,
     };
+  }
+
+  toSanitizedJson(): SanitizedEnterpriseSsoVerificationRecordData {
+    const { id, type, connectorId, enterpriseSsoUserInfo, issuer } = this;
+
+    return { id, type, connectorId, enterpriseSsoUserInfo, issuer };
   }
 
   private async findUserSsoIdentityByEnterpriseSsoUserInfo(): Promise<

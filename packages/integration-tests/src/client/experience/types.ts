@@ -11,9 +11,9 @@ export type RedirectResponse = {
 };
 
 /**
- * @see {@linkcode @logto/core/src/routes/experience/types.ts}
+ * @see {@link file://./../../../../../core/src/routes/experience/types.ts}
  */
-export type PublicInteractionStorageData = {
+export type SanitizedInteractionStorageData = {
   interactionEvent: InteractionEvent;
   userId?: string;
   profile?: Partial<
