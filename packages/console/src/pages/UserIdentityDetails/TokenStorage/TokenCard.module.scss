@@ -1,0 +1,20 @@
+@use '@/scss/underscore' as _;
+
+.tokenCard {
+  padding: _.unit(5.5) _.unit(6);
+  border: 1px solid var(--color-divider);
+  border-radius: 12px;
+}
+
+.tokenCardHeader {
+  display: flex;
+  align-items: center;
+  gap: _.unit(5);
+  font: var(--font-label-1);
+  margin-bottom: _.unit(2);
+}
+
+.tokenCardDescription {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}

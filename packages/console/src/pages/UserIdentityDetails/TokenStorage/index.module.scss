@@ -1,0 +1,25 @@
+@use '@/scss/underscore' as _;
+
+.tokenStatus {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(2);
+}
+
+.multiLine {
+  height: _.unit(27);
+}
+
+.deleteCard {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-divider);
+  border-radius: _.unit(2);
+  padding: _.unit(4);
+
+  .description {
+    flex: 1;
+    margin-inline-end: _.unit(2);
+    font: var(--font-body-2);
+  }
+}
