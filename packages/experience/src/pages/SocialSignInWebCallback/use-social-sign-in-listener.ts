@@ -66,7 +66,6 @@ const useSocialSignInListener = (connectorId: string) => {
       }
 
       if (relatedUser) {
-        // For external Google One Tap, prioritize automatic account linking for better UX
         if (socialSignInSettings.automaticAccountLinking) {
           await bindSocialRelatedUser(verificationId);
         } else {

@@ -96,7 +96,11 @@ const firstScreenRouteMapping: Record<FirstScreen, keyof typeof experience.route
   [FirstScreen.SignInDeprecated]: 'signIn',
 };
 
-export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown): string => {
+export const buildLoginPromptUrl = (
+  params: ExtraParamsObject,
+  appId?: unknown,
+  googleOneTapConnectorId?: string
+): string => {
   const firstScreenKey =
     params[ExtraParamsKey.FirstScreen] ??
     params[ExtraParamsKey.InteractionMode] ??
@@ -108,6 +112,8 @@ export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown):
       : experience.routes[firstScreenRouteMapping[firstScreenKey]];
 
   const directSignIn = params[ExtraParamsKey.DirectSignIn];
+  const googleOneTapCredential = params[ExtraParamsKey.GoogleOneTapCredential];
+
   const searchParams = new URLSearchParams();
   const getSearchParamString = () => (searchParams.size > 0 ? `?${searchParams.toString()}` : '');
 
@@ -126,6 +132,10 @@ export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown):
   appendExtraParam(ExtraParamsKey.GoogleOneTapCredential);
   appendExtraParam(ExtraParamsKey.LoginHint);
   appendExtraParam(ExtraParamsKey.Identifier);
+
+  if (googleOneTapCredential && googleOneTapConnectorId) {
+    return path.join(`callback/${googleOneTapConnectorId}`) + getSearchParamString();
+  }
 
   if (directSignIn) {
     searchParams.append('fallback', firstScreen);

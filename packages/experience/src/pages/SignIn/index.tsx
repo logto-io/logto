@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 
 import LandingPageLayout from '@/Layout/LandingPageLayout';
-import PageContext from '@/Providers/PageContextProvider/PageContext';
 import SingleSignOnFormModeContextProvider from '@/Providers/SingleSignOnFormModeContextProvider';
 import SingleSignOnFormModeContext from '@/Providers/SingleSignOnFormModeContextProvider/SingleSignOnFormModeContext';
 import Divider from '@/components/Divider';
@@ -25,7 +24,6 @@ const SignInFooters = () => {
   const { t } = useTranslation();
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const navigate = useNavigate();
-  const [params] = useSearchParams();
 
   const { signInMethods, signUpMethods, socialConnectors, signInMode, singleSignOnEnabled } =
     useSieMethods();
@@ -97,7 +95,6 @@ const SignIn = () => {
   const { signInMethods, socialConnectors, signInMode } = useSieMethods();
   const { agreeToTermsPolicy } = useTerms();
   const [params] = useSearchParams();
-  const { experienceSettings } = useContext(PageContext);
 
   if (!signInMode) {
     return <ErrorPage />;
@@ -112,22 +109,6 @@ const SignIn = () => {
       <Navigate
         replace
         to={{ pathname: `/${experience.routes.oneTimeToken}`, search: `?${params.toString()}` }}
-      />
-    );
-  }
-
-  // External Google One Tap credential detection
-  if (
-    params.get(ExtraParamsKey.GoogleOneTapCredential) &&
-    experienceSettings?.googleOneTap?.connectorId
-  ) {
-    return (
-      <Navigate
-        replace
-        to={{
-          pathname: `/callback/${experienceSettings.googleOneTap.connectorId}`,
-          search: `?${params.toString()}`,
-        }}
       />
     );
   }
