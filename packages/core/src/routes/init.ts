@@ -48,6 +48,7 @@ import roleRoutes from './role.js';
 import roleScopeRoutes from './role.scope.js';
 import samlApplicationAnonymousRoutes from './saml-application/anonymous.js';
 import samlApplicationRoutes from './saml-application/index.js';
+import secretsRoutes from './secret.js';
 import sentinelActivitiesRoutes from './sentinel-activities.js';
 import signInExperiencesRoutes from './sign-in-experience/index.js';
 import ssoConnectors from './sso-connector/index.js';
@@ -115,6 +116,10 @@ const createRouters = (tenant: TenantContext) => {
   sentinelActivitiesRoutes(managementRouter, tenant);
   if (EnvSet.values.isDevFeaturesEnabled) {
     customProfileFieldsRoutes(managementRouter, tenant);
+  }
+
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    secretsRoutes(managementRouter, tenant);
   }
 
   // General anonymous router for publicly accessible APIs
