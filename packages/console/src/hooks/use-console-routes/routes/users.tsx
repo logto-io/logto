@@ -1,6 +1,7 @@
 import { Navigate, type RouteObject } from 'react-router-dom';
 import { safeLazy } from 'react-safe-lazy';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { UserDetailsTabs } from '@/consts/page-tabs';
 
 const AuditLogDetails = safeLazy(async () => import('@/pages/AuditLogDetails'));
@@ -31,7 +32,11 @@ export const users: RouteObject = {
       ],
     },
     { path: `:userId/${UserDetailsTabs.Logs}/:logId`, element: <AuditLogDetails /> },
-    { path: ':userId/social-identities/:target', element: <SocialIdentityDetails /> },
-    { path: ':userId/sso-identities/:connectorId', element: <SocialIdentityDetails /> },
+    ...(isDevFeaturesEnabled
+      ? [
+          { path: ':userId/social-identities/:target', element: <SocialIdentityDetails /> },
+          { path: ':userId/sso-identities/:connectorId', element: <SocialIdentityDetails /> },
+        ]
+      : []),
   ],
 };
