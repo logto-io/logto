@@ -34,3 +34,15 @@
   color: var(--color-danger-default);
   margin-inline-start: _.unit(0.5);
 }
+
+@media only screen and (max-width: 580px) {
+  .flexWrapper {
+    flex-direction: column;
+
+    .inputField {
+      flex: none;
+      width: 100%;
+    }
+  }
+}
+
