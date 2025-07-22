@@ -134,19 +134,23 @@ const useSocialSignInListener = (connectorId: string) => {
         await asyncInitInteraction(InteractionEvent.SignIn);
       }
 
+      /**
+       * This is the Google One Tap flow for external websites, and the parameter names used are different
+       * from those in the built-in Google One Tap experience, this can better distinguish the two flows.
+       */
       const { [ExtraParamsKey.GoogleOneTapCredential]: externalCredential, ...rest } = data;
       const [error, result] = await verifySocial(connectorId, {
         verificationId: verificationIdRef.current,
         connectorData: {
           // For validation use only
           redirectUri: `${window.location.origin}/callback/${connectorId}`,
+          ...rest,
           // Not using `conditional` here to make type inference work.
           ...(externalCredential && typeof externalCredential === 'string'
             ? {
                 [GoogleConnector.oneTapParams.credential]: externalCredential,
               }
             : {}),
-          ...rest,
         },
       });
 
