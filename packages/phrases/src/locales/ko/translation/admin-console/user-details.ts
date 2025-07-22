@@ -129,6 +129,25 @@ const user_details = {
       edited: '토큰 {{name}}이/가 성공적으로 편집되었습니다.',
     },
   },
+  connections: {
+    /** UNTRANSLATED */
+    title: 'Connection',
+    /** UNTRANSLATED */
+    description:
+      'The user links third-party accounts for social sign-in, enterprise SSO, or resources access.',
+    /** UNTRANSLATED */
+    token_status_column: 'Token status',
+    token_status: {
+      /** UNTRANSLATED */
+      active: 'Active',
+      /** UNTRANSLATED */
+      expired: 'Expired',
+      /** UNTRANSLATED */
+      inactive: 'Inactive',
+      /** UNTRANSLATED */
+      not_applicable: 'Not applicable',
+    },
+  },
 };
 
 export default Object.freeze(user_details);

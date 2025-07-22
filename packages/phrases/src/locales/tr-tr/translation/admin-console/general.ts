@@ -76,6 +76,8 @@ const general = {
   or: 'Veya',
   reset: 'Sıfırla',
   generate: 'Oluştur',
+  /** UNTRANSLATED */
+  manage: 'Manage',
 };
 
 export default Object.freeze(general);

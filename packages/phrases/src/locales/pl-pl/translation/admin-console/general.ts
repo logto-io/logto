@@ -75,6 +75,8 @@ const general = {
   or: 'Lub',
   reset: 'Resetuj',
   generate: 'Generuj',
+  /** UNTRANSLATED */
+  manage: 'Manage',
 };
 
 export default Object.freeze(general);
