@@ -173,7 +173,7 @@ function TokenStorage<T extends ConnectorType>({ type, tokenSecret, connector, m
         <FormField title="user_identity_details.delete_tokens.title">
           <div className={styles.deleteCard}>
             <div className={styles.description}>
-              {t('tenants.leave_tenant_card.leave_tenant_description')}
+              {t('user_identity_details.token_storage_disabled.description')}
             </div>
             <Button
               type="danger"

@@ -144,8 +144,9 @@ function SocialIdentityDetails() {
         />
       </div>
 
-      {target && (
+      {target && userId && (
         <DeleteSocialIdentityConfirmModal
+          userId={userId}
           isOpen={showDeleteConfirmModal}
           target={target}
           connectorName={<ConnectorName name={connector?.name ?? t('connectors.unknown')} />}

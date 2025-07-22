@@ -10,9 +10,11 @@ type Props = {
   readonly connectorName: ReactElement;
   readonly onCancel: () => void;
   readonly onDeleteCallback: () => void;
+  readonly userId: string;
 };
 
 function DeleteSocialIdentityConfirmModal({
+  userId,
   isOpen,
   target,
   connectorName,
@@ -35,7 +37,7 @@ function DeleteSocialIdentityConfirmModal({
       setIsLoading(true);
 
       try {
-        await api.delete(`api/users/${target}`);
+        await api.delete(`api/users/${userId}/identities/${target}`);
       } finally {
         setIsLoading(false);
       }
