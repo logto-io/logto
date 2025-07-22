@@ -173,7 +173,9 @@ function TokenStorage<T extends ConnectorType>({ type, tokenSecret, connector, m
         <FormField title="user_identity_details.delete_tokens.title">
           <div className={styles.deleteCard}>
             <div className={styles.description}>
-              {t('user_identity_details.token_storage_disabled.description')}
+              {t('user_identity_details.token_storage_disabled.description', {
+                connectorName: type === ConnectorType.Social ? connector.name.en : connector.name,
+              })}
             </div>
             <Button
               type="danger"
