@@ -7,16 +7,17 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import UnnamedTrans from '@/components/UnnamedTrans';
+import ConnectorName from '@/components/ConnectorName';
+import ConnectorTokenStatus from '@/components/ConnectorTokenStatus';
 import Button from '@/ds-components/Button';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
 import ImageWithErrorFallback from '@/ds-components/ImageWithErrorFallback';
 import Table from '@/ds-components/Table';
 import type { RequestError } from '@/hooks/use-api';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { getConnectorGroups } from '@/pages/Connectors/utils';
 
-import ConnectorTokenStatus from './ConnectorTokenStatus';
 import styles from './index.module.scss';
 
 type Props = {
@@ -34,14 +35,12 @@ type RowData = {
   };
 };
 
-function ConnectorName({ name }: { readonly name: RowData['name'] }) {
-  return typeof name === 'string' ? <span>{name}</span> : <UnnamedTrans resource={name} />;
-}
-
 function UserSocialIdentities({ userId }: Props) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console',
   });
+
+  const { navigate } = useTenantPathname();
 
   const {
     data,
@@ -150,7 +149,7 @@ function UserSocialIdentities({ userId }: Props) {
                 type="text"
                 size="small"
                 onClick={() => {
-                  // TODO
+                  navigate(`/users/${userId}/social-identities/${target}`);
                 }}
               />
             ),

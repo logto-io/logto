@@ -143,6 +143,8 @@ const user_details = {
       expired: 'Expired',
       inactive: 'Inactive',
       not_applicable: 'Not applicable',
+      available: 'Available',
+      not_available: 'Not available',
     },
   },
 };

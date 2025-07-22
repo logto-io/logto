@@ -1,0 +1,6 @@
+@use '@/scss/underscore' as _;
+
+.notApplicable {
+  color: var(--color-text-secondary);
+  font: var(--font-body-2);
+}

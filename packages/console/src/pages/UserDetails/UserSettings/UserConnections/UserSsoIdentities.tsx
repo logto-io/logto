@@ -8,14 +8,15 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
+import ConnectorTokenStatus from '@/components/ConnectorTokenStatus';
 import Button from '@/ds-components/Button';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
 import Table from '@/ds-components/Table';
 import { type RequestError } from '@/hooks/use-api';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import SsoConnectorLogo from '@/pages/EnterpriseSso/SsoConnectorLogo';
 
-import ConnectorTokenStatus from './ConnectorTokenStatus';
 import styles from './index.module.scss';
 
 type Props = {
@@ -64,6 +65,8 @@ function UserSsoIdentities({ userId }: Props) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console',
   });
+
+  const { navigate } = useTenantPathname();
 
   const {
     data,
@@ -187,7 +190,7 @@ function UserSsoIdentities({ userId }: Props) {
                 type="text"
                 size="small"
                 onClick={() => {
-                  // TODO
+                  navigate(`/users/${userId}/sso-identities/${ssoConnectorId}`);
                 }}
               />
             ),
