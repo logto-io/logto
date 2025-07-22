@@ -150,6 +150,10 @@ const user_details = {
       inactive: 'Inactive',
       /** UNTRANSLATED */
       not_applicable: 'Not applicable',
+      /** UNTRANSLATED */
+      available: 'Available',
+      /** UNTRANSLATED */
+      not_available: 'Not available',
     },
   },
 };
