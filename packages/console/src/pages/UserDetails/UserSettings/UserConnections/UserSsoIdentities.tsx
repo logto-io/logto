@@ -19,8 +19,7 @@ import ConnectorTokenStatus from './ConnectorTokenStatus';
 import styles from './index.module.scss';
 
 type Props = {
-  readonly ssoIdentities?: GetUserAllIdentitiesResponse['ssoIdentities'];
-  readonly isIdentitiesLoading?: boolean;
+  readonly userId: string;
 };
 
 type RowData = {
@@ -61,20 +60,29 @@ function ConnectorName({
   );
 }
 
-function UserSsoIdentities({ isIdentitiesLoading, ssoIdentities = [] }: Props) {
+function UserSsoIdentities({ userId }: Props) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console',
   });
 
   const {
+    data,
+    isLoading: isIdentitiesLoading,
+    error: identitiesError,
+  } = useSWR<GetUserAllIdentitiesResponse, RequestError>(
+    `api/users/${userId}/all-identities?includeTokenSecret=true`
+  );
+
+  const {
     data: ssoConnectors,
-    isLoading,
-    error,
-    mutate,
+    isLoading: isSsoConnectorsLoading,
+    error: ssoConnectorError,
   } = useSWR<SsoConnectorWithProviderConfig[], RequestError>('api/sso-connectors');
 
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-  const isDataLoading = isIdentitiesLoading || isLoading;
+  const isLoading = isIdentitiesLoading || isSsoConnectorsLoading;
+  const error = identitiesError ?? ssoConnectorError;
+
+  const ssoIdentities = useMemo(() => data?.ssoIdentities ?? [], [data]);
 
   const rowData = useMemo(() => {
     if (!ssoConnectors?.length) {
@@ -131,7 +139,7 @@ function UserSsoIdentities({ isIdentitiesLoading, ssoIdentities = [] }: Props) {
         hasBorder
         rowGroups={[{ key: 'ssoIdentities', data: rowData }]}
         rowIndexKey="ssoConnectorId"
-        isLoading={isDataLoading}
+        isLoading={isLoading}
         errorMessage={error?.body?.message ?? error?.message}
         columns={[
           {

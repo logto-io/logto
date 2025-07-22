@@ -143,7 +143,7 @@ class SecretQueries extends SchemaQueries<SecretKeys, CreateSecret, Secret> {
   }
 
   public async findSocialTokenSetSecretsByUserId(userId: string) {
-    return this.pool.many<SocialTokenSetSecret>(sql`
+    return this.pool.any<SocialTokenSetSecret>(sql`
       select ${sql.join(Object.values(secrets.fields), sql`, `)},
           ${secretSocialConnectorRelations.fields.connectorId},
           ${secretSocialConnectorRelations.fields.identityId},
@@ -157,7 +157,7 @@ class SecretQueries extends SchemaQueries<SecretKeys, CreateSecret, Secret> {
   }
 
   public async findEnterpriseSsoTokenSetSecretsByUserId(userId: string) {
-    return this.pool.many<EnterpriseSsoTokenSetSecret>(sql`
+    return this.pool.any<EnterpriseSsoTokenSetSecret>(sql`
       select ${sql.join(Object.values(secrets.fields), sql`, `)},
           ${secretEnterpriseSsoConnectorRelations.fields.ssoConnectorId},
           ${secretEnterpriseSsoConnectorRelations.fields.identityId},

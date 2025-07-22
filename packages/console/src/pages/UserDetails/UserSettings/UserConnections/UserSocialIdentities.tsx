@@ -20,8 +20,7 @@ import ConnectorTokenStatus from './ConnectorTokenStatus';
 import styles from './index.module.scss';
 
 type Props = {
-  readonly identities?: GetUserAllIdentitiesResponse['socialIdentities'];
-  readonly isIdentitiesLoading?: boolean;
+  readonly userId: string;
 };
 
 type RowData = {
@@ -39,20 +38,30 @@ function ConnectorName({ name }: { readonly name: RowData['name'] }) {
   return typeof name === 'string' ? <span>{name}</span> : <UnnamedTrans resource={name} />;
 }
 
-function UserSocialIdentities({ isIdentitiesLoading, identities = [] }: Props) {
+function UserSocialIdentities({ userId }: Props) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console',
   });
 
   const {
+    data,
+    isLoading: isIdentitiesLoading,
+    error: identitiesError,
+  } = useSWR<GetUserAllIdentitiesResponse, RequestError>(
+    `api/users/${userId}/all-identities?includeTokenSecret=true`
+  );
+
+  const {
     data: connectors,
-    error,
-    isLoading,
+    error: connectorsError,
+    isLoading: isConnectorsLoading,
     mutate,
   } = useSWR<ConnectorResponse[], RequestError>('api/connectors');
 
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-  const isDataLoading = isIdentitiesLoading || isLoading;
+  const isLoading = isIdentitiesLoading || isConnectorsLoading;
+  const error = identitiesError ?? connectorsError;
+
+  const identities = useMemo(() => data?.socialIdentities ?? [], [data]);
 
   const rowData = useMemo(() => {
     if (!connectors?.length) {
@@ -82,7 +91,7 @@ function UserSocialIdentities({ isIdentitiesLoading, identities = [] }: Props) {
 
   return (
     <FormField title="user_details.field_connectors">
-      {!isDataLoading && !error && (
+      {!isLoading && !error && (
         <div className={styles.description}>
           {t(
             hasRows ? 'user_details.connectors.connected' : 'user_details.connectors.not_connected'
@@ -93,7 +102,7 @@ function UserSocialIdentities({ isIdentitiesLoading, identities = [] }: Props) {
         hasBorder
         rowGroups={[{ key: 'identities', data: rowData }]}
         rowIndexKey="target"
-        isLoading={isDataLoading}
+        isLoading={isLoading}
         errorMessage={error?.body?.message ?? error?.message}
         columns={[
           {
