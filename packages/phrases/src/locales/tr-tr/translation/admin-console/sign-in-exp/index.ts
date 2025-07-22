@@ -1,4 +1,5 @@
 import content from './content.js';
+import custom_profile_fields from './custom-profile-fields.js';
 import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 
 const sign_in_exp = {
@@ -10,6 +11,8 @@ const sign_in_exp = {
     branding: 'Markalaşma',
     sign_up_and_sign_in: 'Kaydol ve Oturum Aç',
     content: 'İçerik',
+    /** UNTRANSLATED */
+    collect_user_profile: 'Collect user profile',
     password_policy: 'Şifre politikası',
   },
   welcome: {
@@ -114,6 +117,7 @@ const sign_in_exp = {
     desktop: 'Masaüstü',
     mobile: 'Mobil',
   },
+  custom_profile_fields,
 };
 
 export default Object.freeze(sign_in_exp);

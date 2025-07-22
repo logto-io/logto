@@ -102,6 +102,48 @@ const profile = {
   unlink_confirm_text: '연결 해제',
   unlink_reminder:
     '연결을 해제하면 사용자들이 <span></span> 계정으로 로그인하지 못할 거예요. 정말로 진행할까요?',
+  fields: {
+    /** UNTRANSLATED */
+    name: 'Name',
+    /** UNTRANSLATED */
+    avatar: 'Avatar',
+    /** UNTRANSLATED */
+    familyName: 'Family name',
+    /** UNTRANSLATED */
+    givenName: 'Given name',
+    /** UNTRANSLATED */
+    middleName: 'Middle name',
+    /** UNTRANSLATED */
+    nickname: 'Nickname',
+    /** UNTRANSLATED */
+    preferredUsername: 'Preferred username',
+    /** UNTRANSLATED */
+    profile: 'Profile',
+    /** UNTRANSLATED */
+    website: 'Website',
+    /** UNTRANSLATED */
+    gender: 'Gender',
+    /** UNTRANSLATED */
+    birthdate: 'Birthdate',
+    /** UNTRANSLATED */
+    zoneinfo: 'Timezone',
+    /** UNTRANSLATED */
+    locale: 'Language',
+    address: {
+      /** UNTRANSLATED */
+      formatted: 'Address',
+      /** UNTRANSLATED */
+      streetAddress: 'Street address',
+      /** UNTRANSLATED */
+      locality: 'City',
+      /** UNTRANSLATED */
+      region: 'State',
+      /** UNTRANSLATED */
+      postalCode: 'Zip code',
+      /** UNTRANSLATED */
+      country: 'Country',
+    },
+  },
 };
 
 export default Object.freeze(profile);

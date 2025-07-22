@@ -1,4 +1,5 @@
 import content from './content.js';
+import custom_profile_fields from './custom-profile-fields.js';
 import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 
 const sign_in_exp = {
@@ -10,6 +11,8 @@ const sign_in_exp = {
     branding: 'Брендирование',
     sign_up_and_sign_in: 'Регистрация и вход в систему',
     content: 'Содержание',
+    /** UNTRANSLATED */
+    collect_user_profile: 'Collect user profile',
     password_policy: 'Политика пароля',
   },
   welcome: {
@@ -114,6 +117,7 @@ const sign_in_exp = {
     desktop: 'Рабочий стол',
     mobile: 'Мобильный',
   },
+  custom_profile_fields,
 };
 
 export default Object.freeze(sign_in_exp);
