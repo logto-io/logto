@@ -79,11 +79,12 @@ export const createSocialVerificationRecord = async (
   api: KyInstance,
   connectorId: string,
   state: string,
-  redirectUri: string
+  redirectUri: string,
+  scope?: string
 ) => {
   const { verificationRecordId, authorizationUri, expiresAt } = await api
     .post('api/verifications/social', {
-      json: { connectorId, state, redirectUri },
+      json: { connectorId, state, redirectUri, scope },
     })
     .json<{ verificationRecordId: string; authorizationUri: string; expiresAt: string }>();
 

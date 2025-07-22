@@ -24,7 +24,7 @@ const generateNonce = () => generateStandardId();
 
 const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
-  async ({ state, redirectUri }, setSession) => {
+  async ({ state, redirectUri, scope }, setSession) => {
     const config = await getConfig(defaultMetadata.id);
 
     validateConfig(config, appleConfigGuard);
@@ -34,7 +34,7 @@ const getAuthorizationUri =
     const queryParameters = new URLSearchParams({
       client_id: config.clientId,
       redirect_uri: redirectUri,
-      scope: config.scope ?? '',
+      scope: scope ?? config.scope ?? '',
       state,
       nonce,
       // https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/incorporating_sign_in_with_apple_into_other_platforms#3332113

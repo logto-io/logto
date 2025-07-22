@@ -40,7 +40,7 @@ import {
 
 const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
-  async ({ state, redirectUri }) => {
+  async ({ state, redirectUri, scope }) => {
     const config = await getConfig(defaultMetadata.id);
     validateConfig(config, discordConfigGuard);
 
@@ -48,7 +48,7 @@ const getAuthorizationUri =
       client_id: config.clientId,
       redirect_uri: redirectUri,
       response_type: 'code',
-      scope: config.scope ?? defaultScope,
+      scope: scope ?? config.scope ?? defaultScope,
       state,
     });
 
