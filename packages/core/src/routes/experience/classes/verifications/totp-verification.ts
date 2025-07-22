@@ -6,6 +6,7 @@ import {
   type User,
   type TotpVerificationRecordData,
   totpVerificationRecordDataGuard,
+  type SanitizedTotpVerificationRecordData,
 } from '@logto/schemas';
 import { generateStandardId, getUserDisplayName } from '@logto/shared';
 import { authenticator } from 'otplib';
@@ -22,7 +23,12 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { type MfaVerificationRecord } from './verification-record.js';
 
-export { type TotpVerificationRecordData, totpVerificationRecordDataGuard } from '@logto/schemas';
+export {
+  type TotpVerificationRecordData,
+  type SanitizedTotpVerificationRecordData,
+  totpVerificationRecordDataGuard,
+  sanitizedTotpVerificationRecordDataGuard,
+} from '@logto/schemas';
 
 const defaultDisplayName = 'Unnamed User';
 
@@ -167,6 +173,12 @@ export class TotpVerification implements MfaVerificationRecord<VerificationType.
       secret,
       verified,
     };
+  }
+
+  toSanitizedJson(): SanitizedTotpVerificationRecordData {
+    const { id, type, userId, verified } = this;
+
+    return { id, type, userId, verified };
   }
 
   /**

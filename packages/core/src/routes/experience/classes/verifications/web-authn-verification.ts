@@ -7,6 +7,7 @@ import {
   type WebAuthnVerificationPayload,
   type WebAuthnVerificationRecordData,
   webAuthnVerificationRecordDataGuard,
+  type SanitizedWebAuthnVerificationRecordData,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
@@ -28,7 +29,9 @@ import { type MfaVerificationRecord } from './verification-record.js';
 
 export {
   type WebAuthnVerificationRecordData,
+  type SanitizedWebAuthnVerificationRecordData,
   webAuthnVerificationRecordDataGuard,
+  sanitizedWebAuthnVerificationRecordDataGuard,
 } from '@logto/schemas';
 
 export class WebAuthnVerification implements MfaVerificationRecord<VerificationType.WebAuthn> {
@@ -260,6 +263,11 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
       authenticationChallenge,
       registrationInfo,
     };
+  }
+
+  toSanitizedJson(): SanitizedWebAuthnVerificationRecordData {
+    const { id, type, userId, verified } = this;
+    return { id, type, userId, verified };
   }
 
   private async findUser() {

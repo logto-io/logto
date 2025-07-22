@@ -3,6 +3,7 @@ import {
   type UsersPasswordEncryptionMethod,
   VerificationType,
   type NewPasswordIdentityVerificationRecordData,
+  type SanitizedNewPasswordIdentityVerificationRecordData,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 
@@ -20,7 +21,9 @@ import { type VerificationRecord } from './verification-record.js';
 
 export {
   type NewPasswordIdentityVerificationRecordData,
+  type SanitizedNewPasswordIdentityVerificationRecordData,
   newPasswordIdentityVerificationRecordDataGuard,
+  sanitizedNewPasswordIdentityVerificationRecordDataGuard,
 } from '@logto/schemas';
 
 /**
@@ -123,5 +126,10 @@ export class NewPasswordIdentityVerification
       passwordEncrypted,
       passwordEncryptionMethod,
     };
+  }
+
+  toSanitizedJson(): SanitizedNewPasswordIdentityVerificationRecordData {
+    const { id, type, identifier } = this;
+    return { id, type, identifier };
   }
 }

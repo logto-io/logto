@@ -20,3 +20,9 @@ export const totpVerificationRecordDataGuard = z.object({
   secret: z.string().optional(),
   verified: z.boolean(),
 }) satisfies ToZodObject<TotpVerificationRecordData>;
+
+export type SanitizedTotpVerificationRecordData = Omit<TotpVerificationRecordData, 'secret'>;
+
+export const sanitizedTotpVerificationRecordDataGuard = totpVerificationRecordDataGuard.omit({
+  secret: true,
+}) satisfies ToZodObject<SanitizedTotpVerificationRecordData>;

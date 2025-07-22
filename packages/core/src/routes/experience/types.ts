@@ -18,13 +18,20 @@ import { type WithInteractionDetailsContext } from '#src/middleware/koa-interact
 
 import { type WithI18nContext } from '../../middleware/koa-i18next.js';
 
-import { mfaDataGuard, type MfaData } from './classes/mfa.js';
+import {
+  mfaDataGuard,
+  type SanitizedMfaData,
+  type MfaData,
+  sanitizedMfaDataGuard,
+} from './classes/mfa.js';
 import { type EnterpriseSsoConnectorTokenSetSecret } from './classes/verifications/enterprise-sso-verification.js';
 import {
   type VerificationRecordData,
   type VerificationRecord,
   type VerificationRecordMap,
   verificationRecordDataGuard,
+  publicVerificationRecordDataGuard,
+  type SanitizedVerificationRecordData,
 } from './classes/verifications/index.js';
 import { type SocialConnectorTokenSetSecret } from './classes/verifications/social-verification.js';
 import { type WithExperienceInteractionHooksContext } from './middleware/koa-experience-interaction-hooks.js';
@@ -117,6 +124,21 @@ const interactionProfileGuard = Users.createGuard
       .optional(),
   }) satisfies ToZodObject<InteractionProfile>;
 
+export type SanitizedInteractionProfile = Omit<
+  InteractionProfile,
+  | 'passwordEncrypted'
+  | 'passwordEncryptionMethod'
+  | 'socialConnectorTokenSetSecret'
+  | 'enterpriseSsoConnectorTokenSetSecret'
+>;
+
+const sanitizedInteractionProfileGuard = interactionProfileGuard.omit({
+  passwordEncrypted: true,
+  passwordEncryptionMethod: true,
+  socialConnectorTokenSetSecret: true,
+  enterpriseSsoConnectorTokenSetSecret: true,
+}) satisfies ToZodObject<SanitizedInteractionProfile>;
+
 /**
  * The interaction context provides the callback functions to get the user and verification record from the interaction
  */
@@ -171,3 +193,33 @@ export const interactionStorageGuard = z.object({
     })
     .optional(),
 }) satisfies ToZodObject<InteractionStorage>;
+
+export type SanitizedInteractionStorageData = {
+  interactionEvent: InteractionEvent;
+  userId?: string;
+  profile?: SanitizedInteractionProfile;
+  verificationRecords?: SanitizedVerificationRecordData[];
+  mfa?: SanitizedMfaData;
+  captcha?: {
+    verified: boolean;
+    skipped: boolean;
+  };
+};
+
+/**
+ * Sanitized interaction response type that excludes sensitive information
+ * but includes data needed for client-side logic and form pre-population
+ */
+export const sanitizedInteractionStorageGuard = z.object({
+  interactionEvent: z.nativeEnum(InteractionEvent),
+  userId: z.string().optional(),
+  profile: sanitizedInteractionProfileGuard,
+  verificationRecords: publicVerificationRecordDataGuard.array().optional(),
+  mfa: sanitizedMfaDataGuard.optional(),
+  captcha: z
+    .object({
+      verified: z.boolean(),
+      skipped: z.boolean(),
+    })
+    .optional(),
+}) satisfies ToZodObject<SanitizedInteractionStorageData>;
