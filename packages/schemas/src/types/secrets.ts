@@ -27,6 +27,7 @@ export const tokenSetMetadataGuard = z.object({
   scope: z.string().optional(),
   expiresAt: z.number().optional(),
   tokenType: z.string().optional(),
+  hasRefreshToken: z.boolean(),
 });
 
 export type TokenSetMetadata = z.infer<typeof tokenSetMetadataGuard>;
@@ -117,6 +118,10 @@ export const desensitizedEnterpriseSsoTokenSetSecretGuard = enterpriseSsoTokenSe
 export type DesensitizedEnterpriseSsoTokenSetSecret = z.infer<
   typeof desensitizedEnterpriseSsoTokenSetSecretGuard
 >;
+
+export type DesensitizedTokenSetSecret<
+  T extends SocialTokenSetSecret | EnterpriseSsoTokenSetSecret,
+> = Omit<T, 'encryptedDek' | 'iv' | 'authTag' | 'ciphertext'>;
 
 export const getThirdPartyAccessTokenResponseGuard = tokenResponseGuard
   .pick({

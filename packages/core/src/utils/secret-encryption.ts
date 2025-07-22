@@ -8,6 +8,8 @@ import {
   type EncryptedTokenSet,
   type EnterpriseSsoTokenSetSecret,
   type SocialTokenSetSecret,
+  type DesensitizedTokenSetSecret,
+  type TokenSetMetadata,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
@@ -135,7 +137,12 @@ export const isValidAccessTokenResponse = (
   return Boolean(tokenResponse?.access_token);
 };
 
-export const encryptTokenResponse = (tokenResponse: TokenResponseWithAccessToken) => {
+export const encryptTokenResponse = (
+  tokenResponse: TokenResponseWithAccessToken
+): {
+  tokenSecret: EncryptedSecret;
+  metadata: TokenSetMetadata;
+} => {
   const {
     access_token,
     id_token,
@@ -161,6 +168,7 @@ export const encryptTokenResponse = (tokenResponse: TokenResponseWithAccessToken
   return {
     tokenSecret,
     metadata: {
+      hasRefreshToken: Boolean(refresh_token),
       ...conditional(scope && { scope }),
       ...conditional(tokenType && { tokenType }),
       ...conditional(expiresAt && { expiresAt }),
@@ -191,6 +199,6 @@ export const desensitizeTokenSetSecret = <
   authTag,
   ciphertext,
   ...rest
-}: T): Omit<T, 'encryptedDek' | 'iv' | 'authTag' | 'ciphertext'> => {
+}: T): DesensitizedTokenSetSecret<T> => {
   return rest;
 };
