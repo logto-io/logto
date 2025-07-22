@@ -51,24 +51,15 @@ function UserSocialIdentities({ isIdentitiesLoading, identities = [] }: Props) {
     mutate,
   } = useSWR<ConnectorResponse[], RequestError>('api/connectors');
 
-  const isDataLoading = useMemo(
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    () => isIdentitiesLoading || isLoading,
-    [isIdentitiesLoading, isLoading]
-  );
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  const isDataLoading = isIdentitiesLoading || isLoading;
 
-  const connectorGroups = useMemo(() => {
+  const rowData = useMemo(() => {
     if (!connectors?.length) {
       return;
     }
 
-    return getConnectorGroups(connectors);
-  }, [connectors]);
-
-  const rowData = useMemo(() => {
-    if (!connectorGroups) {
-      return;
-    }
+    const connectorGroups = getConnectorGroups(connectors);
 
     return identities.map(({ identity, tokenSecret, target }): RowData => {
       const { logo, name, isTokenStorageSupported } =
@@ -85,7 +76,7 @@ function UserSocialIdentities({ isIdentitiesLoading, identities = [] }: Props) {
         },
       };
     });
-  }, [connectorGroups, identities, t]);
+  }, [connectors, identities, t]);
 
   const hasRows = Boolean(rowData && rowData.length > 0);
 

@@ -72,11 +72,8 @@ function UserSsoIdentities({ isIdentitiesLoading, ssoIdentities = [] }: Props) {
     mutate,
   } = useSWR<SsoConnectorWithProviderConfig[], RequestError>('api/sso-connectors');
 
-  const isDataLoading = useMemo(
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    () => isIdentitiesLoading || isLoading,
-    [isIdentitiesLoading, isLoading]
-  );
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  const isDataLoading = isIdentitiesLoading || isLoading;
 
   const rowData = useMemo(() => {
     if (!ssoConnectors?.length) {
