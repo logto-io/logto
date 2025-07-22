@@ -70,7 +70,7 @@ const authorizationCallbackHandler = async (parameterObject: unknown) => {
  */
 const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
-  async ({ state, redirectUri }) => {
+  async ({ state, redirectUri, scope: customScope }) => {
     const config = await getConfig(defaultMetadata.id);
     validateConfig(config, qqConfigGuard);
 
@@ -80,7 +80,7 @@ const getAuthorizationUri =
       client_id: clientId,
       redirect_uri: redirectUri,
       state,
-      scope: scope ?? 'get_user_info',
+      scope: customScope ?? scope ?? 'get_user_info',
     });
 
     return `${authorizationEndpoint}?${queryParameters.toString()}`;

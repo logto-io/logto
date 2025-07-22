@@ -41,7 +41,7 @@ import {
 
 const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
-  async ({ state, redirectUri }) => {
+  async ({ state, redirectUri, scope: customScope }) => {
     const config = await getConfig(defaultMetadata.id);
     validateConfig(config, GoogleConnector.configGuard);
 
@@ -52,7 +52,7 @@ const getAuthorizationUri =
       redirect_uri: redirectUri,
       response_type: 'code',
       state,
-      scope: scope ?? defaultScope,
+      scope: customScope ?? scope ?? defaultScope,
       ...conditional(prompts && prompts.length > 0 && { prompt: prompts.join(' ') }),
     });
 

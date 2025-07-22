@@ -41,6 +41,32 @@ describe('getAuthorizationUri', () => {
       `${authorizationEndpoint}?appid=%3Ccorp-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fcallback&response_type=code&scope=snsapi_userinfo&state=some_state&agentid=%3Cagent-id%3E#wechat_redirect`
     );
   });
+
+  it('should get a valid uri with custom scope', async () => {
+    const connector = await createConnector({ getConfig });
+    const authorizationUri = await connector.getAuthorizationUri(
+      {
+        state: 'some_state',
+        redirectUri: 'http://localhost:3001/callback',
+        scope: 'custom_scope',
+        connectorId: 'some_connector_id',
+        connectorFactoryId: 'some_connector_factory_id',
+        jti: 'some_jti',
+        headers: {},
+      },
+      vi.fn()
+    );
+    const userAgent = 'some_UA';
+    const isWecom = userAgent.toLowerCase().includes('wxwork');
+
+    const authorizationEndpoint = isWecom
+      ? authorizationEndpointInside
+      : authorizationEndpointQrcode;
+
+    expect(authorizationUri).toEqual(
+      `${authorizationEndpoint}?appid=%3Ccorp-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fcallback&response_type=code&scope=custom_scope&state=some_state&agentid=%3Cagent-id%3E#wechat_redirect`
+    );
+  });
 });
 
 describe('getAccessToken', () => {

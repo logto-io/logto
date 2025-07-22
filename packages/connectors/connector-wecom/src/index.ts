@@ -46,7 +46,7 @@ import {
 
 const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
-  async ({ state, redirectUri, headers: { userAgent } }) => {
+  async ({ state, redirectUri, headers: { userAgent }, scope: customScope }) => {
     const config = await getConfig(defaultMetadata.id);
     validateConfig(config, wecomConfigGuard);
 
@@ -58,7 +58,7 @@ const getAuthorizationUri =
       appid: corpId,
       redirect_uri: encodeURI(redirectUri), // The variable `redirectUri` should match {appId, appSecret}
       response_type: 'code',
-      scope: scope ?? defaultScope,
+      scope: customScope ?? scope ?? defaultScope,
       state,
       agentid: agentId,
     });

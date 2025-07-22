@@ -42,7 +42,7 @@ import { accessTokenResponseGuard, gitlabConfigGuard, userInfoResponseGuard } fr
  */
 const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
-  async ({ state, redirectUri }, setSession) => {
+  async ({ state, redirectUri, scope: customScope }, setSession) => {
     const config = await getConfig(defaultMetadata.id);
     validateConfig(config, gitlabConfigGuard);
 
@@ -58,7 +58,7 @@ const getAuthorizationUri =
     return constructAuthorizationUri(authorizationEndpoint, {
       responseType: 'code',
       clientId,
-      scope: scopesWithRequired.join(' '), // Defaults to mandatoryScope if not provided
+      scope: customScope ?? scopesWithRequired.join(' '), // Defaults to mandatoryScope if not provided
       redirectUri,
       state,
     });

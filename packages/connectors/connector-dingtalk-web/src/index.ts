@@ -38,7 +38,7 @@ import {
 
 const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
-  async ({ state, redirectUri }) => {
+  async ({ state, redirectUri, scope: customScope }) => {
     const config = await getConfig(defaultMetadata.id);
     validateConfig(config, dingtalkConfigGuard);
 
@@ -48,7 +48,7 @@ const getAuthorizationUri =
       client_id: clientId,
       redirect_uri: encodeURI(redirectUri), // The variable `redirectUri` should match {clientId, clientSecret}
       response_type: 'code',
-      scope: scope ?? defaultScope,
+      scope: customScope ?? scope ?? defaultScope,
       state,
       prompt: 'consent',
     });

@@ -45,7 +45,7 @@ import {
 
 const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
-  async ({ state, redirectUri }) => {
+  async ({ state, redirectUri, scope: customScope }) => {
     const config = await getConfig(defaultMetadata.id);
     validateConfig(config, wechatConfigGuard);
 
@@ -55,7 +55,7 @@ const getAuthorizationUri =
       appid: appId,
       redirect_uri: encodeURI(redirectUri), // The variable `redirectUri` should match {appId, appSecret}
       response_type: 'code',
-      scope: scope ?? defaultScope,
+      scope: customScope ?? scope ?? defaultScope,
       state,
     });
 
