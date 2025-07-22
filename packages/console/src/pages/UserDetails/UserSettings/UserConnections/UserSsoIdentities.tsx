@@ -36,6 +36,7 @@ type RowData = {
   };
 };
 
+// Make typescript happy
 // eslint-disable-next-line unicorn/prefer-native-coercion-functions
 function isRowData(data: RowData | undefined): data is RowData {
   return Boolean(data);
