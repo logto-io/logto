@@ -47,10 +47,19 @@ export const validateState = (state: string | undefined, connectorId: string): b
 const validateGoogleOneTapCsrfToken = (csrfToken?: string): boolean =>
   Boolean(csrfToken && getCookie(GoogleConnector.oneTapParams.csrfToken) === csrfToken);
 
-// Validate authentication parameters based on different scenarios:
-// 1. Normal social login: requires valid state parameter for CSRF protection
-// 2. Google One Tap from external website: no validation needed (already verified by Google)
-// 3. Google One Tap from Experience app: validate CSRF token if present
+/**
+ * Validate authentication parameters based on different scenarios:
+ * 1. Normal social login: requires valid state parameter for CSRF protection
+ * 2. Google One Tap from external website: no validation needed (already verified by Google)
+ * 3. Google One Tap from Experience app: validate CSRF token if present
+ *
+ * @param isGoogleOneTap - Whether the login is Google One Tap
+ * @param connectorId - The connector id
+ * @param isExternalCredential - Whether the login is from external website Google One Tap
+ * @param params - The parameters to validate
+ * @param state - The state parameter to validate
+ * @returns Whether the authentication parameters are valid
+ */
 export const getAuthValidationResult = ({
   isGoogleOneTap,
   connectorId,
@@ -81,10 +90,18 @@ export const getAuthValidationResult = ({
   return validateGoogleOneTapCsrfToken(csrfToken);
 };
 
-// Validate session based on different scenarios:
-// 1. Normal social login: requires valid verificationId
-// 2. Google One Tap from Experience app: allow if CSRF token valid
-// 3. Google One Tap from external website: always valid (Google verified)
+/**
+ * Validate the session based on different scenarios:
+ * 1. Normal social login: requires valid verificationId
+ * 2. Google One Tap from Experience app: allow if CSRF token valid
+ * 3. Google One Tap from external website: always valid (Google verified)
+ *
+ * @param verificationId - The verification record id
+ * @param isGoogleOneTap - Whether the login is Google One Tap
+ * @param isExternalCredential - Whether the login is from external website Google One Tap
+ * @param params - The parameters to validate
+ * @returns Whether the session is valid
+ */
 export const getSessionValidationResult = ({
   verificationId,
   isGoogleOneTap,
