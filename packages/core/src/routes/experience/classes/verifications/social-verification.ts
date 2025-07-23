@@ -6,7 +6,7 @@ import {
   GoogleConnector,
   isExternalGoogleOneTap as isExternalGoogleOneTapChecker,
   isGoogleOneTap as isGoogleOneTapChecker,
-  transformConnectorData,
+  normalizeExternalWebsiteGoogleOneTapConnectorData,
 } from '@logto/connector-kit';
 import {
   VerificationType,
@@ -446,7 +446,9 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
 
       return this.libraries.socials.getUserInfoWithOptionalTokenResponse(
         connectorId,
-        transformConnectorData(connectorData),
+        isGoogleOneTap && isExternalWebsiteGoogleOneTap
+          ? normalizeExternalWebsiteGoogleOneTapConnectorData(connectorData)
+          : connectorData,
         async () => this.connectorSession
       );
     }
@@ -454,7 +456,9 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     // Get the connector session from the provider's interactionDetails
     return this.libraries.socials.getUserInfoWithOptionalTokenResponse(
       connectorId,
-      transformConnectorData(connectorData),
+      isGoogleOneTap && isExternalWebsiteGoogleOneTap
+        ? normalizeExternalWebsiteGoogleOneTapConnectorData(connectorData)
+        : connectorData,
       async () => getConnectorSessionResult(ctx, provider)
     );
   }

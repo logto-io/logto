@@ -215,12 +215,16 @@ describe('SocialVerification', () => {
       };
 
       const connectorData = {
-        [GoogleConnector.oneTapParams.credential]: 'credential',
-        [GoogleConnector.oneTapParams.csrfToken]: 'mismatched_token',
+        [GoogleConnector.oneTapParams.credential]: 'external_credential',
       };
 
-      // @ts-expect-error test mock tenant context
-      await verification.verify(ctx, tenantContext, connectorData, 'interactionSession');
+      await verification.verify(
+        ctx,
+        // @ts-expect-error test mock tenant context
+        tenantContext,
+        connectorData,
+        'interactionSession'
+      );
 
       expect(verification.socialUserInfo).toEqual({ id: 'foo', email: 'test@example.com' });
       expect(isExternalGoogleOneTapChecker).toHaveBeenCalledWith(connectorData);

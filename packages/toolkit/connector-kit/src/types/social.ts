@@ -239,7 +239,7 @@ export const isExternalGoogleOneTap = (data: Record<string, unknown>) => {
 };
 
 /**
- * Transform the connector data.
+ * Normalize the connector data for external website embedding Google One Tap.
  *
  * We apply transformation to the connector data when it is from external website embedding Google One Tap:
  * For built-in Google One Tap, we have `GoogleConnector.oneTapParams.csrfToken` and `GoogleConnector.oneTapParams.credential` keys;
@@ -247,19 +247,17 @@ export const isExternalGoogleOneTap = (data: Record<string, unknown>) => {
  * We use this util method to transform the data to the format that the connector expects,
  * so that the connector can handle the data correctly.
  *
- * @param data The connector data from the client.
- * @returns The transformed data.
+ * For now, this method is only used to normalize the Google One Tap data.
+ *
+ * @param data The connector data from external website embedding Google One Tap.
+ * @returns The normalized data.
  */
-export const transformConnectorData = (
+export const normalizeExternalWebsiteGoogleOneTapConnectorData = (
   data: Record<string, unknown>
 ): Record<string, unknown> => {
-  if (isGoogleOneTap(data) && isExternalGoogleOneTap(data)) {
-    return {
-      ...data,
-      [GoogleConnector.oneTapParams.credential]:
-        data[GoogleConnector.oneTapParams.externalCredential],
-    };
-  }
-
-  return data;
+  return {
+    ...data,
+    [GoogleConnector.oneTapParams.credential]:
+      data[GoogleConnector.oneTapParams.externalCredential],
+  };
 };
