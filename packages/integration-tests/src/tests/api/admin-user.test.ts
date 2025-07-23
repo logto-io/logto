@@ -270,7 +270,7 @@ describe('admin console user management', () => {
     const authorizationUriParams = new URLSearchParams({
       state,
       redirect_uri: redirectUri,
-      scope: 'email profile', // default mock social connector scope
+      scope: 'email profile', // Default mock social connector scope
     });
 
     expect(redirectTo).toBe(`http://mock-social/?${authorizationUriParams.toString()}`);
