@@ -110,6 +110,48 @@ const profile = {
   unlink_confirm_text: 'Oui, détacher',
   unlink_reminder:
     'Les utilisateurs ne pourront plus se connecter avec le compte <span></span> si vous le détachez. Êtes-vous sûr de vouloir continuer ?',
+  fields: {
+    /** UNTRANSLATED */
+    name: 'Name',
+    /** UNTRANSLATED */
+    avatar: 'Avatar',
+    /** UNTRANSLATED */
+    familyName: 'Family name',
+    /** UNTRANSLATED */
+    givenName: 'Given name',
+    /** UNTRANSLATED */
+    middleName: 'Middle name',
+    /** UNTRANSLATED */
+    nickname: 'Nickname',
+    /** UNTRANSLATED */
+    preferredUsername: 'Preferred username',
+    /** UNTRANSLATED */
+    profile: 'Profile',
+    /** UNTRANSLATED */
+    website: 'Website',
+    /** UNTRANSLATED */
+    gender: 'Gender',
+    /** UNTRANSLATED */
+    birthdate: 'Birthdate',
+    /** UNTRANSLATED */
+    zoneinfo: 'Timezone',
+    /** UNTRANSLATED */
+    locale: 'Language',
+    address: {
+      /** UNTRANSLATED */
+      formatted: 'Address',
+      /** UNTRANSLATED */
+      streetAddress: 'Street address',
+      /** UNTRANSLATED */
+      locality: 'City',
+      /** UNTRANSLATED */
+      region: 'State',
+      /** UNTRANSLATED */
+      postalCode: 'Zip code',
+      /** UNTRANSLATED */
+      country: 'Country',
+    },
+  },
 };
 
 export default Object.freeze(profile);

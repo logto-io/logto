@@ -110,6 +110,48 @@ const profile = {
   unlink_confirm_text: 'Ja, Verknüpfung aufheben',
   unlink_reminder:
     'Benutzer können sich nicht mehr mit dem <span></span>-Konto anmelden, wenn Sie es trennen. Möchten Sie fortfahren?',
+  fields: {
+    /** UNTRANSLATED */
+    name: 'Name',
+    /** UNTRANSLATED */
+    avatar: 'Avatar',
+    /** UNTRANSLATED */
+    familyName: 'Family name',
+    /** UNTRANSLATED */
+    givenName: 'Given name',
+    /** UNTRANSLATED */
+    middleName: 'Middle name',
+    /** UNTRANSLATED */
+    nickname: 'Nickname',
+    /** UNTRANSLATED */
+    preferredUsername: 'Preferred username',
+    /** UNTRANSLATED */
+    profile: 'Profile',
+    /** UNTRANSLATED */
+    website: 'Website',
+    /** UNTRANSLATED */
+    gender: 'Gender',
+    /** UNTRANSLATED */
+    birthdate: 'Birthdate',
+    /** UNTRANSLATED */
+    zoneinfo: 'Timezone',
+    /** UNTRANSLATED */
+    locale: 'Language',
+    address: {
+      /** UNTRANSLATED */
+      formatted: 'Address',
+      /** UNTRANSLATED */
+      streetAddress: 'Street address',
+      /** UNTRANSLATED */
+      locality: 'City',
+      /** UNTRANSLATED */
+      region: 'State',
+      /** UNTRANSLATED */
+      postalCode: 'Zip code',
+      /** UNTRANSLATED */
+      country: 'Country',
+    },
+  },
 };
 
 export default Object.freeze(profile);

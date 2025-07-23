@@ -1,0 +1,14 @@
+@use '@/scss/underscore' as _;
+
+.buttonWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.tags {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}

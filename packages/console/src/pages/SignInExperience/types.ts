@@ -17,6 +17,7 @@ type OmittedSignInExperienceKeys = keyof Pick<
 export enum SignInExperienceTab {
   Branding = 'branding',
   SignUpAndSignIn = 'sign-up-and-sign-in',
+  CollectUserProfile = 'collect-user-profile',
   Content = 'content',
 }
 

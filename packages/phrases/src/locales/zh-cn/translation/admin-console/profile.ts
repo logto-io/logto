@@ -92,6 +92,48 @@ const profile = {
   email_exists_reminder: '该邮箱 {{email}} 已被其他账号绑定，请更换邮箱。',
   unlink_confirm_text: '确定解绑',
   unlink_reminder: '解绑后，用户将无法使用该 <span></span> 账号进行登录。确定要解绑吗？',
+  fields: {
+    /** UNTRANSLATED */
+    name: 'Name',
+    /** UNTRANSLATED */
+    avatar: 'Avatar',
+    /** UNTRANSLATED */
+    familyName: 'Family name',
+    /** UNTRANSLATED */
+    givenName: 'Given name',
+    /** UNTRANSLATED */
+    middleName: 'Middle name',
+    /** UNTRANSLATED */
+    nickname: 'Nickname',
+    /** UNTRANSLATED */
+    preferredUsername: 'Preferred username',
+    /** UNTRANSLATED */
+    profile: 'Profile',
+    /** UNTRANSLATED */
+    website: 'Website',
+    /** UNTRANSLATED */
+    gender: 'Gender',
+    /** UNTRANSLATED */
+    birthdate: 'Birthdate',
+    /** UNTRANSLATED */
+    zoneinfo: 'Timezone',
+    /** UNTRANSLATED */
+    locale: 'Language',
+    address: {
+      /** UNTRANSLATED */
+      formatted: 'Address',
+      /** UNTRANSLATED */
+      streetAddress: 'Street address',
+      /** UNTRANSLATED */
+      locality: 'City',
+      /** UNTRANSLATED */
+      region: 'State',
+      /** UNTRANSLATED */
+      postalCode: 'Zip code',
+      /** UNTRANSLATED */
+      country: 'Country',
+    },
+  },
 };
 
 export default Object.freeze(profile);
