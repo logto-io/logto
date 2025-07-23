@@ -183,20 +183,15 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
   ) => {
     const { encryptedTokenSetBase64, metadata } = encryptedTokenSet;
 
-    try {
-      await queries.secrets.upsertSocialTokenSetSecret(
-        {
-          id: generateStandardId(),
-          userId,
-          ...deserializeEncryptedSecret(encryptedTokenSetBase64),
-          metadata,
-        },
-        socialConnectorRelationPayload
-      );
-    } catch (error: unknown) {
-      // Upsert token set secret should not break the normal social authentication and link flow
-      void appInsights.trackException(error);
-    }
+    return queries.secrets.upsertSocialTokenSetSecret(
+      {
+        id: generateStandardId(),
+        userId,
+        ...deserializeEncryptedSecret(encryptedTokenSetBase64),
+        metadata,
+      },
+      socialConnectorRelationPayload
+    );
   };
 
   /**

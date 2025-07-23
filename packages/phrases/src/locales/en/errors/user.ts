@@ -44,6 +44,8 @@ const user = {
   phone_required: 'Phone number is a required identifier, you can not set it to null.',
   enterprise_sso_identity_not_exists:
     'The user does not have an enterprise identity linked to the specified SSO connector ID: {{ ssoConnectorId }}.',
+  identity_not_exists_in_current_user:
+    'The specified identity does not exist in the current user account. Please link the identity before proceeding.',
 };
 
 export default Object.freeze(user);

@@ -1,4 +1,8 @@
-import { type UserMfaVerificationResponse, type UserProfileResponse } from '@logto/schemas';
+import {
+  type GetThirdPartyAccessTokenResponse,
+  type UserMfaVerificationResponse,
+  type UserProfileResponse,
+} from '@logto/schemas';
 import { type KyInstance } from 'ky';
 
 const verificationRecordIdHeader = 'logto-verification-id';
@@ -124,3 +128,20 @@ export const updateMfaSettings = async (
       headers: { [verificationRecordIdHeader]: verificationRecordId },
     })
     .json<{ skipMfaOnSignIn: boolean }>();
+
+export const getSocialAccessToken = async (api: KyInstance, target: string) => {
+  return api
+    .get(`api/my-account/identities/${target}/access-token`)
+    .json<GetThirdPartyAccessTokenResponse>();
+};
+
+export const updateSocialAccessToken = async (
+  api: KyInstance,
+  target: string,
+  verificationRecordId: string
+) =>
+  api
+    .put(`api/my-account/identities/${target}/access-token`, {
+      json: { verificationRecordId },
+    })
+    .json<GetThirdPartyAccessTokenResponse>();
