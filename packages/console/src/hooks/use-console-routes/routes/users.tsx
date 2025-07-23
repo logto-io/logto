@@ -14,6 +14,9 @@ const Users = safeLazy(async () => import('@/pages/Users'));
 const SocialIdentityDetails = safeLazy(
   async () => import('@/pages/UserIdentityDetails/SocialIdentityDetails')
 );
+const SsoIdentityDetails = safeLazy(
+  async () => import('@/pages/UserIdentityDetails/SsoIdentityDetails')
+);
 
 export const users: RouteObject = {
   path: 'users',
@@ -35,7 +38,7 @@ export const users: RouteObject = {
     ...(isDevFeaturesEnabled
       ? [
           { path: ':userId/social-identities/:target', element: <SocialIdentityDetails /> },
-          { path: ':userId/sso-identities/:connectorId', element: <SocialIdentityDetails /> },
+          { path: ':userId/sso-identities/:connectorId', element: <SsoIdentityDetails /> },
         ]
       : []),
   ],
