@@ -65,7 +65,10 @@ describe('verifySocialIdentity', () => {
         id: GoogleConnector.factoryId,
       },
     });
-    const connectorData = { credential: 'credential' };
+    const connectorData = {
+      [GoogleConnector.oneTapParams.credential]: 'credential',
+      [GoogleConnector.oneTapParams.csrfToken]: 'mismatched_token',
+    };
 
     await expect(
       verifySocialIdentity({ connectorId: 'google', connectorData }, ctx, tenant)

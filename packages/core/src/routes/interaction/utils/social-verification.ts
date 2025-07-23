@@ -4,7 +4,7 @@ import {
   GoogleConnector,
   isExternalGoogleOneTap,
   isGoogleOneTap as isGoogleOneTapChecker,
-  transformConnectorData,
+  normalizeExternalWebsiteGoogleOneTapConnectorData,
 } from '@logto/connector-kit';
 import type { SocialConnectorPayload } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
@@ -89,7 +89,9 @@ export const verifySocialIdentity = async (
 
   const userInfo = await getUserInfo(
     connectorId,
-    transformConnectorData(connectorData),
+    isGoogleOneTap && isExternalWebsiteGoogleOneTap
+      ? normalizeExternalWebsiteGoogleOneTapConnectorData(connectorData)
+      : connectorData,
     async () => getConnectorSessionResult(ctx, provider)
   );
 

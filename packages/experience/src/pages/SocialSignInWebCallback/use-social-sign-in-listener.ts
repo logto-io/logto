@@ -1,16 +1,9 @@
 import {
-  GoogleConnector,
   isExternalGoogleOneTap as isExternalGoogleOneTapChecker,
   isGoogleOneTap as isGoogleOneTapChecker,
 } from '@logto/connector-kit';
 import type { RequestErrorBody } from '@logto/schemas';
-import {
-  ExtraParamsKey,
-  InteractionEvent,
-  SignInMode,
-  VerificationType,
-  experience,
-} from '@logto/schemas';
+import { InteractionEvent, SignInMode, VerificationType, experience } from '@logto/schemas';
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
