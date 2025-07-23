@@ -73,10 +73,12 @@ export const verificationCodeIdentifierGuard = z.object({
 export type SocialAuthorizationUrlPayload = {
   state: string;
   redirectUri: string;
+  scope?: string;
 };
 export const socialAuthorizationUrlPayloadGuard = z.object({
   state: z.string(),
   redirectUri: z.string(),
+  scope: z.string().optional(),
 }) satisfies ToZodObject<SocialAuthorizationUrlPayload>;
 
 /** Payload type for `POST /api/experience/verification/{social|sso}/:connectorId/verify`. */

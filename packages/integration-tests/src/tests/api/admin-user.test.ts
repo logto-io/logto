@@ -267,7 +267,13 @@ describe('admin console user management', () => {
     const { id: userId } = await createUserByAdmin();
     const { redirectTo } = await getConnectorAuthorizationUri(connectorId, state, redirectUri);
 
-    expect(redirectTo).toBe(`http://mock-social/?state=${state}&redirect_uri=${redirectUri}`);
+    const authorizationUriParams = new URLSearchParams({
+      state,
+      redirect_uri: redirectUri,
+      scope: 'email profile', // Default mock social connector scope
+    });
+
+    expect(redirectTo).toBe(`http://mock-social/?${authorizationUriParams.toString()}`);
 
     const identities = await postUserIdentity(userId, connectorId, {
       code,

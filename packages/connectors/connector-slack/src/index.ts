@@ -33,7 +33,7 @@ import {
 
 const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
-  async ({ state, redirectUri }, setSession) => {
+  async ({ state, redirectUri, scope }, setSession) => {
     const config = await getConfig(defaultMetadata.id);
     validateConfig(config, slackConfigGuard);
 
@@ -45,7 +45,7 @@ const getAuthorizationUri =
       response_type: 'code',
       client_id: config.clientId,
       redirect_uri: redirectUri,
-      scope: config.scope ?? defaultScope,
+      scope: scope ?? config.scope ?? defaultScope,
       state,
     });
 

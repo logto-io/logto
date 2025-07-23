@@ -35,6 +35,7 @@ export type GetAuthorizationUri = (
     connectorFactoryId: string;
     jti: string;
     headers: { userAgent?: string };
+    scope?: string;
   },
   setSession: SetSession
 ) => Promise<string>;

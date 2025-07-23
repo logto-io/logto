@@ -31,7 +31,7 @@ const generateNonce = () => generateStandardId();
 
 const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
-  async ({ state, redirectUri }, setSession) => {
+  async ({ state, redirectUri, scope: customScope }, setSession) => {
     const config = await getConfig(defaultMetadata.id);
     validateConfig(config, oidcConnectorConfigGuard);
     const parsedConfig = oidcConnectorConfigGuard.parse(config);
@@ -58,7 +58,7 @@ const getAuthorizationUri =
     return constructAuthorizationUri(authorizationEndpoint, {
       responseType,
       clientId,
-      scope,
+      scope: customScope ?? scope,
       redirectUri,
       state,
       nonce,

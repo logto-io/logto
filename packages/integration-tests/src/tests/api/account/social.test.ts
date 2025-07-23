@@ -164,13 +164,21 @@ describe('my-account (social)', () => {
           scope: 'profile',
         };
 
-        const { verificationRecordId: newVerificationRecordId } =
+        const mockSocialScope = 'profile custom_scope';
+
+        const { verificationRecordId: newVerificationRecordId, authorizationUri } =
           await createSocialVerificationRecord(
             api,
             connectorIdMap.get(mockSocialConnectorId)!,
             state,
-            redirectUri
+            redirectUri,
+            mockSocialScope
           );
+
+        const authorizationUriParams = new URLSearchParams(authorizationUri.split('?')[1]);
+        expect(authorizationUriParams.get('state')).toBe(state);
+        expect(authorizationUriParams.get('redirect_uri')).toBe(redirectUri);
+        expect(authorizationUriParams.get('scope')).toBe(mockSocialScope);
 
         await verifySocialAuthorization(api, newVerificationRecordId, {
           code: authorizationCode,

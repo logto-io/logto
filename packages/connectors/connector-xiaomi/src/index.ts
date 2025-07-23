@@ -55,7 +55,7 @@ const authorizationCallbackHandler = async (parameterObject: unknown) => {
 
 const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
-  async ({ state, redirectUri }) => {
+  async ({ state, redirectUri, scope }) => {
     const config = await getConfig(defaultMetadata.id);
     validateConfig(config, xiaomiConfigGuard);
 
@@ -64,7 +64,7 @@ const getAuthorizationUri =
       redirect_uri: redirectUri,
       response_type: 'code',
       state,
-      scope: config.scope ?? defaultScope,
+      scope: scope ?? config.scope ?? defaultScope,
       skip_confirm: String(config.skipConfirm ?? false),
     });
 

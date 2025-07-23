@@ -38,14 +38,16 @@ let authCodeRequest: AuthorizationCodeRequest;
 
 const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
-  async ({ state, redirectUri }) => {
+  async ({ state, redirectUri, scope }) => {
     const config = await getConfig(defaultMetadata.id);
 
     validateConfig(config, azureADConfigGuard);
     const { clientId, clientSecret, cloudInstance, tenantId, prompts, scopes } = config;
 
     const defaultAuthCodeUrlParameters: AuthorizationUrlRequest = {
-      scopes: deduplicate([...defaultScopes, ...(scopes?.split(' ') ?? [])]),
+      scopes: scope
+        ? scope.split(' ')
+        : deduplicate([...defaultScopes, ...(scopes?.split(' ') ?? [])]),
       state,
       redirectUri,
       ...conditional(prompts && prompts.length > 0 && { prompt: prompts.join(' ') }),

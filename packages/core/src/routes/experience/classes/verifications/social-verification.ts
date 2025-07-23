@@ -121,12 +121,12 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
   async createAuthorizationUrl(
     ctx: WithLogContext,
     tenantContext: TenantContext,
-    { state, redirectUri }: SocialAuthorizationUrlPayload,
+    { state, redirectUri, scope }: SocialAuthorizationUrlPayload,
     connectorSessionType: SocialAuthorizationSessionStorageType = 'interactionSession'
   ) {
     // For the profile API, connector session result is stored in the current verification record directly.
     if (connectorSessionType === 'verificationRecord') {
-      return this.createSocialAuthorizationSession(ctx, { state, redirectUri });
+      return this.createSocialAuthorizationSession(ctx, { state, redirectUri, scope });
     }
 
     // For the experience API, connector session result is stored in the provider's interactionDetails.
@@ -134,6 +134,7 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
       connectorId: this.connectorId,
       state,
       redirectUri,
+      scope,
     });
   }
 
@@ -395,7 +396,7 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
    */
   private async createSocialAuthorizationSession(
     ctx: WithLogContext,
-    { state, redirectUri }: SocialAuthorizationUrlPayload
+    { state, redirectUri, scope }: SocialAuthorizationUrlPayload
   ) {
     assertThat(state && redirectUri, 'session.insufficient_info');
 
@@ -414,6 +415,7 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
         // Instead of getting the jti from the interaction details, use the current verification record's id as the jti.
         jti: this.id,
         headers: { userAgent },
+        scope,
       },
       async (connectorSession) => {
         // Store the connector session result in the current verification record directly.

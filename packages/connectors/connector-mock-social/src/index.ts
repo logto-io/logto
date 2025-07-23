@@ -20,8 +20,11 @@ import {
 import { defaultMetadata } from './constant.js';
 import { mockSocialConfigGuard } from './types.js';
 
+const mockSocialAuthDomain = 'http://mock-social/';
+const defaultScope = 'email profile';
+
 const getAuthorizationUri: GetAuthorizationUri = async (
-  { state, redirectUri, connectorId },
+  { state, redirectUri, connectorId, scope },
   setSession
 ) => {
   try {
@@ -33,7 +36,13 @@ const getAuthorizationUri: GetAuthorizationUri = async (
     }
   }
 
-  return `http://mock-social/?state=${state}&redirect_uri=${redirectUri}`;
+  const queryParams = new URLSearchParams({
+    state,
+    redirect_uri: redirectUri,
+    scope: scope ?? defaultScope,
+  });
+
+  return `${mockSocialAuthDomain}?${queryParams.toString()}`;
 };
 
 const validateConnectorSession = async (getSession: GetSession) => {

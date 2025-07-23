@@ -45,7 +45,7 @@ export type { AlipayConfig } from './types.js';
 
 const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
-  async ({ state, redirectUri }) => {
+  async ({ state, redirectUri, scope: customScope }) => {
     const config = await getConfig(defaultMetadata.id);
     validateConfig(config, alipayConfigGuard);
 
@@ -56,7 +56,7 @@ const getAuthorizationUri =
     const queryParameters = new URLSearchParams({
       app_id,
       redirect_uri, // The variable `redirectUri` should match {appId, appSecret}
-      scope: scope ?? defaultScope,
+      scope: customScope ?? scope ?? defaultScope,
       state,
     });
 

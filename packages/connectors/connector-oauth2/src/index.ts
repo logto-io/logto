@@ -1,4 +1,4 @@
-import { assert, pick } from '@silverhand/essentials';
+import { assert, conditional, pick } from '@silverhand/essentials';
 
 import {
   type GetAuthorizationUri,
@@ -23,7 +23,7 @@ export * from './oauth2/index.js';
 
 const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
-  async ({ state, redirectUri }, setSession) => {
+  async ({ state, redirectUri, scope }, setSession) => {
     const config = await getConfig(defaultMetadata.id);
     validateConfig(config, oauth2ConnectorConfigGuard);
     const parsedConfig = oauth2ConnectorConfigGuard.parse(config);
@@ -37,6 +37,8 @@ const getAuthorizationUri =
       redirectUri,
       state,
       ...customConfig,
+      // If scope is provided, it will override the scope in the config.
+      ...conditional(scope && { scope }),
     });
   };
 

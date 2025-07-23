@@ -44,6 +44,33 @@ describe('getAuthorizationUri', () => {
     expect(searchParams.get('scope')).toEqual('scope');
     expect(searchParams.has('nonce')).toBeTruthy();
   });
+
+  it('should get a valid uri with custom scope', async () => {
+    const connector = await createConnector({ getConfig });
+    const setSession = vi.fn();
+    const authorizationUri = await connector.getAuthorizationUri(
+      {
+        state: 'some_state',
+        redirectUri: 'http://localhost:3000/callback',
+        scope: 'custom_scope',
+        connectorId: 'some_connector_id',
+        connectorFactoryId: 'some_connector_factory_id',
+        jti: 'some_jti',
+        headers: {},
+      },
+      setSession
+    );
+
+    const { origin, pathname, searchParams } = new URL(authorizationUri);
+    expect(origin + pathname).toEqual(authorizationEndpoint);
+    expect(searchParams.get('client_id')).toEqual('<client-id>');
+    expect(searchParams.get('redirect_uri')).toEqual('http://localhost:3000/callback');
+    expect(searchParams.get('state')).toEqual('some_state');
+    expect(searchParams.get('response_type')).toEqual('code id_token');
+    expect(searchParams.get('response_mode')).toEqual('form_post');
+    expect(searchParams.get('scope')).toEqual('custom_scope');
+    expect(searchParams.has('nonce')).toBeTruthy();
+  });
 });
 
 describe('getUserInfo', () => {

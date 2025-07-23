@@ -39,14 +39,14 @@ import {
 
 const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
-  async ({ state, redirectUri }) => {
+  async ({ state, redirectUri, scope }) => {
     const config = await getConfig(defaultMetadata.id);
     validateConfig(config, githubConfigGuard);
     const queryParameters = new URLSearchParams({
       client_id: config.clientId,
       redirect_uri: redirectUri,
       state,
-      scope: config.scope ?? defaultScope,
+      scope: scope ?? config.scope ?? defaultScope,
     });
 
     return `${authorizationEndpoint}?${queryParameters.toString()}`;

@@ -28,7 +28,10 @@ export default function enterpriseSsoVerificationRoutes<
       params: z.object({
         connectorId: z.string(),
       }),
-      body: socialAuthorizationUrlPayloadGuard,
+      body: socialAuthorizationUrlPayloadGuard.omit({
+        // Custom scope parameter is currently only available for the my-account social verification API
+        scope: true,
+      }),
       response: z.object({
         authorizationUri: z.string(),
         verificationId: z.string(),
