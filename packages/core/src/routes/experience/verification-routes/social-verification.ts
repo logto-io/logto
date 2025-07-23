@@ -1,4 +1,4 @@
-import { GoogleConnector } from '@logto/connector-kit';
+import { GoogleConnector, isGoogleOneTap as isGoogleOneTapChecker } from '@logto/connector-kit';
 import {
   VerificationType,
   socialAuthorizationUrlPayloadGuard,
@@ -114,7 +114,7 @@ export default function socialVerificationRoutes<T extends ExperienceInteraction
         // Check if is Google one tap verification
         if (
           connector.metadata.id === GoogleConnector.factoryId &&
-          connectorData[GoogleConnector.oneTapParams.credential]
+          isGoogleOneTapChecker(connectorData)
         ) {
           const socialVerificationRecord = SocialVerification.create(
             libraries,

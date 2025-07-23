@@ -237,3 +237,29 @@ export const isExternalGoogleOneTap = (data: Record<string, unknown>) => {
       )
   );
 };
+
+/**
+ * Transform the connector data.
+ *
+ * We apply transformation to the connector data when it is from external website embedding Google One Tap:
+ * For built-in Google One Tap, we have `GoogleConnector.oneTapParams.csrfToken` and `GoogleConnector.oneTapParams.credential` keys;
+ * while for external website Google One Tap, we have `GoogleConnector.oneTapParams.externalCredential` key.
+ * We use this util method to transform the data to the format that the connector expects,
+ * so that the connector can handle the data correctly.
+ *
+ * @param data The connector data from the client.
+ * @returns The transformed data.
+ */
+export const transformConnectorData = (
+  data: Record<string, unknown>
+): Record<string, unknown> => {
+  if (isGoogleOneTap(data) && isExternalGoogleOneTap(data)) {
+    return {
+      ...data,
+      [GoogleConnector.oneTapParams.credential]:
+        data[GoogleConnector.oneTapParams.externalCredential],
+    };
+  }
+
+  return data;
+};

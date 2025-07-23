@@ -5,6 +5,8 @@ import {
   type SocialConnector,
   GoogleConnector,
   isExternalGoogleOneTap as isExternalGoogleOneTapChecker,
+  isGoogleOneTap as isGoogleOneTapChecker,
+  transformConnectorData,
 } from '@logto/connector-kit';
 import {
   VerificationType,
@@ -420,12 +422,14 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     connectorSessionType: SocialAuthorizationSessionStorageType
   ) {
     const connector = await this.getConnectorData();
+
+    const isGoogleOneTap = isGoogleOneTapChecker(connectorData);
     const isExternalWebsiteGoogleOneTap = isExternalGoogleOneTapChecker(connectorData);
 
     // Verify the CSRF token if it's a Google connector and has credential (a Google One Tap verification)
     if (
       connector.metadata.id === GoogleConnector.factoryId &&
-      connectorData[GoogleConnector.oneTapParams.credential] &&
+      isGoogleOneTap &&
       !isExternalWebsiteGoogleOneTap
     ) {
       const csrfToken = connectorData[GoogleConnector.oneTapParams.csrfToken];
@@ -442,7 +446,7 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
 
       return this.libraries.socials.getUserInfoWithOptionalTokenResponse(
         connectorId,
-        connectorData,
+        transformConnectorData(connectorData),
         async () => this.connectorSession
       );
     }
@@ -450,7 +454,7 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     // Get the connector session from the provider's interactionDetails
     return this.libraries.socials.getUserInfoWithOptionalTokenResponse(
       connectorId,
-      connectorData,
+      transformConnectorData(connectorData),
       async () => getConnectorSessionResult(ctx, provider)
     );
   }
