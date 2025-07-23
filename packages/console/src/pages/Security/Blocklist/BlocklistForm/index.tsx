@@ -1,4 +1,4 @@
-import { emailOrEmailDomainRegex } from '@logto/core-kit';
+import { emailOrEmailDomainRegEx } from '@logto/core-kit';
 import { type SignInExperience, type EmailBlocklistPolicy } from '@logto/schemas';
 import { useContext } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -133,7 +133,7 @@ function BlocklistForm({ formData }: Props) {
                       return t('blocklist.custom_email_address.duplicate_error');
                     }
 
-                    if (!emailOrEmailDomainRegex.test(input)) {
+                    if (!emailOrEmailDomainRegEx.test(input)) {
                       return t('blocklist.custom_email_address.invalid_format_error');
                     }
 

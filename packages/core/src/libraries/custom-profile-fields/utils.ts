@@ -1,4 +1,4 @@
-import { isValidRegEx } from '@logto/core-kit';
+import { isValidRegEx, numberAndAlphabetRegEx } from '@logto/core-kit';
 import {
   textProfileFieldGuard,
   numberProfileFieldGuard,
@@ -90,7 +90,7 @@ const validateDateProfileField: ValidateCustomProfileField = (data) => {
 };
 
 const validateFieldName = (name: string) => {
-  assertThat(/^[\dA-Za-z]+$/.test(name), 'custom_profile_fields.invalid_name');
+  assertThat(numberAndAlphabetRegEx.test(name), 'custom_profile_fields.invalid_name');
   assertThat(
     !new Set<string>(reservedCustomDataKeys).has(name),
     new RequestError({ code: 'custom_profile_fields.name_conflict_custom_data', name })

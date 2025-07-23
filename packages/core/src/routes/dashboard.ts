@@ -1,4 +1,4 @@
-import { dateRegex } from '@logto/core-kit';
+import { dateRegEx } from '@logto/core-kit';
 import { getActiveUsersResponseGuard, getNewUsersResponseGuard } from '@logto/schemas';
 import { endOfDay, format, subDays } from 'date-fns';
 import { number, object, string } from 'zod';
@@ -86,7 +86,7 @@ export default function dashboardRoutes<T extends ManagementApiRouter>(
   router.get(
     '/dashboard/users/active',
     koaGuard({
-      query: object({ date: string().regex(dateRegex).optional() }),
+      query: object({ date: string().regex(dateRegEx).optional() }),
       response: getActiveUsersResponseGuard,
       status: [200],
     }),

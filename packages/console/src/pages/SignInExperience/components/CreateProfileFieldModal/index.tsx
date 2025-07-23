@@ -1,3 +1,4 @@
+import { numberAndAlphabetRegEx } from '@logto/core-kit';
 import { builtInCustomProfileFieldKeys, reservedCustomDataKeys } from '@logto/schemas';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -32,7 +33,7 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
       return true;
     }
 
-    if (!/^[\dA-Za-z]+$/.test(customDataFieldName)) {
+    if (!numberAndAlphabetRegEx.test(customDataFieldName)) {
       setFieldNameInputError(errorT('custom_profile_fields.invalid_name'));
       return false;
     }

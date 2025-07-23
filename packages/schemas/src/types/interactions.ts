@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
+import { emailRegEx, numberAndAlphabetRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import { z } from 'zod';
 
 import {
@@ -205,7 +205,7 @@ export const updateProfileApiPayloadGuard = z.discriminatedUnion('type', [
   }),
   z.object({
     type: z.literal('extraProfile'),
-    values: z.record(z.string().regex(/^[\dA-Za-z]+$/), z.unknown()),
+    values: z.record(z.string().regex(numberAndAlphabetRegEx), z.unknown()),
   }),
 ]);
 export type UpdateProfileApiPayload = z.infer<typeof updateProfileApiPayloadGuard>;
