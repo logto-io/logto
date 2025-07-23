@@ -67,6 +67,8 @@ class SecretQueries extends SchemaQueries<SecretKeys, CreateSecret, Secret> {
         secretId: newSecret.id,
         ...socialConnectorRelationPayload,
       });
+
+      return newSecret;
     });
   }
 

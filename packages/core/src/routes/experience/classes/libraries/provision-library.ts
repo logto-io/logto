@@ -95,7 +95,13 @@ export class ProvisionLibrary {
     }
 
     if (socialConnectorTokenSetSecret) {
-      await upsertSocialTokenSetSecret(user.id, socialConnectorTokenSetSecret);
+      // Upsert token set secret should not break the normal social authentication and link flow
+      await trySafe(
+        async () => upsertSocialTokenSetSecret(user.id, socialConnectorTokenSetSecret),
+        (error) => {
+          void appInsights.trackException(error);
+        }
+      );
     }
 
     if (enterpriseSsoConnectorTokenSetSecret) {

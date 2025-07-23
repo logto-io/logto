@@ -1,5 +1,7 @@
+import { appInsights } from '@logto/app-insights/node';
 import { UserScope } from '@logto/core-kit';
 import { VerificationType, AccountCenterControlValue } from '@logto/schemas';
+import { trySafe } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -80,7 +82,13 @@ export default function identitiesRoutes<T extends UserRouter>(
       const tokenSetSecret = await newVerificationRecord.getTokenSetSecret();
 
       if (tokenSetSecret) {
-        await upsertSocialTokenSetSecret(user.id, tokenSetSecret);
+        // Upsert token set secret should not break the normal social link flow
+        await trySafe(
+          async () => upsertSocialTokenSetSecret(user.id, tokenSetSecret),
+          (error) => {
+            void appInsights.trackException(error);
+          }
+        );
       }
 
       ctx.status = 204;
