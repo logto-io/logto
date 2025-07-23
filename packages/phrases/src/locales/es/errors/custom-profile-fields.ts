@@ -11,9 +11,10 @@ const custom_profile_fields = {
   invalid_name:
     'Nombre de campo no válido, solo se permiten letras o números, distingue entre mayúsculas y minúsculas.',
   name_conflict_sign_in_identifier:
-    'Nombre de campo no válido. {{name}} es una clave reservada para el identificador de inicio de sesión.',
+    'Nombre de campo no válido. "{{name}}" es una clave reservada para el identificador de inicio de sesión.',
   name_conflict_custom_data:
-    'Nombre de campo no válido. {{name}} es una clave reservada para datos personalizados.',
+    'Nombre de campo no válido. "{{name}}" es una clave reservada para datos personalizados.',
+  name_required: 'El nombre del campo es obligatorio.',
 };
 
 export default Object.freeze(custom_profile_fields);

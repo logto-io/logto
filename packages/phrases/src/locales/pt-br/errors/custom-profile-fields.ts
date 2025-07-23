@@ -11,9 +11,10 @@ const custom_profile_fields = {
   invalid_name:
     'Nome de campo inválido, apenas letras ou números são permitidos, diferenciação por maiúsculas e minúsculas.',
   name_conflict_sign_in_identifier:
-    'Nome de campo inválido. {{name}} é uma chave reservada para identificador de login.',
+    'Nome de campo inválido. "{{name}}" é uma chave reservada para identificador de login.',
   name_conflict_custom_data:
-    'Nome de campo inválido. {{name}} é uma chave reservada para dados personalizados.',
+    'Nome de campo inválido. "{{name}}" é uma chave reservada para dados personalizados.',
+  name_required: 'O nome do campo é obrigatório.',
 };
 
 export default Object.freeze(custom_profile_fields);
