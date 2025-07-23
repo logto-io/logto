@@ -99,7 +99,7 @@ export const executeLegacyHash = async (
   const inputString = resolvedArgs.join('');
 
   if (isPbkdf2Algorithm(algorithm)) {
-    const [salt, iterations = '10_000', keylen = '64', digest = 'sha512'] = resolvedArgs;
+    const [salt, iterations, keylen, digest] = resolvedArgs;
     if (!salt || !iterations || !keylen || !digest) {
       throw new RequestError({ code: 'password.invalid_legacy_password_format' });
     }
