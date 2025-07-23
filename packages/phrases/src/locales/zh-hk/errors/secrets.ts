@@ -1,9 +1,7 @@
 const secrets = {
   third_party_token_set: {
-    /** UNTRANSLATED */
-    token_not_found: 'Token record not found.',
-    /** UNTRANSLATED */
-    access_token_expired: 'The access token has expired. Please reconnect your account.',
+    token_not_found: '找不到憑證記錄。',
+    access_token_expired: '訪問憑證已過期。請重新連接你的帳戶。',
   },
 };
 

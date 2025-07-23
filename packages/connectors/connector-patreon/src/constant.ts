@@ -28,8 +28,7 @@ export const defaultMetadata: ConnectorMetadata = {
     clientSecretFormItem,
     {
       ...scopeFormItem,
-      description:
-        "The `scope` determines permissions granted by the user's authorization. If you are not sure what to enter, do not worry, just leave it blank.",
+      description: "The `scope` determines permissions granted by the user's authorization. ",
     },
   ],
 };

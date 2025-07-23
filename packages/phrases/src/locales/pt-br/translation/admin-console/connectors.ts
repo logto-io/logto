@@ -67,13 +67,10 @@ const connectors = {
     sync_profile_tip:
       'Sincronize o perfil básico do provedor social, como os nomes dos usuários e seus avatares.',
     enable_token_storage: {
-      /** UNTRANSLATED */
-      title: 'Store tokens for persistent API access',
-      /** UNTRANSLATED */
+      title: 'Armazenar tokens para acesso persistente a APIs',
       description:
-        'Store access and refresh tokens in the Secret Vault. Allows automated API calls without repeated user consent. Example: let your AI Agent add events to Google Calendar with persistent authorization. <a>Learn how to call third-party APIs</a>',
-      /** UNTRANSLATED */
-      tip: 'Tips: For standard OAuth/OIDC identity provider, the `offline_access` scope must be included to obtain a refresh token, preventing repeated user consent prompts. ',
+        'Armazene tokens de acesso e atualização no Cofre Secreto. Permite chamadas de API automáticas sem consentimento repetido do usuário. Exemplo: permita que seu Agente de IA adicione eventos ao Google Agenda com autorização persistente. <a>Saiba como chamar APIs de terceiros</a>',
+      tip: 'Dicas: Para provedores de identidade padrão OAuth/OIDC, o escopo `offline_access` deve ser incluído para obter um token de atualização, evitando solicitações de consentimento repetidas do usuário. ',
     },
     callback_uri: 'URI de retorno do chamado',
     callback_uri_description:
@@ -90,6 +87,11 @@ const connectors = {
   drawer_subtitle: 'Siga as instruções para integrar seu conector',
   unknown: 'Conector desconhecido',
   standard_connectors: 'Conectores padrão',
+  create_form: {
+    third_party_connectors:
+      'Integre provedores terceirizados para login social rápido, vinculação de contas sociais e acesso a APIs. <a>Saiba mais</a>',
+    standard_connectors: 'Ou você pode personalizar seu conector social por um protocolo padrão.',
+  },
 };
 
 export default Object.freeze(connectors);

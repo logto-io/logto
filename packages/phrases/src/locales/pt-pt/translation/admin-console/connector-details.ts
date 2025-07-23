@@ -4,7 +4,9 @@ const connector_details = {
   check_readme: 'Verifique o README',
   settings: 'Configurações gerais',
   settings_description:
-    'Os conectores desempenham um papel crítico no Logto. Com a sua ajuda, o Logto permite aos utilizadores finais utilizar o registo ou o início de sessão sem palavra-passe e as capacidades de iniciar sessão com contas sociais.',
+    'Integra provedores de terceiros para login social rápido e ligação de contas sociais',
+  setting_description_with_token_storage_supported:
+    'Integra provedores de terceiros para login social rápido, ligação de contas sociais e acesso à API.',
   email_connector_settings_description:
     'Integre com o seu fornecedor de entrega de e-mail para permitir o registo e login sem palavra-passe para os utilizadores finais.',
   parameter_configuration: 'Configuração de parâmetros',

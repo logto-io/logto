@@ -67,13 +67,10 @@ const connectors = {
     sync_profile_tip:
       'قم بمزامنة الملف الشخصي الأساسي من موفر الخدمة الاجتماعية ، مثل أسماء المستخدمين وصورهم الرمزية.',
     enable_token_storage: {
-      /** UNTRANSLATED */
-      title: 'Store tokens for persistent API access',
-      /** UNTRANSLATED */
+      title: 'تخزين الرموز للوصول الدائم لواجهة برمجة التطبيقات',
       description:
-        'Store access and refresh tokens in the Secret Vault. Allows automated API calls without repeated user consent. Example: let your AI Agent add events to Google Calendar with persistent authorization. <a>Learn how to call third-party APIs</a>',
-      /** UNTRANSLATED */
-      tip: 'Tips: For standard OAuth/OIDC identity provider, the `offline_access` scope must be included to obtain a refresh token, preventing repeated user consent prompts. ',
+        'تخزين رموز الوصول والتحديث في المخزن السري. يتيح مكالمات API تلقائية دون موافقة المستخدم المتكررة. مثال: دع وكيل الذكاء الاصطناعي الخاص بك يضيف أحداثًا إلى تقويم Google بتفويض دائم. <a>تعلم كيفية استدعاء واجهات برمجة التطبيقات للطرف الثالث</a>',
+      tip: 'نصائح: للحصول على موفر هوية OAuth/OIDC القياسي ، يجب تضمين النطاق `offline_access` للحصول على رمز التحديث ، مما يمنع مطالبات موافقة المستخدم المتكررة.',
     },
     callback_uri: 'عنوان URI للرد',
     callback_uri_description:
@@ -90,6 +87,11 @@ const connectors = {
   drawer_subtitle: 'اتبع التعليمات لدمج الموصل الخاص بك',
   unknown: 'موصل غير معروف',
   standard_connectors: 'موصلات قياسية',
+  create_form: {
+    third_party_connectors:
+      'تكامل مزودي الطرف الثالث للحصول على تسجيل سريع على وسائل التواصل الاجتماعي ، وربط الحسابات الاجتماعية ، والوصول إلى واجهة برمجة التطبيقات. <a>تعلم المزيد</a>',
+    standard_connectors: 'أو يمكنك تخصيص موصل التواصل الاجتماعي الخاص بك بواسطة بروتوكول قياسي.',
+  },
 };
 
 export default Object.freeze(connectors);

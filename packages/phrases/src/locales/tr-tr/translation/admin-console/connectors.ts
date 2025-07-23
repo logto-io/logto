@@ -68,13 +68,10 @@ const connectors = {
     sync_profile_tip:
       'Sosyal sağlayıcıdan temel profil (kullanıcıların adları ve avatarları gibi) senkronize edilsin.',
     enable_token_storage: {
-      /** UNTRANSLATED */
-      title: 'Store tokens for persistent API access',
-      /** UNTRANSLATED */
+      title: 'Kalıcı API erişimi için belirteçleri saklayın',
       description:
-        'Store access and refresh tokens in the Secret Vault. Allows automated API calls without repeated user consent. Example: let your AI Agent add events to Google Calendar with persistent authorization. <a>Learn how to call third-party APIs</a>',
-      /** UNTRANSLATED */
-      tip: 'Tips: For standard OAuth/OIDC identity provider, the `offline_access` scope must be included to obtain a refresh token, preventing repeated user consent prompts. ',
+        "Erişim ve yenileme belirteçlerini Gizli Kasada saklayın. Tekrarlı kullanıcı onayı olmadan otomatik API çağrılarına izin verir. Örnek: Yapay Zeka Ajansınızın kalıcı yetkilendirme ile Google Takvim'e etkinlikler eklemesine izin verin. <a>Üçüncü taraf API'larını nasıl çağıracağınızı öğrenin</a>",
+      tip: 'İpuçları: Standart OAuth/OIDC kimlik sağlayıcısı için, yenileme belirteci almak ve tekrarlanan kullanıcı onayı istemlerini önlemek için `offline_access` kapsamı dahil edilmelidir. ',
     },
     callback_uri: 'Geri dönüş URI',
     callback_uri_description:
@@ -91,6 +88,11 @@ const connectors = {
   drawer_subtitle: 'Bağlayıcıyı entegre etmek için yönergeleri izleyin',
   unknown: 'Bilinmeyen bağlayıcı',
   standard_connectors: 'Standart bağlayıcılar',
+  create_form: {
+    third_party_connectors:
+      'Hızlı sosyal oturum açma, sosyal hesap bağlama ve API erişimi için üçüncü taraf sağlayıcıları entegre edin. <a>Daha fazla bilgi edinin</a>',
+    standard_connectors: 'Veya standart bir protokolle sosyal bağlayıcınızı özelleştirebilirsiniz.',
+  },
 };
 
 export default Object.freeze(connectors);

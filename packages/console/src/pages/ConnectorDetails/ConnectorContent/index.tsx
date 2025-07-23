@@ -126,7 +126,12 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
         {isSocialConnector && (
           <FormCard
             title="connector_details.settings"
-            description="connector_details.settings_description"
+            description={
+              // TODO: Remove dev feature guard when token storage is ready for release
+              isDevFeaturesEnabled && isTokenStorageSupported
+                ? 'connector_details.setting_description_with_token_storage_supported'
+                : 'connector_details.settings_description'
+            }
             learnMoreLink={{ href: connectors }}
           >
             <BasicForm
