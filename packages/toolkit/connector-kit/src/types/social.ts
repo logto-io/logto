@@ -222,3 +222,5 @@ export const isExternalGoogleOneTap = (data: Record<string, unknown>) => {
     !data[GoogleConnector.oneTapParams.csrfToken]
   );
 };
+
+export const logtoGoogleOneTapCookieKey = '_logto_google_one_tap_credential';
