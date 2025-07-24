@@ -5,23 +5,36 @@ import { forwardRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import DynamicT from '../DynamicT';
+import Tooltip from '../Tip/Tooltip';
 
 import styles from './index.module.scss';
 
+type BaseProps = {
+  readonly hasError?: boolean;
+  readonly tooltip?: ReactNode;
+};
+
 type Props =
-  | (Omit<HTMLProps<HTMLInputElement>, 'label'> & {
-      /** @deprecated Use `description` instead */
-      readonly label?: ReactNode;
-      readonly hasError?: boolean;
-    })
-  | (HTMLProps<HTMLInputElement> & {
-      readonly description: AdminConsoleKey | ReactElement;
-      readonly hasError?: boolean;
-    });
+  | (Omit<HTMLProps<HTMLInputElement>, 'label'> &
+      BaseProps & {
+        /** @deprecated Use `description` instead */
+        readonly label?: ReactNode;
+      })
+  | (HTMLProps<HTMLInputElement> &
+      BaseProps & {
+        readonly description: AdminConsoleKey | ReactElement;
+      });
 
 function Switch(props: Props, ref?: Ref<HTMLInputElement>) {
-  const { label, hasError, ...rest } = props;
+  const { label, hasError, tooltip, ...rest } = props;
   const { i18n } = useTranslation();
+
+  const switchElement = (
+    <label className={classNames(styles.switch, styles[i18n.dir()])}>
+      <input type="checkbox" {...rest} ref={ref} />
+      <span className={styles.slider} />
+    </label>
+  );
 
   return (
     <div className={classNames(styles.wrapper, hasError && styles.error)}>
@@ -35,10 +48,7 @@ function Switch(props: Props, ref?: Ref<HTMLInputElement>) {
         </div>
       )}
       {label && <div className={styles.label}>{label}</div>}
-      <label className={classNames(styles.switch, styles[i18n.dir()])}>
-        <input type="checkbox" {...rest} ref={ref} />
-        <span className={styles.slider} />
-      </label>
+      {tooltip ? <Tooltip content={tooltip}>{switchElement}</Tooltip> : switchElement}
     </div>
   );
 }

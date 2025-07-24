@@ -17,6 +17,10 @@ const sign_in_experiences = {
   at_least_one_authentication_factor: 'You have to select at least one authentication factor.',
   backup_code_cannot_be_enabled_alone: 'Backup code cannot be enabled alone.',
   duplicated_mfa_factors: 'Duplicated MFA factors.',
+  email_verification_code_cannot_be_used_for_mfa:
+    'Email verification code cannot be used for MFA when email verification is enabled for sign-in.',
+  phone_verification_code_cannot_be_used_for_mfa:
+    'SMS verification code cannot be used for MFA when SMS verification is enabled for sign-in.',
   duplicated_sign_up_identifiers: 'Duplicate sign-up identifiers detected.',
   missing_sign_up_identifiers: 'Primary sign-up identifier cannot be empty.',
   invalid_custom_email_blocklist_format:
