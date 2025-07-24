@@ -158,6 +158,19 @@ describe('social sign-in and sign-up', () => {
       expect(tokenSecret?.metadata.scope).toBe('openid profile phone');
     }
 
+    // Should delete the token set when the connector token storage is disabled
+    if (isDevFeaturesEnabled) {
+      await updateConnectorConfig(connectorIdMap.get(mockSocialConnectorId)!, {
+        enableTokenStorage: false,
+      });
+
+      const { tokenSecret: updatedTokenSecret } = await getUserIdentity(
+        userId,
+        mockSocialConnectorTarget
+      );
+      expect(updatedTokenSecret).toBeUndefined();
+    }
+
     await deleteUser(userId);
   });
 });

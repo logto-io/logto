@@ -98,6 +98,19 @@ describe('enterprise sso sign-in and sign-up', () => {
       expect(tokenSecret?.metadata.scope).toBe('openid profile email');
     }
 
+    // Should delete the token set when the connector token storage is disabled
+    if (isDevFeaturesEnabled) {
+      await ssoConnectorApi.update(ssoConnectorApi.firstConnectorId!, {
+        enableTokenStorage: false,
+      });
+
+      const { tokenSecret: updatedTokenSecret } = await getUserSsoIdentity(
+        userId,
+        ssoConnectorApi.firstConnectorId!
+      );
+      expect(updatedTokenSecret).toBeUndefined();
+    }
+
     await deleteUser(userId);
   });
 
