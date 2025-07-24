@@ -27,6 +27,8 @@ import { socialAccountNotExistErrorDataGuard } from '@/types/guard';
 import { parseQueryParameters } from '@/utils';
 import { getAuthValidationResult, getSessionValidationResult } from '@/utils/social-connectors';
 
+import { normalizeExternalWebsiteGoogleOneTapConnectorData } from './utils';
+
 const useSocialSignInListener = (connectorId: string) => {
   const [loading, setLoading] = useState(true);
   const { setToast } = useToast();
@@ -188,12 +190,13 @@ const useSocialSignInListener = (connectorId: string) => {
     setIsConsumed(true);
 
     const { state, ...rest } = parseQueryParameters(searchParameters);
+    const data = normalizeExternalWebsiteGoogleOneTapConnectorData(rest);
 
     // Google One Tap always contains the `credential`
-    const isGoogleOneTap = isGoogleOneTapChecker(rest);
+    const isGoogleOneTap = isGoogleOneTapChecker(data);
     // External Google One Tap always contains the `credential` and doesn't contain the `csrfToken`
     // Experience built-in Google One Tap always contains the `csrfToken`
-    const isExternalCredential = isExternalGoogleOneTapChecker(rest);
+    const isExternalCredential = isExternalGoogleOneTapChecker(data);
 
     // Cleanup the search parameters once it's consumed
     setSearchParameters({}, { replace: true });
@@ -203,7 +206,7 @@ const useSocialSignInListener = (connectorId: string) => {
       state,
       connectorId,
       isExternalCredential,
-      params: rest,
+      params: data,
     });
 
     if (!isValidAuth) {
@@ -216,7 +219,7 @@ const useSocialSignInListener = (connectorId: string) => {
       verificationId: verificationIdRef.current,
       isGoogleOneTap,
       isExternalCredential,
-      params: rest,
+      params: data,
     });
 
     if (!isValidSession) {
@@ -225,7 +228,7 @@ const useSocialSignInListener = (connectorId: string) => {
       return;
     }
 
-    void signInWithSocialHandler(connectorId, rest);
+    void signInWithSocialHandler(connectorId, data);
   }, [
     connectorId,
     isConsumed,
