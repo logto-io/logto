@@ -82,6 +82,10 @@ function TokenStorage({ type, tokenSecret, connector, mutate }: Props) {
     };
   }, [isTokenStorageSupported, tokenSecret]);
 
+  const connectorNameText = useMemo(() => {
+    return type === ConnectorType.Social ? connector?.name.en : connector?.name;
+  }, [connector, type]);
+
   if (!connector || !isTokenStorageSupported) {
     return null;
   }
@@ -91,7 +95,7 @@ function TokenStorage({ type, tokenSecret, connector, mutate }: Props) {
       title="user_identity_details.token_storage.title"
       description="user_identity_details.token_storage.description"
       descriptionInterpolation={{
-        connectorName: type === ConnectorType.Social ? connector.name.en : connector.name,
+        connectorName: connectorNameText,
       }}
     >
       {!connector.enableTokenStorage && (
@@ -102,15 +106,17 @@ function TokenStorage({ type, tokenSecret, connector, mutate }: Props) {
                 connectorName: <ConnectorName name={connector.name} />,
               }}
             >
-              {t('user_identity_details.token_storage_disabled.description')}
+              {t('user_identity_details.token_storage_disabled.description', {
+                connectorName: connectorNameText,
+              })}
             </Trans>{' '}
             {type === ConnectorType.Social ? (
               <TextLink to={`/connectors/social/${connector.id}`}>
-                {t('connectors.title')} {'>'} {connector.name.en}
+                {t('connectors.title')} {'>'} {connectorNameText}
               </TextLink>
             ) : (
-              <TextLink to={`/connectors/enterprise-sso/${connector.id}`}>
-                {t('enterprise_sso.title')} {'>'} {connector.name}
+              <TextLink to={`/enterprise-sso/${connector.id}/experience`}>
+                {t('enterprise_sso.title')} {'>'} {connectorNameText}
               </TextLink>
             )}
           </InlineNotification>
