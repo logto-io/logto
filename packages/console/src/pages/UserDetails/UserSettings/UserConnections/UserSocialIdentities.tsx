@@ -123,7 +123,7 @@ function UserSocialIdentities({ userId }: Props) {
             {
               title: t('user_details.connectors.user_id'),
               dataIndex: 'identityId',
-              colSpan: 7,
+              colSpan: 6,
               render: ({ identityId = '' }) => (
                 <div className={styles.userId}>
                   <span>{identityId || '-'}</span>
@@ -134,7 +134,7 @@ function UserSocialIdentities({ userId }: Props) {
             {
               title: t('user_details.connections.token_status_column'),
               dataIndex: 'tokenStatus',
-              colSpan: 3,
+              colSpan: 4,
               render: ({ tokenStatus: { isTokenStorageSupported, tokenSecret } }) => (
                 <ConnectorTokenStatus
                   isTokenStorageSupported={isTokenStorageSupported}

@@ -162,7 +162,7 @@ function UserSsoIdentities({ userId }: Props) {
             {
               title: t('user_details.sso_connectors.enterprise_id'),
               dataIndex: 'userIdentity',
-              colSpan: 7,
+              colSpan: 6,
               render: ({ identityId }) => (
                 <div className={styles.userId}>
                   <span>{identityId || '-'}</span>
@@ -173,7 +173,7 @@ function UserSsoIdentities({ userId }: Props) {
             {
               title: t('user_details.connections.token_status_column'),
               dataIndex: 'tokenStatus',
-              colSpan: 3,
+              colSpan: 4,
               render: ({ tokenStatus: { isTokenStorageSupported, tokenSecret } }) => (
                 <ConnectorTokenStatus
                   isTokenStorageSupported={isTokenStorageSupported}
