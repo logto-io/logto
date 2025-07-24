@@ -4,7 +4,6 @@ import {
   GoogleConnector,
   isExternalGoogleOneTap,
   isGoogleOneTap as isGoogleOneTapChecker,
-  normalizeExternalWebsiteGoogleOneTapConnectorData,
 } from '@logto/connector-kit';
 import type { SocialConnectorPayload } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
@@ -87,12 +86,8 @@ export const verifySocialIdentity = async (
     assertThat(value === csrfToken, 'session.csrf_token_mismatch');
   }
 
-  const userInfo = await getUserInfo(
-    connectorId,
-    isGoogleOneTap && isExternalWebsiteGoogleOneTap
-      ? normalizeExternalWebsiteGoogleOneTapConnectorData(connectorData)
-      : connectorData,
-    async () => getConnectorSessionResult(ctx, provider)
+  const userInfo = await getUserInfo(connectorId, connectorData, async () =>
+    getConnectorSessionResult(ctx, provider)
   );
 
   log.append(userInfo);

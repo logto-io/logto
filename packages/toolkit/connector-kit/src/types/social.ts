@@ -195,8 +195,6 @@ export const GoogleConnector = Object.freeze({
     csrfToken: 'g_csrf_token',
     /** The parameter Google One Tap uses to carry the ID token. */
     credential: 'credential',
-    /** The parameter Google One Tap uses to carry the ID token from the external website. This should be aligned with {@link ExtraParamsKey.GoogleOneTapCredential}. */
-    externalCredential: 'google_one_tap_credential',
   }),
   configGuard: z.object({
     clientId: z.string(),
@@ -221,43 +219,12 @@ export type GoogleConnectorConfig = {
 };
 
 export const isGoogleOneTap = (data: Record<string, unknown>) => {
-  return (
-    Boolean(data[GoogleConnector.oneTapParams.externalCredential]) ||
-    (Boolean(data[GoogleConnector.oneTapParams.credential]) &&
-      Boolean(data[GoogleConnector.oneTapParams.csrfToken]))
-  );
+  return Boolean(data[GoogleConnector.oneTapParams.credential]);
 };
 
 export const isExternalGoogleOneTap = (data: Record<string, unknown>) => {
-  return Boolean(
-    data[GoogleConnector.oneTapParams.externalCredential] &&
-      !(
-        data[GoogleConnector.oneTapParams.csrfToken] ??
-        data[GoogleConnector.oneTapParams.credential]
-      )
+  return (
+    Boolean(data[GoogleConnector.oneTapParams.credential]) &&
+    !data[GoogleConnector.oneTapParams.csrfToken]
   );
-};
-
-/**
- * Normalize the connector data for external website embedding Google One Tap.
- *
- * We apply transformation to the connector data when it is from external website embedding Google One Tap:
- * For built-in Google One Tap, we have `GoogleConnector.oneTapParams.csrfToken` and `GoogleConnector.oneTapParams.credential` keys;
- * while for external website Google One Tap, we have `GoogleConnector.oneTapParams.externalCredential` key.
- * We use this util method to transform the data to the format that the connector expects,
- * so that the connector can handle the data correctly.
- *
- * For now, this method is only used to normalize the Google One Tap data.
- *
- * @param data The connector data from external website embedding Google One Tap.
- * @returns The normalized data.
- */
-export const normalizeExternalWebsiteGoogleOneTapConnectorData = (
-  data: Record<string, unknown>
-): Record<string, unknown> => {
-  return {
-    ...data,
-    [GoogleConnector.oneTapParams.credential]:
-      data[GoogleConnector.oneTapParams.externalCredential],
-  };
 };

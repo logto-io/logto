@@ -64,7 +64,6 @@ export enum ExtraParamsKey {
   OneTimeToken = 'one_time_token',
   /**
    * The Google One Tap credential JWT token for external website integration.
-   * This should be aligned with the `externalCredential` in {@link GoogleConnector.oneTapParams}.
    */
   GoogleOneTapCredential = 'google_one_tap_credential',
 }
