@@ -19,6 +19,12 @@ const mfa = {
   backup_code_setup_hint: "When users can't verify the above MFA factors, use the backup option.",
   backup_code_error_hint:
     'To use a backup code, you need at least one more MFA method for successful user authentication.',
+  email_verification_code: 'Email verification code',
+  email_verification_code_description:
+    'Link email address to receive and verify verification codes.',
+  phone_verification_code: 'SMS verification code',
+  phone_verification_code_description:
+    'Link phone number to receive and verify SMS verification codes.',
   policy: 'Policy',
   policy_description: 'Set the MFA policy for sign-in and sign-up flows.',
   two_step_sign_in_policy: '2-step verification policy at sign-in',

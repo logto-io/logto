@@ -216,6 +216,11 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
           await experienceInteraction.mfa.addBackupCodeByVerificationId(verificationId, log);
           break;
         }
+        case MfaFactor.EmailVerificationCode:
+        case MfaFactor.PhoneVerificationCode: {
+          // TODO: Implement email and SMS verification code MFA binding
+          throw new Error('Not implemented yet');
+        }
       }
 
       await experienceInteraction.save();

@@ -183,6 +183,20 @@ function MfaForm({ data, onMfaUpdated }: Props) {
                 label={<FactorLabel type={MfaFactor.WebAuthn} />}
                 {...register('webAuthnEnabled')}
               />
+              {isDevFeaturesEnabled && (
+                <>
+                  <Switch
+                    disabled={isMfaDisabled}
+                    label={<FactorLabel type={MfaFactor.EmailVerificationCode} />}
+                    {...register('emailVerificationCodeEnabled')}
+                  />
+                  <Switch
+                    disabled={isMfaDisabled}
+                    label={<FactorLabel type={MfaFactor.PhoneVerificationCode} />}
+                    {...register('phoneVerificationCodeEnabled')}
+                  />
+                </>
+              )}
               <div className={styles.backupCodeField}>
                 <div className={styles.backupCodeDescription}>
                   <DynamicT forKey="mfa.backup_code_setup_hint" />
