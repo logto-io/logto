@@ -11,6 +11,8 @@ export type MfaConfigForm = {
   totpEnabled: boolean;
   webAuthnEnabled: boolean;
   backupCodeEnabled: boolean;
+  emailVerificationCodeEnabled: boolean;
+  phoneVerificationCodeEnabled: boolean;
   isMandatory: boolean;
   setUpPrompt: SignInPrompt;
   organizationRequiredMfaPolicy?: OrganizationRequiredMfaPolicy;

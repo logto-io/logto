@@ -167,6 +167,8 @@ export enum MfaFactor {
   TOTP = 'Totp',
   WebAuthn = 'WebAuthn',
   BackupCode = 'BackupCode',
+  EmailVerificationCode = 'EmailVerificationCode',
+  PhoneVerificationCode = 'PhoneVerificationCode',
 }
 
 export const mfaFactorsGuard = z.nativeEnum(MfaFactor).array();

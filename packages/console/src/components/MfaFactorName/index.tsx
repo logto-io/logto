@@ -11,6 +11,8 @@ const factorNameLabel: Record<MfaFactor, AdminConsoleKey> = {
   [MfaFactor.TOTP]: 'mfa.totp',
   [MfaFactor.WebAuthn]: 'mfa.webauthn',
   [MfaFactor.BackupCode]: 'mfa.backup_code',
+  [MfaFactor.EmailVerificationCode]: 'mfa.email_verification_code',
+  [MfaFactor.PhoneVerificationCode]: 'mfa.phone_verification_code',
 };
 
 export type Props = {
