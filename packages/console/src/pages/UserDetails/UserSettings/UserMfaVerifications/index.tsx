@@ -63,6 +63,7 @@ function UserMfaVerifications({ userId }: Props) {
       )}
       {(isLoading || Boolean(mfaVerifications?.length) || error) && (
         <Table
+          isRowHoverEffectDisabled
           hasBorder
           rowGroups={[{ key: 'mfaVerifications', data: mfaVerifications }]}
           rowIndexKey="id"

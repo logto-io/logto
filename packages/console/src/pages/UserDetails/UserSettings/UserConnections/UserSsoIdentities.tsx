@@ -140,6 +140,7 @@ function UserSsoIdentities({ userId }: Props) {
       )}
       {(isLoading || hasRows || error) && (
         <Table
+          isRowHoverEffectDisabled
           hasBorder
           rowGroups={[{ key: 'ssoIdentities', data: rowData }]}
           rowIndexKey="ssoConnectorId"

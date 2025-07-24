@@ -102,6 +102,7 @@ function UserSocialIdentities({ userId }: Props) {
       {(isLoading || hasRows || error) && (
         <Table
           hasBorder
+          isRowHoverEffectDisabled
           rowGroups={[{ key: 'identities', data: rowData }]}
           rowIndexKey="target"
           isLoading={isLoading}
