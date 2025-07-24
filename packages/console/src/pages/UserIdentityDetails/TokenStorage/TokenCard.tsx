@@ -3,20 +3,14 @@ import { useTranslation } from 'react-i18next';
 
 import DynamicT from '@/ds-components/DynamicT';
 import Tag, { type Props as TagProps } from '@/ds-components/Tag';
-import { type TokenStatus } from '@/types/connector';
+import { TokenStatus } from '@/types/connector';
 
 import styles from './TokenCard.module.scss';
 
-export type AvailableStatus = 'available' | 'not_available';
-
-const getTagStatus = (tokenStatus: TokenStatus | AvailableStatus): TagProps['status'] => {
+const getTagStatus = (tokenStatus: TokenStatus): TagProps['status'] => {
   switch (tokenStatus) {
-    case 'active':
-    case 'available': {
+    case 'active': {
       return 'success';
-    }
-    case 'not_available': {
-      return 'alert';
     }
     case 'expired': {
       return 'error';
@@ -32,14 +26,18 @@ const getTagStatus = (tokenStatus: TokenStatus | AvailableStatus): TagProps['sta
 
 type Props = {
   readonly title: AdminConsoleKey;
-  readonly description: AdminConsoleKey;
-  readonly status: TokenStatus | AvailableStatus;
+  readonly status: TokenStatus;
+  readonly connectorName?: string;
 };
 
-function TokenCard({ title, description, status }: Props) {
+function TokenCard({ title, status, connectorName }: Props) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console',
   });
+
+  if (status === TokenStatus.NotApplicable) {
+    return null;
+  }
 
   return (
     <div className={styles.tokenCard}>
@@ -50,7 +48,9 @@ function TokenCard({ title, description, status }: Props) {
         </Tag>
       </div>
       <div className={styles.tokenCardDescription}>
-        {typeof description === 'string' ? <DynamicT forKey={description} /> : description}
+        {t(`user_identity_details.access_token.description_${status}`, {
+          connectorName,
+        })}
       </div>
     </div>
   );

@@ -46,6 +46,9 @@ const user = {
     'Il numero di telefono è un identificatore richiesto, non puoi impostarlo su null.',
   enterprise_sso_identity_not_exists:
     "L'utente non ha un'identità aziendale collegata all'ID del connettore SSO specificato: {{ ssoConnectorId }}.",
+  /** UNTRANSLATED */
+  identity_not_exists_in_current_user:
+    'The specified identity does not exist in the current user account. Please link the identity before proceeding.',
 };
 
 export default Object.freeze(user);
