@@ -53,7 +53,7 @@
         }
       }
     },
-    "/api/custom-profile-fields/sie-order": {
+    "/api/custom-profile-fields/properties/sie-order": {
       "post": {
         "summary": "Update the display order of the custom profile fields in Sign-in Experience.",
         "description": "Update the display order of the custom profile fields in Sign-in Experience.",

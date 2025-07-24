@@ -109,7 +109,7 @@ export default function customProfileFieldsRoutes<T extends ManagementApiRouter>
   );
 
   router.post(
-    '/custom-profile-fields/sie-order',
+    '/custom-profile-fields/properties/sie-order',
     koaGuard({
       body: z.object({
         order: z.array(updateCustomProfileFieldSieOrderGuard),

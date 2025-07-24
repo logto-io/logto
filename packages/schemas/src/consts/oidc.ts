@@ -62,6 +62,10 @@ export enum ExtraParamsKey {
    * The one-time token used as a proof for the user's identity. Example use case: Magic link.
    */
   OneTimeToken = 'one_time_token',
+  /**
+   * The Google One Tap credential JWT token for external website integration.
+   */
+  GoogleOneTapCredential = 'google_one_tap_credential',
 }
 
 /** @deprecated Use {@link FirstScreen} instead. */
@@ -90,6 +94,7 @@ export const extraParamsObjectGuard = z
     [ExtraParamsKey.LoginHint]: z.string(),
     [ExtraParamsKey.Identifier]: z.string(),
     [ExtraParamsKey.OneTimeToken]: z.string(),
+    [ExtraParamsKey.GoogleOneTapCredential]: z.string(),
   })
   .partial() satisfies ToZodObject<ExtraParamsObject>;
 
@@ -101,4 +106,5 @@ export type ExtraParamsObject = Partial<{
   [ExtraParamsKey.LoginHint]: string;
   [ExtraParamsKey.Identifier]: string;
   [ExtraParamsKey.OneTimeToken]: string;
+  [ExtraParamsKey.GoogleOneTapCredential]: string;
 }>;

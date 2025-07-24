@@ -27,6 +27,7 @@ export type Props = Omit<HTMLProps<HTMLInputElement>, 'prefix'> & {
   readonly suffix?: ReactElement;
   readonly isSuffixFocusVisible?: boolean;
   readonly label?: string;
+  readonly description?: Nullable<string>;
 };
 
 const InputField = (
@@ -40,6 +41,7 @@ const InputField = (
     isPrefixVisible,
     isSuffixFocusVisible,
     label,
+    description,
     onFocus,
     onBlur,
     onChange,
@@ -131,6 +133,7 @@ const InputField = (
           isFocused={isFocused}
         />
       </div>
+      {description && <div className={styles.description}>{description}</div>}
       {errorMessages && (
         <ErrorMessage className={styles.errorMessage}>
           {errorMessages.length > 1 ? (

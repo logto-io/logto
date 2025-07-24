@@ -3,7 +3,6 @@ import {
   socialUserInfoGuard,
   type ConnectorSession,
   type SocialUserInfo,
-  tokenResponseGuard,
 } from '@logto/connector-kit';
 import { z } from 'zod';
 
@@ -34,6 +33,15 @@ export const socialVerificationRecordDataGuard = z.object({
   type: z.literal(VerificationType.Social),
   socialUserInfo: socialUserInfoGuard.optional(),
   encryptedTokenSet: encryptedTokenSetGuard.optional(),
-  tokenResponse: tokenResponseGuard.optional(),
   connectorSession: connectorSessionGuard.optional(),
 }) satisfies ToZodObject<SocialVerificationRecordData>;
+
+export type SanitizedSocialVerificationRecordData = Omit<
+  SocialVerificationRecordData,
+  'encryptedTokenSet' | 'connectorSession'
+>;
+
+export const sanitizedSocialVerificationRecordDataGuard = socialVerificationRecordDataGuard.omit({
+  encryptedTokenSet: true,
+  connectorSession: true,
+}) satisfies ToZodObject<SanitizedSocialVerificationRecordData>;

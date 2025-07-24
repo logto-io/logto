@@ -19,7 +19,7 @@ export const createSocialAuthorizationUrl = async (
 ) => {
   const { getLogtoConnectorById } = connectors;
 
-  const { connectorId, state, redirectUri } = payload;
+  const { connectorId, state, redirectUri, scope } = payload;
   assertThat(state && redirectUri, 'session.insufficient_info');
 
   const connector = await getLogtoConnectorById(connectorId);
@@ -36,6 +36,7 @@ export const createSocialAuthorizationUrl = async (
     {
       state,
       redirectUri,
+      scope,
       /**
        * For POST /authn/saml/:connectorId API, we need to block requests
        * for non-SAML connector (relies on connectorFactoryId) and use `connectorId`

@@ -14,6 +14,7 @@ import {
   defaultTenantId,
   getTenantOrganizationId,
   getTenantRole,
+  userMfaDataKey,
   userOnboardingDataKey,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
@@ -36,7 +37,6 @@ import type {
   VerifiedSignInInteractionResult,
 } from '../types/index.js';
 import { clearInteractionStorage } from '../utils/interaction.js';
-import { userMfaDataKey } from '../verifications/mfa-verification.js';
 
 import { hasUpdatedProfile, parseUserProfile, postAffiliateLogs } from './helpers.js';
 

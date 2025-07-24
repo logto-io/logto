@@ -1,4 +1,4 @@
-import { isValidRegEx } from '@logto/core-kit';
+import { isValidRegEx, numberAndAlphabetRegEx } from '@logto/core-kit';
 import {
   textProfileFieldGuard,
   numberProfileFieldGuard,
@@ -10,30 +10,13 @@ import {
   urlProfileFieldGuard,
   addressProfileFieldGuard,
   CustomProfileFieldType,
-  userOnboardingDataKey,
-  guideRequestsKey,
-  consoleUserPreferenceKey,
-  defaultTenantIdKey,
+  reservedCustomDataKeys,
+  reservedSignInIdentifierKeys,
 } from '@logto/schemas';
 import { ZodError } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
-
-const reservedCustomDataKeys = Object.freeze([
-  userOnboardingDataKey,
-  guideRequestsKey,
-  consoleUserPreferenceKey,
-  defaultTenantIdKey,
-]);
-
-const reservedSignInIdentifierKeys = Object.freeze([
-  'username',
-  'primaryEmail',
-  'primaryPhone',
-  'email',
-  'phone',
-]);
 
 type ValidateCustomProfileField = (
   data: { name: string; type: CustomProfileFieldType } & Record<string, unknown>
@@ -44,7 +27,7 @@ const validateTextProfileField: ValidateCustomProfileField = (data) => {
   const { minLength, maxLength } = config ?? {};
 
   assertThat(
-    minLength && maxLength && minLength <= maxLength,
+    minLength === undefined || maxLength === undefined || minLength <= maxLength,
     'custom_profile_fields.invalid_min_max_input'
   );
 };
@@ -54,7 +37,7 @@ const validateNumberProfileField: ValidateCustomProfileField = (data) => {
   const { minValue, maxValue } = config ?? {};
 
   assertThat(
-    minValue && maxValue && minValue <= maxValue,
+    minValue === undefined || maxValue === undefined || minValue <= maxValue,
     'custom_profile_fields.invalid_min_max_input'
   );
 };
@@ -107,10 +90,13 @@ const validateDateProfileField: ValidateCustomProfileField = (data) => {
 };
 
 const validateFieldName = (name: string) => {
-  assertThat(/^[\dA-Za-z]+$/.test(name), 'custom_profile_fields.invalid_name');
-  assertThat(!reservedCustomDataKeys.includes(name), 'custom_profile_fields.name_exists');
+  assertThat(numberAndAlphabetRegEx.test(name), 'custom_profile_fields.invalid_name');
   assertThat(
-    !reservedSignInIdentifierKeys.includes(name),
+    !new Set<string>(reservedCustomDataKeys).has(name),
+    new RequestError({ code: 'custom_profile_fields.name_conflict_custom_data', name })
+  );
+  assertThat(
+    !new Set<string>(reservedSignInIdentifierKeys).has(name),
     new RequestError({ code: 'custom_profile_fields.name_conflict_sign_in_identifier', name })
   );
 };

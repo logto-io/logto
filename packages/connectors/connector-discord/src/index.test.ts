@@ -31,6 +31,25 @@ describe('Discord connector', () => {
         `${authorizationEndpoint}?client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&response_type=code&scope=identify+email&state=some_state`
       );
     });
+
+    it('should get a valid authorizationUri with scope', async () => {
+      const connector = await createConnector({ getConfig });
+      const authorizationUri = await connector.getAuthorizationUri(
+        {
+          state: 'some_state',
+          redirectUri: 'http://localhost:3000/callback',
+          scope: 'custom_scope',
+          connectorId: 'some_connector_id',
+          connectorFactoryId: 'some_connector_factory_id',
+          jti: 'some_jti',
+          headers: {},
+        },
+        vi.fn()
+      );
+      expect(authorizationUri).toEqual(
+        `${authorizationEndpoint}?client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&response_type=code&scope=custom_scope&state=some_state`
+      );
+    });
   });
 
   describe('getAccessToken', () => {

@@ -10,6 +10,10 @@ import {
   userProfileGuard,
 } from '../foundations/index.js';
 
+import { userOnboardingDataKey } from './onboarding.js';
+import { defaultTenantIdKey } from './tenant.js';
+import { consoleUserPreferenceKey, guideRequestsKey } from './user.js';
+
 export type BaseProfileField = {
   name: string;
   label?: string;
@@ -213,17 +217,19 @@ export type CustomProfileFieldUnion =
   | AddressProfileField
   | FullnameProfileField;
 
+export const nameAndAvatarGuard = z
+  .object({
+    name: z.string(),
+    avatar: z.string().url().or(z.literal('')),
+  })
+  .partial();
+
+export const builtInProfileGuard = nameAndAvatarGuard.merge(
+  z.object({ profile: userProfileGuard })
+);
+
 export const builtInCustomProfileFieldKeys = Object.freeze(
-  userProfileGuard
-    .merge(
-      Users.createGuard.pick({
-        name: true,
-        primaryEmail: true,
-        primaryPhone: true,
-        avatar: true,
-      })
-    )
-    .keyof().options
+  builtInProfileGuard.merge(userProfileGuard).keyof().options
 );
 
 export const updateCustomProfileFieldDataGuard = z.discriminatedUnion('type', [
@@ -248,3 +254,31 @@ export const updateCustomProfileFieldSieOrderGuard = z.object({
 export type UpdateCustomProfileFieldSieOrder = z.infer<
   typeof updateCustomProfileFieldSieOrderGuard
 >;
+
+export const signInIdentifierKeyGuard = Users.createGuard
+  .pick({
+    username: true,
+    primaryEmail: true,
+    primaryPhone: true,
+  })
+  .extend({
+    email: z.string().nullable().optional(),
+    phone: z.string().nullable().optional(),
+  });
+
+export const reservedCustomDataKeyGuard = z
+  .object({
+    [userOnboardingDataKey]: z.string(),
+    [guideRequestsKey]: z.string(),
+    [consoleUserPreferenceKey]: z.string(),
+    [defaultTenantIdKey]: z.string(),
+  })
+  .partial();
+
+export const reservedCustomDataKeys = Object.freeze(reservedCustomDataKeyGuard.keyof().options);
+
+/**
+ * Disallow sign-in identifiers related field keys in custom profile fields, as this is conflicting
+ * with the built-in sign-in/sign-up experience flows.
+ */
+export const reservedSignInIdentifierKeys = Object.freeze(signInIdentifierKeyGuard.keyof().options);

@@ -3,6 +3,8 @@ import password_rejected from './password-rejected.js';
 const error = {
   general_required: 'Необхідно вказати {{types, list(type: disjunction;)}}',
   general_invalid: '{{types, list(type: disjunction;)}} є недійсним',
+  invalid_min_max_input: 'Значення повинно бути між {{minValue}} і {{maxValue}}',
+  invalid_min_max_length: 'Довжина значення повинна бути між {{minLength}} і {{maxLength}}',
   username_required: "Ім'я користувача є обов'язковим",
   password_required: "Пароль є обов'язковим",
   username_exists: "Таке ім'я користувача вже існує",

@@ -3,7 +3,15 @@ import { type Nullable } from '@silverhand/essentials';
 
 export type ConnectorGroup<T = ConnectorResponse> = Pick<
   ConnectorResponse,
-  'name' | 'logo' | 'logoDark' | 'target' | 'type' | 'description' | 'isStandard' | 'isDemo'
+  | 'name'
+  | 'logo'
+  | 'logoDark'
+  | 'target'
+  | 'type'
+  | 'description'
+  | 'isStandard'
+  | 'isDemo'
+  | 'isTokenStorageSupported'
 > & {
   id: string;
   connectors: T[];
@@ -26,4 +34,12 @@ export type ConnectorFormType = {
   formConfig: Record<string, unknown>;
   /** The raw config data. */
   rawConfig: JsonObject;
+  enableTokenStorage?: boolean;
 };
+
+export enum TokenStatus {
+  Active = 'active',
+  Inactive = 'inactive',
+  Expired = 'expired',
+  NotApplicable = 'not_applicable',
+}

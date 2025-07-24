@@ -52,6 +52,32 @@ describe('Patreon connector', () => {
     );
   });
 
+  it('should get a valid uri with custom scope', async () => {
+    const connector = await createConnector({ getConfig });
+    const authorizationUri = await connector.getAuthorizationUri(
+      {
+        state: 'some_state',
+        redirectUri: 'http://localhost:3000/callback',
+        scope: 'custom_scope',
+        connectorId: 'some_connector_id',
+        connectorFactoryId: 'some_connector_factory_id',
+        jti: 'some_jti',
+        headers: {},
+      },
+      vi.fn()
+    );
+
+    expect(authorizationUri).toEqual(
+      `${authorizationEndpoint}?${new URLSearchParams({
+        response_type: 'code',
+        client_id: '<client-id>',
+        scope: 'custom_scope',
+        redirect_uri: 'http://localhost:3000/callback',
+        state: 'some_state',
+      }).toString()}`
+    );
+  });
+
   it('should get valid SocialUserInfo', async () => {
     nock(userInfoEndpoint)
       .get('')

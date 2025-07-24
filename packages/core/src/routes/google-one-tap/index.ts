@@ -9,7 +9,6 @@ import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { koaLogtoAnonymousMethodsCors } from '#src/middleware/koa-logto-anonymous-cors.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
 
@@ -20,6 +19,8 @@ const consoleLog = new ConsoleLog(chalk.magenta('google-one-tap'));
 
 // Default expiration time: 10 minutes.
 const defaultExpiresTime = 10 * 60;
+
+export const googleOneTapApiPrefix = '/google-one-tap';
 
 /**
  * Get and validate Google One Tap connector configuration
@@ -65,8 +66,7 @@ export default function googleOneTapRoutes<T extends AnonymousRouter>(
   }
 
   router.get(
-    '/google-one-tap/config',
-    koaLogtoAnonymousMethodsCors('GET'),
+    `${googleOneTapApiPrefix}/config`,
     koaGuard({
       status: [200, 204, 400, 403, 404],
       response: GoogleConnector.configGuard
@@ -88,8 +88,7 @@ export default function googleOneTapRoutes<T extends AnonymousRouter>(
   );
 
   router.post(
-    '/google-one-tap/verify',
-    koaLogtoAnonymousMethodsCors('POST'),
+    `${googleOneTapApiPrefix}/verify`,
     koaGuard({
       body: z.object({
         idToken: z.string(),

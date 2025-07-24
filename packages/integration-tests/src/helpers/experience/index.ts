@@ -2,7 +2,7 @@
  * @fileoverview This file contains the successful interaction flow helper functions that use the experience APIs.
  */
 
-import { type SocialUserInfo } from '@logto/connector-kit';
+import { type TokenResponse, type SocialUserInfo } from '@logto/connector-kit';
 import {
   InteractionEvent,
   SignInIdentifier,
@@ -17,8 +17,8 @@ import { initExperienceClient, logoutClient, processSession } from '../client.js
 import { expectRejects } from '../index.js';
 
 import {
-  successFullyCreateSocialVerification,
-  successFullyVerifySocialAuthorization,
+  successfullyCreateSocialVerification,
+  successfullyVerifySocialAuthorization,
 } from './social-verification.js';
 import {
   successfullySendVerificationCode,
@@ -162,12 +162,14 @@ export const identifyUserWithEmailVerificationCode = async (
 
 /**
  *
- * @param socialUserInfo The social user info that will be returned by the social connector.
+ * @param socialUserInfo The social user info and token response that will be returned by the social connector.
  * @param registerNewUser Optional. If true, the user will be registered if the user does not exist, otherwise a error will be thrown if the user does not exist.
  */
 export const signInWithSocial = async (
   connectorId: string,
-  socialUserInfo: SocialUserInfo,
+  socialUserInfo: SocialUserInfo & {
+    tokenResponse?: TokenResponse;
+  },
   options?: {
     registerNewUser?: boolean;
     linkSocial?: boolean;
@@ -178,14 +180,14 @@ export const signInWithSocial = async (
 
   const client = await initExperienceClient();
 
-  const { verificationId } = await successFullyCreateSocialVerification(client, connectorId, {
+  const { verificationId } = await successfullyCreateSocialVerification(client, connectorId, {
     redirectUri,
     state,
   });
 
   const { id, ...rest } = socialUserInfo;
 
-  await successFullyVerifySocialAuthorization(client, connectorId, {
+  await successfullyVerifySocialAuthorization(client, connectorId, {
     verificationId,
     connectorData: {
       state,

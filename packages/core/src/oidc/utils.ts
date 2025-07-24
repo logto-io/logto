@@ -123,6 +123,7 @@ export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown):
 
   appendExtraParam(ExtraParamsKey.OrganizationId);
   appendExtraParam(ExtraParamsKey.OneTimeToken);
+  appendExtraParam(ExtraParamsKey.GoogleOneTapCredential);
   appendExtraParam(ExtraParamsKey.LoginHint);
   appendExtraParam(ExtraParamsKey.Identifier);
 

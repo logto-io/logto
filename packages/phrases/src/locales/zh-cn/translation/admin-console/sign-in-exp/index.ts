@@ -1,4 +1,5 @@
 import content from './content.js';
+import custom_profile_fields from './custom-profile-fields.js';
 import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 
 const sign_in_exp = {
@@ -9,6 +10,8 @@ const sign_in_exp = {
     branding: '品牌',
     sign_up_and_sign_in: '注册与登录',
     content: '内容',
+    /** UNTRANSLATED */
+    collect_user_profile: 'Collect user profile',
     password_policy: '密码策略',
   },
   welcome: {
@@ -111,6 +114,7 @@ const sign_in_exp = {
     desktop: '桌面网页',
     mobile: '移动设备',
   },
+  custom_profile_fields,
 };
 
 export default Object.freeze(sign_in_exp);

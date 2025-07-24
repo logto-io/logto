@@ -40,7 +40,7 @@ import { accessTokenResponseGuard, patreonConfigGuard, userInfoResponseGuard } f
  */
 const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
-  async ({ state, redirectUri }, setSession) => {
+  async ({ state, redirectUri, scope: customScope }, setSession) => {
     const config = await getConfig(defaultMetadata.id);
     validateConfig(config, patreonConfigGuard);
 
@@ -51,7 +51,7 @@ const getAuthorizationUri =
     return constructAuthorizationUri(authorizationEndpoint, {
       responseType: 'code',
       clientId,
-      scope: scope ?? defaultScope, // Defaults to 'profile' if not provided
+      scope: customScope ?? scope ?? defaultScope, // Defaults to 'profile' if not provided
       redirectUri,
       state,
     });

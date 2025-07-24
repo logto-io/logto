@@ -4,7 +4,7 @@
   "description": "QQ web connector implementation.",
   "author": "Yen Harvey. <2117555041@qq.com>",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^4.3.0",
+    "@logto/connector-kit": "workspace:^",
     "got": "^14.0.0",
     "@silverhand/essentials": "^2.9.1",
     "ky": "^1.2.3",

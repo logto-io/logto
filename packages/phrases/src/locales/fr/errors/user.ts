@@ -47,6 +47,8 @@ const user = {
     "L'adresse e-mail est un identifiant requis, vous ne pouvez pas la définir à null.",
   phone_required:
     'Le numéro de téléphone est un identifiant requis, vous ne pouvez pas le définir à null.',
+  enterprise_sso_identity_not_exists:
+    "L'utilisateur n'a pas d'identité d'entreprise liée à l'ID du connecteur SSO spécifié : {{ ssoConnectorId }}.",
 };
 
 export default Object.freeze(user);

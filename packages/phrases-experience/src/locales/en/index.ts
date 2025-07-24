@@ -5,6 +5,7 @@ import error from './error/index.js';
 import input from './input.js';
 import list from './list.js';
 import mfa from './mfa.js';
+import profile from './profile.js';
 import secondary from './secondary.js';
 import user_scopes from './user-scopes.js';
 
@@ -19,6 +20,7 @@ const en = {
     mfa,
     development_tenant,
     user_scopes,
+    profile,
   },
 };
 

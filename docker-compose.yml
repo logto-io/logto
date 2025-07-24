@@ -25,6 +25,6 @@ services:
       POSTGRES_PASSWORD: p0stgr3s
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
-      interval: 10s
+      interval: 5s
       timeout: 5s
       retries: 5

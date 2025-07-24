@@ -4,12 +4,16 @@ import {
   type ConnectorResponse,
 } from '@logto/schemas';
 import { useMemo, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import useSWR from 'swr';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import DynamicT from '@/ds-components/DynamicT';
 import ModalLayout from '@/ds-components/ModalLayout';
+import TextLink from '@/ds-components/TextLink';
 import type { RequestError } from '@/hooks/use-api';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import modalStyles from '@/scss/modal.module.scss';
 
 import { getConnectorGroups } from '../../pages/Connectors/utils';
@@ -40,6 +44,10 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
   const [activeGroupId, setActiveGroupId] = useState<string>();
   const [activeFactoryId, setActiveFactoryId] = useState<string>();
   const isCreatingSocialConnector = type === ConnectorType.Social;
+  const { getDocumentationUrl } = useDocumentationUrl();
+  const { t } = useTranslation(undefined, {
+    keyPrefix: 'admin_console',
+  });
 
   const groups = useMemo(() => {
     if (!factories || !existingConnectors) {
@@ -133,6 +141,23 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
       >
         {isLoading && <Skeleton />}
         {factoriesError?.message ?? connectorsError?.message}
+        {isDevFeaturesEnabled && (
+          <div className={styles.label}>
+            <Trans
+              components={{
+                a: (
+                  <TextLink
+                    href={getDocumentationUrl('/integrations')}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  />
+                ),
+              }}
+            >
+              {t('connectors.create_form.third_party_connectors')}
+            </Trans>
+          </div>
+        )}
         <ConnectorRadioGroup
           name="group"
           groups={defaultGroups}
@@ -149,8 +174,8 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
         )}
         {standardGroups.length > 0 && (
           <>
-            <div className={styles.standardLabel}>
-              <DynamicT forKey="connectors.standard_connectors" />
+            <div className={styles.label}>
+              <DynamicT forKey="connectors.create_form.standard_connectors" />
             </div>
             <ConnectorRadioGroup
               name="group"

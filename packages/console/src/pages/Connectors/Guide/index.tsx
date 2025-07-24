@@ -16,6 +16,7 @@ import BasicForm from '@/components/ConnectorForm/BasicForm';
 import ConfigForm from '@/components/ConnectorForm/ConfigForm';
 import ConnectorTester from '@/components/ConnectorTester';
 import Markdown from '@/components/Markdown';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { ConnectorsTabs } from '@/consts/page-tabs';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
@@ -48,7 +49,13 @@ function Guide({ connector, onClose }: Props) {
   const callbackConnectorId = useRef(generateStandardId());
   const [conflictConnectorName, setConflictConnectorName] = useState<Record<string, string>>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { type: connectorType, formItems, isStandard, id: connectorFactoryId } = connector ?? {};
+  const {
+    type: connectorType,
+    formItems,
+    isStandard,
+    id: connectorFactoryId,
+    isTokenStorageSupported,
+  } = connector ?? {};
   const { language } = i18next;
 
   const isSocialConnector =
@@ -103,7 +110,7 @@ function Guide({ connector, onClose }: Props) {
 
       const config = configParser(data, formItems);
 
-      const { syncProfile, name, logo, logoDark, target } = data;
+      const { syncProfile, name, logo, logoDark, target, enableTokenStorage } = data;
 
       const basePayload = {
         config,
@@ -120,7 +127,12 @@ function Guide({ connector, onClose }: Props) {
       };
 
       const payload = isSocialConnector
-        ? { ...basePayload, syncProfile: syncProfile === SyncProfileMode.EachSignIn }
+        ? {
+            ...basePayload,
+            syncProfile: syncProfile === SyncProfileMode.EachSignIn,
+            // TODO: Remove dev feature guard when token storage is ready for release
+            ...conditional(isDevFeaturesEnabled && { enableTokenStorage }),
+          }
         : basePayload;
 
       try {
@@ -196,6 +208,7 @@ function Guide({ connector, onClose }: Props) {
                       isAllowEditTarget={isStandard}
                       isStandard={isStandard}
                       conflictConnectorName={conflictConnectorName}
+                      isTokenStorageSupported={isTokenStorageSupported}
                     />
                   </div>
                 )}

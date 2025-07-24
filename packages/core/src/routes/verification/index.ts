@@ -180,6 +180,7 @@ export default function verificationRoutes<T extends UserRouter>(
     koaGuard({
       body: socialAuthorizationUrlPayloadGuard.extend({
         connectorId: z.string(),
+        scope: z.string().optional(),
       }),
       response: z.object({
         verificationRecordId: z.string(),

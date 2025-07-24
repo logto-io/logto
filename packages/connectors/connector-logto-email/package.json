@@ -4,7 +4,7 @@
   "description": "Logto email connector.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^4.3.0",
+    "@logto/connector-kit": "workspace:^",
     "@silverhand/essentials": "^2.9.1",
     "got": "^14.0.0",
     "snakecase-keys": "^8.0.1",

@@ -67,6 +67,12 @@ const connectors = {
     sync_profile_each_sign_in: 'Her oturum açmada her zaman senkronize et',
     sync_profile_tip:
       'Sosyal sağlayıcıdan temel profil (kullanıcıların adları ve avatarları gibi) senkronize edilsin.',
+    enable_token_storage: {
+      title: 'Kalıcı API erişimi için belirteçleri saklayın',
+      description:
+        "Erişim ve yenileme belirteçlerini Gizli Kasada saklayın. Tekrarlı kullanıcı onayı olmadan otomatik API çağrılarına izin verir. Örnek: Yapay Zeka Ajansınızın kalıcı yetkilendirme ile Google Takvim'e etkinlikler eklemesine izin verin. <a>Üçüncü taraf API'larını nasıl çağıracağınızı öğrenin</a>",
+      tip: 'İpuçları: Standart OAuth/OIDC kimlik sağlayıcısı için, yenileme belirteci almak ve tekrarlanan kullanıcı onayı istemlerini önlemek için `offline_access` kapsamı dahil edilmelidir. ',
+    },
     callback_uri: 'Geri dönüş URI',
     callback_uri_description:
       "Ayrıca yönlendirme URI'si olarak adlandırılır, kullanıcıların sosyal yetkilendirmeden sonra Logto'ya geri gönderilecekleri URI'dir, ve sosyal sağlayıcının yapılandırma sayfasına kopyalayın yapıştırın.",
@@ -82,6 +88,11 @@ const connectors = {
   drawer_subtitle: 'Bağlayıcıyı entegre etmek için yönergeleri izleyin',
   unknown: 'Bilinmeyen bağlayıcı',
   standard_connectors: 'Standart bağlayıcılar',
+  create_form: {
+    third_party_connectors:
+      'Hızlı sosyal oturum açma, sosyal hesap bağlama ve API erişimi için üçüncü taraf sağlayıcıları entegre edin. <a>Daha fazla bilgi edinin</a>',
+    standard_connectors: 'Veya standart bir protokolle sosyal bağlayıcınızı özelleştirebilirsiniz.',
+  },
 };
 
 export default Object.freeze(connectors);

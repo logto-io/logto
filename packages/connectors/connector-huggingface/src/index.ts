@@ -37,7 +37,7 @@ import {
 
 const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
-  async ({ state, redirectUri }, setSession) => {
+  async ({ state, redirectUri, scope: customScope }, setSession) => {
     const config = await getConfig(defaultMetadata.id);
     validateConfig(config, huggingfaceConnectorConfigGuard);
 
@@ -48,7 +48,7 @@ const getAuthorizationUri =
     return constructAuthorizationUri(authorizationEndpoint, {
       responseType: 'code',
       clientId,
-      scope: scope ?? 'profile', // Defaults to 'profile' if not provided
+      scope: customScope ?? scope ?? 'profile', // Defaults to 'profile' if not provided
       redirectUri,
       state,
     });

@@ -130,6 +130,29 @@ const user_details = {
       edited: 'トークン {{name}} が正常に編集されました。',
     },
   },
+  connections: {
+    /** UNTRANSLATED */
+    title: 'Connection',
+    /** UNTRANSLATED */
+    description:
+      'The user links third-party accounts for social sign-in, enterprise SSO, or resources access.',
+    /** UNTRANSLATED */
+    token_status_column: 'Token status',
+    token_status: {
+      /** UNTRANSLATED */
+      active: 'Active',
+      /** UNTRANSLATED */
+      expired: 'Expired',
+      /** UNTRANSLATED */
+      inactive: 'Inactive',
+      /** UNTRANSLATED */
+      not_applicable: 'Not applicable',
+      /** UNTRANSLATED */
+      available: 'Available',
+      /** UNTRANSLATED */
+      not_available: 'Not available',
+    },
+  },
 };
 
 export default Object.freeze(user_details);

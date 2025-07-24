@@ -1,0 +1,9 @@
+@use '@/scss/underscore' as _;
+
+.form {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: _.unit(6);
+  gap: _.unit(4);
+}

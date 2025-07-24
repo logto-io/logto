@@ -1,5 +1,7 @@
 import type {
   CreatePersonalAccessToken,
+  DesensitizedEnterpriseSsoTokenSetSecret,
+  DesensitizedSocialTokenSetSecret,
   Identities,
   Identity,
   MfaFactor,
@@ -157,3 +159,39 @@ export const updatePersonalAccessToken = async (
       json: body,
     })
     .json<PersonalAccessToken>();
+
+export const getUserIdentity = async (
+  userId: string,
+  target: string,
+  includeTokenSecret = true
+) => {
+  const searchParams = new URLSearchParams({
+    ...conditional(includeTokenSecret && { includeTokenSecret: 'true' }),
+  });
+
+  return authedAdminApi
+    .get(`users/${userId}/identities/${target}`, {
+      searchParams,
+    })
+    .json<{
+      identity: Identity;
+      tokenSecret?: DesensitizedSocialTokenSetSecret;
+    }>();
+};
+
+export const getUserSsoIdentity = async (
+  userId: string,
+  connectorId: string,
+  includeTokenSecret = true
+) => {
+  const searchParams = new URLSearchParams({
+    ...conditional(includeTokenSecret && { includeTokenSecret: 'true' }),
+  });
+
+  return authedAdminApi
+    .get(`users/${userId}/sso-identities/${connectorId}`, { searchParams })
+    .json<{
+      ssoIdentity: UserSsoIdentity;
+      tokenSecret?: DesensitizedEnterpriseSsoTokenSetSecret;
+    }>();
+};

@@ -10,7 +10,6 @@ import assertThat from '#src/utils/assert-that.js';
  */
 export type WithAccountCenterContext<ContextT extends IRouterParamContext = IRouterParamContext> =
   ContextT & { accountCenter: AccountCenter };
-
 /**
  * Create a middleware that injects the account center configs and ensures
  * the global config is enabled.
@@ -20,6 +19,7 @@ export default function koaAccountCenter<StateT, ContextT extends IRouterParamCo
 }: Queries): MiddlewareType<StateT, WithAccountCenterContext<ContextT>, ResponseT> {
   return async (ctx, next) => {
     const accountCenter = await findDefaultAccountCenter();
+
     assertThat(accountCenter.enabled, 'account_center.not_enabled');
 
     ctx.accountCenter = accountCenter;

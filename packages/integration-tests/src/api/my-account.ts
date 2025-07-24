@@ -1,4 +1,8 @@
-import { type UserMfaVerificationResponse, type UserProfileResponse } from '@logto/schemas';
+import {
+  type GetThirdPartyAccessTokenResponse,
+  type UserMfaVerificationResponse,
+  type UserProfileResponse,
+} from '@logto/schemas';
 import { type KyInstance } from 'ky';
 
 const verificationRecordIdHeader = 'logto-verification-id';
@@ -109,3 +113,35 @@ export const deleteMfaVerification = async (
   api.delete(`api/my-account/mfa-verifications/${verificationId}`, {
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
+
+export const getMfaSettings = async (api: KyInstance) =>
+  api.get('api/my-account/mfa-settings').json<{ skipMfaOnSignIn: boolean }>();
+
+export const updateMfaSettings = async (
+  api: KyInstance,
+  verificationRecordId: string,
+  skipMfaOnSignIn: boolean
+) =>
+  api
+    .patch('api/my-account/mfa-settings', {
+      json: { skipMfaOnSignIn },
+      headers: { [verificationRecordIdHeader]: verificationRecordId },
+    })
+    .json<{ skipMfaOnSignIn: boolean }>();
+
+export const getSocialAccessToken = async (api: KyInstance, target: string) => {
+  return api
+    .get(`api/my-account/identities/${target}/access-token`)
+    .json<GetThirdPartyAccessTokenResponse>();
+};
+
+export const updateSocialAccessToken = async (
+  api: KyInstance,
+  target: string,
+  verificationRecordId: string
+) =>
+  api
+    .put(`api/my-account/identities/${target}/access-token`, {
+      json: { verificationRecordId },
+    })
+    .json<GetThirdPartyAccessTokenResponse>();

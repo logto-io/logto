@@ -20,5 +20,6 @@ export const defaultMetadata: ConnectorMetadata = {
     'tr-TR': 'Social mock connector description',
   },
   readme: './README.md',
+  isTokenStorageSupported: true,
   configTemplate: './docs/config-template.json',
 };

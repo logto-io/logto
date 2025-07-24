@@ -110,6 +110,7 @@ const description = {
   switch_account_title: 'В настоящее время вы вошли как {{account}}',
   switch_account_description:
     'Чтобы продолжить, вы будете выйти из текущей учетной записи и автоматически переключены на новую учетную запись.',
+  about_yourself: 'Расскажите нам о себе',
 };
 
 export default Object.freeze(description);

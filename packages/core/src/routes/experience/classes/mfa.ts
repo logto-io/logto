@@ -9,15 +9,15 @@ import {
   bindWebAuthnGuard,
   InteractionEvent,
   type JsonObject,
-  MfaFactor,
   MfaPolicy,
   type User,
   VerificationType,
   type Mfa as MfaSettings,
   OrganizationRequiredMfaPolicy,
+  MfaFactor,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { deduplicate } from '@silverhand/essentials';
+import { cond, deduplicate, pick } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -37,12 +37,26 @@ export type MfaData = {
   backupCode?: BindBackupCode;
 };
 
+export type SanitizedMfaData = {
+  mfaSkipped?: boolean;
+  totp?: Pick<BindTotp, 'type'>;
+  webAuthn?: BindWebAuthn[];
+  backupCode?: Omit<BindBackupCode, 'codes'>;
+};
+
 export const mfaDataGuard = z.object({
   mfaSkipped: z.boolean().optional(),
   totp: bindTotpGuard.optional(),
   webAuthn: z.array(bindWebAuthnGuard).optional(),
   backupCode: bindBackupCodeGuard.optional(),
 }) satisfies ToZodObject<MfaData>;
+
+export const sanitizedMfaDataGuard = z.object({
+  mfaSkipped: z.boolean().optional(),
+  totp: z.object({ type: z.literal(MfaFactor.TOTP) }).optional(),
+  webAuthn: z.array(bindWebAuthnGuard).optional(),
+  backupCode: bindBackupCodeGuard.pick({ type: true }).optional(),
+}) satisfies ToZodObject<SanitizedMfaData>;
 
 export const userMfaDataKey = 'mfa';
 
@@ -351,6 +365,15 @@ export class Mfa {
       totp: this.#totp,
       webAuthn: this.#webAuthn,
       backupCode: this.#backupCode,
+    };
+  }
+
+  get sanitizedData(): SanitizedMfaData {
+    return {
+      mfaSkipped: this.mfaSkipped,
+      totp: cond(this.#totp && pick(this.#totp, 'type')),
+      webAuthn: this.#webAuthn,
+      backupCode: cond(this.#backupCode && pick(this.#backupCode, 'type')),
     };
   }
 

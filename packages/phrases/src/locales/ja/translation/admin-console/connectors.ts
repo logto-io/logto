@@ -65,6 +65,12 @@ const connectors = {
     sync_profile_each_sign_in: 'サインインごとに同期する',
     sync_profile_tip:
       '基本プロファイル（ユーザーの名前やアバターなど）をソーシャルプロバイダから同期します。',
+    enable_token_storage: {
+      title: '持続的な API アクセスのためにトークンを保存',
+      description:
+        'アクセス トークンとリフレッシュ トークンをシークレット ボールトに保存します。繰り返されるユーザーの同意なしに自動化された API コールを許可します。例: 持続的な承認で AI エージェントに Google カレンダーにイベントを追加させる。<a>サードパーティの API を呼び出す方法</a>',
+      tip: 'ヒント: 標準の OAuth/OIDC アイデンティティ プロバイダーの場合、リフレッシュ トークンを取得するには`offline_access`スコープを含める必要があります。これにより、繰り返し行われるユーザーの同意を求めるプロンプトを防ぎます。',
+    },
     callback_uri: 'Callback URI',
     callback_uri_description:
       'Redirect URI もしくはコールバック URI とも呼ばれ、Logto に戻る URI です。コピーしてソーシャルプロバイダの構成ページに貼り付けてください。',
@@ -81,6 +87,11 @@ const connectors = {
   drawer_subtitle: 'インテグレーションの手順に従ってください',
   unknown: '不明なコネクタ',
   standard_connectors: '標準コネクタ',
+  create_form: {
+    third_party_connectors:
+      'サードパーティ プロバイダーを統合して、迅速なソーシャル サインイン、ソーシャル アカウントのリンク、および API アクセスを提供します。<a>詳細はこちら</a>',
+    standard_connectors: 'または標準プロトコルでソーシャルコネクタをカスタマイズできます。',
+  },
 };
 
 export default Object.freeze(connectors);

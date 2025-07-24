@@ -1,0 +1,50 @@
+@use '@/scss/underscore' as _;
+
+.selectContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: _.unit(1);
+
+  .select {
+    cursor: pointer;
+    position: relative;
+
+    input {
+      cursor: pointer;
+    }
+
+    .arrow {
+      position: absolute;
+      inset-inline-end: _.unit(2);
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      color: var(--color-type-secondary);
+      transition: transform 0.2s ease-in-out;
+
+      &.up {
+        transform: translateY(-50%) rotate(180deg);
+      }
+    }
+  }
+
+  .dropdown {
+    padding: _.unit(1);
+    max-height: 288px;
+  }
+
+  .description,
+  .errorMessage {
+    margin-inline-start: _.unit(0.5);
+    @include _.text-hint;
+  }
+
+  .errorMessage {
+    color: var(--color-danger-default);
+  }
+}

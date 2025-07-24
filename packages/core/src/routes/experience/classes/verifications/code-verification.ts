@@ -168,6 +168,10 @@ abstract class CodeVerification<T extends CodeVerificationType>
     };
   }
 
+  toSanitizedJson(): CodeVerificationRecordData<T> {
+    return this.toJson();
+  }
+
   abstract toUserProfile(): CodeVerificationIdentifierMap[T];
 }
 

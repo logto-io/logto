@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+  app:
+    container_name: app # Specify a container name for easier health check
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: svhd/logto:local

@@ -219,6 +219,6 @@ describe('fetchToken', () => {
         data,
         redirectUri
       )
-    ).resolves.toEqual(camelcaseKeys(tokenResponse));
+    ).resolves.toEqual(tokenResponse);
   });
 });

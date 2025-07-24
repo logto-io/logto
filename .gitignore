@@ -33,6 +33,9 @@ cache
 fly.toml
 dump.rdb
 
+# Claude local files
+.claude/
+
 # connectors
 /packages/core/connectors
 

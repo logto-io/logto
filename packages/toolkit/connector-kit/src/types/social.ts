@@ -35,6 +35,7 @@ export type GetAuthorizationUri = (
     connectorFactoryId: string;
     jti: string;
     headers: { userAgent?: string };
+    scope?: string;
   },
   setSession: SetSession
 ) => Promise<string>;
@@ -102,7 +103,8 @@ export type TokenResponse = {
   id_token?: string;
   access_token?: string;
   refresh_token?: string;
-  expires_in?: number;
+  /** Some providers like Azure may return expires_in as a string. */
+  expires_in?: number | string;
   scope?: string;
   token_type?: string;
 };
@@ -111,7 +113,7 @@ export const tokenResponseGuard = z.object({
   id_token: z.string().optional(),
   access_token: z.string().optional(),
   refresh_token: z.string().optional(),
-  expires_in: z.number().optional(),
+  expires_in: z.number().or(z.string()).optional(),
   scope: z.string().optional(),
   token_type: z.string().optional(),
 }) satisfies ToZodObject<TokenResponse>;
@@ -124,6 +126,8 @@ export type GetTokenResponseAndUserInfo = (
   userInfo: SocialUserInfo;
 }>;
 
+export type GetAccessTokenByRefreshToken = (refreshToken: string) => Promise<TokenResponse>;
+
 export type SocialConnector = BaseConnector<ConnectorType.Social> & {
   getAuthorizationUri: GetAuthorizationUri;
   getUserInfo: GetUserInfo;
@@ -135,6 +139,12 @@ export type SocialConnector = BaseConnector<ConnectorType.Social> & {
    * otherwise, use `getUserInfo` to retrieve the user info directly.
    */
   getTokenResponseAndUserInfo?: GetTokenResponseAndUserInfo;
+  /**
+   * @remarks
+   * If the social connector has token storage enabled,
+   * this function can be used to retrieve the access token by the refresh token.
+   */
+  getAccessTokenByRefreshToken?: GetAccessTokenByRefreshToken;
   validateSamlAssertion?: ValidateSamlAssertion;
 };
 

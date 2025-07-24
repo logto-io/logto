@@ -106,6 +106,7 @@ const description = {
   switch_account_title: 'أنت حاليًا مسجل الدخول كـ {{account}}',
   switch_account_description:
     'للمتابعة، سيتم تسجيل الخروج من الحساب الحالي، والتبديل تلقائيًا إلى الحساب الجديد.',
+  about_yourself: 'أخبرنا عن نفسك',
 };
 
 export default Object.freeze(description);

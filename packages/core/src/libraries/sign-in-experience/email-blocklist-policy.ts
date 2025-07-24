@@ -1,4 +1,4 @@
-import { emailOrEmailDomainRegex } from '@logto/core-kit';
+import { emailOrEmailDomainRegEx } from '@logto/core-kit';
 import { type EmailBlocklistPolicy } from '@logto/schemas';
 import { conditional, deduplicate } from '@silverhand/essentials';
 import { got } from 'got';
@@ -12,7 +12,7 @@ const validateCustomBlockListFormat = (list: string[]) => {
   const invalidItems = new Set();
 
   for (const item of list) {
-    if (!emailOrEmailDomainRegex.test(item)) {
+    if (!emailOrEmailDomainRegEx.test(item)) {
       invalidItems.add(item);
     }
   }

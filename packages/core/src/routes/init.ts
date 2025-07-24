@@ -5,7 +5,6 @@ import Router from 'koa-router';
 import { EnvSet } from '#src/env-set/index.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
-import { koaLogtoAnonymousOriginCors } from '#src/middleware/koa-logto-anonymous-cors.js';
 import { koaManagementApiHooks } from '#src/middleware/koa-management-api-hooks.js';
 import koaTenantGuard from '#src/middleware/koa-tenant-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -35,7 +34,7 @@ import dashboardRoutes from './dashboard.js';
 import domainRoutes from './domain.js';
 import emailTemplateRoutes from './email-template/index.js';
 import experienceApiRoutes from './experience/index.js';
-import googleOneTapRoutes from './google-one-tap/index.js';
+import googleOneTapRoutes, { googleOneTapApiPrefix } from './google-one-tap/index.js';
 import hookRoutes from './hook.js';
 import interactionRoutes from './interaction/index.js';
 import logRoutes from './log.js';
@@ -49,6 +48,7 @@ import roleRoutes from './role.js';
 import roleScopeRoutes from './role.scope.js';
 import samlApplicationAnonymousRoutes from './saml-application/anonymous.js';
 import samlApplicationRoutes from './saml-application/index.js';
+import secretsRoutes from './secret.js';
 import sentinelActivitiesRoutes from './sentinel-activities.js';
 import signInExperiencesRoutes from './sign-in-experience/index.js';
 import ssoConnectors from './sso-connector/index.js';
@@ -118,6 +118,10 @@ const createRouters = (tenant: TenantContext) => {
     customProfileFieldsRoutes(managementRouter, tenant);
   }
 
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    secretsRoutes(managementRouter, tenant);
+  }
+
   // General anonymous router for publicly accessible APIs
   const anonymousRouter: AnonymousRouter = new Router();
 
@@ -125,7 +129,6 @@ const createRouters = (tenant: TenantContext) => {
   // These APIs use koa-logto-anonymous-cors middleware to restrict access
   // to only Logto-related domains (*.logto.io, *.logto.dev, etc.)
   const logtoAnonymousRouter: AnonymousRouter = new Router();
-  logtoAnonymousRouter.use(koaLogtoAnonymousOriginCors());
 
   const userRouter: UserRouter = new Router();
   userRouter.use(koaOidcAuth(tenant));
@@ -173,7 +176,12 @@ const createRouters = (tenant: TenantContext) => {
 export default function initApis(tenant: TenantContext): Koa {
   const apisApp = new Koa();
   const { adminUrlSet, cloudUrlSet } = EnvSet.values;
-  apisApp.use(koaCors([adminUrlSet, cloudUrlSet], [accountApiPrefix, verificationApiPrefix]));
+  apisApp.use(
+    koaCors(
+      [adminUrlSet, cloudUrlSet],
+      [accountApiPrefix, verificationApiPrefix, googleOneTapApiPrefix]
+    )
+  );
   apisApp.use(koaBodyEtag());
 
   for (const router of createRouters(tenant)) {

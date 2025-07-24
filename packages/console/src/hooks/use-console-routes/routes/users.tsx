@@ -1,6 +1,7 @@
 import { Navigate, type RouteObject } from 'react-router-dom';
 import { safeLazy } from 'react-safe-lazy';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { UserDetailsTabs } from '@/consts/page-tabs';
 
 const AuditLogDetails = safeLazy(async () => import('@/pages/AuditLogDetails'));
@@ -10,6 +11,12 @@ const UserOrganizations = safeLazy(async () => import('@/pages/UserDetails/UserO
 const UserRoles = safeLazy(async () => import('@/pages/UserDetails/UserRoles'));
 const UserSettings = safeLazy(async () => import('@/pages/UserDetails/UserSettings'));
 const Users = safeLazy(async () => import('@/pages/Users'));
+const SocialIdentityDetails = safeLazy(
+  async () => import('@/pages/UserIdentityDetails/SocialIdentityDetails')
+);
+const SsoIdentityDetails = safeLazy(
+  async () => import('@/pages/UserIdentityDetails/SsoIdentityDetails')
+);
 
 export const users: RouteObject = {
   path: 'users',
@@ -28,5 +35,11 @@ export const users: RouteObject = {
       ],
     },
     { path: `:userId/${UserDetailsTabs.Logs}/:logId`, element: <AuditLogDetails /> },
+    ...(isDevFeaturesEnabled
+      ? [
+          { path: ':userId/social-identities/:target', element: <SocialIdentityDetails /> },
+          { path: ':userId/sso-identities/:connectorId', element: <SsoIdentityDetails /> },
+        ]
+      : []),
   ],
 };

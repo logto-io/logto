@@ -4,6 +4,8 @@ import { z } from 'zod';
 import type {
   CreateConnector,
   GetAuthorizationUri,
+  GetSession,
+  GetTokenResponseAndUserInfo,
   GetUserInfo,
   SocialConnector,
 } from '@logto/connector-kit';
@@ -12,13 +14,17 @@ import {
   ConnectorErrorCodes,
   ConnectorType,
   jsonGuard,
+  tokenResponseGuard,
 } from '@logto/connector-kit';
 
 import { defaultMetadata } from './constant.js';
 import { mockSocialConfigGuard } from './types.js';
 
+const mockSocialAuthDomain = 'http://mock-social/';
+const defaultScope = 'email profile';
+
 const getAuthorizationUri: GetAuthorizationUri = async (
-  { state, redirectUri, connectorId },
+  { state, redirectUri, connectorId, scope },
   setSession
 ) => {
   try {
@@ -30,24 +36,16 @@ const getAuthorizationUri: GetAuthorizationUri = async (
     }
   }
 
-  return `http://mock-social/?state=${state}&redirect_uri=${redirectUri}`;
+  const queryParams = new URLSearchParams({
+    state,
+    redirect_uri: redirectUri,
+    scope: scope ?? defaultScope,
+  });
+
+  return `${mockSocialAuthDomain}?${queryParams.toString()}`;
 };
 
-const getUserInfo: GetUserInfo = async (data, getSession) => {
-  const dataGuard = z.object({
-    code: z.string(),
-    userId: z.optional(z.string()),
-    email: z.string().optional(),
-    phone: z.string().optional(),
-    name: z.string().optional(),
-    avatar: z.string().optional(),
-  });
-  const result = dataGuard.safeParse(data);
-
-  if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, JSON.stringify(data));
-  }
-
+const validateConnectorSession = async (getSession: GetSession) => {
   try {
     const connectorSession = await getSession();
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -60,6 +58,25 @@ const getUserInfo: GetUserInfo = async (data, getSession) => {
       throw error;
     }
   }
+};
+
+const mockSocialDataGuard = z.object({
+  code: z.string(),
+  userId: z.optional(z.string()),
+  email: z.string().optional(),
+  phone: z.string().optional(),
+  name: z.string().optional(),
+  avatar: z.string().optional(),
+});
+
+const getUserInfo: GetUserInfo = async (data, getSession) => {
+  const result = mockSocialDataGuard.safeParse(data);
+
+  if (!result.success) {
+    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, JSON.stringify(data));
+  }
+
+  await validateConnectorSession(getSession);
 
   const { code, userId, ...rest } = result.data;
 
@@ -71,6 +88,33 @@ const getUserInfo: GetUserInfo = async (data, getSession) => {
   };
 };
 
+const getTokenResponseAndUserInfo: GetTokenResponseAndUserInfo = async (data, getSession) => {
+  const result = mockSocialDataGuard
+    .extend({
+      // Extend the data with the token response
+      tokenResponse: tokenResponseGuard.optional(),
+    })
+    .safeParse(data);
+
+  if (!result.success) {
+    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, JSON.stringify(data));
+  }
+
+  await validateConnectorSession(getSession);
+
+  const { code, userId, tokenResponse, ...rest } = result.data;
+
+  // For mock use only. Use to track the created user entity
+  return {
+    userInfo: {
+      id: userId ?? `mock-social-sub-${randomUUID()}`,
+      ...rest,
+      rawData: jsonGuard.parse(data),
+    },
+    tokenResponse,
+  };
+};
+
 const createMockSocialConnector: CreateConnector<SocialConnector> = async ({ getConfig }) => {
   return {
     metadata: defaultMetadata,
@@ -78,6 +122,7 @@ const createMockSocialConnector: CreateConnector<SocialConnector> = async ({ get
     configGuard: mockSocialConfigGuard,
     getAuthorizationUri,
     getUserInfo,
+    getTokenResponseAndUserInfo,
   };
 };
 

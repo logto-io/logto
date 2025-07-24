@@ -11,8 +11,8 @@ import {
   setSocialConnector,
 } from '#src/helpers/connector.js';
 import {
-  successFullyCreateSocialVerification,
-  successFullyVerifySocialAuthorization,
+  successfullyCreateSocialVerification,
+  successfullyVerifySocialAuthorization,
 } from '#src/helpers/experience/social-verification.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { generateEmail } from '#src/utils.js';
@@ -104,12 +104,12 @@ describe('should reject the email registration if the email is in the blocklist'
         interactionEvent: InteractionEvent.Register,
       });
 
-      const { verificationId } = await successFullyCreateSocialVerification(client, connectorId, {
+      const { verificationId } = await successfullyCreateSocialVerification(client, connectorId, {
         redirectUri,
         state,
       });
 
-      await successFullyVerifySocialAuthorization(client, connectorId, {
+      await successfullyVerifySocialAuthorization(client, connectorId, {
         verificationId,
         connectorData: {
           state,

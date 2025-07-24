@@ -31,3 +31,14 @@ export const newPasswordIdentityVerificationRecordDataGuard = z.object({
   passwordEncrypted: z.string().optional(),
   passwordEncryptionMethod: z.literal(UsersPasswordEncryptionMethod.Argon2i).optional(),
 }) satisfies ToZodObject<NewPasswordIdentityVerificationRecordData>;
+
+export type SanitizedNewPasswordIdentityVerificationRecordData = Omit<
+  NewPasswordIdentityVerificationRecordData,
+  'passwordEncrypted' | 'passwordEncryptionMethod'
+>;
+
+export const sanitizedNewPasswordIdentityVerificationRecordDataGuard =
+  newPasswordIdentityVerificationRecordDataGuard.omit({
+    passwordEncrypted: true,
+    passwordEncryptionMethod: true,
+  }) satisfies ToZodObject<SanitizedNewPasswordIdentityVerificationRecordData>;

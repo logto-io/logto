@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
+import { appInsights } from '@logto/app-insights/node';
 import { InteractionEvent, VerificationType, type User } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
+import { conditional, trySafe } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
@@ -13,6 +14,7 @@ import {
   type Interaction,
   type InteractionContext,
   type WithHooksAndLogsContext,
+  type SanitizedInteractionStorageData,
 } from '../types.js';
 
 import {
@@ -409,6 +411,7 @@ export default class ExperienceInteraction {
       queries: { users: userQueries, userSsoIdentities: userSsoIdentityQueries },
       libraries: {
         socials: { upsertSocialTokenSetSecret },
+        ssoConnectors: { upsertEnterpriseSsoTokenSetSecret },
       },
     } = this.tenant;
 
@@ -464,6 +467,7 @@ export default class ExperienceInteraction {
       syncedEnterpriseSsoIdentity,
       jitOrganizationIds,
       socialConnectorTokenSetSecret,
+      enterpriseSsoConnectorTokenSetSecret,
       ...rest
     } = this.profile.data;
     const { mfaSkipped, mfaVerifications } = this.mfa.toUserMfaVerifications();
@@ -513,7 +517,18 @@ export default class ExperienceInteraction {
 
     // Sync social token set secret
     if (socialConnectorTokenSetSecret) {
-      await upsertSocialTokenSetSecret(user.id, socialConnectorTokenSetSecret);
+      // Upsert token set secret should not break the normal social authentication and link flow
+      await trySafe(
+        async () => upsertSocialTokenSetSecret(user.id, socialConnectorTokenSetSecret),
+        (error) => {
+          void appInsights.trackException(error);
+        }
+      );
+    }
+
+    // Sync enterprise sso token set secret
+    if (enterpriseSsoConnectorTokenSetSecret) {
+      await upsertEnterpriseSsoTokenSetSecret(user.id, enterpriseSsoConnectorTokenSetSecret);
     }
 
     // Provision organizations for one-time token that carries organization IDs in the context.
@@ -559,6 +574,19 @@ export default class ExperienceInteraction {
       profile: this.profile.data,
       mfa: this.mfa.data,
       verificationRecords: this.verificationRecordsArray.map((record) => record.toJson()),
+      captcha,
+    };
+  }
+
+  public toSanitizedJson(): SanitizedInteractionStorageData {
+    const { interactionEvent, userId, captcha } = this;
+
+    return {
+      interactionEvent,
+      userId,
+      profile: this.profile.sanitizedData,
+      mfa: this.mfa.sanitizedData,
+      verificationRecords: this.verificationRecordsArray.map((record) => record.toSanitizedJson()),
       captcha,
     };
   }

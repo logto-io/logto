@@ -61,7 +61,6 @@
 
   .cardContent {
     width: 100%;
-    height: 92px;
     padding: _.unit(5);
     background: var(--color-bg-layer-1);
     border-radius: _.unit(2);
@@ -77,6 +76,7 @@
 .cardTitle {
   font: var(--font-title-2);
   text-align: center;
+  word-break: break-word;
 }
 
 .cardDescription {

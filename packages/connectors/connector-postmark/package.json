@@ -4,7 +4,7 @@
   "description": "Postmark connector implementation.",
   "author": "Sten Sandvik <stenrs@gmail.com>",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^4.3.0",
+    "@logto/connector-kit": "workspace:^",
     "@silverhand/essentials": "^2.9.0",
     "postmark": "^4.0.5",
     "zod": "3.24.3"

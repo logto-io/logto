@@ -66,6 +66,12 @@ const connectors = {
     sync_profile_each_sign_in: 'Always do a sync at each sign-in',
     sync_profile_tip:
       "Sync the basic profile from the social provider, such as users' names and their avatars.",
+    enable_token_storage: {
+      title: 'Store tokens for persistent API access',
+      description:
+        'Store access and refresh tokens in the Secret Vault. Allows automated API calls without repeated user consent. Example: let your AI Agent add events to Google Calendar with persistent authorization. <a>Learn how to call third-party APIs</a>',
+      tip: 'Tips: For standard OAuth/OIDC identity provider, the `offline_access` scope must be included to obtain a refresh token, preventing repeated user consent prompts. ',
+    },
     callback_uri: 'Callback URI',
     callback_uri_description:
       "Also called redirect URI, is the URI in Logto where users will be sent back after social authorization, copy and paste to the social provider's config page.",
@@ -81,6 +87,11 @@ const connectors = {
   drawer_subtitle: 'Follow the instructions to integrate your connector',
   unknown: 'Unknown Connector',
   standard_connectors: 'Standard connectors',
+  create_form: {
+    third_party_connectors:
+      'Integrate third-party providers for quick social sign-in, social account linking, and API access. <a>Learn more</a>',
+    standard_connectors: 'Or you can customize your social connector by a standard protocol.',
+  },
 };
 
 export default Object.freeze(connectors);

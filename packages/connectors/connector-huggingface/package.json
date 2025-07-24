@@ -4,8 +4,8 @@
   "description": "Hugging Face connector implementation.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^4.3.0",
-    "@logto/connector-oauth": "workspace:^1.6.0",
+    "@logto/connector-kit": "workspace:^",
+    "@logto/connector-oauth": "workspace:^",
     "@silverhand/essentials": "^2.9.1",
     "ky": "^1.2.3",
     "zod": "3.24.3"

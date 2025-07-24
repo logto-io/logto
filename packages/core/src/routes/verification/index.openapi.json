@@ -145,6 +145,9 @@
                   },
                   "state": {
                     "description": "A random string generated on the client side to prevent CSRF (Cross-Site Request Forgery) attacks."
+                  },
+                  "scope": {
+                    "description": "The custom scopes of the social verification. It can be used to request specific permissions from the social identity provider. If provided, it will override the scope configured in the connector settings."
                   }
                 }
               }

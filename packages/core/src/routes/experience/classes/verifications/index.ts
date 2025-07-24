@@ -7,7 +7,9 @@ import type Queries from '#src/tenants/Queries.js';
 import {
   BackupCodeVerification,
   backupCodeVerificationRecordDataGuard,
+  sanitizedBackupCodeVerificationRecordDataGuard,
   type BackupCodeVerificationRecordData,
+  type SanitizedBackupCodeVerificationRecordData,
 } from './backup-code-verification.js';
 import {
   EmailCodeVerification,
@@ -19,12 +21,16 @@ import {
 import {
   EnterpriseSsoVerification,
   enterpriseSsoVerificationRecordDataGuard,
+  sanitizedEnterpriseSsoVerificationRecordDataGuard,
+  type SanitizedEnterpriseSsoVerificationRecordData,
   type EnterpriseSsoVerificationRecordData,
 } from './enterprise-sso-verification.js';
 import {
   NewPasswordIdentityVerification,
   newPasswordIdentityVerificationRecordDataGuard,
+  sanitizedNewPasswordIdentityVerificationRecordDataGuard,
   type NewPasswordIdentityVerificationRecordData,
+  type SanitizedNewPasswordIdentityVerificationRecordData,
 } from './new-password-identity-verification.js';
 import {
   OneTimeTokenVerification,
@@ -39,18 +45,24 @@ import {
 import {
   SocialVerification,
   socialVerificationRecordDataGuard,
+  sanitizedSocialVerificationRecordDataGuard,
   type SocialVerificationRecordData,
+  type SanitizedSocialVerificationRecordData,
 } from './social-verification.js';
 import {
   TotpVerification,
   totpVerificationRecordDataGuard,
+  sanitizedTotpVerificationRecordDataGuard,
   type TotpVerificationRecordData,
+  type SanitizedTotpVerificationRecordData,
 } from './totp-verification.js';
 import { type VerificationRecord as GenericVerificationRecord } from './verification-record.js';
 import {
   WebAuthnVerification,
   webAuthnVerificationRecordDataGuard,
+  sanitizedWebAuthnVerificationRecordDataGuard,
   type WebAuthnVerificationRecordData,
+  type SanitizedWebAuthnVerificationRecordData,
 } from './web-authn-verification.js';
 
 export type VerificationRecordData =
@@ -63,6 +75,18 @@ export type VerificationRecordData =
   | BackupCodeVerificationRecordData
   | WebAuthnVerificationRecordData
   | NewPasswordIdentityVerificationRecordData
+  | OneTimeTokenVerificationRecordData;
+
+export type SanitizedVerificationRecordData =
+  | PasswordVerificationRecordData
+  | CodeVerificationRecordData<VerificationType.EmailVerificationCode>
+  | CodeVerificationRecordData<VerificationType.PhoneVerificationCode>
+  | SanitizedSocialVerificationRecordData
+  | SanitizedEnterpriseSsoVerificationRecordData
+  | SanitizedTotpVerificationRecordData
+  | SanitizedBackupCodeVerificationRecordData
+  | SanitizedWebAuthnVerificationRecordData
+  | SanitizedNewPasswordIdentityVerificationRecordData
   | OneTimeTokenVerificationRecordData;
 
 // This is to ensure the keys of the map are the same as the type of the verification record
@@ -105,6 +129,19 @@ export const verificationRecordDataGuard = z.discriminatedUnion('type', [
   backupCodeVerificationRecordDataGuard,
   webAuthnVerificationRecordDataGuard,
   newPasswordIdentityVerificationRecordDataGuard,
+  oneTimeTokenVerificationRecordDataGuard,
+]);
+
+export const publicVerificationRecordDataGuard = z.discriminatedUnion('type', [
+  passwordVerificationRecordDataGuard,
+  emailCodeVerificationRecordDataGuard,
+  phoneCodeVerificationRecordDataGuard,
+  sanitizedSocialVerificationRecordDataGuard,
+  sanitizedEnterpriseSsoVerificationRecordDataGuard,
+  sanitizedTotpVerificationRecordDataGuard,
+  sanitizedBackupCodeVerificationRecordDataGuard,
+  sanitizedWebAuthnVerificationRecordDataGuard,
+  sanitizedNewPasswordIdentityVerificationRecordDataGuard,
   oneTimeTokenVerificationRecordDataGuard,
 ]);
 

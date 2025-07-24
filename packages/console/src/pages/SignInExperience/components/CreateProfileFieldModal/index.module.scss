@@ -1,0 +1,78 @@
+@use '@/scss/underscore' as _;
+@use '@/scss/dimensions' as dim;
+
+.group {
+  gap: _.unit(4);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+
+  @media screen and (max-width: dim.$modal-layout-grid-large) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media screen and (max-width: dim.$modal-layout-grid-medium) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media screen and (max-width: dim.$modal-layout-grid-small) {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(4);
+}
+
+.groupLabel {
+  font: var(--font-label-1);
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(1);
+
+  .title {
+    font: var(--font-label-2);
+  }
+
+  .description {
+    font: var(--font-body-3);
+    color: var(--color-text-secondary);
+  }
+}
+
+.customDataFieldNameInput {
+  &:not(:first-child) {
+    margin-top: 0;
+  }
+
+  .wrapper {
+    display: flex;
+    width: 100%;
+
+    .prefix {
+      padding: 0 _.unit(2) 0 _.unit(3);
+      border: 1px solid var(--color-border);
+      border-right: none;
+      border-radius: 6px 0 0 6px;
+      background: var(--color-bg-layer-2);
+      font: var(--font-body-2);
+      height: 36px;
+      line-height: 36px;
+    }
+
+    .input {
+      flex: 1;
+      border-radius: 0 6px 6px 0;
+    }
+  }
+}
+
+.buttonWrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: _.unit(2);
+}

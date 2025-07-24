@@ -124,4 +124,8 @@ export class OneTimeTokenVerification
 
     return { id, type, identifier, verified, oneTimeTokenContext: context };
   }
+
+  toSanitizedJson(): OneTimeTokenVerificationRecordData {
+    return this.toJson();
+  }
 }

@@ -67,6 +67,12 @@ const connectors = {
     sync_profile_each_sign_in: 'Sempre sincronizar em cada login',
     sync_profile_tip:
       'Sincronize o perfil básico do provedor social, como os nomes dos usuários e seus avatares.',
+    enable_token_storage: {
+      title: 'Armazenar tokens para acesso persistente à API',
+      description:
+        'Armazene tokens de acesso e de atualização no Cofre Seguro. Permite chamadas de API automatizadas sem o consentimento repetido do usuário. Exemplo: permita que seu Agente de IA adicione eventos ao Google Calendar com autorização persistente. <a>Saiba como chamar APIs de terceiros</a>',
+      tip: 'Dicas: Para um provedor de identidade padrão OAuth/OIDC, o escopo `offline_access` deve ser incluído para obter um token de atualização, prevenindo prompts repetidos de consentimento do usuário.',
+    },
     callback_uri: 'URI de retorno',
     callback_uri_description:
       'Também chamado de URI de redirecionamento, é a URI no Logto para onde os usuários serão enviados após a autorização social, copie e cole na página de configuração do provedor social.',
@@ -82,6 +88,11 @@ const connectors = {
   drawer_subtitle: 'Siga as instruções para integrar o conector',
   unknown: 'Conector desconhecido',
   standard_connectors: 'Conectores padrão',
+  create_form: {
+    third_party_connectors:
+      'Integre provedores de terceiros para login social rápido, vinculação de contas sociais e acesso a API. <a>Saiba mais</a>',
+    standard_connectors: 'Ou você pode personalizar seu conector social por um protocolo padrão.',
+  },
 };
 
 export default Object.freeze(connectors);

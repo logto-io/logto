@@ -36,6 +36,13 @@ const get_started = {
     },
     create_roles: 'Rollen erstellen',
   },
+  convert_to_production: {
+    card_title: 'Bereit, live zu gehen? Vergiss nicht, dein Produktions-Setup zu starten!',
+    title: 'Halte dein Projekt nicht im Entwicklermodus fest',
+    subtitle:
+      'Du benutzt einen Entwicklermandanten zum kostenlosen Testen. Um live zu gehen, erstelle oder konvertiere zu einem Produktionsmandanten. Brauchst du etwas Eigenes? <a>Kontaktiere uns</a>',
+    convert_button: 'In Produktionsmandanten umwandeln',
+  },
   view_all: 'Alle anzeigen →',
 };
 

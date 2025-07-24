@@ -1,7 +1,10 @@
 import {
   type CreateSecret,
   type CreateSocialTokenSetSecret,
+  type EnterpriseSsoTokenSetSecret,
   type Secret,
+  type SecretEnterpriseSsoConnectorRelationPayload,
+  SecretEnterpriseSsoConnectorRelations,
   type SecretKeys,
   Secrets,
   type SecretSocialConnectorRelationPayload,
@@ -17,6 +20,10 @@ import { convertToIdentifiers } from '../utils/sql.js';
 
 const secrets = convertToIdentifiers(Secrets, true);
 const secretSocialConnectorRelations = convertToIdentifiers(SecretSocialConnectorRelations, true);
+const secretEnterpriseSsoConnectorRelations = convertToIdentifiers(
+  SecretEnterpriseSsoConnectorRelations,
+  true
+);
 
 class SecretQueries extends SchemaQueries<SecretKeys, CreateSecret, Secret> {
   constructor(pool: CommonQueryMethods) {
@@ -60,6 +67,8 @@ class SecretQueries extends SchemaQueries<SecretKeys, CreateSecret, Secret> {
         secretId: newSecret.id,
         ...socialConnectorRelationPayload,
       });
+
+      return newSecret;
     });
   }
 
@@ -78,6 +87,88 @@ class SecretQueries extends SchemaQueries<SecretKeys, CreateSecret, Secret> {
         where ${secrets.fields.userId} = ${userId}
           and ${secrets.fields.type} = ${SecretType.FederatedTokenSet}
           and ${secretSocialConnectorRelations.fields.target} = ${target}
+    `);
+  }
+
+  public async upsertEnterpriseSsoTokenSetSecret(
+    secret: Omit<CreateSocialTokenSetSecret, 'type'>,
+    ssoConnectorRelationPayload: SecretEnterpriseSsoConnectorRelationPayload
+  ) {
+    return this.pool.transaction(async (transaction) => {
+      // Delete any existing secret for the same identity and issuer
+      // This is to ensure only one secret exists for a given identity
+      await transaction.query(sql`
+        delete from ${secrets.table}
+        using ${secretEnterpriseSsoConnectorRelations.table}
+        where ${secrets.fields.id} = ${secretEnterpriseSsoConnectorRelations.fields.secretId}
+          and ${secrets.fields.userId} = ${secret.userId}
+          and ${secretEnterpriseSsoConnectorRelations.fields.issuer} = ${ssoConnectorRelationPayload.issuer}
+      `);
+
+      // Insert new secrets
+      const insertInto = buildInsertIntoWithPool(transaction)(Secrets, { returning: true });
+      const newSecret = await insertInto({
+        ...secret,
+        type: SecretType.FederatedTokenSet,
+      });
+
+      // Insert enterprise SSO connector relation
+      const insertEnterpriseSsoRelations = buildInsertIntoWithPool(transaction)(
+        SecretEnterpriseSsoConnectorRelations
+      );
+      await insertEnterpriseSsoRelations({
+        secretId: newSecret.id,
+        ...ssoConnectorRelationPayload,
+      });
+    });
+  }
+
+  /**
+   * For user federated token exchange use, we need to find the secret by user id and SSO connector.
+   */
+  public async findEnterpriseSsoTokenSetSecretByUserIdAndConnectorId(
+    userId: string,
+    ssoConnectorId: string
+  ) {
+    return this.pool.maybeOne<EnterpriseSsoTokenSetSecret>(sql`
+      select ${sql.join(Object.values(secrets.fields), sql`, `)},
+          ${secretEnterpriseSsoConnectorRelations.fields.ssoConnectorId},
+          ${secretEnterpriseSsoConnectorRelations.fields.identityId},
+          ${secretEnterpriseSsoConnectorRelations.fields.issuer}
+        from ${secrets.table}
+        join ${secretEnterpriseSsoConnectorRelations.table}
+          on ${secrets.fields.id} = ${secretEnterpriseSsoConnectorRelations.fields.secretId}
+        where ${secrets.fields.userId} = ${userId}
+          and ${secrets.fields.type} = ${SecretType.FederatedTokenSet}
+          and ${secretEnterpriseSsoConnectorRelations.fields.ssoConnectorId} = ${ssoConnectorId}
+    `);
+  }
+
+  public async findSocialTokenSetSecretsByUserId(userId: string) {
+    return this.pool.any<SocialTokenSetSecret>(sql`
+      select ${sql.join(Object.values(secrets.fields), sql`, `)},
+          ${secretSocialConnectorRelations.fields.connectorId},
+          ${secretSocialConnectorRelations.fields.identityId},
+          ${secretSocialConnectorRelations.fields.target}
+        from ${secrets.table}
+        join ${secretSocialConnectorRelations.table}
+          on ${secrets.fields.id} = ${secretSocialConnectorRelations.fields.secretId}
+        where ${secrets.fields.userId} = ${userId}
+          and ${secrets.fields.type} = ${SecretType.FederatedTokenSet}
+    `);
+  }
+
+  public async findEnterpriseSsoTokenSetSecretsByUserId(userId: string) {
+    return this.pool.any<EnterpriseSsoTokenSetSecret>(sql`
+      select ${sql.join(Object.values(secrets.fields), sql`, `)},
+          ${secretEnterpriseSsoConnectorRelations.fields.ssoConnectorId},
+          ${secretEnterpriseSsoConnectorRelations.fields.identityId},
+          ${secretEnterpriseSsoConnectorRelations.fields.issuer}
+        from ${secrets.table}
+        join ${secretEnterpriseSsoConnectorRelations.table}
+          on ${secrets.fields.id} = ${secretEnterpriseSsoConnectorRelations.fields.secretId}
+        where ${secrets.fields.userId} = ${userId}
+          and ${secrets.fields.type} = ${SecretType.FederatedTokenSet}
     `);
   }
 }

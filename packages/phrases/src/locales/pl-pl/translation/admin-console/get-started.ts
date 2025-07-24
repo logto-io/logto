@@ -35,6 +35,13 @@ const get_started = {
     },
     create_roles: 'Twórz role',
   },
+  convert_to_production: {
+    card_title: 'Gotowy do uruchomienia? Nie zapomnij rozpocząć konfiguracji produkcyjnej!',
+    title: 'Nie utrzymuj swojego projektu w trybie deweloperskim',
+    subtitle:
+      'Używasz dzierżawy deweloperskiej do darmowych testów. Aby uruchomić produkcję, utwórz nową lub przekształć aktualną w dzierżawę produkcyjną. Potrzebujesz czegoś niestandardowego? <a>Skontaktuj się z nami</a>',
+    convert_button: 'Przekształć w dzierżawę produkcyjną',
+  },
   view_all: 'Zobacz wszystkie →',
 };
 

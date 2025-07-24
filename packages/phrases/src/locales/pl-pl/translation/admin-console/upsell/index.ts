@@ -48,6 +48,25 @@ const upsell = {
   paywall,
   featured_plan_content,
   add_on,
+  convert_to_production_modal: {
+    title: 'Zamierzasz zmienić swojego najemcę rozwojowego na najemcę produkcyjnego',
+    description:
+      'Gotowy do wdrożenia? Przekształcenie tego najemcy deweloperskiego w najemcę produkcyjnego odblokowuje pełną funkcjonalność',
+    benefits: {
+      stable_environment:
+        'Dla użytkowników końcowych: Stabilne środowisko do rzeczywistego użytkowania.',
+      keep_pro_features:
+        'Zachowaj funkcje Pro: Zamierzasz subskrybować plan Pro. <a>Zobacz funkcje Pro.</a>',
+      no_dev_restrictions:
+        'Brak ograniczeń deweloperskich: Usunięcie limitów systemów podmiotów i zasobów oraz banera logowania.',
+    },
+    cards: {
+      dev_description: 'Do celów testowych',
+      prod_description: 'Prawdziwa produkcja',
+      convert_label: 'przekształć',
+    },
+    button: 'Przekształć w najemcę produkcyjnego',
+  },
 };
 
 export default Object.freeze(upsell);

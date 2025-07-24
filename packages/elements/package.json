@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "@lit/localize-tools": "^0.8.0",
-    "@logto/schemas": "workspace:^1.27.0",
+    "@logto/schemas": "workspace:^",
     "@open-wc/testing": "^4.0.0",
     "@playwright/test": "^1.48.1",
     "@silverhand/eslint-config": "6.0.1",

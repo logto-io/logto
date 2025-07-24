@@ -66,6 +66,12 @@ const connectors = {
     sync_profile_each_sign_in: 'Zawsze wykonaj synchronizację przy każdym logowaniu',
     sync_profile_tip:
       'Synchronizuje podstawowy profil z dostawcy usług społecznościowych, takie jak nazwy użytkowników i ich awatary.',
+    enable_token_storage: {
+      title: 'Przechowuj tokeny do trwałego dostępu do API',
+      description:
+        'Przechowuj tokeny dostępu i odświeżania w Tajnej Skrytce. Pozwala to na zautomatyzowane wywołania API bez powtarzającej się zgody użytkownika. Przykład: pozwól swojemu Agentowi AI dodawać wydarzenia do Kalendarza Google z trwałym upoważnieniem. <a>Dowiedz się, jak wywoływać zewnętrzne API</a>',
+      tip: 'Wskazówki: Dla standardowego dostawcy tożsamości OAuth/OIDC, zakres `offline_access` musi być uwzględniony, aby uzyskać token odświeżania, zapobiegając powtarzającym się monitom o zgodę użytkownika.',
+    },
     callback_uri: 'URI zwrotu (Callback)',
     callback_uri_description:
       'Nazywany także URI przekierowania, to URI w Logto, do którego użytkownicy zostaną przesłani po autoryzacji społecznej; skopiuj i wklej na stronie konfiguracyjnej dostawcy usług społecznościowych.',
@@ -81,6 +87,12 @@ const connectors = {
   drawer_subtitle: 'Postępuj zgodnie z instrukcjami, aby zintegrować swój łącznik',
   unknown: 'Nieznany Łącznik',
   standard_connectors: 'Standardowe łączniki',
+  create_form: {
+    third_party_connectors:
+      'Zintegruj zewnętrznych dostawców, aby szybko zalogować się przez nich społecznościowo, połączyć konta społecznościowe i uzyskać dostęp do API. <a>Dowiedz się więcej</a>',
+    standard_connectors:
+      'Lub możesz dostosować swój łącznik społecznościowy, korzystając ze standardowego protokołu.',
+  },
 };
 
 export default Object.freeze(connectors);

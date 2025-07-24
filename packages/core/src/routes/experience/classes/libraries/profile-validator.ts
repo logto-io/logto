@@ -1,4 +1,15 @@
-import { type User, MissingProfile } from '@logto/schemas';
+import {
+  type User,
+  type JsonObject,
+  jsonObjectGuard,
+  MissingProfile,
+  type UserProfile,
+  userProfileGuard,
+  signInIdentifierKeyGuard,
+  reservedCustomDataKeyGuard,
+  builtInCustomProfileFieldKeys,
+  nameAndAvatarGuard,
+} from '@logto/schemas';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -184,5 +195,83 @@ export class ProfileValidator {
     }
 
     return missingProfile;
+  }
+
+  public async hasMissingExtraProfileFields(profile: InteractionProfile, user?: User) {
+    const customProfileFields = await this.queries.customProfileFields.findAllCustomProfileFields();
+    const mandatoryCustomProfileFieldNames = customProfileFields
+      .filter(({ required }) => required)
+      .reduce((accumulator, currentField) => {
+        if (currentField.name === 'fullname') {
+          return [...accumulator, ...(currentField.config.parts?.map(({ key }) => key) ?? [])];
+        }
+        return [...accumulator, currentField.name];
+      }, new Array<string>());
+
+    for (const name of mandatoryCustomProfileFieldNames) {
+      const foundInUser =
+        this.hasField(user, name) ||
+        this.hasField(user?.profile, name) ||
+        this.hasField(user?.customData, name);
+      const foundInProfile =
+        this.hasField(profile, name) ||
+        this.hasField(profile.profile, name) ||
+        this.hasField(profile.customData, name);
+
+      if (!foundInUser && !foundInProfile) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Parse and split profile data into built-in and custom fields based on the provided keys.
+   * @param values The profile data to parse
+   * @returns Object containing `name`, `avatar`, `profile` and `customData`
+   */
+  public validateAndParseCustomProfile(values: Record<string, unknown>): {
+    name?: string;
+    avatar?: string;
+    profile: UserProfile;
+    customData: JsonObject;
+  } {
+    const conflictedSignInIdentifierKeys = Object.keys(signInIdentifierKeyGuard.parse(values));
+    assertThat(
+      conflictedSignInIdentifierKeys.length === 0,
+      new RequestError({
+        code: 'custom_profile_fields.name_conflict_sign_in_identifier',
+        name: conflictedSignInIdentifierKeys.join(', '),
+      })
+    );
+
+    const conflictedCustomDataKeys = Object.keys(reservedCustomDataKeyGuard.parse(values));
+    assertThat(
+      conflictedCustomDataKeys.length === 0,
+      new RequestError({
+        code: 'custom_profile_fields.name_conflict_custom_data',
+        name: conflictedCustomDataKeys.join(', '),
+      })
+    );
+
+    const { name, avatar } = nameAndAvatarGuard.parse(values);
+    const profile = userProfileGuard.parse(values);
+
+    const builtInProfileKeys = new Set<string>(builtInCustomProfileFieldKeys);
+    const customData = jsonObjectGuard.parse(
+      Object.fromEntries(Object.entries(values).filter(([key]) => !builtInProfileKeys.has(key)))
+    );
+
+    return { name, avatar, profile, customData };
+  }
+
+  private hasField(object: unknown, field: string): boolean {
+    if (!object || typeof object !== 'object') {
+      return false;
+    }
+    return Object.entries(object).some(
+      ([key, value]) => key === field && value !== null && value !== undefined
+    );
   }
 }

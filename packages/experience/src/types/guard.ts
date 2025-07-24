@@ -35,6 +35,7 @@ export const missingProfileErrorDataGuard = s.object({
       s.literal(MissingProfile.phone),
       s.literal(MissingProfile.username),
       s.literal(MissingProfile.emailOrPhone),
+      s.literal(MissingProfile.extraProfile),
     ])
   ),
   registeredSocialIdentity,
@@ -156,3 +157,67 @@ export const continueFlowStateGuard = s.object({
 });
 
 export type InteractionFlowState = s.Infer<typeof continueFlowStateGuard>;
+
+export const extraProfileFieldNamesGuard = s.union([
+  s.literal('givenName'),
+  s.literal('familyName'),
+  s.literal('middleName'),
+  s.literal('nickname'),
+  s.literal('preferredUsername'),
+  s.literal('profile'),
+  s.literal('website'),
+  s.literal('gender'),
+  s.literal('birthdate'),
+  s.literal('zoneinfo'),
+  s.literal('locale'),
+  s.literal('address.formatted'),
+  s.literal('address.streetAddress'),
+  s.literal('address.locality'),
+  s.literal('address.region'),
+  s.literal('address.postalCode'),
+  s.literal('address.country'),
+]);
+
+export const addressFieldValueGuard = s.optional(
+  s.object({
+    formatted: s.optional(s.string()),
+    streetAddress: s.optional(s.string()),
+    locality: s.optional(s.string()),
+    region: s.optional(s.string()),
+    postalCode: s.optional(s.string()),
+    country: s.optional(s.string()),
+  })
+);
+
+export const addressFieldConfigGuard = s.object({
+  parts: s.array(
+    s.object({
+      key: s.union([
+        s.literal('streetAddress'),
+        s.literal('locality'),
+        s.literal('region'),
+        s.literal('postalCode'),
+        s.literal('country'),
+        s.literal('formatted'),
+      ]),
+      enabled: s.boolean(),
+    })
+  ),
+});
+
+export const fullnameFieldValueGuard = s.optional(
+  s.object({
+    givenName: s.optional(s.string()),
+    middleName: s.optional(s.string()),
+    familyName: s.optional(s.string()),
+  })
+);
+
+export const fullnameFieldConfigGuard = s.object({
+  parts: s.array(
+    s.object({
+      key: s.union([s.literal('givenName'), s.literal('middleName'), s.literal('familyName')]),
+      enabled: s.boolean(),
+    })
+  ),
+});

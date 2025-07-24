@@ -3,6 +3,8 @@ import password_rejected from './password-rejected.js';
 const error = {
   general_required: '{{types, list(type: disjunction;)}}必填',
   general_invalid: '无效的{{types, list(type: disjunction;)}}',
+  invalid_min_max_input: '输入值应在 {{minValue}} 和 {{maxValue}} 之间',
+  invalid_min_max_length: '输入值的长度应在 {{minLength}} 和 {{maxLength}} 之间',
   username_required: '用户名必填',
   password_required: '密码必填',
   username_exists: '用户名已存在',

@@ -14,6 +14,7 @@ export const socialAuthorizationUrlPayloadGuard = z.object({
   connectorId: z.string(),
   state: z.string(),
   redirectUri: z.string().refine((url) => validateRedirectUrl(url, 'web')),
+  scope: z.string().optional(),
 });
 
 // Identifier Guard

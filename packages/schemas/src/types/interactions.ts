@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
+import { emailRegEx, numberAndAlphabetRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import { z } from 'zod';
 
 import {
@@ -73,10 +73,12 @@ export const verificationCodeIdentifierGuard = z.object({
 export type SocialAuthorizationUrlPayload = {
   state: string;
   redirectUri: string;
+  scope?: string;
 };
 export const socialAuthorizationUrlPayloadGuard = z.object({
   state: z.string(),
   redirectUri: z.string(),
+  scope: z.string().optional(),
 }) satisfies ToZodObject<SocialAuthorizationUrlPayload>;
 
 /** Payload type for `POST /api/experience/verification/{social|sso}/:connectorId/verify`. */
@@ -201,6 +203,10 @@ export const updateProfileApiPayloadGuard = z.discriminatedUnion('type', [
     type: z.literal('social'),
     verificationId: z.string(),
   }),
+  z.object({
+    type: z.literal('extraProfile'),
+    values: z.record(z.string().regex(numberAndAlphabetRegEx), z.unknown()),
+  }),
 ]);
 export type UpdateProfileApiPayload = z.infer<typeof updateProfileApiPayloadGuard>;
 
@@ -296,6 +302,7 @@ export enum MissingProfile {
   phone = 'phone',
   password = 'password',
   emailOrPhone = 'emailOrPhone',
+  extraProfile = 'extraProfile',
 }
 
 export const bindTotpPayloadGuard = z.object({

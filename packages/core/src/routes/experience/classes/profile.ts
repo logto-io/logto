@@ -1,10 +1,11 @@
 import {
   InteractionEvent,
+  MissingProfile,
   SignInIdentifier,
   type UpdateProfileApiPayload,
   VerificationType,
 } from '@logto/schemas';
-import { trySafe } from '@silverhand/essentials';
+import { pick, trySafe } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
@@ -12,7 +13,11 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { type InteractionContext, type InteractionProfile } from '../types.js';
+import type {
+  SanitizedInteractionProfile,
+  InteractionContext,
+  InteractionProfile,
+} from '../types.js';
 
 import { PasswordValidator } from './libraries/password-validator.js';
 import { ProfileValidator } from './libraries/profile-validator.js';
@@ -21,7 +26,7 @@ import { SignInExperienceValidator } from './libraries/sign-in-experience-valida
 // Supported profile types for setting the profile data through the verification record.
 type SetProfileByVerificationIdType = Exclude<
   UpdateProfileApiPayload['type'],
-  'password' | SignInIdentifier.Username
+  'password' | SignInIdentifier.Username | 'extraProfile'
 >;
 
 export class Profile {
@@ -42,6 +47,23 @@ export class Profile {
 
   get data() {
     return this.#data;
+  }
+
+  get sanitizedData(): SanitizedInteractionProfile {
+    return pick(
+      this.#data,
+      'avatar',
+      'name',
+      'username',
+      'primaryEmail',
+      'primaryPhone',
+      'profile',
+      'customData',
+      'socialIdentity',
+      'enterpriseSsoIdentity',
+      'jitOrganizationIds',
+      'syncedEnterpriseSsoIdentity'
+    );
   }
 
   /**
@@ -182,19 +204,30 @@ export class Profile {
     const mandatoryProfileFields =
       await this.signInExperienceValidator.getMandatoryUserProfileBySignUpMethods();
 
-    const missingProfile = this.profileValidator.getMissingUserProfile(
+    const missingMandatoryProfile = this.profileValidator.getMissingUserProfile(
       this.#data,
       mandatoryProfileFields,
       user
     );
 
-    if (missingProfile.size === 0) {
-      return;
-    }
+    assertThat(
+      missingMandatoryProfile.size === 0,
+      new RequestError(
+        { code: 'user.missing_profile', status: 422 },
+        { missingProfile: [...missingMandatoryProfile] }
+      )
+    );
 
-    throw new RequestError(
-      { code: 'user.missing_profile', status: 422 },
-      { missingProfile: [...missingProfile] }
+    assertThat(
+      this.interactionContext.getInteractionEvent() !== InteractionEvent.Register ||
+        !(await this.profileValidator.hasMissingExtraProfileFields(this.#data, user)),
+      new RequestError(
+        {
+          code: 'user.missing_profile',
+          status: 422,
+        },
+        { missingProfile: [MissingProfile.extraProfile] }
+      )
     );
   }
 

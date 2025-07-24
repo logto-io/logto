@@ -112,6 +112,7 @@ const description = {
   switch_account_title: 'Du bist derzeit als {{account}} angemeldet',
   switch_account_description:
     'Um fortzufahren, wirst du vom aktuellen Konto abgemeldet und automatisch zum neuen Konto gewechselt.',
+  about_yourself: 'Erzähl uns etwas über dich',
 };
 
 export default Object.freeze(description);

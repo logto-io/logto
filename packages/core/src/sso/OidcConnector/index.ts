@@ -1,3 +1,5 @@
+import { type TokenResponse } from '@logto/connector-kit';
+import { type ExtendedSocialUserInfo } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared/universal';
 import { conditional } from '@silverhand/essentials';
 import camelcaseKeys from 'camelcase-keys';
@@ -8,18 +10,24 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { SsoConnectorError, SsoConnectorErrorCodes } from '../types/error.js';
 import {
+  type OidcTokenResponse,
   scopePostProcessor,
   type BaseOidcConfig,
   type BasicOidcConnectorConfig,
 } from '../types/oidc.js';
-import { type ExtendedSocialUserInfo } from '../types/saml.js';
 import {
   type CreateSingleSignOnSession,
   type SingleSignOnConnectorSession,
 } from '../types/session.js';
 
-import { mockGetUserInfo } from './test-utils.js';
-import { fetchOidcConfig, fetchToken, getIdTokenClaims, getUserInfo } from './utils.js';
+import { mockGetTokenResponse, mockGetUserInfo } from './test-utils.js';
+import {
+  fetchOidcConfig,
+  fetchToken,
+  getIdTokenClaims,
+  getTokenByRefreshToken,
+  getUserInfo,
+} from './utils.js';
 
 /**
  * OIDC connector
@@ -101,18 +109,22 @@ class OidcConnector {
   async getUserInfo(
     connectorSession: SingleSignOnConnectorSession,
     data: unknown
-  ): Promise<ExtendedSocialUserInfo> {
+  ): Promise<{ userInfo: ExtendedSocialUserInfo; tokenResponse?: OidcTokenResponse }> {
     const { isIntegrationTest } = EnvSet.values;
 
     if (isIntegrationTest) {
-      return mockGetUserInfo(connectorSession, data);
+      return {
+        userInfo: mockGetUserInfo(connectorSession, data),
+        tokenResponse: mockGetTokenResponse(data),
+      };
     }
 
     const oidcConfig = await this.getOidcConfig();
     const { nonce, redirectUri } = connectorSession;
 
     // Fetch token from the OIDC provider using authorization code
-    const { idToken, accessToken } = await fetchToken(oidcConfig, data, redirectUri);
+    const tokenResponse = await fetchToken(oidcConfig, data, redirectUri);
+    const { accessToken, idToken } = camelcaseKeys(tokenResponse);
 
     assertThat(
       accessToken,
@@ -132,13 +144,21 @@ class OidcConnector {
         : idTokenClaims;
 
     return {
-      id: sub,
-      ...conditional(name && { name }),
-      ...conditional(picture && { avatar: picture }),
-      ...conditional(email && email_verified && { email }),
-      ...conditional(phone && phone_verified && { phone }),
-      ...camelcaseKeys(rest),
+      userInfo: {
+        id: sub,
+        ...conditional(name && { name }),
+        ...conditional(picture && { avatar: picture }),
+        ...conditional(email && email_verified && { email }),
+        ...conditional(phone && phone_verified && { phone }),
+        ...camelcaseKeys(rest),
+      },
+      tokenResponse,
     };
+  }
+
+  async getTokenByRefreshToken(refreshToken: string): Promise<TokenResponse> {
+    const oidcConfig = await this.getOidcConfig();
+    return getTokenByRefreshToken(oidcConfig, refreshToken);
   }
 }
 

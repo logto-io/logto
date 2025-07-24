@@ -36,6 +36,13 @@ const get_started = {
     },
     create_roles: 'Criar funções',
   },
+  convert_to_production: {
+    card_title: 'Pronto para lançar? Não se esqueça de lançar sua configuração de produção!',
+    title: 'Não deixe seu projeto preso no modo de desenvolvimento',
+    subtitle:
+      'Você está usando um arrendatário de desenvolvimento para testes gratuitos. Para lançar, crie ou converta para um arrendatário de produção. Precisa de algo personalizado? <a>Contacte-nos</a>',
+    convert_button: 'Converter para arrendatário de produção',
+  },
   view_all: 'Ver tudo →',
 };
 

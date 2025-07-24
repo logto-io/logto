@@ -48,6 +48,24 @@ const upsell = {
   paywall,
   featured_plan_content,
   add_on,
+  convert_to_production_modal: {
+    title: 'أنت على وشك تغيير المستأجر التطويري إلى مستأجر إنتاجي',
+    description:
+      'جاهز للبث المباشر؟ تحويل هذا المستأجر التطويري إلى مستأجر إنتاجي يفتح لك جميع الوظائف',
+    benefits: {
+      stable_environment: 'للمستخدمين النهائيين: بيئة مستقرة للاستخدام الفعلي.',
+      keep_pro_features:
+        'الحفاظ على ميزات Pro: أنت على وشك الاشتراك في خطة Pro. <a>عرض ميزات Pro.</a>',
+      no_dev_restrictions:
+        'لا توجد قيود تطوير: إزالة حدود النظام الخاصة بالكيانات والموارد وشعار تسجيل الدخول.',
+    },
+    cards: {
+      dev_description: 'لأغراض الاختبار',
+      prod_description: 'إنتاج حقيقي',
+      convert_label: 'تحويل',
+    },
+    button: 'تحويل إلى مستأجر إنتاجي',
+  },
 };
 
 export default Object.freeze(upsell);

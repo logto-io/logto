@@ -20,11 +20,11 @@
     "stylelint": "stylelint \"src/**/*.scss\""
   },
   "devDependencies": {
-    "@logto/core-kit": "workspace:^2.6.0",
-    "@logto/language-kit": "workspace:^1.2.0",
-    "@logto/phrases": "workspace:^1.19.0",
+    "@logto/core-kit": "workspace:^",
+    "@logto/language-kit": "workspace:^",
+    "@logto/phrases": "workspace:^",
     "@logto/react": "^4.0.6",
-    "@logto/schemas": "workspace:^1.27.0",
+    "@logto/schemas": "workspace:^",
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/eslint-config-react": "6.0.2",
     "@silverhand/ts-config": "6.0.0",

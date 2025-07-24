@@ -19,6 +19,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import koaInteractionDetails from '#src/middleware/koa-interaction-details.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { EnvSet } from '../../env-set/index.js';
 import { type AnonymousRouter, type RouterInitArgs } from '../types.js';
 
 import experienceAnonymousRoutes from './anonymous-routes/index.js';
@@ -27,7 +28,10 @@ import { experienceRoutes } from './const.js';
 import { koaExperienceInteractionHooks } from './middleware/koa-experience-interaction-hooks.js';
 import koaExperienceInteraction from './middleware/koa-experience-interaction.js';
 import profileRoutes from './profile-routes.js';
-import { type ExperienceInteractionRouterContext } from './types.js';
+import {
+  sanitizedInteractionStorageGuard,
+  type ExperienceInteractionRouterContext,
+} from './types.js';
 import backupCodeVerificationRoutes from './verification-routes/backup-code-verification.js';
 import enterpriseSsoVerificationRoutes from './verification-routes/enterprise-sso-verification.js';
 import newPasswordIdentityVerificationRoutes from './verification-routes/new-password-identity-verification.js';
@@ -187,6 +191,24 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       return next();
     }
   );
+
+  // TODO: @charles remove dev feature guard
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    experienceRouter.get(
+      `${experienceRoutes.interaction}`,
+      koaGuard({
+        status: [200],
+        response: sanitizedInteractionStorageGuard,
+      }),
+      async (ctx, next) => {
+        const { experienceInteraction } = ctx;
+
+        ctx.body = experienceInteraction.toSanitizedJson();
+        ctx.status = 200;
+        return next();
+      }
+    );
+  }
 
   passwordVerificationRoutes(experienceRouter, tenant);
   verificationCodeRoutes(experienceRouter, tenant);

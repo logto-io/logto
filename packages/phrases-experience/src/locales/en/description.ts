@@ -109,6 +109,7 @@ const description = {
   switch_account_title: 'You are currently signed in as {{account}}',
   switch_account_description:
     'To continue, you will be signed out of the current account, and switch to the new account automatically.',
+  about_yourself: 'Tell us about yourself',
 };
 
 export default Object.freeze(description);

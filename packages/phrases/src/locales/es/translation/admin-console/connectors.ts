@@ -67,6 +67,12 @@ const connectors = {
     sync_profile_each_sign_in: 'Siempre sincronice en cada inicio de sesión',
     sync_profile_tip:
       'Sincronice el perfil básico del proveedor social, como los nombres de los usuarios y sus avatares.',
+    enable_token_storage: {
+      title: 'Almacenar tokens para acceso persistente a la API',
+      description:
+        'Almacene tokens de acceso y actualización en el Secret Vault. Permite llamadas API automatizadas sin un consentimiento repetido del usuario. Ejemplo: permite que tu agente de IA agregue eventos a Google Calendar con autorización persistente. <a>Aprende a llamar a APIs de terceros</a>',
+      tip: 'Consejos: Para el proveedor estándar de identidad OAuth/OIDC, el ámbito `offline_access` debe incluirse para obtener un token de actualización, evitando solicitudes de consentimiento repetidas por parte del usuario.',
+    },
     callback_uri: 'URI de devolución de llamada',
     callback_uri_description:
       'También llamado URI de redireccionamiento, es la URI en Logto a la que se enviarán los usuarios después de la autorización social, copie y pegue en la página de configuración del proveedor social.',
@@ -82,6 +88,11 @@ const connectors = {
   drawer_subtitle: 'Siga las instrucciones para integrar su conector',
   unknown: 'Conector desconocido',
   standard_connectors: 'Conectores estándar',
+  create_form: {
+    third_party_connectors:
+      'Integra proveedores de terceros para un inicio de sesión social rápido, vinculación de cuentas sociales y acceso a la API. <a>Aprende más</a>',
+    standard_connectors: 'O puedes personalizar tu conector social mediante un protocolo estándar.',
+  },
 };
 
 export default Object.freeze(connectors);

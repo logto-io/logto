@@ -48,6 +48,23 @@ const upsell = {
   paywall,
   featured_plan_content,
   add_on,
+  convert_to_production_modal: {
+    title: '개발 테넌트를 프로덕션 테넌트로 변경하려 합니다',
+    description:
+      '실제로 서비스를 시작할 준비가 되었습니까? 이 개발 테넌트를 프로덕션 테넌트로 변환하면 모든 기능을 잠금 해제합니다',
+    benefits: {
+      stable_environment: '최종 사용자에게: 실제 사용을 위한 안정적인 환경.',
+      keep_pro_features: 'Pro 기능 유지: Pro 플랜을 구독하려고 합니다. <a>Pro 기능 보기.</a>',
+      no_dev_restrictions:
+        '개발 제한 없음: 엔티티 및 리소스 시스템 제한과 로그인 배너를 제거합니다.',
+    },
+    cards: {
+      dev_description: '테스트 목적',
+      prod_description: '실제 프로덕션',
+      convert_label: '변환',
+    },
+    button: '프로덕션 테넌트로 변환',
+  },
 };
 
 export default Object.freeze(upsell);

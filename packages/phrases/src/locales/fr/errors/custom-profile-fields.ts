@@ -11,7 +11,10 @@ const custom_profile_fields = {
   invalid_name:
     'Nom de champ invalide, seules les lettres ou les chiffres sont autorisés, sensible à la casse.',
   name_conflict_sign_in_identifier:
-    'Nom de champ invalide. {{name}} est un identifiant de connexion réservé.',
+    'Nom de champ invalide. "{{name}}" est une clé d\'identifiant de connexion réservée.',
+  name_conflict_custom_data:
+    'Nom de champ invalide. "{{name}}" est une clé de données personnalisées réservée.',
+  name_required: 'Le nom du champ est requis.',
 };
 
 export default Object.freeze(custom_profile_fields);

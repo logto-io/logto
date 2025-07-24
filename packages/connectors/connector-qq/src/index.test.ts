@@ -40,6 +40,25 @@ describe('getAuthorizationUri', () => {
       `${authorizationEndpoint}?response_type=code&client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&state=some_state&scope=get_user_info`
     );
   });
+
+  it('should get a valid uri with custom scope', async () => {
+    const connector = await createConnector({ getConfig });
+    const authorizationUri = await connector.getAuthorizationUri(
+      {
+        state: 'some_state',
+        redirectUri: 'http://localhost:3000/callback',
+        scope: 'custom_scope',
+        connectorId: 'connector_id',
+        connectorFactoryId: 'connector_factory_id',
+        jti: 'some_jti',
+        headers: {},
+      },
+      vi.fn()
+    );
+    expect(authorizationUri).toEqual(
+      `${authorizationEndpoint}?response_type=code&client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&state=some_state&scope=custom_scope`
+    );
+  });
 });
 
 describe('getAccessToken', () => {

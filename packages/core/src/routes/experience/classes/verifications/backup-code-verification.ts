@@ -4,6 +4,7 @@ import {
   type BindBackupCode,
   type MfaVerificationBackupCode,
   type BackupCodeVerificationRecordData,
+  type SanitizedBackupCodeVerificationRecordData,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 
@@ -16,7 +17,9 @@ import { type MfaVerificationRecord } from './verification-record.js';
 
 export {
   type BackupCodeVerificationRecordData,
+  type SanitizedBackupCodeVerificationRecordData,
   backupCodeVerificationRecordDataGuard,
+  sanitizedBackupCodeVerificationRecordDataGuard,
 } from '@logto/schemas';
 
 export class BackupCodeVerification implements MfaVerificationRecord<VerificationType.BackupCode> {
@@ -135,5 +138,11 @@ export class BackupCodeVerification implements MfaVerificationRecord<Verificatio
       code,
       backupCodes,
     };
+  }
+
+  toSanitizedJson(): SanitizedBackupCodeVerificationRecordData {
+    const { id, type, userId, code } = this;
+
+    return { id, type, userId, code };
   }
 }

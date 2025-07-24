@@ -1,4 +1,5 @@
 import content from './content.js';
+import custom_profile_fields from './custom-profile-fields.js';
 import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 
 const sign_in_exp = {
@@ -9,6 +10,8 @@ const sign_in_exp = {
     branding: '브랜딩',
     sign_up_and_sign_in: '회원가입/로그인',
     content: '내용',
+    /** UNTRANSLATED */
+    collect_user_profile: 'Collect user profile',
     password_policy: '암호 정책',
   },
   welcome: {
@@ -111,6 +114,7 @@ const sign_in_exp = {
     desktop: '데스크톱',
     mobile: '모바일',
   },
+  custom_profile_fields,
 };
 
 export default Object.freeze(sign_in_exp);
