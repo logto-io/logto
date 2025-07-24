@@ -22,6 +22,8 @@ export const oidcConnectorConfigGuard = z
     scope: z.string().optional(),
     // The following fields are only available for EntraID (OIDC) connector
     trustUnverifiedEmail: z.boolean().optional(),
+    // The following fields are only available for Google Workspace connector
+    offlineAccess: z.boolean().optional(),
   })
   .partial();
 
