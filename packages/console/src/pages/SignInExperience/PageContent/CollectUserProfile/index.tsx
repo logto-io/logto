@@ -16,6 +16,7 @@ import { type RequestError } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import pageLayout from '@/scss/page-layout.module.scss';
 
+import CreateProfileFieldModal from '../../components/CreateProfileFieldModal';
 import SignInExperienceTabWrapper from '../components/SignInExperienceTabWrapper';
 
 import styles from './index.module.scss';
@@ -30,6 +31,10 @@ type CreateButtonProps = {
   readonly size: 'large' | 'small';
 };
 
+const collectUserProfilePathname = '/sign-in-experience/collect-user-profile';
+const createCollectUserProfilePathname = `${collectUserProfilePathname}/create`;
+const collectUserProfileDetailsPathname = `${collectUserProfilePathname}/fields/:fieldName`;
+
 function CreateButton({ size, className }: CreateButtonProps) {
   const { navigate } = useTenantPathname();
   return (
@@ -40,7 +45,7 @@ function CreateButton({ size, className }: CreateButtonProps) {
       size={size}
       icon={<Plus />}
       onClick={() => {
-        navigate('/sign-in-exp/collect-user-profile/create');
+        navigate(createCollectUserProfilePathname);
       }}
     />
   );
@@ -48,7 +53,9 @@ function CreateButton({ size, className }: CreateButtonProps) {
 
 function CollectUserProfile({ isActive }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.sign_in_exp' });
-  const { navigate } = useTenantPathname();
+  const { navigate, match } = useTenantPathname();
+
+  const isCreating = match(createCollectUserProfilePathname);
 
   const {
     data: customProfileFields,
@@ -57,77 +64,92 @@ function CollectUserProfile({ isActive }: Props) {
   } = useSWR<CustomProfileField[], RequestError>('api/custom-profile-fields');
 
   return (
-    <SignInExperienceTabWrapper isActive={isActive}>
-      {isActive && (
-        <PageMeta titleKey={['sign_in_exp.tabs.collect_user_profile', 'sign_in_exp.page_title']} />
-      )}
-      <Table
-        className={pageLayout.table}
-        filter={
-          <div className={styles.buttonWrapper}>
-            <CreateButton size="small" />
-          </div>
-        }
-        rowIndexKey="id"
-        rowGroups={[{ key: 'customProfileFields', data: customProfileFields }]}
-        columns={[
-          {
-            title: t('custom_profile_fields.table.title.field_label'),
-            dataIndex: 'name',
-            colSpan: 3,
-            render: ({ name, label }) =>
-              isBuiltInCustomProfileFieldKey(name) ? (
-                <DynamicT forKey={`profile.fields.${name}`} />
-              ) : (
-                label
-              ),
-          },
-          {
-            title: t('custom_profile_fields.table.title.type'),
-            dataIndex: 'type',
-            colSpan: 3,
-            render: ({ type }) => t(`custom_profile_fields.type.${type}`),
-          },
-          {
-            title: t('custom_profile_fields.table.title.user_data_key'),
-            dataIndex: 'data-key',
-            colSpan: 4,
-            render: ({ name, config }) => {
-              const { parts } = config;
-              const keys = parts
-                ?.filter(({ enabled }) => Boolean(enabled))
-                .map(({ key }) => key) ?? [name];
-
-              return (
-                <div className={styles.tags}>
-                  {keys.map((key) => (
-                    <Tag key={key} variant="cell">
-                      {key}
-                    </Tag>
-                  ))}
-                </div>
-              );
-            },
-          },
-        ]}
-        rowClickHandler={({ name }) => {
-          navigate(`/sign-in-experience/collect-user-profile/${name}`);
-        }}
-        isLoading={isLoading}
-        errorMessage={error?.body?.message ?? error?.message}
-        placeholder={
-          <TablePlaceholder
-            image={<CollectUserProfileEmpty />}
-            imageDark={<CollectUserProfileEmptyDark />}
-            title="sign_in_exp.custom_profile_fields.table.placeholder.title"
-            description="sign_in_exp.custom_profile_fields.table.placeholder.description"
-            learnMoreLink={{ href: collectUserProfile }}
-            action={<CreateButton size="large" />}
+    <>
+      <SignInExperienceTabWrapper isActive={isActive}>
+        {isActive && (
+          <PageMeta
+            titleKey={['sign_in_exp.tabs.collect_user_profile', 'sign_in_exp.page_title']}
           />
-        }
-        onRetry={async () => mutate(undefined, true)}
-      />
-    </SignInExperienceTabWrapper>
+        )}
+        <Table
+          className={pageLayout.table}
+          filter={
+            <div className={styles.buttonWrapper}>
+              <CreateButton size="small" />
+            </div>
+          }
+          rowIndexKey="id"
+          rowGroups={[{ key: 'customProfileFields', data: customProfileFields }]}
+          columns={[
+            {
+              title: t('custom_profile_fields.table.title.field_label'),
+              dataIndex: 'name',
+              colSpan: 3,
+              render: ({ name, label }) =>
+                isBuiltInCustomProfileFieldKey(name) ? (
+                  <DynamicT forKey={`profile.fields.${name}`} />
+                ) : (
+                  label
+                ),
+            },
+            {
+              title: t('custom_profile_fields.table.title.type'),
+              dataIndex: 'type',
+              colSpan: 3,
+              render: ({ type }) => t(`custom_profile_fields.type.${type}`),
+            },
+            {
+              title: t('custom_profile_fields.table.title.user_data_key'),
+              dataIndex: 'data-key',
+              colSpan: 4,
+              render: ({ name, config }) => {
+                const keys = config.parts
+                  ?.filter(({ enabled }) => Boolean(enabled))
+                  .map(({ key }) => key) ?? [name];
+
+                return (
+                  <div className={styles.tags}>
+                    {keys.map((key) => (
+                      <Tag key={key} variant="cell">
+                        {key}
+                      </Tag>
+                    ))}
+                  </div>
+                );
+              },
+            },
+          ]}
+          rowClickHandler={({ name }) => {
+            navigate(collectUserProfileDetailsPathname.replace(':fieldName', name));
+          }}
+          isLoading={isLoading}
+          errorMessage={error?.body?.message ?? error?.message}
+          placeholder={
+            <TablePlaceholder
+              image={<CollectUserProfileEmpty />}
+              imageDark={<CollectUserProfileEmptyDark />}
+              title="sign_in_exp.custom_profile_fields.table.placeholder.title"
+              description="sign_in_exp.custom_profile_fields.table.placeholder.description"
+              learnMoreLink={{ href: collectUserProfile }}
+              action={<CreateButton size="large" />}
+            />
+          }
+          onRetry={async () => mutate(undefined, true)}
+        />
+      </SignInExperienceTabWrapper>
+      {isCreating && (
+        <CreateProfileFieldModal
+          existingFieldNames={customProfileFields?.map(({ name }) => name) ?? []}
+          onClose={(fieldName?: string) => {
+            if (fieldName) {
+              navigate(collectUserProfileDetailsPathname.replace(':fieldName', fieldName));
+              return;
+            }
+            navigate(collectUserProfilePathname);
+          }}
+        />
+      )}
+    </>
   );
 }
 

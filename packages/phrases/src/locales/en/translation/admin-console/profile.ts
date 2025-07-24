@@ -109,18 +109,36 @@ const profile = {
     'Users will not be able to sign in with the <span></span> account if you unlink it. Are you sure to proceed?',
   fields: {
     name: 'Name',
+    name_description:
+      "The user's full name in displayable form including all name parts (e.g., “Jane Doe”).",
     avatar: 'Avatar',
+    avatar_description: "URL of the user's avatar image.",
     familyName: 'Family name',
+    familyName_description: 'The user\'s surname(s) or last name(s) (e.g., "Doe").',
     givenName: 'Given name',
+    givenName_description: 'The user\'s given name(s) or first name(s) (e.g., "Jane").',
     middleName: 'Middle name',
+    middleName_description: 'The user\'s middle name(s) (e.g., "Marie").',
     nickname: 'Nickname',
+    nickname_description:
+      'Casual or familiar name for the user, which may differ from their legal name.',
     preferredUsername: 'Preferred username',
+    preferredUsername_description:
+      'Shorthand identifier by which the user wishes to be referenced.',
     profile: 'Profile',
+    profile_description:
+      "URL of the user's human-readable profile page (e.g., social media profile).",
     website: 'Website',
+    website_description: "URL of the user's personal website or blog.",
     gender: 'Gender',
+    gender_description: 'The user\'s self-identified gender (e.g., "Female", "Male", "Non-binary")',
     birthdate: 'Birthdate',
+    birthdate_description: 'The user\'s date of birth in a specified format (e.g., "MM-dd-yyyy").',
     zoneinfo: 'Timezone',
+    zoneinfo_description:
+      'The user\'s timezone in IANA format (e.g., "America/New_York" or "Europe/Paris").',
     locale: 'Language',
+    locale_description: 'The user\'s language in IETF BCP 47 format (e.g., "en-US" or "zh-CN").',
     address: {
       formatted: 'Address',
       streetAddress: 'Street address',
@@ -129,6 +147,11 @@ const profile = {
       postalCode: 'Zip code',
       country: 'Country',
     },
+    address_description:
+      'The user\'s full address in displayable form including all address parts (e.g., "123 Main St, Anytown, USA 12345").',
+    fullname: 'Fullname',
+    fullname_description:
+      'Flexibly combines familyName, givenName, and middleName based on configuration.',
   },
 };
 

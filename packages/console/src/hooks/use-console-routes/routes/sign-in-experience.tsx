@@ -9,6 +9,6 @@ export const signInExperience: RouteObject = {
   path: 'sign-in-experience',
   children: [
     { index: true, element: <Navigate replace to={SignInExperienceTab.Branding} /> },
-    { path: ':tab', element: <SignInExperience /> },
+    { path: ':tab/*', element: <SignInExperience /> },
   ],
 };

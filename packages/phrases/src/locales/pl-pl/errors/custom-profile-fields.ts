@@ -10,9 +10,10 @@ const custom_profile_fields = {
   invalid_name:
     'Nieprawidłowa nazwa pola, dozwolone są tylko litery lub cyfry, rozróżniana wielkość liter.',
   name_conflict_sign_in_identifier:
-    'Nieprawidłowa nazwa pola. {{name}} jest zarezerwowanym kluczem identyfikatora logowania.',
+    'Nieprawidłowa nazwa pola. "{{name}}" jest zarezerwowanym kluczem identyfikatora logowania.',
   name_conflict_custom_data:
-    'Nieprawidłowa nazwa pola. {{name}} jest zarezerwowanym kluczem danych niestandardowych.',
+    'Nieprawidłowa nazwa pola. "{{name}}" jest zarezerwowanym kluczem danych niestandardowych.',
+  name_required: 'Nazwa pola jest wymagana.',
 };
 
 export default Object.freeze(custom_profile_fields);
