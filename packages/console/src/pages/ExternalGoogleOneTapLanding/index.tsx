@@ -1,28 +1,32 @@
+import { GoogleConnector, logtoGoogleOneTapCookieKey } from '@logto/connector-kit';
 import { useLogto } from '@logto/react';
-import { ExtraParamsKey, FirstScreen } from '@logto/schemas';
-import { useContext, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { ExtraParamsKey } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
+import { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getCookie } from 'tiny-cookie';
 
 import AppLoading from '@/components/AppLoading';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useRedirectUri from '@/hooks/use-redirect-uri';
 
-enum ExternalGoogleOneTapLandingSearchParams {
-  Credential = 'credential',
-}
-
 /** The external Google One Tap landing page for external website integration. */
 function ExternalGoogleOneTapLanding() {
   const navigate = useNavigate();
   const { isAuthenticated, signIn } = useLogto();
-  const [searchParams] = useSearchParams();
   const { navigateTenant } = useContext(TenantsContext);
   const redirectUri = useRedirectUri();
-
-  const credential = searchParams.get(ExternalGoogleOneTapLandingSearchParams.Credential);
+  const [logtoGoogleOneTapCookie, setLogtoGoogleOneTapCookie] = useState<string>();
 
   useEffect(() => {
-    if (isAuthenticated || !credential) {
+    const cookieValue = getCookie(logtoGoogleOneTapCookieKey);
+    if (cookieValue) {
+      setLogtoGoogleOneTapCookie(cookieValue);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
       // Navigate to root, which will handle tenant selection
       navigate('/', { replace: true });
       return;
@@ -36,12 +40,19 @@ function ExternalGoogleOneTapLanding() {
        * We can hence clear tokens in the <Callback /> page.
        */
       clearTokens: false,
-      firstScreen: FirstScreen.SignIn,
-      extraParams: {
-        [ExtraParamsKey.GoogleOneTapCredential]: credential,
+      directSignIn: {
+        method: 'social',
+        target: GoogleConnector.target,
       },
+      ...conditional(
+        logtoGoogleOneTapCookie && {
+          extraParams: {
+            [ExtraParamsKey.GoogleOneTapCredential]: logtoGoogleOneTapCookie,
+          },
+        }
+      ),
     });
-  }, [isAuthenticated, navigate, navigateTenant, signIn, redirectUri, credential]);
+  }, [isAuthenticated, navigate, navigateTenant, signIn, redirectUri, logtoGoogleOneTapCookie]);
 
   return <AppLoading />;
 }

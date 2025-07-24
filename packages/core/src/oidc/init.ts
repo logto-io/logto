@@ -4,6 +4,7 @@ import assert from 'node:assert';
 import { readFileSync } from 'node:fs';
 import querystring from 'node:querystring';
 
+import { logtoGoogleOneTapCookieKey } from '@logto/connector-kit';
 import { userClaims } from '@logto/core-kit';
 import type { I18nKey } from '@logto/phrases';
 import {
@@ -221,6 +222,19 @@ export default function initOidc(
           ),
           { sameSite: 'lax', overwrite: true, httpOnly: false }
         );
+
+        if (params[ExtraParamsKey.GoogleOneTapCredential]) {
+          ctx.cookies.set(
+            logtoGoogleOneTapCookieKey,
+            params[ExtraParamsKey.GoogleOneTapCredential],
+            {
+              sameSite: 'lax',
+              overwrite: true,
+              httpOnly: false,
+              maxAge: 10 * 1000, // 10s
+            }
+          );
+        }
 
         switch (prompt.name) {
           case 'login': {
