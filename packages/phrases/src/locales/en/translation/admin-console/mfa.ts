@@ -46,6 +46,10 @@ const mfa = {
   set_up_organization_required_mfa_prompt:
     'MFA setup prompt for users after organization enables MFA',
   prompt_at_sign_in_no_skip: 'Ask users to set up MFA on next sign-in (no skipping)',
+  email_primary_method_tip:
+    "Email verification code is already your primary sign-in method. To maintain security, it can't be reused for MFA.",
+  phone_primary_method_tip:
+    "SMS verification code is already your primary sign-in method. To maintain security, it can't be reused for MFA.",
 };
 
 export default Object.freeze(mfa);
