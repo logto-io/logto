@@ -7,12 +7,12 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
+import ConnectorLogo from '@/components/ConnectorLogo';
 import ConnectorName from '@/components/ConnectorName';
 import ConnectorTokenStatus from '@/components/ConnectorTokenStatus';
 import Button from '@/ds-components/Button';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
-import ImageWithErrorFallback from '@/ds-components/ImageWithErrorFallback';
 import Table from '@/ds-components/Table';
 import type { RequestError } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
@@ -28,6 +28,7 @@ type RowData = {
   target: ConnectorResponse['target'];
   identityId?: string;
   logo?: ConnectorResponse['logo'];
+  logoDark?: ConnectorResponse['logoDark'];
   name: ConnectorResponse['name'] | string;
   tokenStatus: {
     isTokenStorageSupported?: boolean;
@@ -70,11 +71,12 @@ function UserSocialIdentities({ userId }: Props) {
     const connectorGroups = getConnectorGroups(connectors);
 
     return identities.map(({ identity, tokenSecret, target }): RowData => {
-      const { logo, name, isTokenStorageSupported } =
+      const { logo, logoDark, name, isTokenStorageSupported } =
         connectorGroups.find((group) => group.target === target) ?? {};
 
       return {
         logo,
+        logoDark,
         name: name ?? t('connectors.unknown'),
         target,
         identityId: identity.userId,
@@ -109,9 +111,9 @@ function UserSocialIdentities({ userId }: Props) {
               title: t('user_details.connectors.connectors'),
               dataIndex: 'name',
               colSpan: 4,
-              render: ({ logo, name }) => (
+              render: ({ logo = '', logoDark = '', name }) => (
                 <div className={styles.connectorName}>
-                  <ImageWithErrorFallback className={styles.icon} src={logo} alt="logo" />
+                  <ConnectorLogo data={{ logo, logoDark }} size="small" />
                   <div className={styles.name}>
                     <ConnectorName name={name} />
                   </div>
