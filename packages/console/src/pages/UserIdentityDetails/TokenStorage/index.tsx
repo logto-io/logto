@@ -55,7 +55,7 @@ type Props =
       readonly mutate: () => void;
     };
 
-function TokenStorage<T extends ConnectorType>({ type, tokenSecret, connector, mutate }: Props) {
+function TokenStorage({ type, tokenSecret, connector, mutate }: Props) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console',
   });
@@ -126,11 +126,13 @@ function TokenStorage<T extends ConnectorType>({ type, tokenSecret, connector, m
                 description="user_identity_details.access_token.description"
                 status={tokenStatus.accessTokenStatus}
               />
-              <TokenCard
-                title="user_identity_details.refresh_token.title"
-                description="user_identity_details.refresh_token.description"
-                status={tokenStatus.refreshTokenStatus}
-              />
+              {tokenSecret && (
+                <TokenCard
+                  title="user_identity_details.refresh_token.title"
+                  description="user_identity_details.refresh_token.description"
+                  status={tokenStatus.refreshTokenStatus}
+                />
+              )}
             </div>
           </FormField>
           {tokenSecret && (
@@ -169,7 +171,7 @@ function TokenStorage<T extends ConnectorType>({ type, tokenSecret, connector, m
         </>
       )}
 
-      {tokenSecret && (
+      {connector.enableTokenStorage && tokenSecret && (
         <FormField title="user_identity_details.delete_tokens.title">
           <div className={styles.deleteCard}>
             <div className={styles.description}>
@@ -188,7 +190,7 @@ function TokenStorage<T extends ConnectorType>({ type, tokenSecret, connector, m
         </FormField>
       )}
 
-      {tokenSecret && (
+      {connector.enableTokenStorage && tokenSecret && (
         <DeleteSecretConfirmModal
           isOpen={showDeleteConfirmModal}
           connectorName={type === ConnectorType.Social ? connector.name.en : connector.name}
