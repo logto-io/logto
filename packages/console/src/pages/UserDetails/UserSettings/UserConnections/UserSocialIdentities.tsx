@@ -97,66 +97,68 @@ function UserSocialIdentities({ userId }: Props) {
           )}
         </div>
       )}
-      <Table
-        hasBorder
-        rowGroups={[{ key: 'identities', data: rowData }]}
-        rowIndexKey="target"
-        isLoading={isLoading}
-        errorMessage={error?.body?.message ?? error?.message}
-        columns={[
-          {
-            title: t('user_details.connectors.connectors'),
-            dataIndex: 'name',
-            colSpan: 4,
-            render: ({ logo, name }) => (
-              <div className={styles.connectorName}>
-                <ImageWithErrorFallback className={styles.icon} src={logo} alt="logo" />
-                <div className={styles.name}>
-                  <ConnectorName name={name} />
+      {(isLoading || hasRows || error) && (
+        <Table
+          hasBorder
+          rowGroups={[{ key: 'identities', data: rowData }]}
+          rowIndexKey="target"
+          isLoading={isLoading}
+          errorMessage={error?.body?.message ?? error?.message}
+          columns={[
+            {
+              title: t('user_details.connectors.connectors'),
+              dataIndex: 'name',
+              colSpan: 4,
+              render: ({ logo, name }) => (
+                <div className={styles.connectorName}>
+                  <ImageWithErrorFallback className={styles.icon} src={logo} alt="logo" />
+                  <div className={styles.name}>
+                    <ConnectorName name={name} />
+                  </div>
                 </div>
-              </div>
-            ),
-          },
-          {
-            title: t('user_details.connectors.user_id'),
-            dataIndex: 'identityId',
-            colSpan: 7,
-            render: ({ identityId = '' }) => (
-              <div className={styles.userId}>
-                <span>{identityId || '-'}</span>
-                {identityId && <CopyToClipboard variant="icon" value={identityId} />}
-              </div>
-            ),
-          },
-          {
-            title: t('user_details.connections.token_status_column'),
-            dataIndex: 'tokenStatus',
-            colSpan: 3,
-            render: ({ tokenStatus: { isTokenStorageSupported, tokenSecret } }) => (
-              <ConnectorTokenStatus
-                isTokenStorageSupported={isTokenStorageSupported}
-                tokenSecret={tokenSecret}
-              />
-            ),
-          },
-          {
-            title: null,
-            dataIndex: 'action',
-            colSpan: 2,
-            render: ({ target }) => (
-              <Button
-                title="general.manage"
-                type="text"
-                size="small"
-                onClick={() => {
-                  navigate(`/users/${userId}/social-identities/${target}`);
-                }}
-              />
-            ),
-          },
-        ]}
-        onRetry={async () => mutate(undefined, true)}
-      />
+              ),
+            },
+            {
+              title: t('user_details.connectors.user_id'),
+              dataIndex: 'identityId',
+              colSpan: 7,
+              render: ({ identityId = '' }) => (
+                <div className={styles.userId}>
+                  <span>{identityId || '-'}</span>
+                  {identityId && <CopyToClipboard variant="icon" value={identityId} />}
+                </div>
+              ),
+            },
+            {
+              title: t('user_details.connections.token_status_column'),
+              dataIndex: 'tokenStatus',
+              colSpan: 3,
+              render: ({ tokenStatus: { isTokenStorageSupported, tokenSecret } }) => (
+                <ConnectorTokenStatus
+                  isTokenStorageSupported={isTokenStorageSupported}
+                  tokenSecret={tokenSecret}
+                />
+              ),
+            },
+            {
+              title: null,
+              dataIndex: 'action',
+              colSpan: 2,
+              render: ({ target }) => (
+                <Button
+                  title="general.manage"
+                  type="text"
+                  size="small"
+                  onClick={() => {
+                    navigate(`/users/${userId}/social-identities/${target}`);
+                  }}
+                />
+              ),
+            },
+          ]}
+          onRetry={async () => mutate(undefined, true)}
+        />
+      )}
     </FormField>
   );
 }
