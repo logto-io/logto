@@ -3,7 +3,9 @@ import {
   MfaFactor,
   MfaPolicy,
   OrganizationRequiredMfaPolicy,
+  SignInIdentifier,
   type SignInExperience,
+  type SignIn,
 } from '@logto/schemas';
 import { useContext, useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -36,10 +38,11 @@ import { convertMfaFormToConfig, convertMfaConfigToForm, validateBackupCodeFacto
 
 type Props = {
   readonly data: MfaConfig;
+  readonly signInMethods: SignIn['methods'];
   readonly onMfaUpdated: (updatedData: MfaConfig) => void;
 };
 
-function MfaForm({ data, onMfaUpdated }: Props) {
+function MfaForm({ data, signInMethods, onMfaUpdated }: Props) {
   const {
     currentSubscription: { planId, isEnterprisePlan },
     currentSubscriptionQuota,
@@ -68,6 +71,18 @@ function MfaForm({ data, onMfaUpdated }: Props) {
     const { factors } = convertMfaFormToConfig(formValues);
     return validateBackupCodeFactor(factors);
   }, [formValues]);
+
+  const isEmailCodePrimarySignInMethod = useMemo(() => {
+    return signInMethods.some(
+      (method) => method.identifier === SignInIdentifier.Email && method.verificationCode
+    );
+  }, [signInMethods]);
+
+  const isPhoneCodePrimarySignInMethod = useMemo(() => {
+    return signInMethods.some(
+      (method) => method.identifier === SignInIdentifier.Phone && method.verificationCode
+    );
+  }, [signInMethods]);
 
   const isPolicySettingsDisabled = useMemo(() => {
     if (isMfaDisabled) {
@@ -186,13 +201,19 @@ function MfaForm({ data, onMfaUpdated }: Props) {
               {isDevFeaturesEnabled && (
                 <>
                   <Switch
-                    disabled={isMfaDisabled}
+                    disabled={isMfaDisabled || isEmailCodePrimarySignInMethod}
                     label={<FactorLabel type={MfaFactor.EmailVerificationCode} />}
+                    tooltip={
+                      isEmailCodePrimarySignInMethod ? t('mfa.email_primary_method_tip') : undefined
+                    }
                     {...register('emailVerificationCodeEnabled')}
                   />
                   <Switch
-                    disabled={isMfaDisabled}
+                    disabled={isMfaDisabled || isPhoneCodePrimarySignInMethod}
                     label={<FactorLabel type={MfaFactor.PhoneVerificationCode} />}
+                    tooltip={
+                      isPhoneCodePrimarySignInMethod ? t('mfa.phone_primary_method_tip') : undefined
+                    }
                     {...register('phoneVerificationCodeEnabled')}
                   />
                 </>
