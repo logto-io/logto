@@ -135,10 +135,17 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
           // Allow reCAPTCHA API calls
           'https://www.google.com/recaptcha/',
           'https://www.gstatic.com/recaptcha/',
+          // Allow external callback API access
+          ...conditionalArray(isDevFeaturesEnabled && logtoDevOrigins),
           ...developmentOrigins,
         ],
         // WARNING (high risk): Need to allow self-hosted terms of use page loaded in an iframe
-        frameSrc: ["'self'", 'https:', gsiOrigin],
+        frameSrc: [
+          "'self'",
+          'https:',
+          gsiOrigin,
+          ...conditionalArray(isDevFeaturesEnabled && logtoDevOrigins),
+        ],
         // Allow being loaded by console preview iframe
         frameAncestors: ["'self'", ...adminOrigins],
         defaultSrc: ["'self'", gsiOrigin],

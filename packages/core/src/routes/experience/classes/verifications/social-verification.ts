@@ -5,6 +5,8 @@ import {
   ConnectorType,
   type SocialConnector,
   GoogleConnector,
+  isExternalGoogleOneTap as isExternalGoogleOneTapChecker,
+  isGoogleOneTap as isGoogleOneTapChecker,
 } from '@logto/connector-kit';
 import {
   VerificationType,
@@ -435,11 +437,14 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
    * This method can be used for both experience and profile APIs, w/o OIDC interaction context.
    */
   private async verifySocialIdentityInternally(connectorData: JsonObject, ctx: WithLogContext) {
+    const isExternalWebsiteGoogleOneTap = isExternalGoogleOneTapChecker(connectorData);
+    const isGoogleOneTap = isGoogleOneTapChecker(connectorData);
     const connector = await this.getConnectorData();
     // Verify the CSRF token if it's a Google connector and has credential (a Google One Tap verification)
     if (
       connector.metadata.id === GoogleConnector.factoryId &&
-      connectorData[GoogleConnector.oneTapParams.credential]
+      isGoogleOneTap &&
+      !isExternalWebsiteGoogleOneTap
     ) {
       const csrfToken = connectorData[GoogleConnector.oneTapParams.csrfToken];
       const value = ctx.cookies.get(GoogleConnector.oneTapParams.csrfToken);
@@ -480,10 +485,14 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
   ) {
     const connector = await this.getConnectorData();
 
+    const isGoogleOneTap = isGoogleOneTapChecker(connectorData);
+    const isExternalWebsiteGoogleOneTap = isExternalGoogleOneTapChecker(connectorData);
+
     // Verify the CSRF token if it's a Google connector and has credential (a Google One Tap verification)
     if (
       connector.metadata.id === GoogleConnector.factoryId &&
-      connectorData[GoogleConnector.oneTapParams.credential]
+      isGoogleOneTap &&
+      !isExternalWebsiteGoogleOneTap
     ) {
       const csrfToken = connectorData[GoogleConnector.oneTapParams.csrfToken];
       const value = ctx.cookies.get(GoogleConnector.oneTapParams.csrfToken);

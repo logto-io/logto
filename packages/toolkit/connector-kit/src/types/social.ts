@@ -211,3 +211,16 @@ export type GoogleConnectorConfig = {
   scope?: string;
   oneTap?: GoogleOneTapConfig;
 };
+
+export const isGoogleOneTap = (data: Record<string, unknown>) => {
+  return Boolean(data[GoogleConnector.oneTapParams.credential]);
+};
+
+export const isExternalGoogleOneTap = (data: Record<string, unknown>) => {
+  return (
+    Boolean(data[GoogleConnector.oneTapParams.credential]) &&
+    !data[GoogleConnector.oneTapParams.csrfToken]
+  );
+};
+
+export const logtoGoogleOneTapCookieKey = '_logto_google_one_tap_credential';

@@ -1,5 +1,10 @@
 import type { ConnectorSession, SocialUserInfo } from '@logto/connector-kit';
-import { connectorSessionGuard, GoogleConnector } from '@logto/connector-kit';
+import {
+  connectorSessionGuard,
+  GoogleConnector,
+  isExternalGoogleOneTap,
+  isGoogleOneTap as isGoogleOneTapChecker,
+} from '@logto/connector-kit';
 import type { SocialConnectorPayload } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import type { Context } from 'koa';
@@ -66,11 +71,15 @@ export const verifySocialIdentity = async (
 
   const connector = await getConnector(connectorId);
 
+  const isGoogleOneTap = isGoogleOneTapChecker(connectorData);
+  const isExternalWebsiteGoogleOneTap = isExternalGoogleOneTap(connectorData);
+
   // Verify the CSRF token if it's a Google connector and has credential (a Google One Tap
   // verification)
   if (
     connector.metadata.id === GoogleConnector.factoryId &&
-    connectorData[GoogleConnector.oneTapParams.credential]
+    isGoogleOneTap &&
+    !isExternalWebsiteGoogleOneTap
   ) {
     const csrfToken = connectorData[GoogleConnector.oneTapParams.csrfToken];
     const value = ctx.cookies.get(GoogleConnector.oneTapParams.csrfToken);
