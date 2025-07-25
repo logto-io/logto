@@ -1,5 +1,12 @@
 # @logto/connector-smtp
 
+## 1.4.1
+
+### Patch Changes
+
+- Updated dependencies [34964af46]
+  - @logto/connector-kit@4.4.0
+
 ## 1.4.0
 
 ### Minor Changes

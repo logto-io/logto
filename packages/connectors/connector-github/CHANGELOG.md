@@ -1,5 +1,20 @@
 # @logto/connector-github
 
+## 1.7.0
+
+### Minor Changes
+
+- 34964af46: feat: support custom scope in the `getAuthorizationUri` method
+
+  This change allows the `getAuthorizationUri` method in the social connectors to accept an extra `scope` parameter, enabling more flexible authorization requests.
+
+  If the scope is provided, it will be used in the authorization request; otherwise, the default scope configured in the connector settings will be used.
+
+### Patch Changes
+
+- Updated dependencies [34964af46]
+  - @logto/connector-kit@4.4.0
+
 ## 1.6.0
 
 ### Minor Changes

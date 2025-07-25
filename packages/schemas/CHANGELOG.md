@@ -1,5 +1,25 @@
 # Change Log
 
+## 1.30.0
+
+### Minor Changes
+
+- 34964af46: feat: support custom scope in the social verification API
+
+  This change allows developers to specify a custom `scope` parameter in the user account social verification API. If a scope is provided, it will be used to generate the authorization URI; otherwise, the default scope configured in the connector will be used.
+
+  - Affected endpoints:
+    - `POST /api/verifications/social`
+
+### Patch Changes
+
+- 3f5533080: refactor: set the default value of account center `enabled` to true.
+
+  As a result, the account API will be enabled by default, allowing users to access and manage their accounts. To control the visibility and accessibility of individual fields, use the `fields` property. By default, all fields are inaccessible; you can selectively enable them as needed.
+
+- Updated dependencies [34964af46]
+  - @logto/connector-kit@4.4.0
+
 ## 1.29.0
 
 ### Minor Changes
