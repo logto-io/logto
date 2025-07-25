@@ -1,5 +1,39 @@
 # Change Log
 
+## 1.30.0
+
+### Minor Changes
+
+- 34964af46: feat: support custom scope in the social verification API
+
+  This change allows developers to specify a custom `scope` parameter in the user account social verification API. If a scope is provided, it will be used to generate the authorization URI; otherwise, the default scope configured in the connector will be used.
+
+  - Affected endpoints:
+    - `POST /api/verifications/social`
+
+- 289ab5119: add totp and backup code via account api
+
+  Users can now add TOTP and backup code via Account API.
+
+  The endpoints are:
+
+  - `POST /api/my-account/mfa-verifications/totp-secret/generate`: Generate a TOTP secret.
+  - `POST /api/my-account/mfa-verifications/backup-codes/generate`: Generate backup codes.
+  - `POST /api/my-account/mfa-verifications`: Add a TOTP or backup code using the generated secret or codes.
+  - `GET /api/my-account/mfa-verifications/backup-codes`: Retrieve backup codes.
+
+### Patch Changes
+
+- Updated dependencies [34964af46]
+- Updated dependencies [34964af46]
+- Updated dependencies [3f5533080]
+  - @logto/schemas@1.30.0
+  - @logto/connector-kit@4.4.0
+  - @logto/cli@1.30.0
+  - @logto/console@1.26.0
+  - @logto/demo-app@1.5.0
+  - @logto/experience@1.14.0
+
 ## 1.29.0
 
 ### Minor Changes

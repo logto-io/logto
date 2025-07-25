@@ -1,5 +1,12 @@
 # @logto/connector-postmark
 
+## 1.1.1
+
+### Patch Changes
+
+- Updated dependencies [34964af46]
+  - @logto/connector-kit@4.4.0
+
 ## 1.1.0
 
 ### Minor Changes
