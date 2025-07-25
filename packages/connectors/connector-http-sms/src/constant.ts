@@ -32,4 +32,4 @@ export const defaultMetadata: ConnectorMetadata = {
         'The authorization header to be sent with the request, you can verify the value in your server.',
     },
   ],
-}; 
+};
