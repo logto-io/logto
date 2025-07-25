@@ -1,11 +1,16 @@
-import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import { SsoProviderName, SsoProviderType } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared/universal';
 import snakecaseKeys from 'snakecase-keys';
+import { z } from 'zod';
 
 import OidcConnector from '../OidcConnector/index.js';
 import { type SingleSignOnFactory } from '../index.js';
 import { type SingleSignOn, type SingleSignOnConnectorData } from '../types/connector.js';
+import {
+  SsoConnectorConfigErrorCodes,
+  SsoConnectorError,
+  SsoConnectorErrorCodes,
+} from '../types/error.js';
 import { basicOidcConnectorConfigGuard } from '../types/oidc.js';
 import { type CreateSingleSignOnSession } from '../types/session.js';
 
@@ -14,18 +19,27 @@ const googleIssuer = 'https://accounts.google.com';
 
 export class GoogleWorkspaceSsoConnector extends OidcConnector implements SingleSignOn {
   static googleIssuer = googleIssuer;
+  private readonly offlineAccess: boolean;
 
   constructor(readonly data: SingleSignOnConnectorData) {
     const parseConfigResult = googleWorkspaceSsoConnectorConfigGuard.safeParse(data.config);
 
     if (!parseConfigResult.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, parseConfigResult.error);
+      throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidConfig, {
+        config: data.config,
+        message: SsoConnectorConfigErrorCodes.InvalidConnectorConfig,
+        error: parseConfigResult.error.flatten(),
+      });
     }
 
+    const { offlineAccess = false, ...oidcConfigs } = parseConfigResult.data;
+
     super({
-      ...parseConfigResult.data,
+      ...oidcConfigs,
       issuer: googleIssuer,
     });
+
+    this.offlineAccess = offlineAccess;
   }
 
   /**
@@ -45,7 +59,6 @@ export class GoogleWorkspaceSsoConnector extends OidcConnector implements Single
   ) {
     const oidcConfig = await this.getOidcConfig();
     const nonce = generateStandardId();
-    const isOfflineAccess = oidcConfig.scope.includes('offline_access');
 
     await setSession({ nonce, redirectUri, connectorId, state });
 
@@ -59,10 +72,9 @@ export class GoogleWorkspaceSsoConnector extends OidcConnector implements Single
       }),
       // Always use select_account prompt for Google Workspace SSO.
       prompt: 'select_account consent',
-      // Remove offline_access from scope if it exists, as Google Workspace SSO does not support it.
-      scope: oidcConfig.scope.replace('offline_access', '').trim(),
-      // Add `access_type=offline` if `offline_access` is in the scope.
-      ...(isOfflineAccess && { access_type: 'offline' }),
+      scope: oidcConfig.scope,
+      // Add `access_type=offline` if offlineAccess is enabled.
+      ...(this.offlineAccess && { access_type: 'offline' }),
       // Include granted scopes to ensure the user can see the scopes they are consenting to.
       // Recommended by Google for better user experience.
       include_granted_scopes: 'true',
@@ -80,9 +92,13 @@ export class GoogleWorkspaceSsoConnector extends OidcConnector implements Single
   }
 }
 
-export const googleWorkspaceSsoConnectorConfigGuard = basicOidcConnectorConfigGuard.omit({
-  issuer: true,
-});
+export const googleWorkspaceSsoConnectorConfigGuard = basicOidcConnectorConfigGuard
+  .omit({
+    issuer: true,
+  })
+  .extend({
+    offlineAccess: z.boolean().optional(),
+  });
 
 export const googleWorkSpaceSsoConnectorFactory: SingleSignOnFactory<SsoProviderName.GOOGLE_WORKSPACE> =
   {
