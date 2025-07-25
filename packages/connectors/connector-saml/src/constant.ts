@@ -73,6 +73,7 @@ export const formItems: ConnectorConfigFormItem[] = [
   {
     type: ConnectorConfigFormItemType.Switch,
     label: 'Sign Authentication Request',
+    description: 'Sign the authentication request before sent to the IdP.',
     key: 'signAuthnRequest',
     defaultValue: false,
   },
@@ -95,6 +96,8 @@ export const formItems: ConnectorConfigFormItem[] = [
   {
     type: ConnectorConfigFormItemType.Switch,
     label: 'SAML Assertion Encrypted',
+    description:
+      'Encrypt the SAML assertion before sending it to the SP. This is optional and depends on your IdP configuration.',
     key: 'encryptAssertion',
     defaultValue: false,
   },

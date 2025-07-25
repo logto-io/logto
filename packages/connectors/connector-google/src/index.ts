@@ -45,7 +45,7 @@ const getAuthorizationUri =
     const config = await getConfig(defaultMetadata.id);
     validateConfig(config, GoogleConnector.configGuard);
 
-    const { clientId, scope, prompts } = config;
+    const { clientId, scope, prompts, offlineAccess } = config;
 
     const queryParameters = new URLSearchParams({
       client_id: clientId,
@@ -54,6 +54,7 @@ const getAuthorizationUri =
       state,
       scope: customScope ?? scope ?? defaultScope,
       ...conditional(prompts && prompts.length > 0 && { prompt: prompts.join(' ') }),
+      ...conditional(offlineAccess && { access_type: 'offline' }),
     });
 
     return `${authorizationEndpoint}?${queryParameters.toString()}`;
