@@ -17,6 +17,7 @@ export type ButtonType =
   | 'primary'
   | 'danger'
   | 'outline'
+  | 'outlineDanger'
   | 'text'
   | 'default'
   | 'branding'

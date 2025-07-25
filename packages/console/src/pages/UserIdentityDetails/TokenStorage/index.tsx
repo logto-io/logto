@@ -20,7 +20,7 @@ import { type TokenStatus } from '@/types/connector';
 import { getTokenStatus } from '@/utils/connector';
 
 import DeleteSecretConfirmModal from './DeleteSecretConfirmModal';
-import TokenCard, { type AvailableStatus } from './TokenCard';
+import TokenCard from './TokenCard';
 import styles from './index.module.scss';
 
 export enum ConnectorType {
@@ -30,7 +30,7 @@ export enum ConnectorType {
 
 type TokenStatusProps = {
   readonly accessTokenStatus: TokenStatus;
-  readonly refreshTokenStatus: AvailableStatus;
+  readonly hasRefreshToken: boolean;
   readonly createdAt: string;
   readonly updatedAt: string;
   readonly expiresAt: string;
@@ -73,7 +73,7 @@ function TokenStorage({ type, tokenSecret, connector, mutate }: Props) {
 
     return {
       accessTokenStatus: getTokenStatus(isTokenStorageSupported, tokenSecret),
-      refreshTokenStatus: metadata?.hasRefreshToken ? 'available' : 'not_available',
+      hasRefreshToken: Boolean(metadata?.hasRefreshToken),
       createdAt: createdAt ? formatDate(createdAt) : '-',
       updatedAt: updatedAt ? formatDate(updatedAt) : '-',
       // `expiresAt` is in seconds, so we multiply by 1000 to convert to milliseconds for formatting
@@ -125,19 +125,19 @@ function TokenStorage({ type, tokenSecret, connector, mutate }: Props) {
 
       {connector.enableTokenStorage && (
         <>
-          <FormField title="user_identity_details.token_storage.title">
+          <FormField title="user_identity_details.token_status">
             <div className={styles.tokenStatus}>
               <TokenCard
                 title="user_identity_details.access_token.title"
-                description="user_identity_details.access_token.description"
                 status={tokenStatus.accessTokenStatus}
+                connectorName={connectorNameText}
               />
               {tokenSecret && (
-                <TokenCard
-                  title="user_identity_details.refresh_token.title"
-                  description="user_identity_details.refresh_token.description"
-                  status={tokenStatus.refreshTokenStatus}
-                />
+                <InlineNotification severity={tokenStatus.hasRefreshToken ? 'success' : 'info'}>
+                  {tokenStatus.hasRefreshToken
+                    ? t('user_identity_details.refresh_token.available')
+                    : t('user_identity_details.refresh_token.not_available')}
+                </InlineNotification>
               )}
             </div>
           </FormField>
@@ -186,7 +186,7 @@ function TokenStorage({ type, tokenSecret, connector, mutate }: Props) {
               })}
             </div>
             <Button
-              type="danger"
+              type="outlineDanger"
               title="user_identity_details.delete_tokens.title"
               onClick={() => {
                 setShowDeleteConfirmModal(true);
