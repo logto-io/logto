@@ -258,6 +258,7 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
       response: connectorResponseGuard,
       status: [200, 400, 404, 422],
     }),
+    // eslint-disable-next-line complexity
     async (ctx, next) => {
       const {
         params: { id },
@@ -308,6 +309,17 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
         validateConfig(config);
       }
 
+      if (
+        // TODO: remove this check once the feature is enabled in production.
+        EnvSet.values.isDevFeaturesEnabled &&
+        type === ConnectorType.Social &&
+        originalMetadata.isTokenStorageSupported &&
+        enableTokenStorage === false
+      ) {
+        // Delete all stored tokens when disabling token storage.
+        await tenant.queries.secrets.deleteTokenSetSecretsBySocialConnectorId(id);
+      }
+
       await updateConnector({
         set: {
           /**
@@ -324,6 +336,7 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
         where: { id },
         jsonbMode: 'replace',
       });
+
       const connector = await getLogtoConnectorById(id);
       ctx.body = await transpileLogtoConnector(connector, buildExtraInfo(connector.metadata));
 

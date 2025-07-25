@@ -1,5 +1,6 @@
 import {
   SsoConnectors,
+  SsoProviderType,
   ssoConnectorProvidersResponseGuard,
   ssoConnectorWithProviderConfigGuard,
 } from '@logto/schemas';
@@ -36,7 +37,7 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
     router,
     {
       id: tenantId,
-      queries: { ssoConnectors },
+      queries: { ssoConnectors, secrets },
       libraries: {
         quota,
         ssoConnectors: { getSsoConnectorById, getSsoConnectors },
@@ -128,6 +129,13 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
         assertThat(
           EnvSet.values.isDevFeaturesEnabled,
           new RequestError('request.feature_not_supported')
+        );
+
+        // Only OIDC connector supports token storage currently.
+        const { providerType } = ssoConnectorFactories[providerName];
+        assertThat(
+          providerType === SsoProviderType.OIDC,
+          new RequestError('connector.token_storage_not_supported')
         );
       }
 
@@ -238,6 +246,7 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
       response: ssoConnectorWithProviderConfigGuard,
       status: [200, 400, 404, 409, 422],
     }),
+    // eslint-disable-next-line complexity
     async (ctx, next) => {
       const {
         guard: {
@@ -250,6 +259,7 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
       const originalConnector = await getSsoConnectorById(id);
       const { providerName } = originalConnector;
       const { config, domains, ...rest } = body;
+      const { providerType } = ssoConnectorFactories[providerName];
 
       // Validate the connector domains if it's provided
       if (domains) {
@@ -288,6 +298,21 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
           EnvSet.values.isDevFeaturesEnabled,
           new RequestError('request.feature_not_supported')
         );
+        // Only OIDC connector supports token storage currently.
+        assertThat(
+          providerType === SsoProviderType.OIDC,
+          new RequestError('connector.token_storage_not_supported')
+        );
+      }
+
+      // Delete the token secret if the token storage is disabled
+      if (
+        // TODO: remove this check once the feature is enabled in production.
+        EnvSet.values.isDevFeaturesEnabled &&
+        rest.enableTokenStorage === false &&
+        providerType === SsoProviderType.OIDC
+      ) {
+        await secrets.deleteTokenSetSecretsByEnterpriseSsoConnectorId(id);
       }
 
       // Check if there's any valid update

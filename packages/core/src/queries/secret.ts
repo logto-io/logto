@@ -171,6 +171,24 @@ class SecretQueries extends SchemaQueries<SecretKeys, CreateSecret, Secret> {
           and ${secrets.fields.type} = ${SecretType.FederatedTokenSet}
     `);
   }
+
+  public async deleteTokenSetSecretsBySocialConnectorId(connectorId: string) {
+    return this.pool.query(sql`
+      delete from ${secrets.table}
+      using ${secretSocialConnectorRelations.table}
+      where ${secrets.fields.id} = ${secretSocialConnectorRelations.fields.secretId}
+        and ${secretSocialConnectorRelations.fields.connectorId} = ${connectorId}
+    `);
+  }
+
+  public async deleteTokenSetSecretsByEnterpriseSsoConnectorId(ssoConnectorId: string) {
+    return this.pool.query(sql`
+      delete from ${secrets.table}
+      using ${secretEnterpriseSsoConnectorRelations.table}
+      where ${secrets.fields.id} = ${secretEnterpriseSsoConnectorRelations.fields.secretId}
+        and ${secretEnterpriseSsoConnectorRelations.fields.ssoConnectorId} = ${ssoConnectorId}
+    `);
+  }
 }
 
 export default SecretQueries;

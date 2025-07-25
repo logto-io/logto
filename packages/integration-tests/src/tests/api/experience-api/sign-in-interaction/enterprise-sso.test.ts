@@ -52,8 +52,12 @@ describe('enterprise sso sign-in and sign-up', () => {
   });
 
   it('should successfully sign-up with enterprise sso and sync email and sync SSO profile on the next sign-in', async () => {
+    if (!ssoConnectorApi.firstConnectorId) {
+      throw new Error('SSO connector is not created');
+    }
+
     const userId = await signInWithEnterpriseSso(
-      ssoConnectorApi.firstConnectorId!,
+      ssoConnectorApi.firstConnectorId,
       {
         sub: enterpriseSsoIdentityId,
         email,
@@ -69,7 +73,7 @@ describe('enterprise sso sign-in and sign-up', () => {
     if (isDevFeaturesEnabled) {
       const { ssoIdentity, tokenSecret } = await getUserSsoIdentity(
         userId,
-        ssoConnectorApi.firstConnectorId!
+        ssoConnectorApi.firstConnectorId
       );
 
       expect(ssoIdentity.identityId).toBe(enterpriseSsoIdentityId);
@@ -78,7 +82,7 @@ describe('enterprise sso sign-in and sign-up', () => {
       expect(tokenSecret?.metadata.scope).toBe(mockTokenResponse.scope);
     }
 
-    await signInWithEnterpriseSso(ssoConnectorApi.firstConnectorId!, {
+    await signInWithEnterpriseSso(ssoConnectorApi.firstConnectorId, {
       sub: enterpriseSsoIdentityId,
       email,
       email_verified: true,
@@ -94,21 +98,38 @@ describe('enterprise sso sign-in and sign-up', () => {
 
     // Should update the token set
     if (isDevFeaturesEnabled) {
-      const { tokenSecret } = await getUserSsoIdentity(userId, ssoConnectorApi.firstConnectorId!);
+      const { tokenSecret } = await getUserSsoIdentity(userId, ssoConnectorApi.firstConnectorId);
       expect(tokenSecret?.metadata.scope).toBe('openid profile email');
+    }
+
+    // Should delete the token set when the connector token storage is disabled
+    if (isDevFeaturesEnabled) {
+      await ssoConnectorApi.update(ssoConnectorApi.firstConnectorId, {
+        enableTokenStorage: false,
+      });
+
+      const { tokenSecret: updatedTokenSecret } = await getUserSsoIdentity(
+        userId,
+        ssoConnectorApi.firstConnectorId
+      );
+      expect(updatedTokenSecret).toBeUndefined();
     }
 
     await deleteUser(userId);
   });
 
   it('should successfully sign-in and link new enterprise sso identity', async () => {
+    if (!ssoConnectorApi.firstConnectorId) {
+      throw new Error('SSO connector is not created');
+    }
+
     const { userProfile, user } = await generateNewUser({
       primaryEmail: true,
     });
 
     const { primaryEmail } = userProfile;
 
-    const userId = await signInWithEnterpriseSso(ssoConnectorApi.firstConnectorId!, {
+    const userId = await signInWithEnterpriseSso(ssoConnectorApi.firstConnectorId, {
       sub: enterpriseSsoIdentityId,
       email: primaryEmail,
       email_verified: true,

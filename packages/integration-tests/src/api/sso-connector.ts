@@ -94,6 +94,12 @@ export class SsoConnectorApi {
     return connector;
   }
 
+  async update(id: string, data: Partial<SsoConnector>) {
+    const updatedConnector = await patchSsoConnectorById(id, data);
+    this.connectorInstances.set(updatedConnector.id, updatedConnector);
+    return updatedConnector;
+  }
+
   async getSsoConnectorById(id: string) {
     return getSsoConnectorById(id);
   }
