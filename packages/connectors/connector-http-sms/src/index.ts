@@ -70,4 +70,4 @@ const createHttpSmsConnector: CreateConnector<SmsConnector> = async ({ getConfig
   };
 };
 
-export default createHttpSmsConnector; 
+export default createHttpSmsConnector;

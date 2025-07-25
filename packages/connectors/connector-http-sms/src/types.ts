@@ -5,4 +5,4 @@ export const httpSmsConfigGuard = z.object({
   authorization: z.string().optional(),
 });
 
-export type HttpSmsConfig = z.infer<typeof httpSmsConfigGuard>; 
+export type HttpSmsConfig = z.infer<typeof httpSmsConfigGuard>;
