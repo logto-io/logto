@@ -61,6 +61,7 @@ export const defaultLogtoSku: LogtoSkuResponse = {
   unitPrice: 0,
   productId: null,
   defaultPriceId: null,
+  isDefault: true,
   quota: {
     // A soft limit for abuse monitoring
     mauLimit: 100,
@@ -84,7 +85,6 @@ export const defaultLogtoSku: LogtoSkuResponse = {
     subjectTokenEnabled: true,
     bringYourUiEnabled: true,
     idpInitiatedSsoEnabled: false,
-    captchaEnabled: true,
     securityFeaturesEnabled: true,
   },
 };
@@ -113,7 +113,6 @@ export const defaultSubscriptionQuota: NewSubscriptionQuota = {
   bringYourUiEnabled: false,
   idpInitiatedSsoEnabled: false,
   samlApplicationsLimit: 0,
-  captchaEnabled: false,
   securityFeaturesEnabled: false,
 };
 
@@ -137,7 +136,6 @@ export const defaultSubscriptionUsage: NewSubscriptionCountBasedUsage = {
   bringYourUiEnabled: false,
   idpInitiatedSsoEnabled: false,
   samlApplicationsLimit: 0,
-  captchaEnabled: false,
   securityFeaturesEnabled: false,
 };
 

@@ -34,16 +34,12 @@ export type SubscriptionQuota = Omit<
   | 'auditLogsRetentionDays'
   // Since we are deprecation the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
   | 'organizationsEnabled'
-  // Since we will deprecate the `captchaEnabled` key soon (use `securityFeaturesEnabled` instead), we exclude it from the usage keys for now to avoid confusion.
-  | 'captchaEnabled'
 >;
 
 export type SubscriptionUsage = Omit<
   CompleteSubscriptionUsage['usage'],
   // Since we are deprecation the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
-  | 'organizationsEnabled'
-  // Since we will deprecate the `captchaEnabled` key soon (use `securityFeaturesEnabled` instead), we exclude it from the usage keys for now to avoid confusion.
-  | 'captchaEnabled'
+  'organizationsEnabled'
 >;
 
 export type ReportSubscriptionUpdatesUsageKey = Exclude<
@@ -106,11 +102,6 @@ const logtoSkuQuotaGuard = z.object({
   organizationsLimit: z.number().nullable(),
   idpInitiatedSsoEnabled: z.boolean(),
   samlApplicationsLimit: z.number().nullable(),
-  /**
-   * @deprecated
-   * TODO: @sijie remove this
-   */
-  captchaEnabled: z.boolean(),
   securityFeaturesEnabled: z.boolean(),
 }) satisfies ToZodObject<SubscriptionQuota>;
 
