@@ -70,6 +70,16 @@ export const defaultMetadata: ConnectorMetadata = {
         })),
       defaultValue: [OidcPrompt.SelectAccount],
     },
+    {
+      key: 'offlineAccess',
+      type: ConnectorConfigFormItemType.Switch,
+      required: false,
+      label: 'Offline Access',
+      isDevFeature: true,
+      defaultValue: false,
+      description:
+        'Whether to request offline access for the user. This will allow the connector to refresh the access token.',
+    },
   ],
 };
 

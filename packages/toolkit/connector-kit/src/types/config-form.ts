@@ -22,6 +22,7 @@ const baseConfigFormItem = {
   description: z.string().optional(),
   tooltip: z.string().optional(),
   isConfidential: z.boolean().optional(), // For `Text` type only.
+  isDevFeature: z.boolean().optional(), // For development feature flag.
 };
 
 export const connectorConfigFormItemGuard = z.discriminatedUnion('type', [
