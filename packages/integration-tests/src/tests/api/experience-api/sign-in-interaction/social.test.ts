@@ -81,6 +81,11 @@ describe('social sign-in and sign-up', () => {
   });
 
   it('should successfully sign-up with social but not sync email if the email is registered by another user', async () => {
+    const connectorId = connectorIdMap.get(mockSocialConnectorId);
+    if (!connectorId) {
+      throw new Error(`Connector not found.`);
+    }
+
     const { userProfile, user } = await generateNewUser({
       primaryEmail: true,
     });
@@ -88,7 +93,7 @@ describe('social sign-in and sign-up', () => {
     const { primaryEmail } = userProfile;
 
     const userId = await signInWithSocial(
-      connectorIdMap.get(mockSocialConnectorId)!,
+      connectorId,
       {
         id: generateStandardId(),
         email: primaryEmail,
@@ -106,7 +111,12 @@ describe('social sign-in and sign-up', () => {
   });
 
   it('should successfully sign-in with social and sync name', async () => {
-    const userId = await signInWithSocial(connectorIdMap.get(mockSocialConnectorId)!, {
+    const connectorId = connectorIdMap.get(mockSocialConnectorId);
+    if (!connectorId) {
+      throw new Error(`Connector not found.`);
+    }
+
+    const userId = await signInWithSocial(connectorId, {
       id: socialUserId,
       email,
       name: 'John Doe',
@@ -130,12 +140,17 @@ describe('social sign-in and sign-up', () => {
   });
 
   it('should successfully sign-in with linked email and sync name', async () => {
+    const connectorId = connectorIdMap.get(mockSocialConnectorId);
+    if (!connectorId) {
+      throw new Error(`Connector not found.`);
+    }
+
     const { userProfile, user } = await generateNewUser({
       primaryEmail: true,
     });
 
     const userId = await signInWithSocial(
-      connectorIdMap.get(mockSocialConnectorId)!,
+      connectorId,
       {
         id: socialUserId,
         email: userProfile.primaryEmail,
@@ -160,7 +175,7 @@ describe('social sign-in and sign-up', () => {
 
     // Should delete the token set when the connector token storage is disabled
     if (isDevFeaturesEnabled) {
-      await updateConnectorConfig(connectorIdMap.get(mockSocialConnectorId)!, {
+      await updateConnectorConfig(connectorId, {
         enableTokenStorage: false,
       });
 
