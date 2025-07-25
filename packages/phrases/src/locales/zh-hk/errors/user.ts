@@ -42,6 +42,9 @@ const user = {
   phone_required: '手機號碼是必填識別符，你不能將其設為 null。',
   enterprise_sso_identity_not_exists:
     '該使用者沒有企業身份鏈接到指定的 SSO 連接器 ID：{{ ssoConnectorId }}。',
+  /** UNTRANSLATED */
+  identity_not_exists_in_current_user:
+    'The specified identity does not exist in the current user account. Please link the identity before proceeding.',
 };
 
 export default Object.freeze(user);

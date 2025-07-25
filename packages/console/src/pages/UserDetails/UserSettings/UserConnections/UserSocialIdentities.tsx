@@ -7,12 +7,12 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
+import ConnectorLogo from '@/components/ConnectorLogo';
 import ConnectorName from '@/components/ConnectorName';
 import ConnectorTokenStatus from '@/components/ConnectorTokenStatus';
 import Button from '@/ds-components/Button';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
-import ImageWithErrorFallback from '@/ds-components/ImageWithErrorFallback';
 import Table from '@/ds-components/Table';
 import type { RequestError } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
@@ -28,6 +28,7 @@ type RowData = {
   target: ConnectorResponse['target'];
   identityId?: string;
   logo?: ConnectorResponse['logo'];
+  logoDark?: ConnectorResponse['logoDark'];
   name: ConnectorResponse['name'] | string;
   tokenStatus: {
     isTokenStorageSupported?: boolean;
@@ -70,11 +71,12 @@ function UserSocialIdentities({ userId }: Props) {
     const connectorGroups = getConnectorGroups(connectors);
 
     return identities.map(({ identity, tokenSecret, target }): RowData => {
-      const { logo, name, isTokenStorageSupported } =
+      const { logo, logoDark, name, isTokenStorageSupported } =
         connectorGroups.find((group) => group.target === target) ?? {};
 
       return {
         logo,
+        logoDark,
         name: name ?? t('connectors.unknown'),
         target,
         identityId: identity.userId,
@@ -97,66 +99,69 @@ function UserSocialIdentities({ userId }: Props) {
           )}
         </div>
       )}
-      <Table
-        hasBorder
-        rowGroups={[{ key: 'identities', data: rowData }]}
-        rowIndexKey="target"
-        isLoading={isLoading}
-        errorMessage={error?.body?.message ?? error?.message}
-        columns={[
-          {
-            title: t('user_details.connectors.connectors'),
-            dataIndex: 'name',
-            colSpan: 4,
-            render: ({ logo, name }) => (
-              <div className={styles.connectorName}>
-                <ImageWithErrorFallback className={styles.icon} src={logo} alt="logo" />
-                <div className={styles.name}>
-                  <ConnectorName name={name} />
+      {(isLoading || hasRows || error) && (
+        <Table
+          hasBorder
+          isRowHoverEffectDisabled
+          rowGroups={[{ key: 'identities', data: rowData }]}
+          rowIndexKey="target"
+          isLoading={isLoading}
+          errorMessage={error?.body?.message ?? error?.message}
+          columns={[
+            {
+              title: t('user_details.connectors.connectors'),
+              dataIndex: 'name',
+              colSpan: 4,
+              render: ({ logo = '', logoDark = '', name }) => (
+                <div className={styles.connectorName}>
+                  <ConnectorLogo data={{ logo, logoDark }} size="small" />
+                  <div className={styles.name}>
+                    <ConnectorName name={name} />
+                  </div>
                 </div>
-              </div>
-            ),
-          },
-          {
-            title: t('user_details.connectors.user_id'),
-            dataIndex: 'identityId',
-            colSpan: 7,
-            render: ({ identityId = '' }) => (
-              <div className={styles.userId}>
-                <span>{identityId || '-'}</span>
-                {identityId && <CopyToClipboard variant="icon" value={identityId} />}
-              </div>
-            ),
-          },
-          {
-            title: t('user_details.connections.token_status_column'),
-            dataIndex: 'tokenStatus',
-            colSpan: 3,
-            render: ({ tokenStatus: { isTokenStorageSupported, tokenSecret } }) => (
-              <ConnectorTokenStatus
-                isTokenStorageSupported={isTokenStorageSupported}
-                tokenSecret={tokenSecret}
-              />
-            ),
-          },
-          {
-            title: null,
-            dataIndex: 'action',
-            colSpan: 2,
-            render: ({ target }) => (
-              <Button
-                title="general.manage"
-                type="text"
-                size="small"
-                onClick={() => {
-                  navigate(`/users/${userId}/social-identities/${target}`);
-                }}
-              />
-            ),
-          },
-        ]}
-        onRetry={async () => mutate(undefined, true)}
-      />
+              ),
+            },
+            {
+              title: t('user_details.connectors.user_id'),
+              dataIndex: 'identityId',
+              colSpan: 6,
+              render: ({ identityId = '' }) => (
+                <div className={styles.userId}>
+                  <span>{identityId || '-'}</span>
+                  {identityId && <CopyToClipboard variant="icon" value={identityId} />}
+                </div>
+              ),
+            },
+            {
+              title: t('user_details.connections.token_status_column'),
+              dataIndex: 'tokenStatus',
+              colSpan: 4,
+              render: ({ tokenStatus: { isTokenStorageSupported, tokenSecret } }) => (
+                <ConnectorTokenStatus
+                  isTokenStorageSupported={isTokenStorageSupported}
+                  tokenSecret={tokenSecret}
+                />
+              ),
+            },
+            {
+              title: null,
+              dataIndex: 'action',
+              colSpan: 2,
+              render: ({ target }) => (
+                <Button
+                  title="general.manage"
+                  type="text"
+                  size="small"
+                  onClick={() => {
+                    navigate(`/users/${userId}/social-identities/${target}`);
+                  }}
+                />
+              ),
+            },
+          ]}
+          onRetry={async () => mutate(undefined, true)}
+        />
+      )}
     </FormField>
   );
 }

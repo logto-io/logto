@@ -138,65 +138,68 @@ function UserSsoIdentities({ userId }: Props) {
           )}
         </div>
       )}
-      <Table
-        hasBorder
-        rowGroups={[{ key: 'ssoIdentities', data: rowData }]}
-        rowIndexKey="ssoConnectorId"
-        isLoading={isLoading}
-        errorMessage={error?.body?.message ?? error?.message}
-        columns={[
-          {
-            title: t('user_details.sso_connectors.connectors'),
-            dataIndex: 'name',
-            colSpan: 4,
-            render: ({ providerLogo, providerLogoDark, branding, name }) => (
-              <ConnectorName
-                providerLogo={providerLogo}
-                providerLogoDark={providerLogoDark}
-                branding={branding}
-                name={name}
-              />
-            ),
-          },
-          {
-            title: t('user_details.sso_connectors.enterprise_id'),
-            dataIndex: 'userIdentity',
-            colSpan: 7,
-            render: ({ identityId }) => (
-              <div className={styles.userId}>
-                <span>{identityId || '-'}</span>
-                {identityId && <CopyToClipboard variant="icon" value={identityId} />}
-              </div>
-            ),
-          },
-          {
-            title: t('user_details.connections.token_status_column'),
-            dataIndex: 'tokenStatus',
-            colSpan: 3,
-            render: ({ tokenStatus: { isTokenStorageSupported, tokenSecret } }) => (
-              <ConnectorTokenStatus
-                isTokenStorageSupported={isTokenStorageSupported}
-                tokenSecret={tokenSecret}
-              />
-            ),
-          },
-          {
-            title: null,
-            dataIndex: 'action',
-            colSpan: 2,
-            render: ({ ssoConnectorId }) => (
-              <Button
-                title="general.manage"
-                type="text"
-                size="small"
-                onClick={() => {
-                  navigate(`/users/${userId}/sso-identities/${ssoConnectorId}`);
-                }}
-              />
-            ),
-          },
-        ]}
-      />
+      {(isLoading || hasRows || error) && (
+        <Table
+          isRowHoverEffectDisabled
+          hasBorder
+          rowGroups={[{ key: 'ssoIdentities', data: rowData }]}
+          rowIndexKey="ssoConnectorId"
+          isLoading={isLoading}
+          errorMessage={error?.body?.message ?? error?.message}
+          columns={[
+            {
+              title: t('user_details.sso_connectors.connectors'),
+              dataIndex: 'name',
+              colSpan: 4,
+              render: ({ providerLogo, providerLogoDark, branding, name }) => (
+                <ConnectorName
+                  providerLogo={providerLogo}
+                  providerLogoDark={providerLogoDark}
+                  branding={branding}
+                  name={name}
+                />
+              ),
+            },
+            {
+              title: t('user_details.sso_connectors.enterprise_id'),
+              dataIndex: 'userIdentity',
+              colSpan: 6,
+              render: ({ identityId }) => (
+                <div className={styles.userId}>
+                  <span>{identityId || '-'}</span>
+                  {identityId && <CopyToClipboard variant="icon" value={identityId} />}
+                </div>
+              ),
+            },
+            {
+              title: t('user_details.connections.token_status_column'),
+              dataIndex: 'tokenStatus',
+              colSpan: 4,
+              render: ({ tokenStatus: { isTokenStorageSupported, tokenSecret } }) => (
+                <ConnectorTokenStatus
+                  isTokenStorageSupported={isTokenStorageSupported}
+                  tokenSecret={tokenSecret}
+                />
+              ),
+            },
+            {
+              title: null,
+              dataIndex: 'action',
+              colSpan: 2,
+              render: ({ ssoConnectorId }) => (
+                <Button
+                  title="general.manage"
+                  type="text"
+                  size="small"
+                  onClick={() => {
+                    navigate(`/users/${userId}/sso-identities/${ssoConnectorId}`);
+                  }}
+                />
+              ),
+            },
+          ]}
+        />
+      )}
     </FormField>
   );
 }

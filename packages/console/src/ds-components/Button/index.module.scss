@@ -207,6 +207,31 @@
     }
   }
 
+  &.outlineDanger {
+    background-color: inherit;
+    border-color: var(--color-error);
+    border-width: 1px;
+    border-style: solid;
+    color: var(--color-error);
+
+    &:disabled {
+      border-color: var(--color-neutral-70);
+      color: var(--color-neutral-70);
+    }
+
+    &:focus-visible {
+      outline: 3px solid var(--color-danger-focused);
+    }
+
+    &:active {
+      background: var(--color-danger-focused);
+    }
+
+    &:not(:disabled):not(:active):hover {
+      background: var(--color-overlay-danger-hover);
+    }
+  }
+
   &.text {
     background: none;
     border-color: transparent;

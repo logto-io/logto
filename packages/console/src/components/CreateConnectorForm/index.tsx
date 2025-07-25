@@ -125,6 +125,25 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
     >
       <ModalLayout
         title={cardTitle}
+        subtitle={
+          isDevFeaturesEnabled ? (
+            <div className={styles.label}>
+              <Trans
+                components={{
+                  a: (
+                    <TextLink
+                      href={getDocumentationUrl('/integrations')}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    />
+                  ),
+                }}
+              >
+                {t('connectors.create_form.third_party_connectors')}
+              </Trans>
+            </div>
+          ) : undefined
+        }
         footer={
           existingConnectors && (
             <Footer
@@ -141,23 +160,7 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
       >
         {isLoading && <Skeleton />}
         {factoriesError?.message ?? connectorsError?.message}
-        {isDevFeaturesEnabled && (
-          <div className={styles.label}>
-            <Trans
-              components={{
-                a: (
-                  <TextLink
-                    href={getDocumentationUrl('/integrations')}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  />
-                ),
-              }}
-            >
-              {t('connectors.create_form.third_party_connectors')}
-            </Trans>
-          </div>
-        )}
+
         <ConnectorRadioGroup
           name="group"
           groups={defaultGroups}

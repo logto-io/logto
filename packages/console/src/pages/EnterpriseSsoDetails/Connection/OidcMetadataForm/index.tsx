@@ -8,6 +8,7 @@ import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Switch from '@/ds-components/Switch';
 import TextInput from '@/ds-components/TextInput';
+import Textarea from '@/ds-components/Textarea';
 import { uriValidator } from '@/utils/validator';
 
 import { type OidcConnectorConfig, type OidcProviderConfig } from '../../types/oidc';
@@ -83,7 +84,7 @@ function OidcMetadataForm({ providerConfig, config, providerName }: Props) {
           )}
       </FormField>
       <FormField title="enterprise_sso.metadata.oidc.scope_field_name">
-        <TextInput {...register('scope')} error={Boolean(errors.scope)} />
+        <Textarea rows={5} {...register('scope')} error={Boolean(errors.scope)} />
       </FormField>
       {providerName === SsoProviderName.AZURE_AD_OIDC && (
         <FormField

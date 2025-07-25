@@ -33,7 +33,7 @@ const user_identity_details = {
   },
   token_storage: {
     /** UNTRANSLATED */
-    title: 'Token status',
+    title: 'Access token',
     /** UNTRANSLATED */
     description:
       'Store access and refresh tokens from {{connectorName}} in the Secret Vault. Allows automated API calls without repeated user consent.',
@@ -42,15 +42,22 @@ const user_identity_details = {
     /** UNTRANSLATED */
     title: 'Access token',
     /** UNTRANSLATED */
-    description:
-      'This access token has expired. Renewal occurs automatically on the next API request using the refresh token. If the refresh token is expired, user re-authentication is required.',
+    description_active:
+      'Access token is active and securely stored in the Token Vault. Your product can use it to access the {{connectorName}} APIs.',
+    /** UNTRANSLATED */
+    description_inactive:
+      'This access token is inactive (e.g., revoked). Users must re-authorize access to restore functionality.',
+    /** UNTRANSLATED */
+    description_expired:
+      'This access token has expired. Renewal occurs automatically on the next API request using the refresh token. If the refresh token is not available, user re-authentication is required.',
   },
   refresh_token: {
     /** UNTRANSLATED */
-    title: 'Refresh token',
+    available:
+      'Refresh token is available. If the access token expires, it will be automatically refreshed using the refresh token.',
     /** UNTRANSLATED */
-    description:
-      'The ‘offline_access’ scope is available. A new refresh token will be issued with each token request.',
+    not_available:
+      'Refresh token is not available. After the access token expires, users must re-authenticate to obtain new tokens.',
   },
   /** UNTRANSLATED */
   token_status: 'Token status',
@@ -72,9 +79,6 @@ const user_identity_details = {
     confirmation_message:
       'Are you sure you want to delete tokens?  Logto Secret Vault will remove the stored {{connectorName}} access and refresh tokens. This user must re-authorize to restore {{connectorName}} API access.',
   },
-  /** UNTRANSLATED */
-  inactive_description:
-    'The access token is inactive (e.g., revoked). Users must re-authorize access to restore functionality.',
   token_storage_disabled: {
     /** UNTRANSLATED */
     title: 'Token storage is disabled for this connector',

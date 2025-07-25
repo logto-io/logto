@@ -50,6 +50,9 @@ const user = {
     'El número de teléfono es un identificador requerido, no puedes establecerlo como nulo.',
   enterprise_sso_identity_not_exists:
     'El usuario no tiene una identidad empresarial vinculada al ID de conector SSO especificado: {{ ssoConnectorId }}.',
+  /** UNTRANSLATED */
+  identity_not_exists_in_current_user:
+    'The specified identity does not exist in the current user account. Please link the identity before proceeding.',
 };
 
 export default Object.freeze(user);

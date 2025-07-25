@@ -44,6 +44,9 @@ const user = {
   phone_required: '휴대전화번호는 필수 식별자이며, null 로 설정할 수 없습니다.',
   enterprise_sso_identity_not_exists:
     '사용자는 지정된 SSO 커넥터 ID: {{ssoConnectorId}}에 연결된 엔터프라이즈 아이덴티티가 없습니다.',
+  /** UNTRANSLATED */
+  identity_not_exists_in_current_user:
+    'The specified identity does not exist in the current user account. Please link the identity before proceeding.',
 };
 
 export default Object.freeze(user);
