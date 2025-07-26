@@ -85,6 +85,11 @@ export const bindMfa = async (payload: BindMfaPayload, verificationId: string) =
       // No need to verify backup codes
       break;
     }
+    case MfaFactor.EmailVerificationCode:
+    case MfaFactor.PhoneVerificationCode: {
+      // TODO: Implement email and phone verification code binding
+      break;
+    }
   }
 
   await addMfa(payload.type, verificationId);
@@ -118,6 +123,11 @@ export const verifyMfa = async (payload: VerifyMfaPayload, verificationId?: stri
           code,
         },
       });
+      break;
+    }
+    case MfaFactor.EmailVerificationCode:
+    case MfaFactor.PhoneVerificationCode: {
+      // TODO: Implement email and phone verification code verification
       break;
     }
   }
