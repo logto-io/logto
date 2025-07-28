@@ -21,6 +21,10 @@ const sign_in_experiences = {
     'Email verification code cannot be used for MFA when email verification is enabled for sign-in.',
   phone_verification_code_cannot_be_used_for_mfa:
     'SMS verification code cannot be used for MFA when SMS verification is enabled for sign-in.',
+  email_verification_code_cannot_be_used_for_sign_in:
+    'Email verification code cannot be used for sign-in when it is enabled for MFA.',
+  phone_verification_code_cannot_be_used_for_sign_in:
+    'SMS verification code cannot be used for sign-in when it is enabled for MFA.',
   duplicated_sign_up_identifiers: 'Duplicate sign-up identifiers detected.',
   missing_sign_up_identifiers: 'Primary sign-up identifier cannot be empty.',
   invalid_custom_email_blocklist_format:

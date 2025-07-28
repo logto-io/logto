@@ -1,4 +1,4 @@
-import { ConnectorType, SignInIdentifier } from '@logto/schemas';
+import { ConnectorType, SignInIdentifier, MfaFactor, MfaPolicy } from '@logto/schemas';
 
 import {
   mockAliyunDmConnector,
@@ -172,5 +172,107 @@ describe('validate sign-in', () => {
         code: 'sign_in_experiences.at_least_one_authentication_factor',
       })
     );
+  });
+
+  describe('MFA conflicts', () => {
+    test('should throw when email verification code is used for both sign-in and MFA', () => {
+      expect(() => {
+        validateSignIn(
+          {
+            methods: [
+              {
+                ...mockSignInMethod,
+                identifier: SignInIdentifier.Email,
+                verificationCode: true,
+                password: false,
+              },
+            ],
+          },
+          mockSignUp,
+          enabledConnectors,
+          {
+            policy: MfaPolicy.Mandatory,
+            factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
+          }
+        );
+      }).toMatchError(
+        new RequestError({
+          code: 'sign_in_experiences.email_verification_code_cannot_be_used_for_sign_in',
+        })
+      );
+    });
+
+    test('should throw when phone verification code is used for both sign-in and MFA', () => {
+      expect(() => {
+        validateSignIn(
+          {
+            methods: [
+              {
+                ...mockSignInMethod,
+                identifier: SignInIdentifier.Phone,
+                verificationCode: true,
+                password: false,
+              },
+            ],
+          },
+          mockSignUp,
+          enabledConnectors,
+          {
+            policy: MfaPolicy.Mandatory,
+            factors: [MfaFactor.PhoneVerificationCode, MfaFactor.BackupCode],
+          }
+        );
+      }).toMatchError(
+        new RequestError({
+          code: 'sign_in_experiences.phone_verification_code_cannot_be_used_for_sign_in',
+        })
+      );
+    });
+
+    test('should pass when email is used with password and MFA uses email verification code', () => {
+      expect(() => {
+        validateSignIn(
+          {
+            methods: [
+              {
+                ...mockSignInMethod,
+                identifier: SignInIdentifier.Email,
+                verificationCode: false,
+                password: true,
+              },
+            ],
+          },
+          mockSignUp,
+          enabledConnectors,
+          {
+            policy: MfaPolicy.Mandatory,
+            factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
+          }
+        );
+      }).not.toThrow();
+    });
+
+    test('should pass when phone is used with password and MFA uses phone verification code', () => {
+      expect(() => {
+        validateSignIn(
+          {
+            methods: [
+              {
+                ...mockSignInMethod,
+                identifier: SignInIdentifier.Phone,
+                verificationCode: false,
+                password: true,
+              },
+            ],
+          },
+          mockSignUp,
+          enabledConnectors,
+          {
+            policy: MfaPolicy.Mandatory,
+            factors: [MfaFactor.PhoneVerificationCode, MfaFactor.TOTP],
+          }
+        );
+      }).not.toThrow();
+    });
   });
 });
