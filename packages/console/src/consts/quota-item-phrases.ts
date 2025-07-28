@@ -30,7 +30,6 @@ export const skuQuotaItemPhrasesMap: Record<
   bringYourUiEnabled: 'bring_your_ui_enabled.name',
   idpInitiatedSsoEnabled: 'idp_initiated_sso_enabled.name',
   samlApplicationsLimit: 'saml_applications_limit.name',
-  captchaEnabled: 'captcha_enabled.name',
   securityFeaturesEnabled: 'security_features_enabled.name',
 };
 
@@ -61,7 +60,6 @@ export const skuQuotaItemUnlimitedPhrasesMap: Record<
   bringYourUiEnabled: 'bring_your_ui_enabled.unlimited',
   idpInitiatedSsoEnabled: 'idp_initiated_sso_enabled.unlimited',
   samlApplicationsLimit: 'saml_applications_limit.unlimited',
-  captchaEnabled: 'captcha_enabled.unlimited',
   securityFeaturesEnabled: 'security_features_enabled.unlimited',
 };
 
@@ -92,7 +90,6 @@ export const skuQuotaItemLimitedPhrasesMap: Record<
   bringYourUiEnabled: 'bring_your_ui_enabled.limited',
   idpInitiatedSsoEnabled: 'idp_initiated_sso_enabled.limited',
   samlApplicationsLimit: 'saml_applications_limit.limited',
-  captchaEnabled: 'captcha_enabled.limited',
   securityFeaturesEnabled: 'security_features_enabled.limited',
 };
 
@@ -123,7 +120,6 @@ export const skuQuotaItemNotEligiblePhrasesMap: Record<
   bringYourUiEnabled: 'bring_your_ui_enabled.not_eligible',
   idpInitiatedSsoEnabled: 'idp_initiated_sso_enabled.not_eligible',
   samlApplicationsLimit: 'saml_applications_limit.not_eligible',
-  captchaEnabled: 'captcha_enabled.not_eligible',
   securityFeaturesEnabled: 'security_features_enabled.not_eligible',
 };
 /* === for new pricing model === */
