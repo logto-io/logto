@@ -1,7 +1,6 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import { Theme } from '@logto/schemas';
 import type { ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import LearnMore, { type Props as LearnMoreProps } from '@/components/LearnMore';
 import useTheme from '@/hooks/use-theme';
@@ -20,7 +19,6 @@ type Props = {
 };
 
 function TablePlaceholder({ image, imageDark, title, description, learnMoreLink, action }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const theme = useTheme();
 
   return (

@@ -1,14 +1,165 @@
 @use '@/scss/underscore' as _;
 
-.buttonWrapper {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-
 .tags {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.tableContainer {
+  width: 100%;
+  border-radius: 12px;
+  padding: _.unit(3);
+  background-color: var(--color-layer-1);
+  overflow: hidden;
+
+  .buttonWrapper {
+    padding-bottom: _.unit(3);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .row {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 30% 30% 40%;
+    border-top: 1px solid var(--color-divider);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-hover);
+      border-radius: 8px;
+      border-top-color: transparent;
+    }
+  }
+
+  div[draggable='true'] {
+    cursor: move;
+
+    &:hover + div[draggable='true'] {
+      > .row {
+        border-top-color: transparent;
+      }
+    }
+  }
+
+  .cell {
+    padding: _.unit(3);
+    display: flex;
+    align-items: center;
+    gap: _.unit(3);
+    font: var(--font-body-2);
+    color: var(--color-text);
+
+    .draggableIcon {
+      color: var(--color-text-secondary);
+      flex-shrink: 0;
+      cursor: move;
+    }
+
+    .fieldName {
+      color: var(--color-text-link);
+    }
+  }
+
+  .row.header {
+    &:hover {
+      background-color: transparent;
+      border-top-color: var(--color-divider);
+      border-radius: 0;
+      cursor: default;
+    }
+
+    .cell {
+      font: var(--font-label-2);
+    }
+  }
+}
+
+.bone {
+  height: 26px;
+  max-width: 344px;
+  @include _.shimmering-animation;
+}
+
+.row.skeleton {
+  &:hover {
+    background-color: transparent;
+    border-top-color: var(--color-divider);
+    border-radius: 0;
+    cursor: default;
+  }
+
+  .itemPreview {
+    display: flex;
+    align-items: center;
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      margin-inline-end: _.unit(4);
+      border-radius: 12px;
+      flex-shrink: 0;
+      @include _.shimmering-animation;
+    }
+
+    .content {
+      width: 100%;
+
+      .title {
+        height: 12px;
+        @include _.shimmering-animation;
+      }
+
+      .subTitle {
+        height: 8px;
+        margin-top: _.unit(2);
+        @include _.shimmering-animation;
+      }
+    }
+  }
+
+  .bone {
+    width: 100%;
+    height: 32px;
+  }
+}
+
+.emptyPlaceholder {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid var(--color-divider);
+  padding-bottom: _.unit(3);
+
+  .topSpace {
+    flex: 2;
+  }
+
+  .bottomSpace {
+    flex: 3;
+  }
+}
+
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: _.unit(2);
+  border-top: 1px solid var(--color-divider);
+  padding-bottom: _.unit(3);
+
+  .label {
+    text-align: center;
+    font: var(--font-label-2);
+  }
+
+  .errorMessage {
+    font: var(--font-body-2);
+    color: var(--color-neutral-50);
+  }
 }
