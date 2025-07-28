@@ -34,6 +34,7 @@ create table users (
     unique (tenant_id, primary_phone)
 );
 
+/* Unique index on (tenant_id, id) required for foreign key constraint in organization_user_relations table. */
 create unique index users__id
   on users (tenant_id, id);
 
