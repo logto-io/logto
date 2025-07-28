@@ -34,7 +34,7 @@ create table users (
     unique (tenant_id, primary_phone)
 );
 
-create index users__id
+create unique index users__id
   on users (tenant_id, id);
 
 create index users__name
