@@ -200,7 +200,7 @@ const getTokenResponseAndUserInfo =
 
       return {
         userInfo: parseUserInfoResponse(rawUserInfo),
-        tokenResponse: tokenResponse ? accessTokenResponseGuard.parse(tokenResponse) : undefined,
+        tokenResponse,
       };
     } catch (error: unknown) {
       return getUserInfoErrorHandler(error);
