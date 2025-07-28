@@ -47,6 +47,11 @@ export const convertBindMfaToMfaVerification = (bindMfa: BindMfa): MfaVerificati
     };
   }
 
+  if (type === MfaFactor.EmailVerificationCode || type === MfaFactor.PhoneVerificationCode) {
+    // TODO @wangsijie: Implement this later
+    throw new Error('Not implemented yet');
+  }
+
   const { credentialId, counter, publicKey, transports, agent } = bindMfa;
   return {
     ...base,
