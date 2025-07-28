@@ -42,6 +42,7 @@ describe('custom profile fields API', () => {
         name: '',
         type: CustomProfileFieldType.Text,
         label: 'Email address',
+        required: true,
       }),
       {
         code: 'custom_profile_fields.invalid_name',
@@ -81,6 +82,7 @@ describe('custom profile fields API', () => {
         name: '',
         type: CustomProfileFieldType.Text,
         label: 'Invalid name',
+        required: true,
       }),
       {
         code: 'custom_profile_fields.invalid_name',
@@ -92,6 +94,7 @@ describe('custom profile fields API', () => {
         name: 'customData.test',
         type: CustomProfileFieldType.Text,
         label: 'Invalid name',
+        required: true,
       }),
       {
         code: 'custom_profile_fields.invalid_name',
@@ -103,6 +106,7 @@ describe('custom profile fields API', () => {
         name: '123-456',
         type: CustomProfileFieldType.Text,
         label: 'Invalid name',
+        required: true,
       }),
       {
         code: 'custom_profile_fields.invalid_name',
@@ -117,6 +121,7 @@ describe('custom profile fields API', () => {
         name: 'primaryEmail',
         type: CustomProfileFieldType.Text,
         label: 'Email address',
+        required: true,
       }),
       {
         code: 'custom_profile_fields.name_conflict_sign_in_identifier',
@@ -139,9 +144,27 @@ describe('custom profile fields API', () => {
       description: 'Your fullname (Given name and family name)',
       config: {
         parts: [
-          { key: 'givenName', enabled: true },
-          { key: 'middleName', enabled: true },
-          { key: 'familyName', enabled: true },
+          {
+            name: 'givenName',
+            enabled: true,
+            type: CustomProfileFieldType.Text,
+            label: 'Given name',
+            required: true,
+          },
+          {
+            name: 'middleName',
+            enabled: true,
+            type: CustomProfileFieldType.Text,
+            label: 'Middle name',
+            required: true,
+          },
+          {
+            name: 'familyName',
+            enabled: true,
+            type: CustomProfileFieldType.Text,
+            label: 'Family name',
+            required: true,
+          },
         ],
       },
     } satisfies Partial<FullnameProfileField>;

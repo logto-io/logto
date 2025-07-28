@@ -1,9 +1,11 @@
 import {
+  CustomProfileFieldType,
   InteractionEvent,
   MfaFactor,
   MissingProfile,
   SignInIdentifier,
   type SsoConnectorMetadata,
+  supportedDateFormat,
   VerificationType,
 } from '@logto/schemas';
 import * as s from 'superstruct';
@@ -189,19 +191,50 @@ export const addressFieldValueGuard = s.optional(
   })
 );
 
+const profileFieldTypeGuard = s.enums(Object.values(CustomProfileFieldType));
+
+const dateFormatEnumGuard = s.enums(Object.values(supportedDateFormat));
+
+export const dateFieldConfigGuard = s.object({
+  format: dateFormatEnumGuard,
+  customFormat: s.optional(s.string()),
+});
+
+const baseConfigPartGuard = s.object({
+  enabled: s.boolean(),
+  type: profileFieldTypeGuard,
+  label: s.string(),
+  description: s.optional(s.string()),
+  required: s.boolean(),
+  config: s.optional(
+    s.object({
+      placeholder: s.optional(s.string()),
+      minLength: s.optional(s.number()),
+      maxLength: s.optional(s.number()),
+      minValue: s.optional(s.number()),
+      maxValue: s.optional(s.number()),
+      options: s.optional(s.array(s.object({ value: s.string(), label: s.string() }))),
+      format: s.optional(s.string()),
+      customFormat: s.optional(s.string()),
+    })
+  ),
+});
+
 export const addressFieldConfigGuard = s.object({
   parts: s.array(
-    s.object({
-      key: s.union([
-        s.literal('streetAddress'),
-        s.literal('locality'),
-        s.literal('region'),
-        s.literal('postalCode'),
-        s.literal('country'),
-        s.literal('formatted'),
-      ]),
-      enabled: s.boolean(),
-    })
+    s.assign(
+      baseConfigPartGuard,
+      s.object({
+        name: s.union([
+          s.literal('streetAddress'),
+          s.literal('locality'),
+          s.literal('region'),
+          s.literal('postalCode'),
+          s.literal('country'),
+          s.literal('formatted'),
+        ]),
+      })
+    )
   ),
 });
 
@@ -215,9 +248,11 @@ export const fullnameFieldValueGuard = s.optional(
 
 export const fullnameFieldConfigGuard = s.object({
   parts: s.array(
-    s.object({
-      key: s.union([s.literal('givenName'), s.literal('middleName'), s.literal('familyName')]),
-      enabled: s.boolean(),
-    })
+    s.assign(
+      baseConfigPartGuard,
+      s.object({
+        name: s.union([s.literal('givenName'), s.literal('middleName'), s.literal('familyName')]),
+      })
+    )
   ),
 });

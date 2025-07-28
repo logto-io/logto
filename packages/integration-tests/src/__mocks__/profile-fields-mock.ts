@@ -51,6 +51,7 @@ export const websiteData = {
   name: `website`,
   type: CustomProfileFieldType.Url,
   label: 'Website',
+  required: true,
   config: {
     placeholder: 'https://www.example.com',
   },
@@ -63,11 +64,41 @@ export const addressData = {
   required: true,
   config: {
     parts: [
-      { key: 'streetAddress', enabled: true },
-      { key: 'locality', enabled: true },
-      { key: 'region', enabled: true },
-      { key: 'postalCode', enabled: true },
-      { key: 'country', enabled: true },
+      {
+        name: 'streetAddress',
+        enabled: true,
+        type: CustomProfileFieldType.Text,
+        label: 'Street address',
+        required: true,
+      },
+      {
+        name: 'locality',
+        enabled: true,
+        type: CustomProfileFieldType.Text,
+        label: 'Locality',
+        required: true,
+      },
+      {
+        name: 'region',
+        enabled: true,
+        type: CustomProfileFieldType.Text,
+        label: 'Region',
+        required: true,
+      },
+      {
+        name: 'postalCode',
+        enabled: true,
+        type: CustomProfileFieldType.Text,
+        label: 'Postal code',
+        required: true,
+      },
+      {
+        name: 'country',
+        enabled: true,
+        type: CustomProfileFieldType.Text,
+        label: 'Country',
+        required: true,
+      },
     ],
   },
 } satisfies AddressProfileField;
@@ -79,8 +110,20 @@ export const fullnameData = {
   required: true,
   config: {
     parts: [
-      { key: 'givenName', enabled: true },
-      { key: 'familyName', enabled: true },
+      {
+        name: 'givenName',
+        enabled: true,
+        type: CustomProfileFieldType.Text,
+        label: 'Given name',
+        required: true,
+      },
+      {
+        name: 'familyName',
+        enabled: true,
+        type: CustomProfileFieldType.Text,
+        label: 'Family name',
+        required: true,
+      },
     ],
   },
 } satisfies FullnameProfileField;

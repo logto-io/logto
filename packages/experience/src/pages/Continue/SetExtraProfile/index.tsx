@@ -23,13 +23,13 @@ const SetExtraProfile = ({ interactionEvent }: Props) => {
         if (type === CustomProfileFieldType.Address) {
           return {
             ...accumulator,
-            address: Object.fromEntries(config.parts?.map(({ key }) => [key, '']) ?? []),
+            address: Object.fromEntries(config.parts?.map(({ name }) => [name, '']) ?? []),
           };
         }
         if (type === CustomProfileFieldType.Fullname) {
           return {
             ...accumulator,
-            ...Object.fromEntries(config.parts?.map(({ key }) => [key, '']) ?? []),
+            ...Object.fromEntries(config.parts?.map(({ name }) => [name, '']) ?? []),
           };
         }
         return {

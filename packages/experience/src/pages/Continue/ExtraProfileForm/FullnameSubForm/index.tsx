@@ -5,10 +5,11 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import * as s from 'superstruct';
 
-import { InputField } from '@/components/InputFields';
+import PrimitiveProfileInputField from '@/components/InputFields/PrimitiveProfileInputField';
 import { fullnameFieldConfigGuard } from '@/types/guard';
 
 import useFieldLabel from '../use-field-label';
+import useValidateField from '../use-validate-field';
 
 import styles from './index.module.scss';
 
@@ -21,6 +22,8 @@ type Props = {
 const FullnameSubForm = ({ field }: Props) => {
   const { t } = useTranslation();
   const getFieldLabel = useFieldLabel();
+  const validateField = useValidateField();
+
   const { required, name, label, description, config } = field;
   s.assert(config, fullnameFieldConfigGuard);
 
@@ -31,7 +34,7 @@ const FullnameSubForm = ({ field }: Props) => {
 
   const enabledParts = useMemo(() => config.parts.filter(({ enabled }) => enabled), [config.parts]);
   const hasFullnameError = Object.entries(errors).some(([errorKey]) =>
-    enabledParts.some(({ key }) => key === errorKey)
+    enabledParts.some(({ name }) => name === errorKey)
   );
 
   return (
@@ -39,18 +42,19 @@ const FullnameSubForm = ({ field }: Props) => {
       <div
         className={classNames(styles.flexWrapper, enabledParts.length % 2 === 1 && styles.vertical)}
       >
-        {enabledParts.map(({ key }) => (
+        {enabledParts.map((part) => (
           <Controller
-            key={key}
-            name={key}
+            key={part.name}
+            name={part.name}
             control={control}
-            rules={{ required }}
+            rules={{ required, validate: (value) => validateField(value, part) }}
             render={({ field: { onBlur, onChange, value } }) => (
-              <InputField
+              <PrimitiveProfileInputField
+                {...part}
                 className={styles.inputField}
-                label={t(`profile.${key}`)}
+                label={t(`profile.${part.name}`)}
                 value={value ?? ''}
-                isDanger={!!errors[key]}
+                isDanger={!!errors[part.name]}
                 onBlur={onBlur}
                 onChange={onChange}
               />

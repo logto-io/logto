@@ -12,15 +12,24 @@ export const mockCustomProfileFields: CustomProfileField[] = [
     config: {
       parts: [
         {
-          key: 'givenName',
+          name: 'givenName',
+          type: CustomProfileFieldType.Text,
+          label: 'Given name',
+          required: true,
           enabled: true,
         },
         {
-          key: 'middleName',
-          enabled: true,
+          name: 'middleName',
+          type: CustomProfileFieldType.Text,
+          label: 'Middle name',
+          required: true,
+          enabled: false,
         },
         {
-          key: 'familyName',
+          name: 'familyName',
+          type: CustomProfileFieldType.Text,
+          label: 'Family name',
+          required: true,
           enabled: true,
         },
       ],

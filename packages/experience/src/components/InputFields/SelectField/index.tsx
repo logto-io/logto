@@ -10,17 +10,19 @@ import InputField from '../InputField';
 import styles from './index.module.scss';
 
 type Props = {
+  readonly className?: string;
   readonly options: Array<{ value: string; label: string }>;
   readonly value?: string;
   readonly description?: Nullable<string>;
   readonly label?: string;
   readonly placeholder?: string;
   readonly errorMessage?: string;
-  readonly onBlur: () => void;
+  readonly onBlur?: () => void;
   readonly onChange: (value: string) => void;
 };
 
 const SelectField = ({
+  className,
   options,
   value,
   description,
@@ -37,7 +39,7 @@ const SelectField = ({
   );
 
   return (
-    <div className={styles.selectContainer}>
+    <div className={classNames(styles.selectContainer, className)}>
       <div ref={ref} className={styles.select}>
         <InputField
           readOnly

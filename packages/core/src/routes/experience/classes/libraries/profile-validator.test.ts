@@ -146,9 +146,9 @@ describe('ProfileValidator', () => {
           required: true,
           config: {
             parts: [
-              { key: 'givenName', enabled: true },
-              { key: 'middleName', enabled: true },
-              { key: 'familyName', enabled: true },
+              { name: 'givenName', enabled: true },
+              { name: 'middleName', enabled: true },
+              { name: 'familyName', enabled: true },
             ],
           },
         },

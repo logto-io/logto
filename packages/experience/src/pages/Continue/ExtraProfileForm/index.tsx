@@ -1,10 +1,10 @@
 import { CustomProfileFieldType, type CustomProfileField } from '@logto/schemas';
+import { condString } from '@silverhand/essentials';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import * as s from 'superstruct';
 
 import Button from '@/components/Button';
-import { InputField } from '@/components/InputFields';
-import SelectField from '@/components/InputFields/SelectField';
+import PrimitiveProfileInputField from '@/components/InputFields/PrimitiveProfileInputField';
 
 import AddressSubForm from './AddressSubForm';
 import FullnameSubForm from './FullnameSubForm';
@@ -46,45 +46,30 @@ const ExtraProfileForm = ({ customProfileFields, defaultValues, onSubmit }: Prop
           if (field.type === CustomProfileFieldType.Fullname) {
             return <FullnameSubForm key={field.name} field={field} />;
           }
-          const { name, type, label, description, config } = field;
+          const { name, type, label, description } = field;
           return (
             <Controller
               key={name}
               control={control}
               name={name}
-              rules={{ validate: (value) => validateField(value, field) }}
+              rules={{
+                validate: (value) =>
+                  validateField(value, { ...field, description: condString(description) }),
+              }}
               render={({ field: { onBlur, onChange, value } }) => {
                 if (type === CustomProfileFieldType.Address) {
                   return <AddressSubForm field={field} />;
                 }
 
                 s.assert(value, s.optional(s.string()));
-
-                if (type === CustomProfileFieldType.Select) {
-                  s.assert(
-                    config.options,
-                    s.array(s.object({ value: s.string(), label: s.string() }))
-                  );
-                  return (
-                    <SelectField
-                      label={getFieldLabel(name, label)}
-                      options={config.options}
-                      value={value}
-                      description={description}
-                      errorMessage={errors[name]?.message}
-                      onBlur={onBlur}
-                      onChange={onChange}
-                    />
-                  );
-                }
                 return (
-                  <InputField
-                    label={getFieldLabel(name, label)}
-                    description={description}
-                    value={value ?? ''}
-                    isDanger={!!errors[name]?.message}
+                  <PrimitiveProfileInputField
+                    {...field}
+                    label={label || getFieldLabel(name)}
+                    description={condString(description)}
+                    value={value}
+                    isDanger={!!errors[name]}
                     errorMessage={errors[name]?.message}
-                    placeholder={config.placeholder ?? config.format}
                     onChange={onChange}
                     onBlur={onBlur}
                   />

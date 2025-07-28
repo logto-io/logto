@@ -8,6 +8,9 @@ import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 
+import RequestError from '../errors/RequestError/index.js';
+import assertThat from '../utils/assert-that.js';
+
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
 export default function customProfileFieldsRoutes<T extends ManagementApiRouter>(
@@ -47,7 +50,11 @@ export default function customProfileFieldsRoutes<T extends ManagementApiRouter>
     async (ctx, next) => {
       const { params } = ctx.guard;
 
-      ctx.body = await findCustomProfileFieldByName(params.name);
+      const result = await findCustomProfileFieldByName(params.name);
+
+      assertThat(result, new RequestError({ code: 'entity.not_found', status: 404 }));
+
+      ctx.body = result;
       ctx.status = 200;
       return next();
     }

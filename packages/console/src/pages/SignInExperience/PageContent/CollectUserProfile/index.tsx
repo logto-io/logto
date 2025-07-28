@@ -105,7 +105,7 @@ function CollectUserProfile({ isActive }: Props) {
               render: ({ name, config }) => {
                 const keys = config.parts
                   ?.filter(({ enabled }) => Boolean(enabled))
-                  .map(({ key }) => key) ?? [name];
+                  .map(({ name }) => name) ?? [name];
 
                 return (
                   <div className={styles.tags}>
