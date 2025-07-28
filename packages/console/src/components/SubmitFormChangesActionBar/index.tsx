@@ -10,7 +10,7 @@ type Props = {
   readonly isSubmitting: boolean;
   readonly isSubmitDisabled?: boolean;
   readonly onSubmit: () => Promise<void>;
-  readonly onDiscard: () => void;
+  readonly onDiscard?: () => void;
   readonly confirmText?: AdminConsoleKey;
   readonly className?: string;
 };
@@ -27,14 +27,16 @@ function SubmitFormChangesActionBar({
   return (
     <div className={classNames(styles.container, isOpen && styles.active, className)}>
       <div className={styles.actionBar}>
-        <Button
-          size="medium"
-          title="general.discard"
-          disabled={isSubmitting}
-          onClick={() => {
-            onDiscard();
-          }}
-        />
+        {!!onDiscard && (
+          <Button
+            size="medium"
+            title="general.discard"
+            disabled={isSubmitting}
+            onClick={() => {
+              onDiscard();
+            }}
+          />
+        )}
         <Button
           disabled={isSubmitDisabled}
           isLoading={isSubmitting}

@@ -31,6 +31,7 @@ export type Props = Omit<HTMLProps<HTMLInputElement>, 'size'> & {
   readonly alwaysShowSuffix?: boolean;
   readonly isConfidential?: boolean;
   readonly inputContainerClassName?: string;
+  readonly description?: string | ReactElement;
 };
 
 function TextInput(
@@ -45,6 +46,7 @@ function TextInput(
     type = 'text',
     isConfidential = false,
     inputContainerClassName,
+    description,
     ...rest
   }: Props,
   reference: Ref<Nullable<HTMLInputElement>>
@@ -116,6 +118,7 @@ function TextInput(
             ),
           })}
       </div>
+      {description && <div className={styles.description}>{description}</div>}
       {Boolean(error) && typeof error !== 'boolean' && (
         <div className={styles.errorMessage}>{error}</div>
       )}

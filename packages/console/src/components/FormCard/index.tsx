@@ -1,6 +1,7 @@
 import type { AdminConsoleKey } from '@logto/phrases';
-import type { ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 
+import type DangerousRaw from '@/ds-components/DangerousRaw';
 import DynamicT from '@/ds-components/DynamicT';
 
 import { CombinedAddOnAndFeatureTag, type PaywallPlanId } from '../FeatureTag';
@@ -10,7 +11,7 @@ import FormCardLayout from './FormCardLayout';
 import styles from './index.module.scss';
 
 export type Props = {
-  readonly title: AdminConsoleKey;
+  readonly title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   readonly tag?: ReactNode;
   readonly description?: AdminConsoleKey;
   readonly descriptionInterpolation?: Record<string, unknown>;
@@ -33,7 +34,7 @@ function FormCard({
       introduction={
         <>
           <div className={styles.title}>
-            <DynamicT forKey={title} />
+            {typeof title === 'string' ? <DynamicT forKey={title} /> : title}
             {tag}
             <CombinedAddOnAndFeatureTag paywall={paywall} />
           </div>

@@ -27,10 +27,7 @@ type StatusTag = {
   text: AdminConsoleKey;
 };
 
-type Identifier = {
-  name: string;
-  value: string;
-};
+type Identifier = { name: string; value: string } | { name: string; tags: string[] };
 
 type AdditionalActionButton = {
   title: AdminConsoleKey;
@@ -53,7 +50,7 @@ type Props = {
   /**
    * The main 60x60 icon on the very left
    */
-  readonly icon: ReactElement<HTMLElement>;
+  readonly icon?: ReactElement<HTMLElement>;
   /**
    * The main title of the header
    */
@@ -204,15 +201,26 @@ function DetailsPageHeader({
           {identifier && (
             <>
               <div className={styles.text}>{identifier.name}</div>
-              <CopyToClipboard
-                ref={identifierRef}
-                className={styles.copyId}
-                // It's OK to use `ch` here because the font is monospace. 40px is the copy icon + padding.
-                style={{ maxWidth: `calc(${identifier.value.length}ch + 40px)` }}
-                valueStyle={{ width: 0 }}
-                size="small"
-                value={identifier.value}
-              />
+              {'value' in identifier && (
+                <CopyToClipboard
+                  ref={identifierRef}
+                  className={styles.copyId}
+                  // It's OK to use `ch` here because the font is monospace. 40px is the copy icon + padding.
+                  style={{ maxWidth: `calc(${identifier.value.length}ch + 40px)` }}
+                  valueStyle={{ width: 0 }}
+                  size="small"
+                  value={identifier.value}
+                />
+              )}
+              {'tags' in identifier && (
+                <div className={styles.tags}>
+                  {identifier.tags.map((tag) => (
+                    <Tag key={tag} variant="cell">
+                      {tag}
+                    </Tag>
+                  ))}
+                </div>
+              )}
             </>
           )}
         </div>
