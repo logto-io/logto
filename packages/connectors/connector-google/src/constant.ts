@@ -78,9 +78,10 @@ export const defaultMetadata: ConnectorMetadata = {
       isDevFeature: true,
       defaultValue: false,
       description:
-        'Whether to request offline access for the user. This will allow the connector to refresh the access token.',
+        'Enable Google `offline` access to request a refresh token, allowing your app to refresh the access token without user re-authorization. (Note: "consent" prompt is required)',
     },
   ],
+  isTokenStorageSupported: true,
 };
 
 export const defaultTimeout = 5000;

@@ -6,6 +6,8 @@ export const accessTokenResponseGuard = z.object({
   access_token: z.string(),
   scope: z.string(),
   token_type: z.string(),
+  expires_in: z.number().or(z.string()).optional(),
+  refresh_token: z.string().optional(),
 });
 
 export type AccessTokenResponse = z.infer<typeof accessTokenResponseGuard>;

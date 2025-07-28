@@ -12,6 +12,9 @@ import type {
   CreateConnector,
   SocialConnector,
   GoogleConnectorConfig,
+  SocialUserInfo,
+  GetTokenResponseAndUserInfo,
+  GetAccessTokenByRefreshToken,
 } from '@logto/connector-kit';
 import {
   ConnectorError,
@@ -20,6 +23,7 @@ import {
   ConnectorType,
   parseJson,
   GoogleConnector,
+  getAccessTokenByRefreshToken as _getAccessTokenByRefreshToken,
 } from '@logto/connector-kit';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 
@@ -37,6 +41,7 @@ import {
   userInfoResponseGuard,
   authResponseGuard,
   googleOneTapDataGuard,
+  type AccessTokenResponse,
 } from './types.js';
 
 const getAuthorizationUri =
@@ -54,6 +59,7 @@ const getAuthorizationUri =
       state,
       scope: customScope ?? scope ?? defaultScope,
       ...conditional(prompts && prompts.length > 0 && { prompt: prompts.join(' ') }),
+      // Add `access_type=offline` if offlineAccess is enabled.
       ...conditional(offlineAccess && { access_type: 'offline' }),
     });
 
@@ -90,7 +96,7 @@ export const getAccessToken = async (
 
   assert(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
 
-  return { accessToken };
+  return result.data;
 };
 
 type Json = ReturnType<typeof parseJson>;
@@ -104,12 +110,17 @@ type Json = ReturnType<typeof parseJson>;
  *
  * @param data The data from the client.
  * @param config The configuration of the connector.
- * @returns A Promise that resolves to the user information JSON.
+ * @returns An object containing user information JSON and optionally the access token response.
  */
-const getUserInfoJson = async (data: unknown, config: GoogleConnectorConfig): Promise<Json> => {
+const getUserInfoJsonAndTokenResponse = async (
+  data: unknown,
+  config: GoogleConnectorConfig
+): Promise<{
+  rawUserInfo: Json;
+  tokenResponse?: AccessTokenResponse;
+}> => {
   // Google One Tap
   const oneTapResult = googleOneTapDataGuard.safeParse(data);
-
   if (oneTapResult.success) {
     const { payload } = await jwtVerify<Json>(
       oneTapResult.data.credential,
@@ -121,12 +132,18 @@ const getUserInfoJson = async (data: unknown, config: GoogleConnectorConfig): Pr
         clockTolerance: 10,
       }
     );
-    return payload;
+
+    // Google One Tap will return only user information JSON.
+    return {
+      rawUserInfo: payload,
+    };
   }
 
   // Normal Google OAuth
   const { code, redirectUri } = await authorizationCallbackHandler(data);
-  const { accessToken } = await getAccessToken(config, { code, redirectUri });
+  const tokenResponse = await getAccessToken(config, { code, redirectUri });
+
+  const { access_token: accessToken } = tokenResponse;
 
   const httpResponse = await got.post(userInfoEndpoint, {
     headers: {
@@ -134,7 +151,28 @@ const getUserInfoJson = async (data: unknown, config: GoogleConnectorConfig): Pr
     },
     timeout: { request: defaultTimeout },
   });
-  return parseJson(httpResponse.body);
+
+  return {
+    rawUserInfo: parseJson(httpResponse.body),
+    tokenResponse,
+  };
+};
+
+const parseUserInfoResponse = (rawUserInfo: Json): SocialUserInfo => {
+  const result = userInfoResponseGuard.safeParse(rawUserInfo);
+  if (!result.success) {
+    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
+  }
+
+  const { sub: id, picture: avatar, email, email_verified, name } = result.data;
+
+  return {
+    id,
+    avatar,
+    email: conditional(email_verified && email),
+    name,
+    rawData: rawUserInfo,
+  };
 };
 
 const getUserInfo =
@@ -144,21 +182,25 @@ const getUserInfo =
     validateConfig(config, GoogleConnector.configGuard);
 
     try {
-      const rawData = await getUserInfoJson(data, config);
-      const result = userInfoResponseGuard.safeParse(rawData);
+      const { rawUserInfo } = await getUserInfoJsonAndTokenResponse(data, config);
+      return parseUserInfoResponse(rawUserInfo);
+    } catch (error: unknown) {
+      return getUserInfoErrorHandler(error);
+    }
+  };
 
-      if (!result.success) {
-        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-      }
+const getTokenResponseAndUserInfo =
+  (getConfig: GetConnectorConfig): GetTokenResponseAndUserInfo =>
+  async (data) => {
+    const config = await getConfig(defaultMetadata.id);
+    validateConfig(config, GoogleConnector.configGuard);
 
-      const { sub: id, picture: avatar, email, email_verified, name } = result.data;
+    try {
+      const { rawUserInfo, tokenResponse } = await getUserInfoJsonAndTokenResponse(data, config);
 
       return {
-        id,
-        avatar,
-        email: conditional(email_verified && email),
-        name,
-        rawData,
+        userInfo: parseUserInfoResponse(rawUserInfo),
+        tokenResponse: tokenResponse ? accessTokenResponseGuard.parse(tokenResponse) : undefined,
       };
     } catch (error: unknown) {
       return getUserInfoErrorHandler(error);
@@ -189,6 +231,22 @@ const getUserInfoErrorHandler = (error: unknown) => {
   throw error;
 };
 
+const getAccessTokenByRefreshToken =
+  (getConfig: GetConnectorConfig): GetAccessTokenByRefreshToken =>
+  async (refreshToken: string) => {
+    const config = await getConfig(defaultMetadata.id);
+    validateConfig(config, GoogleConnector.configGuard);
+
+    return _getAccessTokenByRefreshToken(
+      {
+        clientId: config.clientId,
+        clientSecret: config.clientSecret,
+        tokenEndpoint: accessTokenEndpoint,
+      },
+      refreshToken
+    );
+  };
+
 const createGoogleConnector: CreateConnector<SocialConnector> = async ({ getConfig }) => {
   return {
     metadata: defaultMetadata,
@@ -196,6 +254,8 @@ const createGoogleConnector: CreateConnector<SocialConnector> = async ({ getConf
     configGuard: GoogleConnector.configGuard,
     getAuthorizationUri: getAuthorizationUri(getConfig),
     getUserInfo: getUserInfo(getConfig),
+    getTokenResponseAndUserInfo: getTokenResponseAndUserInfo(getConfig),
+    getAccessTokenByRefreshToken: getAccessTokenByRefreshToken(getConfig),
   };
 };
 

@@ -1,4 +1,5 @@
-import { describe, it, expect } from 'vitest';
+import nock from 'nock';
+import { describe, it, expect, afterEach } from 'vitest';
 import { z } from 'zod';
 
 import {
@@ -7,6 +8,7 @@ import {
   replaceSendMessageHandlebars,
   validateConfig,
   getValue,
+  getAccessTokenByRefreshToken,
 } from './index.js';
 
 describe('validateConfig', () => {
@@ -160,5 +162,44 @@ describe('getValue', () => {
     for (const key of Object.keys(object)) {
       expect(getValue(object, `${key}.foo`)).toEqual(undefined);
     }
+  });
+});
+
+describe('getAccessTokenByRefreshToken', () => {
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
+  const tokenEndpoint = 'https://example.com/oauth/token';
+  const mockedConfig = {
+    tokenEndpoint,
+    clientId: 'client_id',
+    clientSecret: 'client_secret',
+  };
+  const mockTokenResponse = {
+    access_token: 'new_access_token',
+    token_type: 'Bearer',
+    expires_in: 3600,
+  };
+  const mockRefreshToken = 'refresh_token';
+
+  it('should get an access token by exchanging with refresh token', async () => {
+    nock(tokenEndpoint)
+      .matchHeader('authorization', (value) => {
+        expect(value).toEqual(
+          `Basic ${Buffer.from(`${mockedConfig.clientId}:${mockedConfig.clientSecret}`).toString('base64')}`
+        );
+        return true;
+      })
+      .post('', (body) => {
+        expect(body).toEqual({
+          grant_type: 'refresh_token',
+          refresh_token: mockRefreshToken,
+        });
+        return true;
+      })
+      .reply(200, mockTokenResponse);
+    const { access_token } = await getAccessTokenByRefreshToken(mockedConfig, mockRefreshToken);
+    expect(access_token).toEqual(mockTokenResponse.access_token);
   });
 });

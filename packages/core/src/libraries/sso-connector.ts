@@ -286,8 +286,17 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
       new RequestError('connector.invalid_response')
     );
 
-    const { tokenSecret, metadata } = encryptTokenResponse(tokenResponse);
-    const { access_token } = tokenResponse;
+    // This is to ensure that the refresh token is included in the updated token response.
+    // For some providers like Google, the refresh token is issued only once during the initial authorization.
+    // We need keep the original refresh token in the updated token response.
+    // If new refresh token is returned, it will replace the original one.
+    const updatedTokenResponse: typeof tokenResponse = {
+      refresh_token: refreshToken,
+      ...tokenResponse,
+    };
+
+    const { tokenSecret, metadata } = encryptTokenResponse(updatedTokenResponse);
+    const { access_token } = updatedTokenResponse;
 
     await queries.secrets.updateById(secretId, {
       ...tokenSecret,

@@ -99,10 +99,6 @@ export const getAccessToken = async (config: GithubConfig, codeObject: { code: s
     throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
   }
 
-  const { access_token } = result.data;
-
-  assert(access_token, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
-
   return result.data;
 };
 

@@ -1,5 +1,6 @@
 import { type Json, type JsonObject } from '@withtyped/server';
-import type { ZodType, ZodTypeDef } from 'zod';
+import ky, { HTTPError } from 'ky';
+import { type ZodType, type ZodTypeDef } from 'zod';
 
 import {
   ConnectorError,
@@ -8,6 +9,7 @@ import {
   ConnectorType,
   jsonGuard,
   jsonObjectGuard,
+  tokenResponseGuard,
 } from './types/index.js';
 
 export * from './types/index.js';
@@ -121,4 +123,56 @@ export const getValue = (object: Record<string, unknown>, path: string): unknown
     // eslint-disable-next-line no-restricted-syntax
     return (current as Record<string, unknown>)[part];
   }, object);
+};
+
+/**
+ * Shared function to get access token by refresh token.
+ * This function provides a standard interface for OAuth/OIDC social connectors
+ * to exchange a refresh token for an access token.
+ * It is used by connectors like Google, GitHub, etc.
+ */
+type ConnectorConfig = {
+  clientId: string;
+  clientSecret: string;
+  tokenEndpoint: string;
+};
+
+export const getAccessTokenByRefreshToken = async (
+  { clientId, clientSecret, tokenEndpoint }: ConnectorConfig,
+  refreshToken: string
+) => {
+  const tokenRequestParameters = new URLSearchParams({
+    grant_type: 'refresh_token',
+    refresh_token: refreshToken,
+  });
+
+  const headers = {
+    Authorization: `Basic ${Buffer.from(`${clientId}:${clientSecret}`, 'utf8').toString('base64')}`,
+    'Content-Type': 'application/x-www-form-urlencoded',
+  };
+
+  try {
+    const httpResponse = await ky
+      .post(tokenEndpoint, {
+        body: tokenRequestParameters.toString(),
+        headers,
+      })
+      .json();
+
+    const result = tokenResponseGuard.safeParse(httpResponse);
+
+    if (!result.success) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
+    }
+
+    return result.data;
+  } catch (error: unknown) {
+    if (error instanceof HTTPError) {
+      const { body: rawBody } = error.response;
+
+      throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(rawBody));
+    }
+
+    throw error;
+  }
 };
