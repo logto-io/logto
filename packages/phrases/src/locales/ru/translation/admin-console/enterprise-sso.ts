@@ -70,6 +70,8 @@ const enterprise_sso = {
       client_secret_field_name: 'Секрет клиента',
       issuer_field_name: 'Издатель',
       scope_field_name: 'Область',
+      /** UNTRANSLATED */
+      scope_field_placeholder: 'Enter the scopes (separated by a space)',
     },
   },
 };

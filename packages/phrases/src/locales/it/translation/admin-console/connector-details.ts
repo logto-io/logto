@@ -69,6 +69,12 @@ const connector_details = {
     close_on_tap_outside: "Annulla il prompt se l'utente clicca/tocca all'esterno",
     itp_support: 'Abilita <a>UX One Tap migliorato sui browser ITP</a>',
   },
+  sign_in_experience: {
+    /** UNTRANSLATED */
+    in_use: 'Enabled for sign-in ',
+    /** UNTRANSLATED */
+    not_in_use: 'Disabled for sign-in ',
+  },
 };
 
 export default Object.freeze(connector_details);

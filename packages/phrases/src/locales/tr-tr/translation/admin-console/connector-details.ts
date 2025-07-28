@@ -70,6 +70,12 @@ const connector_details = {
     close_on_tap_outside: 'Kullanıcı dışarıya tıklarsa istemi iptal et',
     itp_support: "<a>ITP tarayıcılarda Yükseltilmiş One Tap UX'i</a> etkinleştir",
   },
+  sign_in_experience: {
+    /** UNTRANSLATED */
+    in_use: 'Enabled for sign-in ',
+    /** UNTRANSLATED */
+    not_in_use: 'Disabled for sign-in ',
+  },
 };
 
 export default Object.freeze(connector_details);

@@ -15,6 +15,16 @@ const mfa = {
   backup_code_description: '在用戶設置任何MFA方法後生成10個一次性備份代碼。',
   backup_code_setup_hint: '當用戶無法驗證上述MFA因素時，使用備份選項。',
   backup_code_error_hint: '要使用備份代碼，你需要至少再添加一種MFA方法以成功進行用戶身份驗證。',
+  /** UNTRANSLATED */
+  email_verification_code: 'Email verification code',
+  /** UNTRANSLATED */
+  email_verification_code_description:
+    'Link email address to receive and verify verification codes.',
+  /** UNTRANSLATED */
+  phone_verification_code: 'SMS verification code',
+  /** UNTRANSLATED */
+  phone_verification_code_description:
+    'Link phone number to receive and verify SMS verification codes.',
   policy: '策略',
   policy_description: '設置登錄和註冊流程的MFA策略。',
   two_step_sign_in_policy: '登錄時的雙步驗證策略',

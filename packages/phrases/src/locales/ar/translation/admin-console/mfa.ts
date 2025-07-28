@@ -18,6 +18,16 @@ const mfa = {
     'عندما لا يمكن للمستخدمين التحقق من العوامل MFA أعلاه ، استخدم الخيار الاحتياطي.',
   backup_code_error_hint:
     'لاستخدام رمز النسخ الاحتياطي ، تحتاج إلى طريقة MFA واحدة على الأقل للمصادقة الناجحة للمستخدم.',
+  /** UNTRANSLATED */
+  email_verification_code: 'Email verification code',
+  /** UNTRANSLATED */
+  email_verification_code_description:
+    'Link email address to receive and verify verification codes.',
+  /** UNTRANSLATED */
+  phone_verification_code: 'SMS verification code',
+  /** UNTRANSLATED */
+  phone_verification_code_description:
+    'Link phone number to receive and verify SMS verification codes.',
   policy: 'السياسة',
   policy_description: 'تعيين سياسة MFA لعمليات تسجيل الدخول والتسجيل.',
   two_step_sign_in_policy: 'سياسة التحقق الثنائي في تسجيل الدخول',

@@ -70,6 +70,12 @@ const connector_details = {
     close_on_tap_outside: '外側をクリック／タップした場合にプロンプトをキャンセル',
     itp_support: '<a>ITP ブラウザでアップグレードされたワンタップ UX</a> を有効にする',
   },
+  sign_in_experience: {
+    /** UNTRANSLATED */
+    in_use: 'Enabled for sign-in ',
+    /** UNTRANSLATED */
+    not_in_use: 'Disabled for sign-in ',
+  },
 };
 
 export default Object.freeze(connector_details);

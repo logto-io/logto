@@ -71,6 +71,8 @@ const enterprise_sso = {
       client_secret_field_name: 'Secret client',
       issuer_field_name: 'Émetteur',
       scope_field_name: 'Portée',
+      /** UNTRANSLATED */
+      scope_field_placeholder: 'Enter the scopes (separated by a space)',
     },
   },
 };

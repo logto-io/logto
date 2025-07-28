@@ -119,6 +119,16 @@ const enterprise_sso_details = {
     'Kimlik sağlayıcıdan dönen doğrulanmamış e-posta adreslerine her zaman güven',
   trust_unverified_email_tip:
     "Entra ID (OIDC) bağlayıcısı `email_verified` bilgisini döndürmez, bu da Azure'dan alınan e-posta adreslerinin doğrulandığının garanti edilmediği anlamına gelir. Varsayılan olarak, Logto doğrulanmamış e-posta adreslerini kullanıcı profiline senkronize etmeyecektir. Bu seçeneği yalnızca Entra ID dizininden gelen tüm e-posta adreslerine güveniyorsanız etkinleştirin.",
+  offline_access: {
+    /** UNTRANSLATED */
+    label: 'Enable offline access',
+    /** UNTRANSLATED */
+    description:
+      'Set `access_type` to `offline` to allow the connector to request a refresh token from Google Workspace.',
+    /** UNTRANSLATED */
+    tooltip:
+      'Unlike the standard OIDC connector, Google Workspace SSO does not support `offline_access` scope by default. It uses the `access_type=offline` parameter to request a refresh token. Enable this option to allow the connector to request a refresh token from Google Workspace.',
+  },
 };
 
 export default Object.freeze(enterprise_sso_details);

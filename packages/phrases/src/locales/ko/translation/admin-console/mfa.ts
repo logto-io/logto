@@ -18,6 +18,16 @@ const mfa = {
   backup_code_setup_hint: '사용자가 위의 MFA 요소를 확인할 수 없는 경우 백업 옵션을 사용하세요.',
   backup_code_error_hint:
     '백업 코드를 사용하려면 성공적인 사용자 인증을 위해 적어도 하나 이상의 MFA 방법이 필요합니다.',
+  /** UNTRANSLATED */
+  email_verification_code: 'Email verification code',
+  /** UNTRANSLATED */
+  email_verification_code_description:
+    'Link email address to receive and verify verification codes.',
+  /** UNTRANSLATED */
+  phone_verification_code: 'SMS verification code',
+  /** UNTRANSLATED */
+  phone_verification_code_description:
+    'Link phone number to receive and verify SMS verification codes.',
   policy: '정책',
   policy_description: '로그인 및 가입 플로우에 대한 MFA 정책을 설정합니다.',
   two_step_sign_in_policy: '로그인 시 2단계 인증 정책',

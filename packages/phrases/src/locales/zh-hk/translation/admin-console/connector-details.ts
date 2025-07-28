@@ -64,6 +64,12 @@ const connector_details = {
     close_on_tap_outside: '如果用戶點擊/點按外部，取消提示',
     itp_support: '在 ITP 瀏覽器上啟用 <a>升級的 One Tap UX</a>',
   },
+  sign_in_experience: {
+    /** UNTRANSLATED */
+    in_use: 'Enabled for sign-in ',
+    /** UNTRANSLATED */
+    not_in_use: 'Disabled for sign-in ',
+  },
 };
 
 export default Object.freeze(connector_details);

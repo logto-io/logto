@@ -70,6 +70,8 @@ const enterprise_sso = {
       client_secret_field_name: 'Client-Geheimnis',
       issuer_field_name: 'Herausgeber',
       scope_field_name: 'Umfang',
+      /** UNTRANSLATED */
+      scope_field_placeholder: 'Enter the scopes (separated by a space)',
     },
   },
 };

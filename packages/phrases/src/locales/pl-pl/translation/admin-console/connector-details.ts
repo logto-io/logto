@@ -70,6 +70,12 @@ const connector_details = {
     close_on_tap_outside: 'Anuluj monit, jeśli użytkownik kliknie/tapnie na zewnątrz',
     itp_support: 'Włącz <a>ulepszony UX One Tap dla przeglądarek ITP</a>',
   },
+  sign_in_experience: {
+    /** UNTRANSLATED */
+    in_use: 'Enabled for sign-in ',
+    /** UNTRANSLATED */
+    not_in_use: 'Disabled for sign-in ',
+  },
 };
 
 export default Object.freeze(connector_details);
