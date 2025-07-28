@@ -1,7 +1,42 @@
-import { builtInCustomProfileFieldKeys } from '@logto/schemas';
+import {
+  builtInCustomProfileFieldKeys,
+  CustomProfileFieldType,
+  userProfileAddressKeys,
+} from '@logto/schemas';
+
+const builtInKeySet = Object.freeze(
+  new Set<string>([
+    ...builtInCustomProfileFieldKeys,
+    ...Object.values(userProfileAddressKeys).map((key) => `address.${key}`),
+  ])
+);
 
 export const isBuiltInCustomProfileFieldKey = (
-  key: string
-): key is (typeof builtInCustomProfileFieldKeys)[number] => {
-  return key in builtInCustomProfileFieldKeys;
+  key?: string
+): key is (typeof builtInCustomProfileFieldKeys)[number] =>
+  key !== undefined && builtInKeySet.has(key);
+
+export const getProfileFieldTypeByName = (name: string): CustomProfileFieldType => {
+  switch (name) {
+    case 'avatar':
+    case 'profile':
+    case 'website': {
+      return CustomProfileFieldType.Url;
+    }
+    case 'gender': {
+      return CustomProfileFieldType.Select;
+    }
+    case 'birthdate': {
+      return CustomProfileFieldType.Date;
+    }
+    case 'address': {
+      return CustomProfileFieldType.Address;
+    }
+    case 'fullname': {
+      return CustomProfileFieldType.Fullname;
+    }
+    default: {
+      return CustomProfileFieldType.Text;
+    }
+  }
 };

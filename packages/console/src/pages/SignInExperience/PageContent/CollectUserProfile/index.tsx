@@ -8,7 +8,6 @@ import CollectUserProfileEmpty from '@/assets/images/collect-user-profile-empty.
 import PageMeta from '@/components/PageMeta';
 import { collectUserProfile } from '@/consts';
 import Button from '@/ds-components/Button';
-import DynamicT from '@/ds-components/DynamicT';
 import Table from '@/ds-components/Table';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import Tag from '@/ds-components/Tag';
@@ -16,11 +15,11 @@ import { type RequestError } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import pageLayout from '@/scss/page-layout.module.scss';
 
-import CreateProfileFieldModal from '../../components/CreateProfileFieldModal';
 import SignInExperienceTabWrapper from '../components/SignInExperienceTabWrapper';
 
+import CreateProfileFieldModal from './CreateProfileFieldModal';
+import { useDataParser } from './ProfileFieldDetails/hooks';
 import styles from './index.module.scss';
-import { isBuiltInCustomProfileFieldKey } from './utils';
 
 type Props = {
   readonly isActive: boolean;
@@ -63,6 +62,8 @@ function CollectUserProfile({ isActive }: Props) {
     isLoading,
   } = useSWR<CustomProfileField[], RequestError>('api/custom-profile-fields');
 
+  const { getDefaultLabel } = useDataParser();
+
   return (
     <>
       <SignInExperienceTabWrapper isActive={isActive}>
@@ -85,12 +86,7 @@ function CollectUserProfile({ isActive }: Props) {
               title: t('custom_profile_fields.table.title.field_label'),
               dataIndex: 'name',
               colSpan: 3,
-              render: ({ name, label }) =>
-                isBuiltInCustomProfileFieldKey(name) ? (
-                  <DynamicT forKey={`profile.fields.${name}`} />
-                ) : (
-                  label
-                ),
+              render: ({ name, label }) => label || getDefaultLabel(name),
             },
             {
               title: t('custom_profile_fields.table.title.type'),
@@ -105,7 +101,7 @@ function CollectUserProfile({ isActive }: Props) {
               render: ({ name, config }) => {
                 const keys = config.parts
                   ?.filter(({ enabled }) => Boolean(enabled))
-                  .map(({ name }) => name) ?? [name];
+                  .map((part) => part.name) ?? [name];
 
                 return (
                   <div className={styles.tags}>
@@ -142,7 +138,7 @@ function CollectUserProfile({ isActive }: Props) {
           existingFieldNames={customProfileFields?.map(({ name }) => name) ?? []}
           onClose={(fieldName?: string) => {
             if (fieldName) {
-              navigate(collectUserProfileDetailsPathname.replace(':fieldName', fieldName));
+              navigate(`${createCollectUserProfilePathname}/${fieldName}`);
               return;
             }
             navigate(collectUserProfilePathname);

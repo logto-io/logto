@@ -1,0 +1,11 @@
+@use '@/scss/underscore' as _;
+
+.titleWithTip {
+  display: flex;
+  align-items: center;
+  gap: _.unit(1);
+}
+
+.checkboxGroup {
+  margin-top: _.unit(2);
+}
