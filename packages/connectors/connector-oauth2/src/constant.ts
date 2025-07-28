@@ -75,6 +75,7 @@ export const defaultMetadata: ConnectorMetadata = {
       defaultValue: {},
     },
   ],
+  isTokenStorageSupported: true,
 };
 
 export const defaultTimeout = 5000;
