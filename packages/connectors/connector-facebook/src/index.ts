@@ -12,6 +12,7 @@ import type {
   GetAuthorizationUri,
   GetUserInfo,
   GetConnectorConfig,
+  GetTokenResponseAndUserInfo,
 } from '@logto/connector-kit';
 import {
   ConnectorError,
@@ -84,56 +85,107 @@ export const getAccessToken = async (
 
   assert(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
 
-  return { accessToken };
+  return result.data;
 };
+
+export const getLongLivedAccessToken = async (config: FacebookConfig, accessToken: string) => {
+  const { clientId: client_id, clientSecret: client_secret } = config;
+  const httpResponse = await got.get(accessTokenEndpoint, {
+    searchParams: {
+      grant_type: 'fb_exchange_token',
+      client_id,
+      client_secret,
+      fb_exchange_token: accessToken,
+    },
+    timeout: { request: defaultTimeout },
+  });
+
+  const result = accessTokenResponseGuard.safeParse(parseJson(httpResponse.body));
+
+  if (!result.success) {
+    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
+  }
+
+  return result.data;
+};
+
+const handleAuthorizationCallback = async (
+  getConfig: GetConnectorConfig,
+  data: unknown,
+  exchangeLongLivedAccessToken = false
+) => {
+  const { code, redirectUri } = await authorizationCallbackHandler(data);
+  const config = await getConfig(defaultMetadata.id);
+  validateConfig(config, facebookConfigGuard);
+  const tokenResponse = await getAccessToken(config, { code, redirectUri });
+
+  if (!exchangeLongLivedAccessToken) {
+    return tokenResponse;
+  }
+
+  return getLongLivedAccessToken(config, tokenResponse.access_token);
+};
+
+const _getUserInfo = async (accessToken: string) => {
+  try {
+    const httpResponse = await got.get(userInfoEndpoint, {
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+      searchParams: {
+        fields: 'id,name,email,picture',
+      },
+      timeout: { request: defaultTimeout },
+    });
+    const rawData = parseJson(httpResponse.body);
+    const result = userInfoResponseGuard.safeParse(rawData);
+
+    if (!result.success) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
+    }
+
+    const { id, email, name, picture } = result.data;
+
+    return {
+      id,
+      avatar: picture?.data.url,
+      email,
+      name,
+      rawData,
+    };
+  } catch (error: unknown) {
+    if (error instanceof HTTPError) {
+      const { statusCode, body: rawBody } = error.response;
+
+      if (statusCode === 400) {
+        throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
+      }
+
+      throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(rawBody));
+    }
+
+    throw error;
+  }
+};
+
+const getTokenResponseAndUserInfo =
+  (getConfig: GetConnectorConfig): GetTokenResponseAndUserInfo =>
+  async (data) => {
+    // Always fetch long lived access token if token storage is enabled
+    const tokenResponse = await handleAuthorizationCallback(getConfig, data, true);
+    const userInfo = await _getUserInfo(tokenResponse.access_token);
+
+    return {
+      tokenResponse,
+      userInfo,
+    };
+  };
 
 const getUserInfo =
   (getConfig: GetConnectorConfig): GetUserInfo =>
   async (data) => {
-    const { code, redirectUri } = await authorizationCallbackHandler(data);
-    const config = await getConfig(defaultMetadata.id);
-    validateConfig(config, facebookConfigGuard);
-    const { accessToken } = await getAccessToken(config, { code, redirectUri });
-
-    try {
-      const httpResponse = await got.get(userInfoEndpoint, {
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
-        searchParams: {
-          fields: 'id,name,email,picture',
-        },
-        timeout: { request: defaultTimeout },
-      });
-      const rawData = parseJson(httpResponse.body);
-      const result = userInfoResponseGuard.safeParse(rawData);
-
-      if (!result.success) {
-        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-      }
-
-      const { id, email, name, picture } = result.data;
-
-      return {
-        id,
-        avatar: picture?.data.url,
-        email,
-        name,
-        rawData,
-      };
-    } catch (error: unknown) {
-      if (error instanceof HTTPError) {
-        const { statusCode, body: rawBody } = error.response;
-
-        if (statusCode === 400) {
-          throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
-        }
-
-        throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(rawBody));
-      }
-
-      throw error;
-    }
+    const { access_token: accessToken } = await handleAuthorizationCallback(getConfig, data);
+    return _getUserInfo(accessToken);
   };
 
 const authorizationCallbackHandler = async (parameterObject: unknown) => {
@@ -170,6 +222,13 @@ const createFacebookConnector: CreateConnector<SocialConnector> = async ({ getCo
     configGuard: facebookConfigGuard,
     getAuthorizationUri: getAuthorizationUri(getConfig),
     getUserInfo: getUserInfo(getConfig),
+    getTokenResponseAndUserInfo: getTokenResponseAndUserInfo(getConfig),
+    getAccessTokenByRefreshToken: () => {
+      throw new ConnectorError(
+        ConnectorErrorCodes.NotImplemented,
+        'Facebook connector does not support refresh token flow.'
+      );
+    },
   };
 };
 
