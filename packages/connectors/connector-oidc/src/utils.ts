@@ -56,3 +56,34 @@ export const getIdToken = async (
 
   return accessTokenResponseHandler(tokenResponse);
 };
+
+export const getAccessTokenByRefreshToken = async (
+  config: OidcConnectorConfig,
+  refreshToken: string
+) => {
+  const {
+    tokenEndpoint,
+    clientId,
+    clientSecret,
+    tokenEndpointAuthMethod,
+    clientSecretJwtSigningAlgorithm,
+    customConfig,
+  } = config;
+
+  const tokenResponse = await requestTokenEndpoint({
+    tokenEndpoint,
+    tokenEndpointAuthOptions: {
+      method: tokenEndpointAuthMethod,
+      clientSecretJwtSigningAlgorithm,
+    },
+    tokenRequestBody: {
+      grantType: 'refresh_token',
+      refreshToken,
+      clientId,
+      clientSecret,
+      ...customConfig,
+    },
+  });
+
+  return accessTokenResponseHandler(tokenResponse);
+};
