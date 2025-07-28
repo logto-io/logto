@@ -127,8 +127,8 @@ function ConnectorDetails() {
             statusTag={{
               status: inUse ? 'success' : 'info',
               text: inUse
-                ? 'connectors.connector_status_in_use'
-                : 'connectors.connector_status_not_in_use',
+                ? 'connector_details.sign_in_experience.in_use'
+                : 'connector_details.sign_in_experience.not_in_use',
             }}
             identifier={{ name: 'ID', value: data.id }}
             additionalActionButton={conditional(
