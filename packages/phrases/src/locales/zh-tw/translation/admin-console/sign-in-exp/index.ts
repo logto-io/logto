@@ -10,8 +10,7 @@ const sign_in_exp = {
     branding: '品牌',
     sign_up_and_sign_in: '註冊與登錄',
     content: '內容',
-    /** UNTRANSLATED */
-    collect_user_profile: 'Collect user profile',
+    collect_user_profile: '收集用戶資料',
     password_policy: '密碼規則',
   },
   welcome: {
@@ -92,7 +91,7 @@ const sign_in_exp = {
     no_connector_email:
       '尚未設置電子郵件連接器。在完成該配置前，用戶將無法通過此登錄方式登錄。<a>{{link}}</a>連接器。',
     no_connector_social:
-      '您還沒有設置任何社交連接器。首先添加連接器以應用社交登錄方法。<a>{{link}}</a>連接器。',
+      '你還沒有設置任何社交連接器。首先添加連接器以應用社交登錄方法。<a>{{link}}</a>連接器。',
     setup_link: '立即設置',
   },
   save_alert: {

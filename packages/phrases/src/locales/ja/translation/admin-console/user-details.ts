@@ -131,26 +131,17 @@ const user_details = {
     },
   },
   connections: {
-    /** UNTRANSLATED */
-    title: 'Connection',
-    /** UNTRANSLATED */
+    title: '接続',
     description:
-      'The user links third-party accounts for social sign-in, enterprise SSO, or resources access.',
-    /** UNTRANSLATED */
-    token_status_column: 'Token status',
+      'ユーザーは、ソーシャルサインイン、エンタープライズ SSO、またはリソースアクセスのためにサードパーティアカウントをリンクします。',
+    token_status_column: 'トークンの状態',
     token_status: {
-      /** UNTRANSLATED */
-      active: 'Active',
-      /** UNTRANSLATED */
-      expired: 'Expired',
-      /** UNTRANSLATED */
-      inactive: 'Inactive',
-      /** UNTRANSLATED */
-      not_applicable: 'Not applicable',
-      /** UNTRANSLATED */
-      available: 'Available',
-      /** UNTRANSLATED */
-      not_available: 'Not available',
+      active: '有効',
+      expired: '期限切れ',
+      inactive: '無効',
+      not_applicable: '該当なし',
+      available: '利用可能',
+      not_available: '利用不可',
     },
   },
 };

@@ -10,8 +10,7 @@ const sign_in_exp = {
     branding: '品牌',
     sign_up_and_sign_in: '註冊與登錄',
     content: '內容',
-    /** UNTRANSLATED */
-    collect_user_profile: 'Collect user profile',
+    collect_user_profile: '收集用戶資料',
     password_policy: '密碼政策',
   },
   welcome: {

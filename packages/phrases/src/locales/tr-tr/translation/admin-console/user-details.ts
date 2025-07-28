@@ -135,26 +135,17 @@ const user_details = {
     },
   },
   connections: {
-    /** UNTRANSLATED */
-    title: 'Connection',
-    /** UNTRANSLATED */
+    title: 'Bağlantı',
     description:
-      'The user links third-party accounts for social sign-in, enterprise SSO, or resources access.',
-    /** UNTRANSLATED */
-    token_status_column: 'Token status',
+      'Kullanıcı, sosyal giriş, kurumsal SSO veya kaynak erişimi için üçüncü taraf hesapları bağlar.',
+    token_status_column: 'Belirteç durumu',
     token_status: {
-      /** UNTRANSLATED */
-      active: 'Active',
-      /** UNTRANSLATED */
-      expired: 'Expired',
-      /** UNTRANSLATED */
-      inactive: 'Inactive',
-      /** UNTRANSLATED */
-      not_applicable: 'Not applicable',
-      /** UNTRANSLATED */
-      available: 'Available',
-      /** UNTRANSLATED */
-      not_available: 'Not available',
+      active: 'Aktif',
+      expired: 'Süresi dolmuş',
+      inactive: 'Pasif',
+      not_applicable: 'Uygulanamaz',
+      available: 'Mevcut',
+      not_available: 'Mevcut değil',
     },
   },
 };

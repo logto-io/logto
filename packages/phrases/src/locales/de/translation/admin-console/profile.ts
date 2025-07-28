@@ -111,85 +111,52 @@ const profile = {
   unlink_reminder:
     'Benutzer können sich nicht mehr mit dem <span></span>-Konto anmelden, wenn Sie es trennen. Möchten Sie fortfahren?',
   fields: {
-    /** UNTRANSLATED */
     name: 'Name',
-    /** UNTRANSLATED */
     name_description:
-      "The user's full name in displayable form including all name parts (e.g., “Jane Doe”).",
-    /** UNTRANSLATED */
+      'Der vollständige Name des Benutzers in anzeigbarer Form, einschließlich aller Namensbestandteile (z.B. "Jane Doe").',
     avatar: 'Avatar',
-    /** UNTRANSLATED */
-    avatar_description: "URL of the user's avatar image.",
-    /** UNTRANSLATED */
-    familyName: 'Family name',
-    /** UNTRANSLATED */
-    familyName_description: 'The user\'s surname(s) or last name(s) (e.g., "Doe").',
-    /** UNTRANSLATED */
-    givenName: 'Given name',
-    /** UNTRANSLATED */
-    givenName_description: 'The user\'s given name(s) or first name(s) (e.g., "Jane").',
-    /** UNTRANSLATED */
-    middleName: 'Middle name',
-    /** UNTRANSLATED */
-    middleName_description: 'The user\'s middle name(s) (e.g., "Marie").',
-    /** UNTRANSLATED */
-    nickname: 'Nickname',
-    /** UNTRANSLATED */
+    avatar_description: 'URL des Avatar-Bildes des Benutzers.',
+    familyName: 'Nachname',
+    familyName_description: 'Der Nachname(n) des Benutzers (z.B. "Doe").',
+    givenName: 'Vorname',
+    givenName_description: 'Der Vorname(n) des Benutzers (z.B. "Jane").',
+    middleName: 'Mittlerer Name',
+    middleName_description: 'Der mittlere Name(n) des Benutzers (z.B. "Marie").',
+    nickname: 'Spitzname',
     nickname_description:
-      'Casual or familiar name for the user, which may differ from their legal name.',
-    /** UNTRANSLATED */
-    preferredUsername: 'Preferred username',
-    /** UNTRANSLATED */
+      'Informeller oder vertrauter Name des Benutzers, der von seinem offiziellen Namen abweichen kann.',
+    preferredUsername: 'Bevorzugter Benutzername',
     preferredUsername_description:
-      'Shorthand identifier by which the user wishes to be referenced.',
-    /** UNTRANSLATED */
-    profile: 'Profile',
-    /** UNTRANSLATED */
-    profile_description:
-      "URL of the user's human-readable profile page (e.g., social media profile).",
-    /** UNTRANSLATED */
+      'Kurzform des Benutzernamens, unter dem der Benutzer angesprochen werden möchte.',
+    profile: 'Profil',
+    profile_description: 'URL der lesbaren Profilseite des Benutzers (z.B. Social-Media-Profil).',
     website: 'Website',
-    /** UNTRANSLATED */
-    website_description: "URL of the user's personal website or blog.",
-    /** UNTRANSLATED */
-    gender: 'Gender',
-    /** UNTRANSLATED */
-    gender_description: 'The user\'s self-identified gender (e.g., "Female", "Male", "Non-binary")',
-    /** UNTRANSLATED */
-    birthdate: 'Birthdate',
-    /** UNTRANSLATED */
-    birthdate_description: 'The user\'s date of birth in a specified format (e.g., "MM-dd-yyyy").',
-    /** UNTRANSLATED */
-    zoneinfo: 'Timezone',
-    /** UNTRANSLATED */
+    website_description: 'URL der persönlichen Website oder des Blogs des Benutzers.',
+    gender: 'Geschlecht',
+    gender_description:
+      'Das selbstidentifizierte Geschlecht des Benutzers (z.B. "Weiblich", "Männlich", "Nicht-binär")',
+    birthdate: 'Geburtsdatum',
+    birthdate_description:
+      'Das Geburtsdatum des Benutzers in einem bestimmten Format (z.B. "TT-MM-JJJJ").',
+    zoneinfo: 'Zeitzone',
     zoneinfo_description:
-      'The user\'s timezone in IANA format (e.g., "America/New_York" or "Europe/Paris").',
-    /** UNTRANSLATED */
-    locale: 'Language',
-    /** UNTRANSLATED */
-    locale_description: 'The user\'s language in IETF BCP 47 format (e.g., "en-US" or "zh-CN").',
+      'Die Zeitzone des Benutzers im IANA-Format (z.B. "America/New_York" oder "Europe/Paris").',
+    locale: 'Sprache',
+    locale_description:
+      'Die Sprache des Benutzers im IETF BCP 47-Format (z.B. "de-DE" oder "en-US").',
     address: {
-      /** UNTRANSLATED */
-      formatted: 'Address',
-      /** UNTRANSLATED */
-      streetAddress: 'Street address',
-      /** UNTRANSLATED */
-      locality: 'City',
-      /** UNTRANSLATED */
-      region: 'State',
-      /** UNTRANSLATED */
-      postalCode: 'Zip code',
-      /** UNTRANSLATED */
-      country: 'Country',
+      formatted: 'Adresse',
+      streetAddress: 'Straße und Hausnummer',
+      locality: 'Stadt',
+      region: 'Bundesland',
+      postalCode: 'Postleitzahl',
+      country: 'Land',
     },
-    /** UNTRANSLATED */
     address_description:
-      'The user\'s full address in displayable form including all address parts (e.g., "123 Main St, Anytown, USA 12345").',
-    /** UNTRANSLATED */
-    fullname: 'Fullname',
-    /** UNTRANSLATED */
+      'Die vollständige Adresse des Benutzers in anzeigbarer Form, einschließlich aller Adressbestandteile (z.B. "123 Hauptstraße, Musterstadt, Deutschland 12345").',
+    fullname: 'Vollständiger Name',
     fullname_description:
-      'Flexibly combines familyName, givenName, and middleName based on configuration.',
+      'Flexible Kombination aus Nachname, Vorname und mittlerem Namen basierend auf der Konfiguration.',
   },
 };
 

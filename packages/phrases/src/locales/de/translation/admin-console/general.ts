@@ -76,8 +76,7 @@ const general = {
   or: 'Oder',
   reset: 'Zurücksetzen',
   generate: 'Erzeugen',
-  /** UNTRANSLATED */
-  manage: 'Manage',
+  manage: 'Verwalten',
 };
 
 export default Object.freeze(general);

@@ -11,8 +11,7 @@ const sign_in_exp = {
     branding: 'Брендирование',
     sign_up_and_sign_in: 'Регистрация и вход в систему',
     content: 'Содержание',
-    /** UNTRANSLATED */
-    collect_user_profile: 'Collect user profile',
+    collect_user_profile: 'Сбор профиля пользователя',
     password_policy: 'Политика пароля',
   },
   welcome: {

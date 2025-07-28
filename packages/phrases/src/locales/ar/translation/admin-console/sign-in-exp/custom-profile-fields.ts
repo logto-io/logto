@@ -1,53 +1,84 @@
 const custom_profile_fields = {
   table: {
-    /** UNTRANSLATED */
-    add_button: 'Add profile field',
+    add_button: 'إضافة حقل الملف الشخصي',
     title: {
-      /** UNTRANSLATED */
-      field_label: 'Field label',
-      /** UNTRANSLATED */
-      type: 'Type',
-      /** UNTRANSLATED */
-      user_data_key: 'Key in user profile',
+      field_label: 'تسمية الحقل',
+      type: 'النوع',
+      user_data_key: 'المفتاح في ملف المستخدم الشخصي',
     },
     placeholder: {
-      /** UNTRANSLATED */
-      title: 'Collect user profile',
-      /** UNTRANSLATED */
-      description: 'Customize fields to collect more user profile information during sign-up.',
+      title: 'جمع ملف المستخدم الشخصي',
+      description: 'تخصيص الحقول لجمع المزيد من معلومات ملف المستخدم الشخصي أثناء التسجيل.',
     },
   },
   type: {
-    /** UNTRANSLATED */
-    Text: 'Text',
-    /** UNTRANSLATED */
-    Number: 'Number',
-    /** UNTRANSLATED */
-    Date: 'Date',
-    /** UNTRANSLATED */
-    Checkbox: 'Checkbox (Boolean)',
-    /** UNTRANSLATED */
-    Select: 'Dropdown (Single select)',
-    /** UNTRANSLATED */
-    Url: 'URL',
-    /** UNTRANSLATED */
-    Regex: 'Regular expression',
-    /** UNTRANSLATED */
-    Address: 'Address (Composition)',
-    /** UNTRANSLATED */
-    Fullname: 'Fullname (Composition)',
+    Text: 'نص',
+    Number: 'رقم',
+    Date: 'تاريخ',
+    Checkbox: 'خانة اختيار (منطقية)',
+    Select: 'قائمة منسدلة (اختيار فردي)',
+    Url: 'رابط URL',
+    Regex: 'تعبير منتظم',
+    Address: 'عنوان (تركيب)',
+    Fullname: 'الاسم الكامل (تركيب)',
   },
   modal: {
-    /** UNTRANSLATED */
-    title: 'Add profile field',
-    /** UNTRANSLATED */
-    subtitle: 'Customize fields to collect more user profile information during sign-up.',
-    /** UNTRANSLATED */
-    built_in_properties: 'Built-in user profile properties',
-    /** UNTRANSLATED */
-    custom_properties: 'Custom properties',
-    /** UNTRANSLATED */
-    create_button: 'Create profile field',
+    title: 'إضافة حقل الملف الشخصي',
+    subtitle: 'تخصيص الحقول لجمع المزيد من معلومات ملف المستخدم الشخصي أثناء التسجيل.',
+    built_in_properties: 'خصائص ملف المستخدم المدمجة',
+    custom_properties: 'خصائص مخصصة',
+    custom_data_field_name: 'اسم حقل البيانات المخصص',
+    custom_data_field_input_placeholder: 'أدخل اسم حقل البيانات المخصص، مثل `myFavoriteFieldName`',
+    custom_field: {
+      title: 'حقل بيانات مخصص',
+      description: 'أي خصائص إضافية للمستخدم يمكنك تعريفها لتلبية المتطلبات الفريدة لتطبيقك.',
+    },
+    type_required: 'الرجاء تحديد نوع الخاصية',
+    create_button: 'إنشاء حقل الملف الشخصي',
+  },
+  details: {
+    page_title: 'تفاصيل حقل الملف الشخصي',
+    back_to_sie: 'العودة إلى تجربة تسجيل الدخول',
+    enter_field_name: 'أدخل اسم حقل الملف الشخصي',
+    delete_description:
+      'لا يمكن التراجع عن هذا الإجراء. هل أنت متأكد أنك تريد حذف حقل الملف الشخصي هذا؟',
+    field_deleted: 'تم حذف حقل الملف الشخصي {{name}} بنجاح.',
+    key: 'مفتاح بيانات المستخدم',
+    field_name: 'اسم الحقل',
+    field_type: 'نوع الحقل',
+    settings: 'الإعدادات',
+    settings_description: 'تخصيص الحقول لجمع المزيد من معلومات ملف المستخدم الشخصي أثناء التسجيل.',
+    address_format: 'تنسيق العنوان',
+    single_line_address: 'عنوان بسطر واحد',
+    multi_line_address: 'عنوان متعدد الأسطر (مثل: الشارع، المدينة، الولاية، الرمز البريدي، البلد)',
+    composition_parts: 'أجزاء التركيب',
+    composition_parts_tip: 'حدد الأجزاء لتكوين الحقل المعقد.',
+    label: 'تسمية العرض',
+    label_placeholder: 'تسمية',
+    label_tip: 'هل تحتاج إلى الترجمة؟ أضف اللغات في <a>تجربة تسجيل الدخول > المحتوى</a>',
+    description: 'وصف العرض',
+    description_placeholder: 'الوصف',
+    options: 'خيارات',
+    options_tip:
+      'أدخل كل خيار في سطر جديد. استخدم الفاصلة المنقوطة لفصل المفتاح عن القيمة، مثل `key:value`',
+    options_placeholder: 'value1:label1\nvalue2:label2\nvalue3:label3',
+    regex: 'تعبير منتظم',
+    regex_tip: 'حدد تعبيرًا منتظمًا للتحقق من صحة الإدخال.',
+    regex_placeholder: '^[a-zA-Z0-9]+$',
+    date_format: 'تنسيق التاريخ',
+    date_format_us: 'الولايات المتحدة (MM/dd/yyyy)',
+    date_format_uk: 'المملكة المتحدة وأوروبا (dd/MM/yyyy)',
+    date_format_iso: 'المعيار الدولي (yyyy-MM-dd)',
+    custom_date_format: 'تنسيق تاريخ مخصص',
+    custom_date_format_placeholder: 'أدخل تنسيق التاريخ المخصص. مثل "MM-dd-yyyy"',
+    custom_date_format_tip: 'راجع <a>وثائق date-fns</a> لرموز التنسيق الصالحة.',
+    input_length: 'طول الإدخال',
+    value_range: 'نطاق القيمة',
+    min: 'الحد الأدنى',
+    max: 'الحد الأقصى',
+    required: 'مطلوب',
+    required_description:
+      'عند التمكين، يجب على المستخدمين ملء هذا الحقل. عند التعطيل، يكون هذا الحقل اختياريًا.',
   },
 };
 

@@ -10,8 +10,7 @@ const sign_in_exp = {
     branding: 'العلامة التجارية',
     sign_up_and_sign_in: 'التسجيل وتسجيل الدخول',
     content: 'المحتوى',
-    /** UNTRANSLATED */
-    collect_user_profile: 'Collect user profile',
+    collect_user_profile: 'جمع ملف تعريف المستخدم',
     password_policy: 'سياسة كلمة المرور',
   },
   welcome: {

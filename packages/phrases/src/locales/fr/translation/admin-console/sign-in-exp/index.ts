@@ -11,8 +11,7 @@ const sign_in_exp = {
     branding: 'Image de marque',
     sign_up_and_sign_in: 'Inscription et connexion',
     content: 'Contenu',
-    /** UNTRANSLATED */
-    collect_user_profile: 'Collect user profile',
+    collect_user_profile: 'Collecter le profil utilisateur',
     password_policy: 'Politique de mot de passe',
   },
   welcome: {

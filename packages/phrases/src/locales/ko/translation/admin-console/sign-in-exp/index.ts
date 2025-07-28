@@ -10,8 +10,7 @@ const sign_in_exp = {
     branding: '브랜딩',
     sign_up_and_sign_in: '회원가입/로그인',
     content: '내용',
-    /** UNTRANSLATED */
-    collect_user_profile: 'Collect user profile',
+    collect_user_profile: '사용자 프로필 수집',
     password_policy: '암호 정책',
   },
   welcome: {

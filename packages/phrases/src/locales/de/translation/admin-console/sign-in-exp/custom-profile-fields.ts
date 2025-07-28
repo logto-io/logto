@@ -1,53 +1,91 @@
 const custom_profile_fields = {
   table: {
-    /** UNTRANSLATED */
-    add_button: 'Add profile field',
+    add_button: 'Profilfeld hinzufügen',
     title: {
-      /** UNTRANSLATED */
-      field_label: 'Field label',
-      /** UNTRANSLATED */
-      type: 'Type',
-      /** UNTRANSLATED */
-      user_data_key: 'Key in user profile',
+      field_label: 'Feldbezeichnung',
+      type: 'Typ',
+      user_data_key: 'Schlüssel im Benutzerprofil',
     },
     placeholder: {
-      /** UNTRANSLATED */
-      title: 'Collect user profile',
-      /** UNTRANSLATED */
-      description: 'Customize fields to collect more user profile information during sign-up.',
+      title: 'Benutzerprofil sammeln',
+      description:
+        'Passen Sie Felder an, um während der Registrierung mehr Benutzerprofilinformationen zu sammeln.',
     },
   },
   type: {
-    /** UNTRANSLATED */
     Text: 'Text',
-    /** UNTRANSLATED */
-    Number: 'Number',
-    /** UNTRANSLATED */
-    Date: 'Date',
-    /** UNTRANSLATED */
-    Checkbox: 'Checkbox (Boolean)',
-    /** UNTRANSLATED */
-    Select: 'Dropdown (Single select)',
-    /** UNTRANSLATED */
+    Number: 'Zahl',
+    Date: 'Datum',
+    Checkbox: 'Checkbox (Boolescher Wert)',
+    Select: 'Dropdown (Einzelauswahl)',
     Url: 'URL',
-    /** UNTRANSLATED */
-    Regex: 'Regular expression',
-    /** UNTRANSLATED */
-    Address: 'Address (Composition)',
-    /** UNTRANSLATED */
-    Fullname: 'Fullname (Composition)',
+    Regex: 'Regulärer Ausdruck',
+    Address: 'Adresse (Zusammensetzung)',
+    Fullname: 'Vollständiger Name (Zusammensetzung)',
   },
   modal: {
-    /** UNTRANSLATED */
-    title: 'Add profile field',
-    /** UNTRANSLATED */
-    subtitle: 'Customize fields to collect more user profile information during sign-up.',
-    /** UNTRANSLATED */
-    built_in_properties: 'Built-in user profile properties',
-    /** UNTRANSLATED */
-    custom_properties: 'Custom properties',
-    /** UNTRANSLATED */
-    create_button: 'Create profile field',
+    title: 'Profilfeld hinzufügen',
+    subtitle:
+      'Passen Sie Felder an, um während der Registrierung mehr Benutzerprofilinformationen zu sammeln.',
+    built_in_properties: 'Integrierte Benutzerprofileigenschaften',
+    custom_properties: 'Benutzerdefinierte Eigenschaften',
+    custom_data_field_name: 'Benutzerdefinierter Datenfeldname',
+    custom_data_field_input_placeholder:
+      'Geben Sie den benutzerdefinierten Datenfeldnamen ein, z.B. `meinLieblingsFeldName`',
+    custom_field: {
+      title: 'Benutzerdefiniertes Datenfeld',
+      description:
+        'Zusätzliche Benutzereigenschaften, die Sie definieren können, um die spezifischen Anforderungen Ihrer Anwendung zu erfüllen.',
+    },
+    type_required: 'Bitte wählen Sie einen Eigenschaftstyp aus',
+    create_button: 'Profilfeld erstellen',
+  },
+  details: {
+    page_title: 'Profilfeld-Details',
+    back_to_sie: 'Zurück zur Anmeldeoberfläche',
+    enter_field_name: 'Geben Sie den Profilfeldnamen ein',
+    delete_description:
+      'Diese Aktion kann nicht rückgängig gemacht werden. Möchten Sie dieses Profilfeld wirklich löschen?',
+    field_deleted: 'Profilfeld {{name}} wurde erfolgreich gelöscht.',
+    key: 'Benutzerdatenschlüssel',
+    field_name: 'Feldname',
+    field_type: 'Feldtyp',
+    settings: 'Einstellungen',
+    settings_description:
+      'Passen Sie Felder an, um während der Registrierung mehr Benutzerprofilinformationen zu sammeln.',
+    address_format: 'Adressformat',
+    single_line_address: 'Einzeilige Adresse',
+    multi_line_address: 'Mehrzeilige Adresse (z.B. Straße, Stadt, Bundesland, Postleitzahl, Land)',
+    composition_parts: 'Zusammensetzungsteile',
+    composition_parts_tip: 'Wählen Sie die Teile aus, um das komplexe Feld zusammenzusetzen.',
+    label: 'Anzeigebezeichnung',
+    label_placeholder: 'Bezeichnung',
+    label_tip:
+      'Benötigen Sie Lokalisierung? Fügen Sie Sprachen unter <a>Anmeldeoberfläche > Inhalt</a> hinzu',
+    description: 'Anzeigebeschreibung',
+    description_placeholder: 'Beschreibung',
+    options: 'Optionen',
+    options_tip:
+      'Geben Sie jede Option in eine neue Zeile ein. Verwenden Sie ein Semikolon, um Schlüssel und Wert zu trennen, z.B. `schlüssel:wert`',
+    options_placeholder: 'wert1:bezeichnung1\nwert2:bezeichnung2\nwert3:bezeichnung3',
+    regex: 'Regulärer Ausdruck',
+    regex_tip: 'Definieren Sie einen regulären Ausdruck, um die Eingabe zu validieren.',
+    regex_placeholder: '^[a-zA-Z0-9]+$',
+    date_format: 'Datumsformat',
+    date_format_us: 'Vereinigte Staaten (MM/TT/JJJJ)',
+    date_format_uk: 'UK und Europa (TT/MM/JJJJ)',
+    date_format_iso: 'Internationaler Standard (JJJJ-MM-TT)',
+    custom_date_format: 'Benutzerdefiniertes Datumsformat',
+    custom_date_format_placeholder:
+      'Geben Sie das benutzerdefinierte Datumsformat ein. Z.B. "MM-TT-JJJJ"',
+    custom_date_format_tip: 'Siehe <a>date-fns</a> Dokumentation für gültige Formatierungstokens.',
+    input_length: 'Eingabelänge',
+    value_range: 'Wertebereich',
+    min: 'Minimum',
+    max: 'Maximum',
+    required: 'Erforderlich',
+    required_description:
+      'Wenn aktiviert, muss dieses Feld von Benutzern ausgefüllt werden. Wenn deaktiviert, ist dieses Feld optional.',
   },
 };
 

@@ -75,8 +75,7 @@ const general = {
   or: 'Или',
   reset: 'Сбросить',
   generate: 'Сгенерировать',
-  /** UNTRANSLATED */
-  manage: 'Manage',
+  manage: 'Управлять',
 };
 
 export default Object.freeze(general);
