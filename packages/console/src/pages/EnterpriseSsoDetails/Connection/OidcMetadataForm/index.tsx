@@ -84,7 +84,12 @@ function OidcMetadataForm({ providerConfig, config, providerName }: Props) {
           )}
       </FormField>
       <FormField title="enterprise_sso.metadata.oidc.scope_field_name">
-        <Textarea rows={5} {...register('scope')} error={Boolean(errors.scope)} />
+        <Textarea
+          rows={5}
+          {...register('scope')}
+          error={Boolean(errors.scope)}
+          placeholder={t('enterprise_sso.metadata.oidc.scope_field_placeholder')}
+        />
       </FormField>
       {providerName === SsoProviderName.AZURE_AD_OIDC && (
         <FormField
