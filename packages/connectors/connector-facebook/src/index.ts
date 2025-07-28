@@ -172,7 +172,8 @@ const getTokenResponseAndUserInfo =
   (getConfig: GetConnectorConfig): GetTokenResponseAndUserInfo =>
   async (data) => {
     // Always fetch long lived access token if token storage is enabled
-    const tokenResponse = await handleAuthorizationCallback(getConfig, data, true);
+    const EXCHANGE_LONG_LIVED_TOKEN = true;
+    const tokenResponse = await handleAuthorizationCallback(getConfig, data, EXCHANGE_LONG_LIVED_TOKEN);
     const userInfo = await _getUserInfo(tokenResponse.access_token);
 
     return {
