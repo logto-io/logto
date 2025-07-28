@@ -155,6 +155,7 @@ const getUserInfo =
   async (data, getSession) => {
     const config = await getConfig(defaultMetadata.id);
     validateConfig(config, oidcConnectorConfigGuard);
+    const parsedConfig = oidcConnectorConfigGuard.parse(config);
 
     assert(
       getSession,
@@ -171,9 +172,9 @@ const getUserInfo =
       })
     );
 
-    const tokenResponse = await getIdToken(config, data, redirectUri);
+    const tokenResponse = await getIdToken(parsedConfig, data, redirectUri);
 
-    return parseUserInfoFromIdToken(config, tokenResponse, nonce);
+    return parseUserInfoFromIdToken(parsedConfig, tokenResponse, nonce);
   };
 
 const getTokenResponseAndUserInfo =
@@ -181,6 +182,7 @@ const getTokenResponseAndUserInfo =
   async (data, getSession) => {
     const config = await getConfig(defaultMetadata.id);
     validateConfig(config, oidcConnectorConfigGuard);
+    const parsedConfig = oidcConnectorConfigGuard.parse(config);
 
     assert(
       getSession,
@@ -197,8 +199,8 @@ const getTokenResponseAndUserInfo =
       })
     );
 
-    const tokenResponse = await getIdToken(config, data, redirectUri);
-    const userInfo = await parseUserInfoFromIdToken(config, tokenResponse, nonce);
+    const tokenResponse = await getIdToken(parsedConfig, data, redirectUri);
+    const userInfo = await parseUserInfoFromIdToken(parsedConfig, tokenResponse, nonce);
 
     return {
       tokenResponse,
