@@ -13,7 +13,7 @@ const getTagStatus = (tokenStatus: TokenStatus): TagProps['status'] => {
       return 'success';
     }
     case 'expired': {
-      return 'error';
+      return 'alert';
     }
     case 'inactive': {
       return 'info';
