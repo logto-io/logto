@@ -202,6 +202,7 @@ export const GoogleConnector = Object.freeze({
     scope: z.string().optional(),
     prompts: oidcPromptsGuard,
     oneTap: googleOneTapConfigGuard.optional(),
+    offlineAccess: z.boolean().optional(),
   }) satisfies ToZodObject<GoogleConnectorConfig>,
 });
 
@@ -210,4 +211,9 @@ export type GoogleConnectorConfig = {
   clientSecret: string;
   scope?: string;
   oneTap?: GoogleOneTapConfig;
+  /**
+   * Whether to request offline access. If set to true, the connector will request a refresh token
+   * @link https://developers.google.com/identity/protocols/oauth2/web-server#offline
+   */
+  offlineAccess?: boolean;
 };

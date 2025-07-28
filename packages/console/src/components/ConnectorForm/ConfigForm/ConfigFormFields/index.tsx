@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { CheckboxGroup } from '@/ds-components/Checkbox';
 import CodeEditor from '@/ds-components/CodeEditor';
 import DangerousRaw from '@/ds-components/DangerousRaw';
@@ -36,6 +37,10 @@ function ConfigFormFields({ formItems }: Props) {
 
   const showFormItems = useCallback(
     (formItem: ConnectorConfigFormItem) => {
+      if (formItem.isDevFeature && !isDevFeaturesEnabled) {
+        return false;
+      }
+
       if (!formItem.showConditions) {
         return true;
       }
@@ -101,7 +106,7 @@ function ConfigFormFields({ formItems }: Props) {
           if (item.type === ConnectorConfigFormItemType.Switch) {
             return (
               <Switch
-                label={item.label}
+                label={item.description}
                 checked={typeof value === 'boolean' ? value : false}
                 onChange={({ currentTarget: { checked } }) => {
                   onChange(checked);
@@ -171,16 +176,15 @@ function ConfigFormFields({ formItems }: Props) {
             isRequired={item.required}
             // Tooltip is currently string and does not support i18n.
             tip={item.tooltip}
-            title={
-              <DangerousRaw>
-                {item.type !== ConnectorConfigFormItemType.Switch && item.label}
-              </DangerousRaw>
-            }
+            title={<DangerousRaw>{item.label}</DangerousRaw>}
           >
             {renderFormItem(item)}
-            {Boolean(item.description) && (
-              <div className={styles.description}>{item.description}</div>
-            )}
+            {
+              //  The Switch component displays the description inside the switch box.
+              Boolean(item.description && item.type !== ConnectorConfigFormItemType.Switch) && (
+                <div className={styles.description}>{item.description}</div>
+              )
+            }
           </FormField>
         ) : null
       )}
