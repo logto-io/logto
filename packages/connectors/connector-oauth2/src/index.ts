@@ -109,8 +109,6 @@ const getTokenResponseAndUserInfo =
 
     const tokenResponse = await getAccessToken(parsedConfig, data, redirectUri);
 
-    console.log(tokenResponse);
-
     const userInfo = await _getUserInfo(
       parsedConfig,
       tokenResponse.token_type,
