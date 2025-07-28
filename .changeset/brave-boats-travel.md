@@ -2,7 +2,7 @@
 "@logto/schemas": patch
 ---
 
-fix: add tenant-aware foreign key constrant to organization_user_relations table
+fix: add tenant-aware foreign key constraint to organization_user_relations table
 
 ### Problem
 
