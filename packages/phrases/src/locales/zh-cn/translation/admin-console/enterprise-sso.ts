@@ -68,6 +68,8 @@ const enterprise_sso = {
       client_secret_field_name: '客户端密钥',
       issuer_field_name: '发行者',
       scope_field_name: '范围',
+      /** UNTRANSLATED */
+      scope_field_placeholder: 'Enter the scopes (separated by a space)',
     },
   },
 };

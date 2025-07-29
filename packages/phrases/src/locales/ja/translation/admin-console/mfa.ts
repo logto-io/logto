@@ -20,6 +20,16 @@ const mfa = {
   backup_code_setup_hint: '上記のMFA要因を検証できない場合は、バックアップオプションを使用します。',
   backup_code_error_hint:
     'バックアップコードを使用するには、成功したユーザー認証のために少なくとも1つ以上のMFAメソッドが必要です。',
+  /** UNTRANSLATED */
+  email_verification_code: 'Email verification code',
+  /** UNTRANSLATED */
+  email_verification_code_description:
+    'Link email address to receive and verify verification codes.',
+  /** UNTRANSLATED */
+  phone_verification_code: 'SMS verification code',
+  /** UNTRANSLATED */
+  phone_verification_code_description:
+    'Link phone number to receive and verify SMS verification codes.',
   policy: 'ポリシー',
   policy_description: 'サインインおよびサインアップフローのためのMFAポリシーを設定します。',
   two_step_sign_in_policy: 'サインイン時の2段階認証ポリシー',

@@ -69,6 +69,12 @@ const connector_details = {
     close_on_tap_outside: '사용자가 외부 클릭/탭 시 프롬프트 취소',
     itp_support: '<a>ITP 브라우저에서 업그레이드된 원탭 UX</a> 활성화',
   },
+  sign_in_experience: {
+    /** UNTRANSLATED */
+    in_use: 'Enabled for sign-in ',
+    /** UNTRANSLATED */
+    not_in_use: 'Disabled for sign-in ',
+  },
 };
 
 export default Object.freeze(connector_details);

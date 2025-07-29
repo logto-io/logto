@@ -21,6 +21,16 @@ const mfa = {
     'Kullanıcılar yukarıdaki MFA faktörlerini doğrulayamadığında yedek seçeneğini kullanın.',
   backup_code_error_hint:
     'Bir yedek kodu kullanmak için başarılı kullanıcı kimlik doğrulaması için en az bir daha fazla MFA yönteme ihtiyacınız vardır.',
+  /** UNTRANSLATED */
+  email_verification_code: 'Email verification code',
+  /** UNTRANSLATED */
+  email_verification_code_description:
+    'Link email address to receive and verify verification codes.',
+  /** UNTRANSLATED */
+  phone_verification_code: 'SMS verification code',
+  /** UNTRANSLATED */
+  phone_verification_code_description:
+    'Link phone number to receive and verify SMS verification codes.',
   policy: 'Politika',
   policy_description: 'Giriş ve kaydolma akışları için MFA politikasını belirleyin.',
   two_step_sign_in_policy: 'Girişte 2 aşamalı doğrulama politikası',

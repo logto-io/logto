@@ -21,6 +21,16 @@ const mfa = {
     'Wenn Benutzer die obigen MFA-Faktoren nicht überprüfen können, verwenden Sie die Backup-Option.',
   backup_code_error_hint:
     'Um einen Backup-Code zu verwenden, benötigen Sie mindestens eine weitere MFA-Methode für eine erfolgreiche Benutzerauthentifizierung.',
+  /** UNTRANSLATED */
+  email_verification_code: 'Email verification code',
+  /** UNTRANSLATED */
+  email_verification_code_description:
+    'Link email address to receive and verify verification codes.',
+  /** UNTRANSLATED */
+  phone_verification_code: 'SMS verification code',
+  /** UNTRANSLATED */
+  phone_verification_code_description:
+    'Link phone number to receive and verify SMS verification codes.',
   policy: 'Richtlinie',
   policy_description: 'Legen Sie die MFA-Richtlinie für Anmelde- und Anmeldevorgänge fest.',
   two_step_sign_in_policy: 'Zwei-Schritt-Verifizierungspolitik bei der Anmeldung',

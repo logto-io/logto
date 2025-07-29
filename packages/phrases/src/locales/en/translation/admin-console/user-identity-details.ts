@@ -26,7 +26,7 @@ const user_identity_details = {
   access_token: {
     title: 'Access token',
     description_active:
-      'Access token is active and securely stored in the Token Vault. Your product can use it to access the {{connectorName}} APIs.',
+      'Access token is active and securely stored in the Secret Vault. Your product can use it to access the {{connectorName}} APIs.',
     description_inactive:
       'This access token is inactive (e.g., revoked). Users must re-authorize access to restore functionality.',
     description_expired:

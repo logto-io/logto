@@ -64,6 +64,12 @@ const connector_details = {
     close_on_tap_outside: '在用戶點擊/點擊外面時取消提示',
     itp_support: '啟用 <a>ITP 瀏覽器上的升級一鍵登入用戶體驗</a>',
   },
+  sign_in_experience: {
+    /** UNTRANSLATED */
+    in_use: 'Enabled for sign-in ',
+    /** UNTRANSLATED */
+    not_in_use: 'Disabled for sign-in ',
+  },
 };
 
 export default Object.freeze(connector_details);

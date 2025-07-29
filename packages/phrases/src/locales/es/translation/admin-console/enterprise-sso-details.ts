@@ -121,6 +121,16 @@ const enterprise_sso_details = {
     'Confiar siempre en las direcciones de correo electrónico no verificadas devueltas por el proveedor de identidad',
   trust_unverified_email_tip:
     'El conector Entra ID (OIDC) no devuelve la reclamación `email_verified`, lo que significa que las direcciones de correo electrónico de Azure no están garantizadas como verificadas. Por defecto, Logto no sincronizará direcciones de correo electrónico no verificadas con el perfil del usuario. Habilite esta opción solo si confía en todas las direcciones de correo electrónico del directorio Entra ID.',
+  offline_access: {
+    /** UNTRANSLATED */
+    label: 'Enable offline access',
+    /** UNTRANSLATED */
+    description:
+      'Set `access_type` to `offline` to allow the connector to request a refresh token from Google Workspace.',
+    /** UNTRANSLATED */
+    tooltip:
+      'Unlike the standard OIDC connector, Google Workspace SSO does not support `offline_access` scope by default. It uses the `access_type=offline` parameter to request a refresh token. Enable this option to allow the connector to request a refresh token from Google Workspace.',
+  },
 };
 
 export default Object.freeze(enterprise_sso_details);

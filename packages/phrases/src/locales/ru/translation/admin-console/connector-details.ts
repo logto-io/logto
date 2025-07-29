@@ -70,6 +70,12 @@ const connector_details = {
     close_on_tap_outside: 'Отменить подсказку, если пользователь кликнет/нажмет вне её',
     itp_support: 'Включить <a>улучшенный UX One Tap для ITP браузеров</a>',
   },
+  sign_in_experience: {
+    /** UNTRANSLATED */
+    in_use: 'Enabled for sign-in ',
+    /** UNTRANSLATED */
+    not_in_use: 'Disabled for sign-in ',
+  },
 };
 
 export default Object.freeze(connector_details);

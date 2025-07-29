@@ -70,6 +70,12 @@ const connector_details = {
     close_on_tap_outside: 'Aufforderung abbrechen, wenn Benutzer außerhalb klicken/tippen',
     itp_support: '<a>Erweiterten One Tap UX auf ITP-Browsern</a> aktivieren',
   },
+  sign_in_experience: {
+    /** UNTRANSLATED */
+    in_use: 'Enabled for sign-in ',
+    /** UNTRANSLATED */
+    not_in_use: 'Disabled for sign-in ',
+  },
 };
 
 export default Object.freeze(connector_details);

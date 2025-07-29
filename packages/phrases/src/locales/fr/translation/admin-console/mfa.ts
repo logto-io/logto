@@ -22,6 +22,16 @@ const mfa = {
     "Quand les utilisateurs ne peuvent pas vérifier les facteurs MFA ci-dessus, utilisez l'option de secours.",
   backup_code_error_hint:
     "Pour utiliser un code de secours, vous avez besoin d'au moins une autre méthode de MFA pour une authentification réussie de l'utilisateur.",
+  /** UNTRANSLATED */
+  email_verification_code: 'Email verification code',
+  /** UNTRANSLATED */
+  email_verification_code_description:
+    'Link email address to receive and verify verification codes.',
+  /** UNTRANSLATED */
+  phone_verification_code: 'SMS verification code',
+  /** UNTRANSLATED */
+  phone_verification_code_description:
+    'Link phone number to receive and verify SMS verification codes.',
   policy: 'Politique',
   policy_description: "Définissez la politique de MFA pour les flux de connexion et d'inscription.",
   two_step_sign_in_policy: 'Politique de vérification en deux étapes à la connexion',

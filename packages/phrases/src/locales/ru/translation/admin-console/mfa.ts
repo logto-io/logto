@@ -21,6 +21,16 @@ const mfa = {
     'Когда пользователи не могут проверить вышеупомянутые факторы MFA, используйте резервный вариант.',
   backup_code_error_hint:
     'Для использования резервного кода вам нужен как минимум еще один метод MFA для успешной аутентификации пользователя.',
+  /** UNTRANSLATED */
+  email_verification_code: 'Email verification code',
+  /** UNTRANSLATED */
+  email_verification_code_description:
+    'Link email address to receive and verify verification codes.',
+  /** UNTRANSLATED */
+  phone_verification_code: 'SMS verification code',
+  /** UNTRANSLATED */
+  phone_verification_code_description:
+    'Link phone number to receive and verify SMS verification codes.',
   policy: 'Политика',
   policy_description: 'Установите политику MFA для процессов входа и регистрации.',
   two_step_sign_in_policy: 'Политика двухэтапной верификации при входе',
