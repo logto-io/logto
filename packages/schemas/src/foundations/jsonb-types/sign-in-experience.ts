@@ -280,3 +280,12 @@ export const emailBlocklistPolicyGuard = z.object({
   blockSubaddressing: z.boolean().optional(),
   customBlocklist: z.string().array().optional(),
 }) satisfies ToZodObject<EmailBlocklistPolicy>;
+
+export enum ForgotPasswordMethod {
+  EmailVerificationCode = 'EmailVerificationCode',
+  PhoneVerificationCode = 'PhoneVerificationCode',
+}
+
+export const forgotPasswordMethodsGuard = z.nativeEnum(ForgotPasswordMethod).array();
+
+export type ForgotPasswordMethods = z.infer<typeof forgotPasswordMethodsGuard>;
