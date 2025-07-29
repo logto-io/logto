@@ -83,7 +83,7 @@ describe('google connector', () => {
         scope: 'scope',
         token_type: 'token_type',
       });
-      const { accessToken } = await getAccessToken(mockedConfig, {
+      const { access_token: accessToken } = await getAccessToken(mockedConfig, {
         code: 'code',
         redirectUri: 'dummyRedirectUri',
       });

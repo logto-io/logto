@@ -70,8 +70,9 @@ export class GoogleWorkspaceSsoConnector extends OidcConnector implements Single
         responseType: 'code',
         redirectUri,
       }),
-      // Always use select_account prompt for Google Workspace SSO.
-      prompt: 'select_account consent',
+      // Always use select_account prompt for Google Workspace SSO. If `offlineAccess` is enabled, include `consent` prompt.
+      // Ref: https://developers.google.com/identity/protocols/oauth2/web-server#authenticationuriparameters
+      prompt: this.offlineAccess ? 'consent select_account' : 'select_account',
       scope: oidcConfig.scope,
       // Add `access_type=offline` if offlineAccess is enabled.
       ...(this.offlineAccess && { access_type: 'offline' }),

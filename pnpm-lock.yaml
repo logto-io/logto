@@ -4584,9 +4584,15 @@ importers:
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
+      ky:
+        specifier: ^1.2.3
+        version: 1.2.3
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
+      nock:
+        specifier: ^14.0.6
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -6102,6 +6108,10 @@ packages:
 
   '@mswjs/interceptors@0.38.2':
     resolution: {integrity: sha512-jS/XP42rw1K+WmJPC39i/aAKvNGQrjn7V85RALvozYqBy+KjFkq6pL+ZXSBCM0sNJalFoaCCWqZE0TuK2Mn99g==}
+    engines: {node: '>=18'}
+
+  '@mswjs/interceptors@0.39.3':
+    resolution: {integrity: sha512-9bw/wBL7pblsnOCIqvn1788S9o4h+cC5HWXg0Xhh0dOzsZ53IyfmBM+FYqpDDPbm0xjCqEqvCITloF3Dm4TXRQ==}
     engines: {node: '>=18'}
 
   '@noble/hashes@1.8.0':
@@ -11597,6 +11607,7 @@ packages:
   koa-router@12.0.1:
     resolution: {integrity: sha512-gaDdj3GtzoLoeosacd50kBBTnnh3B9AYxDThQUo4sfUyXdOhY6ku1qyZKW88tQCRgc3Sw6ChXYXWZwwgjOxE0w==}
     engines: {node: '>= 12'}
+    deprecated: Please use @koa/router instead of koa-router. This is the same package maintained by the same people, but under the Koa team's control on GitHub. Versioning is identical and it is a drop-in replacement. Maintenance is supported by Forward Email @ https://forwardemail.net
 
   koa-send@5.0.1:
     resolution: {integrity: sha512-tmcyQ/wXXuxpDxyNXv5yNNkdAMdFRqwtegBXUaowiQzUKqJehttS0x2j0eOZDQAyloAth5w6wwBImnFzkUz3pQ==}
@@ -12395,6 +12406,10 @@ packages:
 
   nock@14.0.3:
     resolution: {integrity: sha512-sJ9RNmCuYBqXDmGZZHgZ1D1441MqFOU4T5aeLGVGEB4OWI/2LM0mZlkfBQzQKdOfJypL+2nPPBugXKjixBn4kQ==}
+    engines: {node: '>=18.20.0 <20 || >=20.12.1'}
+
+  nock@14.0.6:
+    resolution: {integrity: sha512-67n1OfusL/ON57fwFJ6ZurSJa/msYVQmqlz9rCel2HJYj4Zeb8v9TcmRdEW+PV2i9Fm2358umSvzZukhw/E8DA==}
     engines: {node: '>=18.20.0 <20 || >=20.12.1'}
 
   node-domexception@1.0.0:
@@ -14144,6 +14159,7 @@ packages:
   supertest@7.0.0:
     resolution: {integrity: sha512-qlsr7fIC0lSddmA3tzojvzubYxvlGtzumcdHgPwbFWMISQwL22MhM2Y3LNt+6w9Yyx7559VW5ab70dgphm8qQA==}
     engines: {node: '>=14.18.0'}
+    deprecated: Please upgrade to supertest v7.1.3+, see release notes at https://github.com/forwardemail/supertest/releases/tag/v7.1.3 - maintenance is supported by Forward Email @ https://forwardemail.net
 
   supports-color@10.0.0:
     resolution: {integrity: sha512-HRVVSbCCMbj7/kdWF9Q+bbckjBHLtHMEoJWlkmYzzdwhYMkjkOwubLM6t7NbWKjgKamGDrWL1++KrjUO1t9oAQ==}
@@ -17179,6 +17195,15 @@ snapshots:
       - canvas
       - supports-color
       - utf-8-validate
+
+  '@mswjs/interceptors@0.39.3':
+    dependencies:
+      '@open-draft/deferred-promise': 2.2.0
+      '@open-draft/logger': 0.3.0
+      '@open-draft/until': 2.1.0
+      is-node-process: 1.2.0
+      outvariant: 1.4.3
+      strict-event-emitter: 0.5.1
 
   '@noble/hashes@1.8.0': {}
 
@@ -24978,6 +25003,12 @@ snapshots:
       - canvas
       - supports-color
       - utf-8-validate
+
+  nock@14.0.6:
+    dependencies:
+      '@mswjs/interceptors': 0.39.3
+      json-stringify-safe: 5.0.1
+      propagate: 2.0.1
 
   node-domexception@1.0.0: {}
 
