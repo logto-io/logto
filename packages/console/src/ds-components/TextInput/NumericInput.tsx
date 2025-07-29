@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { type ComponentProps } from 'react';
+import { useRef, type ComponentProps } from 'react';
 
 import CaretDown from '@/assets/icons/caret-down.svg?react';
 import CaretUp from '@/assets/icons/caret-up.svg?react';
@@ -48,10 +48,12 @@ type Props = Omit<ComponentProps<typeof TextInput>, 'type' | 'suffix'> & {
 /** A numeric text input with up and down buttons for incrementing and decrementing the value. */
 function NumericInput({ onValueUp, onValueDown, ...props }: Props) {
   const isDisabled = Boolean(props.disabled) || Boolean(props.readOnly);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   return (
     <TextInput
       {...props}
+      ref={inputRef}
       alwaysShowSuffix
       type="number"
       suffix={
@@ -64,7 +66,10 @@ function NumericInput({ onValueUp, onValueDown, ...props }: Props) {
                 props.max !== undefined &&
                 Number(props.value) >= Number(props.max))
             }
-            onTrigger={onValueUp}
+            onTrigger={(event) => {
+              inputRef.current?.focus();
+              onValueUp?.(event);
+            }}
           >
             <CaretUp />
           </Button>
@@ -76,7 +81,10 @@ function NumericInput({ onValueUp, onValueDown, ...props }: Props) {
                 props.min !== undefined &&
                 Number(props.value) <= Number(props.min))
             }
-            onTrigger={onValueDown}
+            onTrigger={(event) => {
+              inputRef.current?.focus();
+              onValueDown?.(event);
+            }}
           >
             <CaretDown />
           </Button>

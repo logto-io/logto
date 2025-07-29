@@ -12,6 +12,13 @@
     flex: 1;
   }
 
+  .tags {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: _.unit(1);
+  }
+
   .operations {
     display: flex;
     align-items: center;
@@ -34,7 +41,7 @@
 
     .row {
       display: flex;
-      align-items: center;
+      align-items: baseline;
       white-space: nowrap;
       gap: _.unit(2);
 

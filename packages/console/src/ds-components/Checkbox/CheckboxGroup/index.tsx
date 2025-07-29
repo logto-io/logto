@@ -1,7 +1,8 @@
 import { type AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
-import { type ReactNode } from 'react';
+import { type ReactElement, type ReactNode } from 'react';
 
+import type DangerousRaw from '@/ds-components/DangerousRaw';
 import DynamicT from '@/ds-components/DynamicT';
 
 import Checkbox from '../Checkbox';
@@ -9,7 +10,7 @@ import Checkbox from '../Checkbox';
 import styles from './index.module.scss';
 
 export type Option<T> = {
-  title?: AdminConsoleKey;
+  title?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   tag?: ReactNode;
   value: T;
 };
@@ -42,7 +43,7 @@ function CheckboxGroup<T extends string>({
           key={value}
           label={
             <>
-              {title ? <DynamicT forKey={title} /> : value}
+              {typeof title === 'string' ? <DynamicT forKey={title} /> : (title ?? value)}
               {tag}
             </>
           }

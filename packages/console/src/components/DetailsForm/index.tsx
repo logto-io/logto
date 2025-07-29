@@ -10,7 +10,7 @@ type Props = {
   readonly isDirty: boolean;
   readonly isSubmitting: boolean;
   readonly onSubmit: () => Promise<void>;
-  readonly onDiscard: () => void;
+  readonly onDiscard?: () => void;
   readonly children: ReactNode;
 };
 
