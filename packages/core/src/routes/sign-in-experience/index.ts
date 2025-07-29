@@ -113,7 +113,9 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         if (mfa.factors.length > 0) {
           await quota.guardTenantUsageByKey('mfaEnabled');
         }
-        validateMfa(mfa);
+        // Get the current sign-in configuration
+        const { signIn: currentSignIn } = signIn ? { signIn } : await findDefaultSignInExperience();
+        validateMfa(mfa, currentSignIn);
       }
 
       /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */

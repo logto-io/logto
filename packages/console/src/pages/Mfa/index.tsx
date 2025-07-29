@@ -34,6 +34,7 @@ function Mfa() {
       {data && (
         <MfaForm
           data={data.mfa}
+          signInMethods={data.signIn.methods}
           onMfaUpdated={(mfa) => {
             void mutate({ ...data, mfa });
           }}
