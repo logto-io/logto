@@ -171,6 +171,12 @@ const quota_item = {
     unlimited: '맞춤 UI 사용',
     not_eligible: '맞춤 UI 자산을 제거하십시오',
   },
+  collect_user_profile_enabled: {
+    name: '사용자 프로필 수집',
+    limited: '사용자 프로필 수집',
+    unlimited: '사용자 프로필 수집',
+    not_eligible: '사용자 프로필 수집 필드를 제거하십시오',
+  },
   idp_initiated_sso_enabled: {
     name: 'IDP 시작 SSO',
     limited: 'IDP 시작 SSO',

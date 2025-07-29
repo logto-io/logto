@@ -59,7 +59,7 @@ const paywall = {
   sso_connectors: '通过升级到付费计划，可解锁企业 SSO 功能。如需任何帮助，请随时 <a>联系我们</a>。',
   tenant_members: '通过升级到付费计划，可解锁协作功能。如需任何帮助，请随时 <a>联系我们</a>。',
   tenant_members_dev_plan:
-    '您已达到 {{limit}}-成员限制。释放一个成员或撤销待定邀请以添加新成员。需要更多名额？请随时联系我们。',
+    '已达到 {{limit}}-成员限制。释放一个成员或撤销待定邀请以添加新成员。需要更多名额？请随时联系我们。',
   custom_jwt: {
     title: '添加自定义声明',
     description:
@@ -67,7 +67,9 @@ const paywall = {
   },
   bring_your_ui: '升级到付费计划，可带上自定义界面功能和高级福利。',
   security_features:
-    '通过升级到 Pro 计划解锁高级安全功能。如果你有任何问题，请不要犹豫 <a>联系我们</a>。',
+    '通过升级到 Pro 计划解锁高级安全功能。如有任何问题，请不要犹豫 <a>联系我们</a>。',
+  collect_user_profile:
+    '升级到付费计划以解锁在新用户注册期间收集更多用户资料信息的功能。如有任何问题，请不要犹豫 <a>联系我们</a>。',
 };
 
 export default Object.freeze(paywall);

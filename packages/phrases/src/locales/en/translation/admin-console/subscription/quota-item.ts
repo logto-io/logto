@@ -171,6 +171,12 @@ const quota_item = {
     unlimited: 'Bring your UI',
     not_eligible: 'Remove your custom UI assets',
   },
+  collect_user_profile_enabled: {
+    name: 'Collect user profile',
+    limited: 'Collect user profile',
+    unlimited: 'Collect user profile',
+    not_eligible: 'Remove your user profile collection fields',
+  },
   idp_initiated_sso_enabled: {
     name: 'IDP-initiated SSO',
     limited: 'IDP-initiated SSO',

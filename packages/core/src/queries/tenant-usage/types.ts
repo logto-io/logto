@@ -21,6 +21,7 @@ export const tenantUsageGuard = z.object({
   hooksLimit: z.number(),
   customJwtEnabled: z.boolean(),
   bringYourUiEnabled: z.boolean(),
+  collectUserProfileEnabled: z.boolean(),
   /** Add-on quotas start */
   machineToMachineLimit: z.number(),
   resourcesLimit: z.number(),
@@ -51,6 +52,7 @@ export const selfComputedSubscriptionUsageGuard = z.object({
   customJwtEnabled: z.boolean(),
   subjectTokenEnabled: z.boolean(),
   bringYourUiEnabled: z.boolean(),
+  collectUserProfileEnabled: z.boolean(),
   /** Add-on quotas start */
   machineToMachineLimit: z.number(),
   resourcesLimit: z.number(),

@@ -74,6 +74,8 @@ const paywall = {
     'Upgrade to a paid plan for bring your custom UI functionality and premium benefits.',
   security_features:
     "Unlock advanced security features by upgrading to the Pro plan. Don't hesitate to <a>contact us</a> if you have any questions.",
+  collect_user_profile:
+    "Upgrade to a paid plan to collect additional user profile information during sign-up. Don't hesitate to <a>contact us</a> if you have any questions.",
 };
 
 export default Object.freeze(paywall);

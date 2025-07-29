@@ -171,6 +171,12 @@ const quota_item = {
     unlimited: 'Ara yüzünü getir',
     not_eligible: 'Özel UI varlıklarınızı kaldırın',
   },
+  collect_user_profile_enabled: {
+    name: 'Kullanıcı profili toplama',
+    limited: 'Kullanıcı profili toplama',
+    unlimited: 'Kullanıcı profili toplama',
+    not_eligible: 'Kullanıcı profili toplama alanlarınızı kaldırın',
+  },
   idp_initiated_sso_enabled: {
     name: 'IDP başlatılan SSO',
     limited: 'IDP başlatılan SSO',
