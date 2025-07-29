@@ -5,8 +5,10 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import * as s from 'superstruct';
 
-import { InputField } from '@/components/InputFields';
+import PrimitiveProfileInputField from '@/components/InputFields/PrimitiveProfileInputField';
 import { addressFieldConfigGuard } from '@/types/guard';
+
+import useValidateField from '../use-validate-field';
 
 import styles from './index.module.scss';
 
@@ -35,6 +37,8 @@ type Props = {
  */
 const AddressSubForm = ({ field }: Props) => {
   const { t } = useTranslation();
+  const validateField = useValidateField();
+
   const {
     control,
     watch,
@@ -54,7 +58,7 @@ const AddressSubForm = ({ field }: Props) => {
 
   const setFormattedValue = useCallback(() => {
     const formatted = enabledParts
-      .map(({ key }) => values?.[key])
+      .map(({ name }) => values?.[name])
       .filter(Boolean)
       .join(', ');
     setValue('address.formatted', formatted);
@@ -66,26 +70,26 @@ const AddressSubForm = ({ field }: Props) => {
 
   return (
     <div className={styles.addressContainer}>
-      {enabledParts.map(({ key }) => (
+      {enabledParts.map((part) => (
         <Controller
-          key={key}
-          name={`address.${key}`}
+          key={part.name}
+          name={`address.${part.name}`}
           control={control}
-          rules={{ required }}
+          rules={{ required, validate: (value) => validateField(value, part) }}
           render={({ field: { onBlur, onChange, value } }) => (
-            <InputField
-              key={key}
+            <PrimitiveProfileInputField
+              {...part}
               className={classNames(
                 styles.inputField,
-                (key === 'locality' || key === 'region') && styles.halfSize
+                (part.name === 'locality' || part.name === 'region') && styles.halfSize
               )}
-              label={t(`profile.address.${key}`)}
+              label={part.label || t(`profile.address.${part.name}`)}
               value={value ?? ''}
-              isDanger={!!errors.address?.[key]}
+              isDanger={!!errors.address?.[part.name]}
               onBlur={onBlur}
               onChange={(event) => {
                 onChange(event);
-                if (key !== 'formatted') {
+                if (part.name !== 'formatted') {
                   setFormattedValue();
                 }
               }}
@@ -93,7 +97,7 @@ const AddressSubForm = ({ field }: Props) => {
           )}
         />
       ))}
-      {!enabledParts.some(({ key }) => key === 'formatted') && (
+      {!enabledParts.some(({ name }) => name === 'formatted') && (
         <input {...register('address.formatted')} hidden />
       )}
       {description && <div className={styles.description}>{description}</div>}

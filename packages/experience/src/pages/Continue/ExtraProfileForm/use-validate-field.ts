@@ -1,37 +1,34 @@
 import { isValidUrl } from '@logto/core-kit';
 import {
-  type CustomProfileField,
   CustomProfileFieldType,
-  type CustomProfileFieldConfig,
+  supportedDateFormat,
+  type FieldPart,
+  type CustomProfileFieldBaseConfig,
 } from '@logto/schemas';
 import { format, parse, isValid } from 'date-fns';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as s from 'superstruct';
 
-import { addressFieldValueGuard, addressFieldConfigGuard } from '@/types/guard';
+import { dateFieldConfigGuard } from '@/types/guard';
 
 import useFieldLabel from './use-field-label';
 
-const isValidAddressField = (value: unknown, config: CustomProfileFieldConfig): boolean => {
-  s.assert(value, addressFieldValueGuard);
-  s.assert(config, addressFieldConfigGuard);
-
-  return !config.parts.filter(({ enabled }) => enabled).some(({ key }) => !value?.[key]);
-};
-
-const isValidDateField = (value: unknown, config: CustomProfileFieldConfig): boolean => {
+const isValidDateField = (value: unknown, config: CustomProfileFieldBaseConfig): boolean => {
   s.assert(value, s.string());
-  s.assert(config.format, s.string());
-  const parsedDate = parse(value, config.format, new Date(), {
+  s.assert(config, dateFieldConfigGuard);
+  const dateFormat =
+    config.format === supportedDateFormat.Custom ? config.customFormat : config.format;
+  s.assert(dateFormat, s.string());
+  const parsedDate = parse(value, dateFormat, new Date(), {
     useAdditionalDayOfYearTokens: true,
     useAdditionalWeekYearTokens: true,
   });
 
-  return isValid(parsedDate) && format(parsedDate, config.format) === value;
+  return isValid(parsedDate) && format(parsedDate, dateFormat) === value;
 };
 
-const isValidRegexField = (value: unknown, config: CustomProfileFieldConfig): boolean => {
+const isValidRegexField = (value: unknown, config: CustomProfileFieldBaseConfig): boolean => {
   s.assert(value, s.string());
   s.assert(config.format, s.string());
   const regex = new RegExp(config.format);
@@ -44,7 +41,7 @@ const isValidUrlField = (value: unknown): boolean => {
   return isValidUrl(value);
 };
 
-const isValidNumberRange = (value: unknown, config: CustomProfileFieldConfig): boolean => {
+const isValidNumberRange = (value: unknown, config: CustomProfileFieldBaseConfig): boolean => {
   s.assert(value, s.string());
   const parsedNumber = Number(value);
   return (
@@ -54,7 +51,7 @@ const isValidNumberRange = (value: unknown, config: CustomProfileFieldConfig): b
   );
 };
 
-const isValidTextLengthRange = (value: unknown, config: CustomProfileFieldConfig): boolean => {
+const isValidTextLengthRange = (value: unknown, config: CustomProfileFieldBaseConfig): boolean => {
   s.assert(value, s.string());
 
   return (
@@ -68,8 +65,8 @@ const useValidateField = () => {
   const getFieldLabel = useFieldLabel();
 
   const validate = useCallback(
-    (value: unknown, field: CustomProfileField) => {
-      const { type, name, label, required, config } = field;
+    (value: unknown, field: Omit<FieldPart, 'enabled'>) => {
+      const { type, name, label, required, config = {} } = field;
       const labelWithI18nFallback = getFieldLabel(name, label);
       const generalInvalidMessage = t('error.general_invalid', { types: [labelWithI18nFallback] });
       const generalRequireMessage = t('error.general_required', { types: [labelWithI18nFallback] });

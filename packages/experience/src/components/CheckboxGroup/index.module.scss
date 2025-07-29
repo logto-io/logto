@@ -1,0 +1,19 @@
+@use '@/scss/underscore' as _;
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(3);
+}
+
+.description {
+  font: var(--font-body-2);
+  color: var(--color-type-secondary);
+  padding-top: _.unit(1);
+  margin-inline-start: _.unit(0.5);
+}
+
+.errorMessage {
+  margin-top: _.unit(1);
+  margin-inline-start: _.unit(0.5);
+}

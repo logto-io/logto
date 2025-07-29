@@ -203,7 +203,7 @@ export class ProfileValidator {
       .filter(({ required }) => required)
       .reduce((accumulator, currentField) => {
         if (currentField.name === 'fullname') {
-          return [...accumulator, ...(currentField.config.parts?.map(({ key }) => key) ?? [])];
+          return [...accumulator, ...(currentField.config.parts?.map(({ name }) => name) ?? [])];
         }
         return [...accumulator, currentField.name];
       }, new Array<string>());

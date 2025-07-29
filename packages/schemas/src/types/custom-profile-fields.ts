@@ -5,6 +5,7 @@ import { Users } from '../db-entries/user.js';
 import {
   CustomProfileFieldType,
   customProfileFieldTypeGuard,
+  fieldPartGuard,
   type UserProfile,
   userProfileAddressKeys,
   userProfileGuard,
@@ -19,7 +20,7 @@ export type BaseProfileField = {
   label?: string;
   description?: string;
   type: CustomProfileFieldType;
-  required?: boolean;
+  required: boolean;
 };
 
 const baseProfileFieldGuard = z.object({
@@ -27,7 +28,7 @@ const baseProfileFieldGuard = z.object({
   type: customProfileFieldTypeGuard,
   label: z.string(),
   description: z.string().optional(),
-  required: z.boolean().optional(),
+  required: z.boolean(),
 });
 
 export type TextProfileField = BaseProfileField & {
@@ -75,6 +76,7 @@ export type DateProfileField = BaseProfileField & {
   config?: {
     placeholder?: string;
     format: string;
+    customFormat?: string;
   };
 };
 
@@ -84,6 +86,7 @@ export const dateProfileFieldGuard = baseProfileFieldGuard.extend({
     .object({
       placeholder: z.string().optional(),
       format: z.string(),
+      customFormat: z.string().optional(),
     })
     .optional(),
 }) satisfies ToZodObject<DateProfileField>;
@@ -153,7 +156,24 @@ export const regexProfileFieldGuard = baseProfileFieldGuard.extend({
 export type AddressProfileField = BaseProfileField & {
   type: CustomProfileFieldType.Address;
   config: {
-    parts: Array<{ key: keyof Exclude<UserProfile['address'], undefined>; enabled: boolean }>;
+    parts: Array<{
+      enabled: boolean;
+      name: keyof Exclude<UserProfile['address'], undefined>;
+      type: CustomProfileFieldType;
+      label: string;
+      description?: string;
+      required: boolean;
+      config?: {
+        placeholder?: string;
+        minLength?: number;
+        maxLength?: number;
+        minValue?: number;
+        maxValue?: number;
+        options?: Array<{ label: string; value: string }>;
+        format?: string;
+        customFormat?: string;
+      };
+    }>;
   };
 };
 
@@ -161,9 +181,8 @@ export const addressProfileFieldGuard = baseProfileFieldGuard.extend({
   type: z.literal(CustomProfileFieldType.Address),
   config: z.object({
     parts: z.array(
-      z.object({
-        key: z.enum(userProfileAddressKeys),
-        enabled: z.boolean(),
+      fieldPartGuard.omit({ name: true }).extend({
+        name: z.enum(userProfileAddressKeys),
       })
     ),
   }),
@@ -173,13 +192,27 @@ export type FullnameProfileField = BaseProfileField & {
   type: CustomProfileFieldType.Fullname;
   config: {
     parts: Array<{
-      key: keyof Pick<UserProfile, 'givenName' | 'middleName' | 'familyName'>;
       enabled: boolean;
+      name: keyof Pick<UserProfile, 'givenName' | 'middleName' | 'familyName'>;
+      type: CustomProfileFieldType;
+      label: string;
+      description?: string;
+      required: boolean;
+      config?: {
+        placeholder?: string;
+        minLength?: number;
+        maxLength?: number;
+        minValue?: number;
+        maxValue?: number;
+        options?: Array<{ label: string; value: string }>;
+        format?: string;
+        customFormat?: string;
+      };
     }>;
   };
 };
 
-const fullnameKeys = userProfileGuard
+export const fullnameKeys = userProfileGuard
   .pick({
     givenName: true,
     middleName: true,
@@ -190,7 +223,11 @@ const fullnameKeys = userProfileGuard
 export const fullnameProfileFieldGuard = baseProfileFieldGuard.extend({
   type: z.literal(CustomProfileFieldType.Fullname),
   config: z.object({
-    parts: z.array(z.object({ key: z.enum(fullnameKeys), enabled: z.boolean() })),
+    parts: z.array(
+      fieldPartGuard.omit({ name: true }).extend({
+        name: z.enum(fullnameKeys),
+      })
+    ),
   }),
 }) satisfies ToZodObject<FullnameProfileField>;
 
@@ -282,3 +319,10 @@ export const reservedCustomDataKeys = Object.freeze(reservedCustomDataKeyGuard.k
  * with the built-in sign-in/sign-up experience flows.
  */
 export const reservedSignInIdentifierKeys = Object.freeze(signInIdentifierKeyGuard.keyof().options);
+
+export enum supportedDateFormat {
+  US = 'MM/dd/yyyy',
+  UK = 'dd/MM/yyyy',
+  ISO = 'yyyy-MM-dd',
+  Custom = 'custom',
+}
