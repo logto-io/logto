@@ -11,8 +11,7 @@ const sign_in_exp = {
     branding: 'ブランディング',
     sign_up_and_sign_in: 'サインアップとサインイン',
     content: '内容',
-    /** UNTRANSLATED */
-    collect_user_profile: 'Collect user profile',
+    collect_user_profile: 'ユーザープロフィールを収集',
     password_policy: 'パスワードポリシー',
   },
   welcome: {

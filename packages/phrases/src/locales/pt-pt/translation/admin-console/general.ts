@@ -28,7 +28,7 @@ const general = {
   reminder: 'Lembrete',
   edit: 'Editar',
   delete: 'Eliminar',
-  deleted: 'Deleted',
+  deleted: 'Eliminado',
   activate: 'Ativar',
   deactivate: 'Desativar',
   more_options: 'MAIS OPÇÕES',
@@ -75,8 +75,7 @@ const general = {
   or: 'Ou',
   reset: 'Repor',
   generate: 'Gerar',
-  /** UNTRANSLATED */
-  manage: 'Manage',
+  manage: 'Gerir',
 };
 
 export default Object.freeze(general);

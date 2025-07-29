@@ -1,53 +1,81 @@
 const custom_profile_fields = {
   table: {
-    /** UNTRANSLATED */
-    add_button: 'Add profile field',
+    add_button: '新增個人資料欄位',
     title: {
-      /** UNTRANSLATED */
-      field_label: 'Field label',
-      /** UNTRANSLATED */
-      type: 'Type',
-      /** UNTRANSLATED */
-      user_data_key: 'Key in user profile',
+      field_label: '欄位標籤',
+      type: '類型',
+      user_data_key: '使用者資料鍵值',
     },
     placeholder: {
-      /** UNTRANSLATED */
-      title: 'Collect user profile',
-      /** UNTRANSLATED */
-      description: 'Customize fields to collect more user profile information during sign-up.',
+      title: '收集使用者資料',
+      description: '自訂欄位以在註冊時收集更多使用者資料。',
     },
   },
   type: {
-    /** UNTRANSLATED */
-    Text: 'Text',
-    /** UNTRANSLATED */
-    Number: 'Number',
-    /** UNTRANSLATED */
-    Date: 'Date',
-    /** UNTRANSLATED */
-    Checkbox: 'Checkbox (Boolean)',
-    /** UNTRANSLATED */
-    Select: 'Dropdown (Single select)',
-    /** UNTRANSLATED */
-    Url: 'URL',
-    /** UNTRANSLATED */
-    Regex: 'Regular expression',
-    /** UNTRANSLATED */
-    Address: 'Address (Composition)',
-    /** UNTRANSLATED */
-    Fullname: 'Fullname (Composition)',
+    Text: '文字',
+    Number: '數字',
+    Date: '日期',
+    Checkbox: '勾選框 (布林值)',
+    Select: '下拉選單 (單選)',
+    Url: '網址',
+    Regex: '正規表示式',
+    Address: '地址 (組合)',
+    Fullname: '全名 (組合)',
   },
   modal: {
-    /** UNTRANSLATED */
-    title: 'Add profile field',
-    /** UNTRANSLATED */
-    subtitle: 'Customize fields to collect more user profile information during sign-up.',
-    /** UNTRANSLATED */
-    built_in_properties: 'Built-in user profile properties',
-    /** UNTRANSLATED */
-    custom_properties: 'Custom properties',
-    /** UNTRANSLATED */
-    create_button: 'Create profile field',
+    title: '新增個人資料欄位',
+    subtitle: '自訂欄位以在註冊時收集更多使用者資料。',
+    built_in_properties: '內建使用者資料屬性',
+    custom_properties: '自訂屬性',
+    custom_data_field_name: '自訂資料欄位名稱',
+    custom_data_field_input_placeholder: '輸入自訂資料欄位名稱，例如 `myFavoriteFieldName`',
+    custom_field: {
+      title: '自訂資料欄位',
+      description: '任何額外的使用者屬性，可定義以滿足應用程式的獨特需求。',
+    },
+    type_required: '請選擇屬性類型',
+    create_button: '建立個人資料欄位',
+  },
+  details: {
+    page_title: '個人資料欄位詳情',
+    back_to_sie: '返回登入體驗',
+    enter_field_name: '輸入個人資料欄位名稱',
+    delete_description: '此操作無法撤銷。確定要刪除此個人資料欄位嗎？',
+    field_deleted: '個人資料欄位 {{name}} 已成功刪除。',
+    key: '使用者資料鍵值',
+    field_name: '欄位名稱',
+    field_type: '欄位類型',
+    settings: '設定',
+    settings_description: '自訂欄位以在註冊時收集更多使用者資料。',
+    address_format: '地址格式',
+    single_line_address: '單行地址',
+    multi_line_address: '多行地址 (例如：街道、城市、州、郵遞區號、國家)',
+    composition_parts: '組合部分',
+    composition_parts_tip: '選擇組成複雜欄位的部分。',
+    label: '顯示標籤',
+    label_placeholder: '標籤',
+    label_tip: '需要本地化嗎？在<a>登入體驗 > 內容</a>中新增語言',
+    description: '顯示說明',
+    description_placeholder: '說明',
+    options: '選項',
+    options_tip: '每行輸入一個選項。使用分號分隔鍵和值，例如 `key:value`',
+    options_placeholder: 'value1:label1\nvalue2:label2\nvalue3:label3',
+    regex: '正規表示式',
+    regex_tip: '定義正規表示式以驗證輸入。',
+    regex_placeholder: '^[a-zA-Z0-9]+$',
+    date_format: '日期格式',
+    date_format_us: '美國 (MM/dd/yyyy)',
+    date_format_uk: '英國和歐洲 (dd/MM/yyyy)',
+    date_format_iso: '國際標準 (yyyy-MM-dd)',
+    custom_date_format: '自訂日期格式',
+    custom_date_format_placeholder: '輸入自訂日期格式。例如 "MM-dd-yyyy"',
+    custom_date_format_tip: '查看<a>date-fns</a>文件以獲取有效的格式標記。',
+    input_length: '輸入長度',
+    value_range: '數值範圍',
+    min: '最小值',
+    max: '最大值',
+    required: '必填',
+    required_description: '啟用時，使用者必須填寫此欄位。停用時，此欄位為選填。',
   },
 };
 

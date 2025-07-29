@@ -11,8 +11,7 @@ const sign_in_exp = {
     branding: 'Markalaşma',
     sign_up_and_sign_in: 'Kaydol ve Oturum Aç',
     content: 'İçerik',
-    /** UNTRANSLATED */
-    collect_user_profile: 'Collect user profile',
+    collect_user_profile: 'Kullanıcı profili topla',
     password_policy: 'Şifre politikası',
   },
   welcome: {

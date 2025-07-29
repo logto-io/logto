@@ -137,26 +137,17 @@ const user_details = {
     },
   },
   connections: {
-    /** UNTRANSLATED */
-    title: 'Connection',
-    /** UNTRANSLATED */
+    title: 'Connessione',
     description:
-      'The user links third-party accounts for social sign-in, enterprise SSO, or resources access.',
-    /** UNTRANSLATED */
-    token_status_column: 'Token status',
+      "L'utente collega account di terze parti per l'accesso tramite social, SSO aziendale o accesso alle risorse.",
+    token_status_column: 'Stato del token',
     token_status: {
-      /** UNTRANSLATED */
-      active: 'Active',
-      /** UNTRANSLATED */
-      expired: 'Expired',
-      /** UNTRANSLATED */
-      inactive: 'Inactive',
-      /** UNTRANSLATED */
-      not_applicable: 'Not applicable',
-      /** UNTRANSLATED */
-      available: 'Available',
-      /** UNTRANSLATED */
-      not_available: 'Not available',
+      active: 'Attivo',
+      expired: 'Scaduto',
+      inactive: 'Inattivo',
+      not_applicable: 'Non applicabile',
+      available: 'Disponibile',
+      not_available: 'Non disponibile',
     },
   },
 };

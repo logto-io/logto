@@ -108,85 +108,49 @@ const profile = {
   unlink_reminder:
     'Bağlantıyı keserseniz, kullanıcılar <span></span> hesabıyla giriş yapamazlar. Devam etmek istediğinizden emin misiniz?',
   fields: {
-    /** UNTRANSLATED */
-    name: 'Name',
-    /** UNTRANSLATED */
-    name_description:
-      "The user's full name in displayable form including all name parts (e.g., “Jane Doe”).",
-    /** UNTRANSLATED */
+    name: 'Ad',
+    name_description: 'Kullanıcının görüntülenebilir formdaki tam adı (örneğin, "Ahmet Yılmaz").',
     avatar: 'Avatar',
-    /** UNTRANSLATED */
-    avatar_description: "URL of the user's avatar image.",
-    /** UNTRANSLATED */
-    familyName: 'Family name',
-    /** UNTRANSLATED */
-    familyName_description: 'The user\'s surname(s) or last name(s) (e.g., "Doe").',
-    /** UNTRANSLATED */
-    givenName: 'Given name',
-    /** UNTRANSLATED */
-    givenName_description: 'The user\'s given name(s) or first name(s) (e.g., "Jane").',
-    /** UNTRANSLATED */
-    middleName: 'Middle name',
-    /** UNTRANSLATED */
-    middleName_description: 'The user\'s middle name(s) (e.g., "Marie").',
-    /** UNTRANSLATED */
-    nickname: 'Nickname',
-    /** UNTRANSLATED */
-    nickname_description:
-      'Casual or familiar name for the user, which may differ from their legal name.',
-    /** UNTRANSLATED */
-    preferredUsername: 'Preferred username',
-    /** UNTRANSLATED */
-    preferredUsername_description:
-      'Shorthand identifier by which the user wishes to be referenced.',
-    /** UNTRANSLATED */
-    profile: 'Profile',
-    /** UNTRANSLATED */
+    avatar_description: "Kullanıcının avatar resminin URL'si.",
+    familyName: 'Soyadı',
+    familyName_description: 'Kullanıcının soyad(lar)ı (örneğin, "Yılmaz").',
+    givenName: 'Ad',
+    givenName_description: 'Kullanıcının ad(lar)ı (örneğin, "Ahmet").',
+    middleName: 'Orta ad',
+    middleName_description: 'Kullanıcının orta ad(lar)ı (örneğin, "Mehmet").',
+    nickname: 'Takma ad',
+    nickname_description: 'Kullanıcının yasal adından farklı olabilecek günlük veya tanıdık adı.',
+    preferredUsername: 'Tercih edilen kullanıcı adı',
+    preferredUsername_description: 'Kullanıcının referans alınmak istediği kısa tanımlayıcı.',
+    profile: 'Profil',
     profile_description:
-      "URL of the user's human-readable profile page (e.g., social media profile).",
-    /** UNTRANSLATED */
-    website: 'Website',
-    /** UNTRANSLATED */
-    website_description: "URL of the user's personal website or blog.",
-    /** UNTRANSLATED */
-    gender: 'Gender',
-    /** UNTRANSLATED */
-    gender_description: 'The user\'s self-identified gender (e.g., "Female", "Male", "Non-binary")',
-    /** UNTRANSLATED */
-    birthdate: 'Birthdate',
-    /** UNTRANSLATED */
-    birthdate_description: 'The user\'s date of birth in a specified format (e.g., "MM-dd-yyyy").',
-    /** UNTRANSLATED */
-    zoneinfo: 'Timezone',
-    /** UNTRANSLATED */
+      "Kullanıcının insan tarafından okunabilir profil sayfasının URL'si (örneğin, sosyal medya profili).",
+    website: 'Web sitesi',
+    website_description: "Kullanıcının kişisel web sitesi veya blogunun URL'si.",
+    gender: 'Cinsiyet',
+    gender_description:
+      'Kullanıcının kendini tanımladığı cinsiyet (örneğin, "Kadın", "Erkek", "İkili olmayan")',
+    birthdate: 'Doğum tarihi',
+    birthdate_description:
+      'Kullanıcının belirli bir formattaki doğum tarihi (örneğin, "GG-AA-YYYY").',
+    zoneinfo: 'Saat dilimi',
     zoneinfo_description:
-      'The user\'s timezone in IANA format (e.g., "America/New_York" or "Europe/Paris").',
-    /** UNTRANSLATED */
-    locale: 'Language',
-    /** UNTRANSLATED */
-    locale_description: 'The user\'s language in IETF BCP 47 format (e.g., "en-US" or "zh-CN").',
+      'Kullanıcının IANA formatındaki saat dilimi (örneğin, "Europe/Istanbul").',
+    locale: 'Dil',
+    locale_description: 'Kullanıcının IETF BCP 47 formatındaki dili (örneğin, "tr-TR").',
     address: {
-      /** UNTRANSLATED */
-      formatted: 'Address',
-      /** UNTRANSLATED */
-      streetAddress: 'Street address',
-      /** UNTRANSLATED */
-      locality: 'City',
-      /** UNTRANSLATED */
-      region: 'State',
-      /** UNTRANSLATED */
-      postalCode: 'Zip code',
-      /** UNTRANSLATED */
-      country: 'Country',
+      formatted: 'Adres',
+      streetAddress: 'Sokak adresi',
+      locality: 'Şehir',
+      region: 'Eyalet',
+      postalCode: 'Posta kodu',
+      country: 'Ülke',
     },
-    /** UNTRANSLATED */
     address_description:
-      'The user\'s full address in displayable form including all address parts (e.g., "123 Main St, Anytown, USA 12345").',
-    /** UNTRANSLATED */
-    fullname: 'Fullname',
-    /** UNTRANSLATED */
+      'Kullanıcının tüm adres parçalarını içeren görüntülenebilir formdaki tam adresi (örneğin, "123 Ana Cadde, İstanbul, Türkiye 34000").',
+    fullname: 'Tam ad',
     fullname_description:
-      'Flexibly combines familyName, givenName, and middleName based on configuration.',
+      'Yapılandırmaya bağlı olarak soyadı, ad ve orta adı esnek bir şekilde birleştirir.',
   },
 };
 

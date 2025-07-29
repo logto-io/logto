@@ -93,85 +93,44 @@ const profile = {
   unlink_confirm_text: '確定解綁',
   unlink_reminder: '解綁後，用戶將無法使用該 <span></span> 賬號進行登錄。確定要解綁嗎？',
   fields: {
-    /** UNTRANSLATED */
-    name: 'Name',
-    /** UNTRANSLATED */
-    name_description:
-      "The user's full name in displayable form including all name parts (e.g., “Jane Doe”).",
-    /** UNTRANSLATED */
-    avatar: 'Avatar',
-    /** UNTRANSLATED */
-    avatar_description: "URL of the user's avatar image.",
-    /** UNTRANSLATED */
-    familyName: 'Family name',
-    /** UNTRANSLATED */
-    familyName_description: 'The user\'s surname(s) or last name(s) (e.g., "Doe").',
-    /** UNTRANSLATED */
-    givenName: 'Given name',
-    /** UNTRANSLATED */
-    givenName_description: 'The user\'s given name(s) or first name(s) (e.g., "Jane").',
-    /** UNTRANSLATED */
-    middleName: 'Middle name',
-    /** UNTRANSLATED */
-    middleName_description: 'The user\'s middle name(s) (e.g., "Marie").',
-    /** UNTRANSLATED */
-    nickname: 'Nickname',
-    /** UNTRANSLATED */
-    nickname_description:
-      'Casual or familiar name for the user, which may differ from their legal name.',
-    /** UNTRANSLATED */
-    preferredUsername: 'Preferred username',
-    /** UNTRANSLATED */
-    preferredUsername_description:
-      'Shorthand identifier by which the user wishes to be referenced.',
-    /** UNTRANSLATED */
-    profile: 'Profile',
-    /** UNTRANSLATED */
-    profile_description:
-      "URL of the user's human-readable profile page (e.g., social media profile).",
-    /** UNTRANSLATED */
-    website: 'Website',
-    /** UNTRANSLATED */
-    website_description: "URL of the user's personal website or blog.",
-    /** UNTRANSLATED */
-    gender: 'Gender',
-    /** UNTRANSLATED */
-    gender_description: 'The user\'s self-identified gender (e.g., "Female", "Male", "Non-binary")',
-    /** UNTRANSLATED */
-    birthdate: 'Birthdate',
-    /** UNTRANSLATED */
-    birthdate_description: 'The user\'s date of birth in a specified format (e.g., "MM-dd-yyyy").',
-    /** UNTRANSLATED */
-    zoneinfo: 'Timezone',
-    /** UNTRANSLATED */
+    name: '姓名',
+    name_description: '用戶的完整姓名，包含所有部分（例如 "Jane Doe"）。',
+    avatar: '頭像',
+    avatar_description: '用戶頭像圖片的 URL。',
+    familyName: '姓氏',
+    familyName_description: '用戶的姓氏或最後一個名字（例如 "Doe"）。',
+    givenName: '名字',
+    givenName_description: '用戶的名字或第一個名字（例如 "Jane"）。',
+    middleName: '中間名',
+    middleName_description: '用戶的中間名（例如 "Marie"）。',
+    nickname: '暱稱',
+    nickname_description: '用戶的暱稱或熟悉的名字，可能與其法定姓名不同。',
+    preferredUsername: '偏好用戶名',
+    preferredUsername_description: '用戶希望被引用的簡短標識符。',
+    profile: '個人資料',
+    profile_description: '用戶可讀的個人資料頁面 URL（例如社交媒體個人資料）。',
+    website: '網站',
+    website_description: '用戶的個人網站或部落格 URL。',
+    gender: '性別',
+    gender_description: '用戶自我認同的性別（例如 "女性"、"男性"、"非二元性別"）。',
+    birthdate: '出生日期',
+    birthdate_description: '用戶的出生日期，格式為指定格式（例如 "MM-dd-yyyy"）。',
+    zoneinfo: '時區',
     zoneinfo_description:
-      'The user\'s timezone in IANA format (e.g., "America/New_York" or "Europe/Paris").',
-    /** UNTRANSLATED */
-    locale: 'Language',
-    /** UNTRANSLATED */
-    locale_description: 'The user\'s language in IETF BCP 47 format (e.g., "en-US" or "zh-CN").',
+      '用戶的時區，格式為 IANA 格式（例如 "America/New_York" 或 "Europe/Paris"）。',
+    locale: '語言',
+    locale_description: '用戶的語言，格式為 IETF BCP 47（例如 "en-US" 或 "zh-CN"）。',
     address: {
-      /** UNTRANSLATED */
-      formatted: 'Address',
-      /** UNTRANSLATED */
-      streetAddress: 'Street address',
-      /** UNTRANSLATED */
-      locality: 'City',
-      /** UNTRANSLATED */
-      region: 'State',
-      /** UNTRANSLATED */
-      postalCode: 'Zip code',
-      /** UNTRANSLATED */
-      country: 'Country',
+      formatted: '地址',
+      streetAddress: '街道地址',
+      locality: '城市',
+      region: '州/省',
+      postalCode: '郵政編碼',
+      country: '國家',
     },
-    /** UNTRANSLATED */
-    address_description:
-      'The user\'s full address in displayable form including all address parts (e.g., "123 Main St, Anytown, USA 12345").',
-    /** UNTRANSLATED */
-    fullname: 'Fullname',
-    /** UNTRANSLATED */
-    fullname_description:
-      'Flexibly combines familyName, givenName, and middleName based on configuration.',
+    address_description: '用戶的完整地址，包含所有部分（例如 "123 Main St, Anytown, USA 12345"）。',
+    fullname: '全名',
+    fullname_description: '根據配置靈活組合姓氏、名字和中間名。',
   },
 };
 

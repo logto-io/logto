@@ -138,26 +138,17 @@ const user_details = {
     },
   },
   connections: {
-    /** UNTRANSLATED */
-    title: 'Connection',
-    /** UNTRANSLATED */
+    title: 'Connexion',
     description:
-      'The user links third-party accounts for social sign-in, enterprise SSO, or resources access.',
-    /** UNTRANSLATED */
-    token_status_column: 'Token status',
+      "L'utilisateur lie des comptes tiers pour la connexion sociale, l'authentification unique d'entreprise ou l'accès aux ressources.",
+    token_status_column: 'Statut du jeton',
     token_status: {
-      /** UNTRANSLATED */
-      active: 'Active',
-      /** UNTRANSLATED */
-      expired: 'Expired',
-      /** UNTRANSLATED */
-      inactive: 'Inactive',
-      /** UNTRANSLATED */
-      not_applicable: 'Not applicable',
-      /** UNTRANSLATED */
-      available: 'Available',
-      /** UNTRANSLATED */
-      not_available: 'Not available',
+      active: 'Actif',
+      expired: 'Expiré',
+      inactive: 'Inactif',
+      not_applicable: 'Non applicable',
+      available: 'Disponible',
+      not_available: 'Non disponible',
     },
   },
 };

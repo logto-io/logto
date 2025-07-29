@@ -41,7 +41,7 @@ const user_details = {
     'Información adicional del usuario no incluida en las propiedades de usuario predefinidas, como el color y el idioma preferidos del usuario.',
   field_profile: 'Perfil',
   field_profile_tip:
-    "Additional OpenID Connect standard claims that are not included in user's properties. Note that all unknown properties will be stripped. Please refer to <a>profile property reference</a> for more information.",
+    'Reclamaciones estándar adicionales de OpenID Connect que no están incluidas en las propiedades del usuario. Tenga en cuenta que todas las propiedades desconocidas serán eliminadas. Consulte la <a>referencia de propiedades del perfil</a> para obtener más información.',
   field_connectors: 'Conexiones sociales',
   field_sso_connectors: 'Conexiones empresariales',
   custom_data_invalid: 'Los datos personalizados deben ser un objeto JSON válido',
@@ -137,26 +137,17 @@ const user_details = {
     },
   },
   connections: {
-    /** UNTRANSLATED */
-    title: 'Connection',
-    /** UNTRANSLATED */
+    title: 'Conexión',
     description:
-      'The user links third-party accounts for social sign-in, enterprise SSO, or resources access.',
-    /** UNTRANSLATED */
-    token_status_column: 'Token status',
+      'El usuario enlaza cuentas de terceros para inicio de sesión social, SSO empresarial o acceso a recursos.',
+    token_status_column: 'Estado del token',
     token_status: {
-      /** UNTRANSLATED */
-      active: 'Active',
-      /** UNTRANSLATED */
-      expired: 'Expired',
-      /** UNTRANSLATED */
-      inactive: 'Inactive',
-      /** UNTRANSLATED */
-      not_applicable: 'Not applicable',
-      /** UNTRANSLATED */
-      available: 'Available',
-      /** UNTRANSLATED */
-      not_available: 'Not available',
+      active: 'Activo',
+      expired: 'Expirado',
+      inactive: 'Inactivo',
+      not_applicable: 'No aplicable',
+      available: 'Disponible',
+      not_available: 'No disponible',
     },
   },
 };

@@ -1,53 +1,81 @@
 const custom_profile_fields = {
   table: {
-    /** UNTRANSLATED */
-    add_button: 'Add profile field',
+    add_button: '添加资料字段',
     title: {
-      /** UNTRANSLATED */
-      field_label: 'Field label',
-      /** UNTRANSLATED */
-      type: 'Type',
-      /** UNTRANSLATED */
-      user_data_key: 'Key in user profile',
+      field_label: '字段标签',
+      type: '类型',
+      user_data_key: '用户资料键名',
     },
     placeholder: {
-      /** UNTRANSLATED */
-      title: 'Collect user profile',
-      /** UNTRANSLATED */
-      description: 'Customize fields to collect more user profile information during sign-up.',
+      title: '收集用户资料',
+      description: '自定义字段以在注册时收集更多用户资料信息。',
     },
   },
   type: {
-    /** UNTRANSLATED */
-    Text: 'Text',
-    /** UNTRANSLATED */
-    Number: 'Number',
-    /** UNTRANSLATED */
-    Date: 'Date',
-    /** UNTRANSLATED */
-    Checkbox: 'Checkbox (Boolean)',
-    /** UNTRANSLATED */
-    Select: 'Dropdown (Single select)',
-    /** UNTRANSLATED */
+    Text: '文本',
+    Number: '数字',
+    Date: '日期',
+    Checkbox: '复选框 (布尔值)',
+    Select: '下拉框 (单选)',
     Url: 'URL',
-    /** UNTRANSLATED */
-    Regex: 'Regular expression',
-    /** UNTRANSLATED */
-    Address: 'Address (Composition)',
-    /** UNTRANSLATED */
-    Fullname: 'Fullname (Composition)',
+    Regex: '正则表达式',
+    Address: '地址 (组合)',
+    Fullname: '全名 (组合)',
   },
   modal: {
-    /** UNTRANSLATED */
-    title: 'Add profile field',
-    /** UNTRANSLATED */
-    subtitle: 'Customize fields to collect more user profile information during sign-up.',
-    /** UNTRANSLATED */
-    built_in_properties: 'Built-in user profile properties',
-    /** UNTRANSLATED */
-    custom_properties: 'Custom properties',
-    /** UNTRANSLATED */
-    create_button: 'Create profile field',
+    title: '添加资料字段',
+    subtitle: '自定义字段以在注册时收集更多用户资料信息。',
+    built_in_properties: '内置用户资料属性',
+    custom_properties: '自定义属性',
+    custom_data_field_name: '自定义数据字段名称',
+    custom_data_field_input_placeholder: '输入自定义数据字段名称，例如 `myFavoriteFieldName`',
+    custom_field: {
+      title: '自定义数据字段',
+      description: '你可以定义任何额外的用户属性以满足应用的独特需求。',
+    },
+    type_required: '请选择属性类型',
+    create_button: '创建资料字段',
+  },
+  details: {
+    page_title: '资料字段详情',
+    back_to_sie: '返回登录体验',
+    enter_field_name: '输入资料字段名称',
+    delete_description: '此操作无法撤销。确定要删除此资料字段吗？',
+    field_deleted: '资料字段 {{name}} 已成功删除。',
+    key: '用户数据键名',
+    field_name: '字段名称',
+    field_type: '字段类型',
+    settings: '设置',
+    settings_description: '自定义字段以在注册时收集更多用户资料信息。',
+    address_format: '地址格式',
+    single_line_address: '单行地址',
+    multi_line_address: '多行地址 (例如：街道、城市、州、邮编、国家)',
+    composition_parts: '组合部分',
+    composition_parts_tip: '选择组合复杂字段的部分。',
+    label: '显示标签',
+    label_placeholder: '标签',
+    label_tip: '需要本地化？在<a>登录体验 > 内容</a>中添加语言',
+    description: '显示描述',
+    description_placeholder: '描述',
+    options: '选项',
+    options_tip: '每行输入一个选项。使用分号分隔键和值，例如 `key:value`',
+    options_placeholder: 'value1:label1\nvalue2:label2\nvalue3:label3',
+    regex: '正则表达式',
+    regex_tip: '定义正则表达式以验证输入。',
+    regex_placeholder: '^[a-zA-Z0-9]+$',
+    date_format: '日期格式',
+    date_format_us: '美国 (MM/dd/yyyy)',
+    date_format_uk: '英国和欧洲 (dd/MM/yyyy)',
+    date_format_iso: '国际标准 (yyyy-MM-dd)',
+    custom_date_format: '自定义日期格式',
+    custom_date_format_placeholder: '输入自定义日期格式，例如 "MM-dd-yyyy"',
+    custom_date_format_tip: '查看<a>date-fns</a>文档以获取有效的格式化标记。',
+    input_length: '输入长度',
+    value_range: '值范围',
+    min: '最小值',
+    max: '最大值',
+    required: '必填',
+    required_description: '启用时，用户必须填写此字段。禁用时，此字段为可选。',
   },
 };
 

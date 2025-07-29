@@ -1,53 +1,87 @@
 const custom_profile_fields = {
   table: {
-    /** UNTRANSLATED */
-    add_button: 'Add profile field',
+    add_button: 'プロフィールフィールドを追加',
     title: {
-      /** UNTRANSLATED */
-      field_label: 'Field label',
-      /** UNTRANSLATED */
-      type: 'Type',
-      /** UNTRANSLATED */
-      user_data_key: 'Key in user profile',
+      field_label: 'フィールドラベル',
+      type: 'タイプ',
+      user_data_key: 'ユーザープロフィールのキー',
     },
     placeholder: {
-      /** UNTRANSLATED */
-      title: 'Collect user profile',
-      /** UNTRANSLATED */
-      description: 'Customize fields to collect more user profile information during sign-up.',
+      title: 'ユーザープロフィールを収集',
+      description: 'サインアップ時に収集するユーザープロフィール情報をカスタマイズします。',
     },
   },
   type: {
-    /** UNTRANSLATED */
-    Text: 'Text',
-    /** UNTRANSLATED */
-    Number: 'Number',
-    /** UNTRANSLATED */
-    Date: 'Date',
-    /** UNTRANSLATED */
-    Checkbox: 'Checkbox (Boolean)',
-    /** UNTRANSLATED */
-    Select: 'Dropdown (Single select)',
-    /** UNTRANSLATED */
+    Text: 'テキスト',
+    Number: '数値',
+    Date: '日付',
+    Checkbox: 'チェックボックス (ブール値)',
+    Select: 'ドロップダウン (単一選択)',
     Url: 'URL',
-    /** UNTRANSLATED */
-    Regex: 'Regular expression',
-    /** UNTRANSLATED */
-    Address: 'Address (Composition)',
-    /** UNTRANSLATED */
-    Fullname: 'Fullname (Composition)',
+    Regex: '正規表現',
+    Address: '住所 (複合)',
+    Fullname: '氏名 (複合)',
   },
   modal: {
-    /** UNTRANSLATED */
-    title: 'Add profile field',
-    /** UNTRANSLATED */
-    subtitle: 'Customize fields to collect more user profile information during sign-up.',
-    /** UNTRANSLATED */
-    built_in_properties: 'Built-in user profile properties',
-    /** UNTRANSLATED */
-    custom_properties: 'Custom properties',
-    /** UNTRANSLATED */
-    create_button: 'Create profile field',
+    title: 'プロフィールフィールドを追加',
+    subtitle: 'サインアップ時に収集するユーザープロフィール情報をカスタマイズします。',
+    built_in_properties: '組み込みユーザープロフィールプロパティ',
+    custom_properties: 'カスタムプロパティ',
+    custom_data_field_name: 'カスタムデータフィールド名',
+    custom_data_field_input_placeholder:
+      'カスタムデータフィールド名を入力してください。例: `myFavoriteFieldName`',
+    custom_field: {
+      title: 'カスタムデータフィールド',
+      description:
+        'アプリケーションの独自の要件を満たすために定義できる追加のユーザープロパティです。',
+    },
+    type_required: 'プロパティタイプを選択してください',
+    create_button: 'プロフィールフィールドを作成',
+  },
+  details: {
+    page_title: 'プロフィールフィールドの詳細',
+    back_to_sie: 'サインイン体験に戻る',
+    enter_field_name: 'プロフィールフィールド名を入力してください',
+    delete_description:
+      'この操作は取り消せません。このプロフィールフィールドを削除してもよろしいですか？',
+    field_deleted: 'プロフィールフィールド {{name}} が正常に削除されました。',
+    key: 'ユーザーデータキー',
+    field_name: 'フィールド名',
+    field_type: 'フィールドタイプ',
+    settings: '設定',
+    settings_description: 'サインアップ時に収集するユーザープロフィール情報をカスタマイズします。',
+    address_format: '住所フォーマット',
+    single_line_address: '1行の住所',
+    multi_line_address: '複数行の住所 (例: 番地、市区町村、都道府県、郵便番号、国)',
+    composition_parts: '複合パーツ',
+    composition_parts_tip: '複合フィールドを構成するパーツを選択します。',
+    label: '表示ラベル',
+    label_placeholder: 'ラベル',
+    label_tip: '多言語対応が必要ですか？<a>サインイン体験 > コンテンツ</a>で言語を追加してください',
+    description: '表示説明',
+    description_placeholder: '説明',
+    options: 'オプション',
+    options_tip:
+      '各オプションを新しい行に入力します。キーと値をセミコロンで区切ります。例: `key:value`',
+    options_placeholder: 'value1:label1\nvalue2:label2\nvalue3:label3',
+    regex: '正規表現',
+    regex_tip: '入力値を検証する正規表現を定義します。',
+    regex_placeholder: '^[a-zA-Z0-9]+$',
+    date_format: '日付フォーマット',
+    date_format_us: 'アメリカ合衆国 (MM/dd/yyyy)',
+    date_format_uk: '英国およびヨーロッパ (dd/MM/yyyy)',
+    date_format_iso: '国際標準 (yyyy-MM-dd)',
+    custom_date_format: 'カスタム日付フォーマット',
+    custom_date_format_placeholder: 'カスタム日付フォーマットを入力してください。例: "MM-dd-yyyy"',
+    custom_date_format_tip:
+      '有効なフォーマットトークンについては<a>date-fns</a>ドキュメントを参照してください。',
+    input_length: '入力長',
+    value_range: '値の範囲',
+    min: '最小値',
+    max: '最大値',
+    required: '必須',
+    required_description:
+      '有効にすると、このフィールドはユーザーによって入力される必要があります。無効にすると、このフィールドはオプションです。',
   },
 };
 

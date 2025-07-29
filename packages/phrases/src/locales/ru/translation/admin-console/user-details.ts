@@ -134,26 +134,17 @@ const user_details = {
     },
   },
   connections: {
-    /** UNTRANSLATED */
-    title: 'Connection',
-    /** UNTRANSLATED */
+    title: 'Подключение',
     description:
-      'The user links third-party accounts for social sign-in, enterprise SSO, or resources access.',
-    /** UNTRANSLATED */
-    token_status_column: 'Token status',
+      'Пользователь связывает сторонние аккаунты для входа через социальные сети, корпоративный SSO или доступ к ресурсам.',
+    token_status_column: 'Статус токена',
     token_status: {
-      /** UNTRANSLATED */
-      active: 'Active',
-      /** UNTRANSLATED */
-      expired: 'Expired',
-      /** UNTRANSLATED */
-      inactive: 'Inactive',
-      /** UNTRANSLATED */
-      not_applicable: 'Not applicable',
-      /** UNTRANSLATED */
-      available: 'Available',
-      /** UNTRANSLATED */
-      not_available: 'Not available',
+      active: 'Активен',
+      expired: 'Истек',
+      inactive: 'Неактивен',
+      not_applicable: 'Неприменимо',
+      available: 'Доступен',
+      not_available: 'Недоступен',
     },
   },
 };

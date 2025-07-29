@@ -132,26 +132,17 @@ const user_details = {
     },
   },
   connections: {
-    /** UNTRANSLATED */
-    title: 'Connection',
-    /** UNTRANSLATED */
+    title: 'الاتصال',
     description:
-      'The user links third-party accounts for social sign-in, enterprise SSO, or resources access.',
-    /** UNTRANSLATED */
-    token_status_column: 'Token status',
+      'يقوم المستخدم بربط حسابات الطرف الثالث لتسجيل الدخول الاجتماعي، أو تسجيل الدخول الموحد للمؤسسات، أو الوصول إلى الموارد.',
+    token_status_column: 'حالة الرمز',
     token_status: {
-      /** UNTRANSLATED */
-      active: 'Active',
-      /** UNTRANSLATED */
-      expired: 'Expired',
-      /** UNTRANSLATED */
-      inactive: 'Inactive',
-      /** UNTRANSLATED */
-      not_applicable: 'Not applicable',
-      /** UNTRANSLATED */
-      available: 'Available',
-      /** UNTRANSLATED */
-      not_available: 'Not available',
+      active: 'نشط',
+      expired: 'منتهي الصلاحية',
+      inactive: 'غير نشط',
+      not_applicable: 'غير قابل للتطبيق',
+      available: 'متاح',
+      not_available: 'غير متاح',
     },
   },
 };

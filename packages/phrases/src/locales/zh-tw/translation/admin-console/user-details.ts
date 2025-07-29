@@ -125,26 +125,16 @@ const user_details = {
     },
   },
   connections: {
-    /** UNTRANSLATED */
-    title: 'Connection',
-    /** UNTRANSLATED */
-    description:
-      'The user links third-party accounts for social sign-in, enterprise SSO, or resources access.',
-    /** UNTRANSLATED */
-    token_status_column: 'Token status',
+    title: '連接',
+    description: '用戶連結第三方帳戶以進行社交登入、企業 SSO 或資源訪問。',
+    token_status_column: '令牌狀態',
     token_status: {
-      /** UNTRANSLATED */
-      active: 'Active',
-      /** UNTRANSLATED */
-      expired: 'Expired',
-      /** UNTRANSLATED */
-      inactive: 'Inactive',
-      /** UNTRANSLATED */
-      not_applicable: 'Not applicable',
-      /** UNTRANSLATED */
-      available: 'Available',
-      /** UNTRANSLATED */
-      not_available: 'Not available',
+      active: '有效',
+      expired: '已過期',
+      inactive: '無效',
+      not_applicable: '不適用',
+      available: '可用',
+      not_available: '不可用',
     },
   },
 };

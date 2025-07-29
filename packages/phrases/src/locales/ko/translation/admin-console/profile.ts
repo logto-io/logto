@@ -103,85 +103,46 @@ const profile = {
   unlink_reminder:
     '연결을 해제하면 사용자들이 <span></span> 계정으로 로그인하지 못할 거예요. 정말로 진행할까요?',
   fields: {
-    /** UNTRANSLATED */
-    name: 'Name',
-    /** UNTRANSLATED */
-    name_description:
-      "The user's full name in displayable form including all name parts (e.g., “Jane Doe”).",
-    /** UNTRANSLATED */
-    avatar: 'Avatar',
-    /** UNTRANSLATED */
-    avatar_description: "URL of the user's avatar image.",
-    /** UNTRANSLATED */
-    familyName: 'Family name',
-    /** UNTRANSLATED */
-    familyName_description: 'The user\'s surname(s) or last name(s) (e.g., "Doe").',
-    /** UNTRANSLATED */
-    givenName: 'Given name',
-    /** UNTRANSLATED */
-    givenName_description: 'The user\'s given name(s) or first name(s) (e.g., "Jane").',
-    /** UNTRANSLATED */
-    middleName: 'Middle name',
-    /** UNTRANSLATED */
-    middleName_description: 'The user\'s middle name(s) (e.g., "Marie").',
-    /** UNTRANSLATED */
-    nickname: 'Nickname',
-    /** UNTRANSLATED */
-    nickname_description:
-      'Casual or familiar name for the user, which may differ from their legal name.',
-    /** UNTRANSLATED */
-    preferredUsername: 'Preferred username',
-    /** UNTRANSLATED */
-    preferredUsername_description:
-      'Shorthand identifier by which the user wishes to be referenced.',
-    /** UNTRANSLATED */
-    profile: 'Profile',
-    /** UNTRANSLATED */
-    profile_description:
-      "URL of the user's human-readable profile page (e.g., social media profile).",
-    /** UNTRANSLATED */
-    website: 'Website',
-    /** UNTRANSLATED */
-    website_description: "URL of the user's personal website or blog.",
-    /** UNTRANSLATED */
-    gender: 'Gender',
-    /** UNTRANSLATED */
-    gender_description: 'The user\'s self-identified gender (e.g., "Female", "Male", "Non-binary")',
-    /** UNTRANSLATED */
-    birthdate: 'Birthdate',
-    /** UNTRANSLATED */
-    birthdate_description: 'The user\'s date of birth in a specified format (e.g., "MM-dd-yyyy").',
-    /** UNTRANSLATED */
-    zoneinfo: 'Timezone',
-    /** UNTRANSLATED */
+    name: '이름',
+    name_description: '사용자의 전체 이름을 표시 가능한 형태로 나타냅니다 (예: "홍길동").',
+    avatar: '아바타',
+    avatar_description: '사용자의 아바타 이미지 URL입니다.',
+    familyName: '성',
+    familyName_description: '사용자의 성(씨)입니다 (예: "김").',
+    givenName: '이름',
+    givenName_description: '사용자의 이름입니다 (예: "길동").',
+    middleName: '중간 이름',
+    middleName_description: '사용자의 중간 이름입니다 (예: "철").',
+    nickname: '별명',
+    nickname_description: '사용자의 별명으로, 법적 이름과 다를 수 있습니다.',
+    preferredUsername: '선호하는 사용자 이름',
+    preferredUsername_description: '사용자가 선호하는 짧은 식별자입니다.',
+    profile: '프로필',
+    profile_description: '사용자의 프로필 페이지 URL입니다 (예: 소셜 미디어 프로필).',
+    website: '웹사이트',
+    website_description: '사용자의 개인 웹사이트 또는 블로그 URL입니다.',
+    gender: '성별',
+    gender_description: '사용자가 스스로 인식하는 성별입니다 (예: "여성", "남성", "논바이너리").',
+    birthdate: '생년월일',
+    birthdate_description: '사용자의 생년월일을 지정된 형식으로 나타냅니다 (예: "MM-dd-yyyy").',
+    zoneinfo: '시간대',
     zoneinfo_description:
-      'The user\'s timezone in IANA format (e.g., "America/New_York" or "Europe/Paris").',
-    /** UNTRANSLATED */
-    locale: 'Language',
-    /** UNTRANSLATED */
-    locale_description: 'The user\'s language in IETF BCP 47 format (e.g., "en-US" or "zh-CN").',
+      '사용자의 시간대를 IANA 형식으로 나타냅니다 (예: "America/New_York" 또는 "Asia/Seoul").',
+    locale: '언어',
+    locale_description:
+      '사용자의 언어를 IETF BCP 47 형식으로 나타냅니다 (예: "ko-KR" 또는 "en-US").',
     address: {
-      /** UNTRANSLATED */
-      formatted: 'Address',
-      /** UNTRANSLATED */
-      streetAddress: 'Street address',
-      /** UNTRANSLATED */
-      locality: 'City',
-      /** UNTRANSLATED */
-      region: 'State',
-      /** UNTRANSLATED */
-      postalCode: 'Zip code',
-      /** UNTRANSLATED */
-      country: 'Country',
+      formatted: '주소',
+      streetAddress: '도로명 주소',
+      locality: '도시',
+      region: '주/도',
+      postalCode: '우편번호',
+      country: '국가',
     },
-    /** UNTRANSLATED */
     address_description:
-      'The user\'s full address in displayable form including all address parts (e.g., "123 Main St, Anytown, USA 12345").',
-    /** UNTRANSLATED */
-    fullname: 'Fullname',
-    /** UNTRANSLATED */
-    fullname_description:
-      'Flexibly combines familyName, givenName, and middleName based on configuration.',
+      '사용자의 전체 주소를 표시 가능한 형태로 나타냅니다 (예: "서울특별시 강남구 테헤란로 123").',
+    fullname: '전체 이름',
+    fullname_description: '설정에 따라 성, 이름, 중간 이름을 유연하게 조합합니다.',
   },
 };
 
