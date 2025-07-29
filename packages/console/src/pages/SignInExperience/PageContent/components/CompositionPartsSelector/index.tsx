@@ -10,8 +10,8 @@ import IconButton from '@/ds-components/IconButton';
 import Select from '@/ds-components/Select';
 import { ToggleTip } from '@/ds-components/Tip';
 
-import { useDataParser } from '../../CollectUserProfile/ProfileFieldDetails/hooks';
 import { type ProfileFieldForm } from '../../CollectUserProfile/ProfileFieldDetails/types';
+import { useDataParser } from '../../CollectUserProfile/hooks';
 
 import styles from './index.module.scss';
 

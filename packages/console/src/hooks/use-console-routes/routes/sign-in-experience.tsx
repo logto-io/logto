@@ -12,7 +12,6 @@ export const signInExperience: RouteObject = {
   path: 'sign-in-experience',
   children: [
     { index: true, element: <Navigate replace to={SignInExperienceTab.Branding} /> },
-    { path: 'collect-user-profile/create/:fieldName', element: <ProfileFieldDetails /> },
     { path: 'collect-user-profile/fields/:fieldName', element: <ProfileFieldDetails /> },
     { path: ':tab/*', element: <SignInExperience /> },
   ],

@@ -1,12 +1,5 @@
 @use '@/scss/underscore' as _;
 
-.tags {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
 .tableContainer {
   width: 100%;
   border-radius: 12px;
@@ -26,23 +19,6 @@
     display: grid;
     grid-template-columns: 30% 30% 40%;
     border-top: 1px solid var(--color-divider);
-    cursor: pointer;
-
-    &:hover {
-      background-color: var(--color-hover);
-      border-radius: 8px;
-      border-top-color: transparent;
-    }
-  }
-
-  div[draggable='true'] {
-    cursor: move;
-
-    &:hover + div[draggable='true'] {
-      > .row {
-        border-top-color: transparent;
-      }
-    }
   }
 
   .cell {
@@ -52,26 +28,9 @@
     gap: _.unit(3);
     font: var(--font-body-2);
     color: var(--color-text);
-
-    .draggableIcon {
-      color: var(--color-text-secondary);
-      flex-shrink: 0;
-      cursor: move;
-    }
-
-    .fieldName {
-      color: var(--color-text-link);
-    }
   }
 
-  .row.header {
-    &:hover {
-      background-color: transparent;
-      border-top-color: var(--color-divider);
-      border-radius: 0;
-      cursor: default;
-    }
-
+  .header {
     .cell {
       font: var(--font-label-2);
     }
@@ -84,14 +43,7 @@
   @include _.shimmering-animation;
 }
 
-.row.skeleton {
-  &:hover {
-    background-color: transparent;
-    border-top-color: var(--color-divider);
-    border-radius: 0;
-    cursor: default;
-  }
-
+.skeleton {
   .itemPreview {
     display: flex;
     align-items: center;

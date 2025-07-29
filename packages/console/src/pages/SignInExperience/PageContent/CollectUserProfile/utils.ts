@@ -8,6 +8,7 @@ const builtInKeySet = Object.freeze(
   new Set<string>([
     ...builtInCustomProfileFieldKeys,
     ...Object.values(userProfileAddressKeys).map((key) => `address.${key}`),
+    'fullname',
   ])
 );
 

@@ -1,0 +1,55 @@
+@use '@/scss/underscore' as _;
+
+.draggleItemContainer {
+  transform: translate(0, 0);
+}
+
+.tags {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 30% 30% 40%;
+  border-top: 1px solid var(--color-divider);
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--color-hover);
+    border-radius: 8px;
+    border-top-color: transparent;
+  }
+}
+
+div[draggable='true'] {
+  cursor: move;
+
+  &:hover + div[draggable='true'] {
+    > .row {
+      border-top-color: transparent;
+    }
+  }
+}
+
+.cell {
+  padding: _.unit(3);
+  display: flex;
+  align-items: center;
+  gap: _.unit(3);
+  font: var(--font-body-2);
+  color: var(--color-text);
+
+  .draggableIcon {
+    color: var(--color-text-secondary);
+    flex-shrink: 0;
+    cursor: move;
+  }
+
+  .fieldName {
+    color: var(--color-text-link);
+  }
+}

@@ -8,9 +8,13 @@ import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
+import useApi from '@/hooks/use-api';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import modalStyles from '@/scss/modal.module.scss';
 
 import CustomDataProfileNameField from '../../components/CustomDataProfileNameField';
+import { collectUserProfilePathname } from '../consts';
+import { useDataParser } from '../hooks';
 
 import styles from './index.module.scss';
 
@@ -24,11 +28,16 @@ const reservedCustomDataKeySet = new Set<string>(reservedCustomDataKeys);
 function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { t: errorT } = useTranslation('errors');
+  const api = useApi();
+  const { navigate } = useTenantPathname();
+
+  const { getInitialRequestPayloadByFieldName } = useDataParser();
 
   const [selectedField, setSelectedField] = useState<string>();
   const [errorMessage, setErrorMessage] = useState<string>();
   const [customDataFieldName, setCustomDataFieldName] = useState<string>('');
   const [fieldNameInputError, setFieldNameInputError] = useState<string>();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (selectedField) {
@@ -87,6 +96,31 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
         .sort((fieldA, fieldB) => fieldA.name.localeCompare(fieldB.name)),
     [t, existingFieldNames]
   );
+
+  const onSubmit = async () => {
+    if (!selectedField) {
+      setErrorMessage(t('sign_in_exp.custom_profile_fields.modal.type_required'));
+      return;
+    }
+    if (!validateCustomDataFieldNameInput()) {
+      return;
+    }
+    if (selectedField === 'custom' && !customDataFieldName) {
+      setFieldNameInputError(errorT('custom_profile_fields.name_required'));
+      return;
+    }
+    const fieldName = selectedField === 'custom' ? customDataFieldName : selectedField;
+
+    setIsSubmitting(true);
+    try {
+      await api.post('api/custom-profile-fields', {
+        json: getInitialRequestPayloadByFieldName(fieldName),
+      });
+      navigate(`${collectUserProfilePathname}/fields/${fieldName}`);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <Modal
@@ -170,20 +204,8 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
             size="large"
             type="primary"
             title="sign_in_exp.custom_profile_fields.modal.create_button"
-            onClick={() => {
-              if (!selectedField) {
-                setErrorMessage(t('sign_in_exp.custom_profile_fields.modal.type_required'));
-                return;
-              }
-              if (!validateCustomDataFieldNameInput()) {
-                return;
-              }
-              if (selectedField === 'custom' && !customDataFieldName) {
-                setFieldNameInputError(errorT('custom_profile_fields.name_required'));
-                return;
-              }
-              onClose?.(selectedField === 'custom' ? customDataFieldName : selectedField);
-            }}
+            isLoading={isSubmitting}
+            onClick={onSubmit}
           />
         </div>
       </ModalLayout>
