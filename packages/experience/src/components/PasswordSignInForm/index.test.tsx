@@ -76,7 +76,7 @@ describe('UsernamePasswordSignInForm', () => {
 
   test('render with forgot password disabled', () => {
     const { queryByText } = renderPasswordSignInForm([SignInIdentifier.Username], {
-      forgotPassword: { phone: false, email: false },
+      forgotPasswordMethods: [],
     });
 
     expect(queryByText('action.forgot_password')).toBeNull();

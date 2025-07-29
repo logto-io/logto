@@ -1,4 +1,9 @@
-import { ConnectorType, InteractionEvent, SignInIdentifier } from '@logto/schemas';
+import {
+  ConnectorType,
+  ForgotPasswordMethod,
+  InteractionEvent,
+  SignInIdentifier,
+} from '@logto/schemas';
 
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { type ExperienceClient } from '#src/client/experience/index.js';
@@ -34,6 +39,9 @@ describe('Reset Password', () => {
     await clearConnectorsByTypes([ConnectorType.Email]);
     await setEmailConnector();
     await enableAllPasswordSignInMethods();
+    await updateSignInExperience({
+      forgotPasswordMethods: [ForgotPasswordMethod.EmailVerificationCode],
+    });
   });
 
   afterEach(async () => {
