@@ -58,6 +58,7 @@ export const defaultMetadata: ConnectorMetadata = {
       description: "The `scope` determines permissions granted by the user's authorization. ",
     },
   ],
+  isTokenStorageSupported: true,
 };
 
 export const defaultTimeout = 5000;

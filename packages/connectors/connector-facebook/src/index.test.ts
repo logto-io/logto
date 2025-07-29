@@ -59,7 +59,7 @@ describe('Facebook connector', () => {
           expires_in: 3600,
         });
 
-      const { accessToken } = await getAccessToken(mockedConfig, {
+      const { access_token: accessToken } = await getAccessToken(mockedConfig, {
         code,
         redirectUri: dummyRedirectUri,
       });
