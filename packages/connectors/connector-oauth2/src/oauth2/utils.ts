@@ -23,13 +23,20 @@ type TokenEndpointAuthOptions<T extends TokenEndpointAuthMethod = TokenEndpointA
 export type RequestTokenEndpointOptions = {
   tokenEndpoint: string;
   tokenEndpointAuthOptions: TokenEndpointAuthOptions;
-  tokenRequestBody: {
-    grantType: string;
-    code: string;
-    redirectUri: string;
-    clientId: string;
-    clientSecret: string;
-  } & Record<string, string>;
+  tokenRequestBody:
+    | ({
+        grantType: string;
+        code: string;
+        redirectUri: string;
+        clientId: string;
+        clientSecret: string;
+      } & Record<string, string>)
+    | ({
+        grantType: string;
+        refreshToken: string;
+        clientId: string;
+        clientSecret: string;
+      } & Record<string, string>);
   timeout?: number;
 };
 

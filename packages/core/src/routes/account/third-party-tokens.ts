@@ -77,7 +77,7 @@ const getAccessToken = async (
       ? await socials.refreshTokenSetSecret(tokenSetSecret.connectorId, id, refresh_token)
       : await ssoConnectors.refreshTokenSetSecret(tokenSetSecret.ssoConnectorId, id, refresh_token);
 
-    return formatTokenResponse(refreshedResponse.access_token, metadata);
+    return formatTokenResponse(refreshedResponse.access_token, refreshedResponse.metadata);
   }
 
   await secrets.deleteById(id);

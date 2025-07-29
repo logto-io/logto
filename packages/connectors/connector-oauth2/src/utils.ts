@@ -99,3 +99,35 @@ export const getAccessToken = async (
 
   return accessTokenResponseHandler(tokenResponse, tokenEndpointResponseType);
 };
+
+export const getAccessTokenByRefreshToken = async (
+  config: Oauth2ConnectorConfig,
+  refreshToken: string
+): Promise<Oauth2AccessTokenResponse> => {
+  const {
+    tokenEndpoint,
+    tokenEndpointResponseType,
+    clientId,
+    clientSecret,
+    tokenEndpointAuthMethod,
+    clientSecretJwtSigningAlgorithm,
+    customConfig,
+  } = config;
+
+  const tokenResponse = await requestTokenEndpoint({
+    tokenEndpoint,
+    tokenEndpointAuthOptions: {
+      method: tokenEndpointAuthMethod,
+      clientSecretJwtSigningAlgorithm,
+    },
+    tokenRequestBody: {
+      grantType: 'refresh_token',
+      refreshToken,
+      clientId,
+      clientSecret,
+      ...customConfig,
+    },
+  });
+
+  return accessTokenResponseHandler(tokenResponse, tokenEndpointResponseType);
+};

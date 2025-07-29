@@ -63,6 +63,7 @@ export const oauth2AccessTokenResponseGuard = z.object({
   token_type: z.string(),
   expires_in: z.number().optional(),
   refresh_token: z.string().optional(),
+  scope: z.string().optional(),
 });
 
 export type Oauth2AccessTokenResponse = z.infer<typeof oauth2AccessTokenResponseGuard>;
