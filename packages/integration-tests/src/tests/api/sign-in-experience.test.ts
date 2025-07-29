@@ -3,6 +3,7 @@ import {
   MfaPolicy,
   OrganizationRequiredMfaPolicy,
   SignInIdentifier,
+  ForgotPasswordMethod,
 } from '@logto/schemas';
 import { HTTPError, type ResponsePromise } from 'ky';
 
@@ -45,6 +46,7 @@ describe('admin console sign-in experience', () => {
       singleSignOnEnabled: true,
       supportEmail: 'contact@logto.io',
       supportWebsiteUrl: 'https://logto.io',
+      forgotPasswordMethods: [],
     };
 
     const updatedSignInExperience = await updateSignInExperience(newSignInExperience);
@@ -382,4 +384,60 @@ devFeatureTest.describe('MFA validation', () => {
       );
     }
   );
+});
+
+describe('forgot password methods', () => {
+  beforeEach(async () => {
+    // Reset to empty forgot password methods before each test
+    await updateSignInExperience({
+      forgotPasswordMethods: [],
+    });
+  });
+
+  it('should update forgot password methods successfully', async () => {
+    await Promise.all([setEmailConnector(), setSmsConnector()]);
+
+    const forgotPasswordMethods = [
+      ForgotPasswordMethod.EmailVerificationCode,
+      ForgotPasswordMethod.PhoneVerificationCode,
+    ];
+
+    const result = await updateSignInExperience({
+      forgotPasswordMethods,
+    });
+
+    expect(result.forgotPasswordMethods).toEqual(forgotPasswordMethods);
+  });
+
+  it('should accept empty forgot password methods array', async () => {
+    const result = await updateSignInExperience({
+      forgotPasswordMethods: [],
+    });
+
+    expect(result.forgotPasswordMethods).toEqual([]);
+  });
+
+  it('should reject email forgot password method when no email connector exists', async () => {
+    await expectRejects(
+      updateSignInExperience({
+        forgotPasswordMethods: [ForgotPasswordMethod.EmailVerificationCode],
+      }),
+      {
+        code: 'sign_in_experiences.forgot_password_method_requires_connector',
+        status: 400,
+      }
+    );
+  });
+
+  it('should reject phone forgot password method when no SMS connector exists', async () => {
+    await expectRejects(
+      updateSignInExperience({
+        forgotPasswordMethods: [ForgotPasswordMethod.PhoneVerificationCode],
+      }),
+      {
+        code: 'sign_in_experiences.forgot_password_method_requires_connector',
+        status: 400,
+      }
+    );
+  });
 });
