@@ -67,7 +67,6 @@ const connectors = {
       title: '지속적인 API 액세스를 위한 토큰 저장',
       description:
         'Secret Vault에 액세스 및 새로 고침 토큰을 저장하세요. 사용자의 반복적인 동의 없이 자동 API 호출을 허용합니다. 예: 지속적인 권한 부여로 여러분의 AI 에이전트가 Google 캘린더에 이벤트를 추가하도록 하세요. <a>타사 API 호출 방법 알아보기</a>',
-      tip: '팁: 표준 OAuth/OIDC 식별 제공자의 경우 refresh token을 얻기 위해 `offline_access` 범위를 포함해야 하며, 사용자에게 반복적인 동의 요청이 발생하지 않습니다.',
     },
     callback_uri: 'Callback URI',
     callback_uri_description:

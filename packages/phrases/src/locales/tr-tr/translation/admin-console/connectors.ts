@@ -71,7 +71,6 @@ const connectors = {
       title: 'Kalıcı API erişimi için belirteçleri saklayın',
       description:
         "Erişim ve yenileme belirteçlerini Gizli Kasada saklayın. Tekrarlı kullanıcı onayı olmadan otomatik API çağrılarına izin verir. Örnek: Yapay Zeka Ajansınızın kalıcı yetkilendirme ile Google Takvim'e etkinlikler eklemesine izin verin. <a>Üçüncü taraf API'larını nasıl çağıracağınızı öğrenin</a>",
-      tip: 'İpuçları: Standart OAuth/OIDC kimlik sağlayıcısı için, yenileme belirteci almak ve tekrarlanan kullanıcı onayı istemlerini önlemek için `offline_access` kapsamı dahil edilmelidir. ',
     },
     callback_uri: 'Geri dönüş URI',
     callback_uri_description:

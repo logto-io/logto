@@ -70,7 +70,6 @@ const connectors = {
       title: 'Przechowuj tokeny do trwałego dostępu do API',
       description:
         'Przechowuj tokeny dostępu i odświeżania w Tajnej Skrytce. Pozwala to na zautomatyzowane wywołania API bez powtarzającej się zgody użytkownika. Przykład: pozwól swojemu Agentowi AI dodawać wydarzenia do Kalendarza Google z trwałym upoważnieniem. <a>Dowiedz się, jak wywoływać zewnętrzne API</a>',
-      tip: 'Wskazówki: Dla standardowego dostawcy tożsamości OAuth/OIDC, zakres `offline_access` musi być uwzględniony, aby uzyskać token odświeżania, zapobiegając powtarzającym się monitom o zgodę użytkownika.',
     },
     callback_uri: 'URI zwrotu (Callback)',
     callback_uri_description:

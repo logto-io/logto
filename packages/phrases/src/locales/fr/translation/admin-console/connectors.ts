@@ -72,7 +72,6 @@ const connectors = {
       title: 'Stocker les jetons pour un accès API persistant',
       description:
         "Stockez les jetons d'accès et de rafraîchissement dans le Secret Vault. Permet des appels API automatisés sans consentement utilisateur répété. Exemple : laissez votre agent AI ajouter des événements à Google Calendar avec une autorisation persistante. <a>Découvrez comment appeler des API tierces</a>",
-      tip: "Conseils : Pour le fournisseur d'identité standard OAuth/OIDC, la portée `offline_access` doit être incluse pour obtenir un jeton de rafraîchissement, empêchant les invites de consentement utilisateur répété.",
     },
     callback_uri: 'URI de rappel',
     callback_uri_description:

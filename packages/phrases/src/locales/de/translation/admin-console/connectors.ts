@@ -71,7 +71,6 @@ const connectors = {
       title: 'Speicher Tokens für dauerhaften API-Zugriff',
       description:
         'Speichern Sie Zugriffs- und Auffrischungstokens im Secret Vault. Ermöglicht automatisierte API-Aufrufe ohne wiederholte Zustimmung der Benutzer. Beispiel: Lassen Sie Ihren AI-Agenten Ereignisse mit dauerhafter Genehmigung zu Google Kalender hinzufügen. <a>Erfahren Sie, wie man Drittanbieter-APIs aufruft</a>',
-      tip: 'Tipps: Für einen standardmäßigen OAuth/OIDC-Identitätsanbieter muss der `offline_access`-Bereich enthalten sein, um ein Auffrischungstoken zu erhalten und wiederholte Zustimmung der Benutzer zu vermeiden.',
     },
     callback_uri: 'Callback-URI',
     callback_uri_description:

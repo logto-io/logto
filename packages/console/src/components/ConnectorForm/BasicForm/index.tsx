@@ -163,37 +163,32 @@ function BasicForm({
         <div className={styles.tip}>{t('connectors.guide.sync_profile_tip')}</div>
       </FormField>
       {isDevFeaturesEnabled && isTokenStorageSupported && (
-        <>
-          <FormField title="connectors.guide.enable_token_storage.title">
-            <Controller
-              name="enableTokenStorage"
-              control={control}
-              defaultValue={false}
-              render={({ field }) => (
-                <Switch
-                  label={
-                    <Trans
-                      components={{
-                        a: (
-                          <TextLink
-                            href={getDocumentationUrl(retrieveTokenStorage)}
-                            targetBlank="noopener"
-                          />
-                        ),
-                      }}
-                      i18nKey="admin_console.connectors.guide.enable_token_storage.description"
-                    />
-                  }
-                  checked={field.value}
-                  onChange={field.onChange}
-                />
-              )}
-            />
-          </FormField>
-          {isTokenStorageEnabled && (
-            <div className={styles.tip}>{t('connectors.guide.enable_token_storage.tip')}</div>
-          )}
-        </>
+        <FormField title="connectors.guide.enable_token_storage.title">
+          <Controller
+            name="enableTokenStorage"
+            control={control}
+            defaultValue={false}
+            render={({ field }) => (
+              <Switch
+                label={
+                  <Trans
+                    components={{
+                      a: (
+                        <TextLink
+                          href={getDocumentationUrl(retrieveTokenStorage)}
+                          targetBlank="noopener"
+                        />
+                      ),
+                    }}
+                    i18nKey="admin_console.connectors.guide.enable_token_storage.description"
+                  />
+                }
+                checked={field.value}
+                onChange={field.onChange}
+              />
+            )}
+          />
+        </FormField>
       )}
     </div>
   );

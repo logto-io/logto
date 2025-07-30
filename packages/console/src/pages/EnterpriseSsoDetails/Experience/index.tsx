@@ -261,39 +261,32 @@ function Experience({ data, isDeleted, onUpdated, isDarkModeEnabled }: Props) {
             />
           </FormField>
           {isDevFeaturesEnabled && data.providerType === SsoProviderType.OIDC && (
-            <>
-              <FormField title="connectors.guide.enable_token_storage.title">
-                <Controller
-                  name="enableTokenStorage"
-                  control={control}
-                  defaultValue={false}
-                  render={({ field }) => (
-                    <Switch
-                      label={
-                        <Trans
-                          components={{
-                            a: (
-                              <TextLink
-                                href={getDocumentationUrl(retrieveTokenStorage)}
-                                targetBlank="noopener"
-                              />
-                            ),
-                          }}
-                          i18nKey="admin_console.connectors.guide.enable_token_storage.description"
-                        />
-                      }
-                      checked={field.value}
-                      onChange={field.onChange}
-                    />
-                  )}
-                />
-              </FormField>
-              {isTokenStorageEnabled && (
-                <div className={styles.description}>
-                  {t('connectors.guide.enable_token_storage.tip')}
-                </div>
-              )}
-            </>
+            <FormField title="connectors.guide.enable_token_storage.title">
+              <Controller
+                name="enableTokenStorage"
+                control={control}
+                defaultValue={false}
+                render={({ field }) => (
+                  <Switch
+                    label={
+                      <Trans
+                        components={{
+                          a: (
+                            <TextLink
+                              href={getDocumentationUrl(retrieveTokenStorage)}
+                              targetBlank="noopener"
+                            />
+                          ),
+                        }}
+                        i18nKey="admin_console.connectors.guide.enable_token_storage.description"
+                      />
+                    }
+                    checked={field.value}
+                    onChange={field.onChange}
+                  />
+                )}
+              />
+            </FormField>
           )}
         </FormCard>
         <FormCard
