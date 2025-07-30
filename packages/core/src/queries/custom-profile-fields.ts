@@ -53,16 +53,22 @@ export const createCustomProfileFieldsQueries = (pool: CommonQueryMethods) => {
   /**
    * Update the display order of the custom profile fields in Sign-in Experience.
    */
-  const updateFieldOrderInSignInExperience = async (data: UpdateCustomProfileFieldSieOrder[]) => {
-    return pool.any(sql`
-      update ${table}
-      set ${fields.sieOrder} = t.new_sie_order::smallint
-      from (values ${sql.join(
-        data.map(({ name, sieOrder }) => sql`(${name}, ${sieOrder})`),
-        sql`,`
-      )}) t(name, new_sie_order)
-      where ${table}.${fields.name} = t.name
-      returning *
+  const updateFieldOrderInSignInExperience = async (
+    data: UpdateCustomProfileFieldSieOrder[]
+  ): Promise<readonly CustomProfileField[]> => {
+    return pool.any<CustomProfileField>(sql`
+      with updated_fields as (
+        update ${table}
+        set ${fields.sieOrder} = t.new_sie_order::smallint
+        from (values ${sql.join(
+          data.map(({ name, sieOrder }) => sql`(${name}, ${sieOrder})`),
+          sql`,`
+        )}) t(name, new_sie_order)
+        where ${table}.${fields.name} = t.name
+        returning *
+      )
+      select * from updated_fields
+      order by ${fields.sieOrder}
     `);
   };
 
