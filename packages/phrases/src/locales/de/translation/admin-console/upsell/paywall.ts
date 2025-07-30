@@ -74,6 +74,8 @@ const paywall = {
     'Upgrade auf einen kostenpflichtigen Plan für benutzerdefinierte UI-Funktionalität und Premium-Vorteile.',
   security_features:
     'Schalten Sie erweiterte Sicherheitsfunktionen durch ein Upgrade auf den Pro-Plan frei. Zögern Sie nicht, uns zu <a>kontaktieren</a>, wenn Sie Fragen haben.',
+  collect_user_profile:
+    'Upgraden Sie auf einen kostenpflichtigen Plan, um bei der Anmeldung zusätzliche Benutzerprofilinformationen zu sammeln. Zögern Sie nicht, uns zu <a>kontaktieren</a>, wenn Sie Fragen haben.',
 };
 
 export default Object.freeze(paywall);

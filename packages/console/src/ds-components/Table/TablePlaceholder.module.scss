@@ -14,6 +14,9 @@
   }
 
   .title {
+    display: flex;
+    align-items: center;
+    gap: _.unit(1);
     font: var(--font-label-2);
   }
 

@@ -171,6 +171,12 @@ const quota_item = {
     unlimited: '自帶介面',
     not_eligible: '移除您的自定義介面資產',
   },
+  collect_user_profile_enabled: {
+    name: '收集用戶資料',
+    limited: '收集用戶資料',
+    unlimited: '收集用戶資料',
+    not_eligible: '移除您的用戶資料收集欄位',
+  },
   idp_initiated_sso_enabled: {
     name: 'IDP 启动的 SSO',
     limited: 'IDP 启动的 SSO',

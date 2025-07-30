@@ -16,6 +16,7 @@ import {
   Organizations,
   SsoConnectorIdpInitiatedAuthConfigs,
   InternalRole,
+  CustomProfileFields,
 } from '@logto/schemas';
 import { sql } from '@silverhand/slonik';
 import type { CommonQueryMethods, TaggedTemplateLiteralInvocation } from '@silverhand/slonik';
@@ -50,11 +51,7 @@ const { table: ssoConnectorIdpInitiatedAuthConfigsTable } = convertToIdentifiers
   SsoConnectorIdpInitiatedAuthConfigs,
   true
 );
-const { table: signInExperienceTable, fields: signInExperienceFields } = convertToIdentifiers(
-  SignInExperiences,
-  true
-);
-
+const { table: customProfileFieldsTable } = convertToIdentifiers(CustomProfileFields, true);
 export default class TenantUsageQuery {
   constructor(private readonly pool: CommonQueryMethods) {}
 
@@ -72,6 +69,7 @@ export default class TenantUsageQuery {
           this.countHooks(),
           this.isCustomJwtEnabled(),
           this.isBringYourUiEnabled(),
+          this.isCollectUserProfileEnabled(),
           this.countResources(tenantId),
           this.countEnterpriseSso(),
           this.isMfaEnabled(),
@@ -260,6 +258,20 @@ export default class TenantUsageQuery {
     ];
   };
 
+  private readonly isCollectUserProfileEnabled = (): [
+    TaggedTemplateLiteralInvocation,
+    TaggedTemplateLiteralInvocation,
+  ] => {
+    return [
+      sql`
+        select exists (
+          select * from ${customProfileFieldsTable}
+        )
+      `,
+      sql`collectUserProfileEnabled`,
+    ];
+  };
+
   private readonly countResources = (
     tenantId: string
   ): [TaggedTemplateLiteralInvocation, TaggedTemplateLiteralInvocation] => {
@@ -376,16 +388,16 @@ export default class TenantUsageQuery {
       sql`
         select 
           CASE 
-            WHEN ${signInExperienceFields.captchaPolicy}->>'enabled' = 'true' THEN true
-            WHEN ${signInExperienceFields.sentinelPolicy}->>'maxAttempts' is not null THEN true
-            WHEN ${signInExperienceFields.sentinelPolicy}->>'lockoutDuration' is not null THEN true
-            WHEN ${signInExperienceFields.emailBlocklistPolicy} ->> 'blockDisposableAddresses' = 'true' THEN true
-            WHEN ${signInExperienceFields.emailBlocklistPolicy} ->> 'blockSubaddressing' = 'true' THEN true
-            WHEN ${signInExperienceFields.emailBlocklistPolicy} ->> 'customBlocklist' is not null 
-                AND jsonb_array_length(${signInExperienceFields.emailBlocklistPolicy} -> 'customBlocklist') > 0 THEN true
+            WHEN ${signInExperiencesFields.captchaPolicy}->>'enabled' = 'true' THEN true
+            WHEN ${signInExperiencesFields.sentinelPolicy}->>'maxAttempts' is not null THEN true
+            WHEN ${signInExperiencesFields.sentinelPolicy}->>'lockoutDuration' is not null THEN true
+            WHEN ${signInExperiencesFields.emailBlocklistPolicy} ->> 'blockDisposableAddresses' = 'true' THEN true
+            WHEN ${signInExperiencesFields.emailBlocklistPolicy} ->> 'blockSubaddressing' = 'true' THEN true
+            WHEN ${signInExperiencesFields.emailBlocklistPolicy} ->> 'customBlocklist' is not null 
+                AND jsonb_array_length(${signInExperiencesFields.emailBlocklistPolicy} -> 'customBlocklist') > 0 THEN true
             ELSE false
           END as isSecurityFeaturesEnabled
-        from ${signInExperienceTable}
+        from ${signInExperiencesTable}
     `,
       sql`securityFeaturesEnabled`,
     ];

@@ -171,6 +171,12 @@ const quota_item = {
     unlimited: 'Принесите свой UI',
     not_eligible: 'Удалите свои пользовательские элементы UI',
   },
+  collect_user_profile_enabled: {
+    name: 'Сбор профиля пользователя',
+    limited: 'Сбор профиля пользователя',
+    unlimited: 'Сбор профиля пользователя',
+    not_eligible: 'Удалите поля сбора профиля пользователя',
+  },
   idp_initiated_sso_enabled: {
     name: 'Инициированное IDP SSO',
     limited: 'Инициированное IDP SSO',

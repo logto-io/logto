@@ -1,6 +1,7 @@
 import { Theme, type CustomProfileField } from '@logto/schemas';
+import { cond } from '@silverhand/essentials';
 import classNames from 'classnames';
-import { type ReactNode } from 'react';
+import { useContext, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
@@ -11,11 +12,14 @@ import RequestErrorDarkImage from '@/assets/images/request-error-dark.svg?react'
 import RequestErrorImage from '@/assets/images/request-error.svg?react';
 import PageMeta from '@/components/PageMeta';
 import { collectUserProfile } from '@/consts';
+import { latestProPlanId } from '@/consts/subscriptions';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import { type RequestError } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
+import { isPaidPlan } from '@/utils/subscription';
 
 import SignInExperienceTabWrapper from '../components/SignInExperienceTabWrapper';
 
@@ -113,6 +117,11 @@ function CollectUserProfile({ isActive }: Props) {
     'api/custom-profile-fields'
   );
 
+  const {
+    currentSubscription: { planId, isEnterprisePlan },
+  } = useContext(SubscriptionDataContext);
+  const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
+
   return (
     <>
       <SignInExperienceTabWrapper isActive={isActive}>
@@ -146,6 +155,7 @@ function CollectUserProfile({ isActive }: Props) {
                 description="sign_in_exp.custom_profile_fields.table.placeholder.description"
                 learnMoreLink={{ href: collectUserProfile }}
                 action={<CreateButton size="large" />}
+                paywall={cond(!isPaidTenant && latestProPlanId)}
               />
             </EmptyPlaceholder>
           )}

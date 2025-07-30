@@ -9,6 +9,7 @@ import { z } from 'zod';
 import koaGuard from '#src/middleware/koa-guard.js';
 
 import RequestError from '../errors/RequestError/index.js';
+import { koaQuotaGuard } from '../middleware/koa-quota-guard.js';
 import assertThat from '../utils/assert-that.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
@@ -62,6 +63,7 @@ export default function customProfileFieldsRoutes<T extends ManagementApiRouter>
 
   router.post(
     '/custom-profile-fields',
+    koaQuotaGuard({ key: 'collectUserProfileEnabled', quota: libraries.quota }),
     koaGuard({
       body: customProfileFieldUnionGuard,
       response: CustomProfileFields.guard,

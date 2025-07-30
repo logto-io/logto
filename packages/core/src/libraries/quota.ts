@@ -196,6 +196,7 @@ export class QuotaLibrary {
       hooksLimit: rawUsage.hooksLimit,
       customJwtEnabled: rawUsage.customJwtEnabled,
       bringYourUiEnabled: rawUsage.bringYourUiEnabled,
+      collectUserProfileEnabled: rawUsage.collectUserProfileEnabled,
       /** Add-on quotas start */
       machineToMachineLimit: rawUsage.machineToMachineLimit,
       resourcesLimit: rawUsage.resourcesLimit,

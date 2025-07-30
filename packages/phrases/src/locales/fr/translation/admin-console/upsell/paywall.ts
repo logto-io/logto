@@ -74,6 +74,8 @@ const paywall = {
     "Passez à un plan payant pour obtenir des fonctionnalités de personnalisation de l'interface utilisateur ainsi que des avantages premium.",
   security_features:
     "Débloquez des fonctionnalités de sécurité avancées en passant au plan Pro. N'hésitez pas à <a>nous contacter</a> si vous avez des questions.",
+  collect_user_profile:
+    "Passez à un plan payant pour collecter des informations supplémentaires de profil utilisateur lors de l'inscription. N'hésitez pas à <a>nous contacter</a> si vous avez des questions.",
 };
 
 export default Object.freeze(paywall);

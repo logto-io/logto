@@ -74,6 +74,8 @@ const paywall = {
     'Atualize para um plano pago para trazer sua funcionalidade de UI personalizada e benefícios premium.',
   security_features:
     'Desbloqueie recursos de segurança avançados ao atualizar para o plano Pro. Não hesite em <a>entrar em contato conosco</a> se você tiver alguma pergunta.',
+  collect_user_profile:
+    'Atualize para um plano pago para coletar informações adicionais do perfil do usuário durante o cadastro. Não hesite em <a>entrar em contato conosco</a> se tiver alguma dúvida.',
 };
 
 export default Object.freeze(paywall);

@@ -4,16 +4,22 @@ import {
   type CustomProfileField,
   reservedCustomDataKeys,
 } from '@logto/schemas';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { cond } from '@silverhand/essentials';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
+import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
+import QuotaGuardFooter from '@/components/QuotaGuardFooter';
+import { latestProPlanId } from '@/consts/subscriptions';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import useApi from '@/hooks/use-api';
 import modalStyles from '@/scss/modal.module.scss';
+import { isPaidPlan } from '@/utils/subscription';
 
 import CustomDataProfileNameField from '../../components/CustomDataProfileNameField';
 import { useDataParser } from '../hooks';
@@ -28,6 +34,12 @@ type Props = {
 const reservedCustomDataKeySet = new Set<string>(reservedCustomDataKeys);
 
 function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
+  const {
+    currentSubscriptionQuota: { collectUserProfileEnabled },
+    currentSubscription: { planId, isEnterprisePlan },
+  } = useContext(SubscriptionDataContext);
+  const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
+
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { t: errorT } = useTranslation('errors');
   const api = useApi();
@@ -137,6 +149,7 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
         className={styles.content}
         title="sign_in_exp.custom_profile_fields.modal.title"
         subtitle="sign_in_exp.custom_profile_fields.modal.subtitle"
+        paywall={cond(!isPaidTenant && latestProPlanId)}
         size="xlarge"
         onClose={onClose}
       >
@@ -203,15 +216,28 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
           </FormField>
         )}
         {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
-        <div className={styles.buttonWrapper}>
-          <Button
-            size="large"
-            type="primary"
-            title="sign_in_exp.custom_profile_fields.modal.create_button"
-            isLoading={isSubmitting}
-            onClick={onSubmit}
-          />
-        </div>
+        {!collectUserProfileEnabled && (
+          <QuotaGuardFooter>
+            <Trans
+              components={{
+                a: <ContactUsPhraseLink />,
+              }}
+            >
+              {t('upsell.paywall.collect_user_profile')}
+            </Trans>
+          </QuotaGuardFooter>
+        )}
+        {collectUserProfileEnabled && (
+          <div className={styles.buttonWrapper}>
+            <Button
+              size="large"
+              type="primary"
+              title="sign_in_exp.custom_profile_fields.modal.create_button"
+              isLoading={isSubmitting}
+              onClick={onSubmit}
+            />
+          </div>
+        )}
       </ModalLayout>
     </Modal>
   );

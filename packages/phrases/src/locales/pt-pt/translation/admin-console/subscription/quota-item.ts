@@ -171,6 +171,12 @@ const quota_item = {
     unlimited: 'Traga a sua interface gráfica',
     not_eligible: 'Remova os teus ativos de UI personalizados',
   },
+  collect_user_profile_enabled: {
+    name: 'Recolher perfil do utilizador',
+    limited: 'Recolher perfil do utilizador',
+    unlimited: 'Recolher perfil do utilizador',
+    not_eligible: 'Remove os teus campos de recolha de perfil do utilizador',
+  },
   idp_initiated_sso_enabled: {
     name: 'SSO iniciado por IDP',
     limited: 'SSO iniciado por IDP',

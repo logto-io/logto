@@ -171,6 +171,12 @@ const quota_item = {
     unlimited: 'Traga sua IU',
     not_eligible: 'Remova seus ativos de IU personalizados',
   },
+  collect_user_profile_enabled: {
+    name: 'Coletar perfil do usuário',
+    limited: 'Coletar perfil do usuário',
+    unlimited: 'Coletar perfil do usuário',
+    not_eligible: 'Remova seus campos de coleta de perfil do usuário',
+  },
   idp_initiated_sso_enabled: {
     name: 'SSO iniciado por IDP',
     limited: 'SSO iniciado por IDP',

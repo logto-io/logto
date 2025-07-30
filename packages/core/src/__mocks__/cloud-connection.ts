@@ -35,6 +35,7 @@ export const mockQuota = {
   customJwtEnabled: false,
   subjectTokenEnabled: false,
   bringYourUiEnabled: false,
+  collectUserProfileEnabled: false,
   idpInitiatedSsoEnabled: false,
   samlApplicationsLimit: 0,
   securityFeaturesEnabled: false,
