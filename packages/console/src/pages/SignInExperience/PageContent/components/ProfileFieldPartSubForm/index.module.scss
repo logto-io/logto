@@ -1,0 +1,14 @@
+@use '@/scss/underscore' as _;
+
+.dropdownTitleWrapper {
+  display: flex;
+  align-items: center;
+  gap: _.unit(4);
+
+  svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    color: var(--color-text-secondary);
+  }
+}
