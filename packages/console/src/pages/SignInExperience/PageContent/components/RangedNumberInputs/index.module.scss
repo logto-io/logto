@@ -1,0 +1,51 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(1);
+}
+
+.rangedNumberInput {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: _.unit(2);
+
+  .separator {
+    width: 8px;
+    height: 0;
+    border-top: 1px solid var(--color-border);
+    flex-shrink: 0;
+  }
+
+  .inputWrapper {
+    display: flex;
+    width: 100%;
+
+    .prefix {
+      padding: 0 _.unit(2) 0 _.unit(3);
+      border: 1px solid var(--color-border);
+      border-right: none;
+      border-radius: 6px 0 0 6px;
+      background: var(--color-bg-layer-2);
+      font: var(--font-body-2);
+      line-height: 34px;
+      cursor: default;
+      user-select: none;
+    }
+
+    .inputContainer {
+      border-radius: 0 6px 6px 0;
+    }
+
+    .input {
+      flex: 1;
+    }
+  }
+}
+
+.errorMessage {
+  font: var(--font-body-2);
+  color: var(--color-error);
+}

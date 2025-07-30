@@ -1,0 +1,7 @@
+@use '@/scss/underscore' as _;
+
+.dateFormatSelector {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}

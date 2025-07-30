@@ -1,6 +1,6 @@
 import { numberAndAlphabetRegEx } from '@logto/core-kit';
 import { builtInCustomProfileFieldKeys, reservedCustomDataKeys } from '@logto/schemas';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
@@ -8,8 +8,9 @@ import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
-import TextInput from '@/ds-components/TextInput';
 import modalStyles from '@/scss/modal.module.scss';
+
+import CustomDataProfileNameField from '../../components/CustomDataProfileNameField';
 
 import styles from './index.module.scss';
 
@@ -25,8 +26,15 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
   const { t: errorT } = useTranslation('errors');
 
   const [selectedField, setSelectedField] = useState<string>();
+  const [errorMessage, setErrorMessage] = useState<string>();
   const [customDataFieldName, setCustomDataFieldName] = useState<string>('');
   const [fieldNameInputError, setFieldNameInputError] = useState<string>();
+
+  useEffect(() => {
+    if (selectedField) {
+      setErrorMessage(undefined);
+    }
+  }, [selectedField]);
 
   const validateCustomDataFieldNameInput = useCallback((): boolean => {
     if (!customDataFieldName) {
@@ -140,33 +148,33 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
             className={styles.customDataFieldNameInput}
             title="sign_in_exp.custom_profile_fields.modal.custom_data_field_name"
           >
-            <div className={styles.wrapper}>
-              <div className={styles.prefix}>customData.</div>
-              <TextInput
-                className={styles.input}
-                inputContainerClassName={styles.input}
-                placeholder={t(
-                  'sign_in_exp.custom_profile_fields.modal.custom_data_field_input_placeholder'
-                )}
-                value={customDataFieldName}
-                error={fieldNameInputError}
-                onBlur={() => {
-                  validateCustomDataFieldNameInput();
-                }}
-                onChange={(event) => {
-                  setCustomDataFieldName(event.currentTarget.value);
-                  setFieldNameInputError(undefined);
-                }}
-              />
-            </div>
+            <CustomDataProfileNameField
+              value={customDataFieldName}
+              error={fieldNameInputError}
+              placeholder={t(
+                'sign_in_exp.custom_profile_fields.modal.custom_data_field_input_placeholder'
+              )}
+              onBlur={() => {
+                validateCustomDataFieldNameInput();
+              }}
+              onChange={(event) => {
+                setCustomDataFieldName(event.currentTarget.value);
+                setFieldNameInputError(undefined);
+              }}
+            />
           </FormField>
         )}
+        {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
         <div className={styles.buttonWrapper}>
           <Button
             size="large"
             type="primary"
             title="sign_in_exp.custom_profile_fields.modal.create_button"
             onClick={() => {
+              if (!selectedField) {
+                setErrorMessage(t('sign_in_exp.custom_profile_fields.modal.type_required'));
+                return;
+              }
               if (!validateCustomDataFieldNameInput()) {
                 return;
               }
