@@ -123,6 +123,13 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
         getConnectorSession
       );
 
+      // Only store the token response if it contains an access token.
+      if (!tokenResponse?.access_token) {
+        return {
+          userInfo,
+        };
+      }
+
       const encryptedTokenSet = trySafe(
         () => encryptAndSerializeTokenResponse(tokenResponse),
         (error) => {

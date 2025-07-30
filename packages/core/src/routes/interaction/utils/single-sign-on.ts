@@ -189,7 +189,8 @@ export const verifySsoIdentity = async (
         userInfo,
         encryptedTokenSet: conditional(
           enableTokenStorage &&
-            tokenResponse &&
+            // Only store the token response if it contains an access token.
+            tokenResponse?.access_token &&
             trySafe(
               () => encryptAndSerializeTokenResponse(tokenResponse),
               (error) => {
