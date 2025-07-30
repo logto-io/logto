@@ -55,6 +55,8 @@ const custom_profile_fields = {
     label: '顯示標籤',
     label_placeholder: '標籤',
     label_tip: '需要本地化嗎？在<a>登入體驗 > 內容</a>中新增語言',
+    placeholder: '顯示佔位符',
+    placeholder_placeholder: '佔位符',
     description: '顯示說明',
     description_placeholder: '說明',
     options: '選項',

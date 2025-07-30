@@ -76,6 +76,15 @@ function ProfileFieldPartSubForm({ index }: Props) {
           placeholder={t('sign_in_exp.custom_profile_fields.details.label_placeholder')}
         />
       </FormField>
+      {type !== CustomProfileFieldType.Checkbox && (
+        <FormField title="sign_in_exp.custom_profile_fields.details.placeholder">
+          <TextInput
+            {...register(`${fieldPrefix}placeholder`)}
+            error={formErrors?.placeholder?.message}
+            placeholder={t('sign_in_exp.custom_profile_fields.details.placeholder_placeholder')}
+          />
+        </FormField>
+      )}
       <FormField title="sign_in_exp.custom_profile_fields.details.description">
         <TextInput
           {...register(`${fieldPrefix}description`)}

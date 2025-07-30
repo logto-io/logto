@@ -61,6 +61,8 @@ const custom_profile_fields = {
     label: 'Rótulo de exibição',
     label_placeholder: 'Rótulo',
     label_tip: 'Precisa de localização? Adicione idiomas em <a>Experiência de login > Conteúdo</a>',
+    placeholder: 'Placeholder de exibição',
+    placeholder_placeholder: 'Placeholder',
     description: 'Descrição de exibição',
     description_placeholder: 'Descrição',
     options: 'Opções',

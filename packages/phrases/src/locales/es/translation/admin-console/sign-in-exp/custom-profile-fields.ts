@@ -63,6 +63,8 @@ const custom_profile_fields = {
     label_placeholder: 'Etiqueta',
     label_tip:
       '¿Necesitas localización? Agrega idiomas en <a>Experiencia de inicio de sesión > Contenido</a>',
+    placeholder: 'Marcador de posición de visualización',
+    placeholder_placeholder: 'Marcador de posición',
     description: 'Descripción de visualización',
     description_placeholder: 'Descripción',
     options: 'Opciones',

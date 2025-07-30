@@ -59,6 +59,8 @@ const custom_profile_fields = {
     label: 'Display label',
     label_placeholder: 'Label',
     label_tip: 'Need localization? Add languages in <a>Sign-in experience > Content</a>',
+    placeholder: 'Display placeholder',
+    placeholder_placeholder: 'Placeholder',
     description: 'Display description',
     description_placeholder: 'Description',
     options: 'Options',

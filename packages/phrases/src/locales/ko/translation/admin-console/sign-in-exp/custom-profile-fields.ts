@@ -59,6 +59,8 @@ const custom_profile_fields = {
     label: '표시 라벨',
     label_placeholder: '라벨',
     label_tip: '현지화가 필요하신가요? <a>로그인 경험 > 콘텐츠</a>에서 언어를 추가하세요',
+    placeholder: '표시 플레이스홀더',
+    placeholder_placeholder: '플레이스홀더',
     description: '표시 설명',
     description_placeholder: '설명',
     options: '옵션',

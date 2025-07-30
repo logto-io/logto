@@ -58,6 +58,8 @@ const custom_profile_fields = {
     label: '表示ラベル',
     label_placeholder: 'ラベル',
     label_tip: '多言語対応が必要ですか？<a>サインイン体験 > コンテンツ</a>で言語を追加してください',
+    placeholder: 'プレースホルダーを表示',
+    placeholder_placeholder: 'プレースホルダー',
     description: '表示説明',
     description_placeholder: '説明',
     options: 'オプション',

@@ -56,6 +56,8 @@ const custom_profile_fields = {
     label: 'تسمية العرض',
     label_placeholder: 'تسمية',
     label_tip: 'هل تحتاج إلى الترجمة؟ أضف اللغات في <a>تجربة تسجيل الدخول > المحتوى</a>',
+    placeholder: 'عرض العنصر النائب',
+    placeholder_placeholder: 'العنصر النائب',
     description: 'وصف العرض',
     description_placeholder: 'الوصف',
     options: 'خيارات',

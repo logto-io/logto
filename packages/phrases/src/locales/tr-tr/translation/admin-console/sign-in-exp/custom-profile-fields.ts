@@ -61,6 +61,8 @@ const custom_profile_fields = {
     label_placeholder: 'Etiket',
     label_tip:
       'Yerelleştirme mi gerekiyor? <a>Oturum açma deneyimi > İçerik</a> bölümünden diller ekleyin',
+    placeholder: 'Yer tutucu görüntüle',
+    placeholder_placeholder: 'Yer tutucu',
     description: 'Görüntüleme açıklaması',
     description_placeholder: 'Açıklama',
     options: 'Seçenekler',

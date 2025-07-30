@@ -63,6 +63,8 @@ const custom_profile_fields = {
     label_placeholder: 'Libellé',
     label_tip:
       'Besoin de localisation ? Ajoutez des langues dans <a>Expérience de connexion > Contenu</a>',
+    placeholder: "Espace réservé d'affichage",
+    placeholder_placeholder: 'Espace réservé',
     description: "Description d'affichage",
     description_placeholder: 'Description',
     options: 'Options',
