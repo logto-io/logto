@@ -1,12 +1,9 @@
 import { Theme, type CustomProfileField } from '@logto/schemas';
 import classNames from 'classnames';
-import { type ReactNode, useEffect } from 'react';
-import { useFieldArray, useForm } from 'react-hook-form';
-import { toast } from 'react-hot-toast';
+import { type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import useSWR, { mutate } from 'swr';
+import useSWR from 'swr';
 
-import Draggable from '@/assets/icons/draggable.svg?react';
 import Plus from '@/assets/icons/plus.svg?react';
 import CollectUserProfileEmptyDark from '@/assets/images/collect-user-profile-empty-dark.svg?react';
 import CollectUserProfileEmpty from '@/assets/images/collect-user-profile-empty.svg?react';
@@ -15,20 +12,16 @@ import RequestErrorImage from '@/assets/images/request-error.svg?react';
 import PageMeta from '@/components/PageMeta';
 import { collectUserProfile } from '@/consts';
 import Button from '@/ds-components/Button';
-import { DraggableItem } from '@/ds-components/DragDrop';
-import DragDropProvider from '@/ds-components/DragDrop/DragDropProvider';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
-import Tag from '@/ds-components/Tag';
-import useApi, { type RequestError } from '@/hooks/use-api';
+import { type RequestError } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
-import { onKeyDownHandler } from '@/utils/a11y';
-import { trySubmitSafe } from '@/utils/form';
 
 import SignInExperienceTabWrapper from '../components/SignInExperienceTabWrapper';
 
 import CreateProfileFieldModal from './CreateProfileFieldModal';
-import { useDataParser } from './ProfileFieldDetails/hooks';
+import ProfileFieldList from './ProfileFieldList';
+import { collectUserProfilePathname } from './consts';
 import styles from './index.module.scss';
 
 type Props = {
@@ -40,25 +33,17 @@ type CreateButtonProps = {
   readonly size: 'large' | 'small';
 };
 
-type CustomProfileFieldsForm = {
-  readonly fields: CustomProfileField[];
-};
-
-const collectUserProfilePathname = '/sign-in-experience/collect-user-profile';
-const createCollectUserProfilePathname = `${collectUserProfilePathname}/create`;
-const collectUserProfileDetailsPathname = `${collectUserProfilePathname}/fields/:fieldName`;
-
 function CreateButton({ size, className }: CreateButtonProps) {
   const { navigate } = useTenantPathname();
   return (
     <Button
       className={className}
-      title="connectors.create"
+      title="sign_in_exp.custom_profile_fields.table.add_button"
       type="primary"
       size={size}
       icon={<Plus />}
       onClick={() => {
-        navigate(createCollectUserProfilePathname);
+        navigate(`${collectUserProfilePathname}/create`);
       }}
     />
   );
@@ -121,38 +106,11 @@ function TableError({
 function CollectUserProfile({ isActive }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { navigate, match } = useTenantPathname();
-  const api = useApi();
 
-  const isCreating = match(createCollectUserProfilePathname);
+  const isCreating = match(`${collectUserProfilePathname}/create`);
 
-  const {
-    data: customProfileFields,
-    error,
-    isLoading,
-  } = useSWR<CustomProfileField[], RequestError>('api/custom-profile-fields');
-
-  const { control, handleSubmit, reset } = useForm<CustomProfileFieldsForm>();
-  const { fields, swap } = useFieldArray({ control, name: 'fields' });
-
-  const { getDefaultLabel } = useDataParser();
-
-  useEffect(() => {
-    if (customProfileFields) {
-      reset({ fields: customProfileFields });
-    }
-  }, [customProfileFields, reset]);
-
-  const updateSortingOrders = handleSubmit(
-    trySubmitSafe(async ({ fields }) => {
-      const result = await api
-        .post('api/custom-profile-fields/properties/sie-order', {
-          json: { order: fields.map(({ name }, index) => ({ name, sieOrder: index + 1 })) },
-        })
-        .json<CustomProfileField[]>();
-
-      reset({ fields: result });
-      toast.success(t('general.saved'));
-    })
+  const { data, error, isLoading, mutate } = useSWR<CustomProfileField[], RequestError>(
+    'api/custom-profile-fields'
   );
 
   return (
@@ -179,7 +137,7 @@ function CollectUserProfile({ isActive }: Props) {
             </div>
           </div>
           {isLoading && <Skeleton />}
-          {!isLoading && !customProfileFields?.length && (
+          {!isLoading && !data?.length && (
             <EmptyPlaceholder>
               <TablePlaceholder
                 image={<CollectUserProfileEmpty />}
@@ -197,61 +155,16 @@ function CollectUserProfile({ isActive }: Props) {
               onRetry={async () => mutate(undefined, true)}
             />
           )}
-          {!isLoading && fields.length > 0 && (
-            <DragDropProvider>
-              {fields.map(({ id, name, label, type, config }, index) => (
-                <DraggableItem
-                  key={id}
-                  id={id}
-                  sortIndex={index}
-                  moveItem={swap}
-                  dropItem={async () => updateSortingOrders()}
-                  className={styles.draggleItemContainer}
-                >
-                  <div
-                    className={styles.row}
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => {
-                      navigate(collectUserProfileDetailsPathname.replace(':fieldName', name));
-                    }}
-                    onKeyDown={onKeyDownHandler(() => {
-                      navigate(collectUserProfileDetailsPathname.replace(':fieldName', name));
-                    })}
-                  >
-                    <div className={styles.cell}>
-                      <Draggable className={styles.draggableIcon} />
-                      <span className={styles.fieldName}>{label || getDefaultLabel(name)}</span>
-                    </div>
-                    <div className={styles.cell}>
-                      {t(`sign_in_exp.custom_profile_fields.type.${type}`)}
-                    </div>
-                    <div className={styles.cell}>
-                      <div className={styles.tags}>
-                        {(
-                          config.parts
-                            ?.filter(({ enabled }) => Boolean(enabled))
-                            .map((part) => part.name) ?? [name]
-                        ).map((key) => (
-                          <Tag key={key} variant="cell">
-                            {key}
-                          </Tag>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </DraggableItem>
-              ))}
-            </DragDropProvider>
-          )}
+          {data && data.length > 0 && <ProfileFieldList data={data} />}
         </div>
       </SignInExperienceTabWrapper>
       {isCreating && (
         <CreateProfileFieldModal
-          existingFieldNames={customProfileFields?.map(({ name }) => name) ?? []}
-          onClose={(fieldName?: string) => {
-            if (fieldName) {
-              navigate(`${createCollectUserProfilePathname}/${fieldName}`);
+          existingFieldNames={data?.map(({ name }) => name) ?? []}
+          onClose={(field?: CustomProfileField) => {
+            if (field) {
+              void mutate();
+              navigate(`${collectUserProfilePathname}/fields/${field.name}`);
               return;
             }
             navigate(collectUserProfilePathname);

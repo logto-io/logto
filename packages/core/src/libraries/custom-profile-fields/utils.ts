@@ -19,7 +19,8 @@ import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
 type ValidateCustomProfileField = (
-  data: { name: string; type: CustomProfileFieldType } & Record<string, unknown>
+  data: { name: string; type: CustomProfileFieldType } & Record<string, unknown>,
+  isStrict?: boolean
 ) => void;
 
 const validateTextProfileField: ValidateCustomProfileField = (data) => {
@@ -42,29 +43,47 @@ const validateNumberProfileField: ValidateCustomProfileField = (data) => {
   );
 };
 
-const validateCheckboxProfileField: ValidateCustomProfileField = (data) => {
+const validateCheckboxProfileField: ValidateCustomProfileField = (data, isStrict) => {
   const { config } = checkboxProfileFieldGuard.parse(data);
-  assertThat(config.options.length > 0, 'custom_profile_fields.invalid_options');
+  if (isStrict) {
+    assertThat(config.options.length > 0, 'custom_profile_fields.invalid_options');
+  }
 };
 
-const validateSelectProfileField: ValidateCustomProfileField = (data) => {
+const validateSelectProfileField: ValidateCustomProfileField = (data, isStrict) => {
   const { config } = selectProfileFieldGuard.parse(data);
-  assertThat(config.options.length > 0, 'custom_profile_fields.invalid_options');
+  if (isStrict) {
+    assertThat(config.options.length > 0, 'custom_profile_fields.invalid_options');
+  }
 };
 
-const validateRegexProfileField: ValidateCustomProfileField = (data) => {
+const validateRegexProfileField: ValidateCustomProfileField = (data, isStrict) => {
   const { config } = regexProfileFieldGuard.parse(data);
-  assertThat(isValidRegEx(config.format), 'custom_profile_fields.invalid_regex_format');
+  if (isStrict) {
+    assertThat(isValidRegEx(config.format), 'custom_profile_fields.invalid_regex_format');
+  }
 };
 
-const validateAddressProfileField: ValidateCustomProfileField = (data) => {
+const validateAddressProfileField: ValidateCustomProfileField = (data, isStrict) => {
   const { config } = addressProfileFieldGuard.parse(data);
   assertThat(config.parts.length > 0, 'custom_profile_fields.invalid_address_parts');
+
+  if (isStrict) {
+    for (const part of config.parts) {
+      validateCustomProfileFieldData(part, true);
+    }
+  }
 };
 
-const validateFullnameProfileField: ValidateCustomProfileField = (data) => {
+const validateFullnameProfileField: ValidateCustomProfileField = (data, isStrict) => {
   const { config } = fullnameProfileFieldGuard.parse(data);
   assertThat(config.parts.length > 0, 'custom_profile_fields.invalid_fullname_parts');
+
+  if (isStrict) {
+    for (const part of config.parts) {
+      validateCustomProfileFieldData(part, true);
+    }
+  }
 };
 
 const validateUrlProfileField: ValidateCustomProfileField = (data) => {
@@ -101,7 +120,10 @@ const validateFieldName = (name: string) => {
   );
 };
 
-export const validateCustomProfileFieldData: ValidateCustomProfileField = (data) => {
+export const validateCustomProfileFieldData: ValidateCustomProfileField = (
+  data,
+  isStrict = false
+) => {
   const { name, type } = data;
 
   validateFieldName(name);
@@ -116,23 +138,23 @@ export const validateCustomProfileFieldData: ValidateCustomProfileField = (data)
       break;
     }
     case CustomProfileFieldType.Checkbox: {
-      validateCheckboxProfileField(data);
+      validateCheckboxProfileField(data, isStrict);
       break;
     }
     case CustomProfileFieldType.Select: {
-      validateSelectProfileField(data);
+      validateSelectProfileField(data, isStrict);
       break;
     }
     case CustomProfileFieldType.Regex: {
-      validateRegexProfileField(data);
+      validateRegexProfileField(data, isStrict);
       break;
     }
     case CustomProfileFieldType.Address: {
-      validateAddressProfileField(data);
+      validateAddressProfileField(data, isStrict);
       break;
     }
     case CustomProfileFieldType.Fullname: {
-      validateFullnameProfileField(data);
+      validateFullnameProfileField(data, isStrict);
       break;
     }
     case CustomProfileFieldType.Url: {
@@ -141,6 +163,7 @@ export const validateCustomProfileFieldData: ValidateCustomProfileField = (data)
     }
     case CustomProfileFieldType.Date: {
       validateDateProfileField(data);
+      break;
     }
   }
 };

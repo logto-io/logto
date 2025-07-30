@@ -22,17 +22,13 @@ export const createCustomProfileFieldsLibrary = (queries: Queries) => {
   const createCustomProfileField = async (data: CustomProfileFieldUnion) => {
     validateCustomProfileFieldData(data);
 
-    return insertCustomProfileFields({
-      ...data,
-      id: generateStandardId(),
-    });
+    return insertCustomProfileFields({ ...data, id: generateStandardId() });
   };
 
   const updateCustomProfileField = async (name: string, data: UpdateCustomProfileFieldData) => {
-    validateCustomProfileFieldData({
-      ...data,
-      name,
-    });
+    // Use strict validation on update
+    validateCustomProfileFieldData({ ...data, name }, true);
+
     return updateCustomProfileFieldsByName({
       where: { name },
       set: data,

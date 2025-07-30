@@ -35,7 +35,7 @@ function ProfileFieldPartSubForm({ index }: Props) {
 
   return (
     <>
-      <FormField isRequired title="sign_in_exp.custom_profile_fields.details.key">
+      <FormField title="sign_in_exp.custom_profile_fields.details.key">
         <Controller
           name={`${fieldPrefix}name`}
           control={control}
@@ -45,7 +45,7 @@ function ProfileFieldPartSubForm({ index }: Props) {
           }}
         />
       </FormField>
-      <FormField isRequired title="sign_in_exp.custom_profile_fields.details.field_type">
+      <FormField title="sign_in_exp.custom_profile_fields.details.field_type">
         <Controller
           name={`${fieldPrefix}type`}
           control={control}
@@ -67,7 +67,11 @@ function ProfileFieldPartSubForm({ index }: Props) {
       </FormField>
       <FormField isRequired title="sign_in_exp.custom_profile_fields.details.label">
         <TextInput
-          {...register(`${fieldPrefix}label`, { required: true })}
+          {...register(`${fieldPrefix}label`, {
+            required: t('errors.required_field_missing', {
+              field: t('sign_in_exp.custom_profile_fields.details.label'),
+            }),
+          })}
           error={formErrors?.label?.message}
           placeholder={t('sign_in_exp.custom_profile_fields.details.label_placeholder')}
         />
@@ -80,9 +84,13 @@ function ProfileFieldPartSubForm({ index }: Props) {
         />
       </FormField>
       {(type === CustomProfileFieldType.Checkbox || type === CustomProfileFieldType.Select) && (
-        <FormField title="sign_in_exp.custom_profile_fields.details.options">
+        <FormField isRequired title="sign_in_exp.custom_profile_fields.details.options">
           <Textarea
-            {...register(`${fieldPrefix}options`)}
+            {...register(`${fieldPrefix}options`, {
+              required: t('errors.required_field_missing', {
+                field: t('sign_in_exp.custom_profile_fields.details.options'),
+              }),
+            })}
             error={formErrors?.options?.message}
             placeholder={t('sign_in_exp.custom_profile_fields.details.options_placeholder')}
             rows={5}
@@ -100,9 +108,13 @@ function ProfileFieldPartSubForm({ index }: Props) {
         </FormField>
       )}
       {type === CustomProfileFieldType.Regex && (
-        <FormField title="sign_in_exp.custom_profile_fields.details.regex">
+        <FormField isRequired title="sign_in_exp.custom_profile_fields.details.regex">
           <TextInput
-            {...register(`${fieldPrefix}format`)}
+            {...register(`${fieldPrefix}format`, {
+              required: t('errors.required_field_missing', {
+                field: t('sign_in_exp.custom_profile_fields.details.regex'),
+              }),
+            })}
             error={formErrors?.format?.message}
             placeholder={t('sign_in_exp.custom_profile_fields.details.regex_placeholder')}
             description={t('sign_in_exp.custom_profile_fields.details.regex_tip')}
