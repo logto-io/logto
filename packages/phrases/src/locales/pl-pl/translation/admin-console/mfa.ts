@@ -53,6 +53,12 @@ const mfa = {
     'Monit o konfigurację MFA dla organizacji wymagającej MFA',
   prompt_at_sign_in_no_skip:
     'Wymagaj od użytkowników skonfigurowania MFA przy następnym logowaniu (nie można pominąć)',
+  /** UNTRANSLATED */
+  email_primary_method_tip:
+    "Email verification code is already your primary sign-in method. To maintain security, it can't be reused for MFA.",
+  /** UNTRANSLATED */
+  phone_primary_method_tip:
+    "SMS verification code is already your primary sign-in method. To maintain security, it can't be reused for MFA.",
 };
 
 export default Object.freeze(mfa);

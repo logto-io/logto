@@ -53,6 +53,12 @@ const mfa = {
     'MFA-Einrichtungsaufforderung für Benutzer, nachdem die Organisation MFA aktiviert hat',
   prompt_at_sign_in_no_skip:
     'Benutzer bei der nächsten Anmeldung zur MFA-Einrichtung auffordern (keine Möglichkeit zum Überspringen)',
+  /** UNTRANSLATED */
+  email_primary_method_tip:
+    "Email verification code is already your primary sign-in method. To maintain security, it can't be reused for MFA.",
+  /** UNTRANSLATED */
+  phone_primary_method_tip:
+    "SMS verification code is already your primary sign-in method. To maintain security, it can't be reused for MFA.",
 };
 
 export default Object.freeze(mfa);

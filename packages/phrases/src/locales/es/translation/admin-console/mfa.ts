@@ -54,6 +54,12 @@ const mfa = {
     'Sugerencia de configuración de MFA para usuarios después de que la organización habilita MFA',
   prompt_at_sign_in_no_skip:
     'Pedir a los usuarios que configuren MFA en el próximo inicio de sesión (sin omitir)',
+  /** UNTRANSLATED */
+  email_primary_method_tip:
+    "Email verification code is already your primary sign-in method. To maintain security, it can't be reused for MFA.",
+  /** UNTRANSLATED */
+  phone_primary_method_tip:
+    "SMS verification code is already your primary sign-in method. To maintain security, it can't be reused for MFA.",
 };
 
 export default Object.freeze(mfa);

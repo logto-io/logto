@@ -53,6 +53,12 @@ const mfa = {
     'Подсказка настройки MFA для пользователей после включения MFA в организации',
   prompt_at_sign_in_no_skip:
     'Попросить пользователей настроить MFA при следующем входе (без пропуска)',
+  /** UNTRANSLATED */
+  email_primary_method_tip:
+    "Email verification code is already your primary sign-in method. To maintain security, it can't be reused for MFA.",
+  /** UNTRANSLATED */
+  phone_primary_method_tip:
+    "SMS verification code is already your primary sign-in method. To maintain security, it can't be reused for MFA.",
 };
 
 export default Object.freeze(mfa);

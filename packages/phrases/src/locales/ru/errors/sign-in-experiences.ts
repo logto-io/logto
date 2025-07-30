@@ -20,6 +20,12 @@ const sign_in_experiences = {
   at_least_one_authentication_factor: 'Вы должны выбрать как минимум один фактор аутентификации.',
   backup_code_cannot_be_enabled_alone: 'Резервный код не может быть включен самостоятельно.',
   duplicated_mfa_factors: 'Факторы MFA не должны повторяться.',
+  /** UNTRANSLATED */
+  email_verification_code_cannot_be_used_for_mfa:
+    'Email verification code cannot be used for MFA when email verification is enabled for sign-in.',
+  /** UNTRANSLATED */
+  phone_verification_code_cannot_be_used_for_mfa:
+    'SMS verification code cannot be used for MFA when SMS verification is enabled for sign-in.',
   duplicated_sign_up_identifiers: 'Обнаружены дублирующие идентификаторы создания учетной записи.',
   missing_sign_up_identifiers:
     'Основной идентификатор создания учетной записи не может быть пустым.',

@@ -18,6 +18,12 @@ const sign_in_experiences = {
   at_least_one_authentication_factor: 'En az bir doğrulama faktörü seçmelisiniz.',
   backup_code_cannot_be_enabled_alone: 'Yedek kod yalnız başına etkinleştirilemez.',
   duplicated_mfa_factors: 'Yinelenen MFA faktörleri.',
+  /** UNTRANSLATED */
+  email_verification_code_cannot_be_used_for_mfa:
+    'Email verification code cannot be used for MFA when email verification is enabled for sign-in.',
+  /** UNTRANSLATED */
+  phone_verification_code_cannot_be_used_for_mfa:
+    'SMS verification code cannot be used for MFA when SMS verification is enabled for sign-in.',
   duplicated_sign_up_identifiers: 'Yinelenen kayıt kimlikleri tespit edildi.',
   missing_sign_up_identifiers: 'Birincil kayıt kimliği boş olamaz.',
   invalid_custom_email_blocklist_format:

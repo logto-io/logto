@@ -19,6 +19,12 @@ const sign_in_experiences = {
   at_least_one_authentication_factor: 'Musisz wybrać co najmniej jeden czynnik uwierzytelniający.',
   backup_code_cannot_be_enabled_alone: 'Kod zapasowy nie może być włączony samodzielnie.',
   duplicated_mfa_factors: 'Powielone czynniki MFA.',
+  /** UNTRANSLATED */
+  email_verification_code_cannot_be_used_for_mfa:
+    'Email verification code cannot be used for MFA when email verification is enabled for sign-in.',
+  /** UNTRANSLATED */
+  phone_verification_code_cannot_be_used_for_mfa:
+    'SMS verification code cannot be used for MFA when SMS verification is enabled for sign-in.',
   duplicated_sign_up_identifiers: 'Wykryto zduplikowane identyfikatory rejestracji.',
   missing_sign_up_identifiers: 'Podstawowy identyfikator rejestracji nie może być pusty.',
   invalid_custom_email_blocklist_format:

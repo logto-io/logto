@@ -54,6 +54,12 @@ const mfa = {
     "Organizasyon MFA'yı etkinleştirdikten sonra kullanıcılardan MFA kurmalarını isteyin",
   prompt_at_sign_in_no_skip:
     'Bir sonraki girişte kullanıcılardan MFA kurmalarını isteyin (atlanamaz)',
+  /** UNTRANSLATED */
+  email_primary_method_tip:
+    "Email verification code is already your primary sign-in method. To maintain security, it can't be reused for MFA.",
+  /** UNTRANSLATED */
+  phone_primary_method_tip:
+    "SMS verification code is already your primary sign-in method. To maintain security, it can't be reused for MFA.",
 };
 
 export default Object.freeze(mfa);

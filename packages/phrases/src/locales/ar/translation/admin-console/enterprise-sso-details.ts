@@ -117,13 +117,10 @@ const enterprise_sso_details = {
     'موصل Entra ID (OIDC) لا يقدم المطالبة `email_verified`، مما يعني أن عناوين البريد الإلكتروني من Azure ليست مضمونة التحقق. بشكل افتراضي، لن يقوم Logto بمزامنة عناوين البريد الإلكتروني غير الموثوقة إلى ملف تعريف المستخدم. قم بتفعيل هذا الخيار فقط إذا كنت تثق في جميع عناوين البريد الإلكتروني من دليل Entra ID.',
   offline_access: {
     /** UNTRANSLATED */
-    label: 'Enable offline access',
+    label: 'Refresh access token',
     /** UNTRANSLATED */
     description:
-      'Set `access_type` to `offline` to allow the connector to request a refresh token from Google Workspace.',
-    /** UNTRANSLATED */
-    tooltip:
-      'Unlike the standard OIDC connector, Google Workspace SSO does not support `offline_access` scope by default. It uses the `access_type=offline` parameter to request a refresh token. Enable this option to allow the connector to request a refresh token from Google Workspace.',
+      'Enable Google `offline` access to request a refresh token, allowing your app to refresh the access token without user re-authorization.',
   },
 };
 

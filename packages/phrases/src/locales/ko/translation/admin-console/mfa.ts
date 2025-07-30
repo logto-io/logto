@@ -49,6 +49,12 @@ const mfa = {
   set_up_organization_required_mfa_prompt:
     '조직이 MFA를 활성화 한 후 사용자를 위한 MFA 설정 프롬프트',
   prompt_at_sign_in_no_skip: '다음 로그인에 사용자에게 MFA 설정을 요청합니다 (건너뛰기 불가)',
+  /** UNTRANSLATED */
+  email_primary_method_tip:
+    "Email verification code is already your primary sign-in method. To maintain security, it can't be reused for MFA.",
+  /** UNTRANSLATED */
+  phone_primary_method_tip:
+    "SMS verification code is already your primary sign-in method. To maintain security, it can't be reused for MFA.",
 };
 
 export default Object.freeze(mfa);

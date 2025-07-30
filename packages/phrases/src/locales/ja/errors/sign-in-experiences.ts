@@ -20,6 +20,12 @@ const sign_in_experiences = {
   at_least_one_authentication_factor: '認証ファクタを 1 つ以上選択する必要があります。',
   backup_code_cannot_be_enabled_alone: 'バックアップコードは単独で有効にできません。',
   duplicated_mfa_factors: '重複した MFA ファクタです。',
+  /** UNTRANSLATED */
+  email_verification_code_cannot_be_used_for_mfa:
+    'Email verification code cannot be used for MFA when email verification is enabled for sign-in.',
+  /** UNTRANSLATED */
+  phone_verification_code_cannot_be_used_for_mfa:
+    'SMS verification code cannot be used for MFA when SMS verification is enabled for sign-in.',
   duplicated_sign_up_identifiers: '重複したサインアップ識別子が検出されました。',
   missing_sign_up_identifiers: '主要なサインアップ識別子を空にすることはできません。',
   invalid_custom_email_blocklist_format:

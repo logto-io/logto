@@ -41,6 +41,12 @@ const mfa = {
   prompt_only_at_sign_in: '在注册后的下次登录尝试时要求用户设置 MFA （可跳过，一次性提示）',
   set_up_organization_required_mfa_prompt: '组织启用 MFA 后，提示用户设置 MFA',
   prompt_at_sign_in_no_skip: '在下次登录时要求用户设置 MFA （不可跳过）',
+  /** UNTRANSLATED */
+  email_primary_method_tip:
+    "Email verification code is already your primary sign-in method. To maintain security, it can't be reused for MFA.",
+  /** UNTRANSLATED */
+  phone_primary_method_tip:
+    "SMS verification code is already your primary sign-in method. To maintain security, it can't be reused for MFA.",
 };
 
 export default Object.freeze(mfa);

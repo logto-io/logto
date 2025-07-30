@@ -51,6 +51,12 @@ const mfa = {
   set_up_organization_required_mfa_prompt:
     '組織が MFA を有効にした後のユーザーの MFA 設定プロンプト',
   prompt_at_sign_in_no_skip: '次回サインイン時にユーザーに MFA の設定を依頼します（スキップ不可）',
+  /** UNTRANSLATED */
+  email_primary_method_tip:
+    "Email verification code is already your primary sign-in method. To maintain security, it can't be reused for MFA.",
+  /** UNTRANSLATED */
+  phone_primary_method_tip:
+    "SMS verification code is already your primary sign-in method. To maintain security, it can't be reused for MFA.",
 };
 
 export default Object.freeze(mfa);

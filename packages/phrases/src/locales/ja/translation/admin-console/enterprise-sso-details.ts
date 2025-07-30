@@ -120,13 +120,10 @@ const enterprise_sso_details = {
     'Entra ID (OIDC) コネクタは `email_verified` クレームを返さないため、Azure からのメールアドレスは確認済みであることは保証されません。デフォルトでは、Logto は未検証のメールアドレスをユーザープロファイルに同期しません。Entra ID ディレクトリからのすべてのメールアドレスを信頼する場合にのみ、このオプションを有効にしてください。',
   offline_access: {
     /** UNTRANSLATED */
-    label: 'Enable offline access',
+    label: 'Refresh access token',
     /** UNTRANSLATED */
     description:
-      'Set `access_type` to `offline` to allow the connector to request a refresh token from Google Workspace.',
-    /** UNTRANSLATED */
-    tooltip:
-      'Unlike the standard OIDC connector, Google Workspace SSO does not support `offline_access` scope by default. It uses the `access_type=offline` parameter to request a refresh token. Enable this option to allow the connector to request a refresh token from Google Workspace.',
+      'Enable Google `offline` access to request a refresh token, allowing your app to refresh the access token without user re-authorization.',
   },
 };
 
