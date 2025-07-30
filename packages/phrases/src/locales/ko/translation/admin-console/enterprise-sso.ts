@@ -70,8 +70,7 @@ const enterprise_sso = {
       client_secret_field_name: '클라이언트 비밀',
       issuer_field_name: '발급자',
       scope_field_name: '범위',
-      /** UNTRANSLATED */
-      scope_field_placeholder: 'Enter the scopes (separated by a space)',
+      scope_field_placeholder: '범위를 입력하세요 (공백으로 구분)',
     },
   },
 };

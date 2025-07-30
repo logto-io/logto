@@ -20,16 +20,12 @@ const mfa = {
   backup_code_setup_hint: '上記のMFA要因を検証できない場合は、バックアップオプションを使用します。',
   backup_code_error_hint:
     'バックアップコードを使用するには、成功したユーザー認証のために少なくとも1つ以上のMFAメソッドが必要です。',
-  /** UNTRANSLATED */
-  email_verification_code: 'Email verification code',
-  /** UNTRANSLATED */
+  email_verification_code: 'メール認証コード',
   email_verification_code_description:
-    'Link email address to receive and verify verification codes.',
-  /** UNTRANSLATED */
-  phone_verification_code: 'SMS verification code',
-  /** UNTRANSLATED */
+    '確認コードを受信して確認するためにメールアドレスをリンクします。',
+  phone_verification_code: 'SMS認証コード',
   phone_verification_code_description:
-    'Link phone number to receive and verify SMS verification codes.',
+    'SMS認証コードを受信して確認するために電話番号をリンクします。',
   policy: 'ポリシー',
   policy_description: 'サインインおよびサインアップフローのためのMFAポリシーを設定します。',
   two_step_sign_in_policy: 'サインイン時の2段階認証ポリシー',
@@ -51,6 +47,10 @@ const mfa = {
   set_up_organization_required_mfa_prompt:
     '組織が MFA を有効にした後のユーザーの MFA 設定プロンプト',
   prompt_at_sign_in_no_skip: '次回サインイン時にユーザーに MFA の設定を依頼します（スキップ不可）',
+  email_primary_method_tip:
+    'メール認証コードは既にあなたの主要なサインイン方法です。セキュリティを維持するため、それを MFA に再利用することはできません。',
+  phone_primary_method_tip:
+    'SMS認証コードは既にあなたの主要なサインイン方法です。セキュリティを維持するため、それを MFA に再利用することはできません。',
 };
 
 export default Object.freeze(mfa);

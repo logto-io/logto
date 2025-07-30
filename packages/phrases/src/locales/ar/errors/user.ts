@@ -44,9 +44,8 @@ const user = {
   phone_required: 'رقم الهاتف هو معرف مطلوب، لا يمكنك تعيينه ليكون null.',
   enterprise_sso_identity_not_exists:
     'المستخدم ليس لديه هوية مؤسسية مرتبطة بمعرف الموصل SSO المحدد: {{ ssoConnectorId }}.',
-  /** UNTRANSLATED */
   identity_not_exists_in_current_user:
-    'The specified identity does not exist in the current user account. Please link the identity before proceeding.',
+    'الهوية المحددة غير موجودة في حساب المستخدم الحالي. من فضلك قم بربط الهوية قبل المتابعة.',
 };
 
 export default Object.freeze(user);

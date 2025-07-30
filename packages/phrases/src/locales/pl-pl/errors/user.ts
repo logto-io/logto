@@ -47,9 +47,8 @@ const user = {
   phone_required: 'Numer telefonu jest wymaganym identyfikatorem, nie możesz ustawić go jako null.',
   enterprise_sso_identity_not_exists:
     'Użytkownik nie ma tożsamości przedsiębiorstwa powiązanej ze wskazanym identyfikatorem połączenia SSO: {{ ssoConnectorId }}.',
-  /** UNTRANSLATED */
   identity_not_exists_in_current_user:
-    'The specified identity does not exist in the current user account. Please link the identity before proceeding.',
+    'Określona tożsamość nie istnieje w bieżącym koncie użytkownika. Proszę połączyć tożsamość przed kontynuowaniem.',
 };
 
 export default Object.freeze(user);

@@ -70,10 +70,8 @@ const connector_details = {
     itp_support: '<a>ITP 브라우저에서 업그레이드된 원탭 UX</a> 활성화',
   },
   sign_in_experience: {
-    /** UNTRANSLATED */
-    in_use: 'Enabled for sign-in ',
-    /** UNTRANSLATED */
-    not_in_use: 'Disabled for sign-in ',
+    in_use: '로그인에 사용 가능 ',
+    not_in_use: '로그인에 사용 안 함 ',
   },
 };
 

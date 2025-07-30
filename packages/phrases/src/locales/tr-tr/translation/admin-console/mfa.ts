@@ -21,16 +21,12 @@ const mfa = {
     'Kullanıcılar yukarıdaki MFA faktörlerini doğrulayamadığında yedek seçeneğini kullanın.',
   backup_code_error_hint:
     'Bir yedek kodu kullanmak için başarılı kullanıcı kimlik doğrulaması için en az bir daha fazla MFA yönteme ihtiyacınız vardır.',
-  /** UNTRANSLATED */
-  email_verification_code: 'Email verification code',
-  /** UNTRANSLATED */
+  email_verification_code: 'E-posta doğrulama kodu',
   email_verification_code_description:
-    'Link email address to receive and verify verification codes.',
-  /** UNTRANSLATED */
-  phone_verification_code: 'SMS verification code',
-  /** UNTRANSLATED */
+    'Doğrulama kodlarını almak ve doğrulamak için e-posta adresini bağlayın.',
+  phone_verification_code: 'SMS doğrulama kodu',
   phone_verification_code_description:
-    'Link phone number to receive and verify SMS verification codes.',
+    'SMS doğrulama kodlarını almak ve doğrulamak için telefon numarasını bağlayın.',
   policy: 'Politika',
   policy_description: 'Giriş ve kaydolma akışları için MFA politikasını belirleyin.',
   two_step_sign_in_policy: 'Girişte 2 aşamalı doğrulama politikası',
@@ -54,6 +50,10 @@ const mfa = {
     "Organizasyon MFA'yı etkinleştirdikten sonra kullanıcılardan MFA kurmalarını isteyin",
   prompt_at_sign_in_no_skip:
     'Bir sonraki girişte kullanıcılardan MFA kurmalarını isteyin (atlanamaz)',
+  email_primary_method_tip:
+    'E-posta doğrulama kodu zaten birincil oturum açma yönteminizdir. Güvenliği sağlamak için MFA için tekrar kullanılamaz.',
+  phone_primary_method_tip:
+    'SMS doğrulama kodu zaten birincil oturum açma yönteminizdir. Güvenliği sağlamak için MFA için tekrar kullanılamaz.',
 };
 
 export default Object.freeze(mfa);

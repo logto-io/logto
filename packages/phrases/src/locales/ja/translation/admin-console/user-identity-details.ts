@@ -1,90 +1,59 @@
 const user_identity_details = {
-  /** UNTRANSLATED */
-  social_identity_page_title: 'Social identity details',
-  /** UNTRANSLATED */
-  back_to_user_details: 'Back to user details',
-  /** UNTRANSLATED */
-  delete_identity: `Remove identity connection`,
+  social_identity_page_title: 'ソーシャル ID 詳細',
+  back_to_user_details: 'ユーザー詳細に戻る',
+  delete_identity: `ID 接続を削除`,
   social_account: {
-    /** UNTRANSLATED */
-    title: 'Social account',
-    /** UNTRANSLATED */
+    title: 'ソーシャルアカウント',
     description:
-      'View user data and profile information synced from the linked {{connectorName}} account.',
-    /** UNTRANSLATED */
-    provider_name: 'Social identity provider name',
-    /** UNTRANSLATED */
-    identity_id: 'Social identity ID',
-    /** UNTRANSLATED */
-    user_profile: 'User profile synced from social identity provider',
+      '連携された {{connectorName}} アカウントから同期されたユーザーデータとプロフィール情報を表示します。',
+    provider_name: 'ソーシャル ID プロバイダー名',
+    identity_id: 'ソーシャル ID',
+    user_profile: 'ソーシャル ID プロバイダーから同期されたユーザープロフィール',
   },
   sso_account: {
-    /** UNTRANSLATED */
-    title: 'Enterprise SSO account',
-    /** UNTRANSLATED */
+    title: 'エンタープライズ SSO アカウント',
     description:
-      'View user data and profile information synced from the linked {{connectorName}} account.',
-    /** UNTRANSLATED */
-    provider_name: 'Enterprise SSO identity provider name',
-    /** UNTRANSLATED */
-    identity_id: 'Enterprise SSO identity ID',
-    /** UNTRANSLATED */
-    user_profile: 'User profile synced from enterprise SSO identity provider',
+      '連携された {{connectorName}} アカウントから同期されたユーザーデータとプロフィール情報を表示します。',
+    provider_name: 'エンタープライズ SSO ID プロバイダー名',
+    identity_id: 'エンタープライズ SSO ID',
+    user_profile: 'エンタープライズ SSO ID プロバイダーから同期されたユーザープロフィール',
   },
   token_storage: {
-    /** UNTRANSLATED */
-    title: 'Access token',
-    /** UNTRANSLATED */
+    title: 'アクセストークン',
     description:
-      'Store access and refresh tokens from {{connectorName}} in the Secret Vault. Allows automated API calls without repeated user consent.',
+      '{{connectorName}} のアクセストークンとリフレッシュトークンをシークレットボールトに保存します。繰り返しユーザーの同意を得ることなく、自動化された API 呼び出しを可能にします。',
   },
   access_token: {
-    /** UNTRANSLATED */
-    title: 'Access token',
-    /** UNTRANSLATED */
+    title: 'アクセストークン',
     description_active:
-      'Access token is active and securely stored in the Secret Vault. Your product can use it to access the {{connectorName}} APIs.',
-    /** UNTRANSLATED */
+      'アクセストークンはアクティブであり、シークレットボールトに安全に保存されています。 あなたの製品はこれを使用して {{connectorName}} API にアクセスできます。',
     description_inactive:
-      'This access token is inactive (e.g., revoked). Users must re-authorize access to restore functionality.',
-    /** UNTRANSLATED */
+      'このアクセストークンは無効です（例: 取り消されました）。 ユーザーは、機能を復元するためにアクセスを再認可する必要があります。',
     description_expired:
-      'This access token has expired. Renewal occurs automatically on the next API request using the refresh token. If the refresh token is not available, user re-authentication is required.',
+      'このアクセストークンは期限切れです。 プロセススは、次回のリフレッシュトークンを使用した API リクエストで自動的に更新されます。 リフレッシュトークンが利用できない場合は、ユーザー認証が再度必要になります。',
   },
   refresh_token: {
-    /** UNTRANSLATED */
     available:
-      'Refresh token is available. If the access token expires, it will be automatically refreshed using the refresh token.',
-    /** UNTRANSLATED */
+      'リフレッシュトークンが利用可能です。アクセストークンが期限切れになると、リフレッシュトークンを使用して自動的に更新されます。',
     not_available:
-      'Refresh token is not available. After the access token expires, users must re-authenticate to obtain new tokens.',
+      'リフレッシュトークンが利用できません。アクセストークンが期限切れになると、ユーザーは新しいトークンを取得するために再認証する必要があります。',
   },
-  /** UNTRANSLATED */
-  token_status: 'Token status',
-  /** UNTRANSLATED */
-  created_at: 'Created at',
-  /** UNTRANSLATED */
-  updated_at: 'Updated at',
-  /** UNTRANSLATED */
-  expires_at: 'Expires at',
-  /** UNTRANSLATED */
-  scopes: 'Scopes',
+  token_status: 'トークンステータス',
+  created_at: '作成日時',
+  updated_at: '更新日時',
+  expires_at: '有効期限日時',
+  scopes: 'スコープ',
   delete_tokens: {
-    /** UNTRANSLATED */
-    title: 'Delete tokens',
-    /** UNTRANSLATED */
+    title: 'トークンの削除',
     description:
-      'Delete the stored tokens. Users must re-authorize access to restore functionality.',
-    /** UNTRANSLATED */
+      '保存されたトークンを削除します。ユーザーは、機能を復元するためにアクセスを再許可する必要があります。',
     confirmation_message:
-      'Are you sure you want to delete tokens?  Logto Secret Vault will remove the stored {{connectorName}} access and refresh tokens. This user must re-authorize to restore {{connectorName}} API access.',
+      '本当にトークンを削除してもよろしいですか？ Logto シークレットボールトは、保存された {{connectorName}} アクセスおよびリフレッシュトークンを削除します。このユーザーは、{{connectorName}} API アクセスを復元するために再認可する必要があります。',
   },
   token_storage_disabled: {
-    /** UNTRANSLATED */
-    title: 'Token storage is disabled for this connector',
-    /** UNTRANSLATED */
+    title: 'このコネクターのトークンストレージは無効です',
     description:
-      'Users can currently use {{connectorName}} only to sign-in, link accounts, or sync profiles during each consent flow. To access {{connectorName}} APIs and perform actions on behalf of users, please enable token storage in',
+      'ユーザーは、現在、{{connectorName}} を使用してサインインしたり、アカウントをリンクしたり、各同意フロー中にプロファイルを同期したりすることしかできません。{{connectorName}} API にアクセスし、ユーザーの代理としてアクションを実行するには、でトークンストレージを有効にしてください。',
   },
 };
 

@@ -65,10 +65,8 @@ const connector_details = {
     itp_support: '啟用 <a>ITP 瀏覽器上的升級一鍵登入用戶體驗</a>',
   },
   sign_in_experience: {
-    /** UNTRANSLATED */
-    in_use: 'Enabled for sign-in ',
-    /** UNTRANSLATED */
-    not_in_use: 'Disabled for sign-in ',
+    in_use: '已啟用登錄',
+    not_in_use: '已停用登錄',
   },
 };
 

@@ -48,9 +48,8 @@ const user = {
     'Номер телефона является обязательным идентификатором, нельзя установить его в null.',
   enterprise_sso_identity_not_exists:
     'У пользователя отсутствует корпоративная учетная запись, связанная с указанным ID SSO-коннектора: {{ ssoConnectorId }}.',
-  /** UNTRANSLATED */
   identity_not_exists_in_current_user:
-    'The specified identity does not exist in the current user account. Please link the identity before proceeding.',
+    'Указанная учетная запись не существует в текущей учетной записи пользователя. Пожалуйста, свяжите учетную запись перед продолжением.',
 };
 
 export default Object.freeze(user);

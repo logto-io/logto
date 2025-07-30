@@ -21,16 +21,12 @@ const mfa = {
     'Cuando los usuarios no pueden verificar los factores de MFA anteriores, utiliza la opción de respaldo.',
   backup_code_error_hint:
     'Para usar un código de respaldo, necesitas al menos un método de MFA adicional para una autenticación exitosa del usuario.',
-  /** UNTRANSLATED */
-  email_verification_code: 'Email verification code',
-  /** UNTRANSLATED */
+  email_verification_code: 'Código de verificación de email',
   email_verification_code_description:
-    'Link email address to receive and verify verification codes.',
-  /** UNTRANSLATED */
-  phone_verification_code: 'SMS verification code',
-  /** UNTRANSLATED */
+    'Vincula la dirección de correo electrónico para recibir y verificar los códigos de verificación.',
+  phone_verification_code: 'Código de verificación SMS',
   phone_verification_code_description:
-    'Link phone number to receive and verify SMS verification codes.',
+    'Vincula el número de teléfono para recibir y verificar los códigos de verificación SMS.',
   policy: 'Política',
   policy_description:
     'Establece la política de MFA para los flujos de inicio de sesión y registro.',
@@ -54,6 +50,10 @@ const mfa = {
     'Sugerencia de configuración de MFA para usuarios después de que la organización habilita MFA',
   prompt_at_sign_in_no_skip:
     'Pedir a los usuarios que configuren MFA en el próximo inicio de sesión (sin omitir)',
+  email_primary_method_tip:
+    'El código de verificación de email ya es tu método principal de inicio de sesión. Para mantener la seguridad, no se puede reutilizar para MFA.',
+  phone_primary_method_tip:
+    'El código de verificación SMS ya es tu método principal de inicio de sesión. Para mantener la seguridad, no se puede reutilizar para MFA.',
 };
 
 export default Object.freeze(mfa);

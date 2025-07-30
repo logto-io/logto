@@ -71,10 +71,8 @@ const connector_details = {
     itp_support: '<a>ITP ブラウザでアップグレードされたワンタップ UX</a> を有効にする',
   },
   sign_in_experience: {
-    /** UNTRANSLATED */
-    in_use: 'Enabled for sign-in ',
-    /** UNTRANSLATED */
-    not_in_use: 'Disabled for sign-in ',
+    in_use: 'サインインに有効',
+    not_in_use: 'サインインに無効',
   },
 };
 

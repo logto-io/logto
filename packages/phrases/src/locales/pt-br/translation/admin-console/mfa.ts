@@ -21,16 +21,12 @@ const mfa = {
     'Quando os usuários não puderem verificar os fatores MFA acima, use a opção de backup.',
   backup_code_error_hint:
     'Para usar um código de backup, você precisa de pelo menos mais um método MFA para autenticação bem-sucedida do usuário.',
-  /** UNTRANSLATED */
-  email_verification_code: 'Email verification code',
-  /** UNTRANSLATED */
+  email_verification_code: 'Código de verificação de e-mail',
   email_verification_code_description:
-    'Link email address to receive and verify verification codes.',
-  /** UNTRANSLATED */
-  phone_verification_code: 'SMS verification code',
-  /** UNTRANSLATED */
+    'Vincule o endereço de e-mail para receber e verificar códigos de verificação.',
+  phone_verification_code: 'Código de verificação por SMS',
   phone_verification_code_description:
-    'Link phone number to receive and verify SMS verification codes.',
+    'Vincule o número de telefone para receber e verificar códigos de verificação por SMS.',
   policy: 'Política',
   policy_description: 'Defina a política MFA para fluxos de login e inscrição.',
   two_step_sign_in_policy: 'Política de verificação em duas etapas no login',
@@ -52,6 +48,10 @@ const mfa = {
   set_up_organization_required_mfa_prompt:
     'Avisar os usuários para configurar o MFA após a organização ativar o MFA',
   prompt_at_sign_in_no_skip: '在下次登录时要求用户设置 MFA（无法跳过）',
+  email_primary_method_tip:
+    'O código de verificação do e-mail já é seu principal método de login. Para manter a segurança, ele não pode ser reutilizado para MFA.',
+  phone_primary_method_tip:
+    'O código de verificação por SMS já é seu principal método de login. Para manter a segurança, ele não pode ser reutilizado para MFA.',
 };
 
 export default Object.freeze(mfa);

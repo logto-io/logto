@@ -103,10 +103,7 @@ function OidcMetadataForm({ providerConfig, config, providerName }: Props) {
         </FormField>
       )}
       {providerName === SsoProviderName.GOOGLE_WORKSPACE && isDevFeaturesEnabled && (
-        <FormField
-          title="enterprise_sso_details.offline_access.label"
-          tip={t('enterprise_sso_details.offline_access.tooltip')}
-        >
+        <FormField title="enterprise_sso_details.offline_access.label">
           <Switch
             label={t('enterprise_sso_details.offline_access.description')}
             {...register('offlineAccess')}

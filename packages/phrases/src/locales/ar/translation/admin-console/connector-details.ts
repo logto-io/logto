@@ -71,10 +71,8 @@ const connector_details = {
     itp_support: 'تمكين <a>تجربة مستخدم محسنة لـ One Tap على متصفحات ITP</a>',
   },
   sign_in_experience: {
-    /** UNTRANSLATED */
-    in_use: 'Enabled for sign-in ',
-    /** UNTRANSLATED */
-    not_in_use: 'Disabled for sign-in ',
+    in_use: 'ممكّن لتسجيل الدخول',
+    not_in_use: 'معطّل لتسجيل الدخول',
   },
 };
 

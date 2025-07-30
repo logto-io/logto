@@ -21,16 +21,12 @@ const mfa = {
     'Когда пользователи не могут проверить вышеупомянутые факторы MFA, используйте резервный вариант.',
   backup_code_error_hint:
     'Для использования резервного кода вам нужен как минимум еще один метод MFA для успешной аутентификации пользователя.',
-  /** UNTRANSLATED */
-  email_verification_code: 'Email verification code',
-  /** UNTRANSLATED */
+  email_verification_code: 'Код подтверждения по электронной почте',
   email_verification_code_description:
-    'Link email address to receive and verify verification codes.',
-  /** UNTRANSLATED */
-  phone_verification_code: 'SMS verification code',
-  /** UNTRANSLATED */
+    'Свяжите адрес электронной почты для получения и проверки кодов подтверждения.',
+  phone_verification_code: 'Код подтверждения SMS',
   phone_verification_code_description:
-    'Link phone number to receive and verify SMS verification codes.',
+    'Свяжите номер телефона для получения и проверки SMS-кодов подтверждения.',
   policy: 'Политика',
   policy_description: 'Установите политику MFA для процессов входа и регистрации.',
   two_step_sign_in_policy: 'Политика двухэтапной верификации при входе',
@@ -53,6 +49,10 @@ const mfa = {
     'Подсказка настройки MFA для пользователей после включения MFA в организации',
   prompt_at_sign_in_no_skip:
     'Попросить пользователей настроить MFA при следующем входе (без пропуска)',
+  email_primary_method_tip:
+    'Код подтверждения по электронной почте уже является вашим основным методом входа. Для поддержания безопасности его нельзя повторно использовать для MFA.',
+  phone_primary_method_tip:
+    'Код подтверждения SMS уже является вашим основным методом входа. Для поддержания безопасности его нельзя повторно использовать для MFA.',
 };
 
 export default Object.freeze(mfa);

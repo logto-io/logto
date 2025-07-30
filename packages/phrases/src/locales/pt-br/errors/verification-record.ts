@@ -3,11 +3,10 @@ const verification_record = {
   permission_denied: 'Permissão negada, por favor, autentique-se novamente.',
   not_supported_for_google_one_tap: 'Esta API não suporta o Google One Tap.',
   social_verification: {
-    /** UNTRANSLATED */
-    invalid_target: 'Invalid verification record. Expected {{expected}} but got {{actual}}.',
-    /** UNTRANSLATED */
+    invalid_target:
+      'Registro de verificação inválido. Esperado {{expected}}, mas recebido {{actual}}.',
     token_response_not_found:
-      'Token response not found. Please check that token storage is supported and enabled for the social connector.',
+      'Resposta do token não encontrada. Verifique se o armazenamento de token é compatível e está habilitado para o conector social.',
   },
 };
 

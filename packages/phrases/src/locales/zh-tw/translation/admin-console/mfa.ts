@@ -10,28 +10,22 @@ const mfa = {
   webauthn_description: '通過瀏覽器支持的方法進行驗證：生物識別、手機掃描或安全密鑰等。',
   webauthn_native_tip: '本地應用不支持 WebAuthn。',
   webauthn_domain_tip:
-    'WebAuthn將公共密鑰綁定到特定域。修改服務域將阻止用戶通過現有通行證進行身份驗證。',
+    'WebAuthn 將公共密鑰綁定到特定域。修改服務域將阻止用戶通過現有通行證進行身份驗證。',
   backup_code: '備份代碼',
-  backup_code_description: '在用戶設置任何MFA方法後生成10個一次性備份代碼。',
-  backup_code_setup_hint: '當用戶無法驗證上述MFA因素時，使用備份選項。',
-  backup_code_error_hint: '要使用備份代碼，你需要至少再添加一種MFA方法以成功進行用戶身份驗證。',
-  /** UNTRANSLATED */
-  email_verification_code: 'Email verification code',
-  /** UNTRANSLATED */
-  email_verification_code_description:
-    'Link email address to receive and verify verification codes.',
-  /** UNTRANSLATED */
-  phone_verification_code: 'SMS verification code',
-  /** UNTRANSLATED */
-  phone_verification_code_description:
-    'Link phone number to receive and verify SMS verification codes.',
+  backup_code_description: '在用戶設置任何 MFA 方法後生成 10 個一次性備份代碼。',
+  backup_code_setup_hint: '當用戶無法驗證上述 MFA 因素時，使用備份選項。',
+  backup_code_error_hint: '要使用備份代碼，你需要至少再添加一種 MFA 方法以成功進行用戶身份驗證。',
+  email_verification_code: '郵件驗證碼',
+  email_verification_code_description: '連接郵件地址以接收和驗證驗證碼。',
+  phone_verification_code: 'SMS 驗證碼',
+  phone_verification_code_description: '連接手機號碼以接收和驗證 SMS 驗證碼。',
   policy: '策略',
-  policy_description: '設置登錄和註冊流程的MFA策略。',
+  policy_description: '設置登錄和註冊流程的 MFA 策略。',
   two_step_sign_in_policy: '登錄時的雙步驗證策略',
-  user_controlled: '用戶可以自行啟用或禁用MFA',
-  user_controlled_tip: '用戶可以在首次登錄或註冊時跳過MFA設置，或在帳戶設置中啟用/禁用它。',
-  mandatory: '用戶總是需要在登錄時使用MFA',
-  mandatory_tip: '用戶必須在首次登錄或註冊時設置MFA，並在以後的所有登錄中使用它。',
+  user_controlled: '用戶可以自行啟用或禁用 MFA',
+  user_controlled_tip: '用戶可以在首次登錄或註冊時跳過 MFA 設置，或在帳戶設置中啟用/禁用它。',
+  mandatory: '用戶總是需要在登錄時使用 MFA',
+  mandatory_tip: '用戶必須在首次登錄或註冊時設置 MFA，並在以後的所有登錄中使用它。',
   require_mfa: '需要 MFA',
   require_mfa_label:
     '啟用此功能可使雙步驗證成為訪問你的應用的必須步驟。如果禁用，用戶可以自行決定是否啟用 MFA。',
@@ -41,6 +35,8 @@ const mfa = {
   prompt_only_at_sign_in: '在註冊後用戶的下一次登錄嘗試時提示設置 MFA（可跳過，一次性提示）',
   set_up_organization_required_mfa_prompt: '組織啟用 MFA 後的用戶 MFA 設置提示',
   prompt_at_sign_in_no_skip: '在用戶的下次登錄時要求設置 MFA（不可跳過）',
+  email_primary_method_tip: '郵件驗證碼已經是你的主要登錄方式。為了維持安全性，不能重複用作 MFA。',
+  phone_primary_method_tip: 'SMS 驗證碼已經是你的主要登錄方式。為了維持安全性，不能重複用作 MFA。',
 };
 
 export default Object.freeze(mfa);

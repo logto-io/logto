@@ -21,16 +21,12 @@ const mfa = {
     'Wenn Benutzer die obigen MFA-Faktoren nicht überprüfen können, verwenden Sie die Backup-Option.',
   backup_code_error_hint:
     'Um einen Backup-Code zu verwenden, benötigen Sie mindestens eine weitere MFA-Methode für eine erfolgreiche Benutzerauthentifizierung.',
-  /** UNTRANSLATED */
-  email_verification_code: 'Email verification code',
-  /** UNTRANSLATED */
+  email_verification_code: 'E-Mail-Verifizierungscode',
   email_verification_code_description:
-    'Link email address to receive and verify verification codes.',
-  /** UNTRANSLATED */
-  phone_verification_code: 'SMS verification code',
-  /** UNTRANSLATED */
+    'Verknüpfen Sie die E-Mail-Adresse, um Verifizierungscodes zu erhalten und zu überprüfen.',
+  phone_verification_code: 'SMS-Verifizierungscode',
   phone_verification_code_description:
-    'Link phone number to receive and verify SMS verification codes.',
+    'Verknüpfen Sie die Telefonnummer, um SMS-Verifizierungscodes zu erhalten und zu überprüfen.',
   policy: 'Richtlinie',
   policy_description: 'Legen Sie die MFA-Richtlinie für Anmelde- und Anmeldevorgänge fest.',
   two_step_sign_in_policy: 'Zwei-Schritt-Verifizierungspolitik bei der Anmeldung',
@@ -53,6 +49,10 @@ const mfa = {
     'MFA-Einrichtungsaufforderung für Benutzer, nachdem die Organisation MFA aktiviert hat',
   prompt_at_sign_in_no_skip:
     'Benutzer bei der nächsten Anmeldung zur MFA-Einrichtung auffordern (keine Möglichkeit zum Überspringen)',
+  email_primary_method_tip:
+    'E-Mail-Verifizierungscode ist bereits Ihre primäre Anmeldemethode. Um die Sicherheit zu gewährleisten, kann er nicht erneut für MFA verwendet werden.',
+  phone_primary_method_tip:
+    'SMS-Verifizierungscode ist bereits Ihre primäre Anmeldemethode. Um die Sicherheit zu gewährleisten, kann er nicht erneut für MFA verwendet werden.',
 };
 
 export default Object.freeze(mfa);

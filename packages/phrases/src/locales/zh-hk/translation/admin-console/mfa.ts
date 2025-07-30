@@ -15,16 +15,10 @@ const mfa = {
   backup_code_description: '在用戶設定任何 MFA 方法後生成 10 個一次性備用代碼。',
   backup_code_setup_hint: '當用戶無法驗證上述 MFA 因素時，可使用備用選項。',
   backup_code_error_hint: '要使用備用代碼，你需要至少再添加一種 MFA 方法以完成用戶驗證。',
-  /** UNTRANSLATED */
-  email_verification_code: 'Email verification code',
-  /** UNTRANSLATED */
-  email_verification_code_description:
-    'Link email address to receive and verify verification codes.',
-  /** UNTRANSLATED */
-  phone_verification_code: 'SMS verification code',
-  /** UNTRANSLATED */
-  phone_verification_code_description:
-    'Link phone number to receive and verify SMS verification codes.',
+  email_verification_code: 'Email 驗證碼',
+  email_verification_code_description: '連結電子郵件地址以接收和驗證驗證碼。',
+  phone_verification_code: 'SMS 驗證碼',
+  phone_verification_code_description: '連結電話號碼以接收和驗證 SMS 驗證碼。',
   policy: '政策',
   policy_description: '設定登入和註冊流程的 MFA 政策。',
   two_step_sign_in_policy: '登入時的雙重驗證政策',
@@ -41,6 +35,8 @@ const mfa = {
   prompt_only_at_sign_in: '在註冊後的下次登入時要求用戶設定 MFA（可跳過的一次性提示）',
   set_up_organization_required_mfa_prompt: '組織啟用 MFA 後要求用戶設定的 MFA 提示',
   prompt_at_sign_in_no_skip: '在下次登入時要求用戶設定 MFA（不可跳過）',
+  email_primary_method_tip: 'Email 驗證碼已是你的主要登入方法。為了保持安全性，不能重複用於 MFA。',
+  phone_primary_method_tip: 'SMS 驗證碼已是你的主要登入方法。為了保持安全性，不能重複用於 MFA。',
 };
 
 export default Object.freeze(mfa);

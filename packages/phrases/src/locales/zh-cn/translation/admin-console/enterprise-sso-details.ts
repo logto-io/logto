@@ -107,14 +107,9 @@ const enterprise_sso_details = {
   trust_unverified_email_tip:
     'Entra ID（OIDC）连接器不返回 `email_verified` 声明，这意味着来自 Azure 的电子邮件地址不一定经过验证。默认情况下，Logto 将不会将未验证的电子邮件地址同步到用户配置文件。只有在你信任来自 Entra ID 目录的所有电子邮件地址时才启用此选项。',
   offline_access: {
-    /** UNTRANSLATED */
-    label: 'Enable offline access',
-    /** UNTRANSLATED */
+    label: '刷新访问令牌',
     description:
-      'Set `access_type` to `offline` to allow the connector to request a refresh token from Google Workspace.',
-    /** UNTRANSLATED */
-    tooltip:
-      'Unlike the standard OIDC connector, Google Workspace SSO does not support `offline_access` scope by default. It uses the `access_type=offline` parameter to request a refresh token. Enable this option to allow the connector to request a refresh token from Google Workspace.',
+      '启用 Google `offline` 访问以请求刷新令牌，允许你的应用在不重新授权用户的情况下刷新访问令牌。',
   },
 };
 

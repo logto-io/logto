@@ -21,16 +21,12 @@ const mfa = {
     "Quando gli utenti non possono verificare i suddetti fattori MFA, utilizzare l'opzione di backup.",
   backup_code_error_hint:
     "Per utilizzare un codice di backup, è necessario almeno un altro metodo MFA per un'autenticazione utente riuscita.",
-  /** UNTRANSLATED */
-  email_verification_code: 'Email verification code',
-  /** UNTRANSLATED */
+  email_verification_code: 'Codice di verifica email',
   email_verification_code_description:
-    'Link email address to receive and verify verification codes.',
-  /** UNTRANSLATED */
-  phone_verification_code: 'SMS verification code',
-  /** UNTRANSLATED */
+    "Collega l'indirizzo email per ricevere e verificare i codici di verifica.",
+  phone_verification_code: 'Codice di verifica SMS',
   phone_verification_code_description:
-    'Link phone number to receive and verify SMS verification codes.',
+    'Collega il numero di telefono per ricevere e verificare i codici di verifica SMS.',
   policy: 'Politica',
   policy_description: 'Imposta la politica MFA per i flussi di accesso e registrazione.',
   two_step_sign_in_policy: "Politica di verifica a due passaggi all'accesso",
@@ -53,6 +49,10 @@ const mfa = {
     "Messaggio di configurazione MFA per gli utenti dopo che l'organizzazione abilita MFA",
   prompt_at_sign_in_no_skip:
     'Chiedi agli utenti di configurare MFA al prossimo accesso (senza possibilità di saltare)',
+  email_primary_method_tip:
+    'Il codice di verifica email è già il tuo metodo principale di accesso. Per mantenere la sicurezza, non può essere riutilizzato per la MFA.',
+  phone_primary_method_tip:
+    'Il codice di verifica SMS è già il tuo metodo principale di accesso. Per mantenere la sicurezza, non può essere riutilizzato per la MFA.',
 };
 
 export default Object.freeze(mfa);

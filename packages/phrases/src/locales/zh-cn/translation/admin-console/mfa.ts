@@ -5,33 +5,27 @@ const mfa = {
   multi_factors: '多因素',
   multi_factors_description: '用户需要验证启用的两步验证中的一个因素。',
   totp: '身份验证器应用 OTP',
-  otp_description: '将Google Authenticator等链接，以验证一次性密码。',
+  otp_description: '将 Google Authenticator 等链接，以验证一次性密码。',
   webauthn: 'WebAuthn（通行证）',
   webauthn_description: '通过浏览器支持的方法进行验证：生物识别、手机扫描或安全密钥等。',
-  webauthn_native_tip: 'WebAuthn不支持原生应用。',
+  webauthn_native_tip: 'WebAuthn 不支持原生应用。',
   webauthn_domain_tip:
-    'WebAuthn将公钥绑定到特定域。修改服务域将阻止用户通过现有的密码进行身份验证。',
+    'WebAuthn 将公钥绑定到特定域。修改服务域将阻止用户通过现有的密码进行身份验证。',
   backup_code: '备份代码',
-  backup_code_description: '用户设置任何MFA方法后生成10个一次性备份代码。',
-  backup_code_setup_hint: '当用户无法验证上述MFA因素时，请使用备份选项。',
-  backup_code_error_hint: '要使用备份代码，您需要至少再添加一种MFA方法以成功验证用户。',
-  /** UNTRANSLATED */
-  email_verification_code: 'Email verification code',
-  /** UNTRANSLATED */
-  email_verification_code_description:
-    'Link email address to receive and verify verification codes.',
-  /** UNTRANSLATED */
-  phone_verification_code: 'SMS verification code',
-  /** UNTRANSLATED */
-  phone_verification_code_description:
-    'Link phone number to receive and verify SMS verification codes.',
+  backup_code_description: '用户设置任何 MFA 方法后生成 10 个一次性备份代码。',
+  backup_code_setup_hint: '当用户无法验证上述 MFA 因素时，请使用备份选项。',
+  backup_code_error_hint: '要使用备份代码，你需要至少再添加一种 MFA 方法以成功验证用户。',
+  email_verification_code: '邮件验证码',
+  email_verification_code_description: '关联电子邮件地址以接收和验证验证码。',
+  phone_verification_code: '短信验证码',
+  phone_verification_code_description: '关联电话号码以接收和验证短信验证码。',
   policy: '策略',
-  policy_description: '为登录和注册流程设置MFA策略。',
+  policy_description: '为登录和注册流程设置 MFA 策略。',
   two_step_sign_in_policy: '登录时的两步验证策略',
-  user_controlled: '用户可以自行启用或禁用MFA',
-  user_controlled_tip: '用户可以在首次登录或注册时跳过MFA设置，或在账户设置中启用/禁用MFA。',
-  mandatory: '用户始终需要在登录时使用MFA',
-  mandatory_tip: '用户必须在首次登录或注册时设置MFA，并在所有未来的登录中使用它。',
+  user_controlled: '用户可以自行启用或禁用 MFA',
+  user_controlled_tip: '用户可以在首次登录或注册时跳过 MFA 设置，或在账户设置中启用/禁用 MFA。',
+  mandatory: '用户始终需要在登录时使用 MFA',
+  mandatory_tip: '用户必须在首次登录或注册时设置 MFA，并在所有未来的登录中使用它。',
   require_mfa: '需要 MFA',
   require_mfa_label:
     '启用此选项以使两步验证成为访问你的应用程序的强制要求。如果禁用，用户可以决定是否为自己启用 MFA。',
@@ -41,6 +35,8 @@ const mfa = {
   prompt_only_at_sign_in: '在注册后的下次登录尝试时要求用户设置 MFA （可跳过，一次性提示）',
   set_up_organization_required_mfa_prompt: '组织启用 MFA 后，提示用户设置 MFA',
   prompt_at_sign_in_no_skip: '在下次登录时要求用户设置 MFA （不可跳过）',
+  email_primary_method_tip: '邮件验证码已经是你的主要登录方式。为了确保安全性，不能再次用于 MFA。',
+  phone_primary_method_tip: '短信验证码已经是你的主要登录方式。为了确保安全性，不能再次用于 MFA。',
 };
 
 export default Object.freeze(mfa);

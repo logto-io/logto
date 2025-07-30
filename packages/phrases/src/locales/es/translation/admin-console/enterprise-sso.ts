@@ -71,8 +71,7 @@ const enterprise_sso = {
       client_secret_field_name: 'Secreto de cliente',
       issuer_field_name: 'Emisor',
       scope_field_name: 'Ámbito',
-      /** UNTRANSLATED */
-      scope_field_placeholder: 'Enter the scopes (separated by a space)',
+      scope_field_placeholder: 'Ingrese los ámbitos (separados por un espacio)',
     },
   },
 };

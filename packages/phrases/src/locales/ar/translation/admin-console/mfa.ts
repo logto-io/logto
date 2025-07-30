@@ -18,16 +18,12 @@ const mfa = {
     'عندما لا يمكن للمستخدمين التحقق من العوامل MFA أعلاه ، استخدم الخيار الاحتياطي.',
   backup_code_error_hint:
     'لاستخدام رمز النسخ الاحتياطي ، تحتاج إلى طريقة MFA واحدة على الأقل للمصادقة الناجحة للمستخدم.',
-  /** UNTRANSLATED */
-  email_verification_code: 'Email verification code',
-  /** UNTRANSLATED */
+  email_verification_code: 'رمز التحقق عبر البريد الإلكتروني',
   email_verification_code_description:
-    'Link email address to receive and verify verification codes.',
-  /** UNTRANSLATED */
-  phone_verification_code: 'SMS verification code',
-  /** UNTRANSLATED */
+    'ربط عنوان البريد الإلكتروني لاستلام رموز التحقق والتحقق منها.',
+  phone_verification_code: 'رمز التحقق عبر الرسائل القصيرة',
   phone_verification_code_description:
-    'Link phone number to receive and verify SMS verification codes.',
+    'ربط رقم الهاتف لاستلام والتحقق من رموز التحقق عبر الرسائل القصيرة.',
   policy: 'السياسة',
   policy_description: 'تعيين سياسة MFA لعمليات تسجيل الدخول والتسجيل.',
   two_step_sign_in_policy: 'سياسة التحقق الثنائي في تسجيل الدخول',
@@ -49,6 +45,10 @@ const mfa = {
   set_up_organization_required_mfa_prompt:
     'موجه إعداد MFA للمستخدمين بعد أن يقوم المؤسسة بتمكين MFA',
   prompt_at_sign_in_no_skip: 'اطلب من المستخدمين إعداد MFA عند تسجيل الدخول التالي (لا يمكن تخطيه)',
+  email_primary_method_tip:
+    'رمز التحقق عبر البريد الإلكتروني هو بالفعل طريقتك الرئيسية لتسجيل الدخول. للحفاظ على الأمان، لا يمكن إعادة استخدامه لـ MFA.',
+  phone_primary_method_tip:
+    'رمز التحقق عبر الرسائل القصيرة هو بالفعل طريقتك الرئيسية لتسجيل الدخول. للحفاظ على الأمان، لا يمكن إعادة استخدامه لـ MFA.',
 };
 
 export default Object.freeze(mfa);

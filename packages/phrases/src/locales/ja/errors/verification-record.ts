@@ -3,11 +3,10 @@ const verification_record = {
   permission_denied: '許可が拒否されましたので、再認証してください。',
   not_supported_for_google_one_tap: 'この API は Google One Tap をサポートしていません。',
   social_verification: {
-    /** UNTRANSLATED */
-    invalid_target: 'Invalid verification record. Expected {{expected}} but got {{actual}}.',
-    /** UNTRANSLATED */
+    invalid_target:
+      '無効な検証レコードです。{{expected}} を期待しましたが、{{actual}} が返されました。',
     token_response_not_found:
-      'Token response not found. Please check that token storage is supported and enabled for the social connector.',
+      'トークン応答が見つかりません。ソーシャルコネクタのトークンストレージがサポートされており、有効になっていることを確認してください。',
   },
 };
 
