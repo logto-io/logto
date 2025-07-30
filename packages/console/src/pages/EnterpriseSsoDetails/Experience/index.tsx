@@ -17,7 +17,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { spInitiatedSsoFlow } from '@/consts';
+import { retrieveTokenStorage, spInitiatedSsoFlow } from '@/consts';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -274,9 +274,7 @@ function Experience({ data, isDeleted, onUpdated, isDarkModeEnabled }: Props) {
                           components={{
                             a: (
                               <TextLink
-                                href={getDocumentationUrl(
-                                  '/docs/references/connectors/#token-storage'
-                                )}
+                                href={getDocumentationUrl(retrieveTokenStorage)}
                                 targetBlank="noopener"
                               />
                             ),

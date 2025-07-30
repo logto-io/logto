@@ -7,7 +7,11 @@
 }
 
 .multiLine {
-  height: _.unit(27);
+  min-height: _.unit(27);
+
+  > [class$='row'] {
+    align-items: self-start;
+  }
 }
 
 .deleteCard {
