@@ -57,6 +57,8 @@ const session = {
       'Адрес электронной почты "{{email}}" ограничен. Пожалуйста, выберите другой.',
   },
   google_one_tap: {
+    /** UNTRANSLATED */
+    cookie_mismatch: 'Google One Tap cookie mismatch.',
     invalid_id_token: 'Недействительный токен Google ID.',
     unverified_email: 'Неподтверждённая электронная почта.',
   },

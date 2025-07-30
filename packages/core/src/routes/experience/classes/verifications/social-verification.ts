@@ -6,6 +6,7 @@ import {
   GoogleConnector,
   isExternalGoogleOneTap as isExternalGoogleOneTapChecker,
   isGoogleOneTap as isGoogleOneTapChecker,
+  logtoGoogleOneTapCookieKey,
 } from '@logto/connector-kit';
 import {
   VerificationType,
@@ -426,14 +427,18 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     const isExternalWebsiteGoogleOneTap = isExternalGoogleOneTapChecker(connectorData);
 
     // Verify the CSRF token if it's a Google connector and has credential (a Google One Tap verification)
-    if (
-      connector.metadata.id === GoogleConnector.factoryId &&
-      isGoogleOneTap &&
-      !isExternalWebsiteGoogleOneTap
-    ) {
-      const csrfToken = connectorData[GoogleConnector.oneTapParams.csrfToken];
-      const value = ctx.cookies.get(GoogleConnector.oneTapParams.csrfToken);
-      assertThat(value === csrfToken, 'session.csrf_token_mismatch');
+    if (connector.metadata.id === GoogleConnector.factoryId && isGoogleOneTap) {
+      if (isExternalWebsiteGoogleOneTap) {
+        assertThat(
+          connectorData[GoogleConnector.oneTapParams.credential] ===
+            ctx.cookies.get(logtoGoogleOneTapCookieKey),
+          'session.google_one_tap.cookie_mismatch'
+        );
+      } else {
+        const csrfToken = connectorData[GoogleConnector.oneTapParams.csrfToken];
+        const value = ctx.cookies.get(GoogleConnector.oneTapParams.csrfToken);
+        assertThat(value === csrfToken, 'session.csrf_token_mismatch');
+      }
     }
 
     // Get the connector session from the current verification record

@@ -54,6 +54,8 @@ const session = {
     email_not_allowed: 'Kısıtlanmış e-posta adresi "{{email}}". Lütfen farklı bir tane seçiniz.',
   },
   google_one_tap: {
+    /** UNTRANSLATED */
+    cookie_mismatch: 'Google One Tap cookie mismatch.',
     invalid_id_token: 'Geçersiz Google Kimliği Jetonu.',
     unverified_email: 'Doğrulanmamış e-posta.',
   },
