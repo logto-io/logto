@@ -1,5 +1,9 @@
 import { numberAndAlphabetRegEx } from '@logto/core-kit';
-import { builtInCustomProfileFieldKeys, reservedCustomDataKeys } from '@logto/schemas';
+import {
+  builtInCustomProfileFieldKeys,
+  type CustomProfileField,
+  reservedCustomDataKeys,
+} from '@logto/schemas';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -9,18 +13,16 @@ import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import useApi from '@/hooks/use-api';
-import useTenantPathname from '@/hooks/use-tenant-pathname';
 import modalStyles from '@/scss/modal.module.scss';
 
 import CustomDataProfileNameField from '../../components/CustomDataProfileNameField';
-import { collectUserProfilePathname } from '../consts';
 import { useDataParser } from '../hooks';
 
 import styles from './index.module.scss';
 
 type Props = {
   readonly existingFieldNames: string[];
-  readonly onClose?: (fieldName?: string) => void;
+  readonly onClose?: (field?: CustomProfileField) => void;
 };
 
 const reservedCustomDataKeySet = new Set<string>(reservedCustomDataKeys);
@@ -29,7 +31,6 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { t: errorT } = useTranslation('errors');
   const api = useApi();
-  const { navigate } = useTenantPathname();
 
   const { getInitialRequestPayloadByFieldName } = useDataParser();
 
@@ -113,10 +114,13 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
 
     setIsSubmitting(true);
     try {
-      await api.post('api/custom-profile-fields', {
-        json: getInitialRequestPayloadByFieldName(fieldName),
-      });
-      navigate(`${collectUserProfilePathname}/fields/${fieldName}`);
+      const field = await api
+        .post('api/custom-profile-fields', {
+          json: getInitialRequestPayloadByFieldName(fieldName),
+        })
+        .json<CustomProfileField>();
+
+      onClose?.(field);
     } finally {
       setIsSubmitting(false);
     }

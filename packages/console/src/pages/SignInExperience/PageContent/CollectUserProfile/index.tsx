@@ -2,7 +2,7 @@ import { Theme, type CustomProfileField } from '@logto/schemas';
 import classNames from 'classnames';
 import { type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import useSWR, { mutate } from 'swr';
+import useSWR from 'swr';
 
 import Plus from '@/assets/icons/plus.svg?react';
 import CollectUserProfileEmptyDark from '@/assets/images/collect-user-profile-empty-dark.svg?react';
@@ -33,8 +33,6 @@ type CreateButtonProps = {
   readonly size: 'large' | 'small';
 };
 
-const createCollectUserProfilePathname = `${collectUserProfilePathname}/create`;
-
 function CreateButton({ size, className }: CreateButtonProps) {
   const { navigate } = useTenantPathname();
   return (
@@ -45,7 +43,7 @@ function CreateButton({ size, className }: CreateButtonProps) {
       size={size}
       icon={<Plus />}
       onClick={() => {
-        navigate(createCollectUserProfilePathname);
+        navigate(`${collectUserProfilePathname}/create`);
       }}
     />
   );
@@ -109,9 +107,9 @@ function CollectUserProfile({ isActive }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { navigate, match } = useTenantPathname();
 
-  const isCreating = match(createCollectUserProfilePathname);
+  const isCreating = match(`${collectUserProfilePathname}/create`);
 
-  const { data, error, isLoading } = useSWR<CustomProfileField[], RequestError>(
+  const { data, error, isLoading, mutate } = useSWR<CustomProfileField[], RequestError>(
     'api/custom-profile-fields'
   );
 
@@ -163,9 +161,10 @@ function CollectUserProfile({ isActive }: Props) {
       {isCreating && (
         <CreateProfileFieldModal
           existingFieldNames={data?.map(({ name }) => name) ?? []}
-          onClose={(fieldName?: string) => {
-            if (fieldName) {
-              navigate(`${createCollectUserProfilePathname}/${fieldName}`);
+          onClose={(field?: CustomProfileField) => {
+            if (field) {
+              void mutate();
+              navigate(`${collectUserProfilePathname}/fields/${field.name}`);
               return;
             }
             navigate(collectUserProfilePathname);
