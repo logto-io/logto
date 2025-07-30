@@ -1,7 +1,15 @@
 import { CustomProfileFieldType } from '@logto/schemas';
+import { type ReactNode } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import CheckboxIcon from '@/assets/icons/field-type-checkbox.svg?react';
+import DateIcon from '@/assets/icons/field-type-date.svg?react';
+import DropdownIcon from '@/assets/icons/field-type-dropdown.svg?react';
+import NumberIcon from '@/assets/icons/field-type-number.svg?react';
+import RegexIcon from '@/assets/icons/field-type-regex.svg?react';
+import TextIcon from '@/assets/icons/field-type-text.svg?react';
+import UrlIcon from '@/assets/icons/field-type-url.svg?react';
 import FormField from '@/ds-components/FormField';
 import Select from '@/ds-components/Select';
 import Switch from '@/ds-components/Switch';
@@ -13,6 +21,18 @@ import { isBuiltInCustomProfileFieldKey } from '../../CollectUserProfile/utils';
 import CustomDataProfileNameField from '../CustomDataProfileNameField';
 import DateFormatSelector from '../DateFormatSelector';
 import RangedNumberInputs from '../RangedNumberInputs';
+
+import styles from './index.module.scss';
+
+const fieldTypeIconMappings: Record<string, ReactNode> = Object.freeze({
+  [CustomProfileFieldType.Date]: <DateIcon />,
+  [CustomProfileFieldType.Select]: <DropdownIcon />,
+  [CustomProfileFieldType.Number]: <NumberIcon />,
+  [CustomProfileFieldType.Text]: <TextIcon />,
+  [CustomProfileFieldType.Url]: <UrlIcon />,
+  [CustomProfileFieldType.Regex]: <RegexIcon />,
+  [CustomProfileFieldType.Checkbox]: <CheckboxIcon />,
+});
 
 type Props = {
   readonly index?: number;
@@ -53,13 +73,17 @@ function ProfileFieldPartSubForm({ index }: Props) {
             const options = Object.values(CustomProfileFieldType)
               .filter(
                 (type) =>
-                  !fieldPrefix ||
-                  (type !== CustomProfileFieldType.Address &&
-                    type !== CustomProfileFieldType.Fullname)
+                  type !== CustomProfileFieldType.Address &&
+                  type !== CustomProfileFieldType.Fullname
               )
               .map((type) => ({
                 value: type,
-                title: t(`sign_in_exp.custom_profile_fields.type.${type}`),
+                title: (
+                  <div className={styles.dropdownTitleWrapper}>
+                    {fieldTypeIconMappings[type]}
+                    {t(`sign_in_exp.custom_profile_fields.type.${type}`)}
+                  </div>
+                ),
               }));
             return <Select options={options} value={value} onChange={onChange} />;
           }}
