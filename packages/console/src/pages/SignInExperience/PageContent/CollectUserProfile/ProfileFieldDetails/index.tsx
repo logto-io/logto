@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 
 import Delete from '@/assets/icons/delete.svg?react';
 import DetailsPage from '@/components/DetailsPage';
@@ -27,6 +27,7 @@ function ProfileFieldDetails() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { fieldName } = useParams();
   const api = useApi();
+  const { mutate: mutateGlobal } = useSWRConfig();
   const { navigate } = useTenantPathname();
 
   const isBuiltInFieldName = isBuiltInCustomProfileFieldKey(fieldName);
@@ -51,11 +52,12 @@ function ProfileFieldDetails() {
       toast.success(
         t('sign_in_exp.custom_profile_fields.details.field_deleted', { name: data?.name })
       );
+      await mutateGlobal('api/custom-profile-fields', true);
       navigate(parentPathname);
     } finally {
       setIsDeleting(false);
     }
-  }, [api, fieldName, t, data?.name, navigate]);
+  }, [api, fieldName, t, data?.name, navigate, mutateGlobal]);
 
   if (!fieldName) {
     return null;

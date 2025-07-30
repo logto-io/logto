@@ -5,8 +5,7 @@ import {
   userProfileAddressKeys,
   supportedDateFormat,
 } from '@logto/schemas';
-import { cond, condString, type Optional } from '@silverhand/essentials';
-import cleanDeep from 'clean-deep';
+import { cond, type Optional } from '@silverhand/essentials';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -151,11 +150,11 @@ export const useDataParser = () => {
         parts,
       } = data;
 
-      return cleanDeep({
+      return {
         name,
         type,
         label,
-        description: condString(description),
+        description,
         required,
         config: {
           options: parseOptionsStringToArray(options),
@@ -185,7 +184,7 @@ export const useDataParser = () => {
             },
           })),
         },
-      });
+      };
     },
     []
   );
