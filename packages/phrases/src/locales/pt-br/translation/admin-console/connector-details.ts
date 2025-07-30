@@ -71,10 +71,8 @@ const connector_details = {
     itp_support: 'Ativar <a>UX Melhorado do One Tap em navegadores ITP</a>',
   },
   sign_in_experience: {
-    /** UNTRANSLATED */
-    in_use: 'Enabled for sign-in ',
-    /** UNTRANSLATED */
-    not_in_use: 'Disabled for sign-in ',
+    in_use: 'Habilitado para login',
+    not_in_use: 'Desabilitado para login',
   },
 };
 

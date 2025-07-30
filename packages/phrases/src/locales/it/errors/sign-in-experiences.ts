@@ -20,6 +20,10 @@ const sign_in_experiences = {
   at_least_one_authentication_factor: 'Devi selezionare almeno un fattore di autenticazione.',
   backup_code_cannot_be_enabled_alone: 'Il codice di backup non può essere abilitato da solo.',
   duplicated_mfa_factors: 'Fattori MFA duplicati.',
+  email_verification_code_cannot_be_used_for_mfa:
+    "Il codice di verifica email non può essere utilizzato per MFA quando la verifica email è abilitata per l'accesso.",
+  phone_verification_code_cannot_be_used_for_mfa:
+    "Il codice di verifica SMS non può essere utilizzato per MFA quando la verifica SMS è abilitata per l'accesso.",
   duplicated_sign_up_identifiers: 'Sono stati rilevati identificatori di registrazione duplicati.',
   missing_sign_up_identifiers: "L'identificatore di registrazione principale non può essere vuoto.",
   invalid_custom_email_blocklist_format:

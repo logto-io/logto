@@ -74,7 +74,7 @@ export const defaultMetadata: ConnectorMetadata = {
       key: 'offlineAccess',
       type: ConnectorConfigFormItemType.Switch,
       required: false,
-      label: 'Offline Access',
+      label: 'Refresh access token',
       isDevFeature: true,
       defaultValue: false,
       description:

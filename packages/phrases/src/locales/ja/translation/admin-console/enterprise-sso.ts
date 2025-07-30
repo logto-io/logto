@@ -70,8 +70,7 @@ const enterprise_sso = {
       client_secret_field_name: 'クライアントシークレット',
       issuer_field_name: '発行者',
       scope_field_name: 'スコープ',
-      /** UNTRANSLATED */
-      scope_field_placeholder: 'Enter the scopes (separated by a space)',
+      scope_field_placeholder: 'スコープを入力してください（スペースで区切ってください）',
     },
   },
 };

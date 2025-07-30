@@ -3,11 +3,10 @@ const verification_record = {
   permission_denied: 'Permission refusée, veuillez vous réauthentifier.',
   not_supported_for_google_one_tap: 'Cette API ne prend pas en charge Google One Tap.',
   social_verification: {
-    /** UNTRANSLATED */
-    invalid_target: 'Invalid verification record. Expected {{expected}} but got {{actual}}.',
-    /** UNTRANSLATED */
+    invalid_target:
+      'Enregistrement de vérification invalide. Attendu {{expected}} mais obtenu {{actual}}.',
     token_response_not_found:
-      'Token response not found. Please check that token storage is supported and enabled for the social connector.',
+      'Réponse du jeton introuvable. Veuillez vérifier que le stockage du jeton est pris en charge et activé pour le connecteur social.',
   },
 };
 

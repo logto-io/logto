@@ -65,10 +65,8 @@ const connector_details = {
     itp_support: '启用 <a>在 ITP 浏览器上升级的一键登录 UX</a>',
   },
   sign_in_experience: {
-    /** UNTRANSLATED */
-    in_use: 'Enabled for sign-in ',
-    /** UNTRANSLATED */
-    not_in_use: 'Disabled for sign-in ',
+    in_use: '已启用用于登录',
+    not_in_use: '已禁用用于登录',
   },
 };
 

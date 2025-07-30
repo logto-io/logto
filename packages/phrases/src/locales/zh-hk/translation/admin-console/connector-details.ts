@@ -65,10 +65,8 @@ const connector_details = {
     itp_support: '在 ITP 瀏覽器上啟用 <a>升級的 One Tap UX</a>',
   },
   sign_in_experience: {
-    /** UNTRANSLATED */
-    in_use: 'Enabled for sign-in ',
-    /** UNTRANSLATED */
-    not_in_use: 'Disabled for sign-in ',
+    in_use: '啟用登錄',
+    not_in_use: '禁用登錄',
   },
 };
 

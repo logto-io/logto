@@ -70,8 +70,7 @@ const enterprise_sso = {
       client_secret_field_name: 'Tajny klucz klienta',
       issuer_field_name: 'Wydawca',
       scope_field_name: 'Zakres',
-      /** UNTRANSLATED */
-      scope_field_placeholder: 'Enter the scopes (separated by a space)',
+      scope_field_placeholder: 'Wprowadź zakresy (oddzielone spacją)',
     },
   },
 };

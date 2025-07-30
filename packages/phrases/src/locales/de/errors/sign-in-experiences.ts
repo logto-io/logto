@@ -21,6 +21,10 @@ const sign_in_experiences = {
     'Sie müssen mindestens einen Authentifizierungsfaktor auswählen.',
   backup_code_cannot_be_enabled_alone: 'Backup-Code kann nicht alleine aktiviert werden.',
   duplicated_mfa_factors: 'Duplizierte MFA-Faktoren.',
+  email_verification_code_cannot_be_used_for_mfa:
+    'E-Mail-Bestätigungscode kann nicht für MFA verwendet werden, wenn die E-Mail-Bestätigung für die Anmeldung aktiviert ist.',
+  phone_verification_code_cannot_be_used_for_mfa:
+    'SMS-Bestätigungscode kann nicht für MFA verwendet werden, wenn die SMS-Bestätigung für die Anmeldung aktiviert ist.',
   duplicated_sign_up_identifiers: 'Doppelte Anmeldekennungen erkannt.',
   missing_sign_up_identifiers: 'Primäre Anmeldekennung darf nicht leer sein.',
   invalid_custom_email_blocklist_format:

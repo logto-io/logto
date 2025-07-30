@@ -70,8 +70,7 @@ const enterprise_sso = {
       client_secret_field_name: 'السر الخاص بالعميل',
       issuer_field_name: 'المُصدر',
       scope_field_name: 'النطاق',
-      /** UNTRANSLATED */
-      scope_field_placeholder: 'Enter the scopes (separated by a space)',
+      scope_field_placeholder: 'أدخل النطاقات (مفصولة بمسافة)',
     },
   },
 };

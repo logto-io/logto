@@ -13,6 +13,10 @@ const sign_in_experiences = {
   at_least_one_authentication_factor: '至少要選擇一個登錄要素',
   backup_code_cannot_be_enabled_alone: '備份代碼不能單獨啟用。',
   duplicated_mfa_factors: '檢測到重複的多因子驗證因素。',
+  email_verification_code_cannot_be_used_for_mfa:
+    '啟用電郵驗證登錄時，不能將電郵驗證碼用於多因子驗證。',
+  phone_verification_code_cannot_be_used_for_mfa:
+    '啟用 SMS 驗證登錄時，不能將 SMS 驗證碼用於多因子驗證。',
   duplicated_sign_up_identifiers: '檢測到重複的註冊標識符。',
   missing_sign_up_identifiers: '主要的註冊標識符不能為空。',
   invalid_custom_email_blocklist_format:

@@ -70,8 +70,7 @@ const enterprise_sso = {
       client_secret_field_name: 'Müşteri parolası',
       issuer_field_name: 'Yayıncı',
       scope_field_name: 'Kapsam',
-      /** UNTRANSLATED */
-      scope_field_placeholder: 'Enter the scopes (separated by a space)',
+      scope_field_placeholder: 'Kapsamları girin (bir boşluk ile ayrılmış)',
     },
   },
 };

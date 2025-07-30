@@ -44,9 +44,8 @@ const user = {
   phone_required: 'Telefon numarası gerekli bir tanımlayıcıdır, boş bırakılamaz.',
   enterprise_sso_identity_not_exists:
     'Kullanıcının belirtilen SSO bağlantı kimliği ile bağlantılı bir kurumsal kimliği yoktur: {{ ssoConnectorId }}.',
-  /** UNTRANSLATED */
   identity_not_exists_in_current_user:
-    'The specified identity does not exist in the current user account. Please link the identity before proceeding.',
+    'Belirtilen kimlik mevcut kullanıcı hesabında mevcut değil. Lütfen devam etmeden önce kimliği ekleyin.',
 };
 
 export default Object.freeze(user);

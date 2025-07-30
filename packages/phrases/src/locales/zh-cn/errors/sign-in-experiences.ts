@@ -12,6 +12,10 @@ const sign_in_experiences = {
   at_least_one_authentication_factor: '至少要选择一个登录要素',
   backup_code_cannot_be_enabled_alone: '无法仅启用备份代码。',
   duplicated_mfa_factors: '重复的 MFA 要素。',
+  email_verification_code_cannot_be_used_for_mfa:
+    '当启用了电子邮件登录验证时，电子邮件验证码无法用于 MFA。',
+  phone_verification_code_cannot_be_used_for_mfa:
+    '当启用了短信登录验证时，短信验证码无法用于 MFA。',
   duplicated_sign_up_identifiers: '检测到重复的注册标识符。',
   missing_sign_up_identifiers: '主要的注册标识符不能为空。',
   invalid_custom_email_blocklist_format:

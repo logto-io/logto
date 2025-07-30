@@ -1,90 +1,59 @@
 const user_identity_details = {
-  /** UNTRANSLATED */
-  social_identity_page_title: 'Social identity details',
-  /** UNTRANSLATED */
-  back_to_user_details: 'Back to user details',
-  /** UNTRANSLATED */
-  delete_identity: `Remove identity connection`,
+  social_identity_page_title: 'Szczegóły tożsamości społecznej',
+  back_to_user_details: 'Powrót do szczegółów użytkownika',
+  delete_identity: `Usuń połączenie tożsamości`,
   social_account: {
-    /** UNTRANSLATED */
-    title: 'Social account',
-    /** UNTRANSLATED */
+    title: 'Konto społecznościowe',
     description:
-      'View user data and profile information synced from the linked {{connectorName}} account.',
-    /** UNTRANSLATED */
-    provider_name: 'Social identity provider name',
-    /** UNTRANSLATED */
-    identity_id: 'Social identity ID',
-    /** UNTRANSLATED */
-    user_profile: 'User profile synced from social identity provider',
+      'Wyświetl dane użytkownika i informacje o profilu zsynchronizowane z połączonym kontem {{connectorName}}.',
+    provider_name: 'Nazwa dostawcy tożsamości społecznej',
+    identity_id: 'ID tożsamości społecznej',
+    user_profile: 'Profil użytkownika zsynchronizowany z dostawcą tożsamości społecznej',
   },
   sso_account: {
-    /** UNTRANSLATED */
-    title: 'Enterprise SSO account',
-    /** UNTRANSLATED */
+    title: 'Konto SSO przedsiębiorstwa',
     description:
-      'View user data and profile information synced from the linked {{connectorName}} account.',
-    /** UNTRANSLATED */
-    provider_name: 'Enterprise SSO identity provider name',
-    /** UNTRANSLATED */
-    identity_id: 'Enterprise SSO identity ID',
-    /** UNTRANSLATED */
-    user_profile: 'User profile synced from enterprise SSO identity provider',
+      'Wyświetl dane użytkownika i informacje o profilu zsynchronizowane z połączonym kontem {{connectorName}}.',
+    provider_name: 'Nazwa dostawcy tożsamości SSO przedsiębiorstwa',
+    identity_id: 'ID tożsamości SSO przedsiębiorstwa',
+    user_profile: 'Profil użytkownika zsynchronizowany z dostawcą tożsamości SSO przedsiębiorstwa',
   },
   token_storage: {
-    /** UNTRANSLATED */
-    title: 'Access token',
-    /** UNTRANSLATED */
+    title: 'Token dostępu',
     description:
-      'Store access and refresh tokens from {{connectorName}} in the Secret Vault. Allows automated API calls without repeated user consent.',
+      'Przechowuj tokeny dostępu i odświeżania z {{connectorName}} w tajnym repozytorium. Umożliwia automatyczne wywoływanie API bez wielokrotnego wyrażania zgody przez użytkownika.',
   },
   access_token: {
-    /** UNTRANSLATED */
-    title: 'Access token',
-    /** UNTRANSLATED */
+    title: 'Token dostępu',
     description_active:
-      'Access token is active and securely stored in the Secret Vault. Your product can use it to access the {{connectorName}} APIs.',
-    /** UNTRANSLATED */
+      'Token dostępu jest aktywny i bezpiecznie przechowywany w tajnym repozytorium. Twój produkt może go używać do uzyskiwania dostępu do API {{connectorName}}.',
     description_inactive:
-      'This access token is inactive (e.g., revoked). Users must re-authorize access to restore functionality.',
-    /** UNTRANSLATED */
+      'Ten token dostępu jest nieaktywny (np. cofnięty). Użytkownicy muszą ponownie autoryzować dostęp, aby przywrócić funkcjonalność.',
     description_expired:
-      'This access token has expired. Renewal occurs automatically on the next API request using the refresh token. If the refresh token is not available, user re-authentication is required.',
+      'Ten token dostępu wygasł. Odnowienie nastąpi automatycznie przy następnym żądaniu API za pomocą tokenu odświeżania. Jeśli token odświeżania nie jest dostępny, wymagana jest ponowna autoryzacja użytkownika.',
   },
   refresh_token: {
-    /** UNTRANSLATED */
     available:
-      'Refresh token is available. If the access token expires, it will be automatically refreshed using the refresh token.',
-    /** UNTRANSLATED */
+      'Token odświeżania jest dostępny. Jeśli token dostępu wygasnie, zostanie automatycznie odświeżony za pomocą tokenu odświeżania.',
     not_available:
-      'Refresh token is not available. After the access token expires, users must re-authenticate to obtain new tokens.',
+      'Token odświeżania nie jest dostępny. Po wygaśnięciu tokenu dostępu użytkownicy muszą ponownie się uwierzytelnić, aby uzyskać nowe tokeny.',
   },
-  /** UNTRANSLATED */
-  token_status: 'Token status',
-  /** UNTRANSLATED */
-  created_at: 'Created at',
-  /** UNTRANSLATED */
-  updated_at: 'Updated at',
-  /** UNTRANSLATED */
-  expires_at: 'Expires at',
-  /** UNTRANSLATED */
-  scopes: 'Scopes',
+  token_status: 'Status tokenu',
+  created_at: 'Utworzono',
+  updated_at: 'Zaktualizowano',
+  expires_at: 'Wygasa',
+  scopes: 'Zakresy',
   delete_tokens: {
-    /** UNTRANSLATED */
-    title: 'Delete tokens',
-    /** UNTRANSLATED */
+    title: 'Usuń tokeny',
     description:
-      'Delete the stored tokens. Users must re-authorize access to restore functionality.',
-    /** UNTRANSLATED */
+      'Usuń przechowywane tokeny. Użytkownicy muszą ponownie autoryzować dostęp, aby przywrócić funkcjonalność.',
     confirmation_message:
-      'Are you sure you want to delete tokens?  Logto Secret Vault will remove the stored {{connectorName}} access and refresh tokens. This user must re-authorize to restore {{connectorName}} API access.',
+      'Czy na pewno chcesz usunąć tokeny? Logto Secret Vault usunie przechowywane tokeny dostępu i odświeżające {{connectorName}}. Ten użytkownik musi ponownie autoryzować, aby przywrócić dostęp do API {{connectorName}}.',
   },
   token_storage_disabled: {
-    /** UNTRANSLATED */
-    title: 'Token storage is disabled for this connector',
-    /** UNTRANSLATED */
+    title: 'Przechowywanie tokenów jest wyłączone dla tego łącznika',
     description:
-      'Users can currently use {{connectorName}} only to sign-in, link accounts, or sync profiles during each consent flow. To access {{connectorName}} APIs and perform actions on behalf of users, please enable token storage in',
+      'Użytkownicy mogą obecnie korzystać z {{connectorName}} tylko do logowania, łączenia kont lub synchronizacji profili podczas każdego przepływu zgody. Aby uzyskać dostęp do API {{connectorName}} i wykonywać działania w imieniu użytkowników, proszę włączyć przechowywanie tokenów w',
   },
 };
 

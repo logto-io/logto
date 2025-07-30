@@ -17,6 +17,10 @@ const sign_in_experiences = {
   at_least_one_authentication_factor: 'يجب عليك تحديد عامل مصادقة واحد على الأقل.',
   backup_code_cannot_be_enabled_alone: 'لا يمكن تمكين رمز النسخ الاحتياطي بمفرده.',
   duplicated_mfa_factors: 'عوامل MFA مكررة.',
+  email_verification_code_cannot_be_used_for_mfa:
+    'لا يمكن استخدام رمز التحقق من البريد الإلكتروني للمصادقة متعددة العوامل عندما يتم تمكين التحقق من البريد الإلكتروني لتسجيل الدخول.',
+  phone_verification_code_cannot_be_used_for_mfa:
+    'لا يمكن استخدام رمز التحقق عبر الرسائل القصيرة للمصادقة متعددة العوامل عندما يتم تمكين التحقق عبر الرسائل القصيرة لتسجيل الدخول.',
   duplicated_sign_up_identifiers: 'تم اكتشاف معرفات تسجيل مكررة.',
   missing_sign_up_identifiers: 'لا يمكن أن يكون معرف التسجيل الأساسي فارغًا.',
   invalid_custom_email_blocklist_format:

@@ -45,9 +45,8 @@ const user = {
   phone_required: '電話番号は必須の識別子ですので、null に設定することはできません。',
   enterprise_sso_identity_not_exists:
     'ユーザーは、指定された SSO コネクタ ID: {{ ssoConnectorId }} にリンクされたエンタープライズ ID を持っていません。',
-  /** UNTRANSLATED */
   identity_not_exists_in_current_user:
-    'The specified identity does not exist in the current user account. Please link the identity before proceeding.',
+    '指定されたアイデンティティは現在のユーザーアカウントに存在しません。続行する前にアイデンティティをリンクしてください。',
 };
 
 export default Object.freeze(user);

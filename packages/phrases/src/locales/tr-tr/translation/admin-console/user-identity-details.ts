@@ -1,90 +1,59 @@
 const user_identity_details = {
-  /** UNTRANSLATED */
-  social_identity_page_title: 'Social identity details',
-  /** UNTRANSLATED */
-  back_to_user_details: 'Back to user details',
-  /** UNTRANSLATED */
-  delete_identity: `Remove identity connection`,
+  social_identity_page_title: 'Sosyal kimlik bilgileri',
+  back_to_user_details: 'Kullanıcı detaylarına geri dön',
+  delete_identity: `Kimlik bağlantısını kaldır`,
   social_account: {
-    /** UNTRANSLATED */
-    title: 'Social account',
-    /** UNTRANSLATED */
+    title: 'Sosyal hesap',
     description:
-      'View user data and profile information synced from the linked {{connectorName}} account.',
-    /** UNTRANSLATED */
-    provider_name: 'Social identity provider name',
-    /** UNTRANSLATED */
-    identity_id: 'Social identity ID',
-    /** UNTRANSLATED */
-    user_profile: 'User profile synced from social identity provider',
+      '{{connectorName}} hesabından senkronize edilen kullanıcı verilerini ve profil bilgilerini görüntüleyin.',
+    provider_name: 'Sosyal kimlik sağlayıcı adı',
+    identity_id: 'Sosyal kimlik ID',
+    user_profile: 'Sosyal kimlik sağlayıcıdan senkronize edilen kullanıcı profili',
   },
   sso_account: {
-    /** UNTRANSLATED */
-    title: 'Enterprise SSO account',
-    /** UNTRANSLATED */
+    title: 'Kurumsal SSO hesap',
     description:
-      'View user data and profile information synced from the linked {{connectorName}} account.',
-    /** UNTRANSLATED */
-    provider_name: 'Enterprise SSO identity provider name',
-    /** UNTRANSLATED */
-    identity_id: 'Enterprise SSO identity ID',
-    /** UNTRANSLATED */
-    user_profile: 'User profile synced from enterprise SSO identity provider',
+      '{{connectorName}} hesabından senkronize edilen kullanıcı verilerini ve profil bilgilerini görüntüleyin.',
+    provider_name: 'Kurumsal SSO kimlik sağlayıcı adı',
+    identity_id: 'Kurumsal SSO kimlik ID',
+    user_profile: 'Kurumsal SSO kimlik sağlayıcıdan senkronize edilen kullanıcı profili',
   },
   token_storage: {
-    /** UNTRANSLATED */
-    title: 'Access token',
-    /** UNTRANSLATED */
+    title: 'Erişim belirteci',
     description:
-      'Store access and refresh tokens from {{connectorName}} in the Secret Vault. Allows automated API calls without repeated user consent.',
+      "{{connectorName}}'ten erişim ve yenileme belirteçlerini Gizli Kasada depolayın. Tekrarlanan kullanıcı onayı olmadan otomatik API çağrıları yapılmasına izin verir.",
   },
   access_token: {
-    /** UNTRANSLATED */
-    title: 'Access token',
-    /** UNTRANSLATED */
+    title: 'Erişim belirteci',
     description_active:
-      'Access token is active and securely stored in the Secret Vault. Your product can use it to access the {{connectorName}} APIs.',
-    /** UNTRANSLATED */
+      "Erişim belirteci aktif ve Gizli Kasada güvenli bir şekilde saklanmıştır. Ürününüz, {{connectorName}} API'lerine erişmek için kullanabilir.",
     description_inactive:
-      'This access token is inactive (e.g., revoked). Users must re-authorize access to restore functionality.',
-    /** UNTRANSLATED */
+      'Bu erişim belirteci etkin değil (örneğin, iptal edilmiş). Kullanıcılar işlevselliği geri yüklemek için erişimi yeniden yetkilendirmelidir.',
     description_expired:
-      'This access token has expired. Renewal occurs automatically on the next API request using the refresh token. If the refresh token is not available, user re-authentication is required.',
+      'Bu erişim belirtecinin süresi dolmuştur. Yenileme, yenileme belirteci kullanılarak bir sonraki API isteğinde otomatik olarak gerçekleşir. Yenileme belirteci yoksa, kullanıcı yeniden kimlik doğrulaması gereklidir.',
   },
   refresh_token: {
-    /** UNTRANSLATED */
     available:
-      'Refresh token is available. If the access token expires, it will be automatically refreshed using the refresh token.',
-    /** UNTRANSLATED */
+      'Yenileme belirteci mevcut. Erişim belirtecinin süresi dolduğunda, yenileme belirteci kullanılarak otomatik olarak yenilenecektir.',
     not_available:
-      'Refresh token is not available. After the access token expires, users must re-authenticate to obtain new tokens.',
+      'Yenileme belirteci mevcut değil. Erişim belirtecinin süresi dolduktan sonra, kullanıcılar yeni belirteçler almak için yeniden kimlik doğrulaması yapmalıdır.',
   },
-  /** UNTRANSLATED */
-  token_status: 'Token status',
-  /** UNTRANSLATED */
-  created_at: 'Created at',
-  /** UNTRANSLATED */
-  updated_at: 'Updated at',
-  /** UNTRANSLATED */
-  expires_at: 'Expires at',
-  /** UNTRANSLATED */
-  scopes: 'Scopes',
+  token_status: 'Belirteç durumu',
+  created_at: 'Oluşturulma tarihi',
+  updated_at: 'Güncellenme tarihi',
+  expires_at: 'Sona erme tarihi',
+  scopes: 'Kapsamlar',
   delete_tokens: {
-    /** UNTRANSLATED */
-    title: 'Delete tokens',
-    /** UNTRANSLATED */
+    title: 'Belirteçleri sil',
     description:
-      'Delete the stored tokens. Users must re-authorize access to restore functionality.',
-    /** UNTRANSLATED */
+      'Saklanan belirteçleri silin. Kullanıcılar işlevselliği geri yüklemek için erişimi yeniden yetkilendirmelidir.',
     confirmation_message:
-      'Are you sure you want to delete tokens?  Logto Secret Vault will remove the stored {{connectorName}} access and refresh tokens. This user must re-authorize to restore {{connectorName}} API access.',
+      'Belirteçleri silmek istediğinizden emin misiniz? Logto Gizli Kasa saklanan {{connectorName}} erişim ve yenileme belirteçlerini kaldıracaktır. Bu kullanıcı, {{connectorName}} API erişimini geri yüklemek için yeniden yetkilendirmelidir.',
   },
   token_storage_disabled: {
-    /** UNTRANSLATED */
-    title: 'Token storage is disabled for this connector',
-    /** UNTRANSLATED */
+    title: 'Bu bağlayıcı için belirteç saklama devre dışı bırakıldı',
     description:
-      'Users can currently use {{connectorName}} only to sign-in, link accounts, or sync profiles during each consent flow. To access {{connectorName}} APIs and perform actions on behalf of users, please enable token storage in',
+      "Kullanıcılar şu anda {{connectorName}} kullanarak yalnızca oturum açmak, hesapları bağlamak veya her izin akışında profilleri senkronize etmek için kullanabilirler. {{connectorName}} API'lerine erişmek ve kullanıcılar adına işlemler yapmak için belirteç saklamayı etkinleştirin",
   },
 };
 

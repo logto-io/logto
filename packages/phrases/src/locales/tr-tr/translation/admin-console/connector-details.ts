@@ -71,10 +71,8 @@ const connector_details = {
     itp_support: "<a>ITP tarayıcılarda Yükseltilmiş One Tap UX'i</a> etkinleştir",
   },
   sign_in_experience: {
-    /** UNTRANSLATED */
-    in_use: 'Enabled for sign-in ',
-    /** UNTRANSLATED */
-    not_in_use: 'Disabled for sign-in ',
+    in_use: 'Oturum açma için etkin',
+    not_in_use: 'Oturum açma için devre dışı',
   },
 };
 

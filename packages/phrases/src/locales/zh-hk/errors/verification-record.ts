@@ -3,11 +3,8 @@ const verification_record = {
   permission_denied: '沒有權限，請重新驗證。',
   not_supported_for_google_one_tap: '此 API 不支持 Google One Tap。',
   social_verification: {
-    /** UNTRANSLATED */
-    invalid_target: 'Invalid verification record. Expected {{expected}} but got {{actual}}.',
-    /** UNTRANSLATED */
-    token_response_not_found:
-      'Token response not found. Please check that token storage is supported and enabled for the social connector.',
+    invalid_target: '驗證記錄無效。預期 {{expected}}，但獲得 {{actual}}。',
+    token_response_not_found: '找不到令牌響應。請檢查社交連接器是否支持並啟用了令牌存儲。',
   },
 };
 

@@ -21,16 +21,12 @@ const mfa = {
     'Gdy użytkownicy nie mogą zweryfikować powyższych czynników MFA, skorzystaj z opcji kopii zapasowej.',
   backup_code_error_hint:
     'Aby użyć kodu zapasowego, potrzebujesz co najmniej jednej kolejnej metody MFA do pomyślnego uwierzytelniania użytkownika.',
-  /** UNTRANSLATED */
-  email_verification_code: 'Email verification code',
-  /** UNTRANSLATED */
+  email_verification_code: 'Kod weryfikacyjny e-mail',
   email_verification_code_description:
-    'Link email address to receive and verify verification codes.',
-  /** UNTRANSLATED */
-  phone_verification_code: 'SMS verification code',
-  /** UNTRANSLATED */
+    'Połącz adres e-mail, aby otrzymywać i weryfikować kody weryfikacyjne.',
+  phone_verification_code: 'Kod weryfikacyjny SMS',
   phone_verification_code_description:
-    'Link phone number to receive and verify SMS verification codes.',
+    'Połącz numer telefonu, aby otrzymywać i weryfikować kody weryfikacyjne SMS.',
   policy: 'Polityka',
   policy_description: 'Ustaw politykę MFA dla procesów logowania i rejestracji.',
   two_step_sign_in_policy: 'Polityka weryfikacji dwuetapowej podczas logowania',
@@ -53,6 +49,10 @@ const mfa = {
     'Monit o konfigurację MFA dla organizacji wymagającej MFA',
   prompt_at_sign_in_no_skip:
     'Wymagaj od użytkowników skonfigurowania MFA przy następnym logowaniu (nie można pominąć)',
+  email_primary_method_tip:
+    'Kod weryfikacyjny e-mail jest już twoją główną metodą logowania. Aby utrzymać bezpieczeństwo, nie można go ponownie używać do MFA.',
+  phone_primary_method_tip:
+    'Kod weryfikacyjny SMS jest już twoją główną metodą logowania. Aby utrzymać bezpieczeństwo, nie można go ponownie używać do MFA.',
 };
 
 export default Object.freeze(mfa);
