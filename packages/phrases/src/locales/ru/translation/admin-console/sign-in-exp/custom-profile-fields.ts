@@ -60,6 +60,8 @@ const custom_profile_fields = {
     label: 'Отображаемая метка',
     label_placeholder: 'Метка',
     label_tip: 'Нужна локализация? Добавьте языки в <a>Процесс входа > Контент</a>',
+    placeholder: 'Отображаемый заполнитель',
+    placeholder_placeholder: 'Заполнитель',
     description: 'Отображаемое описание',
     description_placeholder: 'Описание',
     options: 'Опции',

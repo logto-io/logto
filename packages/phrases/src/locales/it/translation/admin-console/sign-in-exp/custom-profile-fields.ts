@@ -62,6 +62,8 @@ const custom_profile_fields = {
     label_placeholder: 'Etichetta',
     label_tip:
       'Hai bisogno di localizzazione? Aggiungi lingue in <a>Esperienza di accesso > Contenuto</a>',
+    placeholder: 'Segnaposto visualizzato',
+    placeholder_placeholder: 'Segnaposto',
     description: 'Descrizione visualizzata',
     description_placeholder: 'Descrizione',
     options: 'Opzioni',

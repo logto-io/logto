@@ -55,6 +55,8 @@ const custom_profile_fields = {
     label: '显示标签',
     label_placeholder: '标签',
     label_tip: '需要本地化？在<a>登录体验 > 内容</a>中添加语言',
+    placeholder: '显示占位符',
+    placeholder_placeholder: '占位符',
     description: '显示描述',
     description_placeholder: '描述',
     options: '选项',

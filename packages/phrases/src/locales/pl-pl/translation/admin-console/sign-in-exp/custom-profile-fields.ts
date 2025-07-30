@@ -61,6 +61,8 @@ const custom_profile_fields = {
     label: 'Wyświetlana etykieta',
     label_placeholder: 'Etykieta',
     label_tip: 'Potrzebujesz lokalizacji? Dodaj języki w <a>Doświadczenie logowania > Treść</a>',
+    placeholder: 'Wyświetlany placeholder',
+    placeholder_placeholder: 'Placeholder',
     description: 'Wyświetlany opis',
     description_placeholder: 'Opis',
     options: 'Opcje',

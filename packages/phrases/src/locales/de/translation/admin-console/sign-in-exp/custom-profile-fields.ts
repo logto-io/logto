@@ -62,6 +62,8 @@ const custom_profile_fields = {
     label_placeholder: 'Bezeichnung',
     label_tip:
       'Benötigen Sie Lokalisierung? Fügen Sie Sprachen unter <a>Anmeldeoberfläche > Inhalt</a> hinzu',
+    placeholder: 'Platzhalter anzeigen',
+    placeholder_placeholder: 'Platzhalter',
     description: 'Anzeigebeschreibung',
     description_placeholder: 'Beschreibung',
     options: 'Optionen',
