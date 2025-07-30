@@ -1,5 +1,6 @@
 import { type SignInExperiencePageManagedData } from '@/pages/SignInExperience/types';
 
+import ForgotPasswordMethodsDiffSection from './ForgotPasswordMethodsDiffSection';
 import SignInDiffSection from './SignInDiffSection';
 import SignUpDiffSection from './SignUpDiffSection';
 import SocialTargetsDiffSection from './SocialTargetsDiffSection';
@@ -22,6 +23,11 @@ function SignUpAndSignInDiffSection({ before, after, isAfter = false }: Props) {
       <SocialTargetsDiffSection
         before={before.socialSignInConnectorTargets}
         after={after.socialSignInConnectorTargets}
+        isAfter={isAfter}
+      />
+      <ForgotPasswordMethodsDiffSection
+        before={before.forgotPasswordMethods}
+        after={after.forgotPasswordMethods}
         isAfter={isAfter}
       />
     </>
