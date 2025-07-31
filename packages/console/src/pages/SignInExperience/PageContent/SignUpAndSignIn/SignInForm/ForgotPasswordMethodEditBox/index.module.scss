@@ -36,3 +36,9 @@
 .plusIcon {
   color: var(--color-text-secondary);
 }
+
+.errorMessage {
+  margin-top: _.unit(1);
+  color: var(--color-error);
+  font: var(--font-body-2);
+}
