@@ -1,5 +1,6 @@
 import {
   AlternativeSignUpIdentifier,
+  ForgotPasswordMethod,
   SignInIdentifier,
   type SignUpIdentifier,
   type SignInExperience,
@@ -65,6 +66,42 @@ function SignUpIdentifiersEditBox({ signInExperience }: Props) {
   }, [submitCount, trigger]);
 
   /**
+   * Append the forgot password methods based on the selected sign-up identifier.
+   */
+  const appendForgotPasswordMethods = useCallback(
+    (identifier: SignUpIdentifier) => {
+      const forgotPasswordMethods = getValues('forgotPasswordMethods');
+      const forgotPasswordMethodsSet = new Set(forgotPasswordMethods);
+
+      const newForgotPasswordMethods = [
+        // Add email verification code if email-related identifier is added
+        ...((identifier === SignInIdentifier.Email ||
+          identifier === AlternativeSignUpIdentifier.EmailOrPhone) &&
+        !forgotPasswordMethodsSet.has(ForgotPasswordMethod.EmailVerificationCode)
+          ? [ForgotPasswordMethod.EmailVerificationCode]
+          : []),
+        // Add phone verification code if phone-related identifier is added
+        ...((identifier === SignInIdentifier.Phone ||
+          identifier === AlternativeSignUpIdentifier.EmailOrPhone) &&
+        !forgotPasswordMethodsSet.has(ForgotPasswordMethod.PhoneVerificationCode)
+          ? [ForgotPasswordMethod.PhoneVerificationCode]
+          : []),
+      ];
+
+      if (newForgotPasswordMethods.length > 0) {
+        setValue(
+          'forgotPasswordMethods',
+          [...(forgotPasswordMethods ?? []), ...newForgotPasswordMethods],
+          {
+            shouldDirty: true,
+          }
+        );
+      }
+    },
+    [getValues, setValue]
+  );
+
+  /**
    * Append the sign-in methods based on the selected sign-up identifier.
    */
   const appendSignInMethods = useCallback(
@@ -103,6 +140,7 @@ function SignUpIdentifiersEditBox({ signInExperience }: Props) {
   const onAppendSignUpIdentifier = useCallback(
     (identifier: SignUpIdentifier) => {
       appendSignInMethods(identifier);
+      appendForgotPasswordMethods(identifier);
 
       /**
        * If username is added as a sign-up identifier, we should check "Create your password" checkbox.
@@ -117,7 +155,7 @@ function SignUpIdentifiersEditBox({ signInExperience }: Props) {
         });
       }
     },
-    [appendSignInMethods, setValue]
+    [appendSignInMethods, appendForgotPasswordMethods, setValue]
   );
 
   const options = useMemo<
