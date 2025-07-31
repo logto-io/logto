@@ -175,8 +175,7 @@ export const verifySsoIdentity = async (
 
     const issuer = await connectorInstance.getIssuer();
 
-    // TODO: remove the dev feature guard when token storage is ready
-    if (EnvSet.values.isDevFeaturesEnabled && connectorInstance instanceof OidcConnector) {
+    if (connectorInstance instanceof OidcConnector) {
       const { userInfo, tokenResponse } = await connectorInstance.getUserInfo(
         singleSignOnSession,
         data
@@ -202,7 +201,7 @@ export const verifySsoIdentity = async (
       };
     }
 
-    const { userInfo } = await connectorInstance.getUserInfo(singleSignOnSession, data);
+    const { userInfo } = await connectorInstance.getUserInfo(singleSignOnSession);
 
     return {
       issuer,

@@ -8,6 +8,7 @@ import { generateStandardShortId } from '@logto/shared';
 import { assert, conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -328,5 +329,8 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
     }
   );
 
-  ssoConnectorIdpInitiatedAuthConfigRoutes(...args);
+  // TODO: @simeng Remove this when IdP initiated SAML SSO is ready for production
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    ssoConnectorIdpInitiatedAuthConfigRoutes(...args);
+  }
 }
