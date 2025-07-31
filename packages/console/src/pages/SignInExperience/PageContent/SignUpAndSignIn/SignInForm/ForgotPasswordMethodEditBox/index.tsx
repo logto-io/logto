@@ -7,9 +7,11 @@ import ActionMenu from '@/ds-components/ActionMenu';
 import { DragDropProvider, DraggableItem } from '@/ds-components/DragDrop';
 import { DropdownItem } from '@/ds-components/Dropdown';
 import FormField from '@/ds-components/FormField';
+import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 
 import type { SignInExperienceForm } from '../../../../types';
 import FormFieldDescription from '../../../components/FormFieldDescription';
+import { getForgotPasswordMethodsRequiredConnectors } from '../../utils';
 
 import VerificationMethodItem from './VerificationMethodItem';
 import styles from './index.module.scss';
@@ -18,6 +20,7 @@ import { forgotPasswordMethodPhrase } from './utils';
 function ForgotPasswordMethodEditBox() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { control } = useFormContext<SignInExperienceForm>();
+  const { isConnectorTypeEnabled } = useEnabledConnectorTypes();
 
   return (
     <FormField title="sign_in_exp.sign_up_and_sign_in.sign_in.forgot_password_verification_method">
@@ -28,7 +31,15 @@ function ForgotPasswordMethodEditBox() {
         control={control}
         defaultValue={[]}
         name="forgotPasswordMethods"
-        render={({ field: { value, onChange } }) => {
+        rules={{
+          validate: (value: ForgotPasswordMethod[]) => {
+            const requiredConnectors = getForgotPasswordMethodsRequiredConnectors(value);
+            return requiredConnectors.every((connectorType) =>
+              isConnectorTypeEnabled(connectorType)
+            );
+          },
+        }}
+        render={({ field: { value, onChange }, fieldState: { error } }) => {
           const availableMethods = Object.values(ForgotPasswordMethod).filter(
             (method) => !value.includes(method)
           );
@@ -67,22 +78,31 @@ function ForgotPasswordMethodEditBox() {
           return (
             <div>
               <DragDropProvider>
-                {value.map((method: ForgotPasswordMethod, index: number) => (
-                  <DraggableItem
-                    key={method}
-                    id={method}
-                    sortIndex={index}
-                    moveItem={handleSwapMethods}
-                    className={styles.draggleItemContainer}
-                  >
-                    <VerificationMethodItem
-                      method={method}
-                      onRemove={() => {
-                        handleRemoveMethod(method);
-                      }}
-                    />
-                  </DraggableItem>
-                ))}
+                {value.map((method: ForgotPasswordMethod, index: number) => {
+                  const requiredConnectors = getForgotPasswordMethodsRequiredConnectors([method]);
+                  const hasConnectorError = requiredConnectors.some(
+                    (connectorType) => !isConnectorTypeEnabled(connectorType)
+                  );
+
+                  return (
+                    <DraggableItem
+                      key={method}
+                      id={method}
+                      sortIndex={index}
+                      moveItem={handleSwapMethods}
+                      className={styles.draggleItemContainer}
+                    >
+                      <VerificationMethodItem
+                        method={method}
+                        requiredConnectors={requiredConnectors}
+                        hasError={hasConnectorError}
+                        onRemove={() => {
+                          handleRemoveMethod(method);
+                        }}
+                      />
+                    </DraggableItem>
+                  );
+                })}
               </DragDropProvider>
               {availableMethods.length > 0 && (
                 <ActionMenu
