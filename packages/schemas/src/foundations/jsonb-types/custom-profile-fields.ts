@@ -41,7 +41,7 @@ export const fieldPartGuard = z.object({
   enabled: z.boolean(),
   name: z.string(),
   type: customProfileFieldTypeGuard,
-  label: z.string(),
+  label: z.string().min(1).optional(),
   description: z.string().optional(),
   required: z.boolean(),
   config: baseConfigGuard.optional(),

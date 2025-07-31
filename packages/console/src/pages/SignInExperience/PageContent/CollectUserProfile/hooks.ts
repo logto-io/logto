@@ -6,11 +6,16 @@ import {
   supportedDateFormat,
 } from '@logto/schemas';
 import { cond, type Optional } from '@silverhand/essentials';
+import cleanDeep from 'clean-deep';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { type ProfileFieldForm } from './ProfileFieldDetails/types';
-import { isBuiltInCustomProfileFieldKey, getProfileFieldTypeByName } from './utils';
+import {
+  isBuiltInCustomProfileFieldKey,
+  getProfileFieldTypeByName,
+  isBuiltInAddressComponentKey,
+} from './utils';
 
 const parseOptionsArrayToString = (
   options?: Array<{ value?: string; label?: string } | undefined>
@@ -38,62 +43,63 @@ export const useDataParser = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const getDefaultLabel = useCallback(
-    (fieldName?: string) => {
+    (fieldName: string) => {
       if (isBuiltInCustomProfileFieldKey(fieldName)) {
         if (fieldName === 'address') {
           return t('profile.fields.address.formatted');
         }
         return t(`profile.fields.${fieldName}`);
       }
+      if (isBuiltInAddressComponentKey(fieldName)) {
+        return t(`profile.fields.address.${fieldName}`);
+      }
       return fieldName;
     },
     [t]
   );
 
-  const getDefaultParts = useCallback(
-    (type: CustomProfileFieldType) => {
-      if (type === CustomProfileFieldType.Address) {
-        return userProfileAddressKeys.map((name) => ({
-          name,
-          type: CustomProfileFieldType.Text,
-          label: t(`profile.fields.address.${name}`),
-          required: true,
-          enabled: name === 'formatted',
-        }));
-      }
-      if (type === CustomProfileFieldType.Fullname) {
-        return fullnameKeys.map((name) => ({
-          name,
-          type: CustomProfileFieldType.Text,
-          label: t(`profile.fields.${name}`),
-          required: true,
-          enabled: name !== 'middleName',
-        }));
-      }
-    },
-    [t]
-  );
+  const getDefaultParts = useCallback((type: CustomProfileFieldType) => {
+    if (type === CustomProfileFieldType.Address) {
+      return userProfileAddressKeys.map((name) => ({
+        name,
+        type: CustomProfileFieldType.Text,
+        required: true,
+        enabled: name === 'formatted',
+      }));
+    }
+    if (type === CustomProfileFieldType.Fullname) {
+      return fullnameKeys.map((name) => ({
+        name,
+        type: CustomProfileFieldType.Text,
+        required: true,
+        enabled: name !== 'middleName',
+      }));
+    }
+  }, []);
 
   const getInitialRequestPayloadByFieldName = useCallback(
     (name: string) => {
       const type = getProfileFieldTypeByName(name);
 
-      return {
-        name,
-        type,
-        label: getDefaultLabel(name) ?? name,
-        required: true,
-        config: {
-          format: cond(type === CustomProfileFieldType.Date && supportedDateFormat.US),
-          parts: getDefaultParts(type),
-          options: cond(
-            (type === CustomProfileFieldType.Select || type === CustomProfileFieldType.Checkbox) &&
-              []
-          ),
+      return cleanDeep(
+        {
+          name,
+          type,
+          required: true,
+          config: {
+            format: cond(type === CustomProfileFieldType.Date && supportedDateFormat.US),
+            parts: getDefaultParts(type),
+            options: cond(
+              (type === CustomProfileFieldType.Select ||
+                type === CustomProfileFieldType.Checkbox) &&
+                []
+            ),
+          },
         },
-      };
+        { emptyObjects: false }
+      );
     },
-    [getDefaultParts, getDefaultLabel]
+    [getDefaultParts]
   );
 
   const parseResponseToFormData = useCallback((data: CustomProfileField): ProfileFieldForm => {
@@ -116,8 +122,8 @@ export const useDataParser = () => {
       parts: config.parts?.map((part) => ({
         name: part.name,
         type: part.type,
-        label: part.label,
-        description: part.description,
+        label: part.label ?? '',
+        description: part.description ?? '',
         required: part.required,
         placeholder: part.config?.placeholder ?? '',
         minLength: part.config?.minLength ? String(part.config.minLength) : '',
@@ -125,6 +131,7 @@ export const useDataParser = () => {
         minValue: part.config?.minValue ? String(part.config.minValue) : '',
         maxValue: part.config?.maxValue ? String(part.config.maxValue) : '',
         format: part.config?.format ?? '',
+        customFormat: part.config?.customFormat ?? '',
         options: parseOptionsArrayToString(part.config?.options),
         enabled: part.enabled,
       })),
@@ -150,41 +157,44 @@ export const useDataParser = () => {
         parts,
       } = data;
 
-      return {
-        name,
-        type,
-        label,
-        description,
-        required,
-        config: {
-          options: parseOptionsStringToArray(options),
-          placeholder,
-          minLength: cond(minLength && Number(minLength)),
-          maxLength: cond(maxLength && Number(maxLength)),
-          minValue: cond(minValue && Number(minValue)),
-          maxValue: cond(maxValue && Number(maxValue)),
-          format,
-          customFormat,
-          parts: parts?.map((part) => ({
-            enabled: part.enabled,
-            name: part.name,
-            type: part.type,
-            label: part.label,
-            description: part.description,
-            required: part.required,
-            config: {
-              placeholder: part.placeholder,
-              minLength: cond(part.minLength && Number(part.minLength)),
-              maxLength: cond(part.maxLength && Number(part.maxLength)),
-              minValue: cond(part.minValue && Number(part.minValue)),
-              maxValue: cond(part.maxValue && Number(part.maxValue)),
-              options: parseOptionsStringToArray(part.options),
-              format: part.format,
-              customFormat: part.customFormat,
-            },
-          })),
+      return cleanDeep(
+        {
+          name,
+          type,
+          label: cond(label),
+          description,
+          required,
+          config: {
+            options: parseOptionsStringToArray(options),
+            placeholder,
+            minLength: cond(minLength && Number(minLength)),
+            maxLength: cond(maxLength && Number(maxLength)),
+            minValue: cond(minValue && Number(minValue)),
+            maxValue: cond(maxValue && Number(maxValue)),
+            format,
+            customFormat,
+            parts: parts?.map((part) => ({
+              enabled: part.enabled,
+              name: part.name,
+              type: part.type,
+              label: cond(part.label),
+              description: part.description,
+              required: part.required,
+              config: {
+                placeholder: part.placeholder,
+                minLength: cond(part.minLength && Number(part.minLength)),
+                maxLength: cond(part.maxLength && Number(part.maxLength)),
+                minValue: cond(part.minValue && Number(part.minValue)),
+                maxValue: cond(part.maxValue && Number(part.maxValue)),
+                options: parseOptionsStringToArray(part.options),
+                format: part.format,
+                customFormat: part.customFormat,
+              },
+            })),
+          },
         },
-      };
+        { emptyStrings: false, emptyObjects: false }
+      );
     },
     []
   );

@@ -83,7 +83,7 @@ const AddressSubForm = ({ field }: Props) => {
                 styles.inputField,
                 (part.name === 'locality' || part.name === 'region') && styles.halfSize
               )}
-              label={part.label || t(`profile.address.${part.name}`)}
+              label={part.label ?? t(`profile.address.${part.name}`)}
               value={value ?? ''}
               isDanger={!!errors.address?.[part.name]}
               onBlur={onBlur}

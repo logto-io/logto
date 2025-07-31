@@ -4,6 +4,13 @@ import {
   userProfileAddressKeys,
 } from '@logto/schemas';
 
+const addressComponentKeySet = Object.freeze(new Set<string>(userProfileAddressKeys));
+
+export const isBuiltInAddressComponentKey = (
+  key?: string
+): key is (typeof userProfileAddressKeys)[number] =>
+  key !== undefined && addressComponentKeySet.has(key);
+
 const builtInKeySet = Object.freeze(
   new Set<string>([
     ...builtInCustomProfileFieldKeys,

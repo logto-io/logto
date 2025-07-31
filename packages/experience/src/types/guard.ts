@@ -203,7 +203,7 @@ export const dateFieldConfigGuard = s.object({
 const baseConfigPartGuard = s.object({
   enabled: s.boolean(),
   type: profileFieldTypeGuard,
-  label: s.string(),
+  label: s.optional(s.string()),
   description: s.optional(s.string()),
   required: s.boolean(),
   config: s.optional(
