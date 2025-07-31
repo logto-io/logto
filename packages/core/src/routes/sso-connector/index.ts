@@ -329,5 +329,8 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
     }
   );
 
-  ssoConnectorIdpInitiatedAuthConfigRoutes(...args);
+  // TODO: @simeng Remove this when IdP initiated SAML SSO is ready for production
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    ssoConnectorIdpInitiatedAuthConfigRoutes(...args);
+  }
 }
