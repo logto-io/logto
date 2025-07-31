@@ -157,7 +157,7 @@ Learn more about [social sign-in experience](https://docs.logto.io/end-user-flow
 
 Use the Account API to build a custom Account Center in your app that lets signed-in users link or unlink their social accounts. [Follow the Account API tutorial](https://docs.logto.io/end-user-flows/account-settings/by-account-api#link-a-new-social-connection)
 
-**Tips**: It's allowed to enable the OAuth connector only for account linking and API access, without enabling it for social sign-in.
+**Tip**: It's allowed to enable the OAuth connector only for account linking and API access, without enabling it for social sign-in.
 
 ### Access identity provider APIs and perform actions
 
