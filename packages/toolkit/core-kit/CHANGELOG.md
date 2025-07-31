@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.6.1
+
+### Patch Changes
+
+- 4cc321dbb: add a new regexp to match number and alphabet characters
+
 ## 2.6.0
 
 ### Minor Changes
