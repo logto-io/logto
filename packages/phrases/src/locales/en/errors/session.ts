@@ -54,6 +54,7 @@ const session = {
       'The email address "{{email}}" is restricted. Please choose a different one.',
   },
   google_one_tap: {
+    cookie_mismatch: 'Google One Tap cookie mismatch.',
     invalid_id_token: 'Invalid Google ID Token.',
     unverified_email: 'Unverified email.',
   },

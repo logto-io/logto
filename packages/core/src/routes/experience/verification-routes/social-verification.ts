@@ -1,4 +1,8 @@
-import { GoogleConnector } from '@logto/connector-kit';
+import {
+  GoogleConnector,
+  isGoogleOneTap as isGoogleOneTapChecker,
+  logtoGoogleOneTapCookieKey,
+} from '@logto/connector-kit';
 import {
   VerificationType,
   socialAuthorizationUrlPayloadGuard,
@@ -114,7 +118,7 @@ export default function socialVerificationRoutes<T extends ExperienceInteraction
         // Check if is Google one tap verification
         if (
           connector.metadata.id === GoogleConnector.factoryId &&
-          connectorData[GoogleConnector.oneTapParams.credential]
+          isGoogleOneTapChecker(connectorData)
         ) {
           const socialVerificationRecord = SocialVerification.create(
             libraries,
@@ -148,6 +152,12 @@ export default function socialVerificationRoutes<T extends ExperienceInteraction
       // Skip captcha for social verification, as it's already verified by the connector
       ctx.experienceInteraction.skipCaptcha();
       await ctx.experienceInteraction.save();
+
+      // Clear the Google One Tap cookie to avoid the cookie being used in the next sign in.
+      ctx.cookies.set(logtoGoogleOneTapCookieKey, '', {
+        httpOnly: false,
+        expires: new Date(0),
+      });
 
       // The input verificationId may be undefined if it's a Google one tap callback
       ctx.body = {

@@ -56,6 +56,8 @@ const session = {
       'メールアドレス "{{email}}" は制限されています。別のものを選択してください。',
   },
   google_one_tap: {
+    /** UNTRANSLATED */
+    cookie_mismatch: 'Google One Tap cookie mismatch.',
     invalid_id_token: '無効な Google ID トークン。',
     unverified_email: '未検証のメール。',
   },

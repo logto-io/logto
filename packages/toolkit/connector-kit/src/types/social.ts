@@ -217,3 +217,34 @@ export type GoogleConnectorConfig = {
    */
   offlineAccess?: boolean;
 };
+
+/**
+ * Checks if the given social provider data is from Google One Tap.
+ *
+ * Google One Tap data can come from:
+ * 1. Logto's built-in Google One Tap button (sign-in experience).
+ * 2. An external Google One Tap button (added by the application itself).
+ *
+ * To check specifically for external One Tap, use `isExternalGoogleOneTap`.
+ * @param data - The data from the social provider.
+ * @returns Whether the data is from Google One Tap.
+ */
+export const isGoogleOneTap = (data: Record<string, unknown>) => {
+  return Boolean(data[GoogleConnector.oneTapParams.credential]);
+};
+
+/**
+ * Checks if the given social provider data is from an external Google One Tap button
+ * (not Logto's sign-in experience).
+ *
+ * External Google One Tap data does not include a CSRF token, so different handling
+ * and security measures are required.
+ *
+ * @param data - The data from the social provider.
+ * @returns Whether the data is from external Google One Tap.
+ */
+export const isExternalGoogleOneTap = (data: Record<string, unknown>) => {
+  return isGoogleOneTap(data) && !data[GoogleConnector.oneTapParams.csrfToken];
+};
+
+export const logtoGoogleOneTapCookieKey = '_logto_google_one_tap_credential';

@@ -1,5 +1,6 @@
 import path from 'node:path';
 
+import { GoogleConnector } from '@logto/connector-kit';
 import type { CustomClientMetadata, ExtraParamsObject, OidcClientMetadata } from '@logto/schemas';
 import {
   ApplicationType,
@@ -96,6 +97,7 @@ const firstScreenRouteMapping: Record<FirstScreen, keyof typeof experience.route
   [FirstScreen.SignInDeprecated]: 'signIn',
 };
 
+// eslint-disable-next-line complexity
 export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown): string => {
   const firstScreenKey =
     params[ExtraParamsKey.FirstScreen] ??
@@ -108,6 +110,8 @@ export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown):
       : experience.routes[firstScreenRouteMapping[firstScreenKey]];
 
   const directSignIn = params[ExtraParamsKey.DirectSignIn];
+  const googleOneTapCredential = params[ExtraParamsKey.GoogleOneTapCredential];
+
   const searchParams = new URLSearchParams();
   const getSearchParamString = () => (searchParams.size > 0 ? `?${searchParams.toString()}` : '');
 
@@ -123,13 +127,18 @@ export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown):
 
   appendExtraParam(ExtraParamsKey.OrganizationId);
   appendExtraParam(ExtraParamsKey.OneTimeToken);
-  appendExtraParam(ExtraParamsKey.GoogleOneTapCredential);
   appendExtraParam(ExtraParamsKey.LoginHint);
   appendExtraParam(ExtraParamsKey.Identifier);
 
-  if (directSignIn) {
+  // Reuse DirectSignIn page to handle Google One Tap credential.
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  if (directSignIn || googleOneTapCredential) {
     searchParams.append('fallback', firstScreen);
-    const [method, target] = directSignIn.split(':');
+    const [method, target] =
+      directSignIn?.split(':') ??
+      // Only add Google connector fallback when Google One Tap credential is present.
+      conditional(googleOneTapCredential && ['social', GoogleConnector.target]) ??
+      [];
     return path.join('direct', method ?? '', target ?? '') + getSearchParamString();
   }
 

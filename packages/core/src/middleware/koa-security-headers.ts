@@ -170,7 +170,6 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
           ...adminOrigins,
           ...conditionalArray(isProduction && logtoOrigin),
           ...developmentOrigins,
-          ...conditionalArray(isDevFeaturesEnabled && logtoDevOrigins),
         ],
       },
     },

@@ -1,4 +1,7 @@
+import { GoogleConnector } from '@logto/connector-kit';
 import { fromUint8Array } from 'js-base64';
+
+import { logtoGoogleOneTapCookie } from '@/utils/cookies';
 
 export const generateRandomString = (length = 8) =>
   fromUint8Array(crypto.getRandomValues(new Uint8Array(length)), true);
@@ -7,9 +10,16 @@ export const parseQueryParameters = (parameters: string | URLSearchParams) => {
   const searchParameters =
     parameters instanceof URLSearchParams ? parameters : new URLSearchParams(parameters);
 
-  return Object.fromEntries(
+  const result = Object.fromEntries(
     [...searchParameters.entries()].map(([key, value]) => [key, decodeURIComponent(value)])
   );
+
+  if (logtoGoogleOneTapCookie) {
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    result[GoogleConnector.oneTapParams.credential] = logtoGoogleOneTapCookie;
+  }
+
+  return result;
 };
 
 export const queryStringify = (parameters: URLSearchParams | Record<string, string>) => {

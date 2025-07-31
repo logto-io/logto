@@ -8,7 +8,13 @@ import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
 const { jest } = import.meta;
-const { mockEsm } = createMockUtils(jest);
+const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
+
+const isExternalGoogleOneTap = jest.fn().mockReturnValue(false);
+
+await mockEsmWithActual('@logto/connector-kit', () => ({
+  isExternalGoogleOneTap,
+}));
 
 const getUserInfo = jest.fn().mockResolvedValue({ id: 'foo' });
 const getConnector = jest.fn().mockResolvedValue(mockConnector);
@@ -59,7 +65,10 @@ describe('verifySocialIdentity', () => {
         id: GoogleConnector.factoryId,
       },
     });
-    const connectorData = { credential: 'credential' };
+    const connectorData = {
+      [GoogleConnector.oneTapParams.credential]: 'credential',
+      [GoogleConnector.oneTapParams.csrfToken]: 'mismatched_token',
+    };
 
     await expect(
       verifySocialIdentity({ connectorId: 'google', connectorData }, ctx, tenant)
@@ -82,5 +91,77 @@ describe('verifySocialIdentity', () => {
     await expect(
       verifySocialIdentity({ connectorId, connectorData }, ctx, tenant)
     ).resolves.toEqual({ id: 'foo' });
+  });
+
+  it('should skip CSRF token validation for external website Google One Tap', async () => {
+    const ctx: WithLogContext = {
+      ...createMockContext(),
+      ...createMockLogContext(),
+      // @ts-expect-error test mock context
+      cookies: {
+        get: jest.fn().mockImplementation((key) => {
+          // For external Google One Tap, return the credential value for the logto cookie
+          if (key === '_logto_google_one_tap_credential') {
+            return 'credential';
+          }
+          return 'different_token';
+        }),
+      },
+    };
+
+    getConnector.mockResolvedValueOnce({
+      ...mockConnector,
+      metadata: {
+        ...mockConnector.metadata,
+        id: GoogleConnector.factoryId,
+      },
+    });
+
+    // Mock isExternalGoogleOneTap to return true
+    isExternalGoogleOneTap.mockReturnValueOnce(true);
+
+    const connectorData = {
+      [GoogleConnector.oneTapParams.credential]: 'credential',
+      [GoogleConnector.oneTapParams.csrfToken]: 'mismatched_token',
+    };
+
+    // Should not throw CSRF mismatch error for external website Google One Tap
+    await expect(
+      verifySocialIdentity({ connectorId: 'google', connectorData }, ctx, tenant)
+    ).resolves.toEqual({ id: 'foo' });
+
+    expect(isExternalGoogleOneTap).toHaveBeenCalledWith(connectorData);
+  });
+
+  it('should enforce CSRF token validation for regular Google One Tap', async () => {
+    const ctx: WithLogContext = {
+      ...createMockContext(),
+      ...createMockLogContext(),
+      // @ts-expect-error test mock context
+      cookies: { get: jest.fn().mockReturnValue('different_token') },
+    };
+
+    getConnector.mockResolvedValueOnce({
+      ...mockConnector,
+      metadata: {
+        ...mockConnector.metadata,
+        id: GoogleConnector.factoryId,
+      },
+    });
+
+    // Mock isExternalGoogleOneTap to return false (regular Google One Tap)
+    isExternalGoogleOneTap.mockReturnValueOnce(false);
+
+    const connectorData = {
+      [GoogleConnector.oneTapParams.credential]: 'credential',
+      [GoogleConnector.oneTapParams.csrfToken]: 'mismatched_token',
+    };
+
+    // Should throw CSRF mismatch error for regular Google One Tap
+    await expect(
+      verifySocialIdentity({ connectorId: 'google', connectorData }, ctx, tenant)
+    ).rejects.toThrow('CSRF token mismatch.');
+
+    expect(isExternalGoogleOneTap).toHaveBeenCalledWith(connectorData);
   });
 });
