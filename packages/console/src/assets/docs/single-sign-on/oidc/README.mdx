@@ -26,14 +26,30 @@ After successfully creating an OIDC application on the IdP side, you will need t
 
   After a successful fetch request, you should be able to see the parsed IdP configurations under the issuers section.
 
-- **Scope**: A space-separated list of strings defining the desired permissions or access levels requested by Logto during the OIDC authentication process. The scope parameter allows you to specify what information and access Logto is requesting from the IdP.
-
-  The scope parameter is optional. Regardless of the custom scope settings, Logto will always send the `openid`, `profile` and `email` scopes to the IdP.
-
-  This is to ensure that Logto can retrieve the user's identity information and email address properly from the IdP. You may add additional scopes to the scope parameter to request for more information from the IdP.
-
 </Step>
-<Step index={2} title="Set email domains and enable the SSO connector">
+
+<Step index={2} title="Configure scopes">
+Scopes define the permissions your app requests from users and control which data your app can access from their enterprise accounts.
+
+Setting up scopes requires configuration on both sides:
+
+1. **Your Identity Provider (IdP)**: Configure which permissions are allowed for authorization in your IdP console
+   - Some IdPs enable all public scopes by default (no action needed)
+   - Others require you to explicitly grant permissions
+2. **Logto enterprise connector**: Specify which scopes to request during authentication in the Logto OIDC enterprise connector settings > `Scopes` field.
+   - Logto always includes the `openid`, `profile`, and `email` scopes to retrieve basic user identity information, regardless of your custom scope settings.
+   - You can add additional scopes (separated by spaces) to request more information from the IdP.
+</Step>
+
+<Step index={3} title="Store tokens to access third-party APIs (Optional)">
+If you want to access the Identity Provider's APIs and perform actions with user authorization, Logto needs to get specific API scopes and store tokens.
+
+1. Add the required scopes in the **scope** field following the instructions above
+2. Enable **Store tokens for persistent API access** in the Logto OIDC enterprise connector. Logto will securely [store access tokens in the Secret Vault](https://docs.logto.io/secret-vault/federated-token-set).
+3. For **standard** OIDC identity providers, the `offline_access` scope must be included to obtain a refresh token, preventing repeated user consent prompts.
+</Step>
+
+<Step index={4} title="Set email domains and enable the SSO connector">
 
 Provide the email `domains` of your organization on the connector `experience` tab. This will enabled the SSO connector as an authentication method for those users.
 

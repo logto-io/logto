@@ -92,13 +92,41 @@ Now you have successfully configured a Google Workspace SSO connector on Logto.
 
 <Step index={4} title="Additional Scopes (Optional)">
 
-Use the `Scope` field to add additional scopes to your OAuth request. This will allow you to request for more information from the Google OAuth server. Please refer to the [Google OAuth Scopes](https://developers.google.com/identity/protocols/oauth2/scopes) documentation for more information.
+Scopes define the permissions your app requests from users and control which data your app can access from their Google Workspace accounts. Requesting Google permissions requires configuration on both sides:
 
-\*Regardless of the custom scope settings, Logto will always send the `openid`, `profile` and `email` scopes to the IdP. This is to ensure that Logto can retrieve the user's identity information and email address properly.
+**In Google Cloud Console:**
+
+1. Navigate to **APIs & Services > OAuth consent screen > Scopes**.
+2. Click **Add or Remove Scopes** and select only the scopes your app requires:
+   - Authentication (Required):
+     - `https://www.googleapis.com/auth/userinfo.email`
+     - `https://www.googleapis.com/auth/userinfo.profile`
+     - `openid`
+   - API access (Optional): Add any additional scopes needed for your app (e.g., Drive, Calendar, YouTube). Browse the [Google API Library](https://console.cloud.google.com/apis/library) to find available services. If your app needs access to Google APIs beyond basic permissions, first enable the specific APIs your app will use (e.g., Google Drive API, Gmail API, Calendar API) in the Google API Library.
+3. Click **Update** to confirm the selection.
+4. Click **Save and Continue** to apply the changes.
+
+**In Logto Google Workspace connector:**
+
+1. Logto automatically includes `openid`, `profile`, and `email` scopes to retrieve basic user identity information. You can leave the `Scopes` field blank if you only need basic user information
+2. Add additional scopes (separated by spaces) in the `Scopes` field to request more data from Google. Use full scope URLs, for example: `https://www.googleapis.com/auth/calendar.readonly`
 
 </Step>
 
-<Step index={5} title="Set email domains and enable the SSO connector">
+<Step index={5} title="Store tokens to access Google APIs (Optional)">
+
+If you want to access [Google APIs](https://console.cloud.google.com/apis/library) and perform actions with user authorization, Logto needs to get specific API scopes and store tokens.
+
+1. Add the required scopes in your Google Cloud Console OAuth consent screen configuration and Logto Google connector.
+2. Enable **Store tokens for persistent API access** in Logto Google connector. Logto will securely [store Google access and refresh tokens in the Secret Vault](https://docs.logto.io/secret-vault/federated-token-set/token-retrieval).
+3. To ensure refresh tokens are returned, configure your Logto Google connector to enable **Offline Access**.
+
+**Warning**: You do not need to add `offline_access` in the Logto `Scope` field — doing so may cause an error. Google uses `access_type=offline` automatically when offline access is enabled.
+
+
+</Step>
+
+<Step index={6} title="Set email domains and enable the SSO connector">
 
 Provide the email `domains` of your organization on the connector `experience` tab. This will enabled the SSO connector as an authentication method for those users.
 
