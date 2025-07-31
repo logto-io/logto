@@ -34,7 +34,7 @@ type Props = {
 
 type CreateButtonProps = {
   readonly className?: string;
-  readonly size: 'large' | 'small';
+  readonly size: 'medium' | 'large';
 };
 
 function CreateButton({ size, className }: CreateButtonProps) {
@@ -132,7 +132,7 @@ function CollectUserProfile({ isActive }: Props) {
         )}
         <div className={styles.tableContainer}>
           <div className={styles.buttonWrapper}>
-            <CreateButton size="small" />
+            <CreateButton size="medium" />
           </div>
           <div className={classNames(styles.row, styles.header)}>
             <div className={styles.cell}>
