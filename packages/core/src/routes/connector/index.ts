@@ -7,6 +7,7 @@ import { conditional } from '@silverhand/essentials';
 import cleanDeep from 'clean-deep';
 import { string, object } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type QuotaLibrary } from '#src/libraries/quota.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -137,6 +138,14 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
       }
 
       if (enableTokenStorage) {
+        assertThat(
+          EnvSet.values.secretVaultKek,
+          new RequestError({
+            code: 'request.feature_not_supported',
+            status: 422,
+          })
+        );
+
         assertThat(
           connectorFactory.type === ConnectorType.Social &&
             connectorFactory.metadata.isTokenStorageSupported,
@@ -284,6 +293,14 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
 
       if (enableTokenStorage) {
         assertThat(
+          EnvSet.values.secretVaultKek,
+          new RequestError({
+            code: 'request.feature_not_supported',
+            status: 422,
+          })
+        );
+
+        assertThat(
           type === ConnectorType.Social && originalMetadata.isTokenStorageSupported,
           new RequestError({
             code: 'connector.token_storage_not_supported',
@@ -359,4 +376,5 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
   connectorConfigTestingRoutes(router, tenant);
   connectorAuthorizationUriRoutes(router, tenant);
   connectorFactoryRoutes(router, tenant);
+  // eslint-disable-next-line max-lines
 }
