@@ -69,6 +69,7 @@ export const auditLogs = '/developers/audit-logs';
 export const logtoCloud = '/logto-cloud';
 export const logtoCloudTenantSettings = '/logto-cloud/tenant-settings';
 export const customDomain = '/logto-cloud/custom-domain#use-custom-domain';
+export const retrieveTokenStorage = '/secret-vault/federated-token-set#token-retrieval';
 
 export const addOnPricingExplanationLink =
   'https://blog.logto.io/pricing-add-on-a-simple-explanation/';

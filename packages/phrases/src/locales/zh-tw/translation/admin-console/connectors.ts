@@ -63,7 +63,6 @@ const connectors = {
       title: '存儲令牌以持續訪問 API',
       description:
         '在 Secret Vault 中存儲訪問和刷新令牌。允許自動 API 調用而無需重複用戶授權。例如：讓你的 AI 代理通過持續授權添加事件到 Google 日曆。<a>了解如何調用第三方 API</a>',
-      tip: '提示：對於標準的 OAuth/OIDC 身份供應商，必須包含 `offline_access` 範圍才能獲取刷新令牌，從而防止重複用戶授權提示。',
     },
     callback_uri: 'Callback URI',
     callback_uri_description:

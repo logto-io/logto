@@ -70,7 +70,6 @@ const connectors = {
       title: 'Armazenar tokens para acesso persistente a APIs',
       description:
         'Armazene tokens de acesso e atualização no Cofre Secreto. Permite chamadas de API automáticas sem consentimento repetido do usuário. Exemplo: permita que seu Agente de IA adicione eventos ao Google Agenda com autorização persistente. <a>Saiba como chamar APIs de terceiros</a>',
-      tip: 'Dicas: Para provedores de identidade padrão OAuth/OIDC, o escopo `offline_access` deve ser incluído para obter um token de atualização, evitando solicitações de consentimento repetidas do usuário. ',
     },
     callback_uri: 'URI de retorno do chamado',
     callback_uri_description:

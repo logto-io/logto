@@ -71,7 +71,6 @@ const connectors = {
       title: 'Almacenar tokens para acceso persistente a la API',
       description:
         'Almacene tokens de acceso y actualización en el Secret Vault. Permite llamadas API automatizadas sin un consentimiento repetido del usuario. Ejemplo: permite que tu agente de IA agregue eventos a Google Calendar con autorización persistente. <a>Aprende a llamar a APIs de terceros</a>',
-      tip: 'Consejos: Para el proveedor estándar de identidad OAuth/OIDC, el ámbito `offline_access` debe incluirse para obtener un token de actualización, evitando solicitudes de consentimiento repetidas por parte del usuario.',
     },
     callback_uri: 'URI de devolución de llamada',
     callback_uri_description:

@@ -5,6 +5,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import Error from '@/assets/icons/toast-error.svg?react';
 import ImageInputs from '@/components/ImageInputs';
 import UnnamedTrans from '@/components/UnnamedTrans';
+import { retrieveTokenStorage } from '@/consts';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import FormField from '@/ds-components/FormField';
 import Select from '@/ds-components/Select';
@@ -162,37 +163,32 @@ function BasicForm({
         <div className={styles.tip}>{t('connectors.guide.sync_profile_tip')}</div>
       </FormField>
       {isDevFeaturesEnabled && isTokenStorageSupported && (
-        <>
-          <FormField title="connectors.guide.enable_token_storage.title">
-            <Controller
-              name="enableTokenStorage"
-              control={control}
-              defaultValue={false}
-              render={({ field }) => (
-                <Switch
-                  label={
-                    <Trans
-                      components={{
-                        a: (
-                          <TextLink
-                            href={getDocumentationUrl('/docs/references/connectors/#token-storage')}
-                            targetBlank="noopener"
-                          />
-                        ),
-                      }}
-                      i18nKey="admin_console.connectors.guide.enable_token_storage.description"
-                    />
-                  }
-                  checked={field.value}
-                  onChange={field.onChange}
-                />
-              )}
-            />
-          </FormField>
-          {isTokenStorageEnabled && (
-            <div className={styles.tip}>{t('connectors.guide.enable_token_storage.tip')}</div>
-          )}
-        </>
+        <FormField title="connectors.guide.enable_token_storage.title">
+          <Controller
+            name="enableTokenStorage"
+            control={control}
+            defaultValue={false}
+            render={({ field }) => (
+              <Switch
+                label={
+                  <Trans
+                    components={{
+                      a: (
+                        <TextLink
+                          href={getDocumentationUrl(retrieveTokenStorage)}
+                          targetBlank="noopener"
+                        />
+                      ),
+                    }}
+                    i18nKey="admin_console.connectors.guide.enable_token_storage.description"
+                  />
+                }
+                checked={field.value}
+                onChange={field.onChange}
+              />
+            )}
+          />
+        </FormField>
       )}
     </div>
   );
