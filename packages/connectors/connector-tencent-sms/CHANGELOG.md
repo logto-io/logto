@@ -1,5 +1,12 @@
 # @logto/connector-tencent-sms
 
+## 1.3.1
+
+### Patch Changes
+
+- Updated dependencies [34964af46]
+  - @logto/connector-kit@4.4.0
+
 ## 1.3.0
 
 ### Minor Changes
