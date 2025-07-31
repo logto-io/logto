@@ -187,14 +187,6 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
     ) {
       await helmetPromise(consoleSecurityHeaderSettings, req, res);
 
-      // Special handling for AuthStatus to allow iframe storage access
-      if (requestPath.includes('/auth-status')) {
-        // Add Permissions-Policy header to allow storage access in iframe
-        res.setHeader('Permissions-Policy', 'storage-access=*');
-        // Add Document-Policy header for better iframe storage support
-        res.setHeader('Document-Policy', 'js-profiling=false');
-      }
-
       return next();
     }
 

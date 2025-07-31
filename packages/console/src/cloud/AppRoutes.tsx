@@ -7,7 +7,6 @@ import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import { GlobalAnonymousRoute, GlobalRoute } from '@/contexts/TenantsProvider';
 import { OnboardingApp } from '@/onboarding';
 import AcceptInvitation from '@/pages/AcceptInvitation';
-import AuthStatus from '@/pages/AuthStatus';
 import Callback from '@/pages/Callback';
 import CheckoutSuccessCallback from '@/pages/CheckoutSuccessCallback';
 import ExternalGoogleOneTapLanding from '@/pages/ExternalGoogleOneTapLanding';
@@ -33,7 +32,6 @@ function AppRoutes() {
                 path={GlobalAnonymousRoute.OneTimeTokenLanding}
                 element={<OneTimeTokenLanding />}
               />
-              <Route path={GlobalAnonymousRoute.AuthStatus} element={<AuthStatus />} />
               <Route
                 path={GlobalAnonymousRoute.ExternalGoogleOneTapLanding}
                 element={<ExternalGoogleOneTapLanding />}
