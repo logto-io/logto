@@ -72,13 +72,10 @@ export const verifySocialIdentity = async (
 
   const connector = await getConnector(connectorId);
 
-  const isGoogleOneTap = isGoogleOneTapChecker(connectorData);
-  const isExternalWebsiteGoogleOneTap = isExternalGoogleOneTap(connectorData);
-
   // Verify the CSRF token if it's a Google connector and has credential (a Google One Tap
   // verification)
-  if (connector.metadata.id === GoogleConnector.factoryId && isGoogleOneTap) {
-    if (isExternalWebsiteGoogleOneTap) {
+  if (connector.metadata.id === GoogleConnector.factoryId && isGoogleOneTapChecker(connectorData)) {
+    if (isExternalGoogleOneTap(connectorData)) {
       assertThat(
         connectorData[GoogleConnector.oneTapParams.credential] ===
           ctx.cookies.get(logtoGoogleOneTapCookieKey),
