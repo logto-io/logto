@@ -94,14 +94,14 @@ export const dateProfileFieldGuard = baseProfileFieldGuard.extend({
 export type CheckboxProfileField = BaseProfileField & {
   type: CustomProfileFieldType.Checkbox;
   config: {
-    options: Array<{ label: string; value: string }>;
+    options: Array<{ label?: string; value: string }>;
   };
 };
 
 export const checkboxProfileFieldGuard = baseProfileFieldGuard.extend({
   type: z.literal(CustomProfileFieldType.Checkbox),
   config: z.object({
-    options: z.array(z.object({ label: z.string(), value: z.string() })),
+    options: z.array(z.object({ label: z.string().optional(), value: z.string() })),
   }),
 }) satisfies ToZodObject<CheckboxProfileField>;
 
@@ -109,7 +109,7 @@ export type SelectProfileField = BaseProfileField & {
   type: CustomProfileFieldType.Select;
   config: {
     placeholder?: string;
-    options: Array<{ label: string; value: string }>;
+    options: Array<{ label?: string; value: string }>;
   };
 };
 
@@ -117,7 +117,7 @@ export const selectProfileFieldGuard = baseProfileFieldGuard.extend({
   type: z.literal(CustomProfileFieldType.Select),
   config: z.object({
     placeholder: z.string().optional(),
-    options: z.array(z.object({ label: z.string(), value: z.string() })),
+    options: z.array(z.object({ label: z.string().optional(), value: z.string() })),
   }),
 }) satisfies ToZodObject<SelectProfileField>;
 
@@ -169,7 +169,7 @@ export type AddressProfileField = BaseProfileField & {
         maxLength?: number;
         minValue?: number;
         maxValue?: number;
-        options?: Array<{ label: string; value: string }>;
+        options?: Array<{ label?: string; value: string }>;
         format?: string;
         customFormat?: string;
       };
@@ -204,7 +204,7 @@ export type FullnameProfileField = BaseProfileField & {
         maxLength?: number;
         minValue?: number;
         maxValue?: number;
-        options?: Array<{ label: string; value: string }>;
+        options?: Array<{ label?: string; value: string }>;
         format?: string;
         customFormat?: string;
       };
@@ -320,9 +320,15 @@ export const reservedCustomDataKeys = Object.freeze(reservedCustomDataKeyGuard.k
  */
 export const reservedSignInIdentifierKeys = Object.freeze(signInIdentifierKeyGuard.keyof().options);
 
-export enum supportedDateFormat {
+export enum SupportedDateFormat {
   US = 'MM/dd/yyyy',
   UK = 'dd/MM/yyyy',
   ISO = 'yyyy-MM-dd',
   Custom = 'custom',
+}
+
+export enum Gender {
+  Female = 'female',
+  Male = 'male',
+  Other = 'other',
 }

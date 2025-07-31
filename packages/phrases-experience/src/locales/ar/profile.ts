@@ -21,6 +21,11 @@ const profile = {
     postalCode: 'الرمز البريدي',
     country: 'الدولة',
   },
+  gender_options: {
+    female: 'أنثى',
+    male: 'ذكر',
+    other: 'أفضل عدم القول',
+  },
 };
 
 export default Object.freeze(profile);

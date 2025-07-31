@@ -21,9 +21,10 @@ import { trySubmitSafe } from '@/utils/form';
 import CompositionPartsSelector from '../../../components/CompositionPartsSelector';
 import ProfileFieldPartSubForm from '../../../components/ProfileFieldPartSubForm';
 import { collectUserProfilePathname } from '../../consts';
-import { useDataParser } from '../../hooks';
+import { parseResponseToFormData, parseFormDataToRequestPayload } from '../../data-parser';
+import { type ProfileFieldForm } from '../../types';
+import useI18nFieldLabel from '../../use-i18n-field-label';
 import { isBuiltInCustomProfileFieldKey } from '../../utils';
-import { type ProfileFieldForm } from '../types';
 
 import styles from './index.module.scss';
 
@@ -36,7 +37,6 @@ function ProfileFieldDetailsForm({ data }: Props) {
   const api = useApi();
   const { mutate: mutateGlobal } = useSWRConfig();
   const { navigate } = useTenantPathname();
-  const { parseResponseToFormData, parseFormDataToRequestPayload } = useDataParser();
 
   const isBuiltInFieldName = isBuiltInCustomProfileFieldKey(data.name);
   const isCompositionType =
@@ -56,7 +56,7 @@ function ProfileFieldDetailsForm({ data }: Props) {
 
   const compositionParts = watch('parts');
 
-  const { getDefaultLabel } = useDataParser();
+  const getI18nLabel = useI18nFieldLabel();
 
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -117,7 +117,7 @@ function ProfileFieldDetailsForm({ data }: Props) {
   return (
     <>
       <DetailsPageHeader
-        title={watch('label') || getDefaultLabel(data.name)}
+        title={watch('label') || getI18nLabel(data.name)}
         identifier={{
           name: t('sign_in_exp.custom_profile_fields.details.key'),
           tags: compositionParts
@@ -159,7 +159,7 @@ function ProfileFieldDetailsForm({ data }: Props) {
                 enabled && (
                   <FormCard
                     key={`parts.${name}`}
-                    title={<DangerousRaw>{label || getDefaultLabel(name)}</DangerousRaw>}
+                    title={<DangerousRaw>{label || getI18nLabel(name)}</DangerousRaw>}
                   >
                     <ProfileFieldPartSubForm index={index} />
                   </FormCard>

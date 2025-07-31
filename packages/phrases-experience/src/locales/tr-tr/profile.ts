@@ -21,6 +21,11 @@ const profile = {
     postalCode: 'Posta kodu',
     country: 'Ülke',
   },
+  gender_options: {
+    female: 'Kadın',
+    male: 'Erkek',
+    other: 'Söylememeyi tercih ederim',
+  },
 };
 
 export default Object.freeze(profile);

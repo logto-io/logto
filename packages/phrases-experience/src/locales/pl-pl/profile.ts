@@ -21,6 +21,11 @@ const profile = {
     postalCode: 'Kod pocztowy',
     country: 'Kraj',
   },
+  gender_options: {
+    female: 'Kobieta',
+    male: 'Mężczyzna',
+    other: 'Wolę nie mówić',
+  },
 };
 
 export default Object.freeze(profile);

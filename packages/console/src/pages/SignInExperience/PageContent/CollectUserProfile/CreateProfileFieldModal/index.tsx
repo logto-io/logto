@@ -23,7 +23,7 @@ import modalStyles from '@/scss/modal.module.scss';
 import { isPaidPlan } from '@/utils/subscription';
 
 import CustomDataProfileNameField from '../../components/CustomDataProfileNameField';
-import { useDataParser } from '../hooks';
+import { getInitialRequestPayloadByFieldName } from '../data-parser';
 
 import styles from './index.module.scss';
 
@@ -44,8 +44,6 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { t: errorT } = useTranslation('errors');
   const api = useApi();
-
-  const { getInitialRequestPayloadByFieldName } = useDataParser();
 
   const [selectedField, setSelectedField] = useState<string>();
   const [errorMessage, setErrorMessage] = useState<string>();

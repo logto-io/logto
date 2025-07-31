@@ -12,7 +12,7 @@ import { onKeyDownHandler } from '@/utils/a11y';
 import { trySubmitSafe } from '@/utils/form';
 
 import { collectUserProfilePathname } from '../consts';
-import { useDataParser } from '../hooks';
+import useI18nFieldLabel from '../use-i18n-field-label';
 
 import styles from './index.module.scss';
 
@@ -30,7 +30,7 @@ function ProfileFieldList({ data }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useApi();
   const { navigate } = useTenantPathname();
-  const { getDefaultLabel } = useDataParser();
+  const getI18nLabel = useI18nFieldLabel();
 
   const { control, handleSubmit, reset } = useForm<Form>({
     defaultValues: { fields: data },
@@ -74,7 +74,7 @@ function ProfileFieldList({ data }: Props) {
           >
             <div className={styles.cell}>
               <Draggable className={styles.draggableIcon} />
-              <span className={styles.fieldName}>{label || getDefaultLabel(name)}</span>
+              <span className={styles.fieldName}>{label || getI18nLabel(name)}</span>
             </div>
             <div className={styles.cell}>{t(`sign_in_exp.custom_profile_fields.type.${type}`)}</div>
             <div className={styles.cell}>
