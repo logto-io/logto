@@ -1,6 +1,6 @@
 {
   "name": "@logto/tunnel",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "A CLI tool that creates tunnel service to Logto Cloud for local development.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/logto#readme",
