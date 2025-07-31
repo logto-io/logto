@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-mailgun",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Mailgun connector for Logto.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {

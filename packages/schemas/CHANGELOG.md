@@ -1,5 +1,61 @@
 # Change Log
 
+## 1.30.0
+
+### Minor Changes
+
+- 34964af46: feat: support custom scope in the social verification API
+
+  This change allows developers to specify a custom `scope` parameter in the user account social verification API. If a scope is provided, it will be used to generate the authorization URI; otherwise, the default scope configured in the connector will be used.
+
+  - Affected endpoints:
+    - `POST /api/verifications/social`
+
+- 0343699d7: feat: introduce Logto Secret Vault and federated token set storage
+
+  This update introduces the new [Secret vault](https://docs.logto.io/secret-vault/) feature in Logto.
+
+  The Secret Vault is designed to securely store sensitive user data — such as access tokens, API keys, passcodes, and other confidential information. These secrets are typically used to access third-party services on behalf of users, making secure storage essential.
+
+  With this release, federated token set storage support is added to both social and enterprise SSO connectors. When enabled, Logto will securely store the token set issued by the provider after a successful user authentication. Applications can then retrieve the access token later to access third-party APIs without requiring the user to reauthenticate.
+
+  Supported connectors include:
+
+  - **Social connectors**: GitHub, Google, Facebook, Standard OAuth 2.0, and Standard OIDC.
+  - **Enterprise SSO connectors**: All OIDC-based SSO connectors.
+
+  1. Enable the token storage as needed for social and enterprise SSO connectors in the Logto Console or via the Logto Management API.
+  2. Once enabled, Logto will automatically store the token set issued by the provider after a successful user authentication.
+  3. After the token set is stored, you can retrieve the access token via the Logto Account API for the user. This allows your application to access third-party APIs without requiring the user to reauthenticate.
+
+  For more details, please check the [Federated token set storage](https://docs.logto.io/secret-vault/federated-token-set) documentation.
+
+  Note:
+  For OSS users, to enable the Secret Vault feature, you must set the `SECRET_VAULT_KEK` environment variable to a valid base64 enabled secret key. This key is used to encrypt and decrypt the secrets stored in the vault. For more information, please refer to the [configuration variables](https://docs.logto.io/concepts/core-service/configuration#variables) documentation.
+
+### Patch Changes
+
+- 9a4e11cf8: fix: add tenant-aware foreign key constraint to organization_user_relations table
+
+  ### Problem
+
+  Developers could mistakenly assign a `user_id` from other tenants to an organization, causing 500 errors on organization users API endpoints. The original `organization_user_relations` table only had a foreign key constraint on `users (id)`, allowing any existing user ID to be assigned regardless of tenant isolation.
+
+  ### Root cause
+
+  Logto applies Row Level Security (RLS) on all tables to isolate tenant data access. When joining the `users` table with `organization_user_relations`, the actual user data becomes inaccessible to the current tenant due to RLS restrictions, causing user data to return `null` and triggering 500 server errors.
+
+  ### Solution
+
+  Added a composite foreign key constraint `(tenant_id, user_id)` referencing `users (tenant_id, id)` to ensure the organization-user relation's tenant ID matches the user's tenant ID. This enforces proper tenant isolation at the database level.
+
+- 3f5533080: refactor: set the default value of account center `enabled` to true.
+
+  As a result, the account API will be enabled by default, allowing users to access and manage their accounts. To control the visibility and accessibility of individual fields, use the `fields` property. By default, all fields are inaccessible; you can selectively enable them as needed.
+
+- Updated dependencies [34964af46]
+  - @logto/connector-kit@4.4.0
+
 ## 1.29.0
 
 ### Minor Changes

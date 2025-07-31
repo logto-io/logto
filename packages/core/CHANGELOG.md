@@ -1,5 +1,64 @@
 # Change Log
 
+## 1.30.0
+
+### Minor Changes
+
+- 34964af46: feat: support custom scope in the social verification API
+
+  This change allows developers to specify a custom `scope` parameter in the user account social verification API. If a scope is provided, it will be used to generate the authorization URI; otherwise, the default scope configured in the connector will be used.
+
+  - Affected endpoints:
+    - `POST /api/verifications/social`
+
+- 289ab5119: add totp and backup code via account api
+
+  Users can now add TOTP and backup code via Account API.
+
+  The endpoints are:
+
+  - `POST /api/my-account/mfa-verifications/totp-secret/generate`: Generate a TOTP secret.
+  - `POST /api/my-account/mfa-verifications/backup-codes/generate`: Generate backup codes.
+  - `POST /api/my-account/mfa-verifications`: Add a TOTP or backup code using the generated secret or codes.
+  - `GET /api/my-account/mfa-verifications/backup-codes`: Retrieve backup codes.
+
+- 0343699d7: feat: introduce Logto Secret Vault and federated token set storage
+
+  This update introduces the new [Secret vault](https://docs.logto.io/secret-vault/) feature in Logto.
+
+  The Secret Vault is designed to securely store sensitive user data — such as access tokens, API keys, passcodes, and other confidential information. These secrets are typically used to access third-party services on behalf of users, making secure storage essential.
+
+  With this release, federated token set storage support is added to both social and enterprise SSO connectors. When enabled, Logto will securely store the token set issued by the provider after a successful user authentication. Applications can then retrieve the access token later to access third-party APIs without requiring the user to reauthenticate.
+
+  Supported connectors include:
+
+  - **Social connectors**: GitHub, Google, Facebook, Standard OAuth 2.0, and Standard OIDC.
+  - **Enterprise SSO connectors**: All OIDC-based SSO connectors.
+
+  1. Enable the token storage as needed for social and enterprise SSO connectors in the Logto Console or via the Logto Management API.
+  2. Once enabled, Logto will automatically store the token set issued by the provider after a successful user authentication.
+  3. After the token set is stored, you can retrieve the access token via the Logto Account API for the user. This allows your application to access third-party APIs without requiring the user to reauthenticate.
+
+  For more details, please check the [Federated token set storage](https://docs.logto.io/secret-vault/federated-token-set) documentation.
+
+  Note:
+  For OSS users, to enable the Secret Vault feature, you must set the `SECRET_VAULT_KEK` environment variable to a valid base64 enabled secret key. This key is used to encrypt and decrypt the secrets stored in the vault. For more information, please refer to the [configuration variables](https://docs.logto.io/concepts/core-service/configuration#variables) documentation.
+
+### Patch Changes
+
+- Updated dependencies [9a4e11cf8]
+- Updated dependencies [34964af46]
+- Updated dependencies [34964af46]
+- Updated dependencies [0343699d7]
+- Updated dependencies [0343699d7]
+- Updated dependencies [3f5533080]
+  - @logto/schemas@1.30.0
+  - @logto/connector-kit@4.4.0
+  - @logto/console@1.27.0
+  - @logto/cli@1.30.0
+  - @logto/demo-app@1.5.0
+  - @logto/experience@1.14.0
+
 ## 1.29.0
 
 ### Minor Changes
