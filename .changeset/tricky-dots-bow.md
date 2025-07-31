@@ -3,7 +3,7 @@
 "@logto/schemas": minor
 ---
 
-feat: introduce Logto Secret Vault and Federated token set storage
+feat: introduce Logto Secret Vault and federated token set storage
 
 This update introduces the new [Secret Vault](https://docs.logto.io/secret-vault/) feature in Logto.
 
