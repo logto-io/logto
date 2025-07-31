@@ -5,9 +5,9 @@
   "//": "CAUTION: When updating the fields below, you should also update README accordingly.",
   "fixed": [
     [
+      "@logto/core",
       "@logto/api",
       "@logto/cli",
-      "@logto/core",
       "@logto/create",
       "@logto/schemas"
     ]
