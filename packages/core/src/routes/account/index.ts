@@ -283,11 +283,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
     );
   }
 
-  // TODO: remove this when the third-party tokens feature is no longer experimental.
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    thirdPartyTokensRoutes(...args);
-  }
-
+  thirdPartyTokensRoutes(...args);
   emailAndPhoneRoutes(...args);
   identitiesRoutes(...args);
   mfaVerificationsRoutes(...args);

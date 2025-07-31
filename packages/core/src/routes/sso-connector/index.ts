@@ -18,7 +18,6 @@ import { isSupportedSsoConnector, isSupportedSsoProvider } from '#src/sso/utils.
 import { tableToPathname } from '#src/utils/SchemaRouter.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { EnvSet } from '../../env-set/index.js';
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
 import ssoConnectorIdpInitiatedAuthConfigRoutes from './idp-initiated-auth-config.js';
@@ -125,12 +124,6 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
       }
 
       if (rest.enableTokenStorage) {
-        // TODO: remove this check once the feature is enabled in production.
-        assertThat(
-          EnvSet.values.isDevFeaturesEnabled,
-          new RequestError('request.feature_not_supported')
-        );
-
         // Only OIDC connector supports token storage currently.
         const { providerType } = ssoConnectorFactories[providerName];
         assertThat(
@@ -293,11 +286,6 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
       }
 
       if (rest.enableTokenStorage) {
-        // TODO: remove this check once the feature is enabled in production.
-        assertThat(
-          EnvSet.values.isDevFeaturesEnabled,
-          new RequestError('request.feature_not_supported')
-        );
         // Only OIDC connector supports token storage currently.
         assertThat(
           providerType === SsoProviderType.OIDC,
@@ -306,12 +294,7 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
       }
 
       // Delete the token secret if the token storage is disabled
-      if (
-        // TODO: remove this check once the feature is enabled in production.
-        EnvSet.values.isDevFeaturesEnabled &&
-        rest.enableTokenStorage === false &&
-        providerType === SsoProviderType.OIDC
-      ) {
+      if (rest.enableTokenStorage === false && providerType === SsoProviderType.OIDC) {
         await secrets.deleteTokenSetSecretsByEnterpriseSsoConnectorId(id);
       }
 
@@ -345,8 +328,5 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
     }
   );
 
-  // TODO: @simeng Remove this when IdP initiated SAML SSO is ready for production
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    ssoConnectorIdpInitiatedAuthConfigRoutes(...args);
-  }
+  ssoConnectorIdpInitiatedAuthConfigRoutes(...args);
 }

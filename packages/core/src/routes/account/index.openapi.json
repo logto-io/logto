@@ -479,7 +479,6 @@
     "/api/my-account/identities/{target}/access-token": {
       "get": {
         "operationId": "GetSocialIdentityAccessToken",
-        "tags": ["Dev feature"],
         "summary": "Retrieve the access token issued by a third-party social provider",
         "description": "This API retrieves the access token issued by a third-party social provider for a given social target. \nAccess is only available if token storage is enabled for the corresponding social connector.\nWhen a user authenticates through a social provider, Logto automatically stores the provider’s tokens in an encrypted form.\nYou can use this API to securely retrieve the stored access token and use it to access third-party APIs on behalf of the user.",
         "responses": {
@@ -496,7 +495,6 @@
       },
       "put": {
         "operationId": "UpdateSocialIdentityAccessTokenByVerificationId",
-        "tags": ["Dev feature"],
         "summary": "Update the access token for a social identity by verification ID",
         "description": "This API updates the token storage for a social identity by a given social verification ID. \nIt is used to fetch a new access token from the social provider and store it securely in Logto.",
         "responses": {
@@ -512,7 +510,6 @@
     "/api/my-account/sso-identities/{connectorId}/access-token": {
       "get": {
         "operationId": "GetEnterpriseSsoIdentityAccessToken",
-        "tags": ["Dev feature"],
         "summary": "Retrieve the access token issued by a third-party enterprise SSO provider",
         "description": "This API retrieves the access token issued by a third-party enterprise SSO provider for a given SSO connector ID. \nAccess is only available if token storage is enabled for the corresponding connector.\nWhen a user authenticates through a SSO provider, Logto automatically stores the provider’s tokens in an encrypted form.\nYou can use this API to securely retrieve the stored access token and use it to access third-party APIs on behalf of the user.",
         "responses": {

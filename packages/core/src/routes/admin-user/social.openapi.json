@@ -71,7 +71,6 @@
       "get": {
         "summary": "Retrieve a user's social identity and associated token storage .",
         "description": "This API retrieves the social identity and its associated token set for the specified user from the Logto Secret Vault. The token set will only be available if token storage is enabled for the corresponding social connector.",
-        "tags": ["Dev feature"],
         "parameters": [
           {
             "in": "query",
