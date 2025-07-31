@@ -17,13 +17,18 @@ So, we are using our own "grouping" release strategy in this monorepo:
 
 The release group that includes the Logto core service and its schemas and cli, which consists of the following packages:
 
+- @logto/core (main)
 - @logto/api
 - @logto/cli
-- @logto/core (main)
 - @logto/create
 - @logto/schemas
 
 Their versions will be always in sync, and forms our main release group.
+
+> [!IMPORTANT]
+>
+> The above release group can be found in the `fixed` field of `config.json`. Make sure the `@logto/core` is always on the top of the list.
+> Otherwise, the `publish.js` script will fail to tag the core package and we'll not be able to find the tag to publish it on GitHub.
 
 ### Others
 
