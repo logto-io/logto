@@ -2,7 +2,6 @@ import { SsoProviderName } from '@logto/schemas';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -102,7 +101,7 @@ function OidcMetadataForm({ providerConfig, config, providerName }: Props) {
           />
         </FormField>
       )}
-      {providerName === SsoProviderName.GOOGLE_WORKSPACE && isDevFeaturesEnabled && (
+      {providerName === SsoProviderName.GOOGLE_WORKSPACE && (
         <FormField title="enterprise_sso_details.offline_access.label">
           <Switch
             label={t('enterprise_sso_details.offline_access.description')}

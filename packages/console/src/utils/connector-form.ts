@@ -3,7 +3,6 @@ import { ConnectorConfigFormItemType, ConnectorType } from '@logto/connector-kit
 import { type ConnectorFactoryResponse, type ConnectorResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { SyncProfileMode, type ConnectorFormType } from '@/types/connector';
 import { safeParseJson } from '@/utils/json';
 
@@ -90,8 +89,7 @@ export const convertResponseToForm = (connector: ConnectorResponse): ConnectorFo
     jsonConfig: JSON.stringify(config, null, 2),
     formConfig,
     rawConfig: config,
-    // TODO: Remove dev feature guard when token storage is ready for release
-    ...conditional(isDevFeaturesEnabled && { enableTokenStorage }),
+    enableTokenStorage,
   };
 };
 
@@ -108,5 +106,6 @@ export const convertFactoryResponseToForm = (
     jsonConfig,
     formConfig,
     rawConfig: {},
+    enableTokenStorage: false,
   };
 };

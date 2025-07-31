@@ -6,7 +6,6 @@ import Error from '@/assets/icons/toast-error.svg?react';
 import ImageInputs from '@/components/ImageInputs';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import { retrieveTokenStorage } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import FormField from '@/ds-components/FormField';
 import Select from '@/ds-components/Select';
 import Switch from '@/ds-components/Switch';
@@ -162,7 +161,7 @@ function BasicForm({
         />
         <div className={styles.tip}>{t('connectors.guide.sync_profile_tip')}</div>
       </FormField>
-      {isDevFeaturesEnabled && isTokenStorageSupported && (
+      {isTokenStorageSupported && (
         <FormField title="connectors.guide.enable_token_storage.title">
           <Controller
             name="enableTokenStorage"

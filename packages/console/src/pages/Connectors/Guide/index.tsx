@@ -16,7 +16,6 @@ import BasicForm from '@/components/ConnectorForm/BasicForm';
 import ConfigForm from '@/components/ConnectorForm/ConfigForm';
 import ConnectorTester from '@/components/ConnectorTester';
 import Markdown from '@/components/Markdown';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { ConnectorsTabs } from '@/consts/page-tabs';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
@@ -130,8 +129,7 @@ function Guide({ connector, onClose }: Props) {
         ? {
             ...basePayload,
             syncProfile: syncProfile === SyncProfileMode.EachSignIn,
-            // TODO: Remove dev feature guard when token storage is ready for release
-            ...conditional(isDevFeaturesEnabled && { enableTokenStorage }),
+            enableTokenStorage,
           }
         : basePayload;
 
