@@ -7,7 +7,6 @@ import {
 } from '#src/__mocks__/connectors-mock.js';
 import { deleteUser, getUser, getUserIdentity } from '#src/api/admin-user.js';
 import { updateConnectorConfig } from '#src/api/connector.js';
-import { isDevFeaturesEnabled } from '#src/constants.js';
 import {
   clearConnectorsByTypes,
   setEmailConnector,
@@ -41,12 +40,9 @@ describe('social sign-in and sign-up', () => {
     const { id: socialConnectorId } = await setSocialConnector();
 
     // Enable token storage
-    // TODO: Remove this once we have token storage enabled
-    if (isDevFeaturesEnabled) {
-      await updateConnectorConfig(socialConnectorId, {
-        enableTokenStorage: true,
-      });
-    }
+    await updateConnectorConfig(socialConnectorId, {
+      enableTokenStorage: true,
+    });
 
     await setEmailConnector();
     connectorIdMap.set(mockSocialConnectorId, socialConnectorId);
@@ -72,12 +68,9 @@ describe('social sign-in and sign-up', () => {
     const { primaryEmail } = await getUser(userId);
     expect(primaryEmail).toBe(email);
 
-    // TODO: Remove this once we have token storage enabled
-    if (isDevFeaturesEnabled) {
-      const { tokenSecret } = await getUserIdentity(userId, mockSocialConnectorTarget);
-      expect(tokenSecret?.metadata.scope).toBe(mockTokenResponse.scope);
-      expect(tokenSecret?.metadata.hasRefreshToken).toBe(false);
-    }
+    const { tokenSecret } = await getUserIdentity(userId, mockSocialConnectorTarget);
+    expect(tokenSecret?.metadata.scope).toBe(mockTokenResponse.scope);
+    expect(tokenSecret?.metadata.hasRefreshToken).toBe(false);
   });
 
   it('should successfully sign-up with social but not sync email if the email is registered by another user', async () => {
@@ -131,11 +124,9 @@ describe('social sign-in and sign-up', () => {
 
     expect(name).toBe('John Doe');
 
-    if (isDevFeaturesEnabled) {
-      const { tokenSecret } = await getUserIdentity(userId, mockSocialConnectorTarget);
-      expect(tokenSecret?.metadata.scope).toBe('openid profile email');
-      expect(tokenSecret?.metadata.hasRefreshToken).toBe(true);
-    }
+    const { tokenSecret } = await getUserIdentity(userId, mockSocialConnectorTarget);
+    expect(tokenSecret?.metadata.scope).toBe('openid profile email');
+    expect(tokenSecret?.metadata.hasRefreshToken).toBe(true);
     await deleteUser(userId);
   });
 
@@ -168,23 +159,19 @@ describe('social sign-in and sign-up', () => {
     expect(identities[mockSocialConnectorTarget]).toBeTruthy();
     expect(name).toBe('Foo Bar');
 
-    if (isDevFeaturesEnabled) {
-      const { tokenSecret } = await getUserIdentity(userId, mockSocialConnectorTarget);
-      expect(tokenSecret?.metadata.scope).toBe('openid profile phone');
-    }
+    const { tokenSecret } = await getUserIdentity(userId, mockSocialConnectorTarget);
+    expect(tokenSecret?.metadata.scope).toBe('openid profile phone');
 
     // Should delete the token set when the connector token storage is disabled
-    if (isDevFeaturesEnabled) {
-      await updateConnectorConfig(connectorId, {
-        enableTokenStorage: false,
-      });
+    await updateConnectorConfig(connectorId, {
+      enableTokenStorage: false,
+    });
 
-      const { tokenSecret: updatedTokenSecret } = await getUserIdentity(
-        userId,
-        mockSocialConnectorTarget
-      );
-      expect(updatedTokenSecret).toBeUndefined();
-    }
+    const { tokenSecret: updatedTokenSecret } = await getUserIdentity(
+      userId,
+      mockSocialConnectorTarget
+    );
+    expect(updatedTokenSecret).toBeUndefined();
 
     await deleteUser(userId);
   });

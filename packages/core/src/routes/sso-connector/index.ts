@@ -8,6 +8,7 @@ import { generateStandardShortId } from '@logto/shared';
 import { assert, conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -18,7 +19,6 @@ import { isSupportedSsoConnector, isSupportedSsoProvider } from '#src/sso/utils.
 import { tableToPathname } from '#src/utils/SchemaRouter.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { EnvSet } from '../../env-set/index.js';
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
 import ssoConnectorIdpInitiatedAuthConfigRoutes from './idp-initiated-auth-config.js';
@@ -125,12 +125,6 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
       }
 
       if (rest.enableTokenStorage) {
-        // TODO: remove this check once the feature is enabled in production.
-        assertThat(
-          EnvSet.values.isDevFeaturesEnabled,
-          new RequestError('request.feature_not_supported')
-        );
-
         // Only OIDC connector supports token storage currently.
         const { providerType } = ssoConnectorFactories[providerName];
         assertThat(
@@ -293,11 +287,6 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
       }
 
       if (rest.enableTokenStorage) {
-        // TODO: remove this check once the feature is enabled in production.
-        assertThat(
-          EnvSet.values.isDevFeaturesEnabled,
-          new RequestError('request.feature_not_supported')
-        );
         // Only OIDC connector supports token storage currently.
         assertThat(
           providerType === SsoProviderType.OIDC,
@@ -306,12 +295,7 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
       }
 
       // Delete the token secret if the token storage is disabled
-      if (
-        // TODO: remove this check once the feature is enabled in production.
-        EnvSet.values.isDevFeaturesEnabled &&
-        rest.enableTokenStorage === false &&
-        providerType === SsoProviderType.OIDC
-      ) {
+      if (rest.enableTokenStorage === false && providerType === SsoProviderType.OIDC) {
         await secrets.deleteTokenSetSecretsByEnterpriseSsoConnectorId(id);
       }
 

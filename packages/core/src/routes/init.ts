@@ -117,10 +117,7 @@ const createRouters = (tenant: TenantContext) => {
   if (EnvSet.values.isDevFeaturesEnabled) {
     customProfileFieldsRoutes(managementRouter, tenant);
   }
-
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    secretsRoutes(managementRouter, tenant);
-  }
+  secretsRoutes(managementRouter, tenant);
 
   // General anonymous router for publicly accessible APIs
   const anonymousRouter: AnonymousRouter = new Router();

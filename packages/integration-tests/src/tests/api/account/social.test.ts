@@ -22,7 +22,6 @@ import {
   createVerificationRecordByPassword,
   verifySocialAuthorization,
 } from '#src/api/verification-record.js';
-import { isDevFeaturesEnabled } from '#src/constants.js';
 import {
   clearConnectorsByTypes,
   setEmailConnector,
@@ -35,7 +34,6 @@ import {
   signInAndGetUserApi,
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest } from '#src/utils.js';
 
 describe('my-account (social)', () => {
   const state = 'fake_state';
@@ -57,12 +55,9 @@ describe('my-account (social)', () => {
     connectorIdMap.set(mockSocialConnectorId, socialConnectorId);
     connectorIdMap.set(mockEmailConnectorId, emailConnectorId);
 
-    // TODO: Remove this once we have token storage enabled
-    if (isDevFeaturesEnabled) {
-      await updateConnectorConfig(socialConnectorId, {
-        enableTokenStorage: true,
-      });
-    }
+    await updateConnectorConfig(socialConnectorId, {
+      enableTokenStorage: true,
+    });
   });
 
   afterAll(async () => {
@@ -198,11 +193,8 @@ describe('my-account (social)', () => {
         const userInfo = await getUserInfo(api);
         expect(userInfo.identities).toHaveProperty(mockSocialConnectorTarget);
 
-        // TODO: Remove this once we have token storage enabled
-        if (isDevFeaturesEnabled) {
-          const { tokenSecret } = await getUserIdentity(user.id, mockSocialConnectorTarget);
-          expect(tokenSecret?.metadata.scope).toBe(mockTokenResponse.scope);
-        }
+        const { tokenSecret } = await getUserIdentity(user.id, mockSocialConnectorTarget);
+        expect(tokenSecret?.metadata.scope).toBe(mockTokenResponse.scope);
 
         await deleteDefaultTenantUser(user.id);
       });
@@ -286,7 +278,7 @@ describe('my-account (social)', () => {
     });
   });
 
-  devFeatureTest.describe('/my-account/identities/:target/access-token', () => {
+  describe('/my-account/identities/:target/access-token', () => {
     it('should update user identities and get access token', async () => {
       const socialIdentityId = generateStandardId();
       const { user, username, password } = await createDefaultTenantUserWithPassword();

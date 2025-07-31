@@ -9,7 +9,6 @@ import {
 import { conditional, has, yes } from '@silverhand/essentials';
 import { object, record, string, unknown } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -159,52 +158,47 @@ export default function adminUserSocialRoutes<T extends ManagementApiRouter>(
     }
   );
 
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    router.get(
-      '/users/:userId/identities/:target',
-      koaGuard({
-        params: object({ userId: string(), target: string() }),
-        query: object({
-          includeTokenSecret: string().optional(),
-        }),
-        response: getUserSocialIdentityResponseGuard,
-        status: [200, 404],
+  router.get(
+    '/users/:userId/identities/:target',
+    koaGuard({
+      params: object({ userId: string(), target: string() }),
+      query: object({
+        includeTokenSecret: string().optional(),
       }),
-      async (ctx, next) => {
-        const {
-          params: { userId, target },
-          query: { includeTokenSecret },
-        } = ctx.guard;
+      response: getUserSocialIdentityResponseGuard,
+      status: [200, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId, target },
+        query: { includeTokenSecret },
+      } = ctx.guard;
 
-        const { identities } = await findUserById(userId);
+      const { identities } = await findUserById(userId);
 
-        if (!has(identities, target)) {
-          throw new RequestError({ code: 'user.identity_not_exist', status: 404 });
-        }
+      if (!has(identities, target)) {
+        throw new RequestError({ code: 'user.identity_not_exist', status: 404 });
+      }
 
-        if (!yes(includeTokenSecret)) {
-          ctx.body = {
-            identity: identities[target],
-          };
-          return next();
-        }
-
-        const secret = await secretQueries.findSocialTokenSetSecretByUserIdAndTarget(
-          userId,
-          target
-        );
-
+      if (!yes(includeTokenSecret)) {
         ctx.body = {
           identity: identities[target],
-          ...conditional(
-            secret && {
-              tokenSecret: desensitizeTokenSetSecret(secret),
-            }
-          ),
         };
-
         return next();
       }
-    );
-  }
+
+      const secret = await secretQueries.findSocialTokenSetSecretByUserIdAndTarget(userId, target);
+
+      ctx.body = {
+        identity: identities[target],
+        ...conditional(
+          secret && {
+            tokenSecret: desensitizeTokenSetSecret(secret),
+          }
+        ),
+      };
+
+      return next();
+    }
+  );
 }

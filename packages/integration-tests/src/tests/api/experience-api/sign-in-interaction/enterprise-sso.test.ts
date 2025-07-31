@@ -9,7 +9,6 @@ import {
 } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { SsoConnectorApi } from '#src/api/sso-connector.js';
-import { isDevFeaturesEnabled } from '#src/constants.js';
 import { initExperienceClient } from '#src/helpers/client.js';
 import { setEmailConnector, setSmsConnector } from '#src/helpers/connector.js';
 import { signInWithEnterpriseSso } from '#src/helpers/experience/index.js';
@@ -37,9 +36,10 @@ describe('enterprise sso sign-in and sign-up', () => {
     scope: 'openid',
     expires_in: 3600,
   };
+  const ENABLE_TOKEN_STORAGE = true;
 
   beforeAll(async () => {
-    await ssoConnectorApi.createMockOidcConnector([domain], undefined, isDevFeaturesEnabled);
+    await ssoConnectorApi.createMockOidcConnector([domain], undefined, ENABLE_TOKEN_STORAGE);
     await updateSignInExperience({
       singleSignOnEnabled: true,
       signInMode: SignInMode.SignInAndRegister,
@@ -70,17 +70,15 @@ describe('enterprise sso sign-in and sign-up', () => {
     const { primaryEmail } = await getUser(userId);
     expect(primaryEmail).toBe(email);
 
-    if (isDevFeaturesEnabled) {
-      const { ssoIdentity, tokenSecret } = await getUserSsoIdentity(
-        userId,
-        ssoConnectorApi.firstConnectorId
-      );
+    const { ssoIdentity, tokenSecret } = await getUserSsoIdentity(
+      userId,
+      ssoConnectorApi.firstConnectorId
+    );
 
-      expect(ssoIdentity.identityId).toBe(enterpriseSsoIdentityId);
-      expect(tokenSecret?.identityId).toBe(enterpriseSsoIdentityId);
-      expect(tokenSecret?.ssoConnectorId).toBe(ssoConnectorApi.firstConnectorId);
-      expect(tokenSecret?.metadata.scope).toBe(mockTokenResponse.scope);
-    }
+    expect(ssoIdentity.identityId).toBe(enterpriseSsoIdentityId);
+    expect(tokenSecret?.identityId).toBe(enterpriseSsoIdentityId);
+    expect(tokenSecret?.ssoConnectorId).toBe(ssoConnectorApi.firstConnectorId);
+    expect(tokenSecret?.metadata.scope).toBe(mockTokenResponse.scope);
 
     await signInWithEnterpriseSso(ssoConnectorApi.firstConnectorId, {
       sub: enterpriseSsoIdentityId,
@@ -97,23 +95,22 @@ describe('enterprise sso sign-in and sign-up', () => {
     expect(name).toBe('John Doe');
 
     // Should update the token set
-    if (isDevFeaturesEnabled) {
-      const { tokenSecret } = await getUserSsoIdentity(userId, ssoConnectorApi.firstConnectorId);
-      expect(tokenSecret?.metadata.scope).toBe('openid profile email');
-    }
+    const { tokenSecret: updatedTokenSecret } = await getUserSsoIdentity(
+      userId,
+      ssoConnectorApi.firstConnectorId
+    );
+    expect(updatedTokenSecret?.metadata.scope).toBe('openid profile email');
 
     // Should delete the token set when the connector token storage is disabled
-    if (isDevFeaturesEnabled) {
-      await ssoConnectorApi.update(ssoConnectorApi.firstConnectorId, {
-        enableTokenStorage: false,
-      });
+    await ssoConnectorApi.update(ssoConnectorApi.firstConnectorId, {
+      enableTokenStorage: false,
+    });
 
-      const { tokenSecret: updatedTokenSecret } = await getUserSsoIdentity(
-        userId,
-        ssoConnectorApi.firstConnectorId
-      );
-      expect(updatedTokenSecret).toBeUndefined();
-    }
+    const { tokenSecret: deletedTokenSecret } = await getUserSsoIdentity(
+      userId,
+      ssoConnectorApi.firstConnectorId
+    );
+    expect(deletedTokenSecret).toBeUndefined();
 
     await deleteUser(userId);
   });

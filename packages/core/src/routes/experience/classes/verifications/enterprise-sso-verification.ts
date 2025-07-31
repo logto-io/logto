@@ -14,7 +14,6 @@ import {
 import { generateStandardId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import {
@@ -221,10 +220,6 @@ export class EnterpriseSsoVerification
   }
 
   getTokenSetSecret(): EnterpriseSsoConnectorTokenSetSecret | undefined {
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
-    }
-
     // Not verified or token set not found
     if (!this.enterpriseSsoUserInfo || !this.issuer || !this.encryptedTokenSet) {
       return;

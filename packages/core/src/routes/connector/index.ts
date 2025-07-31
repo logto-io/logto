@@ -15,7 +15,6 @@ import { buildExtraInfo } from '#src/utils/connectors/extra-information.js';
 import { loadConnectorFactories, transpileLogtoConnector } from '#src/utils/connectors/index.js';
 import { checkSocialConnectorTargetAndPlatformUniqueness } from '#src/utils/connectors/platform.js';
 
-import { EnvSet } from '../../env-set/index.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 import connectorAuthorizationUriRoutes from './authorization-uri.js';
@@ -138,12 +137,6 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
       }
 
       if (enableTokenStorage) {
-        // TODO: remove this check once the feature is enabled in production.
-        assertThat(
-          EnvSet.values.isDevFeaturesEnabled,
-          new RequestError('request.feature_not_supported')
-        );
-
         assertThat(
           connectorFactory.type === ConnectorType.Social &&
             connectorFactory.metadata.isTokenStorageSupported,
@@ -290,12 +283,6 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
       }
 
       if (enableTokenStorage) {
-        // TODO: remove this check once the feature is enabled in production.
-        assertThat(
-          EnvSet.values.isDevFeaturesEnabled,
-          new RequestError('request.feature_not_supported')
-        );
-
         assertThat(
           type === ConnectorType.Social && originalMetadata.isTokenStorageSupported,
           new RequestError({
@@ -310,8 +297,6 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
       }
 
       if (
-        // TODO: remove this check once the feature is enabled in production.
-        EnvSet.values.isDevFeaturesEnabled &&
         type === ConnectorType.Social &&
         originalMetadata.isTokenStorageSupported &&
         enableTokenStorage === false

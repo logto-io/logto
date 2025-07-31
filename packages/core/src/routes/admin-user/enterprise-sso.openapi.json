@@ -4,7 +4,6 @@
       "get": {
         "summary": "Retrieve a user's enterprise SSO identity and associated token secret (if token storage is enabled).",
         "description": "This API retrieves the user's enterprise SSO identity and associated token set record from the Logto Secret Vault. The token set will only be available if token storage is enabled for the corresponding SSO connector.",
-        "tags": ["Dev feature"],
         "parameters": [
           {
             "in": "query",
@@ -40,7 +39,6 @@
       "get": {
         "summary": "Retrieve social identities, enterprise SSO identities and associated token secret (if token storage is enabled) for a user.",
         "description": "This API retrieves all identities (social and enterprise SSO) for a user, along with their associated token set records from the Logto Secret Vault. The token sets will only be available if token storage is enabled for the corresponding identity connector.",
-        "tags": ["Dev feature"],
         "parameters": [
           {
             "in": "query",
