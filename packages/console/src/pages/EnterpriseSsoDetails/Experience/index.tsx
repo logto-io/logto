@@ -18,7 +18,6 @@ import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { retrieveTokenStorage, spInitiatedSsoFlow } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Select from '@/ds-components/Select';
@@ -64,7 +63,7 @@ type Props = {
 export type FormType = Pick<SsoConnector, 'branding' | 'connectorName'> &
   DomainsFormType & {
     syncProfile: SyncProfileMode;
-    enableTokenStorage?: boolean;
+    enableTokenStorage: boolean;
   };
 
 const duplicateConnectorNameErrorCode = 'single_sign_on.duplicate_connector_name';
@@ -82,24 +81,23 @@ const dataToFormParser = (data: DataType) => {
     connectorName,
     domains: domains.map((domain) => ({ value: domain, id: generateStandardShortId() })),
     syncProfile: syncProfile ? SyncProfileMode.EachSignIn : SyncProfileMode.OnlyAtRegister,
-    ...conditional(
-      // TODO: Remove dev feature flag after the token storage feature is stable.
-      isDevFeaturesEnabled && providerType === SsoProviderType.OIDC && { enableTokenStorage }
-    ),
+    ...conditional(providerType === SsoProviderType.OIDC && { enableTokenStorage }),
   };
 };
 
 const formDataToSsoConnectorParser = (
   formData: FormType
-): Pick<SsoConnector, 'branding' | 'connectorName' | 'domains' | 'syncProfile'> => {
+): Pick<
+  SsoConnector,
+  'branding' | 'connectorName' | 'domains' | 'syncProfile' | 'enableTokenStorage'
+> => {
   const { branding, connectorName, domains, syncProfile, enableTokenStorage } = formData;
   return {
     branding,
     connectorName,
     domains: domains.map(({ value }) => value),
     syncProfile: syncProfile === SyncProfileMode.EachSignIn,
-    // TODO: Remove dev feature flag after the token storage feature is stable.
-    ...conditional(isDevFeaturesEnabled && { enableTokenStorage }),
+    enableTokenStorage,
   };
 };
 
@@ -260,7 +258,7 @@ function Experience({ data, isDeleted, onUpdated, isDarkModeEnabled }: Props) {
               )}
             />
           </FormField>
-          {isDevFeaturesEnabled && data.providerType === SsoProviderType.OIDC && (
+          {data.providerType === SsoProviderType.OIDC && (
             <FormField title="connectors.guide.enable_token_storage.title">
               <Controller
                 name="enableTokenStorage"

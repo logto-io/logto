@@ -15,7 +15,6 @@ import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { connectors, emailConnectors } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import useApi from '@/hooks/use-api';
 import { useConnectorFormConfigParser } from '@/hooks/use-connector-form-config-parser';
 import { SyncProfileMode } from '@/types/connector';
@@ -80,8 +79,7 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
         ? {
             config,
             syncProfile: syncProfile === SyncProfileMode.EachSignIn,
-            // TODO: Remove dev feature guard when token storage is ready for release
-            ...conditional(isDevFeaturesEnabled && { enableTokenStorage }),
+            enableTokenStorage,
           }
         : { config };
       const standardConnectorPayload = {
@@ -127,8 +125,7 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
           <FormCard
             title="connector_details.settings"
             description={
-              // TODO: Remove dev feature guard when token storage is ready for release
-              isDevFeaturesEnabled && isTokenStorageSupported
+              isTokenStorageSupported
                 ? 'connector_details.setting_description_with_token_storage_supported'
                 : 'connector_details.settings_description'
             }

@@ -75,7 +75,6 @@ export const defaultMetadata: ConnectorMetadata = {
       type: ConnectorConfigFormItemType.Switch,
       required: false,
       label: 'Refresh access token',
-      isDevFeature: true,
       defaultValue: false,
       description:
         'Enable Google `offline` access to request a refresh token, allowing your app to refresh the access token without user re-authorization. (Note: "consent" prompt is required)',
