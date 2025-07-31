@@ -98,7 +98,15 @@ describe('verifySocialIdentity', () => {
       ...createMockContext(),
       ...createMockLogContext(),
       // @ts-expect-error test mock context
-      cookies: { get: jest.fn().mockReturnValue('different_token') },
+      cookies: {
+        get: jest.fn().mockImplementation((key) => {
+          // For external Google One Tap, return the credential value for the logto cookie
+          if (key === '_logto_google_one_tap_credential') {
+            return 'credential';
+          }
+          return 'different_token';
+        }),
+      },
     };
 
     getConnector.mockResolvedValueOnce({

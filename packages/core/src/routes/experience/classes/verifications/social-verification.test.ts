@@ -123,7 +123,13 @@ describe('SocialVerification', () => {
         ...createMockContext(),
         ...createMockLogContext(),
         cookies: {
-          get: jest.fn().mockReturnValue('different_token'),
+          get: jest.fn().mockImplementation((key) => {
+            // For external Google One Tap, return the credential value for the logto cookie
+            if (key === '_logto_google_one_tap_credential') {
+              return 'credential';
+            }
+            return 'different_token';
+          }),
           set: jest.fn(),
         } as unknown as Cookies,
       };
@@ -209,7 +215,13 @@ describe('SocialVerification', () => {
         ...createMockContext(),
         ...createMockLogContext(),
         cookies: {
-          get: jest.fn().mockReturnValue('different_token'),
+          get: jest.fn().mockImplementation((key) => {
+            // For external Google One Tap, return the credential value for the logto cookie
+            if (key === '_logto_google_one_tap_credential') {
+              return 'external_credential';
+            }
+            return 'different_token';
+          }),
           set: jest.fn(),
         } as unknown as Cookies,
       };
