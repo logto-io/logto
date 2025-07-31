@@ -219,8 +219,13 @@ export type GoogleConnectorConfig = {
 };
 
 /**
- * Check if the data is from Google One Tap.
+ * Checks if the given social provider data is from Google One Tap.
  *
+ * Google One Tap data can come from:
+ * 1. Logto's built-in Google One Tap button (sign-in experience).
+ * 2. An external Google One Tap button (added by the application itself).
+ *
+ * To check specifically for external One Tap, use `isExternalGoogleOneTap`.
  * @param data - The data from the social provider.
  * @returns Whether the data is from Google One Tap.
  */
@@ -229,12 +234,11 @@ export const isGoogleOneTap = (data: Record<string, unknown>) => {
 };
 
 /**
- * Check if the data is from external Google One Tap.
+ * Checks if the given social provider data is from an external Google One Tap button
+ * (not Logto's sign-in experience).
  *
- * @remarks
- * External Google One Tap is a feature that allows users to sign in with Google without using the
- * Logto Google One Tap button. It is used when the user is not on the Logto Console sign in page
- * (e.g. on Logto docs site, or Logto blog site, official Logto website, etc.).
+ * External Google One Tap data does not include a CSRF token, so different handling
+ * and security measures are required.
  *
  * @param data - The data from the social provider.
  * @returns Whether the data is from external Google One Tap.
