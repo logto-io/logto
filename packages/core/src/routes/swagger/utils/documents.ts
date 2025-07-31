@@ -66,7 +66,6 @@ const additionalTags = Object.freeze(
     'SAML applications auth flow',
     'One-time tokens',
     'Captcha provider',
-    EnvSet.values.isDevFeaturesEnabled && 'Google One Tap',
     EnvSet.values.isDevFeaturesEnabled && 'Custom profile fields'
   )
 );
