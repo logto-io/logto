@@ -151,16 +151,10 @@ After a user links their GitHub account, admins can manage that connection in th
 
 **Note**: GitHub's access token response does not include the specific scope information, so Logto cannot directly display the list of permissions granted by the user. However, as long as the user has consented to the requested scopes during authorization, your application will have the corresponding permissions when accessing the GitHub API.
 
-## Reference \{#reference}
+## Reference
 
-<Url href="https://docs.github.com/en/developers/apps/getting-started-with-apps/about-apps">
-  GitHub Developer Documentation - About Apps
-</Url>
+[GitHub Developer Documentation - About Apps](https://docs.github.com/en/developers/apps/getting-started-with-apps/about-apps)
 
-<Url href="https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app">
-  GitHub Developer Documentation - Creating an OAuth App
-</Url>
+[GitHub Developer Documentation - Creating an OAuth App](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app)
 
-<Url href="https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/scopes-for-oauth-apps">
-  GitHub OAuth App Scopes Documentation
-</Url>
+[GitHub OAuth App Scopes Documentation](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/scopes-for-oauth-apps)

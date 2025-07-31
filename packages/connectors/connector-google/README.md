@@ -204,14 +204,10 @@ After a user links their Google account, admins can manage that connection in th
 2. Under **Social connections**, locate the Google item and click **Manage**.
 3. On this page, admins can manage the user's Google connection, see all profile information granted and synced from their Google account, and check the [access token status](https://docs.logto.io/secret-vault/federated-token-set#token-storage-status).
 
-## Reference \{#reference}
+## Reference
 
-<Url href="https://developers.google.com/identity/protocols/oauth2/openid-connect#appsetup">
-  Google Identity: Setting up OAuth 2.0
-</Url>
+[Google Identity: Setting up OAuth 2.0](https://developers.google.com/identity/protocols/oauth2/openid-connect#appsetup)
 
-<Url href="https://developers.google.com/identity/gsi/web/guides/overview">
-  Google Identity Services (One Tap)
-</Url>
+[Google Identity Services (One Tap)](https://developers.google.com/identity/gsi/web/guides/overview)
 
-<Url href="https://console.cloud.google.com/">Google Cloud Console</Url>
+[Google Cloud Console](https://console.cloud.google.com/)

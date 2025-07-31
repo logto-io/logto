@@ -150,6 +150,6 @@ After a user links their Facebook account, admins can manage that connection in 
 
 ## Reference
 
-<Url href="https://developers.facebook.com/docs/">Facebook for Developers - Documentation</Url>
+[Facebook for Developers - Documentation](https://developers.facebook.com/docs/)
 
-<Url href="https://developers.facebook.com/docs/facebook-login">Facebook Login Documentation</Url>
+[Facebook Login Documentation](https://developers.facebook.com/docs/facebook-login)
