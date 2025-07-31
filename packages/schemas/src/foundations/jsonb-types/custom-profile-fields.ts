@@ -17,7 +17,7 @@ export enum CustomProfileFieldType {
 export const customProfileFieldTypeGuard = z.nativeEnum(CustomProfileFieldType);
 
 export const fieldOptionGuard = z.object({
-  label: z.string(),
+  label: z.string().optional(),
   value: z.string(),
 });
 
