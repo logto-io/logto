@@ -5,7 +5,7 @@
 
 feat: introduce Logto Secret Vault and federated token set storage
 
-This update introduces the new [Secret Vault](https://docs.logto.io/secret-vault/) feature in Logto.
+This update introduces the new [Secret vault](https://docs.logto.io/secret-vault/) feature in Logto.
 
 The Secret Vault is designed to securely store sensitive user data — such as access tokens, API keys, passcodes, and other confidential information. These secrets are typically used to access third-party services on behalf of users, making secure storage essential.
 
