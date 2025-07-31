@@ -218,15 +218,29 @@ export type GoogleConnectorConfig = {
   offlineAccess?: boolean;
 };
 
+/**
+ * Check if the data is from Google One Tap.
+ *
+ * @param data - The data from the social provider.
+ * @returns Whether the data is from Google One Tap.
+ */
 export const isGoogleOneTap = (data: Record<string, unknown>) => {
   return Boolean(data[GoogleConnector.oneTapParams.credential]);
 };
 
+/**
+ * Check if the data is from external Google One Tap.
+ *
+ * @remarks
+ * External Google One Tap is a feature that allows users to sign in with Google without using the
+ * Logto Google One Tap button. It is used when the user is not on the Logto Console sign in page
+ * (e.g. on Logto docs site, or Logto blog site, official Logto website, etc.).
+ *
+ * @param data - The data from the social provider.
+ * @returns Whether the data is from external Google One Tap.
+ */
 export const isExternalGoogleOneTap = (data: Record<string, unknown>) => {
-  return (
-    Boolean(data[GoogleConnector.oneTapParams.credential]) &&
-    !data[GoogleConnector.oneTapParams.csrfToken]
-  );
+  return isGoogleOneTap(data) && !data[GoogleConnector.oneTapParams.csrfToken];
 };
 
 export const logtoGoogleOneTapCookieKey = '_logto_google_one_tap_credential';
