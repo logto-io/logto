@@ -128,7 +128,7 @@ export const useSieMethods = (): UseSieMethodsReturnType => {
       experienceSettings?.socialConnectors,
       experienceSettings?.ssoConnectors,
       experienceSettings?.signInMode,
-      experienceSettings?.forgotPassword,
+      experienceSettings?.forgotPasswordMethods,
       experienceSettings?.customContent,
       experienceSettings?.singleSignOnEnabled,
       passwordRequiredForSignUp,

@@ -29,6 +29,9 @@ const hasSignInMethodsChanged = (before: SignInMethod[], after: SignInMethod[]) 
 const hasSocialTargetsChanged = (before: string[], after: string[]) =>
   Object.keys(diff(before.slice().sort(), after.slice().sort())).length > 0;
 
+const hasForgotPasswordMethodsChanged = (before: string[], after: string[]) =>
+  Object.keys(diff(before.slice().sort(), after.slice().sort())).length > 0;
+
 export const hasSignUpAndSignInConfigChanged = (
   before: SignInExperiencePageManagedData,
   after: SignInExperiencePageManagedData
@@ -39,7 +42,8 @@ export const hasSignUpAndSignInConfigChanged = (
     !hasSocialTargetsChanged(
       before.socialSignInConnectorTargets,
       after.socialSignInConnectorTargets
-    )
+    ) &&
+    !hasForgotPasswordMethodsChanged(before.forgotPasswordMethods, after.forgotPasswordMethods)
   );
 };
 
@@ -58,7 +62,7 @@ export const getSignUpAndSignInErrorCount = (
   errors: FieldErrorsImpl<DeepRequired<SignInExperienceForm>>,
   formData: SignInExperienceForm
 ) => {
-  const { signUp, signIn } = errors;
+  const { signUp, signIn, forgotPasswordMethods } = errors;
 
   const signUpIdentifiersError = signUp?.identifiers;
   const signUpErrorCount = Array.isArray(signUpIdentifiersError)
@@ -71,7 +75,9 @@ export const getSignUpAndSignInErrorCount = (
     ? signInMethodErrors.filter(Boolean).length
     : 0;
 
-  return signUpErrorCount + signInMethodErrorCount;
+  const forgotPasswordMethodsErrorCount = forgotPasswordMethods ? 1 : 0;
+
+  return signUpErrorCount + signInMethodErrorCount + forgotPasswordMethodsErrorCount;
 };
 
 export const getContentErrorCount = (
