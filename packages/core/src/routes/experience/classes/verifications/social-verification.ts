@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import {
   type ConnectorSession,
   type SocialUserInfo,
@@ -463,3 +464,4 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     );
   }
 }
+/* eslint-enable max-lines */
