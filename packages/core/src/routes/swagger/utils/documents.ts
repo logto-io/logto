@@ -52,8 +52,7 @@ const managementApiIdentifiableEntityNames = Object.freeze(
     'saml-application',
     'secret',
     'email-template',
-    'one-time-token',
-    EnvSet.values.isDevFeaturesEnabled && 'google-one-tap'
+    'one-time-token'
   )
 );
 
