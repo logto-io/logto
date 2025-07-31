@@ -32,12 +32,12 @@ function AppRoutes() {
                 path={GlobalAnonymousRoute.OneTimeTokenLanding}
                 element={<OneTimeTokenLanding />}
               />
-              <Route
-                path={GlobalAnonymousRoute.ExternalGoogleOneTapLanding}
-                element={<ExternalGoogleOneTapLanding />}
-              />
             </>
           )}
+          <Route
+            path={GlobalAnonymousRoute.ExternalGoogleOneTapLanding}
+            element={<ExternalGoogleOneTapLanding />}
+          />
           <Route element={<ProtectedRoutes />}>
             <Route
               path={`${GlobalRoute.AcceptInvitation}/:invitationId`}
