@@ -2,6 +2,7 @@ import {
   AlternativeSignUpIdentifier,
   SignInIdentifier,
   type SignUpIdentifier,
+  type SignInExperience,
 } from '@logto/schemas';
 import { t } from 'i18next';
 import { useCallback, useMemo } from 'react';
@@ -29,7 +30,11 @@ const emailOrPhoneOption = {
 
 const signUpIdentifierOptions = [...signInIdentifierOptions, emailOrPhoneOption];
 
-function SignUpIdentifiersEditBox() {
+type Props = {
+  readonly signInExperience: SignInExperience;
+};
+
+function SignUpIdentifiersEditBox({ signInExperience }: Props) {
   const {
     control,
     getValues,
@@ -82,13 +87,17 @@ function SignUpIdentifiersEditBox() {
 
       setValue(
         'signIn.methods',
-        signInMethods.concat(newSignInMethods.map((identifier) => createSignInMethod(identifier))),
+        signInMethods.concat(
+          newSignInMethods.map((identifier) =>
+            createSignInMethod(identifier, signInExperience.mfa.factors)
+          )
+        ),
         {
           shouldDirty: true,
         }
       );
     },
-    [getValues, setValue]
+    [getValues, setValue, signInExperience.mfa.factors]
   );
 
   const onAppendSignUpIdentifier = useCallback(

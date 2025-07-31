@@ -169,7 +169,12 @@ describe('PATCH /sign-in-exp', () => {
 
     expect(validateLanguageInfo).toHaveBeenCalledWith(mockLanguageInfo);
     expect(validateSignUp).toHaveBeenCalledWith(mockSignUp, logtoConnectors);
-    expect(validateSignIn).toHaveBeenCalledWith(mockSignIn, mockSignUp, logtoConnectors);
+    expect(validateSignIn).toHaveBeenCalledWith(
+      mockSignIn,
+      mockSignUp,
+      logtoConnectors,
+      mockSignInExperience.mfa
+    );
 
     expect(response).toMatchObject({
       status: 200,

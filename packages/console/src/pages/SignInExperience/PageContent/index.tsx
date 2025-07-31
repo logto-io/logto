@@ -146,7 +146,7 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
           <FormProvider {...methods}>
             <form>
               <Branding isActive={tab === SignInExperienceTab.Branding} />
-              <SignUpAndSignIn isActive={tab === SignInExperienceTab.SignUpAndSignIn} />
+              <SignUpAndSignIn isActive={tab === SignInExperienceTab.SignUpAndSignIn} data={data} />
               {isDevFeaturesEnabled && (
                 <CollectUserProfile isActive={tab === SignInExperienceTab.CollectUserProfile} />
               )}

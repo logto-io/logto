@@ -21,6 +21,7 @@ type Props = {
   readonly signInMethod: SignInMethod;
   readonly isPasswordCheckable: boolean;
   readonly isVerificationCodeCheckable: boolean;
+  readonly verificationCodeTooltip?: string;
   readonly isDeletable: boolean;
   readonly requiredConnectors: ConnectorType[];
   readonly hasError?: boolean;
@@ -37,6 +38,7 @@ function SignInMethodItem({
   signInMethod: { identifier, password, verificationCode, isPasswordPrimary },
   isPasswordCheckable,
   isVerificationCodeCheckable,
+  verificationCodeTooltip,
   isDeletable,
   requiredConnectors,
   hasError,
@@ -83,10 +85,7 @@ function SignInMethodItem({
                   label={t('sign_in_exp.sign_up_and_sign_in.sign_in.verification_code_auth')}
                   checked={verificationCode}
                   disabled={!isVerificationCodeCheckable}
-                  tooltip={conditional(
-                    !isVerificationCodeCheckable &&
-                      t('sign_in_exp.sign_up_and_sign_in.tip.verification_code_auth')
-                  )}
+                  tooltip={verificationCodeTooltip}
                   onChange={(checked) => {
                     onVerificationStateChange('verificationCode', checked);
                   }}

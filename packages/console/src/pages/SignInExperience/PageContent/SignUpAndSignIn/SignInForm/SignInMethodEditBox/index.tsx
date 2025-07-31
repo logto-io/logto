@@ -1,4 +1,9 @@
-import { AlternativeSignUpIdentifier, SignInIdentifier } from '@logto/schemas';
+import {
+  AlternativeSignUpIdentifier,
+  SignInIdentifier,
+  MfaFactor,
+  type SignInExperience,
+} from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useCallback } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
@@ -16,7 +21,11 @@ import AddButton from './AddButton';
 import SignInMethodItem from './SignInMethodItem';
 import styles from './index.module.scss';
 
-function SignInMethodEditBox() {
+type Props = {
+  readonly signInExperience: SignInExperience;
+};
+
+function SignInMethodEditBox({ signInExperience }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     control,
@@ -58,6 +67,17 @@ function SignInMethodEditBox() {
         return false;
       }
 
+      // Check if the identifier is already used in MFA factors
+      const mfaFactors = signInExperience.mfa.factors;
+      if (
+        (identifier === SignInIdentifier.Email &&
+          mfaFactors.includes(MfaFactor.EmailVerificationCode)) ||
+        (identifier === SignInIdentifier.Phone &&
+          mfaFactors.includes(MfaFactor.PhoneVerificationCode))
+      ) {
+        return false;
+      }
+
       if (isSignUpPasswordRequired) {
         return true;
       }
@@ -73,7 +93,32 @@ function SignInMethodEditBox() {
 
       return !signUpVerificationRequired;
     },
-    [isSignUpPasswordRequired, signUpIdentifiers]
+    [isSignUpPasswordRequired, signUpIdentifiers, signInExperience.mfa.factors]
+  );
+
+  const getVerificationCodeTooltip = useCallback(
+    (identifier: SignInIdentifier) => {
+      // Check if the identifier is already used in MFA factors
+      const mfaFactors = signInExperience.mfa.factors;
+      if (
+        identifier === SignInIdentifier.Email &&
+        mfaFactors.includes(MfaFactor.EmailVerificationCode)
+      ) {
+        return t('sign_in_exp.sign_up_and_sign_in.tip.email_mfa_enabled');
+      }
+      if (
+        identifier === SignInIdentifier.Phone &&
+        mfaFactors.includes(MfaFactor.PhoneVerificationCode)
+      ) {
+        return t('sign_in_exp.sign_up_and_sign_in.tip.phone_mfa_enabled');
+      }
+
+      // Return the existing tooltip for sign-up required case
+      if (!isVerificationCodeCheckable(identifier)) {
+        return t('sign_in_exp.sign_up_and_sign_in.tip.verification_code_auth');
+      }
+    },
+    [isVerificationCodeCheckable, t, signInExperience.mfa.factors]
   );
 
   return (
@@ -127,6 +172,7 @@ function SignInMethodEditBox() {
                     signInMethod={value}
                     isPasswordCheckable={identifier !== SignInIdentifier.Username}
                     isVerificationCodeCheckable={isVerificationCodeCheckable(value.identifier)}
+                    verificationCodeTooltip={getVerificationCodeTooltip(value.identifier)}
                     requiredConnectors={requiredConnectors}
                     hasError={Boolean(error)}
                     errorMessage={error?.message}
@@ -153,7 +199,7 @@ function SignInMethodEditBox() {
         options={signInIdentifierOptions}
         hasSelectedIdentifiers={fields.length > 0}
         onSelected={(identifier) => {
-          append(createSignInMethod(identifier));
+          append(createSignInMethod(identifier, signInExperience.mfa.factors));
           revalidate();
         }}
       />

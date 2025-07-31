@@ -1,3 +1,4 @@
+import type { SignInExperience } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
 import Card from '@/ds-components/Card';
@@ -8,7 +9,11 @@ import FormSectionTitle from '../../components/FormSectionTitle';
 
 import SignInMethodEditBox from './SignInMethodEditBox';
 
-function SignInForm() {
+type Props = {
+  readonly signInExperience: SignInExperience;
+};
+
+function SignInForm({ signInExperience }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -18,7 +23,7 @@ function SignInForm() {
         <FormFieldDescription>
           {t('sign_in_exp.sign_up_and_sign_in.sign_in.description')}
         </FormFieldDescription>
-        <SignInMethodEditBox />
+        <SignInMethodEditBox signInExperience={signInExperience} />
       </FormField>
     </Card>
   );

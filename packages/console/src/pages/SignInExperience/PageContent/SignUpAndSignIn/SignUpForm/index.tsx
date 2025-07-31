@@ -1,4 +1,4 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier, type SignInExperience } from '@logto/schemas';
 import { useEffect, useMemo } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -15,7 +15,11 @@ import SignUpIdentifiersEditBox from './SignUpIdentifiersEditBox';
 import styles from './index.module.scss';
 import useSignUpPasswordListeners from './use-sign-up-password-listeners';
 
-function SignUpForm() {
+type Props = {
+  readonly signInExperience: SignInExperience;
+};
+
+function SignUpForm({ signInExperience }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const { control, setValue } = useFormContext<SignInExperienceForm>();
@@ -67,7 +71,7 @@ function SignUpForm() {
         <FormFieldDescription>
           {t('sign_in_exp.sign_up_and_sign_in.sign_up.identifier_description')}
         </FormFieldDescription>
-        <SignUpIdentifiersEditBox />
+        <SignUpIdentifiersEditBox signInExperience={signInExperience} />
       </FormField>
       {showAuthenticationFields && (
         <FormField title="sign_in_exp.sign_up_and_sign_in.sign_up.sign_up_authentication">
