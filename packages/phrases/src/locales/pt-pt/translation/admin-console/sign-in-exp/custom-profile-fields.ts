@@ -75,12 +75,12 @@ const custom_profile_fields = {
     regex_tip: 'Defina uma expressão regular para validar a entrada.',
     regex_placeholder: '^[a-zA-Z0-9]+$',
     date_format: 'Formato da data',
-    date_format_us: 'Estados Unidos (MM/dd/aaaa)',
-    date_format_uk: 'Reino Unido e Europa (dd/MM/aaaa)',
-    date_format_iso: 'Padrão internacional (aaaa-MM-dd)',
+    date_format_us: 'Estados Unidos (MM/dd/yyyy)',
+    date_format_uk: 'Reino Unido e Europa (dd/MM/yyyy)',
+    date_format_iso: 'Padrão internacional (yyyy-MM-dd)',
     custom_date_format: 'Formato de data personalizado',
     custom_date_format_placeholder:
-      'Introduza o formato de data personalizado. Por exemplo, "MM-dd-aaaa"',
+      'Introduza o formato de data personalizado. Por exemplo, "MM-dd-yyyy"',
     custom_date_format_tip:
       'Consulte a documentação <a>date-fns</a> para tokens de formatação válidos.',
     input_length: 'Comprimento da entrada',
