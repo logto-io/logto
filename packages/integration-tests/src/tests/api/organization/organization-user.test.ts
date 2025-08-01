@@ -14,9 +14,14 @@ describe('organization user APIs', () => {
 
     beforeAll(async () => {
       const organization = await organizationApi.create({ name: 'test' });
-      const createdUsers = await Promise.all(
-        Array.from({ length: 30 }).map(async () => userApi.create({ username: generateTestName() }))
-      );
+      // Create users sequentially to avoid database connection pool exhaustion
+      const createdUsers = [];
+      for (const _index of Array.from({ length: 30 })) {
+        // eslint-disable-next-line no-await-in-loop
+        const user = await userApi.create({ username: generateTestName() });
+        // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+        createdUsers.push(user);
+      }
       await organizationApi.addUsers(
         organization.id,
         createdUsers.map((user) => user.id)
