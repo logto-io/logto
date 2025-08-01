@@ -26,10 +26,10 @@ export type BaseProfileField = {
 const baseProfileFieldGuard = z.object({
   name: z.string(),
   type: customProfileFieldTypeGuard,
-  label: z.string(),
+  label: z.string().min(1).optional(),
   description: z.string().optional(),
   required: z.boolean(),
-});
+}) satisfies ToZodObject<BaseProfileField>;
 
 export type TextProfileField = BaseProfileField & {
   type: CustomProfileFieldType.Text;
@@ -160,7 +160,7 @@ export type AddressProfileField = BaseProfileField & {
       enabled: boolean;
       name: keyof Exclude<UserProfile['address'], undefined>;
       type: CustomProfileFieldType;
-      label: string;
+      label?: string;
       description?: string;
       required: boolean;
       config?: {
@@ -195,7 +195,7 @@ export type FullnameProfileField = BaseProfileField & {
       enabled: boolean;
       name: keyof Pick<UserProfile, 'givenName' | 'middleName' | 'familyName'>;
       type: CustomProfileFieldType;
-      label: string;
+      label?: string;
       description?: string;
       required: boolean;
       config?: {

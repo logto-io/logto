@@ -17,7 +17,11 @@ import TextInput from '@/ds-components/TextInput';
 import Textarea from '@/ds-components/Textarea';
 
 import { type ProfileFieldForm } from '../../CollectUserProfile/ProfileFieldDetails/types';
-import { isBuiltInCustomProfileFieldKey } from '../../CollectUserProfile/utils';
+import { useDataParser } from '../../CollectUserProfile/hooks';
+import {
+  isBuiltInAddressComponentKey,
+  isBuiltInCustomProfileFieldKey,
+} from '../../CollectUserProfile/utils';
 import CustomDataProfileNameField from '../CustomDataProfileNameField';
 import DateFormatSelector from '../DateFormatSelector';
 import RangedNumberInputs from '../RangedNumberInputs';
@@ -48,9 +52,12 @@ function ProfileFieldPartSubForm({ index }: Props) {
     formState: { errors },
   } = useFormContext<ProfileFieldForm>();
 
+  const { getDefaultLabel } = useDataParser();
+
   const name = watch(`${fieldPrefix}name`);
   const type = watch(`${fieldPrefix}type`);
-  const isBuiltInFieldName = isBuiltInCustomProfileFieldKey(name);
+  const isBuiltInAddressComponent = isBuiltInAddressComponentKey(name);
+  const isBuiltInFieldName = isBuiltInCustomProfileFieldKey(name) || isBuiltInAddressComponent;
   const formErrors = index === undefined ? errors : errors.parts?.[index];
 
   return (
@@ -59,9 +66,14 @@ function ProfileFieldPartSubForm({ index }: Props) {
         <Controller
           name={`${fieldPrefix}name`}
           control={control}
-          render={({ field: { onChange, value } }) => {
+          render={({ field: { value } }) => {
             const InputComponent = isBuiltInFieldName ? TextInput : CustomDataProfileNameField;
-            return <InputComponent disabled value={value} onChange={onChange} />;
+            return (
+              <InputComponent
+                disabled
+                value={isBuiltInAddressComponent ? `address.${value}` : value}
+              />
+            );
           }}
         />
       </FormField>
@@ -89,15 +101,31 @@ function ProfileFieldPartSubForm({ index }: Props) {
           }}
         />
       </FormField>
-      <FormField isRequired title="sign_in_exp.custom_profile_fields.details.label">
-        <TextInput
-          {...register(`${fieldPrefix}label`, {
-            required: t('errors.required_field_missing', {
-              field: t('sign_in_exp.custom_profile_fields.details.label'),
-            }),
-          })}
-          error={formErrors?.label?.message}
-          placeholder={t('sign_in_exp.custom_profile_fields.details.label_placeholder')}
+      <FormField
+        isRequired={!isBuiltInFieldName}
+        title="sign_in_exp.custom_profile_fields.details.label"
+      >
+        <Controller
+          name={`${fieldPrefix}label`}
+          control={control}
+          rules={{
+            required:
+              !isBuiltInFieldName &&
+              t('errors.required_field_missing', {
+                field: t('sign_in_exp.custom_profile_fields.details.label'),
+              }),
+          }}
+          render={({ field: { value, onChange } }) => {
+            return (
+              <TextInput
+                disabled={isBuiltInFieldName}
+                error={formErrors?.label?.message}
+                placeholder={t('sign_in_exp.custom_profile_fields.details.label_placeholder')}
+                value={value || getDefaultLabel(name)}
+                onChange={onChange}
+              />
+            );
+          }}
         />
       </FormField>
       {type !== CustomProfileFieldType.Checkbox && (
