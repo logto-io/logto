@@ -11,6 +11,8 @@ const custom_profile_fields = {
     'Nome del campo non valido, sono consentite solo lettere o numeri, sensibili alle maiuscole.',
   name_conflict_sign_in_identifier:
     'Nome del campo non valido. "{{name}}" è una chiave riservata di identificatore di accesso.',
+  name_conflict_built_in_prop:
+    'Nome del campo non valido. "{{name}}" è una proprietà riservata del profilo utente integrata.',
   name_conflict_custom_data:
     'Nome del campo non valido. "{{name}}" è una chiave riservata per i dati personalizzati.',
   name_required: 'Il nome del campo è obbligatorio.',

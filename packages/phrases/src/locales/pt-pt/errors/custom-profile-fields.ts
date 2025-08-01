@@ -13,6 +13,8 @@ const custom_profile_fields = {
     'Nome de campo inválido, apenas letras ou números são permitidos, diferencia maiúsculas de minúsculas.',
   name_conflict_sign_in_identifier:
     'Nome de campo inválido. "{{name}}" é uma chave reservada de identificador de início de sessão.',
+  name_conflict_built_in_prop:
+    'Nome de campo inválido. "{{name}}" é uma propriedade de perfil de utilizador integrada reservada.',
   name_conflict_custom_data:
     'Nome de campo inválido. "{{name}}" é uma chave reservada de dados personalizados.',
   name_required: 'O nome do campo é obrigatório.',

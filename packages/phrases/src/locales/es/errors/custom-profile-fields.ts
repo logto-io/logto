@@ -12,6 +12,8 @@ const custom_profile_fields = {
     'Nombre de campo no válido, solo se permiten letras o números, distingue entre mayúsculas y minúsculas.',
   name_conflict_sign_in_identifier:
     'Nombre de campo no válido. "{{name}}" es una clave reservada para el identificador de inicio de sesión.',
+  name_conflict_built_in_prop:
+    'Nombre de campo no válido. "{{name}}" es una propiedad de perfil de usuario integrada reservada.',
   name_conflict_custom_data:
     'Nombre de campo no válido. "{{name}}" es una clave reservada para datos personalizados.',
   name_required: 'El nombre del campo es obligatorio.',

@@ -9,6 +9,7 @@ const custom_profile_fields = {
   conflicted_sie_order: '登入體驗的欄位順序值衝突。',
   invalid_name: '欄位名稱無效，只允許字母或數字，區分大小寫。',
   name_conflict_sign_in_identifier: '欄位名稱無效。"{{name}}" 是保留的登入標識符鍵。',
+  name_conflict_built_in_prop: '欄位名稱無效。"{{name}}" 是保留的內建使用者設定檔屬性。',
   name_conflict_custom_data: '欄位名稱無效。"{{name}}" 是保留的自訂資料鍵。',
   name_required: '欄位名稱為必填項。',
 };
