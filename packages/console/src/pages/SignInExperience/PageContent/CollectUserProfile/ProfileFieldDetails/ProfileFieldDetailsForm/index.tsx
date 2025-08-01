@@ -72,13 +72,15 @@ function ProfileFieldDetailsForm({ data }: Props) {
       toast.success(
         t('sign_in_exp.custom_profile_fields.details.field_deleted', { name: data.name })
       );
-      await mutateGlobal(
-        'api/custom-profile-fields',
-        (currentData?: CustomProfileField[]) =>
-          currentData?.filter((field) => field.name !== data.name) ?? [],
-        { revalidate: false }
-      );
-      // Redirect to the list page after deletion
+      await Promise.all([
+        mutateGlobal(
+          'api/custom-profile-fields',
+          (currentData?: CustomProfileField[]) =>
+            currentData?.filter((field) => field.name !== data.name) ?? [],
+          { revalidate: false }
+        ),
+        mutateGlobal(`api/custom-profile-fields/${data.name}`, undefined, { revalidate: false }),
+      ]);
       navigate(collectUserProfilePathname, { replace: true });
     } finally {
       setIsDeleting(false);
@@ -97,12 +99,17 @@ function ProfileFieldDetailsForm({ data }: Props) {
         .json<CustomProfileField>();
 
       reset(parseResponseToFormData(result));
-      await mutateGlobal(
-        'api/custom-profile-fields',
-        (currentData?: CustomProfileField[]) =>
-          currentData?.map((field) => (field.name === formData.name ? result : field)) ?? [],
-        { revalidate: false }
-      );
+
+      await Promise.all([
+        mutateGlobal(
+          'api/custom-profile-fields',
+          (currentData?: CustomProfileField[]) =>
+            currentData?.map((field) => (field.name === formData.name ? result : field)) ?? [],
+          { revalidate: false }
+        ),
+        mutateGlobal(`api/custom-profile-fields/${formData.name}`),
+      ]);
+
       toast.success(t('general.saved'));
     })
   );
