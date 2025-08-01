@@ -19,7 +19,15 @@ type LegacyPassword = {
   encryptedPassword: string;
 };
 
+function isPbkdf2Algorithm(algorithm: string): boolean {
+  return algorithm === 'pbkdf2Sync' || algorithm === 'pbkdf2';
+}
+
 function isLegacyHashAlgorithm(algorithm: string): boolean {
+  if (isPbkdf2Algorithm(algorithm)) {
+    return true;
+  }
+
   try {
     crypto.createHash(algorithm);
     return true;
@@ -89,6 +97,23 @@ export const executeLegacyHash = async (
   // Replace @ with input password
   const resolvedArgs = args.map((arg) => (arg === '@' ? inputPassword : arg));
   const inputString = resolvedArgs.join('');
+
+  if (isPbkdf2Algorithm(algorithm)) {
+    const [salt, iterations, keylen, digest] = resolvedArgs;
+    if (!salt || !iterations || !keylen || !digest) {
+      throw new RequestError({ code: 'password.invalid_legacy_password_format' });
+    }
+
+    return crypto
+      .pbkdf2Sync(
+        inputPassword,
+        salt,
+        Number.parseInt(`${iterations}`, 10),
+        Number.parseInt(`${keylen}`, 10),
+        digest
+      )
+      .toString('hex');
+  }
 
   // Use `node:crypto` for hash calculation
   const hash = crypto.createHash(algorithm);
