@@ -1,5 +1,5 @@
 import type { LanguageTag } from '@logto/language-kit';
-import { Theme, ConnectorType } from '@logto/schemas';
+import { Theme } from '@logto/schemas';
 import type { ConnectorMetadata, ConnectorResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
@@ -69,18 +69,10 @@ function SignInExperiencePreview({
       []
     );
 
-    const hasEmailConnector = allConnectors.some(({ type }) => type === ConnectorType.Email);
-
-    const hasSmsConnector = allConnectors.some(({ type }) => type === ConnectorType.Sms);
-
     return {
       signInExperience: {
         ...signInExperience,
         socialConnectors,
-        forgotPassword: {
-          email: hasEmailConnector,
-          sms: hasSmsConnector,
-        },
       },
       language,
       mode,

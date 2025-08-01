@@ -1,6 +1,7 @@
 import { PasswordPolicyChecker, passwordPolicyGuard } from '@logto/core-kit';
 import {
   AlternativeSignUpIdentifier,
+  ForgotPasswordMethod,
   SignInIdentifier,
   SignInMode,
   type SignUpIdentifier,
@@ -32,7 +33,7 @@ type UseSieMethodsReturnType = {
   socialConnectors: SignInExperienceResponse['socialConnectors'];
   ssoConnectors: SignInExperienceResponse['ssoConnectors'];
   signInMode: SignInExperienceResponse['signInMode'] | undefined;
-  forgotPassword: SignInExperienceResponse['forgotPassword'] | undefined;
+  forgotPasswordMethods: SignInExperienceResponse['forgotPasswordMethods'] | undefined;
   customContent: SignInExperienceResponse['customContent'] | undefined;
   singleSignOnEnabled: boolean | undefined;
   /**
@@ -112,7 +113,7 @@ export const useSieMethods = (): UseSieMethodsReturnType => {
       socialConnectors: experienceSettings?.socialConnectors ?? [],
       ssoConnectors: experienceSettings?.ssoConnectors ?? [],
       signInMode: experienceSettings?.signInMode,
-      forgotPassword: experienceSettings?.forgotPassword,
+      forgotPasswordMethods: experienceSettings?.forgotPasswordMethods,
       customContent: experienceSettings?.customContent,
       singleSignOnEnabled: experienceSettings?.singleSignOnEnabled,
       passwordRequiredForSignUp,
@@ -127,7 +128,7 @@ export const useSieMethods = (): UseSieMethodsReturnType => {
       experienceSettings?.socialConnectors,
       experienceSettings?.ssoConnectors,
       experienceSettings?.signInMode,
-      experienceSettings?.forgotPassword,
+      experienceSettings?.forgotPasswordMethods,
       experienceSettings?.customContent,
       experienceSettings?.singleSignOnEnabled,
       passwordRequiredForSignUp,
@@ -175,15 +176,15 @@ export const usePasswordPolicy = () => {
 
 export const useForgotPasswordSettings = () => {
   const { experienceSettings } = useContext(PageContext);
-  const { forgotPassword } = experienceSettings ?? {};
+  const { forgotPasswordMethods } = experienceSettings ?? {};
 
   const enabledMethodSet = new Set<VerificationCodeIdentifier>();
 
-  if (forgotPassword?.email) {
+  if (forgotPasswordMethods?.includes(ForgotPasswordMethod.EmailVerificationCode)) {
     enabledMethodSet.add(SignInIdentifier.Email);
   }
 
-  if (forgotPassword?.phone) {
+  if (forgotPasswordMethods?.includes(ForgotPasswordMethod.PhoneVerificationCode)) {
     enabledMethodSet.add(SignInIdentifier.Phone);
   }
 
