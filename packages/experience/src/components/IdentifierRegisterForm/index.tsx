@@ -63,6 +63,10 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
+      if (isSubmitting) {
+        return;
+      }
+
       clearErrorMessage();
 
       void handleSubmit(async ({ identifier: { type, value } }) => {
@@ -92,6 +96,7 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
       agreeToTermsPolicy,
       clearErrorMessage,
       handleSubmit,
+      isSubmitting,
       navigateToSingleSignOn,
       onSubmit,
       setIdentifierInputValue,
