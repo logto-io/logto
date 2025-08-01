@@ -10,6 +10,8 @@ const custom_profile_fields = {
   invalid_name: 'اسم الحقل غير صالح ، يُسمح فقط بالأحرف أو الأرقام ، مع مراعاة حالة الأحرف.',
   name_conflict_sign_in_identifier:
     'اسم الحقل غير صالح. "{{name}}" هو مفتاح معرف تسجيل دخول محجوز.',
+  name_conflict_built_in_prop:
+    'اسم الحقل غير صالح. "{{name}}" هو خاصية ملف تعريف مستخدم مدمجة محجوزة.',
   name_conflict_custom_data: 'اسم الحقل غير صالح. "{{name}}" هو مفتاح بيانات مخصصة محجوز.',
   name_required: 'اسم الحقل مطلوب.',
 };

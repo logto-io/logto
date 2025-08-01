@@ -12,6 +12,8 @@ const custom_profile_fields = {
     'Ungültiger Feldname, nur Buchstaben oder Zahlen sind erlaubt, Groß- und Kleinschreibung beachten.',
   name_conflict_sign_in_identifier:
     'Ungültiger Feldname. "{{name}}" ist ein reservierter Schlüssel für die Anmeldung.',
+  name_conflict_built_in_prop:
+    'Ungültiger Feldname. "{{name}}" ist eine reservierte eingebaute Benutzerprofil-Eigenschaft.',
   name_conflict_custom_data:
     'Ungültiger Feldname. "{{name}}" ist ein reservierter Schlüssel für benutzerdefinierte Daten.',
   name_required: 'Feldname ist erforderlich.',

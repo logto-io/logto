@@ -23,6 +23,7 @@ import modalStyles from '@/scss/modal.module.scss';
 import { isPaidPlan } from '@/utils/subscription';
 
 import CustomDataProfileNameField from '../../components/CustomDataProfileNameField';
+import { userAvailableBuiltInFieldKeys } from '../consts';
 import { getInitialRequestPayloadByFieldName } from '../data-parser';
 
 import styles from './index.module.scss';
@@ -32,6 +33,7 @@ type Props = {
   readonly onClose?: (field?: CustomProfileField) => void;
 };
 
+const reservedBuiltInProfileFieldKeySet = new Set<string>(builtInCustomProfileFieldKeys);
 const reservedCustomDataKeySet = new Set<string>(reservedCustomDataKeys);
 
 function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
@@ -76,6 +78,13 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
       return false;
     }
 
+    if (reservedBuiltInProfileFieldKeySet.has(customDataFieldName)) {
+      setFieldNameInputError(
+        errorT('custom_profile_fields.name_conflict_built_in_prop', { name: customDataFieldName })
+      );
+      return false;
+    }
+
     if (reservedCustomDataKeySet.has(customDataFieldName)) {
       setFieldNameInputError(
         errorT('custom_profile_fields.name_conflict_custom_data', {
@@ -90,22 +99,13 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
 
   const builtInFields = useMemo(
     () =>
-      [
-        {
-          name: 'fullname',
-          label: t('profile.fields.fullname'),
-          description: t('profile.fields.fullname_description'),
-          isDisabled: existingFieldNames.includes('fullname'),
-        },
-        ...builtInCustomProfileFieldKeys.map((name) => ({
+      userAvailableBuiltInFieldKeys
+        .map((name) => ({
           name,
           label: t(`profile.fields.${name === 'address' ? 'address.formatted' : name}`),
           description: t(`profile.fields.${name}_description`),
-          isDisabled: existingFieldNames.includes(name),
-        })),
-      ]
-        .slice()
-        .sort((fieldA, fieldB) => fieldA.name.localeCompare(fieldB.name)),
+        }))
+        .filter(({ name }) => !existingFieldNames.includes(name)),
     [t, existingFieldNames]
   );
 
@@ -152,25 +152,29 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
         size="xlarge"
         onClose={onClose}
       >
-        <div className={styles.groupLabel}>
-          {t('sign_in_exp.custom_profile_fields.modal.built_in_properties')}
-        </div>
-        <RadioGroup
-          className={styles.group}
-          type="card"
-          name="fieldName"
-          value={selectedField}
-          onChange={setSelectedField}
-        >
-          {builtInFields.map(({ name, label, description, isDisabled }) => (
-            <Radio key={name} value={name} isDisabled={isDisabled}>
-              <div className={styles.item}>
-                <div className={styles.title}>{label}</div>
-                <div className={styles.description}>{description}</div>
-              </div>
-            </Radio>
-          ))}
-        </RadioGroup>
+        {builtInFields.length > 0 && (
+          <>
+            <div className={styles.groupLabel}>
+              {t('sign_in_exp.custom_profile_fields.modal.built_in_properties')}
+            </div>
+            <RadioGroup
+              className={styles.group}
+              type="card"
+              name="fieldName"
+              value={selectedField}
+              onChange={setSelectedField}
+            >
+              {builtInFields.map(({ name, label, description }) => (
+                <Radio key={name} value={name}>
+                  <div className={styles.item}>
+                    <div className={styles.title}>{label}</div>
+                    <div className={styles.description}>{description}</div>
+                  </div>
+                </Radio>
+              ))}
+            </RadioGroup>
+          </>
+        )}
         <div className={styles.groupLabel}>
           {t('sign_in_exp.custom_profile_fields.modal.custom_properties')}
         </div>
