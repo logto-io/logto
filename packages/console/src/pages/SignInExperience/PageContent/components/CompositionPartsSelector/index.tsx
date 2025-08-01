@@ -10,8 +10,8 @@ import IconButton from '@/ds-components/IconButton';
 import Select from '@/ds-components/Select';
 import { ToggleTip } from '@/ds-components/Tip';
 
-import { type ProfileFieldForm } from '../../CollectUserProfile/ProfileFieldDetails/types';
-import { useDataParser } from '../../CollectUserProfile/hooks';
+import { type ProfileFieldForm } from '../../CollectUserProfile/types';
+import useI18nFieldLabel from '../../CollectUserProfile/use-i18n-field-label';
 
 import styles from './index.module.scss';
 
@@ -30,7 +30,7 @@ function CompositionPartsSelector() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { control, watch } = useFormContext<ProfileFieldForm>();
 
-  const { getDefaultLabel } = useDataParser();
+  const getI18nLabel = useI18nFieldLabel();
   const type = watch('type');
 
   return (
@@ -94,7 +94,7 @@ function CompositionPartsSelector() {
                       ?.filter(({ name }) => name !== 'formatted')
                       .map(({ name, label }) => ({
                         value: name,
-                        title: <DangerousRaw>{label || getDefaultLabel(name)}</DangerousRaw>,
+                        title: <DangerousRaw>{label || getI18nLabel(name)}</DangerousRaw>,
                       })) ?? []
                   }
                   value={enabledParts?.map(({ name }) => name) ?? []}

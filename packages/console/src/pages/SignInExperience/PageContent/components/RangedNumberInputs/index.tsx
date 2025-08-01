@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import NumericInput from '@/ds-components/TextInput/NumericInput';
 
-import { type ProfileFieldForm } from '../../CollectUserProfile/ProfileFieldDetails/types';
+import { type ProfileFieldForm } from '../../CollectUserProfile/types';
 
 import styles from './index.module.scss';
 

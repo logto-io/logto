@@ -5,7 +5,7 @@ import {
   MissingProfile,
   SignInIdentifier,
   type SsoConnectorMetadata,
-  supportedDateFormat,
+  SupportedDateFormat,
   VerificationType,
 } from '@logto/schemas';
 import * as s from 'superstruct';
@@ -161,6 +161,8 @@ export const continueFlowStateGuard = s.object({
 export type InteractionFlowState = s.Infer<typeof continueFlowStateGuard>;
 
 export const extraProfileFieldNamesGuard = s.union([
+  s.literal('name'),
+  s.literal('avatar'),
   s.literal('givenName'),
   s.literal('familyName'),
   s.literal('middleName'),
@@ -193,7 +195,7 @@ export const addressFieldValueGuard = s.optional(
 
 const profileFieldTypeGuard = s.enums(Object.values(CustomProfileFieldType));
 
-const dateFormatEnumGuard = s.enums(Object.values(supportedDateFormat));
+const dateFormatEnumGuard = s.enums(Object.values(SupportedDateFormat));
 
 export const dateFieldConfigGuard = s.object({
   format: dateFormatEnumGuard,
@@ -213,7 +215,7 @@ const baseConfigPartGuard = s.object({
       maxLength: s.optional(s.number()),
       minValue: s.optional(s.number()),
       maxValue: s.optional(s.number()),
-      options: s.optional(s.array(s.object({ value: s.string(), label: s.string() }))),
+      options: s.optional(s.array(s.object({ value: s.string(), label: s.optional(s.string()) }))),
       format: s.optional(s.string()),
       customFormat: s.optional(s.string()),
     })

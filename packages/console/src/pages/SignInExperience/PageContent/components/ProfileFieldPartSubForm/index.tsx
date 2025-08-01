@@ -16,8 +16,8 @@ import Switch from '@/ds-components/Switch';
 import TextInput from '@/ds-components/TextInput';
 import Textarea from '@/ds-components/Textarea';
 
-import { type ProfileFieldForm } from '../../CollectUserProfile/ProfileFieldDetails/types';
-import { useDataParser } from '../../CollectUserProfile/hooks';
+import { type ProfileFieldForm } from '../../CollectUserProfile/types';
+import useI18nFieldLabel from '../../CollectUserProfile/use-i18n-field-label';
 import {
   isBuiltInAddressComponentKey,
   isBuiltInCustomProfileFieldKey,
@@ -52,7 +52,7 @@ function ProfileFieldPartSubForm({ index }: Props) {
     formState: { errors },
   } = useFormContext<ProfileFieldForm>();
 
-  const { getDefaultLabel } = useDataParser();
+  const getI18nLabel = useI18nFieldLabel();
 
   const name = watch(`${fieldPrefix}name`);
   const type = watch(`${fieldPrefix}type`);
@@ -121,7 +121,7 @@ function ProfileFieldPartSubForm({ index }: Props) {
                 disabled={isBuiltInFieldName}
                 error={formErrors?.label?.message}
                 placeholder={t('sign_in_exp.custom_profile_fields.details.label_placeholder')}
-                value={value || getDefaultLabel(name)}
+                value={value || getI18nLabel(name)}
                 onChange={onChange}
               />
             );

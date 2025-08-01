@@ -21,6 +21,11 @@ const profile = {
     postalCode: 'CEP',
     country: 'País',
   },
+  gender_options: {
+    female: 'Feminino',
+    male: 'Masculino',
+    other: 'Prefiro não dizer',
+  },
 };
 
 export default Object.freeze(profile);

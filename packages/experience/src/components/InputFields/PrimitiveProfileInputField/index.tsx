@@ -1,4 +1,5 @@
-import { CustomProfileFieldType, type FieldPart } from '@logto/schemas';
+import { CustomProfileFieldType, type FieldOption, Gender, type FieldPart } from '@logto/schemas';
+import { useTranslation } from 'react-i18next';
 
 import CheckboxGroup from '@/components/CheckboxGroup';
 
@@ -14,6 +15,9 @@ type Props = Partial<Omit<FieldPart, 'enabled'>> & {
   readonly onChange: (value: string) => void;
 };
 
+const isGenderOptionKey = (key: string): key is Gender =>
+  Object.values<string>(Gender).includes(key);
+
 const PrimitiveProfileInputField = ({
   className,
   label,
@@ -26,12 +30,22 @@ const PrimitiveProfileInputField = ({
   onBlur,
   onChange,
 }: Props) => {
+  const { t } = useTranslation();
+  const getDefaultOptions = (options?: FieldOption[]) =>
+    options?.map(({ value, label }) => {
+      if (!label && isGenderOptionKey(value)) {
+        return { value, label: t(`profile.gender_options.${value}`) };
+      }
+      return { value, label: label ?? value };
+    }) ?? [];
+
+  const options = getDefaultOptions(config?.options);
   if (type === CustomProfileFieldType.Select) {
     return (
       <SelectField
         className={className}
         label={label}
-        options={config?.options ?? []}
+        options={options}
         value={value}
         description={description}
         onBlur={onBlur}
@@ -43,7 +57,7 @@ const PrimitiveProfileInputField = ({
     return (
       <CheckboxGroup
         className={className}
-        options={config?.options ?? []}
+        options={options}
         value={value?.split(',') ?? []}
         description={description}
         onChange={(value) => {

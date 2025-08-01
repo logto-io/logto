@@ -21,6 +21,11 @@ const profile = {
     postalCode: '郵政編碼',
     country: '國家',
   },
+  gender_options: {
+    female: '女性',
+    male: '男性',
+    other: '不願透露',
+  },
 };
 
 export default Object.freeze(profile);

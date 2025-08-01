@@ -21,6 +21,11 @@ const profile = {
     postalCode: '우편번호',
     country: '국가',
   },
+  gender_options: {
+    female: '여성',
+    male: '남성',
+    other: '답하지 않음',
+  },
 };
 
 export default Object.freeze(profile);

@@ -1,4 +1,4 @@
-import { supportedDateFormat } from '@logto/schemas';
+import { SupportedDateFormat } from '@logto/schemas';
 import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
@@ -8,7 +8,7 @@ import Select from '@/ds-components/Select';
 import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
 
-import { type ProfileFieldForm } from '../../CollectUserProfile/ProfileFieldDetails/types';
+import { type ProfileFieldForm } from '../../CollectUserProfile/types';
 
 import styles from './index.module.scss';
 
@@ -34,10 +34,10 @@ function DateFormatSelector({ index }: Props) {
 
   useEffect(() => {
     if (!formatValue) {
-      setValue(`${fieldPrefix}format`, supportedDateFormat.US);
+      setValue(`${fieldPrefix}format`, SupportedDateFormat.US);
       return;
     }
-    if (formatValue !== supportedDateFormat.Custom) {
+    if (formatValue !== SupportedDateFormat.Custom) {
       setValue(`${fieldPrefix}customFormat`, '');
     }
   }, [fieldPrefix, formatValue, setValue]);
@@ -50,17 +50,17 @@ function DateFormatSelector({ index }: Props) {
         render={({ field: { value, onChange } }) => (
           <Select
             options={[
-              { value: supportedDateFormat.US, title: t('date_format_us') },
-              { value: supportedDateFormat.UK, title: t('date_format_uk') },
-              { value: supportedDateFormat.ISO, title: t('date_format_iso') },
-              { value: supportedDateFormat.Custom, title: t('custom_date_format') },
+              { value: SupportedDateFormat.US, title: t('date_format_us') },
+              { value: SupportedDateFormat.UK, title: t('date_format_uk') },
+              { value: SupportedDateFormat.ISO, title: t('date_format_iso') },
+              { value: SupportedDateFormat.Custom, title: t('custom_date_format') },
             ]}
             value={value}
             onChange={onChange}
           />
         )}
       />
-      {formatValue === supportedDateFormat.Custom && (
+      {formatValue === SupportedDateFormat.Custom && (
         <FormField isRequired title="sign_in_exp.custom_profile_fields.details.custom_date_format">
           <TextInput
             {...register(`${fieldPrefix}customFormat`, { required: true })}

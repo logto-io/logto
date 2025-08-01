@@ -21,6 +21,11 @@ const profile = {
     postalCode: 'Поштовий індекс',
     country: 'Країна',
   },
+  gender_options: {
+    female: 'Жіноча',
+    male: 'Чоловіча',
+    other: 'Волію не говорити',
+  },
 };
 
 export default Object.freeze(profile);

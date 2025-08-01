@@ -1,7 +1,7 @@
 import { isValidUrl } from '@logto/core-kit';
 import {
   CustomProfileFieldType,
-  supportedDateFormat,
+  SupportedDateFormat,
   type FieldPart,
   type CustomProfileFieldBaseConfig,
 } from '@logto/schemas';
@@ -18,7 +18,7 @@ const isValidDateField = (value: unknown, config: CustomProfileFieldBaseConfig):
   s.assert(value, s.string());
   s.assert(config, dateFieldConfigGuard);
   const dateFormat =
-    config.format === supportedDateFormat.Custom ? config.customFormat : config.format;
+    config.format === SupportedDateFormat.Custom ? config.customFormat : config.format;
   s.assert(dateFormat, s.string());
   const parsedDate = parse(value, dateFormat, new Date(), {
     useAdditionalDayOfYearTokens: true,
