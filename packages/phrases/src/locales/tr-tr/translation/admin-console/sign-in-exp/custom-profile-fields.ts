@@ -55,8 +55,8 @@ const custom_profile_fields = {
     address_format: 'Adres formatı',
     single_line_address: 'Tek satır adres',
     multi_line_address: 'Çok satırlı adres (Örn., Sokak, Şehir, Eyalet, Posta Kodu, Ülke)',
-    composition_parts: 'Bileşim parçaları',
-    composition_parts_tip: 'Karmaşık alanı oluşturmak için parçaları seçin.',
+    components: 'Bileşenler',
+    components_tip: 'Karmaşık alanı oluşturmak için bileşenleri seçin.',
     label: 'Görüntüleme etiketi',
     label_placeholder: 'Etiket',
     label_tip:
@@ -73,9 +73,9 @@ const custom_profile_fields = {
     regex_tip: 'Girdiyi doğrulamak için bir düzenli ifade tanımlayın.',
     regex_placeholder: '^[a-zA-Z0-9]+$',
     date_format: 'Tarih formatı',
-    date_format_us: 'Amerika Birleşik Devletleri (MM/dd/yyyy)',
-    date_format_uk: 'İngiltere ve Avrupa (dd/MM/yyyy)',
-    date_format_iso: 'Uluslararası standart (yyyy-MM-dd)',
+    date_format_us: 'MM/dd/yyyy (örn. Amerika Birleşik Devletleri)',
+    date_format_uk: 'dd/MM/yyyy (örn. İngiltere ve Avrupa)',
+    date_format_iso: 'yyyy-MM-dd (Uluslararası standart)',
     custom_date_format: 'Özel tarih formatı',
     custom_date_format_placeholder: 'Özel tarih formatını girin. Örn. "MM-dd-yyyy"',
     custom_date_format_tip:

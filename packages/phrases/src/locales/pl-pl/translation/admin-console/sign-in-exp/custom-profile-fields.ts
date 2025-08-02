@@ -56,8 +56,8 @@ const custom_profile_fields = {
     single_line_address: 'Adres w jednej linii',
     multi_line_address:
       'Adres w wielu liniach (np. Ulica, Miasto, Województwo, Kod pocztowy, Kraj)',
-    composition_parts: 'Części składowe',
-    composition_parts_tip: 'Wybierz części, które mają tworzyć złożone pole.',
+    components: 'Komponenty',
+    components_tip: 'Wybierz komponenty, które mają tworzyć złożone pole.',
     label: 'Wyświetlana etykieta',
     label_placeholder: 'Etykieta',
     label_tip: 'Potrzebujesz lokalizacji? Dodaj języki w <a>Doświadczenie logowania > Treść</a>',
@@ -73,9 +73,9 @@ const custom_profile_fields = {
     regex_tip: 'Zdefiniuj wyrażenie regularne do walidacji wprowadzonych danych.',
     regex_placeholder: '^[a-zA-Z0-9]+$',
     date_format: 'Format daty',
-    date_format_us: 'Stany Zjednoczone (MM/dd/yyyy)',
-    date_format_uk: 'Wielka Brytania i Europa (dd/MM/yyyy)',
-    date_format_iso: 'Międzynarodowy standard (yyyy-MM-dd)',
+    date_format_us: 'MM/dd/yyyy (np. Stany Zjednoczone)',
+    date_format_uk: 'dd/MM/yyyy (np. Wielka Brytania i Europa)',
+    date_format_iso: 'yyyy-MM-dd (Międzynarodowy standard)',
     custom_date_format: 'Niestandardowy format daty',
     custom_date_format_placeholder: 'Wprowadź niestandardowy format daty. Np. "MM-dd-yyyy"',
     custom_date_format_tip:
