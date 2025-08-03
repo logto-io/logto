@@ -56,8 +56,8 @@ const custom_profile_fields = {
     address_format: 'Adressformat',
     single_line_address: 'Einzeilige Adresse',
     multi_line_address: 'Mehrzeilige Adresse (z.B. Straße, Stadt, Bundesland, Postleitzahl, Land)',
-    composition_parts: 'Zusammensetzungsteile',
-    composition_parts_tip: 'Wählen Sie die Teile aus, um das komplexe Feld zusammenzusetzen.',
+    components: 'Komponenten',
+    components_tip: 'Wählen Sie die Komponenten aus, um das komplexe Feld zusammenzusetzen.',
     label: 'Anzeigebezeichnung',
     label_placeholder: 'Bezeichnung',
     label_tip:
@@ -74,9 +74,9 @@ const custom_profile_fields = {
     regex_tip: 'Definieren Sie einen regulären Ausdruck, um die Eingabe zu validieren.',
     regex_placeholder: '^[a-zA-Z0-9]+$',
     date_format: 'Datumsformat',
-    date_format_us: 'Vereinigte Staaten (MM/dd/yyyy)',
-    date_format_uk: 'UK und Europa (dd/MM/yyyy)',
-    date_format_iso: 'Internationaler Standard (yyyy-MM-dd)',
+    date_format_us: 'MM/dd/yyyy (z.B. Vereinigte Staaten)',
+    date_format_uk: 'dd/MM/yyyy (z.B. UK und Europa)',
+    date_format_iso: 'yyyy-MM-dd (Internationaler Standard)',
     custom_date_format: 'Benutzerdefiniertes Datumsformat',
     custom_date_format_placeholder:
       'Geben Sie das benutzerdefinierte Datumsformat ein. Z.B. "MM-dd-yyyy"',
