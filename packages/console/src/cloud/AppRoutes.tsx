@@ -27,17 +27,15 @@ function AppRoutes() {
           <Route path={GlobalAnonymousRoute.Callback} element={<Callback />} />
           <Route path={GlobalAnonymousRoute.SocialDemoCallback} element={<SocialDemoCallback />} />
           {isDevFeaturesEnabled && (
-            <>
-              <Route
-                path={GlobalAnonymousRoute.OneTimeTokenLanding}
-                element={<OneTimeTokenLanding />}
-              />
-              <Route
-                path={GlobalAnonymousRoute.ExternalGoogleOneTapLanding}
-                element={<ExternalGoogleOneTapLanding />}
-              />
-            </>
+            <Route
+              path={GlobalAnonymousRoute.OneTimeTokenLanding}
+              element={<OneTimeTokenLanding />}
+            />
           )}
+          <Route
+            path={GlobalAnonymousRoute.ExternalGoogleOneTapLanding}
+            element={<ExternalGoogleOneTapLanding />}
+          />
           <Route element={<ProtectedRoutes />}>
             <Route
               path={`${GlobalRoute.AcceptInvitation}/:invitationId`}
