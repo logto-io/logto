@@ -268,6 +268,7 @@ describe('first screen', () => {
       await updateSignInExperience({
         forgotPasswordMethods: [],
       });
+      await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
 
       await experience.page.goto(url.href, { waitUntil: 'networkidle0' });
       experience.toBeAt('sign-in');
