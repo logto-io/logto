@@ -3,7 +3,6 @@ import {
   AgreeToTermsPolicy,
   ConnectorPlatform,
   ConnectorType,
-  ForgotPasswordMethod,
   MfaPolicy,
   SignInIdentifier,
   SignInMode,
@@ -121,10 +120,7 @@ export const mockSignInExperience: SignInExperience = {
   captchaPolicy: {},
   sentinelPolicy: {},
   emailBlocklistPolicy: {},
-  forgotPasswordMethods: [
-    ForgotPasswordMethod.EmailVerificationCode,
-    ForgotPasswordMethod.PhoneVerificationCode,
-  ],
+  forgotPasswordMethods: [],
 };
 
 export const mockSignInExperienceSettings: SignInExperienceResponse = {
@@ -148,10 +144,6 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
     email: true,
     phone: true,
   },
-  forgotPasswordMethods: [
-    ForgotPasswordMethod.EmailVerificationCode,
-    ForgotPasswordMethod.PhoneVerificationCode,
-  ],
   customCss: null,
   customContent: {},
   agreeToTermsPolicy: mockSignInExperience.agreeToTermsPolicy,
