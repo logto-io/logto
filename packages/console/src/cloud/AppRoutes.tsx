@@ -27,12 +27,10 @@ function AppRoutes() {
           <Route path={GlobalAnonymousRoute.Callback} element={<Callback />} />
           <Route path={GlobalAnonymousRoute.SocialDemoCallback} element={<SocialDemoCallback />} />
           {isDevFeaturesEnabled && (
-            <>
-              <Route
-                path={GlobalAnonymousRoute.OneTimeTokenLanding}
-                element={<OneTimeTokenLanding />}
-              />
-            </>
+            <Route
+              path={GlobalAnonymousRoute.OneTimeTokenLanding}
+              element={<OneTimeTokenLanding />}
+            />
           )}
           <Route
             path={GlobalAnonymousRoute.ExternalGoogleOneTapLanding}
