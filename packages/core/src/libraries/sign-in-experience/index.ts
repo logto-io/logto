@@ -7,7 +7,7 @@ import type {
   SignInExperience,
   SsoConnectorMetadata,
 } from '@logto/schemas';
-import { ConnectorType, ReservedPlanId } from '@logto/schemas';
+import { ConnectorType, ForgotPasswordMethod, ReservedPlanId } from '@logto/schemas';
 import { cond, conditional, deduplicate, pick, trySafe } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
 
@@ -259,6 +259,27 @@ export const createSignInExperienceLibrary = (
       return findCaptchaPublicConfig();
     };
 
+    /** Filter forgot password methods based on available connectors */
+    const getFilteredForgotPasswordMethods = () => {
+      const hasEmailConnector = logtoConnectors.some(({ type }) => type === ConnectorType.Email);
+      const hasSmsConnector = logtoConnectors.some(({ type }) => type === ConnectorType.Sms);
+
+      // If dev features are not enabled, ignore signInExperience settings and return based on connectors only
+      // TODO @wangsijie: Remove this when the feature is ready
+      if (!EnvSet.values.isDevFeaturesEnabled) {
+        return [
+          ...(hasEmailConnector ? [ForgotPasswordMethod.EmailVerificationCode] : []),
+          ...(hasSmsConnector ? [ForgotPasswordMethod.PhoneVerificationCode] : []),
+        ];
+      }
+
+      return signInExperience.forgotPasswordMethods.filter(
+        (method) =>
+          (method === ForgotPasswordMethod.EmailVerificationCode && hasEmailConnector) ||
+          (method === ForgotPasswordMethod.PhoneVerificationCode && hasSmsConnector)
+      );
+    };
+
     return {
       ...deepmerge(
         deepmerge(signInExperience, getAppSignInExperience()),
@@ -269,6 +290,7 @@ export const createSignInExperienceLibrary = (
       isDevelopmentTenant,
       googleOneTap: getGoogleOneTap(),
       captchaConfig: await getCaptchaConfig(),
+      forgotPasswordMethods: getFilteredForgotPasswordMethods(),
       ...cond(EnvSet.values.isDevFeaturesEnabled && customProfileFields && { customProfileFields }),
     };
   };

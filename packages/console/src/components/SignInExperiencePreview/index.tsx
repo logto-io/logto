@@ -1,5 +1,5 @@
 import type { LanguageTag } from '@logto/language-kit';
-import { Theme } from '@logto/schemas';
+import { Theme, ConnectorType, ForgotPasswordMethod } from '@logto/schemas';
 import type { ConnectorMetadata, ConnectorResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
@@ -69,10 +69,20 @@ function SignInExperiencePreview({
       []
     );
 
+    const hasEmailConnector = allConnectors.some(({ type }) => type === ConnectorType.Email);
+    const hasSmsConnector = allConnectors.some(({ type }) => type === ConnectorType.Sms);
+
+    const filteredForgotPasswordMethods = signInExperience.forgotPasswordMethods.filter(
+      (method) =>
+        (method === ForgotPasswordMethod.EmailVerificationCode && hasEmailConnector) ||
+        (method === ForgotPasswordMethod.PhoneVerificationCode && hasSmsConnector)
+    );
+
     return {
       signInExperience: {
         ...signInExperience,
         socialConnectors,
+        forgotPasswordMethods: filteredForgotPasswordMethods,
       },
       language,
       mode,
