@@ -1,9 +1,16 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { builtInLanguages } from '@logto/phrases-experience';
-import { CaptchaType, type CreateSignInExperience, type SignInExperience } from '@logto/schemas';
+import {
+  CaptchaType,
+  ForgotPasswordMethod,
+  type CreateSignInExperience,
+  type SignInExperience,
+} from '@logto/schemas';
 import { TtlCache } from '@logto/shared';
 
 import {
+  mockAliyunDmConnector,
+  mockAliyunSmsConnector,
   mockCaptchaProvider,
   mockCustomProfileFields,
   mockGithubConnector,
@@ -192,6 +199,7 @@ describe('getFullSignInExperience()', () => {
       googleOneTap: undefined,
       captchaConfig: undefined,
       customProfileFields: mockCustomProfileFields,
+      forgotPasswordMethods: [],
     });
   });
 
@@ -231,6 +239,7 @@ describe('getFullSignInExperience()', () => {
         connectorId: 'google',
       },
       captchaConfig: undefined,
+      forgotPasswordMethods: [],
     });
   });
 });
@@ -321,5 +330,36 @@ describe('findCaptchaPublicConfig', () => {
     const captchaPublicConfig = await findCaptchaPublicConfig();
 
     expect(captchaPublicConfig).toBeUndefined();
+  });
+});
+
+describe('forgot password methods', () => {
+  it('should return connector-based methods when forgotPasswordMethods is null', async () => {
+    findDefaultSignInExperience.mockResolvedValueOnce({
+      ...mockSignInExperience,
+      forgotPasswordMethods: null, // Test null case
+    });
+    getLogtoConnectors.mockResolvedValueOnce([mockAliyunDmConnector, mockAliyunSmsConnector]);
+    mockSsoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValueOnce([]);
+
+    const fullSignInExperience = await getFullSignInExperience({ locale: 'en' });
+
+    expect(fullSignInExperience.forgotPasswordMethods).toEqual([
+      ForgotPasswordMethod.EmailVerificationCode,
+      ForgotPasswordMethod.PhoneVerificationCode,
+    ]);
+  });
+
+  it('should return empty array when forgotPasswordMethods is null and no connectors available', async () => {
+    findDefaultSignInExperience.mockResolvedValueOnce({
+      ...mockSignInExperience,
+      forgotPasswordMethods: null,
+    });
+    getLogtoConnectors.mockResolvedValueOnce([]); // No connectors
+    mockSsoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValueOnce([]);
+
+    const fullSignInExperience = await getFullSignInExperience({ locale: 'en' });
+
+    expect(fullSignInExperience.forgotPasswordMethods).toEqual([]);
   });
 });

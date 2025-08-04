@@ -354,18 +354,21 @@ export class SignInExperienceValidator {
     if (EnvSet.values.isDevFeaturesEnabled) {
       const { forgotPasswordMethods } = await this.getSignInExperienceData();
 
-      if (verificationRecord.type === VerificationType.EmailVerificationCode) {
-        assertThat(
-          forgotPasswordMethods.includes(ForgotPasswordMethod.EmailVerificationCode),
-          new RequestError({ code: 'session.not_supported_for_forgot_password', status: 422 })
-        );
-      }
+      // If forgotPasswordMethods is null, fallback to connector-based validation (allow all)
+      if (forgotPasswordMethods) {
+        if (verificationRecord.type === VerificationType.EmailVerificationCode) {
+          assertThat(
+            forgotPasswordMethods.includes(ForgotPasswordMethod.EmailVerificationCode),
+            new RequestError({ code: 'session.not_supported_for_forgot_password', status: 422 })
+          );
+        }
 
-      if (verificationRecord.type === VerificationType.PhoneVerificationCode) {
-        assertThat(
-          forgotPasswordMethods.includes(ForgotPasswordMethod.PhoneVerificationCode),
-          new RequestError({ code: 'session.not_supported_for_forgot_password', status: 422 })
-        );
+        if (verificationRecord.type === VerificationType.PhoneVerificationCode) {
+          assertThat(
+            forgotPasswordMethods.includes(ForgotPasswordMethod.PhoneVerificationCode),
+            new RequestError({ code: 'session.not_supported_for_forgot_password', status: 422 })
+          );
+        }
       }
     }
   }

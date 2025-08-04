@@ -106,5 +106,5 @@ export const mockSignInExperience: SignInExperience = {
   captchaPolicy: {},
   sentinelPolicy: {},
   emailBlocklistPolicy: {},
-  forgotPasswordMethods: [],
+  forgotPasswordMethods: null,
 };

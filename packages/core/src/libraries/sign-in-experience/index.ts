@@ -264,9 +264,9 @@ export const createSignInExperienceLibrary = (
       const hasEmailConnector = logtoConnectors.some(({ type }) => type === ConnectorType.Email);
       const hasSmsConnector = logtoConnectors.some(({ type }) => type === ConnectorType.Sms);
 
-      // If dev features are not enabled, ignore signInExperience settings and return based on connectors only
-      // TODO @wangsijie: Remove this when the feature is ready
-      if (!EnvSet.values.isDevFeaturesEnabled) {
+      // If forgotPasswordMethods is null (production compatibility) or dev features are not enabled,
+      // return based on connectors only
+      if (!signInExperience.forgotPasswordMethods || !EnvSet.values.isDevFeaturesEnabled) {
         return [
           ...(hasEmailConnector ? [ForgotPasswordMethod.EmailVerificationCode] : []),
           ...(hasSmsConnector ? [ForgotPasswordMethod.PhoneVerificationCode] : []),
