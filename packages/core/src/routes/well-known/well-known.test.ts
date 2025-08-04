@@ -1,4 +1,3 @@
-import { ForgotPasswordMethod } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
 import {
@@ -75,10 +74,10 @@ describe('GET /.well-known/sign-in-exp', () => {
     expect(response.status).toEqual(200);
     expect(response.body).toMatchObject({
       ...mockSignInExperience,
-      forgotPasswordMethods: [
-        ForgotPasswordMethod.EmailVerificationCode,
-        ForgotPasswordMethod.PhoneVerificationCode,
-      ],
+      forgotPassword: {
+        email: true,
+        phone: true,
+      },
       socialConnectors: [
         {
           ...mockGithubConnector.metadata,

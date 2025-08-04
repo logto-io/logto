@@ -144,6 +144,10 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
   socialConnectors,
   ssoConnectors: [],
   signInMode: SignInMode.SignInAndRegister,
+  forgotPassword: {
+    email: true,
+    phone: true,
+  },
   forgotPasswordMethods: [
     ForgotPasswordMethod.EmailVerificationCode,
     ForgotPasswordMethod.PhoneVerificationCode,

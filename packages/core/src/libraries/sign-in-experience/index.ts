@@ -259,25 +259,30 @@ export const createSignInExperienceLibrary = (
       return findCaptchaPublicConfig();
     };
 
-    /** Filter forgot password methods based on available connectors */
-    const getFilteredForgotPasswordMethods = () => {
+    /** Generate forgot password object based on available connectors and configured methods */
+    const getForgotPassword = () => {
       const hasEmailConnector = logtoConnectors.some(({ type }) => type === ConnectorType.Email);
       const hasSmsConnector = logtoConnectors.some(({ type }) => type === ConnectorType.Sms);
 
       // If forgotPasswordMethods is null (production compatibility) or dev features are not enabled,
       // return based on connectors only
       if (!signInExperience.forgotPasswordMethods || !EnvSet.values.isDevFeaturesEnabled) {
-        return [
-          ...(hasEmailConnector ? [ForgotPasswordMethod.EmailVerificationCode] : []),
-          ...(hasSmsConnector ? [ForgotPasswordMethod.PhoneVerificationCode] : []),
-        ];
+        return {
+          email: hasEmailConnector,
+          phone: hasSmsConnector,
+        };
       }
 
-      return signInExperience.forgotPasswordMethods.filter(
-        (method) =>
-          (method === ForgotPasswordMethod.EmailVerificationCode && hasEmailConnector) ||
-          (method === ForgotPasswordMethod.PhoneVerificationCode && hasSmsConnector)
-      );
+      return {
+        email:
+          signInExperience.forgotPasswordMethods.includes(
+            ForgotPasswordMethod.EmailVerificationCode
+          ) && hasEmailConnector,
+        phone:
+          signInExperience.forgotPasswordMethods.includes(
+            ForgotPasswordMethod.PhoneVerificationCode
+          ) && hasSmsConnector,
+      };
     };
 
     return {
@@ -287,10 +292,10 @@ export const createSignInExperienceLibrary = (
       ),
       socialConnectors,
       ssoConnectors,
+      forgotPassword: getForgotPassword(),
       isDevelopmentTenant,
       googleOneTap: getGoogleOneTap(),
       captchaConfig: await getCaptchaConfig(),
-      forgotPasswordMethods: getFilteredForgotPasswordMethods(),
       ...cond(EnvSet.values.isDevFeaturesEnabled && customProfileFields && { customProfileFields }),
     };
   };

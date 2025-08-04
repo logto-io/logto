@@ -17,6 +17,11 @@ import { type ToZodObject } from '../utils/zod.js';
 
 import { type SsoConnectorMetadata, ssoConnectorMetadataGuard } from './sso-connector.js';
 
+type ForgotPassword = {
+  phone: boolean;
+  email: boolean;
+};
+
 /**
  * Basic information about a social connector for sign-in experience rendering. This type can avoid
  * the need to load the full connector metadata that is not needed for rendering.
@@ -29,6 +34,7 @@ export type ExperienceSocialConnector = Omit<
 export type FullSignInExperience = SignInExperience & {
   socialConnectors: ExperienceSocialConnector[];
   ssoConnectors: SsoConnectorMetadata[];
+  forgotPassword: ForgotPassword;
   isDevelopmentTenant: boolean;
   /**
    * The Google One Tap configuration if the Google connector is enabled and configured.
@@ -57,6 +63,7 @@ export const fullSignInExperienceGuard = SignInExperiences.guard.extend({
     })
     .array(),
   ssoConnectors: ssoConnectorMetadataGuard.array(),
+  forgotPassword: z.object({ phone: z.boolean(), email: z.boolean() }),
   isDevelopmentTenant: z.boolean(),
   googleOneTap: googleOneTapConfigGuard
     .extend({ clientId: z.string(), connectorId: z.string() })

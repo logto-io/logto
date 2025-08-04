@@ -72,22 +72,27 @@ function SignInExperiencePreview({
     const hasEmailConnector = allConnectors.some(({ type }) => type === ConnectorType.Email);
     const hasSmsConnector = allConnectors.some(({ type }) => type === ConnectorType.Sms);
 
-    const filteredForgotPasswordMethods = signInExperience.forgotPasswordMethods
-      ? signInExperience.forgotPasswordMethods.filter(
-          (method) =>
-            (method === ForgotPasswordMethod.EmailVerificationCode && hasEmailConnector) ||
-            (method === ForgotPasswordMethod.PhoneVerificationCode && hasSmsConnector)
-        )
-      : [
-          ...(hasEmailConnector ? [ForgotPasswordMethod.EmailVerificationCode] : []),
-          ...(hasSmsConnector ? [ForgotPasswordMethod.PhoneVerificationCode] : []),
-        ];
+    const forgotPassword = signInExperience.forgotPasswordMethods
+      ? {
+          email:
+            signInExperience.forgotPasswordMethods.includes(
+              ForgotPasswordMethod.EmailVerificationCode
+            ) && hasEmailConnector,
+          phone:
+            signInExperience.forgotPasswordMethods.includes(
+              ForgotPasswordMethod.PhoneVerificationCode
+            ) && hasSmsConnector,
+        }
+      : {
+          email: hasEmailConnector,
+          phone: hasSmsConnector,
+        };
 
     return {
       signInExperience: {
         ...signInExperience,
         socialConnectors,
-        forgotPasswordMethods: filteredForgotPasswordMethods,
+        forgotPassword,
       },
       language,
       mode,

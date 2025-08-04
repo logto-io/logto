@@ -1,11 +1,6 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { builtInLanguages } from '@logto/phrases-experience';
-import {
-  CaptchaType,
-  ForgotPasswordMethod,
-  type CreateSignInExperience,
-  type SignInExperience,
-} from '@logto/schemas';
+import { CaptchaType, type CreateSignInExperience, type SignInExperience } from '@logto/schemas';
 import { TtlCache } from '@logto/shared';
 
 import {
@@ -199,7 +194,10 @@ describe('getFullSignInExperience()', () => {
       googleOneTap: undefined,
       captchaConfig: undefined,
       customProfileFields: mockCustomProfileFields,
-      forgotPasswordMethods: [],
+      forgotPassword: {
+        email: false,
+        phone: false,
+      },
     });
   });
 
@@ -239,7 +237,10 @@ describe('getFullSignInExperience()', () => {
         connectorId: 'google',
       },
       captchaConfig: undefined,
-      forgotPasswordMethods: [],
+      forgotPassword: {
+        email: false,
+        phone: false,
+      },
     });
   });
 });
@@ -344,13 +345,13 @@ describe('forgot password methods', () => {
 
     const fullSignInExperience = await getFullSignInExperience({ locale: 'en' });
 
-    expect(fullSignInExperience.forgotPasswordMethods).toEqual([
-      ForgotPasswordMethod.EmailVerificationCode,
-      ForgotPasswordMethod.PhoneVerificationCode,
-    ]);
+    expect(fullSignInExperience.forgotPassword).toEqual({
+      email: true,
+      phone: true,
+    });
   });
 
-  it('should return empty array when forgotPasswordMethods is null and no connectors available', async () => {
+  it('should return false values when forgotPasswordMethods is null and no connectors available', async () => {
     findDefaultSignInExperience.mockResolvedValueOnce({
       ...mockSignInExperience,
       forgotPasswordMethods: null,
@@ -360,6 +361,9 @@ describe('forgot password methods', () => {
 
     const fullSignInExperience = await getFullSignInExperience({ locale: 'en' });
 
-    expect(fullSignInExperience.forgotPasswordMethods).toEqual([]);
+    expect(fullSignInExperience.forgotPassword).toEqual({
+      email: false,
+      phone: false,
+    });
   });
 });
