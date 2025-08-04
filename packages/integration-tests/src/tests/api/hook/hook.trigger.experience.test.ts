@@ -1,4 +1,5 @@
 import {
+  ForgotPasswordMethod,
   hookEvents,
   InteractionEvent,
   InteractionHookEvent,
@@ -54,6 +55,12 @@ beforeAll(async () => {
     webbHookMockServer.listen(),
     userApi.create({ username, password }),
   ]);
+  await updateSignInExperience({
+    forgotPasswordMethods: [
+      ForgotPasswordMethod.EmailVerificationCode,
+      ForgotPasswordMethod.PhoneVerificationCode,
+    ],
+  });
 });
 
 afterAll(async () => {

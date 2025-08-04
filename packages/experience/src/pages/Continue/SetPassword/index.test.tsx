@@ -36,10 +36,7 @@ describe('SetPassword', () => {
       <SettingsProvider
         settings={{
           ...mockSignInExperienceSettings,
-          forgotPassword: {
-            email: false,
-            phone: false,
-          },
+          forgotPasswordMethods: [],
         }}
       >
         <SetPassword interactionEvent={InteractionEvent.Register} />
@@ -55,10 +52,7 @@ describe('SetPassword', () => {
       <SettingsProvider
         settings={{
           ...mockSignInExperienceSettings,
-          forgotPassword: {
-            email: false,
-            phone: false,
-          },
+          forgotPasswordMethods: [],
         }}
       >
         <SetPassword interactionEvent={InteractionEvent.Register} />
@@ -90,10 +84,7 @@ describe('SetPassword', () => {
       <SettingsProvider
         settings={{
           ...mockSignInExperienceSettings,
-          forgotPassword: {
-            email: false,
-            phone: false,
-          },
+          forgotPasswordMethods: [],
         }}
       >
         <SetPassword interactionEvent={InteractionEvent.Register} />

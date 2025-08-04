@@ -203,11 +203,6 @@ export const createSignInExperienceLibrary = (
       ? await getActiveSsoConnectors(locale)
       : [];
 
-    const forgotPassword = {
-      phone: logtoConnectors.some(({ type }) => type === ConnectorType.Sms),
-      email: logtoConnectors.some(({ type }) => type === ConnectorType.Email),
-    };
-
     const socialConnectors = signInExperience.socialSignInConnectorTargets.reduce<
       ConnectorMetadata[]
     >((previous, connectorTarget) => {
@@ -271,7 +266,6 @@ export const createSignInExperienceLibrary = (
       ),
       socialConnectors,
       ssoConnectors,
-      forgotPassword,
       isDevelopmentTenant,
       googleOneTap: getGoogleOneTap(),
       captchaConfig: await getCaptchaConfig(),

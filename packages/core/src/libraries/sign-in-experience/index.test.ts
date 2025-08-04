@@ -180,10 +180,6 @@ describe('getFullSignInExperience()', () => {
       ...mockSignInExperience,
       socialConnectors: [],
       socialSignInConnectorTargets: ['github', 'facebook', 'wechat'],
-      forgotPassword: {
-        email: false,
-        phone: false,
-      },
       ssoConnectors: [
         {
           id: wellConfiguredSsoConnector.id,
@@ -219,10 +215,6 @@ describe('getFullSignInExperience()', () => {
         { ...mockGoogleConnector.metadata, id: mockGoogleConnector.dbEntry.id },
       ],
       socialSignInConnectorTargets: ['github', 'facebook', 'google'],
-      forgotPassword: {
-        email: false,
-        phone: false,
-      },
       ssoConnectors: [
         {
           id: wellConfiguredSsoConnector.id,
