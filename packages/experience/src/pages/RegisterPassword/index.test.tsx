@@ -46,7 +46,10 @@ describe('<RegisterPassword />', () => {
       <SettingsProvider
         settings={{
           ...mockSignInExperienceSettings,
-          forgotPasswordMethods: [],
+          forgotPassword: {
+            email: false,
+            phone: false,
+          },
         }}
       >
         <RegisterPassword />
@@ -82,7 +85,10 @@ describe('<RegisterPassword />', () => {
       <SettingsProvider
         settings={{
           ...mockSignInExperienceSettings,
-          forgotPasswordMethods: [],
+          forgotPassword: {
+            email: false,
+            phone: false,
+          },
         }}
       >
         <RegisterPassword />
@@ -115,7 +121,10 @@ describe('<RegisterPassword />', () => {
       <SettingsProvider
         settings={{
           ...mockSignInExperienceSettings,
-          forgotPasswordMethods: [],
+          forgotPassword: {
+            email: false,
+            phone: false,
+          },
         }}
       >
         <RegisterPassword />

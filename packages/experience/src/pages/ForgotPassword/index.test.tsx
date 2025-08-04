@@ -8,7 +8,6 @@ import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { mockSignInExperienceSettings, getBoundingClientRectMock } from '@/__mocks__/logto';
 import useSessionStorage, { StorageKeys } from '@/hooks/use-session-storages';
-import type { SignInExperienceResponse } from '@/types';
 
 import ForgotPassword from '.';
 
@@ -24,13 +23,12 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe('ForgotPassword', () => {
-  const renderPage = (forgotPasswordMethods?: SignInExperienceResponse['forgotPasswordMethods']) =>
+  const renderPage = (forgotPassword?: { email: boolean; phone: boolean }) =>
     renderWithPageContext(
       <SettingsProvider
         settings={{
           ...mockSignInExperienceSettings,
-          forgotPasswordMethods:
-            forgotPasswordMethods ?? mockSignInExperienceSettings.forgotPasswordMethods,
+          forgotPassword: forgotPassword ?? mockSignInExperienceSettings.forgotPassword,
         }}
       >
         <UserInteractionContextProvider>
@@ -55,7 +53,7 @@ describe('ForgotPassword', () => {
   });
 
   test('should render error page if forgot password is not enabled', () => {
-    const { queryByText } = renderPage([]);
+    const { queryByText } = renderPage({ email: false, phone: false });
     expect(queryByText('description.reset_password')).toBeNull();
     expect(queryByText('description.not_found')).not.toBeNull();
   });
@@ -72,6 +70,10 @@ describe('ForgotPassword', () => {
   ])(
     'render the forgot password page with methods $methods',
     ({ methods: forgotPasswordMethods }) => {
+      const forgotPassword = {
+        email: forgotPasswordMethods.includes(ForgotPasswordMethod.EmailVerificationCode),
+        phone: forgotPasswordMethods.includes(ForgotPasswordMethod.PhoneVerificationCode),
+      };
       const email = 'foo@logto.io';
       const countryCode = '86';
       const phone = '13911111111';
@@ -92,7 +94,7 @@ describe('ForgotPassword', () => {
             value: identifier.value,
           });
 
-          const { queryByText, container, queryByTestId } = renderPage(forgotPasswordMethods);
+          const { queryByText, container, queryByTestId } = renderPage(forgotPassword);
           const inputField = container.querySelector('input[name="identifier"]');
           const countryCodeSelectorPrefix = queryByTestId('prefix');
 
@@ -103,10 +105,7 @@ describe('ForgotPassword', () => {
 
           expect(queryByText('action.switch_to')).toBeNull();
 
-          if (
-            identifier.type === SignInIdentifier.Phone &&
-            forgotPasswordMethods.includes(ForgotPasswordMethod.PhoneVerificationCode)
-          ) {
+          if (identifier.type === SignInIdentifier.Phone && forgotPassword.phone) {
             expect(inputField.getAttribute('value')).toBe(phone);
             expect(countryCodeSelectorPrefix?.style.width).toBe('100px');
             expect(queryByText(`+${countryCode}`)).not.toBeNull();
@@ -116,10 +115,7 @@ describe('ForgotPassword', () => {
             expect(countryCodeSelectorPrefix?.style.width).toBe('0px');
           }
 
-          if (
-            identifier.type === SignInIdentifier.Email &&
-            forgotPasswordMethods.includes(ForgotPasswordMethod.EmailVerificationCode)
-          ) {
+          if (identifier.type === SignInIdentifier.Email && forgotPassword.email) {
             expect(inputField.getAttribute('value')).toBe(email);
             expect(countryCodeSelectorPrefix?.style.width).toBe('0px');
           } else if (identifier.type === SignInIdentifier.Email) {
@@ -128,10 +124,7 @@ describe('ForgotPassword', () => {
             expect(countryCodeSelectorPrefix?.style.width).toBe('100px');
           }
 
-          if (
-            identifier.type === SignInIdentifier.Username &&
-            forgotPasswordMethods.includes(ForgotPasswordMethod.EmailVerificationCode)
-          ) {
+          if (identifier.type === SignInIdentifier.Username && forgotPassword.email) {
             expect(inputField.getAttribute('value')).toBe('');
             expect(countryCodeSelectorPrefix?.style.width).toBe('0px');
           } else if (identifier.type === SignInIdentifier.Username) {
