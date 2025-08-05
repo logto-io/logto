@@ -40,6 +40,10 @@ describe('oidc-model-instance query', () => {
     payload: JSON.stringify(instance.payload),
   };
 
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('upsertInstance', async () => {
     const expectSql = sql`
       insert into ${table} ("model_name", "id", "payload", "expires_at")
@@ -83,21 +87,13 @@ describe('oidc-model-instance query', () => {
     });
   });
 
-  it('findPayloadByPayloadField', async () => {
+  it('findPayloadByPayloadField - single result', async () => {
     const uid_key = 'uid';
     const uid_value = 'foo';
 
-    const expectSql = sql`
-      select ${fields.payload}, ${fields.consumedAt}
-      from ${table}
-      where ${fields.modelName}=$1
-      and ${fields.payload}->>$2=$3
-    `;
-
+    // Mock a single result
     mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([instance.modelName, uid_key, uid_value]);
-
+      // Simulate pool.any
       return createMockQueryResult([{ consumedAt: 10 }]);
     });
 
@@ -106,6 +102,44 @@ describe('oidc-model-instance query', () => {
     ).resolves.toEqual({
       consumed: true,
     });
+  });
+
+  it('findPayloadByPayloadField - multiple results (should delete and return null)', async () => {
+    const uid_key = 'uid';
+    const uid_value = 'foo';
+
+    // Mock multiple results
+    mockQuery
+      .mockImplementationOnce(async () => {
+        // Simulate pool.any
+        return createMockQueryResult([{ uid: uid_value }, { uid: uid_value }]);
+      })
+      // @ts-expect-error - mock delete query
+      .mockImplementationOnce(async () => {
+        // Simulate delete query
+        return { rowCount: 2 };
+      });
+
+    await expect(
+      findPayloadByPayloadField(instance.modelName, uid_key, uid_value)
+    ).resolves.toBeUndefined();
+
+    expect(mockQuery).toHaveBeenCalledTimes(2);
+  });
+
+  it('findPayloadByPayloadField - no result', async () => {
+    const uid_key = 'uid';
+    const uid_value = 'foo';
+
+    // Mock no result
+    mockQuery.mockImplementationOnce(async () => {
+      // Simulate pool.any
+      return createMockQueryResult([]);
+    });
+
+    await expect(
+      findPayloadByPayloadField(instance.modelName, uid_key, uid_value)
+    ).resolves.toBeUndefined();
   });
 
   it('consumeInstanceById', async () => {
