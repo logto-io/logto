@@ -33,6 +33,7 @@ describe('MFA - User controlled', () => {
           },
         ],
       },
+      forgotPasswordMethods: [],
     });
 
     await enableUserControlledMfaWithTotp();

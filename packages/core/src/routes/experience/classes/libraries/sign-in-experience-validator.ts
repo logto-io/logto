@@ -1,5 +1,6 @@
 import {
   AlternativeSignUpIdentifier,
+  ForgotPasswordMethod,
   InteractionEvent,
   MissingProfile,
   type SignInExperience,
@@ -8,6 +9,7 @@ import {
   VerificationType,
 } from '@logto/schemas';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { validateEmailAgainstBlocklistPolicy } from '#src/libraries/sign-in-experience/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -139,7 +141,7 @@ export class SignInExperienceValidator {
         break;
       }
       case InteractionEvent.ForgotPassword: {
-        this.guardForgotPasswordVerificationMethod(verificationRecord);
+        await this.guardForgotPasswordVerificationMethod(verificationRecord);
         break;
       }
     }
@@ -342,11 +344,32 @@ export class SignInExperienceValidator {
   }
 
   /** Forgot password only supports verification code type verification record */
-  private guardForgotPasswordVerificationMethod(verificationRecord: VerificationRecord) {
+  private async guardForgotPasswordVerificationMethod(verificationRecord: VerificationRecord) {
     assertThat(
       verificationRecord.type === VerificationType.EmailVerificationCode ||
         verificationRecord.type === VerificationType.PhoneVerificationCode,
       new RequestError({ code: 'session.not_supported_for_forgot_password', status: 422 })
     );
+
+    if (EnvSet.values.isDevFeaturesEnabled) {
+      const { forgotPasswordMethods } = await this.getSignInExperienceData();
+
+      // If forgotPasswordMethods is null, fallback to connector-based validation (allow all)
+      if (forgotPasswordMethods) {
+        if (verificationRecord.type === VerificationType.EmailVerificationCode) {
+          assertThat(
+            forgotPasswordMethods.includes(ForgotPasswordMethod.EmailVerificationCode),
+            new RequestError({ code: 'session.not_supported_for_forgot_password', status: 422 })
+          );
+        }
+
+        if (verificationRecord.type === VerificationType.PhoneVerificationCode) {
+          assertThat(
+            forgotPasswordMethods.includes(ForgotPasswordMethod.PhoneVerificationCode),
+            new RequestError({ code: 'session.not_supported_for_forgot_password', status: 422 })
+          );
+        }
+      }
+    }
   }
 }

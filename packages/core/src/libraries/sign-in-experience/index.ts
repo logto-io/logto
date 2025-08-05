@@ -7,7 +7,7 @@ import type {
   SignInExperience,
   SsoConnectorMetadata,
 } from '@logto/schemas';
-import { ConnectorType, ReservedPlanId } from '@logto/schemas';
+import { ConnectorType, ForgotPasswordMethod, ReservedPlanId } from '@logto/schemas';
 import { cond, conditional, deduplicate, pick, trySafe } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
 
@@ -203,11 +203,6 @@ export const createSignInExperienceLibrary = (
       ? await getActiveSsoConnectors(locale)
       : [];
 
-    const forgotPassword = {
-      phone: logtoConnectors.some(({ type }) => type === ConnectorType.Sms),
-      email: logtoConnectors.some(({ type }) => type === ConnectorType.Email),
-    };
-
     const socialConnectors = signInExperience.socialSignInConnectorTargets.reduce<
       ConnectorMetadata[]
     >((previous, connectorTarget) => {
@@ -264,6 +259,46 @@ export const createSignInExperienceLibrary = (
       return findCaptchaPublicConfig();
     };
 
+    /**
+     * Generate forgot password object based on available connectors and configured methods.
+     *
+     * This function determines which forgot password methods are available by checking:
+     * 1. Whether the required connectors (email/SMS) are configured and available
+     * 2. Whether specific methods are explicitly enabled in the sign-in experience configuration
+     *
+     * The logic handles two scenarios:
+     * - Legacy/fallback mode: When forgotPasswordMethods is null or dev features are disabled,
+     *   availability is determined solely by connector presence
+     * - Explicit configuration mode: When dev features are enabled and methods are configured,
+     *   both method inclusion and connector availability must be satisfied
+     */
+    const getForgotPassword = () => {
+      // Check availability of required connectors
+      const hasEmailConnector = logtoConnectors.some(({ type }) => type === ConnectorType.Email);
+      const hasSmsConnector = logtoConnectors.some(({ type }) => type === ConnectorType.Sms);
+
+      // If forgotPasswordMethods is null (production compatibility) or dev features are not enabled,
+      // fall back to connector-based availability only
+      if (!signInExperience.forgotPasswordMethods || !EnvSet.values.isDevFeaturesEnabled) {
+        return {
+          email: hasEmailConnector,
+          phone: hasSmsConnector,
+        };
+      }
+
+      // When methods are explicitly configured, require both method inclusion and connector availability
+      return {
+        email:
+          signInExperience.forgotPasswordMethods.includes(
+            ForgotPasswordMethod.EmailVerificationCode
+          ) && hasEmailConnector,
+        phone:
+          signInExperience.forgotPasswordMethods.includes(
+            ForgotPasswordMethod.PhoneVerificationCode
+          ) && hasSmsConnector,
+      };
+    };
+
     return {
       ...deepmerge(
         deepmerge(signInExperience, getAppSignInExperience()),
@@ -271,7 +306,7 @@ export const createSignInExperienceLibrary = (
       ),
       socialConnectors,
       ssoConnectors,
-      forgotPassword,
+      forgotPassword: getForgotPassword(),
       isDevelopmentTenant,
       googleOneTap: getGoogleOneTap(),
       captchaConfig: await getCaptchaConfig(),

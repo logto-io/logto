@@ -1,9 +1,10 @@
 import { DemoConnector } from '@logto/connector-kit';
 import { PasswordPolicyChecker } from '@logto/core-kit';
-import { ConnectorType, SignInExperiences } from '@logto/schemas';
+import { ConnectorType, SignInExperiences, ForgotPasswordMethod } from '@logto/schemas';
 import { conditional, tryThat } from '@silverhand/essentials';
 import { literal, object, string, z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import {
   validateSignUp,
   validateSignIn,
@@ -82,7 +83,15 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         query: { removeUnusedDemoSocialConnector },
         body: { socialSignInConnectorTargets, emailBlocklistPolicy, ...rest },
       } = ctx.guard;
-      const { languageInfo, signUp, signIn, mfa, sentinelPolicy, captchaPolicy } = rest;
+      const {
+        languageInfo,
+        signUp,
+        signIn,
+        mfa,
+        sentinelPolicy,
+        captchaPolicy,
+        forgotPasswordMethods,
+      } = rest;
 
       if (languageInfo) {
         await validateLanguageInfo(languageInfo);
@@ -116,6 +125,26 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         // Get the current sign-in configuration
         const { signIn: currentSignIn } = signIn ? { signIn } : await findDefaultSignInExperience();
         validateMfa(mfa, currentSignIn);
+      }
+
+      if (forgotPasswordMethods && EnvSet.values.isDevFeaturesEnabled) {
+        const hasEmailConnector = connectors.some(({ type }) => type === ConnectorType.Email);
+        const hasSmsConnector = connectors.some(({ type }) => type === ConnectorType.Sms);
+
+        for (const method of forgotPasswordMethods) {
+          if (method === ForgotPasswordMethod.EmailVerificationCode && !hasEmailConnector) {
+            throw new RequestError({
+              code: 'sign_in_experiences.forgot_password_method_requires_connector',
+              method: 'email',
+            });
+          }
+          if (method === ForgotPasswordMethod.PhoneVerificationCode && !hasSmsConnector) {
+            throw new RequestError({
+              code: 'sign_in_experiences.forgot_password_method_requires_connector',
+              method: 'sms',
+            });
+          }
+        }
       }
 
       /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */

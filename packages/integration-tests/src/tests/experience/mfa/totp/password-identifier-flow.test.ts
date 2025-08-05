@@ -18,6 +18,9 @@ import TotpTestingContext from './totp-testing-context.js';
 describe('MFA - TOTP', () => {
   beforeAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms, ConnectorType.Social]);
+    await updateSignInExperience({
+      forgotPasswordMethods: [],
+    });
     await enableMandatoryMfaWithTotp();
   });
 

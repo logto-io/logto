@@ -4,6 +4,8 @@ import { CaptchaType, type CreateSignInExperience, type SignInExperience } from 
 import { TtlCache } from '@logto/shared';
 
 import {
+  mockAliyunDmConnector,
+  mockAliyunSmsConnector,
   mockCaptchaProvider,
   mockCustomProfileFields,
   mockGithubConnector,
@@ -180,10 +182,6 @@ describe('getFullSignInExperience()', () => {
       ...mockSignInExperience,
       socialConnectors: [],
       socialSignInConnectorTargets: ['github', 'facebook', 'wechat'],
-      forgotPassword: {
-        email: false,
-        phone: false,
-      },
       ssoConnectors: [
         {
           id: wellConfiguredSsoConnector.id,
@@ -196,6 +194,10 @@ describe('getFullSignInExperience()', () => {
       googleOneTap: undefined,
       captchaConfig: undefined,
       customProfileFields: mockCustomProfileFields,
+      forgotPassword: {
+        email: false,
+        phone: false,
+      },
     });
   });
 
@@ -219,10 +221,6 @@ describe('getFullSignInExperience()', () => {
         { ...mockGoogleConnector.metadata, id: mockGoogleConnector.dbEntry.id },
       ],
       socialSignInConnectorTargets: ['github', 'facebook', 'google'],
-      forgotPassword: {
-        email: false,
-        phone: false,
-      },
       ssoConnectors: [
         {
           id: wellConfiguredSsoConnector.id,
@@ -239,6 +237,10 @@ describe('getFullSignInExperience()', () => {
         connectorId: 'google',
       },
       captchaConfig: undefined,
+      forgotPassword: {
+        email: false,
+        phone: false,
+      },
     });
   });
 });
@@ -329,5 +331,39 @@ describe('findCaptchaPublicConfig', () => {
     const captchaPublicConfig = await findCaptchaPublicConfig();
 
     expect(captchaPublicConfig).toBeUndefined();
+  });
+});
+
+describe('forgot password methods', () => {
+  it('should return connector-based methods when forgotPasswordMethods is null', async () => {
+    findDefaultSignInExperience.mockResolvedValueOnce({
+      ...mockSignInExperience,
+      forgotPasswordMethods: null, // Test null case
+    });
+    getLogtoConnectors.mockResolvedValueOnce([mockAliyunDmConnector, mockAliyunSmsConnector]);
+    mockSsoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValueOnce([]);
+
+    const fullSignInExperience = await getFullSignInExperience({ locale: 'en' });
+
+    expect(fullSignInExperience.forgotPassword).toEqual({
+      email: true,
+      phone: true,
+    });
+  });
+
+  it('should return false values when forgotPasswordMethods is null and no connectors available', async () => {
+    findDefaultSignInExperience.mockResolvedValueOnce({
+      ...mockSignInExperience,
+      forgotPasswordMethods: null,
+    });
+    getLogtoConnectors.mockResolvedValueOnce([]); // No connectors
+    mockSsoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValueOnce([]);
+
+    const fullSignInExperience = await getFullSignInExperience({ locale: 'en' });
+
+    expect(fullSignInExperience.forgotPassword).toEqual({
+      email: false,
+      phone: false,
+    });
   });
 });

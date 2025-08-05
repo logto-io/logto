@@ -1,5 +1,5 @@
 import { ConnectorType } from '@logto/connector-kit';
-import { SignInIdentifier } from '@logto/schemas';
+import { ForgotPasswordMethod, SignInIdentifier } from '@logto/schemas';
 
 import { deleteUser } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
@@ -17,6 +17,9 @@ import { generateEmail, generatePhone, waitFor } from '#src/utils.js';
 describe('MFA - TOTP', () => {
   beforeAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms, ConnectorType.Social]);
+    await updateSignInExperience({
+      forgotPasswordMethods: [],
+    });
     await enableMandatoryMfaWithTotp();
   });
 
@@ -42,6 +45,7 @@ describe('MFA - TOTP', () => {
           },
         ],
       },
+      forgotPasswordMethods: [ForgotPasswordMethod.EmailVerificationCode],
     });
 
     const { userProfile, user } = await generateNewUser({ primaryEmail: true });
@@ -86,6 +90,7 @@ describe('MFA - TOTP', () => {
           },
         ],
       },
+      forgotPasswordMethods: [ForgotPasswordMethod.PhoneVerificationCode],
     });
 
     const { userProfile, user } = await generateNewUser({ username: true, password: true });
@@ -134,6 +139,7 @@ describe('MFA - TOTP', () => {
           },
         ],
       },
+      forgotPasswordMethods: [ForgotPasswordMethod.EmailVerificationCode],
     });
 
     const { userProfile, user } = await generateNewUser({ username: true, password: true });
@@ -216,6 +222,7 @@ describe('MFA - TOTP', () => {
           },
         ],
       },
+      forgotPasswordMethods: [ForgotPasswordMethod.EmailVerificationCode],
     });
 
     const verificationExperience = new ExpectTotpExperience(await browser.newPage());

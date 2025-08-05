@@ -72,8 +72,13 @@ describe('GET /.well-known/sign-in-exp', () => {
     expect(findDefaultSignInExperience).toHaveBeenCalledTimes(1);
     expect(getLogtoConnectors).toHaveBeenCalledTimes(1);
     expect(response.status).toEqual(200);
+    const { forgotPasswordMethods, ...expectedSignInExperience } = mockSignInExperience;
     expect(response.body).toMatchObject({
-      ...mockSignInExperience,
+      ...expectedSignInExperience,
+      forgotPassword: {
+        email: true,
+        phone: true,
+      },
       socialConnectors: [
         {
           ...mockGithubConnector.metadata,

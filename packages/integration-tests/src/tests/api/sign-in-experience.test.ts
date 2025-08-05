@@ -3,6 +3,7 @@ import {
   MfaPolicy,
   OrganizationRequiredMfaPolicy,
   SignInIdentifier,
+  ConnectorType,
 } from '@logto/schemas';
 import { HTTPError, type ResponsePromise } from 'ky';
 
@@ -13,11 +14,19 @@ import {
   getSignInExperience,
   updateSignInExperience,
 } from '#src/api/index.js';
-import { setEmailConnector, setSmsConnector } from '#src/helpers/connector.js';
+import {
+  clearConnectorsByTypes,
+  setEmailConnector,
+  setSmsConnector,
+} from '#src/helpers/connector.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { devFeatureTest, generatePassword } from '#src/utils.js';
 
 describe('admin console sign-in experience', () => {
+  afterAll(async () => {
+    await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
+  });
+
   it('should get sign-in experience successfully', async () => {
     const signInExperience = await getSignInExperience();
 
@@ -45,6 +54,7 @@ describe('admin console sign-in experience', () => {
       singleSignOnEnabled: true,
       supportEmail: 'contact@logto.io',
       supportWebsiteUrl: 'https://logto.io',
+      forgotPasswordMethods: [],
     };
 
     const updatedSignInExperience = await updateSignInExperience(newSignInExperience);
@@ -201,6 +211,10 @@ devFeatureTest.describe('MFA validation', () => {
         factors: [],
       },
     });
+  });
+
+  afterEach(async () => {
+    await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
   });
 
   devFeatureTest.it(

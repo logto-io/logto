@@ -1,5 +1,5 @@
 import { ConnectorType } from '@logto/connector-kit';
-import { SignInIdentifier, SignInMode } from '@logto/schemas';
+import { ForgotPasswordMethod, SignInIdentifier, SignInMode } from '@logto/schemas';
 
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { clearSsoConnectors } from '#src/api/sso-connector.js';
@@ -19,6 +19,10 @@ describe('first screen', () => {
     await setSmsConnector();
     await updateSignInExperience({
       signInMode: SignInMode.SignInAndRegister,
+      forgotPasswordMethods: [
+        ForgotPasswordMethod.EmailVerificationCode,
+        ForgotPasswordMethod.PhoneVerificationCode,
+      ],
     });
   });
 
@@ -236,6 +240,13 @@ describe('first screen', () => {
     let url: URL;
 
     beforeEach(async () => {
+      await updateSignInExperience({
+        forgotPasswordMethods: [
+          ForgotPasswordMethod.EmailVerificationCode,
+          ForgotPasswordMethod.PhoneVerificationCode,
+        ],
+      });
+
       // eslint-disable-next-line @silverhand/fp/no-mutation
       experience = new ExpectExperience(await browser.newPage());
       // eslint-disable-next-line @silverhand/fp/no-mutation
@@ -254,7 +265,9 @@ describe('first screen', () => {
     });
 
     it('should fallback to sign-in page if forgot password is disabled', async () => {
-      // Clear SMS & Email connectors to disable forgot password
+      await updateSignInExperience({
+        forgotPasswordMethods: [],
+      });
       await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
 
       await experience.page.goto(url.href, { waitUntil: 'networkidle0' });

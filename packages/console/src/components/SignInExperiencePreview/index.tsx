@@ -1,5 +1,5 @@
 import type { LanguageTag } from '@logto/language-kit';
-import { Theme, ConnectorType } from '@logto/schemas';
+import { Theme, ConnectorType, ForgotPasswordMethod } from '@logto/schemas';
 import type { ConnectorMetadata, ConnectorResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import PhoneInfo from '@/assets/images/phone-info.svg?react';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import type { RequestError } from '@/hooks/use-api';
 import useUiLanguages from '@/hooks/use-ui-languages';
@@ -70,17 +71,41 @@ function SignInExperiencePreview({
     );
 
     const hasEmailConnector = allConnectors.some(({ type }) => type === ConnectorType.Email);
-
     const hasSmsConnector = allConnectors.some(({ type }) => type === ConnectorType.Sms);
+
+    /**
+     * Generate forgot password object based on available connectors and configured methods.
+     * This logic aligns with the core library implementation in sign-in-experience/index.ts
+     */
+    const forgotPassword = (() => {
+      // If forgotPasswordMethods is null (production compatibility) or dev features are not enabled,
+      // fall back to connector-based availability only
+      if (!signInExperience.forgotPasswordMethods || !isDevFeaturesEnabled) {
+        return {
+          email: hasEmailConnector,
+          phone: hasSmsConnector,
+        };
+      }
+
+      // When methods are explicitly configured and dev features are enabled,
+      // require both method inclusion and connector availability
+      return {
+        email:
+          signInExperience.forgotPasswordMethods.includes(
+            ForgotPasswordMethod.EmailVerificationCode
+          ) && hasEmailConnector,
+        phone:
+          signInExperience.forgotPasswordMethods.includes(
+            ForgotPasswordMethod.PhoneVerificationCode
+          ) && hasSmsConnector,
+      };
+    })();
 
     return {
       signInExperience: {
         ...signInExperience,
         socialConnectors,
-        forgotPassword: {
-          email: hasEmailConnector,
-          sms: hasSmsConnector,
-        },
+        forgotPassword,
       },
       language,
       mode,

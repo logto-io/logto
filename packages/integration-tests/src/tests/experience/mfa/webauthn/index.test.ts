@@ -33,6 +33,7 @@ describe('MFA - WebAuthn', () => {
           },
         ],
       },
+      forgotPasswordMethods: [],
     });
   });
 
