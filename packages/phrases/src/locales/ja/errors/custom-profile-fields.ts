@@ -11,6 +11,8 @@ const custom_profile_fields = {
     'フィールド名が無効です。文字または数字のみが許可され、大文字小文字が区別されます。',
   name_conflict_sign_in_identifier:
     '無効なフィールド名です。"{{name}}" は予約されたサインイン識別子キーです。',
+  name_conflict_built_in_prop:
+    '無効なフィールド名です。"{{name}}" は予約された組み込みユーザープロフィールプロパティです。',
   name_conflict_custom_data:
     '無効なフィールド名です。"{{name}}" は予約されたカスタムデータキーです。',
   name_required: 'フィールド名は必須です。',

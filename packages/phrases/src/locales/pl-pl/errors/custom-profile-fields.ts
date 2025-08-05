@@ -11,6 +11,8 @@ const custom_profile_fields = {
     'Nieprawidłowa nazwa pola, dozwolone są tylko litery lub cyfry, rozróżniana wielkość liter.',
   name_conflict_sign_in_identifier:
     'Nieprawidłowa nazwa pola. "{{name}}" jest zarezerwowanym kluczem identyfikatora logowania.',
+  name_conflict_built_in_prop:
+    'Nieprawidłowa nazwa pola. "{{name}}" jest zarezerwowaną wbudowaną właściwością profilu użytkownika.',
   name_conflict_custom_data:
     'Nieprawidłowa nazwa pola. "{{name}}" jest zarezerwowanym kluczem danych niestandardowych.',
   name_required: 'Nazwa pola jest wymagana.',

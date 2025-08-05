@@ -10,6 +10,8 @@ const custom_profile_fields = {
   invalid_name: 'Invalid field name, only letters or numbers are allowed, case sensitive.',
   name_conflict_sign_in_identifier:
     'Invalid field name. "{{name}}" is a reserved sign-in identifier key.',
+  name_conflict_built_in_prop:
+    'Invalid field name. "{{name}}" is a reserved built-in user profile property.',
   name_conflict_custom_data: 'Invalid field name. "{{name}}" is a reserved custom data key.',
   name_required: 'Field name is required.',
 };
