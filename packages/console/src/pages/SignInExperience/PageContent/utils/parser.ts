@@ -148,8 +148,8 @@ export const sieFormDataParser = {
       signUp: signUpFormDataParser.toSignUp(signUp),
       signInMode: createAccountEnabled ? SignInMode.SignInAndRegister : SignInMode.SignIn,
       customCss: customCss?.length ? customCss : null,
-      // TODO @wangsijie: Remove this once the feature is ready
-      ...conditional(isDevFeaturesEnabled && { forgotPasswordMethods }),
+      // TODO @wangsijie: Remove this once forgot password methods feature is ready for production.
+      forgotPasswordMethods: isDevFeaturesEnabled ? forgotPasswordMethods : null,
     };
   },
 };
