@@ -79,12 +79,26 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
     field: Field,
     value: T
   ) => {
-    const result = await pool.maybeOne<QueryResult>(sql`
-      ${findByModel(modelName)}
-      and ${fields.payload}->>${field}=${value}
-    `);
+    // Fetch all matching records
+    const results = await pool.any<QueryResult>(sql`
+    ${findByModel(modelName)}
+    and ${fields.payload}->>${field}=${value}
+  `);
 
-    return convertResult(result, modelName);
+    // In a rare case, when duplicate uid is created for different session instances.
+    // This query may lead to DataIntegrityError.
+    // To handle this case, we delete all duplicates and return null.
+    if (results.length > 1) {
+      // Delete all duplicates
+      await pool.query(sql`
+      delete from ${sql.identifier([modelName])}
+      where ${fields.payload}->>${field}=${value}
+    `);
+      return;
+    }
+
+    // If there is only one record, return the result.
+    return results[0] ? convertResult(results[0], modelName) : undefined;
   };
 
   const consumeInstanceById = async (modelName: string, id: string) => {
