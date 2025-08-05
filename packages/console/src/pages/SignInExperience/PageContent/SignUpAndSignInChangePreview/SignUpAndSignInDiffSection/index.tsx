@@ -1,5 +1,7 @@
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { type SignInExperiencePageManagedData } from '@/pages/SignInExperience/types';
 
+import ForgotPasswordMethodsDiffSection from './ForgotPasswordMethodsDiffSection';
 import SignInDiffSection from './SignInDiffSection';
 import SignUpDiffSection from './SignUpDiffSection';
 import SocialTargetsDiffSection from './SocialTargetsDiffSection';
@@ -24,6 +26,13 @@ function SignUpAndSignInDiffSection({ before, after, isAfter = false }: Props) {
         after={after.socialSignInConnectorTargets}
         isAfter={isAfter}
       />
+      {isDevFeaturesEnabled && (
+        <ForgotPasswordMethodsDiffSection
+          before={before.forgotPasswordMethods ?? undefined}
+          after={after.forgotPasswordMethods ?? undefined}
+          isAfter={isAfter}
+        />
+      )}
     </>
   );
 }

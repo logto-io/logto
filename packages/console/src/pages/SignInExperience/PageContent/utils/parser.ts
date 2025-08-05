@@ -7,6 +7,7 @@ import {
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { emptyBranding } from '@/types/sign-in-experience';
 import { removeFalsyValues } from '@/utils/object';
 
@@ -139,7 +140,7 @@ export const sieFormDataParser = {
     };
   },
   toSignInExperience: (formData: SignInExperienceForm): SignInExperiencePageManagedData => {
-    const { branding, createAccountEnabled, signUp, customCss } = formData;
+    const { branding, createAccountEnabled, signUp, customCss, forgotPasswordMethods } = formData;
 
     return {
       ...formData,
@@ -147,6 +148,8 @@ export const sieFormDataParser = {
       signUp: signUpFormDataParser.toSignUp(signUp),
       signInMode: createAccountEnabled ? SignInMode.SignInAndRegister : SignInMode.SignIn,
       customCss: customCss?.length ? customCss : null,
+      // TODO @wangsijie: Remove this once the feature is ready
+      ...conditional(isDevFeaturesEnabled && { forgotPasswordMethods }),
     };
   },
 };
