@@ -93,6 +93,7 @@ export default class ExperienceInteraction {
       getVerificationRecordByTypeAndId: (type, verificationId) =>
         this.getVerificationRecordByTypeAndId(type, verificationId),
       getVerificationRecordById: (verificationId) => this.getVerificationRecordById(verificationId),
+      getCurrentProfile: () => this.profile.data,
     };
 
     if (typeof interactionData === 'string') {

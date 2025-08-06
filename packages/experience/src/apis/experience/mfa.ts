@@ -87,7 +87,8 @@ export const bindMfa = async (payload: BindMfaPayload, verificationId: string) =
     }
     case MfaFactor.EmailVerificationCode:
     case MfaFactor.PhoneVerificationCode: {
-      // TODO: Implement email and phone verification code binding
+      // Email/Phone MFA factors use special binding logic, but don't submit immediately
+      // to allow additional MFA factors to be bound in the same session
       break;
     }
   }

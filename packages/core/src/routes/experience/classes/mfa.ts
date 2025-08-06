@@ -28,6 +28,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { type InteractionContext } from '../types.js';
 
+import { getAllUserEnabledMfaVerifications } from './helpers.js';
 import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
 
 export type MfaData = {
@@ -72,19 +73,6 @@ const isMfaSkipped = (logtoConfig: JsonObject): boolean => {
 
   return parsed.success ? parsed.data[userMfaDataKey].skipped === true : false;
 };
-
-/**
- * Filter out backup codes mfa verifications that have been used
- */
-const filterOutEmptyBackupCodes = (
-  mfaVerifications: User['mfaVerifications']
-): User['mfaVerifications'] =>
-  mfaVerifications.filter((mfa) => {
-    if (mfa.type === MfaFactor.BackupCode) {
-      return mfa.codes.some((code) => !code.usedAt);
-    }
-    return true;
-  });
 
 /**
  * This class stores all the pending new MFA settings for a user.
@@ -261,11 +249,11 @@ export class Mfa {
 
     await this.checkMfaFactorsEnabledInSignInExperience([MfaFactor.BackupCode]);
 
-    const { mfaVerifications } = await this.interactionContext.getIdentifiedUser();
-    const userHasOtherMfa = mfaVerifications.some((mfa) => mfa.type !== MfaFactor.BackupCode);
-    const hasOtherNewMfa = Boolean(this.#totp ?? this.#webAuthn?.length);
+    const userFactors = await this.getUserMfaFactors();
+    const hasOtherMfaFactors = userFactors.some((factor) => factor !== MfaFactor.BackupCode);
+
     assertThat(
-      userHasOtherMfa || hasOtherNewMfa,
+      hasOtherMfaFactors,
       new RequestError({
         code: 'session.mfa.backup_code_can_not_be_alone',
         status: 422,
@@ -298,11 +286,7 @@ export class Mfa {
       return;
     }
 
-    const {
-      mfaVerifications,
-      logtoConfig,
-      id: userId,
-    } = await this.interactionContext.getIdentifiedUser();
+    const { logtoConfig, id: userId } = await this.interactionContext.getIdentifiedUser();
 
     const isMfaRequiredByUserOrganizations = await this.isMfaRequiredByUserOrganizations(
       mfaSettings,
@@ -334,7 +318,7 @@ export class Mfa {
 
     const availableFactors = factors.filter((factor) => factor !== MfaFactor.BackupCode);
 
-    const factorsInUser = filterOutEmptyBackupCodes(mfaVerifications).map(({ type }) => type);
+    const factorsInUser = await this.getUserMfaFactors();
     const factorsInBind = this.bindMfaFactorsArray.map(({ type }) => type);
     const linkedFactors = deduplicate([...factorsInUser, ...factorsInBind]);
 
@@ -394,5 +378,22 @@ export class Mfa {
       await this.queries.organizations.relations.users.getOrganizationsByUserId(userId);
 
     return organizations.some(({ isMfaRequired }) => isMfaRequired);
+  }
+
+  private async getUserMfaFactors(): Promise<MfaFactor[]> {
+    const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
+    const user = await this.interactionContext.getIdentifiedUser();
+    const currentProfile = this.interactionContext.getCurrentProfile();
+
+    const existingVerifications = getAllUserEnabledMfaVerifications(
+      mfaSettings,
+      user,
+      currentProfile
+    );
+    return [
+      ...existingVerifications.map(({ type }) => type),
+      ...(this.#totp ? [MfaFactor.TOTP] : []),
+      ...(this.#webAuthn?.length ? [MfaFactor.WebAuthn] : []),
+    ].filter(Boolean);
   }
 }

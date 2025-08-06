@@ -150,6 +150,7 @@ export type InteractionContext = {
     type: K,
     verificationId: string
   ) => VerificationRecordMap[K];
+  getCurrentProfile: () => InteractionProfile;
 };
 
 export type ExperienceInteractionRouterContext<ContextT extends WithLogContext = WithLogContext> =

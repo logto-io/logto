@@ -88,6 +88,17 @@ abstract class CodeVerification<T extends CodeVerificationType>
     return this.verified;
   }
 
+  get isNewBindMfaVerification() {
+    // For EmailCodeVerification and PhoneCodeVerification, the binding is always completed before submitting the interaction.
+    // So this method always returns false.
+    // So that it can be used right after the new Email/Phone is bound to the user.
+    // The flow: user binds a new email/phone -> user info updated to the DB -> user submits the interaction
+    // -> check user enabled MFA verifications -> the new email/phone is included in the enabled MFA verifications
+    // -> but the user does not need to verify the new email/phone again -> reuse the verification record
+    // So this verification record are used for the new bind MFA verification, and also can be used for the verification.
+    return false;
+  }
+
   /**
    * Send the verification code to the current `identifier`
    *
