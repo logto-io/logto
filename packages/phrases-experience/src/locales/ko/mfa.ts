@@ -8,6 +8,7 @@ const mfa = {
   link_webauthn_description: '기기 또는 USB 하드웨어 연결',
   link_backup_code_description: '백업 코드 생성',
   link_email_verification_code_description: '이메일 주소 연결',
+  link_email_2fa_description: '2단계 인증을 위한 이메일 주소 연결',
   link_phone_verification_code_description: '전화번호 연결',
   verify_totp_description: '앱에 일회용 코드 입력',
   verify_webauthn_description: '기기 또는 USB 하드웨어 확인',

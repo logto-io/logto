@@ -8,6 +8,7 @@ const mfa = {
   link_webauthn_description: 'Підключіть свій пристрій або USB-ключ',
   link_backup_code_description: 'Згенеруйте резервний код',
   link_email_verification_code_description: "Під'єднайте вашу адресу електронної пошти",
+  link_email_2fa_description: "Під'єднайте вашу адресу електронної пошти для 2-етапної перевірки",
   link_phone_verification_code_description: "Під'єднайте ваш номер телефону",
   verify_totp_description: 'Введіть одноразовий код з програми',
   verify_webauthn_description: 'Підтвердьте свій пристрій або USB-ключ',

@@ -1,10 +1,12 @@
 import type { VerificationCodeIdentifier } from '@logto/schemas';
-import { InteractionEvent, VerificationType } from '@logto/schemas';
+import { InteractionEvent, MfaFactor, VerificationType } from '@logto/schemas';
 import { useCallback, useContext, useMemo } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { validate } from 'superstruct';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { updateProfileWithVerificationCode } from '@/apis/experience';
+import { bindMfa } from '@/apis/experience/mfa';
 import { getInteractionEventFromState } from '@/apis/utils';
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
@@ -12,7 +14,9 @@ import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import { useSieMethods } from '@/hooks/use-sie';
 import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
+import useToast from '@/hooks/use-toast';
 import { SearchParameters } from '@/types';
+import { mfaFlowStateGuard } from '@/types/guard';
 
 import useGeneralVerificationCodeErrorHandler from './use-general-verification-code-error-handler';
 import useIdentifierErrorAlert, { IdentifierErrorType } from './use-identifier-error-alert';
@@ -38,8 +42,10 @@ const useContinueFlowCodeVerification = (
   );
 
   const handleError = useErrorHandler();
+  const { setToast } = useToast();
 
   const verifyVerificationCode = useApi(updateProfileWithVerificationCode);
+  const asyncBindMfa = useApi(bindMfa);
 
   const { generalVerificationCodeErrorHandlers, errorMessage, clearErrorMessage } =
     useGeneralVerificationCodeErrorHandler();
@@ -113,6 +119,46 @@ const useContinueFlowCodeVerification = (
 
   const onSubmit = useCallback(
     async (code: string) => {
+      const [, mfaFlowState] = validate(state, mfaFlowStateGuard);
+      // Check if this is an email MFA binding flow
+      if (
+        mfaFlowState?.availableFactors.includes(MfaFactor.EmailVerificationCode) &&
+        identifier.type === 'email'
+      ) {
+        const [verifyError] = await verifyVerificationCode(
+          {
+            code,
+            identifier,
+            verificationId,
+          },
+          interactionEvent
+        );
+
+        if (verifyError) {
+          await handleError(verifyError, verifyVerificationCodeErrorHandlers);
+          errorCallback?.();
+          return;
+        }
+
+        const [bindError, bindResult] = await asyncBindMfa(
+          { type: MfaFactor.EmailVerificationCode },
+          verificationId
+        );
+
+        if (bindError) {
+          await handleError(bindError);
+          errorCallback?.();
+          return;
+        }
+
+        if (bindResult?.redirectTo) {
+          await redirectTo(bindResult.redirectTo);
+          return;
+        }
+
+        return;
+      }
+
       const [error, result] = await verifyVerificationCode(
         {
           code,
@@ -134,11 +180,13 @@ const useContinueFlowCodeVerification = (
       }
     },
     [
+      asyncBindMfa,
       errorCallback,
       handleError,
       identifier,
       interactionEvent,
       redirectTo,
+      state,
       verificationId,
       verifyVerificationCode,
       verifyVerificationCodeErrorHandlers,

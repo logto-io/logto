@@ -8,6 +8,7 @@ const mfa = {
   link_webauthn_description: '鏈接您的設備或 USB 硬件',
   link_backup_code_description: '生成備份代碼',
   link_email_verification_code_description: '連結您的電子郵件地址',
+  link_email_2fa_description: '連結您的電子郵件地址進行兩步驗證',
   link_phone_verification_code_description: '連結您的電話號碼',
   verify_totp_description: '在應用程序中輸入一次性代碼',
   verify_webauthn_description: '驗證您的設備或 USB 硬件',

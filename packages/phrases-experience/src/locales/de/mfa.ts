@@ -8,6 +8,7 @@ const mfa = {
   link_webauthn_description: 'Verknüpfen Sie Ihr Gerät oder USB-Hardware',
   link_backup_code_description: 'Backup-Code generieren',
   link_email_verification_code_description: 'Verknüpfen Sie Ihre E-Mail-Adresse',
+  link_email_2fa_description: 'Verknüpfen Sie Ihre E-Mail-Adresse für 2-Schritt-Verifizierung',
   link_phone_verification_code_description: 'Verknüpfen Sie Ihre Telefonnummer',
   verify_totp_description: 'Geben Sie den Einmalcode in der App ein',
   verify_webauthn_description: 'Verifizieren Sie Ihr Gerät oder Ihre USB-Hardware',
