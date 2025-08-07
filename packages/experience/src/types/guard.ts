@@ -64,6 +64,7 @@ const mfaFactorsGuard = s.array(
     s.literal(MfaFactor.TOTP),
     s.literal(MfaFactor.WebAuthn),
     s.literal(MfaFactor.BackupCode),
+    s.literal(MfaFactor.EmailVerificationCode),
   ])
 );
 

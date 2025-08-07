@@ -1,0 +1,5 @@
+@use '@/scss/underscore' as _;
+
+.switchLink {
+  margin-top: _.unit(6);
+}
