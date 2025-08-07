@@ -1,6 +1,7 @@
 import {
   AlternativeSignUpIdentifier,
   ConnectorType,
+  ForgotPasswordMethod,
   SignInIdentifier,
   MfaFactor,
   type SignUpIdentifier as SignUpIdentifierMethod,
@@ -43,6 +44,27 @@ export const getSignUpIdentifiersRequiredConnectors = (
         continue;
       }
       default: {
+        continue;
+      }
+    }
+  }
+
+  return Array.from(requiredConnectors);
+};
+
+export const getForgotPasswordMethodsRequiredConnectors = (
+  forgotPasswordMethods: ForgotPasswordMethod[]
+): ConnectorType[] => {
+  const requiredConnectors = new Set<ConnectorType>();
+
+  for (const method of forgotPasswordMethods) {
+    switch (method) {
+      case ForgotPasswordMethod.EmailVerificationCode: {
+        requiredConnectors.add(ConnectorType.Email);
+        continue;
+      }
+      case ForgotPasswordMethod.PhoneVerificationCode: {
+        requiredConnectors.add(ConnectorType.Sms);
         continue;
       }
     }
