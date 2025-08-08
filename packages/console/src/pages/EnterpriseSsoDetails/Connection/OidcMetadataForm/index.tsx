@@ -8,6 +8,7 @@ import InlineNotification from '@/ds-components/InlineNotification';
 import Switch from '@/ds-components/Switch';
 import TextInput from '@/ds-components/TextInput';
 import Textarea from '@/ds-components/Textarea';
+import { formatMultiLineScopeInput } from '@/utils/connector-form';
 import { uriValidator } from '@/utils/validator';
 
 import { type OidcConnectorConfig, type OidcProviderConfig } from '../../types/oidc';
@@ -85,7 +86,9 @@ function OidcMetadataForm({ providerConfig, config, providerName }: Props) {
       <FormField title="enterprise_sso.metadata.oidc.scope_field_name">
         <Textarea
           rows={5}
-          {...register('scope')}
+          {...register('scope', {
+            setValueAs: (value) => formatMultiLineScopeInput(String(value)),
+          })}
           error={Boolean(errors.scope)}
           placeholder={t('enterprise_sso.metadata.oidc.scope_field_placeholder')}
         />

@@ -1,5 +1,6 @@
 import type { ConnectorConfigFormItem } from '@logto/connector-kit';
 import { ConnectorConfigFormItemType } from '@logto/connector-kit';
+import { conditional } from '@silverhand/essentials';
 import { useCallback } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +15,7 @@ import Switch from '@/ds-components/Switch';
 import TextInput from '@/ds-components/TextInput';
 import Textarea from '@/ds-components/Textarea';
 import type { ConnectorFormType } from '@/types/connector';
+import { formatMultiLineScopeInput } from '@/utils/connector-form';
 import { jsonValidator } from '@/utils/validator';
 
 import styles from './index.module.scss';
@@ -65,6 +67,13 @@ function ConfigFormFields({ formItems }: Props) {
       ...register(`formConfig.${item.key}`, {
         required: item.required,
         valueAsNumber: item.type === ConnectorConfigFormItemType.Number,
+        ...conditional(
+          // For `scope` input field using multiline text, we need to format the input value.
+          item.key === 'scope' &&
+            item.type === ConnectorConfigFormItemType.MultilineText && {
+              setValueAs: (value) => formatMultiLineScopeInput(String(value)),
+            }
+        ),
       }),
       placeholder: item.placeholder,
       error,
