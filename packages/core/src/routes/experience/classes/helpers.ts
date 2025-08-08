@@ -6,7 +6,14 @@
  */
 
 import { defaults, parseAffiliateData } from '@logto/affiliate';
-import { adminTenantId, MfaFactor, VerificationType, type User } from '@logto/schemas';
+import {
+  adminTenantId,
+  MfaFactor,
+  VerificationType,
+  type User,
+  type Mfa,
+  type MfaVerification,
+} from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
 import { type IRouterContext } from 'koa-router';
 
@@ -169,6 +176,57 @@ export const mergeUserMfaVerifications = (
   }
 
   return [...userMfaVerifications, ...newMfaVerifications];
+};
+
+/**
+ * Filter out backup codes mfa verifications that have been used
+ */
+const filterOutEmptyBackupCodes = (
+  mfaVerifications: User['mfaVerifications']
+): User['mfaVerifications'] =>
+  mfaVerifications.filter((mfa) => {
+    if (mfa.type === MfaFactor.BackupCode) {
+      return mfa.codes.some((code) => !code.usedAt);
+    }
+    return true;
+  });
+
+/**
+ * Get all enabled MFA verifications for a user (stored + implicit)
+ * @param mfaSettings - MFA settings from sign-in experience
+ * @param user - User object with mfaVerifications and profile data
+ * @param currentProfile - Optional profile override (for current interaction contexts), in cases of MFA verification, this is not needed
+ * @returns Array of all enabled MFA verifications
+ */
+export const getAllUserEnabledMfaVerifications = (
+  mfaSettings: Mfa,
+  user: User,
+  currentProfile?: InteractionProfile
+): MfaVerification[] => {
+  const storedVerifications = filterOutEmptyBackupCodes(user.mfaVerifications).filter(
+    (verification) => mfaSettings.factors.includes(verification.type)
+  );
+
+  if (!EnvSet.values.isDevFeaturesEnabled) {
+    return storedVerifications;
+  }
+
+  const email = currentProfile?.primaryEmail ?? user.primaryEmail;
+
+  const implicitVerifications = [
+    // Email MFA Factor: user has primaryEmail + Email factor enabled in SIE
+    ...(mfaSettings.factors.includes(MfaFactor.EmailVerificationCode) && email
+      ? ([
+          {
+            id: 'implicit-email-mfa', // Fake ID for capability
+            type: MfaFactor.EmailVerificationCode,
+            createdAt: new Date(user.createdAt).toISOString(),
+          },
+        ] satisfies MfaVerification[])
+      : []),
+  ];
+
+  return [...storedVerifications, ...implicitVerifications];
 };
 
 /**

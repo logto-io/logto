@@ -14,6 +14,8 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { EnvSet } from '../../env-set/index.js';
+
 import { experienceRoutes } from './const.js';
 import { type ExperienceInteractionRouterContext } from './types.js';
 
@@ -216,9 +218,20 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
           await experienceInteraction.mfa.addBackupCodeByVerificationId(verificationId, log);
           break;
         }
-        case MfaFactor.EmailVerificationCode:
+        case MfaFactor.EmailVerificationCode: {
+          if (!EnvSet.values.isDevFeaturesEnabled) {
+            throw new Error('Not implemented yet');
+          }
+
+          await experienceInteraction.profile.setProfileByVerificationId(
+            SignInIdentifier.Email,
+            verificationId,
+            log
+          );
+          break;
+        }
         case MfaFactor.PhoneVerificationCode: {
-          // TODO: Implement email and SMS verification code MFA binding
+          // TODO: Implement SMS verification code MFA binding
           throw new Error('Not implemented yet');
         }
       }

@@ -9,7 +9,9 @@ import {
   type User,
 } from '@logto/schemas';
 
+import { getAllUserEnabledMfaVerifications } from '../helpers.js';
 import { type BackupCodeVerification } from '../verifications/backup-code-verification.js';
+import { type EmailCodeVerification } from '../verifications/code-verification.js';
 import { type VerificationRecord } from '../verifications/index.js';
 import { type TotpVerification } from '../verifications/totp-verification.js';
 import { type WebAuthnVerification } from '../verifications/web-authn-verification.js';
@@ -18,20 +20,27 @@ const mfaVerificationTypes = Object.freeze([
   VerificationType.TOTP,
   VerificationType.BackupCode,
   VerificationType.WebAuthn,
+  VerificationType.EmailVerificationCode,
 ]);
 
 type MfaVerificationType =
   | VerificationType.TOTP
   | VerificationType.BackupCode
-  | VerificationType.WebAuthn;
+  | VerificationType.WebAuthn
+  | VerificationType.EmailVerificationCode;
 
 const mfaVerificationTypeToMfaFactorMap = Object.freeze({
   [VerificationType.TOTP]: MfaFactor.TOTP,
   [VerificationType.BackupCode]: MfaFactor.BackupCode,
   [VerificationType.WebAuthn]: MfaFactor.WebAuthn,
+  [VerificationType.EmailVerificationCode]: MfaFactor.EmailVerificationCode,
 }) satisfies Record<MfaVerificationType, MfaFactor>;
 
-type MfaVerificationRecord = TotpVerification | WebAuthnVerification | BackupCodeVerification;
+type MfaVerificationRecord =
+  | TotpVerification
+  | WebAuthnVerification
+  | BackupCodeVerification
+  | EmailCodeVerification;
 
 const isMfaVerificationRecord = (
   verification: VerificationRecord
@@ -49,13 +58,10 @@ export class MfaValidator {
    * Get the enabled MFA factors for the user
    *
    * - Filter out MFA factors that are not configured in the sign-in experience
+   * - Include implicit Email and Phone MFA factors if user has them and they're enabled in SIE
    */
   get userEnabledMfaVerifications() {
-    const { mfaVerifications } = this.user;
-
-    return mfaVerifications.filter((verification) =>
-      this.mfaSettings.factors.includes(verification.type)
-    );
+    return getAllUserEnabledMfaVerifications(this.mfaSettings, this.user);
   }
 
   /**
