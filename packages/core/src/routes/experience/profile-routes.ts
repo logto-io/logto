@@ -231,8 +231,16 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
           break;
         }
         case MfaFactor.PhoneVerificationCode: {
-          // TODO: Implement SMS verification code MFA binding
-          throw new Error('Not implemented yet');
+          if (!EnvSet.values.isDevFeaturesEnabled) {
+            throw new Error('Not implemented yet');
+          }
+
+          await experienceInteraction.profile.setProfileByVerificationId(
+            SignInIdentifier.Phone,
+            verificationId,
+            log
+          );
+          break;
         }
       }
 
