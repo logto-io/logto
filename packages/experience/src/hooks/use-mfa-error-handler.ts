@@ -84,6 +84,15 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
         return startWebAuthnProcessing(flow, state, replace);
       }
 
+      if (factor === MfaFactor.EmailVerificationCode && flow === UserMfaFlow.MfaBinding) {
+        /**
+         * Start email verification code binding if only email verification code is available.
+         */
+        console.log(state);
+        navigate({ pathname: `/${flow}/${factor}` }, { replace, state });
+        return;
+      }
+
       /**
        * Redirect to the specific MFA factor page.
        */
