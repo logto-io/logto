@@ -174,6 +174,7 @@ export const extraProfileFieldNamesGuard = s.union([
   s.literal('birthdate'),
   s.literal('zoneinfo'),
   s.literal('locale'),
+  s.literal('fullname'),
   s.literal('address.formatted'),
   s.literal('address.streetAddress'),
   s.literal('address.locality'),
