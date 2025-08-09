@@ -84,6 +84,9 @@ const custom_profile_fields = {
     value_range: 'Değer aralığı',
     min: 'Minimum',
     max: 'Maksimum',
+    default_value: 'Varsayılan değer',
+    checkbox_checked: 'İşaretli (True)',
+    checkbox_unchecked: 'İşaretsiz (False)',
     required: 'Zorunlu',
     required_description:
       'Etkinleştirildiğinde, bu alan kullanıcılar tarafından doldurulmalıdır. Devre dışı bırakıldığında, bu alan isteğe bağlıdır.',

@@ -137,14 +137,16 @@ function ProfileFieldPartSubForm({ index }: Props) {
           />
         </FormField>
       )}
-      <FormField title="sign_in_exp.custom_profile_fields.details.description">
-        <TextInput
-          {...register(`${fieldPrefix}description`)}
-          error={formErrors?.description?.message}
-          placeholder={t('sign_in_exp.custom_profile_fields.details.description_placeholder')}
-        />
-      </FormField>
-      {(type === CustomProfileFieldType.Checkbox || type === CustomProfileFieldType.Select) && (
+      {type !== CustomProfileFieldType.Checkbox && (
+        <FormField title="sign_in_exp.custom_profile_fields.details.description">
+          <TextInput
+            {...register(`${fieldPrefix}description`)}
+            error={formErrors?.description?.message}
+            placeholder={t('sign_in_exp.custom_profile_fields.details.description_placeholder')}
+          />
+        </FormField>
+      )}
+      {type === CustomProfileFieldType.Select && (
         <FormField isRequired title="sign_in_exp.custom_profile_fields.details.options">
           <Textarea
             {...register(`${fieldPrefix}options`, {
@@ -187,12 +189,40 @@ function ProfileFieldPartSubForm({ index }: Props) {
           <DateFormatSelector />
         </FormField>
       )}
-      <FormField title="sign_in_exp.custom_profile_fields.details.required">
-        <Switch
-          label={t('sign_in_exp.custom_profile_fields.details.required_description')}
-          {...register(`${fieldPrefix}required`)}
-        />
-      </FormField>
+      {type === CustomProfileFieldType.Checkbox && (
+        <FormField title="sign_in_exp.custom_profile_fields.details.default_value">
+          <Controller
+            name={`${fieldPrefix}defaultValue`}
+            control={control}
+            render={({ field: { onChange, value } }) => {
+              return (
+                <Select
+                  value={value === 'true' ? 'true' : 'false'}
+                  options={[
+                    {
+                      value: 'true',
+                      title: t('sign_in_exp.custom_profile_fields.details.checkbox_checked'),
+                    },
+                    {
+                      value: 'false',
+                      title: t('sign_in_exp.custom_profile_fields.details.checkbox_unchecked'),
+                    },
+                  ]}
+                  onChange={onChange}
+                />
+              );
+            }}
+          />
+        </FormField>
+      )}
+      {type !== CustomProfileFieldType.Checkbox && (
+        <FormField title="sign_in_exp.custom_profile_fields.details.required">
+          <Switch
+            label={t('sign_in_exp.custom_profile_fields.details.required_description')}
+            {...register(`${fieldPrefix}required`)}
+          />
+        </FormField>
+      )}
     </>
   );
 }

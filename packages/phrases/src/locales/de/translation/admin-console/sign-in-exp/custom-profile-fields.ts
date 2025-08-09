@@ -85,6 +85,9 @@ const custom_profile_fields = {
     value_range: 'Wertebereich',
     min: 'Minimum',
     max: 'Maximum',
+    default_value: 'Standardwert',
+    checkbox_checked: 'Aktiviert (True)',
+    checkbox_unchecked: 'Deaktiviert (False)',
     required: 'Erforderlich',
     required_description:
       'Wenn aktiviert, muss dieses Feld von Benutzern ausgefüllt werden. Wenn deaktiviert, ist dieses Feld optional.',

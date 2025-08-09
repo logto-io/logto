@@ -46,7 +46,7 @@ const validateNumberProfileField: ValidateCustomProfileField = (data) => {
 const validateCheckboxProfileField: ValidateCustomProfileField = (data, isStrict) => {
   const { config } = checkboxProfileFieldGuard.parse(data);
   if (isStrict) {
-    assertThat(config.options.length > 0, 'custom_profile_fields.invalid_options');
+    assertThat(config?.defaultValue !== undefined, 'custom_profile_fields.invalid_default_value');
   }
 };
 

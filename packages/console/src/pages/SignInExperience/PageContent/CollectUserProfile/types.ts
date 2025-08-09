@@ -15,6 +15,7 @@ type ProfileFieldPartSubForm = {
   maxValue?: string;
   format?: string;
   customFormat?: string;
+  defaultValue?: string;
 };
 
 export type ProfileFieldForm = Omit<ProfileFieldPartSubForm, 'type' | 'enabled'> & {

@@ -91,18 +91,22 @@ export const dateProfileFieldGuard = baseProfileFieldGuard.extend({
     .optional(),
 }) satisfies ToZodObject<DateProfileField>;
 
-export type CheckboxProfileField = BaseProfileField & {
+export type CheckboxProfileField = Omit<BaseProfileField, 'description'> & {
   type: CustomProfileFieldType.Checkbox;
-  config: {
-    options: Array<{ label?: string; value: string }>;
+  required: false;
+  config?: {
+    defaultValue: 'true' | 'false';
   };
 };
 
-export const checkboxProfileFieldGuard = baseProfileFieldGuard.extend({
+export const checkboxProfileFieldGuard = baseProfileFieldGuard.omit({ description: true }).extend({
   type: z.literal(CustomProfileFieldType.Checkbox),
-  config: z.object({
-    options: z.array(z.object({ label: z.string().optional(), value: z.string() })),
-  }),
+  required: z.literal(false),
+  config: z
+    .object({
+      defaultValue: z.literal('true').or(z.literal('false')),
+    })
+    .optional(),
 }) satisfies ToZodObject<CheckboxProfileField>;
 
 export type SelectProfileField = BaseProfileField & {

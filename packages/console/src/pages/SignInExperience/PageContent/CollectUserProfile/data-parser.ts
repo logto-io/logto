@@ -10,7 +10,11 @@ import { cond, type Optional } from '@silverhand/essentials';
 import cleanDeep from 'clean-deep';
 
 import { type ProfileFieldForm } from './types';
-import { getProfileFieldTypeByName } from './utils';
+import {
+  getProfileFieldTypeByName,
+  isBuiltInAddressComponentKey,
+  isBuiltInCustomProfileFieldKey,
+} from './utils';
 
 const parseOptionsArrayToString = (
   options?: Array<{ value?: string; label?: string } | undefined>
@@ -65,6 +69,21 @@ const getDefaultParts = (type: CustomProfileFieldType) => {
   }
 };
 
+/**
+ * Built-in fields can leave label empty for they have i18n labels as fallback.
+ * Custom fields must have a label and will use name as fallback if not provided.
+ */
+const getDefaultFieldLabel = (name: string): string | undefined => {
+  const isBuiltInFieldName =
+    isBuiltInCustomProfileFieldKey(name) || isBuiltInAddressComponentKey(name);
+
+  if (isBuiltInFieldName) {
+    return;
+  }
+
+  return name;
+};
+
 export const getInitialRequestPayloadByFieldName = (name: string) => {
   const type = getProfileFieldTypeByName(name);
 
@@ -72,6 +91,7 @@ export const getInitialRequestPayloadByFieldName = (name: string) => {
     {
       name,
       type,
+      label: getDefaultFieldLabel(name),
       required: true,
       config: {
         format: cond(type === CustomProfileFieldType.Date && SupportedDateFormat.US),
@@ -100,6 +120,7 @@ export const parseResponseToFormData = (data: CustomProfileField): ProfileFieldF
     maxValue: config.maxValue === undefined ? '' : String(config.maxValue),
     format: config.format ?? '',
     customFormat: config.customFormat ?? '',
+    defaultValue: config.defaultValue ?? '',
     parts: config.parts?.map((part) => ({
       name: part.name,
       type: part.type,
@@ -113,6 +134,7 @@ export const parseResponseToFormData = (data: CustomProfileField): ProfileFieldF
       maxValue: part.config?.maxValue ? String(part.config.maxValue) : '',
       format: part.config?.format ?? '',
       customFormat: part.config?.customFormat ?? '',
+      defaultValue: part.config?.defaultValue ?? '',
       options: parseOptionsArrayToString(part.config?.options),
       enabled: part.enabled,
     })),
@@ -136,6 +158,7 @@ export const parseFormDataToRequestPayload = (
     maxValue,
     format,
     customFormat,
+    defaultValue,
     parts,
   } = data;
 
@@ -145,7 +168,7 @@ export const parseFormDataToRequestPayload = (
       type,
       label: cond(label),
       description,
-      required,
+      required: type === CustomProfileFieldType.Checkbox ? false : required,
       config: {
         options: parseOptionsStringToArray(options),
         placeholder,
@@ -155,13 +178,15 @@ export const parseFormDataToRequestPayload = (
         maxValue: cond(maxValue && Number(maxValue)),
         format,
         customFormat,
+        defaultValue:
+          type === CustomProfileFieldType.Checkbox ? String(defaultValue === 'true') : defaultValue,
         parts: parts?.map((part) => ({
           enabled: part.enabled,
           name: part.name,
           type: part.type,
           label: cond(part.label),
           description: part.description,
-          required: part.required,
+          required: part.type === CustomProfileFieldType.Checkbox ? false : part.required,
           config: {
             placeholder: part.placeholder,
             minLength: cond(part.minLength && Number(part.minLength)),
@@ -171,6 +196,10 @@ export const parseFormDataToRequestPayload = (
             options: parseOptionsStringToArray(part.options),
             format: part.format,
             customFormat: part.customFormat,
+            defaultValue:
+              part.type === CustomProfileFieldType.Checkbox
+                ? String(part.defaultValue === 'true')
+                : part.defaultValue,
           },
         })),
       },

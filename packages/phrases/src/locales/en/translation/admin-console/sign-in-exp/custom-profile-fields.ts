@@ -81,6 +81,9 @@ const custom_profile_fields = {
     value_range: 'Value range',
     min: 'Minimum',
     max: 'Maximum',
+    default_value: 'Default value',
+    checkbox_checked: 'Checked (True)',
+    checkbox_unchecked: 'Unchecked (False)',
     required: 'Required',
     required_description:
       'When enabled, this field must be filled out by users. When disabled, this field is optional.',
