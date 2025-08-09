@@ -1,8 +1,7 @@
 import { CustomProfileFieldType, type FieldOption, Gender, type FieldPart } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
-import CheckboxGroup from '@/components/CheckboxGroup';
-
+import CheckboxField from '../CheckboxField';
 import InputField from '../InputField';
 import SelectField from '../SelectField';
 
@@ -55,13 +54,13 @@ const PrimitiveProfileInputField = ({
   }
   if (type === CustomProfileFieldType.Checkbox) {
     return (
-      <CheckboxGroup
+      <CheckboxField
         className={className}
-        options={options}
-        value={value?.split(',') ?? []}
-        description={description}
-        onChange={(value) => {
-          onChange(value.join(','));
+        title={label}
+        checked={value === 'true'}
+        value={value}
+        onChange={(checked) => {
+          onChange(checked ? 'true' : 'false');
         }}
       />
     );

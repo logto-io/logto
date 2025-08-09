@@ -86,6 +86,9 @@ const custom_profile_fields = {
     value_range: 'Rango de valores',
     min: 'Mínimo',
     max: 'Máximo',
+    default_value: 'Valor por defecto',
+    checkbox_checked: 'Marcado (True)',
+    checkbox_unchecked: 'Desmarcado (False)',
     required: 'Obligatorio',
     required_description:
       'Cuando está habilitado, este campo debe ser completado por los usuarios. Cuando está deshabilitado, este campo es opcional.',

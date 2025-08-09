@@ -78,6 +78,9 @@ const custom_profile_fields = {
     value_range: 'نطاق القيمة',
     min: 'الحد الأدنى',
     max: 'الحد الأقصى',
+    default_value: 'القيمة الافتراضية',
+    checkbox_checked: 'محدد (True)',
+    checkbox_unchecked: 'غير محدد (False)',
     required: 'مطلوب',
     required_description:
       'عند التمكين، يجب على المستخدمين ملء هذا الحقل. عند التعطيل، يكون هذا الحقل اختياريًا.',

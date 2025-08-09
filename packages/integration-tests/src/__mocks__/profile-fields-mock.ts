@@ -132,11 +132,8 @@ export const genericCheckboxData = {
   name: `checkbox`,
   type: CustomProfileFieldType.Checkbox,
   label: "I'm a checkbox",
-  required: true,
+  required: false,
   config: {
-    options: [
-      { label: 'Option 1', value: 'option1' },
-      { label: 'Option 2', value: 'option2' },
-    ],
+    defaultValue: 'false',
   },
 } satisfies CheckboxProfileField;

@@ -1,6 +1,7 @@
 const custom_profile_fields = {
   entity_not_exists_with_names: 'Cannot find entities with the given names: {{names}}',
   invalid_min_max_input: 'Invalid min and max input.',
+  invalid_default_value: 'Invalid default value.',
   invalid_options: 'Invalid field options.',
   invalid_regex_format: 'Invalid regex format.',
   invalid_address_parts: 'Invalid address parts.',

@@ -219,6 +219,7 @@ const baseConfigPartGuard = s.object({
       options: s.optional(s.array(s.object({ value: s.string(), label: s.optional(s.string()) }))),
       format: s.optional(s.string()),
       customFormat: s.optional(s.string()),
+      defaultValue: s.optional(s.string()),
     })
   ),
 });

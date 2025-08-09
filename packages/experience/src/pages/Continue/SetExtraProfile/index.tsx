@@ -1,4 +1,4 @@
-import { CustomProfileFieldType } from '@logto/schemas';
+import { CustomProfileFieldType, type FieldPart } from '@logto/schemas';
 import { useContext, useMemo } from 'react';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
@@ -13,6 +13,9 @@ type Props = {
   readonly interactionEvent: ContinueFlowInteractionEvent;
 };
 
+const getDefaultParts = (parts?: FieldPart[]) =>
+  Object.fromEntries(parts?.map(({ name, config }) => [name, config?.defaultValue ?? '']) ?? []);
+
 const SetExtraProfile = ({ interactionEvent }: Props) => {
   const { experienceSettings } = useContext(PageContext);
   const submit = useSetExtraProfile(interactionEvent);
@@ -21,21 +24,12 @@ const SetExtraProfile = ({ interactionEvent }: Props) => {
     return experienceSettings?.customProfileFields?.reduce(
       (accumulator, { type, name, config }) => {
         if (type === CustomProfileFieldType.Address) {
-          return {
-            ...accumulator,
-            address: Object.fromEntries(config.parts?.map(({ name }) => [name, '']) ?? []),
-          };
+          return { ...accumulator, address: getDefaultParts(config.parts) };
         }
         if (type === CustomProfileFieldType.Fullname) {
-          return {
-            ...accumulator,
-            ...Object.fromEntries(config.parts?.map(({ name }) => [name, '']) ?? []),
-          };
+          return { ...accumulator, ...getDefaultParts(config.parts) };
         }
-        return {
-          ...accumulator,
-          [name]: '',
-        };
+        return { ...accumulator, [name]: config.defaultValue ?? '' };
       },
       {} satisfies Record<string, unknown>
     );

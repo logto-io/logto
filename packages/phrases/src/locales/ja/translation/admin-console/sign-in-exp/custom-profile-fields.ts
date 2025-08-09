@@ -81,6 +81,9 @@ const custom_profile_fields = {
     value_range: '値の範囲',
     min: '最小値',
     max: '最大値',
+    default_value: 'デフォルト値',
+    checkbox_checked: 'チェック済み (True)',
+    checkbox_unchecked: 'チェックなし (False)',
     required: '必須',
     required_description:
       '有効にすると、このフィールドはユーザーによって入力される必要があります。無効にすると、このフィールドはオプションです。',

@@ -83,6 +83,9 @@ const custom_profile_fields = {
     value_range: 'Диапазон значений',
     min: 'Минимум',
     max: 'Максимум',
+    default_value: 'Значение по умолчанию',
+    checkbox_checked: 'Выбрано (True)',
+    checkbox_unchecked: 'Не выбрано (False)',
     required: 'Обязательно',
     required_description:
       'Если включено, это поле должно быть заполнено пользователем. Если отключено, это поле необязательно.',
