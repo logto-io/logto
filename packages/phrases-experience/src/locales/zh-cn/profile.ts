@@ -4,7 +4,7 @@ const profile = {
   givenName: '名',
   familyName: '姓',
   middleName: '中间名',
-  fullName: '全名',
+  fullname: '全名',
   nickname: '昵称',
   preferredUsername: '首选用户名',
   profile: '个人资料',

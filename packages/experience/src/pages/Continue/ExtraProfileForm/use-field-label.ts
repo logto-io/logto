@@ -8,10 +8,10 @@ const useFieldLabel = () => {
   const { t } = useTranslation();
 
   const getFieldLabel = useCallback(
-    (fieldName: string, label?: string) => {
+    (fieldName: string, label = '') => {
       try {
         s.assert(fieldName, extraProfileFieldNamesGuard);
-        return label ?? t(`profile.${fieldName}`);
+        return label || t(`profile.${fieldName}`);
       } catch {
         return label;
       }
