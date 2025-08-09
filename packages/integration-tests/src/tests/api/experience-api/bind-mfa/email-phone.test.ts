@@ -3,7 +3,11 @@ import { InteractionEvent, MfaFactor, SignInIdentifier } from '@logto/schemas';
 
 import { deleteUser } from '#src/api/admin-user.js';
 import { initExperienceClient, logoutClient, processSession } from '#src/helpers/client.js';
-import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connector.js';
+import {
+  clearConnectorsByTypes,
+  setEmailConnector,
+  setSmsConnector,
+} from '#src/helpers/connector.js';
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
 import {
   successfullySendVerificationCode,
@@ -14,24 +18,59 @@ import {
   enableAllPasswordSignInMethods,
   enableMandatoryMfaWithEmail,
   enableMandatoryMfaWithEmailAndBackupCode,
+  enableMandatoryMfaWithPhone,
+  enableMandatoryMfaWithPhoneAndBackupCode,
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
+import { devFeatureTest, generateEmail, generatePhone } from '#src/utils.js';
 
 const { describe, it } = devFeatureTest;
 
-describe('Email MFA binding API tests', () => {
+const mfaConfigs = [
+  {
+    type: 'Email',
+    connectorType: ConnectorType.Email,
+    setConnector: setEmailConnector,
+    generateValue: generateEmail,
+    signInIdentifier: SignInIdentifier.Email,
+    mfaFactor: MfaFactor.EmailVerificationCode,
+    enableMandatoryMfa: enableMandatoryMfaWithEmail,
+    enableMandatoryMfaWithBackupCode: enableMandatoryMfaWithEmailAndBackupCode,
+  },
+  {
+    type: 'Phone',
+    connectorType: ConnectorType.Sms,
+    setConnector: setSmsConnector,
+    generateValue: generatePhone,
+    signInIdentifier: SignInIdentifier.Phone,
+    mfaFactor: MfaFactor.PhoneVerificationCode,
+    enableMandatoryMfa: enableMandatoryMfaWithPhone,
+    enableMandatoryMfaWithBackupCode: enableMandatoryMfaWithPhoneAndBackupCode,
+  },
+] as const;
+
+describe.each(mfaConfigs)('$type MFA binding API tests', (config) => {
+  const {
+    type,
+    connectorType,
+    setConnector,
+    generateValue,
+    signInIdentifier,
+    mfaFactor,
+    enableMandatoryMfa,
+    enableMandatoryMfaWithBackupCode,
+  } = config;
   const userApi = new UserApiTest();
 
   beforeAll(async () => {
-    await clearConnectorsByTypes([ConnectorType.Email]);
-    await setEmailConnector();
+    await clearConnectorsByTypes([connectorType]);
+    await setConnector();
     await enableAllPasswordSignInMethods();
   });
 
   afterAll(async () => {
-    await clearConnectorsByTypes([ConnectorType.Email]);
+    await clearConnectorsByTypes([connectorType]);
     await resetMfaSettings();
   });
 
@@ -39,11 +78,11 @@ describe('Email MFA binding API tests', () => {
     await userApi.cleanUp();
   });
 
-  it('should bind Email MFA on register', async () => {
-    await enableMandatoryMfaWithEmail();
+  it(`should bind ${type} MFA on register`, async () => {
+    await enableMandatoryMfa();
 
     const { username, password } = generateNewUserProfile({ username: true, password: true });
-    const email = `register-test-${Date.now()}@example.com`;
+    const identifierValue = generateValue();
 
     const client = await initExperienceClient({
       interactionEvent: InteractionEvent.Register,
@@ -59,22 +98,20 @@ describe('Email MFA binding API tests', () => {
 
     await client.identifyUser({ verificationId });
 
-    // Bind Email MFA
-    const { verificationId: emailVerificationId, code } = await successfullySendVerificationCode(
-      client,
-      {
-        identifier: { type: SignInIdentifier.Email, value: email },
+    // Bind MFA
+    const { verificationId: identifierVerificationId, code } =
+      await successfullySendVerificationCode(client, {
+        identifier: { type: signInIdentifier, value: identifierValue },
         interactionEvent: InteractionEvent.Register,
-      }
-    );
+      });
 
-    const finalEmailVerificationId = await successfullyVerifyVerificationCode(client, {
-      identifier: { type: SignInIdentifier.Email, value: email },
-      verificationId: emailVerificationId,
+    const finalVerificationId = await successfullyVerifyVerificationCode(client, {
+      identifier: { type: signInIdentifier, value: identifierValue },
+      verificationId: identifierVerificationId,
       code,
     });
 
-    await client.bindMfa(MfaFactor.EmailVerificationCode, finalEmailVerificationId);
+    await client.bindMfa(mfaFactor, finalVerificationId);
 
     const { redirectTo } = await client.submitInteraction();
     const userId = await processSession(client, redirectTo);
@@ -84,16 +121,16 @@ describe('Email MFA binding API tests', () => {
     await deleteUser(userId);
   });
 
-  it('should skip Email MFA binding if email is sign up identifier', async () => {
+  it(`should skip ${type} MFA binding if ${type.toLowerCase()} is sign up identifier`, async () => {
     await enableAllPasswordSignInMethods({
-      identifiers: [SignInIdentifier.Username, SignInIdentifier.Email],
+      identifiers: [SignInIdentifier.Username, signInIdentifier],
       password: true,
       verify: true,
     });
-    await enableMandatoryMfaWithEmail();
+    await enableMandatoryMfa();
 
     const { username, password } = generateNewUserProfile({ username: true, password: true });
-    const email = `register-test-${Date.now()}@example.com`;
+    const identifierValue = generateValue();
 
     const client = await initExperienceClient({
       interactionEvent: InteractionEvent.Register,
@@ -109,22 +146,20 @@ describe('Email MFA binding API tests', () => {
 
     await client.identifyUser({ verificationId });
 
-    // Bind Email MFA
-    const { verificationId: emailVerificationId, code } = await successfullySendVerificationCode(
-      client,
-      {
-        identifier: { type: SignInIdentifier.Email, value: email },
+    // Bind MFA
+    const { verificationId: identifierVerificationId, code } =
+      await successfullySendVerificationCode(client, {
+        identifier: { type: signInIdentifier, value: identifierValue },
         interactionEvent: InteractionEvent.Register,
-      }
-    );
+      });
 
-    const finalEmailVerificationId = await successfullyVerifyVerificationCode(client, {
-      identifier: { type: SignInIdentifier.Email, value: email },
-      verificationId: emailVerificationId,
+    const finalVerificationId = await successfullyVerifyVerificationCode(client, {
+      identifier: { type: signInIdentifier, value: identifierValue },
+      verificationId: identifierVerificationId,
       code,
     });
 
-    await client.bindMfa(MfaFactor.EmailVerificationCode, finalEmailVerificationId);
+    await client.bindMfa(mfaFactor, finalVerificationId);
 
     const { redirectTo } = await client.submitInteraction();
     const userId = await processSession(client, redirectTo);
@@ -135,33 +170,31 @@ describe('Email MFA binding API tests', () => {
     await enableAllPasswordSignInMethods();
   });
 
-  it('should bind Email MFA on sign-in', async () => {
-    await enableMandatoryMfaWithEmail();
+  it(`should bind ${type} MFA on sign-in`, async () => {
+    await enableMandatoryMfa();
 
     const { username, password } = generateNewUserProfile({ username: true, password: true });
-    const email = `signin-test-${Date.now()}@example.com`;
+    const identifierValue = generateValue();
 
     await userApi.create({ username, password });
 
     const client = await initExperienceClient();
     await identifyUserWithUsernamePassword(client, username, password);
 
-    // Bind Email MFA
-    const { verificationId: emailVerificationId, code } = await successfullySendVerificationCode(
-      client,
-      {
-        identifier: { type: SignInIdentifier.Email, value: email },
+    // Bind MFA
+    const { verificationId: identifierVerificationId, code } =
+      await successfullySendVerificationCode(client, {
+        identifier: { type: signInIdentifier, value: identifierValue },
         interactionEvent: InteractionEvent.SignIn,
-      }
-    );
+      });
 
-    const finalEmailVerificationId = await successfullyVerifyVerificationCode(client, {
-      identifier: { type: SignInIdentifier.Email, value: email },
-      verificationId: emailVerificationId,
+    const finalVerificationId = await successfullyVerifyVerificationCode(client, {
+      identifier: { type: signInIdentifier, value: identifierValue },
+      verificationId: identifierVerificationId,
       code,
     });
 
-    await client.bindMfa(MfaFactor.EmailVerificationCode, finalEmailVerificationId);
+    await client.bindMfa(mfaFactor, finalVerificationId);
 
     const { redirectTo } = await client.submitInteraction();
     const userId = await processSession(client, redirectTo);
@@ -171,11 +204,11 @@ describe('Email MFA binding API tests', () => {
     await deleteUser(userId);
   });
 
-  it('should reject binding Email MFA with unverified email', async () => {
-    await enableMandatoryMfaWithEmail();
+  it(`should reject binding ${type} MFA with unverified ${type.toLowerCase()}`, async () => {
+    await enableMandatoryMfa();
 
     const { username, password } = generateNewUserProfile({ username: true, password: true });
-    const email = `unverified-test-${Date.now()}@example.com`;
+    const identifierValue = generateValue();
 
     const client = await initExperienceClient({
       interactionEvent: InteractionEvent.Register,
@@ -191,24 +224,27 @@ describe('Email MFA binding API tests', () => {
 
     await client.identifyUser({ verificationId });
 
-    // Get verification ID but don't verify the email
-    const { verificationId: emailVerificationId } = await successfullySendVerificationCode(client, {
-      identifier: { type: SignInIdentifier.Email, value: email },
-      interactionEvent: InteractionEvent.Register,
-    });
+    // Get verification ID but don't verify the identifier
+    const { verificationId: identifierVerificationId } = await successfullySendVerificationCode(
+      client,
+      {
+        identifier: { type: signInIdentifier, value: identifierValue },
+        interactionEvent: InteractionEvent.Register,
+      }
+    );
 
-    // Try to bind Email MFA with unverified email - should fail
-    await expectRejects(client.bindMfa(MfaFactor.EmailVerificationCode, emailVerificationId), {
+    // Try to bind MFA with unverified identifier - should fail
+    await expectRejects(client.bindMfa(mfaFactor, identifierVerificationId), {
       code: 'session.verification_failed',
       status: 400,
     });
   });
 
-  it('should bind both Email MFA and backup code', async () => {
-    await enableMandatoryMfaWithEmailAndBackupCode();
+  it(`should bind both ${type} MFA and backup code`, async () => {
+    await enableMandatoryMfaWithBackupCode();
 
     const { username, password } = generateNewUserProfile({ username: true, password: true });
-    const email = `backup-test-${Date.now()}@example.com`;
+    const identifierValue = generateValue();
 
     const client = await initExperienceClient({
       interactionEvent: InteractionEvent.Register,
@@ -224,24 +260,22 @@ describe('Email MFA binding API tests', () => {
 
     await client.identifyUser({ verificationId });
 
-    // Bind Email MFA
-    const { verificationId: emailVerificationId, code } = await successfullySendVerificationCode(
-      client,
-      {
-        identifier: { type: SignInIdentifier.Email, value: email },
+    // Bind MFA
+    const { verificationId: identifierVerificationId, code } =
+      await successfullySendVerificationCode(client, {
+        identifier: { type: signInIdentifier, value: identifierValue },
         interactionEvent: InteractionEvent.Register,
-      }
-    );
+      });
 
-    const finalEmailVerificationId = await successfullyVerifyVerificationCode(client, {
-      identifier: { type: SignInIdentifier.Email, value: email },
-      verificationId: emailVerificationId,
+    const finalVerificationId = await successfullyVerifyVerificationCode(client, {
+      identifier: { type: signInIdentifier, value: identifierValue },
+      verificationId: identifierVerificationId,
       code,
     });
 
-    await client.bindMfa(MfaFactor.EmailVerificationCode, finalEmailVerificationId);
+    await client.bindMfa(mfaFactor, finalVerificationId);
 
-    // Should require backup code since both Email and BackupCode are mandatory
+    // Should require backup code since both MFA and BackupCode are mandatory
     await expectRejects(client.submitInteraction(), {
       code: 'session.mfa.backup_code_required',
       status: 422,
