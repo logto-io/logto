@@ -55,6 +55,7 @@ const FullnameSubForm = ({ field }: Props) => {
                 label={part.label ?? t(`profile.${part.name}`)}
                 value={value ?? ''}
                 isDanger={!!errors[part.name]}
+                required={part.required}
                 onBlur={onBlur}
                 onChange={onChange}
               />
