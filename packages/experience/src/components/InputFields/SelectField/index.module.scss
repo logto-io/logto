@@ -11,6 +11,8 @@
     position: relative;
 
     input {
+      text-overflow: ellipsis;
+      padding-inline-end: _.unit(8);
       cursor: pointer;
     }
 
