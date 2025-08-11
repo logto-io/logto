@@ -6,7 +6,7 @@
 
 .container {
   @include _.full-width;
-  margin-top: _.unit(2);
+  margin-block: _.unit(2);
 }
 
 .header {
@@ -20,7 +20,7 @@
 
 :global(body.mobile) {
   .container {
-    margin-top: _.unit(2);
+    margin-block: _.unit(2);
   }
 
   .title {
@@ -34,7 +34,7 @@
 
 :global(body.desktop) {
   .container {
-    margin-top: _.unit(12);
+    margin-block: _.unit(12);
   }
 
   .header {
