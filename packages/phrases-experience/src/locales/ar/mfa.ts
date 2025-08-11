@@ -8,6 +8,7 @@ const mfa = {
   link_webauthn_description: 'ربط جهازك أو جهاز USB الخاص بك',
   link_backup_code_description: 'إنشاء رمز نسخ احتياطي',
   link_email_verification_code_description: 'ربط عنوان بريدك الإلكتروني',
+  link_email_2fa_description: 'ربط عنوان بريدك الإلكتروني للتحقق بخطوتين',
   link_phone_verification_code_description: 'ربط رقم هاتفك',
   verify_totp_description: 'أدخل الرمز المرة الواحدة في التطبيق',
   verify_webauthn_description: 'تحقق من جهازك أو جهاز USB الخاص بك',

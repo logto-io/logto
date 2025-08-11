@@ -8,6 +8,7 @@ const mfa = {
   link_webauthn_description: 'Collega il tuo dispositivo o hardware USB',
   link_backup_code_description: 'Genera un codice di backup',
   link_email_verification_code_description: 'Collega il tuo indirizzo email',
+  link_email_2fa_description: 'Collega il tuo indirizzo email per la verifica a 2 passaggi',
   link_phone_verification_code_description: 'Collega il tuo numero di telefono',
   verify_totp_description: "Inserisci il codice monouso nell'app",
   verify_webauthn_description: 'Verifica il tuo dispositivo o hardware USB',

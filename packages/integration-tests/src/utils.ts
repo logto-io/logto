@@ -10,7 +10,7 @@ import { isDevFeaturesEnabled } from './constants.js';
 export const generateName = () => crypto.randomUUID();
 export const generateUserId = () => crypto.randomUUID();
 export const generateUsername = () => `usr_${crypto.randomUUID().replaceAll('-', '_')}`;
-export const generatePassword = () => `pwd_${crypto.randomUUID()}`;
+export const generatePassword = () => `pwd_${crypto.randomUUID().slice(0, 12)}`;
 
 export const generateResourceName = () => `res_${crypto.randomUUID()}`;
 export const generateResourceIndicator = () => `https://${crypto.randomUUID()}.logto.io`;

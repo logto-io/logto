@@ -31,6 +31,11 @@ const MfaFactorList = ({ flow, flowState }: Props) => {
         return startWebAuthnProcessing(flow, flowState);
       }
 
+      if (factor === MfaFactor.EmailVerificationCode && flow === UserMfaFlow.MfaBinding) {
+        navigate(`/${flow}/${factor}`, { state: flowState });
+        return;
+      }
+
       navigate(`/${flow}/${factor}`, { state: flowState });
     },
     [flow, flowState, navigate, startTotpBinding, startWebAuthnProcessing]
