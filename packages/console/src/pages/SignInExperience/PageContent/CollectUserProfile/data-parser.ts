@@ -29,14 +29,17 @@ const parseOptionsArrayToString = (
 
 const parseOptionsStringToArray = (
   options?: string
-): Optional<Array<{ value: string; label: string }>> =>
+): Optional<Array<{ value: string; label?: string }>> =>
   options
     ?.split('\n')
     .map((option) => {
-      const [value = '', label = value] = option.split(':');
+      const [value, label] = option.split(':');
+      if (!value) {
+        return;
+      }
       return { value, label };
     })
-    .filter(Boolean);
+    .filter((option) => option !== undefined);
 
 const getDefaultOptions = (name: string) => {
   if (name === 'gender') {
