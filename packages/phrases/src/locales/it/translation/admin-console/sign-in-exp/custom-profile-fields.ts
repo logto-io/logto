@@ -85,6 +85,9 @@ const custom_profile_fields = {
     value_range: 'Intervallo valori',
     min: 'Minimo',
     max: 'Massimo',
+    default_value: 'Valore predefinito',
+    checkbox_checked: 'Selezionato (True)',
+    checkbox_unchecked: 'Non selezionato (False)',
     required: 'Obbligatorio',
     required_description:
       'Se abilitato, questo campo deve essere compilato dagli utenti. Se disabilitato, questo campo è opzionale.',

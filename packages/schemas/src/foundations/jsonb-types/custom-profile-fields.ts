@@ -35,6 +35,7 @@ export const baseConfigGuard = z.object({
   format: z.string().max(128).optional(),
   customFormat: z.string().max(128).optional(),
   options: fieldOptionsGuard.optional(),
+  defaultValue: z.string().optional(),
 });
 
 export const fieldPartGuard = z.object({

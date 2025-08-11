@@ -81,6 +81,9 @@ const custom_profile_fields = {
     value_range: '값 범위',
     min: '최소',
     max: '최대',
+    default_value: '기본값',
+    checkbox_checked: '체크됨 (True)',
+    checkbox_unchecked: '체크 안됨 (False)',
     required: '필수',
     required_description:
       '활성화하면 사용자가 이 필드를 반드시 입력해야 합니다. 비활성화하면 이 필드는 선택 사항입니다.',

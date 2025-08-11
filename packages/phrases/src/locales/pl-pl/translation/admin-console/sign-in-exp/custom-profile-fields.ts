@@ -84,6 +84,9 @@ const custom_profile_fields = {
     value_range: 'Zakres wartości',
     min: 'Minimum',
     max: 'Maksimum',
+    default_value: 'Wartość domyślna',
+    checkbox_checked: 'Zaznaczono (True)',
+    checkbox_unchecked: 'Odznaczono (False)',
     required: 'Wymagane',
     required_description:
       'Po włączeniu to pole musi być wypełnione przez użytkowników. Po wyłączeniu to pole jest opcjonalne.',
