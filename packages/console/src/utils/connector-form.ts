@@ -109,3 +109,17 @@ export const convertFactoryResponseToForm = (
     enableTokenStorage: false,
   };
 };
+
+/**
+ * `scope` should be stored as a string with space-separated values.
+ *  In some pages like Social connector form and Enterprise SSO connector form,
+ *  we use Textarea to allow multi-line input, which allows users to input scopes in multiple lines.
+ *  To prevent the scopes from being stored with newlines,
+ *  we need to remove any newlines and trim the values before storing.
+ **/
+export const formatMultiLineScopeInput = (value: string) =>
+  value
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .join(' ');
