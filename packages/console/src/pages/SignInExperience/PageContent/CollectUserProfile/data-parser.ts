@@ -53,6 +53,7 @@ const getDefaultParts = (type: CustomProfileFieldType) => {
       type: CustomProfileFieldType.Text,
       required: true,
       enabled: name === 'formatted',
+      config: { minLength: 1, maxLength: 100 },
     }));
   }
   if (type === CustomProfileFieldType.Fullname) {
@@ -61,6 +62,7 @@ const getDefaultParts = (type: CustomProfileFieldType) => {
       type: CustomProfileFieldType.Text,
       required: true,
       enabled: name !== 'middleName',
+      config: { minLength: 1, maxLength: 100 },
     }));
   }
 };
@@ -77,6 +79,7 @@ export const getInitialRequestPayloadByFieldName = (name: string) => {
         format: cond(type === CustomProfileFieldType.Date && SupportedDateFormat.US),
         parts: getDefaultParts(type),
         options: getDefaultOptions(name),
+        ...cond(type === CustomProfileFieldType.Text && { minLength: 1, maxLength: 100 }),
       },
     },
     { emptyArrays: false, emptyObjects: false }
