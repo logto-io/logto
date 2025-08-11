@@ -4,7 +4,7 @@ const profile = {
   givenName: 'Imię własne',
   familyName: 'Nazwisko',
   middleName: 'Drugie imię',
-  fullName: 'Pełne imię i nazwisko',
+  fullname: 'Pełne imię i nazwisko',
   nickname: 'Pseudonim',
   preferredUsername: 'Preferowana nazwa użytkownika',
   profile: 'Profil',
