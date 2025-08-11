@@ -1,5 +1,4 @@
 import { SupportedDateFormat } from '@logto/schemas';
-import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -32,16 +31,6 @@ function DateFormatSelector({ index }: Props) {
   const formatValue = watch(`${fieldPrefix}format`);
   const formErrors = index === undefined ? errors : errors.parts?.[index];
 
-  useEffect(() => {
-    if (!formatValue) {
-      setValue(`${fieldPrefix}format`, SupportedDateFormat.US);
-      return;
-    }
-    if (formatValue !== SupportedDateFormat.Custom) {
-      setValue(`${fieldPrefix}customFormat`, '');
-    }
-  }, [fieldPrefix, formatValue, setValue]);
-
   return (
     <div className={styles.dateFormatSelector}>
       <Controller
@@ -56,7 +45,14 @@ function DateFormatSelector({ index }: Props) {
               { value: SupportedDateFormat.Custom, title: t('custom_date_format') },
             ]}
             value={value}
-            onChange={onChange}
+            onChange={(value) => {
+              onChange(value);
+              setValue(
+                `${fieldPrefix}placeholder`,
+                value === SupportedDateFormat.Custom ? '' : value,
+                { shouldDirty: true }
+              );
+            }}
           />
         )}
       />
