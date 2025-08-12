@@ -47,6 +47,7 @@ const PrimitiveProfileInputField = ({
         options={options}
         value={value}
         description={description}
+        errorMessage={errorMessage}
         onBlur={onBlur}
         onChange={onChange}
       />
