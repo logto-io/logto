@@ -6,14 +6,7 @@
  */
 
 import { defaults, parseAffiliateData } from '@logto/affiliate';
-import {
-  adminTenantId,
-  MfaFactor,
-  VerificationType,
-  type User,
-  type Mfa,
-  type MfaVerification,
-} from '@logto/schemas';
+import { adminTenantId, MfaFactor, VerificationType, type User, type Mfa } from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
 import { type IRouterContext } from 'koa-router';
 
@@ -202,10 +195,33 @@ export const getAllUserEnabledMfaVerifications = (
   mfaSettings: Mfa,
   user: User,
   currentProfile?: InteractionProfile
-): MfaVerification[] => {
-  const storedVerifications = filterOutEmptyBackupCodes(user.mfaVerifications).filter(
-    (verification) => mfaSettings.factors.includes(verification.type)
-  );
+): MfaFactor[] => {
+  const storedVerifications = filterOutEmptyBackupCodes(user.mfaVerifications)
+    .filter((verification) => mfaSettings.factors.includes(verification.type))
+    // Filter out backup codes if all the codes are used
+    .filter((verification) => {
+      if (verification.type !== MfaFactor.BackupCode) {
+        return true;
+      }
+      return verification.codes.some((code) => !code.usedAt);
+    })
+    .slice()
+    // Sort by last used time, the latest used factor is the first one, backup code is always the last one
+    .sort((verificationA, verificationB) => {
+      if (verificationA.type === MfaFactor.BackupCode) {
+        return 1;
+      }
+
+      if (verificationB.type === MfaFactor.BackupCode) {
+        return -1;
+      }
+
+      return (
+        new Date(verificationB.lastUsedAt ?? 0).getTime() -
+        new Date(verificationA.lastUsedAt ?? 0).getTime()
+      );
+    })
+    .map(({ type }) => type);
 
   if (!EnvSet.values.isDevFeaturesEnabled) {
     return storedVerifications;
@@ -217,23 +233,11 @@ export const getAllUserEnabledMfaVerifications = (
   const implicitVerifications = [
     // Email MFA Factor: user has primaryEmail + Email factor enabled in SIE
     ...(mfaSettings.factors.includes(MfaFactor.EmailVerificationCode) && email
-      ? ([
-          {
-            id: 'implicit-email-mfa', // Fake ID for capability
-            type: MfaFactor.EmailVerificationCode,
-            createdAt: new Date(user.createdAt).toISOString(),
-          },
-        ] satisfies MfaVerification[])
+      ? [MfaFactor.EmailVerificationCode]
       : []),
     // Phone MFA Factor: user has primaryPhone + Phone factor enabled in SIE
     ...(mfaSettings.factors.includes(MfaFactor.PhoneVerificationCode) && phone
-      ? ([
-          {
-            id: 'implicit-phone-mfa', // Fake ID for capability
-            type: MfaFactor.PhoneVerificationCode,
-            createdAt: new Date(user.createdAt).toISOString(),
-          },
-        ] satisfies MfaVerification[])
+      ? [MfaFactor.PhoneVerificationCode]
       : []),
   ];
 

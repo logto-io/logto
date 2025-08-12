@@ -67,13 +67,6 @@ const parseBindMfas = ({
       };
     }
 
-    if (
-      bindMfa.type === MfaFactor.EmailVerificationCode ||
-      bindMfa.type === MfaFactor.PhoneVerificationCode
-    ) {
-      throw new Error('Not implemented yet');
-    }
-
     // MfaFactor.PhoneVerificationCode
     return {
       id: generateStandardId(),

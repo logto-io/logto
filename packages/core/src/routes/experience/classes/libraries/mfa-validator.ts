@@ -5,7 +5,6 @@ import {
   userMfaDataGuard,
   userMfaDataKey,
   type Mfa,
-  type MfaVerification,
   type User,
 } from '@logto/schemas';
 
@@ -82,38 +81,14 @@ export class MfaValidator {
   get availableUserMfaVerificationTypes() {
     return (
       this.userEnabledMfaVerifications
-        // Filter out backup codes if all the codes are used
-        .filter((verification) => {
-          if (verification.type !== MfaFactor.BackupCode) {
-            return true;
-          }
-          return verification.codes.some((code) => !code.usedAt);
-        })
         // Filter out duplicated verifications with the same type
-        .reduce<MfaVerification[]>((verifications, verification) => {
-          if (verifications.some(({ type }) => type === verification.type)) {
+        .reduce<MfaFactor[]>((verifications, verification) => {
+          if (verifications.includes(verification)) {
             return verifications;
           }
 
           return [...verifications, verification];
         }, [])
-        .slice()
-        // Sort by last used time, the latest used factor is the first one, backup code is always the last one
-        .sort((verificationA, verificationB) => {
-          if (verificationA.type === MfaFactor.BackupCode) {
-            return 1;
-          }
-
-          if (verificationB.type === MfaFactor.BackupCode) {
-            return -1;
-          }
-
-          return (
-            new Date(verificationB.lastUsedAt ?? 0).getTime() -
-            new Date(verificationA.lastUsedAt ?? 0).getTime()
-          );
-        })
-        .map(({ type }) => type)
     );
   }
 
@@ -146,8 +121,8 @@ export class MfaValidator {
         // New bind MFA verification can not be used for verification
         !verification.isNewBindMfaVerification &&
         // Check if the verification type is enabled in the user's MFA settings
-        this.userEnabledMfaVerifications.some(
-          (factor) => factor.type === mfaVerificationTypeToMfaFactorMap[verification.type]
+        this.userEnabledMfaVerifications.includes(
+          mfaVerificationTypeToMfaFactorMap[verification.type]
         )
     );
 

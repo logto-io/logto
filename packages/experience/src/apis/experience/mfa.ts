@@ -60,40 +60,40 @@ export const skipMfa = async () => {
   return submitInteraction();
 };
 
-export const bindMfa = async (payload: BindMfaPayload, verificationId: string) => {
-  switch (payload.type) {
-    case MfaFactor.TOTP: {
-      const { code } = payload;
-      await api.post(`${experienceApiRoutes.verification}/totp/verify`, {
-        json: {
-          code,
-          verificationId,
-        },
-      });
-      break;
-    }
-    case MfaFactor.WebAuthn: {
-      await api.post(`${experienceApiRoutes.verification}/web-authn/registration/verify`, {
-        json: {
-          verificationId,
-          payload,
-        },
-      });
-      break;
-    }
-    case MfaFactor.BackupCode: {
-      // No need to verify backup codes
-      break;
-    }
-    case MfaFactor.EmailVerificationCode:
-    case MfaFactor.PhoneVerificationCode: {
-      // Email/Phone MFA factors use special binding logic, but don't submit immediately
-      // to allow additional MFA factors to be bound in the same session
-      break;
+export const bindMfa = async (
+  type: MfaFactor,
+  verificationId: string,
+  payload?: BindMfaPayload
+) => {
+  if (payload) {
+    switch (payload.type) {
+      case MfaFactor.TOTP: {
+        const { code } = payload;
+        await api.post(`${experienceApiRoutes.verification}/totp/verify`, {
+          json: {
+            code,
+            verificationId,
+          },
+        });
+        break;
+      }
+      case MfaFactor.WebAuthn: {
+        await api.post(`${experienceApiRoutes.verification}/web-authn/registration/verify`, {
+          json: {
+            verificationId,
+            payload,
+          },
+        });
+        break;
+      }
+      case MfaFactor.BackupCode: {
+        // No need to verify backup codes
+        break;
+      }
     }
   }
 
-  await addMfa(payload.type, verificationId);
+  await addMfa(type, verificationId);
   return submitInteraction();
 };
 
@@ -124,11 +124,6 @@ export const verifyMfa = async (payload: VerifyMfaPayload, verificationId?: stri
           code,
         },
       });
-      break;
-    }
-    case MfaFactor.EmailVerificationCode:
-    case MfaFactor.PhoneVerificationCode: {
-      // TODO: Implement email and phone verification code verification
       break;
     }
   }

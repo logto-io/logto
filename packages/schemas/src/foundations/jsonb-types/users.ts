@@ -111,31 +111,10 @@ export const mfaVerificationBackupCode = z.object({
 
 export type MfaVerificationBackupCode = z.infer<typeof mfaVerificationBackupCode>;
 
-// TODO @wangsijie: Implement this later
-export const mfaVerificationEmailVerificationCode = z.object({
-  type: z.literal(MfaFactor.EmailVerificationCode),
-  ...baseMfaVerification,
-});
-
-export type MfaVerificationEmailVerificationCode = z.infer<
-  typeof mfaVerificationEmailVerificationCode
->;
-
-export const mfaVerificationPhoneVerificationCode = z.object({
-  type: z.literal(MfaFactor.PhoneVerificationCode),
-  ...baseMfaVerification,
-});
-
-export type MfaVerificationPhoneVerificationCode = z.infer<
-  typeof mfaVerificationPhoneVerificationCode
->;
-
 export const mfaVerificationGuard = z.discriminatedUnion('type', [
   mfaVerificationTotp,
   mfaVerificationWebAuthn,
   mfaVerificationBackupCode,
-  mfaVerificationEmailVerificationCode,
-  mfaVerificationPhoneVerificationCode,
 ]);
 
 export type MfaVerification = z.infer<typeof mfaVerificationGuard>;

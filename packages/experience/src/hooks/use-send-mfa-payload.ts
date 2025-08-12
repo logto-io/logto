@@ -23,7 +23,7 @@ export type SendMfaPayloadApiOptions =
 
 const sendMfaPayloadApi = async ({ flow, payload, verificationId }: SendMfaPayloadApiOptions) => {
   if (flow === UserMfaFlow.MfaBinding) {
-    return bindMfa(payload, verificationId);
+    return bindMfa(payload.type, verificationId, payload);
   }
   return verifyMfa(payload, verificationId);
 };
