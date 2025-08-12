@@ -201,6 +201,7 @@ const dateFormatEnumGuard = s.enums(Object.values(SupportedDateFormat));
 
 export const dateFieldConfigGuard = s.object({
   format: dateFormatEnumGuard,
+  placeholder: s.optional(s.string()),
   customFormat: s.optional(s.string()),
 });
 
