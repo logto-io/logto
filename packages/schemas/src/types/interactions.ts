@@ -351,29 +351,10 @@ export const bindBackupCodePayloadGuard = z.object({
 
 export type BindBackupCodePayload = z.infer<typeof bindBackupCodePayloadGuard>;
 
-// TODO @sijie: Implement binding
-export const bindEmailVerificationCodePayloadGuard = z.object({
-  type: z.literal(MfaFactor.EmailVerificationCode),
-});
-
-export type BindEmailVerificationCodePayload = z.infer<
-  typeof bindEmailVerificationCodePayloadGuard
->;
-
-export const bindPhoneVerificationCodePayloadGuard = z.object({
-  type: z.literal(MfaFactor.PhoneVerificationCode),
-});
-
-export type BindPhoneVerificationCodePayload = z.infer<
-  typeof bindPhoneVerificationCodePayloadGuard
->;
-
 export const bindMfaPayloadGuard = z.discriminatedUnion('type', [
   bindTotpPayloadGuard,
   bindWebAuthnPayloadGuard,
   bindBackupCodePayloadGuard,
-  bindEmailVerificationCodePayloadGuard,
-  bindPhoneVerificationCodePayloadGuard,
 ]);
 
 export type BindMfaPayload = z.infer<typeof bindMfaPayloadGuard>;
@@ -404,32 +385,10 @@ export const backupCodeVerificationPayloadGuard = z.object({
 
 export type BackupCodeVerificationPayload = z.infer<typeof backupCodeVerificationPayloadGuard>;
 
-export const emailVerificationCodeVerificationPayloadGuard = z.object({
-  type: z.literal(MfaFactor.EmailVerificationCode),
-  email: z.string(),
-  code: z.string(),
-});
-
-export type EmailVerificationCodeVerificationPayload = z.infer<
-  typeof emailVerificationCodeVerificationPayloadGuard
->;
-
-export const phoneVerificationCodeVerificationPayloadGuard = z.object({
-  type: z.literal(MfaFactor.PhoneVerificationCode),
-  phone: z.string(),
-  code: z.string(),
-});
-
-export type PhoneVerificationCodeVerificationPayload = z.infer<
-  typeof phoneVerificationCodeVerificationPayloadGuard
->;
-
 export const verifyMfaPayloadGuard = z.discriminatedUnion('type', [
   totpVerificationPayloadGuard,
   webAuthnVerificationPayloadGuard,
   backupCodeVerificationPayloadGuard,
-  emailVerificationCodeVerificationPayloadGuard,
-  phoneVerificationCodeVerificationPayloadGuard,
 ]);
 
 export type VerifyMfaPayload = z.infer<typeof verifyMfaPayloadGuard>;
@@ -501,27 +460,11 @@ export const bindBackupCodeGuard = pendingBackupCodeGuard;
 
 export type BindBackupCode = z.infer<typeof bindBackupCodeGuard>;
 
-export const bindEmailVerificationCodeGuard = z.object({
-  type: z.literal(MfaFactor.EmailVerificationCode),
-  email: z.string(),
-});
-
-export type BindEmailVerificationCode = z.infer<typeof bindEmailVerificationCodeGuard>;
-
-export const bindPhoneVerificationCodeGuard = z.object({
-  type: z.literal(MfaFactor.PhoneVerificationCode),
-  phone: z.string(),
-});
-
-export type BindPhoneVerificationCode = z.infer<typeof bindPhoneVerificationCodeGuard>;
-
 // The type for binding new mfa verification to a user, not always equals to the pending type.
 export const bindMfaGuard = z.discriminatedUnion('type', [
   bindTotpGuard,
   bindWebAuthnGuard,
   bindBackupCodeGuard,
-  bindEmailVerificationCodeGuard,
-  bindPhoneVerificationCodeGuard,
 ]);
 
 export type BindMfa = z.infer<typeof bindMfaGuard>;

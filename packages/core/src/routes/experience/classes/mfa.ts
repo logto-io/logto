@@ -391,7 +391,7 @@ export class Mfa {
       currentProfile
     );
     return [
-      ...existingVerifications.map(({ type }) => type),
+      ...existingVerifications,
       ...(this.#totp ? [MfaFactor.TOTP] : []),
       ...(this.#webAuthn?.length ? [MfaFactor.WebAuthn] : []),
     ].filter(Boolean);

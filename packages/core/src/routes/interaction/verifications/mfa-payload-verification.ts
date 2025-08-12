@@ -168,14 +168,6 @@ export async function bindMfaPayloadVerification(
     return verifyBindWebAuthn(interactionStorage, bindMfaPayload, ctx, { rpId, userAgent, origin });
   }
 
-  if (
-    bindMfaPayload.type === MfaFactor.EmailVerificationCode ||
-    bindMfaPayload.type === MfaFactor.PhoneVerificationCode
-  ) {
-    // TODO: Implement email and SMS verification code binding
-    throw new Error('Email and SMS verification code MFA binding not implemented');
-  }
-
   return verifyBindBackupCode(interactionStorage, bindMfaPayload, ctx);
 }
 
@@ -252,41 +244,30 @@ export async function verifyMfaPayloadVerification(
     return result;
   }
 
-  if (verifyMfaPayload.type === MfaFactor.BackupCode) {
-    const { id, type } = await verifyBackupCode(user.mfaVerifications, verifyMfaPayload);
+  const { id, type } = await verifyBackupCode(user.mfaVerifications, verifyMfaPayload);
 
-    // Mark the backup code as used
-    await tenant.queries.users.updateUserById(accountId, {
-      mfaVerifications: user.mfaVerifications.map((mfa) => {
-        if (mfa.id !== id || mfa.type !== MfaFactor.BackupCode) {
-          return mfa;
-        }
+  // Mark the backup code as used
+  await tenant.queries.users.updateUserById(accountId, {
+    mfaVerifications: user.mfaVerifications.map((mfa) => {
+      if (mfa.id !== id || mfa.type !== MfaFactor.BackupCode) {
+        return mfa;
+      }
 
-        return {
-          ...mfa,
-          codes: mfa.codes.map((code) => {
-            if (code.code !== verifyMfaPayload.code) {
-              return code;
-            }
+      return {
+        ...mfa,
+        codes: mfa.codes.map((code) => {
+          if (code.code !== verifyMfaPayload.code) {
+            return code;
+          }
 
-            return {
-              ...code,
-              usedAt: new Date().toISOString(),
-            };
-          }),
-        };
-      }),
-    });
+          return {
+            ...code,
+            usedAt: new Date().toISOString(),
+          };
+        }),
+      };
+    }),
+  });
 
-    return { id, type };
-  }
-
-  if (verifyMfaPayload.type === MfaFactor.EmailVerificationCode) {
-    // TODO: Implement email verification code verification
-    throw new Error('Email verification code MFA verification not implemented');
-  }
-
-  // MfaFactor.PhoneVerificationCode
-  // TODO: Implement phone verification code verification
-  throw new Error('Phone verification code MFA verification not implemented');
+  return { id, type };
 }

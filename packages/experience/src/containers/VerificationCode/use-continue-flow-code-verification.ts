@@ -141,7 +141,7 @@ const useContinueFlowCodeVerification = (
         }
 
         const [bindError, bindResult] = await asyncBindMfa(
-          { type: MfaFactor.EmailVerificationCode },
+          MfaFactor.EmailVerificationCode,
           verificationId
         );
 
