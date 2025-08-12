@@ -24,7 +24,7 @@ const FullnameSubForm = ({ field }: Props) => {
   const getFieldLabel = useFieldLabel();
   const validateField = useValidateField();
 
-  const { required, name, label, description, config } = field;
+  const { name, label, description, config } = field;
   s.assert(config, fullnameFieldConfigGuard);
 
   const {
@@ -47,7 +47,7 @@ const FullnameSubForm = ({ field }: Props) => {
             key={part.name}
             name={part.name}
             control={control}
-            rules={{ required, validate: (value) => validateField(value, part) }}
+            rules={{ required: part.required, validate: (value) => validateField(value, part) }}
             render={({ field: { onBlur, onChange, value } }) => (
               <PrimitiveProfileInputField
                 {...part}
@@ -66,7 +66,7 @@ const FullnameSubForm = ({ field }: Props) => {
       {description && <div className={styles.description}>{description}</div>}
       {hasFullnameError && (
         <div className={styles.errorMessage}>
-          {t('error.general_required', { types: [getFieldLabel(name, label)] })}
+          {t('error.general_invalid', { types: [getFieldLabel(name, label)] })}
         </div>
       )}
     </div>

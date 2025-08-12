@@ -47,7 +47,7 @@ const AddressSubForm = ({ field }: Props) => {
     formState: { errors },
   } = useFormContext<AddressSubFormType>();
 
-  const { description, config, required } = field;
+  const { description, config } = field;
 
   const enabledParts = useMemo(() => {
     s.assert(config, addressFieldConfigGuard);
@@ -75,7 +75,7 @@ const AddressSubForm = ({ field }: Props) => {
           key={part.name}
           name={`address.${part.name}`}
           control={control}
-          rules={{ required, validate: (value) => validateField(value, part) }}
+          rules={{ required: part.required, validate: (value) => validateField(value, part) }}
           render={({ field: { onBlur, onChange, value } }) => (
             <PrimitiveProfileInputField
               {...part}
@@ -104,7 +104,7 @@ const AddressSubForm = ({ field }: Props) => {
       {description && <div className={styles.description}>{description}</div>}
       {errors.address && (
         <div className={styles.errorMessage}>
-          {t('error.general_required', { types: [t('profile.address.formatted')] })}
+          {t('error.general_invalid', { types: [t('profile.address.formatted')] })}
         </div>
       )}
     </div>
