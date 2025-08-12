@@ -100,6 +100,7 @@ export const getInitialRequestPayloadByFieldName = (name: string) => {
       required: true,
       config: {
         format: cond(type === CustomProfileFieldType.Date && SupportedDateFormat.US),
+        placeholder: cond(type === CustomProfileFieldType.Date && SupportedDateFormat.US),
         parts: getDefaultParts(type),
         options: getDefaultOptions(name),
         ...cond(type === CustomProfileFieldType.Text && { minLength: 1, maxLength: 100 }),

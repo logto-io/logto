@@ -101,6 +101,11 @@ function ProfileFieldPartSubForm({ index }: Props) {
           }}
         />
       </FormField>
+      {type === CustomProfileFieldType.Date && (
+        <FormField title="sign_in_exp.custom_profile_fields.details.date_format">
+          <DateFormatSelector />
+        </FormField>
+      )}
       <FormField
         isRequired={!isBuiltInFieldName}
         title="sign_in_exp.custom_profile_fields.details.label"
@@ -182,11 +187,6 @@ function ProfileFieldPartSubForm({ index }: Props) {
             placeholder={t('sign_in_exp.custom_profile_fields.details.regex_placeholder')}
             description={t('sign_in_exp.custom_profile_fields.details.regex_tip')}
           />
-        </FormField>
-      )}
-      {type === CustomProfileFieldType.Date && (
-        <FormField title="sign_in_exp.custom_profile_fields.details.date_format">
-          <DateFormatSelector />
         </FormField>
       )}
       {type === CustomProfileFieldType.Checkbox && (
