@@ -6,6 +6,7 @@ const custom_profile_fields = {
   invalid_regex_format: 'Invalid regex format.',
   invalid_address_parts: 'Invalid address parts.',
   invalid_fullname_parts: 'Invalid fullname parts.',
+  invalid_sub_component_type: 'Invalid sub-component type.',
   name_exists: 'Field already exists with the given name.',
   conflicted_sie_order: 'Conflicted field order value for Sign-in Experience.',
   invalid_name: 'Invalid field name, only letters or numbers are allowed, case sensitive.',

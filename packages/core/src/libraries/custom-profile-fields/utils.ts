@@ -67,6 +67,12 @@ const validateRegexProfileField: ValidateCustomProfileField = (data, isStrict) =
 const validateAddressProfileField: ValidateCustomProfileField = (data, isStrict) => {
   const { config } = addressProfileFieldGuard.parse(data);
   assertThat(config.parts.length > 0, 'custom_profile_fields.invalid_address_parts');
+  assertThat(
+    !config.parts.some(({ type }) =>
+      [CustomProfileFieldType.Address, CustomProfileFieldType.Fullname].includes(type)
+    ),
+    'custom_profile_fields.invalid_sub_component_type'
+  );
 
   if (isStrict) {
     for (const part of config.parts) {
@@ -78,6 +84,12 @@ const validateAddressProfileField: ValidateCustomProfileField = (data, isStrict)
 const validateFullnameProfileField: ValidateCustomProfileField = (data, isStrict) => {
   const { config } = fullnameProfileFieldGuard.parse(data);
   assertThat(config.parts.length > 0, 'custom_profile_fields.invalid_fullname_parts');
+  assertThat(
+    !config.parts.some(({ type }) =>
+      [CustomProfileFieldType.Address, CustomProfileFieldType.Fullname].includes(type)
+    ),
+    'custom_profile_fields.invalid_sub_component_type'
+  );
 
   if (isStrict) {
     for (const part of config.parts) {

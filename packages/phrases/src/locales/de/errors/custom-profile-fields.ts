@@ -2,10 +2,12 @@ const custom_profile_fields = {
   entity_not_exists_with_names:
     'Entitäten mit den angegebenen Namen können nicht gefunden werden: {{names}}',
   invalid_min_max_input: 'Ungültige Eingabe für Minimum und Maximum.',
+  invalid_default_value: 'Ungültiger Standardwert.',
   invalid_options: 'Ungültige Feldoptionen.',
   invalid_regex_format: 'Ungültiges Regex-Format.',
   invalid_address_parts: 'Ungültige Adressbestandteile.',
   invalid_fullname_parts: 'Ungültige Vor- und Nachnamenangaben.',
+  invalid_sub_component_type: 'Ungültiger Unterkomponententyp.',
   name_exists: 'Ein Feld mit diesem Namen existiert bereits.',
   conflicted_sie_order: 'Konflikt im Feldreihenfolgewert für die Sign-in Experience.',
   invalid_name:
