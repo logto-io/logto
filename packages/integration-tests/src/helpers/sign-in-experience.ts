@@ -185,6 +185,22 @@ export const enableMandatoryMfaWithEmailAndBackupCode = async () =>
     },
   });
 
+export const enableMandatoryMfaWithPhone = async () =>
+  updateSignInExperience({
+    mfa: {
+      factors: [MfaFactor.PhoneVerificationCode],
+      policy: MfaPolicy.Mandatory,
+    },
+  });
+
+export const enableMandatoryMfaWithPhoneAndBackupCode = async () =>
+  updateSignInExperience({
+    mfa: {
+      factors: [MfaFactor.PhoneVerificationCode, MfaFactor.BackupCode],
+      policy: MfaPolicy.Mandatory,
+    },
+  });
+
 export const enableMandatoryMfaWithWebAuthnAndBackupCode = async () =>
   updateSignInExperience({
     mfa: {

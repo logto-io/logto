@@ -212,6 +212,7 @@ export const getAllUserEnabledMfaVerifications = (
   }
 
   const email = currentProfile?.primaryEmail ?? user.primaryEmail;
+  const phone = currentProfile?.primaryPhone ?? user.primaryPhone;
 
   const implicitVerifications = [
     // Email MFA Factor: user has primaryEmail + Email factor enabled in SIE
@@ -220,6 +221,16 @@ export const getAllUserEnabledMfaVerifications = (
           {
             id: 'implicit-email-mfa', // Fake ID for capability
             type: MfaFactor.EmailVerificationCode,
+            createdAt: new Date(user.createdAt).toISOString(),
+          },
+        ] satisfies MfaVerification[])
+      : []),
+    // Phone MFA Factor: user has primaryPhone + Phone factor enabled in SIE
+    ...(mfaSettings.factors.includes(MfaFactor.PhoneVerificationCode) && phone
+      ? ([
+          {
+            id: 'implicit-phone-mfa', // Fake ID for capability
+            type: MfaFactor.PhoneVerificationCode,
             createdAt: new Date(user.createdAt).toISOString(),
           },
         ] satisfies MfaVerification[])
