@@ -22,7 +22,6 @@ describe('ProfileValidator', () => {
       const profile = {
         name: 'John Doe',
         avatar: 'https://example.com/avatar.jpg',
-        preferredUsername: 'John',
         gender: 'male',
         birthdate: '2000-01-01',
         website: 'https://example.com',
@@ -32,7 +31,6 @@ describe('ProfileValidator', () => {
         name: 'John Doe',
         avatar: 'https://example.com/avatar.jpg',
         profile: {
-          preferredUsername: 'John',
           gender: 'male',
           birthdate: '2000-01-01',
           website: 'https://example.com',
@@ -47,7 +45,6 @@ describe('ProfileValidator', () => {
       expect(() =>
         profileValidator.validateAndParseCustomProfile({
           name: 'John Doe',
-          preferredUsername: 'John',
           gender: 'male',
           birthdate: '2000-01-01',
           email: 'john@example.com',
@@ -73,7 +70,7 @@ describe('ProfileValidator', () => {
 
       expect(() =>
         profileValidator.validateAndParseCustomProfile({
-          preferredUsername: 'John',
+          name: 'John',
           primaryPhone: '1234567890',
         })
       ).toThrow(

@@ -10,10 +10,10 @@ const custom_profile_fields = {
   conflicted_sie_order: 'Conflicted field order value for Sign-in Experience.',
   invalid_name: 'Invalid field name, only letters or numbers are allowed, case sensitive.',
   name_conflict_sign_in_identifier:
-    'Invalid field name. "{{name}}" is a reserved sign-in identifier key.',
+    'Invalid field name. Reserved sign-in identifier key(s): {{name}}.',
   name_conflict_built_in_prop:
-    'Invalid field name. "{{name}}" is a reserved built-in user profile property.',
-  name_conflict_custom_data: 'Invalid field name. "{{name}}" is a reserved custom data key.',
+    'Invalid field name. Reserved built-in user profile property name(s): {{name}}.',
+  name_conflict_custom_data: 'Invalid field name. Reserved custom data key(s): {{name}}.',
   name_required: 'Field name is required.',
 };
 

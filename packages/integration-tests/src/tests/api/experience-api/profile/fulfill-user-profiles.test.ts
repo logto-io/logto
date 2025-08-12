@@ -254,7 +254,6 @@ describe('Fulfill User Profiles', () => {
         values: {
           name: 'John Doe',
           avatar: 'https://example.com/avatar.jpg',
-          preferredUsername: 'john',
           givenName: 'John',
           familyName: 'Doe',
           gender: 'male',
@@ -276,7 +275,6 @@ describe('Fulfill User Profiles', () => {
         name: 'John Doe',
         avatar: 'https://example.com/avatar.jpg',
         profile: {
-          preferredUsername: 'john',
           givenName: 'John',
           familyName: 'Doe',
           gender: 'male',
@@ -329,6 +327,20 @@ describe('Fulfill User Profiles', () => {
         {
           status: 400,
           code: 'custom_profile_fields.name_conflict_custom_data',
+        }
+      );
+      await expectRejects(
+        client.updateProfile({
+          type: 'extraProfile',
+          values: {
+            givenName: 'John',
+            familyName: 'Doe',
+            preferredUsername: 'john',
+          },
+        }),
+        {
+          status: 400,
+          code: 'custom_profile_fields.name_conflict_built_in_prop',
         }
       );
     });

@@ -9,6 +9,7 @@ import {
   reservedCustomDataKeyGuard,
   builtInCustomProfileFieldKeys,
   nameAndAvatarGuard,
+  reservedBuiltInProfileKeyGuard,
 } from '@logto/schemas';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -237,6 +238,17 @@ export class ProfileValidator {
     profile: UserProfile;
     customData: JsonObject;
   } {
+    const conflictedReservedBuiltInProfileKeys = Object.keys(
+      reservedBuiltInProfileKeyGuard.parse(values)
+    );
+    assertThat(
+      conflictedReservedBuiltInProfileKeys.length === 0,
+      new RequestError({
+        code: 'custom_profile_fields.name_conflict_built_in_prop',
+        name: conflictedReservedBuiltInProfileKeys.join(', '),
+      })
+    );
+
     const conflictedSignInIdentifierKeys = Object.keys(signInIdentifierKeyGuard.parse(values));
     assertThat(
       conflictedSignInIdentifierKeys.length === 0,

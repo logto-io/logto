@@ -10,11 +10,10 @@ const custom_profile_fields = {
   invalid_name:
     'フィールド名が無効です。文字または数字のみが許可され、大文字小文字が区別されます。',
   name_conflict_sign_in_identifier:
-    '無効なフィールド名です。"{{name}}" は予約されたサインイン識別子キーです。',
+    '無効なフィールド名です。予約済みのサインイン識別子キー: {{name}}。',
   name_conflict_built_in_prop:
-    '無効なフィールド名です。"{{name}}" は予約された組み込みユーザープロフィールプロパティです。',
-  name_conflict_custom_data:
-    '無効なフィールド名です。"{{name}}" は予約されたカスタムデータキーです。',
+    '無効なフィールド名です。予約済みの組み込みユーザープロフィールのプロパティ名: {{name}}。',
+  name_conflict_custom_data: '無効なフィールド名です。予約済みのカスタムデータキー: {{name}}。',
   name_required: 'フィールド名は必須です。',
 };
 
