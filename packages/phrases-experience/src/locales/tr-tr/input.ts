@@ -6,6 +6,7 @@ const input = {
   confirm_password: 'Şifreyi Doğrula',
   search_region_code: 'Bölge kodunu ara',
   backup_code: 'Yedek kod',
+  label_with_optional: '{{label}} (İsteğe bağlı)',
 };
 
 export default Object.freeze(input);

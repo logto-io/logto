@@ -1,4 +1,4 @@
-import { type Nullable } from '@silverhand/essentials';
+import { condString, type Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type { HTMLProps, ReactElement, Ref, AnimationEvent } from 'react';
 import {
@@ -46,11 +46,12 @@ const InputField = (
     onBlur,
     onChange,
     value,
+    required = true,
     ...props
   }: Props,
   reference: Ref<Nullable<HTMLInputElement>>
 ) => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const innerRef = useRef<HTMLInputElement>(null);
 
   useImperativeHandle(reference, () => innerRef.current);
@@ -83,6 +84,9 @@ const InputField = (
   }, []);
 
   const isActive = Boolean(isPrefixVisible) || hasValue || isFocused;
+  const labelWithOptionalSuffix = required
+    ? label
+    : condString(label && t('input.label_with_optional', { label }));
 
   return (
     <div className={className}>
@@ -127,7 +131,7 @@ const InputField = (
             })}
         </div>
         <NotchedBorder
-          label={label ?? ''}
+          label={labelWithOptionalSuffix ?? ''}
           isActive={isActive}
           isDanger={Boolean(isDanger)}
           isFocused={isFocused}

@@ -46,7 +46,7 @@ const ExtraProfileForm = ({ customProfileFields, defaultValues, onSubmit }: Prop
           if (field.type === CustomProfileFieldType.Fullname) {
             return <FullnameSubForm key={field.name} field={field} />;
           }
-          const { name, type, label, description } = field;
+          const { name, type, label, description, required } = field;
           return (
             <Controller
               key={name}
@@ -67,6 +67,7 @@ const ExtraProfileForm = ({ customProfileFields, defaultValues, onSubmit }: Prop
                     {...field}
                     label={label || getFieldLabel(name)}
                     description={condString(description)}
+                    required={required}
                     value={value}
                     isDanger={!!errors[name]}
                     errorMessage={errors[name]?.message}

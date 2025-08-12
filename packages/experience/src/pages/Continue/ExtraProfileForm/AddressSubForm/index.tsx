@@ -86,6 +86,7 @@ const AddressSubForm = ({ field }: Props) => {
               label={part.label ?? t(`profile.address.${part.name}`)}
               value={value ?? ''}
               isDanger={!!errors.address?.[part.name]}
+              required={part.required}
               onBlur={onBlur}
               onChange={(event) => {
                 onChange(event);

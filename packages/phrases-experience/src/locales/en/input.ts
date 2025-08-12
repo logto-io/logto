@@ -6,6 +6,7 @@ const input = {
   confirm_password: 'Confirm password',
   search_region_code: 'Search region code',
   backup_code: 'Backup code',
+  label_with_optional: '{{label}} (Optional)',
 };
 
 export default Object.freeze(input);

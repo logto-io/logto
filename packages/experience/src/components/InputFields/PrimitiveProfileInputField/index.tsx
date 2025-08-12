@@ -26,6 +26,7 @@ const PrimitiveProfileInputField = ({
   description,
   isDanger,
   errorMessage,
+  required,
   onBlur,
   onChange,
 }: Props) => {
@@ -48,6 +49,7 @@ const PrimitiveProfileInputField = ({
         value={value}
         description={description}
         errorMessage={errorMessage}
+        required={required}
         onBlur={onBlur}
         onChange={onChange}
       />
@@ -75,6 +77,7 @@ const PrimitiveProfileInputField = ({
       isDanger={isDanger}
       errorMessage={errorMessage}
       placeholder={config?.placeholder}
+      required={required}
       onChange={(event) => {
         onChange(event.currentTarget.value);
       }}

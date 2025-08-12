@@ -6,6 +6,7 @@ const input = {
   confirm_password: 'Підтвердити пароль',
   search_region_code: 'Пошук коду регіону',
   backup_code: 'Резервний код',
+  label_with_optional: "{{label}} (Необов'язково)",
 };
 
 export default Object.freeze(input);

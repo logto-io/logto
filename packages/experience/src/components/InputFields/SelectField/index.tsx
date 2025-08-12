@@ -17,6 +17,8 @@ type Props = {
   readonly label?: string;
   readonly placeholder?: string;
   readonly errorMessage?: string;
+  // eslint-disable-next-line react/boolean-prop-naming
+  readonly required?: boolean;
   readonly onBlur?: () => void;
   readonly onChange: (value: string) => void;
 };
@@ -29,6 +31,7 @@ const SelectField = ({
   label,
   placeholder,
   errorMessage,
+  required,
   onBlur,
   onChange,
 }: Props) => {
@@ -46,6 +49,7 @@ const SelectField = ({
           label={label}
           placeholder={placeholder}
           isDanger={!!errorMessage}
+          required={required}
           value={currentValue}
           onClick={() => {
             setIsOpen(true);
