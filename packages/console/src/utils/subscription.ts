@@ -123,9 +123,11 @@ export const isFeatureEnabled = (quota: Nullable<number>): boolean => {
 
 /**
  * We may have more than one pro planId in the future.
- * E.g grandfathered {@link ReservedPlanId.Pro} and new {@link ReservedPlanId.Pro202411}.
+ * E.g grandfathered {@link ReservedPlanId.Pro}, {@link ReservedPlanId.Pro202411} and new {@link ReservedPlanId.Pro202509}.
  * User this function to check if the planId can be considered as a pro plan.
  */
 export const isProPlan = (planId: string) =>
-  // eslint-disable-next-line no-restricted-syntax
-  [ReservedPlanId.Pro, ReservedPlanId.Pro202411].includes(planId as ReservedPlanId);
+  [ReservedPlanId.Pro, ReservedPlanId.Pro202411, ReservedPlanId.Pro202509].includes(
+    // eslint-disable-next-line no-restricted-syntax
+    planId as ReservedPlanId
+  );

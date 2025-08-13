@@ -20,7 +20,11 @@ import type Queries from '../tenants/Queries.js';
 import { type CloudConnectionLibrary } from './cloud-connection.js';
 import { type ConnectorLibrary } from './connector.js';
 
-const paidReservedPlans = new Set<string>([ReservedPlanId.Pro, ReservedPlanId.Pro202411]);
+const paidReservedPlans = new Set<string>([
+  ReservedPlanId.Pro,
+  ReservedPlanId.Pro202411,
+  ReservedPlanId.Pro202509,
+]);
 
 export class QuotaLibrary {
   constructor(

@@ -9,6 +9,7 @@ const registeredPlanNamePhraseMap: Record<
   [ReservedPlanId.Free]: 'free_plan',
   [ReservedPlanId.Pro]: 'pro_plan',
   [ReservedPlanId.Pro202411]: 'pro_plan',
+  [ReservedPlanId.Pro202509]: 'pro_plan',
   [ReservedPlanId.Development]: 'dev_plan',
   [ReservedPlanId.Admin]: 'admin_plan',
 } satisfies Record<ReservedPlanId, TFuncKey<'translation', 'admin_console.subscription'>>;

@@ -18,6 +18,7 @@ const planTagMap = {
   [ReservedPlanId.Free]: 'free',
   [ReservedPlanId.Pro]: 'pro',
   [ReservedPlanId.Pro202411]: 'pro',
+  [ReservedPlanId.Pro202509]: 'pro',
   [ReservedPlanId.Development]: 'dev',
   [ReservedPlanId.Admin]: 'admin',
   enterprise: 'enterprise',
@@ -27,7 +28,10 @@ const planTagMap = {
  * The minimum plan required to use the feature.
  * Currently we only have pro plan paywall.
  */
-export type PaywallPlanId = Extract<ReservedPlanId, ReservedPlanId.Pro | ReservedPlanId.Pro202411>;
+export type PaywallPlanId = Extract<
+  ReservedPlanId,
+  ReservedPlanId.Pro | ReservedPlanId.Pro202411 | ReservedPlanId.Pro202509
+>;
 
 export type Props = {
   /**
