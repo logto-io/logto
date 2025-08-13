@@ -10,6 +10,7 @@ const mfa = {
   link_email_verification_code_description: 'E-posta adresinizi bağlayın',
   link_email_2fa_description: '2 adımlı doğrulama için e-posta adresinizi bağlayın',
   link_phone_verification_code_description: 'Telefon numaranızı bağlayın',
+  link_phone_2fa_description: '2 adımlı doğrulama için telefon numaranızı bağlayın',
   verify_totp_description: 'Uygulamadaki tek kullanımlık kodu girin',
   verify_webauthn_description: 'Cihazınızı veya USB donanımınızı doğrulayın',
   verify_backup_code_description: 'Kaydettiğiniz yedek kodu yapıştırın',

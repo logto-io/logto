@@ -10,6 +10,7 @@ const mfa = {
   link_email_verification_code_description: '关联您的电子邮件地址',
   link_email_2fa_description: '关联您的电子邮件地址进行两步验证',
   link_phone_verification_code_description: '关联您的电话号码',
+  link_phone_2fa_description: '关联您的电话号码进行两步验证',
   verify_totp_description: '在应用程序中输入一次性代码',
   verify_webauthn_description: '验证您的设备或 USB 硬件',
   verify_backup_code_description: '粘贴您保存的备份代码',

@@ -11,6 +11,7 @@ const mfa = {
   link_email_2fa_description:
     'Vincula tu dirección de correo electrónico para verificación de 2 pasos',
   link_phone_verification_code_description: 'Vincule su número de teléfono',
+  link_phone_2fa_description: 'Vincula tu número de teléfono para verificación de 2 pasos',
   verify_totp_description: 'Ingrese el código de un solo uso en la aplicación',
   verify_webauthn_description: 'Verifique su dispositivo o hardware USB',
   verify_backup_code_description: 'Pegue el código de respaldo que guardó',

@@ -65,6 +65,7 @@ const mfaFactorsGuard = s.array(
     s.literal(MfaFactor.WebAuthn),
     s.literal(MfaFactor.BackupCode),
     s.literal(MfaFactor.EmailVerificationCode),
+    s.literal(MfaFactor.PhoneVerificationCode),
   ])
 );
 
