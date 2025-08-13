@@ -73,3 +73,5 @@ export const retrieveTokenStorage = '/secret-vault/federated-token-set#token-ret
 
 export const addOnPricingExplanationLink =
   'https://blog.logto.io/pricing-add-on-a-simple-explanation/';
+
+export const dateFnsDocumentationLink = 'https://date-fns.org/v2.30.0/docs/format';
