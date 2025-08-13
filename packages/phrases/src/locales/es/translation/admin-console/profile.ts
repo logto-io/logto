@@ -114,7 +114,7 @@ const profile = {
   fields: {
     name: 'Nombre',
     name_description:
-      'El nombre completo del usuario en formato legible, incluyendo todas las partes del nombre (ej. "Juan Pérez").',
+      'El nombre completo del usuario en formato legible, incluyendo todos los componentes del nombre (ej. "Juan Pérez").',
     avatar: 'Avatar',
     avatar_description: 'URL de la imagen de avatar del usuario.',
     familyName: 'Apellido',
@@ -154,7 +154,7 @@ const profile = {
       country: 'País',
     },
     address_description:
-      'La dirección completa del usuario en formato legible, incluyendo todas las partes de la dirección (ej. "123 Calle Principal, Ciudad, País 12345").',
+      'La dirección completa del usuario en formato legible, incluyendo todos los componentes de la dirección (ej. "123 Calle Principal, Ciudad, País 12345").',
     fullname: 'Nombre completo',
     fullname_description:
       'Combina flexiblemente apellido, nombre y segundo nombre según la configuración.',

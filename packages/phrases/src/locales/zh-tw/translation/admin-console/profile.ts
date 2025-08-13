@@ -94,7 +94,7 @@ const profile = {
   unlink_reminder: '解綁後，用戶將無法使用該 <span></span> 賬號進行登錄。確定要解綁嗎？',
   fields: {
     name: '姓名',
-    name_description: '用戶的完整姓名，包含所有部分（例如 "Jane Doe"）。',
+    name_description: '用戶的完整姓名，包含所有名字組件（例如 "Jane Doe"）。',
     avatar: '頭像',
     avatar_description: '用戶頭像圖片的 URL。',
     familyName: '姓氏',
@@ -128,7 +128,8 @@ const profile = {
       postalCode: '郵政編碼',
       country: '國家',
     },
-    address_description: '用戶的完整地址，包含所有部分（例如 "123 Main St, Anytown, USA 12345"）。',
+    address_description:
+      '用戶的完整地址，包含所有地址組件（例如 "123 Main St, Anytown, USA 12345"）。',
     fullname: '全名',
     fullname_description: '根據配置靈活組合姓氏、名字和中間名。',
   },

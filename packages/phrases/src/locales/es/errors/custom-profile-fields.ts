@@ -4,8 +4,8 @@ const custom_profile_fields = {
   invalid_default_value: 'Valor por defecto no válido.',
   invalid_options: 'Opciones de campo no válidas.',
   invalid_regex_format: 'Formato de expresión regular no válido.',
-  invalid_address_parts: 'Partes de dirección no válidas.',
-  invalid_fullname_parts: 'Partes de nombre completo no válidas.',
+  invalid_address_components: 'Componentes de dirección no válidos.',
+  invalid_fullname_components: 'Componentes de nombre completo no válidos.',
   invalid_sub_component_type: 'Tipo de subcomponente no válido.',
   name_exists: 'Ya existe un campo con el nombre proporcionado.',
   conflicted_sie_order:

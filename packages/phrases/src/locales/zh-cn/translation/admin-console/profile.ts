@@ -94,7 +94,7 @@ const profile = {
   unlink_reminder: '解绑后，用户将无法使用该 <span></span> 账号进行登录。确定要解绑吗？',
   fields: {
     name: '姓名',
-    name_description: '用户的全名，包括所有名字部分（例如“张三”）。',
+    name_description: '用户的全名，包括所有名字组件（例如“张三”）。',
     avatar: '头像',
     avatar_description: '用户头像图片的 URL。',
     familyName: '姓氏',
@@ -128,7 +128,7 @@ const profile = {
       country: '国家',
     },
     address_description:
-      '用户的全地址，包括所有地址部分（例如“123 Main St, Anytown, USA 12345”）。',
+      '用户的全地址，包括所有地址组件（例如“123 Main St, Anytown, USA 12345”）。',
     fullname: '全名',
     fullname_description: '根据配置灵活组合姓氏、名字和中间名。',
   },
