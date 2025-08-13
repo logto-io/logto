@@ -121,12 +121,13 @@ function ProfileFieldPartSubForm({ index }: Props) {
               }),
           }}
           render={({ field: { value, onChange } }) => {
+            const fallbackValue = isBuiltInFieldName ? getI18nLabel(name) : '';
             return (
               <TextInput
                 disabled={isBuiltInFieldName}
                 error={formErrors?.label?.message}
                 placeholder={t('sign_in_exp.custom_profile_fields.details.label_placeholder')}
-                value={value || getI18nLabel(name)}
+                value={value || fallbackValue}
                 onChange={onChange}
               />
             );
