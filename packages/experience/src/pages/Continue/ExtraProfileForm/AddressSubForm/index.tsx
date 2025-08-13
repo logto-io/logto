@@ -8,6 +8,7 @@ import * as s from 'superstruct';
 import PrimitiveProfileInputField from '@/components/InputFields/PrimitiveProfileInputField';
 import { addressFieldConfigGuard } from '@/types/guard';
 
+import useFieldLabel from '../use-field-label';
 import useValidateField from '../use-validate-field';
 
 import styles from './index.module.scss';
@@ -38,6 +39,7 @@ type Props = {
 const AddressSubForm = ({ field }: Props) => {
   const { t } = useTranslation();
   const validateField = useValidateField();
+  const getFieldLabel = useFieldLabel();
 
   const {
     control,
@@ -47,7 +49,7 @@ const AddressSubForm = ({ field }: Props) => {
     formState: { errors },
   } = useFormContext<AddressSubFormType>();
 
-  const { description, config, required } = field;
+  const { description, config } = field;
 
   const enabledParts = useMemo(() => {
     s.assert(config, addressFieldConfigGuard);
@@ -68,6 +70,9 @@ const AddressSubForm = ({ field }: Props) => {
     return null;
   }
 
+  const hasNonRequiredErrors = Object.entries(errors.address ?? {}).some(
+    ([_, error]) => typeof error === 'object' && error.type !== 'required'
+  );
   return (
     <div className={styles.addressContainer}>
       {enabledParts.map((part) => (
@@ -75,7 +80,14 @@ const AddressSubForm = ({ field }: Props) => {
           key={part.name}
           name={`address.${part.name}`}
           control={control}
-          rules={{ required, validate: (value) => validateField(value, part) }}
+          rules={{
+            required:
+              part.required &&
+              t('error.general_required', {
+                types: [getFieldLabel(`address.${part.name}`, part.label)],
+              }),
+            validate: (value) => validateField(value, part),
+          }}
           render={({ field: { onBlur, onChange, value } }) => (
             <PrimitiveProfileInputField
               {...part}
@@ -104,7 +116,17 @@ const AddressSubForm = ({ field }: Props) => {
       {description && <div className={styles.description}>{description}</div>}
       {errors.address && (
         <div className={styles.errorMessage}>
-          {t('error.general_required', { types: [t('profile.address.formatted')] })}
+          {hasNonRequiredErrors ? (
+            <>
+              {Object.entries(errors.address).map(([errorKey, error]) => (
+                <p key={errorKey}>
+                  {typeof error === 'object' && 'message' in error ? error.message : String(error)}
+                </p>
+              ))}
+            </>
+          ) : (
+            <p>{t('error.general_required', { types: [t('profile.address.formatted')] })}</p>
+          )}
         </div>
       )}
     </div>
