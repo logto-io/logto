@@ -25,6 +25,13 @@
 
 .errorMessage {
   color: var(--color-danger-default);
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(1);
+
+  > p {
+    margin: 0;
+  }
 }
 
 @media only screen and (max-width: 580px) {

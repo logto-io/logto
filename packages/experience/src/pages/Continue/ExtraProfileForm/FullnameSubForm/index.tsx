@@ -33,9 +33,10 @@ const FullnameSubForm = ({ field }: Props) => {
   } = useFormContext<FullnameFormType>();
 
   const enabledParts = useMemo(() => config.parts.filter(({ enabled }) => enabled), [config.parts]);
-  const hasFullnameError = Object.entries(errors).some(([errorKey]) =>
+  const fullnameErrors = Object.entries(errors).filter(([errorKey]) =>
     enabledParts.some(({ name }) => name === errorKey)
   );
+  const hasNonRequiredErrors = fullnameErrors.some(([_, error]) => error.type !== 'required');
 
   return (
     <div className={styles.fullnameContainer}>
@@ -47,7 +48,12 @@ const FullnameSubForm = ({ field }: Props) => {
             key={part.name}
             name={part.name}
             control={control}
-            rules={{ required: part.required, validate: (value) => validateField(value, part) }}
+            rules={{
+              required:
+                part.required &&
+                t('error.general_required', { types: [getFieldLabel(part.name, part.label)] }),
+              validate: (value) => validateField(value, part),
+            }}
             render={({ field: { onBlur, onChange, value } }) => (
               <PrimitiveProfileInputField
                 {...part}
@@ -64,9 +70,17 @@ const FullnameSubForm = ({ field }: Props) => {
         ))}
       </div>
       {description && <div className={styles.description}>{description}</div>}
-      {hasFullnameError && (
+      {fullnameErrors.length > 0 && (
         <div className={styles.errorMessage}>
-          {t('error.general_invalid', { types: [getFieldLabel(name, label)] })}
+          {hasNonRequiredErrors ? (
+            <>
+              {fullnameErrors.map(([errorKey, error]) => (
+                <p key={errorKey}>{error.message}</p>
+              ))}
+            </>
+          ) : (
+            <p>{t('error.general_required', { types: [getFieldLabel(name, label)] })}</p>
+          )}
         </div>
       )}
     </div>
