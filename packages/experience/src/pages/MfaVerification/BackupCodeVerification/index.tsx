@@ -29,8 +29,8 @@ const BackupCodeVerification = () => {
   } = useForm<FormState>({ defaultValues: { code: '' } });
 
   const onSubmitHandler = useCallback(
-    (event?: FormEvent<HTMLFormElement>) => {
-      void handleSubmit(async ({ code }) => {
+    async (event?: FormEvent<HTMLFormElement>) => {
+      await handleSubmit(async ({ code }) => {
         await sendMfaPayload({
           flow: UserMfaFlow.MfaVerification,
           payload: { type: MfaFactor.BackupCode, code },

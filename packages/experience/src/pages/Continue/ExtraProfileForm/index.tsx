@@ -15,7 +15,7 @@ import useValidateField from './use-validate-field';
 type Props = {
   readonly customProfileFields: CustomProfileField[];
   readonly defaultValues?: Record<string, unknown>;
-  readonly onSubmit: (values: Record<string, unknown>) => void;
+  readonly onSubmit: (values: Record<string, unknown>) => Promise<void>;
 };
 
 const ExtraProfileForm = ({ customProfileFields, defaultValues, onSubmit }: Props) => {
@@ -32,11 +32,11 @@ const ExtraProfileForm = ({ customProfileFields, defaultValues, onSubmit }: Prop
     formState: { errors, isValid, isSubmitting },
   } = methods;
 
-  const submit = handleSubmit((value) => {
+  const submit = handleSubmit(async (value) => {
     if (!isValid) {
       return;
     }
-    onSubmit(value);
+    await onSubmit(value);
   });
 
   return (
@@ -80,7 +80,6 @@ const ExtraProfileForm = ({ customProfileFields, defaultValues, onSubmit }: Prop
           );
         })}
         <Button title="action.continue" htmlType="submit" isLoading={isSubmitting} />
-
         <input hidden type="submit" />
       </form>
     </FormProvider>
