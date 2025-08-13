@@ -55,6 +55,10 @@ const SingleSignOnForm = ({ isTermsAndPrivacyCheckboxVisible }: Props) => {
        */
       event?.preventDefault();
 
+      if (isSubmitting) {
+        return;
+      }
+
       /**
        * Check if the user has agreed to the terms and privacy policy when the policy is set to `Manual`.
        */
@@ -66,7 +70,7 @@ const SingleSignOnForm = ({ isTermsAndPrivacyCheckboxVisible }: Props) => {
 
       await handleSubmit(async ({ identifier: { value } }) => onSubmit(value, true))(event);
     },
-    [agreeToTermsPolicy, clearErrorMessage, handleSubmit, onSubmit, termsValidation]
+    [agreeToTermsPolicy, clearErrorMessage, handleSubmit, isSubmitting, onSubmit, termsValidation]
   );
 
   return (
