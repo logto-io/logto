@@ -3,6 +3,8 @@ import type { Provider } from 'oidc-provider';
 import type Queries from '#src/tenants/Queries.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 
+import { EnvSet } from '../env-set/index.js';
+
 import { grantListener, grantRevocationListener } from './grant.js';
 import { interactionEndedListener, interactionStartedListener } from './interaction.js';
 import { recordActiveUsers } from './record-active-users.js';
@@ -46,7 +48,7 @@ export const addOidcEventListeners = (provider: Provider, queries: Queries) => {
   });
 
   // Record token usage.
-  for (const event of [
+  const events = Object.freeze([
     'access_token.saved',
     'access_token.issued',
     'client_credentials.saved',
@@ -54,7 +56,14 @@ export const addOidcEventListeners = (provider: Provider, queries: Queries) => {
     'initial_access_token.saved',
     'registration_access_token.saved',
     'refresh_token.saved',
-  ]) {
+  ] as const);
+
+  // TODO: Remove this when the `refresh_token.saved` event is no longer used.
+  const filteredEvents = EnvSet.values.isDevFeaturesEnabled
+    ? events.filter((event) => event !== 'refresh_token.saved')
+    : events;
+
+  for (const event of filteredEvents) {
     provider.addListener(event, countTokenUsage);
   }
 };
