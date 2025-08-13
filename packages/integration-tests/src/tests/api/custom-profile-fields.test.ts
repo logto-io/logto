@@ -66,6 +66,96 @@ describe('custom profile fields API', () => {
     );
   });
 
+  it('should fail to create if address field contains invalid sub-component type', async () => {
+    await expectRejects(
+      createCustomProfileField({
+        name: 'address',
+        type: CustomProfileFieldType.Address,
+        required: true,
+        config: {
+          parts: [
+            {
+              name: 'formatted',
+              type: CustomProfileFieldType.Address,
+              enabled: true,
+              required: true,
+            },
+          ],
+        },
+      }),
+      {
+        code: 'custom_profile_fields.invalid_sub_component_type',
+        status: 400,
+      }
+    );
+    await expectRejects(
+      createCustomProfileField({
+        name: 'address',
+        type: CustomProfileFieldType.Address,
+        required: true,
+        config: {
+          parts: [
+            {
+              name: 'formatted',
+              type: CustomProfileFieldType.Fullname,
+              enabled: true,
+              required: true,
+            },
+          ],
+        },
+      }),
+      {
+        code: 'custom_profile_fields.invalid_sub_component_type',
+        status: 400,
+      }
+    );
+  });
+
+  it('should fail to create if fullname field contains invalid sub-component type', async () => {
+    await expectRejects(
+      createCustomProfileField({
+        name: 'fullname',
+        type: CustomProfileFieldType.Fullname,
+        required: true,
+        config: {
+          parts: [
+            {
+              name: 'givenName',
+              type: CustomProfileFieldType.Fullname,
+              enabled: true,
+              required: true,
+            },
+          ],
+        },
+      }),
+      {
+        code: 'custom_profile_fields.invalid_sub_component_type',
+        status: 400,
+      }
+    );
+    await expectRejects(
+      createCustomProfileField({
+        name: 'fullname',
+        type: CustomProfileFieldType.Fullname,
+        required: true,
+        config: {
+          parts: [
+            {
+              name: 'middleName',
+              type: CustomProfileFieldType.Address,
+              enabled: true,
+              required: true,
+            },
+          ],
+        },
+      }),
+      {
+        code: 'custom_profile_fields.invalid_sub_component_type',
+        status: 400,
+      }
+    );
+  });
+
   it('should fail to create if field name is conflicted', async () => {
     const nameField = await createCustomProfileField(nameData);
     await expectRejects(createCustomProfileField(nameData), {
