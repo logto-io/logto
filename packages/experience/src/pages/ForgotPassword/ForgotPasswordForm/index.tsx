@@ -61,7 +61,7 @@ const ForgotPasswordForm = ({ className, autoFocus, defaultValue = '', enabledTy
     async (event?: React.FormEvent<HTMLFormElement>) => {
       clearErrorMessage();
 
-      void handleSubmit(async ({ identifier: { type, value } }) => {
+      await handleSubmit(async ({ identifier: { type, value } }) => {
         if (!type) {
           return;
         }

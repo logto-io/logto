@@ -42,10 +42,10 @@ const Lite = ({ className, autoFocus, onSubmit, errorMessage, clearErrorMessage 
   }, [clearErrorMessage, isValid]);
 
   const onSubmitHandler = useCallback(
-    (event?: React.FormEvent<HTMLFormElement>) => {
+    async (event?: React.FormEvent<HTMLFormElement>) => {
       clearErrorMessage?.();
 
-      void handleSubmit(async (data) => {
+      await handleSubmit(async (data) => {
         await onSubmit(data.newPassword);
       })(event);
     },

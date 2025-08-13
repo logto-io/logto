@@ -70,7 +70,7 @@ const PasswordForm = ({
     async (event?: React.FormEvent<HTMLFormElement>) => {
       clearErrorMessage();
 
-      void handleSubmit(async ({ identifier: { type, value }, password }) => {
+      await handleSubmit(async ({ identifier: { type, value }, password }) => {
         if (!type) {
           return;
         }
