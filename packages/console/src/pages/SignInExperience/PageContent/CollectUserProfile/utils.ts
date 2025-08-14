@@ -1,6 +1,7 @@
 import {
   builtInCustomProfileFieldKeys,
   CustomProfileFieldType,
+  type FieldPart,
   userProfileAddressKeys,
 } from '@logto/schemas';
 
@@ -47,4 +48,20 @@ export const getProfileFieldTypeByName = (name: string): CustomProfileFieldType 
       return CustomProfileFieldType.Text;
     }
   }
+};
+
+/**
+ * Generates field tags based on the field name and its composition parts.
+ * For address fields, it prefixes the field name with 'address.'.
+ * For custom fields, it prefixes with 'customData.'.
+ * Other built-in fields are used as-is.
+ */
+export const getFieldTags = (fieldName: string, compositionParts?: FieldPart[]): string[] => {
+  if (compositionParts) {
+    return compositionParts
+      .filter(({ enabled }) => enabled)
+      .map(({ name }) => (fieldName === 'address' ? `address.${name}` : name));
+  }
+
+  return isBuiltInCustomProfileFieldKey(fieldName) ? [fieldName] : [`customData.${fieldName}`];
 };
