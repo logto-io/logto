@@ -2,6 +2,7 @@ import { CustomProfileFieldType, type FieldOption, Gender, type FieldPart } from
 import { useTranslation } from 'react-i18next';
 
 import CheckboxField from '../CheckboxField';
+import DateField from '../DateField';
 import InputField from '../InputField';
 import SelectField from '../SelectField';
 
@@ -65,6 +66,22 @@ const PrimitiveProfileInputField = ({
         onChange={(checked) => {
           onChange(checked ? 'true' : 'false');
         }}
+      />
+    );
+  }
+  if (type === CustomProfileFieldType.Date) {
+    return (
+      <DateField
+        className={className}
+        label={label}
+        dateFormat={config?.format}
+        description={description}
+        value={value}
+        errorMessage={errorMessage}
+        placeholder={config?.placeholder}
+        required={required}
+        onBlur={onBlur}
+        onChange={onChange}
       />
     );
   }
