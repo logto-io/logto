@@ -220,6 +220,20 @@ describe('custom profile fields API', () => {
     );
   });
 
+  it('should fail to create if field name is "preferredUsername"', async () => {
+    await expectRejects(
+      createCustomProfileField({
+        name: 'preferredUsername',
+        type: CustomProfileFieldType.Text,
+        required: true,
+      }),
+      {
+        code: 'custom_profile_fields.name_conflict_built_in_prop',
+        status: 400,
+      }
+    );
+  });
+
   it('should update custom profile field', async () => {
     const nameField = await createCustomProfileField(nameData);
     const fullnameField = await createCustomProfileField(fullnameData);

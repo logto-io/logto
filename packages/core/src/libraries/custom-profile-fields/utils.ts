@@ -10,11 +10,14 @@ import {
   urlProfileFieldGuard,
   addressProfileFieldGuard,
   CustomProfileFieldType,
-  reservedCustomDataKeys,
-  reservedSignInIdentifierKeys,
 } from '@logto/schemas';
 import { ZodError } from 'zod';
 
+import {
+  reservedBuiltInProfileKeySet,
+  reservedCustomDataKeySet,
+  reservedSignInIdentifierKeySet,
+} from '#src/constants/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -123,11 +126,15 @@ const validateDateProfileField: ValidateCustomProfileField = (data) => {
 const validateFieldName = (name: string) => {
   assertThat(numberAndAlphabetRegEx.test(name), 'custom_profile_fields.invalid_name');
   assertThat(
-    !new Set<string>(reservedCustomDataKeys).has(name),
+    !reservedBuiltInProfileKeySet.has(name),
+    new RequestError({ code: 'custom_profile_fields.name_conflict_built_in_prop', name })
+  );
+  assertThat(
+    !reservedCustomDataKeySet.has(name),
     new RequestError({ code: 'custom_profile_fields.name_conflict_custom_data', name })
   );
   assertThat(
-    !new Set<string>(reservedSignInIdentifierKeys).has(name),
+    !reservedSignInIdentifierKeySet.has(name),
     new RequestError({ code: 'custom_profile_fields.name_conflict_sign_in_identifier', name })
   );
 };

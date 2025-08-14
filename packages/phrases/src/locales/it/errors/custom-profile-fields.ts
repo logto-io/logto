@@ -12,11 +12,11 @@ const custom_profile_fields = {
   invalid_name:
     'Nome del campo non valido, sono consentite solo lettere o numeri, sensibili alle maiuscole.',
   name_conflict_sign_in_identifier:
-    'Nome del campo non valido. "{{name}}" è una chiave riservata di identificatore di accesso.',
+    'Nome del campo non valido. Chiavi di identificatore di accesso riservate: {{name}}.',
   name_conflict_built_in_prop:
-    'Nome del campo non valido. "{{name}}" è una proprietà riservata del profilo utente integrata.',
+    'Nome del campo non valido. Nomi di proprietà integrate del profilo utente riservati: {{name}}.',
   name_conflict_custom_data:
-    'Nome del campo non valido. "{{name}}" è una chiave riservata per i dati personalizzati.',
+    'Nome del campo non valido. Chiavi di dati personalizzati riservate: {{name}}.',
   name_required: 'Il nome del campo è obbligatorio.',
 };
 

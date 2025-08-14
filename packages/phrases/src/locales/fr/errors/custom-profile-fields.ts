@@ -13,11 +13,11 @@ const custom_profile_fields = {
   invalid_name:
     'Nom de champ invalide, seules les lettres ou les chiffres sont autorisés, sensible à la casse.',
   name_conflict_sign_in_identifier:
-    'Nom de champ invalide. "{{name}}" est une clé d\'identifiant de connexion réservée.',
+    'Nom de champ invalide. Clés d’identifiant de connexion réservées : {{name}}.',
   name_conflict_built_in_prop:
-    'Nom de champ invalide. "{{name}}" est une propriété de profil utilisateur intégrée réservée.',
+    'Nom de champ invalide. Noms de propriétés intégrées du profil utilisateur réservés : {{name}}.',
   name_conflict_custom_data:
-    'Nom de champ invalide. "{{name}}" est une clé de données personnalisées réservée.',
+    'Nom de champ invalide. Clés de données personnalisées réservées : {{name}}.',
   name_required: 'Le nom du champ est requis.',
 };
 
