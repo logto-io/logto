@@ -14,6 +14,10 @@ import assertThat from '../utils/assert-that.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
+// Maximum number of items allowed in a single batch creation request.
+// Name kept generic since the route context already implies custom profile fields.
+const batchItemsLimit = 20;
+
 export default function customProfileFieldsRoutes<T extends ManagementApiRouter>(
   ...[router, { queries, libraries }]: RouterInitArgs<T>
 ) {
@@ -73,6 +77,24 @@ export default function customProfileFieldsRoutes<T extends ManagementApiRouter>
       const { body } = ctx.guard;
 
       ctx.body = await createCustomProfileField(body);
+      ctx.status = 201;
+      return next();
+    }
+  );
+
+  router.post(
+    '/custom-profile-fields/batch',
+    koaQuotaGuard({ key: 'collectUserProfileEnabled', quota: libraries.quota }),
+    koaGuard({
+      body: z.array(customProfileFieldUnionGuard).max(batchItemsLimit),
+      response: z.array(CustomProfileFields.guard),
+      status: [201, 400],
+    }),
+    async (ctx, next) => {
+      const { body } = ctx.guard;
+
+      const created = await libraries.customProfileFields.createCustomProfileFieldsBatch(body);
+      ctx.body = created;
       ctx.status = 201;
       return next();
     }

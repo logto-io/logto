@@ -24,6 +24,17 @@
         "description": "Create a custom profile field."
       }
     },
+    "/api/custom-profile-fields/batch": {
+      "post": {
+        "summary": "Batch create custom profile fields",
+        "description": "Create multiple custom profile fields in a single request (max 20 items).",
+        "responses": {
+          "201": {
+            "description": "Custom profile fields created successfully."
+          }
+        }
+      }
+    },
     "/api/custom-profile-fields/{name}": {
       "get": {
         "summary": "Get a custom profile field by name",

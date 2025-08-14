@@ -1,4 +1,8 @@
-import { CustomProfileFieldType, type FullnameProfileField } from '@logto/schemas';
+import {
+  CustomProfileFieldType,
+  type CustomProfileFieldUnion,
+  type FullnameProfileField,
+} from '@logto/schemas';
 
 import {
   nameData,
@@ -15,6 +19,7 @@ import {
   findAllCustomProfileFields,
   updateCustomProfileFieldByName,
   updateCustomProfileFieldsSieOrder,
+  batchCreateCustomProfileFields,
 } from '#src/api/index.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { devFeatureTest } from '#src/utils.js';
@@ -370,5 +375,41 @@ describe('custom profile fields API', () => {
     void deleteCustomProfileFieldByName(addressField.name);
     void deleteCustomProfileFieldByName(birthDateField.name);
     void deleteCustomProfileFieldByName(genderField.name);
+  });
+
+  it('should be able to batch create custom profile fields', async () => {
+    const fieldsToCreate = [
+      nameData,
+      fullnameData,
+      websiteData,
+      addressData,
+      birthDateData,
+      genderData,
+    ];
+    const createdFields = await batchCreateCustomProfileFields(fieldsToCreate);
+
+    expect(createdFields).toHaveLength(fieldsToCreate.length);
+    expect(createdFields).toMatchObject(fieldsToCreate);
+
+    for (const field of createdFields) {
+      void deleteCustomProfileFieldByName(field.name);
+    }
+  });
+
+  it('should fail to batch create more than 20 profile fields', async () => {
+    const fieldsToCreate = Array.from({ length: 21 }).map((_, index) => ({
+      name: `field${index}`,
+      type: CustomProfileFieldType.Text,
+      required: false,
+    })) satisfies CustomProfileFieldUnion[];
+
+    const zodData = await expectRejects<{
+      issues: Array<{ code: string; maximum?: number; type?: string }>;
+    }>(batchCreateCustomProfileFields(fieldsToCreate), {
+      code: 'guard.invalid_input',
+      status: 400,
+    });
+
+    expect(zodData.issues[0]).toMatchObject({ code: 'too_big', maximum: 20, type: 'array' });
   });
 });

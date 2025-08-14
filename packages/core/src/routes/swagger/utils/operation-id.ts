@@ -31,6 +31,7 @@ const devFeatureCustomRoutes: RouteDictionary = Object.freeze({
   'get /custom-profile-fields/:name': 'GetCustomProfileFieldByName',
   'put /custom-profile-fields/:name': 'UpdateCustomProfileFieldByName',
   'delete /custom-profile-fields/:name': 'DeleteCustomProfileFieldByName',
+  'post /custom-profile-fields/batch': 'CreateCustomProfileFieldsBatch',
   'post /custom-profile-fields/properties/sie-order': 'UpdateCustomProfileFieldsSieOrder',
 });
 

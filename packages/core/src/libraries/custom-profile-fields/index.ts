@@ -17,12 +17,21 @@ export const createCustomProfileFieldsLibrary = (queries: Queries) => {
     findCustomProfileFieldsByNames,
     updateCustomProfileFieldsByName,
     updateFieldOrderInSignInExperience,
+    bulkInsertCustomProfileFields,
   } = queries.customProfileFields;
 
   const createCustomProfileField = async (data: CustomProfileFieldUnion) => {
     validateCustomProfileFieldData(data);
 
     return insertCustomProfileFields({ ...data, id: generateStandardId() });
+  };
+
+  const createCustomProfileFieldsBatch = async (data: CustomProfileFieldUnion[]) => {
+    for (const item of data) {
+      validateCustomProfileFieldData(item);
+    }
+    const rows = data.map((item) => ({ ...item, id: generateStandardId() }));
+    return bulkInsertCustomProfileFields(rows);
   };
 
   const updateCustomProfileField = async (name: string, data: UpdateCustomProfileFieldData) => {
@@ -56,6 +65,7 @@ export const createCustomProfileFieldsLibrary = (queries: Queries) => {
 
   return {
     createCustomProfileField,
+    createCustomProfileFieldsBatch,
     updateCustomProfileField,
     updateCustomProfileFieldsSieOrder,
   };
