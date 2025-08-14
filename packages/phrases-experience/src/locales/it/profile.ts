@@ -24,7 +24,7 @@ const profile = {
   gender_options: {
     female: 'Femmina',
     male: 'Maschio',
-    other: 'Preferisco non dire',
+    prefer_not_to_say: 'Preferisco non dire',
   },
 };
 

@@ -24,7 +24,7 @@ const profile = {
   gender_options: {
     female: 'Жіноча',
     male: 'Чоловіча',
-    other: 'Волію не говорити',
+    prefer_not_to_say: 'Волію не говорити',
   },
 };
 

@@ -11,7 +11,7 @@ const profile = {
   website: '網站',
   gender: '性別',
   birthdate: '出生日期',
-  zoneinfo: '時區資訊',
+  zoneinfo: '時區',
   locale: '語言地區',
   address: {
     formatted: '地址',
@@ -24,7 +24,7 @@ const profile = {
   gender_options: {
     female: '女性',
     male: '男性',
-    other: '不願透露',
+    prefer_not_to_say: '不願透露',
   },
 };
 

@@ -11,7 +11,7 @@ const profile = {
   website: 'الموقع الإلكتروني',
   gender: 'الجنس',
   birthdate: 'تاريخ الميلاد',
-  zoneinfo: 'معلومات المنطقة الزمنية',
+  zoneinfo: 'المنطقة الزمنية',
   locale: 'اللغة والمنطقة',
   address: {
     formatted: 'العنوان',
@@ -24,7 +24,7 @@ const profile = {
   gender_options: {
     female: 'أنثى',
     male: 'ذكر',
-    other: 'أفضل عدم القول',
+    prefer_not_to_say: 'أفضل عدم القول',
   },
 };
 

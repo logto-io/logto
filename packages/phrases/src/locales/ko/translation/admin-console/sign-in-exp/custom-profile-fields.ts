@@ -4,7 +4,7 @@ const custom_profile_fields = {
     title: {
       field_label: '필드 라벨',
       type: '유형',
-      user_data_key: '사용자 프로필 키',
+      user_data_key: '사용자 데이터 키',
     },
     placeholder: {
       title: '사용자 프로필 수집',
@@ -26,13 +26,12 @@ const custom_profile_fields = {
   modal: {
     title: '프로필 필드 추가',
     subtitle: '회원가입 시 추가적인 사용자 프로필 정보를 수집하기 위해 필드를 커스터마이즈하세요.',
-    built_in_properties: '내장된 사용자 프로필 속성',
-    custom_properties: '사용자 정의 속성',
-    custom_data_field_name: '사용자 정의 데이터 필드 이름',
-    custom_data_field_input_placeholder:
-      '사용자 정의 데이터 필드 이름을 입력하세요, 예: `myFavoriteFieldName`',
+    built_in_properties: '기본 사용자 데이터',
+    custom_properties: '맞춤 사용자 데이터',
+    custom_data_field_name: '사용자 데이터 키',
+    custom_data_field_input_placeholder: '사용자 데이터 키를 입력하세요. 예: `myFavoriteFieldName`',
     custom_field: {
-      title: '사용자 정의 데이터 필드',
+      title: '맞춤 데이터',
       description:
         '애플리케이션의 고유한 요구 사항을 충족하기 위해 정의할 수 있는 추가적인 사용자 속성입니다.',
     },
@@ -56,16 +55,22 @@ const custom_profile_fields = {
     multi_line_address: '여러 줄 주소 (예: 거리, 도시, 주, 우편번호, 국가)',
     components: '컴포넌트',
     components_tip: '복잡한 필드를 구성할 컴포넌트를 선택하세요.',
-    label: '표시 라벨',
+    label: '필드 라벨',
     label_placeholder: '라벨',
     label_tip: '현지화가 필요하신가요? <a>로그인 경험 > 콘텐츠</a>에서 언어를 추가하세요',
-    placeholder: '표시 플레이스홀더',
+    label_tooltip:
+      '필드 용도를 나타내는 플로팅 라벨입니다. 입력 내부에 나타났다가 포커스되거나 값이 있으면 위로 이동합니다.',
+    placeholder: '필드 플레이스홀더',
     placeholder_placeholder: '플레이스홀더',
-    description: '표시 설명',
+    placeholder_tooltip:
+      '입력란 내부의 예시 또는 형식 힌트입니다. 보통 라벨이 위로 떠오른 뒤 표시되며 짧게 유지하세요 (예: MM/DD/YYYY).',
+    description: '필드 설명',
     description_placeholder: '설명',
+    description_tooltip:
+      '텍스트 필드 아래에 표시되는 보조 텍스트입니다. 더 긴 안내나 접근성 관련 설명에 사용하세요.',
     options: '옵션',
     options_tip:
-      '각 옵션을 새 줄에 입력하세요. 키와 값을 구분하기 위해 콜론을 사용하세요, 예: `key:value`',
+      '각 옵션을 새 줄에 입력하세요. 형식은 value:label (예: red:Red) 입니다. value 만 입력해도 됩니다. label 이 없으면 value 가 라벨로 표시됩니다.',
     options_placeholder: 'value1:label1\nvalue2:label2\nvalue3:label3',
     regex: '정규 표현식',
     regex_tip: '입력을 검증하기 위한 정규 표현식을 정의하세요.',

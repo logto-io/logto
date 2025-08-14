@@ -4,7 +4,7 @@ const custom_profile_fields = {
     title: {
       field_label: 'Feldbezeichnung',
       type: 'Typ',
-      user_data_key: 'Schlüssel im Benutzerprofil',
+      user_data_key: 'Benutzerdatenschlüssel',
     },
     placeholder: {
       title: 'Benutzerprofil sammeln',
@@ -27,13 +27,13 @@ const custom_profile_fields = {
     title: 'Profilfeld hinzufügen',
     subtitle:
       'Passen Sie Felder an, um während der Registrierung mehr Benutzerprofilinformationen zu sammeln.',
-    built_in_properties: 'Integrierte Benutzerprofileigenschaften',
-    custom_properties: 'Benutzerdefinierte Eigenschaften',
-    custom_data_field_name: 'Benutzerdefinierter Datenfeldname',
+    built_in_properties: 'Grundlegende Benutzerdaten',
+    custom_properties: 'Benutzerdefinierte Benutzerdaten',
+    custom_data_field_name: 'Benutzerdatenschlüssel',
     custom_data_field_input_placeholder:
-      'Geben Sie den benutzerdefinierten Datenfeldnamen ein, z.B. `meinLieblingsFeldName`',
+      'Geben Sie den Benutzerdatenschlüssel ein, z. B. `myFavoriteFieldName`',
     custom_field: {
-      title: 'Benutzerdefiniertes Datenfeld',
+      title: 'Benutzerdefinierte Daten',
       description:
         'Zusätzliche Benutzereigenschaften, die Sie definieren können, um die spezifischen Anforderungen Ihrer Anwendung zu erfüllen.',
     },
@@ -58,17 +58,23 @@ const custom_profile_fields = {
     multi_line_address: 'Mehrzeilige Adresse (z.B. Straße, Stadt, Bundesland, Postleitzahl, Land)',
     components: 'Komponenten',
     components_tip: 'Wählen Sie die Komponenten aus, um das komplexe Feld zusammenzusetzen.',
-    label: 'Anzeigebezeichnung',
+    label: 'Feldbezeichnung',
     label_placeholder: 'Bezeichnung',
     label_tip:
       'Benötigen Sie Lokalisierung? Fügen Sie Sprachen unter <a>Anmeldeoberfläche > Inhalt</a> hinzu',
-    placeholder: 'Platzhalter anzeigen',
+    label_tooltip:
+      'Schwebendes Label, das den Zweck des Feldes beschreibt. Es erscheint im Eingabefeld und bewegt sich darüber, sobald es fokussiert ist oder einen Wert enthält.',
+    placeholder: 'Feld-Platzhalter',
     placeholder_placeholder: 'Platzhalter',
-    description: 'Anzeigebeschreibung',
+    placeholder_tooltip:
+      'Inline‑Beispiel oder Format-Hinweis im Eingabefeld. Üblicherweise nach dem Schweben des Labels sichtbar; kurz halten (z. B. TT/MM/JJJJ).',
+    description: 'Feldbeschreibung',
     description_placeholder: 'Beschreibung',
+    description_tooltip:
+      'Unter dem Textfeld angezeigter Hilfetext. Für längere Anweisungen oder Barrierefreiheitshinweise verwenden.',
     options: 'Optionen',
     options_tip:
-      'Geben Sie jede Option in eine neue Zeile ein. Verwenden Sie ein Semikolon, um Schlüssel und Wert zu trennen, z.B. `schlüssel:wert`',
+      'Geben Sie jede Option in eine neue Zeile ein. Format: value:label (z. B. red:Red). Sie können auch nur value angeben; wenn kein Label vorhanden ist, wird der value als Label angezeigt.',
     options_placeholder: 'wert1:bezeichnung1\nwert2:bezeichnung2\nwert3:bezeichnung3',
     regex: 'Regulärer Ausdruck',
     regex_tip: 'Definieren Sie einen regulären Ausdruck, um die Eingabe zu validieren.',

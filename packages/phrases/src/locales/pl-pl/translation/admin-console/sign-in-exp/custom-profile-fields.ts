@@ -4,7 +4,7 @@ const custom_profile_fields = {
     title: {
       field_label: 'Etykieta pola',
       type: 'Typ',
-      user_data_key: 'Klucz w profilu użytkownika',
+      user_data_key: 'Klucz danych użytkownika',
     },
     placeholder: {
       title: 'Zbierz profil użytkownika',
@@ -27,13 +27,13 @@ const custom_profile_fields = {
     title: 'Dodaj pole profilu',
     subtitle:
       'Dostosuj pola, aby zbierać więcej informacji o profilu użytkownika podczas rejestracji.',
-    built_in_properties: 'Wbudowane właściwości profilu użytkownika',
-    custom_properties: 'Właściwości niestandardowe',
-    custom_data_field_name: 'Nazwa niestandardowego pola danych',
+    built_in_properties: 'Podstawowe dane użytkownika',
+    custom_properties: 'Niestandardowe dane użytkownika',
+    custom_data_field_name: 'Klucz danych użytkownika',
     custom_data_field_input_placeholder:
-      'Wprowadź nazwę niestandardowego pola danych, np. `mojaUlubionaNazwaPola`',
+      'Wprowadź klucz danych użytkownika, np. `myFavoriteFieldName`',
     custom_field: {
-      title: 'Niestandardowe pole danych',
+      title: 'Dane niestandardowe',
       description:
         'Dowolne dodatkowe właściwości użytkownika, które możesz zdefiniować, aby spełnić unikalne wymagania Twojej aplikacji.',
     },
@@ -58,16 +58,22 @@ const custom_profile_fields = {
       'Adres w wielu liniach (np. Ulica, Miasto, Województwo, Kod pocztowy, Kraj)',
     components: 'Komponenty',
     components_tip: 'Wybierz komponenty, które mają tworzyć złożone pole.',
-    label: 'Wyświetlana etykieta',
+    label: 'Etykieta pola',
     label_placeholder: 'Etykieta',
     label_tip: 'Potrzebujesz lokalizacji? Dodaj języki w <a>Doświadczenie logowania > Treść</a>',
-    placeholder: 'Wyświetlany placeholder',
+    label_tooltip:
+      'Pływająca etykieta identyfikująca przeznaczenie pola. Pojawia się wewnątrz inputu i przesuwa się nad nim, gdy pole ma fokus lub wartość.',
+    placeholder: 'Placeholder pola',
     placeholder_placeholder: 'Placeholder',
-    description: 'Wyświetlany opis',
+    placeholder_tooltip:
+      'Przykład lub wskazówka formatu w polu. Zwykle pojawia się po uniesieniu etykiety; powinna być krótka (np. DD/MM/RRRR).',
+    description: 'Opis pola',
     description_placeholder: 'Opis',
+    description_tooltip:
+      'Tekst pomocniczy pod polem tekstowym. Użyj do dłuższych instrukcji lub uwag dostępności.',
     options: 'Opcje',
     options_tip:
-      'Wprowadź każdą opcję w nowej linii. Użyj średnika do oddzielenia klucza i wartości, np. `klucz:wartość`',
+      'Wprowadź każdą opcję w nowej linii. Format: value:label (np. red:Red). Możesz podać samo value; jeśli label nie zostanie podany, wartość zostanie użyta jako etykieta.',
     options_placeholder: 'wartość1:etykieta1\nwartość2:etykieta2\nwartość3:etykieta3',
     regex: 'Wyrażenie regularne',
     regex_tip: 'Zdefiniuj wyrażenie regularne do walidacji wprowadzonych danych.',

@@ -4,7 +4,7 @@ const custom_profile_fields = {
     title: {
       field_label: 'Field label',
       type: 'Type',
-      user_data_key: 'Key in user profile',
+      user_data_key: 'User data key',
     },
     placeholder: {
       title: 'Collect user profile',
@@ -25,13 +25,12 @@ const custom_profile_fields = {
   modal: {
     title: 'Add profile field',
     subtitle: 'Customize fields to collect more user profile information during sign-up.',
-    built_in_properties: 'Built-in user profile properties',
-    custom_properties: 'Custom properties',
-    custom_data_field_name: 'Custom data field name',
-    custom_data_field_input_placeholder:
-      'Enter the custom data field name, e.g. `myFavoriteFieldName`',
+    built_in_properties: 'Basic user data',
+    custom_properties: 'Custom user data',
+    custom_data_field_name: 'User data key',
+    custom_data_field_input_placeholder: 'Enter the user data key, e.g. `myFavoriteFieldName`',
     custom_field: {
-      title: 'Custom data field',
+      title: 'Custom data',
       description:
         'Any additional user properties you can define to meet the unique requirements of your application.',
     },
@@ -56,16 +55,22 @@ const custom_profile_fields = {
     multi_line_address: 'Multi-line address (E.g., Street, City, State, Zip Code, Country)',
     components: 'Components',
     components_tip: 'Select the components to compose the complex field.',
-    label: 'Display label',
+    label: 'Field label',
     label_placeholder: 'Label',
     label_tip: 'Need localization? Add languages in <a>Sign-in experience > Content</a>',
-    placeholder: 'Display placeholder',
+    label_tooltip:
+      'Floating label that identifies what the field is for. It appears inside the input and moves above the field when the field is focused or has a value.',
+    placeholder: 'Field placeholder',
     placeholder_placeholder: 'Placeholder',
-    description: 'Display description',
+    placeholder_tooltip:
+      'Inline example or format hint shown inside the input. It typically appears after the label floats and should be short (e.g., MM/DD/YYYY).',
+    description: 'Field description',
     description_placeholder: 'Description',
+    description_tooltip:
+      'Supporting text displayed beneath the text field. Use it for longer instructions or accessibility notes.',
     options: 'Options',
     options_tip:
-      'Enter each option on a new line. Use semicolon to separate key and value, e.g. `key:value`',
+      'Enter each option on a new line. Use value:label (e.g. red:Red). You can also enter only value; if no label is given, the value is displayed as the label.',
     options_placeholder: 'value1:label1\nvalue2:label2\nvalue3:label3',
     regex: 'Regular expression',
     regex_tip: 'Define a regular expression to validate the input.',

@@ -4,7 +4,7 @@ const custom_profile_fields = {
     title: {
       field_label: 'Rótulo do campo',
       type: 'Tipo',
-      user_data_key: 'Chave no perfil do usuário',
+      user_data_key: 'Chave de dados do usuário',
     },
     placeholder: {
       title: 'Coletar perfil do usuário',
@@ -27,13 +27,13 @@ const custom_profile_fields = {
     title: 'Adicionar campo de perfil',
     subtitle:
       'Personalize campos para coletar mais informações do perfil do usuário durante o cadastro.',
-    built_in_properties: 'Propriedades internas do perfil do usuário',
-    custom_properties: 'Propriedades personalizadas',
-    custom_data_field_name: 'Nome do campo de dados personalizado',
+    built_in_properties: 'Dados básicos do usuário',
+    custom_properties: 'Dados personalizados do usuário',
+    custom_data_field_name: 'Chave de dados do usuário',
     custom_data_field_input_placeholder:
-      'Digite o nome do campo de dados personalizado, por exemplo, `meuCampoFavorito`',
+      'Digite a chave de dados do usuário, por exemplo, `myFavoriteFieldName`',
     custom_field: {
-      title: 'Campo de dados personalizado',
+      title: 'Dados personalizados',
       description:
         'Quaisquer propriedades adicionais do usuário que você pode definir para atender aos requisitos exclusivos do seu aplicativo.',
     },
@@ -58,16 +58,22 @@ const custom_profile_fields = {
     multi_line_address: 'Endereço em múltiplas linhas (Ex.: Rua, Cidade, Estado, CEP, País)',
     components: 'Componentes',
     components_tip: 'Selecione os componentes para compor o campo complexo.',
-    label: 'Rótulo de exibição',
+    label: 'Rótulo do campo',
     label_placeholder: 'Rótulo',
     label_tip: 'Precisa de localização? Adicione idiomas em <a>Experiência de login > Conteúdo</a>',
-    placeholder: 'Placeholder de exibição',
+    label_tooltip:
+      'Rótulo flutuante que identifica o propósito do campo. Aparece dentro do input e se move acima quando tem foco ou valor.',
+    placeholder: 'Placeholder do campo',
     placeholder_placeholder: 'Placeholder',
-    description: 'Descrição de exibição',
+    placeholder_tooltip:
+      'Exemplo inline ou dica de formato dentro do campo. Normalmente aparece após o rótulo flutuar e deve ser curto (ex.: DD/MM/AAAA).',
+    description: 'Descrição do campo',
     description_placeholder: 'Descrição',
+    description_tooltip:
+      'Texto de apoio exibido abaixo do campo. Use para instruções mais longas ou notas de acessibilidade.',
     options: 'Opções',
     options_tip:
-      'Digite cada opção em uma nova linha. Use ponto e vírgula para separar chave e valor, por exemplo, `chave:valor`',
+      'Digite cada opção em uma nova linha. Formato: value:label (ex.: red:Red). Você também pode informar apenas value; se nenhum label for fornecido, o próprio value será exibido como rótulo.',
     options_placeholder: 'valor1:rótulo1\nvalor2:rótulo2\nvalor3:rótulo3',
     regex: 'Expressão regular',
     regex_tip: 'Defina uma expressão regular para validar a entrada.',

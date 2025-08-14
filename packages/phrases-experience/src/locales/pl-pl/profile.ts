@@ -24,7 +24,7 @@ const profile = {
   gender_options: {
     female: 'Kobieta',
     male: 'Mężczyzna',
-    other: 'Wolę nie mówić',
+    prefer_not_to_say: 'Wolę nie mówić',
   },
 };
 

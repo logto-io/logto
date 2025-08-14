@@ -4,7 +4,7 @@ const custom_profile_fields = {
     title: {
       field_label: 'フィールドラベル',
       type: 'タイプ',
-      user_data_key: 'ユーザープロフィールのキー',
+      user_data_key: 'ユーザーデータキー',
     },
     placeholder: {
       title: 'ユーザープロフィールを収集',
@@ -25,13 +25,13 @@ const custom_profile_fields = {
   modal: {
     title: 'プロフィールフィールドを追加',
     subtitle: 'サインアップ時に収集するユーザープロフィール情報をカスタマイズします。',
-    built_in_properties: '組み込みユーザープロフィールプロパティ',
-    custom_properties: 'カスタムプロパティ',
-    custom_data_field_name: 'カスタムデータフィールド名',
+    built_in_properties: '基本ユーザーデータ',
+    custom_properties: 'カスタムユーザーデータ',
+    custom_data_field_name: 'ユーザーデータキー',
     custom_data_field_input_placeholder:
-      'カスタムデータフィールド名を入力してください。例: `myFavoriteFieldName`',
+      'ユーザーデータキーを入力してください。例: `myFavoriteFieldName`',
     custom_field: {
-      title: 'カスタムデータフィールド',
+      title: 'カスタムデータ',
       description:
         'アプリケーションの独自の要件を満たすために定義できる追加のユーザープロパティです。',
     },
@@ -55,16 +55,22 @@ const custom_profile_fields = {
     multi_line_address: '複数行の住所 (例: 番地、市区町村、都道府県、郵便番号、国)',
     components: 'コンポーネント',
     components_tip: '複合フィールドを構成するコンポーネントを選択します。',
-    label: '表示ラベル',
+    label: 'フィールドラベル',
     label_placeholder: 'ラベル',
     label_tip: '多言語対応が必要ですか？<a>サインイン体験 > コンテンツ</a>で言語を追加してください',
-    placeholder: 'プレースホルダーを表示',
+    label_tooltip:
+      'フィールドの目的を示すフローティングラベル。入力内に表示され、フォーカスまたは値入力でフィールド上部へ移動します。',
+    placeholder: 'フィールドプレースホルダー',
     placeholder_placeholder: 'プレースホルダー',
-    description: '表示説明',
+    placeholder_tooltip:
+      '入力欄内に表示される簡潔な例または形式ヒント。ラベルがフロートした後に現れることが多く、短く保ってください（例: MM/DD/YYYY）。',
+    description: 'フィールド説明',
     description_placeholder: '説明',
+    description_tooltip:
+      'テキストフィールド下に表示される補助テキスト。詳細な手順やアクセシビリティの注意書きに使用します。',
     options: 'オプション',
     options_tip:
-      '各オプションを新しい行に入力します。キーと値をセミコロンで区切ります。例: `key:value`',
+      '各オプションを新しい行に入力します。形式は value:label（例: red:Red）。value だけでも入力できます。label を省略した場合は value がラベルとして表示されます。',
     options_placeholder: 'value1:label1\nvalue2:label2\nvalue3:label3',
     regex: '正規表現',
     regex_tip: '入力値を検証する正規表現を定義します。',
