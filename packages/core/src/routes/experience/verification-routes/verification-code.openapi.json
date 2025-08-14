@@ -95,6 +95,52 @@
           }
         }
       }
+    },
+    "/api/experience/verification/verification-code/mfa": {
+      "post": {
+        "operationId": "CreateAndSendMfaVerificationCode",
+        "summary": "Create and send MFA verification code",
+        "description": "Create a new MFA verification code and send it to the user's bound identifier (email or phone). This endpoint automatically uses the user's bound email address or phone number from their profile for MFA verification. The user must be identified before calling this endpoint.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "identifierType": {
+                    "description": "The type of identifier to use for MFA verification. Must be either 'Email' or 'Phone'. The endpoint will automatically use the user's bound identifier of this type.",
+                    "enum": ["Email", "Phone"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The MFA verification code has been successfully sent to the user's bound identifier.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "verificationId": {
+                      "description": "The unique ID of the verification record. Required to verify the code."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request. The user is not identified or does not have the specified identifier type bound for MFA."
+          },
+          "404": {
+            "description": "User not found."
+          },
+          "501": {
+            "description": "The connector for the specified identifier type is not configured."
+          }
+        }
+      }
     }
   }
 }

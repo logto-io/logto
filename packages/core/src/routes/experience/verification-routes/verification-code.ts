@@ -12,6 +12,7 @@ import { trySafe } from '@silverhand/essentials';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import { type PasscodeLibrary } from '#src/libraries/passcode.js';
 import { type LogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -193,6 +194,86 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
       };
 
       return next();
+    }
+  );
+
+  router.post(
+    `${experienceRoutes.verification}/verification-code/mfa`,
+    koaGuard({
+      body: z.object({
+        identifierType: z.enum([SignInIdentifier.Email, SignInIdentifier.Phone]),
+      }),
+      response: z.object({
+        verificationId: z.string(),
+      }),
+      status: [200, 400, 404, 501],
+    }),
+    async (ctx, next) => {
+      const { identifierType } = ctx.guard.body;
+      const { experienceInteraction } = ctx;
+
+      if (!experienceInteraction.identifiedUserId) {
+        throw new RequestError({
+          code: 'session.identifier_not_found',
+          status: 400,
+        });
+      }
+
+      const user = await queries.users.findUserById(experienceInteraction.identifiedUserId);
+      const identifierValue =
+        identifierType === SignInIdentifier.Email ? user.primaryEmail : user.primaryPhone;
+
+      if (!identifierValue) {
+        throw new RequestError({
+          code: 'session.mfa.mfa_factor_not_enabled',
+          status: 400,
+        });
+      }
+
+      const identifier = {
+        type: identifierType,
+        value: identifierValue,
+      };
+
+      const log = createVerificationCodeAuditLog(
+        ctx,
+        experienceInteraction,
+        identifier,
+        Action.Create
+      );
+
+      log.append({
+        payload: {
+          identifier,
+        },
+      });
+
+      const codeVerification = createNewCodeVerificationRecord(
+        libraries,
+        queries,
+        identifier,
+        getTemplateTypeByEvent(InteractionEvent.SignIn)
+      );
+
+      const templateContext = await buildVerificationCodeTemplateContext(
+        libraries.passcodes,
+        ctx,
+        identifier
+      );
+
+      await codeVerification.sendVerificationCode({
+        locale: ctx.locale,
+        ...templateContext,
+      });
+
+      experienceInteraction.setVerificationRecord(codeVerification);
+      await experienceInteraction.save();
+
+      ctx.body = {
+        verificationId: codeVerification.id,
+      };
+
+      await next();
     }
   );
 }

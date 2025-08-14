@@ -81,6 +81,17 @@ export class ExperienceClient extends MockClient {
       .json<{ verificationId: string }>();
   }
 
+  public async sendMfaVerificationCode(payload: {
+    identifierType: SignInIdentifier.Email | SignInIdentifier.Phone;
+  }) {
+    return this.api
+      .post(`${experienceRoutes.verification}/verification-code/mfa`, {
+        headers: { cookie: this.interactionCookie },
+        json: payload,
+      })
+      .json<{ verificationId: string }>();
+  }
+
   public async getSocialAuthorizationUri(
     connectorId: string,
     payload: {
