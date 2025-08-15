@@ -1,7 +1,9 @@
 import { SupportedDateFormat } from '@logto/schemas';
+import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
+import { dateFnsDocumentationLink } from '@/consts';
 import FormField from '@/ds-components/FormField';
 import Select from '@/ds-components/Select';
 import TextInput from '@/ds-components/TextInput';
@@ -30,6 +32,21 @@ function DateFormatSelector({ index }: Props) {
   const fieldPrefix = index === undefined ? '' : (`parts.${index}.` as const);
   const formatValue = watch(`${fieldPrefix}format`);
   const formErrors = index === undefined ? errors : errors.parts?.[index];
+
+  useEffect(() => {
+    if (!formatValue) {
+      setValue(`${fieldPrefix}format`, SupportedDateFormat.US, { shouldDirty: true });
+      setValue(`${fieldPrefix}placeholder`, SupportedDateFormat.US, { shouldDirty: true });
+    }
+  }, [fieldPrefix, formatValue, setValue]);
+
+  useEffect(() => {
+    return () => {
+      setValue(`${fieldPrefix}format`, '');
+      setValue(`${fieldPrefix}placeholder`, '');
+      setValue(`${fieldPrefix}customFormat`, '');
+    };
+  }, [fieldPrefix, setValue]);
 
   return (
     <div className={styles.dateFormatSelector}>
@@ -65,7 +82,7 @@ function DateFormatSelector({ index }: Props) {
             description={
               <Trans
                 components={{
-                  a: <TextLink targetBlank href="https://date-fns.org/v2.30.0/docs/format" />,
+                  a: <TextLink targetBlank href={dateFnsDocumentationLink} />,
                 }}
               >
                 {t('custom_date_format_tip')}
