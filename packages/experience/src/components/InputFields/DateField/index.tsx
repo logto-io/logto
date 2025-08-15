@@ -255,7 +255,6 @@ const DateField = (props: Props) => {
 
   if (!isSupportedDateFormat) {
     const { dateFormat, ...restProps } = props;
-    console.log(restProps);
     return (
       <InputField
         {...restProps}
