@@ -1,0 +1,54 @@
+@use '@/scss/underscore' as _;
+
+.dateFieldContainer {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(1);
+
+  .dateInputWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: _.unit(1.5);
+    padding: _.unit(4);
+    height: 44px;
+    transition-property: border;
+    transition-timing-function: ease-in-out;
+    transition-duration: 0.2s;
+    background: inherit;
+
+    &:focus-visible {
+      outline: none;
+    }
+
+    input {
+      border: none;
+      background: inherit;
+      color: var(--color-type-primary);
+      /* stylelint-disable-next-line property-no-unknown */
+      field-sizing: content;
+
+      &::placeholder {
+        color: var(--color-type-secondary);
+      }
+
+      &:focus-visible {
+        outline: none;
+      }
+    }
+
+    .separator {
+      color: var(--color-type-secondary);
+    }
+  }
+
+  .description,
+  .errorMessage {
+    margin-inline-start: _.unit(0.5);
+    @include _.text-hint;
+  }
+
+  .errorMessage {
+    color: var(--color-danger-default);
+  }
+}
