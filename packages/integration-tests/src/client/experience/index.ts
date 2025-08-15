@@ -85,7 +85,20 @@ export class ExperienceClient extends MockClient {
     identifierType: SignInIdentifier.Email | SignInIdentifier.Phone;
   }) {
     return this.api
-      .post(`${experienceRoutes.verification}/verification-code/mfa`, {
+      .post(`${experienceRoutes.verification}/mfa-verification-code`, {
+        headers: { cookie: this.interactionCookie },
+        json: payload,
+      })
+      .json<{ verificationId: string }>();
+  }
+
+  public async verifyMfaVerificationCode(payload: {
+    verificationId: string;
+    code: string;
+    identifierType: SignInIdentifier.Email | SignInIdentifier.Phone;
+  }) {
+    return this.api
+      .post(`${experienceRoutes.verification}/mfa-verification-code/verify`, {
         headers: { cookie: this.interactionCookie },
         json: payload,
       })

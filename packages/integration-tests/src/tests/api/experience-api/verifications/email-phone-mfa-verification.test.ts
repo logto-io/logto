@@ -14,7 +14,7 @@ import {
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
 import {
   successfullySendMfaVerificationCode,
-  successfullyVerifyVerificationCode,
+  successfullyVerifyMfaVerificationCode,
 } from '#src/helpers/experience/verification-code.js';
 import {
   enableAllPasswordSignInMethods,
@@ -86,8 +86,8 @@ describe.each(mfaTestCases)(
         identifierType,
         expectedIdentifierValue: identifierValue,
       });
-      await successfullyVerifyVerificationCode(client, {
-        identifier: { type: identifierType, value: identifierValue },
+      await successfullyVerifyMfaVerificationCode(client, {
+        identifierType,
         verificationId,
         code,
       });

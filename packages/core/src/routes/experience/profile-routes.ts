@@ -16,6 +16,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { EnvSet } from '../../env-set/index.js';
 
+import { createNewMfaCodeVerificationRecord } from './classes/verifications/code-verification.js';
 import { experienceRoutes } from './const.js';
 import { type ExperienceInteractionRouterContext } from './types.js';
 
@@ -51,7 +52,7 @@ function verifiedInteractionGuard<
 
 export default function interactionProfileRoutes<T extends ExperienceInteractionRouterContext>(
   router: Router<unknown, T>,
-  tenant: TenantContext
+  { libraries, queries }: TenantContext
 ) {
   router.post(
     `${experienceRoutes.profile}`,
@@ -228,6 +229,21 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
             verificationId,
             log
           );
+          const { primaryEmail } = experienceInteraction.profile.data;
+          // If the primary email is set, create a new MFA code verification record
+          // to bypass the MFA verification step.
+          if (primaryEmail) {
+            const codeVerification = createNewMfaCodeVerificationRecord(
+              libraries,
+              queries,
+              {
+                type: SignInIdentifier.Email,
+                value: primaryEmail,
+              },
+              true
+            );
+            experienceInteraction.setVerificationRecord(codeVerification);
+          }
           break;
         }
         case MfaFactor.PhoneVerificationCode: {
@@ -240,6 +256,21 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
             verificationId,
             log
           );
+          const { primaryPhone } = experienceInteraction.profile.data;
+          // If the primary phone is set, create a new MFA code verification record
+          // to bypass the MFA verification step.
+          if (primaryPhone) {
+            const codeVerification = createNewMfaCodeVerificationRecord(
+              libraries,
+              queries,
+              {
+                type: SignInIdentifier.Phone,
+                value: primaryPhone,
+              },
+              true
+            );
+            experienceInteraction.setVerificationRecord(codeVerification);
+          }
           break;
         }
       }

@@ -99,7 +99,9 @@ export const identifyUserByVerificationRecord = async (
   switch (verificationRecord.type) {
     case VerificationType.Password:
     case VerificationType.EmailVerificationCode:
-    case VerificationType.PhoneVerificationCode: {
+    case VerificationType.PhoneVerificationCode:
+    case VerificationType.MfaEmailVerificationCode:
+    case VerificationType.MfaPhoneVerificationCode: {
       return {
         user: await verificationRecord.identifyUser(),
       };

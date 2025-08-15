@@ -69,3 +69,18 @@ export const successfullySendMfaVerificationCode = async (
     code,
   };
 };
+
+export const successfullyVerifyMfaVerificationCode = async (
+  client: ExperienceClient,
+  payload: {
+    identifierType: SignInIdentifier.Email | SignInIdentifier.Phone;
+    verificationId: string;
+    code: string;
+  }
+) => {
+  const { verificationId } = await client.verifyMfaVerificationCode(payload);
+
+  expect(verificationId).toBeTruthy();
+
+  return verificationId;
+};

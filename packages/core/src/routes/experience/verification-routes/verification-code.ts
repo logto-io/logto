@@ -1,64 +1,29 @@
 import {
   InteractionEvent,
-  logtoCookieKey,
-  logtoUiCookieGuard,
-  SentinelActivityAction,
   SignInIdentifier,
-  type VerificationCodeIdentifier,
   verificationCodeIdentifierGuard,
 } from '@logto/schemas';
-import { Action } from '@logto/schemas/lib/types/log/interaction.js';
-import { trySafe } from '@silverhand/essentials';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
-import RequestError from '#src/errors/RequestError/index.js';
-import { type PasscodeLibrary } from '#src/libraries/passcode.js';
-import { type LogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
-import type ExperienceInteraction from '../classes/experience-interaction.js';
-import { withSentinel } from '../classes/libraries/sentinel-guard.js';
 import { codeVerificationIdentifierRecordTypeMap } from '../classes/utils.js';
 import {
   createNewCodeVerificationRecord,
+  createNewMfaCodeVerificationRecord,
   getTemplateTypeByEvent,
 } from '../classes/verifications/code-verification.js';
 import { experienceRoutes } from '../const.js';
 import { type ExperienceInteractionRouterContext } from '../types.js';
 
-const createVerificationCodeAuditLog = (
-  { createLog }: LogContext,
-  { interactionEvent }: ExperienceInteraction,
-  identifier: VerificationCodeIdentifier,
-  action: Action
-) => {
-  const verificationType = codeVerificationIdentifierRecordTypeMap[identifier.type];
-
-  return createLog(`Interaction.${interactionEvent}.Verification.${verificationType}.${action}`);
-};
-
-const buildVerificationCodeTemplateContext = async (
-  passcodeLibrary: PasscodeLibrary,
-  ctx: ExperienceInteractionRouterContext,
-  { type }: VerificationCodeIdentifier
-) => {
-  // Build extra context for email verification only
-  if (type !== SignInIdentifier.Email) {
-    return {};
-  }
-
-  // Safely get the orgId and appId context from cookie
-  const { appId: applicationId, organizationId } =
-    trySafe(() => logtoUiCookieGuard.parse(JSON.parse(ctx.cookies.get(logtoCookieKey) ?? '{}'))) ??
-    {};
-
-  return passcodeLibrary.buildVerificationCodeContext({
-    applicationId,
-    organizationId,
-  });
-};
+import {
+  sendCode,
+  verifyCode,
+  getMfaIdentifier,
+  getMfaVerificationType,
+} from './verification-code-helpers.js';
 
 export default function verificationCodeRoutes<T extends ExperienceInteractionRouterContext>(
   router: Router<unknown, T>,
@@ -81,55 +46,19 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
       const { identifier, interactionEvent } = ctx.guard.body;
       await ctx.experienceInteraction.guardCaptcha();
 
-      const log = createVerificationCodeAuditLog(
-        ctx,
-        ctx.experienceInteraction,
+      ctx.body = await sendCode({
         identifier,
-        Action.Create
-      );
-
-      log.append({
-        payload: {
-          identifier,
-          interactionEvent,
-        },
-      });
-
-      const codeVerification = createNewCodeVerificationRecord(
+        interactionEvent,
+        createVerificationRecord: () =>
+          createNewCodeVerificationRecord(
+            libraries,
+            queries,
+            identifier,
+            getTemplateTypeByEvent(interactionEvent)
+          ),
         libraries,
-        queries,
-        identifier,
-        getTemplateTypeByEvent(interactionEvent)
-      );
-
-      // Pre validate the email against email blocklist if the interaction event is register
-      if (
-        interactionEvent === InteractionEvent.Register &&
-        identifier.type === SignInIdentifier.Email
-      ) {
-        await ctx.experienceInteraction.signInExperienceValidator.guardEmailBlocklist(
-          codeVerification
-        );
-      }
-
-      const templateContext = await buildVerificationCodeTemplateContext(
-        libraries.passcodes,
         ctx,
-        identifier
-      );
-
-      await codeVerification.sendVerificationCode({
-        locale: ctx.locale,
-        ...templateContext,
       });
-
-      ctx.experienceInteraction.setVerificationRecord(codeVerification);
-
-      await ctx.experienceInteraction.save();
-
-      ctx.body = {
-        verificationId: codeVerification.id,
-      };
 
       await next();
     }
@@ -151,54 +80,22 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
     }),
     async (ctx, next) => {
       const { verificationId, code, identifier } = ctx.guard.body;
-      const { experienceInteraction } = ctx;
 
-      const log = createVerificationCodeAuditLog(
-        ctx,
-        ctx.experienceInteraction,
+      ctx.body = await verifyCode({
+        verificationId,
+        code,
         identifier,
-        Action.Submit
-      );
-
-      log.append({
-        payload: {
-          identifier,
-          verificationId,
-          code,
-        },
+        verificationType: codeVerificationIdentifierRecordTypeMap[identifier.type],
+        sentinel,
+        ctx,
       });
-
-      const codeVerificationRecord = ctx.experienceInteraction.getVerificationRecordByTypeAndId(
-        codeVerificationIdentifierRecordTypeMap[identifier.type],
-        verificationId
-      );
-
-      await withSentinel(
-        {
-          ctx,
-          sentinel,
-          action: SentinelActivityAction.VerificationCode,
-          identifier,
-          payload: {
-            event: experienceInteraction.interactionEvent,
-            verificationId: codeVerificationRecord.id,
-          },
-        },
-        codeVerificationRecord.verify(identifier, code)
-      );
-
-      await ctx.experienceInteraction.save();
-
-      ctx.body = {
-        verificationId: codeVerificationRecord.id,
-      };
 
       return next();
     }
   );
 
   router.post(
-    `${experienceRoutes.verification}/verification-code/mfa`,
+    `${experienceRoutes.verification}/mfa-verification-code`,
     koaGuard({
       body: z.object({
         identifierType: z.enum([SignInIdentifier.Email, SignInIdentifier.Phone]),
@@ -212,68 +109,64 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
       const { identifierType } = ctx.guard.body;
       const { experienceInteraction } = ctx;
 
-      if (!experienceInteraction.identifiedUserId) {
-        throw new RequestError({
-          code: 'session.identifier_not_found',
-          status: 400,
-        });
-      }
+      const identifier = await getMfaIdentifier({
+        identifierType,
+        experienceInteraction,
+        queries,
+      });
 
-      const user = await queries.users.findUserById(experienceInteraction.identifiedUserId);
-      const identifierValue =
-        identifierType === SignInIdentifier.Email ? user.primaryEmail : user.primaryPhone;
+      ctx.body = await sendCode({
+        identifier,
+        createVerificationRecord: () =>
+          createNewMfaCodeVerificationRecord(libraries, queries, identifier),
+        libraries,
+        ctx,
+      });
 
-      if (!identifierValue) {
-        throw new RequestError({
-          code: 'session.mfa.mfa_factor_not_enabled',
-          status: 400,
-        });
-      }
+      await next();
+    }
+  );
+
+  router.post(
+    `${experienceRoutes.verification}/mfa-verification-code/verify`,
+    koaGuard({
+      body: z.object({
+        verificationId: z.string(),
+        code: z.string(),
+        identifierType: z.enum([SignInIdentifier.Email, SignInIdentifier.Phone]),
+      }),
+      response: z.object({
+        verificationId: z.string(),
+      }),
+      status: [200, 400, 404, 501],
+    }),
+    async (ctx, next) => {
+      const { verificationId, code, identifierType } = ctx.guard.body;
+      const { experienceInteraction } = ctx;
+
+      const mfaVerificationType = getMfaVerificationType(identifierType);
+
+      // Get the verification record to extract the identifier value
+      const codeVerificationRecord = experienceInteraction.getVerificationRecordByTypeAndId(
+        mfaVerificationType,
+        verificationId
+      );
 
       const identifier = {
         type: identifierType,
-        value: identifierValue,
+        value: codeVerificationRecord.identifier.value,
       };
 
-      const log = createVerificationCodeAuditLog(
-        ctx,
-        experienceInteraction,
+      ctx.body = await verifyCode({
+        verificationId,
+        code,
         identifier,
-        Action.Create
-      );
-
-      log.append({
-        payload: {
-          identifier,
-        },
+        verificationType: mfaVerificationType,
+        sentinel,
+        ctx,
       });
 
-      const codeVerification = createNewCodeVerificationRecord(
-        libraries,
-        queries,
-        identifier,
-        getTemplateTypeByEvent(InteractionEvent.SignIn)
-      );
-
-      const templateContext = await buildVerificationCodeTemplateContext(
-        libraries.passcodes,
-        ctx,
-        identifier
-      );
-
-      await codeVerification.sendVerificationCode({
-        locale: ctx.locale,
-        ...templateContext,
-      });
-
-      experienceInteraction.setVerificationRecord(codeVerification);
-      await experienceInteraction.save();
-
-      ctx.body = {
-        verificationId: codeVerification.id,
-      };
-
-      await next();
+      return next();
     }
   );
 }
