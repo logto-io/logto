@@ -58,6 +58,7 @@ const FullnameSubForm = ({ field }: Props) => {
               <PrimitiveProfileInputField
                 {...part}
                 className={styles.inputField}
+                name={part.name}
                 label={part.label ?? t(`profile.${part.name}`)}
                 value={value ?? ''}
                 isDanger={!!errors[part.name]}

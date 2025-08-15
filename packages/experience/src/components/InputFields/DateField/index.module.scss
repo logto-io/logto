@@ -17,16 +17,34 @@
     transition-duration: 0.2s;
     background: inherit;
 
+    .clickOverlay {
+      position: absolute;
+      inset: 0;
+      cursor: text;
+
+      span {
+        opacity: 0%;
+      }
+
+      &.disabled {
+        display: none;
+      }
+    }
+
     &:focus-visible {
       outline: none;
     }
 
     input {
-      border: none;
       background: inherit;
       color: var(--color-type-primary);
       /* stylelint-disable-next-line property-no-unknown */
       field-sizing: content;
+      opacity: 0%;
+
+      &.active {
+        opacity: 100%;
+      }
 
       &::placeholder {
         color: var(--color-type-secondary);
@@ -39,6 +57,11 @@
 
     .separator {
       color: var(--color-type-secondary);
+      opacity: 0%;
+
+      &.active {
+        opacity: 100%;
+      }
     }
   }
 

@@ -4,7 +4,6 @@ import { useState } from 'react';
 
 import DateField from '.';
 
-// Mock i18n hook (only label optional usage); return label directly
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string, options?: Record<string, string>) => options?.label ?? key,
@@ -29,16 +28,17 @@ const Controlled = (props: React.ComponentProps<typeof DateField>) => {
 
 describe('DateField Component', () => {
   test('render US format placeholders and separator', () => {
-    const { container } = render(<DateField dateFormat={SupportedDateFormat.US} label="dob" />);
+    const { container } = render(
+      <DateField dateFormat={SupportedDateFormat.US} label="Date of birth" />
+    );
 
-    // Focus wrapper to activate inputs
-    const wrapper = container.querySelector('[role="button"]');
-    expect(wrapper).not.toBeNull();
-    if (wrapper) {
-      act(() => {
-        fireEvent.click(wrapper);
-      });
-    }
+    const labelNode = Array.from(container.querySelectorAll('*')).find(
+      (element) => element.textContent === 'Date of birth'
+    );
+    expect(labelNode).toBeTruthy();
+    act(() => {
+      fireEvent.click(labelNode!);
+    });
 
     const inputs = Array.from(container.querySelectorAll('input'));
     expect(inputs).toHaveLength(3);
@@ -56,14 +56,18 @@ describe('DateField Component', () => {
   test('typing fills each part and produces final date (controlled, 2023-08-20)', () => {
     const handleChange = jest.fn();
     const { container } = render(
-      <Controlled dateFormat={SupportedDateFormat.US} onChange={handleChange} />
+      <Controlled
+        dateFormat={SupportedDateFormat.US}
+        label="Date of birth"
+        onChange={handleChange}
+      />
     );
-    const wrapper = container.querySelector('[role="button"]');
-    if (wrapper) {
-      act(() => {
-        fireEvent.click(wrapper);
-      });
-    }
+    const labelNode = Array.from(container.querySelectorAll('*')).find(
+      (element) => element.textContent === 'Date of birth'
+    );
+    act(() => {
+      fireEvent.click(labelNode!);
+    });
     const inputs = Array.from(container.querySelectorAll('input'));
 
     act(() => {
@@ -80,14 +84,19 @@ describe('DateField Component', () => {
   test('backspace clears previous field when empty', () => {
     const handleChange = jest.fn();
     const { container } = render(
-      <Controlled dateFormat={SupportedDateFormat.US} value="08/20/2023" onChange={handleChange} />
+      <Controlled
+        dateFormat={SupportedDateFormat.US}
+        value="08/20/2023"
+        label="Date of birth"
+        onChange={handleChange}
+      />
     );
-    const wrapper = container.querySelector('[role="button"]');
-    if (wrapper) {
-      act(() => {
-        fireEvent.click(wrapper);
-      });
-    }
+    const labelNode = Array.from(container.querySelectorAll('*')).find(
+      (element) => element.textContent === 'Date of birth'
+    );
+    act(() => {
+      fireEvent.click(labelNode!);
+    });
     const inputs = Array.from(container.querySelectorAll('input'));
 
     // Focus last input and clear it with backspace until it moves to previous
@@ -116,14 +125,18 @@ describe('DateField Component', () => {
   test('paste distributes digits across inputs', () => {
     const handleChange = jest.fn();
     const { container } = render(
-      <DateField dateFormat={SupportedDateFormat.US} onChange={handleChange} />
+      <DateField
+        dateFormat={SupportedDateFormat.US}
+        label="Date of birth"
+        onChange={handleChange}
+      />
     );
-    const wrapper = container.querySelector('[role="button"]');
-    if (wrapper) {
-      act(() => {
-        fireEvent.click(wrapper);
-      });
-    }
+    const labelNode = Array.from(container.querySelectorAll('*')).find(
+      (element) => element.textContent === 'Date of birth'
+    );
+    act(() => {
+      fireEvent.click(labelNode!);
+    });
     const inputs = Array.from(container.querySelectorAll('input'));
 
     act(() => {
@@ -155,14 +168,18 @@ describe('DateField Component', () => {
   test('UK format placeholders and value assembly', () => {
     const handleChange = jest.fn();
     const { container } = render(
-      <Controlled dateFormat={SupportedDateFormat.UK} onChange={handleChange} />
+      <Controlled
+        dateFormat={SupportedDateFormat.UK}
+        label="Date of birth"
+        onChange={handleChange}
+      />
     );
-    const wrapper = container.querySelector('[role="button"]');
-    if (wrapper) {
-      act(() => {
-        fireEvent.click(wrapper);
-      });
-    }
+    const labelNode = Array.from(container.querySelectorAll('*')).find(
+      (element) => element.textContent === 'Date of birth'
+    );
+    act(() => {
+      fireEvent.click(labelNode!);
+    });
     const inputs = Array.from(container.querySelectorAll('input'));
     expect(inputs[0]?.getAttribute('placeholder')).toBe('DD');
     expect(inputs[1]?.getAttribute('placeholder')).toBe('MM');
@@ -178,14 +195,18 @@ describe('DateField Component', () => {
   test('ISO format placeholders, separator and value assembly', () => {
     const handleChange = jest.fn();
     const { container } = render(
-      <Controlled dateFormat={SupportedDateFormat.ISO} onChange={handleChange} />
+      <Controlled
+        dateFormat={SupportedDateFormat.ISO}
+        label="Date of birth"
+        onChange={handleChange}
+      />
     );
-    const wrapper = container.querySelector('[role="button"]');
-    if (wrapper) {
-      act(() => {
-        fireEvent.click(wrapper);
-      });
-    }
+    const labelNode = Array.from(container.querySelectorAll('*')).find(
+      (element) => element.textContent === 'Date of birth'
+    );
+    act(() => {
+      fireEvent.click(labelNode!);
+    });
     const inputs = Array.from(container.querySelectorAll('input'));
     expect(inputs[0]?.getAttribute('placeholder')).toBe('YYYY');
     expect(inputs[1]?.getAttribute('placeholder')).toBe('MM');

@@ -1,11 +1,9 @@
 import { SupportedDateFormat } from '@logto/schemas';
-import { condString } from '@silverhand/essentials';
+import { cond, condString } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type { FormEventHandler, KeyboardEventHandler, ClipboardEventHandler } from 'react';
-import { useCallback, useState, useRef, useMemo, Fragment, useEffect } from 'react';
+import { useCallback, useState, useRef, useMemo, Fragment, useEffect, useId } from 'react';
 import { useTranslation } from 'react-i18next';
-
-import { onKeyDownHandler as a11yKeyDownHandler } from '@/utils/a11y';
 
 import InputField from '../InputField';
 import NotchedBorder from '../InputField/NotchedBorder';
@@ -14,6 +12,7 @@ import styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;
+  readonly name?: string;
   readonly dateFormat?: string;
   readonly description?: string;
   readonly errorMessage?: string;
@@ -75,6 +74,7 @@ const DateField = (props: Props) => {
 
   const [isFocused, setIsFocused] = useState(false);
   const isActive = isFocused || !!value;
+  const firstInputId = useId();
   const inputReferences = useRef<Array<HTMLInputElement | undefined>>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const isSupportedDateFormat =
@@ -269,16 +269,8 @@ const DateField = (props: Props) => {
     <div ref={containerRef} className={classNames(styles.dateFieldContainer, className)}>
       <div
         className={styles.dateInputWrapper}
-        tabIndex={0}
-        role="button"
-        onKeyDown={a11yKeyDownHandler(() => {
-          setIsFocused(true);
-        })}
-        onClick={() => {
-          setIsFocused(true);
-        }}
+        // Rely on bubbling onBlur from inner inputs to detect leaving the whole group
         onBlur={(event) => {
-          // Check if the focus is moving to an element outside the dateFieldContainer
           const { relatedTarget } = event;
           if (!relatedTarget || !containerRef.current?.contains(relatedTarget)) {
             setIsFocused(false);
@@ -286,41 +278,52 @@ const DateField = (props: Props) => {
           }
         }}
       >
+        {labelWithOptionalSuffix && (
+          <label
+            htmlFor={firstInputId}
+            className={classNames(styles.clickOverlay, isActive && styles.disabled)}
+          >
+            <span>{labelWithOptionalSuffix}</span>
+          </label>
+        )}
         <NotchedBorder
           isActive={isActive}
           isFocused={isFocused}
           label={labelWithOptionalSuffix ?? ''}
           isDanger={!!errorMessage}
         />
-        {isActive &&
-          formatConfig?.parts.map((part, index) => (
-            <Fragment key={part}>
-              <input
-                ref={(element) => {
-                  // eslint-disable-next-line @silverhand/fp/no-mutation
-                  inputReferences.current[index] = element ?? undefined;
-                }}
-                data-id={String(index)}
-                placeholder={part.toUpperCase()}
-                type="text"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                autoComplete="off"
-                // Fallback solution to `field-sizing` in CSS for non-chromium browsers
-                size={getDefaultInputSize(formatConfig.maxLengths[index])}
-                value={dateParts[index] ?? ''}
-                onPaste={onPasteHandler}
-                onInput={onInputHandler}
-                onKeyDown={onKeyDownHandler}
-                onFocus={() => {
-                  setIsFocused(true);
-                }}
-              />
-              {index < formatConfig.parts.length - 1 && (
-                <span className={styles.separator}>{formatConfig.separator}</span>
-              )}
-            </Fragment>
-          ))}
+        {formatConfig?.parts.map((part, index) => (
+          <Fragment key={part}>
+            <input
+              ref={(element) => {
+                // eslint-disable-next-line @silverhand/fp/no-mutation
+                inputReferences.current[index] = element ?? undefined;
+              }}
+              id={cond(index === 0 && firstInputId)}
+              data-id={index}
+              className={classNames(isActive && styles.active)}
+              placeholder={part.toUpperCase()}
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              autoComplete="off"
+              // Fallback solution to `field-sizing` in CSS for non-chromium browsers
+              size={getDefaultInputSize(formatConfig.maxLengths[index])}
+              value={dateParts[index] ?? ''}
+              onPaste={onPasteHandler}
+              onInput={onInputHandler}
+              onKeyDown={onKeyDownHandler}
+              onFocus={() => {
+                setIsFocused(true);
+              }}
+            />
+            {index < formatConfig.parts.length - 1 && (
+              <span className={classNames(isActive && styles.active, styles.separator)}>
+                {formatConfig.separator}
+              </span>
+            )}
+          </Fragment>
+        ))}
       </div>
       {description && <div className={styles.description}>{description}</div>}
       {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}

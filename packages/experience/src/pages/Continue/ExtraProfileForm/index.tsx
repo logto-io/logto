@@ -29,13 +29,10 @@ const ExtraProfileForm = ({ customProfileFields, defaultValues, onSubmit }: Prop
   const {
     handleSubmit,
     control,
-    formState: { errors, isValid, isSubmitting },
+    formState: { errors, isSubmitting },
   } = methods;
 
   const submit = handleSubmit(async (value) => {
-    if (!isValid) {
-      return;
-    }
     await onSubmit(value);
   });
 
@@ -65,6 +62,7 @@ const ExtraProfileForm = ({ customProfileFields, defaultValues, onSubmit }: Prop
                 return (
                   <PrimitiveProfileInputField
                     {...field}
+                    name={name}
                     label={label || getFieldLabel(name)}
                     description={condString(description)}
                     required={required}
