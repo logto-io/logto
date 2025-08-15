@@ -13,6 +13,7 @@ import { trySubmitSafe } from '@/utils/form';
 
 import { collectUserProfilePathname } from '../consts';
 import useI18nFieldLabel from '../use-i18n-field-label';
+import { getFieldTags } from '../utils';
 
 import styles from './index.module.scss';
 
@@ -79,11 +80,7 @@ function ProfileFieldList({ data }: Props) {
             <div className={styles.cell}>{t(`sign_in_exp.custom_profile_fields.type.${type}`)}</div>
             <div className={styles.cell}>
               <div className={styles.tags}>
-                {(
-                  config.parts
-                    ?.filter(({ enabled }) => Boolean(enabled))
-                    .map((part) => part.name) ?? [name]
-                ).map((key) => (
+                {getFieldTags(name, config.parts).map((key) => (
                   <Tag key={key} variant="cell">
                     {key}
                   </Tag>

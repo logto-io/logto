@@ -24,7 +24,7 @@ import { collectUserProfilePathname } from '../../consts';
 import { parseResponseToFormData, parseFormDataToRequestPayload } from '../../data-parser';
 import { type ProfileFieldForm } from '../../types';
 import useI18nFieldLabel from '../../use-i18n-field-label';
-import { isBuiltInCustomProfileFieldKey } from '../../utils';
+import { getFieldTags, isBuiltInCustomProfileFieldKey } from '../../utils';
 
 import styles from './index.module.scss';
 
@@ -120,11 +120,7 @@ function ProfileFieldDetailsForm({ data }: Props) {
         title={watch('label') || getI18nLabel(data.name)}
         identifier={{
           name: t('sign_in_exp.custom_profile_fields.details.key'),
-          tags: compositionParts
-            ?.filter(({ enabled }) => enabled)
-            .map(({ name }) => (data.name === 'address' ? `address.${name}` : name)) ?? [
-            isBuiltInFieldName ? data.name : `customData.${data.name}`,
-          ],
+          tags: getFieldTags(data.name, compositionParts),
         }}
         actionMenuItems={[
           {
