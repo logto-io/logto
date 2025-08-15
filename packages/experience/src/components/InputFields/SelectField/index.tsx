@@ -11,6 +11,7 @@ import styles from './index.module.scss';
 
 type Props = {
   readonly className?: string;
+  readonly name?: string;
   readonly options: Array<{ value: string; label: string }>;
   readonly value?: string;
   readonly description?: Nullable<string>;
@@ -25,6 +26,7 @@ type Props = {
 
 const SelectField = ({
   className,
+  name,
   options,
   value,
   description,
@@ -46,6 +48,7 @@ const SelectField = ({
       <div ref={ref} className={styles.select}>
         <InputField
           readOnly
+          name={name}
           label={label}
           placeholder={placeholder}
           isDanger={!!errorMessage}

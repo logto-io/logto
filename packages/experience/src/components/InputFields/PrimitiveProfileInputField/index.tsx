@@ -20,6 +20,7 @@ const isGenderOptionKey = (key: string): key is Gender =>
 
 const PrimitiveProfileInputField = ({
   className,
+  name,
   label,
   type,
   config,
@@ -45,6 +46,7 @@ const PrimitiveProfileInputField = ({
     return (
       <SelectField
         className={className}
+        name={name}
         label={label}
         options={options}
         value={value}
@@ -60,6 +62,7 @@ const PrimitiveProfileInputField = ({
     return (
       <CheckboxField
         className={className}
+        name={name}
         title={label}
         checked={value === 'true'}
         value={value}
@@ -73,6 +76,7 @@ const PrimitiveProfileInputField = ({
     return (
       <DateField
         className={className}
+        name={name}
         label={label}
         dateFormat={config?.format}
         description={description}
@@ -88,6 +92,7 @@ const PrimitiveProfileInputField = ({
   return (
     <InputField
       className={className}
+      name={name}
       label={label}
       description={description}
       value={value ?? ''}

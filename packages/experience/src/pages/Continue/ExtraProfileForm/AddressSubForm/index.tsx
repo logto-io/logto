@@ -91,6 +91,7 @@ const AddressSubForm = ({ field }: Props) => {
           render={({ field: { onBlur, onChange, value } }) => (
             <PrimitiveProfileInputField
               {...part}
+              name={`address.${part.name}`}
               className={classNames(
                 styles.inputField,
                 (part.name === 'locality' || part.name === 'region') && styles.halfSize
