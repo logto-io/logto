@@ -105,3 +105,70 @@ export const buildInsertIntoWithPool =
       return entry;
     };
   };
+
+type BuildBatchInsertInto = <
+  Key extends string,
+  CreateSchema extends Partial<SchemaLike<Key>>,
+  Schema extends SchemaLike<Key>,
+>(
+  schema: GeneratedSchema<Key, CreateSchema, Schema>,
+  config?: InsertIntoConfig | InsertIntoConfigReturning
+) => (data: ReadonlyArray<OmitAutoSetFields<CreateSchema>>) => Promise<readonly Schema[] | void>;
+
+export const buildBatchInsertIntoWithPool =
+  (pool: CommonQueryMethods): BuildBatchInsertInto =>
+  <
+    Key extends string,
+    CreateSchema extends Partial<SchemaLike<Key>>,
+    Schema extends SchemaLike<Key>,
+  >(
+    schema: GeneratedSchema<Key, CreateSchema, Schema>,
+    config?: InsertIntoConfig | InsertIntoConfigReturning
+  ) => {
+    const { fieldKeys, ...rest } = schema;
+    const { table, fields } = convertToIdentifiers(rest);
+    const keys = excludeAutoSetFields(fieldKeys);
+    const returning = Boolean(config?.returning);
+    const onConflict = config?.onConflict;
+
+    return async (
+      data: ReadonlyArray<OmitAutoSetFields<CreateSchema>>
+    ): Promise<readonly Schema[] | void> => {
+      if (data.length === 0) {
+        return returning ? [] : undefined;
+      }
+
+      // Collect keys present in any row.
+      const insertingKeys = keys.filter((key) => data.some((row) => has(row, key)));
+
+      const valuesTuples = data.map(
+        (row) =>
+          sql`(${sql.join(
+            insertingKeys.map((key) =>
+              has(row, key) ? convertToPrimitiveOrSql(key, row[key] ?? null) : sql`default`
+            ),
+            sql`, `
+          )})`
+      );
+
+      const { rows: inserted } = await pool.query<Schema>(sql`
+        insert into ${table} (${sql.join(
+          insertingKeys.map((key) => fields[key]),
+          sql`, `
+        )})
+        values ${sql.join(valuesTuples, sql`, `)}
+        ${conditionalSql(onConflict, (conflictConfig) =>
+          conflictConfig.ignore
+            ? sql`on conflict do nothing`
+            : sql`on conflict (${sql.join(conflictConfig.fields, sql`, `)}) do update set ${setExcluded(
+                ...conflictConfig.setExcludedFields
+              )}`
+        )}
+        ${conditionalSql(returning, () => sql`returning *`)}
+      `);
+
+      if (returning) {
+        return inserted;
+      }
+    };
+  };

@@ -5,7 +5,10 @@ import {
 } from '@logto/schemas';
 import { type CommonQueryMethods, sql } from '@silverhand/slonik';
 
-import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
+import {
+  buildInsertIntoWithPool,
+  buildBatchInsertIntoWithPool,
+} from '#src/database/insert-into.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
 
@@ -38,6 +41,10 @@ export const createCustomProfileFieldsQueries = (pool: CommonQueryMethods) => {
   };
 
   const insertCustomProfileFields = buildInsertIntoWithPool(pool)(CustomProfileFields, {
+    returning: true,
+  });
+
+  const bulkInsertCustomProfileFields = buildBatchInsertIntoWithPool(pool)(CustomProfileFields, {
     returning: true,
   });
 
@@ -78,6 +85,7 @@ export const createCustomProfileFieldsQueries = (pool: CommonQueryMethods) => {
     findCustomProfileFieldsByNames,
     insertCustomProfileFields,
     updateCustomProfileFieldsByName,
+    bulkInsertCustomProfileFields,
     deleteCustomProfileFieldsByName,
     updateFieldOrderInSignInExperience,
   };
