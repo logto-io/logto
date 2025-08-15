@@ -8,7 +8,7 @@ import type {
   SsoConnectorMetadata,
 } from '@logto/schemas';
 import { ConnectorType, ForgotPasswordMethod, ReservedPlanId } from '@logto/schemas';
-import { cond, conditional, deduplicate, pick, trySafe } from '@silverhand/essentials';
+import { deduplicate, pick, trySafe } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
 
 import { type WellKnownCache } from '#src/caches/well-known.js';
@@ -195,7 +195,7 @@ export const createSignInExperienceLibrary = (
       getIsDevelopmentTenant(),
       getOrganizationOverride(organizationId),
       findApplicationSignInExperience(appId),
-      conditional(EnvSet.values.isDevFeaturesEnabled && findAllCustomProfileFields()),
+      findAllCustomProfileFields(),
     ]);
 
     // Always return empty array if single-sign-on is disabled
@@ -310,7 +310,7 @@ export const createSignInExperienceLibrary = (
       isDevelopmentTenant,
       googleOneTap: getGoogleOneTap(),
       captchaConfig: await getCaptchaConfig(),
-      ...cond(EnvSet.values.isDevFeaturesEnabled && customProfileFields && { customProfileFields }),
+      customProfileFields,
     };
   };
 

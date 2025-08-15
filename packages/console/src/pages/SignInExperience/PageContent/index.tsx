@@ -8,7 +8,6 @@ import { useParams } from 'react-router-dom';
 
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useApi from '@/hooks/use-api';
@@ -132,11 +131,9 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
         >
           {t('sign_in_exp.tabs.sign_up_and_sign_in')}
         </PageTab>
-        {isDevFeaturesEnabled && (
-          <PageTab href="../collect-user-profile">
-            {t('sign_in_exp.tabs.collect_user_profile')}
-          </PageTab>
-        )}
+        <PageTab href="../collect-user-profile">
+          {t('sign_in_exp.tabs.collect_user_profile')}
+        </PageTab>
         <PageTab href="../content" errorCount={getContentErrorCount(errors)}>
           {t('sign_in_exp.tabs.content')}
         </PageTab>
@@ -147,9 +144,7 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
             <form>
               <Branding isActive={tab === SignInExperienceTab.Branding} />
               <SignUpAndSignIn isActive={tab === SignInExperienceTab.SignUpAndSignIn} data={data} />
-              {isDevFeaturesEnabled && (
-                <CollectUserProfile isActive={tab === SignInExperienceTab.CollectUserProfile} />
-              )}
+              <CollectUserProfile isActive={tab === SignInExperienceTab.CollectUserProfile} />
               <Content isActive={tab === SignInExperienceTab.Content} />
             </form>
           </FormProvider>
