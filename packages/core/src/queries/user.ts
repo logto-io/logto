@@ -1,7 +1,7 @@
 import type { User, CreateUser } from '@logto/schemas';
 import { Users } from '@logto/schemas';
 import { PhoneNumberParser } from '@logto/shared';
-import { cond, conditionalArray, type Nullable, pick } from '@silverhand/essentials';
+import { cond, conditionalArray, notEmpty, type Nullable, pick, yes } from '@silverhand/essentials';
 import type { CommonQueryMethods } from '@silverhand/slonik';
 import { sql } from '@silverhand/slonik';
 
@@ -37,6 +37,7 @@ const { table, fields } = convertToIdentifiers(Users);
  */
 export type UserConditions = {
   search?: Search;
+  filters?: { isSuspended?: Nullable<string> };
   relation?: {
     table: string;
     field: string;
@@ -271,7 +272,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
    *
    * @see {@link UserConditions} for more information about the conditions.
    */
-  const buildUserConditions = ({ search, relation }: UserConditions) => {
+  const buildUserConditions = ({ search, relation, filters }: UserConditions) => {
     const hasSearch = search?.matches.length;
     const id = sql.identifier;
     const buildRelationCondition = () => {
@@ -293,7 +294,8 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
 
     const conditions = conditionalArray(
       buildRelationCondition(),
-      hasSearch && sql`(${buildConditionsFromSearch(search, userSearchFields)})`
+      hasSearch && sql`(${buildConditionsFromSearch(search, userSearchFields)})`,
+      notEmpty(filters?.isSuspended) && sql`${fields.isSuspended} = ${yes(filters.isSuspended)}`
     );
 
     if (conditions.length === 0) {
