@@ -113,7 +113,7 @@ const profile = {
   fields: {
     name: 'Name',
     name_description:
-      'Der vollständige Name des Benutzers in anzeigbarer Form, einschließlich aller Namensbestandteile (z.B. "Jane Doe").',
+      'Der vollständige Name des Benutzers in anzeigbarer Form, einschließlich aller Namenskomponenten (z.B. "Jane Doe").',
     avatar: 'Avatar',
     avatar_description: 'URL des Avatar-Bildes des Benutzers.',
     familyName: 'Nachname',
@@ -153,7 +153,7 @@ const profile = {
       country: 'Land',
     },
     address_description:
-      'Die vollständige Adresse des Benutzers in anzeigbarer Form, einschließlich aller Adressbestandteile (z.B. "123 Hauptstraße, Musterstadt, Deutschland 12345").',
+      'Die vollständige Adresse des Benutzers in anzeigbarer Form, einschließlich aller Adresskomponenten (z.B. "123 Hauptstraße, Musterstadt, Deutschland 12345").',
     fullname: 'Vollständiger Name',
     fullname_description:
       'Flexible Kombination aus Nachname, Vorname und mittlerem Namen basierend auf der Konfiguration.',
