@@ -18,9 +18,7 @@ type Props = {
 };
 
 function DateFormatSelector({ index }: Props) {
-  const { t } = useTranslation(undefined, {
-    keyPrefix: 'admin_console.sign_in_exp.custom_profile_fields.details',
-  });
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     control,
     register,
@@ -56,10 +54,22 @@ function DateFormatSelector({ index }: Props) {
         render={({ field: { value, onChange } }) => (
           <Select
             options={[
-              { value: SupportedDateFormat.US, title: t('date_format_us') },
-              { value: SupportedDateFormat.UK, title: t('date_format_uk') },
-              { value: SupportedDateFormat.ISO, title: t('date_format_iso') },
-              { value: SupportedDateFormat.Custom, title: t('custom_date_format') },
+              {
+                value: SupportedDateFormat.US,
+                title: t('sign_in_exp.custom_profile_fields.details.date_format_us'),
+              },
+              {
+                value: SupportedDateFormat.UK,
+                title: t('sign_in_exp.custom_profile_fields.details.date_format_uk'),
+              },
+              {
+                value: SupportedDateFormat.ISO,
+                title: t('sign_in_exp.custom_profile_fields.details.date_format_iso'),
+              },
+              {
+                value: SupportedDateFormat.Custom,
+                title: t('sign_in_exp.custom_profile_fields.details.custom_date_format'),
+              },
             ]}
             value={value}
             onChange={(value) => {
@@ -77,15 +87,24 @@ function DateFormatSelector({ index }: Props) {
         <FormField isRequired title="sign_in_exp.custom_profile_fields.details.custom_date_format">
           <TextInput
             {...register(`${fieldPrefix}customFormat`, { required: true })}
-            error={formErrors?.customFormat?.message}
-            placeholder={t('custom_date_format_placeholder')}
+            error={
+              formErrors?.customFormat &&
+              t('errors.required_field_missing', {
+                field: t(
+                  'sign_in_exp.custom_profile_fields.details.custom_date_format'
+                ).toLowerCase(),
+              })
+            }
+            placeholder={t(
+              'sign_in_exp.custom_profile_fields.details.custom_date_format_placeholder'
+            )}
             description={
               <Trans
                 components={{
                   a: <TextLink targetBlank href={dateFnsDocumentationLink} />,
                 }}
               >
-                {t('custom_date_format_tip')}
+                {t('sign_in_exp.custom_profile_fields.details.custom_date_format_tip')}
               </Trans>
             }
           />

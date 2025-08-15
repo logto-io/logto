@@ -4,7 +4,7 @@ const custom_profile_fields = {
     title: {
       field_label: 'Etiqueta del campo',
       type: 'Tipo',
-      user_data_key: 'Clave en el perfil del usuario',
+      user_data_key: 'Clave de datos de usuario',
     },
     placeholder: {
       title: 'Recopilar perfil del usuario',
@@ -27,13 +27,13 @@ const custom_profile_fields = {
     title: 'Agregar campo de perfil',
     subtitle:
       'Personaliza campos para recopilar más información del perfil del usuario durante el registro.',
-    built_in_properties: 'Propiedades integradas del perfil del usuario',
-    custom_properties: 'Propiedades personalizadas',
-    custom_data_field_name: 'Nombre del campo de datos personalizado',
+    built_in_properties: 'Datos básicos del usuario',
+    custom_properties: 'Datos personalizados del usuario',
+    custom_data_field_name: 'Clave de datos de usuario',
     custom_data_field_input_placeholder:
-      'Ingresa el nombre del campo de datos personalizado, ej. `miCampoFavorito`',
+      'Ingresa la clave de datos de usuario, ej. `myFavoriteFieldName`',
     custom_field: {
-      title: 'Campo de datos personalizado',
+      title: 'Datos personalizados',
       description:
         'Cualquier propiedad adicional del usuario que puedas definir para cumplir con los requisitos únicos de tu aplicación.',
     },
@@ -47,7 +47,7 @@ const custom_profile_fields = {
     delete_description:
       'Esta acción no se puede deshacer. ¿Estás seguro de que deseas eliminar este campo de perfil?',
     field_deleted: 'El campo de perfil {{name}} ha sido eliminado exitosamente.',
-    key: 'Clave de datos del usuario',
+    key: 'Clave de datos de usuario',
     field_name: 'Nombre del campo',
     field_type: 'Tipo de campo',
     settings: 'Configuraciones',
@@ -59,17 +59,23 @@ const custom_profile_fields = {
       'Dirección en múltiples líneas (Ej., Calle, Ciudad, Estado, Código Postal, País)',
     components: 'Componentes',
     components_tip: 'Selecciona los componentes para componer el campo complejo.',
-    label: 'Etiqueta de visualización',
+    label: 'Etiqueta del campo',
     label_placeholder: 'Etiqueta',
     label_tip:
       '¿Necesitas localización? Agrega idiomas en <a>Experiencia de inicio de sesión > Contenido</a>',
-    placeholder: 'Marcador de posición de visualización',
+    label_tooltip:
+      'Etiqueta flotante que identifica el propósito del campo. Aparece dentro del input y se desplaza arriba cuando tiene foco o valor.',
+    placeholder: 'Marcador de posición del campo',
     placeholder_placeholder: 'Marcador de posición',
-    description: 'Descripción de visualización',
+    placeholder_tooltip:
+      'Ejemplo inline o pista de formato dentro del campo. Generalmente aparece tras flotar la etiqueta y debe ser breve (ej.: MM/DD/YYYY).',
+    description: 'Descripción del campo',
     description_placeholder: 'Descripción',
+    description_tooltip:
+      'Texto de apoyo mostrado debajo del campo. Úsalo para instrucciones más extensas o notas de accesibilidad.',
     options: 'Opciones',
     options_tip:
-      'Ingresa cada opción en una nueva línea. Usa punto y coma para separar clave y valor, ej. `clave:valor`',
+      'Ingresa cada opción en una nueva línea. Formato: value:label (ej. red:Red). Puedes ingresar solo value; si no se proporciona label, se mostrará el mismo value como etiqueta.',
     options_placeholder: 'valor1:etiqueta1\nvalor2:etiqueta2\nvalor3:etiqueta3',
     regex: 'Expresión regular',
     regex_tip: 'Define una expresión regular para validar la entrada.',

@@ -24,7 +24,7 @@ const profile = {
   gender_options: {
     female: '여성',
     male: '남성',
-    other: '답하지 않음',
+    prefer_not_to_say: '답하지 않음',
   },
 };
 

@@ -1,7 +1,7 @@
 import { CustomProfileFieldType } from '@logto/schemas';
 import { type ReactNode } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import CheckboxIcon from '@/assets/icons/field-type-checkbox.svg?react';
 import DateIcon from '@/assets/icons/field-type-date.svg?react';
@@ -14,6 +14,7 @@ import FormField from '@/ds-components/FormField';
 import Select from '@/ds-components/Select';
 import Switch from '@/ds-components/Switch';
 import TextInput from '@/ds-components/TextInput';
+import TextLink from '@/ds-components/TextLink';
 import Textarea from '@/ds-components/Textarea';
 
 import { type ProfileFieldForm } from '../../CollectUserProfile/types';
@@ -109,6 +110,7 @@ function ProfileFieldPartSubForm({ index }: Props) {
       <FormField
         isRequired={!isBuiltInFieldName}
         title="sign_in_exp.custom_profile_fields.details.label"
+        tip={t('sign_in_exp.custom_profile_fields.details.label_tooltip')}
       >
         <Controller
           name={`${fieldPrefix}label`}
@@ -117,7 +119,7 @@ function ProfileFieldPartSubForm({ index }: Props) {
             required:
               !isBuiltInFieldName &&
               t('errors.required_field_missing', {
-                field: t('sign_in_exp.custom_profile_fields.details.label'),
+                field: t('sign_in_exp.custom_profile_fields.details.label').toLowerCase(),
               }),
           }}
           render={({ field: { value, onChange } }) => {
@@ -128,6 +130,11 @@ function ProfileFieldPartSubForm({ index }: Props) {
                 error={formErrors?.label?.message}
                 placeholder={t('sign_in_exp.custom_profile_fields.details.label_placeholder')}
                 value={value || fallbackValue}
+                description={
+                  <Trans components={{ a: <TextLink to="/sign-in-experience/content" /> }}>
+                    {t('sign_in_exp.custom_profile_fields.details.label_tip')}
+                  </Trans>
+                }
                 onChange={onChange}
               />
             );
@@ -135,7 +142,10 @@ function ProfileFieldPartSubForm({ index }: Props) {
         />
       </FormField>
       {type !== CustomProfileFieldType.Checkbox && (
-        <FormField title="sign_in_exp.custom_profile_fields.details.placeholder">
+        <FormField
+          title="sign_in_exp.custom_profile_fields.details.placeholder"
+          tip={t('sign_in_exp.custom_profile_fields.details.placeholder_tooltip')}
+        >
           <TextInput
             {...register(`${fieldPrefix}placeholder`)}
             error={formErrors?.placeholder?.message}
@@ -144,7 +154,10 @@ function ProfileFieldPartSubForm({ index }: Props) {
         </FormField>
       )}
       {type !== CustomProfileFieldType.Checkbox && (
-        <FormField title="sign_in_exp.custom_profile_fields.details.description">
+        <FormField
+          title="sign_in_exp.custom_profile_fields.details.description"
+          tip={t('sign_in_exp.custom_profile_fields.details.description_tooltip')}
+        >
           <TextInput
             {...register(`${fieldPrefix}description`)}
             error={formErrors?.description?.message}
@@ -157,10 +170,11 @@ function ProfileFieldPartSubForm({ index }: Props) {
           <Textarea
             {...register(`${fieldPrefix}options`, {
               required: t('errors.required_field_missing', {
-                field: t('sign_in_exp.custom_profile_fields.details.options'),
+                field: t('sign_in_exp.custom_profile_fields.details.options').toLowerCase(),
               }),
             })}
             error={formErrors?.options?.message}
+            description={t('sign_in_exp.custom_profile_fields.details.options_tip')}
             placeholder={t('sign_in_exp.custom_profile_fields.details.options_placeholder')}
             rows={5}
           />
@@ -181,7 +195,7 @@ function ProfileFieldPartSubForm({ index }: Props) {
           <TextInput
             {...register(`${fieldPrefix}format`, {
               required: t('errors.required_field_missing', {
-                field: t('sign_in_exp.custom_profile_fields.details.regex'),
+                field: t('sign_in_exp.custom_profile_fields.details.regex').toLowerCase(),
               }),
             })}
             error={formErrors?.format?.message}

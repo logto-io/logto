@@ -4,7 +4,7 @@ const custom_profile_fields = {
     title: {
       field_label: 'Libellé du champ',
       type: 'Type',
-      user_data_key: 'Clé dans le profil utilisateur',
+      user_data_key: 'Clé des données utilisateur',
     },
     placeholder: {
       title: 'Collecte du profil utilisateur',
@@ -27,13 +27,13 @@ const custom_profile_fields = {
     title: 'Ajouter un champ de profil',
     subtitle:
       "Personnalisez les champs pour collecter plus d'informations sur le profil utilisateur lors de l'inscription.",
-    built_in_properties: 'Propriétés intégrées du profil utilisateur',
-    custom_properties: 'Propriétés personnalisées',
-    custom_data_field_name: 'Nom du champ de données personnalisé',
+    built_in_properties: 'Données utilisateur de base',
+    custom_properties: 'Données utilisateur personnalisées',
+    custom_data_field_name: 'Clé des données utilisateur',
     custom_data_field_input_placeholder:
-      'Entrez le nom du champ de données personnalisé, par exemple `monChampPrefere`',
+      'Saisissez la clé des données utilisateur, p. ex. `myFavoriteFieldName`',
     custom_field: {
-      title: 'Champ de données personnalisé',
+      title: 'Données personnalisées',
       description:
         'Toute propriété utilisateur supplémentaire que vous pouvez définir pour répondre aux besoins uniques de votre application.',
     },
@@ -59,17 +59,23 @@ const custom_profile_fields = {
       'Adresse sur plusieurs lignes (par ex. Rue, Ville, État, Code postal, Pays)',
     components: 'Composants',
     components_tip: 'Sélectionnez les composants pour composer le champ complexe.',
-    label: "Libellé d'affichage",
+    label: 'Libellé du champ',
     label_placeholder: 'Libellé',
     label_tip:
       'Besoin de localisation ? Ajoutez des langues dans <a>Expérience de connexion > Contenu</a>',
-    placeholder: "Espace réservé d'affichage",
+    label_tooltip:
+      "Libellé flottant identifiant l'usage du champ. Apparaît dans le champ puis se déplace au-dessus lorsqu'il est focalisé ou contient une valeur.",
+    placeholder: 'Espace réservé du champ',
     placeholder_placeholder: 'Espace réservé',
-    description: "Description d'affichage",
+    placeholder_tooltip:
+      'Exemple inline ou indication de format affiché dans le champ. Apparaît généralement après que le libellé flotte et doit rester court (ex. JJ/MM/AAAA).',
+    description: 'Description du champ',
     description_placeholder: 'Description',
+    description_tooltip:
+      'Texte d’aide affiché sous le champ. Utilisez-le pour des instructions plus longues ou des notes d’accessibilité.',
     options: 'Options',
     options_tip:
-      'Entrez chaque option sur une nouvelle ligne. Utilisez un point-virgule pour séparer la clé et la valeur, par ex. `clé:valeur`',
+      'Saisissez chaque option sur une nouvelle ligne. Format : value:label (ex. red:Red). Vous pouvez aussi ne saisir que value ; si aucun label n’est fourni, la valeur sera utilisée comme libellé.',
     options_placeholder: 'valeur1:libellé1\nvaleur2:libellé2\nvaleur3:libellé3',
     regex: 'Expression régulière',
     regex_tip: 'Définissez une expression régulière pour valider la saisie.',

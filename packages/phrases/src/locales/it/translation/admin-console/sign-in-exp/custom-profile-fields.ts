@@ -4,7 +4,7 @@ const custom_profile_fields = {
     title: {
       field_label: 'Etichetta campo',
       type: 'Tipo',
-      user_data_key: 'Chiave nel profilo utente',
+      user_data_key: 'Chiave dei dati utente',
     },
     placeholder: {
       title: 'Raccogli profilo utente',
@@ -27,13 +27,13 @@ const custom_profile_fields = {
     title: 'Aggiungi campo profilo',
     subtitle:
       'Personalizza i campi per raccogliere più informazioni sul profilo utente durante la registrazione.',
-    built_in_properties: 'Proprietà integrate del profilo utente',
-    custom_properties: 'Proprietà personalizzate',
-    custom_data_field_name: 'Nome campo dati personalizzato',
+    built_in_properties: 'Dati utente di base',
+    custom_properties: 'Dati utente personalizzati',
+    custom_data_field_name: 'Chiave dei dati utente',
     custom_data_field_input_placeholder:
-      'Inserisci il nome del campo dati personalizzato, es. `mioCampoPreferito`',
+      'Inserisci la chiave dei dati utente, es. `myFavoriteFieldName`',
     custom_field: {
-      title: 'Campo dati personalizzato',
+      title: 'Dati personalizzati',
       description:
         "Qualsiasi proprietà aggiuntiva dell'utente che puoi definire per soddisfare i requisiti unici della tua applicazione.",
     },
@@ -58,17 +58,23 @@ const custom_profile_fields = {
     multi_line_address: 'Indirizzo su più righe (Es. Via, Città, Stato, CAP, Paese)',
     components: 'Componenti',
     components_tip: 'Seleziona i componenti per comporre il campo complesso.',
-    label: 'Etichetta visualizzata',
+    label: 'Etichetta del campo',
     label_placeholder: 'Etichetta',
     label_tip:
       'Hai bisogno di localizzazione? Aggiungi lingue in <a>Esperienza di accesso > Contenuto</a>',
-    placeholder: 'Segnaposto visualizzato',
+    label_tooltip:
+      'Etichetta flottante che identifica lo scopo del campo. Appare dentro l’input e si sposta sopra quando è a fuoco o contiene un valore.',
+    placeholder: 'Segnaposto del campo',
     placeholder_placeholder: 'Segnaposto',
-    description: 'Descrizione visualizzata',
+    placeholder_tooltip:
+      'Esempio inline o suggerimento di formato mostrato nel campo. Di solito appare dopo che l’etichetta fluttua; mantienilo breve (es.: MM/DD/YYYY).',
+    description: 'Descrizione del campo',
     description_placeholder: 'Descrizione',
+    description_tooltip:
+      'Testo di supporto mostrato sotto il campo di testo. Usalo per istruzioni più lunghe o note di accessibilità.',
     options: 'Opzioni',
     options_tip:
-      'Inserisci ogni opzione su una nuova riga. Usa il punto e virgola per separare chiave e valore, es. `chiave:valore`',
+      'Inserisci ogni opzione su una nuova riga. Formato: value:label (es. red:Red). Puoi anche inserire solo value; se manca il label, il value viene mostrato come etichetta.',
     options_placeholder: 'valore1:etichetta1\nvalore2:etichetta2\nvalore3:etichetta3',
     regex: 'Espressione regolare',
     regex_tip: "Definisci un'espressione regolare per validare l'input.",

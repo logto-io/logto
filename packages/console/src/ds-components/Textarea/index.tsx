@@ -7,10 +7,11 @@ import styles from './index.module.scss';
 type Props = HTMLProps<HTMLTextAreaElement> & {
   readonly className?: string;
   readonly error?: string | boolean;
+  readonly description?: string;
 };
 
 function Textarea(
-  { className, error, ...rest }: Props,
+  { className, error, description, ...rest }: Props,
   reference: ForwardedRef<HTMLTextAreaElement>
 ) {
   return (
@@ -21,6 +22,7 @@ function Textarea(
       {Boolean(error) && typeof error !== 'boolean' && (
         <div className={styles.errorMessage}>{error}</div>
       )}
+      {description && <div className={styles.description}>{description}</div>}
     </>
   );
 }

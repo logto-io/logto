@@ -1,17 +1,17 @@
 const profile = {
   name: 'Name',
   avatar: 'Avatar',
-  givenName: 'Given Name',
-  familyName: 'Family Name',
-  middleName: 'Middle Name',
-  fullname: 'Full Name',
+  givenName: 'Given name',
+  familyName: 'Family name',
+  middleName: 'Middle name',
+  fullname: 'Full name',
   nickname: 'Nickname',
-  preferredUsername: 'Preferred Username',
+  preferredUsername: 'Preferred username',
   profile: 'Profile',
   website: 'Website',
   gender: 'Gender',
   birthdate: 'Birthdate',
-  zoneinfo: 'Zoneinfo',
+  zoneinfo: 'Time zone',
   locale: 'Locale',
   address: {
     formatted: 'Address',
@@ -24,7 +24,7 @@ const profile = {
   gender_options: {
     female: 'Female',
     male: 'Male',
-    other: 'Prefer not to say',
+    prefer_not_to_say: 'Prefer not to say',
   },
 };
 

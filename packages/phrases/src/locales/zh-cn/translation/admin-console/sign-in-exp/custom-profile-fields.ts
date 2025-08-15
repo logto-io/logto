@@ -4,7 +4,7 @@ const custom_profile_fields = {
     title: {
       field_label: '字段标签',
       type: '类型',
-      user_data_key: '用户资料键名',
+      user_data_key: '用户数据键名',
     },
     placeholder: {
       title: '收集用户资料',
@@ -25,12 +25,12 @@ const custom_profile_fields = {
   modal: {
     title: '添加资料字段',
     subtitle: '自定义字段以在注册时收集更多用户资料信息。',
-    built_in_properties: '内置用户资料属性',
-    custom_properties: '自定义属性',
-    custom_data_field_name: '自定义数据字段名称',
-    custom_data_field_input_placeholder: '输入自定义数据字段名称，例如 `myFavoriteFieldName`',
+    built_in_properties: '基础用户数据',
+    custom_properties: '自定义用户数据',
+    custom_data_field_name: '用户数据键名',
+    custom_data_field_input_placeholder: '输入用户数据键名，例如 `myFavoriteFieldName`',
     custom_field: {
-      title: '自定义数据字段',
+      title: '自定义数据',
       description: '你可以定义任何额外的用户属性以满足应用的独特需求。',
     },
     type_required: '请选择属性类型',
@@ -52,15 +52,21 @@ const custom_profile_fields = {
     multi_line_address: '多行地址 (例如：街道、城市、州、邮编、国家)',
     components: '组件',
     components_tip: '选择组成复杂字段的组件。',
-    label: '显示标签',
+    label: '字段标签',
     label_placeholder: '标签',
     label_tip: '需要本地化？在<a>登录体验 > 内容</a>中添加语言',
-    placeholder: '显示占位符',
+    label_tooltip:
+      '浮动标签，用于指示字段用途。它初始显示在输入框内，在获得焦点或有值后上移到输入框上方。',
+    placeholder: '字段占位符',
     placeholder_placeholder: '占位符',
-    description: '显示描述',
+    placeholder_tooltip:
+      '输入框内的示例或格式提示。通常在标签上浮后显示，应保持简短（例如：MM/DD/YYYY）。',
+    description: '字段描述',
     description_placeholder: '描述',
+    description_tooltip: '显示在文本字段下方的辅助说明文本。适用于较长的操作指引或无障碍提示。',
     options: '选项',
-    options_tip: '每行输入一个选项。使用分号分隔键和值，例如 `key:value`',
+    options_tip:
+      '每行输入一个选项。使用 value:label 格式（例如 red:红色）。也可以只写 value；若未提供 label，则显示时回退为该 value。',
     options_placeholder: 'value1:label1\nvalue2:label2\nvalue3:label3',
     regex: '正则表达式',
     regex_tip: '定义正则表达式以验证输入。',

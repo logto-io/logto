@@ -4,7 +4,7 @@ const custom_profile_fields = {
     title: {
       field_label: 'تسمية الحقل',
       type: 'النوع',
-      user_data_key: 'المفتاح في ملف المستخدم الشخصي',
+      user_data_key: 'مفتاح بيانات المستخدم',
     },
     placeholder: {
       title: 'جمع ملف المستخدم الشخصي',
@@ -25,12 +25,12 @@ const custom_profile_fields = {
   modal: {
     title: 'إضافة حقل الملف الشخصي',
     subtitle: 'تخصيص الحقول لجمع المزيد من معلومات ملف المستخدم الشخصي أثناء التسجيل.',
-    built_in_properties: 'خصائص ملف المستخدم المدمجة',
-    custom_properties: 'خصائص مخصصة',
-    custom_data_field_name: 'اسم حقل البيانات المخصص',
-    custom_data_field_input_placeholder: 'أدخل اسم حقل البيانات المخصص، مثل `myFavoriteFieldName`',
+    built_in_properties: 'بيانات المستخدم الأساسية',
+    custom_properties: 'بيانات المستخدم المخصصة',
+    custom_data_field_name: 'مفتاح بيانات المستخدم',
+    custom_data_field_input_placeholder: 'أدخل مفتاح بيانات المستخدم، مثل `myFavoriteFieldName`',
     custom_field: {
-      title: 'حقل بيانات مخصص',
+      title: 'بيانات مخصصة',
       description: 'أي خصائص إضافية للمستخدم يمكنك تعريفها لتلبية المتطلبات الفريدة لتطبيقك.',
     },
     type_required: 'الرجاء تحديد نوع الخاصية',
@@ -53,16 +53,22 @@ const custom_profile_fields = {
     multi_line_address: 'عنوان متعدد الأسطر (مثل: الشارع، المدينة، الولاية، الرمز البريدي، البلد)',
     components: 'مكونات',
     components_tip: 'حدد المكونات لتكوين الحقل المعقد.',
-    label: 'تسمية العرض',
+    label: 'تسمية الحقل',
     label_placeholder: 'تسمية',
     label_tip: 'هل تحتاج إلى الترجمة؟ أضف اللغات في <a>تجربة تسجيل الدخول > المحتوى</a>',
-    placeholder: 'عرض العنصر النائب',
+    label_tooltip:
+      'تسمية عائمة تُعرّف الغرض من الحقل. تظهر داخل حقل الإدخال وتتحرك للأعلى عند التركيز أو وجود قيمة.',
+    placeholder: 'عنصر نائب الحقل',
     placeholder_placeholder: 'العنصر النائب',
-    description: 'وصف العرض',
+    placeholder_tooltip:
+      'مثال مضمَّن أو تلميح للتنسيق يظهر داخل الإدخال. يظهر عادةً بعد تحريك التسمية ويجب أن يكون قصيراً (مثال: MM/DD/YYYY).',
+    description: 'وصف الحقل',
     description_placeholder: 'الوصف',
+    description_tooltip:
+      'نص مساعد يُعرض أسفل حقل النص. استخدمه للتعليمات الأطول أو ملاحظات سهولة الوصول.',
     options: 'خيارات',
     options_tip:
-      'أدخل كل خيار في سطر جديد. استخدم الفاصلة المنقوطة لفصل المفتاح عن القيمة، مثل `key:value`',
+      'أدخل كل خيار في سطر جديد. التنسيق: value:label (مثال: red:Red). يمكنك أيضاً إدخال value فقط؛ إذا لم يتم تقديم label فسيُعرَض value نفسه كالتسمية.',
     options_placeholder: 'value1:label1\nvalue2:label2\nvalue3:label3',
     regex: 'تعبير منتظم',
     regex_tip: 'حدد تعبيرًا منتظمًا للتحقق من صحة الإدخال.',

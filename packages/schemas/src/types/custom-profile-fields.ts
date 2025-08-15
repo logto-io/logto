@@ -345,5 +345,5 @@ export enum SupportedDateFormat {
 export enum Gender {
   Female = 'female',
   Male = 'male',
-  Other = 'other',
+  Other = 'prefer_not_to_say',
 }

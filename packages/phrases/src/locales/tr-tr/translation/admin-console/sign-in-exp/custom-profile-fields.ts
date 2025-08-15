@@ -4,7 +4,7 @@ const custom_profile_fields = {
     title: {
       field_label: 'Alan etiketi',
       type: 'Tür',
-      user_data_key: 'Kullanıcı profilindeki anahtar',
+      user_data_key: 'Kullanıcı veri anahtarı',
     },
     placeholder: {
       title: 'Kullanıcı profilini topla',
@@ -27,12 +27,13 @@ const custom_profile_fields = {
     title: 'Profil alanı ekle',
     subtitle:
       'Kayıt sırasında daha fazla kullanıcı profili bilgisi toplamak için alanları özelleştirin.',
-    built_in_properties: 'Yerleşik kullanıcı profili özellikleri',
-    custom_properties: 'Özel özellikler',
-    custom_data_field_name: 'Özel veri alanı adı',
-    custom_data_field_input_placeholder: 'Özel veri alanı adını girin, örn. `benimFavoriAlanAdim`',
+    built_in_properties: 'Temel kullanıcı verileri',
+    custom_properties: 'Özel kullanıcı verileri',
+    custom_data_field_name: 'Kullanıcı veri anahtarı',
+    custom_data_field_input_placeholder:
+      'Kullanıcı veri anahtarını girin, örn. `myFavoriteFieldName`',
     custom_field: {
-      title: 'Özel veri alanı',
+      title: 'Özel veriler',
       description:
         'Uygulamanızın benzersiz gereksinimlerini karşılamak için tanımlayabileceğiniz herhangi bir ek kullanıcı özelliği.',
     },
@@ -57,17 +58,23 @@ const custom_profile_fields = {
     multi_line_address: 'Çok satırlı adres (Örn., Sokak, Şehir, Eyalet, Posta Kodu, Ülke)',
     components: 'Bileşenler',
     components_tip: 'Karmaşık alanı oluşturmak için bileşenleri seçin.',
-    label: 'Görüntüleme etiketi',
+    label: 'Alan etiketi',
     label_placeholder: 'Etiket',
     label_tip:
       'Yerelleştirme mi gerekiyor? <a>Oturum açma deneyimi > İçerik</a> bölümünden diller ekleyin',
-    placeholder: 'Yer tutucu görüntüle',
+    label_tooltip:
+      'Alan amacını belirten kayan etiket. Giriş alanında görünür ve odaklandığında veya değer olduğunda yukarı taşınır.',
+    placeholder: 'Alan yer tutucusu',
     placeholder_placeholder: 'Yer tutucu',
-    description: 'Görüntüleme açıklaması',
+    placeholder_tooltip:
+      'Giriş alanı içindeki satır içi örnek veya biçim ipucu. Genellikle etiket yukarı çıktıktan sonra görünür; kısa tutun (örn. GG/AA/YYYY).',
+    description: 'Alan açıklaması',
     description_placeholder: 'Açıklama',
+    description_tooltip:
+      'Metin alanının altında gösterilen yardımcı metin. Daha uzun talimatlar veya erişilebilirlik notları için kullanın.',
     options: 'Seçenekler',
     options_tip:
-      'Her seçeneği yeni bir satıra girin. Anahtar ve değeri ayırmak için noktalı virgül kullanın, örn. `anahtar:değer`',
+      'Her seçeneği yeni bir satıra girin. Biçim: value:label (örn. red:Red). Sadece value da girebilirsiniz; label verilmezse value etiketi olarak gösterilir.',
     options_placeholder: 'değer1:etiket1\ndeğer2:etiket2\ndeğer3:etiket3',
     regex: 'Düzenli ifade',
     regex_tip: 'Girdiyi doğrulamak için bir düzenli ifade tanımlayın.',
