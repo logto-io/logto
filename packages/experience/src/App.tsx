@@ -21,6 +21,7 @@ import IdentifierSignIn from './pages/IdentifierSignIn';
 import MfaBinding from './pages/MfaBinding';
 import BackupCodeBinding from './pages/MfaBinding/BackupCodeBinding';
 import EmailMfaBinding from './pages/MfaBinding/EmailMfaBinding';
+import PhoneMfaBinding from './pages/MfaBinding/PhoneMfaBinding';
 import TotpBinding from './pages/MfaBinding/TotpBinding';
 import WebAuthnBinding from './pages/MfaBinding/WebAuthnBinding';
 import MfaVerification from './pages/MfaVerification';
@@ -108,6 +109,12 @@ const App = () => {
                           <Route
                             path={MfaFactor.EmailVerificationCode}
                             element={<EmailMfaBinding />}
+                          />
+                        )}
+                        {isDevFeaturesEnabled && (
+                          <Route
+                            path={MfaFactor.PhoneVerificationCode}
+                            element={<PhoneMfaBinding />}
                           />
                         )}
                       </Route>

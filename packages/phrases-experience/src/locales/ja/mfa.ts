@@ -10,6 +10,7 @@ const mfa = {
   link_email_verification_code_description: 'メールアドレスをリンク',
   link_email_2fa_description: '2段階認証のためのメールアドレスをリンク',
   link_phone_verification_code_description: '電話番号をリンク',
+  link_phone_2fa_description: '2段階認証のための電話番号をリンク',
   verify_totp_description: 'アプリに表示されるワンタイムコードを入力',
   verify_webauthn_description: 'デバイスまたはUSBハードウェアを確認',
   verify_backup_code_description: '保存したバックアップコードを貼り付け',

@@ -36,6 +36,11 @@ const MfaFactorList = ({ flow, flowState }: Props) => {
         return;
       }
 
+      if (factor === MfaFactor.PhoneVerificationCode && flow === UserMfaFlow.MfaBinding) {
+        navigate(`/${flow}/${factor}`, { state: flowState });
+        return;
+      }
+
       navigate(`/${flow}/${factor}`, { state: flowState });
     },
     [flow, flowState, navigate, startTotpBinding, startWebAuthnProcessing]
