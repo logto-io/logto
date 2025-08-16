@@ -4,6 +4,8 @@ export enum VerificationType {
   Password = 'Password',
   EmailVerificationCode = 'EmailVerificationCode',
   PhoneVerificationCode = 'PhoneVerificationCode',
+  MfaEmailVerificationCode = 'MfaEmailVerificationCode',
+  MfaPhoneVerificationCode = 'MfaPhoneVerificationCode',
   Social = 'Social',
   EnterpriseSso = 'EnterpriseSso',
   TOTP = 'Totp',

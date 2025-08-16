@@ -1,4 +1,8 @@
-import { VerificationType } from '@logto/schemas';
+import {
+  mfaEmailCodeVerificationRecordDataGuard,
+  mfaPhoneCodeVerificationRecordDataGuard,
+  VerificationType,
+} from '@logto/schemas';
 import { z } from 'zod';
 
 import type Libraries from '#src/tenants/Libraries.js';
@@ -16,6 +20,8 @@ import {
   emailCodeVerificationRecordDataGuard,
   PhoneCodeVerification,
   phoneCodeVerificationRecordDataGuard,
+  MfaEmailCodeVerification,
+  MfaPhoneCodeVerification,
   type CodeVerificationRecordData,
 } from './code-verification.js';
 import {
@@ -69,6 +75,8 @@ export type VerificationRecordData =
   | PasswordVerificationRecordData
   | CodeVerificationRecordData<VerificationType.EmailVerificationCode>
   | CodeVerificationRecordData<VerificationType.PhoneVerificationCode>
+  | CodeVerificationRecordData<VerificationType.MfaEmailVerificationCode>
+  | CodeVerificationRecordData<VerificationType.MfaPhoneVerificationCode>
   | SocialVerificationRecordData
   | EnterpriseSsoVerificationRecordData
   | TotpVerificationRecordData
@@ -81,6 +89,8 @@ export type SanitizedVerificationRecordData =
   | PasswordVerificationRecordData
   | CodeVerificationRecordData<VerificationType.EmailVerificationCode>
   | CodeVerificationRecordData<VerificationType.PhoneVerificationCode>
+  | CodeVerificationRecordData<VerificationType.MfaEmailVerificationCode>
+  | CodeVerificationRecordData<VerificationType.MfaPhoneVerificationCode>
   | SanitizedSocialVerificationRecordData
   | SanitizedEnterpriseSsoVerificationRecordData
   | SanitizedTotpVerificationRecordData
@@ -99,6 +109,8 @@ export type VerificationRecordMap = AssertVerificationMap<{
   [VerificationType.Password]: PasswordVerification;
   [VerificationType.EmailVerificationCode]: EmailCodeVerification;
   [VerificationType.PhoneVerificationCode]: PhoneCodeVerification;
+  [VerificationType.MfaEmailVerificationCode]: MfaEmailCodeVerification;
+  [VerificationType.MfaPhoneVerificationCode]: MfaPhoneCodeVerification;
   [VerificationType.Social]: SocialVerification;
   [VerificationType.EnterpriseSso]: EnterpriseSsoVerification;
   [VerificationType.TOTP]: TotpVerification;
@@ -123,6 +135,8 @@ export const verificationRecordDataGuard = z.discriminatedUnion('type', [
   passwordVerificationRecordDataGuard,
   emailCodeVerificationRecordDataGuard,
   phoneCodeVerificationRecordDataGuard,
+  mfaEmailCodeVerificationRecordDataGuard,
+  mfaPhoneCodeVerificationRecordDataGuard,
   socialVerificationRecordDataGuard,
   enterpriseSsoVerificationRecordDataGuard,
   totpVerificationRecordDataGuard,
@@ -136,6 +150,8 @@ export const publicVerificationRecordDataGuard = z.discriminatedUnion('type', [
   passwordVerificationRecordDataGuard,
   emailCodeVerificationRecordDataGuard,
   phoneCodeVerificationRecordDataGuard,
+  mfaEmailCodeVerificationRecordDataGuard,
+  mfaPhoneCodeVerificationRecordDataGuard,
   sanitizedSocialVerificationRecordDataGuard,
   sanitizedEnterpriseSsoVerificationRecordDataGuard,
   sanitizedTotpVerificationRecordDataGuard,
@@ -148,6 +164,7 @@ export const publicVerificationRecordDataGuard = z.discriminatedUnion('type', [
 /**
  * The factory method to build a new `VerificationRecord` instance based on the provided `VerificationRecordData`.
  */
+// eslint-disable-next-line complexity
 export const buildVerificationRecord = (
   libraries: Libraries,
   queries: Queries,
@@ -162,6 +179,12 @@ export const buildVerificationRecord = (
     }
     case VerificationType.PhoneVerificationCode: {
       return new PhoneCodeVerification(libraries, queries, data);
+    }
+    case VerificationType.MfaEmailVerificationCode: {
+      return new MfaEmailCodeVerification(libraries, queries, data);
+    }
+    case VerificationType.MfaPhoneVerificationCode: {
+      return new MfaPhoneCodeVerification(libraries, queries, data);
     }
     case VerificationType.Social: {
       return new SocialVerification(libraries, queries, data);

@@ -9,11 +9,15 @@ import { VerificationType } from './verification-type.js';
 // One-time code verification record
 export type CodeVerificationType =
   | VerificationType.EmailVerificationCode
-  | VerificationType.PhoneVerificationCode;
+  | VerificationType.PhoneVerificationCode
+  | VerificationType.MfaEmailVerificationCode
+  | VerificationType.MfaPhoneVerificationCode;
 
 type SignInIdentifierTypeOf = {
   [VerificationType.EmailVerificationCode]: SignInIdentifier.Email;
   [VerificationType.PhoneVerificationCode]: SignInIdentifier.Phone;
+  [VerificationType.MfaEmailVerificationCode]: SignInIdentifier.Email;
+  [VerificationType.MfaPhoneVerificationCode]: SignInIdentifier.Phone;
 };
 
 export type VerificationCodeIdentifierOf<T extends CodeVerificationType> =
@@ -49,3 +53,19 @@ export const phoneCodeVerificationRecordDataGuard = basicCodeVerificationRecordD
     value: z.string(),
   }),
 }) satisfies ToZodObject<CodeVerificationRecordData<VerificationType.PhoneVerificationCode>>;
+
+export const mfaEmailCodeVerificationRecordDataGuard = basicCodeVerificationRecordDataGuard.extend({
+  type: z.literal(VerificationType.MfaEmailVerificationCode),
+  identifier: z.object({
+    type: z.literal(SignInIdentifier.Email),
+    value: z.string(),
+  }),
+}) satisfies ToZodObject<CodeVerificationRecordData<VerificationType.MfaEmailVerificationCode>>;
+
+export const mfaPhoneCodeVerificationRecordDataGuard = basicCodeVerificationRecordDataGuard.extend({
+  type: z.literal(VerificationType.MfaPhoneVerificationCode),
+  identifier: z.object({
+    type: z.literal(SignInIdentifier.Phone),
+    value: z.string(),
+  }),
+}) satisfies ToZodObject<CodeVerificationRecordData<VerificationType.MfaPhoneVerificationCode>>;

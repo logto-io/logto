@@ -95,6 +95,104 @@
           }
         }
       }
+    },
+    "/api/experience/verification/mfa-verification-code": {
+      "post": {
+        "operationId": "CreateAndSendMfaVerificationCode",
+        "summary": "Create and send MFA verification code",
+        "description": "Create a new MFA verification code and send it to the user's bound identifier (email or phone). This endpoint automatically uses the user's bound email address or phone number from their profile for MFA verification. The user must be identified before calling this endpoint.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "identifierType": {
+                    "description": "The type of identifier to use for MFA verification. Must be either 'Email' or 'Phone'. The endpoint will automatically use the user's bound identifier of this type.",
+                    "enum": ["Email", "Phone"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The MFA verification code has been successfully sent to the user's bound identifier.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "verificationId": {
+                      "description": "The unique ID of the verification record. Required to verify the code."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request. The user is not identified or does not have the specified identifier type bound for MFA."
+          },
+          "404": {
+            "description": "User not found."
+          },
+          "501": {
+            "description": "The connector for the specified identifier type is not configured."
+          }
+        }
+      }
+    },
+    "/api/experience/verification/mfa-verification-code/verify": {
+      "post": {
+        "operationId": "VerifyMfaVerificationCode",
+        "summary": "Verify MFA verification code",
+        "description": "Verify the provided MFA verification code. The verification code must have been sent using the MFA verification code endpoint. This endpoint verifies the code against the user's bound identifier and marks the verification as complete if successful.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "verificationId": {
+                    "description": "The verification ID returned from the MFA verification code send endpoint."
+                  },
+                  "code": {
+                    "description": "The verification code received by the user."
+                  },
+                  "identifierType": {
+                    "description": "The type of identifier used for MFA verification. Must match the type used when sending the verification code.",
+                    "enum": ["Email", "Phone"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The MFA verification code was successfully verified.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "verificationId": {
+                      "description": "The unique ID of the verification record. This can be used for subsequent MFA operations."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request. The verification code is invalid, expired, or the user is not identified."
+          },
+          "404": {
+            "description": "Verification record not found."
+          },
+          "501": {
+            "description": "The connector for the verification method is not configured."
+          }
+        }
+      }
     }
   }
 }

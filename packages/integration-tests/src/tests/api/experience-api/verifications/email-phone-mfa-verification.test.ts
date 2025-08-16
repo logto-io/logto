@@ -13,8 +13,8 @@ import {
 } from '#src/helpers/connector.js';
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
 import {
-  successfullySendVerificationCode,
-  successfullyVerifyVerificationCode,
+  successfullySendMfaVerificationCode,
+  successfullyVerifyMfaVerificationCode,
 } from '#src/helpers/experience/verification-code.js';
 import {
   enableAllPasswordSignInMethods,
@@ -81,12 +81,13 @@ describe.each(mfaTestCases)(
       await identifyUserWithUsernamePassword(client, userProfile.username, userProfile.password);
 
       const identifierValue = userProfile[userProfileKey]!;
-      const { verificationId, code } = await successfullySendVerificationCode(client, {
-        identifier: { type: identifierType, value: identifierValue },
-        interactionEvent: InteractionEvent.SignIn,
+      // Use the new consolidated MFA verification endpoint
+      const { verificationId, code } = await successfullySendMfaVerificationCode(client, {
+        identifierType,
+        expectedIdentifierValue: identifierValue,
       });
-      await successfullyVerifyVerificationCode(client, {
-        identifier: { type: identifierType, value: identifierValue },
+      await successfullyVerifyMfaVerificationCode(client, {
+        identifierType,
         verificationId,
         code,
       });
