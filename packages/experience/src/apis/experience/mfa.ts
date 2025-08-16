@@ -1,5 +1,6 @@
 import {
   MfaFactor,
+  type SignInIdentifier,
   type WebAuthnRegistrationOptions,
   type WebAuthnAuthenticationOptions,
   type BindMfaPayload,
@@ -128,5 +129,26 @@ export const verifyMfa = async (payload: VerifyMfaPayload, verificationId?: stri
     }
   }
 
+  return submitInteraction();
+};
+
+// Email/Phone MFA verification code
+export const sendMfaVerificationCode = async (
+  identifierType: SignInIdentifier.Email | SignInIdentifier.Phone
+) =>
+  api
+    .post(`${experienceApiRoutes.verification}/mfa-verification-code`, {
+      json: { identifierType },
+    })
+    .json<{ verificationId: string }>();
+
+export const verifyMfaByVerificationCode = async (
+  verificationId: string,
+  code: string,
+  identifierType: SignInIdentifier.Email | SignInIdentifier.Phone
+) => {
+  await api.post(`${experienceApiRoutes.verification}/mfa-verification-code/verify`, {
+    json: { verificationId, code, identifierType },
+  });
   return submitInteraction();
 };
