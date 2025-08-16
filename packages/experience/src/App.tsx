@@ -26,6 +26,8 @@ import TotpBinding from './pages/MfaBinding/TotpBinding';
 import WebAuthnBinding from './pages/MfaBinding/WebAuthnBinding';
 import MfaVerification from './pages/MfaVerification';
 import BackupCodeVerification from './pages/MfaVerification/BackupCodeVerification';
+import EmailVerificationCode from './pages/MfaVerification/EmailVerificationCode';
+import PhoneVerificationCode from './pages/MfaVerification/PhoneVerificationCode';
 import TotpVerification from './pages/MfaVerification/TotpVerification';
 import WebAuthnVerification from './pages/MfaVerification/WebAuthnVerification';
 import OneTimeToken from './pages/OneTimeToken';
@@ -125,6 +127,14 @@ const App = () => {
                         <Route path={MfaFactor.TOTP} element={<TotpVerification />} />
                         <Route path={MfaFactor.WebAuthn} element={<WebAuthnVerification />} />
                         <Route path={MfaFactor.BackupCode} element={<BackupCodeVerification />} />
+                        <Route
+                          path={MfaFactor.EmailVerificationCode}
+                          element={<EmailVerificationCode />}
+                        />
+                        <Route
+                          path={MfaFactor.PhoneVerificationCode}
+                          element={<PhoneVerificationCode />}
+                        />
                       </Route>
 
                       {/* Continue set up missing profile */}

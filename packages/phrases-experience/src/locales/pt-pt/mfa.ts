@@ -37,6 +37,12 @@ const mfa = {
     'Introduza o código de verificação de 6 dígitos gerado pela aplicação autenticadora.',
   enter_one_time_code_description:
     'A verificação em duas etapas foi ativada para esta conta. Por favor, insira o código de utilização única mostrado na sua aplicação autenticadora vinculada.',
+  enter_email_verification_code: 'Introduzir código de verificação por e‑mail',
+  enter_email_verification_code_description:
+    'A autenticação em dois passos está ativada para esta conta. Introduza o código de verificação enviado para o seu endereço de e‑mail.',
+  enter_phone_verification_code: 'Introduzir código de verificação por SMS',
+  enter_phone_verification_code_description:
+    'A autenticação em dois passos está ativada para esta conta. Introduza o código de verificação por SMS enviado para o seu número de telefone.',
   link_another_mfa_factor: 'Mudar para outro método',
   save_backup_code: 'Guarde o seu código de backup',
   save_backup_code_description:

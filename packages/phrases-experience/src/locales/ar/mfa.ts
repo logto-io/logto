@@ -36,6 +36,12 @@ const mfa = {
     'أدخل رمز التحقق المكون من 6 أرقام الذي تم إنشاؤه بواسطة تطبيق المصادقة.',
   enter_one_time_code_description:
     'تم تمكين التحقق من خطوتين لهذا الحساب. يرجى إدخال الرمز لمرة واحدة المعروض على تطبيق المصادقة المرتبط بك.',
+  enter_email_verification_code: 'أدخل رمز التحقق عبر البريد الإلكتروني',
+  enter_email_verification_code_description:
+    'تم تمكين المصادقة بخطوتين لهذا الحساب. يرجى إدخال رمز التحقق المرسل إلى عنوان بريدك الإلكتروني.',
+  enter_phone_verification_code: 'أدخل رمز التحقق عبر الرسائل القصيرة',
+  enter_phone_verification_code_description:
+    'تم تمكين المصادقة بخطوتين لهذا الحساب. يرجى إدخال رمز التحقق عبر الرسائل القصيرة المرسل إلى رقم هاتفك.',
   link_another_mfa_factor: 'التبديل إلى طريقة أخرى',
   save_backup_code: 'احفظ رمز النسخ الاحتياطي الخاص بك',
   save_backup_code_description:

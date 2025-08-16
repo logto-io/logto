@@ -1,0 +1,17 @@
+@use '@/scss/underscore' as _;
+
+.codeInput {
+  margin-top: _.unit(4);
+}
+
+.continueButton {
+  margin-top: _.unit(6);
+}
+
+.message {
+  margin-top: _.unit(3);
+}
+
+.link {
+  cursor: pointer;
+}

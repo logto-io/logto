@@ -36,6 +36,12 @@ const mfa = {
   enter_one_time_code_link_description: '인증 앱에서 생성된 6자리 확인 코드를 입력하세요.',
   enter_one_time_code_description:
     '이 계정에서는 2단계 인증이 활성화되었습니다. 연결된 인증 앱에 표시된 일회용 코드를 입력하세요.',
+  enter_email_verification_code: '이메일 인증 코드 입력',
+  enter_email_verification_code_description:
+    '이 계정에는 2단계 인증이 활성화되어 있습니다. 이메일 주소로 전송된 인증 코드를 입력하세요.',
+  enter_phone_verification_code: 'SMS 인증 코드 입력',
+  enter_phone_verification_code_description:
+    '이 계정에는 2단계 인증이 활성화되어 있습니다. 휴대폰 번호로 전송된 SMS 인증 코드를 입력하세요.',
   link_another_mfa_factor: '다른 방법으로 전환',
   save_backup_code: '백업 코드 저장',
   save_backup_code_description:
