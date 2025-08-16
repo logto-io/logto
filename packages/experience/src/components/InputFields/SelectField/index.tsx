@@ -1,9 +1,10 @@
 import { type Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 import ArrowDown from '@/assets/icons/arrow-down.svg?react';
 import Dropdown, { DropdownItem } from '@/components/Dropdown';
+import { onKeyDownHandler } from '@/utils/a11y';
 
 import InputField from '../InputField';
 
@@ -42,6 +43,52 @@ const SelectField = ({
   const [currentValue, setCurrentValue] = useState(
     options.find((option) => option.value === value)?.label ?? ''
   );
+  const [focusedIndex, setFocusedIndex] = useState<number>();
+  const optionElementReferences = useRef<Array<HTMLDivElement | undefined>>([]);
+
+  useEffect(() => {
+    if (isOpen && focusedIndex !== undefined) {
+      optionElementReferences.current[focusedIndex]?.focus();
+    }
+  }, [isOpen, focusedIndex]);
+
+  const moveFocus = (direction: 1 | -1) => {
+    setFocusedIndex((previous) => {
+      if (options.length === 0) {
+        return previous;
+      }
+      if (previous === undefined) {
+        return direction === 1 ? 0 : options.length - 1;
+      }
+      // Wrap around from the start or end
+      return (previous + direction + options.length) % options.length;
+    });
+  };
+
+  const handleArrowNavigation = (event: React.KeyboardEvent) => {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      if (isOpen) {
+        moveFocus(event.key === 'ArrowDown' ? 1 : -1);
+      } else {
+        setIsOpen(true);
+        const direction = event.key === 'ArrowDown' ? 1 : -1;
+        setFocusedIndex(direction === 1 ? 0 : options.length - 1);
+      }
+    }
+  };
+
+  const handleSelectViaKeyboard = (event: React.KeyboardEvent) => {
+    if ((event.key === 'Enter' || event.key === ' ') && isOpen && focusedIndex !== undefined) {
+      const targetOption = options[focusedIndex];
+      if (targetOption) {
+        event.preventDefault();
+        onChange(targetOption.value);
+        setCurrentValue(targetOption.label);
+        setIsOpen(false);
+      }
+    }
+  };
 
   return (
     <div className={classNames(styles.selectContainer, className)}>
@@ -55,7 +102,20 @@ const SelectField = ({
           required={required}
           value={currentValue}
           onClick={() => {
+            setFocusedIndex(undefined);
             setIsOpen(true);
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Escape') {
+              setIsOpen(false);
+              return;
+            }
+            onKeyDownHandler(() => {
+              setFocusedIndex(undefined);
+              setIsOpen(true);
+            })(event);
+            handleArrowNavigation(event);
+            handleSelectViaKeyboard(event);
           }}
           onBlur={onBlur}
         />
@@ -69,19 +129,44 @@ const SelectField = ({
             setIsOpen(false);
           }}
         >
-          {options.map((option) => (
+          {options.map((option, index) => (
             <DropdownItem
               key={option.value}
+              ref={(element) => {
+                // eslint-disable-next-line @silverhand/fp/no-mutation
+                optionElementReferences.current[index] = element ?? undefined;
+              }}
+              onArrowNavigate={moveFocus}
               onClick={() => {
                 onChange(option.value);
                 setCurrentValue(option.label);
+                setIsOpen(false);
               }}
             >
               {option.label}
             </DropdownItem>
           ))}
         </Dropdown>
-        <div className={classNames(styles.arrow, isOpen && styles.up)}>
+        <div
+          tabIndex={0}
+          role="button"
+          className={classNames(styles.arrow, isOpen && styles.up)}
+          onKeyDown={(event) => {
+            if (event.key === 'Escape') {
+              setIsOpen(false);
+            }
+            onKeyDownHandler(() => {
+              setIsOpen((previous) => {
+                const next = !previous;
+                if (next) {
+                  setFocusedIndex(undefined);
+                }
+                return next;
+              });
+            })(event);
+            handleArrowNavigation(event);
+          }}
+        >
           <ArrowDown />
         </div>
       </div>

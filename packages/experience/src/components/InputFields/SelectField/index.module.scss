@@ -29,6 +29,11 @@
       color: var(--color-type-secondary);
       transition: transform 0.2s ease-in-out;
 
+      &:focus-visible {
+        border-radius: 6px;
+        outline: solid 1px var(--color-brand-default);
+      }
+
       &.up {
         transform: translateY(-50%) rotate(180deg);
       }
@@ -49,4 +54,8 @@
   .errorMessage {
     color: var(--color-danger-default);
   }
+}
+
+.focused {
+  background: var(--color-overlay-neutral-hover);
 }

@@ -9,6 +9,7 @@
   align-items: center;
   overflow: hidden;
   gap: _.unit(4);
+  border: 1px solid transparent;
 
   &:hover {
     background: var(--color-overlay-neutral-hover);
@@ -16,6 +17,11 @@
 
   &.danger {
     color: var(--color-overlay-danger-hover);
+  }
+
+  &:focus-visible {
+    border: solid 1px var(--color-brand-default);
+    outline: none;
   }
 
   .icon {
