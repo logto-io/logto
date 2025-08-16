@@ -113,9 +113,7 @@ const createRouters = (tenant: TenantContext) => {
   oneTimeTokenRoutes(managementRouter, tenant);
   captchaProviderRoutes(managementRouter, tenant);
   sentinelActivitiesRoutes(managementRouter, tenant);
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    customProfileFieldsRoutes(managementRouter, tenant);
-  }
+  customProfileFieldsRoutes(managementRouter, tenant);
   secretsRoutes(managementRouter, tenant);
 
   // General anonymous router for publicly accessible APIs

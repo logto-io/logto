@@ -27,13 +27,7 @@ const methodToVerb = Object.freeze({
 
 type RouteDictionary = Record<`${OpenAPIV3.HttpMethods} ${string}`, string>;
 
-const devFeatureCustomRoutes: RouteDictionary = Object.freeze({
-  'get /custom-profile-fields/:name': 'GetCustomProfileFieldByName',
-  'put /custom-profile-fields/:name': 'UpdateCustomProfileFieldByName',
-  'delete /custom-profile-fields/:name': 'DeleteCustomProfileFieldByName',
-  'post /custom-profile-fields/batch': 'CreateCustomProfileFieldsBatch',
-  'post /custom-profile-fields/properties/sie-order': 'UpdateCustomProfileFieldsSieOrder',
-});
+const devFeatureCustomRoutes: RouteDictionary = Object.freeze({});
 
 export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   // Authn
@@ -94,6 +88,12 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   'post /one-time-tokens/verify': 'VerifyOneTimeToken',
   // Sentinel activities
   'post /sentinel-activities/delete': 'DeleteSentinelActivities',
+  // Collect user profile
+  'get /custom-profile-fields/:name': 'GetCustomProfileFieldByName',
+  'put /custom-profile-fields/:name': 'UpdateCustomProfileFieldByName',
+  'delete /custom-profile-fields/:name': 'DeleteCustomProfileFieldByName',
+  'post /custom-profile-fields/batch': 'CreateCustomProfileFieldsBatch',
+  'post /custom-profile-fields/properties/sie-order': 'UpdateCustomProfileFieldsSieOrder',
   ...(EnvSet.values.isDevFeaturesEnabled ? devFeatureCustomRoutes : {}),
 } satisfies RouteDictionary); // Key assertion doesn't work without `satisfies`
 

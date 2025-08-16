@@ -207,6 +207,7 @@ describe('getFullSignInExperience()', () => {
       socialSignInConnectorTargets: ['github', 'facebook', 'google'],
     });
     getLogtoConnectors.mockResolvedValueOnce([mockGoogleConnector, mockGithubConnector]);
+    findAllCustomProfileFields.mockResolvedValueOnce(mockCustomProfileFields);
     mockSsoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValueOnce([
       wellConfiguredSsoConnector,
     ]);
@@ -237,6 +238,7 @@ describe('getFullSignInExperience()', () => {
         connectorId: 'google',
       },
       captchaConfig: undefined,
+      customProfileFields: mockCustomProfileFields,
       forgotPassword: {
         email: false,
         phone: false,

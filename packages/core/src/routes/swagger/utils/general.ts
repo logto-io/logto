@@ -38,10 +38,11 @@ const tagMap = new Map([
   ['saml-applications', 'SAML applications'],
   ['saml', 'SAML applications auth flow'],
   ['one-time-tokens', 'One-time tokens'],
+  ['custom-profile-fields', 'Custom profile fields'],
 ]);
 
 if (EnvSet.values.isDevFeaturesEnabled) {
-  tagMap.set('custom-profile-fields', 'Custom profile fields');
+  // TagMap.set('foo-bar', 'Foo bar');
 }
 
 /**

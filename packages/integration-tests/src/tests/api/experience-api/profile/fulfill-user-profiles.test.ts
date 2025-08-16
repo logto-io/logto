@@ -27,7 +27,7 @@ import {
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { generateEmail, generateNationalPhoneNumber, devFeatureTest } from '#src/utils.js';
+import { generateEmail, generateNationalPhoneNumber } from '#src/utils.js';
 
 describe('Fulfill User Profiles', () => {
   const userApi = new UserApiTest();
@@ -241,8 +241,8 @@ describe('Fulfill User Profiles', () => {
     });
   });
 
-  devFeatureTest.describe('Fulfill extra profile fields', () => {
-    devFeatureTest.it('should update extra profile fields successfully', async () => {
+  describe('Fulfill extra profile fields', () => {
+    it('should update extra profile fields successfully', async () => {
       const { username, password } = generateNewUserProfile({ username: true, password: true });
       const client = await initExperienceClient({
         interactionEvent: InteractionEvent.Register,
@@ -293,7 +293,7 @@ describe('Fulfill User Profiles', () => {
       await deleteUser(userId);
     });
 
-    devFeatureTest.it('should throw 400 if the extra profile fields are invalid', async () => {
+    it('should throw 400 if the extra profile fields are invalid', async () => {
       const { username, password } = generateNewUserProfile({ username: true, password: true });
       const client = await initExperienceClient({
         interactionEvent: InteractionEvent.Register,

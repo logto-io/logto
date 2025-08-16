@@ -3,9 +3,6 @@
     {
       "name": "Custom profile fields",
       "description": "An admin feature used to create a customized user profile form, which is used to collect additional user information upon successful registrations."
-    },
-    {
-      "name": "Dev feature"
     }
   ],
   "paths": {

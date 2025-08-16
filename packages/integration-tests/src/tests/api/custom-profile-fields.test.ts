@@ -22,9 +22,6 @@ import {
   batchCreateCustomProfileFields,
 } from '#src/api/index.js';
 import { expectRejects } from '#src/helpers/index.js';
-import { devFeatureTest } from '#src/utils.js';
-
-const { describe, it } = devFeatureTest;
 
 describe('custom profile fields API', () => {
   it('should create custom profile field and find it by name', async () => {

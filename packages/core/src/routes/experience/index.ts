@@ -19,7 +19,6 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import koaInteractionDetails from '#src/middleware/koa-interaction-details.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { EnvSet } from '../../env-set/index.js';
 import { type AnonymousRouter, type RouterInitArgs } from '../types.js';
 
 import experienceAnonymousRoutes from './anonymous-routes/index.js';
@@ -192,23 +191,20 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     }
   );
 
-  // TODO: @charles remove dev feature guard
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    experienceRouter.get(
-      `${experienceRoutes.interaction}`,
-      koaGuard({
-        status: [200],
-        response: sanitizedInteractionStorageGuard,
-      }),
-      async (ctx, next) => {
-        const { experienceInteraction } = ctx;
+  experienceRouter.get(
+    `${experienceRoutes.interaction}`,
+    koaGuard({
+      status: [200],
+      response: sanitizedInteractionStorageGuard,
+    }),
+    async (ctx, next) => {
+      const { experienceInteraction } = ctx;
 
-        ctx.body = experienceInteraction.toSanitizedJson();
-        ctx.status = 200;
-        return next();
-      }
-    );
-  }
+      ctx.body = experienceInteraction.toSanitizedJson();
+      ctx.status = 200;
+      return next();
+    }
+  );
 
   passwordVerificationRoutes(experienceRouter, tenant);
   verificationCodeRoutes(experienceRouter, tenant);
