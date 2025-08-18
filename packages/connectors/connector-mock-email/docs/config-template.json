@@ -22,6 +22,12 @@
       "content": "This is for resetting password purposes only. Your verification code is {{code}}."
     },
     {
+      "usageType": "MfaVerification",
+      "type": "text/plain",
+      "subject": "Logto MfaVerification Template",
+      "content": "This is for MFA verification purposes only. Your verification code is {{code}}."
+    },
+    {
       "usageType": "Generic",
       "type": "text/plain",
       "subject": "Logto Generic Template",

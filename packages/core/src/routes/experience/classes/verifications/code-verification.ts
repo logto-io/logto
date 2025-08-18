@@ -313,8 +313,7 @@ export const createNewMfaCodeVerificationRecord = (
         id: generateStandardId(),
         type: VerificationType.MfaEmailVerificationCode,
         identifier,
-        // TODO @wangsijie: replace to new template type
-        templateType: TemplateType.SignIn,
+        templateType: TemplateType.MfaVerification,
         verified,
       });
     }
@@ -323,8 +322,7 @@ export const createNewMfaCodeVerificationRecord = (
         id: generateStandardId(),
         type: VerificationType.MfaPhoneVerificationCode,
         identifier,
-        // TODO @wangsijie: replace to new template type
-        templateType: TemplateType.SignIn,
+        templateType: TemplateType.MfaVerification,
         verified,
       });
     }
