@@ -52,6 +52,8 @@ const getPasscodeIdentifierPayload = (
 type CodeVerificationIdentifierMap = {
   [VerificationType.EmailVerificationCode]: { primaryEmail: string };
   [VerificationType.PhoneVerificationCode]: { primaryPhone: string };
+  [VerificationType.MfaEmailVerificationCode]: Record<string, unknown>;
+  [VerificationType.MfaPhoneVerificationCode]: Record<string, unknown>;
 };
 
 /**
@@ -86,17 +88,6 @@ abstract class CodeVerification<T extends CodeVerificationType>
   /** Returns true if the identifier has been verified by a given code */
   get isVerified() {
     return this.verified;
-  }
-
-  get isNewBindMfaVerification() {
-    // For EmailCodeVerification and PhoneCodeVerification, the binding is always completed before submitting the interaction.
-    // So this method always returns false.
-    // So that it can be used right after the new Email/Phone is bound to the user.
-    // The flow: user binds a new email/phone -> user info updated to the DB -> user submits the interaction
-    // -> check user enabled MFA verifications -> the new email/phone is included in the enabled MFA verifications
-    // -> but the user does not need to verify the new email/phone again -> reuse the verification record
-    // So this verification record are used for the new bind MFA verification, and also can be used for the verification.
-    return false;
   }
 
   /**
@@ -242,6 +233,32 @@ export class PhoneCodeVerification extends CodeVerification<VerificationType.Pho
   }
 }
 
+export class MfaEmailCodeVerification extends CodeVerification<VerificationType.MfaEmailVerificationCode> {
+  public readonly type = VerificationType.MfaEmailVerificationCode;
+
+  toUserProfile(): Record<string, unknown> {
+    return {};
+  }
+
+  get isNewBindMfaVerification(): boolean {
+    // This class is only used for MFA verification
+    return false;
+  }
+}
+
+export class MfaPhoneCodeVerification extends CodeVerification<VerificationType.MfaPhoneVerificationCode> {
+  public readonly type = VerificationType.MfaPhoneVerificationCode;
+
+  toUserProfile(): Record<string, unknown> {
+    return {};
+  }
+
+  get isNewBindMfaVerification(): boolean {
+    // This class is only used for MFA verification
+    return false;
+  }
+}
+
 /**
  * Factory method to create a new `EmailCodeVerification` / `PhoneCodeVerification` record using the given identifier.
  */
@@ -272,6 +289,43 @@ export const createNewCodeVerificationRecord = (
         identifier,
         templateType,
         verified: false,
+      });
+    }
+  }
+};
+
+/**
+ * Factory method to create a new `MfaEmailCodeVerification` / `MfaPhoneCodeVerification` record using the given identifier.
+ */
+export const createNewMfaCodeVerificationRecord = (
+  libraries: Libraries,
+  queries: Queries,
+  identifier:
+    | VerificationCodeIdentifier<SignInIdentifier.Email>
+    | VerificationCodeIdentifier<SignInIdentifier.Phone>,
+  verified = false
+): MfaEmailCodeVerification | MfaPhoneCodeVerification => {
+  const { type } = identifier;
+
+  switch (type) {
+    case SignInIdentifier.Email: {
+      return new MfaEmailCodeVerification(libraries, queries, {
+        id: generateStandardId(),
+        type: VerificationType.MfaEmailVerificationCode,
+        identifier,
+        // TODO @wangsijie: replace to new template type
+        templateType: TemplateType.SignIn,
+        verified,
+      });
+    }
+    case SignInIdentifier.Phone: {
+      return new MfaPhoneCodeVerification(libraries, queries, {
+        id: generateStandardId(),
+        type: VerificationType.MfaPhoneVerificationCode,
+        identifier,
+        // TODO @wangsijie: replace to new template type
+        templateType: TemplateType.SignIn,
+        verified,
       });
     }
   }
