@@ -39,10 +39,10 @@ const mfa = {
     'La verifica in due passaggi è stata abilitata per questo account. Inserisci il codice monouso mostrato sulla tua app di autenticazione collegata.',
   enter_email_verification_code: 'Inserisci il codice di verifica e‑mail',
   enter_email_verification_code_description:
-    'L’autenticazione a due passaggi è abilitata per questo account. Inserisci il codice di verifica e‑mail inviato al tuo indirizzo.',
+    'L’autenticazione a due passaggi è abilitata per questo account. Inserisci il codice di verifica e‑mail inviato a {{identifier}}.',
   enter_phone_verification_code: 'Inserisci il codice di verifica SMS',
   enter_phone_verification_code_description:
-    'L’autenticazione a due passaggi è abilitata per questo account. Inserisci il codice di verifica SMS inviato al tuo numero di telefono.',
+    'L’autenticazione a due passaggi è abilitata per questo account. Inserisci il codice di verifica SMS inviato a {{identifier}}.',
   link_another_mfa_factor: 'Passa a un altro metodo',
   save_backup_code: 'Salva il codice di backup',
   save_backup_code_description:

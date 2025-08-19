@@ -39,10 +39,10 @@ const mfa = {
     '2-step verification has been enabled for this account. Please enter the one-time code shown on your linked authenticator app.',
   enter_email_verification_code: 'Enter Email verification code',
   enter_email_verification_code_description:
-    '2-step authentication has been enabled for this account. Please enter the email verification code sent to your email address.',
+    '2-step authentication has been enabled for this account. Please enter the email verification code sent to {{identifier}}.',
   enter_phone_verification_code: 'Enter SMS verification code',
   enter_phone_verification_code_description:
-    '2-step authentication has been enabled for this account. Please enter the SMS verification code sent to your phone number.',
+    '2-step authentication has been enabled for this account. Please enter the SMS verification code sent to {{identifier}}.',
   link_another_mfa_factor: 'Switch to another method',
   save_backup_code: 'Save your backup code',
   save_backup_code_description:

@@ -106,6 +106,7 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
         const [_, data] = validate(error.data, mfaErrorDataGuard);
         const factors = data?.availableFactors ?? [];
         const skippable = data?.skippable;
+        const maskedIdentifiers = data?.maskedIdentifiers;
 
         if (factors.length === 0) {
           setToast(error.message);
@@ -118,7 +119,7 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
             ? factors.filter((factor) => factor !== MfaFactor.WebAuthn)
             : factors;
 
-        await handleMfaRedirect(flow, { availableFactors, skippable });
+        await handleMfaRedirect(flow, { availableFactors, skippable, maskedIdentifiers });
       };
     },
     [handleMfaRedirect, setToast]

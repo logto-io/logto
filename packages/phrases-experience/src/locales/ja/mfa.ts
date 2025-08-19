@@ -38,10 +38,10 @@ const mfa = {
     'このアカウントでは2段階認証が有効になっています。リンクされた認証アプリに表示されるワンタイムコードを入力してください。',
   enter_email_verification_code: 'メールの確認コードを入力',
   enter_email_verification_code_description:
-    'このアカウントでは二段階認証が有効です。メールアドレスに送信された確認コードを入力してください。',
+    'このアカウントでは二段階認証が有効です。{{identifier}} に送信された確認コードを入力してください。',
   enter_phone_verification_code: 'SMSの確認コードを入力',
   enter_phone_verification_code_description:
-    'このアカウントでは二段階認証が有効です。電話番号に送信されたSMS確認コードを入力してください。',
+    'このアカウントでは二段階認証が有効です。{{identifier}} に送信されたSMS確認コードを入力してください。',
   link_another_mfa_factor: '別の方法に切り替える',
   save_backup_code: 'バックアップコードを保存',
   save_backup_code_description:

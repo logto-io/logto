@@ -1,4 +1,4 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { MfaFactor, SignInIdentifier } from '@logto/schemas';
 import { useEffect, useState } from 'react';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
@@ -33,11 +33,14 @@ const PhoneVerificationCode = () => {
     return <ErrorPage title="error.invalid_session" />;
   }
 
+  const maskedPhone = flowState.maskedIdentifiers?.[MfaFactor.PhoneVerificationCode];
+
   return (
     <SecondaryPageLayout title="mfa.verify_mfa_factors">
       <SectionLayout
         title="mfa.enter_phone_verification_code"
         description="mfa.enter_phone_verification_code_description"
+        descriptionProps={{ identifier: maskedPhone }}
       >
         {verificationId ? (
           <MfaCodeVerification

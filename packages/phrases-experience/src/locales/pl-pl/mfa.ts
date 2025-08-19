@@ -39,10 +39,10 @@ const mfa = {
     'Dla tego konta włączono weryfikację dwuetapową. Proszę wprowadzić jednorazowy kod widoczny w aplikacji autentykacyjnej powiązanej z kontem.',
   enter_email_verification_code: 'Wprowadź kod weryfikacyjny e‑mail',
   enter_email_verification_code_description:
-    'Dla tego konta włączono uwierzytelnianie dwustopniowe. Wprowadź kod weryfikacyjny wysłany na Twój adres e‑mail.',
+    'Dla tego konta włączono uwierzytelnianie dwustopniowe. Wprowadź kod weryfikacyjny wysłany na {{identifier}}.',
   enter_phone_verification_code: 'Wprowadź kod weryfikacyjny SMS',
   enter_phone_verification_code_description:
-    'Dla tego konta włączono uwierzytelnianie dwustopniowe. Wprowadź kod weryfikacyjny SMS wysłany na Twój numer telefonu.',
+    'Dla tego konta włączono uwierzytelnianie dwustopniowe. Wprowadź kod weryfikacyjny SMS wysłany na {{identifier}}.',
   link_another_mfa_factor: 'Przełącz na inny sposób',
   save_backup_code: 'Zapisz swój kod zapasowy',
   save_backup_code_description:

@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 import { appInsights } from '@logto/app-insights/node';
-import { InteractionEvent, VerificationType, type User } from '@logto/schemas';
+import { InteractionEvent, MfaFactor, VerificationType, type User } from '@logto/schemas';
+import { maskEmail, maskPhone } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -339,11 +340,29 @@ export default class ExperienceInteraction {
     const mfaValidator = new MfaValidator(mfaSettings, user);
     const isVerified = mfaValidator.isMfaVerified(this.verificationRecordsArray);
 
+    const { primaryEmail, primaryPhone } = user;
+    // Build masked identifiers for UX hints when applicable
+    const maskedIdentifiers: Record<string, string> = {
+      ...(mfaValidator.availableUserMfaVerificationTypes.includes(
+        MfaFactor.EmailVerificationCode
+      ) && primaryEmail
+        ? { [MfaFactor.EmailVerificationCode]: maskEmail(primaryEmail) }
+        : {}),
+      ...(mfaValidator.availableUserMfaVerificationTypes.includes(
+        MfaFactor.PhoneVerificationCode
+      ) && primaryPhone
+        ? { [MfaFactor.PhoneVerificationCode]: maskPhone(primaryPhone) }
+        : {}),
+    };
+
     assertThat(
       isVerified,
       new RequestError(
         { code: 'session.mfa.require_mfa_verification', status: 403 },
-        { availableFactors: mfaValidator.availableUserMfaVerificationTypes }
+        {
+          availableFactors: mfaValidator.availableUserMfaVerificationTypes,
+          maskedIdentifiers,
+        }
       )
     );
   }
