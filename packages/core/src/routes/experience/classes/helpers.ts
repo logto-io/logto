@@ -208,16 +208,28 @@ export const getAllUserEnabledMfaVerifications = (
       return verification.codes.some((code) => !code.usedAt);
     })
     .slice()
-    // Sort by last used time, the latest used factor is the first one, backup code is always the last one
+    // Sort by priority:
+    // 1) WebAuthn always first if available
+    // 2) Backup code always last
+    // 3) Otherwise by last used time (desc)
     .sort((verificationA, verificationB) => {
-      if (verificationA.type === MfaFactor.BackupCode) {
+      // WebAuthn to the front whenever present
+      if (verificationA.type === MfaFactor.WebAuthn && verificationB.type !== MfaFactor.WebAuthn) {
+        return -1;
+      }
+      if (verificationB.type === MfaFactor.WebAuthn && verificationA.type !== MfaFactor.WebAuthn) {
         return 1;
       }
 
+      // Backup codes to the end
+      if (verificationA.type === MfaFactor.BackupCode) {
+        return 1;
+      }
       if (verificationB.type === MfaFactor.BackupCode) {
         return -1;
       }
 
+      // Recent first for the rest
       return (
         new Date(verificationB.lastUsedAt ?? 0).getTime() -
         new Date(verificationA.lastUsedAt ?? 0).getTime()
