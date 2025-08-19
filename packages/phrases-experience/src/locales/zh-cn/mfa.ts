@@ -34,6 +34,11 @@ const mfa = {
   enter_one_time_code_link_description: '输入身份验证应用生成的 6 位验证码。',
   enter_one_time_code_description:
     '此帐户启用了两步验证。请在你关联的认证应用中输入显示的一次性代码。',
+  enter_email_verification_code: '输入邮箱验证码',
+  enter_email_verification_code_description: '此账户已启用两步认证。请输入发送到你邮箱的验证码。',
+  enter_phone_verification_code: '输入短信验证码',
+  enter_phone_verification_code_description:
+    '此账户已启用两步认证。请输入发送到你手机号的短信验证码。',
   link_another_mfa_factor: '切换到另一种方法',
   save_backup_code: '保存您的备份代码',
   save_backup_code_description:

@@ -37,6 +37,12 @@ const mfa = {
     'Wprowadź 6-cyfrowy kod weryfikacyjny wygenerowany przez aplikację autentykacyjną.',
   enter_one_time_code_description:
     'Dla tego konta włączono weryfikację dwuetapową. Proszę wprowadzić jednorazowy kod widoczny w aplikacji autentykacyjnej powiązanej z kontem.',
+  enter_email_verification_code: 'Wprowadź kod weryfikacyjny e‑mail',
+  enter_email_verification_code_description:
+    'Dla tego konta włączono uwierzytelnianie dwustopniowe. Wprowadź kod weryfikacyjny wysłany na Twój adres e‑mail.',
+  enter_phone_verification_code: 'Wprowadź kod weryfikacyjny SMS',
+  enter_phone_verification_code_description:
+    'Dla tego konta włączono uwierzytelnianie dwustopniowe. Wprowadź kod weryfikacyjny SMS wysłany na Twój numer telefonu.',
   link_another_mfa_factor: 'Przełącz na inny sposób',
   save_backup_code: 'Zapisz swój kod zapasowy',
   save_backup_code_description:
