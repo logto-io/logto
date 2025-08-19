@@ -1,8 +1,8 @@
 const profile = {
   name: 'Name',
   avatar: 'Avatar',
-  givenName: 'Given name',
-  familyName: 'Family name',
+  givenName: 'First name',
+  familyName: 'Last name',
   middleName: 'Middle name',
   fullname: 'Full name',
   nickname: 'Nickname',

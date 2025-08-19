@@ -1,4 +1,5 @@
 import { CustomProfileFieldType } from '@logto/schemas';
+import { cond } from '@silverhand/essentials';
 import { type ReactNode } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
@@ -130,11 +131,13 @@ function ProfileFieldPartSubForm({ index }: Props) {
                 error={formErrors?.label?.message}
                 placeholder={t('sign_in_exp.custom_profile_fields.details.label_placeholder')}
                 value={value || fallbackValue}
-                description={
-                  <Trans components={{ a: <TextLink to="/sign-in-experience/content" /> }}>
-                    {t('sign_in_exp.custom_profile_fields.details.label_tip')}
-                  </Trans>
-                }
+                description={cond(
+                  isBuiltInFieldName && (
+                    <Trans components={{ a: <TextLink to="/sign-in-experience/content" /> }}>
+                      {t('sign_in_exp.custom_profile_fields.details.label_tip')}
+                    </Trans>
+                  )
+                )}
                 onChange={onChange}
               />
             );
