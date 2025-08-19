@@ -76,6 +76,5 @@ export const fullSignInExperienceGuard = SignInExperiences.guard
         siteKey: z.string(),
       })
       .optional(),
-    // @charles TODO: Remove `optional` before release
-    customProfileFields: CustomProfileFields.guard.array().optional(),
+    customProfileFields: CustomProfileFields.guard.array(),
   }) satisfies ToZodObject<FullSignInExperience>;
