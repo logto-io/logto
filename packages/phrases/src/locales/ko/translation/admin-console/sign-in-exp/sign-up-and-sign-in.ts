@@ -28,6 +28,12 @@ const sign_up_and_sign_in = {
     verification_code_auth: '인증 코드',
     auth_swap_tip: '아래 옵션을 변경하여 흐름에 가장 먼저 나타나는 옵션을 설정할 수 있어요.',
     require_auth_factor: '반드시 최소 하나의 인증 방법을 선택해야 해요.',
+    forgot_password_verification_method: '비밀번호 찾기 인증 방법',
+    forgot_password_description:
+      '사용자는 사용 가능한 인증 방법을 사용하여 비밀번호를 재설정할 수 있습니다.',
+    add_verification_method: '인증 방법 추가',
+    email_verification_code: '이메일 인증 코드',
+    phone_verification_code: '전화 인증 코드',
   },
   social_sign_in: {
     title: '소셜 로그인',
@@ -52,6 +58,10 @@ const sign_up_and_sign_in = {
       '회원가입 중에 비밀번호를 설정하는 옵션을 사용으로 설정했기 때문에 이 옵션은 필수예요.',
     verification_code_auth:
       '가입 시 인증 코드를 제공하는 옵션만 활성화했기 때문에 이것은 필수예요. 회원가입에서 비밀번호 설정이 허용되면 이 옵션을 취소할 수 있어요.',
+    email_mfa_enabled:
+      '이메일 인증 코드는 이미 MFA에 사용되고 있어 주 인증 방법으로 재사용할 수 없습니다.',
+    phone_mfa_enabled:
+      '전화 인증 코드는 이미 MFA에 사용되고 있어 주 인증 방법으로 재사용할 수 없습니다.',
     delete_sign_in_method: '{{identifier}}를 필수 ID로 설정했기 때문에 이 옵션은 필수예요.',
     password_disabled_notification:
       '\'사용자 이름으로 회원가입할 때 "비밀번호 생성" 옵션이 비활성화되어 있어 사용자가 로그인하지 못할 수 있습니다. 저장을 진행하시겠습니까?\'',

@@ -54,7 +54,7 @@ const usage = {
   tenant_members: {
     title: 'Membros do locatário',
     tooltip:
-      'Recurso adicional com preço de ${{price, number}} por membro por mês. Os primeiros 3 membros do locatário são gratuitos.',
+      'Recurso adicional com preço de ${{price, number}} por membro por mês. Os primeiros {{basicQuota}} membros do locatário são gratuitos.',
     tooltip_for_enterprise:
       'Os primeiros {{basicQuota}} membros do locatário estão incluídos e são gratuitos para usar no seu plano baseado em contrato. Se você precisar de mais, ${{price, number}} por membro do locatário por mês.',
   },
@@ -76,6 +76,19 @@ const usage = {
     title: 'Segurança avançada',
     tooltip:
       'Recurso adicional com um preço de ${{price, number}}/mês para o pacote completo de segurança avançada, incluindo CAPTCHA, bloqueio de identificador, lista de bloqueio de e-mail (em breve) e mais.',
+  },
+  saml_applications: {
+    title: 'Aplicativo SAML',
+    tooltip: 'Recurso adicional com preço de ${{price, number}} por aplicativo SAML por mês.',
+  },
+  third_party_applications: {
+    title: 'Aplicativo de terceiros',
+    tooltip: 'Recurso adicional com preço de ${{price, number}} por aplicativo por mês.',
+  },
+  rbacEnabled: {
+    title: 'Funções',
+    tooltip:
+      'Recurso adicional com uma taxa fixa de ${{price, number}} por mês. O preço não é afetado pelo número de funções globais.',
   },
   pricing: {
     add_on_changes_in_current_cycle_notice:

@@ -22,10 +22,16 @@ const sign_in_experiences = {
     'E-posta doğrulama kodu, oturum açma için e-posta doğrulama etkinleştirildiğinde MFA için kullanılamaz.',
   phone_verification_code_cannot_be_used_for_mfa:
     'SMS doğrulama kodu, oturum açma için SMS doğrulama etkinleştirildiğinde MFA için kullanılamaz.',
+  email_verification_code_cannot_be_used_for_sign_in:
+    'E-posta doğrulama kodu, MFA için etkinleştirildiğinde oturum açma için kullanılamaz.',
+  phone_verification_code_cannot_be_used_for_sign_in:
+    'SMS doğrulama kodu, MFA için etkinleştirildiğinde oturum açma için kullanılamaz.',
   duplicated_sign_up_identifiers: 'Yinelenen kayıt kimlikleri tespit edildi.',
   missing_sign_up_identifiers: 'Birincil kayıt kimliği boş olamaz.',
   invalid_custom_email_blocklist_format:
     'Geçersiz özel e-posta engelleme listesi öğeleri: {{items, list(type:conjunction)}}. Her öğe, geçerli bir e-posta adresi veya e-posta alan adı olmalıdır, örneğin, foo@example.com veya @example.com.',
+  forgot_password_method_requires_connector:
+    'Şifremi unuttum yöntemi, yapılandırılması gereken ilgili bir {{method}} bağlayıcı gerektirir.',
 };
 
 export default Object.freeze(sign_in_experiences);

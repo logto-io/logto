@@ -55,8 +55,7 @@ const session = {
     email_not_allowed: 'Adres email "{{email}}" jest zastrzeżony. Proszę wybrać inny.',
   },
   google_one_tap: {
-    /** UNTRANSLATED */
-    cookie_mismatch: 'Google One Tap cookie mismatch.',
+    cookie_mismatch: 'Nieprawidłowe dopasowanie ciasteczek Google One Tap.',
     invalid_id_token: 'Nieprawidłowy token ID Google.',
     unverified_email: 'Niezweryfikowany email.',
   },

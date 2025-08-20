@@ -27,6 +27,11 @@ const sign_up_and_sign_in = {
     verification_code_auth: '驗證碼',
     auth_swap_tip: '交換以下選項的位置即可設定它們在使用者登入流程中出現的先後順序。',
     require_auth_factor: '請至少選擇一種驗證方式。',
+    forgot_password_verification_method: '忘記密碼驗證方式',
+    forgot_password_description: '使用者可以使用任何可用的驗證方法重置密碼。',
+    add_verification_method: '新增驗證方法',
+    email_verification_code: '郵件驗證碼',
+    phone_verification_code: '手機驗證碼',
   },
   social_sign_in: {
     title: '社交登入',
@@ -49,6 +54,10 @@ const sign_up_and_sign_in = {
     password_auth: '因註冊設置啟用了使用者名稱密碼標誌。在使用者登入時，這個資訊是必填的。',
     verification_code_auth:
       '因註冊設置啟用了驗證碼標誌，驗證碼屬於使用者必選項，啟用密碼註冊後，你可以選擇關閉驗證碼登入。',
+    email_mfa_enabled:
+      '郵件驗證碼已啟用作為多因素驗證 (MFA)，因此不能重用作為主要登入方式以確保安全。',
+    phone_mfa_enabled:
+      '手機驗證碼已啟用作為多因素驗證 (MFA)，因此不能重用作為主要登入方式以確保安全。',
     delete_sign_in_method: '因註冊設置啟用了{{identifier}}標誌。在使用者登入時，這些資訊是必填的。',
     password_disabled_notification:
       '用於使用者名稱註冊的"設置密碼"選項已被禁用，可能會阻止使用者登入。確認後繼續保存。',

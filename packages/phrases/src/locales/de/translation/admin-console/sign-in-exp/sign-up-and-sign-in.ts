@@ -31,6 +31,12 @@ const sign_up_and_sign_in = {
     auth_swap_tip:
       'Tauschen Sie die untenstehenden Optionen aus, um zu bestimmen, welche zuerst im Vorgang angezeigt wird.',
     require_auth_factor: 'Sie müssen mindestens einen Authentifizierungsfaktor auswählen.',
+    forgot_password_verification_method: 'Passwort-vergessen Verifizierungsmethode',
+    forgot_password_description:
+      'Benutzer können ihr Passwort mit jeder verfügbaren Verifizierungsmethode zurücksetzen.',
+    add_verification_method: 'Verifizierungsmethode hinzufügen',
+    email_verification_code: 'E-Mail-Verifizierungscode',
+    phone_verification_code: 'Telefonverifizierungscode',
   },
   social_sign_in: {
     title: 'ANMELDEN MIT SOCIAL MEDIA',
@@ -55,6 +61,10 @@ const sign_up_and_sign_in = {
       'Dies ist unerlässlich, da Sie die Option zum Setzen eines Passworts während des Anmeldeprozesses aktiviert haben.',
     verification_code_auth:
       'Dies ist unerlässlich, da Sie nur die Möglichkeit aktiviert haben, einen Verifizierungscode bei der Anmeldung bereitzustellen. Sie können das Kontrollkästchen deaktivieren, wenn die Passworteinrichtung im Anmeldeprozess erlaubt ist.',
+    email_mfa_enabled:
+      'E-Mail-Verifizierungscode ist bereits für MFA aktiviert, daher kann er nicht als primäre Anmeldemethode wiederverwendet werden, um die Sicherheit zu gewährleisten.',
+    phone_mfa_enabled:
+      'Telefonverifizierungscode ist bereits für MFA aktiviert, daher kann er nicht als primäre Anmeldemethode wiederverwendet werden, um die Sicherheit zu gewährleisten.',
     delete_sign_in_method:
       'Dies ist unerlässlich, da Sie {{identifier}} als obligatorischen Identifier ausgewählt haben.',
     password_disabled_notification:

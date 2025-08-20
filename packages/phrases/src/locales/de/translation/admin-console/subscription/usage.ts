@@ -54,7 +54,7 @@ const usage = {
   tenant_members: {
     title: 'Tenant-Mitglieder',
     tooltip:
-      'Zusatzfeature zu einem Preis von ${{price, number}} pro Mitglied pro Monat. Die ersten 3 Tenant-Mitglieder sind kostenlos.',
+      'Zusatzfeature zu einem Preis von ${{price, number}} pro Mitglied pro Monat. Die ersten {{basicQuota}} Tenant-Mitglieder sind kostenlos.',
     tooltip_for_enterprise:
       'Die ersten {{basicQuota}} Tenant-Mitglieder sind in deinem vertragsbasierten Plan enthalten und kostenlos. Wenn du mehr benötigst, ${{price, number}} pro Tenant-Mitglied pro Monat.',
   },
@@ -76,6 +76,19 @@ const usage = {
     title: 'Erweiterte Sicherheit',
     tooltip:
       'Zusatzfeature mit einem Preis von ${{price, number}}/Monat für das vollständige erweiterte Sicherheitsbündel, einschließlich CAPTCHA, Identifikator-Sperre, E-Mail-Blockliste (in Kürze verfügbar) und mehr.',
+  },
+  saml_applications: {
+    title: 'SAML-App',
+    tooltip: 'Zusatzfeature zu einem Preis von ${{price, number}} pro SAML-App pro Monat.',
+  },
+  third_party_applications: {
+    title: 'Drittanbieter-App',
+    tooltip: 'Zusatzfeature zu einem Preis von ${{price, number}} pro App pro Monat.',
+  },
+  rbacEnabled: {
+    title: 'Rollen',
+    tooltip:
+      'Zusatzfeature mit einem Festpreis von ${{price, number}} pro Monat. Der Preis wird nicht von der Anzahl der globalen Rollen beeinflusst.',
   },
   pricing: {
     add_on_changes_in_current_cycle_notice:

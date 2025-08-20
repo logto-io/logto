@@ -24,10 +24,16 @@ const sign_in_experiences = {
     "Il codice di verifica email non può essere utilizzato per MFA quando la verifica email è abilitata per l'accesso.",
   phone_verification_code_cannot_be_used_for_mfa:
     "Il codice di verifica SMS non può essere utilizzato per MFA quando la verifica SMS è abilitata per l'accesso.",
+  email_verification_code_cannot_be_used_for_sign_in:
+    "Il codice di verifica email non può essere utilizzato per l'accesso quando è abilitato per MFA.",
+  phone_verification_code_cannot_be_used_for_sign_in:
+    "Il codice di verifica SMS non può essere utilizzato per l'accesso quando è abilitato per MFA.",
   duplicated_sign_up_identifiers: 'Sono stati rilevati identificatori di registrazione duplicati.',
   missing_sign_up_identifiers: "L'identificatore di registrazione principale non può essere vuoto.",
   invalid_custom_email_blocklist_format:
     'Formato non valido per gli elementi della lista bloccata delle email personalizzate: {{items, list(type:conjunction)}}. Ogni elemento deve essere un indirizzo email o un dominio email valido, ad es., foo@example.com o @example.com.',
+  forgot_password_method_requires_connector:
+    'Il metodo di recupero della password richiede che sia configurato un connettore {{method}} corrispondente.',
 };
 
 export default Object.freeze(sign_in_experiences);

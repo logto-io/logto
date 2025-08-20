@@ -46,8 +46,7 @@ const session = {
     email_not_allowed: '電子郵件地址 "{{email}}" 受限。請選擇其他地址。',
   },
   google_one_tap: {
-    /** UNTRANSLATED */
-    cookie_mismatch: 'Google One Tap cookie mismatch.',
+    cookie_mismatch: 'Google One Tap cookie 不匹配。',
     invalid_id_token: '無效的 Google ID Token。',
     unverified_email: '未驗證的電子郵件。',
   },

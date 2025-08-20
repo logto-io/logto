@@ -48,8 +48,7 @@ const session = {
     email_not_allowed: 'عنوان البريد الإلكتروني "{{email}}" مقيد. يرجى اختيار عنوان آخر.',
   },
   google_one_tap: {
-    /** UNTRANSLATED */
-    cookie_mismatch: 'Google One Tap cookie mismatch.',
+    cookie_mismatch: 'عدم تطابق ملف تعريف الارتباط لخدمة Google One Tap.',
     invalid_id_token: 'رمز معرف Google غير صالح.',
     unverified_email: 'البريد الإلكتروني غير مُحقق.',
   },

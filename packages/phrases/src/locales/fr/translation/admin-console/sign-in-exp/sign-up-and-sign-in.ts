@@ -34,6 +34,12 @@ const sign_up_and_sign_in = {
     auth_swap_tip:
       'Echangez les options ci-dessous pour déterminer celle qui apparait en premier dans le processus.',
     require_auth_factor: "Vous devez sélectionner au moins un élément d'authentification.",
+    forgot_password_verification_method: 'Méthode de vérification de mot de passe oublié',
+    forgot_password_description:
+      "Les utilisateurs peuvent réinitialiser leur mot de passe en utilisant n'importe quelle méthode de vérification disponible.",
+    add_verification_method: 'Ajouter une méthode de vérification',
+    email_verification_code: 'Code de vérification e-mail',
+    phone_verification_code: 'Code de vérification par téléphone',
   },
   social_sign_in: {
     title: 'CONNEXION VIA RÉSEAU SOCIAL',
@@ -59,6 +65,10 @@ const sign_up_and_sign_in = {
       "Ceci est essentiel car vous avez activé l'option de configuration d'un mot de passe au cours du processus d'inscription.",
     verification_code_auth:
       "Ceci est essentiel car vous avez uniquement activé l'option de fourniture d'un code de vérification lors de l'inscription. Vous pouvez décocher la case lorsque la configuration d'un mot de passe est autorisée lors du processus d'inscription.",
+    email_mfa_enabled:
+      'Le code de vérification e-mail est déjà activé pour MFA, il ne peut donc pas être réutilisé comme méthode de connexion principale pour la sécurité.',
+    phone_mfa_enabled:
+      'Le code de vérification par téléphone est déjà activé pour MFA, il ne peut donc pas être réutilisé comme méthode de connexion principale pour la sécurité.',
     delete_sign_in_method:
       'Ceci est essentiel car vous avez sélectionné {{identifier}} comme identificateur requis.',
     password_disabled_notification:

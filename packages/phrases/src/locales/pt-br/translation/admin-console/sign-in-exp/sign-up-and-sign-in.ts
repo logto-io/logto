@@ -30,6 +30,12 @@ const sign_up_and_sign_in = {
     verification_code_auth: 'Código de verificação',
     auth_swap_tip: 'Troque as opções abaixo para determinar qual aparece primeiro no fluxo.',
     require_auth_factor: 'Você deve selecionar pelo menos um fator de autenticação.',
+    forgot_password_verification_method: 'Método de verificação de senha esquecida',
+    forgot_password_description:
+      'Os usuários podem redefinir sua senha usando qualquer método de verificação disponível.',
+    add_verification_method: 'Adicionar método de verificação',
+    email_verification_code: 'Código de verificação de e-mail',
+    phone_verification_code: 'Código de verificação de telefone',
   },
   social_sign_in: {
     title: 'LOGIN SOCIAL',
@@ -54,6 +60,10 @@ const sign_up_and_sign_in = {
       'Isso é essencial, pois você habilitou a opção de definir uma senha durante o processo de inscrição.',
     verification_code_auth:
       'Isso é essencial, pois você habilitou apenas a opção de fornecer o código de verificação ao se inscrever. Você pode desmarcar a caixa quando a configuração de senha for permitida no processo de inscrição.',
+    email_mfa_enabled:
+      'O código de verificação por e-mail já está habilitado para MFA, então não pode ser reutilizado como o método de login principal para segurança.',
+    phone_mfa_enabled:
+      'O código de verificação por telefone já está habilitado para MFA, então não pode ser reutilizado como o método de login principal para segurança.',
     delete_sign_in_method:
       'Isso é essencial, pois você selecionou {{identifier}} como um identificador obrigatório.',
     password_disabled_notification:

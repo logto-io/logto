@@ -17,10 +17,15 @@ const sign_in_experiences = {
     '啟用電郵驗證登錄時，不能將電郵驗證碼用於多因子驗證。',
   phone_verification_code_cannot_be_used_for_mfa:
     '啟用 SMS 驗證登錄時，不能將 SMS 驗證碼用於多因子驗證。',
+  email_verification_code_cannot_be_used_for_sign_in:
+    '當啟用多因子驗證時，電子郵件驗證碼不能用於登錄。',
+  phone_verification_code_cannot_be_used_for_sign_in:
+    '當啟用多因子驗證時，SMS 驗證碼不能用於登錄。',
   duplicated_sign_up_identifiers: '檢測到重複的註冊標識符。',
   missing_sign_up_identifiers: '主要的註冊標識符不能為空。',
   invalid_custom_email_blocklist_format:
     '無效的自定義電子郵件黑名單條目：{{items, list(type:conjunction)}}。每個條目必須是有效的電子郵件地址或電子郵件域，例如，foo@example.com 或 @example.com。',
+  forgot_password_method_requires_connector: '忘記密碼方法需要配置相應的 {{method}} 連接器。',
 };
 
 export default Object.freeze(sign_in_experiences);

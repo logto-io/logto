@@ -49,7 +49,7 @@ const usage = {
   },
   tenant_members: {
     title: '租户成员',
-    tooltip: '附加功能，每个成员每月价格为 ${{price, number}} 。前三个租户成员免费。',
+    tooltip: '附加功能，每个成员每月价格为 ${{price, number}} 。前 {{basicQuota}} 个租户成员免费。',
     tooltip_for_enterprise:
       '合同计划包括前 {{basicQuota}} 个租户成员，免费使用。如果需要更多，每个租户成员每月 ${{price, number}}。',
   },
@@ -70,6 +70,18 @@ const usage = {
     title: '高级安全',
     tooltip:
       '附加功能，完整的高级安全包价格为 ${{price, number}}/月，包括 CAPTCHA、标识符锁定、电子邮件黑名单（即将推出）等。',
+  },
+  saml_applications: {
+    title: 'SAML 应用',
+    tooltip: '附加功能，每个 SAML 应用每月价格为 ${{price, number}} 。',
+  },
+  third_party_applications: {
+    title: '第三方应用',
+    tooltip: '附加功能，每个应用每月价格为 ${{price, number}} 。',
+  },
+  rbacEnabled: {
+    title: '角色',
+    tooltip: '附加功能，每月费用为 ${{price, number}} 的固定价格。价格不受全局角色数量的影响。',
   },
   pricing: {
     add_on_changes_in_current_cycle_notice:

@@ -49,7 +49,7 @@ const usage = {
   },
   tenant_members: {
     title: '租戶成員',
-    tooltip: '附加功能，每個成員每月 ${{price, number}}。前三個租戶成員免費。',
+    tooltip: '附加功能，每個成員每月 ${{price, number}}。前 {{basicQuota}} 個租戶成員免費。',
     tooltip_for_enterprise:
       '合同方案中包含前 {{basicQuota}} 個租戶成員免費使用。如果你需要更多，每個租戶成員每月 ${{price, number}}。',
   },
@@ -70,6 +70,18 @@ const usage = {
     title: '進階安全性',
     tooltip:
       '附加功能，完整進階安全性套件的月費為 ${{price, number}}，包括 CAPTCHA、身份鎖定、電子郵件黑名單（即將推出）等。',
+  },
+  saml_applications: {
+    title: 'SAML 應用',
+    tooltip: '附加功能，每個 SAML 應用每月 ${{price, number}}。',
+  },
+  third_party_applications: {
+    title: '第三方應用',
+    tooltip: '附加功能，每個應用每月 ${{price, number}}。',
+  },
+  rbacEnabled: {
+    title: '角色',
+    tooltip: '附加功能，每月固定費率 ${{price, number}}。價格不受全局角色數量影響。',
   },
   pricing: {
     add_on_changes_in_current_cycle_notice:

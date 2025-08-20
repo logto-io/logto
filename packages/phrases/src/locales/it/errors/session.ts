@@ -57,8 +57,7 @@ const session = {
       'L\'indirizzo email "{{email}}" è ristretto. Si prega di sceglierne un altro.',
   },
   google_one_tap: {
-    /** UNTRANSLATED */
-    cookie_mismatch: 'Google One Tap cookie mismatch.',
+    cookie_mismatch: 'Discrepanza dei cookie di Google One Tap.',
     invalid_id_token: 'Token ID Google non valido.',
     unverified_email: 'Email non verificata.',
   },
