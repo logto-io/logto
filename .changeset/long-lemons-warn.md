@@ -6,7 +6,7 @@
 "@logto/core": minor
 ---
 
-add new feature to collect user profile on new user registration
+add a new feature for collecting user profile on new user registration
 
 You can now collect user profile information on the last step of your registration flow.
 
