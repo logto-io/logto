@@ -40,6 +40,7 @@ const sendMessage =
         body: {
           data: {
             to,
+            // @ts-expect-error: TODO @wangsijie, remove this once the connector-kit package is updated in cloud
             type,
             payload: {
               ...payload,

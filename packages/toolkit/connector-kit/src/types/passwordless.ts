@@ -34,6 +34,8 @@ export enum TemplateType {
   UserPermissionValidation = 'UserPermissionValidation',
   /** The template for binding a new identifier to an existing account. */
   BindNewIdentifier = 'BindNewIdentifier',
+  /** The template for sending MFA verification code. */
+  MfaVerification = 'MfaVerification',
 }
 
 export const templateTypeGuard = z.nativeEnum(TemplateType);

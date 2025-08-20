@@ -1,3 +1,4 @@
+import { TemplateType } from '@logto/connector-kit';
 import {
   InteractionEvent,
   SignInIdentifier,
@@ -54,7 +55,10 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
             libraries,
             queries,
             identifier,
-            getTemplateTypeByEvent(interactionEvent)
+            // If the interaction already identified a user, we are binding a new identifier
+            ctx.experienceInteraction.identifiedUserId
+              ? TemplateType.BindNewIdentifier
+              : getTemplateTypeByEvent(interactionEvent)
           ),
         libraries,
         ctx,

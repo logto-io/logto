@@ -16,6 +16,10 @@
       "content": "This is for resetting password purposes only. Your verification code is {{code}}."
     },
     {
+      "usageType": "MfaVerification",
+      "content": "This is for MFA verification purposes only. Your verification code is {{code}}."
+    },
+    {
       "usageType": "Generic",
       "content": "This is for generic purpose through management API only. Your verification code is {{code}}."
     }
