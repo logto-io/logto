@@ -45,7 +45,10 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
     }),
     async (ctx, next) => {
       const { identifier, interactionEvent } = ctx.guard.body;
-      await ctx.experienceInteraction.guardCaptcha();
+      // Require captcha if the user is not identified.
+      if (!ctx.experienceInteraction.identifiedUserId) {
+        await ctx.experienceInteraction.guardCaptcha();
+      }
 
       ctx.body = await sendCode({
         identifier,
