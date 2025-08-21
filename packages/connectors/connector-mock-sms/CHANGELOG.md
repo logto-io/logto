@@ -1,5 +1,13 @@
 # @logto/connector-mock-sms
 
+## 2.3.0
+
+### Minor Changes
+
+- 52a618069: add new template type MfaVerification for verification code
+
+If you are using Email/SMS as a MFA method, you should update your connector configuration to include the new template type `MfaVerification` for verification code.
+
 ## 2.2.1
 
 ### Patch Changes
