@@ -48,7 +48,7 @@ function PlanUsage({ periodicUsage, usageAddOnSkus }: Props) {
       (key) =>
         isPaidTenant || (onlyShowPeriodicUsage && (key === 'mauLimit' || key === 'tokenLimit'))
     )
-    // TODO: remove this filer after the pro plan migration is complete.
+    // TODO: remove this filter after the pro plan migration is complete.
     .filter((key) => {
       return filterNewUsageKeysForLegacyPro(key, planId);
     })
