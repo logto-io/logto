@@ -79,14 +79,14 @@ describe('get subscription data with cache expiration', () => {
     jest.advanceTimersByTime(60 * 60 * 24);
     mockGetTenantSubscription.mockResolvedValueOnce({
       ...mockSubscription,
-      planId: ReservedPlanId.Pro202411,
+      planId: ReservedPlanId.Pro202509,
     });
 
     // Should get new subscription data
     const refreshedSubscriptionData = await subscription.getSubscriptionData();
     expect(refreshedSubscriptionData).toEqual({
       ...mockSubscription,
-      planId: ReservedPlanId.Pro202411,
+      planId: ReservedPlanId.Pro202509,
     });
     expect(mockGetTenantSubscription).toHaveBeenCalled();
   });
@@ -118,14 +118,14 @@ describe('get subscription data with cache expiration', () => {
     jest.advanceTimersByTime(2 * 60 * 60);
     mockGetTenantSubscription.mockResolvedValueOnce({
       ...mockFarFutureSubscription,
-      planId: ReservedPlanId.Pro202411,
+      planId: ReservedPlanId.Pro202509,
     });
 
     // Should get new subscription data due to max TTL
     const refreshedSubscriptionData = await subscription.getSubscriptionData();
     expect(refreshedSubscriptionData).toEqual({
       ...mockFarFutureSubscription,
-      planId: ReservedPlanId.Pro202411,
+      planId: ReservedPlanId.Pro202509,
     });
     expect(mockGetTenantSubscription).toHaveBeenCalled();
   });
@@ -149,14 +149,14 @@ describe('get subscription data with cache expiration', () => {
     jest.advanceTimersByTime(60 * 60);
     mockGetTenantSubscription.mockResolvedValueOnce({
       ...mockExpiredSubscription,
-      planId: ReservedPlanId.Pro202411,
+      planId: ReservedPlanId.Pro202509,
     });
 
     // Should get new subscription data since the cache should be invalidated
     const refreshedSubscriptionData = await subscription.getSubscriptionData();
     expect(refreshedSubscriptionData).toEqual({
       ...mockExpiredSubscription,
-      planId: ReservedPlanId.Pro202411,
+      planId: ReservedPlanId.Pro202509,
     });
     expect(mockGetTenantSubscription).toHaveBeenCalled();
   });

@@ -42,6 +42,7 @@ export const planIdOrder: Record<string, number> = Object.freeze({
   [ReservedPlanId.Free]: 0,
   [ReservedPlanId.Pro]: 1,
   [ReservedPlanId.Pro202411]: 1,
+  [ReservedPlanId.Pro202509]: 1,
 });
 
 export const checkoutStateQueryKey = 'checkout-state';

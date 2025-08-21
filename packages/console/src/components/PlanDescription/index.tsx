@@ -10,6 +10,7 @@ const registeredPlanDescriptionPhrasesMap: Record<
   [ReservedPlanId.Free]: 'free_plan_description',
   [ReservedPlanId.Pro]: 'pro_plan_description',
   [ReservedPlanId.Pro202411]: 'pro_plan_description',
+  [ReservedPlanId.Pro202509]: 'pro_plan_description',
 };
 
 const getRegisteredPlanDescriptionPhrase = (

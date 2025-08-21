@@ -19,9 +19,15 @@ export enum ReservedPlanId {
    */
   Admin = 'admin',
   /**
-   * The latest Pro plan ID applied from 2024-11.
+   * @deprecated
+   * Grandfathered Pro plan ID deprecated from 2025-09.
+   * Use {@link Pro202509} instead.
    */
   Pro202411 = 'pro-202411',
+  /**
+   * Latest Pro plan ID applied from 2025-09.
+   */
+  Pro202509 = 'pro-202509',
 }
 
 /**
