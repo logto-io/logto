@@ -1,7 +1,6 @@
 import { type AdminConsoleKey } from '@logto/phrases';
 import type { Application } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
 import { type ReactElement, useContext, useMemo } from 'react';
 import { useController, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -12,7 +11,7 @@ import useSWR, { useSWRConfig } from 'swr';
 import { GtagConversionId, reportConversion } from '@/components/Conversion/utils';
 import LearnMore from '@/components/LearnMore';
 import { pricingLink, defaultPageSize, integrateLogto } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { LinkButton } from '@/ds-components/Button';
@@ -106,7 +105,61 @@ function CreateForm({
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useApi();
 
-  const { hasMachineToMachineAppsReachedLimit } = useApplicationsUsage();
+  const {
+    hasMachineToMachineAppsReachedLimit,
+    hasSamlAppsReachedLimit,
+    hasThirdPartyAppsReachedLimit,
+  } = useApplicationsUsage();
+
+  const applicationType = watch('type');
+  const isThirdPartyApp = watch('isThirdParty');
+
+  const paywall = useMemo(() => {
+    if (isPaidTenant) {
+      return;
+    }
+
+    if (applicationType === ApplicationType.MachineToMachine) {
+      return latestProPlanId;
+    }
+
+    // TODO: remove this dev feature guard after the new app add-on feature is available for all plans.
+    if (isDevFeaturesEnabled && applicationType === ApplicationType.SAML) {
+      return latestProPlanId;
+    }
+
+    if (isDevFeaturesEnabled && isThirdPartyApp) {
+      return latestProPlanId;
+    }
+  }, [applicationType, isPaidTenant, isThirdPartyApp]);
+
+  const hasAddOnTag = useMemo(() => {
+    if (!isPaidTenant) {
+      return false;
+    }
+
+    if (applicationType === ApplicationType.MachineToMachine) {
+      return hasMachineToMachineAppsReachedLimit;
+    }
+
+    // TODO: remove this dev feature guard after the new app add-on feature is available for all plans.
+    if (isDevFeaturesEnabled && applicationType === ApplicationType.SAML) {
+      return hasSamlAppsReachedLimit;
+    }
+
+    if (isDevFeaturesEnabled && isThirdPartyApp) {
+      return hasThirdPartyAppsReachedLimit;
+    }
+
+    return false;
+  }, [
+    applicationType,
+    hasMachineToMachineAppsReachedLimit,
+    hasSamlAppsReachedLimit,
+    hasThirdPartyAppsReachedLimit,
+    isPaidTenant,
+    isThirdPartyApp,
+  ]);
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (data) => {
@@ -165,14 +218,8 @@ function CreateForm({
       <ModalLayout
         title="applications.create"
         subtitle={subtitleElement}
-        paywall={conditional(
-          !isPaidTenant && watch('type') === ApplicationType.MachineToMachine && latestProPlanId
-        )}
-        hasAddOnTag={
-          isPaidTenant &&
-          watch('type') === ApplicationType.MachineToMachine &&
-          hasMachineToMachineAppsReachedLimit
-        }
+        paywall={paywall}
+        hasAddOnTag={hasAddOnTag}
         size={defaultCreateType ? 'medium' : 'large'}
         footer={
           !isCloud &&

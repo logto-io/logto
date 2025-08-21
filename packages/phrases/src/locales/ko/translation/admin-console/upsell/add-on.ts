@@ -14,6 +14,12 @@ const add_on = {
       '추가 멤버는 월 ${{price, number}} / 개당 비용이 청구됩니다. 첫 번째 달은 청구 주기에 따라 비례 배분됩니다. <a>자세히 알아보기</a>',
     organization:
       'Organization 는 무제한 조직과 함께 {{planName}}에 대한 월 ${{price, number}} 추가 기능입니다. 첫 번째 달은 청구 주기에 따라 비례 배분됩니다. <a>자세히 알아보기</a>',
+    /** UNTRANSLATED */
+    saml_apps:
+      'Additional SAML apps cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
+    /** UNTRANSLATED */
+    third_party_apps:
+      'Additional third-party apps cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
   },
 };
 

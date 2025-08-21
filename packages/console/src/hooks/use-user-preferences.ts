@@ -26,6 +26,9 @@ const userPreferencesGuard = z.object({
   enterpriseSsoUpsellNoticeAcknowledged: z.boolean().optional(),
   addOnChangesInCurrentCycleNoticeAcknowledged: z.boolean().optional(),
   securityFeaturesUpsellNoticeAcknowledged: z.boolean().optional(),
+  samlAppsUpsellNoticeAcknowledged: z.boolean().optional(),
+  thirdPartyAppsUpsellNoticeAcknowledged: z.boolean().optional(),
+  rbacUpsellNoticeAcknowledged: z.boolean().optional(),
   /* === Add on feature related fields === */
 });
 

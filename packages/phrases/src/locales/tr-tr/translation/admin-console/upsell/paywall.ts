@@ -50,6 +50,9 @@ const paywall = {
   logto_pricing_button_text: 'Logto Bulut Fiyatlandırması',
   saml_applications:
     'Ek SAML uygulaması, Logto Enterprise planı ile mevcuttur. Yardım için bize ulaşın.',
+  /** UNTRANSLATED */
+  saml_applications_add_on:
+    'Unlock SAML app feature by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
   hooks:
     '{{count, number}} <planName/> webhook sınırına ulaşıldı. Daha fazla webhook oluşturmak için planı yükseltin. Yardım için ihtiyacınız olursa, <a>iletişime geçin</a>.',
   hooks_other:

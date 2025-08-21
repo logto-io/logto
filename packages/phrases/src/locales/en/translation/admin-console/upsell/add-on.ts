@@ -14,6 +14,10 @@ const add_on = {
       'Additional members cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
     organization:
       'Organization is a <span>${{price, number}} per mo</span> add-on for {{planName}} with unlimited organizations. First month prorated based on your billing cycle. <a>Learn more</a>',
+    saml_apps:
+      'Additional SAML apps cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
+    third_party_apps:
+      'Additional third-party apps cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
   },
 };
 

@@ -50,6 +50,9 @@ const paywall = {
   logto_pricing_button_text: 'Logto 클라우드 가격',
   saml_applications:
     '추가 SAML 앱은 Logto 엔터프라이즈 플랜에서 사용할 수 있습니다. 도움이 필요하면 <a>문의하세요</a>.',
+  /** UNTRANSLATED */
+  saml_applications_add_on:
+    'Unlock SAML app feature by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
   hooks:
     '<planName/>의 {{count, number}}개 웹훅 한도에 도달했습니다. 더 많은 웹훅을 생성하려면 플랜을 업그레이드하세요. 도움이 필요하면 <a>문의하기</a>로 연락 주세요.',
   hooks_other:

@@ -14,6 +14,12 @@ const add_on = {
       'Les membres supplémentaires coûtent <span>${{price, number}} par mois / chacun</span>. Le premier mois est calculé au prorata en fonction de votre cycle de facturation. <a>En savoir plus</a>',
     organization:
       "L'organisation est un complément à <span>${{price, number}} par mois</span> pour {{planName}} avec les organisations illimitées. Le premier mois est calculé au prorata en fonction de votre cycle de facturation. <a>En savoir plus</a>",
+    /** UNTRANSLATED */
+    saml_apps:
+      'Additional SAML apps cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
+    /** UNTRANSLATED */
+    third_party_apps:
+      'Additional third-party apps cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
   },
 };
 

@@ -14,6 +14,12 @@ const add_on = {
       '追加メンバーは <span>月額 ${{price, number}} / 個</span> です。初月は請求サイクルに基づいて日割り計算されます。<a>詳細はこちら</a>',
     organization:
       '組織は {{planName}} のアドオンとして <span>月額 ${{price, number}}</span> で、無制限の組織をサポートします。初月は請求サイクルに基づいて日割り計算されます。<a>詳細はこちら</a>',
+    /** UNTRANSLATED */
+    saml_apps:
+      'Additional SAML apps cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
+    /** UNTRANSLATED */
+    third_party_apps:
+      'Additional third-party apps cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
   },
 };
 

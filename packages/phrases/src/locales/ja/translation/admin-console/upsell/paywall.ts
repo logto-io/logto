@@ -50,6 +50,9 @@ const paywall = {
   logto_pricing_button_text: 'Logto クラウド価格設定',
   saml_applications:
     '追加の SAML アプリは Logto エンタープライズプランで利用可能です。サポートが必要な場合は、お問い合わせください。',
+  /** UNTRANSLATED */
+  saml_applications_add_on:
+    'Unlock SAML app feature by upgrading to a paid plan. For any assistance, feel free to <a>contact us</a>.',
   hooks:
     '{{count, number}}の<planName/>ウェブフック制限に達しました。追加のウェブフックを作成するにはプランをアップグレードしてください。<a>お問い合わせ</a>は何かお手伝いが必要な場合はお気軽にどうぞ。',
   hooks_other:

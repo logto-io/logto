@@ -14,6 +14,12 @@ const add_on = {
       '额外成员的费用是 <span>每月 / 每个 ${{price, number}}</span>。第一个月根据你的计费周期按比例收费。<a>了解更多</a>',
     organization:
       '组织是 {{planName}} 的一个每月 <span>${{price, number}}</span> 的附加功能，可提供无限制的组织。第一个月根据你的计费周期按比例收费。<a>了解更多</a>',
+    /** UNTRANSLATED */
+    saml_apps:
+      'Additional SAML apps cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
+    /** UNTRANSLATED */
+    third_party_apps:
+      'Additional third-party apps cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
   },
 };
 
