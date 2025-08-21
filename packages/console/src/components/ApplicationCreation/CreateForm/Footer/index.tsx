@@ -73,7 +73,7 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
           <Trans
             components={{
               span: <span className={styles.strong} />,
-              a: <TextLink to={addOnPricingExplanationLink} />,
+              a: <TextLink targetBlank to={addOnPricingExplanationLink} />,
             }}
           >
             {t('add_on.footer.machine_to_machine_app', {
@@ -144,7 +144,7 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
             <Trans
               components={{
                 span: <span className={styles.strong} />,
-                a: <TextLink to={addOnPricingExplanationLink} />,
+                a: <TextLink targetBlank to={addOnPricingExplanationLink} />,
               }}
             >
               {t('add_on.footer.saml_apps', {
@@ -187,7 +187,7 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
             <Trans
               components={{
                 span: <span className={styles.strong} />,
-                a: <TextLink to={addOnPricingExplanationLink} />,
+                a: <TextLink targetBlank to={addOnPricingExplanationLink} />,
               }}
             >
               {t('add_on.footer.third_party_apps', {
