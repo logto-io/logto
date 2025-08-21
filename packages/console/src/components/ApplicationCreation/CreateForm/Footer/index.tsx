@@ -9,7 +9,11 @@ import SkuName from '@/components/SkuName';
 import { officialWebsiteContactPageLink } from '@/consts';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import { addOnPricingExplanationLink } from '@/consts/external-links';
-import { machineToMachineAddOnUnitPrice } from '@/consts/subscriptions';
+import {
+  machineToMachineAddOnUnitPrice,
+  samlApplicationsAddOnUnitPrice,
+  thirdPartyApplicationsAddOnUnitPrice,
+} from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button, { LinkButton } from '@/ds-components/Button';
 import TextLink from '@/ds-components/TextLink';
@@ -148,7 +152,7 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
               }}
             >
               {t('add_on.footer.saml_apps', {
-                price: machineToMachineAddOnUnitPrice,
+                price: samlApplicationsAddOnUnitPrice,
               })}
             </Trans>
           </AddOnNoticeFooter>
@@ -191,7 +195,7 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
               }}
             >
               {t('add_on.footer.third_party_apps', {
-                price: machineToMachineAddOnUnitPrice,
+                price: thirdPartyApplicationsAddOnUnitPrice,
               })}
             </Trans>
           </AddOnNoticeFooter>
