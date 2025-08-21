@@ -1,4 +1,5 @@
 import { ApplicationType } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { type Ref, forwardRef, useContext } from 'react';
 
@@ -8,7 +9,6 @@ import FeatureTag, { CombinedAddOnAndFeatureTag } from '@/components/FeatureTag'
 import { isDevFeaturesEnabled } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
-import { TenantsContext } from '@/contexts/TenantsProvider';
 import { isPaidPlan } from '@/utils/subscription';
 
 import GuideCard, { type SelectedGuide } from '../GuideCard';
@@ -35,7 +35,7 @@ function getPaywallTag(
     return isDevFeaturesEnabled ? (
       <CombinedAddOnAndFeatureTag
         hasAddOnTag={isPaidPlan && currentSubscriptionQuota.thirdPartyApplicationsLimit !== null}
-        paywall={latestProPlanId}
+        paywall={conditional(!isPaidPlan && latestProPlanId)}
       />
     ) : (
       <FeatureTag isVisible={!isPaidPlan} plan={latestProPlanId} />
@@ -44,7 +44,10 @@ function getPaywallTag(
 
   if (guideMetadata.target === ApplicationType.SAML) {
     return isDevFeaturesEnabled ? (
-      <CombinedAddOnAndFeatureTag hasAddOnTag={isPaidPlan} paywall={latestProPlanId} />
+      <CombinedAddOnAndFeatureTag
+        hasAddOnTag={isPaidPlan}
+        paywall={conditional(!isPaidPlan && latestProPlanId)}
+      />
     ) : (
       <FeatureTag isEnterprise isVisible={!isEnterprisePlan} />
     );
@@ -55,7 +58,6 @@ function GuideCardGroup(
   { className, categoryName, guides, hasCardBorder, hasCardButton, onClickGuide }: Props,
   ref: Ref<HTMLDivElement>
 ) {
-  const { isDevTenant } = useContext(TenantsContext);
   const {
     currentSubscriptionQuota,
     currentSubscription: { planId, isEnterprisePlan },
