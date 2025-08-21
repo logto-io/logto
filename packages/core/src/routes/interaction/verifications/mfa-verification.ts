@@ -110,6 +110,7 @@ export const verifyMfa = async (
     const mfaData = userMfaDataGuard.safeParse(logtoConfig[userMfaDataKey]);
     const skipMfaOnSignIn = mfaData.success ? mfaData.data.skipMfaOnSignIn : undefined;
     const canSkipMfa = skipMfaOnSignIn && policy !== MfaPolicy.Mandatory;
+
     assertThat(
       Boolean(canSkipMfa) || Boolean(verifiedMfa),
       new RequestError(

@@ -39,10 +39,10 @@ const mfa = {
     'A verificação em duas etapas foi ativada para esta conta. Por favor, insira o código de utilização única mostrado na sua aplicação autenticadora vinculada.',
   enter_email_verification_code: 'Introduzir código de verificação por e‑mail',
   enter_email_verification_code_description:
-    'A autenticação em dois passos está ativada para esta conta. Introduza o código de verificação enviado para o seu endereço de e‑mail.',
+    'A autenticação em dois passos está ativada para esta conta. Introduza o código de verificação enviado para {{identifier}}.',
   enter_phone_verification_code: 'Introduzir código de verificação por SMS',
   enter_phone_verification_code_description:
-    'A autenticação em dois passos está ativada para esta conta. Introduza o código de verificação por SMS enviado para o seu número de telefone.',
+    'A autenticação em dois passos está ativada para esta conta. Introduza o código de verificação por SMS enviado para {{identifier}}.',
   link_another_mfa_factor: 'Mudar para outro método',
   save_backup_code: 'Guarde o seu código de backup',
   save_backup_code_description:

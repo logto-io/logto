@@ -69,9 +69,15 @@ const mfaFactorsGuard = s.array(
   ])
 );
 
+const mfaFactorEnumValues = [
+  MfaFactor.EmailVerificationCode,
+  MfaFactor.PhoneVerificationCode,
+] as const;
+
 export const mfaErrorDataGuard = s.object({
   availableFactors: mfaFactorsGuard,
   skippable: s.optional(s.boolean()),
+  maskedIdentifiers: s.optional(s.record(s.enums(mfaFactorEnumValues), s.string())),
 });
 
 export const mfaFlowStateGuard = mfaErrorDataGuard;

@@ -36,10 +36,10 @@ const mfa = {
     '此帳戶啟用了兩步驗證。請輸入在您關聯的認證應用中顯示的一次性代碼。',
   enter_email_verification_code: '輸入電郵驗證碼',
   enter_email_verification_code_description:
-    '此帳戶已啟用兩步認證。請輸入發送到你電郵地址的驗證碼。',
+    '此帳戶已啟用兩步認證。請輸入發送到你電郵地址的驗證碼。 {{identifier}}',
   enter_phone_verification_code: '輸入短訊驗證碼',
   enter_phone_verification_code_description:
-    '此帳戶已啟用兩步認證。請輸入發送到你手機號碼的短訊驗證碼。',
+    '此帳戶已啟用兩步認證。請輸入發送到你手機號碼的短訊驗證碼。 {{identifier}}',
   link_another_mfa_factor: '切換到另一種方法',
   save_backup_code: '保存您的備份代碼',
   save_backup_code_description:

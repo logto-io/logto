@@ -39,10 +39,10 @@ const mfa = {
     'Bu hesap için iki aşamalı doğrulama etkinleştirildi. Lütfen bağlı kimlik doğrulama uygulamanızda gösterilen tek kullanımlık kodu girin.',
   enter_email_verification_code: 'E‑posta doğrulama kodunu girin',
   enter_email_verification_code_description:
-    'Bu hesapta iki adımlı kimlik doğrulama etkin. Lütfen e‑posta adresinize gönderilen doğrulama kodunu girin.',
+    'Bu hesapta iki adımlı kimlik doğrulama etkin. Lütfen {{identifier}} adresine gönderilen doğrulama kodunu girin.',
   enter_phone_verification_code: 'SMS doğrulama kodunu girin',
   enter_phone_verification_code_description:
-    'Bu hesapta iki adımlı kimlik doğrulama etkin. Lütfen telefon numaranıza gönderilen SMS doğrulama kodunu girin.',
+    'Bu hesapta iki adımlı kimlik doğrulama etkin. Lütfen {{identifier}} numarasına gönderilen SMS doğrulama kodunu girin.',
   link_another_mfa_factor: 'Başka bir yönteme geçin',
   save_backup_code: 'Yedek kodunuzu kaydedin',
   save_backup_code_description:
