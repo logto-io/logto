@@ -1,5 +1,13 @@
 # Change Log
 
+## 4.5.1
+
+### Minor Changes
+
+- 52a618069: add new template type MfaVerification for verification code
+
+If you are using Email/SMS as a MFA method, you should update your connector configuration to include the new template type `MfaVerification` for verification code.
+
 ## 4.4.0
 
 ### Minor Changes
