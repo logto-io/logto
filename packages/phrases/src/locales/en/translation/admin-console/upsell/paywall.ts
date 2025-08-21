@@ -34,13 +34,7 @@ const paywall = {
   standard_connectors_pro_other:
     '{{count, number}} standard connectors of <planName/> limit reached. To meet your team’s needs, upgrade to the Enterprise plan for additional social connectors and the ability to create your own connectors using OIDC, OAuth 2.0, and SAML protocols. Feel free to <a>contact us</a> if you need any assistance.',
   roles:
-    '{{count, number}} role of <planName/> limit reached. Upgrade plan to add additional roles and permissions. Feel free to <a>contact us</a> if you need any assistance.',
-  roles_other:
-    '{{count, number}} roles of <planName/> limit reached. Upgrade plan to add additional roles and permissions. Feel free to <a>contact us</a> if you need any assistance.',
-  machine_to_machine_roles:
-    '{{count, number}} machine-to-machine role of <planName/> limit reached. Upgrade plan to add additional roles and permissions. Feel free to <a>contact us</a> if you need any assistance.',
-  machine_to_machine_roles_other:
-    '{{count, number}} machine-to-machine roles of <planName/> limit reached. Upgrade plan to add additional roles and permissions. Feel free to <a>contact us</a> if you need any assistance.',
+    'Upgrade plan to add additional roles and permissions. Feel free to <a>contact us</a> if you need any assistance.',
   scopes_per_role:
     '{{count, number}} permission per role of <planName/> limit reached. Upgrade plan to add additional roles and permissions. For any assistance, feel free to <a>contact us</a>.',
   scopes_per_role_other:

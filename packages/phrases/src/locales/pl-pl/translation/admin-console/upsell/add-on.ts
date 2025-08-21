@@ -14,12 +14,12 @@ const add_on = {
       'Dodatkowi członkowie kosztują <span>${{price, number}} miesięcznie / każdy</span>. Pierwszy miesiąc proporcjonalny w zależności od cyklu rozliczeniowego. <a>Dowiedz się więcej</a>',
     organization:
       'Organizacja to dodatek za <span>${{price, number}} miesięcznie</span> do {{planName}} z nieograniczoną liczbą organizacji. Pierwszy miesiąc proporcjonalny w zależności od cyklu rozliczeniowego. <a>Dowiedz się więcej</a>',
-    /** UNTRANSLATED */
     saml_apps:
-      'Additional SAML apps cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
-    /** UNTRANSLATED */
+      'Dodatkowe aplikacje SAML kosztują <span>${{price, number}} miesięcznie / każda</span>. Pierwszy miesiąc proporcjonalny w zależności od cyklu rozliczeniowego. <a>Dowiedz się więcej</a>',
     third_party_apps:
-      'Additional third-party apps cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
+      'Dodatkowe aplikacje innych firm kosztują <span>${{price, number}} miesięcznie / każda</span>. Pierwszy miesiąc proporcjonalny w zależności od cyklu rozliczeniowego. <a>Dowiedz się więcej</a>',
+    roles:
+      'Kontrola dostępu oparta na rolach to dodatek za <span>${{price, number}} miesięcznie</span> do planu Pro z nieograniczoną liczbą ról. Pierwszy miesiąc proporcjonalny w zależności od cyklu rozliczeniowego. <a>Dowiedz się więcej</a>',
   },
 };
 

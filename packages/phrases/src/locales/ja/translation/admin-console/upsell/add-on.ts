@@ -14,12 +14,12 @@ const add_on = {
       '追加メンバーは <span>月額 ${{price, number}} / 個</span> です。初月は請求サイクルに基づいて日割り計算されます。<a>詳細はこちら</a>',
     organization:
       '組織は {{planName}} のアドオンとして <span>月額 ${{price, number}}</span> で、無制限の組織をサポートします。初月は請求サイクルに基づいて日割り計算されます。<a>詳細はこちら</a>',
-    /** UNTRANSLATED */
     saml_apps:
-      'Additional SAML apps cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
-    /** UNTRANSLATED */
+      '追加の SAML アプリは <span>月額 ${{price, number}} / 個</span> のコストがかかります。初月は請求サイクルに基づいて日割り計算されます。<a>詳細はこちら</a>',
     third_party_apps:
-      'Additional third-party apps cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
+      '追加のサードパーティアプリは <span>月額 ${{price, number}} / 個</span> のコストがかかります。初月は請求サイクルに基づいて日割り計算されます。<a>詳細はこちら</a>',
+    roles:
+      '役割ベースのアクセス制御はプロ プラン用の <span>月額 ${{price, number}}</span> のアドオンで、無制限の役割があります。初月は請求サイクルに基づいて日割り計算されます。<a>詳細はこちら</a>',
   },
 };
 

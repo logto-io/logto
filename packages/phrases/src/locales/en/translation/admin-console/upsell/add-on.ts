@@ -18,6 +18,8 @@ const add_on = {
       'Additional SAML apps cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
     third_party_apps:
       'Additional third-party apps cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
+    roles:
+      'Role-based access control is a <span>${{price, number}} per mo</span> add-on for Pro plan with unlimited roles. First month prorated based on your billing cycle. <a>Learn more</a>',
   },
 };
 

@@ -14,12 +14,12 @@ const add_on = {
       'Ek üyeler aylık <span>${{price, number}} / adet</span> tutarındadır. İlk ay faturalandırma döngünüze göre orantılı olarak hesaplanır. <a>Daha fazla bilgi edinin</a>',
     organization:
       'Organizasyonlar, {{planName}} için sınırsız organizasyon içeren aylık <span>${{price, number}}</span> tutarında ek bir özelliktir. İlk ay faturalandırma döngünüze göre orantılı olarak hesaplanır. <a>Daha fazla bilgi edinin</a>',
-    /** UNTRANSLATED */
     saml_apps:
-      'Additional SAML apps cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
-    /** UNTRANSLATED */
+      'Ek SAML uygulamaları, aylık <span>${{price, number}} / adet</span> tutarındadır. İlk ay faturalandırma döngünüze göre orantılı olarak hesaplanır. <a>Daha fazla bilgi edinin</a>',
     third_party_apps:
-      'Additional third-party apps cost <span>${{price, number}} per mo / ea</span>. First month prorated based on your billing cycle. <a>Learn more</a>',
+      'Ek üçüncü taraf uygulamaları, aylık <span>${{price, number}} / adet</span> tutarındadır. İlk ay faturalandırma döngünüze göre orantılı olarak hesaplanır. <a>Daha fazla bilgi edinin</a>',
+    roles:
+      'Rol tabanlı erişim kontrolü, sınırsız rol ile Pro plan için aylık <span>${{price, number}}</span> tutarında bir eklentidir. İlk ay faturalandırma döngünüze göre orantılı olarak hesaplanır. <a>Daha fazla bilgi edinin</a>',
   },
 };
 
