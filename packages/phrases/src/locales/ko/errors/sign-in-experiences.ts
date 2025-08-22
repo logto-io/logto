@@ -21,10 +21,16 @@ const sign_in_experiences = {
     '이메일 확인 코드가 로그인에 대해 이메일 확인이 활성화된 경우 MFA에 사용할 수 없습니다.',
   phone_verification_code_cannot_be_used_for_mfa:
     'SMS 확인 코드가 로그인에 대해 SMS 확인이 활성화된 경우 MFA에 사용할 수 없습니다.',
+  email_verification_code_cannot_be_used_for_sign_in:
+    '이메일 확인 코드는 MFA 에 활성화된 경우 로그인에 사용할 수 없습니다.',
+  phone_verification_code_cannot_be_used_for_sign_in:
+    'SMS 확인 코드는 MFA 에 활성화된 경우 로그인에 사용할 수 없습니다.',
   duplicated_sign_up_identifiers: '중복된 회원가입 식별자가 감지되었습니다.',
   missing_sign_up_identifiers: '기본 회원가입 식별자는 비워 둘 수 없습니다.',
   invalid_custom_email_blocklist_format:
     '잘못된 사용자 정의 이메일 차단 목록 항목: {{items, list(type:conjunction)}}. 각 항목은 유효한 이메일 주소 또는 이메일 도메인이어야 합니다. 예: foo@example.com 또는 @example.com.',
+  forgot_password_method_requires_connector:
+    '비밀번호 찾기 방법은 해당 {{method}} 커넥터를 구성해야 합니다.',
 };
 
 export default Object.freeze(sign_in_experiences);

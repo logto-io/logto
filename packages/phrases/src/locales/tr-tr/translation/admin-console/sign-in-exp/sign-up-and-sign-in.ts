@@ -31,6 +31,12 @@ const sign_up_and_sign_in = {
     auth_swap_tip:
       'Akışta ilk olarak hangisinin göründüğünü belirlemek için seçeneklerin yerlerini değiştirin.',
     require_auth_factor: 'En az bir doğrulama faktörü seçmeniz gerekiyor.',
+    forgot_password_verification_method: 'Şifre sıfırlama doğrulama yöntemi',
+    forgot_password_description:
+      'Kullanıcılar, mevcut olan herhangi bir doğrulama yöntemi kullanarak şifrelerini sıfırlayabilir.',
+    add_verification_method: 'Doğrulama yöntemi ekle',
+    email_verification_code: 'E-posta doğrulama kodu',
+    phone_verification_code: 'Telefon doğrulama kodu',
   },
   social_sign_in: {
     title: 'SOSYAL MEDYA İLE OTURUM AÇIN',
@@ -55,6 +61,10 @@ const sign_up_and_sign_in = {
       'Bu, kaydolma işlemi sırasında bir şifre belirleme seçeneğini etkinleştirdiğiniz için önemlidir.',
     verification_code_auth:
       'Bu, yalnızca doğrulama kodu sağlama seçeneğini etkinleştirdiğiniz için önemlidir. Kayıt işlemi sırasında şifre oluşturma izni verildiğinde kutuyu kaldırabilirsiniz.',
+    email_mfa_enabled:
+      'E-posta doğrulama kodu zaten MFA için etkin, bu yüzden güvenlik için birincil oturum açma yöntemi olarak tekrar kullanılamaz.',
+    phone_mfa_enabled:
+      'Telefon doğrulama kodu zaten MFA için etkin, bu yüzden güvenlik için birincil oturum açma yöntemi olarak tekrar kullanılamaz.',
     delete_sign_in_method: 'Bu, {{identifier}} gerekliliğini belirlediğiniz için önemlidir.',
     password_disabled_notification:
       'Kullanıcı adı ile kaydolma için "Şifrenizi oluşturun" seçeneği devre dışı bırakıldı, bu da kullanıcıların oturum açmasını engelleyebilir. Kaydetmeye devam etmek için onaylayın.',

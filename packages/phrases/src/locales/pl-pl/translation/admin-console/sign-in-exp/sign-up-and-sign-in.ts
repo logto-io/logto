@@ -31,6 +31,12 @@ const sign_up_and_sign_in = {
     auth_swap_tip:
       'Zamień poniższe opcje, aby określić, która pojawia się jako pierwsza w procesie.',
     require_auth_factor: 'Musisz wybrać co najmniej jeden czynnik uwierzytelniający.',
+    forgot_password_verification_method: 'Metoda weryfikacji zapomnianego hasła',
+    forgot_password_description:
+      'Użytkownicy mogą zresetować swoje hasło, używając dowolnej dostępnej metody weryfikacji.',
+    add_verification_method: 'Dodaj metodę weryfikacji',
+    email_verification_code: 'Kod weryfikacyjny e-mail',
+    phone_verification_code: 'Kod weryfikacyjny telefonu',
   },
   social_sign_in: {
     title: 'LOGOWANIE SPOŁECZNOŚCIOWE',
@@ -55,6 +61,10 @@ const sign_up_and_sign_in = {
       'Jest to istotne, ponieważ umożliwiłeś opcję tworzenia hasła podczas procesu rejestracji.',
     verification_code_auth:
       'Jest to istotne, ponieważ umożliwiłeś wyłącznie opcję podania kodu weryfikacyjnego podczas rejestracji. Możesz odznaczyć pole wyboru, gdy dozwolone jest ustawienie hasła podczas procesu rejestracji.',
+    email_mfa_enabled:
+      'Kod weryfikacyjny e-mail jest już włączony dla MFA, więc nie może być ponownie użyty jako główna metoda logowania dla bezpieczeństwa.',
+    phone_mfa_enabled:
+      'Kod weryfikacyjny telefonu jest już włączony dla MFA, więc nie może być ponownie użyty jako główna metoda logowania dla bezpieczeństwa.',
     delete_sign_in_method:
       'Jest to istotne, ponieważ wybrałeś {{identifier}} jako wymagany identyfikator.',
     password_disabled_notification:

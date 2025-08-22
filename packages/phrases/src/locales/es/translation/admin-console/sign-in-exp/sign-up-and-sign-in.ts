@@ -34,6 +34,12 @@ const sign_up_and_sign_in = {
     auth_swap_tip:
       'Intercambia las opciones a continuación para determinar cuál aparece primero en el proceso.',
     require_auth_factor: 'Debes seleccionar al menos un factor de autenticación.',
+    forgot_password_verification_method: 'Método de verificación de contraseña olvidada',
+    forgot_password_description:
+      'Los usuarios pueden restablecer su contraseña utilizando cualquier método de verificación disponible.',
+    add_verification_method: 'Agregar método de verificación',
+    email_verification_code: 'Código de verificación de correo electrónico',
+    phone_verification_code: 'Código de verificación de teléfono',
   },
   social_sign_in: {
     title: 'INICIO DE SESIÓN SOCIAL',
@@ -59,6 +65,10 @@ const sign_up_and_sign_in = {
       'Es esencial ya que has habilitado la opción de establecer una contraseña durante el proceso de registro.',
     verification_code_auth:
       'Es esencial ya que solo has habilitado la opción de proporcionar un código de verificación al registrarse. Se puede desactivar la opción si se permite la configuración de contraseña durante el proceso de registro.',
+    email_mfa_enabled:
+      'El código de verificación de correo electrónico ya está habilitado para MFA, por lo que no se puede reutilizar como el método de inicio de sesión principal por razones de seguridad.',
+    phone_mfa_enabled:
+      'El código de verificación de teléfono ya está habilitado para MFA, por lo que no se puede reutilizar como el método de inicio de sesión principal por razones de seguridad.',
     delete_sign_in_method:
       'Es esencial ya que has seleccionado {{identifier}} como identificador obligatorio.',
     password_disabled_notification:

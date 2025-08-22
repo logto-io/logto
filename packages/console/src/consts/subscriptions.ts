@@ -24,6 +24,9 @@ export const organizationAddOnUnitPrice = 48;
 export const tokenAddOnUnitPrice = 80;
 export const hooksAddOnUnitPrice = 2;
 export const securityFeaturesAddOnUnitPrice = 48;
+export const thirdPartyApplicationsAddOnUnitPrice = 8;
+export const samlApplicationsAddOnUnitPrice = 96;
+export const rbacEnabledAddOnUnitPrice = 32;
 /* === Add-on unit price (in USD) === */
 
 /**

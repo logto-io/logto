@@ -27,6 +27,11 @@ const sign_up_and_sign_in = {
     verification_code_auth: '验证码',
     auth_swap_tip: '交换以下选项的位置即可设定它们在用户登录流程中出现的先后。',
     require_auth_factor: '请至少选择一种认证方式。',
+    forgot_password_verification_method: '忘记密码验证方式',
+    forgot_password_description: '用户可以使用任何可用的验证方式重置密码。',
+    add_verification_method: '添加验证方式',
+    email_verification_code: '邮箱验证码',
+    phone_verification_code: '手机验证码',
   },
   social_sign_in: {
     title: '社交登录',
@@ -49,6 +54,9 @@ const sign_up_and_sign_in = {
     password_auth: '因注册设置里你启用了用户名密码标识。这个信息在用户登录时，属于必选项。',
     verification_code_auth:
       '因注册设置里你启用了验证码标识，验证码属于用户必选项。开启密码注册后，你可以选择关闭验证码登录。',
+    email_mfa_enabled:
+      '电子邮件验证码已启用为多因素身份验证，所以不能重复用于主要登录方式以确保安全。',
+    phone_mfa_enabled: '手机验证码已启用为多因素身份验证，所以不能重复用于主要登录方式以确保安全。',
     delete_sign_in_method:
       '因注册设置里你启用了{{identifier}}标识。这些信息在用户登录时，属于必选项。',
     password_disabled_notification:

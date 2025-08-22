@@ -26,10 +26,16 @@ const sign_in_experiences = {
     "Le code de vérification par e-mail ne peut pas être utilisé pour l'authentification multifactorielle lorsque la vérification de l'e-mail est activée pour la connexion.",
   phone_verification_code_cannot_be_used_for_mfa:
     "Le code de vérification SMS ne peut pas être utilisé pour l'authentification multifactorielle lorsque la vérification SMS est activée pour la connexion.",
+  email_verification_code_cannot_be_used_for_sign_in:
+    "Le code de vérification par e-mail ne peut pas être utilisé pour la connexion lorsqu'il est activé pour la MFA.",
+  phone_verification_code_cannot_be_used_for_sign_in:
+    "Le code de vérification SMS ne peut pas être utilisé pour la connexion lorsqu'il est activé pour la MFA.",
   duplicated_sign_up_identifiers: "Des identifiants d'inscription en double ont été détectés.",
   missing_sign_up_identifiers: "L'identifiant principal d'inscription ne peut pas être vide.",
   invalid_custom_email_blocklist_format:
     "Articles non valides de la liste de blocage d'e-mails personnalisés : {{items, list(type:conjunction)}}. Chaque élément doit être une adresse e-mail ou un domaine de messagerie valide, par exemple, foo@example.com ou @example.com.",
+  forgot_password_method_requires_connector:
+    "La méthode de mot de passe oublié nécessite qu'un connecteur {{method}} correspondant soit configuré.",
 };
 
 export default Object.freeze(sign_in_experiences);

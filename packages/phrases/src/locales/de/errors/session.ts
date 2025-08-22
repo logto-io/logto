@@ -58,8 +58,7 @@ const session = {
     email_not_allowed: 'Die E-Mail-Adresse "{{email}}" ist eingeschränkt. Bitte wähle eine andere.',
   },
   google_one_tap: {
-    /** UNTRANSLATED */
-    cookie_mismatch: 'Google One Tap cookie mismatch.',
+    cookie_mismatch: 'Google One Tap Cookie-Störung.',
     invalid_id_token: 'Ungültiges Google-ID-Token.',
     unverified_email: 'Unbestätigte E-Mail.',
   },

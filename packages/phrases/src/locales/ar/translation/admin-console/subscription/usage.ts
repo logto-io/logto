@@ -54,7 +54,7 @@ const usage = {
   tenant_members: {
     title: 'أعضاء المستأجر',
     tooltip:
-      'ميزة إضافية بسعر قدره ${{price, number}} لكل عضو في المستأجر شهريًا. الأعضاء الأولى 3 في المستأجر مجانية.',
+      'ميزة إضافية بسعر قدره ${{price, number}} لكل عضو في المستأجر شهريًا. الأعضاء الأولى {{basicQuota}} في المستأجر مجانية.',
     tooltip_for_enterprise:
       'تشمل خطتك القائمة على العقد أول {{basicQuota}} من أعضاء المستأجر وتكون مجانية للاستخدام. إذا كنت بحاجة إلى المزيد ، {{price, number}} لكل عضو مستأجر شهريًا.',
   },
@@ -75,6 +75,19 @@ const usage = {
     title: 'الأمان المتقدم',
     tooltip:
       'ميزة إضافية بسعر ${{price, number}}/الشهر لحزمة الأمان المتقدمة الكاملة، بما في ذلك CAPTCHA، قفل المعرف، قائمة البريد الإلكتروني المحظورة (قريبًا)، والمزيد.',
+  },
+  saml_applications: {
+    title: 'تطبيق SAML',
+    tooltip: 'ميزة إضافية بسعر ${{price, number}} لكل تطبيق SAML شهريًا.',
+  },
+  third_party_applications: {
+    title: 'تطبيقات الطرف الثالث',
+    tooltip: 'ميزة إضافية بسعر ${{price, number}} لكل تطبيق شهريًا.',
+  },
+  rbacEnabled: {
+    title: 'الأدوار',
+    tooltip:
+      'ميزة إضافية بسعر ثابت ${{price, number}} شهريًا. السعر لا يتأثر بعدد الأدوار العالمية.',
   },
   pricing: {
     add_on_changes_in_current_cycle_notice:

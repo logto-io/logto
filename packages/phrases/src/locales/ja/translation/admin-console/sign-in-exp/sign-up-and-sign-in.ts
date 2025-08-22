@@ -30,6 +30,12 @@ const sign_up_and_sign_in = {
     verification_code_auth: '確認コード',
     auth_swap_tip: '以下のオプションを交換して、フローで最初に表示されるオプションを決定します。',
     require_auth_factor: '少なくとも 1 つの認証要素を選択する必要があります。',
+    forgot_password_verification_method: 'パスワードを忘れたときの確認方法',
+    forgot_password_description:
+      'ユーザーは利用可能な確認方法を使用してパスワードをリセットできます。',
+    add_verification_method: '確認方法を追加',
+    email_verification_code: 'メール確認コード',
+    phone_verification_code: '電話確認コード',
   },
   social_sign_in: {
     title: 'ソーシャルサインイン',
@@ -54,6 +60,10 @@ const sign_up_and_sign_in = {
       'これは、サインアッププロセス中にパスワードを設定するオプションを有効にした場合に必要です。',
     verification_code_auth:
       'これは、サインアップ時に確認コードの提供オプションのみを有効にした場合に必要です。サインアッププロセスでパスワード設定を許可する場合は、ボックスのチェックを外してもかまいません。',
+    email_mfa_enabled:
+      'メール確認コードはすでに MFA に対して有効になっているため、セキュリティのためにプライマリサインイン方法として再利用することはできません。',
+    phone_mfa_enabled:
+      '電話確認コードはすでに MFA に対して有効になっているため、セキュリティのためにプライマリサインイン方法として再利用することはできません。',
     delete_sign_in_method: 'これは {{identifier}} を必須の識別子として選択した場合に必要です。',
     password_disabled_notification:
       'ユーザー名のサインアップで「パスワードを作成する」オプションが無効になっており、ユーザーがサインインできない可能性があります。保存を続行するには確認してください。',

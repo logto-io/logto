@@ -54,7 +54,7 @@ const usage = {
   tenant_members: {
     title: '테넌트 멤버',
     tooltip:
-      '매달 멤버당 ${{price, number}} 의 추가 기능입니다. 처음 3명의 테넌트 멤버는 무료입니다.',
+      '매달 멤버당 ${{price, number}} 의 추가 기능입니다. 처음 {{basicQuota}} 명의 테넌트 멤버는 무료입니다.',
     tooltip_for_enterprise:
       '플랜에는 처음 {{basicQuota}} 명의 테넌트 멤버가 포함되어 무료로 사용할 수 있습니다. 더 필요하다면, 매달 멤버당 ${{price, number}} 입니다.',
   },
@@ -76,6 +76,19 @@ const usage = {
     title: '고급 보안',
     tooltip:
       'CAPTCHA, 식별자 잠금, 이메일 차단 목록 (출시 예정) 등을 포함한 전체 고급 보안 번들에 대해 매달 ${{price, number}} 의 추가 기능입니다.',
+  },
+  saml_applications: {
+    title: 'SAML 앱',
+    tooltip: '추가 기능은 매달 SAML 앱당 ${{price, number}} 로 가격이 책정됩니다.',
+  },
+  third_party_applications: {
+    title: '서드파티 앱',
+    tooltip: '추가 기능은 매달 앱당 ${{price, number}} 로 가격이 책정됩니다.',
+  },
+  rbacEnabled: {
+    title: '역할',
+    tooltip:
+      '추가 기능은 매달 ${{price, number}} 의 정액 요금으로 제공됩니다. 글로벌 역할의 수에 의해 가격이 영향을 받지 않습니다.',
   },
   pricing: {
     add_on_changes_in_current_cycle_notice:

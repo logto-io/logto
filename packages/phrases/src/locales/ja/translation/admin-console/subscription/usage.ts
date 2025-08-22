@@ -55,7 +55,7 @@ const usage = {
   tenant_members: {
     title: 'テナントメンバー',
     tooltip:
-      '追加機能として、月額 {{price, number}} ドルのメンバーごとの料金です。最初の 3 人のテナントメンバーは無料です。',
+      '追加機能として、月額 {{price, number}} ドルのメンバーごとの料金です。最初の {{basicQuota}} 人のテナントメンバーは無料です。',
     tooltip_for_enterprise:
       '最初の {{basicQuota}} のテナントメンバーは契約ベースのプランで含まれており、無料で使用できます。より多くが必要な場合、月額 {{price, number}} ドルのメンバーごとの料金がかかります。',
   },
@@ -77,6 +77,19 @@ const usage = {
     title: '高度なセキュリティ',
     tooltip:
       '追加機能として、CAPTCHA、識別子ロックアウト、メールブロックリスト（近日登場）を含む完全な高度なセキュリティバンドルで、月額 {{price, number}} ドルです。',
+  },
+  saml_applications: {
+    title: 'SAML アプリ',
+    tooltip: '追加機能として、月額 {{price, number}} ドルの SAML アプリごとの料金です。 ',
+  },
+  third_party_applications: {
+    title: 'サードパーティ アプリ',
+    tooltip: '追加機能として、月額 {{price, number}} ドルのアプリごとの料金です。',
+  },
+  rbacEnabled: {
+    title: 'ロール',
+    tooltip:
+      '追加機能として、月額 {{price, number}} ドルの定額料金です。グローバル ロールの数には影響されません。',
   },
   pricing: {
     add_on_changes_in_current_cycle_notice:
