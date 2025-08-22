@@ -34,13 +34,7 @@ const paywall = {
   standard_connectors_pro_other:
     'Hai raggiunto il limite di {{count, number}} connettori standard di <planName/>. Passa al piano Enterprise per ottenere connettori sociali aggiuntivi e la possibilità di creare i tuoi connettori utilizzando i protocolli OIDC, OAuth 2.0 e SAML. Non esitare a <a>contattarci</a> se hai bisogno di assistenza.',
   roles:
-    'Hai raggiunto il limite di {{count, number}} ruoli di <planName/>. Aggiorna il piano per aggiungere ruoli e autorizzazioni aggiuntive. Non esitare a <a>contattarci</a> se hai bisogno di assistenza.',
-  roles_other:
-    'Hai raggiunto il limite di {{count, number}} ruoli di <planName/>. Aggiorna il piano per aggiungere ruoli e autorizzazioni aggiuntive. Non esitare a <a>contattarci</a> se hai bisogno di assistenza.',
-  machine_to_machine_roles:
-    '{{count, number}} ruolo machine-to-machine di <planName/> raggiunto. Aggiorna il piano per aggiungere ruoli e autorizzazioni aggiuntive. Non esitare a <a>contattarci</a> se hai bisogno di assistenza.',
-  machine_to_machine_roles_other:
-    '{{count, number}} ruoli machine-to-machine di <planName/> raggiunti. Aggiorna il piano per aggiungere ruoli e autorizzazioni aggiuntive. Non esitare a <a>contattarci</a> se hai bisogno di assistenza.',
+    'Aggiorna il piano per aggiungere ruoli e autorizzazioni aggiuntive. Non esitare a <a>contattarci</a> se hai bisogno di assistenza.',
   scopes_per_role:
     'Hai raggiunto il limite di {{count, number}} autorizzazioni per ruolo di <planName/>. Aggiorna il piano per aggiungere ruoli e autorizzazioni aggiuntive. Non esitare a <a>contattarci</a> se hai bisogno di assistenza.',
   scopes_per_role_other:
@@ -50,6 +44,8 @@ const paywall = {
   logto_pricing_button_text: 'Prezzi del Logto Cloud',
   saml_applications:
     "L'app SAML aggiuntiva è disponibile con il piano Logto Enterprise. Contattaci se hai bisogno di assistenza.",
+  saml_applications_add_on:
+    "Sblocca la funzionalità dell'app SAML passando a un piano a pagamento. Per qualsiasi assistenza, non esitare a <a>contattarci</a>.",
   hooks:
     'Hai raggiunto il limite di {{count, number}} webhook di <planName/>. Aggiorna il piano per creare altri webhook. Non esitare a <a>contattarci</a> se hai bisogno di assistenza.',
   hooks_other:

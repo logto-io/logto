@@ -34,13 +34,7 @@ const paywall = {
   standard_connectors_pro_other:
     "Vous avez atteint la limite de {{count, number}} connecteurs standard de <planName/>. Pour répondre aux besoins de votre équipe, passez au plan Entreprise pour obtenir des connecteurs sociaux supplémentaires et la possibilité de créer vos propres connecteurs en utilisant les protocoles OIDC, OAuth 2.0 et SAML. N’hésitez pas à <a>nous contacter</a> si vous avez besoin d'aide.",
   roles:
-    "Vous avez atteint la limite de {{count, number}} rôle de <planName/>. Mettez à niveau votre plan pour ajouter des rôles et des permissions supplémentaires. N’hésitez pas à <a>nous contacter</a> si vous avez besoin d'aide.",
-  roles_other:
-    "Vous avez atteint la limite de {{count, number}} rôles de <planName/>. Mettez à niveau votre plan pour ajouter des rôles et des permissions supplémentaires. N’hésitez pas à <a>nous contacter</a> si vous avez besoin d'aide.",
-  machine_to_machine_roles:
-    "{{count, number}} rôle machine à machine de <planName/> atteint la limite. Mettez à niveau le plan pour ajouter des rôles et des permissions supplémentaires. N’hésitez pas à <a>nous contacter</a> si vous avez besoin d'aide.",
-  machine_to_machine_roles_other:
-    "{{count, number}} rôles machine à machine de <planName/> atteints la limite. Mettez à niveau le plan pour ajouter des rôles et des permissions supplémentaires. N’hésitez pas à <a>nous contacter</a> si vous avez besoin d'aide.",
+    "Mettez à niveau votre plan pour ajouter des rôles et des permissions supplémentaires. N'hésitez pas à <a>nous contacter</a> si vous avez besoin d'assistance.",
   scopes_per_role:
     'Vous avez atteint la limite de {{count, number}} permission par rôle de <planName/>. Mettez à niveau votre plan pour ajouter des rôles et des permissions supplémentaires. Pour toute assistance, n’hésitez pas à <a>nous contacter</a>.',
   scopes_per_role_other:
@@ -50,6 +44,8 @@ const paywall = {
   logto_pricing_button_text: 'Tarification Logto Cloud',
   saml_applications:
     "L'application SAML supplémentaire est disponible avec le plan Logto Enterprise. Contactez-nous si vous avez besoin d'assistance.",
+  saml_applications_add_on:
+    "Débloquez la fonctionnalité des applications SAML en passant à un plan payant. Pour toute assistance, n'hésitez pas à <a>nous contacter</a>.",
   hooks:
     "Vous avez atteint la limite de {{count, number}} webhook de <planName/>. Mettez à niveau votre plan pour créer plus de webhooks. N’hésitez pas à <a>nous contacter</a> si vous avez besoin d'aide.",
   hooks_other:

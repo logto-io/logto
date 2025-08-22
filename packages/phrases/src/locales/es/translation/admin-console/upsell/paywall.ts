@@ -34,13 +34,7 @@ const paywall = {
   standard_connectors_pro_other:
     'Has alcanzado el límite de {{count, number}} conectores estándar de <planName/>. Actualiza al plan Enterprise para obtener conectores sociales adicionales y la capacidad de crear tus propios conectores usando los protocolos OIDC, OAuth 2.0 y SAML. Si necesitas ayuda, no dudes en <a>contactarnos</a>.',
   roles:
-    'Has alcanzado el límite de {{count, number}} roles de <planName/>. Actualiza el plan para agregar roles y permisos adicionales. Si necesitas ayuda, no dudes en <a>contactarnos</a>.',
-  roles_other:
-    'Has alcanzado el límite de {{count, number}} roles de <planName/>. Actualiza el plan para agregar roles y permisos adicionales. Si necesitas ayuda, no dudes en <a>contactarnos</a>.',
-  machine_to_machine_roles:
-    '{{count, number}} roles de máquina a máquina de <planName/> alcanzaron el límite. Actualiza el plan para agregar roles y permisos adicionales. Si necesitas ayuda, no dudes en <a>contactarnos</a>.',
-  machine_to_machine_roles_other:
-    '{{count, number}} roles de máquina a máquina de <planName/> alcanzaron el límite. Actualiza el plan para agregar roles y permisos adicionales. Si necesitas ayuda, no dudes en <a>contactarnos</a>.',
+    'Actualiza el plan para agregar roles y permisos adicionales. No dudes en <a>contactarnos</a> si necesitas ayuda.',
   scopes_per_role:
     'Has alcanzado el límite de {{count, number}} permisos por rol de <planName/>. Actualiza el plan para agregar roles y permisos adicionales. Si necesitas ayuda, no dudes en <a>contactarnos</a>.',
   scopes_per_role_other:
@@ -50,6 +44,8 @@ const paywall = {
   logto_pricing_button_text: 'Precios de Logto Cloud',
   saml_applications:
     'La aplicación SAML adicional está disponible con el plan Logto Enterprise. Contáctanos si necesitas asistencia.',
+  saml_applications_add_on:
+    'Desbloquea la función de la aplicación SAML al actualizar a un plan pago. Para cualquier asistencia, no dudes en <a>contactarnos</a>.',
   hooks:
     'Has alcanzado el límite de {{count, number}} webhooks de <planName/>. Actualiza el plan para crear más webhooks. Si necesitas ayuda, no dudes en <a>contactarnos</a>.',
   hooks_other:

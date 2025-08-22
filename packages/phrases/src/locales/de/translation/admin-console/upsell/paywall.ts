@@ -34,13 +34,7 @@ const paywall = {
   standard_connectors_pro_other:
     'Sie haben das Limit von {{count, number}} <planName/>-Standardconnectoren erreicht. Upgraden Sie auf den Enterprise-Plan, um zusätzliche Sozialconnectoren und die Möglichkeit zur Erstellung eigener Connectoren mit OIDC, OAuth 2.0 und SAML-Protokollen zu erhalten. Zögern Sie nicht, <a>Kontaktieren Sie uns</a>, wenn Sie Hilfe benötigen.',
   roles:
-    'Sie haben das Limit von {{count, number}} <planName/>-Rollen erreicht. Upgraden Sie Ihren Plan, um zusätzliche Rollen und Berechtigungen hinzuzufügen. Zögern Sie nicht, <a>Kontaktieren Sie uns</a>, wenn Sie Hilfe benötigen.',
-  roles_other:
-    'Sie haben das Limit von {{count, number}} <planName/>-Rollen erreicht. Upgraden Sie Ihren Plan, um zusätzliche Rollen und Berechtigungen hinzuzufügen. Zögern Sie nicht, <a>Kontaktieren Sie uns</a>, wenn Sie Hilfe benötigen.',
-  machine_to_machine_roles:
-    '{{count, number}} Maschine-zu-Maschine-Rolle des Limits von <planName/> erreicht. Upgraden Sie Ihren Plan, um zusätzliche Rollen und Berechtigungen hinzuzufügen. Fühlen Sie sich frei, uns zu <a>kontaktieren</a>, wenn Sie Unterstützung benötigen.',
-  machine_to_machine_roles_other:
-    '{{count, number}} Maschine-zu-Maschine-Rollen des Limits von <planName/> erreicht. Upgraden Sie Ihren Plan, um zusätzliche Rollen und Berechtigungen hinzuzufügen. Fühlen Sie sich frei, uns zu <a>kontaktieren</a>, wenn Sie Unterstützung benötigen.',
+    'Upgraden Sie den Plan, um zusätzliche Rollen und Berechtigungen hinzuzufügen. Gerne können Sie sich <a>an uns wenden</a>, wenn Sie Unterstützung benötigen.',
   scopes_per_role:
     'Sie haben das Limit von {{count, number}} Berechtigungen pro Rolle von <planName/> erreicht. Upgraden Sie Ihren Plan, um zusätzliche Rollen und Berechtigungen hinzuzufügen. Bei Fragen stehen wir Ihnen gerne zur Verfügung. <a>Kontaktieren Sie uns</a>, wenn Sie Hilfe benötigen.',
   scopes_per_role_other:
@@ -50,6 +44,8 @@ const paywall = {
   logto_pricing_button_text: 'Logto Cloud-Preise',
   saml_applications:
     'Die zusätzliche SAML-App ist mit dem Logto-Enterprise-Plan verfügbar. Kontaktieren Sie uns, wenn Sie Hilfe benötigen.',
+  saml_applications_add_on:
+    'Schalten Sie die SAML-App-Funktion frei, indem Sie auf einen kostenpflichtigen Plan upgraden. Gerne können Sie sich <a>an uns wenden</a>, wenn Sie Unterstützung benötigen.',
   hooks:
     'Sie haben das Limit von {{count, number}} <planName/>-Webhooks erreicht. Upgraden Sie Ihren Plan, um mehr Webhooks zu erstellen. Zögern Sie nicht, <a>Kontaktieren Sie uns</a>, wenn Sie Hilfe benötigen.',
   hooks_other:

@@ -34,13 +34,7 @@ const paywall = {
   standard_connectors_pro_other:
     'Atingiu o limite de {{count, number}} conectores padrão de <planName/>. Atualize para o plano Empresarial para obter conectores sociais adicionais e a capacidade de criar os seus próprios conectores usando os protocolos OIDC, OAuth 2.0 e SAML. Não hesite em <a>Entre em contato conosco</a> se precisar de ajuda.',
   roles:
-    'Atingiu o limite de {{count, number}} funções de <planName/>. Atualize o plano para adicionar funções e permissões adicionais. Não hesite em <a>Entre em contato conosco</a> se precisar de ajuda.',
-  roles_other:
-    'Atingiu o limite de {{count, number}} funções de <planName/>. Atualize o plano para adicionar funções e permissões adicionais. Não hesite em <a>Entre em contato conosco</a> se precisar de ajuda.',
-  machine_to_machine_roles:
-    '{{count, number}} funções de máquina para máquina do <planName/> atingiram o limite. Atualize o plano para adicionar funções e permissões adicionais. Sinta-se à vontade para <a>entrar em contato conosco</a> se precisar de alguma ajuda.',
-  machine_to_machine_roles_other:
-    '{{count, number}} funções de máquina para máquina do <planName/> atingiram o limite. Atualize o plano para adicionar funções e permissões adicionais. Sinta-se à vontade para <a>entrar em contato conosco</a> se precisar de alguma ajuda.',
+    'Atualize o plano para adicionar funções e permissões adicionais. Sinta-se à vontade para <a>entrar em contato conosco</a> se precisar de qualquer assistência.',
   scopes_per_role:
     'Atingiu o limite de {{count, number}} permissões por função de <planName/>. Atualize o plano para adicionar funções e permissões adicionais. Não hesite em <a>Entre em contato conosco</a> se precisar de ajuda.',
   scopes_per_role_other:
@@ -50,6 +44,8 @@ const paywall = {
   logto_pricing_button_text: 'Preços do Logto Cloud',
   saml_applications:
     'O aplicativo SAML adicional está disponível com o plano Logto Enterprise. Entre em contato conosco se precisar de assistência.',
+  saml_applications_add_on:
+    'Desbloqueie a funcionalidade do app SAML ao atualizar para um plano pago. Para qualquer assistência, não hesite em <a>entrar em contato conosco</a>.',
   hooks:
     'Atingiu o limite de {{count, number}} webhooks de <planName/>. Atualize o plano para criar mais webhooks. Não hesite em <a>Entre em contato conosco</a> se precisar de ajuda.',
   hooks_other:

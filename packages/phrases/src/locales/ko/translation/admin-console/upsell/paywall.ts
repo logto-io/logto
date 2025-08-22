@@ -34,13 +34,7 @@ const paywall = {
   standard_connectors_pro_other:
     '<planName/>의 {{count, number}}개 표준 커넥터 제한에 도달했습니다. 팀의 요구를 충족하기 위해 추가 소셜 커넥터 및 OIDC, OAuth 2.0, SAML 프로토콜을 사용하여 고유한 커넥터를 생성할 수 있는 기능과 함께 엔터프라이즈 플랜으로 업그레이드하세요. 도움이 필요하면 <a>문의하세요</a>.',
   roles:
-    '<planName/>의 {{count, number}}개 역할 한도에 도달했습니다. 플랜을 업그레이드하여 추가 역할과 권한을 추가하세요. 도움이 필요하면 <a>문의하기</a>로 연락 주세요.',
-  roles_other:
-    '<planName/>의 {{count, number}}개 역할 한도에 도달했습니다. 플랜을 업그레이드하여 추가 역할과 권한을 추가하세요. 도움이 필요하면 <a>문의하기</a>로 연락 주세요.',
-  machine_to_machine_roles:
-    '{{count, number}}개의 <planName/> 기계 간 역할 제한에 도달했습니다. 추가 역할과 권한을 추가하려면 플랜을 업그레이드하세요. 도움이 필요하면 <a>문의하기</a>로 연락 주세요.',
-  machine_to_machine_roles_other:
-    '{{count, number}}개의 <planName/> 기계 간 역할 제한에 도달했습니다. 추가 역할과 권한을 추가하려면 플랜을 업그레이드하세요. 도움이 필요하면 <a>문의하기</a>로 연락 주세요.',
+    '추가 역할과 권한을 추가하려면 플랜을 업그레이드하세요. 도움이 필요하면 <a>문의하세요</a>.',
   scopes_per_role:
     '<planName/>의 {{count, number}}개 역할 당 권한 한도에 도달했습니다. 플랜을 업그레이드하여 추가 역할과 권한을 추가하세요. 도움이 필요하면 <a>문의하기</a>로 연락 주세요.',
   scopes_per_role_other:
@@ -50,6 +44,8 @@ const paywall = {
   logto_pricing_button_text: 'Logto 클라우드 가격',
   saml_applications:
     '추가 SAML 앱은 Logto 엔터프라이즈 플랜에서 사용할 수 있습니다. 도움이 필요하면 <a>문의하세요</a>.',
+  saml_applications_add_on:
+    '유료 플랜으로 업그레이드하여 SAML 앱 기능을 잠금 해제하세요. 도움이 필요하면 <a>문의하세요</a>.',
   hooks:
     '<planName/>의 {{count, number}}개 웹훅 한도에 도달했습니다. 더 많은 웹훅을 생성하려면 플랜을 업그레이드하세요. 도움이 필요하면 <a>문의하기</a>로 연락 주세요.',
   hooks_other:

@@ -14,6 +14,12 @@ const add_on = {
       'Membros adicionais custam <span>${{price, number}} por mês / cada</span>. Primeiro mês calculado proporcionalmente com base no seu ciclo de faturamento. <a>Saiba mais</a>',
     organization:
       'Organização é um acréscimo de <span>${{price, number}} por mês</span> para {{planName}} com organizações ilimitadas. Primeiro mês calculado proporcionalmente com base no seu ciclo de faturamento. <a>Saiba mais</a>',
+    saml_apps:
+      'Aplicativos SAML adicionais custam <span>${{price, number}} por mês / cada</span>. Primeiro mês calculado proporcionalmente com base no seu ciclo de faturamento. <a>Saiba mais</a>',
+    third_party_apps:
+      'Aplicativos de terceiros adicionais custam <span>${{price, number}} por mês / cada</span>. Primeiro mês calculado proporcionalmente com base no seu ciclo de faturamento. <a>Saiba mais</a>',
+    roles:
+      'Controle de acesso baseado em função é um acréscimo de <span>${{price, number}} por mês</span> para o plano Pro com funções ilimitadas. Primeiro mês calculado proporcionalmente com base no seu ciclo de faturamento. <a>Saiba mais</a>',
   },
 };
 

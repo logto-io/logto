@@ -14,6 +14,12 @@ const add_on = {
       'Les membres supplémentaires coûtent <span>${{price, number}} par mois / chacun</span>. Le premier mois est calculé au prorata en fonction de votre cycle de facturation. <a>En savoir plus</a>',
     organization:
       "L'organisation est un complément à <span>${{price, number}} par mois</span> pour {{planName}} avec les organisations illimitées. Le premier mois est calculé au prorata en fonction de votre cycle de facturation. <a>En savoir plus</a>",
+    saml_apps:
+      'Les applications SAML supplémentaires coûtent <span>${{price, number}} par mois / chacune</span>. Le premier mois est calculé au prorata en fonction de votre cycle de facturation. <a>En savoir plus</a>',
+    third_party_apps:
+      'Les applications tierces supplémentaires coûtent <span>${{price, number}} par mois / chacune</span>. Le premier mois est calculé au prorata en fonction de votre cycle de facturation. <a>En savoir plus</a>',
+    roles:
+      "Le contrôle d'accès basé sur les rôles est un complément à <span>${{price, number}} par mois</span> pour le plan Pro avec des rôles illimités. Le premier mois est calculé au prorata en fonction de votre cycle de facturation. <a>En savoir plus</a>",
   },
 };
 

@@ -34,13 +34,7 @@ const paywall = {
   standard_connectors_pro_other:
     'Osiągnięto limit {{count, number}} standardowych konektorów w planie <planName/>. Aby sprostać potrzebom twojego zespołu, ulepsz do planu Enterprise, aby uzyskać dodatkowe konektory społecznościowe oraz możliwość tworzenia własnych konektorów za pomocą protokołów OIDC, OAuth 2.0 i SAML. Jeśli potrzebujesz pomocy, nie wahaj się <a>skontaktować z nami</a>.',
   roles:
-    'Osiągnięto limit {{count, number}} ról w planie <planName/>. Ulepsz plan, aby dodać dodatkowe role i uprawnienia. Jeśli potrzebujesz pomocy, nie wahaj się <a>skontaktować z nami</a>.',
-  roles_other:
-    'Osiągnięto limit {{count, number}} ról w planie <planName/>. Ulepsz plan, aby dodać dodatkowe role i uprawnienia. Jeśli potrzebujesz pomocy, nie wahaj się <a>skontaktować z nami</a>.',
-  machine_to_machine_roles:
-    '{{count, number}} role maszynowa przekroczyła limit w planie <planName/>. Ulepsz plan, aby dodać dodatkowe role i uprawnienia. Skontaktuj się z nami <a>tutaj</a>, jeśli potrzebujesz pomocy.',
-  machine_to_machine_roles_other:
-    '{{count, number}} role maszynowa przekroczyły limit w planie <planName/>. Ulepsz plan, aby dodać dodatkowe role i uprawnienia. Skontaktuj się z nami <a>tutaj</a>, jeśli potrzebujesz pomocy.',
+    'Zaktualizuj plan, aby dodać dodatkowe role i uprawnienia. Nie wahaj się <a>skontaktować z nami</a>, jeśli potrzebujesz pomocy.',
   scopes_per_role:
     'Osiągnięto limit {{count, number}} uprawnień na rolę w planie <planName/>. Ulepsz plan, aby dodać dodatkowe role i uprawnienia. W razie potrzeb, skontaktuj się z nami <a>tutaj</a>.',
   scopes_per_role_other:
@@ -50,6 +44,8 @@ const paywall = {
   logto_pricing_button_text: 'Cennik Logto Cloud',
   saml_applications:
     'Dodatkowa aplikacja SAML jest dostępna w planie Logto Enterprise. Skontaktuj się z nami, jeśli potrzebujesz pomocy.',
+  saml_applications_add_on:
+    'Odblokuj funkcję aplikacji SAML, ulepszając do płatnego planu. Nie wahaj się <a>skontaktować z nami</a>, jeśli potrzebujesz pomocy.',
   hooks:
     'Osiągnięto limit {{count, number}} webhooków w planie <planName/>. Ulepsz plan, aby tworzyć więcej webhooków. Jeśli potrzebujesz pomocy, nie wahaj się <a>skontaktować z nami</a>.',
   hooks_other:

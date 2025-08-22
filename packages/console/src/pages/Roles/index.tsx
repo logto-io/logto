@@ -1,5 +1,6 @@
 import { RoleType, roleTypeToKey, type RoleResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
+import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
@@ -13,6 +14,8 @@ import ItemPreview from '@/components/ItemPreview';
 import PageMeta from '@/components/PageMeta';
 import RoleIcon from '@/components/RoleIcon';
 import { defaultPageSize, rbac } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
 import Search from '@/ds-components/Search';
@@ -23,6 +26,7 @@ import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import pageLayout from '@/scss/page-layout.module.scss';
+import { isPaidPlan } from '@/utils/subscription';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
 import AssignedEntities from './components/AssignedEntities';
@@ -40,6 +44,14 @@ function Roles() {
   const { navigate, match } = useTenantPathname();
   const isCreating = match(createRolePathname);
   const { getDocumentationUrl } = useDocumentationUrl();
+  const {
+    currentSubscription: { planId, isEnterprisePlan },
+    currentSubscriptionBasicQuota: { userRolesLimit, machineToMachineRolesLimit },
+  } = useContext(SubscriptionDataContext);
+
+  const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
+  // We need to hide the add-on tag for legacy plans who has unlimited roles.
+  const hasRolesIncluded = userRolesLimit === null && machineToMachineRolesLimit === null;
 
   const [{ page, keyword }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
@@ -62,7 +74,13 @@ function Roles() {
     <div className={pageLayout.container}>
       <PageMeta titleKey="roles.page_title" />
       <div className={pageLayout.headline}>
-        <CardTitle title="roles.title" subtitle="roles.subtitle" learnMoreLink={{ href: rbac }} />
+        <CardTitle
+          title="roles.title"
+          subtitle="roles.subtitle"
+          learnMoreLink={{ href: rbac }}
+          // TODO: remove the dev feature when the new paywall logic is ready;
+          hasAddOnTag={isDevFeaturesEnabled && isPaidTenant && !hasRolesIncluded}
+        />
         <Button
           icon={<Plus />}
           type="primary"

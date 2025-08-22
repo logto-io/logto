@@ -33,14 +33,7 @@ const paywall = {
     '已達到 <planName/> 的{{count, number}}個標準連接器限制。為滿足您團隊的需求，請升級至企業版計劃以獲取額外的社交連接器，並可以使用 OIDC、OAuth 2.0 和 SAML 協議創建您自己的連接器。如需任何幫助，請<a>聯絡我們</a>。',
   standard_connectors_pro_other:
     '已達到 <planName/> 的{{count, number}}個標準連接器限制。為滿足您團隊的需求，請升級至企業版計劃以獲取額外的社交連接器，並可以使用 OIDC、OAuth 2.0 和 SAML 協議創建您自己的連接器。如需任何幫助，請<a>聯繫我們</a>。',
-  roles:
-    '已達到 <planName/> 的{{count, number}}個角色限制。升級計劃以添加額外的角色和權限。如需任何幫助，請<a>聯繫我們</a>。',
-  roles_other:
-    '已達到 <planName/> 的{{count, number}}個角色限制。升級計劃以添加額外的角色和權限。如需任何幫助，請<a>聯繫我們</a>。',
-  machine_to_machine_roles:
-    '{{count, number}} machine-to-machine角色已達到 <planName/> 的限制。升級計劃以添加額外的角色和權限。如果需要任何幫助，請隨時<a>聯絡我們</a>。',
-  machine_to_machine_roles_other:
-    '{{count, number}} machine-to-machine角色已達到 <planName/> 的限制。升級計劃以添加額外的角色和權限。如果需要任何幫助，請隨時<a>聯絡我們</a>。',
+  roles: '升級計劃以增加額外的角色和權限。如需任何協助，歡迎<a>聯絡我們</a>。',
   scopes_per_role:
     '已達到 <planName/> 的{{count, number}}個角色每個權限限制。升級計劃以添加額外的角色和權限。如需任何幫助，請<a>聯繫我們</a>。',
   scopes_per_role_other:
@@ -49,6 +42,8 @@ const paywall = {
     '額外的 SAML 應用程式可在 Logto 企業版計劃中使用。如需協助，請與我們聯絡。',
   logto_pricing_button_text: 'Logto 雲端定價',
   saml_applications: '額外的 SAML 應用程式可在 Logto 企業版計劃中使用。如需協助，請聯絡我們。',
+  saml_applications_add_on:
+    '透過升級到付費計劃解鎖 SAML 應用功能。如需任何協助，歡迎<a>聯絡我們</a>。',
   hooks:
     '已達到 <planName/> 的{{count, number}}個 Webhook 限制。升級計劃以創建更多 Webhook。如需任何幫助，請<a>聯繫我們</a>。',
   hooks_other:
