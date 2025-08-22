@@ -3,6 +3,7 @@ import { cond } from '@silverhand/essentials';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import {
   freePlanAuditLogsRetentionDays,
   freePlanM2mLimit,
@@ -47,7 +48,7 @@ const useFeaturedSkuContent = (skuId: string) => {
         isAvailable: true,
       },
       {
-        title: t('third_party_apps'),
+        title: t(isDevFeaturesEnabled ? 'saml_and_third_party_apps' : 'third_party_apps'),
         isAvailable: !isFreePlan,
       },
       {
@@ -59,15 +60,17 @@ const useFeaturedSkuContent = (skuId: string) => {
         isAvailable: !isFreePlan,
       },
       {
-        title: t(`role_and_permissions.${planPhraseKey}`, {
-          ...cond(
-            isFreePlan && {
-              roleCount: freePlanRoleLimit,
-              permissionCount: freePlanPermissionsLimit,
-            }
-          ),
-        }),
-        isAvailable: true,
+        title: isDevFeaturesEnabled
+          ? t('rbac')
+          : t(`role_and_permissions.${planPhraseKey}`, {
+              ...cond(
+                isFreePlan && {
+                  roleCount: freePlanRoleLimit,
+                  permissionCount: freePlanPermissionsLimit,
+                }
+              ),
+            }),
+        isAvailable: isDevFeaturesEnabled ? !isFreePlan : true,
       },
       {
         title: t('organizations'),
