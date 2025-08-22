@@ -82,16 +82,18 @@ export const removeConnectorMessage = async (
   }
 };
 
-type ExpectedErrorInfo = {
+type ExpectedErrorInfo<T = unknown> = {
   code?: string;
   status: number;
   messageIncludes?: string;
   unexpectedProperties?: string[];
+  /** Optional expectations on the error data payload. */
+  expectData?: (data: T) => void;
 };
 
-export const expectRejects = async <T = void>(
+export const expectRejects = async <T = unknown>(
   promise: Promise<unknown>,
-  expected: ExpectedErrorInfo
+  expected: ExpectedErrorInfo<T>
 ) => {
   try {
     await promise;
@@ -102,8 +104,8 @@ export const expectRejects = async <T = void>(
   fail();
 };
 
-const expectRequestError = async <T = void>(error: unknown, expected: ExpectedErrorInfo) => {
-  const { code, status, messageIncludes, unexpectedProperties = [] } = expected;
+const expectRequestError = async <T = unknown>(error: unknown, expected: ExpectedErrorInfo<T>) => {
+  const { code, status, messageIncludes, unexpectedProperties = [], expectData } = expected;
 
   if (!(error instanceof HTTPError)) {
     fail('Error should be an instance of RequestError');
@@ -127,6 +129,10 @@ const expectRequestError = async <T = void>(error: unknown, expected: ExpectedEr
 
   for (const property of unexpectedProperties) {
     expect(body.data).not.toHaveProperty(property);
+  }
+
+  if (expectData) {
+    expectData(body.data);
   }
 
   return body.data;

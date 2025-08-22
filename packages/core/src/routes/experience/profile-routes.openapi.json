@@ -104,6 +104,31 @@
         }
       }
     },
+    "/api/experience/profile/mfa/mfa-suggestion-skipped": {
+      "post": {
+        "operationId": "SkipMfaSuggestion",
+        "summary": "Skip additional MFA suggestion",
+        "tags": ["Dev feature"],
+        "description": "Mark the optional additional MFA binding suggestion as skipped for the current interaction. When multiple MFA factors are enabled and only an email/phone factor is configured, a suggestion to add another factor may be shown; this endpoint records the choice to skip.",
+        "responses": {
+          "204": {
+            "description": "The suggestion was successfully skipped."
+          },
+          "400": {
+            "description": "Not supported for the current interaction event. The MFA profile API can only be used in the `SignIn` or `Register` interaction."
+          },
+          "403": {
+            "description": "Some MFA factors have already been enabled for the user. The user must verify MFA before updating related settings."
+          },
+          "404": {
+            "description": "The user has not been identified yet. The suggestion state must be associated with an identified user."
+          },
+          "422": {
+            "description": "The suggestion is not skippable under current policy."
+          }
+        }
+      }
+    },
     "/api/experience/profile/mfa": {
       "post": {
         "operationId": "BindMfaVerification",

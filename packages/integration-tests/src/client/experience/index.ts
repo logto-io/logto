@@ -239,6 +239,12 @@ export class ExperienceClient extends MockClient {
     });
   }
 
+  public async skipMfaSuggestion() {
+    return this.api.post(`${experienceRoutes.mfa}/mfa-suggestion-skipped`, {
+      headers: { cookie: this.interactionCookie },
+    });
+  }
+
   public async bindMfa(type: MfaFactor, verificationId: string) {
     return this.api.post(`${experienceRoutes.mfa}`, {
       headers: { cookie: this.interactionCookie },

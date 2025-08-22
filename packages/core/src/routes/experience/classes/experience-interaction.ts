@@ -9,6 +9,7 @@ import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { EnvSet } from '../../../env-set/index.js';
 import {
   interactionStorageGuard,
   type InteractionStorage,
@@ -331,7 +332,8 @@ export default class ExperienceInteraction {
    * @throws {RequestError} with 403 if the mfa verification is required but not verified
    */
   public async guardMfaVerificationStatus() {
-    if (this.hasVerifiedSsoIdentity) {
+    // For register, it does not make sense to verify MFA, because this is the first time the user is signing up.
+    if (this.hasVerifiedSsoIdentity || this.interactionEvent === InteractionEvent.Register) {
       return;
     }
 
@@ -471,6 +473,21 @@ export default class ExperienceInteraction {
     // Profile fulfilled
     if (!this.hasVerifiedSsoIdentity) {
       await this.profile.assertUserMandatoryProfileFulfilled();
+    }
+
+    if (EnvSet.values.isDevFeaturesEnabled) {
+      // Optional suggestion: Let Mfa decide whether to suggest additional binding during registration
+      const registeredViaEmail = this.verificationRecordsArray.some(
+        (record) => record.type === VerificationType.EmailVerificationCode && record.isVerified
+      );
+      const registeredViaPhone = this.verificationRecordsArray.some(
+        (record) => record.type === VerificationType.PhoneVerificationCode && record.isVerified
+      );
+
+      await this.mfa.guardAdditionalBindingSuggestion({
+        registeredViaEmail,
+        registeredViaPhone,
+      });
     }
 
     // Revalidate the new MFA data if any
