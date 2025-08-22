@@ -143,6 +143,9 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
       isOpen
       className={modalStyles.content}
       overlayClassName={modalStyles.overlay}
+      onRequestClose={() => {
+        onClose?.();
+      }}
     >
       <ModalLayout
         className={styles.content}
