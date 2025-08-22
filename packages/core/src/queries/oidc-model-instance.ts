@@ -91,8 +91,9 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
     if (results.length > 1) {
       // Delete all duplicates
       await pool.query(sql`
-      delete from ${sql.identifier([modelName])}
-      where ${fields.payload}->>${field}=${value}
+      delete from ${table}
+      where ${fields.modelName}=${modelName}
+      and ${fields.payload}->>${field}=${value}
     `);
       return;
     }
