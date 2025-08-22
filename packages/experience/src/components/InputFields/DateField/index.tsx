@@ -108,7 +108,13 @@ const DateField = (props: Props) => {
 
   const updateValue = useCallback(
     (data: string, targetId: number) => {
-      if (!formatConfig || !isNumeric(data)) {
+      if (data === '') {
+        const clearedParts = dateParts.map((part, index) => (index === targetId ? '' : part));
+        handleOnChange(clearedParts);
+        return;
+      }
+
+      if (!isNumeric(data)) {
         return;
       }
 
@@ -121,7 +127,7 @@ const DateField = (props: Props) => {
           return currentParts;
         }
 
-        const fieldMaxLength = formatConfig.maxLengths[currentTargetId] ?? 0;
+        const fieldMaxLength = formatConfig?.maxLengths[currentTargetId] ?? 0;
         const fieldData = remainingData.slice(0, fieldMaxLength);
         const updatedParts = currentParts.map((part, index) =>
           index === currentTargetId ? fieldData : part
@@ -200,17 +206,24 @@ const DateField = (props: Props) => {
 
       switch (key) {
         case 'Backspace': {
-          event.preventDefault();
+          const caretAtStart = target.selectionStart === 0 && target.selectionEnd === 0;
 
-          if (value) {
-            const clearedParts = dateParts.map((part, index) => (index === targetId ? '' : part));
-            handleOnChange(clearedParts);
-          } else if (previousTarget) {
-            previousTarget.focus();
-            const clearedParts = dateParts.map((part, index) =>
-              index === targetId - 1 ? '' : part
+          if (caretAtStart && previousTarget) {
+            event.preventDefault();
+            const previousValue = previousTarget.value;
+
+            if (!previousValue) {
+              previousTarget.focus();
+              return;
+            }
+
+            const newPreviousValue = previousValue.slice(0, -1);
+            const updatedParts = dateParts.map((part, index) =>
+              index === targetId - 1 ? newPreviousValue : part
             );
-            handleOnChange(clearedParts);
+            handleOnChange(updatedParts);
+            previousTarget.focus();
+            previousTarget.setSelectionRange(newPreviousValue.length, newPreviousValue.length);
           }
           break;
         }
