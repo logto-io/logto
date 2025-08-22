@@ -1,11 +1,15 @@
 import { ApplicationType } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { type Ref, forwardRef, useContext } from 'react';
 
-import { type Guide } from '@/assets/docs/guides/types';
-import { isCloud } from '@/consts/env';
+import { type GuideMetadata, type Guide } from '@/assets/docs/guides/types';
+import { type NewSubscriptionQuota } from '@/cloud/types/router';
+import FeatureTag, { CombinedAddOnAndFeatureTag } from '@/components/FeatureTag';
+import { isDevFeaturesEnabled } from '@/consts/env';
+import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
-import { TenantsContext } from '@/contexts/TenantsProvider';
+import { isPaidPlan } from '@/utils/subscription';
 
 import GuideCard, { type SelectedGuide } from '../GuideCard';
 
@@ -20,12 +24,46 @@ type Props = {
   readonly onClickGuide: (data: SelectedGuide) => void;
 };
 
+function getPaywallTag(
+  guideMetadata: GuideMetadata,
+  currentSubscriptionQuota: NewSubscriptionQuota,
+  isPaidPlan: boolean,
+  isEnterprisePlan: boolean
+) {
+  // TODO: remove the dev feature guard when the new add-on plan is ready for release
+  if (guideMetadata.isThirdParty) {
+    return isDevFeaturesEnabled ? (
+      <CombinedAddOnAndFeatureTag
+        hasAddOnTag={isPaidPlan && currentSubscriptionQuota.thirdPartyApplicationsLimit !== null}
+        paywall={conditional(!isPaidPlan && latestProPlanId)}
+      />
+    ) : (
+      <FeatureTag isVisible={!isPaidPlan} plan={latestProPlanId} />
+    );
+  }
+
+  if (guideMetadata.target === ApplicationType.SAML) {
+    return isDevFeaturesEnabled ? (
+      <CombinedAddOnAndFeatureTag
+        hasAddOnTag={isPaidPlan}
+        paywall={conditional(!isPaidPlan && latestProPlanId)}
+      />
+    ) : (
+      <FeatureTag isEnterprise isVisible={!isEnterprisePlan} />
+    );
+  }
+}
+
 function GuideCardGroup(
   { className, categoryName, guides, hasCardBorder, hasCardButton, onClickGuide }: Props,
   ref: Ref<HTMLDivElement>
 ) {
-  const { isDevTenant } = useContext(TenantsContext);
-  const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
+  const {
+    currentSubscriptionQuota,
+    currentSubscription: { planId, isEnterprisePlan },
+  } = useContext(SubscriptionDataContext);
+
+  const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
 
   if (!guides?.length) {
     return null;
@@ -41,14 +79,12 @@ function GuideCardGroup(
             hasBorder={hasCardBorder}
             hasButton={hasCardButton}
             data={guide}
-            hasPaywall={
-              isCloud &&
-              ((guide.metadata.isThirdParty &&
-                // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-                (currentSubscriptionQuota.thirdPartyApplicationsLimit === 0 || isDevTenant)) ||
-                (guide.metadata.target === ApplicationType.SAML &&
-                  (currentSubscriptionQuota.samlApplicationsLimit === 0 || isDevTenant)))
-            }
+            paywallTag={getPaywallTag(
+              guide.metadata,
+              currentSubscriptionQuota,
+              isPaidTenant,
+              isEnterprisePlan
+            )}
             onClick={onClickGuide}
           />
         ))}

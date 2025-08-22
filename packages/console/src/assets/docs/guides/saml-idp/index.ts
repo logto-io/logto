@@ -4,7 +4,7 @@ import { type GuideMetadata } from '../types';
 
 const metadata = Object.freeze({
   name: 'SAML',
-  description: 'Use Logto as a SAML identity provider (IdP) for your application.',
+  description: 'XML-based framework for SSO. Use if apps only support SAML.',
   target: ApplicationType.SAML,
   isThirdParty: false,
   skipGuideAfterCreation: true,
