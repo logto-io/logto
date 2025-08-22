@@ -169,6 +169,7 @@ describe('role routes', () => {
   });
 
   it('DELETE /roles/:id', async () => {
+    findRoleById.mockResolvedValueOnce(mockAdminUserRole);
     const response = await roleRequester.delete(`/roles/${mockAdminUserRole.id}`);
     expect(response.status).toEqual(204);
     expect(deleteRoleById).toHaveBeenCalledWith(mockAdminUserRole.id);

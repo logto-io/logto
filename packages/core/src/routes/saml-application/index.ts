@@ -128,6 +128,11 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
           }),
         ]);
 
+        // TODO: remove this dev feature guard when new pro plan and add-on skus are ready.
+        if (EnvSet.values.isDevFeaturesEnabled) {
+          void quota.reportSubscriptionUpdatesUsage('samlApplicationsLimit');
+        }
+
         ctx.status = 201;
         ctx.body = ensembleSamlApplication({ application, samlConfig });
       } catch (error) {
@@ -199,6 +204,11 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       );
 
       await deleteApplicationById(id);
+
+      // TODO: remove this dev feature guard when new pro plan and add-on skus are ready.
+      if (EnvSet.values.isDevFeaturesEnabled) {
+        void quota.reportSubscriptionUpdatesUsage('samlApplicationsLimit');
+      }
 
       ctx.status = 204;
 

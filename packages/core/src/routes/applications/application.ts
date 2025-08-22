@@ -20,6 +20,7 @@ import { buildOidcClientMetadata } from '#src/oidc/utils.js';
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
+import { EnvSet } from '../../env-set/index.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 import applicationCustomDataRoutes from './application-custom-data.js';
@@ -161,7 +162,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
     koaGuard({
       body: applicationCreateGuard,
       response: Applications.guard,
-      status: [200, 400, 422, 500],
+      status: [200, 400, 422, 403, 500],
     }),
     // eslint-disable-next-line complexity
     async (ctx, next) => {
@@ -224,6 +225,11 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
 
       if (rest.type === ApplicationType.MachineToMachine) {
         void quota.reportSubscriptionUpdatesUsage('machineToMachineLimit');
+      }
+
+      // TODO: remove this dev feature guard when new pro plan and add-on skus are ready.
+      if (EnvSet.values.isDevFeaturesEnabled && rest.isThirdParty) {
+        void quota.reportSubscriptionUpdatesUsage('thirdPartyApplicationsLimit');
       }
 
       return next();
@@ -361,7 +367,8 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
-      const { type, protectedAppMetadata } = await queries.applications.findApplicationById(id);
+      const { type, protectedAppMetadata, isThirdParty } =
+        await queries.applications.findApplicationById(id);
 
       if (type === ApplicationType.SAML) {
         throw new RequestError('application.saml.use_saml_app_api');
@@ -381,6 +388,11 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
 
       if (type === ApplicationType.MachineToMachine) {
         void quota.reportSubscriptionUpdatesUsage('machineToMachineLimit');
+      }
+
+      // TODO: remove this dev feature guard when new pro plan and add-on skus are ready.
+      if (EnvSet.values.isDevFeaturesEnabled && isThirdParty) {
+        void quota.reportSubscriptionUpdatesUsage('thirdPartyApplicationsLimit');
       }
 
       return next();
