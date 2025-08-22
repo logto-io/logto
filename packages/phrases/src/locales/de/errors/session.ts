@@ -46,6 +46,8 @@ const session = {
     invalid_backup_code: 'Ungültiger Backup-Code.',
     mfa_policy_not_user_controlled: 'MFA-Richtlinie wird nicht vom Benutzer gesteuert.',
     mfa_factor_not_enabled: 'MFA-Faktor ist nicht aktiviert.',
+    suggest_additional_mfa:
+      'Für besseren Schutz füge eine weitere MFA-Methode hinzu. Du kannst diesen Schritt überspringen und fortfahren.',
   },
   sso_enabled:
     'Einmaliges Anmelden ist für diese gegebene E-Mail aktiviert. Bitte melden Sie sich mit SSO an.',
