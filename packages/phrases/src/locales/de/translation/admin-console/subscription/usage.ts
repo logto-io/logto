@@ -53,9 +53,8 @@ const usage = {
   },
   tenant_members: {
     title: 'Tenant-Mitglieder',
-    /** UNTRANSLATED */
     tooltip:
-      'Add-on feature priced at ${{price, number}} per member per month. The first {{count}} tenant member is free.',
+      'Add-on-Funktion zum Preis von ${{price, number}} pro Mitglied pro Monat. Das erste {{count}} Tenant-Mitglied ist kostenlos.',
     tooltip_one:
       'Add-On-Feature zum Preis von ${{price, number}} pro Mitglied pro Monat. Das erste {{count}} Tenant-Mitglied ist kostenlos.',
     tooltip_other:
@@ -80,7 +79,7 @@ const usage = {
   security_features: {
     title: 'Erweiterte Sicherheit',
     tooltip:
-      'Zusatzfeature mit einem Preis von ${{price, number}}/Monat für das vollständige erweiterte Sicherheitsbündel, einschließlich CAPTCHA, Identifikator-Sperre, E-Mail-Blockliste (in Kürze verfügbar) und mehr.',
+      'Add-on-Funktion mit einem Preis von ${{price, number}}/Monat für das vollständige Bundle der erweiterten Sicherheit, einschließlich CAPTCHA, Kontosperrung, E-Mail-Blockliste und mehr.',
   },
   saml_applications: {
     title: 'SAML-App',

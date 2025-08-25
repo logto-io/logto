@@ -53,9 +53,8 @@ const usage = {
   },
   tenant_members: {
     title: 'Członkowie dzierżawcy',
-    /** UNTRANSLATED */
     tooltip:
-      'Add-on feature priced at ${{price, number}} per member per month. The first {{count}} tenant member is free.',
+      'Funkcja dodatkowa w cenie ${{price, number}} za członka miesięcznie. Pierwszy {{count}} członek dzierżawcy jest darmowy.',
     tooltip_one:
       'Funkcja dodatkowa w cenie ${{price, number}} za członka miesięcznie. Pierwszy {{count}} członek dzierżawcy jest darmowy.',
     tooltip_other:
@@ -80,7 +79,7 @@ const usage = {
   security_features: {
     title: 'Zaawansowane zabezpieczenia',
     tooltip:
-      'Funkcja dodatkowa z ceną ${{price, number}}/miesiąc za pełny pakiet zaawansowanych zabezpieczeń, w tym CAPTCHA, blokada identyfikatora, blokada e-mail (wkrótce) i inne.',
+      'Funkcja dodatkowa z ceną ${{price, number}}/miesiąc za pełny pakiet zaawansowanych zabezpieczeń, w tym CAPTCHA, blokada identyfikatora, blokada adresu e-mail i inne.',
   },
   saml_applications: {
     title: 'Aplikacja SAML',

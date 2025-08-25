@@ -53,9 +53,8 @@ const usage = {
   },
   tenant_members: {
     title: 'Члены арендатора',
-    /** UNTRANSLATED */
     tooltip:
-      'Add-on feature priced at ${{price, number}} per member per month. The first {{count}} tenant member is free.',
+      'Дополнительная функция с ценой ${{price, number}} за участника в месяц. Первый {{count}} член арендатора бесплатен.',
     tooltip_one:
       'Дополнительная функция с ценой ${{price, number}} за участника в месяц. Первый {{count}} член арендатора бесплатен.',
     tooltip_other:
@@ -79,7 +78,7 @@ const usage = {
   security_features: {
     title: 'Продвинутая безопасность',
     tooltip:
-      'Дополнительная функция с ценой ${{price, number}}/месяц за полный комплект продвинутой безопасности, включая CAPTCHA, блокировку идентификаторов, черный список email (скоро) и другие.',
+      'Дополнительная функция с ценой ${{price, number}}/месяц за полный пакет продвинутой безопасности, включая CAPTCHA, блокировку идентификатора, черный список электронной почты и многое другое.',
   },
   saml_applications: {
     title: 'SAML приложение',

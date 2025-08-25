@@ -54,9 +54,8 @@ const usage = {
   },
   tenant_members: {
     title: 'テナントメンバー',
-    /** UNTRANSLATED */
     tooltip:
-      'Add-on feature priced at ${{price, number}} per member per month. The first {{count}} tenant member is free.',
+      '追加機能は、月額 {{price, number}} ドル、メンバーごとの価格です。最初の {{count}} テナントメンバーは無料です。',
     tooltip_one:
       '追加機能は月額 {{price, number}} ドル、メンバーごとの価格です。最初の {{count}} テナントメンバーは無料です。',
     tooltip_other:
@@ -81,7 +80,7 @@ const usage = {
   security_features: {
     title: '高度なセキュリティ',
     tooltip:
-      '追加機能として、CAPTCHA、識別子ロックアウト、メールブロックリスト（近日登場）を含む完全な高度なセキュリティバンドルで、月額 {{price, number}} ドルです。',
+      'フルの高度なセキュリティバンドル（CAPTCHA、識別子ロックアウト、メール ブロックリストなどを含む）は月額 {{price, number}} ドルで提供されるアドオン機能です。',
   },
   saml_applications: {
     title: 'SAML アプリ',

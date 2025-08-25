@@ -53,9 +53,8 @@ const usage = {
   },
   tenant_members: {
     title: '테넌트 멤버',
-    /** UNTRANSLATED */
     tooltip:
-      'Add-on feature priced at ${{price, number}} per member per month. The first {{count}} tenant member is free.',
+      '추가 기능은 멤버당 매달 ${{price, number}} 의 가격이 책정됩니다. 처음 {{count}} 명의 테넌트 멤버는 무료입니다.',
     tooltip_one:
       '추가 기능은 멤버당 매달 ${{price, number}} 의 가격이 책정됩니다. 처음 {{count}} 명의 테넌트 멤버는 무료입니다.',
     tooltip_other:
@@ -80,7 +79,7 @@ const usage = {
   security_features: {
     title: '고급 보안',
     tooltip:
-      'CAPTCHA, 식별자 잠금, 이메일 차단 목록 (출시 예정) 등을 포함한 전체 고급 보안 번들에 대해 매달 ${{price, number}} 의 추가 기능입니다.',
+      '추가 기능으로 CAPTCHA, 식별자 잠금, 이메일 차단 목록 등을 포함한 전체 고급 보안 번들에 대해 월 ${{price, number}} 의 가격이 책정됩니다.',
   },
   saml_applications: {
     title: 'SAML 앱',

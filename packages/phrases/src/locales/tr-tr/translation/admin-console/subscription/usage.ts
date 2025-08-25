@@ -53,9 +53,8 @@ const usage = {
   },
   tenant_members: {
     title: 'Kiracı üyeler',
-    /** UNTRANSLATED */
     tooltip:
-      'Add-on feature priced at ${{price, number}} per member per month. The first {{count}} tenant member is free.',
+      'Üyelik başına ayda {{price, number}} $ fiyatlandırılan eklenti özelliği. İlk {{count}} kiracı üye ücretsizdir.',
     tooltip_one:
       'Ayda üye başına ${{price, number}} fiyatlandırılan eklenti özelliği. İlk {{count}} kiracı üye ücretsizdir.',
     tooltip_other:
@@ -79,7 +78,7 @@ const usage = {
   security_features: {
     title: 'Gelişmiş güvenlik',
     tooltip:
-      'CAPTCHA, kimlik kilitleme, e-posta engelleme listesi (yakında geliyor) ve daha fazlasını içeren tam gelişmiş güvenlik paketi için ayda ${{price, number}} karşılığında ek özellik.',
+      'CAPTCHA, kimlik kilitleme, e-posta engelleme listesi ve daha fazlasını içeren tam gelişmiş güvenlik paketi için ayda ${{price, number}} fiyatlandırılan eklenti özelliği.',
   },
   saml_applications: {
     title: 'SAML uygulaması',

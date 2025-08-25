@@ -53,9 +53,7 @@ const usage = {
   },
   tenant_members: {
     title: 'أعضاء المستأجر',
-    /** UNTRANSLATED */
-    tooltip:
-      'Add-on feature priced at ${{price, number}} per member per month. The first {{count}} tenant member is free.',
+    tooltip: 'ميزة إضافية بسعر ${{price, number}} لكل عضو شهريًا. أول {{count}} عضو مستأجر مجاني.',
     tooltip_one:
       'ميزة إضافية بسعر ${{price, number}} لكل عضو شهريًا. أول {{count}} عضو مستأجر مجاني.',
     tooltip_other:
@@ -79,7 +77,7 @@ const usage = {
   security_features: {
     title: 'الأمان المتقدم',
     tooltip:
-      'ميزة إضافية بسعر ${{price, number}}/الشهر لحزمة الأمان المتقدمة الكاملة، بما في ذلك CAPTCHA، قفل المعرف، قائمة البريد الإلكتروني المحظورة (قريبًا)، والمزيد.',
+      'ميزة إضافية بسعر ${{price, number}}/الشهر لحزمة الأمان المتقدمة الكاملة، بما في ذلك CAPTCHA، وقفل التعريف، وقائمة البريد الإلكتروني المحظورة، والمزيد.',
   },
   saml_applications: {
     title: 'تطبيق SAML',

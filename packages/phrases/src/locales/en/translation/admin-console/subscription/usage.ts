@@ -79,7 +79,7 @@ const usage = {
   security_features: {
     title: 'Advanced security',
     tooltip:
-      'Add-on feature with a price of ${{price, number}}/month for the full advanced security bundle, including CAPTCHA, identifier lockout, email blocklist (coming soon), and more.',
+      'Add-on feature with a price of ${{price, number}}/month for the full advanced security bundle, including CAPTCHA, identifier lockout, email blocklist, and more.',
   },
   saml_applications: {
     title: 'SAML app',

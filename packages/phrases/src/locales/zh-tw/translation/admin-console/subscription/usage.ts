@@ -49,9 +49,7 @@ const usage = {
   },
   tenant_members: {
     title: '租戶成員',
-    /** UNTRANSLATED */
-    tooltip:
-      'Add-on feature priced at ${{price, number}} per member per month. The first {{count}} tenant member is free.',
+    tooltip: '附加功能，每位成員每月收費 ${{price, number}}。前 {{count}} 名租戶成員免費。',
     tooltip_one: '附加功能，每位成員每月收費 ${{price, number}}。第 {{count}} 名租戶成員免費。',
     tooltip_other: '附加功能，每位成員每月收費 ${{price, number}}。前 {{count}} 名租戶成員免費。',
     tooltip_for_enterprise:
@@ -73,7 +71,7 @@ const usage = {
   security_features: {
     title: '進階安全性',
     tooltip:
-      '附加功能，完整進階安全性套件的月費為 ${{price, number}}，包括 CAPTCHA、身份鎖定、電子郵件黑名單（即將推出）等。',
+      '附加功能，完整的進階安全包每月 ${{price, number}}，包括人機驗證、標識符鎖定、郵件黑名單等。',
   },
   saml_applications: {
     title: 'SAML 應用',
