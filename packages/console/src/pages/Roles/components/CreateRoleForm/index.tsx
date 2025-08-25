@@ -2,10 +2,13 @@ import { type AdminConsoleKey } from '@logto/phrases';
 import type { Role, ScopeResponse } from '@logto/schemas';
 import { RoleType, internalRolePrefix } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
+import { useContext } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import RoleScopesTransfer from '@/components/RoleScopesTransfer';
+import { isDevFeaturesEnabled } from '@/consts/env';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
@@ -13,6 +16,7 @@ import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
 import { trySubmitSafe } from '@/utils/form';
+import { isPaidPlan } from '@/utils/subscription';
 
 import Footer from './Footer';
 import styles from './index.module.scss';
@@ -38,6 +42,15 @@ type CreateRolePayload = Pick<Role, 'name' | 'description' | 'type'> & {
 
 function CreateRoleForm({ onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+
+  const {
+    currentSubscription: { planId, isEnterprisePlan },
+    currentSubscriptionBasicQuota: { userRolesLimit, machineToMachineRolesLimit },
+  } = useContext(SubscriptionDataContext);
+
+  const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
+  // We need to hide the add-on tag for legacy plans who has unlimited roles.
+  const hasRolesIncluded = userRolesLimit === null && machineToMachineRolesLimit === null;
 
   const {
     control,
@@ -71,6 +84,8 @@ function CreateRoleForm({ onClose }: Props) {
     <ModalLayout
       title="roles.create_role_title"
       subtitle="roles.create_role_description"
+      // TODO: remove the dev feature when the new paywall logic is ready;
+      hasAddOnTag={isDevFeaturesEnabled && isPaidTenant && !hasRolesIncluded}
       learnMoreLink={{
         href: 'https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-roles',
         targetBlank: 'noopener',
