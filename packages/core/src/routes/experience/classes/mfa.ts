@@ -297,23 +297,26 @@ export class Mfa {
    * Optionally suggest user to bind additional MFA factors during registration.
    * Encapsulates suggestion logic and throws a 422 with `session.mfa.suggest_additional_mfa`
    * when conditions are met.
+   * The purpose is to suggest another MFA factor if the user has only one Email or Phone factor.
    */
-  async guardAdditionalBindingSuggestion({
-    registeredViaEmail,
-    registeredViaPhone,
-  }: {
-    registeredViaEmail: boolean;
-    registeredViaPhone: boolean;
-  }) {
+  async guardAdditionalBindingSuggestion(
+    factorsInUser: MfaFactor[],
+    availableFactors: MfaFactor[]
+  ) {
     // Only suggest during registration flow
     if (this.interactionContext.getInteractionEvent() !== InteractionEvent.Register) {
       return;
     }
 
-    // If neither email nor phone was used to register, nothing to suggest
-    if (!registeredViaEmail && !registeredViaPhone) {
+    // If no Email/Phone factor in use, then the user is not registered by Email/Phone
+    if (
+      !factorsInUser.includes(MfaFactor.EmailVerificationCode) &&
+      !factorsInUser.includes(MfaFactor.PhoneVerificationCode)
+    ) {
       return;
     }
+
+    const additionalFactors = availableFactors.filter((factor) => !factorsInUser.includes(factor));
 
     // Respect user's choice to skip suggestion for this interaction
     if (this.additionalBindingSuggestionSkipped) {
@@ -324,26 +327,6 @@ export class Mfa {
     if (this.bindMfaFactorsArray.length > 0) {
       return;
     }
-
-    const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
-    const { factors } = mfaSettings;
-
-    // Build suggestion factors in one pass:
-    // - Exclude BackupCode
-    // - Include non-email/phone factors directly
-    // - Include Phone if registered via Email; include Email if registered via Phone
-    const additionalFactors = factors.filter((factor) => {
-      if (factor === MfaFactor.BackupCode) {
-        return false;
-      }
-      if (factor === MfaFactor.EmailVerificationCode) {
-        return registeredViaPhone;
-      }
-      if (factor === MfaFactor.PhoneVerificationCode) {
-        return registeredViaEmail;
-      }
-      return true;
-    });
 
     // No available factors to suggest
     if (additionalFactors.length === 0) {
@@ -362,13 +345,7 @@ export class Mfa {
    * @throws {RequestError} with status 422 if the user existing backup codes is empty, new backup codes is required
    */
   // eslint-disable-next-line complexity
-  async assertUserMandatoryMfaFulfilled({
-    registeredViaEmail,
-    registeredViaPhone,
-  }: {
-    registeredViaEmail: boolean;
-    registeredViaPhone: boolean;
-  }) {
+  async assertUserMandatoryMfaFulfilled() {
     const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
     const { policy, factors } = mfaSettings;
 
@@ -426,10 +403,7 @@ export class Mfa {
 
     if (EnvSet.values.isDevFeaturesEnabled) {
       // Optional suggestion: Let Mfa decide whether to suggest additional binding during registration
-      await this.guardAdditionalBindingSuggestion({
-        registeredViaEmail,
-        registeredViaPhone,
-      });
+      await this.guardAdditionalBindingSuggestion(factorsInUser, availableFactors);
     }
 
     // Assert backup code

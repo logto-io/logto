@@ -12,6 +12,9 @@ import {
 import { expectRejects } from '#src/helpers/index.js';
 import { resetMfaSettings } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile } from '#src/helpers/user.js';
+import { devFeatureTest } from '#src/utils.js';
+
+const { describe, it } = devFeatureTest;
 
 describe('Register interaction - optional additional MFA suggestion', () => {
   beforeAll(async () => {
@@ -36,7 +39,7 @@ describe('Register interaction - optional additional MFA suggestion', () => {
       },
       mfa: {
         factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
-        policy: MfaPolicy.NoPrompt,
+        policy: MfaPolicy.Mandatory,
       },
     });
   });

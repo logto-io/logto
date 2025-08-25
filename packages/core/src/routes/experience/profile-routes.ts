@@ -44,7 +44,9 @@ function verifiedInteractionGuard<
       })
     );
 
-    await experienceInteraction.guardMfaVerificationStatus();
+    if (experienceInteraction.interactionEvent === InteractionEvent.SignIn) {
+      await experienceInteraction.guardMfaVerificationStatus();
+    }
 
     return next();
   };
