@@ -100,7 +100,7 @@
     "zod": "3.24.3"
   },
   "devDependencies": {
-    "@logto/cloud": "0.2.5-8a3dff0",
+    "@logto/cloud": "0.2.5-6279e2e",
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/ts-config": "6.0.0",
     "@types/adm-zip": "^0.5.5",
