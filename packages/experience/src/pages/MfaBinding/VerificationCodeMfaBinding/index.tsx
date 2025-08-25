@@ -11,6 +11,7 @@ import { sendVerificationCode } from '@/apis/experience';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useSkipMfa from '@/hooks/use-skip-mfa';
+import useSkipOptionalMfa from '@/hooks/use-skip-optional-mfa';
 import IdentifierProfileForm from '@/pages/Continue/IdentifierProfileForm';
 import ErrorPage from '@/pages/ErrorPage';
 import { UserMfaFlow } from '@/types';
@@ -39,6 +40,7 @@ const VerificationCodeMfaBinding = ({
   const [errorMessage, setErrorMessage] = useState<string>();
 
   const skipMfa = useSkipMfa();
+  const skipOptionalMfa = useSkipOptionalMfa();
   const handleError = useErrorHandler();
 
   const clearErrorMessage = useCallback(() => {
@@ -84,13 +86,13 @@ const VerificationCodeMfaBinding = ({
     return <ErrorPage title="error.invalid_session" />;
   }
 
-  const { skippable, availableFactors } = mfaFlowState;
+  const { skippable, availableFactors, suggestion } = mfaFlowState;
 
   return (
     <SecondaryPageLayout
       title={titleKey}
       description={descriptionKey}
-      onSkip={conditional(skippable && skipMfa)}
+      onSkip={conditional(skippable && (suggestion ? skipOptionalMfa : skipMfa))}
     >
       <IdentifierProfileForm
         autoFocus

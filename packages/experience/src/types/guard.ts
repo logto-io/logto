@@ -78,6 +78,8 @@ export const mfaErrorDataGuard = s.object({
   availableFactors: mfaFactorsGuard,
   skippable: s.optional(s.boolean()),
   maskedIdentifiers: s.optional(s.record(s.enums(mfaFactorEnumValues), s.string())),
+  // Whether this MFA flow is an optional suggestion (e.g., add another factor after sign-up)
+  suggestion: s.optional(s.boolean()),
 });
 
 export const mfaFlowStateGuard = mfaErrorDataGuard;
