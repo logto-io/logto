@@ -49,7 +49,11 @@ const usage = {
   },
   tenant_members: {
     title: '租戶成員',
-    tooltip: '附加功能，每位成員每月 ${{price, number}}。首 {{basicQuota}} 位租戶成員免費。',
+    /** UNTRANSLATED */
+    tooltip:
+      'Add-on feature priced at ${{price, number}} per member per month. The first {{count}} tenant member is free.',
+    tooltip_one: '每位租戶成員每月 ${{price, number}} 的附加功能。首 {{count}} 位租戶成員免費。',
+    tooltip_other: '每位租戶成員每月 ${{price, number}} 的附加功能。首 {{count}} 位租戶成員免費。',
     tooltip_for_enterprise:
       '你的合約計劃中包含前 {{basicQuota}} 位租戶成員免費使用。如果你需要更多，每位租戶成員每月 ${{price, number}}。',
   },

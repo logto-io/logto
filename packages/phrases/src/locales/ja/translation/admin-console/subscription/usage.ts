@@ -54,8 +54,13 @@ const usage = {
   },
   tenant_members: {
     title: 'テナントメンバー',
+    /** UNTRANSLATED */
     tooltip:
-      '追加機能として、月額 {{price, number}} ドルのメンバーごとの料金です。最初の {{basicQuota}} 人のテナントメンバーは無料です。',
+      'Add-on feature priced at ${{price, number}} per member per month. The first {{count}} tenant member is free.',
+    tooltip_one:
+      '追加機能は月額 {{price, number}} ドル、メンバーごとの価格です。最初の {{count}} テナントメンバーは無料です。',
+    tooltip_other:
+      '追加機能は月額 {{price, number}} ドル、メンバーごとの価格です。最初の {{count}} テナントメンバーは無料です。',
     tooltip_for_enterprise:
       '最初の {{basicQuota}} のテナントメンバーは契約ベースのプランで含まれており、無料で使用できます。より多くが必要な場合、月額 {{price, number}} ドルのメンバーごとの料金がかかります。',
   },

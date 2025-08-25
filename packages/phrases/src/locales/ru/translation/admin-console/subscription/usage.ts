@@ -53,8 +53,13 @@ const usage = {
   },
   tenant_members: {
     title: 'Члены арендатора',
+    /** UNTRANSLATED */
     tooltip:
-      'Дополнительная функция с ценой ${{price, number}} за участника в месяц. Первые {{basicQuota}} члена арендатора предоставляются бесплатно.',
+      'Add-on feature priced at ${{price, number}} per member per month. The first {{count}} tenant member is free.',
+    tooltip_one:
+      'Дополнительная функция с ценой ${{price, number}} за участника в месяц. Первый {{count}} член арендатора бесплатен.',
+    tooltip_other:
+      'Дополнительная функция с ценой ${{price, number}} за участника в месяц. Первые {{count}} членов арендатора бесплатны.',
     tooltip_for_enterprise:
       'Первые {{basicQuota}} члена арендатора включены и бесплатны в вашем плановом контракте. Если вам нужно больше, то ${{price, number}} за члена арендатора в месяц.',
   },

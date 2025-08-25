@@ -54,8 +54,13 @@ const usage = {
   },
   tenant_members: {
     title: 'Membres du locataire',
+    /** UNTRANSLATED */
     tooltip:
-      'Fonctionnalité en supplément au prix de ${{price, number}} par membre par mois. Les {{basicQuota}} premiers membres du locataire sont gratuits.',
+      'Add-on feature priced at ${{price, number}} per member per month. The first {{count}} tenant member is free.',
+    tooltip_one:
+      'Fonctionnalité supplémentaire au prix de ${{price, number}} par membre par mois. Le premier membre du locataire est gratuit.',
+    tooltip_other:
+      'Fonctionnalité supplémentaire au prix de ${{price, number}} par membre par mois. Les {{count}} premiers membres du locataire sont gratuits.',
     tooltip_for_enterprise:
       'Les {{basicQuota}} premiers membres du locataire sont inclus et gratuits dans votre plan basé sur un contrat. Si vous en avez besoin de plus, ${{price, number}} par membre du locataire par mois.',
   },

@@ -54,8 +54,13 @@ const usage = {
   },
   tenant_members: {
     title: 'Miembros del inquilino',
+    /** UNTRANSLATED */
     tooltip:
-      'Función adicional con un precio de ${{price, number}} por miembro por mes. Los primeros {{basicQuota}} miembros del inquilino son gratis.',
+      'Add-on feature priced at ${{price, number}} per member per month. The first {{count}} tenant member is free.',
+    tooltip_one:
+      'Función adicional con un precio de ${{price, number}} por miembro por mes. El primer {{count}} miembro del inquilino es gratis.',
+    tooltip_other:
+      'Función adicional con un precio de ${{price, number}} por miembro por mes. Los primeros {{count}} miembros del inquilino son gratis.',
     tooltip_for_enterprise:
       'Los primeros {{basicQuota}} miembros del inquilino están incluidos y son gratuitos en tu plan basado en contrato. Si necesitas más, ${{price, number}} por miembro del inquilino por mes.',
   },

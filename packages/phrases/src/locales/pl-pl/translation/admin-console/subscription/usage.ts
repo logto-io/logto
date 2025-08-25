@@ -53,8 +53,13 @@ const usage = {
   },
   tenant_members: {
     title: 'Członkowie dzierżawcy',
+    /** UNTRANSLATED */
     tooltip:
-      'Funkcja dodatkowa w cenie ${{price, number}} za członka miesięcznie. Pierwszych {{basicQuota}} członków dzierżawcy jest darmowych.',
+      'Add-on feature priced at ${{price, number}} per member per month. The first {{count}} tenant member is free.',
+    tooltip_one:
+      'Funkcja dodatkowa w cenie ${{price, number}} za członka miesięcznie. Pierwszy {{count}} członek dzierżawcy jest darmowy.',
+    tooltip_other:
+      'Funkcja dodatkowa w cenie ${{price, number}} za członka miesięcznie. Pierwsze {{count}} członków dzierżawcy jest darmowych.',
     tooltip_for_enterprise:
       'Pierwszych {{basicQuota}} członków dzierżawcy jest wliczonych i darmowych w twoim kontrakcie. Jeśli potrzebujesz więcej, ${{price, number}} za członka dzierżawcy miesięcznie.',
   },

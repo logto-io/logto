@@ -53,8 +53,13 @@ const usage = {
   },
   tenant_members: {
     title: 'أعضاء المستأجر',
+    /** UNTRANSLATED */
     tooltip:
-      'ميزة إضافية بسعر قدره ${{price, number}} لكل عضو في المستأجر شهريًا. الأعضاء الأولى {{basicQuota}} في المستأجر مجانية.',
+      'Add-on feature priced at ${{price, number}} per member per month. The first {{count}} tenant member is free.',
+    tooltip_one:
+      'ميزة إضافية بسعر ${{price, number}} لكل عضو شهريًا. أول {{count}} عضو مستأجر مجاني.',
+    tooltip_other:
+      'ميزة إضافية بسعر ${{price, number}} لكل عضو شهريًا. أول {{count}} أعضاء مستأجرين مجانًا.',
     tooltip_for_enterprise:
       'تشمل خطتك القائمة على العقد أول {{basicQuota}} من أعضاء المستأجر وتكون مجانية للاستخدام. إذا كنت بحاجة إلى المزيد ، {{price, number}} لكل عضو مستأجر شهريًا.',
   },

@@ -53,8 +53,13 @@ const usage = {
   },
   tenant_members: {
     title: '테넌트 멤버',
+    /** UNTRANSLATED */
     tooltip:
-      '매달 멤버당 ${{price, number}} 의 추가 기능입니다. 처음 {{basicQuota}} 명의 테넌트 멤버는 무료입니다.',
+      'Add-on feature priced at ${{price, number}} per member per month. The first {{count}} tenant member is free.',
+    tooltip_one:
+      '추가 기능은 멤버당 매달 ${{price, number}} 의 가격이 책정됩니다. 처음 {{count}} 명의 테넌트 멤버는 무료입니다.',
+    tooltip_other:
+      '추가 기능은 멤버당 매달 ${{price, number}} 의 가격이 책정됩니다. 처음 {{count}} 명의 테넌트 멤버는 무료입니다.',
     tooltip_for_enterprise:
       '플랜에는 처음 {{basicQuota}} 명의 테넌트 멤버가 포함되어 무료로 사용할 수 있습니다. 더 필요하다면, 매달 멤버당 ${{price, number}} 입니다.',
   },

@@ -49,7 +49,11 @@ const usage = {
   },
   tenant_members: {
     title: '租户成员',
-    tooltip: '附加功能，每个成员每月价格为 ${{price, number}} 。前 {{basicQuota}} 个租户成员免费。',
+    /** UNTRANSLATED */
+    tooltip:
+      'Add-on feature priced at ${{price, number}} per member per month. The first {{count}} tenant member is free.',
+    tooltip_one: '附加功能，每个成员每月 ${{price, number}} 。首个租户成员（{{count}} 个）免费。',
+    tooltip_other: '附加功能，每个成员每月 ${{price, number}} 。首 {{count}} 个租户成员免费。',
     tooltip_for_enterprise:
       '合同计划包括前 {{basicQuota}} 个租户成员，免费使用。如果需要更多，每个租户成员每月 ${{price, number}}。',
   },
