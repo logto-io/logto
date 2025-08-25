@@ -27,6 +27,7 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { EnvSet } from '../../../env-set/index.js';
 import { type InteractionContext } from '../types.js';
 
 import { getAllUserEnabledMfaVerifications } from './helpers.js';
@@ -361,7 +362,13 @@ export class Mfa {
    * @throws {RequestError} with status 422 if the user existing backup codes is empty, new backup codes is required
    */
   // eslint-disable-next-line complexity
-  async assertUserMandatoryMfaFulfilled() {
+  async assertUserMandatoryMfaFulfilled({
+    registeredViaEmail,
+    registeredViaPhone,
+  }: {
+    registeredViaEmail: boolean;
+    registeredViaPhone: boolean;
+  }) {
     const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
     const { policy, factors } = mfaSettings;
 
@@ -416,6 +423,14 @@ export class Mfa {
           : { availableFactors, skippable: true }
       )
     );
+
+    if (EnvSet.values.isDevFeaturesEnabled) {
+      // Optional suggestion: Let Mfa decide whether to suggest additional binding during registration
+      await this.guardAdditionalBindingSuggestion({
+        registeredViaEmail,
+        registeredViaPhone,
+      });
+    }
 
     // Assert backup code
     assertThat(

@@ -9,7 +9,6 @@ import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { EnvSet } from '../../../env-set/index.js';
 import {
   interactionStorageGuard,
   type InteractionStorage,
@@ -475,27 +474,21 @@ export default class ExperienceInteraction {
       await this.profile.assertUserMandatoryProfileFulfilled();
     }
 
-    if (EnvSet.values.isDevFeaturesEnabled) {
-      // Optional suggestion: Let Mfa decide whether to suggest additional binding during registration
+    // Revalidate the new MFA data if any
+    await this.mfa.checkAvailability();
+
+    // MFA fulfilled
+    if (!this.hasVerifiedSsoIdentity) {
       const registeredViaEmail = this.verificationRecordsArray.some(
         (record) => record.type === VerificationType.EmailVerificationCode && record.isVerified
       );
       const registeredViaPhone = this.verificationRecordsArray.some(
         (record) => record.type === VerificationType.PhoneVerificationCode && record.isVerified
       );
-
-      await this.mfa.guardAdditionalBindingSuggestion({
+      await this.mfa.assertUserMandatoryMfaFulfilled({
         registeredViaEmail,
         registeredViaPhone,
       });
-    }
-
-    // Revalidate the new MFA data if any
-    await this.mfa.checkAvailability();
-
-    // MFA fulfilled
-    if (!this.hasVerifiedSsoIdentity) {
-      await this.mfa.assertUserMandatoryMfaFulfilled();
     }
 
     const {
