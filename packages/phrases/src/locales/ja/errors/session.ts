@@ -43,6 +43,8 @@ const session = {
     invalid_backup_code: '無効なバックアップコード。',
     mfa_policy_not_user_controlled: 'MFA ポリシーはユーザーによって管理されていません。',
     mfa_factor_not_enabled: 'MFA は有効になっていません。',
+    suggest_additional_mfa:
+      'より強力な保護のため、別のMFA方法の追加を検討してください。この手順はスキップして続行できます。',
   },
   sso_enabled:
     'このメールアドレスではシングルサインオンが有効になっています。SSO でサインインしてください。',
