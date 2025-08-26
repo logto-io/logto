@@ -26,7 +26,7 @@ Go to the API Keys page from the GatewayAPI console, and find the API token or c
 
 ## Set up in Logto
 
-1. **Endpoint**: If your GatewayAPI account is in the EU region, you should use the endpoint `https://gatewayapi.com/rest/mtsms`. If your GatewayAPI account is in the US region, you should use the endpoint `https://gatewayapi.com/rest/mtsms`.
+1. **Endpoint**: If your GatewayAPI account is in the EU region, you should use the endpoint `https://gatewayapi.eu/rest/mtsms`. If your GatewayAPI account is in the US region, you should use the endpoint `https://gatewayapi.com/rest/mtsms`.
 2. **API Token**: The API token you created in the previous step.
 3. **Sender**: The sender you want to use to send the SMS.
 4. **Templates**: The templates you want to use to send the SMS, you can use the default templates or modify them as needed.
