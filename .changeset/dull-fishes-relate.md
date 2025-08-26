@@ -3,4 +3,4 @@
 "@logto/phrases": minor
 ---
 
-add Thai translations to Logto Console and Sign-in Experience
+add Thai translations to Logto Console and sign-in experience
