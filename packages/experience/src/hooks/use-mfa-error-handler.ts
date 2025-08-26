@@ -107,6 +107,7 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
         const factors = data?.availableFactors ?? [];
         const skippable = data?.skippable;
         const maskedIdentifiers = data?.maskedIdentifiers;
+        const suggestion = data?.suggestion;
 
         if (factors.length === 0) {
           setToast(error.message);
@@ -119,7 +120,12 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
             ? factors.filter((factor) => factor !== MfaFactor.WebAuthn)
             : factors;
 
-        await handleMfaRedirect(flow, { availableFactors, skippable, maskedIdentifiers });
+        await handleMfaRedirect(flow, {
+          availableFactors,
+          skippable,
+          maskedIdentifiers,
+          suggestion,
+        });
       };
     },
     [handleMfaRedirect, setToast]
@@ -129,6 +135,8 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
     () => ({
       'user.missing_mfa': handleMfaError(UserMfaFlow.MfaBinding),
       'session.mfa.require_mfa_verification': handleMfaError(UserMfaFlow.MfaVerification),
+      // Optional suggestion to add another MFA during registration
+      'session.mfa.suggest_additional_mfa': handleMfaError(UserMfaFlow.MfaBinding),
       'session.mfa.backup_code_required': async () => startBackupCodeBinding(replace),
     }),
     [handleMfaError, replace, startBackupCodeBinding]

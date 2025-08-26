@@ -35,6 +35,7 @@ const session = {
     invalid_backup_code: '无效的备用代码。',
     mfa_policy_not_user_controlled: 'MFA 策略不受用户控制。',
     mfa_factor_not_enabled: 'MFA 因素未启用。',
+    suggest_additional_mfa: '为更强的安全性，建议添加另一种多因素认证方式。你可以跳过此步骤继续。',
   },
   sso_enabled: '该邮箱已开启单点登录，请使用 SSO 登录。',
   captcha_required: '需要验证码。',

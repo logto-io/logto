@@ -184,6 +184,25 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
     }
   );
 
+  // Mark optional additional MFA binding suggestion as skipped in current interaction
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    router.post(
+      `${experienceRoutes.mfa}/mfa-suggestion-skipped`,
+      koaGuard({ status: [204, 400, 403, 404, 422] }),
+      verifiedInteractionGuard(),
+      async (ctx, next) => {
+        const { experienceInteraction } = ctx;
+
+        experienceInteraction.mfa.skipAdditionalBindingSuggestion();
+        await experienceInteraction.save();
+
+        ctx.status = 204;
+
+        return next();
+      }
+    );
+  }
+
   router.post(
     `${experienceRoutes.mfa}`,
     koaGuard({

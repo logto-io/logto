@@ -61,6 +61,11 @@ export const skipMfa = async () => {
   return submitInteraction();
 };
 
+export const skipMfaSuggestion = async () => {
+  await api.post(`${experienceApiRoutes.mfa}/mfa-suggestion-skipped`);
+  return submitInteraction();
+};
+
 export const bindMfa = async (
   type: MfaFactor,
   verificationId: string,

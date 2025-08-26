@@ -9,6 +9,7 @@ import UserInteractionContext from '@/Providers/UserInteractionContextProvider/U
 import Divider from '@/components/Divider';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
 import useSkipMfa from '@/hooks/use-skip-mfa';
+import useSkipOptionalMfa from '@/hooks/use-skip-optional-mfa';
 import ErrorPage from '@/pages/ErrorPage';
 import { UserMfaFlow } from '@/types';
 import { totpBindingStateGuard } from '@/types/guard';
@@ -24,17 +25,18 @@ const TotpBinding = () => {
   const verificationId = verificationIdsMap[VerificationType.TOTP];
 
   const skipMfa = useSkipMfa();
+  const skipOptionalMfa = useSkipOptionalMfa();
 
   if (!totpBindingState || !verificationId) {
     return <ErrorPage title="error.invalid_session" />;
   }
 
-  const { availableFactors, skippable } = totpBindingState;
+  const { availableFactors, skippable, suggestion } = totpBindingState;
 
   return (
     <SecondaryPageLayout
       title="mfa.add_authenticator_app"
-      onSkip={conditional(skippable && skipMfa)}
+      onSkip={conditional(skippable && (suggestion ? skipOptionalMfa : skipMfa))}
     >
       <div className={styles.container}>
         <SecretSection {...totpBindingState} />

@@ -331,7 +331,8 @@ export default class ExperienceInteraction {
    * @throws {RequestError} with 403 if the mfa verification is required but not verified
    */
   public async guardMfaVerificationStatus() {
-    if (this.hasVerifiedSsoIdentity) {
+    // For register, it does not make sense to verify MFA, because this is the first time the user is signing up.
+    if (this.hasVerifiedSsoIdentity || this.interactionEvent === InteractionEvent.Register) {
       return;
     }
 
@@ -478,7 +479,16 @@ export default class ExperienceInteraction {
 
     // MFA fulfilled
     if (!this.hasVerifiedSsoIdentity) {
-      await this.mfa.assertUserMandatoryMfaFulfilled();
+      const registeredViaEmail = this.verificationRecordsArray.some(
+        (record) => record.type === VerificationType.EmailVerificationCode && record.isVerified
+      );
+      const registeredViaPhone = this.verificationRecordsArray.some(
+        (record) => record.type === VerificationType.PhoneVerificationCode && record.isVerified
+      );
+      await this.mfa.assertUserMandatoryMfaFulfilled({
+        registeredViaEmail,
+        registeredViaPhone,
+      });
     }
 
     const {

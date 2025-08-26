@@ -47,6 +47,8 @@ const session = {
     invalid_backup_code: 'Código de backup inválido.',
     mfa_policy_not_user_controlled: 'A política MFA não é controlada pelo usuário.',
     mfa_factor_not_enabled: 'O fator MFA não está ativado.',
+    suggest_additional_mfa:
+      'Para maior proteção, considere adicionar outro método de MFA. Pode ignorar este passo e continuar.',
   },
   sso_enabled:
     'O login único está habilitado para este e-mail fornecido. Faça login com SSO, por favor.',
