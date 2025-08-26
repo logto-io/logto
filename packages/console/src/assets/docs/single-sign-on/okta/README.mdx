@@ -64,17 +64,45 @@ If the `issuer` link you provided is valid, you will see a parsed full list of O
 
 </Step>
 
-<Step index={4} title="Additional Scopes (Optional)">
+<Step index={4} title="Additional scopes (Optional)">
 
-Use the `Scope` field to add additional scopes to your OAuth request. This will allow you to request for more information from the Okta OAuth server. Please refer to the [Okta documentation](https://developer.okta.com/docs/reference/api/oidc/#scopes) for more details about the available scopes.
+Scopes define the permissions your app requests from users and control which data your app can access from their Okta accounts. Requesting additional Okta permissions requires configuration on both sides:
 
-\*Regardless of the custom scope settings, Logto will always send the `openid`, `profile` and `email` scopes to the IdP. This is to ensure that Logto can retrieve the user's identity information and email address properly.
+**In Okta admin console:**
+
+1. Navigate to **Applications > Applications** and select your OIDC application.
+2. Go to the **Assignments** tab to ensure your app has access to the required users and groups.
+3. For custom scopes, navigate to **Security > API > Authorization Servers** and select your authorization server.
+4. Add custom scopes if needed:
+   - Click **Scopes** and then **Add Scope**
+   - Define scope names like `okta.users.read` or `okta.groups.read` for accessing Okta APIs
+   - Configure consent requirements for each scope
+
+For a complete list of available scopes and their descriptions, please refer to the [Okta OIDC documentation](https://developer.okta.com/docs/api/openapi/okta-oauth/guides/overview/#scopes).
+
+**In Logto Okta connector:**
+
+1. Logto automatically includes `openid`, `profile`, and `email` scopes to retrieve basic user identity information. You can leave the `Scopes` field blank if you only need basic user information.
+2. Add `offline_access` to the `Scopes` field if you plan to store tokens for persistent API access. This scope enables refresh tokens for long-lived API access.
+3. Add additional scopes (separated by spaces) in the `Scopes` field to request more data from Okta. For example: `okta.users.read okta.groups.read`
+
+**Tip:** If your app requests these scopes to access Okta APIs and perform actions, make sure to enable **Store tokens for persistent API access** in Logto Okta connector. See the next section for details.
 
 </Step>
 
-<Step index={5} title="Set email domains and enable the SSO connector">
+<Step index={5} title="Store tokens to access Okta APIs (Optional)">
 
-Provide the email `domains` of your organization on the connector `experience` tab. This will enabled the SSO connector as an authentication method for those users.
+If you want to access [Okta scopes](https://developer.okta.com/docs/guides/request-user-consent/main/#enable-consent-for-scopes) and perform actions with user authorization, Logto needs to get specific scopes and store tokens.
+
+1. Add the required scopes in your Okta developer console API permissions configuration and Logto Okta connector.
+2. Enable **Store tokens for persistent API access** in Logto Okta connector. Logto will securely store Okta access and refresh tokens in the Secret Vault.
+3. To ensure refresh tokens are returned, add the `offline_access` scope to your Okta application permissions and include it in your Logto Okta connector scopes. This scope allows your application to maintain access to resources for extended periods.
+
+</Step>
+
+<Step index={6} title="Set email domains and enable the SSO connector">
+
+Provide the email `domains` of your organization on the connector `experience` tab. This will enable the SSO connector as an authentication method for those users.
 
 Users with email addresses in the specified domains will be exclusively limited to use your SSO connector as their only authentication method.
 
