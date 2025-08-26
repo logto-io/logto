@@ -55,7 +55,11 @@ const usage = {
   tenant_members: {
     title: 'Membres du locataire',
     tooltip:
-      'Fonctionnalité en supplément au prix de ${{price, number}} par membre par mois. Les {{basicQuota}} premiers membres du locataire sont gratuits.',
+      'Fonctionnalité supplémentaire au prix de ${{price, number}} par membre par mois. Les {{count}} premiers membres du locataire sont gratuits.',
+    tooltip_one:
+      'Fonctionnalité supplémentaire au prix de ${{price, number}} par membre par mois. Le premier membre du locataire est gratuit.',
+    tooltip_other:
+      'Fonctionnalité supplémentaire au prix de ${{price, number}} par membre par mois. Les {{count}} premiers membres du locataire sont gratuits.',
     tooltip_for_enterprise:
       'Les {{basicQuota}} premiers membres du locataire sont inclus et gratuits dans votre plan basé sur un contrat. Si vous en avez besoin de plus, ${{price, number}} par membre du locataire par mois.',
   },
@@ -76,7 +80,7 @@ const usage = {
   security_features: {
     title: 'Sécurité avancée',
     tooltip:
-      "Fonctionnalité en supplément avec un prix de ${{price, number}}/mois pour l'ensemble complet de sécurité avancée, incluant CAPTCHA, verrouillage d'identificateur, liste de blocage d'emails (bientôt disponible), et plus.",
+      'Fonctionnalité supplémentaire avec un prix de ${{price, number}}/mois pour le pack complet de sécurité avancée, incluant CAPTCHA, verrouillage des identifiants, liste de blocage des e-mails, et plus.',
   },
   saml_applications: {
     title: 'Application SAML',

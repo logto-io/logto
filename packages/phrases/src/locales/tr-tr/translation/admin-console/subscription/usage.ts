@@ -54,7 +54,11 @@ const usage = {
   tenant_members: {
     title: 'Kiracı üyeler',
     tooltip:
-      'Üye başına aylık {{price, number}} $ ücretle ek özellik. İlk {{basicQuota}} kiracı üye ücretsizdir.',
+      'Üyelik başına ayda {{price, number}} $ fiyatlandırılan eklenti özelliği. İlk {{count}} kiracı üye ücretsizdir.',
+    tooltip_one:
+      'Ayda üye başına ${{price, number}} fiyatlandırılan eklenti özelliği. İlk {{count}} kiracı üye ücretsizdir.',
+    tooltip_other:
+      'Ayda üye başına ${{price, number}} fiyatlandırılan eklenti özelliği. İlk {{count}} kiracı üye ücretsizdir.',
     tooltip_for_enterprise:
       'Sözleşmeye dayalı planınız, ilk {{basicQuota}} kiracı üyeyi içerir ve ücretsiz kullanım sağlar. Daha fazla ihtiyacınız varsa, her kiracı üye için aylık ${{price, number}}.',
   },
@@ -74,7 +78,7 @@ const usage = {
   security_features: {
     title: 'Gelişmiş güvenlik',
     tooltip:
-      'CAPTCHA, kimlik kilitleme, e-posta engelleme listesi (yakında geliyor) ve daha fazlasını içeren tam gelişmiş güvenlik paketi için ayda ${{price, number}} karşılığında ek özellik.',
+      'CAPTCHA, kimlik kilitleme, e-posta engelleme listesi ve daha fazlasını içeren tam gelişmiş güvenlik paketi için ayda ${{price, number}} fiyatlandırılan eklenti özelliği.',
   },
   saml_applications: {
     title: 'SAML uygulaması',

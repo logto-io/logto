@@ -75,7 +75,7 @@ function Footer({ roleType, scopes, isCreating, onClickCreate }: Props) {
     return (
       <AddOnNoticeFooter
         isLoading={isCreating}
-        buttonTitle="applications.create"
+        buttonTitle="roles.create_role_button"
         onClick={() => {
           void update({ rbacUpsellNoticeAcknowledged: true });
           onClickCreate();
