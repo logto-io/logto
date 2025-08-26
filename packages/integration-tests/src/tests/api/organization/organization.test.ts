@@ -119,11 +119,13 @@ describe('organization APIs', () => {
     const organization = await organizationApi.update(createdOrganization.id, {
       name: 'test2',
       description: 'test description.',
+      customCss: 'test css',
     });
     expect(organization).toStrictEqual({
       ...createdOrganization,
       name: 'test2',
       description: 'test description.',
+      customCss: 'test css',
     });
   });
 
