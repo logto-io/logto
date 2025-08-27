@@ -7,7 +7,6 @@ import {
   type NewSubscriptionPeriodicUsage,
   type NewSubscriptionQuota,
 } from '@/cloud/types/router';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import {
   resourceAddOnUnitPrice,
   machineToMachineAddOnUnitPrice,
@@ -59,14 +58,11 @@ export const usageKeys: UsageKey[] = [
   'organizationsLimit',
   'mfaEnabled',
   'enterpriseSsoLimit',
-  // TODO: remove dev features check
-  ...(isDevFeaturesEnabled ? [CustomUsageKey.RbacEnabled] : []),
+  CustomUsageKey.RbacEnabled,
   'resourcesLimit',
   'machineToMachineLimit',
-  // TODO: remove dev features check
-  ...(isDevFeaturesEnabled
-    ? (['samlApplicationsLimit', 'thirdPartyApplicationsLimit'] satisfies UsageKey[])
-    : []),
+  'samlApplicationsLimit',
+  'thirdPartyApplicationsLimit',
   'tenantMembersLimit',
   'tokenLimit',
   'securityFeaturesEnabled',

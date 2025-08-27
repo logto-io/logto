@@ -5,8 +5,7 @@ import { type Ref, forwardRef, useContext } from 'react';
 
 import { type GuideMetadata, type Guide } from '@/assets/docs/guides/types';
 import { type NewSubscriptionQuota } from '@/cloud/types/router';
-import FeatureTag, { CombinedAddOnAndFeatureTag } from '@/components/FeatureTag';
-import { isDevFeaturesEnabled } from '@/consts/env';
+import { CombinedAddOnAndFeatureTag } from '@/components/FeatureTag';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { isPaidPlan } from '@/utils/subscription';
@@ -30,26 +29,21 @@ function getPaywallTag(
   isPaidPlan: boolean,
   isEnterprisePlan: boolean
 ) {
-  // TODO: remove the dev feature guard when the new add-on plan is ready for release
   if (guideMetadata.isThirdParty) {
-    return isDevFeaturesEnabled ? (
+    return (
       <CombinedAddOnAndFeatureTag
         hasAddOnTag={isPaidPlan && currentSubscriptionQuota.thirdPartyApplicationsLimit !== null}
         paywall={conditional(!isPaidPlan && latestProPlanId)}
       />
-    ) : (
-      <FeatureTag isVisible={!isPaidPlan} plan={latestProPlanId} />
     );
   }
 
   if (guideMetadata.target === ApplicationType.SAML) {
-    return isDevFeaturesEnabled ? (
+    return (
       <CombinedAddOnAndFeatureTag
         hasAddOnTag={isPaidPlan}
         paywall={conditional(!isPaidPlan && latestProPlanId)}
       />
-    ) : (
-      <FeatureTag isEnterprise isVisible={!isEnterprisePlan} />
     );
   }
 }

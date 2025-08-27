@@ -14,7 +14,6 @@ import ItemPreview from '@/components/ItemPreview';
 import PageMeta from '@/components/PageMeta';
 import RoleIcon from '@/components/RoleIcon';
 import { defaultPageSize, rbac } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
@@ -78,8 +77,7 @@ function Roles() {
           title="roles.title"
           subtitle="roles.subtitle"
           learnMoreLink={{ href: rbac }}
-          // TODO: remove the dev feature when the new paywall logic is ready;
-          hasAddOnTag={isDevFeaturesEnabled && isPaidTenant && !hasRolesIncluded}
+          hasAddOnTag={isPaidTenant && !hasRolesIncluded}
         />
         <Button
           icon={<Plus />}

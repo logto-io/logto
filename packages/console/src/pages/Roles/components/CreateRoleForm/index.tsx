@@ -7,7 +7,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import RoleScopesTransfer from '@/components/RoleScopesTransfer';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
@@ -84,8 +83,7 @@ function CreateRoleForm({ onClose }: Props) {
     <ModalLayout
       title="roles.create_role_title"
       subtitle="roles.create_role_description"
-      // TODO: remove the dev feature when the new paywall logic is ready;
-      hasAddOnTag={isDevFeaturesEnabled && isPaidTenant && !hasRolesIncluded}
+      hasAddOnTag={isPaidTenant && !hasRolesIncluded}
       learnMoreLink={{
         href: 'https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-roles',
         targetBlank: 'noopener',

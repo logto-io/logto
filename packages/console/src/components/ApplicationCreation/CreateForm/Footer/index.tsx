@@ -6,8 +6,6 @@ import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import SkuName from '@/components/SkuName';
-import { officialWebsiteContactPageLink } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { addOnPricingExplanationLink } from '@/consts/external-links';
 import {
   machineToMachineAddOnUnitPrice,
@@ -15,13 +13,11 @@ import {
   thirdPartyApplicationsAddOnUnitPrice,
 } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
-import Button, { LinkButton } from '@/ds-components/Button';
+import Button from '@/ds-components/Button';
 import TextLink from '@/ds-components/TextLink';
 import useApplicationsUsage from '@/hooks/use-applications-usage';
 import useUserPreferences from '@/hooks/use-user-preferences';
 import { isPaidPlan } from '@/utils/subscription';
-
-import createFormStyles from '../index.module.scss';
 
 import styles from './index.module.scss';
 
@@ -32,7 +28,6 @@ type Props = {
   readonly onClickCreate: () => void;
 };
 
-// eslint-disable-next-line complexity
 function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props) {
   const {
     currentSku,
@@ -108,10 +103,9 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
     }
 
     if (selectedType === ApplicationType.SAML && hasSamlAppsReachedLimit) {
-      // TODO: remove this dev feature guard after the SAML app add-on feature is available for all plans.
       // For paid plan (pro plan), we don't guard the SAML app creation since it's an add-on feature.
-      if (!isDevFeaturesEnabled || currentSku.id === ReservedPlanId.Free) {
-        return isDevFeaturesEnabled ? (
+      if (currentSku.id === ReservedPlanId.Free) {
+        return (
           <QuotaGuardFooter>
             <Trans
               components={{
@@ -121,17 +115,6 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
               {t('paywall.saml_applications_add_on')}
             </Trans>
           </QuotaGuardFooter>
-        ) : (
-          <div className={createFormStyles.container}>
-            <div className={createFormStyles.description}>{t('paywall.saml_applications')}</div>
-            <LinkButton
-              targetBlank
-              size="large"
-              type="primary"
-              title="general.contact_us_action"
-              href={officialWebsiteContactPageLink}
-            />
-          </div>
         );
       }
 
@@ -161,9 +144,7 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
     }
 
     if (isThirdParty && hasThirdPartyAppsReachedLimit) {
-      // TODO: remove this dev feature guard after the SAML app add-on feature is available for all plans.
-      // For paid plan (pro plan), we don't guard the third-party app creation since it's an add-on feature.
-      if (!isDevFeaturesEnabled || currentSku.id === ReservedPlanId.Free) {
+      if (currentSku.id === ReservedPlanId.Free) {
         // Third party app is only available for paid plan (pro plan).
         return (
           <QuotaGuardFooter>
@@ -178,6 +159,7 @@ function Footer({ selectedType, isLoading, onClickCreate, isThirdParty }: Props)
         );
       }
 
+      // For paid plan (pro plan), we don't guard the third-party app creation since it's an add-on feature.
       if (isPaidTenant && !thirdPartyAppsUpsellNoticeAcknowledged) {
         return (
           <AddOnNoticeFooter
