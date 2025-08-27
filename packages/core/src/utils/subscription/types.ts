@@ -1,10 +1,7 @@
 import type router from '@logto/cloud/routes';
 import { type ToZodObject } from '@logto/connector-kit';
-import { conditional } from '@silverhand/essentials';
 import { type RouterRoutes } from '@withtyped/client';
 import { z, type ZodType } from 'zod';
-
-import { EnvSet } from '../../env-set/index.js';
 
 type GetRoutes = RouterRoutes<typeof router>['get'];
 type PostRoutes = RouterRoutes<typeof router>['post'];
@@ -51,13 +48,6 @@ export type ReportSubscriptionUpdatesUsageKey = Exclude<
   'organizationsEnabled'
 >;
 
-const newAddedReportableUsageKeys = Object.freeze([
-  'thirdPartyApplicationsLimit',
-  'userRolesLimit',
-  'machineToMachineRolesLimit',
-  'samlApplicationsLimit',
-] satisfies Array<keyof SubscriptionQuota>);
-
 // Have to manually define this variable since we can only get the literal union from the @logto/cloud/routes module.
 export const allReportSubscriptionUpdatesUsageKeys = Object.freeze([
   'machineToMachineLimit',
@@ -68,8 +58,10 @@ export const allReportSubscriptionUpdatesUsageKeys = Object.freeze([
   'enterpriseSsoLimit',
   'hooksLimit',
   'securityFeaturesEnabled',
-  // TODO: Remove this dev feature guard once new pro plan is ready for production
-  ...(conditional(EnvSet.values.isDevFeaturesEnabled && newAddedReportableUsageKeys) ?? []),
+  'thirdPartyApplicationsLimit',
+  'userRolesLimit',
+  'machineToMachineRolesLimit',
+  'samlApplicationsLimit',
 ]) satisfies readonly ReportSubscriptionUpdatesUsageKey[];
 
 const subscriptionStatusGuard = z.enum([

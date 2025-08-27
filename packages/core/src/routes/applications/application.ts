@@ -20,7 +20,6 @@ import { buildOidcClientMetadata } from '#src/oidc/utils.js';
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
-import { EnvSet } from '../../env-set/index.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 import applicationCustomDataRoutes from './application-custom-data.js';
@@ -227,8 +226,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         void quota.reportSubscriptionUpdatesUsage('machineToMachineLimit');
       }
 
-      // TODO: remove this dev feature guard when new pro plan and add-on skus are ready.
-      if (EnvSet.values.isDevFeaturesEnabled && rest.isThirdParty) {
+      if (rest.isThirdParty) {
         void quota.reportSubscriptionUpdatesUsage('thirdPartyApplicationsLimit');
       }
 
@@ -390,8 +388,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         void quota.reportSubscriptionUpdatesUsage('machineToMachineLimit');
       }
 
-      // TODO: remove this dev feature guard when new pro plan and add-on skus are ready.
-      if (EnvSet.values.isDevFeaturesEnabled && isThirdParty) {
+      if (isThirdParty) {
         void quota.reportSubscriptionUpdatesUsage('thirdPartyApplicationsLimit');
       }
 
