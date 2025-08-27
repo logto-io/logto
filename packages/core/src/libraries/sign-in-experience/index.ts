@@ -131,11 +131,16 @@ export const createSignInExperienceLibrary = (
       return;
     }
     const organization = await trySafe(organizations.findById(organizationId));
-    if (!organization?.branding) {
+    const { branding, customCss } = organization ?? {};
+
+    if (!branding && !customCss) {
       return;
     }
 
-    return { branding: organization.branding };
+    return {
+      ...(branding && { branding }),
+      ...(customCss && { customCss }),
+    };
   };
 
   const findApplicationSignInExperience = async (appId?: string) => {
