@@ -12,8 +12,6 @@ create table organizations (
   description varchar(256),
   /** Additional data associated with the organization. */
   custom_data jsonb /* @use JsonObject */ not null default '{}'::jsonb,
-  /** The custom CSS of the organization. */
-  custom_css text,
   /** Whether multi-factor authentication configuration is required for the members of the organization. */
   is_mfa_required boolean not null default false,
   /** The organization's branding configuration. */

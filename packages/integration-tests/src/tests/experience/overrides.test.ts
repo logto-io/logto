@@ -35,7 +35,6 @@ describe('overrides', () => {
     favicon: 'mock://fake-url-for-omni/favicon.ico',
     darkFavicon: 'mock://fake-url-for-omni/dark-favicon.ico',
   } satisfies Branding);
-  const omniCustomCss = '.logto_main-content { background-color: #f00 !important; }';
 
   const appColor = Object.freeze({
     primaryColor: '#00f',
@@ -53,7 +52,6 @@ describe('overrides', () => {
     logoUrl: 'mock://fake-url-for-org/logo.png',
     darkLogoUrl: 'mock://fake-url-for-org/dark-logo.png',
   } satisfies Branding);
-  const organizationCustomCss = '.logto_main-content { background-color: #0f0 !important; }';
 
   afterEach(async () => {
     await organizationApi.cleanUp();
@@ -66,7 +64,6 @@ describe('overrides', () => {
       privacyPolicyUrl: null,
       color: omniColor,
       branding: omniBranding,
-      customCss: omniCustomCss,
       signUp: { identifiers: [], password: true, verify: false },
       signIn: {
         methods: [
@@ -237,42 +234,11 @@ describe('overrides', () => {
     await deleteApplication(application.id);
   });
 
-  it('should apply omni custom CSS', async () => {
-    const experience = new ExpectExperience(await browser.newPage());
-    await experience.navigateTo(demoAppUrl.href);
-    const element = await experience.toMatchElement('main.logto_main-content');
-    expect(
-      await element.evaluate((element) => window.getComputedStyle(element).backgroundColor)
-    ).toBe('rgb(255, 0, 0)');
-
-    await experience.page.close();
-  });
-
-  it('should apply organization-level custom CSS over omni custom CSS', async () => {
-    const organization = await organizationApi.create({
-      name: 'Sign-in experience override',
-    });
-
-    await organizationApi.update(organization.id, {
-      customCss: organizationCustomCss,
-    });
-
-    const experience = new ExpectExperience(await browser.newPage());
-    await experience.navigateTo(demoAppUrl.href + `?organization_id=${organization.id}`);
-    const element = await experience.toMatchElement('main.logto_main-content');
-    expect(
-      await element.evaluate((element) => window.getComputedStyle(element).backgroundColor)
-    ).toBe('rgb(0, 255, 0)');
-
-    await experience.page.close();
-  });
-
   describe('override fallback', () => {
     beforeAll(async () => {
       await updateSignInExperience({
         color: omniColor,
         branding: pick(omniBranding, 'logoUrl', 'favicon'),
-        customCss: omniCustomCss,
       });
     });
 
@@ -333,21 +299,6 @@ describe('overrides', () => {
     expect(appleFavicon).toBe(appBranding.favicon);
 
     await deleteApplication(application.id);
-    await experience.page.close();
-  });
-
-  it('should fallback to omni custom CSS when organization-level custom CSS is not provided', async () => {
-    const organization = await organizationApi.create({
-      name: 'Sign-in experience override',
-    });
-
-    const experience = new ExpectExperience(await browser.newPage());
-    await experience.navigateTo(demoAppUrl.href + `?organization_id=${organization.id}`);
-    const element = await experience.toMatchElement('main.logto_main-content');
-    expect(
-      await element.evaluate((element) => window.getComputedStyle(element).backgroundColor)
-    ).toBe('rgb(255, 0, 0)');
-
     await experience.page.close();
   });
 });
