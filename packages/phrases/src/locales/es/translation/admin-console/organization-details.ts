@@ -39,6 +39,11 @@ const organization_details = {
     'Los datos personalizados son un objeto JSON que se puede usar para almacenar datos adicionales asociados con la organización.',
   invalid_json_object: 'Objeto JSON no válido.',
   branding: {
+    name: 'Branding',
+    description: 'Personaliza tu experiencia de inicio de sesión a nivel de organización.',
+    organization_level_sie: 'Experiencia de inicio de sesión a nivel de organización',
+    organization_level_sie_switch:
+      'Habilita la experiencia de inicio de sesión a nivel de organización y configura la marca específica de la organización. Si se deshabilita, primero retrocederá al inicio de sesión a nivel de aplicación y luego a la experiencia de inicio de sesión omni.',
     logo: 'Logotipos de la organización',
     logo_tooltip:
       'Puedes pasar el ID de la organización para mostrar este logotipo en la experiencia de inicio de sesión; se necesita la versión oscura del logotipo si se habilita el modo oscuro en la configuración de la experiencia de inicio de sesión omni. <a>Aprende más</a>',

@@ -23,8 +23,9 @@ import useDocumentationUrl from '@/hooks/use-documentation-url';
 import SsoConnectorLogo from '@/pages/EnterpriseSso/SsoConnectorLogo';
 import { domainRegExp } from '@/pages/EnterpriseSsoDetails/Experience/DomainsInput/consts';
 
+import { type FormData } from '../utils';
+
 import styles from './index.module.scss';
-import { type FormData } from './utils';
 
 type Props = {
   readonly form: UseFormReturn<FormData>;

@@ -37,6 +37,11 @@ const organization_details = {
   custom_data_tip: '自定义数据是一个 JSON 对象，可用于存储与机构关联的附加数据。',
   invalid_json_object: '无效的 JSON 对象。',
   branding: {
+    name: '品牌',
+    description: '自定义你的机构级登录体验。',
+    organization_level_sie: '机构级登录体验',
+    organization_level_sie_switch:
+      '启用机构级登录体验并设置机构专属品牌。若关闭，将首先回退到应用级登录体验，然后是通用登录体验。',
     logo: '机构标志',
     logo_tooltip:
       '你可以传递机构 ID 以在登录体验中显示此标志；如果在全套登录体验设置中启用了深色模式，则需要深色版本的标志。<a>了解更多</a>',
