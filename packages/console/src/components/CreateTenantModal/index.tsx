@@ -17,6 +17,7 @@ import DangerousRaw from '@/ds-components/DangerousRaw';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
+import { Ring } from '@/ds-components/Spinner';
 import TextInput from '@/ds-components/TextInput';
 import useTheme from '@/hooks/use-theme';
 import modalStyles from '@/scss/modal.module.scss';
@@ -134,11 +135,14 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
               disabled={isSubmitting}
             />
           </FormField>
-          {regions && !regionsError && (
-            <FormField
-              title="tenants.settings.tenant_region"
-              tip={t('tenants.settings.tenant_region_description')}
-            >
+
+          <FormField
+            title="tenants.settings.tenant_region"
+            tip={t('tenants.settings.tenant_region_description')}
+          >
+            {!regions && !regionsError && <Ring />}
+            {regionsError && <span className={styles.error}>{regionsError.message}</span>}
+            {regions && !regionsError && (
               <Controller
                 control={control}
                 name="regionName"
@@ -160,8 +164,8 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
                   </RadioGroup>
                 )}
               />
-            </FormField>
-          )}
+            )}
+          </FormField>
           <FormField title="tenants.create_modal.tenant_usage_purpose">
             <Controller
               control={control}
