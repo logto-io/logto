@@ -1,4 +1,4 @@
-import { type PublicRegionName } from '@logto/cloud/routes';
+import { type PublicRegionName, type Region as RegionType } from '@logto/cloud/routes';
 import classNames from 'classnames';
 import { useMemo, type FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -53,13 +53,17 @@ export function RegionFlag({ regionName, width = 16 }: RegionFlagProps) {
   return Flag ? <Flag width={width} /> : null;
 }
 
-type Props = {
+type StaticRegionProps = {
   readonly regionName: string;
   readonly isComingSoon?: boolean;
   readonly className?: string;
 };
 
-function Region({ isComingSoon = false, regionName, className }: Props) {
+/**
+ * @deprecated A legacy component that renders a region by name. You should use the new
+ * {@link Region} component to render region data from the API instead.
+ */
+export function StaticRegion({ isComingSoon = false, regionName, className }: StaticRegionProps) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -67,6 +71,20 @@ function Region({ isComingSoon = false, regionName, className }: Props) {
       <RegionFlag regionName={regionName} />
       <span>{getRegionDisplayName(regionName)}</span>
       {isComingSoon && <span className={styles.comingSoon}>{`(${t('general.coming_soon')})`}</span>}
+    </span>
+  );
+}
+
+type Props = {
+  readonly region: RegionType;
+  readonly className?: string;
+};
+
+function Region({ region, className }: Props) {
+  return (
+    <span className={classNames(styles.wrapper, className)}>
+      <RegionFlag regionName={region.id} />
+      <span>{region.name}</span>
     </span>
   );
 }
