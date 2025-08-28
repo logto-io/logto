@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.11.0
+
+### Minor Changes
+
+- 8ae82d585e: add Thai translations to Logto Console and sign-in experience
+
 ## 1.10.1
 
 ### Patch Changes
