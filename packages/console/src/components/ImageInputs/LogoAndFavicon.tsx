@@ -19,7 +19,7 @@ type Props<FormContext extends FieldValues> = {
    */
   readonly favicon: Field<FormContext>;
   /** The type of the logo. It will affect the translation key. */
-  readonly type: 'app_logo' | 'company_logo';
+  readonly type: 'app_logo' | 'company_logo' | 'organization_logo';
 };
 
 /**

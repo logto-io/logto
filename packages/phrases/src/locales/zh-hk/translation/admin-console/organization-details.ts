@@ -36,6 +36,11 @@ const organization_details = {
   custom_data_tip: '自訂資料是一個 JSON 物件，可用於存儲與組織相關的附加資料。',
   invalid_json_object: '無效的 JSON 物件。',
   branding: {
+    name: '品牌',
+    description: '自訂你的組織級登入體驗。',
+    organization_level_sie: '組織級登入體驗',
+    organization_level_sie_switch:
+      '啟用組織級登入體驗並設定組織專屬品牌。若停用，將先回退到應用程式級登入，再回退到通用登入體驗。',
     logo: '組織標誌',
     logo_tooltip:
       '你可以傳遞組織 ID 以在登錄體驗中顯示此標誌；如果在 Omni 登錄體驗設置中啟用了深色模式，則需要使用深色版本的標誌。<a>了解更多</a>',

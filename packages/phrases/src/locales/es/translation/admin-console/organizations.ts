@@ -8,6 +8,7 @@ const organizations = {
   organization_id: 'ID de la organización',
   members: 'Miembros',
   machine_to_machine: 'Aplicaciones máquina a máquina',
+  branding: 'Branding',
   create_organization: 'Crear organización',
   setup_organization: 'Configurar su organización',
   organization_list_placeholder_title: 'Organización',

@@ -39,6 +39,11 @@ const organization_details = {
     '사용자 정의 데이터는 조직과 관련된 추가 데이터를 저장하는 데 사용할 수 있는 JSON 객체입니다.',
   invalid_json_object: '잘못된 JSON 객체입니다.',
   branding: {
+    name: '브랜딩',
+    description: '조직 수준의 로그인 경험을 사용자 지정합니다.',
+    organization_level_sie: '조직 수준 로그인 경험',
+    organization_level_sie_switch:
+      '조직 수준 로그인 경험을 활성화하고 조직 전용 브랜딩을 설정합니다. 비활성화 시 먼저 애플리케이션 수준 로그인으로, 그 다음 통합 로그인 경험으로 폴백합니다.',
     logo: '조직 로고',
     logo_tooltip:
       '조직 ID를 전달하여 로그인 경험에서 이 로고를 표시할 수 있습니다. 어두운 모드가 활성화되어 있는 경우 어두운 버전의 로고가 필요합니다. <a>자세히 알아보기</a>',

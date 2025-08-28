@@ -40,6 +40,11 @@ const organization_details = {
     'Dane niestandardowe to obiekt JSON, który może być wykorzystany do przechowywania dodatkowych danych związanych z organizacją.',
   invalid_json_object: 'Nieprawidłowy obiekt JSON.',
   branding: {
+    name: 'Marka',
+    description: 'Dostosuj doświadczenie logowania na poziomie organizacji.',
+    organization_level_sie: 'Doświadczenie logowania na poziomie organizacji',
+    organization_level_sie_switch:
+      'Włącz doświadczenie logowania na poziomie organizacji i skonfiguruj branding specyficzny dla organizacji. Jeśli wyłączone, nastąpi najpierw powrót do logowania na poziomie aplikacji, a następnie do ogólnego doświadczenia logowania omni.',
     logo: 'Logotypy organizacji',
     logo_tooltip:
       'Możesz podać ID organizacji, aby wyświetlić ten logo w doświadczeniu logowania; ciemna wersja logo jest potrzebna, jeśli tryb ciemny jest włączony w ustawieniach doświadczenia logowania omni. <a>Dowiedz się więcej</a>',

@@ -8,6 +8,7 @@ const organizations = {
   organization_id: 'รหัสองค์กร',
   members: 'สมาชิก',
   machine_to_machine: 'แอปพลิเคชันเครื่องสู่เครื่อง',
+  branding: 'การสร้างแบรนด์',
   create_organization: 'สร้างองค์กร',
   setup_organization: 'ตั้งค่าองค์กรของคุณ',
   organization_list_placeholder_title: 'องค์กร',

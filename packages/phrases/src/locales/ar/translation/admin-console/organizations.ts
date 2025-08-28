@@ -8,6 +8,7 @@ const organizations = {
   organization_id: 'معرف المؤسسة',
   members: 'الأعضاء',
   machine_to_machine: 'تطبيقات من الجهاز إلى الجهاز',
+  branding: 'العلامة التجارية',
   create_organization: 'إنشاء مؤسسة',
   setup_organization: 'إعداد مؤسستك',
   organization_list_placeholder_title: 'المؤسسة',

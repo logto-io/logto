@@ -39,6 +39,11 @@ const organization_details = {
     'カスタムデータは、組織に関連付けられた追加データを格納するために使用できるJSONオブジェクトです。',
   invalid_json_object: '無効なJSONオブジェクト。',
   branding: {
+    name: 'ブランディング',
+    description: '組織レベルのサインイン体験をカスタマイズします。',
+    organization_level_sie: '組織レベルのサインイン体験',
+    organization_level_sie_switch:
+      '組織レベルのサインイン体験を有効にし、組織固有のブランディングを設定します。無効の場合はアプリレベルのサインイン、続いて統合サインイン体験にフォールバックします。',
     logo: '組織ロゴ',
     logo_tooltip:
       '組織IDを渡してサインイン画面でこのロゴを表示できます。ダークモードが有効になっている場合は、ダークバージョンのロゴが必要です。<a>詳細</a>',

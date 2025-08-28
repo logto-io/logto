@@ -8,6 +8,7 @@ const organizations = {
   organization_id: 'Kuruluş Kimliği',
   members: 'Üyeler',
   machine_to_machine: 'Makineden makineye uygulamalar',
+  branding: 'Markalaşma',
   create_organization: 'Kuruluş oluştur',
   setup_organization: 'Kuruluşunuzu ayarlayın',
   organization_list_placeholder_title: 'Kuruluş',

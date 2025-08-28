@@ -39,6 +39,11 @@ const organization_details = {
     'Dados personalizados é um objeto JSON que pode ser usado para armazenar dados adicionais associados à organização.',
   invalid_json_object: 'Objeto JSON inválido.',
   branding: {
+    name: 'Marca',
+    description: 'Personalize a experiência de login em nível de organização.',
+    organization_level_sie: 'Experiência de login em nível de organização',
+    organization_level_sie_switch:
+      'Habilite a experiência de login em nível de organização e configure a marca específica da organização. Se desabilitado, fará fallback primeiro para o login em nível de aplicação e depois para a experiência omni.',
     logo: 'Logotipos da organização',
     logo_tooltip:
       'Você pode passar o ID da organização para exibir este logotipo na experiência de login; a versão escura do logotipo é necessária se o modo escuro estiver habilitado nas configurações da experiência de login omni. <a>Saiba mais</a>',

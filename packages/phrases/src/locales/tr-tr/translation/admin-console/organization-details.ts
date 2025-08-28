@@ -39,6 +39,11 @@ const organization_details = {
     'Özel veri, kuruluşla ilişkili ek verileri depolamak için kullanılabilen bir JSON nesnesidir.',
   invalid_json_object: 'Geçersiz JSON nesnesi.',
   branding: {
+    name: 'Markalaşma',
+    description: 'Kuruluş seviyesindeki oturum açma deneyiminizi özelleştirin.',
+    organization_level_sie: 'Kuruluş seviyesinde oturum açma deneyimi',
+    organization_level_sie_switch:
+      'Kuruluş seviyesindeki oturum açma deneyimini etkinleştirin ve kuruluşa özel markalamayı ayarlayın. Devre dışı bırakılırsa önce uygulama seviyesindeki oturum açmaya, ardından genel (omni) oturum açma deneyimine geri döner.',
     logo: 'Kuruluş logoları',
     logo_tooltip:
       'Bu logoyu oturum açma deneyiminde görüntülemek için kuruluş kimliğini geçirebilirsiniz; koyu mod etkinse logonun koyu sürümü omni oturum açma deneyimi ayarlarında gereklidir. <a>Devamını oku</a>',
