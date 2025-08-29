@@ -64,14 +64,11 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
     watch,
   } = methods;
 
-  const currentRegion = watch('regionName');
-  // The following tag filtering will be replaced with dynamic tag fetching soon.
-  // Use it as a temporary solution.
-  const availableTags = useMemo(
-    () => (currentRegion.includes('_DEV_') ? [TenantTag.Development] : allTags),
-    [currentRegion]
+  const regionName = watch('regionName');
+  const currentRegion = useMemo(
+    () => regions?.find((region) => region.id === regionName),
+    [regions, regionName]
   );
-
   const createTenant = async ({ name, tag, regionName }: CreateTenantData) => {
     const newTenant = await cloudApi.post('/api/tenants', { body: { name, tag, regionName } });
     onClose(newTenant);
@@ -166,28 +163,30 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
               />
             )}
           </FormField>
-          <FormField title="tenants.create_modal.tenant_usage_purpose">
-            <Controller
-              control={control}
-              name="tag"
-              rules={{ required: true }}
-              render={({ field: { onChange, value, name } }) => (
-                <RadioGroup
-                  type="card"
-                  className={styles.envTagRadioGroup}
-                  value={value}
-                  name={name}
-                  onChange={onChange}
-                >
-                  {availableTags.map((tag) => (
-                    <Radio key={tag} value={tag}>
-                      <EnvTagOptionContent tag={tag} />
-                    </Radio>
-                  ))}
-                </RadioGroup>
-              )}
-            />
-          </FormField>
+          {currentRegion && (
+            <FormField title="tenants.create_modal.tenant_usage_purpose">
+              <Controller
+                control={control}
+                name="tag"
+                rules={{ required: true }}
+                render={({ field: { onChange, value, name } }) => (
+                  <RadioGroup
+                    type="card"
+                    className={styles.envTagRadioGroup}
+                    value={value}
+                    name={name}
+                    onChange={onChange}
+                  >
+                    {currentRegion.tags.map((tag) => (
+                      <Radio key={tag} value={tag}>
+                        <EnvTagOptionContent tag={tag} />
+                      </Radio>
+                    ))}
+                  </RadioGroup>
+                )}
+              />
+            </FormField>
+          )}
         </FormProvider>
         <SelectTenantPlanModal
           tenantData={tenantData}
