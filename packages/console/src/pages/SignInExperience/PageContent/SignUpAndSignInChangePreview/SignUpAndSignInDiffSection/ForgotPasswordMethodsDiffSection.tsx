@@ -38,7 +38,7 @@ function ForgotPasswordMethodsDiffSection({ before, after, isAfter = false }: Pr
   return (
     <div>
       <div className={styles.title}>
-        {t('sign_in_exp.sign_up_and_sign_in.sign_in.forgot_password_verification_method')}
+        {t('sign_in_exp.sign_up_and_sign_in.sign_in.forgot_password')}
       </div>
       <ul className={styles.list}>
         {displayMethods.map((method) => (

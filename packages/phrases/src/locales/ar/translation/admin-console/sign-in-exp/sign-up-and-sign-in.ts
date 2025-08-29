@@ -29,7 +29,7 @@ const sign_up_and_sign_in = {
     verification_code_auth: 'رمز التحقق',
     auth_swap_tip: 'قم بتبديل الخيارات أدناه لتحديد الظهور الأول في التدفق.',
     require_auth_factor: 'يجب عليك تحديد عامل مصادقة واحد على الأقل.',
-    forgot_password_verification_method: 'طريقة التحقق من كلمة المرور المنسية',
+    forgot_password: 'نسيت كلمة المرور',
     forgot_password_description:
       'يمكن للمستخدمين إعادة تعيين كلمة المرور الخاصة بهم باستخدام أي طريقة تحقق متاحة.',
     add_verification_method: 'إضافة طريقة تحقق',

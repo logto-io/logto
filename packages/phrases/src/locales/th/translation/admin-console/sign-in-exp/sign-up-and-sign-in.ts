@@ -29,7 +29,7 @@ const sign_up_and_sign_in = {
     verification_code_auth: 'รหัสยืนยัน',
     auth_swap_tip: 'สลับตัวเลือกด้านล่างเพื่อตัดสินใจว่าจะให้ตัวเลือกใดแสดงก่อนในกระบวนการ',
     require_auth_factor: 'คุณต้องเลือกปัจจัยการยืนยันตัวตนอย่างน้อยหนึ่งรายการ',
-    forgot_password_verification_method: 'วิธีการยืนยันเมื่อลืมรหัสผ่าน',
+    forgot_password: 'ลืมรหัสผ่าน',
     forgot_password_description: 'ผู้ใช้สามารถรีเซ็ตรหัสผ่านได้โดยใช้วิธีการยืนยันใดก็ได้ที่มี',
     add_verification_method: 'เพิ่มวิธีการยืนยันตัวตน',
     email_verification_code: 'รหัสยืนยันอีเมล',

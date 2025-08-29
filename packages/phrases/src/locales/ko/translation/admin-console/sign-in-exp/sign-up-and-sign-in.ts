@@ -28,7 +28,7 @@ const sign_up_and_sign_in = {
     verification_code_auth: '인증 코드',
     auth_swap_tip: '아래 옵션을 변경하여 흐름에 가장 먼저 나타나는 옵션을 설정할 수 있어요.',
     require_auth_factor: '반드시 최소 하나의 인증 방법을 선택해야 해요.',
-    forgot_password_verification_method: '비밀번호 찾기 인증 방법',
+    forgot_password: '비밀번호 찾기',
     forgot_password_description:
       '사용자는 사용 가능한 인증 방법을 사용하여 비밀번호를 재설정할 수 있습니다.',
     add_verification_method: '인증 방법 추가',
