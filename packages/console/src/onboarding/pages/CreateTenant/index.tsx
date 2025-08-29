@@ -13,7 +13,7 @@ import ActionBar from '@/components/ActionBar';
 import { GtagConversionId, reportConversion } from '@/components/Conversion/utils';
 import { type CreateTenantData } from '@/components/CreateTenantModal/types';
 import PageMeta from '@/components/PageMeta';
-import Region, { defaultRegionName } from '@/components/Region';
+import { StaticRegion, defaultRegionName } from '@/components/Region';
 import { availableRegions } from '@/consts';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
@@ -138,7 +138,7 @@ function CreateTenant() {
                         key={region}
                         title={
                           <DangerousRaw>
-                            <Region regionName={region} />
+                            <StaticRegion regionName={region} />
                           </DangerousRaw>
                         }
                         value={region}

@@ -11,3 +11,8 @@
   grid-template-columns: repeat(2, 1fr);
   gap: _.unit(4);
 }
+
+.error {
+  font: var(--font-body-2);
+  color: var(--color-error);
+}
