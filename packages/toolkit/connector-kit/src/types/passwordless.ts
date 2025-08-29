@@ -36,6 +36,8 @@ export enum TemplateType {
   BindNewIdentifier = 'BindNewIdentifier',
   /** The template for sending MFA verification code. */
   MfaVerification = 'MfaVerification',
+  /** The template for binding MFA verification. */
+  BindMfa = 'BindMfa',
 }
 
 export const templateTypeGuard = z.nativeEnum(TemplateType);
