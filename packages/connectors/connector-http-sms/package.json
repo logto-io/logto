@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-http-sms",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "SMS connector to send SMS via HTTP call.",
   "author": "Michel Courtine <michel@021.dev>",
   "dependencies": {
