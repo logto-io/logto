@@ -27,7 +27,7 @@ const sign_up_and_sign_in = {
     verification_code_auth: '验证码',
     auth_swap_tip: '交换以下选项的位置即可设定它们在用户登录流程中出现的先后。',
     require_auth_factor: '请至少选择一种认证方式。',
-    forgot_password_verification_method: '忘记密码验证方式',
+    forgot_password: '忘记密码',
     forgot_password_description: '用户可以使用任何可用的验证方式重置密码。',
     add_verification_method: '添加验证方式',
     email_verification_code: '邮箱验证码',

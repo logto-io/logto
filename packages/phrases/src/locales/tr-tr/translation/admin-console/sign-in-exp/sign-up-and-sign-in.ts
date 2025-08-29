@@ -31,7 +31,7 @@ const sign_up_and_sign_in = {
     auth_swap_tip:
       'Akışta ilk olarak hangisinin göründüğünü belirlemek için seçeneklerin yerlerini değiştirin.',
     require_auth_factor: 'En az bir doğrulama faktörü seçmeniz gerekiyor.',
-    forgot_password_verification_method: 'Şifre sıfırlama doğrulama yöntemi',
+    forgot_password: 'Parolamı unuttum',
     forgot_password_description:
       'Kullanıcılar, mevcut olan herhangi bir doğrulama yöntemi kullanarak şifrelerini sıfırlayabilir.',
     add_verification_method: 'Doğrulama yöntemi ekle',

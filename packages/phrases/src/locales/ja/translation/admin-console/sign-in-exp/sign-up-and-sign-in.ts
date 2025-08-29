@@ -30,7 +30,7 @@ const sign_up_and_sign_in = {
     verification_code_auth: '確認コード',
     auth_swap_tip: '以下のオプションを交換して、フローで最初に表示されるオプションを決定します。',
     require_auth_factor: '少なくとも 1 つの認証要素を選択する必要があります。',
-    forgot_password_verification_method: 'パスワードを忘れたときの確認方法',
+    forgot_password: 'パスワードを忘れた場合',
     forgot_password_description:
       'ユーザーは利用可能な確認方法を使用してパスワードをリセットできます。',
     add_verification_method: '確認方法を追加',

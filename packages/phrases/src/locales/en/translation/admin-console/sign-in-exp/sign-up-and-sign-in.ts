@@ -30,7 +30,7 @@ const sign_up_and_sign_in = {
     verification_code_auth: 'Verification code',
     auth_swap_tip: 'Swap the options below to determine which appears first in the flow.',
     require_auth_factor: 'You have to select at least one authentication factor.',
-    forgot_password_verification_method: 'Forgot password verification method',
+    forgot_password: 'Forgot password',
     forgot_password_description:
       'Users can reset their password using any available verification method.',
     add_verification_method: 'Add verification method',
