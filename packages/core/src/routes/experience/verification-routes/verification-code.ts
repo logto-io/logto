@@ -58,9 +58,9 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
             libraries,
             queries,
             identifier,
-            // If the interaction already identified a user, we are binding a new identifier
+            // If the interaction already identified a user, we are binding a new MFA verification
             ctx.experienceInteraction.identifiedUserId
-              ? TemplateType.BindNewIdentifier
+              ? TemplateType.BindMfa
               : getTemplateTypeByEvent(interactionEvent)
           ),
         libraries,

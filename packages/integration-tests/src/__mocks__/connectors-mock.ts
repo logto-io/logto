@@ -130,6 +130,10 @@ export const mockSmsConnectorConfig = {
       usageType: 'MfaVerification',
       content: 'This is for MFA verification purposes only. Your passcode is {{code}}.',
     },
+    {
+      usageType: 'BindMfa',
+      content: 'This is for binding MFA purposes only. Your passcode is {{code}}.',
+    },
   ],
 };
 
@@ -192,6 +196,12 @@ export const mockEmailConnectorConfig = {
       type: 'text/plain',
       subject: 'Logto MFA Verification Template',
       content: 'This is for MFA verification purposes only. Your passcode is {{code}}.',
+    },
+    {
+      usageType: 'BindMfa',
+      type: 'text/plain',
+      subject: 'Logto Bind MFA Template',
+      content: 'This is for binding MFA purposes only. Your passcode is {{code}}.',
     },
   ],
 };
