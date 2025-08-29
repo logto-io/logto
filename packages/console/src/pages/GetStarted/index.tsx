@@ -23,6 +23,7 @@ import { LinkButton } from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import Spacer from '@/ds-components/Spacer';
 import TextLink from '@/ds-components/TextLink';
+import { isDevOnlyRegion } from '@/hooks/use-available-regions';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 import useWindowResize from '@/hooks/use-window-resize';
@@ -105,7 +106,7 @@ function GetStarted() {
   );
 
   const shouldShowConvertToProductionCard = useMemo(() => {
-    if (!isCloud || !isDevTenant || !currentTenant) {
+    if (!isCloud || !isDevTenant || !currentTenant || isDevOnlyRegion(currentTenant.regionName)) {
       return false;
     }
 
