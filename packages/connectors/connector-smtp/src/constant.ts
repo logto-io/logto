@@ -90,9 +90,44 @@ export const defaultMetadata: ConnectorMetadata = {
         {
           contentType: 'text/plain',
           content:
+            'Your Logto organization invitation code is {{code}}. The code will remain active for 10 minutes.',
+          subject: 'Logto OrganizationInvitation with SMTP',
+          usageType: 'OrganizationInvitation',
+        },
+        {
+          contentType: 'text/plain',
+          content:
             'Your Logto verification code is {{code}}. The code will remain active for 10 minutes.',
           subject: 'Logto Generic with SMTP',
           usageType: 'Generic',
+        },
+        {
+          contentType: 'text/plain',
+          content:
+            'Your Logto permission validation code is {{code}}. The code will remain active for 10 minutes.',
+          subject: 'Logto UserPermissionValidation with SMTP',
+          usageType: 'UserPermissionValidation',
+        },
+        {
+          contentType: 'text/plain',
+          content:
+            'Your Logto bind new identifier code is {{code}}. The code will remain active for 10 minutes.',
+          subject: 'Logto BindNewIdentifier with SMTP',
+          usageType: 'BindNewIdentifier',
+        },
+        {
+          contentType: 'text/plain',
+          content:
+            'Your Logto MFA verification code is {{code}}. The code will remain active for 10 minutes.',
+          subject: 'Logto MfaVerification with SMTP',
+          usageType: 'MfaVerification',
+        },
+        {
+          contentType: 'text/plain',
+          content:
+            'Your Logto add 2-step verification code is {{code}}. The code will remain active for 10 minutes.',
+          subject: 'Logto BindMfa with SMTP',
+          usageType: 'BindMfa',
         },
       ],
     },

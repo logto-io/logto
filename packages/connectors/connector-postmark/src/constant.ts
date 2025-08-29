@@ -48,8 +48,28 @@ export const defaultMetadata: ConnectorMetadata = {
           templateAlias: 'logto-forgot-password',
         },
         {
+          usageType: 'OrganizationInvitation',
+          templateAlias: 'logto-organization-invitation',
+        },
+        {
           usageType: 'Generic',
           templateAlias: 'logto-generic',
+        },
+        {
+          usageType: 'UserPermissionValidation',
+          templateAlias: 'logto-user-permission-validation',
+        },
+        {
+          usageType: 'BindNewIdentifier',
+          templateAlias: 'logto-bind-new-identifier',
+        },
+        {
+          usageType: 'MfaVerification',
+          templateAlias: 'logto-mfa-verification',
+        },
+        {
+          usageType: 'BindMfa',
+          templateAlias: 'logto-bind-mfa',
         },
       ],
     },
