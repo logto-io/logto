@@ -75,7 +75,27 @@ export const defaultMetadata: ConnectorMetadata = {
           templateCode: '<template-code>',
         },
         {
+          usageType: 'OrganizationInvitation',
+          templateCode: '<template-code>',
+        },
+        {
           usageType: 'Generic',
+          templateCode: '<template-code>',
+        },
+        {
+          usageType: 'UserPermissionValidation',
+          templateCode: '<template-code>',
+        },
+        {
+          usageType: 'BindNewIdentifier',
+          templateCode: '<template-code>',
+        },
+        {
+          usageType: 'MfaVerification',
+          templateCode: '<template-code>',
+        },
+        {
+          usageType: 'BindMfa',
           templateCode: '<template-code>',
         },
       ],
