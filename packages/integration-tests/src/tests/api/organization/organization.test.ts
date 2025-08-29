@@ -116,14 +116,23 @@ describe('organization APIs', () => {
 
   it('should be able to update organization', async () => {
     const createdOrganization = await organizationApi.create({ name: 'test' });
-    const organization = await organizationApi.update(createdOrganization.id, {
+    const propertiesToUpdate = {
       name: 'test2',
       description: 'test description.',
-    });
-    expect(organization).toStrictEqual({
+      color: {
+        primaryColor: '#f00',
+        darkPrimaryColor: '#0f0',
+      },
+      branding: {
+        logoUrl: 'mock://fake-url-for-org/logo.png',
+        darkLogoUrl: 'mock://fake-url-for-org/dark-logo.png',
+      },
+      customCss: 'test css',
+    };
+    const organization = await organizationApi.update(createdOrganization.id, propertiesToUpdate);
+    expect(organization).toEqual({
       ...createdOrganization,
-      name: 'test2',
-      description: 'test description.',
+      ...propertiesToUpdate,
     });
   });
 

@@ -4,11 +4,12 @@ import type {
   ConnectorMetadata,
   FullSignInExperience,
   LanguageInfo,
+  PartialColor,
   SignInExperience,
   SsoConnectorMetadata,
 } from '@logto/schemas';
 import { ConnectorType, ForgotPasswordMethod, ReservedPlanId } from '@logto/schemas';
-import { deduplicate, pick, trySafe } from '@silverhand/essentials';
+import { deduplicate, trySafe } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
 
 import { type WellKnownCache } from '#src/caches/well-known.js';
@@ -31,6 +32,8 @@ export * from './email-blocklist-policy.js';
 export const developmentTenantPlanId = 'dev';
 
 export type SignInExperienceLibrary = ReturnType<typeof createSignInExperienceLibrary>;
+
+type SignInExperienceOverride = Partial<Omit<SignInExperience, 'color'> & { color: PartialColor }>;
 
 export const createSignInExperienceLibrary = (
   queries: Queries,
@@ -126,30 +129,42 @@ export const createSignInExperienceLibrary = (
    */
   const getOrganizationOverride = async (
     organizationId?: string
-  ): Promise<Partial<SignInExperience> | undefined> => {
+  ): Promise<SignInExperienceOverride> => {
     if (!organizationId) {
-      return;
+      return {};
     }
     const organization = await trySafe(organizations.findById(organizationId));
-    if (!organization?.branding) {
-      return;
-    }
 
-    return { branding: organization.branding };
+    const { branding, color, customCss } = organization ?? {};
+
+    return {
+      ...(branding && { branding }),
+      ...(color && { color }),
+      ...(customCss && { customCss }),
+    };
   };
 
-  const findApplicationSignInExperience = async (appId?: string) => {
+  /** Get the branding and color from the app sign-in experience if it is not a third-party app. */
+  const findApplicationSignInExperience = async (
+    appId?: string
+  ): Promise<SignInExperienceOverride> => {
     if (!appId) {
-      return;
+      return {};
     }
 
     const found = await safeFindSignInExperienceByApplicationId(appId);
 
-    if (!found) {
-      return;
+    const { isThirdParty, branding, color, customCss } = found ?? {};
+
+    if (isThirdParty) {
+      return {};
     }
 
-    return pick(found, 'branding', 'color', 'type', 'isThirdParty');
+    return {
+      ...(branding && { branding }),
+      ...(color && { color }),
+      ...(customCss && { customCss }),
+    };
   };
 
   /**
@@ -243,14 +258,6 @@ export const createSignInExperienceLibrary = (
       };
     };
 
-    /** Get the branding and color from the app sign-in experience if it is not a third-party app. */
-    const getAppSignInExperience = () => {
-      if (!appSignInExperience || appSignInExperience.isThirdParty) {
-        return {};
-      }
-      return pick(appSignInExperience, 'branding', 'color');
-    };
-
     const getCaptchaConfig = async () => {
       if (!signInExperience.captchaPolicy.enabled) {
         return;
@@ -300,9 +307,12 @@ export const createSignInExperienceLibrary = (
     };
 
     return {
-      ...deepmerge(
-        deepmerge(signInExperience, getAppSignInExperience()),
-        organizationOverride ?? {}
+      ...deepmerge<SignInExperience, SignInExperienceOverride>(
+        deepmerge<SignInExperience, SignInExperienceOverride>(
+          signInExperience,
+          appSignInExperience
+        ),
+        organizationOverride
       ),
       socialConnectors,
       ssoConnectors,
