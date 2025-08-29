@@ -1,36 +1,30 @@
 import { MfaFactor, SignInIdentifier } from '@logto/schemas';
-import { useEffect, useState } from 'react';
+import { useContext } from 'react';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import SectionLayout from '@/Layout/SectionLayout';
-import { sendMfaVerificationCode } from '@/apis/experience';
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
 import MfaCodeVerification from '@/containers/MfaCodeVerification';
-import useErrorHandler from '@/hooks/use-error-handler';
 import useMfaFlowState from '@/hooks/use-mfa-factors-state';
 import ErrorPage from '@/pages/ErrorPage';
 import { UserMfaFlow } from '@/types';
+import { codeVerificationTypeMap } from '@/utils/sign-in-experience';
 
 import styles from './index.module.scss';
 
 const PhoneVerificationCode = () => {
   const flowState = useMfaFlowState();
-  const [verificationId, setVerificationId] = useState<string>();
-  const handleError = useErrorHandler();
-
-  useEffect(() => {
-    void (async () => {
-      try {
-        const { verificationId } = await sendMfaVerificationCode(SignInIdentifier.Phone);
-        setVerificationId(verificationId);
-      } catch (error) {
-        await handleError(error);
-      }
-    })();
-  }, [handleError]);
+  const { verificationIdsMap } = useContext(UserInteractionContext);
 
   if (!flowState) {
     return <ErrorPage title="error.invalid_session" />;
+  }
+
+  // VerificationId not found
+  const verificationId = verificationIdsMap[codeVerificationTypeMap.email];
+  if (!verificationId) {
+    return <ErrorPage title="error.invalid_session" rawMessage="Verification ID not found" />;
   }
 
   const maskedPhone = flowState.maskedIdentifiers?.[MfaFactor.PhoneVerificationCode];

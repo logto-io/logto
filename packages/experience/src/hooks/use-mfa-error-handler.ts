@@ -1,4 +1,4 @@
-import { MfaFactor, type RequestErrorBody } from '@logto/schemas';
+import { MfaFactor, SignInIdentifier, type RequestErrorBody } from '@logto/schemas';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +9,7 @@ import { type MfaFlowState, mfaErrorDataGuard } from '@/types/guard';
 import { isNativeWebview } from '@/utils/native-sdk';
 
 import type { ErrorHandlers } from './use-error-handler';
+import useSendMfaVerificationCode from './use-send-mfa-verification-code';
 import useStartBackupCodeBinding from './use-start-backup-code-binding';
 import useStartTotpBinding from './use-start-totp-binding';
 import useStartWebAuthnProcessing from './use-start-webauthn-processing';
@@ -26,6 +27,7 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
   const startTotpBinding = useStartTotpBinding();
   const startWebAuthnProcessing = useStartWebAuthnProcessing();
   const startBackupCodeBinding = useStartBackupCodeBinding();
+  const { onSubmit: startMfaVerificationCodeProcessing } = useSendMfaVerificationCode();
 
   /**
    * Redirect the user to the corresponding MFA page.
@@ -84,12 +86,12 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
         return startWebAuthnProcessing(flow, state, replace);
       }
 
-      if (factor === MfaFactor.EmailVerificationCode && flow === UserMfaFlow.MfaBinding) {
-        /**
-         * Start email verification code binding if only email verification code is available.
-         */
-        navigate({ pathname: `/${flow}/${factor}` }, { replace, state });
-        return;
+      if (factor === MfaFactor.EmailVerificationCode && flow === UserMfaFlow.MfaVerification) {
+        return startMfaVerificationCodeProcessing(SignInIdentifier.Email, state);
+      }
+
+      if (factor === MfaFactor.PhoneVerificationCode && flow === UserMfaFlow.MfaVerification) {
+        return startMfaVerificationCodeProcessing(SignInIdentifier.Phone, state);
       }
 
       /**
@@ -97,7 +99,15 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
        */
       navigate({ pathname: `/${flow}/${factor}` }, { replace, state });
     },
-    [navigate, replace, setToast, startTotpBinding, startWebAuthnProcessing, t]
+    [
+      navigate,
+      replace,
+      setToast,
+      startMfaVerificationCodeProcessing,
+      startTotpBinding,
+      startWebAuthnProcessing,
+      t,
+    ]
   );
 
   const handleMfaError = useCallback(
