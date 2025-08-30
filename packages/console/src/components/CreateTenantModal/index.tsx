@@ -1,11 +1,9 @@
-import { type Region as RegionType } from '@logto/cloud/routes';
 import { Theme, TenantTag } from '@logto/schemas';
 import { useMemo, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
-import useSWRImmutable from 'swr/immutable';
 
 import CreateTenantHeaderIconDark from '@/assets/icons/create-tenant-header-dark.svg?react';
 import CreateTenantHeaderIcon from '@/assets/icons/create-tenant-header.svg?react';
@@ -19,6 +17,7 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import { Ring } from '@/ds-components/Spinner';
 import TextInput from '@/ds-components/TextInput';
+import useAvailableRegions from '@/hooks/use-available-regions';
 import useTheme from '@/hooks/use-theme';
 import modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
@@ -33,19 +32,11 @@ type Props = {
   readonly onClose: (tenant?: TenantResponse) => void;
 };
 
-const allTags = Object.freeze([TenantTag.Development, TenantTag.Production]);
-
 function CreateTenantModal({ isOpen, onClose }: Props) {
   const [tenantData, setTenantData] = useState<CreateTenantData>();
   const theme = useTheme();
   const cloudApi = useCloudApi();
-  const { data: regions, error: regionsError } = useSWRImmutable<RegionType[], Error>(
-    'api/me/regions',
-    async () => {
-      const { regions } = await cloudApi.get('/api/me/regions');
-      return regions;
-    }
-  );
+  const { regions, regionsError, getRegionById } = useAvailableRegions();
 
   const defaultValues = Object.freeze({
     tag: TenantTag.Development,
@@ -65,10 +56,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
   } = methods;
 
   const regionName = watch('regionName');
-  const currentRegion = useMemo(
-    () => regions?.find((region) => region.id === regionName),
-    [regions, regionName]
-  );
+  const currentRegion = useMemo(() => getRegionById(regionName), [getRegionById, regionName]);
   const createTenant = async ({ name, tag, regionName }: CreateTenantData) => {
     const newTenant = await cloudApi.post('/api/tenants', { body: { name, tag, regionName } });
     onClose(newTenant);

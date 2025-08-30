@@ -66,6 +66,7 @@ type Tenants = {
   /** The current tenant ID parsed from the URL. */
   currentTenantId: string;
   currentTenant?: TenantResponse;
+  /** Indicates if the current tenant is a development tenant. */
   isDevTenant: boolean;
   /** Navigate to the given tenant ID. */
   navigateTenant: (tenantId: string) => void;
