@@ -1,8 +1,9 @@
-import { MfaFactor } from '@logto/schemas';
+import { MfaFactor, SignInIdentifier } from '@logto/schemas';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import MfaFactorButton from '@/components/Button/MfaFactorButton';
+import useSendMfaVerificationCode from '@/hooks/use-send-mfa-verification-code';
 import useStartTotpBinding from '@/hooks/use-start-totp-binding';
 import useStartWebAuthnProcessing from '@/hooks/use-start-webauthn-processing';
 import { UserMfaFlow } from '@/types';
@@ -20,6 +21,7 @@ const MfaFactorList = ({ flow, flowState }: Props) => {
   const startWebAuthnProcessing = useStartWebAuthnProcessing();
   const navigate = useNavigate();
   const { availableFactors } = flowState;
+  const { onSubmit: sendMfaVerificationCode } = useSendMfaVerificationCode();
 
   const handleSelectFactor = useCallback(
     async (factor: MfaFactor) => {
@@ -31,19 +33,19 @@ const MfaFactorList = ({ flow, flowState }: Props) => {
         return startWebAuthnProcessing(flow, flowState);
       }
 
-      if (factor === MfaFactor.EmailVerificationCode && flow === UserMfaFlow.MfaBinding) {
-        navigate(`/${flow}/${factor}`, { state: flowState });
+      if (factor === MfaFactor.EmailVerificationCode && flow === UserMfaFlow.MfaVerification) {
+        await sendMfaVerificationCode(SignInIdentifier.Email, flowState);
         return;
       }
 
-      if (factor === MfaFactor.PhoneVerificationCode && flow === UserMfaFlow.MfaBinding) {
-        navigate(`/${flow}/${factor}`, { state: flowState });
+      if (factor === MfaFactor.PhoneVerificationCode && flow === UserMfaFlow.MfaVerification) {
+        await sendMfaVerificationCode(SignInIdentifier.Phone, flowState);
         return;
       }
 
       navigate(`/${flow}/${factor}`, { state: flowState });
     },
-    [flow, flowState, navigate, startTotpBinding, startWebAuthnProcessing]
+    [flow, flowState, navigate, sendMfaVerificationCode, startTotpBinding, startWebAuthnProcessing]
   );
 
   return (
