@@ -1,5 +1,17 @@
 # Change Log
 
+## 1.31.1
+
+### Patch Changes
+
+- Updated dependencies [5da6792d40]
+  - @logto/connector-kit@4.6.0
+  - @logto/cli@1.31.1
+  - @logto/console@1.28.0
+  - @logto/experience@1.15.0
+  - @logto/schemas@1.31.1
+  - @logto/demo-app@1.5.0
+
 ## 1.31.0
 
 ### Minor Changes
