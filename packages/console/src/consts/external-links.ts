@@ -20,6 +20,8 @@ export const logtoThirdPartyAppPermissionsLink =
 export const logtoThirdPartyAppBrandingLink = '/docs/recipes/logto-as-idp/branding-customization/';
 export const appSpecificBrandingLink =
   '/docs/recipes/customize-sie/match-your-brand/#app-specific-branding';
+export const organizationBrandingLink =
+  '/customization/match-your-brand#organization-specific-branding';
 export const organizationLogosForExperienceLink =
   '/docs/recipes/customize-sie/match-your-brand/#organization-specific-logos';
 export const signingKeysLink = '/docs/references/openid-connect/signing-keys-rotation/';

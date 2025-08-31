@@ -23,10 +23,10 @@ import { trySubmitSafe } from '@/utils/form';
 import { isJsonObject } from '@/utils/json';
 
 import { type OrganizationDetailsOutletContext } from '../types';
+import { assembleData, normalizeData, type FormData } from '../utils';
 
 import JitSettings from './JitSettings';
 import styles from './index.module.scss';
-import { assembleData, normalizeData, type FormData } from './utils';
 
 function Settings() {
   const { isDeleting, data, jit, onUpdated } = useOutletContext<OrganizationDetailsOutletContext>();

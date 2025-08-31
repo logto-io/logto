@@ -36,6 +36,11 @@ const organization_details = {
   custom_data_tip: '自訂數據是一個可用於存儲與組織相關的附加數據的 JSON 對象。',
   invalid_json_object: '無效的 JSON 對象。',
   branding: {
+    name: '品牌',
+    description: '自訂你的組織級登入體驗。',
+    organization_level_sie: '組織級登入體驗',
+    organization_level_sie_switch:
+      '啟用組織級登入體驗並設定組織專屬品牌。若停用，將先回退到應用程式級登入，再回退到通用登入體驗。',
     logo: '組織標誌',
     logo_tooltip:
       '你可以通過組織 ID 顯示此標誌在登錄體驗中；如果啟用了暗黑模式，則需要使用標誌的暗色版本。<a>了解更多</a>',

@@ -11,6 +11,7 @@ const MachineToMachine = safeLazy(
 );
 const Members = safeLazy(async () => import('@/pages/OrganizationDetails/Members'));
 const Settings = safeLazy(async () => import('@/pages/OrganizationDetails/Settings'));
+const Branding = safeLazy(async () => import('@/pages/OrganizationDetails/Branding'));
 
 export const organizations: RouteObject = {
   path: 'organizations',
@@ -27,6 +28,10 @@ export const organizations: RouteObject = {
         {
           path: OrganizationDetailsTabs.MachineToMachine,
           element: <MachineToMachine />,
+        },
+        {
+          path: OrganizationDetailsTabs.Branding,
+          element: <Branding />,
         },
       ],
     }

@@ -39,6 +39,7 @@ const sign_in_exp = {
     with_dark: '{{value}} (dark)',
     app_logo_and_favicon: 'App logo and favicon',
     company_logo_and_favicon: 'Company logo and favicon',
+    organization_logo_and_favicon: 'Organization logo and favicon',
   },
   branding_uploads: {
     app_logo: {

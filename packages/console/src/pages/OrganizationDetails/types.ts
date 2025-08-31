@@ -23,4 +23,5 @@ export enum OrganizationDetailsTabs {
   Settings = 'settings',
   Members = 'members',
   MachineToMachine = 'machine-to-machine',
+  Branding = 'branding',
 }
