@@ -19,6 +19,11 @@ describe('application sign in experience', () => {
       logoUrl: 'https://logto.dev/logo.png',
       darkLogoUrl: 'https://logto.dev/logo-dark.png',
     },
+    color: {
+      primaryColor: '#f00',
+      darkPrimaryColor: '#0f0',
+    },
+    customCss: '.logto_main-content { background-color: #f00 !important; }',
     termsOfUseUrl: 'https://logto.dev/terms-of-use',
     privacyPolicyUrl: 'https://logto.dev/privacy-policy',
     displayName: 'Logto Demo',
@@ -80,11 +85,13 @@ describe('application sign in experience', () => {
     const signInExperience = await setApplicationSignInExperience(application.id, {
       ...applicationSignInExperiences,
       displayName: '',
+      customCss: '',
     });
 
     expect(signInExperience).toMatchObject({
       ...applicationSignInExperiences,
       displayName: null,
+      customCss: null,
       applicationId: application.id,
       tenantId: application.tenantId,
     });

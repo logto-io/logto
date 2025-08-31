@@ -8,6 +8,7 @@ create table application_sign_in_experiences (
     references applications (id) on update cascade on delete cascade,
   color jsonb /* @use PartialColor */ not null default '{}'::jsonb,
   branding jsonb /* @use Branding */ not null default '{}'::jsonb,
+  custom_css text,
   terms_of_use_url varchar(2048),
   privacy_policy_url varchar(2048),
   display_name varchar(256),

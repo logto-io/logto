@@ -14,8 +14,12 @@ create table organizations (
   custom_data jsonb /* @use JsonObject */ not null default '{}'::jsonb,
   /** Whether multi-factor authentication configuration is required for the members of the organization. */
   is_mfa_required boolean not null default false,
+  /** The organization's branding color configuration. */
+  color jsonb /* @use PartialColor */ not null default '{}'::jsonb,
   /** The organization's branding configuration. */
   branding jsonb /* @use Branding */ not null default '{}'::jsonb,
+  /** The custom CSS of the organization. */
+  custom_css text,
   /** When the organization was created. */
   created_at timestamptz not null default(now()),
   primary key (id)
