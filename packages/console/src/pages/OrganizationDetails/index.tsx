@@ -17,6 +17,7 @@ import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import Drawer from '@/components/Drawer';
 import PageMeta from '@/components/PageMeta';
 import ThemedIcon from '@/components/ThemedIcon';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useApi, { type RequestError } from '@/hooks/use-api';
@@ -138,9 +139,11 @@ function OrganizationDetails() {
               <TabNavItem href={`${pathname}/${id}/${OrganizationDetailsTabs.MachineToMachine}`}>
                 {t('organizations.machine_to_machine')}
               </TabNavItem>
-              <TabNavItem href={`${pathname}/${id}/${OrganizationDetailsTabs.Branding}`}>
-                {t('organizations.branding')}
-              </TabNavItem>
+              {isDevFeaturesEnabled && (
+                <TabNavItem href={`${pathname}/${id}/${OrganizationDetailsTabs.Branding}`}>
+                  {t('organizations.branding')}
+                </TabNavItem>
+              )}
             </TabNav>
             <Outlet
               context={
