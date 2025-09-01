@@ -14,14 +14,6 @@ const connectors = {
   social_demo_tip:
     '데모 연동은 데모 전용으로 설계되었으며 실제 운영 환경에 배포하는 것은 권장되지 않습니다.',
   connector_type: '종류',
-  connector_status: '로그인 경험',
-  connector_status_in_use: '사용 중',
-  connector_status_not_in_use: '사용 중이 아님',
-  not_in_use_tip: {
-    content:
-      '사용 중이 아님은 로그인 환경에서 이 로그인 방법을 사용하지 않았음을 의미해요. <a>{{link}}</a> 이 로그인 방법을 추가해주세요.',
-    go_to_sie: '로그인 경험으로 가서',
-  },
   placeholder_title: '소셜 연동',
   placeholder_description:
     'Logto는 널리 사용되는 다양한 소셜 로그인 커넥터를 제공하고 있으며, 표준 프로토콜을 사용하여 자신만의 커넥터를 만들 수도 있어요.',

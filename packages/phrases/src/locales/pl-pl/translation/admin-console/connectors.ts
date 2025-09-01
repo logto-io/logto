@@ -13,14 +13,6 @@ const connectors = {
   social_demo_tip:
     'Łącznik demonstracyjny został zaprojektowany wyłącznie dla celów demonstracyjnych i nie jest zalecany do wdrożenia w środowisku produkcyjnym.',
   connector_type: 'Typ',
-  connector_status: 'Doświadczenie logowania',
-  connector_status_in_use: 'W użyciu',
-  connector_status_not_in_use: 'Nie w użyciu',
-  not_in_use_tip: {
-    content:
-      'Nie w użyciu oznacza, że Twoje doświadczenie logowania nie użyło tej metody logowania. <a>{{link}}</a> aby dodać tę metodę logowania.',
-    go_to_sie: 'Przejdź do doświadczenia logowania',
-  },
   placeholder_title: 'Łącznik społecznościowy',
   placeholder_description:
     'Logto dostarczył wiele powszechnie używanych łączników społecznościowych, tymczasem możesz utworzyć własne z wykorzystaniem standardowych protokołów.',

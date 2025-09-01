@@ -14,14 +14,6 @@ const connectors = {
   social_demo_tip:
     'Il connettore demo è progettato esclusivamente per scopi di dimostrazione e non è consigliato per il deployment in un ambiente di produzione.',
   connector_type: 'Tipo',
-  connector_status: 'Esperienza di accesso',
-  connector_status_in_use: 'In uso',
-  connector_status_not_in_use: 'Non in uso',
-  not_in_use_tip: {
-    content:
-      'Non in uso significa che la tua esperienza di accesso non ha utilizzato questo metodo di accesso. <a>{{link}}</a> per aggiungere questo metodo di accesso.',
-    go_to_sie: "Vai all'esperienza di accesso",
-  },
   placeholder_title: 'Connettore sociale',
   placeholder_description:
     'Logto ha fornito molti connettori di accesso condivisi tramite i social media, frattanto puoi creare il tuo usando i protocolli standard.',

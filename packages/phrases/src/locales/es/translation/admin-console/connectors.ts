@@ -14,14 +14,6 @@ const connectors = {
   social_demo_tip:
     'El conector de demostración está diseñado exclusivamente para fines de demostración y no se recomienda para implementación en un entorno de producción.',
   connector_type: 'Tipo',
-  connector_status: 'Experiencia de inicio de sesión',
-  connector_status_in_use: 'En uso',
-  connector_status_not_in_use: 'No en uso',
-  not_in_use_tip: {
-    content:
-      'No en uso significa que tu experiencia de inicio de sesión no ha utilizado este método de inicio de sesión. <a>{{link}}</a> para agregar este método de inicio de sesión. ',
-    go_to_sie: 'Ir a la experiencia de inicio de sesión',
-  },
   placeholder_title: 'Conector social',
   placeholder_description:
     'Logto ha proporcionado muchos conectores de inicio de sesión social ampliamente utilizados, mientras tanto, puede crear el suyo con protocolos estándar.',
