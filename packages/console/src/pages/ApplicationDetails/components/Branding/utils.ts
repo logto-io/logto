@@ -18,12 +18,12 @@ export type ApplicationSignInExperienceForm = ApplicationSignInExperience & {
 export const formatFormToSubmitData = (
   data: ApplicationSignInExperienceForm
 ): Omit<ApplicationSignInExperience, 'applicationId' | 'tenantId'> => {
-  const { branding, color, applicationId, tenantId, isBrandingEnabled, ...rest } = data;
+  const { branding, color, customCss, applicationId, tenantId, isBrandingEnabled, ...rest } = data;
 
   return {
     ...rest,
     ...(isBrandingEnabled
-      ? { color, branding: removeFalsyValues(branding) }
-      : { color: {}, branding: {} }),
+      ? { color, branding: removeFalsyValues(branding), customCss }
+      : { color: {}, branding: {}, customCss: '' }),
   };
 };
