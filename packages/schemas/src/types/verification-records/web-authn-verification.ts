@@ -13,6 +13,8 @@ export type WebAuthnVerificationRecordData = {
   verified: boolean;
   /** The challenge generated for the WebAuthn registration */
   registrationChallenge?: string;
+  /** The rpId used when generating the registration options */
+  registrationRpId?: string;
   /** The challenge generated for the WebAuthn authentication */
   authenticationChallenge?: string;
   registrationInfo?: BindWebAuthn;
@@ -24,18 +26,20 @@ export const webAuthnVerificationRecordDataGuard = z.object({
   userId: z.string(),
   verified: z.boolean(),
   registrationChallenge: z.string().optional(),
+  registrationRpId: z.string().optional(),
   authenticationChallenge: z.string().optional(),
   registrationInfo: bindWebAuthnGuard.optional(),
 }) satisfies ToZodObject<WebAuthnVerificationRecordData>;
 
 export type SanitizedWebAuthnVerificationRecordData = Omit<
   WebAuthnVerificationRecordData,
-  'registrationInfo' | 'registrationChallenge' | 'authenticationChallenge'
+  'registrationInfo' | 'registrationChallenge' | 'registrationRpId' | 'authenticationChallenge'
 >;
 
 export const sanitizedWebAuthnVerificationRecordDataGuard =
   webAuthnVerificationRecordDataGuard.omit({
     registrationInfo: true,
     registrationChallenge: true,
+    registrationRpId: true,
     authenticationChallenge: true,
   }) satisfies ToZodObject<SanitizedWebAuthnVerificationRecordData>;

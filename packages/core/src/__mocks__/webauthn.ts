@@ -53,6 +53,7 @@ export const mockBindWebAuthnPayload: BindWebAuthnPayload = {
 
 export const mockBindWebAuthn: BindWebAuthn = {
   type: MfaFactor.WebAuthn,
+  rpId: 'rpId',
   credentialId: 'credentialId',
   publicKey: 'publicKey',
   transports: [],
