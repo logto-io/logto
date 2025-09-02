@@ -1,4 +1,4 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { MfaFactor, type SignInExperience, SignInIdentifier } from '@logto/schemas';
 import { useEffect, useRef } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
@@ -11,7 +11,7 @@ import { type SignInExperienceForm } from '@/pages/SignInExperience/types';
  * - if the password is enabled for sign-up, then it will be enabled for all sign-in methods.
  * - if the password is not required for sign-up, then verification code authentication method is required for email and phone sign-in methods.
  */
-const useSignUpPasswordListeners = () => {
+const useSignUpPasswordListeners = (signInExperience: SignInExperience) => {
   const {
     control,
     getValues,
@@ -50,6 +50,14 @@ const useSignUpPasswordListeners = () => {
           return method;
         }
 
+        // Check if the identifier is already used in MFA factors
+        const mfaFactors = signInExperience.mfa.factors;
+        const disabledByMfa =
+          (method.identifier === SignInIdentifier.Email &&
+            mfaFactors.includes(MfaFactor.EmailVerificationCode)) ||
+          (method.identifier === SignInIdentifier.Phone &&
+            mfaFactors.includes(MfaFactor.PhoneVerificationCode));
+
         return {
           ...method,
           // Auto enabled password for all sign-in methods,
@@ -57,7 +65,11 @@ const useSignUpPasswordListeners = () => {
           password: method.password || signUpPassword,
           // If password is not required for sign-up,
           // then verification code authentication method is required for email and phone sign-in methods
-          verificationCode: signUpPassword ? method.verificationCode : true,
+          verificationCode: signUpPassword
+            ? disabledByMfa
+              ? false
+              : method.verificationCode
+            : true,
         };
       }),
       {

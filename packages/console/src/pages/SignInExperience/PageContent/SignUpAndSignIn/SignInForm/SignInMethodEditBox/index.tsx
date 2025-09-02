@@ -98,6 +98,15 @@ function SignInMethodEditBox({ signInExperience }: Props) {
 
   const getVerificationCodeTooltip = useCallback(
     (identifier: SignInIdentifier) => {
+      // Return the existing tooltip for sign-up required case
+      if (isVerificationCodeCheckable(identifier)) {
+        return;
+      }
+
+      if (!isSignUpPasswordRequired) {
+        return t('sign_in_exp.sign_up_and_sign_in.tip.verification_code_auth');
+      }
+
       // Check if the identifier is already used in MFA factors
       const mfaFactors = signInExperience.mfa.factors;
       if (
@@ -112,13 +121,8 @@ function SignInMethodEditBox({ signInExperience }: Props) {
       ) {
         return t('sign_in_exp.sign_up_and_sign_in.tip.phone_mfa_enabled');
       }
-
-      // Return the existing tooltip for sign-up required case
-      if (!isVerificationCodeCheckable(identifier)) {
-        return t('sign_in_exp.sign_up_and_sign_in.tip.verification_code_auth');
-      }
     },
-    [isVerificationCodeCheckable, t, signInExperience.mfa.factors]
+    [isVerificationCodeCheckable, isSignUpPasswordRequired, signInExperience.mfa.factors, t]
   );
 
   return (

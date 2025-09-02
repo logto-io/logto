@@ -62,7 +62,7 @@ function SignUpForm({ signInExperience }: Props) {
     setValue('signUp.verify', isSignUpVerify, { shouldDirty: true });
   }, [setValue, signUpIdentifiers]);
 
-  useSignUpPasswordListeners();
+  useSignUpPasswordListeners(signInExperience);
 
   return (
     <Card>
