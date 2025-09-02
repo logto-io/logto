@@ -30,7 +30,7 @@ const sign_up_and_sign_in = {
     verification_code_auth: 'Código de verificação',
     auth_swap_tip: 'Alterne as opções abaixo para determinar qual aparece primeiro no processo.',
     require_auth_factor: 'Tem de selecionar pelo menos um fator de autenticação.',
-    forgot_password_verification_method: 'Método de verificação de senha esquecida',
+    forgot_password: 'Palavra-passe esquecida',
     forgot_password_description:
       'Os utilizadores podem redefinir a sua senha usando qualquer método de verificação disponível.',
     add_verification_method: 'Adicionar método de verificação',

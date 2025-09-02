@@ -23,7 +23,7 @@ type Props = {
 function SignInForm({ signInExperience }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { watch, setValue } = useFormContext<SignInExperienceForm>();
-  const { isConnectorTypeEnabled } = useEnabledConnectorTypes();
+  const { isConnectorTypeEnabled, ready: isConnectorsReady } = useEnabledConnectorTypes();
 
   const signInMethods = watch('signIn.methods');
   const forgotPasswordMethods = watch('forgotPasswordMethods');
@@ -31,6 +31,11 @@ function SignInForm({ signInExperience }: Props) {
 
   useEffect(() => {
     if (!isDevFeaturesEnabled) {
+      return;
+    }
+
+    // Wait for connectors list loading to be ready
+    if (!isConnectorsReady) {
       return;
     }
 
@@ -49,9 +54,15 @@ function SignInForm({ signInExperience }: Props) {
           : []),
       ];
 
-      setValue('forgotPasswordMethods', initialMethods);
+      setValue('forgotPasswordMethods', initialMethods, { shouldDirty: true });
     }
-  }, [hasPasswordMethod, setValue, isConnectorTypeEnabled, forgotPasswordMethods]);
+  }, [
+    hasPasswordMethod,
+    setValue,
+    isConnectorTypeEnabled,
+    forgotPasswordMethods,
+    isConnectorsReady,
+  ]);
 
   return (
     <Card>
