@@ -14,7 +14,6 @@ import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 
-import { EnvSet, getTenantEndpoint } from '../../env-set/index.js';
 import {
   buildVerificationRecordByIdAndType,
   insertVerificationRecord,
@@ -251,6 +250,13 @@ export default function verificationRoutes<T extends UserRouter>(
     }
   );
 
+  /**
+   * WebAuthn registration (passkey binding)
+   *
+   * The rpId must be exactly the domain from which this API is accessed.
+   * This keeps behavior aligned with the experience flow.
+   *
+   */
   router.post(
     `${verificationApiPrefix}/web-authn/registration`,
     koaGuard({
@@ -262,21 +268,16 @@ export default function verificationRoutes<T extends UserRouter>(
       status: [200],
     }),
     async (ctx, next) => {
-      const { id: userId } = ctx.auth;
-
-      // If custom domain is enabled, use the custom domain as the RP ID.
-      // Otherwise, use the default tenant hostname as the RP ID.
-      // The background is that a passkey must be registered with a specific RP ID, which is a domain.
-      // In the future, we will support specifying the RP ID.
-      const domain = await queries.domains.findActiveDomain(tenantContext.id);
-      const rpId = domain
-        ? domain.domain
-        : getTenantEndpoint(tenantContext.id, EnvSet.values).hostname;
+      const {
+        auth: { id: userId },
+        URL: { hostname },
+      } = ctx;
 
       const webAuthnVerification = WebAuthnVerification.create(libraries, queries, userId);
 
-      const registrationOptions =
-        await webAuthnVerification.generateWebAuthnRegistrationOptions(rpId);
+      const registrationOptions = await webAuthnVerification.generateWebAuthnRegistrationOptions(
+        hostname // RP ID: Use the domain of the current API request (custom domain supported)
+      );
 
       const { expiresAt } = await insertVerificationRecord(webAuthnVerification, queries, userId);
 

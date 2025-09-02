@@ -6,6 +6,7 @@ import {
   createWebAuthnRegistrationOptions,
   verifyWebAuthnRegistration,
 } from '#src/api/verification-record.js';
+import { logtoUrl } from '#src/constants.js';
 import { expectRejects } from '#src/helpers/index.js';
 import {
   createDefaultTenantUserWithPassword,
@@ -40,7 +41,7 @@ describe('my-account (mfa - WebAuthn)', () => {
         await createWebAuthnRegistrationOptions(api);
 
       expect(verificationRecordId).toBeTruthy();
-      expect(registrationOptions.rp.name).toBe('localhost');
+      expect(registrationOptions.rp.name).toBe(new URL(logtoUrl).hostname);
       expect(registrationOptions.user.displayName).toBe(user.username);
 
       await deleteDefaultTenantUser(user.id);
@@ -60,7 +61,8 @@ describe('my-account (mfa - WebAuthn)', () => {
         },
       } = await createWebAuthnRegistrationOptions(api);
 
-      const rawId = Buffer.from(rpId ?? 'localhost')
+      const expectedHost = new URL(logtoUrl).hostname;
+      const rawId = Buffer.from(rpId ?? expectedHost)
         .toString('base64')
         .replaceAll('+', '-')
         .replaceAll('/', '_')
@@ -78,7 +80,7 @@ describe('my-account (mfa - WebAuthn)', () => {
               JSON.stringify({
                 type: 'webauthn.create',
                 challenge,
-                origin: 'http://localhost:3001',
+                origin: logtoUrl,
                 crossOrigin: false,
               })
             ).toString('base64url'),
