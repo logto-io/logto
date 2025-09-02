@@ -1,7 +1,7 @@
 import { HTTPError } from 'ky';
 
 import { createDomain, deleteDomain, getDomain, getDomains } from '#src/api/domain.js';
-import { generateDomain } from '#src/utils.js';
+import { devFeatureDisabledTest, devFeatureTest, generateDomain } from '#src/utils.js';
 
 describe('domains', () => {
   afterEach(async () => {
@@ -23,11 +23,22 @@ describe('domains', () => {
     expect(domain.domain).toBe(domainName);
   });
 
-  it('should fail when already has a domain', async () => {
+  // Todo: @xiaoyijun [Multiple Custom Domains] Remove legacy tests
+  devFeatureDisabledTest.it('should fail when already has a domain', async () => {
     await createDomain();
 
     const response = await createDomain().catch((error: unknown) => error);
     expect(response instanceof HTTPError && response.response.status).toBe(422);
+  });
+
+  // Todo: @xiaoyijun [Multiple Custom Domains] Remove legacy tests
+  devFeatureTest.it('should create multiple domains', async () => {
+    const first = await createDomain();
+    const second = await createDomain();
+
+    expect(first.id).toBeTruthy();
+    expect(second.id).toBeTruthy();
+    expect(first.id).not.toEqual(second.id);
   });
 
   it('should get domain detail successfully', async () => {
