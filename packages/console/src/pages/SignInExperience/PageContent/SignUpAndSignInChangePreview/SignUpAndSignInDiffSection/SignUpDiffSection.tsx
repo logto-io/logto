@@ -24,6 +24,10 @@ function SignUpDiffSection({ before, after, isAfter = false }: Props) {
 
   const { identifiers, password, verify } = signUp;
 
+  if (identifiers.length === 0 && !password && !verify) {
+    return null;
+  }
+
   return (
     <div>
       <div className={styles.title}>{t('sign_in_exp.save_alert.sign_up')}</div>
