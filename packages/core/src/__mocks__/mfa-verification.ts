@@ -7,6 +7,7 @@ export const mockTotpBind: BindMfa = {
 
 export const mockWebAuthnBind: BindWebAuthn = {
   type: MfaFactor.WebAuthn,
+  rpId: 'rpId',
   credentialId: 'credentialId',
   publicKey: 'publicKey',
   counter: 0,

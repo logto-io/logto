@@ -147,7 +147,10 @@ describe('bindMfaPayloadVerification', () => {
           },
           additionalParameters
         )
-      ).resolves.toMatchObject(mockBindWebAuthn);
+      ).resolves.toMatchObject({
+        ...mockBindWebAuthn,
+        rpId: additionalParameters.rpId,
+      });
 
       expect(verifyWebAuthnRegistration).toHaveBeenCalled();
     });

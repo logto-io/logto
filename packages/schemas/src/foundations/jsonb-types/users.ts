@@ -93,6 +93,7 @@ export const webAuthnTransportGuard = z.enum([
 export const mfaVerificationWebAuthn = z.object({
   type: z.literal(MfaFactor.WebAuthn),
   ...baseMfaVerification,
+  rpId: z.string().optional(),
   credentialId: z.string(),
   publicKey: z.string(),
   transports: webAuthnTransportGuard.array().optional(),

@@ -446,6 +446,7 @@ export type BindTotp = z.infer<typeof bindTotpGuard>;
 
 export const bindWebAuthnGuard = z.object({
   type: z.literal(MfaFactor.WebAuthn),
+  rpId: z.string(),
   credentialId: z.string(),
   publicKey: z.string(),
   transports: webAuthnTransportGuard.array(),
