@@ -106,6 +106,8 @@ const sign_in_exp = {
     sign_up: 'Registro',
     sign_in: 'Inicio de sesión',
     social: 'Social',
+    forgot_password_migration_notice:
+      'Hemos actualizado la verificación de contraseña olvidada para admitir métodos personalizados. Anteriormente, esto se determinaba automáticamente mediante sus conectores de correo electrónico y SMS. Haga clic en <strong>Confirmar</strong> para completar la actualización.',
   },
   preview: {
     title: 'Previsualización del inicio de sesión',

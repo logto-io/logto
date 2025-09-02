@@ -105,6 +105,8 @@ const sign_in_exp = {
     sign_up: 'Kaydolma',
     sign_in: 'Oturum Açma',
     social: 'Sosyal',
+    forgot_password_migration_notice:
+      "Özel yöntemleri desteklemek için unutulan şifre doğrulamamızı yükselttik. Daha önce bu, E-posta ve SMS bağlayıcılarınız tarafından otomatik olarak belirlenmekteydi. Yükseltmeyi tamamlamak için <strong>Onayla</strong>'ya tıklayın.",
   },
   preview: {
     title: 'Oturum Açma Önizlemesi',

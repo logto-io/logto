@@ -106,6 +106,8 @@ const sign_in_exp = {
     sign_up: 'Inscription',
     sign_in: 'Connexion',
     social: 'Social',
+    forgot_password_migration_notice:
+      'Nous avons mis à niveau la vérification du mot de passe oublié pour prendre en charge des méthodes personnalisées. Auparavant, cela était automatiquement déterminé par vos connecteurs Email et SMS. Cliquez sur <strong>Confirmer</strong> pour terminer la mise à niveau.',
   },
   preview: {
     title: "Aperçu de l'expérience de connexion",

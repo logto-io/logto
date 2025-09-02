@@ -104,6 +104,8 @@ const sign_in_exp = {
     sign_up: 'Registo',
     sign_in: 'Iniciar sessão',
     social: 'Social',
+    forgot_password_migration_notice:
+      'Atualizámos a verificação de palavra-passe esquecida para suportar métodos personalizados. Anteriormente, isto era automaticamente determinado pelos seus conectores de Email e SMS. Clique em <strong>Confirmar</strong> para concluir a atualização.',
   },
   preview: {
     title: 'Visualização prévia do login',

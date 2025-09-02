@@ -102,6 +102,8 @@ const sign_in_exp = {
     sign_up: '회원가입',
     sign_in: '로그인',
     social: '소셜',
+    forgot_password_migration_notice:
+      '사용자 정의 방법을 지원하도록 비밀번호 찾기 확인을 업그레이드했습니다. 이전에는 이메일 및 SMS 커넥터에 의해 자동으로 결정되었습니다. 업그레이드를 완료하려면 <strong>확인</strong>을 클릭하세요.',
   },
   preview: {
     title: '로그인 화면 미리보기',

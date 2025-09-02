@@ -105,6 +105,8 @@ const sign_in_exp = {
     sign_up: 'サインアップ',
     sign_in: 'サインイン',
     social: 'ソーシャル',
+    forgot_password_migration_notice:
+      'パスワードを忘れた場合の検証をカスタムメソッドをサポートするようにアップグレードしました。以前は、これはメールとSMSコネクタによって自動的に決定されていました。アップグレードを完了するには<strong>確認</strong>をクリックしてください。',
   },
   preview: {
     title: 'サインインプレビュー',

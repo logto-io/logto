@@ -1,6 +1,6 @@
-import { type SignInExperience } from '@logto/schemas';
+import { ConnectorType, ForgotPasswordMethod, type SignInExperience } from '@logto/schemas';
 import classNames from 'classnames';
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -8,10 +8,12 @@ import { useParams } from 'react-router-dom';
 
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
+import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { trySubmitSafe } from '@/utils/form';
 
@@ -49,10 +51,13 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { tab } = useParams();
   const [isSaving, setIsSaving] = useState(false);
+  const [isForgotPasswordMigrationNoticeVisible, setIsForgotPasswordMigrationNoticeVisible] =
+    useState(false);
 
   const { updateConfigs } = useConfigs();
   const { getPathname } = useTenantPathname();
   const { isUploading, cancelUpload } = useContext(SignInExperienceContext);
+  const { isConnectorTypeEnabled, ready: isConnectorsReady } = useEnabledConnectorTypes();
 
   const [dataToCompare, setDataToCompare] = useState<SignInExperiencePageManagedData>();
 
@@ -66,13 +71,15 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
     getValues,
     watch,
     formState: { isDirty, errors },
+    setValue,
   } = methods;
   const api = useApi();
   const formData = watch();
+  const hasPasswordMethod = formData.signIn.methods.some((method) => method.password);
 
   const previewConfigs = usePreviewConfigs(formData, isDirty, data);
 
-  const saveData = async () => {
+  const saveData = useCallback(async () => {
     setIsSaving(true);
 
     try {
@@ -90,26 +97,30 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
     } finally {
       setIsSaving(false);
     }
-  };
+  }, [api, getValues, onSignInExperienceUpdated, reset, t, updateConfigs]);
 
-  const onSubmit = handleSubmit(
-    trySubmitSafe(async (formData: SignInExperienceForm) => {
-      if (isSaving) {
-        return;
-      }
+  const onSubmit = useCallback(
+    async (formData: SignInExperienceForm) => {
+      const handler = trySubmitSafe(async (formData: SignInExperienceForm) => {
+        if (isSaving) {
+          return;
+        }
 
-      const formatted = sieFormDataParser.toSignInExperience(formData);
-      const original = signInExperienceToUpdatedDataParser(data);
+        const formatted = sieFormDataParser.toSignInExperience(formData);
+        const original = signInExperienceToUpdatedDataParser(data);
 
-      // Sign-in methods changed, need to show confirm modal first.
-      if (!hasSignUpAndSignInConfigChanged(original, formatted)) {
-        setDataToCompare(formatted);
+        // Sign-in methods changed, need to show confirm modal first.
+        if (!hasSignUpAndSignInConfigChanged(original, formatted)) {
+          setDataToCompare(formatted);
 
-        return;
-      }
+          return;
+        }
 
-      await saveData();
-    })
+        await saveData();
+      });
+      return handler(formData);
+    },
+    [data, isSaving, saveData]
   );
 
   const onDiscard = useCallback(() => {
@@ -118,6 +129,41 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
       cancelUpload();
     }
   }, [isUploading, cancelUpload, reset]);
+
+  // Forgot password migration from null to normal array
+  useEffect(() => {
+    if (!isDevFeaturesEnabled) {
+      return;
+    }
+
+    // Wait for connectors list loading to be ready
+    if (!isConnectorsReady) {
+      return;
+    }
+
+    // If there is no password method, we should clear the forgot password methods.
+    if (!hasPasswordMethod) {
+      setValue('forgotPasswordMethods', []);
+    } else if (!formData.forgotPasswordMethods) {
+      // If this is null, we should initialize it based on current connector setup
+      // if has email connector, then add email verification code method, also for sms connector
+      const initialMethods = [
+        ...(isConnectorTypeEnabled(ConnectorType.Email)
+          ? [ForgotPasswordMethod.EmailVerificationCode]
+          : []),
+        ...(isConnectorTypeEnabled(ConnectorType.Sms)
+          ? [ForgotPasswordMethod.PhoneVerificationCode]
+          : []),
+      ];
+
+      setValue('forgotPasswordMethods', initialMethods, { shouldDirty: true });
+      setIsForgotPasswordMigrationNoticeVisible(true);
+      void onSubmit({
+        ...formData,
+        forgotPasswordMethods: initialMethods,
+      });
+    }
+  }, [hasPasswordMethod, setValue, isConnectorTypeEnabled, isConnectorsReady, onSubmit, formData]);
 
   return (
     <>
@@ -162,7 +208,7 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
           isSubmitDisabled={isUploading}
           isSubmitting={isSaving}
           onDiscard={onDiscard}
-          onSubmit={onSubmit}
+          onSubmit={handleSubmit(onSubmit)}
         />
       </div>
       <ConfirmModal
@@ -175,7 +221,13 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
           await saveData();
         }}
       >
-        {dataToCompare && <SignUpAndSignInChangePreview before={data} after={dataToCompare} />}
+        {dataToCompare && (
+          <SignUpAndSignInChangePreview
+            before={data}
+            after={dataToCompare}
+            isForgotPasswordMigrationNoticeVisible={isForgotPasswordMigrationNoticeVisible}
+          />
+        )}
       </ConfirmModal>
       <UnsavedChangesAlertModal
         hasUnsavedChanges={isDirty || isUploading}
