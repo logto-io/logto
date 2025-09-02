@@ -45,7 +45,27 @@ export const defaultMetadata: ConnectorMetadata = {
           content: '您的验证码是 {{code}}。如非本人操作，请忽略本短信',
         },
         {
+          usageType: 'OrganizationInvitation',
+          content: '您的验证码是 {{code}}。如非本人操作，请忽略本短信',
+        },
+        {
           usageType: 'Generic',
+          content: '您的验证码是 {{code}}。如非本人操作，请忽略本短信',
+        },
+        {
+          usageType: 'UserPermissionValidation',
+          content: '您的验证码是 {{code}}。如非本人操作，请忽略本短信',
+        },
+        {
+          usageType: 'BindNewIdentifier',
+          content: '您的验证码是 {{code}}。如非本人操作，请忽略本短信',
+        },
+        {
+          usageType: 'MfaVerification',
+          content: '您的验证码是 {{code}}。如非本人操作，请忽略本短信',
+        },
+        {
+          usageType: 'BindMfa',
           content: '您的验证码是 {{code}}。如非本人操作，请忽略本短信',
         },
       ],

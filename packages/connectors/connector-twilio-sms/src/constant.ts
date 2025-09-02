@@ -67,9 +67,34 @@ export const defaultMetadata: ConnectorMetadata = {
             'Your Logto password change verification code is {{code}}. The code will remain active for 10 minutes.',
         },
         {
+          usageType: 'OrganizationInvitation',
+          content:
+            'Your Logto organization invitation code is {{code}}. The code will remain active for 10 minutes.',
+        },
+        {
           usageType: 'Generic',
           content:
             'Your Logto verification code is {{code}}. The code will remain active for 10 minutes.',
+        },
+        {
+          usageType: 'UserPermissionValidation',
+          content:
+            'Your Logto permission validation code is {{code}}. The code will remain active for 10 minutes.',
+        },
+        {
+          usageType: 'BindNewIdentifier',
+          content:
+            'Your Logto bind new identifier code is {{code}}. The code will remain active for 10 minutes.',
+        },
+        {
+          usageType: 'MfaVerification',
+          content:
+            'Your Logto MFA verification code is {{code}}. The code will remain active for 10 minutes.',
+        },
+        {
+          usageType: 'BindMfa',
+          content:
+            'Your Logto add 2-step verification code is {{code}}. The code will remain active for 10 minutes.',
         },
       ],
     },
