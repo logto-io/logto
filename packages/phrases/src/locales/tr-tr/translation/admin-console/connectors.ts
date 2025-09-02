@@ -14,14 +14,6 @@ const connectors = {
   social_demo_tip:
     'Demo bağlayıcı sadece gösterim amaçlı tasarlanmıştır ve üretim ortamında uygulanması önerilmez.',
   connector_type: 'Tip',
-  connector_status: 'Oturum açma deneyimi',
-  connector_status_in_use: 'Kullanımda',
-  connector_status_not_in_use: 'Kullanımda değil',
-  not_in_use_tip: {
-    content:
-      'Kullanımda değil, oturum açma deneyiminiz bu oturum açma yöntemini kullanmamış demektir. <a>{{link}}</a> bağlantısını kullanarak bu oturum açma yöntemini ekleyin.',
-    go_to_sie: 'Oturum açma deneyimine git',
-  },
   placeholder_title: 'Sosyal bağlayıcı',
   placeholder_description:
     'Logto, çok sayıda kullanılan sosyal oturum açma bağlayıcısı sağlamıştır. Bu arada, standart protokollerle kendi bağlayıcınızı oluşturabilirsiniz.',

@@ -34,8 +34,6 @@ import pageLayout from '@/scss/page-layout.module.scss';
 
 import ConnectorDeleteButton from './ConnectorDeleteButton';
 import ConnectorName from './ConnectorName';
-import ConnectorStatus from './ConnectorStatus';
-import ConnectorStatusField from './ConnectorStatusField';
 import ConnectorTypeColumn from './ConnectorTypeColumn';
 import Guide from './Guide';
 import SignInExperienceSetupNotice from './SignInExperienceSetupNotice';
@@ -149,14 +147,8 @@ function Connectors() {
           {
             title: t('connectors.connector_type'),
             dataIndex: 'type',
-            colSpan: 5,
+            colSpan: 9,
             render: (connectorGroup) => <ConnectorTypeColumn connectorGroup={connectorGroup} />,
-          },
-          {
-            title: <ConnectorStatusField />,
-            dataIndex: 'status',
-            colSpan: 4,
-            render: (connectorGroup) => <ConnectorStatus connectorGroup={connectorGroup} />,
           },
           {
             title: null,

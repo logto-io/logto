@@ -11,13 +11,6 @@ const connectors = {
   demo_tip: '演示連接器僅用於演示且最多只能發送 100 條消息，不建議在生產環境中部署。',
   social_demo_tip: '演示連接器僅用於演示目的，不建議在生產環境中部署。',
   connector_type: '類型',
-  connector_status: '登錄體驗',
-  connector_status_in_use: '使用中',
-  connector_status_not_in_use: '未使用',
-  not_in_use_tip: {
-    content: '未使用意味著你的登錄體驗並沒有使用這個登錄方式。<a>{{link}}</a>去添加。',
-    go_to_sie: '前往登錄體驗',
-  },
   placeholder_title: '社交連接器',
   placeholder_description:
     'Logto 提供了許多廣泛使用的社交登錄連接器，同時你還可以使用標準協議創建自己的連接器。',

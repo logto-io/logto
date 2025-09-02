@@ -13,14 +13,6 @@ const connectors = {
   social_demo_tip:
     'このデモコネクタは実演目的にのみ使用するように設計されており、本番環境での展開は推奨されません。',
   connector_type: 'タイプ',
-  connector_status: 'サインイン体験',
-  connector_status_in_use: '使用中',
-  connector_status_not_in_use: '未使用',
-  not_in_use_tip: {
-    content:
-      '未使用は、サインイン体験でこのサインイン方法が使用されていないことを意味します。<a>{{link}}</a>でこのサインイン方法を追加してください。',
-    go_to_sie: 'サインイン体験に進む',
-  },
   placeholder_title: 'ソーシャルコネクタ',
   placeholder_description:
     'Logto は、標準プロトコルを使用して独自のソーシャルサインインコネクタを作成できるとともに、多くの一般的に使用されているソーシャルサインインコネクタを提供しています。',

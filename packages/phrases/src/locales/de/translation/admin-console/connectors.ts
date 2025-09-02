@@ -14,14 +14,6 @@ const connectors = {
   social_demo_tip:
     'Der Demo-Connector ist ausschließlich für Demonstrationszwecke konzipiert und wird nicht für den Einsatz in einer Produktionsumgebung empfohlen.',
   connector_type: 'Typ',
-  connector_status: 'Anmeldeoberfläche',
-  connector_status_in_use: 'In Benutzung',
-  connector_status_not_in_use: 'Nicht in Benutzung',
-  not_in_use_tip: {
-    content:
-      'Nicht in Benutzung bedeutet, dass Ihre Anmeldeerfahrung diese Anmeldeoption nicht verwendet hat. <a>{{link}}</a>, um diese Anmeldeoption hinzuzufügen.',
-    go_to_sie: 'Zur Anmeldeerfahrung gehen',
-  },
   placeholder_title: 'Social-Connector',
   placeholder_description:
     'Logto hat viele weit verbreitete Social-Sign-In-Connectoren bereitgestellt. Inzwischen können Sie mit Standardprotokollen Ihre eigenen erstellen.',

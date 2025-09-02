@@ -67,8 +67,6 @@ function ConnectorDeleteButton({ connectorGroup }: Props) {
         </IconButton>
       </Tooltip>
       <DeleteConnectorConfirmModal
-        data={firstConnector}
-        isInUse={inUse}
         isOpen={isDeleteAlertOpen}
         isLoading={isDeleting}
         onCancel={() => {

@@ -13,14 +13,6 @@ const connectors = {
   social_demo_tip:
     'The demo connector is designed exclusively for demonstration purposes and is not recommended for deployment in a production environment.',
   connector_type: 'Type',
-  connector_status: 'Sign in Experience',
-  connector_status_in_use: 'In use',
-  connector_status_not_in_use: 'Not in use',
-  not_in_use_tip: {
-    content:
-      'Not in use means your sign in experience hasn’t used this sign in method. <a>{{link}}</a> to add this sign in method. ',
-    go_to_sie: 'Go to sign in experience',
-  },
   placeholder_title: 'Social connector',
   placeholder_description:
     'Logto has provided many widely used social sign-in connectors meantime you can create your own with standard protocols.',
