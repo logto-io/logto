@@ -72,10 +72,10 @@ describe('domain routes', () => {
     expect(response.body.domain).toEqual('test.com');
   });
 
-  it('POST /domains should fail when there is already a domain', async () => {
-    await expect(
-      domainRequest.post('/domains').send({ domain: mockDomain.domain })
-    ).resolves.toHaveProperty('status', 422);
+  it('POST /domains allows creating multiple domains', async () => {
+    const response = await domainRequest.post('/domains').send({ domain: 'another.com' });
+    expect(response.status).toEqual(201);
+    expect(addDomain).toBeCalledWith('another.com');
   });
 
   it('DELETE /domains/:id', async () => {
