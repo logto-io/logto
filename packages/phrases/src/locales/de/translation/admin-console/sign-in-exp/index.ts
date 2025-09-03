@@ -105,6 +105,8 @@ const sign_in_exp = {
     sign_up: 'Registrierung',
     sign_in: 'Anmeldung',
     social: 'Sozial',
+    forgot_password_migration_notice:
+      'Wir haben die Passwort-zurücksetzen-Verifizierung aktualisiert, um benutzerdefinierte Methoden zu unterstützen. Zuvor wurde dies automatisch durch Ihre E-Mail- und SMS-Konnektoren bestimmt. Klicken Sie auf <strong>Bestätigen</strong>, um das Upgrade abzuschließen.',
   },
   preview: {
     title: 'Vorschau',

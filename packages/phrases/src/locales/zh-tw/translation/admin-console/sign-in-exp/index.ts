@@ -102,6 +102,8 @@ const sign_in_exp = {
     sign_up: '註冊',
     sign_in: '登錄',
     social: '社交',
+    forgot_password_migration_notice:
+      '我們已升級忘記密碼驗證以支援自訂方法。之前，這是由您的電子郵件和簡訊連接器自動確定的。點擊<strong>確認</strong>以完成升級。',
   },
   preview: {
     title: '登錄預覽',

@@ -106,6 +106,8 @@ const sign_in_exp = {
     sign_up: 'Sign-up',
     sign_in: 'Sign-in',
     social: 'Social',
+    forgot_password_migration_notice:
+      "We've upgraded forgot password verification to support custom methods. Previously, this was automatically determined by your Email and SMS connectors. Click <strong>Confirm</strong> to complete the upgrade.",
   },
   preview: {
     title: 'Sign-in preview',

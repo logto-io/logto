@@ -105,6 +105,8 @@ const sign_in_exp = {
     sign_up: 'Registrazione',
     sign_in: 'Accesso',
     social: 'Sociale',
+    forgot_password_migration_notice:
+      "Abbiamo aggiornato la verifica della password dimenticata per supportare metodi personalizzati. In precedenza, questo era determinato automaticamente dai tuoi connettori Email e SMS. Clicca su <strong>Conferma</strong> per completare l'aggiornamento.",
   },
   preview: {
     title: 'Anteprima di accesso',
