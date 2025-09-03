@@ -156,6 +156,11 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
           : []),
       ];
 
+      if (initialMethods.length === 0) {
+        setValue('forgotPasswordMethods', []);
+        return;
+      }
+
       setValue('forgotPasswordMethods', initialMethods, { shouldDirty: true });
       setIsForgotPasswordMigrationNoticeVisible(true);
       void onSubmit({
