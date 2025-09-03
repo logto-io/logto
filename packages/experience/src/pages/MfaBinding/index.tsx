@@ -20,8 +20,10 @@ const MfaBinding = () => {
 
   return (
     <SecondaryPageLayout
-      title="mfa.add_mfa_factors"
-      description="mfa.add_mfa_description"
+      title={flowState.suggestion ? 'mfa.add_another_mfa_factor' : 'mfa.add_mfa_factors'}
+      description={
+        flowState.suggestion ? 'mfa.add_another_mfa_description' : 'mfa.add_mfa_description'
+      }
       onSkip={conditional(
         flowState.skippable && (flowState.suggestion ? skipOptionalMfa : skipMfa)
       )}

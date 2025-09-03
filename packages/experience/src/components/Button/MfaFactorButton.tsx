@@ -18,6 +18,8 @@ import styles from './index.module.scss';
 export type Props = {
   readonly factor: MfaFactor;
   readonly isBinding: boolean;
+  readonly isDisabled?: boolean;
+  readonly maskedIdentifier?: string;
   readonly onClick?: () => void;
 };
 
@@ -53,7 +55,7 @@ const linkFactorDescription: Record<MfaFactor, TFuncKey> = {
   [MfaFactor.PhoneVerificationCode]: 'mfa.link_phone_verification_code_description',
 };
 
-const MfaFactorButton = ({ factor, isBinding, onClick }: Props) => {
+const MfaFactorButton = ({ factor, isBinding, isDisabled, maskedIdentifier, onClick }: Props) => {
   const Icon = factorIcon[factor];
 
   return (
@@ -62,10 +64,12 @@ const MfaFactorButton = ({ factor, isBinding, onClick }: Props) => {
         styles.button,
         styles.secondary,
         styles.large,
-        mfaFactorButtonStyles.mfaFactorButton
+        mfaFactorButtonStyles.mfaFactorButton,
+        isDisabled && mfaFactorButtonStyles.disabled
       )}
       type="button"
-      onClick={onClick}
+      disabled={isDisabled}
+      onClick={isDisabled ? undefined : onClick}
     >
       <Icon className={mfaFactorButtonStyles.icon} />
       <div className={mfaFactorButtonStyles.title}>
@@ -73,12 +77,18 @@ const MfaFactorButton = ({ factor, isBinding, onClick }: Props) => {
           <DynamicT forKey={factorName[factor]} />
         </div>
         <div className={mfaFactorButtonStyles.description}>
-          <DynamicT forKey={(isBinding ? linkFactorDescription : factorDescription)[factor]} />
+          {maskedIdentifier ? (
+            <span>{maskedIdentifier}</span>
+          ) : (
+            <DynamicT forKey={(isBinding ? linkFactorDescription : factorDescription)[factor]} />
+          )}
         </div>
       </div>
-      <FlipOnRtl>
-        <ArrowNext className={mfaFactorButtonStyles.icon} />
-      </FlipOnRtl>
+      {!isDisabled && (
+        <FlipOnRtl>
+          <ArrowNext className={mfaFactorButtonStyles.icon} />
+        </FlipOnRtl>
+      )}
     </button>
   );
 };

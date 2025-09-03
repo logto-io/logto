@@ -19,6 +19,8 @@ const mfa = {
   add_mfa_factors: '2段階認証を追加',
   add_mfa_description:
     '2段階認証が有効になっています。安全なサインインのために第二の認証方法を選択してください。',
+  add_another_mfa_factor: 'もう一つの2段階認証を追加',
+  add_another_mfa_description: 'サインイン時に身元を確認するための別の方法を選択してください。',
   verify_mfa_factors: '2段階認証',
   verify_mfa_description:
     'このアカウントでは2段階認証が有効になっています。アイデンティティを確認するための第二の方法を選択してください。',
