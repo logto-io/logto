@@ -20,6 +20,7 @@ import {
   setSmsConnector,
 } from '#src/helpers/connector.js';
 import { expectRejects } from '#src/helpers/index.js';
+import { defaultSignInSignUpConfigs } from '#src/helpers/sign-in-experience.js';
 import { generatePassword } from '#src/utils.js';
 
 describe('admin console sign-in experience', () => {
@@ -196,16 +197,7 @@ describe('MFA validation', () => {
     await Promise.all([setEmailConnector(), setSmsConnector()]);
     // Clear sign in experience before each test
     await updateSignInExperience({
-      signIn: {
-        methods: [
-          {
-            identifier: SignInIdentifier.Username,
-            password: true,
-            verificationCode: false,
-            isPasswordPrimary: true,
-          },
-        ],
-      },
+      ...defaultSignInSignUpConfigs,
       mfa: {
         policy: MfaPolicy.NoPrompt,
         factors: [],
