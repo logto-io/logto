@@ -1,4 +1,4 @@
-import { Theme, type Organization, type SignInExperience } from '@logto/schemas';
+import { type Organization, type SignInExperience } from '@logto/schemas';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
@@ -7,10 +7,8 @@ import useSWR from 'swr';
 
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
-import ImageInputs, { themeToLogoName } from '@/components/ImageInputs';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { organizationLogosForExperienceLink, organizationsFeatureLink } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
+import { organizationsFeatureLink } from '@/consts';
 import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -110,32 +108,6 @@ function Settings() {
             {...register('description')}
           />
         </FormField>
-        {!isDevFeaturesEnabled && (
-          <ImageInputs
-            uploadTitle="organization_details.branding.logo"
-            tip={
-              <Trans
-                i18nKey="admin_console.organization_details.branding.logo_tooltip"
-                components={{
-                  a: (
-                    <TextLink
-                      targetBlank="noopener"
-                      href={getDocumentationUrl(organizationLogosForExperienceLink)}
-                    />
-                  ),
-                }}
-              />
-            }
-            control={control}
-            register={register}
-            fields={Object.values(Theme).map((theme) => ({
-              name: `branding.${themeToLogoName[theme]}`,
-              error: errors.branding?.[themeToLogoName[theme]],
-              type: 'organization_logo',
-              theme,
-            }))}
-          />
-        )}
         <FormField
           title="organization_details.custom_data"
           tip={t('organization_details.custom_data_tip')}

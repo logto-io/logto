@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 
 import CustomCssEditorField from '@/components/CustomCssEditorField';
 import LogoAndFavicon from '@/components/ImageInputs/LogoAndFavicon';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import ColorPicker from '@/ds-components/ColorPicker';
 import FormField from '@/ds-components/FormField';
@@ -88,7 +87,7 @@ function NonThirdPartyBrandingForm() {
             />
           </div>
         )}
-        {isDevFeaturesEnabled && <CustomCssEditorField />}
+        <CustomCssEditorField />
       </div>
     </>
   );
