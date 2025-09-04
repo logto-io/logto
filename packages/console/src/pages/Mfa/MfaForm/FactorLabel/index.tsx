@@ -1,6 +1,7 @@
 import { type AdminConsoleKey } from '@logto/phrases';
 import { MfaFactor } from '@logto/schemas';
 
+import { BetaTag } from '@/components/FeatureTag';
 import MfaFactorTitle from '@/components/MfaFactorTitle';
 import DynamicT from '@/ds-components/DynamicT';
 
@@ -20,9 +21,18 @@ const factorDescriptionLabel: Record<MfaFactor, AdminConsoleKey> = {
 };
 
 function FactorLabel({ type }: Props) {
+  const showBetaTag =
+    type === MfaFactor.EmailVerificationCode || type === MfaFactor.PhoneVerificationCode;
+
   return (
     <div className={styles.factorLabel}>
-      <MfaFactorTitle type={type} tooltip={type === MfaFactor.WebAuthn && <WebAuthnTipContent />} />
+      <div className={styles.factorTitleWrapper}>
+        <MfaFactorTitle
+          type={type}
+          tooltip={type === MfaFactor.WebAuthn && <WebAuthnTipContent />}
+        />
+        {showBetaTag && <BetaTag />}
+      </div>
       <div className={styles.factorDescription}>
         <DynamicT forKey={factorDescriptionLabel[type]} />
       </div>
