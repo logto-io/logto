@@ -7,7 +7,6 @@ import {
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { emptyBranding } from '@/types/sign-in-experience';
 import { removeFalsyValues } from '@/utils/object';
 
@@ -148,8 +147,6 @@ export const sieFormDataParser = {
       signUp: signUpFormDataParser.toSignUp(signUp),
       signInMode: createAccountEnabled ? SignInMode.SignInAndRegister : SignInMode.SignIn,
       customCss: customCss?.length ? customCss : null,
-      // TODO @wangsijie: Remove this once forgot password methods feature is ready for production.
-      forgotPasswordMethods: isDevFeaturesEnabled ? forgotPasswordMethods : null,
     };
   },
 };

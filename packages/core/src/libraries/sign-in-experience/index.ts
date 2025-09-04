@@ -284,9 +284,9 @@ export const createSignInExperienceLibrary = (
       const hasEmailConnector = logtoConnectors.some(({ type }) => type === ConnectorType.Email);
       const hasSmsConnector = logtoConnectors.some(({ type }) => type === ConnectorType.Sms);
 
-      // If forgotPasswordMethods is null (production compatibility) or dev features are not enabled,
+      // If forgotPasswordMethods is null (production compatibility),
       // fall back to connector-based availability only
-      if (!signInExperience.forgotPasswordMethods || !EnvSet.values.isDevFeaturesEnabled) {
+      if (!signInExperience.forgotPasswordMethods) {
         return {
           email: hasEmailConnector,
           phone: hasSmsConnector,

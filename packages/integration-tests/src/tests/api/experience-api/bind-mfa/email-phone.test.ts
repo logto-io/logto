@@ -23,9 +23,7 @@ import {
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest, generateEmail, generatePhone } from '#src/utils.js';
-
-const { describe, it } = devFeatureTest;
+import { generateEmail, generatePhone } from '#src/utils.js';
 
 const mfaConfigs = [
   {
