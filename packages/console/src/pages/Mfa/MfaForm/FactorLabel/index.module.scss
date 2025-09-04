@@ -6,6 +6,12 @@
   gap: _.unit(1);
 }
 
+.factorTitleWrapper {
+  display: flex;
+  align-items: center;
+  gap: _.unit(2);
+}
+
 .factorDescription {
   font: var(--font-body-2);
   color: var(--color-text-secondary);
