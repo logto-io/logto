@@ -20,6 +20,8 @@ const mfa = {
   add_mfa_factors: 'Agregar verificación de 2 pasos',
   add_mfa_description:
     'La verificación de dos factores está habilitada. Seleccione su segundo método de verificación para iniciar sesión de forma segura.',
+  add_another_mfa_factor: 'Agregar otra verificación de 2 pasos',
+  add_another_mfa_description: 'Seleccione otra forma de verificar su identidad al iniciar sesión.',
   verify_mfa_factors: 'Verificación de 2 pasos',
   verify_mfa_description:
     'La verificación de 2 pasos se ha habilitado para esta cuenta. Seleccione la segunda forma de verificar su identidad.',

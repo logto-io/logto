@@ -17,8 +17,8 @@ import {
   OrganizationRequiredMfaPolicy,
   MfaFactor,
 } from '@logto/schemas';
-import { generateStandardId } from '@logto/shared';
-import { cond, deduplicate, pick } from '@silverhand/essentials';
+import { generateStandardId, maskEmail, maskPhone } from '@logto/shared';
+import { cond, condObject, deduplicate, pick } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -333,9 +333,30 @@ export class Mfa {
       return;
     }
 
+    // Get user data for masking
+    const user = await this.interactionContext.getIdentifiedUser();
+    const { primaryEmail, primaryPhone } = user;
+
+    // Build masked identifiers for bound factors
+    const maskedIdentifiers = condObject({
+      [MfaFactor.EmailVerificationCode]:
+        factorsInUser.includes(MfaFactor.EmailVerificationCode) &&
+        primaryEmail &&
+        maskEmail(primaryEmail),
+      [MfaFactor.PhoneVerificationCode]:
+        factorsInUser.includes(MfaFactor.PhoneVerificationCode) &&
+        primaryPhone &&
+        maskPhone(primaryPhone),
+    });
+
     throw new RequestError(
       { code: 'session.mfa.suggest_additional_mfa', status: 422 },
-      { availableFactors: additionalFactors, skippable: true, suggestion: true }
+      {
+        availableFactors, // Return all available factors, not just additional ones
+        maskedIdentifiers,
+        skippable: true,
+        suggestion: true,
+      }
     );
   }
 

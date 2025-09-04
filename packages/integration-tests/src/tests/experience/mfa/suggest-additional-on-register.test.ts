@@ -64,10 +64,10 @@ devFeatureTest.describe('Experience - suggest additional MFA after email registr
     await experience.waitForPathname('continue/password');
     await experience.toFillNewPasswords(password);
 
-    // Wait for suggestion navigation and page render (list page)
-    await experience.waitForPathname('mfa-binding/Totp');
+    // Wait for suggestion navigation to MFA list page
+    await experience.waitForPathname('mfa-binding');
 
-    // Skip optional suggestion
+    // Skip optional suggestion from list page
     await experience.toClick('div[role=button][class$=skipButton]');
     await experience.page.waitForNetworkIdle();
 
@@ -97,7 +97,11 @@ devFeatureTest.describe('Experience - suggest additional MFA after email registr
     await experience.waitForPathname('continue/password');
     await experience.toFillNewPasswords(password);
 
-    // Land on optional MFA suggestion list
+    // Land on optional MFA suggestion list page
+    await experience.waitForPathname('mfa-binding');
+
+    // Click on TOTP factor button to proceed with binding
+    await experience.toClick('button', 'Authenticator app OTP');
     await experience.waitForPathname('mfa-binding/Totp');
     await experience.toBindTotp();
     const userId = await experience.getUserIdFromDemoAppPage();
@@ -127,8 +131,8 @@ devFeatureTest.describe('Experience - suggest additional MFA after email registr
     await experience.waitForPathname('continue/password');
     await experience.toFillNewPasswords(password);
 
-    // Optional suggestion detail page for TOTP
-    await experience.waitForPathname('mfa-binding/Totp');
+    // Optional suggestion list page
+    await experience.waitForPathname('mfa-binding');
 
     // Click skip for optional suggestion; backend should require backup code
     await experience.toClick('div[role=button][class$=skipButton]');

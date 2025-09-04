@@ -19,6 +19,8 @@ const mfa = {
   add_mfa_factors: '2단계 인증 추가',
   add_mfa_description:
     '2단계 인증이 활성화되었습니다. 안전한 로그인을 위해 두 번째 인증 방법을 선택하세요.',
+  add_another_mfa_factor: '다른 2단계 인증 추가',
+  add_another_mfa_description: '로그인 시 신원을 확인하기 위한 다른 방법을 선택하세요.',
   verify_mfa_factors: '2단계 인증 확인',
   verify_mfa_description:
     '이 계정에 대해 2단계 인증이 활성화되었습니다. 신원을 확인하는 두 번째 방법을 선택하세요.',

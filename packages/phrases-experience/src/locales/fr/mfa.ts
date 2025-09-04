@@ -19,6 +19,9 @@ const mfa = {
   add_mfa_factors: 'Ajouter la vérification en deux étapes',
   add_mfa_description:
     'La vérification en deux étapes est activée. Sélectionnez votre deuxième méthode de vérification pour une connexion sécurisée.',
+  add_another_mfa_factor: 'Ajouter une autre vérification en deux étapes',
+  add_another_mfa_description:
+    'Sélectionnez une autre méthode pour vérifier votre identité lors de la connexion.',
   verify_mfa_factors: 'Vérification en deux étapes',
   verify_mfa_description:
     'La vérification en deux étapes a été activée pour ce compte. Veuillez sélectionner la deuxième façon de vérifier votre identité.',

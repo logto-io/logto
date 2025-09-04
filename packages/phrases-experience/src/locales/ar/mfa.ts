@@ -18,6 +18,8 @@ const mfa = {
   verify_phone_verification_code_description: 'أدخل الرمز المرسل إلى هاتفك',
   add_mfa_factors: 'إضافة التحقق من خطوتين',
   add_mfa_description: 'تم تمكين التحقق من خطوتين. حدد طريقة التحقق الثانية لتسجيل الدخول الآمن.',
+  add_another_mfa_factor: 'إضافة تحقق آخر من خطوتين',
+  add_another_mfa_description: 'حدد طريقة أخرى للتحقق من هويتك عند تسجيل الدخول.',
   verify_mfa_factors: 'التحقق من خطوتين',
   verify_mfa_description:
     'تم تمكين التحقق من خطوتين لهذا الحساب. يرجى تحديد الطريقة الثانية للتحقق من هويتك.',

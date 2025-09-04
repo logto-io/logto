@@ -50,16 +50,27 @@ const MfaFactorList = ({ flow, flowState }: Props) => {
 
   return (
     <div className={styles.factorList}>
-      {availableFactors.map((factor) => (
-        <MfaFactorButton
-          key={factor}
-          factor={factor}
-          isBinding={flow === UserMfaFlow.MfaBinding}
-          onClick={async () => {
-            await handleSelectFactor(factor);
-          }}
-        />
-      ))}
+      {availableFactors.map((factor) => {
+        const isEmailOrPhone =
+          factor === MfaFactor.EmailVerificationCode || factor === MfaFactor.PhoneVerificationCode;
+        const isDisabled = Boolean(
+          flowState.suggestion && isEmailOrPhone && flowState.maskedIdentifiers?.[factor]
+        );
+        const maskedIdentifier = isEmailOrPhone ? flowState.maskedIdentifiers?.[factor] : undefined;
+
+        return (
+          <MfaFactorButton
+            key={factor}
+            factor={factor}
+            isBinding={flow === UserMfaFlow.MfaBinding}
+            isDisabled={isDisabled}
+            maskedIdentifier={maskedIdentifier}
+            onClick={async () => {
+              await handleSelectFactor(factor);
+            }}
+          />
+        );
+      })}
     </div>
   );
 };

@@ -19,6 +19,9 @@ const mfa = {
   add_mfa_factors: '2-Schritte-Verifizierung hinzufügen',
   add_mfa_description:
     'Die Zwei-Faktor-Verifizierung ist aktiviert. Wählen Sie Ihre zweite Verifizierungsmethode für sicheres Anmelden aus.',
+  add_another_mfa_factor: 'Eine weitere 2-Schritte-Verifizierung hinzufügen',
+  add_another_mfa_description:
+    'Wählen Sie eine andere Methode zur Verifizierung Ihrer Identität bei der Anmeldung.',
   verify_mfa_factors: '2-Schritte-Verifizierung',
   verify_mfa_description:
     'Die 2-Schritte-Verifizierung ist für dieses Konto aktiviert. Bitte wählen Sie die zweite Methode zur Verifizierung Ihrer Identität aus.',

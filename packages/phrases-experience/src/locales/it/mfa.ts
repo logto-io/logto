@@ -19,6 +19,9 @@ const mfa = {
   add_mfa_factors: 'Aggiungi la verifica in due passaggi',
   add_mfa_description:
     'La verifica in due passaggi è abilitata. Seleziona il tuo secondo metodo di verifica per un accesso sicuro.',
+  add_another_mfa_factor: "Aggiungi un'altra verifica in 2 passaggi",
+  add_another_mfa_description:
+    "Seleziona un altro modo per verificare la tua identità al momento dell'accesso.",
   verify_mfa_factors: 'Verifica in due passaggi',
   verify_mfa_description:
     'La verifica in due passaggi è stata abilitata per questo account. Seleziona il secondo modo per verificare la tua identità.',

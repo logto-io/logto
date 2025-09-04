@@ -71,17 +71,23 @@ describe('Register interaction - optional additional MFA suggestion', () => {
     await client.updateProfile({ type: 'password', value: password });
     await client.identifyUser({ verificationId });
 
-    await expectRejects<{ availableFactors: MfaFactor[]; skippable: boolean }>(
-      client.submitInteraction(),
-      {
-        code: 'session.mfa.suggest_additional_mfa',
-        status: 422,
-        expectData: (data) => {
-          expect(data.availableFactors).toEqual([MfaFactor.TOTP]);
-          expect(data.skippable).toBe(true);
-        },
-      }
-    );
+    await expectRejects<{
+      availableFactors: MfaFactor[];
+      skippable: boolean;
+      maskedIdentifiers?: Record<string, string>;
+      suggestion?: boolean;
+    }>(client.submitInteraction(), {
+      code: 'session.mfa.suggest_additional_mfa',
+      status: 422,
+      expectData: (data) => {
+        // Should now include both Email and TOTP
+        expect(data.availableFactors).toEqual([MfaFactor.EmailVerificationCode, MfaFactor.TOTP]);
+        expect(data.maskedIdentifiers).toBeDefined();
+        expect(data.maskedIdentifiers?.[MfaFactor.EmailVerificationCode]).toMatch(/\*{4}/);
+        expect(data.skippable).toBe(true);
+        expect(data.suggestion).toBe(true);
+      },
+    });
 
     // Skip suggestion
     await client.skipMfaSuggestion();
