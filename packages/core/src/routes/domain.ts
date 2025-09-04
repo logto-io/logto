@@ -77,7 +77,7 @@ export default function domainRoutes<T extends ManagementApiRouter>(
       status: [201, 422, 400],
     }),
     async (ctx, next) => {
-      if (!EnvSet.values.isDevFeaturesEnabled) {
+      if (!EnvSet.values.isMultipleCustomDomainsEnabled) {
         const existingDomains = await findAllDomains();
         assertThat(
           existingDomains.length === 0,
