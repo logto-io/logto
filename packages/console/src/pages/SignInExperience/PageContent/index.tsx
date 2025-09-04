@@ -8,7 +8,6 @@ import { useParams } from 'react-router-dom';
 
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useApi from '@/hooks/use-api';
@@ -132,10 +131,6 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
 
   // Forgot password migration from null to normal array
   useEffect(() => {
-    if (!isDevFeaturesEnabled) {
-      return;
-    }
-
     // Wait for connectors list loading to be ready
     if (!isConnectorsReady) {
       return;

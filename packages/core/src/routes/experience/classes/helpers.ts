@@ -237,10 +237,6 @@ export const getAllUserEnabledMfaVerifications = (
     })
     .map(({ type }) => type);
 
-  if (!EnvSet.values.isDevFeaturesEnabled) {
-    return storedVerifications;
-  }
-
   const email = currentProfile?.primaryEmail ?? user.primaryEmail;
   const phone = currentProfile?.primaryPhone ?? user.primaryPhone;
 

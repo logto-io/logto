@@ -9,9 +9,9 @@ import { readConnectorMessage } from '#src/helpers/index.js';
 import { enableMandatoryMfaWithEmail, resetMfaSettings } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
-import { devFeatureTest, generateEmail, waitFor } from '#src/utils.js';
+import { generateEmail, waitFor } from '#src/utils.js';
 
-devFeatureTest.describe('email MFA verification', () => {
+describe('email MFA verification', () => {
   beforeAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email]);
     await setEmailConnector();
