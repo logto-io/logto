@@ -3411,8 +3411,8 @@ importers:
         specifier: ^3.4.0
         version: 3.4.0
       date-fns:
-        specifier: ^2.29.3
-        version: 2.29.3
+        specifier: ^4.0.0
+        version: 4.1.0
       dayjs:
         specifier: ^1.10.5
         version: 1.11.13
@@ -3684,8 +3684,8 @@ importers:
         specifier: ^3.4.0
         version: 3.4.0
       date-fns:
-        specifier: ^2.29.3
-        version: 2.29.3
+        specifier: ^4.0.0
+        version: 4.1.0
       decamelize:
         specifier: ^6.0.0
         version: 6.0.0
@@ -4205,8 +4205,8 @@ importers:
         specifier: ^3.34.0
         version: 3.34.0
       date-fns:
-        specifier: ^2.29.3
-        version: 2.29.3
+        specifier: ^4.0.0
+        version: 4.1.0
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -7213,6 +7213,7 @@ packages:
 
   '@simplewebauthn/types@10.0.0':
     resolution: {integrity: sha512-SFXke7xkgPRowY2E+8djKbdEznTVnD5R6GO7GPTthpHrokLvNKw8C3lFZypTxLI7KkCfGPfhtqB3d7OVGGa9jQ==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   '@sinclair/typebox@0.27.8':
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
@@ -9431,9 +9432,8 @@ packages:
     resolution: {integrity: sha512-t/Ygsytq+R995EJ5PZlD4Cu56sWa8InXySaViRzw9apusqsOO2bQP+SbYzAhR0pFKoB+43lYy8rWban9JSuXnA==}
     engines: {node: '>= 0.4'}
 
-  date-fns@2.29.3:
-    resolution: {integrity: sha512-dDCnyH2WnnKusqvZZ6+jA1O51Ibt8ZMRNkDZdyAyK4YfbDwa/cEmuztzG5pk6hqlp9aSBPYcjOlktquahGwGeA==}
-    engines: {node: '>=0.11'}
+  date-fns@4.1.0:
+    resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
 
   dayjs@1.11.13:
     resolution: {integrity: sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==}
@@ -21134,7 +21134,7 @@ snapshots:
       es-errors: 1.3.0
       is-data-view: 1.0.1
 
-  date-fns@2.29.3: {}
+  date-fns@4.1.0: {}
 
   dayjs@1.11.13: {}
 
