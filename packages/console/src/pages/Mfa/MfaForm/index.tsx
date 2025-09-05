@@ -190,24 +190,16 @@ function MfaForm({ data, signInMethods, onMfaUpdated }: Props) {
             <div className={styles.factorField}>
               <Switch
                 disabled={isMfaDisabled}
-                label={<FactorLabel type={MfaFactor.TOTP} />}
-                {...register('totpEnabled')}
-              />
-              <Switch
-                disabled={isMfaDisabled}
                 label={<FactorLabel type={MfaFactor.WebAuthn} />}
                 {...register('webAuthnEnabled')}
               />
+              <Switch
+                disabled={isMfaDisabled}
+                label={<FactorLabel type={MfaFactor.TOTP} />}
+                {...register('totpEnabled')}
+              />
               {isDevFeaturesEnabled && (
                 <>
-                  <Switch
-                    disabled={isMfaDisabled || isEmailCodePrimarySignInMethod}
-                    label={<FactorLabel type={MfaFactor.EmailVerificationCode} />}
-                    tooltip={
-                      isEmailCodePrimarySignInMethod ? t('mfa.email_primary_method_tip') : undefined
-                    }
-                    {...register('emailVerificationCodeEnabled')}
-                  />
                   <Switch
                     disabled={isMfaDisabled || isPhoneCodePrimarySignInMethod}
                     label={<FactorLabel type={MfaFactor.PhoneVerificationCode} />}
@@ -215,6 +207,14 @@ function MfaForm({ data, signInMethods, onMfaUpdated }: Props) {
                       isPhoneCodePrimarySignInMethod ? t('mfa.phone_primary_method_tip') : undefined
                     }
                     {...register('phoneVerificationCodeEnabled')}
+                  />
+                  <Switch
+                    disabled={isMfaDisabled || isEmailCodePrimarySignInMethod}
+                    label={<FactorLabel type={MfaFactor.EmailVerificationCode} />}
+                    tooltip={
+                      isEmailCodePrimarySignInMethod ? t('mfa.email_primary_method_tip') : undefined
+                    }
+                    {...register('emailVerificationCodeEnabled')}
                   />
                 </>
               )}
