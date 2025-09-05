@@ -198,26 +198,22 @@ function MfaForm({ data, signInMethods, onMfaUpdated }: Props) {
                 label={<FactorLabel type={MfaFactor.WebAuthn} />}
                 {...register('webAuthnEnabled')}
               />
-              {isDevFeaturesEnabled && (
-                <>
-                  <Switch
-                    disabled={isMfaDisabled || isEmailCodePrimarySignInMethod}
-                    label={<FactorLabel type={MfaFactor.EmailVerificationCode} />}
-                    tooltip={
-                      isEmailCodePrimarySignInMethod ? t('mfa.email_primary_method_tip') : undefined
-                    }
-                    {...register('emailVerificationCodeEnabled')}
-                  />
-                  <Switch
-                    disabled={isMfaDisabled || isPhoneCodePrimarySignInMethod}
-                    label={<FactorLabel type={MfaFactor.PhoneVerificationCode} />}
-                    tooltip={
-                      isPhoneCodePrimarySignInMethod ? t('mfa.phone_primary_method_tip') : undefined
-                    }
-                    {...register('phoneVerificationCodeEnabled')}
-                  />
-                </>
-              )}
+              <Switch
+                disabled={isMfaDisabled || isEmailCodePrimarySignInMethod}
+                label={<FactorLabel type={MfaFactor.EmailVerificationCode} />}
+                tooltip={
+                  isEmailCodePrimarySignInMethod ? t('mfa.email_primary_method_tip') : undefined
+                }
+                {...register('emailVerificationCodeEnabled')}
+              />
+              <Switch
+                disabled={isMfaDisabled || isPhoneCodePrimarySignInMethod}
+                label={<FactorLabel type={MfaFactor.PhoneVerificationCode} />}
+                tooltip={
+                  isPhoneCodePrimarySignInMethod ? t('mfa.phone_primary_method_tip') : undefined
+                }
+                {...register('phoneVerificationCodeEnabled')}
+              />
               <div className={styles.backupCodeField}>
                 <div className={styles.backupCodeDescription}>
                   <DynamicT forKey="mfa.backup_code_setup_hint" />

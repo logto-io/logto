@@ -2,8 +2,6 @@ import { MfaFactor, SignInIdentifier, type Mfa, type SignIn } from '@logto/schem
 
 import assertThat from '#src/utils/assert-that.js';
 
-import { EnvSet } from '../../env-set/index.js';
-
 export const validateMfa = (mfa: Mfa, signIn?: SignIn) => {
   assertThat(
     new Set(mfa.factors).size === mfa.factors.length,
@@ -14,15 +12,6 @@ export const validateMfa = (mfa: Mfa, signIn?: SignIn) => {
 
   if (backupCodeEnabled) {
     assertThat(mfa.factors.length > 1, 'sign_in_experiences.backup_code_cannot_be_enabled_alone');
-  }
-
-  // TODO @wangsijie: Remove this guard when features are ready
-  if (
-    !EnvSet.values.isDevFeaturesEnabled &&
-    (mfa.factors.includes(MfaFactor.EmailVerificationCode) ||
-      mfa.factors.includes(MfaFactor.PhoneVerificationCode))
-  ) {
-    throw new Error('Not implemented');
   }
 
   // Validate that email/phone verification codes are not used as both sign-in method and MFA

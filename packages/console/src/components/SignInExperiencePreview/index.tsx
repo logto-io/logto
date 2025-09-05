@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import PhoneInfo from '@/assets/images/phone-info.svg?react';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import type { RequestError } from '@/hooks/use-api';
 import useUiLanguages from '@/hooks/use-ui-languages';
@@ -78,9 +77,9 @@ function SignInExperiencePreview({
      * This logic aligns with the core library implementation in sign-in-experience/index.ts
      */
     const forgotPassword = (() => {
-      // If forgotPasswordMethods is null (production compatibility) or dev features are not enabled,
+      // If forgotPasswordMethods is null (production compatibility)
       // fall back to connector-based availability only
-      if (!signInExperience.forgotPasswordMethods || !isDevFeaturesEnabled) {
+      if (!signInExperience.forgotPasswordMethods) {
         return {
           email: hasEmailConnector,
           phone: hasSmsConnector,

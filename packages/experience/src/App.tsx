@@ -8,7 +8,6 @@ import LoadingLayerProvider from './Providers/LoadingLayerProvider';
 import PageContextProvider from './Providers/PageContextProvider';
 import SettingsProvider from './Providers/SettingsProvider';
 import UserInteractionContextProvider from './Providers/UserInteractionContextProvider';
-import { isDevFeaturesEnabled } from './constants/env';
 import DevelopmentTenantNotification from './containers/DevelopmentTenantNotification';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
@@ -107,18 +106,14 @@ const App = () => {
                         <Route path={MfaFactor.TOTP} element={<TotpBinding />} />
                         <Route path={MfaFactor.WebAuthn} element={<WebAuthnBinding />} />
                         <Route path={MfaFactor.BackupCode} element={<BackupCodeBinding />} />
-                        {isDevFeaturesEnabled && (
-                          <Route
-                            path={MfaFactor.EmailVerificationCode}
-                            element={<EmailMfaBinding />}
-                          />
-                        )}
-                        {isDevFeaturesEnabled && (
-                          <Route
-                            path={MfaFactor.PhoneVerificationCode}
-                            element={<PhoneMfaBinding />}
-                          />
-                        )}
+                        <Route
+                          path={MfaFactor.EmailVerificationCode}
+                          element={<EmailMfaBinding />}
+                        />
+                        <Route
+                          path={MfaFactor.PhoneVerificationCode}
+                          element={<PhoneMfaBinding />}
+                        />
                       </Route>
 
                       {/* Mfa verification */}
