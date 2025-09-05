@@ -50,6 +50,15 @@ const mfa = {
     "Email verification code is already your primary sign-in method. To maintain security, it can't be reused for MFA.",
   phone_primary_method_tip:
     "SMS verification code is already your primary sign-in method. To maintain security, it can't be reused for MFA.",
+  no_email_connector_warning:
+    'No email connector set-up yet. Before completing the configuration, users will not be able to use email verification codes for MFA. <a>{{link}}</a> in "Connectors".',
+  no_sms_connector_warning:
+    'No SMS connector set-up yet. Before completing the configuration, users will not be able to use SMS verification codes for MFA. <a>{{link}}</a> in "Connectors".',
+  no_email_connector_error:
+    'Cannot enable email verification code MFA without an email connector. Please configure an email connector first.',
+  no_sms_connector_error:
+    'Cannot enable SMS verification code MFA without an SMS connector. Please configure an SMS connector first.',
+  setup_link: 'Set up',
 };
 
 export default Object.freeze(mfa);

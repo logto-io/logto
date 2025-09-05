@@ -37,6 +37,13 @@ const mfa = {
   prompt_at_sign_in_no_skip: '在下次登入時要求用戶設定 MFA（不可跳過）',
   email_primary_method_tip: 'Email 驗證碼已是你的主要登入方法。為了保持安全性，不能重複用於 MFA。',
   phone_primary_method_tip: 'SMS 驗證碼已是你的主要登入方法。為了保持安全性，不能重複用於 MFA。',
+  no_email_connector_warning:
+    '尚未設定電郵連接器。在完成設定前，用戶無法使用電郵驗證碼進行 MFA。在「連接器」中<a>{{link}}</a>。',
+  no_sms_connector_warning:
+    '尚未設定 SMS 連接器。在完成設定前，用戶無法使用 SMS 驗證碼進行 MFA。在「連接器」中<a>{{link}}</a>。',
+  no_email_connector_error: '沒有電郵連接器無法啟用電郁驗證碼 MFA。請先設定電郵連接器。',
+  no_sms_connector_error: '沒有 SMS 連接器無法啟用 SMS 驗證碼 MFA。請先設定 SMS 連接器。',
+  setup_link: '設定',
 };
 
 export default Object.freeze(mfa);

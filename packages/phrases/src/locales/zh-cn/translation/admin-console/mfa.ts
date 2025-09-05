@@ -37,6 +37,13 @@ const mfa = {
   prompt_at_sign_in_no_skip: '在下次登录时要求用户设置 MFA （不可跳过）',
   email_primary_method_tip: '邮件验证码已经是你的主要登录方式。为了确保安全性，不能再次用于 MFA。',
   phone_primary_method_tip: '短信验证码已经是你的主要登录方式。为了确保安全性，不能再次用于 MFA。',
+  no_email_connector_warning:
+    '尚未设置邮件连接器。在完成配置之前，用户将无法使用邮件验证码进行 MFA。在"连接器"中<a>{{link}}</a>。',
+  no_sms_connector_warning:
+    '尚未设置短信连接器。在完成配置之前，用户将无法使用短信验证码进行 MFA。在"连接器"中<a>{{link}}</a>。',
+  no_email_connector_error: '无法在没有邮件连接器的情况下启用邮件验证码 MFA。请先配置邮件连接器。',
+  no_sms_connector_error: '无法在没有短信连接器的情况下启用短信验证码 MFA。请先配置短信连接器。',
+  setup_link: '设置',
 };
 
 export default Object.freeze(mfa);

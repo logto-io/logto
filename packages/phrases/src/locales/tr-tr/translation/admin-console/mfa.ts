@@ -54,6 +54,15 @@ const mfa = {
     'E-posta doğrulama kodu zaten birincil oturum açma yönteminizdir. Güvenliği sağlamak için MFA için tekrar kullanılamaz.',
   phone_primary_method_tip:
     'SMS doğrulama kodu zaten birincil oturum açma yönteminizdir. Güvenliği sağlamak için MFA için tekrar kullanılamaz.',
+  no_email_connector_warning:
+    'Henüz hiçbir e-posta bağlantısı kurulmamış. Yapılandırma tamamlanmadan önce, kullanıcılar MFA için e-posta doğrulama kodlarını kullanamayacaklar. "Bağlantılar"da <a>{{link}}</a>.',
+  no_sms_connector_warning:
+    'Henüz hiçbir SMS bağlantısı kurulmamış. Yapılandırma tamamlanmadan önce, kullanıcılar MFA için SMS doğrulama kodlarını kullanamayacaklar. "Bağlantılar"da <a>{{link}}</a>.',
+  no_email_connector_error:
+    'E-posta bağlantısı olmadan e-posta doğrulama kodu MFA etkinleştirilemez. Lütfen önce bir e-posta bağlantısı yapılandırın.',
+  no_sms_connector_error:
+    'SMS bağlantısı olmadan SMS doğrulama kodu MFA etkinleştirilemez. Lütfen önce bir SMS bağlantısı yapılandırın.',
+  setup_link: 'Kur',
 };
 
 export default Object.freeze(mfa);

@@ -53,6 +53,15 @@ const mfa = {
     'Il codice di verifica email è già il tuo metodo principale di accesso. Per mantenere la sicurezza, non può essere riutilizzato per la MFA.',
   phone_primary_method_tip:
     'Il codice di verifica SMS è già il tuo metodo principale di accesso. Per mantenere la sicurezza, non può essere riutilizzato per la MFA.',
+  no_email_connector_warning:
+    'Nessun connettore email è ancora stato configurato. Prima di completare la configurazione, gli utenti non potranno utilizzare i codici di verifica email per MFA. <a>{{link}}</a> in "Connettori".',
+  no_sms_connector_warning:
+    'Nessun connettore SMS è ancora stato configurato. Prima di completare la configurazione, gli utenti non potranno utilizzare i codici di verifica SMS per MFA. <a>{{link}}</a> in "Connettori".',
+  no_email_connector_error:
+    'Impossibile abilitare MFA con codice di verifica email senza un connettore email. Si prega di configurare prima un connettore email.',
+  no_sms_connector_error:
+    'Impossibile abilitare MFA con codice di verifica SMS senza un connettore SMS. Si prega di configurare prima un connettore SMS.',
+  setup_link: 'Configura',
 };
 
 export default Object.freeze(mfa);

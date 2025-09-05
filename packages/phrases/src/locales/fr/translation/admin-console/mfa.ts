@@ -54,6 +54,15 @@ const mfa = {
     'Le code de vérification par e-mail est déjà votre méthode de connexion principale. Pour maintenir la sécurité, il ne peut pas être réutilisé pour MFA.',
   phone_primary_method_tip:
     'Le code de vérification par SMS est déjà votre méthode de connexion principale. Pour maintenir la sécurité, il ne peut pas être réutilisé pour MFA.',
+  no_email_connector_warning:
+    'Aucun connecteur d\'e-mail n\'a encore été configuré. Avant de terminer la configuration, les utilisateurs ne pourront pas utiliser les codes de vérification par e-mail pour MFA. <a>{{link}}</a> dans "Connecteurs".',
+  no_sms_connector_warning:
+    'Aucun connecteur SMS n\'a encore été configuré. Avant de terminer la configuration, les utilisateurs ne pourront pas utiliser les codes de vérification SMS pour MFA. <a>{{link}}</a> dans "Connecteurs".',
+  no_email_connector_error:
+    "Impossible d'activer MFA avec code de vérification par e-mail sans connecteur e-mail. Veuillez d'abord configurer un connecteur e-mail.",
+  no_sms_connector_error:
+    "Impossible d'activer MFA avec code de vérification SMS sans connecteur SMS. Veuillez d'abord configurer un connecteur SMS.",
+  setup_link: 'Configurer',
 };
 
 export default Object.freeze(mfa);

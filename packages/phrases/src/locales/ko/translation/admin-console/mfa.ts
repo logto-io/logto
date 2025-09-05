@@ -47,6 +47,15 @@ const mfa = {
     '이메일 인증 코드는 이미 주 로그인 방법입니다. 보안을 유지하기 위해 MFA로 재사용할 수 없습니다.',
   phone_primary_method_tip:
     'SMS 인증 코드는 이미 주 로그인 방법입니다. 보안을 유지하기 위해 MFA로 재사용할 수 없습니다.',
+  no_email_connector_warning:
+    '이메일 커넥터가 아직 설정되지 않았습니다. 구성을 완료하기 전에는 사용자가 MFA에 이메일 인증 코드를 사용할 수 없습니다. "커넥터"에서 <a>{{link}}</a>하세요.',
+  no_sms_connector_warning:
+    'SMS 커넥터가 아직 설정되지 않았습니다. 구성을 완료하기 전에는 사용자가 MFA에 SMS 인증 코드를 사용할 수 없습니다. "커넥터"에서 <a>{{link}}</a>하세요.',
+  no_email_connector_error:
+    '이메일 커넥터 없이는 이메일 인증 코드 MFA를 활성화할 수 없습니다. 먼저 이메일 커넥터를 구성해주세요.',
+  no_sms_connector_error:
+    'SMS 커넥터 없이는 SMS 인증 코드 MFA를 활성화할 수 없습니다. 먼저 SMS 커넥터를 구성해주세요.',
+  setup_link: '설정',
 };
 
 export default Object.freeze(mfa);

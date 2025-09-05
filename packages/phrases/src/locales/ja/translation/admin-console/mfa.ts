@@ -51,6 +51,15 @@ const mfa = {
     'メール認証コードは既にあなたの主要なサインイン方法です。セキュリティを維持するため、それを MFA に再利用することはできません。',
   phone_primary_method_tip:
     'SMS認証コードは既にあなたの主要なサインイン方法です。セキュリティを維持するため、それを MFA に再利用することはできません。',
+  no_email_connector_warning:
+    'メールコネクターがまだ設定されていません。設定を完了する前に、ユーザーはMFAにメール認証コードを使用できません。「コネクター」で<a>{{link}}</a>してください。',
+  no_sms_connector_warning:
+    'SMSコネクターがまだ設定されていません。設定を完了する前に、ユーザーはMFAにSMS認証コードを使用できません。「コネクター」で<a>{{link}}</a>してください。',
+  no_email_connector_error:
+    'メールコネクターがないとメール認証コードMFAを有効にできません。まずメールコネクターを設定してください。',
+  no_sms_connector_error:
+    'SMSコネクターがないとSMS認証コードMFAを有効にできません。まずSMSコネクターを設定してください。',
+  setup_link: '設定',
 };
 
 export default Object.freeze(mfa);
