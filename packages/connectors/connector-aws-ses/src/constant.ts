@@ -125,7 +125,7 @@ export const defaultMetadata: ConnectorMetadata = {
           usageType: 'BindNewIdentifier',
           subject: '<bind-new-identifier-template-subject>',
           content:
-            'Your Logto bind new identifier code is {{code}}. The code will remain active for 10 minutes.',
+            'Your Logto new identifier binding code is {{code}}. The code will remain active for 10 minutes.',
         },
         {
           usageType: 'MfaVerification',
@@ -137,7 +137,7 @@ export const defaultMetadata: ConnectorMetadata = {
           usageType: 'BindMfa',
           subject: '<bind-mfa-template-subject>',
           content:
-            'Your Logto add 2-step verification code is {{code}}. The code will remain active for 10 minutes.',
+            'Your Logto 2-step verification setup code is {{code}}. The code will remain active for 10 minutes.',
         },
       ],
     },
