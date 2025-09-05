@@ -1,7 +1,6 @@
 import { generateDarkColor } from '@logto/core-kit';
 import { defaultPrimaryColor, type Organization } from '@logto/schemas';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { type Option } from '@/ds-components/Select/MultiSelect';
 import { emptyBranding } from '@/types/sign-in-experience';
 import { removeFalsyValues } from '@/utils/object';
@@ -48,12 +47,9 @@ export const assembleData = ({
   ...data
 }: Partial<FormData>): Partial<Organization> => ({
   ...data,
-  // @charles TODO: Remove the dev features guard later
-  ...(!isDevFeaturesEnabled && { branding: branding && removeFalsyValues(branding) }),
-  ...(isDevFeaturesEnabled &&
-    (isBrandingEnabled
-      ? { color, branding: branding && removeFalsyValues(branding), customCss }
-      : { color: {}, branding: {}, customCss: '' })),
+  ...(isBrandingEnabled
+    ? { color, branding: branding && removeFalsyValues(branding), customCss }
+    : { color: {}, branding: {}, customCss: '' }),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   customData: JSON.parse(customData ?? '{}'),
 });
