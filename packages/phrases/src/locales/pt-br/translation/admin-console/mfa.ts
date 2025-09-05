@@ -47,11 +47,21 @@ const mfa = {
     'Pedir aos usuários para configurar o MFA na próxima tentativa de login após o registro (pode ser ignorado, prompt único)',
   set_up_organization_required_mfa_prompt:
     'Avisar os usuários para configurar o MFA após a organização ativar o MFA',
-  prompt_at_sign_in_no_skip: '在下次登录时要求用户设置 MFA（无法跳过）',
+  prompt_at_sign_in_no_skip:
+    'Solicitar que os usuários configurem MFA na próxima tentativa de login (não pode ser ignorado)',
   email_primary_method_tip:
     'O código de verificação do e-mail já é seu principal método de login. Para manter a segurança, ele não pode ser reutilizado para MFA.',
   phone_primary_method_tip:
     'O código de verificação por SMS já é seu principal método de login. Para manter a segurança, ele não pode ser reutilizado para MFA.',
+  no_email_connector_warning:
+    'Nenhum conector de e-mail foi configurado ainda. Antes de completar a configuração, os usuários não poderão usar códigos de verificação por e-mail para MFA. <a>{{link}}</a> em "Conectores".',
+  no_sms_connector_warning:
+    'Nenhum conector SMS foi configurado ainda. Antes de completar a configuração, os usuários não poderão usar códigos de verificação SMS para MFA. <a>{{link}}</a> em "Conectores".',
+  no_email_connector_error:
+    'Não é possível habilitar MFA com código de verificação por e-mail sem um conector de e-mail. Por favor, configure primeiro um conector de e-mail.',
+  no_sms_connector_error:
+    'Não é possível habilitar MFA com código de verificação SMS sem um conector SMS. Por favor, configure primeiro um conector SMS.',
+  setup_link: 'Configurar',
 };
 
 export default Object.freeze(mfa);
