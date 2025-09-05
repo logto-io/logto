@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.6.0
+
+### Minor Changes
+
+- 5da6792d40: add bindMFA to template type
+
 ## 4.5.1
 
 ### Minor Changes

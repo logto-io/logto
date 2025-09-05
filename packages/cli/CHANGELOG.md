@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.31.1
+
+### Patch Changes
+
+- Updated dependencies [5da6792d40]
+  - @logto/connector-kit@4.6.0
+  - @logto/schemas@1.31.1
+
 ## 1.31.0
 
 ### Patch Changes
