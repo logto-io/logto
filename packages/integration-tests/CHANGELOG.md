@@ -1,5 +1,14 @@
 # Change Log
 
+## 1.14.1
+
+### Patch Changes
+
+- 1e77967e7c: fix(core): bind WebAuthn `rpId` to request domain for account api
+
+  - Before: WebAuthn registration via the account API always bound passkeys to the Logto default domain.
+  - After: The `rpId` now matches the domain you use to access the API (including custom domains), consistent with the sign-in experience.
+
 ## 1.14.0
 
 ### Minor Changes

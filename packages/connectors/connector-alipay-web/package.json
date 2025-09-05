@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-alipay-web",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Alipay implementation.",
   "dependencies": {
     "@logto/connector-kit": "workspace:^",

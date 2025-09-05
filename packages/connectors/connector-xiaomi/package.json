@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-xiaomi",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Xiaomi web connector implementation.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {
