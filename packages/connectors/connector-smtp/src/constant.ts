@@ -111,7 +111,7 @@ export const defaultMetadata: ConnectorMetadata = {
         {
           contentType: 'text/plain',
           content:
-            'Your Logto bind new identifier code is {{code}}. The code will remain active for 10 minutes.',
+            'Your Logto new identifier binding code is {{code}}. The code will remain active for 10 minutes.',
           subject: 'Logto BindNewIdentifier with SMTP',
           usageType: 'BindNewIdentifier',
         },
@@ -125,7 +125,7 @@ export const defaultMetadata: ConnectorMetadata = {
         {
           contentType: 'text/plain',
           content:
-            'Your Logto add 2-step verification code is {{code}}. The code will remain active for 10 minutes.',
+            'Your Logto 2-step verification setup code is {{code}}. The code will remain active for 10 minutes.',
           subject: 'Logto BindMfa with SMTP',
           usageType: 'BindMfa',
         },
