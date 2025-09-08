@@ -53,6 +53,15 @@ const mfa = {
     'Kod weryfikacyjny e-mail jest już twoją główną metodą logowania. Aby utrzymać bezpieczeństwo, nie można go ponownie używać do MFA.',
   phone_primary_method_tip:
     'Kod weryfikacyjny SMS jest już twoją główną metodą logowania. Aby utrzymać bezpieczeństwo, nie można go ponownie używać do MFA.',
+  no_email_connector_warning:
+    'Łącznik e-mail nie został jeszcze skonfigurowany. Przed zakończeniem konfiguracji użytkownicy nie będą mogli używać kodów weryfikacyjnych e-mail do MFA. <a>{{link}}</a> w "Łączniki".',
+  no_sms_connector_warning:
+    'Łącznik SMS nie został jeszcze skonfigurowany. Przed zakończeniem konfiguracji użytkownicy nie będą mogli używać kodów weryfikacyjnych SMS do MFA. <a>{{link}}</a> w "Łączniki".',
+  no_email_connector_error:
+    'Nie można włączyć MFA z kodem weryfikacyjnym e-mail bez łącznika e-mail. Proszę najpierw skonfigurować łącznik e-mail.',
+  no_sms_connector_error:
+    'Nie można włączyć MFA z kodem weryfikacyjnym SMS bez łącznika SMS. Proszę najpierw skonfigurować łącznik SMS.',
+  setup_link: 'Skonfiguruj',
 };
 
 export default Object.freeze(mfa);

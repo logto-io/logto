@@ -1,5 +1,7 @@
+/* eslint-disable max-lines */
 import {
   adminTenantId,
+  ConnectorType,
   MfaFactor,
   MfaPolicy,
   OrganizationRequiredMfaPolicy,
@@ -10,7 +12,7 @@ import {
 import { useContext, useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
@@ -25,7 +27,9 @@ import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Select from '@/ds-components/Select';
 import Switch from '@/ds-components/Switch';
+import TextLink from '@/ds-components/TextLink';
 import useApi from '@/hooks/use-api';
+import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 import { trySubmitSafe } from '@/utils/form';
 import { isPaidPlan } from '@/utils/subscription';
 
@@ -49,6 +53,7 @@ function MfaForm({ data, signInMethods, onMfaUpdated }: Props) {
     mutateSubscriptionQuotaAndUsages,
   } = useContext(SubscriptionDataContext);
   const { currentTenantId } = useContext(TenantsContext);
+  const { isConnectorTypeEnabled } = useEnabledConnectorTypes();
 
   const isMfaDisabled =
     isCloud && !currentSubscriptionQuota.mfaEnabled && !isPaidPlan(planId, isEnterprisePlan);
@@ -83,6 +88,9 @@ function MfaForm({ data, signInMethods, onMfaUpdated }: Props) {
       (method) => method.identifier === SignInIdentifier.Phone && method.verificationCode
     );
   }, [signInMethods]);
+
+  const hasEmailConnector = isConnectorTypeEnabled(ConnectorType.Email);
+  const hasSmsConnector = isConnectorTypeEnabled(ConnectorType.Sms);
 
   const isPolicySettingsDisabled = useMemo(() => {
     if (isMfaDisabled) {
@@ -160,6 +168,17 @@ function MfaForm({ data, signInMethods, onMfaUpdated }: Props) {
         return;
       }
 
+      // Check connector availability for email and SMS verification codes
+      if (formData.emailVerificationCodeEnabled && !hasEmailConnector) {
+        toast.error(t('mfa.no_email_connector_error'));
+        return;
+      }
+
+      if (formData.phoneVerificationCodeEnabled && !hasSmsConnector) {
+        toast.error(t('mfa.no_sms_connector_error'));
+        return;
+      }
+
       const { mfa: updatedMfaConfig } = await api
         .patch('api/sign-in-exp', {
           json: { mfa: mfaConfig },
@@ -200,22 +219,56 @@ function MfaForm({ data, signInMethods, onMfaUpdated }: Props) {
               />
               {isDevFeaturesEnabled && (
                 <>
-                  <Switch
-                    disabled={isMfaDisabled || isPhoneCodePrimarySignInMethod}
-                    label={<FactorLabel type={MfaFactor.PhoneVerificationCode} />}
-                    tooltip={
-                      isPhoneCodePrimarySignInMethod ? t('mfa.phone_primary_method_tip') : undefined
-                    }
-                    {...register('phoneVerificationCodeEnabled')}
-                  />
-                  <Switch
-                    disabled={isMfaDisabled || isEmailCodePrimarySignInMethod}
-                    label={<FactorLabel type={MfaFactor.EmailVerificationCode} />}
-                    tooltip={
-                      isEmailCodePrimarySignInMethod ? t('mfa.email_primary_method_tip') : undefined
-                    }
-                    {...register('emailVerificationCodeEnabled')}
-                  />
+                  <div>
+                    <Switch
+                      disabled={isMfaDisabled || isPhoneCodePrimarySignInMethod}
+                      label={<FactorLabel type={MfaFactor.PhoneVerificationCode} />}
+                      tooltip={
+                        isPhoneCodePrimarySignInMethod
+                          ? t('mfa.phone_primary_method_tip')
+                          : undefined
+                      }
+                      {...register('phoneVerificationCodeEnabled')}
+                    />
+                    {formValues.phoneVerificationCodeEnabled && !hasSmsConnector && (
+                      <InlineNotification className={styles.connectorWarning}>
+                        <Trans
+                          components={{
+                            a: <TextLink to="/connectors" />,
+                          }}
+                        >
+                          {t('mfa.no_sms_connector_warning', {
+                            link: t('mfa.setup_link'),
+                          })}
+                        </Trans>
+                      </InlineNotification>
+                    )}
+                  </div>
+                  <div>
+                    <Switch
+                      disabled={isMfaDisabled || isEmailCodePrimarySignInMethod}
+                      label={<FactorLabel type={MfaFactor.EmailVerificationCode} />}
+                      tooltip={
+                        isEmailCodePrimarySignInMethod
+                          ? t('mfa.email_primary_method_tip')
+                          : undefined
+                      }
+                      {...register('emailVerificationCodeEnabled')}
+                    />
+                    {formValues.emailVerificationCodeEnabled && !hasEmailConnector && (
+                      <InlineNotification className={styles.connectorWarning}>
+                        <Trans
+                          components={{
+                            a: <TextLink to="/connectors" />,
+                          }}
+                        >
+                          {t('mfa.no_email_connector_warning', {
+                            link: t('mfa.setup_link'),
+                          })}
+                        </Trans>
+                      </InlineNotification>
+                    )}
+                  </div>
                 </>
               )}
               <div className={styles.backupCodeField}>
@@ -297,3 +350,4 @@ function MfaForm({ data, signInMethods, onMfaUpdated }: Props) {
 }
 
 export default MfaForm;
+/* eslint-enable max-lines */
