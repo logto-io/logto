@@ -316,7 +316,25 @@ export class Mfa {
       return;
     }
 
-    const additionalFactors = availableFactors.filter((factor) => !factorsInUser.includes(factor));
+    const additionalFactors = availableFactors
+      .filter((factor) => !factorsInUser.includes(factor))
+      .slice()
+      .sort((factorA, factorB) => {
+        // Sort order: webauthn -> totp -> sms -> email -> backup code
+        const order = [
+          MfaFactor.WebAuthn,
+          MfaFactor.TOTP,
+          MfaFactor.PhoneVerificationCode,
+          MfaFactor.EmailVerificationCode,
+          MfaFactor.BackupCode,
+        ];
+
+        const indexA = order.indexOf(factorA);
+        const indexB = order.indexOf(factorB);
+
+        // Unrecognized factors at the end
+        return (indexA === -1 ? order.length : indexA) - (indexB === -1 ? order.length : indexB);
+      });
 
     // Respect user's choice to skip suggestion for this interaction
     if (this.additionalBindingSuggestionSkipped) {
