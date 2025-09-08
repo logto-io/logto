@@ -108,7 +108,6 @@
       "post": {
         "operationId": "SkipMfaSuggestion",
         "summary": "Skip additional MFA suggestion",
-        "tags": ["Dev feature"],
         "description": "Mark the optional additional MFA binding suggestion as skipped for the current interaction. When multiple MFA factors are enabled and only an email/phone factor is configured, a suggestion to add another factor may be shown; this endpoint records the choice to skip.",
         "responses": {
           "204": {

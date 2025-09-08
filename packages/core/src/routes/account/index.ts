@@ -13,7 +13,6 @@ import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 
-import { EnvSet } from '../../env-set/index.js';
 import RequestError from '../../errors/RequestError/index.js';
 import { encryptUserPassword } from '../../libraries/user.utils.js';
 import assertThat from '../../utils/assert-that.js';
@@ -199,89 +198,87 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
     }
   );
 
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    router.get(
-      `${accountApiPrefix}/mfa-settings`,
-      koaGuard({
-        response: z.object({
-          skipMfaOnSignIn: z.boolean(),
-        }),
-        status: [200, 400, 401],
+  router.get(
+    `${accountApiPrefix}/mfa-settings`,
+    koaGuard({
+      response: z.object({
+        skipMfaOnSignIn: z.boolean(),
       }),
-      async (ctx, next) => {
-        const { id: userId, scopes } = ctx.auth;
+      status: [200, 400, 401],
+    }),
+    async (ctx, next) => {
+      const { id: userId, scopes } = ctx.auth;
 
-        assertThat(
-          scopes.has(UserScope.Identities),
-          new RequestError({ code: 'auth.unauthorized', status: 401 })
-        );
-        const { fields } = ctx.accountCenter;
-        assertThat(
-          fields.mfa === AccountCenterControlValue.Edit ||
-            fields.mfa === AccountCenterControlValue.ReadOnly,
-          new RequestError({ code: 'account_center.field_not_enabled', status: 400 })
-        );
+      assertThat(
+        scopes.has(UserScope.Identities),
+        new RequestError({ code: 'auth.unauthorized', status: 401 })
+      );
+      const { fields } = ctx.accountCenter;
+      assertThat(
+        fields.mfa === AccountCenterControlValue.Edit ||
+          fields.mfa === AccountCenterControlValue.ReadOnly,
+        new RequestError({ code: 'account_center.field_not_enabled', status: 400 })
+      );
 
-        const user = await findUserById(userId);
-        const mfaData = userMfaDataGuard.safeParse(user.logtoConfig[userMfaDataKey]);
-        const skipMfaOnSignIn = mfaData.success ? (mfaData.data.skipMfaOnSignIn ?? false) : false;
+      const user = await findUserById(userId);
+      const mfaData = userMfaDataGuard.safeParse(user.logtoConfig[userMfaDataKey]);
+      const skipMfaOnSignIn = mfaData.success ? (mfaData.data.skipMfaOnSignIn ?? false) : false;
 
-        ctx.body = { skipMfaOnSignIn };
+      ctx.body = { skipMfaOnSignIn };
 
-        return next();
-      }
-    );
+      return next();
+    }
+  );
 
-    router.patch(
-      `${accountApiPrefix}/mfa-settings`,
-      koaGuard({
-        body: z.object({
-          skipMfaOnSignIn: z.boolean(),
-        }),
-        response: z.object({
-          skipMfaOnSignIn: z.boolean(),
-        }),
-        status: [200, 400, 401],
+  router.patch(
+    `${accountApiPrefix}/mfa-settings`,
+    koaGuard({
+      body: z.object({
+        skipMfaOnSignIn: z.boolean(),
       }),
-      async (ctx, next) => {
-        const { id: userId, identityVerified, scopes } = ctx.auth;
+      response: z.object({
+        skipMfaOnSignIn: z.boolean(),
+      }),
+      status: [200, 400, 401],
+    }),
+    async (ctx, next) => {
+      const { id: userId, identityVerified, scopes } = ctx.auth;
 
-        assertThat(
-          identityVerified,
-          new RequestError({ code: 'verification_record.permission_denied', status: 401 })
-        );
-        assertThat(
-          scopes.has(UserScope.Identities),
-          new RequestError({ code: 'auth.unauthorized', status: 401 })
-        );
-        const { skipMfaOnSignIn } = ctx.guard.body;
-        const { fields } = ctx.accountCenter;
-        assertThat(
-          fields.mfa === AccountCenterControlValue.Edit,
-          new RequestError({ code: 'account_center.field_not_editable', status: 400 })
-        );
+      assertThat(
+        identityVerified,
+        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
+      );
+      assertThat(
+        scopes.has(UserScope.Identities),
+        new RequestError({ code: 'auth.unauthorized', status: 401 })
+      );
+      const { skipMfaOnSignIn } = ctx.guard.body;
+      const { fields } = ctx.accountCenter;
+      assertThat(
+        fields.mfa === AccountCenterControlValue.Edit,
+        new RequestError({ code: 'account_center.field_not_editable', status: 400 })
+      );
 
-        const user = await findUserById(userId);
-        const existingMfaData = userMfaDataGuard.safeParse(user.logtoConfig[userMfaDataKey]);
+      const user = await findUserById(userId);
+      const existingMfaData = userMfaDataGuard.safeParse(user.logtoConfig[userMfaDataKey]);
 
-        const updatedUser = await updateUserById(userId, {
-          logtoConfig: {
-            ...user.logtoConfig,
-            [userMfaDataKey]: {
-              ...(existingMfaData.success ? existingMfaData.data : {}),
-              skipMfaOnSignIn,
-            },
+      const updatedUser = await updateUserById(userId, {
+        logtoConfig: {
+          ...user.logtoConfig,
+          [userMfaDataKey]: {
+            ...(existingMfaData.success ? existingMfaData.data : {}),
+            skipMfaOnSignIn,
           },
-        });
+        },
+      });
 
-        ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
+      ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
 
-        ctx.body = { skipMfaOnSignIn };
+      ctx.body = { skipMfaOnSignIn };
 
-        return next();
-      }
-    );
-  }
+      return next();
+    }
+  );
 
   thirdPartyTokensRoutes(...args);
   emailAndPhoneRoutes(...args);

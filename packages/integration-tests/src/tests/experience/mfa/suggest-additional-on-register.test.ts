@@ -8,9 +8,9 @@ import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connecto
 import { resetMfaSettings } from '#src/helpers/sign-in-experience.js';
 import ExpectMfaExperience from '#src/ui-helpers/expect-mfa-experience.js';
 import ExpectTotpExperience from '#src/ui-helpers/expect-totp-experience.js';
-import { devFeatureTest, generateEmail } from '#src/utils.js';
+import { generateEmail } from '#src/utils.js';
 
-devFeatureTest.describe('Experience - suggest additional MFA after email registration', () => {
+describe('Experience - suggest additional MFA after email registration', () => {
   beforeAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email]);
     await setEmailConnector();

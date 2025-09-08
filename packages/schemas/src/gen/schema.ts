@@ -52,7 +52,7 @@ export const generateSchema = ({ name, comments, fields }: TableWithType) => {
         `  ${camelcase(name)}${conditionalString(
           (nullable || hasDefaultValue || name === tenantId) && '?'
         )}: ${type}${conditionalString(isArray && '[]')}${conditionalString(
-          nullable && !hasDefaultValue && ' | null'
+          nullable && ' | null'
         )};`
     ),
     '};',
@@ -63,7 +63,7 @@ export const generateSchema = ({ name, comments, fields }: TableWithType) => {
       ({ name, comments, type, isArray, nullable, hasDefaultValue }) =>
         printComments(comments) +
         `  ${camelcase(name)}: ${type}${conditionalString(isArray && '[]')}${
-          nullable && !hasDefaultValue ? ' | null' : ''
+          nullable ? ' | null' : ''
         };`
     ),
     '};',

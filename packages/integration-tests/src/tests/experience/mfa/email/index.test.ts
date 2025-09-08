@@ -8,15 +8,9 @@ import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connecto
 import { enableMandatoryMfaWithEmail, resetMfaSettings } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
-import {
-  devFeatureTest,
-  generateEmail,
-  generatePassword,
-  generateUsername,
-  waitFor,
-} from '#src/utils.js';
+import { generateEmail, generatePassword, generateUsername, waitFor } from '#src/utils.js';
 
-devFeatureTest.describe('email MFA binding', () => {
+describe('email MFA binding', () => {
   beforeAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email]);
     await setEmailConnector();

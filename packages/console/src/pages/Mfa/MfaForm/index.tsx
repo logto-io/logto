@@ -217,60 +217,52 @@ function MfaForm({ data, signInMethods, onMfaUpdated }: Props) {
                 label={<FactorLabel type={MfaFactor.TOTP} />}
                 {...register('totpEnabled')}
               />
-              {isDevFeaturesEnabled && (
-                <>
-                  <div>
-                    <Switch
-                      disabled={isMfaDisabled || isPhoneCodePrimarySignInMethod}
-                      label={<FactorLabel type={MfaFactor.PhoneVerificationCode} />}
-                      tooltip={
-                        isPhoneCodePrimarySignInMethod
-                          ? t('mfa.phone_primary_method_tip')
-                          : undefined
-                      }
-                      {...register('phoneVerificationCodeEnabled')}
-                    />
-                    {formValues.phoneVerificationCodeEnabled && !hasSmsConnector && (
-                      <InlineNotification className={styles.connectorWarning}>
-                        <Trans
-                          components={{
-                            a: <TextLink to="/connectors" />,
-                          }}
-                        >
-                          {t('mfa.no_sms_connector_warning', {
-                            link: t('mfa.setup_link'),
-                          })}
-                        </Trans>
-                      </InlineNotification>
-                    )}
-                  </div>
-                  <div>
-                    <Switch
-                      disabled={isMfaDisabled || isEmailCodePrimarySignInMethod}
-                      label={<FactorLabel type={MfaFactor.EmailVerificationCode} />}
-                      tooltip={
-                        isEmailCodePrimarySignInMethod
-                          ? t('mfa.email_primary_method_tip')
-                          : undefined
-                      }
-                      {...register('emailVerificationCodeEnabled')}
-                    />
-                    {formValues.emailVerificationCodeEnabled && !hasEmailConnector && (
-                      <InlineNotification className={styles.connectorWarning}>
-                        <Trans
-                          components={{
-                            a: <TextLink to="/connectors" />,
-                          }}
-                        >
-                          {t('mfa.no_email_connector_warning', {
-                            link: t('mfa.setup_link'),
-                          })}
-                        </Trans>
-                      </InlineNotification>
-                    )}
-                  </div>
-                </>
-              )}
+              <div>
+                <Switch
+                  disabled={isMfaDisabled || isPhoneCodePrimarySignInMethod}
+                  label={<FactorLabel type={MfaFactor.PhoneVerificationCode} />}
+                  tooltip={
+                    isPhoneCodePrimarySignInMethod ? t('mfa.phone_primary_method_tip') : undefined
+                  }
+                  {...register('phoneVerificationCodeEnabled')}
+                />
+                {formValues.phoneVerificationCodeEnabled && !hasSmsConnector && (
+                  <InlineNotification className={styles.connectorWarning}>
+                    <Trans
+                      components={{
+                        a: <TextLink to="/connectors" />,
+                      }}
+                    >
+                      {t('mfa.no_sms_connector_warning', {
+                        link: t('mfa.setup_link'),
+                      })}
+                    </Trans>
+                  </InlineNotification>
+                )}
+              </div>
+              <div>
+                <Switch
+                  disabled={isMfaDisabled || isEmailCodePrimarySignInMethod}
+                  label={<FactorLabel type={MfaFactor.EmailVerificationCode} />}
+                  tooltip={
+                    isEmailCodePrimarySignInMethod ? t('mfa.email_primary_method_tip') : undefined
+                  }
+                  {...register('emailVerificationCodeEnabled')}
+                />
+                {formValues.emailVerificationCodeEnabled && !hasEmailConnector && (
+                  <InlineNotification className={styles.connectorWarning}>
+                    <Trans
+                      components={{
+                        a: <TextLink to="/connectors" />,
+                      }}
+                    >
+                      {t('mfa.no_email_connector_warning', {
+                        link: t('mfa.setup_link'),
+                      })}
+                    </Trans>
+                  </InlineNotification>
+                )}
+              </div>
               <div className={styles.backupCodeField}>
                 <div className={styles.backupCodeDescription}>
                   <DynamicT forKey="mfa.backup_code_setup_hint" />

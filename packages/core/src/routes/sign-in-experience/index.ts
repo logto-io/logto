@@ -4,7 +4,6 @@ import { ConnectorType, SignInExperiences, ForgotPasswordMethod } from '@logto/s
 import { conditional, tryThat } from '@silverhand/essentials';
 import { literal, object, string, z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import {
   validateSignUp,
   validateSignIn,
@@ -127,7 +126,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         validateMfa(mfa, currentSignIn);
       }
 
-      if (forgotPasswordMethods && EnvSet.values.isDevFeaturesEnabled) {
+      if (forgotPasswordMethods) {
         const hasEmailConnector = connectors.some(({ type }) => type === ConnectorType.Email);
         const hasSmsConnector = connectors.some(({ type }) => type === ConnectorType.Sms);
 

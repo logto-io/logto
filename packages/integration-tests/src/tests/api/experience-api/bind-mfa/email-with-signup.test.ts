@@ -12,9 +12,7 @@ import {
   successfullyVerifyVerificationCode,
 } from '#src/helpers/experience/verification-code.js';
 import { enableMandatoryMfaWithEmail, resetMfaSettings } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest, generateEmail, generatePassword } from '#src/utils.js';
-
-const { describe, it } = devFeatureTest;
+import { generateEmail, generatePassword } from '#src/utils.js';
 
 describe('Register with email identifier and bind as email MFA automaticly', () => {
   beforeAll(async () => {
