@@ -90,6 +90,16 @@ export default class GlobalValues {
   /** If the env explicitly indicates it's in the cloud environment. */
   public readonly isCloud = yes(getEnv('IS_CLOUD'));
 
+  /**
+   * Indicates whether this Logto instance supports multiple custom domains.
+   *
+   * **NOTE: Only available to enterprise customers running private instances that need this feature.**
+   *
+   * Controlled by the `MULTIPLE_CUSTOM_DOMAINS_ENABLED` environment variable. When enabled, the instance
+   * can operate with multiple custom domains across both development and production tenants.
+   */
+  public readonly isMultipleCustomDomainsEnabled = yes(getEnv('MULTIPLE_CUSTOM_DOMAINS_ENABLED'));
+
   // eslint-disable-next-line unicorn/consistent-function-scoping
   public readonly databaseUrl = tryThat(() => assertEnv('DB_URL'), throwErrorWithDsnMessage);
   public readonly developmentTenantId = getEnv('DEVELOPMENT_TENANT_ID');
