@@ -16,6 +16,7 @@ import {
   type Mfa as MfaSettings,
   OrganizationRequiredMfaPolicy,
   MfaFactor,
+  SignInIdentifier,
 } from '@logto/schemas';
 import { generateStandardId, maskEmail, maskPhone } from '@logto/shared';
 import { cond, condObject, deduplicate, pick } from '@silverhand/essentials';
@@ -298,6 +299,7 @@ export class Mfa {
    * when conditions are met.
    * The purpose is to suggest another MFA factor if the user has only one Email or Phone factor.
    */
+  // eslint-disable-next-line complexity
   async guardAdditionalBindingSuggestion(
     factorsInUser: MfaFactor[],
     availableFactors: MfaFactor[]
@@ -311,6 +313,22 @@ export class Mfa {
     if (
       !factorsInUser.includes(MfaFactor.EmailVerificationCode) &&
       !factorsInUser.includes(MfaFactor.PhoneVerificationCode)
+    ) {
+      return;
+    }
+
+    const { signUp } = await this.signInExperienceValidator.getSignInExperienceData();
+    // If the user has email, but not registered by email, no suggestion
+    if (
+      factorsInUser.includes(MfaFactor.EmailVerificationCode) &&
+      !signUp.identifiers.includes(SignInIdentifier.Email)
+    ) {
+      return;
+    }
+    // If the user has phone, but not registered by phone, no suggestion
+    if (
+      factorsInUser.includes(MfaFactor.PhoneVerificationCode) &&
+      !signUp.identifiers.includes(SignInIdentifier.Phone)
     ) {
       return;
     }
