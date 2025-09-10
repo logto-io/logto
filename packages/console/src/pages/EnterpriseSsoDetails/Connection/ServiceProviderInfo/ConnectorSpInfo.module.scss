@@ -1,10 +1,6 @@
 @use '@/scss/underscore' as _;
 
-.inputField {
-  margin: _.unit(4) 0;
-}
-
-.uriList {
+.uriContent {
   display: flex;
   flex-direction: column;
   gap: _.unit(3);

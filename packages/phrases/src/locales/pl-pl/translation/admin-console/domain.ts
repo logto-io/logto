@@ -53,6 +53,12 @@ const domain = {
     'Możesz dostosować nazwę domeny tego adresu URI, aby dopasować ją do punktu końcowego Twojej aplikacji. Wybierz "{{custom}}" lub "{{default}}".',
   custom_acs_url_note:
     'Możesz dostosować nazwę domeny tego URI, aby dopasować ją do adresu URL usługi konsumenta oświadczeń Twojego dostawcy tożsamości. Wybierz "{{custom}}" lub "{{default}}".',
+  switch_custom_domain_tip:
+    'Przełącz domenę, aby zobaczyć odpowiadający jej endpoint. Dodaj więcej domen przez <a>domeny niestandardowe</a>.',
+  switch_saml_app_domain_tip:
+    'Przełącz domenę, aby zobaczyć odpowiadające jej adresy URL. W protokołach SAML adresy URL metadanych mogą być hostowane na dowolnej dostępnej domenie. Jednak wybrana domena określa adres URL usługi SSO, na który dostawcy SP przekierowują użytkowników do uwierzytelnienia, co wpływa na doświadczenie logowania i widoczność adresu URL.',
+  switch_saml_connector_domain_tip:
+    'Przełącz domenę, aby zobaczyć odpowiadające adresy URL. Wybrana domena określa Twój adres ACS URL, który wpływa na to, dokąd użytkownicy są kierowani po logowaniu SSO. Wybierz domenę, która odpowiada oczekiwanemu zachowaniu przekierowań Twojej aplikacji.',
 };
 
 export default Object.freeze(domain);

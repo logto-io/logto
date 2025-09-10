@@ -5,7 +5,6 @@ import { useContext, useMemo } from 'react';
 import { guides } from '@/assets/docs/guides';
 import Guide, { GuideContext, type GuideContextType } from '@/components/Guide';
 import { AppDataContext } from '@/contexts/AppDataProvider';
-import useCustomDomain from '@/hooks/use-custom-domain';
 
 type Props = {
   readonly className?: string;
@@ -17,7 +16,7 @@ type Props = {
 
 function ApiGuide({ className, guideId, apiResource, isCompact, onClose }: Props) {
   const { tenantEndpoint } = useContext(AppDataContext);
-  const { applyDomain: applyCustomDomain } = useCustomDomain();
+
   const guide = guides.find(({ id }) => id === guideId);
 
   const memorizedContext = useMemo(
@@ -28,11 +27,11 @@ function ApiGuide({ className, guideId, apiResource, isCompact, onClose }: Props
             metadata: guide.metadata,
             Logo: guide.Logo,
             isCompact: Boolean(isCompact),
-            endpoint: applyCustomDomain(tenantEndpoint?.href ?? ''),
+            endpoint: tenantEndpoint?.href ?? '',
             audience: apiResource.indicator,
           }
       ) satisfies GuideContextType | undefined,
-    [apiResource, applyCustomDomain, guide, isCompact, tenantEndpoint?.href]
+    [apiResource, guide, isCompact, tenantEndpoint?.href]
   );
 
   return memorizedContext ? (

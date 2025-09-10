@@ -1,5 +1,12 @@
 @use '@/scss/underscore' as _;
 
+
+.callbackUriContent {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(3);
+}
+
 .description {
   color: var(--color-text-secondary);
   font: var(--font-body-2);

@@ -4,6 +4,7 @@ import TabItem from '@/mdx-components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
+import CustomDomainEndpointNotice from '@/mdx-components/CustomDomainEndpointNotice';
 
 <Steps>
 
@@ -56,6 +57,10 @@ The minimum configuration to get started for the plugin is:
 - App secret: <code>{props.secrets[0]?.value ?? props.app.secret}</code>
 
 After filling in the values, click **Save Changes** (scroll down to the bottom of the page if you can't find the button).
+
+<br/>
+
+<CustomDomainEndpointNotice />
 
 </Step>
 

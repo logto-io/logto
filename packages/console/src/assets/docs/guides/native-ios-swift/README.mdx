@@ -4,6 +4,7 @@ import TabItem from '@/mdx-components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
+import CustomDomainEndpointNotice from '@/mdx-components/CustomDomainEndpointNotice';
 import Checkpoint from '../../fragments/_checkpoint.md';
 import RedirectUrisNative, { defaultRedirectUri } from '../../fragments/_redirect-uris-native.mdx';
 
@@ -58,6 +59,10 @@ let config = try? LogtoConfig(
 )
 let logtoClient = LogtoClient(useConfig: config)`}
 </Code>
+
+<br/>
+
+<CustomDomainEndpointNotice />
 
 By default, we store credentials like ID Token and Refresh Token in Keychain. Thus the user doesn't need to sign in again when he returns.
 
