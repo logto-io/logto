@@ -7,7 +7,7 @@
 "@logto/schemas": minor
 ---
 
-add Email/Phone MFA via verification codes
+add email/phone MFA via verification codes
 
 Summary
 - Add two new MFA factors: Email verification code and SMS (phone) verification code.
