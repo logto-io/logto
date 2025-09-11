@@ -10,6 +10,8 @@
 
 .message {
   margin-top: _.unit(3);
+  font: var(--font-body-2);
+  color: var(--color-type-secondary);
 }
 
 .link {
