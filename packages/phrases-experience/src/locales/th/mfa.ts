@@ -16,6 +16,8 @@ const mfa = {
   verify_backup_code_description: 'วางรหัสสำรองที่คุณบันทึกไว้',
   verify_email_verification_code_description: 'กรอกรหัสที่ส่งไปยังอีเมลของคุณ',
   verify_phone_verification_code_description: 'กรอกรหัสที่ส่งไปยังโทรศัพท์ของคุณ',
+  send_to_email: 'ส่งไปที่ {{identifier}}',
+  send_to_phone: 'ส่งไปที่ {{identifier}}',
   add_mfa_factors: 'เพิ่มการยืนยันแบบ 2 ขั้นตอน',
   add_mfa_description:
     'การตรวจสอบสองปัจจัยเปิดใช้งานอยู่ เลือกวิธีการตรวจสอบตัวตนที่สองของคุณสำหรับการเข้าสู่ระบบที่ปลอดภัย',

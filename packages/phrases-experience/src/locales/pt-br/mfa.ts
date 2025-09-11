@@ -16,6 +16,8 @@ const mfa = {
   verify_backup_code_description: 'Cole o código de backup que você salvou',
   verify_email_verification_code_description: 'Digite o código enviado para seu e-mail',
   verify_phone_verification_code_description: 'Digite o código enviado para seu telefone',
+  send_to_email: 'Enviar para {{identifier}}',
+  send_to_phone: 'Enviar para {{identifier}}',
   add_mfa_factors: 'Adicionar verificação em duas etapas',
   add_mfa_description:
     'A verificação em duas etapas está ativada. Selecione seu segundo método de verificação para login seguro.',

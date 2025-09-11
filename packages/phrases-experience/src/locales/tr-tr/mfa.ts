@@ -16,6 +16,8 @@ const mfa = {
   verify_backup_code_description: 'Kaydettiğiniz yedek kodu yapıştırın',
   verify_email_verification_code_description: 'E-postanıza gönderilen kodu girin',
   verify_phone_verification_code_description: 'Telefonunuza gönderilen kodu girin',
+  send_to_email: '{{identifier}} adresine gönder',
+  send_to_phone: '{{identifier}} adresine gönder',
   add_mfa_factors: '2 aşamalı doğrulamayı ekle',
   add_mfa_description:
     'İki faktörlü doğrulama etkinleştirildi. Güvenli oturum açmak için ikinci doğrulama yönteminizi seçin.',

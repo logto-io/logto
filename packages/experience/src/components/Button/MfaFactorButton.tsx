@@ -1,6 +1,7 @@
 import { MfaFactor } from '@logto/schemas';
 import classNames from 'classnames';
 import { type TFuncKey } from 'i18next';
+import { useTranslation } from 'react-i18next';
 
 import ArrowNext from '@/assets/icons/arrow-next.svg?react';
 import FactorBackupCode from '@/assets/icons/factor-backup-code.svg?react';
@@ -56,7 +57,24 @@ const linkFactorDescription: Record<MfaFactor, TFuncKey> = {
 };
 
 const MfaFactorButton = ({ factor, isBinding, isDisabled, maskedIdentifier, onClick }: Props) => {
+  const { t } = useTranslation();
   const Icon = factorIcon[factor];
+
+  const getDescriptionForMaskedIdentifier = () => {
+    if (!maskedIdentifier) {
+      return null;
+    }
+
+    if (factor === MfaFactor.EmailVerificationCode) {
+      return t('mfa.send_to_email', { identifier: maskedIdentifier });
+    }
+
+    if (factor === MfaFactor.PhoneVerificationCode) {
+      return t('mfa.send_to_phone', { identifier: maskedIdentifier });
+    }
+
+    return maskedIdentifier;
+  };
 
   return (
     <button
@@ -78,7 +96,7 @@ const MfaFactorButton = ({ factor, isBinding, isDisabled, maskedIdentifier, onCl
         </div>
         <div className={mfaFactorButtonStyles.description}>
           {maskedIdentifier ? (
-            <span>{maskedIdentifier}</span>
+            <span>{getDescriptionForMaskedIdentifier()}</span>
           ) : (
             <DynamicT forKey={(isBinding ? linkFactorDescription : factorDescription)[factor]} />
           )}
