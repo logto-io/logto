@@ -46,6 +46,15 @@ export const defaultMetadata: ConnectorMetadata = {
       placeholder: '<from-messaging-service-sid>',
     },
     {
+      key: 'disableRiskCheck',
+      label: 'Disable risk check',
+      type: ConnectorConfigFormItemType.Switch,
+      required: false,
+      defaultValue: false,
+      description:
+        'Whether to disable Twilio built-in risk check. Enabled by default. More details: https://www.twilio.com/docs/messaging/api/message-resource',
+    },
+    {
       key: 'templates',
       label: 'Templates',
       type: ConnectorConfigFormItemType.Json,
