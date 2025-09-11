@@ -53,6 +53,12 @@ const domain = {
     'You can customize the domain name of this URI to match your application’s endpoint. Choose either "{{custom}}" or "{{default}}".',
   custom_acs_url_note:
     'You can customize the domain name of this URI to match your identity provider assertion consumer service URL. Choose either "{{custom}}" or "{{default}}".',
+  switch_custom_domain_tip:
+    'Switch your domain to view the corresponding endpoint. Add more domains via <a>custom domains</a>.',
+  switch_saml_app_domain_tip:
+    'Switch your domain to view the corresponding URLs. For SAML protocols, metadata URLs can be hosted on any accessible domain. However, the selected domain determines the SSO service URL that SPs use to redirect end users for authentication, which affects the login experience and URL visibility.',
+  switch_saml_connector_domain_tip:
+    "Switch domains to view corresponding URLs. The selected domain determines your ACS URL, which affects where users are redirected after SSO login. Choose the domain that matches your application's expected redirect behavior.",
 };
 
 export default Object.freeze(domain);

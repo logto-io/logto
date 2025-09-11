@@ -6,6 +6,7 @@ import Step from '@/mdx-components/Step';
 import Checkpoint from '../../fragments/_checkpoint.md';
 import RedirectUrisWeb from '../../fragments/_redirect-uris-web.mdx';
 import { generateStandardSecret } from '@logto/shared/universal';
+import CustomDomainEndpointNotice from '@/mdx-components/CustomDomainEndpointNotice';
 
 export const cookieEncryptionKey = generateStandardSecret();
 
@@ -45,6 +46,10 @@ export const handle = handleLogto(
   { encryptionKey: '${cookieEncryptionKey}' } // Random-generated key
 );`}
 </Code>
+
+<br/>
+
+<CustomDomainEndpointNotice />
 
 Since these information are sensitive, it's recommended to use environment variables. For example:
 

@@ -2,6 +2,7 @@ import UriInputField from '@/mdx-components/UriInputField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
+import CustomDomainEndpointNotice from '@/mdx-components/CustomDomainEndpointNotice';
 import RedirectUrisNative from '../../fragments/_redirect-uris-native.mdx';
 import Checkpoint from '../../fragments/_checkpoint.md';
 
@@ -85,6 +86,10 @@ class LogtoViewModel(application: Application) : AndroidViewModel(application) {
     }
 }
 ```
+
+<br/>
+
+<CustomDomainEndpointNotice />
 
 then, create a `LogtoViewModel` for your `MainActivity.kt`:
 

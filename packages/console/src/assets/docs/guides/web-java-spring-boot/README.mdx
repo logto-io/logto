@@ -1,6 +1,7 @@
 import UriInputField from '@/mdx-components/UriInputField';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
+import CustomDomainEndpointNotice from '@/mdx-components/CustomDomainEndpointNotice';
 
 import Checkpoint from '../../fragments/_checkpoint.md';
 import RedirectUrisWeb from '../../fragments/_redirect-uris-web.mdx';
@@ -74,6 +75,10 @@ spring.security.oauth2.client.provider.logto.authorization-uri=${props.endpoint}
 spring.security.oauth2.client.provider.logto.jwk-set-uri=${props.endpoint}oidc/jwks
   `}
 </Code>
+
+<br/>
+
+<CustomDomainEndpointNotice />
 
 </Step>
 

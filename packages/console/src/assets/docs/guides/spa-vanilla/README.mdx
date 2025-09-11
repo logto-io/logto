@@ -4,6 +4,7 @@ import TabItem from '@/mdx-components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
+import CustomDomainEndpointNotice from '@/mdx-components/CustomDomainEndpointNotice';
 
 import Checkpoint from '../../fragments/_checkpoint.md';
 import RedirectUrisWeb, { defaultRedirectUri, defaultPostSignOutUri } from '../../fragments/_redirect-uris-web.mdx';
@@ -59,6 +60,10 @@ const logtoClient = new LogtoClient({
   appId: '${props.app.id}',
 });`}
 </Code>
+
+<br/>
+
+<CustomDomainEndpointNotice />
 
 </Step>
 

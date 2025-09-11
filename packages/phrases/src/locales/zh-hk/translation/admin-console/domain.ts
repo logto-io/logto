@@ -47,6 +47,11 @@ const domain = {
     '您可以自定義此 URI 的域名以匹配您的應用程序端點。選擇“{{custom}}”或“{{default}}”。',
   custom_acs_url_note:
     '您可以自定義這個 URI 的域名以匹配您的身份提供者斷言使用者服務 URL。選擇“{{custom}}”或“{{default}}”。',
+  switch_custom_domain_tip: '切換網域以檢視對應的端點。透過 <a>自訂網域</a> 新增更多網域。',
+  switch_saml_app_domain_tip:
+    '切換網域以檢視對應的 URL。對於 SAML 協定，中繼資料 URL 可部署在任何可存取的網域。但所選網域決定 SP 用於將終端使用者重新導向進行驗證的 SSO 服務 URL，影響登入體驗與 URL 呈現。',
+  switch_saml_connector_domain_tip:
+    '切換網域以檢視對應的 URL。所選網域決定你的 ACS URL，影響使用者在 SSO 登入後被重新導向的位置。請選擇符合應用程式預期重新導向行為的網域。',
 };
 
 export default Object.freeze(domain);

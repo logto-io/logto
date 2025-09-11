@@ -53,6 +53,12 @@ const domain = {
     'Sie können den Domainnamen dieser URI anpassen, um mit dem Endpunkt Ihrer Anwendung übereinzustimmen. Wählen Sie entweder "{{custom}}" oder "{{default}}".',
   custom_acs_url_note:
     'Sie können den Domainnamen dieser URI anpassen, um mit der URL Ihres Identitätsanbieters Assertions-Verbraucherdienst übereinzustimmen. Wählen Sie entweder "{{custom}}" oder "{{default}}".',
+  switch_custom_domain_tip:
+    'Wechseln Sie die Domain, um den entsprechenden Endpunkt anzuzeigen. Fügen Sie über <a>benutzerdefinierte Domains</a> weitere Domains hinzu.',
+  switch_saml_app_domain_tip:
+    'Wechseln Sie die Domain, um die entsprechenden URLs anzuzeigen. Bei SAML‑Protokollen können Metadaten‑URLs auf jeder erreichbaren Domain gehostet werden. Die ausgewählte Domain bestimmt jedoch die SSO-Service-URL, über die SPs Endbenutzer zur Authentifizierung umleiten – dies beeinflusst das Anmeldeerlebnis und die Sichtbarkeit der URL.',
+  switch_saml_connector_domain_tip:
+    'Wechseln Sie die Domain, um die entsprechenden URLs anzuzeigen. Die ausgewählte Domain bestimmt Ihre ACS-URL und damit wohin Nutzer nach dem SSO-Login weitergeleitet werden. Wählen Sie die Domain, die dem erwarteten Weiterleitungsverhalten Ihrer Anwendung entspricht.',
 };
 
 export default Object.freeze(domain);

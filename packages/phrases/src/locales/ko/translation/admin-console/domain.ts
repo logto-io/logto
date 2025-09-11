@@ -52,6 +52,12 @@ const domain = {
     '이 URI의 도메인 이름을 애플리케이션 엔드포인트와 일치하도록 사용자 정의할 수 있습니다. "{{custom}}" 또는 "{{default}}" 중 하나를 선택하세요.',
   custom_acs_url_note:
     '이 URI의 도메인명을 사용자의 ID 공급자 Assertion Consumer 서비스 URL과 일치하도록 사용자 정의할 수 있습니다. "{{custom}}" 또는 "{{default}}" 중 하나를 선택하세요.',
+  switch_custom_domain_tip:
+    '해당 엔드포인트를 보려면 도메인을 전환하세요. <a>사용자 지정 도메인</a>을 통해 더 많은 도메인을 추가할 수 있습니다.',
+  switch_saml_app_domain_tip:
+    '해당 URL을 보려면 도메인을 전환하세요. SAML 프로토콜에서는 메타데이터 URL을 접근 가능한 어떤 도메인에서도 호스팅할 수 있습니다. 하지만 선택한 도메인이 SP가 사용자를 인증을 위해 리디렉션하는 SSO 서비스 URL을 결정하며, 이는 로그인 경험과 URL 노출에 영향을 줍니다.',
+  switch_saml_connector_domain_tip:
+    '해당 URL을 보려면 도메인을 전환하세요. 선택한 도메인은 ACS URL을 결정하며, 이는 SSO 로그인 후 사용자가 리디렉션되는 위치에 영향을 줍니다. 애플리케이션이 기대하는 리디렉션 동작과 일치하는 도메인을 선택하세요.',
 };
 
 export default Object.freeze(domain);

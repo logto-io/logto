@@ -53,6 +53,12 @@ const domain = {
     'Bu URI\'nin alan adını uygulamanızın uç noktasıyla eşleştirmek için özelleştirebilirsiniz. "{{custom}}" veya "{{default}}" seçeneklerinden birini seçin.',
   custom_acs_url_note:
     'Bu URI\'nin alan adını kimlik sağlayıcısı Assertion Consumer Service URL\'inizle eşleştirmek üzere özelleştirebilirsiniz. "{{custom}}" veya "{{default}}" seçeneklerinden birini seçin.',
+  switch_custom_domain_tip:
+    'İlgili uç noktayı görmek için alan adınızı değiştirin. <a>özel alan adları</a> üzerinden daha fazla alan ekleyin.',
+  switch_saml_app_domain_tip:
+    'İlgili URL’leri görmek için alan adını değiştirin. SAML protokollerinde metadata URL’leri erişilebilir herhangi bir alan adında barındırılabilir. Ancak seçilen alan adı, SP’lerin kullanıcıları kimlik doğrulamasına yönlendirmek için kullandığı SSO servis URL’sini belirler; bu da oturum açma deneyimini ve URL görünürlüğünü etkiler.',
+  switch_saml_connector_domain_tip:
+    'İlgili URL’leri görmek için alan adını değiştirin. Seçilen alan adı ACS URL’nizi belirler ve SSO oturum açmasından sonra kullanıcıların nereye yönlendirileceğini etkiler. Uygulamanızın beklenen yönlendirme davranışına uyan alan adını seçin.',
 };
 
 export default Object.freeze(domain);

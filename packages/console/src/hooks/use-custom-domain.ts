@@ -43,11 +43,19 @@ const useCustomDomain = (autoSync = false) => {
     [customDomain]
   );
 
+  const activeCustomDomains = useMemo(
+    () =>
+      data?.filter(({ status }) => status === DomainStatus.Active).map(({ domain }) => domain) ??
+      [],
+    [data]
+  );
+
   return {
     data: customDomain,
     isLoading,
     mutate: mutateDomain,
     applyDomain,
+    activeCustomDomains,
   };
 };
 

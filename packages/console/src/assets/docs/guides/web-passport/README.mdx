@@ -2,6 +2,7 @@ import InlineNotification from '@/ds-components/InlineNotification';
 import UriInputField from '@/mdx-components/UriInputField';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
+import CustomDomainEndpointNotice from '@/mdx-components/CustomDomainEndpointNotice';
 import NpmLikeInstallation from '@/mdx-components/NpmLikeInstallation';
 
 <Steps>
@@ -75,6 +76,10 @@ export default function initPassport() {
   });
 }`}
 </Code>
+
+<br/>
+
+<CustomDomainEndpointNotice />
 
 This code initializes Passport with the **`OpenIDConnectStrategy`**. The serialize and deserialize methods are set for demonstration purposes.
 

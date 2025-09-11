@@ -12,3 +12,10 @@ export const isInCallback = () =>
 export const isAbsoluteUrl = (url?: string) => Boolean(trySafe(() => url && new URL(url)));
 
 export const dropLeadingSlash = (path: string) => path.replace(/^\/+/, '');
+
+export const applyDomain = (url: string, domain?: string) => {
+  if (!domain || !isAbsoluteUrl(url)) {
+    return url;
+  }
+  return url.replace(new URL(url).host, domain);
+};

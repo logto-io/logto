@@ -1,6 +1,7 @@
 import UriInputField from '@/mdx-components/UriInputField';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
+import CustomDomainEndpointNotice from '@/mdx-components/CustomDomainEndpointNotice';
 import RedirectUrisWeb, { defaultRedirectUri, defaultPostSignOutUri } from '../../fragments/_redirect-uris-web.mdx';
 import Checkpoint from '../../fragments/_checkpoint.md';
 
@@ -36,6 +37,10 @@ client = LogtoClient(
     )
 )`}
 </Code>
+
+<br/>
+
+<CustomDomainEndpointNotice />
 
 Also replace the default memory storage with a persistent storage, for example:
 
