@@ -16,6 +16,8 @@ const mfa = {
   verify_backup_code_description: '粘贴您保存的备份代码',
   verify_email_verification_code_description: '输入发送到您电子邮件的验证码',
   verify_phone_verification_code_description: '输入发送到您手机的验证码',
+  send_to_email: '发送至 {{identifier}}',
+  send_to_phone: '发送至 {{identifier}}',
   add_mfa_factors: '添加两步验证',
   add_mfa_description: '已启用两步验证。选择第二种验证方法以进行安全登录。',
   add_another_mfa_factor: '添加另一个两步验证',

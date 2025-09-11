@@ -16,6 +16,8 @@ const mfa = {
   verify_backup_code_description: '保存したバックアップコードを貼り付け',
   verify_email_verification_code_description: 'メールに送信されたコードを入力',
   verify_phone_verification_code_description: '電話に送信されたコードを入力',
+  send_to_email: '{{identifier}} に送信',
+  send_to_phone: '{{identifier}} に送信',
   add_mfa_factors: '2段階認証を追加',
   add_mfa_description:
     '2段階認証が有効になっています。安全なサインインのために第二の認証方法を選択してください。',

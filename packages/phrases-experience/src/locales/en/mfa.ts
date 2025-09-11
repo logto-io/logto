@@ -16,6 +16,8 @@ const mfa = {
   verify_backup_code_description: 'Paste the backup code you saved',
   verify_email_verification_code_description: 'Enter the code sent to your email',
   verify_phone_verification_code_description: 'Enter the code sent to your phone',
+  send_to_email: 'Send to {{identifier}}',
+  send_to_phone: 'Send to {{identifier}}',
   add_mfa_factors: 'Add 2-step verification',
   add_mfa_description:
     'Two-factor verification is enabled. Select your second verification method for secure sign-in.',
