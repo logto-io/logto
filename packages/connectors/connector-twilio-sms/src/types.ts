@@ -13,6 +13,7 @@ export type PublicParameters = {
   To: string;
   MessagingServiceSid: string;
   Body: string;
+  RiskCheck?: 'enable' | 'disable';
 };
 
 /**
@@ -30,6 +31,7 @@ export const twilioSmsConfigGuard = z.object({
   accountSID: z.string(),
   authToken: z.string(),
   fromMessagingServiceSID: z.string(),
+  disableRiskCheck: z.boolean().optional(),
   templates: z.array(templateGuard).refine(
     (templates) =>
       requiredTemplateUsageTypes.every((requiredType) =>

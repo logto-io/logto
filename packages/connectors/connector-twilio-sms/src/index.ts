@@ -25,7 +25,7 @@ const sendMessage =
     const { to, type, payload } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, twilioSmsConfigGuard);
-    const { accountSID, authToken, fromMessagingServiceSID, templates } = config;
+    const { accountSID, authToken, fromMessagingServiceSID, templates, disableRiskCheck } = config;
     const template = templates.find((template) => template.usageType === type);
 
     assert(
@@ -40,6 +40,7 @@ const sendMessage =
       To: to,
       MessagingServiceSid: fromMessagingServiceSID,
       Body: replaceSendMessageHandlebars(template.content, payload),
+      RiskCheck: disableRiskCheck ? 'disable' : 'enable',
     };
 
     try {
