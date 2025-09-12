@@ -24,14 +24,14 @@ const DirectSignIn = () => {
     if (method === 'social') {
       const social = socialConnectors.find((connector) => connector.target === target);
 
-      if (social && social.target === GoogleConnector.target && logtoGoogleOneTapCookie) {
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        window.location.href = `${window.location.origin}/callback/${experienceSettings?.googleOneTap?.connectorId}`;
-        return;
-      }
+      if (social) {
+        // Redirect to the Google One Tap callback page if the social connector is Google and the logtoGoogleOneTapCookie is present (external Google One Tap).
+        if (social.target === GoogleConnector.target && logtoGoogleOneTapCookie) {
+          // eslint-disable-next-line @silverhand/fp/no-mutation
+          window.location.href = `${window.location.origin}/callback/${experienceSettings?.googleOneTap?.connectorId}`;
+          return;
+        }
 
-      // Continue with non-Google logic immediately
-      if (social && social.target !== GoogleConnector.target) {
         void invokeSocialSignIn(social);
         return;
       }
