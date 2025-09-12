@@ -7,6 +7,7 @@ const domain = {
   hostname_already_exists: '이 도메인은 이미 서버에 존재합니다.',
   cloudflare_not_found: 'Cloudflare에서 호스트 이름을 찾을 수 없습니다.',
   domain_is_not_allowed: '이 도메인은 허용되지 않습니다.',
+  domain_in_use: '도메인 {{domain}}은 이미 사용 중입니다.',
 };
 
 export default Object.freeze(domain);

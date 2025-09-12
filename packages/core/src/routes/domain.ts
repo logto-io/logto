@@ -14,7 +14,7 @@ export default function domainRoutes<T extends ManagementApiRouter>(
   ...[router, { id: tenantId, queries, libraries }]: RouterInitArgs<T>
 ) {
   const {
-    domains: { findAllDomains, findDomainById },
+    domains: { findAllDomains, findDomainById, findDomain },
   } = queries;
   const {
     domains: { syncDomainStatus, addDomain, deleteDomain },
@@ -87,6 +87,17 @@ export default function domainRoutes<T extends ManagementApiRouter>(
           })
         );
       }
+
+      const { domain } = ctx.guard.body;
+
+      assertThat(
+        !(await findDomain(domain)),
+        new RequestError({
+          code: 'domain.domain_in_use',
+          domain,
+          status: 422,
+        })
+      );
 
       // Throw 400 error if domain is invalid
       const syncedDomain = await addDomain(ctx.guard.body.domain);

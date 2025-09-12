@@ -7,6 +7,7 @@ const domain = {
   hostname_already_exists: '此網域名稱已經存在我們的伺服器中。',
   cloudflare_not_found: '無法找到 Cloudflare 中的主機名',
   domain_is_not_allowed: '這個網域不允許。',
+  domain_in_use: '網域 {{domain}} 已被使用。',
 };
 
 export default Object.freeze(domain);

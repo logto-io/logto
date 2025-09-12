@@ -12,6 +12,8 @@ const domain = {
     custom_domain_description: '通过使用自定义域名来提高品牌形象。此域名将用于你的登录体验。',
     custom_domain_field: '自定义域名',
     custom_domain_placeholder: 'your.domain.com',
+    add_custom_domain_field: '添加自定义域名',
+    custom_domains_field: '自定义域名',
     add_domain: '添加域名',
     invalid_domain_format: '请提供一个有效的域名 URL，至少有三个部分，例如 "your.domain.com."',
     verify_domain: '验证域名',
@@ -35,6 +37,8 @@ const domain = {
         '如果你之前已在社交连接器提供商或应用程序终结点中设置了此自定义域名，则需要先将 URI 修改为 Logto 默认域名 "<span>{{domain}}</span>"。这对于社交登录按钮的正常工作是必要的。',
       deleted: '自定义域名删除成功！',
     },
+    config_custom_domain_description:
+      '配置自定义域名以设置以下功能：应用、社交连接器和企业连接器（OIDC）。',
   },
   default: {
     default_domain: '默认域名',

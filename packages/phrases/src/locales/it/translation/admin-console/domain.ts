@@ -14,6 +14,8 @@ const domain = {
       'Migliora il tuo branding utilizzando un dominio personalizzato. Questo dominio verrà utilizzato nella tua esperienza di accesso.',
     custom_domain_field: 'Dominio personalizzato',
     custom_domain_placeholder: 'il-tuo-dominio.com',
+    add_custom_domain_field: 'Aggiungi un dominio personalizzato',
+    custom_domains_field: 'Domini personalizzati',
     add_domain: 'Aggiungi dominio',
     invalid_domain_format:
       'Si prega di fornire un URL di dominio valido con un minimo di tre parti, ad esempio "tuo.dominio.com".',
@@ -40,6 +42,8 @@ const domain = {
         'Se hai configurato in precedenza questo dominio personalizzato nel tuo provider di connettore social o endpoint dell\'applicazione, dovrai modificare l\'URI nel dominio Logto predefinito "<span>{{domain}}</span>". È necessario per il corretto funzionamento del pulsante di accesso social.',
       deleted: 'Dominio personalizzato eliminato con successo!',
     },
+    config_custom_domain_description:
+      'Configura domini personalizzati per impostare le seguenti funzionalità: applicazioni, connettori social e connettori enterprise (OIDC).',
   },
   default: {
     default_domain: 'Dominio predefinito',
