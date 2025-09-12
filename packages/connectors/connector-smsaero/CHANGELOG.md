@@ -1,5 +1,16 @@
 # @logto/connector-smsaero
 
+## 1.5.0
+
+### Minor Changes
+
+- 1fb8593659: add full usage types to templates default value
+
+### Patch Changes
+
+- Updated dependencies [5da6792d40]
+  - @logto/connector-kit@4.6.0
+
 ## 1.4.1
 
 ### Patch Changes

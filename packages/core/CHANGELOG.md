@@ -1,5 +1,51 @@
 # Change Log
 
+## 1.32.0
+
+### Minor Changes
+
+- 1fb8593659: add email/phone MFA via verification codes
+
+  Summary
+
+  - Add two new MFA factors: Email verification code and SMS (phone) verification code.
+  - Support binding these factors during registration or first sign-in when MFA is required.
+  - Support verifying these factors on subsequent sign-ins with dedicated MFA verification pages.
+  - Update Console to configure these factors and surface guidance/conflict warnings.
+  - Support customizing forgot password methods in Sign-in Experience (related).
+
+  To learn more about this feature, please refer to the documentation: https://docs.logto.io/end-user-flows/mfa
+
+- 0ef4260e34: unify branding customization options between applications and organizations
+
+  We are now offering a more unified experience for branding customization options between applications and organizations, including:
+
+  - Branding colors (light and dark mode)
+  - Branding logos and favicons (both light and dark mode)
+  - Custom CSS
+
+  When all branding customization options are set, the precedence of the options are as follows:
+  Organization > Application > Omni sign-in experience settings
+
+### Patch Changes
+
+- 1e77967e7c: fix(core): bind WebAuthn `rpId` to request domain for account api
+
+  - Before: WebAuthn registration via the account API always bound passkeys to the Logto default domain.
+  - After: The `rpId` now matches the domain you use to access the API (including custom domains), consistent with the sign-in experience.
+
+- Updated dependencies [5da6792d40]
+- Updated dependencies [1fb8593659]
+- Updated dependencies [0ef4260e34]
+  - @logto/connector-kit@4.6.0
+  - @logto/console@1.29.0
+  - @logto/experience@1.16.0
+  - @logto/phrases@1.21.0
+  - @logto/phrases-experience@1.12.0
+  - @logto/schemas@1.32.0
+  - @logto/cli@1.32.0
+  - @logto/demo-app@1.5.0
+
 ## 1.31.0
 
 ### Minor Changes

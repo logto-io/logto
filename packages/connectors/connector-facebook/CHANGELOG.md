@@ -1,5 +1,12 @@
 # @logto/connector-facebook
 
+## 1.6.1
+
+### Patch Changes
+
+- Updated dependencies [5da6792d40]
+  - @logto/connector-kit@4.6.0
+
 ## 1.6.0
 
 ### Minor Changes
