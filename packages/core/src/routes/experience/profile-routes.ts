@@ -14,8 +14,6 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { EnvSet } from '../../env-set/index.js';
-
 import { createNewMfaCodeVerificationRecord } from './classes/verifications/code-verification.js';
 import { experienceRoutes } from './const.js';
 import { type ExperienceInteractionRouterContext } from './types.js';
@@ -44,7 +42,9 @@ function verifiedInteractionGuard<
       })
     );
 
-    await experienceInteraction.guardMfaVerificationStatus();
+    if (experienceInteraction.interactionEvent === InteractionEvent.SignIn) {
+      await experienceInteraction.guardMfaVerificationStatus();
+    }
 
     return next();
   };
@@ -184,6 +184,23 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
     }
   );
 
+  // Mark optional additional MFA binding suggestion as skipped in current interaction
+  router.post(
+    `${experienceRoutes.mfa}/mfa-suggestion-skipped`,
+    koaGuard({ status: [204, 400, 403, 404, 422] }),
+    verifiedInteractionGuard(),
+    async (ctx, next) => {
+      const { experienceInteraction } = ctx;
+
+      experienceInteraction.mfa.skipAdditionalBindingSuggestion();
+      await experienceInteraction.save();
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
   router.post(
     `${experienceRoutes.mfa}`,
     koaGuard({
@@ -220,10 +237,6 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
           break;
         }
         case MfaFactor.EmailVerificationCode: {
-          if (!EnvSet.values.isDevFeaturesEnabled) {
-            throw new Error('Not implemented yet');
-          }
-
           await experienceInteraction.profile.setProfileByVerificationId(
             SignInIdentifier.Email,
             verificationId,
@@ -247,10 +260,6 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
           break;
         }
         case MfaFactor.PhoneVerificationCode: {
-          if (!EnvSet.values.isDevFeaturesEnabled) {
-            throw new Error('Not implemented yet');
-          }
-
           await experienceInteraction.profile.setProfileByVerificationId(
             SignInIdentifier.Phone,
             verificationId,

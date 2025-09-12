@@ -11,7 +11,7 @@ import useSWR, { useSWRConfig } from 'swr';
 import { GtagConversionId, reportConversion } from '@/components/Conversion/utils';
 import LearnMore from '@/components/LearnMore';
 import { pricingLink, defaultPageSize, integrateLogto } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { LinkButton } from '@/ds-components/Button';
@@ -123,12 +123,11 @@ function CreateForm({
       return latestProPlanId;
     }
 
-    // TODO: remove this dev feature guard after the new app add-on feature is available for all plans.
-    if (isDevFeaturesEnabled && applicationType === ApplicationType.SAML) {
+    if (applicationType === ApplicationType.SAML) {
       return latestProPlanId;
     }
 
-    if (isDevFeaturesEnabled && isThirdPartyApp) {
+    if (isThirdPartyApp) {
       return latestProPlanId;
     }
   }, [applicationType, isPaidTenant, isThirdPartyApp]);
@@ -142,12 +141,11 @@ function CreateForm({
       return hasMachineToMachineAppsReachedLimit;
     }
 
-    // TODO: remove this dev feature guard after the new app add-on feature is available for all plans.
-    if (isDevFeaturesEnabled && applicationType === ApplicationType.SAML) {
+    if (applicationType === ApplicationType.SAML) {
       return hasSamlAppsReachedLimit;
     }
 
-    if (isDevFeaturesEnabled && isThirdPartyApp) {
+    if (isThirdPartyApp) {
       return hasThirdPartyAppsReachedLimit;
     }
 

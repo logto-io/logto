@@ -11,13 +11,6 @@ const connectors = {
   demo_tip: '演示连接器仅用于演示且最多只能发送 100 条消息，不建议在生产环境中部署。',
   social_demo_tip: '演示连接器仅用于演示目的，不建议在生产环境中部署。',
   connector_type: '类型',
-  connector_status: '登录体验',
-  connector_status_in_use: '使用中',
-  connector_status_not_in_use: '未使用',
-  not_in_use_tip: {
-    content: '未使用意味着你的登录体验并没有使用这个登录方式。<a>{{link}}</a>去添加。',
-    go_to_sie: '前往登录体验',
-  },
   placeholder_title: '社交连接器',
   placeholder_description:
     'Logto 提供了许多广泛使用的社交登录连接器，同时你还可以使用标准协议创建自己的连接器。',

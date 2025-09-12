@@ -3,3 +3,9 @@
 .inputField {
   margin: _.unit(4) 0;
 }
+
+.uriList {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(3);
+}

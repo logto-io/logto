@@ -23,9 +23,6 @@ import {
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
-
-const { describe, it } = devFeatureTest;
 
 const mfaTestCases = [
   {

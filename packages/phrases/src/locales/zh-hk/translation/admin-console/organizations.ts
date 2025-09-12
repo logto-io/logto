@@ -8,6 +8,7 @@ const organizations = {
   organization_id: '組織 ID',
   members: '成員',
   machine_to_machine: '機器對機器應用程式',
+  branding: '品牌',
   create_organization: '建立組織',
   setup_organization: '設定您的組織',
   organization_list_placeholder_title: '組織',

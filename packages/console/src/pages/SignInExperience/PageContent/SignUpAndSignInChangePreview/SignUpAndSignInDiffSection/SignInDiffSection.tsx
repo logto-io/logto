@@ -45,6 +45,10 @@ function SignInDiffSection({ before, after, isAfter = false }: Props) {
     .slice()
     .sort() as SignInIdentifier[];
 
+  if (displayedIdentifiers.length === 0) {
+    return null;
+  }
+
   return (
     <div>
       <div className={styles.title}>{t('sign_in_exp.save_alert.sign_in')}</div>

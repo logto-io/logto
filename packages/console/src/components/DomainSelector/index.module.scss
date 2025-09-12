@@ -1,0 +1,14 @@
+@use '@/scss/underscore' as _;
+
+.domainSelector {
+  display: flex;
+  align-items: center;
+}
+
+.selector {
+  width: 300px;
+}
+
+.toggleTipButton {
+  margin-inline-start: _.unit(1);
+}

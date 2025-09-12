@@ -105,6 +105,8 @@ const sign_in_exp = {
     sign_up: 'Rejestracja',
     sign_in: 'Logowanie',
     social: 'Społecznościowy',
+    forgot_password_migration_notice:
+      'Zaktualizowaliśmy weryfikację zapomnianego hasła, aby wspierać niestandardowe metody. Wcześniej było to automatycznie określane przez Twoje łączniki Email i SMS. Kliknij <strong>Potwierdź</strong>, aby zakończyć aktualizację.',
   },
   preview: {
     title: 'Podgląd logowania',

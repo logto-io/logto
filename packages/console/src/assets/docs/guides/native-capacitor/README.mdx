@@ -1,6 +1,7 @@
 import UriInputField from '@/mdx-components/UriInputField';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
+import CustomDomainEndpointNotice from '@/mdx-components/CustomDomainEndpointNotice';
 import NpmLikeInstallation from '@/mdx-components/NpmLikeInstallation';
 
 import capaticorIos from './assets/capacitor-ios.webp';
@@ -37,6 +38,10 @@ const logtoClient = new LogtoClient({
   appId: '${props.app.id}',
 });`}
 </Code>
+
+<br/>
+
+<CustomDomainEndpointNotice />
 
 </Step>
 

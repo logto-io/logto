@@ -53,6 +53,12 @@ const domain = {
     'Puede personalizar el nombre de dominio de esta URI para que coincida con el punto final de su aplicación. Elija "{{custom}}" o "{{default}}".',
   custom_acs_url_note:
     'Puede personalizar el nombre de dominio de esta URI para que coincida con la URL del servicio de consumidor de afirmaciones de su proveedor de identidad. Elija "{{custom}}" o "{{default}}".',
+  switch_custom_domain_tip:
+    'Cambie su dominio para ver el endpoint correspondiente. Agregue más dominios mediante <a>dominios personalizados</a>.',
+  switch_saml_app_domain_tip:
+    'Cambie su dominio para ver las URL correspondientes. En los protocolos SAML, las URL de metadatos pueden alojarse en cualquier dominio accesible. Sin embargo, el dominio seleccionado determina la URL del servicio SSO que los SP utilizan para redirigir a los usuarios finales para la autenticación, lo que afecta la experiencia de inicio de sesión y la visibilidad de la URL.',
+  switch_saml_connector_domain_tip:
+    'Cambie de dominio para ver las URL correspondientes. El dominio seleccionado determina su URL ACS y, por tanto, adónde se redirige a los usuarios tras el inicio de sesión SSO. Elija el dominio que coincida con el comportamiento de redirección esperado de su aplicación.',
 };
 
 export default Object.freeze(domain);

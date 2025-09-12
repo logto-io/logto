@@ -12,8 +12,6 @@ import koaRoleRlsErrorHandler from '#src/middleware/koa-role-rls-error-handler.j
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
-import { EnvSet } from '../env-set/index.js';
-
 import roleApplicationRoutes from './role.application.js';
 import roleUserRoutes from './role.user.js';
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
@@ -181,12 +179,9 @@ export default function roleRoutes<T extends ManagementApiRouter>(
         );
       }
 
-      // TODO: remove this dev feature guard when new pro plan and add-on skus are ready.
-      if (EnvSet.values.isDevFeaturesEnabled) {
-        void quota.reportSubscriptionUpdatesUsage(
-          role.type === RoleType.MachineToMachine ? 'machineToMachineRolesLimit' : 'userRolesLimit'
-        );
-      }
+      void quota.reportSubscriptionUpdatesUsage(
+        role.type === RoleType.MachineToMachine ? 'machineToMachineRolesLimit' : 'userRolesLimit'
+      );
 
       ctx.body = role;
 
@@ -273,11 +268,9 @@ export default function roleRoutes<T extends ManagementApiRouter>(
 
       await deleteRoleById(id);
 
-      if (EnvSet.values.isDevFeaturesEnabled) {
-        void quota.reportSubscriptionUpdatesUsage(
-          role.type === RoleType.MachineToMachine ? 'machineToMachineRolesLimit' : 'userRolesLimit'
-        );
-      }
+      void quota.reportSubscriptionUpdatesUsage(
+        role.type === RoleType.MachineToMachine ? 'machineToMachineRolesLimit' : 'userRolesLimit'
+      );
 
       ctx.status = 204;
 

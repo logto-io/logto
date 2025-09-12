@@ -462,8 +462,10 @@ export default class ExperienceInteraction {
       return;
     }
 
-    // Verified
-    await this.guardMfaVerificationStatus();
+    // Verified, only SignIn requires MFA verification, for register, it does not make sense to verify MFA
+    if (this.#interactionEvent === InteractionEvent.SignIn) {
+      await this.guardMfaVerificationStatus();
+    }
 
     // Revalidate the new profile data if any
     await this.profile.validateAvailability();

@@ -46,6 +46,15 @@ export const defaultMetadata: ConnectorMetadata = {
       placeholder: '<from-messaging-service-sid>',
     },
     {
+      key: 'disableRiskCheck',
+      label: 'Disable risk check',
+      type: ConnectorConfigFormItemType.Switch,
+      required: false,
+      defaultValue: false,
+      description:
+        'Whether to disable Twilio built-in risk check. Enabled by default. More details: https://www.twilio.com/docs/messaging/api/message-resource',
+    },
+    {
       key: 'templates',
       label: 'Templates',
       type: ConnectorConfigFormItemType.Json,
@@ -67,9 +76,34 @@ export const defaultMetadata: ConnectorMetadata = {
             'Your Logto password change verification code is {{code}}. The code will remain active for 10 minutes.',
         },
         {
+          usageType: 'OrganizationInvitation',
+          content:
+            'Your Logto organization invitation code is {{code}}. The code will remain active for 10 minutes.',
+        },
+        {
           usageType: 'Generic',
           content:
             'Your Logto verification code is {{code}}. The code will remain active for 10 minutes.',
+        },
+        {
+          usageType: 'UserPermissionValidation',
+          content:
+            'Your Logto permission validation code is {{code}}. The code will remain active for 10 minutes.',
+        },
+        {
+          usageType: 'BindNewIdentifier',
+          content:
+            'Your Logto new identifier binding code is {{code}}. The code will remain active for 10 minutes.',
+        },
+        {
+          usageType: 'MfaVerification',
+          content:
+            'Your Logto MFA verification code is {{code}}. The code will remain active for 10 minutes.',
+        },
+        {
+          usageType: 'BindMfa',
+          content:
+            'Your Logto 2-step verification setup code is {{code}}. The code will remain active for 10 minutes.',
         },
       ],
     },

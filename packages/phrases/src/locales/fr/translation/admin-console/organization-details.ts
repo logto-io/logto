@@ -39,6 +39,11 @@ const organization_details = {
     "Les données personnalisées sont un objet JSON qui peut être utilisé pour stocker des données supplémentaires associées à l'organisation.",
   invalid_json_object: 'Objet JSON non valide.',
   branding: {
+    name: 'Image de marque',
+    description: "Personnalisez votre expérience de connexion au niveau de l'organisation.",
+    organization_level_sie: "Expérience de connexion au niveau de l'organisation",
+    organization_level_sie_switch:
+      "Activez l'expérience de connexion au niveau de l'organisation et définissez une image de marque spécifique. Si elle est désactivée, retour d'abord à l'expérience de connexion au niveau de l'application puis à l'expérience omni.",
     logo: "Logos de l'organisation",
     logo_tooltip:
       "Vous pouvez passer l'ID de l'organisation pour afficher ce logo dans l'expérience de connexion ; la version sombre du logo est nécessaire si le mode sombre est activé dans les paramètres de l'expérience de connexion omni. <a>Apprenez-en plus</a>",

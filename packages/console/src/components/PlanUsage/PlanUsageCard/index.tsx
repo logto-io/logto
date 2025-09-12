@@ -142,6 +142,9 @@ function PlanUsageCard({
                   ...conditional(
                     typeof basicQuota === 'number' && {
                       basicQuota: formatQuotaNumber(basicQuota),
+                      // For i18n singular/plural support use only.
+                      // - tenant_members
+                      count: basicQuota,
                     }
                   ),
                   ...conditional(usageAddOnSku && formatAddOnQuota(usageAddOnSku.quota)),

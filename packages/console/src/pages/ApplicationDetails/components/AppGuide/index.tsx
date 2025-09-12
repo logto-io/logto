@@ -5,7 +5,6 @@ import { useContext, useMemo } from 'react';
 import { guides } from '@/assets/docs/guides';
 import Guide, { GuideContext, type GuideContextType } from '@/components/Guide';
 import { AppDataContext } from '@/contexts/AppDataProvider';
-import useCustomDomain from '@/hooks/use-custom-domain';
 
 import { type ApplicationSecretRow } from '../../ApplicationDetailsContent/EndpointsAndCredentials';
 
@@ -20,7 +19,6 @@ type Props = {
 
 function AppGuide({ className, guideId, app, secrets, isCompact, onClose }: Props) {
   const { tenantEndpoint } = useContext(AppDataContext);
-  const { applyDomain: applyCustomDomain } = useCustomDomain();
   const guide = guides.find(({ id }) => id === guideId);
 
   const memorizedContext = useMemo(
@@ -31,13 +29,13 @@ function AppGuide({ className, guideId, app, secrets, isCompact, onClose }: Prop
           Logo: guide.Logo,
           app,
           secrets,
-          endpoint: applyCustomDomain(tenantEndpoint?.href ?? ''),
+          endpoint: tenantEndpoint?.href ?? '',
           redirectUris: app.oidcClientMetadata.redirectUris,
           postLogoutRedirectUris: app.oidcClientMetadata.postLogoutRedirectUris,
           isCompact: Boolean(isCompact),
         }
       ) satisfies GuideContextType | undefined,
-    [guide, app, secrets, applyCustomDomain, tenantEndpoint?.href, isCompact]
+    [guide, app, secrets, tenantEndpoint?.href, isCompact]
   );
 
   return memorizedContext ? (

@@ -1,3 +1,5 @@
+import CustomDomainEndpointNotice from '@/mdx-components/CustomDomainEndpointNotice';
+
 Open `Startup.cs` (or `Program.cs`) and add the following code to register Logto authentication middleware:
 
 <Code title="Program.cs" className="language-csharp">
@@ -14,6 +16,10 @@ builder.Services.AddLogtoAuthentication(options =>
 
 app.UseAuthentication();`}
 </Code>
+
+<br/>
+
+<CustomDomainEndpointNotice />
 
 The `AddLogtoAuthentication` method will do the following things:
 

@@ -31,7 +31,7 @@ const sign_up_and_sign_in = {
     auth_swap_tip:
       'Zamień poniższe opcje, aby określić, która pojawia się jako pierwsza w procesie.',
     require_auth_factor: 'Musisz wybrać co najmniej jeden czynnik uwierzytelniający.',
-    forgot_password_verification_method: 'Metoda weryfikacji zapomnianego hasła',
+    forgot_password: 'Zapomniane hasło',
     forgot_password_description:
       'Użytkownicy mogą zresetować swoje hasło, używając dowolnej dostępnej metody weryfikacji.',
     add_verification_method: 'Dodaj metodę weryfikacji',

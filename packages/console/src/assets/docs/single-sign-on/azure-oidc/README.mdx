@@ -6,6 +6,7 @@ import configApplication from './assets/config_application.webp';
 import applicationDetails from './assets/application_details.webp';
 import createSecret from './assets/create_secret.webp';
 import endpoints from './assets/endpoints.webp';
+import permissions from './assets/add_api_permissions.webp';
 
 <Step index={0} title="Create an Microsoft EntraID OIDC application">
 
@@ -69,9 +70,53 @@ Click `Save` to finish the configuration process
 
 </Step>
 
-<Step index={2} title="Set email domains and enable the SSO connector">
+<Step index={2} title="Additional scopes (Optional)">
 
-Provide the email `domains` of your organization on the connector `experience` tab. This will enabled the SSO connector as an authentication method for those users.
+Scopes define the permissions your app requests from users and control which data your app can access from their Microsoft Entra ID accounts. Requesting Microsoft Graph permissions requires configuration on both sides:
+
+**In Microsoft Entra admin center:**
+
+1. Navigate to **Microsoft Entra ID > App registrations** and select your application.
+2. Go to **API permissions > Add a permission > Microsoft Graph > Delegated permissions**.
+3. Select only the permissions your app requires:
+   - OpenID permissions:
+     - `openid` (Required) - Sign users in
+     - `profile` (Required) - View users' basic profile
+     - `email` (Required) - View users' email address
+     - `offline_access` (Optional) - Required only if you enable **Store tokens for persistent API access** in the Logto connector and need to obtain refresh tokens for long-lived access to Microsoft Graph APIs.
+   - API access (Optional): Add any additional permissions needed for your app. Common Microsoft Graph permissions include `Mail.Read`, `Calendars.Read`, `Files.Read`, etc. Browse the [Microsoft Graph permissions reference](https://docs.microsoft.com/en-us/graph/permissions-reference) to find available permissions.
+4. Click **Add permissions** to confirm the selection.
+5. If your app requires admin consent for certain permissions, click **Grant admin consent for [Your Organization]**.
+
+<center>
+  <img src={permissions} alt="Add Microsoft API permissions" />
+</center>
+
+**In Logto Microsoft Entra ID connector:**
+
+1. Logto automatically includes `openid`, `profile`, and `email` scopes to retrieve basic user identity information. You can leave the `Scopes` field blank if you only need basic user information.
+2. Add `offline_access` to the `Scopes` field if you plan to store tokens for persistent API access. This scope enables refresh tokens for long-lived API access.
+3. Add additional scopes (separated by spaces) in the `Scopes` field to request more data from Microsoft Graph. Use standard scope names, for example: `User.Read Mail.Read Calendars.Read`
+
+**Tip**: If your app requests these scopes to access the Microsoft Graph API and perform actions, make sure to enable **Store tokens for persistent API access** in Logto Microsoft Entra ID connector. See the next section for details.
+
+</Step>
+
+
+<Step index={3} title="Store tokens to access Microsoft APIs (Optional)">
+
+If you want to access [Microsoft Graph APIs](https://docs.microsoft.com/en-us/graph/api/overview) and perform actions with user authorization, Logto needs to get specific API scopes and store tokens.
+
+1. Add the required scopes in your Microsoft Entra admin center API permissions configuration and Logto Microsoft Entra ID connector.
+2. Enable **Store tokens for persistent API access** in Logto Microsoft Entra ID connector. Logto will securely store Microsoft access and refresh tokens in the Secret Vault.
+3. To ensure refresh tokens are returned, add the `offline_access` scope to your Microsoft Entra ID application permissions and include it in your Logto Microsoft Entra ID connector scopes. This scope allows your application to maintain access to resources for extended periods.
+
+</Step>
+
+
+<Step index={4} title="Set email domains and enable the SSO connector">
+
+Provide the email `domains` of your organization on the connector `experience` tab. This will enable the SSO connector as an authentication method for those users.
 
 Users with email addresses in the specified domains will be exclusively limited to use your SSO connector as their only authentication method.
 

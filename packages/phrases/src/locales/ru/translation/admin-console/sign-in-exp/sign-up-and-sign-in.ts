@@ -31,7 +31,7 @@ const sign_up_and_sign_in = {
     verification_code_auth: 'Код подтверждения',
     auth_swap_tip: 'Переставьте варианты ниже, чтобы определить, какой появится первым в потоке.',
     require_auth_factor: 'Вы должны выбрать хотя бы один фактор аутентификации.',
-    forgot_password_verification_method: 'Метод проверки при забытом пароле',
+    forgot_password: 'Забыли пароль',
     forgot_password_description:
       'Пользователи могут сбросить пароль, используя любой доступный метод подтверждения.',
     add_verification_method: 'Добавить метод подтверждения',

@@ -36,6 +36,8 @@ const session = {
     invalid_backup_code: 'رمز النسخ الاحتياطي غير صالح.',
     mfa_policy_not_user_controlled: 'سياسة MFA ليست تحت سيطرة المستخدم.',
     mfa_factor_not_enabled: 'عامل MFA غير ممكّن.',
+    suggest_additional_mfa:
+      'للمزيد من الحماية، يُنصح بإضافة طريقة MFA أخرى. يمكنك تخطي هذه الخطوة والمتابعة.',
   },
   sso_enabled:
     'تم تمكين تسجيل الدخول الموحد لهذا البريد الإلكتروني المحدد. يرجى تسجيل الدخول باستخدام SSO.',

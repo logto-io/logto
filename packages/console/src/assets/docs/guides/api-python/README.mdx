@@ -1,4 +1,5 @@
 import InlineNotification from '@/ds-components/InlineNotification';
+import CustomDomainEndpointNotice from '@/mdx-components/CustomDomainEndpointNotice';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
 import { appendPath } from '@silverhand/essentials';
@@ -96,6 +97,10 @@ def requires_auth(f):
     return f(*args, **kwargs)
   return decorated`}
 </Code>
+
+<br/>
+
+<CustomDomainEndpointNotice variant="replace" />
 
 <br/>
 

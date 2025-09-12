@@ -135,9 +135,11 @@ function OrganizationDetails() {
               <TabNavItem href={`${pathname}/${id}/${OrganizationDetailsTabs.Members}`}>
                 {t('organizations.members')}
               </TabNavItem>
-
               <TabNavItem href={`${pathname}/${id}/${OrganizationDetailsTabs.MachineToMachine}`}>
                 {t('organizations.machine_to_machine')}
+              </TabNavItem>
+              <TabNavItem href={`${pathname}/${id}/${OrganizationDetailsTabs.Branding}`}>
+                {t('organizations.branding')}
               </TabNavItem>
             </TabNav>
             <Outlet

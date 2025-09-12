@@ -20,6 +20,8 @@ export const logtoThirdPartyAppPermissionsLink =
 export const logtoThirdPartyAppBrandingLink = '/docs/recipes/logto-as-idp/branding-customization/';
 export const appSpecificBrandingLink =
   '/docs/recipes/customize-sie/match-your-brand/#app-specific-branding';
+export const organizationBrandingLink =
+  '/customization/match-your-brand#organization-specific-branding';
 export const organizationLogosForExperienceLink =
   '/docs/recipes/customize-sie/match-your-brand/#organization-specific-logos';
 export const signingKeysLink = '/docs/references/openid-connect/signing-keys-rotation/';
@@ -69,9 +71,9 @@ export const auditLogs = '/developers/audit-logs';
 export const logtoCloud = '/logto-cloud';
 export const logtoCloudTenantSettings = '/logto-cloud/tenant-settings';
 export const customDomain = '/logto-cloud/custom-domain#use-custom-domain';
+export const customDomainFeatureLink = '/logto-cloud/custom-domain';
 export const retrieveTokenStorage = '/secret-vault/federated-token-set#token-retrieval';
 
-export const addOnPricingExplanationLink =
-  'https://blog.logto.io/pricing-add-on-a-simple-explanation/';
+export const addOnPricingExplanationLink = 'https://docs.logto.io/logto-cloud/billing-and-pricing';
 
 export const dateFnsDocumentationLink = 'https://date-fns.org/v2.30.0/docs/format';

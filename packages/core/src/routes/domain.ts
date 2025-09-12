@@ -6,6 +6,8 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { EnvSet } from '../env-set/index.js';
+
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
 export default function domainRoutes<T extends ManagementApiRouter>(
@@ -75,14 +77,16 @@ export default function domainRoutes<T extends ManagementApiRouter>(
       status: [201, 422, 400],
     }),
     async (ctx, next) => {
-      const existingDomains = await findAllDomains();
-      assertThat(
-        existingDomains.length === 0,
-        new RequestError({
-          code: 'domain.limit_to_one_domain',
-          status: 422,
-        })
-      );
+      if (!EnvSet.values.isMultipleCustomDomainsEnabled) {
+        const existingDomains = await findAllDomains();
+        assertThat(
+          existingDomains.length === 0,
+          new RequestError({
+            code: 'domain.limit_to_one_domain',
+            status: 422,
+          })
+        );
+      }
 
       // Throw 400 error if domain is invalid
       const syncedDomain = await addDomain(ctx.guard.body.domain);

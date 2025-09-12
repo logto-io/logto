@@ -5,7 +5,9 @@ import useSWR from 'swr';
 import type { RequestError } from './use-api';
 
 const useEnabledConnectorTypes = () => {
-  const { data: connectors } = useSWR<ConnectorResponse[], RequestError>('api/connectors');
+  const { data: connectors, isLoading } = useSWR<ConnectorResponse[], RequestError>(
+    'api/connectors'
+  );
 
   const enabledConnectorTypes = useMemo(
     () => connectors?.map(({ type }) => type) ?? [],
@@ -19,6 +21,7 @@ const useEnabledConnectorTypes = () => {
 
   return {
     isConnectorTypeEnabled,
+    ready: !isLoading,
   };
 };
 

@@ -27,7 +27,7 @@ const sign_up_and_sign_in = {
     verification_code_auth: '驗證碼',
     auth_swap_tip: '交換以下選項的位置即可設定它們在用戶登錄流程中出現的先後。',
     require_auth_factor: '請至少選擇一種認證方式。',
-    forgot_password_verification_method: '忘記密碼驗證方式',
+    forgot_password: '忘記密碼',
     forgot_password_description: '用戶可以使用任何可用的驗證方式重置他們的密碼。',
     add_verification_method: '添加驗證方式',
     email_verification_code: '郵件驗證碼',

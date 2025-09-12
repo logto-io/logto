@@ -55,6 +55,7 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
   readonly userId;
   private verified;
   private registrationChallenge?: string;
+  private registrationRpId?: string;
   private authenticationChallenge?: string;
   #registrationInfo?: BindWebAuthn;
 
@@ -69,6 +70,7 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
       verified,
       registrationChallenge,
       authenticationChallenge,
+      registrationRpId,
       registrationInfo,
     } = webAuthnVerificationRecordDataGuard.parse(data);
 
@@ -76,6 +78,7 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
     this.userId = userId;
     this.verified = verified;
     this.registrationChallenge = registrationChallenge;
+    this.registrationRpId = registrationRpId;
     this.authenticationChallenge = authenticationChallenge;
     this.#registrationInfo = registrationInfo;
   }
@@ -89,7 +92,7 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
   }
 
   get isNewBindMfaVerification() {
-    return Boolean(this.#registrationInfo ?? this.registrationChallenge);
+    return Boolean(this.#registrationInfo ?? this.registrationChallenge ?? this.registrationRpId);
   }
 
   /**
@@ -110,6 +113,7 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
     });
 
     this.registrationChallenge = registrationOptions.challenge;
+    this.registrationRpId = rpId;
 
     return registrationOptions;
   }
@@ -135,7 +139,10 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
     } = ctx;
     const { webauthnRelatedOrigins } = await this.queries.accountCenters.findDefaultAccountCenter();
 
-    assertThat(this.registrationChallenge, 'session.mfa.pending_info_not_found');
+    assertThat(
+      this.registrationChallenge && this.registrationRpId,
+      'session.mfa.pending_info_not_found'
+    );
 
     const { verified, registrationInfo } = await verifyWebAuthnRegistration(
       payload,
@@ -152,6 +159,7 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
 
     this.#registrationInfo = {
       type: MfaFactor.WebAuthn,
+      rpId: this.registrationRpId,
       credentialId: credentialID,
       publicKey: isoBase64URL.fromBuffer(credentialPublicKey),
       counter,
@@ -199,7 +207,7 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
     ctx: WithLogContext,
     payload: Omit<WebAuthnVerificationPayload, 'type'>
   ) {
-    const { hostname, origin } = ctx.URL;
+    const { hostname: expectedRpId, origin } = ctx.URL;
     const { mfaVerifications } = await this.findUser();
 
     assertThat(this.authenticationChallenge, 'session.mfa.pending_info_not_found');
@@ -207,7 +215,7 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
     const { result, newCounter } = await verifyWebAuthnAuthentication({
       payload,
       challenge: this.authenticationChallenge,
-      rpId: hostname,
+      rpId: expectedRpId,
       origin,
       mfaVerifications,
     });
@@ -226,6 +234,8 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
 
         return {
           ...mfa,
+          // Save missing `rpId` for existing passkey
+          rpId: mfa.rpId ?? expectedRpId,
           lastUsedAt: new Date().toISOString(),
           ...conditional(newCounter !== undefined && { counter: newCounter }),
         };
@@ -251,6 +261,7 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
       type,
       registrationChallenge,
       authenticationChallenge,
+      registrationRpId,
       registrationInfo,
     } = this;
 
@@ -261,6 +272,7 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
       verified,
       registrationChallenge,
       authenticationChallenge,
+      registrationRpId,
       registrationInfo,
     };
   }

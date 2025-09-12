@@ -237,10 +237,6 @@ export const getAllUserEnabledMfaVerifications = (
     })
     .map(({ type }) => type);
 
-  if (!EnvSet.values.isDevFeaturesEnabled) {
-    return storedVerifications;
-  }
-
   const email = currentProfile?.primaryEmail ?? user.primaryEmail;
   const phone = currentProfile?.primaryPhone ?? user.primaryPhone;
 
@@ -255,7 +251,16 @@ export const getAllUserEnabledMfaVerifications = (
       : []),
   ];
 
-  return [...storedVerifications, ...implicitVerifications];
+  return [...storedVerifications, ...implicitVerifications].slice().sort((factorA, factorB) => {
+    // Backup code always comes last
+    if (factorA === MfaFactor.BackupCode) {
+      return 1;
+    }
+    if (factorB === MfaFactor.BackupCode) {
+      return -1;
+    }
+    return 0;
+  });
 };
 
 /**

@@ -39,6 +39,11 @@ const organization_details = {
     "I dati personalizzati sono un oggetto JSON che può essere utilizzato per archiviare dati aggiuntivi associati all'organizzazione.",
   invalid_json_object: 'Oggetto JSON non valido.',
   branding: {
+    name: 'Marchio',
+    description: "Personalizza l'esperienza di accesso a livello di organizzazione.",
+    organization_level_sie: 'Esperienza di accesso a livello di organizzazione',
+    organization_level_sie_switch:
+      "Abilita l'esperienza di accesso a livello di organizzazione e configura il branding specifico. Se disabilitato, esegue il fallback prima all'accesso a livello di applicazione e poi all'esperienza di accesso omni.",
     logo: "Loghi dell'organizzazione",
     logo_tooltip:
       "Puoi passare l'ID dell'organizzazione per visualizzare questo logo nell'esperienza di accesso; è necessaria la versione scura del logo se la modalità scura è abilitata nelle impostazioni dell'esperienza di accesso omni. <a>Scopri di più</a>",

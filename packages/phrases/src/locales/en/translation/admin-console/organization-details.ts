@@ -39,6 +39,11 @@ const organization_details = {
     'Custom data is a JSON object that can be used to store additional data associated with the organization.',
   invalid_json_object: 'Invalid JSON object.',
   branding: {
+    name: 'branding',
+    description: 'Customize your organization-level sign-in experience.',
+    organization_level_sie: 'Organization-level sign-in experience',
+    organization_level_sie_switch:
+      'Enable the organization-level sign-in experience and set up organization-specific branding. If disabled, it will first fall back to application-level sign-in, then to the omni sign-in experience.',
     logo: 'Organization logos',
     logo_tooltip:
       'You can pass the organization ID to display this logo in the sign-in experience; the dark version of the logo is needed if dark mode is enabled in the omni sign-in experience settings. <a>Learn more</a>',

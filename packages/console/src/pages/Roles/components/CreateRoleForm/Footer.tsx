@@ -7,7 +7,6 @@ import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import SkuName from '@/components/SkuName';
 import { addOnPricingExplanationLink } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { rbacEnabledAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
@@ -65,17 +64,11 @@ function Footer({ roleType, scopes, isCreating, onClickCreate }: Props) {
     );
   }
 
-  if (
-    // TODO: remove dev feature guard with roles add-on is ready
-    isDevFeaturesEnabled &&
-    hasRoleReachedLimit &&
-    isPaidTenant &&
-    !rbacUpsellNoticeAcknowledged
-  ) {
+  if (hasRoleReachedLimit && isPaidTenant && !rbacUpsellNoticeAcknowledged) {
     return (
       <AddOnNoticeFooter
         isLoading={isCreating}
-        buttonTitle="applications.create"
+        buttonTitle="roles.create_role_button"
         onClick={() => {
           void update({ rbacUpsellNoticeAcknowledged: true });
           onClickCreate();

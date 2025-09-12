@@ -14,14 +14,6 @@ const connectors = {
   social_demo_tip:
     'O conector de demonstração é projetado exclusivamente para fins de demonstração e não é recomendado para implantação em um ambiente de produção.',
   connector_type: 'Tipo',
-  connector_status: 'Experiência de login',
-  connector_status_in_use: 'Em uso',
-  connector_status_not_in_use: 'Fora de uso',
-  not_in_use_tip: {
-    content:
-      'Fora de uso significa que sua experiência de login não usou esse método de login. <a>{{link}}</a> para adicionar este método de login. ',
-    go_to_sie: 'Vá para a experiência de login',
-  },
   placeholder_title: 'Conector social',
   placeholder_description:
     'Logto tem fornecido muitos conectores de login social amplamente utilizados enquanto você pode criar o seu próprio com padrões padrão.',

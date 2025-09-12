@@ -18,7 +18,9 @@ const mfa = {
   verify_phone_verification_code_description: 'Telefonunuza gönderilen kodu girin',
   add_mfa_factors: '2 aşamalı doğrulamayı ekle',
   add_mfa_description:
-    'İki faktörlü doğrulama etkin. Güvenli giriş için ikinci doğrulama yönteminizi seçin.',
+    'İki faktörlü doğrulama etkinleştirildi. Güvenli oturum açmak için ikinci doğrulama yönteminizi seçin.',
+  add_another_mfa_factor: 'Başka bir 2 adımlı doğrulama ekle',
+  add_another_mfa_description: 'Oturum açarken kimliğinizi doğrulamak için başka bir yol seçin.',
   verify_mfa_factors: '2 aşamalı doğrulama',
   verify_mfa_description:
     'Bu hesap için 2 aşamalı doğrulama etkinleştirildi. Lütfen kimliğinizi doğrulamak için ikinci yolu seçin.',

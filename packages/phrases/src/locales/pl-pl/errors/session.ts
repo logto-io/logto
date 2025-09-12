@@ -44,6 +44,8 @@ const session = {
     invalid_backup_code: 'Nieprawidłowy kod zapasowy.',
     mfa_policy_not_user_controlled: 'Polityka MFA nie jest kontrolowana przez użytkownika.',
     mfa_factor_not_enabled: 'Czynnik MFA nie jest włączony.',
+    suggest_additional_mfa:
+      'Dla lepszej ochrony rozważ dodanie kolejnej metody MFA. Możesz pominąć ten krok i kontynuować.',
   },
   sso_enabled: 'Single sign on jest włączony dla tego adresu e-mail. Zaloguj się za pomocą SSO.',
   captcha_required: 'Wymagana jest captcha.',

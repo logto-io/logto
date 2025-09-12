@@ -31,7 +31,7 @@ const sign_up_and_sign_in = {
     auth_swap_tip:
       'Tauschen Sie die untenstehenden Optionen aus, um zu bestimmen, welche zuerst im Vorgang angezeigt wird.',
     require_auth_factor: 'Sie müssen mindestens einen Authentifizierungsfaktor auswählen.',
-    forgot_password_verification_method: 'Passwort-vergessen Verifizierungsmethode',
+    forgot_password: 'Passwort vergessen',
     forgot_password_description:
       'Benutzer können ihr Passwort mit jeder verfügbaren Verifizierungsmethode zurücksetzen.',
     add_verification_method: 'Verifizierungsmethode hinzufügen',

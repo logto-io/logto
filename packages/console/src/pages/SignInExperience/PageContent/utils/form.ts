@@ -2,8 +2,6 @@ import type { SignUp, ForgotPasswordMethod } from '@logto/schemas';
 import { diff } from 'deep-object-diff';
 import type { DeepRequired, FieldErrorsImpl } from 'react-hook-form';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
-
 import type {
   SignInExperienceForm,
   SignInExperiencePageManagedData,
@@ -34,9 +32,7 @@ const hasSocialTargetsChanged = (before: string[], after: string[]) =>
 const hasForgotPasswordMethodsChanged = (
   before: readonly ForgotPasswordMethod[] | undefined,
   after: readonly ForgotPasswordMethod[] | undefined
-) =>
-  isDevFeaturesEnabled &&
-  Object.keys(diff((before ?? []).slice().sort(), (after ?? []).slice().sort())).length > 0;
+) => Object.keys(diff((before ?? []).slice().sort(), (after ?? []).slice().sort())).length > 0;
 
 export const hasSignUpAndSignInConfigChanged = (
   before: SignInExperiencePageManagedData,

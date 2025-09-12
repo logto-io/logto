@@ -1,5 +1,61 @@
 # Change Log
 
+## 1.31.0
+
+### Minor Changes
+
+- 316840062e: Add PBKDF2 support for legacy password verification
+
+  Added support for PBKDF2 (Password-Based Key Derivation Function 2) algorithm in legacy password verification. This enhancement allows the system to properly verify passwords that were hashed using PBKDF2 methods, improving compatibility with existing password systems during migration.
+
+  Example usage for user migration with PBKDF2-hashed passwords:
+
+  ```json
+  {
+    "username": "john_doe",
+    "primaryEmail": "john.doe@example.com",
+    "passwordAlgorithm": "Legacy",
+    "passwordDigest": "[\"pbkdf2\", [\"mySalt123\", \"1000\", \"20\", \"sha512\", \"@\"], \"c465f66c6ac481a7a17e9ed5b4e2e7e7288d892f12bf1c95c140901e9a70436e\"]"
+  }
+  ```
+
+  Where the arguments are:
+
+  - `salt`: user-defined salt value
+  - `iterations`: number of iterations (e.g., 1000)
+  - `keylen`: key length (e.g., 20)
+  - `digest`: hash algorithm (e.g., 'sha512')
+  - `@`: placeholder for the input password
+
+- bb385eb15d: add a new feature for collecting user profile on new user registration
+
+  You can now collect user profile information on the last step of your registration flow.
+
+  ### Getting started
+
+  1. In Console: `Sign-in Experience > Collect user profile`. Add your profile fields:
+
+     - Use built-in basics (Name, Gender, Birthdate, Address, …); or
+     - Create custom fields (choose type, label, validation rules, required, etc.).
+
+  2. Drag & drop to reorder fields in the list; the order reflects in the form.
+  3. Test by signing up a new user in the demo app; a "Tell us about yourself" step will appear with your fields.
+  4. Registration completes only after all required fields are filled.
+
+  Check out our [docs](https://docs.logto.io/end-user-flows/collect-user-profile) for more details.
+
+### Patch Changes
+
+- Updated dependencies [8ae82d585e]
+- Updated dependencies [bb385eb15d]
+  - @logto/phrases-experience@1.11.0
+  - @logto/phrases@1.20.0
+  - @logto/experience@1.15.0
+  - @logto/console@1.28.0
+  - @logto/schemas@1.31.0
+  - @logto/demo-app@1.5.0
+  - @logto/cli@1.31.0
+
 ## 1.30.1
 
 ### Patch Changes

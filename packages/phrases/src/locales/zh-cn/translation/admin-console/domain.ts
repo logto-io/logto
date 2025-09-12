@@ -47,6 +47,11 @@ const domain = {
     '你可以根据需要自定义此 URI 的域名，以匹配你的应用程序端点。选择 "{{custom}}" 或 "{{default}}"。',
   custom_acs_url_note:
     '您可以根据需要自定义此 URI 的域名，以匹配您的身份提供方断言使用者服务 URL。选择 "{{custom}}" 或 "{{default}}"。',
+  switch_custom_domain_tip: '切换域名以查看对应的端点。通过 <a>自定义域名</a> 添加更多域名。',
+  switch_saml_app_domain_tip:
+    '切换域名以查看对应的 URL。对于 SAML 协议，元数据 URL 可以托管在任意可访问的域名上。但所选域名决定 SP 用于重定向终端用户进行认证的 SSO 服务 URL，这会影响登录体验与 URL 的可见性。',
+  switch_saml_connector_domain_tip:
+    '切换域名以查看对应的 URL。所选域名决定你的 ACS URL，这会影响用户在 SSO 登录后被重定向的位置。请选择与应用期望重定向行为一致的域名。',
 };
 
 export default Object.freeze(domain);

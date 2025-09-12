@@ -3,6 +3,7 @@ import NpmLikeInstallation from '@/mdx-components/NpmLikeInstallation';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
+import CustomDomainEndpointNotice from '@/mdx-components/CustomDomainEndpointNotice';
 import Checkpoint from '../../fragments/_checkpoint.md';
 import RedirectUrisWeb from '../../fragments/_redirect-uris-web.mdx';
 import { generateStandardSecret } from '@logto/shared/universal';
@@ -52,6 +53,10 @@ NUXT_LOGTO_APP_SECRET=${props.secrets[0]?.value ?? props.app.secret}
 NUXT_LOGTO_COOKIE_ENCRYPTION_KEY=${cookieEncryptionKey} # Random-generated
 `}
 </Code>
+
+<br/>
+
+<CustomDomainEndpointNotice />
 
 See [runtime config](https://nuxt.com/docs/guide/going-further/runtime-config) for more information.
 

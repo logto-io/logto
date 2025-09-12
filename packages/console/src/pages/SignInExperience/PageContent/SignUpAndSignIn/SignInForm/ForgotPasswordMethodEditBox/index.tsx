@@ -23,7 +23,7 @@ function ForgotPasswordMethodEditBox() {
   const { isConnectorTypeEnabled } = useEnabledConnectorTypes();
 
   return (
-    <FormField title="sign_in_exp.sign_up_and_sign_in.sign_in.forgot_password_verification_method">
+    <FormField title="sign_in_exp.sign_up_and_sign_in.sign_in.forgot_password">
       <FormFieldDescription>
         {t('sign_in_exp.sign_up_and_sign_in.sign_in.forgot_password_description')}
       </FormFieldDescription>

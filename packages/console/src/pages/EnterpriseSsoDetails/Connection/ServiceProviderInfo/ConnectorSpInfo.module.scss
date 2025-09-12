@@ -1,0 +1,7 @@
+@use '@/scss/underscore' as _;
+
+.uriContent {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(3);
+}

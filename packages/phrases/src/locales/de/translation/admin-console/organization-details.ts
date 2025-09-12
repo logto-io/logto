@@ -40,6 +40,11 @@ const organization_details = {
     'Benutzerdefinierte Daten sind ein JSON-Objekt, das verwendet werden kann, um zusätzliche Daten zu speichern, die mit der Organisation verbunden sind.',
   invalid_json_object: 'Ungültiges JSON-Objekt.',
   branding: {
+    name: 'Branding',
+    description: 'Passen Sie Ihr organisationsweites Anmeldeerlebnis an.',
+    organization_level_sie: 'Organisationsweites Anmeldeerlebnis',
+    organization_level_sie_switch:
+      'Aktivieren Sie das organisationsweite Anmeldeerlebnis und richten Sie organisationsspezifisches Branding ein. Wenn deaktiviert, fällt es zuerst auf das App-Anmeldeerlebnis und dann auf das Omni-Anmeldeerlebnis zurück.',
     logo: 'Organisationslogos',
     logo_tooltip:
       'Sie können die Organisations-ID übergeben, um dieses Logo im Anmeldeerlebnis anzuzeigen; die dunkle Version des Logos wird benötigt, wenn der Dunkelmodus in den Omni-Anmeldeerlebniseinstellungen aktiviert ist. <a>Mehr erfahren</a>',

@@ -7,6 +7,12 @@
   gap: _.unit(4);
   border-radius: 12px;
   border-color: var(--color-line-divider);
+
+  &.disabled {
+    cursor: not-allowed;
+    border: none;
+    background: var(--color-bg-body-base);
+  }
 }
 
 .icon {
@@ -23,6 +29,7 @@
 
   .name {
     font: var(--font-label-1);
+    color: var(--color-type-primary);
   }
 
   .description {

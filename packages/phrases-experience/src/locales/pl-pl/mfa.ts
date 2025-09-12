@@ -19,6 +19,9 @@ const mfa = {
   add_mfa_factors: 'Dodaj weryfikację dwuetapową',
   add_mfa_description:
     'Weryfikacja dwuetapowa jest włączona. Wybierz swój drugi sposób weryfikacji dla bezpiecznego logowania.',
+  add_another_mfa_factor: 'Dodaj kolejną weryfikację dwuetapową',
+  add_another_mfa_description:
+    'Wybierz inny sposób weryfikacji swojej tożsamości podczas logowania.',
   verify_mfa_factors: 'Weryfikacja dwuetapowa',
   verify_mfa_description:
     'Włączono weryfikację dwuetapową dla tego konta. Proszę wybrać drugi sposób weryfikacji swojej tożsamości.',

@@ -102,6 +102,8 @@ const sign_in_exp = {
     sign_up: '注册',
     sign_in: '登录',
     social: '社交',
+    forgot_password_migration_notice:
+      '我们已升级忘记密码验证以支持自定义方法。以前，这是由您的电子邮件和短信连接器自动确定的。点击<strong>确认</strong>以完成升级。',
   },
   preview: {
     title: '登录预览',

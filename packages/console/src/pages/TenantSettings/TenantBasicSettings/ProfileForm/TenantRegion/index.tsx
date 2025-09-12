@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import Region, { getRegionDisplayName } from '@/components/Region';
+import { getRegionDisplayName, StaticRegion } from '@/components/Region';
 import { trustAndSecurityLink } from '@/consts';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import TextLink from '@/ds-components/TextLink';
@@ -19,7 +19,7 @@ function TenantRegion() {
 
   return (
     <div className={styles.container}>
-      <Region className={styles.region} regionName={regionName} />
+      <StaticRegion className={styles.region} regionName={regionName} />
       <div className={styles.regionTip}>
         <Trans
           components={{

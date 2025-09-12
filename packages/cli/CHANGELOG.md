@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.31.0
+
+### Patch Changes
+
+- Updated dependencies [bb385eb15d]
+  - @logto/schemas@1.31.0
+
 ## 1.30.1
 
 ### Patch Changes

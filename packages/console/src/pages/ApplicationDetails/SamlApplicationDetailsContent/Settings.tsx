@@ -15,8 +15,10 @@ import useSWR, { type KeyedMutator } from 'swr';
 import CirclePlus from '@/assets/icons/circle-plus.svg?react';
 import Plus from '@/assets/icons/plus.svg?react';
 import DetailsForm from '@/components/DetailsForm';
+import DomainSelector from '@/components/DomainSelector';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import { isCloud } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import Button from '@/ds-components/Button';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
@@ -27,8 +29,9 @@ import Table from '@/ds-components/Table';
 import TextInput from '@/ds-components/TextInput';
 import Textarea from '@/ds-components/Textarea';
 import useApi, { type RequestError } from '@/hooks/use-api';
-import useCustomDomain from '@/hooks/use-custom-domain';
+import useDomainSelection from '@/hooks/use-domain-selection';
 import { trySubmitSafe } from '@/utils/form';
+import { applyDomain } from '@/utils/url';
 import { uriValidator } from '@/utils/validator';
 
 import CreateSecretModal from './CreateSecretModal';
@@ -84,7 +87,7 @@ const nameIdFormatToOptionDescriptionMap = Object.freeze({
 function Settings({ data, mutateApplication, isDeleted }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { tenantEndpoint } = useContext(AppDataContext);
-  const { applyDomain: applyCustomDomain } = useCustomDomain();
+  const [selectedDomain, setSelectedDomain] = useDomainSelection();
   const [showCreateSecretModal, setShowCreateSecretModal] = useState(false);
 
   const secrets = useSWR<SamlApplicationSecretResponse[], RequestError>(
@@ -231,18 +234,26 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
           title="application_details.saml_idp_config.title"
           description="application_details.saml_idp_config.description"
         >
+          {isCloud && (
+            <DomainSelector
+              tip={t('domain.switch_saml_app_domain_tip')}
+              value={selectedDomain}
+              onChange={setSelectedDomain}
+            />
+          )}
           {tenantEndpoint && (
             <>
               <FormField title="application_details.saml_idp_config.metadata_url_label">
                 <CopyToClipboard
                   displayType="block"
-                  value={applyCustomDomain(
+                  value={applyDomain(
                     appendPath(
                       tenantEndpoint,
                       samlApplicationManagementApiPrefix,
                       data.id,
                       samlApplicationMetadataEndpointSuffix
-                    ).href
+                    ).href,
+                    selectedDomain
                   )}
                   variant="border"
                 />
@@ -250,14 +261,15 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
               <FormField title="application_details.saml_idp_config.single_sign_on_service_url_label">
                 <CopyToClipboard
                   displayType="block"
-                  value={applyCustomDomain(
+                  value={applyDomain(
                     appendPath(
                       tenantEndpoint,
                       '/api',
                       samlApplicationEndpointPrefix,
                       data.id,
                       samlApplicationSingleSignOnEndpointSuffix
-                    ).href
+                    ).href,
+                    selectedDomain
                   )}
                   variant="border"
                 />
@@ -265,8 +277,9 @@ function Settings({ data, mutateApplication, isDeleted }: Props) {
               <FormField title="application_details.saml_idp_config.idp_entity_id_label">
                 <CopyToClipboard
                   displayType="block"
-                  value={applyCustomDomain(
-                    appendPath(tenantEndpoint, samlApplicationEndpointPrefix, data.id).href
+                  value={applyDomain(
+                    appendPath(tenantEndpoint, samlApplicationEndpointPrefix, data.id).href,
+                    selectedDomain
                   )}
                   variant="border"
                 />

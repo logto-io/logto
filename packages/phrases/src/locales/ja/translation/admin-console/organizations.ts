@@ -8,6 +8,7 @@ const organizations = {
   organization_id: '組織 ID',
   members: 'メンバー',
   machine_to_machine: 'マシン間アプリ',
+  branding: 'ブランディング',
   create_organization: '組織を作成',
   setup_organization: '組織を設定',
   organization_list_placeholder_title: '組織',

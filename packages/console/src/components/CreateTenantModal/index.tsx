@@ -1,5 +1,5 @@
 import { Theme, TenantTag } from '@logto/schemas';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -10,13 +10,14 @@ import CreateTenantHeaderIcon from '@/assets/icons/create-tenant-header.svg?reac
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantResponse } from '@/cloud/types/router';
 import Region, { defaultRegionName } from '@/components/Region';
-import { availableRegions } from '@/consts';
 import Button from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
+import { Ring } from '@/ds-components/Spinner';
 import TextInput from '@/ds-components/TextInput';
+import useAvailableRegions from '@/hooks/use-available-regions';
 import useTheme from '@/hooks/use-theme';
 import modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
@@ -31,11 +32,11 @@ type Props = {
   readonly onClose: (tenant?: TenantResponse) => void;
 };
 
-const availableTags = [TenantTag.Development, TenantTag.Production];
-
 function CreateTenantModal({ isOpen, onClose }: Props) {
   const [tenantData, setTenantData] = useState<CreateTenantData>();
   const theme = useTheme();
+  const cloudApi = useCloudApi();
+  const { regions, regionsError, getRegionById } = useAvailableRegions();
 
   const defaultValues = Object.freeze({
     tag: TenantTag.Development,
@@ -51,10 +52,11 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
     handleSubmit,
     formState: { errors, isSubmitting },
     register,
+    watch,
   } = methods;
 
-  const cloudApi = useCloudApi();
-
+  const regionName = watch('regionName');
+  const currentRegion = useMemo(() => getRegionById(regionName), [getRegionById, regionName]);
   const createTenant = async ({ name, tag, regionName }: CreateTenantData) => {
     const newTenant = await cloudApi.post('/api/tenants', { body: { name, tag, regionName } });
     onClose(newTenant);
@@ -118,54 +120,61 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
               disabled={isSubmitting}
             />
           </FormField>
+
           <FormField
             title="tenants.settings.tenant_region"
             tip={t('tenants.settings.tenant_region_description')}
           >
-            <Controller
-              control={control}
-              name="regionName"
-              rules={{ required: true }}
-              render={({ field: { onChange, value, name } }) => (
-                <RadioGroup type="small" name={name} value={value} onChange={onChange}>
-                  {availableRegions.map((region) => (
-                    <Radio
-                      key={region}
-                      title={
-                        <DangerousRaw>
-                          <Region regionName={region} />
-                        </DangerousRaw>
-                      }
-                      value={region}
-                      isDisabled={isSubmitting}
-                    />
-                  ))}
-                </RadioGroup>
-              )}
-            />
+            {!regions && !regionsError && <Ring />}
+            {regionsError && <span className={styles.error}>{regionsError.message}</span>}
+            {regions && !regionsError && (
+              <Controller
+                control={control}
+                name="regionName"
+                rules={{ required: true }}
+                render={({ field: { onChange, value, name } }) => (
+                  <RadioGroup type="plain" name={name} value={value} onChange={onChange}>
+                    {regions.map((region) => (
+                      <Radio
+                        key={region.id}
+                        title={
+                          <DangerousRaw>
+                            <Region region={region} />
+                          </DangerousRaw>
+                        }
+                        value={region.id}
+                        isDisabled={isSubmitting}
+                      />
+                    ))}
+                  </RadioGroup>
+                )}
+              />
+            )}
           </FormField>
-          <FormField title="tenants.create_modal.tenant_usage_purpose">
-            <Controller
-              control={control}
-              name="tag"
-              rules={{ required: true }}
-              render={({ field: { onChange, value, name } }) => (
-                <RadioGroup
-                  type="card"
-                  className={styles.envTagRadioGroup}
-                  value={value}
-                  name={name}
-                  onChange={onChange}
-                >
-                  {availableTags.map((tag) => (
-                    <Radio key={tag} value={tag}>
-                      <EnvTagOptionContent tag={tag} />
-                    </Radio>
-                  ))}
-                </RadioGroup>
-              )}
-            />
-          </FormField>
+          {currentRegion && (
+            <FormField title="tenants.create_modal.tenant_usage_purpose">
+              <Controller
+                control={control}
+                name="tag"
+                rules={{ required: true }}
+                render={({ field: { onChange, value, name } }) => (
+                  <RadioGroup
+                    type="card"
+                    className={styles.envTagRadioGroup}
+                    value={value}
+                    name={name}
+                    onChange={onChange}
+                  >
+                    {currentRegion.tags.map((tag) => (
+                      <Radio key={tag} value={tag}>
+                        <EnvTagOptionContent tag={tag} />
+                      </Radio>
+                    ))}
+                  </RadioGroup>
+                )}
+              />
+            </FormField>
+          )}
         </FormProvider>
         <SelectTenantPlanModal
           tenantData={tenantData}

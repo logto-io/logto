@@ -3,6 +3,7 @@ import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
 import NpmLikeInstallation from '@/mdx-components/NpmLikeInstallation';
+import CustomDomainEndpointNotice from '@/mdx-components/CustomDomainEndpointNotice';
 
 import Checkpoint from '../../fragments/_checkpoint.md';
 import RedirectUrisWeb from '../../fragments/_redirect-uris-web.mdx';
@@ -44,6 +45,10 @@ const app = createApp(App);
 app.use(createLogto, config);
 app.mount("#app");`}
 </Code>
+
+<br/>
+
+<CustomDomainEndpointNotice />
 
 </Step>
 
