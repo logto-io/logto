@@ -8,6 +8,10 @@
   <script>
     /* See {@link packages/schemas/src/types/ssr.ts} */
     window.logtoSsr = "__LOGTO_SSR__";
+    
+    /* Minimal theme detection to prevent flash - using actual theme colors */
+    document.documentElement.style.backgroundColor = 
+      window.matchMedia('(prefers-color-scheme: dark)').matches ? '#000' : '#eff1f1';
   </script>
 </head>
 

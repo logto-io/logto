@@ -24,12 +24,21 @@ type Props = {
   >;
 };
 
+const getInitialTheme = (preset?: Theme): Theme => {
+  if (preset) {
+    return preset;
+  }
+
+  const darkThemeWatchMedia = window.matchMedia('(prefers-color-scheme: dark)');
+  return darkThemeWatchMedia.matches ? Theme.Dark : Theme.Light;
+};
+
 const PageContextProvider = ({ children, preset }: Props) => {
   const [searchParameters] = useSearchParams();
 
   const [loading, setLoading] = useState(preset?.loading ?? false);
   const [toast, setToast] = useState(preset?.toast ?? '');
-  const [theme, setTheme] = useState<Theme>(preset?.theme ?? Theme.Light);
+  const [theme, setTheme] = useState<Theme>(getInitialTheme(preset?.theme));
 
   const [platform, setPlatform] = useState<Platform>(
     preset?.platform ?? (isMobile ? 'mobile' : 'web')
