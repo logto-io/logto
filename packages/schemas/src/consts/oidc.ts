@@ -47,6 +47,13 @@ export enum ExtraParamsKey {
    */
   LoginHint = 'login_hint',
   /**
+   * The end-users preferred languages to use for the client application, represented as a space-separated list of BCP47 language tags.
+   * E.g. `en` or `en-US` or `en-US en`.
+   *
+   * @see {@link https://openid.net/specs/openid-connect-core-1_0.html#rfc.section.13.2.1}
+   */
+  UiLocales = 'ui_locales',
+  /**
    * Specifies the identifier used in the identifier sign-in or identifier register page.
    *
    * This parameter is applicable only when first_screen is set to either `FirstScreen.IdentifierSignIn` or `FirstScreen.IdentifierRegister`.
@@ -92,6 +99,7 @@ export const extraParamsObjectGuard = z
     [ExtraParamsKey.DirectSignIn]: z.string(),
     [ExtraParamsKey.OrganizationId]: z.string(),
     [ExtraParamsKey.LoginHint]: z.string(),
+    [ExtraParamsKey.UiLocales]: z.string(),
     [ExtraParamsKey.Identifier]: z.string(),
     [ExtraParamsKey.OneTimeToken]: z.string(),
     [ExtraParamsKey.GoogleOneTapCredential]: z.string(),
@@ -104,6 +112,7 @@ export type ExtraParamsObject = Partial<{
   [ExtraParamsKey.DirectSignIn]: string;
   [ExtraParamsKey.OrganizationId]: string;
   [ExtraParamsKey.LoginHint]: string;
+  [ExtraParamsKey.UiLocales]: string;
   [ExtraParamsKey.Identifier]: string;
   [ExtraParamsKey.OneTimeToken]: string;
   [ExtraParamsKey.GoogleOneTapCredential]: string;
