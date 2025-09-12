@@ -13,6 +13,8 @@ const domain = {
       'ブランディングを向上させるために、カスタムドメインを利用してください。このドメインは、サインインエクスペリエンスで使用されます。',
     custom_domain_field: 'カスタムドメイン',
     custom_domain_placeholder: 'your.domain.com',
+    add_custom_domain_field: 'カスタムドメインを追加',
+    custom_domains_field: 'カスタムドメイン',
     add_domain: 'ドメインを追加',
     invalid_domain_format:
       '有効なドメインURLを指定してください。最低3つの部分を含め、例："your.domain.com."',
@@ -39,6 +41,8 @@ const domain = {
         '以前にソーシャルコネクタプロバイダまたはアプリ終了ポイントでこのカスタムドメインを使用して設定した場合、それらのURIをLogtoデフォルトドメイン「<span>{{domain}}</span>」に変更する必要があります。これは、ソーシャルサインインボタンを機能させるために必要です。',
       deleted: 'カスタムドメインを正常に削除しました！',
     },
+    config_custom_domain_description:
+      'アプリケーション、ソーシャルコネクタ、エンタープライズコネクタ（OIDC）を設定するために、カスタムドメインを構成します。',
   },
   default: {
     default_domain: 'デフォルトドメイン',

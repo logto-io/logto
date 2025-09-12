@@ -14,6 +14,8 @@ const domain = {
       'Ulepsz swoją markę, wykorzystując niestandardową domenę. Ta domena będzie używana w Twoim procesie logowania.',
     custom_domain_field: 'Niestandardowa domena',
     custom_domain_placeholder: 'twoja.domena.com',
+    add_custom_domain_field: 'Dodaj domenę niestandardową',
+    custom_domains_field: 'Domeny niestandardowe',
     add_domain: 'Dodaj domenę',
     invalid_domain_format:
       'Proszę podać poprawny adres URL domeny z co najmniej trzema częściami, np. "twoja.domena.com."',
@@ -40,6 +42,8 @@ const domain = {
         'Jeśli wcześniej skonfigurowałeś tę niestandardową domenę w dostawcy łączników społecznościowych lub zakończeniu aplikacji, musisz najpierw zmodyfikować adres URI na domyślną domenę Logto "<span>{{domain}}</span>". Jest to niezbędne do poprawnego działania przycisku logowania społecznego.',
       deleted: 'Niestandardowa domena została pomyślnie usunięta!',
     },
+    config_custom_domain_description:
+      'Skonfiguruj domeny niestandardowe, aby włączyć następujące funkcje: aplikacje, konektory społecznościowe i konektory korporacyjne (OIDC).',
   },
   default: {
     default_domain: 'Domyślna domena',

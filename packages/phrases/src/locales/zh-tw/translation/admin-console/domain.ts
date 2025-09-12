@@ -12,6 +12,8 @@ const domain = {
     custom_domain_description: '提高品牌形象，使用自訂網域。此網域將用於您的登錄體驗。',
     custom_domain_field: '自訂網域',
     custom_domain_placeholder: 'your.domain.com',
+    add_custom_domain_field: '新增自訂網域',
+    custom_domains_field: '自訂網域',
     add_domain: '新增網域',
     invalid_domain_format: '請提供一個有效的域名網址，至少包含三個部分，例如 "your.domain.com."',
     verify_domain: '驗證網域',
@@ -35,6 +37,8 @@ const domain = {
         '如果您以前在社交聯繫運營商或應用端點中設置了此自定義網域，則需要先將 URI 更改為 Logto 默認網域"<span>{{domain}}</span>"。 這是社交登錄按鈕正常工作所必需的。',
       deleted: '成功刪除自定義網域！',
     },
+    config_custom_domain_description:
+      '設定自訂網域以配置以下功能：應用程式、社交連接器與企業連接器（OIDC）。',
   },
   default: {
     default_domain: '預設網域',

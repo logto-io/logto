@@ -27,6 +27,7 @@ function AddDomainForm({ className, isReadonly, onSubmitCustomDomain }: Props) {
     watch,
     formState: { errors, isSubmitting },
     handleSubmit,
+    reset,
   } = useForm<FormData>({
     defaultValues: {
       domain: '',
@@ -38,6 +39,7 @@ function AddDomainForm({ className, isReadonly, onSubmitCustomDomain }: Props) {
   const onSubmit = handleSubmit(
     trySubmitSafe(async (formData) => {
       await onSubmitCustomDomain(formData);
+      reset();
     })
   );
 

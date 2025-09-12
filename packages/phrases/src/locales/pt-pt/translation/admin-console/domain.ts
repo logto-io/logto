@@ -14,6 +14,8 @@ const domain = {
       'Melhore a sua marca utilizando um domínio personalizado. Este domínio será utilizado na sua experiência de início de sessão.',
     custom_domain_field: 'Domínio personalizado',
     custom_domain_placeholder: 'seu.dominio.com',
+    add_custom_domain_field: 'Adicionar um domínio personalizado',
+    custom_domains_field: 'Domínios personalizados',
     add_domain: 'Adicionar domínio',
     invalid_domain_format:
       'Por favor, forneça um URL de domínio válido com um mínimo de três partes, por exemplo, "seu.dominio.com."',
@@ -40,6 +42,8 @@ const domain = {
         'Se já configurou este domínio personalizado no seu fornecedor de conector social ou extremidade de aplicação antes, terá de modificar a URI para o domínio padrão do Logto "<span>{{domain}}</span>" primeiro. Isto é necessário para que o botão de início de sessão social funcione corretamente.',
       deleted: 'Domínio personalizado eliminado com sucesso!',
     },
+    config_custom_domain_description:
+      'Configure domínios personalizados para configurar os seguintes recursos: aplicações, conectores sociais e conectores empresariais (OIDC).',
   },
   default: {
     default_domain: 'Domínio predefinido',

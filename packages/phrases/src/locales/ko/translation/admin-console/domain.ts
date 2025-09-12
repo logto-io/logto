@@ -13,6 +13,8 @@ const domain = {
       '브랜딩을 개선하고 사용자 지정 도메인을 활용하세요. 이 도메인은 로그인 경험에서 사용됩니다.',
     custom_domain_field: '사용자 지정 도메인',
     custom_domain_placeholder: 'your.domain.com',
+    add_custom_domain_field: '사용자 지정 도메인 추가',
+    custom_domains_field: '사용자 지정 도메인',
     add_domain: '도메인 추가',
     invalid_domain_format:
       '유효한 도메인 URL을 제공해야합니다. 최소 세 부분으로 구성되어야 하며 예를 들어 "your.domain.com."이어야 합니다.',
@@ -39,6 +41,8 @@ const domain = {
         '이전에 소셜 커넥터 공급자나 애플리케이션 엔드포인트에 이 사용자 지정 도메인을 설정한 경우 로그인 버튼이 작동하도록 먼저 Logto 기본 도메인의 "<span>{{domain}}</span>" URI를 수정해야합니다.',
       deleted: '사용자 지정 도메인을 성공적으로 삭제했습니다!',
     },
+    config_custom_domain_description:
+      '다음 기능을 설정하려면 사용자 지정 도메인을 구성하세요: 애플리케이션, 소셜 커넥터, 엔터프라이즈 커넥터(OIDC).',
   },
   default: {
     default_domain: '기본 도메인',

@@ -12,6 +12,8 @@ const domain = {
     custom_domain_description: '提高品牌形象，使用自定義域名。此域名將用於您的登錄體驗。',
     custom_domain_field: '自定義域名',
     custom_domain_placeholder: 'your.domain.com',
+    add_custom_domain_field: '新增自定義域名',
+    custom_domains_field: '自定義域名',
     add_domain: '添加域名',
     invalid_domain_format: '請提供有效的域名 URL，至少有三部分，例如 "your.domain.com."',
     verify_domain: '驗證域名',
@@ -35,6 +37,8 @@ const domain = {
         '如果在之前的社交記錄或應用程式終端點中配置了此自定義域名，您需要先使用 Logto 默認域名"<span>{{domain}}</span>" 修改 URI，使社交組件可以正常使用。',
       deleted: '成功刪除自定義域名！',
     },
+    config_custom_domain_description:
+      '配置自定義域名以設定以下功能：應用程式、社交連接器與企業連接器（OIDC）。',
   },
   default: {
     default_domain: '默認域名',

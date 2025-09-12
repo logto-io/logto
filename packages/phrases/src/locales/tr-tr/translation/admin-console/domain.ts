@@ -14,6 +14,8 @@ const domain = {
       'Markalaşmanızı geliştirin ve özel bir alan adı kullanın. Bu alan adı oturum açma deneyiminizde kullanılacaktır.',
     custom_domain_field: 'Özel alan adı',
     custom_domain_placeholder: 'alan_adınız.com',
+    add_custom_domain_field: 'Özel bir alan adı ekle',
+    custom_domains_field: 'Özel alan adları',
     add_domain: 'Alan Adı Ekle',
     invalid_domain_format:
       'Lütfen geçerli bir alan adı URL\'si sağlayın, en az üç parçaya sahip olmalıdır, örneğin "alanınız.com."',
@@ -40,6 +42,8 @@ const domain = {
         'Bu özel alan adını önce sosyal bağlantı sağlayıcınızda veya uygulama uç noktasında yapılandırdıysanız, URI\'yi önce Logto varsayılan alan adı olan "<span>{{domain}}</span>" olarak değiştirmeniz gerekir. Bu, sosyal giriş düğmesinin düzgün çalışması için gereklidir.',
       deleted: 'Özel alan adı başarıyla silindi!',
     },
+    config_custom_domain_description:
+      'Aşağıdaki özellikleri ayarlamak için özel alan adları yapılandırın: uygulamalar, sosyal bağlayıcılar ve kurumsal bağlayıcılar (OIDC).',
   },
   default: {
     default_domain: 'Varsayılan Alan Adı',

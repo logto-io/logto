@@ -14,6 +14,8 @@ const domain = {
       'Improve your branding by utilizing a custom domain. This domain will be used in your sign-in experience.',
     custom_domain_field: 'Custom domain',
     custom_domain_placeholder: 'your.domain.com',
+    add_custom_domain_field: 'Add a custom domain',
+    custom_domains_field: 'Custom domains',
     add_domain: 'Add domain',
     invalid_domain_format:
       'Please provide a valid domain URL with a minimum of three parts, e.g. "your.domain.com."',
@@ -40,6 +42,8 @@ const domain = {
         'If you’ve set up this custom domain in your social connector provider or application endpoint before, you’ll need to modify the URI to the Logto default domain "<span>{{domain}}</span>" first. This is necessary for the social sign-in button to work properly.',
       deleted: 'Delete custom domain successfully!',
     },
+    config_custom_domain_description:
+      'Configure custom domains to set up the following features: applications, social connectors, and enterprise connectors (OIDC).',
   },
   default: {
     default_domain: 'Default domain',

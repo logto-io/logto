@@ -14,6 +14,8 @@ const domain = {
       'Verbessern Sie Ihre Markenbildung durch die Verwendung einer benutzerdefinierten Domain. Diese Domain wird in Ihrem Anmeldeerlebnis verwendet.',
     custom_domain_field: 'Benutzerdefinierte Domain',
     custom_domain_placeholder: 'ihre.domain.com',
+    add_custom_domain_field: 'Benutzerdefinierte Domain hinzufügen',
+    custom_domains_field: 'Benutzerdefinierte Domains',
     add_domain: 'Domain hinzufügen',
     invalid_domain_format:
       'Bitte geben Sie eine gültige Domain-URL mit mindestens drei Teilen an, z. B. "ihre.domain.com."',
@@ -40,6 +42,8 @@ const domain = {
         'Wenn Sie diese benutzerdefinierte Domain bereits in Ihrem Social-Connector-Provider oder Anwendungs-Endpunkt eingerichtet haben, müssen Sie die URI zur Logto-Standarddomain "<span>{{domain}}</span>" ändern. Dies ist notwendig, damit die Social-Sign-In-Schaltfläche ordnungsgemäß funktioniert.',
       deleted: 'Benutzerdefinierte Domain wurde erfolgreich gelöscht!',
     },
+    config_custom_domain_description:
+      'Konfigurieren Sie benutzerdefinierte Domains, um folgende Funktionen einzurichten: Anwendungen, Social‑Connectoren und Enterprise‑Connectoren (OIDC).',
   },
   default: {
     default_domain: 'Standarddomain',
