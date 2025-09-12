@@ -1,5 +1,19 @@
 # @logto/connector-twilio-sms
 
+## 1.4.0
+
+### Minor Changes
+
+- 1fb8593659: add full usage types to templates default value
+- 62922efac4: add configuration option risk check
+
+  You can now disable Twilio's built-in risk check by setting the "Disable risk check" option in the connector configuration.
+
+### Patch Changes
+
+- Updated dependencies [5da6792d40]
+  - @logto/connector-kit@4.6.0
+
 ## 1.3.1
 
 ### Patch Changes
