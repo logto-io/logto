@@ -1,5 +1,6 @@
 import { OrganizationUserRelations, UsersRoles, userProfileResponseGuard } from '@logto/schemas';
 import { type Nullable, tryThat } from '@silverhand/essentials';
+import { object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -46,12 +47,18 @@ export default function adminUserSearchRoutes<T extends ManagementApiRouter>(
     '/users',
     koaPagination(),
     koaGuard({
+      query: object({
+        isSuspended: string().optional(),
+      }),
       response: userProfileResponseGuard.array(),
       status: [200, 400],
     }),
     async (ctx, next) => {
       const { limit, offset } = ctx.pagination;
       const { searchParams } = ctx.request.URL;
+      const {
+        query: { isSuspended },
+      } = ctx.guard;
 
       return tryThat(
         async () => {
@@ -70,6 +77,7 @@ export default function adminUserSearchRoutes<T extends ManagementApiRouter>(
           const conditions: UserConditions = {
             search: parseSearchParamsForSearch(searchParams),
             relation: getQueryRelation(excludeRoleId, excludeOrganizationId),
+            filters: { isSuspended },
           };
 
           const [{ count }, users] = await Promise.all([
