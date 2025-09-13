@@ -35,7 +35,7 @@ export const getExperienceLanguage = ({
   lng,
 }: GetExperienceLanguage) => {
   const acceptableLanguages = conditionalArray<string | string[]>(
-    lng,
+    lng?.split(/\s+/).filter(Boolean),
     autoDetect && detectLanguage(ctx),
     fallbackLanguage
   );

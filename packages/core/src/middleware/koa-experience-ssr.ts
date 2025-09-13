@@ -49,6 +49,7 @@ export default function koaExperienceSsr<StateT, ContextT extends WithI18nContex
       ctx,
       languageInfo: signInExperience.languageInfo,
       customLanguages,
+      lng: typeof ctx.query.lng === 'string' ? ctx.query.lng : undefined,
     });
     const phrases = await libraries.phrases.getPhrases(language);
 

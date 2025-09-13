@@ -9,6 +9,7 @@ export type SsrData = {
   signInExperience: {
     appId?: string;
     organizationId?: string;
+    uiLocales?: string;
     data: FullSignInExperience;
   };
   phrases: {

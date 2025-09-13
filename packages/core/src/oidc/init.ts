@@ -218,6 +218,7 @@ export default function initOidc(
             removeUndefinedKeys({
               appId: typeof appId === 'string' ? appId : undefined,
               organizationId: params.organization_id,
+              ui_locales: params.ui_locales,
             }) satisfies LogtoUiCookie
           ),
           { sameSite: 'lax', overwrite: true, httpOnly: false }

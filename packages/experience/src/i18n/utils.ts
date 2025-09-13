@@ -7,17 +7,24 @@ import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
 import { getPhrases as getPhrasesApi } from '@/apis/settings';
+import { searchKeys } from '@/utils/search-parameters';
 
 const getPhrases = async (language?: string) => {
-  // Directly use the server-side phrases if it's already fetched
-  if (isObject(logtoSsr) && (!language || logtoSsr.phrases.lng === language)) {
+  const uiLocales = sessionStorage.getItem(searchKeys.uiLocales) ?? undefined;
+  const uiLocalesFirst = uiLocales?.trim().split(/\s+/)[0];
+  const preferredLanguage = language ?? uiLocales;
+
+  if (
+    isObject(logtoSsr) &&
+    (!preferredLanguage || logtoSsr.phrases.lng === (language ?? uiLocalesFirst))
+  ) {
     return { phrases: logtoSsr.phrases.data, lng: logtoSsr.phrases.lng };
   }
 
   const detectedLanguage = detectLanguage();
   const response = await getPhrasesApi({
     localLanguage: Array.isArray(detectedLanguage) ? detectedLanguage.join(' ') : detectedLanguage,
-    language,
+    language: preferredLanguage,
   });
 
   const remotePhrases = await response.json<LocalePhrase>();

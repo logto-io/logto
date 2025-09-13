@@ -1,6 +1,6 @@
 import { condString } from '@silverhand/essentials';
 
-export const searchKeysCamelCase = Object.freeze(['organizationId', 'appId'] as const);
+export const searchKeysCamelCase = Object.freeze(['organizationId', 'appId', 'uiLocales'] as const);
 
 type SearchKeysCamelCase = (typeof searchKeysCamelCase)[number];
 
@@ -9,8 +9,15 @@ export const searchKeys = Object.freeze({
    * The key for specifying the organization ID that may be used to override the default settings.
    */
   organizationId: 'organization_id',
-  /** The current application ID. */
+  /**
+   * The current application ID.
+   */
   appId: 'app_id',
+  /**
+   * The end-user's preferred languages, presented as a space-separated list of BCP47 language tags.
+   * E.g. `en` or `en-US` or `en-US en`.
+   */
+  uiLocales: 'ui_locales',
 } satisfies Record<SearchKeysCamelCase, string>);
 
 export const handleSearchParametersData = () => {
