@@ -7,8 +7,6 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { EnvSet } from '../env-set/index.js';
-
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
 export default function domainRoutes<T extends ManagementApiRouter>(
@@ -80,30 +78,20 @@ export default function domainRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const existingDomains = await findAllDomains();
 
-      if (EnvSet.values.isMultipleCustomDomainsEnabled) {
-        /**
-         * Current rule: When multiple custom domains are enabled on this instance,
-         * each tenant is limited to `maxCustomDomains` custom domains (default 10).
-         * Note: This is a temporary global cap; future pricing plans may introduce
-         * tiered limits and this logic will be revisited.
-         */
-        assertThat(
-          existingDomains.length < maxCustomDomains,
-          new RequestError({
-            code: 'domain.exceed_domain_limit',
-            status: 422,
-            limit: maxCustomDomains,
-          })
-        );
-      } else {
-        assertThat(
-          existingDomains.length === 0,
-          new RequestError({
-            code: 'domain.limit_to_one_domain',
-            status: 422,
-          })
-        );
-      }
+      /**
+       * Current rule: When multiple custom domains are enabled on this instance,
+       * each tenant is limited to `maxCustomDomains` custom domains (default 10).
+       * Note: This is a temporary global cap; future pricing plans may introduce
+       * tiered limits and this logic will be revisited.
+       */
+      assertThat(
+        existingDomains.length < maxCustomDomains,
+        new RequestError({
+          code: 'domain.exceed_domain_limit',
+          status: 422,
+          limit: maxCustomDomains,
+        })
+      );
 
       const { domain } = ctx.guard.body;
 

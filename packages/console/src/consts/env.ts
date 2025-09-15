@@ -18,8 +18,6 @@ export const consoleEmbeddedPricingUrl =
   normalizeEnv(import.meta.env.CONSOLE_EMBEDDED_PRICING_URL) ??
   'https://logto.io/console-embedded-pricing';
 
-export const isMultipleCustomDomainsEnabled = yes(
-  normalizeEnv(import.meta.env.MULTIPLE_CUSTOM_DOMAINS_ENABLED)
-);
+export const isMultipleCustomDomainsEnabled = true;
 
 export const inkeepApiKey = normalizeEnv(import.meta.env.INKEEP_API_KEY);
