@@ -4,7 +4,8 @@ import { useEffect, useContext } from 'react';
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 
 const darkThemeWatchMedia = window.matchMedia('(prefers-color-scheme: dark)');
-const getThemeBySystemConfiguration = (): Theme =>
+
+export const getThemeBySystemConfiguration = (): Theme =>
   darkThemeWatchMedia.matches ? Theme.Dark : Theme.Light;
 
 export default function useTheme() {
