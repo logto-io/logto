@@ -60,6 +60,9 @@
                 "properties": {
                   "identifier": {
                     "description": "The identifier (email address or phone number) to send the verification code to."
+                  },
+                  "templateType": {
+                    "description": "Optional override for the template type used to send the verification code. If the identifier is new, BindNewIdentifier will be used regardless."
                   }
                 }
               }

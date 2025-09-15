@@ -81,24 +81,35 @@ export default function verificationRoutes<T extends UserRouter>(
     koaGuard({
       body: z.object({
         identifier: verificationCodeIdentifierGuard,
+        // Optional: explicitly specify the template type to use (limited set)
+        templateType: z
+          .union([
+            z.literal(TemplateType.BindMfa),
+            z.literal(TemplateType.UserPermissionValidation),
+          ])
+          .optional(),
       }),
       response: z.object({ verificationRecordId: z.string(), expiresAt: z.string() }),
       status: [201, 501],
     }),
     async (ctx, next) => {
       const { id: userId, clientId: applicationId } = ctx.auth;
-      const { identifier } = ctx.guard.body;
+      const { identifier, templateType: inputTemplateType } = ctx.guard.body;
 
       const user = await queries.users.findUserById(userId);
       const isNewIdentifier =
         (identifier.type === SignInIdentifier.Email && identifier.value !== user.primaryEmail) ||
         (identifier.type === SignInIdentifier.Phone && identifier.value !== user.primaryPhone);
 
+      const templateType = isNewIdentifier
+        ? TemplateType.BindNewIdentifier
+        : (inputTemplateType ?? TemplateType.UserPermissionValidation);
+
       const codeVerification = createNewCodeVerificationRecord(
         libraries,
         queries,
         identifier,
-        isNewIdentifier ? TemplateType.BindNewIdentifier : TemplateType.UserPermissionValidation
+        templateType
       );
 
       // Build the user context information for the verification code email template.
