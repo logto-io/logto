@@ -9,6 +9,7 @@ const domain = {
   cloudflare_not_found: 'Hostname in Cloudflare nicht gefunden',
   domain_is_not_allowed: 'Diese Domain ist nicht zulässig.',
   domain_in_use: 'Die Domain {{domain}} wird bereits verwendet.',
+  exceed_domain_limit: 'Sie können höchstens {{limit}} benutzerdefinierte Domains haben.',
 };
 
 export default Object.freeze(domain);

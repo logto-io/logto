@@ -8,6 +8,7 @@ const domain = {
   cloudflare_not_found: 'لا يمكن العثور على اسم المضيف في Cloudflare',
   domain_is_not_allowed: 'هذا النطاق غير مسموح به.',
   domain_in_use: 'النطاق {{domain}} قيد الاستخدام بالفعل.',
+  exceed_domain_limit: 'يمكنك امتلاك ما يصل إلى {{limit}} نطاقات مخصصة كحد أقصى.',
 };
 
 export default Object.freeze(domain);

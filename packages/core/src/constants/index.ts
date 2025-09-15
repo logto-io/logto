@@ -19,3 +19,10 @@ export const spInitiatedSamlSsoSessionCookieName = '_logto_sp_saml_sso_session_i
 export const reservedBuiltInProfileKeySet = new Set<string>(reservedBuiltInProfileKeys);
 export const reservedCustomDataKeySet = new Set<string>(reservedCustomDataKeys);
 export const reservedSignInIdentifierKeySet = new Set<string>(reservedSignInIdentifierKeys);
+
+/**
+ * Maximum number of custom domains allowed per tenant when the multi-domain feature is enabled.
+ * This is a temporary global cap across all tenants.
+ * Note: Future pricing plans may introduce tiered limits and this value will be revisited.
+ */
+export const maxCustomDomains = 10;

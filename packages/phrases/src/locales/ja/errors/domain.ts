@@ -8,6 +8,7 @@ const domain = {
   cloudflare_not_found: 'Cloudflare からホスト名が見つかりませんでした。',
   domain_is_not_allowed: 'このドメインは許可されていません。',
   domain_in_use: 'ドメイン {{domain}} はすでに使用されています。',
+  exceed_domain_limit: 'カスタムドメインは最大 {{limit}} 個までです。',
 };
 
 export default Object.freeze(domain);

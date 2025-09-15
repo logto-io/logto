@@ -8,6 +8,7 @@ const domain = {
   cloudflare_not_found: 'Не удается найти имя хоста в Cloudflare',
   domain_is_not_allowed: 'Этот домен не разрешен.',
   domain_in_use: 'Домен {{domain}} уже используется.',
+  exceed_domain_limit: 'Можно иметь не более {{limit}} пользовательских доменов.',
 };
 
 export default Object.freeze(domain);

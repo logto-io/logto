@@ -8,6 +8,7 @@ const domain = {
   cloudflare_not_found: 'ไม่พบชื่อโฮสต์ใน Cloudflare',
   domain_is_not_allowed: 'ไม่อนุญาตให้ใช้โดเมนนี้',
   domain_in_use: 'โดเมน {{domain}} ถูกใช้งานแล้ว',
+  exceed_domain_limit: 'คุณสามารถมีโดเมนกำหนดเองได้สูงสุด {{limit}} โดเมน',
 };
 
 export default Object.freeze(domain);

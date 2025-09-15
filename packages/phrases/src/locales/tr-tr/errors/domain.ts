@@ -8,6 +8,7 @@ const domain = {
   cloudflare_not_found: "Cloudflare'da alan adı bulunamadı.",
   domain_is_not_allowed: 'Bu alan adı izin verilen değildir.',
   domain_in_use: 'Alan adı {{domain}} zaten kullanımda.',
+  exceed_domain_limit: 'En fazla {{limit}} özel alan adına sahip olabilirsiniz.',
 };
 
 export default Object.freeze(domain);

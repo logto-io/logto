@@ -8,6 +8,7 @@ const domain = {
   cloudflare_not_found: '在 Cloudflare 中找不到主机名',
   domain_is_not_allowed: '该域名不允许。',
   domain_in_use: '域名 {{domain}} 已被占用。',
+  exceed_domain_limit: '最多只允许 {{limit}} 个自定义域名。',
 };
 
 export default Object.freeze(domain);
