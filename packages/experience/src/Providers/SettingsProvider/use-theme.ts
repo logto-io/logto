@@ -20,6 +20,8 @@ export default function useTheme() {
       setTheme(getThemeBySystemConfiguration());
     };
 
+    changeTheme();
+
     darkThemeWatchMedia.addEventListener('change', changeTheme);
 
     return () => {
