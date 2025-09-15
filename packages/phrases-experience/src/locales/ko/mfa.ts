@@ -16,6 +16,8 @@ const mfa = {
   verify_backup_code_description: '저장한 백업 코드 붙여넣기',
   verify_email_verification_code_description: '이메일로 전송된 코드 입력',
   verify_phone_verification_code_description: '휴대폰으로 전송된 코드 입력',
+  send_to_email: '{{identifier}}로 전송',
+  send_to_phone: '{{identifier}}로 전송',
   add_mfa_factors: '2단계 인증 추가',
   add_mfa_description:
     '2단계 인증이 활성화되었습니다. 안전한 로그인을 위해 두 번째 인증 방법을 선택하세요.',

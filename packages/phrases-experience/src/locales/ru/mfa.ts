@@ -16,6 +16,8 @@ const mfa = {
   verify_backup_code_description: 'Вставьте резервный код, который вы сохранили',
   verify_email_verification_code_description: 'Введите код, отправленный на вашу электронную почту',
   verify_phone_verification_code_description: 'Введите код, отправленный на ваш телефон',
+  send_to_email: 'Отправить на {{identifier}}',
+  send_to_phone: 'Отправить на {{identifier}}',
   add_mfa_factors: 'Добавить двухфакторную аутентификацию',
   add_mfa_description:
     'Двухфакторная проверка включена. Выберите второй метод проверки для безопасного входа в систему.',

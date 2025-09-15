@@ -15,7 +15,9 @@ const mfa = {
   verify_webauthn_description: 'Verifica il tuo dispositivo o hardware USB',
   verify_backup_code_description: 'Incolla il codice di backup che hai salvato',
   verify_email_verification_code_description: 'Inserisci il codice inviato alla tua email',
-  verify_phone_verification_code_description: 'Inserisci il codice inviato al tuo telefono',
+  verify_phone_verification_code_description: 'Inserisci il codice inviato al tuo telefone',
+  send_to_email: 'Invia a {{identifier}}',
+  send_to_phone: 'Invia a {{identifier}}',
   add_mfa_factors: 'Aggiungi la verifica in due passaggi',
   add_mfa_description:
     'La verifica in due passaggi è abilitata. Seleziona il tuo secondo metodo di verifica per un accesso sicuro.',

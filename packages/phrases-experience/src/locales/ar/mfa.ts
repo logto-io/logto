@@ -16,6 +16,8 @@ const mfa = {
   verify_backup_code_description: 'الصق رمز النسخ الاحتياطي الذي حفظته',
   verify_email_verification_code_description: 'أدخل الرمز المرسل إلى بريدك الإلكتروني',
   verify_phone_verification_code_description: 'أدخل الرمز المرسل إلى هاتفك',
+  send_to_email: 'إرسال إلى {{identifier}}',
+  send_to_phone: 'إرسال إلى {{identifier}}',
   add_mfa_factors: 'إضافة التحقق من خطوتين',
   add_mfa_description: 'تم تمكين التحقق من خطوتين. حدد طريقة التحقق الثانية لتسجيل الدخول الآمن.',
   add_another_mfa_factor: 'إضافة تحقق آخر من خطوتين',
