@@ -2,6 +2,7 @@ import { Domains, domainResponseGuard, domainSelectFields } from '@logto/schemas
 import { pick, trySafe } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { maxCustomDomains } from '#src/constants/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -77,8 +78,24 @@ export default function domainRoutes<T extends ManagementApiRouter>(
       status: [201, 422, 400],
     }),
     async (ctx, next) => {
-      if (!EnvSet.values.isMultipleCustomDomainsEnabled) {
-        const existingDomains = await findAllDomains();
+      const existingDomains = await findAllDomains();
+
+      if (EnvSet.values.isMultipleCustomDomainsEnabled) {
+        /**
+         * Current rule: When multiple custom domains are enabled on this instance,
+         * each tenant is limited to `maxCustomDomains` custom domains (default 10).
+         * Note: This is a temporary global cap; future pricing plans may introduce
+         * tiered limits and this logic will be revisited.
+         */
+        assertThat(
+          existingDomains.length < maxCustomDomains,
+          new RequestError({
+            code: 'domain.exceed_domain_limit',
+            status: 422,
+            limit: maxCustomDomains,
+          })
+        );
+      } else {
         assertThat(
           existingDomains.length === 0,
           new RequestError({
