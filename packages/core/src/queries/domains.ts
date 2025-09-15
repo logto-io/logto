@@ -16,6 +16,7 @@ export const createDomainsQueries = (pool: CommonQueryMethods) => {
       pool.query<Domain>(sql`
         select ${sql.join(Object.values(fields), sql`, `)}
         from ${table}
+        order by ${fields.createdAt}
       `)
     );
 
@@ -28,6 +29,13 @@ export const createDomainsQueries = (pool: CommonQueryMethods) => {
       where ${fields.domain}=${domain}
         and ${fields.status}=${DomainStatus.Active}
     `);
+
+  const findDomain = async (domain: string) =>
+    pool.maybeOne<Domain>(sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where ${fields.domain}=${domain}
+      `);
 
   const insertDomain = buildInsertIntoWithPool(pool)(Domains, {
     returning: true,
@@ -56,6 +64,7 @@ export const createDomainsQueries = (pool: CommonQueryMethods) => {
     findAllDomains,
     findDomainById,
     findActiveDomain,
+    findDomain,
     insertDomain,
     updateDomainById,
     deleteDomainById,

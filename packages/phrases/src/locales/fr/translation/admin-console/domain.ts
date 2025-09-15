@@ -14,6 +14,8 @@ const domain = {
       'Améliorez votre image de marque en utilisant un domaine personnalisé. Ce domaine sera utilisé dans votre expérience de connexion.',
     custom_domain_field: 'Domaine personnalisé',
     custom_domain_placeholder: 'votre.domaine.com',
+    add_custom_domain_field: 'Ajouter un domaine personnalisé',
+    custom_domains_field: 'Domaines personnalisés',
     add_domain: 'Ajouter un domaine',
     invalid_domain_format:
       'Veuillez fournir une URL de domaine valide avec un minimum de trois parties, par exemple "votre.domaine.com."',
@@ -40,6 +42,8 @@ const domain = {
         'Si vous avez configuré ce domaine personnalisé dans votre fournisseur de connecteur social ou le point de terminaison de l’application avant, vous devrez d’abord modifier l’URI vers le domaine Logto par défaut "<span>{{domain}}</span>". Ceci est nécessaire pour que le bouton de connexion sociale fonctionne correctement.',
       deleted: 'Suppression du domaine personnalisé réussie !',
     },
+    config_custom_domain_description:
+      'Configurez des domaines personnalisés pour mettre en place les fonctionnalités suivantes : applications, connecteurs sociaux et connecteurs d’entreprise (OIDC).',
   },
   default: {
     default_domain: 'Domaine par défaut',
