@@ -333,25 +333,24 @@ export class Mfa {
       return;
     }
 
-    const additionalFactors = availableFactors
-      .filter((factor) => !factorsInUser.includes(factor))
-      .slice()
-      .sort((factorA, factorB) => {
-        // Sort order: webauthn -> totp -> sms -> email -> backup code
-        const order = [
-          MfaFactor.WebAuthn,
-          MfaFactor.TOTP,
-          MfaFactor.PhoneVerificationCode,
-          MfaFactor.EmailVerificationCode,
-          MfaFactor.BackupCode,
-        ];
+    const sortedFactors = availableFactors.slice().sort((factorA, factorB) => {
+      // Sort order: webauthn -> totp -> sms -> email -> backup code
+      const order = [
+        MfaFactor.WebAuthn,
+        MfaFactor.TOTP,
+        MfaFactor.PhoneVerificationCode,
+        MfaFactor.EmailVerificationCode,
+        MfaFactor.BackupCode,
+      ];
 
-        const indexA = order.indexOf(factorA);
-        const indexB = order.indexOf(factorB);
+      const indexA = order.indexOf(factorA);
+      const indexB = order.indexOf(factorB);
 
-        // Unrecognized factors at the end
-        return (indexA === -1 ? order.length : indexA) - (indexB === -1 ? order.length : indexB);
-      });
+      // Unrecognized factors at the end
+      return (indexA === -1 ? order.length : indexA) - (indexB === -1 ? order.length : indexB);
+    });
+
+    const additionalFactors = sortedFactors.filter((factor) => !factorsInUser.includes(factor));
 
     // Respect user's choice to skip suggestion for this interaction
     if (this.additionalBindingSuggestionSkipped) {
@@ -387,7 +386,7 @@ export class Mfa {
     throw new RequestError(
       { code: 'session.mfa.suggest_additional_mfa', status: 422 },
       {
-        availableFactors, // Return all available factors, not just additional ones
+        availableFactors: sortedFactors,
         maskedIdentifiers,
         skippable: true,
         suggestion: true,

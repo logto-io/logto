@@ -85,7 +85,7 @@ describe('Register interaction - optional additional MFA suggestion', () => {
       status: 422,
       expectData: (data) => {
         // Should now include both Email and TOTP
-        expect(data.availableFactors).toEqual([MfaFactor.EmailVerificationCode, MfaFactor.TOTP]);
+        expect(data.availableFactors).toEqual([MfaFactor.TOTP, MfaFactor.EmailVerificationCode]);
         expect(data.maskedIdentifiers).toBeDefined();
         expect(data.maskedIdentifiers?.[MfaFactor.EmailVerificationCode]).toMatch(/\*{4}/);
         expect(data.skippable).toBe(true);
@@ -200,9 +200,9 @@ describe('Register interaction - optional additional MFA suggestion', () => {
       expectData: (data) => {
         // Should include Email, Phone and TOTP
         expect(data.availableFactors).toEqual([
-          MfaFactor.EmailVerificationCode,
-          MfaFactor.PhoneVerificationCode,
           MfaFactor.TOTP,
+          MfaFactor.PhoneVerificationCode,
+          MfaFactor.EmailVerificationCode,
         ]);
         expect(data.maskedIdentifiers).toBeDefined();
         expect(data.maskedIdentifiers?.[MfaFactor.EmailVerificationCode]).toMatch(/\*{4}/);
