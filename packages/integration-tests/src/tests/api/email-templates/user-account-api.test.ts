@@ -140,4 +140,34 @@ describe('user account email verification API with i18n email templates', () => 
 
     await deleteDefaultTenantUser(user.id);
   });
+
+  it('uses provided templateType BindMfa with existing email', async () => {
+    const primaryEmail = generateEmail();
+    const { user, username, password } = await createDefaultTenantUserWithPassword({
+      primaryEmail,
+    });
+
+    const api = await signInAndGetUserApi(username, password, {
+      scopes: [UserScope.Profile, UserScope.Email],
+    });
+
+    // Trigger sending verification code with explicit BindMfa template for existing identifier
+    const response = await api
+      .post('api/verifications/verification-code', {
+        json: {
+          identifier: { type: SignInIdentifier.Email, value: primaryEmail },
+          templateType: TemplateType.BindMfa,
+        },
+      })
+      .json<{ verificationRecordId: string; expiresAt: string }>();
+
+    expect(response.verificationRecordId).toBeTruthy();
+
+    // Expect BindMfa template selected
+    expect(await readConnectorMessage('Email')).toMatchObject({
+      type: TemplateType.BindMfa,
+    });
+
+    await deleteDefaultTenantUser(user.id);
+  });
 });
