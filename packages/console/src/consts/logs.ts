@@ -51,12 +51,13 @@ export const auditLogEventTitle: Record<string, Optional<string>> & {
   'Interaction.SignIn.Identifier.Submit': 'Identify user for sign-in interaction',
   'Interaction.ForgotPassword.Identifier.Submit': 'Identify user for forgot-password interaction',
   'Interaction.Register.Identifier.Submit': 'Create and identify new user for register interaction',
-  'Interaction.SignIn.Verification.BackupCode.Create': 'Create backup codes for MFA binding',
-  'Interaction.SignIn.Verification.BackupCode.Submit': 'Verify backup code',
+  'Interaction.SignIn.Verification.BackupCode.Create':
+    'Sign-in: Create backup codes for MFA binding',
+  'Interaction.SignIn.Verification.BackupCode.Submit': 'Sign-in: Verify backup code',
   'Interaction.SignIn.Verification.Totp.Create': 'Create TOTP verification secret for MFA binding',
-  'Interaction.SignIn.Verification.Totp.Submit': 'Verify TOTP verification code',
-  'Interaction.SignIn.Verification.Webauthn.Create': 'Create WebAuthn authentication',
-  'Interaction.SignIn.Verification.WebAuthn.Submit': 'Verify WebAuthn authentication',
+  'Interaction.SignIn.Verification.Totp.Submit': 'Sign-in: Verify TOTP code',
+  'Interaction.SignIn.Verification.Webauthn.Create': 'Sign-in: Create WebAuthn authentication',
+  'Interaction.SignIn.Verification.WebAuthn.Submit': 'Sign-in: Verify WebAuthn authentication',
   'Interaction.SignIn.Verification.EmailVerificationCode.Create':
     'Create and send sign-in email verification code',
   'Interaction.SignIn.Verification.EmailVerificationCode.Submit':
@@ -67,19 +68,21 @@ export const auditLogEventTitle: Record<string, Optional<string>> & {
     'Verify sign-in SMS verification code',
   'Interaction.SignIn.Verification.EnterpriseSso.Create':
     'Create enterprise SSO authentication URL',
-  'Interaction.SignIn.Verification.EnterpriseSso.Submit': 'Verify enterprise SSO authentication',
-  'Interaction.SignIn.Verification.Social.Create': 'Create social authentication URL',
-  'Interaction.SignIn.Verification.Social.Submit': 'Verify social authentication',
+  'Interaction.SignIn.Verification.EnterpriseSso.Submit':
+    'Sign-in: Verify enterprise SSO authentication',
+  'Interaction.SignIn.Verification.Social.Create': 'Sign-in: Create social authentication URL',
+  'Interaction.SignIn.Verification.Social.Submit': 'Sign-in: Verify social authentication',
   'Interaction.SignIn.Verification.NewPassword.Submit': 'Create new password identity for register',
   'Interaction.SignIn.Verification.Password.Submit':
     'Create and verify identifier with password verification',
-  'Interaction.Register.Verification.BackupCode.Create': 'Create backup codes for MFA binding',
-  'Interaction.Register.Verification.BackupCode.Submit': 'Verify backup code',
+  'Interaction.Register.Verification.BackupCode.Create':
+    'Register: Create backup codes for MFA binding',
+  'Interaction.Register.Verification.BackupCode.Submit': 'Register: Verify backup code',
   'Interaction.Register.Verification.Totp.Create':
     'Create TOTP verification secret for MFA binding',
-  'Interaction.Register.Verification.Totp.Submit': 'Verify TOTP verification code',
-  'Interaction.Register.Verification.Webauthn.Create': 'Create WebAuthn authentication',
-  'Interaction.Register.Verification.WebAuthn.Submit': 'Verify WebAuthn authentication',
+  'Interaction.Register.Verification.Totp.Submit': 'Register: Verify TOTP code',
+  'Interaction.Register.Verification.Webauthn.Create': 'Register: Create WebAuthn authentication',
+  'Interaction.Register.Verification.WebAuthn.Submit': 'Register: Verify WebAuthn authentication',
   'Interaction.Register.Verification.EmailVerificationCode.Create':
     'Create and send register email verification code',
   'Interaction.Register.Verification.EmailVerificationCode.Submit':
@@ -90,9 +93,10 @@ export const auditLogEventTitle: Record<string, Optional<string>> & {
     'Verify register SMS verification code',
   'Interaction.Register.Verification.EnterpriseSso.Create':
     'Create enterprise SSO authentication URL',
-  'Interaction.Register.Verification.EnterpriseSso.Submit': 'Verify enterprise SSO authentication',
-  'Interaction.Register.Verification.Social.Create': 'Create social authentication URL',
-  'Interaction.Register.Verification.Social.Submit': 'Verify social authentication',
+  'Interaction.Register.Verification.EnterpriseSso.Submit':
+    'Register: Verify enterprise SSO authentication',
+  'Interaction.Register.Verification.Social.Create': 'Register: Create social authentication URL',
+  'Interaction.Register.Verification.Social.Submit': 'Register: Verify social authentication',
   'Interaction.Register.Verification.NewPassword.Submit':
     'Create new password identity for register',
   'Interaction.Register.Verification.Password.Submit':
