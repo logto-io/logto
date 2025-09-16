@@ -241,13 +241,13 @@ export const getAllUserEnabledMfaVerifications = (
   const phone = currentProfile?.primaryPhone ?? user.primaryPhone;
 
   const implicitVerifications = [
-    // Email MFA Factor: user has primaryEmail + Email factor enabled in SIE
-    ...(mfaSettings.factors.includes(MfaFactor.EmailVerificationCode) && email
-      ? [MfaFactor.EmailVerificationCode]
-      : []),
     // Phone MFA Factor: user has primaryPhone + Phone factor enabled in SIE
     ...(mfaSettings.factors.includes(MfaFactor.PhoneVerificationCode) && phone
       ? [MfaFactor.PhoneVerificationCode]
+      : []),
+    // Email MFA Factor: user has primaryEmail + Email factor enabled in SIE
+    ...(mfaSettings.factors.includes(MfaFactor.EmailVerificationCode) && email
+      ? [MfaFactor.EmailVerificationCode]
       : []),
   ];
 
