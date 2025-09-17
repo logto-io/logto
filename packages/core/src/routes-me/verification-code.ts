@@ -7,6 +7,7 @@ import type { RouterInitArgs } from '#src/routes/types.js';
 
 import RequestError from '../errors/RequestError/index.js';
 import assertThat from '../utils/assert-that.js';
+import { getLogtoCookie } from '../utils/cookie.js';
 
 import type { AuthedMeRouter } from './types.js';
 
@@ -31,7 +32,11 @@ export default function verificationCodeRoutes<T extends AuthedMeRouter>(
     }),
     async (ctx, next) => {
       const code = await createPasscode(undefined, codeType, ctx.guard.body);
-      await sendPasscode(code, { locale: ctx.locale });
+      const { uiLocales } = getLogtoCookie(ctx);
+      await sendPasscode(code, {
+        locale: ctx.locale,
+        uiLocales,
+      });
 
       ctx.status = 204;
 

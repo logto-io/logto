@@ -26,6 +26,7 @@ export const sendVerificationCodeToIdentifier = async (
   payload: RequestVerificationCodePayload & {
     event: InteractionEvent;
     locale?: string;
+    uiLocales?: string;
     messageContext?: VerificationCodeContextInfo;
   },
   jti: string,

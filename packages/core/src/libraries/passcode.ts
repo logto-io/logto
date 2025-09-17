@@ -28,7 +28,7 @@ export const passcodeMaxTryCount = 10;
 
 export type PasscodeLibrary = ReturnType<typeof createPasscodeLibrary>;
 
-export type SendPasscodeContextPayload = Pick<SendMessagePayload, 'locale'> &
+export type SendPasscodeContextPayload = Pick<SendMessagePayload, 'locale' | 'uiLocales'> &
   VerificationCodeContextInfo;
 
 export const createPasscodeLibrary = (queries: Queries, connectorLibrary: ConnectorLibrary) => {
