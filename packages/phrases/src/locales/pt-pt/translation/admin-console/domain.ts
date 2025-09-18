@@ -12,13 +12,13 @@ const domain = {
     custom_domain: 'Domínio personalizado',
     custom_domain_description:
       'Melhore a sua marca utilizando um domínio personalizado. Este domínio será utilizado na sua experiência de início de sessão.',
-    custom_domain_field: 'Domínio personalizado',
+    custom_domain_field: 'Domínios personalizados',
     custom_domain_placeholder: 'seu.dominio.com',
     add_custom_domain_field: 'Adicionar um domínio personalizado',
     custom_domains_field: 'Domínios personalizados',
     add_domain: 'Adicionar domínio',
     invalid_domain_format:
-      'Por favor, forneça um URL de domínio válido com um mínimo de três partes, por exemplo, "seu.dominio.com."',
+      'Por favor, forneça um URL de domínio válido com um mínimo de três partes, por exemplo, "auth.domain.com."',
     verify_domain: 'Verificar domínio',
     enable_ssl: 'Ativar SSL',
     checking_dns_tip:

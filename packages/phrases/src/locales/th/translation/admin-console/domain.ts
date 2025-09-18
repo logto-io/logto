@@ -17,7 +17,7 @@ const domain = {
     custom_domains_field: 'โดเมนแบบกำหนดเอง',
     add_domain: 'เพิ่มโดเมน',
     invalid_domain_format:
-      'โปรดระบุ URL โดเมนที่ถูกต้องและประกอบด้วยอย่างน้อย 3 ส่วน เช่น "your.domain.com."',
+      'โปรดระบุ URL โดเมนที่ถูกต้องและประกอบด้วยอย่างน้อย 3 ส่วน เช่น "auth.domain.com."',
     verify_domain: 'ยืนยันโดเมน',
     enable_ssl: 'เปิดใช้ SSL',
     checking_dns_tip:

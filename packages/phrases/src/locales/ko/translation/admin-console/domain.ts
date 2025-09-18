@@ -17,7 +17,7 @@ const domain = {
     custom_domains_field: '사용자 지정 도메인',
     add_domain: '도메인 추가',
     invalid_domain_format:
-      '유효한 도메인 URL을 제공해야합니다. 최소 세 부분으로 구성되어야 하며 예를 들어 "your.domain.com."이어야 합니다.',
+      '유효한 도메인 URL을 제공해야합니다. 최소 세 부분으로 구성되어야 하며 예를 들어 "auth.domain.com."이어야 합니다.',
     verify_domain: '도메인 확인',
     enable_ssl: 'SSL 사용',
     checking_dns_tip:

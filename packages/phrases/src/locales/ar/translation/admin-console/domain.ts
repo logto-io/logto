@@ -11,13 +11,13 @@ const domain = {
     custom_domain: 'نطاق مخصص',
     custom_domain_description:
       'تحسين العلامة التجارية الخاصة بك عن طريق استخدام نطاق مخصص. سيتم استخدام هذا النطاق في تجربة تسجيل الدخول الخاصة بك.',
-    custom_domain_field: 'نطاق مخصص',
+    custom_domain_field: 'نطاقات مخصصة',
     custom_domain_placeholder: 'your.domain.com',
     add_custom_domain_field: 'إضافة نطاق مخصص',
     custom_domains_field: 'نطاقات مخصصة',
     add_domain: 'إضافة نطاق',
     invalid_domain_format:
-      'يرجى تقديم عنوان URL صالح للنطاق مع حد أدنى من ثلاثة أجزاء ، على سبيل المثال "your.domain.com".',
+      'يرجى تقديم عنوان URL صالح للنطاق مع حد أدنى من ثلاثة أجزاء ، على سبيل المثال "auth.domain.com".',
     verify_domain: 'التحقق من النطاق',
     enable_ssl: 'تمكين SSL',
     checking_dns_tip:

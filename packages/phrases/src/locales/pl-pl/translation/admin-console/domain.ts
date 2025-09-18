@@ -12,13 +12,13 @@ const domain = {
     custom_domain: 'Niestandardowa domena',
     custom_domain_description:
       'Ulepsz swoją markę, wykorzystując niestandardową domenę. Ta domena będzie używana w Twoim procesie logowania.',
-    custom_domain_field: 'Niestandardowa domena',
+    custom_domain_field: 'Niestandardowe domeny',
     custom_domain_placeholder: 'twoja.domena.com',
     add_custom_domain_field: 'Dodaj domenę niestandardową',
     custom_domains_field: 'Domeny niestandardowe',
     add_domain: 'Dodaj domenę',
     invalid_domain_format:
-      'Proszę podać poprawny adres URL domeny z co najmniej trzema częściami, np. "twoja.domena.com."',
+      'Proszę podać poprawny adres URL domeny z co najmniej trzema częściami, np. "auth.domain.com."',
     verify_domain: 'Zweryfikuj domenę',
     enable_ssl: 'Włącz SSL',
     checking_dns_tip:
