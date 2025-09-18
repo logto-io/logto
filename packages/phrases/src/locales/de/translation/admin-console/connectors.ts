@@ -64,9 +64,11 @@ const connectors = {
       description:
         'Speichern Sie Zugriffs- und Auffrischungstokens im Secret Vault. Ermöglicht automatisierte API-Aufrufe ohne wiederholte Zustimmung der Benutzer. Beispiel: Lassen Sie Ihren AI-Agenten Ereignisse mit dauerhafter Genehmigung zu Google Kalender hinzufügen. <a>Erfahren Sie, wie man Drittanbieter-APIs aufruft</a>',
     },
-    callback_uri: 'Callback-URI',
+    callback_uri: 'Redirect-URI (Callback-URI)',
     callback_uri_description:
-      'Auch als Redirect-URI bezeichnet, ist die URI in Logto, zu der Benutzer nach der Social-Autorisierung zurückgesendet werden. Kopieren und fügen Sie sie in die Konfigurationsseite des Social Providers ein.',
+      'Die Redirect-URI ist die Adresse, zu der Benutzer nach der Social-Autorisierung zurückgeleitet werden. Fügen Sie diese URI zur Konfiguration Ihres IdP hinzu.',
+    callback_uri_custom_domain_description:
+      'Wenn Sie in Logto mehrere <a>benutzerdefinierte Domains</a> verwenden, fügen Sie alle entsprechenden Callback-URIs zu Ihrem IdP hinzu, damit Social Login in jeder Domain funktioniert.\n\nDie standardmäßige Logto-Domain (*.logto.app) ist immer gültig - fügen Sie sie nur hinzu, wenn Sie auch Anmeldungen unter dieser Domain unterstützen möchten.',
     acs_url: 'Assertion Consumer Service URL',
   },
   platform: {

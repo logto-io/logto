@@ -57,9 +57,11 @@ const connectors = {
       description:
         '将访问令牌和刷新令牌存储在 Secret Vault 中。允许在不反复获得用户同意的情况下自动调用 API。例如：让你的 AI 代理在持久授权下添加事件到 Google 日历。<a>了解如何调用第三方 API</a>',
     },
-    callback_uri: '回调 URI',
+    callback_uri: '重定向 URI（回调 URI）',
     callback_uri_description:
-      '也称为重定向 URI，在社交授权后，用户将被发送回 Logto 的 URI，复制并粘贴到社交提供者的配置页面中。',
+      'Redirect URI 是在社交授权后用户被重定向到的地址。请将此 URI 添加到 IdP 的配置中。',
+    callback_uri_custom_domain_description:
+      '如果你在 Logto 中使用多个<a>自定义域名</a>，务必将所有对应的回调 URI 都添加到 IdP 中，以确保社交登录在每个域名上都能正常工作。\n\n默认的 Logto 域名 (*.logto.app) 始终有效，只有在你也希望支持该域名下的登录时才需要包含它。',
     acs_url: '断言消费服务 URL',
   },
   platform: {

@@ -35,6 +35,10 @@ const enterprise_sso = {
     },
     oidc: {
       redirect_uri_field_name: "Yönlendirme URI'si (Geri çağrı URL'si)",
+      redirect_uri_field_description:
+        "Yeniden yönlendirme URI'si, SSO kimlik doğrulamasından sonra kullanıcıların yönlendirildiği yerdir. Bu URI'yi IdP yapılandırmanıza ekleyin.",
+      redirect_uri_field_custom_domain_description:
+        "Logto'da birden fazla <a>özel alan adı</a> kullanıyorsanız, SSO'nun her alan adında çalışması için ilgili tüm geri dönüş URI'lerini IdP'nize eklediğinizden emin olun.\n\nVarsayılan Logto alan adı (*.logto.app) her zaman geçerlidir; yalnızca o alan adı altında SSO'yu desteklemek istiyorsanız ekleyin.",
     },
   },
   attribute_mapping: {

@@ -64,9 +64,11 @@ const connectors = {
       description:
         "Memorizza i token di accesso e aggiornamento nel Secret Vault. Consente chiamate API automatizzate senza il consenso ripetuto dell'utente. Esempio: lascia che il tuo agente AI aggiunga eventi a Google Calendar con autorizzazione persistente. <a>Scopri come chiamare le API di terze parti</a>",
     },
-    callback_uri: 'URI di callback',
+    callback_uri: 'URI di reindirizzamento (URI di callback)',
     callback_uri_description:
-      "Anche chiamato URI di reindirizzamento, è l'URI in Logto dove gli utenti verranno rimandati dopo l'autorizzazione tramite social media, copia e incollalo nella pagina di configurazione del provider social media.",
+      "L'URI di reindirizzamento è dove gli utenti vengono reindirizzati dopo l'autorizzazione social. Aggiungi questa URI alla configurazione del tuo IdP.",
+    callback_uri_custom_domain_description:
+      "Se utilizzi più <a>domini personalizzati</a> in Logto, assicurati di aggiungere tutte le rispettive URI di callback al tuo IdP per far funzionare il social login su ogni dominio.\n\nIl dominio predefinito di Logto (*.logto.app) è sempre valido: includilo solo se desideri supportare l'accesso anche sotto quel dominio.",
     acs_url: 'URL del servizio consumer di assunzione',
   },
   platform: {

@@ -36,6 +36,10 @@ const enterprise_sso = {
     },
     oidc: {
       redirect_uri_field_name: 'Redirect URI (Callback URL)',
+      redirect_uri_field_description:
+        'URI การเปลี่ยนเส้นทางคือจุดที่ผู้ใช้ถูกพากลับหลังจากยืนยันตัวตนด้วย SSO เพิ่ม URI นี้ลงในการกำหนดค่าของ IdP ของคุณ',
+      redirect_uri_field_custom_domain_description:
+        'หากคุณใช้ <a>โดเมนแบบกำหนดเอง</a> หลายโดเมนใน Logto อย่าลืมเพิ่ม URI การเรียกกลับที่สอดคล้องกันทั้งหมดลงใน IdP เพื่อให้ SSO ทำงานได้ในทุกโดเมน\n\nโดเมนเริ่มต้นของ Logto (*.logto.app) ใช้งานได้เสมอ รวมไว้เฉพาะเมื่อคุณต้องการรองรับ SSO ภายใต้โดเมนนั้นด้วย',
     },
   },
   attribute_mapping: {

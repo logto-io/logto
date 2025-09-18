@@ -35,6 +35,10 @@ const enterprise_sso = {
     },
     oidc: {
       redirect_uri_field_name: '리디렉션 URI (콜백 URL)',
+      redirect_uri_field_description:
+        '리디렉션 URI는 SSO 인증 이후 사용자가 다시 이동하는 위치입니다. 이 URI를 IdP 구성에 추가하세요.',
+      redirect_uri_field_custom_domain_description:
+        'Logto에서 여러 <a>사용자 지정 도메인</a>을 사용하는 경우 각 도메인에서 SSO가 동작하도록 모든 해당 콜백 URI를 IdP에 반드시 추가하세요.\n\n기본 Logto 도메인 (*.logto.app)은 항상 유효하므로 해당 도메인에서 SSO를 지원하려는 경우에만 포함하세요.',
     },
   },
   attribute_mapping: {
