@@ -31,7 +31,13 @@ function DomainSelector({ value, onChange, tip, className }: Props) {
 
   return (
     <div className={classNames(styles.domainSelector, className)}>
-      <Select value={value} options={options} className={styles.selector} onChange={onChange} />
+      <Select
+        value={value}
+        options={options}
+        className={styles.selector}
+        isReadOnly={options.length <= 1}
+        onChange={onChange}
+      />
       {tip && (
         <ToggleTip anchorClassName={styles.toggleTipButton} content={tip} horizontalAlign="start">
           <IconButton size="small">
