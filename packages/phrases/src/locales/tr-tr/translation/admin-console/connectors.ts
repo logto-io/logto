@@ -64,9 +64,11 @@ const connectors = {
       description:
         "Erişim ve yenileme belirteçlerini Gizli Kasada saklayın. Tekrarlı kullanıcı onayı olmadan otomatik API çağrılarına izin verir. Örnek: Yapay Zeka Ajansınızın kalıcı yetkilendirme ile Google Takvim'e etkinlikler eklemesine izin verin. <a>Üçüncü taraf API'larını nasıl çağıracağınızı öğrenin</a>",
     },
-    callback_uri: 'Geri dönüş URI',
+    callback_uri: "Yeniden yönlendirme URI'si (Geri dönüş URI'si)",
     callback_uri_description:
-      "Ayrıca yönlendirme URI'si olarak adlandırılır, kullanıcıların sosyal yetkilendirmeden sonra Logto'ya geri gönderilecekleri URI'dir, ve sosyal sağlayıcının yapılandırma sayfasına kopyalayın yapıştırın.",
+      "Yeniden yönlendirme URI'si, sosyal yetkilendirmeden sonra kullanıcıların yönlendirildiği yerdir. Bu URI'yi IdP yapılandırmanıza ekleyin.",
+    callback_uri_custom_domain_description:
+      "Logto'da birden fazla <a>özel alan adı</a> kullanıyorsanız, sosyal oturum açmanın her alan adında çalışması için ilgili tüm geri dönüş URI'lerini IdP'nize eklediğinizden emin olun.\n\nVarsayılan Logto alan adı (*.logto.app) her zaman geçerlidir; yalnızca o alan adı altında oturumları desteklemek istiyorsanız ekleyin.",
     acs_url: 'Assertion consumer service URL',
   },
   platform: {

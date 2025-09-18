@@ -36,6 +36,10 @@ const enterprise_sso = {
     },
     oidc: {
       redirect_uri_field_name: 'URI de redirection (URL de rappel)',
+      redirect_uri_field_description:
+        "L'URI de redirection est l'endroit où les utilisateurs sont redirigés après l'authentification SSO. Ajoutez cette URI à la configuration de votre IdP.",
+      redirect_uri_field_custom_domain_description:
+        'Si vous utilisez plusieurs <a>domaines personnalisés</a> dans Logto, veillez à ajouter toutes les URI de rappel correspondantes à votre IdP afin que le SSO fonctionne sur chaque domaine.\n\nLe domaine Logto par défaut (*.logto.app) est toujours valide ; incluez-le uniquement si vous souhaitez aussi prendre en charge le SSO sous ce domaine.',
     },
   },
   attribute_mapping: {

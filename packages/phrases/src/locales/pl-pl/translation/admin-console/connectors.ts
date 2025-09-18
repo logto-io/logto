@@ -63,9 +63,11 @@ const connectors = {
       description:
         'Przechowuj tokeny dostępu i odświeżania w Tajnej Skrytce. Pozwala to na zautomatyzowane wywołania API bez powtarzającej się zgody użytkownika. Przykład: pozwól swojemu Agentowi AI dodawać wydarzenia do Kalendarza Google z trwałym upoważnieniem. <a>Dowiedz się, jak wywoływać zewnętrzne API</a>',
     },
-    callback_uri: 'URI zwrotu (Callback)',
+    callback_uri: 'URI przekierowania (URI zwrotu)',
     callback_uri_description:
-      'Nazywany także URI przekierowania, to URI w Logto, do którego użytkownicy zostaną przesłani po autoryzacji społecznej; skopiuj i wklej na stronie konfiguracyjnej dostawcy usług społecznościowych.',
+      'URI przekierowania to miejsce, do którego użytkownicy są kierowani po autoryzacji społecznościowej. Dodaj ten adres URI do konfiguracji swojego IdP.',
+    callback_uri_custom_domain_description:
+      'Jeśli używasz w Logto wielu <a>domen niestandardowych</a>, dodaj wszystkie odpowiadające im adresy URI zwrotu do IdP, aby logowanie społecznościowe działało w każdej domenie.\n\nDomyślna domena Logto (*.logto.app) jest zawsze ważna - uwzględnij ją tylko wtedy, gdy chcesz obsługiwać logowania także w tej domenie.',
     acs_url: 'Assertion consumer service URL',
   },
   platform: {

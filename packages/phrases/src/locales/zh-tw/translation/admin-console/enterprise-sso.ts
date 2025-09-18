@@ -35,6 +35,10 @@ const enterprise_sso = {
     },
     oidc: {
       redirect_uri_field_name: '重定向 URI（回撥 URL）',
+      redirect_uri_field_description:
+        'Redirect URI 是在 SSO 認證後使用者被重新導向的位置。請將此 URI 加入 IdP 的設定中。',
+      redirect_uri_field_custom_domain_description:
+        '如果你在 Logto 使用多個<a>自訂網域</a>，務必把所有對應的回呼 URI 加到 IdP，確保 SSO 在每個網域都能運作。\n\n預設的 Logto 網域 (*.logto.app) 一直有效；只有在你也希望支援該網域下的 SSO 時才需要包含它。',
     },
   },
   attribute_mapping: {

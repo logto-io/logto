@@ -60,9 +60,11 @@ const connectors = {
       description:
         'Secret Vault에 액세스 및 새로 고침 토큰을 저장하세요. 사용자의 반복적인 동의 없이 자동 API 호출을 허용합니다. 예: 지속적인 권한 부여로 여러분의 AI 에이전트가 Google 캘린더에 이벤트를 추가하도록 하세요. <a>타사 API 호출 방법 알아보기</a>',
     },
-    callback_uri: 'Callback URI',
+    callback_uri: '리디렉션 URI(콜백 URI)',
     callback_uri_description:
-      '리다이렉트 URI라고도 불려요. 사용자의 소셜 인증 이후 되돌아올 Logto URI예요. 소셜 공급자의 설정 페이지에 붙여넣으세요.',
+      '리디렉션 URI는 소셜 인증 이후 사용자가 다시 이동하는 위치입니다. 이 URI를 IdP 구성에 추가하세요.',
+    callback_uri_custom_domain_description:
+      'Logto에서 여러 <a>사용자 지정 도메인</a>을 사용하는 경우 각 도메인에서 소셜 로그인이 동작하도록 모든 해당 콜백 URI를 IdP에 반드시 추가하세요.\n\n기본 Logto 도메인 (*.logto.app)은 항상 유효하므로 해당 도메인에서의 로그인을 지원하려는 경우에만 포함하세요.',
     acs_url: '단언 소비 서비스 URL',
   },
   platform: {

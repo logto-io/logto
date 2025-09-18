@@ -64,9 +64,11 @@ const connectors = {
       description:
         'Armazene tokens de acesso e de atualização no Cofre Seguro. Permite chamadas de API automatizadas sem o consentimento repetido do usuário. Exemplo: permita que seu Agente de IA adicione eventos ao Google Calendar com autorização persistente. <a>Saiba como chamar APIs de terceiros</a>',
     },
-    callback_uri: 'URI de retorno',
+    callback_uri: 'URI de redirecionamento (URI de retorno)',
     callback_uri_description:
-      'Também chamado de URI de redirecionamento, é a URI no Logto para onde os usuários serão enviados após a autorização social, copie e cole na página de configuração do provedor social.',
+      'A URI de redirecionamento é para onde os utilizadores são enviados após a autorização social. Adicione esta URI à configuração do seu IdP.',
+    callback_uri_custom_domain_description:
+      'Se utilizar vários <a>domínios personalizados</a> no Logto, certifique-se de adicionar todas as URIs de callback correspondentes ao seu IdP para que o início de sessão social funcione em cada domínio.\n\nO domínio predefinido do Logto (*.logto.app) é sempre válido; inclua-o apenas se também quiser suportar inícios de sessão nesse domínio.',
     acs_url: 'URL do serviço do consumidor de afirmação',
   },
   platform: {

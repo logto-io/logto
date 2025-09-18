@@ -57,9 +57,11 @@ const connectors = {
       description:
         '在 Secret Vault 中存儲訪問和刷新令牌。允許自動 API 調用而無需重複用戶授權。例如：讓你的 AI 代理通過持續授權添加事件到 Google 日曆。<a>了解如何調用第三方 API</a>',
     },
-    callback_uri: 'Callback URI',
+    callback_uri: '重新導向 URI（回呼 URI）',
     callback_uri_description:
-      '也稱為重定向 URI，在社交授權後，用戶將被發送回 Logto 的 URI，複製並粘貼到社交提供者的配置頁面中。',
+      'Redirect URI 是在社交授權後使用者被重新導向的位置。請將此 URI 加入 IdP 的設定中。',
+    callback_uri_custom_domain_description:
+      '如果你在 Logto 使用多個<a>自訂網域</a>，務必把所有對應的回呼 URI 加到 IdP，確保社群登入在每個網域都能運作。\n\n預設的 Logto 網域 (*.logto.app) 一直有效；只有在你也希望支援該網域下的登入時才需要包含它。',
     acs_url: '斷言消費者服務網址',
   },
   platform: {

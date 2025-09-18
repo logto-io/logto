@@ -35,6 +35,10 @@ const enterprise_sso = {
     },
     oidc: {
       redirect_uri_field_name: 'Adres URL przekierowania (Adres URL wywołania zwrotnego)',
+      redirect_uri_field_description:
+        'URI przekierowania to miejsce, do którego użytkownicy są kierowani po uwierzytelnieniu SSO. Dodaj ten adres URI do konfiguracji swojego IdP.',
+      redirect_uri_field_custom_domain_description:
+        'Jeśli używasz w Logto wielu <a>domen niestandardowych</a>, dodaj wszystkie odpowiadające im adresy URI zwrotu do IdP, aby SSO działało w każdej domenie.\n\nDomyślna domena Logto (*.logto.app) jest zawsze ważna – uwzględnij ją tylko wtedy, gdy chcesz obsługiwać SSO także w tej domenie.',
     },
   },
   attribute_mapping: {
