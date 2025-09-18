@@ -12,13 +12,13 @@ const domain = {
     custom_domain: 'Özel Alan Adı',
     custom_domain_description:
       'Markalaşmanızı geliştirin ve özel bir alan adı kullanın. Bu alan adı oturum açma deneyiminizde kullanılacaktır.',
-    custom_domain_field: 'Özel alan adı',
+    custom_domain_field: 'Özel alan adları',
     custom_domain_placeholder: 'alan_adınız.com',
     add_custom_domain_field: 'Özel bir alan adı ekle',
     custom_domains_field: 'Özel alan adları',
     add_domain: 'Alan Adı Ekle',
     invalid_domain_format:
-      'Lütfen geçerli bir alan adı URL\'si sağlayın, en az üç parçaya sahip olmalıdır, örneğin "alanınız.com."',
+      'Lütfen geçerli bir alan adı URL\'si sağlayın, en az üç parçaya sahip olmalıdır, örneğin "auth.domain.com."',
     verify_domain: 'Alan adınızı doğrulayın',
     enable_ssl: 'SSL etkinleştirilsin mi',
     checking_dns_tip:

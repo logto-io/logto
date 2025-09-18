@@ -12,13 +12,13 @@ const domain = {
     custom_domain: 'Custom Domain',
     custom_domain_description:
       'Improve your branding by utilizing a custom domain. This domain will be used in your sign-in experience.',
-    custom_domain_field: 'Custom domain',
+    custom_domain_field: 'Custom domains',
     custom_domain_placeholder: 'your.domain.com',
     add_custom_domain_field: 'Add a custom domain',
     custom_domains_field: 'Custom domains',
     add_domain: 'Add domain',
     invalid_domain_format:
-      'Please provide a valid domain URL with a minimum of three parts, e.g. "your.domain.com."',
+      'Please provide a valid domain URL with a minimum of three parts, e.g. "auth.domain.com."',
     verify_domain: 'Verify domain',
     enable_ssl: 'Enable SSL',
     checking_dns_tip:

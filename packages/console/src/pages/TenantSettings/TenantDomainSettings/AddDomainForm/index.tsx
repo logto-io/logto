@@ -64,7 +64,7 @@ function AddDomainForm({ className, isReadonly, onSubmitCustomDomain }: Props) {
         type="primary"
         title="domain.custom.add_domain"
         isLoading={isSubmitting}
-        disabled={domainInput.length === 0 || isReadonly}
+        disabled={isReadonly}
         onClick={onSubmit}
       />
     </div>

@@ -15,7 +15,7 @@ const domain = {
     add_custom_domain_field: '新增自定義域名',
     custom_domains_field: '自定義域名',
     add_domain: '添加域名',
-    invalid_domain_format: '請提供有效的域名 URL，至少有三部分，例如 "your.domain.com."',
+    invalid_domain_format: '請提供有效的域名 URL，至少有三部分，例如 "auth.domain.com."',
     verify_domain: '驗證域名',
     enable_ssl: '啟用 SSL',
     checking_dns_tip:

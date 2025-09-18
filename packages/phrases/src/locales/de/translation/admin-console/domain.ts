@@ -12,13 +12,13 @@ const domain = {
     custom_domain: 'Benutzerdefinierte Domain',
     custom_domain_description:
       'Verbessern Sie Ihre Markenbildung durch die Verwendung einer benutzerdefinierten Domain. Diese Domain wird in Ihrem Anmeldeerlebnis verwendet.',
-    custom_domain_field: 'Benutzerdefinierte Domain',
+    custom_domain_field: 'Benutzerdefinierte Domains',
     custom_domain_placeholder: 'ihre.domain.com',
     add_custom_domain_field: 'Benutzerdefinierte Domain hinzufügen',
     custom_domains_field: 'Benutzerdefinierte Domains',
     add_domain: 'Domain hinzufügen',
     invalid_domain_format:
-      'Bitte geben Sie eine gültige Domain-URL mit mindestens drei Teilen an, z. B. "ihre.domain.com."',
+      'Bitte geben Sie eine gültige Domain-URL mit mindestens drei Teilen an, z. B. "auth.domain.com."',
     verify_domain: 'Domain überprüfen',
     enable_ssl: 'SSL aktivieren',
     checking_dns_tip:

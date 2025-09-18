@@ -17,7 +17,7 @@ const domain = {
     custom_domains_field: 'カスタムドメイン',
     add_domain: 'ドメインを追加',
     invalid_domain_format:
-      '有効なドメインURLを指定してください。最低3つの部分を含め、例："your.domain.com."',
+      '有効なドメインURLを指定してください。最低3つの部分を含め、例："auth.domain.com."',
     verify_domain: 'ドメインを検証',
     enable_ssl: 'SSLを有効にする',
     checking_dns_tip:

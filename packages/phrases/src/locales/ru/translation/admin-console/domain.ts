@@ -12,13 +12,13 @@ const domain = {
     custom_domain: 'Пользовательский домен',
     custom_domain_description:
       'Улучшите свой брендинг, используя пользовательский домен. Этот домен будет использоваться в вашем процессе входа.',
-    custom_domain_field: 'Пользовательский домен',
+    custom_domain_field: 'Пользовательские домены',
     custom_domain_placeholder: 'Ваш.домен.com',
     add_custom_domain_field: 'Добавить пользовательский домен',
     custom_domains_field: 'Пользовательские домены',
     add_domain: 'Добавить домен',
     invalid_domain_format:
-      'Please provide a valid domain URL with a minimum of three parts, e.g. "your.domain.com."',
+      'Please provide a valid domain URL with a minimum of three parts, e.g. "auth.domain.com."',
     verify_domain: 'Проверить домен',
     enable_ssl: 'Включить SSL',
     checking_dns_tip:

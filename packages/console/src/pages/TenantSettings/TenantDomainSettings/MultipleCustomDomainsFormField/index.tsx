@@ -32,7 +32,7 @@ function MultipleCustomDomainsFormField() {
           }}
         />
       </FormField>
-      {allDomains && (
+      {allDomains && allDomains.length > 0 && (
         <FormField title="domain.custom.custom_domain_field">
           {allDomains.map((domain) => (
             <CustomDomain
