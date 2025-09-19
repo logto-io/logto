@@ -40,11 +40,6 @@
     }
   }
 
-  .dropdown {
-    padding: _.unit(1);
-    max-height: 288px;
-  }
-
   .description,
   .errorMessage {
     margin-inline-start: _.unit(0.5);
@@ -54,6 +49,11 @@
   .errorMessage {
     color: var(--color-danger-default);
   }
+}
+
+.dropdown {
+  padding: _.unit(1);
+  max-height: 288px;
 }
 
 .focused {
