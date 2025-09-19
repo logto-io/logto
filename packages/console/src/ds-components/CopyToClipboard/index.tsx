@@ -32,6 +32,7 @@ type Props = {
   readonly size?: 'default' | 'small';
   readonly displayType?: 'block' | 'inline';
   readonly isWordWrapAllowed?: boolean;
+  readonly onToggleVisibility?: (isVisible: boolean) => void;
 };
 
 type CopyState = TFuncKey<'translation', 'admin_console.general'>;
@@ -47,6 +48,7 @@ function CopyToClipboard(
     size = 'default',
     isWordWrapAllowed = false,
     displayType = 'inline',
+    onToggleVisibility,
   }: Props,
   ref: ForwardedRef<HTMLDivElement>
 ) {
@@ -81,6 +83,7 @@ function CopyToClipboard(
 
   const toggleHiddenContent = () => {
     setShowHiddenContent((previous) => !previous);
+    onToggleVisibility?.(!showHiddenContent);
   };
 
   return (
