@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-smsaero",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "SMSAero connector implementation.",
   "author": "Danil Tankov <danil.tankoff@yandex.ru>",
   "dependencies": {
