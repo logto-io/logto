@@ -9,7 +9,7 @@ import TextLink from '@/ds-components/TextLink';
 import styles from './index.module.scss';
 
 function ApplicationCredentials() {
-  const { app, secrets } = useContext(GuideContext);
+  const { app, secrets, setShowAppSecret } = useContext(GuideContext);
   const { id } = app ?? {};
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -44,6 +44,7 @@ function ApplicationCredentials() {
             displayType="block"
             value={secrets[0].value}
             variant="border"
+            onToggleVisibility={setShowAppSecret}
           />
         </FormField>
       )}

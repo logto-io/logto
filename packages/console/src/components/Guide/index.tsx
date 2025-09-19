@@ -1,4 +1,5 @@
 import { type ApplicationResponse } from '@logto/schemas';
+import { noop } from '@silverhand/essentials';
 import classNames from 'classnames';
 import {
   type ComponentType,
@@ -32,6 +33,8 @@ export type GuideContextType = {
   redirectUris?: string[];
   postLogoutRedirectUris?: string[];
   audience?: string;
+  showAppSecret: boolean;
+  setShowAppSecret: (show: boolean) => void;
 };
 
 type Props = {
@@ -55,6 +58,8 @@ export const GuideContext = createContext<GuideContextType>({
   postLogoutRedirectUris: [],
   isCompact: false,
   audience: '',
+  showAppSecret: false,
+  setShowAppSecret: noop,
 });
 
 function Guide({ className, guideId, isEmpty, isLoading, onClose }: Props) {

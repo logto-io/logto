@@ -1,6 +1,6 @@
 import { type Resource } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import { useContext, useMemo } from 'react';
+import { useContext, useMemo, useState } from 'react';
 
 import { guides } from '@/assets/docs/guides';
 import Guide, { GuideContext, type GuideContextType } from '@/components/Guide';
@@ -16,6 +16,7 @@ type Props = {
 
 function ApiGuide({ className, guideId, apiResource, isCompact, onClose }: Props) {
   const { tenantEndpoint } = useContext(AppDataContext);
+  const [showAppSecret, setShowAppSecret] = useState(false);
 
   const guide = guides.find(({ id }) => id === guideId);
 
@@ -29,9 +30,11 @@ function ApiGuide({ className, guideId, apiResource, isCompact, onClose }: Props
             isCompact: Boolean(isCompact),
             endpoint: tenantEndpoint?.href ?? '',
             audience: apiResource.indicator,
+            showAppSecret,
+            setShowAppSecret,
           }
       ) satisfies GuideContextType | undefined,
-    [apiResource, guide, isCompact, tenantEndpoint?.href]
+    [apiResource, guide, isCompact, showAppSecret, tenantEndpoint?.href]
   );
 
   return memorizedContext ? (
