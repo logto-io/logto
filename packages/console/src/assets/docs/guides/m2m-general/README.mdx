@@ -40,7 +40,7 @@ M2M app makes a `POST` request to the token endpoint to fetch an access token by
 
 And you also need to include your M2M app's credentials in the request header for the token endpoint to authenticate your M2M app.
 
-This is achieved by including the app's credentials in the [Basic authentication](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization#basic_authentication) form in the request `Authorization` header, where username is the App ID, and password is the App Secret.
+This is achieved by including the app's credentials in the [Basic authentication](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization#basic_authentication) form in the request `Authorization` header: base64-encode `{App ID}:{App Secret}` and set it as the value after the `Basic` prefix.
 
 You can find the App ID and App Secret from your M2M app's details page:
 
