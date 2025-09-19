@@ -1,7 +1,5 @@
 import {
   InteractionEvent,
-  logtoCookieKey,
-  logtoUiCookieGuard,
   SentinelActivityAction,
   SignInIdentifier,
   type VerificationCodeIdentifier,
@@ -9,13 +7,13 @@ import {
   type Sentinel,
 } from '@logto/schemas';
 import { Action } from '@logto/schemas/lib/types/log/interaction.js';
-import { trySafe } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type PasscodeLibrary } from '#src/libraries/passcode.js';
 import { type LogContext } from '#src/middleware/koa-audit-log.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
+import { getLogtoCookie } from '#src/utils/cookie.js';
 
 import type ExperienceInteraction from '../classes/experience-interaction.js';
 import { withSentinel } from '../classes/libraries/sentinel-guard.js';
@@ -55,10 +53,7 @@ const buildVerificationCodeTemplateContext = async (
     return {};
   }
 
-  // Safely get the orgId and appId context from cookie
-  const { appId: applicationId, organizationId } =
-    trySafe(() => logtoUiCookieGuard.parse(JSON.parse(ctx.cookies.get(logtoCookieKey) ?? '{}'))) ??
-    {};
+  const { appId: applicationId, organizationId } = getLogtoCookie(ctx);
 
   return passcodeLibrary.buildVerificationCodeContext({
     applicationId,
@@ -116,6 +111,7 @@ export const sendCode = async ({
   // Send verification code
   await codeVerification.sendVerificationCode({
     locale: ctx.locale,
+    uiLocales: getLogtoCookie(ctx).uiLocales,
     ...templateContext,
   });
 
