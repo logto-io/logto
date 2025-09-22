@@ -12,7 +12,7 @@ const domain = {
     custom_domain_description:
       'تحسين العلامة التجارية الخاصة بك عن طريق استخدام نطاق مخصص. سيتم استخدام هذا النطاق في تجربة تسجيل الدخول الخاصة بك.',
     custom_domain_field: 'نطاقات مخصصة',
-    custom_domain_placeholder: 'your.domain.com',
+    custom_domain_placeholder: 'auth.domain.com',
     add_custom_domain_field: 'إضافة نطاق مخصص',
     custom_domains_field: 'نطاقات مخصصة',
     add_domain: 'إضافة نطاق',
@@ -41,7 +41,7 @@ const domain = {
       deleted: 'تم حذف النطاق المخصص بنجاح!',
     },
     config_custom_domain_description:
-      'قم بإعداد النطاقات المخصصة لتكوين الميزات التالية: التطبيقات وموصلات التواصل الاجتماعي وموصلات المؤسسات (OIDC).',
+      'قم بإعداد النطاقات المخصصة لتكوين الميزات التالية: التطبيقات وموصلات التواصل الاجتماعي وموصلات المؤسسات.',
   },
   default: {
     default_domain: 'النطاق الافتراضي',

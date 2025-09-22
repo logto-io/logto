@@ -13,7 +13,7 @@ const domain = {
     custom_domain_description:
       'Ulepsz swoją markę, wykorzystując niestandardową domenę. Ta domena będzie używana w Twoim procesie logowania.',
     custom_domain_field: 'Niestandardowe domeny',
-    custom_domain_placeholder: 'twoja.domena.com',
+    custom_domain_placeholder: 'auth.domain.com',
     add_custom_domain_field: 'Dodaj domenę niestandardową',
     custom_domains_field: 'Domeny niestandardowe',
     add_domain: 'Dodaj domenę',
@@ -43,7 +43,7 @@ const domain = {
       deleted: 'Niestandardowa domena została pomyślnie usunięta!',
     },
     config_custom_domain_description:
-      'Skonfiguruj domeny niestandardowe, aby włączyć następujące funkcje: aplikacje, konektory społecznościowe i konektory korporacyjne (OIDC).',
+      'Skonfiguruj domeny niestandardowe, aby włączyć następujące funkcje: aplikacje, konektory społecznościowe i konektory korporacyjne.',
   },
   default: {
     default_domain: 'Domyślna domena',

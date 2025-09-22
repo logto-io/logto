@@ -11,7 +11,7 @@ const domain = {
     custom_domain: '自定義域名',
     custom_domain_description: '提高品牌形象，使用自定義域名。此域名將用於您的登錄體驗。',
     custom_domain_field: '自定義域名',
-    custom_domain_placeholder: 'your.domain.com',
+    custom_domain_placeholder: 'auth.domain.com',
     add_custom_domain_field: '新增自定義域名',
     custom_domains_field: '自定義域名',
     add_domain: '添加域名',
@@ -38,7 +38,7 @@ const domain = {
       deleted: '成功刪除自定義域名！',
     },
     config_custom_domain_description:
-      '配置自定義域名以設定以下功能：應用程式、社交連接器與企業連接器（OIDC）。',
+      '配置自定義域名以設定以下功能：應用程式、社交連接器與企業連接器。',
   },
   default: {
     default_domain: '默認域名',

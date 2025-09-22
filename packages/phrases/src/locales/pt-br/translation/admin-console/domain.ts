@@ -13,7 +13,7 @@ const domain = {
     custom_domain_description:
       'Melhore sua marca utilizando um domínio personalizado. Este domínio será utilizado em sua experiência de login.',
     custom_domain_field: 'Domínios personalizados',
-    custom_domain_placeholder: 'seu.domínio.com',
+    custom_domain_placeholder: 'auth.domain.com',
     add_custom_domain_field: 'Adicionar um domínio personalizado',
     custom_domains_field: 'Domínios personalizados',
     add_domain: 'Adicionar domínio',
@@ -43,7 +43,7 @@ const domain = {
       deleted: 'Domínio personalizado excluído com sucesso!',
     },
     config_custom_domain_description:
-      'Configure domínios personalizados para definir os seguintes recursos: aplicativos, conectores sociais e conectores empresariais (OIDC).',
+      'Configure domínios personalizados para definir os seguintes recursos: aplicativos, conectores sociais e conectores empresariais.',
   },
   default: {
     default_domain: 'Domínio padrão',

@@ -12,7 +12,7 @@ const domain = {
     custom_domain_description:
       'เพิ่มความโดดเด่นให้กับแบรนด์ของคุณด้วยการใช้โดเมนที่กำหนดเอง โดเมนนี้จะถูกนำมาใช้ในประสบการณ์ลงชื่อเข้าใช้งานของคุณ',
     custom_domain_field: 'โดเมนที่กำหนดเอง',
-    custom_domain_placeholder: 'your.domain.com',
+    custom_domain_placeholder: 'auth.domain.com',
     add_custom_domain_field: 'เพิ่มโดเมนแบบกำหนดเอง',
     custom_domains_field: 'โดเมนแบบกำหนดเอง',
     add_domain: 'เพิ่มโดเมน',
@@ -42,7 +42,7 @@ const domain = {
       deleted: 'ลบโดเมนที่กำหนดเองสำเร็จ!',
     },
     config_custom_domain_description:
-      'กำหนดค่าโดเมนแบบกำหนดเองเพื่อใช้งานฟีเจอร์ต่อไปนี้: แอปพลิเคชัน, ตัวเชื่อมต่อโซเชียล และตัวเชื่อมต่อองค์กร (OIDC).',
+      'กำหนดค่าโดเมนแบบกำหนดเองเพื่อใช้งานฟีเจอร์ต่อไปนี้: แอปพลิเคชัน, ตัวเชื่อมต่อโซเชียล และตัวเชื่อมต่อองค์กร.',
   },
   default: {
     default_domain: 'โดเมนเริ่มต้น',

@@ -11,7 +11,7 @@ const domain = {
     custom_domain: '自訂網域',
     custom_domain_description: '提高品牌形象，使用自訂網域。此網域將用於您的登錄體驗。',
     custom_domain_field: '自訂網域',
-    custom_domain_placeholder: 'your.domain.com',
+    custom_domain_placeholder: 'auth.domain.com',
     add_custom_domain_field: '新增自訂網域',
     custom_domains_field: '自訂網域',
     add_domain: '新增網域',
@@ -38,7 +38,7 @@ const domain = {
       deleted: '成功刪除自定義網域！',
     },
     config_custom_domain_description:
-      '設定自訂網域以配置以下功能：應用程式、社交連接器與企業連接器（OIDC）。',
+      '設定自訂網域以配置以下功能：應用程式、社交連接器與企業連接器。',
   },
   default: {
     default_domain: '預設網域',
