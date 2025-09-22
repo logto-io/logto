@@ -13,7 +13,7 @@ const domain = {
     custom_domain_description:
       'Verbessern Sie Ihre Markenbildung durch die Verwendung einer benutzerdefinierten Domain. Diese Domain wird in Ihrem Anmeldeerlebnis verwendet.',
     custom_domain_field: 'Benutzerdefinierte Domains',
-    custom_domain_placeholder: 'ihre.domain.com',
+    custom_domain_placeholder: 'auth.domain.com',
     add_custom_domain_field: 'Benutzerdefinierte Domain hinzufügen',
     custom_domains_field: 'Benutzerdefinierte Domains',
     add_domain: 'Domain hinzufügen',
@@ -43,7 +43,7 @@ const domain = {
       deleted: 'Benutzerdefinierte Domain wurde erfolgreich gelöscht!',
     },
     config_custom_domain_description:
-      'Konfigurieren Sie benutzerdefinierte Domains, um folgende Funktionen einzurichten: Anwendungen, Social‑Connectoren und Enterprise‑Connectoren (OIDC).',
+      'Konfigurieren Sie benutzerdefinierte Domains, um folgende Funktionen einzurichten: Anwendungen, Social‑Connectoren und Enterprise‑Connectoren.',
   },
   default: {
     default_domain: 'Standarddomain',

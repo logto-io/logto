@@ -12,7 +12,7 @@ const domain = {
     custom_domain_description:
       '브랜딩을 개선하고 사용자 지정 도메인을 활용하세요. 이 도메인은 로그인 경험에서 사용됩니다.',
     custom_domain_field: '사용자 지정 도메인',
-    custom_domain_placeholder: 'your.domain.com',
+    custom_domain_placeholder: 'auth.domain.com',
     add_custom_domain_field: '사용자 지정 도메인 추가',
     custom_domains_field: '사용자 지정 도메인',
     add_domain: '도메인 추가',
@@ -42,7 +42,7 @@ const domain = {
       deleted: '사용자 지정 도메인을 성공적으로 삭제했습니다!',
     },
     config_custom_domain_description:
-      '다음 기능을 설정하려면 사용자 지정 도메인을 구성하세요: 애플리케이션, 소셜 커넥터, 엔터프라이즈 커넥터(OIDC).',
+      '다음 기능을 설정하려면 사용자 지정 도메인을 구성하세요: 애플리케이션, 소셜 커넥터, 엔터프라이즈 커넥터.',
   },
   default: {
     default_domain: '기본 도메인',

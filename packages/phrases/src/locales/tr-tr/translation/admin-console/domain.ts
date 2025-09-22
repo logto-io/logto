@@ -13,7 +13,7 @@ const domain = {
     custom_domain_description:
       'Markalaşmanızı geliştirin ve özel bir alan adı kullanın. Bu alan adı oturum açma deneyiminizde kullanılacaktır.',
     custom_domain_field: 'Özel alan adları',
-    custom_domain_placeholder: 'alan_adınız.com',
+    custom_domain_placeholder: 'auth.domain.com',
     add_custom_domain_field: 'Özel bir alan adı ekle',
     custom_domains_field: 'Özel alan adları',
     add_domain: 'Alan Adı Ekle',
@@ -43,7 +43,7 @@ const domain = {
       deleted: 'Özel alan adı başarıyla silindi!',
     },
     config_custom_domain_description:
-      'Aşağıdaki özellikleri ayarlamak için özel alan adları yapılandırın: uygulamalar, sosyal bağlayıcılar ve kurumsal bağlayıcılar (OIDC).',
+      'Aşağıdaki özellikleri ayarlamak için özel alan adları yapılandırın: uygulamalar, sosyal bağlayıcılar ve kurumsal bağlayıcılar.',
   },
   default: {
     default_domain: 'Varsayılan Alan Adı',

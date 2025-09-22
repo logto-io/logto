@@ -13,7 +13,7 @@ const domain = {
     custom_domain_description:
       'Improve your branding by utilizing a custom domain. This domain will be used in your sign-in experience.',
     custom_domain_field: 'Custom domains',
-    custom_domain_placeholder: 'your.domain.com',
+    custom_domain_placeholder: 'auth.domain.com',
     add_custom_domain_field: 'Add a custom domain',
     custom_domains_field: 'Custom domains',
     add_domain: 'Add domain',
@@ -43,7 +43,7 @@ const domain = {
       deleted: 'Delete custom domain successfully!',
     },
     config_custom_domain_description:
-      'Configure custom domains to set up the following features: applications, social connectors, and enterprise connectors (OIDC).',
+      'Configure custom domains to set up the following features: applications, social connectors, and enterprise connectors.',
   },
   default: {
     default_domain: 'Default domain',

@@ -12,7 +12,7 @@ const domain = {
     custom_domain_description:
       'ブランディングを向上させるために、カスタムドメインを利用してください。このドメインは、サインインエクスペリエンスで使用されます。',
     custom_domain_field: 'カスタムドメイン',
-    custom_domain_placeholder: 'your.domain.com',
+    custom_domain_placeholder: 'auth.domain.com',
     add_custom_domain_field: 'カスタムドメインを追加',
     custom_domains_field: 'カスタムドメイン',
     add_domain: 'ドメインを追加',
@@ -42,7 +42,7 @@ const domain = {
       deleted: 'カスタムドメインを正常に削除しました！',
     },
     config_custom_domain_description:
-      'アプリケーション、ソーシャルコネクタ、エンタープライズコネクタ（OIDC）を設定するために、カスタムドメインを構成します。',
+      'アプリケーション、ソーシャルコネクタ、エンタープライズコネクタを設定するために、カスタムドメインを構成します。',
   },
   default: {
     default_domain: 'デフォルトドメイン',
