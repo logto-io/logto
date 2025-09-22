@@ -72,13 +72,6 @@
     outline-color: var(--color-focused-variant);
   }
 
-  &.readOnly {
-    background: var(--color-inverse-on-surface);
-    color: var(--color-text);
-    border-color: var(--color-border);
-    cursor: default;
-  }
-
   &.error {
     border-color: var(--color-error);
 
@@ -90,6 +83,17 @@
   .icon {
     display: flex;
     color: var(--color-text-secondary);
+  }
+
+  &.readOnly {
+    background: var(--color-inverse-on-surface);
+    color: var(--color-text);
+    border-color: var(--color-border);
+    cursor: default;
+
+    .icon {
+      color: var(--color-disabled);
+    }
   }
 
   .clear {
