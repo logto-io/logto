@@ -123,7 +123,7 @@ export default function verificationRoutes<T extends UserRouter>(
 
       await codeVerification.sendVerificationCode({
         locale: ctx.locale,
-        uiLocales,
+        ...(uiLocales && { uiLocales }),
         ...emailContextPayload,
       });
 

@@ -123,13 +123,14 @@ export default function additionalRoutes<T extends IRouterParamContext>(
       const { event } = getInteractionStorage(interactionDetails.result);
 
       const messageContext = await buildVerificationCodeTemplateContext(passcodes, ctx, guard.body);
+      const { uiLocales } = getLogtoCookie(ctx);
 
       await sendVerificationCodeToIdentifier(
         {
           event,
           ...guard.body,
           locale: ctx.locale,
-          uiLocales: getLogtoCookie(ctx).uiLocales,
+          ...(uiLocales && { uiLocales }),
           messageContext,
         },
         interactionDetails.jti,
