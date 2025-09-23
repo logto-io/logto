@@ -35,7 +35,7 @@ export default function verificationCodeRoutes<T extends AuthedMeRouter>(
       const { uiLocales } = getLogtoCookie(ctx);
       await sendPasscode(code, {
         locale: ctx.locale,
-        uiLocales,
+        ...(uiLocales && { uiLocales }),
       });
 
       ctx.status = 204;
