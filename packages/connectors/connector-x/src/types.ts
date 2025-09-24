@@ -12,6 +12,7 @@ export const userInfoResponseGuard = z.object({
   data: z.object({
     id: z.string(),
     name: z.string().optional().nullable(),
+    confirmed_email: z.string().optional().nullable(),
   }),
 });
 

@@ -113,8 +113,10 @@ const getUserInfo =
         redirectUri
       );
 
+      const hasEmailScope = (config.scope ?? defaultScope).split(' ').includes('users.email');
+
       const userInfo = await ky
-        .get(userInfoEndpoint, {
+        .get(`${userInfoEndpoint}${hasEmailScope ? '?user.fields=confirmed_email' : ''}`, {
           headers: {
             Authorization: `${token_type} ${access_token}`,
           },
@@ -128,12 +130,13 @@ const getUserInfo =
       }
 
       const {
-        data: { id, name },
+        data: { id, name, confirmed_email: email },
       } = userInfoResult.data;
 
       return {
         id,
         name: conditional(name),
+        email: conditional(email),
         rawData: jsonGuard.parse(userInfo),
       };
     } catch (error: unknown) {
