@@ -51,7 +51,7 @@ In your Logto connector configuration, fill out the following fields with the va
 - **clientId:** Your App's Client ID.
 - **clientSecret:** Your App's Client Secret.
 
-`scope` is a space-delimited list of [scopes](https://docs.x.com/x-api/users/user-lookup-me). If not provided, the default scope is `tweet.read users.read`.
+`scope` accepts a space-delimited list of [scopes](https://docs.x.com/fundamentals/authentication/oauth-2-0/authorization-code#scopes). If you omit it, the default `tweet.read users.read` is used, and those two scopes are always required. Add any others your app needs, for example, include `users.email` to sync the user’s email: `tweet.read users.read users.email`.
 
 ### Config types
 

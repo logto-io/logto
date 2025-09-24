@@ -119,6 +119,7 @@ describe('getUserInfo', () => {
     expect(socialUserInfo).toStrictEqual({
       id: '1',
       name: 'monalisa',
+      email: undefined,
       rawData: {
         data: {
           id: '1',
