@@ -10,6 +10,7 @@ import {
   setEmailConnector,
   setSmsConnector,
 } from '#src/helpers/connector.js';
+import { fulfillUserEmail } from '#src/helpers/experience/index.js';
 import {
   successfullySendVerificationCode,
   successfullyVerifyVerificationCode,
@@ -19,33 +20,35 @@ import { resetMfaSettings } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile } from '#src/helpers/user.js';
 import { generatePhone } from '#src/utils.js';
 
+const emailPrimarySignInExperience = {
+  signUp: {
+    identifiers: [SignInIdentifier.Email],
+    password: true,
+    verify: true,
+  },
+  signIn: {
+    methods: [
+      {
+        identifier: SignInIdentifier.Email,
+        password: true,
+        verificationCode: false,
+        isPasswordPrimary: false,
+      },
+    ],
+  },
+  mfa: {
+    factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
+    policy: MfaPolicy.Mandatory,
+  },
+};
+
 describe('Register interaction - optional additional MFA suggestion', () => {
   beforeAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
     await setEmailConnector();
     await setSmsConnector();
     // Set up sign-in experience upfront (refer to email-with-signup.test.ts pattern)
-    await updateSignInExperience({
-      signUp: {
-        identifiers: [SignInIdentifier.Email],
-        password: true,
-        verify: true,
-      },
-      signIn: {
-        methods: [
-          {
-            identifier: SignInIdentifier.Email,
-            password: true,
-            verificationCode: false,
-            isPasswordPrimary: false,
-          },
-        ],
-      },
-      mfa: {
-        factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
-        policy: MfaPolicy.Mandatory,
-      },
-    });
+    await updateSignInExperience(emailPrimarySignInExperience);
   });
 
   afterAll(async () => {
@@ -138,6 +141,76 @@ describe('Register interaction - optional additional MFA suggestion', () => {
     const { redirectTo } = await client.submitInteraction();
     const userId = await processSession(client, redirectTo);
     await logoutClient(client);
+    await deleteUser(userId);
+  });
+
+  it('should suggest additional MFA when email is required as a secondary identifier', async () => {
+    const secondaryEmailExperience = {
+      signUp: {
+        identifiers: [SignInIdentifier.Username],
+        password: true,
+        verify: true,
+        secondaryIdentifiers: [
+          {
+            identifier: SignInIdentifier.Email,
+            verify: true,
+          },
+        ],
+      },
+      signIn: {
+        methods: [
+          {
+            identifier: SignInIdentifier.Username,
+            password: true,
+            verificationCode: false,
+            isPasswordPrimary: false,
+          },
+        ],
+      },
+      mfa: {
+        factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
+        policy: MfaPolicy.Mandatory,
+      },
+    };
+
+    await updateSignInExperience(secondaryEmailExperience);
+
+    const { username, password, primaryEmail } = generateNewUserProfile({
+      username: true,
+      password: true,
+      primaryEmail: true,
+    });
+
+    const client = await initExperienceClient({ interactionEvent: InteractionEvent.Register });
+
+    await client.updateProfile({ type: SignInIdentifier.Username, value: username });
+    await client.updateProfile({ type: 'password', value: password });
+
+    await fulfillUserEmail(client, primaryEmail);
+
+    await client.identifyUser();
+
+    await expectRejects<{
+      availableFactors: MfaFactor[];
+      skippable: boolean;
+      maskedIdentifiers?: Record<string, string>;
+      suggestion?: boolean;
+    }>(client.submitInteraction(), {
+      code: 'session.mfa.suggest_additional_mfa',
+      status: 422,
+      expectData: (data) => {
+        expect(data.availableFactors).toEqual([MfaFactor.TOTP, MfaFactor.EmailVerificationCode]);
+        expect(data.maskedIdentifiers).toBeDefined();
+        expect(data.maskedIdentifiers?.[MfaFactor.EmailVerificationCode]).toMatch(/\*{4}/);
+        expect(data.skippable).toBe(true);
+        expect(data.suggestion).toBe(true);
+      },
+    });
+
+    await client.skipMfaSuggestion();
+
+    const { redirectTo } = await client.submitInteraction();
+    const userId = await processSession(client, redirectTo);
     await deleteUser(userId);
   });
 

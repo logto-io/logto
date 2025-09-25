@@ -321,14 +321,16 @@ export class Mfa {
     // If the user has email, but not registered by email, no suggestion
     if (
       factorsInUser.includes(MfaFactor.EmailVerificationCode) &&
-      !signUp.identifiers.includes(SignInIdentifier.Email)
+      !signUp.identifiers.includes(SignInIdentifier.Email) &&
+      !signUp.secondaryIdentifiers?.some(({ identifier }) => identifier === SignInIdentifier.Email)
     ) {
       return;
     }
     // If the user has phone, but not registered by phone, no suggestion
     if (
       factorsInUser.includes(MfaFactor.PhoneVerificationCode) &&
-      !signUp.identifiers.includes(SignInIdentifier.Phone)
+      !signUp.identifiers.includes(SignInIdentifier.Phone) &&
+      !signUp.secondaryIdentifiers?.some(({ identifier }) => identifier === SignInIdentifier.Phone)
     ) {
       return;
     }
