@@ -4149,8 +4149,8 @@ importers:
         specifier: 6.0.0
         version: 6.0.0(typescript@5.5.3)
       '@simplewebauthn/browser':
-        specifier: ^10.0.0
-        version: 10.0.0
+        specifier: ^13.0.0
+        version: 13.2.0
       '@simplewebauthn/types':
         specifier: ^10.0.0
         version: 10.0.0
@@ -7208,8 +7208,8 @@ packages:
     peerDependencies:
       typescript: ^5.3.3
 
-  '@simplewebauthn/browser@10.0.0':
-    resolution: {integrity: sha512-hG0JMZD+LiLUbpQcAjS4d+t4gbprE/dLYop/CkE01ugU/9sKXflxV5s0DRjdz3uNMFecatRfb4ZLG3XvF8m5zg==}
+  '@simplewebauthn/browser@13.2.0':
+    resolution: {integrity: sha512-N3fuA1AAnTo5gCStYoIoiasPccC+xPLx2YU88Dv0GeAmPQTWHETlZQq5xZ0DgUq1H9loXMWQH5qqUjcI7BHJ1A==}
 
   '@simplewebauthn/server@10.0.0':
     resolution: {integrity: sha512-w5eIoiF7ltg1sgggjY5Tx654j+DBuyEx2B3869jjmPp0xl2Z4BUP4kJ3yJ6DnZIv+ZYYntT3E6nZXNjPOQbrtw==}
@@ -7217,6 +7217,7 @@ packages:
 
   '@simplewebauthn/types@10.0.0':
     resolution: {integrity: sha512-SFXke7xkgPRowY2E+8djKbdEznTVnD5R6GO7GPTthpHrokLvNKw8C3lFZypTxLI7KkCfGPfhtqB3d7OVGGa9jQ==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   '@sinclair/typebox@0.27.8':
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
@@ -13253,7 +13254,7 @@ packages:
   puppeteer@23.10.3:
     resolution: {integrity: sha512-ODG+L9vCSPkQ1j+yDtNDdkSsWt2NXNrQO5C8MlwkYgE2hYnXdqVRbBpsHnoP7+EULJJKbWyR2Q4BdfohjQor3A==}
     engines: {node: '>=18'}
-    deprecated: < 24.9.0 is no longer supported
+    deprecated: < 24.10.2 is no longer supported
     hasBin: true
 
   pure-rand@6.0.0:
@@ -18325,9 +18326,7 @@ snapshots:
     dependencies:
       typescript: 5.5.3
 
-  '@simplewebauthn/browser@10.0.0':
-    dependencies:
-      '@simplewebauthn/types': 10.0.0
+  '@simplewebauthn/browser@13.2.0': {}
 
   '@simplewebauthn/server@10.0.0':
     dependencies:
