@@ -42,7 +42,7 @@
                     "description": "The email address to associate with the one-time token."
                   },
                   "expiresIn": {
-                    "description": "The expiration time in seconds. If not provided, defaults to 2 days (172,800 seconds)."
+                    "description": "The expiration time in seconds. If not provided, defaults to 10 mins (600 seconds)."
                   },
                   "context": {
                     "description": "Additional context to store with the one-time token. This can be used to store arbitrary data that will be associated with the token."
