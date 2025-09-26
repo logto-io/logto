@@ -132,7 +132,7 @@ function PlanUsageCard({
             content={
               <Trans
                 components={{
-                  a: <TextLink to={addOnPricingExplanationLink} />,
+                  a: <TextLink targetBlank to={addOnPricingExplanationLink} />,
                 }}
               >
                 {t(tooltipKey, {
