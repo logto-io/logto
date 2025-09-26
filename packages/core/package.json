@@ -80,7 +80,7 @@
     "lru-cache": "^11.0.0",
     "nanoid": "^5.0.9",
     "node-forge": "^1.3.1",
-    "oidc-provider": "github:logto-io/node-oidc-provider#c8f353f8593b951156e730b96da38a14386a3338",
+    "oidc-provider": "github:logto-io/node-oidc-provider#61f1133bbf1e4b1b65403641487447c052565fb9",
     "openapi-types": "^12.1.3",
     "otplib": "^12.0.1",
     "p-map": "^7.0.2",
