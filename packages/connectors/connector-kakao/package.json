@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-kakao",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Kakao connector implementation.",
   "author": "Kyungyoon Kim. <ruddbs5302@gmail.com>",
   "dependencies": {

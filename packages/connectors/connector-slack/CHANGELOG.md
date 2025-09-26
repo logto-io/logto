@@ -1,5 +1,13 @@
 # @logto/connector-slack
 
+## 0.3.1
+
+### Patch Changes
+
+- Updated dependencies [ad4f9d6abf]
+- Updated dependencies [5da6792d40]
+  - @logto/connector-kit@4.6.0
+
 ## 0.3.0
 
 ### Minor Changes

@@ -1,5 +1,32 @@
 # Change Log
 
+## 1.21.0
+
+### Minor Changes
+
+- 1fb8593659: add email/phone MFA via verification codes
+
+  Summary
+
+  - Add two new MFA factors: Email verification code and SMS (phone) verification code.
+  - Support binding these factors during registration or first sign-in when MFA is required.
+  - Support verifying these factors on subsequent sign-ins with dedicated MFA verification pages.
+  - Update Console to configure these factors and surface guidance/conflict warnings.
+  - Support customizing forgot password methods in Sign-in Experience (related).
+
+  To learn more about this feature, please refer to the documentation: https://docs.logto.io/end-user-flows/mfa
+
+- 0ef4260e34: unify branding customization options between applications and organizations
+
+  We are now offering a more unified experience for branding customization options between applications and organizations, including:
+
+  - Branding colors (light and dark mode)
+  - Branding logos and favicons (both light and dark mode)
+  - Custom CSS
+
+  When all branding customization options are set, the precedence of the options are as follows:
+  Organization > Application > Omni sign-in experience settings
+
 ## 1.20.0
 
 ### Minor Changes

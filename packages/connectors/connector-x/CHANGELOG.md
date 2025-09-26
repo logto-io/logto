@@ -1,5 +1,19 @@
 # @logto/connector-x
 
+## 0.4.0
+
+### Minor Changes
+
+- eeeba78f99: add email syncing to x connector
+
+  You can now add the `users.email` scope to sync users' email addresses from X accounts.
+
+### Patch Changes
+
+- Updated dependencies [ad4f9d6abf]
+- Updated dependencies [5da6792d40]
+  - @logto/connector-kit@4.6.0
+
 ## 0.3.0
 
 ### Minor Changes
