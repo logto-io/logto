@@ -1663,8 +1663,8 @@ importers:
         version: 3.24.3
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-590fbce
-        version: 0.2.5-590fbce(zod@3.24.3)
+        specifier: 0.2.5-fadb481
+        version: 0.2.5-fadb481(debug@4.4.0)
       '@silverhand/eslint-config':
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.5.3)(typescript@5.5.3)
@@ -3310,8 +3310,8 @@ importers:
         specifier: ^29.5.0
         version: 29.6.3
       '@logto/cloud':
-        specifier: 0.2.5-590fbce
-        version: 0.2.5-590fbce(zod@3.24.3)
+        specifier: 0.2.5-fadb481
+        version: 0.2.5-fadb481(debug@4.4.0)
       '@logto/connector-kit':
         specifier: workspace:^
         version: link:../toolkit/connector-kit
@@ -3824,8 +3824,8 @@ importers:
         version: 3.24.3
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-590fbce
-        version: 0.2.5-590fbce(zod@3.24.3)
+        specifier: 0.2.5-fadb481
+        version: 0.2.5-fadb481(debug@4.4.0)
       '@silverhand/eslint-config':
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.5.3)(typescript@5.5.3)
@@ -6093,9 +6093,9 @@ packages:
   '@logto/client@3.1.1':
     resolution: {integrity: sha512-IYhZqP/hzBhNn3u0MpJD/0MSiPRbxt5sYgDXOkhXmNxRnAnXQOBk57+zNmAT3CqCiERJovriEpLM6eVVsLc3ow==}
 
-  '@logto/cloud@0.2.5-590fbce':
-    resolution: {integrity: sha512-vzRA9X0RKdWYkjnuxdskwX1jmhydMhq7aIxcMazibuQXewVd5m+bVRG+9KDegKFiC5xluBorjiN5NHD9THkchg==}
-    engines: {node: ^22.14.0}
+  '@logto/cloud@0.2.5-fadb481':
+    resolution: {integrity: sha512-E5ZUscmw6R//cYRGUj3xbJB7U2k2w5G6+TbLiWwAAXOpQoDehDWJO7Y9MoWd05VHqFPvs1f9x7xpswrMbkhfMg==}
+    engines: {node: ^18.12.0}
 
   '@logto/js@5.1.0':
     resolution: {integrity: sha512-sOpGv31P6EKBhIGcVuso+aRFzIgOSy7OQO+UmpiABscsRloiOLKTzpUodnz1y3/khtTlmuwrClUricHc4Fxdjg==}
@@ -7217,6 +7217,7 @@ packages:
 
   '@simplewebauthn/types@10.0.0':
     resolution: {integrity: sha512-SFXke7xkgPRowY2E+8djKbdEznTVnD5R6GO7GPTthpHrokLvNKw8C3lFZypTxLI7KkCfGPfhtqB3d7OVGGa9jQ==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   '@sinclair/typebox@0.27.8':
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
@@ -8260,10 +8261,23 @@ packages:
   '@withtyped/client@0.8.8':
     resolution: {integrity: sha512-esZKokD4YUyECHblIYrPIBYgjzpoY9AskW5Lgg8cD9Qxn+LLKwTzjBDcty07kkCS0wvQ2RlzmhYjoRE5yaH6Zg==}
 
+  '@withtyped/postgres@0.11.0':
+    resolution: {integrity: sha512-PHnx6ake/MDdyy4sZXS/7l5XNBtjqlPSqSHrlmCYUXYxUV0sHSrXECKxX7deAvWZtcHVh9VaWEpiQBhFS06Vig==}
+    peerDependencies:
+      '@withtyped/server': ^0.11.0
+
+  '@withtyped/server@0.11.1':
+    resolution: {integrity: sha512-9b/rH+6S8rKlgVTuDfDOSXiVjOBz5yd4EIP6qswncIJvA+i9j1ykR0GIBGuJSQAr7SWrSNCILUVK+oDTiWzJ6g==}
+    peerDependencies:
+      zod: ^3.19.1
+
   '@withtyped/server@0.14.0':
     resolution: {integrity: sha512-syBE91FzVzQAbuoT+coJwXcyPbyVZgrvKjQgAj4y5y38q7k4Le6SBan0kZE2VEKj2HyYj6i91uI99FdE1SkoYA==}
     peerDependencies:
       zod: ^3.19.1
+
+  '@withtyped/shared@0.2.0':
+    resolution: {integrity: sha512-SADIVEospfIWAVK0LxX7F1T04hsWMZ0NkfR3lNfvJqOktJ52GglI3FOTVYOM1NJYReDT6pR0XFlCfaF8TVPt8w==}
 
   '@withtyped/shared@0.2.2':
     resolution: {integrity: sha512-Vpcj12NqaoZ8M5Z/1kffheI9FBZEm9goed0THmgTcMKXLHjXSRbMZMp0olVxovEgaTIAydshqJOQUXKZMctIZw==}
@@ -10257,6 +10271,9 @@ packages:
       picomatch:
         optional: true
 
+  fetch-retry@5.0.6:
+    resolution: {integrity: sha512-3yurQZ2hD9VISAhJJP9bpYFNQrHHBXE2JxxjY5aLEcDi46RmAzJE2OC9FAde0yis5ElW0jTTzs0zfg/Cca4XqQ==}
+
   figures@5.0.0:
     resolution: {integrity: sha512-ej8ksPF4x6e5wvK9yevct0UCXh8TTFlWGVLlgjZuoBH1HwjIfKE/IdL5mq89sFA7zELi1VhKpmtDnrs7zWyeyg==}
     engines: {node: '>=14'}
@@ -10308,6 +10325,10 @@ packages:
   find-up@5.0.0:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
+
+  find-up@6.3.0:
+    resolution: {integrity: sha512-v2ZsoEuVHYy8ZIlYqwPe/39Cy+cFDzp4dXPaxNvkEuouymu+2Jbz0PxpKarJHYJTmv2HWT3O382qY8l4jMWthw==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
   find-up@7.0.0:
     resolution: {integrity: sha512-YyZM99iHrqLKjmt4LJDj58KI+fYyufRLBSYcqycxf//KpBk9FoewoGX0450m9nB44qrZnovzC2oeP5hUibxc/g==}
@@ -11441,6 +11462,9 @@ packages:
 
   joi@17.13.3:
     resolution: {integrity: sha512-otDA4ldcIx+ZXsKHWmp0YizCweVRZG96J10b0FevjfuncLO1oX59THoAmHkNubYJ+9gWsYsp5k8v4ib6oDv1fA==}
+
+  jose@4.15.9:
+    resolution: {integrity: sha512-1vUQX+IdDMVPj4k8kOxgUqlcK518yluMuGZwqlr44FS1ppZB/5GWh4rZG89erpOBOJjU/OBsnCVFfapsRz6nEA==}
 
   jose@5.9.6:
     resolution: {integrity: sha512-AMlnetc9+CV9asI19zHmrgS/WYsWUwCn2R7RzlbJWD7F9eWYUTGyBmU9o6PxngtLGOiDGPRu+Uc4fhKzbpteZQ==}
@@ -13253,7 +13277,7 @@ packages:
   puppeteer@23.10.3:
     resolution: {integrity: sha512-ODG+L9vCSPkQ1j+yDtNDdkSsWt2NXNrQO5C8MlwkYgE2hYnXdqVRbBpsHnoP7+EULJJKbWyR2Q4BdfohjQor3A==}
     engines: {node: '>=18'}
-    deprecated: < 24.9.0 is no longer supported
+    deprecated: < 24.10.2 is no longer supported
     hasBin: true
 
   pure-rand@6.0.0:
@@ -17126,12 +17150,32 @@ snapshots:
       camelcase-keys: 9.1.3
       jose: 5.9.6
 
-  '@logto/cloud@0.2.5-590fbce(zod@3.24.3)':
+  '@logto/cloud@0.2.5-fadb481(debug@4.4.0)':
     dependencies:
+      '@logto/app-insights': link:../../.logto/packages/app-insights
+      '@logto/cli': link:../../.logto/packages/cli
+      '@logto/connector-kit': link:../../.logto/packages/toolkit/connector-kit
+      '@logto/core-kit': link:../../.logto/packages/toolkit/core-kit
+      '@logto/schemas': link:../../.logto/packages/schemas
+      '@logto/shared': link:../../.logto/packages/shared
       '@silverhand/essentials': 2.9.2
-      '@withtyped/server': 0.14.0(zod@3.24.3)
+      '@withtyped/postgres': 0.11.0(@withtyped/server@0.11.1(zod@3.24.3))
+      '@withtyped/server': 0.11.1(zod@3.24.3)
+      accepts: 1.3.8
+      chalk: 5.3.0
+      decamelize: 6.0.0
+      dotenv: 16.4.5
+      fetch-retry: 5.0.6
+      find-up: 6.3.0
+      got: 13.0.0
+      helmet: 7.1.0
+      http-proxy: 1.18.1(debug@4.4.0)
+      jose: 4.15.9
+      mime-types: 2.1.35
+      zod: 3.24.3
     transitivePeerDependencies:
-      - zod
+      - debug
+      - pg-native
 
   '@logto/js@5.1.0':
     dependencies:
@@ -19890,12 +19934,29 @@ snapshots:
     transitivePeerDependencies:
       - zod
 
+  '@withtyped/postgres@0.11.0(@withtyped/server@0.11.1(zod@3.24.3))':
+    dependencies:
+      '@types/pg': 8.11.2
+      '@withtyped/server': 0.11.1(zod@3.24.3)
+      '@withtyped/shared': 0.2.0
+      pg: 8.11.3
+    transitivePeerDependencies:
+      - pg-native
+
+  '@withtyped/server@0.11.1(zod@3.24.3)':
+    dependencies:
+      '@silverhand/essentials': 2.9.2
+      '@withtyped/shared': 0.2.0
+      zod: 3.24.3
+
   '@withtyped/server@0.14.0(zod@3.24.3)':
     dependencies:
       '@silverhand/essentials': 2.9.2
       '@withtyped/shared': 0.2.2
       nanoid: 5.0.9
       zod: 3.24.3
+
+  '@withtyped/shared@0.2.0': {}
 
   '@withtyped/shared@0.2.2': {}
 
@@ -22079,6 +22140,8 @@ snapshots:
     optionalDependencies:
       picomatch: 4.0.2
 
+  fetch-retry@5.0.6: {}
+
   figures@5.0.0:
     dependencies:
       escape-string-regexp: 5.0.0
@@ -22134,6 +22197,11 @@ snapshots:
     dependencies:
       locate-path: 6.0.0
       path-exists: 4.0.0
+
+  find-up@6.3.0:
+    dependencies:
+      locate-path: 7.2.0
+      path-exists: 5.0.0
 
   find-up@7.0.0:
     dependencies:
@@ -23606,6 +23674,8 @@ snapshots:
       '@sideway/address': 4.1.5
       '@sideway/formula': 3.0.1
       '@sideway/pinpoint': 2.0.0
+
+  jose@4.15.9: {}
 
   jose@5.9.6: {}
 
