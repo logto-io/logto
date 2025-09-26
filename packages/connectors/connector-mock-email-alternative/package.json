@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-mock-standard-email",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Mock Standard Email Service connector implementation for integration tests only.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {

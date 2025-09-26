@@ -1,5 +1,13 @@
 # @logto/connector-wecom
 
+## 0.5.1
+
+### Patch Changes
+
+- Updated dependencies [ad4f9d6abf]
+- Updated dependencies [5da6792d40]
+  - @logto/connector-kit@4.6.0
+
 ## 0.5.0
 
 ### Minor Changes
