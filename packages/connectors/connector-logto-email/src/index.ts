@@ -40,7 +40,6 @@ const sendMessage =
         body: {
           data: {
             to,
-            // @ts-expect-error TODO @wangsijie: remove this when @logto/cloud updates
             type,
             payload: {
               ...payload,
