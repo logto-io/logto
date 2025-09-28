@@ -26,6 +26,9 @@ const error = {
   invalid_link_description:
     'Dein einmaliger Token ist möglicherweise abgelaufen oder nicht mehr gültig.',
   captcha_verification_failed: 'Fehler beim Captcha-Verifizierung.',
+  terms_acceptance_required: 'Zustimmung zu den Bedingungen erforderlich',
+  terms_acceptance_required_description:
+    'Du musst den Bedingungen zustimmen, um fortzufahren. Bitte versuche es erneut.',
   something_went_wrong: 'Etwas ist schiefgegangen.',
 };
 

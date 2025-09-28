@@ -1,19 +1,19 @@
 import {
   AgreeToTermsPolicy,
+  experience,
   ExtraParamsKey,
   InteractionEvent,
   SignInIdentifier,
   type RequestErrorBody,
 } from '@logto/schemas';
-import { condString } from '@silverhand/essentials';
-import { useCallback, useContext, useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import {
   identifyAndSubmitInteraction,
-  signInWithVerifiedIdentifier,
-  registerWithOneTimeToken,
+  registerWithVerifiedIdentifier,
+  signInWithOneTimeToken,
 } from '@/apis/experience';
 import LoadingLayer from '@/components/LoadingLayer';
 import useApi from '@/hooks/use-api';
@@ -22,15 +22,16 @@ import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
 import useTerms from '@/hooks/use-terms';
 
-import ErrorPage from '../ErrorPage';
-
 const OneTimeToken = () => {
   const [params] = useSearchParams();
-  const [oneTimeTokenError, setOneTimeTokenError] = useState<string | boolean>();
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const hasTermsAgreed = useRef(false);
+  const isSubmitted = useRef(false);
 
   const asyncIdentifyUserAndSubmit = useApi(identifyAndSubmitInteraction);
-  const asyncSignInWithVerifiedIdentifier = useApi(signInWithVerifiedIdentifier);
-  const asyncRegisterWithOneTimeToken = useApi(registerWithOneTimeToken);
+  const asyncSignInWithOneTimeToken = useApi(signInWithOneTimeToken);
+  const asyncRegisterWithVerifiedIdentifier = useApi(registerWithVerifiedIdentifier);
 
   const { setIdentifierInputValue } = useContext(UserInteractionContext);
   const { termsValidation, agreeToTermsPolicy } = useTerms();
@@ -40,14 +41,27 @@ const OneTimeToken = () => {
   const preRegisterErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.Register);
 
   /**
-   * Update interaction event to `SignIn`, and then identify user and submit.
+   * Update interaction event to `Register`, and then identify user and submit.
    */
-  const signInWithOneTimeToken = useCallback(
+  const registerWithOneTimeToken = useCallback(
     async (verificationId: string) => {
-      const [error, result] = await asyncSignInWithVerifiedIdentifier(verificationId);
+      if (
+        !hasTermsAgreed.current &&
+        agreeToTermsPolicy !== AgreeToTermsPolicy.Automatic &&
+        !(await termsValidation())
+      ) {
+        navigate(
+          { pathname: `/${experience.routes.oneTimeToken}/error` },
+          { replace: true, state: { errorMessage: 'terms_acceptance_required_description' } }
+        );
+        return;
+      }
+
+      setIsLoading(true);
+      const [error, result] = await asyncRegisterWithVerifiedIdentifier(verificationId);
 
       if (error) {
-        await handleError(error, preSignInErrorHandler);
+        await handleError(error, preRegisterErrorHandler);
         return;
       }
 
@@ -55,7 +69,15 @@ const OneTimeToken = () => {
         await redirectTo(result.redirectTo);
       }
     },
-    [preSignInErrorHandler, asyncSignInWithVerifiedIdentifier, handleError, redirectTo]
+    [
+      agreeToTermsPolicy,
+      preRegisterErrorHandler,
+      asyncRegisterWithVerifiedIdentifier,
+      navigate,
+      handleError,
+      redirectTo,
+      termsValidation,
+    ]
   );
 
   /**
@@ -67,11 +89,12 @@ const OneTimeToken = () => {
       const [error, result] = await asyncIdentifyUserAndSubmit({ verificationId });
 
       if (error) {
+        setIsLoading(false);
         await handleError(error, {
-          'user.email_already_in_use': async () => {
-            await signInWithOneTimeToken(verificationId);
+          'user.user_not_exist': async () => {
+            await registerWithOneTimeToken(verificationId);
           },
-          ...preRegisterErrorHandler,
+          ...preSignInErrorHandler,
         });
         return;
       }
@@ -81,14 +104,15 @@ const OneTimeToken = () => {
       }
     },
     [
-      preRegisterErrorHandler,
+      preSignInErrorHandler,
       asyncIdentifyUserAndSubmit,
       handleError,
       redirectTo,
-      signInWithOneTimeToken,
+      registerWithOneTimeToken,
     ]
   );
 
+  // Single effect: validate params, run terms gating once, then proceed to submission with idempotency
   useEffect(() => {
     (async () => {
       const token = params.get(ExtraParamsKey.OneTimeToken);
@@ -96,38 +120,66 @@ const OneTimeToken = () => {
       const errorMessage = params.get('errorMessage');
 
       if (errorMessage) {
-        setOneTimeTokenError(errorMessage);
+        navigate(
+          { pathname: `/${experience.routes.oneTimeToken}/error` },
+          { replace: true, state: { errorMessage } }
+        );
         return;
       }
 
       if (!token || !email) {
-        setOneTimeTokenError(true);
+        navigate(`/${experience.routes.oneTimeToken}/error`, { replace: true });
         return;
       }
 
-      /**
-       * Check if the user has agreed to the terms and privacy policy before navigating to the 3rd-party social sign-in page
-       * when the policy is set to `Manual`
-       */
-      if (agreeToTermsPolicy === AgreeToTermsPolicy.Manual && !(await termsValidation())) {
-        return;
+      if (agreeToTermsPolicy === AgreeToTermsPolicy.Manual) {
+        const isAgreed = await termsValidation();
+
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        hasTermsAgreed.current = isAgreed;
+
+        if (!isAgreed) {
+          navigate(
+            { pathname: `/${experience.routes.oneTimeToken}/error` },
+            {
+              replace: true,
+              state: {
+                title: 'error.terms_acceptance_required',
+                message: 'error.terms_acceptance_required_description',
+              },
+            }
+          );
+          return;
+        }
       }
 
-      const [error, result] = await asyncRegisterWithOneTimeToken({
+      if (isSubmitted.current) {
+        return;
+      }
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      isSubmitted.current ||= true;
+
+      setIsLoading(true);
+      const [error, result] = await asyncSignInWithOneTimeToken({
         token,
         identifier: { type: SignInIdentifier.Email, value: email },
       });
 
       if (error) {
+        setIsLoading(false);
         await handleError(error, {
           global: (error: RequestErrorBody) => {
-            setOneTimeTokenError(error.message);
+            navigate(
+              { pathname: `/${experience.routes.oneTimeToken}/error` },
+              { replace: true, state: { errorMessage: error.message } }
+            );
           },
         });
         return;
       }
 
       if (!result?.verificationId) {
+        setIsLoading(false);
         return;
       }
 
@@ -136,28 +188,19 @@ const OneTimeToken = () => {
       setIdentifierInputValue({ type: SignInIdentifier.Email, value: email });
 
       await submit(result.verificationId);
+      setIsLoading(false);
     })();
   }, [
     agreeToTermsPolicy,
     params,
-    asyncRegisterWithOneTimeToken,
+    asyncSignInWithOneTimeToken,
     handleError,
+    navigate,
     setIdentifierInputValue,
     submit,
     termsValidation,
   ]);
 
-  if (oneTimeTokenError) {
-    return (
-      <ErrorPage
-        isNavbarHidden
-        title="error.invalid_link"
-        message="error.invalid_link_description"
-        rawMessage={condString(typeof oneTimeTokenError !== 'boolean' && oneTimeTokenError)}
-      />
-    );
-  }
-
-  return <LoadingLayer />;
+  return isLoading ? <LoadingLayer /> : null;
 };
 export default OneTimeToken;

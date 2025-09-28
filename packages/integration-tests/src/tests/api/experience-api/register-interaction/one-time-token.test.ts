@@ -38,8 +38,9 @@ describe('Register interaction with one-time token', () => {
   });
 
   it('should successfully register a new user with a magic link containing a one-time token', async () => {
+    // New flow: try SignIn first, then switch to Register on user.user_not_exist
     const client = await initExperienceClient({
-      interactionEvent: InteractionEvent.Register,
+      interactionEvent: InteractionEvent.SignIn,
     });
 
     const oneTimeToken = await createOneTimeToken({
@@ -54,6 +55,14 @@ describe('Register interaction with one-time token', () => {
       },
     });
 
+    // First identify on SignIn should fail for new user
+    await expectRejects(client.identifyUser({ verificationId }), {
+      code: 'user.user_not_exist',
+      status: 404,
+    });
+
+    // Switch to Register then continue
+    await client.updateInteractionEvent({ interactionEvent: InteractionEvent.Register });
     await client.identifyUser({ verificationId });
 
     const { redirectTo } = await client.submitInteraction();
@@ -62,7 +71,7 @@ describe('Register interaction with one-time token', () => {
     await deleteUser(userId);
   });
 
-  it('should fail to sign-up with existing email and be able to sign-in instead', async () => {
+  it('should sign-in directly when email already exists (no need to switch after verify)', async () => {
     const { userProfile, user } = await generateNewUser({
       primaryEmail: true,
       password: true,
@@ -72,8 +81,9 @@ describe('Register interaction with one-time token', () => {
       email: userProfile.primaryEmail,
     });
 
+    // New flow starts with SignIn
     const client = await initExperienceClient({
-      interactionEvent: InteractionEvent.Register,
+      interactionEvent: InteractionEvent.SignIn,
     });
 
     const { verificationId } = await client.verifyOneTimeToken({
@@ -84,17 +94,7 @@ describe('Register interaction with one-time token', () => {
       },
     });
 
-    await expectRejects(
-      client.identifyUser({
-        verificationId,
-      }),
-      {
-        code: 'user.email_already_in_use',
-        status: 422,
-      }
-    );
-
-    await client.updateInteractionEvent({ interactionEvent: InteractionEvent.SignIn });
+    // Existing user: identify on SignIn should succeed directly
     await client.identifyUser({ verificationId });
 
     const { redirectTo } = await client.submitInteraction();
@@ -113,8 +113,9 @@ describe('Register interaction with one-time token', () => {
       },
     });
 
+    // Start with SignIn first per new flow
     const client = await initExperienceClient({
-      interactionEvent: InteractionEvent.Register,
+      interactionEvent: InteractionEvent.SignIn,
     });
 
     const oneTimeToken = await createOneTimeToken({
@@ -129,6 +130,14 @@ describe('Register interaction with one-time token', () => {
       },
     });
 
+    // First identify on SignIn should fail with user not exist
+    await expectRejects(client.identifyUser({ verificationId }), {
+      code: 'user.user_not_exist',
+      status: 404,
+    });
+
+    // Switch to Register; now missing profile (password) is required
+    await client.updateInteractionEvent({ interactionEvent: InteractionEvent.Register });
     await expectRejects(client.identifyUser({ verificationId }), {
       code: 'user.missing_profile',
       status: 422,
@@ -157,8 +166,9 @@ describe('Register interaction with one-time token', () => {
       },
     });
 
+    // Start with SignIn per new flow
     const client = await initExperienceClient({
-      interactionEvent: InteractionEvent.Register,
+      interactionEvent: InteractionEvent.SignIn,
     });
 
     const oneTimeToken = await createOneTimeToken({
@@ -172,7 +182,12 @@ describe('Register interaction with one-time token', () => {
         value: 'foo@logto.io',
       },
     });
-
+    // SignIn identify should fail then switch to Register
+    await expectRejects(client.identifyUser({ verificationId }), {
+      code: 'user.user_not_exist',
+      status: 404,
+    });
+    await client.updateInteractionEvent({ interactionEvent: InteractionEvent.Register });
     await client.identifyUser({ verificationId });
 
     const { redirectTo } = await client.submitInteraction();
@@ -201,8 +216,9 @@ describe('Register interaction with one-time token', () => {
       },
     });
 
+    // Start with SignIn per new flow
     const client = await initExperienceClient({
-      interactionEvent: InteractionEvent.Register,
+      interactionEvent: InteractionEvent.SignIn,
     });
 
     const oneTimeToken = await createOneTimeToken({
@@ -216,7 +232,12 @@ describe('Register interaction with one-time token', () => {
         value: 'foo@logto.io',
       },
     });
-
+    // SignIn identify should fail then switch to Register and fulfill required profile
+    await expectRejects(client.identifyUser({ verificationId }), {
+      code: 'user.user_not_exist',
+      status: 404,
+    });
+    await client.updateInteractionEvent({ interactionEvent: InteractionEvent.Register });
     await client.updateProfile({ type: SignInIdentifier.Username, value: generateUsername() });
     await client.updateProfile({ type: 'password', value: generatePassword() });
     await client.identifyUser({ verificationId });

@@ -27,6 +27,9 @@ const error = {
   invalid_link: 'Lien invalide',
   invalid_link_description: "Votre jeton à usage unique a peut-être expiré ou n'est plus valide.",
   captcha_verification_failed: 'Erreur lors de la vérification du captcha.',
+  terms_acceptance_required: 'Acceptation des conditions requise',
+  terms_acceptance_required_description:
+    'Vous devez accepter les conditions pour continuer. Veuillez réessayer.',
   something_went_wrong: 'Quelque chose a mal tourné.',
 };
 

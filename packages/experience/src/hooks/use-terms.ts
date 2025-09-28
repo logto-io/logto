@@ -25,6 +25,7 @@ const useTerms = () => {
 
   const termsAndPrivacyConfirmModalHandler = useCallback(async () => {
     const [result] = await show({
+      shouldCloseOnOverlayClick: false,
       ModalContent: TermsAndPrivacyConfirmModalContent,
       confirmText: 'action.agree',
     });

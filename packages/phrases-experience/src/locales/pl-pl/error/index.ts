@@ -25,6 +25,9 @@ const error = {
   invalid_link: 'Nieprawidłowy link',
   invalid_link_description: 'Twój jednorazowy token mógł wygasnąć lub nie jest już ważny.',
   captcha_verification_failed: 'Weryfikacja captcha nie powiodła się.',
+  terms_acceptance_required: 'Wymagana akceptacja warunków',
+  terms_acceptance_required_description:
+    'Musisz zaakceptować warunki, aby kontynuować. Spróbuj ponownie.',
   something_went_wrong: 'Coś poszło nie tak.',
 };
 
