@@ -12,5 +12,5 @@ create table daily_active_users (
 create index daily_active_users__id
   on daily_active_users (tenant_id, id);
 
-create index daily_active_users__tenant_date_idx
+create index daily_active_users__tenant_date
   on daily_active_users (tenant_id, date);
