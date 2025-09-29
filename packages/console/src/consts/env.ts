@@ -2,7 +2,7 @@ import { yes } from '@silverhand/essentials';
 
 import { storageKeys } from './storage';
 
-const normalizeEnv = (value: unknown) =>
+export const normalizeEnv = (value: unknown) =>
   value === null || value === undefined ? undefined : String(value);
 
 const isProduction = import.meta.env.PROD;
@@ -23,3 +23,5 @@ export const isMultipleCustomDomainsEnabled = yes(
 );
 
 export const inkeepApiKey = normalizeEnv(import.meta.env.INKEEP_API_KEY);
+export const postHogKey = normalizeEnv(import.meta.env.POSTHOG_PUBLIC_KEY);
+export const postHogHost = normalizeEnv(import.meta.env.POSTHOG_PUBLIC_HOST);

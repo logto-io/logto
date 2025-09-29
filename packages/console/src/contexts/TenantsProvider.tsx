@@ -63,7 +63,13 @@ type Tenants = {
   removeTenant: (tenantId: string) => void;
   /** Update a tenant by ID if it exists in the current tenants data. */
   updateTenant: (tenantId: string, data: Partial<TenantResponse>) => void;
-  /** The current tenant ID parsed from the URL. */
+  /**
+   * The current tenant ID parsed from the URL.
+   *
+   * - If it's a non-cloud deployment, it will always be `default`.
+   * - For cloud deployment, if it's `''`, the user is not in a tenant context (e.g. in onboarding
+   * routes).
+   */
   currentTenantId: string;
   currentTenant?: TenantResponse;
   /** Indicates if the current tenant is a development tenant. */

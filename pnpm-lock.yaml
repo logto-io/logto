@@ -303,7 +303,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -370,7 +370,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -428,7 +428,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -486,7 +486,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -547,7 +547,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -611,7 +611,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -675,7 +675,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -736,7 +736,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -803,7 +803,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -861,7 +861,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -919,7 +919,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -977,7 +977,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1035,7 +1035,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1096,7 +1096,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1166,7 +1166,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1227,7 +1227,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1282,7 +1282,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1334,7 +1334,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1389,7 +1389,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1447,7 +1447,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1505,7 +1505,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1566,7 +1566,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1627,7 +1627,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1688,7 +1688,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1746,7 +1746,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1804,7 +1804,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1862,7 +1862,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1920,7 +1920,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -1978,7 +1978,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2036,7 +2036,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2094,7 +2094,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2152,7 +2152,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2219,7 +2219,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2289,7 +2289,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2347,7 +2347,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2402,7 +2402,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2460,7 +2460,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2524,7 +2524,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2582,7 +2582,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2643,7 +2643,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2701,7 +2701,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2765,7 +2765,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2823,7 +2823,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2881,7 +2881,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -2994,7 +2994,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -3052,7 +3052,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -3110,7 +3110,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -3171,7 +3171,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -3226,7 +3226,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -3281,7 +3281,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.3
-        version: 14.0.3
+        version: 14.0.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -3422,7 +3422,7 @@ importers:
         version: 1.11.13
       debug:
         specifier: ^4.3.4
-        version: 4.4.0(supports-color@5.5.0)
+        version: 4.4.1(supports-color@5.5.0)
       deep-object-diff:
         specifier: ^1.1.9
         version: 1.1.9
@@ -3492,6 +3492,9 @@ importers:
       postcss-modules:
         specifier: ^6.0.0
         version: 6.0.0(postcss@8.5.3)
+      posthog-js:
+        specifier: ^1.268.6
+        version: 1.268.6
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -3912,7 +3915,7 @@ importers:
         version: 15.0.2
       nock:
         specifier: ^14.0.0-beta.5
-        version: 14.0.3
+        version: 14.0.6
       node-mocks-http:
         specifier: ^1.12.1
         version: 1.12.1
@@ -6146,10 +6149,6 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
 
-  '@mswjs/interceptors@0.38.2':
-    resolution: {integrity: sha512-jS/XP42rw1K+WmJPC39i/aAKvNGQrjn7V85RALvozYqBy+KjFkq6pL+ZXSBCM0sNJalFoaCCWqZE0TuK2Mn99g==}
-    engines: {node: '>=18'}
-
   '@mswjs/interceptors@0.39.3':
     resolution: {integrity: sha512-9bw/wBL7pblsnOCIqvn1788S9o4h+cC5HWXg0Xhh0dOzsZ53IyfmBM+FYqpDDPbm0xjCqEqvCITloF3Dm4TXRQ==}
     engines: {node: '>=18'}
@@ -6274,6 +6273,9 @@ packages:
     resolution: {integrity: sha512-s9RtWoxkOLmRJdw3oFvhFbs9OJS0BzrLUc8Hf6l2UdCNd1rqeEyD4BhCJkvzeEoD1FsK4mirsWwGerhVmYKtZg==}
     engines: {node: '>=18'}
     hasBin: true
+
+  '@posthog/core@1.2.1':
+    resolution: {integrity: sha512-zNw96BipqM5/Tf161Q8/K5zpwGY3ezfb2wz+Yc3fIT5OQHW8eEzkQldPgtFKMUkqImc73ukEa2IdUpS6vEGH7w==}
 
   '@puppeteer/browsers@2.10.0':
     resolution: {integrity: sha512-HdHF4rny4JCvIcm7V1dpvpctIGqM3/Me255CB44vW7hDG1zYMmcBMjpNqZEDxdCfXGLkx5kP0+Jz5DUS+ukqtA==}
@@ -7217,6 +7219,7 @@ packages:
 
   '@simplewebauthn/types@10.0.0':
     resolution: {integrity: sha512-SFXke7xkgPRowY2E+8djKbdEznTVnD5R6GO7GPTthpHrokLvNKw8C3lFZypTxLI7KkCfGPfhtqB3d7OVGGa9jQ==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   '@sinclair/typebox@0.27.8':
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
@@ -9132,6 +9135,9 @@ packages:
   core-js@3.34.0:
     resolution: {integrity: sha512-aDdvlDder8QmY91H88GzNi9EtQi2TjvQhpCX6B1v/dAZHU1AuLgHvRh54RiOerpEhEW46Tkf+vgAViB/CWC0ag==}
 
+  core-js@3.45.1:
+    resolution: {integrity: sha512-L4NPsJlCfZsPeXukyzHFlg/i7IIVwHSItR0wg0FLNqYClJ4MQYTYLbC7EkjKYRLZF2iof2MUgN0EGy7MdQFChg==}
+
   cose-base@1.0.3:
     resolution: {integrity: sha512-s9whTXInMSgAp/NVXVNuVxVKzGH2qck3aQlVHxDCdAEPgtMKwc4Wq6/QKhgdEdgbLSi9rBTAcPoRa6JpiG4ksg==}
 
@@ -9463,24 +9469,6 @@ packages:
 
   debug@4.3.4:
     resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
-    engines: {node: '>=6.0'}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
-
-  debug@4.3.7:
-    resolution: {integrity: sha512-Er2nc/H7RrMXZBFCEim6TCmMk02Z8vLC2Rbi1KEBggpo0fS6l0S1nnapwmIi3yW/+GOJap1Krg4w0Hg80oCqgQ==}
-    engines: {node: '>=6.0'}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
-
-  debug@4.4.0:
-    resolution: {integrity: sha512-6WTZ/IxCY/T6BALoZHaE4ctp9xm+Z5kY/pzYaCHRFeyVhojxlrm+46y68HA6hr0TcwEssoxNiDEUJQjfPZ/RYA==}
     engines: {node: '>=6.0'}
     peerDependencies:
       supports-color: '*'
@@ -10256,6 +10244,9 @@ packages:
     peerDependenciesMeta:
       picomatch:
         optional: true
+
+  fflate@0.4.8:
+    resolution: {integrity: sha512-FJqqoDBR00Mdj9ppamLa/Y7vxm+PRmNWA67N846RvsoYVMKB4q3y/de5PA7gUmRMYK/8CMz2GDZQmCRN1wBcWA==}
 
   figures@5.0.0:
     resolution: {integrity: sha512-ej8ksPF4x6e5wvK9yevct0UCXh8TTFlWGVLlgjZuoBH1HwjIfKE/IdL5mq89sFA7zELi1VhKpmtDnrs7zWyeyg==}
@@ -12483,10 +12474,6 @@ packages:
     resolution: {integrity: sha512-WmS3EUGw+vXHlTgiUPi3NzbZNwH6+uGX0QLGgqG+aFSJ5rkX/Ee0nuwHBJfZTfQwwR8lGO819NEIwQ7CGhkdEQ==}
     deprecated: Use `change-case`
 
-  nock@14.0.3:
-    resolution: {integrity: sha512-sJ9RNmCuYBqXDmGZZHgZ1D1441MqFOU4T5aeLGVGEB4OWI/2LM0mZlkfBQzQKdOfJypL+2nPPBugXKjixBn4kQ==}
-    engines: {node: '>=18.20.0 <20 || >=20.12.1'}
-
   nock@14.0.6:
     resolution: {integrity: sha512-67n1OfusL/ON57fwFJ6ZurSJa/msYVQmqlz9rCel2HJYj4Zeb8v9TcmRdEW+PV2i9Fm2358umSvzZukhw/E8DA==}
     engines: {node: '>=18.20.0 <20 || >=20.12.1'}
@@ -13148,8 +13135,22 @@ packages:
   postgres-range@1.1.2:
     resolution: {integrity: sha512-CmPJDSpd3/xYJrtw/tI0Cv029B0zMtnesUOHCZmgvypGBLn+eExXcjCS5OY7mpiw6imYEvd2IMD36sAOYA9U1w==}
 
+  posthog-js@1.268.6:
+    resolution: {integrity: sha512-3IWd5dbs/Bs6akesiDNn+QhN7QBU6xdYV31KG8ive/6srSV7DBcH0W+UgclNvlZanVqpwPTg3mbOgNKa7mEPrQ==}
+    peerDependencies:
+      '@rrweb/types': 2.0.0-alpha.17
+      rrweb-snapshot: 2.0.0-alpha.17
+    peerDependenciesMeta:
+      '@rrweb/types':
+        optional: true
+      rrweb-snapshot:
+        optional: true
+
   postmark@4.0.5:
     resolution: {integrity: sha512-nerZdd3TwOH4CgGboZnlUM/q7oZk0EqpZgJL+Y3Nup8kHeaukxouQ6JcFF3EJEijc4QbuNv1TefGhboAKtf/SQ==}
+
+  preact@10.27.2:
+    resolution: {integrity: sha512-5SYSgFKSyhCbk6SrXyMpqjb5+MQBgfvEKE/OC+PujcY34sOpqtr+0AZQtPYx5IA6VxynQ7rUPCtKzyovpj9Bpg==}
 
   preferred-pm@3.0.3:
     resolution: {integrity: sha512-+wZgbxNES/KlJs9q40F/1sfOd/j7f1O9JaHcW5Dsn3aUUOZg3L2bjpVUcKV2jvtElYfoTuQiNeMfQJ4kwUAhCQ==}
@@ -13253,7 +13254,7 @@ packages:
   puppeteer@23.10.3:
     resolution: {integrity: sha512-ODG+L9vCSPkQ1j+yDtNDdkSsWt2NXNrQO5C8MlwkYgE2hYnXdqVRbBpsHnoP7+EULJJKbWyR2Q4BdfohjQor3A==}
     engines: {node: '>=18'}
-    deprecated: < 24.9.0 is no longer supported
+    deprecated: < 24.10.2 is no longer supported
     hasBin: true
 
   pure-rand@6.0.0:
@@ -14911,6 +14912,9 @@ packages:
     resolution: {integrity: sha512-QW95TCTaHmsYfHDybGMwO5IJIM93I/6vTRk+daHTWFPhwh+C8Cg7j7XyKrwrj8Ib6vYXe0ocYNrmzY4xAAN6ug==}
     engines: {node: '>= 14'}
 
+  web-vitals@4.2.4:
+    resolution: {integrity: sha512-r4DIlprAGwJ7YM11VZp4R884m0Vmgr6EAKe3P+kO0PPj3Unqyvv59rczf6UiGcb9Z8QxZVcqKNwv/g0WNdWwsw==}
+
   web-worker@1.5.0:
     resolution: {integrity: sha512-RiMReJrTAiA+mBjGONMnjVDP2u3p9R1vkcGz6gDIrOMT3oGuYwX2WRMYI9ipkphSuE5XKEhydbhNEJh4NY9mlw==}
 
@@ -15211,6 +15215,7 @@ snapshots:
       '@csstools/css-parser-algorithms': 3.0.4(@csstools/css-tokenizer@3.0.3)
       '@csstools/css-tokenizer': 3.0.3
       lru-cache: 10.4.3
+    optional: true
 
   '@authenio/samlify-node-xmllint@2.0.0(samlify@2.10.0)':
     dependencies:
@@ -15924,7 +15929,7 @@ snapshots:
       '@babel/traverse': 7.24.1
       '@babel/types': 7.27.0
       convert-source-map: 2.0.0
-      debug: 4.4.1(supports-color@10.0.0)
+      debug: 4.4.1(supports-color@5.5.0)
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -15944,7 +15949,7 @@ snapshots:
       '@babel/traverse': 7.24.8
       '@babel/types': 7.24.9
       convert-source-map: 2.0.0
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -16236,7 +16241,7 @@ snapshots:
       '@babel/helper-split-export-declaration': 7.22.6
       '@babel/parser': 7.27.0
       '@babel/types': 7.27.0
-      debug: 4.4.1(supports-color@10.0.0)
+      debug: 4.4.1(supports-color@5.5.0)
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -16251,7 +16256,7 @@ snapshots:
       '@babel/helper-split-export-declaration': 7.24.7
       '@babel/parser': 7.27.0
       '@babel/types': 7.27.0
-      debug: 4.4.1(supports-color@10.0.0)
+      debug: 4.4.1(supports-color@5.5.0)
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -16543,12 +16548,14 @@ snapshots:
       '@jridgewell/trace-mapping': 0.3.9
     optional: true
 
-  '@csstools/color-helpers@5.0.2': {}
+  '@csstools/color-helpers@5.0.2':
+    optional: true
 
   '@csstools/css-calc@2.1.2(@csstools/css-parser-algorithms@3.0.4(@csstools/css-tokenizer@3.0.3))(@csstools/css-tokenizer@3.0.3)':
     dependencies:
       '@csstools/css-parser-algorithms': 3.0.4(@csstools/css-tokenizer@3.0.3)
       '@csstools/css-tokenizer': 3.0.3
+    optional: true
 
   '@csstools/css-color-parser@3.0.8(@csstools/css-parser-algorithms@3.0.4(@csstools/css-tokenizer@3.0.3))(@csstools/css-tokenizer@3.0.3)':
     dependencies:
@@ -16556,6 +16563,7 @@ snapshots:
       '@csstools/css-calc': 2.1.2(@csstools/css-parser-algorithms@3.0.4(@csstools/css-tokenizer@3.0.3))(@csstools/css-tokenizer@3.0.3)
       '@csstools/css-parser-algorithms': 3.0.4(@csstools/css-tokenizer@3.0.3)
       '@csstools/css-tokenizer': 3.0.3
+    optional: true
 
   '@csstools/css-parser-algorithms@2.6.1(@csstools/css-tokenizer@2.2.4)':
     dependencies:
@@ -16564,10 +16572,12 @@ snapshots:
   '@csstools/css-parser-algorithms@3.0.4(@csstools/css-tokenizer@3.0.3)':
     dependencies:
       '@csstools/css-tokenizer': 3.0.3
+    optional: true
 
   '@csstools/css-tokenizer@2.2.4': {}
 
-  '@csstools/css-tokenizer@3.0.3': {}
+  '@csstools/css-tokenizer@3.0.3':
+    optional: true
 
   '@csstools/media-query-list-parser@2.1.9(@csstools/css-parser-algorithms@2.6.1(@csstools/css-tokenizer@2.2.4))(@csstools/css-tokenizer@2.2.4)':
     dependencies:
@@ -16663,7 +16673,7 @@ snapshots:
   '@eslint/eslintrc@2.1.4':
     dependencies:
       ajv: 6.12.6
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
       espree: 9.6.1
       globals: 13.20.0
       ignore: 5.3.1
@@ -16740,7 +16750,7 @@ snapshots:
   '@humanwhocodes/config-array@0.11.14':
     dependencies:
       '@humanwhocodes/object-schema': 2.0.3
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -17226,21 +17236,6 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@mswjs/interceptors@0.38.2':
-    dependencies:
-      '@open-draft/deferred-promise': 2.2.0
-      '@open-draft/logger': 0.3.0
-      '@open-draft/until': 2.1.0
-      is-node-process: 1.2.0
-      jsdom: 26.0.0
-      outvariant: 1.4.3
-      strict-event-emitter: 0.5.1
-    transitivePeerDependencies:
-      - bufferutil
-      - canvas
-      - supports-color
-      - utf-8-validate
-
   '@mswjs/interceptors@0.39.3':
     dependencies:
       '@open-draft/deferred-promise': 2.2.0
@@ -17415,9 +17410,11 @@ snapshots:
     dependencies:
       playwright: 1.48.1
 
+  '@posthog/core@1.2.1': {}
+
   '@puppeteer/browsers@2.10.0':
     dependencies:
-      debug: 4.4.1(supports-color@10.0.0)
+      debug: 4.4.1(supports-color@5.5.0)
       extract-zip: 2.0.1
       progress: 2.0.3
       proxy-agent: 6.5.0
@@ -17430,7 +17427,7 @@ snapshots:
 
   '@puppeteer/browsers@2.6.1':
     dependencies:
-      debug: 4.4.1(supports-color@10.0.0)
+      debug: 4.4.1(supports-color@5.5.0)
       extract-zip: 2.0.1
       progress: 2.0.3
       proxy-agent: 6.5.0
@@ -19337,7 +19334,7 @@ snapshots:
       '@typescript-eslint/type-utils': 7.7.0(eslint@8.57.0)(typescript@5.5.3)
       '@typescript-eslint/utils': 7.7.0(eslint@8.57.0)(typescript@5.5.3)
       '@typescript-eslint/visitor-keys': 7.7.0
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
       eslint: 8.57.0
       graphemer: 1.4.0
       ignore: 5.3.1
@@ -19355,7 +19352,7 @@ snapshots:
       '@typescript-eslint/types': 7.7.0
       '@typescript-eslint/typescript-estree': 7.7.0(typescript@5.5.3)
       '@typescript-eslint/visitor-keys': 7.7.0
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
       eslint: 8.57.0
     optionalDependencies:
       typescript: 5.5.3
@@ -19371,7 +19368,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/typescript-estree': 7.7.0(typescript@5.5.3)
       '@typescript-eslint/utils': 7.7.0(eslint@8.57.0)(typescript@5.5.3)
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
       eslint: 8.57.0
       ts-api-utils: 1.3.0(typescript@5.5.3)
     optionalDependencies:
@@ -19385,7 +19382,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 7.7.0
       '@typescript-eslint/visitor-keys': 7.7.0
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
       globby: 11.1.0
       is-glob: 4.0.3
       minimatch: 9.0.5
@@ -19432,7 +19429,7 @@ snapshots:
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 1.0.2
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
       istanbul-lib-coverage: 3.2.2
       istanbul-lib-report: 3.0.1
       istanbul-lib-source-maps: 5.0.6
@@ -19503,7 +19500,7 @@ snapshots:
   '@vonage/auth@1.12.0':
     dependencies:
       '@vonage/jwt': 1.11.0
-      debug: 4.3.7
+      debug: 4.4.1(supports-color@5.5.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -19519,7 +19516,7 @@ snapshots:
 
   '@vonage/jwt@1.11.0':
     dependencies:
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
       jsonwebtoken: 9.0.2
       uuid: 9.0.1
     transitivePeerDependencies:
@@ -19529,7 +19526,7 @@ snapshots:
     dependencies:
       '@vonage/server-client': 1.16.0
       '@vonage/vetch': 1.8.0
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -19574,7 +19571,7 @@ snapshots:
     dependencies:
       '@vonage/auth': 1.12.0
       '@vonage/vetch': 1.8.0
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
       lodash.camelcase: 4.3.0
       lodash.isobject: 3.0.2
       lodash.kebabcase: 4.1.1
@@ -19661,7 +19658,7 @@ snapshots:
       '@types/debug': 4.1.12
       '@vonage/server-client': 1.16.0
       '@vonage/vetch': 1.8.0
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
       ts-xor: 1.3.0
     transitivePeerDependencies:
       - encoding
@@ -19970,7 +19967,7 @@ snapshots:
 
   agent-base@6.0.2:
     dependencies:
-      debug: 4.4.1(supports-color@10.0.0)
+      debug: 4.4.1(supports-color@5.5.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -20220,7 +20217,7 @@ snapshots:
 
   axios@1.12.2:
     dependencies:
-      follow-redirects: 1.15.9(debug@4.4.0)
+      follow-redirects: 1.15.9(debug@4.4.1)
       form-data: 4.0.4
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -20783,6 +20780,8 @@ snapshots:
 
   core-js@3.34.0: {}
 
+  core-js@3.45.1: {}
+
   cose-base@1.0.3:
     dependencies:
       layout-base: 1.0.2
@@ -20877,6 +20876,7 @@ snapshots:
     dependencies:
       '@asamuzakjp/css-color': 3.1.1
       rrweb-cssom: 0.8.0
+    optional: true
 
   csstype@3.0.11: {}
 
@@ -21111,6 +21111,7 @@ snapshots:
     dependencies:
       whatwg-mimetype: 4.0.0
       whatwg-url: 14.2.0
+    optional: true
 
   data-view-buffer@1.0.1:
     dependencies:
@@ -21148,21 +21149,17 @@ snapshots:
     dependencies:
       ms: 2.1.2
 
-  debug@4.3.7:
-    dependencies:
-      ms: 2.1.3
-
-  debug@4.4.0(supports-color@5.5.0):
-    dependencies:
-      ms: 2.1.3
-    optionalDependencies:
-      supports-color: 5.5.0
-
   debug@4.4.1(supports-color@10.0.0):
     dependencies:
       ms: 2.1.3
     optionalDependencies:
       supports-color: 10.0.0
+
+  debug@4.4.1(supports-color@5.5.0):
+    dependencies:
+      ms: 2.1.3
+    optionalDependencies:
+      supports-color: 5.5.0
 
   decamelize-keys@1.1.1:
     dependencies:
@@ -21642,7 +21639,7 @@ snapshots:
 
   eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
       enhanced-resolve: 5.16.0
       eslint: 8.57.0
       eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
@@ -21794,7 +21791,7 @@ snapshots:
   eslint-plugin-sql@2.1.0(eslint@8.57.0):
     dependencies:
       astring: 1.8.3
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
       eslint: 8.57.0
       lodash: 4.17.21
       pg-formatter: 1.3.0
@@ -21855,7 +21852,7 @@ snapshots:
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.6
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
       doctrine: 3.0.0
       escape-string-regexp: 4.0.0
       eslint-scope: 7.2.2
@@ -22015,7 +22012,7 @@ snapshots:
 
   extract-zip@2.0.1:
     dependencies:
-      debug: 4.4.1(supports-color@10.0.0)
+      debug: 4.4.1(supports-color@5.5.0)
       get-stream: 5.2.0
       yauzl: 2.10.0
     optionalDependencies:
@@ -22079,6 +22076,8 @@ snapshots:
     optionalDependencies:
       picomatch: 4.0.2
 
+  fflate@0.4.8: {}
+
   figures@5.0.0:
     dependencies:
       escape-string-regexp: 5.0.0
@@ -22115,7 +22114,7 @@ snapshots:
     dependencies:
       chalk: 4.1.2
       commander: 5.1.0
-      debug: 4.4.1(supports-color@10.0.0)
+      debug: 4.4.1(supports-color@5.5.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -22160,9 +22159,9 @@ snapshots:
 
   flatted@3.3.1: {}
 
-  follow-redirects@1.15.9(debug@4.4.0):
+  follow-redirects@1.15.9(debug@4.4.1):
     optionalDependencies:
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
 
   for-each@0.3.3:
     dependencies:
@@ -22260,7 +22259,7 @@ snapshots:
   gaxios@6.1.1:
     dependencies:
       extend: 3.0.2
-      https-proxy-agent: 7.0.6(supports-color@10.0.0)
+      https-proxy-agent: 7.0.6
       is-stream: 2.0.1
       node-fetch: 2.7.0
     transitivePeerDependencies:
@@ -22351,7 +22350,7 @@ snapshots:
     dependencies:
       basic-ftp: 5.0.3
       data-uri-to-buffer: 5.0.1
-      debug: 4.4.1(supports-color@10.0.0)
+      debug: 4.4.1(supports-color@5.5.0)
       fs-extra: 8.1.0
     transitivePeerDependencies:
       - supports-color
@@ -22677,6 +22676,7 @@ snapshots:
   html-encoding-sniffer@4.0.0:
     dependencies:
       whatwg-encoding: 3.1.1
+    optional: true
 
   html-escaper@2.0.2: {}
 
@@ -22729,32 +22729,32 @@ snapshots:
     dependencies:
       '@tootallnate/once': 2.0.0
       agent-base: 6.0.2
-      debug: 4.4.1(supports-color@10.0.0)
+      debug: 4.4.1(supports-color@5.5.0)
     transitivePeerDependencies:
       - supports-color
 
   http-proxy-agent@7.0.2:
     dependencies:
       agent-base: 7.1.3
-      debug: 4.4.1(supports-color@10.0.0)
+      debug: 4.4.1(supports-color@5.5.0)
     transitivePeerDependencies:
       - supports-color
 
   http-proxy-middleware@3.0.5:
     dependencies:
       '@types/http-proxy': 1.17.15
-      debug: 4.4.0(supports-color@5.5.0)
-      http-proxy: 1.18.1(debug@4.4.0)
+      debug: 4.4.1(supports-color@5.5.0)
+      http-proxy: 1.18.1(debug@4.4.1)
       is-glob: 4.0.3
       is-plain-object: 5.0.0
       micromatch: 4.0.8
     transitivePeerDependencies:
       - supports-color
 
-  http-proxy@1.18.1(debug@4.4.0):
+  http-proxy@1.18.1(debug@4.4.1):
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.15.9(debug@4.4.0)
+      follow-redirects: 1.15.9(debug@4.4.1)
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
@@ -22767,7 +22767,14 @@ snapshots:
   https-proxy-agent@5.0.1:
     dependencies:
       agent-base: 6.0.2
-      debug: 4.4.1(supports-color@10.0.0)
+      debug: 4.4.1(supports-color@5.5.0)
+    transitivePeerDependencies:
+      - supports-color
+
+  https-proxy-agent@7.0.6:
+    dependencies:
+      agent-base: 7.1.3
+      debug: 4.4.1(supports-color@5.5.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -23196,7 +23203,7 @@ snapshots:
 
   istanbul-lib-source-maps@4.0.1:
     dependencies:
-      debug: 4.4.1(supports-color@10.0.0)
+      debug: 4.4.1(supports-color@5.5.0)
       istanbul-lib-coverage: 3.2.2
       source-map: 0.6.1
     transitivePeerDependencies:
@@ -23205,7 +23212,7 @@ snapshots:
   istanbul-lib-source-maps@5.0.6:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
       istanbul-lib-coverage: 3.2.2
     transitivePeerDependencies:
       - supports-color
@@ -23671,7 +23678,7 @@ snapshots:
       form-data: 4.0.4
       html-encoding-sniffer: 4.0.0
       http-proxy-agent: 7.0.2
-      https-proxy-agent: 7.0.6(supports-color@10.0.0)
+      https-proxy-agent: 7.0.6
       is-potential-custom-element-name: 1.0.1
       nwsapi: 2.2.20
       parse5: 7.2.1
@@ -23690,6 +23697,7 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
+    optional: true
 
   jsesc@0.5.0: {}
 
@@ -23850,14 +23858,14 @@ snapshots:
 
   koa-mount@4.0.0:
     dependencies:
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
       koa-compose: 4.1.0
     transitivePeerDependencies:
       - supports-color
 
   koa-proxies@0.12.4(koa@2.16.2):
     dependencies:
-      http-proxy: 1.18.1(debug@4.4.0)
+      http-proxy: 1.18.1(debug@4.4.1)
       koa: 2.16.2
       path-match: 1.2.4
       uuid: 8.3.2
@@ -23866,7 +23874,7 @@ snapshots:
 
   koa-router@12.0.1:
     dependencies:
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
       http-errors: 2.0.0
       koa-compose: 4.1.0
       methods: 1.1.2
@@ -23876,7 +23884,7 @@ snapshots:
 
   koa-send@5.0.1:
     dependencies:
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
       http-errors: 1.8.1
       resolve-path: 1.4.0
     transitivePeerDependencies:
@@ -23896,7 +23904,7 @@ snapshots:
       content-disposition: 0.5.4
       content-type: 1.0.5
       cookies: 0.9.1
-      debug: 4.4.1(supports-color@10.0.0)
+      debug: 4.4.1(supports-color@5.5.0)
       delegates: 1.0.0
       depd: 2.0.0
       destroy: 1.2.0
@@ -24911,7 +24919,7 @@ snapshots:
   micromark@3.2.0:
     dependencies:
       '@types/debug': 4.1.12
-      debug: 4.4.1(supports-color@10.0.0)
+      debug: 4.4.1(supports-color@5.5.0)
       decode-named-character-reference: 1.2.0
       micromark-core-commonmark: 1.1.0
       micromark-factory-space: 1.1.0
@@ -24933,7 +24941,7 @@ snapshots:
   micromark@4.0.0:
     dependencies:
       '@types/debug': 4.1.12
-      debug: 4.4.1(supports-color@10.0.0)
+      debug: 4.4.1(supports-color@5.5.0)
       decode-named-character-reference: 1.0.1
       devlop: 1.1.0
       micromark-core-commonmark: 2.0.0
@@ -24955,7 +24963,7 @@ snapshots:
   micromark@4.0.2:
     dependencies:
       '@types/debug': 4.1.12
-      debug: 4.4.1(supports-color@10.0.0)
+      debug: 4.4.1(supports-color@5.5.0)
       decode-named-character-reference: 1.2.0
       devlop: 1.1.0
       micromark-core-commonmark: 2.0.3
@@ -25104,17 +25112,6 @@ snapshots:
 
   no-case@4.0.0: {}
 
-  nock@14.0.3:
-    dependencies:
-      '@mswjs/interceptors': 0.38.2
-      json-stringify-safe: 5.0.1
-      propagate: 2.0.1
-    transitivePeerDependencies:
-      - bufferutil
-      - canvas
-      - supports-color
-      - utf-8-validate
-
   nock@14.0.6:
     dependencies:
       '@mswjs/interceptors': 0.39.3
@@ -25157,7 +25154,7 @@ snapshots:
   nodemon@3.1.7:
     dependencies:
       chokidar: 3.6.0
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
       ignore-by-default: 1.0.1
       minimatch: 3.1.2
       pstree.remy: 1.1.8
@@ -25258,7 +25255,7 @@ snapshots:
     dependencies:
       '@koa/cors': 5.0.0
       '@koa/router': 13.1.0
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
       eta: 3.5.0
       got: 13.0.0
       jose: 5.9.6
@@ -25459,10 +25456,10 @@ snapshots:
     dependencies:
       '@tootallnate/quickjs-emscripten': 0.23.0
       agent-base: 7.1.3
-      debug: 4.4.1(supports-color@10.0.0)
+      debug: 4.4.1(supports-color@5.5.0)
       get-uri: 6.0.1
       http-proxy-agent: 7.0.2
-      https-proxy-agent: 7.0.6(supports-color@10.0.0)
+      https-proxy-agent: 7.0.6
       pac-resolver: 7.0.1
       socks-proxy-agent: 8.0.5
     transitivePeerDependencies:
@@ -25791,11 +25788,21 @@ snapshots:
 
   postgres-range@1.1.2: {}
 
+  posthog-js@1.268.6:
+    dependencies:
+      '@posthog/core': 1.2.1
+      core-js: 3.45.1
+      fflate: 0.4.8
+      preact: 10.27.2
+      web-vitals: 4.2.4
+
   postmark@4.0.5:
     dependencies:
       axios: 1.12.2
     transitivePeerDependencies:
       - debug
+
+  preact@10.27.2: {}
 
   preferred-pm@3.0.3:
     dependencies:
@@ -25864,9 +25871,9 @@ snapshots:
   proxy-agent@6.5.0:
     dependencies:
       agent-base: 7.1.3
-      debug: 4.4.1(supports-color@10.0.0)
+      debug: 4.4.1(supports-color@5.5.0)
       http-proxy-agent: 7.0.2
-      https-proxy-agent: 7.0.6(supports-color@10.0.0)
+      https-proxy-agent: 7.0.6
       lru-cache: 7.18.3
       pac-proxy-agent: 7.1.0
       proxy-from-env: 1.1.0
@@ -25893,7 +25900,7 @@ snapshots:
     dependencies:
       '@puppeteer/browsers': 2.6.1
       chromium-bidi: 0.8.0(devtools-protocol@0.0.1367902)
-      debug: 4.4.1(supports-color@10.0.0)
+      debug: 4.4.1(supports-color@5.5.0)
       devtools-protocol: 0.0.1367902
       typed-query-selector: 2.12.0
       ws: 8.18.1
@@ -25907,7 +25914,7 @@ snapshots:
     dependencies:
       '@puppeteer/browsers': 2.10.0
       chromium-bidi: 3.0.0(devtools-protocol@0.0.1425554)
-      debug: 4.4.1(supports-color@10.0.0)
+      debug: 4.4.1(supports-color@5.5.0)
       devtools-protocol: 0.0.1425554
       typed-query-selector: 2.12.0
       ws: 8.18.1
@@ -26428,7 +26435,7 @@ snapshots:
 
   require-in-the-middle@7.2.0:
     dependencies:
-      debug: 4.4.1(supports-color@10.0.0)
+      debug: 4.4.1(supports-color@5.5.0)
       module-details-from-path: 1.0.3
       resolve: 1.22.8
     transitivePeerDependencies:
@@ -26545,7 +26552,8 @@ snapshots:
       '@rollup/rollup-win32-x64-msvc': 4.40.1
       fsevents: 2.3.3
 
-  rrweb-cssom@0.8.0: {}
+  rrweb-cssom@0.8.0:
+    optional: true
 
   run-async@2.4.1: {}
 
@@ -26741,7 +26749,7 @@ snapshots:
   socks-proxy-agent@8.0.5:
     dependencies:
       agent-base: 7.1.3
-      debug: 4.4.1(supports-color@10.0.0)
+      debug: 4.4.1(supports-color@5.5.0)
       socks: 2.8.3
     transitivePeerDependencies:
       - supports-color
@@ -27018,7 +27026,7 @@ snapshots:
       cosmiconfig: 8.3.6(typescript@5.5.3)
       css-functions-list: 3.2.1
       css-tree: 2.3.1
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
       fast-glob: 3.3.2
       fastest-levenshtein: 1.0.16
       file-entry-cache: 7.0.2
@@ -27069,7 +27077,7 @@ snapshots:
     dependencies:
       component-emitter: 1.3.0
       cookiejar: 2.1.4
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
       fast-safe-stringify: 2.1.1
       form-data: 4.0.4
       formidable: 3.5.4
@@ -27239,11 +27247,13 @@ snapshots:
 
   tinyspy@3.0.2: {}
 
-  tldts-core@6.1.85: {}
+  tldts-core@6.1.85:
+    optional: true
 
   tldts@6.1.85:
     dependencies:
       tldts-core: 6.1.85
+    optional: true
 
   tmp@0.2.5: {}
 
@@ -27269,6 +27279,7 @@ snapshots:
   tough-cookie@5.1.2:
     dependencies:
       tldts: 6.1.85
+    optional: true
 
   tr46@0.0.3: {}
 
@@ -27344,7 +27355,7 @@ snapshots:
       cac: 6.7.14
       chokidar: 4.0.3
       consola: 3.4.2
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
       esbuild: 0.25.3
       fix-dts-default-cjs-exports: 1.0.1
       joycon: 3.1.1
@@ -27657,7 +27668,7 @@ snapshots:
   vite-node@3.1.1(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5):
     dependencies:
       cac: 6.7.14
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
       es-module-lexer: 1.6.0
       pathe: 2.0.3
       vite: 6.3.6(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
@@ -27678,7 +27689,7 @@ snapshots:
   vite-plugin-compression@0.5.1(vite@6.3.6(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)):
     dependencies:
       chalk: 4.1.2
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
       fs-extra: 10.1.0
       vite: 6.3.6(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
     transitivePeerDependencies:
@@ -27721,7 +27732,7 @@ snapshots:
       '@vitest/spy': 3.1.1
       '@vitest/utils': 3.1.1
       chai: 5.2.0
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1(supports-color@5.5.0)
       expect-type: 1.2.1
       magic-string: 0.30.17
       pathe: 2.0.3
@@ -27760,6 +27771,7 @@ snapshots:
   w3c-xmlserializer@5.0.0:
     dependencies:
       xml-name-validator: 5.0.0
+    optional: true
 
   wait-on@8.0.1:
     dependencies:
@@ -27787,6 +27799,8 @@ snapshots:
 
   web-streams-polyfill@4.0.0-beta.3: {}
 
+  web-vitals@4.2.4: {}
+
   web-worker@1.5.0: {}
 
   webidl-conversions@3.0.1: {}
@@ -27802,10 +27816,12 @@ snapshots:
   whatwg-encoding@3.1.1:
     dependencies:
       iconv-lite: 0.6.3
+    optional: true
 
   whatwg-mimetype@3.0.0: {}
 
-  whatwg-mimetype@4.0.0: {}
+  whatwg-mimetype@4.0.0:
+    optional: true
 
   whatwg-url@11.0.0:
     dependencies:
@@ -27938,7 +27954,8 @@ snapshots:
 
   xml-name-validator@4.0.0: {}
 
-  xml-name-validator@5.0.0: {}
+  xml-name-validator@5.0.0:
+    optional: true
 
   xml2js@0.5.0:
     dependencies:

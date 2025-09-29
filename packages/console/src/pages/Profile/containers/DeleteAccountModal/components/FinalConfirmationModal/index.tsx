@@ -1,4 +1,3 @@
-import { useLogto } from '@logto/react';
 import { ResponseError } from '@withtyped/client';
 import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +9,7 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import ModalLayout from '@/ds-components/ModalLayout';
 import useRedirectUri from '@/hooks/use-redirect-uri';
+import useSignOut from '@/hooks/use-sign-out';
 import modalStyles from '@/scss/modal.module.scss';
 
 import styles from '../../index.module.scss';
@@ -29,7 +29,7 @@ export default function FinalConfirmationModal({
   onClose,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.profile.delete_account' });
-  const { signOut } = useLogto();
+  const { signOut } = useSignOut();
   const { removeTenant } = useContext(TenantsContext);
   const postSignOutRedirectUri = useRedirectUri('signOut');
   const [isDeleting, setIsDeleting] = useState(false);

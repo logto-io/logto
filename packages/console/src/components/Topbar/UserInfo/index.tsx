@@ -1,5 +1,4 @@
 import { builtInLanguageOptions as consoleBuiltInLanguageOptions } from '@logto/phrases';
-import { useLogto } from '@logto/react';
 import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
 import { useRef, useState } from 'react';
@@ -20,6 +19,7 @@ import Spacer from '@/ds-components/Spacer';
 import { Ring as Spinner } from '@/ds-components/Spinner';
 import useCurrentUser from '@/hooks/use-current-user';
 import useRedirectUri from '@/hooks/use-redirect-uri';
+import useSignOut from '@/hooks/use-sign-out';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useUserPreferences from '@/hooks/use-user-preferences';
 import { DynamicAppearanceMode } from '@/types/appearance-mode';
@@ -30,7 +30,7 @@ import UserInfoSkeleton from './UserInfoSkeleton';
 import styles from './index.module.scss';
 
 function UserInfo() {
-  const { signOut } = useLogto();
+  const { signOut } = useSignOut();
   const { getUrl } = useTenantPathname();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { user, isLoading: isLoadingUser } = useCurrentUser();
