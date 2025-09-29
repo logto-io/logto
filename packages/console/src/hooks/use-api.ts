@@ -137,10 +137,10 @@ export const useStaticApi = ({
         hooks: {
           beforeError: conditionalArray(
             !disableGlobalErrorHandling &&
-            (async (error) => {
-              await handleError(error.response);
-              return error;
-            })
+              (async (error) => {
+                await handleError(error.response);
+                return error;
+              })
           ),
           beforeRequest: [
             async (request) => {
@@ -203,13 +203,13 @@ const useApi = (props: Omit<StaticApiProps, 'prefixUrl' | 'resourceIndicator'> =
     () =>
       isCloud
         ? {
-          prefixUrl: appendPath(new URL(window.location.origin), 'm', currentTenantId),
-          resourceIndicator: buildOrganizationUrn(getTenantOrganizationId(currentTenantId)),
-        }
+            prefixUrl: appendPath(new URL(window.location.origin), 'm', currentTenantId),
+            resourceIndicator: buildOrganizationUrn(getTenantOrganizationId(currentTenantId)),
+          }
         : {
-          prefixUrl: tenantEndpoint,
-          resourceIndicator: getManagementApiResourceIndicator(currentTenantId),
-        },
+            prefixUrl: tenantEndpoint,
+            resourceIndicator: getManagementApiResourceIndicator(currentTenantId),
+          },
     [currentTenantId, tenantEndpoint]
   );
 

@@ -155,16 +155,54 @@ function Content() {
     // Reset user info in the sign-out logic instead.
   }, [isLoaded, postHog, user]);
 
+  /**
+   * The `useEffect` below sets the PostHog group properties based on:
+   *
+   * 1. If `currentTenant` is available, since it contains rich data, set the group with both ID
+   *   and necessary properties.
+   * 2. If only `currentTenantId` is available, set the group with only ID. This usually happens
+   *   when the URL contains a tenant ID but the tenant data is not loaded yet or the tenant is
+   *   unavailable to the user.
+   * 3. If neither is available, reset all group properties. This usually happens when the user is
+   *   not in a tenant context.
+   *
+   * @caveat
+   * We need to identify group when window is reactivated (tab switch or window switch)
+   * since one user may access different tenants in different tabs or windows.
+   *
+   * Currently, PostHog DOES capture the correct group when the user switches tabs or windows
+   * since it reads the properties from the memory if existing, but just in case it doesn't work
+   * in the future, we add this logic here.
+   *
+   * See {https://github.com/PostHog/posthog-js/blob/b5eb605/packages/core/src/posthog-core-stateless.ts#L778-L783 | posthog-js source code}
+   * for details at the time of writing.
+   */
   useEffect(() => {
-    if (currentTenant) {
-      postHog.group('tenant', currentTenantId, {
-        name: currentTenant.name,
-      });
-    } else if (currentTenantId) {
-      postHog.group('tenant', currentTenantId);
-    } else {
-      postHog.resetGroups();
-    }
+    const captureGroups = () => {
+      if (currentTenant) {
+        postHog.group('tenant', currentTenantId, {
+          name: currentTenant.name,
+        });
+      } else if (currentTenantId) {
+        postHog.group('tenant', currentTenantId);
+      } else {
+        postHog.resetGroups();
+      }
+    };
+
+    captureGroups();
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        captureGroups();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, [postHog, currentTenantId, currentTenant]);
 
   /**
