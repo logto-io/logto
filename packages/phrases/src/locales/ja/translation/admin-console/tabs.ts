@@ -4,6 +4,7 @@ const tabs = {
   applications: 'アプリケーション',
   api_resources: 'API リソース',
   sign_in_experience: 'サインイン',
+  sign_in_experience_with_account: 'サインインとアカウント',
   connectors: 'コネクタ',
   enterprise_sso: 'エンタープライズSSO',
   security: 'セキュリティ',

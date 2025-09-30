@@ -4,13 +4,16 @@ import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 
 const sign_in_exp = {
   page_title: '登錄體驗',
+  page_title_with_account: '登錄與帳戶',
   title: '登錄體驗',
+  title_with_account: '登錄與帳戶',
   description: '自定義身份驗證流程和 UI，並實時預覽開箱即用的體驗。',
   tabs: {
     branding: '品牌',
     sign_up_and_sign_in: '註冊與登錄',
-    content: '內容',
     collect_user_profile: '收集用戶資料',
+    account_center: '帳戶中心',
+    content: '內容',
     password_policy: '密碼政策',
   },
   welcome: {
@@ -82,6 +85,58 @@ const sign_in_exp = {
       '上傳壓縮包 (.zip) 以用自己的代碼替換 Logto 預建的 UI。<a>了解更多</a>',
     preview_with_bring_your_ui_description:
       '你的自定義 UI 資源已成功上傳，現在正在提供服務。因此，內建預覽窗口已被禁用。\n要測試你的個性化登錄 UI，請點擊“實時預覽”按鈕在新瀏覽器標籤頁中打開。',
+  },
+  account_center: {
+    title: '帳戶中心',
+    description: '使用 Logto API 自定義你的帳戶中心流程。',
+    enable_account_api: '啟用 Account API',
+    enable_account_api_description:
+      '啟用 Account API，以建立自定義帳戶中心，讓最終使用者無需使用 Logto 管理 API 即可直接存取 API。',
+    field_options: {
+      off: 'Off',
+      edit: 'Edit',
+      read_only: 'Read only',
+    },
+    sections: {
+      account_security: {
+        title: 'ACCOUNT SECURITY',
+        description:
+          'Manage access to the Account API, enabling users to view or edit their identity information and authentication factors after signing into the application. Users must verify their identity to get a valid 10-minute verification record ID before making these security-related changes.',
+        groups: {
+          identifiers: {
+            title: 'Identifiers',
+          },
+          authentication_factors: {
+            title: 'Authentication factors',
+          },
+        },
+      },
+      user_profile: {
+        title: 'USER PROFILE',
+        description:
+          'Manage access to the Account API, enabling users to view or edit basic or custom profile data after signing into the application.',
+        groups: {
+          profile_data: {
+            title: 'Profile data',
+          },
+        },
+      },
+    },
+    fields: {
+      email: 'Email address',
+      phone: 'Phone number',
+      social: 'Social identities',
+      password: 'Password',
+      mfa: 'Multi-factor authentication',
+      mfa_description: 'Let users manage their MFA methods from the account center.',
+      username: 'Username',
+      name: 'Name',
+      avatar: 'Avatar',
+      profile: 'Profile',
+      profile_description: 'Control access to structured profile attributes.',
+      custom_data: 'Custom data',
+      custom_data_description: 'Control access to custom JSON data stored on the user.',
+    },
   },
   sign_up_and_sign_in,
   content,

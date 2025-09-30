@@ -4,6 +4,7 @@ const tabs = {
   applications: 'Uygulamalar',
   api_resources: 'API Kaynakları',
   sign_in_experience: 'Oturum Açma Deneyimi',
+  sign_in_experience_with_account: 'Oturum açma ve hesap',
   connectors: 'Connectors',
   enterprise_sso: 'Kurumsal SSO',
   security: 'Güvenlik',

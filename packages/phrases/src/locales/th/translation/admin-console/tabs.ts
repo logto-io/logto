@@ -4,6 +4,7 @@ const tabs = {
   applications: 'แอปพลิเคชัน',
   api_resources: 'API ทรัพยากร',
   sign_in_experience: 'ประสบการณ์การเข้าสู่ระบบ',
+  sign_in_experience_with_account: 'การเข้าสู่ระบบและบัญชี',
   connectors: 'ตัวเชื่อมต่อ',
   enterprise_sso: 'SSO สำหรับองค์กร',
   security: 'ความปลอดภัย',

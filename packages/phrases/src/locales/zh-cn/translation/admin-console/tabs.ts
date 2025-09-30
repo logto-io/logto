@@ -4,6 +4,7 @@ const tabs = {
   applications: '全部应用',
   api_resources: 'API 资源',
   sign_in_experience: '登录体验',
+  sign_in_experience_with_account: '登录与账户',
   connectors: '连接器',
   enterprise_sso: '企业SSO',
   security: '安全',
