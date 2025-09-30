@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-tencent-sms",
-  "version": "1.3.1",
+  "version": "1.4.0",
   "description": "Tencent SMS connector implementation.",
   "author": "StringKe",
   "dependencies": {

@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-feishu-web",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Feishu web connector.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {

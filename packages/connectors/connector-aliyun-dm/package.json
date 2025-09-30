@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-aliyun-dm",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "Aliyun DM connector implementation.",
   "dependencies": {
     "@logto/connector-kit": "workspace:^",

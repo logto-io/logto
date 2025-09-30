@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-google",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "description": "Google web connector implementation.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {

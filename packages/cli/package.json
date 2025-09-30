@@ -1,6 +1,6 @@
 {
   "name": "@logto/cli",
-  "version": "1.31.0",
+  "version": "1.32.0",
   "description": "Logto CLI.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/logto#readme",

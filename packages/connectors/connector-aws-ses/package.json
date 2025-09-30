@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-aws-ses",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "Logto Connector for Amazon SES",
   "author": "Jeff <admin@breadth.app>",
   "dependencies": {

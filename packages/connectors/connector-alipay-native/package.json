@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-alipay-native",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Alipay Native implementation.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {
