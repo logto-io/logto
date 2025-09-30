@@ -4,6 +4,7 @@ const tabs = {
   applications: 'التطبيقات',
   api_resources: 'موارد API',
   sign_in_experience: 'تجربة تسجيل الدخول',
+  sign_in_experience_with_account: 'تسجيل الدخول والحساب',
   connectors: 'الموصلات',
   enterprise_sso: 'SSO المؤسسات',
   security: 'الأمان',

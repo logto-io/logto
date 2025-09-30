@@ -4,14 +4,17 @@ import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 
 const sign_in_exp = {
   page_title: 'Experiencia de inicio de sesión',
+  page_title_with_account: 'Inicio de sesión y cuenta',
   title: 'Experiencia de inicio de sesión',
+  title_with_account: 'Inicio de sesión y cuenta',
   description:
     'Personaliza los flujos de autenticación y la interfaz de usuario, y previsualiza la experiencia lista para usar en tiempo real.',
   tabs: {
     branding: 'Branding',
     sign_up_and_sign_in: 'Registro e inicio de sesión',
-    content: 'Contenido',
     collect_user_profile: 'Recopilar perfil de usuario',
+    account_center: 'Centro de cuentas',
+    content: 'Contenido',
     password_policy: 'Política de contraseña',
   },
   welcome: {
@@ -86,6 +89,58 @@ const sign_in_exp = {
       'Sube un paquete comprimido (.zip) para reemplazar la interfaz de usuario preconstruida de Logto con tu propio código. <a>Aprende más</a>',
     preview_with_bring_your_ui_description:
       'Tus activos de la interfaz de usuario personalizada se han subido con éxito y ahora se están sirviendo. En consecuencia, la ventana de vista previa incorporada se ha deshabilitado.\nPara probar tu interfaz de inicio de sesión personalizada, haz clic en el botón "Vista previa en vivo" para abrirla en una nueva pestaña del navegador.',
+  },
+  account_center: {
+    title: 'Centro de cuentas',
+    description: 'Personaliza los flujos de tu centro de cuentas usando las APIs de Logto.',
+    enable_account_api: 'Habilitar Account API',
+    enable_account_api_description:
+      'Habilita la Account API para crear un centro de cuentas personalizado y ofrecer a los usuarios finales acceso directo sin usar la Logto Management API.',
+    field_options: {
+      off: 'Off',
+      edit: 'Edit',
+      read_only: 'Read only',
+    },
+    sections: {
+      account_security: {
+        title: 'ACCOUNT SECURITY',
+        description:
+          'Manage access to the Account API, enabling users to view or edit their identity information and authentication factors after signing into the application. Users must verify their identity to get a valid 10-minute verification record ID before making these security-related changes.',
+        groups: {
+          identifiers: {
+            title: 'Identifiers',
+          },
+          authentication_factors: {
+            title: 'Authentication factors',
+          },
+        },
+      },
+      user_profile: {
+        title: 'USER PROFILE',
+        description:
+          'Manage access to the Account API, enabling users to view or edit basic or custom profile data after signing into the application.',
+        groups: {
+          profile_data: {
+            title: 'Profile data',
+          },
+        },
+      },
+    },
+    fields: {
+      email: 'Email address',
+      phone: 'Phone number',
+      social: 'Social identities',
+      password: 'Password',
+      mfa: 'Multi-factor authentication',
+      mfa_description: 'Let users manage their MFA methods from the account center.',
+      username: 'Username',
+      name: 'Name',
+      avatar: 'Avatar',
+      profile: 'Profile',
+      profile_description: 'Control access to structured profile attributes.',
+      custom_data: 'Custom data',
+      custom_data_description: 'Control access to custom JSON data stored on the user.',
+    },
   },
   sign_up_and_sign_in,
   content,

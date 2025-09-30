@@ -4,6 +4,7 @@ const tabs = {
   applications: '全部應用',
   api_resources: 'API 資源',
   sign_in_experience: '登入體驗',
+  sign_in_experience_with_account: '登入與帳戶',
   connectors: '連接器',
   enterprise_sso: '企業 SSO',
   security: '安全',
