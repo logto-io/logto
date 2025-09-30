@@ -1,5 +1,13 @@
 # @logto/connector-http-email
 
+## 0.3.2
+
+### Patch Changes
+
+- Updated dependencies [ad4f9d6abf]
+- Updated dependencies [5da6792d40]
+  - @logto/connector-kit@4.6.0
+
 ## 0.3.1
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-facebook",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Facebook web connector implementation.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {

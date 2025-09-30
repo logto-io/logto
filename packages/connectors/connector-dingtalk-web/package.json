@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-dingtalk-web",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Dingtalk web connector implementation.",
   "dependencies": {
     "@logto/connector-kit": "workspace:^",
