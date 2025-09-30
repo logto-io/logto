@@ -24,6 +24,8 @@ const error = {
   invalid_link: '無效的鏈接',
   invalid_link_description: '你的一次性令牌可能已過期或失效。',
   captcha_verification_failed: '驗證碼驗證失敗。',
+  terms_acceptance_required: '需要同意條款',
+  terms_acceptance_required_description: '必須同意條款後才能繼續，請重試。',
   something_went_wrong: '出錯了。',
 };
 

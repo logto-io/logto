@@ -30,6 +30,7 @@ import PhoneVerificationCode from './pages/MfaVerification/PhoneVerificationCode
 import TotpVerification from './pages/MfaVerification/TotpVerification';
 import WebAuthnVerification from './pages/MfaVerification/WebAuthnVerification';
 import OneTimeToken from './pages/OneTimeToken';
+import OneTimeTokenErrorPage from './pages/OneTimeToken/Error';
 import Register from './pages/Register';
 import RegisterPassword from './pages/RegisterPassword';
 import ResetPassword from './pages/ResetPassword';
@@ -71,8 +72,12 @@ const App = () => {
                       element={<SocialSignInWebCallback />}
                     />
                     <Route path="direct/:method/:target?" element={<DirectSignIn />} />
+                    <Route path={experience.routes.oneTimeToken} element={<OneTimeToken />} />
                     <Route element={<AppLayout />}>
-                      <Route path={experience.routes.oneTimeToken} element={<OneTimeToken />} />
+                      <Route
+                        path={`${experience.routes.oneTimeToken}/error`}
+                        element={<OneTimeTokenErrorPage />}
+                      />
                       <Route path={experience.routes.switchAccount} element={<SwitchAccount />} />
                       <Route
                         path="unknown-session"

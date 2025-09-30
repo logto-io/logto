@@ -18,12 +18,15 @@ const MobileModal = ({
   confirmText = 'action.confirm',
   cancelTextI18nProps,
   confirmTextI18nProps,
+  shouldCloseOnEsc = true,
+  shouldCloseOnOverlayClick = true,
   onConfirm,
   onClose,
 }: ModalProps) => {
   return (
     <ReactModal
-      shouldCloseOnEsc
+      shouldCloseOnEsc={shouldCloseOnEsc}
+      shouldCloseOnOverlayClick={shouldCloseOnOverlayClick}
       role="dialog"
       isOpen={isOpen}
       className={classNames(styles.modal, className)}

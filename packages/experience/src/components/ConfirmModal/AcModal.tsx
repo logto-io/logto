@@ -23,6 +23,8 @@ const AcModal = ({
   confirmText = 'action.confirm',
   confirmTextI18nProps,
   cancelTextI18nProps,
+  shouldCloseOnOverlayClick = true,
+  shouldCloseOnEsc = true,
   onConfirm,
   onClose,
 }: ModalProps) => {
@@ -32,6 +34,9 @@ const AcModal = ({
 
   return (
     <ReactModal
+      shouldCloseOnEsc={shouldCloseOnEsc}
+      shouldCloseOnOverlayClick={shouldCloseOnOverlayClick}
+      role="dialog"
       isOpen={isOpen}
       className={classNames(styles.modal, className)}
       overlayClassName={classNames(modalStyles.overlay, styles.overlay)}

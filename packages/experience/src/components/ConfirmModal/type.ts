@@ -11,6 +11,8 @@ export type ModalProps = {
   confirmText?: TFuncKey;
   cancelTextI18nProps?: Record<string, string>;
   confirmTextI18nProps?: Record<string, string>;
+  shouldCloseOnOverlayClick?: boolean;
+  shouldCloseOnEsc?: boolean;
   onConfirm?: () => void;
   onClose: () => void;
 };

@@ -27,6 +27,9 @@ const error = {
   invalid_link: 'Enlace no válido',
   invalid_link_description: 'Tu token de un solo uso puede haber expirado o ya no ser válido.',
   captcha_verification_failed: 'Error al verificar el captcha.',
+  terms_acceptance_required: 'Se requiere aceptar los términos',
+  terms_acceptance_required_description:
+    'Debes aceptar los términos para continuar. Por favor, inténtalo de nuevo.',
   something_went_wrong: 'Algo salió mal.',
 };
 

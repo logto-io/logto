@@ -24,6 +24,9 @@ const error = {
   invalid_link: 'رابط غير صالح',
   invalid_link_description: 'ربما يكون رمز الدخول المؤقت قد انتهى أو لم يعد صالحًا.',
   captcha_verification_failed: 'فشل التحقق من رمز التحقق.',
+  terms_acceptance_required: 'مطلوب قبول الشروط',
+  terms_acceptance_required_description:
+    'يجب أن توافق على الشروط للمتابعة. يرجى المحاولة مرة أخرى.',
   something_went_wrong: 'حدث خطأ ما.',
 };
 

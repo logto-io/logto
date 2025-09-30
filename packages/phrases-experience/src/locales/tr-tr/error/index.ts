@@ -26,6 +26,9 @@ const error = {
   invalid_link_description:
     'Tek kullanımlık belirtecin süresi dolmuş olabilir veya artık geçerli değil.',
   captcha_verification_failed: 'Captcha doğrulama hatası.',
+  terms_acceptance_required: 'Şartların kabulü gerekli',
+  terms_acceptance_required_description:
+    'Devam etmek için şartları kabul etmelisiniz. Lütfen tekrar deneyin.',
   something_went_wrong: 'Bir şeyler yanlış gitti.',
 };
 

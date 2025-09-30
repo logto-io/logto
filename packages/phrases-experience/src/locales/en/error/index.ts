@@ -25,6 +25,9 @@ const error = {
   invalid_link: 'Invalid link',
   invalid_link_description: 'Your one-time token may have expired or is no longer valid.',
   captcha_verification_failed: 'Failed to perform captcha verification.',
+  terms_acceptance_required: 'Terms acceptance required',
+  terms_acceptance_required_description:
+    'You must agree to the terms to continue. Please try again.',
   something_went_wrong: 'Something went wrong.',
 };
 
