@@ -157,7 +157,7 @@ const OneTimeToken = () => {
         return;
       }
       // eslint-disable-next-line @silverhand/fp/no-mutation
-      isSubmitted.current ||= true;
+      isSubmitted.current = true;
 
       setIsLoading(true);
       const [error, result] = await asyncSignInWithOneTimeToken({
