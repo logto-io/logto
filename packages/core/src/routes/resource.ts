@@ -1,4 +1,4 @@
-import { isManagementApi, Resources, Scopes } from '@logto/schemas';
+import { isManagementApi, ProductEvent, Resources, Scopes } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { yes } from '@silverhand/essentials';
 import { boolean, object, string } from 'zod';
@@ -10,12 +10,15 @@ import { koaQuotaGuard, koaReportSubscriptionUpdates } from '#src/middleware/koa
 import assertThat from '#src/utils/assert-that.js';
 import { attachScopesToResources } from '#src/utils/resource.js';
 
+import { captureEvent } from '../utils/posthog.js';
+
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
 export default function resourceRoutes<T extends ManagementApiRouter>(
   ...[
     router,
     {
+      id: tenantId,
       queries,
       libraries: { quota },
     },
@@ -110,6 +113,7 @@ export default function resourceRoutes<T extends ManagementApiRouter>(
       ctx.status = 201;
       ctx.body = { ...resource, scopes: [] };
 
+      captureEvent(tenantId, ProductEvent.ApiResourceCreated);
       return next();
     }
   );
@@ -193,16 +197,17 @@ export default function resourceRoutes<T extends ManagementApiRouter>(
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
-
       const { indicator } = await findResourceById(id);
+
       assertThat(
         !isManagementApi(indicator),
         new RequestError({ code: 'resource.cannot_delete_management_api' })
       );
-
       await deleteResourceById(id);
+
       ctx.status = 204;
 
+      captureEvent(tenantId, ProductEvent.ApiResourceDeleted);
       return next();
     }
   );

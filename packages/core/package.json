@@ -88,6 +88,7 @@
     "pg-protocol": "^1.6.0",
     "pkg-dir": "^8.0.0",
     "pluralize": "^8.0.0",
+    "posthog-node": "^5.9.2",
     "qrcode": "^1.5.3",
     "raw-body": "^3.0.0",
     "redis": "^4.6.14",

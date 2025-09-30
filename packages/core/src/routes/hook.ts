@@ -1,6 +1,7 @@
 import {
   Hooks,
   Logs,
+  ProductEvent,
   hook,
   hookConfigGuard,
   hookEventGuard,
@@ -21,6 +22,8 @@ import { koaReportSubscriptionUpdates, koaQuotaGuard } from '#src/middleware/koa
 import { type AllowedKeyPrefix } from '#src/queries/log.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { captureEvent } from '../utils/posthog.js';
+
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
 const nonemptyUniqueHookEventsGuard = hookEventsGuard
@@ -28,7 +31,7 @@ const nonemptyUniqueHookEventsGuard = hookEventsGuard
   .transform((events) => deduplicate(events));
 
 export default function hookRoutes<T extends ManagementApiRouter>(
-  ...[router, { queries, libraries }]: RouterInitArgs<T>
+  ...[router, { id: tenantId, queries, libraries }]: RouterInitArgs<T>
 ) {
   const {
     hooks: {
@@ -186,6 +189,7 @@ export default function hookRoutes<T extends ManagementApiRouter>(
 
       ctx.status = 201;
 
+      captureEvent(tenantId, ProductEvent.WebhookCreated);
       return next();
     }
   );
@@ -269,6 +273,7 @@ export default function hookRoutes<T extends ManagementApiRouter>(
       await deleteHookById(id);
       ctx.status = 204;
 
+      captureEvent(tenantId, ProductEvent.WebhookDeleted);
       return next();
     }
   );

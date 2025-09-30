@@ -1,5 +1,6 @@
 import {
   ApplicationType,
+  ProductEvent,
   samlApplicationCreateGuard,
   samlApplicationPatchGuard,
   samlApplicationResponseGuard,
@@ -14,7 +15,7 @@ import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import {
   calculateCertificateFingerprints,
-  ensembleSamlApplication,
+  assembleSamlApplication,
   validateAcsUrl,
 } from '#src/libraries/saml-application/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -25,6 +26,8 @@ import type { ManagementApiRouter, RouterInitArgs } from '#src/routes/types.js';
 import { getSamlAppCallbackUrl } from '#src/saml-application/SamlApplication/utils.js';
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
+
+import { captureEvent } from '../../utils/posthog.js';
 
 export default function samlApplicationRoutes<T extends ManagementApiRouter>(
   ...[router, { id: tenantId, queries, libraries }]: RouterInitArgs<T>
@@ -131,12 +134,13 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
         void quota.reportSubscriptionUpdatesUsage('samlApplicationsLimit');
 
         ctx.status = 201;
-        ctx.body = ensembleSamlApplication({ application, samlConfig });
+        ctx.body = assembleSamlApplication({ application, samlConfig });
       } catch (error) {
         await deleteApplicationById(application.id);
         throw error;
       }
 
+      captureEvent(tenantId, ProductEvent.AppCreated, { type: ApplicationType.SAML });
       return next();
     }
   );
@@ -201,11 +205,11 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       );
 
       await deleteApplicationById(id);
-
       void quota.reportSubscriptionUpdatesUsage('samlApplicationsLimit');
 
       ctx.status = 204;
 
+      captureEvent(tenantId, ProductEvent.AppDeleted, { type: ApplicationType.SAML });
       return next();
     }
   );

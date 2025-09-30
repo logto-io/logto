@@ -83,7 +83,7 @@ export class ProvisionLibrary {
         ...conditional(socialIdentity && { identities: toUserSocialIdentityData(socialIdentity) }),
         ...conditional(customData && { customData }),
       },
-      initialUserRoles
+      { roleNames: initialUserRoles, isInteractive: true }
     );
 
     if (enterpriseSsoIdentity) {

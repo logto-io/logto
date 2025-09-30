@@ -89,6 +89,11 @@ type SchemaRouterConfig<Key extends string> = {
     /** Disable `DELETE /:id` route. */
     deleteById: boolean;
   };
+  /** Lifecycle hooks for certain actions. */
+  hooks?: {
+    /** Triggered after an entity is deleted. */
+    afterDelete?: () => void;
+  };
   /** Middlewares that are used before creating API routes */
   middlewares?: MiddlewareConfig[];
   /** A custom error handler for the router before throwing the error. */
@@ -252,7 +257,7 @@ export default class SchemaRouter<
           response: relationSchema.guard.array(),
           status: [200, 404],
         }),
-        this.#ensembleQualifiedMiddlewares('get', true),
+        this.#assembleQualifiedMiddlewares('get', true),
         async (ctx, next) => {
           const { id } = ctx.guard.params;
 
@@ -281,7 +286,7 @@ export default class SchemaRouter<
         body: z.object({ [columns.relationSchemaIds]: z.string().min(1).array().nonempty() }),
         status: [201, 422],
       }),
-      this.#ensembleQualifiedMiddlewares('post', true),
+      this.#assembleQualifiedMiddlewares('post', true),
       async (ctx, next) => {
         const {
           params: { id },
@@ -307,7 +312,7 @@ export default class SchemaRouter<
         body: z.object({ [columns.relationSchemaIds]: z.string().min(1).array() }),
         status: [204, 422],
       }),
-      this.#ensembleQualifiedMiddlewares('put', true),
+      this.#assembleQualifiedMiddlewares('put', true),
       async (ctx, next) => {
         const {
           params: { id },
@@ -329,7 +334,7 @@ export default class SchemaRouter<
           .extend({ [relationSchemaId]: z.string().min(1) }),
         status: [204, 422],
       }),
-      this.#ensembleQualifiedMiddlewares('delete', true),
+      this.#assembleQualifiedMiddlewares('delete', true),
       async (ctx, next) => {
         const {
           params: { id, [relationSchemaId]: relationId },
@@ -363,7 +368,7 @@ export default class SchemaRouter<
           response: (entityGuard ?? schema.guard).array(),
           status: [200],
         }),
-        this.#ensembleQualifiedMiddlewares('get'),
+        this.#assembleQualifiedMiddlewares('get'),
         async (ctx, next) => {
           const search = parseSearchOptions(searchFields, ctx.guard.query);
           const { limit, offset } = ctx.pagination;
@@ -385,7 +390,7 @@ export default class SchemaRouter<
           response: entityGuard ?? schema.guard,
           status: [201], // TODO: 409/422 for conflict?
         }),
-        this.#ensembleQualifiedMiddlewares('post'),
+        this.#assembleQualifiedMiddlewares('post'),
         async (ctx, next) => {
           // eslint-disable-next-line no-restricted-syntax -- `.omit()` doesn't play well with generics
           ctx.body = await queries.insert({
@@ -406,7 +411,7 @@ export default class SchemaRouter<
           response: entityGuard ?? schema.guard,
           status: [200, 404],
         }),
-        this.#ensembleQualifiedMiddlewares('get'),
+        this.#assembleQualifiedMiddlewares('get'),
         async (ctx, next) => {
           ctx.body = await queries.findById(ctx.guard.params.id);
           return next();
@@ -423,7 +428,7 @@ export default class SchemaRouter<
           response: entityGuard ?? schema.guard,
           status: [200, 404], // TODO: 409/422 for conflict?
         }),
-        this.#ensembleQualifiedMiddlewares('patch'),
+        this.#assembleQualifiedMiddlewares('patch'),
         async (ctx, next) => {
           ctx.body = await queries.updateById(ctx.guard.params.id, ctx.guard.body);
           return next();
@@ -438,9 +443,10 @@ export default class SchemaRouter<
           params: z.object({ id: z.string().min(1) }),
           status: [204, 404],
         }),
-        this.#ensembleQualifiedMiddlewares('delete'),
+        this.#assembleQualifiedMiddlewares('delete'),
         async (ctx, next) => {
           await queries.deleteById(ctx.guard.params.id);
+          this.config.hooks?.afterDelete?.();
           ctx.status = 204;
           return next();
         }
@@ -448,7 +454,7 @@ export default class SchemaRouter<
     }
   }
 
-  #ensembleQualifiedMiddlewares<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
+  #assembleQualifiedMiddlewares<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
     method: RouteMethod,
     isForRelationRoute = false
   ): Middleware<StateT, ContextT, ResponseBodyT> {

@@ -123,7 +123,7 @@ export const calculateCertificateFingerprints = (
  * - A record from the `applications` table with a `type` of `SAML`
  * - A record from the `saml_application_configs` table
  */
-export const ensembleSamlApplication = ({
+export const assembleSamlApplication = ({
   application,
   samlConfig,
 }: {
