@@ -89,6 +89,7 @@
     "overlayscrollbars-react": "^0.5.0",
     "postcss": "^8.4.39",
     "postcss-modules": "^6.0.0",
+    "posthog-js": "^1.268.6",
     "prettier": "^3.5.3",
     "prism-react-renderer": "^2.4.1",
     "prop-types": "^15.8.1",

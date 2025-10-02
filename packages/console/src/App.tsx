@@ -7,7 +7,8 @@ import {
   TenantScope,
 } from '@logto/schemas';
 import { conditionalArray } from '@silverhand/essentials';
-import { useContext, useMemo } from 'react';
+import { PostHogProvider, usePostHog } from 'posthog-js/react';
+import { useContext, useEffect, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
@@ -21,7 +22,7 @@ import 'react-color-palette/css';
 
 import CloudAppRoutes from '@/cloud/AppRoutes';
 import AppLoading from '@/components/AppLoading';
-import { isCloud } from '@/consts/env';
+import { isCloud, postHogHost, postHogKey } from '@/consts/env';
 import { cloudApi, getManagementApi, meApi } from '@/consts/resources';
 import { ConsoleRoutes } from '@/containers/ConsoleRoutes';
 
@@ -71,8 +72,6 @@ export default App;
  * different components.
  */
 function Providers() {
-  const { currentTenantId } = useContext(TenantsContext);
-
   // For Cloud, we use Management API proxy for accessing tenant data.
   // For OSS, we directly call the tenant API with the default tenant API resource.
   const resources = useMemo(
@@ -103,58 +102,123 @@ function Providers() {
   );
 
   return (
-    <LogtoProvider
-      unstable_enableCache
-      config={{
-        endpoint: adminTenantEndpoint.href,
-        appId: adminConsoleApplicationId,
-        resources,
-        scopes,
-        prompt: [Prompt.Login, Prompt.Consent],
+    <PostHogProvider
+      apiKey={postHogKey ?? ''} // Empty key will disable PostHog
+      options={{
+        api_host: postHogHost,
+        defaults: '2025-05-24',
       }}
     >
-      <AppThemeProvider>
-        <Helmet titleTemplate={`%s - ${mainTitle}`} defaultTitle={mainTitle} />
-        <Toast />
-        <AppConfirmModalProvider>
-          <ErrorBoundary>
-            <LogtoErrorBoundary>
-              {/**
-               * If it's not Cloud (OSS), render the tenant app container directly since only default tenant is available;
-               * if it's Cloud, render the tenant app container only when a tenant ID is available (in a tenant context).
-               */}
-              {!isCloud || currentTenantId ? (
+      <LogtoProvider
+        unstable_enableCache
+        config={{
+          endpoint: adminTenantEndpoint.href,
+          appId: adminConsoleApplicationId,
+          resources,
+          scopes,
+          prompt: [Prompt.Login, Prompt.Consent],
+        }}
+      >
+        <AppThemeProvider>
+          <Helmet titleTemplate={`%s - ${mainTitle}`} defaultTitle={mainTitle} />
+          <Toast />
+          <AppConfirmModalProvider>
+            <ErrorBoundary>
+              <LogtoErrorBoundary>
                 <AppDataProvider>
-                  <AppRoutes />
+                  <GlobalScripts />
+                  <Content />
                 </AppDataProvider>
-              ) : (
-                <CloudAppRoutes />
-              )}
-            </LogtoErrorBoundary>
-          </ErrorBoundary>
-        </AppConfirmModalProvider>
-      </AppThemeProvider>
-    </LogtoProvider>
+              </LogtoErrorBoundary>
+            </ErrorBoundary>
+          </AppConfirmModalProvider>
+        </AppThemeProvider>
+      </LogtoProvider>
+    </PostHogProvider>
   );
 }
 
-/** Renders different routes based on the user's onboarding status. */
-function AppRoutes() {
+function Content() {
   const { tenantEndpoint } = useContext(AppDataContext);
-  const { isLoaded } = useCurrentUser();
+  const { isLoaded, user } = useCurrentUser();
   const { isAuthenticated } = useLogto();
+  const { currentTenantId, currentTenant } = useContext(TenantsContext);
+  const postHog = usePostHog();
 
-  // Authenticated user should load onboarding data before rendering the app.
-  // This looks weird and it will be refactored soon by merging the onboarding
-  // routes with the console routes.
-  if (!tenantEndpoint || (isCloud && isAuthenticated && !isLoaded)) {
-    return <AppLoading />;
+  useEffect(() => {
+    if (isLoaded) {
+      postHog.identify(user?.id);
+    }
+    // We don't reset user info here because this component includes some anonymous pages.
+    // Resetting user info may cause issues when the user switches between anonymous and
+    // authenticated pages.
+    // Reset user info in the sign-out logic instead.
+  }, [isLoaded, postHog, user]);
+
+  /**
+   * The `useEffect` below sets the PostHog group properties based on:
+   *
+   * 1. If `currentTenant` is available, since it contains rich data, set the group with both ID
+   *   and necessary properties.
+   * 2. If only `currentTenantId` is available, set the group with only ID. This usually happens
+   *   when the URL contains a tenant ID but the tenant data is not loaded yet or the tenant is
+   *   unavailable to the user.
+   * 3. If neither is available, reset all group properties. This usually happens when the user is
+   *   not in a tenant context.
+   *
+   * @caveat
+   * We need to identify group when window is reactivated (tab switch or window switch)
+   * since one user may access different tenants in different tabs or windows.
+   *
+   * Currently, PostHog DOES capture the correct group when the user switches tabs or windows
+   * since it reads the properties from the memory if existing, but just in case it doesn't work
+   * in the future, we add this logic here.
+   *
+   * See {https://github.com/PostHog/posthog-js/blob/b5eb605/packages/core/src/posthog-core-stateless.ts#L778-L783 | posthog-js source code}
+   * for details at the time of writing.
+   */
+  useEffect(() => {
+    const captureGroups = () => {
+      if (currentTenant) {
+        postHog.group('tenant', currentTenantId, {
+          name: currentTenant.name,
+        });
+      } else if (currentTenantId) {
+        postHog.group('tenant', currentTenantId);
+      } else {
+        postHog.resetGroups();
+      }
+    };
+
+    captureGroups();
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        captureGroups();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [postHog, currentTenantId, currentTenant]);
+
+  /**
+   * If it's not Cloud (OSS), render the tenant app container directly since only default tenant is available;
+   * if it's Cloud, render the tenant app container only when a tenant ID is available (in a tenant context).
+   */
+  if (!isCloud || currentTenantId) {
+    // Authenticated user should load onboarding data before rendering the app.
+    // This looks weird and it can be refactored by merging the onboarding
+    // routes with the console routes.
+    if (!tenantEndpoint || (isCloud && isAuthenticated && !isLoaded)) {
+      return <AppLoading />;
+    }
+
+    return <ConsoleRoutes />;
   }
 
-  return (
-    <>
-      <GlobalScripts />
-      <ConsoleRoutes />
-    </>
-  );
+  return <CloudAppRoutes />;
 }

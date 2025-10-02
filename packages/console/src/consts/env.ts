@@ -19,3 +19,5 @@ export const consoleEmbeddedPricingUrl =
   'https://logto.io/console-embedded-pricing';
 
 export const inkeepApiKey = normalizeEnv(import.meta.env.INKEEP_API_KEY);
+export const postHogKey = normalizeEnv(import.meta.env.POSTHOG_PUBLIC_KEY);
+export const postHogHost = normalizeEnv(import.meta.env.POSTHOG_PUBLIC_HOST);

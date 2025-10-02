@@ -27,6 +27,8 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useRedirectUri from '@/hooks/use-redirect-uri';
 
+import useSignOut from './use-sign-out';
+
 export class RequestError extends Error {
   constructor(
     public readonly status: number,
@@ -45,7 +47,7 @@ export type StaticApiProps = {
 };
 
 const useGlobalRequestErrorHandler = (toastDisabledErrorCodes?: LogtoErrorCode[]) => {
-  const { signOut } = useLogto();
+  const { signOut } = useSignOut();
   const { show } = useConfirmModal();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
