@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import auFlag from './assets/au.svg?react';
 import euFlag from './assets/eu.svg?react';
 import jpFlag from './assets/jp.svg?react';
+import ukFlag from './assets/uk.svg?react';
 import usFlag from './assets/us.svg?react';
 import styles from './index.module.scss';
 
@@ -32,6 +33,7 @@ const regionFlagMap: Readonly<Record<string, FunctionComponent<React.SVGProps<SV
     US: usFlag,
     AU: auFlag,
     JP: jpFlag,
+    UK: ukFlag,
   });
 
 type RegionFlagProps = {
