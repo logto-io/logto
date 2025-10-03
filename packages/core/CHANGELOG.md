@@ -1,5 +1,16 @@
 # Change Log
 
+## 1.32.1
+
+### Patch Changes
+
+- Updated dependencies [3ed4d0a91e]
+  - @logto/experience@1.16.1
+  - @logto/cli@1.32.1
+  - @logto/schemas@1.32.1
+  - @logto/console@1.29.0
+  - @logto/demo-app@1.5.0
+
 ## 1.32.0
 
 ### Minor Changes

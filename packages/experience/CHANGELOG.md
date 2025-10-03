@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.16.1
+
+### Patch Changes
+
+- 3ed4d0a91e: fix an issue that prevents Logto Experience from working in Android 11 and some older browser versions
+
+  The issue is introduced in version 1.32.0 by the usage of the `||=` operator, which is not supported in some older browsers (#7857).
+
 ## 1.16.0
 
 ### Minor Changes
