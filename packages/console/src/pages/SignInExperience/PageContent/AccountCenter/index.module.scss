@@ -1,0 +1,44 @@
+@use '@/scss/underscore' as _;
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(3);
+}
+
+.error {
+  margin-bottom: _.unit(2);
+}
+
+.groupFields {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(3);
+}
+
+.fieldRow {
+  justify-content: space-between;
+  display: flex;
+  gap: _.unit(6);
+  align-items: center;
+  border: 1px solid var(--color-neutral-90);
+  border-radius: _.unit(2);
+  padding: _.unit(4);
+}
+
+.fieldLabel {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(1);
+}
+
+.fieldName {
+  font: var(--font-body-2);
+  color: var(--color-text);
+}
+
+.fieldControl {
+  min-width: 160px;
+  display: flex;
+  justify-content: flex-end;
+}

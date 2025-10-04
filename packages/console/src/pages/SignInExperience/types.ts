@@ -1,4 +1,6 @@
 import {
+  AccountCenterControlValue,
+  type AccountCenter as AccountCenterConfig,
   type SignUp,
   type SignInExperience,
   type SignInIdentifier,
@@ -18,8 +20,47 @@ export enum SignInExperienceTab {
   Branding = 'branding',
   SignUpAndSignIn = 'sign-up-and-sign-in',
   CollectUserProfile = 'collect-user-profile',
+  AccountCenter = 'account-center',
   Content = 'content',
 }
+
+const accountCenterFieldKeys = [
+  'email',
+  'phone',
+  'social',
+  'password',
+  'mfa',
+  'username',
+  'name',
+  'avatar',
+  'profile',
+  'customData',
+] as const;
+
+export type AccountCenterFieldKey = (typeof accountCenterFieldKeys)[number];
+
+export type AccountCenterFormValues = {
+  enabled: boolean;
+  fields: Record<AccountCenterFieldKey, AccountCenterControlValue>;
+};
+
+const createDefaultAccountCenterFormValues = (): AccountCenterFormValues => ({
+  enabled: false,
+  // eslint-disable-next-line no-restricted-syntax
+  fields: Object.fromEntries(
+    accountCenterFieldKeys.map((key) => [key, AccountCenterControlValue.Off])
+  ) as Record<AccountCenterFieldKey, AccountCenterControlValue>,
+});
+
+export const convertAccountCenterToForm = (
+  accountCenter?: AccountCenterConfig
+): AccountCenterFormValues => ({
+  enabled: accountCenter?.enabled ?? false,
+  fields: {
+    ...createDefaultAccountCenterFormValues().fields,
+    ...accountCenter?.fields,
+  },
+});
 
 /**
  * @deprecated
