@@ -1,5 +1,11 @@
 import type { RoleResponse } from '@logto/schemas';
-import { RoleType, Roles, featuredApplicationGuard, featuredUserGuard } from '@logto/schemas';
+import {
+  ProductEvent,
+  RoleType,
+  Roles,
+  featuredApplicationGuard,
+  featuredUserGuard,
+} from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { pickState, trySafe, tryThat } from '@silverhand/essentials';
 import { number, object, string, z } from 'zod';
@@ -11,6 +17,8 @@ import koaPagination from '#src/middleware/koa-pagination.js';
 import koaRoleRlsErrorHandler from '#src/middleware/koa-role-rls-error-handler.js';
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
+
+import { captureEvent } from '../utils/posthog.js';
 
 import roleApplicationRoutes from './role.application.js';
 import roleUserRoutes from './role.user.js';
@@ -200,6 +208,7 @@ export default function roleRoutes<T extends ManagementApiRouter>(
         });
       }
 
+      captureEvent(tenant.id, ProductEvent.RoleCreated, { type: role.type });
       return next();
     }
   );
@@ -274,6 +283,7 @@ export default function roleRoutes<T extends ManagementApiRouter>(
 
       ctx.status = 204;
 
+      captureEvent(tenant.id, ProductEvent.RoleDeleted, { type: role.type });
       return next();
     }
   );

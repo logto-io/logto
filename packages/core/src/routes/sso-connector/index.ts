@@ -1,4 +1,5 @@
 import {
+  ProductEvent,
   SsoConnectors,
   SsoProviderType,
   ssoConnectorProvidersResponseGuard,
@@ -19,6 +20,7 @@ import { isSupportedSsoConnector, isSupportedSsoProvider } from '#src/sso/utils.
 import { tableToPathname } from '#src/utils/SchemaRouter.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { captureEvent } from '../../utils/posthog.js';
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
 import ssoConnectorIdpInitiatedAuthConfigRoutes from './idp-initiated-auth-config.js';
@@ -152,6 +154,7 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
 
       ctx.body = connector;
 
+      captureEvent(tenantId, ProductEvent.SsoConnectorCreated, { providerName });
       return next();
     }
   );
@@ -232,9 +235,12 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
+      const { providerName } = await getSsoConnectorById(id);
 
       await ssoConnectors.deleteById(id);
+
       ctx.status = 204;
+      captureEvent(tenantId, ProductEvent.SsoConnectorDeleted, { providerName });
       return next();
     }
   );

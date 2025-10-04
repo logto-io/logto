@@ -1,7 +1,13 @@
 import { type ConnectorFactory } from '@logto/cli/lib/connector/index.js';
 import type router from '@logto/cloud/routes';
 import { demoConnectorIds, validateConfig } from '@logto/connector-kit';
-import { Connectors, ConnectorType, connectorResponseGuard, type JsonObject } from '@logto/schemas';
+import {
+  Connectors,
+  ConnectorType,
+  connectorResponseGuard,
+  type JsonObject,
+  ProductEvent,
+} from '@logto/schemas';
 import { generateStandardShortId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import cleanDeep from 'clean-deep';
@@ -16,6 +22,7 @@ import { buildExtraInfo } from '#src/utils/connectors/extra-information.js';
 import { loadConnectorFactories, transpileLogtoConnector } from '#src/utils/connectors/index.js';
 import { checkSocialConnectorTargetAndPlatformUniqueness } from '#src/utils/connectors/platform.js';
 
+import { captureEvent } from '../../utils/posthog.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 import connectorAuthorizationUriRoutes from './authorization-uri.js';
@@ -32,6 +39,10 @@ const guardConnectorsQuota = async (
 };
 
 const passwordlessConnector = new Set([ConnectorType.Email, ConnectorType.Sms]);
+const pickFactoryProperties = <T extends ConnectorFactory<typeof router>>(factory: T) => ({
+  type: factory.type,
+  name: factory.metadata.name.en,
+});
 
 export default function connectorRoutes<T extends ManagementApiRouter>(
   ...[router, tenant]: RouterInitArgs<T>
@@ -181,6 +192,18 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
         if (conflictingConnectorIds.length > 0) {
           await deleteConnectorByIds(conflictingConnectorIds);
         }
+
+        captureEvent(
+          tenant.id,
+          ProductEvent.PasswordlessConnectorUpdated,
+          pickFactoryProperties(connectorFactory)
+        );
+      } else {
+        captureEvent(
+          tenant.id,
+          ProductEvent.SocialConnectorCreated,
+          pickFactoryProperties(connectorFactory)
+        );
       }
 
       const connector = await getLogtoConnectorById(insertConnectorId);
@@ -347,6 +370,7 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
   );
 
   router.delete(
+    // eslint-disable-next-line max-lines -- refactor later
     '/connectors/:id',
     koaGuard({ params: object({ id: string().min(1) }), status: [204, 404] }),
     async (ctx, next) => {
@@ -365,6 +389,11 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
 
       if (connectorFactory?.type === ConnectorType.Social) {
         await removeUnavailableSocialConnectorTargets();
+        captureEvent(
+          tenant.id,
+          ProductEvent.SocialConnectorDeleted,
+          pickFactoryProperties(connectorFactory)
+        );
       }
 
       ctx.status = 204;
@@ -376,5 +405,4 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
   connectorConfigTestingRoutes(router, tenant);
   connectorAuthorizationUriRoutes(router, tenant);
   connectorFactoryRoutes(router, tenant);
-  // eslint-disable-next-line max-lines
 }

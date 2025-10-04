@@ -165,7 +165,10 @@ async function handleSubmitRegister(
         }
       ),
     },
-    getInitialUserRoles(isInAdminTenant, isCreatingFirstAdminUser, isCloud)
+    {
+      roleNames: getInitialUserRoles(isInAdminTenant, isCreatingFirstAdminUser, isCloud),
+      isInteractive: true,
+    }
   );
 
   if (isCreatingFirstAdminUser) {

@@ -25,7 +25,7 @@ import { createVerificationStatusLibrary } from '#src/libraries/verification-sta
 import type Queries from './Queries.js';
 
 export default class Libraries {
-  users = createUserLibrary(this.queries);
+  users = createUserLibrary(this.tenantId, this.queries);
   phrases = createPhraseLibrary(this.queries);
   hooks = createHookLibrary(this.queries);
   scopes = createScopeLibrary(this.queries);

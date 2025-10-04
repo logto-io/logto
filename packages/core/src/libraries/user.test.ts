@@ -1,4 +1,4 @@
-import { MfaFactor, UsersPasswordEncryptionMethod } from '@logto/schemas';
+import { defaultTenantId, MfaFactor, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
 import { mockResource, mockAdminUserRole, mockScope } from '#src/__mocks__/index.js';
@@ -48,7 +48,7 @@ const queries = new MockQueries({
 });
 
 describe('generateUserId()', () => {
-  const { generateUserId } = createUserLibrary(queries);
+  const { generateUserId } = createUserLibrary(defaultTenantId, queries);
 
   afterEach(() => {
     hasUserWithId.mockClear();
@@ -98,7 +98,7 @@ describe('encryptUserPassword()', () => {
 });
 
 describe('verifyUserPassword()', () => {
-  const { verifyUserPassword } = createUserLibrary(queries);
+  const { verifyUserPassword } = createUserLibrary(defaultTenantId, queries);
 
   describe('Argon2i', () => {
     it('resolves when password is correct', async () => {
@@ -235,7 +235,7 @@ describe('verifyUserPassword()', () => {
 });
 
 describe('findUserScopesForResourceId()', () => {
-  const { findUserScopesForResourceIndicator } = createUserLibrary(queries);
+  const { findUserScopesForResourceIndicator } = createUserLibrary(defaultTenantId, queries);
 
   it('returns scopes that the user has access', async () => {
     await expect(
@@ -245,7 +245,7 @@ describe('findUserScopesForResourceId()', () => {
 });
 
 describe('findUserRoles()', () => {
-  const { findUserRoles } = createUserLibrary(queries);
+  const { findUserRoles } = createUserLibrary(defaultTenantId, queries);
 
   it('returns user roles', async () => {
     await expect(findUserRoles(mockUser.id)).resolves.toEqual([mockAdminUserRole]);
@@ -254,7 +254,7 @@ describe('findUserRoles()', () => {
 
 describe('addUserMfaVerification()', () => {
   const createdAt = new Date().toISOString();
-  const { addUserMfaVerification } = createUserLibrary(queries);
+  const { addUserMfaVerification } = createUserLibrary(defaultTenantId, queries);
 
   beforeAll(() => {
     jest.useFakeTimers();

@@ -1,4 +1,4 @@
-import { Domains, domainResponseGuard, domainSelectFields } from '@logto/schemas';
+import { Domains, ProductEvent, domainResponseGuard, domainSelectFields } from '@logto/schemas';
 import { pick, trySafe } from '@silverhand/essentials';
 import { z } from 'zod';
 
@@ -8,6 +8,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { EnvSet } from '../env-set/index.js';
+import { captureEvent } from '../utils/posthog.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
@@ -122,6 +123,7 @@ export default function domainRoutes<T extends ManagementApiRouter>(
       ctx.status = 201;
       ctx.body = pick(syncedDomain, ...domainSelectFields);
 
+      captureEvent(tenantId, ProductEvent.CustomDomainCreated);
       return next();
     }
   );
@@ -143,6 +145,7 @@ export default function domainRoutes<T extends ManagementApiRouter>(
 
       ctx.status = 204;
 
+      captureEvent(tenantId, ProductEvent.CustomDomainDeleted);
       return next();
     }
   );

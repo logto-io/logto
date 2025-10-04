@@ -1,7 +1,9 @@
 /* eslint-disable max-lines */
 import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import {
+  ProductEvent,
   UsersPasswordEncryptionMethod,
+  adminTenantId,
   jsonObjectGuard,
   userProfileGuard,
   userProfileResponseGuard,
@@ -16,13 +18,14 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { parseLegacyPassword } from '../../utils/password.js';
+import { captureDeveloperEvent } from '../../utils/posthog.js';
 import { transpileUserProfileResponse } from '../../utils/user.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>
 ) {
-  const [router, { queries, libraries }] = args;
+  const [router, { queries, libraries, id: tenantId }] = args;
   const {
     users: {
       deleteUserById,
@@ -201,26 +204,23 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
       const id = await generateUserId();
 
-      const [user] = await insertUser(
-        {
-          id,
-          primaryEmail,
-          primaryPhone,
-          username,
-          name,
-          avatar,
-          ...conditional(customData && { customData }),
-          ...conditional(password && (await encryptUserPassword(password))),
-          ...conditional(
-            passwordDigest && {
-              passwordEncrypted: passwordDigest,
-              passwordEncryptionMethod: passwordAlgorithm,
-            }
-          ),
-          ...conditional(profile && { profile }),
-        },
-        []
-      );
+      const [user] = await insertUser({
+        id,
+        primaryEmail,
+        primaryPhone,
+        username,
+        name,
+        avatar,
+        ...conditional(customData && { customData }),
+        ...conditional(password && (await encryptUserPassword(password))),
+        ...conditional(
+          passwordDigest && {
+            passwordEncrypted: passwordDigest,
+            passwordEncryptionMethod: passwordAlgorithm,
+          }
+        ),
+        ...conditional(profile && { profile }),
+      });
 
       ctx.body = transpileUserProfileResponse(user);
       return next();
@@ -379,6 +379,9 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       await signOutUser(userId);
       await deleteUserById(userId);
 
+      if (tenantId === adminTenantId) {
+        captureDeveloperEvent(userId, ProductEvent.DeveloperDeleted);
+      }
       ctx.status = 204;
 
       // Manually trigger the `User.Deleted` hook since we need to send the user data in the payload

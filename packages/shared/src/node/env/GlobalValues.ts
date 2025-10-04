@@ -116,8 +116,13 @@ export default class GlobalValues {
 
   public readonly databaseConnectionTimeout = Number(getEnv('DATABASE_CONNECTION_TIMEOUT', '5000'));
 
-  /** Case insensitive username */
+  /** Global switch for enabling/disabling case-sensitive usernames. */
   public readonly isCaseSensitiveUsername = yes(getEnv('CASE_SENSITIVE_USERNAME', 'true'));
+
+  /** The write-only key for PostHog integration. */
+  public readonly posthogPublicKey = process.env.POSTHOG_PUBLIC_KEY;
+  /** The PostHog host URL for SDK to send events to. */
+  public readonly posthogPublicHost = process.env.POSTHOG_PUBLIC_HOST;
 
   /**
    * The Redis endpoint (optional). If it's set, the central cache mechanism will be automatically enabled.

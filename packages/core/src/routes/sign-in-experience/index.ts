@@ -1,6 +1,11 @@
 import { DemoConnector } from '@logto/connector-kit';
 import { PasswordPolicyChecker } from '@logto/core-kit';
-import { ConnectorType, SignInExperiences, ForgotPasswordMethod } from '@logto/schemas';
+import {
+  ConnectorType,
+  SignInExperiences,
+  ForgotPasswordMethod,
+  ProductEvent,
+} from '@logto/schemas';
 import { conditional, tryThat } from '@silverhand/essentials';
 import { literal, object, string, z } from 'zod';
 
@@ -15,6 +20,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 
 import RequestError from '../../errors/RequestError/index.js';
 import { checkPasswordPolicyForUser } from '../../utils/password.js';
+import { captureEvent } from '../../utils/posthog.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 import customUiAssetsRoutes from './custom-ui-assets/index.js';
@@ -22,7 +28,7 @@ import customUiAssetsRoutes from './custom-ui-assets/index.js';
 export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>
 ) {
-  const [router, { queries, libraries, connectors }] = args;
+  const [router, { id: tenantId, queries, libraries, connectors }] = args;
   const { findDefaultSignInExperience, updateDefaultSignInExperience } = queries.signInExperiences;
   const { deleteConnectorById } = queries.connectors;
   const { findUserById } = queries.users;
@@ -197,6 +203,10 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         void quota.reportSubscriptionUpdatesUsage('securityFeaturesEnabled');
       }
 
+      captureEvent(
+        tenantId,
+        mfa?.factors.length ? ProductEvent.MfaEnabled : ProductEvent.MfaDisabled
+      );
       return next();
     }
   );
