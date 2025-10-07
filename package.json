@@ -51,8 +51,7 @@
       "formidable@<3.5.4": "^3.5.4",
       "playwright@<1.55.1": "^1.55.1",
       "tmp@<0.2.4": "^0.2.4",
-      "nanoid@^4.0.0 <5.0.9": "^5.0.9",
-      "nodemailer@<7.0.11": "^7.0.11"
+      "nanoid@^4.0.0 <5.0.9": "^5.0.9"
     },
     "peerDependencyRules": {
       "allowedVersions": {
