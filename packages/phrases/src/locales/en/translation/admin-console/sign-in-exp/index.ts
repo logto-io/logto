@@ -100,6 +100,8 @@ const sign_in_exp = {
       off: 'Off',
       edit: 'Edit',
       read_only: 'Read only',
+      enabled: 'Enabled',
+      disabled: 'Disabled',
     },
     sections: {
       account_security: {
@@ -123,6 +125,17 @@ const sign_in_exp = {
           profile_data: {
             title: 'Profile data',
           },
+        },
+      },
+      secret_vault: {
+        title: 'SECRET VAULT',
+        description:
+          'For social and enterprise connectors, secure store third-party access tokens to call their APIs (e.g., add events to Google Calendar).',
+        third_party_token_storage: {
+          title: 'Third-party token storage',
+          third_party_access_token_retrieval: 'Third-party access token retrieval',
+          third_party_access_token_retrieval_tooltip:
+            "Once the Account API is enabled, third-party token retrieval is automatically activated. To store tokens, you can enable this in the corresponding social or enterprise connector's settings.",
         },
       },
     },

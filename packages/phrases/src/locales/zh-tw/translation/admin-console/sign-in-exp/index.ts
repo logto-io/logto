@@ -96,6 +96,8 @@ const sign_in_exp = {
       off: 'Off',
       edit: 'Edit',
       read_only: 'Read only',
+      enabled: '已啟用',
+      disabled: '已停用',
     },
     sections: {
       account_security: {
@@ -119,6 +121,17 @@ const sign_in_exp = {
           profile_data: {
             title: 'Profile data',
           },
+        },
+      },
+      secret_vault: {
+        title: '密鑰保險庫',
+        description:
+          '對於社交和企業連接器，安全存儲第三方訪問令牌以調用其 API（例如，向 Google 日曆添加事件）。',
+        third_party_token_storage: {
+          title: '第三方令牌存儲',
+          third_party_access_token_retrieval: '第三方訪問令牌檢索',
+          third_party_access_token_retrieval_tooltip:
+            '啟用 Account API 後，第三方令牌檢索會自動激活。要存儲令牌，您可以在相應的社交或企業連接器的設定中啟用此功能。',
         },
       },
     },

@@ -99,6 +99,8 @@ const sign_in_exp = {
       off: 'Off',
       edit: 'Edit',
       read_only: 'Read only',
+      enabled: 'Włączone',
+      disabled: 'Wyłączone',
     },
     sections: {
       account_security: {
@@ -122,6 +124,17 @@ const sign_in_exp = {
           profile_data: {
             title: 'Profile data',
           },
+        },
+      },
+      secret_vault: {
+        title: 'TAJNY SEJF',
+        description:
+          'Dla złączy społecznościowych i korporacyjnych, bezpieczne przechowywanie tokenów dostępu stron trzecich w celu wywołania ich interfejsów API (np. dodawanie wydarzeń do Kalendarza Google).',
+        third_party_token_storage: {
+          title: 'Przechowywanie tokenów stron trzecich',
+          third_party_access_token_retrieval: 'Pobieranie tokenu dostępu strony trzeciej',
+          third_party_access_token_retrieval_tooltip:
+            'Po włączeniu Account API pobieranie tokenów stron trzecich jest automatycznie aktywowane. Aby przechowywać tokeny, możesz to włączyć w ustawieniach odpowiedniego złącza społecznościowego lub korporacyjnego.',
         },
       },
     },

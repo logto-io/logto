@@ -99,6 +99,8 @@ const sign_in_exp = {
       off: 'Off',
       edit: 'Edit',
       read_only: 'Read only',
+      enabled: 'Aktiviert',
+      disabled: 'Deaktiviert',
     },
     sections: {
       account_security: {
@@ -122,6 +124,17 @@ const sign_in_exp = {
           profile_data: {
             title: 'Profile data',
           },
+        },
+      },
+      secret_vault: {
+        title: 'GEHEIMER TRESOR',
+        description:
+          'Für soziale und Enterprise-Konnektoren, sichere Speicherung von Drittanbieter-Zugriffstokens zum Aufrufen ihrer APIs (z. B. Hinzufügen von Ereignissen zu Google Kalender).',
+        third_party_token_storage: {
+          title: 'Drittanbieter-Token-Speicherung',
+          third_party_access_token_retrieval: 'Abruf von Drittanbieter-Zugriffstoken',
+          third_party_access_token_retrieval_tooltip:
+            'Sobald die Account API aktiviert ist, wird der Abruf von Drittanbieter-Token automatisch aktiviert. Um Token zu speichern, können Sie dies in den Einstellungen des entsprechenden sozialen oder Enterprise-Konnektors aktivieren.',
         },
       },
     },

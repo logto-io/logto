@@ -98,6 +98,8 @@ const sign_in_exp = {
       off: 'Off',
       edit: 'Edit',
       read_only: 'Read only',
+      enabled: 'เปิดใช้งาน',
+      disabled: 'ปิดใช้งาน',
     },
     sections: {
       account_security: {
@@ -121,6 +123,17 @@ const sign_in_exp = {
           profile_data: {
             title: 'Profile data',
           },
+        },
+      },
+      secret_vault: {
+        title: 'ห้องนิรภัยความลับ',
+        description:
+          'สำหรับคอนเนคเตอร์โซเชียลและองค์กร จัดเก็บโทเค็นการเข้าถึงของบุคคลที่สามอย่างปลอดภัยเพื่อเรียกใช้ API ของพวกเขา (เช่น เพิ่มกิจกรรมลงใน Google Calendar)',
+        third_party_token_storage: {
+          title: 'การจัดเก็บโทเค็นของบุคคลที่สาม',
+          third_party_access_token_retrieval: 'การดึงโทเค็นการเข้าถึงของบุคคลที่สาม',
+          third_party_access_token_retrieval_tooltip:
+            'เมื่อเปิดใช้งาน Account API แล้ว การดึงโทเค็นของบุคคลที่สามจะถูกเปิดใช้งานโดยอัตโนมัติ ในการจัดเก็บโทเค็น คุณสามารถเปิดใช้งานได้ในการตั้งค่าของคอนเนคเตอร์โซเชียลหรือองค์กรที่เกี่ยวข้อง',
         },
       },
     },

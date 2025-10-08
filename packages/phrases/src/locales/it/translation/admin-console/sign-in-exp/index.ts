@@ -99,6 +99,8 @@ const sign_in_exp = {
       off: 'Off',
       edit: 'Edit',
       read_only: 'Read only',
+      enabled: 'Abilitato',
+      disabled: 'Disabilitato',
     },
     sections: {
       account_security: {
@@ -122,6 +124,17 @@ const sign_in_exp = {
           profile_data: {
             title: 'Profile data',
           },
+        },
+      },
+      secret_vault: {
+        title: 'CASSAFORTE SEGRETA',
+        description:
+          'Per i connettori social e aziendali, archiviazione sicura dei token di accesso di terze parti per chiamare le loro API (ad esempio, aggiungere eventi a Google Calendar).',
+        third_party_token_storage: {
+          title: 'Archiviazione token di terze parti',
+          third_party_access_token_retrieval: 'Recupero token di accesso di terze parti',
+          third_party_access_token_retrieval_tooltip:
+            "Una volta abilitata l'Account API, il recupero dei token di terze parti viene attivato automaticamente. Per archiviare i token, puoi abilitarlo nelle impostazioni del connettore social o aziendale corrispondente.",
         },
       },
     },

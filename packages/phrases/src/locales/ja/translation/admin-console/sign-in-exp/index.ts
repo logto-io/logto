@@ -99,6 +99,8 @@ const sign_in_exp = {
       off: 'Off',
       edit: 'Edit',
       read_only: 'Read only',
+      enabled: '有効',
+      disabled: '無効',
     },
     sections: {
       account_security: {
@@ -122,6 +124,17 @@ const sign_in_exp = {
           profile_data: {
             title: 'Profile data',
           },
+        },
+      },
+      secret_vault: {
+        title: 'シークレットボルト',
+        description:
+          'ソーシャルコネクタやエンタープライズコネクタ向けに、サードパーティのアクセストークンを安全に保存して、それらのAPI（例：Googleカレンダーにイベントを追加）を呼び出します。',
+        third_party_token_storage: {
+          title: 'サードパーティトークンストレージ',
+          third_party_access_token_retrieval: 'サードパーティアクセストークン取得',
+          third_party_access_token_retrieval_tooltip:
+            'Account APIが有効になると、サードパーティトークンの取得が自動的に有効になります。トークンを保存するには、対応するソーシャルまたはエンタープライズコネクタの設定で有効にできます。',
         },
       },
     },

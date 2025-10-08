@@ -99,6 +99,8 @@ const sign_in_exp = {
       off: 'Off',
       edit: 'Edit',
       read_only: 'Read only',
+      enabled: 'Etkin',
+      disabled: 'Devre dışı',
     },
     sections: {
       account_security: {
@@ -122,6 +124,17 @@ const sign_in_exp = {
           profile_data: {
             title: 'Profile data',
           },
+        },
+      },
+      secret_vault: {
+        title: 'GİZLİ KASA',
+        description:
+          "Sosyal ve kurumsal bağlayıcılar için, üçüncü taraf API'lerini çağırmak için üçüncü taraf erişim token'larını güvenli bir şekilde saklayın (örneğin, Google Takvim'e etkinlik ekleyin).",
+        third_party_token_storage: {
+          title: 'Üçüncü taraf token depolama',
+          third_party_access_token_retrieval: "Üçüncü taraf erişim token'ı alma",
+          third_party_access_token_retrieval_tooltip:
+            "Account API etkinleştirildiğinde, üçüncü taraf token alma otomatik olarak etkinleştirilir. Token'ları depolamak için, bunu ilgili sosyal veya kurumsal bağlayıcının ayarlarında etkinleştirebilirsiniz.",
         },
       },
     },

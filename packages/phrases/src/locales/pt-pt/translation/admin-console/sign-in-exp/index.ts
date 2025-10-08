@@ -98,6 +98,8 @@ const sign_in_exp = {
       off: 'Off',
       edit: 'Edit',
       read_only: 'Read only',
+      enabled: 'Ativado',
+      disabled: 'Desativado',
     },
     sections: {
       account_security: {
@@ -121,6 +123,17 @@ const sign_in_exp = {
           profile_data: {
             title: 'Profile data',
           },
+        },
+      },
+      secret_vault: {
+        title: 'COFRE SECRETO',
+        description:
+          'Para conectores sociais e empresariais, armazenamento seguro de tokens de acesso de terceiros para chamar as suas APIs (por exemplo, adicionar eventos ao Google Calendar).',
+        third_party_token_storage: {
+          title: 'Armazenamento de tokens de terceiros',
+          third_party_access_token_retrieval: 'Recuperação de token de acesso de terceiros',
+          third_party_access_token_retrieval_tooltip:
+            'Assim que a Account API estiver ativada, a recuperação de tokens de terceiros é ativada automaticamente. Para armazenar tokens, pode ativá-lo nas definições do conector social ou empresarial correspondente.',
         },
       },
     },
