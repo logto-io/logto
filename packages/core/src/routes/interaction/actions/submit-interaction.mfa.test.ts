@@ -146,7 +146,7 @@ describe('submit action', () => {
           ],
           ...upsertProfile,
         },
-        ['user']
+        { isInteractive: true, roleNames: ['user'] }
       );
     });
 
@@ -175,7 +175,7 @@ describe('submit action', () => {
           ],
           ...upsertProfile,
         },
-        ['user']
+        { isInteractive: true, roleNames: ['user'] }
       );
     });
 
@@ -204,7 +204,7 @@ describe('submit action', () => {
           ],
           ...upsertProfile,
         },
-        ['user']
+        { isInteractive: true, roleNames: ['user'] }
       );
     });
   });

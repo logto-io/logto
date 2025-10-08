@@ -13,13 +13,31 @@ export enum ProductEvent {
   TenantCreated = 'tenant created',
   /** @cloud */
   TenantDeleted = 'tenant deleted',
-  /** @cloud */
+  /**
+   * One or more collaborators have been invited to the Logto Cloud tenant.
+   *
+   * @cloud
+   */
   CollaboratorInvited = 'collaborator invited',
-  /** @cloud */
+  /**
+   * The Logto Cloud tenant has subscribed to the Pro plan. It may be the first time subscribing,
+   * switching from the Free plan, or converting from a dev tenant, etc.
+   *
+   * @cloud
+   */
   ProPlanSubscribed = 'pro plan subscribed',
-  /** @cloud */
+  /**
+   * The Logto Cloud tenant has canceled the Pro plan.
+   *
+   * @cloud
+   */
   ProPlanCanceled = 'pro plan canceled',
-  /** @cloud */
+  /**
+   * The Logto Cloud tenant has subscribed to the Free plan. This may happen when a tenant
+   * newly created or downgrading from the Pro plan.
+   *
+   * @cloud
+   */
   FreePlanSubscribed = 'free plan subscribed',
   /**
    * A user has been created in the admin tenant. Interactive and non-interactive creations are
