@@ -1,5 +1,10 @@
 import type { BindMfa, CreateUser, Scope, User } from '@logto/schemas';
-import { RoleType, UsersPasswordEncryptionMethod } from '@logto/schemas';
+import {
+  adminTenantId,
+  ProductEvent,
+  RoleType,
+  UsersPasswordEncryptionMethod,
+} from '@logto/schemas';
 import { generateStandardShortId, generateStandardId } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
 import { deduplicateByKey, condArray } from '@silverhand/essentials';
@@ -15,13 +20,15 @@ import assertThat from '#src/utils/assert-that.js';
 import { legacyVerify } from '#src/utils/password.js';
 import type { OmitAutoSetFields } from '#src/utils/sql.js';
 
+import { captureDeveloperEvent } from '../utils/posthog.js';
+
 import { convertBindMfaToMfaVerification, encryptUserPassword } from './user.utils.js';
 
 export type InsertUserResult = [User];
 
 export type UserLibrary = ReturnType<typeof createUserLibrary>;
 
-export const createUserLibrary = (queries: Queries) => {
+export const createUserLibrary = (tenantId: string, queries: Queries) => {
   const {
     pool,
     roles: { findDefaultRoles, findRolesByRoleNames, findRoleByRoleName, findRolesByRoleIds },
@@ -59,11 +66,22 @@ export const createUserLibrary = (queries: Queries) => {
       { retries, factor: 0 } // No need for exponential backoff
     );
 
+  type InsertUserOptions = {
+    /** Additional role names to assign to the user upon creation. */
+    roleNames?: string[];
+    /**
+     * Whether the user is created via an interactive flow (e.g. sign up).
+     * @default false
+     */
+    isInteractive?: boolean;
+  };
+
   const insertUser = async (
     data: OmitAutoSetFields<CreateUser>,
-    additionalRoleNames: string[]
+    options?: InsertUserOptions
   ): Promise<InsertUserResult> => {
-    const roleNames = [...EnvSet.values.userDefaultRoleNames, ...additionalRoleNames];
+    const { isInteractive = false } = options ?? {};
+    const roleNames = [...EnvSet.values.userDefaultRoleNames, ...(options?.roleNames ?? [])];
     const [parameterRoles, defaultRoles] = await Promise.all([
       findRolesByRoleNames(roleNames),
       findDefaultRoles(RoleType.User),
@@ -71,7 +89,7 @@ export const createUserLibrary = (queries: Queries) => {
 
     assertThat(parameterRoles.length === roleNames.length, 'role.default_role_missing');
 
-    return pool.transaction(async (connection) => {
+    const result = await pool.transaction<[User]>(async (connection) => {
       const user = await insertUserQuery(data);
       const roles = deduplicateByKey([...parameterRoles, ...defaultRoles], 'id');
 
@@ -84,6 +102,12 @@ export const createUserLibrary = (queries: Queries) => {
 
       return [user];
     });
+
+    if (tenantId === adminTenantId) {
+      captureDeveloperEvent(result[0].id, ProductEvent.DeveloperCreated, { isInteractive });
+    }
+
+    return result;
   };
 
   const checkIdentifierCollision = async (

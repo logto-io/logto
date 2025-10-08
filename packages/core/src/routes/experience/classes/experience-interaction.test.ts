@@ -113,7 +113,7 @@ describe('ExperienceInteraction class', () => {
           id: 'uid',
           primaryEmail: mockEmail,
         },
-        ['user', 'default:admin']
+        { isInteractive: true, roleNames: ['user', 'default:admin'] }
       );
 
       expect(signInExperiences.updateDefaultSignInExperience).toHaveBeenCalledWith({

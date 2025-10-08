@@ -17,7 +17,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { ensembleSamlApplication, generateKeyPairAndCertificate } from './utils.js';
+import { assembleSamlApplication, generateKeyPairAndCertificate } from './utils.js';
 
 const consoleLog = new ConsoleLog(chalk.magenta('SAML app custom domain'));
 
@@ -75,7 +75,7 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
 
     const samlConfig = await findSamlApplicationConfigByApplicationId(application.id);
 
-    return ensembleSamlApplication({ application, samlConfig });
+    return assembleSamlApplication({ application, samlConfig });
   };
 
   const updateSamlApplicationById = async (
@@ -112,7 +112,7 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
         : originalAppConfig,
     ]);
 
-    return ensembleSamlApplication({
+    return assembleSamlApplication({
       application: updatedApplication,
       samlConfig: upToDateSamlConfig,
     });

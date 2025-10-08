@@ -344,7 +344,7 @@ describe('Single sign on util methods tests', () => {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           lastSignInAt: expect.any(Number),
         },
-        []
+        { isInteractive: true }
       );
 
       // Should create new user sso identity

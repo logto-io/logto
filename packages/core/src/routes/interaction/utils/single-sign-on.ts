@@ -440,7 +440,7 @@ export const registerWithSsoAuthentication = async (
       ...syncingProfile,
       lastSignInAt: Date.now(),
     },
-    []
+    { isInteractive: true }
   );
 
   const { id: userId } = user;

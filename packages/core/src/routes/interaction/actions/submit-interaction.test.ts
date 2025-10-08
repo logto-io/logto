@@ -149,7 +149,7 @@ describe('submit action', () => {
         id: 'uid',
         ...upsertProfile,
       },
-      ['user']
+      { isInteractive: true, roleNames: ['user'] }
     );
     expect(assignInteractionResults).toBeCalledWith(ctx, tenant.provider, {
       login: { accountId: 'uid' },
@@ -183,7 +183,7 @@ describe('submit action', () => {
         id: 'pending-account-id',
         ...upsertProfile,
       },
-      ['user']
+      { isInteractive: true, roleNames: ['user'] }
     );
     expect(assignInteractionResults).toBeCalledWith(ctx, tenant.provider, {
       login: { accountId: 'pending-account-id' },
@@ -216,7 +216,7 @@ describe('submit action', () => {
           },
         },
       },
-      ['user']
+      { isInteractive: true, roleNames: ['user'] }
     );
   });
 
@@ -247,7 +247,7 @@ describe('submit action', () => {
         primaryPhone: userInfo.phone,
         lastSignInAt: now,
       },
-      ['user']
+      { isInteractive: true, roleNames: ['user'] }
     );
   });
 
@@ -279,7 +279,7 @@ describe('submit action', () => {
         avatar: userInfo.avatar,
         lastSignInAt: now,
       },
-      ['user']
+      { isInteractive: true, roleNames: ['user'] }
     );
   });
 
@@ -314,7 +314,7 @@ describe('submit action', () => {
         id: 'uid',
         ...upsertProfile,
       },
-      ['user', 'default:admin']
+      { isInteractive: true, roleNames: ['user', 'default:admin'] }
     );
     expect(assignInteractionResults).toBeCalledWith(adminConsoleCtx, tenant.provider, {
       login: { accountId: 'uid' },
