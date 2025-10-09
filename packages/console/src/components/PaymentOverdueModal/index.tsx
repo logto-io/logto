@@ -25,11 +25,18 @@ function PaymentOverdueModal() {
   const [isActionLoading, setIsActionLoading] = useState(false);
 
   const [hasClosed, setHasClosed] = useState(false);
+
+  // TODO: this is a temporary fix to hide the modal for enterprise tenants
+  // Enterprise tenants' invoices are manually paid and has a due date in the future
+  // Should show the modal only if the invoices are overdue
+  const isEnterprise = currentTenant?.subscription.isEnterprisePlan;
+
   const handleCloseModal = () => {
     setHasClosed(true);
   };
 
-  if (!isCloud || openInvoices.length === 0 || hasClosed) {
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  if (!isCloud || openInvoices.length === 0 || isEnterprise || hasClosed) {
     return null;
   }
 
