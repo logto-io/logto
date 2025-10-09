@@ -54,6 +54,7 @@ const buildConfig = (mode: string): UserConfig => ({
     'import.meta.env.INKEEP_API_KEY': JSON.stringify(process.env.INKEEP_API_KEY),
     'import.meta.env.POSTHOG_PUBLIC_KEY': JSON.stringify(process.env.POSTHOG_PUBLIC_KEY),
     'import.meta.env.POSTHOG_PUBLIC_HOST': JSON.stringify(process.env.POSTHOG_PUBLIC_HOST),
+    'import.meta.env.POSTHOG_PUBLIC_UI_HOST': JSON.stringify(process.env.POSTHOG_PUBLIC_UI_HOST),
     // `@withtyped/client` needs this to be defined. We can optimize this later.
     'process.env': {},
   },

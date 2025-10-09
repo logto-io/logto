@@ -22,7 +22,7 @@ import 'react-color-palette/css';
 
 import CloudAppRoutes from '@/cloud/AppRoutes';
 import AppLoading from '@/components/AppLoading';
-import { isCloud, postHogHost, postHogKey } from '@/consts/env';
+import { isCloud, postHogHost, postHogUiHost, postHogKey } from '@/consts/env';
 import { cloudApi, getManagementApi, meApi } from '@/consts/resources';
 import { ConsoleRoutes } from '@/containers/ConsoleRoutes';
 
@@ -105,6 +105,7 @@ function Providers() {
     <PostHogProvider
       apiKey={postHogKey ?? ''} // Empty key will disable PostHog
       options={{
+        ui_host: postHogUiHost,
         api_host: postHogHost,
         defaults: '2025-05-24',
       }}
