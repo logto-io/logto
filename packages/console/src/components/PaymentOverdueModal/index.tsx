@@ -25,11 +25,14 @@ function PaymentOverdueModal() {
   const [isActionLoading, setIsActionLoading] = useState(false);
 
   const [hasClosed, setHasClosed] = useState(false);
+
+  const isEnterprise = currentTenant?.subscription.isEnterprisePlan;
   const handleCloseModal = () => {
     setHasClosed(true);
   };
 
-  if (!isCloud || openInvoices.length === 0 || hasClosed) {
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  if (!isCloud || openInvoices.length === 0 || isEnterprise || hasClosed) {
     return null;
   }
 
