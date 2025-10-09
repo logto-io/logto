@@ -154,6 +154,10 @@ const sign_in_exp = {
       custom_data: 'Custom data',
       custom_data_description: 'Control access to custom JSON data stored on the user.',
     },
+    webauthn_related_origins: 'Origines liées WebAuthn',
+    webauthn_related_origins_description:
+      "Ajoutez les domaines de vos applications front-end autorisés à enregistrer des clés d'accès via l'API de compte.",
+    webauthn_related_origins_error: "L'origine doit commencer par https:// ou http://",
   },
   sign_up_and_sign_in,
   content,

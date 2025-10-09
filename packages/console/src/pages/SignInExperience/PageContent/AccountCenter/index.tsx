@@ -1,7 +1,7 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import { AccountCenterControlValue } from '@logto/schemas';
 import { useCallback, useMemo, type ChangeEvent } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import Tip from '@/assets/icons/tip.svg?react';
@@ -10,6 +10,12 @@ import PageMeta from '@/components/PageMeta';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import IconButton from '@/ds-components/IconButton';
+import MultiTextInput from '@/ds-components/MultiTextInput';
+import type { MultiTextInputRule } from '@/ds-components/MultiTextInput/types';
+import {
+  convertRhfErrorMessage,
+  createValidatorForRhf,
+} from '@/ds-components/MultiTextInput/utils';
 import Select, { type Option } from '@/ds-components/Select';
 import Switch from '@/ds-components/Switch';
 import { ToggleTip } from '@/ds-components/Tip';
@@ -106,6 +112,7 @@ function AccountCenter({ isActive }: Props) {
   const {
     watch,
     setValue,
+    control,
     formState: { isSubmitting },
   } = useFormContext<SignInExperienceForm & { accountCenter: AccountCenterFormValues }>();
 
@@ -146,6 +153,16 @@ function AccountCenter({ isActive }: Props) {
       setValue(`accountCenter.fields.${field}`, value, { shouldDirty: true });
     },
     [setValue]
+  );
+
+  const originValidationRules: MultiTextInputRule = useMemo(
+    () => ({
+      pattern: {
+        verify: (value) => !value || value.startsWith('https://') || value.startsWith('http://'),
+        message: t('sign_in_exp.account_center.webauthn_related_origins_error'),
+      },
+    }),
+    [t]
   );
 
   return (
@@ -205,6 +222,30 @@ function AccountCenter({ isActive }: Props) {
                 </div>
               </FormField>
             ))}
+            {section.key === 'accountSecurity' && (
+              <FormField title="sign_in_exp.account_center.webauthn_related_origins">
+                <div className={styles.description}>
+                  <DynamicT forKey="sign_in_exp.account_center.webauthn_related_origins_description" />
+                </div>
+                <Controller
+                  name="accountCenter.webauthnRelatedOrigins"
+                  control={control}
+                  defaultValue={[]}
+                  rules={{
+                    validate: createValidatorForRhf(originValidationRules),
+                  }}
+                  render={({ field: { onChange, value }, fieldState: { error } }) => (
+                    <MultiTextInput
+                      title="sign_in_exp.account_center.webauthn_related_origins"
+                      value={value}
+                      error={convertRhfErrorMessage(error?.message)}
+                      placeholder="https://account.example.com"
+                      onChange={onChange}
+                    />
+                  )}
+                />
+              </FormField>
+            )}
           </div>
         </FormCard>
       ))}

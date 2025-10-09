@@ -150,6 +150,10 @@ const sign_in_exp = {
       custom_data: 'Custom data',
       custom_data_description: 'Control access to custom JSON data stored on the user.',
     },
+    webauthn_related_origins: 'WebAuthn 관련 출처',
+    webauthn_related_origins_description:
+      '계정 API를 통해 패스키를 등록할 수 있는 프론트엔드 애플리케이션의 도메인을 추가합니다。',
+    webauthn_related_origins_error: '출처는 https:// 또는 http://로 시작해야 합니다',
   },
   sign_up_and_sign_in,
   content,

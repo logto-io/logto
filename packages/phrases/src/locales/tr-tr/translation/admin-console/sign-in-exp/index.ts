@@ -153,6 +153,10 @@ const sign_in_exp = {
       custom_data: 'Custom data',
       custom_data_description: 'Control access to custom JSON data stored on the user.',
     },
+    webauthn_related_origins: 'WebAuthn İlgili Kaynaklar',
+    webauthn_related_origins_description:
+      "Hesap API'si aracılığıyla passkey kaydına izin verilen ön uç uygulamalarınızın alan adlarını ekleyin.",
+    webauthn_related_origins_error: 'Kaynak https:// veya http:// ile başlamalıdır',
   },
   sign_up_and_sign_in,
   content,
