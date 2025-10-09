@@ -26,7 +26,11 @@ function PaymentOverdueModal() {
 
   const [hasClosed, setHasClosed] = useState(false);
 
+  // TODO: this is a temporary fix to hide the modal for enterprise tenants
+  // Enterprise tenants' invoices are manually paid and has a due date in the future
+  // Should show the modal only if the invoices are overdue
   const isEnterprise = currentTenant?.subscription.isEnterprisePlan;
+
   const handleCloseModal = () => {
     setHasClosed(true);
   };
