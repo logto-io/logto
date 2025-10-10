@@ -51,7 +51,7 @@ export default function openapiRoutes<T extends AnonymousRouter, R extends Unkno
 
     // Find supplemental documents
     const supplementDocuments = await getSupplementDocuments('routes', {
-      includeDirectories: ['experience', 'interaction'],
+      includeDirectories: ['experience'],
     });
     const baseDocument = buildExperienceApiBaseDocument(pathMap, tags, ctx.request.origin);
 

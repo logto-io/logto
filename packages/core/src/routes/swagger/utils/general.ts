@@ -9,7 +9,6 @@ import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { type DeepPartial } from '#src/test-utils/tenant.js';
-import { devConsole } from '#src/utils/console.js';
 
 import { isKoaAuthMiddleware } from '../../../middleware/koa-auth/index.js';
 
@@ -201,11 +200,6 @@ export const validateSwaggerDocument = (document: OpenAPIV3.Document) => {
   const operationIdSet = new Set<string>();
 
   for (const [path, operations] of Object.entries(document.paths)) {
-    if (path.startsWith('/api/interaction')) {
-      devConsole.warn(`Path \`${path}\` is not documented. Do something!`);
-      continue;
-    }
-
     // This path is for admin tenant only, skip it.
     if (path === '/api/.well-known/endpoints/{tenantId}') {
       continue;

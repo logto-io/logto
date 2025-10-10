@@ -13,7 +13,6 @@ import { buildOperationId, customRoutes, throwByDifference } from './operation-i
 import { buildParameters, paginationParameters, searchParameters } from './parameters.js';
 
 const anonymousPaths = new Set<string>([
-  'interaction',
   '.well-known',
   'authn',
   'swagger.json',

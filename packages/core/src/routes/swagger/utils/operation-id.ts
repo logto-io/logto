@@ -135,7 +135,6 @@ export const throwByDifference = (builtCustomRoutes: Set<string>) => {
 /** Path segments that are treated as namespace prefixes. */
 const namespacePrefixes = Object.freeze(['jit', '.well-known']);
 const exceptionPrefixes = Object.freeze([
-  '/interaction',
   '/experience',
   '/sign-in-exp/default/check-password',
   accountApiPrefix,
@@ -180,7 +179,6 @@ export const buildOperationId = (method: OpenAPIV3.HttpMethods, path: string) =>
     return customOperationId;
   }
 
-  // Skip interactions APIs as they are going to replaced by the new APIs soon.
   // Skip experience APIs, as all the experience APIs' `operationId` will be customized in the custom openapi.json documents.
   if (exceptionPrefixes.some((prefix) => path.startsWith(prefix))) {
     return;

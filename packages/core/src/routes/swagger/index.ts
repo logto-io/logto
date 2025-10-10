@@ -27,7 +27,10 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
     const routes = buildRouterObjects(allRouters, { guardCustomRoutes: true });
     const { pathMap, tags } = groupRoutesByPath(routes);
 
-    const supplementDocuments = await getSupplementDocuments();
+    const supplementDocuments = await getSupplementDocuments('routes', {
+      // Exclude interaction routes as they are deprecated.
+      excludeDirectories: ['interaction'],
+    });
 
     const baseDocument: OpenAPIV3.Document = buildManagementApiBaseDocument(
       pathMap,
