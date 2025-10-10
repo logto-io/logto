@@ -112,6 +112,7 @@ export const createContextWithRouteParameters = (
     _matchedRouteName: undefined,
     i18n: i18next,
     locale: 'en',
+    emailI18n: { locale: 'en' },
   };
 };
 

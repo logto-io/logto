@@ -16,6 +16,7 @@ import { z } from 'zod';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import { type WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 
+import { type WithEmailI18nContext } from '../../middleware/koa-email-i18n.js';
 import { type WithI18nContext } from '../../middleware/koa-i18next.js';
 
 import {
@@ -156,6 +157,7 @@ export type InteractionContext = {
 export type ExperienceInteractionRouterContext<ContextT extends WithLogContext = WithLogContext> =
   ContextT &
     WithI18nContext &
+    WithEmailI18nContext &
     WithInteractionDetailsContext &
     WithExperienceInteractionHooksContext &
     WithExperienceInteractionContext;
