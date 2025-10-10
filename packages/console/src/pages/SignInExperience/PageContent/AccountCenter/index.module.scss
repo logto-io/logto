@@ -35,10 +35,18 @@
 .fieldName {
   font: var(--font-body-2);
   color: var(--color-text);
+  display: flex;
+  align-items: center;
+  gap: _.unit(1);
 }
 
 .fieldControl {
   min-width: 160px;
   display: flex;
   justify-content: flex-end;
+}
+
+.tipIcon {
+  display: flex;
+  align-items: center;
 }

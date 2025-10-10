@@ -99,6 +99,8 @@ const sign_in_exp = {
       off: 'Off',
       edit: 'Edit',
       read_only: 'Read only',
+      enabled: 'Включено',
+      disabled: 'Отключено',
     },
     sections: {
       account_security: {
@@ -122,6 +124,17 @@ const sign_in_exp = {
           profile_data: {
             title: 'Profile data',
           },
+        },
+      },
+      secret_vault: {
+        title: 'СЕКРЕТНОЕ ХРАНИЛИЩЕ',
+        description:
+          'Для социальных и корпоративных коннекторов, безопасное хранение токенов доступа третьих сторон для вызова их API (например, добавление событий в Google Календарь).',
+        third_party_token_storage: {
+          title: 'Хранилище токенов третьих сторон',
+          third_party_access_token_retrieval: 'Получение токена доступа третьей стороны',
+          third_party_access_token_retrieval_tooltip:
+            'После включения Account API автоматически активируется получение токенов третьих сторон. Для хранения токенов вы можете включить это в настройках соответствующего социального или корпоративного коннектора.',
         },
       },
     },

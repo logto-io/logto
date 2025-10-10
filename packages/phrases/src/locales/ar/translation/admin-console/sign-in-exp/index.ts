@@ -97,6 +97,8 @@ const sign_in_exp = {
       off: 'Off',
       edit: 'Edit',
       read_only: 'Read only',
+      enabled: 'مفعّل',
+      disabled: 'معطّل',
     },
     sections: {
       account_security: {
@@ -120,6 +122,17 @@ const sign_in_exp = {
           profile_data: {
             title: 'Profile data',
           },
+        },
+      },
+      secret_vault: {
+        title: 'خزنة الأسرار',
+        description:
+          'للموصلات الاجتماعية وموصلات المؤسسة، تخزين آمن لرموز الوصول الخاصة بالطرف الثالث لاستدعاء واجهاتهم البرمجية (على سبيل المثال، إضافة أحداث إلى تقويم Google).',
+        third_party_token_storage: {
+          title: 'تخزين رموز الطرف الثالث',
+          third_party_access_token_retrieval: 'استرجاع رمز وصول الطرف الثالث',
+          third_party_access_token_retrieval_tooltip:
+            'بمجرد تفعيل Account API، يتم تفعيل استرجاع رموز الطرف الثالث تلقائيًا. لتخزين الرموز، يمكنك تفعيل ذلك في إعدادات الموصل الاجتماعي أو موصل المؤسسة المقابل.',
         },
       },
     },

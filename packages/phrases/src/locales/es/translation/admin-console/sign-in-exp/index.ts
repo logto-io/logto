@@ -100,6 +100,8 @@ const sign_in_exp = {
       off: 'Off',
       edit: 'Edit',
       read_only: 'Read only',
+      enabled: 'Activado',
+      disabled: 'Desactivado',
     },
     sections: {
       account_security: {
@@ -123,6 +125,17 @@ const sign_in_exp = {
           profile_data: {
             title: 'Profile data',
           },
+        },
+      },
+      secret_vault: {
+        title: 'BÓVEDA SECRETA',
+        description:
+          'Para conectores sociales y empresariales, almacenamiento seguro de tokens de acceso de terceros para llamar a sus APIs (por ejemplo, agregar eventos al Calendario de Google).',
+        third_party_token_storage: {
+          title: 'Almacenamiento de tokens de terceros',
+          third_party_access_token_retrieval: 'Recuperación de token de acceso de terceros',
+          third_party_access_token_retrieval_tooltip:
+            'Una vez que se habilita la Account API, la recuperación de tokens de terceros se activa automáticamente. Para almacenar tokens, puede habilitarlo en la configuración del conector social o empresarial correspondiente.',
         },
       },
     },

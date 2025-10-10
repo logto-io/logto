@@ -96,6 +96,8 @@ const sign_in_exp = {
       off: 'Off',
       edit: 'Edit',
       read_only: 'Read only',
+      enabled: '활성화됨',
+      disabled: '비활성화됨',
     },
     sections: {
       account_security: {
@@ -119,6 +121,17 @@ const sign_in_exp = {
           profile_data: {
             title: 'Profile data',
           },
+        },
+      },
+      secret_vault: {
+        title: '비밀 보관소',
+        description:
+          '소셜 및 엔터프라이즈 커넥터의 경우, 타사 API를 호출하기 위해 타사 액세스 토큰을 안전하게 저장합니다(예: Google 캘린더에 이벤트 추가).',
+        third_party_token_storage: {
+          title: '타사 토큰 저장소',
+          third_party_access_token_retrieval: '타사 액세스 토큰 검색',
+          third_party_access_token_retrieval_tooltip:
+            'Account API가 활성화되면 타사 토큰 검색이 자동으로 활성화됩니다. 토큰을 저장하려면 해당 소셜 또는 엔터프라이즈 커넥터 설정에서 활성화할 수 있습니다.',
         },
       },
     },
