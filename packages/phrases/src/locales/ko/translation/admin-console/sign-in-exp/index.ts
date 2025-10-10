@@ -4,13 +4,16 @@ import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 
 const sign_in_exp = {
   page_title: '로그인 경험',
+  page_title_with_account: '로그인 및 계정',
   title: '로그인 경험',
+  title_with_account: '로그인 및 계정',
   description: '인증 흐름과 UI 를 사용자 지정하고 실시간으로 기본 제공 경험을 미리 볼 수 있습니다.',
   tabs: {
     branding: '브랜딩',
     sign_up_and_sign_in: '회원가입/로그인',
-    content: '내용',
     collect_user_profile: '사용자 프로필 수집',
+    account_center: '계정 센터',
+    content: '내용',
     password_policy: '암호 정책',
   },
   welcome: {
@@ -82,6 +85,58 @@ const sign_in_exp = {
       'Logto 가미리 제공하는 UI 를 나만의 코드로 대체하기 위해 압축 패키지 (.zip)를 업로드하세요. <a>더 알아보기</a>',
     preview_with_bring_your_ui_description:
       '커스텀 UI 자산이 성공적으로 업로드되어 현재 제공되고 있습니다. 따라서 기본 제공 미리보기 창이 비활성화되었습니다.\n개인화된 로그인 UI 를 테스트하려면 "실시간 미리보기" 버튼을 클릭하여 새 브라우저 탭에서 엽니다.',
+  },
+  account_center: {
+    title: '계정 센터',
+    description: 'Logto API로 계정 센터 흐름을 사용자화하세요.',
+    enable_account_api: 'Account API 활성화',
+    enable_account_api_description:
+      'Account API를 활성화하여 Logto 관리 API 없이도 엔드유저에게 직접 API 접근을 제공하는 맞춤형 계정 센터를 구축하세요.',
+    field_options: {
+      off: 'Off',
+      edit: 'Edit',
+      read_only: 'Read only',
+    },
+    sections: {
+      account_security: {
+        title: 'ACCOUNT SECURITY',
+        description:
+          'Manage access to the Account API, enabling users to view or edit their identity information and authentication factors after signing into the application. Users must verify their identity to get a valid 10-minute verification record ID before making these security-related changes.',
+        groups: {
+          identifiers: {
+            title: 'Identifiers',
+          },
+          authentication_factors: {
+            title: 'Authentication factors',
+          },
+        },
+      },
+      user_profile: {
+        title: 'USER PROFILE',
+        description:
+          'Manage access to the Account API, enabling users to view or edit basic or custom profile data after signing into the application.',
+        groups: {
+          profile_data: {
+            title: 'Profile data',
+          },
+        },
+      },
+    },
+    fields: {
+      email: 'Email address',
+      phone: 'Phone number',
+      social: 'Social identities',
+      password: 'Password',
+      mfa: 'Multi-factor authentication',
+      mfa_description: 'Let users manage their MFA methods from the account center.',
+      username: 'Username',
+      name: 'Name',
+      avatar: 'Avatar',
+      profile: 'Profile',
+      profile_description: 'Control access to structured profile attributes.',
+      custom_data: 'Custom data',
+      custom_data_description: 'Control access to custom JSON data stored on the user.',
+    },
   },
   sign_up_and_sign_in,
   content,

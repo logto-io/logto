@@ -1,4 +1,9 @@
-import { ConnectorType, ForgotPasswordMethod, type SignInExperience } from '@logto/schemas';
+import {
+  ConnectorType,
+  ForgotPasswordMethod,
+  type AccountCenter as AccountCenterConfig,
+  type SignInExperience,
+} from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -8,6 +13,7 @@ import { useParams } from 'react-router-dom';
 
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useApi from '@/hooks/use-api';
@@ -21,10 +27,13 @@ import { SignInExperienceContext } from '../contexts/SignInExperienceContextProv
 import usePreviewConfigs from '../hooks/use-preview-configs';
 import {
   SignInExperienceTab,
+  convertAccountCenterToForm,
   type SignInExperiencePageManagedData,
   type SignInExperienceForm,
+  type AccountCenterFormValues,
 } from '../types';
 
+import AccountCenter from './AccountCenter';
 import Branding from './Branding';
 import CollectUserProfile from './CollectUserProfile';
 import Content from './Content';
@@ -42,11 +51,12 @@ import { sieFormDataParser, signInExperienceToUpdatedDataParser } from './utils/
 const PageTab = TabNavItem<`../${SignInExperienceTab}`>;
 
 type Props = {
-  readonly data: SignInExperience;
+  readonly data: SignInExperience & { accountCenter: AccountCenterConfig };
   readonly onSignInExperienceUpdated: (data: SignInExperience) => void;
+  readonly onAccountCenterUpdated: (data: AccountCenterConfig) => void;
 };
 
-function PageContent({ data, onSignInExperienceUpdated }: Props) {
+function PageContent({ data, onSignInExperienceUpdated, onAccountCenterUpdated }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { tab } = useParams();
   const [isSaving, setIsSaving] = useState(false);
@@ -60,8 +70,11 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
 
   const [dataToCompare, setDataToCompare] = useState<SignInExperiencePageManagedData>();
 
-  const methods = useForm<SignInExperienceForm>({
-    defaultValues: sieFormDataParser.fromSignInExperience(data),
+  const methods = useForm<SignInExperienceForm & { accountCenter: AccountCenterFormValues }>({
+    defaultValues: {
+      ...sieFormDataParser.fromSignInExperience(data),
+      accountCenter: convertAccountCenterToForm(data.accountCenter),
+    },
   });
 
   const {
@@ -82,13 +95,30 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
     setIsSaving(true);
 
     try {
+      const { accountCenter, ...formValues } = getValues();
+
       const updatedData = await api
         .patch('api/sign-in-exp', {
-          json: sieFormDataParser.toSignInExperience(getValues()),
+          json: sieFormDataParser.toSignInExperience(formValues),
         })
         .json<SignInExperience>();
 
-      reset(sieFormDataParser.fromSignInExperience(updatedData));
+      if (isDevFeaturesEnabled) {
+        const updatedAccountCenter = await api
+          .patch('api/account-center', {
+            json: { enabled: accountCenter.enabled, fields: accountCenter.fields },
+          })
+          .json<AccountCenterConfig>();
+
+        onAccountCenterUpdated(updatedAccountCenter);
+        reset({
+          ...sieFormDataParser.fromSignInExperience(updatedData),
+          accountCenter: convertAccountCenterToForm(updatedAccountCenter),
+        });
+      } else {
+        reset(sieFormDataParser.fromSignInExperience(updatedData));
+      }
+
       onSignInExperienceUpdated(updatedData);
       setDataToCompare(undefined);
       await updateConfigs({ signInExperienceCustomized: true });
@@ -96,7 +126,7 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
     } finally {
       setIsSaving(false);
     }
-  }, [api, getValues, onSignInExperienceUpdated, reset, t, updateConfigs]);
+  }, [api, getValues, onAccountCenterUpdated, onSignInExperienceUpdated, reset, t, updateConfigs]);
 
   const onSubmit = useCallback(
     async (formData: SignInExperienceForm) => {
@@ -137,7 +167,7 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
     }
 
     // If there is no password method, we should clear the forgot password methods.
-    if (!hasPasswordMethod) {
+    if (!hasPasswordMethod && formData.forgotPasswordMethods?.length) {
       setValue('forgotPasswordMethods', []);
     } else if (!formData.forgotPasswordMethods) {
       // If this is null, we should initialize it based on current connector setup
@@ -180,6 +210,9 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
         <PageTab href="../collect-user-profile">
           {t('sign_in_exp.tabs.collect_user_profile')}
         </PageTab>
+        {isDevFeaturesEnabled && (
+          <PageTab href="../account-center">{t('sign_in_exp.tabs.account_center')}</PageTab>
+        )}
         <PageTab href="../content" errorCount={getContentErrorCount(errors)}>
           {t('sign_in_exp.tabs.content')}
         </PageTab>
@@ -191,17 +224,22 @@ function PageContent({ data, onSignInExperienceUpdated }: Props) {
               <Branding isActive={tab === SignInExperienceTab.Branding} />
               <SignUpAndSignIn isActive={tab === SignInExperienceTab.SignUpAndSignIn} data={data} />
               <CollectUserProfile isActive={tab === SignInExperienceTab.CollectUserProfile} />
+              {isDevFeaturesEnabled && (
+                <AccountCenter isActive={tab === SignInExperienceTab.AccountCenter} />
+              )}
               <Content isActive={tab === SignInExperienceTab.Content} />
             </form>
           </FormProvider>
-          {formData.id && tab !== SignInExperienceTab.CollectUserProfile && (
-            <Preview
-              isLivePreviewDisabled={isDirty}
-              signInExperience={previewConfigs}
-              isPreviewIframeDisabled={Boolean(data.customUiAssets)}
-              className={styles.preview}
-            />
-          )}
+          {formData.id &&
+            tab !== SignInExperienceTab.CollectUserProfile &&
+            tab !== SignInExperienceTab.AccountCenter && (
+              <Preview
+                isLivePreviewDisabled={isDirty}
+                signInExperience={previewConfigs}
+                isPreviewIframeDisabled={Boolean(data.customUiAssets)}
+                className={styles.preview}
+              />
+            )}
         </div>
         <SubmitFormChangesActionBar
           isOpen={isDirty || isUploading}

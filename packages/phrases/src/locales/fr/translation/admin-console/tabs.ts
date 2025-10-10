@@ -4,6 +4,7 @@ const tabs = {
   applications: 'Applications',
   api_resources: 'Ressources API',
   sign_in_experience: 'Expérience de connexion',
+  sign_in_experience_with_account: 'Connexion et compte',
   connectors: 'Connecteurs',
   enterprise_sso: "SSO d'entreprise",
   security: 'Sécurité',
