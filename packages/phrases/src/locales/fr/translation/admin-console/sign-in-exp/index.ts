@@ -167,7 +167,9 @@ const sign_in_exp = {
     no_connector_email:
       'Aucun connecteur d\'email n\'a été configuré. Avant de terminer la configuration, les utilisateurs ne pourront pas se connecter avec cette méthode. <a>{{link}}</a> dans "Connecteurs"',
     no_connector_social:
-      'Vous n’avez pas encore configuré de connecteur social. Ajoutez d’abord des connecteurs pour appliquer des méthodes de connexion sociale. <a>{{link}}</a> dans "Connecteurs".',
+      'Vous n\'avez pas encore configuré de connecteur social. Ajoutez d\'abord des connecteurs pour appliquer des méthodes de connexion sociale. <a>{{link}}</a> dans "Connecteurs".',
+    no_mfa_factor:
+      'Aucun facteur MFA n\'a été configuré. <a>{{link}}</a> dans "Authentification multi-facteurs".',
     setup_link: 'Configurer',
   },
   save_alert: {

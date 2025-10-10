@@ -232,7 +232,7 @@ function PageContent({ data, onSignInExperienceUpdated, onAccountCenterUpdated }
               <SignUpAndSignIn isActive={tab === SignInExperienceTab.SignUpAndSignIn} data={data} />
               <CollectUserProfile isActive={tab === SignInExperienceTab.CollectUserProfile} />
               {isDevFeaturesEnabled && (
-                <AccountCenter isActive={tab === SignInExperienceTab.AccountCenter} />
+                <AccountCenter isActive={tab === SignInExperienceTab.AccountCenter} data={data} />
               )}
               <Content isActive={tab === SignInExperienceTab.Content} />
             </form>

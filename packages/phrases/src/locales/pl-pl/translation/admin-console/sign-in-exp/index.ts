@@ -162,11 +162,13 @@ const sign_in_exp = {
   content,
   setup_warning: {
     no_connector_sms:
-      'Nie ustawiono jeszcze łącznika SMS. Przed zakończeniem konfiguracji użytkownicy nie będą mogli się zalogować przy użyciu tej metody. <a>{{link}}</a> w sekcji „Łączniki“',
+      'Nie ustawiono jeszcze łącznika SMS. Przed zakończeniem konfiguracji użytkownicy nie będą mogli się zalogować przy użyciu tej metody. <a>{{link}}</a> w sekcji „Łączniki"',
     no_connector_email:
-      'Nie ustawiono jeszcze łącznika e-mail. Przed zakończeniem konfiguracji użytkownicy nie będą mogli się zalogować przy użyciu tej metody. <a>{{link}}</a> w sekcji „Łączniki“',
+      'Nie ustawiono jeszcze łącznika e-mail. Przed zakończeniem konfiguracji użytkownicy nie będą mogli się zalogować przy użyciu tej metody. <a>{{link}}</a> w sekcji „Łączniki"',
     no_connector_social:
       'Nie skonfigurowałeś jeszcze żadnego konektora społecznościowego. Najpierw dodaj konektory, aby zastosować metody logowania społecznościowego. <a>{{link}}</a> w "Konektory".',
+    no_mfa_factor:
+      'Nie ustawiono jeszcze czynnika MFA. <a>{{link}}</a> w „Uwierzytelnianie wieloskładnikowe".',
     setup_link: 'Konfiguracja',
   },
   save_alert: {

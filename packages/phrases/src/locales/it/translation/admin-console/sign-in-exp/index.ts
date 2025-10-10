@@ -167,6 +167,8 @@ const sign_in_exp = {
       'Nessun connettore email ancora configurato. Prima di completare la configurazione, gli utenti non saranno in grado di accedere con questo metodo. <a>{{link}}</a> in "Connettori"',
     no_connector_social:
       'Non hai ancora configurato nessun connettore sociale. Aggiungi prima i connettori per applicare i metodi di accesso sociale. <a>{{link}}</a> in "Connettori".',
+    no_mfa_factor:
+      'Nessun fattore MFA ancora configurato. <a>{{link}}</a> in "Autenticazione a più fattori".',
     setup_link: 'Configura',
   },
   save_alert: {
