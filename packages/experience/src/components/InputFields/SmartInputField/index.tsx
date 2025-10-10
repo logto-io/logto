@@ -78,7 +78,12 @@ const SmartInputField = (
             inputRef={innerRef.current}
             onChange={(value) => {
               onCountryCodeChange(value);
-              innerRef.current?.focus();
+
+              // Focus the input field after the animation is complete
+              // because the animation will cause the input field to lose focus
+              setTimeout(() => {
+                innerRef.current?.focus();
+              }, 300);
             }}
           />
         </AnimatedPrefix>
