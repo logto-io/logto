@@ -80,14 +80,16 @@ const CountryCodeDropdown = ({
   }, [inputRef?.parentElement, isMobile]);
 
   useLayoutEffect(() => {
-    // Use setTimeout to ensure the parent element is properly rendered
-    setTimeout(() => {
+    // Use requestAnimationFrame to ensure the parent element is properly painted
+    const raf = requestAnimationFrame(() => {
       updatePosition();
-    }, 0);
+    });
+
     window.addEventListener('resize', updatePosition);
     window.addEventListener('scroll', updatePosition);
 
     return () => {
+      cancelAnimationFrame(raf);
       window.removeEventListener('resize', updatePosition);
       window.removeEventListener('scroll', updatePosition);
     };
