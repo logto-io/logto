@@ -42,6 +42,7 @@ const sign_in_exp = {
     with_dark: '{{value}} (dark)',
     app_logo_and_favicon: 'Uygulama logosu ve favicon',
     company_logo_and_favicon: 'Şirket logosu ve favicon',
+    organization_logo_and_favicon: 'Organizasyon logosu ve favicon',
   },
   branding_uploads: {
     app_logo: {

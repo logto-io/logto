@@ -5,8 +5,7 @@ const applications = {
     'Kimlik doğrulaması için Logtoyu kullanmak üzere mobil, tek sayfa, machine to machine veya geleneksel bir uygulama ayarlayınız',
   subtitle_with_app_type: 'Logto Doğrulamasını {{name}} uygulamanız için yapılandırın',
   create: 'Uygulama oluştur',
-  create_subtitle_third_party:
-    "Logto'yu kimlik sağlayıcısı (IdP) olarak kullanarak üçüncü taraf uygulamalarla kolayca entegre olun",
+  create_third_party: 'Üçüncü taraf uygulama oluştur',
   application_name: 'Uygulama adı',
   application_name_placeholder: 'Uygulamam',
   application_description: 'Uygulama açıklaması',
@@ -60,6 +59,8 @@ const applications = {
   placeholder_title: 'Devam etmek için bir uygulama tipi seçin',
   placeholder_description:
     'Logto, uygulamanızı tanımlamaya, oturum açmayı yönetmeye ve denetim kayıtları oluşturmaya yardımcı olmak için OIDC için bir uygulama varlığı kullanır.',
+  third_party_application_placeholder_description:
+    'Üçüncü taraf hizmetlere OAuth yetkilendirmesi sağlamak için Logtoyu bir Kimlik Sağlayıcı olarak kullanın. \n Kaynak erişimi için önceden oluşturulmuş bir kullanıcı onay ekranı içerir. <a>Daha fazla bilgi edinin</a>',
 };
 
 export default Object.freeze(applications);

@@ -4,8 +4,7 @@ const applications = {
   subtitle: 'สร้างและจัดการแอปพลิเคชันสำหรับการรับรองความถูกต้อง OIDC',
   subtitle_with_app_type: 'ตั้งค่าการยืนยันตัวตน Logto สำหรับแอปพลิเคชัน {{name}} ของคุณ',
   create: 'สร้างแอปพลิเคชัน',
-  create_subtitle_third_party:
-    'ใช้ Logto เป็นผู้ให้บริการระบุตัวตน (IdP) ของคุณเพื่อผสานรวมกับแอปพลิเคชันของบุคคลที่สามได้อย่างง่ายดาย',
+  create_third_party: 'สร้างแอปพลิเคชันของบุคคลที่สาม',
   application_name: 'ชื่อแอปพลิเคชัน',
   application_name_placeholder: 'แอปของฉัน',
   application_description: 'คำอธิบายแอปพลิเคชัน',
@@ -41,8 +40,8 @@ const applications = {
     },
     protected: {
       title: 'แอปที่ถูกป้องกัน',
-      subtitle: 'แอปที่ได้รับการป้องกันโดย Logto', // Not in use
-      description: 'ไม่มีข้อมูล', // Not in use
+      subtitle: 'แอปที่ได้รับการป้องกันโดย Logto',
+      description: 'ไม่มีข้อมูล',
     },
     saml: {
       title: 'แอป SAML',
@@ -58,6 +57,8 @@ const applications = {
   placeholder_title: 'เลือกประเภทแอปพลิเคชันเพื่อดำเนินการต่อ',
   placeholder_description:
     'Logto ใช้เอนทิตีแอปพลิเคชันสำหรับ OIDC เพื่อช่วยในงานต่าง ๆ เช่น การระบุแอป การจัดการการเข้าสู่ระบบ และสร้างบันทึกการตรวจสอบ',
+  third_party_application_placeholder_description:
+    'ใช้ Logto เป็นผู้ให้บริการระบุตัวตนเพื่อให้การอนุญาต OAuth แก่บริการของบุคคลที่สาม \n รวมถึงหน้าจอขอความยินยอมของผู้ใช้ที่สร้างไว้ล่วงหน้าสำหรับการเข้าถึงทรัพยากร <a>เรียนรู้เพิ่มเติม</a>',
 };
 
 export default Object.freeze(applications);

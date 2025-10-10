@@ -39,6 +39,7 @@ const sign_in_exp = {
     with_dark: '{{value}} (深色)',
     app_logo_and_favicon: '應用程式標誌和圖標',
     company_logo_and_favicon: '公司標誌和圖標',
+    organization_logo_and_favicon: '組織標誌和圖標',
   },
   branding_uploads: {
     app_logo: {
@@ -158,7 +159,7 @@ const sign_in_exp = {
     sign_in: '登錄',
     social: '社交',
     forgot_password_migration_notice:
-      '我們已升級忘記密碼驗證以支援自訂方法。之前，這是由您的電子郵件和短信連接器自動確定的。點擊<strong>確認</strong>以完成升級。',
+      '我們已升級忘記密碼驗證以支援自訂方法。之前，這是由你的電子郵件和短信連接器自動確定的。點擊<strong>確認</strong>以完成升級。',
   },
   preview: {
     title: '登錄預覽',

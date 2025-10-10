@@ -38,7 +38,6 @@ const quota_table = {
     built_in_email_connector: 'ตัวเชื่อมต่ออีเมลในตัว',
     mfa: 'การยืนยันตัวตนหลายปัจจัย',
     sso: 'SSO สำหรับองค์กร',
-
     impersonation: 'การสวมรอย',
   },
   user_management: {
@@ -92,7 +91,6 @@ const quota_table = {
   days_other: '{{count, number}} วัน',
   add_on: 'ส่วนเสริม',
   tier: 'ระดับ{{value, number}}: ',
-
   million: '{{value, number}} ล้าน',
   mau_tip:
     'MAU (ผู้ใช้ที่ใช้งานต่อเดือน) หมายถึงจำนวนผู้ใช้ที่ไม่ซ้ำกันซึ่งได้แลกเปลี่ยนโทเคนอย่างน้อยหนึ่งรายการกับ Logto ในรอบบิลหนึ่งรอบ',

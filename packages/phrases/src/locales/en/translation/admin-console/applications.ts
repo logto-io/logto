@@ -4,8 +4,7 @@ const applications = {
   subtitle: 'Create and manage applications for OIDC authentication.',
   subtitle_with_app_type: 'Set up Logto authentication for your {{name}} application',
   create: 'Create application',
-  create_subtitle_third_party:
-    'Use Logto as your identity provider (IdP) to easily integrate with third-party applications',
+  create_third_party: 'Create third-party application',
   application_name: 'Application name',
   application_name_placeholder: 'My App',
   application_description: 'Application description',
@@ -58,6 +57,8 @@ const applications = {
   placeholder_title: 'Select an application type to continue',
   placeholder_description:
     'Logto uses an application entity for OIDC to help with tasks such as identifying your apps, managing sign-in, and creating audit logs.',
+  third_party_application_placeholder_description:
+    'Use Logto as an Identity Provider to provide OAuth authorization to third-party services. Includes a prebuilt user consent screen for resource access. <a>Learn more</a>',
 };
 
 export default Object.freeze(applications);

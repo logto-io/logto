@@ -40,6 +40,7 @@ const sign_in_exp = {
     with_dark: '{{value}} (داكن)',
     app_logo_and_favicon: 'شعار التطبيق ورمز الموقع',
     company_logo_and_favicon: 'شعار الشركة ورمز الموقع',
+    organization_logo_and_favicon: 'شعار المنظمة ورمز الموقع',
   },
   branding_uploads: {
     app_logo: {

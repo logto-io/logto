@@ -39,6 +39,7 @@ const sign_in_exp = {
     with_dark: '{{value}} (다크)',
     app_logo_and_favicon: '앱 로고 및 파비콘',
     company_logo_and_favicon: '회사 로고 및 파비콘',
+    organization_logo_and_favicon: '조직 로고 및 파비콘',
   },
   branding_uploads: {
     app_logo: {

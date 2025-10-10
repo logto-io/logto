@@ -20,7 +20,6 @@ const applicationsEndpoint = 'api/applications';
  * @property paginationRecords - Returns the global pagination records of the first party and third party applications.
  *    This is used to keep track of the pagination when switching between tabs by passing the page records to the tab navigation.
  * @property updatePagination - The function to update the pagination of the current active tab.
- * @property showThirdPartyApplicationTab - The flag to show the third party application tab. Hide the tab if there is no third party applications.
  */
 
 /**
@@ -87,10 +86,6 @@ const useApplicationsData = (isThirdParty = false) => {
     thirdPartyApplicationsFetchUrl
   );
 
-  const { data } = thirdPartyApplicationsData;
-  const [_, totalCount] = data ?? [];
-  const hasThirdPartyApplications = Boolean(totalCount && totalCount > 0);
-
   return {
     ...(isThirdParty ? thirdPartyApplicationsData : firstPartyApplicationsData),
     pagination: {
@@ -101,7 +96,6 @@ const useApplicationsData = (isThirdParty = false) => {
       firstPartyApplicationPage,
       thirdPartyApplicationPage,
     },
-    showThirdPartyApplicationTab: hasThirdPartyApplications,
     updatePagination,
   };
 };

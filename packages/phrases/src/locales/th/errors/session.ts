@@ -37,6 +37,8 @@ const session = {
     invalid_backup_code: 'โค้ดสำรองไม่ถูกต้อง',
     mfa_policy_not_user_controlled: 'นโยบาย MFA ไม่สามารถควบคุมโดยผู้ใช้ได้',
     mfa_factor_not_enabled: 'MFA นี้ยังไม่ได้เปิดใช้งาน',
+    suggest_additional_mfa:
+      'เพื่อการป้องกันที่แข็งแกร่งยิ่งขึ้น พิจารณาเพิ่มวิธี MFA อื่น คุณสามารถข้ามขั้นตอนนี้และดำเนินการต่อได้',
   },
   sso_enabled: 'มีการเปิดใช้งาน Single Sign On สำหรับอีเมลนี้ กรุณาเข้าสู่ระบบด้วย SSO',
   captcha_required: 'จำเป็นต้องยืนยันแคปช่า',

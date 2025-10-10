@@ -41,6 +41,7 @@ const sign_in_exp = {
     with_dark: '{{value}} (โหมดมืด)',
     app_logo_and_favicon: 'โลโก้แอปและ Favicon',
     company_logo_and_favicon: 'โลโก้บริษัทและ Favicon',
+    organization_logo_and_favicon: 'โลโก้องค์กรและ Favicon',
   },
   branding_uploads: {
     app_logo: {

@@ -5,8 +5,7 @@ const applications = {
     'ネイティブ、シングルページ、マシン・トゥ・マシン、または従来のアプリケーションに Logto 認証を設定する',
   subtitle_with_app_type: 'あなたの {{name}} アプリケーションに Logto 認証を設定する',
   create: 'アプリケーションを作成する',
-  create_subtitle_third_party:
-    'Logto を Identity Provider（IdP）として使用し、サードパーティアプリケーションと簡単に統合できます',
+  create_third_party: 'サードパーティアプリケーションを作成する',
   application_name: 'アプリケーション名',
   application_name_placeholder: '私のアプリ',
   application_description: 'アプリケーションの説明',
@@ -59,6 +58,8 @@ const applications = {
   placeholder_title: '続行するにはアプリケーションタイプを選択してください',
   placeholder_description:
     'Logto は OIDC のためにアプリケーションエンティティを使用して、アプリケーションの識別、サインインの管理、監査ログの作成などのタスクをサポートします。',
+  third_party_application_placeholder_description:
+    'Logto を ID プロバイダーとして使用して、サードパーティのサービスに OAuth 承認を提供します。 \n リソースアクセスのための事前構築されたユーザー同意画面が含まれています。<a>詳細を確認</a>',
 };
 
 export default Object.freeze(applications);

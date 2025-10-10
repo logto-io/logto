@@ -54,4 +54,4 @@ const user_identity_details = {
   },
 };
 
-export default user_identity_details;
+export default Object.freeze(user_identity_details);

@@ -4,7 +4,7 @@ const applications = {
   subtitle: '創建一個移動、單頁、machine-to-machine 或傳統 web 應用程序，並通過 Logto 進行身份驗證',
   subtitle_with_app_type: '設置 {{name}} 應用程序的 Logto 身份驗證',
   create: '創建應用',
-  create_subtitle_third_party: '使用 Logto 作為您的身份提供者（IdP），輕鬆集成第三方應用程式',
+  create_third_party: '創建第三方應用',
   application_name: '應用名稱',
   application_name_placeholder: '我的應用',
   application_description: '應用描述',
@@ -57,6 +57,8 @@ const applications = {
   placeholder_title: '選擇應用程式類型以繼續',
   placeholder_description:
     'Logto 使用 OIDC 的應用程式實體來幫助識別你的應用程式、管理登入和創建審計日誌等任務。',
+  third_party_application_placeholder_description:
+    '使用 Logto 作為身份提供者來提供對第三方服務的 OAuth 授權。 \n 包括用於資源訪問的預建用戶同意屏幕。<a>了解更多</a>',
 };
 
 export default Object.freeze(applications);
