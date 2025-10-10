@@ -42,6 +42,7 @@ export type AccountCenterFieldKey = (typeof accountCenterFieldKeys)[number];
 export type AccountCenterFormValues = {
   enabled: boolean;
   fields: Record<AccountCenterFieldKey, AccountCenterControlValue>;
+  webauthnRelatedOrigins: string[];
 };
 
 const createDefaultAccountCenterFormValues = (): AccountCenterFormValues => ({
@@ -50,6 +51,7 @@ const createDefaultAccountCenterFormValues = (): AccountCenterFormValues => ({
   fields: Object.fromEntries(
     accountCenterFieldKeys.map((key) => [key, AccountCenterControlValue.Off])
   ) as Record<AccountCenterFieldKey, AccountCenterControlValue>,
+  webauthnRelatedOrigins: [],
 });
 
 export const convertAccountCenterToForm = (
@@ -60,6 +62,7 @@ export const convertAccountCenterToForm = (
     ...createDefaultAccountCenterFormValues().fields,
     ...accountCenter?.fields,
   },
+  webauthnRelatedOrigins: accountCenter?.webauthnRelatedOrigins ?? [],
 });
 
 /**

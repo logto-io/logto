@@ -153,6 +153,10 @@ const sign_in_exp = {
       custom_data: 'Custom data',
       custom_data_description: 'Control access to custom JSON data stored on the user.',
     },
+    webauthn_related_origins: 'WebAuthn 関連オリジン',
+    webauthn_related_origins_description:
+      'アカウント API を介してパスキーを登録できるフロントエンドアプリケーションのドメインを追加します。',
+    webauthn_related_origins_error: 'オリジンは https:// または http:// で始まる必要があります',
   },
   sign_up_and_sign_in,
   content,

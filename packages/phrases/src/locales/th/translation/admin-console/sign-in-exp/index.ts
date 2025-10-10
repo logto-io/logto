@@ -152,6 +152,10 @@ const sign_in_exp = {
       custom_data: 'Custom data',
       custom_data_description: 'Control access to custom JSON data stored on the user.',
     },
+    webauthn_related_origins: 'แหล่งที่มาที่เกี่ยวข้องกับ WebAuthn',
+    webauthn_related_origins_description:
+      'เพิ่มโดเมนของแอปพลิเคชันส่วนหน้าของคุณที่ได้รับอนุญาตให้ลงทะเบียน passkey ผ่าน Account API',
+    webauthn_related_origins_error: 'แหล่งที่มาต้องเริ่มต้นด้วย https:// หรือ http://',
   },
   sign_up_and_sign_in,
   content,

@@ -151,6 +151,10 @@ const sign_in_exp = {
       custom_data: 'Custom data',
       custom_data_description: 'Control access to custom JSON data stored on the user.',
     },
+    webauthn_related_origins: 'أصول WebAuthn ذات الصلة',
+    webauthn_related_origins_description:
+      'أضف نطاقات تطبيقات الواجهة الأمامية المسموح لها بتسجيل مفاتيح المرور عبر API الحساب.',
+    webauthn_related_origins_error: 'يجب أن يبدأ الأصل بـ https:// أو http://',
   },
   sign_up_and_sign_in,
   content,

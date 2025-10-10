@@ -44,6 +44,7 @@ import {
   getBrandingErrorCount,
   getSignUpAndSignInErrorCount,
   getContentErrorCount,
+  getAccountCenterErrorCount,
   hasSignUpAndSignInConfigChanged,
 } from './utils/form';
 import { sieFormDataParser, signInExperienceToUpdatedDataParser } from './utils/parser';
@@ -106,7 +107,11 @@ function PageContent({ data, onSignInExperienceUpdated, onAccountCenterUpdated }
       if (isDevFeaturesEnabled) {
         const updatedAccountCenter = await api
           .patch('api/account-center', {
-            json: { enabled: accountCenter.enabled, fields: accountCenter.fields },
+            json: {
+              enabled: accountCenter.enabled,
+              fields: accountCenter.fields,
+              webauthnRelatedOrigins: accountCenter.webauthnRelatedOrigins,
+            },
           })
           .json<AccountCenterConfig>();
 
@@ -211,7 +216,9 @@ function PageContent({ data, onSignInExperienceUpdated, onAccountCenterUpdated }
           {t('sign_in_exp.tabs.collect_user_profile')}
         </PageTab>
         {isDevFeaturesEnabled && (
-          <PageTab href="../account-center">{t('sign_in_exp.tabs.account_center')}</PageTab>
+          <PageTab href="../account-center" errorCount={getAccountCenterErrorCount(errors)}>
+            {t('sign_in_exp.tabs.account_center')}
+          </PageTab>
         )}
         <PageTab href="../content" errorCount={getContentErrorCount(errors)}>
           {t('sign_in_exp.tabs.content')}

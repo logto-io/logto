@@ -7,6 +7,7 @@ import type {
   SignInExperiencePageManagedData,
   SignInMethod,
   SignInMethodsObject,
+  AccountCenterFormValues,
 } from '../../types';
 
 export const convertToSignInMethodsObject = (signInMethods: SignInMethod[]): SignInMethodsObject =>
@@ -92,4 +93,14 @@ export const getContentErrorCount = (
   const privacyPolicyUrlErrorCount = errors.privacyPolicyUrl ? 1 : 0;
 
   return termsOfUseUrlErrorCount + privacyPolicyUrlErrorCount;
+};
+
+export const getAccountCenterErrorCount = (
+  errors: FieldErrorsImpl<
+    DeepRequired<SignInExperienceForm & { accountCenter: AccountCenterFormValues }>
+  >
+) => {
+  const webauthnRelatedOriginsErrorCount = errors.accountCenter?.webauthnRelatedOrigins ? 1 : 0;
+
+  return webauthnRelatedOriginsErrorCount;
 };
