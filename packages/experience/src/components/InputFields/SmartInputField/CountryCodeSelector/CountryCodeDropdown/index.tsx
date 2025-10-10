@@ -26,6 +26,9 @@ type Props = {
   readonly onChange?: (value: string) => void;
 };
 
+// The max height of the dropdown content
+const MAX_DROPDOWN_HEIGHT = 480;
+
 const CountryCodeDropdown = ({
   isOpen,
   countryCode,
@@ -64,8 +67,11 @@ const CountryCodeDropdown = ({
 
     if (!isMobile && parent) {
       const { top, left, height, width } = parent.getBoundingClientRect();
+      const topPosition = top + height + offset;
 
-      setPosition({ top: top + height + offset, left, width });
+      // Ensure the dropdown content doesn't go off the screen
+      const maxTopPosition = Math.min(topPosition, window.innerHeight - MAX_DROPDOWN_HEIGHT);
+      setPosition({ top: maxTopPosition, left, width });
 
       return;
     }
@@ -74,7 +80,10 @@ const CountryCodeDropdown = ({
   }, [inputRef?.parentElement, isMobile]);
 
   useLayoutEffect(() => {
-    updatePosition();
+    // Use setTimeout to ensure the parent element is properly rendered
+    setTimeout(() => {
+      updatePosition();
+    }, 0);
     window.addEventListener('resize', updatePosition);
     window.addEventListener('scroll', updatePosition);
 
