@@ -107,6 +107,15 @@ function Applications({ tab }: Props) {
     });
   }, [navigate, search]);
 
+  const onCreateThirdParty = useCallback(() => {
+    if (thirdPartyAppGuide) {
+      setSelectedGuide({
+        id: thirdPartyAppGuide.id,
+        metadata: thirdPartyAppGuide.metadata,
+      });
+    }
+  }, [setSelectedGuide]);
+
   return (
     <div className={pageLayout.container}>
       <PageMeta titleKey="applications.title" />
@@ -174,16 +183,13 @@ function Applications({ tab }: Props) {
           placeholder={
             isThirdPartyTab ? (
               <ThirdPartyApplicationEmptyDataPlaceHolder
-                buttonProps={{
-                  title: 'applications.create_third_party',
-                  onClick: () => {
-                    if (thirdPartyAppGuide) {
-                      setSelectedGuide({
-                        id: thirdPartyAppGuide.id,
-                        metadata: thirdPartyAppGuide.metadata,
-                      });
-                    }
-                  },
+                onCreateThirdParty={() => {
+                  if (thirdPartyAppGuide) {
+                    setSelectedGuide({
+                      id: thirdPartyAppGuide.id,
+                      metadata: thirdPartyAppGuide.metadata,
+                    });
+                  }
                 }}
               />
             ) : (
