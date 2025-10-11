@@ -70,7 +70,13 @@ const CountryCodeDropdown = ({
       const topPosition = top + height + offset;
 
       // Ensure the dropdown content doesn't go off the screen
-      const maxTopPosition = Math.min(topPosition, window.innerHeight - MAX_DROPDOWN_HEIGHT);
+      // - the dropdown menu should be placed under the parent element with some offset
+      // - if the dropdown menu is too tall, it should be adjusted to fit within the viewport
+      // - if the window inner height is smaller than the max height, it should be placed at the top of the viewport
+      const maxTopPosition = Math.max(
+        Math.min(topPosition, window.innerHeight - MAX_DROPDOWN_HEIGHT),
+        0
+      );
       setPosition({ top: maxTopPosition, left, width });
 
       return;
