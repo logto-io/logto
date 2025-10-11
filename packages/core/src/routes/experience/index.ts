@@ -24,6 +24,7 @@ import { type AnonymousRouter, type RouterInitArgs } from '../types.js';
 import experienceAnonymousRoutes from './anonymous-routes/index.js';
 import ExperienceInteraction from './classes/experience-interaction.js';
 import { experienceRoutes } from './const.js';
+import koaExperienceAuditLog from './middleware/koa-experience-audit-log.js';
 import { koaExperienceInteractionHooks } from './middleware/koa-experience-interaction-hooks.js';
 import koaExperienceInteraction from './middleware/koa-experience-interaction.js';
 import profileRoutes from './profile-routes.js';
@@ -54,7 +55,8 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     (anonymousRouter as Router<unknown, ExperienceInteractionRouterContext<RouterContext<T>>>).use(
       koaInteractionDetails(provider),
       koaExperienceInteractionHooks(libraries),
-      koaExperienceInteraction(tenant)
+      koaExperienceInteraction(tenant),
+      koaExperienceAuditLog()
     );
 
   experienceRouter.put(
