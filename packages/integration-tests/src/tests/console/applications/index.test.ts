@@ -351,7 +351,11 @@ describe('applications', () => {
     await expectToChooseAndClickApplicationFramework(page, thirdPartyApp.framework);
 
     // Expect the app can be created successfully
-    await expectToProceedApplicationCreationFrom(page, thirdPartyApp);
+    await expectToProceedApplicationCreationFrom(
+      page,
+      thirdPartyApp,
+      'Create third-party application'
+    );
 
     await expect(page).toMatchElement('div[class$=main] div[class$=header] div[class$=name]', {
       text: thirdPartyApp.name,
@@ -359,10 +363,16 @@ describe('applications', () => {
 
     await expectToProceedAppDeletion(page, thirdPartyApp.name);
 
-    expect(page.url()).toBe(new URL('/console/applications', logtoConsoleUrl).href);
+    expect(page.url()).toBe(
+      new URL('/console/applications/third-party-applications', logtoConsoleUrl).href
+    );
   });
 
   it('delete the initial application', async () => {
+    await expectNavigation(
+      page.goto(appendPathname('/console/applications', logtoConsoleUrl).href)
+    );
+
     await expect(page).toClick(`table tbody tr td div[class$=item] a${cls('title')}`, {
       text: initialApp.name,
     });

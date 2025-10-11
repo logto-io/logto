@@ -5,8 +5,7 @@ const applications = {
     'Skonfiguruj uwierzytelnianie Logto dla Twojej aplikacji natywnej, jednostronicowej, komunikującej się bezpośrednio z zasobami lub tradycyjnej',
   subtitle_with_app_type: 'Skonfiguruj uwierzytelnianie Logto dla twojej aplikacji {{name}}',
   create: 'Utwórz aplikację',
-  create_subtitle_third_party:
-    'Użyj Logto jako swojego dostawcy tożsamości (IdP), aby łatwo integrować się z aplikacjami stron trzecich',
+  create_third_party: 'Utwórz aplikację stron trzecich',
   application_name: 'Nazwa aplikacji',
   application_name_placeholder: 'Moja aplikacja',
   application_description: 'Opis aplikacji',
@@ -60,6 +59,8 @@ const applications = {
   placeholder_title: 'Wybierz typ aplikacji, aby kontynuować',
   placeholder_description:
     'Logto używa jednostki aplikacji dla OIDC, aby pomóc w takich zadaniach jak identyfikowanie Twoich aplikacji, zarządzanie logowaniem i tworzenie dzienników audytu.',
+  third_party_application_placeholder_description:
+    'Użyj Logto jako dostawcy tożsamości, aby zapewnić autoryzację OAuth dla usług stron trzecich. \n Zawiera wbudowany ekran zgody użytkownika na dostęp do zasobów. <a>Dowiedz się więcej</a>',
 };
 
 export default Object.freeze(applications);

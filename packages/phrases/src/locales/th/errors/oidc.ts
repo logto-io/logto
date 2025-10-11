@@ -13,7 +13,6 @@ const oidc = {
   unsupported_grant_type: 'ไม่รองรับ `grant_type` ที่ร้องขอ',
   unsupported_response_mode: 'ไม่รองรับ `response_mode` ที่ร้องขอ',
   unsupported_response_type: 'ไม่รองรับ `response_type` ที่ร้องขอ',
-  /** @deprecated Use {@link oidc.server_error} or {@link oidc.provider_error_fallback} instead. */
   provider_error: 'เกิดข้อผิดพลาดภายใน OIDC: {{message}}',
   server_error: 'เกิดข้อผิดพลาด OIDC ที่ไม่ทราบสาเหตุ กรุณาลองใหม่ภายหลัง',
   provider_error_fallback: 'เกิดข้อผิดพลาด OIDC: {{code}}',

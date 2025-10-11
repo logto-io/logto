@@ -42,6 +42,7 @@ const sign_in_exp = {
     with_dark: '{{value}} (ダーク)',
     app_logo_and_favicon: 'アプリロゴとファビコン',
     company_logo_and_favicon: '企業ロゴとファビコン',
+    organization_logo_and_favicon: '組織のロゴとファビコン',
   },
   branding_uploads: {
     app_logo: {
@@ -180,7 +181,7 @@ const sign_in_exp = {
     sign_in: 'サインイン',
     social: 'ソーシャル',
     forgot_password_migration_notice:
-      'パスワードを忘れた場合の検証をカスタムメソッドをサポートするようにアップグレードしました。以前は、これはメールとSMSコネクタによって自動的に決定されていました。アップグレードを完了するには<strong>確認</strong>をクリックしてください。',
+      'パスワードを忘れた場合の検証をカスタムメソッドをサポートするようにアップグレードしました。以前は、これはメールと SMS コネクタによって自動的に決定されていました。アップグレードを完了するには<strong>確認</strong>をクリックしてください。',
   },
   preview: {
     title: 'サインインプレビュー',

@@ -53,10 +53,11 @@ export const expectFrameworkExists = async (page: Page, framework: string) => {
 
 export const expectToProceedApplicationCreationFrom = async (
   page: Page,
-  { name, description }: { name: string; description: string }
+  { name, description }: { name: string; description: string },
+  creationFormTitle = 'Create application'
 ) => {
   // Expect the creation form to be open
-  await expectModalWithTitle(page, 'Create application');
+  await expectModalWithTitle(page, creationFormTitle);
 
   await expect(page).toFillForm('.ReactModalPortal form', {
     name,

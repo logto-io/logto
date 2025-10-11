@@ -106,7 +106,7 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
       setIsDeleted(true);
       setIsDeleteFormOpen(false);
       toast.success(t('application_details.application_deleted', { name: data.name }));
-      navigate(`/applications`);
+      navigate(`/applications${data.isThirdParty ? '/third-party-applications' : ''}`);
     } finally {
       setIsDeleting(false);
     }

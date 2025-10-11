@@ -4,8 +4,7 @@ const applications = {
   subtitle: 'إنشاء وإدارة التطبيقات للمصادقة بواسطة OIDC.',
   subtitle_with_app_type: 'قم بإعداد مصادقة Logto لتطبيقك {{name}}',
   create: 'إنشاء تطبيق',
-  create_subtitle_third_party:
-    'استخدم Logto كموفر هوية (IdP) للتكامل بسهولة مع التطبيقات من جهات خارجية',
+  create_third_party: 'إنشاء تطبيق جهة خارجية',
   application_name: 'اسم التطبيق',
   application_name_placeholder: 'تطبيقي',
   application_description: 'وصف التطبيق',
@@ -58,6 +57,8 @@ const applications = {
   placeholder_title: 'حدد نوع التطبيق للمتابعة',
   placeholder_description:
     'يستخدم Logto كيان التطبيق لـ OIDC للمساعدة في مهام مثل تحديد التطبيقات الخاصة بك وإدارة تسجيل الدخول وإنشاء سجلات التدقيق.',
+  third_party_application_placeholder_description:
+    'استخدم Logto كمزود هوية لتوفير تفويض OAuth للخدمات الخارجية. \n يتضمن شاشة موافقة المستخدم المُبنية مسبقًا للوصول إلى الموارد. <a>اعرف المزيد</a>',
 };
 
 export default Object.freeze(applications);

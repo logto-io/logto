@@ -41,6 +41,7 @@ const sign_in_exp = {
     with_dark: '{{value}} (dark)',
     app_logo_and_favicon: 'Logótipo e favicon do aplicativo',
     company_logo_and_favicon: 'Logótipo e favicon da empresa',
+    organization_logo_and_favicon: 'Logótipo e favicon da organização',
   },
   branding_uploads: {
     app_logo: {

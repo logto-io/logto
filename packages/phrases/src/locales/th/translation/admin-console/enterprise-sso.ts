@@ -6,7 +6,6 @@ const enterprise_sso = {
   col_connector_name: 'ชื่อตัวเชื่อมต่อ',
   col_type: 'ประเภท',
   col_email_domain: 'โดเมนอีเมล',
-
   placeholder_title: 'ตัวเชื่อมต่อองค์กร',
   placeholder_description:
     'Logto มีผู้ให้บริการระบุตัวตนสำหรับองค์กรที่มีให้เลือกหลายตัวในระบบ คุณยังสามารถสร้างแบบของคุณเองด้วยโปรโตคอล SAML และ OIDC ได้',
