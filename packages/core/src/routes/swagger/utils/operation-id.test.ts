@@ -10,10 +10,6 @@ describe('buildOperationId', () => {
     }
   });
 
-  it('should skip interactions APIs', () => {
-    expect(buildOperationId(OpenAPIV3.HttpMethods.GET, '/interaction/footballs')).toBeUndefined();
-  });
-
   it('should handle JIT APIs', () => {
     expect(buildOperationId(OpenAPIV3.HttpMethods.GET, '/footballs/:footballId/jit/bars')).toBe(
       'ListFootballJitBars'

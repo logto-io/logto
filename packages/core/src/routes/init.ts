@@ -133,20 +133,13 @@ const createRouters = (tenant: TenantContext) => {
   samlApplicationAnonymousRoutes(anonymousRouter, tenant);
 
   wellKnownOpenApiRoutes(anonymousRouter, {
-    experienceRouters: [experienceRouter, interactionRouter],
+    experienceRouters: [experienceRouter],
     managementRouters: [managementRouter, anonymousRouter],
     userRouters: [userRouter],
   });
 
   // The swagger.json should contain all API routers.
-  swaggerRoutes(anonymousRouter, [
-    managementRouter,
-    anonymousRouter,
-    experienceRouter,
-    userRouter,
-    // TODO: interactionRouter should be removed from swagger.json
-    interactionRouter,
-  ]);
+  swaggerRoutes(anonymousRouter, [managementRouter, anonymousRouter, experienceRouter, userRouter]);
 
   return [experienceRouter, interactionRouter, managementRouter, anonymousRouter, userRouter];
 };
