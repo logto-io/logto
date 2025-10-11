@@ -15,9 +15,10 @@ type Props = {
   readonly isActive?: boolean;
   readonly modal?: (isOpen: boolean, onCancel: () => void) => ReactNode;
   readonly externalLink?: string;
+  readonly path?: string;
 };
 
-function Item({ icon, titleKey, modal, externalLink, isActive = false }: Props) {
+function Item({ icon, titleKey, modal, externalLink, path, isActive = false }: Props) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console.tabs',
   });
@@ -60,7 +61,10 @@ function Item({ icon, titleKey, modal, externalLink, isActive = false }: Props) 
   }
 
   return (
-    <Link to={getPath(titleKey)} className={classNames(styles.row, isActive && styles.active)}>
+    <Link
+      to={path ?? getPath(titleKey)}
+      className={classNames(styles.row, isActive && styles.active)}
+    >
       {content}
     </Link>
   );
