@@ -167,6 +167,8 @@ const sign_in_exp = {
       'Nenhum conector de e-mail configurado ainda. Até terminar de configurar seu conector de e-mail, seus usuários não poderão fazer login. <a>{{link}}</a> em "Conectores"',
     no_connector_social:
       'Você ainda não configurou nenhum conector social. Adicione conectores primeiro para aplicar métodos de login social. <a>{{link}}</a> em "Conectores".',
+    no_mfa_factor:
+      'Nenhum fator de MFA configurado ainda. <a>{{link}}</a> em "Autenticação multifator".',
     setup_link: 'Configurar',
   },
   save_alert: {

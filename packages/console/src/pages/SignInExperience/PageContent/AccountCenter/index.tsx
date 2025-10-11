@@ -1,118 +1,37 @@
-import type { AdminConsoleKey } from '@logto/phrases';
-import { AccountCenterControlValue } from '@logto/schemas';
+import { AccountCenterControlValue, type SignInExperience } from '@logto/schemas';
 import { useCallback, useMemo, type ChangeEvent } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import Tip from '@/assets/icons/tip.svg?react';
 import FormCard from '@/components/FormCard';
 import PageMeta from '@/components/PageMeta';
-import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
-import IconButton from '@/ds-components/IconButton';
-import MultiTextInput from '@/ds-components/MultiTextInput';
-import type { MultiTextInputRule } from '@/ds-components/MultiTextInput/types';
-import {
-  convertRhfErrorMessage,
-  createValidatorForRhf,
-} from '@/ds-components/MultiTextInput/utils';
-import Select, { type Option } from '@/ds-components/Select';
+import type { Option } from '@/ds-components/Select';
 import Switch from '@/ds-components/Switch';
-import { ToggleTip } from '@/ds-components/Tip';
 
-import {
-  type AccountCenterFormValues,
-  type AccountCenterFieldKey,
-  type SignInExperienceForm,
+import type {
+  AccountCenterFormValues,
+  AccountCenterFieldKey,
+  SignInExperienceForm,
 } from '../../types';
 import SignInExperienceTabWrapper from '../components/SignInExperienceTabWrapper';
 
+import AccountCenterField from './AccountCenterField';
+import SecretVaultSection from './SecretVaultSection';
+import WebauthnRelatedOriginsField from './WebauthnRelatedOriginsField';
+import { accountCenterSections } from './constants';
 import styles from './index.module.scss';
-
-type AccountCenterFieldItem = {
-  readonly key: AccountCenterFieldKey;
-  readonly title: AdminConsoleKey;
-  readonly description?: AdminConsoleKey;
-};
-
-type AccountCenterFieldGroup = {
-  readonly key: string;
-  readonly title: AdminConsoleKey;
-  readonly items: readonly AccountCenterFieldItem[];
-};
-
-type AccountCenterFieldSection = {
-  readonly key: string;
-  readonly title: AdminConsoleKey;
-  readonly description: AdminConsoleKey;
-  readonly groups: readonly AccountCenterFieldGroup[];
-};
-
-const accountCenterSections: AccountCenterFieldSection[] = [
-  {
-    key: 'accountSecurity',
-    title: 'sign_in_exp.account_center.sections.account_security.title',
-    description: 'sign_in_exp.account_center.sections.account_security.description',
-    groups: [
-      {
-        key: 'identifiers',
-        title: 'sign_in_exp.account_center.sections.account_security.groups.identifiers.title',
-        items: [
-          { key: 'email', title: 'sign_in_exp.account_center.fields.email' },
-          { key: 'phone', title: 'sign_in_exp.account_center.fields.phone' },
-          { key: 'social', title: 'sign_in_exp.account_center.fields.social' },
-        ],
-      },
-      {
-        key: 'authentication',
-        title:
-          'sign_in_exp.account_center.sections.account_security.groups.authentication_factors.title',
-        items: [
-          { key: 'password', title: 'sign_in_exp.account_center.fields.password' },
-          {
-            key: 'mfa',
-            title: 'sign_in_exp.account_center.fields.mfa',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    key: 'userProfile',
-    title: 'sign_in_exp.account_center.sections.user_profile.title',
-    description: 'sign_in_exp.account_center.sections.user_profile.description',
-    groups: [
-      {
-        key: 'profileData',
-        title: 'sign_in_exp.account_center.sections.user_profile.groups.profile_data.title',
-        items: [
-          { key: 'username', title: 'sign_in_exp.account_center.fields.username' },
-          { key: 'name', title: 'sign_in_exp.account_center.fields.name' },
-          { key: 'avatar', title: 'sign_in_exp.account_center.fields.avatar' },
-          {
-            key: 'profile',
-            title: 'sign_in_exp.account_center.fields.profile',
-          },
-          {
-            key: 'customData',
-            title: 'sign_in_exp.account_center.fields.custom_data',
-          },
-        ],
-      },
-    ],
-  },
-];
 
 type Props = {
   readonly isActive: boolean;
+  readonly data: SignInExperience;
 };
 
-function AccountCenter({ isActive }: Props) {
+function AccountCenter({ isActive, data }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     watch,
     setValue,
-    control,
     formState: { isSubmitting },
   } = useFormContext<SignInExperienceForm & { accountCenter: AccountCenterFormValues }>();
 
@@ -137,6 +56,10 @@ function AccountCenter({ isActive }: Props) {
   const { enabled, fields } = watch('accountCenter');
   const isAccountApiEnabled = enabled;
 
+  const isMfaEnabled = useMemo(() => {
+    return data.mfa.factors.length > 0;
+  }, [data.mfa]);
+
   const handleToggle = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       setValue('accountCenter.enabled', event.target.checked, { shouldDirty: true });
@@ -155,16 +78,6 @@ function AccountCenter({ isActive }: Props) {
     [setValue]
   );
 
-  const originValidationRules: MultiTextInputRule = useMemo(
-    () => ({
-      pattern: {
-        verify: (value) => !value || value.startsWith('https://') || value.startsWith('http://'),
-        message: t('sign_in_exp.account_center.webauthn_related_origins_error'),
-      },
-    }),
-    [t]
-  );
-
   return (
     <SignInExperienceTabWrapper isActive={isActive}>
       {isActive && (
@@ -176,7 +89,7 @@ function AccountCenter({ isActive }: Props) {
         learnMoreLink={{ href: 'end-user-flows/account-settings/by-account-api' }}
       >
         <div className={styles.cardContent}>
-          <FormField title="sign_in_exp.account_center.enable_account_api">
+          <FormField title="sign_in_exp.account_center.enable_account_api" headlineSpacing="large">
             <Switch
               checked={enabled}
               disabled={isSubmitting}
@@ -190,113 +103,27 @@ function AccountCenter({ isActive }: Props) {
         <FormCard key={section.key} title={section.title} description={section.description}>
           <div className={styles.cardContent}>
             {section.groups.map((group) => (
-              <FormField key={group.key} title={group.title}>
+              <FormField key={group.key} title={group.title} headlineSpacing="large">
                 <div className={styles.groupFields}>
-                  {group.items.map((item) => {
-                    const isReadOnly = !isAccountApiEnabled || isSubmitting;
-
-                    return (
-                      <div
-                        key={item.key}
-                        className={styles.fieldRow}
-                        data-disabled={isReadOnly || undefined}
-                      >
-                        <div className={styles.fieldLabel}>
-                          <div className={styles.fieldName}>
-                            <DynamicT forKey={item.title} />
-                          </div>
-                        </div>
-                        <div className={styles.fieldControl}>
-                          <Select<AccountCenterControlValue>
-                            value={fields[item.key]}
-                            options={fieldOptions}
-                            isReadOnly={isReadOnly}
-                            onChange={(value) => {
-                              handleFieldChange(item.key, value);
-                            }}
-                          />
-                        </div>
-                      </div>
-                    );
-                  })}
+                  {group.items.map((item) => (
+                    <AccountCenterField
+                      key={item.key}
+                      item={item}
+                      value={fields[item.key]}
+                      isReadOnly={!isAccountApiEnabled || isSubmitting}
+                      isMfaEnabled={isMfaEnabled}
+                      fieldOptions={fieldOptions}
+                      onChange={handleFieldChange}
+                    />
+                  ))}
                 </div>
               </FormField>
             ))}
-            {section.key === 'accountSecurity' && (
-              <FormField title="sign_in_exp.account_center.webauthn_related_origins">
-                <div className={styles.description}>
-                  <DynamicT forKey="sign_in_exp.account_center.webauthn_related_origins_description" />
-                </div>
-                <Controller
-                  name="accountCenter.webauthnRelatedOrigins"
-                  control={control}
-                  defaultValue={[]}
-                  rules={{
-                    validate: createValidatorForRhf(originValidationRules),
-                  }}
-                  render={({ field: { onChange, value }, fieldState: { error } }) => (
-                    <MultiTextInput
-                      title="sign_in_exp.account_center.webauthn_related_origins"
-                      value={value}
-                      error={convertRhfErrorMessage(error?.message)}
-                      placeholder="https://account.example.com"
-                      onChange={onChange}
-                    />
-                  )}
-                />
-              </FormField>
-            )}
+            {section.key === 'accountSecurity' && <WebauthnRelatedOriginsField />}
           </div>
         </FormCard>
       ))}
-      <FormCard
-        title="sign_in_exp.account_center.sections.secret_vault.title"
-        description="sign_in_exp.account_center.sections.secret_vault.description"
-        learnMoreLink={{ href: 'https://docs.logto.io/secret-vault', targetBlank: true }}
-      >
-        <div className={styles.cardContent}>
-          <FormField
-            headlineSpacing="large"
-            title="sign_in_exp.account_center.sections.secret_vault.third_party_token_storage.title"
-          >
-            <div className={styles.groupFields}>
-              <div className={styles.fieldRow}>
-                <div className={styles.fieldLabel}>
-                  <div className={styles.fieldName}>
-                    <DynamicT forKey="sign_in_exp.account_center.sections.secret_vault.third_party_token_storage.third_party_access_token_retrieval" />
-                    <ToggleTip
-                      anchorClassName={styles.tipIcon}
-                      content={t(
-                        'sign_in_exp.account_center.sections.secret_vault.third_party_token_storage.third_party_access_token_retrieval_tooltip'
-                      )}
-                    >
-                      <IconButton size="small">
-                        <Tip />
-                      </IconButton>
-                    </ToggleTip>
-                  </div>
-                </div>
-                <div className={styles.fieldControl}>
-                  <Select<string>
-                    isReadOnly
-                    value={isAccountApiEnabled ? 'enabled' : 'disabled'}
-                    options={[
-                      {
-                        value: isAccountApiEnabled ? 'enabled' : 'disabled',
-                        title: t(
-                          isAccountApiEnabled
-                            ? 'sign_in_exp.account_center.field_options.enabled'
-                            : 'sign_in_exp.account_center.field_options.disabled'
-                        ),
-                      },
-                    ]}
-                  />
-                </div>
-              </div>
-            </div>
-          </FormField>
-        </div>
-      </FormCard>
+      <SecretVaultSection isAccountApiEnabled={isAccountApiEnabled} />
     </SignInExperienceTabWrapper>
   );
 }
