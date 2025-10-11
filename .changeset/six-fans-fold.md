@@ -1,5 +1,5 @@
 ---
-"@logto/console": patch
+"@logto/console": minor
 ---
 
-keep the “Third-party Applications” tab permanently visible on the Applications page.
+keep the “Third-party applications” tab permanently visible on the Applications page

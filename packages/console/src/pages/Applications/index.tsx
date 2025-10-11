@@ -182,16 +182,7 @@ function Applications({ tab }: Props) {
           errorMessage={error?.body?.message ?? error?.message}
           placeholder={
             isThirdPartyTab ? (
-              <ThirdPartyApplicationEmptyDataPlaceHolder
-                onCreateThirdParty={() => {
-                  if (thirdPartyAppGuide) {
-                    setSelectedGuide({
-                      id: thirdPartyAppGuide.id,
-                      metadata: thirdPartyAppGuide.metadata,
-                    });
-                  }
-                }}
-              />
+              <ThirdPartyApplicationEmptyDataPlaceHolder onCreateThirdParty={onCreateThirdParty} />
             ) : (
               <EmptyDataPlaceholder />
             )
