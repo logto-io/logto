@@ -123,7 +123,7 @@ export default function domainRoutes<T extends ManagementApiRouter>(
       ctx.status = 201;
       ctx.body = pick(syncedDomain, ...domainSelectFields);
 
-      captureEvent(tenantId, ProductEvent.CustomDomainCreated);
+      captureEvent({ tenantId, request: ctx.req }, ProductEvent.CustomDomainCreated);
       return next();
     }
   );
@@ -145,7 +145,7 @@ export default function domainRoutes<T extends ManagementApiRouter>(
 
       ctx.status = 204;
 
-      captureEvent(tenantId, ProductEvent.CustomDomainDeleted);
+      captureEvent({ tenantId, request: ctx.req }, ProductEvent.CustomDomainDeleted);
       return next();
     }
   );

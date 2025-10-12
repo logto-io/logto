@@ -208,7 +208,9 @@ export default function roleRoutes<T extends ManagementApiRouter>(
         });
       }
 
-      captureEvent(tenant.id, ProductEvent.RoleCreated, { type: role.type });
+      captureEvent({ tenantId: tenant.id, request: ctx.req }, ProductEvent.RoleCreated, {
+        type: role.type,
+      });
       return next();
     }
   );
@@ -283,7 +285,9 @@ export default function roleRoutes<T extends ManagementApiRouter>(
 
       ctx.status = 204;
 
-      captureEvent(tenant.id, ProductEvent.RoleDeleted, { type: role.type });
+      captureEvent({ tenantId: tenant.id, request: ctx.req }, ProductEvent.RoleDeleted, {
+        type: role.type,
+      });
       return next();
     }
   );

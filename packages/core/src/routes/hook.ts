@@ -189,7 +189,7 @@ export default function hookRoutes<T extends ManagementApiRouter>(
 
       ctx.status = 201;
 
-      captureEvent(tenantId, ProductEvent.WebhookCreated);
+      captureEvent({ tenantId, request: ctx.req }, ProductEvent.WebhookCreated);
       return next();
     }
   );
@@ -273,7 +273,7 @@ export default function hookRoutes<T extends ManagementApiRouter>(
       await deleteHookById(id);
       ctx.status = 204;
 
-      captureEvent(tenantId, ProductEvent.WebhookDeleted);
+      captureEvent({ tenantId, request: ctx.req }, ProductEvent.WebhookDeleted);
       return next();
     }
   );

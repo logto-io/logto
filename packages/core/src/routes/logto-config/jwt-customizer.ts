@@ -102,7 +102,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
 
       ctx.body = jwtCustomizer.value;
 
-      captureEvent(tenantId, ProductEvent.CustomJwtDeployed);
+      captureEvent({ tenantId, request: ctx.req }, ProductEvent.CustomJwtDeployed);
       return next();
     }
   );
@@ -140,7 +140,7 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
 
       ctx.body = await updateJwtCustomizer(key, body);
 
-      captureEvent(tenantId, ProductEvent.CustomJwtDeployed);
+      captureEvent({ tenantId, request: ctx.req }, ProductEvent.CustomJwtDeployed);
       return next();
     }
   );
