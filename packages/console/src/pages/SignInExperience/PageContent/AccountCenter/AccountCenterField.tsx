@@ -18,6 +18,7 @@ type Props = {
   readonly value: AccountCenterControlValue;
   readonly isReadOnly: boolean;
   readonly isMfaEnabled: boolean;
+  readonly isGlobalDisabled: boolean;
   readonly onChange: (field: AccountCenterFieldKey, value?: AccountCenterControlValue) => void;
   readonly fieldOptions: Array<Option<AccountCenterControlValue>>;
 };
@@ -40,6 +41,9 @@ function AccountCenterField({
   value,
   isReadOnly,
   isMfaEnabled,
+  // When Account Center is disabled, all fields should show "off" state but keep the current value
+  // then when Account Center is enabled again, the fields will restore to previous values
+  isGlobalDisabled,
   onChange,
   fieldOptions,
 }: Props) {
@@ -50,10 +54,14 @@ function AccountCenterField({
   const shouldShowConnectorWarning =
     connectorType &&
     value !== AccountCenterControlValue.Off &&
+    !isGlobalDisabled &&
     !isConnectorTypeEnabled(connectorType);
 
   const shouldShowMfaWarning =
-    item.key === 'mfa' && value !== AccountCenterControlValue.Off && !isMfaEnabled;
+    item.key === 'mfa' &&
+    value !== AccountCenterControlValue.Off &&
+    !isGlobalDisabled &&
+    !isMfaEnabled;
 
   return (
     <div>
@@ -66,7 +74,7 @@ function AccountCenterField({
         <div className={styles.fieldControl}>
           <Select<AccountCenterControlValue>
             isDropdownFullWidth
-            value={value}
+            value={isGlobalDisabled ? AccountCenterControlValue.Off : value}
             options={fieldOptions}
             isReadOnly={isReadOnly}
             onChange={(value) => {
