@@ -64,6 +64,7 @@ import { getAcceptedUserClaims, getUserClaimsData } from './scope.js';
 const supportedSigningAlgs = Object.freeze(['RS256', 'PS256', 'ES256', 'ES384', 'ES512'] as const);
 
 export default function initOidc(
+  tenantId: string,
   envSet: EnvSet,
   queries: Queries,
   libraries: Libraries,
@@ -383,7 +384,7 @@ export default function initOidc(
     },
   });
 
-  addOidcEventListeners(oidc, queries);
+  addOidcEventListeners(tenantId, oidc, queries);
   registerGrants(oidc, envSet, queries);
 
   // Provide audit log context for event listeners

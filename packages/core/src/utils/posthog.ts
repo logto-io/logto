@@ -6,6 +6,7 @@ import {
   tenantEventDistinctId,
   type ProductEvent,
 } from '@logto/schemas';
+import { type Optional } from '@silverhand/essentials';
 import { PostHog } from 'posthog-node';
 
 import { EnvSet } from '../env-set/index.js';
@@ -45,12 +46,12 @@ export const captureDeveloperEvent = (
  * used as the distinct ID of the event.
  */
 export const captureEvent = (
-  { tenantId, request }: { tenantId: string; request: IncomingMessage },
+  { tenantId, request }: { tenantId: string; request: Optional<IncomingMessage> },
   event: ProductEvent,
   properties?: Record<string, unknown>
 ) =>
   postHog?.capture({
-    distinctId: request.headersDistinct[cloudUserIdHeader]?.[0] ?? tenantEventDistinctId,
+    distinctId: request?.headersDistinct[cloudUserIdHeader]?.[0] ?? tenantEventDistinctId,
     event,
     groups: {
       [EventGroup.Tenant]: tenantId,

@@ -1,20 +1,33 @@
-import type { Provider } from 'oidc-provider';
+import { ProductEvent } from '@logto/schemas';
+import { type Provider } from 'oidc-provider';
 
 import type Queries from '#src/tenants/Queries.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
+import { captureEvent } from '#src/utils/posthog.js';
 
 import { grantListener, grantRevocationListener } from './grant.js';
 import { interactionEndedListener, interactionStartedListener } from './interaction.js';
 import { recordActiveUsers } from './record-active-users.js';
 import { deleteSessionExtensions } from './session.js';
+import { getAccessTokenEventPayload } from './utils.js';
 
 /**
  * @see {@link https://github.com/panva/node-oidc-provider/blob/v7.x/docs/README.md#im-getting-a-client-authentication-failed-error-with-no-details Getting auth error with no details?}
  * @see {@link https://github.com/panva/node-oidc-provider/blob/v7.x/docs/events.md OIDC Provider events}
  */
-export const addOidcEventListeners = (provider: Provider, queries: Queries) => {
+export const addOidcEventListeners = (tenantId: string, provider: Provider, queries: Queries) => {
   const { recordTokenUsage } = queries.dailyTokenUsage;
-  const countTokenUsage = async () => recordTokenUsage(new Date());
+  const tokenUsageListener = async (payload: unknown) => {
+    if (payload instanceof provider.BaseToken) {
+      captureEvent(
+        { tenantId, request: undefined },
+        ProductEvent.AccessTokenIssued,
+        getAccessTokenEventPayload(payload, provider)
+      );
+    }
+
+    await recordTokenUsage(new Date());
+  };
 
   provider.addListener('grant.success', grantListener);
   provider.addListener('grant.error', grantListener);
@@ -45,17 +58,17 @@ export const addOidcEventListeners = (provider: Provider, queries: Queries) => {
     return deleteSessionExtensions(queries, session);
   });
 
-  // Record token usage.
+  // Record token usage on token issue and save events. Note that some events are omitted:
+  // - `initial_access_token.saved`: client registration related, DCR not enabled in our setup
+  // - `registration_access_token.saved`: client registration related, DCR not enabled in our setup
   const events = Object.freeze([
     'access_token.saved',
     'access_token.issued',
     'client_credentials.saved',
     'client_credentials.issued',
-    'initial_access_token.saved',
-    'registration_access_token.saved',
   ] as const);
 
   for (const event of events) {
-    provider.addListener(event, countTokenUsage);
+    provider.addListener(event, tokenUsageListener);
   }
 };
