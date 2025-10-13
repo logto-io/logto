@@ -24,6 +24,7 @@ export type Props = {
   readonly error?: MultiTextInputError;
   readonly placeholder?: string;
   readonly className?: string;
+  readonly isDisabled?: boolean;
 };
 
 function MultiTextInput({
@@ -34,6 +35,7 @@ function MultiTextInput({
   error,
   placeholder,
   className,
+  isDisabled = false,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -74,6 +76,7 @@ function MultiTextInput({
               error={Boolean(error?.inputs?.[fieldIndex] ?? (fieldIndex === 0 && error?.required))}
               value={fieldValue}
               placeholder={placeholder}
+              disabled={isDisabled}
               onChange={({ currentTarget: { value } }) => {
                 handleInputChange(value, fieldIndex);
               }}
@@ -81,6 +84,7 @@ function MultiTextInput({
             />
             {fieldIndex > 0 && (
               <IconButton
+                disabled={isDisabled}
                 onClick={() => {
                   if (fieldValue.trim().length === 0) {
                     handleRemove(fieldIndex);
@@ -107,6 +111,7 @@ function MultiTextInput({
         title="general.add_another"
         className={styles.addAnother}
         icon={<CirclePlus />}
+        disabled={isDisabled}
         onClick={handleAdd}
       />
       <ConfirmModal
