@@ -5,6 +5,8 @@ import { mockBranding, mockSignInExperience } from '#src/__mocks__/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
+const { jest } = import.meta;
+
 const tenantContext = new MockTenant(undefined, {
   signInExperiences: {
     updateDefaultSignInExperience: async (
@@ -13,6 +15,7 @@ const tenantContext = new MockTenant(undefined, {
       ...mockSignInExperience,
       ...data,
     }),
+    findDefaultSignInExperience: jest.fn().mockResolvedValue(mockSignInExperience),
   },
 });
 const signInExperiencesRoutes = await pickDefault(import('./index.js'));

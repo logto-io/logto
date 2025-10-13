@@ -1,11 +1,11 @@
 import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
-import { pickDefault, createMockUtils } from '@logto/shared/esm';
+import { pickDefault } from '@logto/shared/esm';
 
 import { mockColor, mockSignInExperience } from '#src/__mocks__/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
-const { mockEsm } = createMockUtils(import.meta.jest);
+const { jest } = import.meta;
 
 const signInExperiencesRoutes = await pickDefault(import('./index.js'));
 const signInExperienceRequester = createRequester({
@@ -18,6 +18,7 @@ const signInExperienceRequester = createRequester({
         ...mockSignInExperience,
         ...data,
       }),
+      findDefaultSignInExperience: jest.fn().mockResolvedValue(mockSignInExperience),
     },
   }),
 });
