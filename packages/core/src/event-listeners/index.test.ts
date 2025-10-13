@@ -1,3 +1,5 @@
+import { defaultTenantId } from '@logto/schemas';
+
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
 
@@ -15,7 +17,7 @@ describe('addOidcEventListeners', () => {
   it('should add proper listeners', () => {
     const provider = createMockProvider();
     const addListener = jest.spyOn(provider, 'addListener');
-    addOidcEventListeners(provider, new MockQueries());
+    addOidcEventListeners(defaultTenantId, provider, new MockQueries());
     expect(addListener).toHaveBeenCalledWith('grant.success', grantListener);
     expect(addListener).toHaveBeenCalledWith('grant.error', grantListener);
     expect(addListener).toHaveBeenCalledWith('grant.revoked', grantRevocationListener);

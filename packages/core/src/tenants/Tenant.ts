@@ -123,6 +123,7 @@ export default class Tenant implements TenantContext {
 
     // Mount OIDC
     const provider = initOidc(
+      id,
       envSet,
       queries,
       libraries,
