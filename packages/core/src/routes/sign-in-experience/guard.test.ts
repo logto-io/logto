@@ -18,6 +18,7 @@ const tenantContext = new MockTenant(
         ...mockSignInExperience,
         ...data,
       }),
+      findDefaultSignInExperience: jest.fn().mockResolvedValue(mockSignInExperience),
     },
   },
   undefined,
