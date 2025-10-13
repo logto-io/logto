@@ -13,7 +13,6 @@ import {
 import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
-import { getLogtoCookie } from '#src/utils/cookie.js';
 
 import {
   buildVerificationRecordByIdAndType,
@@ -119,11 +118,8 @@ export default function verificationRoutes<T extends UserRouter>(
           ? await libraries.passcodes.buildVerificationCodeContext({ user, applicationId })
           : undefined;
 
-      const { uiLocales } = getLogtoCookie(ctx);
-
       await codeVerification.sendVerificationCode({
-        locale: ctx.locale,
-        ...(uiLocales && { uiLocales }),
+        ...ctx.emailI18n,
         ...emailContextPayload,
       });
 

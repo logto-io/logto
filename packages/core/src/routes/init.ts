@@ -12,6 +12,7 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 import koaAuth from '../middleware/koa-auth/index.js';
 import koaOidcAuth from '../middleware/koa-auth/koa-oidc-auth.js';
 import koaCors from '../middleware/koa-cors.js';
+import koaEmailI18n from '../middleware/koa-email-i18n.js';
 
 import { accountApiPrefix } from './account/constants.js';
 import accountRoutes from './account/index.js';
@@ -69,6 +70,7 @@ const createRouters = (tenant: TenantContext) => {
 
   const experienceRouter: AnonymousRouter = new Router();
   experienceRouter.use(koaAuditLog(tenant.queries));
+  experienceRouter.use(koaEmailI18n(tenant.queries));
   experienceApiRoutes(experienceRouter, tenant);
 
   const managementRouter: ManagementApiRouter = new Router();
@@ -121,6 +123,7 @@ const createRouters = (tenant: TenantContext) => {
 
   const userRouter: UserRouter = new Router();
   userRouter.use(koaOidcAuth(tenant));
+  userRouter.use(koaEmailI18n(tenant.queries));
   // TODO(LOG-10147): Rename to koaApiHooks, this middleware is used for both management API and user API
   userRouter.use(koaManagementApiHooks(tenant.libraries.hooks));
   accountRoutes(userRouter, tenant);

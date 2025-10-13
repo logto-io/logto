@@ -108,12 +108,9 @@ export const sendCode = async ({
     identifier
   );
 
-  const { uiLocales } = getLogtoCookie(ctx);
-
   // Send verification code
   await codeVerification.sendVerificationCode({
-    locale: ctx.locale,
-    ...(uiLocales && { uiLocales }),
+    ...ctx.emailI18n,
     ...templateContext,
   });
 

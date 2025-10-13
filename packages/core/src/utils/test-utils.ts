@@ -19,6 +19,7 @@ import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-contex
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { i18next } from '#src/utils/i18n.js';
 
+import { type WithEmailI18nContext } from '../middleware/koa-email-i18n.js';
 import { type WithI18nContext } from '../middleware/koa-i18next.js';
 
 /**
@@ -94,7 +95,7 @@ export const emptyMiddleware =
 
 export const createContextWithRouteParameters = (
   mockContextOptions?: Options<Record<string, unknown>>
-): WithI18nContext<Context & IRouterParamContext> => {
+): WithEmailI18nContext<WithI18nContext<Context & IRouterParamContext>> => {
   const ctx = createMockContext(mockContextOptions);
 
   return {
@@ -106,12 +107,13 @@ export const createContextWithRouteParameters = (
     URL: ctx.URL,
     cookies: ctx.cookies,
     params: {},
-    headers: {},
+    headers: ctx.headers,
     router: new Router(),
     _matchedRoute: undefined,
     _matchedRouteName: undefined,
     i18n: i18next,
     locale: 'en',
+    emailI18n: { locale: 'en' },
   };
 };
 
