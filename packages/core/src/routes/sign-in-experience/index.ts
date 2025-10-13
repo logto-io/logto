@@ -204,7 +204,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
       }
 
       captureEvent(
-        tenantId,
+        { tenantId, request: ctx.req },
         mfa?.factors.length ? ProductEvent.MfaEnabled : ProductEvent.MfaDisabled
       );
       return next();

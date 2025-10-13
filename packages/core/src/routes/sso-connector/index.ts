@@ -154,7 +154,9 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
 
       ctx.body = connector;
 
-      captureEvent(tenantId, ProductEvent.SsoConnectorCreated, { providerName });
+      captureEvent({ tenantId, request: ctx.req }, ProductEvent.SsoConnectorCreated, {
+        providerName,
+      });
       return next();
     }
   );
@@ -240,7 +242,9 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
       await ssoConnectors.deleteById(id);
 
       ctx.status = 204;
-      captureEvent(tenantId, ProductEvent.SsoConnectorDeleted, { providerName });
+      captureEvent({ tenantId, request: ctx.req }, ProductEvent.SsoConnectorDeleted, {
+        providerName,
+      });
       return next();
     }
   );

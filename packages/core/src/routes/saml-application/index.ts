@@ -140,7 +140,9 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
         throw error;
       }
 
-      captureEvent(tenantId, ProductEvent.AppCreated, { type: ApplicationType.SAML });
+      captureEvent({ tenantId, request: ctx.req }, ProductEvent.AppCreated, {
+        type: ApplicationType.SAML,
+      });
       return next();
     }
   );
@@ -209,7 +211,9 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
 
       ctx.status = 204;
 
-      captureEvent(tenantId, ProductEvent.AppDeleted, { type: ApplicationType.SAML });
+      captureEvent({ tenantId, request: ctx.req }, ProductEvent.AppDeleted, {
+        type: ApplicationType.SAML,
+      });
       return next();
     }
   );

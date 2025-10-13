@@ -50,7 +50,8 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
     errorHandler,
     searchFields: ['name'],
     hooks: {
-      afterDelete: () => captureEvent(tenantId, ProductEvent.OrganizationRoleDeleted),
+      afterDelete: (ctx) =>
+        captureEvent({ tenantId, request: ctx.req }, ProductEvent.OrganizationRoleDeleted),
     },
   });
 
@@ -129,7 +130,7 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
         });
       }
 
-      captureEvent(tenantId, ProductEvent.OrganizationRoleCreated);
+      captureEvent({ tenantId, request: ctx.req }, ProductEvent.OrganizationRoleCreated);
       return next();
     }
   );

@@ -92,7 +92,7 @@ type SchemaRouterConfig<Key extends string> = {
   /** Lifecycle hooks for certain actions. */
   hooks?: {
     /** Triggered after an entity is deleted. */
-    afterDelete?: () => void;
+    afterDelete?: (ctx: Context) => void;
   };
   /** Middlewares that are used before creating API routes */
   middlewares?: MiddlewareConfig[];
@@ -446,7 +446,7 @@ export default class SchemaRouter<
         this.#assembleQualifiedMiddlewares('delete'),
         async (ctx, next) => {
           await queries.deleteById(ctx.guard.params.id);
-          this.config.hooks?.afterDelete?.();
+          this.config.hooks?.afterDelete?.(ctx);
           ctx.status = 204;
           return next();
         }

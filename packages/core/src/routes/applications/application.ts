@@ -232,7 +232,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         void quota.reportSubscriptionUpdatesUsage('thirdPartyApplicationsLimit');
       }
 
-      captureEvent(tenantId, ProductEvent.AppCreated, {
+      captureEvent({ tenantId, request: ctx.req }, ProductEvent.AppCreated, {
         type: rest.type,
         isThirdParty: rest.isThirdParty ?? false,
       });
@@ -398,7 +398,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         void quota.reportSubscriptionUpdatesUsage('thirdPartyApplicationsLimit');
       }
 
-      captureEvent(tenantId, ProductEvent.AppDeleted, {
+      captureEvent({ tenantId, request: ctx.req }, ProductEvent.AppDeleted, {
         type,
         isThirdParty,
       });

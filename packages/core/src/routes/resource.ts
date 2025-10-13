@@ -113,7 +113,7 @@ export default function resourceRoutes<T extends ManagementApiRouter>(
       ctx.status = 201;
       ctx.body = { ...resource, scopes: [] };
 
-      captureEvent(tenantId, ProductEvent.ApiResourceCreated);
+      captureEvent({ tenantId, request: ctx.req }, ProductEvent.ApiResourceCreated);
       return next();
     }
   );
@@ -207,7 +207,7 @@ export default function resourceRoutes<T extends ManagementApiRouter>(
 
       ctx.status = 204;
 
-      captureEvent(tenantId, ProductEvent.ApiResourceDeleted);
+      captureEvent({ tenantId, request: ctx.req }, ProductEvent.ApiResourceDeleted);
       return next();
     }
   );

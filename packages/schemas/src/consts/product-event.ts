@@ -80,3 +80,9 @@ export enum EventGroup {
  * @see {@link https://posthog.com/docs/product-analytics/group-analytics#advanced-server-side-only-capturing-group-events-without-a-user}
  */
 export const tenantEventDistinctId = 'TENANT_EVENT';
+
+/**
+ * The header that carries the cloud user ID in a request from Logto Cloud. This is useful for
+ * identifying the user who initiated the Management API request proxied by the cloud service.
+ */
+export const cloudUserIdHeader = 'logto-cloud-user-id';

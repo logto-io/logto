@@ -1,4 +1,11 @@
-import { EventGroup, tenantEventDistinctId, type ProductEvent } from '@logto/schemas';
+import { type IncomingMessage } from 'node:http';
+
+import {
+  cloudUserIdHeader,
+  EventGroup,
+  tenantEventDistinctId,
+  type ProductEvent,
+} from '@logto/schemas';
 import { PostHog } from 'posthog-node';
 
 import { EnvSet } from '../env-set/index.js';
@@ -34,15 +41,16 @@ export const captureDeveloperEvent = (
   });
 
 /**
- * Capture tenant-specific events. These events will not be associated with a specific user.
+ * Capture tenant-specific events. If the request header contains the cloud user ID, it will be
+ * used as the distinct ID of the event.
  */
 export const captureEvent = (
-  tenantId: string,
+  { tenantId, request }: { tenantId: string; request: IncomingMessage },
   event: ProductEvent,
   properties?: Record<string, unknown>
 ) =>
   postHog?.capture({
-    distinctId: tenantEventDistinctId,
+    distinctId: request.headersDistinct[cloudUserIdHeader]?.[0] ?? tenantEventDistinctId,
     event,
     groups: {
       [EventGroup.Tenant]: tenantId,

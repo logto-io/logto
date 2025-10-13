@@ -194,13 +194,13 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
         }
 
         captureEvent(
-          tenant.id,
+          { tenantId: tenant.id, request: ctx.req },
           ProductEvent.PasswordlessConnectorUpdated,
           pickFactoryProperties(connectorFactory)
         );
       } else {
         captureEvent(
-          tenant.id,
+          { tenantId: tenant.id, request: ctx.req },
           ProductEvent.SocialConnectorCreated,
           pickFactoryProperties(connectorFactory)
         );
@@ -390,7 +390,7 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
       if (connectorFactory?.type === ConnectorType.Social) {
         await removeUnavailableSocialConnectorTargets();
         captureEvent(
-          tenant.id,
+          { tenantId: tenant.id, request: ctx.req },
           ProductEvent.SocialConnectorDeleted,
           pickFactoryProperties(connectorFactory)
         );
