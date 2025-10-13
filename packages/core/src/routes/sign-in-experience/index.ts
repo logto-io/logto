@@ -5,8 +5,9 @@ import {
   SignInExperiences,
   ForgotPasswordMethod,
   ProductEvent,
+  type SignInExperience,
 } from '@logto/schemas';
-import { conditional, tryThat } from '@silverhand/essentials';
+import { conditional, type Optional, tryThat } from '@silverhand/essentials';
 import { literal, object, string, z } from 'zod';
 
 import {
@@ -24,6 +25,9 @@ import { captureEvent } from '../../utils/posthog.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 import customUiAssetsRoutes from './custom-ui-assets/index.js';
+
+const isMfaEnabled = (mfa: Optional<SignInExperience['mfa']>): boolean =>
+  Boolean(mfa?.factors && mfa.factors.length > 0);
 
 export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>
@@ -102,7 +106,10 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         await validateLanguageInfo(languageInfo);
       }
 
-      const connectors = await getLogtoConnectors();
+      const [connectors, currentSettings] = await Promise.all([
+        getLogtoConnectors(),
+        findDefaultSignInExperience(),
+      ]);
 
       // Remove unavailable connectors
       const filteredSocialSignInConnectorTargets = socialSignInConnectorTargets?.filter((target) =>
@@ -117,18 +124,17 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
       }
 
       if (signIn) {
-        const currentSettings = await findDefaultSignInExperience();
         const { signUp: signUpSettings } = signUp ? { signUp } : currentSettings;
         const { mfa: currentMfa } = mfa ? { mfa } : currentSettings;
         validateSignIn(signIn, signUpSettings, connectors, currentMfa);
       }
 
       if (mfa) {
-        if (mfa.factors.length > 0) {
+        if (isMfaEnabled(mfa)) {
           await quota.guardTenantUsageByKey('mfaEnabled');
         }
         // Get the current sign-in configuration
-        const { signIn: currentSignIn } = signIn ? { signIn } : await findDefaultSignInExperience();
+        const { signIn: currentSignIn } = signIn ? { signIn } : currentSettings;
         validateMfa(mfa, currentSignIn);
       }
 
@@ -203,10 +209,13 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         void quota.reportSubscriptionUpdatesUsage('securityFeaturesEnabled');
       }
 
-      captureEvent(
-        { tenantId, request: ctx.req },
-        mfa?.factors.length ? ProductEvent.MfaEnabled : ProductEvent.MfaDisabled
-      );
+      // Only capture the event when MFA status changes
+      if (isMfaEnabled(currentSettings.mfa) !== isMfaEnabled(mfa)) {
+        captureEvent(
+          { tenantId, request: ctx.req },
+          isMfaEnabled(mfa) ? ProductEvent.MfaEnabled : ProductEvent.MfaDisabled
+        );
+      }
       return next();
     }
   );
