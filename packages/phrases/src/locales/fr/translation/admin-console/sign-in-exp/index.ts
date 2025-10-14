@@ -133,10 +133,12 @@ const sign_in_exp = {
         description:
           "Pour les connecteurs sociaux et d'entreprise, stockage sécurisé des jetons d'accès tiers pour appeler leurs API (par exemple, ajouter des événements au calendrier Google).",
         third_party_token_storage: {
-          title: 'Stockage de jetons tiers',
-          third_party_access_token_retrieval: "Récupération de jeton d'accès tiers",
-          third_party_access_token_retrieval_tooltip:
-            "Une fois l'Account API activée, la récupération de jetons tiers est automatiquement activée. Pour stocker les jetons, vous pouvez l'activer dans les paramètres du connecteur social ou d'entreprise correspondant.",
+          title: 'Jeton tiers',
+          third_party_access_token_retrieval: 'Jeton tiers',
+          third_party_token_tooltip:
+            "Pour stocker les jetons, vous pouvez activer ceci dans les paramètres du connecteur social ou d'entreprise correspondant.",
+          third_party_token_description:
+            "Une fois l'Account API activée, la récupération de jetons tiers est automatiquement activée.",
         },
       },
     },

@@ -129,10 +129,11 @@ const sign_in_exp = {
         description:
           '对于社交和企业连接器，安全存储第三方访问令牌以调用其 API（例如，向 Google 日历添加事件）。',
         third_party_token_storage: {
-          title: '第三方令牌存储',
+          title: '第三方令牌',
           third_party_access_token_retrieval: '第三方访问令牌检索',
-          third_party_access_token_retrieval_tooltip:
-            '启用 Account API 后，第三方令牌检索会自动激活。要存储令牌，您可以在相应的社交或企业连接器的设置中启用此功能。',
+          third_party_token_tooltip:
+            '要存储令牌，您可以在相应的社交或企业连接器的设置中启用此功能。',
+          third_party_token_description: '启用 Account API 后，第三方令牌检索会自动激活。',
         },
       },
     },

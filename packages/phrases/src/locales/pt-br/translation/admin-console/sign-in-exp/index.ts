@@ -132,10 +132,12 @@ const sign_in_exp = {
         description:
           'Para conectores sociais e empresariais, armazene com segurança tokens de acesso de terceiros para chamar suas APIs (por exemplo, adicionar eventos ao Google Calendar).',
         third_party_token_storage: {
-          title: 'Armazenamento de tokens de terceiros',
-          third_party_access_token_retrieval: 'Recuperação de token de acesso de terceiros',
-          third_party_access_token_retrieval_tooltip:
-            'Uma vez que a Account API esteja ativada, a recuperação de tokens de terceiros é ativada automaticamente. Para armazenar tokens, você pode ativar isso nas configurações do conector social ou empresarial correspondente.',
+          title: 'Token de terceiros',
+          third_party_access_token_retrieval: 'Token de terceiros',
+          third_party_token_tooltip:
+            'Para armazenar tokens, você pode habilitar isso nas configurações do conector social ou empresarial correspondente.',
+          third_party_token_description:
+            'Uma vez que a Account API esteja ativada, a recuperação de tokens de terceiros é ativada automaticamente.',
         },
       },
     },

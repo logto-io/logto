@@ -132,10 +132,12 @@ const sign_in_exp = {
         description:
           'Dla złączy społecznościowych i korporacyjnych, bezpieczne przechowywanie tokenów dostępu stron trzecich w celu wywołania ich interfejsów API (np. dodawanie wydarzeń do Kalendarza Google).',
         third_party_token_storage: {
-          title: 'Przechowywanie tokenów stron trzecich',
-          third_party_access_token_retrieval: 'Pobieranie tokenu dostępu strony trzeciej',
-          third_party_access_token_retrieval_tooltip:
-            'Po włączeniu Account API pobieranie tokenów stron trzecich jest automatycznie aktywowane. Aby przechowywać tokeny, możesz to włączyć w ustawieniach odpowiedniego złącza społecznościowego lub korporacyjnego.',
+          title: 'Token strony trzeciej',
+          third_party_access_token_retrieval: 'Token strony trzeciej',
+          third_party_token_tooltip:
+            'Aby przechowywać tokeny, możesz włączyć to w ustawieniach odpowiedniego złącza społecznościowego lub korporacyjnego.',
+          third_party_token_description:
+            'Po włączeniu Account API pobieranie tokenów stron trzecich jest automatycznie aktywowane.',
         },
       },
     },
