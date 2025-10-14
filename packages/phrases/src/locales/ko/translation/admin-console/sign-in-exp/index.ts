@@ -167,6 +167,12 @@ const sign_in_exp = {
       '이메일 연동 설정이 아직 없어요. 이 구성을 완료하기 전에는 사용자가 이 로그인 방식으로 로그인 할 수 없어요. "연동 설정"에서 <a>{{link}}</a>하세요.',
     no_connector_social:
       '아직 소셜 커넥터를 설정하지 않았습니다. 소셜 로그인 방법을 적용하려면 먼저 커넥터를 추가하십시오. "커넥터"에서 <a>{{link}}</a>을(를) 확인하십시오.',
+    no_connector_email_account_center:
+      '이메일 커넥터가 아직 설정되지 않았습니다. <a>"이메일 및 SMS 커넥터"</a>에서 설정하세요.',
+    no_connector_sms_account_center:
+      'SMS 커넥터가 아직 설정되지 않았습니다. <a>"이메일 및 SMS 커넥터"</a>에서 설정하세요.',
+    no_connector_social_account_center:
+      '소셜 커넥터가 아직 설정되지 않았습니다. <a>"소셜 커넥터"</a>에서 설정하세요.',
     no_mfa_factor:
       '아직 MFA 팩터가 설정되지 않았습니다. "다단계 인증"에서 <a>{{link}}</a>하십시오.',
     setup_link: '설정',

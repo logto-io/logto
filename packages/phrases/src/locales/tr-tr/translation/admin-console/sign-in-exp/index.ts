@@ -170,6 +170,12 @@ const sign_in_exp = {
       'Henüz e-posta konektörü kurulmadı. Yapılandırmayı tamamlamadan önce, kullanıcılar bu yöntemle oturum açamazlar. "Konektörler"deki <a>{{link}}</a>',
     no_connector_social:
       'Henüz hiçbir sosyal bağlayıcıyı ayarlamadınız. Sosyal giriş yöntemlerini uygulamak için önce bağlayıcı ekleyin. "Bağlayıcılar" bölümünde <a>{{link}}</a> görüntüleyin.',
+    no_connector_email_account_center:
+      'Henüz e-posta bağlayıcısı kurulmadı. <a>"E-posta ve SMS bağlayıcıları"</a> bölümünde kurun.',
+    no_connector_sms_account_center:
+      'Henüz SMS bağlayıcısı kurulmadı. <a>"E-posta ve SMS bağlayıcıları"</a> bölümünde kurun.',
+    no_connector_social_account_center:
+      'Henüz sosyal bağlayıcı kurulmadı. <a>"Sosyal bağlayıcılar"</a> bölümünde kurun.',
     no_mfa_factor:
       'Henüz MFA faktörü kurulmadı. "Çok faktörlü kimlik doğrulama" bölümünde <a>{{link}}</a>.',
     setup_link: 'Kurulum yapın',

@@ -165,6 +165,11 @@ const sign_in_exp = {
       '尚未设置电子邮件连接器。在完成该配置前，用户将无法通过此登录方式登录。<a>{{link}}</a>连接器。',
     no_connector_social:
       '你还没有设置任何社交连接器。首先添加连接器以应用社交登录方法。<a>{{link}}</a>连接器。',
+    no_connector_email_account_center:
+      '尚未设置电子邮件连接器。请在<a>"邮件与短信连接器"</a>中设置。',
+    no_connector_sms_account_center:
+      '尚未设置 SMS 短信连接器。请在<a>"邮件与短信连接器"</a>中设置。',
+    no_connector_social_account_center: '尚未设置社交连接器。请在<a>"社交连接器"</a>中设置。',
     no_mfa_factor: '尚未设置 MFA 因子。请先在"多因素认证"中<a>{{link}}</a>。',
     setup_link: '立即设置',
   },

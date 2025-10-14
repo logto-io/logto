@@ -75,7 +75,16 @@ function AccountCenterField({
           />
         </div>
       </div>
-      {shouldShowConnectorWarning && <ConnectorSetupWarning requiredConnectors={[connectorType]} />}
+      {shouldShowConnectorWarning && (
+        <ConnectorSetupWarning
+          requiredConnectors={[connectorType]}
+          customPhrases={{
+            [ConnectorType.Email]: 'sign_in_exp.setup_warning.no_connector_email_account_center',
+            [ConnectorType.Sms]: 'sign_in_exp.setup_warning.no_connector_sms_account_center',
+            [ConnectorType.Social]: 'sign_in_exp.setup_warning.no_connector_social_account_center',
+          }}
+        />
+      )}
       {shouldShowMfaWarning && (
         <InlineNotification className={styles.notice}>
           <Trans

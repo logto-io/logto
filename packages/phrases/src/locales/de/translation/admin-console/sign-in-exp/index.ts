@@ -170,6 +170,12 @@ const sign_in_exp = {
       'Es wurde noch kein E-Mail-Konnektor eingerichtet. Bevor die Konfiguration abgeschlossen werden kann, können sich Benutzer nicht mit dieser Methode anmelden. <a>{{link}}</a> in "Verbindungen".',
     no_connector_social:
       'Sie haben noch keine soziale Verbindung eingerichtet. Fügen Sie zuerst Verbindungen hinzu, um soziale Anmeldeverfahren anzuwenden. <a>{{link}}</a> in "Verbindungen".',
+    no_connector_email_account_center:
+      'Noch kein E-Mail-Konnektor eingerichtet. Richten Sie ihn unter <a>"E-Mail- und SMS-Konnektoren"</a> ein.',
+    no_connector_sms_account_center:
+      'Noch kein SMS-Konnektor eingerichtet. Richten Sie ihn unter <a>"E-Mail- und SMS-Konnektoren"</a> ein.',
+    no_connector_social_account_center:
+      'Noch kein Social-Konnektor eingerichtet. Richten Sie ihn unter <a>"Social-Konnektoren"</a> ein.',
     no_mfa_factor:
       'Es wurde noch kein MFA-Faktor eingerichtet. <a>{{link}}</a> in "Multi-Faktor-Authentifizierung".',
     setup_link: 'Einrichtung',

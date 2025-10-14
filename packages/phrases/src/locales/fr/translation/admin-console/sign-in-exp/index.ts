@@ -171,6 +171,12 @@ const sign_in_exp = {
       'Aucun connecteur d\'email n\'a été configuré. Avant de terminer la configuration, les utilisateurs ne pourront pas se connecter avec cette méthode. <a>{{link}}</a> dans "Connecteurs"',
     no_connector_social:
       'Vous n\'avez pas encore configuré de connecteur social. Ajoutez d\'abord des connecteurs pour appliquer des méthodes de connexion sociale. <a>{{link}}</a> dans "Connecteurs".',
+    no_connector_email_account_center:
+      'Aucun connecteur e-mail configuré. Configurez-le dans <a>"Connecteurs e-mail et SMS"</a>.',
+    no_connector_sms_account_center:
+      'Aucun connecteur SMS configuré. Configurez-le dans <a>"Connecteurs e-mail et SMS"</a>.',
+    no_connector_social_account_center:
+      'Aucun connecteur social configuré. Configurez-le dans <a>"Connecteurs sociaux"</a>.',
     no_mfa_factor:
       'Aucun facteur MFA n\'a été configuré. <a>{{link}}</a> dans "Authentification multi-facteurs".',
     setup_link: 'Configurer',
