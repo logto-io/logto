@@ -14,6 +14,7 @@ import Region, {
   getInstanceDropdownItems,
   logtoDropdownItem,
 } from '@/components/Region';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import FormField from '@/ds-components/FormField';
@@ -37,6 +38,7 @@ type Props = {
   readonly onClose: (tenant?: TenantResponse) => void;
 };
 
+// eslint-disable-next-line complexity
 function CreateTenantModal({ isOpen, onClose }: Props) {
   const [tenantData, setTenantData] = useState<CreateTenantData>();
   const theme = useTheme();
@@ -80,6 +82,10 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
   const isLogtoInstance = instanceId === logtoDropdownItem.id;
 
   const currentRegion = useMemo(() => {
+    if (isDevFeaturesEnabled) {
+      return getRegionById(regionName);
+    }
+
     if (isLogtoInstance) {
       return getRegionById(regionName);
     }
@@ -90,7 +96,11 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
   const createTenant = async ({ name, tag, instanceId, regionName }: CreateTenantData) => {
     // For Logto public instance, use the selected region
     // For private instances, use the instance ID as the region
-    const finalRegionName = instanceId === logtoDropdownItem.id ? regionName : instanceId;
+    const finalRegionName = isDevFeaturesEnabled
+      ? isLogtoInstance
+        ? regionName
+        : instanceId
+      : regionName;
     const newTenant = await cloudApi.post('/api/tenants', {
       body: { name, tag, regionName: finalRegionName },
     });
@@ -156,6 +166,39 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
             />
           </FormField>
 
+          {!isDevFeaturesEnabled && (
+            <FormField
+              title="tenants.settings.tenant_region"
+              tip={t('tenants.settings.tenant_region_description')}
+            >
+              {!regions && !regionsError && <Ring />}
+              {regionsError && <span className={styles.error}>{regionsError.message}</span>}
+              {regions && !regionsError && (
+                <Controller
+                  control={control}
+                  name="regionName"
+                  rules={{ required: true }}
+                  render={({ field: { onChange, value, name } }) => (
+                    <RadioGroup type="plain" name={name} value={value} onChange={onChange}>
+                      {regions.map((region) => (
+                        <Radio
+                          key={region.id}
+                          title={
+                            <DangerousRaw>
+                              <Region region={region} />
+                            </DangerousRaw>
+                          }
+                          value={region.id}
+                          isDisabled={isSubmitting}
+                        />
+                      ))}
+                    </RadioGroup>
+                  )}
+                />
+              )}
+            </FormField>
+          )}
+
           {currentRegion && (
             <FormField title="tenants.create_modal.tenant_usage_purpose">
               <Controller
@@ -181,31 +224,32 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
             </FormField>
           )}
 
-          <FormField
-            title="tenants.settings.tenant_instance"
-            tip={t('tenants.settings.tenant_instance_description')}
-          >
-            {!regions && !regionsError && <Ring />}
-            {regionsError && <span className={styles.error}>{regionsError.message}</span>}
-            {regions && !regionsError && (
-              <Controller
-                control={control}
-                name="instanceId"
-                rules={{ required: true }}
-                render={({ field: { onChange, value } }) => (
-                  <InstanceSelector
-                    instances={instanceOptions}
-                    value={value}
-                    isDisabled={isSubmitting}
-                    setTenantTagInForm={setTenantTagInForm}
-                    onChange={onChange}
-                  />
-                )}
-              />
-            )}
-          </FormField>
-
-          {isLogtoInstance && (
+          {isDevFeaturesEnabled && (
+            <FormField
+              title="tenants.settings.tenant_instance"
+              tip={t('tenants.settings.tenant_instance_description')}
+            >
+              {!regions && !regionsError && <Ring />}
+              {regionsError && <span className={styles.error}>{regionsError.message}</span>}
+              {regions && !regionsError && (
+                <Controller
+                  control={control}
+                  name="instanceId"
+                  rules={{ required: true }}
+                  render={({ field: { onChange, value } }) => (
+                    <InstanceSelector
+                      instances={instanceOptions}
+                      value={value}
+                      isDisabled={isSubmitting}
+                      setTenantTagInForm={setTenantTagInForm}
+                      onChange={onChange}
+                    />
+                  )}
+                />
+              )}
+            </FormField>
+          )}
+          {isDevFeaturesEnabled && isLogtoInstance && (
             <FormField
               title="tenants.settings.tenant_region"
               tip={t('tenants.settings.tenant_region_description')}
