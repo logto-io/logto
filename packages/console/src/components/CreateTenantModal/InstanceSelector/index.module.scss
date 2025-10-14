@@ -1,0 +1,81 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: _.unit(2);
+}
+
+.triggerButton {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: _.unit(2) _.unit(2) _.unit(2) _.unit(3);
+  border: 1px solid transparent;
+  border-radius: _.unit(1.5);
+  background-color: var(--color-bg-layer-1);
+  cursor: pointer;
+  transition: border-color 0.2s ease-in-out;
+  font: var(--font-body-2);
+  color: var(--color-text);
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 60%;
+  }
+
+  &:hover:not(:disabled) {
+    border-color: var(--color-hover-variant);
+  }
+
+  .icon {
+    margin-left: _.unit(2);
+    flex-shrink: 0;
+    width: _.unit(5);
+    height: _.unit(5);
+    color: var(--color-text-secondary);
+  }
+}
+
+.selectedContent {
+  display: flex;
+  align-items: center;
+  gap: _.unit(2);
+  flex: 1;
+  min-width: 0;
+}
+
+.instanceName {
+  flex: 1;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.instanceOption {
+  display: flex;
+  align-items: center;
+  gap: _.unit(2);
+  width: 100%;
+}
+
+.selectedName {
+  color: var(--color-primary-40);
+}
+
+.dropdownContent {
+  margin: _.unit(1);
+}
+
+.checkIcon {
+  width: _.unit(5);
+  height: _.unit(5);
+  flex-shrink: 0;
+  color: transparent;
+
+  &.visible {
+    color: var(--color-primary-40);
+  }
+}

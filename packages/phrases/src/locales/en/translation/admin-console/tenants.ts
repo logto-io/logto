@@ -13,6 +13,9 @@ const tenants = {
     description: 'Set the tenant name and view your data hosted region and tenant type.',
     tenant_id: 'Tenant ID',
     tenant_name: 'Tenant name',
+    tenant_instance: 'Select your instance',
+    tenant_instance_description:
+      'Select where your tenant will be hosted. Choose Logto Cloud for public shared infrastructure, or a private instance for dedicated resources.',
     tenant_region: 'Data region',
     tenant_region_description:
       'The physical location where your tenant resources (users, apps, etc.) are hosted. This cannot be changed after creation.',
