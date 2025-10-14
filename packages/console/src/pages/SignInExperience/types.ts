@@ -5,6 +5,7 @@ import {
   type SignInExperience,
   type SignInIdentifier,
   type SignUpIdentifier as SignUpIdentifierMethod,
+  type AccountCenterFieldControl,
 } from '@logto/schemas';
 
 /**
@@ -24,7 +25,7 @@ export enum SignInExperienceTab {
   Content = 'content',
 }
 
-const accountCenterFieldKeys = [
+const accountCenterFieldKeys: Array<keyof AccountCenterFieldControl> = [
   'email',
   'phone',
   'social',
