@@ -5,8 +5,7 @@ import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 const sign_in_exp = {
   page_title: 'ประสบการณ์การเข้าสู่ระบบ',
   page_title_with_account: 'การเข้าสู่ระบบและบัญชี',
-  title: 'ประสบการณ์การเข้าสู่ระบบ',
-  title_with_account: 'การเข้าสู่ระบบและบัญชี',
+  title: 'การเข้าสู่ระบบและบัญชี',
   description:
     'ปรับแต่งกระบวนการยืนยันตัวตนและ UI พร้อมดูตัวอย่างประสบการณ์ใช้งานทันทีแบบเรียลไทม์',
   tabs: {

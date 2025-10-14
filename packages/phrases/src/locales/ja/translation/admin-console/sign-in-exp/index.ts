@@ -5,8 +5,7 @@ import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 const sign_in_exp = {
   page_title: 'サインインエクスペリエンス',
   page_title_with_account: 'サインインとアカウント',
-  title: 'サインインエクスペリエンス',
-  title_with_account: 'サインインとアカウント',
+  title: 'サインインとアカウント',
   description:
     '認証フローと UI をカスタマイズし、すぐに使えるエクスペリエンスをリアルタイムでプレビューします。',
   tabs: {

@@ -5,8 +5,7 @@ import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 const sign_in_exp = {
   page_title: 'Anmeldeoberfläche',
   page_title_with_account: 'Anmeldung & Konto',
-  title: 'Anmeldeoberfläche',
-  title_with_account: 'Anmeldung & Konto',
+  title: 'Anmeldung & Konto',
   description:
     'Passen Sie die Authentifizierungsabläufe und die Benutzeroberfläche an, und sehen Sie sich das Erlebnis sofort an.',
   tabs: {

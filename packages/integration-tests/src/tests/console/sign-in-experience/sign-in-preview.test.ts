@@ -1,11 +1,7 @@
 import { type Nullable } from '@silverhand/essentials';
 import { type Page, type Target } from 'puppeteer';
 
-import {
-  isDevFeaturesEnabled,
-  logtoConsoleUrl as logtoConsoleUrlString,
-  logtoUrl,
-} from '#src/constants.js';
+import { logtoConsoleUrl as logtoConsoleUrlString, logtoUrl } from '#src/constants.js';
 import { goToAdminConsole } from '#src/ui-helpers/index.js';
 import { expectNavigation, appendPathname } from '#src/utils.js';
 
@@ -28,7 +24,7 @@ describe('sign-in experience: sign-in preview', () => {
     await expect(page).toMatchElement(
       'div[class$=main] div[class$=container] div[class$=cardTitle] div[class$=titleEllipsis]',
       {
-        text: isDevFeaturesEnabled ? 'Sign-in & account' : 'Sign-in experience',
+        text: 'Sign-in & account',
       }
     );
 

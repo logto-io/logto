@@ -5,8 +5,7 @@ import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 const sign_in_exp = {
   page_title: '로그인 경험',
   page_title_with_account: '로그인 및 계정',
-  title: '로그인 경험',
-  title_with_account: '로그인 및 계정',
+  title: '로그인 및 계정',
   description: '인증 흐름과 UI 를 사용자 지정하고 실시간으로 기본 제공 경험을 미리 볼 수 있습니다.',
   tabs: {
     branding: '브랜딩',

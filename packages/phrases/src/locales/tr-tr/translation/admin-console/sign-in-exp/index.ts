@@ -5,8 +5,7 @@ import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 const sign_in_exp = {
   page_title: 'Oturum Açma Deneyimi',
   page_title_with_account: 'Oturum açma ve hesap',
-  title: 'Oturum Açma Deneyimi',
-  title_with_account: 'Oturum açma ve hesap',
+  title: 'Oturum açma ve hesap',
   description:
     "Kimlik doğrulama akışlarını ve UI'yı özelleştirin ve hazır deneyimi gerçek zamanlı olarak önizleyin.",
   tabs: {
