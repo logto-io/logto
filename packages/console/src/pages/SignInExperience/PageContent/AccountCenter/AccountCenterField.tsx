@@ -16,7 +16,6 @@ import styles from './index.module.scss';
 type Props = {
   readonly item: AccountCenterFieldItem;
   readonly value: AccountCenterControlValue;
-  readonly isReadOnly: boolean;
   readonly isMfaEnabled: boolean;
   readonly isGlobalDisabled: boolean;
   readonly onChange: (field: AccountCenterFieldKey, value?: AccountCenterControlValue) => void;
@@ -39,7 +38,6 @@ const getConnectorTypeForField = (fieldKey: AccountCenterFieldKey): ConnectorTyp
 function AccountCenterField({
   item,
   value,
-  isReadOnly,
   isMfaEnabled,
   // When Account Center is disabled, all fields should show "off" state but keep the current value
   // then when Account Center is enabled again, the fields will restore to previous values
@@ -65,7 +63,7 @@ function AccountCenterField({
 
   return (
     <div>
-      <div className={styles.fieldRow} data-disabled={isReadOnly || undefined}>
+      <div className={styles.fieldRow} data-disabled={isGlobalDisabled}>
         <div className={styles.fieldLabel}>
           <div className={styles.fieldName}>
             <DynamicT forKey={item.title} />
@@ -76,7 +74,7 @@ function AccountCenterField({
             isDropdownFullWidth
             value={isGlobalDisabled ? AccountCenterControlValue.Off : value}
             options={fieldOptions}
-            isReadOnly={isReadOnly}
+            isReadOnly={isGlobalDisabled}
             onChange={(value) => {
               onChange(item.key, value);
             }}
