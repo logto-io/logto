@@ -65,6 +65,7 @@ function AccountCenterField({
         </div>
         <div className={styles.fieldControl}>
           <Select<AccountCenterControlValue>
+            isDropdownFullWidth
             value={value}
             options={fieldOptions}
             isReadOnly={isReadOnly}
