@@ -19,6 +19,9 @@ create table roles (
 create index roles__id
   on roles (tenant_id, id);
 
+create index roles__type
+  on roles (tenant_id, type);
+
 create function public.check_role_type(role_id varchar(21), target_type role_type) returns boolean as
 $$ begin
   return (select type from public.roles where id = role_id) = target_type;

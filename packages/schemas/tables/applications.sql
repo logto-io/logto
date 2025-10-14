@@ -26,6 +26,9 @@ create index applications__id
 create index applications__is_third_party
   on applications (tenant_id, is_third_party);
 
+create index applications__type
+  on applications (tenant_id, type);
+
 create unique index applications__protected_app_metadata_host
   on applications (
     (protected_app_metadata->>'host')
