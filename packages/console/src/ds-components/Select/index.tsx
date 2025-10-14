@@ -31,6 +31,7 @@ type Props<T> = {
   readonly isClearable?: boolean;
   readonly size?: 'small' | 'medium' | 'large';
   readonly isSearchEnabled?: boolean;
+  readonly isDropdownFullWidth?: boolean;
 };
 
 function Select<T extends string>({
@@ -44,6 +45,7 @@ function Select<T extends string>({
   isClearable,
   size = 'large',
   isSearchEnabled,
+  isDropdownFullWidth = false,
 }: Props<T>) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isOpen, setIsOpen] = useState(false);
@@ -154,7 +156,7 @@ function Select<T extends string>({
         <div className={styles.errorMessage}>{error}</div>
       )}
       <Dropdown
-        isFullWidth
+        isFullWidth={isDropdownFullWidth}
         anchorRef={anchorRef}
         className={styles.dropdown}
         isOpen={isOpen}
