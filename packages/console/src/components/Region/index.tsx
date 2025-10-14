@@ -1,4 +1,6 @@
 import { type PublicRegionName, type Region as RegionType } from '@logto/cloud/routes';
+import { TenantTag } from '@logto/schemas';
+import { condArray } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useMemo, type FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -6,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import auFlag from './assets/au.svg?react';
 import euFlag from './assets/eu.svg?react';
 import jpFlag from './assets/jp.svg?react';
+import logtoFlag from './assets/logto.svg?react';
 import ukFlag from './assets/uk.svg?react';
 import usFlag from './assets/us.svg?react';
 import styles from './index.module.scss';
@@ -18,6 +21,7 @@ const regionDisplayNameMap: Readonly<Record<PublicRegionName, string> & Record<s
     US: 'West US',
     AU: 'Australia',
     JP: 'Japan',
+    UK: 'United Kingdom',
   });
 
 /**
@@ -34,6 +38,7 @@ const regionFlagMap: Readonly<Record<string, FunctionComponent<React.SVGProps<SV
     AU: auFlag,
     JP: jpFlag,
     UK: ukFlag,
+    LOGTO: logtoFlag,
   });
 
 type RegionFlagProps = {
@@ -76,6 +81,24 @@ export function StaticRegion({ isComingSoon = false, regionName, className }: St
     </span>
   );
 }
+
+type InstanceDropdownItemProps = Pick<RegionType, 'id' | 'name' | 'country' | 'tags'>;
+
+export const logtoDropdownItem: InstanceDropdownItemProps = {
+  id: 'logto',
+  name: 'Logto Cloud (Public)',
+  country: 'LOGTO',
+  tags: Object.values(TenantTag),
+};
+
+export const getInstanceDropdownItems = (regions: RegionType[]): InstanceDropdownItemProps[] => {
+  const hasPublicRegions = regions.some(({ isPrivate }) => !isPrivate);
+  const privateInstances = regions
+    .filter(({ isPrivate }) => isPrivate)
+    .map(({ id, name, country, tags }) => ({ id, name, country, tags }));
+
+  return condArray(hasPublicRegions && logtoDropdownItem, ...privateInstances);
+};
 
 type Props = {
   readonly region: RegionType;

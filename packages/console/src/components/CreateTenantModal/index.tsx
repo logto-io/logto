@@ -1,5 +1,5 @@
 import { Theme, TenantTag } from '@logto/schemas';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -9,7 +9,11 @@ import CreateTenantHeaderIconDark from '@/assets/icons/create-tenant-header-dark
 import CreateTenantHeaderIcon from '@/assets/icons/create-tenant-header.svg?react';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantResponse } from '@/cloud/types/router';
-import Region, { defaultRegionName } from '@/components/Region';
+import Region, {
+  defaultRegionName,
+  getInstanceDropdownItems,
+  logtoDropdownItem,
+} from '@/components/Region';
 import Button from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import FormField from '@/ds-components/FormField';
@@ -23,6 +27,7 @@ import modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 
 import EnvTagOptionContent from './EnvTagOptionContent';
+import InstanceSelector from './InstanceSelector';
 import SelectTenantPlanModal from './SelectTenantPlanModal';
 import styles from './index.module.scss';
 import { type CreateTenantData } from './types';
@@ -40,6 +45,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
 
   const defaultValues = Object.freeze({
     tag: TenantTag.Development,
+    instanceId: logtoDropdownItem.id,
     regionName: defaultRegionName,
   });
   const methods = useForm<CreateTenantData>({
@@ -55,10 +61,39 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
     watch,
   } = methods;
 
-  const regionName = watch('regionName');
-  const currentRegion = useMemo(() => getRegionById(regionName), [getRegionById, regionName]);
-  const createTenant = async ({ name, tag, regionName }: CreateTenantData) => {
-    const newTenant = await cloudApi.post('/api/tenants', { body: { name, tag, regionName } });
+  const [instanceId, regionName] = watch(['instanceId', 'regionName']);
+
+  const setTenantTagInForm = useCallback(
+    (tag: TenantTag) => {
+      reset({ ...watch(), tag });
+    },
+    [reset, watch]
+  );
+
+  const instanceOptions = useMemo(() => getInstanceDropdownItems(regions ?? []), [regions]);
+
+  const publicRegions = useMemo(
+    () => regions?.filter((region) => !region.isPrivate) ?? [],
+    [regions]
+  );
+
+  const isLogtoInstance = instanceId === logtoDropdownItem.id;
+
+  const currentRegion = useMemo(() => {
+    if (isLogtoInstance) {
+      return getRegionById(regionName);
+    }
+    // For private instances, find the region that matches the instance
+    return regions?.find((region) => region.id === instanceId);
+  }, [isLogtoInstance, regionName, instanceId, getRegionById, regions]);
+
+  const createTenant = async ({ name, tag, instanceId, regionName }: CreateTenantData) => {
+    // For Logto public instance, use the selected region
+    // For private instances, use the instance ID as the region
+    const finalRegionName = instanceId === logtoDropdownItem.id ? regionName : instanceId;
+    const newTenant = await cloudApi.post('/api/tenants', {
+      body: { name, tag, regionName: finalRegionName },
+    });
     onClose(newTenant);
   };
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -121,36 +156,6 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
             />
           </FormField>
 
-          <FormField
-            title="tenants.settings.tenant_region"
-            tip={t('tenants.settings.tenant_region_description')}
-          >
-            {!regions && !regionsError && <Ring />}
-            {regionsError && <span className={styles.error}>{regionsError.message}</span>}
-            {regions && !regionsError && (
-              <Controller
-                control={control}
-                name="regionName"
-                rules={{ required: true }}
-                render={({ field: { onChange, value, name } }) => (
-                  <RadioGroup type="plain" name={name} value={value} onChange={onChange}>
-                    {regions.map((region) => (
-                      <Radio
-                        key={region.id}
-                        title={
-                          <DangerousRaw>
-                            <Region region={region} />
-                          </DangerousRaw>
-                        }
-                        value={region.id}
-                        isDisabled={isSubmitting}
-                      />
-                    ))}
-                  </RadioGroup>
-                )}
-              />
-            )}
-          </FormField>
           {currentRegion && (
             <FormField title="tenants.create_modal.tenant_usage_purpose">
               <Controller
@@ -173,6 +178,63 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
                   </RadioGroup>
                 )}
               />
+            </FormField>
+          )}
+
+          <FormField
+            title="tenants.settings.tenant_instance"
+            tip={t('tenants.settings.tenant_instance_description')}
+          >
+            {!regions && !regionsError && <Ring />}
+            {regionsError && <span className={styles.error}>{regionsError.message}</span>}
+            {regions && !regionsError && (
+              <Controller
+                control={control}
+                name="instanceId"
+                rules={{ required: true }}
+                render={({ field: { onChange, value } }) => (
+                  <InstanceSelector
+                    instances={instanceOptions}
+                    value={value}
+                    isDisabled={isSubmitting}
+                    setTenantTagInForm={setTenantTagInForm}
+                    onChange={onChange}
+                  />
+                )}
+              />
+            )}
+          </FormField>
+
+          {isLogtoInstance && (
+            <FormField
+              title="tenants.settings.tenant_region"
+              tip={t('tenants.settings.tenant_region_description')}
+            >
+              {!regions && !regionsError && <Ring />}
+              {regionsError && <span className={styles.error}>{regionsError.message}</span>}
+              {regions && !regionsError && (
+                <Controller
+                  control={control}
+                  name="regionName"
+                  rules={{ required: true }}
+                  render={({ field: { onChange, value, name } }) => (
+                    <RadioGroup type="small" name={name} value={value} onChange={onChange}>
+                      {publicRegions.map((region) => (
+                        <Radio
+                          key={region.id}
+                          title={
+                            <DangerousRaw>
+                              <Region region={region} />
+                            </DangerousRaw>
+                          }
+                          value={region.id}
+                          isDisabled={isSubmitting}
+                        />
+                      ))}
+                    </RadioGroup>
+                  )}
+                />
+              )}
             </FormField>
           )}
         </FormProvider>
