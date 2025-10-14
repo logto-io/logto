@@ -132,10 +132,12 @@ const sign_in_exp = {
         description:
           'For social and enterprise connectors, secure store third-party access tokens to call their APIs (e.g., add events to Google Calendar).',
         third_party_token_storage: {
-          title: 'Third-party token storage',
+          title: 'Third-party token',
           third_party_access_token_retrieval: 'Third-party access token retrieval',
-          third_party_access_token_retrieval_tooltip:
-            "Once the Account API is enabled, third-party token retrieval is automatically activated. To store tokens, you can enable this in the corresponding social or enterprise connector's settings.",
+          third_party_token_tooltip:
+            "To store tokens, you can enable this in the corresponding social or enterprise connector's settings.",
+          third_party_token_description:
+            'Once the Account API is enabled, third-party token retrieval is automatically activated.',
         },
       },
     },

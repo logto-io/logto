@@ -1,12 +1,9 @@
 import { useTranslation } from 'react-i18next';
 
-import Tip from '@/assets/icons/tip.svg?react';
 import FormCard from '@/components/FormCard';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
-import IconButton from '@/ds-components/IconButton';
-import Select from '@/ds-components/Select';
-import { ToggleTip } from '@/ds-components/Tip';
+import Tag from '@/ds-components/Tag';
 
 import styles from './index.module.scss';
 
@@ -27,39 +24,34 @@ function SecretVaultSection({ isAccountApiEnabled }: Props) {
         <FormField
           title="sign_in_exp.account_center.sections.secret_vault.third_party_token_storage.title"
           headlineSpacing="large"
+          tip={t(
+            'sign_in_exp.account_center.sections.secret_vault.third_party_token_storage.third_party_token_tooltip'
+          )}
         >
           <div className={styles.groupFields}>
             <div className={styles.fieldRow}>
-              <div className={styles.fieldLabel}>
-                <div className={styles.fieldName}>
-                  <DynamicT forKey="sign_in_exp.account_center.sections.secret_vault.third_party_token_storage.third_party_access_token_retrieval" />
-                  <ToggleTip
-                    anchorClassName={styles.tipIcon}
-                    content={t(
-                      'sign_in_exp.account_center.sections.secret_vault.third_party_token_storage.third_party_access_token_retrieval_tooltip'
-                    )}
+              <div>
+                <div className={styles.statusLine}>
+                  <div className={styles.fieldName}>
+                    <DynamicT forKey="sign_in_exp.account_center.sections.secret_vault.third_party_token_storage.third_party_access_token_retrieval" />
+                  </div>
+                  <Tag
+                    type="state"
+                    status={isAccountApiEnabled ? 'success' : 'info'}
+                    variant="plain"
                   >
-                    <IconButton size="small">
-                      <Tip />
-                    </IconButton>
-                  </ToggleTip>
-                </div>
-              </div>
-              <div className={styles.fieldControl}>
-                <Select<string>
-                  isReadOnly
-                  value={isAccountApiEnabled ? 'enabled' : 'disabled'}
-                  options={[
-                    {
-                      value: isAccountApiEnabled ? 'enabled' : 'disabled',
-                      title: t(
+                    <DynamicT
+                      forKey={
                         isAccountApiEnabled
                           ? 'sign_in_exp.account_center.field_options.enabled'
                           : 'sign_in_exp.account_center.field_options.disabled'
-                      ),
-                    },
-                  ]}
-                />
+                      }
+                    />
+                  </Tag>
+                </div>
+                <div className={styles.description}>
+                  <DynamicT forKey="sign_in_exp.account_center.sections.secret_vault.third_party_token_storage.third_party_token_description" />
+                </div>
               </div>
             </div>
           </div>

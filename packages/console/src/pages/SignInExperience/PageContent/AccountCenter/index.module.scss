@@ -46,6 +46,14 @@
   justify-content: flex-end;
 }
 
+.statusLine {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: _.unit(6);
+  margin-bottom: _.unit(1);
+}
+
 .tipIcon {
   display: flex;
   align-items: center;
@@ -54,7 +62,6 @@
 .description {
   font: var(--font-body-2);
   color: var(--color-text-secondary);
-  margin-bottom: _.unit(1);
 }
 
 .notice {

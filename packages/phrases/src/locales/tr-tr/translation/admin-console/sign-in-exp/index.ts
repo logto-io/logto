@@ -132,10 +132,12 @@ const sign_in_exp = {
         description:
           "Sosyal ve kurumsal bağlayıcılar için, üçüncü taraf API'lerini çağırmak için üçüncü taraf erişim token'larını güvenli bir şekilde saklayın (örneğin, Google Takvim'e etkinlik ekleyin).",
         third_party_token_storage: {
-          title: 'Üçüncü taraf token depolama',
-          third_party_access_token_retrieval: "Üçüncü taraf erişim token'ı alma",
-          third_party_access_token_retrieval_tooltip:
-            "Account API etkinleştirildiğinde, üçüncü taraf token alma otomatik olarak etkinleştirilir. Token'ları depolamak için, bunu ilgili sosyal veya kurumsal bağlayıcının ayarlarında etkinleştirebilirsiniz.",
+          title: 'Üçüncü taraf token',
+          third_party_access_token_retrieval: 'Üçüncü taraf token',
+          third_party_token_tooltip:
+            "Token'ları depolamak için, bunu ilgili sosyal veya kurumsal bağlayıcının ayarlarında etkinleştirebilirsiniz.",
+          third_party_token_description:
+            'Account API etkinleştirildiğinde, üçüncü taraf token alma otomatik olarak etkinleştirilir.',
         },
       },
     },

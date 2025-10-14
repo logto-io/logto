@@ -132,10 +132,12 @@ const sign_in_exp = {
         description:
           'ソーシャルコネクタやエンタープライズコネクタ向けに、サードパーティのアクセストークンを安全に保存して、それらのAPI（例：Googleカレンダーにイベントを追加）を呼び出します。',
         third_party_token_storage: {
-          title: 'サードパーティトークンストレージ',
-          third_party_access_token_retrieval: 'サードパーティアクセストークン取得',
-          third_party_access_token_retrieval_tooltip:
-            'Account APIが有効になると、サードパーティトークンの取得が自動的に有効になります。トークンを保存するには、対応するソーシャルまたはエンタープライズコネクタの設定で有効にできます。',
+          title: 'サードパーティトークン',
+          third_party_access_token_retrieval: 'サードパーティトークン',
+          third_party_token_tooltip:
+            'トークンを保存するには、対応するソーシャルコネクタまたはエンタープライズコネクタの設定でこれを有効にすることができます。',
+          third_party_token_description:
+            'Account APIが有効になると、サードパーティトークンの取得が自動的に有効になります。',
         },
       },
     },
