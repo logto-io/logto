@@ -20,9 +20,10 @@ const noConnectorWarningPhrase = Object.freeze({
 
 type Props = {
   readonly requiredConnectors: ConnectorType[];
+  readonly customPhrases?: NoConnectorWarningPhrase;
 };
 
-function ConnectorSetupWarning({ requiredConnectors }: Props) {
+function ConnectorSetupWarning({ requiredConnectors, customPhrases }: Props) {
   const { isConnectorTypeEnabled } = useEnabledConnectorTypes();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -33,6 +34,8 @@ function ConnectorSetupWarning({ requiredConnectors }: Props) {
   if (missingConnectors.length === 0) {
     return null;
   }
+
+  const phrasesToUse = customPhrases ?? noConnectorWarningPhrase;
 
   return (
     <>
@@ -47,7 +50,7 @@ function ConnectorSetupWarning({ requiredConnectors }: Props) {
               ),
             }}
           >
-            {t(noConnectorWarningPhrase[connectorType], {
+            {t(phrasesToUse[connectorType], {
               link: t('sign_in_exp.setup_warning.setup_link'),
             })}
           </Trans>
