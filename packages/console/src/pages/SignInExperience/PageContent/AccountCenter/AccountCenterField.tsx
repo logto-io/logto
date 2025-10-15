@@ -71,7 +71,7 @@ function AccountCenterField({
         </div>
         <div className={styles.fieldControl}>
           <Select<AccountCenterControlValue>
-            isDropdownFullWidth
+            isDropdownFullWidth={false}
             value={isGlobalDisabled ? AccountCenterControlValue.Off : value}
             options={fieldOptions}
             isReadOnly={isGlobalDisabled}
