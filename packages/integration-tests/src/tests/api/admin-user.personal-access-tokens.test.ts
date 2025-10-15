@@ -3,9 +3,11 @@ import { HTTPError } from 'ky';
 import {
   createPersonalAccessToken,
   deletePersonalAccessToken,
+  deletePersonalAccessTokenByValue,
   deleteUser,
   getUserPersonalAccessTokens,
   updatePersonalAccessToken,
+  updatePersonalAccessTokenByValue,
 } from '#src/api/admin-user.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { randomString } from '#src/utils.js';
@@ -109,6 +111,72 @@ describe('personal access tokens', () => {
       name: newName,
     });
     expect(updatedPat).toEqual(expect.objectContaining({ userId: user.id, name: newName }));
+
+    await deleteUser(user.id);
+  });
+
+  it('should be able to create, get, and delete PATs using token value', async () => {
+    const user = await createUserByAdmin();
+    const name1 = randomString();
+    const name2 = randomString();
+    const pat1 = await createPersonalAccessToken({
+      userId: user.id,
+      name: name1,
+      expiresAt: Date.now() + 1000,
+    });
+    const pat2 = await createPersonalAccessToken({
+      userId: user.id,
+      name: name2,
+    });
+
+    expect(await getUserPersonalAccessTokens(user.id)).toEqual(
+      expect.arrayContaining([pat1, pat2])
+    );
+
+    await Promise.all([
+      deletePersonalAccessTokenByValue(user.id, pat1.value),
+      deletePersonalAccessTokenByValue(user.id, pat2.value),
+    ]);
+    expect(await getUserPersonalAccessTokens(user.id)).toEqual([]);
+
+    await deleteUser(user.id);
+  });
+
+  it('should be able to update PAT using token value', async () => {
+    const user = await createUserByAdmin();
+    const name = randomString();
+    const pat = await createPersonalAccessToken({
+      userId: user.id,
+      name,
+    });
+
+    const newName = randomString();
+    const updatedPat = await updatePersonalAccessTokenByValue(user.id, pat.value, {
+      name: newName,
+    });
+    expect(updatedPat).toEqual(expect.objectContaining({ userId: user.id, name: newName }));
+
+    await deleteUser(user.id);
+  });
+
+  it('should handle special characters in token name with value-based endpoints', async () => {
+    const user = await createUserByAdmin();
+    const nameWithSpecialChars = `token-with-special-chars-${randomString()}!@#$%`;
+    const pat = await createPersonalAccessToken({
+      userId: user.id,
+      name: nameWithSpecialChars,
+    });
+
+    expect(pat.name).toBe(nameWithSpecialChars);
+
+    const newName = `updated-${randomString()}`;
+    const updatedPat = await updatePersonalAccessTokenByValue(user.id, pat.value, {
+      name: newName,
+    });
+    expect(updatedPat.name).toBe(newName);
+
+    await deletePersonalAccessTokenByValue(user.id, pat.value);
+    expect(await getUserPersonalAccessTokens(user.id)).toEqual([]);
 
     await deleteUser(user.id);
   });

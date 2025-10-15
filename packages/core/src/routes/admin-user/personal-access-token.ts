@@ -60,6 +60,9 @@ export default function adminUserPersonalAccessTokenRoutes<T extends ManagementA
     }
   );
 
+  /**
+   * @deprecated Use `/users/:userId/personal-access-tokens/token/:value` instead.
+   */
   router.delete(
     '/users/:userId/personal-access-tokens/:name',
     koaGuard({
@@ -78,6 +81,9 @@ export default function adminUserPersonalAccessTokenRoutes<T extends ManagementA
     }
   );
 
+  /**
+   * @deprecated Use `/users/:userId/personal-access-tokens/token/:value` instead.
+   */
   router.patch(
     '/users/:userId/personal-access-tokens/:name',
     koaGuard({
@@ -93,6 +99,43 @@ export default function adminUserPersonalAccessTokenRoutes<T extends ManagementA
       } = ctx.guard;
 
       ctx.body = await queries.personalAccessTokens.updateName(userId, name, body.name);
+      return next();
+    }
+  );
+
+  router.delete(
+    '/users/:userId/personal-access-tokens/token/:value',
+    koaGuard({
+      params: z.object({ userId: z.string(), value: z.string() }),
+      status: [204, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId, value },
+      } = ctx.guard;
+
+      await queries.personalAccessTokens.deleteByValue(userId, value);
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  router.patch(
+    '/users/:userId/personal-access-tokens/token/:value',
+    koaGuard({
+      params: z.object({ userId: z.string(), value: z.string() }),
+      body: PersonalAccessTokens.updateGuard.pick({ name: true }).required(),
+      response: PersonalAccessTokens.guard,
+      status: [200, 400, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId, value },
+        body,
+      } = ctx.guard;
+
+      ctx.body = await queries.personalAccessTokens.updateNameByValue(userId, value, body.name);
       return next();
     }
   );
