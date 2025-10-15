@@ -45,7 +45,7 @@ function Select<T extends string>({
   isClearable,
   size = 'large',
   isSearchEnabled,
-  isDropdownFullWidth = false,
+  isDropdownFullWidth = true,
 }: Props<T>) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isOpen, setIsOpen] = useState(false);
