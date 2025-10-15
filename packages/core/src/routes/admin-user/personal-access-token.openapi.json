@@ -37,12 +37,38 @@
             "description": "The personal access token name is already in use."
           }
         }
+      },
+      "patch": {
+        "operationId": "UpdatePersonalAccessTokenName",
+        "summary": "Update personal access token",
+        "description": "Update a token for the user by name.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "currentName": {
+                    "description": "The current name of the token to update."
+                  },
+                  "name": {
+                    "description": "The new token name. Must be unique within the user."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The token was updated successfully."
+          }
+        }
       }
     },
     "/api/users/{userId}/personal-access-tokens/{name}": {
       "delete": {
         "summary": "Delete personal access token",
-        "description": "Delete a token for the user by name.",
+        "description": "Delete a token for the user by name using the legacy path parameter. Deprecated: use the POST /delete endpoint instead to avoid url name encoding issues.",
         "parameters": [
           {
             "name": "name",
@@ -58,12 +84,12 @@
       },
       "patch": {
         "summary": "Update personal access token",
-        "description": "Update a token for the user by name.",
+        "description": "Update a token for the user by name using the legacy path parameter. Deprecated: use the PATCH /personal-access-tokens endpoint instead to avoid url name encoding issues.",
         "parameters": [
           {
             "name": "name",
             "in": "path",
-            "description": "The name of the token."
+            "description": "The current name of the token."
           }
         ],
         "requestBody": {
@@ -72,7 +98,32 @@
               "schema": {
                 "properties": {
                   "name": {
-                    "description": "The token name to update. Must be unique within the user."
+                    "description": "The new token name. Must be unique within the user."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The token was updated successfully."
+          }
+        }
+      }
+    },
+    "/api/users/{userId}/personal-access-tokens/delete": {
+      "post": {
+        "operationId": "DeletePersonalAccessTokenPost",
+        "summary": "Delete personal access token",
+        "description": "Delete a token for the user by name.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "The name of the token to delete."
                   }
                 }
               }
@@ -81,7 +132,7 @@
         },
         "responses": {
           "204": {
-            "description": "The token was updated successfully."
+            "description": "The token was deleted successfully."
           }
         }
       }
