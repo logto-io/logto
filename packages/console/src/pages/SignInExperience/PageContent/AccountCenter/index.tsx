@@ -119,7 +119,9 @@ function AccountCenter({ isActive, data }: Props) {
                 </div>
               </FormField>
             ))}
-            {section.key === 'accountSecurity' && <WebauthnRelatedOriginsField />}
+            {section.key === 'accountSecurity' && (
+              <WebauthnRelatedOriginsField isAccountApiEnabled={isAccountApiEnabled} />
+            )}
           </div>
         </FormCard>
       ))}

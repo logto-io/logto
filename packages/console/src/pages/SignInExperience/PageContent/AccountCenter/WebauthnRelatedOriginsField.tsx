@@ -15,7 +15,11 @@ import type { SignInExperienceForm, AccountCenterFormValues } from '../../types'
 
 import styles from './index.module.scss';
 
-function WebauthnRelatedOriginsField() {
+type Props = {
+  readonly isAccountApiEnabled: boolean;
+};
+
+function WebauthnRelatedOriginsField({ isAccountApiEnabled }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { control } = useFormContext<
     SignInExperienceForm & { accountCenter: AccountCenterFormValues }
@@ -49,6 +53,7 @@ function WebauthnRelatedOriginsField() {
             value={value}
             error={convertRhfErrorMessage(error?.message)}
             placeholder="https://account.example.com"
+            isDisabled={!isAccountApiEnabled}
             onChange={onChange}
           />
         )}
