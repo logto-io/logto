@@ -3,9 +3,11 @@ import { HTTPError } from 'ky';
 import {
   createPersonalAccessToken,
   deletePersonalAccessToken,
+  deletePersonalAccessTokenLegacy,
   deleteUser,
   getUserPersonalAccessTokens,
   updatePersonalAccessToken,
+  updatePersonalAccessTokenLegacy,
 } from '#src/api/admin-user.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { randomString } from '#src/utils.js';
@@ -109,6 +111,41 @@ describe('personal access tokens', () => {
       name: newName,
     });
     expect(updatedPat).toEqual(expect.objectContaining({ userId: user.id, name: newName }));
+
+    await deleteUser(user.id);
+  });
+
+  it('should handle special characters in token name with body-based endpoints', async () => {
+    const user = await createUserByAdmin();
+    const nameWithSpecialChars = `token-with-special-chars-${randomString()}!@#$%`;
+    const pat = await createPersonalAccessToken({
+      userId: user.id,
+      name: nameWithSpecialChars,
+    });
+
+    expect(pat.name).toBe(nameWithSpecialChars);
+
+    const newName = `updated-${randomString()}`;
+    const updatedPat = await updatePersonalAccessToken(user.id, pat.name, { name: newName });
+    expect(updatedPat.name).toBe(newName);
+
+    await deletePersonalAccessToken(user.id, updatedPat.name);
+    expect(await getUserPersonalAccessTokens(user.id)).toEqual([]);
+
+    await deleteUser(user.id);
+  });
+
+  it('should support legacy path-based endpoints', async () => {
+    const user = await createUserByAdmin();
+    const name = randomString();
+    await createPersonalAccessToken({ userId: user.id, name });
+
+    const newName = randomString();
+    const updated = await updatePersonalAccessTokenLegacy(user.id, name, { name: newName });
+    expect(updated.name).toBe(newName);
+
+    await deletePersonalAccessTokenLegacy(user.id, newName);
+    expect(await getUserPersonalAccessTokens(user.id)).toEqual([]);
 
     await deleteUser(user.id);
   });

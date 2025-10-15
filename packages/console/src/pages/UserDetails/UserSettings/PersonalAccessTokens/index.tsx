@@ -69,9 +69,9 @@ function PersonalAccessTokens({ userId }: Props) {
             fieldName="user_details.personal_access_tokens.title_short"
             deleteConfirmation="user_details.personal_access_tokens.delete_confirmation"
             onDelete={async () => {
-              await api.delete(
-                `api/users/${userId}/personal-access-tokens/${encodeURIComponent(token.name)}`
-              );
+              await api.post(`api/users/${userId}/personal-access-tokens/delete`, {
+                json: { name: token.name },
+              });
               void mutate();
             }}
             onEdit={() => {
