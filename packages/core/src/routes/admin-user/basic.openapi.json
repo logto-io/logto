@@ -108,6 +108,45 @@
         "description": "Update custom data for the given user ID. This method performs a partial update of the custom data object."
       }
     },
+    "/api/users/{userId}/logto-configs": {
+      "get": {
+        "tags": ["Dev feature"],
+        "responses": {
+          "200": {
+            "description": "Returns the exposed user logto config fields. Currently, only the MFA skip state is available."
+          }
+        },
+        "summary": "Get user logto config",
+        "description": "Retrieve the exposed portion of a user's logto config. This endpoint currently includes only the MFA skip state."
+      },
+      "patch": {
+        "tags": ["Dev feature"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "mfa": {
+                    "properties": {
+                      "skipped": {
+                        "description": "Set whether the user is marked as having skipped MFA binding."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The exposed logto config fields were updated successfully."
+          }
+        },
+        "summary": "Update user logto config",
+        "description": "Update the exposed portion of a user's logto config. This endpoint currently allows updating only the MFA skip state."
+      }
+    },
     "/api/users/{userId}/profile": {
       "patch": {
         "requestBody": {

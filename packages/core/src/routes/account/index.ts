@@ -22,6 +22,7 @@ import type { UserRouter, RouterInitArgs } from '../types.js';
 import { accountApiPrefix } from './constants.js';
 import emailAndPhoneRoutes from './email-and-phone.js';
 import identitiesRoutes from './identities.js';
+import logtoConfigRoutes from './logto-config.js';
 import mfaVerificationsRoutes from './mfa-verifications.js';
 import koaAccountCenter from './middlewares/koa-account-center.js';
 import thirdPartyTokensRoutes from './third-party-tokens.js';
@@ -280,6 +281,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
     }
   );
 
+  logtoConfigRoutes(...args);
   thirdPartyTokensRoutes(...args);
   emailAndPhoneRoutes(...args);
   identitiesRoutes(...args);
