@@ -1,4 +1,4 @@
-import { isDevFeaturesEnabled, logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
+import { logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
 import { goToAdminConsole } from '#src/ui-helpers/index.js';
 import { expectNavigation, appendPathname, waitFor } from '#src/utils.js';
 
@@ -24,7 +24,7 @@ describe('sign-in experience: branding', () => {
     await expect(page).toMatchElement(
       'div[class$=main] div[class$=container] div[class$=cardTitle] div[class$=titleEllipsis]',
       {
-        text: isDevFeaturesEnabled ? 'Sign-in & account' : 'Sign-in experience',
+        text: 'Sign-in & account',
       }
     );
 

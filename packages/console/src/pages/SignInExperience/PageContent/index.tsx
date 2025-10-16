@@ -13,7 +13,6 @@ import { useParams } from 'react-router-dom';
 
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useApi from '@/hooks/use-api';
@@ -104,26 +103,22 @@ function PageContent({ data, onSignInExperienceUpdated, onAccountCenterUpdated }
         })
         .json<SignInExperience>();
 
-      if (isDevFeaturesEnabled) {
-        const updatedAccountCenter = await api
-          .patch('api/account-center', {
-            json: {
-              enabled: accountCenter.enabled,
-              // Disable all fields when account center is disabled
-              fields: accountCenter.enabled ? accountCenter.fields : {},
-              webauthnRelatedOrigins: accountCenter.webauthnRelatedOrigins,
-            },
-          })
-          .json<AccountCenterConfig>();
+      const updatedAccountCenter = await api
+        .patch('api/account-center', {
+          json: {
+            enabled: accountCenter.enabled,
+            // Disable all fields when account center is disabled
+            fields: accountCenter.enabled ? accountCenter.fields : {},
+            webauthnRelatedOrigins: accountCenter.webauthnRelatedOrigins,
+          },
+        })
+        .json<AccountCenterConfig>();
 
-        onAccountCenterUpdated(updatedAccountCenter);
-        reset({
-          ...sieFormDataParser.fromSignInExperience(updatedData),
-          accountCenter: convertAccountCenterToForm(updatedAccountCenter),
-        });
-      } else {
-        reset(sieFormDataParser.fromSignInExperience(updatedData));
-      }
+      onAccountCenterUpdated(updatedAccountCenter);
+      reset({
+        ...sieFormDataParser.fromSignInExperience(updatedData),
+        accountCenter: convertAccountCenterToForm(updatedAccountCenter),
+      });
 
       onSignInExperienceUpdated(updatedData);
       setDataToCompare(undefined);
@@ -216,11 +211,9 @@ function PageContent({ data, onSignInExperienceUpdated, onAccountCenterUpdated }
         <PageTab href="../collect-user-profile">
           {t('sign_in_exp.tabs.collect_user_profile')}
         </PageTab>
-        {isDevFeaturesEnabled && (
-          <PageTab href="../account-center" errorCount={getAccountCenterErrorCount(errors)}>
-            {t('sign_in_exp.tabs.account_center')}
-          </PageTab>
-        )}
+        <PageTab href="../account-center" errorCount={getAccountCenterErrorCount(errors)}>
+          {t('sign_in_exp.tabs.account_center')}
+        </PageTab>
         <PageTab href="../content" errorCount={getContentErrorCount(errors)}>
           {t('sign_in_exp.tabs.content')}
         </PageTab>
@@ -232,9 +225,7 @@ function PageContent({ data, onSignInExperienceUpdated, onAccountCenterUpdated }
               <Branding isActive={tab === SignInExperienceTab.Branding} />
               <SignUpAndSignIn isActive={tab === SignInExperienceTab.SignUpAndSignIn} data={data} />
               <CollectUserProfile isActive={tab === SignInExperienceTab.CollectUserProfile} />
-              {isDevFeaturesEnabled && (
-                <AccountCenter isActive={tab === SignInExperienceTab.AccountCenter} data={data} />
-              )}
+              <AccountCenter isActive={tab === SignInExperienceTab.AccountCenter} data={data} />
               <Content isActive={tab === SignInExperienceTab.Content} />
             </form>
           </FormProvider>

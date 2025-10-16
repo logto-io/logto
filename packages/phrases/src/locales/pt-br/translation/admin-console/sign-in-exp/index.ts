@@ -5,8 +5,7 @@ import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 const sign_in_exp = {
   page_title: 'Experiência de login',
   page_title_with_account: 'Login e conta',
-  title: 'Experiência de login',
-  title_with_account: 'Login e conta',
+  title: 'Login e conta',
   description:
     'Personalize os fluxos de autenticação e a interface do usuário, e visualize a experiência pronta para uso em tempo real.',
   tabs: {

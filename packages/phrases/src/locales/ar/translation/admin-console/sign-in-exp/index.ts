@@ -5,8 +5,7 @@ import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 const sign_in_exp = {
   page_title: 'تجربة تسجيل الدخول',
   page_title_with_account: 'تسجيل الدخول والحساب',
-  title: 'تجربة تسجيل الدخول',
-  title_with_account: 'تسجيل الدخول والحساب',
+  title: 'تسجيل الدخول والحساب',
   description: 'تخصيص تدفقات المصادقة وواجهة المستخدم، ومعاينة التجربة الافتراضية في الوقت الفعلي.',
   tabs: {
     branding: 'العلامة التجارية',

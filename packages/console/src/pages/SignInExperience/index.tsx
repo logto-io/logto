@@ -4,7 +4,7 @@ import useSWR from 'swr';
 
 import RequestDataError from '@/components/RequestDataError';
 import { authFlows } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import CardTitle from '@/ds-components/CardTitle';
 import type { RequestError } from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
@@ -27,7 +27,7 @@ function PageWrapper({ children }: PageWrapperProps) {
       <div className={styles.container}>
         <CardTitle
           className={styles.cardTitle}
-          title={isDevFeaturesEnabled ? 'sign_in_exp.title_with_account' : 'sign_in_exp.title'}
+          title="sign_in_exp.title"
           subtitle="sign_in_exp.description"
           learnMoreLink={{ href: authFlows }}
         />

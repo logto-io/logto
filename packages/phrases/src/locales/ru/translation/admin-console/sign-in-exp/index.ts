@@ -5,8 +5,7 @@ import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 const sign_in_exp = {
   page_title: 'Опыт входа в систему',
   page_title_with_account: 'Вход и аккаунт',
-  title: 'Опыт входа в систему',
-  title_with_account: 'Вход и аккаунт',
+  title: 'Вход и аккаунт',
   description:
     'Настройте потоки аутентификации и пользовательский интерфейс, и просматривайте готовый опыт в реальном времени.',
   tabs: {

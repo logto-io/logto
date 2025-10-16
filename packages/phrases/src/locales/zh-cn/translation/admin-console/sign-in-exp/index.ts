@@ -5,8 +5,7 @@ import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 const sign_in_exp = {
   page_title: '登录体验',
   page_title_with_account: '登录与账户',
-  title: '登录体验',
-  title_with_account: '登录与账户',
+  title: '登录与账户',
   description: '自定义身份验证流程和用户界面，并实时预览开箱即用的体验。',
   tabs: {
     branding: '品牌',
