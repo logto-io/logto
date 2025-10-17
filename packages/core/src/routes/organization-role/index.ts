@@ -130,7 +130,9 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
         });
       }
 
-      captureEvent({ tenantId, request: ctx.req }, ProductEvent.OrganizationRoleCreated);
+      captureEvent({ tenantId, request: ctx.req }, ProductEvent.OrganizationRoleCreated, {
+        type: data.type,
+      });
       return next();
     }
   );
