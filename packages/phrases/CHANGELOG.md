@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.22.0
+
+### Minor Changes
+
+- 47dbdd8332: add account center config page
+
+  You can now configure the account center in the Logto Console.
+
 ## 1.21.0
 
 ### Minor Changes
