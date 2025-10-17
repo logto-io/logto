@@ -174,6 +174,59 @@
         }
       }
     },
+    "/api/my-account/logto-configs": {
+      "get": {
+        "tags": ["Dev feature"],
+        "operationId": "GetLogtoConfig",
+        "summary": "Get logto config",
+        "description": "Retrieve the exposed portion of the current user's logto config. This endpoint currently includes only the MFA skip state.",
+        "responses": {
+          "200": {
+            "description": "The exposed logto config fields were retrieved successfully."
+          },
+          "400": {
+            "description": "MFA is not available in the account center."
+          },
+          "401": {
+            "description": "Permission denied due to insufficient scope."
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Dev feature"],
+        "operationId": "UpdateLogtoConfig",
+        "summary": "Update logto config",
+        "description": "Update the exposed portion of the current user's logto config. This endpoint currently allows updating only the MFA skip state.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "mfa": {
+                    "properties": {
+                      "skipped": {
+                        "description": "Set whether the user is marked as having skipped MFA binding."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The exposed logto_config fields were updated successfully."
+          },
+          "400": {
+            "description": "The request body is invalid."
+          },
+          "401": {
+            "description": "Permission denied due to insufficient scope."
+          }
+        }
+      }
+    },
     "/api/my-account/primary-email": {
       "post": {
         "operationId": "UpdatePrimaryEmail",

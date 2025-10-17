@@ -2,7 +2,12 @@ import { UserScope } from '@logto/core-kit';
 import { AccountCenterControlValue } from '@logto/schemas';
 
 import { enableAllAccountCenterFields, updateAccountCenter } from '#src/api/account-center.js';
-import { getMfaSettings, updateMfaSettings } from '#src/api/my-account.js';
+import {
+  getMfaSettings,
+  getMyLogtoConfig,
+  updateMfaSettings,
+  updateMyLogtoConfig,
+} from '#src/api/my-account.js';
 import { createVerificationRecordByPassword } from '#src/api/verification-record.js';
 import { expectRejects } from '#src/helpers/index.js';
 import {
@@ -11,6 +16,7 @@ import {
   signInAndGetUserApi,
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
+import { devFeatureTest } from '#src/utils.js';
 
 describe('my-account (mfa-settings)', () => {
   beforeAll(async () => {
@@ -185,6 +191,83 @@ describe('my-account (mfa-settings)', () => {
 
       await deleteDefaultTenantUser(user.id);
       await enableAllAccountCenterFields(); // Reset for other tests
+    });
+  });
+
+  devFeatureTest.describe('PATCH /api/my-account/logto-configs', () => {
+    it('should update MFA skip state successfully', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+
+      const response = await updateMyLogtoConfig(api, { mfa: { skipped: true } });
+      expect(response).toEqual({ mfa: { skipped: true } });
+
+      const updatedConfig = await getMyLogtoConfig(api);
+      expect(updatedConfig.mfa.skipped).toBe(true);
+
+      const response2 = await updateMyLogtoConfig(api, { mfa: { skipped: false } });
+      expect(response2).toEqual({ mfa: { skipped: false } });
+
+      const updatedConfig2 = await getMyLogtoConfig(api);
+      expect(updatedConfig2.mfa.skipped).toBe(false);
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should throw error if user does not have Identities scope', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile],
+      });
+
+      await expectRejects(updateMyLogtoConfig(api, { mfa: { skipped: true } }), {
+        code: 'auth.unauthorized',
+        status: 401,
+      });
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should throw error if MFA field is not editable', async () => {
+      await updateAccountCenter({
+        enabled: true,
+        fields: { mfa: AccountCenterControlValue.ReadOnly },
+      });
+
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+
+      await expectRejects(updateMyLogtoConfig(api, { mfa: { skipped: true } }), {
+        code: 'account_center.field_not_editable',
+        status: 400,
+      });
+
+      await deleteDefaultTenantUser(user.id);
+      await enableAllAccountCenterFields();
+    });
+
+    it('should throw error if MFA field is disabled', async () => {
+      await updateAccountCenter({
+        enabled: true,
+        fields: { mfa: AccountCenterControlValue.Off },
+      });
+
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+
+      await expectRejects(updateMyLogtoConfig(api, { mfa: { skipped: true } }), {
+        code: 'account_center.field_not_editable',
+        status: 400,
+      });
+
+      await deleteDefaultTenantUser(user.id);
+      await enableAllAccountCenterFields();
     });
   });
 });
