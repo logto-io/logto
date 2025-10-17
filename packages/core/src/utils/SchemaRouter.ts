@@ -91,6 +91,8 @@ type SchemaRouterConfig<Key extends string> = {
   };
   /** Lifecycle hooks for certain actions. */
   hooks?: {
+    /** Triggered after an entity is inserted. */
+    afterInsert?: (ctx: Context) => void;
     /** Triggered after an entity is deleted. */
     afterDelete?: (ctx: Context) => void;
   };
@@ -397,6 +399,7 @@ export default class SchemaRouter<
             id: generateStandardId(idLength),
             ...ctx.guard.body,
           } as CreateSchema);
+          this.config.hooks?.afterInsert?.(ctx);
           ctx.status = 201;
           return next();
         }

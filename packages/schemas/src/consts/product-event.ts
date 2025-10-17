@@ -53,6 +53,8 @@ export enum ProductEvent {
   RoleDeleted = 'role deleted',
   ApiResourceCreated = 'api resource created',
   ApiResourceDeleted = 'api resource deleted',
+  OrganizationCreated = 'organization created',
+  OrganizationDeleted = 'organization deleted',
   OrganizationRoleCreated = 'organization role created',
   OrganizationRoleDeleted = 'organization role deleted',
   SsoConnectorCreated = 'sso connector created',
