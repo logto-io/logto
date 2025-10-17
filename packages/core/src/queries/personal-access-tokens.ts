@@ -34,6 +34,14 @@ export class PersonalAccessTokensQueries {
     });
   }
 
+  async updateNameByValue(userId: string, value: string, newName: string) {
+    return this.update({
+      where: { userId, value },
+      set: { name: newName },
+      jsonbMode: 'replace',
+    });
+  }
+
   async getTokensByUserId(userId: string) {
     return this.pool.any<PersonalAccessToken>(sql`
       select ${sql.join(Object.values(fields), sql`, `)}
@@ -50,6 +58,17 @@ export class PersonalAccessTokensQueries {
     `);
     if (rowCount < 1) {
       throw new DeletionError(PersonalAccessTokens.table, name);
+    }
+  }
+
+  async deleteByValue(userId: string, value: string) {
+    const { rowCount } = await this.pool.query(sql`
+      delete from ${table}
+        where ${fields.userId} = ${userId}
+        and ${fields.value} = ${value}
+    `);
+    if (rowCount < 1) {
+      throw new DeletionError(PersonalAccessTokens.table, value);
     }
   }
 }

@@ -168,6 +168,20 @@ export const updatePersonalAccessToken = async (
     })
     .json<PersonalAccessToken>();
 
+export const deletePersonalAccessTokenByValue = async (userId: string, value: string) =>
+  authedAdminApi.delete(`users/${userId}/personal-access-tokens/token/${value}`);
+
+export const updatePersonalAccessTokenByValue = async (
+  userId: string,
+  value: string,
+  body: Record<string, unknown>
+) =>
+  authedAdminApi
+    .patch(`users/${userId}/personal-access-tokens/token/${value}`, {
+      json: body,
+    })
+    .json<PersonalAccessToken>();
+
 export const getUserIdentity = async (
   userId: string,
   target: string,
