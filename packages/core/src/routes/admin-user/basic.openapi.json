@@ -110,7 +110,6 @@
     },
     "/api/users/{userId}/logto-configs": {
       "get": {
-        "tags": ["Dev feature"],
         "responses": {
           "200": {
             "description": "Returns the exposed user logto config fields. Currently, only the MFA skip state is available."
@@ -120,7 +119,6 @@
         "description": "Retrieve the exposed portion of a user's logto config. This endpoint currently includes only the MFA skip state."
       },
       "patch": {
-        "tags": ["Dev feature"],
         "requestBody": {
           "content": {
             "application/json": {

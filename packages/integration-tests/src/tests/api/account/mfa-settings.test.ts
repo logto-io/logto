@@ -16,7 +16,6 @@ import {
   signInAndGetUserApi,
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest } from '#src/utils.js';
 
 describe('my-account (mfa-settings)', () => {
   beforeAll(async () => {
@@ -194,7 +193,7 @@ describe('my-account (mfa-settings)', () => {
     });
   });
 
-  devFeatureTest.describe('PATCH /api/my-account/logto-configs', () => {
+  describe('PATCH /api/my-account/logto-configs', () => {
     it('should update MFA skip state successfully', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password, {

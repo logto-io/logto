@@ -176,7 +176,6 @@
     },
     "/api/my-account/logto-configs": {
       "get": {
-        "tags": ["Dev feature"],
         "operationId": "GetLogtoConfig",
         "summary": "Get logto config",
         "description": "Retrieve the exposed portion of the current user's logto config. This endpoint currently includes only the MFA skip state.",
@@ -193,7 +192,6 @@
         }
       },
       "patch": {
-        "tags": ["Dev feature"],
         "operationId": "UpdateLogtoConfig",
         "summary": "Update logto config",
         "description": "Update the exposed portion of the current user's logto config. This endpoint currently allows updating only the MFA skip state.",

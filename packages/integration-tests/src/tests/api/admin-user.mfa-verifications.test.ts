@@ -9,7 +9,6 @@ import {
   updateUserLogtoConfig,
 } from '#src/api/index.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
-import { devFeatureTest } from '#src/utils.js';
 
 describe('admin console user management (mfa verifications)', () => {
   it('should get empty list successfully', async () => {
@@ -58,7 +57,7 @@ describe('admin console user management (mfa verifications)', () => {
     await deleteUser(user.id);
   });
 
-  devFeatureTest.it('should update logto_config MFA skip state successfully', async () => {
+  it('should update logto_config MFA skip state successfully', async () => {
     const user = await createUserByAdmin();
 
     const config = await getUserLogtoConfig(user.id);

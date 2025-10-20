@@ -4,7 +4,6 @@ import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 
-import { EnvSet } from '../../env-set/index.js';
 import RequestError from '../../errors/RequestError/index.js';
 import assertThat from '../../utils/assert-that.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
@@ -12,10 +11,6 @@ import type { UserRouter, RouterInitArgs } from '../types.js';
 import { accountApiPrefix } from './constants.js';
 
 export default function logtoConfigRoutes<T extends UserRouter>(...args: RouterInitArgs<T>) {
-  if (!EnvSet.values.isDevFeaturesEnabled) {
-    return;
-  }
-
   const [router, { queries }] = args;
   const {
     users: { updateUserById, findUserById },
