@@ -23,11 +23,7 @@ export const convertMfaConfigToForm = ({
   organizationRequiredMfaPolicy,
 });
 
-export const convertMfaFormToConfig = (
-  mfaConfigForm: MfaConfigForm,
-  // Should only manage the organization-required MFA policy for the admin tenant
-  includeOrganizationRequiredMfaPolicy = false
-): MfaConfig => {
+export const convertMfaFormToConfig = (mfaConfigForm: MfaConfigForm): MfaConfig => {
   const {
     isMandatory,
     setUpPrompt,
@@ -51,10 +47,7 @@ export const convertMfaFormToConfig = (
   return {
     policy: isMandatory ? MfaPolicy.Mandatory : setUpPrompt,
     factors,
-    ...conditional(
-      includeOrganizationRequiredMfaPolicy &&
-        organizationRequiredMfaPolicy && { organizationRequiredMfaPolicy }
-    ),
+    ...conditional(organizationRequiredMfaPolicy && { organizationRequiredMfaPolicy }),
   };
 };
 

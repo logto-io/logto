@@ -1,6 +1,5 @@
 /* eslint-disable max-lines */
 import {
-  adminTenantId,
   ConnectorType,
   MfaFactor,
   MfaPolicy,
@@ -19,7 +18,7 @@ import FormCard from '@/components/FormCard';
 import InlineUpsell from '@/components/InlineUpsell';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { mfa } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
@@ -155,15 +154,9 @@ function MfaForm({ data, signInMethods, onMfaUpdated }: Props) {
     [t]
   );
 
-  // Only show the organization MFA policy config for the admin tenant
-  const showOrganizationMfaPolicyConfig = useMemo(
-    () => isDevFeaturesEnabled || (isCloud && currentTenantId === adminTenantId),
-    [currentTenantId]
-  );
-
   const onSubmit = handleSubmit(
     trySubmitSafe(async (formData) => {
-      const mfaConfig = convertMfaFormToConfig(formData, showOrganizationMfaPolicyConfig);
+      const mfaConfig = convertMfaFormToConfig(formData);
       if (!validateBackupCodeFactor(mfaConfig.factors)) {
         return;
       }
@@ -317,7 +310,7 @@ function MfaForm({ data, signInMethods, onMfaUpdated }: Props) {
               />
             </FormField>
           )}
-          {!formValues.isMandatory && showOrganizationMfaPolicyConfig && (
+          {!formValues.isMandatory && (
             <FormField title="mfa.set_up_organization_required_mfa_prompt" headlineSpacing="large">
               <Controller
                 control={control}
