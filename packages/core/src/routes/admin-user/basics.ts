@@ -19,7 +19,6 @@ import { encryptUserPassword } from '#src/libraries/user.utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { EnvSet } from '../../env-set/index.js';
 import { parseLegacyPassword } from '../../utils/password.js';
 import { captureDeveloperEvent } from '../../utils/posthog.js';
 import { transpileUserProfileResponse } from '../../utils/user.js';
@@ -121,83 +120,81 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
     }
   );
 
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    router.get(
-      '/users/:userId/logto-configs',
-      koaGuard({
-        params: object({ userId: string() }),
-        response: object({
-          mfa: object({
-            skipped: boolean(),
-          }),
+  router.get(
+    '/users/:userId/logto-configs',
+    koaGuard({
+      params: object({ userId: string() }),
+      response: object({
+        mfa: object({
+          skipped: boolean(),
         }),
-        status: [200, 404],
       }),
-      async (ctx, next) => {
-        const {
-          params: { userId },
-        } = ctx.guard;
+      status: [200, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId },
+      } = ctx.guard;
 
-        const user = await findUserById(userId);
-        const existingMfaData = userMfaDataGuard.safeParse(user.logtoConfig[userMfaDataKey]);
+      const user = await findUserById(userId);
+      const existingMfaData = userMfaDataGuard.safeParse(user.logtoConfig[userMfaDataKey]);
 
-        ctx.body = {
-          mfa: {
-            skipped: existingMfaData.success ? Boolean(existingMfaData.data.skipped) : false,
-          },
-        };
+      ctx.body = {
+        mfa: {
+          skipped: existingMfaData.success ? Boolean(existingMfaData.data.skipped) : false,
+        },
+      };
 
-        return next();
-      }
-    );
+      return next();
+    }
+  );
 
-    router.patch(
-      '/users/:userId/logto-configs',
-      koaGuard({
-        params: object({ userId: string() }),
-        body: object({
-          mfa: object({
-            skipped: boolean(),
-          }),
+  router.patch(
+    '/users/:userId/logto-configs',
+    koaGuard({
+      params: object({ userId: string() }),
+      body: object({
+        mfa: object({
+          skipped: boolean(),
         }),
-        response: object({
-          mfa: object({
-            skipped: boolean(),
-          }),
-        }),
-        status: [200, 404],
       }),
-      async (ctx, next) => {
-        const {
-          params: { userId },
-          body: {
-            mfa: { skipped },
-          },
-        } = ctx.guard;
-
-        const user = await findUserById(userId);
-        const existingMfaData = userMfaDataGuard.safeParse(user.logtoConfig[userMfaDataKey]);
-
-        const updatedUser = await updateUserById(userId, {
-          logtoConfig: {
-            ...user.logtoConfig,
-            [userMfaDataKey]: {
-              ...(existingMfaData.success ? existingMfaData.data : {}),
-              skipped,
-            },
-          },
-        });
-
-        ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
-
-        ctx.body = {
+      response: object({
+        mfa: object({
+          skipped: boolean(),
+        }),
+      }),
+      status: [200, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId },
+        body: {
           mfa: { skipped },
-        };
+        },
+      } = ctx.guard;
 
-        return next();
-      }
-    );
-  }
+      const user = await findUserById(userId);
+      const existingMfaData = userMfaDataGuard.safeParse(user.logtoConfig[userMfaDataKey]);
+
+      const updatedUser = await updateUserById(userId, {
+        logtoConfig: {
+          ...user.logtoConfig,
+          [userMfaDataKey]: {
+            ...(existingMfaData.success ? existingMfaData.data : {}),
+            skipped,
+          },
+        },
+      });
+
+      ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
+
+      ctx.body = {
+        mfa: { skipped },
+      };
+
+      return next();
+    }
+  );
 
   router.patch(
     '/users/:userId/profile',
