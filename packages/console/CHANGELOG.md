@@ -1,5 +1,14 @@
 # Change Log
 
+## 1.30.0
+
+### Minor Changes
+
+- 7a32a89911: keep the “Third-party applications” tab permanently visible on the Applications page
+- 47dbdd8332: add account center config page
+
+  You can now configure the account center in the Logto Console.
+
 ## 1.29.0
 
 ### Minor Changes
