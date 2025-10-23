@@ -10,8 +10,10 @@ import Dropdown, { DropdownItem } from '@/ds-components/Dropdown';
 import styles from './index.module.scss';
 
 type InstanceOption = {
+  /** @deprecated Use `name` instead. */
   id: string;
   name: string;
+  displayName: string;
   country: string;
   tags: TenantTag[];
 };
@@ -37,7 +39,7 @@ function InstanceSelector({
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const selectedInstance = useMemo(
-    () => instances.find((instance) => instance.id === value),
+    () => instances.find((instance) => instance.name === value),
     [instances, value]
   );
 
@@ -58,7 +60,7 @@ function InstanceSelector({
       >
         <div className={styles.selectedContent}>
           <RegionFlag regionName={selectedInstance.country} width={20} />
-          <span className={styles.instanceName}>{selectedInstance.name}</span>
+          <span className={styles.instanceName}>{selectedInstance.displayName}</span>
         </div>
         <CaretDown className={styles.icon} />
       </button>
@@ -73,9 +75,9 @@ function InstanceSelector({
       >
         {instances.map((instance) => (
           <DropdownItem
-            key={instance.id}
+            key={instance.name}
             onClick={() => {
-              onChange(instance.id);
+              onChange(instance.name);
               setIsOpen(false);
               if (instance.tags[0]) {
                 setTenantTagInForm(instance.tags[0]);
@@ -84,11 +86,11 @@ function InstanceSelector({
           >
             <div className={styles.instanceOption}>
               <Tick
-                className={classNames(styles.checkIcon, instance.id === value && styles.visible)}
+                className={classNames(styles.checkIcon, instance.name === value && styles.visible)}
               />
               <RegionFlag regionName={instance.country} width={20} />
-              <span className={classNames(instance.id === value && styles.selectedName)}>
-                {instance.name}
+              <span className={classNames(instance.name === value && styles.selectedName)}>
+                {instance.displayName}
               </span>
             </div>
           </DropdownItem>

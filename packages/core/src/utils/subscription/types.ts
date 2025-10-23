@@ -110,6 +110,9 @@ const logtoSkuQuotaGuard = z.object({
   securityFeaturesEnabled: z.boolean(),
 }) satisfies ToZodObject<SubscriptionQuota>;
 
+// FIXME: @yijun update this guard to the new system limit guard, temporarily reuse the old Logto SKU quota guard as placeholder to avoid build failure.
+const systemLimitGuard = logtoSkuQuotaGuard;
+
 /**
  * Redis cache guard for the subscription data returned from the Cloud API `/api/tenants/my/subscription`.
  * Logto core does not have access to the zod guard of the subscription data in Cloud,
@@ -125,4 +128,5 @@ export const subscriptionCacheGuard = z.object({
   status: subscriptionStatusGuard,
   upcomingInvoice: upcomingInvoiceGuard.nullable().optional(),
   quota: logtoSkuQuotaGuard,
+  systemLimit: systemLimitGuard.optional(),
 }) satisfies ToZodObject<Subscription>;

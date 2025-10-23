@@ -48,7 +48,7 @@ const getInstanceDropdownItems = (regions: RegionType[]): InstanceDropdownItemPr
   const hasPublicRegions = regions.some(({ isPrivate }) => !isPrivate);
   const privateInstances = regions
     .filter(({ isPrivate }) => isPrivate)
-    .map(({ id, name, country, tags }) => ({ id, name, country, tags }));
+    .map(({ id, name, country, tags, displayName }) => ({ id, name, country, tags, displayName }));
 
   return condArray(hasPublicRegions && logtoDropdownItem, ...privateInstances);
 };
