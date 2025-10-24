@@ -24,6 +24,7 @@ export const createDefaultSignInExperience = (
       logoUrl: isCloud ? undefined : 'https://logto.io/logo.svg',
       darkLogoUrl: isCloud ? undefined : 'https://logto.io/logo-dark.svg',
     },
+    hideLogtoBranding: false,
     languageInfo: {
       autoDetect: true,
       fallbackLanguage: 'en' as const,
