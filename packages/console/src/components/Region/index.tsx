@@ -82,10 +82,7 @@ export function StaticRegion({ isComingSoon = false, regionName, className }: St
   );
 }
 
-type InstanceDropdownItemProps = Pick<
-  RegionType,
-  'name' | 'country' | 'tags' | 'displayName'
->;
+type InstanceDropdownItemProps = Pick<RegionType, 'name' | 'country' | 'tags' | 'displayName'>;
 
 export const logtoDropdownItem: InstanceDropdownItemProps = {
   name: 'logto',
