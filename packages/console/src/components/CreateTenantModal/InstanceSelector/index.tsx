@@ -10,8 +10,6 @@ import Dropdown, { DropdownItem } from '@/ds-components/Dropdown';
 import styles from './index.module.scss';
 
 type InstanceOption = {
-  /** @deprecated Use `name` instead. */
-  id: string;
   name: string;
   displayName: string;
   country: string;
