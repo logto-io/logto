@@ -5,6 +5,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import LogoAndFavicon from '@/components/ImageInputs/LogoAndFavicon';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import ColorPicker from '@/ds-components/ColorPicker';
@@ -48,6 +49,8 @@ function BrandingForm() {
       handleResetColor();
     }
   }, [handleResetColor, isDarkModeEnabled, isDirty]);
+
+  const showHideLogtoBranding = isCloud && isDevFeaturesEnabled;
 
   return (
     <Card>
@@ -112,6 +115,14 @@ function BrandingForm() {
             }}
           />
         </>
+      )}
+      {showHideLogtoBranding && (
+        <FormField title="sign_in_exp.branding.hide_logto_branding">
+          <Switch
+            label={t('sign_in_exp.branding.hide_logto_branding_description')}
+            {...register('hideLogtoBranding')}
+          />
+        </FormField>
       )}
     </Card>
   );

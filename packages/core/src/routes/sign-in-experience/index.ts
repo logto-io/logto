@@ -10,6 +10,7 @@ import {
 import { conditional, type Optional, tryThat } from '@silverhand/essentials';
 import { literal, object, string, z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import {
   validateSignUp,
   validateSignIn,
@@ -90,7 +91,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const {
         query: { removeUnusedDemoSocialConnector },
-        body: { socialSignInConnectorTargets, emailBlocklistPolicy, ...rest },
+        body: { socialSignInConnectorTargets, emailBlocklistPolicy, hideLogtoBranding, ...rest },
       } = ctx.guard;
       const {
         languageInfo,
@@ -189,6 +190,11 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
 
       const payload = {
         ...rest,
+        ...conditional(
+          EnvSet.values.isCloud &&
+            EnvSet.values.isDevFeaturesEnabled &&
+            hideLogtoBranding !== undefined && { hideLogtoBranding }
+        ),
         ...conditional(
           filteredSocialSignInConnectorTargets && {
             socialSignInConnectorTargets: filteredSocialSignInConnectorTargets,
