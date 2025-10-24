@@ -11,6 +11,10 @@ type RouteResponseType<T extends { search?: unknown; body?: unknown; response?: 
 type RouteRequestBodyType<T extends { search?: unknown; body?: ZodType; response?: unknown }> =
   z.infer<NonNullable<T['body']>>;
 
+type OmitBooleanValueKeys<T> = Omit<
+  T,
+  { [K in keyof T]: T[K] extends boolean ? K : never }[keyof T]
+>;
 /**
  * The subscription data is fetched from the Cloud API.
  * All the dates are in ISO 8601 format, we need to manually fix the type to string here.
@@ -111,7 +115,44 @@ const logtoSkuQuotaGuard = z.object({
 }) satisfies ToZodObject<SubscriptionQuota>;
 
 // FIXME: @yijun update this guard to the new system limit guard, temporarily reuse the old Logto SKU quota guard as placeholder to avoid build failure.
-const systemLimitGuard = logtoSkuQuotaGuard;
+const systemLimitGuard = (
+  logtoSkuQuotaGuard
+    .extend({
+      usersPerOrganizationLimit: z.number().nullable(),
+      organizationUserRolesLimit: z.number().nullable(),
+      organizationMachineToMachineRolesLimit: z.number().nullable(),
+      organizationScopesLimit: z.number().nullable(),
+    })
+    .omit({
+      /**
+       * MAU and token limits are not enforced as system limits.
+       * Usage will be monitored and reported through a separate metering mechanism.
+       */
+      mauLimit: true,
+      tokenLimit: true,
+      auditLogsRetentionDays: true,
+      customJwtEnabled: true,
+      subjectTokenEnabled: true,
+      bringYourUiEnabled: true,
+      collectUserProfileEnabled: true,
+      mfaEnabled: true,
+      organizationsEnabled: true,
+      securityFeaturesEnabled: true,
+      idpInitiatedSsoEnabled: true,
+    }) satisfies ToZodObject<
+    Omit<
+      OmitBooleanValueKeys<z.infer<typeof logtoSkuQuotaGuard>>,
+      'mauLimit' | 'tokenLimit' | 'auditLogsRetentionDays'
+    > & {
+      /* eslint-disable @typescript-eslint/ban-types */
+      usersPerOrganizationLimit: number | null;
+      organizationUserRolesLimit: number | null;
+      organizationMachineToMachineRolesLimit: number | null;
+      organizationScopesLimit: number | null;
+      /* eslint-enable @typescript-eslint/ban-types */
+    }
+  >
+).partial();
 
 /**
  * Redis cache guard for the subscription data returned from the Cloud API `/api/tenants/my/subscription`.
