@@ -1,4 +1,4 @@
-import { type PublicRegionName, type Region as RegionType } from '@logto/cloud/routes';
+import { type PublicRegionName, type RegionResponse as RegionType } from '@logto/cloud/routes';
 import { TenantTag } from '@logto/schemas';
 import { condArray } from '@silverhand/essentials';
 import classNames from 'classnames';
@@ -82,11 +82,11 @@ export function StaticRegion({ isComingSoon = false, regionName, className }: St
   );
 }
 
-type InstanceDropdownItemProps = Pick<RegionType, 'id' | 'name' | 'country' | 'tags'>;
+type InstanceDropdownItemProps = Pick<RegionType, 'name' | 'country' | 'tags' | 'displayName'>;
 
 export const logtoDropdownItem: InstanceDropdownItemProps = {
-  id: 'logto',
-  name: 'Logto Cloud (Public)',
+  name: 'logto',
+  displayName: 'Logto Cloud (Public)',
   country: 'LOGTO',
   tags: Object.values(TenantTag),
 };
@@ -95,7 +95,7 @@ export const getInstanceDropdownItems = (regions: RegionType[]): InstanceDropdow
   const hasPublicRegions = regions.some(({ isPrivate }) => !isPrivate);
   const privateInstances = regions
     .filter(({ isPrivate }) => isPrivate)
-    .map(({ id, name, country, tags }) => ({ id, name, country, tags }));
+    .map(({ id, name, country, tags, displayName }) => ({ id, name, country, tags, displayName }));
 
   return condArray(hasPublicRegions && logtoDropdownItem, ...privateInstances);
 };
@@ -108,8 +108,8 @@ type Props = {
 function Region({ region, className }: Props) {
   return (
     <span className={classNames(styles.wrapper, className)}>
-      <RegionFlag regionName={region.id} />
-      <span>{region.name}</span>
+      <RegionFlag regionName={region.name} />
+      <span>{region.displayName}</span>
     </span>
   );
 }

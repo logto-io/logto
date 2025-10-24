@@ -47,7 +47,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
 
   const defaultValues = Object.freeze({
     tag: TenantTag.Development,
-    instanceId: logtoDropdownItem.id,
+    instanceId: logtoDropdownItem.name,
     regionName: defaultRegionName,
   });
   const methods = useForm<CreateTenantData>({
@@ -79,7 +79,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
     [regions]
   );
 
-  const isLogtoInstance = instanceId === logtoDropdownItem.id;
+  const isLogtoInstance = instanceId === logtoDropdownItem.name;
 
   const currentRegion = useMemo(() => {
     if (isDevFeaturesEnabled) {
@@ -90,7 +90,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
       return getRegionById(regionName);
     }
     // For private instances, find the region that matches the instance
-    return regions?.find((region) => region.id === instanceId);
+    return regions?.find((region) => region.name === instanceId);
   }, [isLogtoInstance, regionName, instanceId, getRegionById, regions]);
 
   const createTenant = async ({ name, tag, instanceId, regionName }: CreateTenantData) => {
@@ -182,13 +182,13 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
                     <RadioGroup type="plain" name={name} value={value} onChange={onChange}>
                       {regions.map((region) => (
                         <Radio
-                          key={region.id}
+                          key={region.name}
                           title={
                             <DangerousRaw>
                               <Region region={region} />
                             </DangerousRaw>
                           }
-                          value={region.id}
+                          value={region.name}
                           isDisabled={isSubmitting}
                         />
                       ))}
@@ -265,13 +265,13 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
                     <RadioGroup type="small" name={name} value={value} onChange={onChange}>
                       {publicRegions.map((region) => (
                         <Radio
-                          key={region.id}
+                          key={region.name}
                           title={
                             <DangerousRaw>
                               <Region region={region} />
                             </DangerousRaw>
                           }
-                          value={region.id}
+                          value={region.name}
                           isDisabled={isSubmitting}
                         />
                       ))}
