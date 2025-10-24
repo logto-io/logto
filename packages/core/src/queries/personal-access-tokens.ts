@@ -42,10 +42,10 @@ export class PersonalAccessTokensQueries {
     `);
   }
 
-  async deleteByName(appId: string, name: string) {
+  async deleteByName(userId: string, name: string) {
     const { rowCount } = await this.pool.query(sql`
       delete from ${table}
-        where ${fields.userId} = ${appId}
+        where ${fields.userId} = ${userId}
         and ${fields.name} = ${name}
     `);
     if (rowCount < 1) {

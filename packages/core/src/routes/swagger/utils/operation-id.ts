@@ -70,6 +70,8 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   // Users
   'post /users/:userId/roles': 'AssignUserRoles',
   'post /users/:userId/password/verify': 'VerifyUserPassword',
+  'post /users/:userId/personal-access-tokens/delete': 'DeletePersonalAccessTokenByName',
+  'patch /users/:userId/personal-access-tokens': 'UpdatePersonalAccessTokenByName',
   // Dashboard
   'get /dashboard/users/total': 'GetTotalUserCount',
   'get /dashboard/users/new': 'GetNewUserCounts',

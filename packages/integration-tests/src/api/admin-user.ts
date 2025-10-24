@@ -155,9 +155,23 @@ export const getUserPersonalAccessTokens = async (userId: string) =>
   authedAdminApi.get(`users/${userId}/personal-access-tokens`).json<PersonalAccessToken[]>();
 
 export const deletePersonalAccessToken = async (userId: string, name: string) =>
-  authedAdminApi.delete(`users/${userId}/personal-access-tokens/${name}`);
+  authedAdminApi.post(`users/${userId}/personal-access-tokens/delete`, { json: { name } });
 
 export const updatePersonalAccessToken = async (
+  userId: string,
+  name: string,
+  body: Record<string, unknown>
+) =>
+  authedAdminApi
+    .patch(`users/${userId}/personal-access-tokens`, {
+      json: { ...body, currentName: name },
+    })
+    .json<PersonalAccessToken>();
+
+export const deletePersonalAccessTokenLegacy = async (userId: string, name: string) =>
+  authedAdminApi.delete(`users/${userId}/personal-access-tokens/${name}`);
+
+export const updatePersonalAccessTokenLegacy = async (
   userId: string,
   name: string,
   body: Record<string, unknown>
