@@ -13,6 +13,7 @@ import Region, {
   defaultRegionName,
   getInstanceDropdownItems,
   logtoDropdownItem,
+  checkPrivateRegionAccess,
 } from '@/components/Region';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
@@ -73,6 +74,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
   );
 
   const instanceOptions = useMemo(() => getInstanceDropdownItems(regions ?? []), [regions]);
+  const hasPrivateRegionsAccess = useMemo(() => checkPrivateRegionAccess(regions ?? []), [regions]);
 
   const publicRegions = useMemo(
     () => regions?.filter((region) => !region.isPrivate) ?? [],
@@ -83,7 +85,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
 
   const currentRegion = useMemo(() => {
     if (isDevFeaturesEnabled) {
-      return getRegionById(regionName);
+      return getRegionById(isLogtoInstance ? regionName : instanceId);
     }
 
     if (isLogtoInstance) {
@@ -93,14 +95,20 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
     return regions?.find((region) => region.id === instanceId);
   }, [isLogtoInstance, regionName, instanceId, getRegionById, regions]);
 
+  const getFinalRegionName = useCallback(
+    (instanceId: string, regionName: string) => {
+      if (isDevFeaturesEnabled) {
+        return isLogtoInstance ? regionName : instanceId;
+      }
+      return regionName;
+    },
+    [isLogtoInstance]
+  );
+
   const createTenant = async ({ name, tag, instanceId, regionName }: CreateTenantData) => {
     // For Logto public instance, use the selected region
     // For private instances, use the instance ID as the region
-    const finalRegionName = isDevFeaturesEnabled
-      ? isLogtoInstance
-        ? regionName
-        : instanceId
-      : regionName;
+    const finalRegionName = getFinalRegionName(instanceId, regionName);
     const newTenant = await cloudApi.post('/api/tenants', {
       body: { name, tag, regionName: finalRegionName },
     });
@@ -117,7 +125,8 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
         return;
       }
 
-      setTenantData(data);
+      // If it's a dev tag, we don't immediately create a tenant. Instead, we first save it to tenantData. After the user selects a plan, we then create the tenant. At this point, considering the current state of the interaction design, we should use getFinalRegionName() to obtain the final regionName and update it in tenantData.
+      setTenantData({ ...data, regionName: getFinalRegionName(data.instanceId, data.regionName) });
     })
   );
 
@@ -199,32 +208,8 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
             </FormField>
           )}
 
-          {currentRegion && (
-            <FormField title="tenants.create_modal.tenant_usage_purpose">
-              <Controller
-                control={control}
-                name="tag"
-                rules={{ required: true }}
-                render={({ field: { onChange, value, name } }) => (
-                  <RadioGroup
-                    type="card"
-                    className={styles.envTagRadioGroup}
-                    value={value}
-                    name={name}
-                    onChange={onChange}
-                  >
-                    {currentRegion.tags.map((tag) => (
-                      <Radio key={tag} value={tag}>
-                        <EnvTagOptionContent tag={tag} />
-                      </Radio>
-                    ))}
-                  </RadioGroup>
-                )}
-              />
-            </FormField>
-          )}
-
-          {isDevFeaturesEnabled && (
+          {/* Only show the instance selector (dropdown) if there are private regions available. */}
+          {isDevFeaturesEnabled && hasPrivateRegionsAccess && (
             <FormField
               title="tenants.settings.tenant_instance"
               tip={t('tenants.settings.tenant_instance_description')}
@@ -279,6 +264,35 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
                   )}
                 />
               )}
+            </FormField>
+          )}
+
+          {currentRegion && (
+            <FormField title="tenants.create_modal.tenant_usage_purpose">
+              <Controller
+                control={control}
+                name="tag"
+                rules={{ required: true }}
+                render={({ field: { onChange, value, name } }) => (
+                  <RadioGroup
+                    type="card"
+                    className={styles.envTagRadioGroup}
+                    value={value}
+                    name={name}
+                    onChange={onChange}
+                  >
+                    {currentRegion.tags.map((tag) => (
+                      <Radio key={tag} value={tag}>
+                        {/* If the region is private (for enterprise customers), we hide the available production plan. */}
+                        <EnvTagOptionContent
+                          tag={tag}
+                          isAvailableProductionPlanHidden={currentRegion.isPrivate}
+                        />
+                      </Radio>
+                    ))}
+                  </RadioGroup>
+                )}
+              />
             </FormField>
           )}
         </FormProvider>

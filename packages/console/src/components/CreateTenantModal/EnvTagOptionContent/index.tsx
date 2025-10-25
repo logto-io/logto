@@ -11,6 +11,7 @@ import styles from './index.module.scss';
 
 type Props = {
   readonly tag: TenantTag;
+  readonly isAvailableProductionPlanHidden: boolean;
 };
 
 const descriptionMap: Record<TenantTag, AdminConsoleKey> = {
@@ -20,19 +21,22 @@ const descriptionMap: Record<TenantTag, AdminConsoleKey> = {
 
 const availableProductionPlanNames = [ReservedPlanName.Free, ReservedPlanName.Pro];
 
-function EnvTagOptionContent({ tag }: Props) {
+/**
+ *
+ */
+function EnvTagOptionContent({ tag, isAvailableProductionPlanHidden = false }: Props) {
   return (
     <div className={styles.container}>
       <TenantEnvTag isAbbreviated={false} tag={tag} size="large" className={styles.tag} />
       <div className={styles.description}>
         <DynamicT forKey={descriptionMap[tag]} />
       </div>
-      <Divider />
+      {(tag === TenantTag.Development || !isAvailableProductionPlanHidden) && <Divider />}
       <div className={styles.hint}>
         {tag === TenantTag.Development && (
           <DynamicT forKey="tenants.create_modal.development_hint" />
         )}
-        {tag === TenantTag.Production && (
+        {tag === TenantTag.Production && !isAvailableProductionPlanHidden && (
           <>
             <DynamicT forKey="tenants.create_modal.available_plan" />
             {availableProductionPlanNames.map((planName) => (

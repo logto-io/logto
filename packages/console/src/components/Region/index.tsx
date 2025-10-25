@@ -100,6 +100,10 @@ export const getInstanceDropdownItems = (regions: RegionType[]): InstanceDropdow
   return condArray(hasPublicRegions && logtoDropdownItem, ...privateInstances);
 };
 
+export const checkPrivateRegionAccess = (regions: RegionType[]): boolean => {
+  return regions.some(({ isPrivate }) => isPrivate);
+};
+
 type Props = {
   readonly region: RegionType;
   readonly className?: string;
