@@ -300,7 +300,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
                         {/* If the region is private (for enterprise customers), we hide the available production plan. */}
                         <EnvTagOptionContent
                           tag={tag}
-                          isAvailableProductionPlanHidden={currentRegion.isPrivate}
+                          isAvailableProductionPlanInvisible={currentRegion.isPrivate}
                         />
                       </Radio>
                     ))}
