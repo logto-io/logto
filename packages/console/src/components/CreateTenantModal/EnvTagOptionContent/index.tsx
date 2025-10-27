@@ -11,6 +11,12 @@ import styles from './index.module.scss';
 
 type Props = {
   readonly tag: TenantTag;
+  /**
+   * Whether to hide the available production plan information.
+   * Set to true when the available production plans should not be displayed,
+   * for example, in contexts where this information is not relevant or should be hidden from the user.
+   */
+  readonly isAvailableProductionPlanInvisible: boolean;
 };
 
 const descriptionMap: Record<TenantTag, AdminConsoleKey> = {
@@ -20,19 +26,19 @@ const descriptionMap: Record<TenantTag, AdminConsoleKey> = {
 
 const availableProductionPlanNames = [ReservedPlanName.Free, ReservedPlanName.Pro];
 
-function EnvTagOptionContent({ tag }: Props) {
+function EnvTagOptionContent({ tag, isAvailableProductionPlanInvisible = false }: Props) {
   return (
     <div className={styles.container}>
       <TenantEnvTag isAbbreviated={false} tag={tag} size="large" className={styles.tag} />
       <div className={styles.description}>
         <DynamicT forKey={descriptionMap[tag]} />
       </div>
-      <Divider />
+      {(tag === TenantTag.Development || !isAvailableProductionPlanInvisible) && <Divider />}
       <div className={styles.hint}>
         {tag === TenantTag.Development && (
           <DynamicT forKey="tenants.create_modal.development_hint" />
         )}
-        {tag === TenantTag.Production && (
+        {tag === TenantTag.Production && !isAvailableProductionPlanInvisible && (
           <>
             <DynamicT forKey="tenants.create_modal.available_plan" />
             {availableProductionPlanNames.map((planName) => (
