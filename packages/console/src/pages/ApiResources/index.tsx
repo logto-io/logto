@@ -26,7 +26,7 @@ import useTheme from '@/hooks/use-theme';
 import pageLayout from '@/scss/page-layout.module.scss';
 import { buildUrl } from '@/utils/url';
 
-import GuideLibraryModal from './components/GuideLibraryModal';
+import CreateForm from './components/CreateForm';
 import styles from './index.module.scss';
 
 const pageSize = defaultPageSize;
@@ -128,15 +128,20 @@ function ApiResources() {
         }}
         onRetry={async () => mutate(undefined, true)}
       />
-      <GuideLibraryModal
-        isOpen={isCreating}
-        onClose={() => {
-          navigate({
-            pathname: apiResourcesPathname,
-            search,
-          });
-        }}
-      />
+      {isCreating && (
+        <CreateForm
+          onClose={(newApiResource) => {
+            if (newApiResource) {
+              navigate(`/api-resources/${newApiResource.id}`);
+              return;
+            }
+            navigate({
+              pathname: apiResourcesPathname,
+              search,
+            });
+          }}
+        />
+      )}
     </div>
   );
 }
