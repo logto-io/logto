@@ -26,9 +26,6 @@ const descriptionMap: Record<TenantTag, AdminConsoleKey> = {
 
 const availableProductionPlanNames = [ReservedPlanName.Free, ReservedPlanName.Pro];
 
-/**
- *
- */
 function EnvTagOptionContent({ tag, isAvailableProductionPlanHidden = false }: Props) {
   return (
     <div className={styles.container}>

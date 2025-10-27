@@ -1,6 +1,5 @@
 import { type PublicRegionName, type Region as RegionType } from '@logto/cloud/routes';
 import { TenantTag } from '@logto/schemas';
-import { condArray } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useMemo, type FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -82,26 +81,13 @@ export function StaticRegion({ isComingSoon = false, regionName, className }: St
   );
 }
 
-type InstanceDropdownItemProps = Pick<RegionType, 'id' | 'name' | 'country' | 'tags'>;
+export type InstanceDropdownItemProps = Pick<RegionType, 'id' | 'name' | 'country' | 'tags'>;
 
 export const logtoDropdownItem: InstanceDropdownItemProps = {
   id: 'logto',
   name: 'Logto Cloud (Public)',
   country: 'LOGTO',
   tags: Object.values(TenantTag),
-};
-
-export const getInstanceDropdownItems = (regions: RegionType[]): InstanceDropdownItemProps[] => {
-  const hasPublicRegions = regions.some(({ isPrivate }) => !isPrivate);
-  const privateInstances = regions
-    .filter(({ isPrivate }) => isPrivate)
-    .map(({ id, name, country, tags }) => ({ id, name, country, tags }));
-
-  return condArray(hasPublicRegions && logtoDropdownItem, ...privateInstances);
-};
-
-export const checkPrivateRegionAccess = (regions: RegionType[]): boolean => {
-  return regions.some(({ isPrivate }) => isPrivate);
 };
 
 type Props = {

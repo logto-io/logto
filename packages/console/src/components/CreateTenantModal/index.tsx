@@ -1,4 +1,6 @@
+import { type Region as RegionType } from '@logto/cloud/routes';
 import { Theme, TenantTag } from '@logto/schemas';
+import { condArray } from '@silverhand/essentials';
 import { useCallback, useMemo, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -11,9 +13,8 @@ import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantResponse } from '@/cloud/types/router';
 import Region, {
   defaultRegionName,
-  getInstanceDropdownItems,
   logtoDropdownItem,
-  checkPrivateRegionAccess,
+  type InstanceDropdownItemProps,
 } from '@/components/Region';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
@@ -37,6 +38,19 @@ import { type CreateTenantData } from './types';
 type Props = {
   readonly isOpen: boolean;
   readonly onClose: (tenant?: TenantResponse) => void;
+};
+
+const checkPrivateRegionAccess = (regions: RegionType[]): boolean => {
+  return regions.some(({ isPrivate }) => isPrivate);
+};
+
+const getInstanceDropdownItems = (regions: RegionType[]): InstanceDropdownItemProps[] => {
+  const hasPublicRegions = regions.some(({ isPrivate }) => !isPrivate);
+  const privateInstances = regions
+    .filter(({ isPrivate }) => isPrivate)
+    .map(({ id, name, country, tags }) => ({ id, name, country, tags }));
+
+  return condArray(hasPublicRegions && logtoDropdownItem, ...privateInstances);
 };
 
 // eslint-disable-next-line complexity
