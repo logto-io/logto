@@ -188,6 +188,11 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         );
       }
 
+      // Guard the quota for BYUI if the hideLogtoBranding is set to true
+      if (hideLogtoBranding) {
+        await quota.guardTenantUsageByKey('bringYourUiEnabled');
+      }
+
       const payload = {
         ...rest,
         ...conditional(

@@ -66,6 +66,8 @@ const paywall = {
     description:
       'Özel JWT işlevselliği ve prim avantajları için ücretli bir plana yükseltin. Sorularınız varsa, çekinmeden <a>iletişime geçin</a>.',
   },
+  branding_customization:
+    'Planınızı yükselterek "Hide Logto branding" ve "Bring your UI" özellikleriyle markalama üzerinde tam kontrol sağlayın.',
   bring_your_ui:
     'Özel kullanıcı arayüzü işlevselliği ve prim avantajları için ücretli bir plana geçin.',
   security_features:

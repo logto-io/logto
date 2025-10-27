@@ -66,6 +66,8 @@ const paywall = {
     description:
       'Upgrade auf einen kostenpflichtigen Plan für benutzerdefinierte JWT-Funktionalität und Premium-Vorteile. Wenn Sie Fragen haben, zögern Sie nicht, uns zu <a>kontaktieren</a>.',
   },
+  branding_customization:
+    'Schalten Sie die vollständige Branding-Kontrolle mit den Funktionen "Logto-Branding ausblenden" und "Bring your UI" frei, indem Sie Ihren Plan upgraden.',
   bring_your_ui:
     'Upgrade auf einen kostenpflichtigen Plan für benutzerdefinierte UI-Funktionalität und Premium-Vorteile.',
   security_features:

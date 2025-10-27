@@ -4,7 +4,7 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import CustomCssEditorField from '@/components/CustomCssEditorField';
 import InlineUpsell from '@/components/InlineUpsell';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Card from '@/ds-components/Card';
@@ -63,7 +63,7 @@ function CustomUiForm() {
               />
             )}
           />
-          {!isBringYourUiEnabled && (
+          {!isBringYourUiEnabled && !isDevFeaturesEnabled && (
             <InlineUpsell
               className={brandingStyles.upsell}
               for="bring_your_ui"
