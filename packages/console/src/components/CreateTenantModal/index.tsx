@@ -1,4 +1,4 @@
-import { type Region as RegionType } from '@logto/cloud/routes';
+import { type RegionResponse as RegionType } from '@logto/cloud/routes';
 import { Theme, TenantTag } from '@logto/schemas';
 import { condArray } from '@silverhand/essentials';
 import { useCallback, useMemo, useState } from 'react';
