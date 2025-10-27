@@ -125,7 +125,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
         return;
       }
 
-      // If it's a dev tag, we don't immediately create a tenant. Instead, we first save it to tenantData. After the user selects a plan, we then create the tenant. At this point, considering the current state of the interaction design, we should use getFinalRegionName() to obtain the final regionName and update it in tenantData.
+      // For production tenants, store creation parameters with the correct regionName for later use after plan selection.
       setTenantData({ ...data, regionName: getFinalRegionName(data.instanceId, data.regionName) });
     })
   );

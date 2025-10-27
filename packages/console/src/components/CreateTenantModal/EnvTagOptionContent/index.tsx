@@ -11,6 +11,11 @@ import styles from './index.module.scss';
 
 type Props = {
   readonly tag: TenantTag;
+  /**
+   * Whether to hide the available production plan information.
+   * Set to true when the available production plans should not be displayed,
+   * for example, in contexts where this information is not relevant or should be hidden from the user.
+   */
   readonly isAvailableProductionPlanHidden: boolean;
 };
 
