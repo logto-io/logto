@@ -41,8 +41,8 @@ function EditTokenModal({ userId, token, onClose }: Props) {
   const submit = handleSubmit(
     trySubmitSafe(async (data) => {
       const createdData = await api
-        .patch(`api/users/${userId}/personal-access-tokens/${encodeURIComponent(token.name)}`, {
-          json: data,
+        .patch(`api/users/${userId}/personal-access-tokens`, {
+          json: { currentName: token.name, name: data.name },
         })
         .json<PersonalAccessToken>();
       toast.success(
