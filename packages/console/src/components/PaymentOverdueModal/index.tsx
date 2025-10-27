@@ -3,12 +3,12 @@ import { Trans, useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
 import { contactEmailLink } from '@/consts';
-import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import ModalLayout from '@/ds-components/ModalLayout';
+import useOverdueInvoices from '@/hooks/use-overdue-invoices';
 import useSubscribe from '@/hooks/use-subscribe';
 import modalStyles from '@/scss/modal.module.scss';
 
@@ -23,20 +23,15 @@ function PaymentOverdueModal() {
 
   const { visitManagePaymentPage } = useSubscribe();
   const [isActionLoading, setIsActionLoading] = useState(false);
-
   const [hasClosed, setHasClosed] = useState(false);
 
-  // TODO: this is a temporary fix to hide the modal for enterprise tenants
-  // Enterprise tenants' invoices are manually paid and has a due date in the future
-  // Should show the modal only if the invoices are overdue
-  const isEnterprise = currentTenant?.subscription.isEnterprisePlan;
+  const { hasOverdueInvoices } = useOverdueInvoices();
 
   const handleCloseModal = () => {
     setHasClosed(true);
   };
 
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-  if (!isCloud || openInvoices.length === 0 || isEnterprise || hasClosed) {
+  if (!hasOverdueInvoices || hasClosed) {
     return null;
   }
 
