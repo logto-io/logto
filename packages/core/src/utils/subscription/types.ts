@@ -114,7 +114,6 @@ const logtoSkuQuotaGuard = z.object({
   securityFeaturesEnabled: z.boolean(),
 }) satisfies ToZodObject<SubscriptionQuota>;
 
-// FIXME: @yijun update this guard to the new system limit guard, temporarily reuse the old Logto SKU quota guard as placeholder to avoid build failure.
 const systemLimitGuard = (
   logtoSkuQuotaGuard
     .extend({
