@@ -1,4 +1,4 @@
-import { type Region as RegionType } from '@logto/cloud/routes';
+import { type RegionResponse as RegionType } from '@logto/cloud/routes';
 import { useCallback } from 'react';
 import useSWRImmutable from 'swr/immutable';
 
@@ -21,7 +21,7 @@ const useAvailableRegions = () => {
     }
   );
   const getRegionById = useCallback(
-    (id: string) => regions?.find((region) => region.id === id),
+    (id: string) => regions?.find((region) => region.name === id),
     [regions]
   );
 

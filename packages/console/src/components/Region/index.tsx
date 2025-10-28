@@ -1,4 +1,4 @@
-import { type PublicRegionName, type Region as RegionType } from '@logto/cloud/routes';
+import { type PublicRegionName, type RegionResponse as RegionType } from '@logto/cloud/routes';
 import { TenantTag } from '@logto/schemas';
 import classNames from 'classnames';
 import { useMemo, type FunctionComponent } from 'react';
@@ -81,11 +81,14 @@ export function StaticRegion({ isComingSoon = false, regionName, className }: St
   );
 }
 
-export type InstanceDropdownItemProps = Pick<RegionType, 'id' | 'name' | 'country' | 'tags'>;
+export type InstanceDropdownItemProps = Pick<
+  RegionType,
+  'name' | 'country' | 'tags' | 'displayName'
+>;
 
 export const logtoDropdownItem: InstanceDropdownItemProps = {
-  id: 'logto',
-  name: 'Logto Cloud (Public)',
+  name: 'logto',
+  displayName: 'Logto Cloud (Public)',
   country: 'LOGTO',
   tags: Object.values(TenantTag),
 };
@@ -98,8 +101,8 @@ type Props = {
 function Region({ region, className }: Props) {
   return (
     <span className={classNames(styles.wrapper, className)}>
-      <RegionFlag regionName={region.id} />
-      <span>{region.name}</span>
+      <RegionFlag regionName={region.name} />
+      <span>{region.displayName}</span>
     </span>
   );
 }
