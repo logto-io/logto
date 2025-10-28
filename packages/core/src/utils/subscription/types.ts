@@ -153,6 +153,8 @@ const systemLimitGuard = (
   >
 ).partial();
 
+export type SystemLimit = z.infer<typeof systemLimitGuard>;
+
 /**
  * Redis cache guard for the subscription data returned from the Cloud API `/api/tenants/my/subscription`.
  * Logto core does not have access to the zod guard of the subscription data in Cloud,

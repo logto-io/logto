@@ -1,4 +1,5 @@
 import { ReservedPlanId, ConnectorType } from '@logto/schemas';
+import { cond } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -9,7 +10,11 @@ import {
   isReportSubscriptionUpdatesUsageKey,
   getTenantUsageData,
 } from '#src/utils/subscription/index.js';
-import { type SubscriptionQuota, type SubscriptionUsage } from '#src/utils/subscription/types.js';
+import {
+  type SystemLimit,
+  type SubscriptionQuota,
+  type SubscriptionUsage,
+} from '#src/utils/subscription/types.js';
 
 import {
   selfComputedSubscriptionUsageGuard,
@@ -35,82 +40,61 @@ export class QuotaLibrary {
     private readonly subscription: SubscriptionLibrary
   ) {}
 
+  /**
+   * Guard tenant usage by key.
+   *
+   * This method performs a two-tier check:
+   * 1. System limit check (hard blocker)
+   * 2. Quota limit check - based on subscription plan
+   *
+   * System limits are checked first as they are absolute constraints that cannot be exceeded
+   * regardless of the subscription plan. Quota limits are then checked based on the specific
+   * plan's allowances.
+   *
+   * @param key - The usage key to check
+   */
   guardTenantUsageByKey = async (key: keyof SubscriptionUsage) => {
     const { isCloud } = EnvSet.values;
 
-    // Cloud only feature, skip in non-cloud environments
     if (!isCloud) {
       return;
     }
 
-    const {
-      planId,
-      isEnterprisePlan,
-      quota: fullQuota,
-    } = await this.subscription.getSubscriptionData();
+    const { planId, isEnterprisePlan, quota, systemLimit } =
+      await this.subscription.getSubscriptionData();
 
-    // Do not block Pro/Enterprise plan from adding add-on resources.
-    if (this.shouldReportSubscriptionUpdates(planId, isEnterprisePlan, key)) {
+    // Determine which checks are needed
+    const systemLimitValue = cond(
+      // eslint-disable-next-line no-restricted-syntax
+      systemLimit && key in systemLimit && systemLimit[key as keyof typeof systemLimit]
+    );
+    const quotaLimitValue = quota[key];
+
+    // TODO: @xiaoyijun remove dev feature flag
+    const shouldCheckSystemLimit =
+      systemLimitValue !== undefined && EnvSet.values.isDevFeaturesEnabled;
+    const shouldCheckQuota =
+      !this.shouldReportSubscriptionUpdates(planId, isEnterprisePlan, key) &&
+      quotaLimitValue !== null;
+
+    // Early return if no checks needed - avoids fetching usage
+    if (!shouldCheckSystemLimit && !shouldCheckQuota) {
       return;
     }
 
-    const { usage: fullUsage } =
-      key === 'tenantMembersLimit'
-        ? await getTenantUsageData(this.cloudConnection)
-        : // `tenantMembersLimit` need to compute from admin tenant level
-          await this.getTenantUsage();
+    const usage = await this.fetchUsageByKey(key);
 
-    // Type `SubscriptionQuota` and type `SubscriptionUsage` are sharing keys, this design helps us to compare the usage with the quota limit in a easier way.
-    const { [key]: limit } = fullQuota;
-    /**
-     * `tenantMembersLimit` need to compute from admin tenant level, in previous code, we use cloud API to request tenant members count when necessary,
-     * otherwise, we use self computed usage.
-     * Since self computed usage do not include `tenantMembersLimit`, we need to manually add it to the usage object.
-     */
-    const { [key]: usage } = { tenantMembersLimit: 0, ...fullUsage };
-
-    if (limit === null) {
-      return;
+    // First priority: Check system limit (hard limit for all plans)
+    // System limits are absolute constraints that must be enforced first
+    if (shouldCheckSystemLimit) {
+      this.assertSystemLimit(usage, systemLimitValue, key);
     }
 
-    if (typeof limit === 'boolean') {
-      assertThat(
-        limit,
-        new RequestError({
-          code: 'subscription.limit_exceeded',
-          status: 403,
-          data: {
-            key,
-          },
-        })
-      );
-      return;
+    // Second priority: Check quota limit (subscription plan limit)
+    // Only checked after system limit passes, enforces plan-specific restrictions
+    if (shouldCheckQuota) {
+      this.assertQuotaLimit(usage, quotaLimitValue, key);
     }
-
-    if (typeof limit === 'number') {
-      // See the definition of `SubscriptionQuota` and `SubscriptionUsage` in `types.ts`, this should never happen.
-      assertThat(
-        typeof usage === 'number',
-        new TypeError('Usage must be with the same type as the limit.')
-      );
-
-      assertThat(
-        usage < limit,
-        new RequestError({
-          code: 'subscription.limit_exceeded',
-          status: 403,
-          data: {
-            key,
-            limit,
-            usage,
-          },
-        })
-      );
-
-      return;
-    }
-
-    throw new TypeError('Unsupported subscription quota type');
   };
 
   guardEntityScopesUsage = async (entityName: 'resources' | 'roles', entityId: string) => {
@@ -235,4 +219,87 @@ export class QuotaLibrary {
     key: keyof SubscriptionQuota
   ) =>
     (paidReservedPlans.has(planId) || isEnterprisePlan) && isReportSubscriptionUpdatesUsageKey(key);
+
+  /**
+   * Fetch usage by key
+   */
+  private async fetchUsageByKey(
+    key: keyof SubscriptionUsage
+  ): Promise<SubscriptionUsage[keyof SubscriptionUsage]> {
+    const { usage: fullUsage } =
+      key === 'tenantMembersLimit'
+        ? await getTenantUsageData(this.cloudConnection)
+        : await this.getTenantUsage();
+
+    return { tenantMembersLimit: 0, ...fullUsage }[key];
+  }
+
+  /**
+   * Assert system limit
+   */
+  private assertSystemLimit(
+    usage: SubscriptionUsage[keyof SubscriptionUsage],
+    limit: SystemLimit[keyof SystemLimit],
+    key: string
+  ) {
+    assertThat(
+      typeof usage === 'number',
+      new TypeError('Usage must be a number when checking numeric limit.')
+    );
+
+    assertThat(typeof limit === 'number', new TypeError('System limit must be a number.'));
+
+    assertThat(
+      usage < limit,
+      new RequestError({
+        code: 'system_limit.limit_exceeded',
+        status: 403,
+        data: { key, limit, usage },
+      })
+    );
+  }
+
+  /**
+   * Assert quota limit
+   */
+  private assertQuotaLimit(
+    usage: SubscriptionUsage[keyof SubscriptionUsage],
+    limit: SubscriptionQuota[keyof SubscriptionQuota],
+    key: string
+  ) {
+    if (limit === null) {
+      return;
+    }
+
+    if (typeof limit === 'boolean') {
+      assertThat(
+        limit,
+        new RequestError({
+          code: 'subscription.limit_exceeded',
+          status: 403,
+          data: { key },
+        })
+      );
+      return;
+    }
+
+    if (typeof limit === 'number') {
+      assertThat(
+        typeof usage === 'number',
+        new TypeError('Usage must be a number when limit is a number.')
+      );
+
+      assertThat(
+        usage < limit,
+        new RequestError({
+          code: 'subscription.limit_exceeded',
+          status: 403,
+          data: { key, limit, usage },
+        })
+      );
+      return;
+    }
+
+    throw new TypeError('Unsupported subscription quota type');
+  }
 }
