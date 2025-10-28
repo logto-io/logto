@@ -22,7 +22,7 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
     name,
     tag,
     regionName,
-    subscription: { planId, isEnterprisePlan },
+    subscription: { planId },
   } = tenantData;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 

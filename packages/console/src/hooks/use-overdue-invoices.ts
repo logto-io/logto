@@ -1,15 +1,36 @@
-import { useContext, useMemo } from 'react';
+import dayjs from 'dayjs';
+import { useMemo } from 'react';
 
+import { type TenantResponse } from '@/cloud/types/router';
 import { isCloud } from '@/consts/env';
-import { TenantsContext } from '@/contexts/TenantsProvider';
 
-function useOverdueInvoices() {
-  const { currentTenant } = useContext(TenantsContext);
-  const { openInvoices = [] } = currentTenant ?? {};
-  const isEnterprise = currentTenant?.subscription.isEnterprisePlan;
+function useOverdueInvoices(tenantData: TenantResponse | undefined) {
+  const { openInvoices = [] } = tenantData ?? {};
+  const isEnterprise = tenantData?.subscription.isEnterprisePlan;
+
+  const overdueInvoices = useMemo(
+    () =>
+      openInvoices.filter(({ dueDate, collectionMethod }) => {
+        switch (collectionMethod) {
+          // For automatic collection method, consider open invoices always overdue
+          case 'charge_automatically': {
+            return true;
+          }
+          // For manual collection method, consider invoices overdue if past due date
+          case 'send_invoice': {
+            return dueDate && dayjs().isAfter(dayjs(dueDate));
+          }
+          default: {
+            // For legacy invoices without collection method, consider them overdue
+            return true;
+          }
+        }
+      }),
+    [openInvoices]
+  );
 
   const hasOverdueInvoices = useMemo(() => {
-    if (!isCloud || openInvoices.length === 0) {
+    if (!isCloud) {
       return false;
     }
 
@@ -21,30 +42,16 @@ function useOverdueInvoices() {
       return false;
     }
 
-    return openInvoices.some(({ dueDate, collectionMethod }) => {
-      switch (collectionMethod) {
-        // For automatic collection method, consider open invoices always overdue
-        case 'charge_automatically': {
-          return true;
-        }
-        // For manual collection method, consider invoices overdue if past due date
-        case 'send_invoice': {
-          return dueDate && dueDate < new Date();
-        }
-        default: {
-          // For legacy invoices without collection method, consider them overdue
-          return true;
-        }
-      }
-    });
-  }, [isEnterprise, openInvoices]);
+    return overdueInvoices.length > 0;
+  }, [isEnterprise, overdueInvoices]);
 
   return useMemo(
     () => ({
       hasOverdueInvoices,
+      overdueInvoices,
       openInvoices,
     }),
-    [hasOverdueInvoices, openInvoices]
+    [hasOverdueInvoices, openInvoices, overdueInvoices]
   );
 }
 
