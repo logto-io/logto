@@ -7,6 +7,7 @@ import { useOutletContext } from 'react-router-dom';
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import { rbac } from '@/consts';
 import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
 import TextInput from '@/ds-components/TextInput';
@@ -108,7 +109,7 @@ function ApiResourceSettings() {
                     components={{
                       a: (
                         <TextLink
-                          href="https://docs.logto.io/docs/references/resources/#default-api"
+                          href={getDocumentationUrl(rbac + '#default-api-resource-behavior')}
                           targetBlank="noopener"
                         />
                       ),
