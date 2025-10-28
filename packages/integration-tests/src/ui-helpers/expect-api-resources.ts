@@ -15,14 +15,7 @@ export default class ExpectApiResources extends ExpectConsole {
   async toCreateApiResource({ name, indicator }: { name: string; indicator: string }) {
     await this.gotoPage('/api-resources', 'API resources');
     await this.toClickButton('Create API resource');
-
-    await this.toExpectModal('Start with tutorials');
-
-    // Click bottom button to skip tutorials
-    await this.toClickButton('Continue without tutorial', false);
-
     await this.toExpectModal('Create API resource');
-
     await this.toFillForm({
       name,
       indicator,
