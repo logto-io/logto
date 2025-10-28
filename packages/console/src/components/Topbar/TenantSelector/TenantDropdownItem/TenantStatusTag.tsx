@@ -17,7 +17,7 @@ function TenantStatusTag({ tenantData, className }: Props) {
     subscription: { planId, isEnterprisePlan },
   } = tenantData;
 
-  const { hasOverdueInvoices } = useOverdueInvoices();
+  const { hasOverdueInvoices } = useOverdueInvoices(tenantData);
 
   /**
    * Tenant status priority:

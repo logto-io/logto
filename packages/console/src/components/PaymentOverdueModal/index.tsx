@@ -19,13 +19,12 @@ import styles from './index.module.scss';
 function PaymentOverdueModal() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { currentTenant, currentTenantId } = useContext(TenantsContext);
-  const { openInvoices = [] } = currentTenant ?? {};
 
   const { visitManagePaymentPage } = useSubscribe();
   const [isActionLoading, setIsActionLoading] = useState(false);
   const [hasClosed, setHasClosed] = useState(false);
 
-  const { hasOverdueInvoices } = useOverdueInvoices();
+  const { hasOverdueInvoices, overdueInvoices } = useOverdueInvoices(currentTenant);
 
   const handleCloseModal = () => {
     setHasClosed(true);
@@ -73,7 +72,7 @@ function PaymentOverdueModal() {
         )}
         <FormField title="upsell.payment_overdue_modal.unpaid_bills">
           <BillInfo
-            cost={openInvoices.reduce(
+            cost={overdueInvoices.reduce(
               (total, currentInvoice) => total + currentInvoice.amountDue,
               0
             )}
