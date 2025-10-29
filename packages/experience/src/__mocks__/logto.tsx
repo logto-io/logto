@@ -121,6 +121,7 @@ export const mockSignInExperience: SignInExperience = {
   sentinelPolicy: {},
   emailBlocklistPolicy: {},
   forgotPasswordMethods: [],
+  hideLogtoBranding: false,
 };
 
 export const mockSignInExperienceSettings: SignInExperienceResponse = {
@@ -131,6 +132,7 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
   termsOfUseUrl: mockSignInExperience.termsOfUseUrl,
   privacyPolicyUrl: mockSignInExperience.privacyPolicyUrl,
   languageInfo: mockSignInExperience.languageInfo,
+  hideLogtoBranding: false,
   signIn: mockSignInExperience.signIn,
   signUp: {
     identifiers: [SignInIdentifier.Username],

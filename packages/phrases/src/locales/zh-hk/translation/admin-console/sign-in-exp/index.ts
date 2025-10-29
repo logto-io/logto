@@ -39,6 +39,9 @@ const sign_in_exp = {
     app_logo_and_favicon: '應用程式標誌和圖標',
     company_logo_and_favicon: '公司標誌和圖標',
     organization_logo_and_favicon: '組織標誌和圖標',
+    hide_logto_branding: 'Hide Logto branding',
+    hide_logto_branding_description:
+      'Remove "Powered by Logto". Spotlight your brand exclusively with a clean, professional sign-in experience.',
   },
   branding_uploads: {
     app_logo: {

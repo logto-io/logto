@@ -54,6 +54,7 @@ export const mockSignInExperience: SignInExperience = {
   branding: {
     logoUrl: 'http://logto.png',
   },
+  hideLogtoBranding: false,
   termsOfUseUrl: mockTermsOfUseUrl,
   privacyPolicyUrl: mockPrivacyPolicyUrl,
   languageInfo: {
