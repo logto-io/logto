@@ -3,6 +3,8 @@ import { type ToZodObject } from '@logto/connector-kit';
 import { type RouterRoutes } from '@withtyped/client';
 import { z, type ZodType } from 'zod';
 
+import { type OmitBooleanValueKeys } from '#src/utils/type.js';
+
 type GetRoutes = RouterRoutes<typeof router>['get'];
 type PostRoutes = RouterRoutes<typeof router>['post'];
 
@@ -11,10 +13,6 @@ type RouteResponseType<T extends { search?: unknown; body?: unknown; response?: 
 type RouteRequestBodyType<T extends { search?: unknown; body?: ZodType; response?: unknown }> =
   z.infer<NonNullable<T['body']>>;
 
-type OmitBooleanValueKeys<T> = Omit<
-  T,
-  { [K in keyof T]: T[K] extends boolean ? K : never }[keyof T]
->;
 /**
  * The subscription data is fetched from the Cloud API.
  * All the dates are in ISO 8601 format, we need to manually fix the type to string here.

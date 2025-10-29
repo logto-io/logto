@@ -7,13 +7,16 @@ import assertThat from '#src/utils/assert-that.js';
 import {
   reportSubscriptionUpdates,
   isReportSubscriptionUpdatesUsageKey,
-  getTenantUsageData,
+  getTenantUsageData as getTenantUsageFromCloud,
 } from '#src/utils/subscription/index.js';
 import { type SubscriptionQuota, type SubscriptionUsage } from '#src/utils/subscription/types.js';
 
 import {
-  selfComputedSubscriptionUsageGuard,
-  type SelfComputedTenantUsage,
+  isBooleanFeatureKey,
+  isNumericLimitKey,
+  type AllLimitKey,
+  type EntityBasedUsageKey,
+  type NumericLimitKey,
 } from '../queries/tenant-usage/types.js';
 import type Queries from '../tenants/Queries.js';
 
@@ -26,6 +29,11 @@ const paidReservedPlans = new Set<string>([
   ReservedPlanId.Pro202509,
 ]);
 
+type GuardTenantUsageByKeyFunction = {
+  (key: Exclude<AllLimitKey, EntityBasedUsageKey>, context?: { entityId: string }): Promise<void>;
+  (key: EntityBasedUsageKey, context: { entityId: string }): Promise<void>;
+};
+
 export class QuotaLibrary {
   constructor(
     public readonly tenantId: string,
@@ -35,7 +43,7 @@ export class QuotaLibrary {
     private readonly subscription: SubscriptionLibrary
   ) {}
 
-  guardTenantUsageByKey = async (key: keyof SubscriptionUsage) => {
+  guardTenantUsageByKey: GuardTenantUsageByKeyFunction = async (key, context) => {
     const { isCloud } = EnvSet.values;
 
     // Cloud only feature, skip in non-cloud environments
@@ -54,26 +62,19 @@ export class QuotaLibrary {
       return;
     }
 
-    const { usage: fullUsage } =
-      key === 'tenantMembersLimit'
-        ? await getTenantUsageData(this.cloudConnection)
-        : // `tenantMembersLimit` need to compute from admin tenant level
-          await this.getTenantUsage();
-
-    // Type `SubscriptionQuota` and type `SubscriptionUsage` are sharing keys, this design helps us to compare the usage with the quota limit in a easier way.
     const { [key]: limit } = fullQuota;
-    /**
-     * `tenantMembersLimit` need to compute from admin tenant level, in previous code, we use cloud API to request tenant members count when necessary,
-     * otherwise, we use self computed usage.
-     * Since self computed usage do not include `tenantMembersLimit`, we need to manually add it to the usage object.
-     */
-    const { [key]: usage } = { tenantMembersLimit: 0, ...fullUsage };
 
     if (limit === null) {
+      // Skip unlimited quotas
       return;
     }
 
-    if (typeof limit === 'boolean') {
+    // Boolean features: enforce directly by plan quota configuration (true = allowed, false = blocked)
+    if (isBooleanFeatureKey(key)) {
+      assertThat(
+        typeof limit === 'boolean',
+        new TypeError('Feature availability settings must be boolean type.')
+      );
       assertThat(
         limit,
         new RequestError({
@@ -87,12 +88,15 @@ export class QuotaLibrary {
       return;
     }
 
-    if (typeof limit === 'number') {
+    // Number-based limits: query current usage and compare with limit
+    if (isNumericLimitKey(key)) {
       // See the definition of `SubscriptionQuota` and `SubscriptionUsage` in `types.ts`, this should never happen.
       assertThat(
-        typeof usage === 'number',
-        new TypeError('Usage must be with the same type as the limit.')
+        typeof limit === 'number',
+        new TypeError('Usage limit must be number type for numeric limits.')
       );
+
+      const usage = await this.getTenantUsageByKey(key, context);
 
       assertThat(
         usage < limit,
@@ -106,58 +110,10 @@ export class QuotaLibrary {
           },
         })
       );
-
       return;
     }
 
     throw new TypeError('Unsupported subscription quota type');
-  };
-
-  guardEntityScopesUsage = async (entityName: 'resources' | 'roles', entityId: string) => {
-    const { isCloud } = EnvSet.values;
-
-    // Cloud only feature, skip in non-cloud environments
-    if (!isCloud) {
-      return;
-    }
-
-    const {
-      quota: { scopesPerResourceLimit, scopesPerRoleLimit },
-    } = await this.subscription.getSubscriptionData();
-
-    const { [entityId]: usage = 0 } =
-      entityName === 'resources'
-        ? await this.queries.tenantUsage.getScopesForResourcesTenantUsage(this.tenantId)
-        : await this.queries.tenantUsage.getScopesForRolesTenantUsage();
-
-    if (entityName === 'resources') {
-      assertThat(
-        scopesPerResourceLimit === null || scopesPerResourceLimit > usage,
-        new RequestError({
-          code: 'subscription.limit_exceeded',
-          status: 403,
-          data: {
-            key: 'scopesPerResourceLimit',
-            limit: scopesPerResourceLimit,
-            usage,
-          },
-        })
-      );
-      return;
-    }
-
-    assertThat(
-      scopesPerRoleLimit === null || scopesPerRoleLimit > usage,
-      new RequestError({
-        code: 'subscription.limit_exceeded',
-        status: 403,
-        data: {
-          key: 'scopesPerRoleLimit',
-          limit: scopesPerRoleLimit,
-          usage,
-        },
-      })
-    );
   };
 
   reportSubscriptionUpdatesUsage = async (key: keyof SubscriptionUsage) => {
@@ -180,48 +136,26 @@ export class QuotaLibrary {
     }
   };
 
-  public async getTenantUsage(): Promise<{ usage: SelfComputedTenantUsage }> {
-    const [rawUsage, connectors] = await Promise.all([
-      this.queries.tenantUsage.getRawTenantUsage(this.tenantId),
-      this.connectorLibrary.getLogtoConnectors(),
-    ]);
+  private readonly getTenantUsageByKey = async (
+    key: NumericLimitKey,
+    context?: { entityId: string }
+  ) => {
+    if (key === 'tenantMembersLimit') {
+      const {
+        usage: { tenantMembersLimit },
+      } = await getTenantUsageFromCloud(this.cloudConnection);
 
-    const socialConnectors = connectors.filter(
-      (connector) => connector.type === ConnectorType.Social
-    );
+      return tenantMembersLimit;
+    }
 
-    const unparsedUsage: SelfComputedTenantUsage = {
-      applicationsLimit: rawUsage.applicationsLimit,
-      thirdPartyApplicationsLimit: rawUsage.thirdPartyApplicationsLimit,
-      scopesPerResourceLimit: rawUsage.scopesPerResourceLimit, // Max scopes per resource
-      userRolesLimit: rawUsage.userRolesLimit,
-      machineToMachineRolesLimit: rawUsage.machineToMachineRolesLimit,
-      scopesPerRoleLimit: rawUsage.scopesPerRoleLimit, // Max scopes per role
-      hooksLimit: rawUsage.hooksLimit,
-      customJwtEnabled: rawUsage.customJwtEnabled,
-      bringYourUiEnabled: rawUsage.bringYourUiEnabled,
-      collectUserProfileEnabled: rawUsage.collectUserProfileEnabled,
-      /** Add-on quotas start */
-      machineToMachineLimit: rawUsage.machineToMachineLimit,
-      resourcesLimit: rawUsage.resourcesLimit,
-      enterpriseSsoLimit: rawUsage.enterpriseSsoLimit,
-      mfaEnabled: rawUsage.mfaEnabled,
-      securityFeaturesEnabled: rawUsage.securityFeaturesEnabled,
-      /** Enterprise only add-on quotas */
-      idpInitiatedSsoEnabled: rawUsage.idpInitiatedSsoEnabled,
-      samlApplicationsLimit: rawUsage.samlApplicationsLimit,
-      socialConnectorsLimit: socialConnectors.length,
-      organizationsLimit: rawUsage.organizationsLimit,
-      /**
-       * We can not calculate the quota usage since there is no related DB configuration for such feature.
-       * Whether the feature is enabled depends on the `quota` defined for each plan/SKU.
-       * If we mark this value as always `true`, it could block the subscription downgrade (to free plan) since in free plan we do not allow impersonation feature.
-       */
-      subjectTokenEnabled: false,
-    };
+    if (key === 'socialConnectorsLimit') {
+      const connectors = await this.connectorLibrary.getLogtoConnectors();
 
-    return { usage: selfComputedSubscriptionUsageGuard.parse(unparsedUsage) };
-  }
+      return connectors.filter((connector) => connector.type === ConnectorType.Social).length;
+    }
+
+    return this.queries.tenantUsage.getSelfComputedUsageByKey(this.tenantId, key, context);
+  };
 
   /**
    * @remarks
