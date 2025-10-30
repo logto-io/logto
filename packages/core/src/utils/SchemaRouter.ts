@@ -50,12 +50,21 @@ type SchemaMiddleware<
 type MiddlewareConfig = {
   /** The middleware to apply */
   middleware: SchemaMiddleware;
-  /** Define the scope where the middleware will be applied. If not provided, applies to both native and relation routes. */
+  /** Define the scope where the middleware will be applied.
+   * If not provided, applies to both native and relation routes.
+   */
   scope?: MiddlewareScope;
-  /** The HTTP methods this middleware applies to. If not provided, applies to all methods. */
+  /**
+   * The HTTP methods this middleware applies to.
+   * If not provided, applies to all methods.
+   */
   method?: RouteMethod[];
-  /** Status codes that may be returned by this middleware. These codes will be accepted by the route guard's response validation. */
-  status?: number | readonly number[];
+  /**
+   * Status codes that may be returned by this middleware.
+   * These codes will be accepted by the route guard's response validation.
+   * If not provided, no additional status codes will be added to the route guard.
+   */
+  status?: number[];
 };
 
 /**
@@ -490,10 +499,10 @@ export default class SchemaRouter<
 
   #collectRouteStatuses(
     method: RouteMethod,
-    baseStatuses: number | number[],
+    baseStatuses: number[],
     currentScope: MiddlewareScope = 'native'
   ): number[] | undefined {
-    const statusSet = new Set<number>(Array.isArray(baseStatuses) ? baseStatuses : [baseStatuses]);
+    const statusSet = new Set<number>(baseStatuses);
 
     for (const middlewareConfig of this.config.middlewares ?? []) {
       // Skip middlewares that will not run for the current route
