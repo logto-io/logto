@@ -34,6 +34,7 @@ import {
 
 import AccountCenter from './AccountCenter';
 import Branding from './Branding';
+import UpsellNotice from './Branding/UpsellNotice';
 import CollectUserProfile from './CollectUserProfile';
 import Content from './Content';
 import SignUpAndSignIn from './SignUpAndSignIn';
@@ -219,6 +220,7 @@ function PageContent({ data, onSignInExperienceUpdated, onAccountCenterUpdated }
         </PageTab>
       </TabNav>
       <div className={styles.content}>
+        {tab === SignInExperienceTab.Branding && <UpsellNotice />}
         <div className={classNames(styles.contentTop, isDirty && styles.withSubmitActionBar)}>
           <FormProvider {...methods}>
             <form>

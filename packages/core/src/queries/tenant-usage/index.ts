@@ -252,6 +252,7 @@ export default class TenantUsageQuery {
         select exists (
           select * from ${signInExperiencesTable}
           where ${signInExperiencesFields.customUiAssets} is not null
+          or ${signInExperiencesFields.hideLogtoBranding} = true
         )
       `,
       sql`bringYourUiEnabled`,

@@ -66,6 +66,8 @@ const paywall = {
     description:
       'Atualize para um plano pago para funcionalidade personalizada JWT e benefícios premium. Não hesite em <a>contactar-nos</a> se tiver alguma dúvida.',
   },
+  branding_customization:
+    'Atualize o seu plano para desbloquear controlo total da marca com as funcionalidades "Hide Logto branding" e "Bring your UI".',
   bring_your_ui:
     'Atualize para um plano pago para trazer a funcionalidade da sua própria UI personalizada e benefícios premium.',
   security_features:

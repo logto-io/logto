@@ -66,6 +66,8 @@ const paywall = {
     description:
       'カスタム JWT 機能とプレミアム特典のために有料プランにアップグレードしましょう。質問がある場合は、お気軽に<a>お問い合わせください</a>。',
   },
+  branding_customization:
+    'プランをアップグレードして、「Hide Logto branding」と「Bring your UI」機能でブランド管理を完全にコントロールしましょう。',
   bring_your_ui:
     'カスタム UI 機能とプレミアム特典を利用するには、有料プランにアップグレードしてください。',
   security_features:
