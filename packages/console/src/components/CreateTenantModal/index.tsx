@@ -298,10 +298,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
                     {currentRegion.tags.map((tag) => (
                       <Radio key={tag} value={tag}>
                         {/* If the region is private (for enterprise customers), we hide the available production plan. */}
-                        <EnvTagOptionContent
-                          tag={tag}
-                          isAvailableProductionPlanInvisible={currentRegion.isPrivate}
-                        />
+                        <EnvTagOptionContent tag={tag} isPrivateRegion={currentRegion.isPrivate} />
                       </Radio>
                     ))}
                   </RadioGroup>
