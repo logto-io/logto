@@ -39,24 +39,19 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
   const router = new SchemaRouter(Organizations, organizations, {
     middlewares: [
       {
-        middlewares: [
-          koaQuotaGuard({ key: 'organizationsLimit', quota, methods: ['POST', 'PUT'] }),
-        ],
-        scope: {
-          native: ['post', 'put'],
-        },
+        middleware: koaQuotaGuard({ key: 'organizationsLimit', quota }),
+        scope: 'native',
+        method: ['post', 'put'],
+        // Throw 403 when quota exceeded
+        status: [403],
       },
       {
-        middlewares: [
-          koaReportSubscriptionUpdates({
-            key: 'organizationsLimit',
-            quota,
-            methods: ['POST', 'PUT', 'DELETE'],
-          }),
-        ],
-        scope: {
-          native: ['post', 'put', 'delete'],
-        },
+        middleware: koaReportSubscriptionUpdates({
+          key: 'organizationsLimit',
+          quota,
+        }),
+        scope: 'native',
+        method: ['post', 'put', 'delete'],
       },
     ],
     errorHandler,

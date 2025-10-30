@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 import { type DataHookEvent, type GeneratedSchema, type SchemaLike } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { type DeepPartial, isPlainObject } from '@silverhand/essentials';
+import { condArray, type DeepPartial, isPlainObject } from '@silverhand/essentials';
 import camelcase from 'camelcase';
 import deepmerge from 'deepmerge';
 import { type Context, type Middleware } from 'koa';
@@ -33,12 +33,13 @@ const defaultConfig = Object.freeze({
 
 type RouteMethod = 'get' | 'post' | 'put' | 'delete' | 'patch';
 
-type MiddlewareScope = {
-  /** Apply to native routes of SchemaRouter, e.g. GET /, POST /, GET /:id, etc. */
-  native?: boolean | RouteMethod[];
-  /** Apply to relation routes, e.g. GET /:id/relations, POST /:id/relations, etc. */
-  relation?: boolean | RouteMethod[];
-};
+/**
+ * Defines the scope where a middleware can be applied in SchemaRouter.
+ *
+ * - `native`: Apply to native CRUD routes of the schema (e.g., `GET /`, `POST /`, `GET /:id`, `PATCH /:id`, `DELETE /:id`)
+ * - `relation`: Apply to relation routes between schemas (e.g., `GET /:id/relations`, `POST /:id/relations`)
+ */
+type MiddlewareScope = 'native' | 'relation';
 
 type SchemaMiddleware<
   StateT = unknown,
@@ -47,10 +48,14 @@ type SchemaMiddleware<
 > = Middleware<StateT, ContextT, ResponseBodyT>;
 
 type MiddlewareConfig = {
-  /** The middlewares to apply */
-  middlewares: SchemaMiddleware[];
-  /** Define the scope where the middlewares will be applied */
+  /** The middleware to apply */
+  middleware: SchemaMiddleware;
+  /** Define the scope where the middleware will be applied. If not provided, applies to both native and relation routes. */
   scope?: MiddlewareScope;
+  /** The HTTP methods this middleware applies to. If not provided, applies to all methods. */
+  method?: RouteMethod[];
+  /** Status codes that may be returned by this middleware. These codes will be accepted by the route guard's response validation. */
+  status?: number | readonly number[];
 };
 
 /**
@@ -173,9 +178,9 @@ export default class SchemaRouter<
 
     // Apply global middlewares (those without specific scope)
     if (this.config.middlewares?.length) {
-      for (const { middlewares, scope } of this.config.middlewares) {
+      for (const { middleware, scope } of this.config.middlewares) {
         if (!scope) {
-          this.use(...middlewares);
+          this.use(middleware);
         }
       }
     }
@@ -257,9 +262,9 @@ export default class SchemaRouter<
         koaGuard({
           params: z.object({ id: z.string().min(1) }),
           response: relationSchema.guard.array(),
-          status: [200, 404],
+          status: this.#collectRouteStatuses('get', [200, 404], 'relation'),
         }),
-        this.#assembleQualifiedMiddlewares('get', true),
+        this.#assembleQualifiedMiddlewares('get', 'relation'),
         async (ctx, next) => {
           const { id } = ctx.guard.params;
 
@@ -286,9 +291,9 @@ export default class SchemaRouter<
       koaGuard({
         params: z.object({ id: z.string().min(1) }),
         body: z.object({ [columns.relationSchemaIds]: z.string().min(1).array().nonempty() }),
-        status: [201, 422],
+        status: this.#collectRouteStatuses('post', [201, 422], 'relation'),
       }),
-      this.#assembleQualifiedMiddlewares('post', true),
+      this.#assembleQualifiedMiddlewares('post', 'relation'),
       async (ctx, next) => {
         const {
           params: { id },
@@ -312,9 +317,9 @@ export default class SchemaRouter<
       koaGuard({
         params: z.object({ id: z.string().min(1) }),
         body: z.object({ [columns.relationSchemaIds]: z.string().min(1).array() }),
-        status: [204, 422],
+        status: this.#collectRouteStatuses('put', [204, 422], 'relation'),
       }),
-      this.#assembleQualifiedMiddlewares('put', true),
+      this.#assembleQualifiedMiddlewares('put', 'relation'),
       async (ctx, next) => {
         const {
           params: { id },
@@ -334,9 +339,9 @@ export default class SchemaRouter<
         params: z
           .object({ id: z.string().min(1) })
           .extend({ [relationSchemaId]: z.string().min(1) }),
-        status: [204, 422],
+        status: this.#collectRouteStatuses('delete', [204, 422], 'relation'),
       }),
-      this.#assembleQualifiedMiddlewares('delete', true),
+      this.#assembleQualifiedMiddlewares('delete', 'relation'),
       async (ctx, next) => {
         const {
           params: { id, [relationSchemaId]: relationId },
@@ -368,7 +373,7 @@ export default class SchemaRouter<
         koaGuard({
           query: z.object({ q: z.string().optional() }),
           response: (entityGuard ?? schema.guard).array(),
-          status: [200],
+          status: this.#collectRouteStatuses('get', [200]),
         }),
         this.#assembleQualifiedMiddlewares('get'),
         async (ctx, next) => {
@@ -390,7 +395,7 @@ export default class SchemaRouter<
           // @ts-expect-error -- `.omit()` doesn't play well with generics
           body: schema.createGuard.omit({ id: true }),
           response: entityGuard ?? schema.guard,
-          status: [201], // TODO: 409/422 for conflict?
+          status: this.#collectRouteStatuses('post', [201]), // TODO: 409/422 for conflict?
         }),
         this.#assembleQualifiedMiddlewares('post'),
         async (ctx, next) => {
@@ -412,7 +417,7 @@ export default class SchemaRouter<
         koaGuard({
           params: z.object({ id: z.string().min(1) }),
           response: entityGuard ?? schema.guard,
-          status: [200, 404],
+          status: this.#collectRouteStatuses('get', [200, 404]),
         }),
         this.#assembleQualifiedMiddlewares('get'),
         async (ctx, next) => {
@@ -429,7 +434,7 @@ export default class SchemaRouter<
           params: z.object({ id: z.string().min(1) }),
           body: schema.updateGuard,
           response: entityGuard ?? schema.guard,
-          status: [200, 404], // TODO: 409/422 for conflict?
+          status: this.#collectRouteStatuses('patch', [200, 404]), // TODO: 409/422 for conflict?
         }),
         this.#assembleQualifiedMiddlewares('patch'),
         async (ctx, next) => {
@@ -444,7 +449,7 @@ export default class SchemaRouter<
         '/:id',
         koaGuard({
           params: z.object({ id: z.string().min(1) }),
-          status: [204, 404],
+          status: this.#collectRouteStatuses('delete', [204, 404]),
         }),
         this.#assembleQualifiedMiddlewares('delete'),
         async (ctx, next) => {
@@ -459,46 +464,70 @@ export default class SchemaRouter<
 
   #assembleQualifiedMiddlewares<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
     method: RouteMethod,
-    isForRelationRoute = false
+    currentScope: MiddlewareScope = 'native'
   ): Middleware<StateT, ContextT, ResponseBodyT> {
     const pickedMiddlewares: Array<Middleware<StateT, ContextT, ResponseBodyT>> = [];
 
-    const evaluateScope = (scopeValue?: boolean | RouteMethod[]): boolean => {
-      if (scopeValue === undefined) {
-        return false;
-      }
-
-      if (typeof scopeValue === 'boolean') {
-        return scopeValue;
-      }
-
-      return Array.isArray(scopeValue) && scopeValue.includes(method);
-    };
-
-    for (const { middlewares, scope } of this.config.middlewares ?? []) {
+    for (const middlewareConfig of this.config.middlewares ?? []) {
       // We have dealt with the global middlewares.
-      if (!scope) {
+      if (
+        !middlewareConfig.scope ||
+        !this.#shouldUseScopedMiddleware(middlewareConfig, method, currentScope)
+      ) {
         continue;
       }
 
-      const shouldAddForRelation = isForRelationRoute && evaluateScope(scope.relation);
-      const shouldAddForNative = !isForRelationRoute && evaluateScope(scope.native);
+      const typedMiddleware: Middleware<StateT, ContextT, ResponseBodyT> = async (context, next) =>
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        middlewareConfig.middleware(context, next);
 
-      if (shouldAddForRelation || shouldAddForNative) {
-        for (const middleware of middlewares) {
-          const typedMiddleware: Middleware<StateT, ContextT, ResponseBodyT> = async (
-            context,
-            next
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-          ) => middleware(context, next);
-
-          // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-          pickedMiddlewares.push(typedMiddleware);
-        }
-      }
+      // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+      pickedMiddlewares.push(typedMiddleware);
     }
 
     return compose(pickedMiddlewares);
+  }
+
+  #collectRouteStatuses(
+    method: RouteMethod,
+    baseStatuses: number | number[],
+    currentScope: MiddlewareScope = 'native'
+  ): number[] | undefined {
+    const statusSet = new Set<number>(Array.isArray(baseStatuses) ? baseStatuses : [baseStatuses]);
+
+    for (const middlewareConfig of this.config.middlewares ?? []) {
+      // Skip middlewares that will not run for the current route
+      if (!this.#shouldUseScopedMiddleware(middlewareConfig, method, currentScope)) {
+        continue;
+      }
+
+      for (const code of condArray(middlewareConfig.status)) {
+        statusSet.add(code);
+      }
+    }
+
+    return statusSet.size > 0 ? [...statusSet] : undefined;
+  }
+
+  #shouldUseScopedMiddleware(
+    config: Pick<MiddlewareConfig, 'scope' | 'method'>,
+    currentMethod: RouteMethod,
+    currentScope: MiddlewareScope
+  ): boolean {
+    const { scope, method } = config;
+
+    // If scope is specified, check if it matches the current scope
+    if (scope !== undefined && scope !== currentScope) {
+      return false;
+    }
+
+    // If method is specified, check if it includes the current method
+    if (method !== undefined && !method.includes(currentMethod)) {
+      return false;
+    }
+
+    // If we reach here, the middleware should be used
+    return true;
   }
 }
 /* eslint-enable max-lines */

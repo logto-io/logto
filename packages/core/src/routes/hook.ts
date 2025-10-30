@@ -172,7 +172,6 @@ export default function hookRoutes<T extends ManagementApiRouter>(
     koaReportSubscriptionUpdates({
       key: 'hooksLimit',
       quota,
-      methods: ['POST'],
     }),
     async (ctx, next) => {
       const { event, events, enabled, ...rest } = ctx.guard.body;
@@ -266,7 +265,6 @@ export default function hookRoutes<T extends ManagementApiRouter>(
     koaReportSubscriptionUpdates({
       key: 'hooksLimit',
       quota,
-      methods: ['DELETE'],
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
