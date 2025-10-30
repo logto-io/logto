@@ -25,8 +25,6 @@ class MockQuotaLibrary extends QuotaLibrary {
   // eslint-disable-next-line @typescript-eslint/member-ordering
   guardTenantUsageByKey = jest.fn();
   // eslint-disable-next-line @typescript-eslint/member-ordering
-  guardEntityScopesUsage = jest.fn();
-  // eslint-disable-next-line @typescript-eslint/member-ordering
   reportSubscriptionUpdatesUsage = jest.fn();
 }
 

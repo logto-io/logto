@@ -148,7 +148,7 @@ export default function roleRoutes<T extends ManagementApiRouter>(
       body: Roles.createGuard
         .omit({ id: true })
         .extend({ scopeIds: z.string().min(1).array().optional() }),
-      status: [200, 400, 404, 422], // Throws 404 when invalid `scopeId(s)` are provided.
+      status: [200, 400, 404, 422, 403], // Throws 404 when invalid `scopeId(s)` are provided.
       response: Roles.guard,
     }),
     async (ctx, next) => {
