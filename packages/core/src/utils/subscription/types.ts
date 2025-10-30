@@ -84,7 +84,7 @@ const upcomingInvoiceGuard = z.object({
   totalExcludingTax: z.number().nullable(),
 }) satisfies ToZodObject<Subscription['upcomingInvoice']>;
 
-const logtoSkuQuotaGuard = z.object({
+export const logtoSkuQuotaGuard = z.object({
   mauLimit: z.number().nullable(),
   applicationsLimit: z.number().nullable(),
   thirdPartyApplicationsLimit: z.number().nullable(),
@@ -112,7 +112,7 @@ const logtoSkuQuotaGuard = z.object({
   securityFeaturesEnabled: z.boolean(),
 }) satisfies ToZodObject<SubscriptionQuota>;
 
-const systemLimitGuard = (
+export const systemLimitGuard = (
   logtoSkuQuotaGuard
     .extend({
       usersPerOrganizationLimit: z.number().nullable(),
@@ -150,6 +150,10 @@ const systemLimitGuard = (
     }
   >
 ).partial();
+
+export type SystemLimit = z.infer<typeof systemLimitGuard>;
+
+export type SystemLimitKey = keyof SystemLimit;
 
 /**
  * Redis cache guard for the subscription data returned from the Cloud API `/api/tenants/my/subscription`.

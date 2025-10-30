@@ -11,6 +11,9 @@ import {
   SsoConnectors,
   Organizations,
   InternalRole,
+  OrganizationUserRelations,
+  OrganizationRoles,
+  OrganizationScopes,
 } from '@logto/schemas';
 import { sql } from '@silverhand/slonik';
 import type { CommonQueryMethods } from '@silverhand/slonik';
@@ -50,6 +53,13 @@ const { table: rolesScopesTable, fields: rolesScopesFields } = convertToIdentifi
 const { table: hooksTable } = convertToIdentifiers(Hooks, true);
 const { table: ssoConnectorsTable } = convertToIdentifiers(SsoConnectors, true);
 const { table: organizationsTable } = convertToIdentifiers(Organizations, true);
+const { table: organizationUserRelationsTable, fields: organizationUserRelationsFields } =
+  convertToIdentifiers(OrganizationUserRelations, true);
+const { table: organizationRolesTable, fields: organizationRolesFields } = convertToIdentifiers(
+  OrganizationRoles,
+  true
+);
+const { table: organizationScopesTable } = convertToIdentifiers(OrganizationScopes, true);
 
 export default class TenantUsageQuery {
   constructor(private readonly pool: CommonQueryMethods) {}
@@ -68,6 +78,10 @@ export default class TenantUsageQuery {
       enterpriseSsoLimit: this.countEnterpriseSso,
       organizationsLimit: this.countOrganizations,
       samlApplicationsLimit: this.countSamlApplications,
+      usersPerOrganizationLimit: this.countUsersForOrganization,
+      organizationUserRolesLimit: this.countOrganizationUserRoles,
+      organizationMachineToMachineRolesLimit: this.countOrganizationMachineToMachineRoles,
+      organizationScopesLimit: this.countOrganizationScopes,
     };
   }
 
@@ -199,6 +213,52 @@ export default class TenantUsageQuery {
       select
         count(*)
       from ${organizationsTable}
+    `);
+
+    return Number(result.count);
+  };
+
+  private readonly countUsersForOrganization: UsageQueryWithContext = async (
+    _: string,
+    context: { entityId: string }
+  ): Promise<number> => {
+    const result = await this.pool.one<{ count: string }>(sql`
+      select
+        count(*)
+      from ${organizationUserRelationsTable}
+      where ${organizationUserRelationsFields.organizationId} = ${context.entityId}
+    `);
+
+    return Number(result.count);
+  };
+
+  private readonly countOrganizationUserRoles: UsageQuery = async () => {
+    const result = await this.pool.one<{ count: string }>(sql`
+      select
+        count(*)
+      from ${organizationRolesTable}
+      where ${organizationRolesFields.type} = ${RoleType.User}
+    `);
+
+    return Number(result.count);
+  };
+
+  private readonly countOrganizationMachineToMachineRoles: UsageQuery = async () => {
+    const result = await this.pool.one<{ count: string }>(sql`
+      select
+        count(*)
+      from ${organizationRolesTable}
+      where ${organizationRolesFields.type} = ${RoleType.MachineToMachine}
+    `);
+
+    return Number(result.count);
+  };
+
+  private readonly countOrganizationScopes: UsageQuery = async () => {
+    const result = await this.pool.one<{ count: string }>(sql`
+      select
+        count(*)
+      from ${organizationScopesTable}
     `);
 
     return Number(result.count);

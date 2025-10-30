@@ -10,3 +10,7 @@ export type OmitBooleanValueKeys<T> = Omit<
 >;
 
 export type ToZodEnum<T extends string> = z.ZodEnum<[T, ...T[]]>;
+
+export type RequiredNonNullProperties<T> = {
+  [K in keyof T]-?: NonNullable<T[K]>;
+};
