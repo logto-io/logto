@@ -53,6 +53,8 @@ const tenants = {
     tenant_usage_purpose: 'Wofür möchten Sie diesen Mieter verwenden?',
     development_description:
       'Nur für Tests und sollte nicht in der Produktion verwendet werden. Es ist kein Abonnement erforderlich.',
+    development_description_for_private_regions:
+      'Nur für Tests und sollte nicht in der Produktion verwendet werden.',
     development_hint:
       'Es verfügt über alle Pro-Funktionen, hat jedoch Einschränkungen wie ein Anmeldebanner.',
     production_description:

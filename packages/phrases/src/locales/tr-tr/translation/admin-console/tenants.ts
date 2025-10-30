@@ -52,6 +52,8 @@ const tenants = {
     tenant_usage_purpose: 'Bu kiracıyı ne için kullanmak istiyorsunuz?',
     development_description:
       'Yalnızca test amacıyla ve üretimde kullanılmamalıdır. Abonelik gerekli değildir.',
+    development_description_for_private_regions:
+      'Yalnızca test amacıyla ve üretimde kullanılmamalıdır.',
     development_hint:
       'Tüm pro özelliklere sahiptir ancak giriş bannerı gibi bazı sınırlamaları bulunmaktadır.',
     production_description:

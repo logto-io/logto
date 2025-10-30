@@ -53,6 +53,8 @@ const tenants = {
     tenant_usage_purpose: 'Para que pretende utilizar este inquilino?',
     development_description:
       'Apenas para testes e não deve ser usado em produção. Não é necessário nenhum plano de subscrição.',
+    development_description_for_private_regions:
+      'Apenas para testes e não deve ser usado em produção.',
     development_hint:
       'Tem todas as funcionalidades profissionais, mas tem limitações, como um banner de início de sessão.',
     production_description: 'Para uso por utilizadores finais e pode exigir uma subscrição paga.',

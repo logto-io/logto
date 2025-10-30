@@ -53,6 +53,8 @@ const tenants = {
     tenant_usage_purpose: 'Para que você deseja usar este locatário?',
     development_description:
       'Apenas para testes e não deve ser usado em produção. Nenhuma assinatura é necessária.',
+    development_description_for_private_regions:
+      'Apenas para testes e não deve ser usado em produção.',
     development_hint:
       'Possui todos os recursos profissionais, mas com limitações como um banner de entrada.',
     production_description: 'Para uso por usuários finais e pode exigir uma assinatura paga.',

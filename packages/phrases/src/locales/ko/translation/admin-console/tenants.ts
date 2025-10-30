@@ -50,6 +50,8 @@ const tenants = {
     tenant_usage_purpose: '이 테넌트를 사용하는 목적은 무엇입니까?',
     development_description:
       '테스트 용으로만 사용하고 프로덕션에서 사용하지 마십시오. 구독이 필요하지 않습니다.',
+    development_description_for_private_regions:
+      '테스트 용으로만 사용하고 프로덕션에서 사용하지 마십시오.',
     development_hint: '로그인 배너와 같은 제한이 있지만 모든 프로 기능이 있습니다.',
     production_description: '최종 사용자가 사용하기 위한 것으로 유료 구독이 필요할 수 있습니다.',
     available_plan: '사용 가능한 요금제:',
