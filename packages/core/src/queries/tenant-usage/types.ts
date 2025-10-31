@@ -1,17 +1,52 @@
 import { z } from 'zod';
 
-import { type SubscriptionQuota } from '#src/utils/subscription/types.js';
-import { type ToZodEnum } from '#src/utils/type.js';
+import {
+  type SystemLimit,
+  type SubscriptionQuota,
+  type SystemLimitKey,
+  systemLimitGuard,
+  logtoSkuQuotaGuard,
+} from '#src/utils/subscription/types.js';
+import { type RequiredNonNullProperties, type ToZodEnum } from '#src/utils/type.js';
 
-type AllLimitMap = Omit<SubscriptionQuota, 'mauLimit' | 'tokenLimit'>;
+type QuotaLimitMap = Omit<SubscriptionQuota, 'mauLimit' | 'tokenLimit'>;
+
+export type QuotaLimitKey = keyof QuotaLimitMap;
+
 /**
- * All limit keys - currently from SubscriptionQuota
+ * All limit keys - used for limit checking
+ */
+export type AllLimitKey = QuotaLimitKey | SystemLimitKey;
+
+export const isSystemLimitKey = (key: AllLimitKey): key is SystemLimitKey =>
+  systemLimitGuard.required().keyof().safeParse(key).success;
+
+export const isQuotaLimitKey = (key: AllLimitKey): key is keyof QuotaLimitMap =>
+  logtoSkuQuotaGuard
+    .omit({
+      mauLimit: true,
+      tokenLimit: true,
+    })
+    .keyof()
+    .safeParse(key).success;
+
+/**
+ * Complete limit map for type-safe limit classification
  *
  * @remarks
- * Future extension point: Can be extended to union with SystemLimit keys
- * Example: `export type AllLimitKey = keyof SubscriptionQuota | keyof SystemLimit;`
+ * This is an internal type used to derive {@link BooleanFeatureKey} and {@link NumericLimitKey}.
+ * Its keys are exactly {@link AllLimitKey} (QuotaLimitKey | SystemLimitKey).
+ *
+ * **Purpose:** Provides compile-time type safety when classifying limits.
+ * When {@link SubscriptionQuota} or {@link SystemLimit} types change, TypeScript will
+ * report errors in {@link BooleanFeatureKey} or {@link NumericLimitKey} if the
+ * corresponding guard enums are not updated accordingly.
+ *
+ * **Why RequiredNonNullProperties:**
+ * Ensures all {@link SystemLimit} keys are present (not optional) in the merged type,
+ * so they can be properly classified as {@link BooleanFeatureKey} or {@link NumericLimitKey}.
  */
-export type AllLimitKey = keyof AllLimitMap;
+type AllLimitMap = QuotaLimitMap & RequiredNonNullProperties<SystemLimit>;
 
 /**
  * Boolean feature keys - feature flags (enabled/disabled)
@@ -72,6 +107,10 @@ const numericLimitKeyGuard = z.enum([
   'samlApplicationsLimit',
   'socialConnectorsLimit',
   'tenantMembersLimit',
+  'usersPerOrganizationLimit',
+  'organizationUserRolesLimit',
+  'organizationMachineToMachineRolesLimit',
+  'organizationScopesLimit',
 ]) satisfies ToZodEnum<NumericLimitKey>;
 
 export const isNumericLimitKey = (key: AllLimitKey): key is NumericLimitKey =>
@@ -107,7 +146,10 @@ export type SelfComputedUsageKey = Exclude<
  * - scopesPerResourceLimit: entityId = resourceId
  * - scopesPerRoleLimit: entityId = roleId
  */
-export type EntityBasedUsageKey = 'scopesPerResourceLimit' | 'scopesPerRoleLimit';
+export type EntityBasedUsageKey =
+  | 'scopesPerResourceLimit'
+  | 'scopesPerRoleLimit'
+  | 'usersPerOrganizationLimit';
 
 /**
  * Tenant-based usage keys - queryable at tenant level without entity context
