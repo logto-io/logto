@@ -15,16 +15,16 @@ const content = {
     },
   },
   languages: {
-    title: 'LANGUAGES',
-    enable_auto_detect: 'Enable auto-detect',
+    title: 'IDIOMAS',
+    enable_auto_detect: 'Ativar deteção automática',
     description:
-      "Your software detects the user's locale setting and switches to the local language. You can add new languages by translating UI from English to another language.",
-    manage_language: 'Manage language',
-    default_language: 'Default language',
+      'O seu software deteta as definições de idioma do utilizador e muda para o idioma local. Pode adicionar novos idiomas traduzindo a interface do inglês para outro idioma.',
+    manage_language: 'Gerir idioma',
+    default_language: 'Idioma predefinido',
     default_language_description_auto:
-      'The default language will be used when the detected user language isn’t covered in the current language library.',
+      'O idioma predefinido será utilizado quando o idioma detetado do utilizador não estiver disponível na biblioteca atual.',
     default_language_description_fixed:
-      'When auto-detect is off, the default language is the only language your software will show. Turn on auto-detect for language extension.',
+      'Com a deteção automática desativada, o idioma predefinido é o único idioma que o seu software mostrará. Ative a deteção automática para expandir os idiomas.',
   },
   support: {
     title: 'SUPORTE',
@@ -36,23 +36,23 @@ const content = {
     support_website_placeholder: 'https://your.website/support',
   },
   manage_language: {
-    title: 'Manage language',
+    title: 'Gerir idioma',
     subtitle:
-      'Localize the product experience by adding languages and translations. Your contribution can be set as the default language.',
-    add_language: 'Add Language',
-    logto_provided: 'Logto provided',
-    key: 'Key',
-    logto_source_values: 'Logto source values',
-    custom_values: 'Custom values',
-    clear_all_tip: 'Clear all values',
-    unsaved_description: 'Changes won’t be saved if you leave this page without saving.',
-    deletion_tip: 'Delete the language',
-    deletion_title: 'Do you want to delete the added language?',
+      'Localize a experiência do produto adicionando idiomas e traduções. A sua contribuição pode ser definida como idioma predefinido.',
+    add_language: 'Adicionar idioma',
+    logto_provided: 'Fornecido pela Logto',
+    key: 'Chave',
+    logto_source_values: 'Valores de origem da Logto',
+    custom_values: 'Valores personalizados',
+    clear_all_tip: 'Limpar todos os valores',
+    unsaved_description: 'As alterações não serão guardadas se sair desta página sem guardar.',
+    deletion_tip: 'Eliminar o idioma',
+    deletion_title: 'Pretende eliminar o idioma adicionado?',
     deletion_description:
-      'After deletion, your users won’t be able to browse in that language again.',
-    default_language_deletion_title: 'Default language can’t be deleted.',
+      'Após a eliminação, os utilizadores deixarão de poder navegar nesse idioma.',
+    default_language_deletion_title: 'Não é possível eliminar o idioma predefinido.',
     default_language_deletion_description:
-      '{{language}} is set as your default language and can’t be deleted. ',
+      '{{language}} está definido como o seu idioma predefinido e não pode ser eliminado.',
   },
 };
 
