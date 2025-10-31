@@ -2,9 +2,9 @@ const content = {
   terms_of_use: {
     title: 'TERMS',
     description: '添加条款和隐私以满足合规要求。',
-    terms_of_use: 'Terms of use URL',
+    terms_of_use: '使用条款 URL',
     terms_of_use_placeholder: 'https://your.terms.of.use/',
-    privacy_policy: 'Privacy policy URL',
+    privacy_policy: '隐私政策 URL',
     privacy_policy_placeholder: 'https://your.privacy.policy/',
     agree_to_terms: '同意条款',
     agree_policies: {

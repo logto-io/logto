@@ -2,9 +2,9 @@ const content = {
   terms_of_use: {
     title: 'TERMS',
     description: 'Добавьте условия и политику конфиденциальности для соблюдения требований.',
-    terms_of_use: 'Terms of use URL',
+    terms_of_use: 'URL условий использования',
     terms_of_use_placeholder: 'https://your.terms.of.use/',
-    privacy_policy: 'Privacy policy URL',
+    privacy_policy: 'URL политики конфиденциальности',
     privacy_policy_placeholder: 'https://your.privacy.policy/',
     agree_to_terms: 'Согласиться с условиями',
     agree_policies: {

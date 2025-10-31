@@ -2,9 +2,9 @@ const content = {
   terms_of_use: {
     title: 'TERMS',
     description: 'Añadir términos y privacidad para cumplir con los requisitos de cumplimiento.',
-    terms_of_use: 'Terms of use URL',
+    terms_of_use: 'URL de los términos de uso',
     terms_of_use_placeholder: 'https://your.terms.of.use/',
-    privacy_policy: 'Privacy policy URL',
+    privacy_policy: 'URL de la política de privacidad',
     privacy_policy_placeholder: 'https://your.privacy.policy/',
     agree_to_terms: 'Aceptar los términos',
     agree_policies: {

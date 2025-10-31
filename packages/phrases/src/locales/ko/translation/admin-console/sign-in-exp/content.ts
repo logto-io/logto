@@ -2,9 +2,9 @@ const content = {
   terms_of_use: {
     title: 'TERMS',
     description: '컴플라이언스 요구 사항을 충족하기 위해 이용 약관과 개인정보 보호를 추가하세요.',
-    terms_of_use: 'Terms of use URL',
+    terms_of_use: '이용 약관 URL',
     terms_of_use_placeholder: 'https://your.terms.of.use/',
-    privacy_policy: 'Privacy policy URL',
+    privacy_policy: '개인정보 처리방침 URL',
     privacy_policy_placeholder: 'https://your.privacy.policy/',
     agree_to_terms: '약관에 동의하기',
     agree_policies: {
