@@ -42,9 +42,9 @@ const sign_in_exp = {
     app_logo_and_favicon: 'Uygulama logosu ve favicon',
     company_logo_and_favicon: 'Şirket logosu ve favicon',
     organization_logo_and_favicon: 'Organizasyon logosu ve favicon',
-    hide_logto_branding: 'Hide Logto branding',
+    hide_logto_branding: 'Logto markasını gizle',
     hide_logto_branding_description:
-      'Remove "Powered by Logto". Spotlight your brand exclusively with a clean, professional sign-in experience.',
+      '"Powered by Logto" ibaresini kaldırın. Temiz ve profesyonel bir oturum açma deneyimiyle yalnızca kendi markanızı öne çıkarın.',
   },
   branding_uploads: {
     app_logo: {
