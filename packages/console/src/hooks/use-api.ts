@@ -19,15 +19,17 @@ import { useCallback, useContext, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
-import { requestTimeout } from '@/consts';
+import { requestTimeout, contactEmailLink } from '@/consts';
 import { isCloud } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
+import { toastWithAction } from '@/ds-components/Toast/ToastWithAction';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useRedirectUri from '@/hooks/use-redirect-uri';
 
 import useSignOut from './use-sign-out';
+import { useSystemLimitErrorMessage } from './use-system-limit-error-message';
 
 export class RequestError extends Error {
   constructor(
@@ -50,6 +52,7 @@ const useGlobalRequestErrorHandler = (toastDisabledErrorCodes?: LogtoErrorCode[]
   const { signOut } = useSignOut();
   const { show } = useConfirmModal();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { parseSystemLimitErrorMessage } = useSystemLimitErrorMessage();
 
   const postSignOutRedirectUri = useRedirectUri('signOut');
 
@@ -83,6 +86,17 @@ const useGlobalRequestErrorHandler = (toastDisabledErrorCodes?: LogtoErrorCode[]
           return;
         }
 
+        // Toast system limit exceeded error
+        if (data.code === 'system_limit.limit_exceeded') {
+          toastWithAction({
+            message: parseSystemLimitErrorMessage(data),
+            actionText: 'general.contact_us_action',
+            actionHref: contactEmailLink,
+            variant: 'error',
+          });
+          return;
+        }
+
         // Skip showing toast for specific error codes.
         if (toastDisabledErrorCodes?.includes(data.code)) {
           return;
@@ -93,7 +107,14 @@ const useGlobalRequestErrorHandler = (toastDisabledErrorCodes?: LogtoErrorCode[]
         toast.error(httpCodeToMessage[response.status] ?? fallbackErrorMessage);
       }
     },
-    [t, toastDisabledErrorCodes, signOut, postSignOutRedirectUri.href, show]
+    [
+      t,
+      toastDisabledErrorCodes,
+      signOut,
+      postSignOutRedirectUri.href,
+      show,
+      parseSystemLimitErrorMessage,
+    ]
   );
 
   return {

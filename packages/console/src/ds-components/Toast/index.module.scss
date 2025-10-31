@@ -35,4 +35,20 @@ div.toast {
     background-color: var(--color-danger-toast-background);
     white-space: pre-line;
   }
+
+  &.withAction {
+    .message {
+      margin-right: _.unit(3);
+    }
+
+    .action {
+      flex-shrink: 0;
+      font: var(--font-label-2);
+      color: var(--color-text-link);
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
 }
