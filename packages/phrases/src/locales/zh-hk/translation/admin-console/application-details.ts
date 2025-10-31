@@ -4,7 +4,7 @@ const application_details = {
   check_guide: '查看指南',
   settings: '設定',
   settings_description:
-    '一個「應用程式」是一個註冊的軟體或服務，可以存取使用者資訊或代表使用者操作。應用程式有助於識別 Logto 的使用者要求的內容，並處理登入和權限。填寫所需的身份驗證欄位。',
+    '「應用程式」是已註冊的軟件或服務，可存取用戶資料或代替用戶操作。應用程式有助 Logto 辨識誰在申請甚麼，並處理登入和權限。請填寫必須欄位以完成驗證。',
   integration: '整合',
   integration_description:
     '使用 Logto 安全工作者，由 Cloudflare 的邊緣網路提供支持，實現頂級性能和全球 0 毫秒冷啟動。',

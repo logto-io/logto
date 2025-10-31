@@ -4,7 +4,7 @@ const application_details = {
   check_guide: 'Verifica guida',
   settings: 'Impostazioni',
   settings_description:
-    "Un \"Applicazione\" è un software o servizio registrato che può accedere alle informazioni dell'utente o agire per conto di un utente. Le applicazioni aiutano a riconoscere chi sta chiedendo cosa da Logto e gestiscono l'accesso e le autorizzazioni. Compila i campi obbligatori per l'autenticazione.",
+    "Un'applicazione è un software o un servizio registrato che può accedere alle informazioni dell'utente o agire per suo conto. Le applicazioni aiutano Logto a riconoscere chi sta richiedendo cosa e gestiscono l'accesso e le autorizzazioni. Compila i campi obbligatori per l'autenticazione.",
   integration: 'Integrazione',
   integration_description:
     "Implementa con i lavoratori sicuri di Logto, supportati dalla rete perimetrale di Cloudflare per prestazioni di prim'ordine e avviamenti istantanei in tutto il mondo a 0 ms.",
