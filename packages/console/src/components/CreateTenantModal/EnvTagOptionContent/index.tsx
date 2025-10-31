@@ -12,43 +12,55 @@ import styles from './index.module.scss';
 type Props = {
   readonly tag: TenantTag;
   /**
-   * Whether to hide the available production plan information.
+   * Although this parameter is named `isPrivateRegion`, considering our business requirements,
+   * it will also determine whether to hide the available production plan information.
    * Set to true when the available production plans should not be displayed,
    * for example, in contexts where this information is not relevant or should be hidden from the user.
    */
-  readonly isAvailableProductionPlanInvisible: boolean;
+  readonly isPrivateRegion: boolean;
 };
 
-const descriptionMap: Record<TenantTag, AdminConsoleKey> = {
-  [TenantTag.Development]: 'tenants.create_modal.development_description',
-  [TenantTag.Production]: 'tenants.create_modal.production_description',
+const getAdminConsoleKeyBy = (tenantTag: TenantTag, isPrivateRegion = false): AdminConsoleKey => {
+  if (tenantTag === TenantTag.Production) {
+    return 'tenants.create_modal.production_description';
+  }
+  if (isPrivateRegion) {
+    return 'tenants.create_modal.development_description_for_private_regions';
+  }
+  return 'tenants.create_modal.development_description';
 };
 
 const availableProductionPlanNames = [ReservedPlanName.Free, ReservedPlanName.Pro];
 
-function EnvTagOptionContent({ tag, isAvailableProductionPlanInvisible = false }: Props) {
+function EnvTagOptionContent({ tag, isPrivateRegion = false }: Props) {
+  const shouldShowHint = tag === TenantTag.Development || !isPrivateRegion;
+
   return (
     <div className={styles.container}>
       <TenantEnvTag isAbbreviated={false} tag={tag} size="large" className={styles.tag} />
       <div className={styles.description}>
-        <DynamicT forKey={descriptionMap[tag]} />
+        <DynamicT forKey={getAdminConsoleKeyBy(tag, isPrivateRegion)} />
       </div>
-      {(tag === TenantTag.Development || !isAvailableProductionPlanInvisible) && <Divider />}
-      <div className={styles.hint}>
-        {tag === TenantTag.Development && (
-          <DynamicT forKey="tenants.create_modal.development_hint" />
-        )}
-        {tag === TenantTag.Production && !isAvailableProductionPlanInvisible && (
-          <>
-            <DynamicT forKey="tenants.create_modal.available_plan" />
-            {availableProductionPlanNames.map((planName) => (
-              <Tag key={planName} variant="cell" size="small" className={styles.planNameTag}>
-                {planName}
-              </Tag>
-            ))}
-          </>
-        )}
-      </div>
+      {shouldShowHint && (
+        <>
+          <Divider />
+          <div className={styles.hint}>
+            {tag === TenantTag.Development && (
+              <DynamicT forKey="tenants.create_modal.development_hint" />
+            )}
+            {tag === TenantTag.Production && (
+              <>
+                <DynamicT forKey="tenants.create_modal.available_plan" />
+                {availableProductionPlanNames.map((planName) => (
+                  <Tag key={planName} variant="cell" size="small" className={styles.planNameTag}>
+                    {planName}
+                  </Tag>
+                ))}
+              </>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }

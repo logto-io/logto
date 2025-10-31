@@ -53,6 +53,8 @@ const tenants = {
     tenant_usage_purpose: 'What do you want to use this tenant for?',
     development_description:
       "For testing only and shouldn't be used in production. No subscription is required.",
+    development_description_for_private_regions:
+      "For testing only and shouldn't be used in production.",
     development_hint: 'It has all the pro features but has limitations like a sign-in banner.',
     production_description: 'For use by end-users and may require a paid subscription.',
     available_plan: 'Available plan:',

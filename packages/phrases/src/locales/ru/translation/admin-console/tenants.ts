@@ -52,6 +52,8 @@ const tenants = {
     tenant_usage_purpose: 'Для чего вы хотите использовать этот арендатор?',
     development_description:
       'Только для тестирования и не должно использоваться в производстве. Подписка не требуется.',
+    development_description_for_private_regions:
+      'Только для тестирования и не должно использоваться в производстве.',
     development_hint:
       'Он имеет все профессиональные функции, но с ограничениями, такими как баннер входа.',
     production_description:

@@ -45,6 +45,7 @@ const tenants = {
     subtitle: '創建一個擁有獨立資源和用戶的新租戶。',
     tenant_usage_purpose: '你希望使用此租戶做什麼？',
     development_description: '僅供測試使用，不應在生產中使用。無需訂閱。',
+    development_description_for_private_regions: '僅供測試使用，不應在生產中使用。',
     development_hint: '它具有所有專業功能，但存在限制，例如登錄橫幅。',
     production_description: '用於最終用戶使用並可能需要付費訂閱。',
     available_plan: '可用方案：',

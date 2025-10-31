@@ -51,6 +51,7 @@ const tenants = {
     tenant_usage_purpose: 'このテナントを使用する目的は何ですか？',
     development_description:
       'テスト用であり、本番で使用すべきではありません。サブスクリプションは必要ありません。',
+    development_description_for_private_regions: 'テスト用であり、本番で使用すべきではありません。',
     development_hint: 'すべてのプロの機能がありますが、サインインバナーなどの制限があります。',
     production_description:
       'エンドユーザーに使用することを意図しており、有料のサブスクリプションが必要なアプリ向け。',
