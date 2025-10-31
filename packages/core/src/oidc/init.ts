@@ -362,7 +362,8 @@ export default function initOidc(
       },
       Interaction: 3600 /* 1 hour in seconds */,
       Session: 1_209_600 /* 14 days in seconds */,
-      Grant: 1_209_600 /* 14 days in seconds */,
+      // Set this to the longest allowed duration of the refresh token
+      Grant: 180 * 3600 * 24 /* 180 days in seconds */,
     },
     rotateRefreshToken: (ctx) => {
       const { Client: client } = ctx.oidc.entities;
