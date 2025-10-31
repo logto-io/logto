@@ -97,71 +97,72 @@ const sign_in_exp = {
     description: 'Logto API を使用してアカウントセンターのフローをカスタマイズします。',
     enable_account_api: 'Account API を有効化',
     enable_account_api_description:
-      'Account API を有効化すると、Logto Management API を使わずにエンドユーザーに直接 API アクセスを提供するカスタムアカウントセンターを構築できます。',
+      'Account API を有効化してカスタムのアカウントセンターを構築し、Logto 管理 API を使わずにエンドユーザーへ直接 API へのアクセスを提供します。',
     field_options: {
-      off: 'Off',
-      edit: 'Edit',
-      read_only: 'Read only',
+      off: 'オフ',
+      edit: '編集',
+      read_only: '閲覧のみ',
       enabled: '有効',
       disabled: '無効',
     },
     sections: {
       account_security: {
-        title: 'ACCOUNT SECURITY',
+        title: 'アカウントセキュリティ',
         description:
-          'Manage access to the Account API, enabling users to view or edit their identity information and authentication factors after signing into the application. Users must verify their identity to get a valid 10-minute verification record ID before making these security-related changes.',
+          'Account API へのアクセスを管理し、ユーザーがアプリにサインインした後に本人情報や認証要素を表示または編集できるようにします。これらのセキュリティ関連の変更を行う前に、ユーザーは本人確認を行い、有効期限 10 分の検証レコード ID を取得する必要があります。',
         groups: {
           identifiers: {
-            title: 'Identifiers',
+            title: '識別子',
           },
           authentication_factors: {
-            title: 'Authentication factors',
+            title: '認証要素',
           },
         },
       },
       user_profile: {
-        title: 'USER PROFILE',
+        title: 'ユーザープロフィール',
         description:
-          'Manage access to the Account API, enabling users to view or edit basic or custom profile data after signing into the application.',
+          'Account API へのアクセスを管理し、ユーザーがアプリにサインインした後に基本またはカスタムのプロフィールデータを表示・編集できるようにします。',
         groups: {
           profile_data: {
-            title: 'Profile data',
+            title: 'プロフィールデータ',
           },
         },
       },
       secret_vault: {
         title: 'シークレットボルト',
         description:
-          'ソーシャルコネクタやエンタープライズコネクタ向けに、サードパーティのアクセストークンを安全に保存して、それらのAPI（例：Googleカレンダーにイベントを追加）を呼び出します。',
+          'ソーシャルおよびエンタープライズ連携向けに、サードパーティのアクセス トークンを安全に保管して、その API を呼び出します（例: Google カレンダーにイベントを追加）。',
         third_party_token_storage: {
           title: 'サードパーティトークン',
-          third_party_access_token_retrieval: 'サードパーティトークン',
+          third_party_access_token_retrieval: 'サードパーティアクセス トークンの取得',
           third_party_token_tooltip:
-            'トークンを保存するには、対応するソーシャルコネクタまたはエンタープライズコネクタの設定でこれを有効にすることができます。',
+            'トークンを保存するには、対応するソーシャルまたはエンタープライズ連携の設定でこの機能を有効にしてください。',
           third_party_token_description:
-            'Account APIが有効になると、サードパーティトークンの取得が自動的に有効になります。',
+            'Account API を有効にすると、サードパーティトークンの取得が自動的に有効になります。',
         },
       },
     },
     fields: {
-      email: 'Email address',
-      phone: 'Phone number',
-      social: 'Social identities',
-      password: 'Password',
-      mfa: 'Multi-factor authentication',
-      mfa_description: 'Let users manage their MFA methods from the account center.',
-      username: 'Username',
-      name: 'Name',
-      avatar: 'Avatar',
-      profile: 'Profile',
-      profile_description: 'Control access to structured profile attributes.',
-      custom_data: 'Custom data',
-      custom_data_description: 'Control access to custom JSON data stored on the user.',
+      email: 'メールアドレス',
+      phone: '電話番号',
+      social: 'ソーシャル ID',
+      password: 'パスワード',
+      mfa: '多要素認証',
+      mfa_description: 'ユーザーがアカウントセンターから MFA 方法を管理できるようにします。',
+      username: 'ユーザー名',
+      name: '名前',
+      avatar: 'アバター',
+      profile: 'プロフィール',
+      profile_description: '構造化されたプロフィール属性へのアクセスを制御します。',
+      custom_data: 'カスタムデータ',
+      custom_data_description:
+        'ユーザーに保存されているカスタム JSON データへのアクセスを制御します。',
     },
     webauthn_related_origins: 'WebAuthn 関連オリジン',
     webauthn_related_origins_description:
-      'アカウント API を介してパスキーを登録できるフロントエンドアプリケーションのドメインを追加します。',
-    webauthn_related_origins_error: 'オリジンは https:// または http:// で始まる必要があります',
+      'Account API を通じてパスキーを登録できるフロントエンドアプリケーションのドメインを追加します。',
+    webauthn_related_origins_error: 'オリジンは https:// または http:// で始める必要があります',
   },
   sign_up_and_sign_in,
   content,

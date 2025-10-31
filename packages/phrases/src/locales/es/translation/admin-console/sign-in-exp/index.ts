@@ -94,74 +94,76 @@ const sign_in_exp = {
       'Tus activos de la interfaz de usuario personalizada se han subido con éxito y ahora se están sirviendo. En consecuencia, la ventana de vista previa incorporada se ha deshabilitado.\nPara probar tu interfaz de inicio de sesión personalizada, haz clic en el botón "Vista previa en vivo" para abrirla en una nueva pestaña del navegador.',
   },
   account_center: {
-    title: 'Centro de cuentas',
-    description: 'Personaliza los flujos de tu centro de cuentas usando las APIs de Logto.',
-    enable_account_api: 'Habilitar Account API',
+    title: 'CENTRO DE CUENTAS',
+    description: 'Personaliza los flujos de tu centro de cuentas usando las API de Logto.',
+    enable_account_api: 'Habilitar la Account API',
     enable_account_api_description:
-      'Habilita la Account API para crear un centro de cuentas personalizado y ofrecer a los usuarios finales acceso directo sin usar la Logto Management API.',
+      'Activa la Account API para crear un centro de cuentas personalizado y ofrecer a los usuarios finales acceso directo a la API sin utilizar la Logto Management API.',
     field_options: {
-      off: 'Off',
-      edit: 'Edit',
-      read_only: 'Read only',
+      off: 'Desactivado',
+      edit: 'Editar',
+      read_only: 'Solo lectura',
       enabled: 'Activado',
-      disabled: 'Desactivado',
+      disabled: 'Inhabilitado',
     },
     sections: {
       account_security: {
-        title: 'ACCOUNT SECURITY',
+        title: 'SEGURIDAD DE LA CUENTA',
         description:
-          'Manage access to the Account API, enabling users to view or edit their identity information and authentication factors after signing into the application. Users must verify their identity to get a valid 10-minute verification record ID before making these security-related changes.',
+          'Administra el acceso a la Account API para que los usuarios, después de iniciar sesión en la aplicación, puedan ver o editar su información de identidad y los factores de autenticación. Antes de realizar estos cambios relacionados con la seguridad, los usuarios deben verificar su identidad y obtener un ID de registro de verificación válido durante 10 minutos.',
         groups: {
           identifiers: {
-            title: 'Identifiers',
+            title: 'Identificadores',
           },
           authentication_factors: {
-            title: 'Authentication factors',
+            title: 'Factores de autenticación',
           },
         },
       },
       user_profile: {
-        title: 'USER PROFILE',
+        title: 'PERFIL DEL USUARIO',
         description:
-          'Manage access to the Account API, enabling users to view or edit basic or custom profile data after signing into the application.',
+          'Administra el acceso a la Account API para que los usuarios puedan ver o editar datos básicos o personalizados del perfil después de iniciar sesión en la aplicación.',
         groups: {
           profile_data: {
-            title: 'Profile data',
+            title: 'Datos del perfil',
           },
         },
       },
       secret_vault: {
         title: 'BÓVEDA SECRETA',
         description:
-          'Para conectores sociales y empresariales, almacenamiento seguro de tokens de acceso de terceros para llamar a sus APIs (por ejemplo, agregar eventos al Calendario de Google).',
+          'Para conectores sociales y empresariales, almacena de forma segura los tokens de acceso de terceros para invocar sus API (por ejemplo, agregar eventos a Google Calendar).',
         third_party_token_storage: {
           title: 'Token de terceros',
-          third_party_access_token_retrieval: 'Token de terceros',
+          third_party_access_token_retrieval: 'Recuperación de token de acceso de terceros',
           third_party_token_tooltip:
-            'Para almacenar tokens, puede habilitar esto en la configuración del conector social o empresarial correspondiente.',
+            'Para almacenar tokens, puedes activar esta opción en la configuración del conector social o empresarial correspondiente.',
           third_party_token_description:
             'Una vez que se habilita la Account API, la recuperación de tokens de terceros se activa automáticamente.',
         },
       },
     },
     fields: {
-      email: 'Email address',
-      phone: 'Phone number',
-      social: 'Social identities',
-      password: 'Password',
-      mfa: 'Multi-factor authentication',
-      mfa_description: 'Let users manage their MFA methods from the account center.',
-      username: 'Username',
-      name: 'Name',
+      email: 'Dirección de correo electrónico',
+      phone: 'Número de teléfono',
+      social: 'Identidades sociales',
+      password: 'Contraseña',
+      mfa: 'Autenticación multifactor',
+      mfa_description:
+        'Permite que los usuarios gestionen sus métodos MFA desde el centro de cuentas.',
+      username: 'Nombre de usuario',
+      name: 'Nombre',
       avatar: 'Avatar',
-      profile: 'Profile',
-      profile_description: 'Control access to structured profile attributes.',
-      custom_data: 'Custom data',
-      custom_data_description: 'Control access to custom JSON data stored on the user.',
+      profile: 'Perfil',
+      profile_description: 'Controla el acceso a los atributos estructurados del perfil.',
+      custom_data: 'Datos personalizados',
+      custom_data_description:
+        'Controla el acceso a los datos JSON personalizados almacenados en el usuario.',
     },
     webauthn_related_origins: 'Orígenes relacionados con WebAuthn',
     webauthn_related_origins_description:
-      'Agregue los dominios de sus aplicaciones front-end que están permitidos para registrar claves de acceso a través de la API de cuenta.',
+      'Añade los dominios de tus aplicaciones front-end que pueden registrar passkeys a través de la Account API.',
     webauthn_related_origins_error: 'El origen debe comenzar con https:// o http://',
   },
   sign_up_and_sign_in,

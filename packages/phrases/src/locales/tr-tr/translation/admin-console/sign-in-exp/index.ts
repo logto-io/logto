@@ -93,74 +93,74 @@ const sign_in_exp = {
       'Özelleştirilmiş UI varlıklarınız başarıyla yüklendi ve şimdi sunuluyor. Sonuç olarak, yerleşik önizleme penceresi devre dışı bırakıldı.\nKişiselleştirilmiş oturum açma UI\'nizi test etmek için "Canlı Önizleme" düğmesine tıklayarak yeni bir tarayıcı sekmesinde açın.',
   },
   account_center: {
-    title: 'Hesap merkezi',
-    description: "Logto API'leri ile hesap merkezi akışlarını özelleştirin.",
+    title: 'HESAP MERKEZİ',
+    description: "Hesap merkezi akışlarını Logto API'leriyle özelleştirin.",
     enable_account_api: "Account API'yi etkinleştir",
     enable_account_api_description:
-      "Account API'yi etkinleştirerek Logto Management API'sini kullanmadan son kullanıcılara doğrudan API erişimi sağlayan özel bir hesap merkezi oluşturun.",
+      "Account API'yi etkinleştirerek özel bir hesap merkezi oluşturun ve Logto Management API'sini kullanmadan son kullanıcılara doğrudan API erişimi sağlayın.",
     field_options: {
-      off: 'Off',
-      edit: 'Edit',
-      read_only: 'Read only',
+      off: 'Kapalı',
+      edit: 'Düzenle',
+      read_only: 'Yalnızca okuma',
       enabled: 'Etkin',
       disabled: 'Devre dışı',
     },
     sections: {
       account_security: {
-        title: 'ACCOUNT SECURITY',
+        title: 'HESAP GÜVENLİĞİ',
         description:
-          'Manage access to the Account API, enabling users to view or edit their identity information and authentication factors after signing into the application. Users must verify their identity to get a valid 10-minute verification record ID before making these security-related changes.',
+          'Account API erişimini yöneterek kullanıcıların uygulamada oturum açtıktan sonra kimlik bilgilerini ve kimlik doğrulama faktörlerini görüntülemesine veya düzenlemesine izin verin. Bu güvenlikle ilgili değişiklikleri yapmadan önce kullanıcıların kimliğini doğrulayıp 10 dakika geçerli bir doğrulama kayıt kimliği almaları gerekir.',
         groups: {
           identifiers: {
-            title: 'Identifiers',
+            title: 'Tanımlayıcılar',
           },
           authentication_factors: {
-            title: 'Authentication factors',
+            title: 'Kimlik doğrulama faktörleri',
           },
         },
       },
       user_profile: {
-        title: 'USER PROFILE',
+        title: 'KULLANICI PROFİLİ',
         description:
-          'Manage access to the Account API, enabling users to view or edit basic or custom profile data after signing into the application.',
+          'Account API erişimini yöneterek kullanıcıların uygulamada oturum açtıktan sonra temel veya özel profil verilerini görüntülemesine ya da düzenlemesine izin verin.',
         groups: {
           profile_data: {
-            title: 'Profile data',
+            title: 'Profil verileri',
           },
         },
       },
       secret_vault: {
         title: 'GİZLİ KASA',
         description:
-          "Sosyal ve kurumsal bağlayıcılar için, üçüncü taraf API'lerini çağırmak için üçüncü taraf erişim token'larını güvenli bir şekilde saklayın (örneğin, Google Takvim'e etkinlik ekleyin).",
+          "Sosyal ve kurumsal bağlayıcılar için üçüncü taraf erişim belirteçlerini güvenle saklayarak onların API'lerine çağrı yapın (örneğin Google Takvim'e etkinlik ekleyin).",
         third_party_token_storage: {
-          title: 'Üçüncü taraf token',
-          third_party_access_token_retrieval: 'Üçüncü taraf token',
+          title: 'Üçüncü taraf belirteci',
+          third_party_access_token_retrieval: 'Üçüncü taraf erişim belirteci alma',
           third_party_token_tooltip:
-            "Token'ları depolamak için, bunu ilgili sosyal veya kurumsal bağlayıcının ayarlarında etkinleştirebilirsiniz.",
+            'Belirteçleri depolamak için ilgili sosyal veya kurumsal bağlayıcının ayarlarında bu seçeneği etkinleştirebilirsiniz.',
           third_party_token_description:
-            'Account API etkinleştirildiğinde, üçüncü taraf token alma otomatik olarak etkinleştirilir.',
+            'Account API etkinleştirildiğinde üçüncü taraf belirteci alma otomatik olarak etkin hale gelir.',
         },
       },
     },
     fields: {
-      email: 'Email address',
-      phone: 'Phone number',
-      social: 'Social identities',
-      password: 'Password',
-      mfa: 'Multi-factor authentication',
-      mfa_description: 'Let users manage their MFA methods from the account center.',
-      username: 'Username',
-      name: 'Name',
+      email: 'E-posta adresi',
+      phone: 'Telefon numarası',
+      social: 'Sosyal kimlikler',
+      password: 'Parola',
+      mfa: 'Çok faktörlü kimlik doğrulama',
+      mfa_description: 'Kullanıcıların MFA yöntemlerini hesap merkezinden yönetmesine izin verin.',
+      username: 'Kullanıcı adı',
+      name: 'Ad',
       avatar: 'Avatar',
-      profile: 'Profile',
-      profile_description: 'Control access to structured profile attributes.',
-      custom_data: 'Custom data',
-      custom_data_description: 'Control access to custom JSON data stored on the user.',
+      profile: 'Profil',
+      profile_description: 'Yapılandırılmış profil özniteliklerine erişimi kontrol edin.',
+      custom_data: 'Özel veriler',
+      custom_data_description: 'Kullanıcıda saklanan özel JSON verilerine erişimi kontrol edin.',
     },
     webauthn_related_origins: 'WebAuthn İlgili Kaynaklar',
     webauthn_related_origins_description:
-      "Hesap API'si aracılığıyla passkey kaydına izin verilen ön uç uygulamalarınızın alan adlarını ekleyin.",
+      'Account API aracılığıyla passkey kaydedilmesine izin verilen ön uç uygulamalarınızın alan adlarını ekleyin.',
     webauthn_related_origins_error: 'Kaynak https:// veya http:// ile başlamalıdır',
   },
   sign_up_and_sign_in,
