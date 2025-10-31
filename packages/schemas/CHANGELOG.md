@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.33.0
+
+### Patch Changes
+
+- Updated dependencies [47dbdd8332]
+  - @logto/phrases@1.22.0
+
 ## 1.32.0
 
 ### Minor Changes
