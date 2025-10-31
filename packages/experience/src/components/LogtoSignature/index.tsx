@@ -121,7 +121,7 @@ const LogtoSignature = ({ className }: Props) => {
         container.style.setProperty('display', 'block', 'important');
         container.style.setProperty('visibility', 'visible', 'important');
         container.style.setProperty('opacity', '1', 'important');
-        container.style.setProperty('position', 'static', 'important');
+        container.style.setProperty('position', 'absolute', 'important');
       }
 
       anchor.removeAttribute('hidden');
