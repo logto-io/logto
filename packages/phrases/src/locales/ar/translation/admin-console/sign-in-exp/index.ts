@@ -40,9 +40,9 @@ const sign_in_exp = {
     app_logo_and_favicon: 'شعار التطبيق ورمز الموقع',
     company_logo_and_favicon: 'شعار الشركة ورمز الموقع',
     organization_logo_and_favicon: 'شعار المنظمة ورمز الموقع',
-    hide_logto_branding: 'Hide Logto branding',
+    hide_logto_branding: 'إخفاء علامة Logto التجارية',
     hide_logto_branding_description:
-      'Remove "Powered by Logto". Spotlight your brand exclusively with a clean, professional sign-in experience.',
+      'أزل عبارة "مدعوم من Logto". سلّط الضوء على علامتك فقط مع تجربة تسجيل دخول نظيفة واحترافية.',
   },
   branding_uploads: {
     app_logo: {

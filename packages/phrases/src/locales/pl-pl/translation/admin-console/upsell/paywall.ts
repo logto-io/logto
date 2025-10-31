@@ -67,7 +67,7 @@ const paywall = {
       'Ulepsz do płatnego planu, aby uzyskać funkcjonalność niestandardowego JWT i korzyści premium. Jeśli masz jakieś pytania, nie wahaj się <a>skontaktować z nami</a>.',
   },
   branding_customization:
-    'Ulepsz swój plan, aby uzyskać pełną kontrolę nad brandingiem dzięki funkcjom "Hide Logto branding" i "Bring your UI".',
+    'Ulepsz swój plan, aby uzyskać pełną kontrolę nad brandingiem dzięki funkcjom "Ukryj branding Logto" i "Przynieś swój interfejs użytkownika".',
   bring_your_ui:
     'Ulepsz do płatnego planu, aby uzyskać funkcję własnego interfejsu użytkownika i korzyści premium.',
   security_features:

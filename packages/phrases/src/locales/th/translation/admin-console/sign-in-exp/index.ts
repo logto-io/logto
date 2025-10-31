@@ -41,9 +41,9 @@ const sign_in_exp = {
     app_logo_and_favicon: 'โลโก้แอปและ Favicon',
     company_logo_and_favicon: 'โลโก้บริษัทและ Favicon',
     organization_logo_and_favicon: 'โลโก้องค์กรและ Favicon',
-    hide_logto_branding: 'Hide Logto branding',
+    hide_logto_branding: 'ซ่อนแบรนด์ Logto',
     hide_logto_branding_description:
-      'Remove "Powered by Logto". Spotlight your brand exclusively with a clean, professional sign-in experience.',
+      'ลบ "Powered by Logto" เพื่อให้แบรนด์ของคุณโดดเด่นด้วยประสบการณ์ลงชื่อเข้าใช้ที่สะอาดและเป็นมืออาชีพ',
   },
   branding_uploads: {
     app_logo: {
