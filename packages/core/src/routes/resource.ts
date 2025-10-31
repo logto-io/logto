@@ -90,7 +90,6 @@ export default function resourceRoutes<T extends ManagementApiRouter>(
     koaReportSubscriptionUpdates({
       key: 'resourcesLimit',
       quota,
-      methods: ['POST'],
     }),
     async (ctx, next) => {
       const { body } = ctx.guard;
@@ -193,7 +192,6 @@ export default function resourceRoutes<T extends ManagementApiRouter>(
     koaReportSubscriptionUpdates({
       key: 'resourcesLimit',
       quota,
-      methods: ['DELETE'],
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;

@@ -1,4 +1,5 @@
 import { type GeneratedSchema } from '@logto/schemas';
+import type { Middleware } from 'koa';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -129,6 +130,120 @@ describe('SchemaRouter', () => {
 
       expect(queries.deleteById).toHaveBeenCalledWith('test');
       expect(response.status).toEqual(204);
+    });
+  });
+
+  describe('middlewares', () => {
+    it('should allow status codes declared in middleware guard config with scope and method', async () => {
+      // eslint-disable-next-line unicorn/consistent-function-scoping
+      const throwingMiddleware: Middleware = async () => {
+        throw new RequestError({ code: 'entity.not_found', status: 403 });
+      };
+
+      const schemaRouterWithMiddleware = new SchemaRouter(schema, queries, {
+        middlewares: [
+          {
+            middleware: throwingMiddleware,
+            scope: 'native',
+            method: ['get'],
+            status: [403],
+          },
+        ],
+      });
+      const requestWithMiddleware = createRequester({
+        authedRoutes: (router) => router.use(schemaRouterWithMiddleware.routes()),
+      });
+
+      const response = await requestWithMiddleware.get(baseRoute);
+
+      expect(response.status).toEqual(403);
+    });
+
+    it('should apply middleware to all methods when method is not specified', async () => {
+      const callTracker = jest.fn();
+
+      const trackingMiddleware: Middleware = async (ctx, next) => {
+        callTracker(ctx.method);
+        return next();
+      };
+
+      const schemaRouterWithMiddleware = new SchemaRouter(schema, queries, {
+        middlewares: [
+          {
+            middleware: trackingMiddleware,
+            scope: 'native',
+          },
+        ],
+      });
+      const requestWithMiddleware = createRequester({
+        authedRoutes: (router) => router.use(schemaRouterWithMiddleware.routes()),
+      });
+
+      await requestWithMiddleware.get(baseRoute);
+      await requestWithMiddleware.post(baseRoute).send({});
+      await requestWithMiddleware.patch(`${baseRoute}/test`).send({ name: 'test' });
+
+      expect(callTracker).toHaveBeenCalledTimes(3);
+      expect(callTracker).toHaveBeenCalledWith('GET');
+      expect(callTracker).toHaveBeenCalledWith('POST');
+      expect(callTracker).toHaveBeenCalledWith('PATCH');
+    });
+
+    it('should only apply middleware to specified methods', async () => {
+      const callTracker = jest.fn();
+
+      const trackingMiddleware: Middleware = async (ctx, next) => {
+        callTracker(ctx.method);
+        return next();
+      };
+
+      const schemaRouterWithMiddleware = new SchemaRouter(schema, queries, {
+        middlewares: [
+          {
+            middleware: trackingMiddleware,
+            scope: 'native',
+            method: ['get', 'post'],
+          },
+        ],
+      });
+      const requestWithMiddleware = createRequester({
+        authedRoutes: (router) => router.use(schemaRouterWithMiddleware.routes()),
+      });
+
+      await requestWithMiddleware.get(baseRoute);
+      await requestWithMiddleware.post(baseRoute).send({});
+      await requestWithMiddleware.patch(`${baseRoute}/test`).send({ name: 'test' });
+
+      expect(callTracker).toHaveBeenCalledTimes(2);
+      expect(callTracker).toHaveBeenCalledWith('GET');
+      expect(callTracker).toHaveBeenCalledWith('POST');
+      expect(callTracker).not.toHaveBeenCalledWith('PATCH');
+    });
+
+    it('should apply middleware without scope to all routes', async () => {
+      const callTracker = jest.fn();
+
+      const trackingMiddleware: Middleware = async (ctx, next) => {
+        callTracker();
+        return next();
+      };
+
+      const schemaRouterWithMiddleware = new SchemaRouter(schema, queries, {
+        middlewares: [
+          {
+            middleware: trackingMiddleware,
+          },
+        ],
+      });
+      const requestWithMiddleware = createRequester({
+        authedRoutes: (router) => router.use(schemaRouterWithMiddleware.routes()),
+      });
+
+      await requestWithMiddleware.get(baseRoute);
+      await requestWithMiddleware.post(baseRoute).send({});
+
+      // Global middleware should be called for all routes
+      expect(callTracker).toHaveBeenCalledTimes(2);
     });
   });
 

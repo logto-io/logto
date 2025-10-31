@@ -83,7 +83,6 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
     koaReportSubscriptionUpdates({
       quota,
       key: 'enterpriseSsoLimit',
-      methods: ['POST'],
     }),
     async (ctx, next) => {
       const { body } = ctx.guard;
@@ -233,7 +232,6 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
     koaReportSubscriptionUpdates({
       quota,
       key: 'enterpriseSsoLimit',
-      methods: ['DELETE'],
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
