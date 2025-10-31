@@ -1,5 +1,23 @@
 # Change Log
 
+## 1.30.0
+
+### Minor Changes
+
+- 7a32a89911: keep the “Third-party applications” tab permanently visible on the Applications page
+- 47dbdd8332: add account center config page
+
+  You can now configure the account center in the Logto Console.
+
+### Patch Changes
+
+- bb495efcae: add body-based personal access token APIs
+
+  introduce PATCH/POST endpoints that accept token names in the request body to support special characters while keeping path-based routes for compatibility:
+
+  - PATCH /api/users/{userId}/personal-access-tokens
+  - POST /api/users/{userId}/personal-access-tokens/delete
+
 ## 1.29.0
 
 ### Minor Changes

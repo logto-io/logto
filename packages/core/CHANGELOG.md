@@ -1,5 +1,44 @@
 # Change Log
 
+## 1.33.0
+
+### Minor Changes
+
+- dff3918c8d: add API for MFA skip controls
+
+  expose logto_config endpoints in account and management APIs for managing MFA skip controls
+
+  - /api/my-account/logto-configs
+  - /api/admin/users/:userId/logto-configs
+
+- 4f5b4e33dc: append `applicationId` to the experience API audit logs
+
+### Patch Changes
+
+- f55e171956: fix a bug that the `locale` param used in email templates does not respect the user custom languages
+- e5d3dd3278: remove deprecated interaction API endpoints from OpenAPI swagger documentation.
+
+  The legacy interaction API endpoints are no longer supported and have been replaced by the Experience API endpoints.
+
+- bb495efcae: add body-based personal access token APIs
+
+  introduce PATCH/POST endpoints that accept token names in the request body to support special characters while keeping path-based routes for compatibility:
+
+  - PATCH /api/users/{userId}/personal-access-tokens
+  - POST /api/users/{userId}/personal-access-tokens/delete
+
+- Updated dependencies [3ed4d0a91e]
+- Updated dependencies [bb495efcae]
+- Updated dependencies [568db900bb]
+- Updated dependencies [7a32a89911]
+- Updated dependencies [47dbdd8332]
+  - @logto/experience@1.16.1
+  - @logto/console@1.30.0
+  - @logto/phrases@1.22.0
+  - @logto/demo-app@1.5.0
+  - @logto/schemas@1.33.0
+  - @logto/cli@1.33.0
+
 ## 1.32.0
 
 ### Minor Changes
