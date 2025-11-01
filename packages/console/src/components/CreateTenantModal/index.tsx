@@ -16,7 +16,6 @@ import Region, {
   logtoDropdownItem,
   type InstanceDropdownItemProps,
 } from '@/components/Region';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import FormField from '@/ds-components/FormField';
@@ -53,12 +52,11 @@ const getInstanceDropdownItems = (regions: RegionType[]): InstanceDropdownItemPr
   return condArray(hasPublicRegions && logtoDropdownItem, ...privateInstances);
 };
 
-// eslint-disable-next-line complexity
 function CreateTenantModal({ isOpen, onClose }: Props) {
   const [tenantData, setTenantData] = useState<CreateTenantData>();
   const theme = useTheme();
   const cloudApi = useCloudApi();
-  const { regions, regionsError, getRegionById } = useAvailableRegions();
+  const { regions, regionsError, getRegionByName } = useAvailableRegions();
 
   const defaultValues = Object.freeze({
     tag: TenantTag.Development,
@@ -95,26 +93,16 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
     [regions]
   );
 
-  const isLogtoInstance = instanceId === logtoDropdownItem.name;
+  const isLogtoInstance = useMemo(() => instanceId === logtoDropdownItem.name, [instanceId]);
 
-  const currentRegion = useMemo(() => {
-    if (isDevFeaturesEnabled) {
-      return getRegionById(isLogtoInstance ? regionName : instanceId);
-    }
-
-    if (isLogtoInstance) {
-      return getRegionById(regionName);
-    }
-    // For private instances, find the region that matches the instance
-    return regions?.find((region) => region.name === instanceId);
-  }, [isLogtoInstance, regionName, instanceId, getRegionById, regions]);
+  const currentRegion = useMemo(
+    () => getRegionByName(isLogtoInstance ? regionName : instanceId),
+    [isLogtoInstance, regionName, instanceId, getRegionByName]
+  );
 
   const getFinalRegionName = useCallback(
     (instanceId: string, regionName: string) => {
-      if (isDevFeaturesEnabled) {
-        return isLogtoInstance ? regionName : instanceId;
-      }
-      return regionName;
+      return isLogtoInstance ? regionName : instanceId;
     },
     [isLogtoInstance]
   );
@@ -189,41 +177,8 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
             />
           </FormField>
 
-          {!isDevFeaturesEnabled && (
-            <FormField
-              title="tenants.settings.tenant_region"
-              tip={t('tenants.settings.tenant_region_description')}
-            >
-              {!regions && !regionsError && <Ring />}
-              {regionsError && <span className={styles.error}>{regionsError.message}</span>}
-              {regions && !regionsError && (
-                <Controller
-                  control={control}
-                  name="regionName"
-                  rules={{ required: true }}
-                  render={({ field: { onChange, value, name } }) => (
-                    <RadioGroup type="plain" name={name} value={value} onChange={onChange}>
-                      {regions.map((region) => (
-                        <Radio
-                          key={region.name}
-                          title={
-                            <DangerousRaw>
-                              <Region region={region} />
-                            </DangerousRaw>
-                          }
-                          value={region.name}
-                          isDisabled={isSubmitting}
-                        />
-                      ))}
-                    </RadioGroup>
-                  )}
-                />
-              )}
-            </FormField>
-          )}
-
           {/* Only show the instance selector (dropdown) if there are private regions available. */}
-          {isDevFeaturesEnabled && hasPrivateRegionsAccess && (
+          {hasPrivateRegionsAccess && (
             <FormField
               title="tenants.settings.tenant_instance"
               tip={t('tenants.settings.tenant_instance_description')}
@@ -248,7 +203,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
               )}
             </FormField>
           )}
-          {isDevFeaturesEnabled && isLogtoInstance && (
+          {isLogtoInstance && (
             <FormField
               title="tenants.settings.tenant_region"
               tip={t('tenants.settings.tenant_region_description')}
