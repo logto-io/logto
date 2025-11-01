@@ -14,12 +14,16 @@ export const defaultMetadata: ConnectorMetadata = {
   name: {
     en: 'Feishu',
     'zh-CN': '飞书',
+    'tr-TR': 'Feishu',
+    ko: 'Feishu',
   },
   logo: './logo.svg',
   logoDark: null,
   description: {
-    'zh-CN': '飞书是一个由字节跳动开发的企业协作与管理平台',
-    en: 'Feishu is an enterprise collaboration platform developed by ByteDance',
+    en: 'Feishu is an enterprise collaboration platform developed by ByteDance.',
+    'zh-CN': '飞书是由字节跳动开发的企业协作与管理平台。',
+    'tr-TR': 'Feishu, ByteDance tarafından geliştirilen kurumsal bir iş birliği platformudur.',
+    ko: 'Feishu는 ByteDance가 개발한 엔터프라이즈 협업 플랫폼입니다.',
   },
   readme: './README.md',
   formItems: [

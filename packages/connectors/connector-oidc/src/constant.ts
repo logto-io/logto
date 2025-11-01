@@ -16,12 +16,17 @@ export const defaultMetadata: ConnectorMetadata = {
   name: {
     en: 'OIDC',
     'zh-CN': 'OIDC',
+    'tr-TR': 'OIDC',
+    ko: 'OIDC',
   },
   logo: './logo.svg',
   logoDark: null,
   description: {
     en: 'OpenID Connect 1.0 is a simple identity layer on top of the OAuth 2.0 protocol.',
     'zh-CN': 'OpenID Connect 1.0 是基于 OAuth 2.0 协议的一个简单身份层。',
+    'tr-TR':
+      'OpenID Connect 1.0, OAuth 2.0 protokolünün üzerine inşa edilmiş basit bir kimlik katmanıdır.',
+    ko: 'OpenID Connect 1.0은 OAuth 2.0 프로토콜 위에 구축된 간단한 ID 계층입니다.',
   },
   readme: './README.md',
   isStandard: true,

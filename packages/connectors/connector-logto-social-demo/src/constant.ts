@@ -13,7 +13,10 @@ export const defaultMetadata: ConnectorMetadata = {
   logo: './logo.svg',
   logoDark: null,
   description: {
-    en: 'The demo for social sign-in',
+    en: 'Demo connector for social sign-in.',
+    'zh-CN': '用于社交登录的演示连接器。',
+    'tr-TR': 'Sosyal oturum açma için demo bağlayıcı.',
+    ko: '소셜 로그인 데모 커넥터입니다.',
   },
   readme: './README.md',
   isStandard: true,

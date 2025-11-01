@@ -9,13 +9,19 @@ export const defaultMetadata: ConnectorMetadata = {
   platform: null,
   name: {
     en: 'YunPian SMS Service',
+    'zh-CN': '云片短信服务',
     zh: '云片短信服务',
+    'tr-TR': 'YunPian SMS Hizmeti',
+    ko: 'YunPian SMS 서비스',
   },
   logo: './logo.svg',
   logoDark: null,
   description: {
     en: 'YunPian is a SMS service provider.',
+    'zh-CN': '云片网是一家短信服务提供商。',
     zh: '云片网是一家短信服务提供商。',
+    'tr-TR': 'YunPian, bir SMS servis sağlayıcısıdır.',
+    ko: 'YunPian은 SMS 서비스 제공업체입니다.',
   },
   readme: './README.md',
   formItems: [

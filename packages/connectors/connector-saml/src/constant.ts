@@ -172,6 +172,8 @@ export const defaultMetadata: ConnectorMetadata = {
   name: {
     en: 'SAML',
     'zh-CN': 'SAML',
+    'tr-TR': 'SAML',
+    ko: 'SAML',
   },
   logo: './logo.svg',
   logoDark: null,
@@ -179,6 +181,9 @@ export const defaultMetadata: ConnectorMetadata = {
     en: 'SAML is an XML based framework that stands for Security Assertion Markup Language. It can be used for authentication.',
     'zh-CN':
       '安全断言标记语言 SAML 是一个基于 XML 的开源标准数据格式，它可用于在当事方之间交换身份验证和授权数据。',
+    'tr-TR':
+      'SAML (Security Assertion Markup Language), kimlik doğrulaması için kullanılabilen XML tabanlı bir çerçevedir.',
+    ko: 'SAML(Security Assertion Markup Language)은 인증에 사용할 수 있는 XML 기반 프레임워크입니다.',
   },
   readme: './README.md',
   isStandard: true,

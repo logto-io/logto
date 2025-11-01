@@ -12,6 +12,9 @@ export const defaultMetadata: ConnectorMetadata = {
   logoDark: null,
   description: {
     en: 'Postmark is a mail sending platform.',
+    'zh-CN': 'Postmark 是一个邮件发送平台。',
+    'tr-TR': 'Postmark, bir e-posta gönderim platformudur.',
+    ko: 'Postmark는 이메일 발송 플랫폼입니다.',
   },
   readme: './README.md',
   formItems: [

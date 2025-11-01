@@ -12,6 +12,9 @@ export const defaultMetadata: ConnectorMetadata = {
   logoDark: './logo-dark.svg',
   description: {
     en: 'Send SMS via HTTP call.',
+    'zh-CN': '通过 HTTP 调用发送短信。',
+    'tr-TR': 'HTTP isteği aracılığıyla SMS gönderin.',
+    ko: 'HTTP 호출을 통해 SMS를 보냅니다.',
   },
   readme: './README.md',
   formItems: [

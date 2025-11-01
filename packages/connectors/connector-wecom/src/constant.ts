@@ -25,8 +25,11 @@ export const defaultMetadata: ConnectorMetadata = {
   logo: './logo.svg',
   logoDark: null,
   description: {
-    en: 'WeCom is a cross-platform instant messaging app for team. It is the enterprise version of WeChat.',
-    'zh-CN': '企业微信,是腾讯微信团队为企业打造的专业办公管理工具。',
+    en: 'WeCom is a cross-platform instant messaging app for teams. It is the enterprise version of WeChat.',
+    'zh-CN': '企业微信是腾讯微信团队为企业打造的专业办公管理工具。',
+    'tr-TR':
+      "WeCom, ekipler için çoklu platform destekli bir anlık mesajlaşma uygulamasıdır. WeChat'in kurumsal sürümüdür.",
+    ko: 'WeCom은 팀을 위한 크로스 플랫폼 인스턴트 메신저 앱으로, 위챗의 기업용 버전입니다.',
   },
   readme: './README.md',
   formItems: [
