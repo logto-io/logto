@@ -91,74 +91,74 @@ const sign_in_exp = {
   },
   account_center: {
     title: '계정 센터',
-    description: 'Logto API로 계정 센터 흐름을 사용자화하세요.',
+    description: 'Logto API로 계정 센터 플로우를 사용자 지정하세요.',
     enable_account_api: 'Account API 활성화',
     enable_account_api_description:
-      'Account API를 활성화하여 Logto 관리 API 없이도 엔드유저에게 직접 API 접근을 제공하는 맞춤형 계정 센터를 구축하세요.',
+      'Account API를 활성화하여 맞춤형 계정 센터를 구축하고, Logto 관리 API 없이도 최종 사용자에게 직접 API 접근을 제공합니다.',
     field_options: {
-      off: 'Off',
-      edit: 'Edit',
-      read_only: 'Read only',
+      off: '끄기',
+      edit: '편집',
+      read_only: '읽기 전용',
       enabled: '활성화됨',
       disabled: '비활성화됨',
     },
     sections: {
       account_security: {
-        title: 'ACCOUNT SECURITY',
+        title: '계정 보안',
         description:
-          'Manage access to the Account API, enabling users to view or edit their identity information and authentication factors after signing into the application. Users must verify their identity to get a valid 10-minute verification record ID before making these security-related changes.',
+          'Account API 접근을 관리해 사용자가 애플리케이션에 로그인한 뒤 자신의 신원 정보와 인증 요소를 확인하거나 수정할 수 있도록 합니다. 이러한 보안 관련 변경을 진행하기 전에 사용자는 본인 확인을 완료하고 유효 기간 10분의 검증 기록 ID를 받아야 합니다.',
         groups: {
           identifiers: {
-            title: 'Identifiers',
+            title: '식별자',
           },
           authentication_factors: {
-            title: 'Authentication factors',
+            title: '인증 요소',
           },
         },
       },
       user_profile: {
-        title: 'USER PROFILE',
+        title: '사용자 프로필',
         description:
-          'Manage access to the Account API, enabling users to view or edit basic or custom profile data after signing into the application.',
+          'Account API 접근을 관리해 사용자가 로그인 후 기본 또는 사용자 지정 프로필 데이터를 확인하거나 수정할 수 있도록 합니다.',
         groups: {
           profile_data: {
-            title: 'Profile data',
+            title: '프로필 데이터',
           },
         },
       },
       secret_vault: {
         title: '비밀 보관소',
         description:
-          '소셜 및 엔터프라이즈 커넥터의 경우, 타사 API를 호출하기 위해 타사 액세스 토큰을 안전하게 저장합니다(예: Google 캘린더에 이벤트 추가).',
+          '소셜 및 엔터프라이즈 커넥터를 위해 서드파티 액세스 토큰을 안전하게 저장해 해당 API를 호출합니다(예: Google 캘린더에 일정 추가).',
         third_party_token_storage: {
-          title: '타사 토큰',
-          third_party_access_token_retrieval: '타사 토큰',
+          title: '서드파티 토큰',
+          third_party_access_token_retrieval: '서드파티 액세스 토큰 가져오기',
           third_party_token_tooltip:
-            '토큰을 저장하려면 해당 소셜 또는 엔터프라이즈 커넥터 설정에서 이를 활성화할 수 있습니다.',
+            '토큰을 저장하려면 해당 소셜 또는 엔터프라이즈 커넥터 설정에서 이 옵션을 활성화하세요.',
           third_party_token_description:
-            'Account API가 활성화되면 타사 토큰 검색이 자동으로 활성화됩니다.',
+            'Account API를 활성화하면 서드파티 토큰 가져오기가 자동으로 활성화됩니다.',
         },
       },
     },
     fields: {
-      email: 'Email address',
-      phone: 'Phone number',
-      social: 'Social identities',
-      password: 'Password',
-      mfa: 'Multi-factor authentication',
-      mfa_description: 'Let users manage their MFA methods from the account center.',
-      username: 'Username',
-      name: 'Name',
-      avatar: 'Avatar',
-      profile: 'Profile',
-      profile_description: 'Control access to structured profile attributes.',
-      custom_data: 'Custom data',
-      custom_data_description: 'Control access to custom JSON data stored on the user.',
+      email: '이메일 주소',
+      phone: '전화번호',
+      social: '소셜 식별자',
+      password: '비밀번호',
+      mfa: '다중 요소 인증',
+      mfa_description: '사용자가 계정 센터에서 MFA 방법을 관리하도록 허용합니다.',
+      username: '사용자 이름',
+      name: '이름',
+      avatar: '아바타',
+      profile: '프로필',
+      profile_description: '구조화된 프로필 속성에 대한 접근을 제어합니다.',
+      custom_data: '사용자 정의 데이터',
+      custom_data_description: '사용자에 저장된 사용자 정의 JSON 데이터에 대한 접근을 제어합니다.',
     },
-    webauthn_related_origins: 'WebAuthn 관련 출처',
+    webauthn_related_origins: 'WebAuthn 관련 오리진',
     webauthn_related_origins_description:
-      '계정 API를 통해 패스키를 등록할 수 있는 프론트엔드 애플리케이션의 도메인을 추가합니다。',
-    webauthn_related_origins_error: '출처는 https:// 또는 http://로 시작해야 합니다',
+      'Account API를 통해 패스키를 등록할 수 있도록 허용된 프런트엔드 애플리케이션 도메인을 추가하세요.',
+    webauthn_related_origins_error: '오리진은 https:// 또는 http:// 로 시작해야 합니다',
   },
   sign_up_and_sign_in,
   content,

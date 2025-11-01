@@ -4,7 +4,7 @@ const application_details = {
   check_guide: '가이드 확인',
   settings: '설정',
   settings_description:
-    'An "Application" is a registered software or service that can access user info or act for a user. Applications help recognize who’s asking for what from Logto and handle the sign-in and permission. Fill in the required fields for authentication.',
+    '애플리케이션은 사용자 정보를 조회하거나 사용자를 대신해 동작할 수 있도록 등록된 소프트웨어나 서비스입니다. 애플리케이션은 Logto가 누가 무엇을 요청하는지 파악하고, 로그인과 권한 부여를 처리하도록 돕습니다. 인증을 위해 필수 필드를 모두 입력하세요.',
   integration: '통합',
   integration_description:
     '로그토에서 클라우드플레어의 엣지 네트워크로 구동되는 안전한 워커를 사용하여 세계적인 최고 수준의 성능 및 전 세계 0ms의 차가운 시작을 구동합니다.',

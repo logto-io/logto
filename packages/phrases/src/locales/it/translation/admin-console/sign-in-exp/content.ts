@@ -2,9 +2,9 @@ const content = {
   terms_of_use: {
     title: 'TERMS',
     description: 'Aggiungi termini e privacy per soddisfare i requisiti di conformità.',
-    terms_of_use: 'Terms of use URL',
+    terms_of_use: "URL dei termini d'uso",
     terms_of_use_placeholder: 'https://your.terms.of.use/',
-    privacy_policy: 'Privacy policy URL',
+    privacy_policy: "URL dell'informativa sulla privacy",
     privacy_policy_placeholder: 'https://your.privacy.policy/',
     agree_to_terms: 'Accettare i termini',
     agree_policies: {
@@ -15,16 +15,16 @@ const content = {
     },
   },
   languages: {
-    title: 'LANGUAGES',
-    enable_auto_detect: 'Enable auto-detect',
+    title: 'LINGUE',
+    enable_auto_detect: 'Abilita il rilevamento automatico',
     description:
-      "Your software detects the user's locale setting and switches to the local language. You can add new languages by translating UI from English to another language.",
-    manage_language: 'Manage language',
-    default_language: 'Default language',
+      "Il tuo software rileva le impostazioni locali dell'utente e passa alla lingua locale. Puoi aggiungere nuove lingue traducendo l'interfaccia dall'inglese a un'altra lingua.",
+    manage_language: 'Gestisci lingua',
+    default_language: 'Lingua predefinita',
     default_language_description_auto:
-      'The default language will be used when the detected user language isn’t covered in the current language library.',
+      "La lingua predefinita verrà usata quando la lingua rilevata dell'utente non è presente nella libreria attuale.",
     default_language_description_fixed:
-      'When auto-detect is off, the default language is the only language your software will show. Turn on auto-detect for language extension.',
+      "Quando il rilevamento automatico è disattivato, la lingua predefinita è l'unica che il software mostrerà. Attiva il rilevamento automatico per ampliare le lingue.",
   },
   support: {
     title: 'SUPPORTO',
@@ -36,23 +36,23 @@ const content = {
     support_website_placeholder: 'https://your.website/support',
   },
   manage_language: {
-    title: 'Manage language',
+    title: 'Gestisci lingua',
     subtitle:
-      'Localize the product experience by adding languages and translations. Your contribution can be set as the default language.',
-    add_language: 'Add Language',
-    logto_provided: 'Logto provided',
-    key: 'Key',
-    logto_source_values: 'Logto source values',
-    custom_values: 'Custom values',
-    clear_all_tip: 'Clear all values',
-    unsaved_description: 'Changes won’t be saved if you leave this page without saving.',
-    deletion_tip: 'Delete the language',
-    deletion_title: 'Do you want to delete the added language?',
+      "Localizza l'esperienza del prodotto aggiungendo lingue e traduzioni. Il tuo contributo può essere impostato come lingua predefinita.",
+    add_language: 'Aggiungi lingua',
+    logto_provided: 'Fornito da Logto',
+    key: 'Chiave',
+    logto_source_values: 'Valori originali Logto',
+    custom_values: 'Valori personalizzati',
+    clear_all_tip: 'Cancella tutti i valori',
+    unsaved_description: 'Le modifiche non verranno salvate se lasci questa pagina senza salvare.',
+    deletion_tip: 'Elimina lingua',
+    deletion_title: 'Vuoi eliminare la lingua aggiunta?',
     deletion_description:
-      'After deletion, your users won’t be able to browse in that language again.',
-    default_language_deletion_title: 'Default language can’t be deleted.',
+      "Dopo l'eliminazione, gli utenti non potranno più navigare in quella lingua.",
+    default_language_deletion_title: 'Impossibile eliminare la lingua predefinita.',
     default_language_deletion_description:
-      '{{language}} is set as your default language and can’t be deleted. ',
+      '{{language}} è impostata come lingua predefinita e non può essere eliminata.',
   },
 };
 

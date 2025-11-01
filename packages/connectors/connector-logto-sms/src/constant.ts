@@ -12,6 +12,9 @@ export const defaultMetadata: ConnectorMetadata = {
   logoDark: './logo-dark.svg',
   description: {
     en: 'Logto SMS service (demonstration).',
+    'zh-CN': 'Logto SMS 服务（演示）。',
+    'tr-TR': 'Logto SMS hizmeti (demonstrasyon).',
+    ko: 'Logto SMS 서비스(데모).',
   },
   readme: './README.md',
   formItems: [

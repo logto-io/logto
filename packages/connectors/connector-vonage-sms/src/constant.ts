@@ -11,7 +11,10 @@ export const defaultMetadata: ConnectorMetadata = {
   logo: './logo.svg',
   logoDark: null,
   description: {
-    en: 'Communications APIs to connect the world',
+    en: 'Communications APIs to connect the world.',
+    'zh-CN': '用于连接世界的通信 API。',
+    'tr-TR': "Dünyayı birbirine bağlayan iletişim API'leri.",
+    ko: '세계를 연결하는 커뮤니케이션 API입니다.',
   },
   readme: './README.md',
   formItems: [

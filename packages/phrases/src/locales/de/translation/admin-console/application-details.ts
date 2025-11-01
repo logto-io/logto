@@ -4,7 +4,7 @@ const application_details = {
   check_guide: 'Zur Anleitung',
   settings: 'Einstellungen',
   settings_description:
-    'Eine "Anwendung" ist eine registrierte Software oder Dienst, die auf Benutzerinformationen zugreifen oder im Namen eines Benutzers agieren kann. Anwendungen helfen dabei, zu erkennen, wer von Logto was verlangt, und behandeln die Anmeldung und Berechtigung. Fülle die erforderlichen Felder für die Authentifizierung aus.',
+    'Eine Anwendung ist eine registrierte Software oder ein Dienst, der auf Benutzerinformationen zugreifen oder im Namen eines Nutzers agieren kann. Anwendungen helfen Logto dabei, zu erkennen, wer was anfordert, und kümmern sich um Anmeldung und Berechtigungen. Füllen Sie die erforderlichen Felder für die Authentifizierung aus.',
   integration: 'Integration',
   integration_description:
     'Implementieren Sie sichere Worker von Logto, die von Cloudflares Edge-Netzwerk betrieben werden, für eine erstklassige Leistung und weltweite 0ms-Cold-Starts.',

@@ -2,9 +2,9 @@ const content = {
   terms_of_use: {
     title: 'TERMS',
     description: 'Uyumluluk gereksinimlerini karşılamak için Şartlar ve Gizlilik ekleyin.',
-    terms_of_use: 'Terms of use URL',
+    terms_of_use: "Kullanım şartları URL'si",
     terms_of_use_placeholder: 'https://your.terms.of.use/',
-    privacy_policy: 'Privacy policy URL',
+    privacy_policy: "Gizlilik politikası URL'si",
     privacy_policy_placeholder: 'https://your.privacy.policy/',
     agree_to_terms: 'Şartları kabul et',
     agree_policies: {
@@ -14,16 +14,16 @@ const content = {
     },
   },
   languages: {
-    title: 'LANGUAGES',
-    enable_auto_detect: 'Enable auto-detect',
+    title: 'DİLLER',
+    enable_auto_detect: 'Otomatik algılamayı etkinleştir',
     description:
-      "Your software detects the user's locale setting and switches to the local language. You can add new languages by translating UI from English to another language.",
-    manage_language: 'Manage language',
-    default_language: 'Default language',
+      'Yazılımınız kullanıcının yerel ayarını algılar ve yerel dile geçer. İngilizce arayüzü başka bir dile çevirerek yeni diller ekleyebilirsiniz.',
+    manage_language: 'Dili yönet',
+    default_language: 'Varsayılan dil',
     default_language_description_auto:
-      'The default language will be used when the detected user language isn’t covered in the current language library.',
+      'Algılanan kullanıcı dili mevcut dil kitaplığında yoksa varsayılan dil kullanılır.',
     default_language_description_fixed:
-      'When auto-detect is off, the default language is the only language your software will show. Turn on auto-detect for language extension.',
+      'Otomatik algılama kapalıyken yazılımınız yalnızca varsayılan dili gösterir. Dil seçeneklerini genişletmek için otomatik algılamayı açın.',
   },
   support: {
     title: 'DESTEK',
@@ -34,23 +34,22 @@ const content = {
     support_website_placeholder: 'https://your.website/support',
   },
   manage_language: {
-    title: 'Manage language',
+    title: 'Dili yönet',
     subtitle:
-      'Localize the product experience by adding languages and translations. Your contribution can be set as the default language.',
-    add_language: 'Add Language',
-    logto_provided: 'Logto provided',
-    key: 'Key',
-    logto_source_values: 'Logto source values',
-    custom_values: 'Custom values',
-    clear_all_tip: 'Clear all values',
-    unsaved_description: 'Changes won’t be saved if you leave this page without saving.',
-    deletion_tip: 'Delete the language',
-    deletion_title: 'Do you want to delete the added language?',
-    deletion_description:
-      'After deletion, your users won’t be able to browse in that language again.',
-    default_language_deletion_title: 'Default language can’t be deleted.',
+      'Diller ve çeviriler ekleyerek ürün deneyimini yerelleştirin. Katkınız varsayılan dil olarak ayarlanabilir.',
+    add_language: 'Dil ekle',
+    logto_provided: 'Logto tarafından sağlandı',
+    key: 'Anahtar',
+    logto_source_values: 'Logto kaynak değerleri',
+    custom_values: 'Özel değerler',
+    clear_all_tip: 'Tüm değerleri temizle',
+    unsaved_description: 'Kaydetmeden bu sayfadan ayrılırsanız değişiklikler kaydedilmez.',
+    deletion_tip: 'Dili sil',
+    deletion_title: 'Eklenen dili silmek istiyor musunuz?',
+    deletion_description: 'Silindikten sonra kullanıcılar bu dilde gezinemez.',
+    default_language_deletion_title: 'Varsayılan dil silinemez.',
     default_language_deletion_description:
-      '{{language}} is set as your default language and can’t be deleted. ',
+      '{{language}} varsayılan dil olarak ayarlandı ve silinemez.',
   },
 };
 

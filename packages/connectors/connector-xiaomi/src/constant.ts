@@ -15,12 +15,16 @@ export const defaultMetadata: ConnectorMetadata = {
   name: {
     en: 'Xiaomi',
     'zh-CN': '小米',
+    'tr-TR': 'Xiaomi',
+    ko: 'Xiaomi',
   },
   logo: './logo.svg',
   logoDark: null,
   description: {
     en: 'Xiaomi is a Chinese electronics company.',
     'zh-CN': '小米是一家中国的电子产品公司。',
+    'tr-TR': 'Xiaomi, Çin merkezli bir elektronik şirketidir.',
+    ko: '샤오미는 중국의 전자 제품 회사입니다.',
   },
   readme: './README.md',
   formItems: [

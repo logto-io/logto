@@ -93,74 +93,74 @@ const sign_in_exp = {
   },
   account_center: {
     title: 'ศูนย์บัญชี',
-    description: 'ปรับแต่งขั้นตอนศูนย์บัญชีด้วย Logto APIs',
+    description: 'ปรับแต่งขั้นตอนศูนย์บัญชีของคุณด้วย Logto API.',
     enable_account_api: 'เปิดใช้งาน Account API',
     enable_account_api_description:
       'เปิดใช้งาน Account API เพื่อสร้างศูนย์บัญชีแบบกำหนดเอง ให้ผู้ใช้ปลายทางเข้าถึง API ได้โดยตรงโดยไม่ต้องใช้ Logto Management API.',
     field_options: {
-      off: 'Off',
-      edit: 'Edit',
-      read_only: 'Read only',
+      off: 'ปิด',
+      edit: 'แก้ไข',
+      read_only: 'อ่านอย่างเดียว',
       enabled: 'เปิดใช้งาน',
       disabled: 'ปิดใช้งาน',
     },
     sections: {
       account_security: {
-        title: 'ACCOUNT SECURITY',
+        title: 'ความปลอดภัยของบัญชี',
         description:
-          'Manage access to the Account API, enabling users to view or edit their identity information and authentication factors after signing into the application. Users must verify their identity to get a valid 10-minute verification record ID before making these security-related changes.',
+          'จัดการการเข้าถึง Account API เพื่อให้ผู้ใช้สามารถดูหรือแก้ไขข้อมูลตัวตนและปัจจัยการยืนยันตัวตนหลังจากเข้าสู่ระบบแอปพลิเคชัน ผู้ใช้ต้องยืนยันตัวตนเพื่อรับรหัสบันทึกการยืนยันที่มีอายุ 10 นาทีก่อนทำการเปลี่ยนแปลงที่เกี่ยวข้องกับความปลอดภัยเหล่านี้.',
         groups: {
           identifiers: {
-            title: 'Identifiers',
+            title: 'ตัวระบุ',
           },
           authentication_factors: {
-            title: 'Authentication factors',
+            title: 'ปัจจัยการยืนยันตัวตน',
           },
         },
       },
       user_profile: {
-        title: 'USER PROFILE',
+        title: 'โปรไฟล์ผู้ใช้',
         description:
-          'Manage access to the Account API, enabling users to view or edit basic or custom profile data after signing into the application.',
+          'จัดการการเข้าถึง Account API เพื่อให้ผู้ใช้สามารถดูหรือแก้ไขข้อมูลโปรไฟล์พื้นฐานหรือแบบกำหนดเองหลังจากเข้าสู่ระบบแอปพลิเคชัน.',
         groups: {
           profile_data: {
-            title: 'Profile data',
+            title: 'ข้อมูลโปรไฟล์',
           },
         },
       },
       secret_vault: {
-        title: 'ห้องนิรภัยความลับ',
+        title: 'ห้องนิรภัยลับ',
         description:
-          'สำหรับคอนเนคเตอร์โซเชียลและองค์กร จัดเก็บโทเค็นการเข้าถึงของบุคคลที่สามอย่างปลอดภัยเพื่อเรียกใช้ API ของพวกเขา (เช่น เพิ่มกิจกรรมลงใน Google Calendar)',
+          'สำหรับคอนเนคเตอร์โซเชียลและองค์กร จัดเก็บโทเค็นการเข้าถึงของบุคคลที่สามอย่างปลอดภัยเพื่อเรียกใช้ API ของพวกเขา (เช่น เพิ่มกิจกรรมลงใน Google ปฏิทิน).',
         third_party_token_storage: {
-          title: 'โทเค็นของบุคคลที่สาม',
-          third_party_access_token_retrieval: 'โทเค็นของบุคคลที่สาม',
+          title: 'โทเค็นบุคคลที่สาม',
+          third_party_access_token_retrieval: 'การดึงโทเค็นการเข้าถึงบุคคลที่สาม',
           third_party_token_tooltip:
-            'หากต้องการจัดเก็บโทเค็น คุณสามารถเปิดใช้งานในการตั้งค่าของคอนเนคเตอร์โซเชียลหรือองค์กรที่เกี่ยวข้อง',
+            'หากต้องการจัดเก็บโทเค็น คุณสามารถเปิดใช้งานตัวเลือกนี้ได้ในการตั้งค่าของคอนเนคเตอร์โซเชียลหรือองค์กรที่เกี่ยวข้อง.',
           third_party_token_description:
-            'เมื่อเปิดใช้งาน Account API แล้ว การดึงโทเค็นของบุคคลที่สามจะถูกเปิดใช้งานโดยอัตโนมัติ',
+            'เมื่อเปิดใช้งาน Account API แล้ว การดึงโทเค็นของบุคคลที่สามจะเปิดใช้งานโดยอัตโนมัติ.',
         },
       },
     },
     fields: {
-      email: 'Email address',
-      phone: 'Phone number',
-      social: 'Social identities',
-      password: 'Password',
-      mfa: 'Multi-factor authentication',
-      mfa_description: 'Let users manage their MFA methods from the account center.',
-      username: 'Username',
-      name: 'Name',
-      avatar: 'Avatar',
-      profile: 'Profile',
-      profile_description: 'Control access to structured profile attributes.',
-      custom_data: 'Custom data',
-      custom_data_description: 'Control access to custom JSON data stored on the user.',
+      email: 'ที่อยู่อีเมล',
+      phone: 'หมายเลขโทรศัพท์',
+      social: 'ตัวตนโซเชียล',
+      password: 'รหัสผ่าน',
+      mfa: 'การยืนยันตัวตนหลายปัจจัย',
+      mfa_description: 'ให้ผู้ใช้จัดการวิธี MFA จากศูนย์บัญชี.',
+      username: 'ชื่อผู้ใช้',
+      name: 'ชื่อ',
+      avatar: 'อวตาร',
+      profile: 'โปรไฟล์',
+      profile_description: 'ควบคุมการเข้าถึงคุณลักษณะของโปรไฟล์ที่มีโครงสร้าง.',
+      custom_data: 'ข้อมูลแบบกำหนดเอง',
+      custom_data_description: 'ควบคุมการเข้าถึงข้อมูล JSON แบบกำหนดเองที่เก็บไว้กับผู้ใช้.',
     },
-    webauthn_related_origins: 'แหล่งที่มาที่เกี่ยวข้องกับ WebAuthn',
+    webauthn_related_origins: 'ต้นทางที่เกี่ยวข้องกับ WebAuthn',
     webauthn_related_origins_description:
-      'เพิ่มโดเมนของแอปพลิเคชันส่วนหน้าของคุณที่ได้รับอนุญาตให้ลงทะเบียน passkey ผ่าน Account API',
-    webauthn_related_origins_error: 'แหล่งที่มาต้องเริ่มต้นด้วย https:// หรือ http://',
+      'เพิ่มโดเมนของแอปพลิเคชันส่วนหน้าที่ได้รับอนุญาตให้ลงทะเบียน passkey ผ่าน Account API.',
+    webauthn_related_origins_error: 'ต้นทางต้องขึ้นต้นด้วย https:// หรือ http://',
   },
   sign_up_and_sign_in,
   content,

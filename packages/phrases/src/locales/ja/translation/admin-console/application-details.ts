@@ -4,7 +4,7 @@ const application_details = {
   check_guide: 'ガイドを確認',
   settings: '設定',
   settings_description:
-    'An "Application" is a registered software or service that can access user info or act for a user. Applications help recognize who’s asking for what from Logto and handle the sign-in and permission. Fill in the required fields for authentication.',
+    '「アプリケーション」とは、ユーザー情報にアクセスしたり利用者に代わって操作したりできる登録済みのソフトウェアやサービスを指します。アプリケーションは、Logto に誰が何を要求しているのかを認識させ、サインインと権限の処理を担います。認証に必要な項目を入力してください。',
   integration: '統合',
   integration_description:
     "Deploy with Logto secure workers, powered by Cloudflare's edge network for top-tier performance and 0ms cold starts worldwide.",

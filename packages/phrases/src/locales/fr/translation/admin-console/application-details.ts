@@ -4,7 +4,7 @@ const application_details = {
   check_guide: 'Consulter le guide',
   settings: 'Paramètres',
   settings_description:
-    'Une "Application" est un logiciel ou un service enregistré qui peut accéder aux infos utilisateur ou agir pour un utilisateur. Les applications aident à reconnaître qui demande quoi à Logto et à gérer la connexion et les autorisations. Remplissez les champs requis pour l\'authentification.',
+    "Une application est un logiciel ou un service enregistré pouvant accéder aux informations utilisateur ou agir pour un utilisateur. Les applications aident Logto à identifier qui demande quoi et gèrent la connexion ainsi que les autorisations. Remplissez les champs obligatoires pour l'authentification.",
   integration: 'Intégration',
   integration_description:
     'Déployez avec les travailleurs sécurisés de Logto, alimentés par le réseau Edge de Cloudflare pour des performances de premier plan et des démarrages à froid de 0ms dans le monde entier.',

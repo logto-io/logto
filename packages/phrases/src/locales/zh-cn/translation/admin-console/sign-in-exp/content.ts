@@ -2,9 +2,9 @@ const content = {
   terms_of_use: {
     title: 'TERMS',
     description: '添加条款和隐私以满足合规要求。',
-    terms_of_use: 'Terms of use URL',
+    terms_of_use: '使用条款 URL',
     terms_of_use_placeholder: 'https://your.terms.of.use/',
-    privacy_policy: 'Privacy policy URL',
+    privacy_policy: '隐私政策 URL',
     privacy_policy_placeholder: 'https://your.privacy.policy/',
     agree_to_terms: '同意条款',
     agree_policies: {
@@ -14,16 +14,15 @@ const content = {
     },
   },
   languages: {
-    title: 'LANGUAGES',
-    enable_auto_detect: 'Enable auto-detect',
+    title: '语言',
+    enable_auto_detect: '启用自动检测',
     description:
-      "Your software detects the user's locale setting and switches to the local language. You can add new languages by translating UI from English to another language.",
-    manage_language: 'Manage language',
-    default_language: 'Default language',
-    default_language_description_auto:
-      'The default language will be used when the detected user language isn’t covered in the current language library.',
+      '你的软件会检测用户的语言设置并切换为当地语言。你可以通过将界面从英语翻译成其他语言来添加新的语言。',
+    manage_language: '管理语言',
+    default_language: '默认语言',
+    default_language_description_auto: '当检测到的用户语言不在当前语言库中时，将使用默认语言。',
     default_language_description_fixed:
-      'When auto-detect is off, the default language is the only language your software will show. Turn on auto-detect for language extension.',
+      '关闭自动检测时，默认语言是你的软件唯一显示的语言。开启自动检测以扩展语言。',
   },
   support: {
     title: '支持',
@@ -34,23 +33,20 @@ const content = {
     support_website_placeholder: 'https://your.website/support',
   },
   manage_language: {
-    title: 'Manage language',
-    subtitle:
-      'Localize the product experience by adding languages and translations. Your contribution can be set as the default language.',
-    add_language: 'Add Language',
-    logto_provided: 'Logto provided',
-    key: 'Key',
-    logto_source_values: 'Logto source values',
-    custom_values: 'Custom values',
-    clear_all_tip: 'Clear all values',
-    unsaved_description: 'Changes won’t be saved if you leave this page without saving.',
-    deletion_tip: 'Delete the language',
-    deletion_title: 'Do you want to delete the added language?',
-    deletion_description:
-      'After deletion, your users won’t be able to browse in that language again.',
-    default_language_deletion_title: 'Default language can’t be deleted.',
-    default_language_deletion_description:
-      '{{language}} is set as your default language and can’t be deleted. ',
+    title: '管理语言',
+    subtitle: '通过添加语言和翻译来本地化产品体验。你的贡献可以设置为默认语言。',
+    add_language: '添加语言',
+    logto_provided: 'Logto 提供',
+    key: '键',
+    logto_source_values: 'Logto 源值',
+    custom_values: '自定义值',
+    clear_all_tip: '清除全部值',
+    unsaved_description: '如果离开此页面而不保存，更改将不会保存。',
+    deletion_tip: '删除该语言',
+    deletion_title: '确定要删除已添加的语言吗？',
+    deletion_description: '删除后，用户将无法再使用该语言浏览。',
+    default_language_deletion_title: '默认语言无法删除。',
+    default_language_deletion_description: '{{language}} 已设置为你的默认语言，无法删除。',
   },
 };
 

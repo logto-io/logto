@@ -93,74 +93,75 @@ const sign_in_exp = {
       'Ваши пользовательские ресурсы интерфейса успешно загружены и теперь доступны. Встроенное окно предварительного просмотра отключено.\nДля тестирования персонализированного интерфейса входа нажмите кнопку "Прямая трансляция" для открытия в новой вкладке браузера.',
   },
   account_center: {
-    title: 'Центр аккаунта',
-    description: 'Настраивайте процессы центра аккаунта с помощью API Logto.',
+    title: 'ЦЕНТР УЧЁТНОЙ ЗАПИСИ',
+    description: 'Настройте процессы центра учётной записи с помощью API Logto.',
     enable_account_api: 'Включить Account API',
     enable_account_api_description:
-      'Включите Account API, чтобы создать собственный центр аккаунта и дать пользователям прямой доступ к API без использования Logto Management API.',
+      'Включите Account API, чтобы создать собственный центр учётной записи и предоставить конечным пользователям прямой доступ к API без использования Logto Management API.',
     field_options: {
-      off: 'Off',
-      edit: 'Edit',
-      read_only: 'Read only',
+      off: 'Выключено',
+      edit: 'Редактировать',
+      read_only: 'Только чтение',
       enabled: 'Включено',
       disabled: 'Отключено',
     },
     sections: {
       account_security: {
-        title: 'ACCOUNT SECURITY',
+        title: 'БЕЗОПАСНОСТЬ УЧЁТНОЙ ЗАПИСИ',
         description:
-          'Manage access to the Account API, enabling users to view or edit their identity information and authentication factors after signing into the application. Users must verify their identity to get a valid 10-minute verification record ID before making these security-related changes.',
+          'Управляйте доступом к Account API, чтобы пользователи после входа в приложение могли просматривать или изменять сведения о личности и факторы аутентификации. Прежде чем вносить эти изменения, связанные с безопасностью, пользователи должны подтвердить свою личность и получить идентификатор записи проверки, действительный в течение 10 минут.',
         groups: {
           identifiers: {
-            title: 'Identifiers',
+            title: 'Идентификаторы',
           },
           authentication_factors: {
-            title: 'Authentication factors',
+            title: 'Факторы аутентификации',
           },
         },
       },
       user_profile: {
-        title: 'USER PROFILE',
+        title: 'ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ',
         description:
-          'Manage access to the Account API, enabling users to view or edit basic or custom profile data after signing into the application.',
+          'Управляйте доступом к Account API, чтобы пользователи после входа могли просматривать или изменять базовые или собственные данные профиля.',
         groups: {
           profile_data: {
-            title: 'Profile data',
+            title: 'Данные профиля',
           },
         },
       },
       secret_vault: {
         title: 'СЕКРЕТНОЕ ХРАНИЛИЩЕ',
         description:
-          'Для социальных и корпоративных коннекторов, безопасное хранение токенов доступа третьих сторон для вызова их API (например, добавление событий в Google Календарь).',
+          'Для социальных и корпоративных коннекторов безопасно храните токены доступа третьих сторон, чтобы вызывать их API (например, добавлять события в Google Календарь).',
         third_party_token_storage: {
           title: 'Токен третьей стороны',
-          third_party_access_token_retrieval: 'Токен третьей стороны',
+          third_party_access_token_retrieval: 'Получение токена доступа третьей стороны',
           third_party_token_tooltip:
-            'Чтобы хранить токены, вы можете включить это в настройках соответствующего социального или корпоративного коннектора.',
+            'Чтобы сохранять токены, включите эту опцию в настройках соответствующего социального или корпоративного коннектора.',
           third_party_token_description:
-            'После включения Account API автоматически активируется получение токенов третьих сторон.',
+            'После включения Account API получение токенов третьих сторон активируется автоматически.',
         },
       },
     },
     fields: {
-      email: 'Email address',
-      phone: 'Phone number',
-      social: 'Social identities',
-      password: 'Password',
-      mfa: 'Multi-factor authentication',
-      mfa_description: 'Let users manage their MFA methods from the account center.',
-      username: 'Username',
-      name: 'Name',
-      avatar: 'Avatar',
-      profile: 'Profile',
-      profile_description: 'Control access to structured profile attributes.',
-      custom_data: 'Custom data',
-      custom_data_description: 'Control access to custom JSON data stored on the user.',
+      email: 'Адрес электронной почты',
+      phone: 'Номер телефона',
+      social: 'Социальные идентификаторы',
+      password: 'Пароль',
+      mfa: 'Многофакторная аутентификация',
+      mfa_description: 'Разрешите пользователям управлять методами MFA в центре учётной записи.',
+      username: 'Имя пользователя',
+      name: 'Имя',
+      avatar: 'Аватар',
+      profile: 'Профиль',
+      profile_description: 'Управляйте доступом к структурированным атрибутам профиля.',
+      custom_data: 'Пользовательские данные',
+      custom_data_description:
+        'Управляйте доступом к пользовательским JSON-данным, хранящимся у пользователя.',
     },
     webauthn_related_origins: 'Связанные источники WebAuthn',
     webauthn_related_origins_description:
-      'Добавьте домены ваших фронтенд-приложений, которым разрешено регистрировать ключи доступа через API учетной записи.',
+      'Добавьте домены ваших фронтенд-приложений, которым разрешено регистрировать passkey через Account API.',
     webauthn_related_origins_error: 'Источник должен начинаться с https:// или http://',
   },
   sign_up_and_sign_in,

@@ -20,6 +20,9 @@ export const defaultMetadata: ConnectorMetadata = {
   logoDark: null,
   description: {
     en: 'GitLab is an online community for software development and version control.',
+    'zh-CN': 'GitLab 是用于软件开发和版本控制的在线社区。',
+    'tr-TR': 'GitLab, yazılım geliştirme ve sürüm kontrolü için çevrimiçi bir topluluktur.',
+    ko: 'GitLab은 소프트웨어 개발과 버전 관리를 위한 온라인 커뮤니티입니다.',
   },
   readme: './README.md',
   formItems: [

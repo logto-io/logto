@@ -12,6 +12,9 @@ export const defaultMetadata: ConnectorMetadata = {
   logoDark: null,
   description: {
     en: 'Send email via HTTP call.',
+    'zh-CN': '通过 HTTP 调用发送电子邮件。',
+    'tr-TR': 'HTTP isteği aracılığıyla e-posta gönderin.',
+    ko: 'HTTP 호출을 통해 이메일을 보냅니다.',
   },
   readme: './README.md',
   formItems: [
