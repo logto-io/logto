@@ -61,6 +61,29 @@ export const getNewUserProfileFromVerificationRecord = async (
   }
 };
 
+const order: MfaFactor[] = [
+  MfaFactor.WebAuthn,
+  MfaFactor.TOTP,
+  MfaFactor.PhoneVerificationCode,
+  MfaFactor.EmailVerificationCode,
+  MfaFactor.BackupCode,
+];
+
+/**
+ * Sort MFA factors by display priority to keep client experience consistent.
+ * Order: WebAuthn -> TOTP -> Phone -> Email -> Backup code -> others.
+ */
+export const sortMfaFactors = (factors: MfaFactor[]): MfaFactor[] => {
+  return factors.slice().sort((factorA, factorB) => {
+    const indexA = order.indexOf(factorA);
+    const indexB = order.indexOf(factorB);
+    const normalizedIndexA = indexA === -1 ? order.length : indexA;
+    const normalizedIndexB = indexB === -1 ? order.length : indexB;
+
+    return normalizedIndexA - normalizedIndexB;
+  });
+};
+
 /**
  * @throws {RequestError} -400 if the verification record type is not supported for user identification.
  * @throws {RequestError} -400 if the verification record is not verified.
