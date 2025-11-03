@@ -3,8 +3,6 @@ import { type ToZodObject } from '@logto/connector-kit';
 import { type RouterRoutes } from '@withtyped/client';
 import { z, type ZodType } from 'zod';
 
-import { type OmitBooleanValueKeys } from '#src/utils/type.js';
-
 type GetRoutes = RouterRoutes<typeof router>['get'];
 type PostRoutes = RouterRoutes<typeof router>['post'];
 
@@ -84,7 +82,7 @@ const upcomingInvoiceGuard = z.object({
   totalExcludingTax: z.number().nullable(),
 }) satisfies ToZodObject<Subscription['upcomingInvoice']>;
 
-export const logtoSkuQuotaGuard = z.object({
+const logtoSkuQuotaGuard = z.object({
   mauLimit: z.number().nullable(),
   applicationsLimit: z.number().nullable(),
   thirdPartyApplicationsLimit: z.number().nullable(),
@@ -112,48 +110,30 @@ export const logtoSkuQuotaGuard = z.object({
   securityFeaturesEnabled: z.boolean(),
 }) satisfies ToZodObject<SubscriptionQuota>;
 
-export const systemLimitGuard = (
-  logtoSkuQuotaGuard
-    .extend({
-      usersPerOrganizationLimit: z.number().nullable(),
-      organizationUserRolesLimit: z.number().nullable(),
-      organizationMachineToMachineRolesLimit: z.number().nullable(),
-      organizationScopesLimit: z.number().nullable(),
-    })
-    .omit({
-      /**
-       * MAU and token limits are not enforced as system limits.
-       * Usage will be monitored and reported through a separate metering mechanism.
-       */
-      mauLimit: true,
-      tokenLimit: true,
-      auditLogsRetentionDays: true,
-      customJwtEnabled: true,
-      subjectTokenEnabled: true,
-      bringYourUiEnabled: true,
-      collectUserProfileEnabled: true,
-      mfaEnabled: true,
-      organizationsEnabled: true,
-      securityFeaturesEnabled: true,
-      idpInitiatedSsoEnabled: true,
-    }) satisfies ToZodObject<
-    Omit<
-      OmitBooleanValueKeys<z.infer<typeof logtoSkuQuotaGuard>>,
-      'mauLimit' | 'tokenLimit' | 'auditLogsRetentionDays'
-    > & {
-      /* eslint-disable @typescript-eslint/ban-types */
-      usersPerOrganizationLimit: number | null;
-      organizationUserRolesLimit: number | null;
-      organizationMachineToMachineRolesLimit: number | null;
-      organizationScopesLimit: number | null;
-      /* eslint-enable @typescript-eslint/ban-types */
-    }
-  >
-).partial();
+const systemLimitGuard = z
+  .object({
+    applicationsLimit: z.number(),
+    thirdPartyApplicationsLimit: z.number(),
+    scopesPerResourceLimit: z.number(),
+    socialConnectorsLimit: z.number(),
+    userRolesLimit: z.number(),
+    machineToMachineRolesLimit: z.number(),
+    scopesPerRoleLimit: z.number(),
+    hooksLimit: z.number(),
+    machineToMachineLimit: z.number(),
+    resourcesLimit: z.number(),
+    enterpriseSsoLimit: z.number(),
+    tenantMembersLimit: z.number(),
+    organizationsLimit: z.number(),
+    samlApplicationsLimit: z.number(),
+    usersPerOrganizationLimit: z.number(),
+    organizationUserRolesLimit: z.number(),
+    organizationMachineToMachineRolesLimit: z.number(),
+    organizationScopesLimit: z.number(),
+  })
+  .partial() satisfies ToZodObject<Subscription['systemLimit']>;
 
 export type SystemLimit = z.infer<typeof systemLimitGuard>;
-
-export type SystemLimitKey = keyof SystemLimit;
 
 /**
  * Redis cache guard for the subscription data returned from the Cloud API `/api/tenants/my/subscription`.
@@ -170,5 +150,6 @@ export const subscriptionCacheGuard = z.object({
   status: subscriptionStatusGuard,
   upcomingInvoice: upcomingInvoiceGuard.nullable().optional(),
   quota: logtoSkuQuotaGuard,
+  // Todo: @xiaoyijun: LOG-12360 make SystemLimit non-optional after this feature is fully rolled out
   systemLimit: systemLimitGuard.optional(),
 }) satisfies ToZodObject<Subscription>;

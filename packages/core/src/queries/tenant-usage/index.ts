@@ -27,16 +27,16 @@ import {
 } from './types.js';
 
 type UsageQuery = (tenantId: string) => Promise<number>;
-type UsageQueryWithContext = (tenantId: string, context: { entityId: string }) => Promise<number>;
+type UsageQueryWithEntityId = (tenantId: string, entityId: string) => Promise<number>;
 
 type UsageQueryRegistery = { [key in TenantBasedUsageKey]: UsageQuery } & {
-  [key in EntityBasedUsageKey]: UsageQueryWithContext;
+  [key in EntityBasedUsageKey]: UsageQueryWithEntityId;
 };
 
 type GetSelfComputedUsageByKey<K extends SelfComputedUsageKey> = (
   tenantId: string,
   key: K,
-  context: K extends EntityBasedUsageKey ? { entityId: string } : undefined
+  entityId: K extends EntityBasedUsageKey ? string : undefined
 ) => Promise<number>;
 
 const { table: applicationsTable, fields: applicationsFields } = convertToIdentifiers(
@@ -88,11 +88,11 @@ export default class TenantUsageQuery {
   public getSelfComputedUsageByKey: GetSelfComputedUsageByKey<SelfComputedUsageKey> = async (
     tenantId,
     key,
-    context
+    entityId
   ) => {
     const query = this.selfComputedUsageQueryRegistery[key];
     // @ts-expect-error -- TypeScript cannot infer the correct type here due to conditional type complexity
-    return query(tenantId, context);
+    return query(tenantId, entityId);
   };
 
   private readonly countAllApplications: UsageQuery = async () => {
@@ -127,15 +127,15 @@ export default class TenantUsageQuery {
     return Number(result.count);
   };
 
-  private readonly countScopesForResource: UsageQueryWithContext = async (
+  private readonly countScopesForResource: UsageQueryWithEntityId = async (
     tenantId: string,
-    context: { entityId: string }
+    entityId: string
   ): Promise<number> => {
     const result = await this.pool.one<{ count: string }>(sql`
       select count(*) as count
       from ${scopesTable}
       join ${resourcesTable} on ${scopesFields.resourceId} = ${resourcesFields.id}
-      where ${scopesFields.resourceId} = ${context.entityId}
+      where ${scopesFields.resourceId} = ${entityId}
       and ${resourcesFields.indicator} != ${getManagementApiResourceIndicator(tenantId)}
     `);
     return Number(result.count);
@@ -164,14 +164,14 @@ export default class TenantUsageQuery {
     return Number(result.count);
   };
 
-  private readonly countScopesForRole: UsageQueryWithContext = async (
+  private readonly countScopesForRole: UsageQueryWithEntityId = async (
     _: string,
-    context: { entityId: string }
+    entityId: string
   ): Promise<number> => {
     const result = await this.pool.one<{ count: string }>(sql`
     select count(*) as count
     from ${rolesScopesTable}
-    where ${rolesScopesFields.roleId} = ${context.entityId}
+    where ${rolesScopesFields.roleId} = ${entityId}
   `);
 
     return Number(result.count);
@@ -218,15 +218,15 @@ export default class TenantUsageQuery {
     return Number(result.count);
   };
 
-  private readonly countUsersForOrganization: UsageQueryWithContext = async (
+  private readonly countUsersForOrganization: UsageQueryWithEntityId = async (
     _: string,
-    context: { entityId: string }
+    entityId: string
   ): Promise<number> => {
     const result = await this.pool.one<{ count: string }>(sql`
       select
         count(*)
       from ${organizationUserRelationsTable}
-      where ${organizationUserRelationsFields.organizationId} = ${context.entityId}
+      where ${organizationUserRelationsFields.organizationId} = ${entityId}
     `);
 
     return Number(result.count);

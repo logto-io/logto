@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { ConnectorType, ReservedPlanId } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
@@ -8,12 +7,10 @@ const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
 
 const mockGetTenantSubscription = jest.fn();
-const mockGetTenantUsageData = jest.fn();
 const mockReportSubscriptionUpdates = jest.fn();
 
 await mockEsmWithActual('#src/utils/subscription/index.js', () => ({
   getTenantSubscription: mockGetTenantSubscription,
-  getTenantUsageData: mockGetTenantUsageData,
   reportSubscriptionUpdates: mockReportSubscriptionUpdates,
 }));
 
@@ -65,15 +62,6 @@ beforeEach(() => {
   setEnvFlag('isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
 
   mockGetTenantSubscription.mockResolvedValue(mockSubscriptionData);
-  mockGetTenantUsageData.mockResolvedValue({
-    quota: mockSubscriptionData.quota,
-    usage: {
-      tenantMembersLimit: 0,
-      socialConnectorsLimit: 0,
-    },
-    resources: {},
-    roles: {},
-  });
 });
 
 afterEach(() => {
@@ -99,7 +87,8 @@ describe('guardTenantUsageByKey', () => {
     expect(getSelfComputedUsageByKey).not.toHaveBeenCalled();
   });
 
-  it('skips guard when both quota and system limits are null', async () => {
+  it('skips guard when both quota and system limits are null/undefined', async () => {
+    setEnvFlag('isDevFeaturesEnabled', true);
     mockGetTenantSubscription.mockResolvedValueOnce({
       ...mockSubscriptionData,
       quota: {
@@ -108,7 +97,7 @@ describe('guardTenantUsageByKey', () => {
       },
       systemLimit: {
         ...mockSubscriptionData.systemLimit,
-        applicationsLimit: null,
+        applicationsLimit: undefined,
       },
     });
 
@@ -238,6 +227,7 @@ describe('guardTenantUsageByKey', () => {
   });
 
   it('throws when numeric quota limit is not number type', async () => {
+    setEnvFlag('isDevFeaturesEnabled', true);
     mockGetTenantSubscription.mockResolvedValueOnce({
       ...mockSubscriptionData,
       quota: {
@@ -246,7 +236,7 @@ describe('guardTenantUsageByKey', () => {
       },
       systemLimit: {
         ...mockSubscriptionData.systemLimit,
-        applicationsLimit: null,
+        applicationsLimit: undefined,
       },
     });
 
@@ -278,35 +268,6 @@ describe('guardTenantUsageByKey', () => {
       code: 'subscription.limit_exceeded',
       status: 403,
     });
-  });
-
-  it('uses cloud usage data for tenantMembersLimit', async () => {
-    mockGetTenantSubscription.mockResolvedValueOnce({
-      ...mockSubscriptionData,
-      quota: {
-        ...mockSubscriptionData.quota,
-        tenantMembersLimit: 10,
-      },
-    });
-    mockGetTenantUsageData.mockResolvedValueOnce({
-      quota: mockSubscriptionData.quota,
-      usage: { tenantMembersLimit: 5 },
-      resources: {},
-      roles: {},
-    });
-
-    const getSelfComputedUsageByKey = jest.fn();
-
-    const { quotaLibrary, tenant } = createQuotaLibrary({
-      queriesOverride: {
-        tenantUsage: { getSelfComputedUsageByKey },
-      },
-    });
-
-    await quotaLibrary.guardTenantUsageByKey('tenantMembersLimit');
-
-    expect(mockGetTenantUsageData).toHaveBeenCalledWith(tenant.cloudConnection);
-    expect(getSelfComputedUsageByKey).not.toHaveBeenCalled();
   });
 
   it('uses connector library for socialConnectorsLimit', async () => {
@@ -352,13 +313,13 @@ describe('guardTenantUsageByKey', () => {
       },
     });
 
-    await quotaLibrary.guardTenantUsageByKey('scopesPerResourceLimit', {
-      entityId: 'resource_1',
-    });
+    await quotaLibrary.guardTenantUsageByKey('scopesPerResourceLimit', 'resource_1');
 
-    expect(getSelfComputedUsageByKey).toHaveBeenCalledWith(tenant.id, 'scopesPerResourceLimit', {
-      entityId: 'resource_1',
-    });
+    expect(getSelfComputedUsageByKey).toHaveBeenCalledWith(
+      tenant.id,
+      'scopesPerResourceLimit',
+      'resource_1'
+    );
   });
 
   it('throws when entity usage exceeds limit', async () => {
@@ -379,7 +340,7 @@ describe('guardTenantUsageByKey', () => {
     });
 
     await expect(
-      quotaLibrary.guardTenantUsageByKey('scopesPerRoleLimit', { entityId: 'role_1' })
+      quotaLibrary.guardTenantUsageByKey('scopesPerRoleLimit', 'role_1')
     ).rejects.toMatchObject({
       code: 'subscription.limit_exceeded',
       status: 403,
@@ -524,4 +485,3 @@ describe('reportSubscriptionUpdatesUsage', () => {
     expect(mockReportSubscriptionUpdates).not.toHaveBeenCalled();
   });
 });
-/* eslint-enable max-lines */

@@ -171,6 +171,8 @@ export class JwtCustomizerLibrary {
       return;
     }
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
+    // @ts-ignore TS2589: caused by router type growth from @logto/cloud
     const [client, jwtCustomizers] = await Promise.all([
       this.cloudConnection.getClient(),
       this.logtoConfigs.getJwtCustomizers(consoleLog),
