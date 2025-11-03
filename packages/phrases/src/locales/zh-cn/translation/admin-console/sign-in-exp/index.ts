@@ -172,7 +172,7 @@ const sign_in_exp = {
     no_connector_sms_account_center:
       '尚未设置 SMS 短信连接器。请在<a>"邮件与短信连接器"</a>中设置。',
     no_connector_social_account_center: '尚未设置社交连接器。请在<a>"社交连接器"</a>中设置。',
-    no_mfa_factor: '尚未设置 MFA 因子。请先在"多因素认证"中<a>{{link}}</a>。',
+    no_mfa_factor: '尚未设置 MFA 因子。请在<a>{{link}}</a>中完成设置。',
     setup_link: '立即设置',
   },
   save_alert: {

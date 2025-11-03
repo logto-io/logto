@@ -177,7 +177,7 @@ const sign_in_exp = {
       'ยังไม่ได้ตั้งค่าคอนเนคเตอร์ SMS ตั้งค่าใน <a>"คอนเนคเตอร์อีเมลและ SMS"</a>',
     no_connector_social_account_center:
       'ยังไม่ได้ตั้งค่าคอนเนคเตอร์โซเชียล ตั้งค่าใน <a>"คอนเนคเตอร์โซเชียล"</a>',
-    no_mfa_factor: 'ยังไม่ได้ตั้งค่า MFA factor <a>{{link}}</a> ใน "การตรวจสอบสิทธิ์หลายปัจจัย"',
+    no_mfa_factor: 'ยังไม่ได้ตั้งค่า MFA factor กรุณาตั้งค่าใน <a>{{link}}</a>.',
     setup_link: 'ตั้งค่า',
   },
   save_alert: {
