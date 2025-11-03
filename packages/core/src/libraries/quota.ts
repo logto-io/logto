@@ -9,7 +9,7 @@ import {
   isReportSubscriptionUpdatesUsageKey,
 } from '#src/utils/subscription/index.js';
 import {
-  type SystemLimit,
+  type Subscription,
   type SubscriptionQuota,
   type SubscriptionUsage,
 } from '#src/utils/subscription/types.js';
@@ -57,15 +57,9 @@ export class QuotaLibrary {
       return;
     }
 
-    const { planId, isEnterprisePlan, quota, systemLimit } =
-      await this.subscription.getSubscriptionData();
+    const subscriptionData = await this.subscription.getSubscriptionData();
 
-    /**
-     * Create a memoized usage fetcher to prevent duplicate getTenantUsageByKey calls
-     * when both system limit and quota limit checks are performed on the same key.
-     * The fetcher caches results based on key+context combination.
-     */
-    const tenantUsageFetcher = new TenantUsageFetcher(
+    const tenantUsageQuery = new TenantUsageQuery(
       this.tenantId,
       this.queries,
       this.connectorLibrary
@@ -73,17 +67,15 @@ export class QuotaLibrary {
 
     // Todo: @xiaoyijun: remove dev feature flag
     if (EnvSet.values.isDevFeaturesEnabled && isSystemUsageKey(key)) {
-      await this.assertSystemLimit({ key, entityId, systemLimit, tenantUsageFetcher });
+      await this.assertSystemLimit({ key, entityId, subscriptionData, tenantUsageQuery });
     }
 
     if (isQuotaUsageKey(key)) {
       await this.assertQuotaLimit({
-        planId,
-        isEnterprisePlan,
         key,
         entityId,
-        quota,
-        tenantUsageFetcher,
+        subscriptionData,
+        tenantUsageQuery,
       });
     }
   };
@@ -124,15 +116,16 @@ export class QuotaLibrary {
   private readonly assertSystemLimit = async ({
     key,
     entityId,
-    systemLimit,
-    tenantUsageFetcher,
+    subscriptionData,
+    tenantUsageQuery,
   }: {
     key: SystemUsageKey;
     entityId?: string;
-    // Todo: @xiaoyijun: LOG-12360 make SystemLimit non-optional after this feature is fully rolled out
-    systemLimit?: SystemLimit;
-    tenantUsageFetcher: TenantUsageFetcher;
+    subscriptionData: Subscription;
+    tenantUsageQuery: TenantUsageQuery;
   }) => {
+    const { systemLimit } = subscriptionData;
+
     if (!systemLimit) {
       return;
     }
@@ -143,7 +136,7 @@ export class QuotaLibrary {
       return;
     }
 
-    const usage = await tenantUsageFetcher.get(key, entityId);
+    const usage = await tenantUsageQuery.get(key, entityId);
 
     assertThat(
       usage < limit,
@@ -158,20 +151,18 @@ export class QuotaLibrary {
   };
 
   private readonly assertQuotaLimit = async ({
-    planId,
-    isEnterprisePlan,
     key,
     entityId,
-    quota,
-    tenantUsageFetcher,
+    subscriptionData,
+    tenantUsageQuery,
   }: {
-    planId: string;
-    isEnterprisePlan: boolean;
     key: QuotaUsageKey;
     entityId?: string;
-    quota: SubscriptionQuota;
-    tenantUsageFetcher: TenantUsageFetcher;
+    subscriptionData: Subscription;
+    tenantUsageQuery: TenantUsageQuery;
   }) => {
+    const { planId, isEnterprisePlan, quota } = subscriptionData;
+
     // Do not block Pro/Enterprise plan from adding add-on resources.
     if (this.shouldReportSubscriptionUpdates(planId, isEnterprisePlan, key)) {
       return;
@@ -211,7 +202,7 @@ export class QuotaLibrary {
         new TypeError('Usage limit must be number type for numeric limits.')
       );
 
-      const usage = await tenantUsageFetcher.get(key, entityId);
+      const usage = await tenantUsageQuery.get(key, entityId);
 
       assertThat(
         usage < limit,
@@ -229,19 +220,17 @@ export class QuotaLibrary {
   };
 }
 
-type UsageFetcher = (key: NumericUsageKey, entityId?: string) => Promise<number>;
+type TenantUsageQueryFunction = (key: NumericUsageKey, entityId?: string) => Promise<number>;
 
 /**
- * Tenant usage fetcher with caching to avoid duplicate database/API calls.
+ * Provides memoized tenant usage queries to prevent duplicate getTenantUsageByKey calls
+ * when both system limit and quota limit checks are performed on the same key.
  *
  * @remarks
- * This class provides a memoized interface to fetch tenant usage data.
- * When a limit key requires both system limit and quota limit checks,
- * both checks need the same usage value. The fetcher caches results
- * based on the key and context combination to ensure the underlying
+ * This class caches query results based on key+context combination to ensure the underlying
  * getTenantUsageByKey method is called at most once per unique key+context pair.
  */
-class TenantUsageFetcher {
+class TenantUsageQuery {
   private readonly cache = new Map<string, number>();
 
   constructor(
@@ -250,7 +239,7 @@ class TenantUsageFetcher {
     private readonly connectorLibrary: ConnectorLibrary
   ) {}
 
-  get: UsageFetcher = async (key, entityId) => {
+  get: TenantUsageQueryFunction = async (key, entityId) => {
     // Construct a simple cache key: "key" or "key:entityId"
     const cacheKey = entityId ? `${key}:${entityId}` : key;
 
@@ -265,7 +254,7 @@ class TenantUsageFetcher {
     return usage;
   };
 
-  private readonly getTenantUsage: UsageFetcher = async (key, entityId) => {
+  private readonly getTenantUsage: TenantUsageQueryFunction = async (key, entityId) => {
     if (key === 'socialConnectorsLimit') {
       const connectors = await this.connectorLibrary.getLogtoConnectors();
 
