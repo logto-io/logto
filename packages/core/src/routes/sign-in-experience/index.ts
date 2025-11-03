@@ -21,6 +21,7 @@ import { validateMfa } from '#src/libraries/sign-in-experience/mfa.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
 import RequestError from '../../errors/RequestError/index.js';
+import assertThat from '../../utils/assert-that.js';
 import { checkPasswordPolicyForUser } from '../../utils/password.js';
 import { captureEvent } from '../../utils/posthog.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
@@ -91,7 +92,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const {
         query: { removeUnusedDemoSocialConnector },
-        body: { socialSignInConnectorTargets, emailBlocklistPolicy, hideLogtoBranding, ...rest },
+        body: { socialSignInConnectorTargets, emailBlocklistPolicy, ...rest },
       } = ctx.guard;
       const {
         languageInfo,
@@ -101,6 +102,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         sentinelPolicy,
         captchaPolicy,
         forgotPasswordMethods,
+        hideLogtoBranding,
       } = rest;
 
       if (languageInfo) {
@@ -190,16 +192,19 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
 
       // Guard the quota for BYUI if the hideLogtoBranding is set to true
       if (hideLogtoBranding) {
+        // Hide Logto branding is only available for Logto Cloud
+        assertThat(
+          EnvSet.values.isCloud,
+          new RequestError({
+            code: 'request.invalid_input',
+            details: 'Hide Logto branding is not supported in this environment',
+          })
+        );
         await quota.guardTenantUsageByKey('bringYourUiEnabled');
       }
 
       const payload = {
         ...rest,
-        ...conditional(
-          EnvSet.values.isCloud &&
-            EnvSet.values.isDevFeaturesEnabled &&
-            hideLogtoBranding !== undefined && { hideLogtoBranding }
-        ),
         ...conditional(
           filteredSocialSignInConnectorTargets && {
             socialSignInConnectorTargets: filteredSocialSignInConnectorTargets,

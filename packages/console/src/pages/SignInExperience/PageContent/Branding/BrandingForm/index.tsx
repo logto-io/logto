@@ -5,7 +5,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import LogoAndFavicon from '@/components/ImageInputs/LogoAndFavicon';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
@@ -53,8 +53,6 @@ function BrandingForm() {
       handleResetColor();
     }
   }, [handleResetColor, isDarkModeEnabled, isDirty]);
-
-  const showHideLogtoBranding = isCloud && isDevFeaturesEnabled;
 
   return (
     <Card>
@@ -120,7 +118,7 @@ function BrandingForm() {
           />
         </>
       )}
-      {showHideLogtoBranding && (
+      {isCloud && (
         <FormField
           title="sign_in_exp.branding.hide_logto_branding"
           featureTag={{
