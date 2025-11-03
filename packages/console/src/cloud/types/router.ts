@@ -15,6 +15,10 @@ export type TenantUsageAddOnSkus = GuardedResponse<
   GetRoutes['/api/tenants/:tenantId/subscription/add-on-skus']
 >;
 
+export type SystemLimit = Required<
+  GuardedResponse<GetRoutes['/api/tenants/my/subscription']>
+>['systemLimit'];
+
 /* ===== Use `New` in the naming to avoid confusion with legacy types ===== */
 export type NewSubscriptionUsageResponse = GuardedResponse<
   GetRoutes['/api/tenants/:tenantId/subscription-usage']
