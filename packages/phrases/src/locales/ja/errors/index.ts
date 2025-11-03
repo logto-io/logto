@@ -25,6 +25,7 @@ import single_sign_on from './single-sign-on.js';
 import storage from './storage.js';
 import subscription from './subscription.js';
 import swagger from './swagger.js';
+import system_limit from './system-limit.js';
 import user from './user.js';
 import verification_code from './verification-code.js';
 import verification_record from './verification-record.js';
@@ -52,6 +53,7 @@ const errors = {
   hook,
   domain,
   subscription,
+  system_limit,
   application,
   organization,
   single_sign_on,

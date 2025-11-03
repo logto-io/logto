@@ -1,63 +1,108 @@
 import { z } from 'zod';
 
-import { type SubscriptionQuota } from '#src/utils/subscription/types.js';
+import { type SystemLimit, type SubscriptionQuota } from '#src/utils/subscription/types.js';
 import { type ToZodEnum } from '#src/utils/type.js';
 
-type AllLimitMap = Omit<SubscriptionQuota, 'mauLimit' | 'tokenLimit'>;
 /**
- * All limit keys - currently from SubscriptionQuota
+ * Tenant usage quota checking type system
  *
- * @remarks
- * Future extension point: Can be extended to union with SystemLimit keys
- * Example: `export type AllLimitKey = keyof SubscriptionQuota | keyof SystemLimit;`
+ * Type hierarchy:
+ *
+ * UsageKey (all keys that need to be checked)
+ * ├── SystemUsageKey (system-level limits, all numeric)
+ * └── QuotaUsageKey (subscription quota keys, split into two types)
+ *     ├── NumericQuotaUsageKey (numeric quotas, e.g., applicationsLimit)
+ *     └── BooleanQuotaUsageKey (boolean quotas, e.g., mfaEnabled)
+ *
+ * NumericUsageKey (keys for fetching numeric usage)
+ * = NumericQuotaUsageKey | SystemUsageKey
+ * ├── SelfComputedUsageKey (queryable from tenant database)
+ * └── socialConnectorsLimit (requires connector library)
+ *
+ * Design notes:
+ * - SystemUsageKey: System admin limits (higher priority)
+ * - QuotaUsageKey: Subscription plan quotas (lower priority)
+ * - Boolean types are feature toggles, checked directly against quotas
+ * - Numeric types require querying current usage to compare against limits
+ * - SelfComputed means usage can be directly calculated from the database
  */
-export type AllLimitKey = keyof AllLimitMap;
+
+/** System-level limit keys checked in core. */
+export type SystemUsageKey = Exclude<
+  keyof SystemLimit,
+  // Excludes `tenantMembersLimit` as it is checked in Cloud, not in core.
+  'tenantMembersLimit'
+>;
+
+/** Subscription quota keys checked in core. */
+
+export type QuotaUsageKey = Exclude<
+  keyof SubscriptionQuota,
+  | 'mauLimit'
+  | 'tokenLimit'
+  // Exclude tenantMembersLimit as it is checked in Cloud, not in core.
+  | 'tenantMembersLimit'
+>;
 
 /**
- * Boolean feature keys - feature flags (enabled/disabled)
+ * Shared keys between SystemUsageKey and QuotaUsageKey.
  *
- * @remarks
- * These represent boolean feature flags that control feature availability.
- *
- * @example
- * - mfaEnabled
- * - customJwtEnabled
- * - securityFeaturesEnabled
+ * Used for type guards to ensure manual updates when keys are added/removed
+ * from SystemLimit or SubscriptionQuota.
  */
-type BooleanFeatureKey = {
-  [K in keyof AllLimitMap]: AllLimitMap[K] extends boolean ? K : never;
-}[keyof AllLimitMap];
+type SharedUsageKey = QuotaUsageKey & SystemUsageKey;
 
-const booleanFeatureKeyGuard = z.enum([
+const sharedUsageKeyGuard = z.enum([
+  'applicationsLimit',
+  'thirdPartyApplicationsLimit',
+  'scopesPerResourceLimit',
+  'socialConnectorsLimit',
+  'userRolesLimit',
+  'machineToMachineRolesLimit',
+  'scopesPerRoleLimit',
+  'hooksLimit',
+  'machineToMachineLimit',
+  'resourcesLimit',
+  'enterpriseSsoLimit',
+  'organizationsLimit',
+  'samlApplicationsLimit',
+]) satisfies ToZodEnum<SharedUsageKey>;
+
+/** All usage keys that need to be checked (union of SystemUsageKey and QuotaUsageKey). */
+export type UsageKey = QuotaUsageKey | SystemUsageKey;
+
+const systemUsageKeyGuard = z.enum([
+  ...sharedUsageKeyGuard.options,
+  'usersPerOrganizationLimit',
+  'organizationUserRolesLimit',
+  'organizationMachineToMachineRolesLimit',
+  'organizationScopesLimit',
+]) satisfies ToZodEnum<SystemUsageKey>;
+
+export const isSystemUsageKey = (key: UsageKey): key is SystemUsageKey =>
+  systemUsageKeyGuard.safeParse(key).success;
+
+const quotaUsageKeyGuard = z.enum([
+  ...sharedUsageKeyGuard.options,
   'customJwtEnabled',
   'subjectTokenEnabled',
   'bringYourUiEnabled',
   'collectUserProfileEnabled',
   'mfaEnabled',
-  'idpInitiatedSsoEnabled',
   'securityFeaturesEnabled',
-]) satisfies ToZodEnum<BooleanFeatureKey>;
+  'idpInitiatedSsoEnabled',
+]) satisfies ToZodEnum<QuotaUsageKey>;
 
-export const isBooleanFeatureKey = (key: string): key is BooleanFeatureKey =>
-  booleanFeatureKeyGuard.safeParse(key).success;
+export const isQuotaUsageKey = (key: UsageKey): key is QuotaUsageKey =>
+  quotaUsageKeyGuard.safeParse(key).success;
 
-/**
- * Numeric limit keys - numeric usage limits
- *
- * @remarks
- * These represent countable limits that can be queried for current usage.
- *
- * @example
- * - applicationsLimit
- * - hooksLimit
- * - organizationsLimit
- */
-export type NumericLimitKey = {
+/** Numeric quota keys (subset of QuotaUsageKey with numeric values). */
+type NumericQuotaUsageKey = {
   // eslint-disable-next-line @typescript-eslint/ban-types
-  [K in keyof AllLimitMap]: AllLimitMap[K] extends number | null ? K : never;
-}[keyof AllLimitMap];
+  [K in QuotaUsageKey]: SubscriptionQuota[K] extends number | null ? K : never;
+}[QuotaUsageKey];
 
-const numericLimitKeyGuard = z.enum([
+const numericQuotaUsageKeyGuard = z.enum([
   'applicationsLimit',
   'thirdPartyApplicationsLimit',
   'machineToMachineLimit',
@@ -71,53 +116,52 @@ const numericLimitKeyGuard = z.enum([
   'organizationsLimit',
   'samlApplicationsLimit',
   'socialConnectorsLimit',
-  'tenantMembersLimit',
-]) satisfies ToZodEnum<NumericLimitKey>;
+]) satisfies ToZodEnum<NumericQuotaUsageKey>;
 
-export const isNumericLimitKey = (key: AllLimitKey): key is NumericLimitKey =>
-  numericLimitKeyGuard.safeParse(key).success;
+export const isNumericQuotaUsageKey = (key: string): key is NumericQuotaUsageKey =>
+  numericQuotaUsageKeyGuard.safeParse(key).success;
+
+/** Boolean quota keys (subset of QuotaUsageKey with boolean values, i.e., feature toggles). */
+type BooleanQuotaUsageKey = {
+  [K in QuotaUsageKey]: SubscriptionQuota[K] extends boolean ? K : never;
+}[QuotaUsageKey];
+
+const booleanQuotaUsageKeyGuard = z.enum([
+  'customJwtEnabled',
+  'subjectTokenEnabled',
+  'bringYourUiEnabled',
+  'collectUserProfileEnabled',
+  'mfaEnabled',
+  'idpInitiatedSsoEnabled',
+  'securityFeaturesEnabled',
+]) satisfies ToZodEnum<BooleanQuotaUsageKey>;
+
+export const isBooleanQuotaUsageKey = (key: string): key is BooleanQuotaUsageKey =>
+  booleanQuotaUsageKeyGuard.safeParse(key).success;
+
+/** All numeric usage keys (union of NumericQuotaUsageKey and SystemUsageKey). */
+export type NumericUsageKey = NumericQuotaUsageKey | SystemUsageKey;
+
 /**
- * Self-computed usage keys - usage data queried from local tenant database
+ * Self-computed usage keys - usage data queryable from the database.
  *
- * @remarks
- * These usage values are calculated from the tenant's own database.
- *
- * **Why only numeric limits:**
- * During quota checks, boolean features (feature availability) are checked directly
- * against the plan quota - `true` means allowed, `false` means not allowed.
- * Only consumable/numeric limits require actual usage calculation by querying
- * the database to compare current usage against the limit.
- *
- * **Excluded keys:**
- * Not all numeric limits are self-computed. The following require external data sources:
- * - `tenantMembersLimit`: queried from Cloud API
- * - `socialConnectorsLimit`: queried from Connector Library
+ * Excludes `socialConnectorsLimit` as it requires querying the Connector Library.
  */
-export type SelfComputedUsageKey = Exclude<
-  NumericLimitKey,
-  'tenantMembersLimit' | 'socialConnectorsLimit'
->;
+export type SelfComputedUsageKey = Exclude<NumericUsageKey, 'socialConnectorsLimit'>;
 
 /**
- * Entity-based usage keys - requires specific entity context
+ * Entity-based usage keys - requires specific entity context (e.g., resourceId, roleId).
  *
- * @remarks
- * These keys require a { entityId: string } context parameter.
- * The semantic meaning of entityId depends on the key:
- * - scopesPerResourceLimit: entityId = resourceId
- * - scopesPerRoleLimit: entityId = roleId
+ * These keys require an `entityId` parameter to query usage for a specific entity.
  */
-export type EntityBasedUsageKey = 'scopesPerResourceLimit' | 'scopesPerRoleLimit';
+export type EntityBasedUsageKey =
+  | 'scopesPerResourceLimit'
+  | 'scopesPerRoleLimit'
+  | 'usersPerOrganizationLimit';
 
 /**
- * Tenant-based usage keys - queryable at tenant level without entity context
+ * Tenant-based usage keys - queryable at tenant level without entity context.
  *
- * @remarks
- * These keys represent tenant-wide counts.
- *
- * @example
- * - applicationsLimit (total applications in tenant)
- * - hooksLimit (total hooks in tenant)
- * - organizationsLimit (total organizations in tenant)
+ * These keys represent tenant-wide counts (e.g., total applications, hooks, organizations).
  */
 export type TenantBasedUsageKey = Exclude<SelfComputedUsageKey, EntityBasedUsageKey>;

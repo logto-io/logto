@@ -11,6 +11,9 @@ import {
   SsoConnectors,
   Organizations,
   InternalRole,
+  OrganizationUserRelations,
+  OrganizationRoles,
+  OrganizationScopes,
 } from '@logto/schemas';
 import { sql } from '@silverhand/slonik';
 import type { CommonQueryMethods } from '@silverhand/slonik';
@@ -24,16 +27,16 @@ import {
 } from './types.js';
 
 type UsageQuery = (tenantId: string) => Promise<number>;
-type UsageQueryWithContext = (tenantId: string, context: { entityId: string }) => Promise<number>;
+type UsageQueryWithEntityId = (tenantId: string, entityId: string) => Promise<number>;
 
 type UsageQueryRegistery = { [key in TenantBasedUsageKey]: UsageQuery } & {
-  [key in EntityBasedUsageKey]: UsageQueryWithContext;
+  [key in EntityBasedUsageKey]: UsageQueryWithEntityId;
 };
 
 type GetSelfComputedUsageByKey<K extends SelfComputedUsageKey> = (
   tenantId: string,
   key: K,
-  context: K extends EntityBasedUsageKey ? { entityId: string } : undefined
+  entityId: K extends EntityBasedUsageKey ? string : undefined
 ) => Promise<number>;
 
 const { table: applicationsTable, fields: applicationsFields } = convertToIdentifiers(
@@ -50,6 +53,13 @@ const { table: rolesScopesTable, fields: rolesScopesFields } = convertToIdentifi
 const { table: hooksTable } = convertToIdentifiers(Hooks, true);
 const { table: ssoConnectorsTable } = convertToIdentifiers(SsoConnectors, true);
 const { table: organizationsTable } = convertToIdentifiers(Organizations, true);
+const { table: organizationUserRelationsTable, fields: organizationUserRelationsFields } =
+  convertToIdentifiers(OrganizationUserRelations, true);
+const { table: organizationRolesTable, fields: organizationRolesFields } = convertToIdentifiers(
+  OrganizationRoles,
+  true
+);
+const { table: organizationScopesTable } = convertToIdentifiers(OrganizationScopes, true);
 
 export default class TenantUsageQuery {
   constructor(private readonly pool: CommonQueryMethods) {}
@@ -68,17 +78,21 @@ export default class TenantUsageQuery {
       enterpriseSsoLimit: this.countEnterpriseSso,
       organizationsLimit: this.countOrganizations,
       samlApplicationsLimit: this.countSamlApplications,
+      usersPerOrganizationLimit: this.countUsersForOrganization,
+      organizationUserRolesLimit: this.countOrganizationUserRoles,
+      organizationMachineToMachineRolesLimit: this.countOrganizationMachineToMachineRoles,
+      organizationScopesLimit: this.countOrganizationScopes,
     };
   }
 
   public getSelfComputedUsageByKey: GetSelfComputedUsageByKey<SelfComputedUsageKey> = async (
     tenantId,
     key,
-    context
+    entityId
   ) => {
     const query = this.selfComputedUsageQueryRegistery[key];
     // @ts-expect-error -- TypeScript cannot infer the correct type here due to conditional type complexity
-    return query(tenantId, context);
+    return query(tenantId, entityId);
   };
 
   private readonly countAllApplications: UsageQuery = async () => {
@@ -113,15 +127,15 @@ export default class TenantUsageQuery {
     return Number(result.count);
   };
 
-  private readonly countScopesForResource: UsageQueryWithContext = async (
+  private readonly countScopesForResource: UsageQueryWithEntityId = async (
     tenantId: string,
-    context: { entityId: string }
+    entityId: string
   ): Promise<number> => {
     const result = await this.pool.one<{ count: string }>(sql`
       select count(*) as count
       from ${scopesTable}
       join ${resourcesTable} on ${scopesFields.resourceId} = ${resourcesFields.id}
-      where ${scopesFields.resourceId} = ${context.entityId}
+      where ${scopesFields.resourceId} = ${entityId}
       and ${resourcesFields.indicator} != ${getManagementApiResourceIndicator(tenantId)}
     `);
     return Number(result.count);
@@ -150,14 +164,14 @@ export default class TenantUsageQuery {
     return Number(result.count);
   };
 
-  private readonly countScopesForRole: UsageQueryWithContext = async (
+  private readonly countScopesForRole: UsageQueryWithEntityId = async (
     _: string,
-    context: { entityId: string }
+    entityId: string
   ): Promise<number> => {
     const result = await this.pool.one<{ count: string }>(sql`
     select count(*) as count
     from ${rolesScopesTable}
-    where ${rolesScopesFields.roleId} = ${context.entityId}
+    where ${rolesScopesFields.roleId} = ${entityId}
   `);
 
     return Number(result.count);
@@ -199,6 +213,52 @@ export default class TenantUsageQuery {
       select
         count(*)
       from ${organizationsTable}
+    `);
+
+    return Number(result.count);
+  };
+
+  private readonly countUsersForOrganization: UsageQueryWithEntityId = async (
+    _: string,
+    entityId: string
+  ): Promise<number> => {
+    const result = await this.pool.one<{ count: string }>(sql`
+      select
+        count(*)
+      from ${organizationUserRelationsTable}
+      where ${organizationUserRelationsFields.organizationId} = ${entityId}
+    `);
+
+    return Number(result.count);
+  };
+
+  private readonly countOrganizationUserRoles: UsageQuery = async () => {
+    const result = await this.pool.one<{ count: string }>(sql`
+      select
+        count(*)
+      from ${organizationRolesTable}
+      where ${organizationRolesFields.type} = ${RoleType.User}
+    `);
+
+    return Number(result.count);
+  };
+
+  private readonly countOrganizationMachineToMachineRoles: UsageQuery = async () => {
+    const result = await this.pool.one<{ count: string }>(sql`
+      select
+        count(*)
+      from ${organizationRolesTable}
+      where ${organizationRolesFields.type} = ${RoleType.MachineToMachine}
+    `);
+
+    return Number(result.count);
+  };
+
+  private readonly countOrganizationScopes: UsageQuery = async () => {
+    const result = await this.pool.one<{ count: string }>(sql`
+      select
+        count(*)
+      from ${organizationScopesTable}
     `);
 
     return Number(result.count);

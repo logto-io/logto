@@ -2,13 +2,11 @@ import { type Nullable } from '@silverhand/essentials';
 import type { MiddlewareType } from 'koa';
 
 import { type QuotaLibrary } from '#src/libraries/quota.js';
-import { type EntityBasedUsageKey, type AllLimitKey } from '#src/queries/tenant-usage/types.js';
+import { type UsageKey, type EntityBasedUsageKey } from '#src/queries/tenant-usage/types.js';
 import { type SubscriptionUsage } from '#src/utils/subscription/types.js';
 
-type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'COPY' | 'HEAD' | 'OPTIONS';
-
 type UsageGuardConfig = {
-  key: Exclude<AllLimitKey, EntityBasedUsageKey>;
+  key: Exclude<UsageKey, EntityBasedUsageKey>;
   quota: QuotaLibrary;
 };
 

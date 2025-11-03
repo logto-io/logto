@@ -17,6 +17,10 @@ const defaultSystemLimit: Subscription['systemLimit'] = {
   organizationsLimit: 100_000,
   hooksLimit: 10,
   tenantMembersLimit: 100,
+  usersPerOrganizationLimit: 1000,
+  organizationUserRolesLimit: 1000,
+  organizationMachineToMachineRolesLimit: 500,
+  organizationScopesLimit: 1000,
 };
 
 export const mockGetCloudConnectionData: CloudConnectionLibrary['getCloudConnectionData'] =

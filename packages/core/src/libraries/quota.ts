@@ -7,16 +7,23 @@ import assertThat from '#src/utils/assert-that.js';
 import {
   reportSubscriptionUpdates,
   isReportSubscriptionUpdatesUsageKey,
-  getTenantUsageData as getTenantUsageFromCloud,
 } from '#src/utils/subscription/index.js';
-import { type SubscriptionQuota, type SubscriptionUsage } from '#src/utils/subscription/types.js';
+import {
+  type Subscription,
+  type SubscriptionQuota,
+  type SubscriptionUsage,
+} from '#src/utils/subscription/types.js';
 
 import {
-  isBooleanFeatureKey,
-  isNumericLimitKey,
-  type AllLimitKey,
+  isSystemUsageKey,
+  type UsageKey,
   type EntityBasedUsageKey,
-  type NumericLimitKey,
+  type NumericUsageKey,
+  isQuotaUsageKey,
+  type SystemUsageKey,
+  type QuotaUsageKey,
+  isBooleanQuotaUsageKey,
+  isNumericQuotaUsageKey,
 } from '../queries/tenant-usage/types.js';
 import type Queries from '../tenants/Queries.js';
 
@@ -30,10 +37,9 @@ const paidReservedPlans = new Set<string>([
 ]);
 
 type GuardTenantUsageByKeyFunction = {
-  (key: Exclude<AllLimitKey, EntityBasedUsageKey>, context?: { entityId: string }): Promise<void>;
-  (key: EntityBasedUsageKey, context: { entityId: string }): Promise<void>;
+  (key: Exclude<UsageKey, EntityBasedUsageKey>, entityId?: string): Promise<void>;
+  (key: EntityBasedUsageKey, entityId: string): Promise<void>;
 };
-
 export class QuotaLibrary {
   constructor(
     public readonly tenantId: string,
@@ -43,7 +49,7 @@ export class QuotaLibrary {
     private readonly subscription: SubscriptionLibrary
   ) {}
 
-  guardTenantUsageByKey: GuardTenantUsageByKeyFunction = async (key, context) => {
+  guardTenantUsageByKey: GuardTenantUsageByKeyFunction = async (key, entityId) => {
     const { isCloud } = EnvSet.values;
 
     // Cloud only feature, skip in non-cloud environments
@@ -51,69 +57,27 @@ export class QuotaLibrary {
       return;
     }
 
-    const {
-      planId,
-      isEnterprisePlan,
-      quota: fullQuota,
-    } = await this.subscription.getSubscriptionData();
+    const subscriptionData = await this.subscription.getSubscriptionData();
 
-    // Do not block Pro/Enterprise plan from adding add-on resources.
-    if (this.shouldReportSubscriptionUpdates(planId, isEnterprisePlan, key)) {
-      return;
+    const tenantUsageQuery = new TenantUsageQuery(
+      this.tenantId,
+      this.queries,
+      this.connectorLibrary
+    );
+
+    // Todo: @xiaoyijun: remove dev feature flag
+    if (EnvSet.values.isDevFeaturesEnabled && isSystemUsageKey(key)) {
+      await this.assertSystemLimit({ key, entityId, subscriptionData, tenantUsageQuery });
     }
 
-    const { [key]: limit } = fullQuota;
-
-    if (limit === null) {
-      // Skip unlimited quotas
-      return;
+    if (isQuotaUsageKey(key)) {
+      await this.assertQuotaLimit({
+        key,
+        entityId,
+        subscriptionData,
+        tenantUsageQuery,
+      });
     }
-
-    // Boolean features: enforce directly by plan quota configuration (true = allowed, false = blocked)
-    if (isBooleanFeatureKey(key)) {
-      assertThat(
-        typeof limit === 'boolean',
-        new TypeError('Feature availability settings must be boolean type.')
-      );
-      assertThat(
-        limit,
-        new RequestError({
-          code: 'subscription.limit_exceeded',
-          status: 403,
-          data: {
-            key,
-          },
-        })
-      );
-      return;
-    }
-
-    // Number-based limits: query current usage and compare with limit
-    if (isNumericLimitKey(key)) {
-      // See the definition of `SubscriptionQuota` and `SubscriptionUsage` in `types.ts`, this should never happen.
-      assertThat(
-        typeof limit === 'number',
-        new TypeError('Usage limit must be number type for numeric limits.')
-      );
-
-      const usage = await this.getTenantUsageByKey(key, context);
-
-      assertThat(
-        usage < limit,
-        new RequestError({
-          code: 'subscription.limit_exceeded',
-          status: 403,
-          data: {
-            key,
-            limit,
-            usage,
-          },
-        })
-      );
-      return;
-    }
-
-    throw new TypeError('Unsupported subscription quota type');
   };
 
   reportSubscriptionUpdatesUsage = async (key: keyof SubscriptionUsage) => {
@@ -136,27 +100,6 @@ export class QuotaLibrary {
     }
   };
 
-  private readonly getTenantUsageByKey = async (
-    key: NumericLimitKey,
-    context?: { entityId: string }
-  ) => {
-    if (key === 'tenantMembersLimit') {
-      const {
-        usage: { tenantMembersLimit },
-      } = await getTenantUsageFromCloud(this.cloudConnection);
-
-      return tenantMembersLimit;
-    }
-
-    if (key === 'socialConnectorsLimit') {
-      const connectors = await this.connectorLibrary.getLogtoConnectors();
-
-      return connectors.filter((connector) => connector.type === ConnectorType.Social).length;
-    }
-
-    return this.queries.tenantUsage.getSelfComputedUsageByKey(this.tenantId, key, context);
-  };
-
   /**
    * @remarks
    * Should report usage changes to the Cloud only when the following conditions are met:
@@ -169,4 +112,155 @@ export class QuotaLibrary {
     key: keyof SubscriptionQuota
   ) =>
     (paidReservedPlans.has(planId) || isEnterprisePlan) && isReportSubscriptionUpdatesUsageKey(key);
+
+  private readonly assertSystemLimit = async ({
+    key,
+    entityId,
+    subscriptionData,
+    tenantUsageQuery,
+  }: {
+    key: SystemUsageKey;
+    entityId?: string;
+    subscriptionData: Subscription;
+    tenantUsageQuery: TenantUsageQuery;
+  }) => {
+    const { systemLimit } = subscriptionData;
+
+    if (!systemLimit) {
+      return;
+    }
+
+    const limit = systemLimit[key];
+
+    if (limit === undefined) {
+      return;
+    }
+
+    const usage = await tenantUsageQuery.get(key, entityId);
+
+    assertThat(
+      usage < limit,
+      new RequestError(
+        {
+          code: 'system_limit.limit_exceeded',
+          status: 403,
+        },
+        { key, limit, usage }
+      )
+    );
+  };
+
+  private readonly assertQuotaLimit = async ({
+    key,
+    entityId,
+    subscriptionData,
+    tenantUsageQuery,
+  }: {
+    key: QuotaUsageKey;
+    entityId?: string;
+    subscriptionData: Subscription;
+    tenantUsageQuery: TenantUsageQuery;
+  }) => {
+    const { planId, isEnterprisePlan, quota } = subscriptionData;
+
+    // Do not block Pro/Enterprise plan from adding add-on resources.
+    if (this.shouldReportSubscriptionUpdates(planId, isEnterprisePlan, key)) {
+      return;
+    }
+
+    const { [key]: limit } = quota;
+
+    if (limit === null) {
+      // Skip unlimited quotas
+      return;
+    }
+
+    // Boolean features: enforce directly by plan quota configuration (true = allowed, false = blocked)
+    if (isBooleanQuotaUsageKey(key)) {
+      assertThat(
+        typeof limit === 'boolean',
+        new TypeError('Feature availability settings must be boolean type.')
+      );
+      assertThat(
+        limit,
+        new RequestError({
+          code: 'subscription.limit_exceeded',
+          status: 403,
+          data: {
+            key,
+          },
+        })
+      );
+      return;
+    }
+
+    // Number-based limits: query current usage and compare with limit
+    if (isNumericQuotaUsageKey(key)) {
+      // See the definition of `SubscriptionQuota` and `SubscriptionUsage` in `types.ts`, this should never happen.
+      assertThat(
+        typeof limit === 'number',
+        new TypeError('Usage limit must be number type for numeric limits.')
+      );
+
+      const usage = await tenantUsageQuery.get(key, entityId);
+
+      assertThat(
+        usage < limit,
+        new RequestError({
+          code: 'subscription.limit_exceeded',
+          status: 403,
+          data: {
+            key,
+            limit,
+            usage,
+          },
+        })
+      );
+    }
+  };
+}
+
+type TenantUsageQueryFunction = (key: NumericUsageKey, entityId?: string) => Promise<number>;
+
+/**
+ * Provides memoized tenant usage queries to prevent duplicate getTenantUsageByKey calls
+ * when both system limit and quota limit checks are performed on the same key.
+ *
+ * @remarks
+ * This class caches query results based on key+context combination to ensure the underlying
+ * getTenantUsageByKey method is called at most once per unique key+context pair.
+ */
+class TenantUsageQuery {
+  private readonly cache = new Map<string, number>();
+
+  constructor(
+    private readonly tenantId: string,
+    private readonly queries: Queries,
+    private readonly connectorLibrary: ConnectorLibrary
+  ) {}
+
+  get: TenantUsageQueryFunction = async (key, entityId) => {
+    // Construct a simple cache key: "key" or "key:entityId"
+    const cacheKey = entityId ? `${key}:${entityId}` : key;
+
+    const cached = this.cache.get(cacheKey);
+    if (cached !== undefined) {
+      return cached;
+    }
+
+    const usage = await this.getTenantUsage(key, entityId);
+
+    this.cache.set(cacheKey, usage);
+    return usage;
+  };
+
+  private readonly getTenantUsage: TenantUsageQueryFunction = async (key, entityId) => {
+    if (key === 'socialConnectorsLimit') {
+      const connectors = await this.connectorLibrary.getLogtoConnectors();
+
+      return connectors.filter((connector) => connector.type === ConnectorType.Social).length;
+    }
+
+    return this.queries.tenantUsage.getSelfComputedUsageByKey(this.tenantId, key, entityId);
+  };
 }

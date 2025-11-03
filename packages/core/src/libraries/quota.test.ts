@@ -7,12 +7,10 @@ const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
 
 const mockGetTenantSubscription = jest.fn();
-const mockGetTenantUsageData = jest.fn();
 const mockReportSubscriptionUpdates = jest.fn();
 
 await mockEsmWithActual('#src/utils/subscription/index.js', () => ({
   getTenantSubscription: mockGetTenantSubscription,
-  getTenantUsageData: mockGetTenantUsageData,
   reportSubscriptionUpdates: mockReportSubscriptionUpdates,
 }));
 
@@ -22,6 +20,7 @@ const { QuotaLibrary } = await import('./quota.js');
 
 const originalIsCloud = EnvSet.values.isCloud;
 const originalIsIntegrationTest = EnvSet.values.isIntegrationTest;
+const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 
 /**
  * These tests spin up a full MockTenant, which instantiates the real EnvSet and runs its load sequence.
@@ -30,7 +29,10 @@ const originalIsIntegrationTest = EnvSet.values.isIntegrationTest;
  * reference to the original EnvSet singleton. Mutating the live flags keeps both MockTenant and
  * QuotaLibrary aligned with the test scenarios without breaking their dependency chain.
  */
-const setEnvFlag = (key: 'isCloud' | 'isIntegrationTest', value: boolean) => {
+const setEnvFlag = (
+  key: 'isCloud' | 'isIntegrationTest' | 'isDevFeaturesEnabled',
+  value: boolean
+) => {
   Reflect.set(EnvSet.values, key, value);
 };
 
@@ -57,22 +59,15 @@ beforeEach(() => {
   jest.clearAllMocks();
   setEnvFlag('isCloud', true);
   setEnvFlag('isIntegrationTest', false);
+  setEnvFlag('isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
 
   mockGetTenantSubscription.mockResolvedValue(mockSubscriptionData);
-  mockGetTenantUsageData.mockResolvedValue({
-    quota: mockSubscriptionData.quota,
-    usage: {
-      tenantMembersLimit: 0,
-      socialConnectorsLimit: 0,
-    },
-    resources: {},
-    roles: {},
-  });
 });
 
 afterEach(() => {
   setEnvFlag('isCloud', originalIsCloud);
   setEnvFlag('isIntegrationTest', originalIsIntegrationTest);
+  setEnvFlag('isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
 });
 
 describe('guardTenantUsageByKey', () => {
@@ -92,12 +87,17 @@ describe('guardTenantUsageByKey', () => {
     expect(getSelfComputedUsageByKey).not.toHaveBeenCalled();
   });
 
-  it('skips guard when quota limit is null', async () => {
+  it('skips guard when both quota and system limits are null/undefined', async () => {
+    setEnvFlag('isDevFeaturesEnabled', true);
     mockGetTenantSubscription.mockResolvedValueOnce({
       ...mockSubscriptionData,
       quota: {
         ...mockSubscriptionData.quota,
         applicationsLimit: null,
+      },
+      systemLimit: {
+        ...mockSubscriptionData.systemLimit,
+        applicationsLimit: undefined,
       },
     });
 
@@ -111,6 +111,62 @@ describe('guardTenantUsageByKey', () => {
     await quotaLibrary.guardTenantUsageByKey('applicationsLimit');
 
     expect(getSelfComputedUsageByKey).not.toHaveBeenCalled();
+  });
+
+  // Todo @xiaoyijun: remove once the dev feature guard is retired.
+  it('skips system limit guard when dev features are disabled', async () => {
+    setEnvFlag('isDevFeaturesEnabled', false);
+    mockGetTenantSubscription.mockResolvedValueOnce({
+      ...mockSubscriptionData,
+      quota: {
+        ...mockSubscriptionData.quota,
+        applicationsLimit: null,
+      },
+      systemLimit: {
+        ...mockSubscriptionData.systemLimit,
+        applicationsLimit: 2,
+      },
+    });
+
+    const getSelfComputedUsageByKey = jest.fn().mockResolvedValue(2);
+    const { quotaLibrary } = createQuotaLibrary({
+      queriesOverride: {
+        tenantUsage: { getSelfComputedUsageByKey },
+      },
+    });
+
+    await expect(quotaLibrary.guardTenantUsageByKey('applicationsLimit')).resolves.not.toThrow();
+
+    expect(getSelfComputedUsageByKey).not.toHaveBeenCalled();
+  });
+
+  it('throws when usage reaches system limit', async () => {
+    setEnvFlag('isDevFeaturesEnabled', true);
+    mockGetTenantSubscription.mockResolvedValueOnce({
+      ...mockSubscriptionData,
+      quota: {
+        ...mockSubscriptionData.quota,
+        applicationsLimit: null,
+      },
+      systemLimit: {
+        ...mockSubscriptionData.systemLimit,
+        applicationsLimit: 2,
+      },
+    });
+
+    const getSelfComputedUsageByKey = jest.fn().mockResolvedValue(2);
+    const { quotaLibrary } = createQuotaLibrary({
+      queriesOverride: {
+        tenantUsage: { getSelfComputedUsageByKey },
+      },
+    });
+
+    await expect(quotaLibrary.guardTenantUsageByKey('applicationsLimit')).rejects.toMatchObject({
+      code: 'system_limit.limit_exceeded',
+      status: 403,
+    });
+
+    expect(getSelfComputedUsageByKey).toHaveBeenCalledTimes(1);
   });
 
   it('throws when boolean quota limit is disabled', async () => {
@@ -171,11 +227,16 @@ describe('guardTenantUsageByKey', () => {
   });
 
   it('throws when numeric quota limit is not number type', async () => {
+    setEnvFlag('isDevFeaturesEnabled', true);
     mockGetTenantSubscription.mockResolvedValueOnce({
       ...mockSubscriptionData,
       quota: {
         ...mockSubscriptionData.quota,
         applicationsLimit: '3' as unknown as number,
+      },
+      systemLimit: {
+        ...mockSubscriptionData.systemLimit,
+        applicationsLimit: undefined,
       },
     });
 
@@ -207,35 +268,6 @@ describe('guardTenantUsageByKey', () => {
       code: 'subscription.limit_exceeded',
       status: 403,
     });
-  });
-
-  it('uses cloud usage data for tenantMembersLimit', async () => {
-    mockGetTenantSubscription.mockResolvedValueOnce({
-      ...mockSubscriptionData,
-      quota: {
-        ...mockSubscriptionData.quota,
-        tenantMembersLimit: 10,
-      },
-    });
-    mockGetTenantUsageData.mockResolvedValueOnce({
-      quota: mockSubscriptionData.quota,
-      usage: { tenantMembersLimit: 5 },
-      resources: {},
-      roles: {},
-    });
-
-    const getSelfComputedUsageByKey = jest.fn();
-
-    const { quotaLibrary, tenant } = createQuotaLibrary({
-      queriesOverride: {
-        tenantUsage: { getSelfComputedUsageByKey },
-      },
-    });
-
-    await quotaLibrary.guardTenantUsageByKey('tenantMembersLimit');
-
-    expect(mockGetTenantUsageData).toHaveBeenCalledWith(tenant.cloudConnection);
-    expect(getSelfComputedUsageByKey).not.toHaveBeenCalled();
   });
 
   it('uses connector library for socialConnectorsLimit', async () => {
@@ -281,13 +313,13 @@ describe('guardTenantUsageByKey', () => {
       },
     });
 
-    await quotaLibrary.guardTenantUsageByKey('scopesPerResourceLimit', {
-      entityId: 'resource_1',
-    });
+    await quotaLibrary.guardTenantUsageByKey('scopesPerResourceLimit', 'resource_1');
 
-    expect(getSelfComputedUsageByKey).toHaveBeenCalledWith(tenant.id, 'scopesPerResourceLimit', {
-      entityId: 'resource_1',
-    });
+    expect(getSelfComputedUsageByKey).toHaveBeenCalledWith(
+      tenant.id,
+      'scopesPerResourceLimit',
+      'resource_1'
+    );
   });
 
   it('throws when entity usage exceeds limit', async () => {
@@ -308,7 +340,7 @@ describe('guardTenantUsageByKey', () => {
     });
 
     await expect(
-      quotaLibrary.guardTenantUsageByKey('scopesPerRoleLimit', { entityId: 'role_1' })
+      quotaLibrary.guardTenantUsageByKey('scopesPerRoleLimit', 'role_1')
     ).rejects.toMatchObject({
       code: 'subscription.limit_exceeded',
       status: 403,
@@ -316,16 +348,17 @@ describe('guardTenantUsageByKey', () => {
   });
 
   it('skips guard for add-on usage keys on paid plans', async () => {
+    setEnvFlag('isDevFeaturesEnabled', false);
     mockGetTenantSubscription.mockResolvedValueOnce({
       ...mockSubscriptionData,
-      planId: ReservedPlanId.Pro,
+      planId: ReservedPlanId.Pro202509,
       quota: {
         ...mockSubscriptionData.quota,
         machineToMachineLimit: 1,
       },
     });
 
-    const getSelfComputedUsageByKey = jest.fn();
+    const getSelfComputedUsageByKey = jest.fn().mockResolvedValue(0);
 
     const { quotaLibrary } = createQuotaLibrary({
       queriesOverride: {
@@ -336,6 +369,35 @@ describe('guardTenantUsageByKey', () => {
     await quotaLibrary.guardTenantUsageByKey('machineToMachineLimit');
 
     expect(getSelfComputedUsageByKey).not.toHaveBeenCalled();
+  });
+
+  it('calls getTenantUsageByKey only once when both system limit and quota limit checks are needed', async () => {
+    setEnvFlag('isDevFeaturesEnabled', true);
+    mockGetTenantSubscription.mockResolvedValueOnce({
+      ...mockSubscriptionData,
+      quota: {
+        ...mockSubscriptionData.quota,
+        applicationsLimit: 10, // Quota limit set
+      },
+      systemLimit: {
+        ...mockSubscriptionData.systemLimit,
+        applicationsLimit: 5, // System limit set (lower than quota)
+      },
+    });
+
+    const getSelfComputedUsageByKey = jest.fn().mockResolvedValue(2);
+
+    const { quotaLibrary } = createQuotaLibrary({
+      queriesOverride: {
+        tenantUsage: { getSelfComputedUsageByKey },
+      },
+    });
+
+    // Should pass both checks: 2 < 5 (system limit) and 2 < 10 (quota limit)
+    await expect(quotaLibrary.guardTenantUsageByKey('applicationsLimit')).resolves.not.toThrow();
+
+    // The key point: usage should be fetched only once, not twice
+    expect(getSelfComputedUsageByKey).toHaveBeenCalledTimes(1);
   });
 });
 
