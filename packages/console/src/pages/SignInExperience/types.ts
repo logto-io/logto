@@ -55,6 +55,9 @@ const createDefaultAccountCenterFormValues = (): AccountCenterFormValues => ({
   webauthnRelatedOrigins: [],
 });
 
+export const normalizeWebauthnRelatedOrigins = (origins?: string[]): string[] =>
+  origins?.map((origin) => origin.trim()).filter(Boolean) ?? [];
+
 export const convertAccountCenterToForm = (
   accountCenter?: AccountCenterConfig
 ): AccountCenterFormValues => ({
@@ -63,7 +66,7 @@ export const convertAccountCenterToForm = (
     ...createDefaultAccountCenterFormValues().fields,
     ...accountCenter?.fields,
   },
-  webauthnRelatedOrigins: accountCenter?.webauthnRelatedOrigins ?? [],
+  webauthnRelatedOrigins: normalizeWebauthnRelatedOrigins(accountCenter?.webauthnRelatedOrigins),
 });
 
 /**
