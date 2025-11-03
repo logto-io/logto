@@ -84,7 +84,7 @@ export const customClientMetadataGuard = z.object({
   [CustomClientMetadataKey.CorsAllowedOrigins]: z.string().min(1).array().optional(),
   [CustomClientMetadataKey.IdTokenTtl]: z.number().optional(),
   [CustomClientMetadataKey.RefreshTokenTtl]: z.number().optional(),
-  [CustomClientMetadataKey.RefreshTokenTtlInDays]: z.number().int().min(1).max(90).optional(),
+  [CustomClientMetadataKey.RefreshTokenTtlInDays]: z.number().int().min(1).max(180).optional(),
   [CustomClientMetadataKey.TenantId]: z.string().optional(),
   [CustomClientMetadataKey.AlwaysIssueRefreshToken]: z.boolean().optional(),
   [CustomClientMetadataKey.RotateRefreshToken]: z.boolean().optional(),
