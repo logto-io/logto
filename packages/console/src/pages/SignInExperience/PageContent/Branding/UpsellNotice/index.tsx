@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import TextLink from '@/ds-components/TextLink';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
@@ -14,9 +14,8 @@ function UpsellNotice() {
   const { navigate } = useTenantPathname();
   const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
   const isBringYourUiEnabled = currentSubscriptionQuota.bringYourUiEnabled;
-  const showHideLogtoBranding = isCloud && isDevFeaturesEnabled;
 
-  if (!showHideLogtoBranding || isBringYourUiEnabled) {
+  if (!isCloud || isBringYourUiEnabled) {
     return null;
   }
 
