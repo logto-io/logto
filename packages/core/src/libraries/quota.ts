@@ -36,10 +36,77 @@ const paidReservedPlans = new Set<string>([
   ReservedPlanId.Pro202509,
 ]);
 
-type GuardTenantUsageByKeyFunction = {
-  (key: Exclude<UsageKey, EntityBasedUsageKey>, entityId?: string): Promise<void>;
-  (key: EntityBasedUsageKey, entityId: string): Promise<void>;
+/**
+ * Options for quota guard operations.
+ */
+type GuardTenantUsageOptions = {
+  /**
+   * Entity ID for entity-based quota limits.
+   *
+   * @remarks
+   * Required for entity-based quotas like `scopesPerRoleLimit`, `scopesPerResourceLimit`, etc.
+   * Optional for tenant-level quotas like `applicationsLimit`, `resourcesLimit`, etc.
+   *
+   * @example
+   * ```ts
+   * // Entity-based quota: entityId is required
+   * await quota.guardTenantUsageByKey('scopesPerRoleLimit', { entityId: roleId });
+   *
+   * // Tenant-level quota: entityId not needed
+   * await quota.guardTenantUsageByKey('applicationsLimit');
+   * ```
+   */
+  entityId?: string;
+
+  /**
+   * The number of resources to consume in this operation.
+   *
+   * @remarks
+   * This is used to validate batch operations where multiple resources are added at once.
+   * For example, when assigning 10 scopes to a role in a single request, set this to 10.
+   *
+   * The guard will check: `currentUsage + consumeUsageCount <= limit`
+   *
+   * @default 1 - Assumes single resource consumption if not specified
+   *
+   * @example
+   * ```ts
+   * // Adding a single application (default behavior)
+   * await quota.guardTenantUsageByKey('applicationsLimit');
+   *
+   * // Adding 5 scopes to a role at once
+   * await quota.guardTenantUsageByKey('scopesPerRoleLimit', {
+   *   entityId: roleId,
+   *   consumeUsageCount: 5,
+   * });
+   * ```
+   */
+  consumeUsageCount?: number;
 };
+
+/**
+ * Function type for guarding tenant usage against quota limits.
+ * Provides type-safe overloads for tenant-level and entity-based quotas.
+ */
+type GuardTenantUsageByKeyFunction = {
+  /**
+   * Guard tenant-level quota (e.g., applicationsLimit, resourcesLimit)
+   * @param key - Tenant-level quota key
+   * @param options - Optional guard options
+   */
+  (key: Exclude<UsageKey, EntityBasedUsageKey>, options?: GuardTenantUsageOptions): Promise<void>;
+
+  /**
+   * Guard entity-based quota (e.g., scopesPerRoleLimit, scopesPerResourceLimit)
+   * @param key - Entity-based quota key
+   * @param options - Guard options with required entityId
+   */
+  (
+    key: EntityBasedUsageKey,
+    options: GuardTenantUsageOptions & { entityId: string }
+  ): Promise<void>;
+};
+
 export class QuotaLibrary {
   constructor(
     public readonly tenantId: string,
@@ -49,7 +116,44 @@ export class QuotaLibrary {
     private readonly subscription: SubscriptionLibrary
   ) {}
 
-  guardTenantUsageByKey: GuardTenantUsageByKeyFunction = async (key, entityId) => {
+  /**
+   * Guards tenant usage against quota and system limits before performing an operation.
+   *
+   * @remarks
+   * This method checks if the current usage plus the resources to be consumed would exceed
+   * the configured limits. It validates against both system limits (hard caps) and
+   * subscription quota limits.
+   *
+   * The check formula is: `currentUsage + consumeUsageCount <= limit`
+   *
+   * If the limit would be exceeded, this method throws a RequestError. Otherwise, it
+   * returns silently, allowing the operation to proceed.
+   *
+   * @param key - The quota key to check (e.g., 'applicationsLimit', 'scopesPerRoleLimit')
+   * @param options - Optional configuration for the guard operation
+   * @param options.entityId - Entity ID for entity-based quotas (required for entity-based keys)
+   * @param options.consumeUsageCount - Number of resources to consume (default: 1)
+   *
+   * @throws {RequestError} With code 'system_limit.limit_exceeded' if system limit is exceeded
+   * @throws {RequestError} With code 'subscription.limit_exceeded' if quota limit is exceeded
+   *
+   * @example
+   * ```ts
+   * // Guard before adding a single application
+   * await quota.guardTenantUsageByKey('applicationsLimit');
+   *
+   * // Guard before adding multiple scopes to a role
+   * const scopeIds = ['scope1', 'scope2', 'scope3'];
+   * await quota.guardTenantUsageByKey('scopesPerRoleLimit', {
+   *   entityId: 'role_id',
+   *   consumeUsageCount: scopeIds.length,
+   * });
+   * ```
+   */
+  guardTenantUsageByKey: GuardTenantUsageByKeyFunction = async (
+    key,
+    { entityId, consumeUsageCount = 1 } = {}
+  ) => {
     const { isCloud } = EnvSet.values;
 
     // Cloud only feature, skip in non-cloud environments
@@ -67,7 +171,13 @@ export class QuotaLibrary {
 
     // Todo: @xiaoyijun: remove dev feature flag
     if (EnvSet.values.isDevFeaturesEnabled && isSystemUsageKey(key)) {
-      await this.assertSystemLimit({ key, entityId, subscriptionData, tenantUsageQuery });
+      await this.assertSystemLimit({
+        key,
+        entityId,
+        subscriptionData,
+        tenantUsageQuery,
+        consumeUsageCount,
+      });
     }
 
     if (isQuotaUsageKey(key)) {
@@ -76,6 +186,7 @@ export class QuotaLibrary {
         entityId,
         subscriptionData,
         tenantUsageQuery,
+        consumeUsageCount,
       });
     }
   };
@@ -118,11 +229,13 @@ export class QuotaLibrary {
     entityId,
     subscriptionData,
     tenantUsageQuery,
+    consumeUsageCount,
   }: {
     key: SystemUsageKey;
     entityId?: string;
     subscriptionData: Subscription;
     tenantUsageQuery: TenantUsageQuery;
+    consumeUsageCount: number;
   }) => {
     const { systemLimit } = subscriptionData;
 
@@ -139,7 +252,7 @@ export class QuotaLibrary {
     const usage = await tenantUsageQuery.get(key, entityId);
 
     assertThat(
-      usage < limit,
+      usage + consumeUsageCount <= limit,
       new RequestError(
         {
           code: 'system_limit.limit_exceeded',
@@ -155,11 +268,13 @@ export class QuotaLibrary {
     entityId,
     subscriptionData,
     tenantUsageQuery,
+    consumeUsageCount,
   }: {
     key: QuotaUsageKey;
     entityId?: string;
     subscriptionData: Subscription;
     tenantUsageQuery: TenantUsageQuery;
+    consumeUsageCount: number;
   }) => {
     const { planId, isEnterprisePlan, quota } = subscriptionData;
 
@@ -205,7 +320,7 @@ export class QuotaLibrary {
       const usage = await tenantUsageQuery.get(key, entityId);
 
       assertThat(
-        usage < limit,
+        usage + consumeUsageCount <= limit,
         new RequestError({
           code: 'subscription.limit_exceeded',
           status: 403,

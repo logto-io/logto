@@ -93,7 +93,10 @@ export default function roleScopeRoutes<T extends ManagementApiRouter>(
         body: { scopeIds },
       } = ctx.guard;
 
-      await quota.guardTenantUsageByKey('scopesPerRoleLimit', id);
+      await quota.guardTenantUsageByKey('scopesPerRoleLimit', {
+        entityId: id,
+        consumeUsageCount: scopeIds.length,
+      });
 
       await validateRoleScopeAssignment(scopeIds, id);
       await insertRolesScopes(
