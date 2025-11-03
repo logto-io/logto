@@ -94,74 +94,76 @@ const sign_in_exp = {
       'Vos ressources UI personnalisées ont été téléchargées avec succès et sont maintenant servies. En conséquence, la fenêtre de prévisualisation intégrée a été désactivée.\nPour tester votre UI de connexion personnalisée, cliquez sur le bouton "Aperçu en direct" pour l\'ouvrir dans un nouvel onglet du navigateur.',
   },
   account_center: {
-    title: 'Centre de compte',
-    description: 'Personnalisez les parcours de votre centre de compte avec les API Logto.',
-    enable_account_api: "Activer l'Account API",
+    title: 'CENTRE DE COMPTE',
+    description: 'Personnalisez les parcours de votre centre de compte à l’aide des API Logto.',
+    enable_account_api: 'Activer l’API Account',
     enable_account_api_description:
-      "Activez l'Account API pour créer un centre de compte personnalisé et offrir aux utilisateurs finaux un accès direct sans utiliser la Logto Management API.",
+      'Activez l’API Account pour créer un centre de compte personnalisé et offrir aux utilisateurs finaux un accès direct à l’API sans utiliser la Logto Management API.',
     field_options: {
-      off: 'Off',
-      edit: 'Edit',
-      read_only: 'Read only',
+      off: 'Désactivé',
+      edit: 'Modifier',
+      read_only: 'Lecture seule',
       enabled: 'Activé',
       disabled: 'Désactivé',
     },
     sections: {
       account_security: {
-        title: 'ACCOUNT SECURITY',
+        title: 'SÉCURITÉ DU COMPTE',
         description:
-          'Manage access to the Account API, enabling users to view or edit their identity information and authentication factors after signing into the application. Users must verify their identity to get a valid 10-minute verification record ID before making these security-related changes.',
+          'Gérez l’accès à l’API Account afin de permettre aux utilisateurs, après leur connexion à l’application, d’afficher ou de modifier leurs informations d’identité et leurs facteurs d’authentification. Avant d’effectuer ces changements liés à la sécurité, les utilisateurs doivent vérifier leur identité et obtenir un identifiant d’enregistrement de vérification valable 10 minutes.',
         groups: {
           identifiers: {
-            title: 'Identifiers',
+            title: 'Identifiants',
           },
           authentication_factors: {
-            title: 'Authentication factors',
+            title: 'Facteurs d’authentification',
           },
         },
       },
       user_profile: {
-        title: 'USER PROFILE',
+        title: 'PROFIL UTILISATEUR',
         description:
-          'Manage access to the Account API, enabling users to view or edit basic or custom profile data after signing into the application.',
+          'Gérez l’accès à l’API Account afin de permettre aux utilisateurs d’afficher ou de modifier leurs données de profil de base ou personnalisées après leur connexion à l’application.',
         groups: {
           profile_data: {
-            title: 'Profile data',
+            title: 'Données du profil',
           },
         },
       },
       secret_vault: {
-        title: 'COFFRE-FORT SECRET',
+        title: 'COFFRE SECRET',
         description:
-          "Pour les connecteurs sociaux et d'entreprise, stockage sécurisé des jetons d'accès tiers pour appeler leurs API (par exemple, ajouter des événements au calendrier Google).",
+          'Pour les connecteurs sociaux et d’entreprise, stockez en toute sécurité les jetons d’accès de tiers pour appeler leurs API (par exemple ajouter des événements au Google Agenda).',
         third_party_token_storage: {
           title: 'Jeton tiers',
-          third_party_access_token_retrieval: 'Jeton tiers',
+          third_party_access_token_retrieval: 'Récupération de jeton d’accès tiers',
           third_party_token_tooltip:
-            "Pour stocker les jetons, vous pouvez activer ceci dans les paramètres du connecteur social ou d'entreprise correspondant.",
+            'Pour stocker des jetons, activez cette option dans la configuration du connecteur social ou d’entreprise concerné.',
           third_party_token_description:
-            "Une fois l'Account API activée, la récupération de jetons tiers est automatiquement activée.",
+            'Une fois l’API Account activée, la récupération des jetons tiers est automatiquement activée.',
         },
       },
     },
     fields: {
-      email: 'Email address',
-      phone: 'Phone number',
-      social: 'Social identities',
-      password: 'Password',
-      mfa: 'Multi-factor authentication',
-      mfa_description: 'Let users manage their MFA methods from the account center.',
-      username: 'Username',
-      name: 'Name',
+      email: 'Adresse e-mail',
+      phone: 'Numéro de téléphone',
+      social: 'Identités sociales',
+      password: 'Mot de passe',
+      mfa: 'Authentification multifacteur',
+      mfa_description:
+        'Permettez aux utilisateurs de gérer leurs méthodes MFA depuis le centre de compte.',
+      username: "Nom d'utilisateur",
+      name: 'Nom',
       avatar: 'Avatar',
-      profile: 'Profile',
-      profile_description: 'Control access to structured profile attributes.',
-      custom_data: 'Custom data',
-      custom_data_description: 'Control access to custom JSON data stored on the user.',
+      profile: 'Profil',
+      profile_description: 'Contrôlez l’accès aux attributs structurés du profil.',
+      custom_data: 'Données personnalisées',
+      custom_data_description:
+        'Contrôlez l’accès aux données JSON personnalisées stockées sur l’utilisateur.',
     },
-    webauthn_related_origins: 'Origines liées WebAuthn',
+    webauthn_related_origins: 'Origines associées à WebAuthn',
     webauthn_related_origins_description:
-      "Ajoutez les domaines de vos applications front-end autorisés à enregistrer des clés d'accès via l'API de compte.",
+      'Ajoutez les domaines de vos applications front-end autorisés à enregistrer des passkeys via l’API Account.',
     webauthn_related_origins_error: "L'origine doit commencer par https:// ou http://",
   },
   sign_up_and_sign_in,

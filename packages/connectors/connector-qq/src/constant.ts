@@ -27,12 +27,17 @@ export const defaultMetadata: ConnectorMetadata = {
   name: {
     en: 'QQ',
     'zh-CN': 'QQ',
+    'tr-TR': 'QQ',
+    ko: 'QQ',
   },
   logo: './logo.svg',
   logoDark: './logo.svg',
   description: {
     en: 'QQ is a social platform by Tencent with over 600 million users.',
-    'zh-CN': 'QQ是腾讯旗下拥有超过6亿用户的社交平台。',
+    'zh-CN': 'QQ 是腾讯旗下拥有超过 6 亿用户的社交平台。',
+    'tr-TR':
+      'QQ, Tencent tarafından sunulan ve 600 milyondan fazla kullanıcıya sahip bir sosyal platformdur.',
+    ko: 'QQ는 6억 명 이상의 사용자를 보유한 텐센트의 소셜 플랫폼입니다.',
   },
   readme: './README.md',
   formItems: [

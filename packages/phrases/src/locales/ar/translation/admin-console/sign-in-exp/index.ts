@@ -92,73 +92,73 @@ const sign_in_exp = {
   },
   account_center: {
     title: 'مركز الحساب',
-    description: 'خصص تدفقات مركز الحساب باستخدام واجهات Logto.',
-    enable_account_api: 'تفعيل Account API',
+    description: 'خصص تدفقات مركز الحساب لديك باستخدام واجهات برمجة تطبيقات Logto.',
+    enable_account_api: 'تفعيل واجهة Account API',
     enable_account_api_description:
-      'فعّل Account API لبناء مركز حساب مخصص ومنح المستخدمين وصولًا مباشرًا إلى الواجهات دون استخدام Logto Management API.',
+      'فعّل واجهة Account API لبناء مركز حساب مخصص ومنح المستخدمين النهائيين وصولًا مباشرًا إلى الواجهة دون استخدام Logto Management API.',
     field_options: {
-      off: 'Off',
-      edit: 'Edit',
-      read_only: 'Read only',
+      off: 'إيقاف',
+      edit: 'تحرير',
+      read_only: 'للقراءة فقط',
       enabled: 'مفعّل',
       disabled: 'معطّل',
     },
     sections: {
       account_security: {
-        title: 'ACCOUNT SECURITY',
+        title: 'أمان الحساب',
         description:
-          'Manage access to the Account API, enabling users to view or edit their identity information and authentication factors after signing into the application. Users must verify their identity to get a valid 10-minute verification record ID before making these security-related changes.',
+          'أدِر الوصول إلى واجهة Account API لتمكين المستخدمين من عرض معلومات الهوية وعوامل المصادقة أو تعديلها بعد تسجيل الدخول إلى التطبيق. يجب على المستخدمين التحقق من هويتهم للحصول على معرّف سجل تحقق صالح لمدة 10 دقائق قبل إجراء هذه التغييرات المرتبطة بالأمان.',
         groups: {
           identifiers: {
-            title: 'Identifiers',
+            title: 'المعرّفات',
           },
           authentication_factors: {
-            title: 'Authentication factors',
+            title: 'عوامل المصادقة',
           },
         },
       },
       user_profile: {
-        title: 'USER PROFILE',
+        title: 'ملف المستخدم',
         description:
-          'Manage access to the Account API, enabling users to view or edit basic or custom profile data after signing into the application.',
+          'أدِر الوصول إلى واجهة Account API لتمكين المستخدمين من عرض بيانات الملف الشخصي الأساسية أو المخصصة أو تعديلها بعد تسجيل الدخول إلى التطبيق.',
         groups: {
           profile_data: {
-            title: 'Profile data',
+            title: 'بيانات الملف الشخصي',
           },
         },
       },
       secret_vault: {
         title: 'خزنة الأسرار',
         description:
-          'للموصلات الاجتماعية وموصلات المؤسسة، تخزين آمن لرموز الوصول الخاصة بالطرف الثالث لاستدعاء واجهاتهم البرمجية (على سبيل المثال، إضافة أحداث إلى تقويم Google).',
+          'لموصلات الشبكات الاجتماعية وموصلات المؤسسة، خزّن رموز الوصول الخاصة بجهات خارجية بشكل آمن لاستدعاء واجهاتهم البرمجية (مثل إضافة أحداث إلى تقويم Google).',
         third_party_token_storage: {
-          title: 'رمز الطرف الثالث',
-          third_party_access_token_retrieval: 'رمز الطرف الثالث',
+          title: 'رمز جهة خارجية',
+          third_party_access_token_retrieval: 'استرجاع رمز الوصول لجهة خارجية',
           third_party_token_tooltip:
-            'لتخزين الرموز، يمكنك تفعيل هذا في إعدادات الموصل الاجتماعي أو موصل المؤسسة المقابل.',
+            'لحفظ الرموز، يمكنك تفعيل هذا الخيار في إعدادات الموصل الاجتماعي أو المؤسسي المقابل.',
           third_party_token_description:
-            'بمجرد تفعيل Account API، يتم تفعيل استرجاع رموز الطرف الثالث تلقائيًا.',
+            'بعد تفعيل واجهة Account API، يتم تفعيل استرجاع رموز الجهات الخارجية تلقائيًا.',
         },
       },
     },
     fields: {
-      email: 'Email address',
-      phone: 'Phone number',
-      social: 'Social identities',
-      password: 'Password',
-      mfa: 'Multi-factor authentication',
-      mfa_description: 'Let users manage their MFA methods from the account center.',
-      username: 'Username',
-      name: 'Name',
-      avatar: 'Avatar',
-      profile: 'Profile',
-      profile_description: 'Control access to structured profile attributes.',
-      custom_data: 'Custom data',
-      custom_data_description: 'Control access to custom JSON data stored on the user.',
+      email: 'عنوان البريد الإلكتروني',
+      phone: 'رقم الهاتف',
+      social: 'هويات الشبكات الاجتماعية',
+      password: 'كلمة المرور',
+      mfa: 'المصادقة متعددة العوامل',
+      mfa_description: 'اسمح للمستخدمين بإدارة طرق المصادقة متعددة العوامل من مركز الحساب.',
+      username: 'اسم المستخدم',
+      name: 'الاسم',
+      avatar: 'الصورة الرمزية',
+      profile: 'الملف الشخصي',
+      profile_description: 'تحكم في الوصول إلى سمات الملف الشخصي المنظمة.',
+      custom_data: 'بيانات مخصصة',
+      custom_data_description: 'تحكم في الوصول إلى بيانات JSON المخصصة المخزنة للمستخدم.',
     },
     webauthn_related_origins: 'أصول WebAuthn ذات الصلة',
     webauthn_related_origins_description:
-      'أضف نطاقات تطبيقات الواجهة الأمامية المسموح لها بتسجيل مفاتيح المرور عبر API الحساب.',
+      'أضف نطاقات تطبيقات الواجهة الأمامية المسموح لها بتسجيل مفاتيح المرور عبر واجهة Account API.',
     webauthn_related_origins_error: 'يجب أن يبدأ الأصل بـ https:// أو http://',
   },
   sign_up_and_sign_in,

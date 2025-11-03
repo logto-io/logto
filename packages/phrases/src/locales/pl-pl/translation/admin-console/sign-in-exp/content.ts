@@ -2,9 +2,9 @@ const content = {
   terms_of_use: {
     title: 'TERMS',
     description: 'Dodaj Warunki i Prywatność, aby spełnić wymagania zgodności.',
-    terms_of_use: 'Terms of use URL',
+    terms_of_use: 'Adres URL regulaminu',
     terms_of_use_placeholder: 'https://your.terms.of.use/',
-    privacy_policy: 'Privacy policy URL',
+    privacy_policy: 'Adres URL polityki prywatności',
     privacy_policy_placeholder: 'https://your.privacy.policy/',
     agree_to_terms: 'Zgadzam się na warunki',
     agree_policies: {
@@ -14,16 +14,16 @@ const content = {
     },
   },
   languages: {
-    title: 'LANGUAGES',
-    enable_auto_detect: 'Enable auto-detect',
+    title: 'JĘZYKI',
+    enable_auto_detect: 'Włącz automatyczne wykrywanie',
     description:
-      "Your software detects the user's locale setting and switches to the local language. You can add new languages by translating UI from English to another language.",
-    manage_language: 'Manage language',
-    default_language: 'Default language',
+      'Twoje oprogramowanie wykrywa ustawienia regionalne użytkownika i przełącza się na lokalny język. Możesz dodawać nowe języki, tłumacząc interfejs z angielskiego na inny język.',
+    manage_language: 'Zarządzaj językiem',
+    default_language: 'Domyślny język',
     default_language_description_auto:
-      'The default language will be used when the detected user language isn’t covered in the current language library.',
+      'Domyślny język zostanie użyty, gdy wykryty język użytkownika nie znajduje się w bieżącej bibliotece języków.',
     default_language_description_fixed:
-      'When auto-detect is off, the default language is the only language your software will show. Turn on auto-detect for language extension.',
+      'Gdy automatyczne wykrywanie jest wyłączone, domyślny język jest jedynym, który pokaże Twoje oprogramowanie. Włącz automatyczne wykrywanie, aby rozszerzyć obsługę języków.',
   },
   support: {
     title: 'POMOC',
@@ -35,23 +35,22 @@ const content = {
     support_website_placeholder: 'https://your.website/support',
   },
   manage_language: {
-    title: 'Manage language',
+    title: 'Zarządzaj językiem',
     subtitle:
-      'Localize the product experience by adding languages and translations. Your contribution can be set as the default language.',
-    add_language: 'Add Language',
-    logto_provided: 'Logto provided',
-    key: 'Key',
-    logto_source_values: 'Logto source values',
-    custom_values: 'Custom values',
-    clear_all_tip: 'Clear all values',
-    unsaved_description: 'Changes won’t be saved if you leave this page without saving.',
-    deletion_tip: 'Delete the language',
-    deletion_title: 'Do you want to delete the added language?',
-    deletion_description:
-      'After deletion, your users won’t be able to browse in that language again.',
-    default_language_deletion_title: 'Default language can’t be deleted.',
+      'Dostosuj produkt, dodając języki i tłumaczenia. Twój wkład może zostać ustawiony jako język domyślny.',
+    add_language: 'Dodaj język',
+    logto_provided: 'Dostarczone przez Logto',
+    key: 'Klucz',
+    logto_source_values: 'Wartości źródłowe Logto',
+    custom_values: 'Wartości niestandardowe',
+    clear_all_tip: 'Wyczyść wszystkie wartości',
+    unsaved_description: 'Zmiany nie zostaną zapisane, jeśli opuścisz tę stronę bez zapisania.',
+    deletion_tip: 'Usuń język',
+    deletion_title: 'Czy chcesz usunąć dodany język?',
+    deletion_description: 'Po usunięciu użytkownicy nie będą mogli już korzystać z tego języka.',
+    default_language_deletion_title: 'Nie można usunąć domyślnego języka.',
     default_language_deletion_description:
-      '{{language}} is set as your default language and can’t be deleted. ',
+      '{{language}} jest ustawiony jako język domyślny i nie może zostać usunięty.',
   },
 };
 

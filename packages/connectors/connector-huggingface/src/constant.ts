@@ -17,6 +17,11 @@ export const defaultMetadata: ConnectorMetadata = {
   logoDark: null,
   description: {
     en: 'Hugging Face is a machine learning (ML) and data science platform and community that helps users build, deploy and train machine learning models.',
+    'zh-CN':
+      'Hugging Face 是一个机器学习和数据科学平台与社区，帮助用户构建、部署和训练机器学习模型。',
+    'tr-TR':
+      'Hugging Face, kullanıcıların makine öğrenimi modelleri oluşturmasına, dağıtmasına ve eğitmesine yardımcı olan bir makine öğrenimi ve veri bilimi platformu ile topluluğudur.',
+    ko: 'Hugging Face는 사용자가 머신러닝 모델을 구축하고 배포하며 학습하도록 돕는 머신러닝·데이터 과학 플랫폼이자 커뮤니티입니다.',
   },
   readme: './README.md',
   formItems: [

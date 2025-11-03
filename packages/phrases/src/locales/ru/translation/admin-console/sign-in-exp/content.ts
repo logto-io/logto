@@ -2,9 +2,9 @@ const content = {
   terms_of_use: {
     title: 'TERMS',
     description: 'Добавьте условия и политику конфиденциальности для соблюдения требований.',
-    terms_of_use: 'Terms of use URL',
+    terms_of_use: 'URL условий использования',
     terms_of_use_placeholder: 'https://your.terms.of.use/',
-    privacy_policy: 'Privacy policy URL',
+    privacy_policy: 'URL политики конфиденциальности',
     privacy_policy_placeholder: 'https://your.privacy.policy/',
     agree_to_terms: 'Согласиться с условиями',
     agree_policies: {
@@ -14,16 +14,16 @@ const content = {
     },
   },
   languages: {
-    title: 'LANGUAGES',
-    enable_auto_detect: 'Enable auto-detect',
+    title: 'ЯЗЫКИ',
+    enable_auto_detect: 'Включить автоопределение',
     description:
-      "Your software detects the user's locale setting and switches to the local language. You can add new languages by translating UI from English to another language.",
-    manage_language: 'Manage language',
-    default_language: 'Default language',
+      'Ваша платформа определяет языковые настройки пользователя и переключается на локальный язык. Вы можете добавить новые языки, переведя интерфейс с английского на другой язык.',
+    manage_language: 'Управление языком',
+    default_language: 'Язык по умолчанию',
     default_language_description_auto:
-      'The default language will be used when the detected user language isn’t covered in the current language library.',
+      'Язык по умолчанию используется, если обнаруженный язык пользователя отсутствует в текущей библиотеке.',
     default_language_description_fixed:
-      'When auto-detect is off, the default language is the only language your software will show. Turn on auto-detect for language extension.',
+      'При отключенном автоопределении ваш продукт показывает только язык по умолчанию. Включите автоопределение, чтобы расширить набор языков.',
   },
   support: {
     title: 'ПОДДЕРЖКА',
@@ -35,23 +35,22 @@ const content = {
     support_website_placeholder: 'https://your.website/support',
   },
   manage_language: {
-    title: 'Manage language',
+    title: 'Управление языком',
     subtitle:
-      'Localize the product experience by adding languages and translations. Your contribution can be set as the default language.',
-    add_language: 'Add Language',
-    logto_provided: 'Logto provided',
-    key: 'Key',
-    logto_source_values: 'Logto source values',
-    custom_values: 'Custom values',
-    clear_all_tip: 'Clear all values',
-    unsaved_description: 'Changes won’t be saved if you leave this page without saving.',
-    deletion_tip: 'Delete the language',
-    deletion_title: 'Do you want to delete the added language?',
-    deletion_description:
-      'After deletion, your users won’t be able to browse in that language again.',
-    default_language_deletion_title: 'Default language can’t be deleted.',
+      'Локализуйте продукт, добавляя языки и переводы. Ваш вклад можно назначить языком по умолчанию.',
+    add_language: 'Добавить язык',
+    logto_provided: 'Предоставлено Logto',
+    key: 'Ключ',
+    logto_source_values: 'Исходные значения Logto',
+    custom_values: 'Пользовательские значения',
+    clear_all_tip: 'Очистить все значения',
+    unsaved_description: 'Изменения не сохранятся, если вы покинете страницу без сохранения.',
+    deletion_tip: 'Удалить язык',
+    deletion_title: 'Удалить добавленный язык?',
+    deletion_description: 'После удаления пользователи больше не смогут использовать этот язык.',
+    default_language_deletion_title: 'Язык по умолчанию нельзя удалить.',
     default_language_deletion_description:
-      '{{language}} is set as your default language and can’t be deleted. ',
+      '{{language}} установлен как язык по умолчанию и не может быть удален.',
   },
 };
 

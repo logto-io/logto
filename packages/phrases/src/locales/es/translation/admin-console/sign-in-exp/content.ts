@@ -2,9 +2,9 @@ const content = {
   terms_of_use: {
     title: 'TERMS',
     description: 'Añadir términos y privacidad para cumplir con los requisitos de cumplimiento.',
-    terms_of_use: 'Terms of use URL',
+    terms_of_use: 'URL de los términos de uso',
     terms_of_use_placeholder: 'https://your.terms.of.use/',
-    privacy_policy: 'Privacy policy URL',
+    privacy_policy: 'URL de la política de privacidad',
     privacy_policy_placeholder: 'https://your.privacy.policy/',
     agree_to_terms: 'Aceptar los términos',
     agree_policies: {
@@ -16,16 +16,16 @@ const content = {
     },
   },
   languages: {
-    title: 'LANGUAGES',
-    enable_auto_detect: 'Enable auto-detect',
+    title: 'IDIOMAS',
+    enable_auto_detect: 'Activar detección automática',
     description:
-      "Your software detects the user's locale setting and switches to the local language. You can add new languages by translating UI from English to another language.",
-    manage_language: 'Manage language',
-    default_language: 'Default language',
+      'Tu software detecta la configuración regional del usuario y cambia al idioma local. Puedes añadir nuevos idiomas traduciendo la interfaz del inglés a otro idioma.',
+    manage_language: 'Gestionar idioma',
+    default_language: 'Idioma predeterminado',
     default_language_description_auto:
-      'The default language will be used when the detected user language isn’t covered in the current language library.',
+      'El idioma predeterminado se usará cuando el idioma detectado del usuario no esté disponible en la biblioteca actual.',
     default_language_description_fixed:
-      'When auto-detect is off, the default language is the only language your software will show. Turn on auto-detect for language extension.',
+      'Si la detección automática está desactivada, el idioma predeterminado es el único que mostrará tu software. Activa la detección automática para ampliar idiomas.',
   },
   support: {
     title: 'SOPORTE',
@@ -37,23 +37,22 @@ const content = {
     support_website_placeholder: 'https://your.website/support',
   },
   manage_language: {
-    title: 'Manage language',
+    title: 'Gestionar idioma',
     subtitle:
-      'Localize the product experience by adding languages and translations. Your contribution can be set as the default language.',
-    add_language: 'Add Language',
-    logto_provided: 'Logto provided',
-    key: 'Key',
-    logto_source_values: 'Logto source values',
-    custom_values: 'Custom values',
-    clear_all_tip: 'Clear all values',
-    unsaved_description: 'Changes won’t be saved if you leave this page without saving.',
-    deletion_tip: 'Delete the language',
-    deletion_title: 'Do you want to delete the added language?',
-    deletion_description:
-      'After deletion, your users won’t be able to browse in that language again.',
-    default_language_deletion_title: 'Default language can’t be deleted.',
+      'Localiza la experiencia del producto añadiendo idiomas y traducciones. Tu contribución se puede establecer como idioma predeterminado.',
+    add_language: 'Añadir idioma',
+    logto_provided: 'Proporcionado por Logto',
+    key: 'Clave',
+    logto_source_values: 'Valores de origen de Logto',
+    custom_values: 'Valores personalizados',
+    clear_all_tip: 'Borrar todos los valores',
+    unsaved_description: 'Los cambios no se guardarán si sales de esta página sin guardar.',
+    deletion_tip: 'Eliminar el idioma',
+    deletion_title: '¿Quieres eliminar el idioma añadido?',
+    deletion_description: 'Tras eliminarlo, tus usuarios no podrán volver a navegar en ese idioma.',
+    default_language_deletion_title: 'No se puede eliminar el idioma predeterminado.',
     default_language_deletion_description:
-      '{{language}} is set as your default language and can’t be deleted. ',
+      '{{language}} está establecido como tu idioma predeterminado y no se puede eliminar.',
   },
 };
 

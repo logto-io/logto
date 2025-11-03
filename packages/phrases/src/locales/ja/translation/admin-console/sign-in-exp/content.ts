@@ -14,16 +14,16 @@ const content = {
     },
   },
   languages: {
-    title: 'LANGUAGES',
-    enable_auto_detect: 'Enable auto-detect',
+    title: '言語',
+    enable_auto_detect: '自動検出を有効にする',
     description:
-      "Your software detects the user's locale setting and switches to the local language. You can add new languages by translating UI from English to another language.",
-    manage_language: 'Manage language',
-    default_language: 'Default language',
+      'ソフトウェアがユーザーのロケール設定を検出し、ローカル言語に切り替えます。英語の UI を別の言語に翻訳して新しい言語を追加できます。',
+    manage_language: '言語を管理',
+    default_language: '既定の言語',
     default_language_description_auto:
-      'The default language will be used when the detected user language isn’t covered in the current language library.',
+      '検出されたユーザーの言語が現在の言語ライブラリにない場合、既定の言語が使用されます。',
     default_language_description_fixed:
-      'When auto-detect is off, the default language is the only language your software will show. Turn on auto-detect for language extension.',
+      '自動検出をオフにすると、既定の言語だけが表示されます。言語を拡張するには自動検出をオンにしてください。',
   },
   support: {
     title: 'サポート',
@@ -34,23 +34,22 @@ const content = {
     support_website_placeholder: 'https://your.website/support',
   },
   manage_language: {
-    title: 'Manage language',
+    title: '言語を管理',
     subtitle:
-      'Localize the product experience by adding languages and translations. Your contribution can be set as the default language.',
-    add_language: 'Add Language',
-    logto_provided: 'Logto provided',
-    key: 'Key',
-    logto_source_values: 'Logto source values',
-    custom_values: 'Custom values',
-    clear_all_tip: 'Clear all values',
-    unsaved_description: 'Changes won’t be saved if you leave this page without saving.',
-    deletion_tip: 'Delete the language',
-    deletion_title: 'Do you want to delete the added language?',
-    deletion_description:
-      'After deletion, your users won’t be able to browse in that language again.',
-    default_language_deletion_title: 'Default language can’t be deleted.',
+      '言語と翻訳を追加して製品体験をローカライズします。あなたが提供した言語は既定の言語として設定できます。',
+    add_language: '言語を追加',
+    logto_provided: 'Logto 提供',
+    key: 'キー',
+    logto_source_values: 'Logto ソース値',
+    custom_values: 'カスタム値',
+    clear_all_tip: 'すべての値をクリア',
+    unsaved_description: '保存せずにこのページを離れると、変更は保存されません。',
+    deletion_tip: '言語を削除',
+    deletion_title: '追加した言語を削除しますか？',
+    deletion_description: '削除後、ユーザーはその言語で閲覧できなくなります。',
+    default_language_deletion_title: '既定の言語は削除できません。',
     default_language_deletion_description:
-      '{{language}} is set as your default language and can’t be deleted. ',
+      '{{language}} は既定の言語として設定されているため削除できません。',
   },
 };
 

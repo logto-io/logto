@@ -33,12 +33,17 @@ export const defaultMetadata: ConnectorMetadata = {
   name: {
     en: 'KOOK',
     'zh-CN': 'KOOK',
+    'tr-TR': 'KOOK',
+    ko: 'KOOK',
   },
   logo: './logo.svg',
   logoDark: null,
   description: {
-    en: 'KOOK is a voice and text chat platform for gamers, which similar to Discord.',
-    'zh-CN': 'KOOK 是一个类似 Discord 的主要为游戏玩家设计的语音和文字聊天平台。',
+    en: 'KOOK is a voice and text chat platform for gamers, similar to Discord.',
+    'zh-CN': 'KOOK 是一个类似 Discord 的、为游戏玩家设计的语音和文字聊天平台。',
+    'tr-TR':
+      "KOOK, Discord'a benzer şekilde oyuncular için tasarlanmış bir ses ve metin sohbet platformudur.",
+    ko: 'KOOK은 Discord와 유사한, 게이머를 위한 음성 및 텍스트 채팅 플랫폼입니다.',
   },
   readme: './README.md',
   formItems: [

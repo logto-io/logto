@@ -14,6 +14,10 @@ export const defaultMetadata: ConnectorMetadata = {
   logoDark: null,
   description: {
     en: 'Mailgun is an email delivery service for sending, receiving, and tracking emails.',
+    'zh-CN': 'Mailgun 是一款用于发送、接收和跟踪电子邮件的邮件投递服务。',
+    'tr-TR':
+      'Mailgun, e-postaları gönderme, alma ve izleme için kullanılan bir e-posta teslim hizmetidir.',
+    ko: 'Mailgun은 이메일을 발송하고 수신하며 추적할 수 있는 이메일 전송 서비스입니다.',
   },
   readme: './README.md',
   formItems: [
