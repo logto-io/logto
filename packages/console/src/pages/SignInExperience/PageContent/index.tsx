@@ -30,6 +30,7 @@ import {
   type SignInExperiencePageManagedData,
   type SignInExperienceForm,
   type AccountCenterFormValues,
+  normalizeWebauthnRelatedOrigins,
 } from '../types';
 
 import AccountCenter from './AccountCenter';
@@ -97,6 +98,9 @@ function PageContent({ data, onSignInExperienceUpdated, onAccountCenterUpdated }
 
     try {
       const { accountCenter, ...formValues } = getValues();
+      const webauthnRelatedOrigins = normalizeWebauthnRelatedOrigins(
+        accountCenter.webauthnRelatedOrigins
+      );
 
       const updatedData = await api
         .patch('api/sign-in-exp', {
@@ -110,7 +114,7 @@ function PageContent({ data, onSignInExperienceUpdated, onAccountCenterUpdated }
             enabled: accountCenter.enabled,
             // Disable all fields when account center is disabled
             fields: accountCenter.enabled ? accountCenter.fields : {},
-            webauthnRelatedOrigins: accountCenter.webauthnRelatedOrigins,
+            webauthnRelatedOrigins,
           },
         })
         .json<AccountCenterConfig>();
