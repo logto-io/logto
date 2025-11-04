@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { ConnectorType, ReservedPlanId } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
@@ -313,7 +314,7 @@ describe('guardTenantUsageByKey', () => {
       },
     });
 
-    await quotaLibrary.guardTenantUsageByKey('scopesPerResourceLimit', 'resource_1');
+    await quotaLibrary.guardTenantUsageByKey('scopesPerResourceLimit', { entityId: 'resource_1' });
 
     expect(getSelfComputedUsageByKey).toHaveBeenCalledWith(
       tenant.id,
@@ -340,7 +341,7 @@ describe('guardTenantUsageByKey', () => {
     });
 
     await expect(
-      quotaLibrary.guardTenantUsageByKey('scopesPerRoleLimit', 'role_1')
+      quotaLibrary.guardTenantUsageByKey('scopesPerRoleLimit', { entityId: 'role_1' })
     ).rejects.toMatchObject({
       code: 'subscription.limit_exceeded',
       status: 403,
@@ -398,6 +399,141 @@ describe('guardTenantUsageByKey', () => {
 
     // The key point: usage should be fetched only once, not twice
     expect(getSelfComputedUsageByKey).toHaveBeenCalledTimes(1);
+  });
+
+  it('allows usage when usage + consumeUsageCount equals limit', async () => {
+    mockGetTenantSubscription.mockResolvedValueOnce({
+      ...mockSubscriptionData,
+      quota: {
+        ...mockSubscriptionData.quota,
+        applicationsLimit: 10,
+      },
+    });
+
+    const getSelfComputedUsageByKey = jest.fn().mockResolvedValue(7);
+
+    const { quotaLibrary } = createQuotaLibrary({
+      queriesOverride: {
+        tenantUsage: { getSelfComputedUsageByKey },
+      },
+    });
+
+    // 7 + 3 = 10, should be allowed (<=)
+    await expect(
+      quotaLibrary.guardTenantUsageByKey('applicationsLimit', { consumeUsageCount: 3 })
+    ).resolves.not.toThrow();
+  });
+
+  it('throws when usage + consumeUsageCount exceeds limit', async () => {
+    mockGetTenantSubscription.mockResolvedValueOnce({
+      ...mockSubscriptionData,
+      quota: {
+        ...mockSubscriptionData.quota,
+        applicationsLimit: 10,
+      },
+    });
+
+    const getSelfComputedUsageByKey = jest.fn().mockResolvedValue(7);
+
+    const { quotaLibrary } = createQuotaLibrary({
+      queriesOverride: {
+        tenantUsage: { getSelfComputedUsageByKey },
+      },
+    });
+
+    // 7 + 4 = 11 > 10, should throw
+    await expect(
+      quotaLibrary.guardTenantUsageByKey('applicationsLimit', { consumeUsageCount: 4 })
+    ).rejects.toMatchObject({
+      code: 'subscription.limit_exceeded',
+      status: 403,
+    });
+  });
+
+  it('allows batch operation when total usage equals limit for entity-based quota', async () => {
+    mockGetTenantSubscription.mockResolvedValueOnce({
+      ...mockSubscriptionData,
+      quota: {
+        ...mockSubscriptionData.quota,
+        scopesPerRoleLimit: 10,
+      },
+    });
+
+    const getSelfComputedUsageByKey = jest.fn().mockResolvedValue(5);
+
+    const { quotaLibrary } = createQuotaLibrary({
+      queriesOverride: {
+        tenantUsage: { getSelfComputedUsageByKey },
+      },
+    });
+
+    // Simulating adding 5 scopes at once: 5 + 5 = 10, should be allowed
+    await expect(
+      quotaLibrary.guardTenantUsageByKey('scopesPerRoleLimit', {
+        entityId: 'role_1',
+        consumeUsageCount: 5,
+      })
+    ).resolves.not.toThrow();
+  });
+
+  it('blocks batch operation that would exceed entity-based quota limit', async () => {
+    mockGetTenantSubscription.mockResolvedValueOnce({
+      ...mockSubscriptionData,
+      quota: {
+        ...mockSubscriptionData.quota,
+        scopesPerRoleLimit: 10,
+      },
+    });
+
+    const getSelfComputedUsageByKey = jest.fn().mockResolvedValue(5);
+
+    const { quotaLibrary } = createQuotaLibrary({
+      queriesOverride: {
+        tenantUsage: { getSelfComputedUsageByKey },
+      },
+    });
+
+    // Simulating adding 100 scopes at once: 5 + 100 = 105 > 10, should throw
+    await expect(
+      quotaLibrary.guardTenantUsageByKey('scopesPerRoleLimit', {
+        entityId: 'role_1',
+        consumeUsageCount: 100,
+      })
+    ).rejects.toMatchObject({
+      code: 'subscription.limit_exceeded',
+      status: 403,
+    });
+  });
+
+  it('respects system limit with batch consumption', async () => {
+    setEnvFlag('isDevFeaturesEnabled', true);
+    mockGetTenantSubscription.mockResolvedValueOnce({
+      ...mockSubscriptionData,
+      quota: {
+        ...mockSubscriptionData.quota,
+        applicationsLimit: null,
+      },
+      systemLimit: {
+        ...mockSubscriptionData.systemLimit,
+        applicationsLimit: 10,
+      },
+    });
+
+    const getSelfComputedUsageByKey = jest.fn().mockResolvedValue(8);
+
+    const { quotaLibrary } = createQuotaLibrary({
+      queriesOverride: {
+        tenantUsage: { getSelfComputedUsageByKey },
+      },
+    });
+
+    // 8 + 3 = 11 > 10, should throw system limit error
+    await expect(
+      quotaLibrary.guardTenantUsageByKey('applicationsLimit', { consumeUsageCount: 3 })
+    ).rejects.toMatchObject({
+      code: 'system_limit.limit_exceeded',
+      status: 403,
+    });
   });
 });
 
@@ -485,3 +621,4 @@ describe('reportSubscriptionUpdatesUsage', () => {
     expect(mockReportSubscriptionUpdates).not.toHaveBeenCalled();
   });
 });
+/* eslint-enable max-lines */
