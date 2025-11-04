@@ -175,8 +175,7 @@ const sign_in_exp = {
       'SMS 커넥터가 아직 설정되지 않았습니다. <a>"이메일 및 SMS 커넥터"</a>에서 설정하세요.',
     no_connector_social_account_center:
       '소셜 커넥터가 아직 설정되지 않았습니다. <a>"소셜 커넥터"</a>에서 설정하세요.',
-    no_mfa_factor:
-      '아직 MFA 팩터가 설정되지 않았습니다. "다단계 인증"에서 <a>{{link}}</a>하십시오.',
+    no_mfa_factor: '아직 MFA 팩터가 설정되지 않았습니다. <a>{{link}}</a>에서 설정하세요.',
     setup_link: '설정',
   },
   save_alert: {

@@ -179,8 +179,7 @@ const sign_in_exp = {
       'SMSコネクタがまだ設定されていません。<a>「メールおよびSMSコネクタ」</a>で設定してください。',
     no_connector_social_account_center:
       'ソーシャルコネクタがまだ設定されていません。<a>「ソーシャルコネクタ」</a>で設定してください。',
-    no_mfa_factor:
-      'まだ MFA ファクターが設定されていません。「多要素認証」で<a>{{link}}</a>してください。',
+    no_mfa_factor: 'まだ MFA ファクターが設定されていません。<a>{{link}}</a>で設定してください。',
     setup_link: '設定',
   },
   save_alert: {

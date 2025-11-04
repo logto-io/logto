@@ -179,8 +179,7 @@ const sign_in_exp = {
       'Nie ustawiono jeszcze łącznika SMS. Skonfiguruj go w <a>„Łączniki e-mail i SMS"</a>.',
     no_connector_social_account_center:
       'Nie ustawiono jeszcze łącznika społecznościowego. Skonfiguruj go w <a>„Łączniki społecznościowe"</a>.',
-    no_mfa_factor:
-      'Nie ustawiono jeszcze czynnika MFA. <a>{{link}}</a> w „Uwierzytelnianie wieloskładnikowe".',
+    no_mfa_factor: 'Nie ustawiono jeszcze czynnika MFA. Skonfiguruj go w <a>{{link}}</a>.',
     setup_link: 'Konfiguracja',
   },
   save_alert: {

@@ -181,8 +181,7 @@ const sign_in_exp = {
       'Aún no se ha configurado el conector SMS. Configúrelo en <a>"Conectores de correo electrónico y SMS"</a>.',
     no_connector_social_account_center:
       'Aún no se ha configurado el conector social. Configúrelo en <a>"Conectores sociales"</a>.',
-    no_mfa_factor:
-      'Aún no se ha configurado ningún factor de MFA. <a>{{link}}</a> en "Autenticación multifactor".',
+    no_mfa_factor: 'Aún no se ha configurado ningún factor de MFA. Configúrelo en <a>{{link}}</a>.',
     setup_link: 'Configuración',
   },
   save_alert: {
