@@ -178,8 +178,7 @@ const sign_in_exp = {
       'Henüz SMS bağlayıcısı kurulmadı. <a>"E-posta ve SMS bağlayıcıları"</a> bölümünde kurun.',
     no_connector_social_account_center:
       'Henüz sosyal bağlayıcı kurulmadı. <a>"Sosyal bağlayıcılar"</a> bölümünde kurun.',
-    no_mfa_factor:
-      'Henüz MFA faktörü kurulmadı. "Çok faktörlü kimlik doğrulama" bölümünde <a>{{link}}</a>.',
+    no_mfa_factor: 'Henüz MFA faktörü kurulmadı. <a>{{link}}</a> bölümünde kurun.',
     setup_link: 'Kurulum yapın',
   },
   save_alert: {

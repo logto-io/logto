@@ -180,7 +180,7 @@ const sign_in_exp = {
     no_connector_social_account_center:
       'Noch kein Social-Konnektor eingerichtet. Richten Sie ihn unter <a>"Social-Konnektoren"</a> ein.',
     no_mfa_factor:
-      'Es wurde noch kein MFA-Faktor eingerichtet. <a>{{link}}</a> in "Multi-Faktor-Authentifizierung".',
+      'Es wurde noch kein MFA-Faktor eingerichtet. Richten Sie ihn in <a>{{link}}</a> ein.',
     setup_link: 'Einrichtung',
   },
   save_alert: {
