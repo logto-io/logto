@@ -2,6 +2,7 @@ import {
   OrganizationRoles,
   organizationRoleWithScopesGuard,
   ProductEvent,
+  RoleType,
   type CreateOrganizationRole,
   type OrganizationRole,
   type OrganizationRoleKeys,
@@ -35,6 +36,7 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
           relations: { rolesScopes, rolesResourceScopes },
         },
       },
+      libraries: { quota },
     },
   ]: RouterInitArgs<T>
 ) {
@@ -95,10 +97,17 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
     koaGuard({
       body: createGuard,
       response: OrganizationRoles.guard,
-      status: [201, 422],
+      status: [201, 422, 403],
     }),
     async (ctx, next) => {
       const { organizationScopeIds, resourceScopeIds, ...data } = ctx.guard.body;
+
+      await quota.guardTenantUsageByKey(
+        data.type === RoleType.MachineToMachine
+          ? 'organizationMachineToMachineRolesLimit'
+          : 'organizationUserRolesLimit'
+      );
+
       const role = await roles.insert({ id: generateStandardId(), ...data });
 
       if (organizationScopeIds.length > 0) {
