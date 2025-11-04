@@ -107,7 +107,7 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
     }
   );
 
-  userRoutes(router, organizations);
+  userRoutes(router, organizations, quota);
   applicationRoutes(router, organizations);
   jitRoutes(router, organizations);
 
