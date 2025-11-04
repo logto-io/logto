@@ -99,7 +99,7 @@ function AccountCenterField({
             }}
           >
             {t('sign_in_exp.setup_warning.no_mfa_factor', {
-              link: t('sign_in_exp.setup_warning.setup_link'),
+              link: t('sign_in_exp.account_center.fields.mfa'),
             })}
           </Trans>
         </InlineNotification>

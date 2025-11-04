@@ -178,7 +178,7 @@ const sign_in_exp = {
       'No SMS connector set-up yet. Set up in <a>"Email and SMS connectors"</a>.',
     no_connector_social_account_center:
       'No social connector set-up yet. Set up in <a>"Social connectors"</a>.',
-    no_mfa_factor: 'No MFA factor set-up yet. <a>{{link}}</a> in "Multi-factor authentication".',
+    no_mfa_factor: 'No MFA factor set-up yet. Set up in <a>{{link}}</a>.',
     setup_link: 'Set up',
   },
   save_alert: {
