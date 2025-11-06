@@ -77,7 +77,7 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
     setError,
     watch,
   } = useForm<FormType>({ resetOptions: { keepErrors: true } });
-  const api = useApi({ hideErrorToast: true });
+  const api = useApi({ hideErrorToast: [duplicateConnectorNameErrorCode] });
 
   const isLoading = !data && !error;
 
@@ -126,7 +126,9 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
           if (metadata.code === duplicateConnectorNameErrorCode) {
             setError('connectorName', { type: 'custom', message: metadata.message });
           }
+          return;
         }
+        throw error;
       }
     })
   );
