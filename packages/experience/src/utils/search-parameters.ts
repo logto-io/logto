@@ -35,8 +35,11 @@ export const handleSearchParametersData = () => {
     const value = parameters.get(key);
     if (value) {
       sessionStorage.setItem(key, value);
-      parameters.delete(key);
-    } else {
+      if (key !== searchKeys.appId) {
+        // Keep app_id in the URL for resuming sessions
+        parameters.delete(key);
+      }
+    } else if (key !== searchKeys.appId) {
       sessionStorage.removeItem(key);
     }
   }

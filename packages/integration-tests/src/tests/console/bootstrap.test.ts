@@ -108,7 +108,7 @@ describe('smoke testing for console admin account creation and sign-in', () => {
       )
     );
 
-    expect(page.url()).toBe(new URL('sign-in', logtoConsoleUrl).href);
+    expect(page.url()).toBe(new URL('sign-in?app_id=admin-console', logtoConsoleUrl).href);
   });
 
   it('can sign in to admin console again', async () => {

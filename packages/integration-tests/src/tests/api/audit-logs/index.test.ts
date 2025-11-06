@@ -7,6 +7,7 @@ import { getAuditLogs } from '#src/api/logs.js';
 import MockClient from '#src/client/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile } from '#src/helpers/user.js';
+import { parseInteractionCookie } from '#src/utils.js';
 
 describe('audit logs for interaction', () => {
   beforeAll(async () => {
@@ -20,10 +21,12 @@ describe('audit logs for interaction', () => {
   it('should insert log after interaction started and ended', async () => {
     const client = new MockClient();
     await client.initSession();
-    const interactionId = client.parsedCookies.get('_interaction');
+    const interactionCookie = client.parsedCookies.get('_interaction');
 
-    assert(interactionId, new Error('No interaction found in cookie'));
-    console.debug('Testing interaction', interactionId);
+    assert(interactionCookie, new Error('No interaction found in cookie'));
+    console.debug('Testing interaction', interactionCookie);
+
+    const interactionId = parseInteractionCookie(interactionCookie)['demo-app'];
 
     // Expect interaction create log
     const createLogs = await getAuditLogs(

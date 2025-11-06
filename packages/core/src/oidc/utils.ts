@@ -145,3 +145,13 @@ export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown):
 
   return firstScreen + getSearchParamString();
 };
+
+export const buildConsentPromptUrl = (appId?: unknown): string => {
+  const searchParams = new URLSearchParams();
+  if (appId) {
+    searchParams.append('app_id', String(appId));
+  }
+  const searchParamString = searchParams.size > 0 ? `?${searchParams.toString()}` : '';
+
+  return experience.routes.consent + searchParamString;
+};

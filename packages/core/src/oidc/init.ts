@@ -10,7 +10,6 @@ import type { I18nKey } from '@logto/phrases';
 import {
   customClientMetadataDefault,
   CustomClientMetadataKey,
-  experience,
   extraParamsObjectGuard,
   inSeconds,
   logtoCookieKey,
@@ -33,6 +32,7 @@ import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import koaResourceParam from '#src/middleware/koa-resource-param.js';
 import postgresAdapter from '#src/oidc/adapter.js';
 import {
+  buildConsentPromptUrl,
   buildLoginPromptUrl,
   isOriginAllowed,
   validateCustomClientMetadata,
@@ -244,7 +244,7 @@ export default function initOidc(
           }
 
           case 'consent': {
-            return '/' + experience.routes.consent;
+            return '/' + buildConsentPromptUrl(appId);
           }
 
           default: {
