@@ -20,6 +20,9 @@ create table organization_roles (
 create index organization_roles__id
   on organization_roles (tenant_id, id);
 
+create index organization_roles__type
+  on organization_roles (tenant_id, type);
+
 create function check_organization_role_type(role_id varchar(21), target_type role_type) returns boolean as
 $$ begin
   return (select type from organization_roles where id = role_id) = target_type;
