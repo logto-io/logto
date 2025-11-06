@@ -1,10 +1,10 @@
 import classNames from 'classnames';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
 import ArrowPrev from '@/assets/icons/arrow-prev.svg?react';
 import NavClose from '@/assets/icons/nav-close.svg?react';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import FlipOnRtl from '../FlipOnRtl';
@@ -20,7 +20,7 @@ type Props = {
 };
 
 const NavBar = ({ title, type = 'back', isHidden, onClose, onSkip }: Props) => {
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
   const { t } = useTranslation();
 
   const isClosable = type === 'close';

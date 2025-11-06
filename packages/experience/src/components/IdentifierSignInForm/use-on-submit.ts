@@ -1,16 +1,16 @@
 import type { SignIn } from '@logto/schemas';
 import { SignInIdentifier } from '@logto/schemas';
 import { useCallback, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import useCheckSingleSignOn from '@/hooks/use-check-single-sign-on';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import useSendVerificationCode from '@/hooks/use-send-verification-code';
 import { useSieMethods } from '@/hooks/use-sie';
 import { UserFlow } from '@/types';
 
 const useOnSubmit = (signInMethods: SignIn['methods']) => {
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
   const { ssoConnectors } = useSieMethods();
   const { onSubmit: checkSingleSignOn } = useCheckSingleSignOn();
   const { setIdentifierInputValue } = useContext(UserInteractionContext);

@@ -1,8 +1,8 @@
 import { InteractionEvent, MissingProfile } from '@logto/schemas';
 import { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { validate } from 'superstruct';
 
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { UserFlow, SearchParameters, type ContinueFlowInteractionEvent } from '@/types';
 import { missingProfileErrorDataGuard } from '@/types/guard';
 import { queryStringify } from '@/utils';
@@ -26,7 +26,7 @@ const useRequiredProfileErrorHandler = ({
   linkSocial,
   interactionEvent = InteractionEvent.SignIn,
 }: Options = {}) => {
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
   const { setToast } = useToast();
 
   const requiredProfileErrorHandler = useMemo<ErrorHandlers>(

@@ -2,7 +2,7 @@ import { InteractionEvent, type SignInIdentifier } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { type TFuncKey } from 'i18next';
 import { useCallback, useContext, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { validate } from 'superstruct';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
@@ -10,6 +10,7 @@ import UserInteractionContext from '@/Providers/UserInteractionContextProvider/U
 import { sendVerificationCode } from '@/apis/experience';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
 import useErrorHandler from '@/hooks/use-error-handler';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import useSkipMfa from '@/hooks/use-skip-mfa';
 import useSkipOptionalMfa from '@/hooks/use-skip-optional-mfa';
 import IdentifierProfileForm from '@/pages/Continue/IdentifierProfileForm';
@@ -36,7 +37,7 @@ const VerificationCodeMfaBinding = ({
   const { state } = useLocation();
   const [, mfaFlowState] = validate(state, mfaFlowStateGuard);
   const { setVerificationId, setIdentifierInputValue } = useContext(UserInteractionContext);
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
   const [errorMessage, setErrorMessage] = useState<string>();
 
   const skipMfa = useSkipMfa();

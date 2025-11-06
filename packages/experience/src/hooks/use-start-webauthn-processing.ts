@@ -1,9 +1,9 @@
 import { MfaFactor, VerificationType } from '@logto/schemas';
 import { useCallback, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { createWebAuthnRegistration, createWebAuthnAuthentication } from '@/apis/experience';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { UserMfaFlow } from '@/types';
 import { type WebAuthnState, type MfaFlowState } from '@/types/guard';
 
@@ -11,7 +11,7 @@ import useApi from './use-api';
 import useErrorHandler from './use-error-handler';
 
 const useStartWebAuthnProcessing = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
   const asyncCreateRegistrationOptions = useApi(createWebAuthnRegistration);
   const asyncGenerateAuthnOptions = useApi(createWebAuthnAuthentication);
   const handleError = useErrorHandler();

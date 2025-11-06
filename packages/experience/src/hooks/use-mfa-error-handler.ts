@@ -1,9 +1,9 @@
 import { MfaFactor, SignInIdentifier, type RequestErrorBody } from '@logto/schemas';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { validate } from 'superstruct';
 
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { UserMfaFlow } from '@/types';
 import { type MfaFlowState, mfaErrorDataGuard } from '@/types/guard';
 import { isNativeWebview } from '@/utils/native-sdk';
@@ -21,7 +21,7 @@ export type Options = {
 };
 
 const useMfaErrorHandler = ({ replace }: Options = {}) => {
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
   const { t } = useTranslation();
   const { setToast } = useToast();
   const startTotpBinding = useStartTotpBinding();

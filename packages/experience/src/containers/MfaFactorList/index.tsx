@@ -1,8 +1,8 @@
 import { MfaFactor, SignInIdentifier } from '@logto/schemas';
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import MfaFactorButton from '@/components/Button/MfaFactorButton';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import useSendMfaVerificationCode from '@/hooks/use-send-mfa-verification-code';
 import useStartTotpBinding from '@/hooks/use-start-totp-binding';
 import useStartWebAuthnProcessing from '@/hooks/use-start-webauthn-processing';
@@ -19,7 +19,7 @@ type Props = {
 const MfaFactorList = ({ flow, flowState }: Props) => {
   const startTotpBinding = useStartTotpBinding();
   const startWebAuthnProcessing = useStartWebAuthnProcessing();
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
   const { availableFactors } = flowState;
   const { onSubmit: sendMfaVerificationCode } = useSendMfaVerificationCode();
 

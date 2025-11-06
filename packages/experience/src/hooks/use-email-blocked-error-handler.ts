@@ -1,12 +1,13 @@
 import { type RequestErrorBody } from '@logto/schemas';
 import { useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 
 import { usePromiseConfirmModal } from './use-confirm-modal';
 import { type ErrorHandlers } from './use-error-handler';
 
 const useEmailBlockedErrorHandler = (): ErrorHandlers => {
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
   const { show } = usePromiseConfirmModal();
 
   const errorCallback = useCallback(

@@ -6,7 +6,7 @@ import type { RequestErrorBody } from '@logto/schemas';
 import { InteractionEvent, SignInMode, VerificationType, experience } from '@logto/schemas';
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { validate } from 'superstruct';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
@@ -19,6 +19,7 @@ import useBindSocialRelatedUser from '@/containers/SocialLinkAccount/use-social-
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { useSieMethods } from '@/hooks/use-sie';
 import useSocialRegister from '@/hooks/use-social-register';
 import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
@@ -43,7 +44,7 @@ const useSocialSignInListener = (connectorId: string) => {
   // We need to store a up to date reference of the verificationId
   const verificationIdRef = useRef(verificationId);
 
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
   const handleError = useErrorHandler();
   const bindSocialRelatedUser = useBindSocialRelatedUser();
   const registerWithSocial = useSocialRegister(connectorId, true);

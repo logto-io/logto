@@ -1,8 +1,8 @@
 import { AgreeToTermsPolicy, experience, InteractionEvent } from '@logto/schemas';
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { registerWithVerifiedIdentifier } from '@/apis/experience';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 
 import useApi from './use-api';
 import useErrorHandler from './use-error-handler';
@@ -15,7 +15,7 @@ const useSocialRegister = (connectorId: string, replace?: boolean) => {
   const asyncRegisterWithSocial = useApi(registerWithVerifiedIdentifier);
   const redirectTo = useGlobalRedirectTo();
   const { termsValidation, agreeToTermsPolicy } = useTerms();
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
 
   const preRegisterErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.Register, {
     linkSocial: connectorId,

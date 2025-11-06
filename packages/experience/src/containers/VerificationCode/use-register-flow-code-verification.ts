@@ -5,7 +5,6 @@ import {
 } from '@logto/schemas';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
 import { identifyWithVerificationCode, signInWithVerifiedIdentifier } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
@@ -13,6 +12,7 @@ import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { useSieMethods } from '@/hooks/use-sie';
 import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
 import { formatPhoneNumberWithCountryCallingCode } from '@/utils/country-code';
@@ -27,7 +27,7 @@ const useRegisterFlowCodeVerification = (
 ) => {
   const { t } = useTranslation();
   const { show } = useConfirmModal();
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
   const redirectTo = useGlobalRedirectTo();
 
   const { isVerificationCodeEnabledForSignIn } = useSieMethods();

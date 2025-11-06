@@ -1,6 +1,5 @@
 import { InteractionEvent } from '@logto/schemas';
 import { useState, useCallback, useMemo, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import CaptchaContext from '@/Providers/CaptchaContextProvider/CaptchaContext';
 import { identifyAndSubmitInteraction, registerWithUsername } from '@/apis/experience';
@@ -8,11 +7,12 @@ import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { useSieMethods } from '@/hooks/use-sie';
 import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
 
 const useRegisterWithUsername = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
   const redirectTo = useGlobalRedirectTo();
   const { executeCaptcha } = useContext(CaptchaContext);
 
