@@ -19,7 +19,6 @@ import {
   getQuotaByKey,
   getToolTipByKey,
   shouldHideQuotaNotice,
-  filterNewUsageKeysForLegacyPro,
 } from './utils';
 
 type Props = {
@@ -48,10 +47,6 @@ function PlanUsage({ periodicUsage, usageAddOnSkus }: Props) {
       (key) =>
         isPaidTenant || (onlyShowPeriodicUsage && (key === 'mauLimit' || key === 'tokenLimit'))
     )
-    // TODO: remove this filter after the pro plan migration is complete.
-    .filter((key) => {
-      return filterNewUsageKeysForLegacyPro(key, planId);
-    })
     .map((key) => {
       return {
         usage: getUsageByKey(key, {
