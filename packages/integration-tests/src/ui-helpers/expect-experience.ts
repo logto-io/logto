@@ -1,4 +1,4 @@
-import { type MfaFactor } from '@logto/schemas';
+import { demoAppApplicationId, type MfaFactor } from '@logto/schemas';
 import { appendPath } from '@silverhand/essentials';
 
 import { logtoUrl, mockSocialAuthPageUrl } from '#src/constants.js';
@@ -108,8 +108,10 @@ export default class ExpectExperience extends ExpectPage {
     } while (retries--); // eslint-disable-line @silverhand/fp/no-mutation
   }
 
-  async waitForPathname(pathname: string, retry = 3) {
-    return this.waitForUrl(this.buildExperienceUrl(pathname), retry);
+  async waitForPathname(pathname: string, retry = 3, appId = demoAppApplicationId) {
+    const url = this.buildExperienceUrl(pathname);
+    url.searchParams.set('app_id', appId);
+    return this.waitForUrl(url, retry);
   }
 
   /**

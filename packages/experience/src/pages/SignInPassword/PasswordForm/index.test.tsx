@@ -103,7 +103,6 @@ describe('PasswordSignInForm', () => {
         expect(mockedNavigate).toBeCalledWith(
           {
             pathname: `/${UserFlow.SignIn}/verification-code`,
-            search: '',
           },
           {
             replace: true,

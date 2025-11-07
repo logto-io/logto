@@ -267,7 +267,10 @@ describe('UsernamePasswordSignInForm', () => {
     });
 
     await waitFor(() => {
-      expect(mockedNavigate).toBeCalledWith(`/${experience.routes.sso}/connectors`);
+      expect(mockedNavigate).toBeCalledWith(
+        { pathname: `/${experience.routes.sso}/connectors` },
+        undefined
+      );
     });
   });
 
