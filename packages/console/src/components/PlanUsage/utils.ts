@@ -1,5 +1,4 @@
 import { type AdminConsoleKey } from '@logto/phrases';
-import { ReservedPlanId } from '@logto/schemas';
 import { type TFuncKey } from 'i18next';
 
 import {
@@ -249,28 +248,4 @@ export const shouldHideQuotaNotice = (
 
   // Hide the quota notice if the basic quota is 0;
   return basicQuota[key] === 0;
-};
-
-/**
- * During the pro plan migration,
- * we need to hide the new added usage keys for the legacy Pro plan.
- * - RBAC enabled
- * - thirdPartyApplicationsLimit
- *
- * TODO: clean up this function after the migration is complete.
- */
-export const filterNewUsageKeysForLegacyPro = (key: UsageKey, planId: string) => {
-  const newUsageKeys = Object.freeze([CustomUsageKey.RbacEnabled, 'thirdPartyApplicationsLimit']);
-
-  if (!newUsageKeys.includes(key)) {
-    return true;
-  }
-
-  const isProPlanId = isProPlan(planId);
-
-  if (isProPlanId && planId !== ReservedPlanId.Pro202509) {
-    return false; // Hide new usage keys for legacy Pro plan
-  }
-
-  return true;
 };
