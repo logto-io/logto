@@ -1,6 +1,6 @@
 /* eslint-disable complexity */
 import type { Application, Hook, Log, User } from '@logto/schemas';
-import { demoAppApplicationId } from '@logto/schemas';
+import { isBuiltInApplicationId } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
@@ -102,7 +102,7 @@ function AuditLogDetails() {
                       <div>
                         {data.payload.applicationId ? (
                           <ApplicationName
-                            isLink={data.payload.applicationId !== demoAppApplicationId}
+                            isLink={!isBuiltInApplicationId(data.payload.applicationId)}
                             applicationId={data.payload.applicationId}
                           />
                         ) : (

@@ -4,11 +4,11 @@ import type { Role, Application } from '@logto/schemas';
 import {
   Applications,
   ApplicationType,
-  buildDemoAppDataForTenant,
-  demoAppApplicationId,
+  buildBuiltInApplicationDataForTenant,
   hasSecrets,
   InternalRole,
   ProductEvent,
+  isBuiltInApplicationId,
 } from '@logto/schemas';
 import { generateStandardId, generateStandardSecret } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
@@ -252,9 +252,11 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         params: { id },
       } = ctx.guard;
 
-      // Somethings console needs to display demo app info. Build a fixed one for it.
-      if (id === demoAppApplicationId) {
-        ctx.body = { ...buildDemoAppDataForTenant(tenantId), isAdmin: false };
+      const builtInApplication = isBuiltInApplicationId(id)
+        ? buildBuiltInApplicationDataForTenant(tenantId, id)
+        : undefined;
+      if (builtInApplication) {
+        ctx.body = { ...builtInApplication, isAdmin: false };
 
         return next();
       }

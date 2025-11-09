@@ -1,13 +1,13 @@
 import { UserScope } from '@logto/core-kit';
 import {
   applicationSignInExperienceGuard,
-  buildDemoAppDataForTenant,
+  buildBuiltInApplicationDataForTenant,
   type ConsentInfoResponse,
   consentInfoResponseGuard,
-  demoAppApplicationId,
   Organizations,
   publicApplicationGuard,
   publicUserInfoGuard,
+  isBuiltInApplicationId,
 } from '@logto/schemas';
 import { conditional, deduplicate } from '@silverhand/essentials';
 import type Router from 'koa-router';
@@ -224,10 +224,9 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       const { accountId } = session;
 
-      const application =
-        clientId === demoAppApplicationId
-          ? buildDemoAppDataForTenant('')
-          : await queries.applications.findApplicationById(clientId);
+      const application = isBuiltInApplicationId(clientId)
+        ? buildBuiltInApplicationDataForTenant('', clientId)
+        : await queries.applications.findApplicationById(clientId);
 
       const applicationSignInExperience =
         await queries.applicationSignInExperiences.safeFindSignInExperienceByApplicationId(

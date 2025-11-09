@@ -1,0 +1,45 @@
+{
+  "name": "@logto/account-center",
+  "version": "0.1.0",
+  "description": "Logto account center app.",
+  "author": "Silverhand Inc. <contact@silverhand.io>",
+  "license": "MPL-2.0",
+  "private": true,
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "precommit": "lint-staged",
+    "start": "vite",
+    "dev": "vite",
+    "check": "tsc --noEmit",
+    "build": "vite build",
+    "lint": "eslint --ext .ts --ext .tsx src",
+    "lint:report": "pnpm lint --format json --output-file report.json"
+  },
+  "devDependencies": {
+    "@silverhand/eslint-config": "6.0.1",
+    "@silverhand/eslint-config-react": "6.0.2",
+    "@silverhand/ts-config": "6.0.0",
+    "@silverhand/ts-config-react": "6.0.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "eslint": "^8.56.0",
+    "lint-staged": "^15.0.0",
+    "prettier": "^3.5.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.5.3",
+    "vite": "^6.3.6",
+    "vite-plugin-compression": "^0.5.1"
+  },
+  "engines": {
+    "node": "^22.14.0"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand/react"
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc"
+}

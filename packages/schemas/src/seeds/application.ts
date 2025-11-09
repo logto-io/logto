@@ -17,13 +17,25 @@ import { adminTenantId } from './tenant.js';
 export const adminConsoleApplicationId = 'admin-console';
 
 export const demoAppApplicationId = 'demo-app';
+export const accountCenterApplicationId = 'account-center';
 
-export const buildDemoAppDataForTenant = (tenantId: string): Application => ({
+const buildSpaApplicationData = (
+  tenantId: string,
+  {
+    id,
+    name,
+    description,
+  }: {
+    id: string;
+    name: string;
+    description: string;
+  }
+): Application => ({
   tenantId,
-  id: demoAppApplicationId,
-  name: 'Live Preview',
+  id,
+  name,
   secret: 'N/A',
-  description: 'Preview for Sign-in Experience.',
+  description,
   type: ApplicationType.SPA,
   oidcClientMetadata: { redirectUris: [], postLogoutRedirectUris: [] },
   customClientMetadata: {},
@@ -32,6 +44,40 @@ export const buildDemoAppDataForTenant = (tenantId: string): Application => ({
   createdAt: 0,
   customData: {},
 });
+
+export const buildDemoAppDataForTenant = (tenantId: string): Application =>
+  buildSpaApplicationData(tenantId, {
+    id: demoAppApplicationId,
+    name: 'Live Preview',
+    description: 'Preview for Sign-in Experience.',
+  });
+
+export const buildAccountCenterAppDataForTenant = (tenantId: string): Application =>
+  buildSpaApplicationData(tenantId, {
+    id: accountCenterApplicationId,
+    name: 'Account Center',
+    description: 'Placeholder application for Account Center.',
+  });
+
+export type BuiltInApplicationId = typeof demoAppApplicationId | typeof accountCenterApplicationId;
+
+export const isBuiltInApplicationId = (
+  applicationId: string
+): applicationId is BuiltInApplicationId =>
+  applicationId === demoAppApplicationId || applicationId === accountCenterApplicationId;
+
+export const isBuiltInClientId = isBuiltInApplicationId;
+
+export const buildBuiltInApplicationDataForTenant = (
+  tenantId: string,
+  applicationId: BuiltInApplicationId
+): Application => {
+  if (applicationId === demoAppApplicationId) {
+    return buildDemoAppDataForTenant(tenantId);
+  }
+
+  return buildAccountCenterAppDataForTenant(tenantId);
+};
 
 export const createDefaultAdminConsoleApplication = (): Readonly<CreateApplication> =>
   Object.freeze({
