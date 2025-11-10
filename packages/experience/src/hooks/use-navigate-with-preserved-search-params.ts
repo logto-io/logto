@@ -9,6 +9,36 @@ import {
 
 import { searchKeys } from '@/utils/search-parameters';
 
+export const usePreserveSearchParams = () => {
+  const getTo = useCallback((to: To) => {
+    const appId = sessionStorage.getItem(searchKeys.appId);
+
+    if (typeof to === 'string') {
+      const searchParams = new URLSearchParams();
+      if (appId) {
+        searchParams.set(searchKeys.appId, appId);
+      }
+      return {
+        pathname: to,
+        ...conditional(searchParams.size > 0 && { search: searchParams.toString() }),
+      };
+    }
+
+    const { pathname, search, ...rest } = to;
+    const searchParams = new URLSearchParams(search);
+    if (appId) {
+      searchParams.set(searchKeys.appId, appId);
+    }
+    return {
+      pathname,
+      ...conditional(searchParams.size > 0 && { search: searchParams.toString() }),
+      ...rest,
+    };
+  }, []);
+
+  return { getTo };
+};
+
 /**
  * This hook wraps the `useNavigate` hook from `react-router-dom` and preserves `app_id`
  * search parameters across page navigation.
@@ -20,6 +50,7 @@ import { searchKeys } from '@/utils/search-parameters';
  */
 const useNavigateWithPreservedSearchParams = () => {
   const navigate = useNavigate();
+  const { getTo } = usePreserveSearchParams();
 
   const navigateWithSearchParams: NavigateFunction = useCallback(
     (firstArg: To | number, options?: NavigateOptions) => {
@@ -28,38 +59,9 @@ const useNavigateWithPreservedSearchParams = () => {
         return;
       }
 
-      const appId = sessionStorage.getItem(searchKeys.appId);
-
-      if (typeof firstArg === 'string') {
-        const searchParams = new URLSearchParams();
-        if (appId) {
-          searchParams.set(searchKeys.appId, appId);
-        }
-        navigate(
-          {
-            pathname: firstArg,
-            ...conditional(searchParams.size > 0 && { search: searchParams.toString() }),
-          },
-          options
-        );
-        return;
-      }
-
-      const { pathname, search, ...rest } = firstArg;
-      const searchParams = new URLSearchParams(search);
-      if (appId) {
-        searchParams.set(searchKeys.appId, appId);
-      }
-      navigate(
-        {
-          pathname,
-          ...conditional(searchParams.size > 0 && { search: searchParams.toString() }),
-          ...rest,
-        },
-        options
-      );
+      navigate(getTo(firstArg), options);
     },
-    [navigate]
+    [getTo, navigate]
   );
 
   return navigateWithSearchParams;
