@@ -1,18 +1,18 @@
 import { experience, type SsoConnectorMetadata } from '@logto/schemas';
 import { useCallback, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { getSsoConnectors } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 
 import useSingleSignOn from './use-single-sign-on';
 
 const useCheckSingleSignOn = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
   const request = useApi(getSsoConnectors);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const { setSsoEmail, setSsoConnectors, availableSsoConnectorsMap } =

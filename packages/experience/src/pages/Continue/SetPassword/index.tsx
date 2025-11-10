@@ -1,5 +1,4 @@
 import { useCallback, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import { fulfillProfile } from '@/apis/experience';
@@ -9,6 +8,7 @@ import { usePromiseConfirmModal } from '@/hooks/use-confirm-modal';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import usePasswordPolicyChecker from '@/hooks/use-password-policy-checker';
 import usePasswordRejectionErrorHandler from '@/hooks/use-password-rejection-handler';
 import { usePasswordPolicy } from '@/hooks/use-sie';
@@ -26,7 +26,7 @@ const SetPassword = ({ interactionEvent }: Props) => {
     setErrorMessage(undefined);
   }, []);
 
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
   const { show } = usePromiseConfirmModal();
   const redirectTo = useGlobalRedirectTo();
 

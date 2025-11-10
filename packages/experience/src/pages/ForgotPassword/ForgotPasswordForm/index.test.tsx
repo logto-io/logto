@@ -97,7 +97,6 @@ describe('ForgotPasswordForm', () => {
           expect(mockedNavigate).toBeCalledWith(
             {
               pathname: `/${UserFlow.ForgotPassword}/verification-code`,
-              search: '',
             },
             { replace: undefined }
           );

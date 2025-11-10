@@ -1,6 +1,6 @@
 import { experience, type ConsentInfoResponse } from '@logto/schemas';
 import { useContext, useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 import StaticPageLayout from '@/Layout/StaticPageLayout';
 import PageContext from '@/Providers/PageContextProvider/PageContext';
@@ -12,6 +12,7 @@ import PageMeta from '@/components/PageMeta';
 import TextLink from '@/components/TextLink';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import UserProfile from '@/pages/Consent/UserProfile';
 import ErrorPage from '@/pages/ErrorPage';
 import { getBrandingLogoUrl } from '@/utils/logo';
@@ -24,7 +25,7 @@ import styles from './index.module.scss';
  */
 const SwitchAccount = () => {
   const { experienceSettings, theme } = useContext(PageContext);
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
   const handleError = useErrorHandler();
 
   const [consentData, setConsentData] = useState<ConsentInfoResponse>();

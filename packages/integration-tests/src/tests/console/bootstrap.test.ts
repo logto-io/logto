@@ -1,4 +1,4 @@
-import { type User } from '@logto/schemas';
+import { adminConsoleApplicationId, type User } from '@logto/schemas';
 import { appendPath } from '@silverhand/essentials';
 
 import { authedAdminTenantApi } from '#src/api/api.js';
@@ -71,7 +71,9 @@ describe('smoke testing for console admin account creation and sign-in', () => {
     await expect(page).toFill('input[name=identifier]', consoleUsername);
     await expectNavigation(expect(page).toClick('button[name=submit]'));
 
-    expect(page.url()).toBe(appendPathname('/register/password', logtoConsoleUrl).href);
+    expect(page.url()).toBe(
+      appendPathname(`/register/password?app_id=${adminConsoleApplicationId}`, logtoConsoleUrl).href
+    );
 
     await expect(page).toFillForm('form', {
       newPassword: consolePassword,

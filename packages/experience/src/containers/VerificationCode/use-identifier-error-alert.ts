@@ -1,9 +1,9 @@
 import { SignInIdentifier } from '@logto/schemas';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
 import { usePromiseConfirmModal } from '@/hooks/use-confirm-modal';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import type { VerificationCodeIdentifier } from '@/types';
 import { formatPhoneNumberWithCountryCallingCode } from '@/utils/country-code';
 
@@ -14,7 +14,7 @@ export enum IdentifierErrorType {
 
 const useIdentifierErrorAlert = () => {
   const { show } = usePromiseConfirmModal();
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
   const { t } = useTranslation();
 
   // Have to wrap up in a useCallback hook otherwise the handler updates on every cycle

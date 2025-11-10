@@ -1,6 +1,5 @@
 import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
 import { useCallback, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import { continueRegisterWithPassword } from '@/apis/experience';
@@ -9,6 +8,7 @@ import useApi from '@/hooks/use-api';
 import { usePromiseConfirmModal } from '@/hooks/use-confirm-modal';
 import useErrorHandler, { type ErrorHandlers } from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import usePasswordPolicyChecker from '@/hooks/use-password-policy-checker';
 import usePasswordRejectionErrorHandler from '@/hooks/use-password-rejection-handler';
 import { usePasswordPolicy, useSieMethods } from '@/hooks/use-sie';
@@ -19,7 +19,7 @@ import ErrorPage from '../ErrorPage';
 const RegisterPassword = () => {
   const { signUpMethods } = useSieMethods();
 
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
   const redirectTo = useGlobalRedirectTo();
   const { show } = usePromiseConfirmModal();
   const [errorMessage, setErrorMessage] = useState<string>();

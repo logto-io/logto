@@ -1,16 +1,16 @@
 import { MfaFactor, VerificationType } from '@logto/schemas';
 import { useCallback, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { createTotpSecret } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { UserMfaFlow } from '@/types';
 import { type MfaFlowState, type TotpBindingState } from '@/types/guard';
 
 const useStartTotpBinding = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
   const asyncCreateTotpSecret = useApi(createTotpSecret);
   const { setVerificationId } = useContext(UserInteractionContext);
 

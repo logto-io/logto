@@ -3,13 +3,13 @@
 import { SignInIdentifier } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useCallback, useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import CaptchaContext from '@/Providers/CaptchaContextProvider/CaptchaContext';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { sendVerificationCodeApi } from '@/apis/utils';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import {
   UserFlow,
   type ContinueFlowInteractionEvent,
@@ -24,7 +24,7 @@ type Payload = {
 
 const useSendVerificationCode = (flow: UserFlow, replaceCurrentPage?: boolean) => {
   const [errorMessage, setErrorMessage] = useState<string>();
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
   const { executeCaptcha } = useContext(CaptchaContext);
 
   const handleError = useErrorHandler();

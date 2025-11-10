@@ -1,6 +1,5 @@
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
@@ -9,6 +8,7 @@ import SetPassword from '@/containers/SetPassword';
 import useApi from '@/hooks/use-api';
 import { usePromiseConfirmModal } from '@/hooks/use-confirm-modal';
 import useErrorHandler, { type ErrorHandlers } from '@/hooks/use-error-handler';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import usePasswordPolicyChecker from '@/hooks/use-password-policy-checker';
 import usePasswordRejectionErrorHandler from '@/hooks/use-password-rejection-handler';
 import { usePasswordPolicy } from '@/hooks/use-sie';
@@ -21,7 +21,7 @@ const ResetPassword = () => {
   }, []);
   const { t } = useTranslation();
   const { setToast } = useToast();
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
   const { show } = usePromiseConfirmModal();
   const { setForgotPasswordIdentifierInputValue } = useContext(UserInteractionContext);
 

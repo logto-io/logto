@@ -1,18 +1,18 @@
 import { MfaFactor } from '@logto/schemas';
 import { useCallback, useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { sendMfaVerificationCode } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { type VerificationCodeIdentifier } from '@/types';
 import { type MfaFlowState } from '@/types/guard';
 import { codeVerificationTypeMap } from '@/utils/sign-in-experience';
 
 const useSendMfaVerificationCode = () => {
   const [errorMessage, setErrorMessage] = useState<string>();
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
 
   const handleError = useErrorHandler();
   const asyncSendVerificationCode = useApi(sendMfaVerificationCode);

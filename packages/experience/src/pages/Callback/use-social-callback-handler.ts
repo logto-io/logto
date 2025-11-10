@@ -1,13 +1,13 @@
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import {
   getCallbackLinkFromStorage,
   removeCallbackLinkFromStorage,
 } from '@/utils/social-connectors';
 
 const useSocialCallbackHandler = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
 
   const socialCallbackHandler = useCallback(
     (connectorId: string) => {

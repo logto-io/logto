@@ -7,7 +7,7 @@ import {
   type RequestErrorBody,
 } from '@logto/schemas';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import {
@@ -19,12 +19,13 @@ import LoadingLayer from '@/components/LoadingLayer';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
 import useTerms from '@/hooks/use-terms';
 
 const OneTimeToken = () => {
   const [params] = useSearchParams();
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const hasTermsAgreed = useRef(false);
   const isSubmitted = useRef(false);

@@ -1,7 +1,7 @@
 import { AgreeToTermsPolicy, experience, ExtraParamsKey, SignInMode } from '@logto/schemas';
 import { useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
+import { Navigate, useSearchParams } from 'react-router-dom';
 
 import LandingPageLayout from '@/Layout/LandingPageLayout';
 import SingleSignOnFormModeContextProvider from '@/Providers/SingleSignOnFormModeContextProvider';
@@ -13,6 +13,7 @@ import TextLink from '@/components/TextLink';
 import SocialSignInList from '@/containers/SocialSignInList';
 import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
 import TermsAndPrivacyLinks from '@/containers/TermsAndPrivacyLinks';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { useSieMethods } from '@/hooks/use-sie';
 import useTerms from '@/hooks/use-terms';
 
@@ -25,7 +26,7 @@ const RegisterFooter = () => {
   const { signUpMethods, socialConnectors, signInMode, signInMethods, singleSignOnEnabled } =
     useSieMethods();
   const { termsValidation, agreeToTermsPolicy } = useTerms();
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
   const [params] = useSearchParams();
 
   const { showSingleSignOnForm } = useContext(SingleSignOnFormModeContext);

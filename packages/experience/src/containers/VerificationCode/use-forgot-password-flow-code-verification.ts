@@ -1,11 +1,11 @@
 import type { VerificationCodeIdentifier } from '@logto/schemas';
 import { useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { identifyWithVerificationCode } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { UserFlow } from '@/types';
 
 import useGeneralVerificationCodeErrorHandler from './use-general-verification-code-error-handler';
@@ -16,7 +16,7 @@ const useForgotPasswordFlowCodeVerification = (
   verificationId: string,
   errorCallback?: () => void
 ) => {
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
   const handleError = useErrorHandler();
   const verifyVerificationCode = useApi(identifyWithVerificationCode);
 

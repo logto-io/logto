@@ -1,7 +1,7 @@
 import { AgreeToTermsPolicy, SignInMode, VerificationType, experience } from '@logto/schemas';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { registerWithVerifiedIdentifier, signInWithSso } from '@/apis/experience';
@@ -9,6 +9,7 @@ import useApi from '@/hooks/use-api';
 import useEmailBlockedErrorHandler from '@/hooks/use-email-blocked-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { useSieMethods } from '@/hooks/use-sie';
 import useTerms from '@/hooks/use-terms';
 import useToast from '@/hooks/use-toast';
@@ -21,7 +22,7 @@ const useSingleSignOnRegister = () => {
 
   const request = useApi(registerWithVerifiedIdentifier);
   const { termsValidation, agreeToTermsPolicy } = useTerms();
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
   const redirectTo = useGlobalRedirectTo();
 
   return useCallback(
@@ -82,7 +83,7 @@ const useSingleSignOnListener = (connectorId: string) => {
   const verificationId = verificationIdsMap[VerificationType.EnterpriseSso];
 
   const handleError = useErrorHandler();
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
 
   const singleSignOnAuthorizationRequest = useApi(signInWithSso);
   const registerSingleSignOnIdentity = useSingleSignOnRegister();

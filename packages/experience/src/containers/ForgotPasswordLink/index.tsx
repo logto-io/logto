@@ -1,9 +1,9 @@
 import type { SignInIdentifier } from '@logto/schemas';
 import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import TextLink from '@/components/TextLink';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { UserFlow } from '@/types';
 
 type Props = {
@@ -13,7 +13,7 @@ type Props = {
 };
 
 const ForgotPasswordLink = ({ className, ...identifierData }: Props) => {
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
   const { setForgotPasswordIdentifierInputValue } = useContext(UserInteractionContext);
 
   return (
