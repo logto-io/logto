@@ -3,10 +3,18 @@ import { useEffect, useContext } from 'react';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 
-const darkThemeWatchMedia = window.matchMedia('(prefers-color-scheme: dark)');
+const prefersDarkSchemeQuery = '(prefers-color-scheme: dark)';
+
+const getDarkThemeWatchMedia = (): MediaQueryList | undefined => {
+  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+    return undefined;
+  }
+
+  return window.matchMedia(prefersDarkSchemeQuery);
+};
 
 export const getThemeBySystemConfiguration = (): Theme =>
-  darkThemeWatchMedia.matches ? Theme.Dark : Theme.Light;
+  getDarkThemeWatchMedia()?.matches ? Theme.Dark : Theme.Light;
 
 export default function useTheme() {
   const { isPreview, experienceSettings, setTheme } = useContext(PageContext);
@@ -21,6 +29,12 @@ export default function useTheme() {
     };
 
     changeTheme();
+
+    const darkThemeWatchMedia = getDarkThemeWatchMedia();
+
+    if (!darkThemeWatchMedia) {
+      return;
+    }
 
     darkThemeWatchMedia.addEventListener('change', changeTheme);
 

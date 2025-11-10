@@ -16,9 +16,11 @@
     "check": "tsc --noEmit",
     "build": "vite build",
     "lint": "eslint --ext .ts --ext .tsx src",
-    "lint:report": "pnpm lint --format json --output-file report.json"
+    "lint:report": "pnpm lint --format json --output-file report.json",
+    "stylelint": "stylelint \"src/**/*.scss\""
   },
   "devDependencies": {
+    "@logto/core-kit": "workspace:^",
     "@logto/react": "^4.0.6",
     "@logto/schemas": "workspace:^",
     "@silverhand/eslint-config": "6.0.1",
@@ -28,9 +30,11 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
+    "ky": "^1.2.3",
     "eslint": "^8.56.0",
     "lint-staged": "^15.0.0",
     "prettier": "^3.5.3",
+    "stylelint": "^15.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "typescript": "^5.5.3",
@@ -42,6 +46,9 @@
   },
   "eslintConfig": {
     "extends": "@silverhand/react"
+  },
+  "stylelint": {
+    "extends": "@silverhand/eslint-config-react/.stylelintrc"
   },
   "prettier": "@silverhand/eslint-config/.prettierrc"
 }

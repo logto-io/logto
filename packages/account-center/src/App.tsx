@@ -18,7 +18,7 @@ const Main = () => {
   const { isAuthenticated, isLoading, getIdTokenClaims, signIn, signOut } = useLogto();
   const [user, setUser] = useState<Pick<IdTokenClaims, 'sub' | 'username'>>();
   const [isLoadingUser, setIsLoadingUser] = useState(false);
-  const { isLoadingExperience } = useContext(PageContext);
+  const { isLoadingExperience, experienceError } = useContext(PageContext);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -55,6 +55,14 @@ const Main = () => {
     return (
       <div>
         <Callback />
+      </div>
+    );
+  }
+
+  if (experienceError) {
+    return (
+      <div>
+        <p>We were unable to load your experience settings. Please refresh the page.</p>
       </div>
     );
   }
