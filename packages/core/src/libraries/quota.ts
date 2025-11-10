@@ -169,8 +169,7 @@ export class QuotaLibrary {
       this.connectorLibrary
     );
 
-    // Todo: @xiaoyijun: remove dev feature flag
-    if (EnvSet.values.isDevFeaturesEnabled && isSystemUsageKey(key)) {
+    if (isSystemUsageKey(key)) {
       await this.assertSystemLimit({
         key,
         entityId,

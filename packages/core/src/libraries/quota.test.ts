@@ -21,7 +21,6 @@ const { QuotaLibrary } = await import('./quota.js');
 
 const originalIsCloud = EnvSet.values.isCloud;
 const originalIsIntegrationTest = EnvSet.values.isIntegrationTest;
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 
 /**
  * These tests spin up a full MockTenant, which instantiates the real EnvSet and runs its load sequence.
@@ -30,10 +29,7 @@ const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
  * reference to the original EnvSet singleton. Mutating the live flags keeps both MockTenant and
  * QuotaLibrary aligned with the test scenarios without breaking their dependency chain.
  */
-const setEnvFlag = (
-  key: 'isCloud' | 'isIntegrationTest' | 'isDevFeaturesEnabled',
-  value: boolean
-) => {
+const setEnvFlag = (key: 'isCloud' | 'isIntegrationTest', value: boolean) => {
   Reflect.set(EnvSet.values, key, value);
 };
 
@@ -60,7 +56,6 @@ beforeEach(() => {
   jest.clearAllMocks();
   setEnvFlag('isCloud', true);
   setEnvFlag('isIntegrationTest', false);
-  setEnvFlag('isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
 
   mockGetTenantSubscription.mockResolvedValue(mockSubscriptionData);
 });
@@ -68,7 +63,6 @@ beforeEach(() => {
 afterEach(() => {
   setEnvFlag('isCloud', originalIsCloud);
   setEnvFlag('isIntegrationTest', originalIsIntegrationTest);
-  setEnvFlag('isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
 });
 
 describe('guardTenantUsageByKey', () => {
@@ -89,7 +83,6 @@ describe('guardTenantUsageByKey', () => {
   });
 
   it('skips guard when both quota and system limits are null/undefined', async () => {
-    setEnvFlag('isDevFeaturesEnabled', true);
     mockGetTenantSubscription.mockResolvedValueOnce({
       ...mockSubscriptionData,
       quota: {
@@ -114,35 +107,7 @@ describe('guardTenantUsageByKey', () => {
     expect(getSelfComputedUsageByKey).not.toHaveBeenCalled();
   });
 
-  // Todo @xiaoyijun: remove once the dev feature guard is retired.
-  it('skips system limit guard when dev features are disabled', async () => {
-    setEnvFlag('isDevFeaturesEnabled', false);
-    mockGetTenantSubscription.mockResolvedValueOnce({
-      ...mockSubscriptionData,
-      quota: {
-        ...mockSubscriptionData.quota,
-        applicationsLimit: null,
-      },
-      systemLimit: {
-        ...mockSubscriptionData.systemLimit,
-        applicationsLimit: 2,
-      },
-    });
-
-    const getSelfComputedUsageByKey = jest.fn().mockResolvedValue(2);
-    const { quotaLibrary } = createQuotaLibrary({
-      queriesOverride: {
-        tenantUsage: { getSelfComputedUsageByKey },
-      },
-    });
-
-    await expect(quotaLibrary.guardTenantUsageByKey('applicationsLimit')).resolves.not.toThrow();
-
-    expect(getSelfComputedUsageByKey).not.toHaveBeenCalled();
-  });
-
   it('throws when usage reaches system limit', async () => {
-    setEnvFlag('isDevFeaturesEnabled', true);
     mockGetTenantSubscription.mockResolvedValueOnce({
       ...mockSubscriptionData,
       quota: {
@@ -228,7 +193,6 @@ describe('guardTenantUsageByKey', () => {
   });
 
   it('throws when numeric quota limit is not number type', async () => {
-    setEnvFlag('isDevFeaturesEnabled', true);
     mockGetTenantSubscription.mockResolvedValueOnce({
       ...mockSubscriptionData,
       quota: {
@@ -349,13 +313,16 @@ describe('guardTenantUsageByKey', () => {
   });
 
   it('skips guard for add-on usage keys on paid plans', async () => {
-    setEnvFlag('isDevFeaturesEnabled', false);
     mockGetTenantSubscription.mockResolvedValueOnce({
       ...mockSubscriptionData,
       planId: ReservedPlanId.Pro202509,
       quota: {
         ...mockSubscriptionData.quota,
         machineToMachineLimit: 1,
+      },
+      systemLimit: {
+        ...mockSubscriptionData.systemLimit,
+        machineToMachineLimit: undefined,
       },
     });
 
@@ -373,7 +340,6 @@ describe('guardTenantUsageByKey', () => {
   });
 
   it('calls getTenantUsageByKey only once when both system limit and quota limit checks are needed', async () => {
-    setEnvFlag('isDevFeaturesEnabled', true);
     mockGetTenantSubscription.mockResolvedValueOnce({
       ...mockSubscriptionData,
       quota: {
@@ -506,7 +472,6 @@ describe('guardTenantUsageByKey', () => {
   });
 
   it('respects system limit with batch consumption', async () => {
-    setEnvFlag('isDevFeaturesEnabled', true);
     mockGetTenantSubscription.mockResolvedValueOnce({
       ...mockSubscriptionData,
       quota: {
