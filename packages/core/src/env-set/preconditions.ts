@@ -1,5 +1,5 @@
 import { getAvailableAlterations } from '@logto/cli/lib/commands/database/alteration/index.js';
-import { ServiceLogs, Systems } from '@logto/schemas';
+import { idFormatDataGuard, ServiceLogs, Systems } from '@logto/schemas';
 import { ConsoleLog, isKeyInObject } from '@logto/shared';
 import { conditionalString } from '@silverhand/essentials';
 import { sql, type CommonQueryMethods, type DatabasePool } from '@silverhand/slonik';
@@ -11,7 +11,7 @@ const consoleLog = new ConsoleLog(chalk.magenta('pre'));
 
 export const checkPreconditions = async (pool: DatabasePool) => {
   checkDeprecations();
-  await Promise.all([checkAlterationState(pool), checkRowLevelSecurity(pool)]);
+  await Promise.all([checkAlterationState(pool), checkRowLevelSecurity(pool), checkIdFormat(pool)]);
 };
 
 const checkRowLevelSecurity = async (client: CommonQueryMethods) => {
@@ -54,6 +54,54 @@ const checkAlterationState = async (pool: CommonQueryMethods) => {
   );
 
   throw new Error(`Undeployed database alterations found.`);
+};
+
+/**
+ * Validate the ID format configuration.
+ * If the database has a locked-in format (stored during seed), it must match the ENV variable.
+ * If ID_FORMAT is not set, adopt the database value automatically.
+ * If they conflict, refuse to start.
+ */
+const checkIdFormat = async (pool: CommonQueryMethods) => {
+  const envFormat = EnvSet.values.idFormat;
+  const result = await pool.maybeOne<{ value: unknown }>(sql`
+    select ${sql.identifier(['value'])} from ${sql.identifier([Systems.table])}
+    where ${sql.identifier(['key'])} = ${'idFormat'}
+  `);
+
+  if (!result) {
+    // No row exists (first start before seed) — skip, the seed process will store it.
+    return;
+  }
+
+  const parsed = idFormatDataGuard.safeParse(result.value);
+
+  if (!parsed.success) {
+    consoleLog.error(
+      'Invalid ID format configuration found in database (systems.idFormat). ' +
+        'The stored value does not match the expected schema. Please fix or remove this row and try again.'
+    );
+    consoleLog.error(parsed.error.toString());
+    throw new Error(
+      'Startup aborted due to invalid ID format configuration in the database (systems.idFormat).'
+    );
+  }
+
+  const databaseFormat = parsed.data.format;
+
+  // If env is not set, adopt the database format
+  if (!envFormat) {
+    process.env.ID_FORMAT = databaseFormat;
+    consoleLog.info(`ID format loaded from database: '${databaseFormat}'`);
+    return;
+  }
+
+  if (databaseFormat !== envFormat) {
+    throw new Error(
+      `ID format mismatch: database is locked to '${databaseFormat}' but ID_FORMAT env is set to '${envFormat}'. ` +
+        `Once set, the ID format cannot be changed. Update your ID_FORMAT environment variable to '${databaseFormat}'.`
+    );
+  }
 };
 
 const checkDeprecations = () => {

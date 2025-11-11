@@ -1,12 +1,14 @@
+/* Note: id_format columns are replaced at seed time with uuid or varchar(21) depending on the ID_FORMAT setting. */
+
 /* init_order = 2 */
 
 /** The relations between organizations and users. It indicates membership of users in organizations. */
 create table organization_user_relations (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
-  organization_id varchar(21) not null
+  organization_id ${id_format} not null
     references organizations (id) on update cascade on delete cascade,
-  user_id varchar(21) not null
+  user_id ${id_format} not null
     references users (id) on update cascade on delete cascade,
   primary key (tenant_id, organization_id, user_id),
   constraint organization_user_relations__user_id__fk

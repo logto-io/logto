@@ -1,9 +1,11 @@
+/* Note: id_format columns are replaced at seed time with uuid or varchar(21) depending on the ID_FORMAT setting. */
+
 /* init_order = 2 */
 
 create table logs (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
-  id varchar(21) not null,
+  id ${id_format} not null,
   key varchar(128) not null,
   payload jsonb /* @use LogContextPayload */ not null default '{}'::jsonb,
   created_at timestamptz not null default (now()),

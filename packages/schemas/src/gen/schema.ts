@@ -4,7 +4,7 @@ import { condArray, condString, conditionalString } from '@silverhand/essentials
 import camelcase from 'camelcase';
 import pluralize from 'pluralize';
 
-import type { TableWithType } from './types.js';
+import type { FieldWithType, TableWithType } from './types.js';
 
 const createTypeRemark = (originalType: string) => [
   '',
@@ -35,6 +35,18 @@ const printComments = (
         newLine && '\n'
       ).join('')
   );
+
+/**
+ * For ID columns (marked with ${id_format} in SQL), widen the max length to 36
+ * to accommodate both nanoid (21 chars) and UUID (36 chars) formats.
+ */
+const getEffectiveMaxLength = (field: FieldWithType): number | undefined => {
+  const { maxLength, isIdFormat } = field;
+  if (maxLength && isIdFormat) {
+    return Math.max(maxLength, 36);
+  }
+  return maxLength;
+};
 
 export const generateSchema = ({ name, comments, fields }: TableWithType) => {
   const modelName = pluralize(camelcase(name, { pascalCase: true }), 1);
@@ -76,19 +88,22 @@ export const generateSchema = ({ name, comments, fields }: TableWithType) => {
 
     ...fields.map(
       // eslint-disable-next-line complexity
-      ({ name, type, isArray, isEnum, nullable, hasDefaultValue, tsType, isString, maxLength }) => {
+      (field) => {
+        const { name, type, isArray, isEnum, nullable, hasDefaultValue, tsType, isString } = field;
         if (tsType) {
           return `  ${camelcase(name)}: ${camelcase(tsType)}Guard${conditionalString(
             nullable && '.nullable()'
           )}${conditionalString((nullable || hasDefaultValue) && '.optional()')},`;
         }
 
+        const effectiveMaxLength = getEffectiveMaxLength(field);
+
         return `  ${camelcase(name)}: z.${isEnum ? `nativeEnum(${type})` : `${type}()`}${
           // Non-nullable strings should have a min length of 1
           conditionalString(isString && !(nullable || name === tenantId) && `.min(1)`)
         }${
           // String types value in DB should have a max length
-          conditionalString(isString && maxLength && `.max(${maxLength})`)
+          conditionalString(isString && effectiveMaxLength && `.max(${effectiveMaxLength})`)
         }${conditionalString(isArray && '.array()')}${conditionalString(
           nullable && '.nullable()'
         )}${conditionalString(
@@ -102,12 +117,15 @@ export const generateSchema = ({ name, comments, fields }: TableWithType) => {
 
     ...fields.map(
       // eslint-disable-next-line complexity
-      ({ name, type, isArray, isEnum, nullable, tsType, isString, maxLength, hasDefaultValue }) => {
+      (field) => {
+        const { name, type, isArray, isEnum, nullable, tsType, isString, hasDefaultValue } = field;
         if (tsType) {
           return `  ${camelcase(name)}: ${camelcase(tsType)}Guard${conditionalString(
             nullable && '.nullable()'
           )},`;
         }
+
+        const effectiveMaxLength = getEffectiveMaxLength(field);
 
         return `  ${camelcase(name)}: z.${isEnum ? `nativeEnum(${type})` : `${type}()`}${
           // Non-nullable strings should have a min length of 1
@@ -116,7 +134,7 @@ export const generateSchema = ({ name, comments, fields }: TableWithType) => {
           )
         }${
           // String types value in DB should have a max length
-          conditionalString(isString && maxLength && `.max(${maxLength})`)
+          conditionalString(isString && effectiveMaxLength && `.max(${effectiveMaxLength})`)
         }${conditionalString(isArray && '.array()')}${conditionalString(
           nullable && '.nullable()'
         )},`;

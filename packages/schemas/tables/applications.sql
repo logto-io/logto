@@ -5,7 +5,7 @@ create type application_type as enum ('Native', 'SPA', 'Traditional', 'MachineTo
 create table applications (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
-  id varchar(21) not null,
+  id varchar(36) not null,
   name varchar(256) not null,
   /** @deprecated The internal client secret. Note it is only used for internal validation, and the actual secret should be stored in the `application_secrets` table. You should NOT use it unless you are sure what you are doing. */
   secret varchar(64) not null,
@@ -40,7 +40,7 @@ create unique index applications__protected_app_metadata_custom_domain
   );
 
 create function check_application_type(
-  application_id varchar(21),
+  application_id varchar(36),
   variadic target_type application_type[]
 ) returns boolean as
 $$ begin

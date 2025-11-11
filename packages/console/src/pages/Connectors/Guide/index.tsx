@@ -1,7 +1,7 @@
 import { isLanguageTag } from '@logto/language-kit';
 import { ConnectorType } from '@logto/schemas';
 import type { ConnectorFactoryResponse, RequestErrorBody } from '@logto/schemas';
-import { generateStandardId } from '@logto/shared/universal';
+import { generateStandardShortId } from '@logto/shared/universal';
 import { conditional } from '@silverhand/essentials';
 import i18next from 'i18next';
 import { HTTPError } from 'ky';
@@ -45,7 +45,7 @@ type Props = {
 function Guide({ connector, onClose }: Props) {
   const { createConnector } = useConnectorApi();
   const { navigate } = useTenantPathname();
-  const callbackConnectorId = useRef(generateStandardId());
+  const callbackConnectorId = useRef(generateStandardShortId());
   const [conflictConnectorName, setConflictConnectorName] = useState<Record<string, string>>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {

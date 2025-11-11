@@ -7,6 +7,8 @@
  * This module provides utilities to manage tenant organizations.
  */
 
+import { buildSeedId } from '@logto/shared/universal';
+
 import {
   RoleType,
   type CreateOrganization,
@@ -15,16 +17,47 @@ import {
 } from '../db-entries/index.js';
 import { adminTenantId } from '../seeds/tenant.js';
 
-/** Given a tenant ID, return the corresponding organization ID in the admin tenant. */
-export const getTenantOrganizationId = (tenantId: string) => `t-${tenantId}`;
+/**
+ * Given a tenant ID, return the corresponding organization ID in the admin tenant.
+ *
+ * In nanoid mode, this returns `t-${tenantId}` (human-readable).
+ * In uuid mode, this returns a deterministic UUID v5 derived from `t-${tenantId}`.
+ */
+export const getTenantOrganizationId = (tenantId: string) => buildSeedId(`t-${tenantId}`);
 
-/** Given an admin tenant organization ID, check the format and return the corresponding user tenant ID. */
-export const getTenantIdFromOrganizationId = (organizationId: string) => {
-  if (!organizationId.startsWith('t-')) {
-    throw new Error(`Invalid admin tenant organization ID: ${organizationId}`);
+/**
+ * Given an admin tenant organization ID, return the corresponding user tenant ID.
+ *
+ * In nanoid mode, the organization ID has a `t-` prefix that can be stripped directly.
+ * In uuid mode, the organization ID is a UUID v5 hash, so we check against known tenant IDs
+ * by computing the forward mapping and comparing.
+ *
+ * @param organizationId - The organization ID to look up.
+ * @param knownTenantIds - The list of known tenant IDs to search through. Required in uuid mode.
+ */
+export const getTenantIdFromOrganizationId = (
+  organizationId: string,
+  knownTenantIds?: string[]
+): string => {
+  // Fast path: nanoid mode uses the reversible `t-` prefix convention.
+  if (organizationId.startsWith('t-')) {
+    return organizationId.slice(2);
   }
 
-  return organizationId.slice(2);
+  // UUID mode: the organization ID is a UUID v5 hash, so we need to find the tenant ID
+  // by computing the forward mapping for each known tenant.
+  if (knownTenantIds) {
+    for (const tenantId of knownTenantIds) {
+      if (getTenantOrganizationId(tenantId) === organizationId) {
+        return tenantId;
+      }
+    }
+  }
+
+  throw new Error(
+    `Cannot resolve tenant ID from organization ID: ${organizationId}. ` +
+      'In UUID mode, you must provide knownTenantIds to perform the reverse lookup.'
+  );
 };
 
 /**
@@ -157,7 +190,7 @@ const tenantRoleDescriptions: Readonly<Record<TenantRole, string>> = Object.free
 export const getTenantRole = (role: TenantRole): Readonly<OrganizationRole> =>
   Object.freeze({
     tenantId: adminTenantId,
-    id: role,
+    id: buildSeedId(role),
     name: role,
     description: tenantRoleDescriptions[role],
     type: RoleType.User,

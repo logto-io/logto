@@ -1,3 +1,4 @@
+import { IdFormat } from '@logto/shared/universal';
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
@@ -212,26 +213,50 @@ export const cloudflareGuard: Readonly<{
   [CloudflareKey.CustomJwtWorkerConfig]: customJwtWorkerConfigGuard,
 });
 
+// ID format configuration
+export enum IdFormatKey {
+  IdFormat = 'idFormat',
+}
+
+export const idFormatDataGuard = z.object({
+  format: z.nativeEnum(IdFormat),
+});
+
+export type IdFormatData = z.infer<typeof idFormatDataGuard>;
+
+export type IdFormatType = {
+  [IdFormatKey.IdFormat]: IdFormatData;
+};
+
+export const idFormatGuard: Readonly<{
+  [key in IdFormatKey]: z.ZodType<IdFormatType[key]>;
+}> = Object.freeze({
+  [IdFormatKey.IdFormat]: idFormatDataGuard,
+});
+
 // Summary
 export type SystemKey =
   | AlterationStateKey
   | StorageProviderKey
   | DemoSocialKey
   | CloudflareKey
-  | EmailServiceProviderKey;
+  | EmailServiceProviderKey
+  | IdFormatKey;
 
 export type SystemType =
   | AlterationStateType
   | StorageProviderType
   | DemoSocialType
   | CloudflareType
-  | EmailServiceProviderType;
+  | EmailServiceProviderType
+  | IdFormatType;
 
 export type SystemGuard = typeof alterationStateGuard &
   typeof storageProviderGuard &
   typeof demoSocialGuard &
   typeof cloudflareGuard &
-  typeof emailServiceProviderGuard;
+  typeof emailServiceProviderGuard &
+  typeof idFormatGuard;
 
 export const systemKeys: readonly SystemKey[] = Object.freeze([
   ...Object.values(AlterationStateKey),
@@ -239,6 +264,7 @@ export const systemKeys: readonly SystemKey[] = Object.freeze([
   ...Object.values(DemoSocialKey),
   ...Object.values(CloudflareKey),
   ...Object.values(EmailServiceProviderKey),
+  ...Object.values(IdFormatKey),
 ]);
 
 export const systemGuards: SystemGuard = Object.freeze({
@@ -247,4 +273,5 @@ export const systemGuards: SystemGuard = Object.freeze({
   ...demoSocialGuard,
   ...cloudflareGuard,
   ...emailServiceProviderGuard,
+  ...idFormatGuard,
 });

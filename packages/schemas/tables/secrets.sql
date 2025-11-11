@@ -1,9 +1,11 @@
+/* Note: id_format columns are replaced at seed time with uuid or varchar(21) depending on the ID_FORMAT setting. */
+
 /* init_order = 2 */
 create table secrets (
   tenant_id varchar(21) not null 
     references tenants (id) on update cascade on delete cascade,
-  id varchar(21) not null primary key,
-  user_id varchar(21) not null 
+  id ${id_format} not null primary key,
+  user_id ${id_format} not null 
     references users (id) on update cascade on delete cascade,
   type varchar(256) /* @use SecretType */ not null,
   /** Encrypted data encryption key (DEK) for the secret. */

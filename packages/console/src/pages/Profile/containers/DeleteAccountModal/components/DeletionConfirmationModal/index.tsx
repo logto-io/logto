@@ -19,7 +19,7 @@ type RoleMap = { [key in string]?: string[] };
  * Given a list of organization roles from the user's claims, returns a tenant ID - role names map.
  * A user may have multiple roles in the same tenant.
  */
-const getRoleMap = (organizationRoles: string[]) =>
+const getRoleMap = (organizationRoles: string[], knownTenantIds: string[]) =>
   organizationRoles.reduce<RoleMap>((accumulator, value) => {
     const [organizationId, roleName] = value.split(':');
 
@@ -27,9 +27,10 @@ const getRoleMap = (organizationRoles: string[]) =>
       return accumulator;
     }
 
-    const tenantId = getTenantIdFromOrganizationId(organizationId);
-
-    if (!tenantId) {
+    let tenantId: string;
+    try {
+      tenantId = getTenantIdFromOrganizationId(organizationId, knownTenantIds);
+    } catch {
       return accumulator;
     }
 
@@ -68,7 +69,12 @@ export default function DeletionConfirmationModal({ onClose }: Props) {
     void fetchRoleMap();
   }, [getIdTokenClaims, onClose, t]);
 
-  const roleMap = claims && getRoleMap(claims.organization_roles ?? []);
+  const roleMap =
+    claims &&
+    getRoleMap(
+      claims.organization_roles ?? [],
+      tenants.map(({ id }) => id)
+    );
   const tenantsToDelete = tenants.filter(({ id }) => roleMap?.[id]?.includes(TenantRole.Admin));
   const tenantsToQuit = tenants.filter(({ id }) =>
     tenantsToDelete.every(({ id: tenantId }) => tenantId !== id)

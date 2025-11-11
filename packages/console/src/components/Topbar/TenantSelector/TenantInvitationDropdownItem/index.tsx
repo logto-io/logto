@@ -43,7 +43,12 @@ function TenantInvitationDropdownItem({ data }: Props) {
           });
           const data = await cloudApi.get('/api/tenants');
           resetTenants(data);
-          navigateTenant(getTenantIdFromOrganizationId(organizationId));
+          navigateTenant(
+            getTenantIdFromOrganizationId(
+              organizationId,
+              data.map(({ id }) => id)
+            )
+          );
         }}
       />
     </div>
