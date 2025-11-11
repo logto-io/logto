@@ -92,16 +92,28 @@ export const generateHookTestPayload = (hookId: string, event: HookEvent): HookE
     data: { result: 'success' },
   };
 
-  const isInteractionHookEvent = Object.values<string>(InteractionHookEvent).includes(event);
+  const isInteractionHookEvent = (event: HookEvent): event is InteractionHookEvent =>
+    Object.values<string>(InteractionHookEvent).includes(event);
 
-  return {
+  const basicPayload = {
     hookId,
-    event,
     createdAt: now.toISOString(),
-    sessionId: 'fake-session-id',
     userAgent: 'fake-user-agent',
-    ip: 'fake-user-ip',
-    ...(isInteractionHookEvent ? interactionHookContext : dataHookContext),
+  };
+
+  if (isInteractionHookEvent(event)) {
+    return {
+      event,
+      ...basicPayload,
+      ...interactionHookContext,
+    };
+  }
+
+  // Data hook test payload
+  return {
+    event,
+    ...basicPayload,
+    ...dataHookContext,
   };
 };
 

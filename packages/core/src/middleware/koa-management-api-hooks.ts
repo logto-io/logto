@@ -34,19 +34,23 @@ export const koaManagementApiHooks = <StateT, ContextT extends IRouterParamConte
      */
     ctx.appendDataHookContext = dataHooksContextManager.appendContext.bind(dataHooksContextManager);
 
-    await next();
+    try {
+      await next();
+    } finally {
+      // Auto append pre-registered management API hooks if any
+      const registeredData = dataHooksContextManager.getRegisteredDataHookEventContext(ctx);
 
-    // Auto append pre-registered management API hooks if any
-    const registeredData = dataHooksContextManager.getRegisteredDataHookEventContext(ctx);
+      if (registeredData) {
+        dataHooksContextManager.appendContext(...registeredData);
+      }
 
-    if (registeredData) {
-      dataHooksContextManager.appendContext(...registeredData);
-    }
-
-    // Trigger data hooks
-    if (dataHooksContextManager.contextArray.length > 0) {
-      // Hooks should not crash the app
-      void trySafe(hooks.triggerDataHooks(getConsoleLogFromContext(ctx), dataHooksContextManager));
+      // Trigger data hooks
+      if (dataHooksContextManager.contextArray.length > 0) {
+        // Hooks should not crash the app
+        void trySafe(
+          hooks.triggerDataHooks(getConsoleLogFromContext(ctx), dataHooksContextManager)
+        );
+      }
     }
   };
 };

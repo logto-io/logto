@@ -46,7 +46,7 @@ type CustomDataHookMutableSchema =
 type DataHookPropertyUpdateEvent =
   `${CustomDataHookMutableSchema}.${DataHookDetailMutationType.Updated}`;
 
-export type DataHookEvent = BasicDataHookEvent | DataHookPropertyUpdateEvent;
+export type DataHookEvent = BasicDataHookEvent | DataHookPropertyUpdateEvent | 'Identifier.Lockout';
 
 /** The hook event values that can be registered. */
 export const hookEvents = Object.freeze([
@@ -75,6 +75,7 @@ export const hookEvents = Object.freeze([
   'OrganizationScope.Created',
   'OrganizationScope.Deleted',
   'OrganizationScope.Data.Updated',
+  'Identifier.Lockout',
 ] as const satisfies Array<InteractionHookEvent | DataHookEvent>);
 
 /** The type of hook event values that can be registered. */

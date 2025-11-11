@@ -7,6 +7,7 @@ import {
   type InteractionApiMetadata,
   type ManagementApiContext,
   userInfoSelectFields,
+  type VerificationIdentifier,
 } from '@logto/schemas';
 import { pick, type Optional } from '@silverhand/essentials';
 import { type Context } from 'koa';
@@ -51,6 +52,7 @@ export type DataHookContextMap = {
   'User.Created': UserContext;
   'User.Data.Updated': UserContext;
   'User.Deleted': UserContext;
+  'Identifier.Lockout': VerificationIdentifier;
 };
 
 export class DataHookContextManager {

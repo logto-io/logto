@@ -68,16 +68,20 @@ export function koaExperienceInteractionHooks<
 
     ctx.appendDataHookContext = dataHookContext.appendContext.bind(dataHookContext);
 
-    await next();
+    try {
+      await next();
+    } finally {
+      if (interactionHookContext.interactionHookResult) {
+        // Hooks should not crash the app
+        void trySafe(
+          triggerInteractionHooks(getConsoleLogFromContext(ctx), interactionHookContext)
+        );
+      }
 
-    if (interactionHookContext.interactionHookResult) {
-      // Hooks should not crash the app
-      void trySafe(triggerInteractionHooks(getConsoleLogFromContext(ctx), interactionHookContext));
-    }
-
-    if (dataHookContext.contextArray.length > 0) {
-      // Hooks should not crash the app
-      void trySafe(triggerDataHooks(getConsoleLogFromContext(ctx), dataHookContext));
+      if (dataHookContext.contextArray.length > 0) {
+        // Hooks should not crash the app
+        void trySafe(triggerDataHooks(getConsoleLogFromContext(ctx), dataHookContext));
+      }
     }
   };
 }
