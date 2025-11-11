@@ -30,7 +30,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { type InteractionContext } from '../types.js';
 
-import { getAllUserEnabledMfaVerifications } from './helpers.js';
+import { getAllUserEnabledMfaVerifications, sortMfaFactors } from './helpers.js';
 import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
 
 export type MfaData = {
@@ -335,22 +335,7 @@ export class Mfa {
       return;
     }
 
-    const sortedFactors = availableFactors.slice().sort((factorA, factorB) => {
-      // Sort order: webauthn -> totp -> sms -> email -> backup code
-      const order = [
-        MfaFactor.WebAuthn,
-        MfaFactor.TOTP,
-        MfaFactor.PhoneVerificationCode,
-        MfaFactor.EmailVerificationCode,
-        MfaFactor.BackupCode,
-      ];
-
-      const indexA = order.indexOf(factorA);
-      const indexB = order.indexOf(factorB);
-
-      // Unrecognized factors at the end
-      return (indexA === -1 ? order.length : indexA) - (indexB === -1 ? order.length : indexB);
-    });
+    const sortedFactors = sortMfaFactors(availableFactors);
 
     const additionalFactors = sortedFactors.filter((factor) => !factorsInUser.includes(factor));
 
@@ -441,7 +426,9 @@ export class Mfa {
       return;
     }
 
-    const availableFactors = factors.filter((factor) => factor !== MfaFactor.BackupCode);
+    const availableFactors = sortMfaFactors(
+      factors.filter((factor) => factor !== MfaFactor.BackupCode)
+    );
 
     const factorsInUser = await this.getUserMfaFactors();
     const factorsInBind = this.bindMfaFactorsArray.map(({ type }) => type);

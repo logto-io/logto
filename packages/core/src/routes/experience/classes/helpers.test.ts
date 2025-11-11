@@ -7,7 +7,7 @@ import {
   mockUserWebAuthnMfaVerification,
 } from '#src/__mocks__/user.js';
 
-import { getAllUserEnabledMfaVerifications } from './helpers.js';
+import { getAllUserEnabledMfaVerifications, sortMfaFactors } from './helpers.js';
 
 describe('getAllUserEnabledMfaVerifications', () => {
   it('puts WebAuthn first when available', () => {
@@ -39,5 +39,25 @@ describe('getAllUserEnabledMfaVerifications', () => {
     const result = getAllUserEnabledMfaVerifications(mfaSettings, user);
 
     expect(result).toEqual([MfaFactor.WebAuthn, MfaFactor.TOTP, MfaFactor.BackupCode]);
+  });
+});
+
+describe('sortMfaFactors', () => {
+  it('sorts factors by priority order', () => {
+    expect(
+      sortMfaFactors([
+        MfaFactor.EmailVerificationCode,
+        MfaFactor.BackupCode,
+        MfaFactor.TOTP,
+        MfaFactor.WebAuthn,
+        MfaFactor.PhoneVerificationCode,
+      ])
+    ).toEqual([
+      MfaFactor.WebAuthn,
+      MfaFactor.TOTP,
+      MfaFactor.PhoneVerificationCode,
+      MfaFactor.EmailVerificationCode,
+      MfaFactor.BackupCode,
+    ]);
   });
 });
