@@ -1,7 +1,9 @@
+/* Note: id_format columns are replaced at seed time with uuid or varchar(21) depending on the ID_FORMAT setting. */
+
 create table custom_profile_fields (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
-  id varchar(21) not null,
+  id ${id_format} not null,
   name varchar(128) not null,
   type varchar(128) not null /* @use CustomProfileFieldType */,
   label varchar(128) not null default '',

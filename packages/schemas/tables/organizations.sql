@@ -1,3 +1,5 @@
+/* Note: id_format columns are replaced at seed time with uuid or varchar(21) depending on the ID_FORMAT setting. */
+
 /* init_order = 1 */
 
 /** Organizations defined by [RFC 0001](https://github.com/logto-io/rfcs/blob/HEAD/active/0001-organization.md). */
@@ -5,7 +7,7 @@ create table organizations (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
   /** The globally unique identifier of the organization. */
-  id varchar(21) not null,
+  id ${id_format} not null,
   /** The organization's name for display. */
   name varchar(128) not null,
   /** A brief description of the organization. */

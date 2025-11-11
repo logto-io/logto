@@ -4,6 +4,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
+import { isIdFormat } from '@logto/shared';
 import { assert } from '@silverhand/essentials';
 import chalk from 'chalk';
 import { got, RequestError } from 'got';
@@ -24,6 +25,7 @@ import {
   safeExecSync,
 } from '../../utils.js';
 import { seedByPool } from '../database/seed/index.js';
+import { promptIdFormat } from '../database/seed/utils.js';
 
 const pgRequired = new semver.SemVer('14.0.0');
 
@@ -164,6 +166,18 @@ export const decompress = async (toPath: string, tarPath: string) => {
 export const seedDatabase = async (instancePath: string, cloud: boolean) => {
   try {
     const pool = await createPoolAndDatabaseIfNeeded();
+
+    // Resolve ID format: ENV variable > interactive prompt > default (nanoid)
+    const envFormat = process.env.ID_FORMAT;
+    if (envFormat && !isIdFormat(envFormat)) {
+      throw new Error(
+        `Invalid ID_FORMAT environment variable: '${envFormat}'. Must be 'nanoid' or 'uuid'.`
+      );
+    }
+    if (!envFormat && isTty()) {
+      process.env.ID_FORMAT = await promptIdFormat();
+    }
+
     await seedByPool(pool, cloud);
     await pool.end();
   } catch (error: unknown) {

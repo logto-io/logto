@@ -3,7 +3,7 @@
 create table resources (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
-  id varchar(21) not null,
+  id varchar(36) not null,
   name text not null,
   indicator text not null, /* resource indicator also used as audience */
   is_default boolean not null default (false),

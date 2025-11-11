@@ -1,10 +1,12 @@
+/* Note: id_format columns are replaced at seed time with uuid or varchar(21) depending on the ID_FORMAT setting. */
+
 /* init_order = 2 */
 
 create table saml_application_secrets (
-  id varchar(21) not null,
+  id ${id_format} not null,
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
-  application_id varchar(21) not null
+  application_id varchar(36) not null
     references applications (id) on update cascade on delete cascade,
   private_key text not null,
   certificate text not null,

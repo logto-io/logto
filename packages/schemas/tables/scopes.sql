@@ -3,8 +3,8 @@
 create table scopes (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
-  id varchar(21) not null,
-  resource_id varchar(21) not null
+  id varchar(36) not null,
+  resource_id varchar(36) not null
     references resources (id) on update cascade on delete cascade,
   name varchar(256) not null,
   description text,

@@ -5,12 +5,13 @@ import {
   createDefaultAdminConsoleConfig,
   defaultTenantId,
   adminTenantId,
-  defaultManagementApi,
+  createDefaultManagementApi,
   createAdminDataInAdminTenant,
   createMeApiInAdminTenant,
   createDefaultSignInExperience,
   createAdminTenantSignInExperience,
   createDefaultAdminConsoleApplication,
+  Applications,
   createCloudApi,
   createTenantApplicationRole,
   CloudScope,
@@ -19,18 +20,24 @@ import {
   UsersRoles,
   LogtoConfigs,
   SignInExperiences,
-  Applications,
   OrganizationUserRelations,
   getTenantOrganizationId,
   Users,
   OrganizationRoleUserRelations,
   TenantRole,
   AccountCenters,
+  Systems,
 } from '@logto/schemas';
 import { getTenantRole } from '@logto/schemas';
 import { createDefaultAccountCenter } from '@logto/schemas/lib/seeds/account-center.js';
 import { Tenants } from '@logto/schemas/models';
-import { generateStandardId } from '@logto/shared';
+import {
+  IdFormat,
+  generateStandardId,
+  generateStandardSecret,
+  buildSeedId,
+  getIdFormat,
+} from '@logto/shared';
 import type { DatabaseTransactionConnection } from '@silverhand/slonik';
 import { sql } from '@silverhand/slonik';
 
@@ -99,6 +106,9 @@ export const createTables = async (
     ])
   );
 
+  // Resolve the ${id_format} variable in SQL: native uuid type or varchar(21) for nanoid
+  const idFormatType = getIdFormat() === IdFormat.Uuid ? 'uuid' : 'varchar(21)';
+
   const runLifecycleQuery = async (
     lifecycle: Lifecycle,
     parameters: { name?: string; database?: string; password?: string } = {}
@@ -125,13 +135,15 @@ export const createTables = async (
   ];
   const sorted = allQueries.slice().sort(compareQuery);
   const database = await getDatabaseName(connection, true);
-  const password = encryptBaseRole ? generateStandardId(32) : '';
+  const password = encryptBaseRole ? generateStandardSecret() : '';
 
   await runLifecycleQuery('before_all', { database, password });
 
   /* eslint-disable no-await-in-loop */
   for (const [file, query] of sorted) {
-    await connection.query(sql`${sql.raw(query)}`);
+    // eslint-disable-next-line no-template-curly-in-string
+    const resolvedQuery = query.replaceAll('${id_format}', idFormatType);
+    await connection.query(sql`${sql.raw(resolvedQuery)}`);
 
     if (!query.includes('/* no_after_each */')) {
       await runLifecycleQuery('after_each', { name: file.split('.')[0], database });
@@ -151,7 +163,7 @@ export const seedTables = async (
 ) => {
   await createTenant(connection, defaultTenantId);
   await seedOidcConfigs(connection, defaultTenantId);
-  await seedAdminData(connection, defaultManagementApi);
+  await seedAdminData(connection, createDefaultManagementApi());
 
   /**
    * Create a pre-configured role for the Logto Management API access
@@ -205,6 +217,11 @@ export const seedTables = async (
     connection.query(insertInto(createDefaultAdminConsoleApplication(), Applications.table)),
     connection.query(insertInto(createDefaultAccountCenter(defaultTenantId), AccountCenters.table)),
     connection.query(insertInto(createDefaultAccountCenter(adminTenantId), AccountCenters.table)),
+    // Store the chosen ID format permanently in the systems table
+    connection.query(sql`
+      insert into ${sql.identifier([Systems.table])} (key, value)
+        values (${'idFormat'}, ${sql.jsonb({ format: getIdFormat() })})
+    `),
   ]);
 
   // The below seed data is for the Logto Cloud only. We put it here for the sake of simplicity.
@@ -253,7 +270,7 @@ export const seedTest = async (connection: DatabaseTransactionConnection, forLeg
       )
     );
 
-  const userIds = Object.freeze(['test-1', 'test-2'] as const);
+  const userIds = Object.freeze([buildSeedId('test-1'), buildSeedId('test-2')] as const);
   await Promise.all([
     connection.query(
       insertInto({ id: userIds[0], username: 'test1', tenantId: adminTenantId }, Users.table)
@@ -290,7 +307,11 @@ export const seedTest = async (connection: DatabaseTransactionConnection, forLeg
   const addOrganizationMembership = async (userId: string, tenantId: string) =>
     connection.query(
       insertInto(
-        { userId, organizationId: getTenantOrganizationId(tenantId), tenantId: adminTenantId },
+        {
+          userId,
+          organizationId: getTenantOrganizationId(tenantId),
+          tenantId: adminTenantId,
+        },
         OrganizationUserRelations.table
       )
     );

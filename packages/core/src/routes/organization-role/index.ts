@@ -108,7 +108,10 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
           : 'organizationUserRolesLimit'
       );
 
-      const role = await roles.insert({ id: generateStandardId(), ...data });
+      const role = await roles.insert({
+        id: generateStandardId(),
+        ...data,
+      });
 
       if (organizationScopeIds.length > 0) {
         await rolesScopes.insert(

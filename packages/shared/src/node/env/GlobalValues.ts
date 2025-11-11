@@ -1,7 +1,22 @@
 import { assertEnv, getEnv, getEnvAsStringArray, tryThat, yes } from '@silverhand/essentials';
 
+import { type IdFormat, isIdFormat } from '../../utils/id.js';
+
 import UrlSet from './UrlSet.js';
 import { throwErrorWithDsnMessage } from './throw-errors.js';
+
+const resolveIdFormat = (): IdFormat | undefined => {
+  const value = getEnv('ID_FORMAT');
+  if (!value) {
+    return undefined;
+  }
+  if (!isIdFormat(value)) {
+    throw new Error(
+      `Invalid ID_FORMAT environment variable: '${value}'. Must be 'nanoid' or 'uuid'.`
+    );
+  }
+  return value;
+};
 
 export default class GlobalValues {
   public readonly isProduction = getEnv('NODE_ENV') === 'production';
@@ -130,6 +145,13 @@ export default class GlobalValues {
    * You can set it to a truthy value like `true` or `1` to enable cache with the default Redis URL.
    */
   public readonly redisUrl = getEnv('REDIS_URL');
+
+  /**
+   * ID format for all entity IDs on this instance.
+   * Can be 'nanoid' or 'uuid'. When unset, the value is read from the database at startup.
+   * Once the database is seeded with a format, this value is permanent and cannot be changed.
+   */
+  public readonly idFormat = resolveIdFormat();
 
   public get dbUrl(): string {
     return this.databaseUrl;

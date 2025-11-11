@@ -5,7 +5,7 @@ create table organization_scopes (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
   /** The globally unique identifier of the organization scope. */
-  id varchar(21) not null,
+  id varchar(36) not null,
   /** The organization scope's name, unique within the organization template. */
   name varchar(128) not null,
   /** A brief description of the organization scope. */

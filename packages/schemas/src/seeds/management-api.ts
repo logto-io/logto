@@ -1,4 +1,4 @@
-import { generateStandardId } from '@logto/shared/universal';
+import { generateStandardId, buildSeedId } from '@logto/shared/universal';
 
 import {
   RoleType,
@@ -73,6 +73,19 @@ export const defaultManagementApi = Object.freeze({
     type: RoleType.MachineToMachine,
   },
 }) satisfies AdminData;
+
+/**
+ * Create a format-aware version of the default Management API seed data.
+ * The role.id is converted to a valid UUID when format is 'uuid'.
+ */
+export const createDefaultManagementApi = (): AdminData => ({
+  resource: defaultManagementApi.resource,
+  scopes: [...defaultManagementApi.scopes],
+  role: {
+    ...defaultManagementApi.role,
+    id: buildSeedId('admin-role'),
+  },
+});
 
 export function getManagementApiResourceIndicator<TenantId extends string>(
   tenantId: TenantId

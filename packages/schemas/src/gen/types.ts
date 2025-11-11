@@ -7,6 +7,8 @@ export type Field = {
   tsType?: string;
   isString: boolean;
   maxLength?: number;
+  /** Whether this column uses the ${id_format} placeholder (entity ID column). */
+  isIdFormat: boolean;
   hasDefaultValue: boolean;
   nullable: boolean;
   isArray: boolean;

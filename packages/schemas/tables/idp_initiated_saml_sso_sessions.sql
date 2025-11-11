@@ -1,9 +1,11 @@
+/* Note: id_format columns are replaced at seed time with uuid or varchar(21) depending on the ID_FORMAT setting. */
+
 /* init_order = 2 */
 create table idp_initiated_saml_sso_sessions (
   tenant_id varchar(21) not null 
     references tenants (id) on update cascade on delete cascade,
   /** The globally unique identifier of the assertion record. */
-  id varchar(21) not null,
+  id ${id_format} not null,
   /** The identifier of the SAML SSO connector. */
   connector_id varchar(128) not null
     references sso_connectors (id) on update cascade on delete cascade,

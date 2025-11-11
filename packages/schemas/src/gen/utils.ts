@@ -207,6 +207,7 @@ export const parseType = (tableFieldDefinition: string): Field => {
   const hasDefaultValue = restLowercased.includes('default');
   const nullable = !restLowercased.includes('not null');
   const tsType = /\/\* @use (.*) \*\//.exec(restJoined)?.[1];
+  const isIdFormat = restJoined.includes('/* @id_format */');
 
   assert(
     !(!primitiveType && tsType),
@@ -222,6 +223,7 @@ export const parseType = (tableFieldDefinition: string): Field => {
     isString,
     isArray,
     maxLength: conditional(isString && parseStringMaxLength(type)),
+    isIdFormat,
     customType: conditional(!primitiveType && type),
     tsType,
     hasDefaultValue,
