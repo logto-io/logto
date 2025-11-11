@@ -7,7 +7,6 @@ import {
   samlApplicationSecretResponseGuard,
   SamlApplicationSecrets,
 } from '@logto/schemas';
-import { generateStandardId } from '@logto/shared';
 import { removeUndefinedKeys } from '@silverhand/essentials';
 import { z } from 'zod';
 
@@ -54,6 +53,7 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       updateSamlApplicationById,
     },
     quota,
+    idFormats,
   } = libraries;
 
   router.post(
@@ -93,7 +93,7 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
         validateAcsUrl(config.acsUrl);
       }
 
-      const id = generateStandardId();
+      const id = await idFormats.generateApplicationId();
       // Set the default redirect URI for SAML apps when creating a new SAML app.
       const redirectUri = getSamlAppCallbackUrl(
         // Do not apply custom domain directly to the redirect URI, since the custom domain can be removed or changed, we still want the default redirect URI to work.

@@ -8,7 +8,7 @@ create table organization_invitation_role_relations (
   organization_invitation_id varchar(21) not null
     references organization_invitations (id) on update cascade on delete cascade,
   /** The ID of the organization role. */
-  organization_role_id varchar(21) not null
+  organization_role_id varchar(36) not null
     references organization_roles (id) on update cascade on delete cascade,
   primary key (tenant_id, organization_invitation_id, organization_role_id)
 );
