@@ -1,5 +1,5 @@
 import { ConnectorType } from '@logto/connector-kit';
-import { SignInIdentifier, SignInMode } from '@logto/schemas';
+import { demoAppApplicationId, SignInIdentifier, SignInMode } from '@logto/schemas';
 import { appendPath } from '@silverhand/essentials';
 
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
@@ -54,7 +54,9 @@ describe('identifier input cache', () => {
 
   it('cached identifier(email) should not be apply to register form (only username is allowed)', async () => {
     await experience.toClick('a', 'Create account');
-    experience.toMatchUrl(appendPath(new URL(logtoUrl), 'register').href);
+    experience.toMatchUrl(
+      appendPath(new URL(logtoUrl), `register?app_id=${demoAppApplicationId}`).href
+    );
     // The input should be empty
     await experience.toMatchElement('input[name=identifier][value=""]');
   });
