@@ -2,12 +2,17 @@ import { trySafe } from '@silverhand/essentials';
 import { type MiddlewareType } from 'koa';
 import { type IRouterParamContext } from 'koa-router';
 
-import { DataHookContextManager } from '#src/libraries/hook/context-manager.js';
+import {
+  DataHookContextManager,
+  ExceptionHookContextManager,
+} from '#src/libraries/hook/context-manager.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 
 export type WithHookContext<ContextT extends IRouterParamContext = IRouterParamContext> =
-  ContextT & { appendDataHookContext: DataHookContextManager['appendContext'] };
+  ContextT & { appendDataHookContext: DataHookContextManager['appendContext'] } & {
+    appendExceptionHookContext: ExceptionHookContextManager['appendContext'];
+  };
 
 /**
  * The factory to create a new management hook middleware function.
@@ -27,26 +32,41 @@ export const koaManagementApiHooks = <StateT, ContextT extends IRouterParamConte
     } = ctx;
 
     const dataHooksContextManager = new DataHookContextManager({ userAgent, ip });
+    const exceptionHooksContextManager = new ExceptionHookContextManager({ userAgent, ip });
 
     /**
      * Append a hook context to trigger management hooks. If multiple contexts are appended, all of
      * them will be triggered.
      */
     ctx.appendDataHookContext = dataHooksContextManager.appendContext.bind(dataHooksContextManager);
+    ctx.appendExceptionHookContext = exceptionHooksContextManager.appendContext.bind(
+      exceptionHooksContextManager
+    );
 
-    await next();
+    try {
+      await next();
 
-    // Auto append pre-registered management API hooks if any
-    const registeredData = dataHooksContextManager.getRegisteredDataHookEventContext(ctx);
+      // Auto append pre-registered management API hooks if any
+      const registeredData = dataHooksContextManager.getRegisteredDataHookEventContext(ctx);
 
-    if (registeredData) {
-      dataHooksContextManager.appendContext(...registeredData);
-    }
+      if (registeredData) {
+        dataHooksContextManager.appendContext(...registeredData);
+      }
 
-    // Trigger data hooks
-    if (dataHooksContextManager.contextArray.length > 0) {
-      // Hooks should not crash the app
-      void trySafe(hooks.triggerDataHooks(getConsoleLogFromContext(ctx), dataHooksContextManager));
+      // Trigger data hooks
+      if (dataHooksContextManager.contextArray.length > 0) {
+        // Hooks should not crash the app
+        void trySafe(
+          hooks.triggerDataHooks(getConsoleLogFromContext(ctx), dataHooksContextManager)
+        );
+      }
+    } finally {
+      if (exceptionHooksContextManager.contextArray.length > 0) {
+        // Hooks should not crash the app
+        void trySafe(
+          hooks.triggerExceptionHooks(getConsoleLogFromContext(ctx), exceptionHooksContextManager)
+        );
+      }
     }
   };
 };

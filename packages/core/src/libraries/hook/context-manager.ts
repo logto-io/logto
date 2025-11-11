@@ -7,6 +7,8 @@ import {
   type InteractionApiMetadata,
   type ManagementApiContext,
   userInfoSelectFields,
+  type VerificationIdentifier,
+  type ExceptionHookEvent,
 } from '@logto/schemas';
 import { pick, type Optional } from '@silverhand/essentials';
 import { type Context } from 'koa';
@@ -51,6 +53,7 @@ export type DataHookContextMap = {
   'User.Created': UserContext;
   'User.Data.Updated': UserContext;
   'User.Deleted': UserContext;
+  'Identifier.Lockout': VerificationIdentifier;
 };
 
 export class DataHookContextManager {
@@ -131,5 +134,27 @@ export class InteractionHookContextManager {
    */
   assignInteractionHookResult(result: InteractionHookResult) {
     this.interactionHookResult = result;
+  }
+}
+
+/**
+ * The exception hook context manager is a specialized version of `DataHookContextManager` designed to
+ * handle exception-related hook events.
+ * It allows appending contexts that should be triggered even when the request pipeline encounters errors.
+ */
+export class ExceptionHookContextManager {
+  contextArray: Array<DataHookContext & { event: ExceptionHookEvent }> = [];
+
+  constructor(public metadata: DataHookMetadata) {}
+
+  appendContext<Event extends ExceptionHookEvent>(event: Event, context: DataHookContext) {
+    const { user, ...rest } = context;
+    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+    this.contextArray.push({
+      event,
+      // eslint-disable-next-line no-restricted-syntax -- trust the input
+      ...(user ? { data: pick(user as User, ...userInfoSelectFields) } : {}),
+      ...rest,
+    });
   }
 }

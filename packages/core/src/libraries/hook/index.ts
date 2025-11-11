@@ -1,4 +1,5 @@
 import {
+  type ExceptionHookEventPayload,
   LogResult,
   userInfoSelectFields,
   type DataHookEventPayload,
@@ -19,6 +20,7 @@ import { LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';
 
 import {
+  type ExceptionHookContextManager,
   type DataHookContextManager,
   type InteractionHookContextManager,
 } from './context-manager.js';
@@ -188,6 +190,48 @@ export const createHookLibrary = (queries: Queries) => {
     await sendWebhooks(webhooks, consoleLog);
   };
 
+  /**
+   * Trigger data hooks with the given data mutation context. All context objects will be used to trigger hooks.
+   */
+  const triggerExceptionHooks = async (
+    consoleLog: ConsoleLog,
+    contextManager: ExceptionHookContextManager
+  ) => {
+    if (contextManager.contextArray.length === 0) {
+      return;
+    }
+
+    const found = await findAllHooks();
+
+    // Fetch application detail if available
+    const { applicationId } = contextManager.metadata;
+    const application = applicationId
+      ? await trySafe(async () => findApplicationById(applicationId))
+      : undefined;
+
+    // Filter hooks that match each events
+    const webhooks = contextManager.contextArray.flatMap(({ event, ...rest }) => {
+      const hooks = found.filter(
+        ({ event: hookEvent, events, enabled }) =>
+          enabled && (events.length > 0 ? events.includes(event) : event === hookEvent)
+      );
+
+      const payload = {
+        event,
+        createdAt: new Date().toISOString(),
+        ...contextManager.metadata,
+        ...conditional(
+          application && { application: pick(application, 'id', 'type', 'name', 'description') }
+        ),
+        ...rest,
+      } satisfies BetterOmit<ExceptionHookEventPayload, 'hookId'>;
+
+      return hooks.map((hook) => ({ hook, payload }));
+    });
+
+    await sendWebhooks(webhooks, consoleLog);
+  };
+
   const triggerTestHook = async (hookId: string, events: HookEvent[], config: HookConfig) => {
     const { signingKey } = await findHookById(hookId);
     try {
@@ -226,6 +270,7 @@ export const createHookLibrary = (queries: Queries) => {
   return {
     triggerInteractionHooks,
     triggerDataHooks,
+    triggerExceptionHooks,
     triggerTestHook,
   };
 };

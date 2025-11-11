@@ -26,6 +26,7 @@ describe('koaManagementApiHooks', () => {
       ...createContextWithRouteParameters(),
       header: {},
       appendDataHookContext: notToBeCalled,
+      appendExceptionHookContext: notToBeCalled,
     };
     await koaManagementApiHooks(mockHooksLibrary)(ctx, next);
     expect(triggerDataHooks).not.toBeCalled();
@@ -36,6 +37,7 @@ describe('koaManagementApiHooks', () => {
       ...createContextWithRouteParameters(),
       header: {},
       appendDataHookContext: notToBeCalled,
+      appendExceptionHookContext: notToBeCalled,
     };
     next.mockImplementation(() => {
       ctx.appendDataHookContext('Role.Created', { data: { id: '123' } });
@@ -72,6 +74,7 @@ describe('koaManagementApiHooks', () => {
         ...ctxParams,
         header: {},
         appendDataHookContext: notToBeCalled,
+        appendExceptionHookContext: notToBeCalled,
         method,
         _matchedRoute: route,
         path: route,
