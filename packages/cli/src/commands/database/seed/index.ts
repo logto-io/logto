@@ -1,13 +1,15 @@
+import { getEnv } from '@silverhand/essentials';
 import type { DatabasePool } from '@silverhand/slonik';
 import type { CommandModule } from 'yargs';
 
 import { createPoolAndDatabaseIfNeeded } from '../../../database.js';
 import { doesConfigsTableExist } from '../../../queries/logto-config.js';
-import { consoleLog, oraPromise } from '../../../utils.js';
+import { consoleLog, isTty, oraPromise } from '../../../utils.js';
 import { getLatestAlterationTimestamp } from '../alteration/index.js';
 import { getAlterationDirectory } from '../alteration/utils.js';
 
 import { createTables, seedCloud, seedTables, seedTest } from './tables.js';
+import { promptIdFormat } from './utils.js';
 
 export const seedByPool = async (
   pool: DatabasePool,
@@ -52,6 +54,41 @@ const seedLegacyTestData = async (pool: DatabasePool) => {
   });
 };
 
+/**
+ * Resolve the ID format and set it in `process.env.ID_FORMAT` so all seed
+ * functions can read it via `getIdFormat()` from `@logto/shared`.
+ *
+ * Priority: CLI option > ENV variable > interactive prompt > default ('nanoid')
+ */
+const resolveIdFormat = async (cliIdFormat?: string): Promise<void> => {
+  // CLI option takes highest priority
+  if (cliIdFormat) {
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    process.env.ID_FORMAT = cliIdFormat;
+    return;
+  }
+
+  // Check ENV variable (already set in process.env)
+  const envFormat = getEnv('ID_FORMAT');
+  if (envFormat) {
+    if (envFormat !== 'nanoid' && envFormat !== 'uuid') {
+      throw new Error(
+        `Invalid ID_FORMAT environment variable: '${envFormat}'. Must be 'nanoid' or 'uuid'.`
+      );
+    }
+    return;
+  }
+
+  // Interactive prompt in TTY mode
+  if (isTty()) {
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    process.env.ID_FORMAT = await promptIdFormat();
+    return;
+  }
+
+  // Default: nanoid (getIdFormat() returns 'nanoid' when ID_FORMAT is unset)
+};
+
 const seed: CommandModule<
   Record<string, unknown>,
   {
@@ -60,6 +97,7 @@ const seed: CommandModule<
     test?: boolean;
     'legacy-test-data'?: boolean;
     'encrypt-base-role'?: boolean;
+    'id-format'?: string;
   }
 > = {
   command: 'seed [type]',
@@ -87,8 +125,14 @@ const seed: CommandModule<
       .option('encrypt-base-role', {
         describe: 'Seed base role with password',
         type: 'boolean',
+      })
+      .option('id-format', {
+        describe:
+          'ID format for all entity types (nanoid or uuid). This choice is permanent and cannot be changed after installation. Defaults to ID_FORMAT env variable or nanoid.',
+        type: 'string',
+        choices: ['nanoid', 'uuid'] as const,
       }),
-  handler: async ({ swe, cloud, test, legacyTestData, encryptBaseRole }) => {
+  handler: async ({ swe, cloud, test, legacyTestData, encryptBaseRole, idFormat }) => {
     const pool = await createPoolAndDatabaseIfNeeded();
 
     if (legacyTestData) {
@@ -112,6 +156,8 @@ const seed: CommandModule<
     }
 
     try {
+      await resolveIdFormat(idFormat);
+
       await seedByPool(pool, cloud, test, encryptBaseRole);
     } catch (error: unknown) {
       consoleLog.error(error);

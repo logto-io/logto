@@ -4,7 +4,7 @@
 create table application_secrets (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
-  application_id varchar(21) not null
+  application_id varchar(36) not null
     references applications (id) on update cascade on delete cascade,
   /** The name of the secret. Should be unique within the application. */
   name varchar(256) not null,

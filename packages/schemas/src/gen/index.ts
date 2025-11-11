@@ -43,7 +43,10 @@ const generate = async () => {
     files
       .filter((file) => file.endsWith('.sql'))
       .map<Promise<[string, FileData]>>(async (file) => {
-        const paragraph = await fs.readFile(path.join(directory, file), { encoding: 'utf8' });
+        const rawSql = await fs.readFile(path.join(directory, file), { encoding: 'utf8' });
+        // Resolve ${id_format} variable to default varchar(21) for type generation
+        // eslint-disable-next-line no-template-curly-in-string
+        const paragraph = rawSql.replaceAll('${id_format}', 'varchar(21)');
 
         // Get statements
         const statements = paragraph

@@ -7,17 +7,17 @@ create table organization_invitations (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
   /** The unique identifier of the invitation. */
-  id varchar(21) not null,
+  id ${id_format} not null,
   /** The user ID who sent the invitation. */
-  inviter_id varchar(21)
+  inviter_id ${id_format}
     references users (id) on update cascade on delete cascade,
   /** The email address or other identifier of the invitee. */
   invitee varchar(256) not null,
   /** The user ID of who accepted the invitation. */
-  accepted_user_id varchar(21)
+  accepted_user_id ${id_format}
     references users (id) on update cascade on delete cascade,
   /** The ID of the organization to which the invitee is invited. */
-  organization_id varchar(21) not null
+  organization_id ${id_format} not null
     references organizations (id) on update cascade on delete cascade,
   /** The status of the invitation. */
   status organization_invitation_status not null,

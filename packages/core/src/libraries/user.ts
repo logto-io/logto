@@ -5,7 +5,7 @@ import {
   RoleType,
   UsersPasswordEncryptionMethod,
 } from '@logto/schemas';
-import { generateStandardShortId, generateStandardId } from '@logto/shared';
+import { generateStandardId } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
 import { deduplicateByKey, condArray } from '@silverhand/essentials';
 import { argon2Verify, bcryptVerify, md5, sha1, sha256 } from 'hash-wasm';
@@ -55,7 +55,7 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
   const generateUserId = async (retries = 500) =>
     pRetry(
       async () => {
-        const id = generateStandardShortId();
+        const id = generateStandardId(12);
 
         if (!(await hasUserWithId(id))) {
           return id;

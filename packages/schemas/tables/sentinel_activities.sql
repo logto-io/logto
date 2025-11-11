@@ -5,7 +5,7 @@ create type sentinel_decision as enum ('Undecided', 'Allowed', 'Blocked', 'Chall
 create table sentinel_activities (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
-  id varchar(21) not null,
+  id ${id_format} not null,
   /** The target that the action was performed on. */
   target_type varchar(32) /* @use SentinelActivityTargetType */ not null,
   /** The target hashed identifier. */

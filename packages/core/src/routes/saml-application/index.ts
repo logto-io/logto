@@ -7,11 +7,11 @@ import {
   samlApplicationSecretResponseGuard,
   SamlApplicationSecrets,
 } from '@logto/schemas';
-import { generateStandardId } from '@logto/shared';
 import { removeUndefinedKeys } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
+import { generateStandardId } from '@logto/shared';
 import RequestError from '#src/errors/RequestError/index.js';
 import {
   calculateCertificateFingerprints,

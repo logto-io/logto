@@ -7,6 +7,8 @@
  * This module provides utilities to manage tenant organizations.
  */
 
+import { buildSeedId } from '@logto/shared/universal';
+
 import {
   RoleType,
   type CreateOrganization,
@@ -16,7 +18,8 @@ import {
 import { adminTenantId } from '../seeds/tenant.js';
 
 /** Given a tenant ID, return the corresponding organization ID in the admin tenant. */
-export const getTenantOrganizationId = (tenantId: string) => `t-${tenantId}`;
+export const getTenantOrganizationId = (tenantId: string) =>
+  buildSeedId(`t-${tenantId}`);
 
 /** Given an admin tenant organization ID, check the format and return the corresponding user tenant ID. */
 export const getTenantIdFromOrganizationId = (organizationId: string) => {
@@ -157,7 +160,7 @@ const tenantRoleDescriptions: Readonly<Record<TenantRole, string>> = Object.free
 export const getTenantRole = (role: TenantRole): Readonly<OrganizationRole> =>
   Object.freeze({
     tenantId: adminTenantId,
-    id: role,
+    id: buildSeedId(role),
     name: role,
     description: tenantRoleDescriptions[role],
     type: RoleType.User,

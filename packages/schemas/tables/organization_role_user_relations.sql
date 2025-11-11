@@ -4,10 +4,10 @@
 create table organization_role_user_relations (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
-  organization_id varchar(21) not null,
-  organization_role_id varchar(21) not null
+  organization_id ${id_format} not null,
+  organization_role_id ${id_format} not null
     references organization_roles (id) on update cascade on delete cascade,
-  user_id varchar(21) not null,
+  user_id ${id_format} not null,
   primary key (tenant_id, organization_id, organization_role_id, user_id),
   /** User's roles in an organization should be synchronized with the user's membership in the organization. */
   foreign key (tenant_id, organization_id, user_id)

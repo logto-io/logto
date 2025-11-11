@@ -3,7 +3,7 @@
 create table one_time_tokens (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
-  id varchar(21) not null,
+  id ${id_format} not null,
   email varchar(128) not null,
   token varchar(256) not null,
   context jsonb /* @use OneTimeTokenContext */ not null default '{}'::jsonb,

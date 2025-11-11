@@ -4,7 +4,7 @@ create table oidc_session_extensions (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
   session_uid varchar(128) not null,
-  account_id varchar(12) not null
+  account_id ${id_format} not null
     references users (id) on update cascade on delete cascade,
   last_submission jsonb /* @use JsonObject */ not null default '{}'::jsonb,
   created_at timestamptz not null default(now()),

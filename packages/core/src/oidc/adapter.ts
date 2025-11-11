@@ -1,9 +1,11 @@
 import type { CreateApplication } from '@logto/schemas';
 import {
-  ApplicationType,
-  accountCenterApplicationId,
   adminConsoleApplicationId,
-  demoAppApplicationId,
+  adminTenantId,
+  ApplicationType,
+  defaultTenantId,
+  getAccountCenterApplicationId,
+  getDemoAppApplicationId,
 } from '@logto/schemas';
 import { appendPath, tryThat, conditional } from '@silverhand/essentials';
 import { addSeconds } from 'date-fns';
@@ -18,28 +20,35 @@ import type Queries from '#src/tenants/Queries.js';
 import { getConstantClientMetadata } from './utils.js';
 
 /**
- * Append `redirect_uris` and `post_logout_redirect_uris` for Admin Console
- * as Admin Console is attached to the admin tenant in OSS and its endpoints are dynamic (from env variable).
+ * Build client metadata for Admin Console at runtime.
+ * Admin Console is a built-in application (not stored in the database) whose
+ * redirect URIs are computed dynamically from environment variables.
  */
-const transpileMetadata = (clientId: string, data: AllClientMetadata): AllClientMetadata => {
-  if (clientId !== adminConsoleApplicationId) {
-    return data;
-  }
-
+const buildAdminConsoleClientMetadata = (envSet: EnvSet): AllClientMetadata => {
   const { adminUrlSet, cloudUrlSet } = EnvSet.values;
 
-  const urls = [
-    ...adminUrlSet.deduplicated().map((url) => appendPath(url, '/console')),
-    ...cloudUrlSet.deduplicated(),
-  ];
+  const consoleUrls = adminUrlSet.deduplicated().map((url) => appendPath(url, '/console'));
+  const cloudUrls = cloudUrlSet.deduplicated();
+  const allUrls = [...consoleUrls, ...cloudUrls];
+
+  // Cloud-specific per-tenant callback paths
+  const cloudTenantCallbacks = cloudUrlSet
+    .deduplicated()
+    .flatMap((endpoint) =>
+      [defaultTenantId, adminTenantId].map(
+        (tenantId) => appendPath(endpoint, tenantId, 'callback').href
+      )
+    );
 
   return {
-    ...data,
+    ...getConstantClientMetadata(envSet, ApplicationType.SPA),
+    client_id: adminConsoleApplicationId,
+    client_name: 'Admin Console',
     redirect_uris: [
-      ...(data.redirect_uris ?? []),
-      ...urls.map((url) => appendPath(url, '/callback').href),
+      ...allUrls.map((url) => appendPath(url, '/callback').href),
+      ...cloudTenantCallbacks,
     ],
-    post_logout_redirect_uris: [...(data.post_logout_redirect_uris ?? []), ...urls.map(String)],
+    post_logout_redirect_uris: allUrls.map(String),
   };
 };
 
@@ -50,7 +59,7 @@ const buildDemoAppClientMetadata = (envSet: EnvSet): AllClientMetadata => {
 
   return {
     ...getConstantClientMetadata(envSet, ApplicationType.SPA),
-    client_id: demoAppApplicationId,
+    client_id: getDemoAppApplicationId(),
     client_name: 'Live Preview',
     redirect_uris: urlStrings,
     post_logout_redirect_uris: urlStrings,
@@ -64,7 +73,7 @@ const buildAccountCenterClientMetadata = (envSet: EnvSet): AllClientMetadata => 
 
   return {
     ...getConstantClientMetadata(envSet, ApplicationType.SPA),
-    client_id: accountCenterApplicationId,
+    client_id: getAccountCenterApplicationId(),
     client_name: 'Account Center',
     redirect_uris: urlStrings,
     post_logout_redirect_uris: urlStrings,
@@ -139,7 +148,7 @@ export default function postgresAdapter(
       client_secret,
       client_name,
       ...getConstantClientMetadata(envSet, type),
-      ...transpileMetadata(client_id, snakecaseKeys(oidcClientMetadata)),
+      ...snakecaseKeys(oidcClientMetadata),
       // `node-oidc-provider` won't camelCase custom parameter keys, so we need to keep the keys camelCased
       ...customClientMetadata,
       /* Third-party client scopes are restricted to the app-level enabled user scopes. */
@@ -149,10 +158,13 @@ export default function postgresAdapter(
     return {
       upsert: reject,
       find: async (id) => {
-        if (id === demoAppApplicationId) {
+        if (id === adminConsoleApplicationId) {
+          return buildAdminConsoleClientMetadata(envSet);
+        }
+        if (id === getDemoAppApplicationId()) {
           return buildDemoAppClientMetadata(envSet);
         }
-        if (id === accountCenterApplicationId) {
+        if (id === getAccountCenterApplicationId()) {
           return buildAccountCenterClientMetadata(envSet);
         }
 

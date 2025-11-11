@@ -5,7 +5,7 @@ create type users_password_encryption_method as enum ('Argon2i', 'Argon2id', 'Ar
 create table users (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
-  id varchar(12) not null,
+  id ${id_format} not null,
   username varchar(128),
   primary_email varchar(128),
   primary_phone varchar(128),
@@ -16,7 +16,7 @@ create table users (
   avatar varchar(2048),
   /** Additional OpenID Connect standard claims that are not included in user's properties. */
   profile jsonb /* @use UserProfile */ not null default '{}'::jsonb,
-  application_id varchar(21),
+  application_id varchar(36),
   identities jsonb /* @use Identities */ not null default '{}'::jsonb,
   custom_data jsonb /* @use JsonObject */ not null default '{}'::jsonb,
   logto_config jsonb /* @use JsonObject */ not null default '{}'::jsonb,

@@ -5,7 +5,7 @@ create table subject_tokens (
   context jsonb /* @use JsonObject */ not null default '{}'::jsonb,
   expires_at timestamptz not null,
   consumed_at timestamptz,
-  user_id varchar(21) not null
+  user_id ${id_format} not null
     references users (id) on update cascade on delete cascade,
   created_at timestamptz not null default(now()),
   /* It is intented to not reference to user or application table, it can be userId or applicationId, for audit only */

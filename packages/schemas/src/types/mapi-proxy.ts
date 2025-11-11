@@ -13,7 +13,7 @@
  * This module provides utilities to manage mapi proxy.
  */
 
-import { generateStandardSecret } from '@logto/shared/universal';
+import { generateStandardSecret, buildSeedId } from '@logto/shared/universal';
 
 import {
   RoleType,
@@ -32,7 +32,7 @@ import { adminTenantId } from '../seeds/tenant.js';
 export const getMapiProxyRole = (tenantId: string): Readonly<Role> =>
   Object.freeze({
     tenantId: adminTenantId,
-    id: `m-${tenantId}`,
+    id: buildSeedId(`m-${tenantId}`),
     name: `machine:mapi:${tenantId}`,
     description: `Machine-to-machine role for accessing Management API of tenant '${tenantId}'.`,
     type: RoleType.MachineToMachine,
@@ -49,7 +49,7 @@ export const getMapiProxyRole = (tenantId: string): Readonly<Role> =>
 export const getMapiProxyM2mApp = (tenantId: string): Readonly<CreateApplication> =>
   Object.freeze({
     tenantId: adminTenantId,
-    id: `m-${tenantId}`,
+    id: buildSeedId(`m-${tenantId}`),
     secret: generateStandardSecret(32),
     name: `Management API access for ${tenantId}`,
     description: `Machine-to-machine app for accessing Management API of tenant '${tenantId}'.`,

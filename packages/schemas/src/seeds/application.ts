@@ -1,4 +1,8 @@
-import { generateStandardId, generateStandardSecret } from '@logto/shared/universal';
+import {
+  generateStandardSecret,
+  generateStandardId,
+  buildSeedId,
+} from '@logto/shared/universal';
 
 import type {
   Application,
@@ -10,7 +14,7 @@ import { ApplicationType } from '../db-entries/index.js';
 import { adminTenantId } from './tenant.js';
 
 /**
- * The fixed application ID for Admin Console.
+ * The fixed application ID for Admin Console (nanoid format).
  *
  * This built-in application does not belong to any tenant in the OSS version.
  */
@@ -18,6 +22,18 @@ export const adminConsoleApplicationId = 'admin-console';
 
 export const demoAppApplicationId = 'demo-app';
 export const accountCenterApplicationId = 'account-center';
+
+/** Get the Admin Console application ID in the appropriate format. */
+export const getAdminConsoleApplicationId = (): string =>
+  buildSeedId(adminConsoleApplicationId);
+
+/** Get the demo app application ID in the appropriate format. */
+export const getDemoAppApplicationId = (): string =>
+  buildSeedId(demoAppApplicationId);
+
+/** Get the account center application ID in the appropriate format. */
+export const getAccountCenterApplicationId = (): string =>
+  buildSeedId(accountCenterApplicationId);
 
 const buildSpaApplicationData = (
   tenantId: string,
@@ -47,48 +63,45 @@ const buildSpaApplicationData = (
 
 export const buildDemoAppDataForTenant = (tenantId: string): Application =>
   buildSpaApplicationData(tenantId, {
-    id: demoAppApplicationId,
+    id: getDemoAppApplicationId(),
     name: 'Live Preview',
     description: 'Preview for Sign-in Experience.',
   });
 
 export const buildAccountCenterAppDataForTenant = (tenantId: string): Application =>
   buildSpaApplicationData(tenantId, {
-    id: accountCenterApplicationId,
+    id: getAccountCenterApplicationId(),
     name: 'Account Center',
     description: 'Placeholder application for Account Center.',
   });
 
 export type BuiltInApplicationId = typeof demoAppApplicationId | typeof accountCenterApplicationId;
 
-export const isBuiltInApplicationId = (
-  applicationId: string
-): applicationId is BuiltInApplicationId =>
-  applicationId === demoAppApplicationId || applicationId === accountCenterApplicationId;
+export const isBuiltInApplicationId = (applicationId: string): boolean =>
+  applicationId === adminConsoleApplicationId ||
+  applicationId === getDemoAppApplicationId() ||
+  applicationId === getAccountCenterApplicationId();
 
 export const isBuiltInClientId = isBuiltInApplicationId;
 
 export const buildBuiltInApplicationDataForTenant = (
   tenantId: string,
-  applicationId: BuiltInApplicationId
+  applicationId: string
 ): Application => {
-  if (applicationId === demoAppApplicationId) {
+  if (applicationId === adminConsoleApplicationId) {
+    return buildSpaApplicationData(adminTenantId, {
+      id: adminConsoleApplicationId,
+      name: 'Admin Console',
+      description: 'Logto Admin Console.',
+    });
+  }
+
+  if (applicationId === getDemoAppApplicationId()) {
     return buildDemoAppDataForTenant(tenantId);
   }
 
   return buildAccountCenterAppDataForTenant(tenantId);
 };
-
-export const createDefaultAdminConsoleApplication = (): Readonly<CreateApplication> =>
-  Object.freeze({
-    tenantId: adminTenantId,
-    id: adminConsoleApplicationId,
-    name: 'Admin Console',
-    secret: generateStandardSecret(),
-    description: 'Logto Admin Console.',
-    type: ApplicationType.SPA,
-    oidcClientMetadata: { redirectUris: [], postLogoutRedirectUris: [] },
-  });
 
 export const createTenantMachineToMachineApplication = (
   tenantId: string

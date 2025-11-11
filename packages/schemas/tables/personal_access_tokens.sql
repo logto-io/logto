@@ -3,7 +3,7 @@
 create table personal_access_tokens (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
-  user_id varchar(21) not null
+  user_id ${id_format} not null
     references users (id) on update cascade on delete cascade,
   /** The name of the secret. Should be unique within the user. */
   name varchar(256) not null,

@@ -83,12 +83,18 @@ export const generateSchema = ({ name, comments, fields }: TableWithType) => {
           )}${conditionalString((nullable || hasDefaultValue) && '.optional()')},`;
         }
 
+        // ID columns need max(36) to accommodate both nanoid and UUID formats
+        const effectiveMaxLength =
+          maxLength && (name === 'id' || name.endsWith('_id'))
+            ? Math.max(maxLength, 36)
+            : maxLength;
+
         return `  ${camelcase(name)}: z.${isEnum ? `nativeEnum(${type})` : `${type}()`}${
           // Non-nullable strings should have a min length of 1
           conditionalString(isString && !(nullable || name === tenantId) && `.min(1)`)
         }${
           // String types value in DB should have a max length
-          conditionalString(isString && maxLength && `.max(${maxLength})`)
+          conditionalString(isString && effectiveMaxLength && `.max(${effectiveMaxLength})`)
         }${conditionalString(isArray && '.array()')}${conditionalString(
           nullable && '.nullable()'
         )}${conditionalString(
@@ -109,6 +115,12 @@ export const generateSchema = ({ name, comments, fields }: TableWithType) => {
           )},`;
         }
 
+        // ID columns need max(36) to accommodate both nanoid and UUID formats
+        const effectiveMaxLength =
+          maxLength && (name === 'id' || name.endsWith('_id'))
+            ? Math.max(maxLength, 36)
+            : maxLength;
+
         return `  ${camelcase(name)}: z.${isEnum ? `nativeEnum(${type})` : `${type}()`}${
           // Non-nullable strings should have a min length of 1
           conditionalString(
@@ -116,7 +128,7 @@ export const generateSchema = ({ name, comments, fields }: TableWithType) => {
           )
         }${
           // String types value in DB should have a max length
-          conditionalString(isString && maxLength && `.max(${maxLength})`)
+          conditionalString(isString && effectiveMaxLength && `.max(${effectiveMaxLength})`)
         }${conditionalString(isArray && '.array()')}${conditionalString(
           nullable && '.nullable()'
         )},`;

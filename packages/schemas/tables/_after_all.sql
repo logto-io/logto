@@ -1,5 +1,8 @@
 /* This SQL will run after all other queries. */
 
+---- Grant schema usage (needed when schema is recreated) ----
+grant usage on schema public to logto_tenant_${database};
+
 ---- Grant CRUD access to the group ----
 grant select, insert, update, delete
   on all tables

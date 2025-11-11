@@ -1,5 +1,5 @@
 create table daily_token_usage (
-  id varchar(21) not null,
+  id ${id_format} not null,
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
   usage bigint not null default(0),

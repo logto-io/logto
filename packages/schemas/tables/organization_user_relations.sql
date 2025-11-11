@@ -4,9 +4,9 @@
 create table organization_user_relations (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
-  organization_id varchar(21) not null
+  organization_id ${id_format} not null
     references organizations (id) on update cascade on delete cascade,
-  user_id varchar(21) not null
+  user_id ${id_format} not null
     references users (id) on update cascade on delete cascade,
   primary key (tenant_id, organization_id, user_id),
   constraint organization_user_relations__user_id__fk

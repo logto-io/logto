@@ -6,7 +6,7 @@ create table sso_connector_idp_initiated_auth_configs (
   connector_id varchar(128) not null
     references sso_connectors (id) on update cascade on delete cascade,
   /** The default Logto application id. */
-  default_application_id varchar(21) not null
+  default_application_id varchar(36) not null
     references applications (id) on update cascade on delete cascade,
   /** OIDC sign-in redirect URI. */
   redirect_uri text,

@@ -5,7 +5,7 @@ create type role_type as enum ('User', 'MachineToMachine');
 create table roles (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
-  id varchar(21) not null,
+  id ${id_format} not null,
   name varchar(128) not null,
   description varchar(128) not null,
   type role_type not null default 'User',
@@ -22,7 +22,7 @@ create index roles__id
 create index roles__type
   on roles (tenant_id, type);
 
-create function public.check_role_type(role_id varchar(21), target_type role_type) returns boolean as
+create function public.check_role_type(role_id ${id_format}, target_type role_type) returns boolean as
 $$ begin
   return (select type from public.roles where id = role_id) = target_type;
 end; $$ language plpgsql;

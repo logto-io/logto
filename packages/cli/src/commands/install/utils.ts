@@ -24,6 +24,7 @@ import {
   safeExecSync,
 } from '../../utils.js';
 import { seedByPool } from '../database/seed/index.js';
+import { promptIdFormat } from '../database/seed/utils.js';
 
 const pgRequired = new semver.SemVer('14.0.0');
 
@@ -164,6 +165,18 @@ export const decompress = async (toPath: string, tarPath: string) => {
 export const seedDatabase = async (instancePath: string, cloud: boolean) => {
   try {
     const pool = await createPoolAndDatabaseIfNeeded();
+
+    // Resolve ID format: ENV variable > interactive prompt > default (nanoid)
+    const envFormat = process.env.ID_FORMAT;
+    if (envFormat && envFormat !== 'nanoid' && envFormat !== 'uuid') {
+      throw new Error(
+        `Invalid ID_FORMAT environment variable: '${envFormat}'. Must be 'nanoid' or 'uuid'.`
+      );
+    }
+    if (!envFormat && isTty()) {
+      process.env.ID_FORMAT = await promptIdFormat();
+    }
+
     await seedByPool(pool, cloud);
     await pool.end();
   } catch (error: unknown) {

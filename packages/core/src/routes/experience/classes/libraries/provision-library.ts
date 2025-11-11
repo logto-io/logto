@@ -186,7 +186,8 @@ export class ProvisionLibrary {
     } = interactionDetails;
 
     const isAdminTenant = currentTenantId === adminTenantId;
-    const isAdminConsoleApp = String(client_id) === adminConsoleApplicationId;
+    const isAdminConsoleApp =
+      String(client_id) === adminConsoleApplicationId;
 
     const { isCloud, isIntegrationTest } = EnvSet.values;
 

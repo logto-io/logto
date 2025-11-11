@@ -11,7 +11,11 @@ const consoleLog = new ConsoleLog(chalk.magenta('pre'));
 
 export const checkPreconditions = async (pool: DatabasePool) => {
   checkDeprecations();
-  await Promise.all([checkAlterationState(pool), checkRowLevelSecurity(pool)]);
+  await Promise.all([
+    checkAlterationState(pool),
+    checkRowLevelSecurity(pool),
+    checkIdFormat(pool),
+  ]);
 };
 
 const checkRowLevelSecurity = async (client: CommonQueryMethods) => {
@@ -54,6 +58,35 @@ const checkAlterationState = async (pool: CommonQueryMethods) => {
   );
 
   throw new Error(`Undeployed database alterations found.`);
+};
+
+/**
+ * Validate the ID format configuration.
+ * If the database has a locked-in format (stored during seed), it must match the ENV variable.
+ * If they differ, refuse to start.
+ */
+const checkIdFormat = async (pool: CommonQueryMethods) => {
+  const envFormat = EnvSet.values.idFormat;
+  const result = await pool.maybeOne<{ value: unknown }>(sql`
+    select ${sql.identifier(['value'])} from ${sql.identifier([Systems.table])}
+    where ${sql.identifier(['key'])} = ${'idFormat'}
+  `);
+
+  if (result) {
+    const { value } = result;
+    const dbFormat =
+      typeof value === 'object' && value !== null && 'format' in value
+        ? String((value as { format: string }).format)
+        : undefined;
+
+    if (dbFormat && dbFormat !== envFormat) {
+      throw new Error(
+        `ID format mismatch: database is locked to '${dbFormat}' but ID_FORMAT env is set to '${envFormat}'. ` +
+          `Once set, the ID format cannot be changed. Update your ID_FORMAT environment variable to '${dbFormat}'.`
+      );
+    }
+  }
+  // If no row exists (first start before seed), skip — the seed process will store it.
 };
 
 const checkDeprecations = () => {

@@ -1,7 +1,7 @@
 create table hooks (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
-  id varchar(21) not null,
+  id ${id_format} not null,
   name varchar(256) not null default '',
   event varchar(128) /* @use HookEvent */,
   events jsonb /* @use HookEvents */ not null default '[]'::jsonb,

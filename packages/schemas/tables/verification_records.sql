@@ -1,8 +1,8 @@
 create table verification_records (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
-  id varchar(21) not null,
-  user_id varchar(21)
+  id ${id_format} not null,
+  user_id ${id_format}
     references users (id) on update cascade on delete cascade,
   created_at timestamptz not null default(now()),
   expires_at timestamptz not null,

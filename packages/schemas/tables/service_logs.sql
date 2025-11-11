@@ -1,5 +1,5 @@
 create table service_logs (
-  id varchar(21) not null,
+  id ${id_format} not null,
   tenant_id varchar(21) not null,
   type varchar(64) not null,
   payload jsonb /* @use JsonObject */ not null default '{}'::jsonb,

@@ -1,9 +1,9 @@
 import { Applications } from '@logto/schemas';
-import { generateStandardId } from '@logto/shared';
 import { tryThat } from '@silverhand/essentials';
 import { object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { generateStandardId } from '@logto/shared';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';

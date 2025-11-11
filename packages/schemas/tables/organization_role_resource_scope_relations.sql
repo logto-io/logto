@@ -4,9 +4,9 @@
 create table organization_role_resource_scope_relations (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
-  organization_role_id varchar(21) not null
+  organization_role_id ${id_format} not null
     references organization_roles (id) on update cascade on delete cascade,
-  scope_id varchar(21) not null
+  scope_id varchar(36) not null
     references scopes (id) on update cascade on delete cascade,
   primary key (tenant_id, organization_role_id, scope_id)
 );

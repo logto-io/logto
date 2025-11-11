@@ -131,6 +131,21 @@ export default class GlobalValues {
    */
   public readonly redisUrl = getEnv('REDIS_URL');
 
+  /**
+   * ID format for all entity IDs on this instance.
+   * Can be 'nanoid' or 'uuid'. Defaults to 'nanoid'.
+   * Once the database is seeded with a format, this value is permanent and cannot be changed.
+   */
+  public readonly idFormat = (() => {
+    const value = getEnv('ID_FORMAT', 'nanoid');
+    if (value !== 'nanoid' && value !== 'uuid') {
+      throw new Error(
+        `Invalid ID_FORMAT environment variable: '${value}'. Must be 'nanoid' or 'uuid'.`
+      );
+    }
+    return value;
+  })();
+
   public get dbUrl(): string {
     return this.databaseUrl;
   }

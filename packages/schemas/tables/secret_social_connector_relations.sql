@@ -3,7 +3,7 @@
 create table secret_social_connector_relations (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
-  secret_id varchar(21) not null
+  secret_id ${id_format} not null
     references secrets (id) on update cascade on delete cascade,
   /** Social connector ID foreign reference. Only present for secrets that store social connector tokens. Note: avoid directly cascading deletes here, need to delete the secrets first.*/
   connector_id varchar(128) not null

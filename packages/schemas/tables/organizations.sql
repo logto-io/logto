@@ -5,7 +5,7 @@ create table organizations (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
   /** The globally unique identifier of the organization. */
-  id varchar(21) not null,
+  id ${id_format} not null,
   /** The organization's name for display. */
   name varchar(128) not null,
   /** A brief description of the organization. */

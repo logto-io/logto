@@ -25,6 +25,11 @@ const useTenantScopeListener = () => {
   const { scopes, isLoading } = useCurrentTenantScopes();
 
   useEffect(() => {
+    // Tenant scope listening is only relevant for Cloud, where multi-tenant
+    // organization-based access control is used. OSS has a single tenant with no scope changes.
+    if (!isCloud) {
+      return;
+    }
     (async () => {
       const organizationId = getTenantOrganizationId(currentTenantId);
       const claims = await getOrganizationTokenClaims(organizationId);

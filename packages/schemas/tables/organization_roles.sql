@@ -5,7 +5,7 @@ create table organization_roles (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
   /** The globally unique identifier of the organization role. */
-  id varchar(21) not null,
+  id ${id_format} not null,
   /** The organization role's name, unique within the organization template. */
   name varchar(128) not null,
   /** A brief description of the organization role. */
@@ -23,7 +23,7 @@ create index organization_roles__id
 create index organization_roles__type
   on organization_roles (tenant_id, type);
 
-create function check_organization_role_type(role_id varchar(21), target_type role_type) returns boolean as
+create function check_organization_role_type(role_id ${id_format}, target_type role_type) returns boolean as
 $$ begin
   return (select type from organization_roles where id = role_id) = target_type;
 end; $$ language plpgsql set search_path = public;
