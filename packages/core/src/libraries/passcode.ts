@@ -2,8 +2,8 @@ import { appInsights } from '@logto/app-insights/node';
 import type { SendMessagePayload, TemplateType } from '@logto/connector-kit';
 import { templateTypeGuard, ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import {
-  buildDemoAppDataForTenant,
-  demoAppApplicationId,
+  buildBuiltInApplicationDataForTenant,
+  isBuiltInApplicationId,
   type Passcode,
   type User,
 } from '@logto/schemas';
@@ -165,8 +165,8 @@ export const createPasscodeLibrary = (queries: Queries, connectorLibrary: Connec
     try {
       const [application, applicationSignInExperience, organization, userData] = await Promise.all([
         applicationId
-          ? applicationId === demoAppApplicationId
-            ? buildDemoAppDataForTenant('') // Use empty string as the tenantId will be ignored here.
+          ? isBuiltInApplicationId(applicationId)
+            ? Promise.resolve(buildBuiltInApplicationDataForTenant('', applicationId))
             : queries.applications.findApplicationById(applicationId)
           : undefined,
         applicationId

@@ -5,7 +5,7 @@ import { conditionalArray } from '@silverhand/essentials';
 import helmet, { type HelmetOptions } from 'helmet';
 import type { MiddlewareType } from 'koa';
 
-import { EnvSet, AdminApps, getTenantEndpoint } from '#src/env-set/index.js';
+import { EnvSet, AdminApps, UserApps, getTenantEndpoint } from '#src/env-set/index.js';
 
 /**
  * Apply security headers to the response using helmet
@@ -95,55 +95,71 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
     },
   };
 
-  // @ts-expect-error: helmet typings has lots of {A?: T, B?: never} | {A?: never, B?: T} options definitions. Optional settings type can not inferred correctly.
-  const experienceSecurityHeaderSettings: HelmetOptions = {
-    ...basicSecurityHeaderSettings,
-    // WARNING (high risk): Need to allow self-hosted terms of use page loaded in an iframe
-    frameguard: false,
-    // Allow being loaded by console preview iframe
-    crossOriginResourcePolicy: {
-      policy: 'cross-origin',
-    },
-    contentSecurityPolicy: {
-      useDefaults: true,
-      directives: {
-        'upgrade-insecure-requests': null,
-        imgSrc: ["'self'", 'data:', 'https:'],
-        scriptSrc: [
-          "'self'",
-          "'unsafe-inline'",
-          "'unsafe-hashes'",
-          `${gsiOrigin}client`,
-          // Some of our users may use the Cloudflare Web Analytics service. We need to allow it to
-          // load its scripts.
-          'https://static.cloudflareinsights.com/',
-          // Cloudflare Turnstile
-          'https://challenges.cloudflare.com/turnstile/v0/api.js',
-          // Google Recaptcha Enterprise
-          'https://www.google.com/recaptcha/enterprise.js',
-          // Google Recaptcha static resources
-          'https://www.gstatic.com/recaptcha/',
-          // Allow "unsafe-eval" for debugging purpose in non-production environment
-          ...conditionalArray(!isProduction && "'unsafe-eval'"),
-        ],
-        scriptSrcAttr: ["'unsafe-inline'"],
-        connectSrc: [
-          "'self'",
-          gsiOrigin,
-          tenantEndpointOrigin,
-          // Allow reCAPTCHA API calls
-          'https://www.google.com/recaptcha/',
-          'https://www.gstatic.com/recaptcha/',
-          ...developmentOrigins,
-        ],
-        // WARNING (high risk): Need to allow self-hosted terms of use page loaded in an iframe
-        frameSrc: ["'self'", 'https:', gsiOrigin],
-        // Allow being loaded by console preview iframe
-        frameAncestors: ["'self'", ...adminOrigins],
-        defaultSrc: ["'self'", gsiOrigin],
-      },
-    },
+  type UserFacingSecurityHeaderOverride = {
+    scriptSrc?: string[];
+    connectSrc?: string[];
   };
+
+  const createUserFacingSecurityHeaderSettings = (
+    overrides: UserFacingSecurityHeaderOverride = {}
+  ): HelmetOptions => {
+    const { scriptSrc: scriptSource = [], connectSrc: connectSource = [] } = overrides;
+
+    // @ts-expect-error: helmet typings has lots of {A?: T, B?: never} | {A?: never, B?: T} options definitions. Optional settings type can not inferred correctly.
+    return {
+      ...basicSecurityHeaderSettings,
+      // WARNING (high risk): Need to allow self-hosted terms of use page loaded in an iframe
+      frameguard: false,
+      // Allow being loaded by console preview iframe
+      crossOriginResourcePolicy: {
+        policy: 'cross-origin',
+      },
+      contentSecurityPolicy: {
+        useDefaults: true,
+        directives: {
+          'upgrade-insecure-requests': null,
+          imgSrc: ["'self'", 'data:', 'https:'],
+          scriptSrc: [
+            "'self'",
+            "'unsafe-inline'",
+            "'unsafe-hashes'",
+            ...scriptSource,
+            // Allow "unsafe-eval" for debugging purpose in non-production environment
+            ...conditionalArray(!isProduction && "'unsafe-eval'"),
+          ],
+          scriptSrcAttr: ["'unsafe-inline'"],
+          connectSrc: ["'self'", tenantEndpointOrigin, ...connectSource, ...developmentOrigins],
+          // WARNING (high risk): Need to allow self-hosted terms of use page loaded in an iframe
+          frameSrc: ["'self'", 'https:', gsiOrigin],
+          // Allow being loaded by console preview iframe
+          frameAncestors: ["'self'", ...adminOrigins],
+          defaultSrc: ["'self'", gsiOrigin],
+        },
+      },
+    };
+  };
+
+  const experienceSecurityHeaderSettings = createUserFacingSecurityHeaderSettings({
+    scriptSrc: [
+      `${gsiOrigin}client`,
+      // Some of our users may use the Cloudflare Web Analytics service. We need to allow it to
+      // load its scripts.
+      'https://static.cloudflareinsights.com/',
+      // Cloudflare Turnstile
+      'https://challenges.cloudflare.com/turnstile/v0/api.js',
+      // Google Recaptcha Enterprise
+      'https://www.google.com/recaptcha/enterprise.js',
+      // Google Recaptcha static resources
+      'https://www.gstatic.com/recaptcha/',
+    ],
+    connectSrc: [
+      gsiOrigin,
+      // Allow reCAPTCHA API calls
+      'https://www.google.com/recaptcha/',
+      'https://www.gstatic.com/recaptcha/',
+    ],
+  });
+  const accountCenterSecurityHeaderSettings = createUserFacingSecurityHeaderSettings();
 
   // @ts-expect-error: helmet typings has lots of {A?: T, B?: never} | {A?: never, B?: T} options definitions. Optional settings type can not inferred correctly.
   const consoleSecurityHeaderSettings: HelmetOptions = {
@@ -188,7 +204,13 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
       return next();
     }
 
-    // Route has been handled by one of mounted apps
+    if (requestPath.startsWith(`/${UserApps.AccountCenter}`)) {
+      await helmetPromise(accountCenterSecurityHeaderSettings, req, res);
+
+      return next();
+    }
+
+    // Route has been handled by one of the other mounted apps
     if (mountedApps.some((app) => app !== '' && requestPath.startsWith(`/${app}`))) {
       await helmetPromise(basicSecurityHeaderSettings, req, res);
 

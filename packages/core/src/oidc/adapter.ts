@@ -1,5 +1,10 @@
 import type { CreateApplication } from '@logto/schemas';
-import { ApplicationType, adminConsoleApplicationId, demoAppApplicationId } from '@logto/schemas';
+import {
+  ApplicationType,
+  accountCenterApplicationId,
+  adminConsoleApplicationId,
+  demoAppApplicationId,
+} from '@logto/schemas';
 import { appendPath, tryThat, conditional } from '@silverhand/essentials';
 import { addSeconds } from 'date-fns';
 import type { AdapterFactory, AllClientMetadata } from 'oidc-provider';
@@ -47,6 +52,20 @@ const buildDemoAppClientMetadata = (envSet: EnvSet): AllClientMetadata => {
     ...getConstantClientMetadata(envSet, ApplicationType.SPA),
     client_id: demoAppApplicationId,
     client_name: 'Live Preview',
+    redirect_uris: urlStrings,
+    post_logout_redirect_uris: urlStrings,
+  };
+};
+
+const buildAccountCenterClientMetadata = (envSet: EnvSet): AllClientMetadata => {
+  const urlStrings = getTenantUrls(envSet.tenantId, EnvSet.values).map(
+    (url) => appendPath(url, '/account-center').href
+  );
+
+  return {
+    ...getConstantClientMetadata(envSet, ApplicationType.SPA),
+    client_id: accountCenterApplicationId,
+    client_name: 'Account Center',
     redirect_uris: urlStrings,
     post_logout_redirect_uris: urlStrings,
   };
@@ -132,6 +151,9 @@ export default function postgresAdapter(
       find: async (id) => {
         if (id === demoAppApplicationId) {
           return buildDemoAppClientMetadata(envSet);
+        }
+        if (id === accountCenterApplicationId) {
+          return buildAccountCenterClientMetadata(envSet);
         }
 
         const application = await tryThat(

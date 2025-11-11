@@ -26,6 +26,7 @@
     "test:report": "codecov -F core"
   },
   "dependencies": {
+    "@logto/account-center": "workspace:*",
     "@authenio/samlify-node-xmllint": "^2.0.0",
     "@aws-sdk/client-s3": "^3.556.0",
     "@azure/storage-blob": "^12.17.0",

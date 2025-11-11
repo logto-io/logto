@@ -1,4 +1,4 @@
-import { buildDemoAppDataForTenant, demoAppApplicationId } from '@logto/schemas';
+import { buildBuiltInApplicationDataForTenant, isBuiltInApplicationId } from '@logto/schemas';
 import { type MiddlewareType } from 'koa';
 import { type IRouterParamContext } from 'koa-router';
 import type { Provider } from 'oidc-provider';
@@ -32,10 +32,9 @@ export default function koaAutoConsent<StateT, ContextT extends IRouterParamCont
       new errors.InvalidClient('client must be available')
     );
 
-    const application =
-      clientId === demoAppApplicationId
-        ? buildDemoAppDataForTenant('')
-        : await findApplicationById(clientId);
+    const application = isBuiltInApplicationId(clientId)
+      ? buildBuiltInApplicationDataForTenant('', clientId)
+      : await findApplicationById(clientId);
 
     const shouldAutoConsent = !application.isThirdParty;
 
