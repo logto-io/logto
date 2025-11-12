@@ -1,11 +1,13 @@
-import { ConnectorType } from '@logto/connector-kit';
+import { ConnectorType, TemplateType } from '@logto/connector-kit';
 import {
   InteractionEvent,
   SignInIdentifier,
   type VerificationCodeIdentifier,
 } from '@logto/schemas';
 
-import { initExperienceClient } from '#src/helpers/client.js';
+import { deleteUser } from '#src/api/admin-user.js';
+import { updateSignInExperience } from '#src/api/sign-in-experience.js';
+import { initExperienceClient, logoutClient, processSession } from '#src/helpers/client.js';
 import {
   clearConnectorsByTypes,
   setEmailConnector,
@@ -15,7 +17,8 @@ import {
   successfullySendVerificationCode,
   successfullyVerifyVerificationCode,
 } from '#src/helpers/experience/verification-code.js';
-import { expectRejects } from '#src/helpers/index.js';
+import { expectRejects, readConnectorMessage } from '#src/helpers/index.js';
+import { generateEmail, generatePassword, generateUsername } from '#src/utils.js';
 
 describe('Verification code verification APIs', () => {
   beforeAll(async () => {
@@ -202,6 +205,119 @@ describe('Verification code verification APIs', () => {
         },
         verificationId,
       });
+    });
+  });
+
+  describe('template selection respects sign-up identifiers', () => {
+    beforeAll(async () => {
+      await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
+      await setEmailConnector();
+    });
+
+    afterAll(async () => {
+      await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
+    });
+
+    const usernamePasswordMethod = {
+      identifier: SignInIdentifier.Username,
+      password: true,
+      verificationCode: false,
+      isPasswordPrimary: true,
+    };
+
+    it('keeps using the Register template when email is still a sign-up identifier', async () => {
+      await updateSignInExperience({
+        signUp: {
+          identifiers: [SignInIdentifier.Username, SignInIdentifier.Email],
+          password: true,
+          verify: true,
+        },
+        signIn: {
+          methods: [usernamePasswordMethod],
+        },
+        forgotPasswordMethods: [],
+      });
+
+      const client = await initExperienceClient({
+        interactionEvent: InteractionEvent.Register,
+      });
+      const username = generateUsername();
+      const password = generatePassword();
+      const email = generateEmail();
+
+      await client.updateProfile({ type: SignInIdentifier.Username, value: username });
+      await client.updateProfile({ type: 'password', value: password });
+
+      // Create the user first so the interaction already has an identified user.
+      await client.identifyUser();
+
+      const { verificationId } = await client.sendVerificationCode({
+        interactionEvent: InteractionEvent.Register,
+        identifier: { type: SignInIdentifier.Email, value: email },
+      });
+
+      const emailMessage = await readConnectorMessage('Email');
+      expect(emailMessage.type).toBe(TemplateType.Register);
+
+      const { verificationId: verifiedEmailId } = await client.verifyVerificationCode({
+        identifier: { type: SignInIdentifier.Email, value: email },
+        verificationId,
+        code: emailMessage.code,
+      });
+
+      await client.updateProfile({ type: SignInIdentifier.Email, verificationId: verifiedEmailId });
+
+      const { redirectTo } = await client.submitInteraction();
+      const userId = await processSession(client, redirectTo);
+      await logoutClient(client);
+      await deleteUser(userId);
+    });
+
+    it('switches to BindMfa template when email is not part of sign-up identifiers', async () => {
+      await updateSignInExperience({
+        signUp: {
+          identifiers: [SignInIdentifier.Username],
+          password: true,
+          verify: false,
+        },
+        signIn: {
+          methods: [usernamePasswordMethod],
+        },
+        forgotPasswordMethods: [],
+      });
+
+      const client = await initExperienceClient({
+        interactionEvent: InteractionEvent.Register,
+      });
+      const username = generateUsername();
+      const password = generatePassword();
+      const email = generateEmail();
+
+      await client.updateProfile({ type: SignInIdentifier.Username, value: username });
+      await client.updateProfile({ type: 'password', value: password });
+
+      await client.identifyUser();
+
+      const { verificationId } = await client.sendVerificationCode({
+        interactionEvent: InteractionEvent.Register,
+        identifier: { type: SignInIdentifier.Email, value: email },
+      });
+
+      const emailMessage = await readConnectorMessage('Email');
+      expect(emailMessage.type).toBe(TemplateType.BindMfa);
+
+      const { verificationId: verifiedEmailId } = await client.verifyVerificationCode({
+        identifier: { type: SignInIdentifier.Email, value: email },
+        verificationId,
+        code: emailMessage.code,
+      });
+
+      await client.updateProfile({ type: SignInIdentifier.Email, verificationId: verifiedEmailId });
+
+      const { redirectTo } = await client.submitInteraction();
+      const userId = await processSession(client, redirectTo);
+      await logoutClient(client);
+      await deleteUser(userId);
     });
   });
 });
