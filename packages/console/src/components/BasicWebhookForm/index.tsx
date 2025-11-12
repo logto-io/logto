@@ -29,6 +29,10 @@ const hookEventGroups: Array<CheckboxOptionGroup<HookEvent>> = [
       value: event,
     })),
   },
+  {
+    title: 'webhooks.schemas.security',
+    options: [{ value: 'Identifier.Lockout' }],
+  },
 ];
 
 export type BasicWebhookFormType = {

@@ -12,6 +12,7 @@ const webhooks = {
     scope: 'İzin',
     organization_role: 'Kuruluş rolü',
     organization_scope: 'Kuruluş izni',
+    security: 'Güvenlik',
   },
   table: {
     name: 'Adı',

@@ -12,6 +12,7 @@ const webhooks = {
     scope: 'Uprawnienie',
     organization_role: 'Rola w organizacji',
     organization_scope: 'Uprawnienie w organizacji',
+    security: 'Bezpieczeństwo',
   },
   table: {
     name: 'Nazwa',
