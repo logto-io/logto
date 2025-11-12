@@ -50,6 +50,14 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
         await ctx.experienceInteraction.guardCaptcha();
       }
 
+      // Check if email/phone is in sign up identifiers, to determine if it's binding email/phone for MFA
+      const { signUp } =
+        await ctx.experienceInteraction.signInExperienceValidator.getSignInExperienceData();
+      // If the interaction already identified a user, and email/phone is not in sign up identifiers,
+      // then the sign-up/sign-in flow is complete and we are binding a new MFA verification
+      const isBindingEmailForMfa =
+        ctx.experienceInteraction.identifiedUserId && !signUp.identifiers.includes(identifier.type);
+
       ctx.body = await sendCode({
         identifier,
         interactionEvent,
@@ -59,9 +67,7 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
             queries,
             identifier,
             // If the interaction already identified a user, we are binding a new MFA verification
-            ctx.experienceInteraction.identifiedUserId
-              ? TemplateType.BindMfa
-              : getTemplateTypeByEvent(interactionEvent)
+            isBindingEmailForMfa ? TemplateType.BindMfa : getTemplateTypeByEvent(interactionEvent)
           ),
         libraries,
         ctx,
