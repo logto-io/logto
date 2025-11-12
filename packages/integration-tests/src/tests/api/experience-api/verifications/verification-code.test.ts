@@ -17,7 +17,7 @@ import {
   successfullySendVerificationCode,
   successfullyVerifyVerificationCode,
 } from '#src/helpers/experience/verification-code.js';
-import { expectRejects, readConnectorMessage } from '#src/helpers/index.js';
+import { createUserByAdmin, expectRejects, readConnectorMessage } from '#src/helpers/index.js';
 import { generateEmail, generatePassword, generateUsername } from '#src/utils.js';
 
 describe('Verification code verification APIs', () => {
@@ -269,6 +269,60 @@ describe('Verification code verification APIs', () => {
 
       const { redirectTo } = await client.submitInteraction();
       const userId = await processSession(client, redirectTo);
+      await logoutClient(client);
+      await deleteUser(userId);
+    });
+
+    it('keeps using the Register template when email is still a secondary sign-up identifier', async () => {
+      await updateSignInExperience({
+        signUp: {
+          identifiers: [SignInIdentifier.Username],
+          secondaryIdentifiers: [{ identifier: SignInIdentifier.Email, verify: true }],
+          password: true,
+          verify: true,
+        },
+        signIn: {
+          methods: [usernamePasswordMethod],
+        },
+        forgotPasswordMethods: [],
+      });
+
+      const username = generateUsername();
+      const password = generatePassword();
+      const { id: userId } = await createUserByAdmin({ username, password });
+
+      const client = await initExperienceClient({
+        interactionEvent: InteractionEvent.SignIn,
+      });
+      const email = generateEmail();
+
+      const { verificationId: passwordVerificationId } = await client.verifyPassword({
+        identifier: { type: SignInIdentifier.Username, value: username },
+        password,
+      });
+
+      await client.identifyUser({ verificationId: passwordVerificationId });
+
+      const { verificationId } = await client.sendVerificationCode({
+        interactionEvent: InteractionEvent.SignIn,
+        identifier: { type: SignInIdentifier.Email, value: email },
+      });
+
+      const emailMessage = await readConnectorMessage('Email');
+      expect(emailMessage.type).toBe(TemplateType.SignIn);
+
+      const { verificationId: verifiedEmailId } = await client.verifyVerificationCode({
+        identifier: { type: SignInIdentifier.Email, value: email },
+        verificationId,
+        code: emailMessage.code,
+      });
+
+      await client.updateProfile({ type: SignInIdentifier.Email, verificationId: verifiedEmailId });
+
+      const { redirectTo } = await client.submitInteraction();
+      const signedInUserId = await processSession(client, redirectTo);
+      expect(signedInUserId).toBe(userId);
+
       await logoutClient(client);
       await deleteUser(userId);
     });
