@@ -1,5 +1,5 @@
 import type { LanguageTag } from '@logto/language-kit';
-import { languages, fallback } from '@logto/language-kit';
+import { languages, findSupportedLanguageTag } from '@logto/language-kit';
 import type { DeepPartial, NormalizeKeyPaths } from '@silverhand/essentials';
 import { z } from 'zod';
 
@@ -62,8 +62,10 @@ export type LogtoErrorI18nKey = `errors:${LogtoErrorCode}`;
 
 export type AdminConsoleKey = NormalizeKeyPaths<typeof en.translation.admin_console>;
 
-export const getDefaultLanguageTag = (languages: string): LanguageTag =>
-  builtInLanguageTagGuard.or(fallback<LanguageTag>('en')).parse(languages);
+export const getDefaultLanguageTag = (language: string): LanguageTag =>
+  builtInLanguageTagGuard.parse(
+    findSupportedLanguageTag(language ? [language] : [], builtInLanguages)
+  );
 
 export const isBuiltInLanguageTag = (language: string): language is BuiltInLanguageTag =>
   builtInLanguageTagGuard.safeParse(language).success;

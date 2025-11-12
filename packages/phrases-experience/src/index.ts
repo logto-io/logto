@@ -1,5 +1,5 @@
 import type { LanguageTag } from '@logto/language-kit';
-import { languages, fallback } from '@logto/language-kit';
+import { languages, findSupportedLanguageTag } from '@logto/language-kit';
 import type { NormalizeKeyPaths } from '@silverhand/essentials';
 import { z } from 'zod';
 
@@ -81,7 +81,9 @@ const resource: Resource = {
 };
 
 export const getDefaultLanguageTag = (language: string): LanguageTag =>
-  builtInLanguageTagGuard.or(fallback<LanguageTag>('en')).parse(language);
+  builtInLanguageTagGuard.parse(
+    findSupportedLanguageTag(language ? [language] : [], builtInLanguages, 'en')
+  );
 
 export const isBuiltInLanguageTag = (language: string): language is BuiltInLanguageTag =>
   builtInLanguageTagGuard.safeParse(language).success;
