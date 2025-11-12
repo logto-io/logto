@@ -11,11 +11,13 @@ const baseLanguageInfo = {
 
 describe('getExperienceLanguage', () => {
   it('should fallback to built-in regional variant when base language requested', () => {
-    const ctx = createMockContext({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const ctx: ParameterizedContext<any, any, any> = createMockContext({
       headers: { 'accept-language': 'pl' },
-    }) as ParameterizedContext<any, any, any>;
+    });
 
     const language = getExperienceLanguage({
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       ctx,
       languageInfo: baseLanguageInfo,
       customLanguages: [],
@@ -25,11 +27,13 @@ describe('getExperienceLanguage', () => {
   });
 
   it('should respect custom languages with best match', () => {
-    const ctx = createMockContext({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const ctx: ParameterizedContext<any, any, any> = createMockContext({
       headers: { 'accept-language': 'fi' },
-    }) as ParameterizedContext<any, any, any>;
+    });
 
     const language = getExperienceLanguage({
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       ctx,
       languageInfo: baseLanguageInfo,
       customLanguages: ['fi-FI'],
@@ -39,11 +43,13 @@ describe('getExperienceLanguage', () => {
   });
 
   it('should fallback to default when no match found', () => {
-    const ctx = createMockContext({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const ctx: ParameterizedContext<any, any, any> = createMockContext({
       headers: { 'accept-language': 'xx' },
-    }) as ParameterizedContext<any, any, any>;
+    });
 
     const language = getExperienceLanguage({
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       ctx,
       languageInfo: baseLanguageInfo,
       customLanguages: [],

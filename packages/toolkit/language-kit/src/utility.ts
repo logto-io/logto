@@ -14,6 +14,11 @@ export const languageTagGuard: z.ZodType<LanguageTag> = z
   .any()
   .refine((value: unknown) => isLanguageTag(value));
 
+/**
+ * Normalizes a language tag using Intl.getCanonicalLocales.
+ * Transforms underscores to hyphens and returns the canonical form.
+ * Returns undefined for non-string inputs, empty strings, '*' wildcard, or invalid language tags.
+ */
 export const canonicalizeLanguageTag = (language: string): Optional<string> => {
   if (typeof language !== 'string') {
     return;
@@ -29,7 +34,9 @@ export const canonicalizeLanguageTag = (language: string): Optional<string> => {
     const [canonical] = Intl.getCanonicalLocales(trimmed.replaceAll('_', '-'));
 
     return canonical;
-  } catch {}
+  } catch {
+    // Intentionally ignore errors - invalid language tags should return undefined
+  }
 };
 
 type SupportedLanguageEntry = {
@@ -58,7 +65,7 @@ const toSupportedLanguageEntry = (language: string): Optional<SupportedLanguageE
 };
 
 const findMatchingSupportedLanguage = (
-  preferred: Iterable<string>,
+  preferred: string[],
   supportedEntries: SupportedLanguageEntry[]
 ): Optional<SupportedLanguageEntry> => {
   for (const language of preferred) {
@@ -93,28 +100,52 @@ const buildSupportedEntries = (supported: readonly string[]): SupportedLanguageE
     .map((language) => toSupportedLanguageEntry(language))
     .filter((entry): entry is SupportedLanguageEntry => isNonNullable(entry));
 
+/**
+ * Matches preferred language tags against supported languages.
+ * Attempts direct matches first, then falls back to base language matches.
+ * Returns undefined when no match is found (unlike findSupportedLanguageTag which returns a default).
+ *
+ * @param preferred - Iterable of preferred language tags
+ * @param supported - Array of supported language tags
+ * @returns The matching supported language tag, or undefined if no match is found
+ */
 export const matchSupportedLanguageTag = (
-  preferred: Iterable<string>,
+  preferred: string[],
   supported: readonly string[]
-): Optional<string> => {
+): {
+  supportedEntries: SupportedLanguageEntry[];
+  match: Optional<SupportedLanguageEntry['original']>;
+} => {
   const supportedEntries = buildSupportedEntries(supported);
 
-  return findMatchingSupportedLanguage(preferred, supportedEntries)?.original;
+  return {
+    supportedEntries,
+    match: findMatchingSupportedLanguage(preferred, supportedEntries)?.original,
+  };
 };
 
+/**
+ * Finds the best matching language tag from preferred languages that is supported.
+ * Attempts direct matches first, then falls back to base language matches.
+ * If no match is found, returns the default language or a supported version of it.
+ *
+ * @param preferred - Iterable of preferred language tags (e.g., from Accept-Language header)
+ * @param supported - Array of supported language tags
+ * @param defaultLanguage - Default language to use when no match is found (default: 'en')
+ * @returns The best matching supported language tag
+ */
 export const findSupportedLanguageTag = (
-  preferred: Iterable<string>,
+  preferred: string[],
   supported: readonly string[],
   defaultLanguage = 'en'
 ): string => {
-  const supportedEntries = buildSupportedEntries(supported);
-  const canonicalDefault = canonicalizeLanguageTag(defaultLanguage)?.toLowerCase();
-
-  const matched = findMatchingSupportedLanguage(preferred, supportedEntries);
+  const { match: matched, supportedEntries } = matchSupportedLanguageTag(preferred, supported);
 
   if (matched) {
-    return matched.original;
+    return matched;
   }
+
+  const canonicalDefault = canonicalizeLanguageTag(defaultLanguage)?.toLowerCase();
 
   const defaultMatch = canonicalDefault
     ? (supportedEntries.find((entry) => entry.canonical === canonicalDefault)?.original ??
