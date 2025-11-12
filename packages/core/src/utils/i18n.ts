@@ -35,15 +35,15 @@ export const getExperienceLanguage = ({
   customLanguages,
   lng,
 }: GetExperienceLanguage) => {
-  const acceptableLanguageCandidates = conditionalArray<string | readonly string[]>(
+  const acceptableLanguageCandidates = conditionalArray<string | string[]>(
     lng?.split(/\s+/).filter(Boolean),
     autoDetect && detectLanguage(ctx),
     fallbackLanguage
   );
-  const acceptableLanguages = acceptableLanguageCandidates.flatMap((language) =>
+  const acceptableLanguages = acceptableLanguageCandidates.flatMap<string>((language) =>
     Array.isArray(language) ? language : [language]
   );
-  const customLanguage = matchSupportedLanguageTag(acceptableLanguages, customLanguages);
+  const { match: customLanguage } = matchSupportedLanguageTag(acceptableLanguages, customLanguages);
 
   if (customLanguage) {
     return customLanguage;

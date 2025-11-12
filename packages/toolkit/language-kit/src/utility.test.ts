@@ -86,10 +86,18 @@ describe('matchSupportedLanguageTag', () => {
   const supported = ['en', 'zh-CN'];
 
   it('should return supported language when found', () => {
-    expect(matchSupportedLanguageTag(['zh-HK'], supported)).toBe('zh-CN');
+    expect(matchSupportedLanguageTag(['zh-HK'], supported).match).toBe('zh-CN');
   });
 
   it('should return undefined when no match found', () => {
-    expect(matchSupportedLanguageTag(['de'], supported)).toBeUndefined();
+    expect(matchSupportedLanguageTag(['de'], supported).match).toBeUndefined();
+  });
+
+  it('should return specific language when provided in params', () => {
+    expect(matchSupportedLanguageTag(['fr'], supported).match).toBeUndefined(); // 'fr' not in supported
+    expect(matchSupportedLanguageTag(['en'], supported).match).toBe('en'); // 'en' is in supported
+    expect(matchSupportedLanguageTag(['zh-CN'], supported).match).toBe('zh-CN'); // Exact match
+    expect(matchSupportedLanguageTag(['zh-HK'], supported).match).toBe('zh-CN'); // Base language fallback
+    expect(matchSupportedLanguageTag(['fr', 'zh-CN'], supported).match).toBe('zh-CN');
   });
 });
