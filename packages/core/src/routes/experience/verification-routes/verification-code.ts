@@ -56,7 +56,9 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
       // If the interaction already identified a user, and email/phone is not in sign up identifiers,
       // then the sign-up/sign-in flow is complete and we are binding a new MFA verification
       const isBindingEmailForMfa =
-        ctx.experienceInteraction.identifiedUserId && !signUp.identifiers.includes(identifier.type);
+        ctx.experienceInteraction.identifiedUserId &&
+        !signUp.identifiers.includes(identifier.type) &&
+        !signUp.secondaryIdentifiers?.some(({ identifier: id }) => id === identifier.type);
 
       ctx.body = await sendCode({
         identifier,
