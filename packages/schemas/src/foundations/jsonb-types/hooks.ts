@@ -1,10 +1,11 @@
 import { z } from 'zod';
 
 /**
- * We categorize the hook events into two types:
+ * We categorize the hook events into three types:
  *
  * InteractionHookEvent: The hook events that are triggered by user interactions.
  * DataHookEvent: The hook events that are triggered by Logto data mutations.
+ * ExceptionHookEvent: The hook events that are triggered on exceptions.
  */
 
 // InteractionHookEvent

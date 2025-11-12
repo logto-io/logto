@@ -20,7 +20,7 @@ import {
   hasRegisteredDataHookEvent,
 } from './utils.js';
 
-type DataHookMetadata = {
+export type DataHookMetadata = {
   userAgent?: string;
   ip: string;
 } & Partial<InteractionApiMetadata>;

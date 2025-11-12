@@ -1,8 +1,6 @@
 import {
-  type ExceptionHookEventPayload,
   LogResult,
   userInfoSelectFields,
-  type DataHookEventPayload,
   type Hook,
   type HookConfig,
   type HookEvent,
@@ -23,6 +21,7 @@ import {
   type ExceptionHookContextManager,
   type DataHookContextManager,
   type InteractionHookContextManager,
+  type DataHookMetadata,
 } from './context-manager.js';
 import { generateHookTestPayload, parseResponse, sendWebhookRequest } from './utils.js';
 
@@ -159,34 +158,7 @@ export const createHookLibrary = (queries: Queries) => {
       return;
     }
 
-    const found = await findAllHooks();
-
-    // Fetch application detail if available
-    const { applicationId } = contextManager.metadata;
-    const application = applicationId
-      ? await trySafe(async () => findApplicationById(applicationId))
-      : undefined;
-
-    // Filter hooks that match each events
-    const webhooks = contextManager.contextArray.flatMap(({ event, ...rest }) => {
-      const hooks = found.filter(
-        ({ event: hookEvent, events, enabled }) =>
-          enabled && (events.length > 0 ? events.includes(event) : event === hookEvent)
-      );
-
-      const payload = {
-        event,
-        createdAt: new Date().toISOString(),
-        ...contextManager.metadata,
-        ...conditional(
-          application && { application: pick(application, 'id', 'type', 'name', 'description') }
-        ),
-        ...rest,
-      } satisfies BetterOmit<DataHookEventPayload, 'hookId'>;
-
-      return hooks.map((hook) => ({ hook, payload }));
-    });
-
+    const webhooks = await buildMutationWebhooks(contextManager);
     await sendWebhooks(webhooks, consoleLog);
   };
 
@@ -201,34 +173,7 @@ export const createHookLibrary = (queries: Queries) => {
       return;
     }
 
-    const found = await findAllHooks();
-
-    // Fetch application detail if available
-    const { applicationId } = contextManager.metadata;
-    const application = applicationId
-      ? await trySafe(async () => findApplicationById(applicationId))
-      : undefined;
-
-    // Filter hooks that match each events
-    const webhooks = contextManager.contextArray.flatMap(({ event, ...rest }) => {
-      const hooks = found.filter(
-        ({ event: hookEvent, events, enabled }) =>
-          enabled && (events.length > 0 ? events.includes(event) : event === hookEvent)
-      );
-
-      const payload = {
-        event,
-        createdAt: new Date().toISOString(),
-        ...contextManager.metadata,
-        ...conditional(
-          application && { application: pick(application, 'id', 'type', 'name', 'description') }
-        ),
-        ...rest,
-      } satisfies BetterOmit<ExceptionHookEventPayload, 'hookId'>;
-
-      return hooks.map((hook) => ({ hook, payload }));
-    });
-
+    const webhooks = await buildMutationWebhooks(contextManager);
     await sendWebhooks(webhooks, consoleLog);
   };
 
@@ -266,6 +211,45 @@ export const createHookLibrary = (queries: Queries) => {
       });
     }
   };
+
+  /**
+   * Shared builder to construct webhook invocation list for data-like mutation contexts.
+   * Declared at module scope to satisfy linting rules.
+   */
+  async function buildMutationWebhooks<Event extends HookEvent>({
+    contextArray,
+    metadata,
+  }: {
+    contextArray: Array<{ event: Event } & Record<string, unknown>>;
+    metadata: DataHookMetadata;
+  }) {
+    const foundHooks = await findAllHooks();
+
+    // Fetch application detail if available
+    const { applicationId } = metadata;
+    const application = applicationId
+      ? await trySafe(async () => findApplicationById(applicationId))
+      : undefined;
+
+    return contextArray.flatMap(({ event, ...rest }) => {
+      const hooks = foundHooks.filter(
+        ({ event: hookEvent, events, enabled }) =>
+          enabled && (events.length > 0 ? events.includes(event) : event === hookEvent)
+      );
+
+      const payload = {
+        event,
+        createdAt: new Date().toISOString(),
+        ...metadata,
+        ...conditional(
+          application && { application: pick(application, 'id', 'type', 'name', 'description') }
+        ),
+        ...rest,
+      };
+
+      return hooks.map((hook) => ({ hook, payload }));
+    });
+  }
 
   return {
     triggerInteractionHooks,
