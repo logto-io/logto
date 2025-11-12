@@ -5,6 +5,8 @@ import { type ParameterizedContext } from 'koa';
 import type Libraries from '#src/tenants/Libraries.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
+import RequestError from '../errors/RequestError/index.js';
+
 import { koaManagementApiHooks, type WithHookContext } from './koa-management-api-hooks.js';
 
 const { jest } = import.meta;
@@ -16,9 +18,11 @@ const notToBeCalled = () => {
 describe('koaManagementApiHooks', () => {
   const next = jest.fn();
   const triggerDataHooks = jest.fn();
+  const triggerExceptionHooks = jest.fn();
   // @ts-expect-error mock
   const mockHooksLibrary: Libraries['hooks'] = {
     triggerDataHooks,
+    triggerExceptionHooks,
   };
 
   it("should do nothing if there's no hook context", async () => {
@@ -99,6 +103,42 @@ describe('koaManagementApiHooks', () => {
               params: ctxParams.params,
               matchedRoute: route,
               status: 200,
+            },
+          ],
+        })
+      );
+    });
+  });
+
+  describe('exception hooks', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should trigger exception hooks on error', async () => {
+      const error = new RequestError({ code: 'session.verification_blocked_too_many_attempts' });
+      const ctx: ParameterizedContext<unknown, WithHookContext> = {
+        ...createContextWithRouteParameters(),
+        header: {},
+        appendDataHookContext: notToBeCalled,
+        appendExceptionHookContext: notToBeCalled,
+      };
+      next.mockImplementation(() => {
+        ctx.appendExceptionHookContext('Identifier.Lockout', { error });
+        throw error;
+      });
+
+      await expect(koaManagementApiHooks(mockHooksLibrary)(ctx, next)).rejects.toThrowError(error);
+
+      expect(triggerExceptionHooks).toBeCalledTimes(1);
+      expect(triggerExceptionHooks).toBeCalledWith(
+        expect.any(ConsoleLog),
+        expect.objectContaining({
+          metadata: { userAgent: ctx.header['user-agent'], ip: ctx.ip },
+          contextArray: [
+            {
+              error,
+              event: 'Identifier.Lockout',
             },
           ],
         })

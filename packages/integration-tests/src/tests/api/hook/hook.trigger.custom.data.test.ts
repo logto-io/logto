@@ -25,7 +25,7 @@ import WebhookMockServer from './WebhookMockServer.js';
 import { assertHookLogResult } from './utils.js';
 
 describe('manual data hook tests', () => {
-  const webbHookMockServer = new WebhookMockServer(9999);
+  const webHookMockServer = new WebhookMockServer(9999);
   const webHookApi = new WebHookApiTest();
   const userApi = new UserApiTest();
   const organizationApi = new OrganizationApiTest();
@@ -33,18 +33,18 @@ describe('manual data hook tests', () => {
   const ssoConnectorApi = new SsoConnectorApi();
 
   beforeAll(async () => {
-    await webbHookMockServer.listen();
+    await webHookMockServer.listen();
   });
 
   afterAll(async () => {
-    await webbHookMockServer.close();
+    await webHookMockServer.close();
   });
 
   beforeEach(async () => {
     await webHookApi.create({
       name: hookName,
       events: [...hookEvents],
-      config: { url: webbHookMockServer.endpoint },
+      config: { url: webHookMockServer.endpoint },
     });
   });
 

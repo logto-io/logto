@@ -191,7 +191,7 @@ export const createHookLibrary = (queries: Queries) => {
   };
 
   /**
-   * Trigger data hooks with the given data mutation context. All context objects will be used to trigger hooks.
+   * Trigger exception hooks with the given exception mutation context. All context objects will be used to trigger hooks.
    */
   const triggerExceptionHooks = async (
     consoleLog: ConsoleLog,
