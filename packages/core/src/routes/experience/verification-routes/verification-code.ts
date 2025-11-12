@@ -1,5 +1,6 @@
 import { TemplateType } from '@logto/connector-kit';
 import {
+  AlternativeSignUpIdentifier,
   InteractionEvent,
   SignInIdentifier,
   verificationCodeIdentifierGuard,
@@ -58,7 +59,10 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
       const isBindingEmailForMfa =
         ctx.experienceInteraction.identifiedUserId &&
         !signUp.identifiers.includes(identifier.type) &&
-        !signUp.secondaryIdentifiers?.some(({ identifier: id }) => id === identifier.type);
+        !signUp.secondaryIdentifiers?.some(
+          ({ identifier: id }) =>
+            id === identifier.type || id === AlternativeSignUpIdentifier.EmailOrPhone
+        );
 
       ctx.body = await sendCode({
         identifier,
