@@ -19,6 +19,8 @@
     "lint:report": "pnpm lint --format json --output-file report.json"
   },
   "devDependencies": {
+    "@logto/react": "^4.0.6",
+    "@logto/schemas": "workspace:^",
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/eslint-config-react": "6.0.2",
     "@silverhand/ts-config": "6.0.0",

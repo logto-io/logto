@@ -70,6 +70,12 @@ importers:
 
   packages/account-center:
     devDependencies:
+      '@logto/react':
+        specifier: ^4.0.6
+        version: 4.0.6(react@18.3.1)
+      '@logto/schemas':
+        specifier: workspace:^
+        version: link:../schemas
       '@silverhand/eslint-config':
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.5.3)(typescript@5.5.3)
