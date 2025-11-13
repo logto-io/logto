@@ -24,7 +24,7 @@ import { generateEmail, generatePassword } from '#src/utils.js';
 import WebhookMockServer from './WebhookMockServer.js';
 import { assertHookLogResult } from './utils.js';
 
-const webbHookMockServer = new WebhookMockServer(9999);
+const webHookMockServer = new WebhookMockServer(9999);
 const userNamePrefix = 'hookTriggerTestUser';
 const username = `${userNamePrefix}_0`;
 const password = generatePassword();
@@ -42,13 +42,13 @@ beforeAll(async () => {
       password: true,
       verify: false,
     }),
-    webbHookMockServer.listen(),
+    webHookMockServer.listen(),
     userApi.create({ username, password }),
   ]);
 });
 
 afterAll(async () => {
-  await Promise.all([userApi.cleanUp(), webbHookMockServer.close()]);
+  await Promise.all([userApi.cleanUp(), webHookMockServer.close()]);
 });
 
 describe('trigger invalid hook', () => {
@@ -82,17 +82,17 @@ describe('interaction api trigger hooks', () => {
       webHookApi.create({
         name: 'interactionHookEventListener',
         events: Object.values(InteractionHookEvent),
-        config: { url: webbHookMockServer.endpoint },
+        config: { url: webHookMockServer.endpoint },
       }),
       webHookApi.create({
         name: 'dataHookEventListener',
         events: hookEvents.filter((event) => !(event in InteractionHookEvent)),
-        config: { url: webbHookMockServer.endpoint },
+        config: { url: webHookMockServer.endpoint },
       }),
       webHookApi.create({
         name: 'registerOnlyInteractionHookEventListener',
         events: [InteractionHookEvent.PostRegister],
-        config: { url: webbHookMockServer.endpoint },
+        config: { url: webHookMockServer.endpoint },
       }),
     ]);
   });

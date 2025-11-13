@@ -41,7 +41,6 @@ export const assertHookLogResult = async (
 
   if (assertions.hookPayload) {
     expect(result).toEqual(LogResult.Success);
-    expect(payload.response).toBeTruthy();
 
     const { body } = mockHookResponseGuard.parse(payload.response);
     expect(verifySignature(body.rawPayload, signingKey, body.signature)).toBeTruthy();

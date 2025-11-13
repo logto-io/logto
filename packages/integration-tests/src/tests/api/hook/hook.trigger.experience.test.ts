@@ -9,7 +9,7 @@ import {
 import { deleteUser } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { SsoConnectorApi } from '#src/api/sso-connector.js';
-import { initExperienceClient, logoutClient, processSession } from '#src/helpers/client.js';
+import { initExperienceClient, processSession, logoutClient } from '#src/helpers/client.js';
 import { resetPasswordlessConnectors } from '#src/helpers/connector.js';
 import {
   fulfillUserEmail,
@@ -32,7 +32,7 @@ import { generateEmail, generatePassword, randomString } from '#src/utils.js';
 import WebhookMockServer from './WebhookMockServer.js';
 import { assertHookLogResult } from './utils.js';
 
-const webbHookMockServer = new WebhookMockServer(9999);
+const webHookMockServer = new WebhookMockServer(9999);
 const userNamePrefix = 'experienceApiHookTriggerTestUser';
 const username = `${userNamePrefix}_0`;
 const password = generatePassword();
@@ -52,7 +52,7 @@ beforeAll(async () => {
       password: true,
       verify: false,
     }),
-    webbHookMockServer.listen(),
+    webHookMockServer.listen(),
     userApi.create({ username, password }),
   ]);
   await updateSignInExperience({
@@ -64,7 +64,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await Promise.all([userApi.cleanUp(), webbHookMockServer.close()]);
+  await Promise.all([userApi.cleanUp(), webHookMockServer.close()]);
 });
 
 afterEach(async () => {
@@ -108,17 +108,17 @@ describe('experience api hook trigger', () => {
       webHookApi.create({
         name: 'interactionHookEventListener',
         events: Object.values(InteractionHookEvent),
-        config: { url: webbHookMockServer.endpoint },
+        config: { url: webHookMockServer.endpoint },
       }),
       webHookApi.create({
         name: 'dataHookEventListener',
         events: hookEvents.filter((event) => !(event in InteractionHookEvent)),
-        config: { url: webbHookMockServer.endpoint },
+        config: { url: webHookMockServer.endpoint },
       }),
       webHookApi.create({
         name: 'registerOnlyInteractionHookEventListener',
         events: [InteractionHookEvent.PostRegister],
-        config: { url: webbHookMockServer.endpoint },
+        config: { url: webHookMockServer.endpoint },
       }),
     ]);
   });
@@ -291,7 +291,7 @@ describe('organization jit provisioning hook trigger', () => {
     await webHookApi.create({
       name: hookName,
       events: ['Organization.Membership.Updated'],
-      config: { url: webbHookMockServer.endpoint },
+      config: { url: webHookMockServer.endpoint },
     });
   });
 
@@ -341,5 +341,62 @@ describe('organization jit provisioning hook trigger', () => {
     await assertOrganizationMembershipUpdated(organization.id);
 
     await deleteUser(userId);
+  });
+});
+
+describe('should trigger `Identifier.Lockout` event when user repeatedly fails to sign in', () => {
+  const hookName = 'identifierLockoutHookEventListener';
+
+  const testIdentifier = {
+    type: SignInIdentifier.Username,
+    value: `${userNamePrefix}_lockout`,
+  };
+  const maxAttempts = 3;
+  // eslint-disable-next-line @silverhand/fp/no-let
+  let userId: string;
+
+  beforeAll(async () => {
+    await enableAllPasswordSignInMethods({
+      identifiers: [SignInIdentifier.Username],
+      password: true,
+      verify: false,
+    });
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    userId = await registerNewUserUsernamePassword(testIdentifier.value, generatePassword());
+
+    await updateSignInExperience({
+      sentinelPolicy: { maxAttempts: 3, lockoutDuration: 1 },
+    });
+
+    await webHookApi.create({
+      name: hookName,
+      events: ['Identifier.Lockout'],
+      config: { url: webHookMockServer.endpoint },
+    });
+  });
+
+  afterAll(async () => {
+    await deleteUser(userId);
+  });
+
+  it('should log lockout hook after max failed attempts', async () => {
+    // eslint-disable-next-line @silverhand/fp/no-let, @silverhand/fp/no-mutation
+    for (let i = 0; i < maxAttempts; i++) {
+      // Ignore sign-in failure
+      // eslint-disable-next-line no-await-in-loop
+      await expect(
+        signInWithPassword({
+          identifier: testIdentifier,
+          password: 'wrong_password',
+        })
+      ).rejects.toThrowError();
+    }
+
+    await assertHookLogResult(webHookApi.hooks.get(hookName)!, 'Identifier.Lockout', {
+      hookPayload: {
+        event: 'Identifier.Lockout',
+        ...testIdentifier,
+      },
+    });
   });
 });

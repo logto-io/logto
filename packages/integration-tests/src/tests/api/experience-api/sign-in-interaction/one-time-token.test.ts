@@ -26,6 +26,12 @@ const { user, userProfile } = await generateNewUser({
 });
 
 describe('Sign-in interaction with one-time token', () => {
+  beforeAll(async () => {
+    await updateSignInExperience({
+      sentinelPolicy: {},
+    });
+  });
+
   it('should successfully sign-in with a one-time token', async () => {
     const client = await initExperienceClient({
       interactionEvent: InteractionEvent.SignIn,

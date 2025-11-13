@@ -1,7 +1,6 @@
 import {
   LogResult,
   userInfoSelectFields,
-  type DataHookEventPayload,
   type Hook,
   type HookConfig,
   type HookEvent,
@@ -19,8 +18,10 @@ import { LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';
 
 import {
-  type DataHookContextManager,
+  type HookContextManager,
   type InteractionHookContextManager,
+  type HookMetadata,
+  type HookContext,
 } from './context-manager.js';
 import { generateHookTestPayload, parseResponse, sendWebhookRequest } from './utils.js';
 
@@ -149,42 +150,31 @@ export const createHookLibrary = (queries: Queries) => {
   /**
    * Trigger data hooks with the given data mutation context. All context objects will be used to trigger hooks.
    */
-  const triggerDataHooks = async (
-    consoleLog: ConsoleLog,
-    contextManager: DataHookContextManager
-  ) => {
-    if (contextManager.contextArray.length === 0) {
+  const triggerDataHooks = async (consoleLog: ConsoleLog, contextManager: HookContextManager) => {
+    if (contextManager.dataHookContextArray.length === 0) {
       return;
     }
 
-    const found = await findAllHooks();
+    const { dataHookContextArray: contextArray, metadata } = contextManager;
 
-    // Fetch application detail if available
-    const { applicationId } = contextManager.metadata;
-    const application = applicationId
-      ? await trySafe(async () => findApplicationById(applicationId))
-      : undefined;
+    const webhooks = await buildWebhooks({ contextArray, metadata });
+    await sendWebhooks(webhooks, consoleLog);
+  };
 
-    // Filter hooks that match each events
-    const webhooks = contextManager.contextArray.flatMap(({ event, ...rest }) => {
-      const hooks = found.filter(
-        ({ event: hookEvent, events, enabled }) =>
-          enabled && (events.length > 0 ? events.includes(event) : event === hookEvent)
-      );
+  /**
+   * Trigger exception hooks with the given exception mutation context. All context objects will be used to trigger hooks.
+   */
+  const triggerExceptionHooks = async (
+    consoleLog: ConsoleLog,
+    contextManager: HookContextManager
+  ) => {
+    if (contextManager.exceptionHookContextArray.length === 0) {
+      return;
+    }
 
-      const payload = {
-        event,
-        createdAt: new Date().toISOString(),
-        ...contextManager.metadata,
-        ...conditional(
-          application && { application: pick(application, 'id', 'type', 'name', 'description') }
-        ),
-        ...rest,
-      } satisfies BetterOmit<DataHookEventPayload, 'hookId'>;
+    const { exceptionHookContextArray: contextArray, metadata } = contextManager;
 
-      return hooks.map((hook) => ({ hook, payload }));
-    });
-
+    const webhooks = await buildWebhooks({ contextArray, metadata });
     await sendWebhooks(webhooks, consoleLog);
   };
 
@@ -223,9 +213,49 @@ export const createHookLibrary = (queries: Queries) => {
     }
   };
 
+  /**
+   * Shared builder to construct webhook invocation list for data-like mutation contexts.
+   */
+  async function buildWebhooks<Event extends HookEvent>({
+    contextArray,
+    metadata,
+  }: {
+    contextArray: Array<HookContext & { event: Event }>;
+    metadata: HookMetadata;
+  }) {
+    const foundHooks = await findAllHooks();
+
+    // Fetch application detail if available
+    const { applicationId } = metadata;
+    const application =
+      foundHooks.length > 0 && applicationId
+        ? await trySafe(async () => findApplicationById(applicationId))
+        : undefined;
+
+    return contextArray.flatMap(({ event, ...rest }) => {
+      const hooks = foundHooks.filter(
+        ({ event: hookEvent, events, enabled }) =>
+          enabled && (events.length > 0 ? events.includes(event) : event === hookEvent)
+      );
+
+      const payload = {
+        event,
+        createdAt: new Date().toISOString(),
+        ...metadata,
+        ...conditional(
+          application && { application: pick(application, 'id', 'type', 'name', 'description') }
+        ),
+        ...rest,
+      };
+
+      return hooks.map((hook) => ({ hook, payload }));
+    });
+  }
+
   return {
     triggerInteractionHooks,
     triggerDataHooks,
+    triggerExceptionHooks,
     triggerTestHook,
   };
 };

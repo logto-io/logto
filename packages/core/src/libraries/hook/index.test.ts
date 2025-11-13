@@ -79,9 +79,7 @@ const { triggerInteractionHooks, triggerTestHook, triggerDataHooks } = createHoo
   })
 );
 
-const { DataHookContextManager, InteractionHookContextManager } = await import(
-  './context-manager.js'
-);
+const { HookContextManager, InteractionHookContextManager } = await import('./context-manager.js');
 
 describe('triggerInteractionHooks()', () => {
   afterEach(() => {
@@ -197,8 +195,8 @@ describe('triggerDataHooks()', () => {
     const metadata = { userAgent: 'ua', ip: 'ip' };
     const hookData = { path: '/test', method: 'POST', data: { success: true } };
 
-    const hooksManager = new DataHookContextManager(metadata);
-    hooksManager.appendContext('Role.Created', hookData);
+    const hooksManager = new HookContextManager(metadata);
+    hooksManager.appendDataHookContext('Role.Created', hookData);
 
     await triggerDataHooks(new ConsoleLog(), hooksManager);
 
@@ -252,9 +250,9 @@ describe('triggerDataHooks()', () => {
       sessionId: 'some_jti',
     };
 
-    const hooksManager = new DataHookContextManager(metadata);
+    const hooksManager = new HookContextManager(metadata);
 
-    hooksManager.appendContext('Role.Created', {
+    hooksManager.appendDataHookContext('Role.Created', {
       data: { id: 'user_id', username: 'user' },
     });
 

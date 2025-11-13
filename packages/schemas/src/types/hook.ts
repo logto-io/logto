@@ -1,7 +1,11 @@
 import { z } from 'zod';
 
 import { Hooks, type Application, type User } from '../db-entries/index.js';
-import { type DataHookEvent, type InteractionHookEvent } from '../foundations/index.js';
+import {
+  type ExceptionHookEvent,
+  type DataHookEvent,
+  type InteractionHookEvent,
+} from '../foundations/index.js';
 
 import { type InteractionEvent } from './interactions.js';
 import { type userInfoSelectFields } from './user.js';
@@ -90,4 +94,10 @@ export type DataHookEventPayload = {
   Partial<ManagementApiContext> &
   Record<string, unknown>;
 
-export type HookEventPayload = InteractionHookEventPayload | DataHookEventPayload;
+export type ExceptionHookEventPayload = Omit<DataHookEventPayload, 'event'> & {
+  event: ExceptionHookEvent;
+};
+export type HookEventPayload =
+  | InteractionHookEventPayload
+  | DataHookEventPayload
+  | ExceptionHookEventPayload;
