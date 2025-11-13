@@ -7,8 +7,11 @@ import Callback from './Callback';
 import PageContextProvider from './Providers/PageContextProvider';
 import PageContext from './Providers/PageContextProvider/PageContext';
 import BrandingHeader from './components/BrandingHeader';
+import initI18n from './i18n/init';
 
 import '@/scss/normalized.scss';
+
+void initI18n();
 
 const redirectUri = `${window.location.origin}/account-center`;
 

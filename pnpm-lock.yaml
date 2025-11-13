@@ -73,6 +73,12 @@ importers:
       '@logto/core-kit':
         specifier: workspace:^
         version: link:../toolkit/core-kit
+      '@logto/language-kit':
+        specifier: workspace:^
+        version: link:../toolkit/language-kit
+      '@logto/phrases-account-center':
+        specifier: workspace:^
+        version: link:../phrases-account-center
       '@logto/react':
         specifier: ^4.0.6
         version: 4.0.6(react@18.3.1)
@@ -85,6 +91,9 @@ importers:
       '@silverhand/eslint-config-react':
         specifier: 6.0.2
         version: 6.0.2(eslint@8.57.0)(postcss@8.5.3)(prettier@3.5.3)(stylelint@15.11.0(typescript@5.5.3))(typescript@5.5.3)
+      '@silverhand/essentials':
+        specifier: ^2.9.1
+        version: 2.9.2
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.5.3)
@@ -103,6 +112,12 @@ importers:
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
+      i18next:
+        specifier: ^22.4.15
+        version: 22.4.15
+      i18next-browser-languagedetector:
+        specifier: ^8.0.0
+        version: 8.0.0
       ky:
         specifier: ^1.2.3
         version: 1.2.3
@@ -118,6 +133,9 @@ importers:
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
+      react-i18next:
+        specifier: ^12.3.1
+        version: 12.3.1(i18next@22.4.15)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       stylelint:
         specifier: ^15.0.0
         version: 15.11.0(typescript@5.5.3)
@@ -4489,6 +4507,40 @@ importers:
 
   packages/phrases:
     dependencies:
+      '@logto/language-kit':
+        specifier: workspace:^
+        version: link:../toolkit/language-kit
+      '@silverhand/essentials':
+        specifier: ^2.9.1
+        version: 2.9.2
+      zod:
+        specifier: 3.24.3
+        version: 3.24.3
+    devDependencies:
+      '@silverhand/eslint-config':
+        specifier: 6.0.1
+        version: 6.0.1(eslint@8.57.0)(prettier@3.5.3)(typescript@5.5.3)
+      '@silverhand/ts-config':
+        specifier: 6.0.0
+        version: 6.0.0(typescript@5.5.3)
+      eslint:
+        specifier: ^8.56.0
+        version: 8.57.0
+      lint-staged:
+        specifier: ^15.0.0
+        version: 15.0.2
+      prettier:
+        specifier: ^3.5.3
+        version: 3.5.3
+      typescript:
+        specifier: ^5.5.3
+        version: 5.5.3
+
+  packages/phrases-account-center:
+    dependencies:
+      '@logto/core-kit':
+        specifier: workspace:^
+        version: link:../toolkit/core-kit
       '@logto/language-kit':
         specifier: workspace:^
         version: link:../toolkit/language-kit
@@ -11657,6 +11709,7 @@ packages:
   keygrip@1.1.0:
     resolution: {integrity: sha512-iYSchDJ+liQ8iwbSI2QqsQOvqv58eJCEanyJPJi+Khyu8smkcKSFUCbPwzFcL7YVtZ6eONjqRX/38caJ7QjRAQ==}
     engines: {node: '>= 0.6'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
@@ -17261,7 +17314,7 @@ snapshots:
 
   '@manypkg/find-root@1.1.0':
     dependencies:
-      '@babel/runtime': 7.27.0
+      '@babel/runtime': 7.28.4
       '@types/node': 12.20.55
       find-up: 4.1.0
       fs-extra: 8.1.0
@@ -18914,7 +18967,7 @@ snapshots:
 
   '@tanem/svg-injector@10.1.68':
     dependencies:
-      '@babel/runtime': 7.27.0
+      '@babel/runtime': 7.28.4
       content-type: 1.0.5
       tslib: 2.8.1
 
@@ -21422,7 +21475,7 @@ snapshots:
 
   dom-helpers@3.4.0:
     dependencies:
-      '@babel/runtime': 7.27.0
+      '@babel/runtime': 7.28.4
 
   domexception@4.0.0:
     dependencies:
@@ -22908,11 +22961,11 @@ snapshots:
 
   i18next-browser-languagedetector@8.0.0:
     dependencies:
-      '@babel/runtime': 7.27.0
+      '@babel/runtime': 7.28.4
 
   i18next@22.4.15:
     dependencies:
-      '@babel/runtime': 7.27.0
+      '@babel/runtime': 7.28.4
 
   iconv-lite@0.4.24:
     dependencies:
@@ -26161,7 +26214,7 @@ snapshots:
 
   react-error-boundary@3.1.4(react@18.3.1):
     dependencies:
-      '@babel/runtime': 7.27.0
+      '@babel/runtime': 7.28.4
       react: 18.3.1
 
   react-fast-compare@3.2.1: {}
@@ -26192,7 +26245,7 @@ snapshots:
 
   react-i18next@12.3.1(i18next@22.4.15)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      '@babel/runtime': 7.27.0
+      '@babel/runtime': 7.28.4
       html-parse-stringify: 3.0.1
       i18next: 22.4.15
       react: 18.3.1
@@ -26309,7 +26362,7 @@ snapshots:
 
   react-svg@16.3.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      '@babel/runtime': 7.27.0
+      '@babel/runtime': 7.28.4
       '@tanem/svg-injector': 10.1.68
       '@types/prop-types': 15.7.14
       prop-types: 15.8.1
@@ -26327,7 +26380,7 @@ snapshots:
 
   react-textarea-autosize@8.5.7(@types/react@18.3.3)(react@18.3.1):
     dependencies:
-      '@babel/runtime': 7.27.0
+      '@babel/runtime': 7.28.4
       react: 18.3.1
       use-composed-ref: 1.4.0(@types/react@18.3.3)(react@18.3.1)
       use-latest: 1.3.0(@types/react@18.3.3)(react@18.3.1)

@@ -5,9 +5,21 @@
   align-items: center;
   padding: _.unit(4) _.unit(6);
   min-height: _.unit(16);
-}
+  gap: _.unit(4);
 
-.logo {
-  max-height: _.unit(10);
-  width: auto;
+  .logo {
+    max-height: _.unit(10);
+    width: auto;
+  }
+
+  .splitter {
+    height: 16px;
+    width: 1px;
+    background-color: var(--color-border);
+  }
+
+  .title {
+    font: var(--font-title-1);
+    color: var(--color-text-strong);
+  }
 }
