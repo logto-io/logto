@@ -14,8 +14,7 @@ const Callback = () => {
 
   if (error) {
     return (
-      <main>
-        <h1>Account Center</h1>
+      <>
         <p>We couldn&apos;t complete the sign in callback.</p>
         <pre>{error.message}</pre>
         <button
@@ -26,16 +25,11 @@ const Callback = () => {
         >
           Back to sign in
         </button>
-      </main>
+      </>
     );
   }
 
-  return (
-    <main>
-      <h1>Account Center</h1>
-      <p>Finishing sign in…</p>
-    </main>
-  );
+  return <p>Finishing sign in…</p>;
 };
 
 export default Callback;

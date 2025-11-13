@@ -1,8 +1,14 @@
 import { type IdTokenClaims, LogtoProvider, useLogto } from '@logto/react';
 import { accountCenterApplicationId } from '@logto/schemas';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
+import styles from './App.module.scss';
 import Callback from './Callback';
+import PageContextProvider from './Providers/PageContextProvider';
+import PageContext from './Providers/PageContextProvider/PageContext';
+import BrandingHeader from './components/BrandingHeader';
+
+import '@/scss/normalized.scss';
 
 const redirectUri = `${window.location.origin}/account-center`;
 
@@ -12,6 +18,7 @@ const Main = () => {
   const { isAuthenticated, isLoading, getIdTokenClaims, signIn, signOut } = useLogto();
   const [user, setUser] = useState<Pick<IdTokenClaims, 'sub' | 'username'>>();
   const [isLoadingUser, setIsLoadingUser] = useState(false);
+  const { isLoadingExperience, experienceError } = useContext(PageContext);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -45,42 +52,53 @@ const Main = () => {
   }, [isAuthenticated, isInCallback, isLoading, signIn]);
 
   if (isInCallback) {
-    return <Callback />;
+    return (
+      <div>
+        <Callback />
+      </div>
+    );
   }
 
-  if (isLoading || isLoadingUser) {
+  if (experienceError) {
     return (
-      <main>
-        <h1>Account Center</h1>
-        <p>Loading...</p>
-      </main>
+      <div>
+        <p>We were unable to load your experience settings. Please refresh the page.</p>
+      </div>
+    );
+  }
+
+  if (isLoading || isLoadingUser || isLoadingExperience) {
+    return (
+      <div>
+        <p>Loading…</p>
+      </div>
     );
   }
 
   if (!isAuthenticated) {
     return (
-      <main>
-        <h1>Account Center</h1>
+      <div>
         <p>Redirecting to sign in…</p>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main>
-      <h1>Account Center</h1>
+    <div>
       <p>
         Signed in as <strong>{user?.username ?? user?.sub ?? 'your account'}</strong>.
       </p>
-      <button
-        type="button"
-        onClick={() => {
-          void signOut(redirectUri);
-        }}
-      >
-        Sign out
-      </button>
-    </main>
+      <div>
+        <button
+          type="button"
+          onClick={() => {
+            void signOut(redirectUri);
+          }}
+        >
+          Sign out
+        </button>
+      </div>
+    </div>
   );
 };
 
@@ -91,7 +109,12 @@ const App = () => (
       appId: accountCenterApplicationId,
     }}
   >
-    <Main />
+    <PageContextProvider>
+      <div className={styles.app}>
+        <BrandingHeader />
+        <Main />
+      </div>
+    </PageContextProvider>
   </LogtoProvider>
 );
 

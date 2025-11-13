@@ -1,0 +1,13 @@
+@use '@/scss/underscore' as _;
+
+.header {
+  display: flex;
+  align-items: center;
+  padding: _.unit(4) _.unit(6);
+  min-height: _.unit(16);
+}
+
+.logo {
+  max-height: _.unit(10);
+  width: auto;
+}

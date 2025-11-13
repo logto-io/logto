@@ -70,6 +70,9 @@ importers:
 
   packages/account-center:
     devDependencies:
+      '@logto/core-kit':
+        specifier: workspace:^
+        version: link:../toolkit/core-kit
       '@logto/react':
         specifier: ^4.0.6
         version: 4.0.6(react@18.3.1)
@@ -100,6 +103,9 @@ importers:
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
+      ky:
+        specifier: ^1.2.3
+        version: 1.2.3
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -112,6 +118,9 @@ importers:
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
+      stylelint:
+        specifier: ^15.0.0
+        version: 15.11.0(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
