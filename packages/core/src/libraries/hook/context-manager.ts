@@ -67,7 +67,7 @@ export class HookContextManager {
 
   constructor(public metadata: HookMetadata) {}
 
-  getRegisteredDataHookEventContext(
+  getRegisteredHookEventContext(
     ctx: IRouterParamContext & Context
   ): Readonly<[DataHookEvent, HookContext]> | undefined {
     const { method, _matchedRoute: matchedRoute } = ctx;

@@ -376,5 +376,41 @@ describe('account', () => {
 
       await deleteDefaultTenantUser(user.id);
     });
+
+    it('should throw error and trigger sentinel policy when failed to verify password', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password);
+
+      await updateSignInExperience({
+        sentinelPolicy: {
+          maxAttempts: 2,
+          lockoutDuration: 1,
+        },
+      });
+
+      await expectRejects(createVerificationRecordByPassword(api, 'wrong-password'), {
+        code: 'session.invalid_credentials',
+        status: 422,
+      });
+
+      // Second attempt to trigger the lockout
+      await expectRejects(createVerificationRecordByPassword(api, 'wrong-password'), {
+        code: 'session.verification_blocked_too_many_attempts',
+        status: 400,
+      });
+
+      const hook = webHookApi.hooks.get(hookName)!;
+      await assertHookLogResult(hook, 'Identifier.Lockout', {
+        hookPayload: {
+          event: 'Identifier.Lockout',
+        },
+      });
+
+      await deleteDefaultTenantUser(user.id);
+
+      await updateSignInExperience({
+        sentinelPolicy: {},
+      });
+    });
   });
 });

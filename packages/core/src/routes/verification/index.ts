@@ -38,7 +38,7 @@ export default function verificationRoutes<T extends UserRouter>(
     koaGuard({
       body: z.object({ password: z.string().min(1) }),
       response: z.object({ verificationRecordId: z.string(), expiresAt: z.string() }),
-      status: [201, 422],
+      status: [201, 400, 422],
     }),
     async (ctx, next) => {
       const { id: userId } = ctx.auth;

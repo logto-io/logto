@@ -42,10 +42,10 @@ export const koaManagementApiHooks = <StateT, ContextT extends IRouterParamConte
       await next();
 
       // Auto append pre-registered management API hooks if any
-      const registeredData = hooksContextManager.getRegisteredDataHookEventContext(ctx);
+      const registeredDataHookContext = hooksContextManager.getRegisteredHookEventContext(ctx);
 
-      if (registeredData) {
-        hooksContextManager.appendDataHookContext(...registeredData);
+      if (registeredDataHookContext) {
+        hooksContextManager.appendDataHookContext(...registeredDataHookContext);
       }
 
       // Trigger data hooks

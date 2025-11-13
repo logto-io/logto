@@ -381,7 +381,7 @@ describe('should trigger `Identifier.Lockout` event when user repeatedly fails t
 
   it('should log lockout hook after max failed attempts', async () => {
     // eslint-disable-next-line @silverhand/fp/no-let, @silverhand/fp/no-mutation
-    for (let i = 0; i < maxAttempts + 1; i++) {
+    for (let i = 0; i < maxAttempts; i++) {
       // Ignore sign-in failure
       // eslint-disable-next-line no-await-in-loop
       await expect(

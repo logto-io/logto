@@ -1,6 +1,4 @@
 import {
-  type DataHookEvent,
-  type ExceptionHookEvent,
   LogResult,
   userInfoSelectFields,
   type Hook,
@@ -159,7 +157,7 @@ export const createHookLibrary = (queries: Queries) => {
 
     const { dataHookContextArray: contextArray, metadata } = contextManager;
 
-    const webhooks = await buildMutationWebhooks({ contextArray, metadata });
+    const webhooks = await buildWebhooks({ contextArray, metadata });
     await sendWebhooks(webhooks, consoleLog);
   };
 
@@ -176,7 +174,7 @@ export const createHookLibrary = (queries: Queries) => {
 
     const { exceptionHookContextArray: contextArray, metadata } = contextManager;
 
-    const webhooks = await buildMutationWebhooks({ contextArray, metadata });
+    const webhooks = await buildWebhooks({ contextArray, metadata });
     await sendWebhooks(webhooks, consoleLog);
   };
 
@@ -218,11 +216,11 @@ export const createHookLibrary = (queries: Queries) => {
   /**
    * Shared builder to construct webhook invocation list for data-like mutation contexts.
    */
-  async function buildMutationWebhooks<Event extends HookEvent>({
+  async function buildWebhooks<Event extends HookEvent>({
     contextArray,
     metadata,
   }: {
-    contextArray: Array<HookContext & { event: DataHookEvent | ExceptionHookEvent }>;
+    contextArray: Array<HookContext & { event: Event }>;
     metadata: HookMetadata;
   }) {
     const foundHooks = await findAllHooks();
