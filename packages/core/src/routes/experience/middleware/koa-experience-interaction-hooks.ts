@@ -5,8 +5,7 @@ import { type IRouterParamContext } from 'koa-router';
 import { z } from 'zod';
 
 import {
-  DataHookContextManager,
-  ExceptionHookContextManager,
+  HookContextManager,
   InteractionHookContextManager,
 } from '#src/libraries/hook/context-manager.js';
 import { type WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
@@ -21,8 +20,8 @@ export type WithExperienceInteractionHooksContext<
   ContextT extends IRouterParamContext = IRouterParamContext,
 > = ContextT & {
   assignInteractionHookResult: InteractionHookContextManager['assignInteractionHookResult'];
-  appendDataHookContext: DataHookContextManager['appendContext'];
-  appendExceptionHookContext: ExceptionHookContextManager['appendContext'];
+  appendDataHookContext: HookContextManager['appendDataHookContext'];
+  appendExceptionHookContext: HookContextManager['appendExceptionHookContext'];
 };
 
 export function koaExperienceInteractionHooks<
@@ -63,17 +62,14 @@ export function koaExperienceInteractionHooks<
     ctx.assignInteractionHookResult =
       interactionHookContext.assignInteractionHookResult.bind(interactionHookContext);
 
-    const dataHookContext = new DataHookContextManager({
-      ...interactionApiMetadata,
-      ip,
-    });
-    const exceptionHookContext = new ExceptionHookContextManager({
+    const dataHookContext = new HookContextManager({
       ...interactionApiMetadata,
       ip,
     });
 
-    ctx.appendDataHookContext = dataHookContext.appendContext.bind(dataHookContext);
-    ctx.appendExceptionHookContext = exceptionHookContext.appendContext.bind(exceptionHookContext);
+    ctx.appendDataHookContext = dataHookContext.appendDataHookContext.bind(dataHookContext);
+    ctx.appendExceptionHookContext =
+      dataHookContext.appendExceptionHookContext.bind(dataHookContext);
 
     try {
       await next();
@@ -85,14 +81,14 @@ export function koaExperienceInteractionHooks<
         );
       }
 
-      if (dataHookContext.contextArray.length > 0) {
+      if (dataHookContext.dataHookContextArray.length > 0) {
         // Hooks should not crash the app
         void trySafe(triggerDataHooks(getConsoleLogFromContext(ctx), dataHookContext));
       }
     } finally {
-      if (exceptionHookContext.contextArray.length > 0) {
+      if (dataHookContext.exceptionHookContextArray.length > 0) {
         // Hooks should not crash the app
-        void trySafe(triggerExceptionHooks(getConsoleLogFromContext(ctx), exceptionHookContext));
+        void trySafe(triggerExceptionHooks(getConsoleLogFromContext(ctx), dataHookContext));
       }
     }
   };

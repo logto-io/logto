@@ -78,7 +78,7 @@ describe('exception hooks', () => {
           userAgent: ctx.header['user-agent'],
         }),
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        contextArray: expect.arrayContaining([
+        exceptionHookContextArray: expect.arrayContaining([
           {
             error,
             event: 'Identifier.Lockout',

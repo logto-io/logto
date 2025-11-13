@@ -1,4 +1,6 @@
 import {
+  type DataHookEvent,
+  type ExceptionHookEvent,
   LogResult,
   userInfoSelectFields,
   type Hook,
@@ -18,10 +20,10 @@ import { LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';
 
 import {
-  type ExceptionHookContextManager,
-  type DataHookContextManager,
+  type HookContextManager,
   type InteractionHookContextManager,
-  type DataHookMetadata,
+  type HookMetadata,
+  type HookContext,
 } from './context-manager.js';
 import { generateHookTestPayload, parseResponse, sendWebhookRequest } from './utils.js';
 
@@ -150,15 +152,14 @@ export const createHookLibrary = (queries: Queries) => {
   /**
    * Trigger data hooks with the given data mutation context. All context objects will be used to trigger hooks.
    */
-  const triggerDataHooks = async (
-    consoleLog: ConsoleLog,
-    contextManager: DataHookContextManager
-  ) => {
-    if (contextManager.contextArray.length === 0) {
+  const triggerDataHooks = async (consoleLog: ConsoleLog, contextManager: HookContextManager) => {
+    if (contextManager.dataHookContextArray.length === 0) {
       return;
     }
 
-    const webhooks = await buildMutationWebhooks(contextManager);
+    const { dataHookContextArray: contextArray, metadata } = contextManager;
+
+    const webhooks = await buildMutationWebhooks({ contextArray, metadata });
     await sendWebhooks(webhooks, consoleLog);
   };
 
@@ -167,13 +168,15 @@ export const createHookLibrary = (queries: Queries) => {
    */
   const triggerExceptionHooks = async (
     consoleLog: ConsoleLog,
-    contextManager: ExceptionHookContextManager
+    contextManager: HookContextManager
   ) => {
-    if (contextManager.contextArray.length === 0) {
+    if (contextManager.exceptionHookContextArray.length === 0) {
       return;
     }
 
-    const webhooks = await buildMutationWebhooks(contextManager);
+    const { exceptionHookContextArray: contextArray, metadata } = contextManager;
+
+    const webhooks = await buildMutationWebhooks({ contextArray, metadata });
     await sendWebhooks(webhooks, consoleLog);
   };
 
@@ -214,22 +217,22 @@ export const createHookLibrary = (queries: Queries) => {
 
   /**
    * Shared builder to construct webhook invocation list for data-like mutation contexts.
-   * Declared at module scope to satisfy linting rules.
    */
   async function buildMutationWebhooks<Event extends HookEvent>({
     contextArray,
     metadata,
   }: {
-    contextArray: Array<{ event: Event } & Record<string, unknown>>;
-    metadata: DataHookMetadata;
+    contextArray: Array<HookContext & { event: DataHookEvent | ExceptionHookEvent }>;
+    metadata: HookMetadata;
   }) {
     const foundHooks = await findAllHooks();
 
     // Fetch application detail if available
     const { applicationId } = metadata;
-    const application = applicationId
-      ? await trySafe(async () => findApplicationById(applicationId))
-      : undefined;
+    const application =
+      foundHooks.length > 0 && applicationId
+        ? await trySafe(async () => findApplicationById(applicationId))
+        : undefined;
 
     return contextArray.flatMap(({ event, ...rest }) => {
       const hooks = foundHooks.filter(

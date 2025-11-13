@@ -53,7 +53,7 @@ describe('koaManagementApiHooks', () => {
       expect.any(ConsoleLog),
       expect.objectContaining({
         metadata: { userAgent: ctx.header['user-agent'], ip: ctx.ip },
-        contextArray: [
+        dataHookContextArray: [
           {
             event: 'Role.Created',
             data: { id: '123' },
@@ -94,7 +94,7 @@ describe('koaManagementApiHooks', () => {
       expect(triggerDataHooks).toBeCalledWith(
         expect.any(ConsoleLog),
         expect.objectContaining({
-          contextArray: [
+          dataHookContextArray: [
             {
               event,
               data: { key },
@@ -135,7 +135,7 @@ describe('koaManagementApiHooks', () => {
         expect.any(ConsoleLog),
         expect.objectContaining({
           metadata: { userAgent: ctx.header['user-agent'], ip: ctx.ip },
-          contextArray: [
+          exceptionHookContextArray: [
             {
               error,
               event: 'Identifier.Lockout',

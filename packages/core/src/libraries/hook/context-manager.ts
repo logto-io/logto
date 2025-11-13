@@ -19,12 +19,12 @@ import {
   hasRegisteredDataHookEvent,
 } from './utils.js';
 
-export type DataHookMetadata = {
+export type HookMetadata = {
   userAgent?: string;
   ip: string;
 } & Partial<InteractionApiMetadata>;
 
-export type DataHookContext = {
+export type HookContext = {
   /** Data details */
   data?: unknown;
 } & Partial<ManagementApiContext> &
@@ -47,21 +47,29 @@ type UserContext = {
 /**
  * A map of data hook event to its context type for better type hinting.
  */
-export type DataHookContextMap = {
+type DataHookContextMap = {
   'Organization.Membership.Updated': { organizationId: string };
   'User.Created': UserContext;
   'User.Data.Updated': UserContext;
   'User.Deleted': UserContext;
 };
 
-export class DataHookContextManager {
-  contextArray: Array<DataHookContext & { event: DataHookEvent }> = [];
+export class HookContextManager {
+  /**
+   * Data hooks are triggered when certain data mutations occur. E.g. user creation, user update, etc.
+   * Note that these hooks are only triggered for successful requests.
+   */
+  dataHookContextArray: Array<HookContext & { event: DataHookEvent }> = [];
+  /**
+   * Exception hooks are triggered when exceptions occur during request processing.
+   */
+  exceptionHookContextArray: Array<HookContext & { event: ExceptionHookEvent }> = [];
 
-  constructor(public metadata: DataHookMetadata) {}
+  constructor(public metadata: HookMetadata) {}
 
   getRegisteredDataHookEventContext(
     ctx: IRouterParamContext & Context
-  ): Readonly<[DataHookEvent, DataHookContext]> | undefined {
+  ): Readonly<[DataHookEvent, HookContext]> | undefined {
     const { method, _matchedRoute: matchedRoute } = ctx;
 
     const key = buildManagementApiDataHookRegistrationKey(method, matchedRoute);
@@ -79,19 +87,27 @@ export class DataHookContextManager {
     ]);
   }
 
-  appendContext<Event extends DataHookEvent>(
+  appendDataHookContext<Event extends DataHookEvent>(
     event: Event,
     context: Event extends keyof DataHookContextMap
       ? DataHookContextMap[Event] & Partial<ManagementApiContext> & Record<string, unknown>
-      : DataHookContext
+      : HookContext
   ) {
     const { user, ...rest } = context;
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-    this.contextArray.push({
+    this.dataHookContextArray.push({
       event,
       // eslint-disable-next-line no-restricted-syntax -- trust the input
       ...(user ? { data: pick(user as User, ...userInfoSelectFields) } : {}),
       ...rest,
+    });
+  }
+
+  appendExceptionHookContext<Event extends ExceptionHookEvent>(event: Event, context: HookContext) {
+    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+    this.exceptionHookContextArray.push({
+      event,
+      ...context,
     });
   }
 }
@@ -132,27 +148,5 @@ export class InteractionHookContextManager {
    */
   assignInteractionHookResult(result: InteractionHookResult) {
     this.interactionHookResult = result;
-  }
-}
-
-/**
- * The exception hook context manager is a specialized version of `DataHookContextManager` designed to
- * handle exception-related hook events.
- * It allows appending contexts that should be triggered even when the request pipeline encounters errors.
- */
-export class ExceptionHookContextManager {
-  contextArray: Array<DataHookContext & { event: ExceptionHookEvent }> = [];
-
-  constructor(public metadata: DataHookMetadata) {}
-
-  appendContext<Event extends ExceptionHookEvent>(event: Event, context: DataHookContext) {
-    const { user, ...rest } = context;
-    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-    this.contextArray.push({
-      event,
-      // eslint-disable-next-line no-restricted-syntax -- trust the input
-      ...(user ? { data: pick(user as User, ...userInfoSelectFields) } : {}),
-      ...rest,
-    });
   }
 }

@@ -2,16 +2,13 @@ import { trySafe } from '@silverhand/essentials';
 import { type MiddlewareType } from 'koa';
 import { type IRouterParamContext } from 'koa-router';
 
-import {
-  DataHookContextManager,
-  ExceptionHookContextManager,
-} from '#src/libraries/hook/context-manager.js';
+import { HookContextManager } from '#src/libraries/hook/context-manager.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 
 export type WithHookContext<ContextT extends IRouterParamContext = IRouterParamContext> =
-  ContextT & { appendDataHookContext: DataHookContextManager['appendContext'] } & {
-    appendExceptionHookContext: ExceptionHookContextManager['appendContext'];
+  ContextT & { appendDataHookContext: HookContextManager['appendDataHookContext'] } & {
+    appendExceptionHookContext: HookContextManager['appendExceptionHookContext'];
   };
 
 /**
@@ -31,40 +28,36 @@ export const koaManagementApiHooks = <StateT, ContextT extends IRouterParamConte
       ip,
     } = ctx;
 
-    const dataHooksContextManager = new DataHookContextManager({ userAgent, ip });
-    const exceptionHooksContextManager = new ExceptionHookContextManager({ userAgent, ip });
+    const hooksContextManager = new HookContextManager({ userAgent, ip });
 
     /**
      * Append a hook context to trigger management hooks. If multiple contexts are appended, all of
      * them will be triggered.
      */
-    ctx.appendDataHookContext = dataHooksContextManager.appendContext.bind(dataHooksContextManager);
-    ctx.appendExceptionHookContext = exceptionHooksContextManager.appendContext.bind(
-      exceptionHooksContextManager
-    );
+    ctx.appendDataHookContext = hooksContextManager.appendDataHookContext.bind(hooksContextManager);
+    ctx.appendExceptionHookContext =
+      hooksContextManager.appendExceptionHookContext.bind(hooksContextManager);
 
     try {
       await next();
 
       // Auto append pre-registered management API hooks if any
-      const registeredData = dataHooksContextManager.getRegisteredDataHookEventContext(ctx);
+      const registeredData = hooksContextManager.getRegisteredDataHookEventContext(ctx);
 
       if (registeredData) {
-        dataHooksContextManager.appendContext(...registeredData);
+        hooksContextManager.appendDataHookContext(...registeredData);
       }
 
       // Trigger data hooks
-      if (dataHooksContextManager.contextArray.length > 0) {
+      if (hooksContextManager.dataHookContextArray.length > 0) {
         // Hooks should not crash the app
-        void trySafe(
-          hooks.triggerDataHooks(getConsoleLogFromContext(ctx), dataHooksContextManager)
-        );
+        void trySafe(hooks.triggerDataHooks(getConsoleLogFromContext(ctx), hooksContextManager));
       }
     } finally {
-      if (exceptionHooksContextManager.contextArray.length > 0) {
+      if (hooksContextManager.exceptionHookContextArray.length > 0) {
         // Hooks should not crash the app
         void trySafe(
-          hooks.triggerExceptionHooks(getConsoleLogFromContext(ctx), exceptionHooksContextManager)
+          hooks.triggerExceptionHooks(getConsoleLogFromContext(ctx), hooksContextManager)
         );
       }
     }
