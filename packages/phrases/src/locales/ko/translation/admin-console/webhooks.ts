@@ -11,6 +11,7 @@ const webhooks = {
     scope: '권한',
     organization_role: '조직 역할',
     organization_scope: '조직 권한',
+    security: '보안',
   },
   table: {
     name: '이름',

@@ -11,6 +11,7 @@ const webhooks = {
     scope: '權限',
     organization_role: '組織角色',
     organization_scope: '組織權限',
+    security: '安全',
   },
   table: {
     name: '名稱',
