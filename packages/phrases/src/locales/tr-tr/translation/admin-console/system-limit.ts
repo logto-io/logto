@@ -15,6 +15,7 @@ const system_limit = {
     tenant_member: 'tenant üyesi',
     organization: 'organizasyon',
     saml_application: 'SAML uygulaması',
+    custom_domain: 'özel alan adı',
     user_per_organization: 'organizasyon başına kullanıcı',
     organization_user_role: 'organizasyon kullanıcı rolü',
     organization_machine_to_machine_role: 'organizasyon makine arası rol',

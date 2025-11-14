@@ -32,6 +32,7 @@ export const skuQuotaItemPhrasesMap: Record<
   idpInitiatedSsoEnabled: 'idp_initiated_sso_enabled.name',
   samlApplicationsLimit: 'saml_applications_limit.name',
   securityFeaturesEnabled: 'security_features_enabled.name',
+  customDomainsLimit: 'custom_domains_limit.name',
 };
 
 export const skuQuotaItemUnlimitedPhrasesMap: Record<
@@ -63,6 +64,7 @@ export const skuQuotaItemUnlimitedPhrasesMap: Record<
   idpInitiatedSsoEnabled: 'idp_initiated_sso_enabled.unlimited',
   samlApplicationsLimit: 'saml_applications_limit.unlimited',
   securityFeaturesEnabled: 'security_features_enabled.unlimited',
+  customDomainsLimit: 'custom_domains_limit.unlimited',
 };
 
 export const skuQuotaItemLimitedPhrasesMap: Record<
@@ -94,6 +96,7 @@ export const skuQuotaItemLimitedPhrasesMap: Record<
   idpInitiatedSsoEnabled: 'idp_initiated_sso_enabled.limited',
   samlApplicationsLimit: 'saml_applications_limit.limited',
   securityFeaturesEnabled: 'security_features_enabled.limited',
+  customDomainsLimit: 'custom_domains_limit.limited',
 };
 
 export const skuQuotaItemNotEligiblePhrasesMap: Record<
@@ -125,5 +128,6 @@ export const skuQuotaItemNotEligiblePhrasesMap: Record<
   idpInitiatedSsoEnabled: 'idp_initiated_sso_enabled.not_eligible',
   samlApplicationsLimit: 'saml_applications_limit.not_eligible',
   securityFeaturesEnabled: 'security_features_enabled.not_eligible',
+  customDomainsLimit: 'custom_domains_limit.not_eligible',
 };
 /* === for new pricing model === */

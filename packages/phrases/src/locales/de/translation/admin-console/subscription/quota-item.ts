@@ -202,6 +202,13 @@ const quota_item = {
     unlimited: 'Erweiterte Sicherheitsfunktionen',
     not_eligible: 'Entferne deine erweiterten Sicherheitseinstellungen',
   },
+  custom_domains_limit: {
+    name: 'Benutzerdefinierte Domains',
+    limited: '{{count, number}} benutzerdefinierte Domain',
+    limited_other: '{{count, number}} benutzerdefinierte Domains',
+    unlimited: 'Unbegrenzte benutzerdefinierte Domains',
+    not_eligible: 'Entferne deine benutzerdefinierten Domains',
+  },
 };
 
 export default Object.freeze(quota_item);

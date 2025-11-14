@@ -23,6 +23,7 @@ const systemLimitKeyGuard = z.enum([
   'tenantMembersLimit',
   'organizationsLimit',
   'samlApplicationsLimit',
+  'customDomainsLimit',
   'usersPerOrganizationLimit',
   'organizationUserRolesLimit',
   'organizationMachineToMachineRolesLimit',
@@ -48,6 +49,7 @@ const systemLimitEntityPhrases: Record<SystemLimitKey, AdminConsoleKey> = {
   tenantMembersLimit: 'system_limit.entities.tenant_member',
   organizationsLimit: 'system_limit.entities.organization',
   samlApplicationsLimit: 'system_limit.entities.saml_application',
+  customDomainsLimit: 'system_limit.entities.custom_domain',
   usersPerOrganizationLimit: 'system_limit.entities.user_per_organization',
   organizationUserRolesLimit: 'system_limit.entities.organization_user_role',
   organizationMachineToMachineRolesLimit:

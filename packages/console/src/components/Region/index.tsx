@@ -1,4 +1,4 @@
-import { type PublicRegionName, type RegionResponse as RegionType } from '@logto/cloud/routes';
+import { type RegionResponse as RegionType } from '@logto/cloud/routes';
 import { TenantTag } from '@logto/schemas';
 import classNames from 'classnames';
 import { useMemo, type FunctionComponent } from 'react';
@@ -12,16 +12,15 @@ import ukFlag from './assets/uk.svg?react';
 import usFlag from './assets/us.svg?react';
 import styles from './index.module.scss';
 
-export const defaultRegionName = 'EU' satisfies PublicRegionName;
+export const defaultRegionName = 'EU';
 
-const regionDisplayNameMap: Readonly<Record<PublicRegionName, string> & Record<string, string>> =
-  Object.freeze({
-    EU: 'Europe',
-    US: 'West US',
-    AU: 'Australia',
-    JP: 'Japan',
-    UK: 'United Kingdom',
-  });
+const regionDisplayNameMap: Readonly<Record<string, string>> = Object.freeze({
+  EU: 'Europe',
+  US: 'West US',
+  AU: 'Australia',
+  JP: 'Japan',
+  UK: 'United Kingdom',
+});
 
 /**
  * Get the display name of the region. If the region is not in the map, return the original region

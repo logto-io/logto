@@ -1,4 +1,3 @@
-import { type PublicRegionName } from '@logto/cloud/routes';
 import { ReservedPlanId, TenantTag, defaultManagementApi } from '@logto/schemas';
 import dayjs from 'dayjs';
 
@@ -116,6 +115,7 @@ export const defaultSubscriptionQuota: NewSubscriptionQuota = {
   idpInitiatedSsoEnabled: false,
   samlApplicationsLimit: 0,
   securityFeaturesEnabled: false,
+  customDomainsLimit: 1,
 };
 
 export const defaultSubscriptionUsage: NewSubscriptionCountBasedUsage = {
@@ -140,6 +140,7 @@ export const defaultSubscriptionUsage: NewSubscriptionCountBasedUsage = {
   idpInitiatedSsoEnabled: false,
   samlApplicationsLimit: 0,
   securityFeaturesEnabled: false,
+  customDomainsLimit: 0,
 };
 
 const getAdminTenantEndpoint = () => {
@@ -158,12 +159,7 @@ export const adminTenantEndpoint = getAdminTenantEndpoint();
 export const mainTitle = isCloud ? 'Logto Cloud' : 'Logto Console';
 
 // Manually maintaining the list of regions to avoid unexpected changes. We may consider using an API in the future.
-export const availableRegions = Object.freeze([
-  'EU',
-  'US',
-  'AU',
-  'JP',
-] as const satisfies PublicRegionName[]);
+export const availableRegions = Object.freeze(['EU', 'US', 'AU', 'JP'] as const);
 
 // The threshold days to show the convert to production card in the get started page
 export const convertToProductionThresholdDays = 7;

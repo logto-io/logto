@@ -202,6 +202,13 @@ const quota_item = {
     unlimited: 'Sicurezza avanzata',
     not_eligible: 'Rimuovi le tue impostazioni di sicurezza avanzata',
   },
+  custom_domains_limit: {
+    name: 'Domini personalizzati',
+    limited: '{{count, number}} dominio personalizzato',
+    limited_other: '{{count, number}} domini personalizzati',
+    unlimited: 'Domini personalizzati illimitati',
+    not_eligible: 'Rimuovi i tuoi domini personalizzati',
+  },
 };
 
 export default Object.freeze(quota_item);

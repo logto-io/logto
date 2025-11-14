@@ -62,6 +62,7 @@ export const allReportSubscriptionUpdatesUsageKeys = Object.freeze([
   'userRolesLimit',
   'machineToMachineRolesLimit',
   'samlApplicationsLimit',
+  'customDomainsLimit',
 ]) satisfies readonly ReportSubscriptionUpdatesUsageKey[];
 
 const subscriptionStatusGuard = z.enum([
@@ -108,6 +109,7 @@ const logtoSkuQuotaGuard = z.object({
   idpInitiatedSsoEnabled: z.boolean(),
   samlApplicationsLimit: z.number().nullable(),
   securityFeaturesEnabled: z.boolean(),
+  customDomainsLimit: z.number().nullable(),
 }) satisfies ToZodObject<SubscriptionQuota>;
 
 const systemLimitGuard = z
@@ -130,6 +132,7 @@ const systemLimitGuard = z
     organizationUserRolesLimit: z.number(),
     organizationMachineToMachineRolesLimit: z.number(),
     organizationScopesLimit: z.number(),
+    customDomainsLimit: z.number(),
   })
   .partial() satisfies ToZodObject<Subscription['systemLimit']>;
 

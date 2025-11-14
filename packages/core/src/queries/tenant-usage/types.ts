@@ -66,6 +66,7 @@ const sharedUsageKeyGuard = z.enum([
   'enterpriseSsoLimit',
   'organizationsLimit',
   'samlApplicationsLimit',
+  'customDomainsLimit',
 ]) satisfies ToZodEnum<SharedUsageKey>;
 
 /** All usage keys that need to be checked (union of SystemUsageKey and QuotaUsageKey). */
@@ -91,6 +92,7 @@ const quotaUsageKeyGuard = z.enum([
   'mfaEnabled',
   'securityFeaturesEnabled',
   'idpInitiatedSsoEnabled',
+  'customDomainsLimit',
 ]) satisfies ToZodEnum<QuotaUsageKey>;
 
 export const isQuotaUsageKey = (key: UsageKey): key is QuotaUsageKey =>
@@ -116,6 +118,7 @@ const numericQuotaUsageKeyGuard = z.enum([
   'organizationsLimit',
   'samlApplicationsLimit',
   'socialConnectorsLimit',
+  'customDomainsLimit',
 ]) satisfies ToZodEnum<NumericQuotaUsageKey>;
 
 export const isNumericQuotaUsageKey = (key: string): key is NumericQuotaUsageKey =>

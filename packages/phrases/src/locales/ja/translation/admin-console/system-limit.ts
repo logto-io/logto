@@ -16,6 +16,7 @@ const system_limit = {
     tenant_member: 'テナントメンバー',
     organization: '組織',
     saml_application: 'SAML アプリケーション',
+    custom_domain: 'カスタムドメイン',
     user_per_organization: '組織ごとのユーザー',
     organization_user_role: '組織ユーザーロール',
     organization_machine_to_machine_role: '組織マシン間ロール',

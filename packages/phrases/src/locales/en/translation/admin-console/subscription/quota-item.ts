@@ -202,6 +202,13 @@ const quota_item = {
     unlimited: 'Advanced security',
     not_eligible: 'Remove your advanced security settings',
   },
+  custom_domains_limit: {
+    name: 'Custom domains',
+    limited: '{{count, number}} custom domain',
+    limited_other: '{{count, number}} custom domains',
+    unlimited: 'Unlimited custom domains',
+    not_eligible: 'Remove your custom domains',
+  },
 };
 
 export default Object.freeze(quota_item);

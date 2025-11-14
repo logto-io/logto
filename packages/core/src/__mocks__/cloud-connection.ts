@@ -59,6 +59,7 @@ export const mockQuota = {
   idpInitiatedSsoEnabled: false,
   samlApplicationsLimit: 0,
   securityFeaturesEnabled: false,
+  customDomainsLimit: 1,
 };
 
 export const mockSubscriptionData: Subscription = {
