@@ -131,7 +131,7 @@ describe('when the application is not admin-console', () => {
       'status',
       200
     );
-    expect(getPhrases).toBeCalledWith('fr');
+    expect(getPhrases).toBeCalledWith(zhCnTag);
   });
 
   it('should use cache for continuous requests', async () => {
