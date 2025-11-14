@@ -17,6 +17,7 @@ import {
   OrganizationRequiredMfaPolicy,
   MfaFactor,
   SignInIdentifier,
+  AlternativeSignUpIdentifier,
 } from '@logto/schemas';
 import { generateStandardId, maskEmail, maskPhone } from '@logto/shared';
 import { cond, condObject, deduplicate, pick } from '@silverhand/essentials';
@@ -322,7 +323,11 @@ export class Mfa {
     if (
       factorsInUser.includes(MfaFactor.EmailVerificationCode) &&
       !signUp.identifiers.includes(SignInIdentifier.Email) &&
-      !signUp.secondaryIdentifiers?.some(({ identifier }) => identifier === SignInIdentifier.Email)
+      !signUp.secondaryIdentifiers?.some(
+        ({ identifier }) =>
+          identifier === SignInIdentifier.Email ||
+          identifier === AlternativeSignUpIdentifier.EmailOrPhone
+      )
     ) {
       return;
     }
@@ -330,7 +335,11 @@ export class Mfa {
     if (
       factorsInUser.includes(MfaFactor.PhoneVerificationCode) &&
       !signUp.identifiers.includes(SignInIdentifier.Phone) &&
-      !signUp.secondaryIdentifiers?.some(({ identifier }) => identifier === SignInIdentifier.Phone)
+      !signUp.secondaryIdentifiers?.some(
+        ({ identifier }) =>
+          identifier === SignInIdentifier.Phone ||
+          identifier === AlternativeSignUpIdentifier.EmailOrPhone
+      )
     ) {
       return;
     }

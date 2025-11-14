@@ -1,5 +1,11 @@
 import { ConnectorType } from '@logto/connector-kit';
-import { InteractionEvent, MfaFactor, MfaPolicy, SignInIdentifier } from '@logto/schemas';
+import {
+  AlternativeSignUpIdentifier,
+  InteractionEvent,
+  MfaFactor,
+  MfaPolicy,
+  SignInIdentifier,
+} from '@logto/schemas';
 import { authenticator } from 'otplib';
 
 import { deleteUser } from '#src/api/admin-user.js';
@@ -211,6 +217,75 @@ describe('Register interaction - optional additional MFA suggestion', () => {
 
     const { redirectTo } = await client.submitInteraction();
     const userId = await processSession(client, redirectTo);
+    await deleteUser(userId);
+  });
+
+  it('should suggest additional MFA when email or phone is required as a secondary identifier', async () => {
+    await updateSignInExperience({
+      signUp: {
+        identifiers: [SignInIdentifier.Username],
+        password: true,
+        verify: true,
+        secondaryIdentifiers: [
+          {
+            identifier: AlternativeSignUpIdentifier.EmailOrPhone,
+            verify: true,
+          },
+        ],
+      },
+      signIn: {
+        methods: [
+          {
+            identifier: SignInIdentifier.Username,
+            password: true,
+            verificationCode: false,
+            isPasswordPrimary: false,
+          },
+        ],
+      },
+      mfa: {
+        factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
+        policy: MfaPolicy.Mandatory,
+      },
+    });
+
+    const { username, password, primaryEmail } = generateNewUserProfile({
+      username: true,
+      password: true,
+      primaryEmail: true,
+    });
+
+    const client = await initExperienceClient({ interactionEvent: InteractionEvent.Register });
+
+    await client.updateProfile({ type: SignInIdentifier.Username, value: username });
+    await client.updateProfile({ type: 'password', value: password });
+
+    await fulfillUserEmail(client, primaryEmail);
+
+    await client.identifyUser();
+
+    await expectRejects<{
+      availableFactors: MfaFactor[];
+      skippable: boolean;
+      maskedIdentifiers?: Record<string, string>;
+      suggestion?: boolean;
+    }>(client.submitInteraction(), {
+      code: 'session.mfa.suggest_additional_mfa',
+      status: 422,
+      expectData: (data) => {
+        expect(data.availableFactors).toEqual([MfaFactor.TOTP, MfaFactor.EmailVerificationCode]);
+        expect(data.maskedIdentifiers).toBeDefined();
+        expect(data.maskedIdentifiers?.[MfaFactor.EmailVerificationCode]).toMatch(/\*{4}/);
+        expect(data.skippable).toBe(true);
+        expect(data.suggestion).toBe(true);
+      },
+    });
+
+    await client.skipMfaSuggestion();
+
+    const { redirectTo } = await client.submitInteraction();
+    const userId = await processSession(client, redirectTo);
+    await logoutClient(client);
     await deleteUser(userId);
   });
 
