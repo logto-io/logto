@@ -2,12 +2,12 @@ import { Domains, ProductEvent, domainResponseGuard, domainSelectFields } from '
 import { pick, trySafe } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { maxCustomDomains } from '#src/constants/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { EnvSet } from '../env-set/index.js';
+import { assertCustomDomainLimit } from '../utils/domain.js';
 import { captureEvent } from '../utils/posthog.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
@@ -21,6 +21,7 @@ export default function domainRoutes<T extends ManagementApiRouter>(
   const {
     domains: { syncDomainStatus, addDomain, deleteDomain },
     samlApplications: { syncCustomDomainsToSamlApplicationRedirectUrls },
+    quota,
   } = libraries;
 
   router.get(
@@ -81,30 +82,12 @@ export default function domainRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const existingDomains = await findAllDomains();
 
-      if (EnvSet.values.isMultipleCustomDomainsEnabled) {
-        /**
-         * Current rule: When multiple custom domains are enabled on this instance,
-         * each tenant is limited to `maxCustomDomains` custom domains (default 10).
-         * Note: This is a temporary global cap; future pricing plans may introduce
-         * tiered limits and this logic will be revisited.
-         */
-        assertThat(
-          existingDomains.length < maxCustomDomains,
-          new RequestError({
-            code: 'domain.exceed_domain_limit',
-            status: 422,
-            limit: maxCustomDomains,
-          })
-        );
-      } else {
-        assertThat(
-          existingDomains.length === 0,
-          new RequestError({
-            code: 'domain.limit_to_one_domain',
-            status: 422,
-          })
-        );
-      }
+      await assertCustomDomainLimit({
+        isPrivateRegionFeature: EnvSet.values.isMultipleCustomDomainsEnabled,
+        isDevelopmentFeatureEnabled: EnvSet.values.isDevFeaturesEnabled,
+        quotaLibrary: quota,
+        existingDomainCount: existingDomains.length,
+      });
 
       const { domain } = ctx.guard.body;
 
