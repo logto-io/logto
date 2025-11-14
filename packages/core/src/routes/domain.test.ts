@@ -7,6 +7,12 @@ import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
+// eslint-disable-next-line unicorn/no-useless-undefined
+const mockAssertCustomDomainLimit = jest.fn(async () => undefined);
+
+jest.mock('../utils/domain.js', () => ({
+  assertCustomDomainLimit: mockAssertCustomDomainLimit,
+}));
 
 const domains = {
   findAllDomains: jest.fn(async (): Promise<Domain[]> => [mockDomain]),
@@ -66,6 +72,12 @@ describe('domain routes', () => {
   it('POST /domains', async () => {
     domains.findAllDomains.mockResolvedValueOnce([]);
     const response = await domainRequest.post('/domains').send({ domain: 'test.com' });
+    expect(mockAssertCustomDomainLimit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        quotaLibrary: mockLibraries.quota,
+        existingDomainCount: 0,
+      })
+    );
     expect(addDomain).toBeCalledWith('test.com');
     expect(response.status).toEqual(201);
     expect(response.body.id).toBeTruthy();
