@@ -16,6 +16,7 @@ const system_limit = {
     tenant_member: 'Mandantenmitglied',
     organization: 'Organisation',
     saml_application: 'SAML-Anwendung',
+    custom_domain: 'Benutzerdefinierte Domain',
     user_per_organization: 'Benutzer pro Organisation',
     organization_user_role: 'Organisationsbenutzerrolle',
     organization_machine_to_machine_role: 'Organisations-Maschine-zu-Maschine-Rolle',

@@ -202,6 +202,13 @@ const quota_item = {
     unlimited: 'ความปลอดภัยขั้นสูง',
     not_eligible: 'ลบการตั้งค่าความปลอดภัยขั้นสูงของคุณ',
   },
+  custom_domains_limit: {
+    name: 'โดเมนแบบกำหนดเอง',
+    limited: '{{count, number}} โดเมนแบบกำหนดเอง',
+    limited_other: '{{count, number}} โดเมนแบบกำหนดเอง',
+    unlimited: 'ไม่จำกัดโดเมนแบบกำหนดเอง',
+    not_eligible: 'ลบโดเมนแบบกำหนดเองของคุณ',
+  },
 };
 
 export default Object.freeze(quota_item);

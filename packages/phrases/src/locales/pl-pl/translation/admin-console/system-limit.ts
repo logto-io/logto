@@ -15,6 +15,7 @@ const system_limit = {
     tenant_member: 'członek najemcy',
     organization: 'organizacja',
     saml_application: 'aplikacja SAML',
+    custom_domain: 'niestandardowa domena',
     user_per_organization: 'użytkownik na organizację',
     organization_user_role: 'rola użytkownika organizacji',
     organization_machine_to_machine_role: 'rola maszyna-maszyna organizacji',

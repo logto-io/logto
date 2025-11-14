@@ -202,6 +202,13 @@ const quota_item = {
     unlimited: '高度なセキュリティ',
     not_eligible: '高度なセキュリティ設定を削除してください',
   },
+  custom_domains_limit: {
+    name: 'カスタムドメイン',
+    limited: '{{count, number}} カスタムドメイン',
+    limited_other: '{{count, number}} カスタムドメイン',
+    unlimited: '無制限のカスタムドメイン',
+    not_eligible: 'カスタムドメインを削除してください',
+  },
 };
 
 export default Object.freeze(quota_item);

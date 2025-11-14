@@ -202,6 +202,13 @@ const quota_item = {
     unlimited: 'Расширенная безопасность',
     not_eligible: 'Удалите свои настройки расширенной безопасности',
   },
+  custom_domains_limit: {
+    name: 'Пользовательские домены',
+    limited: '{{count, number}} пользовательский домен',
+    limited_other: '{{count, number}} пользовательских доменов',
+    unlimited: 'Неограниченное количество пользовательских доменов',
+    not_eligible: 'Удалите свои пользовательские домены',
+  },
 };
 
 export default Object.freeze(quota_item);

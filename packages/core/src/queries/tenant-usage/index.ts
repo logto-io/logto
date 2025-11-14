@@ -14,6 +14,7 @@ import {
   OrganizationUserRelations,
   OrganizationRoles,
   OrganizationScopes,
+  Domains,
 } from '@logto/schemas';
 import { sql } from '@silverhand/slonik';
 import type { CommonQueryMethods } from '@silverhand/slonik';
@@ -60,6 +61,7 @@ const { table: organizationRolesTable, fields: organizationRolesFields } = conve
   true
 );
 const { table: organizationScopesTable } = convertToIdentifiers(OrganizationScopes, true);
+const { table: domainsTable } = convertToIdentifiers(Domains, true);
 
 export default class TenantUsageQuery {
   constructor(private readonly pool: CommonQueryMethods) {}
@@ -82,6 +84,7 @@ export default class TenantUsageQuery {
       organizationUserRolesLimit: this.countOrganizationUserRoles,
       organizationMachineToMachineRolesLimit: this.countOrganizationMachineToMachineRoles,
       organizationScopesLimit: this.countOrganizationScopes,
+      customDomainsLimit: this.countCustomDomains,
     };
   }
 
@@ -270,6 +273,16 @@ export default class TenantUsageQuery {
         count(*)
       from ${applicationsTable}
       where ${applicationsFields.type} = ${ApplicationType.SAML}
+    `);
+
+    return Number(result.count);
+  };
+
+  private readonly countCustomDomains: UsageQuery = async () => {
+    const result = await this.pool.one<{ count: string }>(sql`  
+      select
+        count(*)
+      from ${domainsTable}
     `);
 
     return Number(result.count);

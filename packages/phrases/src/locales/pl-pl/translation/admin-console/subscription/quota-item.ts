@@ -202,6 +202,13 @@ const quota_item = {
     unlimited: 'Zaawansowane zabezpieczenia',
     not_eligible: 'Usuń swoje ustawienia zaawansowanych zabezpieczeń',
   },
+  custom_domains_limit: {
+    name: 'Niestandardowe domeny',
+    limited: '{{count, number}} niestandardowa domena',
+    limited_other: '{{count, number}} niestandardowe domeny',
+    unlimited: 'Nieograniczone niestandardowe domeny',
+    not_eligible: 'Usuń swoje niestandardowe domeny',
+  },
 };
 
 export default Object.freeze(quota_item);

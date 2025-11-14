@@ -202,6 +202,13 @@ const quota_item = {
     unlimited: 'Gelişmiş güvenlik',
     not_eligible: 'Gelişmiş güvenlik ayarlarınızı kaldırın',
   },
+  custom_domains_limit: {
+    name: 'Özel alan adları',
+    limited: '{{count, number}} özel alan adı',
+    limited_other: '{{count, number}} özel alan adları',
+    unlimited: 'Sınırsız özel alan adları',
+    not_eligible: 'Özel alan adlarınızı kaldırın',
+  },
 };
 
 export default Object.freeze(quota_item);

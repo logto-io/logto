@@ -15,6 +15,7 @@ const system_limit = {
     tenant_member: '租户成员',
     organization: '组织',
     saml_application: 'SAML 应用',
+    custom_domain: '自定义域名',
     user_per_organization: '每个组织的用户',
     organization_user_role: '组织用户角色',
     organization_machine_to_machine_role: '组织机器对机器角色',

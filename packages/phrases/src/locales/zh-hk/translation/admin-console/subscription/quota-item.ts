@@ -202,6 +202,13 @@ const quota_item = {
     unlimited: '高級安全',
     not_eligible: '移除您的高級安全設置',
   },
+  custom_domains_limit: {
+    name: '自定義域名',
+    limited: '{{count, number}} 個自定義域名',
+    limited_other: '{{count, number}} 個自定義域名',
+    unlimited: '無限自定義域名',
+    not_eligible: '刪除您的自定義域名',
+  },
 };
 
 export default Object.freeze(quota_item);
