@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 import { getBrandingLogoUrl } from '@/utils/logo';
@@ -7,6 +8,7 @@ import styles from './index.module.scss';
 
 const BrandingHeader = () => {
   const { theme, experienceSettings } = useContext(PageContext);
+  const { t } = useTranslation();
 
   if (!experienceSettings) {
     return null;
@@ -25,6 +27,8 @@ const BrandingHeader = () => {
   return (
     <header className={styles.header}>
       <img className={styles.logo} src={logoUrl} alt="logo" />
+      <div className={styles.splitter} />
+      <span className={styles.title}>{t('header.title')}</span>
     </header>
   );
 };
