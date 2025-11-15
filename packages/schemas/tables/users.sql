@@ -5,7 +5,7 @@ create type users_password_encryption_method as enum ('Argon2i', 'Argon2id', 'Ar
 create table users (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
-  id varchar(12) not null,
+  id varchar(36) not null,
   username varchar(128),
   primary_email varchar(128),
   primary_phone varchar(128),

@@ -24,6 +24,7 @@ import {
   safeExecSync,
 } from '../../utils.js';
 import { seedByPool } from '../database/seed/index.js';
+import { promptIdFormats } from '../database/seed/utils.js';
 
 const pgRequired = new semver.SemVer('14.0.0');
 
@@ -164,7 +165,11 @@ export const decompress = async (toPath: string, tarPath: string) => {
 export const seedDatabase = async (instancePath: string, cloud: boolean) => {
   try {
     const pool = await createPoolAndDatabaseIfNeeded();
-    await seedByPool(pool, cloud);
+
+    // Prompt for ID formats if in TTY mode
+    const idFormats = isTty() ? await promptIdFormats() : undefined;
+
+    await seedByPool(pool, cloud, false, false, idFormats);
     await pool.end();
   } catch (error: unknown) {
     consoleLog.error(error);

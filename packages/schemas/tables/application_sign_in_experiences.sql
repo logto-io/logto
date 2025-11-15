@@ -4,7 +4,7 @@
 create table application_sign_in_experiences (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
-  application_id varchar(21) not null
+  application_id varchar(36) not null
     references applications (id) on update cascade on delete cascade,
   color jsonb /* @use PartialColor */ not null default '{}'::jsonb,
   branding jsonb /* @use Branding */ not null default '{}'::jsonb,
