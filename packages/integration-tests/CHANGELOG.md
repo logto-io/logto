@@ -1,5 +1,23 @@
 # Change Log
 
+## 1.16.0
+
+### Minor Changes
+
+- 08f887c448: support cross-app authentication callbacks within the same browser session
+
+  When multiple applications are initiating authentication requests within the same browser session,
+  authentication callbacks may interfere with each other due to the shared `_interaction` cookie.
+
+  To resolve this, we now change the cookie from a plain UID string to a structured mapping object
+  `{ [app_id]: interaction_uid }`, and maintain the `app_id` in either the URL search parameters or HTTP
+  headers for all authentication-related requests and redirects. This ensures that each application can
+  correctly identify its own authentication context without interference from others.
+
+  The fallback mechanism is also implemented to ensure backward compatibility.
+
+- c3266a917a: add a new webhook event "Identifier.Lockout", which is triggered when a user is locked out due to repeated failed sign-in attempts
+
 ## 1.15.0
 
 ### Minor Changes
