@@ -9,6 +9,20 @@
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="app"></div>
+  <script type="module">
+    // Dev-only react-refresh preamble. We load the Vite-provided runtime dynamically so
+    // production builds do not try to resolve /@react-refresh (which breaks rollup) while
+    // still enabling HMR in development to avoid the “preamble not detected” error.
+    if (import.meta.env.DEV) {
+      const base = (import.meta.env.BASE_URL ?? '/').replace(/\/?$/, '/');
+      const RefreshRuntimeModule = await import(`${base}@react-refresh`);
+      const RefreshRuntime = RefreshRuntimeModule.default ?? RefreshRuntimeModule;
+      RefreshRuntime.injectIntoGlobalHook(window);
+      window.$RefreshReg$ = () => {};
+      window.$RefreshSig$ = () => (type) => type;
+      window.__vite_plugin_react_preamble_installed__ = true;
+    }
+  </script>
   <script type="module" src="src/index.tsx"></script>
 </body>
 

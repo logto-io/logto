@@ -1,4 +1,4 @@
-@use '@/scss/underscore' as _;
+@use '@/shared/scss/underscore' as _;
 
 .notification {
   padding: _.unit(3) _.unit(4);

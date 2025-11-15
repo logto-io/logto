@@ -4,8 +4,14 @@
     "outDir": "build",
     "baseUrl": ".",
     "paths": {
-      "@/*": [
+      "@ac/*": [
         "src/*"
+      ],
+      "@/*": [
+        "../experience/src/*"
+      ],
+      "@experience/*": [
+        "../experience/src/*"
       ]
     }
   }

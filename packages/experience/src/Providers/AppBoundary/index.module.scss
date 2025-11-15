@@ -1,5 +1,5 @@
-@use '@/scss/colors' as colors;
-@use '@/scss/underscore' as _;
+@use '@/shared/scss/colors' as colors;
+@use '@/shared/scss/underscore' as _;
 
 body {
   &.light {

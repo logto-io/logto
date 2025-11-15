@@ -74,12 +74,15 @@ importers:
       '@logto/core-kit':
         specifier: workspace:^
         version: link:../toolkit/core-kit
+      '@logto/experience':
+        specifier: workspace:^
+        version: link:../experience
       '@logto/language-kit':
         specifier: workspace:^
         version: link:../toolkit/language-kit
-      '@logto/phrases-account-center':
+      '@logto/phrases-experience':
         specifier: workspace:^
-        version: link:../phrases-account-center
+        version: link:../phrases-experience
       '@logto/react':
         specifier: ^4.0.6
         version: 4.0.6(react@18.3.1)
@@ -101,15 +104,30 @@ importers:
       '@silverhand/ts-config-react':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.5.3)
+      '@types/color':
+        specifier: ^4.2.0
+        version: 4.2.0
       '@types/react':
         specifier: ^18.3.3
         version: 18.3.3
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.0
+      '@types/react-helmet':
+        specifier: ^6.1.6
+        version: 6.1.6
+      '@types/react-modal':
+        specifier: ^3.13.1
+        version: 3.13.1
       '@vitejs/plugin-react':
         specifier: ^4.3.1
         version: 4.3.1(vite@6.3.6(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+      classnames:
+        specifier: ^2.3.1
+        version: 2.3.1
+      color:
+        specifier: ^4.2.3
+        version: 4.2.3
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -134,15 +152,27 @@ importers:
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
+      react-helmet:
+        specifier: ^6.1.0
+        version: 6.1.0(react@18.3.1)
       react-i18next:
         specifier: ^12.3.1
         version: 12.3.1(i18next@22.4.15)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-modal:
+        specifier: ^3.15.1
+        version: 3.15.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-top-loading-bar:
+        specifier: ^2.3.1
+        version: 2.3.1(react@18.3.1)
       stylelint:
         specifier: ^15.0.0
         version: 15.11.0(typescript@5.5.3)
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
+      use-debounced-loader:
+        specifier: ^0.1.1
+        version: 0.1.1(react@18.3.1)
       vite:
         specifier: ^6.3.6
         version: 6.3.6(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
@@ -4508,40 +4538,6 @@ importers:
 
   packages/phrases:
     dependencies:
-      '@logto/language-kit':
-        specifier: workspace:^
-        version: link:../toolkit/language-kit
-      '@silverhand/essentials':
-        specifier: ^2.9.1
-        version: 2.9.2
-      zod:
-        specifier: 3.24.3
-        version: 3.24.3
-    devDependencies:
-      '@silverhand/eslint-config':
-        specifier: 6.0.1
-        version: 6.0.1(eslint@8.57.0)(prettier@3.5.3)(typescript@5.5.3)
-      '@silverhand/ts-config':
-        specifier: 6.0.0
-        version: 6.0.0(typescript@5.5.3)
-      eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.2
-      prettier:
-        specifier: ^3.5.3
-        version: 3.5.3
-      typescript:
-        specifier: ^5.5.3
-        version: 5.5.3
-
-  packages/phrases-account-center:
-    dependencies:
-      '@logto/core-kit':
-        specifier: workspace:^
-        version: link:../toolkit/core-kit
       '@logto/language-kit':
         specifier: workspace:^
         version: link:../toolkit/language-kit

@@ -1,8 +1,8 @@
 import { Theme } from '@logto/schemas';
 import { useEffect, useMemo, useState } from 'react';
 
-import { getSignInExperienceSettings } from '@/apis/sign-in-experience';
-import { getThemeBySystemPreference, subscribeToSystemTheme } from '@/utils/theme';
+import { getSignInExperienceSettings } from '@ac/apis/sign-in-experience';
+import { getThemeBySystemPreference, subscribeToSystemTheme } from '@ac/utils/theme';
 
 import type { PageContextType } from './PageContext';
 import PageContext from './PageContext';

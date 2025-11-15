@@ -1,4 +1,4 @@
-import { isBuiltInLanguageTag } from '@logto/phrases-account-center';
+import { isBuiltInLanguageTag } from '@logto/phrases-experience';
 import type { LanguageInfo } from '@logto/schemas';
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';

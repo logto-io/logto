@@ -6,8 +6,8 @@ import { useContext } from 'react';
 import { Helmet } from 'react-helmet';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
-import defaultAppleTouchLogo from '@/assets/apple-touch-icon.png';
-import defaultFavicon from '@/assets/favicon.png';
+import defaultAppleTouchLogo from '@/shared/assets/apple-touch-icon.png';
+import defaultFavicon from '@/shared/assets/favicon.png';
 import { type SignInExperienceResponse } from '@/types';
 
 import styles from './index.module.scss';
