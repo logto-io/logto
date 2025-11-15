@@ -1,3 +1,4 @@
+import AppBoundary from '@experience/Providers/AppBoundary';
 import { type IdTokenClaims, LogtoProvider, useLogto } from '@logto/react';
 import { accountCenterApplicationId } from '@logto/schemas';
 import { useContext, useEffect, useState } from 'react';
