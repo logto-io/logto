@@ -9,6 +9,13 @@
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="app"></div>
+  <script type="module">
+    import RefreshRuntime from '/account-center/@react-refresh';
+    RefreshRuntime.injectIntoGlobalHook(window);
+    window.$RefreshReg$ = () => {};
+    window.$RefreshSig$ = () => (type) => type;
+    window.__vite_plugin_react_preamble_installed__ = true;
+  </script>
   <script type="module" src="src/index.tsx"></script>
 </body>
 

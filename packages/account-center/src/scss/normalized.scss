@@ -1,4 +1,9 @@
+@use '@experience/scss/colors' as experience-colors;
+
 body {
+  @include experience-colors.static;
+  @include experience-colors.light;
+  --radius: 8px;
   margin: 0;
   padding: 0;
   font-family: sans-serif;
@@ -36,4 +41,10 @@ input {
 
 ::-webkit-scrollbar-track {
   background: transparent;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    @include experience-colors.dark;
+  }
 }
