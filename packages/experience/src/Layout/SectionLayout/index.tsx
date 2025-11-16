@@ -1,7 +1,7 @@
 import { type TFuncKey } from 'i18next';
 import { type ReactNode } from 'react';
 
-import DynamicT from '@/components/DynamicT';
+import DynamicT from '@/shared/components/DynamicT';
 
 import styles from './index.module.scss';
 

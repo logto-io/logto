@@ -1,10 +1,10 @@
 import type { TFuncKey } from 'i18next';
 import { type ReactElement } from 'react';
 
-import DynamicT from '@/components/DynamicT';
 import NavBar from '@/components/NavBar';
-import PageMeta from '@/components/PageMeta';
 import usePlatform from '@/hooks/use-platform';
+import DynamicT from '@/shared/components/DynamicT';
+import PageMeta from '@/shared/components/PageMeta';
 
 import { InlineNotification } from '../../components/Notification';
 

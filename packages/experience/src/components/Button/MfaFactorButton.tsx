@@ -9,8 +9,8 @@ import FactorEmail from '@/assets/icons/factor-email.svg?react';
 import FactorPhone from '@/assets/icons/factor-phone.svg?react';
 import FactorTotp from '@/assets/icons/factor-totp.svg?react';
 import FactorWebAuthn from '@/assets/icons/factor-webauthn.svg?react';
+import DynamicT from '@/shared/components/DynamicT';
 
-import DynamicT from '../DynamicT';
 import FlipOnRtl from '../FlipOnRtl';
 
 import mfaFactorButtonStyles from './MfaFactorButton.module.scss';

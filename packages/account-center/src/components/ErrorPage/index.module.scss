@@ -1,0 +1,47 @@
+@use '@experience/shared/scss/_underscore.scss' as _;
+
+.errorPage {
+  @include _.flex_column(center, center);
+  gap: _.unit(4);
+  text-align: center;
+  flex: 1;
+}
+
+.illustration {
+  width: 194px;
+  max-width: 100%;
+  align-self: center;
+
+  svg {
+    width: 100%;
+    height: auto;
+  }
+}
+
+.title {
+  @include _.title;
+}
+
+.message {
+  @include _.text-hint;
+}
+
+.support {
+  margin-top: _.unit(2);
+  display: grid;
+  gap: _.unit(1);
+  justify-items: center;
+}
+
+.supportItem {
+  @include _.text-hint;
+}
+
+.supportLink {
+  color: var(--color-primary);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

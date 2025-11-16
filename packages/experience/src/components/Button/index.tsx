@@ -3,7 +3,7 @@ import type { TFuncKey } from 'i18next';
 import { type HTMLProps } from 'react';
 import { useDebouncedLoader } from 'use-debounced-loader';
 
-import DynamicT from '../DynamicT';
+import DynamicT from '@/shared/components/DynamicT';
 
 import RotatingRingIcon from './RotatingRingIcon';
 import styles from './index.module.scss';
