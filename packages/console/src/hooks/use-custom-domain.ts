@@ -44,17 +44,27 @@ const useCustomDomain = (autoSync = false) => {
         return;
       }
 
-      // New domain added
-      void mutate([...data, domain]);
+      // New domain added - insert at the beginning to maintain sort order (newest first)
+      void mutate([domain, ...data]);
     },
     [mutate, data]
   );
 
+  /**
+   * Note: Sorted by creation time (newest first).
+   * Newly created domains will appear at the top of the list.
+   */
+  const allDomains = useMemo(() => {
+    if (!data) {
+      return [];
+    }
+    return data.slice().sort((domainA, domainB) => domainB.createdAt - domainA.createdAt);
+  }, [data]);
+
   const activeCustomDomains = useMemo(
     () =>
-      data?.filter(({ status }) => status === DomainStatus.Active).map(({ domain }) => domain) ??
-      [],
-    [data]
+      allDomains.filter(({ status }) => status === DomainStatus.Active).map(({ domain }) => domain),
+    [allDomains]
   );
 
   return {
@@ -71,7 +81,7 @@ const useCustomDomain = (autoSync = false) => {
      * - Full array of custom domains returned from the API.
      * - Will eventually replace the legacy `data` field.
      */
-    allDomains: data,
+    allDomains,
     isLoading,
     mutate: mutateDomain,
     activeCustomDomains,

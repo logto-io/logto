@@ -8,6 +8,7 @@ export const domainSelectFields = Object.freeze([
   'status',
   'errorMessage',
   'dnsRecords',
+  'createdAt',
 ] as const);
 
 export const domainResponseGuard = Domains.guard.pick({
@@ -16,6 +17,7 @@ export const domainResponseGuard = Domains.guard.pick({
   status: true,
   errorMessage: true,
   dnsRecords: true,
+  createdAt: true,
 });
 
 export type DomainResponse = z.infer<typeof domainResponseGuard>;
