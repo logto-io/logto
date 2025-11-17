@@ -10,7 +10,7 @@ import CreateTenantHeaderIconDark from '@/assets/icons/create-tenant-header-dark
 import CreateTenantHeaderIcon from '@/assets/icons/create-tenant-header.svg?react';
 import { createTenantApi, useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import ActionBar from '@/components/ActionBar';
-import { GtagConversionId, reportConversion } from '@/components/Conversion/utils';
+import { GtagConversionId, reportToGoogle } from '@/components/Conversion/utils';
 import { type CreateTenantData } from '@/components/CreateTenantModal/types';
 import PageMeta from '@/components/PageMeta';
 import { StaticRegion, defaultRegionName } from '@/components/Region';
@@ -22,7 +22,6 @@ import FormField from '@/ds-components/FormField';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import TextInput from '@/ds-components/TextInput';
-import useCurrentUser from '@/hooks/use-current-user';
 import useTheme from '@/hooks/use-theme';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 import pageLayout from '@/onboarding/scss/layout.module.scss';
@@ -63,15 +62,11 @@ function CreateTenant() {
 
   const { isAuthenticated, getOrganizationToken } = useLogto();
   const cloudApi = useCloudApi();
-  const { user } = useCurrentUser();
+  const { currentTenant } = useContext(TenantsContext);
 
   const onCreateClick = handleSubmit(
     trySubmitSafe(async ({ name, regionName, collaboratorEmails }: CreateTenantForm) => {
-      reportConversion({
-        gtagId: GtagConversionId.SignUp,
-        redditType: 'SignUp',
-        transactionId: user?.id,
-      });
+      reportToGoogle(GtagConversionId.SignUp, { transactionId: currentTenant?.id });
       const newTenant = await cloudApi.post('/api/tenants', {
         body: { name: name || 'My project', regionName },
       });
