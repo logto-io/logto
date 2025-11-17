@@ -112,7 +112,7 @@ export const addOnLabels = {
   addOnBundle: 'Add-on (bundle)',
 } as const;
 
-type CombinedAddOnAndFeatureTagProps = {
+export type CombinedAddOnAndFeatureTagProps = {
   readonly hasAddOnTag?: boolean;
   readonly className?: string;
   /** The minimum plan required to use the feature. */

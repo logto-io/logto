@@ -2,6 +2,7 @@ import { useContext } from 'react';
 
 import FormCard from '@/components/FormCard';
 import PageMeta from '@/components/PageMeta';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import FormField from '@/ds-components/FormField';
 import useCustomDomain from '@/hooks/use-custom-domain';
@@ -19,9 +20,9 @@ function TenantDomainSettings() {
   const { getDocumentationUrl } = useDocumentationUrl();
   const { currentTenant } = useContext(TenantsContext);
 
-  const isMultipleCustomDomainsEnabled = Boolean(
-    currentTenant?.featureFlags?.isMultipleCustomDomainsEnabled
-  );
+  // TODO @xiaoyijun: remove the dev feature flag
+  const isMultipleCustomDomainsEnabled =
+    isDevFeaturesEnabled || Boolean(currentTenant?.featureFlags?.isMultipleCustomDomainsEnabled);
 
   if (isLoadingCustomDomain) {
     return <Skeleton />;

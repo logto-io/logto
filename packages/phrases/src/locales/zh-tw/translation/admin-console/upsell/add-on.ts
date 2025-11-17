@@ -3,6 +3,8 @@ const add_on = {
     'MFA 是 {{planName}} 的每月 ${{price, number}} 加購項目。第一個月的費用將根據你的帳單週期按比例計算。<a>了解更多</a>',
   security_features_inline_notification:
     '啟用 CAPTCHA、自定義鎖定體驗和其他高級安全功能——全部包含在每月僅需 ${{price, number}} 的附加組合中。',
+  custom_domain:
+    '擴展至多達 10 個自訂網域,每月僅需 ${{price, number}}。第一個月根據你的帳單週期按比例收費。<a>了解更多</a>',
   footer: {
     api_resource:
       '額外的資源每月每個花費 <span>${{price, number}}</span>。第一個月的費用將根據你的帳單週期按比例計算。<a>了解更多</a>',

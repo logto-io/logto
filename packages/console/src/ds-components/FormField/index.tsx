@@ -4,7 +4,12 @@ import type { ReactElement, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Tip from '@/assets/icons/tip.svg?react';
-import FeatureTag, { BetaTag, type Props as FeatureTagProps } from '@/components/FeatureTag';
+import FeatureTag, {
+  BetaTag,
+  type Props as FeatureTagProps,
+  type CombinedAddOnAndFeatureTagProps,
+  CombinedAddOnAndFeatureTag,
+} from '@/components/FeatureTag';
 
 import type DangerousRaw from '../DangerousRaw';
 import DynamicT from '../DynamicT';
@@ -28,6 +33,7 @@ export type Props = {
   readonly tip?: ToggleTipProps['content'];
   readonly featureTag?: FeatureTagProps;
   readonly isBeta?: boolean;
+  readonly addOnFeatureTag?: CombinedAddOnAndFeatureTagProps;
 };
 
 function FormField({
@@ -43,9 +49,10 @@ function FormField({
   featureTag,
   isBeta,
   headlineClassName,
+  addOnFeatureTag,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const hasTags = Boolean(featureTag) || Boolean(isBeta);
+  const hasTags = Boolean(featureTag) || Boolean(isBeta) || Boolean(addOnFeatureTag);
 
   return (
     <div className={classNames(styles.field, className)}>
@@ -73,6 +80,9 @@ function FormField({
           <div className={styles.tagsWrapper}>
             {featureTag && <FeatureTag {...featureTag} className={styles.featureTag} />}
             {isBeta && <BetaTag />}
+            {addOnFeatureTag && (
+              <CombinedAddOnAndFeatureTag {...addOnFeatureTag} className={styles.featureTag} />
+            )}
           </div>
         )}
         <Spacer />
