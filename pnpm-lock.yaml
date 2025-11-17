@@ -4566,6 +4566,7 @@ importers:
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
+
   packages/phrases-experience:
     dependencies:
       '@logto/core-kit':
