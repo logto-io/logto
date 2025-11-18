@@ -18,7 +18,9 @@ const paywall = {
   scopes_per_resource_other:
     'Sie haben das Limit von {{count, number}} Berechtigungen pro API-Ressource von <planName/> erreicht. Upgraden Sie jetzt, um zu erweitern. <a>Kontaktieren Sie uns</a>, wenn Sie Hilfe benötigen.',
   custom_domain:
-    'Freischalten Sie die Funktion für benutzerdefinierte Domains, indem Sie auf den <strong>Hobby</strong>- oder <strong>Pro</strong>-Plan upgraden. Zögern Sie nicht, uns zu <a>kontaktieren</a>, wenn Sie Unterstützung benötigen.',
+    'Limit von {{count, number}} benutzerdefinierter Domain für <planName/> erreicht. Upgraden Sie auf einen kostenpflichtigen Plan, um mehrere benutzerdefinierte Domains und Premium-Vorteile hinzuzufügen. Zögern Sie nicht, <a>uns zu kontaktieren</a>, wenn Sie Fragen haben.',
+  custom_domain_others:
+    'Limit von {{count, number}} benutzerdefinierten Domains für <planName/> erreicht. Upgraden Sie auf einen kostenpflichtigen Plan, um mehrere benutzerdefinierte Domains und Premium-Vorteile hinzuzufügen. Zögern Sie nicht, <a>uns zu kontaktieren</a>, wenn Sie Fragen haben.',
   social_connectors:
     'Sie haben das Limit von {{count, number}} <planName/>-Sozialconnectoren erreicht. Upgraden Sie Ihren Plan, um zusätzliche Sozialconnectoren und die Möglichkeit zur Erstellung eigener Connectoren mit OIDC, OAuth 2.0 und SAML-Protokollen zu erhalten. Zögern Sie nicht, <a>Kontaktieren Sie uns</a>, wenn Sie Hilfe benötigen.',
   social_connectors_other:

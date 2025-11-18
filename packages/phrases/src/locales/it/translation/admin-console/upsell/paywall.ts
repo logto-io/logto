@@ -18,7 +18,9 @@ const paywall = {
   scopes_per_resource_other:
     'Hai raggiunto il limite di {{count, number}} autorizzazioni per risorsa API di <planName/>. Aggiorna ora per espanderlo. <a>Contattaci</a> per qualsiasi assistenza.',
   custom_domain:
-    'Sblocca la funzionalità del dominio personalizzato passando al piano <strong>Hobby</strong> o <strong>Pro</strong>. Non esitare a <a>contattarci</a> se hai bisogno di assistenza.',
+    'Limite di {{count, number}} dominio personalizzato di <planName/> raggiunto. Passa a un piano a pagamento per aggiungere più domini personalizzati e vantaggi premium. Non esitare a <a>contattarci</a> se hai domande.',
+  custom_domain_others:
+    'Limite di {{count, number}} domini personalizzati di <planName/> raggiunto. Passa a un piano a pagamento per aggiungere più domini personalizzati e vantaggi premium. Non esitare a <a>contattarci</a> se hai domande.',
   social_connectors:
     'Hai raggiunto il limite di {{count, number}} connettori sociali di <planName/>. Passa al piano per ottenere connettori sociali aggiuntivi e la possibilità di creare i tuoi connettori utilizzando i protocolli OIDC, OAuth 2.0 e SAML. Non esitare a <a>contattarci</a> se hai bisogno di assistenza.',
   social_connectors_other:

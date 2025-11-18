@@ -3,6 +3,8 @@ const add_on = {
     'MFA é um acréscimo de ${{price, number}} por mês para o {{planName}}. Primeiro mês calculado proporcionalmente com base no seu ciclo de faturamento. <a>Saiba mais</a>',
   security_features_inline_notification:
     'Habilite CAPTCHA, experiência de bloqueio personalizada e outros recursos avançados de segurança — todos incluídos em um pacote adicional por apenas ${{price, number}}/mês.',
+  custom_domain:
+    'Expanda para até 10 domínios personalizados por apenas ${{price, number}}. O primeiro mês é proporcional ao seu ciclo de faturamento. <a>Saiba mais</a>',
   footer: {
     api_resource:
       'Recursos adicionais custam <span>${{price, number}} por mês / cada</span>. Primeiro mês calculado proporcionalmente com base no seu ciclo de faturamento. <a>Saiba mais</a>',

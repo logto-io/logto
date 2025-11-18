@@ -18,7 +18,9 @@ const paywall = {
   scopes_per_resource_other:
     '{{count, number}} <planName/> API kaynağı başına izin sınırına ulaşıldı. Genişletmek için şimdi yükseltin. Yardıma ihtiyacınız olursa, <a>iletişime geçin</a>.',
   custom_domain:
-    'Özel alan işlevselliğini kilidini açmak için <strong>Hobiyi</strong> veya <strong>Pro’yu</strong> yükseltin. Yardım için <a>bizimle iletişime geçin</a> ihtiyacınız varsa.',
+    '<planName/> için {{count, number}} özel alan sınırına ulaşıldı. Birden fazla özel alan ve premium avantajlar eklemek için ücretli bir plana yükseltin. Sorularınız varsa <a>bizimle iletişime geçmekten</a> çekinmeyin.',
+  custom_domain_others:
+    '<planName/> için {{count, number}} özel alan sınırına ulaşıldı. Birden fazla özel alan ve premium avantajlar eklemek için ücretli bir plana yükseltin. Sorularınız varsa <a>bizimle iletişime geçmekten</a> çekinmeyin.',
   social_connectors:
     '{{count, number}} <planName/> sosyal bağlayıcı sınırına ulaşıldı. Ekibinizin ihtiyaçlarını karşılamak için planı yükseltin ve OIDC, OAuth 2.0 ve SAML protokolleri kullanarak kendi bağlayıcılarınızı oluşturma yeteneğine sahip olun. Yardım için ihtiyacınız olursa, <a>iletişime geçin</a>.',
   social_connectors_other:

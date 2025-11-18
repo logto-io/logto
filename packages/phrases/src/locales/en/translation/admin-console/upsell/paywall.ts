@@ -18,7 +18,9 @@ const paywall = {
   scopes_per_resource_other:
     '{{count, number}} permissions per API resource of <planName/> limit reached. Upgrade now to expand. <a>Contact us</a> for any assistance.',
   custom_domain:
-    'Unlock custom domain functionality by upgrading to <strong>Hobby</strong> or <strong>Pro</strong> plan. Don’t hesitate to <a>contact us</a> if you need any assistance.',
+    '{{count, number}} custom domain of <planName/> limit reached. Upgrade to a paid plan to add multiple custom domains and premium benefits. Don’t hesitate to <a>contact us</a> if you have any questions.',
+  custom_domain_others:
+    '{{count, number}} custom domains of <planName/> limit reached. Upgrade to a paid plan to add multiple custom domains and premium benefits. Don’t hesitate to <a>contact us</a> if you have any questions.',
   social_connectors:
     '{{count, number}} social connector of <planName/> limit reached. To meet your team’s needs, upgrade plan for additional social connectors and the ability to create your own connectors using OIDC, OAuth 2.0, and SAML protocols. Feel free to <a>contact us</a> if you need any assistance.',
   social_connectors_other:

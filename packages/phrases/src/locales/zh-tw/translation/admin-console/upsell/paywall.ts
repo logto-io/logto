@@ -16,9 +16,11 @@ const paywall = {
   scopes_per_resource:
     '已達到 <planName/> 的{{count, number}}個 API 資源每個權限限制。立即升級以擴展。如需任何幫助，請<a>聯繫我們</a>。',
   scopes_per_resource_other:
-    '已達到 <planName/> 的{{count, number}}個 API 資源每個權限限制。立即升級以擴展。如需任何幫助，請<a>聯繫我們</a>。',
+    '已達到 <planName/> 的{{count, number}}個 API 資源每個權限限制。立即升級以擴展。如需任何幫助,請<a>聯繫我們</a>。',
   custom_domain:
-    '升級至 <strong>Hobby</strong> 或 <strong>Pro</strong> 計劃以解鎖自訂網域功能。如有任何需要協助，請隨時<a>聯繫我們</a>。',
+    '已達到 <planName/> 的 {{count, number}} 個自訂網域限制。升級到付費計劃以新增多個自訂網域和高級福利。如有任何問題,請不要猶豫 <a>聯繫我們</a>。',
+  custom_domain_others:
+    '已達到 <planName/> 的 {{count, number}} 個自訂網域限制。升級到付費計劃以新增多個自訂網域和高級福利。如有任何問題,請不要猶豫 <a>聯繫我們</a>。',
   social_connectors:
     '已達到 <planName/> 的{{count, number}}個社交連接器限制。為滿足您團隊的需求，請升級計劃以獲取額外的社交連接器，並可以使用 OIDC、OAuth 2.0 和 SAML 協議創建您自己的連接器。如需任何幫助，請<a>聯繫我們</a>。',
   social_connectors_other:
