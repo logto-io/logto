@@ -77,7 +77,7 @@ export default function domainRoutes<T extends ManagementApiRouter>(
     koaGuard({
       body: Domains.createGuard.pick({ domain: true }),
       response: domainResponseGuard,
-      status: [201, 422, 400],
+      status: [201, 422, 400, 403],
     }),
     async (ctx, next) => {
       const existingDomains = await findAllDomains();
