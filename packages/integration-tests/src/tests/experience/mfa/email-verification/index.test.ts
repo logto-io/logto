@@ -77,13 +77,19 @@ describe('email MFA verification', () => {
     await waitFor(300);
     experience2.toBeAt(`mfa-verification/${MfaFactor.EmailVerificationCode}`);
 
-    // Read email code and fill inputs named mfaCode_0..5
+    /**
+     * Read email code and fill inputs named mfaCode_0..5
+     * Note: The frontend automatically submits when all 6 digits are filled.
+     * See packages/experience/src/containers/MfaCodeVerification/index.tsx:74-79
+     * The onChange handler checks if all 6 digits are ready and auto-submits,
+     * so we don't need to manually click the Continue button here.
+     */
     const { code } = await readConnectorMessage('Email');
     for (const [index, char] of code.split('').entries()) {
       // eslint-disable-next-line no-await-in-loop
       await experience2.toFillInput(`mfaCode_${index}`, char);
     }
-    await experience2.toClick('button', 'Continue');
+    // No need to click Continue button - auto-submit happens after filling the 6th digit
     await experience2.verifyThenEnd();
 
     await deleteUser(user.id);
