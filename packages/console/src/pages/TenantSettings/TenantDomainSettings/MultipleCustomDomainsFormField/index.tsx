@@ -84,7 +84,7 @@ function MultipleCustomDomainsFormField() {
         />
         {
           // TODO @xiaoyijun: remove the dev feature flag
-          isDevFeaturesEnabled && <PaywallNotification />
+          isDevFeaturesEnabled && hasReachedQuotaLimit && <PaywallNotification />
         }
       </FormField>
       {allDomains.length > 0 && (

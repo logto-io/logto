@@ -21,10 +21,9 @@ export default function PaywallNotification() {
   const {
     currentSubscription: { planId },
     currentSubscriptionQuota,
+    hasSurpassedSubscriptionQuotaLimit,
   } = useContext(SubscriptionDataContext);
   const { currentTenant } = useContext(TenantsContext);
-
-  const { hasSurpassedSubscriptionQuotaLimit } = useContext(SubscriptionDataContext);
 
   if (isFreeTenant) {
     return (
