@@ -17,6 +17,7 @@ export const mockDomainResponse: DomainResponse = {
   status: DomainStatus.PendingVerification,
   errorMessage: null,
   dnsRecords: [],
+  createdAt: mockCreatedAtForDomain,
 };
 
 export const mockDomain: Domain = {
