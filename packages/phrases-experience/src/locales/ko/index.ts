@@ -2,6 +2,7 @@ import { type DeepPartial } from '@silverhand/essentials';
 
 import type { LocalePhrase } from '../../types.js';
 
+import account_center from './account-center.js';
 import action from './action.js';
 import description from './description.js';
 import development_tenant from './development-tenant.js';
@@ -25,6 +26,7 @@ const ko = {
     development_tenant,
     user_scopes,
     profile,
+    account_center,
   },
 } satisfies DeepPartial<LocalePhrase>;
 

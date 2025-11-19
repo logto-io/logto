@@ -1,6 +1,5 @@
+import type { SignInExperienceResponse } from '@experience/shared/types';
 import { Theme } from '@logto/schemas';
-
-import type { SignInExperienceResponse } from '@/types/sign-in-experience';
 
 export const getBrandingLogoUrl = ({
   theme,

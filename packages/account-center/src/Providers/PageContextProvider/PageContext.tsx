@@ -1,7 +1,6 @@
+import type { SignInExperienceResponse } from '@experience/shared/types';
 import { Theme } from '@logto/schemas';
 import { createContext } from 'react';
-
-import type { SignInExperienceResponse } from '@/types/sign-in-experience';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};

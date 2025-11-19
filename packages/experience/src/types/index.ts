@@ -3,9 +3,12 @@ import type {
   Theme,
   WebAuthnRegistrationOptions,
   WebAuthnAuthenticationOptions,
-  FullSignInExperience,
   InteractionEvent,
 } from '@logto/schemas';
+
+import type { SignInExperienceResponse } from '../shared/types';
+
+export type { SignInExperienceResponse } from '../shared/types';
 
 export enum UserFlow {
   SignIn = 'sign-in',
@@ -28,8 +31,6 @@ export enum SearchParameters {
 export type Platform = 'web' | 'mobile';
 
 export type VerificationCodeIdentifier = SignInIdentifier.Email | SignInIdentifier.Phone;
-
-export type SignInExperienceResponse = Omit<FullSignInExperience, 'socialSignInConnectorTargets'>;
 
 export type PreviewConfig = {
   signInExperience: SignInExperienceResponse;

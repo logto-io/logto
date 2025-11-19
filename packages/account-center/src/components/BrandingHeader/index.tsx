@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import PageContext from '@/Providers/PageContextProvider/PageContext';
-import { getBrandingLogoUrl } from '@/utils/logo';
+import PageContext from '@ac/Providers/PageContextProvider/PageContext';
+import { getBrandingLogoUrl } from '@ac/utils/logo';
 
 import styles from './index.module.scss';
 
@@ -28,7 +28,7 @@ const BrandingHeader = () => {
     <header className={styles.header}>
       <img className={styles.logo} src={logoUrl} alt="logo" />
       <div className={styles.splitter} />
-      <span className={styles.title}>{t('header.title')}</span>
+      <span className={styles.title}>{t('account_center.header.title')}</span>
     </header>
   );
 };

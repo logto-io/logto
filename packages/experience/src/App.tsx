@@ -49,7 +49,7 @@ import VerificationCode from './pages/VerificationCode';
 import { UserMfaFlow } from './types';
 import { handleSearchParametersData } from './utils/search-parameters';
 import 'overlayscrollbars/overlayscrollbars.css';
-import './scss/normalized.scss';
+import './shared/scss/normalized.scss';
 import './scss/overlayscrollbars.scss';
 
 handleSearchParametersData();

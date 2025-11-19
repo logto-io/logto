@@ -1,10 +1,10 @@
 import type { LanguageTag } from '@logto/language-kit';
-import resources from '@logto/phrases-account-center';
+import resources from '@logto/phrases-experience';
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
 
-import { resolveLanguage, storageKey } from '@/i18n/utils';
+import { resolveLanguage, storageKey } from '@ac/i18n/utils';
 
 i18next.use(initReactI18next).use(LanguageDetector);
 

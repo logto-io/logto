@@ -2,6 +2,8 @@ import { type IdTokenClaims, LogtoProvider, useLogto } from '@logto/react';
 import { accountCenterApplicationId } from '@logto/schemas';
 import { useContext, useEffect, useState } from 'react';
 
+import AppBoundary from '@ac/Providers/AppBoundary';
+
 import styles from './App.module.scss';
 import Callback from './Callback';
 import PageContextProvider from './Providers/PageContextProvider';
@@ -9,7 +11,7 @@ import PageContext from './Providers/PageContextProvider/PageContext';
 import BrandingHeader from './components/BrandingHeader';
 import initI18n from './i18n/init';
 
-import '@/scss/normalized.scss';
+import '@experience/shared/scss/normalized.scss';
 
 void initI18n();
 
@@ -18,7 +20,7 @@ const redirectUri = `${window.location.origin}/account-center`;
 const Main = () => {
   const params = new URLSearchParams(window.location.search);
   const isInCallback = Boolean(params.get('code'));
-  const { isAuthenticated, isLoading, getIdTokenClaims, signIn, signOut } = useLogto();
+  const { isAuthenticated, isLoading, getIdTokenClaims, signIn } = useLogto();
   const [user, setUser] = useState<Pick<IdTokenClaims, 'sub' | 'username'>>();
   const [isLoadingUser, setIsLoadingUser] = useState(false);
   const { isLoadingExperience, experienceError } = useContext(PageContext);
@@ -88,18 +90,8 @@ const Main = () => {
 
   return (
     <div>
-      <p>
-        Signed in as <strong>{user?.username ?? user?.sub ?? 'your account'}</strong>.
-      </p>
       <div>
-        <button
-          type="button"
-          onClick={() => {
-            void signOut(redirectUri);
-          }}
-        >
-          Sign out
-        </button>
+        Signed in as <strong>{user?.username ?? user?.sub ?? 'your account'}</strong>.
       </div>
     </div>
   );
@@ -113,10 +105,18 @@ const App = () => (
     }}
   >
     <PageContextProvider>
-      <div className={styles.app}>
-        <BrandingHeader />
-        <Main />
-      </div>
+      <AppBoundary>
+        <div className={styles.app}>
+          <BrandingHeader />
+          <div className={styles.layout}>
+            <div className={styles.container}>
+              <main className={styles.main}>
+                <Main />
+              </main>
+            </div>
+          </div>
+        </div>
+      </AppBoundary>
     </PageContextProvider>
   </LogtoProvider>
 );
