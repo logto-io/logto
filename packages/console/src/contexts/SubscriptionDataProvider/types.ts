@@ -31,10 +31,24 @@ type NewSubscriptionSupplementContext = {
 };
 
 type NewSubscriptionResourceStatus = {
+  /**
+   * Quota checking function with business rules applied.
+   *
+   * This function wraps the pure calculation utilities from SubscriptionDataProvider/utils
+   * and applies plan-specific enforcement policies (e.g., Development plan unlimited features).
+   * Backend still enforces actual limits; this function only controls UI behavior.
+   */
   hasSurpassedSubscriptionQuotaLimit: <T extends keyof NewSubscriptionCountBasedUsage>(
     quotaKey: T,
     usage?: NewSubscriptionCountBasedUsage[T]
   ) => boolean;
+  /**
+   * Quota checking function with business rules applied.
+   *
+   * This function wraps the pure calculation utilities from SubscriptionDataProvider/utils
+   * and applies plan-specific enforcement policies (e.g., Development plan unlimited features).
+   * Backend still enforces actual limits; this function only controls UI behavior.
+   */
   hasReachedSubscriptionQuotaLimit: <T extends keyof NewSubscriptionCountBasedUsage>(
     quotaKey: T,
     usage?: NewSubscriptionCountBasedUsage[T]

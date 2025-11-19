@@ -16,6 +16,7 @@ import {
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useScroll from '@/hooks/use-scroll';
 import useUserPreferences from '@/hooks/use-user-preferences';
+import { shouldEnforcePaywallInUI } from '@/utils/paywall';
 
 import { getPath } from '../ConsoleContent/Sidebar';
 import { useSidebarMenuItems } from '../ConsoleContent/Sidebar/hook';
@@ -53,23 +54,33 @@ export default function AppContent() {
         hasSurpassedSubscriptionQuotaLimit: <T extends keyof NewSubscriptionCountBasedUsage>(
           quotaKey: T,
           usage?: NewSubscriptionCountBasedUsage[T]
-        ) =>
-          hasSurpassedSubscriptionQuotaLimit({
+        ) => {
+          if (!shouldEnforcePaywallInUI(newSubscriptionData.currentSubscription.planId, quotaKey)) {
+            return false;
+          }
+
+          return hasSurpassedSubscriptionQuotaLimit({
             quotaKey,
             usage,
             subscriptionUsage: newSubscriptionData.currentSubscriptionUsage,
             subscriptionQuota: newSubscriptionData.currentSubscriptionQuota,
-          }),
+          });
+        },
         hasReachedSubscriptionQuotaLimit: <T extends keyof NewSubscriptionCountBasedUsage>(
           quotaKey: T,
           usage?: NewSubscriptionCountBasedUsage[T]
-        ) =>
-          hasReachedSubscriptionQuotaLimit({
+        ) => {
+          if (!shouldEnforcePaywallInUI(newSubscriptionData.currentSubscription.planId, quotaKey)) {
+            return false;
+          }
+
+          return hasReachedSubscriptionQuotaLimit({
             quotaKey,
             usage,
             subscriptionUsage: newSubscriptionData.currentSubscriptionUsage,
             subscriptionQuota: newSubscriptionData.currentSubscriptionQuota,
-          }),
+          });
+        },
       }}
     >
       <div className={styles.app}>
