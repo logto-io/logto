@@ -20,12 +20,9 @@ import { condArray, conditional, conditionalArray, trySafe } from '@silverhand/e
 
 import { EnvSet } from '#src/env-set/index.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
-import { getConsoleLogFromContext } from '#src/utils/console.js';
-import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import { getTenantId } from '#src/utils/tenant.js';
 
 import { type InteractionProfile, type WithHooksAndLogsContext } from '../../types.js';
-import { postAffiliateLogs } from '../helpers.js';
 import { toUserSocialIdentityData } from '../utils.js';
 
 type OrganizationProvisionPayload =
@@ -315,13 +312,6 @@ export class ProvisionLibrary {
   private readonly triggerAnalyticReports = ({ id }: User) => {
     appInsights.client?.trackEvent({
       name: getEventName(Component.Core, CoreEvent.Register),
-    });
-
-    const { cloudConnection, id: tenantId } = this.tenantContext;
-
-    void trySafe(postAffiliateLogs(this.ctx, cloudConnection, id, tenantId), (error) => {
-      getConsoleLogFromContext(this.ctx).warn('Failed to post affiliate logs', error);
-      void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
     });
   };
 }

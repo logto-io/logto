@@ -5,16 +5,11 @@
  * we have moved some of the standalone functions into this file.
  */
 
-import { defaults, parseAffiliateData } from '@logto/affiliate';
-import { adminTenantId, MfaFactor, VerificationType, type User, type Mfa } from '@logto/schemas';
-import { conditional, trySafe } from '@silverhand/essentials';
-import { type IRouterContext } from 'koa-router';
+import { MfaFactor, VerificationType, type User, type Mfa } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 import assertThat from '#src/utils/assert-that.js';
-import { getConsoleLogFromContext } from '#src/utils/console.js';
 
 import type { InteractionProfile } from '../types.js';
 
@@ -284,30 +279,4 @@ export const getAllUserEnabledMfaVerifications = (
     }
     return 0;
   });
-};
-
-/**
- * Post affiliate data to the cloud service.
- */
-export const postAffiliateLogs = async (
-  ctx: IRouterContext,
-  cloudConnection: CloudConnectionLibrary,
-  userId: string,
-  tenantId: string
-) => {
-  if (!EnvSet.values.isCloud || tenantId !== adminTenantId) {
-    return;
-  }
-
-  const affiliateData = trySafe(() =>
-    parseAffiliateData(JSON.parse(decodeURIComponent(ctx.cookies.get(defaults.cookieName) ?? '')))
-  );
-
-  if (affiliateData) {
-    const client = await cloudConnection.getClient();
-    await client.post('/api/affiliate-logs', {
-      body: { userId, ...affiliateData },
-    });
-    getConsoleLogFromContext(ctx).info('Affiliate logs posted', userId);
-  }
 };
