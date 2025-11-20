@@ -24,11 +24,12 @@ const getRegisteredSkuNamePhrase = (
 
 type Props = {
   readonly skuId: string;
+  readonly isEnterprise?: boolean;
 };
 
-function SkuName({ skuId }: Props) {
+function SkuName({ skuId, isEnterprise = false }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.subscription' });
-  const skuNamePhrase = getRegisteredSkuNamePhrase(skuId);
+  const skuNamePhrase = isEnterprise ? 'enterprise' : getRegisteredSkuNamePhrase(skuId);
   return <span>{String(t(skuNamePhrase))}</span>;
 }
 

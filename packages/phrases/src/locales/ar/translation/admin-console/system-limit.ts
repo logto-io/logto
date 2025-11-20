@@ -1,5 +1,6 @@
 const system_limit = {
-  limit_exceeded: 'وصل هذا المستأجر إلى حد {{entity}} وفقًا لسياسة حد الكيان الخاصة بـ Logto.',
+  limit_exceeded:
+    'لقد وصل مستأجر <planName/> إلى حد {{entity}} الخاص به بموجب <a>سياسة كيان Logto</a>.',
   entities: {
     application: 'التطبيق',
     third_party_application: 'تطبيق الطرف الثالث',

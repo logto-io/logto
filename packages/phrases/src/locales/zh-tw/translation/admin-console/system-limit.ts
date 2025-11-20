@@ -1,5 +1,5 @@
 const system_limit = {
-  limit_exceeded: '此租戶已達到 Logto 實體限制政策規定的{{entity}}限制。',
+  limit_exceeded: '此 <planName/> 租戶已達到 <a>Logto 實體政策</a>下的{{entity}}限制。',
   entities: {
     application: '應用',
     third_party_application: '第三方應用',

@@ -1,10 +1,14 @@
 import { type AdminConsoleKey } from '@logto/phrases';
 import { type RequestErrorBody } from '@logto/schemas';
-import { useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useCallback, useContext } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
 import { type SystemLimit } from '@/cloud/types/router';
+import SkuName from '@/components/SkuName';
+import { entityPolicyLink } from '@/consts';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
+import TextLink from '@/ds-components/TextLink';
 
 type SystemLimitKey = keyof SystemLimit;
 
@@ -59,8 +63,12 @@ const systemLimitEntityPhrases: Record<SystemLimitKey, AdminConsoleKey> = {
 
 export const useSystemLimitErrorMessage = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const {
+    currentSubscription: { planId, isEnterprisePlan },
+  } = useContext(SubscriptionDataContext);
+
   const parseSystemLimitErrorMessage = useCallback(
-    (errorBody: RequestErrorBody): string => {
+    (errorBody: RequestErrorBody) => {
       if (errorBody.code !== 'system_limit.limit_exceeded') {
         return t('general.unknown_error');
       }
@@ -73,9 +81,18 @@ export const useSystemLimitErrorMessage = () => {
       const { key } = result.data;
 
       const entity = t(systemLimitEntityPhrases[key]);
-      return t('system_limit.limit_exceeded', { entity });
+      return (
+        <Trans
+          components={{
+            a: <TextLink href={entityPolicyLink} targetBlank="noopener" />,
+            planName: <SkuName skuId={planId} isEnterprise={isEnterprisePlan} />,
+          }}
+        >
+          {t('system_limit.limit_exceeded', { entity })}
+        </Trans>
+      );
     },
-    [t]
+    [t, planId, isEnterprisePlan]
   );
 
   return {

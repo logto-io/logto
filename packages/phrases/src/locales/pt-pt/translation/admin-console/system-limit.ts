@@ -1,6 +1,6 @@
 const system_limit = {
   limit_exceeded:
-    'Este inquilino atingiu o limite de {{entity}} de acordo com a política de limite de entidade da Logto.',
+    'Este inquilino <planName/> atingiu o seu limite de {{entity}} de acordo com <a>a política de entidade da Logto</a>.',
   entities: {
     application: 'aplicação',
     third_party_application: 'aplicação de terceiros',

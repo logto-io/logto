@@ -1,6 +1,6 @@
 const system_limit = {
   limit_exceeded:
-    'Этот арендатор достиг лимита {{entity}} согласно политике ограничения сущностей Logto.',
+    'Этот арендатор <planName/> достиг своего лимита {{entity}} согласно <a>политике сущностей Logto</a>.',
   entities: {
     application: 'приложение',
     third_party_application: 'стороннее приложение',
