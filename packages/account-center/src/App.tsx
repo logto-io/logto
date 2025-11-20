@@ -26,7 +26,7 @@ const Main = () => {
   const params = new URLSearchParams(window.location.search);
   const isInCallback = Boolean(params.get('code'));
   const { isAuthenticated, isLoading, signIn } = useLogto();
-  const { isLoadingExperience, experienceError } = useContext(PageContext);
+  const { isLoadingExperience, experienceError, userInfoError } = useContext(PageContext);
 
   useEffect(() => {
     if (isInCallback || isLoading) {
@@ -42,7 +42,7 @@ const Main = () => {
     return <Callback />;
   }
 
-  if (experienceError) {
+  if (experienceError ?? userInfoError) {
     return (
       <ErrorPage
         titleKey="error.something_went_wrong"

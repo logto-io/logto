@@ -1,8 +1,10 @@
+import { useLogto } from '@logto/react';
 import { Theme } from '@logto/schemas';
 import { useEffect, useMemo, useState } from 'react';
 
 import { getAccountCenterSettings } from '@ac/apis/account-center';
 import { getSignInExperienceSettings } from '@ac/apis/sign-in-experience';
+import { getUserInfo } from '@ac/apis/user';
 import { getThemeBySystemPreference, subscribeToSystemTheme } from '@ac/utils/theme';
 
 import type { PageContextType } from './PageContext';
@@ -13,14 +15,43 @@ type Props = {
 };
 
 const PageContextProvider = ({ children }: Props) => {
+  const { isAuthenticated, getAccessToken } = useLogto();
   const [theme, setTheme] = useState(Theme.Light);
   const [experienceSettings, setExperienceSettings] =
     useState<PageContextType['experienceSettings']>(undefined);
   const [accountCenterSettings, setAccountCenterSettings] =
     useState<PageContextType['accountCenterSettings']>(undefined);
+  const [userInfo, setUserInfo] = useState<PageContextType['userInfo']>(undefined);
+  const [userInfoError, setUserInfoError] = useState<Error>();
   const [verificationId, setVerificationId] = useState<string>();
   const [isLoadingExperience, setIsLoadingExperience] = useState(true);
   const [experienceError, setExperienceError] = useState<Error>();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      return;
+    }
+
+    const fetchUserInfo = async () => {
+      try {
+        const accessToken = await getAccessToken();
+        if (!accessToken) {
+          return;
+        }
+
+        const data = await getUserInfo(accessToken);
+
+        setUserInfo(data);
+        setUserInfoError(undefined);
+      } catch (error: unknown) {
+        setUserInfoError(
+          error instanceof Error ? error : new Error('Failed to load user information.')
+        );
+      }
+    };
+
+    void fetchUserInfo();
+  }, [isAuthenticated, getAccessToken]);
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -74,6 +105,9 @@ const PageContextProvider = ({ children }: Props) => {
       setExperienceSettings,
       accountCenterSettings,
       setAccountCenterSettings,
+      userInfo,
+      setUserInfo,
+      userInfoError,
       verificationId,
       setVerificationId,
       isLoadingExperience,
@@ -85,6 +119,8 @@ const PageContextProvider = ({ children }: Props) => {
       experienceSettings,
       isLoadingExperience,
       theme,
+      userInfo,
+      userInfoError,
       verificationId,
     ]
   );

@@ -6,7 +6,7 @@ import ErrorPage from '@ac/components/ErrorPage';
 import PasswordVerification from '@ac/components/PasswordVerification';
 
 const Email = () => {
-  const { accountCenterSettings, verificationId } = useContext(PageContext);
+  const { accountCenterSettings, verificationId, userInfo } = useContext(PageContext);
 
   if (
     !accountCenterSettings?.enabled ||
@@ -25,6 +25,7 @@ const Email = () => {
     <div style={{ padding: '20px' }}>
       <h1>Email Settings</h1>
       <p>Verification ID: {verificationId}</p>
+      {userInfo?.primaryEmail && <p>Current Email: {userInfo.primaryEmail}</p>}
       <p>Email linking function is currently blank.</p>
     </div>
   );
