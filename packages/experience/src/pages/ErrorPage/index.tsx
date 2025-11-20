@@ -6,9 +6,9 @@ import StaticPageLayout from '@/Layout/StaticPageLayout';
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 import EmptyStateDark from '@/assets/icons/empty-state-dark.svg?react';
 import EmptyState from '@/assets/icons/empty-state.svg?react';
-import DynamicT from '@/components/DynamicT';
 import NavBar from '@/components/NavBar';
-import PageMeta from '@/components/PageMeta';
+import DynamicT from '@/shared/components/DynamicT';
+import PageMeta from '@/shared/components/PageMeta';
 
 import SupportInfo from './SupportInfo';
 import styles from './index.module.scss';

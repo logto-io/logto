@@ -1,9 +1,8 @@
 import { type ReactNode, useContext } from 'react';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
-
-import PageMeta from '../../components/PageMeta';
-import type { Props as PageMetaProps } from '../../components/PageMeta';
+import PageMeta from '@/shared/components/PageMeta';
+import type { Props as PageMetaProps } from '@/shared/components/PageMeta';
 
 import styles from './index.module.scss';
 

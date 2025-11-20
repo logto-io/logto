@@ -9,8 +9,7 @@ import { Link } from 'react-router-dom';
 import { useIframeModal } from '@/Providers/IframeModalProvider';
 import { usePreserveSearchParams } from '@/hooks/use-navigate-with-preserved-search-params';
 import usePlatform from '@/hooks/use-platform';
-
-import DynamicT from '../DynamicT';
+import DynamicT from '@/shared/components/DynamicT';
 
 import styles from './index.module.scss';
 

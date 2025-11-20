@@ -3,8 +3,7 @@ import classNames from 'classnames';
 import type { TFuncKey } from 'i18next';
 
 import ConnectIcon from '@/assets/icons/connect-icon.svg?react';
-
-import DynamicT from '../DynamicT';
+import DynamicT from '@/shared/components/DynamicT';
 
 import styles from './index.module.scss';
 

@@ -2,12 +2,12 @@ import { type AgreeToTermsPolicy } from '@logto/schemas';
 import { type TFuncKey } from 'i18next';
 import { useMemo, type ReactNode } from 'react';
 
-import DynamicT from '@/components/DynamicT';
-import type { Props as PageMetaProps } from '@/components/PageMeta';
 import type { Props as TextLinkProps } from '@/components/TextLink';
 import TextLink from '@/components/TextLink';
 import TermsAndPrivacyLinks from '@/containers/TermsAndPrivacyLinks';
 import useTerms from '@/hooks/use-terms';
+import DynamicT from '@/shared/components/DynamicT';
+import type { Props as PageMetaProps } from '@/shared/components/PageMeta';
 
 import FirstScreenLayout from '../FirstScreenLayout';
 
