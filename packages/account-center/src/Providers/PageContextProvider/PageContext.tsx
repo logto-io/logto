@@ -12,6 +12,8 @@ export type PageContextType = {
   setExperienceSettings: React.Dispatch<React.SetStateAction<SignInExperienceResponse | undefined>>;
   accountCenterSettings?: AccountCenter;
   setAccountCenterSettings: React.Dispatch<React.SetStateAction<AccountCenter | undefined>>;
+  verificationId?: string;
+  setVerificationId: React.Dispatch<React.SetStateAction<string | undefined>>;
   isLoadingExperience: boolean;
   experienceError?: Error;
 };
@@ -23,6 +25,8 @@ const PageContext = createContext<PageContextType>({
   setExperienceSettings: noop,
   accountCenterSettings: undefined,
   setAccountCenterSettings: noop,
+  verificationId: undefined,
+  setVerificationId: noop,
   isLoadingExperience: false,
   experienceError: undefined,
 });

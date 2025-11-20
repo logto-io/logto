@@ -18,6 +18,7 @@ const PageContextProvider = ({ children }: Props) => {
     useState<PageContextType['experienceSettings']>(undefined);
   const [accountCenterSettings, setAccountCenterSettings] =
     useState<PageContextType['accountCenterSettings']>(undefined);
+  const [verificationId, setVerificationId] = useState<string>();
   const [isLoadingExperience, setIsLoadingExperience] = useState(true);
   const [experienceError, setExperienceError] = useState<Error>();
 
@@ -73,10 +74,19 @@ const PageContextProvider = ({ children }: Props) => {
       setExperienceSettings,
       accountCenterSettings,
       setAccountCenterSettings,
+      verificationId,
+      setVerificationId,
       isLoadingExperience,
       experienceError,
     }),
-    [accountCenterSettings, experienceError, experienceSettings, isLoadingExperience, theme]
+    [
+      accountCenterSettings,
+      experienceError,
+      experienceSettings,
+      isLoadingExperience,
+      theme,
+      verificationId,
+    ]
   );
 
   return <PageContext.Provider value={value}>{children}</PageContext.Provider>;
