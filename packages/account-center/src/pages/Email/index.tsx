@@ -3,7 +3,7 @@ import { useContext } from 'react';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import ErrorPage from '@ac/components/ErrorPage';
-import PasswordVerification from '@ac/components/PasswordVerification';
+import VerificationMethodList from '@ac/components/VerificationMethodList';
 
 const Email = () => {
   const { accountCenterSettings, verificationId, userInfo } = useContext(PageContext);
@@ -18,7 +18,7 @@ const Email = () => {
   }
 
   if (!verificationId) {
-    return <PasswordVerification />;
+    return <VerificationMethodList />;
   }
 
   return (
