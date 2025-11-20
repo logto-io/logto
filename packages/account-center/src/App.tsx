@@ -11,15 +11,16 @@ import PageContext from './Providers/PageContextProvider/PageContext';
 import BrandingHeader from './components/BrandingHeader';
 import ErrorPage from './components/ErrorPage';
 import initI18n from './i18n/init';
+import Email from './pages/Email';
 import Home from './pages/Home';
-import { handleAccountCenterRoute } from './utils/account-center-route';
+import { accountCenterBasePath, handleAccountCenterRoute } from './utils/account-center-route';
 
 import '@experience/shared/scss/normalized.scss';
 
 void initI18n();
 handleAccountCenterRoute();
 
-const redirectUri = `${window.location.origin}/account-center`;
+const redirectUri = `${window.location.origin}${accountCenterBasePath}`;
 
 const Main = () => {
   const params = new URLSearchParams(window.location.search);
@@ -56,6 +57,10 @@ const Main = () => {
 
   if (!isAuthenticated) {
     return <div className={styles.status}>Redirecting to sign in…</div>;
+  }
+
+  if (window.location.pathname === `${accountCenterBasePath}/email`) {
+    return <Email />;
   }
 
   return <Home />;

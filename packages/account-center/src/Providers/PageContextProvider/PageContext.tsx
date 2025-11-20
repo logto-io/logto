@@ -1,5 +1,5 @@
 import type { SignInExperienceResponse } from '@experience/shared/types';
-import { Theme } from '@logto/schemas';
+import { Theme, type AccountCenter } from '@logto/schemas';
 import { createContext } from 'react';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -10,6 +10,8 @@ export type PageContextType = {
   setTheme: React.Dispatch<React.SetStateAction<Theme>>;
   experienceSettings?: SignInExperienceResponse;
   setExperienceSettings: React.Dispatch<React.SetStateAction<SignInExperienceResponse | undefined>>;
+  accountCenterSettings?: AccountCenter;
+  setAccountCenterSettings: React.Dispatch<React.SetStateAction<AccountCenter | undefined>>;
   isLoadingExperience: boolean;
   experienceError?: Error;
 };
@@ -19,6 +21,8 @@ const PageContext = createContext<PageContextType>({
   setTheme: noop,
   experienceSettings: undefined,
   setExperienceSettings: noop,
+  accountCenterSettings: undefined,
+  setAccountCenterSettings: noop,
   isLoadingExperience: false,
   experienceError: undefined,
 });

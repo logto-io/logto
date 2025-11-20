@@ -27,6 +27,7 @@ const error = {
   terms_acceptance_required: 'จำเป็นต้องยอมรับเงื่อนไข',
   terms_acceptance_required_description: 'คุณต้องยอมรับเงื่อนไขเพื่อดำเนินการต่อ กรุณาลองอีกครั้ง',
   something_went_wrong: 'เกิดข้อผิดพลาดบางอย่าง',
+  feature_not_enabled: 'ฟีเจอร์นี้ไม่ได้เปิดใช้งาน',
 };
 
 export default Object.freeze(error);

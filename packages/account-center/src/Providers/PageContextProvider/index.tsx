@@ -1,6 +1,7 @@
 import { Theme } from '@logto/schemas';
 import { useEffect, useMemo, useState } from 'react';
 
+import { getAccountCenterSettings } from '@ac/apis/account-center';
 import { getSignInExperienceSettings } from '@ac/apis/sign-in-experience';
 import { getThemeBySystemPreference, subscribeToSystemTheme } from '@ac/utils/theme';
 
@@ -15,6 +16,8 @@ const PageContextProvider = ({ children }: Props) => {
   const [theme, setTheme] = useState(Theme.Light);
   const [experienceSettings, setExperienceSettings] =
     useState<PageContextType['experienceSettings']>(undefined);
+  const [accountCenterSettings, setAccountCenterSettings] =
+    useState<PageContextType['accountCenterSettings']>(undefined);
   const [isLoadingExperience, setIsLoadingExperience] = useState(true);
   const [experienceError, setExperienceError] = useState<Error>();
 
@@ -23,11 +26,16 @@ const PageContextProvider = ({ children }: Props) => {
       setIsLoadingExperience(true);
 
       try {
-        const settings = await getSignInExperienceSettings();
+        const [settings, accountCenter] = await Promise.all([
+          getSignInExperienceSettings(),
+          getAccountCenterSettings(),
+        ]);
         setExperienceSettings(settings);
+        setAccountCenterSettings(accountCenter);
         setExperienceError(undefined);
       } catch (error: unknown) {
         setExperienceSettings(undefined);
+        setAccountCenterSettings(undefined);
         setExperienceError(
           error instanceof Error ? error : new Error('Failed to load sign-in experience settings.')
         );
@@ -63,10 +71,12 @@ const PageContextProvider = ({ children }: Props) => {
       setTheme,
       experienceSettings,
       setExperienceSettings,
+      accountCenterSettings,
+      setAccountCenterSettings,
       isLoadingExperience,
       experienceError,
     }),
-    [experienceError, experienceSettings, isLoadingExperience, theme]
+    [accountCenterSettings, experienceError, experienceSettings, isLoadingExperience, theme]
   );
 
   return <PageContext.Provider value={value}>{children}</PageContext.Provider>;
