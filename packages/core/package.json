@@ -32,7 +32,6 @@
     "@google-cloud/storage": "^7.10.0",
     "@koa/cors": "^5.0.0",
     "@logto/account-center": "workspace:*",
-    "@logto/affiliate": "^0.1.0",
     "@logto/app-insights": "workspace:^",
     "@logto/cli": "workspace:^",
     "@logto/connector-kit": "workspace:^",
