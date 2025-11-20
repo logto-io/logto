@@ -1,5 +1,6 @@
 const system_limit = {
-  limit_exceeded: "This tenant has reached the {{entity}} limit per Logto's entity limit policy.",
+  limit_exceeded:
+    "This <planName/> tenant has reached its {{entity}} limit under <a>Logto's entity policy</a>.",
   entities: {
     application: 'application',
     third_party_application: 'third-party application',

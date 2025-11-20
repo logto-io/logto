@@ -1,5 +1,6 @@
 const system_limit = {
-  limit_exceeded: "Bu tenant, Logto'nun varlık limit politikası gereği {{entity}} limitine ulaştı.",
+  limit_exceeded:
+    "Bu <planName/> tenant'ı, <a>Logto'nun varlık politikası</a> kapsamında {{entity}} limitine ulaştı.",
   entities: {
     application: 'uygulama',
     third_party_application: 'üçüncü taraf uygulama',

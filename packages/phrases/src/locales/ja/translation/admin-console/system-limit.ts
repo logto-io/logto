@@ -1,6 +1,6 @@
 const system_limit = {
   limit_exceeded:
-    'このテナントは Logto のエンティティ制限ポリシーごとの{{entity}}制限に達しました。',
+    'この<planName/>テナントは、<a>Logtoのエンティティポリシー</a>に基づく{{entity}}の制限に達しました。',
   entities: {
     application: 'アプリケーション',
     third_party_application: 'サードパーティアプリ',
