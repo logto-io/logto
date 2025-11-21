@@ -1,12 +1,9 @@
 import type { UserProfileResponse } from '@logto/schemas';
-import ky from 'ky';
+
+import { createAuthenticatedKy } from './base-ky';
 
 export const getUserInfo = async (accessToken: string) => {
-  return ky
-    .get('/api/my-account', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
+  return createAuthenticatedKy(accessToken)
+    .get('/api/my-account')
     .json<Partial<UserProfileResponse>>();
 };

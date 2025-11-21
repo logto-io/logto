@@ -1,8 +1,12 @@
-import ky from 'ky';
+import { createAuthenticatedKy } from './base-ky';
 
-export const verifyPassword = async (password: string) => {
-  return ky.post('/api/verifications/password', { json: { password } }).json<{
-    verificationRecordId: string;
-    expiresAt: string;
-  }>();
+export const verifyPassword = async (accessToken: string, password: string) => {
+  return createAuthenticatedKy(accessToken)
+    .post('/api/verifications/password', {
+      json: { password },
+    })
+    .json<{
+      verificationRecordId: string;
+      expiresAt: string;
+    }>();
 };
