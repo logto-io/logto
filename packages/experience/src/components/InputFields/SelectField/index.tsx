@@ -4,9 +4,8 @@ import { useRef, useState, useEffect } from 'react';
 
 import ArrowDown from '@/assets/icons/arrow-down.svg?react';
 import Dropdown, { DropdownItem } from '@/components/Dropdown';
+import InputField from '@/shared/components/InputFields/InputField';
 import { onKeyDownHandler } from '@/shared/utils/a11y';
-
-import InputField from '../InputField';
 
 import styles from './index.module.scss';
 

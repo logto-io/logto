@@ -1,23 +1,43 @@
-import { useState, useContext } from 'react';
+import Button from '@experience/shared/components/Button';
+import ErrorMessage from '@experience/shared/components/ErrorMessage';
+import PasswordInputField from '@experience/shared/components/InputFields/PasswordInputField';
+import { useState, useContext, type FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { verifyPassword } from '@ac/apis/verification';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
 
+import styles from './index.module.scss';
+
 const PasswordVerification = () => {
+  const { t } = useTranslation();
   const { setVerificationId } = useContext(PageContext);
   const [password, setPassword] = useState('');
+  const [fieldError, setFieldError] = useState<string>();
+  const [formError, setFormError] = useState<string>();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string>();
 
-  const handleVerify = async () => {
+  const handleVerify = async (event?: FormEvent<HTMLFormElement>) => {
+    event?.preventDefault();
+
+    if (!password) {
+      setFieldError(t('error.password_required'));
+      return;
+    }
+
+    setFieldError(undefined);
+    setFormError(undefined);
     setLoading(true);
-    setError(undefined);
     try {
       const result = await verifyPassword(password);
       setVerificationId(result.verificationRecordId);
     } catch {
-      setError('Verification failed. Please check your password.');
+      setFormError(
+        t('account_center.password_verification.error_failed', {
+          defaultValue: 'Verification failed. Please check your password.',
+        })
+      );
     } finally {
       setLoading(false);
     }
@@ -28,23 +48,35 @@ const PasswordVerification = () => {
       title="account_center.password_verification.title"
       description="account_center.password_verification.description"
     >
-      <div style={{ padding: '20px' }}>
-        <div style={{ marginBottom: '10px' }}>
-          <input
-            type="password"
-            value={password}
-            placeholder="Enter password"
-            style={{ padding: '8px', marginRight: '10px' }}
-            onChange={(event) => {
-              setPassword(event.target.value);
-            }}
-          />
-          <button disabled={loading} style={{ padding: '8px 16px' }} onClick={handleVerify}>
-            {loading ? 'Verifying...' : 'Verify'}
-          </button>
-        </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-      </div>
+      <form noValidate className={styles.form} onSubmit={handleVerify}>
+        <PasswordInputField
+          autoComplete="current-password"
+          label={t('input.password')}
+          value={password}
+          errorMessage={fieldError}
+          isDanger={Boolean(fieldError)}
+          onChange={(event) => {
+            if (event.target instanceof HTMLInputElement) {
+              setPassword(String(event.target.value));
+
+              if (fieldError) {
+                setFieldError(undefined);
+              }
+
+              if (formError) {
+                setFormError(undefined);
+              }
+            }
+          }}
+        />
+        <Button
+          className={styles.submit}
+          htmlType="submit"
+          title="action.confirm"
+          isLoading={loading}
+        />
+        {formError && <ErrorMessage className={styles.error}>{formError}</ErrorMessage>}
+      </form>
     </SecondaryPageLayout>
   );
 };

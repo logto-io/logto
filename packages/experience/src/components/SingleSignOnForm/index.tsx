@@ -4,7 +4,6 @@ import { Controller, useForm } from 'react-hook-form';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import LockIcon from '@/assets/icons/lock.svg?react';
-import ErrorMessage from '@/components/ErrorMessage';
 import SmartInputField, {
   type IdentifierInputValue,
 } from '@/components/InputFields/SmartInputField';
@@ -12,6 +11,7 @@ import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
 import useOnSubmit from '@/hooks/use-check-single-sign-on';
 import useTerms from '@/hooks/use-terms';
 import Button from '@/shared/components/Button';
+import ErrorMessage from '@/shared/components/ErrorMessage';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
 
 import styles from './index.module.scss';

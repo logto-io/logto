@@ -1,3 +1,3 @@
-export { default as InputField } from './InputField';
-export { default as PasswordInputField } from './PasswordInputField';
+export { default as InputField } from '@/shared/components/InputFields/InputField';
+export { default as PasswordInputField } from '@/shared/components/InputFields/PasswordInputField';
 export { default as SmartInputField } from './SmartInputField';

@@ -5,7 +5,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
-import ErrorMessage from '@/components/ErrorMessage';
 import { PasswordInputField } from '@/components/InputFields';
 import type { IdentifierInputValue } from '@/components/InputFields/SmartInputField';
 import CaptchaBox from '@/containers/CaptchaBox';
@@ -13,6 +12,7 @@ import ForgotPasswordLink from '@/containers/ForgotPasswordLink';
 import usePasswordSignIn from '@/hooks/use-password-sign-in';
 import { useForgotPasswordSettings } from '@/hooks/use-sie';
 import Button from '@/shared/components/Button';
+import ErrorMessage from '@/shared/components/ErrorMessage';
 
 import styles from '../index.module.scss';
 

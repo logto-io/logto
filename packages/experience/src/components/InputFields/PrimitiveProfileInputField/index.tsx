@@ -1,9 +1,10 @@
 import { CustomProfileFieldType, type FieldOption, Gender, type FieldPart } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
+import InputField from '@/shared/components/InputFields/InputField';
+
 import CheckboxField from '../CheckboxField';
 import DateField from '../DateField';
-import InputField from '../InputField';
 import SelectField from '../SelectField';
 
 type Props = Partial<Omit<FieldPart, 'enabled'>> & {

@@ -5,8 +5,8 @@ import i18next from 'i18next';
 import type { TFuncKey } from 'i18next';
 import { ParseError } from 'libphonenumber-js/mobile';
 
-import type { ErrorType } from '@/components/ErrorMessage';
 import type { IdentifierInputType } from '@/components/InputFields/SmartInputField';
+import type { ErrorType } from '@/shared/components/ErrorMessage';
 import { parsePhoneNumber } from '@/utils/country-code';
 
 const { t } = i18next;
