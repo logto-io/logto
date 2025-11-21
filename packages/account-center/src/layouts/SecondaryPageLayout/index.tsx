@@ -1,9 +1,8 @@
 import DynamicT from '@experience/shared/components/DynamicT';
+import NavBar from '@experience/shared/components/NavBar';
 import PageMeta from '@experience/shared/components/PageMeta';
 import type { TFuncKey } from 'i18next';
 import { type ReactElement } from 'react';
-
-import NavBar from '@ac/components/NavBar';
 
 import styles from './index.module.scss';
 

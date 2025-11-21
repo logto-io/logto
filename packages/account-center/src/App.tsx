@@ -1,6 +1,7 @@
 import { LogtoProvider, useLogto, UserScope } from '@logto/react';
 import { accountCenterApplicationId } from '@logto/schemas';
 import { useContext, useEffect } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import AppBoundary from '@ac/Providers/AppBoundary';
 
@@ -59,36 +60,40 @@ const Main = () => {
     return <div className={styles.status}>Redirecting to sign in…</div>;
   }
 
-  if (window.location.pathname === `${accountCenterBasePath}/email`) {
-    return <Email />;
-  }
-
-  return <Home />;
+  return (
+    <Routes>
+      <Route path="email" element={<Email />} />
+      <Route index element={<Home />} />
+      <Route path="*" element={<Home />} />
+    </Routes>
+  );
 };
 
 const App = () => (
-  <LogtoProvider
-    config={{
-      endpoint: window.location.origin,
-      appId: accountCenterApplicationId,
-      scopes: [UserScope.Profile, UserScope.Email, UserScope.Phone, UserScope.Identities],
-    }}
-  >
-    <PageContextProvider>
-      <AppBoundary>
-        <div className={styles.app}>
-          <BrandingHeader />
-          <div className={styles.layout}>
-            <div className={styles.container}>
-              <main className={styles.main}>
-                <Main />
-              </main>
+  <BrowserRouter basename={accountCenterBasePath}>
+    <LogtoProvider
+      config={{
+        endpoint: window.location.origin,
+        appId: accountCenterApplicationId,
+        scopes: [UserScope.Profile, UserScope.Email, UserScope.Phone, UserScope.Identities],
+      }}
+    >
+      <PageContextProvider>
+        <AppBoundary>
+          <div className={styles.app}>
+            <BrandingHeader />
+            <div className={styles.layout}>
+              <div className={styles.container}>
+                <main className={styles.main}>
+                  <Main />
+                </main>
+              </div>
             </div>
           </div>
-        </div>
-      </AppBoundary>
-    </PageContextProvider>
-  </LogtoProvider>
+        </AppBoundary>
+      </PageContextProvider>
+    </LogtoProvider>
+  </BrowserRouter>
 );
 
 export default App;

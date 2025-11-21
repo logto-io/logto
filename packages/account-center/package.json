@@ -67,5 +67,8 @@
   "stylelint": {
     "extends": "@silverhand/eslint-config-react/.stylelintrc"
   },
-  "prettier": "@silverhand/eslint-config/.prettierrc"
+  "prettier": "@silverhand/eslint-config/.prettierrc",
+  "dependencies": {
+    "react-router-dom": "^7.9.6"
+  }
 }
