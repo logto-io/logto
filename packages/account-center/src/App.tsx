@@ -12,10 +12,12 @@ import BrandingHeader from './components/BrandingHeader';
 import ErrorPage from './components/ErrorPage';
 import initI18n from './i18n/init';
 import Home from './pages/Home';
+import { handleAccountCenterRoute } from './utils/account-center-route';
 
 import '@experience/shared/scss/normalized.scss';
 
 void initI18n();
+handleAccountCenterRoute();
 
 const redirectUri = `${window.location.origin}/account-center`;
 
