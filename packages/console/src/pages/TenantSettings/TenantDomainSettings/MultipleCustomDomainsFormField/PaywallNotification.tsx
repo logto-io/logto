@@ -6,7 +6,6 @@ import SkuName from '@/components/SkuName';
 import { addOnPricingExplanationLink } from '@/consts';
 import { customDomainAddOnUnitPrice } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
-import { TenantsContext } from '@/contexts/TenantsProvider';
 import InlineNotification from '@/ds-components/InlineNotification';
 import TextLink from '@/ds-components/TextLink';
 import usePaywall from '@/hooks/use-paywall';
@@ -21,9 +20,7 @@ export default function PaywallNotification() {
   const {
     currentSubscription: { planId },
     currentSubscriptionQuota,
-    hasSurpassedSubscriptionQuotaLimit,
   } = useContext(SubscriptionDataContext);
-  const { currentTenant } = useContext(TenantsContext);
 
   if (isFreeTenant) {
     return (
@@ -51,16 +48,7 @@ export default function PaywallNotification() {
     );
   }
 
-  /**
-   * Specifically for private region users who have enabled multiple custom domains feature flag.
-   *
-   * TODO @xiaoyijun: remove this special handling after enterprise subscription is live
-   */
-  if (currentTenant?.featureFlags?.isMultipleCustomDomainsEnabled) {
-    return null;
-  }
-
-  if (isPaidTenant && !hasSurpassedSubscriptionQuotaLimit('customDomainsLimit')) {
+  if (isPaidTenant) {
     return (
       <InlineNotification className={styles.paywallNotification}>
         <Trans

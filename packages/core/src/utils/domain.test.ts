@@ -36,7 +36,6 @@ describe('assertCustomDomainLimit()', () => {
     await expect(
       assertCustomDomainLimit({
         isPrivateRegionFeature: true,
-        isDevelopmentFeatureEnabled: false,
         quotaLibrary,
         existingDomainCount: maxCustomDomains - 1,
       })
@@ -51,7 +50,6 @@ describe('assertCustomDomainLimit()', () => {
     await expect(
       assertCustomDomainLimit({
         isPrivateRegionFeature: true,
-        isDevelopmentFeatureEnabled: true,
         quotaLibrary,
         existingDomainCount: maxCustomDomains,
       })
@@ -66,42 +64,12 @@ describe('assertCustomDomainLimit()', () => {
     expect(guardTenantUsageByKey).not.toHaveBeenCalled();
   });
 
-  it('limits tenants without dev features to a single custom domain', async () => {
+  it('should check quota guard when private region feature is disabled', async () => {
     const { quotaLibrary, guardTenantUsageByKey } = createQuotaLibraryMock();
 
     await expect(
       assertCustomDomainLimit({
         isPrivateRegionFeature: false,
-        isDevelopmentFeatureEnabled: false,
-        quotaLibrary,
-        existingDomainCount: 0,
-      })
-    ).resolves.toBeUndefined();
-
-    await expect(
-      assertCustomDomainLimit({
-        isPrivateRegionFeature: false,
-        isDevelopmentFeatureEnabled: false,
-        quotaLibrary,
-        existingDomainCount: 1,
-      })
-    ).rejects.toMatchError(
-      new RequestError({
-        code: 'domain.limit_to_one_domain',
-        status: 422,
-      })
-    );
-
-    expect(guardTenantUsageByKey).not.toHaveBeenCalled();
-  });
-
-  it('delegates to quota guard when dev features are enabled', async () => {
-    const { quotaLibrary, guardTenantUsageByKey } = createQuotaLibraryMock();
-
-    await expect(
-      assertCustomDomainLimit({
-        isPrivateRegionFeature: false,
-        isDevelopmentFeatureEnabled: true,
         quotaLibrary,
         existingDomainCount: 5,
       })

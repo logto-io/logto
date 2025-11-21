@@ -1,5 +1,6 @@
 import { type AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
+import { type ReactNode } from 'react';
 import { toast } from 'react-hot-toast';
 
 import Error from '@/assets/icons/toast-error.svg?react';
@@ -13,7 +14,7 @@ import styles from './index.module.scss';
 type ToastVariant = 'success' | 'error';
 
 type ToastWithActionProps = {
-  readonly message: string;
+  readonly message: ReactNode;
   readonly variant: ToastVariant;
   readonly actionText: AdminConsoleKey;
   readonly actionHref: string;

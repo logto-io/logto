@@ -9,6 +9,7 @@ export const reservationLink = 'https://cal.com/logto/30min';
 export const trustAndSecurityLink = 'https://logto.io/trust-and-security';
 export const pricingLink = 'https://logto.io/pricing';
 export const officialWebsiteContactPageLink = 'https://logto.io/contact';
+export const entityPolicyLink = 'https://docs.logto.io/logto-cloud/system-limit';
 
 /** Docs link */
 export const organizationsFeatureLink = '/organizations';

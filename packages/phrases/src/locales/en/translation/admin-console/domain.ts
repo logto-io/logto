@@ -9,7 +9,7 @@ const domain = {
   error_hint:
     'Make sure to update your DNS records. We will continue to check every {{value}} seconds.',
   custom: {
-    custom_domain: 'Custom Domain',
+    custom_domain: 'Custom Domains',
     custom_domain_description:
       'Improve your branding by utilizing a custom domain. This domain will be used in your sign-in experience.',
     custom_domain_field: 'Custom domains',

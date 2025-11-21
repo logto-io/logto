@@ -1,10 +1,10 @@
 import { DomainStatus, type Domain } from '@logto/schemas';
-import { cond } from '@silverhand/essentials';
+import { type Optional } from '@silverhand/essentials';
 import { useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { type CombinedAddOnAndFeatureTagProps } from '@/components/FeatureTag';
 import LearnMore from '@/components/LearnMore';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { customDomain as customDomainDocumentationLink } from '@/consts/external-links';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
@@ -23,7 +23,8 @@ import styles from './index.module.scss';
 
 function MultipleCustomDomainsFormField() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { allDomains, mutate } = useCustomDomain(true);
+  const { allDomains, mutate, shouldDisplayFeatureAddOnTag, shouldDisplayUpsellNotification } =
+    useCustomDomain(true);
   const api = useApi();
   const {
     access: { canManageTenant },
@@ -31,6 +32,7 @@ function MultipleCustomDomainsFormField() {
   const { hasReachedSubscriptionQuotaLimit } = useContext(SubscriptionDataContext);
   const { isPaidTenant } = usePaywall();
   const { currentTenant } = useContext(TenantsContext);
+  const { isFreeTenant } = usePaywall();
 
   const hasReachedQuotaLimit = hasReachedSubscriptionQuotaLimit('customDomainsLimit');
 
@@ -60,20 +62,20 @@ function MultipleCustomDomainsFormField() {
     isPaidTenant,
   ]);
 
+  const addOnFeatureTagProps = useMemo<Optional<CombinedAddOnAndFeatureTagProps>>(() => {
+    if (shouldDisplayFeatureAddOnTag) {
+      return {
+        hasAddOnTag: !isFreeTenant,
+        paywall: latestProPlanId,
+      };
+    }
+  }, [isFreeTenant, shouldDisplayFeatureAddOnTag]);
+
   return (
     <>
       <FormField
         title="domain.custom.add_custom_domain_field"
-        {...cond(
-          // TODO @xiaoyijun: remove the dev feature flag
-          isDevFeaturesEnabled &&
-            hasReachedQuotaLimit && {
-              addOnFeatureTag: {
-                hasAddOnTag: hasReachedQuotaLimit,
-                paywall: latestProPlanId,
-              },
-            }
-        )}
+        addOnFeatureTag={addOnFeatureTagProps}
       >
         <AddDomainForm
           isReadonly={!canAddDomain}
@@ -82,10 +84,7 @@ function MultipleCustomDomainsFormField() {
             mutate(createdDomain);
           }}
         />
-        {
-          // TODO @xiaoyijun: remove the dev feature flag
-          isDevFeaturesEnabled && hasReachedQuotaLimit && <PaywallNotification />
-        }
+        {shouldDisplayUpsellNotification && <PaywallNotification />}
       </FormField>
       {allDomains.length > 0 && (
         <FormField title="domain.custom.custom_domain_field">
