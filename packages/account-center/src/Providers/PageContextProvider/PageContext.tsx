@@ -7,7 +7,9 @@ const noop = () => {};
 
 export type PageContextType = {
   theme: Theme;
+  toast: string;
   setTheme: React.Dispatch<React.SetStateAction<Theme>>;
+  setToast: React.Dispatch<React.SetStateAction<string>>;
   experienceSettings?: SignInExperienceResponse;
   setExperienceSettings: React.Dispatch<React.SetStateAction<SignInExperienceResponse | undefined>>;
   accountCenterSettings?: AccountCenter;
@@ -23,7 +25,9 @@ export type PageContextType = {
 
 const PageContext = createContext<PageContextType>({
   theme: Theme.Light,
+  toast: '',
   setTheme: noop,
+  setToast: noop,
   experienceSettings: undefined,
   setExperienceSettings: noop,
   accountCenterSettings: undefined,

@@ -1,8 +1,8 @@
+import Toast from '@experience/shared/components/Toast';
 import type { ReactNode } from 'react';
 import { useCallback, useContext } from 'react';
 
-import PageContext from '@/Providers/PageContextProvider/PageContext';
-import Toast from '@/shared/components/Toast';
+import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 
 type Props = {
   readonly children: ReactNode;
@@ -11,7 +11,6 @@ type Props = {
 const ToastProvider = ({ children }: Props) => {
   const { toast, setToast } = useContext(PageContext);
 
-  // Prevent internal eventListener rebind
   const hideToast = useCallback(() => {
     setToast('');
   }, [setToast]);

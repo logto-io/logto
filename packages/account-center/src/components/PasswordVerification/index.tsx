@@ -1,5 +1,4 @@
 import Button from '@experience/shared/components/Button';
-import ErrorMessage from '@experience/shared/components/ErrorMessage';
 import PasswordInputField from '@experience/shared/components/InputFields/PasswordInputField';
 import { useState, useContext, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,10 +11,9 @@ import styles from './index.module.scss';
 
 const PasswordVerification = () => {
   const { t } = useTranslation();
-  const { setVerificationId } = useContext(PageContext);
+  const { setVerificationId, setToast } = useContext(PageContext);
   const [password, setPassword] = useState('');
   const [fieldError, setFieldError] = useState<string>();
-  const [formError, setFormError] = useState<string>();
   const [loading, setLoading] = useState(false);
 
   const handleVerify = async (event?: FormEvent<HTMLFormElement>) => {
@@ -27,17 +25,13 @@ const PasswordVerification = () => {
     }
 
     setFieldError(undefined);
-    setFormError(undefined);
     setLoading(true);
     try {
       const result = await verifyPassword(password);
       setVerificationId(result.verificationRecordId);
     } catch {
-      setFormError(
-        t('account_center.password_verification.error_failed', {
-          defaultValue: 'Verification failed. Please check your password.',
-        })
-      );
+      const errorMessage = t('account_center.password_verification.error_failed');
+      setToast(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -62,10 +56,6 @@ const PasswordVerification = () => {
               if (fieldError) {
                 setFieldError(undefined);
               }
-
-              if (formError) {
-                setFormError(undefined);
-              }
             }
           }}
         />
@@ -75,7 +65,6 @@ const PasswordVerification = () => {
           title="action.confirm"
           isLoading={loading}
         />
-        {formError && <ErrorMessage className={styles.error}>{formError}</ErrorMessage>}
       </form>
     </SecondaryPageLayout>
   );

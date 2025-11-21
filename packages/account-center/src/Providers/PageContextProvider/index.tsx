@@ -17,6 +17,7 @@ type Props = {
 const PageContextProvider = ({ children }: Props) => {
   const { isAuthenticated, getAccessToken } = useLogto();
   const [theme, setTheme] = useState(Theme.Light);
+  const [toast, setToast] = useState('');
   const [experienceSettings, setExperienceSettings] =
     useState<PageContextType['experienceSettings']>(undefined);
   const [accountCenterSettings, setAccountCenterSettings] =
@@ -100,7 +101,9 @@ const PageContextProvider = ({ children }: Props) => {
   const value = useMemo<PageContextType>(
     () => ({
       theme,
+      toast,
       setTheme,
+      setToast,
       experienceSettings,
       setExperienceSettings,
       accountCenterSettings,
@@ -119,6 +122,7 @@ const PageContextProvider = ({ children }: Props) => {
       experienceSettings,
       isLoadingExperience,
       theme,
+      toast,
       userInfo,
       userInfoError,
       verificationId,
