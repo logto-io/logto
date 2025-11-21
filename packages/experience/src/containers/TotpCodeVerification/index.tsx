@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import VerificationCodeInput from '@/components/VerificationCode';
 import Button from '@/shared/components/Button';
+import VerificationCodeInput from '@/shared/components/VerificationCode';
 import { type UserMfaFlow } from '@/types';
 
 import styles from './index.module.scss';

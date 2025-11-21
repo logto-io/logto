@@ -21,6 +21,23 @@ const account_center = {
       name: 'Parola',
       description: 'Parolanızı doğrulayın',
     },
+    email: {
+      name: 'E-posta doğrulama kodu',
+      description: 'Doğrulama kodunu e-postana gönder',
+    },
+  },
+  email_verification: {
+    title: 'E-postanı doğrula',
+    prepare_description:
+      "Verify it's you to protect your account security. Send the verification code to your email.",
+    email_label: 'Email address',
+    send: 'Send verification code',
+    description: 'Doğrulama kodu {{email}} adresine gönderildi. Devam etmek için kodu gir.',
+    resend: 'Kodu yeniden gönder',
+    resend_countdown: 'Hâlâ gelmedi mi? {{seconds}} sn sonra tekrar gönder.',
+    error_send_failed: 'Doğrulama kodu gönderilemedi. Lütfen daha sonra tekrar dene.',
+    error_verify_failed: 'Doğrulama başarısız. Lütfen kodu tekrar gir.',
+    error_invalid_code: 'Doğrulama kodu geçersiz veya süresi dolmuş.',
   },
 };
 

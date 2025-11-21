@@ -20,6 +20,23 @@ const account_center = {
       name: '密码',
       description: '验证您的密码',
     },
+    email: {
+      name: '邮箱验证码',
+      description: '发送验证码到您的邮箱',
+    },
+  },
+  email_verification: {
+    title: '验证您的邮箱',
+    prepare_description:
+      "Verify it's you to protect your account security. Send the verification code to your email.",
+    email_label: 'Email address',
+    send: 'Send verification code',
+    description: '验证码已发送至您的邮箱 {{email}}。请输入验证码以继续。',
+    resend: '重新发送',
+    resend_countdown: '还没有收到？{{seconds}} 秒后可重新发送。',
+    error_send_failed: '验证码发送失败，请稍后再试。',
+    error_verify_failed: '验证失败，请重新输入验证码。',
+    error_invalid_code: '验证码无效或已过期。',
   },
 };
 

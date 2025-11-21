@@ -21,6 +21,24 @@ const account_center = {
       name: 'Palavra-passe',
       description: 'Verifique a sua palavra-passe',
     },
+    email: {
+      name: 'Código de verificação por e-mail',
+      description: 'Enviar código de verificação para o seu e-mail',
+    },
+  },
+  email_verification: {
+    title: 'Verifique o seu e-mail',
+    prepare_description:
+      "Verify it's you to protect your account security. Send the verification code to your email.",
+    email_label: 'Email address',
+    send: 'Send verification code',
+    description:
+      'O código de verificação foi enviado para o e-mail {{email}}. Introduza o código para continuar.',
+    resend: 'Reenviar código',
+    resend_countdown: 'Ainda não recebeu? Reenvie após {{seconds}} s.',
+    error_send_failed: 'Falha ao enviar o código de verificação. Tente novamente mais tarde.',
+    error_verify_failed: 'Falha na verificação. Introduza novamente o código.',
+    error_invalid_code: 'O código de verificação é inválido ou expirou.',
   },
 };
 

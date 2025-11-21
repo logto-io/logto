@@ -21,6 +21,25 @@ const account_center = {
       name: 'Passwort',
       description: 'Bestätige dein Passwort',
     },
+    email: {
+      name: 'E-Mail-Bestätigungscode',
+      description: 'Bestätigungscode an deine E-Mail senden',
+    },
+  },
+  email_verification: {
+    title: 'Bestätige deine E-Mail',
+    prepare_description:
+      "Verify it's you to protect your account security. Send the verification code to your email.",
+    email_label: 'Email address',
+    send: 'Send verification code',
+    description:
+      'Der Bestätigungscode wurde an deine E-Mail {{email}} gesendet. Gib den Code ein, um fortzufahren.',
+    resend: 'Code erneut senden',
+    resend_countdown: 'Noch nichts erhalten? Erneut senden nach {{seconds}} s.',
+    error_send_failed:
+      'Bestätigungscode konnte nicht gesendet werden. Bitte versuche es später noch einmal.',
+    error_verify_failed: 'Verifizierung fehlgeschlagen. Bitte gib den Code erneut ein.',
+    error_invalid_code: 'Der Bestätigungscode ist ungültig oder abgelaufen.',
   },
 };
 

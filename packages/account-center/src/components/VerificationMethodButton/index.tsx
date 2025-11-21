@@ -1,9 +1,13 @@
+import DynamicT from '@/shared/components/DynamicT';
 import ArrowNext from '@experience/shared/assets/icons/arrow-next.svg?react';
 import styles from '@experience/shared/components/Button/index.module.scss';
 import FlipOnRtl from '@experience/shared/components/FlipOnRtl';
 import classNames from 'classnames';
+import { type TFuncKey } from 'i18next';
+import type { ComponentType, SVGProps } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import EmailIcon from '@ac/assets/icons/email.svg?react';
 import PasswordIcon from '@ac/assets/icons/password.svg?react';
 import { VerificationMethod } from '@ac/types';
 
@@ -14,12 +18,34 @@ export type Props = {
   readonly onClick?: () => void;
 };
 
+type MethodContent = {
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
+  nameKey: TFuncKey;
+  descriptionKey: TFuncKey;
+};
+
+const methodContentMap: Partial<Record<VerificationMethod, MethodContent>> = {
+  [VerificationMethod.Password]: {
+    icon: PasswordIcon,
+    nameKey: 'account_center.verification_method.password.name',
+    descriptionKey: 'account_center.verification_method.password.description',
+  },
+  [VerificationMethod.EmailCode]: {
+    icon: EmailIcon,
+    nameKey: 'account_center.verification_method.email.name',
+    descriptionKey: 'account_center.verification_method.email.description',
+  },
+};
+
 const VerificationMethodButton = ({ method, onClick }: Props) => {
   const { t } = useTranslation();
+  const content = methodContentMap[method];
 
-  if (method !== VerificationMethod.Password) {
+  if (!content) {
     return null;
   }
+
+  const { icon: Icon, nameKey, descriptionKey } = content;
 
   return (
     <button
@@ -32,13 +58,13 @@ const VerificationMethodButton = ({ method, onClick }: Props) => {
       type="button"
       onClick={onClick}
     >
-      <PasswordIcon className={verificationMethodStyles.icon} />
+      <Icon className={verificationMethodStyles.icon} />
       <div className={verificationMethodStyles.title}>
         <div className={verificationMethodStyles.name}>
-          {t('account_center.verification_method.password.name')}
+          <DynamicT forKey={nameKey} />
         </div>
         <div className={verificationMethodStyles.description}>
-          {t('account_center.verification_method.password.description')}
+          <DynamicT forKey={descriptionKey} />
         </div>
       </div>
       <FlipOnRtl>

@@ -4,12 +4,13 @@ import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
 import { VerificationMethod } from '@ac/types';
 
+import EmailVerification from '../EmailVerification';
 import PasswordVerification from '../PasswordVerification';
 import VerificationMethodButton from '../VerificationMethodButton';
 
 const VerificationMethodList = () => {
   const { userInfo } = useContext(PageContext);
-  const [verifyingMethod, setVerifyingMethod] = useState<'password' | undefined>();
+  const [verifyingMethod, setVerifyingMethod] = useState<'password' | 'email' | undefined>();
 
   if (verifyingMethod === 'password') {
     return (
@@ -20,6 +21,18 @@ const VerificationMethodList = () => {
       />
     );
   }
+
+  if (verifyingMethod === 'email') {
+    return (
+      <EmailVerification
+        onBack={() => {
+          setVerifyingMethod(undefined);
+        }}
+      />
+    );
+  }
+
+  const hasEmailVerification = Boolean(userInfo?.primaryEmail);
 
   return (
     <SecondaryPageLayout
@@ -32,6 +45,14 @@ const VerificationMethodList = () => {
             method={VerificationMethod.Password}
             onClick={() => {
               setVerifyingMethod('password');
+            }}
+          />
+        )}
+        {hasEmailVerification && (
+          <VerificationMethodButton
+            method={VerificationMethod.EmailCode}
+            onClick={() => {
+              setVerifyingMethod('email');
             }}
           />
         )}

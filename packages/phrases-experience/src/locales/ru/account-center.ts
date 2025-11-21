@@ -21,6 +21,23 @@ const account_center = {
       name: 'Пароль',
       description: 'Подтвердите свой пароль',
     },
+    email: {
+      name: 'Код подтверждения по электронной почте',
+      description: 'Отправить код подтверждения на вашу почту',
+    },
+  },
+  email_verification: {
+    title: 'Подтвердите свою почту',
+    prepare_description:
+      "Verify it's you to protect your account security. Send the verification code to your email.",
+    email_label: 'Email address',
+    send: 'Send verification code',
+    description: 'Код подтверждения отправлен на {{email}}. Введите код, чтобы продолжить.',
+    resend: 'Отправить код ещё раз',
+    resend_countdown: 'Не получили? Повторная отправка через {{seconds}} с.',
+    error_send_failed: 'Не удалось отправить код подтверждения. Попробуйте позже.',
+    error_verify_failed: 'Не удалось подтвердить. Введите код ещё раз.',
+    error_invalid_code: 'Код подтверждения недействителен или истёк.',
   },
 };
 
