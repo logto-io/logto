@@ -13,18 +13,15 @@ const PasswordVerification = () => {
   const { t } = useTranslation();
   const { setVerificationId, setToast } = useContext(PageContext);
   const [password, setPassword] = useState('');
-  const [fieldError, setFieldError] = useState<string>();
   const [loading, setLoading] = useState(false);
 
   const handleVerify = async (event?: FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
 
     if (!password) {
-      setFieldError(t('error.password_required'));
       return;
     }
 
-    setFieldError(undefined);
     setLoading(true);
     try {
       const result = await verifyPassword(password);
@@ -47,15 +44,9 @@ const PasswordVerification = () => {
           autoComplete="current-password"
           label={t('input.password')}
           value={password}
-          errorMessage={fieldError}
-          isDanger={Boolean(fieldError)}
           onChange={(event) => {
             if (event.target instanceof HTMLInputElement) {
               setPassword(String(event.target.value));
-
-              if (fieldError) {
-                setFieldError(undefined);
-              }
             }
           }}
         />
@@ -63,6 +54,7 @@ const PasswordVerification = () => {
           className={styles.submit}
           htmlType="submit"
           title="action.confirm"
+          disabled={!password}
           isLoading={loading}
         />
       </form>
