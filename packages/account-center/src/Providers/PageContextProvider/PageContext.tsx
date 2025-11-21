@@ -18,7 +18,7 @@ export type PageContextType = {
   setUserInfo: React.Dispatch<React.SetStateAction<Partial<UserProfileResponse> | undefined>>;
   userInfoError?: Error;
   verificationId?: string;
-  setVerificationId: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setVerificationId: (verificationId?: string, expiresAt?: string) => void;
   isLoadingExperience: boolean;
   experienceError?: Error;
 };

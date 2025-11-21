@@ -1,6 +1,6 @@
 import { useLogto } from '@logto/react';
 import { Theme } from '@logto/schemas';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { getAccountCenterSettings } from '@ac/apis/account-center';
 import { getSignInExperienceSettings } from '@ac/apis/sign-in-experience';
@@ -9,6 +9,11 @@ import { getThemeBySystemPreference, subscribeToSystemTheme } from '@ac/utils/th
 
 import type { PageContextType } from './PageContext';
 import PageContext from './PageContext';
+import {
+  clearVerificationRecord,
+  getStoredVerificationId,
+  persistVerificationRecord,
+} from './verification-storage';
 
 type Props = {
   readonly children: React.ReactNode;
@@ -27,6 +32,28 @@ const PageContextProvider = ({ children }: Props) => {
   const [verificationId, setVerificationId] = useState<string>();
   const [isLoadingExperience, setIsLoadingExperience] = useState(true);
   const [experienceError, setExperienceError] = useState<Error>();
+
+  useEffect(() => {
+    const storedVerificationId = getStoredVerificationId();
+
+    if (storedVerificationId) {
+      setVerificationId(storedVerificationId);
+    }
+  }, []);
+
+  const setVerificationIdCallback = useCallback((id?: string, expiresAt?: string) => {
+    setVerificationId(id);
+
+    if (!id || !expiresAt) {
+      clearVerificationRecord();
+      return;
+    }
+
+    persistVerificationRecord({
+      verificationId: id,
+      expiresAt,
+    });
+  }, []);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -112,7 +139,7 @@ const PageContextProvider = ({ children }: Props) => {
       setUserInfo,
       userInfoError,
       verificationId,
-      setVerificationId,
+      setVerificationId: setVerificationIdCallback,
       isLoadingExperience,
       experienceError,
     }),
@@ -126,6 +153,7 @@ const PageContextProvider = ({ children }: Props) => {
       userInfo,
       userInfoError,
       verificationId,
+      setVerificationIdCallback,
     ]
   );
 

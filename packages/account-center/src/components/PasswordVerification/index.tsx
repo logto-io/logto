@@ -37,7 +37,7 @@ const PasswordVerification = ({ onBack }: Props) => {
       }
 
       const result = await verifyPassword(accessToken, password);
-      setVerificationId(result.verificationRecordId);
+      setVerificationId(result.verificationRecordId, result.expiresAt);
     } catch {
       const errorMessage = t('account_center.password_verification.error_failed');
       setToast(errorMessage);
