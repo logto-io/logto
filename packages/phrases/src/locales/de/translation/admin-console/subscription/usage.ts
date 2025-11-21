@@ -62,6 +62,11 @@ const usage = {
     tooltip_for_enterprise:
       'Die ersten {{basicQuota}} Tenant-Mitglieder sind in deinem vertragsbasierten Plan enthalten und kostenlos. Wenn du mehr benötigst, ${{price, number}} pro Tenant-Mitglied pro Monat.',
   },
+  custom_domains: {
+    title: 'Benutzerdefinierte Domains',
+    tooltip:
+      'Add-on-Funktion zum Preis von ${{price, number}} für bis zu 10 benutzerdefinierte Domains pro Monat. Die erste benutzerdefinierte Domain ist kostenlos.',
+  },
   tokens: {
     title: 'Tokens',
     tooltip:

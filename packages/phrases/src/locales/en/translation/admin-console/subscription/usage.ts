@@ -62,6 +62,11 @@ const usage = {
     tooltip_for_enterprise:
       'The first {{count}} tenant members are included and free to use in your contract-based plan. If you need more, ${{price, number}} per tenant member per month.',
   },
+  custom_domains: {
+    title: 'Custom domains',
+    tooltip:
+      'Add-on feature priced at ${{price, number}} for up to 10 custom domains per month. The first 1 custom domain is free.',
+  },
   tokens: {
     title: 'Tokens',
     tooltip:

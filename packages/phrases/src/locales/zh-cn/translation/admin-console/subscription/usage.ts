@@ -55,6 +55,10 @@ const usage = {
     tooltip_for_enterprise:
       '合同计划包括前 {{basicQuota}} 个租户成员，免费使用。如果需要更多，每个租户成员每月 ${{price, number}}。',
   },
+  custom_domains: {
+    title: '自定义域名',
+    tooltip: '附加功能，每月 ${{price, number}}，最多 10 个自定义域名。首个自定义域名免费。',
+  },
   tokens: {
     title: '令牌',
     tooltip:

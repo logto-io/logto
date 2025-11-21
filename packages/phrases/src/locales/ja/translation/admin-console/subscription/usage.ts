@@ -63,6 +63,11 @@ const usage = {
     tooltip_for_enterprise:
       '最初の {{basicQuota}} のテナントメンバーは契約ベースのプランで含まれており、無料で使用できます。より多くが必要な場合、月額 {{price, number}} ドルのメンバーごとの料金がかかります。',
   },
+  custom_domains: {
+    title: 'カスタムドメイン',
+    tooltip:
+      '追加機能で、月額 ${{price, number}} で最大 10 個のカスタムドメインを利用できます。最初の 1 つは無料です。',
+  },
   tokens: {
     title: 'トークン',
     tooltip:

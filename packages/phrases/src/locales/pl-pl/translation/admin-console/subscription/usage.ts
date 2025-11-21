@@ -62,6 +62,11 @@ const usage = {
     tooltip_for_enterprise:
       'Pierwszych {{basicQuota}} członków dzierżawcy jest wliczonych i darmowych w twoim kontrakcie. Jeśli potrzebujesz więcej, ${{price, number}} za członka dzierżawcy miesięcznie.',
   },
+  custom_domains: {
+    title: 'Własne domeny',
+    tooltip:
+      'Funkcja dodatkowa w cenie ${{price, number}} za maksymalnie 10 własnych domen miesięcznie. Pierwsza własna domena jest bezpłatna.',
+  },
   tokens: {
     title: 'Tokeny',
     tooltip:

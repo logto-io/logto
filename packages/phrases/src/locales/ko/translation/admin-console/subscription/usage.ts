@@ -62,6 +62,11 @@ const usage = {
     tooltip_for_enterprise:
       '플랜에는 처음 {{basicQuota}} 명의 테넌트 멤버가 포함되어 무료로 사용할 수 있습니다. 더 필요하다면, 매달 멤버당 ${{price, number}} 입니다.',
   },
+  custom_domains: {
+    title: '커스텀 도메인',
+    tooltip:
+      '애드온 기능으로 월 ${{price, number}} 에 최대 10개의 커스텀 도메인을 사용할 수 있습니다. 첫 번째 커스텀 도메인은 무료입니다.',
+  },
   tokens: {
     title: '토큰',
     tooltip:

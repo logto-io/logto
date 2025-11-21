@@ -63,6 +63,11 @@ const usage = {
     tooltip_for_enterprise:
       'Les {{basicQuota}} premiers membres du locataire sont inclus et gratuits dans votre plan basé sur un contrat. Si vous en avez besoin de plus, ${{price, number}} par membre du locataire par mois.',
   },
+  custom_domains: {
+    title: 'Domaines personnalisés',
+    tooltip:
+      'Fonctionnalité supplémentaire au prix de ${{price, number}} pour jusqu’à 10 domaines personnalisés par mois. Le premier domaine personnalisé est gratuit.',
+  },
   tokens: {
     title: 'Jetons',
     tooltip:
