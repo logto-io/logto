@@ -11,6 +11,10 @@ const account_center = {
     description:
       'تحقق من أنك الشخص المقصود لحماية أمان حسابك. يرجى اختيار الطريقة للتحقق من هويتك.',
   },
+  password_verification: {
+    title: 'Verify password',
+    description: "Verify it's you to protect your account security. Enter your password.",
+  },
   verification_method: {
     password: {
       name: 'كلمة المرور',

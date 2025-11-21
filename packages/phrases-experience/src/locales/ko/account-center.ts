@@ -10,6 +10,10 @@ const account_center = {
     title: '보안 인증',
     description: '계정 보안을 위해 본인인지 확인하세요. 신원을 인증할 방법을 선택해 주세요.',
   },
+  password_verification: {
+    title: 'Verify password',
+    description: "Verify it's you to protect your account security. Enter your password.",
+  },
   verification_method: {
     password: {
       name: '비밀번호',

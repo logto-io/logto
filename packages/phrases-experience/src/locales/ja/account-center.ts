@@ -11,6 +11,10 @@ const account_center = {
     description:
       'アカウントの安全を守るため、ご本人であることを確認します。本人確認の方法を選択してください。',
   },
+  password_verification: {
+    title: 'Verify password',
+    description: "Verify it's you to protect your account security. Enter your password.",
+  },
   verification_method: {
     password: {
       name: 'パスワード',

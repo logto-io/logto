@@ -2,6 +2,7 @@ import { useState, useContext } from 'react';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { verifyPassword } from '@ac/apis/verification';
+import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
 
 const PasswordVerification = () => {
   const { setVerificationId } = useContext(PageContext);
@@ -23,25 +24,28 @@ const PasswordVerification = () => {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Verify Password</h1>
-      <p>Please verify your password to continue.</p>
-      <div style={{ marginBottom: '10px' }}>
-        <input
-          type="password"
-          value={password}
-          placeholder="Enter password"
-          style={{ padding: '8px', marginRight: '10px' }}
-          onChange={(event) => {
-            setPassword(event.target.value);
-          }}
-        />
-        <button disabled={loading} style={{ padding: '8px 16px' }} onClick={handleVerify}>
-          {loading ? 'Verifying...' : 'Verify'}
-        </button>
+    <SecondaryPageLayout
+      title="account_center.password_verification.title"
+      description="account_center.password_verification.description"
+    >
+      <div style={{ padding: '20px' }}>
+        <div style={{ marginBottom: '10px' }}>
+          <input
+            type="password"
+            value={password}
+            placeholder="Enter password"
+            style={{ padding: '8px', marginRight: '10px' }}
+            onChange={(event) => {
+              setPassword(event.target.value);
+            }}
+          />
+          <button disabled={loading} style={{ padding: '8px 16px' }} onClick={handleVerify}>
+            {loading ? 'Verifying...' : 'Verify'}
+          </button>
+        </div>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
       </div>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-    </div>
+    </SecondaryPageLayout>
   );
 };
 

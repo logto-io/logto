@@ -11,6 +11,10 @@ const account_center = {
     description:
       'Підтвердьте, що це ви, щоб захистити безпеку облікового запису. Будь ласка, оберіть спосіб підтвердження особи.',
   },
+  password_verification: {
+    title: 'Verify password',
+    description: "Verify it's you to protect your account security. Enter your password.",
+  },
   verification_method: {
     password: {
       name: 'Пароль',

@@ -10,6 +10,10 @@ const account_center = {
     title: '安全验证',
     description: '为保护账户安全，请确认是您本人。请选择验证身份的方法。',
   },
+  password_verification: {
+    title: 'Verify password',
+    description: "Verify it's you to protect your account security. Enter your password.",
+  },
   verification_method: {
     password: {
       name: '密码',

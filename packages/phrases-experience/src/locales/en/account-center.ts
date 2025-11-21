@@ -11,6 +11,10 @@ const account_center = {
     description:
       "Verify it's you to protect your account security. Please select the method to verify your identity.",
   },
+  password_verification: {
+    title: 'Verify password',
+    description: "Verify it's you to protect your account security. Enter your password.",
+  },
   verification_method: {
     password: {
       name: 'Password',
