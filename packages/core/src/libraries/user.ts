@@ -22,13 +22,18 @@ import type { OmitAutoSetFields } from '#src/utils/sql.js';
 
 import { captureDeveloperEvent } from '../utils/posthog.js';
 
+import type { IdFormatLibrary } from './id-format.js';
 import { convertBindMfaToMfaVerification, encryptUserPassword } from './user.utils.js';
 
 export type InsertUserResult = [User];
 
 export type UserLibrary = ReturnType<typeof createUserLibrary>;
 
-export const createUserLibrary = (tenantId: string, queries: Queries) => {
+export const createUserLibrary = (
+  tenantId: string,
+  queries: Queries,
+  idFormats?: IdFormatLibrary
+) => {
   const {
     pool,
     roles: { findDefaultRoles, findRolesByRoleNames, findRoleByRoleName, findRolesByRoleIds },
@@ -55,7 +60,8 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
   const generateUserId = async (retries = 500) =>
     pRetry(
       async () => {
-        const id = generateStandardShortId();
+        // Use ID format library if available, otherwise fall back to nanoid format
+        const id = idFormats ? await idFormats.generateUserId() : generateStandardShortId();
 
         if (!(await hasUserWithId(id))) {
           return id;

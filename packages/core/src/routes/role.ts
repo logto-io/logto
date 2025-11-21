@@ -51,6 +51,7 @@ export default function roleRoutes<T extends ManagementApiRouter>(
   } = queries;
   const {
     quota,
+    idFormats,
     roleScopes: { validateRoleScopeAssignment },
   } = libraries;
 
@@ -176,7 +177,7 @@ export default function roleRoutes<T extends ManagementApiRouter>(
 
       const role = await insertRole({
         ...roleBody,
-        id: generateStandardId(),
+        id: await idFormats.generateRoleId(),
       });
 
       if (scopeIds) {

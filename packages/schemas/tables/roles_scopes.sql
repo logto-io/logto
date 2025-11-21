@@ -2,7 +2,7 @@ create table roles_scopes (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
   id varchar(21) not null,
-  role_id varchar(21) not null
+  role_id varchar(36) not null
     references roles (id) on update cascade on delete cascade,
   scope_id varchar(21) not null
     references scopes (id) on update cascade on delete cascade,

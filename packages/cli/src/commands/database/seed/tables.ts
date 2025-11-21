@@ -26,6 +26,9 @@ import {
   OrganizationRoleUserRelations,
   TenantRole,
   AccountCenters,
+  TenantIdConfig,
+  createDefaultTenantIdConfig,
+  createAdminTenantIdConfig,
 } from '@logto/schemas';
 import { getTenantRole } from '@logto/schemas';
 import { createDefaultAccountCenter } from '@logto/schemas/lib/seeds/account-center.js';
@@ -85,9 +88,54 @@ const lifecycleNames: readonly string[] = Object.freeze([
   'after_each',
 ] satisfies Lifecycle[]);
 
+/**
+ * Transform SQL schema to use native PostgreSQL UUID type instead of VARCHAR.
+ * This is used for fresh installations when UUID format is chosen.
+ *
+ * Replaces:
+ * - `id varchar(12)` → `id uuid` (user IDs)
+ * - `id varchar(21)` → `id uuid` (organization, role, organization_role IDs)
+ * - `user_id varchar(12)` → `user_id uuid`
+ * - `user_id varchar(21)` → `user_id uuid`
+ * - `organization_id varchar(21)` → `organization_id uuid`
+ * - `role_id varchar(21)` → `role_id uuid`
+ * - `organization_role_id varchar(21)` → `organization_role_id uuid`
+ * - `organization_invitation_id varchar(21)` → `organization_invitation_id uuid`
+ * - `application_id varchar(21)` → `application_id uuid`
+ * - Function parameters: `varchar(21)` → `uuid` in function signatures
+ */
+const transformToNativeUuid = (sql: string): string => {
+  return (
+    sql
+      // Replace ID column definitions (primary keys)
+      .replaceAll(/\bid varchar\(12\)/g, 'id uuid')
+      .replaceAll(/\bid varchar\(21\)/g, 'id uuid')
+      // Replace user_id foreign keys
+      .replaceAll(/\buser_id varchar\(12\)/g, 'user_id uuid')
+      .replaceAll(/\buser_id varchar\(21\)/g, 'user_id uuid')
+      .replaceAll(/\btarget_user_id varchar\(12\)/g, 'target_user_id uuid')
+      // Replace organization_id foreign keys
+      .replaceAll(/\borganization_id varchar\(21\)/g, 'organization_id uuid')
+      // Replace role_id foreign keys
+      .replaceAll(/\brole_id varchar\(21\)/g, 'role_id uuid')
+      // Replace organization_role_id foreign keys
+      .replaceAll(/\borganization_role_id varchar\(21\)/g, 'organization_role_id uuid')
+      // Replace other entity ID foreign keys
+      .replaceAll(/\borganization_invitation_id varchar\(21\)/g, 'organization_invitation_id uuid')
+      .replaceAll(/\bapplication_id varchar\(21\)/g, 'application_id uuid')
+      .replaceAll(/\borganization_scope_id varchar\(21\)/g, 'organization_scope_id uuid')
+      .replaceAll(/\bresource_id varchar\(21\)/g, 'resource_id uuid')
+      .replaceAll(/\bscope_id varchar\(21\)/g, 'scope_id uuid')
+      // Replace function parameter types (e.g., in check_role_type function)
+      .replaceAll('(role_id varchar(21)', '(role_id uuid')
+      .replaceAll('(application_id varchar(21)', '(application_id uuid')
+  );
+};
+
 export const createTables = async (
   connection: DatabaseTransactionConnection,
-  encryptBaseRole: boolean
+  encryptBaseRole: boolean,
+  idFormats?: IdFormatConfig
 ): Promise<{ password: string }> => {
   const tableDirectory = getPathInModule('@logto/schemas', 'tables');
   const directoryFiles = await readdir(tableDirectory);
@@ -98,6 +146,10 @@ export const createTables = async (
       await readFile(path.join(tableDirectory, file), 'utf8'),
     ])
   );
+
+  // Determine if we should use native UUID type (only for fresh installs with UUID formats)
+  const useNativeUuid =
+    idFormats && (idFormats.idFormat === 'uuid' || idFormats.idFormat === 'uuidv7');
 
   const runLifecycleQuery = async (
     lifecycle: Lifecycle,
@@ -131,7 +183,9 @@ export const createTables = async (
 
   /* eslint-disable no-await-in-loop */
   for (const [file, query] of sorted) {
-    await connection.query(sql`${sql.raw(query)}`);
+    // Transform SQL to use native UUID type if UUID format is chosen
+    const transformedQuery = useNativeUuid ? transformToNativeUuid(query) : query;
+    await connection.query(sql`${sql.raw(transformedQuery)}`);
 
     if (!query.includes('/* no_after_each */')) {
       await runLifecycleQuery('after_each', { name: file.split('.')[0], database });
@@ -144,10 +198,15 @@ export const createTables = async (
   return { password };
 };
 
+export type IdFormatConfig = {
+  idFormat: string;
+};
+
 export const seedTables = async (
   connection: DatabaseTransactionConnection,
   latestTimestamp: number,
-  isCloud: boolean
+  isCloud: boolean,
+  idFormats?: IdFormatConfig
 ) => {
   await createTenant(connection, defaultTenantId);
   await seedOidcConfigs(connection, defaultTenantId);
@@ -189,6 +248,15 @@ export const seedTables = async (
       .map(({ id }) => id)
   );
 
+  // Create tenant ID config with custom formats if provided, otherwise use defaults
+  const defaultTenantIdConfig = idFormats
+    ? { tenantId: defaultTenantId, ...idFormats }
+    : createDefaultTenantIdConfig(defaultTenantId);
+
+  const adminTenantIdConfig = idFormats
+    ? { tenantId: adminTenantId, ...idFormats }
+    : createAdminTenantIdConfig();
+
   await Promise.all([
     seedLegacyManagementApiUserRole(connection),
     seedTenantCloudServiceApplication(connection, defaultTenantId),
@@ -205,6 +273,8 @@ export const seedTables = async (
     connection.query(insertInto(createDefaultAdminConsoleApplication(), Applications.table)),
     connection.query(insertInto(createDefaultAccountCenter(defaultTenantId), AccountCenters.table)),
     connection.query(insertInto(createDefaultAccountCenter(adminTenantId), AccountCenters.table)),
+    connection.query(insertInto(defaultTenantIdConfig, TenantIdConfig.table)),
+    connection.query(insertInto(adminTenantIdConfig, TenantIdConfig.table)),
   ]);
 
   // The below seed data is for the Logto Cloud only. We put it here for the sake of simplicity.
