@@ -179,6 +179,9 @@ importers:
       vite-plugin-compression:
         specifier: ^0.5.1
         version: 0.5.1(vite@6.3.6(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
+      vite-plugin-svgr:
+        specifier: ^4.3.0
+        version: 4.3.0(rollup@4.40.1)(typescript@5.5.3)(vite@6.3.6(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
 
   packages/api:
     dependencies:

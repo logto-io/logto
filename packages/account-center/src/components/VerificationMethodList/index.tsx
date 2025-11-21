@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
+import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
 
 import PasswordVerification from '../PasswordVerification';
 
@@ -13,9 +14,10 @@ const VerificationMethodList = () => {
   }
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Security Verification</h1>
-      <p>Please select a verification method to continue.</p>
+    <SecondaryPageLayout
+      title="account_center.verification.title"
+      description="account_center.verification.description"
+    >
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         {userInfo?.hasPassword && (
           <button
@@ -28,7 +30,7 @@ const VerificationMethodList = () => {
           </button>
         )}
       </div>
-    </div>
+    </SecondaryPageLayout>
   );
 };
 

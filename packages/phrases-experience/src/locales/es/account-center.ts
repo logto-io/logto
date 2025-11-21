@@ -6,6 +6,11 @@ const account_center = {
     title: 'Página no encontrada',
     description: 'Esta página no está disponible.',
   },
+  verification: {
+    title: 'Verificación de seguridad',
+    description:
+      'Confirma que eres tú para proteger la seguridad de tu cuenta. Selecciona el método para verificar tu identidad.',
+  },
 };
 
 export default Object.freeze(account_center);

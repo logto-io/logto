@@ -6,6 +6,11 @@ const account_center = {
     title: 'ページが見つかりません',
     description: 'このページは利用できません。',
   },
+  verification: {
+    title: 'セキュリティ確認',
+    description:
+      'アカウントの安全を守るため、ご本人であることを確認します。本人確認の方法を選択してください。',
+  },
 };
 
 export default Object.freeze(account_center);

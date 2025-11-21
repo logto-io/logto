@@ -55,7 +55,8 @@
     "typescript": "^5.5.3",
     "use-debounced-loader": "^0.1.1",
     "vite": "^6.3.6",
-    "vite-plugin-compression": "^0.5.1"
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-svgr": "^4.3.0"
   },
   "engines": {
     "node": "^22.14.0"
