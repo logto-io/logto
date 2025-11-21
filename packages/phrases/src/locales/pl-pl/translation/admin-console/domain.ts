@@ -9,7 +9,7 @@ const domain = {
   error_hint:
     'Upewnij się, że zaktualizowałeś swoje rekordy DNS. Będziemy nadal sprawdzać co {{value}} sekund.',
   custom: {
-    custom_domain: 'Niestandardowa domena',
+    custom_domain: 'Niestandardowe domeny',
     custom_domain_description:
       'Ulepsz swoją markę, wykorzystując niestandardową domenę. Ta domena będzie używana w Twoim procesie logowania.',
     custom_domain_field: 'Niestandardowe domeny',

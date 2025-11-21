@@ -1,10 +1,12 @@
 import { DomainStatus, type Domain } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
 import useSWR from 'swr';
 
 import { customDomainSyncInterval } from '@/consts/custom-domain';
 import { isCloud } from '@/consts/env';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 
 import { type RequestError } from './use-api';
 
@@ -17,6 +19,11 @@ const useCustomDomain = (autoSync = false) => {
       }
     )
   );
+
+  const { currentSubscriptionBasicQuota, currentSubscriptionUsage } =
+    useContext(SubscriptionDataContext);
+
+  const { currentTenant } = useContext(TenantsContext);
 
   const isLoading = !data && !error;
 
@@ -67,6 +74,50 @@ const useCustomDomain = (autoSync = false) => {
     [allDomains]
   );
 
+  /**
+   * Whether to display the feature add-on tag for custom domains.
+   * Shows the add-on tag when current usage exceeds the basic quota limit (excluding add-on quota).
+   */
+  const shouldDisplayFeatureAddOnTag = useMemo(() => {
+    /**
+     * Specifically for private region users who have enabled multiple custom domains feature flag.
+     *
+     * TODO @xiaoyijun: remove this special handling after enterprise subscription is live
+     */
+    if (currentTenant?.featureFlags?.isMultipleCustomDomainsEnabled) {
+      return false;
+    }
+
+    return (
+      currentSubscriptionUsage.customDomainsLimit >=
+      (currentSubscriptionBasicQuota.customDomainsLimit ?? Number.POSITIVE_INFINITY)
+    );
+  }, [
+    currentSubscriptionBasicQuota.customDomainsLimit,
+    currentSubscriptionUsage.customDomainsLimit,
+    currentTenant?.featureFlags?.isMultipleCustomDomainsEnabled,
+  ]);
+
+  const shouldDisplayUpsellNotification = useMemo(() => {
+    /**
+     * Specifically for private region users who have enabled multiple custom domains feature flag.
+     *
+     * TODO @xiaoyijun: remove this special handling after enterprise subscription is live
+     */
+    if (currentTenant?.featureFlags?.isMultipleCustomDomainsEnabled) {
+      return false;
+    }
+
+    return (
+      currentSubscriptionBasicQuota.customDomainsLimit ===
+      currentSubscriptionUsage.customDomainsLimit
+    );
+  }, [
+    currentSubscriptionBasicQuota.customDomainsLimit,
+    currentSubscriptionUsage.customDomainsLimit,
+    currentTenant?.featureFlags?.isMultipleCustomDomainsEnabled,
+  ]);
+
   return {
     /**
      * Legacy single custom domain.
@@ -85,6 +136,8 @@ const useCustomDomain = (autoSync = false) => {
     isLoading,
     mutate: mutateDomain,
     activeCustomDomains,
+    shouldDisplayFeatureAddOnTag,
+    shouldDisplayUpsellNotification,
   };
 };
 
