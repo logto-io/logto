@@ -28,7 +28,7 @@
 .cardItem {
   flex: 0 0 calc((100% - _.unit(2) * 2) / 3);
   max-width: calc((100% - _.unit(2) * 2) / 3);
-  max-height: 112px;
+  min-height: 112px;
 
   &.periodicUsage {
     flex: 0 0 calc((100% - _.unit(2)) / 2);
