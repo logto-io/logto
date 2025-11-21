@@ -62,6 +62,11 @@ const usage = {
     tooltip_for_enterprise:
       'Os primeiros {{basicQuota}} membros do locatário estão incluídos e são gratuitos para usar no seu plano baseado em contrato. Se você precisar de mais, ${{price, number}} por membro do locatário por mês.',
   },
+  custom_domains: {
+    title: 'Domínios personalizados',
+    tooltip:
+      'Recurso adicional com preço de ${{price, number}} para até 10 domínios personalizados por mês. O primeiro domínio personalizado é gratuito.',
+  },
   tokens: {
     title: 'Tokens',
     tooltip:

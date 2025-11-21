@@ -63,6 +63,11 @@ const usage = {
     tooltip_for_enterprise:
       'I primi {{basicQuota}} membri del tenant sono inclusi e gratuiti nel tuo piano basato su contratto. Se ne hai bisogno di più, ${{price, number}} per membro del tenant al mese.',
   },
+  custom_domains: {
+    title: 'Domini personalizzati',
+    tooltip:
+      'Funzionalità aggiuntiva al prezzo di ${{price, number}} per un massimo di 10 domini personalizzati al mese. Il primo dominio personalizzato è gratuito.',
+  },
   tokens: {
     title: 'Token',
     tooltip:

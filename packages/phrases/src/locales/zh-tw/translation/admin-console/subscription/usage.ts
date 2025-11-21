@@ -55,6 +55,10 @@ const usage = {
     tooltip_for_enterprise:
       '合同方案中包含前 {{basicQuota}} 個租戶成員免費使用。如果你需要更多，每個租戶成員每月 ${{price, number}}。',
   },
+  custom_domains: {
+    title: '自訂網域',
+    tooltip: '附加功能，每月 ${{price, number}}，最多 10 個自訂網域。首個自訂網域免費。',
+  },
   tokens: {
     title: '令牌',
     tooltip:

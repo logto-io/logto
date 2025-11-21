@@ -19,6 +19,7 @@ import {
   samlApplicationsAddOnUnitPrice,
   thirdPartyApplicationsAddOnUnitPrice,
   rbacEnabledAddOnUnitPrice,
+  customDomainAddOnUnitPrice,
 } from '@/consts/subscriptions';
 import { isProPlan } from '@/utils/subscription';
 
@@ -48,6 +49,7 @@ type UsageKey =
       | 'securityFeaturesEnabled'
       | 'thirdPartyApplicationsLimit'
       | 'samlApplicationsLimit'
+      | 'customDomainsLimit'
     >
   | CustomUsageKey.RbacEnabled;
 
@@ -62,6 +64,7 @@ export const usageKeys: UsageKey[] = [
   'machineToMachineLimit',
   'samlApplicationsLimit',
   'thirdPartyApplicationsLimit',
+  'customDomainsLimit',
   'tenantMembersLimit',
   'tokenLimit',
   'securityFeaturesEnabled',
@@ -81,6 +84,7 @@ export const usageKeyPriceMap: Record<UsageKey, number> = {
   thirdPartyApplicationsLimit: thirdPartyApplicationsAddOnUnitPrice,
   securityFeaturesEnabled: securityFeaturesAddOnUnitPrice,
   rbacEnabled: rbacEnabledAddOnUnitPrice,
+  customDomainsLimit: customDomainAddOnUnitPrice,
 };
 
 export const titleKeyMap: Record<
@@ -100,6 +104,7 @@ export const titleKeyMap: Record<
   thirdPartyApplicationsLimit: 'third_party_applications.title',
   samlApplicationsLimit: 'saml_applications.title',
   rbacEnabled: 'rbacEnabled.title',
+  customDomainsLimit: 'custom_domains.title',
 };
 
 const tooltipKeyMap: Record<
@@ -119,6 +124,7 @@ const tooltipKeyMap: Record<
   thirdPartyApplicationsLimit: 'third_party_applications.tooltip',
   samlApplicationsLimit: 'saml_applications.tooltip',
   rbacEnabled: 'rbacEnabled.tooltip',
+  customDomainsLimit: 'custom_domains.tooltip',
 };
 
 const enterpriseTooltipKeyMap: Record<
@@ -138,6 +144,7 @@ const enterpriseTooltipKeyMap: Record<
   thirdPartyApplicationsLimit: 'third_party_applications.tooltip',
   samlApplicationsLimit: 'saml_applications.tooltip',
   rbacEnabled: 'rbacEnabled.tooltip',
+  customDomainsLimit: 'custom_domains.tooltip',
 };
 
 const isRbacEnabled = ({ userRolesLimit, machineToMachineRolesLimit }: NewSubscriptionQuota) =>

@@ -62,6 +62,11 @@ const usage = {
     tooltip_for_enterprise:
       'Sözleşmeye dayalı planınız, ilk {{basicQuota}} kiracı üyeyi içerir ve ücretsiz kullanım sağlar. Daha fazla ihtiyacınız varsa, her kiracı üye için aylık ${{price, number}}.',
   },
+  custom_domains: {
+    title: 'Özel alan adları',
+    tooltip:
+      'Ayda ${{price, number}} fiyatla en fazla 10 özel alan adı için eklenti özelliği. İlk özel alan adı ücretsizdir.',
+  },
   tokens: {
     title: 'Tokenler',
     tooltip:
