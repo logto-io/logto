@@ -12,7 +12,13 @@ const VerificationMethodList = () => {
   const [verifyingMethod, setVerifyingMethod] = useState<'password' | undefined>();
 
   if (verifyingMethod === 'password') {
-    return <PasswordVerification />;
+    return (
+      <PasswordVerification
+        onBack={() => {
+          setVerifyingMethod(undefined);
+        }}
+      />
+    );
   }
 
   return (

@@ -9,7 +9,11 @@ import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
 
 import styles from './index.module.scss';
 
-const PasswordVerification = () => {
+type Props = {
+  readonly onBack?: () => void;
+};
+
+const PasswordVerification = ({ onBack }: Props) => {
   const { t } = useTranslation();
   const { setVerificationId, setToast } = useContext(PageContext);
   const [password, setPassword] = useState('');
@@ -38,6 +42,7 @@ const PasswordVerification = () => {
     <SecondaryPageLayout
       title="account_center.password_verification.title"
       description="account_center.password_verification.description"
+      onBack={onBack}
     >
       <form noValidate className={styles.form} onSubmit={handleVerify}>
         <PasswordInputField

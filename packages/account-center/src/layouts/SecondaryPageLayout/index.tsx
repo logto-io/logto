@@ -12,6 +12,7 @@ type Props = {
   readonly titleProps?: Record<string, unknown>;
   readonly descriptionProps?: Record<string, unknown>;
   readonly onSkip?: () => void;
+  readonly onBack?: () => void;
   readonly isNavBarHidden?: boolean;
   readonly children: React.ReactNode;
 };
@@ -22,13 +23,14 @@ const SecondaryPageLayout = ({
   titleProps,
   descriptionProps,
   onSkip,
+  onBack,
   isNavBarHidden,
   children,
 }: Props) => {
   return (
     <div className={styles.wrapper}>
       <PageMeta titleKey={title} />
-      <NavBar isHidden={isNavBarHidden} onSkip={onSkip} />
+      <NavBar isHidden={isNavBarHidden} onSkip={onSkip} onClose={onBack} />
       <div className={styles.container}>
         <div className={styles.header}>
           <div className={styles.title}>
