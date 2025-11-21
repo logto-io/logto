@@ -1,4 +1,4 @@
-import { LogtoProvider, useLogto } from '@logto/react';
+import { LogtoProvider, useLogto, UserScope } from '@logto/react';
 import { accountCenterApplicationId } from '@logto/schemas';
 import { useContext, useEffect } from 'react';
 
@@ -71,6 +71,7 @@ const App = () => (
     config={{
       endpoint: window.location.origin,
       appId: accountCenterApplicationId,
+      scopes: [UserScope.Profile, UserScope.Email, UserScope.Phone, UserScope.Identities],
     }}
   >
     <PageContextProvider>
