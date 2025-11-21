@@ -2,10 +2,10 @@ import classNames from 'classnames';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import ArrowPrev from '@/assets/icons/arrow-prev.svg?react';
-import NavClose from '@/assets/icons/nav-close.svg?react';
-import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
-import { onKeyDownHandler } from '@/utils/a11y';
+import ArrowPrev from '@/shared/assets/icons/arrow-prev.svg?react';
+import NavClose from '@/shared/assets/icons/nav-close.svg?react';
+import useNavigateWithPreservedSearchParams from '@/shared/hooks/use-navigate-with-preserved-search-params';
+import { onKeyDownHandler } from '@/shared/utils/a11y';
 
 import FlipOnRtl from '../FlipOnRtl';
 

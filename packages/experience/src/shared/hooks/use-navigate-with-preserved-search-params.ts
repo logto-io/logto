@@ -7,7 +7,7 @@ import {
   useNavigate,
 } from 'react-router-dom';
 
-import { searchKeys } from '@/utils/search-parameters';
+import { searchKeys } from '@/shared/utils/search-parameters';
 
 export const usePreserveSearchParams = () => {
   const getTo = useCallback((to: To) => {

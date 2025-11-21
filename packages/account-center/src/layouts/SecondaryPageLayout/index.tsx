@@ -1,12 +1,8 @@
+import DynamicT from '@experience/shared/components/DynamicT';
+import NavBar from '@experience/shared/components/NavBar';
+import PageMeta from '@experience/shared/components/PageMeta';
 import type { TFuncKey } from 'i18next';
 import { type ReactElement } from 'react';
-
-import usePlatform from '@/hooks/use-platform';
-import DynamicT from '@/shared/components/DynamicT';
-import NavBar from '@/shared/components/NavBar';
-import PageMeta from '@/shared/components/PageMeta';
-
-import { InlineNotification } from '../../components/Notification';
 
 import styles from './index.module.scss';
 
@@ -15,7 +11,6 @@ type Props = {
   readonly description?: TFuncKey | ReactElement | '';
   readonly titleProps?: Record<string, unknown>;
   readonly descriptionProps?: Record<string, unknown>;
-  readonly notification?: TFuncKey;
   readonly onSkip?: () => void;
   readonly isNavBarHidden?: boolean;
   readonly children: React.ReactNode;
@@ -26,20 +21,14 @@ const SecondaryPageLayout = ({
   description,
   titleProps,
   descriptionProps,
-  notification,
   onSkip,
   isNavBarHidden,
   children,
 }: Props) => {
-  const { isMobile } = usePlatform();
-
   return (
     <div className={styles.wrapper}>
       <PageMeta titleKey={title} />
       <NavBar isHidden={isNavBarHidden} onSkip={onSkip} />
-      {isMobile && notification && (
-        <InlineNotification message={notification} className={styles.notification} />
-      )}
       <div className={styles.container}>
         <div className={styles.header}>
           <div className={styles.title}>
@@ -57,9 +46,6 @@ const SecondaryPageLayout = ({
         </div>
         {children}
       </div>
-      {!isMobile && notification && (
-        <InlineNotification message={notification} className={styles.notification} />
-      )}
     </div>
   );
 };

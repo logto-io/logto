@@ -7,9 +7,9 @@ import type { LinkProps } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 import { useIframeModal } from '@/Providers/IframeModalProvider';
-import { usePreserveSearchParams } from '@/hooks/use-navigate-with-preserved-search-params';
 import usePlatform from '@/hooks/use-platform';
 import DynamicT from '@/shared/components/DynamicT';
+import { usePreserveSearchParams } from '@/shared/hooks/use-navigate-with-preserved-search-params';
 
 import styles from './index.module.scss';
 
