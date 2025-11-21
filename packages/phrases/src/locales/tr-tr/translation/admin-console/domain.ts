@@ -9,7 +9,7 @@ const domain = {
   error_hint:
     'DNS kayıtlarınızı güncellediğinizden emin olunuz. {{value}} saniyede bir kontrol edeceğiz.',
   custom: {
-    custom_domain: 'Özel Alan Adı',
+    custom_domain: 'Özel Alan Adları',
     custom_domain_description:
       'Markalaşmanızı geliştirin ve özel bir alan adı kullanın. Bu alan adı oturum açma deneyiminizde kullanılacaktır.',
     custom_domain_field: 'Özel alan adları',

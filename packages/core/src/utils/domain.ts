@@ -14,12 +14,10 @@ export const isSubdomainOf = (subdomain: string, domain: string): boolean => {
 
 export const assertCustomDomainLimit = async ({
   isPrivateRegionFeature,
-  isDevelopmentFeatureEnabled,
   quotaLibrary,
   existingDomainCount,
 }: {
   isPrivateRegionFeature: boolean;
-  isDevelopmentFeatureEnabled: boolean;
   quotaLibrary: QuotaLibrary;
   existingDomainCount: number;
 }) => {
@@ -46,17 +44,5 @@ export const assertCustomDomainLimit = async ({
     return;
   }
 
-  if (!isDevelopmentFeatureEnabled) {
-    assertThat(
-      existingDomainCount === 0,
-      new RequestError({
-        code: 'domain.limit_to_one_domain',
-        status: 422,
-      })
-    );
-    return;
-  }
-
-  // Currently in development mode, we use the quota library to enforce limits.
   await quotaLibrary.guardTenantUsageByKey('customDomainsLimit');
 };

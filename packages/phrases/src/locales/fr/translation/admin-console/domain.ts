@@ -9,7 +9,7 @@ const domain = {
   error_hint:
     'Assurez-vous de mettre à jour vos enregistrements DNS. Nous continuerons à vérifier toutes les {{value}} secondes.',
   custom: {
-    custom_domain: 'Domaine personnalisé',
+    custom_domain: 'Domaines personnalisés',
     custom_domain_description:
       'Améliorez votre image de marque en utilisant un domaine personnalisé. Ce domaine sera utilisé dans votre expérience de connexion.',
     custom_domain_field: 'Domaines personnalisés',

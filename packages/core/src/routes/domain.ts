@@ -24,6 +24,8 @@ export default function domainRoutes<T extends ManagementApiRouter>(
     quota,
   } = libraries;
 
+  const isPrivateRegionFeature = EnvSet.values.isMultipleCustomDomainsEnabled;
+
   router.get(
     '/domains',
     koaGuard({ response: domainResponseGuard.array(), status: 200 }),
@@ -83,8 +85,7 @@ export default function domainRoutes<T extends ManagementApiRouter>(
       const existingDomains = await findAllDomains();
 
       await assertCustomDomainLimit({
-        isPrivateRegionFeature: EnvSet.values.isMultipleCustomDomainsEnabled,
-        isDevelopmentFeatureEnabled: EnvSet.values.isDevFeaturesEnabled,
+        isPrivateRegionFeature,
         quotaLibrary: quota,
         existingDomainCount: existingDomains.length,
       });
@@ -102,7 +103,9 @@ export default function domainRoutes<T extends ManagementApiRouter>(
 
       // Throw 400 error if domain is invalid
       const syncedDomain = await addDomain(ctx.guard.body.domain);
-
+      if (!isPrivateRegionFeature) {
+        void quota.reportSubscriptionUpdatesUsage('customDomainsLimit');
+      }
       ctx.status = 201;
       ctx.body = pick(syncedDomain, ...domainSelectFields);
 
@@ -117,6 +120,10 @@ export default function domainRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const { id } = ctx.guard.params;
       await deleteDomain(id);
+
+      if (!isPrivateRegionFeature) {
+        void quota.reportSubscriptionUpdatesUsage('customDomainsLimit');
+      }
 
       await trySafe(async () => {
         const domains = await findAllDomains();

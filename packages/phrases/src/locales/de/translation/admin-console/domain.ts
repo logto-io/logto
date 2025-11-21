@@ -9,7 +9,7 @@ const domain = {
   error_hint:
     'Stellen Sie sicher, dass Sie Ihre DNS-Einträge aktualisiert haben. Wir werden alle {{value}} Sekunden weiter überprüfen.',
   custom: {
-    custom_domain: 'Benutzerdefinierte Domain',
+    custom_domain: 'Benutzerdefinierte Domains',
     custom_domain_description:
       'Verbessern Sie Ihre Markenbildung durch die Verwendung einer benutzerdefinierten Domain. Diese Domain wird in Ihrem Anmeldeerlebnis verwendet.',
     custom_domain_field: 'Benutzerdefinierte Domains',
