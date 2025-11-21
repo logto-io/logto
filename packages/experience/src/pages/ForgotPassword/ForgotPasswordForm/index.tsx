@@ -4,11 +4,11 @@ import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
-import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import { SmartInputField } from '@/components/InputFields';
 import CaptchaBox from '@/containers/CaptchaBox';
 import useSendVerificationCode from '@/hooks/use-send-verification-code';
+import Button from '@/shared/components/Button';
 import type { VerificationCodeIdentifier } from '@/types';
 import { UserFlow } from '@/types';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';

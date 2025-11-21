@@ -11,6 +11,12 @@ const account_center = {
     description:
       'Подтвердите, что это вы, чтобы защитить безопасность аккаунта. Пожалуйста, выберите способ подтверждения личности.',
   },
+  verification_method: {
+    password: {
+      name: 'Пароль',
+      description: 'Подтвердите свой пароль',
+    },
+  },
 };
 
 export default Object.freeze(account_center);

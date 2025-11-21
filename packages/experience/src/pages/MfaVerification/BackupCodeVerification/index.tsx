@@ -5,12 +5,12 @@ import { useForm } from 'react-hook-form';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import SectionLayout from '@/Layout/SectionLayout';
-import Button from '@/components/Button';
 import { InputField } from '@/components/InputFields';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
 import useMfaFlowState from '@/hooks/use-mfa-factors-state';
 import useSendMfaPayload from '@/hooks/use-send-mfa-payload';
 import ErrorPage from '@/pages/ErrorPage';
+import Button from '@/shared/components/Button';
 import { UserMfaFlow } from '@/types';
 
 import styles from './index.module.scss';

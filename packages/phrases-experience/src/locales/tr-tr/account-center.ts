@@ -11,6 +11,12 @@ const account_center = {
     description:
       'Hesap güvenliğinizi korumak için siz olduğunuzu doğrulayın. Kimliğinizi doğrulamak için lütfen yöntemi seçin.',
   },
+  verification_method: {
+    password: {
+      name: 'Parola',
+      description: 'Parolanızı doğrulayın',
+    },
+  },
 };
 
 export default Object.freeze(account_center);

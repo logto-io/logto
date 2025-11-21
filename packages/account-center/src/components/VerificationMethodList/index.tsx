@@ -2,8 +2,10 @@ import { useContext, useState } from 'react';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
+import { VerificationMethod } from '@ac/types';
 
 import PasswordVerification from '../PasswordVerification';
+import VerificationMethodButton from '../VerificationMethodButton';
 
 const VerificationMethodList = () => {
   const { userInfo } = useContext(PageContext);
@@ -20,14 +22,12 @@ const VerificationMethodList = () => {
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         {userInfo?.hasPassword && (
-          <button
-            style={{ padding: '10px', textAlign: 'left' }}
+          <VerificationMethodButton
+            method={VerificationMethod.Password}
             onClick={() => {
               setVerifyingMethod('password');
             }}
-          >
-            Password
-          </button>
+          />
         )}
       </div>
     </SecondaryPageLayout>

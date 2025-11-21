@@ -3,8 +3,8 @@ import { condString } from '@silverhand/essentials';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import * as s from 'superstruct';
 
-import Button from '@/components/Button';
 import PrimitiveProfileInputField from '@/components/InputFields/PrimitiveProfileInputField';
+import Button from '@/shared/components/Button';
 
 import AddressSubForm from './AddressSubForm';
 import FullnameSubForm from './FullnameSubForm';

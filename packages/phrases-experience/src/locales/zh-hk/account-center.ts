@@ -10,6 +10,12 @@ const account_center = {
     title: '安全驗證',
     description: '為保障帳戶安全，請確認是你本人。請選擇用於驗證身份的方法。',
   },
+  verification_method: {
+    password: {
+      name: '密碼',
+      description: '驗證你的密碼',
+    },
+  },
 };
 
 export default Object.freeze(account_center);

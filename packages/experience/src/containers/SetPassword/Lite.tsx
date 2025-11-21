@@ -3,9 +3,9 @@ import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import { PasswordInputField } from '@/components/InputFields';
+import Button from '@/shared/components/Button';
 
 import HiddenIdentifierInput from './HiddenIdentifierInput';
 import styles from './index.module.scss';

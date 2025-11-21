@@ -11,6 +11,12 @@ const account_center = {
     description:
       'Conferma che sei tu per proteggere la sicurezza del tuo account. Seleziona il metodo per verificare la tua identità.',
   },
+  verification_method: {
+    password: {
+      name: 'Password',
+      description: 'Verifica la tua password',
+    },
+  },
 };
 
 export default Object.freeze(account_center);

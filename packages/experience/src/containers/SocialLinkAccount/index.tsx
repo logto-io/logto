@@ -4,10 +4,10 @@ import type { TFuncKey } from 'i18next';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Button from '@/components/Button';
 import TextLink from '@/components/TextLink';
 import { useSieMethods } from '@/hooks/use-sie';
 import useSocialRegister from '@/hooks/use-social-register';
+import Button from '@/shared/components/Button';
 import DynamicT from '@/shared/components/DynamicT';
 import type { SocialRelatedUserInfo } from '@/types/guard';
 import { maskEmail, maskPhone } from '@/utils/format';

@@ -3,13 +3,13 @@ import { useCallback, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import { SmartInputField } from '@/components/InputFields';
 import type {
   IdentifierInputType,
   IdentifierInputValue,
 } from '@/components/InputFields/SmartInputField';
+import Button from '@/shared/components/Button';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
 
 import styles from './index.module.scss';

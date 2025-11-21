@@ -3,17 +3,17 @@ import classNames from 'classnames';
 import { type TFuncKey } from 'i18next';
 import { useTranslation } from 'react-i18next';
 
-import ArrowNext from '@/assets/icons/arrow-next.svg?react';
 import FactorBackupCode from '@/assets/icons/factor-backup-code.svg?react';
 import FactorEmail from '@/assets/icons/factor-email.svg?react';
 import FactorPhone from '@/assets/icons/factor-phone.svg?react';
 import FactorTotp from '@/assets/icons/factor-totp.svg?react';
 import FactorWebAuthn from '@/assets/icons/factor-webauthn.svg?react';
+import ArrowNext from '@/shared/assets/icons/arrow-next.svg?react';
+import styles from '@/shared/components/Button/index.module.scss';
 import DynamicT from '@/shared/components/DynamicT';
 import FlipOnRtl from '@/shared/components/FlipOnRtl';
 
 import mfaFactorButtonStyles from './MfaFactorButton.module.scss';
-import styles from './index.module.scss';
 
 export type Props = {
   readonly factor: MfaFactor;

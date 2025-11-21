@@ -10,6 +10,12 @@ const account_center = {
     title: '보안 인증',
     description: '계정 보안을 위해 본인인지 확인하세요. 신원을 인증할 방법을 선택해 주세요.',
   },
+  verification_method: {
+    password: {
+      name: '비밀번호',
+      description: '비밀번호를 확인하세요',
+    },
+  },
 };
 
 export default Object.freeze(account_center);
