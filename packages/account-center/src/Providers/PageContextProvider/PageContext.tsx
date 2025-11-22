@@ -14,6 +14,8 @@ export type PageContextType = {
   setExperienceSettings: React.Dispatch<React.SetStateAction<SignInExperienceResponse | undefined>>;
   accountCenterSettings?: AccountCenter;
   setAccountCenterSettings: React.Dispatch<React.SetStateAction<AccountCenter | undefined>>;
+  accountApiUnauthorized: boolean;
+  setAccountApiUnauthorized: React.Dispatch<React.SetStateAction<boolean>>;
   userInfo?: Partial<UserProfileResponse>;
   setUserInfo: React.Dispatch<React.SetStateAction<Partial<UserProfileResponse> | undefined>>;
   userInfoError?: Error;
@@ -32,6 +34,8 @@ const PageContext = createContext<PageContextType>({
   setExperienceSettings: noop,
   accountCenterSettings: undefined,
   setAccountCenterSettings: noop,
+  accountApiUnauthorized: false,
+  setAccountApiUnauthorized: noop,
   userInfo: undefined,
   setUserInfo: noop,
   userInfoError: undefined,

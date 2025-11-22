@@ -1,5 +1,6 @@
 import EmptyStateDark from '@experience/assets/icons/empty-state-dark.svg';
 import EmptyState from '@experience/assets/icons/empty-state.svg';
+import Button from '@experience/shared/components/Button';
 import DynamicT from '@experience/shared/components/DynamicT';
 import PageMeta from '@experience/shared/components/PageMeta';
 import { Theme } from '@logto/schemas';
@@ -15,6 +16,10 @@ type Props = {
   readonly titleKey?: TFuncKey;
   readonly messageKey?: TFuncKey;
   readonly rawMessage?: string;
+  readonly action?: {
+    titleKey: TFuncKey;
+    onClick: () => void;
+  };
 };
 
 const SupportInfo = () => {
@@ -69,7 +74,12 @@ const SupportInfo = () => {
   );
 };
 
-const ErrorPage = ({ titleKey = 'description.not_found', messageKey, rawMessage }: Props) => {
+const ErrorPage = ({
+  titleKey = 'description.not_found',
+  messageKey,
+  rawMessage,
+  action,
+}: Props) => {
   const { theme } = useContext(PageContext);
   const message = rawMessage ?? (messageKey ? <DynamicT forKey={messageKey} /> : undefined);
   const illustration = theme === Theme.Light ? EmptyState : EmptyStateDark;
@@ -84,6 +94,9 @@ const ErrorPage = ({ titleKey = 'description.not_found', messageKey, rawMessage 
         <DynamicT forKey={titleKey} />
       </div>
       {message && <div className={styles.message}>{message}</div>}
+      {action && (
+        <Button className={styles.action} title={action.titleKey} onClick={action.onClick} />
+      )}
       <SupportInfo />
     </div>
   );
