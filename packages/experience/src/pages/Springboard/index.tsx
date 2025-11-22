@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import LoadingLayer from '@/components/LoadingLayer';
+import LoadingLayer from '@/shared/components/LoadingLayer';
 import { storeCallbackLink, storeState } from '@/utils/social-connectors';
 
 const Springboard = () => {

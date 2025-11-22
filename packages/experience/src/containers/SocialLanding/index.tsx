@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 
-import { LoadingIcon } from '@/components/LoadingLayer';
 import useConnectors from '@/hooks/use-connectors';
+import { LoadingIcon } from '@/shared/components/LoadingLayer';
 
 import styles from './index.module.scss';
 
