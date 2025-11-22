@@ -6,7 +6,7 @@ import UserInteractionContext from '@/Providers/UserInteractionContextProvider/U
 import {
   type IdentifierInputType,
   type IdentifierInputValue,
-} from '@/components/InputFields/SmartInputField';
+} from '@/shared/components/InputFields/SmartInputField';
 
 import useLoginHint from './use-login-hint';
 

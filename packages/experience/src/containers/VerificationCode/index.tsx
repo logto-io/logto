@@ -4,8 +4,8 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 
 import TextLink from '@/components/TextLink';
-import VerificationCodeInput, { defaultLength } from '@/components/VerificationCode';
 import Button from '@/shared/components/Button';
+import VerificationCodeInput, { defaultLength } from '@/shared/components/VerificationCode';
 import { UserFlow } from '@/types';
 
 import PasswordSignInLink from './PasswordSignInLink';

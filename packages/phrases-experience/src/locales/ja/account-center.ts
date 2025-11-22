@@ -21,6 +21,41 @@ const account_center = {
       name: 'パスワード',
       description: 'パスワードを確認してください',
     },
+    email: {
+      name: 'メール認証コード',
+      description: '認証コードをメールに送信',
+    },
+    phone: {
+      name: '電話認証コード',
+      description: '認証コードを電話番号に送信',
+    },
+  },
+  email_verification: {
+    title: 'メールアドレスを確認',
+    prepare_description:
+      "Verify it's you to protect your account security. Send the verification code to your email.",
+    email_label: 'Email address',
+    send: 'Send verification code',
+    description:
+      '認証コードをメールアドレス {{email}} に送信しました。コードを入力して続行してください。',
+    resend: 'コードを再送',
+    resend_countdown: 'まだ届きませんか？ {{seconds}} 秒後に再送できます。',
+    error_send_failed: '認証コードの送信に失敗しました。しばらくしてからもう一度お試しください。',
+    error_verify_failed: '認証に失敗しました。もう一度コードを入力してください。',
+    error_invalid_code: '認証コードが無効か、有効期限が切れています。',
+  },
+  phone_verification: {
+    title: '電話番号を確認',
+    prepare_description:
+      'アカウントの安全を守るため、ご本人であることを確認します。認証コードを電話に送信します。',
+    phone_label: '電話番号',
+    send: 'Send verification code',
+    description: '認証コードを電話 {{phone}} に送信しました。コードを入力して続行してください。',
+    resend: 'コードを再送',
+    resend_countdown: 'まだ届きませんか？ {{seconds}} 秒後に再送できます。',
+    error_send_failed: '認証コードの送信に失敗しました。しばらくしてからもう一度お試しください。',
+    error_verify_failed: '認証に失敗しました。もう一度コードを入力してください。',
+    error_invalid_code: '認証コードが無効か、有効期限が切れています。',
   },
 };
 

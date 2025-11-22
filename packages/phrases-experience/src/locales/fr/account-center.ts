@@ -21,6 +21,42 @@ const account_center = {
       name: 'Mot de passe',
       description: 'Vérifiez votre mot de passe',
     },
+    email: {
+      name: 'Code de vérification par e-mail',
+      description: 'Envoyer le code de vérification sur votre e-mail',
+    },
+    phone: {
+      name: 'Code de vérification par téléphone',
+      description: 'Envoyer le code de vérification sur votre numéro de téléphone',
+    },
+  },
+  email_verification: {
+    title: 'Vérifiez votre e-mail',
+    prepare_description:
+      "Verify it's you to protect your account security. Send the verification code to your email.",
+    email_label: 'Email address',
+    send: 'Send verification code',
+    description:
+      'Le code de vérification a été envoyé à votre e-mail {{email}}. Saisissez le code pour continuer.',
+    resend: 'Renvoyer le code',
+    resend_countdown: 'Pas encore reçu ? Renvoyez après {{seconds}} s.',
+    error_send_failed: "Échec de l'envoi du code de vérification. Veuillez réessayer plus tard.",
+    error_verify_failed: 'Échec de la vérification. Veuillez saisir le code à nouveau.',
+    error_invalid_code: 'Le code de vérification est invalide ou a expiré.',
+  },
+  phone_verification: {
+    title: 'Vérifiez votre téléphone',
+    prepare_description:
+      "Verify it's you to protect your account security. Send the verification code to your phone.",
+    phone_label: 'Numéro de téléphone',
+    send: 'Send verification code',
+    description:
+      'Le code de vérification a été envoyé à votre téléphone {{phone}}. Saisissez le code pour continuer.',
+    resend: 'Renvoyer le code',
+    resend_countdown: 'Pas encore reçu ? Renvoyez après {{seconds}} s.',
+    error_send_failed: "Échec de l'envoi du code de vérification. Veuillez réessayer plus tard.",
+    error_verify_failed: 'Échec de la vérification. Veuillez saisir le code à nouveau.',
+    error_invalid_code: 'Le code de vérification est invalide ou a expiré.',
   },
 };
 

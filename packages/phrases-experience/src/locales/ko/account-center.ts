@@ -20,6 +20,41 @@ const account_center = {
       name: '비밀번호',
       description: '비밀번호를 확인하세요',
     },
+    email: {
+      name: '이메일 인증 코드',
+      description: '인증 코드를 이메일로 보내기',
+    },
+    phone: {
+      name: '전화 인증 코드',
+      description: '인증 코드를 전화번호로 보내기',
+    },
+  },
+  email_verification: {
+    title: '이메일 확인',
+    prepare_description:
+      "Verify it's you to protect your account security. Send the verification code to your email.",
+    email_label: 'Email address',
+    send: 'Send verification code',
+    description:
+      '인증 코드가 이메일 {{email}}(으)로 전송되었습니다. 코드를 입력해 계속 진행하세요.',
+    resend: '코드 다시 보내기',
+    resend_countdown: '아직 받지 못하셨나요? {{seconds}}초 후에 다시 보내세요.',
+    error_send_failed: '인증 코드를 보내지 못했습니다. 잠시 후 다시 시도해주세요.',
+    error_verify_failed: '인증에 실패했습니다. 코드를 다시 입력해주세요.',
+    error_invalid_code: '인증 코드가 잘못되었거나 만료되었습니다.',
+  },
+  phone_verification: {
+    title: '전화번호 확인',
+    prepare_description: '계정 보안을 위해 본인인지 확인하세요. 인증 코드를 전화로 보내겠습니다.',
+    phone_label: '전화번호',
+    send: 'Send verification code',
+    description:
+      '인증 코드가 전화번호 {{phone}}(으)로 전송되었습니다. 코드를 입력해 계속 진행하세요.',
+    resend: '코드 다시 보내기',
+    resend_countdown: '아직 받지 못하셨나요? {{seconds}}초 후에 다시 보내세요.',
+    error_send_failed: '인증 코드를 보내지 못했습니다. 잠시 후 다시 시도해주세요.',
+    error_verify_failed: '인증에 실패했습니다. 코드를 다시 입력해주세요.',
+    error_invalid_code: '인증 코드가 잘못되었거나 만료되었습니다.',
   },
 };
 

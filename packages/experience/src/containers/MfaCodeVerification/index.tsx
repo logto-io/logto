@@ -3,8 +3,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import TextLink from '@/components/TextLink';
-import VerificationCodeInput from '@/components/VerificationCode';
 import Button from '@/shared/components/Button';
+import VerificationCodeInput from '@/shared/components/VerificationCode';
 
 import styles from './index.module.scss';
 import useMfaCodeVerification from './use-mfa-code-verification';
