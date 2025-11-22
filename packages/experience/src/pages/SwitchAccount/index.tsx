@@ -5,7 +5,6 @@ import { useSearchParams } from 'react-router-dom';
 import StaticPageLayout from '@/Layout/StaticPageLayout';
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 import { getConsentInfo } from '@/apis/consent';
-import LoadingLayer from '@/components/LoadingLayer';
 import TextLink from '@/components/TextLink';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
@@ -14,6 +13,7 @@ import UserProfile from '@/pages/Consent/UserProfile';
 import ErrorPage from '@/pages/ErrorPage';
 import Button from '@/shared/components/Button';
 import DynamicT from '@/shared/components/DynamicT';
+import LoadingLayer from '@/shared/components/LoadingLayer';
 import PageMeta from '@/shared/components/PageMeta';
 import { getBrandingLogoUrl } from '@/utils/logo';
 
