@@ -8,6 +8,7 @@ import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext'
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { verifyPassword } from '@ac/apis/verification';
 import useApi from '@ac/hooks/use-api';
+import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
 
 import styles from './index.module.scss';
@@ -23,6 +24,7 @@ const PasswordVerification = ({ onBack }: Props) => {
   const { loading } = useContext(LoadingContext);
   const [password, setPassword] = useState('');
   const asyncVerifyPassword = useApi(verifyPassword);
+  const handleError = useErrorHandler();
 
   const handleVerify = async (event?: FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
@@ -40,7 +42,12 @@ const PasswordVerification = ({ onBack }: Props) => {
 
     const [error, result] = await asyncVerifyPassword(accessToken, password);
 
-    if (error || !result) {
+    if (error) {
+      await handleError(error);
+      return;
+    }
+
+    if (!result) {
       setToast(t('account_center.password_verification.error_failed'));
       return;
     }
