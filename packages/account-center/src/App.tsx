@@ -28,7 +28,8 @@ const Main = () => {
   const params = new URLSearchParams(window.location.search);
   const isInCallback = Boolean(params.get('code'));
   const { isAuthenticated, isLoading, signIn } = useLogto();
-  const { isLoadingExperience, experienceError, userInfoError } = useContext(PageContext);
+  const { isLoadingExperience, experienceError, userInfoError, accountApiUnauthorized } =
+    useContext(PageContext);
   const isInitialAuthLoading = !isAuthenticated && isLoading;
 
   useEffect(() => {
@@ -43,6 +44,21 @@ const Main = () => {
 
   if (isInCallback) {
     return <Callback />;
+  }
+
+  if (accountApiUnauthorized) {
+    return (
+      <ErrorPage
+        titleKey="error.something_went_wrong"
+        messageKey="error.invalid_session"
+        action={{
+          titleKey: 'action.sign_in',
+          onClick: () => {
+            void signIn({ redirectUri });
+          },
+        }}
+      />
+    );
   }
 
   if (experienceError ?? userInfoError) {

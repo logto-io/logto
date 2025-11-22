@@ -1,5 +1,6 @@
 import { useLogto } from '@logto/react';
 import { Theme } from '@logto/schemas';
+import { HTTPError } from 'ky';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { getAccountCenterSettings } from '@ac/apis/account-center';
@@ -27,6 +28,7 @@ const PageContextProvider = ({ children }: Props) => {
     useState<PageContextType['experienceSettings']>(undefined);
   const [accountCenterSettings, setAccountCenterSettings] =
     useState<PageContextType['accountCenterSettings']>(undefined);
+  const [accountApiUnauthorized, setAccountApiUnauthorized] = useState(false);
   const [userInfo, setUserInfo] = useState<PageContextType['userInfo']>(undefined);
   const [userInfoError, setUserInfoError] = useState<Error>();
   const [verificationId, setVerificationId] = useState<string>();
@@ -72,6 +74,11 @@ const PageContextProvider = ({ children }: Props) => {
         setUserInfo(data);
         setUserInfoError(undefined);
       } catch (error: unknown) {
+        if (error instanceof HTTPError && error.response.status === 401) {
+          setAccountApiUnauthorized(true);
+          return;
+        }
+
         setUserInfoError(
           error instanceof Error ? error : new Error('Failed to load user information.')
         );
@@ -94,6 +101,11 @@ const PageContextProvider = ({ children }: Props) => {
         setAccountCenterSettings(accountCenter);
         setExperienceError(undefined);
       } catch (error: unknown) {
+        if (error instanceof HTTPError && error.response.status === 401) {
+          setAccountApiUnauthorized(true);
+          return;
+        }
+
         setExperienceSettings(undefined);
         setAccountCenterSettings(undefined);
         setExperienceError(
@@ -135,6 +147,8 @@ const PageContextProvider = ({ children }: Props) => {
       setExperienceSettings,
       accountCenterSettings,
       setAccountCenterSettings,
+      accountApiUnauthorized,
+      setAccountApiUnauthorized,
       userInfo,
       setUserInfo,
       userInfoError,
@@ -145,6 +159,7 @@ const PageContextProvider = ({ children }: Props) => {
     }),
     [
       accountCenterSettings,
+      accountApiUnauthorized,
       experienceError,
       experienceSettings,
       isLoadingExperience,
@@ -153,6 +168,7 @@ const PageContextProvider = ({ children }: Props) => {
       userInfo,
       userInfoError,
       verificationId,
+      setAccountApiUnauthorized,
       setVerificationIdCallback,
     ]
   );

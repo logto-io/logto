@@ -14,11 +14,16 @@ export type ErrorHandlers = {
 
 const useErrorHandler = () => {
   const { t } = useTranslation();
-  const { setToast } = useContext(PageContext);
+  const { setToast, setAccountApiUnauthorized } = useContext(PageContext);
 
   const handleError = useCallback(
     async (error: unknown, errorHandlers?: ErrorHandlers) => {
       if (error instanceof HTTPError) {
+        if (error.response.status === 401) {
+          setAccountApiUnauthorized(true);
+          return;
+        }
+
         try {
           const logtoError = await error.response.json<RequestErrorBody>();
 
@@ -50,7 +55,7 @@ const useErrorHandler = () => {
       setToast(t('error.unknown'));
       console.error(error);
     },
-    [setToast, t]
+    [setAccountApiUnauthorized, setToast, t]
   );
 
   return handleError;
