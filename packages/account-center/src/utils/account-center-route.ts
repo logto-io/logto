@@ -1,7 +1,9 @@
+import { emailRoute } from '@ac/constants/routes';
+
 export const accountCenterBasePath = '/account-center';
 const storageKey = 'account-center-route-cache';
 
-const knownRoutePrefixes: readonly string[] = ['/email', '/phone', '/username', '/password'];
+const knownRoutePrefixes: readonly string[] = [emailRoute, '/phone', '/username', '/password'];
 
 const isKnownRoute = (pathname?: string): pathname is string =>
   pathname !== undefined &&
