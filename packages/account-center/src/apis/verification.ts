@@ -30,6 +30,23 @@ export const sendEmailVerificationCode = async (accessToken: string, email: stri
     }>();
 };
 
+export const sendPhoneVerificationCode = async (accessToken: string, phone: string) => {
+  return createAuthenticatedKy(accessToken)
+    .post('/api/verifications/verification-code', {
+      json: {
+        identifier: {
+          type: SignInIdentifier.Phone,
+          value: phone,
+        },
+        templateType: TemplateType.UserPermissionValidation,
+      },
+    })
+    .json<{
+      verificationRecordId: string;
+      expiresAt: string;
+    }>();
+};
+
 export const verifyEmailVerificationCode = async (
   accessToken: string,
   payload: {
@@ -46,6 +63,32 @@ export const verifyEmailVerificationCode = async (
         identifier: {
           type: SignInIdentifier.Email,
           value: email,
+        },
+        verificationId: verificationRecordId,
+        code,
+      },
+    })
+    .json<{
+      verificationRecordId: string;
+    }>();
+};
+
+export const verifyPhoneVerificationCode = async (
+  accessToken: string,
+  payload: {
+    verificationRecordId: string;
+    code: string;
+    phone: string;
+  }
+) => {
+  const { verificationRecordId, code, phone } = payload;
+
+  return createAuthenticatedKy(accessToken)
+    .post('/api/verifications/verification-code/verify', {
+      json: {
+        identifier: {
+          type: SignInIdentifier.Phone,
+          value: phone,
         },
         verificationId: verificationRecordId,
         code,

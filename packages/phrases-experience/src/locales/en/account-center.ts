@@ -25,6 +25,10 @@ const account_center = {
       name: 'Email verification code',
       description: 'Send verification code to your email',
     },
+    phone: {
+      name: 'Phone verification code',
+      description: 'Send verification code to your phone number',
+    },
   },
   email_verification: {
     title: 'Verify your email',
@@ -34,6 +38,20 @@ const account_center = {
     send: 'Send verification code',
     description:
       'The verification code has been sent to your email {{email}}. Enter the code to continue.',
+    resend: 'Resend code',
+    resend_countdown: 'Not received yet? Resend after {{seconds}}s.',
+    error_send_failed: 'Failed to send verification code. Please try again later.',
+    error_verify_failed: 'Verification failed. Please enter the code again.',
+    error_invalid_code: 'The verification code is invalid or has expired.',
+  },
+  phone_verification: {
+    title: 'Verify your phone',
+    prepare_description:
+      "Verify it's you to protect your account security. Send the verification code to your phone.",
+    phone_label: 'Phone number',
+    send: 'Send verification code',
+    description:
+      'The verification code has been sent to your phone {{phone}}. Enter the code to continue.',
     resend: 'Resend code',
     resend_countdown: 'Not received yet? Resend after {{seconds}}s.',
     error_send_failed: 'Failed to send verification code. Please try again later.',

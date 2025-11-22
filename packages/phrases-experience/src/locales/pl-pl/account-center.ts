@@ -25,6 +25,10 @@ const account_center = {
       name: 'Kod weryfikacyjny e-mail',
       description: 'Wyślij kod weryfikacyjny na swój e-mail',
     },
+    phone: {
+      name: 'Kod weryfikacyjny telefoniczny',
+      description: 'Wyślij kod weryfikacyjny na swój numer telefonu',
+    },
   },
   email_verification: {
     title: 'Zweryfikuj swój e-mail',
@@ -34,6 +38,20 @@ const account_center = {
     send: 'Send verification code',
     description:
       'Kod weryfikacyjny został wysłany na adres {{email}}. Wprowadź kod, aby kontynuować.',
+    resend: 'Wyślij kod ponownie',
+    resend_countdown: 'Nie otrzymałeś? Wyślij ponownie po {{seconds}} s.',
+    error_send_failed: 'Nie udało się wysłać kodu weryfikacyjnego. Spróbuj ponownie później.',
+    error_verify_failed: 'Weryfikacja nie powiodła się. Wprowadź kod ponownie.',
+    error_invalid_code: 'Kod weryfikacyjny jest nieprawidłowy lub wygasł.',
+  },
+  phone_verification: {
+    title: 'Zweryfikuj swój telefon',
+    prepare_description:
+      'Potwierdź, że to Ty, aby chronić bezpieczeństwo konta. Wyślij kod weryfikacyjny na swój telefon.',
+    phone_label: 'Numer telefonu',
+    send: 'Send verification code',
+    description:
+      'Kod weryfikacyjny został wysłany na Twój telefon {{phone}}. Wprowadź kod, aby kontynuować.',
     resend: 'Wyślij kod ponownie',
     resend_countdown: 'Nie otrzymałeś? Wyślij ponownie po {{seconds}} s.',
     error_send_failed: 'Nie udało się wysłać kodu weryfikacyjnego. Spróbuj ponownie później.',
