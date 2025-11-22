@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Checkbox from '@/components/Checkbox';
 import TermsLinks from '@/components/TermsLinks';
 import useTerms from '@/hooks/use-terms';
-import { onKeyDownHandler } from '@/utils/a11y';
+import { onKeyDownHandler } from '@/shared/utils/a11y';
 
 import styles from './index.module.scss';
 

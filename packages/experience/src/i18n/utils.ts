@@ -7,7 +7,7 @@ import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
 import { getPhrases as getPhrasesApi } from '@/apis/settings';
-import { searchKeys } from '@/utils/search-parameters';
+import { searchKeys } from '@/shared/utils/search-parameters';
 
 const getPhrases = async (language?: string) => {
   const uiLocales = sessionStorage.getItem(searchKeys.uiLocales) ?? undefined;

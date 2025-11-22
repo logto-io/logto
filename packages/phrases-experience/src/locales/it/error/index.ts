@@ -29,6 +29,7 @@ const error = {
   terms_acceptance_required_description:
     'Devi accettare i termini per continuare. Per favore riprova.',
   something_went_wrong: 'Qualcosa è andato storto.',
+  feature_not_enabled: 'Questa funzione non è abilitata.',
 };
 
 export default Object.freeze(error);

@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import SectionLayout from '@/Layout/SectionLayout';
-import Button from '@/components/Button';
 import TextLink from '@/components/TextLink';
 import usePlatform from '@/hooks/use-platform';
 import useTextHandler from '@/hooks/use-text-handler';
+import Button from '@/shared/components/Button';
 import { type TotpBindingState } from '@/types/guard';
 
 import styles from './index.module.scss';

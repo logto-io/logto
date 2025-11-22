@@ -12,7 +12,7 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import ErrorMessage from '@/components/ErrorMessage';
+import ErrorMessage from '@/shared/components/ErrorMessage';
 
 import NotchedBorder from './NotchedBorder';
 import styles from './index.module.scss';

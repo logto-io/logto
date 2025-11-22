@@ -28,6 +28,7 @@ const error = {
   terms_acceptance_required_description:
     'Ви повинні погодитися з умовами, щоб продовжити. Будь ласка, спробуйте ще раз.',
   something_went_wrong: 'Щось пішло не так.',
+  feature_not_enabled: 'Ця функція не увімкнена.',
 };
 
 export default Object.freeze(error);

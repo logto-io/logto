@@ -8,11 +8,11 @@ import ReactModal from 'react-modal';
 
 import CheckMark from '@/assets/icons/check-mark.svg?react';
 import SearchIcon from '@/assets/icons/search-icon.svg?react';
-import InputField from '@/components/InputFields/InputField';
-import NavBar from '@/components/NavBar';
 import useDebounce from '@/hooks/use-debounce';
 import usePlatform from '@/hooks/use-platform';
-import { onKeyDownHandler } from '@/utils/a11y';
+import InputField from '@/shared/components/InputFields/InputField';
+import NavBar from '@/shared/components/NavBar';
+import { onKeyDownHandler } from '@/shared/utils/a11y';
 import type { CountryMetaData } from '@/utils/country-code';
 
 import styles from './index.module.scss';

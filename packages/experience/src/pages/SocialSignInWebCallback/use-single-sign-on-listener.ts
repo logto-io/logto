@@ -9,10 +9,10 @@ import useApi from '@/hooks/use-api';
 import useEmailBlockedErrorHandler from '@/hooks/use-email-blocked-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
-import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { useSieMethods } from '@/hooks/use-sie';
 import useTerms from '@/hooks/use-terms';
 import useToast from '@/hooks/use-toast';
+import useNavigateWithPreservedSearchParams from '@/shared/hooks/use-navigate-with-preserved-search-params';
 import { parseQueryParameters } from '@/utils';
 import { validateState } from '@/utils/social-connectors';
 

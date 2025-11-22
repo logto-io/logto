@@ -6,10 +6,10 @@ import { validate } from 'superstruct';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
-import Button from '@/components/Button';
 import useSendMfaPayload from '@/hooks/use-send-mfa-payload';
 import useTextHandler from '@/hooks/use-text-handler';
 import ErrorPage from '@/pages/ErrorPage';
+import Button from '@/shared/components/Button';
 import DynamicT from '@/shared/components/DynamicT';
 import { UserMfaFlow } from '@/types';
 import { backupCodeBindingStateGuard } from '@/types/guard';

@@ -47,6 +47,18 @@
         }
       }
     },
+    "/api/.well-known/account-center": {
+      "get": {
+        "tags": ["Dev feature"],
+        "summary": "Get default account center",
+        "description": "Get the default account center configuration. Available only when developer features are enabled.",
+        "responses": {
+          "200": {
+            "description": "The default account center configuration."
+          }
+        }
+      }
+    },
     "/api/.well-known/management.openapi.json": {
       "get": {
         "summary": "Get Management API swagger JSON",

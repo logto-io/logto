@@ -3,7 +3,7 @@ import { useCallback, useContext } from 'react';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { createWebAuthnRegistration, createWebAuthnAuthentication } from '@/apis/experience';
-import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
+import useNavigateWithPreservedSearchParams from '@/shared/hooks/use-navigate-with-preserved-search-params';
 import { UserMfaFlow } from '@/types';
 import { type WebAuthnState, type MfaFlowState } from '@/types/guard';
 

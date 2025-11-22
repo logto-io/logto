@@ -29,6 +29,7 @@ const error = {
   terms_acceptance_required_description:
     'You must agree to the terms to continue. Please try again.',
   something_went_wrong: 'Something went wrong.',
+  feature_not_enabled: 'This feature is not enabled.',
 };
 
 export default Object.freeze(error);

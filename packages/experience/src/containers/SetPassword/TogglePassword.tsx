@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 import Checkbox from '@/components/Checkbox';
-import { onKeyDownHandler } from '@/utils/a11y';
+import { onKeyDownHandler } from '@/shared/utils/a11y';
 
 import styles from './index.module.scss';
 

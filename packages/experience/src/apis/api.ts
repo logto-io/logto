@@ -1,7 +1,7 @@
 import i18next from 'i18next';
 import ky from 'ky';
 
-import { searchKeys } from '@/utils/search-parameters';
+import { searchKeys } from '@/shared/utils/search-parameters';
 
 export default ky.extend({
   hooks: {

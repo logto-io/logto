@@ -10,8 +10,8 @@ import { useRef } from 'react';
 import ReactModal from 'react-modal';
 
 import usePosition from '@/hooks/use-position';
+import { onKeyDownHandler } from '@/shared/utils/a11y';
 import type { HorizontalAlignment } from '@/types/positioning';
-import { onKeyDownHandler } from '@/utils/a11y';
 
 import OverlayScrollbar from '../OverlayScrollbar';
 

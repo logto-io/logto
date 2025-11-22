@@ -5,12 +5,12 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import LandingPageLayout from '@/Layout/LandingPageLayout';
 import { consent, getConsentInfo } from '@/apis/consent';
-import Button from '@/components/Button';
 import TermsLinks from '@/components/TermsLinks';
 import TextLink from '@/components/TextLink';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
+import Button from '@/shared/components/Button';
 
 import OrganizationSelector, { type Organization } from './OrganizationSelector';
 import ScopesListCard from './ScopesListCard';

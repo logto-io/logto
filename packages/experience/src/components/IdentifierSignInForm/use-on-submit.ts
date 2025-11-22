@@ -4,9 +4,9 @@ import { useCallback, useContext } from 'react';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import useCheckSingleSignOn from '@/hooks/use-check-single-sign-on';
-import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import useSendVerificationCode from '@/hooks/use-send-verification-code';
 import { useSieMethods } from '@/hooks/use-sie';
+import useNavigateWithPreservedSearchParams from '@/shared/hooks/use-navigate-with-preserved-search-params';
 import { UserFlow } from '@/types';
 
 const useOnSubmit = (signInMethods: SignIn['methods']) => {

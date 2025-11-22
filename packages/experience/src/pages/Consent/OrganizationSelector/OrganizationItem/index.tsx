@@ -4,7 +4,7 @@ import { type ReactNode } from 'react';
 
 import CheckMark from '@/assets/icons/check-mark.svg?react';
 import OrganizationIcon from '@/assets/icons/organization-icon.svg?react';
-import { onKeyDownHandler } from '@/utils/a11y';
+import { onKeyDownHandler } from '@/shared/utils/a11y';
 
 import styles from './index.module.scss';
 

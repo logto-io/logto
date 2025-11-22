@@ -7,8 +7,8 @@ import type { Nullable, Optional } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
 import ky from 'ky';
 
+import { searchKeys } from '@/shared/utils/search-parameters';
 import type { SignInExperienceResponse } from '@/types';
-import { searchKeys } from '@/utils/search-parameters';
 
 const buildSearchParameters = (record: Record<string, Nullable<Optional<string>>>) => {
   const entries = Object.entries(record).filter((entry): entry is [string, string] =>

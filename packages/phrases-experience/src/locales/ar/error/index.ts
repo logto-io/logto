@@ -28,6 +28,7 @@ const error = {
   terms_acceptance_required_description:
     'يجب أن توافق على الشروط للمتابعة. يرجى المحاولة مرة أخرى.',
   something_went_wrong: 'حدث خطأ ما.',
+  feature_not_enabled: 'هذه الميزة غير مفعلة.',
 };
 
 export default Object.freeze(error);

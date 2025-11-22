@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
 import CloseIcon from '@/assets/icons/close-icon.svg?react';
-import Button from '@/components/Button';
-import IconButton from '@/components/Button/IconButton';
-import { onKeyDownHandler } from '@/utils/a11y';
+import Button from '@/shared/components/Button';
+import IconButton from '@/shared/components/IconButton';
+import { onKeyDownHandler } from '@/shared/utils/a11y';
 
 import modalStyles from '../../scss/modal.module.scss';
 

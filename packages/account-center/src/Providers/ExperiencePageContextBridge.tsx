@@ -15,9 +15,8 @@ type Props = {
  * package so shared components (AppBoundary) can consume consistent values.
  */
 const ExperiencePageContextBridge = ({ children }: Props) => {
-  const { theme, setTheme, experienceSettings, setExperienceSettings } =
+  const { theme, toast, setTheme, setToast, experienceSettings, setExperienceSettings } =
     useContext(AccountPageContext);
-  const [toast, setToast] = useState('');
   const [loading, setLoading] = useState(false);
   const [platform, setPlatform] = useState<Platform>('web');
   const [termsAgreement, setTermsAgreement] = useState(false);

@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import ReactModal from 'react-modal';
 
-import Button from '@/components/Button';
+import Button from '@/shared/components/Button';
 
 import modalStyles from '../../scss/modal.module.scss';
 

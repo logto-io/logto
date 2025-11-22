@@ -30,6 +30,7 @@ const error = {
   terms_acceptance_required_description:
     'Du musst den Bedingungen zustimmen, um fortzufahren. Bitte versuche es erneut.',
   something_went_wrong: 'Etwas ist schiefgegangen.',
+  feature_not_enabled: 'Diese Funktion ist nicht aktiviert.',
 };
 
 export default Object.freeze(error);

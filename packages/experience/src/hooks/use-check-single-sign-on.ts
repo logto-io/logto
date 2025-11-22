@@ -6,7 +6,7 @@ import UserInteractionContext from '@/Providers/UserInteractionContextProvider/U
 import { getSsoConnectors } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
-import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
+import useNavigateWithPreservedSearchParams from '@/shared/hooks/use-navigate-with-preserved-search-params';
 
 import useSingleSignOn from './use-single-sign-on';
 

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { useCallback, useContext } from 'react';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
-import Toast from '@/components/Toast';
+import Toast from '@/shared/components/Toast';
 
 type Props = {
   readonly children: ReactNode;

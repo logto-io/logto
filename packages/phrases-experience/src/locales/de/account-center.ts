@@ -6,6 +6,22 @@ const account_center = {
     title: 'Seite nicht gefunden',
     description: 'Diese Seite ist nicht verfügbar.',
   },
+  verification: {
+    title: 'Sicherheitsüberprüfung',
+    description:
+      'Bestätige deine Identität, um die Sicherheit deines Kontos zu schützen. Bitte wähle eine Methode zur Verifizierung deiner Identität.',
+  },
+  password_verification: {
+    title: 'Verify password',
+    description: "Verify it's you to protect your account security. Enter your password.",
+    error_failed: 'Verification failed. Please check your password.',
+  },
+  verification_method: {
+    password: {
+      name: 'Passwort',
+      description: 'Bestätige dein Passwort',
+    },
+  },
 };
 
 export default Object.freeze(account_center);

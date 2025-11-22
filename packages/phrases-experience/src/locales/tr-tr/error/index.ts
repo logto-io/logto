@@ -30,6 +30,7 @@ const error = {
   terms_acceptance_required_description:
     'Devam etmek için şartları kabul etmelisiniz. Lütfen tekrar deneyin.',
   something_went_wrong: 'Bir şeyler yanlış gitti.',
+  feature_not_enabled: 'Bu özellik etkinleştirilmedi.',
 };
 
 export default Object.freeze(error);

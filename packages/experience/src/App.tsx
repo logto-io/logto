@@ -1,6 +1,8 @@
 import { MfaFactor, experience } from '@logto/schemas';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 
+import { handleSearchParametersData } from '@/shared/utils/search-parameters';
+
 import AppLayout from './Layout/AppLayout';
 import AppBoundary from './Providers/AppBoundary';
 import CaptchaContextProvider from './Providers/CaptchaContextProvider';
@@ -47,7 +49,6 @@ import Springboard from './pages/Springboard';
 import SwitchAccount from './pages/SwitchAccount';
 import VerificationCode from './pages/VerificationCode';
 import { UserMfaFlow } from './types';
-import { handleSearchParametersData } from './utils/search-parameters';
 import 'overlayscrollbars/overlayscrollbars.css';
 import './shared/scss/normalized.scss';
 import './scss/overlayscrollbars.scss';

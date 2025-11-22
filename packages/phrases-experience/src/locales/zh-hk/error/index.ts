@@ -27,6 +27,7 @@ const error = {
   terms_acceptance_required: '需要同意條款',
   terms_acceptance_required_description: '必須同意條款後才能繼續，請重試。',
   something_went_wrong: '出錯了。',
+  feature_not_enabled: '此功能未啟用。',
 };
 
 export default Object.freeze(error);

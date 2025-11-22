@@ -1,7 +1,7 @@
 import type { FormEventHandler, KeyboardEventHandler, ClipboardEventHandler } from 'react';
 import { useMemo, useRef, useCallback, useEffect } from 'react';
 
-import ErrorMessage from '@/components/ErrorMessage';
+import ErrorMessage from '@/shared/components/ErrorMessage';
 
 import styles from './index.module.scss';
 

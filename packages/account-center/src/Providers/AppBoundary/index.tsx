@@ -1,6 +1,8 @@
 import useColorTheme from '@/Providers/AppBoundary/use-color-theme';
 import type { ReactElement } from 'react';
 
+import ToastProvider from '../ToastProvider';
+
 import AppMeta from './AppMeta';
 
 type Props = {
@@ -13,7 +15,7 @@ const AppBoundary = ({ children }: Props) => {
   return (
     <>
       <AppMeta />
-      {children}
+      <ToastProvider>{children}</ToastProvider>
     </>
   );
 };

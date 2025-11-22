@@ -1,4 +1,4 @@
-import { adminTenantId, fullSignInExperienceGuard } from '@logto/schemas';
+import { adminTenantId, fullSignInExperienceGuard, AccountCenters } from '@logto/schemas';
 import { z } from 'zod';
 
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
@@ -21,6 +21,7 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
   const {
     customPhrases: { findAllCustomLanguageTags },
     signInExperiences: { findDefaultSignInExperience },
+    accountCenters: { findDefaultAccountCenter },
   } = queries;
 
   if (tenantId === adminTenantId) {
@@ -82,4 +83,18 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
   );
 
   experienceRoutes(router, libraries);
+
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    router.get(
+      '/.well-known/account-center',
+      koaGuard({
+        response: AccountCenters.guard,
+        status: 200,
+      }),
+      async (ctx, next) => {
+        ctx.body = await findDefaultAccountCenter();
+        return next();
+      }
+    );
+  }
 }

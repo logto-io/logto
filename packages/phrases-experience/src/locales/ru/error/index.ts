@@ -30,6 +30,7 @@ const error = {
   terms_acceptance_required_description:
     'Вы должны согласиться с условиями, чтобы продолжить. Пожалуйста, попробуйте снова.',
   something_went_wrong: 'Что-то пошло не так.',
+  feature_not_enabled: 'Эта функция не включена.',
 };
 
 export default Object.freeze(error);

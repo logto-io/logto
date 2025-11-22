@@ -3,6 +3,7 @@ import {
   type Translation,
   type SsoConnectorMetadata,
   type CustomProfileField,
+  type AccountCenter,
 } from '@logto/schemas';
 import { HTTPError } from 'ky';
 
@@ -173,6 +174,14 @@ describe('.well-known api', () => {
       expect(signInExperience.customProfileFields).toContainEqual(fullnameField);
 
       void deleteCustomProfileFieldByName(fullnameData.name);
+    });
+  });
+
+  devFeatureTest.describe('account center', () => {
+    devFeatureTest.it('get /.well-known/account-center', async () => {
+      const response = await api.get('.well-known/account-center').json<AccountCenter>();
+      expect(response.enabled).toEqual(expect.any(Boolean));
+      expect(response.fields).toEqual(expect.any(Object));
     });
   });
 });

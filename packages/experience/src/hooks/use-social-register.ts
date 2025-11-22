@@ -2,7 +2,7 @@ import { AgreeToTermsPolicy, experience, InteractionEvent } from '@logto/schemas
 import { useCallback } from 'react';
 
 import { registerWithVerifiedIdentifier } from '@/apis/experience';
-import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
+import useNavigateWithPreservedSearchParams from '@/shared/hooks/use-navigate-with-preserved-search-params';
 
 import useApi from './use-api';
 import useErrorHandler from './use-error-handler';
