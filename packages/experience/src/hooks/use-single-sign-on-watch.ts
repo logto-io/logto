@@ -9,9 +9,9 @@ import { useCallback, useContext, useEffect } from 'react';
 import SingleSignOnFormModeContext from '@/Providers/SingleSignOnFormModeContextProvider/SingleSignOnFormModeContext';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { getSsoConnectors } from '@/apis/experience';
-import type { IdentifierInputValue } from '@/components/InputFields/SmartInputField';
 import useApi from '@/hooks/use-api';
 import useSingleSignOn from '@/hooks/use-single-sign-on';
+import type { IdentifierInputValue } from '@/shared/components/InputFields/SmartInputField';
 import useNavigateWithPreservedSearchParams from '@/shared/hooks/use-navigate-with-preserved-search-params';
 import { validateEmail } from '@/utils/form';
 

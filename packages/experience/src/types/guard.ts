@@ -10,7 +10,7 @@ import {
 } from '@logto/schemas';
 import * as s from 'superstruct';
 
-import { type IdentifierInputValue } from '@/components/InputFields/SmartInputField';
+import { type IdentifierInputValue } from '@/shared/components/InputFields/SmartInputField';
 
 import { UserFlow } from '.';
 

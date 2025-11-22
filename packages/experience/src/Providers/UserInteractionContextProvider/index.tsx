@@ -1,9 +1,9 @@
 import { type SsoConnectorMetadata, type VerificationType } from '@logto/schemas';
 import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 
-import { type IdentifierInputValue } from '@/components/InputFields/SmartInputField';
 import useSessionStorage, { StorageKeys } from '@/hooks/use-session-storages';
 import { useSieMethods } from '@/hooks/use-sie';
+import { type IdentifierInputValue } from '@/shared/components/InputFields/SmartInputField';
 
 import UserInteractionContext, { type UserInteractionContextType } from './UserInteractionContext';
 

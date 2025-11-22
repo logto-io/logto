@@ -1,10 +1,11 @@
 import Button from '@experience/shared/components/Button';
 import DynamicT from '@experience/shared/components/DynamicT';
-import InputField from '@experience/shared/components/InputFields/InputField';
+import SmartInputField from '@experience/shared/components/InputFields/SmartInputField';
 import VerificationCodeInput, {
   defaultLength,
 } from '@experience/shared/components/VerificationCode';
 import { useLogto } from '@logto/react';
+import { SignInIdentifier } from '@logto/schemas';
 import type { TFuncKey } from 'i18next';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -190,6 +191,10 @@ const CodeVerification = ({
     hasSentCode && identifier && descriptionPropsBuilder
       ? descriptionPropsBuilder(identifier)
       : undefined;
+  const identifierType =
+    identifierLabelKey === 'account_center.phone_verification.phone_label'
+      ? SignInIdentifier.Phone
+      : SignInIdentifier.Email;
 
   return (
     <SecondaryPageLayout
@@ -246,12 +251,13 @@ const CodeVerification = ({
         </div>
       ) : (
         <div className={styles.prepare}>
-          <InputField
+          <SmartInputField
             readOnly
             className={styles.identifierInput}
             name="identifier"
             label={t(identifierLabelKey)}
-            value={identifier ?? ''}
+            defaultValue={identifier ?? ''}
+            enabledTypes={[identifierType]}
           />
           <Button
             title="account_center.email_verification.send"

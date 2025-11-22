@@ -15,11 +15,12 @@ type Props = {
   readonly value?: string;
   readonly inputRef?: Nullable<HTMLInputElement>;
   readonly isVisible?: boolean;
+  readonly isInteractive?: boolean;
   readonly onChange?: (value: string) => void;
 };
 
 const CountryCodeSelector = (
-  { className, value, inputRef, isVisible = true, onChange }: Props,
+  { className, value, inputRef, isVisible = true, isInteractive = true, onChange }: Props,
   ref: ForwardedRef<HTMLDivElement>
 ) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -42,11 +43,17 @@ const CountryCodeSelector = (
       ref={ref}
       className={classNames(styles.countryCodeSelector, isVisible && styles.visible, className)}
       role="button"
-      tabIndex={isVisible ? 0 : -1}
-      onClick={showDropDown}
-      onKeyDown={onKeyDownHandler({
-        Enter: showDropDown,
-      })}
+      tabIndex={isVisible && isInteractive ? 0 : -1}
+      aria-disabled={!isInteractive}
+      style={isInteractive ? undefined : { pointerEvents: 'none' }}
+      onClick={isInteractive ? showDropDown : undefined}
+      onKeyDown={
+        isInteractive
+          ? onKeyDownHandler({
+              Enter: showDropDown,
+            })
+          : undefined
+      }
     >
       <span>{`+${countryCode}`}</span>
       <DownArrowIcon />
