@@ -2,7 +2,7 @@ import { InteractionEvent, MissingProfile } from '@logto/schemas';
 import { useMemo } from 'react';
 import { validate } from 'superstruct';
 
-import useNavigateWithPreservedSearchParams from '@/shared/hooks/use-navigate-with-preserved-search-params';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { UserFlow, SearchParameters, type ContinueFlowInteractionEvent } from '@/types';
 import { missingProfileErrorDataGuard } from '@/types/guard';
 import { queryStringify } from '@/utils';

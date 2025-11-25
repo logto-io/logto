@@ -8,11 +8,11 @@ import SetPassword from '@/containers/SetPassword';
 import useApi from '@/hooks/use-api';
 import { usePromiseConfirmModal } from '@/hooks/use-confirm-modal';
 import useErrorHandler, { type ErrorHandlers } from '@/hooks/use-error-handler';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import usePasswordPolicyChecker from '@/hooks/use-password-policy-checker';
 import usePasswordRejectionErrorHandler from '@/hooks/use-password-rejection-handler';
 import { usePasswordPolicy } from '@/hooks/use-sie';
 import useToast from '@/hooks/use-toast';
-import useNavigateWithPreservedSearchParams from '@/shared/hooks/use-navigate-with-preserved-search-params';
 
 const ResetPassword = () => {
   const [errorMessage, setErrorMessage] = useState<string>();

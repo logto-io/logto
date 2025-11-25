@@ -11,8 +11,8 @@ import UserInteractionContext from '@/Providers/UserInteractionContextProvider/U
 import { getSsoConnectors } from '@/apis/experience';
 import type { IdentifierInputValue } from '@/components/InputFields/SmartInputField';
 import useApi from '@/hooks/use-api';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import useSingleSignOn from '@/hooks/use-single-sign-on';
-import useNavigateWithPreservedSearchParams from '@/shared/hooks/use-navigate-with-preserved-search-params';
 import { validateEmail } from '@/utils/form';
 
 import { useSieMethods } from './use-sie';

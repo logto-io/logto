@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import useNavigateWithPreservedSearchParams from '@/shared/hooks/use-navigate-with-preserved-search-params';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import {
   getCallbackLinkFromStorage,
   removeCallbackLinkFromStorage,

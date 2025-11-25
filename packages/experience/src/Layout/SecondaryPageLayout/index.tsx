@@ -1,6 +1,7 @@
 import type { TFuncKey } from 'i18next';
 import { type ReactElement } from 'react';
 
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import usePlatform from '@/hooks/use-platform';
 import DynamicT from '@/shared/components/DynamicT';
 import NavBar from '@/shared/components/NavBar';
@@ -32,11 +33,18 @@ const SecondaryPageLayout = ({
   children,
 }: Props) => {
   const { isMobile } = usePlatform();
+  const navigate = useNavigateWithPreservedSearchParams();
 
   return (
     <div className={styles.wrapper}>
       <PageMeta titleKey={title} />
-      <NavBar isHidden={isNavBarHidden} onSkip={onSkip} />
+      <NavBar
+        isHidden={isNavBarHidden}
+        onSkip={onSkip}
+        onBack={() => {
+          navigate(-1);
+        }}
+      />
       {isMobile && notification && (
         <InlineNotification message={notification} className={styles.notification} />
       )}

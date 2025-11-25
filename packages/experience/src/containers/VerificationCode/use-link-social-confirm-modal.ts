@@ -4,8 +4,8 @@ import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import useLinkSocial from '@/hooks/use-social-link-account';
-import useNavigateWithPreservedSearchParams from '@/shared/hooks/use-navigate-with-preserved-search-params';
 import { formatPhoneNumberWithCountryCallingCode } from '@/utils/country-code';
 
 const useLinkSocialConfirmModal = () => {

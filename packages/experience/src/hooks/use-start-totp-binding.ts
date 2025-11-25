@@ -5,7 +5,7 @@ import UserInteractionContext from '@/Providers/UserInteractionContextProvider/U
 import { createTotpSecret } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
-import useNavigateWithPreservedSearchParams from '@/shared/hooks/use-navigate-with-preserved-search-params';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { UserMfaFlow } from '@/types';
 import { type MfaFlowState, type TotpBindingState } from '@/types/guard';
 

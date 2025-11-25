@@ -9,12 +9,12 @@ import LoadingLayer from '@/components/LoadingLayer';
 import TextLink from '@/components/TextLink';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import UserProfile from '@/pages/Consent/UserProfile';
 import ErrorPage from '@/pages/ErrorPage';
 import Button from '@/shared/components/Button';
 import DynamicT from '@/shared/components/DynamicT';
 import PageMeta from '@/shared/components/PageMeta';
-import useNavigateWithPreservedSearchParams from '@/shared/hooks/use-navigate-with-preserved-search-params';
 import { getBrandingLogoUrl } from '@/utils/logo';
 
 import styles from './index.module.scss';

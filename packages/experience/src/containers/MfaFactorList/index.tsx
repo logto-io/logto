@@ -2,10 +2,10 @@ import { MfaFactor, SignInIdentifier } from '@logto/schemas';
 import { useCallback } from 'react';
 
 import MfaFactorButton from '@/components/Button/MfaFactorButton';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import useSendMfaVerificationCode from '@/hooks/use-send-mfa-verification-code';
 import useStartTotpBinding from '@/hooks/use-start-totp-binding';
 import useStartWebAuthnProcessing from '@/hooks/use-start-webauthn-processing';
-import useNavigateWithPreservedSearchParams from '@/shared/hooks/use-navigate-with-preserved-search-params';
 import { UserMfaFlow } from '@/types';
 import { type MfaFlowState } from '@/types/guard';
 

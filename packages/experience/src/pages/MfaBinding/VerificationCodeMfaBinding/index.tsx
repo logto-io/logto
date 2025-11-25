@@ -10,11 +10,11 @@ import UserInteractionContext from '@/Providers/UserInteractionContextProvider/U
 import { sendVerificationCode } from '@/apis/experience';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
 import useErrorHandler from '@/hooks/use-error-handler';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import useSkipMfa from '@/hooks/use-skip-mfa';
 import useSkipOptionalMfa from '@/hooks/use-skip-optional-mfa';
 import IdentifierProfileForm from '@/pages/Continue/IdentifierProfileForm';
 import ErrorPage from '@/pages/ErrorPage';
-import useNavigateWithPreservedSearchParams from '@/shared/hooks/use-navigate-with-preserved-search-params';
 import { UserMfaFlow } from '@/types';
 import { mfaFlowStateGuard } from '@/types/guard';
 import { codeVerificationTypeMap } from '@/utils/sign-in-experience';
