@@ -1,0 +1,17 @@
+@use '@experience/shared/scss/underscore' as _;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(4);
+  width: 100%;
+  max-width: _.unit(100);
+}
+
+.submit {
+  align-self: flex-start;
+}
+
+.error {
+  margin-top: _.unit(1);
+}

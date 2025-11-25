@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import react from '@vitejs/plugin-react';
 import { mergeConfig, defineConfig, type Plugin, type UserConfig } from 'vite';
 import viteCompression from 'vite-plugin-compression';
+import svgr from 'vite-plugin-svgr';
 
 import { defaultConfig } from '../../vite.shared.config';
 
@@ -54,6 +55,7 @@ const buildConfig = (mode: string): UserConfig => ({
   plugins: [
     experienceAliasPlugin(),
     react(),
+    svgr(),
     viteCompression({ disable: mode === 'development' }),
     viteCompression({ disable: mode === 'development', algorithm: 'brotliCompress' }),
   ],

@@ -6,6 +6,22 @@ const account_center = {
     title: 'Страница не найдена',
     description: 'Эта страница недоступна.',
   },
+  verification: {
+    title: 'Проверка безопасности',
+    description:
+      'Подтвердите, что это вы, чтобы защитить безопасность аккаунта. Пожалуйста, выберите способ подтверждения личности.',
+  },
+  password_verification: {
+    title: 'Verify password',
+    description: "Verify it's you to protect your account security. Enter your password.",
+    error_failed: 'Verification failed. Please check your password.',
+  },
+  verification_method: {
+    password: {
+      name: 'Пароль',
+      description: 'Подтвердите свой пароль',
+    },
+  },
 };
 
 export default Object.freeze(account_center);

@@ -52,10 +52,12 @@
     "react-modal": "^3.15.1",
     "react-top-loading-bar": "^2.3.1",
     "stylelint": "^15.0.0",
+    "superstruct": "^2.0.0",
     "typescript": "^5.5.3",
     "use-debounced-loader": "^0.1.1",
     "vite": "^6.3.6",
-    "vite-plugin-compression": "^0.5.1"
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-svgr": "^4.3.0"
   },
   "engines": {
     "node": "^22.14.0"
@@ -66,5 +68,8 @@
   "stylelint": {
     "extends": "@silverhand/eslint-config-react/.stylelintrc"
   },
-  "prettier": "@silverhand/eslint-config/.prettierrc"
+  "prettier": "@silverhand/eslint-config/.prettierrc",
+  "dependencies": {
+    "react-router-dom": "^7.9.6"
+  }
 }

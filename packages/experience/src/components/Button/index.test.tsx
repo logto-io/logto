@@ -1,8 +1,8 @@
 import { render, fireEvent } from '@testing-library/react';
 
 import { mockSocialConnectorData } from '@/__mocks__/logto';
+import Button from '@/shared/components/Button';
 
-import Button from '.';
 import SocialLinkButton from './SocialLinkButton';
 
 describe('Button Component', () => {

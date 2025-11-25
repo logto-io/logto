@@ -4,7 +4,7 @@ import type { ForwardedRef } from 'react';
 import { useState, useMemo, forwardRef } from 'react';
 
 import DownArrowIcon from '@/assets/icons/arrow-down.svg?react';
-import { onKeyDownHandler } from '@/utils/a11y';
+import { onKeyDownHandler } from '@/shared/utils/a11y';
 import { getCountryList, getDefaultCountryCallingCode } from '@/utils/country-code';
 
 import CountryCodeDropdown from './CountryCodeDropdown';

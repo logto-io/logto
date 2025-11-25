@@ -5,8 +5,8 @@ import type { FormEventHandler, KeyboardEventHandler, ClipboardEventHandler } fr
 import { useCallback, useState, useRef, useMemo, Fragment, useEffect, useId } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import InputField from '../InputField';
-import NotchedBorder from '../InputField/NotchedBorder';
+import InputField from '@/shared/components/InputFields/InputField';
+import NotchedBorder from '@/shared/components/InputFields/InputField/NotchedBorder';
 
 import styles from './index.module.scss';
 

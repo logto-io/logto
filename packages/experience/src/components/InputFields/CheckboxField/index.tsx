@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 
 import Checkbox, { type Props as CheckboxProps } from '@/components/Checkbox';
-import { onKeyDownHandler } from '@/utils/a11y';
+import { onKeyDownHandler } from '@/shared/utils/a11y';
 
 import styles from './index.module.scss';
 

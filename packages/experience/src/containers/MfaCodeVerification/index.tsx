@@ -2,9 +2,9 @@ import { type SignInIdentifier } from '@logto/schemas';
 import { useCallback, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import Button from '@/components/Button';
 import TextLink from '@/components/TextLink';
 import VerificationCodeInput from '@/components/VerificationCode';
+import Button from '@/shared/components/Button';
 
 import styles from './index.module.scss';
 import useMfaCodeVerification from './use-mfa-code-verification';

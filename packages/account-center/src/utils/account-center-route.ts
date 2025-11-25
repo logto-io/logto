@@ -1,4 +1,4 @@
-const accountCenterBasePath = '/account-center';
+export const accountCenterBasePath = '/account-center';
 const storageKey = 'account-center-route-cache';
 
 const knownRoutePrefixes: readonly string[] = ['/email', '/phone', '/username', '/password'];

@@ -4,7 +4,7 @@ import ReactModal from 'react-modal';
 import type { LoadingBarRef } from 'react-top-loading-bar';
 import LoadingBar from 'react-top-loading-bar';
 
-import NavBar from '@/components/NavBar';
+import NavBar from '@/shared/components/NavBar';
 
 import styles from './index.module.scss';
 

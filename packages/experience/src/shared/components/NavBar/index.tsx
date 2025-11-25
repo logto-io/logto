@@ -2,10 +2,9 @@ import classNames from 'classnames';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import ArrowPrev from '@/assets/icons/arrow-prev.svg?react';
-import NavClose from '@/assets/icons/nav-close.svg?react';
-import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
-import { onKeyDownHandler } from '@/utils/a11y';
+import ArrowPrev from '@/shared/assets/icons/arrow-prev.svg?react';
+import NavClose from '@/shared/assets/icons/nav-close.svg?react';
+import { onKeyDownHandler } from '@/shared/utils/a11y';
 
 import FlipOnRtl from '../FlipOnRtl';
 
@@ -16,14 +15,23 @@ type Props = {
   readonly type?: 'back' | 'close';
   readonly isHidden?: boolean;
   readonly onClose?: () => void;
+  readonly onBack?: () => void;
   readonly onSkip?: () => void;
 };
 
-const NavBar = ({ title, type = 'back', isHidden, onClose, onSkip }: Props) => {
-  const navigate = useNavigateWithPreservedSearchParams();
+const NavBar = ({ title, type = 'back', isHidden, onClose, onBack, onSkip }: Props) => {
   const { t } = useTranslation();
 
   const isClosable = type === 'close';
+  const handleBack = useCallback(() => {
+    if (onBack) {
+      onBack();
+
+      return;
+    }
+
+    window.history.back();
+  }, [onBack]);
 
   const clickHandler = useCallback(() => {
     if (onClose) {
@@ -38,8 +46,8 @@ const NavBar = ({ title, type = 'back', isHidden, onClose, onSkip }: Props) => {
       return;
     }
 
-    navigate(-1);
-  }, [isClosable, navigate, onClose]);
+    handleBack();
+  }, [handleBack, isClosable, onClose]);
 
   return (
     <div className={classNames(styles.navBar, isHidden && styles.hidden)}>
