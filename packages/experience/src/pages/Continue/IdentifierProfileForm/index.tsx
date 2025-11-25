@@ -4,12 +4,12 @@ import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { SmartInputField } from '@/components/InputFields';
+import Button from '@/shared/components/Button';
+import ErrorMessage from '@/shared/components/ErrorMessage';
 import type {
   IdentifierInputType,
   IdentifierInputValue,
-} from '@/components/InputFields/SmartInputField';
-import Button from '@/shared/components/Button';
-import ErrorMessage from '@/shared/components/ErrorMessage';
+} from '@/shared/components/InputFields/SmartInputField';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
 
 import styles from './index.module.scss';

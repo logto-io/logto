@@ -2,7 +2,7 @@ import { type SsoConnectorMetadata, type VerificationType } from '@logto/schemas
 import { noop } from '@silverhand/essentials';
 import { createContext } from 'react';
 
-import { type IdentifierInputValue } from '@/components/InputFields/SmartInputField';
+import { type IdentifierInputValue } from '@/shared/components/InputFields/SmartInputField';
 import { type VerificationIdsMap } from '@/types/guard';
 
 export type UserInteractionContextType = {
