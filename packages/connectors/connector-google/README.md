@@ -70,7 +70,7 @@ Scopes define the permissions your app requests from users and control which dat
 
 ### Configure scopes in Google Cloud Console
 
-1. Navigate to **APIs & Services > OAuth consent screen > Scopes**.
+1. Navigate to **APIs & Services > OAuth consent screen > Data Access**.
 2. Click **Add or Remove Scopes** and select only the scopes your app requires:
    - **Authentication (Required)**:
      - `https://www.googleapis.com/auth/userinfo.email`
