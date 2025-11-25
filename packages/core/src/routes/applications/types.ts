@@ -35,5 +35,5 @@ export const applicationPatchGuard = originalApplicationPatchGuard
           )
           .optional(),
       })
-      .optional(),
+      .nullish(),
   });
