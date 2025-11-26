@@ -119,7 +119,7 @@ describe('post sso-connectors', () => {
       domains,
     });
 
-    expect(domains).toEqual(domains.map((domain) => domain.toLowerCase()));
+    expect(connector.domains).toEqual(domains.map((domain) => domain.toLowerCase()));
 
     await deleteSsoConnectorById(connector.id);
   });
@@ -337,7 +337,7 @@ describe('patch sso-connector by id', () => {
       domains,
     });
 
-    expect(domains).toEqual(domains.map((domain) => domain.toLowerCase()));
+    expect(connector.domains).toEqual(domains.map((domain) => domain.toLowerCase()));
 
     await deleteSsoConnectorById(connector.id);
   });
