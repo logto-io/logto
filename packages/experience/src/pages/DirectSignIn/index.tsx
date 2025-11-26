@@ -3,11 +3,11 @@ import { useContext, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
-import { LoadingIconWithContainer } from '@/components/LoadingLayer';
 import useSocial from '@/containers/SocialSignInList/use-social';
 import useFallbackRoute from '@/hooks/use-fallback-route';
 import { useSieMethods } from '@/hooks/use-sie';
 import useSingleSignOn from '@/hooks/use-single-sign-on';
+import { LoadingIconWithContainer } from '@/shared/components/LoadingLayer';
 import { logtoGoogleOneTapCookie } from '@/utils/cookies';
 
 import styles from './index.module.scss';

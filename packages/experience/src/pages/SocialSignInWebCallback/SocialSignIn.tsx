@@ -1,4 +1,4 @@
-import LoadingLayer from '@/components/LoadingLayer';
+import LoadingLayer from '@/shared/components/LoadingLayer';
 
 import useSocialSignInListener from './use-social-sign-in-listener';
 

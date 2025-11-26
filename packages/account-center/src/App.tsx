@@ -4,6 +4,7 @@ import { useContext, useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import AppBoundary from '@ac/Providers/AppBoundary';
+import LoadingContextProvider from '@ac/Providers/LoadingContextProvider';
 
 import styles from './App.module.scss';
 import Callback from './Callback';
@@ -79,20 +80,22 @@ const App = () => (
         scopes: [UserScope.Profile, UserScope.Email, UserScope.Phone, UserScope.Identities],
       }}
     >
-      <PageContextProvider>
-        <AppBoundary>
-          <div className={styles.app}>
-            <BrandingHeader />
-            <div className={styles.layout}>
-              <div className={styles.container}>
-                <main className={styles.main}>
-                  <Main />
-                </main>
+      <LoadingContextProvider>
+        <PageContextProvider>
+          <AppBoundary>
+            <div className={styles.app}>
+              <BrandingHeader />
+              <div className={styles.layout}>
+                <div className={styles.container}>
+                  <main className={styles.main}>
+                    <Main />
+                  </main>
+                </div>
               </div>
             </div>
-          </div>
-        </AppBoundary>
-      </PageContextProvider>
+          </AppBoundary>
+        </PageContextProvider>
+      </LoadingContextProvider>
     </LogtoProvider>
   </BrowserRouter>
 );

@@ -1,6 +1,6 @@
-import LoadingLayer from '@/components/LoadingLayer';
 import useNativeMessageListener from '@/hooks/use-native-message-listener';
 import { useSieMethods } from '@/hooks/use-sie';
+import LoadingLayer from '@/shared/components/LoadingLayer';
 
 import useSingleSignOnListener from './use-single-sign-on-listener';
 

@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react';
 
-import styles from './index.module.scss';
+import styles from './LoadingMask.module.scss';
 
 type Props = {
   readonly children?: ReactNode;

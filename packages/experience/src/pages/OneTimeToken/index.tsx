@@ -15,13 +15,13 @@ import {
   registerWithVerifiedIdentifier,
   signInWithOneTimeToken,
 } from '@/apis/experience';
-import LoadingLayer from '@/components/LoadingLayer';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
 import useTerms from '@/hooks/use-terms';
+import LoadingLayer from '@/shared/components/LoadingLayer';
 
 const OneTimeToken = () => {
   const [params] = useSearchParams();

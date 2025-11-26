@@ -4,8 +4,10 @@ import { useLogto } from '@logto/react';
 import { useState, useContext, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { verifyPassword } from '@ac/apis/verification';
+import useApi from '@ac/hooks/use-api';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
 
 import styles from './index.module.scss';
@@ -18,32 +20,32 @@ const PasswordVerification = ({ onBack }: Props) => {
   const { t } = useTranslation();
   const { setVerificationId, setToast } = useContext(PageContext);
   const { getAccessToken } = useLogto();
+  const { loading } = useContext(LoadingContext);
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+  const asyncVerifyPassword = useApi(verifyPassword);
 
   const handleVerify = async (event?: FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
 
-    if (!password) {
+    if (!password || loading) {
       return;
     }
 
-    setLoading(true);
-    try {
-      const accessToken = await getAccessToken();
+    const accessToken = await getAccessToken();
 
-      if (!accessToken) {
-        throw new Error('Missing access token');
-      }
-
-      const result = await verifyPassword(accessToken, password);
-      setVerificationId(result.verificationRecordId, result.expiresAt);
-    } catch {
-      const errorMessage = t('account_center.password_verification.error_failed');
-      setToast(errorMessage);
-    } finally {
-      setLoading(false);
+    if (!accessToken) {
+      setToast(t('account_center.password_verification.error_failed'));
+      return;
     }
+
+    const [error, result] = await asyncVerifyPassword(accessToken, password);
+
+    if (error || !result) {
+      setToast(t('account_center.password_verification.error_failed'));
+      return;
+    }
+
+    setVerificationId(result.verificationRecordId, result.expiresAt);
   };
 
   return (
@@ -67,7 +69,7 @@ const PasswordVerification = ({ onBack }: Props) => {
           className={styles.submit}
           htmlType="submit"
           title="action.confirm"
-          disabled={!password}
+          disabled={!password || loading}
           isLoading={loading}
         />
       </form>
