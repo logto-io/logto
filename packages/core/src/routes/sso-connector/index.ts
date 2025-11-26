@@ -330,7 +330,7 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
       }
 
       // Check if there's any valid update
-      const hasValidUpdate = parsedConfig ?? Object.keys(rest).length > 0;
+      const hasValidUpdate = parsedConfig ?? domains ?? Object.keys(rest).length > 0;
 
       // Patch update the connector only if there's any valid update
       const connector = hasValidUpdate
