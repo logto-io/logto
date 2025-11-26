@@ -109,6 +109,20 @@ describe('post sso-connectors', () => {
       })
     ).rejects.toThrow(HTTPError);
   });
+
+  it('should store domains in lowercase', async () => {
+    const domains = ['Test.COM', 'Example.com', 'foo.org', 'BAR.net'];
+
+    const connector = await createSsoConnector({
+      providerName: SsoProviderName.OIDC,
+      connectorName: 'domains-test-OIDC-connector',
+      domains,
+    });
+
+    expect(connector.domains).toEqual(domains.map((domain) => domain.toLowerCase()));
+
+    await deleteSsoConnectorById(connector.id);
+  });
 });
 
 describe('get sso-connectors', () => {
@@ -310,4 +324,21 @@ describe('patch sso-connector by id', () => {
       await deleteSsoConnectorById(id);
     }
   );
+
+  it('should store domains in lowercase when patching', async () => {
+    const { id } = await createSsoConnector({
+      providerName: SsoProviderName.OIDC,
+      connectorName: 'domains-test-OIDC-connector',
+    });
+
+    const domains = ['Test.COM', 'Example.com', 'foo.org', 'BAR.net'];
+
+    const connector = await patchSsoConnectorById(id, {
+      domains,
+    });
+
+    expect(connector.domains).toEqual(domains.map((domain) => domain.toLowerCase()));
+
+    await deleteSsoConnectorById(connector.id);
+  });
 });

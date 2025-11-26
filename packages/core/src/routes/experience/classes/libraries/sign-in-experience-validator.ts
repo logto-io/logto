@@ -157,7 +157,10 @@ export class SignInExperienceValidator {
     const { getAvailableSsoConnectors } = this.libraries.ssoConnectors;
     const availableSsoConnectors = await getAvailableSsoConnectors();
 
-    return availableSsoConnectors.filter(({ domains }) => domains.includes(domain));
+    return availableSsoConnectors.filter(({ domains }) => {
+      const normalizedDomains = domains.map((item) => item.toLowerCase());
+      return normalizedDomains.includes(domain.toLowerCase());
+    });
   }
 
   public async getMfaSettings() {
