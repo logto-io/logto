@@ -26,7 +26,8 @@ import { generateEmail, generatePassword } from '#src/utils.js';
 
 describe('enterprise sso sign-in and sign-up', () => {
   const ssoConnectorApi = new SsoConnectorApi();
-  const domain = 'foo.com';
+  // Use a random domain that contains uppercase letters to test the case-insensitivity of email domain matching.
+  const domain = 'Foo.com';
   const enterpriseSsoIdentityId = generateStandardId();
   const email = generateEmail(domain);
   const userApi = new UserApiTest();
@@ -192,8 +193,6 @@ describe('enterprise sso sign-in and sign-up', () => {
 
   describe('should block email identifier from non-enterprise sso verifications if the SSO is enabled', () => {
     const password = generatePassword();
-    const email = generateEmail(domain);
-    const identifier = Object.freeze({ type: SignInIdentifier.Email, value: email });
 
     beforeAll(async () => {
       await Promise.all([setEmailConnector(), setSmsConnector()]);
@@ -202,6 +201,9 @@ describe('enterprise sso sign-in and sign-up', () => {
     });
 
     it('should reject when trying to sign-in with email verification code', async () => {
+      // Test with lowercase domain to ensure the domain matching is case-insensitive
+      const email = generateEmail(domain.toLocaleLowerCase());
+      const identifier = Object.freeze({ type: SignInIdentifier.Email, value: email });
       const client = await initExperienceClient();
 
       const { verificationId, code } = await successfullySendVerificationCode(client, {
@@ -228,6 +230,9 @@ describe('enterprise sso sign-in and sign-up', () => {
 
     it('should reject when trying to sign-in with email password', async () => {
       const client = await initExperienceClient();
+      // Test with uppercase domain to ensure the domain matching is case-insensitive
+      const email = generateEmail(domain.toUpperCase());
+      const identifier = Object.freeze({ type: SignInIdentifier.Email, value: email });
 
       const { verificationId } = await client.verifyPassword({
         identifier,

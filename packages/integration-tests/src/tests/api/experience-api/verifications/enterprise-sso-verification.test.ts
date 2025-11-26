@@ -202,10 +202,11 @@ describe('enterprise sso verification', () => {
 
   describe('getSsoConnectorsByEmail', () => {
     const ssoConnectorApi = new SsoConnectorApi();
-    const domain = `foo${randomString()}.com`;
+    const domain = `foo-${randomString()}.com`;
+    const uppercaseDomain = `BAR-${randomString().toUpperCase()}.COM`;
 
     beforeAll(async () => {
-      await ssoConnectorApi.createMockOidcConnector([domain]);
+      await ssoConnectorApi.createMockOidcConnector([domain, uppercaseDomain]);
 
       await updateSignInExperience({
         singleSignOnEnabled: true,
@@ -216,15 +217,26 @@ describe('enterprise sso verification', () => {
       await ssoConnectorApi.cleanUp();
     });
 
-    it('should get sso connectors with given email properly', async () => {
-      const client = new ExperienceClient();
-      await client.initSession();
+    const testEmailDomains = [
+      domain,
+      domain.toUpperCase(),
+      domain.toLocaleLowerCase(),
+      uppercaseDomain,
+      uppercaseDomain.toLowerCase(),
+    ];
 
-      const response = await client.getAvailableSsoConnectors('bar@' + domain);
+    it.each(testEmailDomains)(
+      'should match sso connectors for email domain: %s',
+      async (emailDomain) => {
+        const client = new ExperienceClient();
+        await client.initSession();
 
-      expect(response.connectorIds.length).toBeGreaterThan(0);
-      expect(response.connectorIds[0]).toBe(ssoConnectorApi.firstConnectorId);
-    });
+        const response = await client.getAvailableSsoConnectors('bar@' + emailDomain);
+
+        expect(response.connectorIds.length).toBeGreaterThan(0);
+        expect(response.connectorIds[0]).toBe(ssoConnectorApi.firstConnectorId);
+      }
+    );
 
     it('should return empty array if no sso connectors found', async () => {
       const client = new ExperienceClient();

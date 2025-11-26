@@ -86,7 +86,7 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
     }),
     async (ctx, next) => {
       const { body } = ctx.guard;
-      const { providerName, connectorName, config, domains, ...rest } = body;
+      const { providerName, connectorName, config, domains: rawDomains, ...rest } = body;
 
       // Return 422 if the connector provider is not supported
       if (!isSupportedSsoProvider(providerName)) {
@@ -96,6 +96,9 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
           status: 422,
         });
       }
+
+      // Normalize domains to lowercase for consistency
+      const domains = rawDomains?.map((domain) => domain.toLowerCase());
 
       // Validate the connector domains if it's provided
       if (domains) {
@@ -268,8 +271,11 @@ export default function singleSignOnConnectorsRoutes<T extends ManagementApiRout
 
       const originalConnector = await getSsoConnectorById(id);
       const { providerName } = originalConnector;
-      const { config, domains, ...rest } = body;
+      const { config, domains: rawDomains, ...rest } = body;
       const { providerType } = ssoConnectorFactories[providerName];
+
+      // Normalize domains to lowercase for consistency
+      const domains = rawDomains?.map((domain) => domain.toLowerCase());
 
       // Validate the connector domains if it's provided
       if (domains) {
