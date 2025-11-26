@@ -197,7 +197,6 @@ describe('enterprise sso sign-in and sign-up', () => {
     beforeAll(async () => {
       await Promise.all([setEmailConnector(), setSmsConnector()]);
       await enableAllVerificationCodeSignInMethods();
-      await userApi.create({ primaryEmail: email, password });
     });
 
     it('should reject when trying to sign-in with email verification code', async () => {
@@ -233,6 +232,7 @@ describe('enterprise sso sign-in and sign-up', () => {
       // Test with uppercase domain to ensure the domain matching is case-insensitive
       const email = generateEmail(domain.toUpperCase());
       const identifier = Object.freeze({ type: SignInIdentifier.Email, value: email });
+      const user = await userApi.create({ primaryEmail: email, password });
 
       const { verificationId } = await client.verifyPassword({
         identifier,
@@ -248,6 +248,8 @@ describe('enterprise sso sign-in and sign-up', () => {
           status: 422,
         }
       );
+
+      await deleteUser(user.id);
     });
   });
 });
