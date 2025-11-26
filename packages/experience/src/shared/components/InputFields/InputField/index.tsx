@@ -26,7 +26,7 @@ export type Props = Omit<HTMLProps<HTMLInputElement>, 'prefix'> & {
   readonly isPrefixVisible?: boolean;
   readonly suffix?: ReactElement;
   readonly isSuffixFocusVisible?: boolean;
-  readonly label?: string;
+  readonly label?: ReactElement | string;
   readonly description?: Nullable<string>;
 };
 

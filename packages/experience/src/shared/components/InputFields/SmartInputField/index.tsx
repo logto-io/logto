@@ -35,6 +35,7 @@ const SmartInputField = (
 ) => {
   const innerRef = useRef<HTMLInputElement>(null);
   useImperativeHandle(ref, () => innerRef.current);
+  const isInputEditable = !rest.readOnly && !rest.disabled;
 
   const {
     countryCode,
@@ -66,7 +67,7 @@ const SmartInputField = (
       {...getInputHtmlProps(enabledTypes, identifierType)}
       {...rest}
       ref={innerRef}
-      isSuffixFocusVisible={Boolean(inputValue)}
+      isSuffixFocusVisible={isInputEditable && Boolean(inputValue)}
       style={{ paddingInlineStart }}
       value={inputValue}
       isPrefixVisible={isPrefixVisible}
@@ -75,6 +76,7 @@ const SmartInputField = (
           <CountryCodeSelector
             value={countryCode}
             inputRef={innerRef.current}
+            isInteractive={isInputEditable}
             onChange={(value) => {
               onCountryCodeChange(value);
 
@@ -88,16 +90,18 @@ const SmartInputField = (
         </AnimatedPrefix>
       }
       suffix={
-        <IconButton
-          onMouseDown={(event) => {
-            event.preventDefault();
-          }}
-          onClick={onInputValueClear}
-        >
-          <ClearIcon />
-        </IconButton>
+        isInputEditable ? (
+          <IconButton
+            onMouseDown={(event) => {
+              event.preventDefault();
+            }}
+            onClick={onInputValueClear}
+          >
+            <ClearIcon />
+          </IconButton>
+        ) : undefined
       }
-      onChange={onInputValueChange}
+      onChange={isInputEditable ? onInputValueChange : undefined}
     />
   );
 };

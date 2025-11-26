@@ -21,6 +21,41 @@ const account_center = {
       name: 'Пароль',
       description: 'Подтвердите свой пароль',
     },
+    email: {
+      name: 'Код подтверждения по электронной почте',
+      description: 'Отправить код подтверждения на вашу почту',
+    },
+    phone: {
+      name: 'Код подтверждения по телефону',
+      description: 'Отправить код подтверждения на ваш номер телефона',
+    },
+  },
+  email_verification: {
+    title: 'Подтвердите свою почту',
+    prepare_description:
+      "Verify it's you to protect your account security. Send the verification code to your email.",
+    email_label: 'Email address',
+    send: 'Send verification code',
+    description: 'Код подтверждения отправлен на {{email}}. Введите код, чтобы продолжить.',
+    resend: 'Отправить код ещё раз',
+    resend_countdown: 'Не получили? Повторная отправка через {{seconds}} с.',
+    error_send_failed: 'Не удалось отправить код подтверждения. Попробуйте позже.',
+    error_verify_failed: 'Не удалось подтвердить. Введите код ещё раз.',
+    error_invalid_code: 'Код подтверждения недействителен или истёк.',
+  },
+  phone_verification: {
+    title: 'Подтвердите свой телефон',
+    prepare_description:
+      'Подтвердите, что это вы, чтобы защитить безопасность аккаунта. Отправьте код подтверждения на свой телефон.',
+    phone_label: 'Номер телефона',
+    send: 'Send verification code',
+    description:
+      'Код подтверждения отправлен на ваш телефон {{phone}}. Введите код, чтобы продолжить.',
+    resend: 'Отправить код ещё раз',
+    resend_countdown: 'Не получили? Повторная отправка через {{seconds}} с.',
+    error_send_failed: 'Не удалось отправить код подтверждения. Попробуйте позже.',
+    error_verify_failed: 'Не удалось подтвердить. Введите код ещё раз.',
+    error_invalid_code: 'Код подтверждения недействителен или истёк.',
   },
 };
 

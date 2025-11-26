@@ -28,16 +28,17 @@ const Main = () => {
   const isInCallback = Boolean(params.get('code'));
   const { isAuthenticated, isLoading, signIn } = useLogto();
   const { isLoadingExperience, experienceError, userInfoError } = useContext(PageContext);
+  const isInitialAuthLoading = !isAuthenticated && isLoading;
 
   useEffect(() => {
-    if (isInCallback || isLoading) {
+    if (isInCallback || isInitialAuthLoading) {
       return;
     }
 
     if (!isAuthenticated) {
       void signIn({ redirectUri });
     }
-  }, [isAuthenticated, isInCallback, isLoading, signIn]);
+  }, [isAuthenticated, isInCallback, isInitialAuthLoading, signIn]);
 
   if (isInCallback) {
     return <Callback />;
@@ -52,7 +53,7 @@ const Main = () => {
     );
   }
 
-  if (isLoading || isLoadingExperience) {
+  if (isInitialAuthLoading || isLoadingExperience) {
     return <div className={styles.status}>Loading…</div>;
   }
 

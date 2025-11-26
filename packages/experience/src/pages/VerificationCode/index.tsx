@@ -6,10 +6,10 @@ import { validate } from 'superstruct';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
-import { type IdentifierInputValue } from '@/components/InputFields/SmartInputField';
 import VerificationCodeContainer from '@/containers/VerificationCode';
 import { useSieMethods } from '@/hooks/use-sie';
 import ErrorPage from '@/pages/ErrorPage';
+import { type IdentifierInputValue } from '@/shared/components/InputFields/SmartInputField';
 import { UserFlow } from '@/types';
 import { userFlowGuard } from '@/types/guard';
 import { formatPhoneNumberWithCountryCallingCode } from '@/utils/country-code';

@@ -21,6 +21,40 @@ const account_center = {
       name: 'Parola',
       description: 'Parolanızı doğrulayın',
     },
+    email: {
+      name: 'E-posta doğrulama kodu',
+      description: 'Doğrulama kodunu e-postana gönder',
+    },
+    phone: {
+      name: 'Telefon doğrulama kodu',
+      description: 'Doğrulama kodunu telefon numarana gönder',
+    },
+  },
+  email_verification: {
+    title: 'E-postanı doğrula',
+    prepare_description:
+      "Verify it's you to protect your account security. Send the verification code to your email.",
+    email_label: 'Email address',
+    send: 'Send verification code',
+    description: 'Doğrulama kodu {{email}} adresine gönderildi. Devam etmek için kodu gir.',
+    resend: 'Kodu yeniden gönder',
+    resend_countdown: 'Hâlâ gelmedi mi? {{seconds}} sn sonra tekrar gönder.',
+    error_send_failed: 'Doğrulama kodu gönderilemedi. Lütfen daha sonra tekrar dene.',
+    error_verify_failed: 'Doğrulama başarısız. Lütfen kodu tekrar gir.',
+    error_invalid_code: 'Doğrulama kodu geçersiz veya süresi dolmuş.',
+  },
+  phone_verification: {
+    title: 'Telefonunu doğrula',
+    prepare_description:
+      'Hesap güvenliğinizi korumak için siz olduğunuzu doğrulayın. Doğrulama kodunu telefonuna gönder.',
+    phone_label: 'Telefon numarası',
+    send: 'Send verification code',
+    description: 'Doğrulama kodu telefonuna {{phone}} gönderildi. Devam etmek için kodu gir.',
+    resend: 'Kodu yeniden gönder',
+    resend_countdown: 'Hâlâ gelmedi mi? {{seconds}} sn sonra tekrar gönder.',
+    error_send_failed: 'Doğrulama kodu gönderilemedi. Lütfen daha sonra tekrar dene.',
+    error_verify_failed: 'Doğrulama başarısız. Lütfen kodu tekrar gir.',
+    error_invalid_code: 'Doğrulama kodu geçersiz veya süresi dolmuş.',
   },
 };
 
