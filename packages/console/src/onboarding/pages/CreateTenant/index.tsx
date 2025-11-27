@@ -52,7 +52,7 @@ function CreateTenant() {
   } = methods;
   const { prependTenant } = useContext(TenantsContext);
   const theme = useTheme();
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { update } = useUserOnboardingData();
   const parseEmailOptions = useCallback(
     (values: InviteeEmailItem[]) => {
@@ -93,6 +93,7 @@ function CreateTenant() {
         isAuthenticated,
         getOrganizationToken,
         tenantId: newTenant.id,
+        language: i18n.language,
       });
 
       if (collaboratorEmails.length > 0) {
