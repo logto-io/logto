@@ -4,7 +4,6 @@ import {
   OrganizationInvitations,
   organizationInvitationEntityGuard,
 } from '@logto/schemas';
-import { isObject } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -12,7 +11,6 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import SchemaRouter from '#src/utils/SchemaRouter.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import koaEmailI18n from '../../middleware/koa-email-i18n.js';
 import { errorHandler } from '../organization/utils.js';
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
@@ -96,22 +94,11 @@ export default function organizationInvitationRoutes<T extends ManagementApiRout
       body: sendMessagePayloadGuard,
       status: [204],
     }),
-    koaEmailI18n(queries),
     async (ctx, next) => {
       const {
         params: { id },
         body,
       } = ctx.guard;
-      // The `koaEmailI18n` properties are not available in the `SchemaRouter` context.
-      // So we have to assert its existence here to make TypeScript happy.
-      assertThat(
-        'emailI18n' in ctx && isObject(ctx.emailI18n),
-        new RequestError({
-          status: 422,
-          code: 'request.invalid_input',
-          details: 'The email i18n context is missing.',
-        })
-      );
       const { invitee, organizationId, inviterId } = await invitations.findById(id);
 
       const templateContext =
@@ -121,7 +108,6 @@ export default function organizationInvitationRoutes<T extends ManagementApiRout
         );
 
       await organizationInvitations.sendEmail(invitee, {
-        ...ctx.emailI18n,
         ...templateContext,
         ...body,
       });

@@ -6,6 +6,7 @@ import { conditional, trySafe } from '@silverhand/essentials';
 import Client, { ResponseError } from '@withtyped/client';
 import { useContext, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
 import { cloudApi } from '@/consts';
@@ -41,6 +42,7 @@ type UseCloudApiProps = {
 export const useCloudApi = ({ hideErrorToast = false }: UseCloudApiProps = {}): Client<
   typeof router
 > => {
+  const { i18n } = useTranslation();
   const { isAuthenticated, getAccessToken } = useLogto();
   const api = useMemo(
     () =>
@@ -48,7 +50,10 @@ export const useCloudApi = ({ hideErrorToast = false }: UseCloudApiProps = {}): 
         baseUrl: window.location.origin,
         headers: async () => {
           if (isAuthenticated) {
-            return { Authorization: `Bearer ${(await getAccessToken(cloudApi.indicator)) ?? ''}` };
+            return {
+              Authorization: `Bearer ${(await getAccessToken(cloudApi.indicator)) ?? ''}`,
+              'Accept-Language': i18n.language,
+            };
           }
         },
         before: {
