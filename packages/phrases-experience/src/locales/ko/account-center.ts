@@ -29,6 +29,14 @@ const account_center = {
       description: '인증 코드를 전화번호로 보내기',
     },
   },
+  email: {
+    title: '이메일 연결',
+    description: '이메일을 연결해 로그인하거나 계정 복구에 활용하세요.',
+    verification_title: '이메일 인증 코드를 입력',
+    verification_description: '인증 코드가 이메일 {{email_address}}(으)로 전송되었습니다.',
+    success: 'Primary email linked successfully.',
+    verification_required: 'Verification expired. Please verify your identity again.',
+  },
   email_verification: {
     title: '이메일 확인',
     prepare_description:

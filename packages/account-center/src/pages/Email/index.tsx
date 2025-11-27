@@ -1,12 +1,129 @@
+import { useLogto } from '@logto/react';
 import { AccountCenterControlValue } from '@logto/schemas';
-import { useContext } from 'react';
+import { useCallback, useContext, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
+import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
+import { updatePrimaryEmail } from '@ac/apis/account';
+import { verifyEmailVerificationCode } from '@ac/apis/verification';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
+import useApi from '@ac/hooks/use-api';
+import useErrorHandler from '@ac/hooks/use-error-handler';
+
+import EmailSendStep from './EmailSendStep';
+import EmailVerifyStep from './EmailVerifyStep';
 
 const Email = () => {
-  const { accountCenterSettings, verificationId, userInfo } = useContext(PageContext);
+  const { t } = useTranslation();
+  const { getAccessToken } = useLogto();
+  const { loading } = useContext(LoadingContext);
+  const {
+    accountCenterSettings,
+    verificationId,
+    userInfo,
+    setToast,
+    setUserInfo,
+    setVerificationId,
+  } = useContext(PageContext);
+  const [email, setEmail] = useState('');
+  const [pendingEmail, setPendingEmail] = useState<string>();
+  const [pendingVerificationRecordId, setPendingVerificationRecordId] = useState<string>();
+  const [verifyResetSignal, setVerifyResetSignal] = useState(0);
+  const verifyCodeRequest = useApi(verifyEmailVerificationCode);
+  const bindEmailRequest = useApi(updatePrimaryEmail);
+  const handleError = useErrorHandler();
+
+  const resetFlow = useCallback((shouldClearEmail = false) => {
+    setPendingEmail(undefined);
+    setPendingVerificationRecordId(undefined);
+
+    if (shouldClearEmail) {
+      setEmail('');
+    }
+  }, []);
+
+  const handleVerifyAndBind = useCallback(
+    async (code: string) => {
+      if (!pendingEmail || !pendingVerificationRecordId || loading || !verificationId) {
+        return;
+      }
+
+      const accessToken = await getAccessToken();
+
+      if (!accessToken) {
+        setToast(t('account_center.email_verification.error_verify_failed'));
+        return;
+      }
+
+      const [verifyError, verifyResult] = await verifyCodeRequest(accessToken, {
+        verificationRecordId: pendingVerificationRecordId,
+        code,
+        email: pendingEmail,
+      });
+
+      if (verifyError || !verifyResult) {
+        setVerifyResetSignal((current) => current + 1);
+        await handleError(verifyError ?? new Error('Failed to verify email code.'), {
+          'verification_code.not_found': () => {
+            setToast(t('account_center.email_verification.error_invalid_code'));
+          },
+          'verification_record.not_found': () => {
+            resetFlow(true);
+            setToast(t('account_center.email_verification.error_invalid_code'));
+          },
+          'verification_code.email_mismatch': () => {
+            setToast(t('account_center.email_verification.error_invalid_code'));
+          },
+          'verification_code.code_mismatch': () => {
+            setToast(t('account_center.email_verification.error_invalid_code'));
+          },
+          'verification_code.expired': () => {
+            setToast(t('account_center.email_verification.error_invalid_code'));
+          },
+          'verification_code.exceed_max_try': () => {
+            setToast(t('account_center.email_verification.error_invalid_code'));
+          },
+        });
+        return;
+      }
+
+      const [bindError] = await bindEmailRequest(accessToken, verificationId, {
+        email: pendingEmail,
+        newIdentifierVerificationRecordId: verifyResult.verificationRecordId,
+      });
+
+      if (bindError) {
+        await handleError(bindError, {
+          'verification_record.permission_denied': async () => {
+            setVerificationId(undefined);
+            resetFlow(true);
+            setToast(t('account_center.email.verification_required'));
+          },
+        });
+        return;
+      }
+
+      setUserInfo((current) => ({ ...current, primaryEmail: pendingEmail }));
+      setToast(t('account_center.email.success'));
+    },
+    [
+      bindEmailRequest,
+      getAccessToken,
+      handleError,
+      loading,
+      pendingEmail,
+      pendingVerificationRecordId,
+      resetFlow,
+      setToast,
+      setUserInfo,
+      setVerificationId,
+      t,
+      verificationId,
+      verifyCodeRequest,
+    ]
+  );
 
   if (
     !accountCenterSettings?.enabled ||
@@ -21,13 +138,42 @@ const Email = () => {
     return <VerificationMethodList />;
   }
 
-  return (
-    <div style={{ padding: '20px' }}>
-      <h1>Email Settings</h1>
-      <p>Verification ID: {verificationId}</p>
-      {userInfo?.primaryEmail && <p>Current Email: {userInfo.primaryEmail}</p>}
-      <p>Email linking function is currently blank.</p>
-    </div>
+  if (userInfo?.primaryEmail) {
+    return (
+      <div style={{ padding: '20px', lineHeight: 1.6 }}>
+        <div>Current primary email: {userInfo.primaryEmail}</div>
+        <div>Email update is not available yet.</div>
+      </div>
+    );
+  }
+
+  return !pendingEmail || !pendingVerificationRecordId ? (
+    <EmailSendStep
+      email={email}
+      onCodeSent={(value, recordId) => {
+        setEmail(value);
+        setPendingEmail(value);
+        setPendingVerificationRecordId(recordId);
+      }}
+    />
+  ) : (
+    <EmailVerifyStep
+      pendingEmail={pendingEmail}
+      verificationRecordId={pendingVerificationRecordId}
+      resetSignal={verifyResetSignal}
+      onResent={(recordId) => {
+        setPendingVerificationRecordId(recordId);
+      }}
+      onSubmit={(code) => {
+        void handleVerifyAndBind(code);
+      }}
+      onBack={() => {
+        resetFlow(true);
+      }}
+      onInvalidCode={() => {
+        setToast(t('error.invalid_passcode'));
+      }}
+    />
   );
 };
 

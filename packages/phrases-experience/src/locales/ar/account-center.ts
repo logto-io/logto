@@ -30,6 +30,14 @@ const account_center = {
       description: 'أرسل رمز التحقق إلى رقم هاتفك',
     },
   },
+  email: {
+    title: 'ربط البريد الإلكتروني',
+    description: 'اربط بريدك الإلكتروني لتسجيل الدخول أو للمساعدة في استعادة الحساب.',
+    verification_title: 'أدخل رمز التحقق من البريد الإلكتروني',
+    verification_description: 'تم إرسال رمز التحقق إلى بريدك الإلكتروني {{email_address}}.',
+    success: 'Primary email linked successfully.',
+    verification_required: 'Verification expired. Please verify your identity again.',
+  },
   email_verification: {
     title: 'تحقق من بريدك الإلكتروني',
     prepare_description:

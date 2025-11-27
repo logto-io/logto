@@ -30,6 +30,14 @@ const account_center = {
       description: '認証コードを電話番号に送信',
     },
   },
+  email: {
+    title: 'メールをリンク',
+    description: 'メールをリンクしてサインインやアカウント復旧に役立てましょう。',
+    verification_title: 'メール認証コードを入力',
+    verification_description: '認証コードをメールアドレス {{email_address}} に送信しました。',
+    success: 'Primary email linked successfully.',
+    verification_required: 'Verification expired. Please verify your identity again.',
+  },
   email_verification: {
     title: 'メールアドレスを確認',
     prepare_description:

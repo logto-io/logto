@@ -30,6 +30,14 @@ const account_center = {
       description: 'Отправить код подтверждения на ваш номер телефона',
     },
   },
+  email: {
+    title: 'Привязать email',
+    description: 'Привяжите свой email, чтобы входить или помочь с восстановлением аккаунта.',
+    verification_title: 'Введите код подтверждения email',
+    verification_description: 'Код подтверждения отправлен на ваш email {{email_address}}.',
+    success: 'Primary email linked successfully.',
+    verification_required: 'Verification expired. Please verify your identity again.',
+  },
   email_verification: {
     title: 'Подтвердите свою почту',
     prepare_description:

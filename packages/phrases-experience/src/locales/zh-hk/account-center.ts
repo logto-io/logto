@@ -29,6 +29,14 @@ const account_center = {
       description: '發送驗證碼到你的電話號碼',
     },
   },
+  email: {
+    title: '連結電郵',
+    description: '連結你的電郵以登入或協助帳戶恢復。',
+    verification_title: '輸入電郵驗證碼',
+    verification_description: '驗證碼已發送至你的電郵 {{email_address}}。',
+    success: 'Primary email linked successfully.',
+    verification_required: 'Verification expired. Please verify your identity again.',
+  },
   email_verification: {
     title: '驗證你的電郵',
     prepare_description:

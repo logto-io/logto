@@ -30,6 +30,16 @@ const account_center = {
       description: 'Enviar código de verificación a tu número de teléfono',
     },
   },
+  email: {
+    title: 'Vincular correo electrónico',
+    description:
+      'Vincula tu correo electrónico para iniciar sesión o ayudar con la recuperación de la cuenta.',
+    verification_title: 'Ingresa el código de verificación de correo',
+    verification_description:
+      'El código de verificación se ha enviado a tu correo {{email_address}}.',
+    success: 'Primary email linked successfully.',
+    verification_required: 'Verification expired. Please verify your identity again.',
+  },
   email_verification: {
     title: 'Verifica tu correo electrónico',
     prepare_description:

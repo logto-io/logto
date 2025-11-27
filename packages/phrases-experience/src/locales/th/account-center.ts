@@ -30,6 +30,14 @@ const account_center = {
       description: 'ส่งรหัสยืนยันไปยังหมายเลขโทรศัพท์ของคุณ',
     },
   },
+  email: {
+    title: 'เชื่อมต่ออีเมล',
+    description: 'เชื่อมต่ออีเมลของคุณเพื่อเข้าสู่ระบบหรือช่วยในการกู้คืนบัญชี',
+    verification_title: 'ป้อนรหัสยืนยันอีเมล',
+    verification_description: 'รหัสยืนยันได้ถูกส่งไปยังอีเมล {{email_address}} ของคุณ',
+    success: 'Primary email linked successfully.',
+    verification_required: 'Verification expired. Please verify your identity again.',
+  },
   email_verification: {
     title: 'ยืนยันอีเมลของคุณ',
     prepare_description:

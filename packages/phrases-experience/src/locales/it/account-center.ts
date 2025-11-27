@@ -30,6 +30,15 @@ const account_center = {
       description: 'Invia il codice di verifica al tuo numero di telefono',
     },
   },
+  email: {
+    title: "Collega l'email",
+    description: "Collega la tua email per accedere o per aiutare con il recupero dell'account.",
+    verification_title: 'Inserisci il codice di verifica e-mail',
+    verification_description:
+      'Il codice di verifica è stato inviato alla tua e-mail {{email_address}}.',
+    success: 'Primary email linked successfully.',
+    verification_required: 'Verification expired. Please verify your identity again.',
+  },
   email_verification: {
     title: 'Verifica la tua e-mail',
     prepare_description:

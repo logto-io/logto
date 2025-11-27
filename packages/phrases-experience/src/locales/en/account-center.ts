@@ -30,6 +30,15 @@ const account_center = {
       description: 'Send verification code to your phone number',
     },
   },
+  email: {
+    title: 'Link email',
+    description: 'Link your email to sign in or help with account recovery.',
+    verification_title: 'Enter email verification code',
+    verification_description:
+      'The verification code has been sent to your email {{email_address}}.',
+    success: 'Primary email linked successfully.',
+    verification_required: 'Verification expired. Please verify your identity again.',
+  },
   email_verification: {
     title: 'Verify your email',
     prepare_description:

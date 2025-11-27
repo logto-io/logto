@@ -30,6 +30,16 @@ const account_center = {
       description: 'Bestätigungscode an deine Telefonnummer senden',
     },
   },
+  email: {
+    title: 'E-Mail verknüpfen',
+    description:
+      'Verknüpfe deine E-Mail, um dich anzumelden oder die Kontowiederherstellung zu erleichtern.',
+    verification_title: 'E-Mail-Bestätigungscode eingeben',
+    verification_description:
+      'Der Bestätigungscode wurde an deine E-Mail {{email_address}} gesendet.',
+    success: 'Primary email linked successfully.',
+    verification_required: 'Verification expired. Please verify your identity again.',
+  },
   email_verification: {
     title: 'Bestätige deine E-Mail',
     prepare_description:

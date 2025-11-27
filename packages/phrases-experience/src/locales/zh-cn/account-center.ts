@@ -29,6 +29,14 @@ const account_center = {
       description: '发送验证码到您的手机号码',
     },
   },
+  email: {
+    title: '关联邮箱',
+    description: '关联邮箱以用于登录或帮助找回账号。',
+    verification_title: '输入邮箱验证码',
+    verification_description: '验证码已发送到你的邮箱 {{email_address}}。',
+    success: 'Primary email linked successfully.',
+    verification_required: 'Verification expired. Please verify your identity again.',
+  },
   email_verification: {
     title: '验证您的邮箱',
     prepare_description:

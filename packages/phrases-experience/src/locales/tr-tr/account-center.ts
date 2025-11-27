@@ -30,6 +30,14 @@ const account_center = {
       description: 'Doğrulama kodunu telefon numarana gönder',
     },
   },
+  email: {
+    title: 'E-postayı bağla',
+    description: 'Giriş yapmak veya hesap kurtarmaya yardımcı olmak için e-postanı bağla.',
+    verification_title: 'E-posta doğrulama kodunu gir',
+    verification_description: 'Doğrulama kodu e-postana {{email_address}} gönderildi.',
+    success: 'Primary email linked successfully.',
+    verification_required: 'Verification expired. Please verify your identity again.',
+  },
   email_verification: {
     title: 'E-postanı doğrula',
     prepare_description:
