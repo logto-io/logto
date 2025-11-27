@@ -23,6 +23,9 @@ create table applications (
 create index applications__id
   on applications (tenant_id, id);
 
+create index applications__include_type_is_third_party
+  on applications (tenant_id) include (type, is_third_party);
+
 create index applications__is_third_party
   on applications (tenant_id, is_third_party);
 

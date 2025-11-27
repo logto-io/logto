@@ -19,6 +19,9 @@ create table roles (
 create index roles__id
   on roles (tenant_id, id);
 
+create index roles__include_type_name
+  on roles (tenant_id) include (type, name);
+
 create index roles__type
   on roles (tenant_id, type);
 
