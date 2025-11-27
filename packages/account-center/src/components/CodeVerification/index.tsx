@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import useApi from '@ac/hooks/use-api';
+import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
 
 import styles from './index.module.scss';
@@ -64,8 +65,8 @@ const CodeVerification = ({
   const { loading } = useContext(LoadingContext);
   const sendCodeRequest = useApi(sendCode);
   const verifyCodeRequest = useApi(verifyCode);
+  const handleError = useErrorHandler();
   const [codeInput, setCodeInput] = useState<string[]>([]);
-  const [errorMessage, setErrorMessage] = useState<string>();
   const [countdown, setCountdown] = useState(0);
   const [pendingVerificationRecord, setPendingVerificationRecord] = useState<{
     recordId: string;
@@ -111,7 +112,12 @@ const CodeVerification = ({
 
     const [error, result] = await sendCodeRequest(accessToken, identifier);
 
-    if (error || !result) {
+    if (error) {
+      await handleError(error);
+      return;
+    }
+
+    if (!result) {
       setToast(t('account_center.email_verification.error_send_failed'));
       return;
     }
@@ -121,10 +127,18 @@ const CodeVerification = ({
       expiresAt: result.expiresAt,
     });
     setCodeInput([]);
-    setErrorMessage(undefined);
     setHasSentCode(true);
     startCountdown();
-  }, [getAccessToken, identifier, loading, sendCodeRequest, setToast, startCountdown, t]);
+  }, [
+    getAccessToken,
+    handleError,
+    identifier,
+    loading,
+    sendCodeRequest,
+    setToast,
+    startCountdown,
+    t,
+  ]);
 
   const handleVerify = useCallback(
     async (code: string[]) => {
@@ -154,7 +168,7 @@ const CodeVerification = ({
 
       if (error) {
         setCodeInput([]);
-        setErrorMessage(t('account_center.email_verification.error_verify_failed'));
+        await handleError(error);
         return;
       }
 
@@ -163,11 +177,11 @@ const CodeVerification = ({
     },
     [
       getAccessToken,
+      handleError,
       identifier,
       loading,
       pendingVerificationRecord,
       setVerificationId,
-      t,
       verifyCodeRequest,
     ]
   );
@@ -206,10 +220,8 @@ const CodeVerification = ({
             name={codeInputName}
             className={styles.codeInput}
             value={codeInput}
-            error={errorMessage}
             onChange={(code) => {
               setCodeInput(code);
-              setErrorMessage(undefined);
             }}
           />
           <div className={styles.message}>
@@ -238,7 +250,7 @@ const CodeVerification = ({
             isLoading={loading}
             onClick={() => {
               if (!isCodeReady(codeInput)) {
-                setErrorMessage(t('error.invalid_passcode'));
+                setToast(t('error.invalid_passcode'));
                 return;
               }
 
