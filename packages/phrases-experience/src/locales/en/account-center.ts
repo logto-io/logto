@@ -51,6 +51,12 @@ const account_center = {
     success: 'Primary phone linked successfully.',
     verification_required: 'Verification expired. Please verify your identity again.',
   },
+  code_verification: {
+    send: 'Send verification code',
+    resend: 'Resend code',
+    resend_countdown: 'Not received yet? Resend after {{seconds}}s.',
+  },
+
   email_verification: {
     title: 'Verify your email',
     prepare_description:

@@ -51,6 +51,12 @@ const account_center = {
     verification_required: 'Verification expired. Please verify your identity again.',
   },
 
+  code_verification: {
+    send: 'Send verification code',
+    resend: 'コードを再送',
+    resend_countdown: 'まだ届きませんか？ {{seconds}} 秒後に再送できます。',
+  },
+
   email_verification: {
     title: 'メールアドレスを確認',
     prepare_description:

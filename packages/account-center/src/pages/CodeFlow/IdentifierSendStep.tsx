@@ -22,7 +22,6 @@ type Props = {
   readonly identifierType: SignInIdentifier.Email | SignInIdentifier.Phone;
   readonly name: string;
   readonly labelKey: IdentifierLabelKey;
-  readonly buttonTitleKey: TFuncKey;
   readonly titleKey: TFuncKey;
   readonly descriptionKey: TFuncKey;
   readonly value: string;
@@ -40,7 +39,6 @@ const IdentifierSendStep = ({
   identifierType,
   name,
   labelKey,
-  buttonTitleKey,
   titleKey,
   descriptionKey,
   value,
@@ -104,7 +102,7 @@ const IdentifierSendStep = ({
           }}
         />
         <Button
-          title={buttonTitleKey}
+          title="account_center.code_verification.send"
           type="primary"
           className={styles.submit}
           disabled={!pendingValue || loading}

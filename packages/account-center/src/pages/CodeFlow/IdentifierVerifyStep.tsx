@@ -26,8 +26,6 @@ type Props = {
     titleKey: TFuncKey;
     descriptionKey: TFuncKey;
     descriptionProps: Record<string, string>;
-    resendKey: TFuncKey;
-    resendCountdownKey: TFuncKey;
   };
   readonly onResent: (verificationRecordId: string) => void;
   readonly resetSignal: number;
@@ -137,7 +135,7 @@ const IdentifierVerifyStep = ({
         <div className={styles.message}>
           {countdown > 0 ? (
             <DynamicT
-              forKey={translation.resendCountdownKey}
+              forKey="account_center.code_verification.resend_countdown"
               interpolation={{ seconds: countdown }}
             />
           ) : (
@@ -149,7 +147,7 @@ const IdentifierVerifyStep = ({
                 void handleResend();
               }}
             >
-              <DynamicT forKey={translation.resendKey} />
+              <DynamicT forKey="account_center.code_verification.resend" />
             </button>
           )}
         </div>

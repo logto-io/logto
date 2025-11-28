@@ -26,7 +26,6 @@ type IdentifierBindingPageProps<VerifyPayload, BindPayload> = {
     titleKey: TFuncKey;
     descriptionKey: TFuncKey;
     inputLabelKey: IdentifierLabelKey;
-    buttonTitleKey: TFuncKey;
     inputName: string;
   };
   readonly verifyStep: {
@@ -34,8 +33,6 @@ type IdentifierBindingPageProps<VerifyPayload, BindPayload> = {
     descriptionKey: TFuncKey;
     descriptionPropsBuilder: (identifier: string) => Record<string, string>;
     codeInputName: string;
-    resendKey: TFuncKey;
-    resendCountdownKey: TFuncKey;
   };
   readonly mismatchErrorCode: string;
   readonly sendCode: (
@@ -227,7 +224,6 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
       identifierType={identifierType}
       name={sendStep.inputName}
       labelKey={sendStep.inputLabelKey}
-      buttonTitleKey={sendStep.buttonTitleKey}
       titleKey={sendStep.titleKey}
       descriptionKey={sendStep.descriptionKey}
       value={identifier}
@@ -247,8 +243,6 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
         titleKey: verifyStep.titleKey,
         descriptionKey: verifyStep.descriptionKey,
         descriptionProps: verifyStep.descriptionPropsBuilder(pendingIdentifier),
-        resendKey: verifyStep.resendKey,
-        resendCountdownKey: verifyStep.resendCountdownKey,
       }}
       sendCode={sendCode}
       resetSignal={verifyResetSignal}

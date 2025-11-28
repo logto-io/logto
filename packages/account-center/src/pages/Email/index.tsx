@@ -13,7 +13,6 @@ const Email = () => (
       titleKey: 'account_center.email.title',
       descriptionKey: 'account_center.email.description',
       inputLabelKey: 'account_center.email_verification.email_label',
-      buttonTitleKey: 'account_center.email_verification.send',
       inputName: 'email',
     }}
     verifyStep={{
@@ -21,8 +20,6 @@ const Email = () => (
       descriptionKey: 'account_center.email.verification_description',
       descriptionPropsBuilder: (identifier) => ({ email_address: identifier }),
       codeInputName: 'emailCode',
-      resendKey: 'account_center.email_verification.resend',
-      resendCountdownKey: 'account_center.email_verification.resend_countdown',
     }}
     mismatchErrorCode="verification_code.email_mismatch"
     sendCode={sendEmailVerificationCode}

@@ -50,6 +50,12 @@ const account_center = {
     verification_required: 'Verification expired. Please verify your identity again.',
   },
 
+  code_verification: {
+    send: 'Send verification code',
+    resend: '코드 다시 보내기',
+    resend_countdown: '아직 받지 못하셨나요? {{seconds}}초 후에 다시 보내세요.',
+  },
+
   email_verification: {
     title: '이메일 확인',
     prepare_description:

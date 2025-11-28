@@ -51,6 +51,12 @@ const account_center = {
     verification_required: 'Verification expired. Please verify your identity again.',
   },
 
+  code_verification: {
+    send: 'Send verification code',
+    resend: 'ส่งรหัสอีกครั้ง',
+    resend_countdown: 'ยังไม่ได้รับใช่ไหม? ส่งใหม่ได้หลัง {{seconds}} วินาที',
+  },
+
   email_verification: {
     title: 'ยืนยันอีเมลของคุณ',
     prepare_description:

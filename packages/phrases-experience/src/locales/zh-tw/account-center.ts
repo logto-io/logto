@@ -50,6 +50,12 @@ const account_center = {
     verification_required: 'Verification expired. Please verify your identity again.',
   },
 
+  code_verification: {
+    send: 'Send verification code',
+    resend: '重新傳送驗證碼',
+    resend_countdown: '尚未收到？{{seconds}} 秒後可重新傳送。',
+  },
+
   email_verification: {
     title: '驗證您的電子郵件',
     prepare_description:

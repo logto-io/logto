@@ -13,7 +13,6 @@ const Phone = () => (
       titleKey: 'account_center.phone.title',
       descriptionKey: 'account_center.phone.description',
       inputLabelKey: 'account_center.phone_verification.phone_label',
-      buttonTitleKey: 'account_center.phone_verification.send',
       inputName: 'phone',
     }}
     verifyStep={{
@@ -21,8 +20,6 @@ const Phone = () => (
       descriptionKey: 'account_center.phone.verification_description',
       descriptionPropsBuilder: (identifier) => ({ phone_number: identifier }),
       codeInputName: 'phoneCode',
-      resendKey: 'account_center.phone_verification.resend',
-      resendCountdownKey: 'account_center.phone_verification.resend_countdown',
     }}
     mismatchErrorCode="verification_code.phone_mismatch"
     sendCode={sendPhoneVerificationCode}

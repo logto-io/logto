@@ -54,6 +54,12 @@ const account_center = {
     verification_required: 'Verification expired. Please verify your identity again.',
   },
 
+  code_verification: {
+    send: 'Send verification code',
+    resend: 'Code erneut senden',
+    resend_countdown: 'Noch nichts erhalten? Erneut senden nach {{seconds}} s.',
+  },
+
   email_verification: {
     title: 'Bestätige deine E-Mail',
     prepare_description:
