@@ -14,12 +14,13 @@ const account_center = {
       'Bestätigungscode konnte nicht gesendet werden. Bitte versuche es später noch einmal.',
     error_invalid_code: 'Der Bestätigungscode ist ungültig oder abgelaufen.',
     error_verify_failed: 'Verifizierung fehlgeschlagen. Bitte gib den Code erneut ein.',
-    verification_required: 'Verification expired. Please verify your identity again.',
+    verification_required: 'Verifizierung abgelaufen. Bitte bestätige deine Identität erneut.',
   },
   password_verification: {
-    title: 'Verify password',
-    description: "Verify it's you to protect your account security. Enter your password.",
-    error_failed: 'Verification failed. Please check your password.',
+    title: 'Passwort bestätigen',
+    description:
+      'Zum Schutz deines Kontos gib dein Passwort ein, um deine Identität zu bestätigen.',
+    error_failed: 'Verifizierung fehlgeschlagen. Bitte überprüfe dein Passwort.',
   },
   verification_method: {
     password: {
@@ -42,20 +43,22 @@ const account_center = {
     verification_title: 'E-Mail-Bestätigungscode eingeben',
     verification_description:
       'Der Bestätigungscode wurde an deine E-Mail {{email_address}} gesendet.',
-    success: 'Primary email linked successfully.',
-    verification_required: 'Verification expired. Please verify your identity again.',
+    success: 'Primäre E-Mail wurde erfolgreich verknüpft.',
+    verification_required: 'Verifizierung abgelaufen. Bitte bestätige deine Identität erneut.',
   },
   phone: {
-    title: 'Link phone',
-    description: 'Link your phone number to sign in or help with account recovery.',
-    verification_title: 'Enter phone verification code',
-    verification_description: 'The verification code has been sent to your phone {{phone_number}}.',
-    success: 'Primary phone linked successfully.',
-    verification_required: 'Verification expired. Please verify your identity again.',
+    title: 'Telefon verknüpfen',
+    description:
+      'Verknüpfe deine Telefonnummer, um dich anzumelden oder die Kontowiederherstellung zu unterstützen.',
+    verification_title: 'Telefon-Bestätigungscode eingeben',
+    verification_description:
+      'Der Bestätigungscode wurde an dein Telefon {{phone_number}} gesendet.',
+    success: 'Primäre Telefonnummer wurde erfolgreich verknüpft.',
+    verification_required: 'Verifizierung abgelaufen. Bitte bestätige deine Identität erneut.',
   },
 
   code_verification: {
-    send: 'Send verification code',
+    send: 'Bestätigungscode senden',
     resend: 'Code erneut senden',
     resend_countdown: 'Noch nichts erhalten? Erneut senden nach {{seconds}} s.',
   },
@@ -64,8 +67,8 @@ const account_center = {
     title: 'Bestätige deine E-Mail',
     prepare_description:
       "Verify it's you to protect your account security. Send the verification code to your email.",
-    email_label: 'Email address',
-    send: 'Send verification code',
+    email_label: 'E-Mail-Adresse',
+    send: 'Bestätigungscode senden',
     description:
       'Der Bestätigungscode wurde an deine E-Mail {{email}} gesendet. Gib den Code ein, um fortzufahren.',
     resend: 'Code erneut senden',
@@ -80,7 +83,7 @@ const account_center = {
     prepare_description:
       "Verify it's you to protect your account security. Send the verification code to your phone.",
     phone_label: 'Telefonnummer',
-    send: 'Send verification code',
+    send: 'Bestätigungscode senden',
     description:
       'Der Bestätigungscode wurde an dein Telefon {{phone}} gesendet. Gib den Code ein, um fortzufahren.',
     resend: 'Code erneut senden',

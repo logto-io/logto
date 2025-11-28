@@ -13,12 +13,12 @@ const account_center = {
     error_send_failed: '認証コードの送信に失敗しました。しばらくしてからもう一度お試しください。',
     error_invalid_code: '認証コードが無効か、有効期限が切れています。',
     error_verify_failed: '認証に失敗しました。もう一度コードを入力してください。',
-    verification_required: 'Verification expired. Please verify your identity again.',
+    verification_required: '認証の有効期限が切れました。もう一度本人確認を行ってください。',
   },
   password_verification: {
-    title: 'Verify password',
-    description: "Verify it's you to protect your account security. Enter your password.",
-    error_failed: 'Verification failed. Please check your password.',
+    title: 'パスワードを確認',
+    description: 'アカウントを保護するため、パスワードを入力して本人確認してください。',
+    error_failed: '認証に失敗しました。パスワードを確認してください。',
   },
   verification_method: {
     password: {
@@ -39,20 +39,20 @@ const account_center = {
     description: 'メールをリンクしてサインインやアカウント復旧に役立てましょう。',
     verification_title: 'メール認証コードを入力',
     verification_description: '認証コードをメールアドレス {{email_address}} に送信しました。',
-    success: 'Primary email linked successfully.',
-    verification_required: 'Verification expired. Please verify your identity again.',
+    success: 'メインのメールアドレスをリンクしました。',
+    verification_required: '認証の有効期限が切れました。もう一度本人確認を行ってください。',
   },
   phone: {
-    title: 'Link phone',
-    description: 'Link your phone number to sign in or help with account recovery.',
-    verification_title: 'Enter phone verification code',
-    verification_description: 'The verification code has been sent to your phone {{phone_number}}.',
-    success: 'Primary phone linked successfully.',
-    verification_required: 'Verification expired. Please verify your identity again.',
+    title: '電話番号をリンク',
+    description: 'サインインやアカウント復旧のために電話番号をリンクします。',
+    verification_title: '電話の認証コードを入力',
+    verification_description: '認証コードを電話番号 {{phone_number}} に送信しました。',
+    success: 'メインの電話番号をリンクしました。',
+    verification_required: '認証の有効期限が切れました。もう一度本人確認を行ってください。',
   },
 
   code_verification: {
-    send: 'Send verification code',
+    send: '認証コードを送信',
     resend: 'コードを再送',
     resend_countdown: 'まだ届きませんか？ {{seconds}} 秒後に再送できます。',
   },
@@ -61,8 +61,8 @@ const account_center = {
     title: 'メールアドレスを確認',
     prepare_description:
       "Verify it's you to protect your account security. Send the verification code to your email.",
-    email_label: 'Email address',
-    send: 'Send verification code',
+    email_label: 'メールアドレス',
+    send: '認証コードを送信',
     description:
       '認証コードをメールアドレス {{email}} に送信しました。コードを入力して続行してください。',
     resend: 'コードを再送',
@@ -76,7 +76,7 @@ const account_center = {
     prepare_description:
       'アカウントの安全を守るため、ご本人であることを確認します。認証コードを電話に送信します。',
     phone_label: '電話番号',
-    send: 'Send verification code',
+    send: '認証コードを送信',
     description: '認証コードを電話 {{phone}} に送信しました。コードを入力して続行してください。',
     resend: 'コードを再送',
     resend_countdown: 'まだ届きませんか？ {{seconds}} 秒後に再送できます。',
