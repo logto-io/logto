@@ -12,11 +12,12 @@ import PageContextProvider from './Providers/PageContextProvider';
 import PageContext from './Providers/PageContextProvider/PageContext';
 import BrandingHeader from './components/BrandingHeader';
 import ErrorPage from './components/ErrorPage';
-import { emailRoute, sessionExpiredRoute } from './constants/routes';
+import { emailRoute, sessionExpiredRoute, updateSuccessRoute } from './constants/routes';
 import initI18n from './i18n/init';
 import Email from './pages/Email';
 import Home from './pages/Home';
 import SessionExpired from './pages/SessionExpired';
+import UpdateSuccess from './pages/UpdateSuccess';
 import { accountCenterBasePath, handleAccountCenterRoute } from './utils/account-center-route';
 
 import '@experience/shared/scss/normalized.scss';
@@ -67,6 +68,7 @@ const Main = () => {
   return (
     <Routes>
       <Route path={sessionExpiredRoute} element={<SessionExpired />} />
+      <Route path={updateSuccessRoute} element={<UpdateSuccess />} />
       <Route path={emailRoute} element={<Email />} />
       <Route index element={<Home />} />
       <Route path="*" element={<Home />} />

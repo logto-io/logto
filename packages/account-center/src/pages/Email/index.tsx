@@ -2,6 +2,7 @@ import { useLogto } from '@logto/react';
 import { AccountCenterControlValue } from '@logto/schemas';
 import { useCallback, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
@@ -9,6 +10,7 @@ import { updatePrimaryEmail } from '@ac/apis/account';
 import { verifyEmailVerificationCode } from '@ac/apis/verification';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
+import { updateSuccessRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 
@@ -18,15 +20,10 @@ import EmailVerifyStep from './EmailVerifyStep';
 const Email = () => {
   const { t } = useTranslation();
   const { getAccessToken } = useLogto();
+  const navigate = useNavigate();
   const { loading } = useContext(LoadingContext);
-  const {
-    accountCenterSettings,
-    verificationId,
-    userInfo,
-    setToast,
-    setUserInfo,
-    setVerificationId,
-  } = useContext(PageContext);
+  const { accountCenterSettings, verificationId, userInfo, setToast, setVerificationId } =
+    useContext(PageContext);
   const [email, setEmail] = useState('');
   const [pendingEmail, setPendingEmail] = useState<string>();
   const [pendingVerificationRecordId, setPendingVerificationRecordId] = useState<string>();
@@ -105,19 +102,18 @@ const Email = () => {
         return;
       }
 
-      setUserInfo((current) => ({ ...current, primaryEmail: pendingEmail }));
-      setToast(t('account_center.email.success'));
+      void navigate(updateSuccessRoute, { replace: true });
     },
     [
       bindEmailRequest,
       getAccessToken,
       handleError,
       loading,
+      navigate,
       pendingEmail,
       pendingVerificationRecordId,
       resetFlow,
       setToast,
-      setUserInfo,
       setVerificationId,
       t,
       verificationId,
