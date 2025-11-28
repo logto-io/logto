@@ -22,7 +22,7 @@ const Email = () => {
   const { getAccessToken } = useLogto();
   const navigate = useNavigate();
   const { loading } = useContext(LoadingContext);
-  const { accountCenterSettings, verificationId, userInfo, setToast, setVerificationId } =
+  const { accountCenterSettings, verificationId, setToast, setVerificationId } =
     useContext(PageContext);
   const [email, setEmail] = useState('');
   const [pendingEmail, setPendingEmail] = useState<string>();
@@ -132,15 +132,6 @@ const Email = () => {
 
   if (!verificationId) {
     return <VerificationMethodList />;
-  }
-
-  if (userInfo?.primaryEmail) {
-    return (
-      <div style={{ padding: '20px', lineHeight: 1.6 }}>
-        <div>Current primary email: {userInfo.primaryEmail}</div>
-        <div>Email update is not available yet.</div>
-      </div>
-    );
   }
 
   return !pendingEmail || !pendingVerificationRecordId ? (
