@@ -10,11 +10,15 @@ const account_center = {
     title: 'Перевірка безпеки',
     description:
       'Підтвердьте, що це ви, щоб захистити безпеку облікового запису. Будь ласка, оберіть спосіб підтвердження особи.',
+    error_send_failed: 'Не вдалося надіслати код підтвердження. Спробуйте ще раз пізніше.',
+    error_invalid_code: 'Код підтвердження недійсний або строк його дії минув.',
+    error_verify_failed: 'Не вдалося підтвердити. Будь ласка, введіть код ще раз.',
+    verification_required: 'Термін перевірки минув. Підтвердіть свою особу ще раз.',
   },
   password_verification: {
-    title: 'Verify password',
-    description: "Verify it's you to protect your account security. Enter your password.",
-    error_failed: 'Verification failed. Please check your password.',
+    title: 'Підтвердьте пароль',
+    description: 'Щоб захистити обліковий запис, введіть пароль для підтвердження своєї особи.',
+    error_failed: 'Перевірка не вдалася. Перевірте пароль.',
   },
   verification_method: {
     password: {
@@ -30,12 +34,37 @@ const account_center = {
       description: 'Надіслати код підтвердження на ваш номер телефону',
     },
   },
+  email: {
+    title: 'Прив’язати email',
+    description:
+      'Прив’яжіть свій email, щоб входити або допомогти з відновленням облікового запису.',
+    verification_title: 'Введіть код підтвердження email',
+    verification_description: 'Код підтвердження надіслано на ваш email {{email_address}}.',
+    success: 'Основний email успішно прив’язано.',
+    verification_required: 'Термін перевірки минув. Підтвердіть свою особу ще раз.',
+  },
+  phone: {
+    title: 'Прив’язати телефон',
+    description:
+      'Прив’яжіть номер телефону, щоб увійти або допомогти з відновленням облікового запису.',
+    verification_title: 'Введіть код підтвердження телефону',
+    verification_description: 'Код підтвердження надіслано на ваш телефон {{phone_number}}.',
+    success: 'Основний телефон успішно прив’язано.',
+    verification_required: 'Термін перевірки минув. Підтвердіть свою особу ще раз.',
+  },
+
+  code_verification: {
+    send: 'Надіслати код підтвердження',
+    resend: 'Надіслати код ще раз',
+    resend_countdown: 'Ще не отримали? Повторна відправка через {{seconds}} с.',
+  },
+
   email_verification: {
     title: 'Підтвердьте свою електронну пошту',
     prepare_description:
       "Verify it's you to protect your account security. Send the verification code to your email.",
-    email_label: 'Email address',
-    send: 'Send verification code',
+    email_label: 'Адреса електронної пошти',
+    send: 'Надіслати код підтвердження',
     description: 'Код підтвердження надіслано на адресу {{email}}. Введіть код, щоб продовжити.',
     resend: 'Надіслати код ще раз',
     resend_countdown: 'Ще не отримали? Повторна відправка через {{seconds}} с.',
@@ -48,7 +77,7 @@ const account_center = {
     prepare_description:
       'Підтвердьте, що це ви, щоб захистити безпеку облікового запису. Надішліть код підтвердження на свій телефон.',
     phone_label: 'Номер телефону',
-    send: 'Send verification code',
+    send: 'Надіслати код підтвердження',
     description:
       'Код підтвердження надіслано на ваш телефон {{phone}}. Введіть код, щоб продовжити.',
     resend: 'Надіслати код ще раз',

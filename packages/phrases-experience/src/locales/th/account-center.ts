@@ -10,11 +10,15 @@ const account_center = {
     title: 'การยืนยันความปลอดภัย',
     description:
       'ยืนยันว่าเป็นคุณเพื่อปกป้องความปลอดภัยของบัญชี กรุณาเลือกวิธีเพื่อยืนยันตัวตนของคุณ',
+    error_send_failed: 'ส่งรหัสยืนยันไม่สำเร็จ โปรดลองอีกครั้งในภายหลัง',
+    error_invalid_code: 'รหัสยืนยันไม่ถูกต้องหรือหมดอายุแล้ว',
+    error_verify_failed: 'ยืนยันไม่สำเร็จ กรุณากรอกรหัสอีกครั้ง',
+    verification_required: 'การยืนยันหมดอายุ โปรดยืนยันตัวตนอีกครั้ง',
   },
   password_verification: {
-    title: 'Verify password',
-    description: "Verify it's you to protect your account security. Enter your password.",
-    error_failed: 'Verification failed. Please check your password.',
+    title: 'ยืนยันรหัสผ่าน',
+    description: 'เพื่อปกป้องบัญชี กรุณากรอกรหัสผ่านเพื่อยืนยันตัวตน',
+    error_failed: 'การยืนยันล้มเหลว โปรดตรวจสอบรหัสผ่านของคุณ',
   },
   verification_method: {
     password: {
@@ -30,12 +34,35 @@ const account_center = {
       description: 'ส่งรหัสยืนยันไปยังหมายเลขโทรศัพท์ของคุณ',
     },
   },
+  email: {
+    title: 'เชื่อมต่ออีเมล',
+    description: 'เชื่อมต่ออีเมลของคุณเพื่อเข้าสู่ระบบหรือช่วยในการกู้คืนบัญชี',
+    verification_title: 'ป้อนรหัสยืนยันอีเมล',
+    verification_description: 'รหัสยืนยันได้ถูกส่งไปยังอีเมล {{email_address}} ของคุณ',
+    success: 'เชื่อมต่ออีเมลหลักเรียบร้อยแล้ว',
+    verification_required: 'การยืนยันหมดอายุ โปรดยืนยันตัวตนอีกครั้ง',
+  },
+  phone: {
+    title: 'เชื่อมต่อโทรศัพท์',
+    description: 'เชื่อมต่อหมายเลขโทรศัพท์เพื่อใช้เข้าสู่ระบบหรือช่วยกู้คืนบัญชี',
+    verification_title: 'กรอกรหัสยืนยันทางโทรศัพท์',
+    verification_description: 'ได้ส่งรหัสยืนยันไปยังโทรศัพท์ {{phone_number}} แล้ว',
+    success: 'เชื่อมต่อโทรศัพท์หลักเรียบร้อยแล้ว',
+    verification_required: 'การยืนยันหมดอายุ โปรดยืนยันตัวตนอีกครั้ง',
+  },
+
+  code_verification: {
+    send: 'ส่งรหัสยืนยัน',
+    resend: 'ส่งรหัสอีกครั้ง',
+    resend_countdown: 'ยังไม่ได้รับใช่ไหม? ส่งใหม่ได้หลัง {{seconds}} วินาที',
+  },
+
   email_verification: {
     title: 'ยืนยันอีเมลของคุณ',
     prepare_description:
       "Verify it's you to protect your account security. Send the verification code to your email.",
-    email_label: 'Email address',
-    send: 'Send verification code',
+    email_label: 'ที่อยู่อีเมล',
+    send: 'ส่งรหัสยืนยัน',
     description: 'ได้ส่งรหัสยืนยันไปยังอีเมล {{email}} แล้ว กรุณากรอกรหัสเพื่อดำเนินการต่อ',
     resend: 'ส่งรหัสอีกครั้ง',
     resend_countdown: 'ยังไม่ได้รับใช่ไหม? ส่งใหม่ได้หลัง {{seconds}} วินาที',
@@ -48,7 +75,7 @@ const account_center = {
     prepare_description:
       'ยืนยันว่าเป็นคุณเพื่อปกป้องความปลอดภัยของบัญชี ส่งรหัสยืนยันไปยังโทรศัพท์ของคุณ',
     phone_label: 'หมายเลขโทรศัพท์',
-    send: 'Send verification code',
+    send: 'ส่งรหัสยืนยัน',
     description: 'ได้ส่งรหัสยืนยันไปยังโทรศัพท์ {{phone}} แล้ว กรุณากรอกรหัสเพื่อดำเนินการต่อ',
     resend: 'ส่งรหัสอีกครั้ง',
     resend_countdown: 'ยังไม่ได้รับใช่ไหม? ส่งใหม่ได้หลัง {{seconds}} วินาที',

@@ -10,11 +10,15 @@ const account_center = {
     title: 'Güvenlik doğrulaması',
     description:
       'Hesap güvenliğinizi korumak için siz olduğunuzu doğrulayın. Kimliğinizi doğrulamak için lütfen yöntemi seçin.',
+    error_send_failed: 'Doğrulama kodu gönderilemedi. Lütfen daha sonra tekrar dene.',
+    error_invalid_code: 'Doğrulama kodu geçersiz veya süresi dolmuş.',
+    error_verify_failed: 'Doğrulama başarısız. Lütfen kodu tekrar gir.',
+    verification_required: 'Doğrulama süresi doldu. Lütfen kimliğini yeniden doğrula.',
   },
   password_verification: {
-    title: 'Verify password',
-    description: "Verify it's you to protect your account security. Enter your password.",
-    error_failed: 'Verification failed. Please check your password.',
+    title: 'Parolayı doğrula',
+    description: 'Hesabını korumak için kimliğini doğrula. Parolanı gir.',
+    error_failed: 'Doğrulama başarısız. Lütfen parolanı kontrol et.',
   },
   verification_method: {
     password: {
@@ -30,12 +34,35 @@ const account_center = {
       description: 'Doğrulama kodunu telefon numarana gönder',
     },
   },
+  email: {
+    title: 'E-postayı bağla',
+    description: 'Giriş yapmak veya hesap kurtarmaya yardımcı olmak için e-postanı bağla.',
+    verification_title: 'E-posta doğrulama kodunu gir',
+    verification_description: 'Doğrulama kodu e-postana {{email_address}} gönderildi.',
+    success: 'Birincil e-posta başarıyla bağlandı.',
+    verification_required: 'Doğrulama süresi doldu. Lütfen kimliğini yeniden doğrula.',
+  },
+  phone: {
+    title: 'Telefonu bağla',
+    description: 'Giriş yapmak veya hesap kurtarmaya yardımcı olmak için telefon numaranı bağla.',
+    verification_title: 'Telefon doğrulama kodunu gir',
+    verification_description: 'Doğrulama kodu telefonuna {{phone_number}} gönderildi.',
+    success: 'Birincil telefon başarıyla bağlandı.',
+    verification_required: 'Doğrulama süresi doldu. Lütfen kimliğini yeniden doğrula.',
+  },
+
+  code_verification: {
+    send: 'Doğrulama kodu gönder',
+    resend: 'Kodu yeniden gönder',
+    resend_countdown: 'Hâlâ gelmedi mi? {{seconds}} sn sonra tekrar gönder.',
+  },
+
   email_verification: {
     title: 'E-postanı doğrula',
     prepare_description:
       "Verify it's you to protect your account security. Send the verification code to your email.",
-    email_label: 'Email address',
-    send: 'Send verification code',
+    email_label: 'E-posta adresi',
+    send: 'Doğrulama kodu gönder',
     description: 'Doğrulama kodu {{email}} adresine gönderildi. Devam etmek için kodu gir.',
     resend: 'Kodu yeniden gönder',
     resend_countdown: 'Hâlâ gelmedi mi? {{seconds}} sn sonra tekrar gönder.',
@@ -48,7 +75,7 @@ const account_center = {
     prepare_description:
       'Hesap güvenliğinizi korumak için siz olduğunuzu doğrulayın. Doğrulama kodunu telefonuna gönder.',
     phone_label: 'Telefon numarası',
-    send: 'Send verification code',
+    send: 'Doğrulama kodu gönder',
     description: 'Doğrulama kodu telefonuna {{phone}} gönderildi. Devam etmek için kodu gir.',
     resend: 'Kodu yeniden gönder',
     resend_countdown: 'Hâlâ gelmedi mi? {{seconds}} sn sonra tekrar gönder.',
