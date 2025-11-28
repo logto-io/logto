@@ -1,4 +1,3 @@
-import { useLogto } from '@logto/react';
 import type { AccountCenter, SignInIdentifier } from '@logto/schemas';
 import { AccountCenterControlValue } from '@logto/schemas';
 import { type TFuncKey } from 'i18next';
@@ -11,6 +10,7 @@ import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
 import { updateSuccessRoute } from '@ac/constants/routes';
+import useAccessToken from '@ac/hooks/use-access-token';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 
@@ -79,7 +79,7 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
 }: IdentifierBindingPageProps<VerifyPayload, BindPayload>) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { getAccessToken } = useLogto();
+  const getAccessToken = useAccessToken();
   const { loading } = useContext(LoadingContext);
   const { accountCenterSettings, verificationId, setToast, setVerificationId } =
     useContext(PageContext);
@@ -150,11 +150,6 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
       }
 
       const accessToken = await getAccessToken();
-
-      if (!accessToken) {
-        setToast(t('account_center.verification.error_verify_failed'));
-        return;
-      }
 
       const [verifyError, verifyResult] = await verifyCodeRequest(
         accessToken,

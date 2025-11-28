@@ -1,12 +1,12 @@
 import Button from '@experience/shared/components/Button';
 import PasswordInputField from '@experience/shared/components/InputFields/PasswordInputField';
-import { useLogto } from '@logto/react';
 import { useState, useContext, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { verifyPassword } from '@ac/apis/verification';
+import useAccessToken from '@ac/hooks/use-access-token';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
@@ -20,7 +20,7 @@ type Props = {
 const PasswordVerification = ({ onBack }: Props) => {
   const { t } = useTranslation();
   const { setVerificationId, setToast } = useContext(PageContext);
-  const { getAccessToken } = useLogto();
+  const getAccessToken = useAccessToken();
   const { loading } = useContext(LoadingContext);
   const [password, setPassword] = useState('');
   const asyncVerifyPassword = useApi(verifyPassword);
@@ -34,11 +34,6 @@ const PasswordVerification = ({ onBack }: Props) => {
     }
 
     const accessToken = await getAccessToken();
-
-    if (!accessToken) {
-      setToast(t('account_center.password_verification.error_failed'));
-      return;
-    }
 
     const [error, result] = await asyncVerifyPassword(accessToken, password);
 

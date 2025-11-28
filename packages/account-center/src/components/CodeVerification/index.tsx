@@ -4,7 +4,6 @@ import SmartInputField from '@experience/shared/components/InputFields/SmartInpu
 import VerificationCodeInput, {
   defaultLength,
 } from '@experience/shared/components/VerificationCode';
-import { useLogto } from '@logto/react';
 import { SignInIdentifier } from '@logto/schemas';
 import type { TFuncKey } from 'i18next';
 import { useCallback, useContext, useEffect, useState } from 'react';
@@ -12,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 
 import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
+import useAccessToken from '@ac/hooks/use-access-token';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
@@ -60,7 +60,7 @@ const CodeVerification = ({
   verifyCode,
 }: Props) => {
   const { t } = useTranslation();
-  const { getAccessToken } = useLogto();
+  const getAccessToken = useAccessToken();
   const { setToast, setVerificationId } = useContext(PageContext);
   const { loading } = useContext(LoadingContext);
   const sendCodeRequest = useApi(sendCode);
@@ -105,10 +105,6 @@ const CodeVerification = ({
     }
 
     const accessToken = await getAccessToken();
-
-    if (!accessToken) {
-      return;
-    }
 
     const [error, result] = await sendCodeRequest(accessToken, identifier);
 
@@ -155,10 +151,6 @@ const CodeVerification = ({
       const { recordId, expiresAt } = pendingVerificationRecord;
 
       const accessToken = await getAccessToken();
-
-      if (!accessToken) {
-        return;
-      }
 
       const [error] = await verifyCodeRequest(accessToken, {
         verificationRecordId: recordId,
