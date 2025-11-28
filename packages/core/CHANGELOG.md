@@ -1,5 +1,55 @@
 # Change Log
 
+## 1.34.0
+
+### Minor Changes
+
+- 08f887c448: support cross-app authentication callbacks within the same browser session
+
+  When multiple applications are initiating authentication requests within the same browser session,
+  authentication callbacks may interfere with each other due to the shared `_interaction` cookie.
+
+  To resolve this, we now change the cookie from a plain UID string to a structured mapping object
+  `{ [app_id]: interaction_uid }`, and maintain the `app_id` in either the URL search parameters or HTTP
+  headers for all authentication-related requests and redirects. This ensures that each application can
+  correctly identify its own authentication context without interference from others.
+
+  The fallback mechanism is also implemented to ensure backward compatibility.
+
+- c3266a917a: add a new webhook event "Identifier.Lockout", which is triggered when a user is locked out due to repeated failed sign-in attempts
+
+### Patch Changes
+
+- 900201a48c: align refresh token grant lifetime with 180-day TTL
+
+  Refresh tokens were expiring after 14 days because the provider grant TTL was still capped at the default two weeks, regardless of the configured refresh token TTL.
+
+  Now set the OIDC grant TTL to 180 days so refresh tokens can live for their configured duration, also expand the refresh token TTL up to 180 days.
+
+- dadbea6936: fix email/phone template selection during sign up
+
+  Previously, the send code API (Experience API) always switched to the `TemplateType.BindMfa` email template as soon as an interaction already had an identified user. During multi-step sign-up flows (for example, username + email), the interaction can already identify the user before the email step finishes, so legitimate sign-up verifications were mistakenly treated as MFA binding and used the wrong template.
+
+  The fix checks if the email/phone identifier is part of the sign-up identifiers. If it is, then we are still in the sign-up flow and should use the appropriate sign-up email/phone template. Only when the email/phone is not part of the sign-up identifiers (meaning the sign-up flow is complete) and the interaction has an identified user, do we switch to the `BindMfa` template.
+
+- c6554587ee: improve SSO connectors with case-insensitive domain matching
+
+  According to the latest standards, email domains should be treated as case-insensitive. To ensure robust and user-friendly authentication, we need to locate SSO connectors correctly regardless of the letter case in the provided email domain.
+
+  - Domain normalization on insert: The domains configured for SSO connectors are now normalized to lowercase before being inserted into the database. This ensures consistency and prevents issues arising from varied casing. As part of this change, identical domains with different casing will be treated as duplicates and rejected to maintain data integrity.
+  - Case-insensitive search for SSO connectors: The get SSO connectors by email endpoint has been updated to perform a case-insensitive search when matching email domains. This guarantees that the correct enabled SSO connector is identified, regardless of the casing used in the user's email address.
+
+- Updated dependencies [900201a48c]
+- Updated dependencies [08f887c448]
+- Updated dependencies [c3266a917a]
+  - @logto/schemas@1.34.0
+  - @logto/experience@1.17.0
+  - @logto/console@1.31.0
+  - @logto/phrases@1.23.0
+  - @logto/account-center@0.1.0
+  - @logto/cli@1.34.0
+  - @logto/demo-app@1.5.0
+
 ## 1.33.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.31.0
+
+### Minor Changes
+
+- c3266a917a: add a new webhook event "Identifier.Lockout", which is triggered when a user is locked out due to repeated failed sign-in attempts
+
 ## 1.30.0
 
 ### Minor Changes
