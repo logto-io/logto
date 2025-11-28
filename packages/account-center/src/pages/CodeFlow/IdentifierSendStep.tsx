@@ -1,6 +1,5 @@
 import Button from '@experience/shared/components/Button';
 import SmartInputField from '@experience/shared/components/InputFields/SmartInputField';
-import { useLogto } from '@logto/react';
 import { type SignInIdentifier } from '@logto/schemas';
 import { type TFuncKey } from 'i18next';
 import { useContext, useEffect, useState } from 'react';
@@ -8,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
+import useAccessToken from '@ac/hooks/use-access-token';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
@@ -46,7 +46,7 @@ const IdentifierSendStep = ({
   sendCode,
 }: Props) => {
   const { t } = useTranslation();
-  const { getAccessToken } = useLogto();
+  const getAccessToken = useAccessToken();
   const { loading } = useContext(LoadingContext);
   const { setToast } = useContext(PageContext);
   const [pendingValue, setPendingValue] = useState(value);
@@ -65,11 +65,6 @@ const IdentifierSendStep = ({
     }
 
     const accessToken = await getAccessToken();
-
-    if (!accessToken) {
-      setToast(t('account_center.verification.error_send_failed'));
-      return;
-    }
 
     const [error, result] = await sendCodeRequest(accessToken, target);
 

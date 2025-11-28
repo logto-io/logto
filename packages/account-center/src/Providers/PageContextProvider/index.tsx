@@ -8,6 +8,7 @@ import { getAccountCenterSettings } from '@ac/apis/account-center';
 import { getSignInExperienceSettings } from '@ac/apis/sign-in-experience';
 import { getUserInfo } from '@ac/apis/user';
 import { sessionExpiredRoute } from '@ac/constants/routes';
+import useAccessToken from '@ac/hooks/use-access-token';
 import { getThemeBySystemPreference, subscribeToSystemTheme } from '@ac/utils/theme';
 
 import type { PageContextType } from './PageContext';
@@ -23,7 +24,8 @@ type Props = {
 };
 
 const PageContextProvider = ({ children }: Props) => {
-  const { isAuthenticated, getAccessToken } = useLogto();
+  const { isAuthenticated } = useLogto();
+  const getAccessToken = useAccessToken();
   const navigate = useNavigate();
   const [theme, setTheme] = useState(Theme.Light);
   const [toast, setToast] = useState('');
@@ -67,9 +69,6 @@ const PageContextProvider = ({ children }: Props) => {
     const fetchUserInfo = async () => {
       try {
         const accessToken = await getAccessToken();
-        if (!accessToken) {
-          return;
-        }
 
         const data = await getUserInfo(accessToken);
 

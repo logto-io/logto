@@ -3,13 +3,13 @@ import DynamicT from '@experience/shared/components/DynamicT';
 import VerificationCodeInput, {
   defaultLength,
 } from '@experience/shared/components/VerificationCode';
-import { useLogto } from '@logto/react';
 import { type TFuncKey } from 'i18next';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
+import useAccessToken from '@ac/hooks/use-access-token';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
@@ -54,7 +54,7 @@ const IdentifierVerifyStep = ({
   sendCode,
 }: Props) => {
   const { t } = useTranslation();
-  const { getAccessToken } = useLogto();
+  const getAccessToken = useAccessToken();
   const { loading } = useContext(LoadingContext);
   const { setToast } = useContext(PageContext);
   const [codeInput, setCodeInput] = useState<string[]>([]);
@@ -95,11 +95,6 @@ const IdentifierVerifyStep = ({
 
   const handleResend = async () => {
     const accessToken = await getAccessToken();
-
-    if (!accessToken) {
-      setToast(t('account_center.verification.error_send_failed'));
-      return;
-    }
 
     const [error, result] = await sendCodeRequest(accessToken, identifier);
 
