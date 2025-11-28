@@ -10,6 +10,10 @@ const account_center = {
     title: 'セキュリティ確認',
     description:
       'アカウントの安全を守るため、ご本人であることを確認します。本人確認の方法を選択してください。',
+    error_send_failed: '認証コードの送信に失敗しました。しばらくしてからもう一度お試しください。',
+    error_invalid_code: '認証コードが無効か、有効期限が切れています。',
+    error_verify_failed: '認証に失敗しました。もう一度コードを入力してください。',
+    verification_required: 'Verification expired. Please verify your identity again.',
   },
   password_verification: {
     title: 'Verify password',
@@ -38,6 +42,15 @@ const account_center = {
     success: 'Primary email linked successfully.',
     verification_required: 'Verification expired. Please verify your identity again.',
   },
+  phone: {
+    title: 'Link phone',
+    description: 'Link your phone number to sign in or help with account recovery.',
+    verification_title: 'Enter phone verification code',
+    verification_description: 'The verification code has been sent to your phone {{phone_number}}.',
+    success: 'Primary phone linked successfully.',
+    verification_required: 'Verification expired. Please verify your identity again.',
+  },
+
   email_verification: {
     title: 'メールアドレスを確認',
     prepare_description:

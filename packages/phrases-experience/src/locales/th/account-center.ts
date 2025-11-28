@@ -10,6 +10,10 @@ const account_center = {
     title: 'การยืนยันความปลอดภัย',
     description:
       'ยืนยันว่าเป็นคุณเพื่อปกป้องความปลอดภัยของบัญชี กรุณาเลือกวิธีเพื่อยืนยันตัวตนของคุณ',
+    error_send_failed: 'ส่งรหัสยืนยันไม่สำเร็จ โปรดลองอีกครั้งในภายหลัง',
+    error_invalid_code: 'รหัสยืนยันไม่ถูกต้องหรือหมดอายุแล้ว',
+    error_verify_failed: 'ยืนยันไม่สำเร็จ กรุณากรอกรหัสอีกครั้ง',
+    verification_required: 'Verification expired. Please verify your identity again.',
   },
   password_verification: {
     title: 'Verify password',
@@ -38,6 +42,15 @@ const account_center = {
     success: 'Primary email linked successfully.',
     verification_required: 'Verification expired. Please verify your identity again.',
   },
+  phone: {
+    title: 'Link phone',
+    description: 'Link your phone number to sign in or help with account recovery.',
+    verification_title: 'Enter phone verification code',
+    verification_description: 'The verification code has been sent to your phone {{phone_number}}.',
+    success: 'Primary phone linked successfully.',
+    verification_required: 'Verification expired. Please verify your identity again.',
+  },
+
   email_verification: {
     title: 'ยืนยันอีเมลของคุณ',
     prepare_description:

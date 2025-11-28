@@ -4,12 +4,12 @@ import VerificationCodeInput, {
   defaultLength,
 } from '@experience/shared/components/VerificationCode';
 import { useLogto } from '@logto/react';
+import { type TFuncKey } from 'i18next';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
-import { sendEmailVerificationCode } from '@ac/apis/verification';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
@@ -19,23 +19,41 @@ import styles from './index.module.scss';
 const resendCooldownSeconds = 60;
 
 type Props = {
-  readonly pendingEmail: string;
+  readonly identifier: string;
   readonly verificationRecordId: string;
+  readonly codeInputName: string;
+  readonly translation: {
+    titleKey: TFuncKey;
+    descriptionKey: TFuncKey;
+    descriptionProps: Record<string, string>;
+    resendKey: TFuncKey;
+    resendCountdownKey: TFuncKey;
+  };
   readonly onResent: (verificationRecordId: string) => void;
   readonly resetSignal: number;
   readonly onSubmit: (code: string) => void;
   readonly onBack: () => void;
   readonly onInvalidCode: () => void;
+  readonly sendCode: (
+    accessToken: string,
+    identifier: string
+  ) => Promise<{
+    verificationRecordId: string;
+    expiresAt: string;
+  }>;
 };
 
-const EmailVerifyStep = ({
-  pendingEmail,
+const IdentifierVerifyStep = ({
+  identifier,
   verificationRecordId,
+  codeInputName,
+  translation,
   onResent,
   resetSignal,
   onSubmit,
   onBack,
   onInvalidCode,
+  sendCode,
 }: Props) => {
   const { t } = useTranslation();
   const { getAccessToken } = useLogto();
@@ -43,7 +61,7 @@ const EmailVerifyStep = ({
   const { setToast } = useContext(PageContext);
   const [codeInput, setCodeInput] = useState<string[]>([]);
   const [countdown, setCountdown] = useState(resendCooldownSeconds);
-  const sendCodeRequest = useApi(sendEmailVerificationCode);
+  const sendCodeRequest = useApi(sendCode);
   const handleError = useErrorHandler();
 
   const isCodeReady = useMemo(
@@ -81,11 +99,11 @@ const EmailVerifyStep = ({
     const accessToken = await getAccessToken();
 
     if (!accessToken) {
-      setToast(t('account_center.email_verification.error_send_failed'));
+      setToast(t('account_center.verification.error_send_failed'));
       return;
     }
 
-    const [error, result] = await sendCodeRequest(accessToken, pendingEmail);
+    const [error, result] = await sendCodeRequest(accessToken, identifier);
 
     if (error) {
       await handleError(error);
@@ -93,7 +111,7 @@ const EmailVerifyStep = ({
     }
 
     if (!result) {
-      setToast(t('account_center.email_verification.error_send_failed'));
+      setToast(t('account_center.verification.error_send_failed'));
       return;
     }
 
@@ -102,14 +120,14 @@ const EmailVerifyStep = ({
 
   return (
     <SecondaryPageLayout
-      title="account_center.email.verification_title"
-      description="account_center.email.verification_description"
-      descriptionProps={{ email_address: pendingEmail }}
+      title={translation.titleKey}
+      description={translation.descriptionKey}
+      descriptionProps={translation.descriptionProps}
       onBack={onBack}
     >
       <div className={styles.container}>
         <VerificationCodeInput
-          name="emailCode"
+          name={codeInputName}
           className={styles.codeInput}
           value={codeInput}
           onChange={(code) => {
@@ -119,7 +137,7 @@ const EmailVerifyStep = ({
         <div className={styles.message}>
           {countdown > 0 ? (
             <DynamicT
-              forKey="account_center.email_verification.resend_countdown"
+              forKey={translation.resendCountdownKey}
               interpolation={{ seconds: countdown }}
             />
           ) : (
@@ -131,7 +149,7 @@ const EmailVerifyStep = ({
                 void handleResend();
               }}
             >
-              <DynamicT forKey="account_center.email_verification.resend" />
+              <DynamicT forKey={translation.resendKey} />
             </button>
           )}
         </div>
@@ -154,4 +172,4 @@ const EmailVerifyStep = ({
   );
 };
 
-export default EmailVerifyStep;
+export default IdentifierVerifyStep;

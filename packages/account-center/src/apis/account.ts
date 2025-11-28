@@ -12,3 +12,14 @@ export const updatePrimaryEmail = async (
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
 };
+
+export const updatePrimaryPhone = async (
+  accessToken: string,
+  verificationRecordId: string,
+  payload: { phone: string; newIdentifierVerificationRecordId: string }
+) => {
+  await createAuthenticatedKy(accessToken).post('/api/my-account/primary-phone', {
+    json: payload,
+    headers: { [verificationRecordIdHeader]: verificationRecordId },
+  });
+};

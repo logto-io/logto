@@ -10,6 +10,10 @@ const account_center = {
     title: 'Verifica di sicurezza',
     description:
       'Conferma che sei tu per proteggere la sicurezza del tuo account. Seleziona il metodo per verificare la tua identità.',
+    error_send_failed: 'Invio del codice di verifica non riuscito. Riprova più tardi.',
+    error_invalid_code: 'Il codice di verifica non è valido o è scaduto.',
+    error_verify_failed: 'Verifica non riuscita. Inserisci di nuovo il codice.',
+    verification_required: 'Verification expired. Please verify your identity again.',
   },
   password_verification: {
     title: 'Verify password',
@@ -39,6 +43,15 @@ const account_center = {
     success: 'Primary email linked successfully.',
     verification_required: 'Verification expired. Please verify your identity again.',
   },
+  phone: {
+    title: 'Link phone',
+    description: 'Link your phone number to sign in or help with account recovery.',
+    verification_title: 'Enter phone verification code',
+    verification_description: 'The verification code has been sent to your phone {{phone_number}}.',
+    success: 'Primary phone linked successfully.',
+    verification_required: 'Verification expired. Please verify your identity again.',
+  },
+
   email_verification: {
     title: 'Verifica la tua e-mail',
     prepare_description:

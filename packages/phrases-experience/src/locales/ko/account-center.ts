@@ -9,6 +9,10 @@ const account_center = {
   verification: {
     title: '보안 인증',
     description: '계정 보안을 위해 본인인지 확인하세요. 신원을 인증할 방법을 선택해 주세요.',
+    error_send_failed: '인증 코드를 보내지 못했습니다. 잠시 후 다시 시도해주세요.',
+    error_invalid_code: '인증 코드가 잘못되었거나 만료되었습니다.',
+    error_verify_failed: '인증에 실패했습니다. 코드를 다시 입력해주세요.',
+    verification_required: 'Verification expired. Please verify your identity again.',
   },
   password_verification: {
     title: 'Verify password',
@@ -37,6 +41,15 @@ const account_center = {
     success: 'Primary email linked successfully.',
     verification_required: 'Verification expired. Please verify your identity again.',
   },
+  phone: {
+    title: 'Link phone',
+    description: 'Link your phone number to sign in or help with account recovery.',
+    verification_title: 'Enter phone verification code',
+    verification_description: 'The verification code has been sent to your phone {{phone_number}}.',
+    success: 'Primary phone linked successfully.',
+    verification_required: 'Verification expired. Please verify your identity again.',
+  },
+
   email_verification: {
     title: '이메일 확인',
     prepare_description:

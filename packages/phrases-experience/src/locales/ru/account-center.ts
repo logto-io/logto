@@ -10,6 +10,10 @@ const account_center = {
     title: 'Проверка безопасности',
     description:
       'Подтвердите, что это вы, чтобы защитить безопасность аккаунта. Пожалуйста, выберите способ подтверждения личности.',
+    error_send_failed: 'Не удалось отправить код подтверждения. Попробуйте позже.',
+    error_invalid_code: 'Код подтверждения недействителен или истёк.',
+    error_verify_failed: 'Не удалось подтвердить. Введите код ещё раз.',
+    verification_required: 'Verification expired. Please verify your identity again.',
   },
   password_verification: {
     title: 'Verify password',
@@ -38,6 +42,15 @@ const account_center = {
     success: 'Primary email linked successfully.',
     verification_required: 'Verification expired. Please verify your identity again.',
   },
+  phone: {
+    title: 'Link phone',
+    description: 'Link your phone number to sign in or help with account recovery.',
+    verification_title: 'Enter phone verification code',
+    verification_description: 'The verification code has been sent to your phone {{phone_number}}.',
+    success: 'Primary phone linked successfully.',
+    verification_required: 'Verification expired. Please verify your identity again.',
+  },
+
   email_verification: {
     title: 'Подтвердите свою почту',
     prepare_description:

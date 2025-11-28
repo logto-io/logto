@@ -9,6 +9,10 @@ const account_center = {
   verification: {
     title: '安全驗證',
     description: '為保障帳戶安全，請確認是你本人。請選擇用於驗證身份的方法。',
+    error_send_failed: '驗證碼傳送失敗，請稍後再試。',
+    error_invalid_code: '驗證碼無效或已過期。',
+    error_verify_failed: '驗證失敗，請重新輸入驗證碼。',
+    verification_required: 'Verification expired. Please verify your identity again.',
   },
   password_verification: {
     title: 'Verify password',
@@ -37,6 +41,15 @@ const account_center = {
     success: 'Primary email linked successfully.',
     verification_required: 'Verification expired. Please verify your identity again.',
   },
+  phone: {
+    title: 'Link phone',
+    description: 'Link your phone number to sign in or help with account recovery.',
+    verification_title: 'Enter phone verification code',
+    verification_description: 'The verification code has been sent to your phone {{phone_number}}.',
+    success: 'Primary phone linked successfully.',
+    verification_required: 'Verification expired. Please verify your identity again.',
+  },
+
   email_verification: {
     title: '驗證你的電郵',
     prepare_description:
