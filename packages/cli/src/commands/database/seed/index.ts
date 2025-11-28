@@ -1,19 +1,26 @@
+import type { IdFormat } from '@logto/shared';
 import type { DatabasePool } from '@silverhand/slonik';
 import type { CommandModule } from 'yargs';
 
 import { createPoolAndDatabaseIfNeeded } from '../../../database.js';
 import { doesConfigsTableExist } from '../../../queries/logto-config.js';
-import { consoleLog, oraPromise } from '../../../utils.js';
+import { consoleLog, isTty, oraPromise } from '../../../utils.js';
 import { getLatestAlterationTimestamp } from '../alteration/index.js';
 import { getAlterationDirectory } from '../alteration/utils.js';
 
 import { createTables, seedCloud, seedTables, seedTest } from './tables.js';
+import { promptIdFormats } from './utils.js';
+
+export type IdFormatConfig = {
+  idFormat: IdFormat;
+};
 
 export const seedByPool = async (
   pool: DatabasePool,
   cloud = false,
   test = false,
-  encryptBaseRole = false
+  encryptBaseRole = false,
+  idFormats?: IdFormatConfig
 ) => {
   await pool.transaction(async (connection) => {
     // Check alteration scripts available in order to insert correct timestamp
@@ -26,7 +33,7 @@ export const seedByPool = async (
       );
     }
 
-    const tableInfo = await oraPromise(createTables(connection, encryptBaseRole), {
+    const tableInfo = await oraPromise(createTables(connection, encryptBaseRole, idFormats), {
       text: 'Create tables',
     });
 
@@ -34,7 +41,7 @@ export const seedByPool = async (
       consoleLog.info('base role password:', tableInfo.password);
     }
 
-    await seedTables(connection, latestTimestamp, cloud);
+    await seedTables(connection, latestTimestamp, cloud, idFormats);
 
     if (cloud) {
       await seedCloud(connection);
@@ -60,6 +67,7 @@ const seed: CommandModule<
     test?: boolean;
     'legacy-test-data'?: boolean;
     'encrypt-base-role'?: boolean;
+    'id-format'?: string;
   }
 > = {
   command: 'seed [type]',
@@ -87,8 +95,14 @@ const seed: CommandModule<
       .option('encrypt-base-role', {
         describe: 'Seed base role with password',
         type: 'boolean',
+      })
+      .option('id-format', {
+        describe:
+          'ID format for all entity types (nanoid or uuidv7). If not specified, interactive prompts will be shown in TTY mode.',
+        type: 'string',
+        choices: ['nanoid', 'uuidv7'] as const,
       }),
-  handler: async ({ swe, cloud, test, legacyTestData, encryptBaseRole }) => {
+  handler: async ({ swe, cloud, test, legacyTestData, encryptBaseRole, idFormat }) => {
     const pool = await createPoolAndDatabaseIfNeeded();
 
     if (legacyTestData) {
@@ -112,7 +126,21 @@ const seed: CommandModule<
     }
 
     try {
-      await seedByPool(pool, cloud, test, encryptBaseRole);
+      // Prompt for ID formats if in TTY mode and not specified via CLI option
+      // The choices constraint in yargs ensures idFormat is a valid IdFormat
+      const idFormats: IdFormatConfig | undefined = idFormat
+        ? // Use the same format for all entity types if specified via CLI
+          {
+            // eslint-disable-next-line no-restricted-syntax
+            idFormat: idFormat as IdFormat,
+          }
+        : isTty()
+          ? // Interactive prompts in TTY mode
+            await promptIdFormats()
+          : // If not TTY and no CLI option, idFormats will be undefined and defaults will be used
+            undefined;
+
+      await seedByPool(pool, cloud, test, encryptBaseRole, idFormats);
     } catch (error: unknown) {
       consoleLog.error(error);
       consoleLog.error(

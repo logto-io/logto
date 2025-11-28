@@ -123,6 +123,13 @@ type SchemaRouterConfig<Key extends string> = {
    */
   idLength?: number;
   /**
+   * A custom ID generator function. If provided, this will be used instead of `generateStandardId()`.
+   * This allows for custom ID generation strategies (e.g., UUID).
+   *
+   * @returns A promise that resolves to the generated ID string.
+   */
+  idGenerator?: () => Promise<string> | string;
+  /**
    * The guard for the entity returned by the following routes:
    *
    * - `GET /:id`
@@ -408,9 +415,14 @@ export default class SchemaRouter<
         }),
         this.#assembleQualifiedMiddlewares('post'),
         async (ctx, next) => {
+          // Use custom ID generator if provided, otherwise use generateStandardId
+          const id = this.config.idGenerator
+            ? await this.config.idGenerator()
+            : generateStandardId(idLength);
+
           // eslint-disable-next-line no-restricted-syntax -- `.omit()` doesn't play well with generics
           ctx.body = await queries.insert({
-            id: generateStandardId(idLength),
+            id,
             ...ctx.guard.body,
           } as CreateSchema);
           this.config.hooks?.afterInsert?.(ctx);

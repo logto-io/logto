@@ -14,10 +14,10 @@ create table organization_invitations (
   /** The email address or other identifier of the invitee. */
   invitee varchar(256) not null,
   /** The user ID of who accepted the invitation. */
-  accepted_user_id varchar(21)
+  accepted_user_id varchar(36)
     references users (id) on update cascade on delete cascade,
   /** The ID of the organization to which the invitee is invited. */
-  organization_id varchar(21) not null
+  organization_id varchar(36) not null
     references organizations (id) on update cascade on delete cascade,
   /** The status of the invitation. */
   status organization_invitation_status not null,

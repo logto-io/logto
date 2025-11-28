@@ -131,6 +131,13 @@ export default class GlobalValues {
    */
   public readonly redisUrl = getEnv('REDIS_URL');
 
+  /**
+   * Default ID format for all entity IDs in new tenants.
+   * Can be 'nanoid' or 'uuidv7'. Defaults to 'nanoid' for backward compatibility.
+   * This applies to all entity types: users, organizations, roles, organization roles, and applications.
+   */
+  public readonly defaultIdFormat = getEnv('DEFAULT_ID_FORMAT', 'nanoid');
+
   public get dbUrl(): string {
     return this.databaseUrl;
   }
