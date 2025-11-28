@@ -1,3 +1,4 @@
+import LogtoSignature from '@experience/shared/components/LogtoSignature';
 import { LogtoProvider, useLogto, UserScope } from '@logto/react';
 import { accountCenterApplicationId } from '@logto/schemas';
 import { useContext, useEffect } from 'react';
@@ -74,6 +75,25 @@ const Main = () => {
   );
 };
 
+const Layout = () => {
+  const { experienceSettings, theme } = useContext(PageContext);
+  const hideLogtoBranding = experienceSettings?.hideLogtoBranding === true;
+
+  return (
+    <div className={styles.app}>
+      <BrandingHeader />
+      <div className={styles.layout}>
+        <div className={styles.container}>
+          <main className={styles.main}>
+            <Main />
+            {!hideLogtoBranding && <LogtoSignature className={styles.signature} theme={theme} />}
+          </main>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const App = () => (
   <BrowserRouter basename={accountCenterBasePath}>
     <LogtoProvider
@@ -86,16 +106,7 @@ const App = () => (
       <LoadingContextProvider>
         <PageContextProvider>
           <AppBoundary>
-            <div className={styles.app}>
-              <BrandingHeader />
-              <div className={styles.layout}>
-                <div className={styles.container}>
-                  <main className={styles.main}>
-                    <Main />
-                  </main>
-                </div>
-              </div>
-            </div>
+            <Layout />
           </AppBoundary>
         </PageContextProvider>
       </LoadingContextProvider>
