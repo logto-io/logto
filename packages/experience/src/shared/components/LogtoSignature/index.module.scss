@@ -1,6 +1,5 @@
 @use '@/shared/scss/underscore' as _;
 
-
 .signature {
   @include _.flex-row;
   font: var(--font-label-2);
@@ -36,7 +35,6 @@
     margin-inline-end: _.unit(1);
   }
 }
-
 
 :global(body.mobile) {
   .signature {
