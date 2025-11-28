@@ -1,15 +1,16 @@
+import LogtoSignature from '@experience/shared/components/LogtoSignature';
 import { LogtoProvider, useLogto, UserScope } from '@logto/react';
 import { accountCenterApplicationId } from '@logto/schemas';
 import { useContext, useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import AppBoundary from '@ac/Providers/AppBoundary';
-import ErrorBoundary from '@ac/Providers/AppBoundary/ErrorBoundary';
-import LogtoErrorBoundary from '@ac/Providers/AppBoundary/LogtoErrorBoundary';
 import LoadingContextProvider from '@ac/Providers/LoadingContextProvider';
 
 import styles from './App.module.scss';
 import Callback from './Callback';
+import ErrorBoundary from './Providers/AppBoundary/ErrorBoundary';
+import LogtoErrorBoundary from './Providers/AppBoundary/LogtoErrorBoundary';
 import PageContextProvider from './Providers/PageContextProvider';
 import PageContext from './Providers/PageContextProvider/PageContext';
 import BrandingHeader from './components/BrandingHeader';
@@ -20,7 +21,6 @@ import Home from './pages/Home';
 import Phone from './pages/Phone';
 import UpdateSuccess from './pages/UpdateSuccess';
 import { accountCenterBasePath, handleAccountCenterRoute } from './utils/account-center-route';
-
 import '@experience/shared/scss/normalized.scss';
 
 void initI18n();
@@ -68,6 +68,29 @@ const Main = () => {
   );
 };
 
+const Layout = () => {
+  const { experienceSettings, theme } = useContext(PageContext);
+  const hideLogtoBranding = experienceSettings?.hideLogtoBranding === true;
+
+  return (
+    <div className={styles.app}>
+      <BrandingHeader />
+      <div className={styles.layout}>
+        <div className={styles.container}>
+          <main className={styles.main}>
+            <ErrorBoundary>
+              <LogtoErrorBoundary>
+                <Main />
+              </LogtoErrorBoundary>
+            </ErrorBoundary>
+            {!hideLogtoBranding && <LogtoSignature className={styles.signature} theme={theme} />}
+          </main>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const App = () => (
   <BrowserRouter basename={accountCenterBasePath}>
     <LogtoProvider
@@ -80,20 +103,7 @@ const App = () => (
       <LoadingContextProvider>
         <PageContextProvider>
           <AppBoundary>
-            <div className={styles.app}>
-              <BrandingHeader />
-              <div className={styles.layout}>
-                <div className={styles.container}>
-                  <main className={styles.main}>
-                    <ErrorBoundary>
-                      <LogtoErrorBoundary>
-                        <Main />
-                      </LogtoErrorBoundary>
-                    </ErrorBoundary>
-                  </main>
-                </div>
-              </div>
-            </div>
+            <Layout />
           </AppBoundary>
         </PageContextProvider>
       </LoadingContextProvider>
