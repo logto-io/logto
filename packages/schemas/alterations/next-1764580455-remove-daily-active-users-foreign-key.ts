@@ -6,7 +6,14 @@ import type { AlterationScript } from '../lib/types/alteration.js';
  * Remove foreign key constraint from daily_active_users table to allow
  * historical billing data to persist even after tenant deletion.
  * This supports the MAU-based billing system requirements.
- * Also optimizes indexes for aggregation performance.
+ *
+ * Index optimizations:
+ * 1. Removes redundant (tenant_id, id) index (id is already primary key)
+ * 2. Adds optimized index (tenant_id, date, user_id) for aggregation queries
+ *    - Changed from DESC to ASC to reduce page splits and improve insert performance
+ * 3. Replaces problematic partial index with BRIN index
+ *    - Partial index used CURRENT_DATE causing "functions in index predicate must be marked IMMUTABLE" error
+ *    - BRIN index is better for time-series data: small size, low maintenance, no periodic rebuild needed
  */
 
 const alteration: AlterationScript = {
@@ -29,18 +36,18 @@ const alteration: AlterationScript = {
       on daily_active_users (tenant_id, date, user_id)
     `);
 
-    // Add partial index for recent data to optimize billing cycle queries
+    // Add BRIN index for time-series date range queries
+    // Optimized for sequential data insertion and range scans (date >= ?)
     await pool.query(sql`
-      create index daily_active_users__recent_date_covering
-      on daily_active_users (date, tenant_id, user_id)
-      where date >= (CURRENT_DATE - INTERVAL '90 days')
+      create index daily_active_users__date_brin
+      on daily_active_users using brin (date)
     `);
   },
 
   down: async (pool) => {
     // Drop the new indexes we created
     await pool.query(sql`
-      drop index if exists daily_active_users__recent_date_covering
+      drop index if exists daily_active_users__date_brin
     `);
 
     await pool.query(sql`
