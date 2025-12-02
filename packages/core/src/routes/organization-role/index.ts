@@ -36,7 +36,7 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
           relations: { rolesScopes, rolesResourceScopes },
         },
       },
-      libraries: { quota },
+      libraries: { quota, idFormats },
     },
   ]: RouterInitArgs<T>
 ) {
@@ -108,7 +108,10 @@ export default function organizationRoleRoutes<T extends ManagementApiRouter>(
           : 'organizationUserRolesLimit'
       );
 
-      const role = await roles.insert({ id: generateStandardId(), ...data });
+      const role = await roles.insert({
+        id: await idFormats.generateOrganizationRoleId(),
+        ...data,
+      });
 
       if (organizationScopeIds.length > 0) {
         await rolesScopes.insert(

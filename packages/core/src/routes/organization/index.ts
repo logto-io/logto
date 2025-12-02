@@ -32,7 +32,7 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
     {
       id: tenantId,
       queries: { organizations },
-      libraries: { quota },
+      libraries: { quota, idFormats },
     },
   ] = args;
 
@@ -58,6 +58,7 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
     searchFields: ['name'],
     disabled: { get: true },
     idLength: 12,
+    idGenerator: async () => idFormats.generateOrganizationId(),
     hooks: {
       afterInsert: async (ctx) => {
         captureEvent({ tenantId, request: ctx.req }, ProductEvent.OrganizationCreated);

@@ -4,6 +4,7 @@ import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import { createCustomProfileFieldsLibrary } from '#src/libraries/custom-profile-fields/index.js';
 import { createDomainLibrary } from '#src/libraries/domain.js';
 import { createHookLibrary } from '#src/libraries/hook/index.js';
+import { createIdFormatLibrary } from '#src/libraries/id-format.js';
 import { JwtCustomizerLibrary } from '#src/libraries/jwt-customizer.js';
 import type { LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import { createOneTimeTokenLibrary } from '#src/libraries/one-time-token.js';
@@ -25,7 +26,8 @@ import { createVerificationStatusLibrary } from '#src/libraries/verification-sta
 import type Queries from './Queries.js';
 
 export default class Libraries {
-  users = createUserLibrary(this.tenantId, this.queries);
+  idFormats = createIdFormatLibrary(this.tenantId, this.queries);
+  users = createUserLibrary(this.tenantId, this.queries, this.idFormats);
   phrases = createPhraseLibrary(this.queries);
   hooks = createHookLibrary(this.queries);
   scopes = createScopeLibrary(this.queries);

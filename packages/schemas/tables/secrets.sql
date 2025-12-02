@@ -3,7 +3,7 @@ create table secrets (
   tenant_id varchar(21) not null 
     references tenants (id) on update cascade on delete cascade,
   id varchar(21) not null primary key,
-  user_id varchar(21) not null 
+  user_id varchar(36) not null 
     references users (id) on update cascade on delete cascade,
   type varchar(256) /* @use SecretType */ not null,
   /** Encrypted data encryption key (DEK) for the secret. */

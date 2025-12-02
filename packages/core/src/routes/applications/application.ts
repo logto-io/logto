@@ -62,7 +62,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
   const {
     queries,
     id: tenantId,
-    libraries: { quota, protectedApps },
+    libraries: { quota, protectedApps, idFormats },
   } = tenant;
 
   router.get(
@@ -193,7 +193,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       }
 
       const application = await queries.applications.insertApplication({
-        id: generateStandardId(),
+        id: await idFormats.generateApplicationId(),
         secret: generateInternalSecret(),
         oidcClientMetadata: buildOidcClientMetadata(oidcClientMetadata),
         ...conditional(
