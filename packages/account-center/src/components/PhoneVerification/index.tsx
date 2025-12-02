@@ -7,6 +7,8 @@ import CodeVerification, { type TranslationKeys } from '../CodeVerification';
 
 type Props = {
   readonly onBack?: () => void;
+  readonly onSwitchMethod?: () => void;
+  readonly hasAlternativeMethod?: boolean;
 };
 
 const phoneTranslationKeys: TranslationKeys = {
@@ -15,7 +17,7 @@ const phoneTranslationKeys: TranslationKeys = {
   prepareDescription: 'account_center.phone_verification.prepare_description',
 };
 
-const PhoneVerification = ({ onBack }: Props) => {
+const PhoneVerification = ({ onBack, onSwitchMethod, hasAlternativeMethod }: Props) => {
   const { userInfo } = useContext(PageContext);
   const phone = userInfo?.primaryPhone;
 
@@ -38,7 +40,9 @@ const PhoneVerification = ({ onBack }: Props) => {
           phone: payload.identifier,
         })
       }
+      hasAlternativeMethod={hasAlternativeMethod}
       onBack={onBack}
+      onSwitchMethod={onSwitchMethod}
     />
   );
 };

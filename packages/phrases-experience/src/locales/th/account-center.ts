@@ -14,6 +14,7 @@ const account_center = {
     error_invalid_code: 'รหัสยืนยันไม่ถูกต้องหรือหมดอายุแล้ว',
     error_verify_failed: 'ยืนยันไม่สำเร็จ กรุณากรอกรหัสอีกครั้ง',
     verification_required: 'การยืนยันหมดอายุ โปรดยืนยันตัวตนอีกครั้ง',
+    try_another_method: 'ลองใช้วิธีอื่นเพื่อยืนยันตัวตน',
   },
   password_verification: {
     title: 'ยืนยันรหัสผ่าน',

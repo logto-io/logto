@@ -14,6 +14,7 @@ const account_center = {
     error_invalid_code: 'O código de verificação é inválido ou expirou.',
     error_verify_failed: 'Falha na verificação. Digite o código novamente.',
     verification_required: 'A verificação expirou. Confirme sua identidade novamente.',
+    try_another_method: 'Tente outro método para verificar',
   },
   password_verification: {
     title: 'Verificar senha',
