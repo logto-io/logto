@@ -16,6 +16,7 @@ type Props = {
   readonly titleKey?: TFuncKey;
   readonly messageKey?: TFuncKey;
   readonly rawMessage?: string;
+  readonly illustration?: string;
   readonly action?: {
     titleKey: TFuncKey;
     onClick: () => void;
@@ -78,17 +79,19 @@ const ErrorPage = ({
   titleKey = 'description.not_found',
   messageKey,
   rawMessage,
+  illustration,
   action,
 }: Props) => {
   const { theme } = useContext(PageContext);
   const message = rawMessage ?? (messageKey ? <DynamicT forKey={messageKey} /> : undefined);
-  const illustration = theme === Theme.Light ? EmptyState : EmptyStateDark;
+  const resolvedIllustration =
+    illustration ?? (theme === Theme.Light ? EmptyState : EmptyStateDark);
 
   return (
     <div className={styles.errorPage}>
       <PageMeta titleKey={titleKey} />
       <div className={styles.illustration}>
-        <img src={illustration} alt="" role="presentation" />
+        <img src={resolvedIllustration} alt="" role="presentation" />
       </div>
       <div className={styles.title}>
         <DynamicT forKey={titleKey} />

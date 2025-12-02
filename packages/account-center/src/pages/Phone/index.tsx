@@ -2,6 +2,7 @@ import { SignInIdentifier } from '@logto/schemas';
 
 import { updatePrimaryPhone } from '@ac/apis/account';
 import { sendPhoneVerificationCode, verifyPhoneVerificationCode } from '@ac/apis/verification';
+import { phoneSuccessRoute } from '@ac/constants/routes';
 
 import IdentifierBindingPage from '../CodeFlow/IdentifierBindingPage';
 
@@ -34,6 +35,7 @@ const Phone = () => (
       phone: identifier,
       newIdentifierVerificationRecordId,
     })}
+    successRedirect={phoneSuccessRoute}
   />
 );
 

@@ -83,6 +83,20 @@ const account_center = {
     error_verify_failed: '인증에 실패했습니다. 코드를 다시 입력해주세요.',
     error_invalid_code: '인증 코드가 잘못되었거나 만료되었습니다.',
   },
+  update_success: {
+    default: {
+      title: '업데이트 완료',
+      description: '변경 사항이 성공적으로 저장되었습니다.',
+    },
+    email: {
+      title: '이메일 주소가 업데이트되었습니다!',
+      description: '계정의 이메일 주소가 성공적으로 변경되었습니다.',
+    },
+    phone: {
+      title: '전화번호가 업데이트되었습니다!',
+      description: '계정의 전화번호가 성공적으로 변경되었습니다.',
+    },
+  },
 };
 
 export default Object.freeze(account_center);

@@ -84,6 +84,20 @@ const account_center = {
     error_verify_failed: '認証に失敗しました。もう一度コードを入力してください。',
     error_invalid_code: '認証コードが無効か、有効期限が切れています。',
   },
+  update_success: {
+    default: {
+      title: '更新が完了しました',
+      description: '変更内容が正常に保存されました。',
+    },
+    email: {
+      title: 'メールアドレスを更新しました！',
+      description: 'アカウントのメールアドレスが正常に変更されました。',
+    },
+    phone: {
+      title: '電話番号を更新しました！',
+      description: 'アカウントの電話番号が正常に変更されました。',
+    },
+  },
 };
 
 export default Object.freeze(account_center);

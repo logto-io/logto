@@ -2,6 +2,7 @@ import { SignInIdentifier } from '@logto/schemas';
 
 import { updatePrimaryEmail } from '@ac/apis/account';
 import { sendEmailVerificationCode, verifyEmailVerificationCode } from '@ac/apis/verification';
+import { emailSuccessRoute } from '@ac/constants/routes';
 
 import IdentifierBindingPage from '../CodeFlow/IdentifierBindingPage';
 
@@ -34,6 +35,7 @@ const Email = () => (
       email: identifier,
       newIdentifierVerificationRecordId,
     })}
+    successRedirect={emailSuccessRoute}
   />
 );
 

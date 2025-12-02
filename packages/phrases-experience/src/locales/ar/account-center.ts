@@ -83,6 +83,20 @@ const account_center = {
     error_verify_failed: 'فشل التحقق. يرجى إدخال الرمز مرة أخرى.',
     error_invalid_code: 'رمز التحقق غير صالح أو منتهي الصلاحية.',
   },
+  update_success: {
+    default: {
+      title: 'تم التحديث بنجاح',
+      description: 'تم حفظ تغييراتك بنجاح.',
+    },
+    email: {
+      title: 'تم تحديث البريد الإلكتروني!',
+      description: 'تم تغيير عنوان البريد الإلكتروني لحسابك بنجاح.',
+    },
+    phone: {
+      title: 'تم تحديث رقم الهاتف!',
+      description: 'تم تغيير رقم هاتف حسابك بنجاح.',
+    },
+  },
 };
 
 export default Object.freeze(account_center);

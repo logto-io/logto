@@ -1,26 +1,50 @@
-import { useContext } from 'react';
+import { SignInIdentifier } from '@logto/schemas';
+import type { TFuncKey } from 'i18next';
+import { useMemo } from 'react';
 
-import PageContext from '@ac/Providers/PageContextProvider/PageContext';
+import successIllustration from '@ac/assets/icons/success.svg';
 import ErrorPage from '@ac/components/ErrorPage';
 
-import styles from './index.module.scss';
+type TranslationMap = Partial<
+  Record<SignInIdentifier, { readonly titleKey: TFuncKey; readonly messageKey: TFuncKey }>
+> & {
+  readonly default: { readonly titleKey: TFuncKey; readonly messageKey: TFuncKey };
+};
 
-const UpdateSuccess = () => {
-  const { accountCenterSettings } = useContext(PageContext);
+const translationMap: TranslationMap = {
+  [SignInIdentifier.Email]: {
+    titleKey: 'account_center.update_success.email.title',
+    messageKey: 'account_center.update_success.email.description',
+  },
+  [SignInIdentifier.Phone]: {
+    titleKey: 'account_center.update_success.phone.title',
+    messageKey: 'account_center.update_success.phone.description',
+  },
+  default: {
+    titleKey: 'account_center.update_success.default.title',
+    messageKey: 'account_center.update_success.default.description',
+  },
+};
 
-  if (!accountCenterSettings?.enabled) {
-    return (
-      <ErrorPage titleKey="error.something_went_wrong" messageKey="error.feature_not_enabled" />
-    );
-  }
+type Props = {
+  readonly identifierType?: SignInIdentifier;
+};
+
+const UpdateSuccess = ({ identifierType }: Props) => {
+  const translationKeys = useMemo(() => {
+    if (!identifierType) {
+      return translationMap.default;
+    }
+
+    return translationMap[identifierType] ?? translationMap.default;
+  }, [identifierType]);
 
   return (
-    <div className={styles.container}>
-      {/* <PageMeta titleKey="Update success" /> */}
-      {/* TODO: update with correct phrase after design ready */}
-      <div className={styles.title}>Update success</div>
-      <div className={styles.message}>Your changes have been saved successfully.</div>
-    </div>
+    <ErrorPage
+      illustration={successIllustration}
+      titleKey={translationKeys.titleKey}
+      messageKey={translationKeys.messageKey}
+    />
   );
 };
 

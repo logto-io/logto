@@ -83,6 +83,20 @@ const account_center = {
     error_verify_failed: 'Doğrulama başarısız. Lütfen kodu tekrar gir.',
     error_invalid_code: 'Doğrulama kodu geçersiz veya süresi dolmuş.',
   },
+  update_success: {
+    default: {
+      title: 'Güncelleme başarılı',
+      description: 'Değişiklikleriniz başarıyla kaydedildi.',
+    },
+    email: {
+      title: 'E-posta adresi güncellendi!',
+      description: 'Hesabınızın e-posta adresi başarıyla değiştirildi.',
+    },
+    phone: {
+      title: 'Telefon numarası güncellendi!',
+      description: 'Hesabınızın telefon numarası başarıyla değiştirildi.',
+    },
+  },
 };
 
 export default Object.freeze(account_center);

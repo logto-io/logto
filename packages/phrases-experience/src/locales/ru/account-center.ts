@@ -84,6 +84,20 @@ const account_center = {
     error_verify_failed: 'Не удалось подтвердить. Введите код ещё раз.',
     error_invalid_code: 'Код подтверждения недействителен или истёк.',
   },
+  update_success: {
+    default: {
+      title: 'Обновление выполнено успешно',
+      description: 'Ваши изменения успешно сохранены.',
+    },
+    email: {
+      title: 'Адрес электронной почты обновлён!',
+      description: 'Адрес электронной почты вашего аккаунта успешно изменён.',
+    },
+    phone: {
+      title: 'Номер телефона обновлён!',
+      description: 'Номер телефона вашего аккаунта успешно изменён.',
+    },
+  },
 };
 
 export default Object.freeze(account_center);

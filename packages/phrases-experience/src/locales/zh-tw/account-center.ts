@@ -81,6 +81,20 @@ const account_center = {
     error_verify_failed: '驗證失敗，請重新輸入驗證碼。',
     error_invalid_code: '驗證碼無效或已過期。',
   },
+  update_success: {
+    default: {
+      title: '更新成功',
+      description: '您的變更已成功儲存。',
+    },
+    email: {
+      title: '電子郵件地址已更新！',
+      description: '您的帳戶電子郵件地址已成功變更。',
+    },
+    phone: {
+      title: '電話號碼已更新！',
+      description: '您的帳戶電話號碼已成功變更。',
+    },
+  },
 };
 
 export default Object.freeze(account_center);
