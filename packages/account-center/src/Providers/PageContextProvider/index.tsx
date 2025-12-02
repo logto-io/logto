@@ -1,13 +1,11 @@
 import { useLogto } from '@logto/react';
 import { Theme } from '@logto/schemas';
-import { HTTPError } from 'ky';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { getAccountCenterSettings } from '@ac/apis/account-center';
 import { getSignInExperienceSettings } from '@ac/apis/sign-in-experience';
 import { getUserInfo } from '@ac/apis/user';
-import { sessionExpiredRoute } from '@ac/constants/routes';
+import useApi from '@ac/hooks/use-api';
 import { getThemeBySystemPreference, subscribeToSystemTheme } from '@ac/utils/theme';
 
 import type { PageContextType } from './PageContext';
@@ -23,8 +21,8 @@ type Props = {
 };
 
 const PageContextProvider = ({ children }: Props) => {
-  const { isAuthenticated, getAccessToken } = useLogto();
-  const navigate = useNavigate();
+  const { isAuthenticated } = useLogto();
+  const getUserInfoRequest = useApi(getUserInfo, { silent: true });
   const [theme, setTheme] = useState(Theme.Light);
   const [toast, setToast] = useState('');
   const [experienceSettings, setExperienceSettings] =
@@ -65,30 +63,21 @@ const PageContextProvider = ({ children }: Props) => {
     }
 
     const fetchUserInfo = async () => {
-      try {
-        const accessToken = await getAccessToken();
-        if (!accessToken) {
-          return;
-        }
+      const [error, data] = await getUserInfoRequest();
 
-        const data = await getUserInfo(accessToken);
-
-        setUserInfo(data);
-        setUserInfoError(undefined);
-      } catch (error: unknown) {
-        if (error instanceof HTTPError && error.response.status === 401) {
-          void navigate(sessionExpiredRoute, { replace: true });
-          return;
-        }
-
+      if (error || !data) {
         setUserInfoError(
           error instanceof Error ? error : new Error('Failed to load user information.')
         );
+        return;
       }
+
+      setUserInfo(data);
+      setUserInfoError(undefined);
     };
 
     void fetchUserInfo();
-  }, [isAuthenticated, getAccessToken, navigate]);
+  }, [getUserInfoRequest, isAuthenticated]);
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -103,11 +92,6 @@ const PageContextProvider = ({ children }: Props) => {
         setAccountCenterSettings(accountCenter);
         setExperienceError(undefined);
       } catch (error: unknown) {
-        if (error instanceof HTTPError && error.response.status === 401) {
-          void navigate(sessionExpiredRoute, { replace: true });
-          return;
-        }
-
         setExperienceSettings(undefined);
         setAccountCenterSettings(undefined);
         setExperienceError(
@@ -119,7 +103,7 @@ const PageContextProvider = ({ children }: Props) => {
     };
 
     void loadSettings();
-  }, [navigate]);
+  }, []);
 
   useEffect(() => {
     if (!experienceSettings?.color.isDarkModeEnabled) {

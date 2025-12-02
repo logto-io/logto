@@ -4,7 +4,6 @@ import SmartInputField from '@experience/shared/components/InputFields/SmartInpu
 import VerificationCodeInput, {
   defaultLength,
 } from '@experience/shared/components/VerificationCode';
-import { useLogto } from '@logto/react';
 import { SignInIdentifier } from '@logto/schemas';
 import type { TFuncKey } from 'i18next';
 import { useCallback, useContext, useEffect, useState } from 'react';
@@ -60,7 +59,6 @@ const CodeVerification = ({
   verifyCode,
 }: Props) => {
   const { t } = useTranslation();
-  const { getAccessToken } = useLogto();
   const { setToast, setVerificationId } = useContext(PageContext);
   const { loading } = useContext(LoadingContext);
   const sendCodeRequest = useApi(sendCode);
@@ -104,13 +102,7 @@ const CodeVerification = ({
       return;
     }
 
-    const accessToken = await getAccessToken();
-
-    if (!accessToken) {
-      return;
-    }
-
-    const [error, result] = await sendCodeRequest(accessToken, identifier);
+    const [error, result] = await sendCodeRequest(identifier);
 
     if (error) {
       await handleError(error);
@@ -129,16 +121,7 @@ const CodeVerification = ({
     setCodeInput([]);
     setHasSentCode(true);
     startCountdown();
-  }, [
-    getAccessToken,
-    handleError,
-    identifier,
-    loading,
-    sendCodeRequest,
-    setToast,
-    startCountdown,
-    t,
-  ]);
+  }, [handleError, identifier, loading, sendCodeRequest, setToast, startCountdown, t]);
 
   const handleVerify = useCallback(
     async (code: string[]) => {
@@ -154,13 +137,7 @@ const CodeVerification = ({
 
       const { recordId, expiresAt } = pendingVerificationRecord;
 
-      const accessToken = await getAccessToken();
-
-      if (!accessToken) {
-        return;
-      }
-
-      const [error] = await verifyCodeRequest(accessToken, {
+      const [error] = await verifyCodeRequest({
         verificationRecordId: recordId,
         code: code.join(''),
         identifier,
@@ -176,7 +153,6 @@ const CodeVerification = ({
       setPendingVerificationRecord(undefined);
     },
     [
-      getAccessToken,
       handleError,
       identifier,
       loading,

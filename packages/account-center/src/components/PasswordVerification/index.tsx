@@ -1,6 +1,5 @@
 import Button from '@experience/shared/components/Button';
 import PasswordInputField from '@experience/shared/components/InputFields/PasswordInputField';
-import { useLogto } from '@logto/react';
 import { useState, useContext, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -20,7 +19,6 @@ type Props = {
 const PasswordVerification = ({ onBack }: Props) => {
   const { t } = useTranslation();
   const { setVerificationId, setToast } = useContext(PageContext);
-  const { getAccessToken } = useLogto();
   const { loading } = useContext(LoadingContext);
   const [password, setPassword] = useState('');
   const asyncVerifyPassword = useApi(verifyPassword);
@@ -33,14 +31,7 @@ const PasswordVerification = ({ onBack }: Props) => {
       return;
     }
 
-    const accessToken = await getAccessToken();
-
-    if (!accessToken) {
-      setToast(t('account_center.password_verification.error_failed'));
-      return;
-    }
-
-    const [error, result] = await asyncVerifyPassword(accessToken, password);
+    const [error, result] = await asyncVerifyPassword(password);
 
     if (error) {
       await handleError(error);
