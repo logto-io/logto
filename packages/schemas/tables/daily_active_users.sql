@@ -9,14 +9,11 @@ create table daily_active_users (
 );
 
 -- Optimized index for aggregation queries with better write performance
--- Supports: WHERE tenant_id = ? AND date BETWEEN ? AND ? GROUP BY tenant_id, date, user_id
 create index daily_active_users__tenant_date_user
   on daily_active_users (tenant_id, date, user_id);
 
 -- BRIN index for time-series date range queries
 -- Optimized for sequential data insertion and range scans (date >= ?)
--- Small index size, low maintenance cost, no periodic rebuild needed
--- Best for: WHERE date >= ? AND date <= ? (billing cycle range queries)
 create index daily_active_users__date_brin
   on daily_active_users using brin (date);
 
