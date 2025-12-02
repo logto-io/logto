@@ -57,7 +57,7 @@ export default function koaTokenUsageGuard<StateT, ContextT, ResponseBodyT>(
       });
 
       assertThat(
-        tokenLimit === null || tokenUsage < tokenLimit,
+        tokenLimit === null || tokenUsage.totalUsage < tokenLimit,
         new RequestError({
           code: 'auth.exceed_token_limit',
           status: 429,

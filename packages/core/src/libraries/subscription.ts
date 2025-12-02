@@ -4,6 +4,7 @@ import { TtlCache } from '@logto/shared';
 import { TenantSubscriptionCache } from '#src/caches/tenant-subscription.js';
 import { type CacheStore } from '#src/caches/types.js';
 import { cacheConsole } from '#src/caches/utils.js';
+import { type TokenUsageCounts, tokenUsageCountsGuard } from '#src/queries/daily-token-usage.js';
 import type Queries from '#src/tenants/Queries.js';
 import { getTenantSubscription } from '#src/utils/subscription/index.js';
 import { type Subscription } from '#src/utils/subscription/types.js';
@@ -66,7 +67,7 @@ export class SubscriptionLibrary {
    * We don't want to calculate the latest token usage for each request.
    * Using this cache, we can reduce the number of queries to the database.
    */
-  private readonly tokenUsageCache = new TtlCache<string, number>(tokenUsageCacheTtl);
+  private readonly tokenUsageCache = new TtlCache<string, TokenUsageCounts>(tokenUsageCacheTtl);
 
   constructor(
     public readonly tenantId: string,
@@ -97,13 +98,19 @@ export class SubscriptionLibrary {
       return cachedValue;
     }
 
-    const { tokenUsage } = await this.queries.dailyTokenUsage.countTokenUsage({
+    const tokenUsageCounts = await this.queries.dailyTokenUsage.countTokenUsage({
       from,
       to,
     });
+    const result = tokenUsageCountsGuard.safeParse(tokenUsageCounts);
+    if (!result.success) {
+      throw new Error(
+        `Invalid token usage counts data retrieved for tenant ${this.tenantId}: ${result.error.message}`
+      );
+    }
 
-    this.tokenUsageCache.set(cacheKey, tokenUsage, getTokenUsageCacheTtl(to));
-    return tokenUsage;
+    this.tokenUsageCache.set(cacheKey, result.data, getTokenUsageCacheTtl(to));
+    return result.data;
   }
 
   private buildTokenUsageKey({ tenantId, from, to }: { tenantId: string; from: Date; to: Date }) {
