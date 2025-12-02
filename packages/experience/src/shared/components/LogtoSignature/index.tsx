@@ -1,10 +1,9 @@
 import { Theme } from '@logto/schemas';
-import { useContext, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
-import PageContext from '@/Providers/PageContextProvider/PageContext';
-import LogtoLogtoDark from '@/assets/icons/logto-logo-dark.svg?react';
-import LogtoLogoLight from '@/assets/icons/logto-logo-light.svg?react';
-import LogtoLogoShadow from '@/assets/icons/logto-logo-shadow.svg?react';
+import LogtoLogtoDark from '@/shared/assets/icons/logto-logo-dark.svg?react';
+import LogtoLogoLight from '@/shared/assets/icons/logto-logo-light.svg?react';
+import LogtoLogoShadow from '@/shared/assets/icons/logto-logo-shadow.svg?react';
 
 import styles from './index.module.scss';
 
@@ -77,10 +76,10 @@ body.mobile [data-logto-signature="secured"][data-logto-signature="secured"] {
 
 type Props = {
   readonly className?: string;
+  readonly theme: Theme;
 };
 
-const LogtoSignature = ({ className }: Props) => {
-  const { theme } = useContext(PageContext);
+const LogtoSignature = ({ className, theme }: Props) => {
   const LogtoLogo = theme === Theme.Light ? LogtoLogoLight : LogtoLogtoDark;
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -165,7 +164,7 @@ const LogtoSignature = ({ className }: Props) => {
         guardStyleElement.remove();
       }
     };
-  }, [className]);
+  }, []);
 
   return (
     <div ref={containerRef} className={className} data-logto-signature-container="secured">

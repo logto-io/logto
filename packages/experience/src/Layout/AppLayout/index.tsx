@@ -3,15 +3,15 @@ import { useContext } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
-import LogtoSignature from '@/components/LogtoSignature';
 import usePlatform from '@/hooks/use-platform';
+import LogtoSignature from '@/shared/components/LogtoSignature';
 import { layoutClassNames } from '@/utils/consts';
 
 import CustomContent from './CustomContent';
 import styles from './index.module.scss';
 
 const AppLayout = () => {
-  const { experienceSettings } = useContext(PageContext);
+  const { experienceSettings, theme } = useContext(PageContext);
   const { isMobile } = usePlatform();
   const hideLogtoBranding = experienceSettings?.hideLogtoBranding === true;
 
@@ -22,7 +22,10 @@ const AppLayout = () => {
         <main className={classNames(styles.main, layoutClassNames.mainContent)}>
           <Outlet />
           {!hideLogtoBranding && (
-            <LogtoSignature className={classNames(styles.signature, layoutClassNames.signature)} />
+            <LogtoSignature
+              className={classNames(styles.signature, layoutClassNames.signature)}
+              theme={theme}
+            />
           )}
         </main>
       </div>
