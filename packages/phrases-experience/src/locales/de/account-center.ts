@@ -57,9 +57,14 @@ const account_center = {
     verification_required: 'Verifizierung abgelaufen. Bitte bestätige deine Identität erneut.',
   },
   username: {
-    title: 'Set username',
-    description: 'Username must contain only letters, numbers, and underscores.',
-    success: 'Username updated successfully.',
+    title: 'Benutzernamen festlegen',
+    description: 'Benutzername darf nur Buchstaben, Zahlen und Unterstriche enthalten.',
+    success: 'Benutzername erfolgreich aktualisiert.',
+  },
+  password: {
+    title: 'Passwort festlegen',
+    description: 'Erstelle ein neues Passwort, um dein Konto zu schützen.',
+    success: 'Passwort erfolgreich aktualisiert.',
   },
 
   code_verification: {
@@ -71,7 +76,7 @@ const account_center = {
   email_verification: {
     title: 'Bestätige deine E-Mail',
     prepare_description:
-      "Verify it's you to protect your account security. Send the verification code to your email.",
+      'Bestätige deine Identität, um die Sicherheit deines Kontos zu schützen. Sende den Bestätigungscode an deine E-Mail.',
     email_label: 'E-Mail-Adresse',
     send: 'Bestätigungscode senden',
     description:
@@ -86,7 +91,7 @@ const account_center = {
   phone_verification: {
     title: 'Bestätige dein Telefon',
     prepare_description:
-      "Verify it's you to protect your account security. Send the verification code to your phone.",
+      'Bestätige deine Identität, um die Sicherheit deines Kontos zu schützen. Sende den Bestätigungscode an dein Telefon.',
     phone_label: 'Telefonnummer',
     send: 'Bestätigungscode senden',
     description:
@@ -112,8 +117,13 @@ const account_center = {
       description: 'Die Telefonnummer deines Kontos wurde erfolgreich geändert.',
     },
     username: {
-      title: 'Username updated!',
-      description: "Your account's username has been successfully changed.",
+      title: 'Benutzername aktualisiert!',
+      description: 'Der Benutzername deines Kontos wurde erfolgreich geändert.',
+    },
+
+    password: {
+      title: 'Passwort aktualisiert!',
+      description: 'Das Passwort deines Kontos wurde erfolgreich geändert.',
     },
   },
 };

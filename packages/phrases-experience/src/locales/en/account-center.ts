@@ -56,6 +56,11 @@ const account_center = {
     description: 'Username must contain only letters, numbers, and underscores.',
     success: 'Username updated successfully.',
   },
+  password: {
+    title: 'Set password',
+    description: 'Create a new password to secure your account.',
+    success: 'Password updated successfully.',
+  },
 
   code_verification: {
     send: 'Send verification code',
@@ -107,6 +112,10 @@ const account_center = {
     username: {
       title: 'Username updated!',
       description: "Your account's username has been successfully changed.",
+    },
+    password: {
+      title: 'Password updated!',
+      description: "Your account's password has been successfully changed.",
     },
   },
 };

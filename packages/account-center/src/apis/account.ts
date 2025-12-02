@@ -34,3 +34,14 @@ export const updateUsername = async (
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
 };
+
+export const updatePassword = async (
+  accessToken: string,
+  verificationRecordId: string,
+  payload: { password: string }
+) => {
+  await createAuthenticatedKy(accessToken).post('/api/my-account/password', {
+    json: payload,
+    headers: { [verificationRecordIdHeader]: verificationRecordId },
+  });
+};

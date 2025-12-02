@@ -51,9 +51,14 @@ const account_center = {
     verification_required: 'Срок действия проверки истёк. Подтвердите личность ещё раз.',
   },
   username: {
-    title: 'Set username',
-    description: 'Username must contain only letters, numbers, and underscores.',
-    success: 'Username updated successfully.',
+    title: 'Установить имя пользователя',
+    description: 'Имя пользователя может содержать только буквы, цифры и символы подчеркивания.',
+    success: 'Имя пользователя успешно обновлено.',
+  },
+  password: {
+    title: 'Установить пароль',
+    description: 'Создайте новый пароль, чтобы защитить свой аккаунт.',
+    success: 'Пароль успешно обновлён.',
   },
 
   code_verification: {
@@ -65,7 +70,7 @@ const account_center = {
   email_verification: {
     title: 'Подтвердите свою почту',
     prepare_description:
-      "Verify it's you to protect your account security. Send the verification code to your email.",
+      'Подтвердите, что это вы, чтобы защитить свой аккаунт. Отправьте код подтверждения на свою почту.',
     email_label: 'Адрес электронной почты',
     send: 'Отправить код подтверждения',
     description: 'Код подтверждения отправлен на {{email}}. Введите код, чтобы продолжить.',
@@ -103,8 +108,13 @@ const account_center = {
       description: 'Номер телефона вашего аккаунта успешно изменён.',
     },
     username: {
-      title: 'Username updated!',
-      description: "Your account's username has been successfully changed.",
+      title: 'Имя пользователя обновлено!',
+      description: 'Имя пользователя вашего аккаунта успешно изменено.',
+    },
+
+    password: {
+      title: 'Пароль обновлён!',
+      description: 'Пароль вашего аккаунта успешно изменён.',
     },
   },
 };

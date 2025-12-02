@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 
-import usePasswordErrorMessage from './use-password-error-message';
+import usePasswordErrorMessage from '@/shared/hooks/use-password-error-message';
+
 import { usePasswordPolicy } from './use-sie';
 
 type Options = {

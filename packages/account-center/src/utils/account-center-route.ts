@@ -3,6 +3,8 @@ import {
   emailSuccessRoute,
   phoneRoute,
   phoneSuccessRoute,
+  passwordRoute,
+  passwordSuccessRoute,
   usernameRoute,
   usernameSuccessRoute,
 } from '@ac/constants/routes';
@@ -15,9 +17,10 @@ const knownRoutePrefixes: readonly string[] = [
   emailSuccessRoute,
   phoneRoute,
   phoneSuccessRoute,
+  passwordRoute,
+  passwordSuccessRoute,
   usernameRoute,
   usernameSuccessRoute,
-  '/password',
 ];
 
 const isKnownRoute = (pathname?: string): pathname is string =>

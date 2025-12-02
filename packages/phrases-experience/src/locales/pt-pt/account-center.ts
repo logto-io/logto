@@ -55,9 +55,14 @@ const account_center = {
     verification_required: 'A verificação expirou. Confirme novamente a sua identidade.',
   },
   username: {
-    title: 'Set username',
-    description: 'Username must contain only letters, numbers, and underscores.',
-    success: 'Username updated successfully.',
+    title: 'Definir nome de utilizador',
+    description: 'O nome de utilizador deve conter apenas letras, números e sublinhados.',
+    success: 'Nome de utilizador atualizado com sucesso.',
+  },
+  password: {
+    title: 'Definir palavra-passe',
+    description: 'Crie uma nova palavra-passe para proteger a sua conta.',
+    success: 'Palavra-passe atualizada com sucesso.',
   },
 
   code_verification: {
@@ -69,7 +74,7 @@ const account_center = {
   email_verification: {
     title: 'Verifique o seu e-mail',
     prepare_description:
-      "Verify it's you to protect your account security. Send the verification code to your email.",
+      'Confirme que é você para proteger a segurança da sua conta. Envie o código de verificação para o seu e-mail.',
     email_label: 'Endereço de e-mail',
     send: 'Enviar código de verificação',
     description:
@@ -108,8 +113,13 @@ const account_center = {
       description: 'O número de telefone da sua conta foi alterado com sucesso.',
     },
     username: {
-      title: 'Username updated!',
-      description: "Your account's username has been successfully changed.",
+      title: 'Nome de utilizador atualizado!',
+      description: 'O nome de utilizador da sua conta foi alterado com sucesso.',
+    },
+
+    password: {
+      title: 'Palavra-passe atualizada!',
+      description: 'A palavra-passe da sua conta foi alterada com sucesso.',
     },
   },
 };

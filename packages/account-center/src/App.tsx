@@ -19,12 +19,15 @@ import {
   emailSuccessRoute,
   phoneRoute,
   phoneSuccessRoute,
+  passwordRoute,
+  passwordSuccessRoute,
   usernameRoute,
   usernameSuccessRoute,
 } from './constants/routes';
 import initI18n from './i18n/init';
 import Email from './pages/Email';
 import Home from './pages/Home';
+import Password from './pages/Password';
 import Phone from './pages/Phone';
 import UpdateSuccess from './pages/UpdateSuccess';
 import Username from './pages/Username';
@@ -79,8 +82,10 @@ const Main = () => {
         path={usernameSuccessRoute}
         element={<UpdateSuccess identifierType={SignInIdentifier.Username} />}
       />
+      <Route path={passwordSuccessRoute} element={<UpdateSuccess identifierType="password" />} />
       <Route path={emailRoute} element={<Email />} />
       <Route path={phoneRoute} element={<Phone />} />
+      <Route path={passwordRoute} element={<Password />} />
       <Route path={usernameRoute} element={<Username />} />
       <Route index element={<Home />} />
       <Route path="*" element={<Home />} />

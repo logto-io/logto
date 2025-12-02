@@ -53,9 +53,14 @@ const account_center = {
     verification_required: 'Термін перевірки минув. Підтвердіть свою особу ще раз.',
   },
   username: {
-    title: 'Set username',
-    description: 'Username must contain only letters, numbers, and underscores.',
-    success: 'Username updated successfully.',
+    title: 'Встановити ім’я користувача',
+    description: 'Ім’я користувача може містити лише літери, цифри та символи підкреслення.',
+    success: 'Ім’я користувача успішно оновлено.',
+  },
+  password: {
+    title: 'Встановити пароль',
+    description: 'Створіть новий пароль, щоб захистити свій обліковий запис.',
+    success: 'Пароль успішно оновлено.',
   },
 
   code_verification: {
@@ -67,7 +72,7 @@ const account_center = {
   email_verification: {
     title: 'Підтвердьте свою електронну пошту',
     prepare_description:
-      "Verify it's you to protect your account security. Send the verification code to your email.",
+      'Підтвердіть, що це ви, щоб захистити безпеку облікового запису. Надішліть код підтвердження на свою електронну пошту.',
     email_label: 'Адреса електронної пошти',
     send: 'Надіслати код підтвердження',
     description: 'Код підтвердження надіслано на адресу {{email}}. Введіть код, щоб продовжити.',
@@ -105,8 +110,13 @@ const account_center = {
       description: 'Номер телефону вашого облікового запису успішно змінено.',
     },
     username: {
-      title: 'Username updated!',
-      description: "Your account's username has been successfully changed.",
+      title: 'Ім’я користувача оновлено!',
+      description: 'Ім’я користувача вашого облікового запису успішно змінено.',
+    },
+
+    password: {
+      title: 'Пароль оновлено!',
+      description: 'Пароль вашого облікового запису успішно змінено.',
     },
   },
 };
