@@ -49,6 +49,26 @@ const VerificationMethodList = () => {
     }
   }, [availableMethods, verifyingMethod]);
 
+  const hasPasswordVerification = Boolean(userInfo?.hasPassword);
+  const hasEmailVerification = Boolean(userInfo?.primaryEmail);
+  const hasPhoneVerification = Boolean(userInfo?.primaryPhone);
+
+  const availableMethods = useMemo(
+    () =>
+      [
+        hasPasswordVerification && VerificationMethod.Password,
+        hasEmailVerification && VerificationMethod.EmailCode,
+        hasPhoneVerification && VerificationMethod.PhoneCode,
+      ].filter((method) => isVerificationMethod(method)),
+    [hasEmailVerification, hasPasswordVerification, hasPhoneVerification]
+  );
+
+  useEffect(() => {
+    if (!verifyingMethod && availableMethods.length === 1) {
+      setVerifyingMethod(availableMethods[0]);
+    }
+  }, [availableMethods, verifyingMethod]);
+
   if (verifyingMethod === VerificationMethod.Password) {
     return (
       <PasswordVerification
